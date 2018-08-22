@@ -196,7 +196,7 @@ var Address = function (freeformAddress, options) {
 			isDigit._init(this.sync, this.loadParams, ilib.bind(this, function() {
 				if (typeof(ilib.data.nativecountries) === 'undefined') {
 					Utils.loadData({
-						object: Address,
+						object: "Address",
 						name: "nativecountries.json", // countries in their own language 
 						locale: "-", // only need to load the root file 
 						nonlocale: true,
@@ -223,7 +223,7 @@ Address.prototype = {
 	_loadCountries: function(onLoad) {
 		if (typeof(ilib.data.countries) === 'undefined') {
 			Utils.loadData({
-				object: Address,
+				object: "Address",
 				name: "countries.json", // countries in English
 				locale: "-", // only need to load the root file
 				nonlocale: true,
@@ -245,7 +245,7 @@ Address.prototype = {
 	_loadCtrynames: function(onLoad) {
 		Utils.loadData({
 			name: "ctrynames.json", 
-			object: Address, 
+			object: "Address", 
 			locale: this.locale,
 			sync: this.sync, 
 			loadParams: this.loadParams, 
@@ -327,7 +327,7 @@ Address.prototype = {
 	 */
 	_init: function(callback) {
 		Utils.loadData({
-			object: Address, 
+			object: "Address", 
 			locale: new Locale(this.countryCode), 
 			name: "address.json", 
 			sync: this.sync, 
@@ -336,7 +336,7 @@ Address.prototype = {
 				if (!info || JSUtils.isEmpty(info)) {
 					// load the "unknown" locale instead
 					Utils.loadData({
-						object: Address, 
+						object: "Address", 
 						locale: new Locale("XX"), 
 						name: "address.json", 
 						sync: this.sync, 
@@ -384,7 +384,11 @@ Address.prototype = {
 				var it = line.charIterator();
 				while (it.hasNext()) {
 					var c = it.next();
-					if (isIdeo(c) || CType.withinRange(c, "Hangul")) {
+					if (isIdeo(c) || 
+					        CType.withinRange(c, "hangul") || 
+					        CType.withinRange(c, 'katakana') ||
+					        CType.withinRange(c, 'hiragana') ||
+					        CType.withinRange(c, 'bopomofo')) {
 						asianChars++;
 					} else if (isAscii(c) && !isDigit(c)) {
 						latinChars++;

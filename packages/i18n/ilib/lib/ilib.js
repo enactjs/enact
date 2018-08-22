@@ -1,7 +1,7 @@
 /*
  * ilib.js - define the ilib name space
  * 
- * Copyright © 2012-2015, JEDLSoft
+ * Copyright © 2012-2018, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,8 +38,24 @@ ilib._ver = function() {
  * @return {string} a version string for this instance of ilib
  */
 ilib.getVersion = function () {
-	// TODO: need some way of getting the version number under dynamic load code
-    return ilib._ver() || "12.0"; 
+    if (ilib._dyncode) {
+        try {
+            var pkg;
+            //pkg = require("../package.json");
+            /* [Temp fix for webOS build for enyo]
+               The build has 2 parts of Enyo using the webOS submission of iLib.
+               First, Enyo ilib re-routes the locale JSON requests to /usr/share/javascript/ilib/locale/ in place of ./lib/enyo-ilib/ilib/locale.
+               Second, it also copies the js from /usr/share/javascript/ilib/locale/lib into ./lib/enyo-ilib/ilib/lib.
+               Since the package.json is outside that lib directory, it's triggering the error.
+               Will either need to move the package.json file location or update the webos_enyojs_app_2.6+.bbclass to copy the package.json as well.
+            */
+            pkg.version = "13.0.2";
+            return pkg.version;
+        } catch (e) {
+            // ignore
+        }
+    }
+    return ilib._ver() || "13.0"; 
 };
 
 /**
@@ -67,7 +83,8 @@ ilib.data = {
     /** @type {null|Object.<string,Array.<Array.<number>>>} */ ctype_z: null,
     /** @type {null|Object.<string,Array.<Array.<number>>>} */ scriptToRange: null,
     /** @type {null|Object.<string,string|Object.<string|Object.<string,string>>>} */ dateformats: null,
-    /** @type {null|Array.<string>} */ timezones: []
+    /** @type {null|Array.<string>} */ timezones: [],
+    cache: {}
 };
 
 /*
@@ -129,7 +146,7 @@ ilib._getPlatform = function () {
     		}
     	} catch (e) {}
     	
-        if (typeof(process) !== 'undefined' && typeof(window) === 'undefined' && typeof(module) !== 'undefined') {
+        if (typeof(process) !== 'undefined' && process.versions && process.versions.node && typeof(module) !== 'undefined') {
             ilib._platform = "nodejs";
         } else if (typeof(Qt) !== 'undefined') {
         	ilib._platform = "qt";
@@ -157,7 +174,7 @@ ilib._getBrowser = function () {
 			if (navigator.userAgent.indexOf("Firefox") > -1) {
 				browser = "firefox";
 			}
-			if (navigator.userAgent.indexOf("Opera") > -1) {
+			if (navigator.userAgent.search(/Opera|OPR/) > -1 ) {
 				browser = "opera";
 			}
 			if (navigator.userAgent.indexOf("Chrome") > -1) {
@@ -171,6 +188,14 @@ ilib._getBrowser = function () {
 				// already taken care of above
 				browser = "safari";
 			}
+            if (navigator.userAgent.indexOf("Edge") > -1) {                
+                browser = "Edge";
+            }
+            if (navigator.userAgent.search(/iPad|iPhone|iPod/) > -1) {
+                // Due to constraints of the iOS platform, 
+                // all browser must be built on top of the WebKit rendering engine
+                browser = "iOS";
+            }
 		}
 	}
 	return browser;
@@ -218,6 +243,15 @@ ilib._global = function(name) {
  */
 ilib._isGlobal = function(name) {
 	return typeof(ilib._global(name)) !== 'undefined';
+};
+
+/**
+ * Clear the file load cache. This is mainly used by the unit tests,
+ * but could be used by regular callers if you want to free up memory
+ * for garbage collecting.
+ */
+ilib.clearCache = function() {
+	ilib.data.cache = {};
 };
 
 /**
@@ -321,7 +355,10 @@ ilib.getLocale = function () {
             	var lang = locobj.name && locobj.name.replace("_", "-") || "en-US";
     			break;
     	}
-        ilib.locale = typeof(ilib.locale) === 'string' ? ilib.locale : 'en-US';
+        ilib.locale = typeof(ilib.locale) === 'string' && ilib.locale ? ilib.locale : 'en-US';
+        if (ilib.locale === "en") {
+        	ilib.locale = "en-US"; // hack to get various platforms working correctly
+        }
     }
     return ilib.locale;
 };

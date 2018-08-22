@@ -75,7 +75,7 @@ var PhoneLocale = function(options) {
 
 	Utils.loadData({
 		name: "phoneloc.json",
-		object: PhoneLocale,
+		object: "PhoneLocale",
 		nonlocale: true,
 		sync: sync, 
 		loadParams: loadParams, 

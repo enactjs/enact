@@ -1,6 +1,6 @@
 /*
  * isAscii.js - Character type is ASCII
- * 
+ *
  * Copyright © 2012-2015, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,7 @@ var IString = require("./IString.js");
 
 /**
  * Return whether or not the first character is in the ASCII range.<p>
- * 
+ *
  * @static
  * @param {string|IString|number} ch character or code point to examine
  * @return {boolean} true if the first character is in the ASCII range.
@@ -47,7 +47,7 @@ var isAscii = function (ch) {
 			num = ch._toCodePoint(0);
 			break;
 	}
-	return CType._inRange(num, 'ascii', ilib.data.ctype);
+	return ilib.data.ctype ? CType._inRange(num, 'ascii', ilib.data.ctype) : (num <= 0x7F);
 };
 
 /**

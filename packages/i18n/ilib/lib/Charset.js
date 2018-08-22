@@ -89,10 +89,6 @@ var Charset = function(options) {
 		}
 	}
 
-	if (!Charset.cache) {
-		Charset.cache = {};
-	}
-	
 	// default data. A majority of charsets use this info
 	this.info = {
 		description: "default",
@@ -104,7 +100,7 @@ var Charset = function(options) {
 	};
 
 	Utils.loadData({
-		object: Charset, 
+		object: "Charset", 
 		locale: "-",
 		nonlocale: true,
 		name: "charsetaliases.json", 
@@ -122,7 +118,7 @@ var Charset = function(options) {
 				this.name = this.originalName;
 			}
 			Utils.loadData({
-				object: Charset, 
+				object: "Charset", 
 				locale: "-",
 				nonlocale: true,
 				name: "charset/" + this.name + ".json", 

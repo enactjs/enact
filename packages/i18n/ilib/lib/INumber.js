@@ -25,11 +25,13 @@ isDigit.js
 isSpace.js
 LocaleInfo.js
 Utils.js
+JSUtils.js
 Currency.js
 */
 
 var ilib = require("./ilib.js");
 var Utils = require("./Utils.js");
+var JSUtils = require("./JSUtils.js");
 
 var Locale = require("./Locale.js");
 var LocaleInfo = require("./LocaleInfo.js");
@@ -101,9 +103,7 @@ var Currency = require("./Currency.js");
  */
 var INumber = function (str, options) {
 	var i, stripped = "", 
-		sync = true,
-		loadParams,
-		onLoad;
+		sync = true;
 	
 	this.locale = new Locale();
 	this.type = "number";
@@ -126,16 +126,19 @@ var INumber = function (str, options) {
 		if (typeof(options.sync) !== 'undefined') {
 			sync = (options.sync == true);
 		}
-		loadParams = options.loadParams;
-		onLoad = options.onLoad;
+	} else {
+	    options = {sync: true};
 	}
 	
-	isDigit._init(sync, loadParams, ilib.bind(this, function() {
-		isSpace._init(sync, loadParams, ilib.bind(this, function() {
+	isDigit._init(sync, options.loadParams, ilib.bind(this, function() {
+		isSpace._init(sync, options.loadParams, ilib.bind(this, function() {
 			new LocaleInfo(this.locale, {
 				sync: sync,
+				loadParams: options.loadParams,
 				onLoad: ilib.bind(this, function (li) {
+				    this.li = li;
 					this.decimal = li.getDecimalSeparator();
+					var nativeDecimal = this.li.getNativeDecimalSeparator() || "";
 					
 					switch (typeof(str)) {
 					case 'string':
@@ -154,7 +157,7 @@ var INumber = function (str, options) {
 								stripped += this.str.charAt(i);
 								unary = false;
 								lastNumericChar = i;
-							} else if (this.str.charAt(i) === this.decimal) {
+							} else if (this.str.charAt(i) === this.decimal || this.str.charAt(i) === nativeDecimal) {
 								stripped += "."; // always convert to period
 								unary = false;
 								lastNumericChar = i;
@@ -162,8 +165,9 @@ var INumber = function (str, options) {
 						}
 						// record what we actually parsed
 						this.parsed = this.str.substring(0, lastNumericChar+1);
+						
 						/** @type {number} */
-						this.value = parseFloat(stripped);
+						this.value = parseFloat(this._mapToLatinDigits(stripped));
 						break;
 					case 'number':
 						this.str = "" + str;
@@ -173,7 +177,7 @@ var INumber = function (str, options) {
 					case 'object':
 						// call parseFloat to coerse the type to number
 						this.value = parseFloat(str.valueOf());
-    					this.str = "" + this.value;
+						this.str = "" + this.value;
 						break;
 						
 					case 'undefined':
@@ -217,11 +221,12 @@ var INumber = function (str, options) {
 								locale: this.locale, 
 								sign: stripped,
 								sync: sync,
+								loadParams: options.loadParams,
 								onLoad: ilib.bind(this, function (cur) {
 									this.currency = cur;
 									if (options && typeof(options.onLoad) === 'function') {
 										options.onLoad(this);
-									}				
+									}
 								})
 							});
 							return;
@@ -237,6 +242,26 @@ var INumber = function (str, options) {
 };
 
 INumber.prototype = {
+    /**
+     * @private
+     */
+    _mapToLatinDigits: function(str) {
+        // only map if there are actual native digits
+        var digits = this.li.getNativeDigits();
+        if (!digits) return str;
+        
+        var digitMap = {};
+        for (var i = 0; i < digits.length; i++) {
+            digitMap[digits[i]] = String(i);
+        }
+        var decimal = this.li.getNativeDecimalSeparator();
+        
+        return str.split("").map(function(ch) {
+            if (ch == decimal) return ".";
+            return digitMap[ch] || ch;
+        }).join("");
+    },
+    
 	/**
 	 * Return the locale for this formatter instance.
 	 * @return {Locale} the locale instance for this formatter

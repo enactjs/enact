@@ -120,174 +120,216 @@ var RataDie = require("./RataDie.js");
  * @param {Object=} params parameters that govern the settings and behaviour of this Han date
  */
 var HanDate = function(params) {
-	this.timezone = "local";
-	if (params) {
-		if (params.locale) {
-			this.locale = (typeof(params.locale) === 'string') ? new Locale(params.locale) : params.locale;
-			var li = new LocaleInfo(this.locale);
-			this.timezone = li.getTimeZone(); 
-		}
-		if (params.timezone) {
-			this.timezone = params.timezone;
-		}
+	params = params || {};
+	if (params.locale) {
+		this.locale = (typeof(params.locale) === 'string') ? new Locale(params.locale) : params.locale;
+	}
+	if (params.timezone) {
+		this.timezone = params.timezone;
 	}
 	
-	new HanCal({
-		sync: params && typeof(params) === 'boolean' ? params.sync : true,
-		loadParams: params && params.loadParams,
-		callback: ilib.bind(this, function (cal) {
-			this.cal = cal;
-	
-			if (params && (params.year || params.month || params.day || params.hour ||
-				params.minute || params.second || params.millisecond || params.cycle || params.cycleYear)) {
-				if (typeof(params.cycle) !== 'undefined') {
-					/**
-					 * Cycle number in the Han calendar.
-					 * @type number
-					 */
-					this.cycle = parseInt(params.cycle, 10) || 0;
-					
-					var year = (typeof(params.year) !== 'undefined' ? parseInt(params.year, 10) : parseInt(params.cycleYear, 10)) || 0;
-					
-					/**
-					 * Year in the Han calendar.
-					 * @type number
-					 */
-					this.year = HanCal._getElapsedYear(year, this.cycle);
-				} else {
-					if (typeof(params.year) !== 'undefined') {
-						this.year = parseInt(params.year, 10) || 0;
-						this.cycle = Math.floor((this.year - 1) / 60);
-					} else {
-						this.year = this.cycle = 0;
-					}
-				}	
-				
-				/**
-				 * The month number, ranging from 1 to 13
-				 * @type number
-				 */
-				this.month = parseInt(params.month, 10) || 1;
-	
-				/**
-				 * The day of the month. This ranges from 1 to 30.
-				 * @type number
-				 */
-				this.day = parseInt(params.day, 10) || 1;
-				
-				/**
-				 * The hour of the day. This can be a number from 0 to 23, as times are
-				 * stored unambiguously in the 24-hour clock.
-				 * @type number
-				 */
-				this.hour = parseInt(params.hour, 10) || 0;
-	
-				/**
-				 * The minute of the hours. Ranges from 0 to 59.
-				 * @type number
-				 */
-				this.minute = parseInt(params.minute, 10) || 0;
-	
-				/**
-				 * The second of the minute. Ranges from 0 to 59.
-				 * @type number
-				 */
-				this.second = parseInt(params.second, 10) || 0;
-	
-				/**
-				 * The millisecond of the second. Ranges from 0 to 999.
-				 * @type number
-				 */
-				this.millisecond = parseInt(params.millisecond, 10) || 0;
-			
-				// derived properties
-				
-				/**
-				 * Year in the cycle of the Han calendar
-				 * @type number
-				 */
-				this.cycleYear = MathUtils.amod(this.year, 60); 
-
-				/**
-				 * The day of the year. Ranges from 1 to 384.
-				 * @type number
-				 */
-				this.dayOfYear = parseInt(params.dayOfYear, 10);
-	
-				if (typeof(params.dst) === 'boolean') {
-					this.dst = params.dst;
-				}
-				
-				this.newRd({
-					cal: this.cal,
-					cycle: this.cycle,
-					year: this.year,
-					month: this.month,
-					day: this.day,
-					hour: this.hour,
-					minute: this.minute,
-					second: this.second,
-					millisecond: this.millisecond,
-					sync: params && typeof(params.sync) === 'boolean' ? params.sync : true,
-					loadParams: params && params.loadParams,
-					callback: ilib.bind(this, function (rd) {
-						if (rd) {
-							this.rd = rd;
-							
-							// add the time zone offset to the rd to convert to UTC
-							if (!this.tz) {
-								this.tz = new TimeZone({id: this.timezone});
-							}
-							// getOffsetMillis requires that this.year, this.rd, and this.dst 
-							// are set in order to figure out which time zone rules apply and 
-							// what the offset is at that point in the year
-							this.offset = this.tz._getOffsetMillisWallTime(this) / 86400000;
-							if (this.offset !== 0) {
-								this.rd = this.newRd({
-									cal: this.cal,
-									rd: this.rd.getRataDie() - this.offset
-								});
-								this._calcLeap();
-							} else {
-								// re-use the derived properties from the RD calculations
-								this.leapMonth = this.rd.leapMonth;
-								this.priorLeapMonth = this.rd.priorLeapMonth;
-								this.leapYear = this.rd.leapYear;
-							}
-						}
-						
-						if (!this.rd) {
-							this.rd = this.newRd(JSUtils.merge(params || {}, {
-								cal: this.cal
-							}));
-							this._calcDateComponents();
-						}
-						
-						if (params && typeof(params.onLoad) === 'function') {
-							params.onLoad(this);
-						}
-					})
-				});
-			} else {
-				if (!this.rd) {
-					this.rd = this.newRd(JSUtils.merge(params || {}, {
-						cal: this.cal
-					}));
-					this._calcDateComponents();
-				}
-				
-				if (params && typeof(params.onLoad) === 'function') {
-					params.onLoad(this);
-				}
-			}
-		})
-	});
-
+    if (!this.timezone) {
+        if (this.locale) {
+            new LocaleInfo(this.locale, {
+                sync: params.sync,
+                loadParams: params.loadParams,
+                onLoad: ilib.bind(this, function(li) {
+                    this.li = li;
+                    this.timezone = li.getTimeZone();
+                    this._init(params);
+                })
+            });
+        } else {
+            this.timezone = "local";
+            this._init(params);
+        }
+    } else {
+        this._init(params);
+    }
 };
 
 HanDate.prototype = new IDate({noinstance: true});
 HanDate.prototype.parent = IDate;
 HanDate.prototype.constructor = HanDate;
+
+/**
+ * Initialize the han date
+ * @private
+ */
+HanDate.prototype._init = function (params) {
+    new HanCal({
+        sync: params && typeof(params.sync) === 'boolean' ? params.sync : true,
+        loadParams: params && params.loadParams,
+        onLoad: ilib.bind(this, function (cal) {
+            this.cal = cal;
+    
+            if (params.year || params.month || params.day || params.hour ||
+                params.minute || params.second || params.millisecond || params.cycle || params.cycleYear) {
+                if (typeof(params.cycle) !== 'undefined') {
+                    /**
+                     * Cycle number in the Han calendar.
+                     * @type number
+                     */
+                    this.cycle = parseInt(params.cycle, 10) || 0;
+                    
+                    var year = (typeof(params.year) !== 'undefined' ? parseInt(params.year, 10) : parseInt(params.cycleYear, 10)) || 0;
+                    
+                    /**
+                     * Year in the Han calendar.
+                     * @type number
+                     */
+                    this.year = HanCal._getElapsedYear(year, this.cycle);
+                } else {
+                    if (typeof(params.year) !== 'undefined') {
+                        this.year = parseInt(params.year, 10) || 0;
+                        this.cycle = Math.floor((this.year - 1) / 60);
+                    } else {
+                        this.year = this.cycle = 0;
+                    }
+                }   
+                
+                /**
+                 * The month number, ranging from 1 to 13
+                 * @type number
+                 */
+                this.month = parseInt(params.month, 10) || 1;
+    
+                /**
+                 * The day of the month. This ranges from 1 to 30.
+                 * @type number
+                 */
+                this.day = parseInt(params.day, 10) || 1;
+                
+                /**
+                 * The hour of the day. This can be a number from 0 to 23, as times are
+                 * stored unambiguously in the 24-hour clock.
+                 * @type number
+                 */
+                this.hour = parseInt(params.hour, 10) || 0;
+    
+                /**
+                 * The minute of the hours. Ranges from 0 to 59.
+                 * @type number
+                 */
+                this.minute = parseInt(params.minute, 10) || 0;
+    
+                /**
+                 * The second of the minute. Ranges from 0 to 59.
+                 * @type number
+                 */
+                this.second = parseInt(params.second, 10) || 0;
+    
+                /**
+                 * The millisecond of the second. Ranges from 0 to 999.
+                 * @type number
+                 */
+                this.millisecond = parseInt(params.millisecond, 10) || 0;
+            
+                // derived properties
+                
+                /**
+                 * Year in the cycle of the Han calendar
+                 * @type number
+                 */
+                this.cycleYear = MathUtils.amod(this.year, 60); 
+
+                /**
+                 * The day of the year. Ranges from 1 to 384.
+                 * @type number
+                 */
+                this.dayOfYear = parseInt(params.dayOfYear, 10);
+    
+                if (typeof(params.dst) === 'boolean') {
+                    this.dst = params.dst;
+                }
+                
+                this.newRd({
+                    cal: this.cal,
+                    cycle: this.cycle,
+                    year: this.year,
+                    month: this.month,
+                    day: this.day,
+                    hour: this.hour,
+                    minute: this.minute,
+                    second: this.second,
+                    millisecond: this.millisecond,
+                    sync: params.sync,
+                    loadParams: params.loadParams,
+                    callback: ilib.bind(this, function (rd) {
+                        if (rd) {
+                            this.rd = rd;
+                            
+                            // add the time zone offset to the rd to convert to UTC
+                            new TimeZone({
+                                id: this.timezone,
+                                sync: params.sync,
+                                loadParams: params.loadParams,
+                                onLoad: ilib.bind(this, function(tz) {
+                                    this.tz = tz;
+                                    // getOffsetMillis requires that this.year, this.rd, and this.dst 
+                                    // are set in order to figure out which time zone rules apply and 
+                                    // what the offset is at that point in the year
+                                    this.offset = this.tz._getOffsetMillisWallTime(this) / 86400000;
+                                    if (this.offset !== 0) {
+                                        // this newRd can be called synchronously because we already called
+                                        // it asynchronously above, so all of the astro data should 
+                                        // already be loaded.
+                                        this.rd = this.newRd({
+                                            cal: this.cal,
+                                            rd: this.rd.getRataDie() - this.offset
+                                        });
+                                        this._calcLeap();
+                                    } else {
+                                        // re-use the derived properties from the RD calculations
+                                        this.leapMonth = this.rd.leapMonth;
+                                        this.priorLeapMonth = this.rd.priorLeapMonth;
+                                        this.leapYear = this.rd.leapYear;
+                                    }
+                                    
+                                    this._init2(params);
+                                })
+                            });
+                        } else {
+                            this._init2(params);
+                        }
+                    })
+                });
+            } else {
+                this._init2(params);
+            }
+        })
+    });
+};
+
+/**
+ * Finish the initialization for the han date.
+ * @private
+ */
+HanDate.prototype._init2 = function (params) {
+    if (!this.rd) {
+        // init2() may be called without newRd having been called before,
+        // so we cannot guarantee that the astro data is already loaded.
+        // That means, we have to treat this as a possibly asynchronous
+        // call.
+        this.newRd(JSUtils.merge(params || {}, {
+            cal: this.cal,
+            sync: params.sync,
+            loadParams: params.loadParams,
+            callback: ilib.bind(this, function(rd) {
+                this.rd = rd;
+                this._calcDateComponents();
+
+                if (params && typeof(params.onLoad) === 'function') {
+                    params.onLoad(this);
+                }
+            })
+        }));
+    } else {
+        if (params && typeof(params.onLoad) === 'function') {
+            params.onLoad(this);
+        }
+    }
+};
 
 /**
  * Return a new RD for this date type using the given params.

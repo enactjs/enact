@@ -1,7 +1,7 @@
 /*
  * julian.js - Represent a Julian calendar object.
  * 
- * Copyright © 2012-2015, JEDLSoft
+ * Copyright © 2012-2015,2018, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,12 +29,16 @@ var Calendar = require("./Calendar.js");
  * Construct a new Julian calendar object. This class encodes information about
  * a Julian calendar.<p>
  * 
- * 
+ * @param {Object=} options Options governing the construction of this instance
  * @constructor
  * @extends Calendar
  */
-var JulianCal = function() {
+var JulianCal = function(options) {
 	this.type = "julian";
+    
+    if (options && typeof(options.onLoad) === "function") {
+        options.onLoad(this);
+    }
 };
 
 /* the lengths of each month */

@@ -69,7 +69,7 @@ var JSUtils = require("./JSUtils.js");
  * @param {string=} script the ISO 15924 code of the script for this locale, if any
  */
 var Locale = function(language, region, variant, script) {
-	if (typeof(region) === 'undefined') {
+    if (typeof(region) === 'undefined' && typeof(variant) === 'undefined' && typeof(script) === 'undefined') {
 		var spec = language || ilib.getLocale();
 		if (typeof(spec) === 'string') {
 			var parts = spec.split('-');
@@ -111,25 +111,25 @@ var Locale = function(language, region, variant, script) {
 	        this.variant = spec.variant || undefined;
 		}
 	} else {
-		if (language) {
+		if (language && typeof(language) === "string") {
 			language = language.trim();
 			this.language = language.length > 0 ? language.toLowerCase() : undefined;
 		} else {
 			this.language = undefined;
 		}
-		if (region) {
+		if (region && typeof(region) === "string") {
 			region = region.trim();
 			this.region = region.length > 0 ? region.toUpperCase() : undefined;
 		} else {
 			this.region = undefined;
 		}
-		if (variant) {
+		if (variant && typeof(variant) === "string") {
 			variant = variant.trim();
 			this.variant = variant.length > 0 ? variant : undefined;
 		} else {
 			this.variant = undefined;
 		}
-		if (script) {
+		if (script && typeof(script) === "string") {
 			script = script.trim();
 			this.script = script.length > 0 ? script : undefined;
 		} else {
@@ -798,7 +798,24 @@ Locale.prototype = {
 	 * @return {string} the locale specifier
 	 */
 	getSpec: function() {
+	    if (!this.spec) this._genSpec();
 		return this.spec;
+	},
+	
+	/**
+	 * Return the language locale specifier. This includes the
+	 * language and the script if it is available. This can be
+	 * used to see whether the written language of two locales
+	 * match each other regardless of the region or variant.
+	 * 
+	 * @return {string} the language locale specifier
+	 */
+	getLangSpec: function() {
+	    var spec = this.language;
+	    if (spec && this.script) {
+	        spec += "-" + this.script;
+	    }
+	    return spec || "";
 	},
 	
 	/**

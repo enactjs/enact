@@ -1,7 +1,7 @@
 /*
  * NumFmt.js - Number formatter definition
  *
- * Copyright © 2012-2015, JEDLSoft
+ * Copyright © 2012-2015, 2018 JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@
  */
 
 /*
-!depends 
-ilib.js 
+!depends
+ilib.js
 Locale.js
 LocaleInfo.js
 Utils.js
@@ -75,6 +75,16 @@ var INumber = require("./INumber.js");
  * If the type of the formatter is "currency" and this
  * property is not specified, then the minimum fraction digits is set to the normal number
  * of digits used with that currency, which is almost always 0, 2, or 3 digits.
+ * <li><i>significantDigits</i> - specify that max number of significant digits in the
+ * formatted output. This applies before and after the decimal point. The amount is
+ * rounded according to the rounding mode specified, or the rounding mode as given in
+ * the locale information. If the significant digits and the max or min fraction digits
+ * are both specified, this formatter will attempt to honour them both by choosing the
+ * one that is smaller if there is a conflict. For example, if the max fraction digits
+ * is 6 and the significant digits is 5 and the number to be formatted has a long
+ * fraction, it will only format 5 digits. The default is "unlimited digits", which means
+ * to format as many digits as the javascript engine can represent internally (usually
+ * around 13-15 or so on a 64-bit machine).
  * <li><i>useNative</i> - the flag used to determaine whether to use the native script settings
  * for formatting the numbers .
  * <li><i>roundingMode</i> - When the maxFractionDigits or maxIntegerDigits is specified,
@@ -106,11 +116,11 @@ var INumber = require("./INumber.js");
  * When the type of this formatter is "number", the style can be one of the following:
  * <ul>
  *   <li><i>standard - format a fully specified floating point number properly for the locale
- *   <li><i>scientific</i> - use scientific notation for all numbers. That is, 1 integral 
- *   digit, followed by a number of fractional digits, followed by an "e" which denotes 
- *   exponentiation, followed digits which give the power of 10 in the exponent. 
- *   <li><i>native</i> - format a floating point number using the native digits and 
- *   formatting symbols for the script of the locale. 
+ *   <li><i>scientific</i> - use scientific notation for all numbers. That is, 1 integral
+ *   digit, followed by a number of fractional digits, followed by an "e" which denotes
+ *   exponentiation, followed digits which give the power of 10 in the exponent.
+ *   <li><i>native</i> - format a floating point number using the native digits and
+ *   formatting symbols for the script of the locale.
  *   <li><i>nogrouping</i> - format a floating point number without grouping digits for
  *   the integral portion of the number
  * </ul>
@@ -146,9 +156,9 @@ var INumber = require("./INumber.js");
 var NumFmt = function (options) {
 	var sync = true;
 	this.locale = new Locale();
-	/** 
+	/**
 	 * @private
-	 * @type {string} 
+	 * @type {string}
 	 */
 	this.type = "number";
 	var loadParams = undefined;
@@ -167,74 +177,88 @@ var NumFmt = function (options) {
 		}
 
 		if (options.currency) {
-			/** 
-			 * @private 
-			 * @type {string} 
+			/**
+			 * @private
+			 * @type {string}
 			 */
 			this.currency = options.currency;
 		}
 
-		if (typeof (options.maxFractionDigits) === 'number') {
-			/** 
-			 * @private 
-			 * @type {number|undefined} 
-			 */
-			this.maxFractionDigits = this._toPrimitive(options.maxFractionDigits);
-		}
-		if (typeof (options.minFractionDigits) === 'number') {
-			/** 
-			 * @private 
-			 * @type {number|undefined} 
-			 */
-			this.minFractionDigits = this._toPrimitive(options.minFractionDigits);
-			// enforce the limits to avoid JS exceptions
-			if (this.minFractionDigits < 0) {
-				this.minFractionDigits = 0;
-			}
-			if (this.minFractionDigits > 20) {
-				this.minFractionDigits = 20;
-			}
-		}
+        if (typeof (options.maxFractionDigits) !== 'undefined') {
+            /**
+             * @private
+             * @type {number|undefined}
+             */
+            this.maxFractionDigits = Number(options.maxFractionDigits);
+        }
+        if (typeof (options.minFractionDigits) !== 'undefined') {
+            /**
+             * @private
+             * @type {number|undefined}
+             */
+            this.minFractionDigits = Number(options.minFractionDigits);
+            // enforce the limits to avoid JS exceptions
+            if (this.minFractionDigits < 0) {
+                this.minFractionDigits = 0;
+            }
+            if (this.minFractionDigits > 20) {
+                this.minFractionDigits = 20;
+            }
+        }
+        if (typeof (options.significantDigits) !== 'undefined') {
+            /**
+             * @private
+             * @type {number|undefined}
+             */
+            this.significantDigits = Number(options.significantDigits);
+            // enforce the limits to avoid JS exceptions
+            if (this.significantDigits < 1) {
+                this.significantDigits = 1;
+            }
+            if (this.significantDigits > 20) {
+                this.significantDigits = 20;
+            }
+        }
 		if (options.style) {
-			/** 
-			 * @private 
-			 * @type {string} 
+			/**
+			 * @private
+			 * @type {string}
 			 */
 			this.style = options.style;
 		}
 		if (typeof(options.useNative) === 'boolean') {
-			/** 
-			 * @private 
-			 * @type {boolean} 
+			/**
+			 * @private
+			 * @type {boolean}
 			 * */
 			this.useNative = options.useNative;
 		}
-		/** 
-		 * @private 
-		 * @type {string} 
+		/**
+		 * @private
+		 * @type {string}
 		 */
 		this.roundingMode = options.roundingMode;
 
 		if (typeof(options.sync) === 'boolean') {
 			sync = options.sync;
 		}
-		
+
 		loadParams = options.loadParams;
 	}
 
-	/** 
-	 * @private 
-	 * @type {LocaleInfo|undefined} 
+	/**
+	 * @private
+	 * @type {LocaleInfo|undefined}
 	 */
 	this.localeInfo = undefined;
-	
+
 	new LocaleInfo(this.locale, {
 		sync: sync,
 		loadParams: loadParams,
 		onLoad: ilib.bind(this, function (li) {
-			/** 
-			 * @private 
-			 * @type {LocaleInfo|undefined} 
+			/**
+			 * @private
+			 * @type {LocaleInfo|undefined}
 			 */
 			this.localeInfo = li;
 
@@ -257,7 +281,7 @@ var NumFmt = function (options) {
 						if (this.style !== "common" && this.style !== "iso") {
 							this.style = "common";
 						}
-						
+
 						if (typeof(this.maxFractionDigits) !== 'number' && typeof(this.minFractionDigits) !== 'number') {
 							this.minFractionDigits = this.maxFractionDigits = this.currencyInfo.getFractionDigits();
 						}
@@ -266,7 +290,7 @@ var NumFmt = function (options) {
 						this.template = new IString(templates[this.style] || templates.common);
 						this.templateNegative = new IString(templates[this.style + "Negative"] || templates["commonNegative"]);
 						this.sign = (this.style === "iso") ? this.currencyInfo.getCode() : this.currencyInfo.getSign();
-						
+
 						if (!this.roundingMode) {
 							this.roundingMode = this.currencyInfo && this.currencyInfo.roundingMode;
 						}
@@ -315,16 +339,16 @@ NumFmt.prototype = {
 	 * option is given to the constructor, then this flag will be honoured. If the useNative
 	 * option is not given to the constructor, this this formatter will use native digits if
 	 * the locale typically uses native digits.
-	 * 
+	 *
 	 *  @return {boolean} true if this formatter will format with native digits, false otherwise
 	 */
 	getUseNative: function() {
 		if (typeof(this.useNative) === "boolean") {
 			return this.useNative;
-		} 
+		}
 		return (this.localeInfo.getDigitsStyle() === "native");
 	},
-	
+
 	/**
 	 * @private
 	 */
@@ -348,49 +372,55 @@ NumFmt.prototype = {
 			this.roundingMode = "halfdown";
 			this.round = MathUtils[this.roundingMode];
 		}
-		
+
 		if (this.style === "nogrouping") {
 			this.prigroupSize = this.secgroupSize = 0;
 		} else {
 			this.prigroupSize = this.localeInfo.getPrimaryGroupingDigits();
 			this.secgroupSize = this.localeInfo.getSecondaryGroupingDigits();
 			this.groupingSeparator = this.getUseNative() ? this.localeInfo.getNativeGroupingSeparator() : this.localeInfo.getGroupingSeparator();
-		} 
+		}
 		this.decimalSeparator = this.getUseNative() ? this.localeInfo.getNativeDecimalSeparator() : this.localeInfo.getDecimalSeparator();
-		
+
 		if (this.getUseNative()) {
 			var nd = this.localeInfo.getNativeDigits() || this.localeInfo.getDigits();
 			if (nd) {
 				this.digits = nd.split("");
 			}
 		}
-		
+
 		this.exponentSymbol = this.localeInfo.getExponential() || "e";
 	},
 
-	/**
-	 * @private
-	 * @param {INumber|Number|string|number} num object, string, or number to convert to a primitive number
-	 * @return {number} the primitive number equivalent of the argument
-	 */
-	_toPrimitive: function (num) {
-		var n = 0;
+    /**
+     * Apply the constraints used in the current formatter to the given number. This will
+     * will apply the maxFractionDigits, significantDigits, and rounding mode
+     * constraints and return the result. The result is further
+     * manipulated in the format method to produce the final formatted number string.
+     * This method is intended for use by code that needs to use the same number that
+     * this formatter instance uses for formatting before that number is turned into a
+     * formatted string.
+     *
+     * @param {number} num the number to constrain
+     * @returns {number} the number with the constraints applied to it
+     */
+    constrain: function(num) {
+        var parts = ("" + num).split("."),
+            result = num;
 
-		switch (typeof (num)) {
-		case 'number':
-			n = num;
-			break;
-		case 'string':
-			n = parseFloat(num);
-			break;
-		case 'object':
-			// call parseFloat to coerse the type to number 
-			n = parseFloat(num.valueOf());
-			break;
-		}
+        // only apply the either significantDigits or the maxFractionDigits -- whichever results in a shorter fractional part
+        if ((typeof(this.significantDigits) !== 'undefined' && this.significantDigits > 0) &&
+            (typeof(this.maxFractionDigits) === 'undefined' || this.maxFractionDigits < 0 ||
+                parts[0].length + this.maxFractionDigits > this.significantDigits)) {
+            result = MathUtils.significant(result, this.significantDigits, this.round);
+        }
 
-		return n;
-	},
+        if (typeof(this.maxFractionDigits) !== 'undefined' && this.maxFractionDigits > -1) {
+            result = MathUtils.shiftDecimal(this.round(MathUtils.shiftDecimal(result, this.maxFractionDigits)), -this.maxFractionDigits);
+        }
+
+        return result;
+    },
 
 	/**
 	 * Format the number using scientific notation as a positive number. Negative
@@ -402,7 +432,7 @@ NumFmt.prototype = {
 	_formatScientific: function (num) {
 		var n = new Number(num);
 		var formatted;
-		
+
 		var factor,
 			str = n.toExponential(),
 			parts = str.split("e"),
@@ -412,18 +442,21 @@ NumFmt.prototype = {
 			integral,
 			fraction;
 
-		if (this.maxFractionDigits > 0) {
-			// if there is a max fraction digits setting, round the fraction to 
-			// the right length first by dividing or multiplying by powers of 10. 
-			// manipulate the fraction digits so as to
-			// avoid the rounding errors of floating point numbers
-			factor = Math.pow(10, this.maxFractionDigits);
-			significant = this.round(significant * factor) / factor;
-		}
+        if (this.maxFractionDigits > 0 || this.significantDigits > 0) {
+            // if there is a max fraction digits setting, round the fraction to
+            // the right length first by dividing or multiplying by powers of 10.
+            // manipulate the fraction digits so as to
+            // avoid the rounding errors of floating point numbers
+            var maxDigits = (this.maxFractionDigits || 25) + 1;
+            if (this.significantDigits > 0) {
+                maxDigits = Math.min(maxDigits, this.significantDigits);
+            }
+            significant = MathUtils.significant(significant, maxDigits, this.round);
+        }
 		numparts = ("" + significant).split(".");
 		integral = numparts[0];
 		fraction = numparts[1];
-		
+
 		if (typeof(this.maxFractionDigits) !== 'undefined') {
 			fraction = fraction.substring(0, this.maxFractionDigits);
 		}
@@ -432,8 +465,8 @@ NumFmt.prototype = {
 		}
 		formatted = integral;
 		if (fraction.length) {
-			formatted += this.decimalSeparator + fraction;	
-		} 
+			formatted += this.decimalSeparator + fraction;
+		}
 		formatted += this.exponentSymbol + exponent;
 		return formatted;
 	},
@@ -447,21 +480,18 @@ NumFmt.prototype = {
 	_formatStandard: function (num) {
 		var i;
 		var k;
-		
-		if (typeof(this.maxFractionDigits) !== 'undefined' && this.maxFractionDigits > -1) {
-			var factor = Math.pow(10, this.maxFractionDigits);
-			num = this.round(num * factor) / factor;
-		}
 
-		num = Math.abs(num);
+        var parts,
+            integral,
+            fraction,
+            cycle,
+            formatted;
 
-		var parts = ("" + num).split("."),
-			integral = parts[0],
-			fraction = parts[1],
-			cycle,
-			formatted;
-		
-		integral = integral.toString();
+        num = Math.abs(this.constrain(num));
+
+		parts = ("" + num).split(".");
+		integral = parts[0].toString();
+		fraction = parts[1];
 
 		if (this.minFractionDigits > 0) {
 			fraction = JSUtils.pad(fraction || "", this.minFractionDigits, true);
@@ -503,15 +533,17 @@ NumFmt.prototype = {
 			formatted = integral;
 		}
 
-		if (fraction && (typeof(this.maxFractionDigits) === 'undefined' || this.maxFractionDigits > 0)) {
-			formatted += this.decimalSeparator;
-			formatted += fraction;
-		}
-		
+        if (fraction &&
+            ((typeof(this.maxFractionDigits) === 'undefined' && typeof(this.significantDigits) === 'undefined') ||
+              this.maxFractionDigits > 0 || this.significantDigits > 0)) {
+            formatted += this.decimalSeparator;
+            formatted += fraction;
+        }
+
 		if (this.digits) {
 			formatted = JSUtils.mapString(formatted, this.digits);
 		}
-		
+
 		return formatted;
 	},
 
@@ -528,7 +560,7 @@ NumFmt.prototype = {
 		}
 
 		// convert to a real primitive number type
-		n = this._toPrimitive(num);
+		n = Number(num);
 
 		if (this.type === "number") {
 			formatted = (this.style === "scientific") ?
@@ -603,6 +635,16 @@ NumFmt.prototype = {
 	getMinFractionDigits: function () {
 		return typeof (this.minFractionDigits) !== 'undefined' ? this.minFractionDigits : -1;
 	},
+
+   /**
+     * Returns the significant digits set up in the constructor.
+     *
+     * @return {number} the number of significant digits this
+     * formatter will format, or -1 for no minimum
+     */
+    getSignificantDigits: function () {
+        return typeof (this.significantDigits) !== 'undefined' ? this.significantDigits : -1;
+    },
 
 	/**
 	 * Returns the ISO 4217 code for the currency that this formatter formats.

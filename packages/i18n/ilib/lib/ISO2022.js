@@ -29,11 +29,32 @@ var Charmap = require("./Charmap.js");
  * @constructor
  */
 var ISO2022 = function (options) {
-	// first, load in all the tables we need for this version of 2022
-	this.charset = new Charset({name: options.name});
+    // first, load in all the tables we need for this version of 2022
+    options = options || {sync: true};
+    var name = options.name || "ISO-2022-JP";
+    var sync = typeof(options.sync) === "boolean" ? options.sync : true;
+    
+    if (typeof(options.charset) === "object" && options.charset instanceof Charset) {
+        this.charset = options.charset;
+        if (typeof(options.onLoad) === "function") {
+            options.onLoad(this);
+        }
+    } else {
+        new Charset({
+            name: name,
+            sync: sync,
+            loadParams: options.loadParams,
+            onLoad: ilib.bind(this, function(cs) {
+                this.charset = cs;
+                if (typeof(options.onLoad) === "function") {
+                    options.onLoad(this);
+                }
+            })
+        });
+    }
 };
 
-ISO2022.prototype = new Charmap();
+ISO2022.prototype = new Charmap({noinstance: true});
 ISO2022.prototype.parent = Charmap;
 ISO2022.prototype.constructor = ISO2022;
 

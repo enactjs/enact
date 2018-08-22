@@ -155,6 +155,7 @@ storiesOf('Moonstone', module)
 							noRateButtons={boolean('noRateButtons', MediaControlsConfig)}
 							pauseIcon={select('pauseIcon', icons, MediaControlsConfig, 'pause')}
 							playIcon={select('playIcon', icons, MediaControlsConfig, 'play')}
+							playPauseButtonDisabled={boolean('playPauseButtonDisabled', MediaControlsConfig)}
 							rateButtonsDisabled={boolean('rateButtonsDisabled', MediaControlsConfig)}
 						>
 							<leftComponents><IconButton backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
