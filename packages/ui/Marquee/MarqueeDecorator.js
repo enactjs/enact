@@ -123,8 +123,7 @@ const TimerState = {
 };
 
 /**
- * {@link ui/Marquee.MarqueeDecorator} is a higher-order component (HOC) which makes
- * the Wrapped component's children marquee.
+ * A Higher-order Component that provides marquee functionalities.
  *
  * @class MarqueeDecorator
  * @memberof ui/Marquee
@@ -161,10 +160,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			children: PropTypes.node,
 
 			/**
-			 * Passed through to the wrapped component. Does not affect Marquee behavior except that
-			 * components that are `marqueeOn="focus"` will be treated as if they were
-			 * `marqueeOn="hover"`, to allow disabled (and thuse, unfocusable) components to
-			 * marquee.
+			 * Passed through to the wrapped component.
+			 *
+			 * Does not affect Marquee behavior except that components that are `marqueeOn="focus"`
+			 * will be treated as if they were `marqueeOn="hover"`, to allow disabled (and thuse,
+			 * unfocusable) components to marquee.
 			 *
 			 * @type {Boolean}
 			 * @public
