@@ -7,10 +7,10 @@ import IconButton from '../IconButton';
 import componentCss from './ScrollButton.less';
 
 const classNameMap = {
-	down: css.scrollbarBottomButton,
-	left: css.scrollbarLeftButton,
-	right: css.scrollbarRightButton,
-	up: css.scrollbarUpButton
+	down: componentCss.scrollbarBottomButton,
+	left: componentCss.scrollbarLeftButton,
+	right: componentCss.scrollbarRightButton,
+	up: componentCss.scrollbarUpButton
 };
 
 /**
