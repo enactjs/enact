@@ -1,6 +1,6 @@
 /**
  * Exports the {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
- * Higher-order Component and {@link spotlight/SpotlightContainerDecorator.spotlightDefaultClass}
+ * Higher-order component and {@link spotlight/SpotlightContainerDecorator.spotlightDefaultClass}
  * `className`. The default export is
  * {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}.
  *
@@ -78,7 +78,7 @@ const defaultConfig = {
 };
 
 /**
- * Constructs a Higher-order Component that allows Spotlight focus to be passed to
+ * Constructs a Higher-order component that allows Spotlight focus to be passed to
  * its own configurable hierarchy of spottable child controls.
  *
  * Example:

@@ -123,7 +123,7 @@ const TimerState = {
 };
 
 /**
- * A Higher-order Component that provides marquee functionalities.
+ * A Higher-order component that provides marquee functionalities.
  *
  * @class MarqueeDecorator
  * @memberof ui/Marquee

@@ -42,7 +42,7 @@ If possible, include an executable example showing the module using the `@exampl
 
 ## Class Level Documentation
 
-Class level documentation includes components and Higher-order Components (HOCs).  Each component or HOC export should have a class level block that discusses the features and provides an example usage. This block also serves as a place to indicate any HOCs that may be applied or to cross-reference related components.
+Class level documentation includes components and Higher-order components (HOCs).  Each component or HOC export should have a class level block that discusses the features and provides an example usage. This block also serves as a place to indicate any HOCs that may be applied or to cross-reference related components.
 
 ### Components
 
@@ -76,13 +76,13 @@ Below is an example block for a component:
 * `@public` should be used for any component or HOC that is exported. Unexported objects should be marked `@private` to prevent them from appearing in the documentation.
 * Note: The Usage example is not runnable and will not render a preview.
 
-### Higher-order Components
+### Higher-order components
 
 Below is an example of HOC declaration:
 
 ```
 /**
- * A Higher-order Component that provides a consistent set of pointer events -- `onDown`, `onUp`,
+ * A Higher-order component that provides a consistent set of pointer events -- `onDown`, `onUp`,
  * and `onTap` -- across mouse and touch interfaces along with support for common gestures including
  * `onFlick`, `onDrag`, `onHold`, and `onHoldPulse`.
  *

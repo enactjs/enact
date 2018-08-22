@@ -14,7 +14,7 @@ addAll({
 });
 
 /**
- *{@link moonstone/EditableIntegerPicker.EditableIntegerPickerDecorator} is a Higher-order Component
+ *{@link moonstone/EditableIntegerPicker.EditableIntegerPickerDecorator} is a Higher-order component
  * which handles various functionalities of {@link moonstone/EditableIntegerPicker.EditableIntegerPicker}.
  *
  * @class EditableIntegerPickerDecorator

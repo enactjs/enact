@@ -111,7 +111,7 @@ const ItemBase = kind({
 });
 
 /**
- * A Higher-order Component that adds touch support to the component it wraps.
+ * A Higher-order component that adds touch support to the component it wraps.
  *
  * @hoc
  * @memberof ui/Item

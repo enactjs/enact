@@ -1,5 +1,5 @@
 /**
- * Exports the {@link ui/Toggleable.Toggleable} Higher-order Component (HOC).
+ * Exports the {@link ui/Toggleable.Toggleable} Higher-order component (HOC).
  *
  * @module ui/Toggleable
  * @exports Toggleable

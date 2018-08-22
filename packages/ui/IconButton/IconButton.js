@@ -172,7 +172,7 @@ const IconButtonBase = kind({
 
 
 /**
- * A Higher-order Component that adds universal button behaviors to an [IconButtonBase]{@link ui/IconButton.IconButtonBase}.
+ * A Higher-order component that adds universal button behaviors to an [IconButtonBase]{@link ui/IconButton.IconButtonBase}.
  *
  * @hoc
  * @memberof ui/IconButton

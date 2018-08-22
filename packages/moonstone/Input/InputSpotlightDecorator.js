@@ -28,7 +28,7 @@ const handleKeyDown = handle(
 );
 
 /**
- * A Higher-order Component that manages the
+ * A Higher-order component that manages the
  * spotlight behavior for an {@link moonstone/Input.Input}
  *
  * @class InputSpotlightDecorator

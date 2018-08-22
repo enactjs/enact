@@ -183,7 +183,7 @@ const ButtonBase = kind({
 });
 
 /**
- * A Higher-order Component that adds touch support to a [ButtonBase]{@link ui/Button.ButtonBase}.
+ * A Higher-order component that adds touch support to a [ButtonBase]{@link ui/Button.ButtonBase}.
  *
  * @hoc
  * @memberof ui/Button

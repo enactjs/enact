@@ -1,5 +1,5 @@
 /**
- * Provides the `ApiDecorator` Higher-order Component
+ * Provides the `ApiDecorator` Higher-order component
  *
  * @module core/internal/ApiDecorator
  * @private
@@ -53,7 +53,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link core/internal/ApiDecorator.ApiDecorator} is a Higher-order Component that exposes an
+ * {@link core/internal/ApiDecorator.ApiDecorator} is a Higher-order component that exposes an
  * imperative API for a contained component. ApiDecorator accepts an array of API endpoints in the
  * `api` config parameter. Each is then mapped to the underlying component instance as either a
  * function call or property getter/setter pair. The component passes a reference to itself to the

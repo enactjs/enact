@@ -1,5 +1,5 @@
 /*
- * A Higher-order Component that adds a FloatingLayer adjacent to wrapped component.
+ * A Higher-order component that adds a FloatingLayer adjacent to wrapped component.
  *
  * @class FloatingLayerDecorator
  * @memberof ui/FloatingLayer.FloatingLayerDecorator
@@ -49,7 +49,7 @@ const defaultConfig = {
 };
 
 /**
- * A Higher-order Component that adds a FloatingLayer adjacent to wrapped component.
+ * A Higher-order component that adds a FloatingLayer adjacent to wrapped component.
  *
  * @class FloatingLayerDecorator
  * @memberof ui/FloatingLayer

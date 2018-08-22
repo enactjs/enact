@@ -1,6 +1,6 @@
 /**
  * Exports the {@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}
- * Higher-order Component.
+ * Higher-order component.
  *
  * @module spotlight/SpotlightRootDecorator
  */
@@ -34,7 +34,7 @@ const defaultConfig = {
 };
 
 /**
- * Constructs a Higher-order Component that initializes and enables Spotlight
+ * Constructs a Higher-order component that initializes and enables Spotlight
  * 5-way navigation within an application.
  *
  * Example:
