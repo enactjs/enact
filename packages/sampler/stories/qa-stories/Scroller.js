@@ -31,7 +31,6 @@ storiesOf('Scroller', module)
 			<Scroller
 				data-spotlight-container-disabled={boolean('data-spotlight-container-disabled', Scroller, false)}
 				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
-				style={{height: ri.unit(600, 'rem')}}
 			>
 				<Group childComponent={Item}>
 					{itemData}
@@ -42,10 +41,7 @@ storiesOf('Scroller', module)
 	.add(
 		'With ExpandableList',
 		() => (
-			<Scroller
-				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
-				style={{height: ri.unit(600, 'rem')}}
-			>
+			<Scroller focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}>
 				<ExpandableList
 					closeOnSelect
 					title="Expandable List in Scroller"
@@ -64,9 +60,6 @@ storiesOf('Scroller', module)
 				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Scroller, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				style={{
-					width: '100%'
-				}}
 			>
 				<div
 					style={{
@@ -86,12 +79,7 @@ storiesOf('Scroller', module)
 	.add(
 		'With Many ExpandableList',
 		() => (
-			<Scroller
-				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
-				style={{
-					width: '100%'
-				}}
-			>
+			<Scroller focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}>
 				<Divider>Nothing selected</Divider>
 				<ExpandableList
 					noneText="Nothing Selected"
