@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Icon` and `moonstone/IconButton` to require `children`
 
+### Fixed
+
+- `moonstone/VideoPlayer` to prevent default browser scroll behavior when navigating via 5-way
+
 ## [2.1.0] - 2018-08-20
 
 ### Added
