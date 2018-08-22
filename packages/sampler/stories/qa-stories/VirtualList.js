@@ -13,21 +13,16 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBase, UiVirtualListBase);
 
 const
-	style = {
-		item: {
-			borderBottom: ri.unit(3, 'rem') + ' solid #202328',
-			boxSizing: 'border-box'
-		},
-		list: {
-			height: '100%'
-		}
+	itemStyle = {
+		borderBottom: ri.unit(3, 'rem') + ' solid #202328',
+		boxSizing: 'border-box'
 	},
 	items = [],
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (size) => ({index, ...rest}) => {
-		const itemStyle = {height: size + 'px', ...style.item};
+		const style = {height: size + 'px', ...itemStyle};
 		return (
-			<StatefulSwitchItem index={index} style={itemStyle} {...rest}>
+			<StatefulSwitchItem index={index} style={style} {...rest}>
 				{items[index].item}
 			</StatefulSwitchItem>
 		);
@@ -88,7 +83,6 @@ storiesOf('VirtualList', module)
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 0))}
-					style={style.list}
 				/>
 			);
 		},
