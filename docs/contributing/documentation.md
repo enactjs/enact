@@ -76,7 +76,7 @@ Below is an example block for a component:
 * `@public` should be used for any component or HOC that is exported. Unexported objects should be marked `@private` to prevent them from appearing in the documentation.
 * Note: The Usage example is not runnable and will not render a preview.
 
-### Higher-order components
+### Higher-order Components
 
 Below is an example of HOC declaration:
 
