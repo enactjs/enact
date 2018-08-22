@@ -4,13 +4,13 @@ import React from 'react';
 
 import IconButton from '../IconButton';
 
-import componentCss from './ScrollButton.less';
+import css from './ScrollButton.less';
 
 const classNameMap = {
-	down: componentCss.scrollbarBottomButton,
-	left: componentCss.scrollbarLeftButton,
-	right: componentCss.scrollbarRightButton,
-	up: componentCss.scrollbarUpButton
+	down: css.scrollbarBottomButton,
+	left: css.scrollbarLeftButton,
+	right: css.scrollbarRightButton,
+	up: css.scrollbarUpButton
 };
 
 /**
@@ -70,15 +70,6 @@ const ScrollButton = kind({
 		active: PropTypes.bool,
 
 		/**
-		 * Override [IconButton]{@link moonstone/IconButton and
-		 * [Button]{@link moonstone/Button's `'bg'` and `'client'` css classes
-		 *
-		 * @type {Object}
-		 * @private
-		 */
-		css: PropTypes.object,
-
-		/**
 		 * Disables the button.
 		 *
 		 * @type {Boolean}
@@ -88,7 +79,7 @@ const ScrollButton = kind({
 	},
 
 	styles: {
-		css: componentCss,
+		css,
 		className: 'scrollButton'
 	},
 
@@ -97,7 +88,7 @@ const ScrollButton = kind({
 		className: ({direction, styler}) => styler.append(classNameMap[direction])
 	},
 
-	render: ({css, children, disabled, ...rest}) => {
+	render: ({children, disabled, ...rest}) => {
 		delete rest.active;
 		delete rest.direction;
 
