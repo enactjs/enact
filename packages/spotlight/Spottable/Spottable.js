@@ -305,10 +305,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
 
 			// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
-			if (
-				(!is('enter', keyCode) && !key) ||
-				(!getDirection(keyCode) && !key)
-			) {
+			if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {
 				return notPrevented;
 			}
 
