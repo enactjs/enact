@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `moonstone/Icon` and `moonstone/IconButton` to require `children`
+
 ## [2.1.0] - 2018-08-20
 
 ### Added
