@@ -279,8 +279,8 @@ class ScrollableBase extends Component {
 		/**
 		 * Specifies overscroll effects shows on which type of inputs.
 		 *
-		 * @type {String[]}
-		 * @default null
+		 * @type {Object}
+		 * @default {drag: false, pageKey: false, wheel: false}
 		 * @private
 		 */
 		overscrollEffectOn: PropTypes.shape({
