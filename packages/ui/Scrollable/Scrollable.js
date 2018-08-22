@@ -782,12 +782,10 @@ class ScrollableBase extends Component {
 	}
 
 	checkAndApplyOverscrollEffectOnStart = (orientation, edge, targetPosition) => {
-		if (edge) {
-			if (this.isDragging) {
-				this.applyOverscrollEffectOnDrag(orientation, edge, targetPosition, overscrollTypeHold);
-			} else if (this.getOverscrollStatus(orientation, edge).type === overscrollTypeNone) {
-				this.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
-			}
+		if (this.isDragging) {
+			this.applyOverscrollEffectOnDrag(orientation, edge, targetPosition, overscrollTypeHold);
+		} else if (edge && this.getOverscrollStatus(orientation, edge).type === overscrollTypeNone) {
+			this.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 		}
 	}
 
