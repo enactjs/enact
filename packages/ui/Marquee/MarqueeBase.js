@@ -57,7 +57,7 @@ const MarqueeBase = kind({
 		children: PropTypes.node,
 
 		/**
-		 * Called to capture a reference to the client node
+		 * Called when mounting or unmounting with a reference to the client node
 		 *
 		 * @type {Function}
 		 * @public
