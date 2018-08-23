@@ -4,13 +4,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Fixed
-
-- `moonstone/Picker` to fire onChange events, due to a hold, consistently across pointer and 5-way navigation
 ### Changed
 
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effects only by wheel input
 - `moonstone/Icon` and `moonstone/IconButton` to require `children`
+
+### Fixed
+
+- `moonstone/Picker` to fire onChange events, due to a hold, consistently across pointer and 5-way navigation
 
 ## [2.1.0] - 2018-08-20
 
