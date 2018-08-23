@@ -232,6 +232,12 @@ class ScrollableBase extends Component {
 		configureSpotlightContainer(nextProps);
 	}
 
+	componentDidUpdate () {
+		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null) {
+			this.calculateAndScrollTo();
+		}
+	}
+
 	componentWillUnmount () {
 		this.stopOverscrollJob('horizontal', 'before');
 		this.stopOverscrollJob('horizontal', 'after');
