@@ -31,6 +31,17 @@ const LabeledIconBase = kind({
 
 	propTypes: /** @lends ui/LabeledIcon.LabeledIconBase.prototype */ {
 		/**
+		 * The icon.
+		 *
+		 * This will be passed as `children` to the `iconComponent`, unless you supply a React
+		 * element (like JSX) to this prop, directly or via the `<icon>` slot.
+		 *
+		 * @type {String|Element|Component}
+		 * @public
+		 */
+		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.func]).isRequired,
+
+		/**
 		 * The label.
 		 *
 		 * This accepts strings, DOM, and Components, if you need more elaborate features. It may be
@@ -74,17 +85,6 @@ const LabeledIconBase = kind({
 		 * @public
 		 */
 		disabled: PropTypes.bool,
-
-		/**
-		 * The icon.
-		 *
-		 * This will be passed as `children` to the `iconComponent`, unless you supply a React
-		 * element (like JSX) to this prop, directly or via the `<icon>` slot.
-		 *
-		 * @type {String|Element|Component}
-		 * @public
-		 */
-		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.func]),
 
 		/**
 		 * The component used to render the `icon`.
