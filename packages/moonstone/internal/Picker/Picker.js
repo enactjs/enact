@@ -11,7 +11,6 @@ import Touchable from '@enact/ui/Touchable';
 import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import Spotlight, {getDirection} from '@enact/spotlight';
-import Spottable from '@enact/spotlight/Spottable';
 
 import Skinnable from '../../Skinnable';
 import {validateRange, validateStepped} from '../validators';
@@ -19,6 +18,7 @@ import {validateRange, validateStepped} from '../validators';
 import IdProvider from '../IdProvider';
 import $L from '../$L';
 import PickerButton from './PickerButton';
+import SpottablePicker from './SpottablePicker';
 
 import css from './Picker.less';
 
@@ -33,23 +33,8 @@ const isLeft = is('left');
 const isRight = is('right');
 const isUp = is('up');
 
-const PickerDiv = Touchable('div');
-const PickerHorizontalDiv = Touchable(
-	Spottable({selectionKeys: [37, 39]}, 'div')
-);
-const PickerVerticalDiv = Touchable(
-	Spottable({selectionKeys: [38, 40]}, 'div')
-);
-
-const getPicker = (joined, orientation) => {
-	if (joined && orientation === 'horizontal') {
-		return PickerHorizontalDiv;
-	} else if (joined && orientation === 'vertical') {
-		return PickerVerticalDiv;
-	} else {
-		return PickerDiv;
-	}
-};
+const Div = Touchable('div');
+const SpottableDiv = Touchable(SpottablePicker);
 
 const PickerViewManager = shouldUpdate((props, nextProps) => {
 	return (
@@ -857,7 +842,15 @@ const PickerBase = class extends React.Component {
 		const valueText = ariaValueText != null ? ariaValueText : this.calcValueText();
 		const decrementerAriaControls = !incrementerDisabled ? id : null;
 		const incrementerAriaControls = !decrementerDisabled ? id : null;
-		const Component = getPicker(joined, orientation);
+		const spottablePickerProps = {};
+		let Component;
+
+		if (joined) {
+			Component = SpottableDiv;
+			spottablePickerProps.orientation = orientation;
+		} else {
+			Component = Div;
+		}
 
 		return (
 			<Component
@@ -879,6 +872,7 @@ const PickerBase = class extends React.Component {
 				onUp={this.handleUp}
 				onMouseLeave={this.clearPressedState}
 				ref={this.initContainerRef}
+				{...spottablePickerProps}
 			>
 				<PickerButton
 					aria-controls={!joined ? incrementerAriaControls : null}
