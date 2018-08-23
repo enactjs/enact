@@ -41,7 +41,8 @@ const defaultConfig = {
 };
 
 /**
- * A higher-order component that adds state management to a component for a single prop via a single event callback.
+ * A higher-order component that adds state management to a component for a single prop via
+ * a single event callback.
  *
  * Applying `Changeable` to a component will pass two additional props: the current value from state
  * and an event callback to invoke when the value changes. By default, the value is passed in the

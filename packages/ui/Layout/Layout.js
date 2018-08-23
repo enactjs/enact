@@ -31,6 +31,8 @@ import {Cell, CellBase, toFlexAlign} from './Cell';
 import css from './Layout.less';
 
 /**
+ * A container for `Cell`s.
+ *
  * A stateless component that acts as a containing area for [Cells]{@link ui/Layout.Cell} to be
  * positioned in a row or a column (horizontally or vertically, respectively. It supports an
  * [orientation]{@link ui/Layout.Layout#orientation} property for laying-out its contents
@@ -62,6 +64,8 @@ const LayoutBase = kind({
 
 	propTypes: /** @lends ui/Layout.Layout.prototype */ {
 		/**
+		 * The alignment of children.
+		 *
 		 * Aligns the children [Cells]{@link ui/Layout.Cell} vertically in the case of a horizontal
 		 * layout or horizontally in the case of a vertical layout. `"start"`, `"center"` and
 		 * `"end"` are the most commonly used, although all values of `align-items` are supported.
@@ -117,6 +121,8 @@ const LayoutBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
+		 * Sets the Layout's `flex-wrap` values.
+		 *
 		 * Determines how a Layout handles its cells if there are more than fit in the available
 		 * space. This works like a normal `Boolean` prop, but also accepts strings for customization
 		 * beyond the basic on/off support. In addition to `true` and `false`, the following strings

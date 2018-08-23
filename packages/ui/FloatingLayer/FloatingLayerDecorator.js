@@ -37,7 +37,9 @@ const defaultConfig = {
 	floatLayerId: 'floatLayer',
 
 	/**
-	 * Class name to be applied to wrapped component. It can be used when you want to only apply
+	 * Class name to be applied to wrapped component.
+
+	 * It can be used when you want to only apply
 	 * certain styles to the wrapped component and not to the float layer.
 	 *
 	 * @type {String}

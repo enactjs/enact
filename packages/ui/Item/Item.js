@@ -17,6 +17,7 @@ import componentCss from './Item.less';
 
 /**
  * A basic list item component structure without any behaviors applied to it.
+ *
  * It also has support for overlay to place things before and after the main content.
  *
  * @class ItemBase
