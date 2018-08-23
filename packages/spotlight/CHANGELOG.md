@@ -7,6 +7,9 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Added
 
 - `spotlight/Spottable` property `selectionKeys`
+### Fixed
+
+- `spotlight/SpotlightContainerDecorator` to unmount config instead of remove when spotlightId is changed if it preserves id
 
 ## [2.1.0] - 2018-08-20
 
