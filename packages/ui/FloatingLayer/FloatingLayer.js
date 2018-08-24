@@ -20,8 +20,9 @@ const forwardClose = forwardWithType('onClose');
 const forwardOpen = forwardWithType('onOpen');
 
 /**
- * {@link ui/FloatingLayer.FloatingLayerBase} is a component that creates an entry point to the new
- * render tree. This is used for modal components such as popups.
+ * A component that creates an entry point to the new render tree.
+ *
+ * This is used for modal components such as popups.
  *
  * @class FloatingLayerBase
  * @memberof ui/FloatingLayer
@@ -51,7 +52,7 @@ class FloatingLayerBase extends React.Component {
 		floatLayerId: PropTypes.string,
 
 		/**
-		 * When `true`, FloatingLayer will not hide when the user presses `ESC` key.
+		 * Prevents FloatingLayer from hiding when the user presses `ESC` key.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -60,7 +61,7 @@ class FloatingLayerBase extends React.Component {
 		noAutoDismiss: PropTypes.bool,
 
 		/**
-		 * A function to be run when floating layer is closed.
+		 * Called when floating layer is closed.
 		 *
 		 * @type {Function}
 		 * @public
@@ -68,9 +69,11 @@ class FloatingLayerBase extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
-		 * A function to be run when a closing action is invoked. These actions may include pressing
-		 * cancel/back (e.g. `ESC`) key or programmatically closing by `FloatingLayerDecorator`. When
-		 * cancel key is pressed, the function will only invoke if `noAutoDismiss` is set to `false`.
+		 * Called when a closing action is invoked.
+		 *
+		 * These actions may include pressing cancel/back (e.g. `ESC`) key or programmatically closing
+		 * by `FloatingLayerDecorator`. When cancel key is pressed, the function will only invoke if
+		 * `noAutoDismiss` is set to `false`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -78,7 +81,7 @@ class FloatingLayerBase extends React.Component {
 		onDismiss: PropTypes.func,
 
 		/**
-		 * A function to be run when floating layer is opened. It will only be invoked for the first render.
+		 * Called when floating layer is opened. It will only be invoked for the first render.
 		 *
 		 * @type {Function}
 		 * @public
@@ -86,7 +89,7 @@ class FloatingLayerBase extends React.Component {
 		onOpen: PropTypes.func,
 
 		/**
-		 * When `true`, the floating layer and its components will be rendered.
+		 * Renders the floating layer and its components.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -95,7 +98,9 @@ class FloatingLayerBase extends React.Component {
 		open: PropTypes.bool,
 
 		/**
-		 * The scrim type. It can be either `'transparent'`, `'translucent'`, or `'none'`.
+		 * The scrim type that overlays FloatingLayer.
+		 *
+		 * It can be either `'transparent'`, `'translucent'`, or `'none'`.
 		 *
 		 * @type {String}
 		 * @default 'translucent'
@@ -249,12 +254,14 @@ const handleCancel = handle(
 );
 
 /**
- * {@link ui/FloatingLayer.FloatingLayer} is a component that creates an entry point to the new
- * render tree. This is used for modal components such as popups.
+ * FloatingLayer that mixes {@link ui/Cancelable.Cancelable} to handle FloatingLayer dismissal.
+ *
+ * This is used for modal components such as popups.
  *
  * @class FloatingLayer
  * @memberof ui/FloatingLayer
  * @ui
+ * @extends ui/FloatingLayer.FloatingLayerBase
  * @mixes ui/Cancelable.Cancelable
  * @public
  */
