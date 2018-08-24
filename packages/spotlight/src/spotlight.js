@@ -188,7 +188,7 @@ const Spotlight = (function () {
 		}
 
 		if ((getPointerMode() && !fromPointer)) {
-			setContainerLastFocusedElement(elem, containerIds);
+			focusChanged(elem, containerIds, true);
 			return false;
 		}
 
@@ -231,14 +231,14 @@ const Spotlight = (function () {
 		return true;
 	}
 
-	function focusChanged (elem, containerIds) {
+	function focusChanged (elem, containerIds, force) {
 		if (!containerIds || !containerIds.length) {
 			containerIds = getContainersForNode(elem);
 		}
 		const containerId = last(containerIds);
 		if (containerId) {
 			setContainerLastFocusedElement(elem, containerIds);
-			setLastContainer(containerId);
+			setLastContainer(containerId, force);
 		}
 
 		if (__DEV__) {
@@ -682,10 +682,7 @@ const Spotlight = (function () {
 			if (isNavigable(target, nextContainerId, true)) {
 				const focused = focusElement(target, nextContainerIds);
 
-				if (!focused && wasContainerId) {
-					this.setActiveContainer(elem);
-				}
-
+				this.setActiveContainer(elem);
 				return focused;
 			} else if (wasContainerId) {
 				// if we failed to find a spottable target within the provided container, we'll set

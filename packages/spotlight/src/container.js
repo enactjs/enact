@@ -849,12 +849,12 @@ function getLastContainer () {
 	return isActiveContainer(_lastContainerId) ? _lastContainerId : '';
 }
 
-function setLastContainer (containerId) {
+function setLastContainer (containerId, force) {
 	// If the current container is restricted to 'self-only' and if the next container to be
 	// activated is not inside the currently activated container, the next container should not be
 	// activated.
 	const currentContainerId = getLastContainer();
-	if (currentContainerId) {
+	if (!force && currentContainerId) {
 		const config = getContainerConfig(currentContainerId);
 		if (config && config.restrict === 'self-only') {
 			const focused = document.activeElement;
@@ -864,7 +864,7 @@ function setLastContainer (containerId) {
 			if (currentContainer &&
 				nextContainer &&
 				// allow the last container to be updated when the focus lies within nextContainer
-				!(focused && !nextContainer.contains(focused)) &&
+				!(focused && nextContainer.contains(focused)) &&
 				!currentContainer.contains(nextContainer)
 			) {
 				return;
