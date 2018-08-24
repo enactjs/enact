@@ -1,10 +1,5 @@
 /*
  * A higher-order component that adds a FloatingLayer adjacent to wrapped component.
- *
- * @class FloatingLayerDecorator
- * @memberof ui/FloatingLayer.FloatingLayerDecorator
- * @ui
- * @public
  */
 
 import hoc from '@enact/core/hoc';
