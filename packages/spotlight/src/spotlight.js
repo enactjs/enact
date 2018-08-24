@@ -682,7 +682,7 @@ const Spotlight = (function () {
 			if (isNavigable(target, nextContainerId, true)) {
 				const focused = focusElement(target, nextContainerIds);
 
-				this.setActiveContainer(elem);
+				this.setActiveContainer(nextContainerId);
 				return focused;
 			} else if (wasContainerId) {
 				// if we failed to find a spottable target within the provided container, we'll set
