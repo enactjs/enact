@@ -864,7 +864,7 @@ function setLastContainer (containerId) {
 			if (currentContainer &&
 				nextContainer &&
 				// allow the last container to be updated when the focus lies within nextContainer
-				!(focused && nextContainer.contains(focused)) &&
+				!(focused && !nextContainer.contains(focused)) &&
 				!currentContainer.contains(nextContainer)
 			) {
 				return;
