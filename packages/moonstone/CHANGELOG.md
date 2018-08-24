@@ -11,7 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scrollable` to calculate and `scrollTo()` when updated by resizing
+- `moonstone/Scroller` to recalculate and perform `scrollTo()` when height is updated
 
 ## [2.1.0] - 2018-08-20
 

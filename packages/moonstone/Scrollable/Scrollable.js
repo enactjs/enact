@@ -232,12 +232,6 @@ class ScrollableBase extends Component {
 		configureSpotlightContainer(nextProps);
 	}
 
-	componentDidUpdate () {
-		if (this.uiRef.scrollToInfo === null && this.childRef.nodeIndexToBeFocused == null) {
-			this.calculateAndScrollTo();
-		}
-	}
-
 	componentWillUnmount () {
 		this.stopOverscrollJob('horizontal', 'before');
 		this.stopOverscrollJob('horizontal', 'after');
@@ -585,7 +579,7 @@ class ScrollableBase extends Component {
 
 	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
 	handleScrollerUpdate = () => {
-		if (this.uiRef.scrollToInfo === null && Spotlight.getPointerMode()) {
+		if (this.uiRef.scrollToInfo === null) {
 			const scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 			if (scrollHeight !== this.uiRef.bounds.scrollHeight) {
 				this.calculateAndScrollTo();
