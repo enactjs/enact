@@ -625,6 +625,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderKnobProportion = 0;
 		this.mediaControlsSpotlightId = props.spotlightId + '_mediaControls';
 		this.moreButtonSpotlightId = this.mediaControlsSpotlightId + '_moreButton';
+		this.isReadyToReadInfoComponents = false;
 
 		this.initI18n();
 
@@ -744,13 +745,18 @@ const VideoPlayerBase = class extends React.Component {
 			this.showControls();
 		}
 
-		if (this.state.mediaControlsVisible && prevState.infoVisible !== this.state.infoVisible) {
+		if (this.isReadyToReadInfoComponents) {
 			const current = Spotlight.getCurrent();
 			if (current && current.dataset.spotlightId === this.moreButtonSpotlightId) {
 				// need to blur manually to read out `infoComponent`
 				current.blur();
 			}
 			Spotlight.focus(this.moreButtonSpotlightId);
+			this.isReadyToReadInfoComponents = false;
+		}
+
+		if (this.state.mediaControlsVisible && prevState.infoVisible !== this.state.infoVisible) {
+			this.isReadyToReadInfoComponents = true;
 		}
 	}
 
