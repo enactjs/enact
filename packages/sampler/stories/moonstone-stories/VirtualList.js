@@ -1,3 +1,4 @@
+import {Item as UiItem} from '@enact/ui/Item';
 import Item from '@enact/moonstone/Item';
 import {VirtualList as UiVirtualList} from '@enact/ui/VirtualList';
 import VirtualList from '@enact/moonstone/VirtualList';
@@ -19,11 +20,25 @@ const
 	items = [],
 	defaultDataSize = 1000,
 	// eslint-disable-next-line enact/prop-types, enact/display-name
+	uiRenderItem = (size) => ({index, ...rest}) => {
+		const itemStyle = {
+			borderBottom: ri.unit(3, 'rem') + ' solid #202328',
+			boxSizing: 'border-box',
+			height: size + 'px'
+		};
+
+		return (
+			<UiItem {...rest} style={itemStyle}>
+				{items[index]}
+			</UiItem>
+		);
+	},
+	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (size) => ({index, ...rest}) => {
 		const itemStyle = {
-			height: size + 'px',
 			borderBottom: ri.unit(3, 'rem') + ' solid #202328',
-			boxSizing: 'border-box'
+			boxSizing: 'border-box',
+			height: size + 'px'
 		};
 
 		return (
@@ -62,14 +77,11 @@ storiesOf('UI', module)
 			return (
 				<UiVirtualList
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
-					itemRenderer={renderItem(itemSize)}
+					itemRenderer={uiRenderItem(itemSize)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 0))}
-					style={{
-						height: ri.unit(552, 'rem')
-					}}
 				/>
 			);
 		})
@@ -91,9 +103,6 @@ storiesOf('Moonstone', module)
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 0))}
-					style={{
-						height: ri.unit(552, 'rem')
-					}}
 					wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"], Config)]}
 				/>
 			);
