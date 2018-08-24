@@ -17,6 +17,7 @@ import Skinnable from '../Skinnable';
 
 import overscrollCss from './OverscrollEffect.less';
 import scrollbarCss from './Scrollbar.less';
+import Spottable from '@enact/spotlight/Spottable/Spottable';
 
 const
 	{
@@ -54,6 +55,8 @@ const configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusabl
 		navigableFilter: focusableScrollbar ? null : navigableFilter
 	});
 };
+
+const SpottableDiv = Spottable('div');
 
 /**
  * A Moonstone-styled native component that provides horizontal and vertical scrollbars.
@@ -176,6 +179,12 @@ class ScrollableBaseNative extends Component {
 			cbAlertThumb: this.alertThumbAfterRendered,
 			onNextScroll: this.onScrollbarButtonClick,
 			onPrevScroll: this.onScrollbarButtonClick
+		};
+
+		this.lastFocusedElementWidth = 0;
+		this.state = {
+			lastFocusedElementWidth: 0,
+			pos: {}
 		};
 
 		configureSpotlightContainer(props);
@@ -336,6 +345,8 @@ class ScrollableBaseNative extends Component {
 	// event handlers for Spotlight support
 
 	startScrollOnFocus = (pos) => {
+		console.log('startScrollOnFocus', this.lastScrollPositionOnFocus && this.lastScrollPositionOnFocus.top, pos.top, this.lastScrollPositionOnFocus && this.lastScrollPositionOnFocus.top == pos.top);
+
 		if (pos) {
 			const
 				{top, left} = pos,
@@ -356,6 +367,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	calculateAndScrollTo = () => {
+		console.log('calculateAndScrollTo');
 		const
 			spotItem = Spotlight.getCurrent(),
 			positionFn = this.childRef.calculatePositionOnFocus,
@@ -388,30 +400,30 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
-	onFocus = (ev) => {
-		const
-			{isDragging} = this.uiRef,
-			shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
-				this.childRef.shouldPreventScrollByFocus() :
-				false;
+	// onFocus = (ev) => {
+	// 	const
+	// 		{isDragging} = this.uiRef,
+	// 		shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
+	// 			this.childRef.shouldPreventScrollByFocus() :
+	// 			false;
 
-		if (!Spotlight.getPointerMode()) {
-			this.alertThumb();
-		}
+	// 	if (!Spotlight.getPointerMode()) {
+	// 		this.alertThumb();
+	// 	}
 
-		if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || isDragging)) {
-			const
-				item = ev.target,
-				positionFn = this.childRef.calculatePositionOnFocus,
-				spotItem = Spotlight.getCurrent();
+	// 	if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || isDragging)) {
+	// 		const
+	// 			item = ev.target,
+	// 			positionFn = this.childRef.calculatePositionOnFocus,
+	// 			spotItem = Spotlight.getCurrent();
 
-			if (item && item === spotItem && positionFn) {
-				this.calculateAndScrollTo();
-			}
-		} else if (this.childRef.setLastFocusedNode) {
-			this.childRef.setLastFocusedNode(ev.target);
-		}
-	}
+	// 		if (item && item === spotItem && positionFn) {
+	// 			this.calculateAndScrollTo();
+	// 		}
+	// 	} else if (this.childRef.setLastFocusedNode) {
+	// 		this.childRef.setLastFocusedNode(ev.target);
+	// 	}
+	// }
 
 	getPageDirection = (keyCode) => {
 		const
@@ -522,20 +534,60 @@ class ScrollableBaseNative extends Component {
 				direction = this.getPageDirection(keyCode);
 				overscrollEffectRequired = this.scrollByPage(direction);
 			}
-		} else if (!Spotlight.getPointerMode() && !repeat && this.hasFocus() && getDirection(keyCode)) {
-			const element = Spotlight.getCurrent();
-
+		} else {
 			direction = getDirection(keyCode);
-			overscrollEffectRequired = !(element ? getTargetByDirectionFromElement(direction, element) : null);
-			if (overscrollEffectRequired) {
-				const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef;
+			if (direction) {
+				const element = Spotlight.getCurrent();
 
-				if ((horizontalScrollbarRef && horizontalScrollbarRef.getContainerRef().contains(element)) ||
-					(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(element))) {
-					overscrollEffectRequired = false;
+				const bounds = this.uiRef.getScrollBounds();
+
+				if (this.hasFocus() && this.lastFocusedElementWidth === 0 && (
+					direction === 'down' && element.offsetTop + element.clientHeight > this.uiRef.scrollTop + bounds.clientHeight ||
+					direction === 'up' && element.offsetTop - element.clientHeight < this.uiRef.scrollTop)) {
+					this.lastFocusedElementWidth = element.clientWidth;
+					Spotlight.pause();
+					// element.blur();
+
+					this.setState({
+						lastFocusedElementWidth: element.clientWidth,
+						pos: {
+							top: direction === 'down' ? bounds.clientHeight - 6 : 0
+						}
+					});
 				}
+
+				// this.startScrollOnFocus({left: 0, top: element.offsetTop + element.clientHeight})
+				// if (!repeat) {
+				// 	overscrollEffectRequired = !(element ? target : null);
+				// 	if (overscrollEffectRequired) {
+				// 		const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef;
+
+				// 		if ((horizontalScrollbarRef && horizontalScrollbarRef.getContainerRef().contains(element)) ||
+				// 			(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(element))) {
+				// 			overscrollEffectRequired = false;
+				// 		}
+				// 	}
+				// }
 			}
 		}
+		// if (!Spotlight.getPointerMode() && !repeat && this.hasFocus()) {
+		// 	direction = getDirection(keyCode);
+		// 	if (direction) {
+		// 		const element = Spotlight.getCurrent();
+		// 		const target = getTargetByDirectionFromElement(direction, element);
+		// 		overscrollEffectRequired = !(element ? target : null);
+		// 		if (overscrollEffectRequired) {
+		// 			const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef;
+
+		// 			if ((horizontalScrollbarRef && horizontalScrollbarRef.getContainerRef().contains(element)) ||
+		// 				(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(element))) {
+		// 				overscrollEffectRequired = false;
+		// 			}
+		// 		} else {
+		// 			this.calculateAndScrollTo(target);
+		// 		}
+		// 	}
+		// }
 
 		if (direction && overscrollEffectRequired) { /* if the spotlight focus will not move */
 			const
@@ -550,6 +602,18 @@ class ScrollableBaseNative extends Component {
 				this.uiRef.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 			}
 		}
+	}
+
+	onKeyUp = () => {
+		// if (Spotlight.isPaused()) {
+		// 	Spotlight.resume();
+		// 	Spotlight.focus('dummyElement');
+		// 	Spotlight.move('up');
+
+		// 	this.setState({
+		// 		lastFocusedElementWidth: 0
+		// 	});
+		// }
 	}
 
 	onScrollbarButtonClick = ({isPreviousScrollButton, isVerticalScrollBar}) => {
@@ -567,6 +631,18 @@ class ScrollableBaseNative extends Component {
 	}
 
 	scrollStopOnScroll = () => {
+
+		if (Spotlight.isPaused()) {
+			Spotlight.resume();
+			Spotlight.focus('dummyElement');
+			Spotlight.move('up');
+
+			this.setState({
+				lastFocusedElementWidth: 0
+			});
+			this.lastFocusedElementWidth = 0;
+		}
+
 		this.childRef.setContainerDisabled(false);
 		this.focusOnItem();
 		this.lastScrollPositionOnFocus = null;
@@ -605,13 +681,15 @@ class ScrollableBaseNative extends Component {
 	alertThumbAfterRendered = () => {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem && this.uiRef && this.uiRef.childRef.containerRef.contains(spotItem) && this.uiRef.isUpdatedScrollThumb) {
+		if (!this.uiRef.scrolling) {
+		// if (!Spotlight.getPointerMode() && spotItem && this.uiRef && this.uiRef.childRef.containerRef.contains(spotItem) && this.uiRef.isUpdatedScrollThumb) {
 			this.alertThumb();
 		}
 	}
 
 	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
 	handleScrollerUpdate = () => {
+		console.log('handleScrollerUpdate');
 		if (this.uiRef.scrollToInfo === null && Spotlight.getPointerMode()) {
 			const scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 			if (scrollHeight !== this.uiRef.bounds.scrollHeight) {
@@ -807,6 +885,7 @@ class ScrollableBaseNative extends Component {
 				clearOverscrollEffect={this.clearOverscrollEffect}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
+				onKeyUp={this.onKeyUp}
 				onMouseDown={this.onMouseDown}
 				onWheel={this.onWheel}
 				ref={this.initUiRef}
@@ -838,7 +917,24 @@ class ScrollableBaseNative extends Component {
 						ref={initUiContainerRef}
 						style={style}
 					>
-						<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={this.initVerticalOverscrollRef}>
+						<div
+							// spotlightId="dummyElement"
+							// spotlightDisabled={!this.state.lastFocusedElementWidth}
+							className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)}
+							ref={this.initVerticalOverscrollRef}
+						>
+							<SpottableDiv
+								spotlightId="dummyElement"
+								spotlightDisabled={!this.state.lastFocusedElementWidth}
+								style={{
+									backgroundColor: '#cf0652',
+									position: 'absolute',
+									top: this.state.pos.top,
+									// left: this.state.pos.left,
+									width: this.state.lastFocusedElementWidth,
+									height: '6px'
+								}}
+							/>
 							<ChildWrapper className={classNames(contentClassName, overscrollCss.overscrollFrame, overscrollCss.horizontal)} ref={this.initHorizontalOverscrollRef} {...restChildWrapperProps}>
 								{childRenderer({
 									...childComponentProps,
