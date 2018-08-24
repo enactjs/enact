@@ -1636,21 +1636,26 @@ const VideoPlayerBase = class extends React.Component {
 	}, 200);
 
 	handleSliderKeyDown = (ev) => {
-		if (is('enter', ev.keyCode)) {
+		const {keyCode} = ev;
+
+		if (is('enter', keyCode)) {
 			this.setState({
 				slider5WayPressed: true
 			}, this.slider5WayPressJob.start());
-		} else if (is('down', ev.keyCode)) {
+		} else if (is('down', keyCode)) {
 			Spotlight.setPointerMode(false);
 
 			if (Spotlight.focus(this.mediaControlsSpotlightId)) {
 				stopImmediate(ev);
+				this.activityDetected();
 			}
-		} else if (is('up', ev.keyCode)) {
+		} else if (is('up', keyCode)) {
 			stopImmediate(ev);
 
 			this.handleSliderBlur();
 			this.hideControls();
+		} else {
+			this.activityDetected();
 		}
 	}
 
