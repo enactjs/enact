@@ -456,6 +456,7 @@ class ScrollableBaseNative extends Component {
 			this.forwardScrollEvent('onScrollStop');
 		}
 		this.scrollStopJob.stop();
+		this.startScrollJob.stop();
 
 		this.removeEventListeners();
 		off('keydown', this.onKeyDown);
@@ -718,25 +719,9 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onScroll = (ev) => {
-		const
-			bounds = this.getScrollBounds(),
-			canScrollHorizontally = this.canScrollHorizontally(bounds);
-		let
-			{scrollLeft, scrollTop} = ev.target;
+		const {scrollLeft, scrollTop} = ev.target;
 
-		if (!this.scrolling) {
-			this.scrollStartOnScroll();
-		}
-
-		if (this.state.rtl && canScrollHorizontally) {
-			/* FIXME: RTL / this calculation only works for Chrome */
-			scrollLeft = bounds.maxLeft - scrollLeft;
-		}
-
-		this.scrollOnScroll(scrollLeft, scrollTop);
-
-		this.startHidingThumb();
-		this.scrollStopJob.start();
+		this.startScrollJob.startRaf(scrollLeft, scrollTop);
 	}
 
 	scrollByPage = (keyCode) => {
@@ -929,9 +914,23 @@ class ScrollableBaseNative extends Component {
 		this.isScrollAnimationTargetAccumulated = false;
 		this.scrolling = false;
 		this.forwardScrollEvent('onScrollStop');
+		this.startHidingThumb();
 	}
 
 	scrollOnScroll = (left, top) => {
+		const
+			bounds = this.getScrollBounds(),
+			canScrollHorizontally = this.canScrollHorizontally(bounds);
+
+		if (!this.scrolling) {
+			this.scrollStartOnScroll();
+		}
+
+		if (this.state.rtl && canScrollHorizontally) {
+			/* FIXME: RTL / this calculation only works for Chrome */
+			left = bounds.maxLeft - left;
+		}
+
 		let
 			dirHorizontal = 0,
 			dirVertical = 0;
@@ -949,9 +948,12 @@ class ScrollableBaseNative extends Component {
 			this.childRef.didScroll(this.scrollLeft, this.scrollTop, dirHorizontal, dirVertical);
 		}
 		this.forwardScrollEvent('onScroll');
+		this.scrollStopJob.start();
 	}
 
-	scrollStopJob = new Job(this.scrollStopOnScroll.bind(this), scrollStopWaiting);
+	startScrollJob = new Job(this.scrollOnScroll, 16);
+
+	scrollStopJob = new Job(this.scrollStopOnScroll, scrollStopWaiting);
 
 	// update scroll position
 
@@ -1234,7 +1236,7 @@ class ScrollableBaseNative extends Component {
 
 		if (childRef && childRef.containerRef) {
 			if (childRef.containerRef.addEventListener) {
-				childRef.containerRef.addEventListener('scroll', this.onScroll, {capture: true});
+				childRef.containerRef.addEventListener('scroll', this.onScroll, {capture: true, passive: true});
 				childRef.containerRef.addEventListener('mousedown', this.onMouseDown);
 			}
 			this.childRef.containerRef.style.scrollBehavior = 'smooth';
@@ -1254,7 +1256,7 @@ class ScrollableBaseNative extends Component {
 		}
 
 		if (childRef && childRef.containerRef && childRef.containerRef.removeEventListener) {
-			childRef.containerRef.removeEventListener('scroll', this.onScroll, {capture: true});
+			childRef.containerRef.removeEventListener('scroll', this.onScroll, {capture: true, passive: true});
 			childRef.containerRef.removeEventListener('mousedown', this.onMouseDown);
 		}
 
