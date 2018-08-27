@@ -202,7 +202,7 @@ const Spotlight = (function () {
 			if (currentFocusedElement) {
 				currentFocusedElement.blur();
 			}
-			elem.focus();
+			elem.focus({preventScroll: true});
 			focusChanged(elem, containerIds);
 		};
 
@@ -223,7 +223,7 @@ const Spotlight = (function () {
 			currentFocusedElement.blur();
 		}
 
-		elem.focus();
+		elem.focus({preventScroll: true});
 
 		_duringFocusChange = false;
 
