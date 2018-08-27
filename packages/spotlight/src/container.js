@@ -871,7 +871,7 @@ function containsContainer (outerContainerId, innerContainerId) {
  * @returns	{Boolean} `true` if the active container can change to `containerId`
  * @private
  */
-function mayLeaveForContainer (containerId) {
+function mayActivateContainer (containerId) {
 	const currentContainerId = getLastContainer();
 
 	// If the current container is restricted to 'self-only' and if the next container to be
@@ -960,7 +960,7 @@ export {
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
-	mayLeaveForContainer,
+	mayActivateContainer,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
