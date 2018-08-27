@@ -163,7 +163,7 @@ const MediaOverlayBase = kind({
 });
 
 /**
- * Moonstone-specific behaviors to apply to [MediaOverlay]{@link moonstone/MediaOverlay.MediaOverlayBase}.
+ * A higher-order component that adds Moonstone specific behaviors to `MediaOverlay`.
  *
  * @hoc
  * @memberof moonstone/MediaOverlay

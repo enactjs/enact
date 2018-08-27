@@ -12,8 +12,10 @@ let panelId = 0;
 
 /**
  * A Panel is the standard view container used inside a [Panels]{@link moonstone/Panels.Panels} view
- * manager instance. [Panels]{@link moonstone/Panels.Panels} will typically contain several
- * instances of these and transition between them.
+ * manager instance.
+ *
+ * [Panels]{@link moonstone/Panels.Panels} will typically contain several instances of these and
+ * transition between them.
  *
  * @class Panel
  * @memberof moonstone/Panels
@@ -26,6 +28,8 @@ const PanelBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Panel.prototype */ {
 		/**
+ 		 * The "aria-label" for the Panel.
+		 *
 		 * By default, the panel will be labeled by its [Header]{@link moonstone/Panels.Header}.
 		 * When `aria-label` is set, it will be used instead to provide an accessibility label for
 		 * the panel.

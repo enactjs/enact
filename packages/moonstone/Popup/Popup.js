@@ -39,7 +39,7 @@ const forwardHide = forward('onHide');
 const forwardShow = forward('onShow');
 
 /**
- * PopupBase is a base component of [`Popup`]{@link moonstone/Popup.Popup}.
+ * The base popup component.
  *
  * @class PopupBase
  * @memberof moonstone/Popup
