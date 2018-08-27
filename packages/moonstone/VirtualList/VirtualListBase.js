@@ -527,11 +527,7 @@ const VirtualListBaseFactory = (type) => {
 			this.isWrappedBy5way = false;
 
 			// If the currently focused item is disabled, we assume that all items in a list are disabled.
-			if (
-				(!wrap && isItemDisabled === isItemDisabledDefault) ||
-				isItemDisabled(currentIndex) ||
-				(!isForward && !isBackward)
-			) {
+			if (isItemDisabled(currentIndex)) {
 				return false;
 			}
 
