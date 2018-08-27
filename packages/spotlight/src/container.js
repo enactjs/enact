@@ -853,7 +853,7 @@ function isRestrictedContainer (containerId, restrict = 'self-only') {
  *
  * @param {String} outerContainerId The outer container id
  * @param {String} innerContainerId The inner container id
- * @returns {Boolean} `true` if both containers exist and `innerContainerId` is withing
+ * @returns {Boolean} `true` if both containers exist and `innerContainerId` is within
  *                    `outerContainerId`
  * @private
  */
