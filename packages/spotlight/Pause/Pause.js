@@ -50,7 +50,7 @@ function pause () {
 function resume () {
 	paused = false;
 }
-
+// isn't this just `paused`??
 function isPaused () {
 	return paused !== false;
 }
@@ -59,7 +59,7 @@ function isPaused () {
  * Acts as a semaphore for Spotlight pause state ensuring that only the last Pause instance can
  * resume Spotlight.
  *
- * *Note* {@link spotlight/Spotlight.resume} will always resume spotlight regardless of what last
+ * *Note* [`resume`]{@link spotlight/Spotlight.resume} will always resume spotlight regardless of what last
  * paused spotlight and can be used as an escape hatch to force resumption.
  *
  * @class Pause
@@ -72,7 +72,7 @@ class Pause {
 	 * Accepts a name for the instance
 	 *
 	 * The `name` is not used but may be useful for debugging which instance has currently paused
-	 * Spotlight.
+	 * `Spotlight`.
 	 *
 	 * @param {String} name The name of the pause instance
 	 * @memberof spotlight/Pause.Pause
@@ -82,10 +82,15 @@ class Pause {
 	constructor (name) {
 		this.name = name;
 	}
-
+	// what is this for?
 	toString () {
 		return `Pause<${this.name}>`;
 	}
+
+	// what's different from the above isPaused? Confusing.
+	// Is this specifically for checking if the Spotlight is paused by an instance?
+	// or is it just checking if this instance is paused? if so, isn't it just the `paused` boolean value?
+	// Then, function name should be more descriptive to it's actual purpose.
 
 	/**
 	 * Returns `true` when Spotlight is paused by this instance

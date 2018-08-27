@@ -1,5 +1,5 @@
 /**
- * Provides the {@link spotlight/Accelerator.Accelerator} class.
+ * Provides the [Accelerator]{@link spotlight/Accelerator.Accelerator} class.
  *
  * @module spotlight/Accelerator
  */
@@ -12,14 +12,14 @@ class Accelerator {
 	/**
 	 * @constructor
 	 * @param {Number[]} frequency - Controls the frequency with which the acceleration will
-	 *	"freeze". While frozen, the current target item cannot change, and all events are directed
+	 *	"freeze". While frozen, the current target item cannot change (change what?), and all events are directed
 	 *	to it.
 	 * @memberof spotlight/Accelerator.Accelerator
 	 */
 	constructor (frequency = [3, 3, 3, 2, 2, 2, 1]) {
 
 		/*
-		 * Whether the instance is currently in an accelerating state.
+		 * Whether the instance (? what instance) is currently in an accelerating state.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -27,7 +27,7 @@ class Accelerator {
 		this.accelerating = false;
 
 		/*
-		 * The current count of skipped events.
+		 * Count of skipped events.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -51,7 +51,7 @@ class Accelerator {
 		this.keyCode = 0;
 
 		/*
-		 * Whether the instance is in a state of being canceled.
+		 * Indicated acceleration is canceled.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -59,8 +59,7 @@ class Accelerator {
 		this.canceled = false;
 
 		/*
-		 * Controls the frequency with which the acceleration will "freeze". While frozen,
-		 * the current target item cannot change, and all events are directed to it.
+		 * Array of frequency rate in seconds with which the acceleration will "freeze".
 		 *
 		 * @type {Array}
 		 * @default [3, 3, 3, 2, 2, 2, 1]
@@ -94,18 +93,17 @@ class Accelerator {
 					event.preventDefault();
 					return true;
 				} else {
-					let elapsedTime = Date.now() - this.time,
-						seconds = Math.floor(elapsedTime / 1000),
+					let elapsedSeconds = Math.floor(Date.now() - this.time / 1000),
 						toSkip = 0;
 
-					seconds = seconds > this.frequency.length - 1 ? this.frequency.length - 1 : seconds;
+					elapsedSeconds = elapsedSeconds > this.frequency.length - 1 ? this.frequency.length - 1 : elapsedSeconds;
 
-					toSkip = this.frequency[seconds] - 1;
+					toSkip = this.frequency[elapsedSeconds] - 1;
 					if (toSkip < 0) {
 						toSkip = 0;
 					}
 
-					this.accelerating = !(seconds === 0 && this.skipped === 0);
+					this.accelerating = !(elapsedSeconds === 0 && this.skipped === 0);
 
 					if (this.skipped >= toSkip) {
 						this.skipped = 0;
@@ -124,7 +122,7 @@ class Accelerator {
 	}
 
 	/**
-	 * Resets the Accelerator instance to the default values.
+	 * Resets the Accelerator instance variables.
 	 *
 	 * @function
 	 * @returns {undefined}
@@ -149,18 +147,6 @@ class Accelerator {
 	 */
 	cancel = () => {
 		this.canceled = true;
-	}
-
-	/**
-	 * Verifies that the Accelerator is active.
-	 *
-	 * @function
-	 * @returns {Boolean} `true` if the Accelerator is active; otherwise, `false`.
-	 * @public
-	 * @memberof spotlight/Accelerator.Accelerator
-	 */
-	isAccelerating = () => {
-		return this.accelerating;
 	}
 }
 

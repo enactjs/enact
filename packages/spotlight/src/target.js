@@ -26,12 +26,11 @@ import {
 } from './utils';
 
 function isFocusable (elem) {
-	const containers = getContainersForNode(elem);
+	const containerIDs = getContainersForNode(elem);
 	let verifySelector = true;
 
-	for (let i = containers.length - 1; i >= 0; i--) {
-		const containerId = containers[i];
-		if (!isNavigable(elem, containerId, verifySelector)) {
+	for (let i = containerIDs.length - 1; i >= 0; i--) {
+		if (!isNavigable(elem, containerIDs[i], verifySelector)) {
 			return false;
 		}
 
@@ -73,9 +72,9 @@ function getTargetByContainer (containerId) {
 function getTargetBySelector (selector) {
 	if (!selector) return null;
 
-	if (selector.charAt(0) === '@') {
-		const containerId = selector.length === 1 ? null : selector.substr(1);
-
+	if (selector[0] === '@') {
+		//  no need to check selector.length === 1 and assign null.
+		const containerId = selector.substr(1);
 		return getTargetByContainer(containerId);
 	}
 
@@ -96,6 +95,8 @@ function isRestrictedContainer (containerId) {
 }
 
 function getSpottableDescendantsWithoutContainers (containerId, containerIds) {
+	// console.log('containerId', containerId);
+	// console.log('containerIds', containerIds);
 	return getSpottableDescendants(containerId).filter(n => {
 		return !isContainer(n) || containerIds.indexOf(n.dataset.spotlightId) === -1;
 	});
@@ -350,6 +351,7 @@ function getTargetByDirectionFromPosition (direction, position, containerId) {
 
 	return getNavigableContainersForNode(getContainerNode(containerId))
 		.reduceRight((result, id, index, elementContainerIds) => {
+			console.log(result, id, index, elementContainerIds);
 			return result ||
 				getTargetInContainerByDirectionFromPosition(
 					direction,

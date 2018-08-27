@@ -35,6 +35,8 @@ const setPointerMode = (pointerMode) => {
  * @memberof spotlight/pointer
  * @private
  */
+
+// This should be isPointerMode, or _pointerMode should be isPointerMode. getPointerMode is confusing.
 const getPointerMode = () => {
 	return _pointerMode;
 };
@@ -88,12 +90,10 @@ const updatePointerPosition = (x, y) => {
  * @memberof spotlight/pointer
  * @private
  */
-const getLastPointerPosition = () => {
-	return {
-		x: _pointerX,
-		y: _pointerY
-	};
-};
+const getLastPointerPosition = () => ({
+	x: _pointerX,
+	y: _pointerY
+});
 
 // 30ms (_pointerHiddenToKeyTimeout) is semi-arbitrary, to account for the time it takes for the
 // following directional key event to fire, and to prevent momentary spotting of the last
@@ -127,7 +127,6 @@ const notifyPointerMove = (current, target, x, y) => {
 		return !priorPointerMode || !current || !current.contains(target);
 	}
 
-	// the pointer hasn't actually moved (surprise!)
 	return false;
 };
 

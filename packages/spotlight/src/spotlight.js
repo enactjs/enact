@@ -8,10 +8,9 @@
  */
 
 /**
- * Exports the {@link spotlight.Spotlight} object used for controlling spotlight behavior and the
- * {@link spotlight.Spotlight.getDirection} function for mapping a keycode to a spotlight direction.
- *
- * The default export is {@link spotlight.Spotlight}.
+ * Provides [Spotlight]{@link spotlight.Spotlight} behaviors and controls and
+ * [getDirection()]{@link spotlight.Spotlight.getDirection} for mapping a keycode to a spotlight
+ * direction.
  *
  * @module spotlight
  */
@@ -80,12 +79,12 @@ const isRight = is('right');
 const isUp = is('up');
 
 /**
- * Translates keyCodes into 5-way direction descriptions (e.g. `'down'`)
+ * Translates keyCodes into 5-way direction descriptions.
  *
  * @function
  * @memberof spotlight
- * @param {Number} keyCode - Key code to analyze
- * @returns {String|false} - One of `'up'`, `'down'`, `'left'`, `'right'` or `false` if not a direction key
+ * @param {Number} keyCode - Event Key code
+ * @returns {String|false} - `'up'`, `'down'`, `'left'`, `'right'` or `false` if not a direction key
  * @public
  */
 const getDirection = function (keyCode) {
@@ -99,7 +98,7 @@ const getDirection = function (keyCode) {
 const SpotlightAccelerator = new Accelerator();
 
 /**
- * Provides 5-way navigation and focus support
+ * Provides 5-way navigation and focus support.
  *
  * ```
  * import Spotlight from '@enact/Spotlight';
@@ -144,7 +143,7 @@ const Spotlight = (function () {
 	let _spotOnWindowFocus = false;
 
 	/*
-	 * `true` when a pointer move event occurs during a keypress. Used to short circuit key down
+	 * Indicates a pointer move event is occur during a keypress. Used to short circuit key down
 	 * handling until the next keyup occurs.
 	 *
 	 * @type {Boolean}
@@ -185,10 +184,11 @@ const Spotlight = (function () {
 	}
 
 	function focusElement (elem, containerIds, fromPointer) {
+		// elem is being checked every time this function is being called. Duplication.
 		if (!elem) {
 			return false;
 		}
-
+		// I suggest changing getPointerMode => isPointerMode
 		if ((getPointerMode() && !fromPointer)) {
 			setContainerLastFocusedElement(elem, containerIds);
 			return false;
@@ -240,6 +240,7 @@ const Spotlight = (function () {
 			containerIds = getContainersForNode(elem);
 		}
 		const containerId = last(containerIds);
+		// duplicated check from line #236
 		if (containerId) {
 			setContainerLastFocusedElement(elem, containerIds);
 			setLastContainer(containerId);
@@ -310,7 +311,8 @@ const Spotlight = (function () {
 
 		return false;
 	}
-
+	// this and the above can be simplified. or is it written so that spotNext() doesn't call
+	// getContainersForNode and isContainer5WayHoldable when it's not needed. Is this a common case for this function?
 	function spotNext (direction, currentFocusedElement, currentContainerIds) {
 		const next = getTargetByDirectionFromElement(direction, currentFocusedElement);
 
@@ -358,7 +360,7 @@ const Spotlight = (function () {
 		_spotOnWindowFocus = true;
 		_pointerMoveDuringKeyPress = false;
 	}
-
+	//  this looks only checking leave event.. shoudn't we call the funciton different?
 	function handleWebOSMouseEvent (ev) {
 		if (!isPaused() && ev && ev.detail && ev.detail.type === 'Leave') {
 			onBlur();
@@ -481,13 +483,37 @@ const Spotlight = (function () {
 		}
 	}
 
+	function findTarget (elem) {
+		let target = elem || getTargetByContainer();
+
+		if (typeof elem === 'string') {
+			if (getContainerConfig(elem)) {
+				target = getTargetByContainer(elem);
+			} else if (/^[\w\d-]+$/.test(elem)) {
+				// support component IDs consisting of alphanumeric, dash, or underscore
+				target = getTargetBySelector(`[data-spotlight-id=${elem}]`);
+			} else {
+				target = getTargetBySelector(elem);
+			}
+		}
+		return target;
+	}
+
+	function wasContainerId (id) {
+		return typeof id === 'string' && getContainerConfig(id);
+	}
+
+	function isDirection (direction) {
+		return direction !== 'up' && direction !== 'down' && direction !== 'left' && direction !== 'right';
+	}
+
 	/*
 	 * public methods
 	 */
 	const exports = /** @lends spotlight.Spotlight */ { // eslint-disable-line no-shadow
 		/**
 		 * Initializes Spotlight. This is generally handled by
-		 * {@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}.
+		 * [SpotlightRootDecorator]{@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}.
 		 *
 		 * @public
 		 */
@@ -514,7 +540,8 @@ const Spotlight = (function () {
 		},
 
 		/**
-		 * Terminates Spotlight. This is generally handled by {@link spotlight.SpotlightRootDecorator}.
+		 * Terminates Spotlight. This is generally handled by
+		 * SpotlightRootDecorator]{@link spotlight.SpotlightRootDecorator}.
 		 *
 		 * @public
 		 */
@@ -562,7 +589,7 @@ const Spotlight = (function () {
 		// add(<containerId>, <config>);
 		/**
 		 * Adds the config for a new container. The container ID may be passed in the configuration
-		 * object. If no container ID is supplied, a new container ID will be generated.
+		 * object. If not, an ID will be generated.
 		 *
 		 * @function
 		 * @param {String|Object} param1 Configuration object or container ID
@@ -571,14 +598,15 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		add: addContainer,
-
 		unmount: function (containerId) {
 			if (!containerId || typeof containerId !== 'string') {
+				// are we checking for all the missing params? looks little random to check just for this.
 				throw new Error('Please assign the "containerId"!');
 			}
 			unmountContainer(containerId);
 		},
 
+		// how is this differnet from unmount?
 		/**
 		 * Removes a container from Spotlight
 		 *
@@ -654,8 +682,7 @@ const Spotlight = (function () {
 		// focus(<containerId>)
 		// focus(<extSelector>)
 		/**
-		 * Focuses the specified component ID, container ID, element selector, or the default
-		 * container.
+		 * Gives focus to an element.
 		 *
 		 * If Spotlight is in pointer mode, focus is not changed but `elem` will be set as the last
 		 * focused element of its spotlight containers.
@@ -666,34 +693,19 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		focus: function (elem) {
-			let target = elem;
-			let wasContainerId = false;
-
-			if (!elem) {
-				target = getTargetByContainer();
-			} else if (typeof elem === 'string') {
-				if (getContainerConfig(elem)) {
-					target = getTargetByContainer(elem);
-					wasContainerId = true;
-				} else if (/^[\w\d-]+$/.test(elem)) {
-					// support component IDs consisting of alphanumeric, dash, or underscore
-					target = getTargetBySelector(`[data-spotlight-id=${elem}]`);
-				} else {
-					target = getTargetBySelector(elem);
-				}
-			}
-
+			const target = findTarget(elem);
 			const nextContainerIds = getContainersForNode(target);
 			const nextContainerId = last(nextContainerIds);
+
 			if (isNavigable(target, nextContainerId, true)) {
 				const focused = focusElement(target, nextContainerIds);
 
-				if (!focused && wasContainerId) {
-					setLastContainer(elem);
+				if (!focused && wasContainerId(elem)) {
+					this.setActiveContainer(elem);
 				}
 
 				return focused;
-			} else if (wasContainerId) {
+			} else if (wasContainerId(elem)) {
 				// if we failed to find a spottable target within the provided container, we'll set
 				// it as the active container to allow it to focus itself if its contents change
 				setLastContainer(elem);
@@ -716,19 +728,13 @@ const Spotlight = (function () {
 		 */
 		move: function (direction, selector) {
 			direction = direction.toLowerCase();
-			if (direction !== 'up' && direction !== 'down' && direction !== 'left' && direction !== 'right') {
-				return false;
-			}
+			if (!isDirection(direction)) return false;
 
 			const elem = selector ? parseSelector(selector)[0] : getCurrent();
-			if (!elem) {
-				return false;
-			}
+			if (!elem) return false;
 
 			const containerIds = getContainersForNode(elem);
-			if (!containerIds.length) {
-				return false;
-			}
+			if (!containerIds.length) return false;
 
 			return spotNext(direction, elem, containerIds);
 		},
