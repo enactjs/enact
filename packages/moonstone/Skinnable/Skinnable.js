@@ -6,7 +6,7 @@
  */
 
 import hoc from '@enact/core/hoc';
-import SkinnableBase, {withSkinnableProps} from '@enact/ui/Skinnable';
+import SkinnableBase from '@enact/ui/Skinnable';
 
 const defaultConfig = {
 	skins: {
@@ -49,6 +49,5 @@ const Skinnable = hoc(defaultConfig, SkinnableBase);
 
 export default Skinnable;
 export {
-	Skinnable,
-	withSkinnableProps
+	Skinnable
 };

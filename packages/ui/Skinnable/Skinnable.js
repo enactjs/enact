@@ -8,7 +8,6 @@
  *
  * @module ui/Skinnable
  * @exports Skinnable
- * @exports withSkinnableProps
  * @public
  */
 
