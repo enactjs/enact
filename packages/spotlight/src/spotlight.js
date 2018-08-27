@@ -38,7 +38,7 @@ import {
 	isContainer,
 	isContainer5WayHoldable,
 	isNavigable,
-	unmountContainer,
+	mayLeaveForContainer,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
@@ -46,7 +46,8 @@ import {
 	setContainerPreviousTarget,
 	setDefaultContainer,
 	setLastContainer,
-	setLastContainerFromTarget
+	setLastContainerFromTarget,
+	unmountContainer
 } from './container';
 
 import {
@@ -755,7 +756,9 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		setActiveContainer: function (containerId) {
-			setLastContainer(containerId || rootContainerId);
+			if (mayLeaveForContainer(containerId)) {
+				setLastContainer(containerId || rootContainerId);
+			}
 		},
 
 		/**
