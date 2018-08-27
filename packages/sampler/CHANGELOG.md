@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [2.1.0] - 2018-08-20
+
+### Fixed
+
+- `ui/VirtualList` sampler to use `ui/Item` instead of `moonstone/Item`
+
+## [2.0.2] - 2018-08-13
+
+No significant changes.
+
 ## [2.0.1] - 2018-08-01
 
 No significant changes.

@@ -3,9 +3,7 @@
  *
  * @example
  * <Picker>
- * 	<p>A</p>
- * 	<p>B</p>
- * 	<p>C</p>
+ * 	{['A', 'B', 'C']}
  * </Picker>
  *
  * @module moonstone/Picker

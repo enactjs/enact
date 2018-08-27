@@ -12,8 +12,7 @@ const isEventSource = (ev) => ev.target === ev.currentTarget;
 /**
  * Marquees the children of the component.
  *
- * Generally, you would use {@link ui/Marquee.Marquee} which wraps this component with
- * {@link ui/Marquee.MarqueeDecorator} which automates the necessary calculations.
+ * For automated marquee calculations use {@link ui/Marquee.Marquee}.
  *
  * @class MarqueeBase
  * @memberof ui/Marquee
@@ -40,7 +39,7 @@ const MarqueeBase = kind({
 		alignment: PropTypes.oneOf(['left', 'right', 'center']),
 
 		/**
-		 * `true` when the component should be animating
+		 * Applies animating styles such as removing the ellipsis.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -58,7 +57,7 @@ const MarqueeBase = kind({
 		children: PropTypes.node,
 
 		/**
-		 * Function to capture a reference to the client node
+		 * Called when mounting or unmounting with a reference to the client node
 		 *
 		 * @type {Function}
 		 * @public

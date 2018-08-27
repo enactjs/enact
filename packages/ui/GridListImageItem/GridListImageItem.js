@@ -6,6 +6,7 @@
  */
 
 import kind from '@enact/core/kind';
+import {Column, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -91,7 +92,7 @@ const GridListImageItem = kind({
 		placeholder: PropTypes.string,
 
 		/**
-		 * When `true`, applies a selected visual effect to the image, but only if `selectionOverlayShowing`
+		 * Applies a selected visual effect to the image, but only if `selectionOverlayShowing`
 		 * is also `true`.
 		 *
 		 * @type {Boolean}
@@ -101,9 +102,10 @@ const GridListImageItem = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * The custom selection overlay component to render. A component can be a stateless functional
-		 * component, `kind()` or React component. The following is an example with custom selection
-		 * overlay kind.
+		 * The custom selection overlay component to render.
+		 *
+		 * A component can be a stateless functional component, `kind()` or React component.
+		 * The following is an example with custom selection overlay kind.
 		 *
 		 * Example:
 		 * ```
@@ -120,8 +122,7 @@ const GridListImageItem = kind({
 		selectionOverlay: PropTypes.func,
 
 		/**
-		 * When `true`, a selection overlay with a centered icon is shown. When `selected` is true,
-		 * a check mark is shown.
+		 * Shows a selection overlay with a centered icon. When `selected` is true, a check mark is shown.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -189,13 +190,13 @@ const GridListImageItem = kind({
 		delete rest.selectionOverlayShowing;
 
 		return (
-			<div {...rest}>
-				<ImageComponent className={css.image} placeholder={placeholder} src={source}>
+			<Column {...rest} inline>
+				<Cell className={css.image} component={ImageComponent} placeholder={placeholder} src={source}>
 					{selectionOverlay}
-				</ImageComponent>
-				{caption ? (<Caption className={css.caption}>{caption}</Caption>) : null}
-				{subCaption ? (<Caption className={css.subCaption}>{subCaption}</Caption>) : null}
-			</div>
+				</Cell>
+				{caption ? (<Cell className={css.caption} component={Caption} shrink>{caption}</Cell>) : null}
+				{subCaption ? (<Cell className={css.subCaption} component={Caption} shrink>{subCaption}</Cell>) : null}
+			</Column>
 		);
 	}
 });

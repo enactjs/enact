@@ -94,7 +94,8 @@ var LocaleInfo = function(locale, options) {
 			prigroupSize:number,
 			roundingMode:string,
 			script:string,
-			secgroupSize:number
+			secgroupSize:number,
+			useNative:boolean
 		},
 		timezone:string,
 		units:string,
@@ -128,12 +129,12 @@ var LocaleInfo = function(locale, options) {
 		}
 	}
 
-	if (!LocaleInfo.cache) {
-		LocaleInfo.cache = {};
+	if (!ilib.data.cache.LocaleInfo) {
+		ilib.data.cache.LocaleInfo = {};
 	}
 
 	Utils.loadData({
-		object: LocaleInfo, 
+		object: "LocaleInfo", 
 		locale: this.locale, 
 		name: "localeinfo.json", 
 		sync: sync, 
@@ -142,7 +143,7 @@ var LocaleInfo = function(locale, options) {
 			if (!info) {
 				info = LocaleInfo.defaultInfo;
 				var spec = this.locale.getSpec().replace(/-/g, "_");
-				LocaleInfo.cache[spec] = info;
+				ilib.data.cache.LocaleInfo[spec] = info;
 			}
 			this.info = info;
 			if (options && typeof(options.onLoad) === 'function') {
@@ -447,7 +448,7 @@ LocaleInfo.prototype = {
 	 * @returns {string} string that describes the style of digits used in this locale
 	 */
 	getDigitsStyle: function () {
-		if (this.info.numfmt.useNative) {
+		if (this.info.numfmt && this.info.numfmt.useNative) {
 			return "native";
 		}
 		if (typeof(this.info.native_numfmt) !== 'undefined') {

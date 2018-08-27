@@ -1,5 +1,5 @@
 /**
- * Exports the {@link spotlight/Spottable.Spottable} Higher-order Component and
+ * Exports the {@link spotlight/Spottable.Spottable} higher-order component and
  * the {@link spotlight/Spottable.spottableClass} `className`. The default export is
  * {@link spotlight/Spottable.Spottable}.
  *
@@ -73,7 +73,7 @@ const defaultConfig = {
 };
 
 /**
- * Constructs a Spotlight 5-way navigation-enabled Higher-order Component.
+ * Constructs a Spotlight 5-way navigation-enabled higher-order component.
  *
  * Example:
  * ```

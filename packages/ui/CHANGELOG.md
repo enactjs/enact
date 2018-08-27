@@ -4,16 +4,26 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
-### Fixed
-
-- `ui/Image` to not display broken image icons
-- `ui/Scrollable` to use GPU acceleration to improve rendering performance
-- `ui/Marquee` to move `position: relative` style into `animate` class to improve rendering performance
-
 ### Changed
 
+- `ui/Icon` to require `children`
+- `ui/LabeledIcon` to require `icon` prop
+
+## [2.1.0] - 2018-08-20
+
+### Fixed
+
+- `ui/FloatingLayer` to apply `key`s to prevent React warnings
+
+## [2.0.2] - 2018-08-13
+
+### Fixed
+
+- `ui/Image` to not display "missing image" icon when `src` fails to load
 - `ui/Image` to not require `src` prop if `placeholder` is specified
 - `ui/GridListImageItem` to not require `source` prop
+- `ui/Scrollable` to use GPU acceleration to improve rendering performance
+- `ui/Marquee` to move `position: relative` style into `animate` class to improve rendering performance
 
 ## [2.0.1] - 2018-08-01
 

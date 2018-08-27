@@ -1,6 +1,6 @@
 /**
  * Exports the {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
- * Higher-order Component and {@link spotlight/SpotlightContainerDecorator.spotlightDefaultClass}
+ * higher-order component and {@link spotlight/SpotlightContainerDecorator.spotlightDefaultClass}
  * `className`. The default export is
  * {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}.
  *
@@ -78,7 +78,7 @@ const defaultConfig = {
 };
 
 /**
- * Constructs a Higher-order Component that allows Spotlight focus to be passed to
+ * Constructs a higher-order component that allows Spotlight focus to be passed to
  * its own configurable hierarchy of spottable child controls.
  *
  * Example:
@@ -105,7 +105,7 @@ const defaultConfig = {
  * ```
  * @param  {Object}    defaultConfig  Set of default configuration parameters. Additional parameters
  *                                    are passed as configuration to {@link spotlight/Spotlight.set}
- * @param  {Function} Higher-order component
+ * @param  {Function} higher-order component
  *
  * @returns {Function} SpotlightContainerDecorator
  * @class SpotlightContainerDecorator
@@ -201,7 +201,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			let id = nextProps.spotlightId;
 			if (prevId !== id) {
-				Spotlight.remove(prevId);
+				this.releaseContainer(prevId);
 				id = Spotlight.add(id);
 
 				this.setState(stateFromProps({spotlightId: id}));
@@ -215,10 +215,14 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
+			this.releaseContainer(this.state.id);
+		}
+
+		releaseContainer (spotlightId) {
 			if (this.state.preserveId) {
-				Spotlight.unmount(this.state.id);
+				Spotlight.unmount(spotlightId);
 			} else {
-				Spotlight.remove(this.state.id);
+				Spotlight.remove(spotlightId);
 			}
 		}
 

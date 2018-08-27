@@ -1,7 +1,7 @@
 /**
- * Exports the {@link ui/FloatingLayer.FloatingLayer} component and
- * {@link ui/FloatingLayer.FloatingLayerDecorator} higher-order component (HOC).
- * The default export is {@link ui/FloatingLayer.FloatingLayer}.
+ * FloatingLayer provides a way to render a component into a node outside of its parent component.
+ *
+ * This is used for modal components such as popups.
  *
  * @module ui/FloatingLayer
  * @exports FloatingLayer

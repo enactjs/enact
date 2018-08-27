@@ -4,6 +4,39 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Changed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effects only by wheel input
+- `moonstone/Icon` and `moonstone/IconButton` to require `children`
+
+### Fixed
+
+- `moonstone/VideoPlayer` so that activity is detected and the `autoCloseTimeout` timer is reset when using 5-way to navigate from the media slider
+
+## [2.1.0] - 2018-08-20
+
+### Added
+
+- `moonstone/VideoPlayer` property `noMediaSliderFeedback`
+- `moonstone/VideoPlayer.MediaControls` property `playPauseButtonDisabled`
+
+### Changed
+
+- `moonstone/Picker` key down hold threshold to 800ms before firing the `onChange` event
+
+### Fixed
+
+- `moonstone/GridListImageItem` to properly vertically align when the content varies in size
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to not scroll by dragging
+- `moonstone/Slider` to not emit `onChange` event when `value` has not changed
+- `moonstone/VideoPlayer` to focus on available media buttons if the default spotlight component is disabled
+- `moonstone/VideoPlayer` to keep media controls visible when interacting with popups
+- `moonstone/VideoPlayer` to read out `infoComponents` accessibility value when `moreButtonColor` is pressed
+- `moonstone/VideoPlayer` to round the time displayed down to the nearest second
+- `moonstone/VirtualList` to restore last focused item correctly
+
+## [2.0.2] - 2018-08-13
+
 ### Fixed
 
 - `moonstone/DatePicker` to correctly change year when `minYear` and `maxYear` aren't provided
@@ -11,6 +44,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` to have proper spacing and label-alignment with all label positions
 - `moonstone/Popup` to prevent duplicate 5-way navigation when `spotlightRestrict="self-first"`
 - `moonstone/Scroller` not to scroll to wrong position via 5way navigation in RTL languages
+- `moonstone/Scroller` not to scroll when focusing in pointer mode
 - `moonstone/Slider` to forward `onActivate` event
 - `moonstone/VideoPlayer` to reset key down hold when media becomes unavailable
 

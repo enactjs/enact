@@ -98,28 +98,38 @@ var GregRataDie = require("./GregRataDie.js");
  * @param {Object=} params parameters that govern the settings and behaviour of this Thai solar date
  */
 var ThaiSolarDate = function(params) {
-	var p = params;
-	if (params) {
-		// there is 198327 days difference between the Thai solar and 
-		// Gregorian epochs which is equivalent to 543 years
-		p = {};
-		JSUtils.shallowCopy(params, p);
-		if (typeof(p.year) !== 'undefined') {
-			p.year -= 543;	
-		}
-		if (typeof(p.rd) !== 'undefined') {
-			p.rd -= 198327;
-		}
-	}
-	this.rd = NaN; // clear these out so that the GregorianDate constructor can set it
-	this.offset = undefined;
-	//console.log("ThaiSolarDate.constructor: date is " + JSON.stringify(this) + " parent is " + JSON.stringify(this.parent) + " and parent.parent is " + JSON.stringify(this.parent.parent));
-	GregorianDate.call(this, p);
-	this.cal = new ThaiSolarCal();
-	// make sure the year is set correctly
-	if (params && typeof(params.year) !== 'undefined') {
-		this.year = parseInt(params.year, 10);
-	}
+    var p = {};
+
+    if (params) {
+        JSUtils.shallowCopy(params, p);
+        
+        // there is 198327 days difference between the Thai solar and
+        // Gregorian epochs which is equivalent to 543 years
+        if (typeof(p.year) !== 'undefined') {
+            p.year -= 543;
+        }
+        if (typeof(p.rd) !== 'undefined') {
+            p.rd -= 198327;
+        }
+    }
+    this.rd = null; // clear these out so that the GregorianDate constructor can set it
+    this.offset = undefined;
+    //console.log("ThaiSolarDate.constructor: date is " + JSON.stringify(this) + " parent is " + JSON.stringify(this.parent) + " and parent.parent is " + JSON.stringify(this.parent.parent));
+
+    p.onLoad = ilib.bind(this, function(gd) {
+        this.cal = new ThaiSolarCal();
+        
+        // make sure the year is set correctly from the original params
+        if (params && typeof(params.year) !== 'undefined') {
+            this.year = parseInt(params.year, 10);
+        }
+
+        if (params && typeof(params.onLoad) === "function") {
+            params.onLoad(gd);
+        }
+    });
+
+    GregorianDate.call(this, p);
 };
 
 ThaiSolarDate.prototype = new GregorianDate({noinstance: true});
