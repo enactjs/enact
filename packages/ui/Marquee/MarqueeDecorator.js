@@ -123,8 +123,7 @@ const TimerState = {
 };
 
 /**
- * {@link ui/Marquee.MarqueeDecorator} is a higher-order component (HOC) which makes
- * the Wrapped component's children marquee.
+ * A higher-order component that provides marquee functionalities.
  *
  * @class MarqueeDecorator
  * @memberof ui/Marquee
@@ -161,10 +160,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			children: PropTypes.node,
 
 			/**
-			 * Passed through to the wrapped component. Does not affect Marquee behavior except that
-			 * components that are `marqueeOn="focus"` will be treated as if they were
-			 * `marqueeOn="hover"`, to allow disabled (and thuse, unfocusable) components to
-			 * marquee.
+			 * Passed through to the wrapped component.
+			 *
+			 * Does not affect Marquee behavior except that components that are `marqueeOn="focus"`
+			 * will be treated as if they were `marqueeOn="hover"`, to allow disabled (and thus,
+			 * unfocusable) components to marquee.
 			 *
 			 * @type {Boolean}
 			 * @public
@@ -172,9 +172,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * Forces the `direction` of the marquee. Valid values are `'rtl'` and `'ltr'`. This
-			 * includes non-text elements as well. The default behavior, if this prop is unset, is
-			 * to evaluate the text content for directionality using {@link i18n/util.isRtlText}.
+			 * Forces the `direction` of the marquee.
+			 *
+			 * Valid values are `'rtl'` and `'ltr'`. This includes non-text elements as well.
+			 * The default behavior, if this prop is unset, is to evaluate the text content for
+			 * directionality using {@link i18n/util.isRtlText}.
 			 *
 			 * @type {String}
 			 * @public
@@ -199,8 +201,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeDisabled: PropTypes.bool,
 
 			/**
-			 * Determines what triggers the marquee to start its animation. Valid values are
-			 * `'focus'`, `'hover'` and `'render'`. The default is `'focus'`.
+			 * Determines what triggers the marquee to start its animation.
+			 *
+			 * Valid values are `'focus'`, `'hover'` and `'render'`. The default is `'focus'`.
 			 *
 			 * @type {String}
 			 * @default 'focus'
@@ -209,8 +212,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeOn: PropTypes.oneOf(['focus', 'hover', 'render']),
 
 			/**
-			 * Number of milliseconds to wait before starting marquee the first time. Has no effect
-			 * if `marqueeOn` is not `'render'`
+			 * Number of milliseconds to wait before starting marquee the first time.
+			 *
+			 * Has no effect if `marqueeOn` is not `'render'`
 			 *
 			 * @type {Number}
 			 * @default 1000
@@ -220,7 +224,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			/**
 			 * Number of milliseconds to wait before resetting the marquee position after it
-			 * finishes. A minimum of 40 milliseconds is enforced.
+			 * finishes.
+			 *
+			 * A minimum of 40 milliseconds is enforced.
 			 *
 			 * @type {Number}
 			 * @default 1000
@@ -238,10 +244,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeSpeed: PropTypes.number,
 
 			/**
-			 * Used to signal for a remeasurement inside of marquee. The value
-			 * must change for the remeasurement to take place. The value
-			 * type is `any` because it does not matter. It is only used to
-			 * check for changes.
+			 * Used to signal for a remeasurement inside of marquee.
+			 *
+			 * The value must change for the remeasurement to take place. The value
+			 * type is `any` because it does not matter. It is only used to check for changes.
 			 *
 			 * @private
 			 */

@@ -131,6 +131,27 @@ class ScrollableBaseNative extends Component {
 		focusableScrollbar: PropTypes.bool,
 
 		/**
+		 * Specifies overscroll effects shows on which type of inputs.
+		 *
+		 * @type {Object}
+		 * @default {
+		 *	arrowKey: false,
+		 *	drag: false,
+		 *	pageKey: false,
+		 *	scrollbarButton: false,
+		 *	wheel: true
+		 * }
+		 * @private
+		 */
+		overscrollEffectOn: PropTypes.shape({
+			arrowKey: PropTypes.bool,
+			drag: PropTypes.bool,
+			pageKey: PropTypes.bool,
+			scrollbarButton: PropTypes.bool,
+			wheel: PropTypes.bool
+		}),
+
+		/**
 		 * Sets the hint string read when focusing the next button in the vertical scroll bar.
 		 *
 		 * @type {String}
@@ -169,7 +190,14 @@ class ScrollableBaseNative extends Component {
 
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
-		focusableScrollbar: false
+		focusableScrollbar: false,
+		overscrollEffectOn: {
+			arrowKey: false,
+			drag: false,
+			pageKey: false,
+			scrollbarButton: false,
+			wheel: true
+		}
 	}
 
 	constructor (props) {
@@ -264,6 +292,7 @@ class ScrollableBaseNative extends Component {
 	 */
 	onWheel = (ev) => {
 		const
+			overscrollEffectRequired = this.props.overscrollEffectOn.wheel,
 			bounds = this.uiRef.getScrollBounds(),
 			canScrollHorizontally = this.uiRef.canScrollHorizontally(bounds),
 			canScrollVertically = this.uiRef.canScrollVertically(bounds),
@@ -295,11 +324,11 @@ class ScrollableBaseNative extends Component {
 					(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(ev.target))) {
 					delta = this.uiRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
-				} else {
+				} else if (overscrollEffectRequired) {
 					this.uiRef.checkAndApplyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce);
 				}
 			} else {
-				if (eventDelta < 0 && this.uiRef.scrollTop <= 0 || eventDelta > 0 && this.uiRef.scrollTop >= bounds.maxTop) {
+				if (overscrollEffectRequired && (eventDelta < 0 && this.uiRef.scrollTop <= 0 || eventDelta > 0 && this.uiRef.scrollTop >= bounds.maxTop)) {
 					this.uiRef.applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
 				}
 				needToHideThumb = true;
@@ -313,7 +342,7 @@ class ScrollableBaseNative extends Component {
 				delta = this.uiRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				needToHideThumb = !delta;
 			} else {
-				if (eventDelta < 0 && this.scrollLeft <= 0 || eventDelta > 0 && this.scrollLeft >= bounds.maxLeft) {
+				if (overscrollEffectRequired && (eventDelta < 0 && this.scrollLeft <= 0 || eventDelta > 0 && this.scrollLeft >= bounds.maxLeft)) {
 					this.uiRef.applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
 				}
 				needToHideThumb = true;
@@ -329,7 +358,7 @@ class ScrollableBaseNative extends Component {
 				this.uiRef.isScrollAnimationTargetAccumulated = false;
 				this.uiRef.wheelDirection = direction;
 			}
-			this.uiRef.scrollToAccumulatedTarget(delta, canScrollVertically);
+			this.uiRef.scrollToAccumulatedTarget(delta, canScrollVertically, overscrollEffectRequired);
 		}
 
 		if (needToHideThumb) {
@@ -356,12 +385,12 @@ class ScrollableBaseNative extends Component {
 				scrollVertically = bounds.maxTop > 0 && Math.abs(top - this.uiRef.scrollTop) > epsilon;
 
 			if (scrollHorizontally || scrollVertically) {
-				this.uiRef.start(
-					left,
-					top,
-					this.animateOnFocus,
-					(!this.childRef.shouldPreventOverscrollEffect || !this.childRef.shouldPreventOverscrollEffect())
-				);
+				this.uiRef.start({
+					targetX: left,
+					targetY: top,
+					animate: this.animateOnFocus,
+					overscrollEffect: this.props.overscrollEffectOn[this.uiRef.lastInputType] && (!this.childRef.shouldPreventOverscrollEffect || !this.childRef.shouldPreventOverscrollEffect())
+				});
 				this.lastScrollPositionOnFocus = pos;
 			}
 		}
@@ -477,6 +506,8 @@ class ScrollableBaseNative extends Component {
 			{childRef, containerRef} = this.uiRef,
 			focusedItem = Spotlight.getCurrent();
 
+		this.uiRef.lastInputType = 'pageKey';
+
 		// Should skip scroll by page when focusedItem is paging control button of Scrollbar
 		if (focusedItem && childRef.containerRef.contains(focusedItem)) {
 			const
@@ -526,7 +557,9 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onKeyDown = (ev) => {
-		const {keyCode, repeat} = ev;
+		const
+			{overscrollEffectOn} = this.props,
+			{keyCode, repeat} = ev;
 		let
 			overscrollEffectRequired = false,
 			direction = getDirection(keyCode);
@@ -558,27 +591,25 @@ class ScrollableBaseNative extends Component {
 			ev.preventDefault();
 			if (!repeat && this.hasFocus()) {
 				direction = this.getPageDirection(keyCode);
-				overscrollEffectRequired = this.scrollByPage(direction);
+				overscrollEffectRequired = this.scrollByPage(direction) && overscrollEffectOn.pageKey;
+			}
+		} else if (!Spotlight.getPointerMode() && !repeat && this.hasFocus() && getDirection(keyCode)) {
+			const element = Spotlight.getCurrent();
+
+			direction = getDirection(keyCode);
+
+			this.uiRef.lastInputType = 'arrowKey';
+
+			overscrollEffectRequired = overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null);
+			if (overscrollEffectRequired) {
+				const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef;
+
+				if ((horizontalScrollbarRef && horizontalScrollbarRef.getContainerRef().contains(element)) ||
+					(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(element))) {
+					overscrollEffectRequired = false;
+				}
 			}
 		}
-		// if (!Spotlight.getPointerMode() && !repeat && this.hasFocus()) {
-		// 	direction = getDirection(keyCode);
-		// 	if (direction) {
-		// 		const element = Spotlight.getCurrent();
-		// 		const target = getTargetByDirectionFromElement(direction, element);
-		// 		overscrollEffectRequired = !(element ? target : null);
-		// 		if (overscrollEffectRequired) {
-		// 			const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef;
-
-		// 			if ((horizontalScrollbarRef && horizontalScrollbarRef.getContainerRef().contains(element)) ||
-		// 				(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(element))) {
-		// 				overscrollEffectRequired = false;
-		// 			}
-		// 		} else {
-		// 			this.calculateAndScrollTo(target);
-		// 		}
-		// 	}
-		// }
 
 		if (direction && overscrollEffectRequired) { /* if the spotlight focus will not move */
 			const
@@ -617,12 +648,14 @@ class ScrollableBaseNative extends Component {
 			direction = isPreviousScrollButton ? -1 : 1,
 			pageDistance = direction * (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
+		this.uiRef.lastInputType = 'scrollbarButton';
+
 		if (direction !== this.uiRef.wheelDirection) {
 			this.uiRef.isScrollAnimationTargetAccumulated = false;
 			this.uiRef.wheelDirection = direction;
 		}
 
-		this.uiRef.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar);
+		this.uiRef.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, this.props.overscrollEffectOn.scrollbarButton);
 	}
 
 	scrollStopOnScroll = () => {
