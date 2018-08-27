@@ -2,12 +2,11 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [2.1.1] - 2018-08-27
 
 ### Changed
 
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effects only by wheel input
-- `moonstone/Icon` and `moonstone/IconButton` to require `children`
 
 ### Fixed
 
