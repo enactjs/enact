@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Added
+
+- `spotlight/SpotlightContainerDecorator` config option `preventScroll` to support moving focus without scrolling
+
 ### Fixed
 
 - `spotlight/SpotlightContainerDecorator` to unmount config instead of remove when spotlightId is changed if it preserves id
