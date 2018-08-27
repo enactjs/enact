@@ -684,14 +684,14 @@ const Spotlight = (function () {
 				const focused = focusElement(target, nextContainerIds);
 
 				if (!focused && wasContainerId) {
-					this.setActiveContainer(elem);
+					setLastContainer(elem);
 				}
 
 				return focused;
 			} else if (wasContainerId) {
 				// if we failed to find a spottable target within the provided container, we'll set
 				// it as the active container to allow it to focus itself if its contents change
-				this.setActiveContainer(elem);
+				setLastContainer(elem);
 			}
 
 			return false;
