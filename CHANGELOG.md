@@ -11,11 +11,8 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Fixed
 
 - `moonstone/VideoPlayer` so that activity is detected and the `autoCloseTimeout` timer is reset when using 5-way to navigate from the media slider
-- `moonstone/Icon` and `moonstone/IconButton` to warn if `children` (the icon) not supplied
 - `spotlight` to correctly handle focus with `'self-only'` containers
 - `spotlight/SpotlightContainerDecorator` to unmount config instead of remove when spotlightId is changed if it preserves id
-- `ui/Icon` to warn if `children` (the icon) is not supplied
-- `ui/LabeledIcon` to warn if `icon` prop supplied
 
 ## [2.1.0] - 2018-08-20
 

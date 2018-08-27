@@ -4,10 +4,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [2.1.1] - 2018-08-27
 
-### Fixed
-
-- `ui/Icon` to warn if `children` (the icon) is not supplied
-- `ui/LabeledIcon` to warn if `icon` prop supplied
+No significant changes.
 
 ## [2.1.0] - 2018-08-20
 
