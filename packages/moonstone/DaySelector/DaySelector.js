@@ -45,7 +45,7 @@ const DaySelectorBase = kind({
 
 	propTypes: /** @lends moonstone/DaySelector.DaySelectorBase.prototype */ {
 		/**
-		 * Applies a disabled style and prevents interacting with the component.
+		 * Disables DaySelector and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @public

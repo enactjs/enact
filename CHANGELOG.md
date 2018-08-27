@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.1.1] - 2018-08-27
+
+### Changed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effects only by wheel input
+
+### Fixed
+
+- `moonstone/VideoPlayer` so that activity is detected and the `autoCloseTimeout` timer is reset when using 5-way to navigate from the media slider
+- `spotlight` to correctly handle focus with `'self-only'` containers
+- `spotlight/SpotlightContainerDecorator` to unmount config instead of remove when spotlightId is changed if it preserves id
+
 ## [2.1.0] - 2018-08-20
 
 ### Added

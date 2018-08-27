@@ -54,9 +54,6 @@ storiesOf('VirtualList.VirtualGridList', module)
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				spacing={ri.scale(number('spacing', Config, 18))}
-				style={{
-					height: ri.unit(552, 'rem')
-				}}
 			/>
 		),
 		{propTables: [Config]}
