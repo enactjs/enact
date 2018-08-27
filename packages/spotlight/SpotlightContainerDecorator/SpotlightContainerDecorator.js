@@ -201,7 +201,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			let id = nextProps.spotlightId;
 			if (prevId !== id) {
-				Spotlight.remove(prevId);
+				this.releaseContainer(prevId);
 				id = Spotlight.add(id);
 
 				this.setState(stateFromProps({spotlightId: id}));
@@ -215,10 +215,14 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
+			this.releaseContainer(this.state.id);
+		}
+
+		releaseContainer (spotlightId) {
 			if (this.state.preserveId) {
-				Spotlight.unmount(this.state.id);
+				Spotlight.unmount(spotlightId);
 			} else {
-				Spotlight.remove(this.state.id);
+				Spotlight.remove(spotlightId);
 			}
 		}
 

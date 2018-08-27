@@ -7,8 +7,13 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Fixed
 
 - `spotlight` to always update the last focused container when it contains the focused element
+- `spotlight/SpotlightContainerDecorator` to unmount config instead of remove when spotlightId is changed if it preserves id
 
-## [2.0.2] - 2018-13-01
+## [2.1.0] - 2018-08-20
+
+No significant changes.
+
+## [2.0.2] - 2018-08-13
 
 ### Fixed
 
