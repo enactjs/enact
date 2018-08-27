@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Changed
+
+- `spotlight` to call focus() function of the target element with `{preventScroll: true}` option
+
 ### Fixed
 
 - `spotlight/SpotlightContainerDecorator` to unmount config instead of remove when spotlightId is changed if it preserves id
