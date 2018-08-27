@@ -1,6 +1,6 @@
 /**
  * Exports the {@link ui/Remeasurable.Remeasurable} and {@link ui/Remeasurable.RemeasurableDecorator}
- * Higher-order Component (HOC). Adds the ability to broadcast remeasure changes
+ * higher-order component (HOC). Adds the ability to broadcast remeasure changes
  * based on a callback. The default export is {@link ui/Remeasurable.Remeasurable}.
  *
  * @module ui/Remeasurable
@@ -29,7 +29,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/Remeasurable.RemeasurableDecorator} is a Higher-order Component which adds the ability
+ * {@link ui/Remeasurable.RemeasurableDecorator} is a higher-order component which adds the ability
  * to broadcast remeasure changes based on a callback.
  *
  * @class RemeasurableDecorator
@@ -112,7 +112,7 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 
 /**
- * {@link ui/Remeasurable.Remeasurable} is a Higher-order Component which notifies a child of a
+ * {@link ui/Remeasurable.Remeasurable} is a higher-order component which notifies a child of a
  * change in size from parent. This can then be used to trigger a new measurement. A `remeasure`
  * prop will be passed down to the wrapped component.
  *

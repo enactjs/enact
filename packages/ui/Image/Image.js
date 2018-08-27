@@ -15,8 +15,9 @@ import {selectSrc} from '../resolution';
 import componentCss from './Image.less';
 
 /**
- * A basic image component designed to display images conditionally based on screen size. This
- * component does not have a default size, therefore the image will not show unless a size is
+ * A basic image component designed to display images conditionally based on screen size.
+ *
+ * This component does not have a default size, therefore the image will not show unless a size is
  * specified using a CSS `className` or inline `style`.
  *
  * Example:
@@ -89,7 +90,7 @@ const ImageBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * A function that will run if the image has an error.
+		 * Called if the image has an error.
 		 *
 		 * @type {Function}
 		 * @public
@@ -97,7 +98,7 @@ const ImageBase = kind({
 		onError: PropTypes.func,
 
 		/**
-		 * A function that will run once the image is loaded.
+		 * Called once the image is loaded.
 		 *
 		 * @type {Function}
 		 * @public
