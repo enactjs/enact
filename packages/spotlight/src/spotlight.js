@@ -751,6 +751,9 @@ const Spotlight = (function () {
 		/**
 		 * Sets the currently active container.
 		 *
+		 * Note: If the current container is restricted to 'self-only' and `containerId` is not
+		 * contained within the current container then the active container will not be updated.
+		 *
 		 * @param {String} [containerId] The id of the currently active container. If this is not
 		 *	provided, the root container is set as the currently active container.
 		 * @public
