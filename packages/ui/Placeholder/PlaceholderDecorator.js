@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * Default config for [PlaceholderDecorator]{@link ui/Placeholder.PlaceholderDecorator}
+ * Default config for PlaceholderDecorator.
  *
  * @memberof ui/Placeholder.PlaceholderDecorator
  * @hocconfig
@@ -30,8 +30,10 @@ const defaultConfig = {
 };
 
 /**
- * The context propTypes required by `PlaceholderDecorator`. This should be set as the `childContextTypes` of a
- * container so that the container can notify when scrolling
+ * The context propTypes required by `PlaceholderDecorator`.
+ *
+ * This should be set as the `childContextTypes` of a container so that the container can notify
+ * when scrolling.
  *
  * @memberof ui/Placeholder.PlaceholderDecorator
  * @public
@@ -43,8 +45,7 @@ const contextTypes = {
 };
 
 /**
- * [PlaceholderDecorator]{@link ui/Placeholder.PlaceholderDecorator} is a higher-order component (HOC) that enables
- * a container to notify the wrapped component when scrolling.
+ * A higher-order component that enables a container to notify the wrapped component when scrolling.
  *
  * Containers must provide `registerPlaceholder`, `unregisterPlaceholder`, and `invalidateBounds` methods via React's context for
  * `PlaceholderDecorator` instances.

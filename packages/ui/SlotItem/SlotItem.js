@@ -1,6 +1,7 @@
 /**
- * An unstyled item component that accepts multiple positions of children, using the usual
- * `children` prop, as well as two additional props: `slotBefore`, and `slotAfter`.
+ * An unstyled item component that accepts multiple positions of children.
+ *
+ * Using the usual `children` prop, as well as two additional props: `slotBefore`, and `slotAfter`.
  * It is able to be customized by a theme or application.
  *
  * @module ui/SlotItem

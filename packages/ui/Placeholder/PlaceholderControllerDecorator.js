@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom';
 import {contextTypes} from './PlaceholderDecorator';
 
 /**
- * Default config for [PlaceholderControllerDecorator]{@link ui/Placeholder.PlaceholderControllerDecorator}
+ * Default config for `PlaceholderControllerDecorator`.
  *
  * @memberof ui/Placeholder.PlaceholderControllerDecorator
  * @hocconfig
@@ -15,8 +15,9 @@ import {contextTypes} from './PlaceholderDecorator';
  */
 const defaultConfig = {
 	/**
-	 * The bounds of the container represented by an object with `height` and `width` members. If
-	 * the container is a static size, this can be specified at design-time to avoid calculating the
+	 * The bounds of the container represented by an object with `height` and `width` members.
+	 *
+	 * If the container is a static size, this can be specified at design-time to avoid calculating the
 	 * bounds at run-time (the default behavior).
 	 *
 	 * @type {Object}
@@ -47,8 +48,8 @@ const defaultConfig = {
 };
 
 /**
- * [PlaceholderControllerDecorator]{@link ui/Placeholder.PlaceholderControllerDecorator} is a higher-order component (HOC) that can make
- * placeholders rendered or not rendered depending on `'scrollTop'` from the `'onScroll'`'s parameter.
+ * A higher-order component (HOC) that can make placeholders rendered or not rendered depending on
+ * `'scrollTop'` from the `'onScroll'`'s parameter.
  *
  * @class PlaceholderControllerDecorator
  * @memberof ui/Placeholder

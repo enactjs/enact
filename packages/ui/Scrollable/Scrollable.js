@@ -94,8 +94,9 @@ class ScrollableBase extends Component {
 		applyOverscrollEffect: PropTypes.func,
 
 		/**
-		 * A callback function that receives a reference to the `scrollTo` feature. Once received,
-		 * the `scrollTo` method can be called as an imperative interface.
+		 * A callback function that receives a reference to the `scrollTo` feature.
+		 *
+		 * Once received, the `scrollTo` method can be called as an imperative interface.
 		 *
 		 * The `scrollTo` function accepts the following paramaters:
 		 * - {position: {x, y}} - Pixel value for x and/or y position
@@ -195,6 +196,7 @@ class ScrollableBase extends Component {
 
 		/**
 		 * Called when scrolling.
+		 *
 		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
 		 * It is not recommended to set this prop since it can cause performance degradation.
 		 * Use `onScrollStart` or `onScrollStop` instead.
@@ -210,6 +212,7 @@ class ScrollableBase extends Component {
 
 		/**
 		 * Called when scroll starts.
+		 *
 		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
 		 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
 		 *
@@ -240,6 +243,7 @@ class ScrollableBase extends Component {
 
 		/**
 		 * Called when scroll stops.
+		 *
 		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
 		 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
 		 *
@@ -315,6 +319,7 @@ class ScrollableBase extends Component {
 
 		/**
 		 * Scrollable CSS style.
+		 *
 		 * Should be defined because we manipulate style prop in render().
 		 *
 		 * @type {Object}
@@ -324,6 +329,7 @@ class ScrollableBase extends Component {
 
 		/**
 		 * Specifies how to show vertical scrollbar.
+		 *
 		 * Valid values are:
 		 * * `'auto'`,
 		 * * `'visible'`, and

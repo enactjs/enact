@@ -17,9 +17,8 @@ import ScrollableNative from '../Scrollable/ScrollableNative';
 import css from './Scroller.less';
 
 /**
- * An unstyled base component for Scroller{@link ui/Scroller.Scroller}.
- * In most circumstances, you will want to use the Scrollable version:
- * [Scroller]{@link ui/Scroller.Scroller}
+ * An unstyled base scroller component.
+ * In most circumstances, you will want to use the Scrollable version [Scroller]{@link ui/Scroller.Scroller}
  *
  * @class ScrollerBase
  * @memberof ui/Scroller
