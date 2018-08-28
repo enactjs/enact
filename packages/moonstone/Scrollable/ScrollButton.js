@@ -4,7 +4,7 @@ import React from 'react';
 
 import IconButton from '../IconButton';
 
-import css from './Scrollbar.less';
+import css from './ScrollButton.less';
 
 const classNameMap = {
 	down: css.scrollbarBottomButton,
@@ -96,6 +96,7 @@ const ScrollButton = kind({
 			<IconButton
 				{...rest}
 				backgroundOpacity="transparent"
+				css={css}
 				disabled={disabled}
 				small
 			>
