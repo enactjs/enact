@@ -640,10 +640,13 @@ const VirtualListBaseFactory = (type) => {
 				this.setSpotlightContainerRestrict(keyCode, target);
 				Spotlight.setPointerMode(false);
 				if (this.jumpToSpottableItem(keyCode, repeat, target)) {
-					// Pause Spotlight so we don't focus twice
-					// Resume after a short delay so Spotlight will work as intended
+					// Pause Spotlight temporarily so we don't focus twice
+					const prevPausedState = Spotlight.isPaused();
 					Spotlight.pause();
-					setTimeout(Spotlight.resume, 16);
+					// If spotlight was not previously paused resume at a later time
+					if (!prevPausedState) {
+						setTimeout(Spotlight.resume, 16);
+					}
 				}
 			}
 		}
