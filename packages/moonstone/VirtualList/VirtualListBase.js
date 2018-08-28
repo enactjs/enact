@@ -604,7 +604,7 @@ const VirtualListBaseFactory = (type) => {
 				if (isWrapped) {
 					this.isWrappedBy5way = true;
 				}
-				
+
 				if (firstIndex <= nextIndex && nextIndex < firstIndex + numOfItems) {
 					this.focusOnItem(nextIndex);
 				} else {
@@ -639,7 +639,6 @@ const VirtualListBaseFactory = (type) => {
 				ev.preventDefault();
 				this.setSpotlightContainerRestrict(keyCode, target);
 				Spotlight.setPointerMode(false);
-				this.jumpToSpottableItem(keyCode, repeat, target)
 				if (this.jumpToSpottableItem(keyCode, repeat, target)) {
 					// Pause Spotlight so we don't focus twice
 					// Resume after a short delay so Spotlight will work as intended
