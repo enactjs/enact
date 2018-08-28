@@ -184,6 +184,7 @@ const Spotlight = (function () {
 	}
 
 	function focusElement (elem, containerIds, fromPointer) {
+		console.trace('focus');
 		if (!elem) {
 			return false;
 		}
@@ -403,6 +404,7 @@ const Spotlight = (function () {
 	}
 
 	function onKeyDown (evt) {
+		console.log(evt);
 		if (shouldPreventNavigation()) {
 			notifyKeyDown(evt.keyCode);
 			return;
