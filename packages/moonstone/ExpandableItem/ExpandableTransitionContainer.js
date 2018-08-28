@@ -11,7 +11,6 @@ import Transition from '@enact/ui/Transition';
  */
 
 const ExpandableTransitionContainerBase = SpotlightContainerDecorator(
-	{preventScroll: true},
 	Resizable(
 		{resize: 'onTransitionEnd', filter: (ev) => ev.propertyName === 'height'},
 		Transition

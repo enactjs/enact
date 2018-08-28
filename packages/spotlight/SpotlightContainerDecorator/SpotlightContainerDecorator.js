@@ -25,6 +25,8 @@ const spotlightDefaultClass = 'spottable-default';
 const enterEvent = 'onMouseEnter';
 const leaveEvent = 'onMouseLeave';
 
+const SpotlightContainerContext = React.createContext(null);
+
 /**
  * Default config for {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
  *
@@ -180,7 +182,12 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.state = stateFromProps(props);
+			this.state = {
+				preventScroll: containerConfig.preventScroll,
+				...stateFromProps(props)
+			};
+
+			this.nestedPreventScroll = false;
 		}
 
 		componentWillMount () {
@@ -205,6 +212,11 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				id = Spotlight.add(id);
 
 				this.setState(stateFromProps({spotlightId: id}));
+			}
+			if (this.nestedPreventScroll) {
+				this.setState({
+					preventScroll: true
+				});
 			}
 		}
 
@@ -279,7 +291,19 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			return (
-				<Wrapped {...rest} />
+				<SpotlightContainerContext.Consumer>
+					{preventScroll => {
+						this.nestedPreventScroll = preventScroll;
+						if (!containerConfig.preventScroll && preventScroll) {
+							Spotlight.set(this.state.id, {preventScroll: true});
+						}
+						return (
+							<SpotlightContainerContext.Provider value={this.state.preventScroll}>
+								<Wrapped {...rest} />
+							</SpotlightContainerContext.Provider>
+						);
+					}}
+				</SpotlightContainerContext.Consumer>
 			);
 		}
 	};
