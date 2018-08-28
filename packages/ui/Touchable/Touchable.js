@@ -180,7 +180,7 @@ const handleBlur = handle(
 );
 
 /**
- * Default config for {@link ui/Touchable.Touchable}.
+ * Default config for `Touchable`.
  *
  * @memberof ui/Touchable.Touchable
  * @hocconfig
@@ -197,7 +197,7 @@ const defaultConfig = {
 };
 
 /**
- * A higher-order component (HOC) that provides a consistent set of pointer events -- `onDown`, `onUp`,
+ * A higher-order component that provides a consistent set of pointer events -- `onDown`, `onUp`,
  * and `onTap` -- across mouse and touch interfaces along with support for common gestures including
  * `onFlick`, `onDrag`, `onHold`, and `onHoldPulse`.
  *
@@ -216,7 +216,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends ui/Touchable.Touchable.prototype */ {
 			/**
-			 * When `true`, disables the component.
+			 * Disables the component.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -225,7 +225,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * Instance-specific overrides of the drag configuration
+			 * Instance-specific overrides of the drag configuration.
 			 *
 			 * @see ui/Touchable.configure
 			 * @type {Object}
@@ -234,7 +234,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			dragConfig: dragConfigPropType,
 
 			/**
-			 * Instance-specific overrides of the flick configuration
+			 * Instance-specific overrides of the flick configuration.
 			 *
 			 * @see ui/Touchable.configure
 			 * @type {Object}
@@ -243,8 +243,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			flickConfig: flickConfigPropType,
 
 			/**
-			 * Instance-specific overrides of the hold configuration
-			 *
+			 * Instance-specific overrides of the hold configuration.
 			 * @see ui/Touchable.configure
 			 * @type {Object}
 			 * @public
@@ -252,8 +251,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			holdConfig: holdConfigPropType,
 
 			/**
-			 * When `true`, prevents resuming the touch events and gestures when re-entering the
-			 * component.
+			 * Prevents resuming the touch events and gestures when re-entering the component.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -262,7 +260,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			noResume: PropTypes.bool,
 
 			/**
-			 * Event handler for 'down' pointer events
+			 * Event handler for 'down' pointer events.
 			 *
 			 * @type {Function}
 			 * @public
@@ -270,7 +268,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onDown: PropTypes.func,
 
 			/**
-			 * Event handler for a drag gesture
+			 * Event handler for a drag gesture.
 			 *
  			 * Event payload includes:
 			 *
@@ -284,7 +282,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onDrag: PropTypes.func,
 
 			/**
-			 * Event handler for the end of a drag gesture
+			 * Event handler for the end of a drag gesture.
 			 *
  			 * Event payload includes:
 			 *
@@ -296,7 +294,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onDragEnd: PropTypes.func,
 
 			/**
-			 * Event handler for the start of a drag gesture
+			 * Event handler for the start of a drag gesture.
 			 *
  			 * Event payload includes:
 			 *
@@ -310,7 +308,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onDragStart: PropTypes.func,
 
 			/**
-			 * Event handler for a flick gesture
+			 * Event handler for a flick gesture.
 			 *
 			 * Event payload includes:
 			 *
@@ -326,11 +324,11 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onFlick: PropTypes.func,
 
 			/**
-			 * Event handler for hold events
+			 * Event handler for hold events.
 			 *
 			 * Event payload includes:
 			 *
-			 * * `type` - Type of event, `'onFlick'`
+			 * * `type` - Type of event, `'onHold'`
 			 * * `name` - The name of the hold as configured in the events list
 			 * * `time` - Time, in milliseconds, configured for this hold which may vary slightly
 			 *            from time since the hold began
@@ -345,7 +343,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			 *
 			 * Event payload includes:
 			 *
-			 * * `type` - Type of event, `'onHold'`
+			 * * `type` - Type of event, `'onHoldPulse'`
 			 * * `time` - Time, in milliseconds, since the hold began
 			 *
 			 * @type {Function}

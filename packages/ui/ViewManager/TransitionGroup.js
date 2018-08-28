@@ -135,7 +135,9 @@ class TransitionGroup extends React.Component {
 		childFactory: PropTypes.func,
 
 		/**
-		 * Type of component wrapping the children. May be a DOM node or a custom React component.
+		 * Type of component wrapping the children.
+		 *
+		 * May be a DOM node or a custom React component.
 		 *
 		 * @type {Component}
 		 * @default 'div'
@@ -192,8 +194,10 @@ class TransitionGroup extends React.Component {
 		onWillTransition: PropTypes.func,
 
 		/**
-		 * Maximum number of rendered children. Used to limit how many visible transitions are
-		 * active at any time. A value of 1 would prevent any exit transitions whereas a value of 2,
+		 * Maximum number of rendered children.
+		 *
+		 * Used to limit how many visible transitions are active at any time.
+		 * A value of 1 would prevent any exit transitions whereas a value of 2,
 		 * the default, would ensure that only 1 view is transitioning on and 1 view is
 		 * transitioning off at a time.
 		 *

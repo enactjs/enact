@@ -326,7 +326,7 @@ const SliderDecorator = compose(
  */
 
 /**
- * The handler to run when the value is changed.
+ * Called when the value is changed.
  *
  * @name onChange
  * @memberof ui/Slider.Slider.prototype

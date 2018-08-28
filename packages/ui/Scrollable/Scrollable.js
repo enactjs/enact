@@ -135,6 +135,7 @@ class ScrollableBase extends Component {
 
 		/**
 		 * Direction of the list or the scroller.
+		 *
 		 * `'both'` could be only used for[Scroller]{@link ui/Scroller.Scroller}.
 		 *
 		 * Valid values are:
