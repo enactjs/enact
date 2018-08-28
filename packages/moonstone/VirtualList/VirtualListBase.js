@@ -644,7 +644,7 @@ const VirtualListBaseFactory = (type) => {
 					// Pause Spotlight so we don't focus twice
 					// Resume after a short delay so Spotlight will work as intended
 					Spotlight.pause();
-					setTimeout(Spotlight.resume, 0);
+					setTimeout(Spotlight.resume, 16);
 				}
 			}
 		}
