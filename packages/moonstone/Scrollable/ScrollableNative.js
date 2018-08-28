@@ -459,7 +459,7 @@ class ScrollableBaseNative extends Component {
 		switch (direction) {
 			case 'up':
 				oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
-				oPoint.y = viewportBounds.top;
+				oPoint.y = viewportBounds.top + oSpotBounds.height / 2 - 1;
 				break;
 			case 'left':
 				oPoint.x = viewportBounds.left;
@@ -467,7 +467,7 @@ class ScrollableBaseNative extends Component {
 				break;
 			case 'down':
 				oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
-				oPoint.y = viewportBounds.top + viewportBounds.height;
+				oPoint.y = viewportBounds.top + viewportBounds.height - oSpotBounds.height / 2 + 1;
 				break;
 			case 'right':
 				oPoint.x = viewportBounds.left + viewportBounds.width;
