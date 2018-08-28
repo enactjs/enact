@@ -391,9 +391,10 @@ class ScrollableBase extends Component {
 				rDirection = reverseDirections[direction],
 				viewportBounds = containerRef.getBoundingClientRect(),
 				focusedItemBounds = focusedItem.getBoundingClientRect(),
-				endPoint = (direction === 'up') ?
-					{x: focusedItemBounds.left + focusedItemBounds.width / 2, y: viewportBounds.top + focusedItemBounds.height / 2 - 1} :
-					{x: focusedItemBounds.left + focusedItemBounds.width / 2, y: viewportBounds.top + viewportBounds.height - focusedItemBounds.height / 2 + 1};
+				endPoint = {
+					x: focusedItemBounds.left + focusedItemBounds.width / 2,
+					y: viewportBounds.top + ((direction === 'up') ? focusedItemBounds.height / 2 - 1 : viewportBounds.height - focusedItemBounds.height / 2 + 1)
+				};
 			let next = null;
 
 			/* 1. Find spottable item in viewport */
@@ -446,8 +447,10 @@ class ScrollableBase extends Component {
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				Spotlight.setPointerMode(false);
-				direction = isPageUp(keyCode) ? 'up' : 'down'
-				overscrollEffectRequired = this.scrollByPage(direction) && overscrollEffectOn.pageKey;
+				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
+					direction = isPageUp(keyCode) ? 'up' : 'down';
+					overscrollEffectRequired = this.scrollByPage(direction) && overscrollEffectOn.pageKey;
+				}
 			} else if (getDirection(keyCode)) {
 				const element = Spotlight.getCurrent();
 
