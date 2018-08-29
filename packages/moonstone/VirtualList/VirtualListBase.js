@@ -3,6 +3,7 @@ import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
+import {Pause} from '@enact/spotlight/Pause';
 import Spottable from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 
@@ -268,12 +269,12 @@ const VirtualListBaseFactory = (type) => {
 				// remove a function for preventing native scrolling by Spotlight
 				if (containerNode && containerNode.removeEventListener) {
 					containerNode.removeEventListener('scroll', this.preventScroll);
-					containerNode.removeEventListener('keydown', this.onKeyDown);
 				}
 			}
 
 			if (containerNode && containerNode.removeEventListener) {
 				containerNode.removeEventListener('keydown', this.onKeyDown);
+				containerNode.removeEventListener('keyup', this.revertSpotlightState);
 			}
 
 			this.setContainerDisabled(false);
@@ -641,16 +642,23 @@ const VirtualListBaseFactory = (type) => {
 				Spotlight.setPointerMode(false);
 				if (this.jumpToSpottableItem(keyCode, repeat, target)) {
 					// Pause Spotlight temporarily so we don't focus twice
-					const prevPausedState = Spotlight.isPaused();
-					Spotlight.pause();
-					// If spotlight was not previously paused resume at a later time
-					if (!prevPausedState) {
-						setTimeout(Spotlight.resume, 16);
+					this.virtualListPause = new Pause('VirtualList');
+					this.virtualListPause.pause();
+
+					const containerNode = this.uiRef.containerRef;
+
+					if (containerNode && containerNode.addEventListener) {
+						containerNode.addEventListener('keyup', this.resumeSpotlight);
 					}
 				}
 			}
 		}
 
+		resumeSpotlight = () => {
+			const containerNode = this.uiRef.containerRef;
+			this.virtualListPause.resume();
+			containerNode.removeEventListener('keyup', this.resumeSpotlight);
+		}
 		/**
 		 * Handle global `onKeyDown` event
 		 */
