@@ -407,7 +407,7 @@ const VirtualListBaseFactory = (type) => {
 				{dataSize, spacing} = this.props,
 				{dimensionToExtent, primary: {clientSize, gridSize, itemSize}, scrollPosition} = this.uiRef,
 				{findSpottableItem} = this,
-				numOfItemsInPage = (Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent),
+				numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent,
 				firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent,
 				lastFullyVisibleIndex = Math.min(dataSize - 1, Math.floor((scrollPosition + clientSize - itemSize) / gridSize) * dimensionToExtent);
 			let candidateIndex = -1;
