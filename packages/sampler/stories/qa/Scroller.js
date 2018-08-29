@@ -31,7 +31,7 @@ class ScrollerResizableItem extends React.Component {
 		toggleMore: PropTypes.func
 	}
 	render () {
-		const height = this.props.more ? 1500 : 400;
+		const height = ri.unit(this.props.more ? 1500 : 400, 'rem');
 		const text = this.props.more ? 'less' : 'more';
 		const style = {
 			position: 'relative',
