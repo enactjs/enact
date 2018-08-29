@@ -11,39 +11,6 @@ import ScrollableNative from '../Scrollable/ScrollableNative';
 
 const SpotlightPlaceholder = Spottable('div');
 
-const configureSpotlight = (spotlightId, instance) => {
-	Spotlight.set(spotlightId, {
-		enterTo: 'last-focused',
-		/*
-		 * Returns the data-index as the key for last focused
-		 */
-		lastFocusedPersist: function () {
-			if (this.lastFocusedIndex != null) {
-				return {
-					container: false,
-					element: true,
-					key: this.lastFocusedIndex
-				};
-			}
-		}.bind(instance),
-		/*
-		 * Restores the data-index into the placeholder if its the only element. Tries to find a
-		 * matching child otherwise.
-		 */
-		lastFocusedRestore: ({key}, all) => {
-			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
-				all[0].dataset.index = key;
-
-				return all[0];
-			}
-
-			return all.reduce((focused, node) => {
-				return focused || Number(node.dataset.index) === key && node;
-			}, null);
-		}
-	});
-};
-
 const
 	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
 	isDown = is('down'),
@@ -223,7 +190,7 @@ const VirtualListBaseFactory = (type) => {
 
 			const {spotlightId} = props;
 			if (spotlightId) {
-				configureSpotlight(spotlightId, this);
+				this.configureSpotlight(spotlightId);
 			}
 		}
 
@@ -253,7 +220,7 @@ const VirtualListBaseFactory = (type) => {
 
 		componentWillReceiveProps (nextProps) {
 			if (nextProps.spotlightId && nextProps.spotlightId !== this.props.spotlightId) {
-				configureSpotlight(nextProps.spotlightId, this);
+				this.configureSpotlight(nextProps.spotlightId);
 			}
 		}
 
@@ -301,6 +268,47 @@ const VirtualListBaseFactory = (type) => {
 					document.removeEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
 				}
 			}
+		}
+
+		configureSpotlight = (spotlightId) => {
+			Spotlight.set(spotlightId, {
+				enterTo: 'last-focused',
+				/*
+				 * Returns the data-index as the key for last focused
+				 */
+				lastFocusedPersist: this.lastFocusedPersist,
+				/*
+				 * Restores the data-index into the placeholder if its the only element. Tries to find a
+				 * matching child otherwise.
+				 */
+				lastFocusedRestore: this.lastFocusedRestore
+			});
+		}
+
+		lastFocusedPersist = () => {
+			if (this.lastFocusedIndex != null) {
+				return {
+					container: false,
+					element: true,
+					key: this.lastFocusedIndex
+				};
+			}
+		}
+
+		/*
+		 * Restores the data-index into the placeholder if its the only element. Tries to find a
+		 * matching child otherwise.
+		 */
+		lastFocusedRestore = ({key}, all) => {
+			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
+				all[0].dataset.index = key;
+
+				return all[0];
+			}
+
+			return all.reduce((focused, node) => {
+				return focused || Number(node.dataset.index) === key && node;
+			}, null);
 		}
 
 		/**

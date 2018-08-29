@@ -424,15 +424,18 @@ function generateId () {
  * @private
  */
 const mergeConfig = (current, updated) => {
-	const cfg = Object.assign({}, current);
+	if (!updated) return current;
 
-	if (updated) {
-		Object.keys(updated).forEach(key => {
-			if (key in GlobalConfig) {
-				cfg[key] = updated[key];
+	let cfg = null;
+
+	Object.keys(updated).forEach(key => {
+		if (key in GlobalConfig && current[key] !== updated[key]) {
+			if (cfg == null) {
+				cfg = Object.assign({}, current);
 			}
-		});
-	}
+			cfg[key] = updated[key];
+		}
+	});
 
 	return cfg;
 };
@@ -467,7 +470,7 @@ const configureContainer = (...args) => {
 		containerId = generateId();
 	}
 
-	config = mergeConfig(containerConfigs.get(containerId) || GlobalConfig, config);
+	config = mergeConfig(containerConfigs.get(containerId) || {...GlobalConfig}, config);
 	containerConfigs.set(containerId, config);
 
 	return containerId;
