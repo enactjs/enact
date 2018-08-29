@@ -744,6 +744,22 @@ const VideoPlayerBase = class extends React.Component {
 			this.showControls();
 		}
 
+		if (this.state.announce !== prevState.announce) {
+			if (this.state.announce === AnnounceState.TITLE) {
+				this.bottomControlsRef.setAttribute('aria-labelledby', `${this.id}_title`);
+				this.bottomControlsRef.setAttribute('aria-live', 'off');
+				this.bottomControlsRef.setAttribute('role', 'alert');
+			} else if (this.state.announce === AnnounceState.INFO) {
+				this.bottomControlsRef.setAttribute('aria-labelledby', `${this.id}_info`);
+				this.bottomControlsRef.removeAttribute('aria-live');
+				this.bottomControlsRef.setAttribute('role', 'region');
+			} else {
+				this.bottomControlsRef.removeAttribute('aria-labelledby');
+				this.bottomControlsRef.removeAttribute('aria-live');
+				this.bottomControlsRef.removeAttribute('role');
+			}
+		}
+
 		if (this.state.mediaControlsVisible && prevState.infoVisible !== this.state.infoVisible) {
 			const current = Spotlight.getCurrent();
 			if (current && current.dataset.spotlightId === this.moreButtonSpotlightId) {
@@ -1705,21 +1721,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.announceRef = node;
 	}
 
-	getControlsAriaProps () {
-		if (this.state.announce === AnnounceState.TITLE) {
-			return {
-				'aria-labelledby': `${this.id}_title`,
-				'aria-live': 'off',
-				role: 'alert'
-			};
-		} else if (this.state.announce === AnnounceState.INFO) {
-			return {
-				'aria-labelledby': `${this.id}_info`,
-				role: 'region'
-			};
-		}
-
-		return null;
+	setBottomControlsRef = (node) => {
+		this.bottomControlsRef = node;
 	}
 
 	render () {
@@ -1778,8 +1781,6 @@ const VideoPlayerBase = class extends React.Component {
 		mediaProps.onUpdate = this.handleEvent;
 		mediaProps.ref = this.setVideoRef;
 
-		const controlsAriaProps = this.getControlsAriaProps();
-
 		let proportionSelection = selection;
 		if (proportionSelection != null && this.state.duration) {
 			proportionSelection = selection.map(t => t / this.state.duration);
@@ -1814,7 +1815,7 @@ const VideoPlayerBase = class extends React.Component {
 				</Overlay>
 
 				{this.state.bottomControlsRendered ?
-					<div className={css.fullscreen} {...controlsAriaProps}>
+					<div className={css.fullscreen} ref={this.setBottomControlsRef}>
 						<FeedbackContent
 							className={css.miniFeedback}
 							playbackRate={this.pulsedPlaybackRate || this.selectPlaybackRate(this.speedIndex)}
