@@ -36,7 +36,7 @@ class PopupFromSelfOnlyContainer extends React.Component {
 	render () {
 		return (
 			<div>
-				<Container spotlightId='selfOnlyContainer'>
+				<Container spotlightId="selfOnlyContainer">
 					<Button onClick={this.openPopup}>button</Button>
 				</Container>
 				<Notification open={this.state.isPopup}>
