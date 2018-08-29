@@ -2,6 +2,8 @@ import Button from '@enact/moonstone/Button';
 import Popup from '@enact/moonstone/Popup';
 import React from 'react';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import Spotlight from '@enact/spotlight';
+import Notification from '@enact/moonstone/Notification';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
@@ -10,6 +12,43 @@ import {boolean, select, text} from '../../src/enact-knobs';
 Popup.displayName = 'Popup';
 
 const Container = SpotlightContainerDecorator('div');
+
+class PopupFromSelfOnlyContainer extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			isPopup: false
+		};
+	}
+
+	componentDidMount = () => {
+		Spotlight.set('selfOnlyContainer', {'restrict': 'self-only'});
+	}
+
+	openPopup = () => {
+		this.setState({isPopup: true});
+	}
+
+	closePopup = () => {
+		this.setState({isPopup: false});
+	}
+
+	render () {
+		return (
+			<div>
+				<Container spotlightId='selfOnlyContainer'>
+					<Button onClick={this.openPopup}>button</Button>
+				</Container>
+				<Notification open={this.state.isPopup}>
+					<span>popup</span>
+					<buttons>
+						<Button onClick={this.closePopup}>button</Button>
+					</buttons>
+				</Notification>
+			</div>
+		);
+	}
+}
 
 storiesOf('Popup', module)
 	.add(
@@ -40,5 +79,10 @@ storiesOf('Popup', module)
 					</Container>
 				</Popup>
 			</div>
+		)
+	).add(
+		'from self-only container',
+		() => (
+			<PopupFromSelfOnlyContainer />
 		)
 	);
