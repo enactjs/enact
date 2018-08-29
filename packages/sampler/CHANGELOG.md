@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ### Added
 
-- `Scroller` qa-sample to verify it with resizable item
+- `moonstone/Scroller` qa-sampler sample with resizable items
 
 ## [2.1.1] - 2018-08-27
 

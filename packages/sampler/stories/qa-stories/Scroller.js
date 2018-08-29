@@ -6,11 +6,11 @@ import Divider from '@enact/moonstone/Divider';
 import ri from '@enact/ui/resolution';
 import Group from '@enact/ui/Group';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
 import {boolean, select} from '../../src/enact-knobs';
-import ScrollerResizableItem from './components/ScrollerResizableItem';
 
 Scroller.displayName = 'Scroller';
 
@@ -25,6 +25,22 @@ const
 		horizontalScrollbar: ['auto', 'hidden', 'visible']
 	};
 
+class ScrollerResizableItem extends React.Component {
+	static propTypes = {
+		more: PropTypes.bool,
+		toggleMore: PropTypes.func
+	}
+	render () {
+		const height = this.props.more ? 1500 : 400;
+		const text = this.props.more ? 'less' : 'more';
+		return (
+			<div style={{position: 'relative', width: '90%', height: height, border: 'solid 3px yellow'}}>
+				<Button onClick={this.props.toggleMore} small style={{position: 'absolute', bottom: 0}}>{text}</Button>
+			</div>
+		);
+	}
+}
+
 class ScrollerWithResizable extends React.Component {
 	constructor (props) {
 		super(props);
@@ -36,9 +52,10 @@ class ScrollerWithResizable extends React.Component {
 	handleClick = () => {
 		this.setState(prevState => ({more: !prevState.more}));
 	}
+
 	render () {
 		return (
-			<Scroller direction="vertical" verticalScrollbar="visible">
+			<Scroller verticalScrollbar="visible">
 				<Item>Item</Item>
 				<Item>Item</Item>
 				<ScrollerResizableItem toggleMore={this.handleClick} more={this.state.more} />
