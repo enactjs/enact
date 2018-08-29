@@ -49,9 +49,7 @@ class ScrollerWithResizable extends React.Component {
 		};
 	}
 
-	handleClick = () => {
-		this.setState(prevState => ({more: !prevState.more}));
-	}
+	handleClick = () => this.setState({more: !this.state.more})
 
 	render () {
 		return (
