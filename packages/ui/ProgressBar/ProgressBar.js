@@ -85,10 +85,10 @@ const ProgressBar = kind({
 		/**
 		 * Sets the orientation of the slider.
 		 *
-		 * Whether the progress-bar depicts its progress value
-		 * in a left and right orientation or up and down orientation.
+		 * Allowed values include:
 		 *
-		 * * Must be either `'horizontal'` or `'vertical'`.
+		 * * `'horizontal'` - A left and right orientation
+		 * * `'vertical'` - An up and down orientation
 		 *
 		 * @type {String}
 		 * @default 'horizontal'

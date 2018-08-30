@@ -402,14 +402,13 @@ const scaleToRem = (pixels) => unit(scale(pixels), 'rem');
  *
  * @function
  * @memberof ui/resolution
- * @param {String|ui/resolution.selectSrcSrcOptions}    src    A string containing
- *                                                             a single image source or
- *                                                             a key/value hash/object
- *                                                             containing keys representing
- *                                                             screen types (`'hd'`, `'fhd'`,
- *                                                             `'uhd'`, etc.) and values
- *                                                             containing the asset source
- *                                                             for that target screen resolution.
+ * @param {String|ui/resolution.selectSrcSrcOptions}    src    A string containing a single image
+ *                                                             source or a key/value hash/object
+ *                                                             containing keys representing screen
+ *                                                             types (`'hd'`, `'fhd'`, `'uhd'`,
+ *                                                             etc.) and values containing the asset
+ *                                                             source for that target screen
+ *                                                             resolution.
  *
  * @returns {String}                                           The chosen source, given the string
  *                                                             or hash provided
@@ -431,8 +430,7 @@ function selectSrc (src) {
 }
 
 /**
- * This will need to be re-run any time the screen size changes, so all the values can be
- * re-cached.
+ * This will need to be re-run any time the screen size changes, so all the values can be re-cached.
  *
  * @function
  * @memberof ui/resolution

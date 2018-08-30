@@ -244,6 +244,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 			/**
 			 * Instance-specific overrides of the hold configuration.
+			 *
 			 * @see ui/Touchable.configure
 			 * @type {Object}
 			 * @public

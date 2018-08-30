@@ -53,11 +53,10 @@ const contextTypes = {
 };
 
 /**
- * A higher-order component that can be used to notify a container that the wrapped component has
- * been resized.
+ * A higher-order component that notifies a container that the wrapped component has been resized.
  *
  * It may be useful in cases where a component may need to update itself as a result of its children
- * changing in size, such as a [Scroller] {@link ui/Scroller}.
+ * changing in size, such as a [Scroller]{@link ui/Scroller}.
  *
  * Containers must provide an `invalidateBounds` method via React's context in order for `Resizable`
  * instances to notify it of resize.

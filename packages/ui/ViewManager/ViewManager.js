@@ -47,8 +47,7 @@ class ViewManager extends React.Component {
 		/**
 		 * Views to be managed.
 		 *
-		 * May be any renderable component including custom React components or
-		 * primitive DOM nodes.
+		 * May be any renderable component including custom React components or primitive DOM nodes.
 		 *
 		 * @type {Node}
 		 */
@@ -167,9 +166,8 @@ class ViewManager extends React.Component {
 		/**
 		 * Explicitly sets the transition direction.
 		 *
-		 * If omitted, the direction is determined
-		 * automaticallly based on the change of index or a string comparison of the first child's
-		 * key
+		 * If omitted, the direction is determined automaticallly based on the change of index or a
+		 * string comparison of the first child's key.
 		 *
 		 * @type {Boolean}
 		 */

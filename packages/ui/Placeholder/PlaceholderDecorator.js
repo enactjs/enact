@@ -47,8 +47,8 @@ const contextTypes = {
 /**
  * A higher-order component that enables a container to notify the wrapped component when scrolling.
  *
- * Containers must provide `registerPlaceholder`, `unregisterPlaceholder`, and `invalidateBounds` methods via React's context for
- * `PlaceholderDecorator` instances.
+ * Containers must provide `registerPlaceholder`, `unregisterPlaceholder`, and `invalidateBounds`
+ * methods via React's context for `PlaceholderDecorator` instances.
  *
  * @class PlaceholderDecorator
  * @memberof ui/Placeholder

@@ -2,11 +2,12 @@
  * Provides Moonstone-themed Icon component with interactive togglable capabilities.
  *
  * Moonstone components that uses `ToggleIcon`:
- * [Checkbox]{@link moonstone/Checkbox.Checkbox},
- * [FormCheckbox]{@link moonstone/FormCheckbox.FormCheckbox},
- * [Switch]{@link moonstone/Switch.Switch},
- * [the icon for RadioItem]{@link moonstone/RadioItem.RadioItem}, and
- * [the icon for SelectableItem]{@link moonstone/SelectableItem.SelectableItem}.
+ *
+ * * [Checkbox]{@link moonstone/Checkbox.Checkbox},
+ * * [FormCheckbox]{@link moonstone/FormCheckbox.FormCheckbox},
+ * * [Switch]{@link moonstone/Switch.Switch},
+ * * [RadioItem]{@link moonstone/RadioItem.RadioItem}, and
+ * * [SelectableItem]{@link moonstone/SelectableItem.SelectableItem}.
  *
  * @module moonstone/ToggleIcon
  * @example

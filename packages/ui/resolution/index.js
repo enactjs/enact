@@ -1,8 +1,7 @@
 /**
  * Exports a number of useful methods for resolution independence.
  *
- *The default export is an
- * object containing the resolution independence methods.
+ * The default export is an object containing the resolution independence methods.
  *
  * @module ui/resolution
  * @exports ResolutionDecorator

@@ -17,8 +17,8 @@ const defaultConfig = {
 	/**
 	 * The bounds of the container represented by an object with `height` and `width` members.
 	 *
-	 * If the container is a static size, this can be specified at design-time to avoid calculating the
-	 * bounds at run-time (the default behavior).
+	 * If the container is a static size, this can be specified at design-time to avoid calculating
+	 * the bounds at run-time (the default behavior).
 	 *
 	 * @type {Object}
 	 * @default null
@@ -48,8 +48,10 @@ const defaultConfig = {
 };
 
 /**
- * A higher-order component (HOC) that can make placeholders rendered or not rendered depending on
- * `'scrollTop'` from the `'onScroll'`'s parameter.
+ * A higher-order component (HOC) that render placeholder components.
+ *
+ * Components are rendered based on their position relative to the `'scrollTop'` from the
+ * `'onScroll'`'s parameter. They are not unmounted once rendered.
  *
  * @class PlaceholderControllerDecorator
  * @memberof ui/Placeholder

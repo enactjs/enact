@@ -18,9 +18,9 @@ const defaultConfig = {
 /**
  * This higher-order component is based on [ui/Skinnable]{@link ui/Skinnable.Skinnable}.
  *
- * Comes pre-configured for Moonstone's supported skins: "dark" (default) and "light". It is used
- * to apply the relevant skinning classes to each component and has been used to pre-select specific
- * skins for some components.
+ * `Skinnable` comes pre-configured for Moonstone's supported skins: "dark" (default) and "light".
+ * It is used to apply the relevant skinning classes to each component and has been used to
+ * pre-select specific skins for some components.
  *
  * @class Skinnable
  * @memberof moonstone/Skinnable
@@ -34,7 +34,7 @@ const Skinnable = hoc(defaultConfig, SkinnableBase);
  *
  * Available Moonstone skins are `"dark"` (default) and `"light"`. This may be changed at runtime.
  * All components already use their defaults, but a skin may be changed via this prop or by using
- * {@link moonstone/Skinnable} directly and a config object.
+ * `Skinnable` directly and a config object.
  *
  * Example:
  * ```

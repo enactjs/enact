@@ -60,8 +60,7 @@ const HeaderBase = kind({
 		/**
 		 * Children provided are added to the header-components area.
 		 *
-		 * A space for controls which
-		 * live in the header, apart from the body of the panel view.
+		 * A space for controls which live in the header, apart from the body of the panel view.
 		 *
 		 * @type {Element|Element[]}
 		 */

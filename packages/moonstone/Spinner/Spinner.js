@@ -139,7 +139,7 @@ const SpinnerBase = kind({
 });
 
 /**
- * A higher-order component that makes sure spotlight is paused when `blockClickOn` prop is `'screen'`.
+ * A higher-order component that pauses spotlight when `blockClickOn` prop is `'screen'`.
  *
  * Resumes spotlight when unmounted. However, spotlight is not paused when `blockClickOn` prop is
  * `'container'`. Blocking spotlight within the container is up to app implementation.
