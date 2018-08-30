@@ -1652,7 +1652,7 @@ const VideoPlayerBase = class extends React.Component {
 				this.activityDetected();
 			}
 		} else if (is('up', keyCode)) {
-      preventDefault(ev);
+			preventDefault(ev);
 			stopImmediate(ev);
 
 			this.handleSliderBlur();
