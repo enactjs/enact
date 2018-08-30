@@ -15,7 +15,6 @@ import kind from '@enact/core/kind';
 import UiIcon from '@enact/ui/Icon';
 import Pure from '@enact/ui/internal/Pure';
 import compose from 'ramda/src/compose';
-import PropTypes from 'prop-types';
 
 import Skinnable from '../Skinnable';
 
@@ -34,23 +33,6 @@ import componentCss from './Icon.less';
  */
 const IconBase = kind({
 	name: 'Icon',
-
-	propTypes: /** @lends moonstone/Icon.Icon.prototype */ {
-		/**
-		 * The icon content.
-		 *
-		 * May be specified as either:
-		 *
-		 * * A string that represents an icon from the [iconList]{@link ui/Icon.Icon.iconList},
-		 * * An HTML entity string, Unicode reference or hex value (in the form '0x...'),
-		 * * A URL specifying path to an icon image, or
-		 * * An object representing a resolution independent resource (See {@link ui/resolution}).
-		 *
-		 * @type {String|Object}
-		 * @public
-		 */
-		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired
-	},
 
 	render: (props) => UiIcon.inline({
 		...props,

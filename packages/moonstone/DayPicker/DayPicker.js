@@ -191,7 +191,7 @@ const DayPicker = DayPickerDecorator(DayPickerBase);
  */
 
 /**
- * Applies a disabled style and prevents interacting with the component.
+ * Disables DayPicker and the control becomes non-interactive.
  *
  * @name disabled
  * @type {Boolean}

@@ -99,8 +99,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/Marquee.MarqueeController} is a higher-order component (HOC) which will synchronize
- * contained `Marquee`s.
+ * A higher-order component that synchronizes contained `Marquee`s.
  *
  * @memberof ui/Marquee
  * @hoc

@@ -1,5 +1,5 @@
 /**
- * Higher-order component to add a Moonstone styled popup to a component.
+ * A higher-order component to add a Moonstone styled popup to a component.
  *
  * @module moonstone/ContextualPopupDecorator
  * @exports	ContextualPopup

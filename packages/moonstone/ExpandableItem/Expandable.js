@@ -58,7 +58,7 @@ const defaultConfig = {
 };
 
 /**
- * A Higher-order Component that manages the open state of a component and adds {@link ui/Cancelable.Cancelable}
+ * A higher-order component that manages the open state of a component and adds {@link ui/Cancelable.Cancelable}
  * support to call the `onClose` handler on
  * cancel.
  *

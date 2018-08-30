@@ -25,6 +25,8 @@ const CellBase = kind({
 
 	propTypes: /** @lends ui/Layout.Cell.prototype */ {
 		/**
+		 * The alignment of `Cell`.
+		 *
 		 * Aligns this `Cell` vertically in the case of a horizontal layout or
 		 * horizontally in the case of a vertical layout. `"start"`, `"center"` and
 		 * `"end"` are the most commonly used, although all values of `align-self` are supported.
@@ -56,6 +58,8 @@ const CellBase = kind({
 		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
+		 * Sizes `Cell` to its contents.
+		 *
 		 * A `shrink`able cell will contract to its minimum size, according to the dimensions of its
 		 * contents. This is used when you want the size of this Cell's content to influence the
 		 * dimensions of this cell. `shrink` will not allow the contents of the Layout to be pushed
@@ -69,7 +73,8 @@ const CellBase = kind({
 		shrink: PropTypes.bool,
 
 		/**
-		 * Set the desired size of the Cell using any valid CSS measurement value.
+		 * Sets the desired size of the Cell using any valid CSS measurement value.
+		 *
 		 * When used in conjunction with [shrink]{@link ui/Layout.Cell#shrink}, the size will be
 		 * the maximum size, shrinking as necessary, to fit the content.
 		 *

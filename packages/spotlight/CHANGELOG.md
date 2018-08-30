@@ -2,10 +2,11 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
+## [2.1.1] - 2018-08-27
 
 ### Fixed
 
+- `spotlight` to correctly handle focus with `'self-only'` containers
 - `spotlight/SpotlightContainerDecorator` to unmount config instead of remove when spotlightId is changed if it preserves id
 
 ## [2.1.0] - 2018-08-20

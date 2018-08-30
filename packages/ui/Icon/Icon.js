@@ -74,7 +74,7 @@ const Icon = kind({
 		 * @type {String|Object}
 		 * @public
 		 */
-		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -108,7 +108,7 @@ const Icon = kind({
 		iconList: PropTypes.object,
 
 		/**
-		 * When `true`, applies the `pressed` CSS class to the [Icon]{@link ui/Icon.Icon}
+		 * Applies the `pressed` CSS class.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -117,7 +117,7 @@ const Icon = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * When `true`, applies the `small` CSS class to the [Icon]{@link ui/Icon.Icon}
+		 * Applies the `small` CSS class.
 		 *
 		 * @type {Boolean}
 		 * @default false

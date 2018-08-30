@@ -10,7 +10,7 @@
 
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {on, off} from '@enact/core/dispatcher';
-import {adaptEvent, call, forKey, forward, forwardWithPrevent, handle, stopImmediate, returnsTrue} from '@enact/core/handle';
+import {adaptEvent, call, forKey, forward, forwardWithPrevent, handle, preventDefault, stopImmediate, returnsTrue} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform';
 import {perfNow, Job} from '@enact/core/util';
@@ -1110,6 +1110,7 @@ const VideoPlayerBase = class extends React.Component {
 			Spotlight.getPointerMode() &&
 			!this.props.spotlightDisabled
 		),
+		preventDefault,
 		stopImmediate,
 		this.showControlsFromPointer
 	)
@@ -1646,10 +1647,12 @@ const VideoPlayerBase = class extends React.Component {
 			Spotlight.setPointerMode(false);
 
 			if (Spotlight.focus(this.mediaControlsSpotlightId)) {
+				preventDefault(ev);
 				stopImmediate(ev);
 				this.activityDetected();
 			}
 		} else if (is('up', keyCode)) {
+			preventDefault(ev);
 			stopImmediate(ev);
 
 			this.handleSliderBlur();

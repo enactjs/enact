@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * A Higher-order Component that classifies an application with a target set of font sizing rules.
+ * A higher-order component that classifies an application with a target set of font sizing rules.
  *
  * @class AccessibilityDecorator
  * @memberof moonstone/MoonstoneDecorator
