@@ -61,7 +61,7 @@ const ButtonBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * The icon displayed within the [button][ButtonBase]{@link ui/Button.ButtonBase}.
+		 * The icon displayed within the Button.
 		 *
 		 * The icon will be displayed before the natural reading order of the text, regardless
 		 * of locale. Any string that is valid for its {@link ui/Button.Button.iconComponent} is
@@ -183,7 +183,7 @@ const ButtonBase = kind({
 });
 
 /**
- * Adds touch support to a [ButtonBase]{@link ui/Button.ButtonBase}.
+ * A higher-order component that adds touch support to a [ButtonBase]{@link ui/Button.ButtonBase}.
  *
  * @hoc
  * @memberof ui/Button

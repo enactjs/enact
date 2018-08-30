@@ -29,10 +29,6 @@ storiesOf('UI', module)
 				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Config, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				style={{
-					height: ri.unit(552, 'rem'),
-					width: '100%'
-				}}
 				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, Config, 'auto')}
 			>
 				<div
@@ -67,10 +63,6 @@ storiesOf('Moonstone', module)
 				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Config, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				style={{
-					height: ri.unit(552, 'rem'),
-					width: '100%'
-				}}
 				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, Config, 'auto')}
 			>
 				<div

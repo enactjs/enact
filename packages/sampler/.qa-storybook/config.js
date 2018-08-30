@@ -1,10 +1,10 @@
 import configure from '../src/configure';
 import {setOptions} from '@storybook/addon-options';
 
-const stories = require.context('../stories/qa-stories', true, /.js$/);
+const stories = require.context('../stories/qa', true, /.js$/);
 
 setOptions({
-	name: 'ENACT SAMPLER',
+	name: 'ENACT QA SAMPLER',
 	url: 'http://enactjs.com/',
 	goFullScreen: false,
 	showStoriesPanel: true,

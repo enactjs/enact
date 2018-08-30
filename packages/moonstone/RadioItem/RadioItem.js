@@ -56,7 +56,6 @@ const RadioItemBase = kind({
 			data-webos-voice-intent="SelectRadioItem"
 			{...props}
 			css={props.css}
-			icon=""
 			iconComponent={
 				<ToggleIcon css={componentCss} />
 			}

@@ -82,9 +82,6 @@ storiesOf('UI', module)
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 0))}
-					style={{
-						height: ri.unit(552, 'rem')
-					}}
 				/>
 			);
 		})
@@ -106,9 +103,6 @@ storiesOf('Moonstone', module)
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 0))}
-					style={{
-						height: ri.unit(552, 'rem')
-					}}
 					wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"], Config)]}
 				/>
 			);

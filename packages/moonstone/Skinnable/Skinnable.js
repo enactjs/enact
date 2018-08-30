@@ -1,12 +1,12 @@
 /**
- * Exports the {@link moonstone/Skinnable.Skinnable} Higher-order Component (HOC).
+ * Exports the {@link moonstone/Skinnable.Skinnable} higher-order component (HOC).
  *
  * @module moonstone/Skinnable
  * @public
  */
 
 import hoc from '@enact/core/hoc';
-import SkinnableBase, {withSkinnableProps} from '@enact/ui/Skinnable';
+import SkinnableBase from '@enact/ui/Skinnable';
 
 const defaultConfig = {
 	skins: {
@@ -16,7 +16,7 @@ const defaultConfig = {
 };
 
 /**
- * This Higher-order Component is based on [ui/Skinnable]{@link ui/Skinnable.Skinnable} and comes
+ * This higher-order component is based on [ui/Skinnable]{@link ui/Skinnable.Skinnable} and comes
  * pre-configured for Moonstone's supported skins: "dark" (default) and "light". It is used to apply
  * the relevant skinning classes to each component and has been used to pre-select specific skins
  * for some components.
@@ -49,6 +49,5 @@ const Skinnable = hoc(defaultConfig, SkinnableBase);
 
 export default Skinnable;
 export {
-	Skinnable,
-	withSkinnableProps
+	Skinnable
 };

@@ -4,9 +4,21 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Fixed
+
+- `moonstone/ExpandableItem` to not make scrolling of a parent scroller when 5-way key is pressed on the first item or the last item
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to jump to the previous or next page properly via page up or down keys
+
+## [2.1.1] - 2018-08-27
+
 ### Changed
 
-- `moonstone/Icon` and `moonstone/IconButton` to require `children`
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effects only by wheel input
+
+### Fixed
+
+- `moonstone/Scroller` to scroll container elements into view
+- `moonstone/VideoPlayer` so that activity is detected and the `autoCloseTimeout` timer is reset when using 5-way to navigate from the media slider
 
 ### Fixed
 
