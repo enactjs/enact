@@ -34,7 +34,7 @@ import css from './ExpandableItem.less';
 const isUp = is('up');
 const isDown = is('down');
 
-const ContainerDiv = SpotlightContainerDecorator({continue5WayHold: true}, 'div');
+const ContainerDiv = SpotlightContainerDecorator({continue5WayHold: true, preventScroll: true}, 'div');
 
 // Returns `true` if a directional movement would leave the same container as `srcNode` is in.
 // For a more generalized implementation, there'd need to be some way to specify an upper-most

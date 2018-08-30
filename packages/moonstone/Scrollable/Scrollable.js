@@ -830,6 +830,7 @@ const Scrollable = Skinnable(SpotlightContainerDecorator(
 	{
 		overflow: true,
 		preserveId: true,
+		preventScroll: true,
 		restrict: 'self-first'
 	},
 	ScrollableBase

@@ -199,11 +199,13 @@ const Spotlight = (function () {
 			return true;
 		}
 
+		const config = getContainerConfig(getLastContainer()) || {};
+
 		let silentFocus = function () {
 			if (currentFocusedElement) {
 				currentFocusedElement.blur();
 			}
-			elem.focus();
+			elem.focus({preventScroll: config.preventScroll});
 			focusChanged(elem, containerIds);
 		};
 
@@ -224,7 +226,7 @@ const Spotlight = (function () {
 			currentFocusedElement.blur();
 		}
 
-		elem.focus();
+		elem.focus({preventScroll: config.preventScroll});
 
 		_duringFocusChange = false;
 

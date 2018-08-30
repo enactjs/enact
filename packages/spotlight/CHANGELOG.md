@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [2.1.1] - 2018-08-27
 
+### Added
+
+- `spotlight/SpotlightContainerDecorator` config option `preventScroll` to support moving focus without scrolling
+
 ### Fixed
 
 - `spotlight` to correctly handle focus with `'self-only'` containers

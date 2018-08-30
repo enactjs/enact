@@ -61,6 +61,7 @@ let GlobalConfig = {
 	leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
 	navigableFilter: null,
 	overflow: false,
+	preventScroll: false,
 	rememberSource: false,
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
 	selector: '',           // can be a valid <extSelector> except "@" syntax.
