@@ -274,7 +274,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (containerNode && containerNode.removeEventListener) {
 				containerNode.removeEventListener('keydown', this.onKeyDown);
-				containerNode.removeEventListener('keyup', this.revertSpotlightState);
+				containerNode.removeEventListener('keyup', this.resumeSpotlight);
 			}
 
 			this.setContainerDisabled(false);
