@@ -276,7 +276,7 @@ const VirtualListBaseFactory = (type) => {
 				containerNode.removeEventListener('keydown', this.onKeyDown);
 			}
 
-			document.removeEventListener('keyup', this.resumeSpotlight);
+			this.resumeSpotlight();
 
 			this.setContainerDisabled(false);
 		}
