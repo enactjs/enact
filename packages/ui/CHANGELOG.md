@@ -2,11 +2,11 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [Unreleased]
+## [unreleased]
 
 ### Fixed
 
-- `ui/Marquee` to move `position: relative` back into `text` class to fix problem with flexbox
+- `ui/Marquee` positioning bug when used with CSS flexbox layouts
 
 ## [2.1.1] - 2018-08-27
 
