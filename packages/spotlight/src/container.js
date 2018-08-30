@@ -437,7 +437,7 @@ const mergeConfig = (current, updated) => {
 		}
 	});
 
-	return cfg;
+	return cfg || current;
 };
 
 /**
