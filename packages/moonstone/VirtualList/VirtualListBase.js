@@ -274,7 +274,9 @@ const VirtualListBaseFactory = (type) => {
 
 			if (containerNode && containerNode.removeEventListener) {
 				containerNode.removeEventListener('keydown', this.onKeyDown);
-				containerNode.removeEventListener('keyup', this.resumeSpotlight);
+			}
+			if (document) {
+				document.removeEventListener('keyup', this.resumeSpotlight);
 			}
 
 			this.setContainerDisabled(false);
@@ -645,19 +647,18 @@ const VirtualListBaseFactory = (type) => {
 					this.virtualListPause = new Pause('VirtualList');
 					this.virtualListPause.pause();
 
-					const containerNode = this.uiRef.containerRef;
-
-					if (containerNode && containerNode.addEventListener) {
-						containerNode.addEventListener('keyup', this.resumeSpotlight);
+					if (document) {
+						document.addEventListener('keyup', this.resumeSpotlight);
 					}
 				}
 			}
 		}
 
 		resumeSpotlight = () => {
-			const containerNode = this.uiRef.containerRef;
 			this.virtualListPause.resume();
-			containerNode.removeEventListener('keyup', this.resumeSpotlight);
+			if (document) {
+				document.removeEventListener('keyup', this.resumeSpotlight);
+			}
 		}
 		/**
 		 * Handle global `onKeyDown` event
