@@ -831,6 +831,58 @@ function isActiveContainer (containerId) {
 	return config && config.active;
 }
 
+/**
+ * Determines if the provided container has a configured restriction.
+ *
+ * By default, returns `true` for `'self-only'` restrictions but the type of restriction can be
+ * passed as well.
+ *
+ * @param {String} containerId The container id
+ * @param {String} [restrict] The container restriction defaulted to `'self-only'`
+ * @returns {Boolean} `true` if the container has the specified restriction
+ * @private
+ */
+function isRestrictedContainer (containerId, restrict = 'self-only') {
+	const config = getContainerConfig(containerId);
+
+	return Boolean(config && config.restrict === restrict);
+}
+
+/**
+ * Determines if `innerContainerId` is inside `outerContainerId`.
+ *
+ * @param {String} outerContainerId The outer container id
+ * @param {String} innerContainerId The inner container id
+ * @returns {Boolean} `true` if both containers exist and `innerContainerId` is within
+ *                    `outerContainerId`
+ * @private
+ */
+function containsContainer (outerContainerId, innerContainerId) {
+	const outer = getContainerNode(outerContainerId);
+	const inner = getContainerNode(innerContainerId);
+
+	return Boolean(outer && inner && outer.contains(inner));
+}
+
+/**
+ * Determines if `containerId` may become the active container.
+ *
+ * @param {String} containerId Spotlight container to which focus is leaving
+ * @returns	{Boolean} `true` if the active container can change to `containerId`
+ * @private
+ */
+function mayActivateContainer (containerId) {
+	const currentContainerId = getLastContainer();
+
+	// If the current container is restricted to 'self-only' and if the next container to be
+	// activated is not inside the currently activated container, the next container should not be
+	// activated.
+	return (
+		!isRestrictedContainer(currentContainerId) ||
+		containsContainer(currentContainerId, containerId)
+	);
+}
+
 function getDefaultContainer () {
 	return isActiveContainer(_defaultContainerId) ? _defaultContainerId : '';
 }
@@ -850,22 +902,6 @@ function getLastContainer () {
 }
 
 function setLastContainer (containerId) {
-	// If the current container is restricted to 'self-only' and if the next container to be
-	// activated is not inside the currently activated container, the next container should not be
-	// activated.
-	const currentContainerId = getLastContainer();
-	if (currentContainerId) {
-		const config = getContainerConfig(currentContainerId);
-		if (config && config.restrict === 'self-only') {
-			const currentContainer = getContainerNode(currentContainerId);
-			const nextContainer = getContainerNode(containerId);
-
-			if (currentContainer && nextContainer && !currentContainer.contains(nextContainer)) {
-				return;
-			}
-		}
-	}
-
 	_lastContainerId = containerId || '';
 }
 
@@ -924,6 +960,7 @@ export {
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
+	mayActivateContainer,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,

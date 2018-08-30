@@ -5,7 +5,7 @@ import Scroller from '@enact/ui/Scroller';
 import {LabeledIconBase as UiLabeledIconBase, LabeledIcon as UiLabeledIcon} from '@enact/ui/LabeledIcon';
 import Layout, {Cell} from '@enact/ui/Layout';
 
-import iconNames from '../moonstone-stories/icons';
+import iconNames from '../default/icons';
 
 import {mergeComponentMetadata} from '../../src/utils';
 import {boolean, select} from '../../src/enact-knobs';

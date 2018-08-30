@@ -38,7 +38,7 @@ import {
 	isContainer,
 	isContainer5WayHoldable,
 	isNavigable,
-	unmountContainer,
+	mayActivateContainer,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
@@ -46,7 +46,8 @@ import {
 	setContainerPreviousTarget,
 	setDefaultContainer,
 	setLastContainer,
-	setLastContainerFromTarget
+	setLastContainerFromTarget,
+	unmountContainer
 } from './container';
 
 import {
@@ -683,14 +684,14 @@ const Spotlight = (function () {
 				const focused = focusElement(target, nextContainerIds);
 
 				if (!focused && wasContainerId) {
-					this.setActiveContainer(elem);
+					setLastContainer(elem);
 				}
 
 				return focused;
 			} else if (wasContainerId) {
 				// if we failed to find a spottable target within the provided container, we'll set
 				// it as the active container to allow it to focus itself if its contents change
-				this.setActiveContainer(elem);
+				setLastContainer(elem);
 			}
 
 			return false;
@@ -750,12 +751,17 @@ const Spotlight = (function () {
 		/**
 		 * Sets the currently active container.
 		 *
+		 * Note: If the current container is restricted to 'self-only' and `containerId` is not
+		 * contained within the current container then the active container will not be updated.
+		 *
 		 * @param {String} [containerId] The id of the currently active container. If this is not
 		 *	provided, the root container is set as the currently active container.
 		 * @public
 		 */
 		setActiveContainer: function (containerId) {
-			setLastContainer(containerId || rootContainerId);
+			if (mayActivateContainer(containerId)) {
+				setLastContainer(containerId || rootContainerId);
+			}
 		},
 
 		/**

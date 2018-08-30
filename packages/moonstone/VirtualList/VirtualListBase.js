@@ -405,23 +405,24 @@ const VirtualListBaseFactory = (type) => {
 		getIndexToScroll = (direction, currentIndex) => {
 			const
 				{dataSize, spacing} = this.props,
-				{dimensionToExtent, primary} = this.uiRef,
+				{dimensionToExtent, primary: {clientSize, gridSize, itemSize}, scrollPosition} = this.uiRef,
 				{findSpottableItem} = this,
-				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo,
-				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent);
+				numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent,
+				firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent,
+				lastFullyVisibleIndex = Math.min(dataSize - 1, Math.floor((scrollPosition + clientSize - itemSize) / gridSize) * dimensionToExtent);
 			let candidateIndex = -1;
 
 			/* First, find a spottable item in this page */
 			if (direction === 'down') { // Page Down
-				if ((lastVisibleIndex - (lastVisibleIndex % dimensionToExtent)) > currentIndex) { // If a current focused item is in the last visible line.
+				if ((lastFullyVisibleIndex - (lastFullyVisibleIndex % dimensionToExtent)) > currentIndex) { // If a current focused item is in the last visible line.
 					candidateIndex = findSpottableItem(
-						lastVisibleIndex,
+						lastFullyVisibleIndex,
 						currentIndex - (currentIndex % dimensionToExtent) + dimensionToExtent - 1
 					);
 				}
-			} else if (firstVisibleIndex + dimensionToExtent <= currentIndex) { // Page Up,  if a current focused item is in the first visible line.
+			} else if (firstFullyVisibleIndex + dimensionToExtent <= currentIndex) { // Page Up,  if a current focused item is in the first visible line.
 				candidateIndex = findSpottableItem(
-					firstVisibleIndex,
+					firstFullyVisibleIndex,
 					currentIndex - (currentIndex % dimensionToExtent)
 				);
 			}
@@ -429,18 +430,18 @@ const VirtualListBaseFactory = (type) => {
 			/* Second, find a spottable item in the next page */
 			if (candidateIndex === -1) {
 				if (direction === 'down') { // Page Down
-					candidateIndex = findSpottableItem(lastVisibleIndex + numOfItemsInPage, lastVisibleIndex);
+					candidateIndex = findSpottableItem(lastFullyVisibleIndex + numOfItemsInPage, lastFullyVisibleIndex);
 				} else { // Page Up
-					candidateIndex = findSpottableItem(firstVisibleIndex - numOfItemsInPage, firstVisibleIndex);
+					candidateIndex = findSpottableItem(firstFullyVisibleIndex - numOfItemsInPage, firstFullyVisibleIndex);
 				}
 			}
 
 			/* Last, find a spottable item in a whole data */
 			if (candidateIndex === -1) {
 				if (direction === 'down') { // Page Down
-					candidateIndex = findSpottableItem(lastVisibleIndex + numOfItemsInPage + 1, dataSize);
+					candidateIndex = findSpottableItem(lastFullyVisibleIndex + numOfItemsInPage + 1, dataSize);
 				} else { // Page Up
-					candidateIndex = findSpottableItem(firstVisibleIndex - numOfItemsInPage - 1, -1);
+					candidateIndex = findSpottableItem(firstFullyVisibleIndex - numOfItemsInPage - 1, -1);
 				}
 			}
 
