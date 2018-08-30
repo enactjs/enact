@@ -933,6 +933,16 @@ function setLastContainerFromTarget (current, target) {
 	}
 }
 
+function isWithinOverflowContainer (target, containerIds = getContainersForNode(target)) {
+	return containerIds
+		// ignore the root container id which is set to overflow by the root decorator
+		.filter(id => id !== rootContainerId)
+		// get the config for each container
+		.map(getContainerConfig)
+		// and check if any are set to overflow
+		.some(config => config && config.overflow);
+}
+
 export {
 	// Remove
 	getAllContainerIds,
@@ -960,6 +970,7 @@ export {
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
+	isWithinOverflowContainer,
 	mayActivateContainer,
 	removeAllContainers,
 	removeContainer,

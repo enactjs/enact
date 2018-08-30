@@ -38,6 +38,7 @@ import {
 	isContainer,
 	isContainer5WayHoldable,
 	isNavigable,
+	isWithinOverflowContainer,
 	mayActivateContainer,
 	removeAllContainers,
 	removeContainer,
@@ -199,11 +200,13 @@ const Spotlight = (function () {
 			return true;
 		}
 
+		const focusOptions = isWithinOverflowContainer(elem, containerIds) ? {preventScroll: true} : null;
+
 		let silentFocus = function () {
 			if (currentFocusedElement) {
 				currentFocusedElement.blur();
 			}
-			elem.focus();
+			elem.focus(focusOptions);
 			focusChanged(elem, containerIds);
 		};
 
@@ -224,7 +227,7 @@ const Spotlight = (function () {
 			currentFocusedElement.blur();
 		}
 
-		elem.focus();
+		elem.focus(focusOptions);
 
 		_duringFocusChange = false;
 
