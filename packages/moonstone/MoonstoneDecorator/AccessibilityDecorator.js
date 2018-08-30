@@ -18,6 +18,7 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {
 		static propTypes =  /** @lends moonstone/MoonstoneDecorator.AccessibilityDecorator.prototype */ {
 			/**
 			 * Enables additional features to help users visually differentiate components.
+			 *
 			 * The UI library will be responsible for using this information to adjust
 			 * the components' contrast to this preset.
 			 *

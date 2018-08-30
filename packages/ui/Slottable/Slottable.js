@@ -1,5 +1,7 @@
 /**
- * Exports the {@link ui/Slottable.Slottable} higher-order component (HOC).
+ * Provides a higher-order component that render child components into pre-designated slots.
+ *
+ * See [SlotItem]{@link ui/SlotItem.SlotItemDecorator} for the use of `Slottable`.
  *
  * @module ui/Slottable
  * @exports Slottable
@@ -88,11 +90,11 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/Slottable.Slottable} is a higher-order component (HOC) that allows wrapped components to
- * separate children into pre-designated 'slots'.  To use `Slottable`, you must configure it by passing in
- * a config object with the `slots` member set to an array of slot names.  Any children whose
- * `slot` or `defaultSlot` property matches a named slot or whose type matches a named slot will be placed
- * into a property of the same name on the wrapped component.
+ * A higher-order component that allows wrapped components to separate children into pre-designated 'slots'.
+ *
+ * To use `Slottable`, you must configure it by passing in a config object with the `slots` member set to an
+ * array of slot names.  Any children whose `slot` or `defaultSlot` property matches a named slot or whose
+ * type matches a named slot will be placed into a property of the same name on the wrapped component.
  *
  * @class Slottable
  * @memberof ui/Slottable
