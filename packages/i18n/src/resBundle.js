@@ -39,9 +39,6 @@ function createResBundle (locale) {
  * @returns {undefined}
  */
 function setResBundleLocale (spec) {
-	// Load any ResBundle external data into cache.
-	ResBundle.strings = ResBundle.strings || {};
-	ResBundle.strings.cache = global.resBundleData || ResBundle.strings.cache;
 	// Get active bundle and if needed, (re)initialize.
 	const locale = new Locale(spec);
 	const rb = getResBundle();
