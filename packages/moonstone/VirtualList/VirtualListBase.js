@@ -614,6 +614,7 @@ const VirtualListBaseFactory = (type) => {
 
 					if (!Spotlight.isPaused()) {
 						Spotlight.pause();
+						document.addEventListener('keyup', this.resumeSpotlight);
 					}
 
 					target.blur();
@@ -643,16 +644,14 @@ const VirtualListBaseFactory = (type) => {
 				Spotlight.setPointerMode(false);
 				if (this.jumpToSpottableItem(keyCode, repeat, target)) {
 					// Pause Spotlight temporarily so we don't focus twice
-					this.virtualListPause = new Pause('VirtualList');
-					this.virtualListPause.pause();
-
+					Spotlight.pause();
 					document.addEventListener('keyup', this.resumeSpotlight);
 				}
 			}
 		}
 
 		resumeSpotlight = () => {
-			this.virtualListPause.resume();
+			Spotlight.resume();
 			document.removeEventListener('keyup', this.resumeSpotlight);
 		}
 		/**
