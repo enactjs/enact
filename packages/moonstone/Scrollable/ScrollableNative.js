@@ -4,6 +4,7 @@ import {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {Job} from '@enact/core/util';
 import platform from '@enact/core/platform';
+import {forward} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
@@ -511,6 +512,8 @@ class ScrollableBaseNative extends Component {
 		let
 			overscrollEffectRequired = false,
 			direction = null;
+
+		forward('onKeyDown', ev, this.props);
 
 		this.animateOnFocus = true;
 
