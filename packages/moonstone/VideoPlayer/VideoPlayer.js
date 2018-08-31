@@ -657,6 +657,21 @@ const VideoPlayerBase = class extends React.Component {
 		if (props.setApiProvider) {
 			props.setApiProvider(this);
 		}
+
+		// eslint-disable-next-line
+		this.a11yObserver = new MutationObserver((mutations) => {
+			mutations.forEach((mutation) => {
+				if (mutation.attributeName === 'role' && mutation.target.getAttribute('role') === 'region') {
+					const current = Spotlight.getCurrent();
+					if (current && current.dataset.spotlightId === this.moreButtonSpotlightId) {
+						// need to blur manually to read out `infoComponent`
+						current.blur();
+					}
+
+					Spotlight.focus(this.moreButtonSpotlightId);
+				}
+			});
+		});
 	}
 
 	componentDidMount () {
@@ -744,14 +759,14 @@ const VideoPlayerBase = class extends React.Component {
 			this.showControls();
 		}
 
-		if (this.state.mediaControlsVisible && prevState.infoVisible !== this.state.infoVisible) {
-			const current = Spotlight.getCurrent();
-			if (current && current.dataset.spotlightId === this.moreButtonSpotlightId) {
-				// need to blur manually to read out `infoComponent`
-				current.blur();
-			}
-			Spotlight.focus(this.moreButtonSpotlightId);
-		}
+		// if (this.state.mediaControlsVisible && prevState.infoVisible !== this.state.infoVisible) {
+		// 	const current = Spotlight.getCurrent();
+		// 	if (current && current.dataset.spotlightId === this.moreButtonSpotlightId) {
+		// 		// need to blur manually to read out `infoComponent`
+		// 		current.blur();
+		// 	}
+		// 	Spotlight.focus(this.moreButtonSpotlightId);
+		// }
 	}
 
 	componentWillUnmount () {
@@ -1708,6 +1723,15 @@ const VideoPlayerBase = class extends React.Component {
 		this.announceRef = node;
 	}
 
+	setBottomControlsRef = (node) => {
+		this.bottomControlsRef = node;
+		if (node) {
+			this.a11yObserver.observe(node, {attributes: true});
+		} else {
+			this.a11yObserver.disconnect();
+		}
+	}
+
 	getControlsAriaProps () {
 		if (this.state.announce === AnnounceState.TITLE) {
 			return {
@@ -1817,7 +1841,7 @@ const VideoPlayerBase = class extends React.Component {
 				</Overlay>
 
 				{this.state.bottomControlsRendered ?
-					<div className={css.fullscreen} {...controlsAriaProps}>
+					<div className={css.fullscreen} ref={this.setBottomControlsRef} {...controlsAriaProps}>
 						<FeedbackContent
 							className={css.miniFeedback}
 							playbackRate={this.pulsedPlaybackRate || this.selectPlaybackRate(this.speedIndex)}
