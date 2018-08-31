@@ -9,6 +9,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableItem` to not make scrolling of a parent scroller when 5-way key is pressed on the first item or the last item
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to jump to the previous or next page properly via page up or down keys
 - `moonstone/VirtuaList` to allow `onKeyDown` events to bubble
+- `moonstone/Scrollable` to forward `onKeyDown` event
 
 ## [2.1.1] - 2018-08-27
 
