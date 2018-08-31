@@ -117,8 +117,8 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardMouseLeave = forward(leaveEvent);
 	const {navigableFilter, preserveId, ...containerConfig} = config;
 
-	const stateFromProps = ({spotlightId}) => {
-		const id = Spotlight.add(spotlightId);
+	const stateFromProps = ({spotlightId, spotlightRestrict}) => {
+		const id = Spotlight.add(spotlightId, {restrict: spotlightRestrict});
 		return {
 			id,
 			preserveId: preserveId && id === spotlightId
@@ -181,19 +181,13 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.state = stateFromProps(props);
-		}
 
-		componentWillMount () {
 			const cfg = {
 				...containerConfig,
 				navigableFilter: this.navigableFilter
 			};
 
-			if (this.props.spotlightRestrict) {
-				cfg.restrict = this.props.spotlightRestrict;
-			}
-
-			Spotlight.add(this.state.id, cfg);
+			Spotlight.set(this.state.id, cfg);
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -202,15 +196,10 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			let id = nextProps.spotlightId;
 			if (prevId !== id) {
 				this.releaseContainer(prevId);
-				id = Spotlight.add(id);
-
-				this.setState(stateFromProps({spotlightId: id}));
 			}
-		}
 
-		componentDidUpdate (prevProps) {
-			if (this.props.spotlightRestrict !== prevProps.spotlightRestrict) {
-				Spotlight.set(this.state.id, {restrict: this.props.spotlightRestrict});
+			if (prevId !== id || this.props.spotlightRestrict !== nextProps.spotlightRestrict) {
+				this.setState(stateFromProps(nextProps));
 			}
 		}
 

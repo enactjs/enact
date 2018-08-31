@@ -208,7 +208,12 @@ class ScrollableBaseNative extends Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		configureSpotlightContainer(nextProps);
+		if (
+			this.props['data-spotlight-id'] !== nextProps['data-spotlight-id'] ||
+			this.props.focusableScrollbar !== nextProps.focusableScrollbar
+		) {
+			configureSpotlightContainer(nextProps);
+		}
 	}
 
 	componentWillUnmount () {
