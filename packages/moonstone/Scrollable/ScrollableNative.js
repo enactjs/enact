@@ -210,9 +210,9 @@ class ScrollableBaseNative extends Component {
 		};
 
 		this.observer = null;
-		this.lastFocusedElementWidth = 0;
 		this.state = {
 			lastFocusedElementWidth: 0,
+			spotlightMuted: false,
 			pos: {}
 		};
 
@@ -570,11 +570,12 @@ class ScrollableBaseNative extends Component {
 		if (this.observer == null && direction) {
 			this.observer = new IntersectionObserver((entries) => {
 				entries.forEach((entry) => {
-					if (!Spotlight.isPaused() && entry.boundingClientRect.height !== entry.intersectionRect.height) {
+					if (element && !Spotlight.isPaused() && entry.boundingClientRect.height !== entry.intersectionRect.height) {
 						Spotlight.pause();
 
 						this.setState(() => {
 							return {
+								spotlightMuted: true,
 								lastFocusedElementWidth: element.clientWidth,
 								pos: {
 									top: direction === 'down' ? this.uiRef.getScrollBounds().clientHeight - 6 : 0
@@ -594,7 +595,7 @@ class ScrollableBaseNative extends Component {
 				overscrollEffectRequired = this.scrollByPage(direction) && overscrollEffectOn.pageKey;
 			}
 		} else if (!Spotlight.getPointerMode() && !repeat && this.hasFocus() && getDirection(keyCode)) {
-			const element = Spotlight.getCurrent();
+			// const element = Spotlight.getCurrent();
 
 			direction = getDirection(keyCode);
 
@@ -631,15 +632,6 @@ class ScrollableBaseNative extends Component {
 			this.observer.disconnect();
 			this.observer = null;
 		}
-		// if (Spotlight.isPaused()) {
-		// 	Spotlight.resume();
-		// 	Spotlight.focus('dummyElement');
-		// 	Spotlight.move('up');
-
-		// 	this.setState({
-		// 		lastFocusedElementWidth: 0
-		// 	});
-		// }
 	}
 
 	onScrollbarButtonClick = ({isPreviousScrollButton, isVerticalScrollBar}) => {
@@ -666,9 +658,9 @@ class ScrollableBaseNative extends Component {
 			Spotlight.move('up');
 
 			this.setState({
-				lastFocusedElementWidth: 0
+				lastFocusedElementWidth: 0,
+				spotlightMuted: false
 			});
-			this.lastFocusedElementWidth = 0;
 		}
 
 		this.childRef.setContainerDisabled(false);
@@ -941,13 +933,12 @@ class ScrollableBaseNative extends Component {
 						className={classNames(className, overscrollCss.scrollable)}
 						data-spotlight-container={spotlightContainer}
 						data-spotlight-container-disabled={spotlightContainerDisabled}
+						data-spotlight-container-muted={this.state.spotlightMuted}
 						data-spotlight-id={spotlightId}
 						ref={initUiContainerRef}
 						style={style}
 					>
 						<div
-							// spotlightId="dummyElement"
-							// spotlightDisabled={!this.state.lastFocusedElementWidth}
 							className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)}
 							ref={this.initVerticalOverscrollRef}
 						>
