@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` scrolling behavior for focused items in 5-way mode
 - `moonstone/VideoPlayer` to prevent default browser scroll behavior when navigating via 5-way
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to jump to the previous or next page properly via page up or down keys
+- `moonstone/VirtuaList` to allow `onKeyDown` events to bubble
+- `moonstone/Scrollable` to forward `onKeyDown` event
 
 ## [2.1.1] - 2018-08-27
 

@@ -235,13 +235,14 @@ const VirtualListBaseFactory = (type) => {
 				// remove a function for preventing native scrolling by Spotlight
 				if (containerNode && containerNode.removeEventListener) {
 					containerNode.removeEventListener('scroll', this.preventScroll);
-					containerNode.removeEventListener('keydown', this.onKeyDown);
 				}
 			}
 
 			if (containerNode && containerNode.removeEventListener) {
 				containerNode.removeEventListener('keydown', this.onKeyDown);
 			}
+
+			this.resumeSpotlight();
 
 			this.setContainerDisabled(false);
 		}
@@ -648,11 +649,17 @@ const VirtualListBaseFactory = (type) => {
 				this.setSpotlightContainerRestrict(keyCode, target);
 				Spotlight.setPointerMode(false);
 				if (this.jumpToSpottableItem(keyCode, repeat, target)) {
-					ev.stopPropagation();
+					// Pause Spotlight temporarily so we don't focus twice
+					Spotlight.pause();
+					document.addEventListener('keyup', this.resumeSpotlight);
 				}
 			}
 		}
 
+		resumeSpotlight = () => {
+			Spotlight.resume();
+			document.removeEventListener('keyup', this.resumeSpotlight);
+		}
 		/**
 		 * Handle global `onKeyDown` event
 		 */
