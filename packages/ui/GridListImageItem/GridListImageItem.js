@@ -163,9 +163,7 @@ const GridListImageItem = kind({
 
 	computed: {
 		className: ({caption, selected, styler, subCaption}) => styler.append(
-			{selected},
-			{caption},
-			{subCaption}
+			{selected, caption, subCaption}
 		),
 		selectionOverlay: ({css, iconComponent: IconComponent, selectionOverlay: SelectionOverlay, selectionOverlayShowing}) => {
 			if (selectionOverlayShowing) {
