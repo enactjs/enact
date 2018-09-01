@@ -613,7 +613,6 @@ const VirtualListBaseFactory = (type) => {
 
 					if (!Spotlight.isPaused()) {
 						Spotlight.pause();
-						document.addEventListener('keyup', this.resumeSpotlight);
 					}
 
 					target.blur();
