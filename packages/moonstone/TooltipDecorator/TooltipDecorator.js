@@ -26,10 +26,11 @@ let currentTooltip; // needed to know whether or not we should stop a showing jo
  */
 const defaultConfig = {
 	/**
-	 * The name of the property which will receive the tooltip node. By default, `TooltipDecorator`
-	 * will add a new child to the wrapped component, following any other children passed in. If
-	 * a component needs to, it can specify another property to receive the tooltip and the
-	 * `children` property will not be modified.
+	 * The name of the property which will receive the tooltip node.
+	 *
+	 * By default, `TooltipDecorator` will add a new child to the wrapped component, following any
+	 * other children passed in. If a component needs to, it can specify another property to receive
+	 * the tooltip and the `children` property will not be modified.
 	 *
 	 * @type {String}
 	 * @default 'children'
@@ -39,7 +40,7 @@ const defaultConfig = {
 };
 
 /**
- * A Higher-order Component which positions [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} in
+ * A higher-order component which positions [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} in
  * relation to the wrapped component.
  *
  * The tooltip is automatically displayed when the decoratorated component is focused after a set

@@ -22,6 +22,15 @@ import {countReactChildren} from './util';
 
 import css from './VideoPlayer.less';
 
+const OuterContainer = SpotlightContainerDecorator({
+	enterTo: 'default-element',
+	defaultElement: [
+		`.${css.leftComponents} .${spotlightDefaultClass}`,
+		`.${css.rightComponents} .${spotlightDefaultClass}`,
+		`.${spotlightDefaultClass}`,
+		`.${css.mediaControls} *`
+	]
+}, 'div');
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 const MediaButton = onlyUpdateForKeys([
 	'children',
@@ -268,6 +277,14 @@ const MediaControlsBase = kind({
 		playIcon: PropTypes.string,
 
 		/**
+		 * Disables the media "play"/"pause" button.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		playPauseButtonDisabled: PropTypes.bool,
+
+		/**
 		 * Disables the media playback-rate control buttons; the inner pair.
 		 *
 		 * @type {Boolean}
@@ -300,6 +317,15 @@ const MediaControlsBase = kind({
 		spotlightDisabled: PropTypes.bool,
 
 		/**
+		 * The spotlight ID for the media controls container.
+		 *
+		 * @type {String}
+		 * @public
+		 * @default 'mediaControls'
+		 */
+		spotlightId: PropTypes.string,
+
+		/**
 		 * The visibility of the component. When `false`, the component will be hidden.
 		 *
 		 * @type {Boolean}
@@ -314,6 +340,7 @@ const MediaControlsBase = kind({
 		forwardIcon: 'forward',
 		jumpBackwardIcon: 'skipbackward',
 		jumpForwardIcon: 'skipforward',
+		spotlightId: 'mediaControls',
 		moreButtonCloseLabel: $L('Back'),
 		moreButtonColor: 'blue',
 		moreButtonLabel: $L('More'),
@@ -363,11 +390,13 @@ const MediaControlsBase = kind({
 		paused,
 		pauseIcon,
 		playIcon,
+		playPauseButtonDisabled,
 		playPauseClassName,
 		rateButtonsDisabled,
 		rightComponents,
 		showMoreComponents,
 		spotlightDisabled,
+		spotlightId,
 		...rest
 	}) => {
 		delete rest.moreButtonCloseLabel;
@@ -376,14 +405,14 @@ const MediaControlsBase = kind({
 		delete rest.visible;
 
 		return (
-			<div {...rest} data-media-controls>
+			<OuterContainer {...rest} spotlightId={spotlightId}>
 				<div className={css.leftComponents}>{leftComponents}</div>
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
 						<Container className={css.mediaControls} spotlightDisabled={showMoreComponents || spotlightDisabled}>
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpBackwardIcon}</MediaButton>}
 							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{backwardIcon}</MediaButton>}
-							<MediaButton aria-label={paused ? $L('Play') : $L('Pause')} className={playPauseClassName} backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{paused ? playIcon : pauseIcon}</MediaButton>
+							<MediaButton aria-label={paused ? $L('Play') : $L('Pause')} className={playPauseClassName} backgroundOpacity="translucent" disabled={mediaDisabled || playPauseButtonDisabled} onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{paused ? playIcon : pauseIcon}</MediaButton>
 							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick} spotlightDisabled={spotlightDisabled}>{forwardIcon}</MediaButton>}
 							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpForwardIcon}</MediaButton>}
 						</Container>
@@ -411,7 +440,7 @@ const MediaControlsBase = kind({
 						</MediaButton>
 					) : null}
 				</div>
-			</div>
+			</OuterContainer>
 		);
 	}
 });
@@ -575,6 +604,14 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			paused: PropTypes.bool,
 
 			/**
+			 * Disables state on the media "play"/"pause" button
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			playPauseButtonDisabled: PropTypes.bool,
+
+			/**
 			 * Disables the media playback-rate control buttons; the inner pair.
 			 *
 			 * @type {Boolean}
@@ -669,18 +706,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 		componentDidUpdate (prevProps, prevState) {
 			if (this.state.showMoreComponents !== prevState.showMoreComponents) {
 				forwardToggleMore({showMoreComponents: this.state.showMoreComponents}, this.props);
-
-				// Readout 'more' or 'back' button explicitly.
-				let selectedButton = Spotlight.getCurrent();
-				if (selectedButton === this.mediaControlsNode.querySelector(`.${css.moreButton}`)) {
-					if (this.props.visible) {
-						selectedButton.blur();
-						selectedButton.focus();
-					}
-				} else if (!this.state.showMoreComponents) {
-					// if spotlight was not in "back" button, then focus "more" button
-					Spotlight.focus(this.props.moreButtonSpotlightId);
-				}
 			}
 
 			// if media controls disabled, reset key loop
@@ -724,9 +749,9 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 				mediaDisabled,
 				moreButtonColor,
 				moreButtonDisabled,
-				moreButtonSpotlightId,
 				no5WayJump,
 				noRateButtons,
+				playPauseButtonDisabled,
 				rateButtonsDisabled,
 				visible
 			} = this.props;
@@ -734,14 +759,15 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {
 			if (mediaDisabled) return;
 
 			if (visible && moreButtonColor && !moreButtonDisabled && is(moreButtonColor, ev.keyCode)) {
-				Spotlight.focus(moreButtonSpotlightId);
 				this.toggleMoreComponents();
 			}
 
-			if (is('play', ev.keyCode)) {
-				forward('onPlay', ev, this.props);
-			} else if (is('pause', ev.keyCode)) {
-				forward('onPause', ev, this.props);
+			if (!playPauseButtonDisabled) {
+				if (is('play', ev.keyCode)) {
+					forward('onPlay', ev, this.props);
+				} else if (is('pause', ev.keyCode)) {
+					forward('onPause', ev, this.props);
+				}
 			}
 
 			if (!no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {

@@ -79,8 +79,10 @@ const updateLocale = function (locale) {
 	if (ilib._load) ilib._load.manifest = undefined;
 	// remove the cache of the platform name to allow transition between snapshot and browser
 	delete ilib._platform;
-	// load any external ilib data
+	// load any external ilib/resbundle data
 	ilib.data = global.ilibData || ilib.data;
+	ilib.data.cache = ilib.data.cache || {};
+	ilib.data.cache['ResBundle-strings'] = global.resBundleData || {};
 	// ilib handles falsy values and automatically uses local locale when encountered which
 	// is expected and desired
 	ilib.setLocale(locale);

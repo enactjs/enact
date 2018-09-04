@@ -2,7 +2,24 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [2.0.2] - 2018-13-01
+## [unreleased]
+
+### Fixed
+
+- `spotlight` to prevent the browser from scrolling elements into view when focused within a spotlight container configured with `overflow: true`
+
+## [2.1.1] - 2018-08-27
+
+### Fixed
+
+- `spotlight` to correctly handle focus with `'self-only'` containers
+- `spotlight/SpotlightContainerDecorator` to unmount config instead of remove when spotlightId is changed if it preserves id
+
+## [2.1.0] - 2018-08-20
+
+No significant changes.
+
+## [2.0.2] - 2018-08-13
 
 ### Fixed
 

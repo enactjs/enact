@@ -219,6 +219,37 @@ describe('Slider', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	// these tests validate behavior relating to `value` defaulting to `min`
+	it('should not emit onChange when decrementing at the lower bound when value is unset', () => {
+		const handleChange = sinon.spy();
+		const subject = mount(
+			<Slider min={0} max={10} onChange={handleChange} />
+		);
+
+		activate(subject);
+		leftKeyDown(subject);
+
+		const expected = 'onChange not emitted';
+		const actual = handleChange.called ? 'onChange emitted' : 'onChange not emitted';
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should increment from the lower bound when value is unset', () => {
+		const handleChange = sinon.spy();
+		const subject = mount(
+			<Slider min={0} max={10} onChange={handleChange} />
+		);
+
+		activate(subject);
+		rightKeyDown(subject);
+
+		const expected = 1;
+		const actual = subject.find('Slider').prop('value');
+
+		expect(actual).to.equal(expected);
+	});
+
 	it('should call onSpotlightLeft on horizontal slider at min value', () => {
 		const handleSpotlight = sinon.spy();
 		const subject = mount(

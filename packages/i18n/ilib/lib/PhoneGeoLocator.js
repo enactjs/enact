@@ -155,7 +155,7 @@ var PhoneGeoLocator = function(options) {
 							
 							Utils.loadData({
 								name: "iddarea.json",
-								object: PhoneGeoLocator,
+								object: "PhoneGeoLocator",
 								nonlocale: true,
 								sync: sync,
 								loadParams: loadParams,
@@ -163,7 +163,7 @@ var PhoneGeoLocator = function(options) {
 									this.regiondata = data;
 									Utils.loadData({
 										name: "area.json",
-										object: PhoneGeoLocator,
+										object: "PhoneGeoLocator",
 										locale: this.locale,
 										sync: sync,
 										loadParams: JSUtils.merge(loadParams, {
@@ -353,7 +353,7 @@ PhoneGeoLocator.prototype = {
 		
 				Utils.loadData({
 					name: "extarea.json",
-					object: PhoneGeoLocator, 
+					object: "PhoneGeoLocator", 
 					locale: locale,
 					sync: sync,
 					loadParams: JSUtils.merge((options && options.loadParams) || {}, {returnOne: true}),
@@ -361,7 +361,7 @@ PhoneGeoLocator.prototype = {
 						this.extarea = data;
 						Utils.loadData({
 							name: "extstates.json",
-							object: PhoneGeoLocator, 
+							object: "PhoneGeoLocator", 
 							locale: locale,
 							sync: sync,
 							loadParams: JSUtils.merge((options && options.loadParams) || {}, {returnOne: true}),
@@ -590,7 +590,7 @@ PhoneGeoLocator.prototype = {
 		
 		Utils.loadData({
 			name: "area.json",
-			object: PhoneGeoLocator,
+			object: "PhoneGeoLocator",
 			locale: phoneLoc,
 			sync: sync,
 			loadParams: JSUtils.merge(loadParams, {

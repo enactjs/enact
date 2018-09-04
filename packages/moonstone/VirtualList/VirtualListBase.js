@@ -11,39 +11,6 @@ import ScrollableNative from '../Scrollable/ScrollableNative';
 
 const SpotlightPlaceholder = Spottable('div');
 
-const configureSpotlight = (spotlightId, instance) => {
-	Spotlight.set(spotlightId, {
-		enterTo: 'last-focused',
-		/*
-		 * Returns the data-index as the key for last focused
-		 */
-		lastFocusedPersist: function () {
-			if (this.lastFocusedIndex != null) {
-				return {
-					container: false,
-					element: true,
-					key: this.lastFocusedIndex
-				};
-			}
-		}.bind(instance),
-		/*
-		 * Restores the data-index into the placeholder if its the only element. Tries to find a
-		 * matching child otherwise.
-		 */
-		lastFocusedRestore: ({key}, all) => {
-			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
-				all[0].dataset.index = key;
-
-				return all[0];
-			}
-
-			return all.reduce((focused, node) => {
-				return focused || node.dataset.index === key && node;
-			}, null);
-		}
-	});
-};
-
 const
 	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
 	isDown = is('down'),
@@ -223,7 +190,7 @@ const VirtualListBaseFactory = (type) => {
 
 			const {spotlightId} = props;
 			if (spotlightId) {
-				configureSpotlight(spotlightId, this);
+				this.configureSpotlight(spotlightId);
 			}
 		}
 
@@ -253,7 +220,7 @@ const VirtualListBaseFactory = (type) => {
 
 		componentWillReceiveProps (nextProps) {
 			if (nextProps.spotlightId && nextProps.spotlightId !== this.props.spotlightId) {
-				configureSpotlight(nextProps.spotlightId, this);
+				this.configureSpotlight(nextProps.spotlightId);
 			}
 		}
 
@@ -268,13 +235,14 @@ const VirtualListBaseFactory = (type) => {
 				// remove a function for preventing native scrolling by Spotlight
 				if (containerNode && containerNode.removeEventListener) {
 					containerNode.removeEventListener('scroll', this.preventScroll);
-					containerNode.removeEventListener('keydown', this.onKeyDown);
 				}
 			}
 
 			if (containerNode && containerNode.removeEventListener) {
 				containerNode.removeEventListener('keydown', this.onKeyDown);
 			}
+
+			this.resumeSpotlight();
 
 			this.setContainerDisabled(false);
 		}
@@ -301,6 +269,47 @@ const VirtualListBaseFactory = (type) => {
 					document.removeEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
 				}
 			}
+		}
+
+		configureSpotlight = (spotlightId) => {
+			Spotlight.set(spotlightId, {
+				enterTo: 'last-focused',
+				/*
+				 * Returns the data-index as the key for last focused
+				 */
+				lastFocusedPersist: this.lastFocusedPersist,
+				/*
+				 * Restores the data-index into the placeholder if its the only element. Tries to find a
+				 * matching child otherwise.
+				 */
+				lastFocusedRestore: this.lastFocusedRestore
+			});
+		}
+
+		lastFocusedPersist = () => {
+			if (this.lastFocusedIndex != null) {
+				return {
+					container: false,
+					element: true,
+					key: this.lastFocusedIndex
+				};
+			}
+		}
+
+		/*
+		 * Restores the data-index into the placeholder if its the only element. Tries to find a
+		 * matching child otherwise.
+		 */
+		lastFocusedRestore = ({key}, all) => {
+			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
+				all[0].dataset.index = key;
+
+				return all[0];
+			}
+
+			return all.reduce((focused, node) => {
+				return focused || Number(node.dataset.index) === key && node;
+			}, null);
 		}
 
 		/**
@@ -405,23 +414,24 @@ const VirtualListBaseFactory = (type) => {
 		getIndexToScroll = (direction, currentIndex) => {
 			const
 				{dataSize, spacing} = this.props,
-				{dimensionToExtent, primary} = this.uiRef,
+				{dimensionToExtent, primary: {clientSize, gridSize, itemSize}, scrollPosition} = this.uiRef,
 				{findSpottableItem} = this,
-				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo,
-				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent);
+				numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent,
+				firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent,
+				lastFullyVisibleIndex = Math.min(dataSize - 1, Math.floor((scrollPosition + clientSize - itemSize) / gridSize) * dimensionToExtent);
 			let candidateIndex = -1;
 
 			/* First, find a spottable item in this page */
 			if (direction === 'down') { // Page Down
-				if ((lastVisibleIndex - (lastVisibleIndex % dimensionToExtent)) > currentIndex) { // If a current focused item is in the last visible line.
+				if ((lastFullyVisibleIndex - (lastFullyVisibleIndex % dimensionToExtent)) > currentIndex) { // If a current focused item is in the last visible line.
 					candidateIndex = findSpottableItem(
-						lastVisibleIndex,
+						lastFullyVisibleIndex,
 						currentIndex - (currentIndex % dimensionToExtent) + dimensionToExtent - 1
 					);
 				}
-			} else if (firstVisibleIndex + dimensionToExtent <= currentIndex) { // Page Up,  if a current focused item is in the first visible line.
+			} else if (firstFullyVisibleIndex + dimensionToExtent <= currentIndex) { // Page Up,  if a current focused item is in the first visible line.
 				candidateIndex = findSpottableItem(
-					firstVisibleIndex,
+					firstFullyVisibleIndex,
 					currentIndex - (currentIndex % dimensionToExtent)
 				);
 			}
@@ -429,18 +439,18 @@ const VirtualListBaseFactory = (type) => {
 			/* Second, find a spottable item in the next page */
 			if (candidateIndex === -1) {
 				if (direction === 'down') { // Page Down
-					candidateIndex = findSpottableItem(lastVisibleIndex + numOfItemsInPage, lastVisibleIndex);
+					candidateIndex = findSpottableItem(lastFullyVisibleIndex + numOfItemsInPage, lastFullyVisibleIndex);
 				} else { // Page Up
-					candidateIndex = findSpottableItem(firstVisibleIndex - numOfItemsInPage, firstVisibleIndex);
+					candidateIndex = findSpottableItem(firstFullyVisibleIndex - numOfItemsInPage, firstFullyVisibleIndex);
 				}
 			}
 
 			/* Last, find a spottable item in a whole data */
 			if (candidateIndex === -1) {
 				if (direction === 'down') { // Page Down
-					candidateIndex = findSpottableItem(lastVisibleIndex + numOfItemsInPage + 1, dataSize);
+					candidateIndex = findSpottableItem(lastFullyVisibleIndex + numOfItemsInPage + 1, dataSize);
 				} else { // Page Up
-					candidateIndex = findSpottableItem(firstVisibleIndex - numOfItemsInPage - 1, -1);
+					candidateIndex = findSpottableItem(firstFullyVisibleIndex - numOfItemsInPage - 1, -1);
 				}
 			}
 
@@ -639,11 +649,17 @@ const VirtualListBaseFactory = (type) => {
 				this.setSpotlightContainerRestrict(keyCode, target);
 				Spotlight.setPointerMode(false);
 				if (this.jumpToSpottableItem(keyCode, repeat, target)) {
-					ev.stopPropagation();
+					// Pause Spotlight temporarily so we don't focus twice
+					Spotlight.pause();
+					document.addEventListener('keyup', this.resumeSpotlight);
 				}
 			}
 		}
 
+		resumeSpotlight = () => {
+			Spotlight.resume();
+			document.removeEventListener('keyup', this.resumeSpotlight);
+		}
 		/**
 		 * Handle global `onKeyDown` event
 		 */

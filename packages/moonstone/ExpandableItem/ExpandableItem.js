@@ -302,9 +302,11 @@ const ExpandableItemBase = kind({
 				if (autoClose && onClose && isUp(keyCode) && wouldDirectionLeaveContainer('up', target)) {
 					onClose();
 					ev.nativeEvent.stopImmediatePropagation();
+					ev.preventDefault();
 				} else if (isDown(keyCode) && wouldDirectionLeaveContainer('down', target)) {
 					if (lockBottom) {
 						ev.nativeEvent.stopImmediatePropagation();
+						ev.preventDefault();
 					} else if (onSpotlightDown) {
 						onSpotlightDown(ev);
 					}

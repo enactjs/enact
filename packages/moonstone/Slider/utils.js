@@ -29,7 +29,7 @@ const isNotMax = (ev, {value, max}) => {
 	return value !== max;
 };
 
-const isNotMin = (ev, {value, min}) => {
+const isNotMin = (ev, {min, value = min}) => {
 	return value !== min;
 };
 

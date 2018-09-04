@@ -1,6 +1,6 @@
 /**
  * Exports the {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
- * Higher-order Component and {@link spotlight/SpotlightContainerDecorator.spotlightDefaultClass}
+ * higher-order component and {@link spotlight/SpotlightContainerDecorator.spotlightDefaultClass}
  * `className`. The default export is
  * {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}.
  *
@@ -78,7 +78,7 @@ const defaultConfig = {
 };
 
 /**
- * Constructs a Higher-order Component that allows Spotlight focus to be passed to
+ * Constructs a higher-order component that allows Spotlight focus to be passed to
  * its own configurable hierarchy of spottable child controls.
  *
  * Example:
@@ -105,7 +105,7 @@ const defaultConfig = {
  * ```
  * @param  {Object}    defaultConfig  Set of default configuration parameters. Additional parameters
  *                                    are passed as configuration to {@link spotlight/Spotlight.set}
- * @param  {Function} Higher-order component
+ * @param  {Function} higher-order component
  *
  * @returns {Function} SpotlightContainerDecorator
  * @class SpotlightContainerDecorator
@@ -117,8 +117,8 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardMouseLeave = forward(leaveEvent);
 	const {navigableFilter, preserveId, ...containerConfig} = config;
 
-	const stateFromProps = ({spotlightId}) => {
-		const id = Spotlight.add(spotlightId);
+	const stateFromProps = ({spotlightId, spotlightRestrict}) => {
+		const id = Spotlight.add(spotlightId, {restrict: spotlightRestrict});
 		return {
 			id,
 			preserveId: preserveId && id === spotlightId
@@ -181,19 +181,13 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.state = stateFromProps(props);
-		}
 
-		componentWillMount () {
 			const cfg = {
 				...containerConfig,
 				navigableFilter: this.navigableFilter
 			};
 
-			if (this.props.spotlightRestrict) {
-				cfg.restrict = this.props.spotlightRestrict;
-			}
-
-			Spotlight.add(this.state.id, cfg);
+			Spotlight.set(this.state.id, cfg);
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -201,24 +195,23 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			let id = nextProps.spotlightId;
 			if (prevId !== id) {
-				Spotlight.remove(prevId);
-				id = Spotlight.add(id);
-
-				this.setState(stateFromProps({spotlightId: id}));
+				this.releaseContainer(prevId);
 			}
-		}
 
-		componentDidUpdate (prevProps) {
-			if (this.props.spotlightRestrict !== prevProps.spotlightRestrict) {
-				Spotlight.set(this.state.id, {restrict: this.props.spotlightRestrict});
+			if (prevId !== id || this.props.spotlightRestrict !== nextProps.spotlightRestrict) {
+				this.setState(stateFromProps(nextProps));
 			}
 		}
 
 		componentWillUnmount () {
+			this.releaseContainer(this.state.id);
+		}
+
+		releaseContainer (spotlightId) {
 			if (this.state.preserveId) {
-				Spotlight.unmount(this.state.id);
+				Spotlight.unmount(spotlightId);
 			} else {
-				Spotlight.remove(this.state.id);
+				Spotlight.remove(spotlightId);
 			}
 		}
 

@@ -2,7 +2,51 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [2.0.2] - 2018-13-01
+## [unreleased]
+
+### Fixed
+
+- `moonstone/ExpandableItem` to not make scrolling of a parent scroller when 5-way key is pressed on the first item or the last item
+- `moonstone/Scroller` scrolling behavior for focused items in 5-way mode
+- `moonstone/VideoPlayer` to prevent default browser scroll behavior when navigating via 5-way
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to jump to the previous or next page properly via page up or down keys
+- `moonstone/VirtuaList` to allow `onKeyDown` events to bubble
+- `moonstone/Scrollable` to forward `onKeyDown` event
+
+## [2.1.1] - 2018-08-27
+
+### Changed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effects only by wheel input
+
+### Fixed
+
+- `moonstone/Scroller` to scroll container elements into view
+- `moonstone/VideoPlayer` so that activity is detected and the `autoCloseTimeout` timer is reset when using 5-way to navigate from the media slider
+
+## [2.1.0] - 2018-08-20
+
+### Added
+
+- `moonstone/VideoPlayer` property `noMediaSliderFeedback`
+- `moonstone/VideoPlayer.MediaControls` property `playPauseButtonDisabled`
+
+### Changed
+
+- `moonstone/Picker` key down hold threshold to 800ms before firing the `onChange` event
+
+### Fixed
+
+- `moonstone/GridListImageItem` to properly vertically align when the content varies in size
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to not scroll by dragging
+- `moonstone/Slider` to not emit `onChange` event when `value` has not changed
+- `moonstone/VideoPlayer` to focus on available media buttons if the default spotlight component is disabled
+- `moonstone/VideoPlayer` to keep media controls visible when interacting with popups
+- `moonstone/VideoPlayer` to read out `infoComponents` accessibility value when `moreButtonColor` is pressed
+- `moonstone/VideoPlayer` to round the time displayed down to the nearest second
+- `moonstone/VirtualList` to restore last focused item correctly
+
+## [2.0.2] - 2018-08-13
 
 ### Fixed
 

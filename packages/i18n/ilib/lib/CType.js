@@ -317,6 +317,7 @@ CType._load = function (name, sync, loadParams, onLoad) {
 	if (!ilib.data[name]) {
 		var loadName = name ? name + ".json" : "CType.json";
 		Utils.loadData({
+			object: "CType",
 			name: loadName,
 			locale: "-",
 			nonlocale: true,

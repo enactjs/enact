@@ -100,7 +100,7 @@ var AddressFmt = function(options) {
 	// console.log("Creating formatter for region: " + this.locale.region);
 	Utils.loadData({
 		name: "address.json",
-		object: AddressFmt, 
+		object: "AddressFmt", 
 		locale: this.locale,
 		sync: this.sync, 
 		loadParams: this.loadParams, 
@@ -109,7 +109,7 @@ var AddressFmt = function(options) {
 				// load the "unknown" locale instead
 				Utils.loadData({
 					name: "address.json",
-					object: AddressFmt, 
+					object: "AddressFmt", 
 					locale: new Locale("XX"),
 					sync: this.sync, 
 					loadParams: this.loadParams, 
@@ -139,7 +139,7 @@ AddressFmt.prototype._init = function () {
 	this.style = this.info && this.info.formats && this.info.formats[this.styleName];
 	
 	// use generic default -- should not happen, but just in case...
-	this.style = this.style || (this.info && this.info.formats["default"]) || "{streetAddress}\n{locality} {region} {postalCode}\n{country}";
+	this.style = this.style || (this.info && this.info.formats && this.info.formats["default"]) || "{streetAddress}\n{locality} {region} {postalCode}\n{country}";
 };
 
 /**

@@ -55,7 +55,7 @@ const defaultConfig = {
 
 
 /**
- * Higher-order Component that adds breadcrumbs to a Panels component
+ * A higher-order component that adds breadcrumbs to a Panels component
  *
  * @class BreadcrumbDecorator
  * @type {Function}

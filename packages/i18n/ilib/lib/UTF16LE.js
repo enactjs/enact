@@ -2,7 +2,7 @@
  * UTF16LE.js - Implement Unicode Transformation Format 16 bit, 
  * Little Endian mappings
  * 
- * Copyright © 2014-2015, JEDLSoft
+ * Copyright © 2014-2015, 2018, JEDLSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,12 +32,38 @@ var Charmap = require("./Charmap.js");
  * @extends Charmap
  */
 var UTF16LE = function (options) {
-	this.charset = new Charset({name: "UTF-16LE"});
+    options = options || {sync: true};
+    if (typeof(options.charset) === "object" && options.charset instanceof Charset) {
+        this.charset = options.charset;
+        this._init(options);
+    } else {
+        new Charset({
+            name: "UTF-16LE",
+            sync: options.sync,
+            loadParams: options.loadParams,
+            onLoad: ilib.bind(this, function(cs) {
+                this.charset = cs;
+                this._init(options);
+            })
+        });
+    }
 };
 
-UTF16LE.prototype = new Charmap();
+UTF16LE.prototype = new Charmap({noinstance: true});
 UTF16LE.prototype.parent = Charmap;
 UTF16LE.prototype.constructor = UTF16LE;
+
+/**
+ * @private
+ * Initialize the charmap instance
+ */
+UTF16LE.prototype._init = function(options) {
+    this._calcExpansionFactor();
+
+    if (typeof(options.onLoad) === "function") {
+        options.onLoad(this);
+    }
+};
 
 UTF16LE.prototype.mapToUnicode = function (bytes) {
 	if (typeof(Buffer) !== "undefined") {

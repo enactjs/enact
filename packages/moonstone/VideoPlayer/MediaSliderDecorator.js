@@ -45,7 +45,9 @@ const handleKeyDown = handle(
 		[forKey('left'), returnsTrue(call('decrement'))],
 		[forKey('right'), returnsTrue(call('increment'))]
 	),
-	// if we handled left or right, stopImmediate to prevent spotlight handling
+	// if we handled left or right, preventDefault to prevent browser scroll behavior
+	preventDefault,
+	// stopImmediate to prevent spotlight handling
 	stopImmediate
 );
 

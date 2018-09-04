@@ -2,7 +2,23 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [2.0.2] - 2018-13-01
+## [unreleased]
+
+### Fixed
+
+- `ui/Marquee` positioning bug when used with CSS flexbox layouts
+
+## [2.1.1] - 2018-08-27
+
+No significant changes.
+
+## [2.1.0] - 2018-08-20
+
+### Fixed
+
+- `ui/FloatingLayer` to apply `key`s to prevent React warnings
+
+## [2.0.2] - 2018-08-13
 
 ### Fixed
 

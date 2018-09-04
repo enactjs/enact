@@ -1,6 +1,5 @@
 /**
- * Exports the {@link ui/ViewManager.ViewManager} component and the
- * arrangers for use with it.
+ * A component that manages the transitions of views.
  *
  * @module ui/ViewManager
  * @exports shape
@@ -46,8 +45,9 @@ class ViewManager extends React.Component {
 		childProps: PropTypes.object,
 
 		/**
-		 * Views to be managed. May be any renderable component including custom React components or
-		 * primitive DOM nodes.
+		 * Views to be managed.
+		 *
+		 * May be any renderable component including custom React components or primitive DOM nodes.
 		 *
 		 * @type {Node}
 		 */
@@ -73,7 +73,9 @@ class ViewManager extends React.Component {
 		duration: PropTypes.number,
 
 		/**
-		 * Index of last visible view. Defaults to the current value of `index`.
+		 * Index of last visible view.
+		 *
+		 * Defaults to the current value of `index`.
 		 *
 		 * @type {Number}
 		 * @default value of index
@@ -91,7 +93,9 @@ class ViewManager extends React.Component {
 
 		/**
 		 * Name of the property to pass to the wrapped view to indicate when it is entering the
-		 * viewport. When `true`, the view has been created but has not transitioned into place.
+		 * viewport.
+		 *
+		 * When `true`, the view has been created but has not transitioned into place.
 		 * When `false`, the view has finished its transition.
 		 *
 		 * The notification can be delayed by setting `enteringDelay`. If not set, the view will not
@@ -160,9 +164,10 @@ class ViewManager extends React.Component {
 		onWillTransition: PropTypes.func,
 
 		/**
-		 * Explicitly sets the transition direction. If omitted, the direction is determined
-		 * automaticallly based on the change of index or a string comparison of the first child's
-		 * key
+		 * Explicitly sets the transition direction.
+		 *
+		 * If omitted, the direction is determined automaticallly based on the change of index or a
+		 * string comparison of the first child's key.
 		 *
 		 * @type {Boolean}
 		 */

@@ -23,7 +23,7 @@ import css from './MoonstoneDecorator.less';
 import {configure} from '@enact/ui/Touchable';
 
 /**
- * Default config for {@link moonstone/MoonstoneDecorator.MoonstoneDecorator}.
+ * Default config for `MoonstoneDecorator`.
  *
  * @memberof moonstone/MoonstoneDecorator
  * @hocconfig
@@ -45,8 +45,9 @@ const defaultConfig = {
 };
 
 /**
- * A Higher-order Component that applies Moonstone theming to an application. It also applies
- * [floating layer]{@link ui/FloatingLayer.FloatingLayerDecorator},
+ * A higher-order component that applies Moonstone theming to an application.
+ *
+ * It also applies [floating layer]{@link ui/FloatingLayer.FloatingLayerDecorator},
  * [resolution independence]{@link ui/resolution.ResolutionDecorator},
  * [skin support]{@link moonstone/Skinnable}, [spotlight]{@link spotlight.SpotlightRootDecorator}, and
  * [internationalization support]{@link i18n/I18nDecorator.I18nDecorator}. It is meant to be applied to
