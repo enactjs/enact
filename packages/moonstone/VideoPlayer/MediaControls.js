@@ -57,6 +57,12 @@ const MediaControlsBase = kind({
 	// intentionally assigning these props to MediaControls instead of Base (which is private)
 	propTypes: /** @lends moonstone/VideoPlayer.MediaControls.prototype */ {
 		/**
+		 * PoC
+		 * VideoPlayer announce state
+		 */
+		announceState: PropTypes.number,
+
+		/**
 		 * Reverse-playback [icon]{@link moonstone/Icon.Icon} name. Accepts any
 		 * [icon]{@link moonstone/Icon.Icon} component type.
 		 *
@@ -75,6 +81,12 @@ const MediaControlsBase = kind({
 		 * @public
 		 */
 		forwardIcon: PropTypes.string,
+
+		/**
+		 * PoC
+		 * VideoPlayer id
+		 */
+		id: PropTypes.string,
 
 		/**
 		 * Jump backward [icon]{@link moonstone/Icon.Icon} name. Accepts any
@@ -360,6 +372,12 @@ const MediaControlsBase = kind({
 		playPauseClassName: ({showMoreComponents}) => showMoreComponents ? null : spotlightDefaultClass,
 		moreButtonClassName: ({showMoreComponents, styler}) => styler.join('moreButton', {[spotlightDefaultClass]: showMoreComponents}),
 		moreIconLabel: ({moreButtonCloseLabel, moreButtonLabel, showMoreComponents}) => showMoreComponents ? moreButtonCloseLabel : moreButtonLabel,
+		moreIconLabelledBy: ({announceState, id, showMoreComponents}) => {
+			if (announceState < 4 && showMoreComponents) {
+				return `${id}_info ${id}_moreBackAriaLabel`
+			}
+			return null;
+		},
 		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis'
 	},
 
@@ -368,6 +386,7 @@ const MediaControlsBase = kind({
 		centerClassName,
 		children,
 		forwardIcon,
+		id,
 		jumpBackwardIcon,
 		jumpButtonsDisabled,
 		jumpForwardIcon,
@@ -379,6 +398,7 @@ const MediaControlsBase = kind({
 		moreButtonSpotlightId,
 		moreIcon,
 		moreIconLabel,
+		moreIconLabelledBy,
 		noJumpButtons,
 		noRateButtons,
 		onBackwardButtonClick,
@@ -426,6 +446,7 @@ const MediaControlsBase = kind({
 					{countReactChildren(children) ? (
 						<MediaButton
 							aria-label={moreIconLabel}
+							aria-labelledby={moreIconLabelledBy}
 							backgroundOpacity="translucent"
 							className={moreButtonClassName}
 							color={moreButtonColor}
@@ -440,6 +461,7 @@ const MediaControlsBase = kind({
 						</MediaButton>
 					) : null}
 				</div>
+				<div style={{display: 'none'}} id={`${id}_moreBackAriaLabel`}>{',' + moreIconLabel}</div>
 			</OuterContainer>
 		);
 	}

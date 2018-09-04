@@ -1715,11 +1715,6 @@ const VideoPlayerBase = class extends React.Component {
 				'aria-live': 'off',
 				role: 'alert'
 			};
-		} else if (this.state.announce === AnnounceState.INFO) {
-			return {
-				'aria-labelledby': `${this.id}_info`,
-				role: 'region'
-			};
 		}
 
 		return null;
@@ -1880,7 +1875,9 @@ const VideoPlayerBase = class extends React.Component {
 							</MediaSlider>}
 
 							<ComponentOverride
+								announceState={this.state.announce}
 								component={mediaControlsComponent}
+								id={this.id}
 								mediaDisabled={disabled || this.state.sourceUnavailable}
 								moreButtonSpotlightId={this.moreButtonSpotlightId}
 								onBackwardButtonClick={this.handleRewind}
