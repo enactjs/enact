@@ -264,13 +264,6 @@ class ScrollableBase extends Component {
 		if (focusedItem) {
 			focusedItem.blur();
 		}
-
-		if (
-			direction === 'vertical' && this.uiRef.canScrollVertically(bounds) ||
-			direction === 'horizontal' && this.uiRef.canScrollHorizontally(bounds)
-		) {
-			this.childRef.setContainerDisabled(true);
-		}
 	}
 
 	onWheel = ({delta, horizontalScrollbarRef, verticalScrollbarRef}) => {
@@ -285,7 +278,6 @@ class ScrollableBase extends Component {
 
 		if (delta !== 0) {
 			this.isWheeling = true;
-			this.childRef.setContainerDisabled(true);
 		}
 	}
 
@@ -505,7 +497,6 @@ class ScrollableBase extends Component {
 	}
 
 	stop = () => {
-		this.childRef.setContainerDisabled(false);
 		this.focusOnItem();
 		this.lastScrollPositionOnFocus = null;
 		this.isWheeling = false;
@@ -782,8 +773,7 @@ class ScrollableBase extends Component {
 									onScroll: handleScroll,
 									onUpdate: this.handleScrollerUpdate,
 									ref: this.initChildRef,
-									rtl,
-									spotlightId
+									rtl
 								})}
 							</ChildWrapper>
 							{isVerticalScrollbarVisible ?

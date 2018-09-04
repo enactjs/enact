@@ -75,7 +75,7 @@ storiesOf('Scroller', module)
 		'List of things',
 		() => (
 			<Scroller
-				data-spotlight-container-disabled={boolean('data-spotlight-container-disabled', Scroller, false)}
+				spotlightDisabled={boolean('spotlightDisabled', Scroller, false)}
 				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
 			>
 				<Group childComponent={Item}>
