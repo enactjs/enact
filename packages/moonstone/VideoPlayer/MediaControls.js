@@ -374,7 +374,7 @@ const MediaControlsBase = kind({
 		moreIconLabel: ({moreButtonCloseLabel, moreButtonLabel, showMoreComponents}) => showMoreComponents ? moreButtonCloseLabel : moreButtonLabel,
 		moreIconLabelledBy: ({announceState, id, showMoreComponents}) => {
 			if (announceState < 4 && showMoreComponents) {
-				return `${id}_info ${id}_moreBackAriaLabel`
+				return `${id}_info ${id}_moreBackAriaLabel`;
 			}
 			return null;
 		},
