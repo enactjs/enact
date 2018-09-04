@@ -88,6 +88,7 @@ class ChangeableTooltip extends React.Component {
 			left: '50%',
 			transform: 'translateX(-50%)'
 		};
+
 		return (
 			<div>
 				<div style={style}>
@@ -106,7 +107,7 @@ class ChangeableTooltip extends React.Component {
 						top: parseInt(top || 0)
 					}}
 				>
-					{'drawer'}
+					drawer
 				</IconButton>
 			</div>
 		);
