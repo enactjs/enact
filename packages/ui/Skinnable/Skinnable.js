@@ -23,6 +23,14 @@ import React from 'react';
  */
 const defaultConfig = {
 	/**
+	 * The prop in which to pass the effective skin to the wrapped component
+	 *
+	 * @type {string}
+	 * @memberof ui/Skinnable.Skinnable.defaultConfig
+	 */
+	prop: null,
+
+	/**
 	 * A hash mapping the available skin names to their CSS class name.
 	 *
 	 * The keys are accepted as the only valid values for the `skin` prop on the wrapped component.
@@ -68,7 +76,7 @@ const SkinContext = React.createContext(null);
  * @public
  */
 const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
-	const {skins, defaultSkin} = config;
+	const {prop, skins, defaultSkin} = config;
 
 	function determineSkin (authorSkin, parentSkin) {
 		return authorSkin || defaultSkin || parentSkin;
@@ -97,6 +105,10 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 				{parentSkin => {
 					const effectiveSkin = determineSkin(skin, parentSkin);
 
+					if (prop) {
+						rest[prop] = effectiveSkin;
+					}
+
 					return (
 						<SkinContext.Provider value={effectiveSkin}>
 							<Wrapped className={getClassName(skin, parentSkin, className)} {...rest} />
@@ -110,5 +122,6 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 
 export default Skinnable;
 export {
-	Skinnable
+	Skinnable,
+	SkinContext
 };
