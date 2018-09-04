@@ -424,17 +424,20 @@ function generateId () {
  * @private
  */
 const mergeConfig = (current, updated) => {
-	const cfg = Object.assign({}, current);
+	if (!updated) return current;
 
-	if (updated) {
-		Object.keys(updated).forEach(key => {
-			if (key in GlobalConfig) {
-				cfg[key] = updated[key];
+	let cfg = null;
+
+	Object.keys(updated).forEach(key => {
+		if (key in GlobalConfig && current[key] !== updated[key]) {
+			if (cfg == null) {
+				cfg = Object.assign({}, current);
 			}
-		});
-	}
+			cfg[key] = updated[key];
+		}
+	});
 
-	return cfg;
+	return cfg || current;
 };
 
 /**
@@ -467,7 +470,7 @@ const configureContainer = (...args) => {
 		containerId = generateId();
 	}
 
-	config = mergeConfig(containerConfigs.get(containerId) || GlobalConfig, config);
+	config = mergeConfig(containerConfigs.get(containerId) || {...GlobalConfig}, config);
 	containerConfigs.set(containerId, config);
 
 	return containerId;
@@ -933,6 +936,16 @@ function setLastContainerFromTarget (current, target) {
 	}
 }
 
+function isWithinOverflowContainer (target, containerIds = getContainersForNode(target)) {
+	return containerIds
+		// ignore the root container id which is set to overflow by the root decorator
+		.filter(id => id !== rootContainerId)
+		// get the config for each container
+		.map(getContainerConfig)
+		// and check if any are set to overflow
+		.some(config => config && config.overflow);
+}
+
 export {
 	// Remove
 	getAllContainerIds,
@@ -960,6 +973,7 @@ export {
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
+	isWithinOverflowContainer,
 	mayActivateContainer,
 	removeAllContainers,
 	removeContainer,

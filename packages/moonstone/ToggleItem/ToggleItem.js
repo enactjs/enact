@@ -153,6 +153,7 @@ const ToggleItemDecorator = hoc(defaultConfig, ({invalidateProps}, Wrapped) => {
 
 /**
  * A Moonstone-styled item with built-in support for toggling, marqueed text, and `Spotlight` focus.
+ *
  * This is not intended to be used directly, but should be extended by a component that will
  * customize this component's appearance by supplying an `iconComponent` prop.
  *

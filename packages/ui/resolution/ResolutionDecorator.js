@@ -12,14 +12,14 @@ import hoc from '@enact/core/hoc';
 import {init, defineScreenTypes, getResolutionClasses} from './resolution';
 
 /**
- * Default config for {@link ui/resolution.ResolutionDecorator}
+ * Default config for `ResolutionDecorator`.
  *
  * @memberof ui/resolution.ResolutionDecorator
  * @hocconfig
  */
 const defaultConfig = {
 	/**
-	 * When `true`, an event listener will be attached to the window to listen for resize events.
+	 * Attaches an event listener to the window to listen for resize events.
 	 *
 	 * @type {Boolean}
 	 * @default true
@@ -41,7 +41,7 @@ const defaultConfig = {
 };
 
 /**
- * A higher-order component (HOC) that configures resolution support for its wrapped component tree.
+ * A higher-order component that configures resolution support for its wrapped component tree.
  *
  * Configuration options:
  *	* `dynamic: true` - when `true`, updates the resolution classes when the window resizes

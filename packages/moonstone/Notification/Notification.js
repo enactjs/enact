@@ -16,8 +16,10 @@ import Popup from '../Popup';
 import componentCss from './Notification.less';
 
 /**
- * A Moonstone styled notification component. It provides a notification modal which can be opened
- * and closed, overlaying an app. Apps will want to use {@link moonstone/Notification.Notification}.
+ * A Moonstone styled notification component.
+ *
+ * It provides a notification modal which can be opened and closed, overlaying an app. Apps will
+ * want to use {@link moonstone/Notification.Notification}.
  *
  * @class NotificationBase
  * @memberof moonstone/Notification

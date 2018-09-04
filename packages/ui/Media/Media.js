@@ -110,7 +110,7 @@ const handledMediaEventsMap = {
 };
 
 /**
- * {@link ui/Media.Media} is a component representation of HTMLMediaElement.
+ * A component representation of HTMLMediaElement.
  *
  * @class Media
  * @memberof ui/Media
@@ -129,9 +129,10 @@ class Media extends React.Component {
 		mediaComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
 
 		/**
-		 * An event map object for custom media events. List custom events that aren't standard to
-		 * React. These will be directly added to the media element and props matching their name
-		 * will be executed as callback functions when the event fires.
+		 * An event map object for custom media events.
+		 *
+		 * List custom events that aren't standard to React. These will be directly added to the media
+		 * element and props matching their name will be executed as callback functions when the event fires.
 		 *
 		 * Example:
 		 * ```

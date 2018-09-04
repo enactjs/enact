@@ -1,5 +1,5 @@
 /**
- * Exports the {@link ui/Resizable.Resizable} higher-order component (HOC).
+ * A higher-order component that handles component resize event.
  *
  * @module ui/Resizable
  * @exports Resizable
@@ -12,14 +12,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * Default config for {@link ui/Resizable.Resizable}
+ * Default config for `Resizable`.
  *
  * @memberof ui/Resizable.Resizable
  * @hocconfig
  */
 const defaultConfig = {
 	/**
-	 * Configures the event name that will indicate a resize of a container may be necessary
+	 * Configures the event name that will indicate a resize of a container may be necessary.
 	 *
 	 * @type {String}
 	 * @default null
@@ -28,8 +28,9 @@ const defaultConfig = {
 	filter: null,
 
 	/**
-	 * Configures a function that can filter the event to limit when the container is notified. This
-	 * function will receive the event payload as its only argument and should return `true` to
+	 * Configures a function that can filter the event to limit when the container is notified.
+	 *
+	 * This function will receive the event payload as its only argument and should return `true` to
 	 * prevent the resize notification.
 	 *
 	 * @type {Function}
@@ -52,9 +53,10 @@ const contextTypes = {
 };
 
 /**
- * {@link ui/Resizable.Resizable} is a higher-order component that can be used to notify a container
- * that the wrapped component has been resized. It may be useful in cases where a component may need
- * to update itself as a result of its children changing in size, such as a [Scroller] {@link ui/Scroller}.
+ * A higher-order component that notifies a container that the wrapped component has been resized.
+ *
+ * It may be useful in cases where a component may need to update itself as a result of its children
+ * changing in size, such as a [Scroller]{@link ui/Scroller}.
  *
  * Containers must provide an `invalidateBounds` method via React's context in order for `Resizable`
  * instances to notify it of resize.

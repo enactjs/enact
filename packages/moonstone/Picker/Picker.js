@@ -24,8 +24,9 @@ import {validateRange} from '../internal/validators';
 import PickerCore, {PickerItem} from '../internal/Picker';
 
 /**
- * The base component for [`Picker`]{@link moonstone/Picker.Picker}. This version is not
- * [`spottable`]{@link spotlight/Spottable.Spottable}.
+ * The base `Picker` component.
+ *
+ * This version is not [`spottable`]{@link spotlight/Spottable.Spottable}.
  *
  * @class PickerBase
  * @memberof moonstone/Picker
@@ -246,8 +247,9 @@ const PickerBase = kind({
 });
 
 /**
- * A Picker component that allows selecting values from a list of values. By default,
- * `RangePicker` maintains the state of its `value` property. Supply the `defaultValue`
+ * A Picker component that allows selecting values from a list of values.
+ *
+ * By default, `RangePicker` maintains the state of its `value` property. Supply the `defaultValue`
  * property to control its initial value. If you wish to directly control updates to the component,
  * supply a value to `value` at creation time and update it in response to `onChange` events.
  *

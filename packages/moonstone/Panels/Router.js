@@ -41,7 +41,9 @@ const Router = class extends React.Component {
 
 	static propTypes = /** @lends moonstone/Panels.Router.prototype */ {
 		/**
-		 * List of views to render. Will be rendered as a flat array of views suitable for use in
+		 * List of views to render.
+		 *
+		 * Will be rendered as a flat array of views suitable for use in
 		 * Panels and not a hierarchy of views as the path implies.
 		 *
 		 * May either be a URI-style path (`'/app/home/settings'`) or an array
@@ -66,7 +68,9 @@ const Router = class extends React.Component {
 		]),
 
 		/**
-		 * Routes defined as an object rather than via JSX. If specified, `routes` will take
+		 * Routes defined as an object rather than via JSX.
+		 *
+		 * If specified, `routes` will take
 		 * precendence over a JSX definition.
 		 *
 		 * ```JavaScript
@@ -201,7 +205,9 @@ const Router = class extends React.Component {
 
 /**
  * Used with {@link moonstone/Panels.Routable} to define the `path` segment and the
- * `component` to render. `Route` elements can be nested to build multiple level paths.
+ * `component` to render.
+ *
+ *`Route` elements can be nested to build multiple level paths.
  *
  * In the below example, `Panels` would render `SettingsPanel` with breadcrumbs to
  * navigate `AppPanel` and `HomePanel`.
