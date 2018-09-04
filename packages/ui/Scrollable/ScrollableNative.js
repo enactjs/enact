@@ -958,7 +958,7 @@ class ScrollableBaseNative extends Component {
 		this.scrollStopJob.start();
 	}
 
-	startScrollJob = new Job(this.scrollOnScroll, 16);
+	startScrollJob = new Job(this.scrollOnScroll);
 
 	scrollStopJob = new Job(this.scrollStopOnScroll, scrollStopWaiting);
 

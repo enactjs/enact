@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
+- `ui/ScrolllableNative` to update scroll buttons correctly on wheel
 - `ui/Marquee` positioning bug when used with CSS flexbox layouts
 
 ## [2.1.1] - 2018-08-27
