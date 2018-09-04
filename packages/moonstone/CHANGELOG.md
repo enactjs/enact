@@ -12,7 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to jump to the previous or next page properly via page up or down keys
 - `moonstone/VirtuaList` to allow `onKeyDown` events to bubble
 - `moonstone/Scrollable` to forward `onKeyDown` event
-- `moonstone/TooltipDecorator` to calculate position when `tooltipText` changed
+- `moonstone/TooltipDecorator` to update position when `tooltipText` is changed
 
 ## [2.1.1] - 2018-08-27
 

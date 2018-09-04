@@ -170,7 +170,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			if (prevProps.tooltipText !== this.props.tooltipText) {
+			if (this.state.showing && prevProps.tooltipText !== this.props.tooltipText) {
 				this.setTooltipLayout();
 			}
 		}

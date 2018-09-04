@@ -62,20 +62,20 @@ class ChangeableTooltip extends React.Component {
 		}
 	}
 
-	handleChangeLeft = (ev) => {
+	handleChangeLeft = ({value}) => {
 		this.setState(prevState => ({
 			position: {
 				...prevState.position,
-				left: parseInt(ev.value)
+				left: value
 			}
 		}));
 	}
 
-	handleChangeTop = (ev) => {
+	handleChangeTop = ({value}) => {
 		this.setState(prevState => ({
 			position: {
 				...prevState.position,
-				top: parseInt(ev.value)
+				top: value
 			}
 		}));
 	}
@@ -95,14 +95,15 @@ class ChangeableTooltip extends React.Component {
 					<Input id="left" small type="number" onChange={this.handleChangeLeft} value={left} />
 					<div>TOP : </div>
 					<Input id="top" small type="number" onChange={this.handleChangeTop} value={top} />
+					<Button onClick={this.changeTooltipText}>Change Text</Button>
 				</div>
 				<IconButton
 					tooltipText={this.state.text}
 					onClick={this.changeTooltipText}
 					style={{
 						position: 'absolute',
-						left,
-						top
+						left: parseInt(left || 0),
+						top: parseInt(top || 0)
 					}}
 				>
 					{'drawer'}
