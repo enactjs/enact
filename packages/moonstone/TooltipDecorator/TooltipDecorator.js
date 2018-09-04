@@ -169,6 +169,12 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		componentDidUpdate (prevProps) {
+			if (prevProps.tooltipText !== this.props.tooltipText) {
+				this.setTooltipLayout();
+			}
+		}
+
 		componentWillUnmount () {
 			if (currentTooltip === this) {
 				currentTooltip = null;
