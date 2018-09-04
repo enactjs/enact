@@ -419,6 +419,7 @@ const MediaControlsBase = kind({
 		spotlightId,
 		...rest
 	}) => {
+		delete rest.announceState;
 		delete rest.moreButtonCloseLabel;
 		delete rest.moreButtonLabel;
 		delete rest.onClose;
@@ -445,7 +446,7 @@ const MediaControlsBase = kind({
 					{rightComponents}
 					{countReactChildren(children) ? (
 						<MediaButton
-							aria-label={moreIconLabel}
+							aria-label={moreIconLabelledBy ? '' : moreIconLabel}
 							aria-labelledby={moreIconLabelledBy}
 							backgroundOpacity="translucent"
 							className={moreButtonClassName}
