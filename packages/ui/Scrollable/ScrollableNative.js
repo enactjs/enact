@@ -4,7 +4,6 @@ import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
-import {on, off} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -34,8 +33,6 @@ const
 	},
 	{
 		epsilon,
-		isPageDown,
-		isPageUp,
 		nop,
 		overscrollTypeDone,
 		overscrollTypeHold,
@@ -171,14 +168,6 @@ class ScrollableBaseNative extends Component {
 		 * @private
 		 */
 		onFlick: PropTypes.func,
-
-		/**
-		 * Called when pressing a key.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onKeyDown: PropTypes.func,
 
 		/**
 		 * Called when trigerring a mousedown event.
@@ -407,8 +396,6 @@ class ScrollableBaseNative extends Component {
 	componentDidMount () {
 		this.addEventListeners();
 		this.updateScrollbars();
-
-		on('keydown', this.onKeyDown);
 	}
 
 	componentWillUpdate () {
@@ -466,7 +453,6 @@ class ScrollableBaseNative extends Component {
 		this.startScrollJob.stop();
 
 		this.removeEventListeners();
-		off('keydown', this.onKeyDown);
 
 		if (this.context.Subscriber) {
 			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
@@ -729,32 +715,6 @@ class ScrollableBaseNative extends Component {
 		const {scrollLeft, scrollTop} = ev.target;
 
 		this.startScrollJob.startRaf(scrollLeft, scrollTop);
-	}
-
-	scrollByPage = (keyCode) => {
-		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
-		// scroller as a plain container
-		if (!this.state.isVerticalScrollbarVisible) return;
-
-		const
-			bounds = this.getScrollBounds(),
-			canScrollVertically = this.canScrollVertically(bounds),
-			pageDistance = (isPageUp(keyCode) ? -1 : 1) * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
-
-		this.lastInputType = 'pageKey';
-
-		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.pageKey);
-	}
-
-	onKeyDown = (ev) => {
-		if (this.props.onKeyDown) {
-			forward('onKeyDown', ev, this.props);
-		} else if (isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) {
-			ev.preventDefault();
-			if (!ev.repeat) {
-				this.scrollByPage(ev.keyCode);
-			}
-		}
 	}
 
 	scrollToAccumulatedTarget = (delta, vertical, overscrollEffect) => {
@@ -1322,7 +1282,6 @@ class ScrollableBaseNative extends Component {
 		delete rest.clearOverscrollEffect;
 		delete rest.horizontalScrollbar;
 		delete rest.onFlick;
-		delete rest.onKeyDown;
 		delete rest.onMouseDown;
 		delete rest.onScroll;
 		delete rest.onScrollStart;

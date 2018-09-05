@@ -524,7 +524,7 @@ class ScrollableBaseNative extends Component {
 
 		if (isPageUp(keyCode) || isPageDown(keyCode)) {
 			ev.preventDefault();
-			if (!repeat && this.hasFocus() && this.props.direction === 'vertical' || this.props.direction === 'both') {
+			if (!repeat && this.hasFocus() && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
 				Spotlight.setPointerMode(false);
 				direction = isPageUp(keyCode) ? 'up' : 'down';
 				overscrollEffectRequired = this.scrollByPage(direction) && overscrollEffectOn.pageKey;
