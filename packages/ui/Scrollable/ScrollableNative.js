@@ -27,7 +27,6 @@ const
 		overscrollTypeOnce: 2,
 		overscrollTypeDone: 9,
 		overscrollVelocityFactor: 300,
-		paginationPageMultiplier: 0.8,
 		scrollStopWaiting: 200,
 		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	},
@@ -39,7 +38,6 @@ const
 		overscrollTypeNone,
 		overscrollTypeOnce,
 		overscrollVelocityFactor,
-		paginationPageMultiplier,
 		scrollStopWaiting,
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;

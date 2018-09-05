@@ -27,11 +27,11 @@ const
 		overscrollTypeDone,
 		overscrollTypeNone,
 		overscrollTypeOnce,
-		paginationPageMultiplier,
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants,
 	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
 	overscrollTimeout = 300,
+	paginationPageMultiplier = 0.8,
 	reverseDirections = {
 		down: 'up',
 		up: 'down'
