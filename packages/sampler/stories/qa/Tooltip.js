@@ -96,7 +96,6 @@ class ChangeableTooltip extends React.Component {
 					<Input id="left" small type="number" onChange={this.handleChangeLeft} value={left} />
 					<div>TOP : </div>
 					<Input id="top" small type="number" onChange={this.handleChangeTop} value={top} />
-					<Button onClick={this.changeTooltipText}>Change Text</Button>
 				</div>
 				<IconButton
 					tooltipText={this.state.text}
