@@ -245,8 +245,7 @@ class ScrollableBaseNative extends Component {
 	isVoiceControl = false
 	voiceControlDirection = 'vertical'
 
-	onFlick = ({direction}) => {
-		const bounds = this.uiRef.getScrollBounds();
+	onFlick = () => {
 		const focusedItem = Spotlight.getCurrent();
 
 		if (focusedItem) {

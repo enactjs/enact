@@ -257,8 +257,7 @@ class ScrollableBase extends Component {
 		vertical: {before: null, after: null}
 	}
 
-	onFlick = ({direction}) => {
-		const bounds = this.uiRef.getScrollBounds();
+	onFlick = () => {
 		const focusedItem = Spotlight.getCurrent();
 
 		if (focusedItem) {
