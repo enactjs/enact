@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effects properly on repeating wheel input
+- `moonstone/TooltipDecorator` to add exception handling for cases where tooltipRef or clientRef don't exist
 
 ## [2.1.2] - 2018-09-04
 

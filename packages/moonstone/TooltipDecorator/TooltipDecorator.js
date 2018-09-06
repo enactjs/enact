@@ -187,6 +187,10 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		setTooltipLayout () {
+			if (!(this.tooltipRef && this.clientRef)) {
+				return;
+			}
+
 			const position = this.props.tooltipPosition;
 			const arr = position.split(' ');
 			let tooltipDirection = null;
