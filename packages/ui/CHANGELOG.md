@@ -2,10 +2,11 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [2.1.2] - 2018-09-04
 
 ### Fixed
 
+- `ui/GridListImageItem` to properly set `selected` style
 - `ui/Marquee` positioning bug when used with CSS flexbox layouts
 
 ## [2.1.1] - 2018-08-27
