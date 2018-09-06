@@ -336,7 +336,7 @@ class ScrollableBaseNative extends Component {
 				delta = this.uiRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				needToHideThumb = !delta;
 			} else {
-				if (overscrollEffectRequired && (eventDelta < 0 && this.scrollLeft <= 0 || eventDelta > 0 && this.scrollLeft >= bounds.maxLeft)) {
+				if (overscrollEffectRequired && (eventDelta < 0 && this.uiRef.scrollLeft <= 0 || eventDelta > 0 && this.uiRef.scrollLeft >= bounds.maxLeft)) {
 					this.uiRef.applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
 				}
 				needToHideThumb = true;
