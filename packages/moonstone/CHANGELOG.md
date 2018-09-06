@@ -6,6 +6,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 - `moonstone/VideoPlayer` timing to read out `infoComponents` accessibility value when `moreButton` or `moreButtonColor` is pressed
+## [Unreleased]
+
+### Fixed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effects properly on repeating wheel input
 
 ## [2.1.2] - 2018-09-04
 
