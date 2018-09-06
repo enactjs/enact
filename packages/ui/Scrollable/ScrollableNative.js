@@ -383,6 +383,7 @@ class ScrollableBaseNative extends Component {
 		};
 
 		this.overscrollEnabled = !!(props.applyOverscrollEffect);
+		this.scrollTicking = false;
 
 		props.cbScrollTo(this.scrollTo);
 	}
@@ -463,7 +464,6 @@ class ScrollableBaseNative extends Component {
 			this.forwardScrollEvent('onScrollStop');
 		}
 		this.scrollStopJob.stop();
-		this.startScrollJob.stop();
 
 		this.removeEventListeners();
 		off('keydown', this.onKeyDown);
@@ -728,7 +728,13 @@ class ScrollableBaseNative extends Component {
 	onScroll = (ev) => {
 		const {scrollLeft, scrollTop} = ev.target;
 
-		this.startScrollJob.startRaf(scrollLeft, scrollTop);
+		if (!this.scrollTicking) {
+			window.requestAnimationFrame(() => {
+				this.scrollOnScroll(scrollLeft, scrollTop);
+				this.scrollTicking = false;
+			});
+		}
+		this.scrollTicking = true;
 	}
 
 	scrollByPage = (keyCode) => {
@@ -957,8 +963,6 @@ class ScrollableBaseNative extends Component {
 		this.forwardScrollEvent('onScroll');
 		this.scrollStopJob.start();
 	}
-
-	startScrollJob = new Job(this.scrollOnScroll);
 
 	scrollStopJob = new Job(this.scrollStopOnScroll, scrollStopWaiting);
 
