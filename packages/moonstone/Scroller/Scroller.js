@@ -27,7 +27,6 @@ import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
 const
-	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
 	epsilon = 1,
 	reverseDirections = {
 		left: 'right',
@@ -76,14 +75,7 @@ class ScrollerBase extends Component {
 	}
 
 	componentDidUpdate () {
-		const {onUpdate} = this.props;
-		if (onUpdate) {
-			onUpdate();
-		}
-	}
-
-	componentWillUnmount () {
-		this.setContainerDisabled(false);
+		forward('onUpdate', {}, this.props);
 	}
 
 	isScrolledToBoundary = false
@@ -274,24 +266,6 @@ class ScrollerBase extends Component {
 		return nextSpottable && this.uiRef.containerRef.contains(nextSpottable);
 	}
 
-	handleGlobalKeyDown = () => {
-		this.setContainerDisabled(false);
-	}
-
-	setContainerDisabled = (bool) => {
-		const containerNode = this.uiRef && this.uiRef.containerRef;
-
-		if (containerNode) {
-			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
-
-			if (bool) {
-				document.addEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
-			} else {
-				document.removeEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
-			}
-		}
-	}
-
 	getNextEndPoint = (direction, oSpotBounds) => {
 		const bounds = this.uiRef.getScrollBounds();
 
@@ -410,8 +384,6 @@ const Scroller = (props) => (
 	<Scrollable
 		{...props}
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
-			delete scrollerProps.spotlightId;
-
 			return <ScrollerBase {...scrollerProps} />;
 		}}
 	/>
@@ -457,8 +429,6 @@ const ScrollerNative = (props) => (
 	<ScrollableNative
 		{...props}
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
-			delete scrollerProps.spotlightId;
-
 			return <ScrollerBase {...scrollerProps} />;
 		}}
 	/>

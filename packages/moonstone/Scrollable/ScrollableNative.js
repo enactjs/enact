@@ -245,23 +245,11 @@ class ScrollableBaseNative extends Component {
 	isVoiceControl = false
 	voiceControlDirection = 'vertical'
 
-	onMouseDown = () => {
-		this.childRef.setContainerDisabled(false);
-	}
-
-	onFlick = ({direction}) => {
-		const bounds = this.uiRef.getScrollBounds();
+	onFlick = () => {
 		const focusedItem = Spotlight.getCurrent();
 
 		if (focusedItem) {
 			focusedItem.blur();
-		}
-
-		if (
-			direction === 'vertical' && this.uiRef.canScrollVertically(bounds) ||
-			direction === 'horizontal' && this.uiRef.canScrollHorizontally(bounds)
-		) {
-			this.childRef.setContainerDisabled(true);
 		}
 	}
 
@@ -309,7 +297,6 @@ class ScrollableBaseNative extends Component {
 				const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef;
 
 				if (!this.isWheeling) {
-					this.childRef.setContainerDisabled(true);
 					this.isWheeling = true;
 				}
 
@@ -330,7 +317,6 @@ class ScrollableBaseNative extends Component {
 		} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
 			if (eventDelta < 0 && this.uiRef.scrollLeft > 0 || eventDelta > 0 && this.uiRef.scrollLeft < bounds.maxLeft) {
 				if (!this.isWheeling) {
-					this.childRef.setContainerDisabled(true);
 					this.isWheeling = true;
 				}
 				delta = this.uiRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
@@ -579,7 +565,6 @@ class ScrollableBaseNative extends Component {
 	}
 
 	scrollStopOnScroll = () => {
-		this.childRef.setContainerDisabled(false);
 		this.focusOnItem();
 		this.lastScrollPositionOnFocus = null;
 		this.isWheeling = false;
@@ -860,8 +845,7 @@ class ScrollableBaseNative extends Component {
 									isVerticalScrollbarVisible,
 									onUpdate: this.handleScrollerUpdate,
 									ref: this.initChildRef,
-									rtl,
-									spotlightId
+									rtl
 								})}
 							</ChildWrapper>
 							{isVerticalScrollbarVisible ?
