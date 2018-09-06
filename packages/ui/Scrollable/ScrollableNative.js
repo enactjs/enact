@@ -383,7 +383,7 @@ class ScrollableBaseNative extends Component {
 		};
 
 		this.overscrollEnabled = !!(props.applyOverscrollEffect);
-		this.scrollTicking = false;
+		this.scrollRaFId = null;
 
 		props.cbScrollTo(this.scrollTo);
 	}
@@ -471,6 +471,10 @@ class ScrollableBaseNative extends Component {
 		if (this.context.Subscriber) {
 			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
 			this.context.Subscriber.unsubscribe('i18n', this.handleSubscription);
+		}
+
+		if (this.scrollRaFId) {
+			window.cancelAnimationFrame(this.scrollRaFId);
 		}
 	}
 
@@ -728,13 +732,12 @@ class ScrollableBaseNative extends Component {
 	onScroll = (ev) => {
 		const {scrollLeft, scrollTop} = ev.target;
 
-		if (!this.scrollTicking) {
-			window.requestAnimationFrame(() => {
+		if (!this.scrollRaFId) {
+			this.scrollRaFId = window.requestAnimationFrame(() => {
 				this.scrollOnScroll(scrollLeft, scrollTop);
-				this.scrollTicking = false;
+				this.scrollRaFId = null;
 			});
 		}
-		this.scrollTicking = true;
 	}
 
 	scrollByPage = (keyCode) => {
