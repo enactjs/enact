@@ -744,49 +744,71 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	canVoiceScroll = (scroll) => {
+		const
+			{scrollTop, scrollLeft} = this.uiRef,
+			isRtl = this.uiRef.state.rtl;
+		const scrollBounds = this.uiRef.getScrollBounds();
+
+		if (scroll === 'up' || scroll === 'top') {
+			if (scrollTop === 0) return false;
+		} else if (scroll === 'down' || scroll === 'bottom') {
+			if (scrollTop === scrollBounds.maxTop) return false;
+		} else if (scroll === 'left' || scroll === 'leftmost') {
+			const limit = isRtl ? scrollBounds.maxLeft : 0;
+			if (scrollLeft === limit) return false;
+		} else if (scroll === 'right' || scroll === 'rightmost') {
+			const limit = isRtl ? 0 : scrollBounds.maxLeft;
+			if (scrollLeft === limit) return false;
+		}
+		return true;
+	}
+
 	onVoice = (e) => {
 		const
 			scroll = e && e.detail && e.detail.scroll,
 			isRtl = this.uiRef.state.rtl;
-		this.isVoiceControl = true;
 
-		switch (scroll) {
-			case 'up':
-				this.voiceControlDirection = 'vertical';
-				this.onScrollbarButtonClick({isPreviousScrollButton: true, isVerticalScrollBar: true});
-				break;
-			case 'down':
-				this.voiceControlDirection = 'vertical';
-				this.onScrollbarButtonClick({isPreviousScrollButton: false, isVerticalScrollBar: true});
-				break;
-			case 'left':
-				this.voiceControlDirection = 'horizontal';
-				this.onScrollbarButtonClick({isPreviousScrollButton: !isRtl, isVerticalScrollBar: false});
-				break;
-			case 'right':
-				this.voiceControlDirection = 'horizontal';
-				this.onScrollbarButtonClick({isPreviousScrollButton: isRtl, isVerticalScrollBar: false});
-				break;
-			case 'top':
-				this.voiceControlDirection = 'vertical';
-				this.uiRef.scrollTo({align: 'top'});
-				break;
-			case 'bottom':
-				this.voiceControlDirection = 'vertical';
-				this.uiRef.scrollTo({align: 'bottom'});
-				break;
-			case 'leftmost':
-				this.voiceControlDirection = 'horizontal';
-				this.uiRef.scrollTo({align: isRtl ? 'right' : 'left'});
-				break;
-			case 'rightmost':
-				this.voiceControlDirection = 'horizontal';
-				this.uiRef.scrollTo({align: isRtl ? 'left' : 'right'});
-				break;
-			default:
-				this.isVoiceControl = false;
+		if (this.canVoiceScroll(scroll)) {
+			this.isVoiceControl = true;
+			switch (scroll) {
+				case 'up':
+					this.voiceControlDirection = 'vertical';
+					this.onScrollbarButtonClick({isPreviousScrollButton: true, isVerticalScrollBar: true});
+					break;
+				case 'down':
+					this.voiceControlDirection = 'vertical';
+					this.onScrollbarButtonClick({isPreviousScrollButton: false, isVerticalScrollBar: true});
+					break;
+				case 'left':
+					this.voiceControlDirection = 'horizontal';
+					this.onScrollbarButtonClick({isPreviousScrollButton: !isRtl, isVerticalScrollBar: false});
+					break;
+				case 'right':
+					this.voiceControlDirection = 'horizontal';
+					this.onScrollbarButtonClick({isPreviousScrollButton: isRtl, isVerticalScrollBar: false});
+					break;
+				case 'top':
+					this.voiceControlDirection = 'vertical';
+					this.uiRef.scrollTo({align: 'top'});
+					break;
+				case 'bottom':
+					this.voiceControlDirection = 'vertical';
+					this.uiRef.scrollTo({align: 'bottom'});
+					break;
+				case 'leftmost':
+					this.voiceControlDirection = 'horizontal';
+					this.uiRef.scrollTo({align: isRtl ? 'right' : 'left'});
+					break;
+				case 'rightmost':
+					this.voiceControlDirection = 'horizontal';
+					this.uiRef.scrollTo({align: isRtl ? 'left' : 'right'});
+					break;
+				default:
+					this.isVoiceControl = false;
+			}
+			e.preventDefault();
 		}
-		e.preventDefault();
 	}
 
 	render () {
