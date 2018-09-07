@@ -868,10 +868,10 @@ class ScrollableBase extends Component {
 				edge = this.getEdgeFromPosition(this.scrollLeft, bounds.maxLeft);
 
 			if (edge) { // if edge is null, no need to check which edge is reached.
-				if ((edge === 'before') === rtl) {
-					reachedEdgeInfo.right = true;
-				} else {
+				if ((edge === 'before' && !rtl) || ((edge === 'after') && rtl)) {
 					reachedEdgeInfo.left = true;
+				} else {
+					reachedEdgeInfo.right = true;
 				}
 			}
 		}
