@@ -752,7 +752,7 @@ const VideoPlayerBase = class extends React.Component {
 					current.blur();
 				}
 				Spotlight.focus(this.moreButtonSpotlightId);
-			}, 50);
+			}, 1);
 		}
 	}
 
