@@ -230,7 +230,6 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		handleComplete = (component) => {
 			const complete = this.markReady(component);
 			if (complete) {
-				this.cancelJob.stop();
 				this.markAll(STATE.ready);
 				this.dispatch('start');
 			}

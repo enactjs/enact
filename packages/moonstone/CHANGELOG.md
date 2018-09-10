@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [2.1.3] - 2018-09-10
+
+### Fixed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effects properly on repeating wheel input
+- `moonstone/TooltipDecorator` to handle runtime error when setting `tooltipText` to an empty string
+- `moonstone/VideoPlayer` timing to read out `infoComponents` accessibility value when `moreButton` or `moreButtonColor` is pressed
+
 ## [2.1.2] - 2018-09-04
 
 ### Fixed
