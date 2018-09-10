@@ -645,7 +645,9 @@ const VirtualListBaseFactory = (type) => {
 			this.isScrolledByJump = false;
 
 			if (getDirection(keyCode)) {
-				ev.preventDefault();
+				if (type === JS) {
+					ev.preventDefault();
+				}
 				this.setSpotlightContainerRestrict(keyCode, target);
 				Spotlight.setPointerMode(false);
 				if (this.jumpToSpottableItem(keyCode, repeat, target)) {
