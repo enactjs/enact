@@ -421,7 +421,7 @@ class ScrollableBase extends Component {
 		}
 
 		// Need to check whether an overscroll effect is needed
-		return false;
+		return true;
 	}
 
 	hasFocus () {
