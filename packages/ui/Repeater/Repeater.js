@@ -1,5 +1,5 @@
 /**
- * Exports the {@link ui/Repeater.Repeater} component.
+ * A repeater component.
  *
  * @module ui/Repeater
  * @exports Repeater
@@ -10,8 +10,7 @@ import PropTypes from 'prop-types';
 import kind from '@enact/core/kind';
 
 /**
- * {@link ui/Repeater.Repeater} is a stateless component that stamps out copies of
- * `childComponent`
+ * A stateless component that stamps out copies of `childComponent`.
  *
  * @class Repeater
  * @memberof ui/Repeater
@@ -23,8 +22,9 @@ const RepeaterBase = kind({
 
 	propTypes: /** @lends ui/Repeater.Repeater.prototype */ {
 		/**
-		 * Component type to repeat. This can be a React component or a string describing a DOM
-		 * node (e.g. `'div'`)
+		 * Component type to repeat.
+		 *
+		 * This can be a React component or a string describing a DOM node (e.g. `'div'`).
 		 *
 		 * @type {Component}
 		 * @required
@@ -33,12 +33,13 @@ const RepeaterBase = kind({
 		childComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
 
 		/**
-		 * An array of data to be mapped onto the `childComponent`. This supports two data types.
-		 * If an array of strings is provided, the strings will be used in the generated
-		 * `childComponent` as the readable text. If an array of objects is provided, each object
-		 * will be spread onto the generated `childComponent` with no interpretation. You'll be
-		 * responsible for setting properties like `disabled`, `className`, and setting the text
-		 * content using the `children` key.
+		 * An array of data to be mapped onto the `childComponent`.
+		 *
+		 * This supports two data types. If an array of strings is provided, the strings will be used
+		 * in the generated `childComponent` as the readable text. If an array of objects is provided,
+		 * each object will be spread onto the generated `childComponent` with no interpretation.
+		 * You'll be responsible for setting properties like `disabled`, `className`, and setting the
+		 * text content using the `children` key.
 		 *
 		 * > **NOTE**: When an array of objects is provided, make sure a unique `key` is assigned to each
 		 * data. See https://fb.me/react-warning-keys for more information.
@@ -55,7 +56,7 @@ const RepeaterBase = kind({
 		]).isRequired,
 
 		/**
-		 * The property on each `childComponent` that receives the data in `children`
+		 * The property on each `childComponent` that receives the data in `children`.
 		 *
 		 * @type {String}
 		 * @default 'children'
@@ -64,7 +65,7 @@ const RepeaterBase = kind({
 		childProp: PropTypes.string,
 
 		/**
-		 * The property on each `childComponent` that receives the index of the item in the `Repeater`
+		 * The property on each `childComponent` that receives the index of the item in the `Repeater`.
 		 *
 		 * @type {String}
 		 * @default 'data-index'

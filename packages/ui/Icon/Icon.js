@@ -74,7 +74,7 @@ const Icon = kind({
 		 * @type {String|Object}
 		 * @public
 		 */
-		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the

@@ -6,6 +6,7 @@ import Divider from '@enact/moonstone/Divider';
 import ri from '@enact/ui/resolution';
 import Group from '@enact/ui/Group';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
@@ -23,6 +24,51 @@ const
 		direction: ['both', 'horizontal', 'vertical'],
 		horizontalScrollbar: ['auto', 'hidden', 'visible']
 	};
+
+class ScrollerResizableItem extends React.Component {
+	static propTypes = {
+		more: PropTypes.bool,
+		toggleMore: PropTypes.func
+	}
+	render () {
+		const height = ri.unit(this.props.more ? 1500 : 400, 'rem');
+		const text = this.props.more ? 'less' : 'more';
+		const style = {
+			position: 'relative',
+			width: '90%',
+			border: 'solid yellow'
+		};
+		return (
+			<div style={{...style, height}}>
+				<Button onClick={this.props.toggleMore} small style={{position: 'absolute', bottom: 0}}>{text}</Button>
+			</div>
+		);
+	}
+}
+
+class ScrollerWithResizable extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			more: false
+		};
+	}
+
+	handleClick = () => {
+		this.setState(prevState => ({more: !prevState.more}));
+	}
+
+	render () {
+		return (
+			<Scroller verticalScrollbar="visible">
+				<Item>Item</Item>
+				<Item>Item</Item>
+				<ScrollerResizableItem toggleMore={this.handleClick} more={this.state.more} />
+			</Scroller>
+		);
+	}
+}
+
 
 storiesOf('Scroller', module)
 	.add(
@@ -143,5 +189,11 @@ storiesOf('Scroller', module)
 					{['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8', 'Option 9', 'Option 10', 'Option 11', 'Option 12', 'Option 13', 'Option 14', 'Option 15', 'Option 16', 'Option 17', 'Option 18', 'Option 19', 'Option 20']}
 				</ExpandableList>
 			</Scroller>
+		)
+	)
+	.add(
+		'With Resizable',
+		() => (
+			<ScrollerWithResizable />
 		)
 	);

@@ -166,11 +166,10 @@ const ToggleButtonBase = kind({
 });
 
 /**
- * [ToggleButton]{@link moonstone/ToggleButton.ToggleButton}
- * is a [toggleable]{@link ui/Toggleable.Toggleable} [button]{@link moonstone/Button.Button}.
+ * A toggleable button.
  *
- * By default, [ToggleButton]{@link moonstone/ToggleButton.ToggleButton} maintains the state of its
- * `selected` property. Supply the `defaultSelected` property to control its initial value. If you
+ * By default, `ToggleButton` maintains the state of its `selected` property.
+ * Supply the `defaultSelected` property to control its initial value. If you
  * wish to directly control updates to the component, supply a value to `selected` at creation time
  * and update it in response to `onToggle` events.
  *

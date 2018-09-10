@@ -85,6 +85,15 @@ const ProgressBarBase = kind({
 		 * [ProgressBarTooltip]{@link moonstone/ProgressBar.ProgressBarTooltip} with additional
 		 * props configured.
 		 *
+		 * The provided component will receive the following props from `ProgressBar`:
+		 *
+		 * * `orientation`  - The value of `orientation`
+		 * * `percent`      - Always `true` indicating the value should be presented as a percentage
+		 *                    rather than an absolute value
+		 * * `progress`     - The `value` as a proportion between `min` and `max`
+		 * * `visible`      - Always `true` indicating that the tooltip should be visible
+		 *
+		 * Usage:
 		 * ```
 		 * <ProgressBar
 		 *   tooltip={
@@ -96,6 +105,7 @@ const ProgressBarBase = kind({
 		 * The tooltip may also be passed as a child via the `"tooltip"` slot. See
 		 * [Slottable]{@link ui/Slottable} for more information on how slots can be used.
 		 *
+		 * Usage:
 		 * ```
 		 * <ProgressBar>
 		 *   <ProgressBarTooltip side="after" />

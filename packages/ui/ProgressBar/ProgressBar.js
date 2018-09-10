@@ -1,6 +1,8 @@
 /**
  * A basic progress bar component that can display the progress of something in a horizontal or
- * vertical bar format. A secondary independent progress indicator can be displayed, to indicate
+ * vertical bar format.
+ *
+ * A secondary independent progress indicator can be displayed, to indicate
  * an additional degree of information, often used as a background loading progress.
  *
  * @module ui/ProgressBar
@@ -45,8 +47,9 @@ const ProgressBar = kind({
 
 	propTypes: /** @lends ui/ProgressBar.ProgressBar.prototype */ {
 		/**
-		 * The proportion of the loaded portion of the progress bar. Valid values are
-		 * between `0` and `1`.
+		 * The proportion of the loaded portion of the progress bar.
+		 *
+		 * * Valid values are between `0` and `1`.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -80,9 +83,12 @@ const ProgressBar = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Sets the orientation of the slider, whether the progress-bar depicts its progress value
-		 * in a left and right orientation or up and down orientation.
-		 * Must be either `'horizontal'` or `'vertical'`.
+		 * Sets the orientation of the slider.
+		 *
+		 * Allowed values include:
+		 *
+		 * * `'horizontal'` - A left and right orientation
+		 * * `'vertical'` - An up and down orientation
 		 *
 		 * @type {String}
 		 * @default 'horizontal'
@@ -91,8 +97,9 @@ const ProgressBar = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * The proportion of the filled portion of the progress bar. Valid values are
-		 * between `0` and `1`.
+		 * The proportion of the filled portion of the progress bar.
+		 *
+		 * * Valid values are between `0` and `1`.
 		 *
 		 * @type {Number}
 		 * @default 0

@@ -94,8 +94,9 @@ class ScrollableBase extends Component {
 		applyOverscrollEffect: PropTypes.func,
 
 		/**
-		 * A callback function that receives a reference to the `scrollTo` feature. Once received,
-		 * the `scrollTo` method can be called as an imperative interface.
+		 * A callback function that receives a reference to the `scrollTo` feature.
+		 *
+		 * Once received, the `scrollTo` method can be called as an imperative interface.
 		 *
 		 * The `scrollTo` function accepts the following paramaters:
 		 * - {position: {x, y}} - Pixel value for x and/or y position
@@ -134,6 +135,7 @@ class ScrollableBase extends Component {
 
 		/**
 		 * Direction of the list or the scroller.
+		 *
 		 * `'both'` could be only used for[Scroller]{@link ui/Scroller.Scroller}.
 		 *
 		 * Valid values are:
@@ -195,6 +197,7 @@ class ScrollableBase extends Component {
 
 		/**
 		 * Called when scrolling.
+		 *
 		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
 		 * It is not recommended to set this prop since it can cause performance degradation.
 		 * Use `onScrollStart` or `onScrollStop` instead.
@@ -210,6 +213,7 @@ class ScrollableBase extends Component {
 
 		/**
 		 * Called when scroll starts.
+		 *
 		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
 		 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
 		 *
@@ -240,6 +244,7 @@ class ScrollableBase extends Component {
 
 		/**
 		 * Called when scroll stops.
+		 *
 		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
 		 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
 		 *
@@ -315,6 +320,7 @@ class ScrollableBase extends Component {
 
 		/**
 		 * Scrollable CSS style.
+		 *
 		 * Should be defined because we manipulate style prop in render().
 		 *
 		 * @type {Object}
@@ -324,6 +330,7 @@ class ScrollableBase extends Component {
 
 		/**
 		 * Specifies how to show vertical scrollbar.
+		 *
 		 * Valid values are:
 		 * * `'auto'`,
 		 * * `'visible'`, and
@@ -454,7 +461,7 @@ class ScrollableBase extends Component {
 	componentWillUnmount () {
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
 		if (this.animator.isAnimating()) {
-			this.forwardScrollEvent('onScrollStop');
+			this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
 			this.animator.stop();
 		}
 
@@ -809,15 +816,15 @@ class ScrollableBase extends Component {
 	checkAndApplyOverscrollEffectOnStart = (orientation, edge, targetPosition) => {
 		if (this.isDragging) {
 			this.applyOverscrollEffectOnDrag(orientation, edge, targetPosition, overscrollTypeHold);
-		} else if (edge && this.getOverscrollStatus(orientation, edge).type === overscrollTypeNone) {
+		} else if (edge) {
 			this.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 		}
 	}
 
 	// call scroll callbacks
 
-	forwardScrollEvent (type) {
-		forward(type, {scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
+	forwardScrollEvent (type, reachedEdgeInfo) {
+		forward(type, {scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo(), reachedEdgeInfo}, this.props);
 	}
 
 	// update scroll position
@@ -848,6 +855,38 @@ class ScrollableBase extends Component {
 		if (this.state.isVerticalScrollbarVisible) {
 			this.updateThumb(this.verticalScrollbarRef, bounds);
 		}
+	}
+
+	getReachedEdgeInfo = () => {
+		const
+			bounds = this.getScrollBounds(),
+			reachedEdgeInfo = {bottom: false, left: false, right: false, top: false};
+
+		if (this.canScrollHorizontally(bounds)) {
+			const
+				rtl = this.state.rtl,
+				edge = this.getEdgeFromPosition(this.scrollLeft, bounds.maxLeft);
+
+			if (edge) { // if edge is null, no need to check which edge is reached.
+				if ((edge === 'before' && !rtl) || (edge === 'after' && rtl)) {
+					reachedEdgeInfo.left = true;
+				} else {
+					reachedEdgeInfo.right = true;
+				}
+			}
+		}
+
+		if (this.canScrollVertically(bounds)) {
+			const edge = this.getEdgeFromPosition(this.scrollTop, bounds.maxTop);
+
+			if (edge === 'before') {
+				reachedEdgeInfo.top = true;
+			} else if (edge === 'after') {
+				reachedEdgeInfo.bottom = true;
+			}
+		}
+
+		return reachedEdgeInfo;
 	}
 
 	// scroll start/stop
@@ -966,7 +1005,7 @@ class ScrollableBase extends Component {
 		}
 		if (this.scrolling) {
 			this.scrolling = false;
-			this.forwardScrollEvent('onScrollStop');
+			this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
 		}
 	}
 

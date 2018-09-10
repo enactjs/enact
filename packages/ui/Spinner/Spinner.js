@@ -1,6 +1,8 @@
 /**
  * An unstyled indeterminate progress indicator (Spinner) component to be customized by a
- * theme or application. Basically, this positions your `Spinner` component where you want it on the
+ * theme or application.
+ *
+ * Basically, this positions your `Spinner` component where you want it on the
  * screen, and hooks into the interaction blocking code and scrim management.
  *
  * The theme using this component must supply a `component` element which follows the requirements
@@ -31,9 +33,9 @@ const Spinner = kind({
 
 	propTypes: /** @lends ui/Spinner.Spinner.prototype */ {
 		/**
-		 * A theme-supplied component that performs the animation. Theme authors can use the
-		 * `css.running` class to attach the animation CSS.
+		 * A theme-supplied component that performs the animation.
 		 *
+		 * Theme authors can use the `css.running` class to attach the animation CSS.
 		 * This element should accept a `children` prop which takes the form of an optional message
 		 * for the user.
 		 *
@@ -63,8 +65,7 @@ const Spinner = kind({
 		blockClickOn: PropTypes.oneOf(['screen', 'container', null]),
 
 		/**
-		 * When `true`, the spinner is horizontally and vertically centered, relative to its
-		 * containing component.
+		 * Centers the spinner horizontally and vertically relative to its containing component.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -91,7 +92,7 @@ const Spinner = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, sets a scrim behind the spinner with the `css.scrim` class applied.
+		 * Sets a scrim behind the spinner with the `css.scrim` class applied.
 		 *
 		 * Only has an effect when `blockClickOn` is `'screen'` or `'container'` and has no effect
 		 * by default or when blockClickOn is `null`.

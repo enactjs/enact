@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import ComponentOverride from '../ComponentOverride';
 
 /**
- * An unstyled, knob component to be used with a [Slider]{@link ui/Slider.Slider}
+ * An unstyled, knob component to be used with a `Slider`.
  *
  * @class Knob
  * @memberof ui/Slider
@@ -27,7 +27,7 @@ const Knob = kind({
 
 		/**
 		 * A number between 0 and 1 representing the proportion of the `value` in terms of `min`
-		 * and `max` props of the slider
+		 * and `max` props of the slider.
 		 *
 		 * @type {Boolean}
 		 * @public

@@ -25,7 +25,7 @@ import componentCss from './Slider.less';
 import {calcProportion} from './utils';
 
 /**
- * An unstyled, sliding range-selection component
+ * An unstyled, sliding range-selection component.
  *
  * @class SliderBase
  * @memberof ui/Slider
@@ -37,7 +37,7 @@ const SliderBase = kind({
 
 	propTypes: /** @lends ui/Slider.SliderBase.prototype */ {
 		/**
-		 * The component used to render the progress bar within the slider
+		 * The component used to render the progress bar within the slider.
 		 *
 		 * The provided component will receive the following props from `Slider`
 		 *
@@ -84,7 +84,7 @@ const SliderBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, the component is disabled and does not generate events
+		 * Disables component and does not generate events.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -93,8 +93,9 @@ const SliderBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Defines a custom knob component for the slider. By default, Slider will use its own
-		 * implementation, {@link ui/Slider.Knob}.
+		 * Defines a custom knob component for the slider.
+		 *
+		 * By default, Slider will use its own implementation, {@link ui/Slider.Knob}.
 		 *
 		 * The following props are forwarded to the knob:
 		 *
@@ -136,7 +137,7 @@ const SliderBase = kind({
 		min: PropTypes.number,
 
 		/**
-		 * When `true`, the slider bar does not display filled.
+		 * Applies the style where the slider bar does not display filled.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -154,7 +155,7 @@ const SliderBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * When `true`, a pressed visual effect is applied
+		 * Applies a pressed visual effect.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -325,7 +326,7 @@ const SliderDecorator = compose(
  */
 
 /**
- * The handler to run when the value is changed.
+ * Called when the value is changed.
  *
  * @name onChange
  * @memberof ui/Slider.Slider.prototype

@@ -4,6 +4,7 @@ import {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {Job} from '@enact/core/util';
 import platform from '@enact/core/platform';
+import {forward} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
@@ -34,8 +35,6 @@ const
 	overscrollTimeout = 300,
 	reverseDirections = {
 		down: 'up',
-		left: 'right',
-		right: 'left',
 		up: 'down'
 	};
 
@@ -220,7 +219,12 @@ class ScrollableBaseNative extends Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		configureSpotlightContainer(nextProps);
+		if (
+			this.props['data-spotlight-id'] !== nextProps['data-spotlight-id'] ||
+			this.props.focusableScrollbar !== nextProps.focusableScrollbar
+		) {
+			configureSpotlightContainer(nextProps);
+		}
 	}
 
 	componentWillUnmount () {
@@ -342,7 +346,7 @@ class ScrollableBaseNative extends Component {
 				delta = this.uiRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				needToHideThumb = !delta;
 			} else {
-				if (overscrollEffectRequired && (eventDelta < 0 && this.scrollLeft <= 0 || eventDelta > 0 && this.scrollLeft >= bounds.maxLeft)) {
+				if (overscrollEffectRequired && (eventDelta < 0 && this.uiRef.scrollLeft <= 0 || eventDelta > 0 && this.uiRef.scrollLeft >= bounds.maxLeft)) {
 					this.uiRef.applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
 				}
 				needToHideThumb = true;
@@ -460,41 +464,6 @@ class ScrollableBaseNative extends Component {
 	// 	}
 	// }
 
-	getPageDirection = (keyCode) => {
-		const
-			{direction} = this.props,
-			isRtl = this.uiRef.state.rtl,
-			isVertical = (direction === 'vertical' || direction === 'both');
-
-		return isPageUp(keyCode) ?
-			(isVertical && 'up' || isRtl && 'right' || 'left') :
-			(isVertical && 'down' || isRtl && 'left' || 'right');
-	}
-
-	getEndPoint = (direction, oSpotBounds, viewportBounds) => {
-		let oPoint = {};
-
-		switch (direction) {
-			case 'up':
-				oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
-				oPoint.y = viewportBounds.top;
-				break;
-			case 'left':
-				oPoint.x = viewportBounds.left;
-				oPoint.y = oSpotBounds.top;
-				break;
-			case 'down':
-				oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
-				oPoint.y = viewportBounds.top + viewportBounds.height;
-				break;
-			case 'right':
-				oPoint.x = viewportBounds.left + viewportBounds.width;
-				oPoint.y = oSpotBounds.top;
-				break;
-		}
-		return oPoint;
-	}
-
 	scrollByPage = (direction) => {
 		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
 		// scroller as a plain container
@@ -516,7 +485,10 @@ class ScrollableBaseNative extends Component {
 				rDirection = reverseDirections[direction],
 				viewportBounds = containerRef.getBoundingClientRect(),
 				focusedItemBounds = focusedItem.getBoundingClientRect(),
-				endPoint = this.getEndPoint(direction, focusedItemBounds, viewportBounds);
+				endPoint = {
+					x: focusedItemBounds.left + focusedItemBounds.width / 2,
+					y: viewportBounds.top + ((direction === 'up') ? focusedItemBounds.height / 2 - 1 : viewportBounds.height - focusedItemBounds.height / 2 + 1)
+				};
 			let next = null;
 
 			/* 1. Find spottable item in viewport */
@@ -564,6 +536,8 @@ class ScrollableBaseNative extends Component {
 			overscrollEffectRequired = false,
 			direction = getDirection(keyCode);
 
+		forward('onKeyDown', ev, this.props);
+
 		this.animateOnFocus = true;
 		const element = Spotlight.getCurrent();
 
@@ -588,10 +562,10 @@ class ScrollableBaseNative extends Component {
 		}
 
 		if (isPageUp(keyCode) || isPageDown(keyCode)) {
-			Spotlight.setPointerMode(false);
 			ev.preventDefault();
-			if (!repeat && this.hasFocus()) {
-				direction = this.getPageDirection(keyCode);
+			if (!repeat && this.hasFocus() && this.props.direction === 'vertical' || this.props.direction === 'both') {
+				Spotlight.setPointerMode(false);
+				direction = isPageUp(keyCode) ? 'up' : 'down';
 				overscrollEffectRequired = this.scrollByPage(direction) && overscrollEffectOn.pageKey;
 			}
 		} else if (!Spotlight.getPointerMode() && !repeat && this.hasFocus() && getDirection(keyCode)) {
@@ -709,8 +683,7 @@ class ScrollableBaseNative extends Component {
 
 	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
 	handleScrollerUpdate = () => {
-		console.log('handleScrollerUpdate');
-		if (this.uiRef.scrollToInfo === null && Spotlight.getPointerMode()) {
+		if (this.uiRef.scrollToInfo === null) {
 			const scrollHeight = this.uiRef.getScrollBounds().scrollHeight;
 			if (scrollHeight !== this.uiRef.bounds.scrollHeight) {
 				this.calculateAndScrollTo();

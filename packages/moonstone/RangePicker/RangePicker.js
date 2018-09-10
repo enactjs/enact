@@ -26,8 +26,7 @@ const digits = (num) => {
 };
 
 /**
- * Base component of [RangePicker]{@link moonstone/RangePicker.RangePicker} which is not
- * [spottable]{@link spotlight/Spottable.Spottable}.
+ * RangePicker base component.
  *
  * @class RangePickerBase
  * @memberof moonstone/RangePicker

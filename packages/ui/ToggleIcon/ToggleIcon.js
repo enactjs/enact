@@ -1,6 +1,8 @@
 /**
  * An unstyled icon component that handles interaction and toggles state between activated
- * and deactivated. Visually, it may be to be customized by a theme or application to represent any
+ * and deactivated.
+ *
+ * Visually, it may be to be customized by a theme or application to represent any
  * state.
  *
  * @module ui/ToggleIcon
@@ -55,7 +57,7 @@ const ToggleIconBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true` this control is disabled and non-interactive
+		 * Disables `ToggleIcon`.
 		 *
 		 * @type {Boolean}
 		 * @default false

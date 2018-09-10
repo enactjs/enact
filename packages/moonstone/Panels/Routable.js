@@ -28,8 +28,9 @@ const defaultConfig = {
 
 /**
  * A higher-order component that provides support for Routes as children of Panels which are
- * selected via `path` instead of the usual flat array of Panels. When using `Routable` you must
- * specify the `navigate` config option.
+ * selected via `path` instead of the usual flat array of Panels.
+ *
+ * When using `Routable` you must specify the `navigate` config option.
  *
  * @class Routable
  * @memberof moonstone/Panels
