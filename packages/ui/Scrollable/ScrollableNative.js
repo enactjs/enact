@@ -1319,7 +1319,6 @@ class ScrollableBaseNative extends Component {
 		delete rest.clearOverscrollEffect;
 		delete rest.horizontalScrollbar;
 		delete rest.onFlick;
-		delete rest.onKeyDown;
 		delete rest.onMouseDown;
 		delete rest.onScroll;
 		delete rest.onScrollStart;
