@@ -623,7 +623,7 @@ class ScrollableBaseNative extends Component {
 		// Spotlight is paused when scrolled by key down
 		if (Spotlight.isPaused()) {
 			Spotlight.resume();
-			Spotlight.focus('dummyElement');
+			Spotlight.focus(`${this.uiRef.containerRef.dataset.spotlightId}-dummyElement`);
 			Spotlight.move('up');
 
 			this.setState({
@@ -911,7 +911,7 @@ class ScrollableBaseNative extends Component {
 							ref={this.initVerticalOverscrollRef}
 						>
 							<SpottableDiv
-								spotlightId="dummyElement"
+								spotlightId={`${spotlightId}-dummyElement`}
 								spotlightDisabled={!this.state.lastFocusedElementWidth}
 								style={{
 									backgroundColor: '#cf0652',
