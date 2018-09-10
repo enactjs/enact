@@ -13,7 +13,6 @@ import classNames from 'classnames';
 import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
-import {on, off} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -406,8 +405,6 @@ class ScrollableBase extends Component {
 	componentDidMount () {
 		this.addEventListeners();
 		this.updateScrollbars();
-
-		on('keydown', this.onKeyDown);
 	}
 
 	componentWillUpdate () {
@@ -466,7 +463,6 @@ class ScrollableBase extends Component {
 		}
 
 		this.removeEventListeners();
-		off('keydown', this.onKeyDown);
 
 		if (this.context.Subscriber) {
 			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
@@ -693,7 +689,7 @@ class ScrollableBase extends Component {
 	onKeyDown = (ev) => {
 		if (this.props.onKeyDown) {
 			forward('onKeyDown', ev, this.props);
-		} else if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) && !ev.repeat) {
+		} else if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode))) {
 			this.scrollByPage(ev.keyCode);
 		}
 	}
@@ -1207,6 +1203,7 @@ class ScrollableBase extends Component {
 
 		if (containerRef && containerRef.addEventListener) {
 			containerRef.addEventListener('wheel', this.onWheel);
+			containerRef.addEventListener('keydown', this.onKeyDown);
 		}
 
 		if (childRef && childRef.containerRef) {
@@ -1226,6 +1223,7 @@ class ScrollableBase extends Component {
 
 		if (containerRef && containerRef.removeEventListener) {
 			containerRef.removeEventListener('wheel', this.onWheel);
+			containerRef.removeEventListener('keydown', this.onKeyDown);
 		}
 
 		if (childRef && childRef.containerRef && childRef.containerRef.removeEventListener) {

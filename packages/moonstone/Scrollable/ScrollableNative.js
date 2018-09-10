@@ -28,11 +28,11 @@ const
 		overscrollTypeDone,
 		overscrollTypeNone,
 		overscrollTypeOnce,
-		paginationPageMultiplier,
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants,
 	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
 	overscrollTimeout = 300,
+	paginationPageMultiplier = 0.8,
 	reverseDirections = {
 		down: 'up',
 		up: 'down'
@@ -562,7 +562,7 @@ class ScrollableBaseNative extends Component {
 
 		if (isPageUp(keyCode) || isPageDown(keyCode)) {
 			ev.preventDefault();
-			if (!repeat && this.hasFocus() && this.props.direction === 'vertical' || this.props.direction === 'both') {
+			if (!repeat && this.hasFocus() && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
 				Spotlight.setPointerMode(false);
 				direction = isPageUp(keyCode) ? 'up' : 'down';
 				overscrollEffectRequired = this.scrollByPage(direction) && overscrollEffectOn.pageKey;
