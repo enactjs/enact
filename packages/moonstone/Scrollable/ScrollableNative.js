@@ -437,32 +437,31 @@ class ScrollableBaseNative extends Component {
 	onFocus = (ev) => {
 		if (this.observer) {
 			this.observer.observe(ev.target);
+		} else {
+			const
+				{isDragging} = this.uiRef,
+				shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
+					this.childRef.shouldPreventScrollByFocus() :
+					false;
+
+			if (!Spotlight.getPointerMode()) {
+				this.alertThumb();
+			}
+
+			if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || isDragging)) {
+				const
+					item = ev.target,
+					positionFn = this.childRef.calculatePositionOnFocus,
+					spotItem = Spotlight.getCurrent();
+
+				if (item && item === spotItem && positionFn) {
+					this.calculateAndScrollTo();
+				}
+			} else if (this.childRef.setLastFocusedNode) {
+				this.childRef.setLastFocusedNode(ev.target);
+			}
 		}
 	}
-	// onFocus = (ev) => {
-	// 	const
-	// 		{isDragging} = this.uiRef,
-	// 		shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
-	// 			this.childRef.shouldPreventScrollByFocus() :
-	// 			false;
-
-	// 	if (!Spotlight.getPointerMode()) {
-	// 		this.alertThumb();
-	// 	}
-
-	// 	if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || isDragging)) {
-	// 		const
-	// 			item = ev.target,
-	// 			positionFn = this.childRef.calculatePositionOnFocus,
-	// 			spotItem = Spotlight.getCurrent();
-
-	// 		if (item && item === spotItem && positionFn) {
-	// 			this.calculateAndScrollTo();
-	// 		}
-	// 	} else if (this.childRef.setLastFocusedNode) {
-	// 		this.childRef.setLastFocusedNode(ev.target);
-	// 	}
-	// }
 
 	scrollByPage = (direction) => {
 		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
@@ -569,10 +568,6 @@ class ScrollableBaseNative extends Component {
 				overscrollEffectRequired = this.scrollByPage(direction) && overscrollEffectOn.pageKey;
 			}
 		} else if (!Spotlight.getPointerMode() && !repeat && this.hasFocus() && getDirection(keyCode)) {
-			// const element = Spotlight.getCurrent();
-
-			direction = getDirection(keyCode);
-
 			this.uiRef.lastInputType = 'arrowKey';
 
 			overscrollEffectRequired = overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null);
@@ -625,7 +620,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	scrollStopOnScroll = () => {
-
+		// Spotlight is paused when scrolled by key down
 		if (Spotlight.isPaused()) {
 			Spotlight.resume();
 			Spotlight.focus('dummyElement');
