@@ -6,13 +6,6 @@ import IconButton from '../IconButton';
 
 import css from './Scrollbar.less';
 
-const classNameMap = {
-	down: css.scrollbarBottomButton,
-	left: css.scrollbarLeftButton,
-	right: css.scrollbarRightButton,
-	up: css.scrollbarUpButton
-};
-
 /**
  * An [IconButton]{@link moonstone/IconButton.IconButton} used within
  * a [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
@@ -35,21 +28,6 @@ const ScrollButton = kind({
 		 * @public
 		 */
 		children: PropTypes.string.isRequired,
-
-		/**
-		 * Scroll direction for this button.
-		 *
-		 * Valid values are:
-		 * * `'down'`,
-		 * * `'left'`,
-		 * * `'right'`, and
-		 * * `'up'`.
-		 *
-		 * @type {String}
-		 * @required
-		 * @public
-		 */
-		direction: PropTypes.oneOf(['down', 'left', 'right', 'up']).isRequired,
 
 		/**
 		* Sets the hint string read when focusing the scroll bar button.
@@ -84,13 +62,11 @@ const ScrollButton = kind({
 	},
 
 	computed: {
-		'aria-label': ({active, 'aria-label': ariaLabel}) => (active ? null : ariaLabel),
-		className: ({direction, styler}) => styler.append(classNameMap[direction])
+		'aria-label': ({active, 'aria-label': ariaLabel}) => (active ? null : ariaLabel)
 	},
 
 	render: ({children, disabled, ...rest}) => {
 		delete rest.active;
-		delete rest.direction;
 
 		return (
 			<IconButton
