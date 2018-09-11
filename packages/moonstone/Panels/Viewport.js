@@ -71,6 +71,13 @@ const ViewportBase = class extends React.Component {
 		super();
 
 		this.paused = new Pause('Viewport');
+		this.state = { autoFocus: '' };
+	}
+
+	componentWillReceiveProps (nextProps) {
+		if (this.props.index !== nextProps.index) {
+			this.setState({ autoFocus: this.props.index < nextProps.index ? 'default-element' : 'last-focused' });
+		}
 	}
 
 	componentDidMount () {
@@ -116,9 +123,10 @@ const ViewportBase = class extends React.Component {
 		this.pause
 	)
 
-	mapChildren = (children, generateId) => React.Children.map(children, (child, index) => {
+	mapChildren = (children, generateId, autoFocus) => React.Children.map(children, (child, index) => {
 		return child ? React.cloneElement(child, {
 			spotlightId: child.props.spotlightId || generateId(index, 'panel-container', Spotlight.remove),
+			...(autoFocus && {autoFocus: child.props.autoFocus || autoFocus}),
 			'data-index': index
 		}) : null;
 	})
@@ -128,7 +136,7 @@ const ViewportBase = class extends React.Component {
 	render () {
 		const {arranger, children, generateId, index, noAnimation, ...rest} = this.props;
 		const enteringProp = this.getEnteringProp(noAnimation);
-		const mappedChildren = this.mapChildren(children, generateId);
+		const mappedChildren = this.mapChildren(children, generateId, this.state.autoFocus);
 		const className = classnames(css.viewport, rest.className);
 
 		const count = React.Children.count(mappedChildren);
