@@ -71,18 +71,18 @@ const ViewportBase = class extends React.Component {
 		super();
 
 		this.paused = new Pause('Viewport');
-		this.state = { autoFocus: '' };
-	}
-
-	componentWillReceiveProps (nextProps) {
-		if (this.props.index !== nextProps.index) {
-			this.setState({ autoFocus: this.props.index < nextProps.index ? 'default-element' : 'last-focused' });
-		}
+		this.state = {autoFocus: ''};
 	}
 
 	componentDidMount () {
 		// eslint-disable-next-line react/no-find-dom-node
 		this.node = ReactDOM.findDOMNode(this);
+	}
+
+	componentWillReceiveProps (nextProps) {
+		if (this.props.index !== nextProps.index) {
+			this.setState({autoFocus: this.props.index < nextProps.index ? 'default-element' : 'last-focused'});
+		}
 	}
 
 	componentWillUnmount () {
