@@ -1,8 +1,8 @@
 /**
- * Provides the {@link spotlight/Pause.Pause} class which allows consumers to safely pause and
- * resume spotlight without resuming another consumer's pause.
+ * Provides a class which allows consumers to safely pause and resume spotlight without resuming
+ * another consumer's pause.
  *
- * When muliple components attempt to pause and resume spotlight at overalapping times using the
+ * When multiple components attempt to pause and resume spotlight at overlapping times using
  * [Spotlight.pause()]{@link spotlight.Spotlight.pause} and
  * [Spotlight.resume()]{@link spotlight.Spotlight.resume}, one component might resume spotlight when
  * another expected it to still be paused.
@@ -13,7 +13,7 @@
  * `Pause` have no effect.
  *
  * *Note:* The top-level [Spotlight.pause()]{@link spotlight.Spotlight.pause} and
- * [Spotlight.resume()]{@link spotlight.Spotlight.resume} do not respect the pause locks and acts as
+ * [Spotlight.resume()]{@link spotlight.Spotlight.resume} do not respect the pause locks and act as
  * a user-space escape hatch.
  *
  * ```
