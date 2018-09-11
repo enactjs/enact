@@ -450,13 +450,19 @@ class ScrollableBase extends Component {
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
-					// We need to convert to 5-way key mode to move Spot to another item manually.
-					Spotlight.setPointerMode(false);
+					const isPointerMode = Spotlight.getPointerMode();
+
+					if (isPointerMode) {
+						// We need to convert to 5-way key mode to move Spot to another item manually.
+						Spotlight.setPointerMode(false);
+					}
 					direction = isPageUp(keyCode) ? 'up' : 'down';
 					overscrollEffectRequired = this.scrollByPage(direction, keyCode) && overscrollEffectOn.pageKey;
-					// It is not converted to 5-way key mode even though pressing a channel up or down keys in pointer mode.
-					// So we need to convert back to the pointer mode.
-					Spotlight.setPointerMode(true);
+					if (isPointerMode) {
+						// It is not converted to 5-way key mode even though pressing a channel up or down keys in pointer mode.
+						// So we need to convert back to the pointer mode.
+						Spotlight.setPointerMode(true);
+					}
 				}
 			} else if (getDirection(keyCode)) {
 				const element = Spotlight.getCurrent();
