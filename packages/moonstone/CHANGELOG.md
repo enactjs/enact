@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Panels` to set child's `autoFocus` prop to `default-element` when `index` increases
+
 ## [2.1.3] - 2018-09-10
 
 ### Fixed
