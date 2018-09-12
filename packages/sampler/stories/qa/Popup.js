@@ -1,9 +1,9 @@
 import Button from '@enact/moonstone/Button';
-import Popup from '@enact/moonstone/Popup';
-import React from 'react';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import Spotlight from '@enact/spotlight';
 import Notification from '@enact/moonstone/Notification';
+import Popup from '@enact/moonstone/Popup';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import Toggleable from '@enact/ui/Toggleable';
+import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
@@ -13,42 +13,22 @@ Popup.displayName = 'Popup';
 
 const Container = SpotlightContainerDecorator('div');
 
-class PopupFromSelfOnlyContainer extends React.Component {
-	constructor (props) {
-		super(props);
-		this.state = {
-			isPopup: false
-		};
-	}
-
-	componentDidMount = () => {
-		Spotlight.set('selfOnlyContainer', {'restrict': 'self-only'});
-	}
-
-	openPopup = () => {
-		this.setState({isPopup: true});
-	}
-
-	closePopup = () => {
-		this.setState({isPopup: false});
-	}
-
-	render () {
-		return (
-			<div>
-				<Container spotlightId="selfOnlyContainer">
-					<Button onClick={this.openPopup}>button</Button>
-				</Container>
-				<Notification open={this.state.isPopup}>
-					<span>popup</span>
-					<buttons>
-						<Button onClick={this.closePopup}>button</Button>
-					</buttons>
-				</Notification>
-			</div>
-		);
-	}
-}
+const PopupFromSelfOnlyContainer = Toggleable(
+	{prop: 'open', toggle: 'onToggle'},
+	({onToggle, open}) => (
+		<div>
+			<Container spotlightId="selfOnlyContainer" spotlightRestrict="self-only">
+				<Button onClick={onToggle}>button</Button>
+			</Container>
+			<Notification open={open}>
+				<span>popup</span>
+				<buttons>
+					<Button onClick={onToggle}>button</Button>
+				</buttons>
+			</Notification>
+		</div>
+	)
+);
 
 storiesOf('Popup', module)
 	.add(
