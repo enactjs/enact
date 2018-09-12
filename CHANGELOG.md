@@ -2,12 +2,6 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
-
-### Fixed
-
-- `moonstone/IncrementSlider` to prevent focusing to other components while dragging.
-
 ## [2.1.3] - 2018-09-10
 
 ### Fixed

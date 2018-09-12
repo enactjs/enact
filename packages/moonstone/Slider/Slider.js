@@ -259,7 +259,6 @@ const SliderBase = kind({
 	render: ({css, focused, tooltip, ...rest}) => {
 		delete rest.activateOnFocus;
 		delete rest.active;
-		delete rest.dragging;
 		delete rest.knobStep;
 		delete rest.onActivate;
 
