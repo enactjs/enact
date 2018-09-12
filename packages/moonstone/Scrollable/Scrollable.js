@@ -396,10 +396,10 @@ class ScrollableBase extends Component {
 					x: focusedItemBounds.left + focusedItemBounds.width / 2,
 					y: viewportBounds.top + ((direction === 'up') ? focusedItemBounds.height / 2 - 1 : viewportBounds.height - focusedItemBounds.height / 2 + 1)
 				},
-				isPointerMode = Spotlight.getPointerMode();
+				wasPointerMode = Spotlight.getPointerMode();
 			let next = null;
 
-			if (isPointerMode) {
+			if (wasPointerMode) {
 				// We need to convert to 5-way key mode to move Spot to another item manually.
 				Spotlight.setPointerMode(false);
 			}
@@ -423,7 +423,7 @@ class ScrollableBase extends Component {
 				this.childRef.scrollToNextItem({direction, focusedItem, reverseDirection: rDirection, spotlightId});
 			}
 
-			if (isPointerMode) {
+			if (wasPointerMode) {
 				// It is not converted to 5-way key mode even though pressing a channel up or down keys in pointer mode.
 				// So we need to convert back to the pointer mode.
 				Spotlight.setPointerMode(true);
