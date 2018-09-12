@@ -60,7 +60,8 @@ storiesOf('Popup', module)
 				</Popup>
 			</div>
 		)
-	).add(
+	)
+	.add(
 		'from self-only container',
 		() => (
 			<PopupFromSelfOnlyContainer />
