@@ -395,8 +395,14 @@ class ScrollableBase extends Component {
 				endPoint = {
 					x: focusedItemBounds.left + focusedItemBounds.width / 2,
 					y: viewportBounds.top + ((direction === 'up') ? focusedItemBounds.height / 2 - 1 : viewportBounds.height - focusedItemBounds.height / 2 + 1)
-				};
+				},
+				isPointerMode = Spotlight.getPointerMode();
 			let next = null;
+
+			if (isPointerMode) {
+				// We need to convert to 5-way key mode to move Spot to another item manually.
+				Spotlight.setPointerMode(false);
+			}
 
 			/* 1. Find spottable item in viewport */
 			next = getTargetByDirectionFromPosition(rDirection, endPoint, spotlightId);
@@ -415,6 +421,12 @@ class ScrollableBase extends Component {
 			// For VirtualList
 			} else if (this.childRef.scrollToNextItem) {
 				this.childRef.scrollToNextItem({direction, focusedItem, reverseDirection: rDirection, spotlightId});
+			}
+
+			if (isPointerMode) {
+				// It is not converted to 5-way key mode even though pressing a channel up or down keys in pointer mode.
+				// So we need to convert back to the pointer mode.
+				Spotlight.setPointerMode(true);
 			}
 		} else {
 			this.uiRef.scrollByPage(keyCode);
@@ -450,19 +462,8 @@ class ScrollableBase extends Component {
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
-					const isPointerMode = Spotlight.getPointerMode();
-
-					if (isPointerMode) {
-						// We need to convert to 5-way key mode to move Spot to another item manually.
-						Spotlight.setPointerMode(false);
-					}
 					direction = isPageUp(keyCode) ? 'up' : 'down';
 					overscrollEffectRequired = this.scrollByPage(direction, keyCode) && overscrollEffectOn.pageKey;
-					if (isPointerMode) {
-						// It is not converted to 5-way key mode even though pressing a channel up or down keys in pointer mode.
-						// So we need to convert back to the pointer mode.
-						Spotlight.setPointerMode(true);
-					}
 				}
 			} else if (getDirection(keyCode)) {
 				const element = Spotlight.getCurrent();
