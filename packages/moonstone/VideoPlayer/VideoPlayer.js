@@ -50,7 +50,14 @@ import Video from './Video';
 import css from './VideoPlayer.less';
 
 const SpottableDiv = Touchable(Spottable('div'));
-const RootContainer = SpotlightContainerDecorator('div');
+const RootContainer = SpotlightContainerDecorator(
+	{
+		enterTo: 'default-element',
+		defaultElement: [`.${css.controlsHandleAbove}`, `.${css.controlsFrame}`]
+	},
+	'div'
+);
+
 const ControlsContainer = SpotlightContainerDecorator(
 	{
 		enterTo: '',
