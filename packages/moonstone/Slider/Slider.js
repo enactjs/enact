@@ -86,14 +86,6 @@ const SliderBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Indicates that the slider knob is being dragged.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		dragging: PropTypes.bool,
-
-		/**
 		 * Indicates that the slider has gained focus and if the tooltip is present, it will be
 		 * shown.
 		 *

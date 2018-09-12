@@ -164,7 +164,6 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					{...props}
 					active={this.state.active}
 					aria-valuetext={this.getValueText()}
-					dragging={this.state.dragging}
 					focused={this.state.focused || this.state.dragging}
 					onActivate={this.handleActivate}
 					onBlur={this.handleBlur}
