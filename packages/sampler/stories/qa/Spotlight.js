@@ -224,7 +224,8 @@ class FocusedAndDisabled extends React.Component {
 						</IconButton>
 						{React.cloneElement(comp, {
 							disabled: this.state.index === index,
-							spotlightId: `component-${index}`})}
+							spotlightId: `component-${index}`
+						})}
 					</Row>
 				))}
 			</Scroller>
