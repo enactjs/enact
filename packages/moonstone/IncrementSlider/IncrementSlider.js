@@ -151,14 +151,6 @@ const IncrementSliderBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Indicates that the slider knob is being dragged.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		dragging: PropTypes.bool,
-
-		/**
 		 * Shows the tooltip, when present.
 		 * @type {Boolean}
 		 * @public
@@ -479,7 +471,6 @@ const IncrementSliderBase = kind({
 		decrementDisabled,
 		decrementIcon,
 		disabled,
-		dragging,
 		focused,
 		id,
 		incrementAriaLabel,
@@ -523,7 +514,7 @@ const IncrementSliderBase = kind({
 					disabled={decrementDisabled}
 					onTap={onDecrement}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
-					spotlightDisabled={spotlightDisabled || dragging}
+					spotlightDisabled={spotlightDisabled}
 				>
 					{decrementIcon}
 				</IncrementSliderButton>
@@ -560,7 +551,7 @@ const IncrementSliderBase = kind({
 					disabled={incrementDisabled}
 					onTap={onIncrement}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}
-					spotlightDisabled={spotlightDisabled || dragging}
+					spotlightDisabled={spotlightDisabled}
 				>
 					{incrementIcon}
 				</IncrementSliderButton>
