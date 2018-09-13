@@ -47,7 +47,7 @@ storiesOf('IncrementSlider', module)
 		'spotlight behavior while dragging',
 		() => (
 			<div>
-				While holding down the knob(dargging), move the cursor quickly between knob and SliderButtons.
+				While holding down the knob(dargging), move the cursor quickly between knob and SliderButtons. Ensure the buttons do not receive spotligh.
 				<IncrementSliderView />
 			</div>
 		)
