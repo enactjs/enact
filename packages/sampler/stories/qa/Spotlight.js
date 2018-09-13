@@ -32,7 +32,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import Pause from '@enact/spotlight/Pause';
 
 import docs from '../../images/icon-enact-docs.png';
 import {boolean, select} from '../../src/enact-knobs';
@@ -118,53 +117,6 @@ class DisappearTest extends React.Component {
 				>
 					Restore Button
 				</Button>
-			</div>
-		);
-	}
-}
-
-class DisableTest extends React.Component {
-	constructor (props) {
-		super(props);
-
-		this.state = {
-			disabled: false
-		};
-	}
-
-	componentDidMount () {
-		Spotlight.resume();
-		this.id = setInterval(() => this.setState(state => ({disabled: !state.disabled})), 5000);
-	}
-
-	componentWillUnmount () {
-		clearInterval(this.id);
-		this.paused.resume();
-	}
-
-	paused = new Pause('Pause Test')
-
-	handleToggle = () => {
-		if (this.paused.isPaused()) {
-			this.paused.resume();
-		} else {
-			this.paused.pause();
-		}
-	}
-
-	render () {
-		return (
-			<div>
-				<p>Timed Button is alternately enabled and disabled every 5 seconds. Pressing the Active/Paused button will resume and pause Spotlight, respectively.</p>
-				<Button disabled={this.state.disabled}>
-					Timed Button
-				</Button>
-				<ToggleButton
-					defaultSelected
-					toggleOnLabel="Active"
-					toggleOffLabel="Paused"
-					onToggle={this.handleToggle}
-				/>
 			</div>
 		);
 	}
@@ -375,12 +327,6 @@ storiesOf('Spotlight', module)
 		'Disappearing Spottable',
 		() => (
 			<DisappearTest />
-		)
-	)
-	.add(
-		'Disabled with Pause',
-		() => (
-			<DisableTest />
 		)
 	)
 	.add(
