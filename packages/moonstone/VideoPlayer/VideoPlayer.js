@@ -1205,9 +1205,11 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		this.speedIndex = 0;
+		// must happen before send() to ensure feedback uses the right value
+		// TODO: refactor into this.state member
+		this.prevCommand = 'play';
 		this.setPlaybackRate(1);
 		this.send('play');
-		this.prevCommand = 'play';
 		this.announce($L('Play'));
 		this.startDelayedMiniFeedbackHide(5000);
 	}
@@ -1225,9 +1227,11 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		this.speedIndex = 0;
+		// must happen before send() to ensure feedback uses the right value
+		// TODO: refactor into this.state member
+		this.prevCommand = 'pause';
 		this.setPlaybackRate(1);
 		this.send('pause');
-		this.prevCommand = 'pause';
 		this.announce($L('Pause'));
 		this.stopDelayedMiniFeedbackHide();
 	}
