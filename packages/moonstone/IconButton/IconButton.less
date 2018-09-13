@@ -3,6 +3,7 @@
 @import "../styles/mixins.less";
 @import "../styles/variables.less";
 @import "../styles/text.less";
+@import "../styles/skin.less";
 
 .iconButton {
 	.moon-taparea(@moon-icon-button-size);
@@ -57,4 +58,17 @@
 	.selected {
 		/* Exported for customization*/
 	}
+
+	.applySkins({
+		.focus({
+			.disabled({
+				color: @moon-spotlight-disabled-text-color;
+
+				.icon {
+					.vendor-opacity(0.6);
+					color: @moon-spotlight-text-color;
+				}
+			});
+		});
+	});
 }
