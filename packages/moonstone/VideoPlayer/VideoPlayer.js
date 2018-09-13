@@ -1205,6 +1205,8 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		this.speedIndex = 0;
+		// must happen before send() to ensure feedback uses the right value
+		// TODO: refactor into this.state member
 		this.prevCommand = 'play';
 		this.setPlaybackRate(1);
 		this.send('play');
@@ -1225,6 +1227,8 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		this.speedIndex = 0;
+		// must happen before send() to ensure feedback uses the right value
+		// TODO: refactor into this.state member
 		this.prevCommand = 'pause';
 		this.setPlaybackRate(1);
 		this.send('pause');
