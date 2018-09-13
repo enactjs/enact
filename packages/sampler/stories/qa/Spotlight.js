@@ -219,7 +219,7 @@ class FocusedAndDisabled extends React.Component {
 				{this.tests.map((comp, index) => (
 					<Row key={`row-${index}`}>
 						{/* eslint-disable-next-line react/jsx-no-bind */}
-						<IconButton onTap={() => this.select(index)} data-index={index}>
+						<IconButton onTap={() => this.select(index)}>
 							arrowlargeright
 						</IconButton>
 						{React.cloneElement(comp, {
