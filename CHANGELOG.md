@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Fixed
 
-- `moonstone/FormCheckboxItem` to retain focus in `FormCheckbox` icon when disabled
+- `moonstone/FormCheckboxItem` styling when focused and disabled
 
 ## [2.1.3] - 2018-09-10
 
