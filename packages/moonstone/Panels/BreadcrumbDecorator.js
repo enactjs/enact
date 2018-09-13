@@ -159,7 +159,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				if (!current) return;
 
 				const breadcrumbs = document.querySelector(`#${id} .${css.breadcrumbs}`);
-				if (breadcrumbs.contains(current)) {
+				if (breadcrumbs && breadcrumbs.contains(current)) {
 					current.blur();
 				}
 			}
