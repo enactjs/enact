@@ -25,6 +25,7 @@ import ToggleItem from '@enact/moonstone/ToggleItem';
 import Scroller from '@enact/moonstone/Scroller';
 import Slider from '@enact/moonstone/Slider';
 import Spotlight from '@enact/spotlight';
+import {Row} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
@@ -32,6 +33,7 @@ import PropTypes from 'prop-types';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
+import docs from '../../images/icon-enact-docs.png';
 import {boolean, select} from '../../src/enact-knobs';
 import Pause from '@enact/spotlight/Pause';
 
@@ -232,6 +234,53 @@ class PopupFocusTest extends React.Component {
 	}
 }
 
+class FocusedAndDisabled extends React.Component {
+	state = {
+		index: -1
+	}
+
+	tests = [
+		<Button icon="star">Button</Button>,
+		<IconButton>star</IconButton>,
+		<Button icon={docs}>Button</Button>,
+		<IconButton>{docs}</IconButton>
+	]
+
+	handleClear = () => this.setState({index: -1})
+
+	select = (index) => {
+		Spotlight.setPointerMode(false);
+		Spotlight.focus(`component-${index}`);
+		this.setState({index});
+	}
+
+	render () {
+		return (
+			<Scroller>
+				<p>Click or 5-way select the icon buttons to:</p>
+				<ol>
+					<li>Disable pointer mode</li>
+					<li>Set focus on the component next to the button</li>
+					<li>Disable the newly focused component</li>
+				</ol>
+				<Button onClick={this.handleClear}>Enable All</Button>
+				{this.tests.map((comp, index) => (
+					<Row key={`row-${index}`}>
+						{/* eslint-disable-next-line react/jsx-no-bind */}
+						<IconButton onTap={() => this.select(index)}>
+							arrowlargeright
+						</IconButton>
+						{React.cloneElement(comp, {
+							disabled: this.state.index === index,
+							spotlightId: `component-${index}`
+						})}
+					</Row>
+				))}
+			</Scroller>
+		);
+	}
+}
+
 storiesOf('Spotlight', module)
 	.add(
 		'Multiple Buttons',
@@ -345,6 +394,12 @@ storiesOf('Spotlight', module)
 				showCloseButton={boolean('showCloseButton', PopupFocusTest, true)}
 				spotlightRestrict={select('spotlightRestrict', ['self-first', 'self-only'], PopupFocusTest, 'self-only')}
 			/>
+		)
+	)
+	.add(
+		'Focused and Disabled',
+		() => (
+			<FocusedAndDisabled />
 		)
 	)
 	.add(
