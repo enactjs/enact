@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panels` to always blur breadcrumbs when transitioning to a new panel
 - `moonstone/Button` and `moonstone/IconButton` to style image-based icons correctly when focused and disabled
 - `moonstone/VideoPlayer` to show correct playback rate feedback on play or pause
+- `moonstone/Scroller` to correctly set scroll position when nested item is focused
 
 ## [2.1.3] - 2018-09-10
 
