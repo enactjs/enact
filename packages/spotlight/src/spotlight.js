@@ -346,6 +346,7 @@ const Spotlight = (function () {
 		const direction = getDirection(keyCode);
 
 		if (isTab(keyCode)) {
+			// go backwards on shift+tab, forward on tab
 			focusNextElement(evt.shiftKey ? -1 : 1);
 		} else if (direction) {
 			const currentFocusedElement = getCurrent();
@@ -412,22 +413,13 @@ const Spotlight = (function () {
 		}
 	}
 
-	let spottables = null;
-
-	const clearOrderedSpottables = new Job(() => {
-		spottables = null;
-	}, 400);
-
 	const getOrderedSpottables = () => {
-		clearOrderedSpottables.start();
-		if (spottables) return spottables;
-
 		const allSpottables = [...document.querySelectorAll(`.${spottableClass}`)];
 		const [ordered, unordered] = allSpottables.reduce((result, spottable) => {
 			result[spottable.tabIndex === -1 ? 1 : 0].push(spottable);
 			return result;
 		}, [[], []]);
-		spottables = [
+		const spottables = [
 			...ordered.sort((a, b) => a.tabIndex - b.tabIndex),
 			...unordered
 		];
@@ -436,31 +428,53 @@ const Spotlight = (function () {
 	};
 
 	const getNextSpottable = (direction) => {
-		const sp = getOrderedSpottables();
+		const spottables = getOrderedSpottables();
 		const current = getCurrent();
-
-		const index = current ? sp.indexOf(current) : -1;
+		const index = current ? spottables.indexOf(current) : -1;
 
 		let next = 0;
 		if (index === -1) {
-			// when there isn't a currently focused element, start at the first for forward wheel
-			// and last for reverse wheel
-			next = direction === 1 ? 0 : sp.length - 1;
+			// when there isn't a currently focused element, start at the first for forward and last
+			// for reverse
+			next = direction === 1 ? 0 : spottables.length - 1;
 		} else {
-			next = (index + direction + sp.length) % sp.length;
+			// find the next index, wrapping to move to first/last when moving out of bounds
+			next = (index + direction + spottables.length) % spottables.length;
 		}
 
-		return sp[next];
+		return spottables[next];
 	};
 
+	/**
+	 * Moves to the next spottable element in `direction`.
+	 *
+	 * Spottables are ordered by tabindex first followed by source order. All component with a
+	 * positive tabindex are ordered before those that have not set tabindex. When focus isn't set
+	 * when this method is called, the first spottable is focused for a forward `direction` and the
+	 * `last` is focused for a backward `direction`.
+	 *
+	 * @param {Number} direction The direction to move where a positive integer is forward and a
+	 *                           negative integer is backward
+	 * @returns	{Boolean} `true` if an element was focused
+	 * @private
+	 */
 	function focusNextElement (direction) {
-		const next = getNextSpottable(direction);
-		Spotlight.setPointerMode(false);
-		Spotlight.focus(next);
+		const next = getNextSpottable(Math.sign(direction));
+
+		if (next) {
+			Spotlight.setPointerMode(false);
+			return Spotlight.focus(next);
+		}
+
+		return false;
 	}
 
+	// Using Job to throttle the wheel events which occur very quickly. 200ms chosen based
+	// experientially but may be adjusted or made configurable
 	const focusNextElementJob = new Job(focusNextElement, 200);
 
+	// 100ms is somewhat arbitrary to be longer than a held key but shorter than a user would press
+	// the key again.
 	const resetAcceleratedTabJob = new Job(() => {
 		if (isTab(SpotlightAccelerator.keyCode)) {
 			SpotlightAccelerator.reset();
@@ -473,6 +487,8 @@ const Spotlight = (function () {
 		if (direction === 0) return;
 
 		focusNextElementJob.throttle(direction);
+
+		// prevent the default browser scroll behavior
 		ev.preventDefault();
 	}
 
@@ -495,6 +511,7 @@ const Spotlight = (function () {
 			if (getCurrent() || wasTab) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
 				if (wasTab) {
+					// Tab keys do not generate a keyup event and therefore must be reset seperately
 					resetAcceleratedTabJob.start();
 				}
 			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
