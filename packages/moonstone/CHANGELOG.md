@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Panels` to always blur breadcrumbs when transitioning to a new panel
+- `moonstone/VideoPlayer` to show correct playback rate feedback on play or pause
 
 ## [2.1.3] - 2018-09-10
 

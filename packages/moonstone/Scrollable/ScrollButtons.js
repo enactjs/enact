@@ -316,7 +316,6 @@ class ScrollButtons extends Component {
 			<ScrollButton
 				aria-label={rtl && !vertical ? nextButtonAriaLabel : previousButtonAriaLabel}
 				data-spotlight-overflow="ignore"
-				direction={vertical ? 'up' : 'left'}
 				disabled={disabled || prevButtonDisabled}
 				key="prevButton"
 				onClick={this.onClickPrev}
@@ -335,7 +334,6 @@ class ScrollButtons extends Component {
 			<ScrollButton
 				aria-label={rtl && !vertical ? previousButtonAriaLabel : nextButtonAriaLabel}
 				data-spotlight-overflow="ignore"
-				direction={vertical ? 'down' : 'right'}
 				disabled={disabled || nextButtonDisabled}
 				key="nextButton"
 				onClick={this.onClickNext}
