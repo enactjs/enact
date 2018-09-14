@@ -346,7 +346,7 @@ const Spotlight = (function () {
 		const direction = getDirection(keyCode);
 
 		if (isTab(keyCode)) {
-			focusNextElement(1);
+			focusNextElement(evt.shiftKey ? -1 : 1);
 		} else if (direction) {
 			const currentFocusedElement = getCurrent();
 			const currentContainerIds = getContainersForNode(currentFocusedElement);
@@ -422,7 +422,8 @@ const Spotlight = (function () {
 		clearOrderedSpottables.start();
 		if (spottables) return spottables;
 
-		const [ordered, unordered] = [...document.querySelectorAll(`.${spottableClass}`)].reduce((result, spottable) => {
+		const allSpottables = [...document.querySelectorAll(`.${spottableClass}`)];
+		const [ordered, unordered] = allSpottables.reduce((result, spottable) => {
 			result[spottable.tabIndex === -1 ? 1 : 0].push(spottable);
 			return result;
 		}, [[], []]);
