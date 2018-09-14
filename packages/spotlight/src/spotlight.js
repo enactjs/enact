@@ -16,7 +16,7 @@
  * @module spotlight
  */
 
-import {is} from '@enact/core/keymap';
+import {add, is} from '@enact/core/keymap';
 import {isWindowReady} from '@enact/core/snapshot';
 import platform from '@enact/core/platform';
 import last from 'ramda/src/last';
@@ -72,11 +72,15 @@ import {
 	matchSelector,
 	parseSelector
 } from './utils';
+import Job from '@enact/core/util/Job';
+
+add('tab', 9);
 
 const isDown = is('down');
 const isEnter = is('enter');
 const isLeft = is('left');
 const isRight = is('right');
+const isTab = is('tab');
 const isUp = is('up');
 
 /**
@@ -338,14 +342,17 @@ const Spotlight = (function () {
 	}
 
 	function onAcceleratedKeyDown (evt) {
-		const direction = getDirection(evt.keyCode);
+		const {keyCode} = evt;
+		const direction = getDirection(keyCode);
 
-		if (!direction) return;
+		if (isTab(keyCode)) {
+			focusNextElement(1);
+		} else if (direction) {
+			const currentFocusedElement = getCurrent();
+			const currentContainerIds = getContainersForNode(currentFocusedElement);
 
-		const currentFocusedElement = getCurrent();
-		const currentContainerIds = getContainersForNode(currentFocusedElement);
-
-		spotNext(direction, currentFocusedElement, currentContainerIds);
+			spotNext(direction, currentFocusedElement, currentContainerIds);
+		}
 	}
 
 	function onBlur () {
@@ -405,6 +412,69 @@ const Spotlight = (function () {
 		}
 	}
 
+	let spottables = null;
+
+	const clearOrderedSpottables = new Job(() => {
+		spottables = null;
+	}, 400);
+
+	const getOrderedSpottables = () => {
+		clearOrderedSpottables.start();
+		if (spottables) return spottables;
+
+		const [ordered, unordered] = [...document.querySelectorAll(`.${spottableClass}`)].reduce((result, spottable) => {
+			result[spottable.tabIndex === -1 ? 1 : 0].push(spottable);
+			return result;
+		}, [[], []]);
+		spottables = [
+			...ordered.sort((a, b) => a.tabIndex - b.tabIndex),
+			...unordered
+		];
+
+		return spottables;
+	};
+
+	const getNextSpottable = (direction) => {
+		const sp = getOrderedSpottables();
+		const current = getCurrent();
+
+		const index = current ? sp.indexOf(current) : -1;
+
+		let next = 0;
+		if (index === -1) {
+			// when there isn't a currently focused element, start at the first for forward wheel
+			// and last for reverse wheel
+			next = direction === 1 ? 0 : sp.length - 1;
+		} else {
+			next = (index + direction + sp.length) % sp.length;
+		}
+
+		return sp[next];
+	};
+
+	function focusNextElement (direction) {
+		const next = getNextSpottable(direction);
+		Spotlight.setPointerMode(false);
+		Spotlight.focus(next);
+	}
+
+	const focusNextElementJob = new Job(focusNextElement, 200);
+
+	const resetAcceleratedTabJob = new Job(() => {
+		if (isTab(SpotlightAccelerator.keyCode)) {
+			SpotlightAccelerator.reset();
+		}
+	}, 100);
+
+	function onWheel (ev) {
+		const direction = Math.sign(ev.deltaY);
+
+		if (direction === 0) return;
+
+		focusNextElementJob.throttle(direction);
+		ev.preventDefault();
+	}
+
 	function onKeyDown (evt) {
 		if (shouldPreventNavigation()) {
 			notifyKeyDown(evt.keyCode);
@@ -412,23 +482,27 @@ const Spotlight = (function () {
 		}
 
 		const keyCode = evt.keyCode;
+		const wasTab = isTab(keyCode);
 		const direction = getDirection(keyCode);
 		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
 
-		if (pointerHandled || !(direction || isEnter(keyCode))) {
+		if (pointerHandled || !(direction || isEnter(keyCode) || wasTab)) {
 			return;
 		}
 
 		if (!isPaused() && !_pointerMoveDuringKeyPress) {
-			if (getCurrent()) {
+			if (getCurrent() || wasTab) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
+				if (wasTab) {
+					resetAcceleratedTabJob.start();
+				}
 			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
 				restoreFocus();
 			}
 			_5WayKeyHold = true;
 		}
 
-		if (direction) {
+		if (direction || wasTab) {
 			preventDefault(evt);
 		}
 	}
@@ -495,6 +569,7 @@ const Spotlight = (function () {
 			if (!_initialized) {
 				window.addEventListener('blur', onBlur);
 				window.addEventListener('focus', onFocus);
+				window.addEventListener('wheel', onWheel);
 				window.addEventListener('keydown', onKeyDown);
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
