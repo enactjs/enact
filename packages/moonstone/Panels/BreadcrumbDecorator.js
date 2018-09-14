@@ -1,10 +1,11 @@
-import {coerceFunction} from '@enact/core/util';
 import hoc from '@enact/core/hoc';
-import invariant from 'invariant';
 import kind from '@enact/core/kind';
+import {coerceFunction} from '@enact/core/util';
 import ViewManager from '@enact/ui/ViewManager';
-import React from 'react';
+import Spotlight from '@enact/spotlight';
+import invariant from 'invariant';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import IdProvider from '../internal/IdProvider';
 import Skinnable from '../Skinnable';
@@ -152,6 +153,18 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			className: cfgClassName
 		},
 
+		handlers: {
+			handleBreadcrumbWillTransition: (ev, {id}) => {
+				const current = Spotlight.getCurrent();
+				if (!current) return;
+
+				const breadcrumbs = document.querySelector(`#${id} .${css.breadcrumbs}`);
+				if (breadcrumbs && breadcrumbs.contains(current)) {
+					current.blur();
+				}
+			}
+		},
+
 		computed: {
 			// Invokes the breadcrumb generator, if provided
 			breadcrumbs: ({breadcrumbs, id, index, onSelectBreadcrumb}) => {
@@ -202,7 +215,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		},
 
-		render: ({breadcrumbs, childProps, children, className, generateId, id, index, noAnimation, ...rest}) => {
+		render: ({breadcrumbs, childProps, children, className, generateId, handleBreadcrumbWillTransition, id, index, noAnimation, ...rest}) => {
 			delete rest.onSelectBreadcrumb;
 
 			const count = React.Children.count(children);
@@ -220,6 +233,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						end={calcMax()}
 						index={index - 1}
 						noAnimation={noAnimation}
+						onWillTransition={handleBreadcrumbWillTransition}
 						start={0}
 					>
 						{breadcrumbs}

@@ -189,17 +189,17 @@ class ScrollerBase extends Component {
 				newScrollTop += nestedItemBottom - scrollBottom;
 			} else if (nestedItemTop - currentScrollTop < epsilon) {
 				// Caculate when 5-way focus up past the top.
-				newScrollTop += nestedItemTop - currentScrollTop;
+				if (newItemTop > newScrollTop) {
+					// Ensure that the adjusted scrollTop would at least scroll the container to the top of
+					// the viewport (e.g. because the container is at the bottom of the scroller and the
+					// nested item is at the top of the container)
+					newScrollTop = newItemTop;
+				} else {
+					newScrollTop += nestedItemTop - currentScrollTop;
+				}
 			} else if (newItemTop - nestedItemHeight - currentScrollTop > epsilon) {
 				// set scroll position so that the top of the container is at least on the top as a fallback.
 				newScrollTop = newItemTop - nestedItemHeight;
-			}
-
-			// Ensure that the adjusted scrollTop would at least scroll the container to the top of
-			// the viewport (e.g. because the container is at the bottom of the scroller and the
-			// nested item is at the top of the container)
-			if (newItemTop > newScrollTop) {
-				newScrollTop = newItemTop;
 			}
 		} else if (itemBottom - scrollBottom > epsilon) {
 			// Caculate when 5-way focus down past the bottom.

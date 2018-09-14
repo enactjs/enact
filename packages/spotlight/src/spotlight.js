@@ -635,6 +635,7 @@ const Spotlight = (function () {
 		/**
 		 * Pauses Spotlight
 		 *
+		 * @function
 		 * @returns {undefined}
 		 * @public
 		 */
@@ -643,6 +644,7 @@ const Spotlight = (function () {
 		/**
 		 * Resumes Spotlight
 		 *
+		 * @function
 		 * @returns {undefined}
 		 * @public
 		 */
@@ -804,6 +806,7 @@ const Spotlight = (function () {
 		/**
 		 * Determines whether Spotlight is currently paused.
 		 *
+		 * @function
 		 * @returns {Boolean} `true` if Spotlight is currently paused.
 		 * @public
 		 */

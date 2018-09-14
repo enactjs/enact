@@ -371,7 +371,7 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	scrollByPage = (direction) => {
+	scrollByPage = (direction, keyCode) => {
 		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
 		// scroller as a plain container
 		if (!this.uiRef.state.isVerticalScrollbarVisible) {
@@ -395,8 +395,14 @@ class ScrollableBase extends Component {
 				endPoint = {
 					x: focusedItemBounds.left + focusedItemBounds.width / 2,
 					y: viewportBounds.top + ((direction === 'up') ? focusedItemBounds.height / 2 - 1 : viewportBounds.height - focusedItemBounds.height / 2 + 1)
-				};
+				},
+				wasPointerMode = Spotlight.getPointerMode();
 			let next = null;
+
+			if (wasPointerMode) {
+				// We need to convert to 5-way key mode to move Spot to another item manually.
+				Spotlight.setPointerMode(false);
+			}
 
 			/* 1. Find spottable item in viewport */
 			next = getTargetByDirectionFromPosition(rDirection, endPoint, spotlightId);
@@ -417,11 +423,17 @@ class ScrollableBase extends Component {
 				this.childRef.scrollToNextItem({direction, focusedItem, reverseDirection: rDirection, spotlightId});
 			}
 
-			// Need to check whether an overscroll effect is needed
-			return true;
+			if (wasPointerMode) {
+				// It is not converted to 5-way key mode even though pressing a channel up or down keys in pointer mode.
+				// So we need to convert back to the pointer mode.
+				Spotlight.setPointerMode(true);
+			}
+		} else {
+			this.uiRef.scrollByPage(keyCode);
 		}
 
-		return false;
+		// Need to check whether an overscroll effect is needed
+		return true;
 	}
 
 	hasFocus () {
@@ -450,9 +462,8 @@ class ScrollableBase extends Component {
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
-					Spotlight.setPointerMode(false);
 					direction = isPageUp(keyCode) ? 'up' : 'down';
-					overscrollEffectRequired = this.scrollByPage(direction) && overscrollEffectOn.pageKey;
+					overscrollEffectRequired = this.scrollByPage(direction, keyCode) && overscrollEffectOn.pageKey;
 				}
 			} else if (getDirection(keyCode)) {
 				const element = Spotlight.getCurrent();
