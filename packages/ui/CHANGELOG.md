@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/ViewManager` to emit `onWillTransition` when either views or added or removed
+
 ## [2.1.3] - 2018-09-10
 
 ### Fixed
