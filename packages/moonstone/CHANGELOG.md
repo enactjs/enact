@@ -2,21 +2,21 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [2.1.4] - 2018-09-17
 
 ### Fixed
 
-- `moonstone/Scroller` to not to adjust `scrollTop` when nested item is focused
-- `moonstone/Panels` to always blur breadcrumbs when transitioning to a new panel
 - `moonstone/Button` and `moonstone/IconButton` to style image-based icons correctly when focused and disabled
-- `moonstone/VideoPlayer` to show correct playback rate feedback on play or pause
+- `moonstone/FormCheckboxItem` styling when focused and disabled
+- `moonstone/Panels` to always blur breadcrumbs when transitioning to a new panel
 - `moonstone/Scroller` to correctly set scroll position when nested item is focused
+- `moonstone/Scroller` to not adjust `scrollTop` when nested item is focused
+- `moonstone/VideoPlayer` to show correct playback rate feedback on play or pause
 
 ## [2.1.3] - 2018-09-10
 
 ### Fixed
 
-- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll page by page via channel up or down keys without focused item
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effects properly on repeating wheel input
 - `moonstone/TooltipDecorator` to handle runtime error when setting `tooltipText` to an empty string
 - `moonstone/VideoPlayer` timing to read out `infoComponents` accessibility value when `moreButton` or `moreButtonColor` is pressed

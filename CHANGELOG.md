@@ -2,11 +2,18 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [2.1.4] - 2018-09-17
 
 ### Fixed
 
+- `moonstone/Button` and `moonstone/IconButton` to style image-based icons correctly when focused and disabled
 - `moonstone/FormCheckboxItem` styling when focused and disabled
+- `moonstone/Panels` to always blur breadcrumbs when transitioning to a new panel
+- `moonstone/Scroller` to correctly set scroll position when nested item is focused
+- `moonstone/Scroller` to not adjust `scrollTop` when nested item is focused
+- `moonstone/VideoPlayer` to show correct playback rate feedback on play or pause
+- `spotlight/Spottable` to respect paused state when it becomes enabled
+- `ui/ViewManager` to emit `onWillTransition` when views are either added or removed
 
 ## [2.1.3] - 2018-09-10
 
