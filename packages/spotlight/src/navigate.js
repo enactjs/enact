@@ -1,8 +1,6 @@
 
 const obliqueMinDistance = 1;
-const obliqueMultiplier = 5;
 const straightMinDistance = 0;
-const straightMultiplier = 1;
 
 const calcGroupId = ({x, y}) => y * 3 + x;
 
@@ -225,11 +223,12 @@ function navigate (targetRect, direction, rects, config) {
 	}
 
 	const distanceFunction = generateDistancefunction(targetRect);
+	const {obliqueMultiplier, straightMultiplier, straightOnly, straightOverlapThreshold} = config;
 
 	const groups = partition(
 		rects,
 		targetRect,
-		config.straightOverlapThreshold,
+		straightOverlapThreshold,
 		(rect, destRect) => (
 			calcGroupId(
 				direction === 'up' || direction === 'down' ? calcNextExtendedGridPosition(rect, destRect) : calcNextGridPosition(rect, destRect)
@@ -240,7 +239,7 @@ function navigate (targetRect, direction, rects, config) {
 	const internalGroups = partition(
 		groups[4],
 		targetRect.center,
-		config.straightOverlapThreshold,
+		straightOverlapThreshold,
 		(rect, destRect) => calcGroupId(calcNextGridPosition(rect, destRect))
 	);
 
@@ -487,7 +486,7 @@ function navigate (targetRect, direction, rects, config) {
 			return null;
 	}
 
-	if (config.straightOnly) {
+	if (straightOnly) {
 		priorities.splice(2, 2);
 	}
 

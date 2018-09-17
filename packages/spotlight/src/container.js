@@ -60,11 +60,13 @@ let GlobalConfig = {
 	},
 	leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
 	navigableFilter: null,
+	obliqueMultiplier: 5,
 	overflow: false,
 	rememberSource: false,
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
 	selector: '',           // can be a valid <extSelector> except "@" syntax.
 	selectorDisabled: false,
+	straightMultiplier: 1,
 	straightOnly: false,
 	straightOverlapThreshold: 0.5,
 	tabIndexIgnoreList: 'a, input, select, textarea, button, iframe, [contentEditable=true]'
