@@ -52,6 +52,14 @@ const GridListImageItemBase = kind({
 
 	propTypes: /** @lends moonstone/GridListImageItem.GridListImageItemBase.prototype */ {
 		/**
+		 * The voice control intent.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		'data-webos-voice-intent': PropTypes.string,
+
+		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
@@ -67,6 +75,9 @@ const GridListImageItemBase = kind({
 		 * @public
 		 */
 		css: PropTypes.object,
+
+		/**
+		 * The voice control label.
 
 		/**
 		 * Placeholder image used while [source]{@link ui/GridListImageItem.GridListImageItem#source}
@@ -121,7 +132,7 @@ const GridListImageItemBase = kind({
 		publicClassNames: ['gridListImageItem', 'icon', 'image', 'selected', 'caption', 'subCaption']
 	},
 
-	render: ({css, selectionOverlay, ...rest}) => {
+	render: ({css, 'data-webos-voice-intent': voiceIntent, selectionOverlay, ...rest}) => {
 		if (selectionOverlay) {
 			rest['role'] = 'checkbox';
 			rest['aria-checked'] = rest.selected;
@@ -132,6 +143,7 @@ const GridListImageItemBase = kind({
 				{...rest}
 				captionComponent={captionComponent}
 				css={css}
+				data-webos-voice-intent={voiceIntent || 'Select'}
 				iconComponent={Icon}
 				imageComponent={Image}
 				selectionOverlay={selectionOverlay}
