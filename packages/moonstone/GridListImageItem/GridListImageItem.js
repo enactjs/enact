@@ -77,9 +77,6 @@ const GridListImageItemBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * The voice control label.
-
-		/**
 		 * Placeholder image used while [source]{@link ui/GridListImageItem.GridListImageItem#source}
 		 * is loaded.
 		 *
