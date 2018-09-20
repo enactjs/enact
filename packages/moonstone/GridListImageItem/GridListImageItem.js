@@ -131,7 +131,7 @@ const GridListImageItemBase = kind({
 		publicClassNames: ['gridListImageItem', 'icon', 'image', 'selected', 'caption', 'subCaption']
 	},
 
-	render: ({css, 'data-webos-voice-intent': voiceIntent, selectionOverlay, ...rest}) => {
+	render: ({css, selectionOverlay, ...rest}) => {
 		if (selectionOverlay) {
 			rest['role'] = 'checkbox';
 			rest['aria-checked'] = rest.selected;
@@ -142,7 +142,6 @@ const GridListImageItemBase = kind({
 				{...rest}
 				captionComponent={captionComponent}
 				css={css}
-				data-webos-voice-intent={voiceIntent}
 				iconComponent={Icon}
 				imageComponent={Image}
 				selectionOverlay={selectionOverlay}
