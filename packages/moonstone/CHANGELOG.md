@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [Unreleased]
+
+### Fixed
+
+- `moonstone/Scroller` not to scroll stops when focusing to element while scrolling
+
 ## [2.1.4] - 2018-09-17
 
 ### Fixed
