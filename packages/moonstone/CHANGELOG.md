@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scroller` not to scroll stops when focusing to element while scrolling
+- `moonstone/Scroller` not to scroll stops when focusing on a child element while scrolling
 
 ## [2.1.4] - 2018-09-17
 
