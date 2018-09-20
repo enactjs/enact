@@ -55,6 +55,7 @@ const GridListImageItemBase = kind({
 		 * The voice control intent.
 		 *
 		 * @type {String}
+		 * @default 'Select'
 		 * @public
 		 */
 		'data-webos-voice-intent': PropTypes.string,
