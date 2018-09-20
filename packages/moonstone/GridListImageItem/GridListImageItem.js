@@ -120,6 +120,7 @@ const GridListImageItemBase = kind({
 	},
 
 	defaultProps: {
+		'data-webos-voice-intent': 'Select',
 		placeholder: defaultPlaceholder,
 		selected: false
 	},
@@ -140,7 +141,7 @@ const GridListImageItemBase = kind({
 				{...rest}
 				captionComponent={captionComponent}
 				css={css}
-				data-webos-voice-intent={voiceIntent || 'Select'}
+				data-webos-voice-intent={voiceIntent}
 				iconComponent={Icon}
 				imageComponent={Image}
 				selectionOverlay={selectionOverlay}
