@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `moonstone/GridListImageItem` voice control feature support
+
 ## [2.1.4] - 2018-09-17
 
 ### Fixed
