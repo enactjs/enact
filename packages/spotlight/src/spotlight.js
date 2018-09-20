@@ -25,6 +25,8 @@ import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
 import {isPaused, pause, resume} from '../Pause';
 
+import '../node_modules/spatial-navigation-polyfill/polyfill/spatnav-heuristic.js';
+
 import {
 	addContainer,
 	configureContainer,
@@ -314,7 +316,7 @@ const Spotlight = (function () {
 	function spotNext (direction, currentFocusedElement, currentContainerIds) {
 		const next = getTargetByDirectionFromElement(direction, currentFocusedElement);
 
-		if (next) {
+		if (next && next !== currentFocusedElement) {
 			const currentContainerId = last(currentContainerIds);
 			const nextContainerIds = getContainersForNode(next);
 
@@ -406,13 +408,17 @@ const Spotlight = (function () {
 	}
 
 	function onKeyDown (evt) {
+		const keyCode = evt.keyCode;
+		const direction = getDirection(keyCode);
+		if (direction) {
+			preventDefault(evt);
+		}
+
 		if (shouldPreventNavigation()) {
 			notifyKeyDown(evt.keyCode);
 			return;
 		}
 
-		const keyCode = evt.keyCode;
-		const direction = getDirection(keyCode);
 		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
 
 		if (pointerHandled || !(direction || isEnter(keyCode))) {
@@ -426,10 +432,6 @@ const Spotlight = (function () {
 				restoreFocus();
 			}
 			_5WayKeyHold = true;
-		}
-
-		if (direction) {
-			preventDefault(evt);
 		}
 	}
 

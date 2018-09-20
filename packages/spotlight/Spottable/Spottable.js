@@ -375,6 +375,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				} else {
 					rest.className = spottableClass;
 				}
+				tabIndex = 0;
 			}
 
 			if (spotlightId) {

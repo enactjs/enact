@@ -268,7 +268,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			return (
-				<Wrapped {...rest} />
+				<Wrapped tabIndex={0} style={{'--spatial-navigation-contain': 'contain'}} {...rest} />
 			);
 		}
 	};

@@ -4,24 +4,15 @@ import {
 	getAllContainerIds,
 	getContainerConfig,
 	getContainerFocusTarget,
-	getContainerNode,
+	getContainerId,
 	getContainerPreviousTarget,
 	getContainersForNode,
 	getDefaultContainer,
 	getLastContainer,
-	getNavigableContainersForNode,
-	getSpottableDescendants,
 	isContainer,
 	isNavigable
 } from './container';
-import navigate from './navigate';
 import {
-	contains,
-	getContainerRect,
-	getPointRect,
-	getRect,
-	getRects,
-	intersects,
 	parseSelector
 } from './utils';
 
@@ -95,221 +86,73 @@ function isRestrictedContainer (containerId) {
 	return config && (config.enterTo === 'last-focused' || config.enterTo === 'default-element');
 }
 
-function getSpottableDescendantsWithoutContainers (containerId, containerIds) {
-	return getSpottableDescendants(containerId).filter(n => {
-		return !isContainer(n) || containerIds.indexOf(n.dataset.spotlightId) === -1;
-	});
-}
+function getTargetInContainerByDirectionFromElement (direction, element, spatNavContainer, checkedNode) {
+	//console.log("getTargetInContainerByDirectionFromElement()");
+	//console.log(new Error().stack);
+	//console.log(spatNavContainer);
 
-function filterRects (elementRects, boundingRect) {
-	if (!boundingRect) {
-		return elementRects;
-	}
+	// Get all candidate elements in spatNavContainer.
+	let candidates = spatNavContainer.focusableAreas({mode:'all'});
 
-	// remove elements that are outside of boundingRect, if specified
-	return elementRects.filter(rect => {
-		if (isContainer(rect.element)) {
-			// For containers, test intersection since they may be larger than the bounding rect
-			return intersects(boundingRect, rect);
-		} else {
-			// For elements, use contains with the center to include mostly visible elements
-			return contains(boundingRect, rect.center);
-		}
-	});
-}
-
-function getContainerContainingRect (elementRects, elementRect) {
-	// find candidates that are containers and *visually* contain element
-	const overlapping = elementRects.filter(rect => {
-		return isContainer(rect.element) && contains(rect, elementRect);
-	});
-
-	// if the next element is a container AND the current element is *visually* contained within
-	// one of the candidate element, we need to ignore container `enterTo` preferences and
-	// retrieve its spottable descendants and try to navigate to them.
-	if (overlapping.length) {
-		return overlapping[0].element.dataset.spotlightId;
-	}
-
-	return false;
-}
-
-function getOverflowContainerRect (containerId) {
-	// if the target container has overflowing content, update the boundingRect to match its
-	// bounds to prevent finding elements within the container's hierarchy but not visible.
-	// This filter only applies when waterfalling to prevent filtering out elements that share
-	// a container tree with `element`
-	const nextConfig = getContainerConfig(containerId);
-	if (nextConfig && nextConfig.overflow) {
-		return getContainerRect(containerId);
-	}
-}
-
-function getTargetInContainerByDirectionFromPosition (direction, containerId, positionRect, elementContainerIds, boundingRect) {
-	const elements = getSpottableDescendantsWithoutContainers(containerId, elementContainerIds);
-	let elementRects = filterRects(getRects(elements), boundingRect);
-
-	let next = null;
-
-	while (elementRects.length > 0) {
-		const overlappingContainerId = getContainerContainingRect(elementRects, positionRect);
-
-		// if the pointer is within a container that is a candidate element, we need to ignore container
-		// `enterTo` preferences and retrieve its spottable descendants and try to navigate to them.
-		if (overlappingContainerId) {
-			next = getTargetInContainerByDirectionFromPosition(
-				direction,
-				overlappingContainerId,
-				positionRect,
-				elementContainerIds,
-				boundingRect
-			);
-
-			if (!next) {
-				// filter out the container and try again
-				elementRects = elementRects.filter(rect => {
-					return rect.element.dataset.spotlightId !== overlappingContainerId;
-				});
-				continue;
-			}
-
-			// found a target so break out and return
-			break;
-		}
-
-		// try to navigate from position to one of the candidates in containerId
-		next = navigate(
-			positionRect,
-			direction,
-			elementRects,
-			getContainerConfig(containerId)
-		);
-
-		// if we match a container, recurse into it
-		if (next && isContainer(next)) {
-			const nextContainerId = next.dataset.spotlightId;
-
-			// need to cache this reference so we can filter it out later if necessary
-			const lastNavigated = next;
-
-			next = getTargetInContainerByDirectionFromPosition(
-				direction,
-				nextContainerId,
-				positionRect,
-				elementContainerIds,
-				getOverflowContainerRect(nextContainerId) || boundingRect
-			);
-
-			if (!next) {
-				// filter out the container and try again
-				elementRects = elementRects.filter(rect => rect.element !== lastNavigated);
-				continue;
-			}
-		}
-
-		// If we've met every condition and haven't explicitly retried the search via `continue`,
-		// break out and return
-		break;
-	}
-
-	return next;
-}
-
-
-function getTargetInContainerByDirectionFromElement (direction, containerId, element, elementRect, elementContainerIds, boundingRect) {
-	const elements = getSpottableDescendantsWithoutContainers(containerId, elementContainerIds);
+	//  Exclude element which is checked already.
+	candidates.filter((candidate) => !checkedNode.has(candidate));
 
 	// shortcut for previous target from element if it were saved
-	const previous = getContainerPreviousTarget(containerId, direction, element);
-	if (previous && elements.indexOf(previous) !== -1) {
+	const previous = getContainerPreviousTarget(getContainerId(spatNavContainer), direction, element);
+	if (previous && candidates.indexOf(previous) !== -1) {
 		return previous;
 	}
 
-	// `spotlightOverflow` is a private, and likely temporary, API to allow a component within an
-	// spotlight container with `overflow: true` to be treated as if it were outside of the
-	// container. The result is that the candidates, `elements` are filtered by the bounds of the
-	// overflow container effectively hiding those that have overflowed and are visually hidden.
-	//
-	// Currently only used by moonstone/Scroller.Scrollbar as a means to allow 5-way navigation to
-	// escape the Scrollable from paging controls rather than focusing contents that are out of view
-	if (element.dataset.spotlightOverflow === 'ignore') {
-		boundingRect = getOverflowContainerRect(containerId) || boundingRect;
-	}
+	while (candidates.length > 0) {
+		console.log(candidates);
+		// Get best candidate
+		let bestCandidate = element.spatNavSearch(direction, candidates, spatNavContainer);
+		console.log(bestCandidate);
 
-	let elementRects = filterRects(getRects(elements), boundingRect);
+		if (bestCandidate && !isContainer(bestCandidate) && isFocusable(bestCandidate)) {
+		//console.log(bestCandidate);
+			// bestCandidate is spottable element.
+			return bestCandidate;
+		} else if (bestCandidate) {
+			// If bestCandidate is container or scrollable div, delegate focus.
+			let containerId = getContainerId(bestCandidate);
 
-	let next = null;
+			// if we match a container and has restrict configuration, return its target.
+			// otherwise, recurse into it
+			let childBestCandidate = (isRestrictedContainer(containerId) && getTargetByContainer(containerId)) ||
+							getTargetInContainerByDirectionFromElement(direction, element, bestCandidate, checkedNode);
 
-	while (elementRects.length > 0) {
-		const overlappingContainerId = getContainerContainingRect(elementRects, elementRect);
-
-		// if the next element is a container AND the current element is *visually* contained within
-		// one of the candidate elements, we need to ignore container `enterTo` preferences and
-		// retrieve its spottable descendants and try to navigate to them.
-		if (overlappingContainerId) {
-			next = getTargetInContainerByDirectionFromElement(
-				direction,
-				overlappingContainerId,
-				element,
-				elementRect,
-				elementContainerIds,
-				boundingRect
-			);
-
-			if (!next) {
-				// filter out the container and try again
-				elementRects = elementRects.filter(rect => {
-					return rect.element.dataset.spotlightId !== overlappingContainerId;
-				});
-				continue;
+			if (childBestCandidate) {
+				// If there is target element in childContainer, return the element.
+				return childBestCandidate;
+			} else  {
+				// No target element in childContainer. Can't delegate to any node.
+				let index = candidates.indexOf(bestCandidate);
+				if (index > -1) {
+					// Exclude childContainer in candidates.
+					candidates.splice(index, 1);
+				}
 			}
-
-			// found a target so break out and return
-			break;
+		} else {
+			// There is no best candidate element in spatNavContainer
+			// Check again with child focusable element in spatNavContainer.
+			// Because, spatnav filter candidate which overlapped with current element.
+			let newCandidate = [];
+			for (let candidate of candidates) {
+				checkedNode.add(candidate);
+				if (isContainer(candidate)) {
+					newCandidate = newCandidate.concat(candidate.focusableAreas({mode:'all'}));
+				}
+			}
+			//console.log(candidates);
+			newCandidate.filter((candidate) => !checkedNode.has(candidate));
+			candidates = newCandidate;
+			//console.log(candidates);
 		}
-
-		// try to navigate from element to one of the candidates in containerId
-		next = navigate(
-			elementRect,
-			direction,
-			elementRects,
-			getContainerConfig(containerId)
-		);
-
-		// if we match a container,
-		if (next && isContainer(next)) {
-			const nextContainerId = next.dataset.spotlightId;
-
-			// need to cache this reference so we can filter it out later if necessary
-			const lastNavigated = next;
-
-			// and it is restricted, return its target
-			if (isRestrictedContainer(nextContainerId)) {
-				next = getTargetByContainer(nextContainerId);
-			} else {
-				// otherwise, recurse into it
-				next = getTargetInContainerByDirectionFromElement(
-					direction,
-					nextContainerId,
-					element,
-					elementRect,
-					elementContainerIds,
-					getOverflowContainerRect(nextContainerId) || boundingRect
-				);
-			}
-
-			if (!next) {
-				elementRects = elementRects.filter(rect => rect.element !== lastNavigated);
-				continue;
-			}
-		}
-
-		// If we've met every condition and haven't explicitly retried the search via `continue`,
-		// break out and return
-		break;
 	}
-
-	return next;
+	// There is no target element in spatNavContainer
+	//console.log('return null');
+	return null;
 }
 
 function getTargetByDirectionFromElement (direction, element) {
@@ -317,47 +160,46 @@ function getTargetByDirectionFromElement (direction, element) {
 	if (typeof extSelector === 'string') {
 		return getTargetBySelector(extSelector);
 	}
+	let spatNavContainer = element.getSpatnavContainer();
+	// spatNavContainer could be a scrollable div not wrapped with SpotlightContainerDecorator
 
-	const elementRect = getRect(element);
+	let checkedNode = new Set();
 
-	return getNavigableContainersForNode(element)
-		.reduceRight((result, containerId, index, elementContainerIds) => {
-			result = result || getTargetInContainerByDirectionFromElement(
-				direction,
-				containerId,
-				element,
-				elementRect,
-				elementContainerIds
-			);
+	while (spatNavContainer) {
+		//console.log(spatNavContainer);
 
-			if (!result) {
-				result = getLeaveForTarget(containerId, direction);
-
+		// Get all candidate from container
+		let next = getTargetInContainerByDirectionFromElement(direction, element, spatNavContainer, checkedNode);
+		if (next) {
+			return next;
+		}
+		const containerId = getContainerId(spatNavContainer);
+		if (containerId) {
+			// Current is container wrapped with SpotlightContainerDecorator
+			const leaveForTarget = getLeaveForTarget(containerId, direction);
+			if (leaveForTarget) {
+				return leaveForTarget;
+			} else if (leaveForTarget === false) {
 				// To support a `leaveFor` configuration with navigation disallowed in the current
 				// `direction`, we return the current element to prevent further searches for a
 				// target in this reduction.
-				if (result === false) {
-					result = element;
-				}
+				return null;
 			}
+		}
 
-			return result;
-		}, null);
+		// // Search again from outer container. Exclude searched container
+		//console.log(spatNavContainer);
+		checkedNode.add(spatNavContainer);
+		spatNavContainer = spatNavContainer.getSpatnavContainer();
+		//console.log(spatNavContainer);
+	}
+	return null;
 }
 
 function getTargetByDirectionFromPosition (direction, position, containerId) {
-	const pointerRect = getPointRect(position);
-
-	return getNavigableContainersForNode(getContainerNode(containerId))
-		.reduceRight((result, id, index, elementContainerIds) => {
-			return result ||
-				getTargetInContainerByDirectionFromPosition(
-					direction,
-					id,
-					pointerRect,
-					elementContainerIds
-				);
-		}, null);
+	// TODO : Can't support this function using spatial navigation polyfil
+	// TODO : check the usability
+	return null;
 }
 
 /**
@@ -373,9 +215,13 @@ function getTargetByDirectionFromPosition (direction, position, containerId) {
  */
 function getLeaveForTarget (containerId, direction) {
 	const config = getContainerConfig(containerId);
-
 	if (config) {
 		const target = config.restrict !== 'self-only' && config.leaveFor && config.leaveFor[direction];
+		if (target === false) {
+			// self-only container
+			return false;
+		}
+
 		if (typeof target === 'string') {
 			if (target === '') {
 				return false;

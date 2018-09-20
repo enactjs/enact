@@ -952,6 +952,7 @@ export {
 	getContainerNode,
 
 	// Maybe
+	getContainerId,
 	getContainerConfig,
 	getContainerDefaultElement,
 	getContainerLastFocusedElement,

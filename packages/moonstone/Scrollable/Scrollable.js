@@ -734,6 +734,7 @@ class ScrollableBase extends Component {
 				scrollLeftAriaLabel,
 				scrollRightAriaLabel,
 				scrollUpAriaLabel,
+				tabIndex,
 				...rest
 			} = this.props,
 			downButtonAriaLabel = scrollDownAriaLabel == null ? $L('scroll down') : scrollDownAriaLabel,
@@ -781,6 +782,7 @@ class ScrollableBase extends Component {
 						data-spotlight-id={spotlightId}
 						ref={initUiContainerRef}
 						style={style}
+						tabIndex={tabIndex}
 					>
 						<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={this.initVerticalOverscrollRef}>
 							<ChildWrapper className={classNames(contentClassName, overscrollCss.overscrollFrame, overscrollCss.horizontal)} ref={this.initHorizontalOverscrollRef} {...restChildWrapperProps}>
