@@ -2,6 +2,17 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Skinnable` config option `prop` to configure the property in which to pass the current skin to the wrapped component
+- `ui/Transition` prop `css` to support customizable styling
+
+### Changed
+
+- `ui/Cell` and `ui/Layout` to accept any type of children, since the `component` that may be set could accept any format of `children`
+
 ## [2.1.4] - 2018-09-17
 
 ### Fixed
