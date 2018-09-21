@@ -731,7 +731,13 @@ const VideoPlayerBase = class extends React.Component {
 			if (!this.props.spotlightDisabled ) {
 				// Set focus to the hidden spottable control - maintaining focus on available spottable
 				// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
-				Spotlight.focus(`.${css.controlsHandleAbove}`);
+				if (Spotlight.getPointerMode()) {
+					Spotlight.setPointerMode(false);
+					Spotlight.focus(`.${css.controlsHandleAbove}`);
+					Spotlight.setPointerMode(true);
+				} else {
+					Spotlight.focus(`.${css.controlsHandleAbove}`);
+				}
 			}
 		} else if (this.state.mediaControlsVisible && !prevState.mediaControlsVisible) {
 			forwardControlsAvailable({available: true}, this.props);
