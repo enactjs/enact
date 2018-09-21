@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Cell` and `ui/Layout` to accept any type of children, since the `component` that may be set could accept any format of `children`
+- `ui/Skinnable` offering a context hook to allow ancestors to change skin and children to be notified –and possibly take action– without passing props all the way down directly
+- `ui/Transition` support for customizable styling via the `css` prop
+
 ## [2.1.3] - 2018-09-10
 
 ### Fixed
