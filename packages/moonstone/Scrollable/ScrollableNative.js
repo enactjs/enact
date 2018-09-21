@@ -744,22 +744,44 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
-	canVoiceScroll = (scroll) => {
+	notifyVoiceException = (e, type) => {
+		const param = {'voiceUi': {'exception': type}};
+		if (window.webOSVoiceReportActionResult) {
+			window.webOSVoiceReportActionResult(param);
+			e.preventDefault();
+		}
+	}
+
+	canVoiceScroll = (e) => {
 		const
+			scroll = e && e.detail && e.detail.scroll,
 			{scrollTop, scrollLeft} = this.uiRef,
 			isRtl = this.uiRef.state.rtl;
 		const scrollBounds = this.uiRef.getScrollBounds();
+		const notifyAlreadyCompleted = () => this.notifyVoiceException(e, 'alreadyCompleted');
 
 		if (scroll === 'up' || scroll === 'top') {
-			if (scrollTop === 0) return false;
+			if (scrollTop === 0) {
+				notifyAlreadyCompleted();
+				return false;
+			}
 		} else if (scroll === 'down' || scroll === 'bottom') {
-			if (scrollTop === scrollBounds.maxTop) return false;
+			if (scrollTop === scrollBounds.maxTop) {
+				notifyAlreadyCompleted();
+				return false;
+			}
 		} else if (scroll === 'left' || scroll === 'leftmost') {
 			const limit = isRtl ? scrollBounds.maxLeft : 0;
-			if (scrollLeft === limit) return false;
+			if (scrollLeft === limit) {
+				notifyAlreadyCompleted();
+				return false;
+			}
 		} else if (scroll === 'right' || scroll === 'rightmost') {
 			const limit = isRtl ? 0 : scrollBounds.maxLeft;
-			if (scrollLeft === limit) return false;
+			if (scrollLeft === limit) {
+				notifyAlreadyCompleted();
+				return false;
+			}
 		}
 		return true;
 	}
@@ -769,7 +791,7 @@ class ScrollableBaseNative extends Component {
 			scroll = e && e.detail && e.detail.scroll,
 			isRtl = this.uiRef.state.rtl;
 
-		if (this.canVoiceScroll(scroll)) {
+		if (this.canVoiceScroll(e)) {
 			this.isVoiceControl = true;
 			switch (scroll) {
 				case 'up':
