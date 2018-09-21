@@ -140,16 +140,17 @@ class ScrollerBase extends Component {
 			newItemTop = this.uiRef.containerRef.scrollTop + (itemTop - containerTop),
 			itemBottom = newItemTop + itemHeight,
 			scrollBottom = clientHeight + currentScrollTop;
-
-		let newScrollTop = this.uiRef.scrollPos.top;
+		let
+			newScrollTop = this.uiRef.scrollPos.top,
+			scrollHeightDecrease = 0;
 
 		// Caculations for when scrollHeight decrease.
 		if (scrollInfo) {
 			const
 				{scrollTop, previousScrollHeight} = scrollInfo,
-				{scrollHeight} = this.uiRef.scrollBounds,
-				scrollHeightDecrease = previousScrollHeight - scrollHeight;
+				{scrollHeight} = this.uiRef.scrollBounds;
 
+			scrollHeightDecrease = previousScrollHeight - scrollHeight;
 			if (scrollHeightDecrease > 0) {
 				newScrollTop = scrollTop;
 
@@ -204,7 +205,7 @@ class ScrollerBase extends Component {
 		} else if (itemBottom - scrollBottom > epsilon) {
 			// Caculate when 5-way focus down past the bottom.
 			newScrollTop += itemBottom - scrollBottom;
-		} else if (newItemTop - currentScrollTop < epsilon) {
+		} else if (newItemTop - currentScrollTop < epsilon && scrollHeightDecrease <= 0) {
 			// Caculate when 5-way focus up past the top.
 			newScrollTop += newItemTop - currentScrollTop;
 		}
