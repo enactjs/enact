@@ -124,6 +124,5 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 
 export default Skinnable;
 export {
-	Skinnable,
-	SkinContext
+	Skinnable
 };
