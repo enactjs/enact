@@ -75,7 +75,7 @@ class ScrollerBase extends Component {
 		rtl: PropTypes.bool,
 
 		/**
-		 * Spotlight Id. It would be the same with [Scrollable]{@link ui/Scrollable.Scrollable}'s.
+		 * The spotlight id for the component.
 		 *
 		 * @type {String}
 		 * @private
