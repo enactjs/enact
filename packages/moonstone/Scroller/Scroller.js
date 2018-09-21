@@ -150,7 +150,7 @@ class ScrollerBase extends Component {
 			scrollBottom = clientHeight + currentScrollTop;
 		let
 			newScrollTop = this.uiRef.scrollPos.top,
-			scrollHeightDecrease = 0;
+			scrollHeightChange = 0;
 
 		// Calculations for when scrollHeight decrease.
 		if (scrollInfo) {
@@ -158,29 +158,29 @@ class ScrollerBase extends Component {
 				{scrollTop, previousScrollHeight} = scrollInfo,
 				{scrollHeight} = this.uiRef.scrollBounds;
 
-			scrollHeightDecrease = previousScrollHeight - scrollHeight;
-			if (scrollHeightDecrease > 0) {
+			scrollHeightChange = previousScrollHeight - scrollHeight;
+			if (scrollHeightChange > 0) {
 				newScrollTop = scrollTop;
 
 				const
 					itemBounds = focusedItem.getBoundingClientRect(),
 					newItemBottom = newScrollTop + itemBounds.top + itemBounds.height - containerTop;
 
-				if (newItemBottom < scrollBottom && scrollHeightDecrease + newItemBottom > scrollBottom) {
+				if (newItemBottom < scrollBottom && scrollHeightChange + newItemBottom > scrollBottom) {
 					// When `focusedItem` is not at the very bottom of the `Scroller` and
-					// `scrollHeightDecrease` caused a scroll.
+					// `scrollHeightChange` caused a scroll.
 					const
 						distanceFromBottom = scrollBottom - newItemBottom,
-						bottomOffset = scrollHeightDecrease - distanceFromBottom;
+						bottomOffset = scrollHeightChange - distanceFromBottom;
 					if (bottomOffset < newScrollTop) {
 						// guard against negative `scrollTop`
 						newScrollTop -= bottomOffset;
 					}
 				} else if (newItemBottom === scrollBottom) {
 					// when `focusedItem` is at the very bottom of the `Scroller`
-					if (scrollHeightDecrease < newScrollTop) {
+					if (scrollHeightChange < newScrollTop) {
 						// guard against negative `scrollTop`
-						newScrollTop -= scrollHeightDecrease;
+						newScrollTop -= scrollHeightChange;
 					}
 				}
 			}
@@ -213,7 +213,7 @@ class ScrollerBase extends Component {
 		} else if (itemBottom - scrollBottom > epsilon) {
 			// Calculate when 5-way focus down past the bottom.
 			newScrollTop += itemBottom - scrollBottom;
-		} else if (newItemTop - currentScrollTop < epsilon && scrollHeightDecrease <= 0) {
+		} else if (newItemTop - currentScrollTop < epsilon && scrollHeightChange <= 0) {
 			// Calculate when 5-way focus up past the top.
 			newScrollTop += newItemTop - currentScrollTop;
 		}
