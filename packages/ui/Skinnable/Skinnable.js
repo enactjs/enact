@@ -23,7 +23,7 @@ import React from 'react';
  */
 const defaultConfig = {
 	/**
-	 * The prop in which to pass the effective skin to the wrapped component
+	 * The prop in which to pass the effective skin to the wrapped component.
 	 *
 	 * @type {string}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
