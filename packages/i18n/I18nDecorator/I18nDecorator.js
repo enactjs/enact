@@ -4,7 +4,6 @@
  * @module i18n/I18nDecorator
  * @exports I18nDecorator
  * @exports I18nContextDecorator
- * @exports I18nContext
  */
 
 import {on, off} from '@enact/core/dispatcher';
@@ -23,15 +22,6 @@ const contextTypes = {
 	updateLocale: PropTypes.func
 };
 
-/**
- * A [context]{@link https://reactjs.org/docs/context.html} for communicating locale changes.
- *
- * Provides an object containing a `rtl` member, which is `true` if the current context is RTL and
- * an `updateLocal` member, which is a function that can be called with a locale string.
- *
- * @memberof i18n/I18nDecorator
- * @class
- */
 const I18nContext = React.createContext(null);
 
 /**
