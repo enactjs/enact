@@ -25,6 +25,8 @@ const defaultConfig = {
 	/**
 	 * The prop in which to pass the effective skin to the wrapped component.
 	 *
+	 * If left unset, the current skin will not be passed to the wrapped component.
+	 *
 	 * @type {string}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
