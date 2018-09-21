@@ -10,7 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scroller` to set correct scroll position when a child ExpandableList is closed
+- `moonstone/Scroller` to set correct scroll position when an expandable child is closed
 - `moonstone/Scroller` to prevent focusing children while scrolling
 
 ## [2.1.4] - 2018-09-17
