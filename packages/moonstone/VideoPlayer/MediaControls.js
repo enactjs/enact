@@ -23,7 +23,6 @@ import {countReactChildren} from './util';
 import css from './VideoPlayer.less';
 
 const OuterContainer = SpotlightContainerDecorator({
-	enterTo: 'default-element',
 	defaultElement: [
 		`.${css.leftComponents} .${spotlightDefaultClass}`,
 		`.${css.rightComponents} .${spotlightDefaultClass}`,

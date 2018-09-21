@@ -13,6 +13,12 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Cell` and `ui/Layout` to accept any type of children, since the `component` that may be set could accept any format of `children`
 
+## [2.1.4] - 2018-09-17
+
+### Fixed
+
+- `ui/ViewManager` to emit `onWillTransition` when views are either added or removed
+
 ## [2.1.3] - 2018-09-10
 
 ### Fixed

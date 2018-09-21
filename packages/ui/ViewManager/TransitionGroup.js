@@ -288,7 +288,7 @@ class TransitionGroup extends React.Component {
 			});
 		}
 
-		if (this.keysToEnter.length) {
+		if (this.keysToEnter.length || this.keysToLeave.length) {
 			forwardOnWillTransition(null, this.props);
 		}
 
