@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/GridListImageItem` voice control feature support
 
+### Fixed
+
+- `moonstone/Scroller` to prevent focusing children while scrolling
+
 ## [2.1.4] - 2018-09-17
 
 ### Fixed

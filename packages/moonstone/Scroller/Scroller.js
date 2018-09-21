@@ -72,7 +72,15 @@ class ScrollerBase extends Component {
 		 * @type {Boolean}
 		 * @private
 		 */
-		rtl: PropTypes.bool
+		rtl: PropTypes.bool,
+
+		/**
+		 * The spotlight id for the component.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		spotlightId: PropTypes.string
 	}
 
 	componentDidUpdate () {
@@ -279,7 +287,9 @@ class ScrollerBase extends Component {
 	}
 
 	setContainerDisabled = (bool) => {
-		const containerNode = this.uiRef && this.uiRef.containerRef;
+		const
+			{spotlightId} = this.props,
+			containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 
 		if (containerNode) {
 			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
@@ -380,6 +390,7 @@ class ScrollerBase extends Component {
 
 		delete props.initUiChildRef;
 		delete props.onUpdate;
+		delete props.spotlightId;
 
 		return (
 			<UiScrollerBase
@@ -410,8 +421,6 @@ const Scroller = (props) => (
 	<Scrollable
 		{...props}
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
-			delete scrollerProps.spotlightId;
-
 			return <ScrollerBase {...scrollerProps} />;
 		}}
 	/>
@@ -457,8 +466,6 @@ const ScrollerNative = (props) => (
 	<ScrollableNative
 		{...props}
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
-			delete scrollerProps.spotlightId;
-
 			return <ScrollerBase {...scrollerProps} />;
 		}}
 	/>
