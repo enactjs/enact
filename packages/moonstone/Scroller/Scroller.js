@@ -144,7 +144,7 @@ class ScrollerBase extends Component {
 			newScrollTop = this.uiRef.scrollPos.top,
 			scrollHeightDecrease = 0;
 
-		// Caculations for when scrollHeight decrease.
+		// Calculations for when scrollHeight decrease.
 		if (scrollInfo) {
 			const
 				{scrollTop, previousScrollHeight} = scrollInfo,
@@ -186,10 +186,10 @@ class ScrollerBase extends Component {
 				nestedItemBottom = nestedItemTop + nestedItemHeight;
 
 			if (nestedItemBottom - scrollBottom > epsilon) {
-				// Caculate when 5-way focus down past the bottom.
+				// Calculate when 5-way focus down past the bottom.
 				newScrollTop += nestedItemBottom - scrollBottom;
 			} else if (nestedItemTop - currentScrollTop < epsilon) {
-				// Caculate when 5-way focus up past the top.
+				// Calculate when 5-way focus up past the top.
 				if (newItemTop > newScrollTop) {
 					// Ensure that the adjusted scrollTop would at least scroll the container to the top of
 					// the viewport (e.g. because the container is at the bottom of the scroller and the
@@ -203,10 +203,10 @@ class ScrollerBase extends Component {
 				newScrollTop = newItemTop - nestedItemHeight;
 			}
 		} else if (itemBottom - scrollBottom > epsilon) {
-			// Caculate when 5-way focus down past the bottom.
+			// Calculate when 5-way focus down past the bottom.
 			newScrollTop += itemBottom - scrollBottom;
 		} else if (newItemTop - currentScrollTop < epsilon && scrollHeightDecrease <= 0) {
-			// Caculate when 5-way focus up past the top.
+			// Calculate when 5-way focus up past the top.
 			newScrollTop += newItemTop - currentScrollTop;
 		}
 
@@ -221,7 +221,7 @@ class ScrollerBase extends Component {
 	 * `scrollInfo.previousScrollHeight` and `scrollInfo.scrollTop`
 	 * @param {Number} scrollPosition last target position, passed scroll animation is ongoing
 	 *
-	 * @returns {Object} with keys {top, left} containing caculated top and left positions for scroll.
+	 * @returns {Object} with keys {top, left} containing calculated top and left positions for scroll.
 	 * @private
 	 */
 	calculatePositionOnFocus = ({item, scrollInfo, scrollPosition}) => {
