@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VideoPlayer` to unfocus all slotted components when media controls hide
 - `moonstone/Scroller` to set correct scroll position when an expandable child is closed
 - `moonstone/Scroller` to prevent focusing children while scrolling
 

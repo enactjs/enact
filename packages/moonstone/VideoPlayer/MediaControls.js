@@ -405,7 +405,7 @@ const MediaControlsBase = kind({
 
 		return (
 			<OuterContainer {...rest} spotlightId={spotlightId}>
-				<div className={css.leftComponents}>{leftComponents}</div>
+				<Container className={css.leftComponents} spotlightDisabled={spotlightDisabled}>{leftComponents}</Container>
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
 						<Container className={css.mediaControls} spotlightDisabled={showMoreComponents || spotlightDisabled}>
@@ -420,7 +420,7 @@ const MediaControlsBase = kind({
 						</Container>
 					</div>
 				</div>
-				<div className={css.rightComponents}>
+				<Container className={css.rightComponents} spotlightDisabled={spotlightDisabled}>
 					{rightComponents}
 					{countReactChildren(children) ? (
 						<MediaButton
@@ -438,7 +438,7 @@ const MediaControlsBase = kind({
 							{moreIcon}
 						</MediaButton>
 					) : null}
-				</div>
+				</Container>
 			</OuterContainer>
 		);
 	}

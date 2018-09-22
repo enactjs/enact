@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `spotlight/SpotlightContainerDecorator` to blur active element when becomes `spotlightDisabled`
+
 ## [2.1.4] - 2018-09-17
 
 ### Fixed

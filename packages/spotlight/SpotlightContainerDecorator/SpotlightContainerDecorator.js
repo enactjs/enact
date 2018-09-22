@@ -203,6 +203,18 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		componentDidUpdate (prevProps) {
+			const current = Spotlight.getCurrent();
+
+			if (!prevProps.spotlightDisabled && this.props.spotlightDisabled && current) {
+				const containerNode = document.querySelector(`[data-spotlight-id='${this.state.id}']`);
+
+				if (containerNode && containerNode.contains(current)) {
+					current.blur();
+				}
+			}
+		}
+
 		componentWillUnmount () {
 			this.releaseContainer(this.state.id);
 		}
