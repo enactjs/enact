@@ -680,7 +680,7 @@ const Spotlight = (function () {
 		// focus(<containerId>)
 		// focus(<extSelector>)
 		/**
-		 * Gives focus to an element.
+		 * Sets focus.
 		 *
 		 * If Spotlight is in pointer mode, focus is not changed but `elem` will be set as the last
 		 * focused element of its spotlight containers.
