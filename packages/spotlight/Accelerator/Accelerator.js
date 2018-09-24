@@ -1,5 +1,5 @@
 /**
- * Provides the [Accelerator]{@link spotlight/Accelerator.Accelerator} class.
+ * Provides the a class to manage key repeat acceleration.
  *
  * @module spotlight/Accelerator
  */
@@ -12,14 +12,14 @@ class Accelerator {
 	/**
 	 * @constructor
 	 * @param {Number[]} frequency - Controls the frequency with which the acceleration will
-	 *	"freeze". While frozen, the current target item cannot change (change what?), and all events are directed
-	 *	to it.
+	 *	"freeze". While frozen, all events will be focused to the current target item and any attempts
+	 * to change the current target will be prevented.
 	 * @memberof spotlight/Accelerator.Accelerator
 	 */
 	constructor (frequency = [3, 3, 3, 2, 2, 2, 1]) {
 
 		/*
-		 * Whether the instance (? what instance) is currently in an accelerating state.
+		 * Whether the instance is currently in an accelerating state.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -51,7 +51,7 @@ class Accelerator {
 		this.keyCode = 0;
 
 		/*
-		 * Indicated acceleration is canceled.
+		 * Indicates acceleration is canceled.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -93,7 +93,7 @@ class Accelerator {
 					event.preventDefault();
 					return true;
 				} else {
-					let elapsedSeconds = Math.floor(Date.now() - this.time / 1000),
+					let elapsedSeconds = Math.floor((Date.now() - this.time) / 1000),
 						toSkip = 0;
 
 					elapsedSeconds = elapsedSeconds > this.frequency.length - 1 ? this.frequency.length - 1 : elapsedSeconds;
@@ -147,6 +147,18 @@ class Accelerator {
 	 */
 	cancel = () => {
 		this.canceled = true;
+	}
+
+	/**
+	* Verifies that the Accelerator is active.
+	*
+	 * @function
+	 * @returns {Boolean} `true` if the Accelerator is active;
+	 * @public
+	 * @memberof spotlight/Accelerator.Accelerator
+	 */
+	isAccelerating = () => {
+		return this.accelerating;
 	}
 }
 

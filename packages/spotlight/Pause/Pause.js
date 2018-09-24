@@ -72,7 +72,7 @@ class Pause {
 	 * Accepts a name for the instance
 	 *
 	 * The `name` is not used but may be useful for debugging which instance has currently paused
-	 * `Spotlight`.
+	 * Spotlight.
 	 *
 	 * @param {String} name The name of the pause instance
 	 * @memberof spotlight/Pause.Pause

@@ -8,9 +8,7 @@
  */
 
 /**
- * Provides [Spotlight]{@link spotlight.Spotlight} behaviors and controls and
- * [getDirection()]{@link spotlight.Spotlight.getDirection} for mapping a keycode to a spotlight
- * direction.
+ * Provides a class for 5-way navigation and focus control.
  *
  * @module spotlight
  */
@@ -143,7 +141,7 @@ const Spotlight = (function () {
 	let _spotOnWindowFocus = false;
 
 	/*
-	 * Indicates a pointer move event is occur during a keypress. Used to short circuit key down
+	 * Indicates a pointer move event occured during a keypress. Used to short circuit key down
 	 * handling until the next keyup occurs.
 	 *
 	 * @type {Boolean}
@@ -499,7 +497,7 @@ const Spotlight = (function () {
 		return target;
 	}
 
-	function wasContainerId (id) {
+	function isContainerId (id) {
 		return typeof id === 'string' && getContainerConfig(id);
 	}
 
@@ -700,12 +698,12 @@ const Spotlight = (function () {
 			if (isNavigable(target, nextContainerId, true)) {
 				const focused = focusElement(target, nextContainerIds);
 
-				if (!focused && wasContainerId(elem)) {
-					this.setActiveContainer(elem);
+				if (!focused && isContainerId(elem)) {
+					setLastContainer(elem);
 				}
 
 				return focused;
-			} else if (wasContainerId(elem)) {
+			} else if (isContainerId(elem)) {
 				// if we failed to find a spottable target within the provided container, we'll set
 				// it as the active container to allow it to focus itself if its contents change
 				setLastContainer(elem);

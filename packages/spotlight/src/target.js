@@ -95,8 +95,6 @@ function isRestrictedContainer (containerId) {
 }
 
 function getSpottableDescendantsWithoutContainers (containerId, containerIds) {
-	// console.log('containerId', containerId);
-	// console.log('containerIds', containerIds);
 	return getSpottableDescendants(containerId).filter(n => {
 		return !isContainer(n) || containerIds.indexOf(n.dataset.spotlightId) === -1;
 	});
@@ -351,7 +349,6 @@ function getTargetByDirectionFromPosition (direction, position, containerId) {
 
 	return getNavigableContainersForNode(getContainerNode(containerId))
 		.reduceRight((result, id, index, elementContainerIds) => {
-			console.log(result, id, index, elementContainerIds);
 			return result ||
 				getTargetInContainerByDirectionFromPosition(
 					direction,
