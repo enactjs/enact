@@ -2,12 +2,6 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
-
-### Fixed
-
-- `moonstone/VideoPlayer` to focus to `controlsHandleAbove` when controls and cursor disappear at the same time 
-
 ## [2.1.4] - 2018-09-17
 
 ### Fixed
