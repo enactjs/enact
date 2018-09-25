@@ -21,13 +21,18 @@
 		overflow: hidden;
 		width: 100%;
 		white-space: pre !important;
-		will-change: left, right;
 		transition-property: left, right;
 		transition-timing-function: linear;
-		position: relative;
 		
 		&.animate {
 			overflow: visible;
+		}
+	}
+
+	&.promoted {
+		.text {
+			will-change: left, right;
+			position: relative;
 		}
 	}
 

@@ -105,6 +105,8 @@ const MarqueeBase = kind({
 		 */
 		overflow: PropTypes.oneOf(['clip', 'ellipsis']),
 
+		promoted: PropTypes.bool,
+
 		/**
 		 * `true` if the directionality of the content is right-to-left
 		 *
@@ -124,6 +126,7 @@ const MarqueeBase = kind({
 	},
 
 	defaultProps: {
+		promoted: false,
 		rtl: false
 	},
 
@@ -142,6 +145,7 @@ const MarqueeBase = kind({
 	},
 
 	computed: {
+		className: ({promoted, styler}) => styler.append({promoted}),
 		clientClassName: ({animating}) => animating ? animated : css.text,
 		clientStyle: ({alignment, animating, distance, overflow, rtl, speed}) => {
 			// If the components content directionality doesn't match the context, we need to set it

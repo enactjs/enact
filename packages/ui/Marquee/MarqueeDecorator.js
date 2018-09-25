@@ -4,6 +4,7 @@ import hoc from '@enact/core/hoc';
 import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
 import {is} from '@enact/core/keymap';
 import {on, off} from '@enact/core/dispatcher';
+import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
 import shallowEqual from 'recompose/shallowEqual';
@@ -272,6 +273,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				animating: false,
 				overflow: 'ellipsis',
+				promoted: props.marqueeOn === 'render',
 				rtl: false
 			};
 			this.textDirectionValidated = false;
@@ -327,6 +329,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else if (next.disabled && this.isHovered && marqueeOn === 'focus' && this.sync) {
 				this.context.enter(this);
 			}
+
+			if (next.marqueeOn === 'render' && !this.state.promoted) {
+				this.setState({promoted: true});
+			}
 		}
 
 		shouldComponentUpdate (nextProps, nextState) {
@@ -367,6 +373,24 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
 			}
 			off('keydown', this.handlePointerHide);
+		}
+
+		promoteJob = new Job(() => {
+			this.setState(state => state.promoted ? null : {promoted: true});
+		})
+
+		demoteJob = new Job(() => {
+			this.setState(state => state.promoted ? {promoted: false} : null);
+		}, 5000)
+
+		demote () {
+			this.promoteJob.stop();
+			this.demoteJob.start();
+		}
+
+		promote () {
+			this.demoteJob.stop();
+			this.promoteJob.startAfter(Math.max(0, this.props.marqueeDelay - 200));
 		}
 
 		/*
@@ -509,6 +533,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.calculateMetrics();
 					if (!this.contentFits) {
 						this.setState({
+							promoted: true,
 							animating: true
 						});
 					} else if (this.sync) {
@@ -531,6 +556,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					animating: false
 				});
 			}
+
+			this.demote();
 		}
 
 		/*
@@ -636,6 +663,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = (ev) => {
+			this.promote();
 			this.isFocused = true;
 			if (!this.sync) {
 				this.calculateMetrics();
@@ -648,6 +676,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleBlur = (ev) => {
+			this.promoteJob.stop();
 			forwardBlur(ev, this.props);
 			if (this.isFocused) {
 				this.isFocused = false;
@@ -661,6 +690,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleEnter = (ev) => {
 			this.isHovered = true;
 			if (this.props.disabled || this.props.marqueeOn === 'hover') {
+				this.promote();
 				if (this.sync) {
 					this.context.enter(this);
 				} else if (!this.state.animating) {
@@ -671,6 +701,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleLeave = (ev) => {
+			this.promoteJob.stop();
 			this.handleUnhover();
 			forwardLeave(ev, this.props);
 		}
@@ -768,6 +799,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						distance={this.distance}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}
+						promoted={this.state.promoted}
 						rtl={rtl}
 						speed={marqueeSpeed}
 					>
