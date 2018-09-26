@@ -61,6 +61,8 @@ let GlobalConfig = {
 	leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
 	navigableFilter: null,
 	obliqueMultiplier: 5,
+	onBlurContainer: null,
+	onFocusContainer: null,
 	overflow: false,
 	rememberSource: false,
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
@@ -948,6 +950,40 @@ function isWithinOverflowContainer (target, containerIds = getContainersForNode(
 		.some(config => config && config.overflow);
 }
 
+function notifyBlurContainer (direction, current, currentContainerIds, next, nextContainerIds) {
+	currentContainerIds.forEach(containerId => {
+		if (!nextContainerIds.includes(containerId)) {
+			const config = getContainerConfig(containerId);
+
+			if (config && config.onBlurContainer) {
+				config.onBlurContainer({
+					type: 'onBlurContainer',
+					direction,
+					target: current,
+					relatedTarget: next
+				});
+			}
+		}
+	});
+}
+
+function notifyFocusContainer (direction, current, currentContainerIds, next, nextContainerIds) {
+	nextContainerIds.forEach(containerId => {
+		if (!currentContainerIds.includes(containerId)) {
+			const config = getContainerConfig(containerId);
+
+			if (config && config.onFocusContainer) {
+				config.onFocusContainer({
+					type: 'onFocusContainer',
+					direction,
+					target: next,
+					relatedTarget: current
+				});
+			}
+		}
+	});
+}
+
 export {
 	// Remove
 	getAllContainerIds,
@@ -977,6 +1013,8 @@ export {
 	isNavigable,
 	isWithinOverflowContainer,
 	mayActivateContainer,
+	notifyBlurContainer,
+	notifyFocusContainer,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
