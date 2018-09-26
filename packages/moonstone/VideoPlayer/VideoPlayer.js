@@ -733,7 +733,8 @@ const VideoPlayerBase = class extends React.Component {
 				// rightComponents, children, etc.), we need to explicitly blur the element when
 				// MediaControls hide. See ENYO-5454
 				const current = Spotlight.getCurrent();
-				if (current) {
+				const mediaControls = document.querySelector(`[data-spotlight-id="${this.mediaControlsSpotlightId}"]`);
+				if (current && mediaControls && mediaControls.contains(current)) {
 					current.blur();
 				}
 
