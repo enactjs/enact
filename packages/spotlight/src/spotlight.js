@@ -203,9 +203,6 @@ const Spotlight = (function () {
 		const focusOptions = isWithinOverflowContainer(elem, containerIds) ? {preventScroll: true} : null;
 
 		let silentFocus = function () {
-			if (currentFocusedElement) {
-				currentFocusedElement.blur();
-			}
 			elem.focus(focusOptions);
 			focusChanged(elem, containerIds);
 		};
@@ -221,10 +218,6 @@ const Spotlight = (function () {
 			silentFocus();
 			_duringFocusChange = false;
 			return true;
-		}
-
-		if (currentFocusedElement) {
-			currentFocusedElement.blur();
 		}
 
 		elem.focus(focusOptions);
