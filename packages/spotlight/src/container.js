@@ -741,7 +741,9 @@ function getContainerFocusTarget (containerId) {
 		}
 
 		const {overflow} = getContainerConfig(containerId);
-		return !overflow ? element : contains(getContainerRect(containerId), getRect(element)) && element;
+		if (!overflow || contains(getContainerRect(containerId), getRect(element))) {
+			return element;
+		}
 	}, null) || null;
 }
 
