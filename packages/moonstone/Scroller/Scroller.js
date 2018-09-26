@@ -104,7 +104,8 @@ class ScrollerBase extends Component {
 
 	configureSpotlight () {
 		Spotlight.set(this.props.spotlightId, {
-			onBlurContainer: this.handleBlurContainer
+			onBlurContainer: this.handleBlurContainer,
+			onBlurContainerFail: this.handleBlurContainer
 		});
 	}
 

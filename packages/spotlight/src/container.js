@@ -61,8 +61,9 @@ let GlobalConfig = {
 	leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
 	navigableFilter: null,
 	obliqueMultiplier: 5,
-	onBlurContainer: null,
-	onFocusContainer: null,
+	onBlurContainer: null,      // @private - notify the container when leaving via 5-way
+	onBlurContainerFail: null,  // @private - notify the container when failing to leave via 5-way
+	onFocusContainer: null,     // @private - notify the container when entering via 5-way
 	overflow: false,
 	rememberSource: false,
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
@@ -950,6 +951,20 @@ function isWithinOverflowContainer (target, containerIds = getContainersForNode(
 		.some(config => config && config.overflow);
 }
 
+function notifyBlurFailContainer (direction, current, currentContainerIds) {
+	currentContainerIds.forEach(containerId => {
+		const config = getContainerConfig(containerId);
+
+		if (config && config.onBlurContainerFail) {
+			config.onBlurContainerFail({
+				type: 'onBlurContainerFail',
+				direction,
+				target: current
+			});
+		}
+	});
+}
+
 function notifyBlurContainer (direction, current, currentContainerIds, next, nextContainerIds) {
 	currentContainerIds.forEach(containerId => {
 		if (!nextContainerIds.includes(containerId)) {
@@ -1014,6 +1029,7 @@ export {
 	isWithinOverflowContainer,
 	mayActivateContainer,
 	notifyBlurContainer,
+	notifyBlurFailContainer,
 	notifyFocusContainer,
 	removeAllContainers,
 	removeContainer,

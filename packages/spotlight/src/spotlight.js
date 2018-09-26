@@ -41,6 +41,7 @@ import {
 	isWithinOverflowContainer,
 	mayActivateContainer,
 	notifyBlurContainer,
+	notifyBlurFailContainer,
 	notifyFocusContainer,
 	removeAllContainers,
 	removeContainer,
@@ -353,6 +354,8 @@ const Spotlight = (function () {
 
 			return focused;
 		}
+
+		notifyBlurFailContainer(direction, currentFocusedElement, currentContainerIds);
 
 		return false;
 	}
