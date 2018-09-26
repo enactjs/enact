@@ -951,20 +951,16 @@ function isWithinOverflowContainer (target, containerIds = getContainersForNode(
 		.some(config => config && config.overflow);
 }
 
-function notifyBlurFailContainer (direction, current, currentContainerIds) {
-	currentContainerIds.forEach(containerId => {
-		const config = getContainerConfig(containerId);
-
-		if (config && config.onBlurContainerFail) {
-			config.onBlurContainerFail({
-				type: 'onBlurContainerFail',
-				direction,
-				target: current
-			});
-		}
-	});
-}
-
+/**
+ * Notifies any affected containers that focus has left one of their children for another container
+ *
+ * @param {String} direction up/down/left/right
+ * @param {Node} current currently focused element
+ * @param {String[]} currentContainerIds Containers for current
+ * @param {Node} next To be focused element
+ * @param {String[]} nextContainerIds Containers for next
+ * @private
+ */
 function notifyBlurContainer (direction, current, currentContainerIds, next, nextContainerIds) {
 	currentContainerIds.forEach(containerId => {
 		if (!nextContainerIds.includes(containerId)) {
@@ -982,17 +978,49 @@ function notifyBlurContainer (direction, current, currentContainerIds, next, nex
 	});
 }
 
-function notifyFocusContainer (direction, current, currentContainerIds, next, nextContainerIds) {
-	nextContainerIds.forEach(containerId => {
-		if (!currentContainerIds.includes(containerId)) {
+/**
+ * Notifies any containers that focus attempted to move but failed to find a target
+ *
+ * @param {String} direction up/down/left/right
+ * @param {Node} current currently focused element
+ * @param {String[]} currentContainerIds Containers for current
+ * @private
+ */
+function notifyBlurFailContainer (direction, current, currentContainerIds) {
+	currentContainerIds.forEach(containerId => {
+		const config = getContainerConfig(containerId);
+
+		if (config && config.onBlurContainerFail) {
+			config.onBlurContainerFail({
+				type: 'onBlurContainerFail',
+				direction,
+				target: current
+			});
+		}
+	});
+}
+
+/**
+ * Notifies any affected containers that they one of their children has received focus.
+ *
+ * @param {String} direction up/down/left/right
+ * @param {Node} previous Previously focused element
+ * @param {String[]} previousContainerIds Containers for previous
+ * @param {Node} current Currently focused element
+ * @param {String[]} currentContainerIds Containers for current
+ * @private
+ */
+function notifyFocusContainer (direction, previous, previousContainerIds, current, currentContainerIds) {
+	currentContainerIds.forEach(containerId => {
+		if (!previousContainerIds.includes(containerId)) {
 			const config = getContainerConfig(containerId);
 
 			if (config && config.onFocusContainer) {
 				config.onFocusContainer({
 					type: 'onFocusContainer',
 					direction,
-					target: next,
-					relatedTarget: current
+					target: current,
+					relatedTarget: previous
 				});
 			}
 		}
