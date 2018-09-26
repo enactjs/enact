@@ -11,6 +11,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VideoPlayer` to unfocus media controls when hidden
+- `moonstone/Scroller` to set correct scroll position when an expandable child is closed
+- `moonstone/Scroller` to prevent focusing children while scrolling
 
 ## [2.1.4] - 2018-09-17
 
@@ -22,6 +24,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` to correctly set scroll position when nested item is focused
 - `moonstone/Scroller` to not adjust `scrollTop` when nested item is focused
 - `moonstone/VideoPlayer` to show correct playback rate feedback on play or pause
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to handle 5way navigation properly when `focusableScrollbar` is true
 
 ## [2.1.3] - 2018-09-10
 

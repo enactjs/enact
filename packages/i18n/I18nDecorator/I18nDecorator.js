@@ -4,7 +4,6 @@
  * @module i18n/I18nDecorator
  * @exports I18nDecorator
  * @exports I18nContextDecorator
- * @exports I18nContext
  */
 
 import {on, off} from '@enact/core/dispatcher';
