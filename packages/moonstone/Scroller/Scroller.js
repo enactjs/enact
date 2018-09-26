@@ -83,10 +83,18 @@ class ScrollerBase extends Component {
 		spotlightId: PropTypes.string
 	}
 
-	componentDidUpdate () {
+	componentDidMount () {
+		this.configureSpotlight();
+	}
+
+	componentDidUpdate (prevProps) {
 		const {onUpdate} = this.props;
 		if (onUpdate) {
 			onUpdate();
+		}
+
+		if (prevProps.spotlightId !== this.props.spotlightId) {
+			this.configureSpotlight();
 		}
 	}
 
@@ -94,7 +102,11 @@ class ScrollerBase extends Component {
 		this.setContainerDisabled(false);
 	}
 
-	isScrolledToBoundary = false
+	configureSpotlight () {
+		Spotlight.set(this.props.spotlightId, {
+			onBlurContainer: this.handleBlurContainer
+		});
+	}
 
 	/**
 	 * Returns the first spotlight container between `node` and the scroller
@@ -277,12 +289,6 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	findInternalTarget = (direction, target) => {
-		const nextSpottable = getTargetByDirectionFromElement(direction, target);
-
-		return nextSpottable && this.uiRef.containerRef.contains(nextSpottable);
-	}
-
 	handleGlobalKeyDown = () => {
 		this.setContainerDisabled(false);
 	}
@@ -362,20 +368,12 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	onKeyDown = (ev) => {
-		forward('onKeyDown', ev, this.props);
-
-		const
-			{keyCode, target} = ev,
-			direction = getDirection(keyCode);
-
-		if (!ev.repeat) {
-			this.isScrolledToBoundary = false;
-		}
-
-		if (direction && !this.findInternalTarget(direction, target) && !this.isScrolledToBoundary) {
+	handleBlurContainer = ({direction, target}) => {
+		const contentsContainer = this.uiRef.containerRef;
+		// ensure we only scroll to boundary from the contents and not a scroll button which
+		// lie outside of this.uiRef.containerRef but within the spotlight container
+		if (contentsContainer && contentsContainer.contains(target)) {
 			this.scrollToBoundary(direction);
-			this.isScrolledToBoundary = true;
 		}
 	}
 
@@ -396,7 +394,6 @@ class ScrollerBase extends Component {
 		return (
 			<UiScrollerBase
 				{...props}
-				onKeyDown={this.onKeyDown}
 				ref={this.initUiRef}
 			/>
 		);
