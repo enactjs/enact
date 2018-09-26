@@ -4,13 +4,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Fixed
-
-- `moonstone/VideoPlayer` to lose focus on media controls when hidden 
-
 ### Added
 
 - `moonstone/GridListImageItem` voice control feature support
+
+### Fixed
+
+- `moonstone/VideoPlayer` to unfocus media controls when hidden
 
 ## [2.1.4] - 2018-09-17
 
