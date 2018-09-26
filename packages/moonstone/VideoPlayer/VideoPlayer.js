@@ -728,7 +728,16 @@ const VideoPlayerBase = class extends React.Component {
 			forwardControlsAvailable({available: false}, this.props);
 			this.stopAutoCloseTimeout();
 
-			if (!this.props.spotlightDisabled ) {
+			if (!this.props.spotlightDisabled) {
+				// If last focused item were in a user specified components (e.g. leftComponents,
+				// rightComponents, children, etc.), we need to explicitly blur the element when
+				// MediaControls hide. See ENYO-5454
+				const current = Spotlight.getCurrent();
+				const mediaControls = document.querySelector(`[data-spotlight-id="${this.mediaControlsSpotlightId}"]`);
+				if (current && mediaControls && mediaControls.contains(current)) {
+					current.blur();
+				}
+
 				// Set focus to the hidden spottable control - maintaining focus on available spottable
 				// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
 				Spotlight.focus(`.${css.controlsHandleAbove}`);
@@ -737,7 +746,7 @@ const VideoPlayerBase = class extends React.Component {
 			forwardControlsAvailable({available: true}, this.props);
 			this.startAutoCloseTimeout();
 
-			if (!this.props.spotlightDisabled ) {
+			if (!this.props.spotlightDisabled) {
 				const current = Spotlight.getCurrent();
 				if (!current || this.player.contains(current)) {
 					// Set focus within media controls when they become visible.
