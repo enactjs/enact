@@ -329,10 +329,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else if (next.disabled && this.isHovered && marqueeOn === 'focus' && this.sync) {
 				this.context.enter(this);
 			}
-
-			// if (next.marqueeOn === 'render' && !this.state.promoted) {
-			// 	this.setState({promoted: true});
-			// }
 		}
 
 		shouldComponentUpdate (nextProps, nextState) {
