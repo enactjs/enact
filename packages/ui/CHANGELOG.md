@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/Marquee.MarqueeBase` prop `willAnimate` to improve app performance by deferring animation preparation styling such as composite layer promotion.
 - `ui/Skinnable` config option `prop` to configure the property in which to pass the current skin to the wrapped component
 - `ui/Transition` prop `css` to support customizable styling
 
