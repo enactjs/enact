@@ -738,6 +738,14 @@ const VideoPlayerBase = class extends React.Component {
 					current.blur();
 				}
 
+				// when in pointer mode, the focus call below will only update the last focused for
+				// the video player and not set the active container to the video player which will
+				// cause focus to land back on the media controls button when spotlight restores
+				// focus.
+				if (Spotlight.getPointerMode()) {
+					Spotlight.setActiveContainer(this.props.spotlightId);
+				}
+
 				// Set focus to the hidden spottable control - maintaining focus on available spottable
 				// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
 				Spotlight.focus(`.${css.controlsHandleAbove}`);
