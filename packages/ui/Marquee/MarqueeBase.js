@@ -5,8 +5,6 @@ import React from 'react';
 
 import css from './Marquee.less';
 
-const animated = css.text + ' ' + css.animate;
-
 const isEventSource = (ev) => ev.target === ev.currentTarget;
 
 /**
@@ -73,6 +71,7 @@ const MarqueeBase = kind({
 		 * * `marquee` - The root component class
 		 * * `animate` - Applied to the inner content node when the text is animating
 		 * * `text` - The inner content node
+		 * * `willAnimate` - Applied to the inner content node shortly before animation
 		 *
 		 * @type {Object}
 		 * @public
@@ -155,8 +154,11 @@ const MarqueeBase = kind({
 	},
 
 	computed: {
-		className: ({willAnimate, styler}) => styler.append({willAnimate}),
-		clientClassName: ({animating}) => animating ? animated : css.text,
+		clientClassName: ({animating, willAnimate, styler}) => styler.join({
+			animate: animating,
+			text: true,
+			willAnimate
+		}),
 		clientStyle: ({alignment, animating, distance, overflow, rtl, speed}) => {
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
