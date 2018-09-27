@@ -105,8 +105,6 @@ const MarqueeBase = kind({
 		 */
 		overflow: PropTypes.oneOf(['clip', 'ellipsis']),
 
-		promoted: PropTypes.bool,
-
 		/**
 		 * `true` if the directionality of the content is right-to-left
 		 *
@@ -122,12 +120,24 @@ const MarqueeBase = kind({
 		 * @type {Number}
 		 * @public
 		 */
-		speed: PropTypes.number
+		speed: PropTypes.number,
+
+		/**
+		 * Indicates the marquee will animate soon.
+		 *
+		 * Should be used by the component to prepare itself for animation such as promoting
+		 * composite layers for improved performance.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 * @default false
+		 */
+		willAnimate: PropTypes.bool
 	},
 
 	defaultProps: {
-		promoted: false,
-		rtl: false
+		rtl: false,
+		willAnimate: false
 	},
 
 	styles: {
@@ -145,7 +155,7 @@ const MarqueeBase = kind({
 	},
 
 	computed: {
-		className: ({promoted, styler}) => styler.append({promoted}),
+		className: ({willAnimate, styler}) => styler.append({willAnimate}),
 		clientClassName: ({animating}) => animating ? animated : css.text,
 		clientStyle: ({alignment, animating, distance, overflow, rtl, speed}) => {
 			// If the components content directionality doesn't match the context, we need to set it
@@ -179,6 +189,7 @@ const MarqueeBase = kind({
 		delete rest.overflow;
 		delete rest.rtl;
 		delete rest.speed;
+		delete rest.willAnimate;
 
 		return (
 			<div {...rest}>

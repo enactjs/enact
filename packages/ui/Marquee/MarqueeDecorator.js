@@ -273,7 +273,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				animating: false,
 				overflow: 'ellipsis',
-				promoted: props.marqueeOn === 'render',
+				promoted: false,
 				rtl: false
 			};
 			this.textDirectionValidated = false;
@@ -330,9 +330,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.context.enter(this);
 			}
 
-			if (next.marqueeOn === 'render' && !this.state.promoted) {
-				this.setState({promoted: true});
-			}
+			// if (next.marqueeOn === 'render' && !this.state.promoted) {
+			// 	this.setState({promoted: true});
+			// }
 		}
 
 		shouldComponentUpdate (nextProps, nextState) {
@@ -380,17 +380,17 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		})
 
 		demoteJob = new Job(() => {
-			this.setState(state => state.promoted ? {promoted: false} : null);
-		}, 5000)
+			this.setState(state => (!state.animating && state.promoted) ? {promoted: false} : null);
+		})
 
 		demote () {
 			this.promoteJob.stop();
-			this.demoteJob.start();
+			this.demoteJob.idle();
 		}
 
-		promote () {
+		promote (delay) {
 			this.demoteJob.stop();
-			this.promoteJob.startAfter(Math.max(0, this.props.marqueeDelay - 200));
+			this.promoteJob.startAfter(Math.max(0, delay - 200));
 		}
 
 		/*
@@ -561,13 +561,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		/*
-		 * Starts marquee animation with synchronization, if not already animating
+		 * Starts marquee animation with synchronization, if not already animating and a timer is
+		 * not already active to start.
 		 *
 		 * @param {Number} [delay] Milliseconds to wait before animating
 		 * @returns {undefined}
 		 */
 		tryStartingAnimation = (delay) => {
-			if (this.state.animating) return;
+			if (this.state.animating || this.timerState !== TimerState.CLEAR) return;
 
 			this.startAnimation(delay);
 		}
@@ -579,6 +580,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		startAnimation = (delay) => {
+			this.promote(delay);
 			if (this.sync) {
 				// If we're running a timer for anything, we should let that finish, unless it's
 				// another syncstart request.  We should probably check to see if the start request
@@ -663,7 +665,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = (ev) => {
-			this.promote();
 			this.isFocused = true;
 			if (!this.sync) {
 				this.calculateMetrics();
@@ -690,7 +691,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleEnter = (ev) => {
 			this.isHovered = true;
 			if (this.props.disabled || this.props.marqueeOn === 'hover') {
-				this.promote();
 				if (this.sync) {
 					this.context.enter(this);
 				} else if (!this.state.animating) {
@@ -799,9 +799,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						distance={this.distance}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}
-						promoted={this.state.promoted}
 						rtl={rtl}
 						speed={marqueeSpeed}
+						willAnimate={this.state.promoted}
 					>
 						{children}
 					</MarqueeComponent>
