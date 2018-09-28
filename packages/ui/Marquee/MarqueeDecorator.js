@@ -359,6 +359,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillUnmount () {
 			this.clearTimeout();
+			this.promoteJob.stop();
+			this.demoteJob.stop();
 			if (this.sync) {
 				this.sync = false;
 				this.context.unregister(this);
