@@ -986,7 +986,7 @@ function notifyBlurContainer (direction, current, currentContainerIds, next, nex
  * @param {String[]} currentContainerIds Containers for current
  * @private
  */
-function notifyBlurFailContainer (direction, current, currentContainerIds) {
+function notifyBlurContainerFail (direction, current, currentContainerIds) {
 	currentContainerIds.forEach(containerId => {
 		const config = getContainerConfig(containerId);
 
@@ -1057,7 +1057,7 @@ export {
 	isWithinOverflowContainer,
 	mayActivateContainer,
 	notifyBlurContainer,
-	notifyBlurFailContainer,
+	notifyBlurContainerFail,
 	notifyFocusContainer,
 	removeAllContainers,
 	removeContainer,
