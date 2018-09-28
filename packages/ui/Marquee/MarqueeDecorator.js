@@ -495,10 +495,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		start = (delay = this.props.marqueeDelay) => {
-			if (this.props.marqueeDisabled || this.contentFits) {
-				// if marquee isn't necessary (contentFits), do not set `animating` but return
-				// `true` to mark it complete if its synchronized so it doesn't block other
-				// instances.
+			if (this.props.marqueeDisabled) {
+				// if marquee isn't necessary, do not set `animating` but return `true` to mark it
+				// complete if it's synchronized so it doesn't block other instances.
 				return true;
 			} else if (!this.state.animating) {
 				// Don't need to worry about this.timerState because if we're sync, we were just
@@ -638,9 +637,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleFocus = (ev) => {
 			this.isFocused = true;
 			if (!this.sync) {
-				this.calculateMetrics();
-
-				if (!this.state.animating && !this.contentFits) {
+				if (!this.state.animating) {
 					this.startAnimation();
 				}
 			}
