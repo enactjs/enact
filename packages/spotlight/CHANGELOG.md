@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` to correctly set focus when the window is activated
+
 ## [2.1.4] - 2018-09-17
 
 ### Fixed

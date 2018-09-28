@@ -11,7 +11,7 @@ import {coerceArray} from '@enact/core/util';
 import intersection from 'ramda/src/intersection';
 import last from 'ramda/src/last';
 
-import {matchSelector} from './utils';
+import {contains, matchSelector, getContainerRect, getRect} from './utils';
 
 const containerAttribute = 'data-spotlight-id';
 const containerConfigs   = new Map();
@@ -740,7 +740,10 @@ function getContainerFocusTarget (containerId) {
 			return getContainerFocusTarget(nextId);
 		}
 
-		return element;
+		const {overflow} = getContainerConfig(containerId);
+		if (!overflow || contains(getContainerRect(containerId), getRect(element))) {
+			return element;
+		}
 	}, null) || null;
 }
 
