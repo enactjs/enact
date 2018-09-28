@@ -1001,7 +1001,7 @@ function notifyBlurContainerFail (direction, current, currentContainerIds) {
 }
 
 /**
- * Notifies any affected containers that they one of their children has received focus.
+ * Notifies any affected containers that one of their children has received focus.
  *
  * @param {String} direction up/down/left/right
  * @param {Node} previous Previously focused element
