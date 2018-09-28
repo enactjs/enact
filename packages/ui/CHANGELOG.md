@@ -13,6 +13,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Cell` and `ui/Layout` to accept any type of children, since the `component` that may be set could accept any format of `children`
 
+### Fixed
+
+- `ui/Touchable` to correctly handle a hold cancelled from an onHold handler
+
 ## [2.1.4] - 2018-09-17
 
 ### Fixed
