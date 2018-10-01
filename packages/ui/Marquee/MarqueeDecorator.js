@@ -346,9 +346,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.textDirectionValidated === false) {
 				this.validateTextDirection(this.props);
 			}
-			if (this.distance === null) {
-				this.calculateMetrics();
-			}
 			if (this.shouldStartMarquee()) {
 				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
