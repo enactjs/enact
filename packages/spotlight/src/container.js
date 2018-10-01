@@ -61,6 +61,9 @@ let GlobalConfig = {
 	leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
 	navigableFilter: null,
 	obliqueMultiplier: 5,
+	onEnterContainer: null,     // @private - notify the container when entering via 5-way
+	onLeaveContainer: null,      // @private - notify the container when leaving via 5-way
+	onLeaveContainerFail: null,  // @private - notify the container when failing to leave via 5-way
 	overflow: false,
 	rememberSource: false,
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
@@ -951,6 +954,82 @@ function isWithinOverflowContainer (target, containerIds = getContainersForNode(
 		.some(config => config && config.overflow);
 }
 
+/**
+ * Notifies any affected containers that focus has left one of their children for another container
+ *
+ * @param {String} direction up/down/left/right
+ * @param {Node} current currently focused element
+ * @param {String[]} currentContainerIds Containers for current
+ * @param {Node} next To be focused element
+ * @param {String[]} nextContainerIds Containers for next
+ * @private
+ */
+function notifyLeaveContainer (direction, current, currentContainerIds, next, nextContainerIds) {
+	currentContainerIds.forEach(containerId => {
+		if (!nextContainerIds.includes(containerId)) {
+			const config = getContainerConfig(containerId);
+
+			if (config && config.onLeaveContainer) {
+				config.onLeaveContainer({
+					type: 'onLeaveContainer',
+					direction,
+					target: current,
+					relatedTarget: next
+				});
+			}
+		}
+	});
+}
+
+/**
+ * Notifies any containers that focus attempted to move but failed to find a target
+ *
+ * @param {String} direction up/down/left/right
+ * @param {Node} current currently focused element
+ * @param {String[]} currentContainerIds Containers for current
+ * @private
+ */
+function notifyLeaveContainerFail (direction, current, currentContainerIds) {
+	currentContainerIds.forEach(containerId => {
+		const config = getContainerConfig(containerId);
+
+		if (config && config.onLeaveContainerFail) {
+			config.onLeaveContainerFail({
+				type: 'onLeaveContainerFail',
+				direction,
+				target: current
+			});
+		}
+	});
+}
+
+/**
+ * Notifies any affected containers that one of their children has received focus.
+ *
+ * @param {String} direction up/down/left/right
+ * @param {Node} previous Previously focused element
+ * @param {String[]} previousContainerIds Containers for previous
+ * @param {Node} current Currently focused element
+ * @param {String[]} currentContainerIds Containers for current
+ * @private
+ */
+function notifyEnterContainer (direction, previous, previousContainerIds, current, currentContainerIds) {
+	currentContainerIds.forEach(containerId => {
+		if (!previousContainerIds.includes(containerId)) {
+			const config = getContainerConfig(containerId);
+
+			if (config && config.onEnterContainer) {
+				config.onEnterContainer({
+					type: 'onEnterContainer',
+					direction,
+					target: current,
+					relatedTarget: previous
+				});
+			}
+		}
+	});
+}
+
 export {
 	// Remove
 	getAllContainerIds,
@@ -980,6 +1059,9 @@ export {
 	isNavigable,
 	isWithinOverflowContainer,
 	mayActivateContainer,
+	notifyLeaveContainer,
+	notifyLeaveContainerFail,
+	notifyEnterContainer,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
