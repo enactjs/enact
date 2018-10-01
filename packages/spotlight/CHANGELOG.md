@@ -6,11 +6,12 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
-- `spotlight` to not explicitly `blur()` the currently focused element when focusing another allowing the platform to manage blurring before focus.
+- `spotlight` to not explicitly `blur()` the currently focused element when focusing another allowing the platform to manage blurring before focus
 
 ### Fixed
 
 - `spotlight` to correctly set focus when the window is activated
+- `spotlight` to correctly set focus when entering a restricted container
 
 ## [2.1.4] - 2018-09-17
 
