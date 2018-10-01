@@ -61,9 +61,9 @@ let GlobalConfig = {
 	leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
 	navigableFilter: null,
 	obliqueMultiplier: 5,
-	onBlurContainer: null,      // @private - notify the container when leaving via 5-way
-	onBlurContainerFail: null,  // @private - notify the container when failing to leave via 5-way
-	onFocusContainer: null,     // @private - notify the container when entering via 5-way
+	onEnterContainer: null,     // @private - notify the container when entering via 5-way
+	onLeaveContainer: null,      // @private - notify the container when leaving via 5-way
+	onLeaveContainerFail: null,  // @private - notify the container when failing to leave via 5-way
 	overflow: false,
 	rememberSource: false,
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
@@ -961,14 +961,14 @@ function isWithinOverflowContainer (target, containerIds = getContainersForNode(
  * @param {String[]} nextContainerIds Containers for next
  * @private
  */
-function notifyBlurContainer (direction, current, currentContainerIds, next, nextContainerIds) {
+function notifyLeaveContainer (direction, current, currentContainerIds, next, nextContainerIds) {
 	currentContainerIds.forEach(containerId => {
 		if (!nextContainerIds.includes(containerId)) {
 			const config = getContainerConfig(containerId);
 
-			if (config && config.onBlurContainer) {
-				config.onBlurContainer({
-					type: 'onBlurContainer',
+			if (config && config.onLeaveContainer) {
+				config.onLeaveContainer({
+					type: 'onLeaveContainer',
 					direction,
 					target: current,
 					relatedTarget: next
@@ -986,13 +986,13 @@ function notifyBlurContainer (direction, current, currentContainerIds, next, nex
  * @param {String[]} currentContainerIds Containers for current
  * @private
  */
-function notifyBlurContainerFail (direction, current, currentContainerIds) {
+function notifyLeaveContainerFail (direction, current, currentContainerIds) {
 	currentContainerIds.forEach(containerId => {
 		const config = getContainerConfig(containerId);
 
-		if (config && config.onBlurContainerFail) {
-			config.onBlurContainerFail({
-				type: 'onBlurContainerFail',
+		if (config && config.onLeaveContainerFail) {
+			config.onLeaveContainerFail({
+				type: 'onLeaveContainerFail',
 				direction,
 				target: current
 			});
@@ -1010,14 +1010,14 @@ function notifyBlurContainerFail (direction, current, currentContainerIds) {
  * @param {String[]} currentContainerIds Containers for current
  * @private
  */
-function notifyFocusContainer (direction, previous, previousContainerIds, current, currentContainerIds) {
+function notifyEnterContainer (direction, previous, previousContainerIds, current, currentContainerIds) {
 	currentContainerIds.forEach(containerId => {
 		if (!previousContainerIds.includes(containerId)) {
 			const config = getContainerConfig(containerId);
 
-			if (config && config.onFocusContainer) {
-				config.onFocusContainer({
-					type: 'onFocusContainer',
+			if (config && config.onEnterContainer) {
+				config.onEnterContainer({
+					type: 'onEnterContainer',
 					direction,
 					target: current,
 					relatedTarget: previous
@@ -1056,9 +1056,9 @@ export {
 	isNavigable,
 	isWithinOverflowContainer,
 	mayActivateContainer,
-	notifyBlurContainer,
-	notifyBlurContainerFail,
-	notifyFocusContainer,
+	notifyLeaveContainer,
+	notifyLeaveContainerFail,
+	notifyEnterContainer,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,

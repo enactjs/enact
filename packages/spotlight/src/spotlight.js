@@ -40,9 +40,9 @@ import {
 	isNavigable,
 	isWithinOverflowContainer,
 	mayActivateContainer,
-	notifyBlurContainer,
-	notifyBlurContainerFail,
-	notifyFocusContainer,
+	notifyLeaveContainer,
+	notifyLeaveContainerFail,
+	notifyEnterContainer,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
@@ -327,7 +327,7 @@ const Spotlight = (function () {
 				return false;
 			}
 
-			notifyBlurContainer(
+			notifyLeaveContainer(
 				direction,
 				currentFocusedElement,
 				currentContainerIds,
@@ -344,7 +344,7 @@ const Spotlight = (function () {
 
 			const focused = focusElement(next, nextContainerIds);
 
-			notifyFocusContainer(
+			notifyEnterContainer(
 				direction,
 				currentFocusedElement,
 				currentContainerIds,
@@ -355,7 +355,7 @@ const Spotlight = (function () {
 			return focused;
 		}
 
-		notifyBlurContainerFail(direction, currentFocusedElement, currentContainerIds);
+		notifyLeaveContainerFail(direction, currentFocusedElement, currentContainerIds);
 
 		return false;
 	}

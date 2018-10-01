@@ -103,8 +103,8 @@ class ScrollerBase extends Component {
 
 	configureSpotlight () {
 		Spotlight.set(this.props.spotlightId, {
-			onBlurContainer: this.handleBlurContainer,
-			onBlurContainerFail: this.handleBlurContainer
+			onLeaveContainer: this.handleLeaveContainer,
+			onLeaveContainerFail: this.handleLeaveContainer
 		});
 	}
 
@@ -368,7 +368,7 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	handleBlurContainer = ({direction, target}) => {
+	handleLeaveContainer = ({direction, target}) => {
 		const contentsContainer = this.uiRef.containerRef;
 		// ensure we only scroll to boundary from the contents and not a scroll button which
 		// lie outside of this.uiRef.containerRef but within the spotlight container
