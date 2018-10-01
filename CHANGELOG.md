@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [Unreleased]
+
+### Fixed
+
+- `moonstone/DayPicker` to fix unexpectedly collapsing during select sub items with voice
+
 ## [2.1.4] - 2018-09-17
 
 ### Fixed
