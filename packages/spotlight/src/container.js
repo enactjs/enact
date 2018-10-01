@@ -641,13 +641,16 @@ function getContainerLastFocusedElement (containerId) {
 	}
 
 	// lastFocusedElement may be a container ID so try to convert it to a node to test navigability
-	const {lastFocusedElement} = config;
+	const {lastFocusedElement, overflow} = config;
 	let node = lastFocusedElement;
 	if (typeof node === 'string') {
 		node = getContainerNode(lastFocusedElement);
 	}
 
-	return isNavigable(node, containerId, true) ? lastFocusedElement : null;
+	return isNavigable(node, containerId, true) &&
+			(!overflow || contains(getContainerRect(containerId), getRect(node))) ?
+		lastFocusedElement :
+		null;
 }
 
 /**
