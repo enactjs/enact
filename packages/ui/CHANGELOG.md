@@ -6,12 +6,17 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/Marquee.MarqueeBase` prop `willAnimate` to improve app performance by deferring animation preparation styling such as composite layer promotion.
 - `ui/Skinnable` config option `prop` to configure the property in which to pass the current skin to the wrapped component
 - `ui/Transition` prop `css` to support customizable styling
 
 ### Changed
 
 - `ui/Cell` and `ui/Layout` to accept any type of children, since the `component` that may be set could accept any format of `children`
+
+### Fixed
+
+- `ui/Touchable` to correctly handle a hold cancelled from an onHold handler
 
 ## [2.1.4] - 2018-09-17
 
