@@ -696,22 +696,35 @@ function getContainerNavigableElements (containerId) {
 	}
 
 	const config = getContainerConfig(containerId);
+	const {enterTo, overflow} = config;
 
-	const enterLast = config.enterTo === 'last-focused';
-	const enterDefault = config.enterTo === 'default-element';
+	const enterLast = enterTo === 'last-focused';
 	let next;
 
 	// if the container has a preferred entry point, try to find it first
 	if (enterLast) {
 		next = getContainerLastFocusedElement(containerId);
-	} else if (enterDefault) {
+	}
+
+	// try default element if last focused can't be focused
+	if (!next) {
 		next = getContainerDefaultElement(containerId);
 	}
 
-	// if there isn't a preferred entry or it wasn't found, try to find something to spot
 	if (!next) {
-		next = (!enterDefault && getContainerDefaultElement(containerId)) ||
-				getSpottableDescendants(containerId);
+		const spottables = getSpottableDescendants(containerId);
+
+		// if there isn't a preferred entry on an overflow container, try to find the first element
+		// in view
+		if (overflow) {
+			const containerRect = getContainerRect(containerId);
+			next = spottables.find(element => contains(containerRect, getRect(element)));
+		}
+
+		// otherwise, return all spottables within the container
+		if (!next) {
+			next = spottables;
+		}
 	}
 
 	return next ? coerceArray(next) : [];
@@ -732,7 +745,6 @@ function getContainerFocusTarget (containerId) {
 	restoreLastFocusedElement(containerId);
 
 	let next = getContainerNavigableElements(containerId);
-
 	// If multiple candidates returned, we need to find the first viable target since some may
 	// be empty containers which should be skipped.
 	return next.reduce((result, element) => {
@@ -743,10 +755,7 @@ function getContainerFocusTarget (containerId) {
 			return getContainerFocusTarget(nextId);
 		}
 
-		const {overflow} = getContainerConfig(containerId);
-		if (!overflow || contains(getContainerRect(containerId), getRect(element))) {
-			return element;
-		}
+		return element;
 	}, null) || null;
 }
 
