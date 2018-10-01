@@ -667,9 +667,8 @@ class ScrollableBase extends Component {
 	}
 
 	notifyVoiceException = (e, type) => {
-		const param = {'voiceUi': {'exception': type}};
 		if (window.webOSVoiceReportActionResult) {
-			window.webOSVoiceReportActionResult(param);
+			window.webOSVoiceReportActionResult({'voiceUi': {'exception': type}});
 			e.preventDefault();
 		}
 	}
@@ -688,7 +687,7 @@ class ScrollableBase extends Component {
 				return false;
 			}
 		} else if (scroll === 'down' || scroll === 'bottom') {
-			if (scrollTop === scrollBounds.maxTop) {
+			if (scrollTop >= scrollBounds.maxTop - 1) {
 				notifyAlreadyCompleted();
 				return false;
 			}
@@ -719,39 +718,46 @@ class ScrollableBase extends Component {
 				case 'up':
 					this.voiceControlDirection = 'vertical';
 					this.onScrollbarButtonClick({isPreviousScrollButton: true, isVerticalScrollBar: true});
+					e.preventDefault();
 					break;
 				case 'down':
 					this.voiceControlDirection = 'vertical';
 					this.onScrollbarButtonClick({isPreviousScrollButton: false, isVerticalScrollBar: true});
+					e.preventDefault();
 					break;
 				case 'left':
 					this.voiceControlDirection = 'horizontal';
 					this.onScrollbarButtonClick({isPreviousScrollButton: !isRtl, isVerticalScrollBar: false});
+					e.preventDefault();
 					break;
 				case 'right':
 					this.voiceControlDirection = 'horizontal';
 					this.onScrollbarButtonClick({isPreviousScrollButton: isRtl, isVerticalScrollBar: false});
+					e.preventDefault();
 					break;
 				case 'top':
 					this.voiceControlDirection = 'vertical';
 					this.uiRef.scrollTo({align: 'top'});
+					e.preventDefault();
 					break;
 				case 'bottom':
 					this.voiceControlDirection = 'vertical';
 					this.uiRef.scrollTo({align: 'bottom'});
+					e.preventDefault();
 					break;
 				case 'leftmost':
 					this.voiceControlDirection = 'horizontal';
 					this.uiRef.scrollTo({align: isRtl ? 'right' : 'left'});
+					e.preventDefault();
 					break;
 				case 'rightmost':
 					this.voiceControlDirection = 'horizontal';
 					this.uiRef.scrollTo({align: isRtl ? 'left' : 'right'});
+					e.preventDefault();
 					break;
 				default:
 					this.isVoiceControl = false;
 			}
-			e.preventDefault();
 		}
 	}
 
