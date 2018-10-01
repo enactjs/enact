@@ -104,11 +104,13 @@ const DayPickerBase = kind({
 		children: ({children}) => children.map(child => child['aria-label'])
 	},
 
-	render: (props) => {
+	render: ({title, ...rest}) => {
 		return (
 			<ExpandableListBase
-				{...props}
+				{...rest}
+				data-webos-voice-label={title}
 				select="multiple"
+				title={title}
 			/>
 		);
 	}
