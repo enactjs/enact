@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/DayPicker` to prevent closing when selecting days via voice control
 - `moonstone/VideoPlayer` to unfocus media controls when hidden
 - `moonstone/Scroller` to set correct scroll position when an expandable child is closed
 - `moonstone/Scroller` to prevent focusing children while scrolling
