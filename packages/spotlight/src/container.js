@@ -696,14 +696,15 @@ function getContainerNavigableElements (containerId) {
 	const {enterTo, overflow} = config;
 
 	const enterLast = enterTo === 'last-focused';
-	const enterDefault = enterTo === 'default-element';
 	let next;
 
 	// if the container has a preferred entry point, try to find it first
 	if (enterLast) {
-		// fall back to default element if last focused can't be focused
-		next = getContainerLastFocusedElement(containerId) || getContainerDefaultElement(containerId);
-	} else if (enterDefault) {
+		next = getContainerLastFocusedElement(containerId);
+	}
+
+	// try default element if last focused can't be focused
+	if (!next) {
 		next = getContainerDefaultElement(containerId);
 	}
 
