@@ -698,30 +698,36 @@ function getContainerNavigableElements (containerId) {
 	const enterLast = enterTo === 'last-focused';
 	const enterDefault = enterTo === 'default-element';
 	let next;
-	const spottables = getSpottableDescendants(containerId);
 
 	// if the container has a preferred entry point, try to find it first
 	if (enterLast) {
-		next = getContainerLastFocusedElement(containerId);
+		// fall back to default element if last focused can't be focused
+		next = getContainerLastFocusedElement(containerId) || getContainerDefaultElement(containerId);
 	} else if (enterDefault) {
 		next = getContainerDefaultElement(containerId);
 	}
 
-	// if there isn't a preferred entry on an overflow container, try to find the first element in view
-	if (!next && overflow) {
-		next = spottables.reduce((result, element) => {
-			if (result) {
-				return result;
-			}
-			if (contains(getContainerRect(containerId), getRect(element))) {
-				return element;
-			}
-		}, null);
-	}
-
-	// if there isn't a preferred entry or it wasn't found, try to find something to spot
 	if (!next) {
-		next = (!enterDefault && getContainerDefaultElement(containerId)) || spottables;
+		const spottables = getSpottableDescendants(containerId);
+
+		// if there isn't a preferred entry on an overflow container, try to find the first element
+		// in view
+		if (overflow) {
+			const containerRect = getContainerRect(containerId);
+			next = spottables.reduce((result, element) => {
+				if (result) {
+					return result;
+				}
+				if (contains(containerRect, getRect(element))) {
+					return element;
+				}
+			}, null);
+		}
+
+		// otherwise, return all spottables within the container
+		if (!next) {
+			next = spottables;
+		}
 	}
 
 	return next ? coerceArray(next) : [];
