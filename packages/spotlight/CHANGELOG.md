@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Fixed
 
 - `spotlight` to correctly set focus when the window is activated
+- `spotlight` to correctly set focus when entering a restricted container
 
 ## [2.1.4] - 2018-09-17
 

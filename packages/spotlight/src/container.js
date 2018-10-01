@@ -641,16 +641,13 @@ function getContainerLastFocusedElement (containerId) {
 	}
 
 	// lastFocusedElement may be a container ID so try to convert it to a node to test navigability
-	const {lastFocusedElement, overflow} = config;
+	const {lastFocusedElement} = config;
 	let node = lastFocusedElement;
 	if (typeof node === 'string') {
 		node = getContainerNode(lastFocusedElement);
 	}
 
-	return isNavigable(node, containerId, true) &&
-			(!overflow || contains(getContainerRect(containerId), getRect(node))) ?
-		lastFocusedElement :
-		null;
+	return isNavigable(node, containerId, true) ? lastFocusedElement : null;
 }
 
 /**
@@ -696,10 +693,12 @@ function getContainerNavigableElements (containerId) {
 	}
 
 	const config = getContainerConfig(containerId);
+	const {enterTo, overflow} = config;
 
-	const enterLast = config.enterTo === 'last-focused';
-	const enterDefault = config.enterTo === 'default-element';
+	const enterLast = enterTo === 'last-focused';
+	const enterDefault = enterTo === 'default-element';
 	let next;
+	const spottables = getSpottableDescendants(containerId);
 
 	// if the container has a preferred entry point, try to find it first
 	if (enterLast) {
@@ -708,10 +707,21 @@ function getContainerNavigableElements (containerId) {
 		next = getContainerDefaultElement(containerId);
 	}
 
+	// if there isn't a preferred entry on an overflow container, try to find the first element in view
+	if (!next && overflow) {
+		next = spottables.reduce((result, element) => {
+			if (result) {
+				return result;
+			}
+			if (contains(getContainerRect(containerId), getRect(element))) {
+				return element;
+			}
+		}, null);
+	}
+
 	// if there isn't a preferred entry or it wasn't found, try to find something to spot
 	if (!next) {
-		next = (!enterDefault && getContainerDefaultElement(containerId)) ||
-				getSpottableDescendants(containerId);
+		next = (!enterDefault && getContainerDefaultElement(containerId)) || spottables;
 	}
 
 	return next ? coerceArray(next) : [];
@@ -732,7 +742,6 @@ function getContainerFocusTarget (containerId) {
 	restoreLastFocusedElement(containerId);
 
 	let next = getContainerNavigableElements(containerId);
-
 	// If multiple candidates returned, we need to find the first viable target since some may
 	// be empty containers which should be skipped.
 	return next.reduce((result, element) => {
@@ -743,10 +752,7 @@ function getContainerFocusTarget (containerId) {
 			return getContainerFocusTarget(nextId);
 		}
 
-		const {overflow} = getContainerConfig(containerId);
-		if (!overflow || contains(getContainerRect(containerId), getRect(element))) {
-			return element;
-		}
+		return element;
 	}, null) || null;
 }
 

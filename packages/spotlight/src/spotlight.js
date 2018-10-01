@@ -388,11 +388,8 @@ const Spotlight = (function () {
 
 			if (!Spotlight.focus(lastFocusedElement)) {
 				// If the last focused element was previously also disabled (or no longer exists), we
-				// need to set focus to the next target element within the same container
-				if (!Spotlight.focus(last(getContainersForNode(lastFocusedElement)))) {
-					// If no target elements can be focused, we need to set focus somewhere
-					Spotlight.focus();
-				}
+				// need to set focus somewhere
+				Spotlight.focus();
 			}
 			_spotOnWindowFocus = false;
 		}
