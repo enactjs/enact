@@ -715,14 +715,7 @@ function getContainerNavigableElements (containerId) {
 		// in view
 		if (overflow) {
 			const containerRect = getContainerRect(containerId);
-			next = spottables.reduce((result, element) => {
-				if (result) {
-					return result;
-				}
-				if (contains(containerRect, getRect(element))) {
-					return element;
-				}
-			}, null);
+			next = spottables.find(element => contains(containerRect, getRect(element)));
 		}
 
 		// otherwise, return all spottables within the container
