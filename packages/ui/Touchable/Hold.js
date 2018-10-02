@@ -101,9 +101,9 @@ class Hold {
 	leave = () => {
 		if (!this.isHolding()) return;
 
-		const {global, resume} = this.holdConfig;
+		const {global: isGlobal, resume} = this.holdConfig;
 
-		if (global) return;
+		if (isGlobal) return;
 
 		if (resume) {
 			this.suspend();
