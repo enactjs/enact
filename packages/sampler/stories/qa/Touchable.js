@@ -16,8 +16,6 @@ storiesOf('Touchable', module)
 				onHold={action('onHold')}
 				onHoldEnd={action('onHoldEnd')}
 				onHoldPulse={action('onHoldPulse')}
-				onDragStart={action('onDragStart')}
-				onDragEnd={action('onDragEnd')}
 				disabled={boolean('disabled', Button)}
 			>
 				Touchable
