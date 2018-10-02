@@ -23,7 +23,7 @@ import {contextTypes} from '@enact/core/internal/PubSub';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import css from './Transition.less';
+import componentCss from './Transition.less';
 
 const forwardTransitionEnd = forward('onTransitionEnd');
 const forwardOnShow = forward('onShow');
@@ -82,6 +82,39 @@ const TransitionBase = kind({
 		 * @public
 		 */
 		clipWidth: PropTypes.number,
+
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `transition`     - The root component class
+		 * * `inner`          - The element inside the transition. This is the container for the transitioning content.
+		 * * `shown`          - Applied when content is present (visible), related to the `visible` prop/state
+		 * * `hidden`         - Applied when content is not present (hiding), related to the `visible` prop/state
+		 * * `slide`          - Applied when the `slide` `type` is set
+		 * * `fade`           - Applied when the `fade` `type` is set
+		 * * `clip`           - Applied when the `clip` `type` is set
+		 * * `up`             - Applied when the `direction` `up` is set
+		 * * `right`          - Applied when the `direction` `right` is set
+		 * * `down`           - Applied when the `direction` `down` is set
+		 * * `left`           - Applied when the `direction` `left` is set
+		 * * `short`          - Applied when the `duration` `short` is set
+		 * * `medium`         - Applied when the `duration` `medium` is set
+		 * * `long`           - Applied when the `duration` `long` is set
+		 * * `ease`           - Applied when the `timingFunction` `ease` is set
+		 * * `ease-in`        - Applied when the `timingFunction` `ease-in` is set
+		 * * `ease-out`       - Applied when the `timingFunction` `ease-out` is set
+		 * * `ease-in-out`    - Applied when the `timingFunction` `ease-in-out` is set
+		 * * `ease-in-quart`  - Applied when the `timingFunction` `ease-in-quart` is set
+		 * * `ease-out-quart` - Applied when the `timingFunction` `ease-out-quart` is set
+		 * * `linear`         - Applied when the `timingFunction` `linear` is set
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
 
 		/**
 		 * Sets the direction of transition. Where the component will move *to*; the destination.
@@ -184,12 +217,13 @@ const TransitionBase = kind({
 	},
 
 	styles: {
-		css,
-		className: 'transition'
+		css: componentCss,
+		className: 'transition',
+		publicClassNames: true
 	},
 
 	computed: {
-		className: ({direction, duration, timingFunction, type, visible, styler}) => styler.append(
+		className: ({css, direction, duration, timingFunction, type, visible, styler}) => styler.append(
 			visible ? 'shown' : 'hidden',
 			direction && css[direction],
 			duration && css[duration],
@@ -203,7 +237,7 @@ const TransitionBase = kind({
 				};
 			}
 		},
-		style: ({clipHeight, direction, duration, type, visible, style}) => {
+		style: ({css, clipHeight, direction, duration, type, visible, style}) => {
 			if (type === 'clip') {
 				style = {
 					...style,
@@ -225,7 +259,7 @@ const TransitionBase = kind({
 		childRef: ({childRef, noAnimation, children}) => (noAnimation || !children) ? null : childRef
 	},
 
-	render: ({childRef, children, innerStyle, noAnimation, visible, ...rest}) => {
+	render: ({css, childRef, children, innerStyle, noAnimation, visible, ...rest}) => {
 		delete rest.clipHeight;
 		delete rest.clipWidth;
 		delete rest.direction;
