@@ -689,9 +689,9 @@ class ScrollableBase extends Component {
 		// Case 2. Cannot scroll
 		} else if (
 			(['up', 'top'].includes(scroll) && this.isReachedEdge(scrollTop, 0)) ||
-			(['down', 'bottom']includes(scroll) && this.isReachedEdge(scrollTop, maxTop)) ||
-			(['left', 'leftmost']includes(scroll) && this.isReachedEdge(scrollLeft, 0, maxLeft, isRtl)) ||
-			(['right', 'rightmost']includes(scroll) && this.isReachedEdge(scrollLeft, maxLeft, 0, isRtl))
+			(['down', 'bottom'].includes(scroll) && this.isReachedEdge(scrollTop, maxTop)) ||
+			(['left', 'leftmost'].includes(scroll) && this.isReachedEdge(scrollLeft, 0, maxLeft, isRtl)) ||
+			(['right', 'rightmost'].includes(scroll) && this.isReachedEdge(scrollLeft, maxLeft, 0, isRtl))
 		) {
 			if (window.webOSVoiceReportActionResult) {
 				window.webOSVoiceReportActionResult({voiceUi: {exception: 'alreadyCompleted'}});
