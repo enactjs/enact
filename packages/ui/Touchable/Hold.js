@@ -188,6 +188,7 @@ const holdConfigPropType = PropTypes.shape({
 		})
 	),
 	frequency: PropTypes.number,
+	global: PropTypes.bool,
 	moveTolerance: PropTypes.number
 });
 
