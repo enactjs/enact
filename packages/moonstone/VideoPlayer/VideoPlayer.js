@@ -50,7 +50,14 @@ import Video from './Video';
 import css from './VideoPlayer.less';
 
 const SpottableDiv = Touchable(Spottable('div'));
-const RootContainer = SpotlightContainerDecorator('div');
+const RootContainer = SpotlightContainerDecorator(
+	{
+		enterTo: 'default-element',
+		defaultElement: [`.${css.controlsHandleAbove}`, `.${css.controlsFrame}`]
+	},
+	'div'
+);
+
 const ControlsContainer = SpotlightContainerDecorator(
 	{
 		enterTo: '',
@@ -721,7 +728,24 @@ const VideoPlayerBase = class extends React.Component {
 			forwardControlsAvailable({available: false}, this.props);
 			this.stopAutoCloseTimeout();
 
-			if (!this.props.spotlightDisabled ) {
+			if (!this.props.spotlightDisabled) {
+				// If last focused item were in a user specified components (e.g. leftComponents,
+				// rightComponents, children, etc.), we need to explicitly blur the element when
+				// MediaControls hide. See ENYO-5454
+				const current = Spotlight.getCurrent();
+				const mediaControls = document.querySelector(`[data-spotlight-id="${this.mediaControlsSpotlightId}"]`);
+				if (current && mediaControls && mediaControls.contains(current)) {
+					current.blur();
+				}
+
+				// when in pointer mode, the focus call below will only update the last focused for
+				// the video player and not set the active container to the video player which will
+				// cause focus to land back on the media controls button when spotlight restores
+				// focus.
+				if (Spotlight.getPointerMode()) {
+					Spotlight.setActiveContainer(this.props.spotlightId);
+				}
+
 				// Set focus to the hidden spottable control - maintaining focus on available spottable
 				// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
 				Spotlight.focus(`.${css.controlsHandleAbove}`);
@@ -730,7 +754,7 @@ const VideoPlayerBase = class extends React.Component {
 			forwardControlsAvailable({available: true}, this.props);
 			this.startAutoCloseTimeout();
 
-			if (!this.props.spotlightDisabled ) {
+			if (!this.props.spotlightDisabled) {
 				const current = Spotlight.getCurrent();
 				if (!current || this.player.contains(current)) {
 					// Set focus within media controls when they become visible.
@@ -746,11 +770,13 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (this.state.mediaControlsVisible && prevState.infoVisible !== this.state.infoVisible) {
 			const current = Spotlight.getCurrent();
-			if (current && current.dataset.spotlightId === this.moreButtonSpotlightId) {
+			if (current && current.dataset && current.dataset.spotlightId === this.moreButtonSpotlightId) {
 				// need to blur manually to read out `infoComponent`
 				current.blur();
 			}
-			Spotlight.focus(this.moreButtonSpotlightId);
+			setTimeout(() => {
+				Spotlight.focus(this.moreButtonSpotlightId);
+			}, 1);
 		}
 	}
 
@@ -1203,9 +1229,11 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		this.speedIndex = 0;
+		// must happen before send() to ensure feedback uses the right value
+		// TODO: refactor into this.state member
+		this.prevCommand = 'play';
 		this.setPlaybackRate(1);
 		this.send('play');
-		this.prevCommand = 'play';
 		this.announce($L('Play'));
 		this.startDelayedMiniFeedbackHide(5000);
 	}
@@ -1223,9 +1251,11 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		this.speedIndex = 0;
+		// must happen before send() to ensure feedback uses the right value
+		// TODO: refactor into this.state member
+		this.prevCommand = 'pause';
 		this.setPlaybackRate(1);
 		this.send('pause');
-		this.prevCommand = 'pause';
 		this.announce($L('Pause'));
 		this.stopDelayedMiniFeedbackHide();
 	}
