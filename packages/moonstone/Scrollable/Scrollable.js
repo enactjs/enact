@@ -680,7 +680,7 @@ class ScrollableBase extends Component {
 			verticalDirection = ['up', 'down', 'top', 'bottom'],
 			horizontalDirection = ['left', 'right', 'leftmost', 'rightmost'];
 
-		this.voiceControlDirection = scroll in verticalDirection && 'vertical' || scroll in horizontalDirection && 'horizontal' || null;
+		this.voiceControlDirection = verticalDirection.includes(scroll) && 'vertical' || horizontalDirection.includes(scroll) && 'horizontal' || null;
 
 		// Case 1. Invalid direction
 		if (this.voiceControlDirection === null) {
@@ -688,10 +688,10 @@ class ScrollableBase extends Component {
 
 		// Case 2. Cannot scroll
 		} else if (
-			((scroll === 'up' || scroll === 'top') && this.isReachedEdge(scrollTop, 0)) ||
-			((scroll === 'down' || scroll === 'bottom') && this.isReachedEdge(scrollTop, maxTop)) ||
-			((scroll === 'left' || scroll === 'leftmost') && this.isReachedEdge(scrollLeft, 0, maxLeft, isRtl)) ||
-			((scroll === 'right' || scroll === 'rightmost') && this.isReachedEdge(scrollLeft, maxLeft, 0, isRtl))
+			(['up', 'top'].includes(scroll) && this.isReachedEdge(scrollTop, 0)) ||
+			(['down', 'bottom']includes(scroll) && this.isReachedEdge(scrollTop, maxTop)) ||
+			(['left', 'leftmost']includes(scroll) && this.isReachedEdge(scrollLeft, 0, maxLeft, isRtl)) ||
+			(['right', 'rightmost']includes(scroll) && this.isReachedEdge(scrollLeft, maxLeft, 0, isRtl))
 		) {
 			if (window.webOSVoiceReportActionResult) {
 				window.webOSVoiceReportActionResult({voiceUi: {exception: 'alreadyCompleted'}});
@@ -701,10 +701,10 @@ class ScrollableBase extends Component {
 		// Case 3. Can scroll
 		} else {
 			this.isVoiceControl = true;
-			if (scroll in ['up', 'down', 'left', 'right']) {
+			if (['up', 'down', 'left', 'right'].includes(scroll)) {
 				const isPreviousScrollButton = (scroll === 'up') || (scroll === 'left' && !isRtl) || (scroll === 'right' && isRtl);
-				this.onScrollbarButtonClick({isPreviousScrollButton, isVerticalScrollBar: scroll in verticalDirection});
-			} else { // scroll in ['top', 'bottom', 'leftmost', 'rightmost']
+				this.onScrollbarButtonClick({isPreviousScrollButton, isVerticalScrollBar: verticalDirection.includes(scroll)});
+			} else { // ['top', 'bottom', 'leftmost', 'rightmost'].includes(scroll)
 				this.uiRef.scrollTo({align: verticalDirection && scroll || (scroll === 'leftmost' && isRtl || scroll === 'rightmost' && !isRtl) && 'right' || 'left'});
 			}
 			e.preventDefault();
