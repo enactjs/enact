@@ -2,6 +2,17 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Touchable` event `onHoldEnd` to notify when a hold has been released
+- `ui/Touchable` prop `holdConfig.global` to allow a hold to continue when leaving or blurring the element
+
+### Fixed
+
+- `ui/Touchable` to continue drag events when blurring the element when `dragConfig.global` is set
+
 ## [2.2.0] - 2018-10-02
 
 ### Added

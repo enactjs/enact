@@ -176,7 +176,7 @@ const handleGlobalMove = handle(
 const handleBlur = handle(
 	forward('onBlur'),
 	call('hasFocus'),
-	call('endGesture')
+	call('blurGesture')
 );
 
 /**
@@ -538,6 +538,16 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		leaveGesture () {
 			this.drag.leave();
 			this.hold.leave();
+
+			return true;
+		}
+
+		blurGesture () {
+			this.targetHadFocus = false;
+
+			this.hold.blur();
+			this.flick.blur();
+			this.drag.blur();
 
 			return true;
 		}

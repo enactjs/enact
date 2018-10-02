@@ -14,7 +14,10 @@ storiesOf('Touchable', module)
 		() => (
 			<Button
 				onHold={action('onHold')}
+				onHoldEnd={action('onHoldEnd')}
 				onHoldPulse={action('onHoldPulse')}
+				onDragStart={action('onDragStart')}
+				onDragEnd={action('onDragEnd')}
 				disabled={boolean('disabled', Button)}
 			>
 				Touchable
@@ -33,6 +36,7 @@ storiesOf('Touchable', module)
 					frequency: 1000
 				}}
 				onHold={action('onHold')}
+				onHoldEnd={action('onHoldEnd')}
 				onHoldPulse={action('onHoldPulse')}
 				disabled={boolean('disabled', Button)}
 			>
@@ -50,6 +54,7 @@ storiesOf('Touchable', module)
 				}}
 				noResume={boolean('noResume', Button, false)}
 				onHold={action('onHold')}
+				onHoldEnd={action('onHoldEnd')}
 				onHoldPulse={action('onHoldPulse')}
 				disabled={boolean('disabled', Button)}
 			>
@@ -63,6 +68,7 @@ storiesOf('Touchable', module)
 			<Button
 				noResume={boolean('noResume', Button, true)}
 				onHold={action('onHold')}
+				onHoldEnd={action('onHoldEnd')}
 				onHoldPulse={action('onHoldPulse')}
 				disabled={boolean('disabled', Button)}
 			>

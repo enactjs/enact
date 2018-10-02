@@ -10,7 +10,7 @@ class Hold {
 
 	isHolding = () => this.holdConfig != null
 
-	begin = (defaultConfig, {holdConfig, noResume, onHold, onHoldPulse}, {x, y}) => {
+	begin = (defaultConfig, {holdConfig, noResume, onHold, onHoldEnd, onHoldPulse}, {x, y}) => {
 		if (!onHold && !onHoldPulse) return;
 
 		this.startX = x;
@@ -20,6 +20,7 @@ class Hold {
 			...defaultConfig,
 			...holdConfig,
 			onHold,
+			onHoldEnd,
 			onHoldPulse,
 			resume: !noResume
 		};
@@ -62,8 +63,25 @@ class Hold {
 		}
 	}
 
+	blur = () => {
+		if (!this.isHolding()) return;
+
+		if (!this.holdConfig.global) {
+			this.end();
+		}
+	}
+
 	end = () => {
 		if (!this.isHolding()) return;
+
+		const {onHoldEnd} = this.holdConfig;
+		if (this.pulsing && onHoldEnd) {
+			const time = window.performance.now() - this.holdStart;
+			onHoldEnd({
+				type: 'onHoldEnd',
+				time
+			});
+		}
 
 		this.suspend();
 		this.pulsing = false;
@@ -83,7 +101,9 @@ class Hold {
 	leave = () => {
 		if (!this.isHolding()) return;
 
-		const {resume} = this.holdConfig;
+		const {global, resume} = this.holdConfig;
+
+		if (global) return;
 
 		if (resume) {
 			this.suspend();
@@ -155,6 +175,7 @@ const defaultHoldConfig = {
 		{name: 'hold', time: 200}
 	],
 	frequency: 200,
+	global: false,
 	moveTolerance: 16
 };
 
