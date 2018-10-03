@@ -241,7 +241,7 @@ const Spotlight = (function () {
 			setLastContainer(containerId);
 		}
 
-		if (__DEV__) {
+		if (__DEV__ && elem.closest('.debug.spotlight')) {
 			assignFocusPreview(elem);
 		}
 	}

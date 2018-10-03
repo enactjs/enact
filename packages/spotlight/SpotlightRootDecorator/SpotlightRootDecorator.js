@@ -54,7 +54,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SpotlightRootDecorator';
 
-		componentWillMount () {
+		componentDidMount () {
 			if (typeof window === 'object') {
 				Spotlight.initialize({
 					selector: '.' + spottableClass,
@@ -65,9 +65,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					overflow: true
 				});
 			}
-		}
 
-		componentDidMount () {
 			if (!noAutoFocus) {
 				Spotlight.focus();
 			}
