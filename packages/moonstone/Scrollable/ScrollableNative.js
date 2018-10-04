@@ -744,98 +744,48 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
-	notifyVoiceException = (e, type) => {
-		if (window.webOSVoiceReportActionResult) {
-			window.webOSVoiceReportActionResult({'voiceUi': {'exception': type}});
-			e.preventDefault();
-		}
-	}
-
-	canVoiceScroll = (e) => {
-		const
-			scroll = e && e.detail && e.detail.scroll,
-			{scrollTop, scrollLeft} = this.uiRef,
-			isRtl = this.uiRef.state.rtl;
-		const scrollBounds = this.uiRef.getScrollBounds();
-		const notifyAlreadyCompleted = () => this.notifyVoiceException(e, 'alreadyCompleted');
-
-		if (scroll === 'up' || scroll === 'top') {
-			if (scrollTop === 0) {
-				notifyAlreadyCompleted();
-				return false;
-			}
-		} else if (scroll === 'down' || scroll === 'bottom') {
-			if (scrollTop >= scrollBounds.maxTop - 1) {
-				notifyAlreadyCompleted();
-				return false;
-			}
-		} else if (scroll === 'left' || scroll === 'leftmost') {
-			const limit = isRtl ? scrollBounds.maxLeft : 0;
-			if (scrollLeft === limit) {
-				notifyAlreadyCompleted();
-				return false;
-			}
-		} else if (scroll === 'right' || scroll === 'rightmost') {
-			const limit = isRtl ? 0 : scrollBounds.maxLeft;
-			if (scrollLeft === limit) {
-				notifyAlreadyCompleted();
-				return false;
-			}
-		}
-		return true;
+	isReachedEdge = (scrollPos, ltrBound, rtlBound, isRtl = false) => {
+		const bound = isRtl ? rtlBound : ltrBound;
+		return (bound === 0 && scrollPos === 0) || (bound > 0 && scrollPos >= bound - 1);
 	}
 
 	onVoice = (e) => {
 		const
 			scroll = e && e.detail && e.detail.scroll,
-			isRtl = this.uiRef.state.rtl;
+			isRtl = this.uiRef.state.rtl,
+			{scrollTop, scrollLeft} = this.uiRef,
+			{maxLeft, maxTop} = this.uiRef.getScrollBounds(),
+			verticalDirection = ['up', 'down', 'top', 'bottom'],
+			horizontalDirection = ['left', 'right', 'leftmost', 'rightmost'];
 
-		if (this.canVoiceScroll(e)) {
-			this.isVoiceControl = true;
-			switch (scroll) {
-				case 'up':
-					this.voiceControlDirection = 'vertical';
-					this.onScrollbarButtonClick({isPreviousScrollButton: true, isVerticalScrollBar: true});
-					e.preventDefault();
-					break;
-				case 'down':
-					this.voiceControlDirection = 'vertical';
-					this.onScrollbarButtonClick({isPreviousScrollButton: false, isVerticalScrollBar: true});
-					e.preventDefault();
-					break;
-				case 'left':
-					this.voiceControlDirection = 'horizontal';
-					this.onScrollbarButtonClick({isPreviousScrollButton: !isRtl, isVerticalScrollBar: false});
-					e.preventDefault();
-					break;
-				case 'right':
-					this.voiceControlDirection = 'horizontal';
-					this.onScrollbarButtonClick({isPreviousScrollButton: isRtl, isVerticalScrollBar: false});
-					e.preventDefault();
-					break;
-				case 'top':
-					this.voiceControlDirection = 'vertical';
-					this.uiRef.scrollTo({align: 'top'});
-					e.preventDefault();
-					break;
-				case 'bottom':
-					this.voiceControlDirection = 'vertical';
-					this.uiRef.scrollTo({align: 'bottom'});
-					e.preventDefault();
-					break;
-				case 'leftmost':
-					this.voiceControlDirection = 'horizontal';
-					this.uiRef.scrollTo({align: isRtl ? 'right' : 'left'});
-					e.preventDefault();
-					break;
-				case 'rightmost':
-					this.voiceControlDirection = 'horizontal';
-					this.uiRef.scrollTo({align: isRtl ? 'left' : 'right'});
-					e.preventDefault();
-					break;
-				default:
-					this.isVoiceControl = false;
+		this.voiceControlDirection = verticalDirection.includes(scroll) && 'vertical' || horizontalDirection.includes(scroll) && 'horizontal' || null;
+
+		// Case 1. Invalid direction
+		if (this.voiceControlDirection === null) {
+			this.isVoiceControl = false;
+
+		// Case 2. Cannot scroll
+		} else if (
+			(['up', 'top'].includes(scroll) && this.isReachedEdge(scrollTop, 0)) ||
+			(['down', 'bottom'].includes(scroll) && this.isReachedEdge(scrollTop, maxTop)) ||
+			(['left', 'leftmost'].includes(scroll) && this.isReachedEdge(scrollLeft, 0, maxLeft, isRtl)) ||
+			(['right', 'rightmost'].includes(scroll) && this.isReachedEdge(scrollLeft, maxLeft, 0, isRtl))
+		) {
+			if (window.webOSVoiceReportActionResult) {
+				window.webOSVoiceReportActionResult({voiceUi: {exception: 'alreadyCompleted'}});
+				e.preventDefault();
 			}
+
+		// Case 3. Can scroll
+		} else {
+			this.isVoiceControl = true;
+			if (['up', 'down', 'left', 'right'].includes(scroll)) {
+				const isPreviousScrollButton = (scroll === 'up') || (scroll === 'left' && !isRtl) || (scroll === 'right' && isRtl);
+				this.onScrollbarButtonClick({isPreviousScrollButton, isVerticalScrollBar: verticalDirection.includes(scroll)});
+			} else { // ['top', 'bottom', 'leftmost', 'rightmost'].includes(scroll)
+				this.uiRef.scrollTo({align: verticalDirection.includes(scroll) && scroll || (scroll === 'leftmost' && isRtl || scroll === 'rightmost' && !isRtl) && 'right' || 'left'});
+			}
+			e.preventDefault();
 		}
 	}
 
