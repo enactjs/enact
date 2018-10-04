@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [Fixed]
+
+- `spotlight/SpotlightRootDecorator` to initialize spotlight after the component mounts to allow replacing a root instance with another
+
 ## [2.2.0] - 2018-10-02
 
 ### Changed
