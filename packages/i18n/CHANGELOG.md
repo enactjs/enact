@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `i18n` resource loading failure due to resolving the path incorrectly
+
 ## [2.2.0] - 2018-10-02
 
 No significant changes.
