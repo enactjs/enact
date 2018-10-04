@@ -340,6 +340,19 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onHold: PropTypes.func,
 
 			/**
+			 * Event handler for the end of hold events.
+			 *
+			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `'onHoldEnd'`
+			 * * `time` - Time, in milliseconds, since the hold began
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onHoldEnd: PropTypes.func,
+
+			/**
 			 * Event handler for hold pulse events
 			 *
 			 * Event payload includes:
@@ -624,6 +637,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.onDown;
 			delete props.onFlick;
 			delete props.onHold;
+			delete props.onHoldEnd;
 			delete props.onHoldPulse;
 			delete props.onTap;
 			delete props.onUp;
