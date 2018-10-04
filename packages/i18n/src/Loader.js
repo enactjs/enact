@@ -103,10 +103,11 @@ EnyoLoader.prototype._loadFilesAsync = function (paths, results, params, cache, 
 		} else if (cacheItem) {
 			results.push(cacheItem);
 		} else {
+			let locdata = this._pathjoin(this.base, 'locale');
 			if (this.isAvailable(_root, path)) {
 				url = this._pathjoin(_root, path);
-			} else if (this.isAvailable(this.base + 'locale', path)) {
-				url = this._pathjoin(this._pathjoin(this.base, 'locale'), path);
+			} else if (this.isAvailable(locdata, path)) {
+				url = this._pathjoin(locdata, path);
 			}
 
 			let resultFunc = (json, err) => {
