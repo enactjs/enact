@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact i18n module, newest chan
 
 ### Fixed
 
-- `i18n/Loader` to use `_pathjoin` function when merging paths
+- `i18n` resource loading failure due to resolving the path incorrectly
 
 ## [2.2.0] - 2018-10-02
 
