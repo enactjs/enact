@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact i18n module, newest chan
 
 ### Fixed
 
-- `i18n/DurationFmt` to pass corresponding parameters for `IString.loadPlurals`
+- `i18n/ilib/DurationFmt` to respect `sync` parameter when loading strings
 
 ## [2.2.0] - 2018-10-02
 
