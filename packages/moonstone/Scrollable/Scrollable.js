@@ -685,7 +685,6 @@ class ScrollableBase extends Component {
 		// Case 1. Invalid direction
 		if (this.voiceControlDirection === null) {
 			this.isVoiceControl = false;
-
 		// Case 2. Cannot scroll
 		} else if (
 			(['up', 'top'].includes(scroll) && this.isReachedEdge(scrollTop, 0)) ||
@@ -697,7 +696,6 @@ class ScrollableBase extends Component {
 				window.webOSVoiceReportActionResult({voiceUi: {exception: 'alreadyCompleted'}});
 				e.preventDefault();
 			}
-
 		// Case 3. Can scroll
 		} else {
 			this.isVoiceControl = true;
