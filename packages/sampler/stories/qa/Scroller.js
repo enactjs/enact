@@ -69,34 +69,34 @@ class ScrollerWithResizable extends React.Component {
 	}
 }
 
-class ScrollerLastFocusedItem extends React.Component{
+class ScrollerLastFocusedItem extends React.Component {
 	componentDidMount () {
-    this.blurEvent = document.createEvent('Event');
- 	  this.blurEvent.initEvent('blur', true, true);
-   	this.focusEvent = document.createEvent('Event');
-   	this.focusEvent.initEvent('focus', true, true);
-  }
+		this.blurEvent = document.createEvent('Event');
+		this.blurEvent.initEvent('blur', true, true);
+		this.focusEvent = document.createEvent('Event');
+		this.focusEvent.initEvent('focus', true, true);
+	}
 
- 	handleScrollStop = () => {
-   	window.dispatchEvent(this.blurEvent);
+	handleScrollStop = () => {
+		window.dispatchEvent(this.blurEvent);
 		window.dispatchEvent(this.focusEvent);
- 	}
+	}
 
 	render () {
 		return (
-				<Scroller
-					 focusableScrollbar
-					 verticalScrollbar="visible"
-					 style={{height: 200}}
-					 onScrollStop={this.handleScrollStop}
-				>
-					<Item>Item</Item>
-					<Item>Item</Item>
-					<Item>Focus me and press right</Item>
-					<Item>Item</Item>
-					<Item>Item</Item>
-				</Scroller>
-	  );
+			<Scroller
+				focusableScrollbar
+				verticalScrollbar="visible"
+				style={{height: 200}}
+				onScrollStop={this.handleScrollStop}
+			>
+				<Item>Item</Item>
+				<Item>Item</Item>
+				<Item>Focus me and press right</Item>
+				<Item>Item</Item>
+				<Item>Item</Item>
+			</Scroller>
+		);
 	}
 }
 
@@ -230,6 +230,6 @@ storiesOf('Scroller', module)
 	.add(
 		'Last Focused Item',
 		() => (
-	    <ScrollerLastFocusedItem />
-  	)
-  );
+			<ScrollerLastFocusedItem />
+		)
+	);
