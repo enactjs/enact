@@ -124,7 +124,8 @@ function filterRects (elementRects, boundingRect) {
 		// if the element's rect is larger than the bounding rect, clamp it to the bounding rect and
 		// recalculate the center based on the new bounds.
 		if (topUpdate || bottomUpdate || leftUpdate || rightUpdate) {
-			const updated = {...rect};
+			const updated = {...rect, center: {...rect.center}};
+
 			if (topUpdate) updated.top = boundingRect.top;
 			if (bottomUpdate) updated.bottom = boundingRect.bottom;
 			if (leftUpdate) updated.left = boundingRect.left;
