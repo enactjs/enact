@@ -28,6 +28,7 @@ import ScrollableNative from '../Scrollable/ScrollableNative';
 const
 	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
 	epsilon = 1,
+	heightThreshold = 39,
 	reverseDirections = {
 		left: 'right',
 		right: 'left'
@@ -153,7 +154,7 @@ class ScrollerBase extends Component {
 	 */
 	calculateScrollTop = (focusedItem, itemTop, itemHeight, scrollInfo, scrollPosition) => {
 		const
-			{clientHeight} = this.uiRef.scrollBounds,
+			{clientHeight, scrollHeight} = this.uiRef.scrollBounds,
 			{top: containerTop} = this.uiRef.containerRef.getBoundingClientRect(),
 			currentScrollTop = (scrollPosition ? scrollPosition : this.uiRef.scrollPos.top),
 			// calculation based on client position
@@ -167,8 +168,7 @@ class ScrollerBase extends Component {
 		// Calculations for when scrollHeight decrease.
 		if (scrollInfo) {
 			const
-				{scrollTop, previousScrollHeight} = scrollInfo,
-				{scrollHeight} = this.uiRef.scrollBounds;
+				{scrollTop, previousScrollHeight} = scrollInfo;
 
 			scrollHeightChange = previousScrollHeight - scrollHeight;
 			if (scrollHeightChange > 0) {
@@ -224,10 +224,22 @@ class ScrollerBase extends Component {
 			}
 		} else if (itemBottom - scrollBottom > epsilon) {
 			// Calculate when 5-way focus down past the bottom.
-			newScrollTop += itemBottom - scrollBottom;
+
+			// if the last item is focused and have an invisible area, scroll all the way to the bottom
+			if (scrollHeight - itemBottom < heightThreshold) {
+				newScrollTop += scrollHeight - scrollBottom;
+			} else {
+				newScrollTop += itemBottom - scrollBottom;
+			}
 		} else if (newItemTop - currentScrollTop < epsilon && scrollHeightChange <= 0) {
 			// Calculate when 5-way focus up past the top.
-			newScrollTop += newItemTop - currentScrollTop;
+
+			// if the first item is focused and have an invisible area, scroll all the way to the top
+			if (newItemTop < heightThreshold) {
+				newScrollTop = 0;
+			} else {
+				newScrollTop += newItemTop - currentScrollTop;
+			}
 		}
 
 		return newScrollTop;
