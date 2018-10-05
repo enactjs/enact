@@ -7,7 +7,7 @@ import {calcProportion} from './utils';
 
 import css from './Slider.less';
 
-const PositionDecorator = hoc((config, Wrapped) => {
+const PositionDecorator = hoc((Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'PositionDecorator'
 
