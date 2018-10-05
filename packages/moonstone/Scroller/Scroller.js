@@ -22,13 +22,13 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {Spotlight} from '@enact/spotlight';
 
+import ri from '@enact/ui/resolution';
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
 const
 	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
 	epsilon = 1,
-	heightThreshold = 39,
 	reverseDirections = {
 		left: 'right',
 		right: 'left'
@@ -81,6 +81,12 @@ class ScrollerBase extends Component {
 		 * @private
 		 */
 		spotlightId: PropTypes.string
+	}
+
+	constructor (props) {
+		super(props);
+
+		this.heightThreshold = ri.scale(39);
 	}
 
 	componentDidMount () {
@@ -226,7 +232,7 @@ class ScrollerBase extends Component {
 			// Calculate when 5-way focus down past the bottom.
 
 			// if the last item is focused and have an invisible area, scroll all the way to the bottom
-			if (scrollHeight - itemBottom < heightThreshold) {
+			if (scrollHeight - itemBottom < this.heightThreshold) {
 				newScrollTop += scrollHeight - scrollBottom;
 			} else {
 				newScrollTop += itemBottom - scrollBottom;
@@ -235,7 +241,7 @@ class ScrollerBase extends Component {
 			// Calculate when 5-way focus up past the top.
 
 			// if the first item is focused and have an invisible area, scroll all the way to the top
-			if (newItemTop < heightThreshold) {
+			if (newItemTop < this.heightThreshold) {
 				newScrollTop = 0;
 			} else {
 				newScrollTop += newItemTop - currentScrollTop;
