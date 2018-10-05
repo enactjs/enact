@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Marquee.MarqueeDecorator` to check animating state when handling `onMarqueeComplete` event
+- `ui/Marquee` to prevent restarting animation after blurring just before the previous animation completed
 
 ## [2.2.0] - 2018-10-02
 
