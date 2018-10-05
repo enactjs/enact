@@ -87,7 +87,7 @@ class ScrollerLastFocusedItem extends React.Component {
 			<Scroller
 				focusableScrollbar
 				verticalScrollbar="visible"
-				style={{height: 200}}
+				style={{height: ri.scale(200)}}
 				onScrollStop={this.handleScrollStop}
 			>
 				<Item>Item</Item>
