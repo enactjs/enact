@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact i18n module, newest chan
 ### Fixed
 
 - `i18n/ilib/DurationFmt` to respect `sync` parameter when loading strings
+- `i18n` resource loading failure due to resolving the path incorrectly
 
 ## [2.2.0] - 2018-10-02
 
