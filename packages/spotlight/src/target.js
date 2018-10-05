@@ -87,7 +87,6 @@ function isRestrictedContainer (containerId) {
 }
 
 function getTargetInContainerByDirectionFromElement (direction, element, spatNavContainer, checkedNode) {
-	//console.log("getTargetInContainerByDirectionFromElement()");
 	//console.log(new Error().stack);
 	//console.log(spatNavContainer);
 
@@ -104,10 +103,8 @@ function getTargetInContainerByDirectionFromElement (direction, element, spatNav
 	}
 
 	while (candidates.length > 0) {
-		console.log(candidates);
 		// Get best candidate
 		let bestCandidate = element.spatNavSearch(direction, candidates, spatNavContainer);
-		console.log(bestCandidate);
 
 		if (bestCandidate && !isContainer(bestCandidate) && isFocusable(bestCandidate)) {
 		//console.log(bestCandidate);
@@ -166,8 +163,6 @@ function getTargetByDirectionFromElement (direction, element) {
 	let checkedNode = new Set();
 
 	while (spatNavContainer) {
-		//console.log(spatNavContainer);
-
 		// Get all candidate from container
 		let next = getTargetInContainerByDirectionFromElement(direction, element, spatNavContainer, checkedNode);
 		if (next) {
@@ -187,11 +182,9 @@ function getTargetByDirectionFromElement (direction, element) {
 			}
 		}
 
-		// // Search again from outer container. Exclude searched container
-		//console.log(spatNavContainer);
+		// Search again from outer container. Exclude searched container
 		checkedNode.add(spatNavContainer);
 		spatNavContainer = spatNavContainer.getSpatnavContainer();
-		//console.log(spatNavContainer);
 	}
 	return null;
 }
