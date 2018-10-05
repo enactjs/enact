@@ -115,6 +115,35 @@ function filterRects (elementRects, boundingRect) {
 			// For elements, use contains with the center to include mostly visible elements
 			return contains(boundingRect, rect.center);
 		}
+	}).map(rect => {
+		let topUpdate = rect.top < boundingRect.top;
+		let bottomUpdate = rect.bottom > boundingRect.bottom;
+		let leftUpdate = rect.left < boundingRect.left;
+		let rightUpdate = rect.right > boundingRect.right;
+
+		// if the element's rect is larger than the bounding rect, clamp it to the bounding rect and
+		// recalculate the center based on the new bounds.
+		if (topUpdate || bottomUpdate || leftUpdate || rightUpdate) {
+			const updated = {...rect};
+			if (topUpdate) updated.top = boundingRect.top;
+			if (bottomUpdate) updated.bottom = boundingRect.bottom;
+			if (leftUpdate) updated.left = boundingRect.left;
+			if (rightUpdate) updated.right = boundingRect.right;
+
+			if (leftUpdate || rightUpdate) {
+				const centerX = (updated.right - updated.left) / 2;
+				updated.center.x = updated.center.left = updated.center.right = centerX;
+			}
+
+			if (topUpdate || bottomUpdate) {
+				const centerY = (updated.bottom - updated.top) / 2;
+				updated.center.y = updated.center.top = updated.center.bottom = centerY;
+			}
+
+			return updated;
+		}
+
+		return rect;
 	});
 }
 
