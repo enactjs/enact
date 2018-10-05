@@ -17,6 +17,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Touchable` to correctly handle a hold cancelled from an onHold handler
+- `ui/Marquee.MarqueeDecorator` to handle situations where lazily loaded CSS could cause marquee to not start correctly
 
 ## [2.1.4] - 2018-09-17
 
