@@ -659,9 +659,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleMarqueeComplete = () => {
-			if (this.state.animating) {
-				this.resetAnimation();
-			}
+			this.resetAnimation();
 		}
 
 		handleFocus = (ev) => {
