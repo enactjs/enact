@@ -1,4 +1,4 @@
-import last from 'ramda/src/last';
+changeimport last from 'ramda/src/last';
 
 import {
 	getAllContainerIds,
