@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Marquee` to prevent restarting animation after blurring just before the previous animation completed
+
 ## [2.2.0] - 2018-10-02
 
 ### Added
