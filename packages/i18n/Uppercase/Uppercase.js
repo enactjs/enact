@@ -37,7 +37,7 @@ const formatContent = (casing, content) => {
  * @hoc
  * @public
  */
-const Uppercase = hoc((config, Wrapped) => kind({
+const Uppercase = hoc((Wrapped) => kind({
 	name: 'Uppercase',
 
 	propTypes: /** @lends i18n/Uppercase.Uppercase.prototype */ {
