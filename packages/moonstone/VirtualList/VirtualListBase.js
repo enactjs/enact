@@ -272,6 +272,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		configureSpotlight = (spotlightId) => {
+			const {spacing} = this.props;
+
 			Spotlight.set(spotlightId, {
 				enterTo: 'last-focused',
 				/*
@@ -282,7 +284,12 @@ const VirtualListBaseFactory = (type) => {
 				 * Restores the data-index into the placeholder if its the only element. Tries to find a
 				 * matching child otherwise.
 				 */
-				lastFocusedRestore: this.lastFocusedRestore
+				lastFocusedRestore: this.lastFocusedRestore,
+				/*
+				 * Directs spotlight focus to favor straight elements that are within range of `spacing`
+				 * over oblique elements, like scroll buttons.
+				 */
+				obliqueMultiplier: spacing > 0 ? spacing : 1
 			});
 		}
 
