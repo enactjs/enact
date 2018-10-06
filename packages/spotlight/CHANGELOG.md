@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` navigation into an overflow container which contains elements or containers larger than the container's bounds
+
 ## [2.2.0] - 2018-10-02
 
 ### Changed
