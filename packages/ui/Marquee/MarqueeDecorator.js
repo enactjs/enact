@@ -4,6 +4,7 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
+import {Job} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -299,7 +300,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 			this.state = {
 				animating: false,
-				overflow: 'ellipsis'
+				overflow: 'ellipsis',
+				promoted: false
 			};
 			this.sync = false;
 			this.forceRestartMarquee = false;
@@ -368,9 +370,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
-			if (this.distance === null) {
-				this.calculateMetrics();
-			}
 			if (this.shouldStartMarquee()) {
 				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
@@ -379,6 +378,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillUnmount () {
 			this.clearTimeout();
+			this.promoteJob.stop();
+			this.demoteJob.stop();
 			if (this.sync) {
 				this.sync = false;
 				this.context.unregister(this);
@@ -388,6 +389,24 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.context.Subscriber.unsubscribe('resize', this.handleResize);
 			}
 			off('keydown', this.handlePointerHide);
+		}
+
+		promoteJob = new Job(() => {
+			this.setState(state => state.promoted ? null : {promoted: true});
+		})
+
+		demoteJob = new Job(() => {
+			this.setState(state => (!state.animating && state.promoted) ? {promoted: false} : null);
+		})
+
+		demote () {
+			this.promoteJob.stop();
+			this.demoteJob.idle();
+		}
+
+		promote (delay = this.props.marqueeDelay) {
+			this.demoteJob.stop();
+			this.promoteJob.startAfter(Math.max(0, delay - 200));
 		}
 
 		/*
@@ -516,10 +535,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		start = (delay = this.props.marqueeDelay) => {
-			if (this.props.marqueeDisabled || this.contentFits) {
-				// if marquee isn't necessary (contentFits), do not set `animating` but return
-				// `true` to mark it complete if its synchronized so it doesn't block other
-				// instances.
+			if (this.props.marqueeDisabled) {
+				// if marquee isn't necessary, do not set `animating` but return `true` to mark it
+				// complete if it's synchronized so it doesn't block other instances.
 				return true;
 			} else if (!this.state.animating) {
 				// Don't need to worry about this.timerState because if we're sync, we were just
@@ -530,6 +548,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.calculateMetrics();
 					if (!this.contentFits) {
 						this.setState({
+							promoted: true,
 							animating: true
 						});
 					} else if (this.sync) {
@@ -552,16 +571,19 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					animating: false
 				});
 			}
+
+			this.demote();
 		}
 
 		/*
-		 * Starts marquee animation with synchronization, if not already animating
+		 * Starts marquee animation with synchronization, if not already animating and a timer is
+		 * not already active to start.
 		 *
 		 * @param {Number} [delay] Milliseconds to wait before animating
 		 * @returns {undefined}
 		 */
 		tryStartingAnimation = (delay) => {
-			if (this.state.animating) return;
+			if (this.state.animating || this.timerState !== TimerState.CLEAR) return;
 
 			this.startAnimation(delay);
 		}
@@ -573,6 +595,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		startAnimation = (delay) => {
+			this.promote(delay);
 			if (this.sync) {
 				// If we're running a timer for anything, we should let that finish, unless it's
 				// another syncstart request.  We should probably check to see if the start request
@@ -639,7 +662,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleResize = () => {
 			if (this.node && !this.props.marqueeDisabled) {
 				this.invalidateMetrics();
-				this.calculateMetrics();
 				if (this.state.animating) {
 					this.cancelAnimation();
 					this.resetAnimation();
@@ -654,9 +676,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleFocus = (ev) => {
 			this.isFocused = true;
 			if (!this.sync) {
-				this.calculateMetrics();
-
-				if (!this.state.animating && !this.contentFits) {
+				if (!this.state.animating) {
 					this.startAnimation();
 				}
 			}
@@ -664,6 +684,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleBlur = (ev) => {
+			this.promoteJob.stop();
 			forwardBlur(ev, this.props);
 			if (this.isFocused) {
 				this.isFocused = false;
@@ -687,6 +708,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleLeave = (ev) => {
+			this.promoteJob.stop();
 			this.handleUnhover();
 			forwardLeave(ev, this.props);
 		}
@@ -765,6 +787,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						overflow={this.state.overflow}
 						rtl={isTextRtl}
 						speed={marqueeSpeed}
+						willAnimate={this.state.promoted}
 					>
 						{children}
 					</MarqueeComponent>

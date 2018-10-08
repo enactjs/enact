@@ -4,8 +4,15 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Fixed
+
+- `ui/Marquee` to prevent restarting animation after blurring just before the previous animation completed
+
+## [2.2.0] - 2018-10-02
+
 ### Added
 
+- `ui/Marquee.MarqueeBase` prop `willAnimate` to improve app performance by deferring animation preparation styling such as composite layer promotion
 - `ui/Skinnable` config option `prop` to configure the property in which to pass the current skin to the wrapped component
 - `ui/Transition` prop `css` to support customizable styling
 
@@ -16,6 +23,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Marquee` to marquee when necessary after a locale change
+- `ui/Touchable` to correctly handle a hold cancelled from an onHold handler
+- `ui/Marquee.MarqueeDecorator` to handle situations where lazily loaded CSS could cause marquee to not start correctly
 
 ## [2.1.4] - 2018-09-17
 

@@ -398,7 +398,6 @@ const TimePickerBase = kind({
 								case 'a':
 									return (
 										<DateComponentPicker
-											accessibilityHint={meridiemLabel}
 											aria-label={meridiemAriaLabel}
 											aria-valuetext={meridiems ? meridiems[meridiem] : null}
 											className={css.meridiemComponent}
