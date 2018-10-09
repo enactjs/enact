@@ -69,7 +69,7 @@ class ScrollerWithResizable extends React.Component {
 	}
 }
 
-class ScrollerLastFocusedItem extends React.Component {
+class ScrollerTopMostVisibleItemInTheScroller extends React.Component {
 	componentDidMount () {
 		this.blurEvent = document.createEvent('Event');
 		this.blurEvent.initEvent('blur', true, true);
@@ -91,8 +91,8 @@ class ScrollerLastFocusedItem extends React.Component {
 				onScrollStop={this.handleScrollStop}
 			>
 				<Item>Item</Item>
-				<Item>Item</Item>
-				<Item>Focus me and press right</Item>
+				<Item>Focus me, press right, then select on down arrow</Item>
+				<Item>Focus should return here</Item>
 				<Item>Item</Item>
 				<Item>Item</Item>
 			</Scroller>
@@ -228,8 +228,8 @@ storiesOf('Scroller', module)
 		)
 	)
 	.add(
-		'Last Focused Item',
+		'Top Most Visible Item in the Scroller',
 		() => (
-			<ScrollerLastFocusedItem />
+			<ScrollerTopMostVisibleItemInTheScroller />
 		)
 	);
