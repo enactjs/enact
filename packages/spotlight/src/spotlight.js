@@ -137,6 +137,7 @@ const Spotlight = (function () {
 	 * @default false
 	 */
 	let _5WayKeyHold = false;
+	let _leaveContainerFail = false;
 
 	/*
 	 * Whether to set focus during the next window focus event
@@ -308,6 +309,10 @@ const Spotlight = (function () {
 	}
 
 	function spotNext (direction, currentFocusedElement, currentContainerIds) {
+		if (_leaveContainerFail && _5WayKeyHold) {
+			return false;
+		}
+
 		const next = getTargetByDirectionFromElement(direction, currentFocusedElement);
 
 		if (next) {
@@ -349,6 +354,7 @@ const Spotlight = (function () {
 		}
 
 		notifyLeaveContainerFail(direction, currentFocusedElement, currentContainerIds);
+		_leaveContainerFail = true;
 
 		return false;
 	}
@@ -418,6 +424,7 @@ const Spotlight = (function () {
 		if (getDirection(keyCode) || isEnter(keyCode)) {
 			SpotlightAccelerator.reset();
 			_5WayKeyHold = false;
+			_leaveContainerFail = false;
 		}
 	}
 
