@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Scroller` to prevent scroll animation on 5-way hold when it reaches the boundary
+
 ## [2.2.1] - 2018-10-09
 
 ### Fixed

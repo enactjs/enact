@@ -138,6 +138,14 @@ const Spotlight = (function () {
 	 */
 	let _5WayKeyHold = false;
 
+	/**
+	 * Whether there is a valid next target for a given direction
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	let _noNextTarget = false;
+
 	/*
 	 * Whether to set focus during the next window focus event
 	 *
@@ -314,6 +322,8 @@ const Spotlight = (function () {
 			const currentContainerId = last(currentContainerIds);
 			const nextContainerIds = getContainersForNode(next);
 
+			_noNextTarget = false;
+
 			// prevent focus if 5-way is being held and the next element isn't wrapped by
 			// the current element's immediate container
 			if (_5WayKeyHold && nextContainerIds.indexOf(currentContainerId) < 0 && !isContainer5WayHoldable(currentContainerId)) {
@@ -348,7 +358,10 @@ const Spotlight = (function () {
 			return focused;
 		}
 
-		notifyLeaveContainerFail(direction, currentFocusedElement, currentContainerIds);
+		if (!_noNextTarget) {
+			notifyLeaveContainerFail(direction, currentFocusedElement, currentContainerIds);
+			_noNextTarget = true;
+		}
 
 		return false;
 	}
