@@ -28,7 +28,7 @@ const SELECTED_DAY_TYPES = {
  * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
-const DaySelectorDecorator = hoc((config, Wrapped) => {
+const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
 
 		static displayName = 'DaySelectorDecorator'
