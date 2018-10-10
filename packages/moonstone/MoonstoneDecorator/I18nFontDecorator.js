@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import {fontGenerator, fontOverrideGenerator} from './fontGenerator';
 
-const I18nFontDecorator = hoc((config, Wrapped) => {
+const I18nFontDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class I18nDecorator extends React.Component {
 		static displayName = 'I18nFontDecorator'
 
