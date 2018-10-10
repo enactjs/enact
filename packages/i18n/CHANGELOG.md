@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [2.2.1] - 2018-10-09
+
+### Fixed
+
+- `i18n/ilib/DurationFmt` to respect `sync` parameter when loading strings
+- `i18n` resource loading failure due to resolving the path incorrectly
+
 ## [2.2.0] - 2018-10-02
 
 No significant changes.

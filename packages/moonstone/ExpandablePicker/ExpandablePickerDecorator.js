@@ -2,7 +2,7 @@ import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const ExpandablePickerDecorator = hoc((config, Wrapped) => {
+const ExpandablePickerDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 
 	return class extends React.Component {
 		static displayName = 'ExpandablePickerDecorator'
