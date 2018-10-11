@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [Unreleased]
+
+### Changed
+
+- `core/util.Job.idle` to cancel existing scheduled jobs before scheduling a new job and to use `startAfter` when there is no `window` object or no `window.requestIdleCallback` method
+
 ## [2.2.1] - 2018-10-09
 
 No significant changes.
