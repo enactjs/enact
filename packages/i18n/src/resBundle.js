@@ -1,5 +1,6 @@
-import ResBundle from '../ilib/lib/ResBundle';
+import IString from '../ilib/lib/IString';
 import Locale from '../ilib/lib/Locale';
+import ResBundle from '../ilib/lib/ResBundle';
 
 // The ilib.ResBundle for the active locale used by $L
 let resBundle;
@@ -80,9 +81,19 @@ function clearResBundle () {
 	resBundle = null;
 }
 
+function getIStringFromBundle (str, rb) {
+	const isObject = typeof str === 'object';
+	if (rb) {
+		return isObject ? rb.getString(str.value, str.key) : rb.getString(str);
+	}
+
+	return new IString(isObject ? str.value : str);
+}
+
 export {
-	getResBundle,
-	setResBundleLocale,
 	clearResBundle,
-	createResBundle
+	createResBundle,
+	getIStringFromBundle,
+	getResBundle,
+	setResBundleLocale
 };

@@ -2,25 +2,17 @@ import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {createResBundle, getResBundle} from '../src/resBundle';
+import {createResBundle, getIStringFromBundle, getResBundle} from '../src/resBundle';
 import ilib from '../ilib/lib/ilib';
 import IString from '../ilib/lib/IString';
 import {I18nContextDecorator} from '../I18nDecorator';
-
-function getIStringFromBundle (rb, str) {
-	const isObject = typeof str === 'object';
-	if (rb) {
-		return isObject ? rb.getString(str.value, str.key) : rb.getString(str);
-	}
-
-	return new IString(isObject ? str.value : str);
-}
 
 function getTextMap (mapPropsToText, props) {
 	const {children, defaultText} = props;
 
 	if (mapPropsToText) {
-		return Object.keys(mapPropsToText).reduce((result, prop) => {
+		const map = {};
+		Object.keys(mapPropsToText).forEach(prop => {
 			const text = mapPropsToText[prop];
 
 			// if a prop is specified without a proper value (string or object), ignore it
@@ -28,12 +20,12 @@ function getTextMap (mapPropsToText, props) {
 				if (typeof text === 'string') {
 					// for string text values, pass them along as the untranslated text
 					// without a default value
-					result[prop] = {translated: false, text, defaultText: false};
+					map[prop] = {translated: false, text, defaultText: false};
 				} else if (typeof text.text === 'string') {
 					// for object text values with a string text member, use it as the
 					// untranslated text and optionally look for a string defaultText for a
 					// default value
-					result[prop] = {
+					map[prop] = {
 						translated: false,
 						text: text.text,
 						defaultText: typeof text.defaultText === 'string' ?
@@ -42,9 +34,9 @@ function getTextMap (mapPropsToText, props) {
 					};
 				}
 			}
+		});
 
-			return result;
-		}, {});
+		return  map;
 	} else if (typeof children === 'string') {
 		return {
 			children: {
@@ -56,7 +48,7 @@ function getTextMap (mapPropsToText, props) {
 	}
 }
 
-const STRING_ONLY = '~~Text~~';
+const STRING_ONLY = function () {};
 
 const defaultConfig = {
 	mapPropsToText: null
@@ -113,10 +105,10 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				if (!resBundle) return;
 
 				const translated = props.reduce((obj, prop) => {
-					obj[prop].translated = String(getIStringFromBundle(resBundle, obj[prop].text));
+					obj[prop].translated = String(getIStringFromBundle(obj[prop].text, resBundle));
 
 					return obj;
-				}, Object.assign({}, map));
+				}, {...map});
 
 				this.setState({
 					map: translated
@@ -143,7 +135,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			if (!this.shouldTranslate()) {
-				const props = Object.assign({}, this.props);
+				const props = {...this.props};
 
 				delete props.locale;
 
@@ -160,8 +152,9 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				return this.getTextForProp('children');
 			}
 
-			const props = Object.assign({}, this.props);
+			const props = {...this.props};
 			delete props.locale;
+
 			Object.keys(this.state.map).forEach(prop => {
 				props[prop] = this.getTextForProp(prop);
 			});
