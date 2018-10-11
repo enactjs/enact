@@ -77,13 +77,6 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			Spotlight.terminate();
 		}
 
-		navigableFilter = (elem) => {
-			while (elem && elem !== document && elem.nodeType === 1) {
-				if (elem.getAttribute('data-spotlight-container-disabled') === 'true') return false;
-				elem = elem.parentNode;
-			}
-		}
-
 		render () {
 			return <Wrapped {...this.props} />;
 		}

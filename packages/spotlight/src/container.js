@@ -71,8 +71,7 @@ let GlobalConfig = {
 	selectorDisabled: false,
 	straightMultiplier: 1,
 	straightOnly: false,
-	straightOverlapThreshold: 0.5,
-	tabIndexIgnoreList: 'a, input, select, textarea, button, iframe, [contentEditable=true]'
+	straightOverlapThreshold: 0.5
 };
 
 /**
