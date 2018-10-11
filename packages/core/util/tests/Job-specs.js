@@ -99,5 +99,21 @@ describe('Job', function () {
 			const j = new Job(fn, 10);
 			j.idle(value);
 		});
+
+		it('should clear an existing job id before starting job', function (done) {
+			let jobRun = 0;
+			const fn = function (complete) {
+				jobRun += 1;
+				if (jobRun > 1) {
+					done(new Error('too many jobs'));
+				}
+				if (complete) {
+					complete();
+				}
+			};
+			const j = new Job(fn);
+			j.idle();
+			j.idle(done);
+		});
 	});
 });
