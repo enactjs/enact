@@ -100,6 +100,31 @@ class ScrollerTopMostVisibleItemInTheScroller extends React.Component {
 	}
 }
 
+class ScrollerWithTwoExpandableList extends React.Component {
+	render () {
+		return (
+			<div>
+				<Scroller
+					style={{height: ri.scale(200)}}
+					direction="vertical"
+				>
+					<ExpandableList title="first" selected={0}>
+						{['a', 'b', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'd']}
+					</ExpandableList>
+				</Scroller>
+				<Scroller
+					style={{height: ri.scale(200)}}
+					direction="vertical"
+				>
+					<ExpandableList title="second">
+						{['a', 'b', 'c', 'd']}
+					</ExpandableList>
+				</Scroller>
+			</div>
+		);
+	}
+}
+
 storiesOf('Scroller', module)
 	.add(
 		'List of things',
@@ -231,5 +256,11 @@ storiesOf('Scroller', module)
 		'Top Most Visible Item in the Scroller',
 		() => (
 			<ScrollerTopMostVisibleItemInTheScroller />
+		)
+	)
+	.add(
+		'With Two Expandable List',
+		() => (
+			<ScrollerWithTwoExpandableList />
 		)
 	);
