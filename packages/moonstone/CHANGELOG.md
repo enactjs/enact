@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Scroller` to prevent making container enabled if `data-spotlight-container-disabled` prop is true
+
 ## [2.2.1] - 2018-10-09
 
 ### Fixed
