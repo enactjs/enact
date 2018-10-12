@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Scroller` slowed scrolling behavior when repeatedly requesting a scroll to the same position
+
 ## [2.2.1] - 2018-10-09
 
 ### Fixed
