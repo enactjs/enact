@@ -4,9 +4,9 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ## [Unreleased]
 
-### Changed
+### Fixed
 
-- `core/util.Job.idle` to cancel existing scheduled jobs before scheduling a new job and to use `startAfter` when there is no `window` object or no `window.requestIdleCallback` method
+- `core/util.Job` to cancel existing scheduled `idle()` jobs before scheduling another
 
 ## [2.2.1] - 2018-10-09
 
