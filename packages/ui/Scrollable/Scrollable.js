@@ -383,6 +383,9 @@ class ScrollableBase extends Component {
 
 		this.overscrollEnabled = !!(props.applyOverscrollEffect);
 
+		// Enable the early bail out of repeated scrolling to the same position
+		this.animationInfo = null;
+
 		props.cbScrollTo(this.scrollTo);
 	}
 
@@ -910,8 +913,6 @@ class ScrollableBase extends Component {
 			return;
 		}
 
-		// adding this member variable -- which is only referenced here -- to enable the early bail
-		// out above.
 		this.animationInfo = updatedAnimationInfo;
 
 		this.animator.stop();
