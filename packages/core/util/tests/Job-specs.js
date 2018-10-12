@@ -91,7 +91,7 @@ describe('Job', function () {
 			};
 			window.cancelIdleCallback = windowCancel || function (id) {
 				clearTimeout(id);
-			}
+			};
 		});
 
 		after(() => {
