@@ -505,7 +505,9 @@ class ScrollableBase extends Component {
 	}
 
 	stop = () => {
-		this.childRef.setContainerDisabled(false);
+		if (!this.props['data-spotlight-container-disabled']) {
+			this.childRef.setContainerDisabled(false);
+		}
 		this.focusOnItem();
 		this.lastScrollPositionOnFocus = null;
 		this.isWheeling = false;
