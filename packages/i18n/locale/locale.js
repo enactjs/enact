@@ -22,30 +22,39 @@ import {initCaseMappers} from '../src/case';
  *	test, or undefined to test the current locale
  * @returns {Boolean} `true` if non-Latin locale
  */
-function isNonLatinLocale (spec) {
-	const li = new LocaleInfo(spec),
-		locale = li.getLocale();
+function isNonLatinLocale (spec, options) {
+	const onLoad = options && options.onLoad;
 
-	// We use the non-latin fonts for these languages (even though their scripts are technically
-	// considered latin)
-	const nonLatinLanguageOverrides =  ['vi', 'en-JP'];
-	// We use the latin fonts (with non-Latin fallback) for these languages (even though their
-	// scripts are non-latin)
-	const latinLanguageOverrides = ['ko', 'ha'];
+	if (!onLoad) return;
 
-	return (
-		(
-			// the language actually is non-latin
-			li.getScript() !== 'Latn' ||
-			// the language is treated as non-latin
-			nonLatinLanguageOverrides.indexOf(locale.getLanguage()) !== -1 ||
-			// the combination of language and region is treated as non-latin
-			nonLatinLanguageOverrides.indexOf(locale.toString()) !== -1
-		) && (
-			// the non-latin language should be treated as latin
-			latinLanguageOverrides.indexOf(locale.getLanguage()) < 0
-		)
-	);
+	// eslint-disable-next-line no-new
+	new LocaleInfo(spec, {
+		...options,
+		onLoad: (li) => {
+			const locale = li.getLocale();
+
+			// We use the non-latin fonts for these languages (even though their scripts are technically
+			// considered latin)
+			const nonLatinLanguageOverrides =  ['vi', 'en-JP'];
+			// We use the latin fonts (with non-Latin fallback) for these languages (even though their
+			// scripts are non-latin)
+			const latinLanguageOverrides = ['ko', 'ha'];
+
+			onLoad(
+				(
+					// the language actually is non-latin
+					li.getScript() !== 'Latn' ||
+					// the language is treated as non-latin
+					nonLatinLanguageOverrides.indexOf(locale.getLanguage()) !== -1 ||
+					// the combination of language and region is treated as non-latin
+					nonLatinLanguageOverrides.indexOf(locale.toString()) !== -1
+				) && (
+					// the non-latin language should be treated as latin
+					latinLanguageOverrides.indexOf(locale.getLanguage()) < 0
+				)
+			);
+		}
+	});
 }
 
 /**
@@ -54,11 +63,20 @@ function isNonLatinLocale (spec) {
  * @memberof i18n/locale
  * @returns {Boolean} `true` if current locale is a right-to-left locale
  */
-function isRtlLocale () {
-	const li = new LocaleInfo();
-	const scriptName = li.getScript();
-	const script = new ScriptInfo(scriptName);
-	return script.getScriptDirection() === 'rtl';
+function isRtlLocale (options) {
+	const onLoad = options && options.onLoad;
+
+	if (!onLoad) return;
+
+	// eslint-disable-next-line no-new
+	new LocaleInfo(ilib.getLocale(), {
+		...options,
+		onLoad: (li) => {		
+			const scriptName = li.getScript();
+			const script = new ScriptInfo(scriptName);
+			onLoad(script.getScriptDirection() === 'rtl');
+		}
+	});
 }
 
 /**

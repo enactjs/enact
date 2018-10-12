@@ -100,4 +100,28 @@ describe('Job', function () {
 			j.idle(value);
 		});
 	});
+
+	describe('#promise', function () {
+		it('should start job for a resolved promise', function (done) {
+			const j = new Job(() => done());
+			j.promise(Promise.resolve(true));
+		});
+
+		it('should not start job for a rejected promise', function (done) {
+			const j = new Job(() => {
+				done(new Error('Job ran for rejected promise'));
+			});
+			j.promise(Promise.reject(true));
+			setTimeout(done, 10);
+		});
+
+		it('should not start job when stopped before promise resolves', function (done) {
+			const j = new Job(() => {
+				done(new Error('Job ran for stopped promise'));
+			});
+			j.promise(new Promise(resolve => setTimeout(resolve, 20)));
+			setTimeout(() => j.stop(), 10);
+			setTimeout(done, 30);
+		});
+	});
 });

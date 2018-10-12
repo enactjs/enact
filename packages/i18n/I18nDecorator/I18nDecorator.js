@@ -10,9 +10,9 @@
 import {on, off} from '@enact/core/dispatcher';
 import hoc from '@enact/core/hoc';
 import {Publisher, contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
+import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
-
 
 import {isRtlLocale, updateLocale} from '../locale';
 import ilib from '../src/index.js';
@@ -28,6 +28,24 @@ const contextTypes = {
 const I18nContext = React.createContext(null);
 
 /**
+ * Default config for `ResolutionDecorator`.
+ *
+ * @memberof i18n/I18nDecorator.I18nDecorator
+ * @hocconfig
+ */
+const defaultConfig = {
+	/**
+	 * Retrieve i18n resource files synchronously
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 * @memberof i18n/I18nDecorator.I18nDecorator.defaultConfig
+	 */
+	sync: false
+};
+
+/**
  * A higher-order component that is used to wrap the root element in an app. It provides an `rtl` member on the
  * context of the wrapped component, allowing the children to check the current text directionality as well as
  * an `updateLocale` method that can be used to update the current locale.
@@ -39,7 +57,7 @@ const I18nContext = React.createContext(null);
  * @hoc
  * @public
  */
-const I18nDecorator = hoc({sync: false}, (config, Wrapped) => {
+const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {sync} = config;
 
 	return class extends React.Component {
@@ -73,37 +91,47 @@ const I18nDecorator = hoc({sync: false}, (config, Wrapped) => {
 			const ilibLocale = ilib.getLocale();
 			const locale = props.locale && props.locale !== ilibLocale ? updateLocale(props.locale) : ilibLocale;
 
-			this.state = {
-				locale: locale,
-				rtl: isRtlLocale(),
-				updateLocale: this.updateLocale
-			};
+			let rtl = false;
 
 			if (sync) {
-				setResBundleLocale(locale);
+				isRtlLocale({
+					onLoad: (isRtl) => {
+						rtl = isRtl;
+					}
+				});
+			} else {
+				this.loadResourceJob = new Job(this.setState.bind(this))
 			}
+
+			this.state = {
+				locale,
+				rtl,
+				resourcesLoaded: sync
+			};
+
+			setResBundleLocale(locale, sync);
 		}
 
 		getChildContext () {
 			return {
 				Subscriber: this.publisher.getSubscriber(),
-				rtl: isRtlLocale(),
+				rtl: this.state.rtl,
 				updateLocale: this.updateLocale
 			};
 		}
 
-		componentWillMount () {
+		componentDidMount () {
 			this.publisher = Publisher.create('i18n', this.context.Subscriber);
 			this.publisher.publish({
 				locale: this.state.locale,
-				rtl: isRtlLocale()
+				rtl: this.state.rtl
 			});
-		}
 
-		componentDidMount () {
 			if (typeof window === 'object') {
 				on('languagechange', this.handleLocaleChange, window);
 			}
+
+			this.loadResources();
 		}
 
 		componentWillReceiveProps (newProps) {
@@ -113,8 +141,17 @@ const I18nDecorator = hoc({sync: false}, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
+			this.loadResourceJob.stop();
 			if (typeof window === 'object') {
 				off('languagechange', this.handleLocaleChange, window);
+			}
+		}
+
+		loadResources () {
+			if (!this.state.resourcesLoaded) {
+				this.loadResourceJob.promise(new Promise((resolve, reject) => {
+					return isRtlLocale({sync, onLoad: rtl => resolve({rtl})})
+				}));
 			}
 		}
 
@@ -133,17 +170,16 @@ const I18nDecorator = hoc({sync: false}, (config, Wrapped) => {
 		 */
 		updateLocale = (newLocale) => {
 			const locale = updateLocale(newLocale);
-			if (sync) {
-				setResBundleLocale(locale);
-			}
+			setResBundleLocale(locale, sync);
 
-			const updated = {
+			this.setState({
+				locale
+			});
+
+			this.publisher.publish({
 				locale,
 				rtl: isRtlLocale()
-			};
-
-			this.setState(updated);
-			this.publisher.publish(updated);
+			});
 		}
 
 		render () {
@@ -153,10 +189,16 @@ const I18nDecorator = hoc({sync: false}, (config, Wrapped) => {
 				classes = this.props.className + ' ' + classes;
 			}
 
+			const value = {
+				locale: this.state.locale,
+				rtl: isRtlLocale(),
+				updateLocale: this.updateLocale
+			};
+
 			delete props.locale;
 
 			return (
-				<I18nContext.Provider value={this.state}>
+				<I18nContext.Provider value={value}>
 					<Wrapped {...props} className={classes} />
 				</I18nContext.Provider>
 			);
@@ -164,13 +206,13 @@ const I18nDecorator = hoc({sync: false}, (config, Wrapped) => {
 	};
 });
 
-const defaultConfig = {
+const contextDefaultConfig = {
 	localeProp: null,
 	rtlProp: null,
 	updateLocaleProp: null
 };
 
-const I18nContextDecorator = hoc(defaultConfig, (config, Wrapped) => {
+const I18nContextDecorator = hoc(contextDefaultConfig, (config, Wrapped) => {
 	const {localeProp, rtlProp, updateLocaleProp} = config;
 
 	// eslint-disable-next-line no-shadow

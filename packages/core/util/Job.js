@@ -76,10 +76,10 @@ class Job {
 				window.cancelIdleCallback(this.id);
 			} else if (this.type === 'raf') {
 				window.cancelAnimationFrame(this.id);
-			} else {
+			} else if (this.type === 'timeout') {
 				clearTimeout(this.id);
 			}
-			this.id = null;
+			this.id = this.type = null;
 		}
 	}
 
@@ -205,6 +205,19 @@ class Job {
 			// If requestAnimationFrame is not supported just run the function immediately
 			this.fn(...args);
 		}
+	}
+
+	promise = (promise) => {
+		if (!(promise instanceof Promise)) return;
+
+		this.type = 'promise';
+		this.id = promise;
+
+		promise.then(result => {
+			if (this.id === promise) {
+				this.run([result])
+			}
+		});
 	}
 }
 
