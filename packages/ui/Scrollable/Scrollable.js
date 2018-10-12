@@ -897,6 +897,23 @@ class ScrollableBase extends Component {
 			bounds = this.getScrollBounds(),
 			{maxLeft, maxTop} = bounds;
 
+		const updatedAnimationInfo = {
+			sourceX: scrollLeft,
+			sourceY: scrollTop,
+			targetX,
+			targetY,
+			duration
+		};
+
+		// bail early when scrolling to the same position
+		if (this.animationInfo && this.animationInfo.targetX === targetX && this.animationInfo.targetY === targetY) {
+			return;
+		}
+
+		// adding this member variable -- which is only referenced here -- to enable the early bail
+		// out above.
+		this.animationInfo = updatedAnimationInfo;
+
 		this.animator.stop();
 		if (!this.scrolling) {
 			this.scrolling = true;
@@ -922,13 +939,7 @@ class ScrollableBase extends Component {
 		this.showThumb(bounds);
 
 		if (animate) {
-			this.animator.animate(this.scrollAnimation({
-				sourceX: scrollLeft,
-				sourceY: scrollTop,
-				targetX,
-				targetY,
-				duration
-			}));
+			this.animator.animate(this.scrollAnimation(this.animationInfo));
 		} else {
 			this.scroll(targetX, targetY);
 			this.stop();
