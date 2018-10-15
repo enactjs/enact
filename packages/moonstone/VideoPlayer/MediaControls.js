@@ -341,7 +341,9 @@ const MediaControlsBase = kind({
 		jumpBackwardIcon: 'skipbackward',
 		jumpForwardIcon: 'skipforward',
 		spotlightId: 'mediaControls',
+		moreButtonCloseLabel: $L('Back'),
 		moreButtonColor: 'blue',
+		moreButtonLabel: $L('More'),
 		pauseIcon: 'pause',
 		playIcon: 'play',
 		visible: true
@@ -357,7 +359,7 @@ const MediaControlsBase = kind({
 		centerClassName: ({showMoreComponents, styler}) => styler.join('centerComponents', {more: showMoreComponents}),
 		playPauseClassName: ({showMoreComponents}) => showMoreComponents ? null : spotlightDefaultClass,
 		moreButtonClassName: ({showMoreComponents, styler}) => styler.join('moreButton', {[spotlightDefaultClass]: showMoreComponents}),
-		moreIconLabel: ({moreButtonCloseLabel = $L('Back'), moreButtonLabel = $L('More'), showMoreComponents}) => showMoreComponents ? moreButtonCloseLabel : moreButtonLabel,
+		moreIconLabel: ({moreButtonCloseLabel, moreButtonLabel, showMoreComponents}) => showMoreComponents ? moreButtonCloseLabel : moreButtonLabel,
 		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis'
 	},
 
