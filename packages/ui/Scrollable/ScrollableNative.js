@@ -1050,7 +1050,7 @@ class ScrollableBaseNative extends Component {
 		};
 
 		// bail early when scrolling to the same position
-		if (this.animationInfo && this.animationInfo.targetX === targetX && this.animationInfo.targetY === targetY) {
+		if (this.scrolling && this.animationInfo && this.animationInfo.targetX === targetX && this.animationInfo.targetY === targetY) {
 			return;
 		}
 
