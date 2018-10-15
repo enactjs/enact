@@ -385,6 +385,9 @@ class ScrollableBaseNative extends Component {
 		this.overscrollEnabled = !!(props.applyOverscrollEffect);
 		this.scrollRaFId = null;
 
+		// Enable the early bail out of repeated scrolling to the same position
+		this.animationInfo = null;
+
 		props.cbScrollTo(this.scrollTo);
 	}
 
@@ -1040,6 +1043,18 @@ class ScrollableBaseNative extends Component {
 			childContainerRef = childRef.containerRef,
 			bounds = this.getScrollBounds(),
 			{maxLeft, maxTop} = bounds;
+
+		const updatedAnimationInfo = {
+			targetX,
+			targetY
+		};
+
+		// bail early when scrolling to the same position
+		if (this.scrolling && this.animationInfo && this.animationInfo.targetX === targetX && this.animationInfo.targetY === targetY) {
+			return;
+		}
+
+		this.animationInfo = updatedAnimationInfo;
 
 		if (Math.abs(maxLeft - targetX) < epsilon) {
 			targetX = maxLeft;

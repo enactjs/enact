@@ -440,6 +440,10 @@ class ScrollableBase extends Component {
 
 		forward('onKeyDown', ev, this.props);
 
+		if (isPageUp(keyCode) || isPageDown(keyCode)) {
+			ev.preventDefault();
+		}
+
 		this.animateOnFocus = true;
 
 		if (!repeat && this.hasFocus()) {
@@ -449,7 +453,6 @@ class ScrollableBase extends Component {
 				direction = null;
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
-				ev.preventDefault();
 				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
 					Spotlight.setPointerMode(false);
 					direction = isPageUp(keyCode) ? 'up' : 'down';
