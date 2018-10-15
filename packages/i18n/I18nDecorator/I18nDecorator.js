@@ -119,7 +119,7 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				on('languagechange', this.handleLocaleChange, window);
 			}
 
-			this.loadResources();
+			this.loadResources(this.state.locale);
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -128,7 +128,7 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				if (sync) {
 					this.setState(state);
 				} else {
-					this.loadResources();
+					this.loadResources(nextProps.locale);
 				}
 			}
 		}
