@@ -280,6 +280,10 @@ EnyoLoader.prototype._loadManifest = function (_root, subpath, sync) {
 	const dirpath = this._pathjoin(_root, subpath);
 	const filepath = this._pathjoin(dirpath, 'ilibmanifest.json');
 
+	if (this.manifest[dirpath]) {
+		return;
+	}
+
 	let cachedManifest;
 	if (typeof window !== 'undefined' && window.localStorage) {
 		cachedManifest = window.localStorage.getItem(cachePrefix + filepath);
@@ -304,19 +308,17 @@ EnyoLoader.prototype._loadManifest = function (_root, subpath, sync) {
 	return get(filepath).then(json => this._handleManifest(dirpath, filepath, json));
 };
 
-EnyoLoader.prototype.loadManifests = async function (_root) {
-	// load standard manifests
-	if (!this.manifest) {
-		this._validateCache();
-		await this._loadManifest(this.base, 'locale'); // standard ilib locale data
-		await this._loadManifest('', iLibResources);     // the app's resources dir
-	}
-
-	if (!this.manifest[_root]) {
+EnyoLoader.prototype.loadManifests = function (_root) {
+	this._validateCache();
+	return Promise.all([
+		// standard ilib locale data
+		this._loadManifest(this.base, 'locale'),
+		// the app's resources dir
+		this._loadManifest('', iLibResources),
 		// maybe it's a custom root? If so, try to load
 		// the manifest file first in case it is there
-		await this._loadManifest(_root, '');
-	}
+		this._loadManifest(_root, '')
+	]);
 };
 
 EnyoLoader.prototype.loadManifestsSync = function (_root) {
