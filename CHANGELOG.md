@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.2.2] - 2018-10-15
+
+### Fixed
+
+- `core/util.Job` to cancel existing scheduled `idle()` jobs before scheduling another
+- `moonstone/Scroller` stuttering when page up/down key is pressed
+- `ui/Scroller` slowed scrolling behavior when repeatedly requesting a scroll to the same position
+
 ## [2.2.1] - 2018-10-09
 
 ### Fixed
