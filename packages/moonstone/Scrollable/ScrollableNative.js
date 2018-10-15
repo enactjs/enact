@@ -246,7 +246,9 @@ class ScrollableBaseNative extends Component {
 	voiceControlDirection = 'vertical'
 
 	onMouseDown = () => {
-		this.childRef.setContainerDisabled(false);
+		if (!this.props['data-spotlight-container-disabled']) {
+			this.childRef.setContainerDisabled(false);
+		}
 	}
 
 	onFlick = ({direction}) => {
@@ -257,10 +259,10 @@ class ScrollableBaseNative extends Component {
 			focusedItem.blur();
 		}
 
-		if (
+		if ((
 			direction === 'vertical' && this.uiRef.canScrollVertically(bounds) ||
 			direction === 'horizontal' && this.uiRef.canScrollHorizontally(bounds)
-		) {
+		) && !this.props['data-spotlight-container-disabled']) {
 			this.childRef.setContainerDisabled(true);
 		}
 	}
@@ -309,7 +311,9 @@ class ScrollableBaseNative extends Component {
 				const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef;
 
 				if (!this.isWheeling) {
-					this.childRef.setContainerDisabled(true);
+					if (!this.props['data-spotlight-container-disabled']) {
+						this.childRef.setContainerDisabled(true);
+					}
 					this.isWheeling = true;
 				}
 
@@ -330,7 +334,9 @@ class ScrollableBaseNative extends Component {
 		} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
 			if (eventDelta < 0 && this.uiRef.scrollLeft > 0 || eventDelta > 0 && this.uiRef.scrollLeft < bounds.maxLeft) {
 				if (!this.isWheeling) {
-					this.childRef.setContainerDisabled(true);
+					if (!this.props['data-spotlight-container-disabled']) {
+						this.childRef.setContainerDisabled(true);
+					}
 					this.isWheeling = true;
 				}
 				delta = this.uiRef.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
@@ -579,7 +585,9 @@ class ScrollableBaseNative extends Component {
 	}
 
 	scrollStopOnScroll = () => {
-		this.childRef.setContainerDisabled(false);
+		if (!this.props['data-spotlight-container-disabled']) {
+			this.childRef.setContainerDisabled(false);
+		}
 		this.focusOnItem();
 		this.lastScrollPositionOnFocus = null;
 		this.isWheeling = false;
