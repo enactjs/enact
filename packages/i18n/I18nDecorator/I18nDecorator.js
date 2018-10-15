@@ -22,6 +22,35 @@ import getI18nClasses from './getI18nClasses';
 
 const join = (a, b) => a && b ? a + ' ' + b : (a || b || '');
 
+const invoke = (fn, options, callback) => {
+	const {onLoad} = options;
+
+	fn({
+		...options,
+		onLoad: (result) => {
+			callback(result);
+			if (onLoad) onLoad(result);
+		}
+	});
+}
+
+const wrapIlibCallback = (fn, options = {}) => {
+	const {sync = false} = options;
+
+	if (!fn) {
+		return sync ? null : Promise.resolve(null);
+	}
+
+	if (sync) {
+		let value = null;
+		invoke(fn, options, (v) => (value = v));
+
+		return value;
+	}
+
+	return new Promise(resolve => invoke(fn, options, resolve));
+}
+
 const contextTypes = {
 	rtl: PropTypes.bool,
 	updateLocale: PropTypes.func
@@ -64,7 +93,7 @@ const defaultConfig = {
  * @public
  */
 const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {loader = Promise.resolve(null), loaderProp, sync} = config;
+	const {loader, loaderProp, sync} = config;
 
 	return class extends React.Component {
 		static displayName = 'I18nDecorator'
@@ -144,33 +173,33 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const locale = updateLocale(spec);
 
 			let rtl = false;
+			let classes = '';
+			let loaderResult = null;
 
 			if (sync) {
-				isRtlLocale({
-					onLoad: (isRtl) => {
-						rtl = isRtl;
-					}
-				});
+				const options = {locale, sync};
+				rtl = wrapIlibCallback(isRtlLocale, options);
+				classes = wrapIlibCallback(getI18nClasses, options);
+				loaderResult = wrapIlibCallback(loader, options);
+
+				setResBundleLocale(locale, sync);
 			}
 
 			return {
+				classes,
+				loaderResult,
 				locale,
-				rtl,
-				resourcesLoaded: sync
+				resourcesLoaded: sync,
+				rtl
 			};
 		}
 
 		loadResources (locale) {
+			const options = {sync, locale};
 			const resources = Promise.all([
-				new Promise(resolve => isRtlLocale({
-					sync,
-					onLoad: resolve
-				})),
-				new Promise(resolve => getI18nClasses({
-					sync,
-					onLoad: resolve
-				})),
-				loader,
+				wrapIlibCallback(isRtlLocale, options),
+				wrapIlibCallback(getI18nClasses, options),
+				wrapIlibCallback(loader, options),
 				setResBundleLocale(locale, sync)
 			]).then(([rtl, classes, loaderResult]) => {
 				return {
@@ -213,13 +242,7 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const props = Object.assign({}, this.props);
 			delete props.locale;
 
-			if (sync) {
-				getI18nClasses({sync, onLoad: className => {
-					props.className = join(className, this.props.className);
-				}});
-			} else if (this.state.classes) {
-				props.className = join(this.state.classes, this.props.className)
-			}
+			props.className = join(this.state.classes, this.props.className);
 
 			if (loaderProp) {
 				props[loaderProp] = this.state.loaderResult;
