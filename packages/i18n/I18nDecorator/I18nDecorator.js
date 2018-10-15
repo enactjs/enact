@@ -20,6 +20,8 @@ import {setResBundleLocale} from '../src/resBundle';
 
 import getI18nClasses from './getI18nClasses';
 
+const join = (a, b) => a && b ? a + ' ' + b : (a || b || '');
+
 const contextTypes = {
 	rtl: PropTypes.bool,
 	updateLocale: PropTypes.func
@@ -34,6 +36,10 @@ const I18nContext = React.createContext(null);
  * @hocconfig
  */
 const defaultConfig = {
+	loader: null,
+
+	loaderProp: 'localized',
+
 	/**
 	 * Retrieve i18n resource files synchronously
 	 *
@@ -58,7 +64,7 @@ const defaultConfig = {
  * @public
  */
 const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {sync} = config;
+	const {loader = Promise.resolve(null), loaderProp, sync} = config;
 
 	return class extends React.Component {
 		static displayName = 'I18nDecorator'
@@ -89,32 +95,14 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			const ilibLocale = ilib.getLocale();
-			const locale = props.locale && props.locale !== ilibLocale ? updateLocale(props.locale) : ilibLocale;
+			const locale = props.locale && props.locale !== ilibLocale ? props.locale : ilibLocale;
 
-			let rtl = false;
-
-			if (sync) {
-				isRtlLocale({
-					onLoad: (isRtl) => {
-						rtl = isRtl;
-					}
-				});
-			} else {
-				this.loadResourceJob = new Job(this.setState.bind(this))
-			}
-
-			this.state = {
-				locale,
-				rtl,
-				resourcesLoaded: sync
-			};
-
-			setResBundleLocale(locale, sync);
+			this.loadResourceJob = new Job(this.setState.bind(this));
+			this.state = this.getDerivedStateForLocale(locale);
 		}
 
 		getChildContext () {
 			return {
-				Subscriber: this.publisher.getSubscriber(),
 				rtl: this.state.rtl,
 				updateLocale: this.updateLocale
 			};
@@ -134,9 +122,14 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.loadResources();
 		}
 
-		componentWillReceiveProps (newProps) {
-			if (newProps.locale) {
-				this.updateLocale(newProps.locale);
+		componentWillReceiveProps (nextProps) {
+			if (this.props.locale !== nextProps.locale) {
+				const state = this.getDerivedStateForLocale(nextProps.locale);
+				if (sync) {
+					this.setState(state);
+				} else {
+					this.loadResources();
+				}
 			}
 		}
 
@@ -147,12 +140,49 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		loadResources () {
-			if (!this.state.resourcesLoaded) {
-				this.loadResourceJob.promise(new Promise((resolve, reject) => {
-					return isRtlLocale({sync, onLoad: rtl => resolve({rtl})})
-				}));
+		getDerivedStateForLocale (spec) {
+			const locale = updateLocale(spec);
+
+			let rtl = false;
+
+			if (sync) {
+				isRtlLocale({
+					onLoad: (isRtl) => {
+						rtl = isRtl;
+					}
+				});
 			}
+
+			return {
+				locale,
+				rtl,
+				resourcesLoaded: sync
+			};
+		}
+
+		loadResources (locale) {
+			const resources = Promise.all([
+				new Promise(resolve => isRtlLocale({
+					sync,
+					onLoad: resolve
+				})),
+				new Promise(resolve => getI18nClasses({
+					sync,
+					onLoad: resolve
+				})),
+				loader,
+				setResBundleLocale(locale, sync)
+			]).then(([rtl, classes, loaderResult]) => {
+				return {
+					locale,
+					classes,
+					loaderResult,
+					rtl,
+					resourcesLoaded: true
+				};
+			});
+
+			this.loadResourceJob.promise(resources);
 		}
 
 		handleLocaleChange = () => {
@@ -169,37 +199,42 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @public
 		 */
 		updateLocale = (newLocale) => {
-			const locale = updateLocale(newLocale);
-			setResBundleLocale(locale, sync);
+			const state = this.getDerivedStateForLocale(newLocale);
 
-			this.setState({
-				locale
-			});
-
-			this.publisher.publish({
-				locale,
-				rtl: isRtlLocale()
-			});
+			if (sync) {
+				this.setState(state);
+			} else {
+				this.loadResources(newLocale);
+				this.setState({resourcesLoaded: false});
+			}
 		}
 
 		render () {
 			const props = Object.assign({}, this.props);
-			let classes = getI18nClasses();
-			if (this.props.className) {
-				classes = this.props.className + ' ' + classes;
+			delete props.locale;
+
+			if (sync) {
+				getI18nClasses({sync, onLoad: className => {
+					props.className = join(className, this.props.className);
+				}});
+			} else if (this.state.classes) {
+				props.className = join(this.state.classes, this.props.className)
+			}
+
+			if (loaderProp) {
+				props[loaderProp] = this.state.loaderResult;
 			}
 
 			const value = {
 				locale: this.state.locale,
-				rtl: isRtlLocale(),
+				rtl: this.state.rtl,
+				loaded: this.state.resourcesLoaded,
 				updateLocale: this.updateLocale
 			};
 
-			delete props.locale;
-
 			return (
 				<I18nContext.Provider value={value}>
-					<Wrapped {...props} className={classes} />
+					<Wrapped {...props} />
 				</I18nContext.Provider>
 			);
 		}

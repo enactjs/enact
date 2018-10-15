@@ -22,8 +22,8 @@ import {initCaseMappers} from '../src/case';
  *	test, or undefined to test the current locale
  * @returns {Boolean} `true` if non-Latin locale
  */
-function isNonLatinLocale (spec, options) {
-	const onLoad = options && options.onLoad;
+function isNonLatinLocale (spec, options = {}) {
+	const {onLoad} = options;
 
 	if (!onLoad) return;
 
@@ -63,8 +63,8 @@ function isNonLatinLocale (spec, options) {
  * @memberof i18n/locale
  * @returns {Boolean} `true` if current locale is a right-to-left locale
  */
-function isRtlLocale (options) {
-	const onLoad = options && options.onLoad;
+function isRtlLocale (options = {}) {
+	const {onLoad, sync} = options;
 
 	if (!onLoad) return;
 
@@ -73,8 +73,13 @@ function isRtlLocale (options) {
 		...options,
 		onLoad: (li) => {		
 			const scriptName = li.getScript();
-			const script = new ScriptInfo(scriptName);
-			onLoad(script.getScriptDirection() === 'rtl');
+			// eslint-disable-next-line no-new
+			new ScriptInfo(scriptName, {
+				sync,
+				onLoad: (script) => {
+					onLoad(script.getScriptDirection() === 'rtl');
+				}
+			});
 		}
 	});
 }
