@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scroller` to not enable Spotlight by click when 'data-spotlight-container-disabled' prop is true
+- `moonstone/Scroller` to not enable Spotlight by click, flick, and wheel when 'data-spotlight-container-disabled' prop is true
 - `moonstone/Scroller` stuttering when page up/down key is pressed
 
 ## [2.2.1] - 2018-10-09
