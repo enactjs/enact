@@ -21,7 +21,7 @@ describe('ExpandableList', () => {
 		const children = ['option1', 'option2', 'option3'];
 
 		const expandableList = mount(
-			<ExpandableListBase title="Item">
+			<ExpandableListBase title="Item" open>
 				{children}
 			</ExpandableListBase>
 		);
