@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Notification` to use flex layout for alignment instead of 3d transform
+
 ## [2.2.2] - 2018-10-15
 
 ### Fixed
