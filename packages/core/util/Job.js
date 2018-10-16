@@ -147,14 +147,13 @@ class Job {
 	 * @public
 	 */
 	idleUntil = (timeout, ...args) => {
-		if (typeof window !== 'undefined') {
-			if (window.requestIdleCallback) {
-				this.type = 'idle';
-				this.id = window.requestIdleCallback(() => this.run(args), {timeout});
-			} else {
-				// If requestIdleCallback is not supported just run the function immediately
-				this.fn(...args);
-			}
+		if (typeof window !== 'undefined' && window.requestIdleCallback) {
+			this.stop();
+			this.type = 'idle';
+			this.id = window.requestIdleCallback(() => this.run(args), {timeout});
+		} else {
+			// since we can't request an idle callback, just pass to startAfter()
+			this.startAfter(timeout, ...args);
 		}
 	}
 

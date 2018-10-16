@@ -2,6 +2,25 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.2.2] - 2018-10-15
+
+### Fixed
+
+- `core/util.Job` to cancel existing scheduled `idle()` jobs before scheduling another
+- `moonstone/Scroller` stuttering when page up/down key is pressed
+- `ui/Scroller` slowed scrolling behavior when repeatedly requesting a scroll to the same position
+
+## [2.2.1] - 2018-10-09
+
+### Fixed
+
+- `i18n/ilib/DurationFmt` to respect `sync` parameter when loading strings
+- `i18n` resource loading failure due to resolving the path incorrectly
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to notify user when scrolling is not possible via voice command
+- `moonstone/TimePicker` to not read out meridiem label when changing the value
+- `spotlight` navigation into an overflow container which contains elements or containers larger than the container's bounds
+- `ui/Marquee` to prevent restarting animation after blurring just before the previous animation completed
+
 ## [2.2.0] - 2018-10-02
 
 ### Added

@@ -51,7 +51,7 @@ const contextTypes = {
  * @hoc
  * @public
  */
-const RadioControllerDecorator = hoc((config, Wrapped) => {
+const RadioControllerDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 
 	return class extends React.Component {
 		static displayName = 'RadioControllerDecorator'
