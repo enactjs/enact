@@ -85,15 +85,6 @@ class ScrollableBaseNative extends Component {
 		'data-spotlight-container': PropTypes.bool,
 
 		/**
-		 * `false` if the content of the list or the scroller could get focus
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		'data-spotlight-container-disabled': PropTypes.bool,
-
-		/**
 		 * This is passed onto the wrapped component to allow
 		 * it to customize the spotlight container for its use case.
 		 *
@@ -181,11 +172,18 @@ class ScrollableBaseNative extends Component {
 		 * @default $L('scroll up')
 		 * @public
 		 */
-		scrollUpAriaLabel: PropTypes.string
+		scrollUpAriaLabel: PropTypes.string,
+
+		/**
+		 * Disables spotlight navigation into the component.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		spotlightDisabled: PropTypes.bool
 	}
 
 	static defaultProps = {
-		'data-spotlight-container-disabled': false,
 		focusableScrollbar: false,
 		overscrollEffectOn: {
 			arrowKey: false,
@@ -193,7 +191,8 @@ class ScrollableBaseNative extends Component {
 			pageKey: false,
 			scrollbarButton: false,
 			wheel: true
-		}
+		},
+		spotlightDisabled: false
 	}
 
 	constructor (props) {
@@ -246,7 +245,7 @@ class ScrollableBaseNative extends Component {
 	voiceControlDirection = 'vertical'
 
 	onMouseDown = () => {
-		if (!this.props['data-spotlight-container-disabled']) {
+		if (!this.props.spotlightDisabled) {
 			this.childRef.setContainerDisabled(false);
 		}
 	}
@@ -262,7 +261,7 @@ class ScrollableBaseNative extends Component {
 		if ((
 			direction === 'vertical' && this.uiRef.canScrollVertically(bounds) ||
 			direction === 'horizontal' && this.uiRef.canScrollHorizontally(bounds)
-		) && !this.props['data-spotlight-container-disabled']) {
+		) && !this.props.spotlightDisabled) {
 			this.childRef.setContainerDisabled(true);
 		}
 	}
@@ -311,7 +310,7 @@ class ScrollableBaseNative extends Component {
 				const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef;
 
 				if (!this.isWheeling) {
-					if (!this.props['data-spotlight-container-disabled']) {
+					if (!this.props.spotlightDisabled) {
 						this.childRef.setContainerDisabled(true);
 					}
 					this.isWheeling = true;
@@ -334,7 +333,7 @@ class ScrollableBaseNative extends Component {
 		} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
 			if (eventDelta < 0 && this.uiRef.scrollLeft > 0 || eventDelta > 0 && this.uiRef.scrollLeft < bounds.maxLeft) {
 				if (!this.isWheeling) {
-					if (!this.props['data-spotlight-container-disabled']) {
+					if (!this.props.spotlightDisabled) {
 						this.childRef.setContainerDisabled(true);
 					}
 					this.isWheeling = true;
@@ -585,7 +584,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	scrollStopOnScroll = () => {
-		if (!this.props['data-spotlight-container-disabled']) {
+		if (!this.props.spotlightDisabled) {
 			this.childRef.setContainerDisabled(false);
 		}
 		this.focusOnItem();
@@ -800,13 +799,13 @@ class ScrollableBaseNative extends Component {
 			{
 				childRenderer,
 				'data-spotlight-container': spotlightContainer,
-				'data-spotlight-container-disabled': spotlightContainerDisabled,
 				'data-spotlight-id': spotlightId,
 				focusableScrollbar,
 				scrollDownAriaLabel,
 				scrollLeftAriaLabel,
 				scrollRightAriaLabel,
 				scrollUpAriaLabel,
+				spotlightDisabled,
 				...rest
 			} = this.props,
 			downButtonAriaLabel = scrollDownAriaLabel == null ? $L('scroll down') : scrollDownAriaLabel,
@@ -851,9 +850,9 @@ class ScrollableBaseNative extends Component {
 					<div
 						className={classNames(className, overscrollCss.scrollable)}
 						data-spotlight-container={spotlightContainer}
-						data-spotlight-container-disabled={spotlightContainerDisabled}
 						data-spotlight-id={spotlightId}
 						ref={initUiContainerRef}
+						spotlightDisabled={spotlightDisabled}
 						style={style}
 					>
 						<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={this.initVerticalOverscrollRef}>

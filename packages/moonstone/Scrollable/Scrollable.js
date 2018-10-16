@@ -104,15 +104,6 @@ class ScrollableBase extends Component {
 		'data-spotlight-container': PropTypes.bool,
 
 		/**
-		 * `false` if the content of the list or the scroller could get focus
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		'data-spotlight-container-disabled': PropTypes.bool,
-
-		/**
 		 * This is passed onto the wrapped component to allow
 		 * it to customize the spotlight container for its use case.
 		 *
@@ -200,11 +191,18 @@ class ScrollableBase extends Component {
 		 * @default $L('scroll up')
 		 * @public
 		 */
-		scrollUpAriaLabel: PropTypes.string
+		scrollUpAriaLabel: PropTypes.string,
+
+		/**
+		 * Disables spotlight navigation into the component.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		spotlightDisabled: PropTypes.bool
 	}
 
 	static defaultProps = {
-		'data-spotlight-container-disabled': false,
 		focusableScrollbar: false,
 		overscrollEffectOn: {
 			arrowKey: false,
@@ -212,7 +210,8 @@ class ScrollableBase extends Component {
 			pageKey: false,
 			scrollbarButton: false,
 			wheel: true
-		}
+		},
+		spotlightDisabled: false
 	}
 
 	constructor (props) {
@@ -268,7 +267,7 @@ class ScrollableBase extends Component {
 		if ((
 			direction === 'vertical' && this.uiRef.canScrollVertically(bounds) ||
 			direction === 'horizontal' && this.uiRef.canScrollHorizontally(bounds)
-		) && !this.props['data-spotlight-container-disabled']) {
+		) && !this.props.spotlightDisabled) {
 			this.childRef.setContainerDisabled(true);
 		}
 	}
@@ -285,7 +284,7 @@ class ScrollableBase extends Component {
 
 		if (delta !== 0) {
 			this.isWheeling = true;
-			if (!this.props['data-spotlight-container-disabled']) {
+			if (!this.props.spotlightDisabled) {
 				this.childRef.setContainerDisabled(true);
 			}
 		}
@@ -508,7 +507,7 @@ class ScrollableBase extends Component {
 	}
 
 	stop = () => {
-		if (!this.props['data-spotlight-container-disabled']) {
+		if (!this.props.spotlightDisabled) {
 			this.childRef.setContainerDisabled(false);
 		}
 		this.focusOnItem();
@@ -719,13 +718,13 @@ class ScrollableBase extends Component {
 			{
 				childRenderer,
 				'data-spotlight-container': spotlightContainer,
-				'data-spotlight-container-disabled': spotlightContainerDisabled,
 				'data-spotlight-id': spotlightId,
 				focusableScrollbar,
 				scrollDownAriaLabel,
 				scrollLeftAriaLabel,
 				scrollRightAriaLabel,
 				scrollUpAriaLabel,
+				spotlightDisabled,
 				...rest
 			} = this.props,
 			downButtonAriaLabel = scrollDownAriaLabel == null ? $L('scroll down') : scrollDownAriaLabel,
@@ -769,9 +768,9 @@ class ScrollableBase extends Component {
 					<div
 						className={classNames(className, overscrollCss.scrollable)}
 						data-spotlight-container={spotlightContainer}
-						data-spotlight-container-disabled={spotlightContainerDisabled}
 						data-spotlight-id={spotlightId}
 						ref={initUiContainerRef}
+						spotlightDisabled={spotlightDisabled}
 						style={style}
 					>
 						<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={this.initVerticalOverscrollRef}>
