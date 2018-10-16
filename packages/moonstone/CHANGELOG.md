@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Scroller` to scroll to the scroll boundary when focused to the first or last element
+
 ## [2.2.2] - 2018-10-15
 
 ### Fixed
@@ -13,7 +19,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to notify user when scrolling is not possible via voice command
-- `moonstone/Scroller` to scroll to the scroll boundary when focused to the first or last element
 - `moonstone/TimePicker` to not read out meridiem label when changing the value
 
 ## [2.2.0] - 2018-10-02
