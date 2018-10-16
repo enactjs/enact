@@ -5,80 +5,89 @@
 @import '../styles/skin.less';
 
 .notification {
-	position: relative;
-	left: 50%;
-	width: fit-content;
-	min-width: @moon-notification-min-width;
-	max-width: @moon-notification-max-width;
-	text-align: center;
-	border-radius: @moon-notification-border-radius;
-	margin-bottom: @moon-notification-margin-bottom;
-	transform: translate3d(-50%, 50%, 0);
-	padding: @moon-notification-padding-top-botton @moon-notification-padding-left-right;
+	width: 100%;
+	height: @moon-notification-margin-bottom * 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
 	&.wide {
-		max-width: @moon-notification-wide-width; // 4 button case
-	}
-
-	&::before {
-		content: '';
-		display: block;
-		position: absolute;
-		border-width: @moon-notification-border-width;
-		border-style: solid;
-		border-radius: @moon-notification-out-border-radius;
-		top: -@moon-notification-border-width;
-		right: -@moon-notification-border-width;
-		bottom: -@moon-notification-border-width;
-		left: -@moon-notification-border-width;
-		z-index: -1;
-	}
-
-	.body {
-		.moon-notification-content();
-
-		:global(.enact-locale-ja) &,
-		:global(.enact-locale-zh) & {
-			overflow-wrap: normal;
-			word-break: normal;
+		.container {
+			max-width: @moon-notification-wide-width; // 4 button case
 		}
 	}
 
-	.buttons {
+	.container {
+		position: relative;
 		box-sizing: border-box;
+		width: fit-content;
+		min-width: @moon-notification-min-width;
+		max-width: @moon-notification-max-width;
+		text-align: center;
+		border-radius: @moon-notification-border-radius;
+		padding: @moon-notification-padding-top-botton @moon-notification-padding-left-right;
 
-		& > * {
-			// Applying the margin to the children allows for the case of no children without needing removing the margin
-			margin-top: 24px;
-			.margin-start-end(@moon-notification-button-gap, 0);
+		&::before {
+			content: '';
+			display: block;
+			position: absolute;
+			border-width: @moon-notification-border-width;
+			border-style: solid;
+			border-radius: @moon-notification-out-border-radius;
+			top: -@moon-notification-border-width;
+			right: -@moon-notification-border-width;
+			bottom: -@moon-notification-border-width;
+			left: -@moon-notification-border-width;
+			z-index: -1;
 		}
 
-		& > :first-child {
-			margin-left: 0;
+		.body {
+			.moon-notification-content();
 
-			:global(.enact-locale-right-to-left) & {
+			:global(.enact-locale-ja) &,
+			:global(.enact-locale-zh) & {
+				overflow-wrap: normal;
+				word-break: normal;
+			}
+		}
+
+		.buttons {
+			box-sizing: border-box;
+
+			& > * {
+				// Applying the margin to the children allows for the case of no children without needing removing the margin
+				margin-top: 24px;
+				.margin-start-end(@moon-notification-button-gap, 0);
+			}
+
+			& > :first-child {
+				margin-left: 0;
+
+				:global(.enact-locale-right-to-left) & {
+					margin-right: 0;
+				}
+			}
+
+			& > :last-child {
 				margin-right: 0;
+
+				:global(.enact-locale-right-to-left) & {
+					margin-right: @moon-notification-button-gap;
+				}
 			}
 		}
-
-		& > :last-child {
-			margin-right: 0;
-
-			:global(.enact-locale-right-to-left) & {
-				margin-right: @moon-notification-button-gap;
-			}
-		}
-	}
-
-	:global(.enact-locale-right-to-left) & {
-		right: 50%;
-		transform: translate3d(50%, 50%, 0);
 	}
 
 	// Skin colors
 	.applySkins({
-		&::before {
-			border-color: @moon-notification-border-color;
+		background-color: transparent;
+
+		.container {
+			background-color: fade(@moon-popup-bg-color, @moon-popup-bg-opacity);
+
+			&::before {
+				border-color: @moon-notification-border-color;
+			}
 		}
 	});
 }
