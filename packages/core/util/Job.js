@@ -215,7 +215,7 @@ class Job {
 
 		promise.then(result => {
 			if (this.id === promise) {
-				this.run([result])
+				this.run([result]);
 			}
 		});
 	}

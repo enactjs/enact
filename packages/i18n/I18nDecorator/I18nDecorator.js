@@ -164,6 +164,7 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const resources = Promise.all([
 				wrapIlibCallback(isRtlLocale, options),
 				wrapIlibCallback(getI18nClasses, options),
+				// move updating into a new method with call to setState
 				setResBundleLocale(locale, sync)
 			]).then(([rtl, classes]) => {
 				return {
@@ -172,7 +173,8 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					rtl,
 					resourcesLoaded: true
 				};
-			});
+			})
+			// .catch(...);
 
 			this.loadResourceJob.promise(resources);
 		}

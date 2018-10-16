@@ -111,7 +111,9 @@ describe('Job', function () {
 			const j = new Job(() => {
 				done(new Error('Job ran for rejected promise'));
 			});
-			j.promise(Promise.reject(true));
+			const promise = Promise.reject(true);
+			promise.catch(() => {});
+			j.promise(promise);
 			setTimeout(done, 10);
 		});
 
@@ -122,6 +124,15 @@ describe('Job', function () {
 			j.promise(new Promise(resolve => setTimeout(resolve, 20)));
 			setTimeout(() => j.stop(), 10);
 			setTimeout(done, 30);
+		});
+
+		it('should not start job when another is started', function (done) {
+			const j = new Job((value) => {
+				expect(value).to.equal(2);
+				done();
+			});
+			j.promise(new Promise(resolve => resolve(1)));
+			j.promise(new Promise(resolve => resolve(2)));
 		});
 	});
 });
