@@ -86,7 +86,7 @@ class ScrollerBase extends Component {
 	constructor (props) {
 		super(props);
 
-		this.heightThreshold = ri.scale(39);
+		this.heightThreshold = ri.scale(24);
 	}
 
 	componentDidMount () {
