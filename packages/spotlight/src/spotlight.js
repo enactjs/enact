@@ -68,7 +68,8 @@ import {
 	getTargetByContainer,
 	getTargetByDirectionFromElement,
 	getTargetByDirectionFromPosition,
-	getTargetBySelector
+	getTargetBySelector,
+	isFocusable
 } from './target';
 
 import {
@@ -846,7 +847,7 @@ const Spotlight = (function () {
 				return false;
 			}
 
-			return matchSelector('.' + spottableClass, elem);
+			return isFocusable(elem);
 		},
 
 		/**

@@ -326,8 +326,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = (ev) => {
-			if (this.props.disabled) return;
-
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = true;
 			}
@@ -351,6 +349,13 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			if (hasPointerMoved(ev.clientX, ev.clientY)) {
 				this.isHovered = false;
 			}
+		}
+
+		handleMouseDown = (ev) => {
+			if (!Spotlight.isSpottable(ev.currentTarget)) {
+				ev.preventDefault();
+			}
+			forward('onMouseDown', ev, this.props);
 		}
 
 		render () {
@@ -386,6 +391,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 					{...rest}
 					onBlur={this.handleBlur}
 					onFocus={this.handleFocus}
+					onMouseDown={this.handleMouseDown}
 					onMouseEnter={this.handleEnter}
 					onMouseLeave={this.handleLeave}
 					onKeyDown={this.handleKeyDown}

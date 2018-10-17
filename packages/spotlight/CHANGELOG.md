@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+- `spotlight/Spottable` to prevent focus when it should not be focusable
+
 ## [2.2.2] - 2018-10-15
 
 No significant changes.
