@@ -114,6 +114,7 @@ class Job {
 	 */
 	throttleUntil = (timeout, ...args) => {
 		if (!this.id) {
+			this.type = 'throttle';
 			this.run(args);
 			this.id = setTimeout(this.stop, timeout);
 		}
