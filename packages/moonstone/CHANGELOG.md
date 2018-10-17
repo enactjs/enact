@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Notification` to use flex layout for alignment instead of 3d transform
+- `moonstone/Notification` rendering bug that caused text to be blurry
 
 ## [2.2.2] - 2018-10-15
 
