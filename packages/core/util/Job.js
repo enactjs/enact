@@ -202,7 +202,7 @@ class Job {
 			this.id = window.requestAnimationFrame(callback);
 		} else {
 			// If requestAnimationFrame is not supported just run the function immediately
-			this.fn(...args);
+			this.run(args);
 		}
 	}
 }
