@@ -169,7 +169,7 @@ const PopupBase = kind({
 	styles: {
 		css: componentCss,
 		className: 'popup',
-		publicClassNames: ['popup', 'reserveClose']
+		publicClassNames: ['popup', 'reserveClose', 'transition', 'inner']
 	},
 
 	computed: {
@@ -200,6 +200,7 @@ const PopupBase = kind({
 
 		return (
 			<TransitionContainer
+				css={css}
 				className={css.popupTransitionContainer}
 				direction="down"
 				duration="short"

@@ -138,7 +138,7 @@ const NotificationBase = kind({
 
 	render: ({buttons, children, css, ...rest}) => {
 		return (
-			<Popup noAnimation {...rest}>
+			<Popup noAnimation {...rest} css={css}>
 				<div className={css.body}>
 					{children}
 				</div>
