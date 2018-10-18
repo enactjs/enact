@@ -9,7 +9,7 @@ const invoke = (fn, options, callback) => {
 			if (onLoad) onLoad(result);
 		}
 	});
-}
+};
 
 const wrapIlibCallback = (fn, options = {}) => {
 	const {sync = false} = options;
@@ -26,7 +26,7 @@ const wrapIlibCallback = (fn, options = {}) => {
 	}
 
 	return new Promise(resolve => invoke(fn, options, resolve));
-}
+};
 
 export default wrapIlibCallback;
 export {

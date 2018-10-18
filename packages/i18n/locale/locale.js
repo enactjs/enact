@@ -71,7 +71,7 @@ function isRtlLocale (options = {}) {
 	// eslint-disable-next-line no-new
 	new LocaleInfo(ilib.getLocale(), {
 		...options,
-		onLoad: (li) => {		
+		onLoad: (li) => {
 			const scriptName = li.getScript();
 			// eslint-disable-next-line no-new
 			new ScriptInfo(scriptName, {
