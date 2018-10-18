@@ -245,8 +245,10 @@ class ScrollableBaseNative extends Component {
 	isVoiceControl = false
 	voiceControlDirection = 'vertical'
 
-	onMouseDown = () => {
-		if (!this.props['data-spotlight-container-disabled']) {
+	onMouseDown = (ev) => {
+		if (this.props['data-spotlight-container-disabled']) {
+			ev.preventDefault();
+		} else {
 			this.childRef.setContainerDisabled(false);
 		}
 	}
