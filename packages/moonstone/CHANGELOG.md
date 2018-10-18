@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VideoPlayer` to position the slider knob correctly when beyond the left or right edge of the slider
+- `moonstone/Notification` rendering bug that caused text to be blurry
 
 ## [2.2.2] - 2018-10-15
 
