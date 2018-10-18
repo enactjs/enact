@@ -15,6 +15,16 @@ import Popup from '../Popup';
 
 import componentCss from './Notification.less';
 
+const fixHeight = (node) => {
+	if (!node) return;
+
+	const {top} = node.getBoundingClientRect();
+	const delta = Math.round(top) - top;
+	if (delta !== 0) {
+		node.style.transform = `translateY(${delta}px)`;
+	}
+};
+
 /**
  * A Moonstone styled notification component.
  *
@@ -139,7 +149,7 @@ const NotificationBase = kind({
 	render: ({buttons, children, css, ...rest}) => {
 		return (
 			<Popup noAnimation {...rest}>
-				<div className={css.body}>
+				<div className={css.body} ref={fixHeight}>
 					{children}
 				</div>
 				{buttons ? <div className={css.buttons}>
