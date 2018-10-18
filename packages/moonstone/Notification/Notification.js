@@ -21,7 +21,7 @@ const fixHeight = (node) => {
 	const {top} = node.getBoundingClientRect();
 	const delta = Math.round(top) - top;
 	if (delta !== 0) {
-		node.style.transform = `translateY(${delta}px)`;
+		node.style.transform = `translate3d(0, ${delta}px, 0)`;
 	}
 };
 
