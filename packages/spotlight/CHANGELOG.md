@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` selection of elements clipped by an overflow container
+
 ## [2.2.2] - 2018-10-15
 
 No significant changes.
