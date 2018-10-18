@@ -76,6 +76,8 @@ const PopupBase = kind({
 		 *
 		 * * `popup` - The root class name
 		 * * `reserveClose` - Applied when the close button is shown and space must be allocated for it
+		 * * `transition` - Comes from the {@link ui/Transition.Transition} component
+		 * * `inner` - Comes from the {@link ui/Transition.Transition} component
 		 *
 		 * @type {Object}
 		 * @private
