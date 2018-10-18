@@ -1,7 +1,10 @@
 /**
- * Provides Moonstone-themed Icon component with interactive togglable capabilities.
+ * Provides Moonstone-themed Icon component with interactive toggleable capabilities. It's intended
+ * as a fully do-it-yourself sort of component, as in initially, there is no visual change when a
+ * user interacts with the control; you the developer must add and extend the mechanics by adding
+ * visuals.
  *
- * Moonstone components that uses `ToggleIcon`:
+ * The following Moonstone components use `ToggleIcon`, and make good examples of various usages.
  *
  * * [Checkbox]{@link moonstone/Checkbox.Checkbox},
  * * [FormCheckbox]{@link moonstone/FormCheckbox.FormCheckbox},
@@ -9,12 +12,18 @@
  * * [RadioItem]{@link moonstone/RadioItem.RadioItem}, and
  * * [SelectableItem]{@link moonstone/SelectableItem.SelectableItem}.
  *
- * @module moonstone/ToggleIcon
+ * In the most common use-case, an [Icon]{@link moonstone/Icon.Icon} is necessary to be sent in as
+ * `children`, however, not mandatory. The component, and styling classes, continue function
+ * normally even without an icon. This quality allows you to do highly customizable styling by
+ * attaching to the pseudo-elements `::before` and `::after` and save a DOM node, by adding styles
+ * to the CSS exclucively.
+ *
  * @example
- * <ToggleIcon
- * 	onToggle={(props)=> console.log(props.selected)}>
- * 	check
+ * <ToggleIcon onToggle={(props)=> console.log(props.selected)}>
+ *   check
  * </ToggleIcon>
+ *
+ * @module moonstone/ToggleIcon
  * @exports ToggleIcon
  * @exports ToggleIconBase
  * @exports ToggleIconDecorator
