@@ -76,6 +76,8 @@ const PopupBase = kind({
 		 *
 		 * * `popup` - The root class name
 		 * * `reserveClose` - Applied when the close button is shown and space must be allocated for it
+		 * * `transition` - Comes from the {@link ui/Transition.Transition} component
+		 * * `inner` - Comes from the {@link ui/Transition.Transition} component
 		 *
 		 * @type {Object}
 		 * @private
@@ -169,7 +171,7 @@ const PopupBase = kind({
 	styles: {
 		css: componentCss,
 		className: 'popup',
-		publicClassNames: ['popup', 'reserveClose']
+		publicClassNames: ['popup', 'reserveClose', 'transition', 'inner']
 	},
 
 	computed: {
@@ -200,6 +202,7 @@ const PopupBase = kind({
 
 		return (
 			<TransitionContainer
+				css={css}
 				className={css.popupTransitionContainer}
 				direction="down"
 				duration="short"

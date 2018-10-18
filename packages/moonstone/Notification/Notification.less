@@ -1,19 +1,23 @@
 // Notification.less
 //
-@import '../styles/variables.less';
-@import '../styles/text.less';
-@import '../styles/skin.less';
+@import "../styles/variables.less";
+@import "../styles/text.less";
+@import "../styles/skin.less";
+
+.transition .inner {
+	height: (@moon-notification-margin-bottom * 2);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 
 .notification {
 	position: relative;
-	left: 50%;
 	width: fit-content;
 	min-width: @moon-notification-min-width;
 	max-width: @moon-notification-max-width;
 	text-align: center;
 	border-radius: @moon-notification-border-radius;
-	margin-bottom: @moon-notification-margin-bottom;
-	transform: translate3d(-50%, 50%, 0);
 	padding: @moon-notification-padding-top-botton @moon-notification-padding-left-right;
 
 	&.wide {
