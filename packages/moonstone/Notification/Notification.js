@@ -15,15 +15,16 @@ import Popup from '../Popup';
 
 import componentCss from './Notification.less';
 
-const fixHeight = (node) => {
+const fixTransform = (node) => {
 	if (!node) return;
 
-	const {left, top} = node.getBoundingClientRect();
+	const parent = node.parentNode;
+	const {left, top} = parent.getBoundingClientRect();
 	const deltaY = Math.round(top) - top;
 	const deltaX = Math.round(left) - left;
 	if (deltaY !== 0 || deltaX !== 0) {
-		node.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0)`;
-		node.style.willChange = 'transform';
+		parent.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0)`;
+		parent.style.willChange = 'transform';
 	}
 };
 
@@ -151,7 +152,7 @@ const NotificationBase = kind({
 	render: ({buttons, children, css, ...rest}) => {
 		return (
 			<Popup noAnimation {...rest}>
-				<div className={css.body} ref={fixHeight}>
+				<div className={css.body} ref={fixTransform}>
 					{children}
 				</div>
 				{buttons ? <div className={css.buttons}>
