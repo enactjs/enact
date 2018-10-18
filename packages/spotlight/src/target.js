@@ -132,12 +132,12 @@ function filterRects (elementRects, boundingRect) {
 			if (rightUpdate) updated.right = boundingRect.right;
 
 			if (leftUpdate || rightUpdate) {
-				const centerX = (updated.right - updated.left) / 2;
+				const centerX = updated.left + (updated.right - updated.left) / 2;
 				updated.center.x = updated.center.left = updated.center.right = centerX;
 			}
 
 			if (topUpdate || bottomUpdate) {
-				const centerY = (updated.bottom - updated.top) / 2;
+				const centerY = updated.top + (updated.bottom - updated.top) / 2;
 				updated.center.y = updated.center.top = updated.center.bottom = centerY;
 			}
 

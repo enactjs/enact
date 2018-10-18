@@ -7,6 +7,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Scroller` to not enable Spotlight by click and wheel when 'data-spotlight-container-disabled' prop is true
+- `moonstone/VideoPlayer` to position the slider knob correctly when beyond the left or right edge of the slider
+
+## [2.2.2] - 2018-10-15
+
+### Fixed
+
 - `moonstone/Scroller` stuttering when page up/down key is pressed
 
 ## [2.2.1] - 2018-10-09
