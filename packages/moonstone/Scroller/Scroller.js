@@ -83,12 +83,6 @@ class ScrollerBase extends Component {
 		spotlightId: PropTypes.string
 	}
 
-	constructor (props) {
-		super(props);
-
-		this.heightThreshold = ri.scale(24);
-	}
-
 	componentDidMount () {
 		this.configureSpotlight();
 	}
@@ -160,6 +154,7 @@ class ScrollerBase extends Component {
 	 */
 	calculateScrollTop = (focusedItem, itemTop, itemHeight, scrollInfo, scrollPosition) => {
 		const
+			heightThreshold = ri.scale(24),
 			{clientHeight, scrollHeight} = this.uiRef.scrollBounds,
 			{top: containerTop} = this.uiRef.containerRef.getBoundingClientRect(),
 			currentScrollTop = (scrollPosition ? scrollPosition : this.uiRef.scrollPos.top),
@@ -232,7 +227,7 @@ class ScrollerBase extends Component {
 			// Calculate when 5-way focus down past the bottom.
 
 			// if the last item is focused and have an invisible area, scroll all the way to the bottom
-			if (scrollHeight - itemBottom < this.heightThreshold) {
+			if (scrollHeight - itemBottom < heightThreshold) {
 				newScrollTop += scrollHeight - scrollBottom;
 			} else {
 				newScrollTop += itemBottom - scrollBottom;
@@ -241,7 +236,7 @@ class ScrollerBase extends Component {
 			// Calculate when 5-way focus up past the top.
 
 			// if the first item is focused and have an invisible area, scroll all the way to the top
-			if (newItemTop < this.heightThreshold) {
+			if (newItemTop < heightThreshold) {
 				newScrollTop = 0;
 			} else {
 				newScrollTop += newItemTop - currentScrollTop;
