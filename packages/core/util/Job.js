@@ -114,6 +114,7 @@ class Job {
 	 */
 	throttleUntil = (timeout, ...args) => {
 		if (!this.id) {
+			this.type = 'timeout';
 			this.run(args);
 			this.id = setTimeout(this.stop, timeout);
 		}
@@ -202,7 +203,7 @@ class Job {
 			this.id = window.requestAnimationFrame(callback);
 		} else {
 			// If requestAnimationFrame is not supported just run the function immediately
-			this.fn(...args);
+			this.run(args);
 		}
 	}
 }
