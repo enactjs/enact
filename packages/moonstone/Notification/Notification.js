@@ -18,10 +18,12 @@ import componentCss from './Notification.less';
 const fixHeight = (node) => {
 	if (!node) return;
 
-	const {top} = node.getBoundingClientRect();
-	const delta = Math.round(top) - top;
-	if (delta !== 0) {
-		node.style.transform = `translate3d(0, ${delta}px, 0)`;
+	const {left, top} = node.getBoundingClientRect();
+	const deltaY = Math.round(top) - top;
+	const deltaX = Math.round(left) - left;
+	if (deltaY !== 0 || deltaX !== 0) {
+		node.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0)`;
+		node.style.willChange = 'transform';
 	}
 };
 
