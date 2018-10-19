@@ -11,6 +11,27 @@ import computed from './computed';
 import styles from './styles';
 
 /**
+ * Configuration for CSS class name mapping
+ *
+ * @typedef StylesBlock
+ * @property {Object.<string, string>} css
+ * @property {String} className
+ * @property {Boolean|String|String[]} publicClassNames
+ */
+
+/**
+ * @typedef KindConfig
+ * @property {Object.<string, function>} computed
+ * @property {Object.<string, function>} contextTypes
+ * @property {Object.<string, any>} defaultProps
+ * @property {Object.<string, function>} handlers
+ * @property {String} name
+ * @property {Object.<string, number>} propTypes
+ * @property {function} render
+ * @property {StylesBlock} styles
+ */
+
+/**
  * Creates a new component with some helpful declarative syntactic sugar.
  *
  * Example:
@@ -55,7 +76,7 @@ import styles from './styles';
  * ```
  *
  * @function
- * @param  {Object}    config    Component configuration
+ * @param  {KindConfig}    config    Component configuration
  *
  * @returns {Function}           Component
  * @memberof core/kind
