@@ -3,6 +3,7 @@ import hoc from '@enact/core/hoc';
 import {coerceArray} from '@enact/core/util';
 import ilib from '@enact/i18n';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
+import ListFmt from '@enact/i18n/ilib/lib/ListFmt';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -240,6 +241,14 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 			}
 
 			const type = this.calcSelectedDayType(selected);
+			const format = (list) => {
+				if (this.props.locale === 'fa-IR') {
+					const listFmt = new ListFmt({length: 'medium', style:'unit'});
+					return listFmt.format(list);
+				}
+
+				return list.join(', ');
+			};
 
 			switch (type) {
 				case SELECTED_DAY_TYPES.EVERY_DAY :
@@ -249,7 +258,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 				case SELECTED_DAY_TYPES.EVERY_WEEKDAY :
 					return everyWeekdayText;
 				case SELECTED_DAY_TYPES.SELECTED_DAYS :
-					return selected.sort().map((dayIndex) => selectDayStrings[dayIndex]).join(', ');
+					return format(selected.sort().map((dayIndex) => selectDayStrings[dayIndex]));
 				case SELECTED_DAY_TYPES.SELECTED_NONE :
 					return '';
 			}
