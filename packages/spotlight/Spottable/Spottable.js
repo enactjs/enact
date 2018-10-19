@@ -179,6 +179,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 			this.isFocused = false;
 			this.isHovered = false;
+			this.shouldPreventBlur = false;
 
 			this.state = {
 				focusedWhenDisabled: false
@@ -191,7 +192,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const focusedWhenDisabled = this.isFocused && nextProps.disabled;
+			const focusedWhenDisabled = this.isFocused && (nextProps.disabled || nextProps.spotlightDisabled);
 
 			this.setState({
 				focusedWhenDisabled
@@ -310,6 +311,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		handleBlur = (ev) => {
+			if (this.shouldPreventBlur) return;
+
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = false;
 
@@ -326,6 +329,13 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = (ev) => {
+			if (this.props.disabled || this.props.spotlightDisabled) {
+				this.shouldPreventBlur = true;
+				ev.target.blur();
+				this.shouldPreventBlur = false;
+				return;
+			}
+
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = true;
 			}
@@ -349,13 +359,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			if (hasPointerMoved(ev.clientX, ev.clientY)) {
 				this.isHovered = false;
 			}
-		}
-
-		handleMouseDown = (ev) => {
-			if (!Spotlight.isSpottable(ev.currentTarget)) {
-				ev.preventDefault();
-			}
-			forward('onMouseDown', ev, this.props);
 		}
 
 		render () {
@@ -391,7 +394,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 					{...rest}
 					onBlur={this.handleBlur}
 					onFocus={this.handleFocus}
-					onMouseDown={this.handleMouseDown}
 					onMouseEnter={this.handleEnter}
 					onMouseLeave={this.handleLeave}
 					onKeyDown={this.handleKeyDown}

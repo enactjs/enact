@@ -7,7 +7,7 @@
  * @module spotlight/SpotlightContainerDecorator
  */
 
-import {forProp, forward, handle, stop} from '@enact/core/handle';
+import {forProp, forward, handle, returnsTrue, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -182,6 +182,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.state = stateFromProps(props);
+			this.shouldPreventBlur = false;
 
 			const cfg = {
 				...containerConfig,
@@ -227,10 +228,24 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
+		getShouldPreventBlur = () => this.shouldPreventBlur
+
+		setShouldPreventBlur = (value) => () => {
+			this.shouldPreventBlur = value;
+		}
+
+		handleBlur = handle(
+			forProp('spotlightDisabled', true),
+			this.getShouldPreventBlur,
+			stop
+		).bind(this)
+
 		handleFocus = handle(
 			forProp('spotlightDisabled', true),
 			stop,
-			({target}) => target.blur()
+			returnsTrue(this.setShouldPreventBlur(true)),
+			returnsTrue(({target}) => target.blur()),
+			this.setShouldPreventBlur(false)
 		).bind(this)
 
 		handleMouseEnter = handle(
@@ -264,9 +279,10 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			rest['data-spotlight-container'] = true;
 			rest['data-spotlight-id'] = this.state.id;
+			rest.onBlurCapture = this.handleBlur;
+			rest.onFocusCapture = this.handleFocus;
 			rest.onMouseEnter = this.handleMouseEnter;
 			rest.onMouseLeave = this.handleMouseLeave;
-			rest.onFocusCapture = this.handleFocus;
 
 			if (spotlightDisabled) {
 				rest['data-spotlight-container-disabled'] = spotlightDisabled;
