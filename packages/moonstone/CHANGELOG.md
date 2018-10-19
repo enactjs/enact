@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/DayPicker` separator character used between selected days in the label in fa-IR locale
 - `moonstone/Scroller` to scroll to the boundary when focusing the first or last element with a minimal margin in 5-way mode
 - `moonstone/VideoPlayer` to position the slider knob correctly when beyond the left or right edge of the slider
 
