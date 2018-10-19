@@ -6,7 +6,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scroller` to not enable Spotlight by click and wheel when 'data-spotlight-container-disabled' prop is true
+- `moonstone/Scroller` to respect the disabled spotlight container status when handling pointer events
+- `moonstone/Scroller` to scroll to the boundary when focusing the first or last element with a minimal margin in 5-way mode
 - `moonstone/VideoPlayer` to position the slider knob correctly when beyond the left or right edge of the slider
 
 ## [2.2.2] - 2018-10-15
