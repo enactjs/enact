@@ -56,6 +56,7 @@ const GridListImageItemBase = kind({
 		 *
 		 * @type {String}
 		 * @default 'Select'
+		 * @memberof moonstone/GridListImageItem.GridListImageItemBase.prototype
 		 * @public
 		 */
 		'data-webos-voice-intent': PropTypes.string,
