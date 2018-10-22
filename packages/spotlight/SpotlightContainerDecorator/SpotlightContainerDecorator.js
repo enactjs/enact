@@ -7,7 +7,7 @@
  * @module spotlight/SpotlightContainerDecorator
  */
 
-import {forProp, forward, handle, returnsTrue, stop} from '@enact/core/handle';
+import {forProp, forward, handle, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -228,33 +228,32 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		getShouldPreventBlur = () => this.shouldPreventBlur
-
-		setShouldPreventBlur = (value) => () => {
-			this.shouldPreventBlur = value;
+		silentBlur = ({target}) => {
+			this.shouldPreventBlur = true;
+			target.blur();
+			this.shouldPreventBlur = false;
 		}
 
-		handleBlur = handle(
-			forProp('spotlightDisabled', true),
-			this.getShouldPreventBlur,
-			stop
-		).bind(this)
+		handle = handle.bind(this)
 
-		handleFocus = handle(
+		handleBlur = this.handle(
+			() => this.shouldPreventBlur,
+			stop
+		)
+
+		handleFocus = this.handle(
 			forProp('spotlightDisabled', true),
 			stop,
-			returnsTrue(this.setShouldPreventBlur(true)),
-			returnsTrue(({target}) => target.blur()),
-			this.setShouldPreventBlur(false)
-		).bind(this)
+			this.silentBlur
+		)
 
-		handleMouseEnter = handle(
+		handleMouseEnter = this.handle(
 			forward('onMouseEnter'),
 			isNewPointerPosition,
 			() => Spotlight.setActiveContainer(this.state.id)
-		).bind(this)
+		)
 
-		handleMouseLeave = handle(
+		handleMouseLeave = this.handle(
 			forward('onMouseLeave'),
 			not(forProp('spotlightRestrict', 'self-only')),
 			isNewPointerPosition,
@@ -269,7 +268,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					Spotlight.setActiveContainer(activeContainer);
 				}
 			}
-		).bind(this)
+		)
 
 		render () {
 			const {spotlightDisabled, spotlightMuted, ...rest} = this.props;
