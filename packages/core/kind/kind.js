@@ -13,14 +13,16 @@ import styles from './styles';
 /**
  * Configuration for CSS class name mapping
  *
- * @typedef StylesBlock
+ * @typedef {Object} StylesBlock
+ * @memberof core/kind
  * @property {Object.<string, string>} css
  * @property {String} className
  * @property {Boolean|String|String[]} publicClassNames
  */
 
 /**
- * @typedef KindConfig
+ * @typedef {Object} KindConfig
+ * @memberof core/kind
  * @property {Object.<string, function>} computed
  * @property {Object.<string, function>} contextTypes
  * @property {Object.<string, any>} defaultProps
