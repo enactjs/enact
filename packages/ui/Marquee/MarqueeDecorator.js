@@ -197,10 +197,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forceDirection: PropTypes.oneOf(['rtl', 'ltr']),
 
 			/**
-			 * The current loclae as a
+			 * The current locale as a
 			 * {@link https://tools.ietf.org/html/rfc5646|BCP 47 language tag}.
 			 *
-			 * @private
+			 * @type {String}
+			 * @public
 			 */
 			locale: PropTypes.string,
 
@@ -275,9 +276,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			remeasure: PropTypes.any,
 
 			/**
-			 * Sets the text directionality to right-to-left for the current locale
+			 * Indicates the text directionality of the current locale is right-to-left
 			 *
-			 * @private
+			 * @type {String}
+			 * @public
 			 */
 			rtl: PropTypes.bool
 		}
@@ -458,14 +460,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					(this.isHovered && (marqueeOn === 'hover' || marqueeOn === 'focus' && disabled))
 				)
 			);
-		}
-
-		validateTextDirection () {
-			// eslint-disable-next-line react/no-did-mount-set-state
-			this.setState((state, props) => {
-				const rtl = determineTextDirection(this.node, props.rtl, props.forceDirection);
-				return state.rtl === rtl ? null : {rtl};
-			});
 		}
 
 		/*
@@ -742,6 +736,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		cacheNode = (node) => {
 			this.node = node;
+		}
+
+		validateTextDirection () {
+			// eslint-disable-next-line react/no-did-mount-set-state
+			this.setState((state, props) => {
+				const rtl = determineTextDirection(this.node, props.rtl, props.forceDirection);
+				return state.rtl === rtl ? null : {rtl};
+			});
 		}
 
 		renderMarquee () {
