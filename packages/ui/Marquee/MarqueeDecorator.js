@@ -327,12 +327,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				});
 			}
 
+			this.validateTextDirection();
 			if (this.props.marqueeOn === 'render') {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
 			on('keydown', this.handlePointerHide);
-
-			this.validateTextDirection();
 		}
 
 		componentWillReceiveProps (next) {
@@ -627,7 +626,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.setState({
 				animating: false
 			});
-			// synchronized Marquees defe`r to the controller to restart them
+			// synchronized Marquees defer to the controller to restart them
 			if (this.sync) {
 				this.context.complete(this);
 			} else if (!this.state.animating) {
@@ -739,7 +738,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		validateTextDirection () {
-			// eslint-disable-next-line react/no-did-mount-set-state
 			this.setState((state, props) => {
 				const rtl = determineTextDirection(this.node, props.rtl, props.forceDirection);
 				return state.rtl === rtl ? null : {rtl};
