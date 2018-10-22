@@ -265,11 +265,17 @@ class ScrollableBase extends Component {
 			focusedItem.blur();
 		}
 
-		if (
+		if ((
 			direction === 'vertical' && this.uiRef.canScrollVertically(bounds) ||
 			direction === 'horizontal' && this.uiRef.canScrollHorizontally(bounds)
-		) {
+		) && !this.props['data-spotlight-container-disabled']) {
 			this.childRef.setContainerDisabled(true);
+		}
+	}
+
+	onMouseDown = (ev) => {
+		if (this.props['data-spotlight-container-disabled']) {
+			ev.preventDefault();
 		}
 	}
 
@@ -285,7 +291,9 @@ class ScrollableBase extends Component {
 
 		if (delta !== 0) {
 			this.isWheeling = true;
-			this.childRef.setContainerDisabled(true);
+			if (!this.props['data-spotlight-container-disabled']) {
+				this.childRef.setContainerDisabled(true);
+			}
 		}
 	}
 
@@ -509,7 +517,9 @@ class ScrollableBase extends Component {
 	}
 
 	stop = () => {
-		this.childRef.setContainerDisabled(false);
+		if (!this.props['data-spotlight-container-disabled']) {
+			this.childRef.setContainerDisabled(false);
+		}
 		this.focusOnItem();
 		this.lastScrollPositionOnFocus = null;
 		this.isWheeling = false;
@@ -743,6 +753,7 @@ class ScrollableBase extends Component {
 				clearOverscrollEffect={this.clearOverscrollEffect}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
+				onMouseDown={this.onMouseDown}
 				onWheel={this.onWheel}
 				ref={this.initUiRef}
 				removeEventListeners={this.removeEventListeners}
