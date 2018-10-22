@@ -22,7 +22,7 @@ addAll({
  * @hoc
  * @private
  */
-const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
+const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	// Set-up event forwarding
 	const forwardBlur = forward('onBlur');
 	const forwardChange = forward('onChange');

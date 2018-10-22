@@ -6,6 +6,16 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
+- `spotlight` selection of elements clipped by an overflow container
+
+## [2.2.2] - 2018-10-15
+
+No significant changes.
+
+## [2.2.1] - 2018-10-09
+
+### Fixed
+
 - `spotlight` navigation into an overflow container which contains elements or containers larger than the container's bounds
 
 ## [2.2.0] - 2018-10-02
