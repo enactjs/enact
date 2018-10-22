@@ -9,26 +9,6 @@ const
 	rtlText = 'العربية - العراق',
 	contentSelector = `.${css.text}`;
 
-const makeI18nSubscriber = () => ({
-	listener: null,
-	subscribe: function (channel, listener) {
-		if (channel === 'i18n') {
-			this.listener = listener;
-		}
-	},
-	unsubscribe: function () {
-		this.listener = null;
-	},
-	publish: function (message) {
-		if (this.listener) {
-			this.listener({
-				channel: 'i18n',
-				message
-			});
-		}
-	}
-});
-
 describe('Marquee', () => {
 	it('should determine the correct directionality of latin text on initial render', function () {
 		const subject = mount(
@@ -92,13 +72,9 @@ describe('Marquee', () => {
 	});
 
 	it('should override direction to RTL when forceDirection is set and locale is LTR', function () {
-		const Subscriber = makeI18nSubscriber();
 		const subject = mount(
-			<Marquee forceDirection="rtl" />,
-			{context: {Subscriber}}
+			<Marquee forceDirection="rtl" locale="ltr" />
 		);
-
-		Subscriber.publish({rtl: false});
 
 		const expected = 'rtl';
 		const actual = subject.find(contentSelector).prop('style');
@@ -107,13 +83,9 @@ describe('Marquee', () => {
 	});
 
 	it('should override direction to LTR when forceDirection is set and locale is RTL', function () {
-		const Subscriber = makeI18nSubscriber();
 		const subject = mount(
-			<Marquee forceDirection="ltr" />,
-			{context: {Subscriber}}
+			<Marquee forceDirection="ltr" locale="rtl" />
 		);
-
-		Subscriber.publish({rtl: true});
 
 		const expected = 'ltr';
 		const actual = subject.find(contentSelector).prop('style');
@@ -122,13 +94,9 @@ describe('Marquee', () => {
 	});
 
 	it('should have direction of RTL when forceDirection is RTL and locale is RTL', function () {
-		const Subscriber = makeI18nSubscriber();
 		const subject = mount(
-			<Marquee forceDirection="rtl" />,
-			{context: {Subscriber}}
+			<Marquee forceDirection="rtl" locale="rtl" />
 		);
-
-		Subscriber.publish({rtl: true});
 
 		const expected = 'rtl';
 		const actual = subject.find(contentSelector).prop('style');
@@ -137,13 +105,9 @@ describe('Marquee', () => {
 	});
 
 	it('should have direction of LTR when forceDirection is LTR and locale is LTR', function () {
-		const Subscriber = makeI18nSubscriber();
 		const subject = mount(
-			<Marquee forceDirection="ltr" />,
-			{context: {Subscriber}}
+			<Marquee forceDirection="ltr" locale="ltr" />
 		);
-
-		Subscriber.publish({rtl: false});
 
 		const expected = 'ltr';
 		const actual = subject.find(contentSelector).prop('style');
