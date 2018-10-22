@@ -13,6 +13,7 @@
 	"visible": true,
 	"uiRevision": 2,
 	"useNativeScroll": true,
+	"disableBackHistoryAPI": true,
 	"class": {
 		"hidden": false
 	},

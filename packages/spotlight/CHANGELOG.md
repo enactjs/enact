@@ -5,6 +5,9 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ## [unreleased]
 
 - `spotlight/Spottable` to prevent focus when it should not be focusable
+### Fixed
+
+- `spotlight` selection of elements clipped by an overflow container
 
 ## [2.2.2] - 2018-10-15
 
