@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Marquee` to marquee when necessary after a locale change
+
 ## [2.2.3] - 2018-10-22
 
 No significant changes.
@@ -32,7 +38,6 @@ No significant changes.
 
 ### Fixed
 
-- `ui/Marquee` to marquee when necessary after a locale change
 - `ui/Touchable` to correctly handle a hold cancelled from an onHold handler
 - `ui/Marquee.MarqueeDecorator` to handle situations where lazily loaded CSS could cause marquee to not start correctly
 
