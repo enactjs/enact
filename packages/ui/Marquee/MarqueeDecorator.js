@@ -335,9 +335,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (next) {
-			const {forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
+			const {forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpeed, rtl} = this.props;
 			if (
 				locale !== next.locale ||
+				rtl !== next.rtl ||
 				!shallowEqual(this.props.children, next.children) ||
 				(invalidateProps && didPropChange(invalidateProps, this.props, next))
 			) {
