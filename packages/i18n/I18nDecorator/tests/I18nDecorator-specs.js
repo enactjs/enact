@@ -25,6 +25,7 @@ describe('I18nDecorator', () => {
 		);
 
 		const Wrapped = I18nDecorator(
+			{sync: true},
 			I18nContextDecorator(
 				{rtlProp: 'rtl'},
 				Component
@@ -45,6 +46,7 @@ describe('I18nDecorator', () => {
 		);
 
 		const Wrapped = I18nDecorator(
+			{sync: true},
 			I18nContextDecorator(
 				{updateLocaleProp: 'updateLocale'},
 				Component
@@ -69,6 +71,7 @@ describe('I18nDecorator', () => {
 		};
 
 		const Wrapped = I18nDecorator(
+			{sync: true},
 			I18nContextDecorator(
 				{updateLocaleProp: '_updateLocale'},
 				Component
@@ -94,6 +97,7 @@ describe('I18nDecorator', () => {
 		};
 
 		const Wrapped = I18nDecorator(
+			{sync: true},
 			I18nContextDecorator(
 				{rtlProp: 'rtl', updateLocaleProp: '_updateLocale'},
 				Component
@@ -116,7 +120,7 @@ describe('I18nDecorator', () => {
 			<div className={props.className} />
 		);
 
-		const Wrapped = I18nDecorator(Component);
+		const Wrapped = I18nDecorator({sync: true}, Component);
 		shallow(<Wrapped locale="ar-SA" />);
 
 		const expected = 'ar-SA';
@@ -130,7 +134,7 @@ describe('I18nDecorator', () => {
 			<div className={props.className} />
 		);
 
-		const Wrapped = I18nDecorator(Component);
+		const Wrapped = I18nDecorator({sync: true}, Component);
 		// explicitly setting locale so we get a known class list regardless of runtime locale
 		const subject = shallow(<Wrapped locale="en-US" />).find(Component);
 

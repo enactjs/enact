@@ -100,9 +100,9 @@ EnyoLoader.prototype._pathjoin = function (_root, subpath) {
  * @param {function(Array.<Object>)} callback callback to call when this function is finished
  *	attempting to load all the files that exist and can be loaded
  *
- * @returns {undefined}
+ * @returns {Promise}
  */
-EnyoLoader.prototype._loadFilesAsync = async function (path, params, cache) {
+EnyoLoader.prototype._loadFilesAsync = function (path, params, cache) {
 	let _root = iLibResources;
 	if (params && typeof params.root !== 'undefined') {
 		_root = params.root;
@@ -111,36 +111,37 @@ EnyoLoader.prototype._loadFilesAsync = async function (path, params, cache) {
 		url;
 
 	if (this.webos && path.indexOf('zoneinfo') !== -1) {
+		// TODO: Sort out async zone file loading
 		return this._createZoneFile(path);
 	} else if (cacheItem) {
-		return cacheItem;
+		return Promise.resolve(cacheItem);
 	}
 
-	await this.loadManifests(_root);
-
-	const isRootAvailable = this.isAvailable(_root, path);
-	if (isRootAvailable) {
-		url = this._pathjoin(_root, path);
-	} else {
-		const localeBase = this._pathjoin(this.base, 'locale');
-		const isBaseAvailable = this.isAvailable(localeBase, path);
-		if (isBaseAvailable) {
-			url = this._pathjoin(localeBase, path);
-		}
-	}
-
-	if (url) {
-		return get(url).then(json => {
-			if (typeof json === 'object') {
-				cache.update = true;
-				return json;
-			} else if (path === 'localeinfo.json') {
-				return LocaleInfo.defaultInfo;
+	return this.loadManifests(_root).then(() => {
+		const isRootAvailable = this.isAvailable(_root, path);
+		if (isRootAvailable) {
+			url = this._pathjoin(_root, path);
+		} else {
+			const localeBase = this._pathjoin(this.base, 'locale');
+			const isBaseAvailable = this.isAvailable(localeBase, path);
+			if (isBaseAvailable) {
+				url = this._pathjoin(localeBase, path);
 			}
-		});
-	}
+		}
 
-	return null;
+		if (url) {
+			return get(url).then(json => {
+				if (typeof json === 'object') {
+					cache.update = true;
+					return json;
+				} else if (path === 'localeinfo.json') {
+					return LocaleInfo.defaultInfo;
+				}
+			});
+		}
+
+		return null;
+	});
 };
 
 EnyoLoader.prototype._loadFilesCache = function (_root, paths) {
