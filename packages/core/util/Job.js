@@ -231,7 +231,7 @@ class Job {
 	 */
 	promise = (promise) => {
 		invariant(
-			promise && typeof promise.then === 'function' ,
+			promise && typeof promise.then === 'function',
 			'promise expects a thenable'
 		);
 

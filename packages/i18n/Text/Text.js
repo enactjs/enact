@@ -97,7 +97,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const props = Object.keys(map);
 
 			Promise.all([
-				new Promise((resolve, reject) => {
+				new Promise((resolve) => {
 					if (bundle) {
 						resolve(bundle);
 					}
