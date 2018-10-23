@@ -701,8 +701,7 @@ class ScrollableBase extends Component {
 		} else if (movement.includes(type)) {
 			const index = movement.indexOf(type);
 			if (this.props.direction === 'horizontal') {
-				scroll = horizontalDirection[index];
-				if (isRtl) scroll = scroll === 'left' && 'right' || scroll === 'right' && 'left' || scroll === 'leftmost' && 'rightmost' || scroll === 'rightmost' && 'leftmost';
+				scroll = isRtl ? horizontalDirection[index % 2 === 0 ? index + 1 : index - 1] : horizontalDirection[index];
 			} else {
 				scroll = verticalDirection[index];
 			}
