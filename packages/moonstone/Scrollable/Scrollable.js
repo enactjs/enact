@@ -692,16 +692,20 @@ class ScrollableBase extends Component {
 			{scrollTop, scrollLeft} = this.uiRef,
 			{maxLeft, maxTop} = this.uiRef.getScrollBounds(),
 			verticalDirection = ['up', 'down', 'top', 'bottom'],
-			horizontalDirection = ['left', 'right', 'leftmost', 'rightmost'];
+			horizontalDirection = ['left', 'right', 'leftmost', 'rightmost'],
+			movement = ['previous', 'next', 'first', 'last'];
 
 		let scroll;
 		if (verticalDirection.includes(type) || horizontalDirection.includes(type)) {
 			scroll = type;
-		} else if (this.props.direction === 'horizontal') {
-			scroll = type === 'previous' && 'left' || type === 'next' && 'right' || type === 'first' && 'leftmost' || type === 'last' && 'rightmost';
-			if (isRtl) scroll = scroll === 'left' && 'right' || scroll === 'right' && 'left' || scroll === 'leftmost' && 'rightmost' || scroll === 'rightmost' && 'leftmost';
-		} else {
-			scroll = type === 'previous' && 'up' || type === 'next' && 'down' || type === 'first' && 'top' || type === 'last' && 'bottom';
+		} else if (movement.includes(type)) {
+			const index = movement.indexOf(type);
+			if (this.props.direction === 'horizontal') {
+				scroll = horizontalDirection[index];
+				if (isRtl) scroll = scroll === 'left' && 'right' || scroll === 'right' && 'left' || scroll === 'leftmost' && 'rightmost' || scroll === 'rightmost' && 'leftmost';
+			} else {
+				scroll = verticalDirection[index];
+			}
 		}
 
 		this.voiceControlDirection = verticalDirection.includes(scroll) && 'vertical' || horizontalDirection.includes(scroll) && 'horizontal' || null;
