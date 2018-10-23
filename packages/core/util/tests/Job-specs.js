@@ -133,6 +133,26 @@ describe('Job', function () {
 	});
 
 	describe('#promise', function () {
+		it('should throw when passed a non-thenable argument', function (done) {
+			const j = new Job(() => done('Unexpected job execution'));
+			try {
+				j.promise({});
+			} catch (msg) {
+				done();
+			}
+		});
+
+		it('should support a non-Promise, thenable argument', function (done) {
+			const j = new Job(() => done());
+			try {
+				j.promise({
+					then: (fn) => fn(true)
+				});
+			} catch (msg) {
+				done(msg);
+			}
+		});
+
 		it('should start job for a resolved promise', function (done) {
 			const j = new Job(() => done());
 			j.promise(Promise.resolve(true));
@@ -142,9 +162,7 @@ describe('Job', function () {
 			const j = new Job(() => {
 				done(new Error('Job ran for rejected promise'));
 			});
-			const promise = Promise.reject(true);
-			promise.catch(() => {});
-			j.promise(promise);
+			j.promise(Promise.reject(true)).catch(() => {});
 			setTimeout(done, 10);
 		});
 
@@ -164,6 +182,23 @@ describe('Job', function () {
 			});
 			j.promise(new Promise(resolve => resolve(1)));
 			j.promise(new Promise(resolve => resolve(2)));
+		});
+
+		it('should return the value from the job to the resolved promise', function (done) {
+			const j = new Job(() => 'job value');
+			j.promise(Promise.resolve(true)).then(value => {
+				expect(value).to.equal('job value');
+				done();
+			});
+		});
+
+		it('should not return the value from the job to the resolved promise', function (done) {
+			const j = new Job(() => 'job value');
+			j.promise(Promise.resolve(true)).then(value => {
+				expect(value).to.not.exist();
+				done();
+			});
+			j.promise(Promise.resolve(true)).then(() => done());
 		});
 	});
 });
