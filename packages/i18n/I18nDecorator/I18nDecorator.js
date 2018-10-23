@@ -30,7 +30,7 @@ const contextTypes = {
 const I18nContext = React.createContext(null);
 
 /**
- * Default config for `ResolutionDecorator`.
+ * Default config for `I18nDecorator`.
  *
  * @memberof i18n/I18nDecorator.I18nDecorator
  * @hocconfig
@@ -173,6 +173,7 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					resourcesLoaded: true
 				};
 			});
+			// TODO: Resolve how to handle failed resource resquests
 			// .catch(...);
 
 			this.loadResourceJob.promise(resources);

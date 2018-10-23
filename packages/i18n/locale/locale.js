@@ -20,7 +20,8 @@ import {initCaseMappers} from '../src/case';
  * @memberof i18n/locale
  * @param {ilib.Locale|string|undefined} spec locale specifier or locale object of the locale to
  *	test, or undefined to test the current locale
- * @returns {Boolean} `true` if non-Latin locale
+ * @param {Object} [options] An object configuring the request. Must include an `onLoad` member to
+ *                           receive the result.
  */
 function isNonLatinLocale (spec, options = {}) {
 	const {onLoad} = options;
@@ -58,10 +59,11 @@ function isNonLatinLocale (spec, options = {}) {
 }
 
 /**
- * Returns `true` if current locale is a right-to-left locale
+ * Determines if current locale is a right-to-left locale.
  *
  * @memberof i18n/locale
- * @returns {Boolean} `true` if current locale is a right-to-left locale
+ * @param {Object} [options] An object configuring the request. Must include an `onLoad` member to
+ *                           receive the result.
  */
 function isRtlLocale (options = {}) {
 	const {onLoad, sync} = options;

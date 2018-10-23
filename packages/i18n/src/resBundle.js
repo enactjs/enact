@@ -81,6 +81,15 @@ function clearResBundle () {
 	resBundle = null;
 }
 
+/**
+ * Retrieves an IString from a resource bundle by key.
+ *
+ * If the bundle doesn't exist, the key is returned wrapped by IString.
+ *
+ * @param {String|Object} str Key for localized string
+ * @param {ResBundl} rb ilib resource bundle
+ * @returns	{IString} The string value wrapped by an IString
+ */
 function getIStringFromBundle (str, rb) {
 	const isObject = typeof str === 'object';
 	if (rb) {

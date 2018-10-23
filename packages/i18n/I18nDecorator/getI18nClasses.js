@@ -73,7 +73,8 @@ function getClassesForLocale (li, options) {
  * A function that returns locale in class name.
  *
  * @memberof i18n/I18nDecorator
- * @returns {String} Class
+ * @param {options.sync} Perform a synchronous request for the classes
+ * @param {options.onLoad} Called with a string of i18n classes
  * @private
  */
 function getI18nClasses (options = {}) {
