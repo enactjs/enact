@@ -97,7 +97,12 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const props = Object.keys(map);
 
 			Promise.all([
-				bundle ? Promise.resolve(bundle) : createResBundle(locale, null, false),
+				new Promise((resolve, reject) => {
+					if (bundle) {
+						resolve(bundle);
+					}
+					createResBundle({locale, sync: false, onLoad: resolve});
+				}),
 				// ResBundle.getString will try to synchronously fetch the plurals resouce so need
 				// to proactively fetch it to avoid the sync XHR
 				new Promise(resolve => IString.loadPlurals(false, null, null, resolve))

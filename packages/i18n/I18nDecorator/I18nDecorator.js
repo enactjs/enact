@@ -15,7 +15,7 @@ import React from 'react';
 
 import {isRtlLocale, updateLocale} from '../locale';
 import ilib from '../src/index.js';
-import {setResBundleLocale} from '../src/resBundle';
+import {createResBundle, setResBundle} from '../src/resBundle';
 import wrapIlibCallback from '../src/wrapIlibCallback';
 
 import getI18nClasses from './getI18nClasses';
@@ -147,7 +147,8 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				rtl = wrapIlibCallback(isRtlLocale, options);
 				classes = wrapIlibCallback(getI18nClasses, options);
 
-				setResBundleLocale(locale, sync);
+				const bundle = wrapIlibCallback(createResBundle, options);
+				setResBundle(bundle);
 			}
 
 			return {
@@ -164,8 +165,10 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				wrapIlibCallback(isRtlLocale, options),
 				wrapIlibCallback(getI18nClasses, options),
 				// move updating into a new method with call to setState
-				setResBundleLocale(locale, sync)
-			]).then(([rtl, classes]) => {
+				wrapIlibCallback(createResBundle, options)
+			]).then(([rtl, classes, bundle]) => {
+				setResBundle(bundle);
+
 				return {
 					locale,
 					classes,
