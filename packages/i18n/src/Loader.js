@@ -1,13 +1,12 @@
 /* global XMLHttpRequest, ILIB_BASE_PATH, ILIB_RESOURCES_PATH, ILIB_CACHE_ID */
 
+import {memoize} from '@enact/core/util';
 import xhr from 'xhr';
 
 import Loader from '../ilib/lib/Loader';
 import LocaleInfo from '../ilib/lib/LocaleInfo';
 
 import ZoneInfoFile from './zoneinfo';
-
-const inProgressRequests = {};
 
 const getImpl = (url, callback, sync) => {
 	if (typeof XMLHttpRequest !== 'undefined') {
@@ -30,21 +29,15 @@ const getImpl = (url, callback, sync) => {
 
 const getSync = (url, callback) => getImpl(url, callback, true);
 
-const get = (url) => {
-	inProgressRequests[url] = inProgressRequests[url] || new Promise((resolve, reject) => {
-		getImpl(url, (json, error) => {
-			delete inProgressRequests[url];
-
-			if (error) {
-				reject(error);
-			} else {
-				resolve(json);
-			}
-		}, false);
-	});
-
-	return inProgressRequests[url];
-};
+const get = memoize((url) => new Promise((resolve, reject) => {
+	getImpl(url, (json, error) => {
+		if (error) {
+			reject(error);
+		} else {
+			resolve(json);
+		}
+	}, false);
+}));
 
 const iLibBase = ILIB_BASE_PATH;
 const iLibResources = ILIB_RESOURCES_PATH;
@@ -216,11 +209,11 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 
 				this.loadManifestsSync(_root);
 
-				if (this.isAvailable(_root, path, true)) {
+				if (this.isAvailable(_root, path)) {
 					getSync(this._pathjoin(_root, path), handler);
 				}
 
-				if (!found && this.isAvailable(locdata, path, true)) {
+				if (!found && this.isAvailable(locdata, path)) {
 					getSync(this._pathjoin(locdata, path), handler);
 				}
 
