@@ -40,6 +40,9 @@ import {
 	isNavigable,
 	isWithinOverflowContainer,
 	mayActivateContainer,
+	notifyLeaveContainer,
+	notifyLeaveContainerFail,
+	notifyEnterContainer,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
@@ -203,9 +206,6 @@ const Spotlight = (function () {
 		const focusOptions = isWithinOverflowContainer(elem, containerIds) ? {preventScroll: true} : null;
 
 		let silentFocus = function () {
-			if (currentFocusedElement) {
-				currentFocusedElement.blur();
-			}
 			elem.focus(focusOptions);
 			focusChanged(elem, containerIds);
 		};
@@ -221,10 +221,6 @@ const Spotlight = (function () {
 			silentFocus();
 			_duringFocusChange = false;
 			return true;
-		}
-
-		if (currentFocusedElement) {
-			currentFocusedElement.blur();
 		}
 
 		elem.focus(focusOptions);
@@ -324,6 +320,14 @@ const Spotlight = (function () {
 				return false;
 			}
 
+			notifyLeaveContainer(
+				direction,
+				currentFocusedElement,
+				currentContainerIds,
+				next,
+				nextContainerIds
+			);
+
 			setContainerPreviousTarget(
 				currentContainerId,
 				direction,
@@ -331,8 +335,20 @@ const Spotlight = (function () {
 				currentFocusedElement
 			);
 
-			return focusElement(next, nextContainerIds);
+			const focused = focusElement(next, nextContainerIds);
+
+			notifyEnterContainer(
+				direction,
+				currentFocusedElement,
+				currentContainerIds,
+				next,
+				nextContainerIds
+			);
+
+			return focused;
 		}
+
+		notifyLeaveContainerFail(direction, currentFocusedElement, currentContainerIds);
 
 		return false;
 	}
@@ -377,10 +393,16 @@ const Spotlight = (function () {
 		// trying to focus something else (potentially) unless the window was previously blurred
 		if (_spotOnWindowFocus) {
 			setPlatformPointerMode();
+
 			// If the window was previously blurred while in pointer mode, the last active containerId may
 			// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
 			// to the last focused element of the last active containerId, so we use rootContainerId instead
-			if (!Spotlight.focus(getContainerLastFocusedElement(rootContainerId))) {
+			let lastFocusedElement = getContainerLastFocusedElement(rootContainerId);
+			while (isContainer(lastFocusedElement)) {
+				({lastFocusedElement} = getContainerConfig(lastFocusedElement));
+			}
+
+			if (!Spotlight.focus(lastFocusedElement)) {
 				// If the last focused element was previously also disabled (or no longer exists), we
 				// need to set focus somewhere
 				Spotlight.focus();
@@ -635,6 +657,7 @@ const Spotlight = (function () {
 		/**
 		 * Pauses Spotlight
 		 *
+		 * @function
 		 * @returns {undefined}
 		 * @public
 		 */
@@ -643,6 +666,7 @@ const Spotlight = (function () {
 		/**
 		 * Resumes Spotlight
 		 *
+		 * @function
 		 * @returns {undefined}
 		 * @public
 		 */
@@ -804,6 +828,7 @@ const Spotlight = (function () {
 		/**
 		 * Determines whether Spotlight is currently paused.
 		 *
+		 * @function
 		 * @returns {Boolean} `true` if Spotlight is currently paused.
 		 * @public
 		 */

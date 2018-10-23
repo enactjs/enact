@@ -2,16 +2,71 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [2.2.3] - 2018-10-22
 
 ### Fixed
 
-- `moonstone/ExpandableItem` to not make scrolling of a parent scroller when 5-way key is pressed on the first item or the last item
+- `moonstone/Scroller` to respect the disabled spotlight container status when handling pointer events
+- `moonstone/Scroller` to scroll to the boundary when focusing the first or last element with a minimal margin in 5-way mode
+- `moonstone/VideoPlayer` to position the slider knob correctly when beyond the left or right edge of the slider
+
+## [2.2.2] - 2018-10-15
+
+### Fixed
+
+- `moonstone/Scroller` stuttering when page up/down key is pressed
+
+## [2.2.1] - 2018-10-09
+
+### Fixed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to notify user when scrolling is not possible via voice command
+- `moonstone/TimePicker` to not read out meridiem label when changing the value
+
+## [2.2.0] - 2018-10-02
+
+### Added
+
+- `moonstone/GridListImageItem` voice control feature support
+
+### Fixed
+
+- `moonstone/DayPicker` to prevent closing when selecting days via voice control
+- `moonstone/VideoPlayer` to unfocus media controls when hidden
+- `moonstone/Scroller` to set correct scroll position when an expandable child is closed
+- `moonstone/Scroller` to prevent focusing children while scrolling
+
+## [2.1.4] - 2018-09-17
+
+### Fixed
+
+- `moonstone/Button` and `moonstone/IconButton` to style image-based icons correctly when focused and disabled
+- `moonstone/FormCheckboxItem` styling when focused and disabled
+- `moonstone/Panels` to always blur breadcrumbs when transitioning to a new panel
+- `moonstone/Scroller` to correctly set scroll position when nested item is focused
+- `moonstone/Scroller` to not adjust `scrollTop` when nested item is focused
+- `moonstone/VideoPlayer` to show correct playback rate feedback on play or pause
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to handle 5way navigation properly when `focusableScrollbar` is true
+
+## [2.1.3] - 2018-09-10
+
+### Fixed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effects properly on repeating wheel input
+- `moonstone/TooltipDecorator` to handle runtime error when setting `tooltipText` to an empty string
+- `moonstone/VideoPlayer` timing to read out `infoComponents` accessibility value when `moreButton` or `moreButtonColor` is pressed
+
+## [2.1.2] - 2018-09-04
+
+### Fixed
+
+- `moonstone/ExpandableItem` to prevent default browser scroll behavior when 5-way key is pressed on the first item or the last item
 - `moonstone/Scroller` scrolling behavior for focused items in 5-way mode
+- `moonstone/Scroller` to scroll container elements into view
+- `moonstone/TooltipDecorator` to update position when `tooltipText` is changed
 - `moonstone/VideoPlayer` to prevent default browser scroll behavior when navigating via 5-way
-- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to jump to the previous or next page properly via page up or down keys
 - `moonstone/VirtuaList` to allow `onKeyDown` events to bubble
-- `moonstone/Scrollable` to forward `onKeyDown` event
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` scrolling via page up or down keys
 
 ## [2.1.1] - 2018-08-27
 
@@ -21,7 +76,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scroller` to scroll container elements into view
 - `moonstone/VideoPlayer` so that activity is detected and the `autoCloseTimeout` timer is reset when using 5-way to navigate from the media slider
 
 ## [2.1.0] - 2018-08-20

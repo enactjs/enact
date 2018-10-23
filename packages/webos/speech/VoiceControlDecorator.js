@@ -54,7 +54,7 @@ import hoc from '@enact/core/hoc';
  * @hoc
  * @public
  */
-const VoiceControlDecorator = hoc((config, Wrapped) => {
+const VoiceControlDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
 		static displayName = 'VoiceControlDecorator'
 

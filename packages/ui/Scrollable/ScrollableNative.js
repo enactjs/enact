@@ -383,6 +383,10 @@ class ScrollableBaseNative extends Component {
 		};
 
 		this.overscrollEnabled = !!(props.applyOverscrollEffect);
+		this.scrollRaFId = null;
+
+		// Enable the early bail out of repeated scrolling to the same position
+		this.animationInfo = null;
 
 		props.cbScrollTo(this.scrollTo);
 	}
@@ -460,10 +464,9 @@ class ScrollableBaseNative extends Component {
 	componentWillUnmount () {
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
 		if (this.scrolling) {
-			this.forwardScrollEvent('onScrollStop');
+			this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
 		}
 		this.scrollStopJob.stop();
-		this.startScrollJob.stop();
 
 		this.removeEventListeners();
 		off('keydown', this.onKeyDown);
@@ -471,6 +474,10 @@ class ScrollableBaseNative extends Component {
 		if (this.context.Subscriber) {
 			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
 			this.context.Subscriber.unsubscribe('i18n', this.handleSubscription);
+		}
+
+		if (this.scrollRaFId) {
+			window.cancelAnimationFrame(this.scrollRaFId);
 		}
 	}
 
@@ -728,7 +735,12 @@ class ScrollableBaseNative extends Component {
 	onScroll = (ev) => {
 		const {scrollLeft, scrollTop} = ev.target;
 
-		this.startScrollJob.startRaf(scrollLeft, scrollTop);
+		if (!this.scrollRaFId) {
+			this.scrollRaFId = window.requestAnimationFrame(() => {
+				this.scrollOnScroll(scrollLeft, scrollTop);
+				this.scrollRaFId = null;
+			});
+		}
 	}
 
 	scrollByPage = (keyCode) => {
@@ -891,15 +903,15 @@ class ScrollableBaseNative extends Component {
 	checkAndApplyOverscrollEffectOnStart = (orientation, edge, targetPosition) => {
 		if (this.isDragging) {
 			this.applyOverscrollEffectOnDrag(orientation, edge, targetPosition, overscrollTypeHold);
-		} else if (edge && this.getOverscrollStatus(orientation, edge).type === overscrollTypeNone) {
+		} else if (edge) {
 			this.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 		}
 	}
 
 	// call scroll callbacks
 
-	forwardScrollEvent (type) {
-		forward(type, {scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
+	forwardScrollEvent (type, reachedEdgeInfo) {
+		forward(type, {scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo(), reachedEdgeInfo}, this.props);
 	}
 
 	// call scroll callbacks and update scrollbars for native scroll
@@ -920,7 +932,7 @@ class ScrollableBaseNative extends Component {
 		this.lastInputType = null;
 		this.isScrollAnimationTargetAccumulated = false;
 		this.scrolling = false;
-		this.forwardScrollEvent('onScrollStop');
+		this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
 		this.startHidingThumb();
 	}
 
@@ -958,8 +970,6 @@ class ScrollableBaseNative extends Component {
 		this.scrollStopJob.start();
 	}
 
-	startScrollJob = new Job(this.scrollOnScroll, 16);
-
 	scrollStopJob = new Job(this.scrollStopOnScroll, scrollStopWaiting);
 
 	// update scroll position
@@ -992,6 +1002,38 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	getReachedEdgeInfo = () => {
+		const
+			bounds = this.getScrollBounds(),
+			reachedEdgeInfo = {bottom: false, left: false, right: false, top: false};
+
+		if (this.canScrollHorizontally(bounds)) {
+			const
+				rtl = this.state.rtl,
+				edge = this.getEdgeFromPosition(this.scrollLeft, bounds.maxLeft);
+
+			if (edge) { // if edge is null, no need to check which edge is reached.
+				if ((edge === 'before' && !rtl) || (edge === 'after' && rtl)) {
+					reachedEdgeInfo.left = true;
+				} else {
+					reachedEdgeInfo.right = true;
+				}
+			}
+		}
+
+		if (this.canScrollVertically(bounds)) {
+			const edge = this.getEdgeFromPosition(this.scrollTop, bounds.maxTop);
+
+			if (edge === 'before') {
+				reachedEdgeInfo.top = true;
+			} else if (edge === 'after') {
+				reachedEdgeInfo.bottom = true;
+			}
+		}
+
+		return reachedEdgeInfo;
+	}
+
 	// scroll start
 
 	start ({targetX, targetY, animate = true, overscrollEffect = false}) {
@@ -1001,6 +1043,18 @@ class ScrollableBaseNative extends Component {
 			childContainerRef = childRef.containerRef,
 			bounds = this.getScrollBounds(),
 			{maxLeft, maxTop} = bounds;
+
+		const updatedAnimationInfo = {
+			targetX,
+			targetY
+		};
+
+		// bail early when scrolling to the same position
+		if (this.scrolling && this.animationInfo && this.animationInfo.targetX === targetX && this.animationInfo.targetY === targetY) {
+			return;
+		}
+
+		this.animationInfo = updatedAnimationInfo;
 
 		if (Math.abs(maxLeft - targetX) < epsilon) {
 			targetX = maxLeft;

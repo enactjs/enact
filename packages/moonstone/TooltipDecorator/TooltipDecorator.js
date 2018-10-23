@@ -169,6 +169,12 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		componentDidUpdate (prevProps) {
+			if (this.state.showing && prevProps.tooltipText !== this.props.tooltipText) {
+				this.setTooltipLayout();
+			}
+		}
+
 		componentWillUnmount () {
 			if (currentTooltip === this) {
 				currentTooltip = null;
@@ -181,6 +187,8 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		setTooltipLayout () {
+			if (!this.tooltipRef || !this.clientRef) return;
+
 			const position = this.props.tooltipPosition;
 			const arr = position.split(' ');
 			let tooltipDirection = null;

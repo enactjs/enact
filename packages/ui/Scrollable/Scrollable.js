@@ -383,6 +383,9 @@ class ScrollableBase extends Component {
 
 		this.overscrollEnabled = !!(props.applyOverscrollEffect);
 
+		// Enable the early bail out of repeated scrolling to the same position
+		this.animationInfo = null;
+
 		props.cbScrollTo(this.scrollTo);
 	}
 
@@ -461,7 +464,7 @@ class ScrollableBase extends Component {
 	componentWillUnmount () {
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
 		if (this.animator.isAnimating()) {
-			this.forwardScrollEvent('onScrollStop');
+			this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
 			this.animator.stop();
 		}
 
@@ -816,15 +819,15 @@ class ScrollableBase extends Component {
 	checkAndApplyOverscrollEffectOnStart = (orientation, edge, targetPosition) => {
 		if (this.isDragging) {
 			this.applyOverscrollEffectOnDrag(orientation, edge, targetPosition, overscrollTypeHold);
-		} else if (edge && this.getOverscrollStatus(orientation, edge).type === overscrollTypeNone) {
+		} else if (edge) {
 			this.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 		}
 	}
 
 	// call scroll callbacks
 
-	forwardScrollEvent (type) {
-		forward(type, {scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
+	forwardScrollEvent (type, reachedEdgeInfo) {
+		forward(type, {scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo(), reachedEdgeInfo}, this.props);
 	}
 
 	// update scroll position
@@ -857,6 +860,38 @@ class ScrollableBase extends Component {
 		}
 	}
 
+	getReachedEdgeInfo = () => {
+		const
+			bounds = this.getScrollBounds(),
+			reachedEdgeInfo = {bottom: false, left: false, right: false, top: false};
+
+		if (this.canScrollHorizontally(bounds)) {
+			const
+				rtl = this.state.rtl,
+				edge = this.getEdgeFromPosition(this.scrollLeft, bounds.maxLeft);
+
+			if (edge) { // if edge is null, no need to check which edge is reached.
+				if ((edge === 'before' && !rtl) || (edge === 'after' && rtl)) {
+					reachedEdgeInfo.left = true;
+				} else {
+					reachedEdgeInfo.right = true;
+				}
+			}
+		}
+
+		if (this.canScrollVertically(bounds)) {
+			const edge = this.getEdgeFromPosition(this.scrollTop, bounds.maxTop);
+
+			if (edge === 'before') {
+				reachedEdgeInfo.top = true;
+			} else if (edge === 'after') {
+				reachedEdgeInfo.bottom = true;
+			}
+		}
+
+		return reachedEdgeInfo;
+	}
+
 	// scroll start/stop
 
 	start ({targetX, targetY, animate = true, duration = animationDuration, overscrollEffect = false}) {
@@ -864,6 +899,21 @@ class ScrollableBase extends Component {
 			{scrollLeft, scrollTop} = this,
 			bounds = this.getScrollBounds(),
 			{maxLeft, maxTop} = bounds;
+
+		const updatedAnimationInfo = {
+			sourceX: scrollLeft,
+			sourceY: scrollTop,
+			targetX,
+			targetY,
+			duration
+		};
+
+		// bail early when scrolling to the same position
+		if (this.scrolling && this.animationInfo && this.animationInfo.targetX === targetX && this.animationInfo.targetY === targetY) {
+			return;
+		}
+
+		this.animationInfo = updatedAnimationInfo;
 
 		this.animator.stop();
 		if (!this.scrolling) {
@@ -890,13 +940,7 @@ class ScrollableBase extends Component {
 		this.showThumb(bounds);
 
 		if (animate) {
-			this.animator.animate(this.scrollAnimation({
-				sourceX: scrollLeft,
-				sourceY: scrollTop,
-				targetX,
-				targetY,
-				duration
-			}));
+			this.animator.animate(this.scrollAnimation(this.animationInfo));
 		} else {
 			this.scroll(targetX, targetY);
 			this.stop();
@@ -973,7 +1017,7 @@ class ScrollableBase extends Component {
 		}
 		if (this.scrolling) {
 			this.scrolling = false;
-			this.forwardScrollEvent('onScrollStop');
+			this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
 		}
 	}
 

@@ -1,7 +1,9 @@
 import Button from '@enact/moonstone/Button';
+import Notification from '@enact/moonstone/Notification';
 import Popup from '@enact/moonstone/Popup';
-import React from 'react';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import Toggleable from '@enact/ui/Toggleable';
+import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
@@ -10,6 +12,23 @@ import {boolean, select, text} from '../../src/enact-knobs';
 Popup.displayName = 'Popup';
 
 const Container = SpotlightContainerDecorator('div');
+
+const PopupFromSelfOnlyContainer = Toggleable(
+	{prop: 'open', toggle: 'onToggle'},
+	({onToggle, open}) => (
+		<div>
+			<Container spotlightId="selfOnlyContainer" spotlightRestrict="self-only">
+				<Button onClick={onToggle}>button</Button>
+			</Container>
+			<Notification open={open}>
+				<span>popup</span>
+				<buttons>
+					<Button onClick={onToggle}>button</Button>
+				</buttons>
+			</Notification>
+		</div>
+	)
+);
 
 storiesOf('Popup', module)
 	.add(
@@ -40,5 +59,11 @@ storiesOf('Popup', module)
 					</Container>
 				</Popup>
 			</div>
+		)
+	)
+	.add(
+		'from self-only container',
+		() => (
+			<PopupFromSelfOnlyContainer />
 		)
 	);

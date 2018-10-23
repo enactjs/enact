@@ -81,6 +81,24 @@ describe('Job', function () {
 	});
 
 	describe('#idle', function () {
+		// polyfill for PhantomJS to verify expected idle behavior as much as possible
+		const windowRequest = window.requestIdleCallback;
+		const windowCancel = window.cancelIdleCallback;
+
+		before(() => {
+			window.requestIdleCallback = windowRequest || function (fn) {
+				return setTimeout(fn, 0);
+			};
+			window.cancelIdleCallback = windowCancel || function (id) {
+				clearTimeout(id);
+			};
+		});
+
+		after(() => {
+			window.requestIdleCallback = windowRequest;
+			window.cancelIdleCallback = windowCancel;
+		});
+
 		it('should start job', function (done) {
 			const j = new Job(done, 10);
 			j.idle();
@@ -98,6 +116,19 @@ describe('Job', function () {
 
 			const j = new Job(fn, 10);
 			j.idle(value);
+		});
+
+		it('should clear an existing job id before starting job', function (done) {
+			const fn = function (arg) {
+				if (arg === 'first') {
+					done(new Error('First job ran'));
+				} else {
+					done();
+				}
+			};
+			const j = new Job(fn);
+			j.idle('first');
+			j.idle('second');
 		});
 	});
 

@@ -1,6 +1,7 @@
 import {adaptEvent, call, handle, forKey, forward, oneOf, preventDefault, returnsTrue, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {calcProportion} from '@enact/ui/Slider/utils';
+import clamp from 'ramda/src/clamp';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -68,7 +69,7 @@ const handleKeyUp = handle(
  * @hoc
  * @private
  */
-const MediaSliderDecorator = hoc((config, Wrapped) => {
+const MediaSliderDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
 		static displayName = 'MediaSliderDecorator'
 
@@ -125,11 +126,10 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {
 
 		move (clientX) {
 			this.setState((state) => {
-				if (clientX >= state.minX && clientX <= state.maxX) {
-					return {
-						x: calcProportion(state.minX, state.maxX, clientX)
-					};
-				}
+				const value = clamp(state.minX, state.maxX, clientX);
+				return {
+					x: calcProportion(state.minX, state.maxX, value)
+				};
 			});
 		}
 
