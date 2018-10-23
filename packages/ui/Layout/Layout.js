@@ -85,10 +85,10 @@ const LayoutBase = kind({
 		/**
 		 * Only [Cell]{@link ui/Layout.Cell} components are supported as children.
 		 *
-		 * @type {Node}
+		 * @type {Any}
 		 * @public
 		 */
-		children: PropTypes.node,
+		children: PropTypes.any,
 
 		/**
 		 * The type of component to use to render as the `Layout`. May be a DOM node name (e.g 'div',

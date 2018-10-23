@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
  * @hoc
  * @public
  */
-const AccessibilityDecorator = hoc((config, Wrapped) => {
+const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
 		static displayName = 'AccessibilityDecorator'
 

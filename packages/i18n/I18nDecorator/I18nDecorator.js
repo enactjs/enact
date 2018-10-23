@@ -4,7 +4,6 @@
  * @module i18n/I18nDecorator
  * @exports I18nDecorator
  * @exports I18nContextDecorator
- * @exports I18nContext
  */
 
 import {on, off} from '@enact/core/dispatcher';
@@ -37,7 +36,7 @@ const I18nContext = React.createContext(null);
  * @hoc
  * @public
  */
-const I18nDecorator = hoc((config, Wrapped) => {
+const I18nDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
 		static displayName = 'I18nDecorator'
 

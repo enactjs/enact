@@ -17,12 +17,12 @@
  */
 
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
-import {forward} from '@enact/core/handle';
-import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import {Spotlight, getDirection} from '@enact/spotlight';
+import {Spotlight} from '@enact/spotlight';
 
+import ri from '@enact/ui/resolution';
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
@@ -72,13 +72,29 @@ class ScrollerBase extends Component {
 		 * @type {Boolean}
 		 * @private
 		 */
-		rtl: PropTypes.bool
+		rtl: PropTypes.bool,
+
+		/**
+		 * The spotlight id for the component.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		spotlightId: PropTypes.string
 	}
 
-	componentDidUpdate () {
+	componentDidMount () {
+		this.configureSpotlight();
+	}
+
+	componentDidUpdate (prevProps) {
 		const {onUpdate} = this.props;
 		if (onUpdate) {
 			onUpdate();
+		}
+
+		if (prevProps.spotlightId !== this.props.spotlightId) {
+			this.configureSpotlight();
 		}
 	}
 
@@ -86,7 +102,12 @@ class ScrollerBase extends Component {
 		this.setContainerDisabled(false);
 	}
 
-	isScrolledToBoundary = false
+	configureSpotlight () {
+		Spotlight.set(this.props.spotlightId, {
+			onLeaveContainer: this.handleLeaveContainer,
+			onLeaveContainerFail: this.handleLeaveContainer
+		});
+	}
 
 	/**
 	 * Returns the first spotlight container between `node` and the scroller
@@ -133,45 +154,46 @@ class ScrollerBase extends Component {
 	 */
 	calculateScrollTop = (focusedItem, itemTop, itemHeight, scrollInfo, scrollPosition) => {
 		const
-			{clientHeight} = this.uiRef.scrollBounds,
+			heightThreshold = ri.scale(24),
+			{clientHeight, scrollHeight} = this.uiRef.scrollBounds,
 			{top: containerTop} = this.uiRef.containerRef.getBoundingClientRect(),
 			currentScrollTop = (scrollPosition ? scrollPosition : this.uiRef.scrollPos.top),
 			// calculation based on client position
 			newItemTop = this.uiRef.containerRef.scrollTop + (itemTop - containerTop),
 			itemBottom = newItemTop + itemHeight,
 			scrollBottom = clientHeight + currentScrollTop;
+		let
+			newScrollTop = this.uiRef.scrollPos.top,
+			scrollHeightChange = 0;
 
-		let newScrollTop = this.uiRef.scrollPos.top;
-
-		// Caculations for when scrollHeight decrease.
+		// Calculations for when scrollHeight decrease.
 		if (scrollInfo) {
 			const
-				{scrollTop, previousScrollHeight} = scrollInfo,
-				{scrollHeight} = this.uiRef.scrollBounds,
-				scrollHeightDecrease = previousScrollHeight - scrollHeight;
+				{scrollTop, previousScrollHeight} = scrollInfo;
 
-			if (scrollHeightDecrease > 0) {
+			scrollHeightChange = previousScrollHeight - scrollHeight;
+			if (scrollHeightChange > 0) {
 				newScrollTop = scrollTop;
 
 				const
 					itemBounds = focusedItem.getBoundingClientRect(),
 					newItemBottom = newScrollTop + itemBounds.top + itemBounds.height - containerTop;
 
-				if (newItemBottom < scrollBottom && scrollHeightDecrease + newItemBottom > scrollBottom) {
+				if (newItemBottom < scrollBottom && scrollHeightChange + newItemBottom > scrollBottom) {
 					// When `focusedItem` is not at the very bottom of the `Scroller` and
-					// `scrollHeightDecrease` caused a scroll.
+					// `scrollHeightChange` caused a scroll.
 					const
 						distanceFromBottom = scrollBottom - newItemBottom,
-						bottomOffset = scrollHeightDecrease - distanceFromBottom;
+						bottomOffset = scrollHeightChange - distanceFromBottom;
 					if (bottomOffset < newScrollTop) {
 						// guard against negative `scrollTop`
 						newScrollTop -= bottomOffset;
 					}
 				} else if (newItemBottom === scrollBottom) {
 					// when `focusedItem` is at the very bottom of the `Scroller`
-					if (scrollHeightDecrease < newScrollTop) {
+					if (scrollHeightChange < newScrollTop) {
 						// guard against negative `scrollTop`
-						newScrollTop -= scrollHeightDecrease;
+						newScrollTop -= scrollHeightChange;
 					}
 				}
 			}
@@ -185,28 +207,40 @@ class ScrollerBase extends Component {
 				nestedItemBottom = nestedItemTop + nestedItemHeight;
 
 			if (nestedItemBottom - scrollBottom > epsilon) {
-				// Caculate when 5-way focus down past the bottom.
+				// Calculate when 5-way focus down past the bottom.
 				newScrollTop += nestedItemBottom - scrollBottom;
 			} else if (nestedItemTop - currentScrollTop < epsilon) {
-				// Caculate when 5-way focus up past the top.
-				newScrollTop += nestedItemTop - currentScrollTop;
+				// Calculate when 5-way focus up past the top.
+				if (newItemTop > newScrollTop) {
+					// Ensure that the adjusted scrollTop would at least scroll the container to the top of
+					// the viewport (e.g. because the container is at the bottom of the scroller and the
+					// nested item is at the top of the container)
+					newScrollTop = newItemTop;
+				} else {
+					newScrollTop += nestedItemTop - currentScrollTop;
+				}
 			} else if (newItemTop - nestedItemHeight - currentScrollTop > epsilon) {
 				// set scroll position so that the top of the container is at least on the top as a fallback.
 				newScrollTop = newItemTop - nestedItemHeight;
 			}
-
-			// Ensure that the adjusted scrollTop would at least scroll the container to the top of
-			// the viewport (e.g. because the container is at the bottom of the scroller and the
-			// nested item is at the top of the container)
-			if (newItemTop > newScrollTop) {
-				newScrollTop = newItemTop;
-			}
 		} else if (itemBottom - scrollBottom > epsilon) {
-			// Caculate when 5-way focus down past the bottom.
-			newScrollTop += itemBottom - scrollBottom;
-		} else if (newItemTop - currentScrollTop < epsilon) {
-			// Caculate when 5-way focus up past the top.
-			newScrollTop += newItemTop - currentScrollTop;
+			// Calculate when 5-way focus down past the bottom.
+
+			// if the last item is focused and have an invisible area, scroll all the way to the bottom
+			if (scrollHeight - itemBottom < heightThreshold) {
+				newScrollTop += scrollHeight - scrollBottom;
+			} else {
+				newScrollTop += itemBottom - scrollBottom;
+			}
+		} else if (newItemTop - currentScrollTop < epsilon && scrollHeightChange <= 0) {
+			// Calculate when 5-way focus up past the top.
+
+			// if the first item is focused and have an invisible area, scroll all the way to the top
+			if (newItemTop < heightThreshold) {
+				newScrollTop = 0;
+			} else {
+				newScrollTop += newItemTop - currentScrollTop;
+			}
 		}
 
 		return newScrollTop;
@@ -220,7 +254,7 @@ class ScrollerBase extends Component {
 	 * `scrollInfo.previousScrollHeight` and `scrollInfo.scrollTop`
 	 * @param {Number} scrollPosition last target position, passed scroll animation is ongoing
 	 *
-	 * @returns {Object} with keys {top, left} containing caculated top and left positions for scroll.
+	 * @returns {Object} with keys {top, left} containing calculated top and left positions for scroll.
 	 * @private
 	 */
 	calculatePositionOnFocus = ({item, scrollInfo, scrollPosition}) => {
@@ -268,18 +302,14 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	findInternalTarget = (direction, target) => {
-		const nextSpottable = getTargetByDirectionFromElement(direction, target);
-
-		return nextSpottable && this.uiRef.containerRef.contains(nextSpottable);
-	}
-
 	handleGlobalKeyDown = () => {
 		this.setContainerDisabled(false);
 	}
 
 	setContainerDisabled = (bool) => {
-		const containerNode = this.uiRef && this.uiRef.containerRef;
+		const
+			{spotlightId} = this.props,
+			containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 
 		if (containerNode) {
 			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
@@ -351,20 +381,12 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	onKeyDown = (ev) => {
-		forward('onKeyDown', ev, this.props);
-
-		const
-			{keyCode, target} = ev,
-			direction = getDirection(keyCode);
-
-		if (!ev.repeat) {
-			this.isScrolledToBoundary = false;
-		}
-
-		if (direction && !this.findInternalTarget(direction, target) && !this.isScrolledToBoundary) {
+	handleLeaveContainer = ({direction, target}) => {
+		const contentsContainer = this.uiRef.containerRef;
+		// ensure we only scroll to boundary from the contents and not a scroll button which
+		// lie outside of this.uiRef.containerRef but within the spotlight container
+		if (contentsContainer && contentsContainer.contains(target)) {
 			this.scrollToBoundary(direction);
-			this.isScrolledToBoundary = true;
 		}
 	}
 
@@ -380,11 +402,11 @@ class ScrollerBase extends Component {
 
 		delete props.initUiChildRef;
 		delete props.onUpdate;
+		delete props.spotlightId;
 
 		return (
 			<UiScrollerBase
 				{...props}
-				onKeyDown={this.onKeyDown}
 				ref={this.initUiRef}
 			/>
 		);
@@ -410,8 +432,6 @@ const Scroller = (props) => (
 	<Scrollable
 		{...props}
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
-			delete scrollerProps.spotlightId;
-
 			return <ScrollerBase {...scrollerProps} />;
 		}}
 	/>
@@ -457,8 +477,6 @@ const ScrollerNative = (props) => (
 	<ScrollableNative
 		{...props}
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
-			delete scrollerProps.spotlightId;
-
 			return <ScrollerBase {...scrollerProps} />;
 		}}
 	/>
