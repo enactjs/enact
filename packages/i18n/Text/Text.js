@@ -140,12 +140,12 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			if (!this.shouldTranslate()) {
-				const props = {...this.props};
+				const passThrough = {...this.props};
 
-				delete props.locale;
+				delete passThrough.locale;
 
 				return (
-					<Wrapped {...props} />
+					<Wrapped {...passThrough} />
 				);
 			}
 
