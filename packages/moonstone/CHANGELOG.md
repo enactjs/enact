@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll properly via supporting additional scroll type
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll properly via supporting additional scroll type in voice control
 
 ## [2.2.3] - 2018-10-22
 
