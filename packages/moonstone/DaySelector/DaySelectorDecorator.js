@@ -3,7 +3,6 @@ import hoc from '@enact/core/hoc';
 import {coerceArray} from '@enact/core/util';
 import ilib from '@enact/i18n';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
-import ListFmt from '@enact/i18n/ilib/lib/ListFmt';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -242,12 +241,9 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 
 			const type = this.calcSelectedDayType(selected);
 			const format = (list) => {
-				if (this.props.locale === 'fa-IR') {
-					const listFmt = new ListFmt({length: 'medium', style:'unit'});
-					return listFmt.format(list);
-				}
+				let separator = this.props.locale === 'fa-IR' ? '، ' : ', ';
 
-				return list.join(', ');
+				return list.join(separator);
 			};
 
 			switch (type) {
