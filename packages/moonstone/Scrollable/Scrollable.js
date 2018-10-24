@@ -687,12 +687,24 @@ class ScrollableBase extends Component {
 
 	onVoice = (e) => {
 		const
-			scroll = e && e.detail && e.detail.scroll,
+			type = e && e.detail && e.detail.scroll,
 			isRtl = this.uiRef.state.rtl,
 			{scrollTop, scrollLeft} = this.uiRef,
 			{maxLeft, maxTop} = this.uiRef.getScrollBounds(),
 			verticalDirection = ['up', 'down', 'top', 'bottom'],
-			horizontalDirection = ['left', 'right', 'leftmost', 'rightmost'];
+			horizontalDirection = ['left', 'right', 'leftmost', 'rightmost'],
+			movement = ['previous', 'next', 'first', 'last'];
+
+		let scroll, index;
+		if (verticalDirection.includes(type) || horizontalDirection.includes(type)) {
+			scroll = type;
+		} else if ((index = movement.indexOf(type)) > -1) {
+			if (this.props.direction === 'horizontal') {
+				scroll = isRtl ? horizontalDirection[index % 2 ? index - 1 : index + 1] : horizontalDirection[index];
+			} else {
+				scroll = verticalDirection[index];
+			}
+		}
 
 		this.voiceControlDirection = verticalDirection.includes(scroll) && 'vertical' || horizontalDirection.includes(scroll) && 'horizontal' || null;
 
