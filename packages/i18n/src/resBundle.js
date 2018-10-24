@@ -6,6 +6,8 @@ let resBundle;
 
 /**
  * Returns the current ilib.ResBundle
+ *
+ * @returns {ilib.ResBundle} Current ResBundle
  */
 function getResBundle () {
 	return resBundle;
@@ -46,7 +48,7 @@ function createResBundle (options) {
  * string resources if necessary.
  *
  * @param {string} spec the locale specifier
- * @returns {Promise} Resolves with a new ilib.ResBundle
+ * @returns {ilib.ResBundle} Current ResBundle
  */
 function setResBundle (bundle) {
 	return (resBundle = bundle);
