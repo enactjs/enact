@@ -1,8 +1,14 @@
 /**
- * Provides Moonstone-themed Icon component with interactive toggleable capabilities. It's intended
- * as a fully do-it-yourself sort of component, as in initially, there is no visual change when a
- * user interacts with the control; you the developer must add and extend the mechanics by adding
- * visuals.
+ * Provides Moonstone-themed Icon component with interactive toggleable capabilities.
+ *
+ * `ToggleIcon` does not implement a visual change when a user interacts with the control and must
+ * be customized by the consumer using [css className
+ * overrides]{@link ui/ToggleIcon.ToggleIconBase.css}.
+ *
+ * Often, an [Icon value]{@link moonstone/Icon.Icon} is passed as `children` to represent the
+ * selected state but is not required. Omitting `children` allows the consumer to implement more
+ * advanced approaches such as styling the `::before` and `::after` pseudo-elements to save a DOM
+ * node.
  *
  * The following Moonstone components use `ToggleIcon`, and make good examples of various usages.
  *
@@ -11,12 +17,6 @@
  * * [Switch]{@link moonstone/Switch.Switch},
  * * [RadioItem]{@link moonstone/RadioItem.RadioItem}, and
  * * [SelectableItem]{@link moonstone/SelectableItem.SelectableItem}.
- *
- * In the most common use-case, an [Icon]{@link moonstone/Icon.Icon} is necessary to be sent in as
- * `children`, however, not mandatory. The component, and styling classes, continue function
- * normally even without an icon. This quality allows you to do highly customizable styling by
- * attaching to the pseudo-elements `::before` and `::after` and save a DOM node, by adding styles
- * to the CSS exclucively.
  *
  * @example
  * <ToggleIcon onToggle={(props)=> console.log(props.selected)}>
