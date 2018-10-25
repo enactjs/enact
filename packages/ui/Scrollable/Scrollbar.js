@@ -117,7 +117,7 @@ class ScrollbarBase extends PureComponent {
 			this.updateBounds(bounds);
 		}
 
-		const scrollThumbPositionRatio = (scrollOrigin / (this.scrollSize - this.clientSize));
+		const scrollThumbPositionRatio = scrollOrigin / (this.scrollSize - this.clientSize);
 
 		setCSSVariable(this.thumbRef, '--scrollbar-size-ratio', this.scrollThumbSizeRatio);
 		setCSSVariable(this.thumbRef, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
