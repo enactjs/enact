@@ -40,6 +40,7 @@
 
 // Generic Non-Latin Font Rule generator
 .moon-locale-non-latin(@nlrules) when (isruleset(@nlrules)) {
+	:global(.enact-locale-non-latin)&,
 	:global(.enact-locale-non-latin) & {
 		@nlrules();
 	}
