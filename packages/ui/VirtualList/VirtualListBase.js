@@ -196,6 +196,14 @@ const VirtualListBaseFactory = (type) => {
 			spacing: PropTypes.number,
 
 			/**
+			 * Called to update scroll bounds.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			syncScrollBounds: PropTypes.func,
+
+			/**
 			 * Called to execute additional logic in a themed component when updating states and bounds.
 			 *
 			 * @type {Function}
@@ -481,7 +489,7 @@ const VirtualListBaseFactory = (type) => {
 
 		calculateScrollBounds (props) {
 			const
-				{clientSize} = props,
+				{clientSize, syncScrollBounds} = props,
 				node = this.containerRef;
 
 			if (!clientSize && !node) {
@@ -507,6 +515,10 @@ const VirtualListBaseFactory = (type) => {
 
 			if (this.scrollPosition > maxPos) {
 				this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
+			}
+
+			if (syncScrollBounds) {
+				syncScrollBounds(scrollBounds);
 			}
 		}
 
@@ -784,6 +796,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.pageScroll;
 			delete rest.rtl;
 			delete rest.spacing;
+			delete rest.syncScrollBounds;
 			delete rest.updateStatesAndBounds;
 			delete rest.isVerticalScrollbarVisible;
 

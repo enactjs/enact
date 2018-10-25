@@ -1281,6 +1281,16 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	syncScrollBounds = (bounds) => {
+		if (this.horizontalScrollbarRef) {
+			this.horizontalScrollbarRef.updateBounds(bounds);
+		}
+
+		if (this.verticalScrollbarRef) {
+			this.verticalScrollbarRef.updateBounds(bounds);
+		}
+	}
+
 	getMoreInfo () {
 		if (typeof this.childRef.getMoreInfo === 'function') {
 			return this.childRef.getMoreInfo();
@@ -1403,6 +1413,7 @@ class ScrollableBaseNative extends Component {
 			rtl,
 			scrollTo: this.scrollTo,
 			style,
+			syncScrollBounds: this.syncScrollBounds,
 			verticalScrollbarProps: this.verticalScrollbarProps
 		});
 	}

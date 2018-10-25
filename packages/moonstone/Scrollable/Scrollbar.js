@@ -82,12 +82,13 @@ class ScrollbarBase extends Component {
 
 	initScrollbarRef = (ref) => {
 		if (ref) {
-			const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = ref;
+			const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate, updateBounds: uiUpdateBounds} = ref;
 
 			this.getContainerRef = getContainerRef;
 			this.showThumb = showThumb;
 			this.startHidingThumb = startHidingThumb;
 			this.uiUpdate = uiUpdate;
+			this.updateBounds = uiUpdateBounds;
 		}
 	}
 
@@ -146,7 +147,8 @@ const Scrollbar = ApiDecorator(
 		'isOneOfScrollButtonsFocused',
 		'showThumb',
 		'startHidingThumb',
-		'update'
+		'update',
+		'updateBounds'
 	]}, ScrollbarBase
 );
 Scrollbar.displayName = 'Scrollbar';

@@ -69,7 +69,15 @@ class ScrollerBase extends Component {
 		 * @type {Boolean}
 		 * @private
 		 */
-		rtl: PropTypes.bool
+		rtl: PropTypes.bool,
+
+		/**
+		 * Called to update scroll bounds.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		syncScrollBounds: PropTypes.func
 	}
 
 	static defaultProps = {
@@ -156,6 +164,7 @@ class ScrollerBase extends Component {
 
 	calculateMetrics () {
 		const
+			{syncScrollBounds} = this.props,
 			{scrollBounds} = this,
 			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.containerRef;
 		scrollBounds.scrollWidth = scrollWidth;
@@ -164,6 +173,10 @@ class ScrollerBase extends Component {
 		scrollBounds.clientHeight = clientHeight;
 		scrollBounds.maxLeft = Math.max(0, scrollWidth - clientWidth);
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
+
+		if (syncScrollBounds) {
+			syncScrollBounds(scrollBounds);
+		}
 	}
 
 	initContainerRef = (ref) => {
@@ -182,8 +195,9 @@ class ScrollerBase extends Component {
 
 		delete rest.cbScrollTo;
 		delete rest.direction;
-		delete rest.rtl;
 		delete rest.isVerticalScrollbarVisible;
+		delete rest.rtl;
+		delete rest.syncScrollBounds;
 
 		return (
 			<div

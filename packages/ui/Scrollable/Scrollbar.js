@@ -103,20 +103,34 @@ class ScrollbarBase extends PureComponent {
 	containerRef = null
 	thumbRef = null
 
+	clientSize = null
+	scrollSize = null
+	scrollThumbSizeRatio = null
+
 	update = (bounds) => {
 		const
 			{vertical} = this.props,
-			{clientWidth, clientHeight, scrollWidth, scrollHeight, scrollLeft, scrollTop} = bounds,
-			clientSize = vertical ? clientHeight : clientWidth,
-			scrollSize = vertical ? scrollHeight : scrollWidth,
-			scrollOrigin = vertical ? scrollTop : scrollLeft,
+			{scrollLeft, scrollTop} = bounds,
+			scrollOrigin = vertical ? scrollTop : scrollLeft;
 
-			thumbSizeRatioBase = (clientSize / scrollSize),
-			scrollThumbPositionRatio = (scrollOrigin / (scrollSize - clientSize)),
-			scrollThumbSizeRatio = Math.max(this.minThumbSizeRatio, Math.min(1, thumbSizeRatioBase));
+		if (this.clientSize === null && this.scrollSize === null) {
+			this.updateBounds(bounds);
+		}
 
-		setCSSVariable(this.thumbRef, '--scrollbar-size-ratio', scrollThumbSizeRatio);
+		const scrollThumbPositionRatio = (scrollOrigin / (this.scrollSize - this.clientSize));
+
+		setCSSVariable(this.thumbRef, '--scrollbar-size-ratio', this.scrollThumbSizeRatio);
 		setCSSVariable(this.thumbRef, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
+	}
+
+	updateBounds = (bounds) => {
+		const
+			{vertical} = this.props,
+			{clientWidth, clientHeight, scrollWidth, scrollHeight} = bounds;
+
+		this.clientSize = vertical ? clientHeight : clientWidth;
+		this.scrollSize = vertical ? scrollHeight : scrollWidth;
+		this.scrollThumbSizeRatio = Math.max(this.minThumbSizeRatio, Math.min(1, this.clientSize / this.scrollSize));
 	}
 
 	showThumb = () => {

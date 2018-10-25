@@ -783,6 +783,7 @@ class ScrollableBase extends Component {
 					rtl,
 					scrollTo,
 					style,
+					syncScrollBounds,
 					verticalScrollbarProps
 				}) => (
 					<div
@@ -805,7 +806,8 @@ class ScrollableBase extends Component {
 									onUpdate: this.handleScrollerUpdate,
 									ref: this.initChildRef,
 									rtl,
-									spotlightId
+									spotlightId,
+									syncScrollBounds
 								})}
 							</ChildWrapper>
 							{isVerticalScrollbarVisible ?

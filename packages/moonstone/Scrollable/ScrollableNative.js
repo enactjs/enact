@@ -857,6 +857,7 @@ class ScrollableBaseNative extends Component {
 					rtl,
 					scrollTo,
 					style,
+					syncScrollBounds,
 					verticalScrollbarProps
 				}) => (
 					<div
@@ -878,7 +879,8 @@ class ScrollableBaseNative extends Component {
 									onUpdate: this.handleScrollerUpdate,
 									ref: this.initChildRef,
 									rtl,
-									spotlightId
+									spotlightId,
+									syncScrollBounds
 								})}
 							</ChildWrapper>
 							{isVerticalScrollbarVisible ?
