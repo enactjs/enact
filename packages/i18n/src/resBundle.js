@@ -34,11 +34,7 @@ function createResBundle (options) {
 	new ResBundle({
 		...opts,
 		onLoad: (bundle) => {
-			if (bundle) {
-				opts.onLoad(bundle);
-			}
-
-			opts.onLoad();
+			opts.onLoad(bundle || null);
 		}
 	});
 }
