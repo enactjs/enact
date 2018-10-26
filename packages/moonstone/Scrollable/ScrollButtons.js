@@ -150,17 +150,16 @@ class ScrollButtons extends Component {
 	updateButtons = (bounds) => {
 		const
 			{vertical} = this.props,
+			{nextButtonDisabled, prevButtonDisabled} = this.state,
 			currentPos = vertical ? bounds.scrollTop : bounds.scrollLeft,
 			maxPos = vertical ? bounds.maxTop : bounds.maxLeft,
 			shouldDisablePrevButton = currentPos <= 0,
 			/* If a scroll size or a client size is not integer,
 			   browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
-			shouldDisableNextButton = maxPos - currentPos <= 1;
-
+			shouldDisableNextButton = maxPos - currentPos <= 1,
+			updatePrevButton = (prevButtonDisabled !== shouldDisablePrevButton),
+			updateNextButton = (nextButtonDisabled !== shouldDisableNextButton);
 		let nextState = null;
-		const
-			updatePrevButton = (this.state.prevButtonDisabled !== shouldDisablePrevButton),
-			updateNextButton = (this.state.nextButtonDisabled !== shouldDisableNextButton);
 
 		if (updatePrevButton && updateNextButton) {
 			nextState = {prevButtonDisabled: shouldDisablePrevButton, nextButtonDisabled: shouldDisableNextButton};
