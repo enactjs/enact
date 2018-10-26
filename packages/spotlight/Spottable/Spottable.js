@@ -179,6 +179,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 			this.isFocused = false;
 			this.isHovered = false;
+			// Used to indicate that we want to stop propagation on blur events that occur as a
+			// result of this component imperatively blurring itself on focus when spotlightDisabled
 			this.shouldPreventBlur = false;
 
 			this.state = {

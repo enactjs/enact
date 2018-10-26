@@ -182,6 +182,8 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.state = stateFromProps(props);
+			// Used to indicate that we want to stop propagation on blur events that occur as a
+			// result of this component imperatively blurring itself on focus when spotlightDisabled
 			this.shouldPreventBlur = false;
 
 			const cfg = {
