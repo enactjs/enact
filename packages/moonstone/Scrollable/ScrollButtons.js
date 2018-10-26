@@ -159,17 +159,17 @@ class ScrollButtons extends Component {
 			shouldDisableNextButton = maxPos - currentPos <= 1,
 			updatePrevButton = (prevButtonDisabled !== shouldDisablePrevButton),
 			updateNextButton = (nextButtonDisabled !== shouldDisableNextButton);
-		let nextState = null;
-
-		if (updatePrevButton && updateNextButton) {
-			nextState = {prevButtonDisabled: shouldDisablePrevButton, nextButtonDisabled: shouldDisableNextButton};
-		} else if (updatePrevButton) {
-			nextState = {prevButtonDisabled: shouldDisablePrevButton};
-		} else if (updateNextButton) {
-			nextState = {nextButtonDisabled: shouldDisableNextButton};
-		}
 
 		if (updatePrevButton || updateNextButton) {
+			let nextState = {};
+
+			if (updatePrevButton) {
+				nextState.prevButtonDisabled = shouldDisablePrevButton;
+			}
+			if (updateNextButton) {
+				nextState.nextButtonDisabled = shouldDisableNextButton;
+			}
+
 			this.setState(nextState);
 		}
 	}
