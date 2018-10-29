@@ -20,6 +20,8 @@ import $L from '../$L';
 import PickerButton from './PickerButton';
 import SpottablePicker from './SpottablePicker';
 
+import {contextTypes} from '@enact/core/internal/PubSub';
+
 import css from './Picker.less';
 
 const holdConfig = {
@@ -370,6 +372,8 @@ const PickerBase = class extends React.Component {
 		wrap: PropTypes.bool
 	}
 
+	static contextTypes = contextTypes
+
 	static defaultProps = {
 		accessibilityHint: '',
 		orientation: 'horizontal',
@@ -385,7 +389,8 @@ const PickerBase = class extends React.Component {
 			// Set to `true` onFocus and `false` onBlur to prevent setting aria-valuetext (which
 			// will notify the user) when the component does not have focus
 			active: false,
-			pressed: 0
+			pressed: 0,
+			rtl: false
 		};
 
 		this.initContainerRef = this.initRef('containerRef');
@@ -398,6 +403,12 @@ const PickerBase = class extends React.Component {
 
 		// Pressed state for this.handleUp
 		this.pickerButtonPressed = false;
+	}
+
+	componentWillMount () {
+		if (this.context.Subscriber) {
+			this.context.Subscriber.subscribe('i18n', this.handleLocaleChange);
+		}
 	}
 
 	componentDidMount () {
@@ -440,6 +451,9 @@ const PickerBase = class extends React.Component {
 		}
 		if (platform.webos) {
 			this.containerRef.removeEventListener('webOSVoice', this.handleVoice);
+		}
+		if (this.context.Subscriber) {
+			this.context.Subscriber.unsubscribe('i18n', this.handleLocaleChange);
 		}
 	}
 
@@ -777,8 +791,15 @@ const PickerBase = class extends React.Component {
 		};
 	}
 
+	handleLocaleChange = ({message: {rtl}}) => {
+		// prevent re-render when text direction matches locale direction
+		if (rtl !== this.state.rtl) {
+			this.setState({rtl});
+		}
+	}
+
 	render () {
-		const {active} = this.state;
+		const {active, rtl} = this.state;
 		const {
 			'aria-valuetext': ariaValueText,
 			noAnimation,
@@ -835,6 +856,44 @@ const PickerBase = class extends React.Component {
 		const valueText = ariaValueText != null ? ariaValueText : this.calcValueText();
 		const decrementerAriaControls = !incrementerDisabled ? id : null;
 		const incrementerAriaControls = !decrementerDisabled ? id : null;
+		const shouldLayoutIncrementToDecrement = rtl || orientation === 'vertical';
+
+		const DecrementButton = <PickerButton
+			aria-controls={!joined ? decrementerAriaControls : null}
+			aria-label={this.calcDecrementLabel(valueText)}
+			className={css.decrementer}
+			data-webos-voice-group-label={voiceGroupLabel}
+			data-webos-voice-label={joined ? this.calcButtonLabel(reverse, valueText) : null}
+			disabled={decrementerDisabled}
+			hidden={reachedStart}
+			holdConfig={holdConfig}
+			icon={decrementIcon}
+			joined={joined}
+			onDown={this.handleDecDown}
+			onHoldPulse={this.handleDecDown}
+			onKeyDown={this.handleDecKeyDown}
+			onSpotlightDisappear={onSpotlightDisappear}
+			onUp={this.handleUp}
+			spotlightDisabled={spotlightDisabled}
+		/>;
+
+		const IncrementButton = <PickerButton
+			aria-controls={!joined ? incrementerAriaControls : null}
+			aria-label={this.calcIncrementLabel(valueText)}
+			className={css.incrementer}
+			data-webos-voice-group-label={voiceGroupLabel}
+			data-webos-voice-label={joined ? this.calcButtonLabel(!reverse, valueText) : null}
+			disabled={incrementerDisabled}
+			hidden={reachedEnd}
+			holdConfig={holdConfig}
+			icon={incrementIcon}
+			joined={joined}
+			onDown={this.handleIncDown}
+			onHoldPulse={this.handleIncDown}
+			onKeyDown={this.handleIncKeyDown}
+			onSpotlightDisappear={onSpotlightDisappear}
+			spotlightDisabled={spotlightDisabled}
+		/>;
 
 		return (
 			<Div
@@ -854,23 +913,7 @@ const PickerBase = class extends React.Component {
 				onMouseLeave={this.clearPressedState}
 				ref={this.initContainerRef}
 			>
-				<PickerButton
-					aria-controls={!joined ? incrementerAriaControls : null}
-					aria-label={this.calcIncrementLabel(valueText)}
-					className={css.incrementer}
-					data-webos-voice-group-label={voiceGroupLabel}
-					data-webos-voice-label={joined ? this.calcButtonLabel(!reverse, valueText) : null}
-					disabled={incrementerDisabled}
-					hidden={reachedEnd}
-					holdConfig={holdConfig}
-					icon={incrementIcon}
-					joined={joined}
-					onDown={this.handleIncDown}
-					onHoldPulse={this.handleIncDown}
-					onKeyDown={this.handleIncKeyDown}
-					onSpotlightDisappear={onSpotlightDisappear}
-					spotlightDisabled={spotlightDisabled}
-				/>
+				{shouldLayoutIncrementToDecrement ? IncrementButton : DecrementButton}
 				<div
 					aria-disabled={disabled}
 					aria-hidden={!active}
@@ -891,24 +934,7 @@ const PickerBase = class extends React.Component {
 						{children}
 					</PickerViewManager>
 				</div>
-				<PickerButton
-					aria-controls={!joined ? decrementerAriaControls : null}
-					aria-label={this.calcDecrementLabel(valueText)}
-					className={css.decrementer}
-					data-webos-voice-group-label={voiceGroupLabel}
-					data-webos-voice-label={joined ? this.calcButtonLabel(reverse, valueText) : null}
-					disabled={decrementerDisabled}
-					hidden={reachedStart}
-					holdConfig={holdConfig}
-					icon={decrementIcon}
-					joined={joined}
-					onDown={this.handleDecDown}
-					onHoldPulse={this.handleDecDown}
-					onKeyDown={this.handleDecKeyDown}
-					onSpotlightDisappear={onSpotlightDisappear}
-					onUp={this.handleUp}
-					spotlightDisabled={spotlightDisabled}
-				/>
+				{shouldLayoutIncrementToDecrement ? DecrementButton : IncrementButton}
 			</Div>
 		);
 	}

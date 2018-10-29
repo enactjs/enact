@@ -11,6 +11,7 @@ import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollabl
 import {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {Job} from '@enact/core/util';
+import {on, off} from '@enact/core/dispatcher';
 import platform from '@enact/core/platform';
 import {forward} from '@enact/core/handle';
 import PropTypes from 'prop-types';
@@ -227,6 +228,10 @@ class ScrollableBase extends Component {
 		configureSpotlightContainer(props);
 	}
 
+	componentDidMount () {
+		on('wheel', this.onGlobalWheel);
+	}
+
 	componentWillReceiveProps (nextProps) {
 		configureSpotlightContainer(nextProps);
 	}
@@ -236,6 +241,7 @@ class ScrollableBase extends Component {
 		this.stopOverscrollJob('horizontal', 'after');
 		this.stopOverscrollJob('vertical', 'before');
 		this.stopOverscrollJob('vertical', 'after');
+		off('wheel', this.onGlobalWheel);
 	}
 
 	// status
@@ -276,6 +282,15 @@ class ScrollableBase extends Component {
 	onMouseDown = (ev) => {
 		if (this.props['data-spotlight-container-disabled']) {
 			ev.preventDefault();
+		}
+	}
+
+	onGlobalWheel = (ev) => {
+		const {containerRef} = this.uiRef;
+
+		if (containerRef.contains(ev.target)) {
+			ev.preventDefault();
+			ev.stopPropagation();
 		}
 	}
 

@@ -21,6 +21,7 @@
 
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import kind from '@enact/core/kind';
 import {extractAriaProps} from '@enact/core/util';
 import Spottable from '@enact/spotlight/Spottable';
@@ -334,6 +335,14 @@ const IncrementSliderBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
+		 * Set content to RTL.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * Disables spotlight navigation into the component.
 		 *
 		 * @type {Boolean}
@@ -459,7 +468,8 @@ const IncrementSliderBase = kind({
 			return !(disabled || value >= max) ?
 				`${valueText != null ? valueText : value} ${incrementAriaLabel}` :
 				null;
-		}
+		},
+		shouldLayoutIncrementToDecrement: ({orientation, rtl}) => rtl || orientation === 'vertical'
 	},
 
 	render: ({active,
@@ -490,6 +500,7 @@ const IncrementSliderBase = kind({
 		onIncrementSpotlightDisappear,
 		onSpotlightDisappear,
 		orientation,
+		shouldLayoutIncrementToDecrement,
 		spotlightDisabled,
 		step,
 		tooltip,
@@ -502,22 +513,39 @@ const IncrementSliderBase = kind({
 		delete rest.onSpotlightLeft;
 		delete rest.onSpotlightRight;
 		delete rest.onSpotlightUp;
+		delete rest.rtl;
+
+		const DecrementButton = <IncrementSliderButton
+			aria-controls={!incrementDisabled ? id : null}
+			aria-hidden={ariaHidden}
+			aria-label={decrementAriaLabel}
+			className={css.decrementButton}
+			data-webos-voice-group-label={voiceGroupLabel}
+			disabled={decrementDisabled}
+			onTap={onDecrement}
+			onSpotlightDisappear={onDecrementSpotlightDisappear}
+			spotlightDisabled={spotlightDisabled}
+		>
+			{decrementIcon}
+		</IncrementSliderButton>;
+
+		const IncrementButton = <IncrementSliderButton
+			aria-controls={!decrementDisabled ? id : null}
+			aria-hidden={ariaHidden}
+			aria-label={incrementAriaLabel}
+			className={css.incrementButton}
+			data-webos-voice-group-label={voiceGroupLabel}
+			disabled={incrementDisabled}
+			onTap={onIncrement}
+			onSpotlightDisappear={onIncrementSpotlightDisappear}
+			spotlightDisabled={spotlightDisabled}
+		>
+			{incrementIcon}
+		</IncrementSliderButton>;
 
 		return (
 			<div {...rest}>
-				<IncrementSliderButton
-					aria-controls={!incrementDisabled ? id : null}
-					aria-hidden={ariaHidden}
-					aria-label={decrementAriaLabel}
-					className={css.decrementButton}
-					data-webos-voice-group-label={voiceGroupLabel}
-					disabled={decrementDisabled}
-					onTap={onDecrement}
-					onSpotlightDisappear={onDecrementSpotlightDisappear}
-					spotlightDisabled={spotlightDisabled}
-				>
-					{decrementIcon}
-				</IncrementSliderButton>
+				{shouldLayoutIncrementToDecrement ? IncrementButton : DecrementButton}
 				<Slider
 					{...ariaProps}
 					active={active}
@@ -542,19 +570,7 @@ const IncrementSliderBase = kind({
 					tooltip={tooltip}
 					value={value}
 				/>
-				<IncrementSliderButton
-					aria-controls={!decrementDisabled ? id : null}
-					aria-hidden={ariaHidden}
-					aria-label={incrementAriaLabel}
-					className={css.incrementButton}
-					data-webos-voice-group-label={voiceGroupLabel}
-					disabled={incrementDisabled}
-					onTap={onIncrement}
-					onSpotlightDisappear={onIncrementSpotlightDisappear}
-					spotlightDisabled={spotlightDisabled}
-				>
-					{incrementIcon}
-				</IncrementSliderButton>
+				{shouldLayoutIncrementToDecrement ? DecrementButton : IncrementButton}
 			</div>
 		);
 	}
@@ -566,7 +582,8 @@ const IncrementSliderDecorator = compose(
 	IdProvider({generateProp: null, prefix: 's_'}),
 	SliderBehaviorDecorator({emitSpotlightEvents: 'onSpotlightDirection'}),
 	Skinnable,
-	Slottable({slots: ['knob', 'tooltip']})
+	Slottable({slots: ['knob', 'tooltip']}),
+	I18nContextDecorator({rtlProp: 'rtl'})
 );
 
 /**

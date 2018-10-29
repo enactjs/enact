@@ -423,7 +423,7 @@ const Spotlight = (function () {
 		_pointerMoveDuringKeyPress = false;
 		const keyCode = evt.keyCode;
 
-		if (getDirection(keyCode) || isEnter(keyCode)) {
+		if (getDirection(keyCode) || isEnter(keyCode) || isTab(keyCode)) {
 			SpotlightAccelerator.reset();
 			_5WayKeyHold = false;
 		}
@@ -495,14 +495,6 @@ const Spotlight = (function () {
 	// experientially but may be adjusted or made configurable
 	const focusNextElementJob = new Job(focusNextElement, 200);
 
-	// 100ms is somewhat arbitrary to be longer than a held key but shorter than a user would press
-	// the key again.
-	const resetAcceleratedTabJob = new Job(() => {
-		if (isTab(SpotlightAccelerator.keyCode)) {
-			SpotlightAccelerator.reset();
-		}
-	}, 100);
-
 	function onWheel (ev) {
 		const direction = Math.sign(ev.deltaY);
 
@@ -532,10 +524,6 @@ const Spotlight = (function () {
 		if (!isPaused() && !_pointerMoveDuringKeyPress) {
 			if (getCurrent() || wasTab) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
-				if (wasTab) {
-					// Tab keys do not generate a keyup event and therefore must be reset seperately
-					resetAcceleratedTabJob.start();
-				}
 			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
 				restoreFocus();
 			}

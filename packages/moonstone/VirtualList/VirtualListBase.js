@@ -1,5 +1,7 @@
 import clamp from 'ramda/src/clamp';
 import {is} from '@enact/core/keymap';
+import Job from '@enact/core/util/Job';
+import {on, off} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
@@ -17,6 +19,7 @@ const
 	isLeft = is('left'),
 	isRight = is('right'),
 	isUp = is('up'),
+	isTab = is('tab'),
 	JS = 'JS',
 	Native = 'Native',
 	isItemDisabledDefault = () => (false);
@@ -192,6 +195,8 @@ const VirtualListBaseFactory = (type) => {
 			if (spotlightId) {
 				this.configureSpotlight(spotlightId);
 			}
+
+			this.focusNextElementJob = new Job(this.jumpToSpottableItem, 200);
 		}
 
 		componentDidMount () {
@@ -212,6 +217,8 @@ const VirtualListBaseFactory = (type) => {
 			if (containerNode && containerNode.addEventListener) {
 				containerNode.addEventListener('keydown', this.onKeyDown);
 			}
+
+			on('wheel', this.onWheel);
 
 			setTimeout(() => {
 				this.restoreFocus();
@@ -245,6 +252,7 @@ const VirtualListBaseFactory = (type) => {
 			this.resumeSpotlight();
 
 			this.setContainerDisabled(false);
+			off('wheel', this.onWheel);
 		}
 
 		isScrolledBy5way = false
@@ -523,20 +531,28 @@ const VirtualListBaseFactory = (type) => {
 			this.setRestrict(isSelfOnly);
 		}
 
-		jumpToSpottableItem = (keyCode, repeat, target) => {
+		jumpToSpottableItem = ({deltaY, keyCode, repeat, shiftKey, type: eventType}) => {
 			const
 				{cbScrollTo, dataSize, isItemDisabled, rtl, wrap} = this.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
 				{dimensionToExtent, isPrimaryDirectionVertical} = this.uiRef,
+				target = Spotlight.getCurrent(),
 				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute)),
+				wasTab = isTab(keyCode),
+				wasWheel = eventType === 'wheel',
+				was5Way = !wasTab && !wasWheel,
 				isForward = (
 					isPrimaryDirectionVertical && isDown(keyCode) ||
 					!isPrimaryDirectionVertical && (!rtl && isRight(keyCode) || rtl && isLeft(keyCode)) ||
+					wasTab && !shiftKey ||
+					wasWheel && Math.sign(deltaY) === 1 ||
 					null
 				),
 				isBackward = (
-					isPrimaryDirectionVertical && isUp(keyCode) ||
+					isPrimaryDirectionVertical && (isUp(keyCode) || (isTab(keyCode) && shiftKey)) ||
 					!isPrimaryDirectionVertical && (!rtl && isLeft(keyCode) || rtl && isRight(keyCode)) ||
+					wasTab && shiftKey ||
+					wasWheel && Math.sign(deltaY) === -1 ||
 					null
 				);
 
@@ -545,7 +561,7 @@ const VirtualListBaseFactory = (type) => {
 
 			// If the currently focused item is disabled, we assume that all items in a list are disabled.
 			if (
-				(!wrap && isItemDisabled === isItemDisabledDefault) ||
+				(!wrap && isItemDisabled === isItemDisabledDefault && was5Way) ||
 				isItemDisabled(currentIndex) ||
 				(!isForward && !isBackward)
 			) {
@@ -553,66 +569,80 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			const currentExtent = this.getExtentIndex(currentIndex);
+			const boundaryIndex = was5Way ? dimensionToExtent : 1;
 			let
 				nextIndex = -1,
 				animate = true,
 				isWrapped = false,
-				spottableExtent = -1;
+				spottableExtent = -1,
+				targetIndex = nextIndex;
 
 			if (isForward) {
-				nextIndex = this.findSpottableItemWithPositionInExtent(currentIndex + 1, dataSize, currentIndex % dimensionToExtent);
-				if (nextIndex === -1) {
-					spottableExtent = this.findSpottableExtent(currentIndex, true);
-					if (spottableExtent === -1) {
-						if (wrap && !repeat) {
-							const candidateExtent = this.getExtentIndex(this.findSpottableItem(0, dataSize));
+				targetIndex = currentIndex + 1;
 
-							// If currentExtent is equal to candidateExtent,
-							// it means that the current extent is the only spottable extent.
-							// So we find nextIndex only when currentExtent is different from candidateExtent.
-							if (currentExtent !== candidateExtent) {
-								nextIndex = this.findNearestSpottableItemInExtent(currentIndex, candidateExtent);
-								animate = (wrap === true);
-								isWrapped = true;
+				if (was5Way) {
+					nextIndex = this.findSpottableItemWithPositionInExtent(targetIndex, dataSize, currentIndex % boundaryIndex);
+					if (nextIndex === -1) {
+						spottableExtent = this.findSpottableExtent(currentIndex, true);
+						if (spottableExtent === -1) {
+							if (wrap && !repeat) {
+								const candidateExtent = this.getExtentIndex(this.findSpottableItem(0, dataSize));
+
+								// If currentExtent is equal to candidateExtent,
+								// it means that the current extent is the only spottable extent.
+								// So we find nextIndex only when currentExtent is different from candidateExtent.
+								if (currentExtent !== candidateExtent) {
+									nextIndex = this.findNearestSpottableItemInExtent(currentIndex, candidateExtent);
+									animate = (wrap === true);
+									isWrapped = true;
+								}
 							}
-						}
 
-						// If there is no item which could get focus forward,
-						// we need to set restriction option to `self-first`.
-						if (nextIndex === -1) {
-							this.setRestrict(false);
+							// If there is no item which could get focus forward,
+							// we need to set restriction option to `self-first`.
+							if (nextIndex === -1) {
+								this.setRestrict(false);
+							}
+						} else {
+							nextIndex = this.findNearestSpottableItemInExtent(currentIndex, spottableExtent);
 						}
-					} else {
-						nextIndex = this.findNearestSpottableItemInExtent(currentIndex, spottableExtent);
 					}
+				} else {
+					nextIndex = this.findSpottableItem(targetIndex, dataSize);
 				}
 			} else { // isBackward
-				nextIndex = this.findSpottableItemWithPositionInExtent(currentIndex - 1, -1, currentIndex % dimensionToExtent);
-				if (nextIndex === -1) {
-					spottableExtent = this.findSpottableExtent(currentIndex, false);
+				targetIndex = currentIndex - 1;
 
-					if (spottableExtent === -1) {
-						if (wrap && !repeat) {
-							const candidateExtent = this.getExtentIndex(this.findSpottableItem(dataSize - 1, -1));
+				if (was5Way) {
+					nextIndex = this.findSpottableItemWithPositionInExtent(targetIndex, -1, currentIndex % boundaryIndex);
+					if (nextIndex === -1) {
+						spottableExtent = this.findSpottableExtent(currentIndex, false);
 
-							// If currentExtent is equal to candidateExtent,
-							// it means that the current extent is the only spottable extent.
-							// So we find nextIndex only when currentExtent is different from candidateExtent.
-							if (currentExtent !== candidateExtent) {
-								nextIndex = this.findNearestSpottableItemInExtent(currentIndex, candidateExtent);
-								animate = (wrap === true);
-								isWrapped = true;
+						if (spottableExtent === -1) {
+							if (wrap && !repeat) {
+								const candidateExtent = this.getExtentIndex(this.findSpottableItem(dataSize - 1, -1));
+
+								// If currentExtent is equal to candidateExtent,
+								// it means that the current extent is the only spottable extent.
+								// So we find nextIndex only when currentExtent is different from candidateExtent.
+								if (currentExtent !== candidateExtent) {
+									nextIndex = this.findNearestSpottableItemInExtent(currentIndex, candidateExtent);
+									animate = (wrap === true);
+									isWrapped = true;
+								}
 							}
-						}
 
-						// If there is no item which could get focus forward,
-						// we need to set restriction option to `self-first`.
-						if (nextIndex === -1) {
-							this.setRestrict(false);
+							// If there is no item which could get focus forward,
+							// we need to set restriction option to `self-first`.
+							if (nextIndex === -1) {
+								this.setRestrict(false);
+							}
+						} else {
+							nextIndex = this.findNearestSpottableItemInExtent(currentIndex, spottableExtent);
 						}
-					} else {
-						nextIndex = this.findNearestSpottableItemInExtent(currentIndex, spottableExtent);
 					}
+				} else {
+					nextIndex = this.findSpottableItem(targetIndex, dataSize);
 				}
 			}
 
@@ -647,18 +677,53 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		onKeyDown = (ev) => {
-			const {keyCode, repeat, target} = ev;
+			const {keyCode, target, shiftKey} = ev;
+			const {dataSize} = this.props;
+			const index = parseInt(target.dataset.index);
 
 			this.isScrolledByJump = false;
 
-			if (getDirection(keyCode)) {
+			if (getDirection(keyCode) || (isTab(keyCode) && (index < dataSize - 1 && !shiftKey || index > 0 && shiftKey))) {
 				ev.preventDefault();
 				this.setSpotlightContainerRestrict(keyCode, target);
 				Spotlight.setPointerMode(false);
-				if (this.jumpToSpottableItem(keyCode, repeat, target)) {
+				if (this.jumpToSpottableItem(ev)) {
 					// Pause Spotlight temporarily so we don't focus twice
 					Spotlight.pause();
 					document.addEventListener('keyup', this.resumeSpotlight);
+				}
+			}
+		}
+
+		onWheel = (ev) => {
+			const containerNode = this.uiRef.containerRef;
+			const {target} = ev;
+			const current = Spotlight.getCurrent();
+
+			if (containerNode.contains(target)) {
+				ev.preventDefault();
+				ev.stopPropagation();
+			} else if (containerNode.contains(current)) {
+				const direction = Math.sign(ev.deltaY);
+				if (direction === 0) return;
+
+				const index = parseInt(current.dataset.index);
+				const {dataSize, wrap} = this.props;
+				const isForward = direction === 1;
+				const isBackward = direction === -1;
+				const lastIndex = dataSize - 1;
+
+				if (
+					dataSize && (
+						index === 0 && (isForward || isBackward && wrap) ||
+						index > 0 && index < lastIndex ||
+						index === lastIndex && (isBackward || isForward && wrap)
+					)
+				) {
+					ev.preventDefault();
+					ev.stopPropagation();
+
+					this.focusNextElementJob.throttle(ev);
 				}
 			}
 		}
