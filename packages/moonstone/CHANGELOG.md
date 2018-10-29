@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Marquee`, `moonstone/MediaOverlay` to display localed based font
 - `moonstone/DayPicker` separator character used between selected days in the label in fa-IR locale
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` scrolling by voice commands in RTL locales
 
