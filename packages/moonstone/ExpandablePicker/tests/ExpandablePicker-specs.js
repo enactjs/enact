@@ -87,7 +87,7 @@ describe('ExpandablePicker Specs', () => {
 			</ExpandablePickerBase>
 		);
 
-		const checkButton = expandablePicker.find('IconButton').at(1);
+		const checkButton = expandablePicker.find('IconButton').at(0);
 
 		const expected = label;
 		const actual = checkButton.prop('aria-label');
@@ -103,7 +103,7 @@ describe('ExpandablePicker Specs', () => {
 			</ExpandablePickerBase>
 		);
 
-		const checkButton = expandablePicker.find('IconButton').at(0);
+		const checkButton = expandablePicker.find('IconButton').at(1);
 
 		const expected = label;
 		const actual = checkButton.prop('aria-label');

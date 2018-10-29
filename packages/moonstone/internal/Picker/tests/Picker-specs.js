@@ -9,8 +9,8 @@ const tap = (node) => {
 	node.simulate('mousedown');
 	node.simulate('mouseup');
 };
-const decrement = (slider) => tap(slider.find('IconButton').last());
-const increment = (slider) => tap(slider.find('IconButton').first());
+const decrement = (slider) => tap(slider.find('IconButton').first());
+const increment = (slider) => tap(slider.find('IconButton').last());
 
 describe('Picker Specs', function () {
 

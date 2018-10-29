@@ -10,8 +10,8 @@ const tap = (node) => {
 	node.simulate('mouseup');
 };
 
-const decrement = (slider) => tap(slider.find('Icon').last());
-const increment = (slider) => tap(slider.find('Icon').first());
+const decrement = (slider) => tap(slider.find('Icon').first());
+const increment = (slider) => tap(slider.find('Icon').last());
 describe('EditableIntegerPicker', () => {
 
 	it('should render a single child with the current value', function () {
