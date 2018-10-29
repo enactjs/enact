@@ -23,7 +23,7 @@ import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
 import {ImageBase as Image} from '../Image';
-import {Marquee, MarqueeController} from '../Marquee';
+import {MarqueeDecorator, MarqueeController} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import componentCss from './GridListImageItem.less';
@@ -34,6 +34,7 @@ const
 	'9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
 	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
 	'4NCg==',
+	Marquee = MarqueeDecorator('div'),
 	captionComponent = (props) => (
 		<Marquee alignment="center" marqueeOn="hover" {...props} />
 	);

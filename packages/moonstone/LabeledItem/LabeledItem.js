@@ -18,9 +18,10 @@ import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
 import {ItemBase} from '../Item';
-import {Marquee, MarqueeController} from '../Marquee';
+import {MarqueeDecorator, MarqueeController} from '../Marquee';
 import Skinnable from '../Skinnable';
 
+const Marquee = MarqueeDecorator('div');
 const Controller = MarqueeController(
 	{marqueeOnFocus: true},
 	Touchable(

@@ -3,9 +3,11 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Marquee from '../Marquee';
+import {MarqueeDecorator} from '../Marquee';
 
 import css from './VideoPlayer.less';
+
+const Marquee = MarqueeDecorator('div');
 
 /**
  * MediaTitle {@link moonstone/VideoPlayer}.

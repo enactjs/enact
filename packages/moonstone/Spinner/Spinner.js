@@ -22,10 +22,12 @@ import UiSpinnerBase from '@enact/ui/Spinner';
 import Spotlight from '@enact/spotlight';
 
 import $L from '../internal/$L';
-import Marquee from '../Marquee';
+import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import componentCss from './Spinner.less';
+
+const Marquee = MarqueeDecorator('div');
 
 /**
  * A component that shows spinning balls, with optional text as children.

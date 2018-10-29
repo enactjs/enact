@@ -12,6 +12,7 @@
  * @exports MarqueeDecorator
  */
 
+import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import {isRtlText} from '@enact/i18n/util';
 import {
@@ -19,12 +20,38 @@ import {
 	MarqueeController,
 	MarqueeDecorator as UiMarqueeDecorator
 } from '@enact/ui/Marquee';
+import React from 'react';
+
+import css from './Marquee.less';
+
+/**
+ * A Moonstone styled div without any behavior.
+ *
+ * @class MoonMarqueeBase
+ * @memberof moonstone/Marquee
+ * @ui
+ * @private
+ */
+const MoonMarqueeBase = kind({
+	name: 'MarqueeBase',
+
+	styles: {
+		css: css,
+		className: 'marquee'
+	},
+
+	render: (props) => (
+		<div
+			{...props}
+		/>
+	)
+});
 
 const MarqueeDecorator = hoc({
 	marqueeDirection: (str) => isRtlText(str) ? 'rtl' : 'ltr'
 }, UiMarqueeDecorator);
 
-const Marquee = MarqueeDecorator('div');
+const Marquee = MarqueeDecorator(MoonMarqueeBase);
 
 export default Marquee;
 export {

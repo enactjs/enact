@@ -1,8 +1,10 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 
-import Marquee from '../../Marquee';
+import {MarqueeDecorator} from '../../Marquee';
 import css from './Picker.less';
+
+const Marquee = MarqueeDecorator('div');
 
 const PickerItemBase = kind({
 	name: 'PickerItem',
