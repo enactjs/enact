@@ -27,6 +27,32 @@ const gridListItemSizeShape = PropTypes.shape({
 	minWidth: PropTypes.number.isRequired
 });
 
+const ListContext = React.createContext();
+
+class ListProvider extends Component {
+	static propTypes = /** @lends ui/VirtualList.ListProvider.prototype */ {
+		/**
+		 * It is the object which is passed to items.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		itemProps: PropTypes.object
+	}
+
+	static defaultProps = {
+		itemProps: {}
+	}
+
+	render () {
+		return (
+			<ListContext.Provider value={this.props.itemProps}>
+				{this.props.children}
+			</ListContext.Provider>
+		);
+	}
+}
+
 /**
  * The base version of the virtual list component.
  *
@@ -159,6 +185,14 @@ const VirtualListBaseFactory = (type) => {
 			getComponentProps: PropTypes.func,
 
 			/**
+			 * It is the object which is passed to items.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			itemProps: PropTypes.object,
+
+			/**
 			 * Number of spare DOM node.
 			 * `3` is good for the default value experimentally and
 			 * this value is highly recommended not to be changed by developers.
@@ -265,12 +299,6 @@ const VirtualListBaseFactory = (type) => {
 				} else {
 					this.setScrollPosition(x, y, 0, 0, nextProps.rtl);
 				}
-			}
-		}
-
-		componentWillUpdate (nextProps, nextState) {
-			if (this.state.firstIndex === nextState.firstIndex) {
-				this.prevFirstIndex = -1; // force to re-render items
 			}
 		}
 
@@ -638,17 +666,26 @@ const VirtualListBaseFactory = (type) => {
 			const
 				{itemRenderer, getComponentProps} = this.props,
 				key = index % this.state.numOfItems,
-				itemElement = itemRenderer({
-					index,
-					key
-				}),
 				componentProps = getComponentProps && getComponentProps(index) || {};
 
-			this.cc[key] = React.cloneElement(itemElement, {
-				...componentProps,
-				className: classNames(css.listItem, itemElement.props.className),
-				style: {...itemElement.props.style, ...(this.composeStyle(...rest))}
-			});
+			this.cc[key] = (
+				<ListContext.Consumer key={key}>
+					{(context) => {
+						const itemElement = itemRenderer({
+							...context,
+							index
+						});
+
+						return (
+							React.cloneElement(itemElement, {
+								...componentProps,
+								className: classNames(css.listItem, itemElement.props.className),
+								style: {...itemElement.props.style, ...(this.composeStyle(...rest))}
+							})
+						);
+					}}
+				</ListContext.Consumer>
+			);
 		}
 
 		applyStyleToHideNode = (index) => {
@@ -662,10 +699,10 @@ const VirtualListBaseFactory = (type) => {
 				{firstIndex, numOfItems} = this.state,
 				{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
 				diff = firstIndex - this.prevFirstIndex,
-				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems || this.prevFirstIndex === -1) ? firstIndex : this.prevFirstIndex + numOfItems;
+				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.prevFirstIndex + numOfItems;
 			let
 				hideTo = 0,
-				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0 || this.prevFirstIndex === -1) ? firstIndex + numOfItems : this.prevFirstIndex;
+				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0) ? firstIndex + numOfItems : this.prevFirstIndex;
 
 			if (updateFrom >= updateTo) {
 				return;
@@ -768,7 +805,7 @@ const VirtualListBaseFactory = (type) => {
 
 		render () {
 			const
-				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
+				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemProps, itemsRenderer, style, ...rest} = this.props,
 				{cc, initItemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
 
@@ -794,7 +831,9 @@ const VirtualListBaseFactory = (type) => {
 			return (
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
 					<div {...rest} ref={this.initContentRef}>
-						{itemsRenderer({cc, initItemContainerRef, primary})}
+						<ListProvider itemProps={itemProps}>
+							{itemsRenderer({cc, initItemContainerRef, primary})}
+						</ListProvider>
 					</div>
 				</div>
 			);
