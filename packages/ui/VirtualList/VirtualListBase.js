@@ -29,30 +29,6 @@ const gridListItemSizeShape = PropTypes.shape({
 
 const ListContext = React.createContext();
 
-class ListProvider extends Component {
-	static propTypes = /** @lends ui/VirtualList.ListProvider.prototype */ {
-		/**
-		 * It is the object which is passed to items.
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		itemProps: PropTypes.object
-	}
-
-	static defaultProps = {
-		itemProps: {}
-	}
-
-	render () {
-		return (
-			<ListContext.Provider value={this.props.itemProps}>
-				{this.props.children}
-			</ListContext.Provider>
-		);
-	}
-}
-
 /**
  * The base version of the virtual list component.
  *
@@ -831,9 +807,9 @@ const VirtualListBaseFactory = (type) => {
 			return (
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
 					<div {...rest} ref={this.initContentRef}>
-						<ListProvider itemProps={itemProps}>
+						<ListContext.Provider value={itemProps}>
 							{itemsRenderer({cc, initItemContainerRef, primary})}
-						</ListProvider>
+						</ListContext.Provider>
 					</div>
 				</div>
 			);
