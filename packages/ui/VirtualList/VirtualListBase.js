@@ -27,8 +27,6 @@ const gridListItemSizeShape = PropTypes.shape({
 	minWidth: PropTypes.number.isRequired
 });
 
-const ListContext = React.createContext();
-
 /**
  * The base version of the virtual list component.
  *
@@ -275,6 +273,12 @@ const VirtualListBaseFactory = (type) => {
 				} else {
 					this.setScrollPosition(x, y, 0, 0, nextProps.rtl);
 				}
+			}
+		}
+
+		componentWillUpdate (nextProps, nextState) {
+			if (this.state.firstIndex === nextState.firstIndex || this.props.itemProps && this.props.itemProps !== nextProps.itemProps) {
+				this.prevFirstIndex = -1; // force to re-render items
 			}
 		}
 
@@ -642,26 +646,18 @@ const VirtualListBaseFactory = (type) => {
 			const
 				{itemRenderer, getComponentProps} = this.props,
 				key = index % this.state.numOfItems,
+				itemElement = itemRenderer({
+					...this.props.itemProps,
+					key,
+					index
+				}),
 				componentProps = getComponentProps && getComponentProps(index) || {};
 
-			this.cc[key] = (
-				<ListContext.Consumer key={key}>
-					{(context) => {
-						const itemElement = itemRenderer({
-							...context,
-							index
-						});
-
-						return (
-							React.cloneElement(itemElement, {
-								...componentProps,
-								className: classNames(css.listItem, itemElement.props.className),
-								style: {...itemElement.props.style, ...(this.composeStyle(...rest))}
-							})
-						);
-					}}
-				</ListContext.Consumer>
-			);
+			this.cc[key] = React.cloneElement(itemElement, {
+				...componentProps,
+				className: classNames(css.listItem, itemElement.props.className),
+				style: {...itemElement.props.style, ...(this.composeStyle(...rest))}
+			});
 		}
 
 		applyStyleToHideNode = (index) => {
@@ -675,10 +671,10 @@ const VirtualListBaseFactory = (type) => {
 				{firstIndex, numOfItems} = this.state,
 				{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
 				diff = firstIndex - this.prevFirstIndex,
-				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems) ? firstIndex : this.prevFirstIndex + numOfItems;
+				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems || this.prevFirstIndex === -1) ? firstIndex : this.prevFirstIndex + numOfItems;
 			let
 				hideTo = 0,
-				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0) ? firstIndex + numOfItems : this.prevFirstIndex;
+				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0 || this.prevFirstIndex === -1) ? firstIndex + numOfItems : this.prevFirstIndex;
 
 			if (updateFrom >= updateTo) {
 				return;
@@ -781,7 +777,7 @@ const VirtualListBaseFactory = (type) => {
 
 		render () {
 			const
-				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemProps, itemsRenderer, style, ...rest} = this.props,
+				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
 				{cc, initItemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
 
@@ -790,6 +786,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.dataSize;
 			delete rest.direction;
 			delete rest.getComponentProps;
+			delete rest.itemProps;
 			delete rest.itemRenderer;
 			delete rest.itemSize;
 			delete rest.onUpdate;
@@ -807,9 +804,7 @@ const VirtualListBaseFactory = (type) => {
 			return (
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
 					<div {...rest} ref={this.initContentRef}>
-						<ListContext.Provider value={itemProps}>
-							{itemsRenderer({cc, initItemContainerRef, primary})}
-						</ListContext.Provider>
+						{itemsRenderer({cc, initItemContainerRef, primary})}
 					</div>
 				</div>
 			);
