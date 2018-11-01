@@ -159,10 +159,10 @@ const VirtualListBaseFactory = (type) => {
 			getComponentProps: PropTypes.func,
 
 			/**
-			 * It is the object which is passed to items.
+			 * It is the object which is passed as arguments of `itemsRenderer` prop function.
 			 *
 			 * @type {Object}
-			 * @public
+			 * @private
 			 */
 			itemProps: PropTypes.object,
 
