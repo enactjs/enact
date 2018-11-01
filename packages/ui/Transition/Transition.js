@@ -436,8 +436,10 @@ class Transition extends React.Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		if (nextProps.visible && this.state.renderState === TRANSITION_STATE.INIT) {
+		if (!this.props.visible && nextProps.visible) {
 			this.setState({
+				initialHeight: null,
+				innerWidth: null,
 				renderState: TRANSITION_STATE.MEASURE
 			});
 		}
@@ -463,7 +465,7 @@ class Transition extends React.Component {
 		if ((visible === prevProps.visible &&
 			initialHeight === prevState.initialHeight &&
 			renderState !== TRANSITION_STATE.INIT) ||
-			(!initialHeight && visible)) {
+			(initialHeight == null && visible)) {
 			this.measureInner();
 		}
 
