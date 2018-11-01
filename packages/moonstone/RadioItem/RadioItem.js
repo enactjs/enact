@@ -1,5 +1,5 @@
 /**
- * Provides a Moonstone-themed Item component and interactive togglable radio icon.
+ * Provides a Moonstone-themed Item component and interactive toggleable radio icon.
  *
  * @example
  * <RadioItem>Item</RadioItem>
