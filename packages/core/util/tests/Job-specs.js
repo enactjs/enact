@@ -192,7 +192,7 @@ describe('Job', function () {
 			});
 		});
 
-		it('should not return the value from the job to the resolved promise', function (done) {
+		it('should not return the value from the job to the replaced promise', function (done) {
 			const j = new Job(() => 'job value');
 			j.promise(Promise.resolve(true)).then(value => {
 				expect(value).to.not.exist();

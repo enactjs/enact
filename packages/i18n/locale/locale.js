@@ -24,33 +24,33 @@ import {initCaseMappers} from '../src/case';
  *                           receive the result.
  */
 function isNonLatinLocale (spec, options = {}) {
-	const {onLoad} = options;
+	const {onLoad, latinLanguageOverrides, nonLatinLanguageOverrides, ...rest} = options;
 
 	if (!onLoad) return;
 
 	// eslint-disable-next-line no-new
 	new LocaleInfo(spec, {
-		...options,
+		...rest,
 		onLoad: (li) => {
 			const locale = li.getLocale();
-
-			// We use the non-latin fonts for these languages (even though their scripts are technically
-			// considered latin)
-			const nonLatinLanguageOverrides =  ['vi', 'en-JP'];
-			// We use the latin fonts (with non-Latin fallback) for these languages (even though their
-			// scripts are non-latin)
-			const latinLanguageOverrides = ['ko', 'ha'];
 
 			onLoad(
 				(
 					// the language actually is non-latin
 					li.getScript() !== 'Latn' ||
 					// the language is treated as non-latin
-					nonLatinLanguageOverrides.indexOf(locale.getLanguage()) !== -1 ||
+					(
+						Array.isArray(nonLatinLanguageOverrides) &&
+						nonLatinLanguageOverrides.indexOf(locale.getLanguage()) !== -1
+					) ||
 					// the combination of language and region is treated as non-latin
-					nonLatinLanguageOverrides.indexOf(locale.toString()) !== -1
+					(
+						Array.isArray(nonLatinLanguageOverrides) &&
+						nonLatinLanguageOverrides.indexOf(locale.toString()) !== -1
+					)
 				) && (
 					// the non-latin language should be treated as latin
+					!Array.isArray(latinLanguageOverrides) ||
 					latinLanguageOverrides.indexOf(locale.getLanguage()) < 0
 				)
 			);

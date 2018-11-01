@@ -23,6 +23,8 @@ function all (fns, callback) {
 function getClassesForLocale (li, options) {
 	const locale = li.getLocale();
 
+	const {latinLanguageOverrides, nonLatinLanguageOverrides, ...rest} = options;
+
 	all([
 		// allow enact to define other fonts for non-Latin languages, or for certain
 		// Latin-based languages where the characters with some accents don't appear in the
@@ -30,12 +32,14 @@ function getClassesForLocale (li, options) {
 		// same word. So, treat it like a non-Latin language in order to get all the characters
 		// to display with the same font.
 		(done) => isNonLatinLocale(locale, {
-			...options,
+			...rest,
+			latinLanguageOverrides,
+			nonLatinLanguageOverrides,
 			onLoad: (isNonLatin) => done(isNonLatin ? base + 'non-latin' : '')
 		}),
 		// allow enact to apply right-to-left styles to the app and widgets if necessary
 		(done) => isRtlLocale({
-			...options,
+			...rest,
 			onLoad: (isRtl) => done(isRtl ? base + 'right-to-left' : '')
 		})
 	], function (classes) {
@@ -75,6 +79,8 @@ function getClassesForLocale (li, options) {
  * @memberof i18n/I18nDecorator
  * @param {options.sync} Perform a synchronous request for the classes
  * @param {options.onLoad} Called with a string of i18n classes
+ * @param {options.latinLanguageOverrides} Array of locales to treat as latin
+ * @param {options.nonLatinLanguageOverrides} Array of locales to treat as non-latin
  * @private
  */
 function getI18nClasses (options = {}) {

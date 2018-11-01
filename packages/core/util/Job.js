@@ -212,14 +212,14 @@ class Job {
 	/**
 	 * Starts the job when `promise` resolves.
 	 *
-	 * The job execution is tied to the resolution of the last promise passed. Like other methods on
-	 * `Job`, calling `promise()` again with a new Promise will block execution of the job until
-	 * that new Promise resolves. Any previous promises will still resolve normally but will not
-	 * trigger job execution.
+	 * The job execution is tied to the resolution of the last `Promise` passed. Like other methods
+	 * on `Job`, calling `promise()` again with a new `Promise` will block execution of the job
+	 * until that new `Promise` resolves. Any previous `Promise`s will still resolve normally but
+	 * will not trigger job execution.
 	 *
 	 * Unlike other methods on `Job`, `promise()` returns a `Promise` which is the result of calling
-	 * `then()` on the passed `promise`. That promise resolves with either the result of job
-	 * execution or `undefined` if promise was superseded by a subsequent promise passed as
+	 * `then()` on the passed `promise`. That `Promise` resolves with either the result of job
+	 * execution or `undefined` if `Promise` was superseded by a subsequent `Promise` passed as
 	 * described above.
 	 *
 	 * @method

@@ -37,6 +37,24 @@ const I18nContext = React.createContext(null);
  */
 const defaultConfig = {
 	/**
+	 * Array of locales that should be treated as latin regardless of their script.
+	 *
+	 * @type {String[]}
+	 * @default	null
+	 * @public
+	 */
+	latinLanguageOverrides: null,
+
+	/**
+	 * Array of locales that should be treated as non-latin regardless of their script.
+	 *
+	 * @type {String[]}
+	 * @public null
+	 * @public
+	 */
+	nonLatinLanguageOverrides: null,
+
+	/**
 	 * Retrieve i18n resource files synchronously
 	 *
 	 * @type {Boolean}
@@ -60,7 +78,7 @@ const defaultConfig = {
  * @public
  */
 const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {sync} = config;
+	const {latinLanguageOverrides, nonLatinLanguageOverrides, sync} = config;
 
 	return class extends React.Component {
 		static displayName = 'I18nDecorator'
@@ -139,31 +157,36 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		getDerivedStateForLocale (spec) {
 			const locale = updateLocale(spec);
 
-			let rtl = false;
-			let classes = '';
+			const state = {
+				locale,
+				resourcesLoaded: sync
+			};
 
 			if (sync) {
 				const options = {locale, sync};
-				rtl = wrapIlibCallback(isRtlLocale, options);
-				classes = wrapIlibCallback(getI18nClasses, options);
+				state.rtl = wrapIlibCallback(isRtlLocale, options);
+				state.classes = wrapIlibCallback(getI18nClasses, {
+					...options,
+					latinLanguageOverrides,
+					nonLatinLanguageOverrides
+				});
 
 				const bundle = wrapIlibCallback(createResBundle, options);
 				setResBundle(bundle);
 			}
 
-			return {
-				classes,
-				locale,
-				resourcesLoaded: sync,
-				rtl
-			};
+			return state;
 		}
 
 		loadResources (locale) {
 			const options = {sync, locale};
 			const resources = Promise.all([
 				wrapIlibCallback(isRtlLocale, options),
-				wrapIlibCallback(getI18nClasses, options),
+				wrapIlibCallback(getI18nClasses, {
+					...options,
+					latinLanguageOverrides,
+					nonLatinLanguageOverrides
+				}),
 				// move updating into a new method with call to setState
 				wrapIlibCallback(createResBundle, options)
 			]).then(([rtl, classes, bundle]) => {
