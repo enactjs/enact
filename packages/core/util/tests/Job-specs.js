@@ -134,7 +134,7 @@ describe('Job', function () {
 
 	describe('#promise', function () {
 		it('should throw when passed a non-thenable argument', function (done) {
-			const j = new Job(() => done('Unexpected job execution'));
+			const j = new Job(() => done(new Error('Unexpected job execution')));
 			try {
 				j.promise({});
 			} catch (msg) {
