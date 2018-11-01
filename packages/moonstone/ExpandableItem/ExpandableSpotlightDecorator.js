@@ -1,4 +1,4 @@
-import {getContainersForNode, getContainerNode, isContainer, setContainerLastFocusedElement} from '@enact/spotlight/src/container';
+import {getContainersForNode, getContainerNode, setContainerLastFocusedElement} from '@enact/spotlight/src/container';
 import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import Spotlight from '@enact/spotlight';
@@ -114,13 +114,13 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		highlightLabeledItem = () => {
-			const current = Spotlight.getCurrent() || Spotlight.getPointerMode() && getContainerNode(Spotlight.getActiveContainer());
+			const current = Spotlight.getCurrent();
 			const label = this.containerNode.querySelector('[data-expandable-label]');
 
 			if (current === label) return;
 
 			if (this.containerNode.contains(current)) {
-				if (Spotlight.getPointerMode() && !isContainer(current)) {
+				if (Spotlight.getPointerMode()) {
 					// If we don't clear the focus, switching back to 5-way before focusing anything
 					// will result in what appears to be lost focus
 					current.blur();
@@ -138,9 +138,10 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// If there is focus or active container somewhere else, then we only need to fix
 				// the nearest containers to the label that arent also containing the currently
 				// focused element.
-				if (current) {
+				const node = current || Spotlight.getPointerMode() && getContainerNode(Spotlight.getActiveContainer());
+				if (node) {
 					const ids = getContainersForNode(current);
-					containerIds = containerIds.filter((id) => ids.indexOf(id) < 0);
+					containerIds = containerIds.filter((id) => !ids.includes(id));
 				}
 
 				setContainerLastFocusedElement(label, containerIds);
