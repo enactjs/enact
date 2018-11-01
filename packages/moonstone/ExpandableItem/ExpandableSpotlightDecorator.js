@@ -1,4 +1,4 @@
-import {getContainersForNode, setContainerLastFocusedElement} from '@enact/spotlight/src/container';
+import {getContainersForNode, getContainerNode, isContainer, setContainerLastFocusedElement} from '@enact/spotlight/src/container';
 import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import Spotlight from '@enact/spotlight';
@@ -114,13 +114,13 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		highlightLabeledItem = () => {
-			const current = Spotlight.getCurrent();
+			const current = Spotlight.getCurrent() || Spotlight.getPointerMode() && getContainerNode(Spotlight.getActiveContainer());
 			const label = this.containerNode.querySelector('[data-expandable-label]');
 
 			if (current === label) return;
 
 			if (this.containerNode.contains(current)) {
-				if (Spotlight.getPointerMode()) {
+				if (Spotlight.getPointerMode() && !isContainer(current)) {
 					// If we don't clear the focus, switching back to 5-way before focusing anything
 					// will result in what appears to be lost focus
 					current.blur();
@@ -128,18 +128,19 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 				Spotlight.focus(label);
 			} else {
-				const containerIds = getContainersForNode(label);
+				let containerIds = getContainersForNode(label);
 
 				// when focus is not within the expandable (due to a cancel event or the close
 				// on blur from ExpandableInput, or some quick key presses), we need to fix the last
 				// focused element config so that focus can be restored to the label rather than
 				// spotlight getting lost.
 				//
-				// If there is focus somewhere else, then we only need to fix the nearest container
-				// to be the label. If there isn't focus, we need to update the entire container
-				// tree.
+				// If there is focus or active container somewhere else, then we only need to fix
+				// the nearest containers to the label that arent also containing the currently
+				// focused element.
 				if (current) {
-					containerIds.splice(containerIds.length - 1);
+					const ids = getContainersForNode(current);
+					containerIds = containerIds.filter((id) => ids.indexOf(id) < 0);
 				}
 
 				setContainerLastFocusedElement(label, containerIds);
