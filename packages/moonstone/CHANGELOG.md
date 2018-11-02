@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ExpandableItem` to not steal focus after closing
+- `moonstone/Header` title layout to allow space for tall glyphs
 
 ## [2.2.4] - 2018-10-29
 
