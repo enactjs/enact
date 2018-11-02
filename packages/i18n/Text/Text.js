@@ -1,11 +1,19 @@
-import hoc from '@enact/core/hoc';
-import React from 'react';
-import PropTypes from 'prop-types';
+/**
+ * An unstyled text translation component.
+ *
+ * @module i18n/Text
+ * @exports Text
+ * @exports TextDecorator
+ */
 
-import {createResBundle, getIStringFromBundle, getResBundle} from '../src/resBundle';
+import hoc from '@enact/core/hoc';
+import PropTypes from 'prop-types';
+import React from 'react';
+
 import ilib from '../ilib/lib/ilib';
 import IString from '../ilib/lib/IString';
 import {I18nContextDecorator} from '../I18nDecorator';
+import {createResBundle, getIStringFromBundle, getResBundle} from '../src/resBundle';
 
 function getTextMap (mapPropsToText, props) {
 	const {children, defaultText} = props;
@@ -50,10 +58,55 @@ function getTextMap (mapPropsToText, props) {
 
 const STRING_ONLY = function () {};
 
+/**
+ * Default config for {@link i18n/Text.TextDecorator}.
+ *
+ * @memberof i18n/Text.TextDecorator
+ * @hocconfig
+ */
 const defaultConfig = {
+	/**
+	 * Configures the translated text passed to the wrapped component.
+	 *
+	 * @type {Object<String, String|Object>}
+	 * @default null
+	 * @public
+	 * @memberof i18n/Text.TextDecorator.defaultConfig
+	 */
 	mapPropsToText: null
 };
 
+/**
+ * A higher-order component that is used to translate text and provide the translations via props.
+ *
+ * `TextDecorator` accepts an optional `mapPropsToText` config prop which defines the props it will
+ * populate and the text to translate and provide in that prop. `defaultText` can also be provided
+ * when appropriate.
+ *
+ * If translations are not available yet and all props do not include a default value,
+ * `TextDecorator` will render nothing. Once translations are avaiable, the component will update
+ * with the translated strings.
+ *
+ * ```
+ * TextDecorator({
+ *   mapPropsToText: {
+ *     // Always translate "Go" and pass it in the `children` prop
+ *     children: 'Go',
+ *     // Translate "Go to next page" but pass "" (value always untranslated) while
+ *     // waiting for the translated strings to be fetched.
+ *     'aria-label': {
+ *       text: 'Go to next page',
+ *       defaultText: ''
+ *     }
+ *   }
+ * })
+ * ```
+ *
+ * @class TextDecorator
+ * @memberof i18n/Text
+ * @hoc
+ * @public
+ */
 const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {mapPropsToText} = config;
 
@@ -61,6 +114,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'TextDecorator'
 
 		static propTypes = {
+			children: PropTypes.string,
 			locale: PropTypes.string
 		}
 
@@ -176,6 +230,20 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	);
 });
 
+/**
+ * Translates its child string value in the current locale.
+ *
+ * If translations are not available yet, `Text` will render nothing. Once translations are
+ * avaiable, the component will update with the translated string.
+ *
+ * ```
+ * <Text>Go</Text>
+ * ```
+ *
+ * @class Text
+ * @memberof i18n/Text
+ * @public
+ */
 const Text = TextDecorator(STRING_ONLY);
 
 export default Text;

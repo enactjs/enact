@@ -42,6 +42,7 @@ const defaultConfig = {
 	 * @type {String[]}
 	 * @default	null
 	 * @public
+	 * @memberof i18n/I18nDecorator.I18nDecorator.defaultConfig
 	 */
 	latinLanguageOverrides: null,
 
@@ -50,7 +51,7 @@ const defaultConfig = {
 	 *
 	 * @type {String[]}
 	 * @public null
-	 * @public
+	 * @memberof i18n/I18nDecorator.I18nDecorator.defaultConfig
 	 */
 	nonLatinLanguageOverrides: null,
 
