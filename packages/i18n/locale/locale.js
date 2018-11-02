@@ -52,6 +52,10 @@ function isNonLatinLocale (spec, options = {}) {
 					// the non-latin language should be treated as latin
 					!Array.isArray(latinLanguageOverrides) ||
 					latinLanguageOverrides.indexOf(locale.getLanguage()) < 0
+				) && (
+					// or the combination of language and region should be treated as latin
+					!Array.isArray(latinLanguageOverrides) ||
+					latinLanguageOverrides.indexOf(locale.toString()) < 0
 				)
 			);
 		}
