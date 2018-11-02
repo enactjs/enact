@@ -140,7 +140,7 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// focused element.
 				const node = current || Spotlight.getPointerMode() && getContainerNode(Spotlight.getActiveContainer());
 				if (node) {
-					const ids = getContainersForNode(current);
+					const ids = getContainersForNode(node);
 					containerIds = containerIds.filter((id) => !ids.includes(id));
 				}
 
