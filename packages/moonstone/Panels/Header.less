@@ -65,15 +65,18 @@
 		height: @moon-header-height-medium;
 
 		.title {
-			// This `margin-top: -3px;` is intended to account for the height disparity and visual
-			// offset when switching between Header+Input and a Standard Header's title height.
-			// The height is determined by the line-height below, but we want to maintain that as a
-			// relative unit (`em`) rather than dictate specific pixels. The -3px offset may need to
-			// be updated or removed to accomodate taller glyphs.
-			margin-top: -3px;
 			line-height: @moon-medium-header-line-height;
 
 			.moon-locale-non-latin({line-height: @moon-non-latin-medium-header-line-height;});
+		}
+
+		.decorator {
+			// This `margin-top` is intended to account for the height disparity and visual
+			// offset when switching between Header+Input and a Standard Header's title height.
+			// The height is determined by the line-height above, but we want to maintain that as a
+			// relative unit (`em`) rather than dictate specific pixels. The offset may need to
+			// be updated or removed to accomodate taller glyphs.
+			margin-top: ~"calc(" @moon-medium-header-line-height  ~"/ 19.5)";
 		}
 
 		.decorator,
