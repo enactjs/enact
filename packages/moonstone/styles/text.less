@@ -7,7 +7,10 @@
 //
 
 // Text base provides family, weight, and size
-// Accepts 0 or 1 argument
+// Accepts 0, 1 or 2 arguments
+// The first argument allows overriding the font size, defaulting to
+// the default body font size, the 2nd argument is used privately by
+// MoonstoneDecorator to override the target of the rules.
 .moon-text-base(@font-size: @moon-body-font-size; @target: normal) {
 	.moon-font({
 		font-weight: @moon-non-latin-font-weight;
