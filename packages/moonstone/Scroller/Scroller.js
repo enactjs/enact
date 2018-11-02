@@ -175,27 +175,12 @@ class ScrollerBase extends Component {
 			if (scrollHeightChange > 0) {
 				newScrollTop = scrollTop;
 
-				const
-					itemBounds = focusedItem.getBoundingClientRect(),
-					newItemBottom = newScrollTop + itemBounds.top + itemBounds.height - containerTop;
-
-				if (newItemBottom < scrollBottom && scrollHeightChange + newItemBottom > scrollBottom) {
-					// When `focusedItem` is not at the very bottom of the `Scroller` and
-					// `scrollHeightChange` caused a scroll.
-					const
-						distanceFromBottom = scrollBottom - newItemBottom,
-						bottomOffset = scrollHeightChange - distanceFromBottom;
-					if (bottomOffset < newScrollTop) {
-						// guard against negative `scrollTop`
-						newScrollTop -= bottomOffset;
-					}
-				} else if (newItemBottom === scrollBottom) {
-					// when `focusedItem` is at the very bottom of the `Scroller`
-					if (scrollHeightChange < newScrollTop) {
-						// guard against negative `scrollTop`
-						newScrollTop -= scrollHeightChange;
-					}
+				if (scrollHeightChange < newScrollTop) {
+					// guard against negative `scrollTop`
+					newScrollTop -= scrollHeightChange;
 				}
+
+				return newScrollTop;
 			}
 		}
 
