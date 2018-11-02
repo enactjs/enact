@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Transition` to support changing children dimensions after an initial render with no children
+- `ui/Transition` to better support layout after changing children
 
 ## [2.2.4] - 2018-10-29
 
