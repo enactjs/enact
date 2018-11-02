@@ -12,6 +12,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/MoonstoneDecorator` to apply both Latin and non-Latin rules to the root element so all children inherit the correct default font rules.
+- `moonstone/Marquee`, `moonstone/MediaOverlay` to display locale-based font
 - `moonstone/DayPicker` separator character used between selected days in the label in fa-IR locale
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` scrolling by voice commands in RTL locales
 
