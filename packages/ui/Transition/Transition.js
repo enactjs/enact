@@ -439,7 +439,7 @@ class Transition extends React.Component {
 		if (!this.props.visible && nextProps.visible) {
 			this.setState({
 				initialHeight: null,
-				innerWidth: null,
+				initialWidth: null,
 				renderState: TRANSITION_STATE.MEASURE
 			});
 		}
