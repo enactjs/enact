@@ -51,6 +51,52 @@ class ExpandableListChildrenLengthUpdate extends React.Component {
 	}
 }
 
+class ExpandableListWithAddedChildren extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			list: [],
+			open: true
+		};
+	}
+
+	setZero = () => {
+		this.setState({
+			list: []
+		});
+	}
+
+	setTen = () => {
+		this.setState({
+			list: ['a', 'b', 'c', 'd', 'e', 'a', 'b', 'c', 'd', 'e']
+		});
+	}
+
+	setClose = () => {
+		this.setState({
+			open: false
+		});
+	}
+
+	setOpen = () => {
+		this.setState({
+			open: true
+		});
+	}
+
+	render () {
+		return (
+			<div>
+				<Button onClick={this.setZero}>0</Button>
+				<Button onClick={this.setTen}>10</Button>
+				<ExpandableList style={{height: '100%'}} title={'test'} open={this.state.open} onClose={this.setClose} onOpen={this.setOpen}>
+					{this.state.list}
+				</ExpandableList>
+			</div>
+		);
+	}
+}
+
 storiesOf('ExpandableList', module)
 	.add(
 		'with children length update',
@@ -121,5 +167,11 @@ storiesOf('ExpandableList', module)
 					{optionsArray}
 				</ExpandableList>
 			</Scroller>
+		)
+	)
+	.add(
+		'with added children',
+		() => (
+			<ExpandableListWithAddedChildren />
 		)
 	);
