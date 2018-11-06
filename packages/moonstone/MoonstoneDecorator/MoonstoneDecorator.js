@@ -15,6 +15,7 @@ import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
 
 import Skinnable from '../Skinnable';
+import MoonstoneI18NDecorator from '../internal/i18n/MoonstoneI18NDecorator';
 
 import I18nFontDecorator from './I18nFontDecorator';
 import AccessibilityDecorator from './AccessibilityDecorator';
@@ -88,8 +89,11 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// technically considered latin)
 				nonLatinLanguageOverrides: ['vi', 'en-JP']
 			},
-			I18nFontDecorator(
-				App
+			MoonstoneI18NDecorator(
+				{...i18n},
+				I18nFontDecorator(
+					App
+				)
 			)
 		);
 	}
