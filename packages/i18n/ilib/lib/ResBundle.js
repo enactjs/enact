@@ -530,7 +530,7 @@ ResBundle.prototype = {
             return undefined;
         } else {
             var ret = new IString(trans);
-            ret.setLocale(this.locale.getSpec(), this.sync, this.loadParams); // no callback
+            ret.setLocale(this.locale.getSpec(), true, this.loadParams); // no callback
             return ret;
         }
 	}, 
