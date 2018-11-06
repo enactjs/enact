@@ -1,7 +1,6 @@
 import hoc from '@enact/core/hoc';
-import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import I18nDecorator, {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import wrapIlibCallback from '@enact/i18n/src/wrapIlibCallback';
-
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -17,8 +16,7 @@ const MoonstoneI18NDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	class Decorator extends React.Component {
 		static displayName = 'MoonstoneI18NDecorator'
 
-		static propTypes = /** @lends i18n/I18nDecorator.I18nDecorator.prototype */ {
-
+		static propTypes = {
 			/**
 			 * A string with a {@link https://tools.ietf.org/html/rfc5646|BCP 47 language tag}.
 			 *
@@ -36,7 +34,7 @@ const MoonstoneI18NDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillReceiveProps (nextProps) {
 			if (this.props.locale !== nextProps.locale) {
-				if (sync ) {
+				if (sync) {
 					const options = {locale: nextProps.locale, sync};
 					const bundle = wrapIlibCallback(createResBundle, options);
 					setResBundle(bundle);
@@ -53,6 +51,8 @@ const MoonstoneI18NDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			).then(bundle => {
 				setResBundle(bundle);
 			});
+
+			// TOOD: How do we trigger $L to execute once resources are loaded?
 		}
 
 		render () {
@@ -60,9 +60,20 @@ const MoonstoneI18NDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 	}
 
-	return I18nContextDecorator(
-		{localeProp: 'locale'},
-		Decorator
+	return I18nDecorator(
+		{
+			...config,
+			// We use the latin fonts (with non-Latin fallback) for these languages (even though
+			// their scripts are non-latin)
+			latinLanguageOverrides: ['ko', 'ha'],
+			// We use the non-latin fonts for these languages (even though their scripts are
+			// technically considered latin)
+			nonLatinLanguageOverrides: ['vi', 'en-JP']
+		},
+		I18nContextDecorator(
+			{localeProp: 'locale'},
+			Decorator
+		)
 	);
 });
 

@@ -7,7 +7,6 @@
 
 import {addAll} from '@enact/core/keymap';
 import hoc from '@enact/core/hoc';
-import I18nDecorator from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import classNames from 'classnames';
 import {ResolutionDecorator} from '@enact/ui/resolution';
@@ -79,21 +78,10 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	if (i18n) {
 		// Apply the @enact/i18n decorator around the font decorator so the latter will update the
 		// font stylesheet when the locale changes
-		App = I18nDecorator(
-			{
-				...i18n,
-				// We use the latin fonts (with non-Latin fallback) for these languages (even though
-				// their scripts are non-latin)
-				latinLanguageOverrides: ['ko', 'ha'],
-				// We use the non-latin fonts for these languages (even though their scripts are
-				// technically considered latin)
-				nonLatinLanguageOverrides: ['vi', 'en-JP']
-			},
-			MoonstoneI18NDecorator(
-				{...i18n},
-				I18nFontDecorator(
-					App
-				)
+		App = MoonstoneI18NDecorator(
+			{...i18n},
+			I18nFontDecorator(
+				App
 			)
 		);
 	}
