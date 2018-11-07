@@ -1,3 +1,4 @@
+import '../../src/glue.js';
 import {isNonLatinLocale, updateLocale} from '../locale';
 
 describe('locale', () => {
@@ -8,11 +9,12 @@ describe('locale', () => {
 		isNonLatinLocale('en-US', {sync: true, onLoad});
 	});
 
-	it.only('should treat "ja-JP" as non-latin locale', (done) => {
+	it('should treat "ja-JP" as non-latin locale', (done) => {
 		function onLoad (nonLatin) { done(!nonLatin); }
 
 		updateLocale('ja-JP');
 
+		// eslint-disable-next-line no-undefined
 		isNonLatinLocale(undefined, {sync: true, onLoad});
 	});
 
