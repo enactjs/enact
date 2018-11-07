@@ -50,7 +50,18 @@ function setResBundle (bundle) {
 	return (resBundle = bundle);
 }
 
+/**
+ * Deletes the current bundle object of strings and clears the cache.
+ * @returns {undefined}
+ */
+function clearResBundle () {
+	delete ResBundle.strings;
+	delete ResBundle.sysres;
+	resBundle = null;
+}
+
 export {
+	clearResBundle,
 	createResBundle,
 	getResBundle,
 	setResBundle

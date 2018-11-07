@@ -1,4 +1,4 @@
-import {getResBundle} from '../i18n/resBundle';
+import {clearResBundle, getResBundle} from '../i18n/resBundle';
 import {getIStringFromBundle} from '@enact/i18n/src/resBundle';
 
 function toIString (str) {
@@ -22,5 +22,6 @@ function $L (str) {
 
 export default $L;
 export {
-	$L
+	$L,
+	clearResBundle
 };
