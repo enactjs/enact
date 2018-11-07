@@ -14,7 +14,7 @@ import {initCaseMappers} from '../src/case';
 
 // Returns `true` if a locale list is provided and it includes either the language (the first part
 // of the spec e.g. ko) or the entire spec (e.g. ko-KR)
-const includesLocale = (localeList, locale) => !Array.isArray(localeList) || (
+const includesLocale = (localeList, locale) => Array.isArray(localeList) && (
 	localeList.includes(locale.getLanguage()) ||
 	localeList.includes(locale.toString())
 );
@@ -34,12 +34,15 @@ function isNonLatinLocale (spec, options = {}) {
 	const {onLoad, latinLanguageOverrides, nonLatinLanguageOverrides, ...rest} = options;
 
 	if (!onLoad) return;
+	console.log(`called for ${spec}`)
 
 	// eslint-disable-next-line no-new
 	new LocaleInfo(spec, {
 		...rest,
 		onLoad: (li) => {
 			const locale = li.getLocale();
+			console.log(li);
+			console.log(li.getScript());
 
 			onLoad(
 				// the language actually is non-latin and should not be treated as latin

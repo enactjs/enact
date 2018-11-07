@@ -145,4 +145,35 @@ describe('I18nDecorator', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
+	it('should treat "en-US" as latin locale', function () {
+		const Component = (props) => (
+			<div className={props.className} />
+		);
+
+		const Wrapped = I18nDecorator({sync: true}, Component);
+		// explicitly setting locale so we get a known class list regardless of runtime locale
+		const subject = shallow(<Wrapped locale="en-US" />).find(Component);
+
+		const expected = false;
+		const actual =	subject.hasClass('enact-locale-non-latin');
+
+		expect(actual).to.equal(expected);
+	});
+
+
+	it('should treat "ja-JP" as non-latin locale', function () {
+		const Component = (props) => (
+			<div className={props.className} />
+		);
+
+		const Wrapped = I18nDecorator({sync: true}, Component);
+		// explicitly setting locale so we get a known class list regardless of runtime locale
+		const subject = shallow(<Wrapped locale="ja-JP" />).find(Component);
+
+		const expected = true;
+		const actual =	subject.hasClass('enact-locale-non-latin');
+
+		expect(actual).to.equal(expected);
+	});
 });
