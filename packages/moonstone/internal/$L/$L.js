@@ -46,6 +46,16 @@ function createResBundle (options) {
 }
 
 /**
+ * Deletes the current bundle object of strings and clears the cache.
+ * @returns {undefined}
+ */
+function clearResBundle () {
+	delete ResBundle.strings;
+	delete ResBundle.sysres;
+	resBundle = null;
+}
+
+/**
  * Set the locale for the strings that $L loads. This may reload the
  * string resources if necessary.
  *
@@ -82,6 +92,7 @@ function $L (str) {
 export default $L;
 export {
 	$L,
+	clearResBundle,
 	createResBundle,
 	setResBundle
 };
