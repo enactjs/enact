@@ -6,13 +6,16 @@
 // Mixin classes for creating the moontone text classes
 //
 
-// Text base provides weight color
-// Accepts 0 or 1 argument
-.moon-text-base(@font-size: @moon-body-font-size) {
+// Text base provides family, weight, and size
+// Accepts 0, 1 or 2 arguments
+// The first argument allows overriding the font size, defaulting to
+// the default body font size, the 2nd argument is used privately by
+// MoonstoneDecorator to override the target of the rules.
+.moon-text-base(@font-size: @moon-body-font-size; @target: normal) {
 	.moon-font({
 		font-weight: @moon-non-latin-font-weight;
 		font-size: @moon-non-latin-sub-header-font-size;
-	});
+	}, @target);
 	font-weight: bold;
 	font-size: @font-size;
 }
@@ -20,26 +23,31 @@
 //
 // Moonstone Font Applicator
 //
-// When only rules are provided.
-.moon-font(@nlrules) when (isruleset(@nlrules)) {
-	.moon-font(@moon-font-family, @moon-non-latin-font-family, @nlrules);
+// When only rules are provided. Default populate the @target argument.
+.moon-font(@nlrules; @target: normal) when (isruleset(@nlrules)) {
+	.moon-font(@moon-font-family, @moon-non-latin-font-family, @nlrules, @target);
 }
-// When 0, 1, or 2 strings (font family names) are provided.
-.moon-font(@family: @moon-font-family; @nlfamily: @moon-non-latin-font-family) when (isstring(@family)) and (isstring(@nlfamily)) {
-	.moon-font(@family; @nlfamily; {})
+// When 0, 1, or 2 strings (font family names) are provided. Default populate the @target argument so the signature stays the same.
+.moon-font(@family: @moon-font-family; @nlfamily: @moon-non-latin-font-family; @target: normal) when (isstring(@family)) and (isstring(@nlfamily)) and (isstring(@target)) {
+	.moon-font(@family, @nlfamily, {}, @target);
 }
-// When exactly 3 args are provided. Types are assumed because they went through the trouble to provide all 3 args.
-.moon-font(@family; @nlfamily; @nlrules) {
+// When exactly 3 or 4 args are provided. Types are assumed because they went through the trouble to provide all 3 required args.
+.moon-font(@family; @nlfamily; @nlrules; @target: normal) {
 	font-family: @family;
 
 	.moon-locale-non-latin({
 		font-family: @nlfamily;
 		@nlrules();
-	});
+	}, @target);
 }
 
 // Generic Non-Latin Font Rule generator
-.moon-locale-non-latin(@nlrules) when (isruleset(@nlrules)) {
+.moon-locale-non-latin(@nlrules; @target) when (isruleset(@nlrules)) and (@target = self) {
+	&:global(.enact-locale-non-latin) {
+		@nlrules();
+	}
+}
+.moon-locale-non-latin(@nlrules; @target: normal) when (isruleset(@nlrules)) {
 	:global(.enact-locale-non-latin) & {
 		@nlrules();
 	}

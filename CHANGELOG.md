@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.2.5] - 2018-11-05
+
+### Fixed
+
+- `moonstone/ExpandableItem` to not steal focus after closing
+- `ui/Transition` to better support layout after changing children
+
 ## [2.2.4] - 2018-10-29
 
 ### Fixed
