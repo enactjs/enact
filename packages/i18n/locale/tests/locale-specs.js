@@ -1,5 +1,5 @@
 import '../../src/glue.js';
-import {isNonLatinLocale, updateLocale} from '../locale';
+import {isNonLatinLocale} from '../locale';
 
 const validate = (expected) => (actual) => {
 	expect(actual ? 'non-latin' : 'latin').to.equal(expected);
