@@ -9,7 +9,7 @@
 import {on, off} from '@enact/core/dispatcher';
 import hoc from '@enact/core/hoc';
 import {Publisher, contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
-import {Job} from '@enact/core/util';
+import {Job, coerceArray} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -55,6 +55,9 @@ const defaultConfig = {
 	 */
 	nonLatinLanguageOverrides: null,
 
+	resourceLoaderCallback: null,
+	resourceLoaders: null,
+
 	/**
 	 * Retrieve i18n resource files synchronously
 	 *
@@ -79,7 +82,7 @@ const defaultConfig = {
  * @public
  */
 const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {latinLanguageOverrides, nonLatinLanguageOverrides, sync} = config;
+	const {latinLanguageOverrides, nonLatinLanguageOverrides, resourceLoaderCallback, resourceLoaders, sync} = config;
 
 	return class extends React.Component {
 		static displayName = 'I18nDecorator'
@@ -174,6 +177,13 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 				const bundle = wrapIlibCallback(createResBundle, options);
 				setResBundle(bundle);
+
+				if (Array.isArray(resourceLoaders)) {
+					const userResources = resourceLoaders.map(fn => wrapIlibCallback(fn, options));
+					if (resourceLoaderCallback) {
+						resourceLoaderCallback(userResources);
+					}
+				}
 			}
 
 			return state;
@@ -189,8 +199,13 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					nonLatinLanguageOverrides
 				}),
 				// move updating into a new method with call to setState
-				wrapIlibCallback(createResBundle, options)
-			]).then(([rtl, classes, bundle]) => {
+				wrapIlibCallback(createResBundle, options),
+				...(resourceLoaders || []).map(fn => wrapIlibCallback(fn, options))
+			]).then(([rtl, classes, bundle, ...userResources]) => {
+				if (resourceLoaderCallback) {
+					resourceLoaderCallback(userResources)
+				}
+
 				setResBundle(bundle);
 
 				return {
@@ -259,7 +274,7 @@ const contextDefaultConfig = {
 };
 
 const I18nContextDecorator = hoc(contextDefaultConfig, (config, Wrapped) => {
-	const {localeProp, rtlProp, updateLocaleProp} = config;
+	const {loadedProp, localeProp, rtlProp, updateLocaleProp} = config;
 
 	// eslint-disable-next-line no-shadow
 	return function I18nContextDecorator (props) {
@@ -268,9 +283,13 @@ const I18nContextDecorator = hoc(contextDefaultConfig, (config, Wrapped) => {
 				{(i18nContext) => {
 
 					if (i18nContext) {
-						const {locale, rtl, updateLocale: update} = i18nContext;
+						const {loaded, locale, rtl, updateLocale: update} = i18nContext;
 
 						props = Object.assign({}, props);
+						if (loadedProp) {
+							props[loadedProp] = loaded;
+						}
+
 						if (localeProp) {
 							props[localeProp] = locale;
 						}

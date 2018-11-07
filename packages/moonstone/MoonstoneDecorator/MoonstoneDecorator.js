@@ -11,10 +11,10 @@ import React from 'react';
 import classNames from 'classnames';
 import {ResolutionDecorator} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
+import I18nDecorator from '@enact/i18n/I18nDecorator';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
 
 import Skinnable from '../Skinnable';
-import MoonstoneI18NDecorator from '../internal/i18n/MoonstoneI18NDecorator';
 
 import I18nFontDecorator from './I18nFontDecorator';
 import AccessibilityDecorator from './AccessibilityDecorator';
@@ -78,8 +78,16 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	if (i18n) {
 		// Apply the @enact/i18n decorator around the font decorator so the latter will update the
 		// font stylesheet when the locale changes
-		App = MoonstoneI18NDecorator(
-			{...i18n},
+		App = I18nDecorator(
+			{
+				...i18n,
+				// We use the latin fonts (with non-Latin fallback) for these languages (even though
+				// their scripts are non-latin)
+				latinLanguageOverrides: ['ko', 'ha'],
+				// We use the non-latin fonts for these languages (even though their scripts are
+				// technically considered latin)
+				nonLatinLanguageOverrides: ['vi', 'en-JP']
+			},
 			I18nFontDecorator(
 				App
 			)
