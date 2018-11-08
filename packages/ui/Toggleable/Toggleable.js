@@ -158,7 +158,23 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Function}
 			 * @public
 			 */
-			[toggle]: PropTypes.func
+			[toggle]: PropTypes.func,
+
+			/**
+			 * The "aria-label" when toggle button is off.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			toggleOffAriaLabel: PropTypes.string,
+
+			/**
+			 * The "aria-label" when toggle button is on.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			toggleOnAriaLabel: PropTypes.string
 		}
 
 		static defaultProps = {
@@ -232,7 +248,9 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		render () {
-			const props = Object.assign({}, this.props);
+			const
+				props = Object.assign({}, this.props),
+				toggleAriaLabel = this.state.active ? props['toggleOffAriaLabel'] : props['toggleOnAriaLabel'];
 
 			if (toggleProp || toggle) {
 				// Supporting only one of the toggleProp or toggle, but we don't want both applying.
@@ -244,8 +262,10 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			if (prop) props[prop] = this.state.active;
 
 			delete props[defaultPropKey];
+			delete props['toggleOffAriaLabel'];
+			delete props['toggleOnAriaLabel'];
 
-			return <Wrapped {...props} />;
+			return <Wrapped aria-label={toggleAriaLabel} {...props} />;
 		}
 	};
 });
