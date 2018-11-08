@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/VideoPlayer` to disable pointer mode when hiding media controls via 5-way
+
 ## [2.2.5] - 2018-11-05
 
 ### Fixed
