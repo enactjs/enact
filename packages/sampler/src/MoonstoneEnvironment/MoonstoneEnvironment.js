@@ -156,7 +156,7 @@ const StorybookDecorator = (story, config) => {
 			className={classnames(classes)}
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
-			locale={select('locale', locales, Config, getPropFromURL('locale'))}
+			locale={select('locale', locales, Config, getPropFromURL('locale') || window.navigator.language)}
 			textSize={boolean('large text', Config, (getPropFromURL('large text') === 'true')) ? 'large' : 'normal'}
 			highContrast={boolean('high contrast', Config, (getPropFromURL('high contrast') === 'true'))}
 			style={backgroundLabelMap[select('background', backgroundLabels, Config, getPropFromURL('background'))]}
