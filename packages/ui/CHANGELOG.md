@@ -7,7 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/Toggleable` props `toggleOffLabel` and `toggleOnLabel` to configure the label set on used toggleable.
+- `ui/Toggleable` props `toggleOffAriaLabel` and `toggleOnAriaLabel` to configure the label set on used toggleable.
 
 ## [2.2.5] - 2018-11-05
 
