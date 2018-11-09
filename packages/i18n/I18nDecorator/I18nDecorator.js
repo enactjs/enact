@@ -55,8 +55,7 @@ const defaultConfig = {
 	 */
 	nonLatinLanguageOverrides: null,
 
-	resourceLoaderCallback: null,
-	resourceLoaders: null,
+	resources: null,
 
 	/**
 	 * Retrieve i18n resource files synchronously
@@ -82,7 +81,19 @@ const defaultConfig = {
  * @public
  */
 const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {latinLanguageOverrides, nonLatinLanguageOverrides, resourceLoaderCallback, resourceLoaders, sync} = config;
+	const {latinLanguageOverrides, nonLatinLanguageOverrides, sync} = config;
+
+	// Normalize the structure of the external resources to be an array of resource/onLoad pairs
+	const extResources = Array.isArray(config.resources) ? config.resources.map(res => {
+		if (!res) return;
+
+		const fn = res.resource || res;
+		const onLoad = res.onLoad;
+
+		if (typeof fn !== 'function') return;
+
+		return {resource: fn, onLoad};
+	}).filter(Boolean) : [];
 
 	return class extends React.Component {
 		static displayName = 'I18nDecorator'
@@ -137,7 +148,9 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				on('languagechange', this.handleLocaleChange, window);
 			}
 
-			this.loadResources(this.state.locale);
+			if (!sync) {
+				this.loadResources(this.state.locale);
+			}
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -178,12 +191,10 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				const bundle = wrapIlibCallback(createResBundle, options);
 				setResBundle(bundle);
 
-				if (Array.isArray(resourceLoaders)) {
-					const userResources = resourceLoaders.map(fn => wrapIlibCallback(fn, options));
-					if (resourceLoaderCallback) {
-						resourceLoaderCallback(userResources);
-					}
-				}
+				extResources.forEach(({resource, onLoad}) => {
+					const result = resource(options);
+					if (onLoad) onLoad(result);
+				});
 			}
 
 			return state;
@@ -200,13 +211,10 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				}),
 				// move updating into a new method with call to setState
 				wrapIlibCallback(createResBundle, options),
-				...(resourceLoaders || []).map(fn => wrapIlibCallback(fn, options))
+				...extResources.map(res => wrapIlibCallback(res.resource, options))
 			]).then(([rtl, classes, bundle, ...userResources]) => {
-				if (resourceLoaderCallback) {
-					resourceLoaderCallback(userResources)
-				}
-
 				setResBundle(bundle);
+				extResources.forEach(({onLoad}, i) => onLoad && onLoad(userResources[i]));
 
 				return {
 					locale,
