@@ -254,7 +254,7 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 EnyoLoader.prototype._handleManifest = function (dirpath, filepath, json) {
 	// star indicates there was no ilibmanifest.json, so always try to load files from
 	// that dir
-	if (typeof json === 'object') {
+	if (json != null) {
 		if (typeof window !== 'undefined' && window.localStorage) {
 			window.localStorage.setItem(cachePrefix + filepath, JSON.stringify(json));
 		}
@@ -291,9 +291,7 @@ EnyoLoader.prototype._loadManifest = function (_root, subpath, sync) {
 
 	if (sync) {
 		getSync(filepath, (json) => {
-			if (json) {
-				this._handleManifest(dirpath, filepath, json);
-			}
+			this._handleManifest(dirpath, filepath, json);
 		});
 
 		return;
