@@ -12,6 +12,13 @@ import ScriptInfo from '../ilib/lib/ScriptInfo';
 
 import {initCaseMappers} from '../src/case';
 
+// Returns `true` if a locale list is provided and it includes either the language (the first part
+// of the spec e.g. ko) or the entire spec (e.g. ko-KR)
+const includesLocale = (localeList, locale) => Array.isArray(localeList) && (
+	localeList.includes(locale.getLanguage()) ||
+	localeList.includes(locale.toString())
+);
+
 /**
  * Tell whether or not the given locale is considered a non-Latin locale for webOS purposes. This
  * controls which fonts are used in various places to show the various languages. An undefined spec
@@ -35,28 +42,10 @@ function isNonLatinLocale (spec, options = {}) {
 			const locale = li.getLocale();
 
 			onLoad(
-				(
-					// the language actually is non-latin
-					li.getScript() !== 'Latn' ||
-					// the language is treated as non-latin
-					(
-						Array.isArray(nonLatinLanguageOverrides) &&
-						nonLatinLanguageOverrides.indexOf(locale.getLanguage()) !== -1
-					) ||
-					// the combination of language and region is treated as non-latin
-					(
-						Array.isArray(nonLatinLanguageOverrides) &&
-						nonLatinLanguageOverrides.indexOf(locale.toString()) !== -1
-					)
-				) && (
-					// the non-latin language should be treated as latin
-					!Array.isArray(latinLanguageOverrides) ||
-					latinLanguageOverrides.indexOf(locale.getLanguage()) < 0
-				) && (
-					// or the combination of language and region should be treated as latin
-					!Array.isArray(latinLanguageOverrides) ||
-					latinLanguageOverrides.indexOf(locale.toString()) < 0
-				)
+				// the language actually is non-latin and should not be treated as latin
+				(li.getScript() !== 'Latn' && !includesLocale(latinLanguageOverrides, locale)) ||
+				// the language is latin but should be treated as non-latin
+				includesLocale(nonLatinLanguageOverrides, locale)
 			);
 		}
 	});
