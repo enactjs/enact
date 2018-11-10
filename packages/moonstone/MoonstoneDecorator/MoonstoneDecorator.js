@@ -5,23 +5,22 @@
  * @exports MoonstoneDecorator
  */
 
-import classNames from 'classnames';
-import hoc from '@enact/core/hoc';
 import {addAll} from '@enact/core/keymap';
+import hoc from '@enact/core/hoc';
+import React from 'react';
+import classNames from 'classnames';
+import {ResolutionDecorator} from '@enact/ui/resolution';
+import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import I18nDecorator from '@enact/i18n/I18nDecorator';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
-import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
-import {ResolutionDecorator} from '@enact/ui/resolution';
-import {configure} from '@enact/ui/Touchable';
-import React from 'react';
 
 import Skinnable from '../Skinnable';
 
-import AccessibilityDecorator from './AccessibilityDecorator';
 import I18nFontDecorator from './I18nFontDecorator';
+import AccessibilityDecorator from './AccessibilityDecorator';
 import screenTypes from './screenTypes.json';
-
 import css from './MoonstoneDecorator.less';
+import {configure} from '@enact/ui/Touchable';
 
 /**
  * Default config for `MoonstoneDecorator`.
