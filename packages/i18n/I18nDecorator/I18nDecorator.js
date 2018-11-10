@@ -9,7 +9,7 @@
 import {on, off} from '@enact/core/dispatcher';
 import hoc from '@enact/core/hoc';
 import {Publisher, contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
-import {Job, coerceArray} from '@enact/core/util';
+import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
 

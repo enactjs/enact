@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` property `childProps` to support additional props included in the object passed to the `itemsRenderer` callback
+
 ## [2.2.5] - 2018-11-05
 
 ### Fixed
