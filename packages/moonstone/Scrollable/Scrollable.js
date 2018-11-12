@@ -86,6 +86,14 @@ class ScrollableBase extends Component {
 	static displayName = 'Scrollable'
 
 	static propTypes = /** @lends moonstone/Scrollable.Scrollable.prototype */ {
+		/*
+		 * It scrolls with scroll animation when `true`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		animate: PropTypes.bool,
 		/**
 		 * Render function.
 		 *
@@ -204,6 +212,7 @@ class ScrollableBase extends Component {
 	}
 
 	static defaultProps = {
+		animate: false,
 		'data-spotlight-container-disabled': false,
 		focusableScrollbar: false,
 		overscrollEffectOn: {
@@ -452,7 +461,7 @@ class ScrollableBase extends Component {
 			ev.preventDefault();
 		}
 
-		this.animateOnFocus = true;
+		this.animateOnFocus = this.props.animate;
 
 		if (!repeat && this.hasFocus()) {
 			const {overscrollEffectOn} = this.props;

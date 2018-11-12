@@ -690,7 +690,7 @@ class ScrollableBase extends Component {
 
 		this.lastInputType = 'pageKey';
 
-		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.pageKey);
+		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.pageKey, this.props.animate);
 	}
 
 	onKeyDown = (ev) => {
@@ -701,7 +701,7 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	scrollToAccumulatedTarget = (delta, vertical, overscrollEffect) => {
+	scrollToAccumulatedTarget = (delta, vertical, overscrollEffect, animate) => {
 		if (!this.isScrollAnimationTargetAccumulated) {
 			this.accumulatedTargetX = this.scrollLeft;
 			this.accumulatedTargetY = this.scrollTop;
@@ -714,7 +714,7 @@ class ScrollableBase extends Component {
 			this.accumulatedTargetX += delta;
 		}
 
-		this.start({targetX: this.accumulatedTargetX, targetY: this.accumulatedTargetY, overscrollEffect});
+		this.start({targetX: this.accumulatedTargetX, targetY: this.accumulatedTargetY, overscrollEffect, animate});
 	}
 
 	// overscroll effect
@@ -1307,6 +1307,7 @@ class ScrollableBase extends Component {
 			};
 
 		delete rest.addEventListeners;
+		delete rest.animate;
 		delete rest.applyOverscrollEffect;
 		delete rest.cbScrollTo;
 		delete rest.clearOverscrollEffect;

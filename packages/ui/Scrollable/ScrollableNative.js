@@ -755,7 +755,7 @@ class ScrollableBaseNative extends Component {
 
 		this.lastInputType = 'pageKey';
 
-		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.pageKey);
+		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.pageKey, this.props.animate);
 	}
 
 	onKeyDown = (ev) => {
@@ -769,7 +769,7 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
-	scrollToAccumulatedTarget = (delta, vertical, overscrollEffect) => {
+	scrollToAccumulatedTarget = (delta, vertical, overscrollEffect, animate) => {
 		if (!this.isScrollAnimationTargetAccumulated) {
 			this.accumulatedTargetX = this.scrollLeft;
 			this.accumulatedTargetY = this.scrollTop;
@@ -782,7 +782,7 @@ class ScrollableBaseNative extends Component {
 			this.accumulatedTargetX += delta;
 		}
 
-		this.start({targetX: this.accumulatedTargetX, targetY: this.accumulatedTargetY, overscrollEffect});
+		this.start({targetX: this.accumulatedTargetX, targetY: this.accumulatedTargetY, overscrollEffect, animate});
 	}
 
 	// overscroll effect
@@ -791,7 +791,7 @@ class ScrollableBaseNative extends Component {
 		if (position <= 0) {
 			return 'before';
 		/* If a scroll size or a client size is not integer,
-		   browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
+			 browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
 		} else if (position >= maxPosition - 1) {
 			return 'after';
 		} else {
@@ -838,7 +838,7 @@ class ScrollableBaseNative extends Component {
 			maxPos = this.getScrollBounds()[isVertical ? 'maxTop' : 'maxLeft'];
 
 		/* If a scroll size or a client size is not integer,
-		   browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
+			 browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
 		if ((edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - 1)) { // Already on the edge
 			this.applyOverscrollEffect(orientation, edge, type, ratio);
 		} else {
@@ -1371,6 +1371,7 @@ class ScrollableBaseNative extends Component {
 			};
 
 		delete rest.addEventListeners;
+		delete rest.animate;
 		delete rest.applyOverscrollEffect;
 		delete rest.cbScrollTo;
 		delete rest.clearOverscrollEffect;

@@ -67,6 +67,14 @@ class ScrollableBaseNative extends Component {
 	static displayName = 'ScrollableNative'
 
 	static propTypes = /** @lends moonstone/ScrollableNative.ScrollableNative.prototype */ {
+		/*
+		 * It scrolls with scroll animation when `true`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		animate: PropTypes.bool,
 		/**
 		 * Render function.
 		 *
@@ -185,6 +193,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	static defaultProps = {
+		animate: false,
 		'data-spotlight-container-disabled': false,
 		focusableScrollbar: false,
 		overscrollEffectOn: {
@@ -520,7 +529,7 @@ class ScrollableBaseNative extends Component {
 
 	onKeyDown = (ev) => {
 		const
-			{overscrollEffectOn} = this.props,
+			{animate, overscrollEffectOn} = this.props,
 			{keyCode, repeat} = ev;
 		let
 			overscrollEffectRequired = false,
@@ -528,7 +537,7 @@ class ScrollableBaseNative extends Component {
 
 		forward('onKeyDown', ev, this.props);
 
-		this.animateOnFocus = true;
+		this.animateOnFocus = animate;
 
 		if (isPageUp(keyCode) || isPageDown(keyCode)) {
 			ev.preventDefault();
