@@ -1682,6 +1682,7 @@ const VideoPlayerBase = class extends React.Component {
 				this.activityDetected();
 			}
 		} else if (is('up', keyCode)) {
+			Spotlight.setPointerMode(false);
 			preventDefault(ev);
 			stopImmediate(ev);
 
