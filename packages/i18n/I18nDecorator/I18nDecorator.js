@@ -99,7 +99,12 @@ const I18nDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unuse
 
 		componentWillReceiveProps (newProps) {
 			if (newProps.locale) {
-				this.updateLocale(newProps.locale);
+				if (newProps.locale === 'local') {
+					ilib.getLocale();
+					this.updateLocale();
+				} else {
+					this.updateLocale(newProps.locale);
+				}
 			}
 		}
 

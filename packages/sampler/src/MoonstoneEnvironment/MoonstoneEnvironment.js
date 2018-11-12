@@ -55,7 +55,7 @@ const MoonstoneFullscreen = MoonstoneDecorator({overlay: false}, FullscreenBase)
 
 // NOTE: Locales taken from strawman. Might need to add more in the future.
 const locales = {
-	'local':                                                '',
+	'local':                                                'local',
 	'en-US - US English':                                   'en-US',
 	'ko-KR - Korean':                                       'ko-KR',
 	'es-ES - Spanish, with alternate weekends':             'es-ES',
@@ -156,7 +156,7 @@ const StorybookDecorator = (story, config) => {
 			className={classnames(classes)}
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
-			locale={select('locale', locales, Config, getPropFromURL('locale') || window.navigator.language)}
+			locale={select('locale', locales, Config, getPropFromURL('locale'))}
 			textSize={boolean('large text', Config, (getPropFromURL('large text') === 'true')) ? 'large' : 'normal'}
 			highContrast={boolean('high contrast', Config, (getPropFromURL('high contrast') === 'true'))}
 			style={backgroundLabelMap[select('background', backgroundLabels, Config, getPropFromURL('background'))]}
