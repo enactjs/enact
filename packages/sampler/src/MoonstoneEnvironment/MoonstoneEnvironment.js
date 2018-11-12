@@ -125,7 +125,7 @@ const StorybookDecorator = (story, config) => {
 	const sample = story();
 	const Config = {
 		defaultProps: {
-			locale: 'en-US',
+			locale: '',
 			'large text': false,
 			'high contrast': false,
 			skin: 'dark'
