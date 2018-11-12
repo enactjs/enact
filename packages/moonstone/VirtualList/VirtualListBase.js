@@ -37,14 +37,6 @@ const VirtualListBaseFactory = (type) => {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
 		static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
-			/*
-			 * It scrolls with scroll animation when `true`.
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @private
-			 */
-			animate: PropTypes.bool,
 			/**
 			 * The `render` function called for each item in the list.
 			 *
@@ -79,6 +71,15 @@ const VirtualListBaseFactory = (type) => {
 			 * @private
 			 */
 			itemsRenderer: PropTypes.func.isRequired,
+
+			/**
+			 * It scrolls with scroll animation when `true`.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @private
+			 */
+			animate: PropTypes.bool,
 
 			/**
 			 * Callback method of scrollTo.
@@ -985,6 +986,15 @@ const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-b
 
 ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 	/**
+	 * It scrolls with scroll animation when `true`.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @private
+	 */
+	animate: PropTypes.bool,
+
+	/**
 	 * Direction of the list.
 	 *
 	 * Valid values are:
@@ -1029,6 +1039,15 @@ const ScrollableVirtualListNative = (props) => (
 );
 
 ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
+	/**
+	 * It scrolls with scroll animation when `true`.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @private
+	 */
+	animate: PropTypes.bool,
+
 	/**
 	 * Direction of the list.
 	 *

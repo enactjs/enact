@@ -86,6 +86,15 @@ class ScrollableBase extends Component {
 		addEventListeners: PropTypes.func,
 
 		/**
+		 * It scrolls with scroll animation when `true`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		animate: PropTypes.bool,
+
+		/**
 		 * Called to execute additional logic in a themed component to show overscroll effect.
 		 *
 		 * @type {Function}
@@ -351,6 +360,7 @@ class ScrollableBase extends Component {
 	}
 
 	static defaultProps = {
+		animate: false,
 		cbScrollTo: nop,
 		horizontalScrollbar: 'auto',
 		noScrollByDrag: false,

@@ -86,14 +86,6 @@ class ScrollableBase extends Component {
 	static displayName = 'Scrollable'
 
 	static propTypes = /** @lends moonstone/Scrollable.Scrollable.prototype */ {
-		/*
-		 * It scrolls with scroll animation when `true`.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		animate: PropTypes.bool,
 		/**
 		 * Render function.
 		 *
@@ -128,6 +120,15 @@ class ScrollableBase extends Component {
 		 * @private
 		 */
 		'data-spotlight-id': PropTypes.string,
+
+		/**
+		 * It scrolls with scroll animation when `true`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		animate: PropTypes.bool,
 
 		/**
 		 * Direction of the list or the scroller.
@@ -212,8 +213,8 @@ class ScrollableBase extends Component {
 	}
 
 	static defaultProps = {
-		animate: false,
 		'data-spotlight-container-disabled': false,
+		animate: false,
 		focusableScrollbar: false,
 		overscrollEffectOn: {
 			arrowKey: false,
