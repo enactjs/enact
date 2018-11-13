@@ -2,12 +2,6 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
-
-### Added
-
-- `ui/Scrollable` to not to animate with 5-way navigation by default
-
 ## [2.2.5] - 2018-11-05
 
 ### Fixed
