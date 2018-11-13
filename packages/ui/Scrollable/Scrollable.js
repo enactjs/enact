@@ -86,15 +86,6 @@ class ScrollableBase extends Component {
 		addEventListeners: PropTypes.func,
 
 		/**
-		 * It scrolls with scroll animation when `true`.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		animate: PropTypes.bool,
-
-		/**
 		 * Called to execute additional logic in a themed component to show overscroll effect.
 		 *
 		 * @type {Function}
@@ -170,6 +161,15 @@ class ScrollableBase extends Component {
 		 * @public
 		 */
 		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+
+		/**
+		 * Prevents animated scrolling.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		noAnimation: PropTypes.bool,
 
 		/**
 		 * Prevents scroll by dragging or flicking on the list or the scroller.
@@ -360,9 +360,9 @@ class ScrollableBase extends Component {
 	}
 
 	static defaultProps = {
-		animate: false,
 		cbScrollTo: nop,
 		horizontalScrollbar: 'auto',
+		noAnimation: false,
 		noScrollByDrag: false,
 		onScroll: nop,
 		onScrollStart: nop,
@@ -700,7 +700,7 @@ class ScrollableBase extends Component {
 
 		this.lastInputType = 'pageKey';
 
-		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.pageKey, this.props.animate);
+		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.pageKey, !this.props.noAnimation);
 	}
 
 	onKeyDown = (ev) => {
@@ -1317,11 +1317,11 @@ class ScrollableBase extends Component {
 			};
 
 		delete rest.addEventListeners;
-		delete rest.animate;
 		delete rest.applyOverscrollEffect;
 		delete rest.cbScrollTo;
 		delete rest.clearOverscrollEffect;
 		delete rest.horizontalScrollbar;
+		delete rest.noAnimation;
 		delete rest.onFlick;
 		delete rest.onKeyDown;
 		delete rest.onMouseDown;

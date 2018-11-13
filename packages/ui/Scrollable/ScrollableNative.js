@@ -79,15 +79,6 @@ class ScrollableBaseNative extends Component {
 		addEventListeners: PropTypes.func,
 
 		/**
-		 * It scrolls with scroll animation when `true`.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		animate: PropTypes.bool,
-
-		/**
 		 * Called to execute additional logic in a themed component to show overscroll effect.
 		 *
 		 * @type {Function}
@@ -163,6 +154,15 @@ class ScrollableBaseNative extends Component {
 		 * @public
 		 */
 		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+
+		/**
+		 * Prevents animated scrolling.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		noAnimation: PropTypes.bool,
 
 		/**
 		 * Prevents scroll by dragging or flicking on the list or the scroller.
@@ -361,9 +361,9 @@ class ScrollableBaseNative extends Component {
 	}
 
 	static defaultProps = {
-		animate: false,
 		cbScrollTo: nop,
 		horizontalScrollbar: 'auto',
+		noAnimation: false,
 		noScrollByDrag: false,
 		onScroll: nop,
 		onScrollStart: nop,
@@ -765,7 +765,7 @@ class ScrollableBaseNative extends Component {
 
 		this.lastInputType = 'pageKey';
 
-		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.pageKey, this.props.animate);
+		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.pageKey, !this.props.noAnimation);
 	}
 
 	onKeyDown = (ev) => {
