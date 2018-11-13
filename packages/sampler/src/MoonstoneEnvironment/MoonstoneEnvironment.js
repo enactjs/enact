@@ -55,7 +55,7 @@ const MoonstoneFullscreen = MoonstoneDecorator({overlay: false}, FullscreenBase)
 
 // NOTE: Locales taken from strawman. Might need to add more in the future.
 const locales = {
-	'local':                                                'local',
+	'local':                                                '',
 	'en-US - US English':                                   'en-US',
 	'ko-KR - Korean':                                       'ko-KR',
 	'es-ES - Spanish, with alternate weekends':             'es-ES',
@@ -125,7 +125,7 @@ const StorybookDecorator = (story, config) => {
 	const sample = story();
 	const Config = {
 		defaultProps: {
-			locale: 'en-US',
+			locale: '',
 			'large text': false,
 			'high contrast': false,
 			skin: 'dark'
