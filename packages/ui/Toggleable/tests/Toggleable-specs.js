@@ -387,7 +387,7 @@ describe('Toggleable', () => {
 		);
 
 		const expected = label;
-		const actual = subject.find(DivComponent).getElement().prop('aria-label');
+		const actual = subject.find(DivComponent).prop('aria-label');
 
 		expect(actual).to.equal(expected);
 	});
@@ -400,7 +400,7 @@ describe('Toggleable', () => {
 		);
 
 		const expected = label;
-		const actual = subject.find(DivComponent).getElement().prop('aria-label');
+		const actual = subject.find(DivComponent).prop('aria-label');
 
 		expect(actual).to.equal(expected);
 	});
