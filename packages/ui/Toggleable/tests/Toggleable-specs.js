@@ -387,9 +387,9 @@ describe('Toggleable', () => {
 		);
 
 		const expected = label;
-		const actual = subject.find(DivComponent).getElement().props;
+		const actual = subject.find(DivComponent).getElement().prop('aria-label');
 
-		expect(actual).to.have.property(expected);
+		expect(actual).to.equal(expected);
 	});
 
 	it('should set "toggleOnAriaLabel" to the wrapped component', function () {
@@ -400,9 +400,9 @@ describe('Toggleable', () => {
 		);
 
 		const expected = label;
-		const actual = subject.find(DivComponent).getElement().props;
+		const actual = subject.find(DivComponent).getElement().prop('aria-label');
 
-		expect(actual).to.have.property(expected);
+		expect(actual).to.equal(expected);
 	});
 
 });
