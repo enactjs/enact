@@ -159,7 +159,6 @@ class ScrollableBaseNative extends Component {
 		 * Prevents animated scrolling.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @private
 		 */
 		noAnimation: PropTypes.bool,
@@ -363,7 +362,6 @@ class ScrollableBaseNative extends Component {
 	static defaultProps = {
 		cbScrollTo: nop,
 		horizontalScrollbar: 'auto',
-		noAnimation: false,
 		noScrollByDrag: false,
 		onScroll: nop,
 		onScrollStart: nop,
@@ -1381,11 +1379,11 @@ class ScrollableBaseNative extends Component {
 			};
 
 		delete rest.addEventListeners;
-		delete rest.animate;
 		delete rest.applyOverscrollEffect;
 		delete rest.cbScrollTo;
 		delete rest.clearOverscrollEffect;
 		delete rest.horizontalScrollbar;
+		delete rest.noAnimation;
 		delete rest.onFlick;
 		delete rest.onKeyDown;
 		delete rest.onMouseDown;

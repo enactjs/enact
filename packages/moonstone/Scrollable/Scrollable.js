@@ -122,10 +122,9 @@ class ScrollableBase extends Component {
 		'data-spotlight-id': PropTypes.string,
 
 		/**
-		 * It scrolls with scroll animation when `true`.
+		 * Animate while scrolling
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @private
 		 */
 		animate: PropTypes.bool,
@@ -214,7 +213,6 @@ class ScrollableBase extends Component {
 
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
-		animate: false,
 		focusableScrollbar: false,
 		overscrollEffectOn: {
 			arrowKey: false,

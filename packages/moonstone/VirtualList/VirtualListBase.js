@@ -73,10 +73,9 @@ const VirtualListBaseFactory = (type) => {
 			itemsRenderer: PropTypes.func.isRequired,
 
 			/**
-			 * It scrolls with scroll animation when `true`.
+			 * Animate while scrolling
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @private
 			 */
 			animate: PropTypes.bool,
@@ -187,7 +186,6 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		static defaultProps = {
-			animate: false,
 			dataSize: 0,
 			isItemDisabled: isItemDisabledDefault,
 			pageScroll: false,
@@ -582,7 +580,7 @@ const VirtualListBaseFactory = (type) => {
 							// So we find nextIndex only when currentExtent is different from candidateExtent.
 							if (currentExtent !== candidateExtent) {
 								nextIndex = this.findNearestSpottableItemInExtent(currentIndex, candidateExtent);
-								animate = this.props.animate && (wrap === true);
+								animate = animate && (wrap === true);
 								isWrapped = true;
 							}
 						}
@@ -610,7 +608,7 @@ const VirtualListBaseFactory = (type) => {
 							// So we find nextIndex only when currentExtent is different from candidateExtent.
 							if (currentExtent !== candidateExtent) {
 								nextIndex = this.findNearestSpottableItemInExtent(currentIndex, candidateExtent);
-								animate = this.props.animate && (wrap === true);
+								animate = animate && (wrap === true);
 								isWrapped = true;
 							}
 						}
@@ -986,10 +984,9 @@ const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-b
 
 ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 	/**
-	 * It scrolls with scroll animation when `true`.
+	 * Animate while scrolling
 	 *
 	 * @type {Boolean}
-	 * @default false
 	 * @private
 	 */
 	animate: PropTypes.bool,
@@ -1040,10 +1037,9 @@ const ScrollableVirtualListNative = (props) => (
 
 ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
 	/**
-	 * It scrolls with scroll animation when `true`.
+	 * Animate while scrolling
 	 *
 	 * @type {Boolean}
-	 * @default false
 	 * @private
 	 */
 	animate: PropTypes.bool,
