@@ -186,9 +186,18 @@ describe('MarqueeBase', () => {
 		expect(actual).to.not.have.property('transition');
 	});
 
-	it('should transition when animating is true', function () {
+	it('should not transition when animating is true and distance is less than or equal to 1', function () {
 		const subject = shallow(
-			<MarqueeBase animating />
+			<MarqueeBase animating distance={1} />
+		);
+
+		const actual = subject.childAt(0).prop('style');
+		expect(actual).to.not.have.property('transitionDuration');
+	});
+
+	it('should transition when animating is true and distance is greater than 1', function () {
+		const subject = shallow(
+			<MarqueeBase animating distance={1.1} />
 		);
 
 		const actual = subject.childAt(0).prop('style');
