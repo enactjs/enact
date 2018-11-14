@@ -106,6 +106,7 @@ class ScrollableBaseNative extends Component {
 		 * Animate while scrolling
 		 *
 		 * @type {Boolean}
+		 * @default false
 		 * @private
 		 */
 		animate: PropTypes.bool,
@@ -194,6 +195,7 @@ class ScrollableBaseNative extends Component {
 
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
+		animate: false,
 		focusableScrollbar: false,
 		overscrollEffectOn: {
 			arrowKey: false,

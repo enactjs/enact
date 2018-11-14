@@ -76,6 +76,7 @@ const VirtualListBaseFactory = (type) => {
 			 * Animate while scrolling
 			 *
 			 * @type {Boolean}
+			 * @default false
 			 * @private
 			 */
 			animate: PropTypes.bool,
@@ -186,6 +187,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		static defaultProps = {
+			animate: false,
 			dataSize: 0,
 			isItemDisabled: isItemDisabledDefault,
 			pageScroll: false,
@@ -987,6 +989,7 @@ ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBa
 	 * Animate while scrolling
 	 *
 	 * @type {Boolean}
+	 * @default false
 	 * @private
 	 */
 	animate: PropTypes.bool,
@@ -1040,6 +1043,7 @@ ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.Virtual
 	 * Animate while scrolling
 	 *
 	 * @type {Boolean}
+	 * @default false
 	 * @private
 	 */
 	animate: PropTypes.bool,
@@ -1059,6 +1063,7 @@ ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.Virtual
 };
 
 ScrollableVirtualListNative.defaultProps = {
+	animate: false,
 	direction: 'vertical'
 };
 
