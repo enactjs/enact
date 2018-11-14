@@ -250,7 +250,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			const
 				props = Object.assign({}, this.props),
-				toggleAriaLabel = this.state.active ? props['toggleOffAriaLabel'] : props['toggleOnAriaLabel'];
+				toggleAriaLabel = this.state.active ? props['toggleOnAriaLabel'] : props['toggleOffAriaLabel'];
 
 			if (toggleProp || toggle) {
 				// Supporting only one of the toggleProp or toggle, but we don't want both applying.
