@@ -477,7 +477,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{Number}			Distance to travel in pixels
 		 */
 		calculateDistance (node) {
-			const distance = Math.ceil(node.scrollWidth - node.clientWidth);
+			const rect = node.getBoundingClientRect();
+			const distance = Math.abs(node.scrollWidth - rect.width);
 			return distance;
 		}
 
