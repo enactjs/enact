@@ -631,7 +631,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.selectPlaybackRates('fastForward');
 		this.sliderKnobProportion = 0;
 		this.mediaControlsSpotlightId = props.spotlightId + '_mediaControls';
-		this.mediaSliderSpotlightId = this.mediaSliderSpotlightId + '_mediaSlider';
 		this.moreButtonSpotlightId = this.mediaControlsSpotlightId + '_moreButton';
 
 		this.initI18n();
@@ -722,7 +721,6 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (this.props.spotlightId !== prevProps.spotlightId) {
 			this.mediaControlsSpotlightId = this.props.spotlightId + '_mediaControls';
-			this.mediaSliderSpotlightId = this.mediaSliderSpotlightId + '_mediaSlider';
 			this.moreButtonSpotlightId = this.mediaControlsSpotlightId + '_moreButton';
 		}
 
@@ -731,13 +729,11 @@ const VideoPlayerBase = class extends React.Component {
 			this.stopAutoCloseTimeout();
 
 			if (!this.props.spotlightDisabled) {
-				// If last focused item were in a user specified components (e.g. leftComponents,
-				// rightComponents, children, etc.), we need to explicitly blur the element when
-				// MediaControls hide. See ENYO-5454
+				// If last focused item were in the media controls or slider, we need to explicitly
+				// blur the element when MediaControls hide. See ENYO-5648
 				const current = Spotlight.getCurrent();
-				const mediaControls = document.querySelector(`[data-spotlight-id="${this.mediaControlsSpotlightId}"]`);
-				const mediaSlider = document.querySelector(`[data-spotlight-id="${this.mediaSliderSpotlightId}"]`);
-				if (current && (mediaSlider && mediaSlider.contains(current) || mediaControls && mediaControls.contains(current))) {
+				const bottomControls = document.querySelector(`.${css.bottom}`);
+				if (current && bottomControls && bottomControls.contains(current)) {
 					current.blur();
 				}
 
@@ -1897,7 +1893,6 @@ const VideoPlayerBase = class extends React.Component {
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								selection={proportionSelection}
 								spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
-								spotlightId={this.mediaSliderSpotlightId}
 								value={this.state.proportionPlayed}
 								visible={this.state.mediaSliderVisible}
 							>
