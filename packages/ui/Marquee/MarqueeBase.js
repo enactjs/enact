@@ -171,7 +171,7 @@ const MarqueeBase = kind({
 				textOverflow: overflow
 			};
 
-			if (animating) {
+			if (animating && distance > 1) {
 				const duration = distance / speed;
 
 				style[sideProperty] = `${distance}px`;

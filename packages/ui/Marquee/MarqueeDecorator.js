@@ -478,7 +478,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		calculateDistance (node) {
 			const rect = node.getBoundingClientRect();
-			const distance = Math.floor(Math.abs(node.scrollWidth - rect.width));
+			const distance = Math.abs(node.scrollWidth - rect.width);
 			return distance;
 		}
 
