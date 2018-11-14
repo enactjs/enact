@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Marquee` to handle very small marquees better
+
 ## [2.2.5] - 2018-11-05
 
 ### Fixed
