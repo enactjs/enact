@@ -122,6 +122,15 @@ class ScrollableBase extends Component {
 		'data-spotlight-id': PropTypes.string,
 
 		/**
+		 * Animate while scrolling
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		animate: PropTypes.bool,
+
+		/**
 		 * Direction of the list or the scroller.
 		 * `'both'` could be only used for[Scroller]{@link moonstone/Scroller.Scroller}.
 		 *
@@ -205,6 +214,7 @@ class ScrollableBase extends Component {
 
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
+		animate: false,
 		focusableScrollbar: false,
 		overscrollEffectOn: {
 			arrowKey: false,
@@ -452,7 +462,7 @@ class ScrollableBase extends Component {
 			ev.preventDefault();
 		}
 
-		this.animateOnFocus = true;
+		this.animateOnFocus = this.props.animate;
 
 		if (!repeat && this.hasFocus()) {
 			const {overscrollEffectOn} = this.props;
@@ -735,6 +745,7 @@ class ScrollableBase extends Component {
 	render () {
 		const
 			{
+				animate,
 				childRenderer,
 				'data-spotlight-container': spotlightContainer,
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
@@ -760,6 +771,7 @@ class ScrollableBase extends Component {
 				addEventListeners={this.addEventListeners}
 				applyOverscrollEffect={this.applyOverscrollEffect}
 				clearOverscrollEffect={this.clearOverscrollEffect}
+				noAnimation={!animate}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
