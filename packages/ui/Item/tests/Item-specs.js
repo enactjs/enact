@@ -10,7 +10,7 @@ const tap = (node) => {
 
 describe('Item', () => {
 
-	it('should create an Item that is enabled by default', function () {
+	test('should create an Item that is enabled by default', () => {
 		const item = mount(
 			<Item>I am an Item</Item>
 		);
@@ -18,22 +18,25 @@ describe('Item', () => {
 		const expected = 0;
 		const actual = item.find({disabled: true}).length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should have \'disabled\' HTML attribute when \'disabled=true\'', function () {
-		const item = mount(
-			<Item disabled>I am a disabled Item</Item>
-		);
+	test(
+		'should have \'disabled\' HTML attribute when \'disabled=true\'',
+		() => {
+			const item = mount(
+				<Item disabled>I am a disabled Item</Item>
+			);
 
-		const expected = 1;
-		const actual = item.find('div[disabled=true]').length;
+			const expected = 1;
+			const actual = item.find('div[disabled=true]').length;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
 	describe('events', () => {
-		it('should call onTap when tapped', function () {
+		test('should call onTap when tapped', () => {
 			const handleClick = sinon.spy();
 			const item = mount(
 				<Item onTap={handleClick}>I am a normal Item</Item>
@@ -44,10 +47,10 @@ describe('Item', () => {
 			const expected = true;
 			const actual = handleClick.called;
 
-			expect(actual).to.equal(expected);
+			expect(actual).toBe(expected);
 		});
 
-		it('should not call onTap when tapped and disabled', function () {
+		test('should not call onTap when tapped and disabled', () => {
 			const handleClick = sinon.spy();
 			const item = mount(
 				<Item disabled onTap={handleClick}>I am a disabled Item</Item>
@@ -58,7 +61,7 @@ describe('Item', () => {
 			const expected = false;
 			const actual = handleClick.called;
 
-			expect(actual).to.equal(expected);
+			expect(actual).toBe(expected);
 		});
 	});
 

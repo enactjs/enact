@@ -6,7 +6,7 @@ describe('Region', () => {
 			const ariaLabel = 'LABEL';
 			const title = 'TITLE';
 
-			it('should use aria-label when set', function () {
+			test('should use aria-label when set', () => {
 				const props = {
 					'aria-label': ariaLabel,
 					title: title
@@ -15,10 +15,10 @@ describe('Region', () => {
 				const expected = ariaLabel;
 				const actual = Region.computed['aria-label'](props);
 
-				expect(actual).to.equal(expected);
+				expect(actual).toBe(expected);
 			});
 
-			it('should use title when aria-label is not set', function () {
+			test('should use title when aria-label is not set', () => {
 				const props = {
 					title: title
 				};
@@ -26,7 +26,7 @@ describe('Region', () => {
 				const expected = title;
 				const actual = Region.computed['aria-label'](props);
 
-				expect(actual).to.equal(expected);
+				expect(actual).toBe(expected);
 			});
 		});
 	});

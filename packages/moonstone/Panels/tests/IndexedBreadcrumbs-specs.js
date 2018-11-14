@@ -7,7 +7,7 @@ describe('IndexedBreadcrumbs', () => {
 
 	// Suite-wide setup
 
-	it('should generate {index} breadcrumbs when {index} <= {max}', function () {
+	test('should generate {index} breadcrumbs when {index} <= {max}', () => {
 		const index = 3;
 		const max = 5;
 		const breadcrumbs = IndexedBreadcrumbs('id', index, max);
@@ -15,10 +15,10 @@ describe('IndexedBreadcrumbs', () => {
 		const expected = index;
 		const actual = breadcrumbs.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should generate {max} breadcrumbs when {index} > {max}', function () {
+	test('should generate {max} breadcrumbs when {index} > {max}', () => {
 		const index = 6;
 		const max = 1;
 		const breadcrumbs = IndexedBreadcrumbs('id', index, max);
@@ -26,33 +26,36 @@ describe('IndexedBreadcrumbs', () => {
 		const expected = max;
 		const actual = breadcrumbs.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should pad indices less than 10 with 0', function () {
+	test('should pad indices less than 10 with 0', () => {
 		const breadcrumbs = IndexedBreadcrumbs('id', 1, 5);
 
 		const expected = '01';
 		// React creates two children, one for '<' and one for the index label
 		const actual = breadcrumbs[0].props.children[1];
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should call {onBreadcrumbClick} once when breadcrumb is clicked', function () {
-		const handleClick = sinon.spy();
-		const subject = mount(
-			<nav>
-				{IndexedBreadcrumbs('id', 1, 1, handleClick)}
-			</nav>
-		);
+	test(
+		'should call {onBreadcrumbClick} once when breadcrumb is clicked',
+		() => {
+			const handleClick = sinon.spy();
+			const subject = mount(
+				<nav>
+					{IndexedBreadcrumbs('id', 1, 1, handleClick)}
+				</nav>
+			);
 
-		subject.find('Breadcrumb').simulate('click', {});
+			subject.find('Breadcrumb').simulate('click', {});
 
-		const expected = true;
-		const actual = handleClick.calledOnce;
+			const expected = true;
+			const actual = handleClick.calledOnce;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
 });

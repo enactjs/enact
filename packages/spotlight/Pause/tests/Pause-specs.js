@@ -4,7 +4,7 @@ const PAUSED = 'Paused';
 const NOT_PAUSED = 'Not Paused';
 
 describe('Pause', () => {
-	it('should pause spotlight', function () {
+	test('should pause spotlight', () => {
 		const subject = new Pause();
 
 		subject.pause();
@@ -14,10 +14,10 @@ describe('Pause', () => {
 
 		subject.resume();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should resume spotlight', function () {
+	test('should resume spotlight', () => {
 		const subject = new Pause();
 
 		subject.pause();
@@ -26,63 +26,72 @@ describe('Pause', () => {
 		const expected = NOT_PAUSED;
 		const actual = isPaused() ? PAUSED : NOT_PAUSED;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should not resume spotlight when another Paused instance is in control', function () {
+	test(
+        'should not resume spotlight when another Paused instance is in control',
+        () => {
+            const subject = new Pause();
+            const another = new Pause();
+
+            another.pause();
+            subject.pause();
+
+            const expected = PAUSED;
+            const actual = isPaused() ? PAUSED : NOT_PAUSED;
+
+            another.resume();
+
+            expect(actual).toBe(expected);
+        }
+    );
+
+	test(
+        'should not report paused when another Paused instance is in control',
+        () => {
+            const subject = new Pause();
+            const another = new Pause();
+
+            another.pause();
+            subject.pause();
+
+            const expected = NOT_PAUSED;
+            const actual = subject.isPaused() ? PAUSED : NOT_PAUSED;
+
+            another.resume();
+
+            expect(actual).toBe(expected);
+        }
+    );
+
+	test(
+        'should not report paused when the global Spotlight is paused',
+        () => {
+            const subject = new Pause();
+
+            pause();
+            subject.pause();
+
+            const expected = NOT_PAUSED;
+            const actual = subject.isPaused() ? PAUSED : NOT_PAUSED;
+
+            resume();
+
+            expect(actual).toBe(expected);
+        }
+    );
+
+	test('should allow the global Spotlight to resume', () => {
 		const subject = new Pause();
-		const another = new Pause();
 
-		another.pause();
 		subject.pause();
-
-		const expected = PAUSED;
-		const actual = isPaused() ? PAUSED : NOT_PAUSED;
-
-		another.resume();
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should not report paused when another Paused instance is in control', function () {
-		const subject = new Pause();
-		const another = new Pause();
-
-		another.pause();
-		subject.pause();
-
-		const expected = NOT_PAUSED;
-		const actual = subject.isPaused() ? PAUSED : NOT_PAUSED;
-
-		another.resume();
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should not report paused when the global Spotlight is paused', function () {
-		const subject = new Pause();
-
-		pause();
-		subject.pause();
-
-		const expected = NOT_PAUSED;
-		const actual = subject.isPaused() ? PAUSED : NOT_PAUSED;
-
 		resume();
 
-		expect(actual).to.equal(expected);
-	});
-
-	it('should allow the global Spotlight to resume', function () {
-		const subject = new Pause();
-
-		subject.pause();
-		resume();
-
 		const expected = NOT_PAUSED;
 		const actual = isPaused() ? PAUSED : NOT_PAUSED;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
 });

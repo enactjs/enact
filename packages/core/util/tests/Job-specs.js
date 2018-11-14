@@ -1,13 +1,13 @@
 import Job from '../Job';
 
-describe('Job', function () {
-	describe('#start', function () {
-		it('should start job', function (done) {
+describe('Job', () => {
+	describe('#start', () => {
+		test('should start job', done => {
 			const j = new Job(done, 10);
 			j.start();
 		});
 
-		it('should pass args to fn', function (done) {
+		test('should pass args to fn', done => {
 			const value = 'argument';
 			const fn = function (arg) {
 				if (arg === value) {
@@ -22,8 +22,8 @@ describe('Job', function () {
 		});
 	});
 
-	describe('#stop', function () {
-		it('should stop job', function (done) {
+	describe('#stop', () => {
+		test('should stop job', done => {
 			let ran = false;
 			const j = new Job(function () {
 				ran = true;
@@ -39,8 +39,8 @@ describe('Job', function () {
 		});
 	});
 
-	describe('#throttle', function () {
-		it('should throttle job', function (done) {
+	describe('#throttle', () => {
+		test('should throttle job', done => {
 			let number = 0;
 			const j = new Job(function () {
 				number++;
@@ -65,7 +65,7 @@ describe('Job', function () {
 			}, 30);
 		});
 
-		it('should pass args to fn', function (done) {
+		test('should pass args to fn', done => {
 			const value = 'argument';
 			const fn = function (arg) {
 				if (arg === value) {
@@ -80,12 +80,12 @@ describe('Job', function () {
 		});
 	});
 
-	describe('#idle', function () {
+	describe('#idle', () => {
 		// polyfill for PhantomJS to verify expected idle behavior as much as possible
 		const windowRequest = window.requestIdleCallback;
 		const windowCancel = window.cancelIdleCallback;
 
-		before(() => {
+		beforeAll(() => {
 			window.requestIdleCallback = windowRequest || function (fn) {
 				return setTimeout(fn, 0);
 			};
@@ -94,17 +94,17 @@ describe('Job', function () {
 			};
 		});
 
-		after(() => {
+		afterAll(() => {
 			window.requestIdleCallback = windowRequest;
 			window.cancelIdleCallback = windowCancel;
 		});
 
-		it('should start job', function (done) {
+		test('should start job', done => {
 			const j = new Job(done, 10);
 			j.idle();
 		});
 
-		it('should pass args to fn', function (done) {
+		test('should pass args to fn', done => {
 			const value = 'argument';
 			const fn = function (arg) {
 				if (arg === value) {
@@ -118,7 +118,7 @@ describe('Job', function () {
 			j.idle(value);
 		});
 
-		it('should clear an existing job id before starting job', function (done) {
+		test('should clear an existing job id before starting job', done => {
 			const fn = function (arg) {
 				if (arg === 'first') {
 					done(new Error('First job ran'));

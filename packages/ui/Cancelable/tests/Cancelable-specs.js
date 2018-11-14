@@ -18,7 +18,7 @@ describe('Cancelable', () => {
 		return {
 			keyCode,
 			nativeEvent: {
-				stopImmediatePropagation: sinon.spy()
+				stopImmediatePropagation: jest.fn()
 			}
 		};
 	};
@@ -27,8 +27,8 @@ describe('Cancelable', () => {
 	const returnsTrue = () => true;
 	const stop = (ev) => ev.stopPropagation();
 
-	it('should call onCancel from prop for escape key', function () {
-		const handleCancel = sinon.spy(returnsTrue);
+	test('should call onCancel from prop for escape key', () => {
+		const handleCancel = jest.fn(returnsTrue);
 		const Comp = Cancelable(
 			{onCancel: 'onCustomEvent'},
 			Component
@@ -41,12 +41,13 @@ describe('Cancelable', () => {
 		subject.simulate('keyup', makeKeyEvent(27));
 
 		const expected = true;
-		const actual = handleCancel.calledOnce;
+		const actual = handleCancel;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toHaveBeenCalled();
+		// expect(actual).toBe(expected);
 	});
 
-	it('should only call onCancel for escape key by default', function () {
+	test('should only call onCancel for escape key by default', () => {
 		const handleCancel = sinon.spy(returnsTrue);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
@@ -62,10 +63,10 @@ describe('Cancelable', () => {
 		const expected = true;
 		const actual = handleCancel.calledOnce;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should not call onCancel for non-escape key', function () {
+	test('should not call onCancel for non-escape key', () => {
 		const handleCancel = sinon.spy(returnsTrue);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
@@ -81,10 +82,10 @@ describe('Cancelable', () => {
 		const expected = false;
 		const actual = handleCancel.calledOnce;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should stop propagation when handled', function () {
+	test('should stop propagation when handled', () => {
 		const handleCancel = sinon.spy(stop);
 		const keyEvent = makeKeyEvent(27);
 		const Comp = Cancelable(
@@ -101,10 +102,10 @@ describe('Cancelable', () => {
 		const expected = true;
 		const actual = keyEvent.nativeEvent.stopImmediatePropagation.calledOnce;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should not stop propagation for not handled', function () {
+	test('should not stop propagation for not handled', () => {
 		const handleCancel = sinon.spy(returnsTrue);
 		const keyEvent = makeKeyEvent(42);
 		const Comp = Cancelable(
@@ -121,10 +122,10 @@ describe('Cancelable', () => {
 		const expected = false;
 		const actual = keyEvent.nativeEvent.stopImmediatePropagation.calledOnce;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should forward to onKeyUp handler for any key', function () {
+	test('should forward to onKeyUp handler for any key', () => {
 		const handleKeyUp = sinon.spy();
 		const keyEvent = makeKeyEvent(42);
 		const Comp = Cancelable(
@@ -141,10 +142,10 @@ describe('Cancelable', () => {
 		const expected = true;
 		const actual = handleKeyUp.calledOnce;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should call onCancel when additional cancel handlers pass', function () {
+	test('should call onCancel when additional cancel handlers pass', () => {
 		const customCancelHandler = (ev) => ev.keyCode === 461;
 		addCancelHandler(customCancelHandler);
 		const handleCancel = sinon.spy(returnsTrue);
@@ -164,132 +165,148 @@ describe('Cancelable', () => {
 		const expected = true;
 		const actual = handleCancel.calledOnce;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should bubble up the component tree when config handler does not call stopPropagation', function () {
-		const handleCancel = sinon.spy(returnsTrue);
-		const Comp = Cancelable(
-			{onCancel: handleCancel},
-			Component
-		);
+	test(
+		'should bubble up the component tree when config handler does not call stopPropagation',
+		() => {
+			const handleCancel = sinon.spy(returnsTrue);
+			const Comp = Cancelable(
+				{onCancel: handleCancel},
+				Component
+			);
 
-		const subject = mount(
-			<Comp>
-				<Comp className="second" />
-			</Comp>
-		);
+			const subject = mount(
+				<Comp>
+					<Comp className="second" />
+				</Comp>
+			);
 
-		subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+			subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
 
-		const expected = 2;
-		const actual = handleCancel.callCount;
+			const expected = 2;
+			const actual = handleCancel.callCount;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
 
-	it('should not bubble up the component tree when config handler calls stopPropagation', function () {
-		const handleCancel = sinon.spy(stop);
-		const Comp = Cancelable(
-			{onCancel: handleCancel},
-			Component
-		);
+	test(
+		'should not bubble up the component tree when config handler calls stopPropagation',
+		() => {
+			const handleCancel = sinon.spy(stop);
+			const Comp = Cancelable(
+				{onCancel: handleCancel},
+				Component
+			);
 
-		const subject = mount(
-			<Comp>
-				<Comp className="second" />
-			</Comp>
-		);
+			const subject = mount(
+				<Comp>
+					<Comp className="second" />
+				</Comp>
+			);
 
-		subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+			subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
 
-		const expected = 1;
-		const actual = handleCancel.callCount;
+			const expected = 1;
+			const actual = handleCancel.callCount;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should bubble up the component tree when prop handler does not call stopPropagation', function () {
-		const handleCancel = sinon.spy();
-		const Comp = Cancelable(
-			{onCancel: 'onCustomEvent'},
-			Component
-		);
+	test(
+		'should bubble up the component tree when prop handler does not call stopPropagation',
+		() => {
+			const handleCancel = sinon.spy();
+			const Comp = Cancelable(
+				{onCancel: 'onCustomEvent'},
+				Component
+			);
 
-		const subject = mount(
-			<Comp onCustomEvent={handleCancel}>
-				<Comp className="second" onCustomEvent={returnsTrue} />
-			</Comp>
-		);
+			const subject = mount(
+				<Comp onCustomEvent={handleCancel}>
+					<Comp className="second" onCustomEvent={returnsTrue} />
+				</Comp>
+			);
 
-		subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+			subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
 
-		const expected = true;
-		const actual = handleCancel.called;
+			const expected = true;
+			const actual = handleCancel.called;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should not bubble up the component tree when prop handler calls stopPropagation', function () {
-		const handleCancel = sinon.spy();
-		const Comp = Cancelable(
-			{onCancel: 'onCustomEvent'},
-			Component
-		);
+	test(
+		'should not bubble up the component tree when prop handler calls stopPropagation',
+		() => {
+			const handleCancel = sinon.spy();
+			const Comp = Cancelable(
+				{onCancel: 'onCustomEvent'},
+				Component
+			);
 
-		const subject = mount(
-			<Comp onCustomEvent={handleCancel}>
-				<Comp className="second" onCustomEvent={stop} />
-			</Comp>
-		);
+			const subject = mount(
+				<Comp onCustomEvent={handleCancel}>
+					<Comp className="second" onCustomEvent={stop} />
+				</Comp>
+			);
 
-		subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+			subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
 
-		const expected = false;
-		const actual = handleCancel.called;
+			const expected = false;
+			const actual = handleCancel.called;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	describe('modal instances', function () {
+	describe('modal instances', () => {
 		const customEventHandler = (ev) => {
 			return ev.keyIdentifier === '27';
 		};
 
+	
+
 		// PhantomJS doesn't support KeyboardEvent so we're faking it ...
 		const makeKeyboardEvent = (keyCode) => {
-			const ev = document.createEvent('KeyboardEvent');
-			ev.initKeyboardEvent('keyup', true, true, window, keyCode);
-
-			return ev;
+			
+			
+			return () => map.keyup({ key: keyCode });
 		};
 
-		before(() => {
+		beforeAll(() => {
 			addCancelHandler(customEventHandler);
 		});
 
-		after(() => {
+		afterAll(() => {
 			removeCancelHandler(customEventHandler);
 		});
 
-		it('should invoke handler for cancel events dispatche to the window', function () {
-			const handleCancel = sinon.spy(returnsTrue);
-			const Comp = Cancelable(
-				{modal: true, onCancel: handleCancel},
-				Component
-			);
+		test.only(
+			'should invoke handler for cancel events dispatch to the window',
+			() => {
+				const handleCancel = jest.fn(returnsTrue);
+				const Comp = Cancelable(
+					{modal: true, onCancel: handleCancel},
+					Component
+				);
 
-			mount(<Comp />);
-			document.dispatchEvent(makeKeyboardEvent(27));
+				mount(<Comp />);
+				document.dispatchEvent(makeKeyboardEvent(27));
 
-			const expected = true;
-			const actual = handleCancel.calledOnce;
+				const expected = true;
+				const actual = handleCancel;
 
-			expect(actual).to.equal(expected);
-		});
+				expect(actual).toHaveBeenCalled();
+			}
+		);
 
-		it('should invoke modal handlers in LIFO order', function () {
+		test('should invoke modal handlers in LIFO order', () => {
 			const results = [];
 			const append = str => () => {
 				results.push(str);
@@ -313,30 +330,33 @@ describe('Cancelable', () => {
 			const expected = ['second', 'first'];
 			const actual = results;
 
-			expect(actual).to.deep.equal(expected);
+			expect(actual).toEqual(expected);
 		});
 
-		it('should not invoke modal handlers after one calls stopPropagation', function () {
-			const handleCancel = sinon.spy(returnsTrue);
+		test(
+			'should not invoke modal handlers after one calls stopPropagation',
+			() => {
+				const handleCancel = sinon.spy(returnsTrue);
 
-			const First = Cancelable(
-				{modal: true, onCancel: handleCancel},
-				Component
-			);
-			const Second = Cancelable(
-				{modal: true, onCancel: stop},
-				Component
-			);
+				const First = Cancelable(
+					{modal: true, onCancel: handleCancel},
+					Component
+				);
+				const Second = Cancelable(
+					{modal: true, onCancel: stop},
+					Component
+				);
 
-			mount(<First />);
-			mount(<Second />);
+				mount(<First />);
+				mount(<Second />);
 
-			document.dispatchEvent(makeKeyboardEvent(27));
+				document.dispatchEvent(makeKeyboardEvent(27));
 
-			const expected = false;
-			const actual = handleCancel.called;
+				const expected = false;
+				const actual = handleCancel.called;
 
-			expect(actual).to.equal(expected);
-		});
+				expect(actual).toBe(expected);
+			}
+		);
 	});
 });

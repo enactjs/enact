@@ -29,7 +29,7 @@ const callCount = spy => {
 };
 
 describe('IncrementSlider Specs', () => {
-	it('should decrement value', function () {
+	test('should decrement value', () => {
 		const handleChange = sinon.spy();
 		const value = 50;
 		const incrementSlider = mount(
@@ -44,10 +44,10 @@ describe('IncrementSlider Specs', () => {
 		const expected = value - 1;
 		const actual = handleChange.args[0][0].value;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should increment value', function () {
+	test('should increment value', () => {
 		const handleChange = sinon.spy();
 		const value = 50;
 		const incrementSlider = mount(
@@ -62,10 +62,10 @@ describe('IncrementSlider Specs', () => {
 		const expected = value + 1;
 		const actual = handleChange.args[0][0].value;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should only call onChange once', function () {
+	test('should only call onChange once', () => {
 		const handleChange = sinon.spy();
 		const value = 50;
 		const incrementSlider = mount(
@@ -80,10 +80,10 @@ describe('IncrementSlider Specs', () => {
 		const expected = true;
 		const actual = handleChange.calledOnce;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should not call onChange on prop change', function () {
+	test('should not call onChange on prop change', () => {
 		const handleChange = sinon.spy();
 		const value = 50;
 		const incrementSlider = mount(
@@ -98,10 +98,10 @@ describe('IncrementSlider Specs', () => {
 		const expected = false;
 		const actual = handleChange.called;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should disable decrement button when value === min', function () {
+	test('should disable decrement button when value === min', () => {
 		const incrementSlider = mount(
 			<IncrementSlider
 				value={0}
@@ -112,10 +112,10 @@ describe('IncrementSlider Specs', () => {
 		const expected = true;
 		const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('disabled');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should disable increment button when value === max', function () {
+	test('should disable increment button when value === max', () => {
 		const incrementSlider = mount(
 			<IncrementSlider
 				value={10}
@@ -126,10 +126,10 @@ describe('IncrementSlider Specs', () => {
 		const expected = true;
 		const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('disabled');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should use custom incrementIcon', function () {
+	test('should use custom incrementIcon', () => {
 		const icon = 'plus';
 		const incrementSlider = mount(
 			<IncrementSlider incrementIcon={icon} />
@@ -138,10 +138,10 @@ describe('IncrementSlider Specs', () => {
 		const expected = icon;
 		const actual = incrementSlider.find(`.${css.incrementButton} Icon`).prop('children');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should use custom decrementIcon', function () {
+	test('should use custom decrementIcon', () => {
 		const icon = 'minus';
 		const incrementSlider = mount(
 			<IncrementSlider decrementIcon={icon} />
@@ -150,302 +150,368 @@ describe('IncrementSlider Specs', () => {
 		const expected = icon;
 		const actual = incrementSlider.find(`.${css.decrementButton} Icon`).prop('children');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should set decrementButton "aria-label" to value and hint string', function () {
-		const incrementSlider = mount(
-			<IncrementSlider value={10} />
-		);
+	test(
+		'should set decrementButton "aria-label" to value and hint string',
+		() => {
+			const incrementSlider = mount(
+				<IncrementSlider value={10} />
+			);
 
-		const expected = '10 press ok button to decrease the value';
-		const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('aria-label');
+			const expected = '10 press ok button to decrease the value';
+			const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('aria-label');
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should set decrementButton "aria-label" to decrementAriaLabel', function () {
-		const label = 'decrement aria label';
-		const incrementSlider = mount(
-			<IncrementSlider value={10} decrementAriaLabel={label} />
-		);
+	test(
+		'should set decrementButton "aria-label" to decrementAriaLabel',
+		() => {
+			const label = 'decrement aria label';
+			const incrementSlider = mount(
+				<IncrementSlider value={10} decrementAriaLabel={label} />
+			);
 
-		const expected = `10 ${label}`;
-		const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('aria-label');
+			const expected = `10 ${label}`;
+			const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('aria-label');
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should not set decrementButton "aria-label" when decrementButton is disabled', function () {
-		const incrementSlider = mount(
-			<IncrementSlider disabled value={10} />
-		);
+	test(
+		'should not set decrementButton "aria-label" when decrementButton is disabled',
+		() => {
+			const incrementSlider = mount(
+				<IncrementSlider disabled value={10} />
+			);
 
-		const expected = null;
-		const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('aria-label');
+			const expected = null;
+			const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('aria-label');
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should set incrementButton "aria-label" to value and hint string', function () {
-		const incrementSlider = mount(
-			<IncrementSlider value={10} />
-		);
+	test(
+		'should set incrementButton "aria-label" to value and hint string',
+		() => {
+			const incrementSlider = mount(
+				<IncrementSlider value={10} />
+			);
 
-		const expected = '10 press ok button to increase the value';
-		const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('aria-label');
+			const expected = '10 press ok button to increase the value';
+			const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('aria-label');
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should set incrementButton "aria-label" to incrementAriaLabel', function () {
-		const label = 'increment aria label';
-		const incrementSlider = mount(
-			<IncrementSlider value={10} incrementAriaLabel={label} />
-		);
+	test(
+		'should set incrementButton "aria-label" to incrementAriaLabel',
+		() => {
+			const label = 'increment aria label';
+			const incrementSlider = mount(
+				<IncrementSlider value={10} incrementAriaLabel={label} />
+			);
 
-		const expected = `10 ${label}`;
-		const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('aria-label');
+			const expected = `10 ${label}`;
+			const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('aria-label');
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should not set incrementButton "aria-label" when incrementButton is disabled', function () {
-		const incrementSlider = mount(
-			<IncrementSlider disabled value={10} />
-		);
+	test(
+		'should not set incrementButton "aria-label" when incrementButton is disabled',
+		() => {
+			const incrementSlider = mount(
+				<IncrementSlider disabled value={10} />
+			);
 
-		const expected = null;
-		const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('aria-label');
+			const expected = null;
+			const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('aria-label');
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
 	// test directional events from IncrementSliderButtons
 
-	it('should call onSpotlightLeft from the decrement button of horizontal IncrementSlider', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider onSpotlightLeft={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightLeft from the decrement button of horizontal IncrementSlider',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider onSpotlightLeft={handleSpotlight} />
+			);
 
-		leftKeyDown(incrementSlider.find(`IconButton.${css.decrementButton}`));
+			leftKeyDown(incrementSlider.find(`IconButton.${css.decrementButton}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should call onSpotlightLeft from the decrement button of vertical IncrementSlider', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider orientation="vertical" onSpotlightLeft={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightLeft from the decrement button of vertical IncrementSlider',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider orientation="vertical" onSpotlightLeft={handleSpotlight} />
+			);
 
-		leftKeyDown(incrementSlider.find(`IconButton.${css.decrementButton}`));
+			leftKeyDown(incrementSlider.find(`IconButton.${css.decrementButton}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should call onSpotlightLeft from the increment button of vertical IncrementSlider', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider orientation="vertical" onSpotlightLeft={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightLeft from the increment button of vertical IncrementSlider',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider orientation="vertical" onSpotlightLeft={handleSpotlight} />
+			);
 
-		leftKeyDown(incrementSlider.find(`IconButton.${css.incrementButton}`));
+			leftKeyDown(incrementSlider.find(`IconButton.${css.incrementButton}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should call onSpotlightRight from the increment button of horizontal IncrementSlider', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider onSpotlightRight={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightRight from the increment button of horizontal IncrementSlider',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider onSpotlightRight={handleSpotlight} />
+			);
 
-		rightKeyDown(incrementSlider.find(`IconButton.${css.incrementButton}`));
+			rightKeyDown(incrementSlider.find(`IconButton.${css.incrementButton}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should call onSpotlightRight from the increment button of vertical IncrementSlider', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider orientation="vertical" onSpotlightRight={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightRight from the increment button of vertical IncrementSlider',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider orientation="vertical" onSpotlightRight={handleSpotlight} />
+			);
 
-		rightKeyDown(incrementSlider.find(`IconButton.${css.incrementButton}`));
+			rightKeyDown(incrementSlider.find(`IconButton.${css.incrementButton}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should call onSpotlightRight from the decrement button of vertical IncrementSlider', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider orientation="vertical" onSpotlightRight={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightRight from the decrement button of vertical IncrementSlider',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider orientation="vertical" onSpotlightRight={handleSpotlight} />
+			);
 
-		rightKeyDown(incrementSlider.find(`IconButton.${css.decrementButton}`));
+			rightKeyDown(incrementSlider.find(`IconButton.${css.decrementButton}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should call onSpotlightUp from the decrement button of horizontal IncrementSlider', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider onSpotlightUp={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightUp from the decrement button of horizontal IncrementSlider',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider onSpotlightUp={handleSpotlight} />
+			);
 
-		upKeyDown(incrementSlider.find(`IconButton.${css.decrementButton}`));
+			upKeyDown(incrementSlider.find(`IconButton.${css.decrementButton}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should call onSpotlightUp from the increment button of horizontal IncrementSlider', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider onSpotlightUp={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightUp from the increment button of horizontal IncrementSlider',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider onSpotlightUp={handleSpotlight} />
+			);
 
-		upKeyDown(incrementSlider.find(`IconButton.${css.incrementButton}`));
+			upKeyDown(incrementSlider.find(`IconButton.${css.incrementButton}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should call onSpotlightUp from the increment button of vertical IncrementSlider', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider orientation="vertical" onSpotlightUp={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightUp from the increment button of vertical IncrementSlider',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider orientation="vertical" onSpotlightUp={handleSpotlight} />
+			);
 
-		upKeyDown(incrementSlider.find(`IconButton.${css.incrementButton}`));
+			upKeyDown(incrementSlider.find(`IconButton.${css.incrementButton}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should call onSpotlightDown from the increment button of horizontal IncrementSlider', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider onSpotlightDown={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightDown from the increment button of horizontal IncrementSlider',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider onSpotlightDown={handleSpotlight} />
+			);
 
-		downKeyDown(incrementSlider.find(`IconButton.${css.incrementButton}`));
+			downKeyDown(incrementSlider.find(`IconButton.${css.incrementButton}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should call onSpotlightDown from the decrement button of horizontal IncrementSlider', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider orientation="vertical" onSpotlightDown={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightDown from the decrement button of horizontal IncrementSlider',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider orientation="vertical" onSpotlightDown={handleSpotlight} />
+			);
 
-		downKeyDown(incrementSlider.find(`IconButton.${css.decrementButton}`));
+			downKeyDown(incrementSlider.find(`IconButton.${css.decrementButton}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should call onSpotlightDown from the decrement button of vertical IncrementSlider', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider orientation="vertical" onSpotlightDown={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightDown from the decrement button of vertical IncrementSlider',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider orientation="vertical" onSpotlightDown={handleSpotlight} />
+			);
 
-		downKeyDown(incrementSlider.find(`IconButton.${css.decrementButton}`));
+			downKeyDown(incrementSlider.find(`IconButton.${css.decrementButton}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
 	// test directional events at bounds of slider
 
-	it('should call onSpotlightLeft from slider of horizontal IncrementSlider when value is at min', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider min={0} value={0} onSpotlightLeft={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightLeft from slider of horizontal IncrementSlider when value is at min',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider min={0} value={0} onSpotlightLeft={handleSpotlight} />
+			);
 
-		leftKeyDown(incrementSlider.find(`Slider.${css.slider}`));
+			leftKeyDown(incrementSlider.find(`Slider.${css.slider}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should call onSpotlightRight from slider of horizontal IncrementSlider when value is at max', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider max={100} value={100} onSpotlightRight={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightRight from slider of horizontal IncrementSlider when value is at max',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider max={100} value={100} onSpotlightRight={handleSpotlight} />
+			);
 
-		rightKeyDown(incrementSlider.find(`Slider.${css.slider}`));
+			rightKeyDown(incrementSlider.find(`Slider.${css.slider}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should call onSpotlightDown from slider of vertical IncrementSlider when value is at min', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider min={0} value={0} orientation="vertical" onSpotlightDown={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightDown from slider of vertical IncrementSlider when value is at min',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider min={0} value={0} orientation="vertical" onSpotlightDown={handleSpotlight} />
+			);
 
-		downKeyDown(incrementSlider.find(`Slider.${css.slider}`));
+			downKeyDown(incrementSlider.find(`Slider.${css.slider}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should call onSpotlightUp from slider of horizontal IncrementSlider when value is at max', function () {
-		const handleSpotlight = sinon.spy();
-		const incrementSlider = mount(
-			<IncrementSlider max={100} value={100} orientation="vertical" onSpotlightUp={handleSpotlight} />
-		);
+	test(
+		'should call onSpotlightUp from slider of horizontal IncrementSlider when value is at max',
+		() => {
+			const handleSpotlight = sinon.spy();
+			const incrementSlider = mount(
+				<IncrementSlider max={100} value={100} orientation="vertical" onSpotlightUp={handleSpotlight} />
+			);
 
-		upKeyDown(incrementSlider.find(`Slider.${css.slider}`));
+			upKeyDown(incrementSlider.find(`Slider.${css.slider}`));
 
-		const expected = 'called once';
-		const actual = callCount(handleSpotlight);
+			const expected = 'called once';
+			const actual = callCount(handleSpotlight);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 });

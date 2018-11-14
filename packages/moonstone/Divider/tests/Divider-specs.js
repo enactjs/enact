@@ -4,7 +4,7 @@ import Divider from '../Divider';
 
 describe('Divider Specs', () => {
 
-	it('should capitalize its content', function () {
+	test('should capitalize its content', () => {
 		const content = 'uncapped';
 		const divider = mount(
 			<Divider>{content}</Divider>
@@ -13,10 +13,10 @@ describe('Divider Specs', () => {
 		const expected = content.charAt(0).toUpperCase();
 		const actual = divider.text().charAt(0);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should render a Divider with content', function () {
+	test('should render a Divider with content', () => {
 		const content = 'Hello Divider!';
 
 		const divider = mount(
@@ -26,10 +26,10 @@ describe('Divider Specs', () => {
 		const expected = content;
 		const actual = divider.text();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should not capitalize content when casing is "preserve"', function () {
+	test('should not capitalize content when casing is "preserve"', () => {
 		const content = 'uncapped';
 
 		const divider = mount(
@@ -39,6 +39,6 @@ describe('Divider Specs', () => {
 		const expected = content;
 		const actual = divider.text();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });
