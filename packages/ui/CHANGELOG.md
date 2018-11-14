@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Marquee` to calculate distance precisely
+- `ui/Marquee` to handle very small marquees better
 
 ## [2.2.5] - 2018-11-05
 
