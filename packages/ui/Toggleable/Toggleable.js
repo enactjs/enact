@@ -247,10 +247,23 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			() => this.updateActive(!this.state.active)
 		)
 
+		getCustomAriaProps () {
+			const label = this.state.active ? this.props['toggleOnAriaLabel'] : this.props['toggleOffAriaLabel'];
+
+			if (label) {
+				return {
+					'aria-valuetext': label,
+					role: 'spinbutton'
+				};
+			}
+
+			return null;
+		}
+
 		render () {
 			const
-				props = Object.assign({}, this.props),
-				toggleAriaLabel = this.state.active ? props['toggleOnAriaLabel'] : props['toggleOffAriaLabel'];
+				customAriaProps = this.getCustomAriaProps(),
+				props = Object.assign({}, this.props);
 
 			if (toggleProp || toggle) {
 				// Supporting only one of the toggleProp or toggle, but we don't want both applying.
@@ -265,7 +278,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			delete props['toggleOffAriaLabel'];
 			delete props['toggleOnAriaLabel'];
 
-			return <Wrapped aria-label={toggleAriaLabel} {...props} />;
+			return <Wrapped {...customAriaProps} {...props} />;
 		}
 	};
 });
