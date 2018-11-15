@@ -103,6 +103,15 @@ class ScrollableBaseNative extends Component {
 		'data-spotlight-id': PropTypes.string,
 
 		/**
+		 * Animate while scrolling
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		animate: PropTypes.bool,
+
+		/**
 		 * Direction of the list or the scroller.
 		 * `'both'` could be only used for[Scroller]{@link moonstone/Scroller.Scroller}.
 		 *
@@ -186,6 +195,7 @@ class ScrollableBaseNative extends Component {
 
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
+		animate: false,
 		focusableScrollbar: false,
 		overscrollEffectOn: {
 			arrowKey: false,
@@ -520,7 +530,7 @@ class ScrollableBaseNative extends Component {
 
 	onKeyDown = (ev) => {
 		const
-			{overscrollEffectOn} = this.props,
+			{animate, overscrollEffectOn} = this.props,
 			{keyCode, repeat} = ev;
 		let
 			overscrollEffectRequired = false,
@@ -528,7 +538,7 @@ class ScrollableBaseNative extends Component {
 
 		forward('onKeyDown', ev, this.props);
 
-		this.animateOnFocus = true;
+		this.animateOnFocus = animate;
 
 		if (isPageUp(keyCode) || isPageDown(keyCode)) {
 			ev.preventDefault();
@@ -809,6 +819,7 @@ class ScrollableBaseNative extends Component {
 	render () {
 		const
 			{
+				animate,
 				childRenderer,
 				'data-spotlight-container': spotlightContainer,
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
@@ -834,6 +845,7 @@ class ScrollableBaseNative extends Component {
 				addEventListeners={this.addEventListeners}
 				applyOverscrollEffect={this.applyOverscrollEffect}
 				clearOverscrollEffect={this.clearOverscrollEffect}
+				noAnimation={!animate}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}

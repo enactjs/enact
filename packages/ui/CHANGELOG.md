@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [2.2.6] - 2018-11-15
+
+### Fixed
+
+- `ui/Marquee` to handle contents which overflow their containers only slightly
+
 ## [2.2.5] - 2018-11-05
 
 ### Fixed
