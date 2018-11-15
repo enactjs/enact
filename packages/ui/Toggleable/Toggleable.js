@@ -265,7 +265,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			delete props['toggleOffAriaLabel'];
 			delete props['toggleOnAriaLabel'];
 
-			return <Wrapped aria-pressed={this.state.active} aria-label={toggleAriaLabel} {...props} />;
+			return <Wrapped aria-label={toggleAriaLabel} {...props} />;
 		}
 	};
 });
