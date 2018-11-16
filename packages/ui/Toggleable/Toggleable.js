@@ -161,7 +161,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			[toggle]: PropTypes.func,
 
 			/**
-			 * The "aria-label" when toggle button is off.
+			 * The `'aria-label'` when toggle button is off.
 			 *
 			 * @type {String}
 			 * @public
@@ -169,7 +169,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			toggleOffAriaLabel: PropTypes.string,
 
 			/**
-			 * The "aria-label" when toggle button is on.
+			 * The `'aria-label'` when toggle button is on.
 			 *
 			 * @type {String}
 			 * @public
