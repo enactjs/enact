@@ -248,16 +248,10 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		getCustomAriaProps () {
-			const label = this.state.active ? this.props['toggleOnAriaLabel'] : this.props['toggleOffAriaLabel'];
+			const label = this.props[this.state.active ? 'toggleOnAriaLabel' : 'toggleOffAriaLabel'];
 
-			if (label) {
-				return {
-					'aria-valuetext': label,
-					role: 'spinbutton'
-				};
-			}
-
-			return null;
+			// You can override aria-valuetext and role property on the toggleable component.
+			return label ? {'aria-valuetext': label, role: 'spinbutton'} : null;
 		}
 
 		render () {
@@ -270,13 +264,19 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				delete props[toggle];
 				props[toggleProp || toggle] = this.handleToggle;
 			}
-			if (activate) props[activate] = this.handleActivate;
-			if (deactivate) props[deactivate] = this.handleDeactivate;
-			if (prop) props[prop] = this.state.active;
+			if (activate) {
+				props[activate] = this.handleActivate;
+			}
+			if (deactivate) {
+				props[deactivate] = this.handleDeactivate;
+			}
+			if (prop) {
+				props[prop] = this.state.active;
+			}
 
 			delete props[defaultPropKey];
-			delete props['toggleOffAriaLabel'];
-			delete props['toggleOnAriaLabel'];
+			delete props.toggleOffAriaLabel;
+			delete props.toggleOnAriaLabel;
 
 			return <Wrapped {...customAriaProps} {...props} />;
 		}

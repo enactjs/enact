@@ -380,7 +380,7 @@ describe('Toggleable', () => {
 	});
 
 	it('should set \'toggleOffAriaLabel\' to the wrapped component', function () {
-		const label = 'custom toggle off aria-label';
+		const label = 'custom toggle off aria-valuetext';
 		const Component = Toggleable(DivComponent);
 		const subject = mount(
 			<Component toggleOffAriaLabel={label} />
@@ -393,7 +393,7 @@ describe('Toggleable', () => {
 	});
 
 	it('should set \'toggleOnAriaLabel\' to the wrapped component', function () {
-		const label = 'custom toggle on aria-label';
+		const label = 'custom toggle on aria-valuetext';
 		const Component = Toggleable(DivComponent);
 		const subject = mount(
 			<Component selected toggleOnAriaLabel={label} />
@@ -404,5 +404,4 @@ describe('Toggleable', () => {
 
 		expect(actual).to.equal(expected);
 	});
-
 });
