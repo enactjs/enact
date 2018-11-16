@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [2.2.6] - 2018-11-15
+
+### Fixed
+
+- Sampler to allow selecting the device locale
+
 ## [2.2.5] - 2018-11-05
 
 No significant changes.
