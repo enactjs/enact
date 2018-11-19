@@ -90,7 +90,7 @@ const defaultConfig = {
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	const {emulateMouse} = config;
 
-	class SpottableClass extends React.Component {
+	return class extends React.Component {
 		static displayName = 'Spottable'
 
 		static propTypes = /** @lends spotlight/Spottable.Spottable.prototype */ {
@@ -187,8 +187,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidMount () {
 			// eslint-disable-next-line react/no-find-dom-node
-			this.node = React.createRef();
-			// this.node = ReactDOM.findDOMNode(this);
+			this.node = ReactDOM.findDOMNode(this);
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -355,7 +354,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {disabled, forwardedRef, spotlightId, ...rest} = this.props;
+			const {disabled, spotlightId, ...rest} = this.props;
 			const spottable = this.state.focusedWhenDisabled || isSpottable(this.props);
 			let tabIndex = rest.tabIndex;
 
@@ -385,7 +384,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return (
 				<Wrapped
 					{...rest}
-					ref={forwardedRef}
 					onBlur={this.handleBlur}
 					onFocus={this.handleFocus}
 					onMouseEnter={this.handleEnter}
@@ -398,10 +396,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			);
 		}
 	};
-
-	return React.forwardRef((props, ref) => {
-		return <SpottableClass {...props} forwardedRef={ref} />;
-	});
 });
 
 export default Spottable;
