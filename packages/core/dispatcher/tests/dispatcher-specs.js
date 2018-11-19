@@ -1,7 +1,7 @@
 /* global CustomEvent */
 
 import sinon from 'sinon';
-// import {restoreErrorAndWarnings, watchErrorAndWarnings} from 'console-snoop';
+import {restoreErrorAndWarnings, watchErrorAndWarnings} from 'console-snoop';
 
 import {off, on, once} from '../dispatcher';
 
@@ -11,7 +11,7 @@ describe('dispatcher', () => {
 		const handler = sinon.spy();
 		on('localechange', handler, window);
 
-		const ev = new CustomEvent('localechange', {});
+		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
 
 		const expected = true;
@@ -25,7 +25,7 @@ describe('dispatcher', () => {
 		on('localechange', handler, window);
 		on('localechange', handler, window);
 
-		const ev = new CustomEvent('localechange', {});
+		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
 
 		const expected = true;
@@ -38,7 +38,7 @@ describe('dispatcher', () => {
 		const handler = sinon.spy();
 		on('localechange', handler, window);
 
-		const ev = new CustomEvent('localechange', {});
+		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
 
 		off('localechange', handler, window);
@@ -54,7 +54,7 @@ describe('dispatcher', () => {
 		const handler = sinon.spy();
 		once('localechange', handler, window);
 
-		const ev = new CustomEvent('localechange', {});
+		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
 		window.dispatchEvent(ev);
 
@@ -69,7 +69,7 @@ describe('dispatcher', () => {
 		const onceHandler = once('localechange', handler, window);
 		off('localechange', onceHandler, window);
 
-		const ev = new CustomEvent('localechange', {});
+		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
 
 		const expected = false;
@@ -78,11 +78,11 @@ describe('dispatcher', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test.skip(
+	test(
 		'should not block subsequent handlers when a handler throws',
 		() => {
 			// clear enyo-console-spy so we can stub it to suppress the console.error
-			// restoreErrorAndWarnings();
+			restoreErrorAndWarnings();
 			sinon.stub(console, 'error');
 
 			const throws = function () {
@@ -92,13 +92,13 @@ describe('dispatcher', () => {
 			on('localechange', throws, window);
 			on('localechange', handler, window);
 
-			const ev = new CustomEvent('localechange', {});
+			const ev = new window.CustomEvent('localechange', {});
 			window.dispatchEvent(ev);
 
 			// restore console.error and set up enyo-console-spy again so it can complete successfully
 			// eslint-disable-next-line no-console
 			console.error.restore();
-			// watchErrorAndWarnings();
+			watchErrorAndWarnings();
 
 			const expected = true;
 			const actual = handler.calledOnce;
