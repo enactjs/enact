@@ -224,6 +224,7 @@ class TransitionGroup extends React.Component {
 		this.keysToEnter = [];
 		this.keysToLeave = [];
 		this.keysToStay = [];
+		this.groupRefs = {};
 	}
 
 	componentDidMount () {
@@ -319,7 +320,7 @@ class TransitionGroup extends React.Component {
 	performAppear = (key) => {
 		this.currentlyTransitioningKeys[key] = true;
 
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 
 		if (component.componentWillAppear) {
 			component.componentWillAppear(
@@ -331,7 +332,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	_handleDoneAppearing = (key) => {
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 		if (component.componentDidAppear) {
 			component.componentDidAppear();
 		}
@@ -353,7 +354,7 @@ class TransitionGroup extends React.Component {
 	performEnter = (key) => {
 		this.currentlyTransitioningKeys[key] = true;
 
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 
 		if (component.componentWillEnter) {
 			component.componentWillEnter(
@@ -365,7 +366,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	_handleDoneEntering = (key) => {
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 		if (component.componentDidEnter) {
 			component.componentDidEnter();
 		}
@@ -378,7 +379,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	performStay = (key) => {
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 
 		if (component.componentWillStay) {
 			component.componentWillStay(
@@ -390,7 +391,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	_handleDoneStaying = (key) => {
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 		if (component.componentDidStay) {
 			component.componentDidStay();
 		}
@@ -403,7 +404,7 @@ class TransitionGroup extends React.Component {
 	performLeave = (key) => {
 		this.currentlyTransitioningKeys[key] = true;
 
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 		if (component.componentWillLeave) {
 			component.componentWillLeave(this._handleDoneLeaving.bind(this, key));
 		} else {
@@ -415,7 +416,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	_handleDoneLeaving = (key) => {
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 
 		if (component.componentDidLeave) {
 			component.componentDidLeave();
@@ -433,6 +434,10 @@ class TransitionGroup extends React.Component {
 		});
 	}
 
+	storeRefs = key => node => {
+		this.groupRefs[key] = node;
+	}
+
 	render () {
 		// support wrapping arbitrary children with a component that supports the necessary
 		// lifecycle methods to animate transitions
@@ -441,7 +446,7 @@ class TransitionGroup extends React.Component {
 
 			return React.cloneElement(
 				this.props.childFactory(child),
-				{key: child.key, ref: child.key, leaving: isLeaving, appearing: !this.hasMounted}
+				{key: child.key, ref: this.storeRefs(child.key), leaving: isLeaving, appearing: !this.hasMounted}
 			);
 		});
 
