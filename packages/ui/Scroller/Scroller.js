@@ -42,6 +42,15 @@ class ScrollerBase extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
+		 * The number of items of data the scroller contains.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		dataSize: PropTypes.number,
+
+		/**
 		 * Direction of the scroller.
 		 *
 		 * Valid values are:
@@ -64,6 +73,33 @@ class ScrollerBase extends Component {
 		isVerticalScrollbarVisible: PropTypes.bool,
 
 		/**
+		 * The rendering function called for each item in the scroller.
+		 *
+		 * > **Note**: The scroller does **not** always render a component whenever its render function is called
+		 * due to performance optimization.
+		 *
+		 * Example:
+		 * ```
+		 * renderItem = ({index, ...rest}) => {
+		 * 	delete rest.data;
+		 *
+		 * 	return (
+		 * 		<MyComponent index={index} {...rest} />
+		 * 	);
+		 * }
+		 * ```
+		 *
+		 * @type {Function}
+		 * @param {Object}     event
+		 * @param {Number}     event.data-index    It is required for `Spotlight` 5-way navigation. Pass to the root element in the component.
+		 * @param {Number}     event.index    The index number of the component to render.
+		 *
+		 * @required
+		 * @public
+		 */
+		itemRenderer: PropTypes.func,
+
+		/**
 		 * `true` if RTL, `false` if LTR.
 		 *
 		 * @type {Boolean}
@@ -73,7 +109,15 @@ class ScrollerBase extends Component {
 	}
 
 	static defaultProps = {
+		dataSize: 0,
 		direction: 'both'
+	}
+
+	constructor (props) {
+		super(props);
+
+		this.children = [];
+		this.checkItemRenderer();
 	}
 
 	componentDidMount () {
@@ -172,6 +216,15 @@ class ScrollerBase extends Component {
 		}
 	}
 
+	checkItemRenderer = () => {
+		const {dataSize, itemRenderer} = this.props;
+		if (dataSize && itemRenderer) {
+			for (let index = 0; index < dataSize; index++) {
+				this.children.push(itemRenderer({index}));
+			}
+		}
+	}
+
 	render () {
 		const
 			{className, style, ...rest} = this.props,
@@ -181,9 +234,15 @@ class ScrollerBase extends Component {
 			});
 
 		delete rest.cbScrollTo;
+		delete rest.dataSize;
 		delete rest.direction;
-		delete rest.rtl;
 		delete rest.isVerticalScrollbarVisible;
+		delete rest.itemRenderer;
+		delete rest.rtl;
+
+		if (this.children.length > 0) {
+			rest.children = this.children;
+		}
 
 		return (
 			<div
