@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## unreleased
+
+### Added
+
+- `ui/Button` and `ui/Icon` prop `smallest` for even smaller buttons and icons
+
 ## [2.2.6] - 2018-11-15
 
 ### Fixed

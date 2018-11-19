@@ -43,6 +43,7 @@ const ButtonBase = kind({
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 * * `selected` - Applied when `selected` prop is `true`
 		 * * `small` - Applied when `small` prop is `true`
+		 * * `smallest` - Applied when `smallest` prop is `true`
 		 *
 		 * @type {Object}
 		 * @public
@@ -80,9 +81,9 @@ const ButtonBase = kind({
 		/**
 		 * The component used to render the [icon]{@link ui/Button.ButtonBase.icon}.
 		 *
-		 * This component will receive the `small` property set on the Button as well as the `icon`
-		 * class to customize its styling. If [icon]{@link ui/Button.ButtonBase.icon} is not a
-		 * string, this property is not used.
+		 * This component will receive the `small` or `smallest` properties set on the Button as well
+		 * as the `icon`  class to customize its styling. If [icon]{@link ui/Button.ButtonBase.icon}
+		 * is not a string, this property is not used.
 		 *
 		 * @type {Function}
 		 * @public
@@ -135,7 +136,19 @@ const ButtonBase = kind({
 		 * @default false
 		 * @public
 		 */
-		small: PropTypes.bool
+		small: PropTypes.bool,
+
+		/**
+		 * Reduces the size of the component.
+		 *
+		 * Applies the `smallest` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		smallest: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -143,7 +156,8 @@ const ButtonBase = kind({
 		minWidth: true,
 		pressed: false,
 		selected: false,
-		small: false
+		small: false,
+		smallest: false
 	},
 
 	styles: {
@@ -153,15 +167,16 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({minWidth, pressed, selected, small, styler}) => styler.append({
-			pressed,
-			small,
+		className: ({minWidth, pressed, selected, small, smallest, styler}) => styler.append({
 			minWidth,
-			selected
+			pressed,
+			selected,
+			small,
+			smallest
 		}),
-		icon: ({css, icon, iconComponent: Icon, small}) => {
+		icon: ({css, icon, iconComponent: Icon, small, smallest}) => {
 			return (typeof icon === 'string' && Icon) ? (
-				<Icon small={small} className={css.icon}>{icon}</Icon>
+				<Icon small={small} smallest={smallest} className={css.icon}>{icon}</Icon>
 			) : icon;
 		}
 	},
@@ -172,6 +187,7 @@ const ButtonBase = kind({
 		delete rest.pressed;
 		delete rest.selected;
 		delete rest.small;
+		delete rest.smallest;
 
 		return (
 			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>

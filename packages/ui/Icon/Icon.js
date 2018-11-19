@@ -85,8 +85,9 @@ const Icon = kind({
 		 * * `icon` - The root component class
 		 * * `dingbat` - Applied when the value of [`icon`]{@link ui/Icon.Icon.icon} is not
 		 *   found in [iconList]{@link ui/Icon.Icon.iconList}
-		 * * `small` - Applied when `small` prop is `true`
 		 * * `pressed` - Applied when `pressed` prop is `true`
+		 * * `small` - Applied when `small` prop is `true`
+		 * * `smallest` - Applied when `smallest` prop is `true`
 		 *
 		 * @type {Object}
 		 * @public
@@ -123,13 +124,23 @@ const Icon = kind({
 		 * @default false
 		 * @public
 		 */
-		small: PropTypes.bool
+		small: PropTypes.bool,
+
+		/**
+		 * Applies the `smallest` CSS class.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		smallest: PropTypes.bool
 	},
 
 	defaultProps: {
 		iconList: {},
 		pressed: false,
-		small: false
+		small: false,
+		smallest: false
 	},
 
 	styles: {
@@ -139,11 +150,12 @@ const Icon = kind({
 	},
 
 	computed: {
-		className: ({children: icon, iconList, pressed, small, styler}) => styler.append({
+		className: ({children: icon, iconList, pressed, small, smallest, styler}) => styler.append({
 			// If the icon isn't in our known set, apply our custom font class
 			dingbat: !(icon in iconList),
 			pressed,
-			small
+			small,
+			smallest
 		}),
 		iconProps: ({children: iconProp, iconList, style}) => {
 			let icon = iconList[iconProp];
@@ -190,6 +202,7 @@ const Icon = kind({
 		delete rest.iconList;
 		delete rest.pressed;
 		delete rest.small;
+		delete rest.smallest;
 
 		return (
 			<div
