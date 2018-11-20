@@ -7,7 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/Toggleable` props `toggleOffAriaLabel` and `toggleOnAriaLabel` to configure the aria-label set on used toggleable.
+- `ui/Toggleable` props `toggleOffAriaLabel` and `toggleOnAriaLabel` to configure the accessibility string in the toggleable.
 
 ## [2.2.6] - 2018-11-15
 
