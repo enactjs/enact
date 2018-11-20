@@ -74,6 +74,7 @@ class ExpandableListWithAddedChildren extends React.Component {
 	render () {
 		return (
 			<Scroller>
+				<Divider>Change the number of items in the list</Divider>
 				<Button onClick={this.setZero}>0</Button>
 				<Button onClick={this.setTen}>10</Button>
 				<ExpandableList title={'test'} defaultOpen>
