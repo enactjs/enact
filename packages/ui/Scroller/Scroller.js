@@ -80,21 +80,18 @@ class ScrollerBase extends Component {
 		 *
 		 * Example:
 		 * ```
-		 * renderItem = ({index, ...rest}) => {
-		 * 	delete rest.data;
+		 * renderItem = ({index}) => {
 		 *
 		 * 	return (
-		 * 		<MyComponent index={index} {...rest} />
+		 * 		<MyComponent index={index} />
 		 * 	);
 		 * }
 		 * ```
 		 *
 		 * @type {Function}
 		 * @param {Object}     event
-		 * @param {Number}     event.data-index    It is required for `Spotlight` 5-way navigation. Pass to the root element in the component.
 		 * @param {Number}     event.index    The index number of the component to render.
 		 *
-		 * @required
 		 * @public
 		 */
 		itemRenderer: PropTypes.func,
@@ -116,7 +113,7 @@ class ScrollerBase extends Component {
 	constructor (props) {
 		super(props);
 
-		this.children = [];
+		this.cc = [];
 		this.checkItemRenderer();
 	}
 
@@ -218,9 +215,10 @@ class ScrollerBase extends Component {
 
 	checkItemRenderer = () => {
 		const {dataSize, itemRenderer} = this.props;
+
 		if (dataSize && itemRenderer) {
 			for (let index = 0; index < dataSize; index++) {
-				this.children.push(itemRenderer({index}));
+				this.cc.push(itemRenderer({index}));
 			}
 		}
 	}
@@ -240,8 +238,8 @@ class ScrollerBase extends Component {
 		delete rest.itemRenderer;
 		delete rest.rtl;
 
-		if (this.children.length > 0) {
-			rest.children = this.children;
+		if (this.cc.length > 0) {
+			rest.children = this.cc;
 		}
 
 		return (
