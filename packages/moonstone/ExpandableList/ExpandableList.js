@@ -106,6 +106,14 @@ const ExpandableListBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
+		 * Disables voice control.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
 		 * When `true` and `select` is not `'multiple'`, the expandable will be closed when an item
 		 * is selected.
 		 *
@@ -285,6 +293,7 @@ const ExpandableListBase = kind({
 		},
 
 		itemProps: ({
+			'data-webos-voice-disabled': voiceDisabled,
 			onSpotlightDisappear,
 			onSpotlightLeft,
 			onSpotlightRight,
@@ -294,7 +303,8 @@ const ExpandableListBase = kind({
 			onSpotlightDisappear,
 			onSpotlightLeft,
 			onSpotlightRight,
-			spotlightDisabled
+			spotlightDisabled,
+			'data-webos-voice-disabled': voiceDisabled
 		}),
 
 		// generate a label that concatenates the text of the selected items

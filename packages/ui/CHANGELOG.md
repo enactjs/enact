@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [2.2.7] - 2018-11-21
+
+### Fixed
+
+- `ui/Marquee` to avoid very small animations
+
 ## [2.2.6] - 2018-11-15
 
 ### Fixed
