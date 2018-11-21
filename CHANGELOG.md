@@ -2,6 +2,11 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.2.7] - 2018-11-21
+
+- `moonstone/Picker`, `moonstone/ExpandablePicker`, `moonstone/ExpandableList`, `moonstone/IncrementSlider` to support disabling voice control
+- `ui/Marquee` to avoid very small animations
+
 ## [2.2.6] - 2018-11-15
 
 ### Fixed

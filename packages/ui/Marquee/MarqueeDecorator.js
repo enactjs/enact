@@ -332,13 +332,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		shouldComponentUpdate (nextProps, nextState) {
-			const {overflow, ...rest} = this.state;
-			const {overflow: nextOverflow, ...nextRest} = nextState;
-
 			return (
-				!shallowEqual(rest, nextRest) ||
-				!shallowEqual(this.props, nextProps) ||
-				(overflow !== 'ellipsis' && nextOverflow !== 'clip')
+				!shallowEqual(this.state, nextState) ||
+				!shallowEqual(this.props, nextProps)
 			);
 		}
 
@@ -462,11 +458,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.distance = this.calculateDistance(node);
 				this.contentFits = !this.shouldAnimate(this.distance);
 
-				// TODO: Replace with functional setState with React 16
 				const overflow = this.calculateTextOverflow(this.distance);
-				if (!(this.contentFits && overflow === 'clip' && this.state.overflow === 'ellipsis')) {
-					this.setState({overflow});
-				}
+				this.setState(state => {
+					return state.overflow === overflow ? null : {overflow};
+				});
 			}
 		}
 
@@ -495,7 +490,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{String}				text-overflow value
 		 */
 		calculateTextOverflow (distance) {
-			return distance === 0 ? 'clip' : 'ellipsis';
+			return distance < 1 ? 'clip' : 'ellipsis';
 		}
 
 		/*
@@ -505,7 +500,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{Boolean}				`true` if it should animated
 		 */
 		shouldAnimate (distance) {
-			return distance > 0;
+			return distance >= 1;
 		}
 
 		/*
