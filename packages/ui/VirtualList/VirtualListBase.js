@@ -768,7 +768,16 @@ const VirtualListBaseFactory = (type) => {
 
 		render () {
 			const
-				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
+				{
+					cc: children,
+					className,
+					'data-webos-voice-focused': voiceFocused,
+					'data-webos-voice-group-label': voiceGroupLabel,
+					itemsRenderer,
+					style,
+					SwipableItems,
+					...rest
+				} = this.props,
 				{cc, initItemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
 
@@ -794,7 +803,8 @@ const VirtualListBaseFactory = (type) => {
 			return (
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
 					<div {...rest} ref={this.initContentRef}>
-						{itemsRenderer({cc, initItemContainerRef, primary})}
+						{/*itemsRenderer({cc, initItemContainerRef, primary})*/}
+						<SwipableItems arrangeable={true}>{children}</SwipableItems>
 					</div>
 				</div>
 			);
