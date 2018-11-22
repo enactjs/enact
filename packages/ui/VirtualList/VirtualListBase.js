@@ -155,6 +155,11 @@ const VirtualListBaseFactory = (type) => {
 			'data-webos-voice-group-label': PropTypes.string,
 
 			/**
+			 * TBD
+			 */
+			arrangementMapContextToProps: PropTypes.any,
+
+			/**
 			 * Callback method of scrollTo.
 			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
 			 *
@@ -197,6 +202,11 @@ const VirtualListBaseFactory = (type) => {
 			 * @public
 			 */
 			direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+			/**
+			 * TBD
+			 */
+			Droppable: PropTypes.any,
 
 			/**
 			 * Called to get the props for list items.
@@ -820,7 +830,7 @@ const VirtualListBaseFactory = (type) => {
 		render () {
 			const
 				{
-					arrangementConfig,
+					arrangementMapContextToProps,
 					Droppable,
 					itemSize,
 
@@ -834,12 +844,11 @@ const VirtualListBaseFactory = (type) => {
 				{firstIndex} = this.state,
 				{cc, DraggableChild, initItemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className),
-				SwipableItems =
-					arrangementConfig(
-						Droppable({slots: slotNames},
-							slotsRenderer
-						)
-					);
+				SwipableItems = arrangementMapContextToProps(
+					Droppable({slots: slotNames},
+						slotsRenderer
+					)
+				);
 
 			delete rest.cbScrollTo;
 			delete rest.clientSize;
@@ -866,10 +875,13 @@ const VirtualListBaseFactory = (type) => {
 						{/*itemsRenderer({cc, initItemContainerRef, primary})*/}
 						<SwipableItems
 							arrangeable={true}
+							children={this.cc}
 							DraggableChild={DraggableChild}
 							index={firstIndex}
 							itemSize={itemSize}
-						>{this.cc}</SwipableItems>
+							ref={initItemContainerRef}
+							role="list"
+						/>
 					</div>
 				</div>
 			);
