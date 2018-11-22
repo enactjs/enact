@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -11,6 +12,53 @@ const
 	nop = () => {},
 	JS = 'JS',
 	Native = 'Native';
+
+const slotNames = [];
+const slotLength = 17;
+for (let i = 0; i < slotLength; i++) {
+	slotNames.push(`Child${i}`);
+}
+
+const slotsRenderer = kind({
+	name: 'slotsRenderer',
+
+	propTypes: {
+	},
+
+	render: ({DraggableChild, index, itemSize, ...rest}) => {
+		const children = [];
+
+		for (let i = 0; i < slotNames.length; i++) {
+			const content = rest[slotNames[i]];
+			delete rest[slotNames[i]];
+			children.push(
+				<DraggableChild
+					className={css.draggable}
+					key={i}
+					name={slotNames[i]}
+					style={{
+						position: 'absolute',
+						width: '100%',
+						height: itemSize + 'px',
+						transform: `translate3d(0, ${(index + i) * itemSize}px, 0)`
+					}}
+				>
+					{content}
+				</DraggableChild>
+			);
+		}
+
+		return (
+			<div {...rest}>
+				{children}
+			</div>
+		);
+	}
+});
+
+/*for (let i = 0; i < slotLength; i++) {
+	slotsRenderer.propTypes[slotNames[i]] = PropTypes.node; // eslint-disable-line : react-foreign-prop-types
+}*/
 
 /**
  * The shape for the grid list item size
@@ -217,6 +265,8 @@ const VirtualListBaseFactory = (type) => {
 			super(props);
 
 			this.state = {firstIndex: 0, numOfItems: 0};
+
+			this.DraggableChild = props.Draggable('div');
 		}
 
 		componentWillMount () {
@@ -628,8 +678,8 @@ const VirtualListBaseFactory = (type) => {
 
 			if (this.isItemSized) {
 				style.width = width;
-				style.height = height;
 			}
+			style.height = height;
 
 			return style;
 		}
@@ -644,11 +694,12 @@ const VirtualListBaseFactory = (type) => {
 				}),
 				componentProps = getComponentProps && getComponentProps(index) || {};
 
-			this.cc[key] = React.cloneElement(itemElement, {
+			this.cc[key] = React.createElement(slotNames[index], {
 				...componentProps,
-				className: classNames(css.listItem, itemElement.props.className),
-				style: {...itemElement.props.style, ...(this.composeStyle(...rest))}
-			});
+				key: index,
+				className: css.listItem
+				// style: this.composeStyle(...rest)
+			}, itemElement);
 		}
 
 		applyStyleToHideNode = (index) => {
@@ -769,25 +820,34 @@ const VirtualListBaseFactory = (type) => {
 		render () {
 			const
 				{
-					cc: children,
+					arrangementConfig,
+					Droppable,
+					itemSize,
+
 					className,
 					'data-webos-voice-focused': voiceFocused,
 					'data-webos-voice-group-label': voiceGroupLabel,
 					itemsRenderer,
 					style,
-					SwipableItems,
 					...rest
 				} = this.props,
-				{cc, initItemContainerRef, primary} = this,
-				containerClasses = this.mergeClasses(className);
+				{firstIndex} = this.state,
+				{cc, DraggableChild, initItemContainerRef, primary} = this,
+				containerClasses = this.mergeClasses(className),
+				SwipableItems =
+					arrangementConfig(
+						Droppable({slots: slotNames},
+							slotsRenderer
+						)
+					);
 
 			delete rest.cbScrollTo;
 			delete rest.clientSize;
 			delete rest.dataSize;
 			delete rest.direction;
+			delete rest.Draggable;
 			delete rest.getComponentProps;
 			delete rest.itemRenderer;
-			delete rest.itemSize;
 			delete rest.onUpdate;
 			delete rest.overhang;
 			delete rest.pageScroll;
@@ -804,7 +864,12 @@ const VirtualListBaseFactory = (type) => {
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
 					<div {...rest} ref={this.initContentRef}>
 						{/*itemsRenderer({cc, initItemContainerRef, primary})*/}
-						<SwipableItems arrangeable={true}>{children}</SwipableItems>
+						<SwipableItems
+							arrangeable={true}
+							DraggableChild={DraggableChild}
+							index={firstIndex}
+							itemSize={itemSize}
+						>{this.cc}</SwipableItems>
 					</div>
 				</div>
 			);
