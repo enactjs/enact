@@ -19,42 +19,68 @@ for (let i = 0; i < slotLength; i++) {
 	slotNames.push(`Child${i}`);
 }
 
-const slotsRenderer = kind({
-	name: 'slotsRenderer',
+const slotsRenderer = ({DraggableChild, index, initItemContainerRef, itemSize, slotsStyle, ...rest}) => {
+	const children = [];
 
-	propTypes: {
-	},
-
-	render: ({DraggableChild, index, initItemContainerRef, itemSize, slotStyle, ...rest}) => {
-		const children = [];
-
-		for (let i = 0; i < slotNames.length; i++) {
-			const content = rest[slotNames[i]];
-			delete rest[slotNames[i]];
-			children.push(
-				<DraggableChild
-					className={css.draggable}
-					key={i}
-					name={slotNames[i]}
-					style={{
-						position: 'absolute',
-						width: '100%',
-						height: itemSize + 'px',
-						transform: slotStyle[(index + i) % 17] || null
-					}}
-				>
-					{content}
-				</DraggableChild>
-			);
-		}
-
-		return (
-			<div {...rest} ref={initItemContainerRef}>
-				{children}
-			</div>
+	for (let i = 0; i < slotNames.length; i++) {
+		const content = rest[slotNames[i]];
+		delete rest[slotNames[i]];
+		children.push(
+			<DraggableChild
+				className={css.draggable}
+				key={i}
+				name={slotNames[i]}
+				style={{
+					position: 'absolute',
+					width: '100%',
+					height: itemSize + 'px',
+					transform: slotsStyle[(index + i) % 17] || null
+				}}
+			>
+				{content}
+			</DraggableChild>
 		);
 	}
-});
+
+	return (
+		<div {...rest} ref={initItemContainerRef}>
+			{children}
+		</div>
+	);
+};
+
+const SlotManager = ({
+	arrangementMapContextToProps,
+	Draggable,
+	Droppable,
+	firstIndex,
+	initItemContainerRef,
+	itemSize,
+	slotItems,
+	slotsRenderer,
+	slotsStyle
+}) => {
+	const
+		SwipableItems = arrangementMapContextToProps(
+			Droppable({slots: slotNames},
+				slotsRenderer
+			)
+		),
+		DraggableChild = Draggable('div');
+
+	return (
+		<SwipableItems
+			arrangeable={true}
+			children={slotItems}
+			DraggableChild={DraggableChild}
+			index={firstIndex}
+			initItemContainerRef={initItemContainerRef}
+			itemSize={itemSize}
+			role="list"
+			slotsStyle={slotsStyle}
+		/>
+	);
+};
 
 /**
  * The shape for the grid list item size
@@ -271,8 +297,6 @@ const VirtualListBaseFactory = (type) => {
 			super(props);
 
 			this.state = {firstIndex: 0, numOfItems: 0};
-
-			this.DraggableChild = props.Draggable('div');
 		}
 
 		componentWillMount () {
@@ -357,7 +381,7 @@ const VirtualListBaseFactory = (type) => {
 		curDataSize = 0
 		hasDataSizeChanged = false
 		cc = []
-		slotStyle = []
+		slotsStyle = []
 		scrollPosition = 0
 
 		contentRef = null
@@ -702,7 +726,7 @@ const VirtualListBaseFactory = (type) => {
 
 				// node.style.transform = `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`;
 				// node.style.height = height;
-				this.slotStyle[index % numOfItems] = `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`;
+				this.slotsStyle[index % numOfItems] = `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`;
 			}
 		}
 
@@ -844,6 +868,7 @@ const VirtualListBaseFactory = (type) => {
 			const
 				{
 					arrangementMapContextToProps,
+					Draggable,
 					Droppable,
 					itemSize,
 
@@ -856,18 +881,12 @@ const VirtualListBaseFactory = (type) => {
 				} = this.props,
 				{firstIndex} = this.state,
 				{cc, DraggableChild, initItemContainerRef, primary} = this,
-				containerClasses = this.mergeClasses(className),
-				SwipableItems = arrangementMapContextToProps(
-					Droppable({slots: slotNames},
-						slotsRenderer
-					)
-				);
+				containerClasses = this.mergeClasses(className);
 
 			delete rest.cbScrollTo;
 			delete rest.clientSize;
 			delete rest.dataSize;
 			delete rest.direction;
-			delete rest.Draggable;
 			delete rest.getComponentProps;
 			delete rest.itemRenderer;
 			delete rest.onUpdate;
@@ -886,15 +905,16 @@ const VirtualListBaseFactory = (type) => {
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
 					<div {...rest} ref={this.initContentRef}>
 						{/*itemsRenderer({cc, initItemContainerRef, primary})*/}
-						<SwipableItems
-							arrangeable={true}
-							children={this.cc}
-							DraggableChild={DraggableChild}
-							index={firstIndex}
+						<SlotManager
+							arrangementMapContextToProps={arrangementMapContextToProps}
+							Draggable={Draggable}
+							Droppable={Droppable}
+							firstIndex={firstIndex}
 							initItemContainerRef={initItemContainerRef}
 							itemSize={itemSize}
-							role="list"
-							slotStyle={this.slotStyle}
+							slotItems={this.cc}
+							slotsRenderer={slotsRenderer}
+							slotsStyle={this.slotsStyle}
 						/>
 					</div>
 				</div>
