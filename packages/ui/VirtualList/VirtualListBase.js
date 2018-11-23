@@ -25,7 +25,7 @@ const slotsRenderer = kind({
 	propTypes: {
 	},
 
-	render: ({DraggableChild, index, itemSize, ...rest}) => {
+	render: ({DraggableChild, index, initItemContainerRef, itemSize, slotStyle, ...rest}) => {
 		const children = [];
 
 		for (let i = 0; i < slotNames.length; i++) {
@@ -40,7 +40,7 @@ const slotsRenderer = kind({
 						position: 'absolute',
 						width: '100%',
 						height: itemSize + 'px',
-						transform: `translate3d(0, ${(index + i) * itemSize}px, 0)`
+						transform: slotStyle[(index + i) % 17] || null
 					}}
 				>
 					{content}
@@ -49,16 +49,12 @@ const slotsRenderer = kind({
 		}
 
 		return (
-			<div {...rest}>
+			<div {...rest} ref={initItemContainerRef}>
 				{children}
 			</div>
 		);
 	}
 });
-
-/*for (let i = 0; i < slotLength; i++) {
-	slotsRenderer.propTypes[slotNames[i]] = PropTypes.node; // eslint-disable-line : react-foreign-prop-types
-}*/
 
 /**
  * The shape for the grid list item size
@@ -361,6 +357,7 @@ const VirtualListBaseFactory = (type) => {
 		curDataSize = 0
 		hasDataSizeChanged = false
 		cc = []
+		slotStyle = []
 		scrollPosition = 0
 
 		contentRef = null
@@ -694,6 +691,21 @@ const VirtualListBaseFactory = (type) => {
 			return style;
 		}
 
+		applyStyleToExistingNode = (index, width, height, primaryPosition, secondaryPosition) => {
+			const
+				{numOfItems} = this.state,
+				node = this.itemContainerRef.children[index % numOfItems];
+
+			if (node) {
+				const
+					{x, y} = this.getXY(primaryPosition, secondaryPosition);
+
+				// node.style.transform = `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`;
+				// node.style.height = height;
+				this.slotStyle[index % numOfItems] = `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`;
+			}
+		}
+
 		applyStyleToNewNode = (index, ...rest) => {
 			const
 				{itemRenderer, getComponentProps} = this.props,
@@ -704,7 +716,7 @@ const VirtualListBaseFactory = (type) => {
 				}),
 				componentProps = getComponentProps && getComponentProps(index) || {};
 
-			this.cc[key] = React.createElement(slotNames[index], {
+			this.cc[key] = React.createElement(slotNames[key], {
 				...componentProps,
 				key: index,
 				className: css.listItem
@@ -745,6 +757,7 @@ const VirtualListBaseFactory = (type) => {
 			// positioning items
 			for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
 				this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
+				this.applyStyleToExistingNode(i, width, height, primaryPosition, secondaryPosition);
 
 				if (++j === dimensionToExtent) {
 					secondaryPosition = 0;
@@ -878,9 +891,10 @@ const VirtualListBaseFactory = (type) => {
 							children={this.cc}
 							DraggableChild={DraggableChild}
 							index={firstIndex}
+							initItemContainerRef={initItemContainerRef}
 							itemSize={itemSize}
-							ref={initItemContainerRef}
 							role="list"
+							slotStyle={this.slotStyle}
 						/>
 					</div>
 				</div>
