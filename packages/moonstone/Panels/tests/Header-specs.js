@@ -32,6 +32,8 @@ describe('Header Specs', () => {
 	});
 
 	test('should inject a custom component when headerInput is used', () => {
+		const Input = () => <input />;
+
 		// This just uses an <input> tag for easy discoverability. It should behave the same way
 		// as a moonstone/Input, the standard here, but that would require importing a diffenent
 		// component than what we're testing here.
@@ -39,7 +41,7 @@ describe('Header Specs', () => {
 			<Header>
 				<title>Header</title>
 				<headerInput>
-					<input placeholder="An easy to find legal DOM node" />
+					<Input/>
 				</headerInput>
 			</Header>
 		);
