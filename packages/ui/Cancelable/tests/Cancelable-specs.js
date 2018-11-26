@@ -18,7 +18,7 @@ describe('Cancelable', () => {
 		return {
 			keyCode,
 			nativeEvent: {
-				stopImmediatePropagation: jest.fn()
+				stopImmediatePropagation: sinon.spy()
 			}
 		};
 	};
@@ -28,7 +28,7 @@ describe('Cancelable', () => {
 	const stop = (ev) => ev.stopPropagation();
 
 	test('should call onCancel from prop for escape key', () => {
-		const handleCancel = jest.fn(returnsTrue);
+		const handleCancel = sinon.spy(returnsTrue);
 		const Comp = Cancelable(
 			{onCancel: 'onCustomEvent'},
 			Component
@@ -41,10 +41,9 @@ describe('Cancelable', () => {
 		subject.simulate('keyup', makeKeyEvent(27));
 
 		const expected = true;
-		const actual = handleCancel;
+		const actual = handleCancel.called;
 
-		expect(actual).toHaveBeenCalled();
-		// expect(actual).toBe(expected);
+		expect(actual).toBe(expected);
 	});
 
 	test('should only call onCancel for escape key by default', () => {
@@ -270,13 +269,8 @@ describe('Cancelable', () => {
 			return ev.keyIdentifier === '27';
 		};
 
-	
-
-		// PhantomJS doesn't support KeyboardEvent so we're faking it ...
 		const makeKeyboardEvent = (keyCode) => {
-			
-			
-			return () => map.keyup({ key: keyCode });
+			return new KeyboardEvent('keyup', {keyCode, code: keyCode, bubbles: true});
 		};
 
 		beforeAll(() => {
@@ -287,10 +281,10 @@ describe('Cancelable', () => {
 			removeCancelHandler(customEventHandler);
 		});
 
-		test.only(
+		test(
 			'should invoke handler for cancel events dispatch to the window',
 			() => {
-				const handleCancel = jest.fn(returnsTrue);
+				const handleCancel = sinon.spy(returnsTrue);
 				const Comp = Cancelable(
 					{modal: true, onCancel: handleCancel},
 					Component
@@ -300,9 +294,9 @@ describe('Cancelable', () => {
 				document.dispatchEvent(makeKeyboardEvent(27));
 
 				const expected = true;
-				const actual = handleCancel;
+				const actual = handleCancel.called;
 
-				expect(actual).toHaveBeenCalled();
+				expect(actual).toBe(expected);
 			}
 		);
 
