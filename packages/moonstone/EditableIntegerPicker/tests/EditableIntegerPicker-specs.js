@@ -89,7 +89,7 @@ describe('EditableIntegerPicker', () => {
 			picker.find('PickerItem').simulate('click', {target: {type: 'click'}});
 
 			const input = node.querySelector('input');
-			input.focus();
+			picker.find('input').simulate('focus');
 			input.value = 38;
 			input.blur();
 
