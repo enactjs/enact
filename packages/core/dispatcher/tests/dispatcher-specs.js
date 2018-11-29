@@ -1,5 +1,3 @@
-/* global CustomEvent */
-
 import sinon from 'sinon';
 import {restoreErrorAndWarnings, watchErrorAndWarnings} from 'console-snoop';
 

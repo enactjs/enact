@@ -270,7 +270,7 @@ describe('Cancelable', () => {
 		};
 
 		const makeKeyboardEvent = (keyCode) => {
-			return new KeyboardEvent('keyup', {keyCode, code: keyCode, bubbles: true});
+			return new window.KeyboardEvent('keyup', {keyCode, code: keyCode, bubbles: true});
 		};
 
 		beforeAll(() => {

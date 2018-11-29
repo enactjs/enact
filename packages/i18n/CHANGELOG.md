@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `i18n/I18nDecorator` HOC config prop `sync` to support asynchronous retrieval of i18n resource files
+- `i18n/I18nDecorator` HOC config props `latinLanguageOverrides` and `nonLatinLanguageOverrides` to allow consumers to configure some locales to be treated as Latin or non-Latin for the purposes of applying the `enact-locale-non-latin` global class name.
+- `i18n/Text` component to provide asynchronous text translations
 ## [2.2.7] - 2018-11-21
 
 No significant changes.
