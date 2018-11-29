@@ -2,6 +2,22 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.2.7] - 2018-11-21
+
+- `moonstone/Picker`, `moonstone/ExpandablePicker`, `moonstone/ExpandableList`, `moonstone/IncrementSlider` to support disabling voice control
+- `ui/Marquee` to avoid very small animations
+
+## [2.2.6] - 2018-11-15
+
+### Fixed
+
+- `i18n/I18nDecorator` to allow changing the locale to a falsey value to use the device locale
+- `moonstone/VideoPlayer` to blur slider when hiding media controls
+- `moonstone/VideoPlayer` to disable pointer mode when hiding media controls via 5-way
+- `moonstone/VirtualList` and `moonstone/Scroller` to not to animate with 5-way navigation by default
+- `ui/Marquee` to handle contents which overflow their containers only slightly
+
+
 ## [2.2.5] - 2018-11-05
 
 ### Fixed
