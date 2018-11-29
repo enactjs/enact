@@ -8,22 +8,22 @@ describe('Uppercase', () => {
 	// Suite-wide setup
 
 	test(
-        'should uppercase content when it contains a single string child',
-        () => {
-            const Component = (props) => (
-                <div>{props.children}</div>
-            );
-            const Wrapped = Uppercase(Component);
-            const subject = mount(
-                <Wrapped>uppercase</Wrapped>
-            );
+		'should uppercase content when it contains a single string child',
+		() => {
+			const Component = (props) => (
+				<div>{props.children}</div>
+			);
+			const Wrapped = Uppercase(Component);
+			const subject = mount(
+				<Wrapped>uppercase</Wrapped>
+			);
 
-            const expected = 'UPPERCASE';
-            const actual = subject.text();
+			const expected = 'UPPERCASE';
+			const actual = subject.text();
 
-            expect(actual).toBe(expected);
-        }
-    );
+			expect(actual).toBe(expected);
+		}
+	);
 
 	test('should not uppercase content when casing is "preserve"', () => {
 		const Component = (props) => (
@@ -41,83 +41,83 @@ describe('Uppercase', () => {
 	});
 
 	test(
-        'should uppercase the first letter of each word when casing is "word"',
-        () => {
-            const Component = (props) => (
-                <div>{props.children}</div>
-            );
-            const Wrapped = Uppercase(Component);
-            const subject = mount(
-                <Wrapped casing="word">uppercase uppercase uppercase</Wrapped>
-            );
+		'should uppercase the first letter of each word when casing is "word"',
+		() => {
+			const Component = (props) => (
+				<div>{props.children}</div>
+			);
+			const Wrapped = Uppercase(Component);
+			const subject = mount(
+				<Wrapped casing="word">uppercase uppercase uppercase</Wrapped>
+			);
 
-            const expected = 'Uppercase Uppercase Uppercase';
-            const actual = subject.text();
+			const expected = 'Uppercase Uppercase Uppercase';
+			const actual = subject.text();
 
-            expect(actual).toBe(expected);
-        }
-    );
-
-	test(
-        'should uppercase the first letter of the first word when casing is "sentence"',
-        () => {
-            const Component = (props) => (
-                <div>{props.children}</div>
-            );
-            const Wrapped = Uppercase(Component);
-            const subject = mount(
-                <Wrapped casing="sentence">uppercase uppercase uppercase</Wrapped>
-            );
-
-            const expected = 'Uppercase uppercase uppercase';
-            const actual = subject.text();
-
-            expect(actual).toBe(expected);
-        }
-    );
+			expect(actual).toBe(expected);
+		}
+	);
 
 	test(
-        'should uppercase content when it contains multiple children',
-        () => {
-            const Component = (props) => (
-                <div>{props.children}</div>
-            );
-            const Wrapped = Uppercase(Component);
-            const subject = mount(
-                <Wrapped>
-                    {[
-                        'uppercase',
-                        'uppercase'
-                    ]}
-                </Wrapped>
-            );
+		'should uppercase the first letter of the first word when casing is "sentence"',
+		() => {
+			const Component = (props) => (
+				<div>{props.children}</div>
+			);
+			const Wrapped = Uppercase(Component);
+			const subject = mount(
+				<Wrapped casing="sentence">uppercase uppercase uppercase</Wrapped>
+			);
 
-            const expected = 'UPPERCASEUPPERCASE';
-            const actual = subject.text();
+			const expected = 'Uppercase uppercase uppercase';
+			const actual = subject.text();
 
-            expect(actual).toBe(expected);
-        }
-    );
+			expect(actual).toBe(expected);
+		}
+	);
 
 	test(
-        'should not uppercase content when it contains a single non-string child',
-        () => {
-            const Component = (props) => (
-                <div>{props.children}</div>
-            );
-            const Wrapped = Uppercase(Component);
-            const subject = mount(
-                <Wrapped>
-                    <span>uppercase</span>
-                </Wrapped>
-            );
+		'should uppercase content when it contains multiple children',
+		() => {
+			const Component = (props) => (
+				<div>{props.children}</div>
+			);
+			const Wrapped = Uppercase(Component);
+			const subject = mount(
+				<Wrapped>
+					{[
+						'uppercase',
+						'uppercase'
+					]}
+				</Wrapped>
+			);
 
-            const expected = 'uppercase';
-            const actual = subject.text();
+			const expected = 'UPPERCASEUPPERCASE';
+			const actual = subject.text();
 
-            expect(actual).toBe(expected);
-        }
-    );
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should not uppercase content when it contains a single non-string child',
+		() => {
+			const Component = (props) => (
+				<div>{props.children}</div>
+			);
+			const Wrapped = Uppercase(Component);
+			const subject = mount(
+				<Wrapped>
+					<span>uppercase</span>
+				</Wrapped>
+			);
+
+			const expected = 'uppercase';
+			const actual = subject.text();
+
+			expect(actual).toBe(expected);
+		}
+	);
 
 	test('should uppercase non-latin locales correctly', () => {
 		// This is difficult to truly unit test because we need a character set we know ilib

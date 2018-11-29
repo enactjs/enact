@@ -25,6 +25,7 @@ describe('I18nDecorator', () => {
 		);
 
 		const Wrapped = I18nDecorator(
+			{sync: true},
 			I18nContextDecorator(
 				{rtlProp: 'rtl'},
 				Component
@@ -45,6 +46,7 @@ describe('I18nDecorator', () => {
 		);
 
 		const Wrapped = I18nDecorator(
+			{sync: true},
 			I18nContextDecorator(
 				{updateLocaleProp: 'updateLocale'},
 				Component
@@ -59,32 +61,33 @@ describe('I18nDecorator', () => {
 	});
 
 	test(
-        'should update the current locale when updateLocale is called',
-        () => {
-            // eslint-disable-next-line enact/prop-types
-            const Component = ({_updateLocale}) => {
-                const handleClick = () => _updateLocale('ar-SA');
+		'should update the current locale when updateLocale is called',
+		() => {
+			// eslint-disable-next-line enact/prop-types
+			const Component = ({_updateLocale}) => {
+				const handleClick = () => _updateLocale('ar-SA');
 
-                return (
-                    <button onClick={handleClick} />
-                );
-            };
+				return (
+					<button onClick={handleClick} />
+				);
+			};
 
-            const Wrapped = I18nDecorator(
-                I18nContextDecorator(
-                    {updateLocaleProp: '_updateLocale'},
-                    Component
-                )
-            );
-            const subject = mount(<Wrapped />);
-            subject.find('button').simulate('click');
+			const Wrapped = I18nDecorator(
+				{sync: true},
+				I18nContextDecorator(
+					{updateLocaleProp: '_updateLocale'},
+					Component
+				)
+			);
+			const subject = mount(<Wrapped />);
+			subject.find('button').simulate('click');
 
-            const expected = 'ar-SA';
-            const actual = ilib.getLocale();
+			const expected = 'ar-SA';
+			const actual = ilib.getLocale();
 
-            expect(actual).toBe(expected);
-        }
-    );
+			expect(actual).toBe(expected);
+		}
+	);
 
 	test('should update the rtl context parameter when RTL changes', () => {
 		// eslint-disable-next-line enact/prop-types
@@ -97,6 +100,7 @@ describe('I18nDecorator', () => {
 		};
 
 		const Wrapped = I18nDecorator(
+			{sync: true},
 			I18nContextDecorator(
 				{rtlProp: 'rtl', updateLocaleProp: '_updateLocale'},
 				Component
@@ -119,7 +123,7 @@ describe('I18nDecorator', () => {
 			<div className={props.className} />
 		);
 
-		const Wrapped = I18nDecorator(Component);
+		const Wrapped = I18nDecorator({sync: true}, Component);
 		shallow(<Wrapped locale="ar-SA" />);
 
 		const expected = 'ar-SA';
@@ -133,7 +137,7 @@ describe('I18nDecorator', () => {
 			<div className={props.className} />
 		);
 
-		const Wrapped = I18nDecorator(Component);
+		const Wrapped = I18nDecorator({sync: true}, Component);
 		// explicitly setting locale so we get a known class list regardless of runtime locale
 		const subject = shallow(<Wrapped locale="en-US" />).find(Component);
 
@@ -141,6 +145,37 @@ describe('I18nDecorator', () => {
 		const actual =	subject.hasClass('enact-locale-en') &&
 						subject.hasClass('enact-locale-en-US') &&
 						subject.hasClass('enact-locale-US');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should treat "en-US" as latin locale', () => {
+		const Component = (props) => (
+			<div className={props.className} />
+		);
+
+		const Wrapped = I18nDecorator({sync: true}, Component);
+		// explicitly setting locale so we get a known class list regardless of runtime locale
+		const subject = shallow(<Wrapped locale="en-US" />).find(Component);
+
+		const expected = false;
+		const actual =	subject.hasClass('enact-locale-non-latin');
+
+		expect(actual).toBe(expected);
+	});
+
+
+	test('should treat "ja-JP" as non-latin locale', () => {
+		const Component = (props) => (
+			<div className={props.className} />
+		);
+
+		const Wrapped = I18nDecorator({sync: true}, Component);
+		// explicitly setting locale so we get a known class list regardless of runtime locale
+		const subject = shallow(<Wrapped locale="ja-JP" />).find(Component);
+
+		const expected = true;
+		const actual =	subject.hasClass('enact-locale-non-latin');
 
 		expect(actual).toBe(expected);
 	});

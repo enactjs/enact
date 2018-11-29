@@ -131,4 +131,74 @@ describe('Job', () => {
 			j.idle('second');
 		});
 	});
+
+	describe('#promise', function () {
+		it('should throw when passed a non-thenable argument', function (done) {
+			const j = new Job(() => done(new Error('Unexpected job execution')));
+			try {
+				j.promise({});
+			} catch (msg) {
+				done();
+			}
+		});
+
+		it('should support a non-Promise, thenable argument', function (done) {
+			const j = new Job(() => done());
+			try {
+				j.promise({
+					then: (fn) => fn(true)
+				});
+			} catch (msg) {
+				done(msg);
+			}
+		});
+
+		it('should start job for a resolved promise', function (done) {
+			const j = new Job(() => done());
+			j.promise(Promise.resolve(true));
+		});
+
+		it('should not start job for a rejected promise', function (done) {
+			const j = new Job(() => {
+				done(new Error('Job ran for rejected promise'));
+			});
+			j.promise(Promise.reject(true)).catch(() => {});
+			setTimeout(done, 10);
+		});
+
+		it('should not start job when stopped before promise resolves', function (done) {
+			const j = new Job(() => {
+				done(new Error('Job ran for stopped promise'));
+			});
+			j.promise(new Promise(resolve => setTimeout(resolve, 20)));
+			setTimeout(() => j.stop(), 10);
+			setTimeout(done, 30);
+		});
+
+		it('should not start job when another is started', function (done) {
+			const j = new Job((value) => {
+				expect(value).to.equal(2);
+				done();
+			});
+			j.promise(new Promise(resolve => resolve(1)));
+			j.promise(new Promise(resolve => resolve(2)));
+		});
+
+		it('should return the value from the job to the resolved promise', function (done) {
+			const j = new Job(() => 'job value');
+			j.promise(Promise.resolve(true)).then(value => {
+				expect(value).to.equal('job value');
+				done();
+			});
+		});
+
+		it('should not return the value from the job to the replaced promise', function (done) {
+			const j = new Job(() => 'job value');
+			j.promise(Promise.resolve(true)).then(value => {
+				expect(value).to.not.exist();
+				done();
+			});
+			j.promise(Promise.resolve(true)).then(() => done());
+		});
+	});
 });
