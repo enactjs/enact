@@ -49,8 +49,8 @@ describe('Input Specs', () => {
 		);
 		const input = subject.find('input');
 
-		node.querySelector('input').focus();
-		input.simulate('keyDown', {nativeEvent: {which: 13, keyCode: 13}});
+		input.simulate('mouseDown');
+		input.simulate('keyUp', {which: 13, keyCode: 13, code:13});
 		node.remove();
 
 		const expected = true;
