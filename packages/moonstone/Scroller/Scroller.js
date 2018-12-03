@@ -227,13 +227,13 @@ class ScrollerBase extends Component {
 	 * @returns {Object} with keys {top, left} containing calculated top and left positions for scroll.
 	 * @private
 	 */
-	calculatePositionOnFocus = ({item, scrollInfo, scrollPosition}) => {
+	calculatePositionOnFocus = ({item, scrollPosition}) => {
 		if (!this.uiRef.isVertical() && !this.uiRef.isHorizontal() || !item || !this.uiRef.containerRef.contains(item)) {
 			return;
 		}
 
 		if (this.uiRef.isVertical()) {
-			this.uiRef.scrollPos.top = this.calculateScrollTop(item, scrollInfo, scrollPosition);
+			this.uiRef.scrollPos.top = this.calculateScrollTop(item);
 		} else if (this.uiRef.isHorizontal()) {
 			const {
 				left: itemLeft,
