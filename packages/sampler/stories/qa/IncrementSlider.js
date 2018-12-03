@@ -2,8 +2,12 @@ import IncrementSliderDelayValue from './components/IncrementSliderDelayValue';
 import React from 'react';
 import IncrementSlider from '@enact/moonstone/IncrementSlider';
 import Button from '@enact/moonstone/Button';
+import IconButton from '@enact/moonstone/IconButton';
+import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
 import ri from '@enact/ui/resolution';
 import {storiesOf} from '@storybook/react';
+
+const ContextualPopupButton = ContextualPopupDecorator(IconButton);
 
 class IncrementSliderView extends React.Component {
 
@@ -33,6 +37,53 @@ class IncrementSliderView extends React.Component {
 	}
 }
 
+class IncrementSliderWithContextualPopup extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			open: false
+		};
+	}
+
+		handleClick = () => {
+			this.setState((prevState) => {
+				return {open: !prevState.open};
+			});
+		}
+
+		renderPopup = () => (
+			<div style={{width: 400}}>
+				<IncrementSlider
+					// active
+					tooltip
+					min={-9.9}
+					max={9.9}
+					step={0.1}
+				/>
+			</div>
+		);
+
+		render () {
+			return (
+				<div>
+					<ContextualPopupButton
+						direction="down"
+						spotlightRestrict="self-only"
+						onClick={this.handleClick}
+						onClose={this.handleClick}
+						open={this.state.open}
+						popupComponent={this.renderPopup}
+						small
+					>
+						{'drawer'}
+					</ContextualPopupButton>
+				</div>
+			);
+		}
+
+}
+
+
 storiesOf('IncrementSlider', module)
 	.add(
 		'PLAT-28221',
@@ -49,6 +100,15 @@ storiesOf('IncrementSlider', module)
 			<div>
 				While holding down the knob (dragging), move the cursor quickly between knob and SliderButtons. Ensure the buttons do not receive spotlight.
 				<IncrementSliderView />
+			</div>
+		)
+	)
+	.add(
+		'with ContextualPopup',
+		() => (
+			<div>
+				Slider knob changes value with 5-way Interaction between ContextualPopup and Slider.
+				<IncrementSliderWithContextualPopup />
 			</div>
 		)
 	);
