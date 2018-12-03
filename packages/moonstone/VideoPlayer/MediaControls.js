@@ -455,7 +455,7 @@ const MediaControlsBase = kind({
  * @hoc
  * @private
  */
-const MediaControlsDecorator = hoc((config, Wrapped) => {
+const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	class MediaControlsDecoratorHOC extends React.Component {
 		static displayName = 'MediaControlsDecorator'
 

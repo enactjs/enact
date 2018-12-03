@@ -332,13 +332,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		shouldComponentUpdate (nextProps, nextState) {
-			const {overflow, ...rest} = this.state;
-			const {overflow: nextOverflow, ...nextRest} = nextState;
-
 			return (
-				!shallowEqual(rest, nextRest) ||
-				!shallowEqual(this.props, nextProps) ||
-				(overflow !== 'ellipsis' && nextOverflow !== 'clip')
+				!shallowEqual(this.state, nextState) ||
+				!shallowEqual(this.props, nextProps)
 			);
 		}
 
@@ -347,9 +343,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			// potentially causing a re-render if rtl changes
 			if (this.textDirectionValidated === false) {
 				this.validateTextDirection(this.props);
-			}
-			if (this.distance === null) {
-				this.calculateMetrics();
 			}
 			if (this.shouldStartMarquee()) {
 				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
@@ -465,11 +458,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.distance = this.calculateDistance(node);
 				this.contentFits = !this.shouldAnimate(this.distance);
 
-				// TODO: Replace with functional setState with React 16
 				const overflow = this.calculateTextOverflow(this.distance);
-				if (!(this.contentFits && overflow === 'clip' && this.state.overflow === 'ellipsis')) {
-					this.setState({overflow});
-				}
+				this.setState(state => {
+					return state.overflow === overflow ? null : {overflow};
+				});
 			}
 		}
 
@@ -480,7 +472,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{Number}			Distance to travel in pixels
 		 */
 		calculateDistance (node) {
-			const distance = Math.ceil(node.scrollWidth - node.clientWidth);
+			const rect = node.getBoundingClientRect();
+			const distance = Math.abs(node.scrollWidth - rect.width);
 			return distance;
 		}
 
@@ -497,7 +490,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{String}				text-overflow value
 		 */
 		calculateTextOverflow (distance) {
-			return distance === 0 ? 'clip' : 'ellipsis';
+			return distance < 1 ? 'clip' : 'ellipsis';
 		}
 
 		/*
@@ -507,7 +500,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{Boolean}				`true` if it should animated
 		 */
 		shouldAnimate (distance) {
-			return distance > 0;
+			return distance >= 1;
 		}
 
 		/*
@@ -517,10 +510,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		start = (delay = this.props.marqueeDelay) => {
-			if (this.props.marqueeDisabled || this.contentFits) {
-				// if marquee isn't necessary (contentFits), do not set `animating` but return
-				// `true` to mark it complete if its synchronized so it doesn't block other
-				// instances.
+			if (this.props.marqueeDisabled) {
+				// if marquee isn't necessary, do not set `animating` but return `true` to mark it
+				// complete if it's synchronized so it doesn't block other instances.
 				return true;
 			} else if (!this.state.animating) {
 				// Don't need to worry about this.timerState because if we're sync, we were just
@@ -645,7 +637,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleResize = () => {
 			if (this.node && !this.props.marqueeDisabled) {
 				this.invalidateMetrics();
-				this.calculateMetrics();
 				if (this.state.animating) {
 					this.cancelAnimation();
 					this.resetAnimation();
@@ -665,9 +656,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleFocus = (ev) => {
 			this.isFocused = true;
 			if (!this.sync) {
-				this.calculateMetrics();
-
-				if (!this.state.animating && !this.contentFits) {
+				if (!this.state.animating) {
 					this.startAnimation();
 				}
 			}

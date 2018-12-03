@@ -2,6 +2,36 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [2.2.7] - 2018-11-21
+
+No significant changes.
+
+## [2.2.6] - 2018-11-15
+
+No significant changes.
+
+## [2.2.5] - 2018-11-05
+
+No significant changes.
+
+## [2.2.4] - 2018-10-29
+
+No significant changes.
+
+## [2.2.3] - 2018-10-22
+
+No significant changes.
+
+## [2.2.2] - 2018-10-15
+
+### Fixed
+
+- `core/util.Job` to cancel existing scheduled `idle()` jobs before scheduling another
+
+## [2.2.1] - 2018-10-09
+
+No significant changes.
+
 ## [2.2.0] - 2018-10-02
 
 No significant changes.

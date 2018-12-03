@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed item component and interactive togglable switch.
+ * Provides Moonstone-themed item component and interactive toggleable switch.
  *
  * @example
  * <SwitchItem>

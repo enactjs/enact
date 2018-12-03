@@ -14,8 +14,7 @@
  */
 
 import '../src/glue';
-import {getResBundle} from '../src/resBundle';
-import IString from '../ilib/lib/IString';
+import {getIStringFromBundle, getResBundle} from '../src/resBundle';
 
 /**
  * Maps a string or key/value object to a translated string for the current locale.
@@ -28,12 +27,8 @@ import IString from '../ilib/lib/IString';
  */
 function toIString (str) {
 	const rb = getResBundle();
-	const isObject = typeof str === 'object';
-	if (rb) {
-		return isObject ? rb.getString(str.value, str.key) : rb.getString(str);
-	}
 
-	return new IString(isObject ? str.value : str);
+	return getIStringFromBundle(str, rb);
 }
 
 /**

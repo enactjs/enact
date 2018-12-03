@@ -2,6 +2,44 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [2.2.7] - 2018-11-21
+
+### Fixed
+
+- `ui/Marquee` to avoid very small animations
+
+## [2.2.6] - 2018-11-15
+
+### Fixed
+
+- `ui/Marquee` to handle contents which overflow their containers only slightly
+
+## [2.2.5] - 2018-11-05
+
+### Fixed
+
+- `ui/Transition` to better support layout after changing children
+
+## [2.2.4] - 2018-10-29
+
+No significant changes.
+
+## [2.2.3] - 2018-10-22
+
+No significant changes.
+
+## [2.2.2] - 2018-10-15
+
+### Fixed
+
+- `ui/Scroller` slowed scrolling behavior when repeatedly requesting a scroll to the same position
+
+## [2.2.1] - 2018-10-09
+
+### Fixed
+
+- `ui/Marquee` to prevent restarting animation after blurring just before the previous animation completed
+
 ## [2.2.0] - 2018-10-02
 
 ### Added
@@ -17,6 +55,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Touchable` to correctly handle a hold cancelled from an onHold handler
+- `ui/Marquee.MarqueeDecorator` to handle situations where lazily loaded CSS could cause marquee to not start correctly
 
 ## [2.1.4] - 2018-09-17
 

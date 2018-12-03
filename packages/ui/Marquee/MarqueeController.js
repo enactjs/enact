@@ -19,7 +19,7 @@ const STATE = {
 const contextTypes = {
 	/**
 	 * Called by `Marquee` instances when marqueeing is canceled (e.g. when blurring a `Marquee`
-	 * set to `marqueeOn='focus'`)
+	 * set to `marqueeOn='focus'`).
 	 *
 	 * @type {Function}
 	 * @memberof ui/Marquee.MarqueeController.contextTypes
@@ -27,7 +27,7 @@ const contextTypes = {
 	cancel: PropTypes.func,
 
 	/**
-	 * Called by `Marquee` instances when marqueeing has completed
+	 * Called by `Marquee` instances when marqueeing has completed.
 	 *
 	 * @type {Function}
 	 * @memberof ui/Marquee.MarqueeController.contextTypes
@@ -35,7 +35,7 @@ const contextTypes = {
 	complete: PropTypes.func,
 
 	/**
-	 * Called by `Marquee` instances when hovered
+	 * Called by `Marquee` instances when hovered.
 	 *
 	 * @type {Function}
 	 * @memberof ui/Marquee.MarqueeController.contextTypes
@@ -43,7 +43,7 @@ const contextTypes = {
 	enter: PropTypes.func,
 
 	/**
-	 * Called by `Marquee` instances when unhovered
+	 * Called by `Marquee` instances when unhovered.
 	 *
 	 * @type {Function}
 	 * @memberof ui/Marquee.MarqueeController.contextTypes
@@ -51,7 +51,11 @@ const contextTypes = {
 	leave: PropTypes.func,
 
 	/**
-	 * Called to register a `Marquee` instance to be synchronized
+	 * Called to register a `Marquee` instance to be synchronized.
+	 *
+	 * Accepts a configuration object with `start` and `stop` members. These correspond to methods
+	 * on the instance to start and stop marqueeing. The start method can return `true` if no
+	 * marqueeing needs to occur, which will mark the marquee complete.
 	 *
 	 * @type {Function}
 	 * @memberof ui/Marquee.MarqueeController.contextTypes
@@ -60,8 +64,7 @@ const contextTypes = {
 
 	/**
 	 * Called by `Marquee` instances when marqueeing is started (e.g. when focusing a `Marquee`
-	 * set to `marqueeOn='focus'`). If the Marquee instance should not or does not need to marquee,
-	 * the function can return `true` to mark itself complete.
+	 * set to `marqueeOn='focus'`).
 	 *
 	 * @type {Function}
 	 * @memberof ui/Marquee.MarqueeController.contextTypes
@@ -69,7 +72,7 @@ const contextTypes = {
 	start: PropTypes.func,
 
 	/**
-	 * Called to unregister a synchronized `Marquee` instance
+	 * Called to unregister a synchronized `Marquee` instance.
 	 *
 	 * @type {Function}
 	 * @memberof ui/Marquee.MarqueeController.contextTypes
@@ -79,7 +82,7 @@ const contextTypes = {
 
 
 /**
- * Default configuration parameters for {@link ui/Marquee.MarqueeController}
+ * Default configuration parameters for {@link ui/Marquee.MarqueeController}.
  *
  * @type {Object}
  * @memberof ui/Marquee.MarqueeController
@@ -89,7 +92,7 @@ const defaultConfig = {
 	/**
 	 * When `true`, any `onFocus` events that bubble to the controller will start the contained
 	 * `Marquee` instances. This is useful when a component contains `Marquee` instances that need to be
-	 * started with sibling components are focused.
+	 * started when sibling components are focused.
 	 *
 	 * @type {Boolean}
 	 * @default false

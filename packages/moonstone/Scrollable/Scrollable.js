@@ -122,6 +122,15 @@ class ScrollableBase extends Component {
 		'data-spotlight-id': PropTypes.string,
 
 		/**
+		 * Animate while scrolling
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		animate: PropTypes.bool,
+
+		/**
 		 * Direction of the list or the scroller.
 		 * `'both'` could be only used for[Scroller]{@link moonstone/Scroller.Scroller}.
 		 *
@@ -205,6 +214,7 @@ class ScrollableBase extends Component {
 
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
+		animate: false,
 		focusableScrollbar: false,
 		overscrollEffectOn: {
 			arrowKey: false,
@@ -265,11 +275,17 @@ class ScrollableBase extends Component {
 			focusedItem.blur();
 		}
 
-		if (
+		if ((
 			direction === 'vertical' && this.uiRef.canScrollVertically(bounds) ||
 			direction === 'horizontal' && this.uiRef.canScrollHorizontally(bounds)
-		) {
+		) && !this.props['data-spotlight-container-disabled']) {
 			this.childRef.setContainerDisabled(true);
+		}
+	}
+
+	onMouseDown = (ev) => {
+		if (this.props['data-spotlight-container-disabled']) {
+			ev.preventDefault();
 		}
 	}
 
@@ -285,7 +301,9 @@ class ScrollableBase extends Component {
 
 		if (delta !== 0) {
 			this.isWheeling = true;
-			this.childRef.setContainerDisabled(true);
+			if (!this.props['data-spotlight-container-disabled']) {
+				this.childRef.setContainerDisabled(true);
+			}
 		}
 	}
 
@@ -440,7 +458,11 @@ class ScrollableBase extends Component {
 
 		forward('onKeyDown', ev, this.props);
 
-		this.animateOnFocus = true;
+		if (isPageUp(keyCode) || isPageDown(keyCode)) {
+			ev.preventDefault();
+		}
+
+		this.animateOnFocus = this.props.animate;
 
 		if (!repeat && this.hasFocus()) {
 			const {overscrollEffectOn} = this.props;
@@ -505,7 +527,9 @@ class ScrollableBase extends Component {
 	}
 
 	stop = () => {
-		this.childRef.setContainerDisabled(false);
+		if (!this.props['data-spotlight-container-disabled']) {
+			this.childRef.setContainerDisabled(false);
+		}
 		this.focusOnItem();
 		this.lastScrollPositionOnFocus = null;
 		this.isWheeling = false;
@@ -673,12 +697,21 @@ class ScrollableBase extends Component {
 
 	onVoice = (e) => {
 		const
-			scroll = e && e.detail && e.detail.scroll,
+			isHorizontal = this.props.direction === 'horizontal',
 			isRtl = this.uiRef.state.rtl,
 			{scrollTop, scrollLeft} = this.uiRef,
 			{maxLeft, maxTop} = this.uiRef.getScrollBounds(),
 			verticalDirection = ['up', 'down', 'top', 'bottom'],
-			horizontalDirection = ['left', 'right', 'leftmost', 'rightmost'];
+			horizontalDirection = isRtl ? ['right', 'left', 'rightmost', 'leftmost'] : ['left', 'right', 'leftmost', 'rightmost'],
+			movement = ['previous', 'next', 'first', 'last'];
+
+		let
+			scroll = e && e.detail && e.detail.scroll,
+			index = movement.indexOf(scroll);
+
+		if (index > -1) {
+			scroll = isHorizontal ? horizontalDirection[index] : verticalDirection[index];
+		}
 
 		this.voiceControlDirection = verticalDirection.includes(scroll) && 'vertical' || horizontalDirection.includes(scroll) && 'horizontal' || null;
 
@@ -712,6 +745,7 @@ class ScrollableBase extends Component {
 	render () {
 		const
 			{
+				animate,
 				childRenderer,
 				'data-spotlight-container': spotlightContainer,
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
@@ -737,8 +771,10 @@ class ScrollableBase extends Component {
 				addEventListeners={this.addEventListeners}
 				applyOverscrollEffect={this.applyOverscrollEffect}
 				clearOverscrollEffect={this.clearOverscrollEffect}
+				noAnimation={!animate}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
+				onMouseDown={this.onMouseDown}
 				onWheel={this.onWheel}
 				ref={this.initUiRef}
 				removeEventListeners={this.removeEventListeners}
