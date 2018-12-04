@@ -118,7 +118,7 @@ class ScrollerBase extends Component {
 	 */
 	getSpotlightContainerForNode = (node) => {
 		do {
-			if (node.dataset.spotlightId && node.dataset.spotlightContainer) {
+			if (node.dataset.spotlightId && node.dataset.spotlightContainer && !node.dataset.expandableContainer) {
 				return node;
 			}
 		} while ((node = node.parentNode) && node !== this.uiRef.containerRef);
