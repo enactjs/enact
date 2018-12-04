@@ -1026,9 +1026,7 @@ class ScrollableBase extends Component {
 		}
 
 		this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirX, dirY);
-		if (this.scrolling) {
-			this.forwardScrollEvent('onScroll');
-		}
+		this.forwardScrollEvent('onScroll');
 	}
 
 	stop () {
