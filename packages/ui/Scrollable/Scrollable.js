@@ -944,7 +944,7 @@ class ScrollableBase extends Component {
 			this.scrolling = true;
 			this.forwardScrollEvent('onScrollStart');
 		}
-		this.scrollStopJob.start();
+		this.scrollStopJob.stop();
 
 		if (Math.abs(maxLeft - targetX) < epsilon) {
 			targetX = maxLeft;
@@ -1028,7 +1028,6 @@ class ScrollableBase extends Component {
 		this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirX, dirY);
 		if (this.scrolling) {
 			this.forwardScrollEvent('onScroll');
-			this.scrollStopJob.start();
 		}
 	}
 
@@ -1042,6 +1041,9 @@ class ScrollableBase extends Component {
 		}
 		if (this.props.stop) {
 			this.props.stop();
+		}
+		if (this.scrolling) {
+			this.scrollStopJob.start();
 		}
 	}
 
