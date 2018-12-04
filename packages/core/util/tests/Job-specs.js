@@ -133,7 +133,7 @@ describe('Job', () => {
 	});
 
 	describe('#promise', function () {
-		it('should throw when passed a non-thenable argument', function (done) {
+		test('should throw when passed a non-thenable argument', done => {
 			const j = new Job(() => done(new Error('Unexpected job execution')));
 			try {
 				j.promise({});
@@ -142,7 +142,7 @@ describe('Job', () => {
 			}
 		});
 
-		it('should support a non-Promise, thenable argument', function (done) {
+		test('should support a non-Promise, thenable argument', done => {
 			const j = new Job(() => done());
 			try {
 				j.promise({
@@ -153,12 +153,12 @@ describe('Job', () => {
 			}
 		});
 
-		it('should start job for a resolved promise', function (done) {
+		test('should start job for a resolved promise', done => {
 			const j = new Job(() => done());
 			j.promise(Promise.resolve(true));
 		});
 
-		it('should not start job for a rejected promise', function (done) {
+		test('should not start job for a rejected promise', done => {
 			const j = new Job(() => {
 				done(new Error('Job ran for rejected promise'));
 			});
@@ -166,7 +166,7 @@ describe('Job', () => {
 			setTimeout(done, 10);
 		});
 
-		it('should not start job when stopped before promise resolves', function (done) {
+		test('should not start job when stopped before promise resolves', done => {
 			const j = new Job(() => {
 				done(new Error('Job ran for stopped promise'));
 			});
@@ -175,27 +175,27 @@ describe('Job', () => {
 			setTimeout(done, 30);
 		});
 
-		it('should not start job when another is started', function (done) {
+		test('should not start job when another is started', done => {
 			const j = new Job((value) => {
-				expect(value).to.equal(2);
+				expect(value).toBe(2);
 				done();
 			});
 			j.promise(new Promise(resolve => resolve(1)));
 			j.promise(new Promise(resolve => resolve(2)));
 		});
 
-		it('should return the value from the job to the resolved promise', function (done) {
+		test('should return the value from the job to the resolved promise', done => {
 			const j = new Job(() => 'job value');
 			j.promise(Promise.resolve(true)).then(value => {
-				expect(value).to.equal('job value');
+				expect(value).toBe('job value');
 				done();
 			});
 		});
 
-		it('should not return the value from the job to the replaced promise', function (done) {
+		test('should not return the value from the job to the replaced promise', done => {
 			const j = new Job(() => 'job value');
 			j.promise(Promise.resolve(true)).then(value => {
-				expect(value).to.not.exist();
+				expect(value).toBeUndefined();
 				done();
 			});
 			j.promise(Promise.resolve(true)).then(() => done());
