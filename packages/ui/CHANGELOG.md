@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Maruqee` to display an ellipsis when changing to text that no longer fits within its bounds
+- `ui/Marquee` to display an ellipsis when changing to text that no longer fits within its bounds
 
 ## [2.2.7] - 2018-11-21
 
