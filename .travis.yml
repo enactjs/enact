@@ -7,7 +7,7 @@ cache:
     - $(npm config get cache)
 install:
     - npm config set prefer-offline true
-    - npm install -g enactjs/cli#master
+    - npm install -g @enact/cli
     - npm install
     - npm run bootstrap
 script:
