@@ -77,9 +77,9 @@ describe('SpotlightContainerDecorator', () => {
 
 			const node = document.createElement('div');
 			const subject = mount(
-	<Component spotlightId="outer-container">
-	<Component spotlightId="inner-container" />
-	<Component spotlightId="self-only-container" />
+				<Component spotlightId="outer-container">
+					<Component spotlightId="inner-container" />
+					<Component spotlightId="self-only-container" />
 				</Component>,
 				{attachTo: node}
 			);

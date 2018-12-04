@@ -143,44 +143,44 @@ describe('pointer', () => {
 		});
 
 		test(
-            'should return true if the pointer has moved and current is falsy',
-            () => {
-                const expected = true;
-                const actual = notifyPointerMove(null, null, 5, 5);
+			'should return true if the pointer has moved and current is falsy',
+			() => {
+				const expected = true;
+				const actual = notifyPointerMove(null, null, 5, 5);
 
-                expect(actual).toBe(expected);
-            }
-        );
-
-		test(
-            'should return false if the pointer has moved and target is within current',
-            () => {
-                const current = document.createElement('div');
-                const target = document.createElement('div');
-                current.appendChild(target);
-
-                notifyPointerMove(null, current, 5, 5);
-
-                const expected = false;
-                const actual = notifyPointerMove(current, target, 10, 10);
-
-                expect(actual).toBe(expected);
-            }
-        );
+				expect(actual).toBe(expected);
+			}
+		);
 
 		test(
-            'should return true if the pointer has moved and target is not within current',
-            () => {
-                const current = document.createElement('div');
-                const target = document.createElement('div');
+			'should return false if the pointer has moved and target is within current',
+			() => {
+				const current = document.createElement('div');
+				const target = document.createElement('div');
+				current.appendChild(target);
 
-                notifyPointerMove(null, current, 5, 5);
+				notifyPointerMove(null, current, 5, 5);
 
-                const expected = true;
-                const actual = notifyPointerMove(current, target, 10, 10);
+				const expected = false;
+				const actual = notifyPointerMove(current, target, 10, 10);
 
-                expect(actual).toBe(expected);
-            }
-        );
+				expect(actual).toBe(expected);
+			}
+		);
+
+		test(
+			'should return true if the pointer has moved and target is not within current',
+			() => {
+				const current = document.createElement('div');
+				const target = document.createElement('div');
+
+				notifyPointerMove(null, current, 5, 5);
+
+				const expected = true;
+				const actual = notifyPointerMove(current, target, 10, 10);
+
+				expect(actual).toBe(expected);
+			}
+		);
 	});
 });

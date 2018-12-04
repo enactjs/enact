@@ -264,20 +264,20 @@ describe('container', () => {
 		));
 
 		test(
-            'should not any spottables within a disabled ancestor container',
-            testScenario(
-                scenarios.spottablesInNestedDisabledContainer,
-                () => {
-                    configureContainer('container');
-                    configureContainer('child');
+			'should not any spottables within a disabled ancestor container',
+			testScenario(
+				scenarios.spottablesInNestedDisabledContainer,
+				() => {
+					configureContainer('container');
+					configureContainer('child');
 
-                    const expected = 0;
-                    const actual = getSpottableDescendants('child').length;
+					const expected = 0;
+					const actual = getSpottableDescendants('child').length;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test('should return spottables and containers in source order', testScenario(
 			scenarios.mixedOrder,
@@ -292,17 +292,17 @@ describe('container', () => {
 
 	describe('#getContainersForNode', () => {
 		test(
-            'should return the rootContainerId when no other containers exist',
-            testScenario(
-                scenarios.onlySpottables,
-                (root) => {
-                    const expected = [rootContainerId];
-                    const actual = getContainersForNode(root.lastChild);
+			'should return the rootContainerId when no other containers exist',
+			testScenario(
+				scenarios.onlySpottables,
+				(root) => {
+					const expected = [rootContainerId];
+					const actual = getContainersForNode(root.lastChild);
 
-                    expect(actual).toEqual(expected);
-                }
-            )
-        );
+					expect(actual).toEqual(expected);
+				}
+			)
+		);
 
 		test('should return all ancestor container ids', testScenario(
 			scenarios.complexTree,
@@ -352,16 +352,16 @@ describe('container', () => {
 		});
 
 		test(
-            'should return false for nodes that do not have the container attribute',
-            () => {
-                const div = document.createElement('div');
+			'should return false for nodes that do not have the container attribute',
+			() => {
+				const div = document.createElement('div');
 
-                const expected = false;
-                const actual = isContainer(div);
+				const expected = false;
+				const actual = isContainer(div);
 
-                expect(actual).toBe(expected);
-            }
-        );
+				expect(actual).toBe(expected);
+			}
+		);
 
 		test('should return true for a configured container id', () => {
 			const expected = true;
@@ -383,239 +383,239 @@ describe('container', () => {
 		afterEach(teardownContainers);
 
 		test.skip(
-            'should return the last focused element when enterTo is "last-focused"',
-            testScenario(
-                scenarios.containerWithDefaultAndLastFocused,
-                (root) => {
-                    configureContainer('container', {
-                        enterTo: 'last-focused',
-                        defaultElement: '.spottable-default'
-                    });
+			'should return the last focused element when enterTo is "last-focused"',
+			testScenario(
+				scenarios.containerWithDefaultAndLastFocused,
+				(root) => {
+					configureContainer('container', {
+						enterTo: 'last-focused',
+						defaultElement: '.spottable-default'
+					});
 
-                    setContainerLastFocusedElement(root.querySelector('#lastFocused'), ['container']);
+					setContainerLastFocusedElement(root.querySelector('#lastFocused'), ['container']);
 
-                    const expected = 'lastFocused';
-                    const actual = getContainerFocusTarget('container').id;
+					const expected = 'lastFocused';
+					const actual = getContainerFocusTarget('container').id;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test.skip(
-            'should return the default spottable element when enterTo is "last-focused" but no element has been focused',
-            testScenario(
-                scenarios.containerWithDefaultAndLastFocused,
-                () => {
-                    configureContainer('container', {
-                        enterTo: 'last-focused',
-                        defaultElement: '.spottable-default'
-                    });
+			'should return the default spottable element when enterTo is "last-focused" but no element has been focused',
+			testScenario(
+				scenarios.containerWithDefaultAndLastFocused,
+				() => {
+					configureContainer('container', {
+						enterTo: 'last-focused',
+						defaultElement: '.spottable-default'
+					});
 
-                    const expected = 'spottableDefault';
-                    const actual = getContainerFocusTarget('container').id;
+					const expected = 'spottableDefault';
+					const actual = getContainerFocusTarget('container').id;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test(
-            'should return the first spottable element when enterTo is "last-focused" and defaultElement is not configured',
-            testScenario(
-                scenarios.containerWithDefaultAndLastFocused,
-                () => {
-                    configureContainer('container', {
-                        enterTo: 'last-focused'
-                    });
+			'should return the first spottable element when enterTo is "last-focused" and defaultElement is not configured',
+			testScenario(
+				scenarios.containerWithDefaultAndLastFocused,
+				() => {
+					configureContainer('container', {
+						enterTo: 'last-focused'
+					});
 
-                    const expected = 'firstSpottable';
-                    const actual = getContainerFocusTarget('container').id;
+					const expected = 'firstSpottable';
+					const actual = getContainerFocusTarget('container').id;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test(
-            'should return the first spottable element when enterTo is "last-focused" and defaultElement is not found',
-            testScenario(
-                scenarios.containerWithDefaultAndLastFocused,
-                () => {
-                    configureContainer('container', {
-                        enterTo: 'last-focused',
-                        // configured, but not found
-                        defaultElement: '[data-default-spottable]'
-                    });
+			'should return the first spottable element when enterTo is "last-focused" and defaultElement is not found',
+			testScenario(
+				scenarios.containerWithDefaultAndLastFocused,
+				() => {
+					configureContainer('container', {
+						enterTo: 'last-focused',
+						// configured, but not found
+						defaultElement: '[data-default-spottable]'
+					});
 
-                    const expected = 'firstSpottable';
-                    const actual = getContainerFocusTarget('container').id;
+					const expected = 'firstSpottable';
+					const actual = getContainerFocusTarget('container').id;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
-
-		test.skip(
-            'should return the default spottable element when enterTo is "default-element"',
-            testScenario(
-                scenarios.containerWithDefaultAndLastFocused,
-                () => {
-                    configureContainer('container', {
-                        enterTo: 'default-element',
-                        defaultElement: '.spottable-default'
-                    });
-
-                    const expected = 'spottableDefault';
-                    const actual = getContainerFocusTarget('container').id;
-
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test.skip(
-            'should return the default spottable element when enterTo is "default-element" and defaultElement contains an array of selectors',
-            testScenario(
-                scenarios.containerWithDefaultAndLastFocused,
-                () => {
-                    configureContainer('container', {
-                        enterTo: 'default-element',
-                        defaultElement: ['.does-not-exist', '.spottable-default']
-                    });
+			'should return the default spottable element when enterTo is "default-element"',
+			testScenario(
+				scenarios.containerWithDefaultAndLastFocused,
+				() => {
+					configureContainer('container', {
+						enterTo: 'default-element',
+						defaultElement: '.spottable-default'
+					});
 
-                    const expected = 'spottableDefault';
-                    const actual = getContainerFocusTarget('container').id;
+					const expected = 'spottableDefault';
+					const actual = getContainerFocusTarget('container').id;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
+
+		test.skip(
+			'should return the default spottable element when enterTo is "default-element" and defaultElement contains an array of selectors',
+			testScenario(
+				scenarios.containerWithDefaultAndLastFocused,
+				() => {
+					configureContainer('container', {
+						enterTo: 'default-element',
+						defaultElement: ['.does-not-exist', '.spottable-default']
+					});
+
+					const expected = 'spottableDefault';
+					const actual = getContainerFocusTarget('container').id;
+
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		// FIXME: This is testing a previously supported feature (setting a node as defaultElement)
 		// which was never documented and should be removed in a future release.
 		test(
-            'should return the default spottable element when enterTo is "default-element" and defaultElement contains an array of selectors wiht a node reference',
-            testScenario(
-                scenarios.containerWithDefaultAndLastFocused,
-                (root) => {
-                    configureContainer('container', {
-                        enterTo: 'default-element',
-                        defaultElement: [root.querySelector('#lastFocused'), '.spottable-default']
-                    });
+			'should return the default spottable element when enterTo is "default-element" and defaultElement contains an array of selectors wiht a node reference',
+			testScenario(
+				scenarios.containerWithDefaultAndLastFocused,
+				(root) => {
+					configureContainer('container', {
+						enterTo: 'default-element',
+						defaultElement: [root.querySelector('#lastFocused'), '.spottable-default']
+					});
 
-                    const expected = 'lastFocused';
-                    const actual = getContainerFocusTarget('container').id;
+					const expected = 'lastFocused';
+					const actual = getContainerFocusTarget('container').id;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
-
-		test(
-            'should return the first spottable element when enterTo is "default-element" but defaultElement is not configured',
-            testScenario(
-                scenarios.containerWithDefaultAndLastFocused,
-                () => {
-                    configureContainer('container', {
-                        enterTo: 'default-element'
-                    });
-
-                    const expected = 'firstSpottable';
-                    const actual = getContainerFocusTarget('container').id;
-
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test(
-            'should return the first spottable element when enterTo is "default-element" but defaultElement is not found',
-            testScenario(
-                scenarios.containerWithDefaultAndLastFocused,
-                () => {
-                    configureContainer('container', {
-                        enterTo: 'default-element',
-                        defaultElement: '[data-default-spottable]'
-                    });
+			'should return the first spottable element when enterTo is "default-element" but defaultElement is not configured',
+			testScenario(
+				scenarios.containerWithDefaultAndLastFocused,
+				() => {
+					configureContainer('container', {
+						enterTo: 'default-element'
+					});
 
-                    const expected = 'firstSpottable';
-                    const actual = getContainerFocusTarget('container').id;
+					const expected = 'firstSpottable';
+					const actual = getContainerFocusTarget('container').id;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
+
+		test(
+			'should return the first spottable element when enterTo is "default-element" but defaultElement is not found',
+			testScenario(
+				scenarios.containerWithDefaultAndLastFocused,
+				() => {
+					configureContainer('container', {
+						enterTo: 'default-element',
+						defaultElement: '[data-default-spottable]'
+					});
+
+					const expected = 'firstSpottable';
+					const actual = getContainerFocusTarget('container').id;
+
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test.skip(
-            'should return the default element when enterTo is "default-element" and defaultElement is within a subcontainer',
-            testScenario(
-                scenarios.complexTree,
-                () => {
-                    configureContainer('first-container', {
-                        enterTo: 'default-element',
-                        defaultElement: `[${containerAttribute}='second-container'] > .spottable`
-                    });
-                    configureContainer('second-container');
+			'should return the default element when enterTo is "default-element" and defaultElement is within a subcontainer',
+			testScenario(
+				scenarios.complexTree,
+				() => {
+					configureContainer('first-container', {
+						enterTo: 'default-element',
+						defaultElement: `[${containerAttribute}='second-container'] > .spottable`
+					});
+					configureContainer('second-container');
 
-                    const expected = 'second-container';
-                    const actual = getContainerFocusTarget('first-container').parentNode.dataset.spotlightId;
+					const expected = 'second-container';
+					const actual = getContainerFocusTarget('first-container').parentNode.dataset.spotlightId;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
-
-		test(
-            'should return the first spottable element when enterTo is "default-element" and defaultElement is within a disabled subcontainer',
-            testScenario(
-                scenarios.complexTree,
-                () => {
-                    configureContainer('second-container', {
-                        enterTo: 'default-element',
-                        defaultElement: `[${containerAttribute}='third-container'] > .spottable`
-                    });
-                    configureContainer('third-container');
-
-                    const expected = 'secondContainerFirstSpottable';
-                    const actual = getContainerFocusTarget('second-container').id;
-
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test(
-            'should return the first spottable element when enterTo is not configured',
-            testScenario(
-                scenarios.containerWithDefaultAndLastFocused,
-                () => {
-                    configureContainer('container');
+			'should return the first spottable element when enterTo is "default-element" and defaultElement is within a disabled subcontainer',
+			testScenario(
+				scenarios.complexTree,
+				() => {
+					configureContainer('second-container', {
+						enterTo: 'default-element',
+						defaultElement: `[${containerAttribute}='third-container'] > .spottable`
+					});
+					configureContainer('third-container');
 
-                    const expected = 'firstSpottable';
-                    const actual = getContainerFocusTarget('container').id;
+					const expected = 'secondContainerFirstSpottable';
+					const actual = getContainerFocusTarget('second-container').id;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
+
+		test(
+			'should return the first spottable element when enterTo is not configured',
+			testScenario(
+				scenarios.containerWithDefaultAndLastFocused,
+				() => {
+					configureContainer('container');
+
+					const expected = 'firstSpottable';
+					const actual = getContainerFocusTarget('container').id;
+
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test.skip(
-            'should return the default element when enterTo is not configured and defaultElement is configured',
-            testScenario(
-                scenarios.containerWithDefaultAndLastFocused,
-                () => {
-                    configureContainer('container', {
-                        defaultElement: '.spottable-default'
-                    });
+			'should return the default element when enterTo is not configured and defaultElement is configured',
+			testScenario(
+				scenarios.containerWithDefaultAndLastFocused,
+				() => {
+					configureContainer('container', {
+						defaultElement: '.spottable-default'
+					});
 
-                    const expected = 'spottableDefault';
-                    const actual = getContainerFocusTarget('container').id;
+					const expected = 'spottableDefault';
+					const actual = getContainerFocusTarget('container').id;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test.skip('should cascade search into child containers with', testScenario(
 			scenarios.nestedContainersWithDefaultAndLastFocused,
@@ -639,29 +639,29 @@ describe('container', () => {
 		));
 
 		test.skip(
-            'should cascade search into child containers when multiple containers have enterTo configured',
-            testScenario(
-                scenarios.nestedContainersWithDefaultAndLastFocused,
-                (root) => {
-                    configureContainer('container', {
-                        enterTo: 'last-focused',
-                        defaultElement: '.spottable-default'
-                    });
+			'should cascade search into child containers when multiple containers have enterTo configured',
+			testScenario(
+				scenarios.nestedContainersWithDefaultAndLastFocused,
+				(root) => {
+					configureContainer('container', {
+						enterTo: 'last-focused',
+						defaultElement: '.spottable-default'
+					});
 
-                    configureContainer('child', {
-                        enterTo: 'last-focused',
-                        defaultElement: '.spottable-default'
-                    });
+					configureContainer('child', {
+						enterTo: 'last-focused',
+						defaultElement: '.spottable-default'
+					});
 
-                    setContainerLastFocusedElement(root.querySelector('#lastChildFocused'), [rootContainerId, 'container', 'child']);
+					setContainerLastFocusedElement(root.querySelector('#lastChildFocused'), [rootContainerId, 'container', 'child']);
 
-                    const expected = 'lastChildFocused';
-                    const actual = getContainerFocusTarget('container').id;
+					const expected = 'lastChildFocused';
+					const actual = getContainerFocusTarget('container').id;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test('should skip empty subcontainers', testScenario(
 			scenarios.emptySubcontainer,
@@ -699,30 +699,30 @@ describe('container', () => {
 		});
 
 		test(
-            'should return true for any node when not verifying selector and without a navigableFilter',
-            testScenario(
-                scenarios.nonSpottableSiblings,
-                (root) => {
-                    const expected = true;
-                    const actual = isNavigable(root.querySelector('.other'), rootContainerId);
+			'should return true for any node when not verifying selector and without a navigableFilter',
+			testScenario(
+				scenarios.nonSpottableSiblings,
+				(root) => {
+					const expected = true;
+					const actual = isNavigable(root.querySelector('.other'), rootContainerId);
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test(
-            'should return true for spottable children when verifying selector',
-            testScenario(
-                scenarios.onlySpottables,
-                (root) => {
-                    const expected = true;
-                    const actual = isNavigable(root.querySelector('.spottable'), rootContainerId, true);
+			'should return true for spottable children when verifying selector',
+			testScenario(
+				scenarios.onlySpottables,
+				(root) => {
+					const expected = true;
+					const actual = isNavigable(root.querySelector('.spottable'), rootContainerId, true);
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test('should return true for containers', testScenario(
 			scenarios.onlyContainers,
@@ -772,76 +772,76 @@ describe('container', () => {
 		));
 
 		test(
-            'should update lastFocusedElement to the node\'s container id when element is within a container with enterTo configured',
-            testScenario(
-                scenarios.complexTree,
-                (root) => {
-                    const item = root
-                        .querySelectorAll(`[${containerAttribute}='first-container'] .spottable`)
-                        .item(0);
-                    configureContainer('first-container', {
-                        enterTo: 'last-focused'
-                    });
+			'should update lastFocusedElement to the node\'s container id when element is within a container with enterTo configured',
+			testScenario(
+				scenarios.complexTree,
+				(root) => {
+					const item = root
+						.querySelectorAll(`[${containerAttribute}='first-container'] .spottable`)
+						.item(0);
+					configureContainer('first-container', {
+						enterTo: 'last-focused'
+					});
 
-                    setContainerLastFocusedElement(
-                        item,
-                        getContainersForNode(item)
-                    );
+					setContainerLastFocusedElement(
+						item,
+						getContainersForNode(item)
+					);
 
-                    const expected = 'first-container';
-                    const actual = getContainerConfig(rootContainerId).lastFocusedElement;
+					const expected = 'first-container';
+					const actual = getContainerConfig(rootContainerId).lastFocusedElement;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
-
-		test(
-            'should ignore sub-containers that does not have enterTo configured',
-            testScenario(
-                scenarios.complexTree,
-                (root) => {
-                    const item = root
-                        .querySelectorAll(`[${containerAttribute}='second-container'] .spottable`)
-                        .item(0);
-
-                    setContainerLastFocusedElement(
-                        item,
-                        getContainersForNode(item)
-                    );
-
-                    const expected = item;
-                    const actual = getContainerConfig(rootContainerId).lastFocusedElement;
-
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test(
-            'should update lastFocusedElement to the first sub-container that has enterTo configured',
-            testScenario(
-                scenarios.complexTree,
-                (root) => {
-                    const item = root
-                        .querySelectorAll(`[${containerAttribute}='second-container'] .spottable`)
-                        .item(0);
-                    configureContainer('second-container', {
-                        enterTo: 'last-focused'
-                    });
+			'should ignore sub-containers that does not have enterTo configured',
+			testScenario(
+				scenarios.complexTree,
+				(root) => {
+					const item = root
+						.querySelectorAll(`[${containerAttribute}='second-container'] .spottable`)
+						.item(0);
 
-                    setContainerLastFocusedElement(
-                        item,
-                        getContainersForNode(item)
-                    );
+					setContainerLastFocusedElement(
+						item,
+						getContainersForNode(item)
+					);
 
-                    const expected = 'second-container';
-                    const actual = getContainerConfig(rootContainerId).lastFocusedElement;
+					const expected = item;
+					const actual = getContainerConfig(rootContainerId).lastFocusedElement;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
+
+		test(
+			'should update lastFocusedElement to the first sub-container that has enterTo configured',
+			testScenario(
+				scenarios.complexTree,
+				(root) => {
+					const item = root
+						.querySelectorAll(`[${containerAttribute}='second-container'] .spottable`)
+						.item(0);
+					configureContainer('second-container', {
+						enterTo: 'last-focused'
+					});
+
+					setContainerLastFocusedElement(
+						item,
+						getContainersForNode(item)
+					);
+
+					const expected = 'second-container';
+					const actual = getContainerConfig(rootContainerId).lastFocusedElement;
+
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 	});
 
 	describe('#unmountContainer', () => {
@@ -849,151 +849,151 @@ describe('container', () => {
 		afterEach(teardownContainers);
 
 		test(
-            'should return element when last focused is not within a subcontainer with enterTo',
-            testScenario(
-                scenarios.onlySpottables,
-                (root) => {
-                    const index = 3;
-                    const item = root.querySelectorAll('.spottable').item(index);
-                    setContainerLastFocusedElement(
-                        item,
-                        getContainersForNode(item)
-                    );
+			'should return element when last focused is not within a subcontainer with enterTo',
+			testScenario(
+				scenarios.onlySpottables,
+				(root) => {
+					const index = 3;
+					const item = root.querySelectorAll('.spottable').item(index);
+					setContainerLastFocusedElement(
+						item,
+						getContainersForNode(item)
+					);
 
-                    unmountContainer(rootContainerId);
+					unmountContainer(rootContainerId);
 
-                    const expected = true;
-                    const actual = getContainerConfig(rootContainerId).lastFocusedKey.element;
+					const expected = true;
+					const actual = getContainerConfig(rootContainerId).lastFocusedKey.element;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
-
-		test(
-            'should return container when last focused is within a subcontainer with enterTo',
-            testScenario(
-                scenarios.complexTree,
-                (root) => {
-                    const item = root
-                        .querySelectorAll(`[${containerAttribute}="first-container"] .spottable`)
-                        .item(1);
-                    configureContainer('first-container', {
-                        enterTo: 'last-focused'
-                    });
-                    setContainerLastFocusedElement(
-                        item,
-                        getContainersForNode(item)
-                    );
-
-                    unmountContainer(rootContainerId);
-
-                    const expected = true;
-                    const actual = getContainerConfig(rootContainerId).lastFocusedKey.container;
-
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test(
-            'should save the index of the node when lastFocusedPersist is undefined',
-            testScenario(
-                scenarios.onlySpottables,
-                (root) => {
-                    const index = 3;
-                    const item = root.querySelectorAll('.spottable').item(index);
-                    setContainerLastFocusedElement(
-                        item,
-                        getContainersForNode(item)
-                    );
+			'should return container when last focused is within a subcontainer with enterTo',
+			testScenario(
+				scenarios.complexTree,
+				(root) => {
+					const item = root
+						.querySelectorAll(`[${containerAttribute}="first-container"] .spottable`)
+						.item(1);
+					configureContainer('first-container', {
+						enterTo: 'last-focused'
+					});
+					setContainerLastFocusedElement(
+						item,
+						getContainersForNode(item)
+					);
 
-                    unmountContainer(rootContainerId);
+					unmountContainer(rootContainerId);
 
-                    const expected = index;
-                    const actual = getContainerConfig(rootContainerId).lastFocusedKey.key;
+					const expected = true;
+					const actual = getContainerConfig(rootContainerId).lastFocusedKey.container;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
-
-		test(
-            'should save a custom key for container-configured lastFocusedPersist',
-            testScenario(
-                scenarios.onlySpottables,
-                (root) => {
-                    const index = 3;
-                    const item = root.querySelectorAll('.spottable').item(3);
-                    configureContainer(rootContainerId, {
-                        lastFocusedPersist: (n, all) => ({
-                            element: true,
-                            key: `item-${all.indexOf(n)}`
-                        })
-                    });
-                    setContainerLastFocusedElement(
-                        item,
-                        getContainersForNode(item)
-                    );
-
-                    unmountContainer(rootContainerId);
-
-                    const expected = `item-${index}`;
-                    const actual = getContainerConfig(rootContainerId).lastFocusedKey.key;
-
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test(
-            'should save the container id as the key when a container with enterTo configured had the last focused item',
-            testScenario(
-                scenarios.complexTree,
-                (root) => {
-                    const item = root
-                        .querySelectorAll(`[${containerAttribute}="first-container"] .spottable`)
-                        .item(1);
-                    configureContainer('first-container', {
-                        enterTo: 'last-focused'
-                    });
-                    setContainerLastFocusedElement(
-                        item,
-                        getContainersForNode(item)
-                    );
+			'should save the index of the node when lastFocusedPersist is undefined',
+			testScenario(
+				scenarios.onlySpottables,
+				(root) => {
+					const index = 3;
+					const item = root.querySelectorAll('.spottable').item(index);
+					setContainerLastFocusedElement(
+						item,
+						getContainersForNode(item)
+					);
 
-                    unmountContainer(rootContainerId);
+					unmountContainer(rootContainerId);
 
-                    const expected = 'first-container';
-                    const actual = getContainerConfig(rootContainerId).lastFocusedKey.key;
+					const expected = index;
+					const actual = getContainerConfig(rootContainerId).lastFocusedKey.key;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test(
-            'should save the index as the key when last focused item is only within containers without enterTo configured',
-            testScenario(
-                scenarios.complexTree,
-                (root) => {
-                    const item = root
-                        .querySelectorAll(`[${containerAttribute}="second-container"] .spottable`)
-                        .item(1);
-                    setContainerLastFocusedElement(
-                        item,
-                        getContainersForNode(item)
-                    );
+			'should save a custom key for container-configured lastFocusedPersist',
+			testScenario(
+				scenarios.onlySpottables,
+				(root) => {
+					const index = 3;
+					const item = root.querySelectorAll('.spottable').item(3);
+					configureContainer(rootContainerId, {
+						lastFocusedPersist: (n, all) => ({
+							element: true,
+							key: `item-${all.indexOf(n)}`
+						})
+					});
+					setContainerLastFocusedElement(
+						item,
+						getContainersForNode(item)
+					);
 
-                    unmountContainer(rootContainerId);
+					unmountContainer(rootContainerId);
 
-                    const expected = 4;
-                    const actual = getContainerConfig(rootContainerId).lastFocusedKey.key;
+					const expected = `item-${index}`;
+					const actual = getContainerConfig(rootContainerId).lastFocusedKey.key;
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
+
+		test(
+			'should save the container id as the key when a container with enterTo configured had the last focused item',
+			testScenario(
+				scenarios.complexTree,
+				(root) => {
+					const item = root
+						.querySelectorAll(`[${containerAttribute}="first-container"] .spottable`)
+						.item(1);
+					configureContainer('first-container', {
+						enterTo: 'last-focused'
+					});
+					setContainerLastFocusedElement(
+						item,
+						getContainersForNode(item)
+					);
+
+					unmountContainer(rootContainerId);
+
+					const expected = 'first-container';
+					const actual = getContainerConfig(rootContainerId).lastFocusedKey.key;
+
+					expect(actual).toBe(expected);
+				}
+			)
+		);
+
+		test(
+			'should save the index as the key when last focused item is only within containers without enterTo configured',
+			testScenario(
+				scenarios.complexTree,
+				(root) => {
+					const item = root
+						.querySelectorAll(`[${containerAttribute}="second-container"] .spottable`)
+						.item(1);
+					setContainerLastFocusedElement(
+						item,
+						getContainersForNode(item)
+					);
+
+					unmountContainer(rootContainerId);
+
+					const expected = 4;
+					const actual = getContainerConfig(rootContainerId).lastFocusedKey.key;
+
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test('should mark the container inactive', testScenario(
 			scenarios.complexTree,
@@ -1014,73 +1014,73 @@ describe('container', () => {
 		afterEach(teardownContainers);
 
 		test(
-            'should be nearest restrict="self-only" container to current if target is not within it',
-            testScenario(
-                scenarios.complexTree,
-                (root) => {
-                    configureContainer('first-container', {
-                        restrict: 'self-only'
-                    });
-                    const current = root.querySelector('[data-spotlight-id="first-container"] .spottable');
-                    const target = root.querySelector('.spottable');
+			'should be nearest restrict="self-only" container to current if target is not within it',
+			testScenario(
+				scenarios.complexTree,
+				(root) => {
+					configureContainer('first-container', {
+						restrict: 'self-only'
+					});
+					const current = root.querySelector('[data-spotlight-id="first-container"] .spottable');
+					const target = root.querySelector('.spottable');
 
-                    setLastContainerFromTarget(current, target);
+					setLastContainerFromTarget(current, target);
 
-                    const expected = 'first-container';
-                    const actual = getLastContainer();
+					const expected = 'first-container';
+					const actual = getLastContainer();
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
-
-		test(
-            'should be use nearest container to target if within current container',
-            testScenario(
-                scenarios.complexTree,
-                (root) => {
-                    configureContainer('first-container', {
-                        restrict: 'none'
-                    });
-                    configureContainer('second-container', {
-                        restrict: 'none'
-                    });
-                    const current = root.querySelector('[data-spotlight-id="first-container"] .spottable');
-                    const target = root.querySelector('[data-spotlight-id="second-container"] .spottable');
-
-                    setLastContainerFromTarget(current, target);
-
-                    const expected = 'second-container';
-                    const actual = getLastContainer();
-
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 
 		test(
-            'should target container if it is restrict="self-only" and contains current container',
-            testScenario(
-                scenarios.complexTree,
-                (root) => {
-                    configureContainer('first-container', {
-                        restrict: 'self-only'
-                    });
-                    configureContainer('second-container', {
-                        restrict: 'none'
-                    });
-                    const current = root.querySelector('[data-spotlight-id="second-container"] .spottable');
-                    const target = root.querySelector('[data-spotlight-id="first-container"]');
+			'should be use nearest container to target if within current container',
+			testScenario(
+				scenarios.complexTree,
+				(root) => {
+					configureContainer('first-container', {
+						restrict: 'none'
+					});
+					configureContainer('second-container', {
+						restrict: 'none'
+					});
+					const current = root.querySelector('[data-spotlight-id="first-container"] .spottable');
+					const target = root.querySelector('[data-spotlight-id="second-container"] .spottable');
 
-                    setLastContainerFromTarget(current, target);
+					setLastContainerFromTarget(current, target);
 
-                    const expected = 'first-container';
-                    const actual = getLastContainer();
+					const expected = 'second-container';
+					const actual = getLastContainer();
 
-                    expect(actual).toBe(expected);
-                }
-            )
-        );
+					expect(actual).toBe(expected);
+				}
+			)
+		);
+
+		test(
+			'should target container if it is restrict="self-only" and contains current container',
+			testScenario(
+				scenarios.complexTree,
+				(root) => {
+					configureContainer('first-container', {
+						restrict: 'self-only'
+					});
+					configureContainer('second-container', {
+						restrict: 'none'
+					});
+					const current = root.querySelector('[data-spotlight-id="second-container"] .spottable');
+					const target = root.querySelector('[data-spotlight-id="first-container"]');
+
+					setLastContainerFromTarget(current, target);
+
+					const expected = 'first-container';
+					const actual = getLastContainer();
+
+					expect(actual).toBe(expected);
+				}
+			)
+		);
 	});
 
 	describe('#getDefaultContainer', () => {
@@ -1174,32 +1174,32 @@ describe('container', () => {
 		afterEach(teardownContainers);
 
 		test(
-            'should include all containers when none are restrict="self-only"',
-            testScenario(
-                scenarios.complexTree,
-                (root) => {
-                    const expected = [rootContainerId, 'first-container', 'second-container'];
-                    const actual = getNavigableContainersForNode(root.querySelector('#secondContainerFirstSpottable'));
+			'should include all containers when none are restrict="self-only"',
+			testScenario(
+				scenarios.complexTree,
+				(root) => {
+					const expected = [rootContainerId, 'first-container', 'second-container'];
+					const actual = getNavigableContainersForNode(root.querySelector('#secondContainerFirstSpottable'));
 
-                    expect(actual).toEqual(expected);
-                }
-            )
-        );
+					expect(actual).toEqual(expected);
+				}
+			)
+		);
 
 		test(
-            'should include all containers within the first restrict="self-only" container (inclusive)',
-            testScenario(
-                scenarios.complexTree,
-                (root) => {
-                    configureContainer('first-container', {restrict: 'self-only'});
+			'should include all containers within the first restrict="self-only" container (inclusive)',
+			testScenario(
+				scenarios.complexTree,
+				(root) => {
+					configureContainer('first-container', {restrict: 'self-only'});
 
-                    const expected = ['first-container', 'second-container'];
-                    const actual = getNavigableContainersForNode(root.querySelector('#secondContainerFirstSpottable'));
+					const expected = ['first-container', 'second-container'];
+					const actual = getNavigableContainersForNode(root.querySelector('#secondContainerFirstSpottable'));
 
-                    expect(actual).toEqual(expected);
-                }
-            )
-        );
+					expect(actual).toEqual(expected);
+				}
+			)
+		);
 	});
 
 	describe('#getContainerNavigableElements', () => {
@@ -1207,16 +1207,16 @@ describe('container', () => {
 		afterEach(teardownContainers);
 
 		test(
-            'should return an empty array for an unconfigured container',
-            testScenario(
-                scenarios.complexTree,
-                () => {
-                    const expected = [];
-                    const actual = getContainerNavigableElements('first-container');
+			'should return an empty array for an unconfigured container',
+			testScenario(
+				scenarios.complexTree,
+				() => {
+					const expected = [];
+					const actual = getContainerNavigableElements('first-container');
 
-                    expect(actual).toEqual(expected);
-                }
-            )
-        );
+					expect(actual).toEqual(expected);
+				}
+			)
+		);
 	});
 });

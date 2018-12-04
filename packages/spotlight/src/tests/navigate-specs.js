@@ -102,43 +102,43 @@ describe('navigate', () => {
 	});
 
 	test(
-        'should return the element "under" when its center is nearest in that direction',
-        () => {
-            const targetRect = getRect(105, 100, 10, 10);
-            const rects = [
-                [100, 110, 10, 10, 'right'],
-                [100, 90, 10, 10, 'left'],
-                [90, 90, 30, 30, 'under'], // completely contains the targetRect
-                [110, 100, 10, 10, 'below']
-            ].map(args => getRect(...args));
+		'should return the element "under" when its center is nearest in that direction',
+		() => {
+			const targetRect = getRect(105, 100, 10, 10);
+			const rects = [
+				[100, 110, 10, 10, 'right'],
+				[100, 90, 10, 10, 'left'],
+				[90, 90, 30, 30, 'under'], // completely contains the targetRect
+				[110, 100, 10, 10, 'below']
+			].map(args => getRect(...args));
 
-            expect(navigate(
-                targetRect,
-                'up',
-                rects,
-                {}
-            )).toBe('under');
+			expect(navigate(
+				targetRect,
+				'up',
+				rects,
+				{}
+			)).toBe('under');
 
-            expect(navigate(
-                targetRect,
-                'down',
-                rects,
-                {}
-            )).toBe('below');
+			expect(navigate(
+				targetRect,
+				'down',
+				rects,
+				{}
+			)).toBe('below');
 
-            expect(navigate(
-                targetRect,
-                'left',
-                rects,
-                {}
-            )).toBe('left');
+			expect(navigate(
+				targetRect,
+				'left',
+				rects,
+				{}
+			)).toBe('left');
 
-            expect(navigate(
-                targetRect,
-                'right',
-                rects,
-                {}
-            )).toBe('right');
-        }
-    );
+			expect(navigate(
+				targetRect,
+				'right',
+				rects,
+				{}
+			)).toBe('right');
+		}
+	);
 });

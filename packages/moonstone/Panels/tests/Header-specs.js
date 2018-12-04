@@ -41,7 +41,7 @@ describe('Header Specs', () => {
 			<Header>
 				<title>Header</title>
 				<headerInput>
-					<Input/>
+					<Input />
 				</headerInput>
 			</Header>
 		);
