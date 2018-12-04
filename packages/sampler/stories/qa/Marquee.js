@@ -1,5 +1,7 @@
 import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
+import {Header, HeaderBase} from '@enact/moonstone/Panels';
 import Item from '@enact/moonstone/Item';
+import Icon from '@enact/moonstone/Icon';
 import ri from '@enact/ui/resolution';
 import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
@@ -28,6 +30,64 @@ const RTL = [
 ];
 
 const disabledDisclaimer = (disabled) => (disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>Marquee does not visually respond to <code>disabled</code> state.</p> : <p />);
+
+const CustomItemBase = ({children, marqueeRef, ...rest}) => (<div {...rest} style={{display: 'flex', width: 300, alignItems: 'center'}}>
+	<Icon>flag</Icon>
+	<Marquee ref={marqueeRef} style={{flex: 1, overflow: 'hidden'}}>{children}</Marquee>
+	<Icon>trash</Icon>
+</div>
+);
+
+const CustomItem = Spottable(MarqueeController(
+	{marqueeOnFocus: true},
+	CustomItemBase
+));
+
+class MarqueeWithShortContent extends React.Component {
+	constructor (props) {
+		super(props);
+
+		this.state = {
+			long: false,
+			scrollWidth: null,
+			width: null
+		};
+	}
+
+	componentDidMount () {
+		this.updateSizeInfo();
+	}
+
+	componentDidUpdate () {
+		this.updateSizeInfo();
+	}
+
+	updateSizeInfo = () => {
+		if (this.node.scrollWidth !== this.state.scrollWidth) {
+			this.setState({
+				scrollWidth: this.node.scrollWidth,
+				width: this.node.getBoundingClientRect().width
+			});
+		}
+	}
+
+	handleClick = () => {
+		this.setState(prevState => ({long: !prevState.long}));
+	}
+
+	getRef = ref => {
+		this.node = ref.node;
+	}
+
+	render () {
+		return (
+			<div>
+				scrollWidth: {this.state.scrollWidth} width: {this.state.width}
+				<CustomItem marqueeRef={this.getRef} onClick={this.handleClick}>{this.state.long ? 'Very very very very very very very very very long text' : 'text'}</CustomItem>
+			</div>
+		);
+	}
+}
 
 storiesOf('Marquee', module)
 	.add(
@@ -156,5 +216,14 @@ storiesOf('Marquee', module)
 					{LTR[0]}
 				</Marquee>
 			</SpottableDiv>
+		)
+	)
+
+	.add(
+		'with Short Content',
+		() => (
+			<div>
+				<MarqueeWithShortContent />
+			</div>
 		)
 	);
