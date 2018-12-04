@@ -2,6 +2,11 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+- `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` components not to call `onScrollStop` too frequently during scroll
+
 ## [2.2.7] - 2018-11-21
 
 ### Fixed
