@@ -11,7 +11,7 @@ const tap = (node) => {
 
 describe('ToggleIcon Specs', () => {
 
-	it('should call onToggle when tapped', function () {
+	test('should call onToggle when tapped', () => {
 		const handleToggle = sinon.spy();
 		const subject = mount(
 			<ToggleIcon onToggle={handleToggle}>
@@ -24,10 +24,10 @@ describe('ToggleIcon Specs', () => {
 		const expected = true;
 		const actual = handleToggle.calledOnce;
 
-		expect(expected).to.equal(actual);
+		expect(expected).toBe(actual);
 	});
 
-	it('should call onClick when clicked', function () {
+	test('should call onClick when clicked', () => {
 		const handleClick = sinon.spy();
 		const subject = mount(
 			<ToggleIcon onClick={handleClick}>
@@ -40,10 +40,10 @@ describe('ToggleIcon Specs', () => {
 		const expected = true;
 		const actual = handleClick.calledOnce;
 
-		expect(expected).to.equal(actual);
+		expect(expected).toBe(actual);
 	});
 
-	it('should call onTap when tapped', function () {
+	test('should call onTap when tapped', () => {
 		const handleTap = sinon.spy();
 		const subject = mount(
 			<ToggleIcon onTap={handleTap}>
@@ -56,10 +56,10 @@ describe('ToggleIcon Specs', () => {
 		const expected = true;
 		const actual = handleTap.calledOnce;
 
-		expect(expected).to.equal(actual);
+		expect(expected).toBe(actual);
 	});
 
-	it('should call both onToggle and onTap when tapped', function () {
+	test('should call both onToggle and onTap when tapped', () => {
 		const handleBoth = sinon.spy();
 		const subject = mount(
 			<ToggleIcon onTap={handleBoth} onToggle={handleBoth}>
@@ -72,7 +72,7 @@ describe('ToggleIcon Specs', () => {
 		const expected = true;
 		const actual = handleBoth.calledTwice;
 
-		expect(expected).to.equal(actual);
+		expect(expected).toBe(actual);
 	});
 
 });

@@ -19,7 +19,7 @@ const CustomIcon = (props) => <Icon {...props}>star</Icon>;
 
 describe('ToggleItem Specs', () => {
 
-	it('should call onToggle, onClick, or both when clicked', function () {
+	test('should call onToggle, onClick, or both when clicked', () => {
 		const handleToggle = sinon.spy();
 		const subject = mount(
 			<ToggleItem component={SlottedItem} onToggle={handleToggle} iconComponent={CustomIcon}>
@@ -32,10 +32,10 @@ describe('ToggleItem Specs', () => {
 		const expected = 1;
 		const actual = handleToggle.callCount;
 
-		expect(expected).to.equal(actual);
+		expect(expected).toBe(actual);
 	});
 
-	it('should call onClick when clicked', function () {
+	test('should call onClick when clicked', () => {
 		const handleClick = sinon.spy();
 		const subject = mount(
 			<ToggleItemBase component={SlottedItem} onClick={handleClick} iconComponent={CustomIcon}>
@@ -48,10 +48,10 @@ describe('ToggleItem Specs', () => {
 		const expected = 1;
 		const actual = handleClick.callCount;
 
-		expect(expected).to.equal(actual);
+		expect(expected).toBe(actual);
 	});
 
-	it('should call onTap when tapped', function () {
+	test('should call onTap when tapped', () => {
 		const handleTap = sinon.spy();
 		const subject = mount(
 			<ToggleItem component={SlottedItem} onTap={handleTap} iconComponent={CustomIcon}>
@@ -63,10 +63,10 @@ describe('ToggleItem Specs', () => {
 		const expected = 1;
 		const actual = handleTap.callCount;
 
-		expect(expected).to.equal(actual);
+		expect(expected).toBe(actual);
 	});
 
-	it('should call both onToggle and onTap when tapped', function () {
+	test('should call both onToggle and onTap when tapped', () => {
 		const handleBoth = sinon.spy();
 		const subject = mount(
 			<ToggleItem component={SlottedItem} onTap={handleBoth} onToggle={handleBoth} iconComponent={CustomIcon}>
@@ -79,6 +79,6 @@ describe('ToggleItem Specs', () => {
 		const expected = 2;
 		const actual = handleBoth.callCount;
 
-		expect(expected).to.equal(actual);
+		expect(expected).toBe(actual);
 	});
 });

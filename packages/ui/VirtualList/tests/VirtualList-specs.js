@@ -74,7 +74,7 @@ describe('VirtualList', () => {
 		resultScrollTop = null;
 	});
 
-	it('should render a list of \'items\'', () => {
+	test('should render a list of \'items\'', () => {
 		const subject = mount(
 			<VirtualList
 				clientSize={clientSize}
@@ -87,10 +87,10 @@ describe('VirtualList', () => {
 		const expected = 'Account 0';
 		const actual = subject.find('#item0').text();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should render (clientHeight / itemHeight + overhang) items', () => {
+	test('should render (clientHeight / itemHeight + overhang) items', () => {
 		const subject = mount(
 			<VirtualList
 				clientSize={clientSize}
@@ -103,31 +103,34 @@ describe('VirtualList', () => {
 		const expected = 27; // 720 / 30 + 3
 		const actual = subject.childAt(0).text().split('Account').length - 1;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
 	describe('ScrollTo', () => {
-		it('should scroll to the specific item of a given index with scrollTo', () => {
-			mount(
-				<VirtualList
-					cbScrollTo={getScrollTo}
-					clientSize={clientSize}
-					dataSize={dataSize}
-					itemRenderer={renderItem}
-					itemSize={30}
-					onScrollStop={handlerOnScrollStop}
-				/>
-			);
+		test(
+			'should scroll to the specific item of a given index with scrollTo',
+			() => {
+				mount(
+					<VirtualList
+						cbScrollTo={getScrollTo}
+						clientSize={clientSize}
+						dataSize={dataSize}
+						itemRenderer={renderItem}
+						itemSize={30}
+						onScrollStop={handlerOnScrollStop}
+					/>
+				);
 
-			myScrollTo({index: 10, animate: false});
+				myScrollTo({index: 10, animate: false});
 
-			const expected = 300;
-			const actual = resultScrollTop;
+				const expected = 300;
+				const actual = resultScrollTop;
 
-			expect(actual).to.equal(expected);
-		});
+				expect(actual).toBe(expected);
+			}
+		);
 
-		it('should scroll to the given \'x\' position with scrollTo', () => {
+		test('should scroll to the given \'x\' position with scrollTo', () => {
 			mount(
 				<VirtualList
 					cbScrollTo={getScrollTo}
@@ -145,10 +148,10 @@ describe('VirtualList', () => {
 			const expected = 100;
 			const actual = resultScrollLeft;
 
-			expect(actual).to.equal(expected);
+			expect(actual).toBe(expected);
 		});
 
-		it('should scroll to the given \'y\' position with scrollTo', () => {
+		test('should scroll to the given \'y\' position with scrollTo', () => {
 			mount(
 				<VirtualList
 					cbScrollTo={getScrollTo}
@@ -165,11 +168,11 @@ describe('VirtualList', () => {
 			const expected = 100;
 			const actual = resultScrollTop;
 
-			expect(actual).to.equal(expected);
+			expect(actual).toBe(expected);
 		});
 
 		describe('scroll events', () => {
-			it('should call onScrollStart once', () => {
+			test('should call onScrollStart once', () => {
 				mount(
 					<VirtualList
 						cbScrollTo={getScrollTo}
@@ -186,10 +189,10 @@ describe('VirtualList', () => {
 				const expected = 1;
 				const actual = onScrollStartCount;
 
-				expect(actual).to.equal(expected);
+				expect(actual).toBe(expected);
 			});
 
-			it('should call onScroll once', () => {
+			test('should call onScroll once', () => {
 				mount(
 					<VirtualList
 						cbScrollTo={getScrollTo}
@@ -206,10 +209,10 @@ describe('VirtualList', () => {
 				const expected = 1;
 				const actual = onScrollCount;
 
-				expect(actual).to.equal(expected);
+				expect(actual).toBe(expected);
 			});
 
-			it('should call onScrollStop once', () => {
+			test('should call onScrollStop once', () => {
 				mount(
 					<VirtualList
 						cbScrollTo={getScrollTo}
@@ -226,41 +229,44 @@ describe('VirtualList', () => {
 				const expected = 1;
 				const actual = onScrollStopCount;
 
-				expect(actual).to.equal(expected);
+				expect(actual).toBe(expected);
 			});
 		});
 	});
 
 	describe('Adding an item', () => {
-		it('should render an added item named \'Password 0\' as the first item', (done) => {
-			const itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
-			const renderItemArray = ({index, ...rest}) => { // eslint-disable-line enact/display-name, enact/prop-types
-				return (
-					<div {...rest} id={'item' + index}>
-						{itemArray[index].name}
-					</div>
+		test(
+			'should render an added item named \'Password 0\' as the first item',
+			(done) => {
+				const itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
+				const renderItemArray = ({index, ...rest}) => { // eslint-disable-line enact/display-name, enact/prop-types
+					return (
+						<div {...rest} id={'item' + index}>
+							{itemArray[index].name}
+						</div>
+					);
+				};
+
+				const subject = mount(
+					<VirtualList
+						clientSize={clientSize}
+						dataSize={itemArray.length}
+						itemRenderer={renderItemArray} // eslint-disable-line react/jsx-no-bind
+						itemSize={30}
+					/>
 				);
-			};
 
-			const subject = mount(
-				<VirtualList
-					clientSize={clientSize}
-					dataSize={itemArray.length}
-					itemRenderer={renderItemArray} // eslint-disable-line react/jsx-no-bind
-					itemSize={30}
-				/>
-			);
+				itemArray.unshift({name: 'Password 0'});
+				subject.setProps({dataSize: itemArray.length});
 
-			itemArray.unshift({name: 'Password 0'});
-			subject.setProps({dataSize: itemArray.length});
+				setTimeout(() => {
+					const expected = itemArray[0].name;
+					const actual = subject.find('#item0').text();
 
-			setTimeout(() => {
-				const expected = itemArray[0].name;
-				const actual = subject.find('#item0').text();
-
-				expect(actual).to.equal(expected);
-				done();
-			}, 0);
-		});
+					expect(actual).toBe(expected);
+					done();
+				}, 0);
+			}
+		);
 	});
 });

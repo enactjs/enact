@@ -14,7 +14,7 @@ describe('RadioDecorator', () => {
 
 	const Controller = RadioControllerDecorator('main');
 
-	it('should be activated when its prop is true on mount', function () {
+	test('should be activated when its prop is true on mount', () => {
 		const Component = RadioDecorator({prop: 'active'}, Item);
 		const subject = mount(
 			<Controller>
@@ -25,10 +25,10 @@ describe('RadioDecorator', () => {
 		const expected = subject.find('RadioDecorator').instance();
 		const actual = subject.instance().active;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should not be activated when its prop is false on mount', function () {
+	test('should not be activated when its prop is false on mount', () => {
 		const Component = RadioDecorator({prop: 'active'}, Item);
 		const subject = mount(
 			<Controller>
@@ -39,31 +39,34 @@ describe('RadioDecorator', () => {
 		const expected = null;
 		const actual = subject.instance().active;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should be activated when its prop is set to true after mount', function () {
-		const Component = RadioDecorator({prop: 'active'}, Item);
-		const Wrapper = ({active}) => (	// eslint-disable-line enact/prop-types
-			<Controller>
-				<Component active={active} />
-			</Controller>
-		);
-		const subject = mount(
-			<Wrapper />
-		);
+	test(
+		'should be activated when its prop is set to true after mount',
+		() => {
+			const Component = RadioDecorator({prop: 'active'}, Item);
+			const Wrapper = ({active}) => (	// eslint-disable-line enact/prop-types
+				<Controller>
+					<Component active={active} />
+				</Controller>
+			);
+			const subject = mount(
+				<Wrapper />
+			);
 
-		subject.setProps({
-			active: true
-		});
+			subject.setProps({
+				active: true
+			});
 
-		const expected = subject.find('RadioDecorator').instance();
-		const actual = subject.find('RadioControllerDecorator').instance().active;
+			const expected = subject.find('RadioDecorator').instance();
+			const actual = subject.find('RadioControllerDecorator').instance().active;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should be activated when the activated event fires', function () {
+	test('should be activated when the activated event fires', () => {
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
 		const subject = mount(
 			<Controller>
@@ -76,10 +79,10 @@ describe('RadioDecorator', () => {
 		const expected = subject.find('RadioDecorator').instance();
 		const actual = subject.instance().active;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should be deactivated when the deactivated event fires', function () {
+	test('should be deactivated when the deactivated event fires', () => {
 		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
 		const subject = mount(
 			<Controller>
@@ -92,27 +95,30 @@ describe('RadioDecorator', () => {
 		const expected = null;
 		const actual = subject.instance().active;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should be deactivated when the activated event fires on another instance', function () {
-		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
-		const subject = mount(
-			<Controller>
-				<Component active />
-				<Component />
-			</Controller>
-		);
+	test(
+		'should be deactivated when the activated event fires on another instance',
+		() => {
+			const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
+			const subject = mount(
+				<Controller>
+					<Component active />
+					<Component />
+				</Controller>
+			);
 
-		subject.find('span').at(1).simulate('click');
+			subject.find('span').at(1).simulate('click');
 
-		const expected = subject.find('RadioDecorator').at(1).instance();
-		const actual = subject.instance().active;
+			const expected = subject.find('RadioDecorator').at(1).instance();
+			const actual = subject.instance().active;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should not deactivate items in a ancestor controller', function () {
+	test('should not deactivate items in a ancestor controller', () => {
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
 		const subject = mount(
 			<Controller>
@@ -134,15 +140,15 @@ describe('RadioDecorator', () => {
 
 		const childExpected = childController.find('RadioDecorator').at(1).instance();
 		const childActual = childController.at(0).instance().active;
-		expect(childActual).to.equal(childExpected);
+		expect(childActual).toBe(childExpected);
 
 		const parentExpected = subject.find('RadioDecorator').at(0).instance();
 		const parentActual = subject.at(0).instance().active;
-		expect(parentActual).to.equal(parentExpected);
+		expect(parentActual).toBe(parentExpected);
 	});
 
 
-	it('should not call deactivate callback on inactive items', function () {
+	test('should not call deactivate callback on inactive items', () => {
 		const handleDeactivate = sinon.spy();
 		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
 
@@ -169,6 +175,6 @@ describe('RadioDecorator', () => {
 		const expected = false;
 		const actual = handleDeactivate.called;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });

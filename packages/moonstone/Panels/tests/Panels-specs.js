@@ -11,59 +11,71 @@ const tap = (node) => {
 
 describe('Panels Specs', () => {
 
-	it('should render application close button when \'noCloseButton\' is not specified', function () {
-		const panels = mount(
-			<Panels />
-		);
+	test(
+		'should render application close button when \'noCloseButton\' is not specified',
+		() => {
+			const panels = mount(
+				<Panels />
+			);
 
-		const applicationCloseButton = panels.find('IconButton');
-		const expected = 1;
-		const actual = applicationCloseButton.length;
+			const applicationCloseButton = panels.find('IconButton');
+			const expected = 1;
+			const actual = applicationCloseButton.length;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should not render application close button when \'noCloseButton\' is set to true', function () {
-		const panels = mount(
-			<Panels noCloseButton />
-		);
+	test(
+		'should not render application close button when \'noCloseButton\' is set to true',
+		() => {
+			const panels = mount(
+				<Panels noCloseButton />
+			);
 
-		const applicationCloseButton = panels.find('IconButton');
-		const expected = 0;
-		const actual = applicationCloseButton.length;
+			const applicationCloseButton = panels.find('IconButton');
+			const expected = 0;
+			const actual = applicationCloseButton.length;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should call onApplicationClose when application close button is clicked', function () {
-		const handleAppClose = sinon.spy();
-		const subject = mount(
-			<Panels onApplicationClose={handleAppClose} />
-		);
+	test(
+		'should call onApplicationClose when application close button is clicked',
+		() => {
+			const handleAppClose = sinon.spy();
+			const subject = mount(
+				<Panels onApplicationClose={handleAppClose} />
+			);
 
-		tap(subject.find('IconButton'));
+			tap(subject.find('IconButton'));
 
-		const expected = true;
-		const actual = handleAppClose.calledOnce;
+			const expected = true;
+			const actual = handleAppClose.calledOnce;
 
-		expect(expected).to.equal(actual);
-	});
+			expect(expected).toBe(actual);
+		}
+	);
 
-	it('should set application close button "aria-label" to closeButtonAriaLabel', function () {
-		const label = 'custom close button label';
-		const panels = mount(
-			<Panels closeButtonAriaLabel={label} />
-		);
+	test(
+		'should set application close button "aria-label" to closeButtonAriaLabel',
+		() => {
+			const label = 'custom close button label';
+			const panels = mount(
+				<Panels closeButtonAriaLabel={label} />
+			);
 
-		const expected = label;
-		const actual = panels.find('IconButton').prop('aria-label');
+			const expected = label;
+			const actual = panels.find('IconButton').prop('aria-label');
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
 	describe('computed', () => {
 		describe('childProps', () => {
-			it('should not add aria-owns when noCloseButton is true', () => {
+			test('should not add aria-owns when noCloseButton is true', () => {
 				const id = 'id';
 				const childProps = {};
 				const props = {
@@ -75,10 +87,10 @@ describe('Panels Specs', () => {
 				const expected = childProps;
 				const actual = PanelsBase.computed.childProps(props);
 
-				expect(actual).to.equal(expected);
+				expect(actual).toBe(expected);
 			});
 
-			it('should not add aria-owns when id is not set', () => {
+			test('should not add aria-owns when id is not set', () => {
 				const childProps = {};
 				const props = {
 					childProps,
@@ -88,10 +100,10 @@ describe('Panels Specs', () => {
 				const expected = childProps;
 				const actual = PanelsBase.computed.childProps(props);
 
-				expect(actual).to.equal(expected);
+				expect(actual).toBe(expected);
 			});
 
-			it('should add aria-owns', () => {
+			test('should add aria-owns', () => {
 				const id = 'id';
 				const childProps = {};
 				const props = {
@@ -103,10 +115,10 @@ describe('Panels Specs', () => {
 				const expected = `${id}_close`;
 				const actual = PanelsBase.computed.childProps(props)['aria-owns'];
 
-				expect(actual).to.equal(expected);
+				expect(actual).toBe(expected);
 			});
 
-			it('should append aria-owns', () => {
+			test('should append aria-owns', () => {
 				const id = 'id';
 				const ariaOwns = ':allthethings:';
 				const childProps = {
@@ -121,7 +133,7 @@ describe('Panels Specs', () => {
 				const expected = `${ariaOwns} ${id}_close`;
 				const actual = PanelsBase.computed.childProps(props)['aria-owns'];
 
-				expect(actual).to.equal(expected);
+				expect(actual).toBe(expected);
 			});
 		});
 	});
