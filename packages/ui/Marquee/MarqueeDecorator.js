@@ -443,6 +443,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.distance = null;
 			// Assume the marquee does not fit until calculations show otherwise
 			this.contentFits = false;
+
+			this.setState(state => {
+				return state.overflow === 'ellipsis' ? null : {overflow: 'ellipsis'};
+			});
 		}
 
 		/*
