@@ -17,7 +17,6 @@ describe('VirtualList', () => {
 		onScrollStartCount,
 		onScrollStopCount,
 		renderItem,
-		resultScrollLeft,
 		resultScrollTop;
 
 	beforeEach(() => {
@@ -27,7 +26,6 @@ describe('VirtualList', () => {
 		onScrollCount = 0;
 		onScrollStartCount = 0;
 		onScrollStopCount = 0;
-		resultScrollLeft = 0;
 		resultScrollTop = 0;
 
 		getScrollTo = (scrollTo) => {
