@@ -39,7 +39,6 @@ describe('VirtualList', () => {
 		};
 		handlerOnScrollStop = (done, testCase) => (e) => {
 			onScrollStopCount++;
-			resultScrollLeft = e.scrollLeft;
 			resultScrollTop = e.scrollTop;
 
 			testCase();
@@ -71,7 +70,6 @@ describe('VirtualList', () => {
 		onScrollStartCount = null;
 		onScrollStopCount = null;
 		renderItem = null;
-		resultScrollLeft = null;
 		resultScrollTop = null;
 	});
 
