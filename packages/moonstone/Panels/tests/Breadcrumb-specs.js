@@ -1,12 +1,11 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 import Breadcrumb from '../Breadcrumb';
 
 describe('Breadcrumb', () => {
 
 	test('should include {index} in the payload of {onSelect}', () => {
-		const handleSelect = sinon.spy();
+		const handleSelect = jest.fn();
 		const subject = mount(
 			<Breadcrumb index={3} onSelect={handleSelect} />
 		);
@@ -14,7 +13,7 @@ describe('Breadcrumb', () => {
 		subject.simulate('click', {});
 
 		const expected = 3;
-		const actual = handleSelect.firstCall.args[0].index;
+		const actual = handleSelect.mock.calls[0][0].index;
 
 		expect(actual).toBe(expected);
 	});
@@ -22,8 +21,8 @@ describe('Breadcrumb', () => {
 	test(
 		'should include call both the {onClick} and {onSelect} handlers on click',
 		() => {
-			const handleSelect = sinon.spy();
-			const handleClick = sinon.spy();
+			const handleSelect = jest.fn();
+			const handleClick = jest.fn();
 			const subject = mount(
 				<Breadcrumb index={3} onClick={handleClick} onSelect={handleSelect} />
 			);
@@ -31,7 +30,8 @@ describe('Breadcrumb', () => {
 			subject.simulate('click', {});
 
 			const expected = true;
-			const actual = handleSelect.calledOnce && handleClick.calledOnce;
+			const actual = handleSelect.mock.calls.length === 1 &&
+					handleClick.mock.calls.length === 1;
 
 			expect(actual).toBe(expected);
 		}

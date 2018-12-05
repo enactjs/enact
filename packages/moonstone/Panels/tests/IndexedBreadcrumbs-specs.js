@@ -1,6 +1,5 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 import IndexedBreadcrumbs from '../IndexedBreadcrumbs';
 
 describe('IndexedBreadcrumbs', () => {
@@ -42,7 +41,7 @@ describe('IndexedBreadcrumbs', () => {
 	test(
 		'should call {onBreadcrumbClick} once when breadcrumb is clicked',
 		() => {
-			const handleClick = sinon.spy();
+			const handleClick = jest.fn();
 			const subject = mount(
 				<nav>
 					{IndexedBreadcrumbs('id', 1, 1, handleClick)}
@@ -51,8 +50,8 @@ describe('IndexedBreadcrumbs', () => {
 
 			subject.find('Breadcrumb').simulate('click', {});
 
-			const expected = true;
-			const actual = handleClick.calledOnce;
+			const expected = 1;
+			const actual = handleClick.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		}

@@ -1,6 +1,5 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 import ExpandablePicker, {ExpandablePickerBase} from '../ExpandablePicker';
 
 const tap = (node) => {
@@ -29,7 +28,7 @@ describe('ExpandablePicker Specs', () => {
 
 	test('should include value in onChange when value is specified', () => {
 		const value = 2;
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 		const expandablePicker = mount(
 			<ExpandablePicker onChange={handleChange} open title="Options" value={value}>
 				{['Option one', 'Option two', 'Option three']}
@@ -40,7 +39,7 @@ describe('ExpandablePicker Specs', () => {
 		tap(checkButton);
 
 		const expected = value;
-		const actual = handleChange.firstCall.args[0].value;
+		const actual = handleChange.mock.calls[0][0].value;
 
 		expect(actual).toBe(expected);
 	});
@@ -49,7 +48,7 @@ describe('ExpandablePicker Specs', () => {
 		'should include default value in onChange when value is not specified',
 		() => {
 			const value = 0;
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const expandablePicker = mount(
 				<ExpandablePickerBase onChange={handleChange} open title="Options">
 					{['Option one', 'Option two', 'Option three']}
@@ -60,7 +59,7 @@ describe('ExpandablePicker Specs', () => {
 			tap(checkButton);
 
 			const expected = value;
-			const actual = handleChange.firstCall.args[0].value;
+			const actual = handleChange.mock.calls[0][0].value;
 
 			expect(actual).toBe(expected);
 		}

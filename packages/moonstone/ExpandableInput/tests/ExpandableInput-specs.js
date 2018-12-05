@@ -1,5 +1,4 @@
 import React from 'react';
-import sinon from 'sinon';
 import {mount, shallow} from 'enzyme';
 import {ExpandableInput, ExpandableInputBase} from '../ExpandableInput';
 
@@ -112,7 +111,7 @@ describe('ExpandableInputBase', () => {
 
 describe('ExpandableInput', () => {
 	test('should pass onChange callback to input', () => {
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 		const value = 'input string';
 		const evt = {target: {value: value}};
 
@@ -123,7 +122,7 @@ describe('ExpandableInput', () => {
 		subject.find('input').simulate('change', evt);
 
 		const expected = value;
-		const actual = handleChange.firstCall.args[0].value;
+		const actual = handleChange.mock.calls[0][0].value;
 
 		expect(actual).toBe(expected);
 	});

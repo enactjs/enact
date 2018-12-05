@@ -1,6 +1,5 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 import Input from '../Input';
 import Spotlight from '@enact/spotlight';
 
@@ -24,7 +23,7 @@ describe('Input Specs', () => {
 	});
 
 	test('should callback onChange when the text changes', () => {
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 		const value = 'blah';
 		const evt = {target: {value: value}};
 		const subject = mount(
@@ -34,14 +33,14 @@ describe('Input Specs', () => {
 		subject.find('input').simulate('change', evt);
 
 		const expected = value;
-		const actual = handleChange.firstCall.args[0].value;
+		const actual = handleChange.mock.calls[0][0].value;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should blur input on enter if dismissOnEnter', () => {
 		const node = document.body.appendChild(document.createElement('div'));
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 
 		const subject = mount(
 			<Input onBlur={handleChange} dismissOnEnter />,
@@ -53,8 +52,8 @@ describe('Input Specs', () => {
 		input.simulate('keyUp', {which: 13, keyCode: 13, code:13});
 		node.remove();
 
-		const expected = true;
-		const actual = handleChange.calledOnce;
+		const expected = 1;
+		const actual = handleChange.mock.calls.length;
 
 		expect(actual).toBe(expected);
 	});
