@@ -45,42 +45,41 @@ class IncrementSliderWithContextualPopup extends React.Component {
 		};
 	}
 
-		handleClick = () => {
-			this.setState((prevState) => {
-				return {open: !prevState.open};
-			});
-		}
+	handleClick = () => {
+		this.setState((prevState) => {
+			return {open: !prevState.open};
+		});
+	}
 
-		renderPopup = () => (
-			<div style={{width: 400}}>
-				<IncrementSlider
-					// active
-					tooltip
-					min={-9.9}
-					max={9.9}
-					step={0.1}
-				/>
+	renderPopup = () => (
+		<div style={{width: 400}}>
+			<IncrementSlider
+				// active
+				tooltip
+				min={-9.9}
+				max={9.9}
+				step={0.1}
+			/>
+		</div>
+	);
+
+	render () {
+		return (
+			<div>
+				<ContextualPopupButton
+					direction="down"
+					spotlightRestrict="self-only"
+					onClick={this.handleClick}
+					onClose={this.handleClick}
+					open={this.state.open}
+					popupComponent={this.renderPopup}
+					small
+				>
+					{'drawer'}
+				</ContextualPopupButton>
 			</div>
 		);
-
-		render () {
-			return (
-				<div>
-					<ContextualPopupButton
-						direction="down"
-						spotlightRestrict="self-only"
-						onClick={this.handleClick}
-						onClose={this.handleClick}
-						open={this.state.open}
-						popupComponent={this.renderPopup}
-						small
-					>
-						{'drawer'}
-					</ContextualPopupButton>
-				</div>
-			);
-		}
-
+	}
 }
 
 
