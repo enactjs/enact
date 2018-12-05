@@ -95,7 +95,7 @@ describe('dispatcher', () => {
 
 			// restore console.error and set up enyo-console-spy again so it can complete successfully
 			// eslint-disable-next-line no-console
-			console.error.restore();
+			console.error.mockRestore();
 			watchErrorAndWarnings();
 
 			const expected = true;

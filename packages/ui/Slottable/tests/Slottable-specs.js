@@ -121,7 +121,7 @@ describe('Slottable Specs', () => {
 		'should not distribute children with an invalid \'slot\' property',
 		() => {
 			// Remove Global Spy and replace with a stub instead
-			console.error.restore();
+			console.error.mockRestore();
 			sinon.stub(console, 'error');
 
 			const Component = Slottable({slots: ['a', 'b']}, ({a, b, c}) => (
