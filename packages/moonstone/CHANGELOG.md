@@ -4,10 +4,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Added
-
-- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` property `childProps` to support additional props included in the object passed to the `itemsRenderer` callback
-
 ### Fixed
 
 - `moonstone/ExpandableInput` to focus labeled item on close
@@ -26,7 +22,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to disable pointer mode when hiding media controls via 5-way
 - `moonstone/VirtualList` and `moonstone/Scroller` to not to animate with 5-way navigation by default
 
-### Fixerd
+### Fixed
 
 - `moonstone/Scroller` to correctly handle scrolling focused elements and containers into view
 
