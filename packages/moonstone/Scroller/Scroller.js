@@ -200,11 +200,13 @@ class ScrollerBase extends Component {
 			if (containerBounds.top > scrollerBounds.top) {
 				// ... to the top of the container if the top is below the top of the scroller
 				adjustScrollTop(calcItemAtStart(containerBounds, scrollerBounds, scrollTop, scrollTopDelta));
-			} else if (containerBounds.top + containerBounds.height < scrollerBounds.top + scrollerBounds.height) {
-				// ... to the bottom of the container if the bottom is above the bottom of the
-				// scroller
-				adjustScrollTop(calcItemAtEnd(containerBounds, scrollerBounds, scrollTop, scrollTopDelta));
 			}
+			// removing support for "snap to bottom" for 2.2.8
+			// } else if (containerBounds.top + containerBounds.height < scrollerBounds.top + scrollerBounds.height) {
+			// 	// ... to the bottom of the container if the bottom is above the bottom of the
+			// 	// scroller
+			// 	adjustScrollTop(calcItemAtEnd(containerBounds, scrollerBounds, scrollTop, scrollTopDelta));
+			// }
 
 			// N.B. if the container covers the scrollable area (its top is above the top of the
 			// scroller and its bottom is below the bottom of the scroller), we need not adjust the
