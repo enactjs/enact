@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Marquee` to display an ellipsis when changing to text that no longer fits within its bounds
+- `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` to debounce `onScrollStop` events for non-animated scrolls
 
 ## [2.2.7] - 2018-11-21
 
