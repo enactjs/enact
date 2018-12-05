@@ -1,11 +1,12 @@
-import IncrementSliderDelayValue from './components/IncrementSliderDelayValue';
-import React from 'react';
-import IncrementSlider from '@enact/moonstone/IncrementSlider';
 import Button from '@enact/moonstone/Button';
-import IconButton from '@enact/moonstone/IconButton';
 import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
+import IconButton from '@enact/moonstone/IconButton';
+import IncrementSlider from '@enact/moonstone/IncrementSlider';
 import ri from '@enact/ui/resolution';
+import React from 'react';
 import {storiesOf} from '@storybook/react';
+
+import IncrementSliderDelayValue from './components/IncrementSliderDelayValue';
 
 const ContextualPopupButton = ContextualPopupDecorator(IconButton);
 
