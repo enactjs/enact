@@ -1,7 +1,6 @@
-import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
-import {Header, HeaderBase} from '@enact/moonstone/Panels';
-import Item from '@enact/moonstone/Item';
 import Icon from '@enact/moonstone/Icon';
+import Item from '@enact/moonstone/Item';
+import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
 import ri from '@enact/ui/resolution';
 import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
@@ -31,11 +30,13 @@ const RTL = [
 
 const disabledDisclaimer = (disabled) => (disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>Marquee does not visually respond to <code>disabled</code> state.</p> : <p />);
 
-const CustomItemBase = ({children, marqueeRef, ...rest}) => (<div {...rest} style={{display: 'flex', width: 300, alignItems: 'center'}}>
-	<Icon>flag</Icon>
-	<Marquee ref={marqueeRef} style={{flex: 1, overflow: 'hidden'}}>{children}</Marquee>
-	<Icon>trash</Icon>
-</div>
+// eslint-disable-next-line enact/prop-types
+const CustomItemBase = ({children, marqueeRef, ...rest}) => (
+	<div {...rest} style={{display: 'flex', width: 300, alignItems: 'center'}}>
+		<Icon>flag</Icon>
+		<Marquee ref={marqueeRef} style={{flex: 1, overflow: 'hidden'}}>{children}</Marquee>
+		<Icon>trash</Icon>
+	</div>
 );
 
 const CustomItem = Spottable(MarqueeController(
