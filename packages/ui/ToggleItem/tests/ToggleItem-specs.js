@@ -1,7 +1,6 @@
 
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 
 import ToggleItem, {ToggleItemBase} from '../ToggleItem';
 import Icon from '../../Icon';
@@ -20,7 +19,7 @@ const CustomIcon = (props) => <Icon {...props}>star</Icon>;
 describe('ToggleItem Specs', () => {
 
 	test('should call onToggle, onClick, or both when clicked', () => {
-		const handleToggle = sinon.spy();
+		const handleToggle = jest.fn();
 		const subject = mount(
 			<ToggleItem component={SlottedItem} onToggle={handleToggle} iconComponent={CustomIcon}>
 				Toggle Item
@@ -30,13 +29,13 @@ describe('ToggleItem Specs', () => {
 		tap(subject);
 
 		const expected = 1;
-		const actual = handleToggle.callCount;
+		const actual = handleToggle.mock.calls.length;
 
 		expect(expected).toBe(actual);
 	});
 
 	test('should call onClick when clicked', () => {
-		const handleClick = sinon.spy();
+		const handleClick = jest.fn();
 		const subject = mount(
 			<ToggleItemBase component={SlottedItem} onClick={handleClick} iconComponent={CustomIcon}>
 				Toggle Item
@@ -46,13 +45,13 @@ describe('ToggleItem Specs', () => {
 		subject.simulate('click');
 
 		const expected = 1;
-		const actual = handleClick.callCount;
+		const actual = handleClick.mock.calls.length;
 
 		expect(expected).toBe(actual);
 	});
 
 	test('should call onTap when tapped', () => {
-		const handleTap = sinon.spy();
+		const handleTap = jest.fn();
 		const subject = mount(
 			<ToggleItem component={SlottedItem} onTap={handleTap} iconComponent={CustomIcon}>
 				Toggle Item
@@ -61,13 +60,13 @@ describe('ToggleItem Specs', () => {
 
 		tap(subject);
 		const expected = 1;
-		const actual = handleTap.callCount;
+		const actual = handleTap.mock.calls.length;
 
 		expect(expected).toBe(actual);
 	});
 
 	test('should call both onToggle and onTap when tapped', () => {
-		const handleBoth = sinon.spy();
+		const handleBoth = jest.fn();
 		const subject = mount(
 			<ToggleItem component={SlottedItem} onTap={handleBoth} onToggle={handleBoth} iconComponent={CustomIcon}>
 				Toggle Item
@@ -77,7 +76,7 @@ describe('ToggleItem Specs', () => {
 		tap(subject);
 
 		const expected = 2;
-		const actual = handleBoth.callCount;
+		const actual = handleBoth.mock.calls.length;
 
 		expect(expected).toBe(actual);
 	});

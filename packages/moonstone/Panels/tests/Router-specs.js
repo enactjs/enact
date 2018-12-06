@@ -76,9 +76,9 @@ describe('Router', () => {
 	test(
 		'should render no children if {path} does not exist in {routes}',
 		() => {
-			// Remove Global Spy and replace with a stub instead
-			console.error.mockRestore();
-			jest.spyOn(console, 'error').mockImplementation();
+			// Modify the console spy to silence error output with
+			// an empty mock implementation
+			console.error.mockImplementation();
 
 			const subject = shallow(
 				<Router routes={routes} path="/help" />
@@ -178,9 +178,9 @@ describe('Router', () => {
 	);
 
 	test('should render nothing for an invalid path', () => {
-		// Remove Global Spy and replace with a stub instead
-		console.error.mockRestore();
-		jest.spyOn(console, 'error').mockImplementation();
+		// Modify the console spy to silence error output with
+		// an empty mock implementation
+		console.error.mockImplementation();
 
 		const subject = mount(
 			<Router path="/does/not/exist">
@@ -199,9 +199,9 @@ describe('Router', () => {
 	});
 
 	test('should render nothing for a partially valid path', () => {
-		// Remove Global Spy and replace with a stub instead
-		console.error.mockRestore();
-		jest.spyOn(console, 'error').mockImplementation();
+		// Modify the console spy to silence error output with
+		// an empty mock implementation
+		console.error.mockImplementation();
 
 		const subject = mount(
 			<Router path="/app/home/other">
