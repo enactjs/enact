@@ -77,7 +77,7 @@ class MarqueeWithShortContent extends React.Component {
 	}
 
 	getRef = ref => {
-		this.node = ref.node;
+		this.node = ref && ref.node;
 	}
 
 	render () {
