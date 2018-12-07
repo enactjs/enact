@@ -1,5 +1,3 @@
-import sinon from 'sinon';
-
 import {memoize} from '..';
 
 describe('memoize', () => {
@@ -19,12 +17,12 @@ describe('memoize', () => {
 	});
 
 	test('should forward all args to memoized function', () => {
-		const spy = sinon.spy();
+		const spy = jest.fn();
 		const memoized = memoize(spy);
 		memoized(1, 2);
 
 		const expected = [1, 2];
-		const actual = spy.firstCall.args;
+		const actual = spy.mock.calls[0];
 
 		expect(expected).toEqual(actual);
 	});

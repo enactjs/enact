@@ -3,7 +3,6 @@
 
 import React from 'react';
 import {shallow, mount} from 'enzyme';
-import sinon from 'sinon';
 
 import Touchable from '../Touchable';
 import {activate, deactivate} from '../state';
@@ -114,15 +113,15 @@ describe('Touchable', () => {
 	describe('#onDown', () => {
 		test('should invoke onDown handle on mouse down', () => {
 			const Component = Touchable(DivComponent);
-			const handler = sinon.spy();
+			const handler = jest.fn();
 			const subject = mount(
 				<Component onDown={handler} />
 			);
 
 			subject.simulate('mousedown', {});
 
-			const expected = true;
-			const actual = handler.calledOnce;
+			const expected = 1;
+			const actual = handler.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		});
@@ -131,7 +130,7 @@ describe('Touchable', () => {
 	describe('#onUp', () => {
 		test('should invoke onUp handle on mouse up', () => {
 			const Component = Touchable({activeProp: 'pressed'}, DivComponent);
-			const handler = sinon.spy();
+			const handler = jest.fn();
 			const subject = mount(
 				<Component onUp={handler} />
 			);
@@ -140,8 +139,8 @@ describe('Touchable', () => {
 			subject.simulate('mousedown', ev);
 			subject.simulate('mouseup', ev);
 
-			const expected = true;
-			const actual = handler.calledOnce;
+			const expected = 1;
+			const actual = handler.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		});
@@ -150,7 +149,7 @@ describe('Touchable', () => {
 	describe('#onTap', () => {
 		test('should be called on mouse up', () => {
 			const Component = Touchable({activeProp: 'active'}, DivComponent);
-			const handler = sinon.spy();
+			const handler = jest.fn();
 			const subject = mount(
 				<Component onTap={handler} />
 			);
@@ -159,30 +158,30 @@ describe('Touchable', () => {
 			subject.simulate('mousedown', ev);
 			subject.simulate('mouseup', ev);
 
-			const expected = true;
-			const actual = handler.calledOnce;
+			const expected = 1;
+			const actual = handler.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		});
 
 		test('should be called on click', () => {
 			const Component = Touchable({activeProp: 'active'}, DivComponent);
-			const handler = sinon.spy();
+			const handler = jest.fn();
 			const subject = mount(
 				<Component onTap={handler} />
 			);
 
 			subject.simulate('click');
 
-			const expected = true;
-			const actual = handler.calledOnce;
+			const expected = 1;
+			const actual = handler.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		});
 
 		test('should be called before onClick on click', () => {
 			const Component = Touchable({activeProp: 'active'}, DivComponent);
-			const handler = sinon.spy();
+			const handler = jest.fn();
 			const subject = mount(
 				<Component onTap={handler} onClick={handler} />
 			);
@@ -190,14 +189,14 @@ describe('Touchable', () => {
 			subject.simulate('click');
 
 			const expected = ['onTap', 'click'];
-			const actual = handler.getCalls().map(call => call.args[0].type);
+			const actual = handler.mock.calls.map(call => call[0].type);
 
 			expect(actual).toEqual(expected);
 		});
 
 		test('should be called before onCLick on mouse up', () => {
 			const Component = Touchable({activeProp: 'active'}, DivComponent);
-			const handler = sinon.spy();
+			const handler = jest.fn();
 			const subject = mount(
 				<Component onTap={handler} onClick={handler} />
 			);
@@ -212,14 +211,14 @@ describe('Touchable', () => {
 			subject.simulate('click', ev);
 
 			const expected = ['onTap', 'click'];
-			const actual = handler.getCalls().map(call => call.args[0].type);
+			const actual = handler.mock.calls.map(call => call[0].type);
 
 			expect(actual).toEqual(expected);
 		});
 
 		test('should be preventable via onUp handler', () => {
 			const Component = Touchable({activeProp: 'active'}, DivComponent);
-			const handler = sinon.spy();
+			const handler = jest.fn();
 			const subject = mount(
 				<Component onTap={handler} onUp={preventDefault} />
 			);
@@ -228,8 +227,8 @@ describe('Touchable', () => {
 			subject.simulate('mousedown', ev);
 			subject.simulate('mouseup', ev);
 
-			const expected = false;
-			const actual = handler.calledOnce;
+			const expected = 0;
+			const actual = handler.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		});
@@ -263,7 +262,7 @@ describe('Touchable', () => {
 				'should update active state on mouse down when activeProp is configured',
 				() => {
 					const Component = Touchable({activeProp: 'active'}, DivComponent);
-					const handler = sinon.spy();
+					const handler = jest.fn();
 					const subject = mount(
 						<Component onDown={handler} />
 					);
@@ -284,7 +283,7 @@ describe('Touchable', () => {
 				'should not update active state on mouse down when disabled',
 				() => {
 					const Component = Touchable({activeProp: 'active'}, DivComponent);
-					const handler = sinon.spy();
+					const handler = jest.fn();
 					const subject = mount(
 						<Component onDown={handler} disabled />
 					);
@@ -344,7 +343,7 @@ describe('Touchable', () => {
 				'should update active state on mouse up when activeProp is configured',
 				() => {
 					const Component = Touchable({activeProp: 'active'}, DivComponent);
-					const handler = sinon.spy();
+					const handler = jest.fn();
 					const subject = mount(
 						<Component onDown={handler} />
 					);
@@ -367,7 +366,7 @@ describe('Touchable', () => {
 				'should not update active state on mouse down when disabled',
 				() => {
 					const Component = Touchable({activeProp: 'active'}, DivComponent);
-					const handler = sinon.spy();
+					const handler = jest.fn();
 					const subject = mount(
 						<Component onDown={handler} disabled />
 					);

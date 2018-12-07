@@ -1,7 +1,6 @@
 /* eslint-disable enact/prop-types */
 import React from 'react';
 import {mount, shallow} from 'enzyme';
-import sinon from 'sinon';
 import Toggleable from '../Toggleable';
 
 describe('Toggleable', () => {
@@ -132,43 +131,43 @@ describe('Toggleable', () => {
 	// test forwarding events
 
 	test('should invoke passed \'onToggle\' handler', () => {
-		const handleToggle = sinon.spy();
+		const handleToggle = jest.fn();
 		const Component = Toggleable(DivComponent);
 		const subject = shallow(
 			<Component onToggle={handleToggle} />
 		);
 		subject.simulate('toggle');
 
-		const expected = true;
-		const actual = handleToggle.called;
+		const expected = 1;
+		const actual = handleToggle.mock.calls.length;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should invoke passed \'onActivate\' handler', () => {
-		const handleActivate = sinon.spy();
+		const handleActivate = jest.fn();
 		const Component = Toggleable({activate: 'onActivate'}, DivComponent);
 		const subject = shallow(
 			<Component onActivate={handleActivate} />
 		);
 		subject.simulate('activate');
 
-		const expected = true;
-		const actual = handleActivate.called;
+		const expected = 1;
+		const actual = handleActivate.mock.calls.length;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should invoke passed \'onDeactivate\' handler', () => {
-		const handleDeactivate = sinon.spy();
+		const handleDeactivate = jest.fn();
 		const Component = Toggleable({deactivate: 'onDeactivate'}, DivComponent);
 		const subject = shallow(
 			<Component onDeactivate={handleDeactivate} />
 		);
 		subject.simulate('deactivate');
 
-		const expected = true;
-		const actual = handleDeactivate.called;
+		const expected = 1;
+		const actual = handleDeactivate.mock.calls.length;
 
 		expect(actual).toBe(expected);
 	});
@@ -176,15 +175,15 @@ describe('Toggleable', () => {
 	test(
 		'should not invoke passed \'onToggle\' handler when disabled',
 		() => {
-			const handleToggle = sinon.spy();
+			const handleToggle = jest.fn();
 			const Component = Toggleable(DivComponent);
 			const subject = shallow(
 				<Component onToggle={handleToggle} disabled />
 			);
 			subject.simulate('toggle');
 
-			const expected = false;
-			const actual = handleToggle.called;
+			const expected = 0;
+			const actual = handleToggle.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		}
@@ -193,15 +192,15 @@ describe('Toggleable', () => {
 	test(
 		'should not invoke passed \'onActivate\' handler when disabled',
 		() => {
-			const handleActivate = sinon.spy();
+			const handleActivate = jest.fn();
 			const Component = Toggleable({activate: 'onActivate'}, DivComponent);
 			const subject = shallow(
 				<Component onActivate={handleActivate} disabled />
 			);
 			subject.simulate('activate');
 
-			const expected = false;
-			const actual = handleActivate.called;
+			const expected = 0;
+			const actual = handleActivate.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		}
@@ -210,15 +209,15 @@ describe('Toggleable', () => {
 	test(
 		'should not invoke passed \'onDeactivate\' handler when \'disabled\'',
 		() => {
-			const handleDeactivate = sinon.spy();
+			const handleDeactivate = jest.fn();
 			const Component = Toggleable({deactivate: 'onDeactivate'}, DivComponent);
 			const subject = shallow(
 				<Component onDeactivate={handleDeactivate} disabled />
 			);
 			subject.simulate('deactivate');
 
-			const expected = false;
-			const actual = handleDeactivate.called;
+			const expected = 0;
+			const actual = handleDeactivate.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		}

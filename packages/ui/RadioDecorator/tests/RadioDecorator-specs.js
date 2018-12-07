@@ -1,6 +1,5 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 import {RadioControllerDecorator, RadioDecorator} from '../RadioDecorator';
 
 describe('RadioDecorator', () => {
@@ -149,7 +148,7 @@ describe('RadioDecorator', () => {
 
 
 	test('should not call deactivate callback on inactive items', () => {
-		const handleDeactivate = sinon.spy();
+		const handleDeactivate = jest.fn();
 		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
 
 		// deactivate() is only called when there was a previously active item
@@ -172,8 +171,8 @@ describe('RadioDecorator', () => {
 		});
 
 		// verify that the deactivate handler wasn't called
-		const expected = false;
-		const actual = handleDeactivate.called;
+		const expected = 0;
+		const actual = handleDeactivate.mock.calls.length;
 
 		expect(actual).toBe(expected);
 	});

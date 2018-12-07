@@ -1,6 +1,5 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 
 import {Panels, PanelsBase} from '../Panels';
 
@@ -44,15 +43,15 @@ describe('Panels Specs', () => {
 	test(
 		'should call onApplicationClose when application close button is clicked',
 		() => {
-			const handleAppClose = sinon.spy();
+			const handleAppClose = jest.fn();
 			const subject = mount(
 				<Panels onApplicationClose={handleAppClose} />
 			);
 
 			tap(subject.find('IconButton'));
 
-			const expected = true;
-			const actual = handleAppClose.calledOnce;
+			const expected = 1;
+			const actual = handleAppClose.mock.calls.length;
 
 			expect(expected).toBe(actual);
 		}

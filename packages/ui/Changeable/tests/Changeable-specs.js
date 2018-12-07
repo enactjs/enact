@@ -1,5 +1,4 @@
 import React from 'react';
-import sinon from 'sinon';
 import {mount, shallow} from 'enzyme';
 import Changeable from '../Changeable';
 
@@ -136,15 +135,15 @@ describe('Changeable', () => {
 	});
 
 	test('should invoke passed \'onChange\' handler', () => {
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 		const Component = Changeable(DivComponent);
 		const subject = shallow(
 			<Component onChange={handleChange} />
 		);
 		subject.simulate('change', {});
 
-		const expected = true;
-		const actual = handleChange.called;
+		const expected = 1;
+		const actual = handleChange.mock.calls.length;
 
 		expect(actual).toBe(expected);
 	});
@@ -152,15 +151,15 @@ describe('Changeable', () => {
 	test(
 		'should not invoke passed \'onChange\' handler when \'disabled\'',
 		() => {
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const Component = Changeable(DivComponent);
 			const subject = shallow(
 				<Component onChange={handleChange} disabled />
 			);
 			subject.simulate('change', {});
 
-			const expected = false;
-			const actual = handleChange.called;
+			const expected = 0;
+			const actual = handleChange.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		}

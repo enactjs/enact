@@ -1,4 +1,3 @@
-import sinon from 'sinon';
 import {
 	handle,
 	adaptEvent,
@@ -17,8 +16,8 @@ import {
 describe('handle', () => {
 
 	const makeEvent = (payload) => ({
-		preventDefault: sinon.spy(),
-		stopPropagation: sinon.spy(),
+		preventDefault: jest.fn(),
+		stopPropagation: jest.fn(),
 		...payload
 	});
 
@@ -26,53 +25,54 @@ describe('handle', () => {
 	const returnsFalse = () => false;
 
 	test('should call only handler', () => {
-		const handler = sinon.spy(returnsTrue);
+		const handler = jest.fn(returnsTrue);
 		const callback = handle(handler);
 
 		callback(makeEvent());
 
-		const expected = true;
-		const actual = handler.calledOnce;
+		const expected = 1;
+		const actual = handler.mock.calls.length;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should call multiple handlers', () => {
-		const handler1 = sinon.spy(returnsTrue);
-		const handler2 = sinon.spy(returnsTrue);
+		const handler1 = jest.fn(returnsTrue);
+		const handler2 = jest.fn(returnsTrue);
 
 		const callback = handle(handler1, handler2);
 
 		callback(makeEvent());
 
 		const expected = true;
-		const actual = handler1.calledOnce && handler2.calledOnce;
+		const actual = handler1.mock.calls.length === 1 &&
+				handler2.mock.calls.length === 1;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should skip non-function handlers', () => {
-		const handler = sinon.spy(returnsTrue);
+		const handler = jest.fn(returnsTrue);
 		const callback = handle(null, void 0, 0, 'purple', handler);
 
 		callback(makeEvent());
 
-		const expected = true;
-		const actual = handler.calledOnce;
+		const expected = 1;
+		const actual = handler.mock.calls.length;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should not call handlers after one that returns false', () => {
-		const handler1 = sinon.spy(returnsTrue);
-		const handler2 = sinon.spy(returnsTrue);
+		const handler1 = jest.fn(returnsTrue);
+		const handler2 = jest.fn(returnsTrue);
 
 		const callback = handle(handler1, returnsFalse, handler2);
 
 		callback(makeEvent());
 
-		const expected = false;
-		const actual = handler2.calledOnce;
+		const expected = 0;
+		const actual = handler2.mock.calls.length;
 
 		expect(actual).toBe(expected);
 	});
@@ -82,8 +82,8 @@ describe('handle', () => {
 		const ev = makeEvent();
 		callback(ev);
 
-		const expected = true;
-		const actual = ev.stopPropagation.calledOnce;
+		const expected = 1;
+		const actual = ev.stopPropagation.mock.calls.length;
 
 		expect(actual).toBe(expected);
 	});
@@ -93,8 +93,8 @@ describe('handle', () => {
 		const ev = makeEvent();
 		callback(ev);
 
-		const expected = true;
-		const actual = ev.preventDefault.calledOnce;
+		const expected = 1;
+		const actual = ev.preventDefault.mock.calls.length;
 
 		expect(actual).toBe(expected);
 	});
@@ -102,66 +102,66 @@ describe('handle', () => {
 	test('should call any method on event', () => {
 		const callback = handle(callOnEvent('customMethod'));
 		const ev = makeEvent({
-			customMethod: sinon.spy()
+			customMethod: jest.fn()
 		});
 		callback(ev);
 
-		const expected = true;
-		const actual = ev.customMethod.calledOnce;
+		const expected = 1;
+		const actual = ev.customMethod.mock.calls.length;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should only call handler for specified keyCode', () => {
 		const keyCode = 13;
-		const handler = sinon.spy();
+		const handler = jest.fn();
 		const callback = handle(forKeyCode(keyCode), handler);
 
 		callback(makeEvent());
-		expect(handler.calledOnce).toBe(false);
+		expect(handler).not.toHaveBeenCalled();
 
 		callback(makeEvent({keyCode}));
-		expect(handler.calledOnce).toBe(true);
+		expect(handler).toHaveBeenCalled();
 	});
 
 	test('should only call handler for specified event prop', () => {
 		const prop = 'index';
 		const value = 0;
-		const handler = sinon.spy();
+		const handler = jest.fn();
 		const callback = handle(forEventProp(prop, value), handler);
 
 		// undefined shouldn't pass
 		callback(makeEvent());
-		expect(handler.calledOnce).toBe(false);
+		expect(handler).not.toHaveBeenCalled();
 
 		// == check shouldn't pass
 		callback(makeEvent({
 			[prop]: false
 		}));
-		expect(handler.calledOnce).toBe(false);
+		expect(handler).not.toHaveBeenCalled();
 
 		// === should pass
 		callback(makeEvent({
 			[prop]: value
 		}));
-		expect(handler.calledOnce).toBe(true);
+		expect(handler).toHaveBeenCalled();
 	});
 
 	test('should only call handler for specified prop', () => {
-		const handler = sinon.spy();
+		const handler = jest.fn();
 		const callback = handle(forProp('checked', true), handler);
 
 		// undefined shouldn't pass
 		callback({}, {});
-		expect(handler.calledOnce).toBe(false);
+		expect(handler).not.toHaveBeenCalled();
 
 		// == check shouldn't pass
 		callback({}, {checked: 1});
-		expect(handler.calledOnce).toBe(false);
+		expect(handler).not.toHaveBeenCalled();
 
 		// === should pass
 		callback({}, {checked: true});
-		expect(handler.calledOnce).toBe(true);
+		expect(handler).toHaveBeenCalled();
 	});
 
 	test(
@@ -170,7 +170,7 @@ describe('handle', () => {
 			const event = 'onMyClick';
 			const prop = 'index';
 			const propValue = 0;
-			const spy = sinon.spy();
+			const spy = jest.fn();
 
 			const props = {
 				[event]: spy
@@ -182,7 +182,7 @@ describe('handle', () => {
 			handle(forward(event))(payload, props);
 
 			const expected = true;
-			const actual = spy.args[0][0][prop] === propValue;
+			const actual = spy.mock.calls[0][0][prop] === propValue;
 
 			expect(actual).toBe(expected);
 		}
@@ -192,12 +192,12 @@ describe('handle', () => {
 		'should forwardWithPrevent events to function specified in provided props when preventDefault() hasn\'t been called',
 		() => {
 			const event = 'onMyClick';
-			const handler = sinon.spy();
+			const handler = jest.fn();
 
 			const callback = handle(forwardWithPrevent(event), handler);
 
 			callback();
-			expect(handler.calledOnce).toBe(true);
+			expect(handler).toHaveBeenCalledTimes(1);
 		}
 	);
 
@@ -205,7 +205,7 @@ describe('handle', () => {
 		'should not forwardWithPrevent events to function specified in provided props when preventDefault() has been called',
 		() => {
 			const event = 'onMyClick';
-			const handler = sinon.spy();
+			const handler = jest.fn();
 
 			const callback = handle(forwardWithPrevent(event), handler);
 
@@ -213,7 +213,7 @@ describe('handle', () => {
 			callback({}, {
 				'onMyClick': (ev) => ev.preventDefault()
 			});
-			expect(handler.calledOnce).toBe(false);
+			expect(handler).not.toHaveBeenCalled();
 		}
 	);
 
@@ -224,13 +224,13 @@ describe('handle', () => {
 				value: 1
 			}
 		};
-		const handler = sinon.spy();
+		const handler = jest.fn();
 		const h = handle.bind(componentInstance);
 		const callback = h(handler);
 		callback();
 
 		const expected = 1;
-		const actual = handler.firstCall.args[1].value;
+		const actual = handler.mock.calls[0][1].value;
 
 		expect(actual).toBe(expected);
 	});
@@ -242,26 +242,26 @@ describe('handle', () => {
 			},
 			props: {}
 		};
-		const handler = sinon.spy();
+		const handler = jest.fn();
 		const h = handle.bind(componentInstance);
 		const callback = h(handler);
 		callback();
 
 		const expected = 1;
-		const actual = handler.firstCall.args[2].value;
+		const actual = handler.mock.calls[0][2].value;
 
 		expect(actual).toBe(expected);
 	});
 
 	describe('finally', () => {
 		test('should call the finally callback when handle returns true', () => {
-			const finallyCallback = sinon.spy();
+			const finallyCallback = jest.fn();
 			const callback = handle(returnsTrue).finally(finallyCallback);
 
 			callback(makeEvent());
 
-			const expected = true;
-			const actual = finallyCallback.calledOnce;
+			const expected = 1;
+			const actual = finallyCallback.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		});
@@ -269,13 +269,13 @@ describe('handle', () => {
 		test(
 			'should call the finally callback when handle returns false',
 			() => {
-				const finallyCallback = sinon.spy();
+				const finallyCallback = jest.fn();
 				const callback = handle(returnsFalse).finally(finallyCallback);
 
 				callback(makeEvent());
 
-				const expected = true;
-				const actual = finallyCallback.calledOnce;
+				const expected = 1;
+				const actual = finallyCallback.mock.calls.length;
 
 				expect(actual).toBe(expected);
 			}
@@ -284,7 +284,7 @@ describe('handle', () => {
 		test(
 			'should call the finally callback when handle throws an error',
 			() => {
-				const finallyCallback = sinon.spy();
+				const finallyCallback = jest.fn();
 				const callback = handle(() => {
 					throw new Error('Something has gone awry ...');
 				}).finally(finallyCallback);
@@ -295,8 +295,8 @@ describe('handle', () => {
 					// we don't want the error to interrupt the test
 				}
 
-				const expected = true;
-				const actual = finallyCallback.calledOnce;
+				const expected = 1;
+				const actual = finallyCallback.mock.calls.length;
 
 				expect(actual).toBe(expected);
 			}
@@ -305,7 +305,7 @@ describe('handle', () => {
 
 	describe('#oneOf', () => {
 		test('should call each handler until one passes', () => {
-			const handler = sinon.spy(returnsTrue);
+			const handler = jest.fn(returnsTrue);
 			const h1 = [
 				returnsFalse,
 				handler
@@ -318,13 +318,13 @@ describe('handle', () => {
 			callback();
 
 			const expected = 1;
-			const actual = handler.callCount;
+			const actual = handler.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		});
 
 		test('should stop if the first handler passes', () => {
-			const handler = sinon.spy(returnsTrue);
+			const handler = jest.fn(returnsTrue);
 			const callback = oneOf(
 				[returnsTrue, handler],
 				[returnsTrue, handler],
@@ -333,13 +333,13 @@ describe('handle', () => {
 			callback();
 
 			const expected = 1;
-			const actual = handler.callCount;
+			const actual = handler.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		});
 
 		test('should pass args to condition', () => {
-			const handler = sinon.spy(returnsTrue);
+			const handler = jest.fn(returnsTrue);
 			const callback = oneOf(
 				[handler, returnsTrue]
 			);
@@ -347,13 +347,13 @@ describe('handle', () => {
 			callback(ev);
 
 			const expected = ev;
-			const actual = handler.firstCall.args[0];
+			const actual = handler.mock.calls[0][0];
 
 			expect(actual).toBe(expected);
 		});
 
 		test('should pass args to handlers', () => {
-			const handler = sinon.spy(returnsTrue);
+			const handler = jest.fn(returnsTrue);
 			const callback = oneOf(
 				[returnsTrue, handler]
 			);
@@ -361,7 +361,7 @@ describe('handle', () => {
 			callback(ev);
 
 			const expected = ev;
-			const actual = handler.firstCall.args[0];
+			const actual = handler.mock.calls[0][0];
 
 			expect(actual).toBe(expected);
 		});
@@ -413,7 +413,7 @@ describe('handle', () => {
 					value: 1
 				}
 			};
-			const handler = sinon.spy();
+			const handler = jest.fn();
 			const h = handle.bind(componentInstance);
 			const callback = oneOf(
 				[returnsTrue, h(handler)]
@@ -421,7 +421,7 @@ describe('handle', () => {
 			callback();
 
 			const expected = 1;
-			const actual = handler.firstCall.args[2].value;
+			const actual = handler.mock.calls[0][2].value;
 
 			expect(actual).toBe(expected);
 		});
@@ -433,7 +433,7 @@ describe('handle', () => {
 				},
 				context: {}
 			};
-			const handler = sinon.spy();
+			const handler = jest.fn();
 			const o = oneOf.bind(componentInstance);
 			const callback = o(
 				[returnsTrue, handler]
@@ -441,7 +441,7 @@ describe('handle', () => {
 			callback();
 
 			const expected = 1;
-			const actual = handler.firstCall.args[1].value;
+			const actual = handler.mock.calls[0][1].value;
 
 			expect(actual).toBe(expected);
 		});
@@ -453,7 +453,7 @@ describe('handle', () => {
 					value: 1
 				}
 			};
-			const handler = sinon.spy();
+			const handler = jest.fn();
 			const o = oneOf.bind(componentInstance);
 			const callback = o(
 				[returnsTrue, handler]
@@ -461,13 +461,13 @@ describe('handle', () => {
 			callback();
 
 			const expected = 1;
-			const actual = handler.firstCall.args[2].value;
+			const actual = handler.mock.calls[0][2].value;
 
 			expect(actual).toBe(expected);
 		});
 
 		test('should support finally callback', () => {
-			const handler = sinon.spy();
+			const handler = jest.fn();
 			const callback = oneOf(
 				[returnsFalse, returnsTrue],
 				[returnsFalse, returnsTrue]
@@ -475,8 +475,8 @@ describe('handle', () => {
 
 			callback();
 
-			const expected = true;
-			const actual = handler.calledOnce;
+			const expected = 1;
+			const actual = handler.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		});
@@ -484,7 +484,7 @@ describe('handle', () => {
 
 	describe('#adaptEvent', () => {
 		test('should pass the adapted event payload to the provided handler', () => {
-			const handler = sinon.spy();
+			const handler = jest.fn();
 			const onlyValue = ({value}) => ({value});
 			const ev = {
 				value: 1,
@@ -494,18 +494,18 @@ describe('handle', () => {
 			adaptEvent(onlyValue, handler)(ev);
 
 			const expected = {value: 1};
-			const actual = handler.firstCall.args[0];
+			const actual = handler.mock.calls[0][0];
 
 			expect(actual).toEqual(expected);
 		});
 
 		test('should pass additional arguments to the provided handler', () => {
-			const handler = sinon.spy();
+			const handler = jest.fn();
 			const returnOne = () => 1;
 			adaptEvent(returnOne, handler)(0, 2, 3);
 
 			const expected = [1, 2, 3];
-			const actual = handler.firstCall.args;
+			const actual = handler.mock.calls[0];
 
 			expect(actual).toEqual(expected);
 		});
@@ -514,20 +514,20 @@ describe('handle', () => {
 			const obj = {
 				adapt: () => 1
 			};
-			const handler = sinon.spy();
+			const handler = jest.fn();
 			const fn = adaptEvent(call('adapt'), handler).bind(obj);
 
 			fn(0, 2, 3);
 
 			const expected = [1, 2, 3];
-			const actual = handler.firstCall.args;
+			const actual = handler.mock.calls[0];
 
 			expect(actual).toEqual(expected);
 		});
 
 		test('should support bound handler function', () => {
 			const obj = {
-				handler: sinon.spy()
+				handler: jest.fn()
 			};
 			const returnOne = () => 1;
 			const fn = adaptEvent(returnOne, call('handler')).bind(obj);
@@ -535,7 +535,7 @@ describe('handle', () => {
 			fn(0, 2, 3);
 
 			const expected = [1, 2, 3];
-			const actual = obj.handler.firstCall.args;
+			const actual = obj.handler.mock.calls[0];
 
 			expect(actual).toEqual(expected);
 		});

@@ -1,6 +1,5 @@
 import {mount} from 'enzyme';
 import React from 'react';
-import sinon from 'sinon';
 
 import Slider from '../Slider';
 import css from '../Slider.less';
@@ -19,13 +18,13 @@ const downKeyDown = keyDown(40);
 
 describe('Slider', () => {
 	const callCount = spy => {
-		switch (spy.callCount) {
+		switch (spy.mock.calls.length) {
 			case 0:
 				return 'not called';
 			case 1:
 				return 'called once';
 			default:
-				return `called ${spy.callCount} times`;
+				return `called ${spy.mock.calls.length} times`;
 		}
 	};
 
@@ -256,7 +255,7 @@ describe('Slider', () => {
 	test(
 		'should not emit onChange when decrementing at the lower bound when value is unset',
 		() => {
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const subject = mount(
 				<Slider min={0} max={10} onChange={handleChange} />
 			);
@@ -265,14 +264,14 @@ describe('Slider', () => {
 			leftKeyDown(subject);
 
 			const expected = 'onChange not emitted';
-			const actual = handleChange.called ? 'onChange emitted' : 'onChange not emitted';
+			const actual = handleChange.mock.calls.length > 0 ? 'onChange emitted' : 'onChange not emitted';
 
 			expect(actual).toBe(expected);
 		}
 	);
 
 	test('should increment from the lower bound when value is unset', () => {
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 		const subject = mount(
 			<Slider min={0} max={10} onChange={handleChange} />
 		);
@@ -287,7 +286,7 @@ describe('Slider', () => {
 	});
 
 	test('should call onSpotlightLeft on horizontal slider at min value', () => {
-		const handleSpotlight = sinon.spy();
+		const handleSpotlight = jest.fn();
 		const subject = mount(
 			<Slider defaultValue={0} onSpotlightLeft={handleSpotlight} />
 		);
@@ -302,7 +301,7 @@ describe('Slider', () => {
 	});
 
 	test('should call onSpotlightLeft on vertical slider at any value', () => {
-		const handleSpotlight = sinon.spy();
+		const handleSpotlight = jest.fn();
 		const subject = mount(
 			<Slider defaultValue={50} orientation="vertical" onSpotlightLeft={handleSpotlight} />
 		);
@@ -319,7 +318,7 @@ describe('Slider', () => {
 	test(
 		'should not call onSpotlightLeft on horizontal slider at greater than min value',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const subject = mount(
 				<Slider defaultValue={1} onSpotlightLeft={handleSpotlight} />
 			);
@@ -335,7 +334,7 @@ describe('Slider', () => {
 	);
 
 	test('should call onSpotlightDown on vertical slider at min value', () => {
-		const handleSpotlight = sinon.spy();
+		const handleSpotlight = jest.fn();
 		const subject = mount(
 			<Slider defaultValue={0} orientation="vertical" onSpotlightDown={handleSpotlight} />
 		);
@@ -350,7 +349,7 @@ describe('Slider', () => {
 	});
 
 	test('should call onSpotlightDown on horizontal slider at any value', () => {
-		const handleSpotlight = sinon.spy();
+		const handleSpotlight = jest.fn();
 		const subject = mount(
 			<Slider defaultValue={50} onSpotlightDown={handleSpotlight} />
 		);
@@ -367,7 +366,7 @@ describe('Slider', () => {
 	test(
 		'should not call onSpotlightDown on vertical slider at greater than min value',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const subject = mount(
 				<Slider defaultValue={1} orientation="vertical" onSpotlightDown={handleSpotlight} />
 			);
@@ -383,7 +382,7 @@ describe('Slider', () => {
 	);
 
 	test('should call onSpotlightRight on horizontal slider at max value', () => {
-		const handleSpotlight = sinon.spy();
+		const handleSpotlight = jest.fn();
 		const subject = mount(
 			<Slider defaultValue={100} onSpotlightRight={handleSpotlight} />
 		);
@@ -398,7 +397,7 @@ describe('Slider', () => {
 	});
 
 	test('should call onSpotlightRight on vertical slider at any value', () => {
-		const handleSpotlight = sinon.spy();
+		const handleSpotlight = jest.fn();
 		const subject = mount(
 			<Slider defaultValue={50} orientation="vertical" onSpotlightRight={handleSpotlight} />
 		);
@@ -415,7 +414,7 @@ describe('Slider', () => {
 	test(
 		'should not call onSpotlightRight on horizontal slider at less than max value',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const subject = mount(
 				<Slider defaultValue={99} onSpotlightRight={handleSpotlight} />
 			);
@@ -431,7 +430,7 @@ describe('Slider', () => {
 	);
 
 	test('should call onSpotlightUp on vertical slider at max value', () => {
-		const handleSpotlight = sinon.spy();
+		const handleSpotlight = jest.fn();
 		const subject = mount(
 			<Slider defaultValue={100} max={100} orientation="vertical" onSpotlightUp={handleSpotlight} />
 		);
@@ -446,7 +445,7 @@ describe('Slider', () => {
 	});
 
 	test('should call onSpotlightUp on horizontal slider at any value', () => {
-		const handleSpotlight = sinon.spy();
+		const handleSpotlight = jest.fn();
 		const subject = mount(
 			<Slider defaultValue={50} onSpotlightUp={handleSpotlight} />
 		);
@@ -463,7 +462,7 @@ describe('Slider', () => {
 	test(
 		'should not call onSpotlightUp on vertical slider at less than max value',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const subject = mount(
 				<Slider defaultValue={99} orientation="vertical" onSpotlightUp={handleSpotlight} />
 			);

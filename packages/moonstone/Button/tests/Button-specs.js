@@ -1,6 +1,5 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 import Button from '../Button';
 
 describe('Button', () => {
@@ -34,29 +33,29 @@ describe('Button', () => {
 
 	describe('events', () => {
 		test('should call onClick when not disabled', () => {
-			const handleClick = sinon.spy();
+			const handleClick = jest.fn();
 			const subject = mount(
 				<Button onClick={handleClick}>I am a disabled Button</Button>
 			);
 
 			subject.simulate('click');
 
-			const expected = true;
-			const actual = handleClick.called;
+			const expected = 1;
+			const actual = handleClick.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		});
 
 		test('should not call onClick when disabled', () => {
-			const handleClick = sinon.spy();
+			const handleClick = jest.fn();
 			const subject = mount(
 				<Button disabled onClick={handleClick}>I am a disabled Button</Button>
 			);
 
 			subject.simulate('click');
 
-			const expected = false;
-			const actual = handleClick.called;
+			const expected = 0;
+			const actual = handleClick.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		});

@@ -1,4 +1,3 @@
-import sinon from 'sinon';
 import {mount, shallow} from 'enzyme';
 import React from 'react';
 
@@ -167,7 +166,7 @@ describe('Scroller', () => {
 
 	describe('ScrollerBase API', () => {
 		test('should call onUpdate when Scroller updates', () => {
-			const handleUpdate = sinon.spy();
+			const handleUpdate = jest.fn();
 			const subject = shallow(
 				<ScrollerBase
 					onUpdate={handleUpdate}
@@ -178,8 +177,8 @@ describe('Scroller', () => {
 
 			subject.setProps({children: ''});
 
-			const expected = true;
-			const actual = handleUpdate.calledOnce;
+			const expected = 1;
+			const actual = handleUpdate.mock.calls.length;
 
 			expect(expected).toBe(actual);
 		});

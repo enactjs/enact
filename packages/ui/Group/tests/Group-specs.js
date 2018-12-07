@@ -1,7 +1,6 @@
 /* globals describe, it, expect */
 
 import React from 'react';
-import sinon from 'sinon';
 import {mount, shallow} from 'enzyme';
 import {GroupBase} from '../Group';
 
@@ -9,7 +8,7 @@ describe('Group', () => {
 	const stringItems = ['One', 'Two', 'Three'];
 
 	test('should call handler with selected on select', () => {
-		const handleClick = sinon.spy();
+		const handleClick = jest.fn();
 		const subject = mount(
 			<GroupBase childComponent="div" onSelect={handleClick}>
 				{stringItems}
@@ -20,13 +19,13 @@ describe('Group', () => {
 		subject.find('div').at(selected).simulate('click', {});
 
 		const expected = selected;
-		const actual = handleClick.firstCall.args[0].selected;
+		const actual = handleClick.mock.calls[0][0].selected;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should call handler with data on select', () => {
-		const handleClick = sinon.spy();
+		const handleClick = jest.fn();
 		const subject = mount(
 			<GroupBase childComponent="div" onSelect={handleClick}>
 				{stringItems}
@@ -37,7 +36,7 @@ describe('Group', () => {
 		subject.find('div').at(selected).simulate('click', {});
 
 		const expected = stringItems[selected];
-		const actual = handleClick.firstCall.args[0].data;
+		const actual = handleClick.mock.calls[0][0].data;
 
 		expect(actual).toBe(expected);
 	});
@@ -45,7 +44,7 @@ describe('Group', () => {
 	test(
 		'should call handler on move when childSelect="onMouseMove"',
 		() => {
-			const handleClick = sinon.spy();
+			const handleClick = jest.fn();
 			const subject = mount(
 				<GroupBase childComponent="div" childSelect="onMouseMove" onSelect={handleClick}>
 					{stringItems}
@@ -54,8 +53,8 @@ describe('Group', () => {
 
 			subject.find('div').at(0).simulate('mousemove', {});
 
-			const expected = true;
-			const actual = handleClick.called;
+			const expected = 1;
+			const actual = handleClick.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		}
@@ -63,7 +62,7 @@ describe('Group', () => {
 
 	test('should select the third item with selected=2', () => {
 		const selected = 2;
-		const handleClick = sinon.spy();
+		const handleClick = jest.fn();
 		const subject = mount(
 			<GroupBase childComponent="div" selected={selected} onSelect={handleClick}>
 				{stringItems}
@@ -78,7 +77,7 @@ describe('Group', () => {
 
 	test('should set {data-active} on the first item', () => {
 		const selected = 0;
-		const handleClick = sinon.spy();
+		const handleClick = jest.fn();
 		const subject = mount(
 			<GroupBase childComponent="div" selected={selected} selectedProp="data-active" onSelect={handleClick}>
 				{stringItems}
@@ -93,7 +92,7 @@ describe('Group', () => {
 
 	test('should set {children} to be the item by default', () => {
 		const selected = 0;
-		const handleClick = sinon.spy();
+		const handleClick = jest.fn();
 		const subject = mount(
 			<GroupBase childComponent="div" onSelect={handleClick}>
 				{stringItems}
@@ -108,7 +107,7 @@ describe('Group', () => {
 
 	test('should set {data-child} to be the item', () => {
 		const selected = 0;
-		const handleClick = sinon.spy();
+		const handleClick = jest.fn();
 		const subject = mount(
 			<GroupBase childComponent="div" childProp="data-child" onSelect={handleClick}>
 				{stringItems}

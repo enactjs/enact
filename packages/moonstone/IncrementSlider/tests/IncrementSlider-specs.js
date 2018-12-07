@@ -1,5 +1,4 @@
 import React from 'react';
-import sinon from 'sinon';
 import {mount} from 'enzyme';
 import IncrementSlider from '../IncrementSlider';
 import css from '../IncrementSlider.less';
@@ -18,19 +17,19 @@ const upKeyDown = keyDown(38);
 const downKeyDown = keyDown(40);
 
 const callCount = spy => {
-	switch (spy.callCount) {
+	switch (spy.mock.calls.length) {
 		case 0:
 			return 'not called';
 		case 1:
 			return 'called once';
 		default:
-			return `called ${spy.callCount} times`;
+			return `called ${spy.mock.calls.length} times`;
 	}
 };
 
 describe('IncrementSlider Specs', () => {
 	test('should decrement value', () => {
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 		const value = 50;
 		const incrementSlider = mount(
 			<IncrementSlider
@@ -42,13 +41,13 @@ describe('IncrementSlider Specs', () => {
 		decrement(incrementSlider);
 
 		const expected = value - 1;
-		const actual = handleChange.args[0][0].value;
+		const actual = handleChange.mock.calls[0][0].value;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should increment value', () => {
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 		const value = 50;
 		const incrementSlider = mount(
 			<IncrementSlider
@@ -60,13 +59,13 @@ describe('IncrementSlider Specs', () => {
 		increment(incrementSlider);
 
 		const expected = value + 1;
-		const actual = handleChange.args[0][0].value;
+		const actual = handleChange.mock.calls[0][0].value;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should only call onChange once', () => {
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 		const value = 50;
 		const incrementSlider = mount(
 			<IncrementSlider
@@ -77,14 +76,14 @@ describe('IncrementSlider Specs', () => {
 
 		increment(incrementSlider);
 
-		const expected = true;
-		const actual = handleChange.calledOnce;
+		const expected = 1;
+		const actual = handleChange.mock.calls.length;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should not call onChange on prop change', () => {
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 		const value = 50;
 		const incrementSlider = mount(
 			<IncrementSlider
@@ -95,8 +94,8 @@ describe('IncrementSlider Specs', () => {
 
 		incrementSlider.setProps({onChange: handleChange, value: value + 1});
 
-		const expected = false;
-		const actual = handleChange.called;
+		const expected = 0;
+		const actual = handleChange.mock.calls.length;
 
 		expect(actual).toBe(expected);
 	});
@@ -244,7 +243,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightLeft from the decrement button of horizontal IncrementSlider',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider onSpotlightLeft={handleSpotlight} />
 			);
@@ -261,7 +260,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightLeft from the decrement button of vertical IncrementSlider',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider orientation="vertical" onSpotlightLeft={handleSpotlight} />
 			);
@@ -278,7 +277,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightLeft from the increment button of vertical IncrementSlider',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider orientation="vertical" onSpotlightLeft={handleSpotlight} />
 			);
@@ -295,7 +294,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightRight from the increment button of horizontal IncrementSlider',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider onSpotlightRight={handleSpotlight} />
 			);
@@ -312,7 +311,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightRight from the increment button of vertical IncrementSlider',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider orientation="vertical" onSpotlightRight={handleSpotlight} />
 			);
@@ -329,7 +328,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightRight from the decrement button of vertical IncrementSlider',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider orientation="vertical" onSpotlightRight={handleSpotlight} />
 			);
@@ -346,7 +345,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightUp from the decrement button of horizontal IncrementSlider',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider onSpotlightUp={handleSpotlight} />
 			);
@@ -363,7 +362,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightUp from the increment button of horizontal IncrementSlider',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider onSpotlightUp={handleSpotlight} />
 			);
@@ -380,7 +379,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightUp from the increment button of vertical IncrementSlider',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider orientation="vertical" onSpotlightUp={handleSpotlight} />
 			);
@@ -397,7 +396,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightDown from the increment button of horizontal IncrementSlider',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider onSpotlightDown={handleSpotlight} />
 			);
@@ -414,7 +413,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightDown from the decrement button of horizontal IncrementSlider',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider orientation="vertical" onSpotlightDown={handleSpotlight} />
 			);
@@ -431,7 +430,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightDown from the decrement button of vertical IncrementSlider',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider orientation="vertical" onSpotlightDown={handleSpotlight} />
 			);
@@ -450,7 +449,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightLeft from slider of horizontal IncrementSlider when value is at min',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider min={0} value={0} onSpotlightLeft={handleSpotlight} />
 			);
@@ -467,7 +466,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightRight from slider of horizontal IncrementSlider when value is at max',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider max={100} value={100} onSpotlightRight={handleSpotlight} />
 			);
@@ -484,7 +483,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightDown from slider of vertical IncrementSlider when value is at min',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider min={0} value={0} orientation="vertical" onSpotlightDown={handleSpotlight} />
 			);
@@ -501,7 +500,7 @@ describe('IncrementSlider Specs', () => {
 	test(
 		'should call onSpotlightUp from slider of horizontal IncrementSlider when value is at max',
 		() => {
-			const handleSpotlight = sinon.spy();
+			const handleSpotlight = jest.fn();
 			const incrementSlider = mount(
 				<IncrementSlider max={100} value={100} orientation="vertical" onSpotlightUp={handleSpotlight} />
 			);

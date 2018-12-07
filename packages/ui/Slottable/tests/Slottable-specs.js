@@ -5,7 +5,6 @@ import React from 'react';
 import {mount} from 'enzyme';
 import kind from '@enact/core/kind';
 import Slottable from '../Slottable';
-import sinon from 'sinon';
 
 describe('Slottable Specs', () => {
 
@@ -120,9 +119,9 @@ describe('Slottable Specs', () => {
 	test(
 		'should not distribute children with an invalid \'slot\' property',
 		() => {
-			// Remove Global Spy and replace with a stub instead
-			console.error.restore();
-			sinon.stub(console, 'error');
+			// Modify the console spy to silence error output with
+			// an empty mock implementation
+			console.error.mockImplementation();
 
 			const Component = Slottable({slots: ['a', 'b']}, ({a, b, c}) => (
 				<div>
@@ -146,12 +145,12 @@ describe('Slottable Specs', () => {
 			expect(actual).toBe(expected);
 
 			// Check to make sure that we only get the one expected error
-			const actualErrorsLength = console.error.args.length;
+			const actualErrorsLength = console.error.mock.calls.length;
 			const expectedErrorLength = 1;
 
 			expect(actualErrorsLength).toBe(expectedErrorLength);
 
-			const actualError = console.error.args[0][0];
+			const actualError = console.error.mock.calls[0][0];
 			const expectedError = 'Warning: The slot "c" specified on div does not exist';
 
 			expect(actualError).toBe(expectedError);

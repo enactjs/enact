@@ -1,6 +1,5 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 import Item from '../Item';
 
 const tap = (node) => {
@@ -37,29 +36,29 @@ describe('Item', () => {
 
 	describe('events', () => {
 		test('should call onTap when tapped', () => {
-			const handleClick = sinon.spy();
+			const handleClick = jest.fn();
 			const item = mount(
 				<Item onTap={handleClick}>I am a normal Item</Item>
 			);
 
 			tap(item);
 
-			const expected = true;
-			const actual = handleClick.called;
+			const expected = 1;
+			const actual = handleClick.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		});
 
 		test('should not call onTap when tapped and disabled', () => {
-			const handleClick = sinon.spy();
+			const handleClick = jest.fn();
 			const item = mount(
 				<Item disabled onTap={handleClick}>I am a disabled Item</Item>
 			);
 
 			tap(item);
 
-			const expected = false;
-			const actual = handleClick.called;
+			const expected = 0;
+			const actual = handleClick.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		});

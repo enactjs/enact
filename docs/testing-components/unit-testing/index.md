@@ -33,7 +33,6 @@ component or item under test and end with the `"-specs.js"` suffix.
 We use a dizzying number of tools to perform unit testing.  A quick overview of the different tools can be helpful.
 
 *   [Jest](https://jestjs.io/) - A test framework. This tool allows us to setup, assert and run tests. We can also use `jest` as a mocking library.
-*   [Sinon](http://sinonjs.org/) - A mock library.  Useful for adding mocks and spies to components under test.
 *   [Enzyme](http://airbnb.io/enzyme/) - A test library for use with React.  It allows us to shallowly render components and inspect the output.
 *   [jsdom](https://github.com/jsdom/jsdom) - A pure-JavaScript implementation of many web standards, notably the WHATWG DOM and HTML Standards, for use with Node.js.
 

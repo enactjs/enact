@@ -1,6 +1,5 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 import {TimePicker, TimePickerBase} from '../TimePicker';
 import css from '../TimePicker.less';
 
@@ -22,7 +21,7 @@ describe('TimePicker', () => {
 	test(
 		'should emit an onChange event when changing a component picker',
 		() => {
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const subject = mount(
 				<TimePicker onChange={handleChange} open title="Time" value={new Date(2000, 6, 15, 3, 30)} />
 			);
@@ -30,8 +29,8 @@ describe('TimePicker', () => {
 			const base = subject.find('DateComponentRangePicker').first();
 			base.prop('onChange')({value: 0});
 
-			const expected = true;
-			const actual = handleChange.calledOnce;
+			const expected = 1;
+			const actual = handleChange.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		}

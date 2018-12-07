@@ -1,6 +1,5 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 import Picker from '../Picker';
 import PickerItem from '../PickerItem';
 import css from '../Picker.less';
@@ -28,7 +27,7 @@ describe('Picker Specs', () => {
 	test(
 		'should return an object {value: Number} that represents the next value of the Picker component when pressing the increment <span>',
 		() => {
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const picker = mount(
 				<Picker index={0} max={1} min={-1} onChange={handleChange} value={0} />
 			);
@@ -36,7 +35,7 @@ describe('Picker Specs', () => {
 			increment(picker);
 
 			const expected = 1;
-			const actual = handleChange.args[0][0].value;
+			const actual = handleChange.mock.calls[0][0].value;
 
 			expect(actual).toBe(expected);
 		}
@@ -45,7 +44,7 @@ describe('Picker Specs', () => {
 	test(
 		'should return an object {value: Number} that represents the next value of the Picker component when pressing the decrement <span>',
 		() => {
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const picker = mount(
 				<Picker index={0} max={1} min={-1} onChange={handleChange} value={0} />
 			);
@@ -53,22 +52,22 @@ describe('Picker Specs', () => {
 			decrement(picker);
 
 			const expected = -1;
-			const actual = handleChange.args[0][0].value;
+			const actual = handleChange.mock.calls[0][0].value;
 
 			expect(actual).toBe(expected);
 		}
 	);
 
 	test('should not run the onChange handler when disabled', () => {
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 		const picker = mount(
 			<Picker disabled index={0} max={0} min={0} onChange={handleChange} value={0} />
 		);
 
 		increment(picker);
 
-		const expected = false;
-		const actual = handleChange.called;
+		const expected = 0;
+		const actual = handleChange.mock.calls.length;
 
 		expect(actual).toBe(expected);
 	});
@@ -76,7 +75,7 @@ describe('Picker Specs', () => {
 	test(
 		'should wrap to the beginning of the value range if \'wrap\' is true',
 		() => {
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const picker = mount(
 				<Picker index={0} max={0} min={-1} onChange={handleChange} value={0} wrap />
 			);
@@ -84,7 +83,7 @@ describe('Picker Specs', () => {
 			increment(picker);
 
 			const expected = -1;
-			const actual = handleChange.args[0][0].value;
+			const actual = handleChange.mock.calls[0][0].value;
 
 			expect(actual).toBe(expected);
 		}
@@ -93,7 +92,7 @@ describe('Picker Specs', () => {
 	test(
 		'should wrap to the end of the value range if \'wrap\' is true',
 		() => {
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const picker = mount(
 				<Picker index={0} max={1} min={0} onChange={handleChange} value={0} wrap />
 			);
@@ -101,14 +100,14 @@ describe('Picker Specs', () => {
 			decrement(picker);
 
 			const expected = 1;
-			const actual = handleChange.args[0][0].value;
+			const actual = handleChange.mock.calls[0][0].value;
 
 			expect(actual).toBe(expected);
 		}
 	);
 
 	test('should increment by \'step\' value', () => {
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 		const picker = mount(
 			<Picker index={0} max={6} min={0} onChange={handleChange} step={3} value={0} />
 		);
@@ -116,13 +115,13 @@ describe('Picker Specs', () => {
 		increment(picker);
 
 		const expected = 3;
-		const actual = handleChange.args[0][0].value;
+		const actual = handleChange.mock.calls[0][0].value;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should decrement by \'step\' value', () => {
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 		const picker = mount(
 			<Picker index={0} max={3} min={0} onChange={handleChange} step={3} value={3} />
 		);
@@ -130,13 +129,13 @@ describe('Picker Specs', () => {
 		decrement(picker);
 
 		const expected = 0;
-		const actual = handleChange.args[0][0].value;
+		const actual = handleChange.mock.calls[0][0].value;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should increment by \'step\' value and wrap successfully', () => {
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 		const picker = mount(
 			<Picker index={0} max={3} min={0} onChange={handleChange} step={3} value={3} wrap />
 		);
@@ -144,13 +143,13 @@ describe('Picker Specs', () => {
 		increment(picker);
 
 		const expected = 0;
-		const actual = handleChange.args[0][0].value;
+		const actual = handleChange.mock.calls[0][0].value;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should decrement by \'step\' value and wrap successfully', () => {
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 		const picker = mount(
 			<Picker index={0} max={9} min={0} onChange={handleChange} step={3} value={0} wrap />
 		);
@@ -158,7 +157,7 @@ describe('Picker Specs', () => {
 		decrement(picker);
 
 		const expected = 9;
-		const actual = handleChange.args[0][0].value;
+		const actual = handleChange.mock.calls[0][0].value;
 
 		expect(actual).toBe(expected);
 	});
@@ -237,14 +236,14 @@ describe('Picker Specs', () => {
 	test(
 		'should allow keyboard decrement via left arrow keys when \'joined\' and \'horizontal\'',
 		() => {
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const picker = mount(
 				<Picker index={0} joined max={1} min={-1} onChange={handleChange} value={0} />
 			);
 
 			const expected = -1;
 			picker.simulate('keyDown', {keyCode: 37});
-			const actual = handleChange.args[0][0].value;
+			const actual = handleChange.mock.calls[0][0].value;
 
 			expect(actual).toBe(expected);
 		}
@@ -253,14 +252,14 @@ describe('Picker Specs', () => {
 	test(
 		'should allow keyboard increment via right arrow keys when \'joined\' and \'horizontal\'',
 		() => {
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const picker = mount(
 				<Picker index={0} joined max={1} min={-1} onChange={handleChange} value={0} />
 			);
 
 			const expected = 1;
 			picker.simulate('keyDown', {keyCode: 39});
-			const actual = handleChange.args[0][0].value;
+			const actual = handleChange.mock.calls[0][0].value;
 
 			expect(actual).toBe(expected);
 		}
@@ -269,14 +268,14 @@ describe('Picker Specs', () => {
 	test(
 		'should allow keyboard decrement via down arrow keys when \'joined\' and \'vertical\'',
 		() => {
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const picker = mount(
 				<Picker index={0} joined max={1} min={-1} onChange={handleChange} orientation="vertical" value={0} />
 			);
 
 			const expected = -1;
 			picker.simulate('keyDown', {keyCode: 40});
-			const actual = handleChange.args[0][0].value;
+			const actual = handleChange.mock.calls[0][0].value;
 
 			expect(actual).toBe(expected);
 		}
@@ -285,14 +284,14 @@ describe('Picker Specs', () => {
 	test(
 		'should allow keyboard decrement via up arrow keys when \'joined\' and \'vertical\'',
 		() => {
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const picker = mount(
 				<Picker index={0} joined max={1} min={-1} onChange={handleChange} orientation="vertical" value={0} />
 			);
 
 			const expected = 1;
 			picker.simulate('keyDown', {keyCode: 38});
-			const actual = handleChange.args[0][0].value;
+			const actual = handleChange.mock.calls[0][0].value;
 
 			expect(actual).toBe(expected);
 		}
@@ -301,14 +300,14 @@ describe('Picker Specs', () => {
 	test(
 		'should not allow keyboard decrement via left arrow keys when \'joined\' and \'vertical\'',
 		() => {
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const picker = mount(
 				<Picker index={0} joined max={1} min={-1} onChange={handleChange} orientation="vertical" value={0} />
 			);
 
-			const expected = false;
+			const expected = 0;
 			picker.simulate('keyDown', {keyCode: 37});
-			const actual = handleChange.called;
+			const actual = handleChange.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		}
@@ -317,14 +316,14 @@ describe('Picker Specs', () => {
 	test(
 		'should not allow keyboard increment via right arrow keys when \'joined\' and \'vertical\'',
 		() => {
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const picker = mount(
 				<Picker index={0} joined max={1} min={-1} onChange={handleChange} orientation="vertical" value={0} />
 			);
 
-			const expected = false;
+			const expected = 0;
 			picker.simulate('keyDown', {keyCode: 39});
-			const actual = handleChange.called;
+			const actual = handleChange.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		}
@@ -333,14 +332,14 @@ describe('Picker Specs', () => {
 	test(
 		'should not allow keyboard decrement via down arrow keys when \'joined\' and \'horizontal\'',
 		() => {
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const picker = mount(
 				<Picker index={0} joined max={1} min={-1} onChange={handleChange} orientation="horizontal" value={0}  />
 			);
 
-			const expected = false;
+			const expected = 0;
 			picker.simulate('keyDown', {keyCode: 40});
-			const actual = handleChange.called;
+			const actual = handleChange.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		}
@@ -349,14 +348,14 @@ describe('Picker Specs', () => {
 	test(
 		'should not allow keyboard increment via up arrow keys when \'joined\' and \'horizontal\'',
 		() => {
-			const handleChange = sinon.spy();
+			const handleChange = jest.fn();
 			const picker = mount(
 				<Picker index={0} joined max={1} min={-1} onChange={handleChange} orientation="horizontal" value={0} />
 			);
 
-			const expected = false;
+			const expected = 0;
 			picker.simulate('keyDown', {keyCode: 38});
-			const actual = handleChange.called;
+			const actual = handleChange.mock.calls.length;
 
 			expect(actual).toBe(expected);
 		}
