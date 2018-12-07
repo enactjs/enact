@@ -78,6 +78,7 @@ describe('dispatcher', () => {
 		() => {
 			// Modify the console spy to silence error output with
 			// an empty mock implementation
+			// eslint-disable-next-line no-console
 			console.error.mockImplementation();
 
 			const throws = function () {
