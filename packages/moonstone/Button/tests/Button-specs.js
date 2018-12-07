@@ -54,7 +54,7 @@ describe('Button', () => {
 
 			subject.simulate('click');
 
-			const expected = 1;
+			const expected = 0;
 			const actual = handleClick.mock.calls.length;
 
 			expect(actual).toBe(expected);
