@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` to find spottable element correctly if first element in container is disabled
+
+
 ## [2.2.8] - 2018-12-06
 
 No significant changes.
