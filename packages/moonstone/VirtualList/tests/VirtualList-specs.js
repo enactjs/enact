@@ -40,10 +40,13 @@ describe('VirtualList', () => {
 		handlerOnScrollStart = () => {
 			onScrollStartCount++;
 		};
-		handlerOnScrollStop = (e) => {
+		handlerOnScrollStop = (done, testCase) => (e) => {
 			onScrollStopCount++;
 			resultScrollLeft = e.scrollLeft;
 			resultScrollTop = e.scrollTop;
+
+			testCase();
+			done();
 		};
 		renderItem = ({index, ...rest}) => { // eslint-disable-line enact/display-name, enact/prop-types
 			return (
@@ -127,7 +130,14 @@ describe('VirtualList', () => {
 	describe('ScrollTo', () => {
 		test(
 			'should scroll to the specific item of a given index with scrollTo',
-			() => {
+			(done) => {
+				const onScrollStop = handlerOnScrollStop(done, () => {
+					const expected = 300;
+					const actual = resultScrollTop;
+
+					expect(actual).toBe(expected);
+				});
+
 				mount(
 					<VirtualList
 						cbScrollTo={getScrollTo}
@@ -135,20 +145,22 @@ describe('VirtualList', () => {
 						dataSize={dataSize}
 						itemRenderer={renderItem}
 						itemSize={30}
-						onScrollStop={handlerOnScrollStop}
+						onScrollStop={onScrollStop}
 					/>
 				);
 
 				myScrollTo({index: 10, animate: false});
-
-				const expected = 300;
-				const actual = resultScrollTop;
-
-				expect(actual).toBe(expected);
 			}
 		);
 
-		test('should scroll to the given \'x\' position with scrollTo', () => {
+		test('should scroll to the given \'x\' position with scrollTo', (done) => {
+			const onScrollStop = handlerOnScrollStop(done, () => {
+				const expected = 100;
+				const actual = resultScrollLeft;
+
+				expect(actual).toBe(expected);
+			});
+
 			mount(
 				<VirtualList
 					cbScrollTo={getScrollTo}
@@ -157,19 +169,21 @@ describe('VirtualList', () => {
 					direction="horizontal"
 					itemRenderer={renderItem}
 					itemSize={30}
-					onScrollStop={handlerOnScrollStop}
+					onScrollStop={onScrollStop}
 				/>
 			);
 
 			myScrollTo({position: {x: 100}, animate: false});
-
-			const expected = 100;
-			const actual = resultScrollLeft;
-
-			expect(actual).toBe(expected);
 		});
 
-		test('should scroll to the given \'y\' position with scrollTo', () => {
+		test('should scroll to the given \'y\' position with scrollTo', (done) => {
+			const onScrollStop = handlerOnScrollStop(done, () => {
+				const expected = 100;
+				const actual = resultScrollTop;
+
+				expect(actual).toBe(expected);
+			});
+
 			mount(
 				<VirtualList
 					cbScrollTo={getScrollTo}
@@ -177,16 +191,11 @@ describe('VirtualList', () => {
 					dataSize={dataSize}
 					itemRenderer={renderItem}
 					itemSize={30}
-					onScrollStop={handlerOnScrollStop}
+					onScrollStop={onScrollStop}
 				/>
 			);
 
 			myScrollTo({position: {y: 100}, animate: false});
-
-			const expected = 100;
-			const actual = resultScrollTop;
-
-			expect(actual).toBe(expected);
 		});
 
 		describe('scroll events', () => {
@@ -230,7 +239,14 @@ describe('VirtualList', () => {
 				expect(actual).toBe(expected);
 			});
 
-			test('should call onScrollStop once', () => {
+			test('should call onScrollStop once', (done) => {
+				const onScrollStop = handlerOnScrollStop(done, () => {
+					const expected = 1;
+					const actual = onScrollStopCount;
+
+					expect(actual).toBe(expected);
+				});
+
 				mount(
 					<VirtualList
 						cbScrollTo={getScrollTo}
@@ -238,16 +254,11 @@ describe('VirtualList', () => {
 						dataSize={dataSize}
 						itemRenderer={renderItem}
 						itemSize={30}
-						onScrollStop={handlerOnScrollStop}
+						onScrollStop={onScrollStop}
 					/>
 				);
 
 				myScrollTo({position: {y: 100}, animate: false});
-
-				const expected = 1;
-				const actual = onScrollStopCount;
-
-				expect(actual).toBe(expected);
 			});
 		});
 	});
