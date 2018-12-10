@@ -718,7 +718,7 @@ function getContainerNavigableElements (containerId) {
 		// in view
 		if (overflow) {
 			const containerRect = getContainerRect(containerId);
-			next = spottables.find(element => [null, 'false'].includes(element.getAttribute('disabled')) && contains(containerRect, getRect(element)));
+			next = spottables.find(element => !element.hasAttribute('disabled') && contains(containerRect, getRect(element)));
 		}
 
 		// otherwise, return all spottables within the container
