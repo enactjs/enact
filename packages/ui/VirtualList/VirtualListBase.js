@@ -22,19 +22,22 @@ for (let i = 0; i < slotLength; i++) {
 const slotsRenderer = ({DraggableChild, index, initItemContainerRef, itemSize, slotsStyle, ...rest}) => {
 	const children = [];
 
+	// console.log('slotsRenderer', index);
+
 	for (let i = 0; i < slotNames.length; i++) {
-		const content = rest[slotNames[i]];
-		delete rest[slotNames[i]];
+		const key = (index + i) % 17;
+		const content = rest[slotNames[key]];
+		delete rest[slotNames[key]];
 		children.push(
 			<DraggableChild
 				className={css.draggable}
 				key={i}
-				name={slotNames[i]}
+				name={slotNames[key]}
 				style={{
 					position: 'absolute',
 					width: '100%',
 					height: itemSize + 'px',
-					transform: slotsStyle[(index + i) % 17] || null
+					transform: slotsStyle[key] || null
 				}}
 			>
 				{content}
@@ -740,6 +743,8 @@ const VirtualListBaseFactory = (type) => {
 				}),
 				componentProps = getComponentProps && getComponentProps(index) || {};
 
+			// console.log('applyStyleToNewNode', index);
+
 			this.cc[key] = React.createElement(slotNames[key], {
 				...componentProps,
 				key: index,
@@ -763,6 +768,8 @@ const VirtualListBaseFactory = (type) => {
 			let
 				hideTo = 0,
 				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0 || this.prevFirstIndex === -1) ? firstIndex + numOfItems : this.prevFirstIndex;
+
+			// console.log('positionItems', firstIndex);
 
 			if (updateFrom >= updateTo) {
 				return;
