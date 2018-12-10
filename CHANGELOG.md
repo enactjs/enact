@@ -9,6 +9,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/ExpandableInput` to focus labeled item on close
 - `moonstone/ExpandableItem` to disable its spotlight container when the component is disabled
 - `moonstone/Scroller` to correctly handle scrolling focused elements and containers into view
+- `spotlight` to focus correctly within an overflow container in which the first element is another container without spottable children
 - `ui/Marquee` to display an ellipsis when changing to text that no longer fits within its bounds
 - `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` to debounce `onScrollStop` events for non-animated scrolls
 
