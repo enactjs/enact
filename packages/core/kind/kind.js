@@ -11,26 +11,50 @@ import computed from './computed';
 import styles from './styles';
 
 /**
+ * @callback RenderFunction
+ * @memberof core/kind
+ * @param {Object<string, any>} props
+ * @param {Object<string, any>} context
+ * @returns React.Element|null
+ */
+
+/**
+ * @callback ComputedPropFunction
+ * @memberof core/kind
+ * @param {Object<string, any>} props
+ * @param {Object<string, any>} context
+ * @returns any
+ */
+
+/**
+ * @callback HandlerFunction
+ * @memberof core/kind
+ * @param {any} event
+ * @param {Object<string, any>} props
+ * @param {Object<string, any>} context
+ */
+
+/**
  * Configuration for CSS class name mapping
  *
  * @typedef {Object} StylesBlock
  * @memberof core/kind
  * @property {Object.<string, string>} css
- * @property {String} className
- * @property {Boolean|String|String[]} publicClassNames
+ * @property {String} [className]
+ * @property {Boolean|String|String[]} [publicClassNames]
  */
 
 /**
  * @typedef {Object} KindConfig
  * @memberof core/kind
- * @property {Object.<string, function>} computed
- * @property {Object.<string, function>} contextTypes
- * @property {Object.<string, any>} defaultProps
- * @property {Object.<string, function>} handlers
  * @property {String} name
- * @property {Object.<string, number>} propTypes
- * @property {function} render
- * @property {StylesBlock} styles
+ * @property {Object.<string, Function>} [propTypes]
+ * @property {Object.<string, any>} [defaultProps]
+ * @property {Object.<string, Function>} [contextTypes]
+ * @property {StylesBlock} [styles]
+ * @property {Object.<string, HandlerFunction>} [handlers]
+ * @property {Object.<string, ComputedPropFunction>} [computed]
+ * @property {RenderFunction} render
  */
 
 /**
