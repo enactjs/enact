@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ExpandableInput` to focus labeled item on close
+- `moonstone/ExpandableItem` to disable its spotlight container when the component is disabled
 - `moonstone/Scroller` to correctly handle scrolling focused elements and containers into view
 
 ## [2.2.7] - 2018-11-21
