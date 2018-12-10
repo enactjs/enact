@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [2.2.8] - 2018-12-06
+
+### Fixed
+
+- `spotlight` to focus correctly within an overflow container in which the first element is another container without spottable children
+
 ## [2.2.7] - 2018-11-21
 
 No significant changes.
