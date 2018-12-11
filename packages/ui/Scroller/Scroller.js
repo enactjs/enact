@@ -110,11 +110,12 @@ class ScrollerBase extends Component {
 		direction: 'both'
 	}
 
-	constructor (props) {
-		super(props);
+	componentWillMount () {
+		const {dataSize, itemRenderer} = this.props;
 
-		this.cc = [];
-		this.checkItemRenderer();
+		if (dataSize && itemRenderer) {
+			this.positionItems(dataSize);
+		}
 	}
 
 	componentDidMount () {
@@ -125,6 +126,18 @@ class ScrollerBase extends Component {
 		this.calculateMetrics();
 		if (this.props.isVerticalScrollbarVisible && !prevProps.isVerticalScrollbarVisible) {
 			this.forceUpdate();
+		}
+	}
+
+	componentWillReceiveProps (nextProps) {
+		const {dataSize} = this.props;
+
+		this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
+
+		if (this.hasDataSizeChanged) {
+			// reset children
+			this.cc = [];
+			this.positionItems(nextProps.dataSize);
 		}
 	}
 
@@ -141,6 +154,9 @@ class ScrollerBase extends Component {
 		top: 0,
 		left: 0
 	}
+
+	hasDataSizeChanged = false
+	cc = []
 
 	getScrollBounds = () => this.scrollBounds
 
@@ -213,19 +229,23 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	checkItemRenderer = () => {
-		const {dataSize, itemRenderer} = this.props;
+	createNewNode = (index) => {
+		const itemElement = this.props.itemRenderer({index});
 
-		if (dataSize && itemRenderer) {
-			for (let index = 0; index < dataSize; index++) {
-				this.cc.push(itemRenderer({index}));
-			}
+		this.cc[index] = React.cloneElement(itemElement, {
+			key: index
+		});
+	}
+
+	positionItems (dataSize) {
+		for (let index = 0; index < dataSize; index++) {
+			this.createNewNode(index);
 		}
 	}
 
 	render () {
 		const
-			{className, style, ...rest} = this.props,
+			{children, className, style, ...rest} = this.props,
 			mergedStyle = Object.assign({}, style, {
 				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
 				overflowY: this.isVertical() ? 'auto' : 'hidden'
@@ -238,13 +258,10 @@ class ScrollerBase extends Component {
 		delete rest.itemRenderer;
 		delete rest.rtl;
 
-		if (this.cc.length > 0) {
-			rest.children = this.cc;
-		}
-
 		return (
 			<div
 				{...rest}
+				children={this.cc.length > 0 ? this.cc : children}
 				className={classNames(className, css.hideNativeScrollbar)}
 				ref={this.initContainerRef}
 				style={mergedStyle}

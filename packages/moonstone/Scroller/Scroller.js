@@ -23,7 +23,7 @@ import React, {Component} from 'react';
 import {Spotlight} from '@enact/spotlight';
 
 import ri from '@enact/ui/resolution';
-import Scrollable from '../Scrollable';
+import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
 const
@@ -57,6 +57,30 @@ class ScrollerBase extends Component {
 		 * @private
 		 */
 		initUiChildRef: PropTypes.func,
+
+		/**
+		 * The rendering function called for each item in the scroller.
+		 *
+		 * > **Note**: The scroller does **not** always render a component whenever its render function is called
+		 * due to performance optimization.
+		 *
+		 * Example:
+		 * ```
+		 * renderItem = ({index}) => {
+		 *
+		 * 	return (
+		 * 		<MyComponent index={index} />
+		 * 	);
+		 * }
+		 * ```
+		 *
+		 * @type {Function}
+		 * @param {Object}     event
+		 * @param {Number}     event.index    The index number of the component to render.
+		 *
+		 * @public
+		 */
+		itemRenderer: PropTypes.func,
 
 		/**
 		 * Called when [Scroller]{@link moonstone/Scroller.Scroller} updates.
@@ -407,6 +431,12 @@ class ScrollerBase extends Component {
 		return (
 			<UiScrollerBase
 				{...props}
+				itemRenderer={({index}) => ( // eslint-disable-line react/jsx-no-bind
+					this.props.itemRenderer({
+						[dataIndexAttribute]: index,
+						index
+					})
+				)}
 				ref={this.initUiRef}
 			/>
 		);
