@@ -26,7 +26,7 @@ describe('Popup specs', () => {
 		document.body.removeChild(div);
 	});
 
-	it('should be rendered opened if open is set to true', () => {
+	test('should be rendered opened if open is set to true', () => {
 		const popup = mount(
 			<Popup open><div>popup</div></Popup>,
 			options
@@ -35,10 +35,10 @@ describe('Popup specs', () => {
 		const expected = true;
 		const actual = popup.find('FloatingLayer').prop('open');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should not be rendered if open is set to false', () => {
+	test('should not be rendered if open is set to false', () => {
 		const popup = mount(
 			<Popup><div>popup</div></Popup>,
 			options
@@ -47,23 +47,26 @@ describe('Popup specs', () => {
 		const expected = false;
 		const actual = popup.find('FloatingLayer').prop('open');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should set popup close button "aria-label" to closeButtonAriaLabel', () => {
-		const label = 'custom close button label';
-		const popup = mount(
-			<Popup open showCloseButton closeButtonAriaLabel={label}><div>popup</div></Popup>,
-			options
-		);
+	test(
+		'should set popup close button "aria-label" to closeButtonAriaLabel',
+		() => {
+			const label = 'custom close button label';
+			const popup = mount(
+				<Popup open showCloseButton closeButtonAriaLabel={label}><div>popup</div></Popup>,
+				options
+			);
 
-		const expected = label;
-		const actual = popup.find('IconButton').prop('aria-label');
+			const expected = label;
+			const actual = popup.find('IconButton').prop('aria-label');
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should set role to alert by default', function () {
+	test('should set role to alert by default', () => {
 		const popup = shallow(
 			<PopupBase><div>popup</div></PopupBase>
 		);
@@ -71,10 +74,10 @@ describe('Popup specs', () => {
 		const expected = 'alert';
 		const actual = popup.find(`.${css.popup}`).prop('role');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should allow role to be overridden', function () {
+	test('should allow role to be overridden', () => {
 		const popup = shallow(
 			<PopupBase role="dialog"><div>popup</div></PopupBase>
 		);
@@ -82,6 +85,6 @@ describe('Popup specs', () => {
 		const expected = 'dialog';
 		const actual = popup.find(`.${css.popup}`).prop('role');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });

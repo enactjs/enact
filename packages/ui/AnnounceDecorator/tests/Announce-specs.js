@@ -4,7 +4,7 @@ import Announce from '../Announce';
 
 describe('Announce', () => {
 
-	it('should have an announce method on the component', function () {
+	test('should have an announce method on the component', () => {
 		const subject = shallow(
 			<Announce />
 		);
@@ -13,10 +13,10 @@ describe('Announce', () => {
 		const expected = 'function';
 		const actual = typeof node.announce;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should update the aria-label with the provided message', function () {
+	test('should update the aria-label with the provided message', () => {
 		const message = 'message';
 		const subject = mount(
 			<Announce />
@@ -29,7 +29,7 @@ describe('Announce', () => {
 		// since we're manually updating the node in Announce, we have to manually check the node here
 		const actual = node.alert.getAttribute('aria-label');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
 });

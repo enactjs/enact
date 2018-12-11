@@ -7,6 +7,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` property `childProps` to support additional props included in the object passed to the `itemsRenderer` callback
+## [2.2.8] - 2018-12-06
+
+### Fixed
+
+- `moonstone/ExpandableInput` to focus labeled item on close
+- `moonstone/ExpandableItem` to disable its spotlight container when the component is disabled
+- `moonstone/Scroller` to correctly handle scrolling focused elements and containers into view
+
 ## [2.2.7] - 2018-11-21
 
 ### Fixed

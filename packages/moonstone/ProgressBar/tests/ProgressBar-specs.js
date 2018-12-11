@@ -3,7 +3,7 @@ import {mount} from 'enzyme';
 import ProgressBar from '../ProgressBar';
 
 describe('ProgressBar Specs', () => {
-	it('should only show tooltip when tooltip is true', function () {
+	test('should only show tooltip when tooltip is true', () => {
 		const progressBar = mount(
 			<ProgressBar tooltip />
 		);
@@ -11,10 +11,10 @@ describe('ProgressBar Specs', () => {
 		const expected = 1;
 		const actual = progressBar.find('ProgressBarTooltip').length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should have tooltip show progress as percentage', function () {
+	test('should have tooltip show progress as percentage', () => {
 		const progressBar = mount(
 			<ProgressBar
 				tooltip
@@ -25,6 +25,6 @@ describe('ProgressBar Specs', () => {
 		const expected = '60%';
 		const actual = progressBar.find('ProgressBarTooltip').text();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });

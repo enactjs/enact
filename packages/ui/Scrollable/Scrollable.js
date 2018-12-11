@@ -13,6 +13,7 @@ import classNames from 'classnames';
 import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
+import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -38,6 +39,7 @@ const
 		overscrollTypeOnce: 2,
 		overscrollTypeDone: 9,
 		paginationPageMultiplier: 0.8,
+		scrollStopWaiting: 200,
 		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	},
 	{
@@ -51,6 +53,7 @@ const
 		overscrollTypeNone,
 		overscrollTypeOnce,
 		paginationPageMultiplier,
+		scrollStopWaiting,
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
 
@@ -473,8 +476,12 @@ class ScrollableBase extends Component {
 
 	componentWillUnmount () {
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
-		if (this.animator.isAnimating()) {
+		if (this.scrolling) {
 			this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
+		}
+		this.scrollStopJob.stop();
+
+		if (this.animator.isAnimating()) {
 			this.animator.stop();
 		}
 
@@ -904,6 +911,13 @@ class ScrollableBase extends Component {
 
 	// scroll start/stop
 
+	doScrollStop = () => {
+		this.scrolling = false;
+		this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
+	}
+
+	scrollStopJob = new Job(this.doScrollStop, scrollStopWaiting);
+
 	start ({targetX, targetY, animate = true, duration = animationDuration, overscrollEffect = false}) {
 		const
 			{scrollLeft, scrollTop} = this,
@@ -930,6 +944,7 @@ class ScrollableBase extends Component {
 			this.scrolling = true;
 			this.forwardScrollEvent('onScrollStart');
 		}
+		this.scrollStopJob.stop();
 
 		if (Math.abs(maxLeft - targetX) < epsilon) {
 			targetX = maxLeft;
@@ -1026,8 +1041,7 @@ class ScrollableBase extends Component {
 			this.props.stop();
 		}
 		if (this.scrolling) {
-			this.scrolling = false;
-			this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
+			this.scrollStopJob.start();
 		}
 	}
 

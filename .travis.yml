@@ -7,12 +7,12 @@ cache:
     - $(npm config get cache)
 install:
     - npm config set prefer-offline true
-    - npm install -g enactjs/cli#develop
+    - npm install -g enactjs/cli#5382f263d24c112195166ae3e45edca8ae96b232
     - npm install
     - npm run bootstrap
 script:
     - echo -e "\x1b\x5b35;1m*** Starting tests...\x1b\x5b0m"
-    - npm run lerna -- run test
+    - npm test -- -- -- --maxWorkers=4
     - echo -e "\x1b\x5b35;1m*** Tests complete\x1b\x5b0m"
     - echo -e "\x1b\x5b35;1m*** Starting eslint...\x1b\x5b0m"
     - npm run lerna -- run lint -- -- -- --max-warnings 0 .
