@@ -14,30 +14,35 @@ const
 	Native = 'Native';
 
 const slotNames = [];
-const slotLength = 17;
+const slotLength = 100;
+const numOfVirtualItems = 15;
 for (let i = 0; i < slotLength; i++) {
 	slotNames.push(`Child${i}`);
 }
 
-const slotsRenderer = ({DraggableChild, index, initItemContainerRef, itemSize, slotsStyle, ...rest}) => {
+const slotsRenderer = ({DraggableChild, index:firstIndex, initItemContainerRef, itemSize, slotsStyle, ...rest}) => {
 	const children = [];
 
-	// console.log('slotsRenderer', index);
+	console.log('slotsRenderer', firstIndex);
 
-	for (let i = 0; i < slotNames.length; i++) {
-		const key = (index + i) % 17;
-		const content = rest[slotNames[key]];
-		delete rest[slotNames[key]];
+	for (let i = 0; i < numOfVirtualItems; i++) {
+		const index = firstIndex + i;
+		const key = (firstIndex + i) % numOfVirtualItems;
+		const content = rest[slotNames[index]];
+		delete rest[slotNames[index]];
+
+		// console.log('slotsRenderer > index', index, slotNames[index]);
+
 		children.push(
 			<DraggableChild
 				className={css.draggable}
-				key={i}
-				name={slotNames[key]}
+				key={key}
+				name={slotNames[index]}
 				style={{
 					position: 'absolute',
 					width: '100%',
 					height: itemSize + 'px',
-					transform: slotsStyle[key] || null
+					transform: slotsStyle[index] || null
 				}}
 			>
 				{content}
@@ -71,10 +76,18 @@ const SlotManager = ({
 		),
 		DraggableChild = Draggable('div');
 
+	const items = [...slotItems];
+	items.sort((a, b) => {
+		if (a.key > b.key) return 1;
+		if (a.key < b.key) return -1;
+		return 0;
+	});
+	console.log('slotItems', items)
+
 	return (
 		<SwipableItems
 			arrangeable={true}
-			children={slotItems}
+			children={items}
 			DraggableChild={DraggableChild}
 			index={firstIndex}
 			initItemContainerRef={initItemContainerRef}
@@ -729,7 +742,7 @@ const VirtualListBaseFactory = (type) => {
 
 				// node.style.transform = `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`;
 				// node.style.height = height;
-				this.slotsStyle[index % numOfItems] = `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`;
+				this.slotsStyle[index] = `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`;
 			}
 		}
 
@@ -737,20 +750,31 @@ const VirtualListBaseFactory = (type) => {
 			const
 				{itemRenderer, getComponentProps} = this.props,
 				key = index % this.state.numOfItems,
+				switchedIndex =
+					window.arrangement &&
+					window.arrangement['Child' + index] &&
+					window.arrangement['Child' + index].substring(5) || index,
 				itemElement = itemRenderer({
-					index,
+					index: switchedIndex,
 					key
 				}),
 				componentProps = getComponentProps && getComponentProps(index) || {};
 
-			// console.log('applyStyleToNewNode', index);
+			console.log('switchedIndex', switchedIndex)
 
-			this.cc[key] = React.createElement(slotNames[key], {
+			// console.log('applyStyleToNewNode', index, slotNames[index]);
+
+			this.cc[key] = React.createElement(slotNames[switchedIndex], {
 				...componentProps,
-				key: index,
+				// key: index,
 				className: css.listItem
 				// style: this.composeStyle(...rest)
 			}, itemElement);
+
+			window.style = window.style || [];
+			window.style[index] = this.composeStyle(...rest);
+
+			// this.slotsStyle[index] = this.composeStyle(...rest);
 		}
 
 		applyStyleToHideNode = (index) => {
@@ -769,7 +793,7 @@ const VirtualListBaseFactory = (type) => {
 				hideTo = 0,
 				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0 || this.prevFirstIndex === -1) ? firstIndex + numOfItems : this.prevFirstIndex;
 
-			// console.log('positionItems', firstIndex);
+			console.log('positionItems', firstIndex);
 
 			if (updateFrom >= updateTo) {
 				return;
