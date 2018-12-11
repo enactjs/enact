@@ -58,7 +58,7 @@ const slotsRenderer = ({DraggableChild, index:firstIndex, initItemContainerRef, 
 };
 
 const SlotManager = ({
-	arrangementMapContextToProps,
+	arrangement,
 	Draggable,
 	Droppable,
 	firstIndex,
@@ -69,7 +69,7 @@ const SlotManager = ({
 	slotsStyle
 }) => {
 	const
-		SwipableItems = arrangementMapContextToProps(
+		SwipableItems = (
 			Droppable({slots: slotNames},
 				slotsRenderer
 			)
@@ -87,6 +87,7 @@ const SlotManager = ({
 	return (
 		<SwipableItems
 			arrangeable={true}
+			arrangement={arrangement}
 			children={items}
 			DraggableChild={DraggableChild}
 			index={firstIndex}
@@ -195,7 +196,7 @@ const VirtualListBaseFactory = (type) => {
 			/**
 			 * TBD
 			 */
-			arrangementMapContextToProps: PropTypes.any,
+			arrangement: PropTypes.object,
 
 			/**
 			 * Callback method of scrollTo.
@@ -748,15 +749,15 @@ const VirtualListBaseFactory = (type) => {
 
 		applyStyleToNewNode = (index, ...rest) => {
 			const
-				{itemRenderer, getComponentProps} = this.props,
+				{arrangement, itemRenderer, getComponentProps} = this.props,
 				key = index % this.state.numOfItems,
 				switchedIndex =
-					window.arrangement &&
-					window.arrangement['Child' + index] &&
-					window.arrangement['Child' + index].substring(5) || index,
+					arrangement &&
+					arrangement['Child' + index] &&
+					arrangement['Child' + index].substring(5) || index,
 				itemElement = itemRenderer({
-					index: switchedIndex,
-					key
+					index: switchedIndex
+					// key
 				}),
 				componentProps = getComponentProps && getComponentProps(index) || {};
 
@@ -771,8 +772,8 @@ const VirtualListBaseFactory = (type) => {
 				// style: this.composeStyle(...rest)
 			}, itemElement);
 
-			window.style = window.style || [];
-			window.style[index] = this.composeStyle(...rest);
+			// window.style = window.style || [];
+			// window.style[index] = this.composeStyle(...rest);
 
 			// this.slotsStyle[index] = this.composeStyle(...rest);
 		}
@@ -898,7 +899,7 @@ const VirtualListBaseFactory = (type) => {
 		render () {
 			const
 				{
-					arrangementMapContextToProps,
+					arrangement,
 					Draggable,
 					Droppable,
 					itemSize,
@@ -937,7 +938,7 @@ const VirtualListBaseFactory = (type) => {
 					<div {...rest} ref={this.initContentRef}>
 						{/*itemsRenderer({cc, initItemContainerRef, primary})*/}
 						<SlotManager
-							arrangementMapContextToProps={arrangementMapContextToProps}
+							arrangement={arrangement}
 							Draggable={Draggable}
 							Droppable={Droppable}
 							firstIndex={firstIndex}

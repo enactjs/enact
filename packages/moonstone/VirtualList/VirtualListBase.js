@@ -950,25 +950,30 @@ VirtualListBaseNative.displayName = 'VirtualListBaseNative';
 const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
 	<Scrollable
 		{...props}
-		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBase
-				{...childProps}
-				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
-					[
-						cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
-						primary ?
-							null :
-							<SpotlightPlaceholder
-								data-index={0}
-								data-vl-placeholder
-								key="1"
-								onFocus={handlePlaceholderFocus}
-							/>,
-						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
-					]
-				)}
-			/>
-		)}
+		childRenderer={({arrangementMapContextToProps, ref, ...childProps}) => { // eslint-disable-line react/jsx-no-bind
+			const ArrangementVirtualListBase = arrangementMapContextToProps(VirtualListBase);
+
+			return (
+				<ArrangementVirtualListBase
+					{...childProps}
+					innerRef={ref}
+					itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
+						[
+							cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
+							primary ?
+								null :
+								<SpotlightPlaceholder
+									data-index={0}
+									data-vl-placeholder
+									key="1"
+									onFocus={handlePlaceholderFocus}
+								/>,
+							needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
+						]
+					)}
+				/>
+			);
+		}}
 	/>
 );
 
