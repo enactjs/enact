@@ -14,7 +14,7 @@ class Accelerator {
 	 * @param {Number[]} frequency - Controls the frequency with which the acceleration will
 	 *	"freeze". While frozen, the current target item cannot change, and all events are directed
 	 *	to it.
-	 * @memberof spotlight/Accelerator.Accelerator
+	 * @memberof spotlight/Accelerator.Accelerator.prototype
 	 */
 	constructor (frequency = [3, 3, 3, 2, 2, 2, 1]) {
 
@@ -78,7 +78,7 @@ class Accelerator {
 	 * @param  {Function} callback - The callback to execute.
 	 * @returns {Boolean} `true` if the event was consumed by processKey and callback was not called
 	 * @public
-	 * @memberof spotlight/Accelerator.Accelerator
+	 * @memberof spotlight/Accelerator.Accelerator.prototype
 	 */
 	processKey = (event, callback) => {
 		switch (event.type) {
@@ -129,7 +129,7 @@ class Accelerator {
 	 * @function
 	 * @returns {undefined}
 	 * @public
-	 * @memberof spotlight/Accelerator.Accelerator
+	 * @memberof spotlight/Accelerator.Accelerator.prototype
 	 */
 	reset = () => {
 		this.skipped = 0;
@@ -145,7 +145,7 @@ class Accelerator {
 	 * @function
 	 * @returns {undefined}
 	 * @public
-	 * @memberof spotlight/Accelerator.Accelerator
+	 * @memberof spotlight/Accelerator.Accelerator.prototype
 	 */
 	cancel = () => {
 		this.canceled = true;
@@ -157,7 +157,7 @@ class Accelerator {
 	 * @function
 	 * @returns {Boolean} `true` if the Accelerator is active; otherwise, `false`.
 	 * @public
-	 * @memberof spotlight/Accelerator.Accelerator
+	 * @memberof spotlight/Accelerator.Accelerator.prototype
 	 */
 	isAccelerating = () => {
 		return this.accelerating;
