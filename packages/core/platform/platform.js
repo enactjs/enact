@@ -81,16 +81,25 @@ const ua = () => {
 let _platform;
 
 /**
- * Returns the {@link core/platform.platform} object.
+ * @typedef {Object} PlatformDescription
+ * @property {Boolean} gesture - `true` if the platform has native double-finger events
+ * @property {Boolean} node - `true` only if `window` is `undefined`
+ * @property {String} platformName - The name of the platform
+ * @property {Boolean} touch - `true` if the platform has native single-finger events
+ * @property {Boolean} unknown - `true` for any unknown system
  *
- * @function
- * @returns {Object}     The {@link core/platform.platform} object
- *
- * @method detect
  * @memberof core/platform
  * @public
  */
 
+/**
+ * Returns the {@link core/platform.platform} object.
+ *
+ * @function detect
+ * @returns {PlatformDescription}     The {@link core/platform.platform} object
+ * @memberof core/platform
+ * @public
+ */
 const detect = () => {
 	if (_platform) {
 		// if we've already determined the platform, we'll use that determination
@@ -141,18 +150,11 @@ const detect = () => {
 /**
  * Provides basic information about the running platform.
  *
- * @readonly
- * @type {Object}
- * @property {Boolean} gesture - `true` if the platform has native double-finger events
- * @property {Boolean} node - `true` only if `window` is `undefined`
- * @property {String} platformName - The name of the platform
- * @property {Boolean} touch - `true` if the platform has native single-finger events
- * @property {Boolean} unknown - `true` for any unknown system
- *
+ * @member platform
+ * @type {PlatformDescription}
  * @memberof core/platform
  * @public
  */
-
 const platform = {};
 
 [
