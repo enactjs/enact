@@ -34,4 +34,34 @@ describe('ExpandableList', () => {
 
 		expect(actual).toBe(expected);
 	});
+
+	test('should set ExpandableItem "data-webos-voice-disabled" when voice control is disabled', () => {
+		const children = ['option1', 'option2', 'option3'];
+
+		const expandableList = mount(
+			<ExpandableListBase data-webos-voice-disabled title="Item" open>
+				{children}
+			</ExpandableListBase>
+		);
+
+		const expected = true;
+		const actual = expandableList.find('ExpandableItem').prop('data-webos-voice-disabled');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should set children "data-webos-voice-disabled" when voice control is disabled', () => {
+		const children = ['option1', 'option2', 'option3'];
+
+		const expandableList = mount(
+			<ExpandableListBase data-webos-voice-disabled title="Item" open>
+				{children}
+			</ExpandableListBase>
+		);
+
+		const expected = true;
+		const actual = expandableList.find('GroupItem').first().prop('data-webos-voice-disabled');
+
+		expect(actual).toBe(expected);
+	});
 });
