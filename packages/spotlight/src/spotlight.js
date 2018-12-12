@@ -117,6 +117,7 @@ const SpotlightAccelerator = new Accelerator();
  * const isFocused = Spotlight.isSpottable(current);
  * ```
  *
+ * @member
  * @type {Object}
  * @memberof spotlight
  * @public
