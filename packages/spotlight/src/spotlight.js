@@ -512,6 +512,8 @@ const Spotlight = (function () {
 		 * Initializes Spotlight. This is generally handled by
 		 * {@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}.
 		 *
+		 * @param {Object} containerDefaults Default configuration for new spotlight containers
+		 * @returns {undefined}
 		 * @public
 		 */
 		initialize: function (containerDefaults) {
@@ -866,7 +868,7 @@ const Spotlight = (function () {
 		/**
 		 * Returns a list of spottable elements wrapped by the supplied container.
 		 *
-		 * @param {String} [containerId] The id of the container used to determine the list of spottable elements
+		 * @param {String} containerId The id of the container used to determine the list of spottable elements
 		 * @returns {Node[]} The spottable elements that are wrapped by the supplied container
 		 * @public
 		 */
