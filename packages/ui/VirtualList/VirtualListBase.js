@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -20,20 +19,14 @@ for (let i = 0; i < slotLength; i++) {
 	slotNames.push(`Child${i}`);
 }
 
-const slotsRenderer = ({DraggableChild, index:firstIndex, initItemContainerRef, itemSize, slotsStyle, ...rest}) => {
+const slotsRenderer = ({DraggableChild, index:firstIndex, initItemContainerRef, itemSize, ...rest}) => {
 	const children = [];
-
-	console.log('slotsRenderer', firstIndex);
-	console.log('-------------------------------------------');
-
 
 	for (let i = 0; i < numOfVirtualItems; i++) {
 		const index = firstIndex + i;
 		const key = (firstIndex + i) % numOfVirtualItems;
 		const content = rest[slotNames[index]];
 		delete rest[slotNames[index]];
-
-		// console.log('slotsRenderer > index', index, slotNames[index]);
 
 		children.push(
 			<DraggableChild
@@ -44,7 +37,7 @@ const slotsRenderer = ({DraggableChild, index:firstIndex, initItemContainerRef, 
 					position: 'absolute',
 					width: '100%',
 					height: itemSize + 'px',
-					transform: slotsStyle[index] || null
+					transform: `translate3d(0, ${itemSize * index}px, 0)` || null
 				}}
 			>
 				{content}
@@ -68,7 +61,6 @@ const SlotManager = ({
 	itemSize,
 	slotItems,
 	slotsRenderer,
-	slotsStyle
 }) => {
 	const
 		SwipableItems = (
@@ -77,14 +69,6 @@ const SlotManager = ({
 			)
 		),
 		DraggableChild = Draggable('div');
-
-	// const items = [...slotItems];
-	// items.sort((a, b) => {
-	// 	if (a.key > b.key) return 1;
-	// 	if (a.key < b.key) return -1;
-	// 	return 0;
-	// });
-	// console.log('slotItems', items)
 
 	return (
 		<SwipableItems
@@ -96,7 +80,6 @@ const SlotManager = ({
 			initItemContainerRef={initItemContainerRef}
 			itemSize={itemSize}
 			role="list"
-			slotsStyle={slotsStyle}
 		/>
 	);
 };
@@ -247,6 +230,11 @@ const VirtualListBaseFactory = (type) => {
 			/**
 			 * TBD
 			 */
+			Draggable: PropTypes.any,
+
+			/**
+			 * TBD
+			 */
 			Droppable: PropTypes.any,
 
 			/**
@@ -358,7 +346,7 @@ const VirtualListBaseFactory = (type) => {
 			} else if (rtl !== nextProps.rtl) {
 				const {x, y} = this.getXY(this.scrollPosition, 0);
 
-				// this.cc = [];
+				this.cc = [];
 				if (type === Native) {
 					this.scrollToPosition(x, y, nextProps.rtl);
 				} else {
@@ -366,49 +354,6 @@ const VirtualListBaseFactory = (type) => {
 				}
 			}
 		}
-
-/*
-		shouldComponentUpdate (nextProps, nextState) {
-			if (this.state.firstIndex != nextState.firstIndex) {
-				console.log('#########');
-				console.log(this.props.arrangement);
-
-				const a = [], tempCC = [...this.cc];
-				for (let slot in this.props.arrangement) {
-					console.log(slot);
-					// if (a.indexOf(slot) === -1) {
-					const index = slot.substring(5);
-					const key = index % this.state.numOfItems;
-					const slotElement = this.cc[key];
-					console.log(index, slotElement);
-					if (
-						this.state.firstIndex <= index &&
-						index < this.state.firstIndex + this.state.numOfItems &&
-						this.props.arrangement[slot] !== slotElement.type
-					) {
-						const index2 = this.props.arrangement[slot].substring(5) % this.state.numOfItems;
-						const key2 = index2 % this.state.numOfItems;
-						const slotElement2 = this.cc[key2];
-						console.log(index2, slotElement2);
-						if (
-							this.state.firstIndex <= index2 &&
-							index2 < this.state.firstIndex + this.state.numOfItems
-						) {
-							// tempCC[index2] = slotElement;
-							tempCC[index] = slotElement2;
-							console.log('Swap!!!!', this.props.arrangement[slot], slotElement.type);
-							debugger;
-						}
-				    }
-						// a.push(this.props.arrangement[slot]);
-					// }
-				}
-				this.cc = tempCC;
-			}
-
-			return true;
-		}
-*/
 
 		componentWillUpdate (nextProps, nextState) {
 			if (this.state.firstIndex === nextState.firstIndex) {
@@ -443,7 +388,6 @@ const VirtualListBaseFactory = (type) => {
 		curDataSize = 0
 		hasDataSizeChanged = false
 		cc = []
-		slotsStyle = []
 		scrollPosition = 0
 
 		contentRef = null
@@ -777,50 +721,19 @@ const VirtualListBaseFactory = (type) => {
 			return style;
 		}
 
-		applyStyleToExistingNode = (index, width, height, primaryPosition, secondaryPosition) => {
+		applyStyleToNewNode = (index) => {
 			const
-				{numOfItems} = this.state,
-				node = this.itemContainerRef.children[index % numOfItems];
-
-			if (node) {
-				const
-					{x, y} = this.getXY(primaryPosition, secondaryPosition);
-
-				// node.style.transform = `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`;
-				// node.style.height = height;
-				this.slotsStyle[index] = `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`;
-			}
-		}
-
-		applyStyleToNewNode = (index, ...rest) => {
-			const
-				{arrangement, itemRenderer, getComponentProps} = this.props,
-				key = index % this.state.numOfItems,
-				// switchedIndex =
-				// 	arrangement &&
-				// 	arrangement['Child' + index] &&
-				// 	arrangement['Child' + index].substring(5) || index,
+				{itemRenderer, getComponentProps} = this.props,
 				itemElement = itemRenderer({
 					index
-					// key
 				}),
 				componentProps = getComponentProps && getComponentProps(index) || {};
 
-			// console.log('switchedIndex', switchedIndex)
-
-			// console.log('applyStyleToNewNode', index, slotNames[index]);
-
+			// create element
 			this.cc[index] = React.createElement(slotNames[index], {
 				...componentProps,
-				// key: index,
 				className: css.listItem
-				// style: this.composeStyle(...rest)
 			}, itemElement);
-
-			// window.style = window.style || [];
-			// window.style[index] = this.composeStyle(...rest);
-
-			// this.slotsStyle[index] = this.composeStyle(...rest);
 		}
 
 		applyStyleToHideNode = (index) => {
@@ -839,8 +752,6 @@ const VirtualListBaseFactory = (type) => {
 				hideTo = 0,
 				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0 || this.prevFirstIndex === -1) ? firstIndex + numOfItems : this.prevFirstIndex;
 
-			console.log('positionItems', firstIndex);
-
 			if (updateFrom >= updateTo) {
 				return;
 			} else if (updateTo > dataSize) {
@@ -852,13 +763,12 @@ const VirtualListBaseFactory = (type) => {
 				{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),
 				width, height;
 
-			width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
-			height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
+			// width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
+			// height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
 
 			// positioning items
 			for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
-				this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
-				this.applyStyleToExistingNode(i, width, height, primaryPosition, secondaryPosition);
+				this.applyStyleToNewNode(i);
 
 				if (++j === dimensionToExtent) {
 					secondaryPosition = 0;
@@ -948,16 +858,14 @@ const VirtualListBaseFactory = (type) => {
 					Draggable,
 					Droppable,
 					itemSize,
-
 					className,
 					'data-webos-voice-focused': voiceFocused,
 					'data-webos-voice-group-label': voiceGroupLabel,
-					itemsRenderer,
 					style,
 					...rest
 				} = this.props,
 				{firstIndex} = this.state,
-				{cc, DraggableChild, initItemContainerRef, primary} = this,
+				{initItemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
 
 			delete rest.cbScrollTo;
@@ -966,6 +874,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.direction;
 			delete rest.getComponentProps;
 			delete rest.itemRenderer;
+			delete rest.itemsRenderer;
 			delete rest.onUpdate;
 			delete rest.overhang;
 			delete rest.pageScroll;
@@ -978,21 +887,13 @@ const VirtualListBaseFactory = (type) => {
 				this.positionItems();
 			}
 
-			let str = '';
-			if (this.cc && this.cc.length > 0) {
-				// console.log(this.cc.reduce((index, str) => {
-					// return (str + this.cc[index].type + ' ')
-				// }), '');
-				for (let i = 0; i < this.cc.length; i++) {
-					str += (this.cc[i].type + ' ');
-				}
-				console.log(str);
-			}
-
 			return (
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
 					<div {...rest} ref={this.initContentRef}>
-						{/*itemsRenderer({cc, initItemContainerRef, primary})*/}
+						{/*
+							// FIXME
+							itemsRenderer({cc, initItemContainerRef, primary})
+						*/}
 						<SlotManager
 							arrangement={arrangement}
 							Draggable={Draggable}
@@ -1002,7 +903,6 @@ const VirtualListBaseFactory = (type) => {
 							itemSize={itemSize}
 							slotItems={this.cc}
 							slotsRenderer={slotsRenderer}
-							slotsStyle={this.slotsStyle}
 						/>
 					</div>
 				</div>
