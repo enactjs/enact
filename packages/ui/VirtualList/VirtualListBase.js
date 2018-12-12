@@ -78,19 +78,19 @@ const SlotManager = ({
 		),
 		DraggableChild = Draggable('div');
 
-	const items = [...slotItems];
-	items.sort((a, b) => {
-		if (a.key > b.key) return 1;
-		if (a.key < b.key) return -1;
-		return 0;
-	});
-	console.log('slotItems', items)
+	// const items = [...slotItems];
+	// items.sort((a, b) => {
+	// 	if (a.key > b.key) return 1;
+	// 	if (a.key < b.key) return -1;
+	// 	return 0;
+	// });
+	// console.log('slotItems', items)
 
 	return (
 		<SwipableItems
 			arrangeable={true}
 			arrangement={arrangement}
-			children={items}
+			children={slotItems}
 			DraggableChild={DraggableChild}
 			index={firstIndex}
 			initItemContainerRef={initItemContainerRef}
@@ -334,43 +334,6 @@ const VirtualListBaseFactory = (type) => {
 			this.setContainerSize();
 		}
 
-		shouldComponentUpdate (nextProps, nextState) {
-			if (this.state.firstIndex != nextState.firstIndex) {
-				console.log('#########');
-				console.log(this.props.arrangement);
-
-				const a = [];
-				for (let slot in this.props.arrangement) {
-					console.log(slot);
-					if (a.indexOf(slot) === -1) {
-						const index = slot.substring(5) % this.state.numOfItems;
-						const slotElement = this.cc[index];
-						console.log(index, slotElement);
-						if (
-							this.state.firstIndex <= index &&
-							index < this.state.firstIndex + this.state.numOfItems &&
-							this.props.arrangement[slot] !== slotElement.type
-						) {
-							const index2 = this.props.arrangement[slot].substring(5) % this.state.numOfItems;
-							const slotElement2 = this.cc[index2];
-							console.log(index2, slotElement2);
-							if (
-								this.state.firstIndex <= index2 &&
-								index2 < this.state.firstIndex + this.state.numOfItems
-							) {
-								this.cc[index2] = slotElement;
-								this.cc[index] = slotElement2;
-								console.log('Swap!!!!');
-							}
-					    }
-						a.push(this.props.arrangement[slot]);
-					}
-				}
-			}
-
-			return true;
-		}
-
 		// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
 		// Calling setState within componentWillReceivePropswill not trigger an additional render.
 		componentWillReceiveProps (nextProps) {
@@ -395,7 +358,7 @@ const VirtualListBaseFactory = (type) => {
 			} else if (rtl !== nextProps.rtl) {
 				const {x, y} = this.getXY(this.scrollPosition, 0);
 
-				this.cc = [];
+				// this.cc = [];
 				if (type === Native) {
 					this.scrollToPosition(x, y, nextProps.rtl);
 				} else {
@@ -403,6 +366,49 @@ const VirtualListBaseFactory = (type) => {
 				}
 			}
 		}
+
+/*
+		shouldComponentUpdate (nextProps, nextState) {
+			if (this.state.firstIndex != nextState.firstIndex) {
+				console.log('#########');
+				console.log(this.props.arrangement);
+
+				const a = [], tempCC = [...this.cc];
+				for (let slot in this.props.arrangement) {
+					console.log(slot);
+					// if (a.indexOf(slot) === -1) {
+					const index = slot.substring(5);
+					const key = index % this.state.numOfItems;
+					const slotElement = this.cc[key];
+					console.log(index, slotElement);
+					if (
+						this.state.firstIndex <= index &&
+						index < this.state.firstIndex + this.state.numOfItems &&
+						this.props.arrangement[slot] !== slotElement.type
+					) {
+						const index2 = this.props.arrangement[slot].substring(5) % this.state.numOfItems;
+						const key2 = index2 % this.state.numOfItems;
+						const slotElement2 = this.cc[key2];
+						console.log(index2, slotElement2);
+						if (
+							this.state.firstIndex <= index2 &&
+							index2 < this.state.firstIndex + this.state.numOfItems
+						) {
+							// tempCC[index2] = slotElement;
+							tempCC[index] = slotElement2;
+							console.log('Swap!!!!', this.props.arrangement[slot], slotElement.type);
+							debugger;
+						}
+				    }
+						// a.push(this.props.arrangement[slot]);
+					// }
+				}
+				this.cc = tempCC;
+			}
+
+			return true;
+		}
+*/
 
 		componentWillUpdate (nextProps, nextState) {
 			if (this.state.firstIndex === nextState.firstIndex) {
@@ -790,21 +796,21 @@ const VirtualListBaseFactory = (type) => {
 			const
 				{arrangement, itemRenderer, getComponentProps} = this.props,
 				key = index % this.state.numOfItems,
-				switchedIndex =
-					arrangement &&
-					arrangement['Child' + index] &&
-					arrangement['Child' + index].substring(5) || index,
+				// switchedIndex =
+				// 	arrangement &&
+				// 	arrangement['Child' + index] &&
+				// 	arrangement['Child' + index].substring(5) || index,
 				itemElement = itemRenderer({
-					index: switchedIndex
+					index
 					// key
 				}),
 				componentProps = getComponentProps && getComponentProps(index) || {};
 
-			console.log('switchedIndex', switchedIndex)
+			// console.log('switchedIndex', switchedIndex)
 
 			// console.log('applyStyleToNewNode', index, slotNames[index]);
 
-			this.cc[key] = React.createElement(slotNames[switchedIndex], {
+			this.cc[index] = React.createElement(slotNames[index], {
 				...componentProps,
 				// key: index,
 				className: css.listItem
@@ -819,7 +825,7 @@ const VirtualListBaseFactory = (type) => {
 
 		applyStyleToHideNode = (index) => {
 			const key = index % this.state.numOfItems;
-			this.cc[key] = <div key={key} style={{display: 'none'}} />;
+			this.cc[index] = <div key={key} style={{display: 'none'}} />;
 		}
 
 		positionItems () {
@@ -970,6 +976,17 @@ const VirtualListBaseFactory = (type) => {
 
 			if (primary) {
 				this.positionItems();
+			}
+
+			let str = '';
+			if (this.cc && this.cc.length > 0) {
+				// console.log(this.cc.reduce((index, str) => {
+					// return (str + this.cc[index].type + ' ')
+				// }), '');
+				for (let i = 0; i < this.cc.length; i++) {
+					str += (this.cc[i].type + ' ');
+				}
+				console.log(str);
 			}
 
 			return (
