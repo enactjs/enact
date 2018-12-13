@@ -729,12 +729,11 @@ const VideoPlayerBase = class extends React.Component {
 			this.stopAutoCloseTimeout();
 
 			if (!this.props.spotlightDisabled) {
-				// If last focused item were in a user specified components (e.g. leftComponents,
-				// rightComponents, children, etc.), we need to explicitly blur the element when
-				// MediaControls hide. See ENYO-5454
+				// If last focused item were in the media controls or slider, we need to explicitly
+				// blur the element when MediaControls hide. See ENYO-5648
 				const current = Spotlight.getCurrent();
-				const mediaControls = document.querySelector(`[data-spotlight-id="${this.mediaControlsSpotlightId}"]`);
-				if (current && mediaControls && mediaControls.contains(current)) {
+				const bottomControls = document.querySelector(`.${css.bottom}`);
+				if (current && bottomControls && bottomControls.contains(current)) {
 					current.blur();
 				}
 
@@ -1682,6 +1681,7 @@ const VideoPlayerBase = class extends React.Component {
 				this.activityDetected();
 			}
 		} else if (is('up', keyCode)) {
+			Spotlight.setPointerMode(false);
 			preventDefault(ev);
 			stopImmediate(ev);
 

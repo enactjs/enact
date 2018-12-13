@@ -116,6 +116,14 @@ const VirtualListBaseFactory = (type) => {
 			cbScrollTo: PropTypes.func,
 
 			/**
+			 * Additional props included in the object passed to the `itemsRenderer` callback.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			childProps: PropTypes.object,
+
+			/**
 			 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
 			 *
 			 * @type {Object}
@@ -269,7 +277,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentWillUpdate (nextProps, nextState) {
-			if (this.state.firstIndex === nextState.firstIndex) {
+			if (this.state.firstIndex === nextState.firstIndex || this.props.childProps && this.props.childProps !== nextProps.childProps) {
 				this.prevFirstIndex = -1; // force to re-render items
 			}
 		}
@@ -639,8 +647,9 @@ const VirtualListBaseFactory = (type) => {
 				{itemRenderer, getComponentProps} = this.props,
 				key = index % this.state.numOfItems,
 				itemElement = itemRenderer({
-					index,
-					key
+					...this.props.childProps,
+					key,
+					index
 				}),
 				componentProps = getComponentProps && getComponentProps(index) || {};
 
@@ -773,10 +782,12 @@ const VirtualListBaseFactory = (type) => {
 				containerClasses = this.mergeClasses(className);
 
 			delete rest.cbScrollTo;
+			delete rest.childProps;
 			delete rest.clientSize;
 			delete rest.dataSize;
 			delete rest.direction;
 			delete rest.getComponentProps;
+			delete rest.isVerticalScrollbarVisible;
 			delete rest.itemRenderer;
 			delete rest.itemSize;
 			delete rest.onUpdate;
@@ -785,7 +796,6 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.rtl;
 			delete rest.spacing;
 			delete rest.updateStatesAndBounds;
-			delete rest.isVerticalScrollbarVisible;
 
 			if (primary) {
 				this.positionItems();

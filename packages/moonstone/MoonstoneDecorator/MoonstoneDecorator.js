@@ -31,7 +31,9 @@ import {configure} from '@enact/ui/Touchable';
 const defaultConfig = {
 	disableFullscreen: false,
 	float: true,
-	i18n: true,
+	i18n: {
+		sync: true
+	},
 	noAutoFocus: false,
 	overlay: false,
 	ri: {
@@ -77,6 +79,15 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		// Apply the @enact/i18n decorator around the font decorator so the latter will update the
 		// font stylesheet when the locale changes
 		App = I18nDecorator(
+			{
+				...i18n,
+				// We use the latin fonts (with non-Latin fallback) for these languages (even though
+				// their scripts are non-latin)
+				latinLanguageOverrides: ['ko', 'ha'],
+				// We use the non-latin fonts for these languages (even though their scripts are
+				// technically considered latin)
+				nonLatinLanguageOverrides: ['vi', 'en-JP']
+			},
 			I18nFontDecorator(
 				App
 			)

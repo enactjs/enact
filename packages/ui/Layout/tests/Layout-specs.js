@@ -12,19 +12,22 @@ describe('Layout Specs', () => {
 	];
 
 	layoutPropAlign.forEach(([value, resolved]) => {
-		it(`should apply '${resolved}' style value given an align prop value of "${value}"`, function () {
-			const wrapped = mount(
-				<Layout align={value}><Cell>Body</Cell></Layout>
-			);
+		test(
+			`should apply '${resolved}' style value given an align prop value of "${value}"`,
+			() => {
+				const wrapped = mount(
+					<Layout align={value}><Cell>Body</Cell></Layout>
+				);
 
-			const expected = resolved;
-			const actual = wrapped.find(`.${css.layout}`).prop('style').alignItems;
+				const expected = resolved;
+				const actual = wrapped.find(`.${css.layout}`).prop('style').alignItems;
 
-			expect(actual).to.contain(expected);
-		});
+				expect(actual).toContain(expected);
+			}
+		);
 	});
 
-	it('should apply a class for inline', function () {
+	test('should apply a class for inline', () => {
 		const wrapped = mount(
 			<Layout inline><Cell>Body</Cell></Layout>
 		);
@@ -32,7 +35,7 @@ describe('Layout Specs', () => {
 		const expected = true;
 		const actual = wrapped.find(`.${css.layout}`).hasClass(css.inline);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
 	// Tests for prop and className combinations
@@ -42,7 +45,7 @@ describe('Layout Specs', () => {
 
 	propStyleCombination.forEach(([prop, vals]) => {
 		vals.forEach((value) => {
-			it(`should apply classes for ${prop}`, function () {
+			test(`should apply classes for ${prop}`, () => {
 				const propValue = {
 					[prop]: value
 				};
@@ -53,7 +56,7 @@ describe('Layout Specs', () => {
 				const expected = true;
 				const actual = wrapped.find(`.${css.layout}`).hasClass(css[value]);
 
-				expect(actual).to.equal(expected);
+				expect(actual).toBe(expected);
 			});
 		});
 	});
@@ -64,7 +67,7 @@ describe('Layout Specs', () => {
 	];
 
 	cellBooleanPropClasses.forEach((prop) => {
-		it(`should apply a class for ${prop}`, function () {
+		test(`should apply a class for ${prop}`, () => {
 			const props = {
 				[prop]: true
 			};
@@ -75,7 +78,7 @@ describe('Layout Specs', () => {
 			const expected = true;
 			const actual = wrapped.find(`.${css.cell}`).hasClass(css[prop]);
 
-			expect(actual).to.equal(expected);
+			expect(actual).toBe(expected);
 		});
 	});
 
@@ -85,19 +88,22 @@ describe('Layout Specs', () => {
 
 	cellPropSize.forEach(([prop, vals]) => {
 		vals.forEach((value) => {
-			it(`should apply flexBasis styles the size prop value ${value}`, function () {
-				const propValue = {
-					[prop]: value
-				};
-				const wrapped = mount(
-					<Layout><Cell {...propValue}>Body</Cell></Layout>
-				);
+			test(
+				`should apply flexBasis styles the size prop value ${value}`,
+				() => {
+					const propValue = {
+						[prop]: value
+					};
+					const wrapped = mount(
+						<Layout><Cell {...propValue}>Body</Cell></Layout>
+					);
 
-				const expected = value;
-				const actual = wrapped.find(`.${css.cell}`).prop('style').flexBasis;
+					const expected = value;
+					const actual = wrapped.find(`.${css.cell}`).prop('style').flexBasis;
 
-				expect(actual).to.contain(expected);
-			});
+					expect(actual).toContain(expected);
+				}
+			);
 		});
 	});
 });
