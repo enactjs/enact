@@ -25,7 +25,7 @@ import {configure} from '@enact/ui/Touchable';
 /**
  * Default config for `MoonstoneDecorator`.
  *
- * @memberof moonstone/MoonstoneDecorator
+ * @memberof moonstone/MoonstoneDecorator.MoonstoneDecorator
  * @hocconfig
  */
 const defaultConfig = {
