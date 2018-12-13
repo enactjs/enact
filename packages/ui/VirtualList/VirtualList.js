@@ -83,7 +83,7 @@ const VirtualGridList = kind({
 		 * />
 		 * ```
 		 *
-		 * @type {ui/VirtualList.gridListItemSizeShape}
+		 * @type {gridListItemSizeShape}
 		 * @required
 		 * @public
 		 */
@@ -169,7 +169,7 @@ const VirtualGridListNative = kind({
 		 * />
 		 * ```
 		 *
-		 * @type {ui/VirtualList.gridListItemSizeShape}
+		 * @type {gridListItemSizeShape}
 		 * @required
 		 * @public
 		 */
