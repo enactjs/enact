@@ -11,7 +11,7 @@ import {coerceArray} from '@enact/core/util';
 import intersection from 'ramda/src/intersection';
 import last from 'ramda/src/last';
 
-import {contains, matchSelector, getContainerRect, getRect} from './utils';
+import {contains, matchSelector, getContainerRect, getRect, intersects} from './utils';
 
 const containerAttribute = 'data-spotlight-id';
 const containerConfigs   = new Map();
@@ -717,7 +717,14 @@ function getContainerNavigableElements (containerId) {
 		// if there isn't a preferred entry on an overflow container, filter the visible elements
 		if (overflow) {
 			const containerRect = getContainerRect(containerId);
-			next = spottables.filter(element => contains(containerRect, getRect(element)));
+			next = spottables.filter(element => {
+				const elementRect = getRect(element);
+				if (isContainerNode(element)) {
+					return intersects(containerRect, elementRect);
+				}
+
+				return contains(containerRect, elementRect);
+			});
 		}
 
 		// otherwise, return all spottables within the container
