@@ -712,19 +712,12 @@ function getContainerNavigableElements (containerId) {
 	}
 
 	if (!next) {
-		const spottables = getSpottableDescendants(containerId);
+		const spottables = getDeepSpottableDescendants(containerId);
 
 		// if there isn't a preferred entry on an overflow container, filter the visible elements
 		if (overflow) {
 			const containerRect = getContainerRect(containerId);
-			next = spottables.filter(element => {
-				const elementRect = getRect(element);
-				if (isContainerNode(element)) {
-					return intersects(containerRect, elementRect);
-				}
-
-				return contains(containerRect, elementRect);
-			});
+			next = spottables.filter(element => contains(containerRect, getRect(element)));
 		}
 
 		// otherwise, return all spottables within the container
