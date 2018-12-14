@@ -72,7 +72,7 @@ const VirtualListBaseFactory = (type) => {
 			 * The size of an item for the list; valid values are either a number for `VirtualList`
 			 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
 			 *
-			 * @type {Number|gridListItemSizeShape}
+			 * @type {Number|ui/VirtualList.gridListItemSizeShape}
 			 * @required
 			 * @private
 			 */

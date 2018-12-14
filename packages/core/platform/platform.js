@@ -150,7 +150,6 @@ const detect = () => {
 /**
  * Provides basic information about the running platform.
  *
- * @member platform
  * @type {PlatformDescription}
  * @memberof core/platform
  * @public

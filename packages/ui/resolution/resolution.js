@@ -403,7 +403,7 @@ const scaleToRem = (pixels) => unit(scale(pixels), 'rem');
  *
  * @function
  * @memberof ui/resolution
- * @param {String|selectSrcSrcOptions} src                     A string containing a single image
+ * @param {String|ui/resolution.selectSrcSrcOptions} src       A string containing a single image
  *                                                             source or a key/value hash/object
  *                                                             containing keys representing screen
  *                                                             types (`'hd'`, `'fhd'`, `'uhd'`,
