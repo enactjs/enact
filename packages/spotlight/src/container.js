@@ -717,7 +717,14 @@ function getContainerNavigableElements (containerId) {
 		// if there isn't a preferred entry on an overflow container, filter the visible elements
 		if (overflow) {
 			const containerRect = getContainerRect(containerId);
-			next = spottables.filter(element => contains(containerRect, getRect(element)));
+			next = spottables.filter(element => {
+				const elementRect = getRect(element);
+				if (isContainer(element)) {
+					return intersects(containerRect, elementRect);
+				}
+
+				return contains(containerRect, getRect(element));
+			});
 		}
 
 		// otherwise, return all spottables within the container
