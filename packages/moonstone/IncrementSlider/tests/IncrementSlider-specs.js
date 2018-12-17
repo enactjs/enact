@@ -513,4 +513,62 @@ describe('IncrementSlider Specs', () => {
 			expect(actual).toBe(expected);
 		}
 	);
+
+	test(
+		'should set incrementButton "data-webos-voice-disabled" when voice control is disabled',
+		() => {
+			const incrementSlider = mount(
+				<IncrementSlider data-webos-voice-disabled value={10} />
+			);
+
+			const expected = true;
+			const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('data-webos-voice-disabled');
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should set decrementButton "data-webos-voice-disabled" when voice control is disabled',
+		() => {
+			const incrementSlider = mount(
+				<IncrementSlider data-webos-voice-disabled value={10} />
+			);
+
+			const expected = true;
+			const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('data-webos-voice-disabled');
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should set incrementButton "data-webos-voice-group-label" when voice group label is set',
+		() => {
+			const label = 'voice control group label';
+			const incrementSlider = mount(
+				<IncrementSlider data-webos-voice-group-label={label} value={10} />
+			);
+
+			const expected = label;
+			const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('data-webos-voice-group-label');
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should set decrementButton "data-webos-voice-group-label" when voice group label is set',
+		() => {
+			const label = 'voice control group label';
+			const incrementSlider = mount(
+				<IncrementSlider data-webos-voice-group-label={label} value={10} />
+			);
+
+			const expected = label;
+			const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('data-webos-voice-group-label');
+
+			expect(actual).toBe(expected);
+		}
+	);
 });
