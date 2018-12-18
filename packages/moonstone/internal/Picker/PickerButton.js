@@ -2,7 +2,7 @@ import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {contextTypes as controlContextTypes} from '@enact/ui/Marquee/MarqueeController';
+import {MarqueeControllerContext} from '@enact/ui/Marquee/MarqueeController';
 import Pure from '@enact/ui/internal/Pure';
 import Touchable from '@enact/ui/Touchable';
 
@@ -36,17 +36,17 @@ const PickerButtonBase = kind({
 
 	propTypes: {
 		disabled: PropTypes.bool,
+		enter: PropTypes.func,
 		hidden: PropTypes.bool,
 		icon: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.object
 		]),
 		joined: PropTypes.bool,
+		leave: PropTypes.func,
 		onSpotlightDisappear: PropTypes.func,
 		spotlightDisabled: PropTypes.bool
 	},
-
-	contextTypes: controlContextTypes,
 
 	styles: {
 		css
@@ -55,17 +55,17 @@ const PickerButtonBase = kind({
 	handlers: {
 		onMouseEnter: handle(
 			forward('onMouseEnter'),
-			(ev, props, context) => {
-				if (context.enter) {
-					context.enter(null);
+			(ev, {enter}) => {
+				if (enter) {
+					enter(null);
 				}
 			}
 		),
 		onMouseLeave: handle(
 			forward('onMouseLeave'),
-			(ev, props, context) => {
-				if (context.leave) {
-					context.leave(null);
+			(ev, {leave}) => {
+				if (leave) {
+					leave(null);
 				}
 			}
 		)
@@ -88,9 +88,20 @@ const PickerButtonBase = kind({
 			);
 		} else {
 			return (
-				<IconButton {...rest} backgroundOpacity="transparent" disabled={disabled} small>
-					{icon}
-				</IconButton>
+				<MarqueeControllerContext.Consumer>
+					{sync => (
+						<IconButton
+							{...rest}
+							backgroundOpacity="transparent"
+							disabled={disabled}
+							enter={sync && sync.enter}
+							leave={sync && sync.leave}
+							small
+						>
+							{icon}
+						</IconButton>
+					)}
+				</MarqueeControllerContext.Consumer>
 			);
 		}
 	}
