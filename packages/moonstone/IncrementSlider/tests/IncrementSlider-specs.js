@@ -515,7 +515,7 @@ describe('IncrementSlider Specs', () => {
 	);
 
 	test(
-		'should set incrementButton "data-webos-voice-disabled" when voice control is disabled',
+		'should set "data-webos-voice-disabled" to increment button when voice control is disabled',
 		() => {
 			const incrementSlider = mount(
 				<IncrementSlider data-webos-voice-disabled value={10} />
@@ -529,7 +529,7 @@ describe('IncrementSlider Specs', () => {
 	);
 
 	test(
-		'should set decrementButton "data-webos-voice-disabled" when voice control is disabled',
+		'should set "data-webos-voice-disabled" to decrement button when voice control is disabled',
 		() => {
 			const incrementSlider = mount(
 				<IncrementSlider data-webos-voice-disabled value={10} />
@@ -543,7 +543,7 @@ describe('IncrementSlider Specs', () => {
 	);
 
 	test(
-		'should set incrementButton "data-webos-voice-group-label" when voice group label is set',
+		'should set "data-webos-voice-group-label" to increment button when voice group label is set',
 		() => {
 			const label = 'voice control group label';
 			const incrementSlider = mount(
@@ -558,7 +558,7 @@ describe('IncrementSlider Specs', () => {
 	);
 
 	test(
-		'should set decrementButton "data-webos-voice-group-label" when voice group label is set',
+		'should set "data-webos-voice-group-label" to decrement button when voice group label is set',
 		() => {
 			const label = 'voice control group label';
 			const incrementSlider = mount(

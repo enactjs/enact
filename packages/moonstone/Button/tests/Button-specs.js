@@ -59,14 +59,13 @@ describe('Button', () => {
 
 			expect(actual).toBe(expected);
 		});
-	});
 
-	describe('voice control', () => {
 		test('should have "data-webos-voice-intent=Select" in default', () => {
 			const button = mount(<Button>Hello</Button>);
 
 			const expected = 'Select';
 			const actual = button.find('div').at(0).prop('data-webos-voice-intent');
+
 			expect(actual).toBe(expected);
 		});
 	});

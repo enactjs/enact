@@ -35,7 +35,7 @@ describe('ExpandableList', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should set ExpandableItem "data-webos-voice-disabled" when voice control is disabled', () => {
+	test('should set "data-webos-voice-disabled" to LabeledItem when voice control is disabled', () => {
 		const children = ['option1', 'option2', 'option3'];
 
 		const expandableList = mount(
@@ -45,12 +45,12 @@ describe('ExpandableList', () => {
 		);
 
 		const expected = true;
-		const actual = expandableList.find('ExpandableItem').prop('data-webos-voice-disabled');
+		const actual = expandableList.find('LabeledItem').prop('data-webos-voice-disabled');
 
 		expect(actual).toBe(expected);
 	});
 
-	test('should set children "data-webos-voice-disabled" when voice control is disabled', () => {
+	test('should set "data-webos-voice-disabled" to child item when voice control is disabled', () => {
 		const children = ['option1', 'option2', 'option3'];
 
 		const expandableList = mount(

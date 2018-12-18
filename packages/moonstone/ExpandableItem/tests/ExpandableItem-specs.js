@@ -39,7 +39,7 @@ describe('ExpandableItem', () => {
 	});
 
 	describe('Voice Control', () => {
-		test('should set ExpandableItem "data-webos-voice-disabled" when voice control is disabled', () => {
+		test('should set "data-webos-voice-disabled" to LabeledItem when voice control is disabled', () => {
 			const children = ['option1', 'option2', 'option3'];
 
 			const expandableItem = mount(
@@ -49,7 +49,7 @@ describe('ExpandableItem', () => {
 			);
 
 			const expected = true;
-			const actual = expandableItem.find('ExpandableItem').prop('data-webos-voice-disabled');
+			const actual = expandableItem.find('LabeledItem').prop('data-webos-voice-disabled');
 
 			expect(actual).toBe(expected);
 		});

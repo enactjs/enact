@@ -129,7 +129,7 @@ describe('ExpandablePicker Specs', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should set decrement button "data-webos-voice-disabled" when voice control is disabled', () => {
+	test('should set "data-webos-voice-disabled" to decrement button when voice control is disabled', () => {
 		const children = ['option1', 'option2', 'option3'];
 
 		const expandablePicker = mount(
@@ -144,7 +144,7 @@ describe('ExpandablePicker Specs', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should set increment button "data-webos-voice-disabled" when voice control is disabled', () => {
+	test('should set "data-webos-voice-disabled" to increment button when voice control is disabled', () => {
 		const children = ['option1', 'option2', 'option3'];
 
 		const expandablePicker = mount(

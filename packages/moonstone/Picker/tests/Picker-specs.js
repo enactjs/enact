@@ -44,7 +44,7 @@ describe('Picker Specs', () => {
 		expect(actual).toBe(true);
 	});
 
-	test('should set decrement button "data-webos-voice-disabled" when voice control is disabled', () => {
+	test('should set "data-webos-voice-disabled" to decrement button when voice control is disabled', () => {
 		const picker = mount(
 			<PickerBase data-webos-voice-disabled>
 				{[1, 2, 3, 4]}
@@ -53,10 +53,11 @@ describe('Picker Specs', () => {
 
 		const expected = true;
 		const actual = picker.find('PickerButton').at(0).prop('data-webos-voice-disabled');
+
 		expect(actual).toBe(expected);
 	});
 
-	test('should set increment button "data-webos-voice-disabled" when voice control is disabled', () => {
+	test('should set "data-webos-voice-disabled" to increment button when voice control is disabled', () => {
 		const picker = mount(
 			<PickerBase data-webos-voice-disabled>
 				{[1, 2, 3, 4]}
@@ -65,6 +66,7 @@ describe('Picker Specs', () => {
 
 		const expected = true;
 		const actual = picker.find('PickerButton').at(1).prop('data-webos-voice-disabled');
+
 		expect(actual).toBe(expected);
 	});
 });

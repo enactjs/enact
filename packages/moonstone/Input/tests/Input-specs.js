@@ -207,20 +207,19 @@ describe('Input Specs', () => {
 
 		expect(subject.find('Tooltip')).toHaveLength(0);
 	});
-});
 
-describe('Voice Control', () => {
-	test('should include a voice intent if specified', () => {
+	test('should set voice intent if specified', () => {
 		const input = mount(
 			<Input data-webos-voice-intent="Select" />
 		);
 
 		const expected = 'Select';
 		const actual = input.find('input').prop('data-webos-voice-intent');
+
 		expect(actual).toBe(expected);
 	});
 
-	test('should include a voice label if specified', () => {
+	test('should set voice label if specified', () => {
 		const label = 'input label';
 		const input = mount(
 			<Input data-webos-voice-label={label} />
@@ -228,6 +227,7 @@ describe('Voice Control', () => {
 
 		const expected = label;
 		const actual = input.find('input').prop('data-webos-voice-label');
+
 		expect(actual).toBe(expected);
 	});
 });
