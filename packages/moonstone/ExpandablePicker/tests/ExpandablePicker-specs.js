@@ -128,4 +128,34 @@ describe('ExpandablePicker Specs', () => {
 
 		expect(actual).toBe(expected);
 	});
+
+	test('should set decrement button "data-webos-voice-disabled" when voice control is disabled', () => {
+		const children = ['option1', 'option2', 'option3'];
+
+		const expandablePicker = mount(
+			<ExpandablePickerBase data-webos-voice-disabled title="Options" open>
+				{children}
+			</ExpandablePickerBase>
+		);
+
+		const expected = true;
+		const actual = expandablePicker.find('IconButton').at(0).prop('data-webos-voice-disabled');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should set increment button "data-webos-voice-disabled" when voice control is disabled', () => {
+		const children = ['option1', 'option2', 'option3'];
+
+		const expandablePicker = mount(
+			<ExpandablePickerBase data-webos-voice-disabled title="Options" open>
+				{children}
+			</ExpandablePickerBase>
+		);
+
+		const expected = true;
+		const actual = expandablePicker.find('IconButton').at(1).prop('data-webos-voice-disabled');
+
+		expect(actual).toBe(expected);
+	});
 });
