@@ -57,8 +57,7 @@
 	.debug {
 		// `.debug.aria` Add in an Aria overlay to visualize what is assigned to the aria attributes
 		&.aria {
-			[aria-label]::after,
-			[aria-valuetext]::after {
+			.field() {
 				position: absolute;
 				font-size: small;
 				font-weight: 100;
@@ -76,16 +75,56 @@
 				pointer-events: none;
 			}
 
-			[aria-label]::after {
-				content: "Aria Label:\0020" attr(aria-label);
+			&.all {
+				[role]::after,
+				[aria-checked]::after,
+				[aria-controls]::after,
+				[aria-disabled]::after,
+				[aria-hidden]::after,
+				[aria-label]::after,
+				[aria-labelledby]::after,
+				[aria-live]::after,
+				[aria-owns]::after,
+				[aria-pressed]::after,
+				[aria-valuetext]::after {
+					.field();
+					content: "Role:(" attr(role) "), Checked:(" attr(aria-checked) "), Controls:(" attr(aria-controls) "), Disabled:(" attr(aria-disabled) "), Hidden:(" attr(aria-hidden) "), Label(" attr(aria-label) "), Labelledby:(" attr(aria-labelledby) "), Live:(" attr(aria-live) "), Owns:(" attr(aria-owns) "), Pressed:(" attr(aria-pressed) "), Valuetext:(" attr(aria-valuetext) ")";
+				}
 			}
 
-			[aria-valuetext]::after {
-				content: "Aria Value:\0020" attr(aria-valuetext);
+			&.live {
+				[aria-live]::after {
+					.field();
+					content: "Live(" attr(aria-live) ")";
+				}
 			}
 
-			[aria-label][aria-valuetext]::after {
-				content: "Aria Label:\0020'" attr(aria-label) "'; Aria Value:\0020'" attr(aria-valuetext) "';";
+			&.relationship {
+				[aria-controls]::after,
+				[aria-labelledby]::after,
+				[aria-owns]::after {
+					.field();
+					content: "Controls:(" attr(aria-controls) "), Labelledby:(" attr(aria-labelledby) "), Owns:(" attr(aria-owns) ")";
+				}
+			}
+
+			&.role {
+				[role]::after {
+					.field();
+					content: "Role(" attr(role) ")";
+				}
+			}
+
+			&.widget {
+				[aria-checked]::after,
+				[aria-disabled]::after,
+				[aria-hidden]::after,
+				[aria-label]::after,
+				[aria-pressed]::after,
+				[aria-valuetext]::after {
+					.field();
+					content: "Checked(" attr(aria-checked) "), Disabled(" attr(aria-disabled) "), Hidden(" attr(aria-hidden) "), Label(" attr(aria-label) "), Pressed(" attr(aria-pressed) "), Valuetext(" attr(aria-valuetext) ")";
+				}
 			}
 		}
 	}

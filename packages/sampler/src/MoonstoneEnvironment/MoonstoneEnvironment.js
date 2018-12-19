@@ -102,6 +102,15 @@ const skins = {
 	'Light': 'light'
 };
 
+const debugAriaTypes = {
+	'': '',
+	'All': 'all',
+	'Live region attributes': 'live',
+	'Relationship attributes': 'relationship',
+	'Role': 'role',
+	'Widget attributes': 'widget'
+};
+
 // NOTE: Knobs cannot set locale in fullscreen mode. This allows any knob to be taken from the URL.
 const getPropFromURL = (propName, fallbackValue) => {
 	propName = encodeURI(propName);
@@ -143,11 +152,16 @@ const StorybookDecorator = (story, config) => {
 		groupId: 'Development'
 	};
 
-	const classes = {
+	const debugAriaType = select('debug aria type', debugAriaTypes, DevelopmentConfig, getPropFromURL('debugAriaType'));
+
+	let classes = {
 		aria: boolean('debug aria', DevelopmentConfig, (getPropFromURL('debug aria') === 'true')),
 		layout: boolean('debug layout', DevelopmentConfig, (getPropFromURL('debug layout') === 'true')),
 		spotlight: boolean('debug spotlight', DevelopmentConfig, (getPropFromURL('debug spotlight') === 'true'))
 	};
+
+	classes = Object.assign({[debugAriaType]: classes.aria}, classes);
+
 	if (Object.keys(classes).length > 0) {
 		classes.debug = true;
 	}
