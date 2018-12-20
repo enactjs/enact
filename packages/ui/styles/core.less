@@ -93,9 +93,10 @@
 			}
 
 			&.live {
-				[aria-live]::after {
+				[aria-live]::after,
+				[role]::after {
 					.field();
-					content: "Live(" attr(aria-live) ")";
+					content: "Live(" attr(aria-live) "), Role(" attr(role) ")";
 				}
 			}
 
