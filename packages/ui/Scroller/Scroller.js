@@ -75,15 +75,12 @@ class ScrollerBase extends Component {
 		/**
 		 * The rendering function called for each item in the scroller.
 		 *
-		 * > **Note**: The scroller does **not** always render a component whenever its render function is called
-		 * due to performance optimization.
-		 *
 		 * Example:
 		 * ```
-		 * renderItem = ({index}) => {
+		 * renderItem = ({index, ...rest}) => {
 		 *
 		 * 	return (
-		 * 		<MyComponent index={index} />
+		 * 		<MyComponent {...rest} index={index} />
 		 * 	);
 		 * }
 		 * ```
@@ -106,7 +103,7 @@ class ScrollerBase extends Component {
 	}
 
 	static defaultProps = {
-		dataSize: 0,
+		dataSize: undefined,
 		direction: 'both'
 	}
 
@@ -130,14 +127,16 @@ class ScrollerBase extends Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		const {dataSize} = this.props;
+		const {dataSize, itemRenderer} = this.props;
 
-		this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
+		if (dataSize && itemRenderer) {
+			this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
 
-		if (this.hasDataSizeChanged) {
-			// reset children
-			this.cc = [];
-			this.positionItems(nextProps.dataSize);
+			if (this.hasDataSizeChanged) {
+				// reset children
+				this.cc = [];
+				this.positionItems(nextProps.dataSize);
+			}
 		}
 	}
 
@@ -229,23 +228,19 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	createNewNode = (index) => {
-		const itemElement = this.props.itemRenderer({index});
-
-		this.cc[index] = React.cloneElement(itemElement, {
-			key: index
-		});
-	}
-
 	positionItems (dataSize) {
 		for (let index = 0; index < dataSize; index++) {
-			this.createNewNode(index);
+			const itemElement = this.props.itemRenderer({index});
+
+			this.cc[index] = React.cloneElement(itemElement, {
+				key: index
+			});
 		}
 	}
 
 	render () {
 		const
-			{children, className, style, ...rest} = this.props,
+			{children, className, dataSize, style, ...rest} = this.props,
 			mergedStyle = Object.assign({}, style, {
 				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
 				overflowY: this.isVertical() ? 'auto' : 'hidden'
@@ -261,7 +256,7 @@ class ScrollerBase extends Component {
 		return (
 			<div
 				{...rest}
-				children={this.cc.length > 0 ? this.cc : children}
+				children={(typeof dataSize !== 'undefined') ? this.cc : children}
 				className={classNames(className, css.hideNativeScrollbar)}
 				ref={this.initContainerRef}
 				style={mergedStyle}

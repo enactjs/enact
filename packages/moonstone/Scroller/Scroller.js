@@ -61,15 +61,12 @@ class ScrollerBase extends Component {
 		/**
 		 * The rendering function called for each item in the scroller.
 		 *
-		 * > **Note**: The scroller does **not** always render a component whenever its render function is called
-		 * due to performance optimization.
-		 *
 		 * Example:
 		 * ```
-		 * renderItem = ({index}) => {
+		 * renderItem = ({index, ...rest}) => {
 		 *
 		 * 	return (
-		 * 		<MyComponent index={index} />
+		 * 		<MyComponent {...rest} index={index} />
 		 * 	);
 		 * }
 		 * ```
