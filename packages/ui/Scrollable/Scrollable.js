@@ -918,7 +918,7 @@ class ScrollableBase extends Component {
 
 	scrollStopJob = new Job(this.doScrollStop, scrollStopWaiting);
 
-	start ({targetX, targetY, animate = true, duration = animationDuration, overscrollEffect = false}) {
+	start ({targetX, targetY, animate = true, duration = animationDuration, overscrollEffect = false, force = false}) {
 		const
 			{scrollLeft, scrollTop} = this,
 			bounds = this.getScrollBounds(),
@@ -933,7 +933,7 @@ class ScrollableBase extends Component {
 		};
 
 		// bail early when scrolling to the same position
-		if (this.scrolling && this.animationInfo && this.animationInfo.targetX === targetX && this.animationInfo.targetY === targetY) {
+		if (!force && this.scrolling && this.animationInfo && this.animationInfo.targetX === targetX && this.animationInfo.targetY === targetY) {
 			return;
 		}
 
@@ -1111,15 +1111,17 @@ class ScrollableBase extends Component {
 	scrollTo = (opt) => {
 		if (!this.deferScrollTo) {
 			const {left, top} = this.getPositionForScrollTo(opt);
+			let force = false;
 
 			if (this.props.scrollTo) {
-				this.props.scrollTo(opt);
+				force = this.props.scrollTo(opt);
 			}
 			this.scrollToInfo = null;
 			this.start({
 				targetX: (left !== null) ? left : this.scrollLeft,
 				targetY: (top !== null) ? top : this.scrollTop,
-				animate: opt.animate
+				animate: opt.animate,
+				force
 			});
 		} else {
 			this.scrollToInfo = opt;

@@ -555,6 +555,7 @@ class ScrollableBase extends Component {
 	scrollTo = (opt) => {
 		this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
 		this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
+		return !(this.indexToFocus === null && this.nodeToFocus === null);
 	}
 
 	alertThumb = () => {
