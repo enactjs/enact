@@ -428,10 +428,11 @@ class ScrollerBase extends Component {
 		return (
 			<UiScrollerBase
 				{...props}
-				itemRenderer={({index}) => ( // eslint-disable-line react/jsx-no-bind
+				itemRenderer={({index, key}) => ( // eslint-disable-line react/jsx-no-bind
 					this.props.itemRenderer({
 						[dataIndexAttribute]: index,
-						index
+						index,
+						key
 					})
 				)}
 				ref={this.initUiRef}

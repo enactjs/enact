@@ -230,11 +230,7 @@ class ScrollerBase extends Component {
 
 	positionItems (dataSize) {
 		for (let index = 0; index < dataSize; index++) {
-			const itemElement = this.props.itemRenderer({index});
-
-			this.cc[index] = React.cloneElement(itemElement, {
-				key: index
-			});
+			this.cc[index] = this.props.itemRenderer({index, key: index});
 		}
 	}
 
@@ -256,7 +252,7 @@ class ScrollerBase extends Component {
 		return (
 			<div
 				{...rest}
-				children={(typeof dataSize !== 'undefined') ? this.cc : children}
+				children={typeof dataSize !== 'undefined' ? this.cc : children}
 				className={classNames(className, css.hideNativeScrollbar)}
 				ref={this.initContainerRef}
 				style={mergedStyle}
