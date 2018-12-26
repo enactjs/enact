@@ -102,8 +102,8 @@ const skins = {
 	'Light': 'light'
 };
 
-const debugAria = {
-	'Disable': '',
+const debugAriaOptions = {
+	'Disable (Default)': '',
 	'All': 'all',
 	'Live region attributes': 'live',
 	'Relationship attributes': 'relationship',
@@ -145,17 +145,16 @@ const StorybookDecorator = (story, config) => {
 
 	const DevelopmentConfig = {
 		defaultProps: {
-			'debug aria': '',
 			'debug layout': false,
 			'debug spotlight': false
 		},
 		groupId: 'Development'
 	};
 
-	const debugAriaType = select('debug aria', debugAria, DevelopmentConfig, getPropFromURL('debug aria'));
+	const debugAriaOption = select('debug aria', debugAriaOptions, DevelopmentConfig, getPropFromURL('debug aria'));
 
 	const classes = {
-		[`aria ${debugAriaType}`]: debugAriaType && true,
+		[`aria ${debugAriaOption}`]: debugAriaOption && true,
 		layout: boolean('debug layout', DevelopmentConfig, (getPropFromURL('debug layout') === 'true')),
 		spotlight: boolean('debug spotlight', DevelopmentConfig, (getPropFromURL('debug spotlight') === 'true'))
 	};
