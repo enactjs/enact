@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `moonstone/ExpandableInput` and `moonstone/Input` samples to allow selecting the input type
+
 ## [2.2.8] - 2018-12-06
 
 No significant changes.
