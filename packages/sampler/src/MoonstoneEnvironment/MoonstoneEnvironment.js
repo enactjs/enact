@@ -146,21 +146,25 @@ const StorybookDecorator = (story, config) => {
 	const DevelopmentConfig = {
 		defaultProps: {
 			'debug aria': false,
+			'debug aria type': '',
 			'debug layout': false,
 			'debug spotlight': false
 		},
 		groupId: 'Development'
 	};
 
-	const debugAriaType = select('debug aria type', debugAriaTypes, DevelopmentConfig, getPropFromURL('debugAriaType'));
+	const
+		aria = boolean('debug aria', DevelopmentConfig, (getPropFromURL('debug aria') === 'true')),
+		ariaDebugType = select('debug aria type', debugAriaTypes, DevelopmentConfig, getPropFromURL('debug aria type')),
+		layout = boolean('debug layout', DevelopmentConfig, (getPropFromURL('debug layout') === 'true')),
+		spotlight = boolean('debug spotlight', DevelopmentConfig, (getPropFromURL('debug spotlight') === 'true'));
 
-	let classes = {
-		aria: boolean('debug aria', DevelopmentConfig, (getPropFromURL('debug aria') === 'true')),
-		layout: boolean('debug layout', DevelopmentConfig, (getPropFromURL('debug layout') === 'true')),
-		spotlight: boolean('debug spotlight', DevelopmentConfig, (getPropFromURL('debug spotlight') === 'true'))
+	const classes = {
+		aria: aria,
+		[ariaDebugType]: aria,
+		layout: layout,
+		spotlight: spotlight
 	};
-
-	classes = Object.assign({[debugAriaType]: classes.aria}, classes);
 
 	if (Object.keys(classes).length > 0) {
 		classes.debug = true;
