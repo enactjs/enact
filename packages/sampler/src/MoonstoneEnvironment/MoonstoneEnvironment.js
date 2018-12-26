@@ -102,8 +102,8 @@ const skins = {
 	'Light': 'light'
 };
 
-const debugAriaTypes = {
-	'': '',
+const debugAria = {
+	'Disable': '',
 	'All': 'all',
 	'Live region attributes': 'live',
 	'Relationship attributes': 'relationship',
@@ -145,29 +145,25 @@ const StorybookDecorator = (story, config) => {
 
 	const DevelopmentConfig = {
 		defaultProps: {
-			'debug aria': false,
-			'debug aria type': '',
+			'debug aria': '',
 			'debug layout': false,
 			'debug spotlight': false
 		},
 		groupId: 'Development'
 	};
 
-	const
-		aria = boolean('debug aria', DevelopmentConfig, (getPropFromURL('debug aria') === 'true')),
-		ariaDebugType = select('debug aria type', debugAriaTypes, DevelopmentConfig, getPropFromURL('debug aria type')),
-		layout = boolean('debug layout', DevelopmentConfig, (getPropFromURL('debug layout') === 'true')),
-		spotlight = boolean('debug spotlight', DevelopmentConfig, (getPropFromURL('debug spotlight') === 'true'));
+	const debugAriaType = select('debug aria', debugAria, DevelopmentConfig, getPropFromURL('debug aria'));
 
 	const classes = {
-		aria: aria,
-		[ariaDebugType]: aria,
-		layout: layout,
-		spotlight: spotlight
+		[`aria ${debugAriaType}`]: debugAriaType && true,
+		layout: boolean('debug layout', DevelopmentConfig, (getPropFromURL('debug layout') === 'true')),
+		spotlight: boolean('debug spotlight', DevelopmentConfig, (getPropFromURL('debug spotlight') === 'true'))
 	};
 
-	if (Object.keys(classes).length > 0) {
-		classes.debug = true;
+	for (const key in classes) {
+		if (typeof classes[key] !== 'undefined') {
+			classes.debug = true;
+		}
 	}
 
 	return (
