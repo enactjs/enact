@@ -111,6 +111,28 @@ const extractAriaProps = function (props) {
 };
 
 /**
+ * Removes voice control related props from `props` and returns them in a new object.
+ *
+ * @function
+ * @param   {Object}    props    Props object
+ *
+ * @returns {Object}             voice control related props
+ * @memberof core/util
+ * @public
+ */
+const extractVoiceProps = function (props) {
+	const obj = {};
+	Object.keys(props).forEach(key => {
+		if (key.indexOf('data-webos-voice-') === 0) {
+			obj[key] = props[key];
+			delete props[key];
+		}
+	});
+
+	return obj;
+};
+
+/**
  * Gets the current timestamp of either `window.performance.now` or `Date.now`
  *
  * @function
@@ -204,6 +226,7 @@ export {
 	coerceArray,
 	coerceFunction,
 	extractAriaProps,
+	extractVoiceProps,
 	isRenderable,
 	Job,
 	memoize,

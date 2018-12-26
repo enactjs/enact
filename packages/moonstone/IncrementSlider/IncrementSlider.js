@@ -22,7 +22,7 @@
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
-import {extractAriaProps} from '@enact/core/util';
+import {extractAriaProps, extractVoiceProps} from '@enact/core/util';
 import Spottable from '@enact/spotlight/Spottable';
 import Changeable from '@enact/ui/Changeable';
 import Slottable from '@enact/ui/Slottable';
@@ -87,24 +87,6 @@ const IncrementSliderBase = kind({
 		 * @public
 		 */
 		'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-
-		/**
-		 * Disables voice control.
-		 *
-		 * @type {Boolean}
-		 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
-		 * @public
-		 */
-		'data-webos-voice-disabled': PropTypes.bool,
-
-		/**
-		 * The `data-webos-voice-group-label` for the IconButton of IncrementSlider.
-		 *
-		 * @type {String}
-		 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
-		 * @public
-		 */
-		'data-webos-voice-group-label': PropTypes.string,
 
 		/**
 		 * Sets the knob to selected state and allows it to move via 5-way controls.
@@ -473,8 +455,6 @@ const IncrementSliderBase = kind({
 
 	render: ({active,
 		'aria-hidden': ariaHidden,
-		'data-webos-voice-disabled': voiceDisabled,
-		'data-webos-voice-group-label': voiceGroupLabel,
 		backgroundProgress,
 		css,
 		decrementAriaLabel,
@@ -507,6 +487,7 @@ const IncrementSliderBase = kind({
 		...rest
 	}) => {
 		const ariaProps = extractAriaProps(rest);
+		const voiceProps = extractVoiceProps(rest);
 		delete rest.onSpotlightDirection;
 		delete rest.onSpotlightDown;
 		delete rest.onSpotlightLeft;
@@ -516,12 +497,11 @@ const IncrementSliderBase = kind({
 		return (
 			<div {...rest}>
 				<IncrementSliderButton
+					{...voiceProps}
 					aria-controls={!incrementDisabled ? id : null}
 					aria-hidden={ariaHidden}
 					aria-label={decrementAriaLabel}
 					className={css.decrementButton}
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={decrementDisabled}
 					onTap={onDecrement}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
@@ -554,12 +534,11 @@ const IncrementSliderBase = kind({
 					value={value}
 				/>
 				<IncrementSliderButton
+					{...voiceProps}
 					aria-controls={!decrementDisabled ? id : null}
 					aria-hidden={ariaHidden}
 					aria-label={incrementAriaLabel}
 					className={css.incrementButton}
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={incrementDisabled}
 					onTap={onIncrement}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}
