@@ -476,7 +476,7 @@ class ScrollableBase extends Component {
 
 	componentWillUnmount () {
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
-		if (this.animator.isAnimating()) {
+		if (this.scrolling) {
 			this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
 		}
 		this.scrollStopJob.stop();
