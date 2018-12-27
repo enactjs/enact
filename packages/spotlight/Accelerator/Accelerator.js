@@ -62,7 +62,7 @@ class Accelerator {
 		 * Controls the frequency with which the acceleration will "freeze". While frozen,
 		 * the current target item cannot change, and all events are directed to it.
 		 *
-		 * @type {Array}
+		 * @type {Number[]}
 		 * @default [3, 3, 3, 2, 2, 2, 1]
 		 * @public
 		 */

@@ -101,7 +101,7 @@ const defaultConfig = {
 /**
  * Checks whether any of the invalidateProps has changed or not
  *
- * @param {Array} propList An array of invalidateProps
+ * @param {String[]} propList An array of invalidateProps
  * @param {Object} prev Previous props
  * @param {Object} next Next props
  * @returns {Boolean} `true` if any of the props changed

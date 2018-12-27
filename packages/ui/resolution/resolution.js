@@ -105,7 +105,7 @@ function getScreenTypeObject (type) {
  *
  * @function
  * @memberof ui/resolution
- * @param {Array}    types    An array of objects containing screen configuration data, as in the
+ * @param {Object[]}    types    An array of objects containing screen configuration data, as in the
  *                            preceding example.
  * @returns {undefined}
  * @public
