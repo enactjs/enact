@@ -154,13 +154,13 @@ const StorybookDecorator = (story, config) => {
 	const debugAriaOption = select('debug aria', debugAriaOptions, DevelopmentConfig, getPropFromURL('debug aria'));
 
 	const classes = {
-		[`aria ${debugAriaOption}`]: debugAriaOption && true,
+		[`aria ${debugAriaOption}`]: !!debugAriaOption,
 		layout: boolean('debug layout', DevelopmentConfig, (getPropFromURL('debug layout') === 'true')),
 		spotlight: boolean('debug spotlight', DevelopmentConfig, (getPropFromURL('debug spotlight') === 'true'))
 	};
 
 	for (const key in classes) {
-		if (typeof classes[key] !== 'undefined') {
+		if (classes[key]) {
 			classes.debug = true;
 		}
 	}
