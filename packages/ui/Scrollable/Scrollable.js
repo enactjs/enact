@@ -476,7 +476,7 @@ class ScrollableBase extends Component {
 
 	componentWillUnmount () {
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
-		if (this.scrolling) {
+		if (this.animator.isAnimating()) {
 			this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
 		}
 		this.scrollStopJob.stop();
@@ -933,7 +933,7 @@ class ScrollableBase extends Component {
 		};
 
 		// bail early when scrolling to the same position
-		if (this.scrolling && this.animationInfo && this.animationInfo.targetX === targetX && this.animationInfo.targetY === targetY) {
+		if (this.animator.isAnimating() && this.animationInfo && this.animationInfo.targetX === targetX && this.animationInfo.targetY === targetY) {
 			return;
 		}
 
