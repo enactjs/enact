@@ -1,5 +1,5 @@
+import IString from '../ilib/lib/IString';
 import ResBundle from '../ilib/lib/ResBundle';
-import Locale from '../ilib/lib/Locale';
 
 // The ilib.ResBundle for the active locale used by $L
 let resBundle;
@@ -18,33 +18,36 @@ function getResBundle () {
  *
  * @param  {ilib.Locale} locale Locale for ResBundle
  *
- * @returns {ilib.ResBundle} New ilib.ResBundle
+ * @returns {Promise|ResBundle} Resolves with a new ilib.ResBundle
  */
-function createResBundle (locale) {
-	resBundle = new ResBundle({
-		locale: locale,
+function createResBundle (options) {
+	const opts = {
 		type: 'html',
 		name: 'strings',
-		sync: true,
-		lengthen: true		// if pseudo-localizing, this tells it to lengthen strings
-	});
+		lengthen: true,		// if pseudo-localizing, this tells it to lengthen strings
+		...options
+	};
 
-	return resBundle;
+	if (!opts.onLoad) return;
+
+	// eslint-disable-next-line no-new
+	new ResBundle({
+		...opts,
+		onLoad: (bundle) => {
+			opts.onLoad(bundle || null);
+		}
+	});
 }
 
 /**
  * Set the locale for the strings that $L loads. This may reload the
  * string resources if necessary.
+ *
  * @param {string} spec the locale specifier
- * @returns {undefined}
+ * @returns {ilib.ResBundle} Current ResBundle
  */
-function setResBundleLocale (spec) {
-	// Get active bundle and if needed, (re)initialize.
-	const locale = new Locale(spec);
-	const rb = getResBundle();
-	if (!rb || spec !== rb.getLocale().getSpec()) {
-		createResBundle(locale);
-	}
+function setResBundle (bundle) {
+	return (resBundle = bundle);
 }
 
 /**
@@ -57,8 +60,28 @@ function clearResBundle () {
 	resBundle = null;
 }
 
+/**
+ * Retrieves an IString from a resource bundle by key.
+ *
+ * If the bundle doesn't exist, the key is returned wrapped by IString.
+ *
+ * @param {String|Object} str Key for localized string
+ * @param {ResBundl} rb ilib resource bundle
+ * @returns	{IString} The string value wrapped by an IString
+ */
+function getIStringFromBundle (str, rb) {
+	const isObject = typeof str === 'object';
+	if (rb) {
+		return isObject ? rb.getString(str.value, str.key) : rb.getString(str);
+	}
+
+	return new IString(isObject ? str.value : str);
+}
+
 export {
+	clearResBundle,
+	createResBundle,
+	getIStringFromBundle,
 	getResBundle,
-	setResBundleLocale,
-	clearResBundle
+	setResBundle
 };
