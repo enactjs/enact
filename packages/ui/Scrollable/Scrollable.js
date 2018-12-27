@@ -933,7 +933,7 @@ class ScrollableBase extends Component {
 		};
 
 		// bail early when scrolling to the same position
-		if (this.scrolling && this.animationInfo && this.animationInfo.targetX === targetX && this.animationInfo.targetY === targetY) {
+		if (this.animator.isAnimating() && this.animationInfo && this.animationInfo.targetX === targetX && this.animationInfo.targetY === targetY) {
 			return;
 		}
 
