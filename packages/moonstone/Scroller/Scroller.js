@@ -152,12 +152,14 @@ class ScrollerBase extends Component {
 	 * @private
 	 */
 	calculateScrollTop = (item) => {
-		const roundToBoundary = (sb, st, sh) => {
-			const threshold = ri.scale(24);
-
+		const threshold = ri.scale(24);
+		const roundToStart = (sb, st) => {
 			// round to start
 			if (st < threshold) return 0;
 
+			return st;
+		};
+		const roundToEnd = (sb, st, sh) => {
 			// round to end
 			if (sh - (st + sb.height) < threshold) return sh - sb.height;
 
@@ -170,9 +172,9 @@ class ScrollerBase extends Component {
 		const calcItemAtEnd = (ib, sb, st, d) => ib.top + ib.height + st + d - (sb.top + sb.height);
 		const calcItemInView = (ib, sb, st, sh, d) => {
 			if (isItemBeforeView(ib, sb, d)) {
-				return roundToBoundary(sb, calcItemAtStart(ib, sb, st, d), sh, d);
+				return roundToStart(sb, calcItemAtStart(ib, sb, st, d));
 			} else if (isItemAfterView(ib, sb, d)) {
-				return roundToBoundary(sb, calcItemAtEnd(ib, sb, st, d), sh, d);
+				return roundToEnd(sb, calcItemAtEnd(ib, sb, st, d), sh);
 			}
 
 			return st;
