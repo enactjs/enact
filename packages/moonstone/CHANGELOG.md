@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to focus an item properly by `scrollTo` API right after scrolling to the same position
+- `moonstone/VirtualList` to focus an item properly by `scrollTo` API immediately after a prior call to the same position
 
 ## [2.2.8] - 2018-12-06
 
