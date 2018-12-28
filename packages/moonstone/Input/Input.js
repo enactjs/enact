@@ -16,6 +16,7 @@ import Changeable from '@enact/ui/Changeable';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import React from 'react';
+import {extractVoiceProps} from '@enact/core/util';
 
 import $L from '../internal/$L';
 import Skinnable from '../Skinnable';
@@ -42,12 +43,6 @@ const InputBase = kind({
 	name: 'Input',
 
 	propTypes: /** @lends moonstone/Input.InputBase.prototype */ {
-
-		// TODO: Document voice control props and make public
-		'data-webos-voice-group-label': PropTypes.string,
-		'data-webos-voice-intent': PropTypes.string,
-		'data-webos-voice-label': PropTypes.string,
-
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
@@ -264,8 +259,9 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-intent' : voiceIntent, 'data-webos-voice-label': voiceLabel, ...rest}) => {
+	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, ...rest}) => {
 		const inputProps = extractInputProps(rest);
+		const voiceProps = extractVoiceProps(rest);
 		delete rest.dismissOnEnter;
 		delete rest.focused;
 		delete rest.invalid;
@@ -277,11 +273,9 @@ const InputBase = kind({
 				<InputDecoratorIcon position="before" small={small}>{iconBefore}</InputDecoratorIcon>
 				<input
 					{...inputProps}
+					{...voiceProps}
 					aria-disabled={disabled}
 					className={css.input}
-					data-webos-voice-group-label={voiceGroupLabel}
-					data-webos-voice-intent={voiceIntent}
-					data-webos-voice-label={voiceLabel}
 					dir={dir}
 					disabled={disabled}
 					onChange={onChange}

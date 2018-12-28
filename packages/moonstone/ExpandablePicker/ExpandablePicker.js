@@ -18,6 +18,7 @@
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import {extractVoiceProps} from '@enact/core/util';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -52,24 +53,6 @@ const ExpandablePickerBase = kind({
 		 * @public
 		 */
 		children: PropTypes.node.isRequired,
-
-		/**
-		 * Disables voice control.
-		 *
-		 * @type {Boolean}
-		 * @memberof moonstone/ExpandablePicker.ExpandablePickerBase.prototype
-		 * @public
-		 */
-		'data-webos-voice-disabled': PropTypes.bool,
-
-		/**
-		 * The `data-webos-voice-group-label` for ExpandableItem and Picker.
-		 *
-		 * @type {String}
-		 * @memberof moonstone/ExpandablePicker.ExpandablePickerBase.prototype
-		 * @public
-		 */
-		'data-webos-voice-group-label': PropTypes.string,
 
 		/**
 		 * The "aria-label" for the the check button.
@@ -322,8 +305,6 @@ const ExpandablePickerBase = kind({
 
 	render: (props) => {
 		const {
-			'data-webos-voice-disabled': voiceDisabled,
-			'data-webos-voice-group-label': voiceGroupLabel,
 			checkButtonAriaLabel,
 			children,
 			decrementAriaLabel,
@@ -350,11 +331,12 @@ const ExpandablePickerBase = kind({
 			...rest
 		} = props;
 
+		const voiceProps = extractVoiceProps(rest);
+
 		return (
 			<ExpandableItemBase
+				{...voiceProps}
 				{...rest}
-				data-webos-voice-disabled={voiceDisabled}
-				data-webos-voice-group-label={voiceGroupLabel}
 				disabled={disabled}
 				onSpotlightDisappear={onSpotlightDisappear}
 				onSpotlightDown={!open ? onSpotlightDown : null}
@@ -364,10 +346,9 @@ const ExpandablePickerBase = kind({
 				spotlightDisabled={spotlightDisabled}
 			>
 				<Picker
+					{...voiceProps}
 					aria-label={pickerAriaLabel}
 					className={css.picker}
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
 					decrementAriaLabel={decrementAriaLabel}
 					decrementIcon={decrementIcon}
 					disabled={disabled}
@@ -389,9 +370,9 @@ const ExpandablePickerBase = kind({
 					{children}
 				</Picker>
 				<IconButton
+					{...voiceProps}
 					aria-label={checkButtonAriaLabel}
 					className={css.button}
-					data-webos-voice-disabled={voiceDisabled}
 					onSpotlightDisappear={onSpotlightDisappear}
 					onSpotlightDown={onSpotlightDown}
 					onSpotlightLeft={rtl ? onSpotlightLeft : null}

@@ -11,6 +11,7 @@ import Touchable from '@enact/ui/Touchable';
 import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import Spotlight, {getDirection} from '@enact/spotlight';
+import {extractVoiceProps} from '@enact/core/util';
 
 import Skinnable from '../../Skinnable';
 import {validateRange, validateStepped} from '../validators';
@@ -128,24 +129,6 @@ const PickerBase = class extends React.Component {
 		 * @public
 		 */
 		'aria-valuetext': PropTypes.string,
-
-		/**
-		 * Disables voice control.
-		 *
-		 * @type {Boolean}
-		 * @memberof moonstone/internal/Picker.PickerBase.prototype
-		 * @public
-		 */
-		'data-webos-voice-disabled': PropTypes.bool,
-
-		/**
-		 * The `data-webos-voice-group-label` for the IconButton of Picker.
-		 *
-		 * @type {String}
-		 * @memberof moonstone/internal/Picker.PickerBase.prototype
-		 * @public
-		 */
-		'data-webos-voice-group-label': PropTypes.string,
 
 		/**
 		 * Accessibility hint
@@ -792,8 +775,6 @@ const PickerBase = class extends React.Component {
 			'aria-valuetext': ariaValueText,
 			noAnimation,
 			children,
-			'data-webos-voice-disabled': voiceDisabled,
-			'data-webos-voice-group-label': voiceGroupLabel,
 			disabled,
 			id,
 			index,
@@ -806,6 +787,8 @@ const PickerBase = class extends React.Component {
 			width,
 			...rest
 		} = this.props;
+
+		const voiceProps = extractVoiceProps(rest);
 
 		delete rest['aria-label'];
 		delete rest.accessibilityHint;
@@ -848,13 +831,12 @@ const PickerBase = class extends React.Component {
 
 		return (
 			<Div
+				{...voiceProps}
 				{...rest}
 				aria-controls={joined ? id : null}
 				aria-disabled={disabled}
 				aria-label={this.calcAriaLabel(valueText)}
 				className={classes}
-				data-webos-voice-disabled={voiceDisabled}
-				data-webos-voice-group-label={voiceGroupLabel}
 				data-webos-voice-intent="Select"
 				disabled={disabled}
 				onBlur={this.handleBlur}
@@ -866,11 +848,10 @@ const PickerBase = class extends React.Component {
 				ref={this.initContainerRef}
 			>
 				<PickerButton
+					{...voiceProps}
 					aria-controls={!joined ? incrementerAriaControls : null}
 					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
 					data-webos-voice-label={joined ? this.calcButtonLabel(!reverse, valueText) : null}
 					disabled={incrementerDisabled}
 					hidden={reachedEnd}
@@ -904,11 +885,10 @@ const PickerBase = class extends React.Component {
 					</PickerViewManager>
 				</div>
 				<PickerButton
+					{...voiceProps}
 					aria-controls={!joined ? decrementerAriaControls : null}
 					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
 					data-webos-voice-label={joined ? this.calcButtonLabel(reverse, valueText) : null}
 					disabled={decrementerDisabled}
 					hidden={reachedStart}
