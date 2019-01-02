@@ -165,8 +165,11 @@ class ScrollerBase extends Component {
 
 			return st;
 		};
-		const isItemBeforeView = (ib, sb, d) => ib.top + d < sb.top;
-		const isItemAfterView = (ib, sb, d) => ib.top + d + ib.height > sb.top + sb.height;
+		// adding threshold into these determinations ensures that items that are within that are
+		// near the bounds of the scroller cause the edge to be scrolled into view even when the
+		// itme itself is in view (e.g. due to margins)
+		const isItemBeforeView = (ib, sb, d) => ib.top + d - threshold < sb.top;
+		const isItemAfterView = (ib, sb, d) => ib.top + d + ib.height + threshold > sb.top + sb.height;
 		const canItemFit = (ib, sb) => ib.height <= sb.height;
 		const calcItemAtStart = (ib, sb, st, d) => ib.top + st + d - sb.top;
 		const calcItemAtEnd = (ib, sb, st, d) => ib.top + ib.height + st + d - (sb.top + sb.height);
@@ -176,7 +179,6 @@ class ScrollerBase extends Component {
 			} else if (isItemAfterView(ib, sb, d)) {
 				return roundToEnd(sb, calcItemAtEnd(ib, sb, st, d), sh);
 			}
-
 			return st;
 		};
 
