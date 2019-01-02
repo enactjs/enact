@@ -789,6 +789,8 @@ const PickerBase = class extends React.Component {
 		} = this.props;
 
 		const voiceProps = extractVoiceProps(rest);
+		const voiceLabelsExt = voiceProps['data-webos-voice-labels-ext'];
+		delete voiceProps['data-webos-voice-labels-ext'];
 
 		delete rest['aria-label'];
 		delete rest.accessibilityHint;
@@ -838,6 +840,7 @@ const PickerBase = class extends React.Component {
 				aria-label={this.calcAriaLabel(valueText)}
 				className={classes}
 				data-webos-voice-intent="Select"
+				data-webos-voice-labels-ext={voiceLabelsExt}
 				disabled={disabled}
 				onBlur={this.handleBlur}
 				onFocus={this.handleFocus}
