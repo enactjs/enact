@@ -27,6 +27,7 @@ import componentCss from './SwitchItem.less';
  * @class SwitchItem
  * @memberof moonstone/SwitchItem
  * @extends moonstone/ToggleItem.ToggleItem
+ * @omit iconComponent
  * @ui
  * @public
  */

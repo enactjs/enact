@@ -129,6 +129,12 @@ const dateTimeConfig = {
  * @mixes ui/Toggleable.Toggleable
  * @mixes ui/RadioDecorator.RadioDecorator
  * @mixes ui/Changeable.Changeable
+ * @omit day
+ * @omit maxDays
+ * @omit maxMonths
+ * @omit month
+ * @omit order
+ * @omit year
  * @ui
  * @public
  */
