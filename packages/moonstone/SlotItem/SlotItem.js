@@ -42,6 +42,7 @@ import componentCss from './SlotItem.less';
  * @class SlotItemBase
  * @memberof moonstone/SlotItem
  * @extends ui/SlotItem.SlotItemBase
+ * @omit component
  * @mixes moonstone/Item.ItemBase
  * @ui
  * @public
