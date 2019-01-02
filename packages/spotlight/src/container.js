@@ -1,4 +1,5 @@
 /* global process */
+
 /**
  * Exports methods and members for creating and maintaining spotlight containers.
  *
@@ -749,7 +750,6 @@ function getContainerFocusTarget (containerId) {
 	restoreLastFocusedElement(containerId);
 
 	let next = getContainerNavigableElements(containerId);
-
 	// If multiple candidates returned, we need to find the first viable target since some may
 	// be empty containers which should be skipped.
 	return next.reduce((result, element) => {
