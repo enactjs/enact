@@ -393,7 +393,6 @@ class ScrollerBase extends Component {
  *
  * @class Scroller
  * @memberof moonstone/Scroller
- * @extends moonstone/Scrollable.Scrollable
  * @extends moonstone/Scroller.ScrollerBase
  * @ui
  * @public
@@ -438,7 +437,6 @@ Scroller.defaultProps = {
  *
  * @class ScrollerNative
  * @memberof moonstone/Scroller
- * @extends moonstone/Scrollable.ScrollableNative
  * @extends moonstone/Scroller.ScrollerBase
  * @ui
  * @private

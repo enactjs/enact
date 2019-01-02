@@ -26,6 +26,7 @@ import componentCss from './SelectableItem.less';
  * @class SelectableItem
  * @memberof moonstone/SelectableItem
  * @extends moonstone/ToggleItem.ToggleItemBase
+ * @omit iconComponent
  * @ui
  * @public
  */

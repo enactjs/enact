@@ -33,7 +33,9 @@ export {
 	 *
 	 * @see ui/Marquee.Marquee
 	 * @class Marquee
+	 * @extends ui/Marquee.Marquee
 	 * @memberof moonstone/Marquee
+	 * @ui
 	 * @public
 	 */
 	Marquee,
@@ -43,7 +45,9 @@ export {
 	 *
 	 * @see ui/Marquee.Marquee
 	 * @class MarqueeBase
+	 * @extends ui/Marquee.MarqueeBase
 	 * @memberof moonstone/Marquee
+	 * @ui
 	 * @public
 	 */
 	MarqueeBase,
@@ -54,6 +58,7 @@ export {
 	 * @see ui/Marquee.MarqueeController
 	 * @hoc
 	 * @name MarqueeController
+	 * @extends ui/Marquee.MarqueeController
 	 * @memberof moonstone/Marquee
 	 * @public
 	 */
@@ -65,6 +70,7 @@ export {
 	 * @see ui/Marquee.MarqueeDecorator
 	 * @hoc
 	 * @name MarqueeDecorator
+	 * @extends ui/Marquee.MarqueeDecorator
 	 * @memberof moonstone/Marquee
 	 * @public
 	 */

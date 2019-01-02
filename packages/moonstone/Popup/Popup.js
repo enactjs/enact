@@ -2,6 +2,8 @@
  * Modal component that appears at the bottom of the screen and takes up the full screen width.
  *
  * @module moonstone/Popup
+ * @exports Popup
+ * @exports PopupBase
  * @example
  * <Popup open>Hello!</Popup>
  */
