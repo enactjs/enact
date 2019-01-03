@@ -180,6 +180,12 @@ class ScrollerBase extends Component {
 		this.containerRef.scrollTo(this.getRtlPositionX(x), y);
 	}
 
+	positionItems (dataSize) {
+		for (let index = 0; index < dataSize; index++) {
+			this.cc[index] = this.props.itemRenderer({index, key: index});
+		}
+	}
+
 	// for ScrollableNative
 	didScroll (x, y) {
 		this.scrollPos.left = x;
@@ -225,12 +231,6 @@ class ScrollerBase extends Component {
 	initContainerRef = (ref) => {
 		if (ref) {
 			this.containerRef = ref;
-		}
-	}
-
-	positionItems (dataSize) {
-		for (let index = 0; index < dataSize; index++) {
-			this.cc[index] = this.props.itemRenderer({index, key: index});
 		}
 	}
 
