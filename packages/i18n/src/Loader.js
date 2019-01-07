@@ -1,4 +1,4 @@
-/* global XMLHttpRequest, ILIB_BASE_PATH, ILIB_RESOURCES_PATH, ILIB_CACHE_ID */
+/* global XMLHttpRequest */
 
 import {memoize} from '@enact/core/util';
 import xhr from 'xhr';
@@ -19,7 +19,14 @@ const getImpl = (url, callback, sync) => {
 				body = req.response;
 				error = false;
 			}
-			const json = error ? null : JSON.parse(body);
+
+			let json = null;
+			try {
+				json = error ? null : JSON.parse(body);
+			} catch (e) {
+				error = 'Failed to parse ILIB JSON data';
+			}
+
 			callback(json, error);
 		});
 	} else {
@@ -39,11 +46,14 @@ const get = memoize((url) => new Promise((resolve, reject) => {
 	}, false);
 }));
 
-const iLibBase = ILIB_BASE_PATH;
-const iLibResources = ILIB_RESOURCES_PATH;
+// safely access global variables that may be set by the user or a plugin
+const safeGlobal = (key, value) => typeof global[key] === 'undefined' ? value : global[key];
+
+const iLibBase = safeGlobal('ILIB_BASE_PATH', '/ilib');
+const iLibResources = safeGlobal('ILIB_RESOURCES_PATH', '/locale');
 const cachePrefix = 'ENACT-ILIB-';
 const cacheKey = cachePrefix + 'CACHE-ID';
-const cacheID = ILIB_CACHE_ID;
+const cacheID = safeGlobal('ILIB_CACHE_ID', '$ILIB');
 
 function EnyoLoader () {
 	this.base = iLibBase;
