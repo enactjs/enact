@@ -1,13 +1,13 @@
 import Job from '../Job';
 
-describe('Job', function () {
-	describe('#start', function () {
-		it('should start job', function (done) {
+describe('Job', () => {
+	describe('#start', () => {
+		test('should start job', done => {
 			const j = new Job(done, 10);
 			j.start();
 		});
 
-		it('should pass args to fn', function (done) {
+		test('should pass args to fn', done => {
 			const value = 'argument';
 			const fn = function (arg) {
 				if (arg === value) {
@@ -22,8 +22,8 @@ describe('Job', function () {
 		});
 	});
 
-	describe('#stop', function () {
-		it('should stop job', function (done) {
+	describe('#stop', () => {
+		test('should stop job', done => {
 			let ran = false;
 			const j = new Job(function () {
 				ran = true;
@@ -39,8 +39,8 @@ describe('Job', function () {
 		});
 	});
 
-	describe('#throttle', function () {
-		it('should throttle job', function (done) {
+	describe('#throttle', () => {
+		test('should throttle job', done => {
 			let number = 0;
 			const j = new Job(function () {
 				number++;
@@ -65,7 +65,7 @@ describe('Job', function () {
 			}, 30);
 		});
 
-		it('should pass args to fn', function (done) {
+		test('should pass args to fn', done => {
 			const value = 'argument';
 			const fn = function (arg) {
 				if (arg === value) {
@@ -80,12 +80,12 @@ describe('Job', function () {
 		});
 	});
 
-	describe('#idle', function () {
+	describe('#idle', () => {
 		// polyfill for PhantomJS to verify expected idle behavior as much as possible
 		const windowRequest = window.requestIdleCallback;
 		const windowCancel = window.cancelIdleCallback;
 
-		before(() => {
+		beforeAll(() => {
 			window.requestIdleCallback = windowRequest || function (fn) {
 				return setTimeout(fn, 0);
 			};
@@ -94,17 +94,17 @@ describe('Job', function () {
 			};
 		});
 
-		after(() => {
+		afterAll(() => {
 			window.requestIdleCallback = windowRequest;
 			window.cancelIdleCallback = windowCancel;
 		});
 
-		it('should start job', function (done) {
+		test('should start job', done => {
 			const j = new Job(done, 10);
 			j.idle();
 		});
 
-		it('should pass args to fn', function (done) {
+		test('should pass args to fn', done => {
 			const value = 'argument';
 			const fn = function (arg) {
 				if (arg === value) {
@@ -118,7 +118,7 @@ describe('Job', function () {
 			j.idle(value);
 		});
 
-		it('should clear an existing job id before starting job', function (done) {
+		test('should clear an existing job id before starting job', done => {
 			const fn = function (arg) {
 				if (arg === 'first') {
 					done(new Error('First job ran'));
@@ -129,6 +129,76 @@ describe('Job', function () {
 			const j = new Job(fn);
 			j.idle('first');
 			j.idle('second');
+		});
+	});
+
+	describe('#promise', function () {
+		test('should throw when passed a non-thenable argument', done => {
+			const j = new Job(() => done(new Error('Unexpected job execution')));
+			try {
+				j.promise({});
+			} catch (msg) {
+				done();
+			}
+		});
+
+		test('should support a non-Promise, thenable argument', done => {
+			const j = new Job(() => done());
+			try {
+				j.promise({
+					then: (fn) => fn(true)
+				});
+			} catch (msg) {
+				done(msg);
+			}
+		});
+
+		test('should start job for a resolved promise', done => {
+			const j = new Job(() => done());
+			j.promise(Promise.resolve(true));
+		});
+
+		test('should not start job for a rejected promise', done => {
+			const j = new Job(() => {
+				done(new Error('Job ran for rejected promise'));
+			});
+			j.promise(Promise.reject(true)).catch(() => {});
+			setTimeout(done, 10);
+		});
+
+		test('should not start job when stopped before promise resolves', done => {
+			const j = new Job(() => {
+				done(new Error('Job ran for stopped promise'));
+			});
+			j.promise(new Promise(resolve => setTimeout(resolve, 20)));
+			setTimeout(() => j.stop(), 10);
+			setTimeout(done, 30);
+		});
+
+		test('should not start job when another is started', done => {
+			const j = new Job((value) => {
+				expect(value).toBe(2);
+				done();
+			});
+			j.promise(new Promise(resolve => resolve(1)));
+			j.promise(new Promise(resolve => resolve(2)));
+		});
+
+		test('should return the value from the job to the resolved promise', done => {
+			const j = new Job(() => 'job value');
+			j.promise(Promise.resolve(true)).then(value => {
+				expect(value).toBe('job value');
+				done();
+			});
+		});
+
+		test('should not return the value from the job to the replaced promise', done => {
+			const j = new Job(() => 'job value');
+			j.promise(Promise.resolve(true)).then(value => {
+				expect(value).toBeUndefined();
+				done();
+			});
+			j.promise(Promise.resolve(true)).then(() => done());
 		});
 	});
 });

@@ -7,6 +7,34 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Marquee` to marquee when necessary after a locale change
+## [2.2.8] - 2018-12-06
+
+### Fixed
+
+- `ui/Marquee` to display an ellipsis when changing to text that no longer fits within its bounds
+- `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` to debounce `onScrollStop` events for non-animated scrolls
+
+## [2.2.7] - 2018-11-21
+
+### Fixed
+
+- `ui/Marquee` to avoid very small animations
+
+## [2.2.6] - 2018-11-15
+
+### Fixed
+
+- `ui/Marquee` to handle contents which overflow their containers only slightly
+
+## [2.2.5] - 2018-11-05
+
+### Fixed
+
+- `ui/Transition` to better support layout after changing children
+
+## [2.2.4] - 2018-10-29
+
+No significant changes.
 
 ## [2.2.3] - 2018-10-22
 

@@ -11,20 +11,21 @@ describe('I18nDecorator', () => {
 
 	// Suite-wide setup
 
-	beforeEach(function () {
+	beforeEach(() => {
 		updateLocale('en-US');
 	});
 
-	afterEach(function () {
+	afterEach(() => {
 		updateLocale();
 	});
 
-	it('should add rtl context parameter', function () {
+	test('should add rtl context parameter', () => {
 		const Component = (props) => (
 			<div>{'rtl' in props ? 'has rtl prop' : 'does not have rtl prop'}</div>
 		);
 
 		const Wrapped = I18nDecorator(
+			{sync: true},
 			I18nContextDecorator(
 				{rtlProp: 'rtl'},
 				Component
@@ -35,16 +36,17 @@ describe('I18nDecorator', () => {
 		const expected = 'has rtl prop';
 		const actual = subject.text();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should add updateLocale context parameter', function () {
+	test('should add updateLocale context parameter', () => {
 		// eslint-disable-next-line enact/prop-types
 		const Component = ({updateLocale: update}) => (
 			<div>{typeof update}</div>
 		);
 
 		const Wrapped = I18nDecorator(
+			{sync: true},
 			I18nContextDecorator(
 				{updateLocaleProp: 'updateLocale'},
 				Component
@@ -55,35 +57,39 @@ describe('I18nDecorator', () => {
 		const expected = 'function';
 		const actual = subject.text();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should update the current locale when updateLocale is called', function () {
-		// eslint-disable-next-line enact/prop-types
-		const Component = ({_updateLocale}) => {
-			const handleClick = () => _updateLocale('ar-SA');
+	test(
+		'should update the current locale when updateLocale is called',
+		() => {
+			// eslint-disable-next-line enact/prop-types
+			const Component = ({_updateLocale}) => {
+				const handleClick = () => _updateLocale('ar-SA');
 
-			return (
-				<button onClick={handleClick} />
+				return (
+					<button onClick={handleClick} />
+				);
+			};
+
+			const Wrapped = I18nDecorator(
+				{sync: true},
+				I18nContextDecorator(
+					{updateLocaleProp: '_updateLocale'},
+					Component
+				)
 			);
-		};
+			const subject = mount(<Wrapped />);
+			subject.find('button').simulate('click');
 
-		const Wrapped = I18nDecorator(
-			I18nContextDecorator(
-				{updateLocaleProp: '_updateLocale'},
-				Component
-			)
-		);
-		const subject = mount(<Wrapped />);
-		subject.find('button').simulate('click');
+			const expected = 'ar-SA';
+			const actual = ilib.getLocale();
 
-		const expected = 'ar-SA';
-		const actual = ilib.getLocale();
+			expect(actual).toBe(expected);
+		}
+	);
 
-		expect(actual).to.equal(expected);
-	});
-
-	it('should update the rtl context parameter when RTL changes', function () {
+	test('should update the rtl context parameter when RTL changes', () => {
 		// eslint-disable-next-line enact/prop-types
 		const Component = ({rtl, _updateLocale}) => {
 			const handleClick = () => _updateLocale('ar-SA');
@@ -94,6 +100,7 @@ describe('I18nDecorator', () => {
 		};
 
 		const Wrapped = I18nDecorator(
+			{sync: true},
 			I18nContextDecorator(
 				{rtlProp: 'rtl', updateLocaleProp: '_updateLocale'},
 				Component
@@ -108,29 +115,29 @@ describe('I18nDecorator', () => {
 		const expected = 'rtl';
 		const actual = button.text();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should set locale via props', function () {
+	test('should set locale via props', () => {
 		const Component = (props) => (
 			<div className={props.className} />
 		);
 
-		const Wrapped = I18nDecorator(Component);
+		const Wrapped = I18nDecorator({sync: true}, Component);
 		shallow(<Wrapped locale="ar-SA" />);
 
 		const expected = 'ar-SA';
 		const actual = ilib.getLocale();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should add locale classes to Wrapped', function () {
+	test('should add locale classes to Wrapped', () => {
 		const Component = (props) => (
 			<div className={props.className} />
 		);
 
-		const Wrapped = I18nDecorator(Component);
+		const Wrapped = I18nDecorator({sync: true}, Component);
 		// explicitly setting locale so we get a known class list regardless of runtime locale
 		const subject = shallow(<Wrapped locale="en-US" />).find(Component);
 
@@ -139,6 +146,37 @@ describe('I18nDecorator', () => {
 						subject.hasClass('enact-locale-en-US') &&
 						subject.hasClass('enact-locale-US');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
+	});
+
+	test('should treat "en-US" as latin locale', () => {
+		const Component = (props) => (
+			<div className={props.className} />
+		);
+
+		const Wrapped = I18nDecorator({sync: true}, Component);
+		// explicitly setting locale so we get a known class list regardless of runtime locale
+		const subject = shallow(<Wrapped locale="en-US" />).find(Component);
+
+		const expected = false;
+		const actual =	subject.hasClass('enact-locale-non-latin');
+
+		expect(actual).toBe(expected);
+	});
+
+
+	test('should treat "ja-JP" as non-latin locale', () => {
+		const Component = (props) => (
+			<div className={props.className} />
+		);
+
+		const Wrapped = I18nDecorator({sync: true}, Component);
+		// explicitly setting locale so we get a known class list regardless of runtime locale
+		const subject = shallow(<Wrapped locale="ja-JP" />).find(Component);
+
+		const expected = true;
+		const actual =	subject.hasClass('enact-locale-non-latin');
+
+		expect(actual).toBe(expected);
 	});
 });
