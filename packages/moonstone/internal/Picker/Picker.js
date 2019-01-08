@@ -790,6 +790,8 @@ const PickerBase = class extends React.Component {
 
 		const voiceProps = extractVoiceProps(rest);
 		const voiceLabelsExt = voiceProps['data-webos-voice-labels-ext'];
+		delete voiceProps['data-webos-voice-label'];
+		delete voiceProps['data-webos-voice-labels'];
 		delete voiceProps['data-webos-voice-labels-ext'];
 
 		delete rest['aria-label'];

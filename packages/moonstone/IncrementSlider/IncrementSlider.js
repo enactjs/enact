@@ -489,6 +489,9 @@ const IncrementSliderBase = kind({
 	}) => {
 		const ariaProps = extractAriaProps(rest);
 		const voiceProps = extractVoiceProps(rest);
+		delete voiceProps['data-webos-voice-label'];
+		delete voiceProps['data-webos-voice-labels'];
+
 		delete rest.onSpotlightDirection;
 		delete rest.onSpotlightDown;
 		delete rest.onSpotlightLeft;
