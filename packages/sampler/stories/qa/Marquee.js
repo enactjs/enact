@@ -1,7 +1,11 @@
-import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
+import kind from '@enact/core/kind';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import Button from '@enact/moonstone/Button';
+import Divider from '@enact/moonstone/Divider';
 import Item from '@enact/moonstone/Item';
-import ri from '@enact/ui/resolution';
+import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
 import Spottable from '@enact/spotlight/Spottable';
+import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
@@ -28,6 +32,21 @@ const RTL = [
 ];
 
 const disabledDisclaimer = (disabled) => (disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>Marquee does not visually respond to <code>disabled</code> state.</p> : <p />);
+
+const MarqueI18nSamples = I18nContextDecorator({updateLocaleProp: 'updateLocale'}, kind({
+	name: 'I18nPanel',
+
+	handlers: {
+		updateLocale: (ev, {updateLocale}) => updateLocale('ar-SA')
+	},
+
+	render: ({updateLocale}) => (
+		<div>
+			<Divider>Remeasure marquee when locale change causes a font change with different metrics</Divider>
+			<Button onClick={updateLocale}>change locale</Button>
+		</div>
+	)
+}));
 
 storiesOf('Marquee', module)
 	.add(
@@ -156,5 +175,12 @@ storiesOf('Marquee', module)
 					{LTR[0]}
 				</Marquee>
 			</SpottableDiv>
+		)
+	)
+
+	.add(
+		'I18n',
+		() => (
+			<MarqueI18nSamples />
 		)
 	);
