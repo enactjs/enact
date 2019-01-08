@@ -1,4 +1,5 @@
 import Button from '@enact/moonstone/Button';
+import {Panel, Header} from '@enact/moonstone/Panels';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import Scroller from '@enact/moonstone/Scroller';
 import UiScroller from '@enact/ui/Scroller';
@@ -9,6 +10,7 @@ import Group from '@enact/ui/Group';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
+import Repeater from '@enact/ui/Repeater';
 import PropTypes from 'prop-types';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
@@ -16,6 +18,10 @@ import {action} from '@storybook/addon-actions';
 import {boolean, select, number} from '../../src/enact-knobs';
 
 Scroller.displayName = 'Scroller';
+
+const CustomItem = (props) => {
+	return <Item style={{height: '100px'}} {...props} />;
+};
 
 const itemData = [];
 for (let i = 0; i < 100; i++) {
@@ -152,6 +158,21 @@ class ScrollerWithLargeContainer extends React.Component {
 					<Item>Hello</Item>
 				</Container>
 			</Scroller>
+		);
+	}
+}
+
+class ScrollerWithSpotlightTargetCalculation extends React.Component {
+	render () {
+		return (
+			<div>
+				<Button>hello</Button>
+				<Scroller focusableScrollbar style={{height: ri.scale(300)}}>
+					<Repeater childComponent={CustomItem}>
+						{itemData}
+					</Repeater>
+				</Scroller>
+			</div>
 		);
 	}
 }
@@ -330,4 +351,11 @@ storiesOf('Scroller', module)
 				</Scroller>
 			);
 		}
+	).add(
+		'With Spotlight Target Calculation',
+		() => (
+			<div>
+				<ScrollerWithSpotlightTargetCalculation />
+			</div>
+		)
 	);
