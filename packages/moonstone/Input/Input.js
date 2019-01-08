@@ -16,11 +16,11 @@ import Changeable from '@enact/ui/Changeable';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {extractVoiceProps} from '@enact/core/util';
 
 import $L from '../internal/$L';
 import Skinnable from '../Skinnable';
 import Tooltip from '../TooltipDecorator/Tooltip';
+import {extractVoiceProps} from '../internal/util';
 
 import componentCss from './Input.less';
 import InputDecoratorIcon from './InputDecoratorIcon';

@@ -11,10 +11,10 @@ import Touchable from '@enact/ui/Touchable';
 import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import Spotlight, {getDirection} from '@enact/spotlight';
-import {extractVoiceProps} from '@enact/core/util';
 
 import Skinnable from '../../Skinnable';
 import {validateRange, validateStepped} from '../validators';
+import {extractVoiceProps} from '../util';
 
 import IdProvider from '../IdProvider';
 import $L from '../$L';

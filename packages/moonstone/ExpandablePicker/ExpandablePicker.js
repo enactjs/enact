@@ -18,7 +18,6 @@
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
-import {extractVoiceProps} from '@enact/core/util';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -26,6 +25,7 @@ import React from 'react';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import IconButton from '../IconButton';
 import Picker from '../Picker';
+import {extractVoiceProps} from '../internal/util';
 
 import ExpandablePickerDecorator from './ExpandablePickerDecorator';
 

@@ -16,7 +16,7 @@
 
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
-import {extractAriaProps, extractVoiceProps} from '@enact/core/util';
+import {extractAriaProps} from '@enact/core/util';
 import {getContainersForNode} from '@enact/spotlight/src/container';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
@@ -25,6 +25,7 @@ import last from 'ramda/src/last';
 import React from 'react';
 
 import LabeledItem from '../LabeledItem';
+import {extractVoiceProps} from '../internal/util';
 
 import Expandable from './Expandable';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
