@@ -45,7 +45,6 @@ class ScrollerBase extends Component {
 		 * The number of items of data the scroller contains.
 		 *
 		 * @type {Number}
-		 * @default 0
 		 * @public
 		 */
 		dataSize: PropTypes.number,
@@ -103,7 +102,6 @@ class ScrollerBase extends Component {
 	}
 
 	static defaultProps = {
-		dataSize: undefined,
 		direction: 'both'
 	}
 
@@ -111,7 +109,7 @@ class ScrollerBase extends Component {
 		const {dataSize, itemRenderer} = this.props;
 
 		if (dataSize && itemRenderer) {
-			this.positionItems(dataSize);
+			this.createItems(dataSize);
 		}
 	}
 
@@ -135,7 +133,7 @@ class ScrollerBase extends Component {
 			if (this.hasDataSizeChanged) {
 				// reset children
 				this.cc = [];
-				this.positionItems(nextProps.dataSize);
+				this.createItems(nextProps.dataSize);
 			}
 		}
 	}
@@ -180,7 +178,7 @@ class ScrollerBase extends Component {
 		this.containerRef.scrollTo(this.getRtlPositionX(x), y);
 	}
 
-	positionItems (dataSize) {
+	createItems (dataSize) {
 		for (let index = 0; index < dataSize; index++) {
 			this.cc[index] = this.props.itemRenderer({index, key: index});
 		}
@@ -252,7 +250,7 @@ class ScrollerBase extends Component {
 		return (
 			<div
 				{...rest}
-				children={typeof dataSize !== 'undefined' ? this.cc : children}
+				children={dataSize ? this.cc : children}
 				className={classNames(className, css.hideNativeScrollbar)}
 				ref={this.initContainerRef}
 				style={mergedStyle}
