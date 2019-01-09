@@ -59,8 +59,8 @@ const defaultConfig = {
 	/**
 	 * Array of resource loaders which are invoked after a locale change.
 	 *
-	 * Each loader must be a function which accepts an object and returns either the resource or a
-	 * `Promise` for the resource.
+	 * Each loader must be a function which accepts an object and returns either the resource when
+	 * `options.sync` is `true` or a `Promise` for the resource for `options.sync` is `false`.
 	 *
 	 * ```
 	 * resources: [
