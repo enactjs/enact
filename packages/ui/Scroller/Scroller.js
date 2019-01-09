@@ -178,12 +178,6 @@ class ScrollerBase extends Component {
 		this.containerRef.scrollTo(this.getRtlPositionX(x), y);
 	}
 
-	renderItems (dataSize) {
-		for (let index = 0; index < dataSize; index++) {
-			this.cc[index] = this.props.itemRenderer({index, key: index});
-		}
-	}
-
 	// for ScrollableNative
 	didScroll (x, y) {
 		this.scrollPos.left = x;
@@ -224,6 +218,12 @@ class ScrollerBase extends Component {
 		scrollBounds.clientHeight = clientHeight;
 		scrollBounds.maxLeft = Math.max(0, scrollWidth - clientWidth);
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
+	}
+
+	renderItems (dataSize) {
+		for (let index = 0; index < dataSize; index++) {
+			this.cc[index] = this.props.itemRenderer({index, key: index});
+		}
 	}
 
 	initContainerRef = (ref) => {
