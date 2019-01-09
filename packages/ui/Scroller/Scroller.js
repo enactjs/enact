@@ -109,7 +109,7 @@ class ScrollerBase extends Component {
 		const {dataSize, itemRenderer} = this.props;
 
 		if (dataSize && itemRenderer) {
-			this.createItems(dataSize);
+			this.renderItems(dataSize);
 		}
 	}
 
@@ -133,7 +133,7 @@ class ScrollerBase extends Component {
 			if (this.hasDataSizeChanged) {
 				// reset children
 				this.cc = [];
-				this.createItems(nextProps.dataSize);
+				this.renderItems(nextProps.dataSize);
 			}
 		}
 	}
@@ -178,7 +178,7 @@ class ScrollerBase extends Component {
 		this.containerRef.scrollTo(this.getRtlPositionX(x), y);
 	}
 
-	createItems (dataSize) {
+	renderItems (dataSize) {
 		for (let index = 0; index < dataSize; index++) {
 			this.cc[index] = this.props.itemRenderer({index, key: index});
 		}
