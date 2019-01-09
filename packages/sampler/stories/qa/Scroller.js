@@ -1,6 +1,7 @@
 import Button from '@enact/moonstone/Button';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import Scroller from '@enact/moonstone/Scroller';
+import UiScroller from '@enact/ui/Scroller';
 import Item from '@enact/moonstone/Item';
 import Divider from '@enact/moonstone/Divider';
 import ri from '@enact/ui/resolution';
@@ -262,5 +263,22 @@ storiesOf('Scroller', module)
 		'With Two Expandable List',
 		() => (
 			<ScrollerWithTwoExpandableList />
+		)
+	)
+	.add(
+		'With Two ui:Scroller',
+		() => (
+			<div style={{display: 'flex', height: ri.unit(399, 'rem')}}>
+				<UiScroller>
+					<Group childComponent={Item}>
+						{itemData}
+					</Group>
+				</UiScroller>
+				<UiScroller>
+					<Group childComponent={Item}>
+						{itemData}
+					</Group>
+				</UiScroller>
+			</div>
 		)
 	);
