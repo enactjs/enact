@@ -10,6 +10,15 @@
 		@componentRules();
 	}
 
+	&:global(.moonstone-highcontrast) {
+		// Load the moonstone (dark) rules into this scope
+
+		@import "./colors.less";
+		@import './colors-highcontrast.less';
+
+		@componentRules();
+	}
+
 	&:global(.moonstone-light) {
 		// Load the moonstone-light rules into this scope
 		@import './colors-light.less';

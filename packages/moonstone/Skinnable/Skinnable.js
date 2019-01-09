@@ -11,6 +11,7 @@ import SkinnableBase from '@enact/ui/Skinnable';
 const defaultConfig = {
 	skins: {
 		dark: 'moonstone',
+		'dark-highcontrast': 'moonstone-highcontrast',
 		light: 'moonstone-light'
 	}
 };

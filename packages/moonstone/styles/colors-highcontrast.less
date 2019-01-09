@@ -1,20 +1,17 @@
-// colors-light.less (light skin)
+// colors.less (dark skin)
 //
-// Base our light skin off of the dark (default) skin
-@import (multiple) "./colors.less";
 
 // ---------------------------------------
 // Universal Color Definitions
 // ---------------------------------------
-@moon-darker-gray:          #262626;
-@moon-dark-gray:            #4d4d4d;
-@moon-gray:                 #a6a6a6;
-@moon-light-gray:           #ededed;
-@moon-black:                #000;
-@moon-accent:               #cf0652;
-@moon-accent-high-contrast: #cccccc;
-@moon-white:                #fff;
-@moon-red:                  #f00;
+@moon-darker-gray: #262626;
+@moon-dark-gray:   #4d4d4d;
+@moon-gray:        #a6a6a6;
+@moon-light-gray:  #ededed;
+@moon-black:       #000;
+@moon-accent:      #cccccc;
+@moon-white:       #fff;
+@moon-red:         #f00;
 
 @moon-remote-button-red-color:     #ff6d78; // #da3c3c; // #e71b1c;
 @moon-remote-button-green-color:   #6ff467; // #21c171; // #339966;
@@ -24,9 +21,9 @@
 
 // UI Conceptual Colors
 // ---------------------------------------
-@moon-bg-color:      @moon-light-gray;
-@moon-text-color:    @moon-dark-gray;
-@moon-border-color:  @moon-dark-gray;
+@moon-bg-color:      @moon-black;
+@moon-text-color:    @moon-gray;
+@moon-border-color:  #595959;
 @moon-overlay-text-shadow: 0 2px 2px rgba(0, 0, 0, 0.75);
 
 // Disabled Opacity
@@ -38,7 +35,6 @@
 // ---------------------------------------
 @moon-spotlight-text-color:           @moon-white;
 @moon-spotlight-disabled-text-color:  fade(@moon-spotlight-text-color, 40%);
-@moon-spotlight-text-color:           @moon-white;
 @moon-spotlight-bg-color:             @moon-accent;
 @moon-spotlight-border-color:         @moon-accent;
 @moon-spotlight-color:                @moon-accent;
@@ -56,15 +52,18 @@
 
 // Header
 // ---------------------------------------
-@moon-header-text-color:              @moon-text-color;
+@moon-header-text-color:              #ccc;
 @moon-header-sub-title-color:         @moon-text-color;
 @moon-sub-header-text-color:          @moon-text-color;
 @moon-sup-header-text-color:          @moon-text-color;
-@moon-header-border-color:            @moon-border-color;
-@moon-header-bottom-border-color:     @moon-border-color;
+@moon-header-border-color:            #505050;
+@moon-header-bottom-border-color:     #404040;
 @moon-header-full-bleed-text-color:   #f5f5f5;
-@moon-header-title-below-full-bleed-text-color: @moon-header-full-bleed-text-color;
+@moon-header-title-below-full-bleed-text-color: @moon-light-gray;
 @moon-header-full-bleed-border-color: fade(@moon-white, 25%);
+@moon-header-input-bg-color:          @moon-spotlight-color;
+@moon-header-input-text-color:        @moon-spotlight-text-color;
+
 
 // Divider
 // ---------------------------------------
@@ -73,13 +72,12 @@
 
 // Button
 // ---------------------------------------
-@moon-button-text-color:              @moon-white;
-@moon-button-bg-color:                #686868;
-@moon-button-disabled-text-color:     #cdcdcd;
-@moon-button-disabled-bg-color:       @moon-button-bg-color;
+@moon-button-text-color:              #ccc;
+@moon-button-bg-color:                @moon-dark-gray;
+@moon-button-disabled-bg-color:       @moon-darker-gray;
 @moon-button-translucent-opacity:     30%;
 @moon-button-lightTranslucent-bg-color:  @moon-white;
-@moon-button-transparent-active-text-color:  @moon-text-color;
+@moon-button-transparent-active-text-color:  @moon-white;
 @moon-button-disabled-text-color:     @moon-dark-gray;
 
 // IconButton
@@ -119,7 +117,7 @@
 // Checkbox
 // ---------------------------------------
 @moon-checkbox-check-color: @moon-text-color;
-@moon-checkbox-bg-color: @moon-white;
+@moon-checkbox-bg-color: fade(@moon-white, 30%);
 @moon-checkbox-bg-spotlight-color: fade(@moon-white, 40%);
 
 // DaySelector
@@ -128,11 +126,16 @@
 @moon-day-selector-checkbox-bg-color: @moon-formcheckbox-bg-color;
 @moon-day-selector-checkbox-text-color: @moon-formcheckbox-text-color;
 
+// EditableIntegerPicker
+// ---------------------------------------
+@moon-editable-integer-picker-input-bg-color: @moon-white;
+@moon-editable-integer-picker-input-text-color: @moon-spotlight-color;
+
 // FormCheckbox
 // ---------------------------------------
-@moon-formcheckbox-bg-color: @moon-white;
-@moon-formcheckbox-text-color: @moon-text-color;
-@moon-formcheckbox-border-color: fade(@moon-black, 15%);
+@moon-formcheckbox-bg-color: @moon-button-bg-color;
+@moon-formcheckbox-text-color: @moon-button-text-color;
+@moon-formcheckbox-border-color: fade(@moon-white, 15%);
 
 // GridListImageItem
 // ---------------------------------------
@@ -158,15 +161,15 @@
 
 // Popup
 // ---------------------------------------
-@moon-popup-bg-color: @moon-bg-color;
+@moon-popup-bg-color: @moon-dark-gray;
 @moon-popup-bg-opacity: 95%;
-@moon-popup-close-text-color: @moon-text-color;
+@moon-popup-close-text-color: @moon-white;
 
 // Progress Bar
 // ---------------------------------------
-@moon-progress-bar-bg-color: fade(@moon-gray, 50%);
-@moon-progress-bar-loaded-bg-color: fade(@moon-text-color, 40%);
-@moon-progress-bar-fill-bg-color: @moon-text-color;
+@moon-progress-bar-bg-color: rgba(128, 128, 128, 0.3);
+@moon-progress-bar-loaded-bg-color: rgba(200, 200, 200, 0.5);
+@moon-progress-bar-fill-bg-color: #f5f5f5;
 @moon-progress-bar-tooltip-text-color: @moon-white;
 @moon-progress-bar-highlighted-fill-bg-color: @moon-spotlight-bg-color;
 
@@ -201,7 +204,7 @@
 
 // ContextualPopup
 // ---------------------------------------
-@moon-contextual-popup-bg-color: @moon-bg-color;
+@moon-contextual-popup-bg-color: @moon-dark-gray;
 @moon-contextual-popup-border-color: rgba(0, 0, 0, 0.5);
 
 // Notification
@@ -210,7 +213,9 @@
 
 // VideoPlayer
 // ---------------------------------------
-@moon-video-slider-tooltip-thumbnail-border-color: @moon-black;
+@moon-video-feedback-mini-bg-color: rgba(75, 75, 75, 0.7);
+@moon-video-feedback-mini-text-color: @moon-white;
+@moon-video-slider-tooltip-thumbnail-border-color: @moon-contextual-popup-border-color;
 @moon-video-player-indicator-text-color: @moon-white;
 @moon-video-player-bottom-bg-color: transparent;
 @moon-video-player-redicon-bg-color: transparent;
@@ -225,4 +230,4 @@
 
 // Scrollable
 // ---------------------------------------
-@moon-scrollable-overscroll-color: #454545;
+@moon-scrollable-overscroll-color: #ccc;

@@ -27,6 +27,8 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			 */
 			highContrast: PropTypes.bool,
 
+			skin: PropTypes.string,
+
 			/**
 			 * Sets the goal size of the text.
 			 *
@@ -70,11 +72,16 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 		}
 
 		render () {
-			const {className, highContrast, textSize, ...props} = this.props;
+			const {className, highContrast, skin, textSize, ...props} = this.props;
 			const accessibilityClassName = highContrast ? `enact-a11y-high-contrast enact-text-${textSize}` : `enact-text-${textSize}`;
 			const combinedClassName = className ? `${className} ${accessibilityClassName}` : accessibilityClassName;
 
-			return <Wrapped className={combinedClassName} {...props} />;
+			let newSkin = skin;
+			if (highContrast && (!skin || skin === 'dark')) {
+				newSkin = 'dark-highcontrast';
+			}
+
+			return <Wrapped {...props} className={combinedClassName} skin={newSkin} />;
 		}
 	};
 });
