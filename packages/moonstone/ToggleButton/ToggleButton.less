@@ -37,6 +37,10 @@
 		}
 	}
 
+	&.selected {
+		border-color: var(--moon-accent);
+	}
+
 	// Skin colors
 	.applySkins({
 		&::after {
@@ -45,8 +49,6 @@
 		}
 
 		&.selected {
-			border-color: @moon-accent;
-
 			&::after {
 				background-color: @moon-toggle-button-switch-on-bg-color;
 				border-color: @moon-toggle-button-switch-on-border-color;

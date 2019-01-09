@@ -101,3 +101,9 @@
 	padding-left: @moon-spotlight-outset;
 	padding-right: @moon-spotlight-outset;
 }
+
+.moon-high-contrast(@ruleset) {
+	:global(.enact-a11y-high-contrast) & {
+		@ruleset();
+	}
+}

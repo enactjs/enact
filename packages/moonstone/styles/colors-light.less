@@ -6,14 +6,17 @@
 // ---------------------------------------
 // Universal Color Definitions
 // ---------------------------------------
-@moon-darker-gray: #262626;
-@moon-dark-gray:   #4d4d4d;
-@moon-gray:        #a6a6a6;
-@moon-light-gray:  #ededed;
-@moon-black:       #000;
-@moon-accent:      #cf0652;
-@moon-white:       #fff;
-@moon-red:         #f00;
+@moon-darker-gray:             #262626;
+@moon-dark-gray:               #4d4d4d;
+@moon-gray:                    #a6a6a6;
+@moon-light-gray:              #ededed;
+@moon-black:                   #000;
+@moon-accent:                  #cf0652;
+@moon-accent-alt:              #fff;
+@moon-highcontrast-accent:     #cccccc;
+@moon-highcontrast-accent-alt: #000000;
+@moon-white:                   #fff;
+@moon-red:                     #f00;
 
 @moon-remote-button-red-color:     #ff6d78; // #da3c3c; // #e71b1c;
 @moon-remote-button-green-color:   #6ff467; // #21c171; // #339966;
@@ -35,14 +38,18 @@
 
 // Spotlight and State
 // ---------------------------------------
-@moon-spotlight-text-color:           @moon-white;
-@moon-spotlight-disabled-text-color:  fade(@moon-spotlight-text-color, 40%);
-@moon-spotlight-text-color:           @moon-white;
-@moon-spotlight-bg-color:             @moon-accent;
-@moon-spotlight-border-color:         @moon-accent;
-@moon-spotlight-color:                @moon-accent;
+@moon-spotlight-text-color:           var(--moon-accent-alt);
+@moon-spotlight-disabled-text-color:  ~"hsla("
+    var(--moon-accent-h),
+    var(--moon-accent-s),
+    var(--moon-accent-l),
+    0.4
+~")";
+@moon-spotlight-bg-color:             var(--moon-accent);
+@moon-spotlight-border-color:         var(--moon-accent);
+@moon-spotlight-color:                var(--moon-accent);
 @moon-active-border-color:            @moon-gray;
-@moon-active-spotlight-border-color:  @moon-white;
+@moon-active-spotlight-border-color:  var(--moon-accent-alt);
 
 
 // ---------------------------------------

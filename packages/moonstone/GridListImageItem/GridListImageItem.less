@@ -24,6 +24,8 @@
 	&.selected {
 		.icon {
 			opacity: 1;
+			border-color: var(--moon-accent);
+			color: var(--moon-accent);
 		}
 	}
 
@@ -52,10 +54,6 @@
 			border-color: @moon-gridlist-item-selection-color;
 			background-color: @moon-gridlist-item-selection-color;
 
-			.icon {
-				border-color: @moon-accent;
-				color: @moon-accent;
-			}
 			.caption,
 			.subCaption {
 				color: @moon-spotlight-text-color;
@@ -89,12 +87,6 @@
 					}
 					.icon {
 						color: transparent;
-					}
-				}
-				&.selected {
-					.icon {
-						border-color: @moon-accent;
-						color: @moon-accent;
 					}
 				}
 			});

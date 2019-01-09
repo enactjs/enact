@@ -13,9 +13,35 @@
 .applySkins({
 	color: @moon-text-color;
 
+	--moon-accent: @moon-accent;
+	--moon-accent-h: hue(@moon-accent);
+	--moon-accent-s: saturation(@moon-accent);
+	--moon-accent-l: lightness(@moon-accent);
+
+	--moon-accent-alt: @moon-accent-alt;
+	--moon-accent-alt-h: hue(@moon-accent-alt);
+	--moon-accent-alt-s: saturation(@moon-accent-alt);
+	--moon-accent-alt-l: lightness(@moon-accent-alt);
+
+	.moon-high-contrast({
+		--moon-accent: @moon-highcontrast-accent;
+		--moon-accent-h: hue(@moon-highcontrast-accent);
+		--moon-accent-s: saturation(@moon-highcontrast-accent);
+		--moon-accent-l: lightness(@moon-highcontrast-accent);
+
+		--moon-accent-alt: @moon-highcontrast-accent-alt;
+		--moon-accent-alt-h: hue(@moon-highcontrast-accent-alt);
+		--moon-accent-alt-s: saturation(@moon-highcontrast-accent-alt);
+		--moon-accent-alt-l: lightness(@moon-highcontrast-accent-alt);
+	});
+
 	::selection {
 		color: @moon-spotlight-text-color;
-		background-color: lighten(@moon-spotlight-bg-color, 18%);
+		background-color: ~"hsl("
+			var(--moon-accent-h),
+			var(--moon-accent-s),
+			"calc(var(--moon-accent-l) + 0.18)"
+		~")";
 	}
 
 	// Spotlight

@@ -6,6 +6,8 @@
 
 // Interally theme our implementation using published classes from ToggleIcon
 .toggleIcon {
+	color: var(--moon-accent);
+
 	.icon {
 		@dot-size: @moon-selectable-item-indicator-size - 3px * 2;
 
@@ -18,11 +20,6 @@
 	&:not(.selected) {
 		display: none;
 	}
-
-	// Skin colors
-	.applySkins({
-		color: @moon-accent;
-	});
 }
 
 // Icon inherits its color. .toggleIcon (a wrapper for icon) above sets itself to a color.
@@ -34,14 +31,4 @@
 			color: inherit;
 		});
 	}
-});
-
-.muted({
-	.focus({
-		.toggleIcon {
-			.applySkins({
-				color: @moon-accent;
-			});
-		}
-	});
 });
