@@ -52,6 +52,15 @@ const GridListImageItemBase = kind({
 
 	propTypes: /** @lends moonstone/GridListImageItem.GridListImageItemBase.prototype */ {
 		/**
+		 * The voice control intent.
+		 *
+		 * @type {String}
+		 * @default 'Select'
+		 * @public
+		 */
+		'data-webos-voice-intent': PropTypes.string,
+
+		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
@@ -112,6 +121,7 @@ const GridListImageItemBase = kind({
 	},
 
 	defaultProps: {
+		'data-webos-voice-intent': 'Select',
 		placeholder: defaultPlaceholder,
 		selected: false
 	},

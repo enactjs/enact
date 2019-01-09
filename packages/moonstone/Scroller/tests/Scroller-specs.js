@@ -1,4 +1,3 @@
-import sinon from 'sinon';
 import {mount, shallow} from 'enzyme';
 import React from 'react';
 
@@ -21,132 +20,153 @@ describe('Scroller', () => {
 	});
 
 	describe('Scrollbar visibility', () => {
-		it('should render both horizontal and vertical scrollbars when \'horizontalScrollbar\' and \'verticalScrollbar\' are "visible"', () => {
-			const subject = mount(
-				<Scroller
-					horizontalScrollbar="visible"
-					verticalScrollbar="visible"
-				>
-					{contents}
-				</Scroller>
-			);
+		test(
+			'should render both horizontal and vertical scrollbars when \'horizontalScrollbar\' and \'verticalScrollbar\' are "visible"',
+			() => {
+				const subject = mount(
+					<Scroller
+						horizontalScrollbar="visible"
+						verticalScrollbar="visible"
+					>
+						{contents}
+					</Scroller>
+				);
 
-			const expected = 2;
-			const actual = subject.find('Scrollbar').length;
+				const expected = 2;
+				const actual = subject.find('Scrollbar').length;
 
-			expect(actual).to.equal(expected);
-		});
+				expect(actual).toBe(expected);
+			}
+		);
 
-		it('should render only vertical scrollbar when \'verticalScrollbar\' is "visible" and \'horizontalScrollbar\' is "hidden"', () => {
-			const subject = mount(
-				<Scroller
-					horizontalScrollbar="hidden"
-					verticalScrollbar="visible"
-				>
-					{contents}
-				</Scroller>
-			);
+		test(
+			'should render only vertical scrollbar when \'verticalScrollbar\' is "visible" and \'horizontalScrollbar\' is "hidden"',
+			() => {
+				const subject = mount(
+					<Scroller
+						horizontalScrollbar="hidden"
+						verticalScrollbar="visible"
+					>
+						{contents}
+					</Scroller>
+				);
 
-			const expected = 1;
-			const actual = subject.find('Scrollbar').length;
+				const expected = 1;
+				const actual = subject.find('Scrollbar').length;
 
-			expect(actual).to.equal(expected);
-		});
+				expect(actual).toBe(expected);
+			}
+		);
 
-		it('should not render any scrollbar when when \'horizontalScrollbar\' and \'verticalScrollbar\' are "hidden"', () => {
-			const subject = mount(
-				<Scroller
-					horizontalScrollbar="hidden"
-					verticalScrollbar="hidden"
-				>
-					{contents}
-				</Scroller>
-			);
+		test(
+			'should not render any scrollbar when when \'horizontalScrollbar\' and \'verticalScrollbar\' are "hidden"',
+			() => {
+				const subject = mount(
+					<Scroller
+						horizontalScrollbar="hidden"
+						verticalScrollbar="hidden"
+					>
+						{contents}
+					</Scroller>
+				);
 
-			const expected = 0;
-			const actual = subject.find('Scrollbar').length;
+				const expected = 0;
+				const actual = subject.find('Scrollbar').length;
 
-			expect(actual).to.equal(expected);
-		});
+				expect(actual).toBe(expected);
+			}
+		);
 	});
 
 	describe('Scrollbar accessibility', () => {
-		it('should set "aria-label" to previous scroll button in the horizontal scroll bar', function () {
-			const label = 'custom button aria label';
-			const subject = mount(
-				<Scroller
-					horizontalScrollbar="visible"
-					scrollLeftAriaLabel={label}
-					verticalScrollbar="visible"
-				>
-					{contents}
-				</Scroller>
-			);
+		test(
+			'should set "aria-label" to previous scroll button in the horizontal scroll bar',
+			() => {
+				const label = 'custom button aria label';
+				const subject = mount(
+					<Scroller
+						horizontalScrollbar="visible"
+						scrollLeftAriaLabel={label}
+						verticalScrollbar="visible"
+					>
+						{contents}
+					</Scroller>
+				);
 
-			const expected = label;
-			const actual = subject.find('ScrollButton').at(2).prop('aria-label');
+				const expected = label;
+				const actual = subject.find('ScrollButton').at(2).prop('aria-label');
 
-			expect(actual).to.equal(expected);
-		});
+				expect(actual).toBe(expected);
+			}
+		);
 
-		it('should set "aria-label" to next scroll button in the horizontal scroll bar', function () {
-			const label = 'custom button aria label';
-			const subject = mount(
-				<Scroller
-					horizontalScrollbar="visible"
-					scrollRightAriaLabel={label}
-					verticalScrollbar="visible"
-				>
-					{contents}
-				</Scroller>
-			);
+		test(
+			'should set "aria-label" to next scroll button in the horizontal scroll bar',
+			() => {
+				const label = 'custom button aria label';
+				const subject = mount(
+					<Scroller
+						horizontalScrollbar="visible"
+						scrollRightAriaLabel={label}
+						verticalScrollbar="visible"
+					>
+						{contents}
+					</Scroller>
+				);
 
-			const expected = label;
-			const actual = subject.find('ScrollButton').at(3).prop('aria-label');
+				const expected = label;
+				const actual = subject.find('ScrollButton').at(3).prop('aria-label');
 
-			expect(actual).to.equal(expected);
-		});
+				expect(actual).toBe(expected);
+			}
+		);
 
-		it('should set "aria-label" to previous scroll button in the vertical scroll bar', function () {
-			const label = 'custom button aria label';
-			const subject = mount(
-				<Scroller
-					horizontalScrollbar="visible"
-					verticalScrollbar="visible"
-					scrollUpAriaLabel={label}
-				>
-					{contents}
-				</Scroller>
-			);
+		test(
+			'should set "aria-label" to previous scroll button in the vertical scroll bar',
+			() => {
+				const label = 'custom button aria label';
+				const subject = mount(
+					<Scroller
+						horizontalScrollbar="visible"
+						verticalScrollbar="visible"
+						scrollUpAriaLabel={label}
+					>
+						{contents}
+					</Scroller>
+				);
 
-			const expected = label;
-			const actual = subject.find('ScrollButton').at(0).prop('aria-label');
+				const expected = label;
+				const actual = subject.find('ScrollButton').at(0).prop('aria-label');
 
-			expect(actual).to.equal(expected);
-		});
+				expect(actual).toBe(expected);
+			}
+		);
 
-		it('should set "aria-label" to next scroll button in the vertical scroll bar', function () {
-			const label = 'custom button aria label';
-			const subject = mount(
-				<Scroller
-					horizontalScrollbar="visible"
-					verticalScrollbar="visible"
-					scrollDownAriaLabel={label}
-				>
-					{contents}
-				</Scroller>
-			);
+		test(
+			'should set "aria-label" to next scroll button in the vertical scroll bar',
+			() => {
+				const label = 'custom button aria label';
+				const subject = mount(
+					<Scroller
+						horizontalScrollbar="visible"
+						verticalScrollbar="visible"
+						scrollDownAriaLabel={label}
+					>
+						{contents}
+					</Scroller>
+				);
 
-			const expected = label;
-			const actual = subject.find('ScrollButton').at(1).prop('aria-label');
+				const expected = label;
+				const actual = subject.find('ScrollButton').at(1).prop('aria-label');
 
-			expect(actual).to.equal(expected);
-		});
+				expect(actual).toBe(expected);
+			}
+		);
 	});
 
 	describe('ScrollerBase API', () => {
-		it('should call onUpdate when Scroller updates', function () {
-			const handleUpdate = sinon.spy();
+		test('should call onUpdate when Scroller updates', () => {
+			const handleUpdate = jest.fn();
 			const subject = shallow(
 				<ScrollerBase
 					onUpdate={handleUpdate}
@@ -157,10 +177,10 @@ describe('Scroller', () => {
 
 			subject.setProps({children: ''});
 
-			const expected = true;
-			const actual = handleUpdate.calledOnce;
+			const expected = 1;
+			const actual = handleUpdate.mock.calls.length;
 
-			expect(expected).to.equal(actual);
+			expect(expected).toBe(actual);
 		});
 	});
 });

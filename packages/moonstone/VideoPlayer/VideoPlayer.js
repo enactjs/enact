@@ -728,7 +728,23 @@ const VideoPlayerBase = class extends React.Component {
 			forwardControlsAvailable({available: false}, this.props);
 			this.stopAutoCloseTimeout();
 
-			if (!this.props.spotlightDisabled ) {
+			if (!this.props.spotlightDisabled) {
+				// If last focused item were in the media controls or slider, we need to explicitly
+				// blur the element when MediaControls hide. See ENYO-5648
+				const current = Spotlight.getCurrent();
+				const bottomControls = document.querySelector(`.${css.bottom}`);
+				if (current && bottomControls && bottomControls.contains(current)) {
+					current.blur();
+				}
+
+				// when in pointer mode, the focus call below will only update the last focused for
+				// the video player and not set the active container to the video player which will
+				// cause focus to land back on the media controls button when spotlight restores
+				// focus.
+				if (Spotlight.getPointerMode()) {
+					Spotlight.setActiveContainer(this.props.spotlightId);
+				}
+
 				// Set focus to the hidden spottable control - maintaining focus on available spottable
 				// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
 				Spotlight.focus(`.${css.controlsHandleAbove}`);
@@ -737,7 +753,7 @@ const VideoPlayerBase = class extends React.Component {
 			forwardControlsAvailable({available: true}, this.props);
 			this.startAutoCloseTimeout();
 
-			if (!this.props.spotlightDisabled ) {
+			if (!this.props.spotlightDisabled) {
 				const current = Spotlight.getCurrent();
 				if (!current || this.player.contains(current)) {
 					// Set focus within media controls when they become visible.
@@ -1665,6 +1681,7 @@ const VideoPlayerBase = class extends React.Component {
 				this.activityDetected();
 			}
 		} else if (is('up', keyCode)) {
+			Spotlight.setPointerMode(false);
 			preventDefault(ev);
 			stopImmediate(ev);
 

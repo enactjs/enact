@@ -4,19 +4,23 @@
  * @module i18n/I18nDecorator
  * @exports I18nDecorator
  * @exports I18nContextDecorator
- * @exports I18nContext
  */
 
 import {on, off} from '@enact/core/dispatcher';
 import hoc from '@enact/core/hoc';
 import {Publisher, contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
+import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import ilib from '../src/index.js';
 import {isRtlLocale, updateLocale} from '../locale';
+import ilib from '../src/index.js';
+import {createResBundle, setResBundle} from '../src/resBundle';
+import wrapIlibCallback from '../src/wrapIlibCallback';
 
 import getI18nClasses from './getI18nClasses';
+
+const join = (a, b) => a && b ? a + ' ' + b : (a || b || '');
 
 const contextTypes = {
 	rtl: PropTypes.bool,
@@ -24,6 +28,43 @@ const contextTypes = {
 };
 
 const I18nContext = React.createContext(null);
+
+/**
+ * Default config for `I18nDecorator`.
+ *
+ * @memberof i18n/I18nDecorator.I18nDecorator
+ * @hocconfig
+ */
+const defaultConfig = {
+	/**
+	 * Array of locales that should be treated as latin regardless of their script.
+	 *
+	 * @type {String[]}
+	 * @default	null
+	 * @public
+	 * @memberof i18n/I18nDecorator.I18nDecorator.defaultConfig
+	 */
+	latinLanguageOverrides: null,
+
+	/**
+	 * Array of locales that should be treated as non-latin regardless of their script.
+	 *
+	 * @type {String[]}
+	 * @public null
+	 * @memberof i18n/I18nDecorator.I18nDecorator.defaultConfig
+	 */
+	nonLatinLanguageOverrides: null,
+
+	/**
+	 * Retrieve i18n resource files synchronously
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 * @memberof i18n/I18nDecorator.I18nDecorator.defaultConfig
+	 */
+	sync: false
+};
 
 /**
  * A higher-order component that is used to wrap the root element in an app. It provides an `rtl` member on the
@@ -37,7 +78,9 @@ const I18nContext = React.createContext(null);
  * @hoc
  * @public
  */
-const I18nDecorator = hoc((config, Wrapped) => {
+const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	const {latinLanguageOverrides, nonLatinLanguageOverrides, sync} = config;
+
 	return class extends React.Component {
 		static displayName = 'I18nDecorator'
 
@@ -67,47 +110,100 @@ const I18nDecorator = hoc((config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			const ilibLocale = ilib.getLocale();
-			const locale = props.locale && props.locale !== ilibLocale ? updateLocale(props.locale) : ilibLocale;
+			const locale = props.locale && props.locale !== ilibLocale ? props.locale : ilibLocale;
 
-			this.state = {
-				locale: locale,
-				rtl: isRtlLocale(),
-				updateLocale: this.updateLocale
-			};
+			this.loadResourceJob = new Job(this.setState.bind(this));
+			this.state = this.getDerivedStateForLocale(locale);
 		}
 
 		getChildContext () {
 			return {
-				Subscriber: this.publisher.getSubscriber(),
-				rtl: isRtlLocale(),
+				rtl: this.state.rtl,
 				updateLocale: this.updateLocale
 			};
 		}
 
-		componentWillMount () {
+		componentDidMount () {
 			this.publisher = Publisher.create('i18n', this.context.Subscriber);
 			this.publisher.publish({
 				locale: this.state.locale,
-				rtl: isRtlLocale()
+				rtl: this.state.rtl
 			});
-		}
 
-		componentDidMount () {
 			if (typeof window === 'object') {
 				on('languagechange', this.handleLocaleChange, window);
 			}
+
+			this.loadResources(this.state.locale);
 		}
 
-		componentWillReceiveProps (newProps) {
-			if (newProps.locale) {
-				this.updateLocale(newProps.locale);
+		componentWillReceiveProps (nextProps) {
+			if (this.props.locale !== nextProps.locale) {
+				const state = this.getDerivedStateForLocale(nextProps.locale);
+				if (sync) {
+					this.setState(state);
+				} else {
+					this.loadResources(nextProps.locale);
+				}
 			}
 		}
 
 		componentWillUnmount () {
+			this.loadResourceJob.stop();
 			if (typeof window === 'object') {
 				off('languagechange', this.handleLocaleChange, window);
 			}
+		}
+
+		getDerivedStateForLocale (spec) {
+			const locale = updateLocale(spec);
+
+			const state = {
+				locale,
+				resourcesLoaded: sync
+			};
+
+			if (sync) {
+				const options = {locale, sync};
+				state.rtl = wrapIlibCallback(isRtlLocale, options);
+				state.classes = wrapIlibCallback(getI18nClasses, {
+					...options,
+					latinLanguageOverrides,
+					nonLatinLanguageOverrides
+				});
+
+				const bundle = wrapIlibCallback(createResBundle, options);
+				setResBundle(bundle);
+			}
+
+			return state;
+		}
+
+		loadResources (locale) {
+			const options = {sync, locale};
+			const resources = Promise.all([
+				wrapIlibCallback(isRtlLocale, options),
+				wrapIlibCallback(getI18nClasses, {
+					...options,
+					latinLanguageOverrides,
+					nonLatinLanguageOverrides
+				}),
+				// move updating into a new method with call to setState
+				wrapIlibCallback(createResBundle, options)
+			]).then(([rtl, classes, bundle]) => {
+				setResBundle(bundle);
+
+				return {
+					locale,
+					classes,
+					rtl,
+					resourcesLoaded: true
+				};
+			});
+			// TODO: Resolve how to handle failed resource resquests
+			// .catch(...);
+
+			this.loadResourceJob.promise(resources);
 		}
 
 		handleLocaleChange = () => {
@@ -124,41 +220,45 @@ const I18nDecorator = hoc((config, Wrapped) => {
 		 * @public
 		 */
 		updateLocale = (newLocale) => {
-			const locale = updateLocale(newLocale);
-			const updated = {
-				locale,
-				rtl: isRtlLocale()
-			};
+			const state = this.getDerivedStateForLocale(newLocale);
 
-			this.setState(updated);
-			this.publisher.publish(updated);
+			if (sync) {
+				this.setState(state);
+			} else {
+				this.loadResources(newLocale);
+				this.setState({resourcesLoaded: false});
+			}
 		}
 
 		render () {
 			const props = Object.assign({}, this.props);
-			let classes = getI18nClasses();
-			if (this.props.className) {
-				classes = this.props.className + ' ' + classes;
-			}
-
 			delete props.locale;
 
+			props.className = join(this.state.classes, this.props.className);
+
+			const value = {
+				locale: this.state.locale,
+				rtl: this.state.rtl,
+				loaded: this.state.resourcesLoaded,
+				updateLocale: this.updateLocale
+			};
+
 			return (
-				<I18nContext.Provider value={this.state}>
-					<Wrapped {...props} className={classes} />
+				<I18nContext.Provider value={value}>
+					<Wrapped {...props} />
 				</I18nContext.Provider>
 			);
 		}
 	};
 });
 
-const defaultConfig = {
+const contextDefaultConfig = {
 	localeProp: null,
 	rtlProp: null,
 	updateLocaleProp: null
 };
 
-const I18nContextDecorator = hoc(defaultConfig, (config, Wrapped) => {
+const I18nContextDecorator = hoc(contextDefaultConfig, (config, Wrapped) => {
 	const {localeProp, rtlProp, updateLocaleProp} = config;
 
 	// eslint-disable-next-line no-shadow

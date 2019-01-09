@@ -157,7 +157,7 @@ var DurationFmt = function(options) {
         sync: sync,
         loadParams: loadParams,
         onLoad: ilib.bind(this, function (sysres) {
-            IString.loadPlurals(options.sync, this.locale, options.loadParams, ilib.bind(this, function() {
+            IString.loadPlurals(sync, this.locale, loadParams, ilib.bind(this, function() {
                 switch (this.length) {
                     case 'short':
                         this.components = {

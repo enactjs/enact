@@ -13,6 +13,7 @@
  */
 
 import hoc from '@enact/core/hoc';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {isRtlText} from '@enact/i18n/util';
 import {
 	MarqueeBase,
@@ -22,7 +23,15 @@ import {
 
 const MarqueeDecorator = hoc({
 	marqueeDirection: (str) => isRtlText(str) ? 'rtl' : 'ltr'
-}, UiMarqueeDecorator);
+}, (config, Wrapped) => {
+	return I18nContextDecorator(
+		{rtlProp: 'rtl', localeProp: 'locale'},
+		UiMarqueeDecorator(
+			config,
+			Wrapped
+		)
+	);
+});
 
 const Marquee = MarqueeDecorator('div');
 

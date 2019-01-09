@@ -6,7 +6,74 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/ViewManager` to emit `onWillTransition` when either views or added or removed
+- `ui/Marquee` to marquee when necessary after a locale change
+## [2.2.8] - 2018-12-06
+
+### Fixed
+
+- `ui/Marquee` to display an ellipsis when changing to text that no longer fits within its bounds
+- `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` to debounce `onScrollStop` events for non-animated scrolls
+
+## [2.2.7] - 2018-11-21
+
+### Fixed
+
+- `ui/Marquee` to avoid very small animations
+
+## [2.2.6] - 2018-11-15
+
+### Fixed
+
+- `ui/Marquee` to handle contents which overflow their containers only slightly
+
+## [2.2.5] - 2018-11-05
+
+### Fixed
+
+- `ui/Transition` to better support layout after changing children
+
+## [2.2.4] - 2018-10-29
+
+No significant changes.
+
+## [2.2.3] - 2018-10-22
+
+No significant changes.
+
+## [2.2.2] - 2018-10-15
+
+### Fixed
+
+- `ui/Scroller` slowed scrolling behavior when repeatedly requesting a scroll to the same position
+
+## [2.2.1] - 2018-10-09
+
+### Fixed
+
+- `ui/Marquee` to prevent restarting animation after blurring just before the previous animation completed
+
+## [2.2.0] - 2018-10-02
+
+### Added
+
+- `ui/Marquee.MarqueeBase` prop `willAnimate` to improve app performance by deferring animation preparation styling such as composite layer promotion
+- `ui/Skinnable` config option `prop` to configure the property in which to pass the current skin to the wrapped component
+- `ui/Transition` prop `css` to support customizable styling
+
+### Changed
+
+- `ui/Cell` and `ui/Layout` to accept any type of children, since the `component` that may be set could accept any format of `children`
+
+### Fixed
+
+- `ui/Touchable` to correctly handle a hold cancelled from an onHold handler
+- `ui/Marquee.MarqueeDecorator` to handle situations where lazily loaded CSS could cause marquee to not start correctly
+
+## [2.1.4] - 2018-09-17
+
+### Fixed
+
+- `ui/ViewManager` to emit `onWillTransition` when views are either added or removed
 
 ## [2.1.3] - 2018-09-10
 

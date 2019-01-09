@@ -69,6 +69,61 @@ class ScrollerWithResizable extends React.Component {
 	}
 }
 
+class ScrollerTopMostVisibleItemInTheScroller extends React.Component {
+	componentDidMount () {
+		this.blurEvent = document.createEvent('Event');
+		this.blurEvent.initEvent('blur', true, true);
+		this.focusEvent = document.createEvent('Event');
+		this.focusEvent.initEvent('focus', true, true);
+	}
+
+	handleScrollStop = () => {
+		window.dispatchEvent(this.blurEvent);
+		window.dispatchEvent(this.focusEvent);
+	}
+
+	render () {
+		return (
+			<Scroller
+				focusableScrollbar
+				verticalScrollbar="visible"
+				style={{height: ri.scale(200)}}
+				onScrollStop={this.handleScrollStop}
+			>
+				<Item>Item</Item>
+				<Item>Focus me, press right, then select on down arrow</Item>
+				<Item>Focus should return here</Item>
+				<Item>Item</Item>
+				<Item>Item</Item>
+			</Scroller>
+		);
+	}
+}
+
+class ScrollerWithTwoExpandableList extends React.Component {
+	render () {
+		return (
+			<div>
+				<Scroller
+					style={{height: ri.scale(200)}}
+					direction="vertical"
+				>
+					<ExpandableList title="first" selected={0}>
+						{['a', 'b', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'd']}
+					</ExpandableList>
+				</Scroller>
+				<Scroller
+					style={{height: ri.scale(200)}}
+					direction="vertical"
+				>
+					<ExpandableList title="second">
+						{['a', 'b', 'c', 'd']}
+					</ExpandableList>
+				</Scroller>
+			</div>
+		);
+	}
+}
 
 storiesOf('Scroller', module)
 	.add(
@@ -195,5 +250,17 @@ storiesOf('Scroller', module)
 		'With Resizable',
 		() => (
 			<ScrollerWithResizable />
+		)
+	)
+	.add(
+		'Top Most Visible Item in the Scroller',
+		() => (
+			<ScrollerTopMostVisibleItemInTheScroller />
+		)
+	)
+	.add(
+		'With Two Expandable List',
+		() => (
+			<ScrollerWithTwoExpandableList />
 		)
 	);

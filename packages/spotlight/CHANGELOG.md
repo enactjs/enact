@@ -2,7 +2,56 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
+## [2.2.8] - 2018-12-06
+
+### Fixed
+
+- `spotlight` to focus correctly within an overflow container in which the first element is another container without spottable children
+
+## [2.2.7] - 2018-11-21
+
+No significant changes.
+
+## [2.2.6] - 2018-11-15
+
+No significant changes.
+
+## [2.2.5] - 2018-11-05
+
+No significant changes.
+
+## [2.2.4] - 2018-10-29
+
+No significant changes.
+
+## [2.2.3] - 2018-10-22
+
+### Fixed
+
+- `spotlight` selection of elements clipped by an overflow container
+
+## [2.2.2] - 2018-10-15
+
+No significant changes.
+
+## [2.2.1] - 2018-10-09
+
+### Fixed
+
+- `spotlight` navigation into an overflow container which contains elements or containers larger than the container's bounds
+
+## [2.2.0] - 2018-10-02
+
+### Changed
+
+- `spotlight` to not explicitly `blur()` the currently focused element when focusing another, allowing the platform to manage blurring before focus
+
+### Fixed
+
+- `spotlight` to correctly set focus when the window is activated
+- `spotlight` to correctly set focus when entering a restricted container
+
+## [2.1.4] - 2018-09-17
 
 ### Fixed
 

@@ -29,7 +29,7 @@ describe('ApiDecorator', () => {
 		}
 	};
 
-	it('should invoke arrow function on wrapped component', function () {
+	test('should invoke arrow function on wrapped component', () => {
 		const Component = ApiDecorator(
 			{api: ['arrowFunction']},
 			ApiProvider
@@ -42,10 +42,10 @@ describe('ApiDecorator', () => {
 		const expected = 'arrow';
 		const actual = subject.instance().arrowFunction();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should invoke instance function on wrapped component', function () {
+	test('should invoke instance function on wrapped component', () => {
 		const Component = ApiDecorator(
 			{api: ['instanceFunction']},
 			ApiProvider
@@ -58,10 +58,10 @@ describe('ApiDecorator', () => {
 		const expected = 'instance';
 		const actual = subject.instance().instanceFunction();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should get an instance property on wrapped component', function () {
+	test('should get an instance property on wrapped component', () => {
 		const Component = ApiDecorator(
 			{api: ['instanceProperty']},
 			ApiProvider
@@ -74,10 +74,10 @@ describe('ApiDecorator', () => {
 		const expected = 'property';
 		const actual = subject.instance().instanceProperty;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should set an instance property on wrapped component', function () {
+	test('should set an instance property on wrapped component', () => {
 		const Component = ApiDecorator(
 			{api: ['instanceProperty']},
 			ApiProvider
@@ -92,6 +92,6 @@ describe('ApiDecorator', () => {
 		const expected = 'updated';
 		const actual = subject.instance().instanceProperty;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });

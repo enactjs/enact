@@ -149,7 +149,7 @@ const SpinnerBase = kind({
  * @ui
  * @private
  */
-const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
+const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
 		static displayName = 'SpinnerSpotlightDecorator';
 
