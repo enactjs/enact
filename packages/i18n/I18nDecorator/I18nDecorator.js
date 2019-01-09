@@ -50,11 +50,42 @@ const defaultConfig = {
 	 * Array of locales that should be treated as non-latin regardless of their script.
 	 *
 	 * @type {String[]}
-	 * @public null
+	 * @default null
+	 * @public
 	 * @memberof i18n/I18nDecorator.I18nDecorator.defaultConfig
 	 */
 	nonLatinLanguageOverrides: null,
 
+	/**
+	 * Array of resource loaders which are invoked after a locale change.
+	 *
+	 * Each loader must be a function which accepts an object and returns either the resource or a
+	 * `Promise` for the resource.
+	 *
+	 * ```
+	 * resources: [
+	 *   (options) => new Promise((resolve, reject) => {
+	 *     fetchResource({onLoad: resolve, onError: reject});
+	 *   })
+	 * ]
+	 * ```
+	 *
+	 * If you need to handle the resource in some way on load, you can pass an object with an
+	 * `onLoad` member that will be called once all resources have been loaded. This should be used
+	 * if loading a resource has side effects that should only be applied once all loading has
+	 * completed.
+	 *
+	 * ```
+	 * resources: [
+	 *   {resource: (options) => { ... fetch ... }, onLoad: (res) => { ... apply side effect ... }}
+	 * ]
+	 * ```
+	 *
+	 * @type {Array<Function|Object>}
+	 * @default null
+	 * @public
+	 * @memberof i18n/I18nDecorator.I18nDecorator.defaultConfig
+	 */
 	resources: null,
 
 	/**
