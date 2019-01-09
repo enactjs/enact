@@ -8,6 +8,18 @@ import {storiesOf} from '@storybook/react';
 
 import {select, text} from '../../src/enact-knobs';
 
+import {Marquee} from '@enact/moonstone/Marquee';
+import {Button} from '@enact/moonstone/Button';
+import {CheckboxItem} from '@enact/moonstone/CheckboxItem';
+import {ExpandableInput} from '@enact/moonstone/ExpandableInput';
+import {ExpandableList} from '@enact/moonstone/ExpandableList';
+import {FormCheckboxItem} from '@enact/moonstone/FormCheckboxItem';
+import {GridListImageItem} from '@enact/moonstone/GridListImageItem';
+import {Input} from '@enact/moonstone/Input';
+import {LabeledItem} from '@enact/moonstone/LabeledItem';
+import {SelectableItem} from '@enact/moonstone/SelectableItem';
+import {SwitchItem} from '@enact/moonstone/SwitchItem';
+
 Divider.displayName = 'Divider';
 
 const
@@ -112,6 +124,28 @@ storiesOf('Divider', module)
 					<Item>Item 41</Item>
 					<Item>Item 42</Item>
 				</div>
+			</Scroller>
+		)
+	).add(
+		'Tall Glyphs as Non-Latin components',
+		() => (
+			<Scroller style={{height: '100%'}}>
+				<Divider>Problem</Divider>
+				<Marquee>ଇନପୁଟଗୁଡିକ</Marquee>
+				<GridListImageItem caption="ଇନପୁଟଗୁଡିକ" style={{height: 200}} />
+				<Divider>No Problem</Divider>
+				<div>ଇନପୁଟଗୁଡିକ</div>
+				<BodyText>ଇନପୁଟଗୁଡିକ</BodyText>
+				<Button>ଇନପୁଟଗୁଡିକ</Button>
+				<CheckboxItem>ଇନପୁଟଗୁଡିକ</CheckboxItem>
+				<Divider>ଇନପୁଟଗୁଡିକ</Divider>
+				<ExpandableInput title="ଇନପୁଟଗୁଡିକ">ଇନପୁଟଗୁଡିକ</ExpandableInput>
+				<ExpandableList title="ଇନପୁଟଗୁଡିକ">{['ଇନପୁଟଗୁଡିକ']}</ExpandableList>
+				<FormCheckboxItem>ଇନପୁଟଗୁଡିକ</FormCheckboxItem>
+				<Input value="ଇନପୁଟଗୁଡିକ" />
+				<LabeledItem label="ଇନପୁଟଗୁଡିକ">ଇନପୁଟଗୁଡିକ</LabeledItem>
+				<SelectableItem>ଇନପୁଟଗୁଡିକ</SelectableItem>
+				<SwitchItem>ଇନପୁଟଗୁଡିକ</SwitchItem>
 			</Scroller>
 		)
 	);
