@@ -138,7 +138,7 @@ class ScrollerWithLargeContainer extends React.Component {
 
 	render () {
 		return (
-			<Scroller focusableScrollbar spotlightId='scroller' style={{height: 200}}>
+			<Scroller focusableScrollbar spotlightId="scroller" style={{height: 200}}>
 				<Container>
 					<Item>Hello</Item>
 					<Item>Hello</Item>
