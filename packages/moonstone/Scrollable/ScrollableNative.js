@@ -5,6 +5,7 @@ import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from 
 import {Job} from '@enact/core/util';
 import platform from '@enact/core/platform';
 import {forward} from '@enact/core/handle';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
@@ -936,14 +937,19 @@ class ScrollableBaseNative extends Component {
  * @ui
  * @private
  */
-const ScrollableNative = Skinnable(SpotlightContainerDecorator(
-	{
-		overflow: true,
-		preserveId: true,
-		restrict: 'self-first'
-	},
-	ScrollableBaseNative
-));
+const ScrollableNative = Skinnable(
+	SpotlightContainerDecorator(
+		{
+			overflow: true,
+			preserveId: true,
+			restrict: 'self-first'
+		},
+		I18nContextDecorator(
+			{rtlProp: 'rtl'},
+			ScrollableBaseNative
+		)
+	)
+);
 
 export default ScrollableNative;
 export {

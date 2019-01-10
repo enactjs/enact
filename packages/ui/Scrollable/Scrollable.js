@@ -314,6 +314,14 @@ class ScrollableBase extends Component {
 		removeEventListeners: PropTypes.func,
 
 		/**
+		 * Indicates the content's text direction is right-to-left.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * Called to execute additional logic in a themed component when scrollTo is called.
 		 *
 		 * @type {Function}
@@ -377,7 +385,6 @@ class ScrollableBase extends Component {
 		super(props);
 
 		this.state = {
-			rtl: false,
 			remeasure: false,
 			isHorizontalScrollbarVisible: props.horizontalScrollbar === 'visible',
 			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
@@ -414,7 +421,6 @@ class ScrollableBase extends Component {
 
 		if (this.context.Subscriber) {
 			this.context.Subscriber.subscribe('resize', this.handleSubscription);
-			this.context.Subscriber.subscribe('i18n', this.handleSubscription);
 		}
 	}
 
@@ -486,7 +492,6 @@ class ScrollableBase extends Component {
 
 		if (this.context.Subscriber) {
 			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
-			this.context.Subscriber.unsubscribe('i18n', this.handleSubscription);
 		}
 	}
 
@@ -498,12 +503,7 @@ class ScrollableBase extends Component {
 	}
 
 	handleSubscription = ({channel, message}) => {
-		if (channel === 'i18n') {
-			const {rtl} = message;
-			if (rtl !== this.state.rtl) {
-				this.setState({rtl});
-			}
-		} else if (channel === 'resize') {
+		if (channel === 'resize') {
 			this.publisher.publish(message);
 		}
 	}
@@ -572,7 +572,7 @@ class ScrollableBase extends Component {
 
 	// drag/flick event handlers
 
-	getRtlX = (x) => (this.state.rtl ? -x : x)
+	getRtlX = (x) => (this.props.rtl ? -x : x)
 
 	onMouseDown = (ev) => {
 		this.stop();
@@ -880,7 +880,7 @@ class ScrollableBase extends Component {
 
 		if (this.canScrollHorizontally(bounds)) {
 			const
-				rtl = this.state.rtl,
+				rtl = this.props.rtl,
 				edge = this.getEdgeFromPosition(this.scrollLeft, bounds.maxLeft);
 
 			if (edge) { // if edge is null, no need to check which edge is reached.
@@ -1312,8 +1312,8 @@ class ScrollableBase extends Component {
 
 	render () {
 		const
-			{className, containerRenderer, noScrollByDrag, style, ...rest} = this.props,
-			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl} = this.state,
+			{className, containerRenderer, noScrollByDrag, rtl, style, ...rest} = this.props,
+			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className),
 			childWrapper = noScrollByDrag ? 'div' : TouchableDiv,
 			childWrapperProps = {
