@@ -712,7 +712,11 @@ function getContainerNavigableElements (containerId) {
 	}
 
 	if (!next) {
-		const spottables = getDeepSpottableDescendants(containerId);
+		let spottables = overflow ?
+			// overflow requires deep recursion to handle selecting the children of unrestricted
+			// containers or restricted containers larger than the container
+			getDeepSpottableDescendants(containerId) :
+			getSpottableDescendants(containerId);
 
 		// if there isn't a preferred entry on an overflow container, filter the visible elements
 		if (overflow) {
