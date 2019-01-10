@@ -87,4 +87,28 @@ describe('Popup specs', () => {
 
 		expect(actual).toBe(expected);
 	});
+
+	test('should set "data-webos-voice-exclusive" when popup is open', () => {
+		const popup = mount(
+			<Popup open><div>popup</div></Popup>,
+			options
+		);
+
+		const expected = true;
+		const actual = popup.find(`.${css.popup}`).prop('data-webos-voice-exclusive');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should set "data-webos-voice-disabled" when voice control is disabled', () => {
+		const popup = mount(
+			<Popup open data-webos-voice-disabled><div>popup</div></Popup>,
+			options
+		);
+
+		const expected = true;
+		const actual = popup.find(`.${css.popup}`).prop('data-webos-voice-disabled');
+
+		expect(actual).toBe(expected);
+	});
 });

@@ -59,5 +59,14 @@ describe('Button', () => {
 
 			expect(actual).toBe(expected);
 		});
+
+		test('should have "Select" voice intent in the node of "role=button"', () => {
+			const button = mount(<Button>Hello</Button>);
+
+			const expected = 'Select';
+			const actual = button.find('[role="button"]').prop('data-webos-voice-intent');
+
+			expect(actual).toBe(expected);
+		});
 	});
 });
