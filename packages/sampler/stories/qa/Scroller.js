@@ -310,7 +310,7 @@ storiesOf('Scroller', module)
 					</Group>
 				</UiScroller>
 			</div>
-    )
+		)
 	)
 	.add(
 		'With Large Container',
