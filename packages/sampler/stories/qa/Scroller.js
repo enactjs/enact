@@ -19,10 +19,6 @@ import {boolean, select, number} from '../../src/enact-knobs';
 
 Scroller.displayName = 'Scroller';
 
-const CustomItem = (props) => {
-	return <Item style={{height: '100px'}} {...props} />;
-};
-
 const itemData = [];
 for (let i = 0; i < 100; i++) {
 	itemData.push(`Item ${i}`);
@@ -166,12 +162,21 @@ class ScrollerWithSpotlightTargetCalculation extends React.Component {
 	render () {
 		return (
 			<div>
-				<Button>hello</Button>
-				<Scroller focusableScrollbar style={{height: ri.scale(300)}}>
-					<Repeater childComponent={CustomItem}>
-						{itemData}
-					</Repeater>
-				</Scroller>
+				<Panel>
+					<Header title='Scroll Intent (Scroller)'>
+						<Button>hello</Button>
+					</Header>
+					<Scroller
+						focusableScrollbar
+						data-webos-voice-focused
+					>
+						<Repeater
+							childComponent={Item}
+						>
+							{itemData}
+						</Repeater>
+					</Scroller>
+				</Panel>
 			</div>
 		);
 	}
@@ -354,8 +359,6 @@ storiesOf('Scroller', module)
 	).add(
 		'With Spotlight Target Calculation',
 		() => (
-			<div>
-				<ScrollerWithSpotlightTargetCalculation />
-			</div>
+			<ScrollerWithSpotlightTargetCalculation />
 		)
 	);
