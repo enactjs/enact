@@ -4,7 +4,6 @@ import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
-import {on, off} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -28,21 +27,17 @@ const
 		overscrollTypeOnce: 2,
 		overscrollTypeDone: 9,
 		overscrollVelocityFactor: 300,
-		paginationPageMultiplier: 0.8,
 		scrollStopWaiting: 200,
 		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	},
 	{
 		epsilon,
-		isPageDown,
-		isPageUp,
 		nop,
 		overscrollTypeDone,
 		overscrollTypeHold,
 		overscrollTypeNone,
 		overscrollTypeOnce,
 		overscrollVelocityFactor,
-		paginationPageMultiplier,
 		scrollStopWaiting,
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
@@ -180,14 +175,6 @@ class ScrollableBaseNative extends Component {
 		 * @private
 		 */
 		onFlick: PropTypes.func,
-
-		/**
-		 * Called when pressing a key.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onKeyDown: PropTypes.func,
 
 		/**
 		 * Called when trigerring a mousedown event.
@@ -421,8 +408,6 @@ class ScrollableBaseNative extends Component {
 	componentDidMount () {
 		this.addEventListeners();
 		this.updateScrollbars();
-
-		on('keydown', this.onKeyDown);
 	}
 
 	componentWillUpdate () {
@@ -479,7 +464,6 @@ class ScrollableBaseNative extends Component {
 		this.scrollStopJob.stop();
 
 		this.removeEventListeners();
-		off('keydown', this.onKeyDown);
 
 		if (this.context.Subscriber) {
 			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
@@ -750,32 +734,6 @@ class ScrollableBaseNative extends Component {
 				this.scrollOnScroll(scrollLeft, scrollTop);
 				this.scrollRaFId = null;
 			});
-		}
-	}
-
-	scrollByPage = (keyCode) => {
-		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
-		// scroller as a plain container
-		if (!this.state.isVerticalScrollbarVisible) return;
-
-		const
-			bounds = this.getScrollBounds(),
-			canScrollVertically = this.canScrollVertically(bounds),
-			pageDistance = (isPageUp(keyCode) ? -1 : 1) * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
-
-		this.lastInputType = 'pageKey';
-
-		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.pageKey, !this.props.noAnimation);
-	}
-
-	onKeyDown = (ev) => {
-		if (this.props.onKeyDown) {
-			forward('onKeyDown', ev, this.props);
-		} else if (isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) {
-			ev.preventDefault();
-			if (!ev.repeat) {
-				this.scrollByPage(ev.keyCode);
-			}
 		}
 	}
 
@@ -1387,7 +1345,6 @@ class ScrollableBaseNative extends Component {
 		delete rest.horizontalScrollbar;
 		delete rest.noAnimation;
 		delete rest.onFlick;
-		delete rest.onKeyDown;
 		delete rest.onMouseDown;
 		delete rest.onScroll;
 		delete rest.onScrollStart;
