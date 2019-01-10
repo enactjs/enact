@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Scroller` scrolling to boundary behavior for short scrollers
 - `moonstone/VirtualList` to focus an item properly by `scrollTo` API immediately after a prior call to the same position
 
 ## [2.2.8] - 2018-12-06

@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
-import {boolean, select} from '../../src/enact-knobs';
+import {boolean, select, number} from '../../src/enact-knobs';
 
 Scroller.displayName = 'Scroller';
 
@@ -317,4 +317,17 @@ storiesOf('Scroller', module)
 		() => (
 			<ScrollerWithLargeContainer />
 		)
+	)
+	.add(
+		'Test scrolling to boundary with small overflow',
+		() => {
+			const size = number('Spacer size', {min: 0, max: 300}, 100);
+			return (
+				<Scroller style={{height: 200}}>
+					<Item>1</Item>
+					<div style={{height: size}}>{size}px Spacer</div>
+					<Item style={{marginBottom: '18px'}}>3</Item>
+				</Scroller>
+			);
+		}
 	);
