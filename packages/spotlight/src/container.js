@@ -1,3 +1,5 @@
+/* global process */
+
 /**
  * Exports methods and members for creating and maintaining spotlight containers.
  *
@@ -551,7 +553,11 @@ const configureDefaults = (config) => {
  * @public
  */
 const isNavigable = (node, containerId, verify) => {
-	if (!node || (node.offsetWidth <= 0 && node.offsetHeight <= 0)) {
+	if (!node || (
+		// jsdom reports all nodes as having no size so we must skip this condition in our tests
+		process.env.NODE_ENV !== 'test' &&
+		node.offsetWidth <= 0 && node.offsetHeight <= 0
+	)) {
 		return false;
 	}
 

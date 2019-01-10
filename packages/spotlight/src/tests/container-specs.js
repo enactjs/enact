@@ -382,7 +382,7 @@ describe('container', () => {
 		beforeEach(setupContainers);
 		afterEach(teardownContainers);
 
-		test.skip(
+		test(
 			'should return the last focused element when enterTo is "last-focused"',
 			testScenario(
 				scenarios.containerWithDefaultAndLastFocused,
@@ -402,7 +402,7 @@ describe('container', () => {
 			)
 		);
 
-		test.skip(
+		test(
 			'should return the default spottable element when enterTo is "last-focused" but no element has been focused',
 			testScenario(
 				scenarios.containerWithDefaultAndLastFocused,
@@ -456,7 +456,7 @@ describe('container', () => {
 			)
 		);
 
-		test.skip(
+		test(
 			'should return the default spottable element when enterTo is "default-element"',
 			testScenario(
 				scenarios.containerWithDefaultAndLastFocused,
@@ -474,7 +474,7 @@ describe('container', () => {
 			)
 		);
 
-		test.skip(
+		test(
 			'should return the default spottable element when enterTo is "default-element" and defaultElement contains an array of selectors',
 			testScenario(
 				scenarios.containerWithDefaultAndLastFocused,
@@ -547,7 +547,7 @@ describe('container', () => {
 			)
 		);
 
-		test.skip(
+		test(
 			'should return the default element when enterTo is "default-element" and defaultElement is within a subcontainer',
 			testScenario(
 				scenarios.complexTree,
@@ -600,7 +600,7 @@ describe('container', () => {
 			)
 		);
 
-		test.skip(
+		test(
 			'should return the default element when enterTo is not configured and defaultElement is configured',
 			testScenario(
 				scenarios.containerWithDefaultAndLastFocused,
@@ -617,7 +617,7 @@ describe('container', () => {
 			)
 		);
 
-		test.skip('should cascade search into child containers with', testScenario(
+		test('should cascade search into child containers with', testScenario(
 			scenarios.nestedContainersWithDefaultAndLastFocused,
 			(root) => {
 				configureContainer('container', {
@@ -638,7 +638,7 @@ describe('container', () => {
 			}
 		));
 
-		test.skip(
+		test(
 			'should cascade search into child containers when multiple containers have enterTo configured',
 			testScenario(
 				scenarios.nestedContainersWithDefaultAndLastFocused,
