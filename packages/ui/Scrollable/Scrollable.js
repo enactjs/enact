@@ -14,7 +14,6 @@ import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
-import {on, off} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
