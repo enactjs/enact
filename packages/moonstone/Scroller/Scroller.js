@@ -152,29 +152,33 @@ class ScrollerBase extends Component {
 	 * @private
 	 */
 	calculateScrollTop = (item) => {
-		const roundToBoundary = (sb, st, sh) => {
-			const threshold = ri.scale(24);
-
+		const threshold = ri.scale(24);
+		const roundToStart = (sb, st) => {
 			// round to start
 			if (st < threshold) return 0;
 
+			return st;
+		};
+		const roundToEnd = (sb, st, sh) => {
 			// round to end
 			if (sh - (st + sb.height) < threshold) return sh - sb.height;
 
 			return st;
 		};
-		const isItemBeforeView = (ib, sb, d) => ib.top + d < sb.top;
-		const isItemAfterView = (ib, sb, d) => ib.top + d + ib.height > sb.top + sb.height;
+		// adding threshold into these determinations ensures that items that are within that are
+		// near the bounds of the scroller cause the edge to be scrolled into view even when the
+		// itme itself is in view (e.g. due to margins)
+		const isItemBeforeView = (ib, sb, d) => ib.top + d - threshold < sb.top;
+		const isItemAfterView = (ib, sb, d) => ib.top + d + ib.height + threshold > sb.top + sb.height;
 		const canItemFit = (ib, sb) => ib.height <= sb.height;
 		const calcItemAtStart = (ib, sb, st, d) => ib.top + st + d - sb.top;
 		const calcItemAtEnd = (ib, sb, st, d) => ib.top + ib.height + st + d - (sb.top + sb.height);
 		const calcItemInView = (ib, sb, st, sh, d) => {
 			if (isItemBeforeView(ib, sb, d)) {
-				return roundToBoundary(sb, calcItemAtStart(ib, sb, st, d), sh, d);
+				return roundToStart(sb, calcItemAtStart(ib, sb, st, d));
 			} else if (isItemAfterView(ib, sb, d)) {
-				return roundToBoundary(sb, calcItemAtEnd(ib, sb, st, d), sh, d);
+				return roundToEnd(sb, calcItemAtEnd(ib, sb, st, d), sh);
 			}
-
 			return st;
 		};
 
