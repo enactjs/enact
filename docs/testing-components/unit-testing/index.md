@@ -7,9 +7,9 @@ title: Unit Testing
 ### Running Tests
 
 If you have created a enact project using the `enact cli` it will have everything you need 
-to run tests. For a single-run, execute `enact test start --single-run --browsers PhantomJS`. 
+to run tests. For a single-run, execute `enact test`. 
 You can also have the tests automatically run each time the filesystem changes simply with 
-`enact test start`. If you built your app using `enact cli` you can also use 
+`enact test`. If you built your app using `enact cli` you can also use 
 `npm run test` and `npm run test-watch` for short. Both commands will execute 
 the test suite and output the results to the console. If you are working on 
 framework modules, at a minimum you should perform the single test run on your 
@@ -32,12 +32,9 @@ component or item under test and end with the `"-specs.js"` suffix.
 
 We use a dizzying number of tools to perform unit testing.  A quick overview of the different tools can be helpful.
 
-*   [Karma](https://karma-runner.github.io/1.0/index.html) - A tool for running tests in a browser (real or headless).  This tool launches Mocha.
-*   [Mocha](https://mochajs.org/) - A test framework.  This tool lets us set up suites of tests
-*   [Chai](http://chaijs.com/) - An assertion library.  This library lets us write expressive tests in the suites.  We use a wrapper called `dirty-chai` to avoid linting problems with Chai's use of properties for validation.
-*   [Sinon](http://sinonjs.org/) - A mock library.  Useful for adding mocks and spies to components under test.
+*   [Jest](https://jestjs.io/) - A test framework. This tool allows us to setup, assert and run tests. We can also use `jest` as a mocking library.
 *   [Enzyme](http://airbnb.io/enzyme/) - A test library for use with React.  It allows us to shallowly render components and inspect the output.
-*   [PhantomJS](http://phantomjs.org/) - A 'headless' browser.  This allows us to execute tests quickly without having to launch a controlled browser environment and without having to actually render content to the screen.
+*   [jsdom](https://github.com/jsdom/jsdom) - A pure-JavaScript implementation of many web standards, notably the WHATWG DOM and HTML Standards, for use with Node.js.
 
 ## Unit Testing
 
@@ -46,10 +43,8 @@ We use a dizzying number of tools to perform unit testing.  A quick overview of 
 Unit testing is the core of our testing platform. Unit testing only tests the smallest units of code. Typically a test
 just tests a function/method. For Enact framework developers testing will also extend into component and virtual DOM testing.
 
-We are using [Mocha](https://mochajs.org/) with [Chai](http://chaijs.com/) as our testing framework. We won't cover all the functions this gives us in this document. We
-suggest looking at the [Chai API](http://chaijs.com/api/) after finishing this if you want to know all of the things Chai can give you.
-
-We are also using Chai's [expect](http://chaijs.com/guide/styles/) syntax.
+We are using [Jest](https://jestjs.io/) as our testing framework. We won't cover all the functions this gives us in this document. We
+suggest looking at the [Jest Docs](https://jestjs.io/docs/en/api) after finishing this if you want to know all of the things Jest can give you.
 
 Say you have a function like this:
 
@@ -59,14 +54,14 @@ const add = (numA, numB) => {
 }
 ```
 
-To test this function in mocha we could write something like:
+To test this function in `Jest` we could write something like:
 
 ```js
-it('Should add the two arguments together', () => { 
+test('Should add the two arguments together', () => { 
 	const expected = 3;
 	const actual = add(1,2)
 	
-	expect(actual).to.equal(expected);
+	expect(actual).toBe(expected);
 });
 ```
 
@@ -93,21 +88,21 @@ code, but it does show where unit tests can break down because of certain assump
 Something better would probably be:
 
 ```js
-it('Should add the two arguments together', () => {
+test('Should add the two arguments together', () => {
 	let expected = 3;
 	let actual = add(1,2);
 	
-	expect(actual).to.equal(expected);
+	expect(actual).toBe(expected);
 	
 	let expected = 30;
 	let actual = add(10,20);
 	
-	expect(actual).to.equal(expected);
+	expect(actual).toBe(expected);
 	
 	let expected = 123;
 	let actual = add(111, 12);
 	
-	expect(actual).to.equal(expected);
+	expect(actual).toBe(expected);
 });
 ```
 
@@ -126,14 +121,14 @@ const Text = (props) => {
 	return <p>{props.content}</p>;
 }
 
-it('Should contain text', () => { 
-	const Text = shallow( 
+test('Should contain text', () => { 
+	const subject = shallow( 
 		<Text content='sample' /> 
 	);
 	
 	const expected = 'sample'; 
-	const actual = Text.text()
-	expect(actual).to.equal(expected); 
+	const actual = subject.text()
+	expect(actual).toBe(expected); 
 });
 ```
 
@@ -188,9 +183,9 @@ const returnArg (arg) => {
 	return arg;
 }
 
-it('Should return arg', () =>{ 
+test('Should return arg', () =>{ 
 	const actual = returnArg('sample');
-	expect(actual).to.equal('sample');
+	expect(actual).toBe('sample');
 });
 ```
 
@@ -208,26 +203,26 @@ const Text = (props) => {
 }
 
 //Example A - Bad
-it('Should pass prop to component', () => {
+test('Should pass prop to component', () => {
 	const Text = shallow(
 	    <Text content='sample' />
 	);
 	
 	const expected = 'sample';
 	const contentProp = Text.prop('content')
-	expect(contentProp).to.equal(expected);
+	expect(contentProp).toBe(expected);
 });
 
 //Example B - Better
 
-it('Should contain text', () => { 
-	const Text = shallow( 
+test('Should contain text', () => { 
+	const subject = shallow( 
 	   <Text content='sample' /> 
 	);
 	
 	const expected = 'sample'; 
-	const actual = Text.text()
-	expect(actual).to.equal(expected); 
+	const actual = subject.text()
+	expect(actual).toBe(expected); 
 }); 
 ```
 

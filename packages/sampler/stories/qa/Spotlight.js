@@ -403,6 +403,28 @@ storiesOf('Spotlight', module)
 		)
 	)
 	.add(
+		'Navigating into overflow containers',
+		() => (
+			<div>
+				<Item>Before last-focused Container + Scroller</Item>
+				<Container style={{outline: '1px dotted #ffffff80'}}>
+					<Scroller>
+						<ExpandableItem disabled title="Expandable Item">
+							<Button>Hiding!</Button>
+						</ExpandableItem>
+						<Item>Item A</Item>
+						<Item disabled>Item B</Item>
+						<Item>Item C</Item>
+						<ExpandableItem disabled title="Expandable Item">
+							<Button>Hiding!</Button>
+						</ExpandableItem>
+					</Scroller>
+				</Container>
+				<Item>After last-focused Container + Scroller</Item>
+			</div>
+		)
+	)
+	.add(
 		'Kitchen Sink',
 		() => (
 			<div>

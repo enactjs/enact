@@ -210,6 +210,7 @@ class ExpandableInputBase extends React.Component {
 		if (!this.props.open && nextProps.open) {
 			initialValue = nextProps.value;
 		} else if (this.props.open && !nextProps.open) {
+			this.paused.resume();
 			initialValue = null;
 		}
 

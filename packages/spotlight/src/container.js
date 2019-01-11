@@ -1,3 +1,5 @@
+/* global process */
+
 /**
  * Exports methods and members for creating and maintaining spotlight containers.
  *
@@ -11,7 +13,7 @@ import {coerceArray} from '@enact/core/util';
 import intersection from 'ramda/src/intersection';
 import last from 'ramda/src/last';
 
-import {contains, matchSelector, getContainerRect, getRect} from './utils';
+import {contains, matchSelector, getContainerRect, getRect, intersects} from './utils';
 
 const containerAttribute = 'data-spotlight-id';
 const containerConfigs   = new Map();
@@ -551,7 +553,11 @@ const configureDefaults = (config) => {
  * @public
  */
 const isNavigable = (node, containerId, verify) => {
-	if (!node || (node.offsetWidth <= 0 && node.offsetHeight <= 0)) {
+	if (!node || (
+		// jsdom reports all nodes as having no size so we must skip this condition in our tests
+		process.env.NODE_ENV !== 'test' &&
+		node.offsetWidth <= 0 && node.offsetHeight <= 0
+	)) {
 		return false;
 	}
 
@@ -712,13 +718,23 @@ function getContainerNavigableElements (containerId) {
 	}
 
 	if (!next) {
-		const spottables = getSpottableDescendants(containerId);
+		let spottables = overflow ?
+			// overflow requires deep recursion to handle selecting the children of unrestricted
+			// containers or restricted containers larger than the container
+			getDeepSpottableDescendants(containerId) :
+			getSpottableDescendants(containerId);
 
-		// if there isn't a preferred entry on an overflow container, try to find the first element
-		// in view
+		// if there isn't a preferred entry on an overflow container, filter the visible elements
 		if (overflow) {
 			const containerRect = getContainerRect(containerId);
-			next = spottables.find(element => contains(containerRect, getRect(element)));
+			next = spottables.filter(element => {
+				const elementRect = getRect(element);
+				if (isContainer(element)) {
+					return intersects(containerRect, elementRect);
+				}
+
+				return contains(containerRect, getRect(element));
+			});
 		}
 
 		// otherwise, return all spottables within the container
