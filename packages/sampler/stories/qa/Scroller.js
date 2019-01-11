@@ -163,7 +163,7 @@ class ScrollerWithSpotlightTargetCalculation extends React.Component {
 		return (
 			<div>
 				<Panel>
-					<Header title='Scroll Intent (Scroller)'>
+					<Header title="Scroll Intent (Scroller)">
 						<Button>hello</Button>
 					</Header>
 					<Scroller
