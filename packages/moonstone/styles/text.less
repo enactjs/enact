@@ -41,6 +41,22 @@
 	}, @target);
 }
 
+// Convenience method added to simply set the font size. Please don't use this inside the framework
+// as it will generate a significant amount of selectors and rules that might not be minified.
+// The framework offers more direct and more efficient means of assigning multiple rules at once.
+// This is primarily a convenience for external app developers.
+// Usage:
+//    0 args -> default size for latin is applied to both latin and non-latin
+//    1 arg  -> that size is applied to both latin and non-latin
+//    2 args -> first is applied to latin, second to non-latin
+.moon-font-size(@font-size: @moon-body-font-size; @nlfont-size: @font-size) {
+	font-size: @font-size;
+
+	.moon-locale-non-latin({
+		font-size: @nlfont-size;
+	});
+}
+
 // Generic Non-Latin Font Rule generator
 .moon-locale-non-latin(@nlrules; @target) when (isruleset(@nlrules)) and (@target = self) {
 	&:global(.enact-locale-non-latin) {

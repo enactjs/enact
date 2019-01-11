@@ -14,36 +14,36 @@ const decrement = (slider) => tap(slider.find('Icon').last());
 const increment = (slider) => tap(slider.find('Icon').first());
 describe('EditableIntegerPicker', () => {
 
-	it('should render a single child with the current value', function () {
+	test('should render a single child with the current value', () => {
 		const picker = mount(
 			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />
 		);
 		const expected = 10;
 		const actual = parseInt(picker.find('PickerItem').text());
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should increase by step amount on increment press', function () {
+	test('should increase by step amount on increment press', () => {
 		const picker = mount(
 			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={10} />
 		);
 		increment(picker);
 		const expected = 20;
 		const actual = parseInt(picker.find('PickerItem').first().text());
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should decrease by step amount on decrement press', function () {
+	test('should decrease by step amount on decrement press', () => {
 		const picker = mount(
 			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={10} />
 		);
 		decrement(picker);
 		const expected = 0;
 		const actual = parseInt(picker.find('PickerItem').first().text());
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should enable input field on click', function () {
+	test('should enable input field on click', () => {
 		const picker = mount(
 			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />
 		);
@@ -51,10 +51,10 @@ describe('EditableIntegerPicker', () => {
 		picker.find('PickerItem').simulate('click', {target: {type: 'click'}});
 		const expected = 1;
 		const actual = picker.find('input').length;
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should disable input when blurred', function () {
+	test('should disable input when blurred', () => {
 		const node = document.body.appendChild(document.createElement('div'));
 		const picker = mount(
 			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
@@ -74,46 +74,52 @@ describe('EditableIntegerPicker', () => {
 
 		node.parentNode.removeChild(node);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should take value inputted and navigate to the value on blur', function () {
-		const node = document.body.appendChild(document.createElement('div'));
-		const picker = mount(
-			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
-			{attachTo: node}
-		);
+	test(
+		'should take value inputted and navigate to the value on blur',
+		() => {
+			const node = document.body.appendChild(document.createElement('div'));
+			const picker = mount(
+				<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
+				{attachTo: node}
+			);
 
-		picker.find('PickerItem').simulate('click', {target: {type: 'click'}});
+			picker.find('PickerItem').simulate('click', {target: {type: 'click'}});
 
-		const input = node.querySelector('input');
-		input.focus();
-		input.value = 38;
-		input.blur();
+			const input = node.querySelector('input');
+			picker.find('input').simulate('focus');
+			input.value = 38;
+			input.blur();
 
-		picker.update();
+			picker.update();
 
-		const expected = 38;
-		const actual = parseInt(picker.find('PickerItem').first().text());
+			const expected = 38;
+			const actual = parseInt(picker.find('PickerItem').first().text());
 
-		node.parentNode.removeChild(node);
+			node.parentNode.removeChild(node);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should enable input field when some number is typed on the picker', function () {
-		const picker = mount(
-			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />
-		);
+	test(
+		'should enable input field when some number is typed on the picker',
+		() => {
+			const picker = mount(
+				<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />
+			);
 
-		picker.simulate('keyDown', {keyCode: 50});
-		const expected = 1;
-		const actual = picker.find('input').length;
+			picker.simulate('keyDown', {keyCode: 50});
+			const expected = 1;
+			const actual = picker.find('input').length;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should pause the spotlight when input is focused', function () {
+	test('should pause the spotlight when input is focused', () => {
 		const node = document.body.appendChild(document.createElement('div'));
 		const picker = mount(
 			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
@@ -130,10 +136,10 @@ describe('EditableIntegerPicker', () => {
 		Spotlight.resume();
 		node.parentNode.removeChild(node);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should resume the spotlight when input is blurred', function () {
+	test('should resume the spotlight when input is blurred', () => {
 		const node = document.body.appendChild(document.createElement('div'));
 		const picker = mount(
 			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
@@ -151,16 +157,16 @@ describe('EditableIntegerPicker', () => {
 
 		node.parentNode.removeChild(node);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should be disabled when limited to a single value', function () {
+	test('should be disabled when limited to a single value', () => {
 		const picker = shallow(
 			<EditableIntegerPickerBase min={0} max={0} value={0} />
 		);
 
 		const actual = picker.find('SpottablePicker').last().prop('disabled');
-		expect(actual).to.be.true();
+		expect(actual).toBe(true);
 	});
 
 });

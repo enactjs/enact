@@ -18,7 +18,7 @@ describe('FloatingLayer Specs', () => {
 		document.body.removeChild(div);
 	});
 
-	it('should not render if FloatingLayer is not open', () => {
+	test('should not render if FloatingLayer is not open', () => {
 		const wrapper = mount(
 			<FloatingLayerBase><p>Hi</p></FloatingLayerBase>,
 			{context}
@@ -26,10 +26,10 @@ describe('FloatingLayer Specs', () => {
 
 		const expected = null;
 		const actual = wrapper.instance().node;
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should render if FloatingLayer is open', () => {
+	test('should render if FloatingLayer is open', () => {
 		const wrapper = mount(
 			<FloatingLayerBase open><p>Hi</p></FloatingLayerBase>,
 			{context}
@@ -37,6 +37,6 @@ describe('FloatingLayer Specs', () => {
 
 		const expected = 1;
 		const actual = wrapper.instance().node.querySelectorAll('p').length;
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });

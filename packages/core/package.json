@@ -1,14 +1,14 @@
 {
   "name": "@enact/core",
-  "version": "2.2.5",
+  "version": "2.2.8",
   "description": "Enact is an open source JavaScript framework containing everything you need to create a fast, scalable mobile or web application.",
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",
     "lint": "enact lint --strict",
-    "test": "enact test start --single-run --browsers PhantomJS",
-    "test-json": "enact test start --single-run --browsers PhantomJS --reporters json",
-    "test-watch": "enact test start --browsers PhantomJS",
+    "test": "enact test",
+    "test-json": "enact test --json",
+    "test-watch": "enact test --watch",
     "transpile": "enact transpile"
   },
   "license": "Apache-2.0",

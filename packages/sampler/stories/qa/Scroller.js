@@ -1,16 +1,19 @@
 import Button from '@enact/moonstone/Button';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import Scroller from '@enact/moonstone/Scroller';
+import UiScroller from '@enact/ui/Scroller';
 import Item from '@enact/moonstone/Item';
 import Divider from '@enact/moonstone/Divider';
 import ri from '@enact/ui/resolution';
 import Group from '@enact/ui/Group';
+import Spotlight from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
-import {boolean, select} from '../../src/enact-knobs';
+import {boolean, select, number} from '../../src/enact-knobs';
 
 Scroller.displayName = 'Scroller';
 
@@ -121,6 +124,34 @@ class ScrollerWithTwoExpandableList extends React.Component {
 					</ExpandableList>
 				</Scroller>
 			</div>
+		);
+	}
+}
+
+const Container = SpotlightContainerDecorator('div');
+
+class ScrollerWithLargeContainer extends React.Component {
+	componentDidMount () {
+		setTimeout(() => {
+			Spotlight.focus('scroller');
+		}, 50);
+	}
+
+	render () {
+		return (
+			<Scroller focusableScrollbar spotlightId="scroller" style={{height: 200}}>
+				<Container>
+					<Item>Hello</Item>
+					<Item>Hello</Item>
+					<Item>Hello</Item>
+					<Item>Hello</Item>
+					<Item>Hello</Item>
+					<Item>Hello</Item>
+					<Item>Hello</Item>
+					<Item>Hello</Item>
+					<Item>Hello</Item>
+				</Container>
+			</Scroller>
 		);
 	}
 }
@@ -263,4 +294,40 @@ storiesOf('Scroller', module)
 		() => (
 			<ScrollerWithTwoExpandableList />
 		)
+	)
+	.add(
+		'With Two ui:Scroller',
+		() => (
+			<div style={{display: 'flex', height: ri.unit(399, 'rem')}}>
+				<UiScroller>
+					<Group childComponent={Item}>
+						{itemData}
+					</Group>
+				</UiScroller>
+				<UiScroller>
+					<Group childComponent={Item}>
+						{itemData}
+					</Group>
+				</UiScroller>
+			</div>
+		)
+	)
+	.add(
+		'With Large Container',
+		() => (
+			<ScrollerWithLargeContainer />
+		)
+	)
+	.add(
+		'Test scrolling to boundary with small overflow',
+		() => {
+			const size = number('Spacer size', {min: 0, max: 300}, 100);
+			return (
+				<Scroller style={{height: 200}}>
+					<Item>1</Item>
+					<div style={{height: size}}>{size}px Spacer</div>
+					<Item style={{marginBottom: '18px'}}>3</Item>
+				</Scroller>
+			);
+		}
 	);
