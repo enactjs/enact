@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` property `childProps` to support additional props included in the object passed to the `itemsRenderer` callback
 
+## [2.2.9] - 2019-01-11
+
 ### Fixed
 
 - `moonstone/Scroller` scrolling to boundary behavior for short scrollers
