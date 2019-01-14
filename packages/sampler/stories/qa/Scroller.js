@@ -330,4 +330,19 @@ storiesOf('Scroller', module)
 				</Scroller>
 			);
 		}
+	).add(
+		'With Spotlight Target Calculation',
+		() => (
+			<div>
+				<Button>hello</Button>
+				<Scroller
+					focusableScrollbar
+					style={{height: 400}}
+				>
+					<Group childComponent={Item}>
+						{itemData}
+					</Group>
+				</Scroller>
+			</div>
+		)
 	);
