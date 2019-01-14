@@ -339,9 +339,7 @@ storiesOf('Scroller', module)
 					focusableScrollbar
 					style={{height: 400}}
 				>
-					<Group
-						childComponent={Item}
-					>
+					<Group childComponent={Item}>
 						{itemData}
 					</Group>
 				</Scroller>
