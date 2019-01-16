@@ -30,6 +30,7 @@ storiesOf('Remeasurable', module)
 		() => (
 			<Scroller style={{height: ri.unit(399, 'rem'), width: ri.unit(501, 'rem')}}>
 				<NoUpdate>
+					<Item marqueeOn="render">ABCDEFGHIJKLMNOPQRST</Item>
 					<Item>ABCDEFGHIJKLMNOPQRST</Item>
 					<SelectableItem>
 						SELECTABLE ITEM ABCDEFG

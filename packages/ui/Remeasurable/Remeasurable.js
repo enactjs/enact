@@ -35,7 +35,6 @@ class Remeasurable extends React.Component {
 	}
 
 	static getDerivedStateFromProps = (nextProps, state) => {
-		console.log('remasur', nextProps[nextProps.trigger])
 		if (nextProps[nextProps.trigger] !== state[nextProps.trigger]) {
 			return {
 				remeasure: perfNow(),

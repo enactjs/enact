@@ -10,7 +10,6 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
@@ -363,11 +362,8 @@ class ScrollableBase extends Component {
 		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 	}
 
-	static contextTypes = contextTypesState
-
 	static childContextTypes = {
-		...contextTypesResize,
-		...contextTypesState
+		...contextTypesResize
 	}
 
 	static defaultProps = {
@@ -413,13 +409,8 @@ class ScrollableBase extends Component {
 	}
 
 	getChildContext = () => ({
-		invalidateBounds: this.enqueueForceUpdate,
-		Subscriber: this.publisher.getSubscriber()
+		invalidateBounds: this.enqueueForceUpdate
 	})
-
-	componentWillMount () {
-		this.publisher = Publisher.create('resize', this.context.Subscriber);
-	}
 
 	componentDidMount () {
 		this.addEventListeners();
@@ -461,16 +452,6 @@ class ScrollableBase extends Component {
 			if (!this.deferScrollTo) {
 				this.scrollTo(this.scrollToInfo);
 			}
-		}
-
-		// publish container resize changes
-		const horizontal = isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
-		const vertical = isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
-		if (horizontal || vertical) {
-			this.publisher.publish({
-				horizontal,
-				vertical
-			});
 		}
 	}
 
