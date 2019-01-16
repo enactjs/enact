@@ -851,18 +851,7 @@ const ScrollableVirtualList = (props) => (
 	/>
 );
 
-ScrollableVirtualList.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
-	/**
-	 * The layout direction of the list.
-	 *
-	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'vertical'
-	 * @public
-	 */
+ScrollableVirtualList.propTypes = {
 	direction: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 

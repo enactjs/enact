@@ -69,7 +69,7 @@ const defaultConfig = {
 	* Invalidate the distance if any property (like 'inline') changes.
 	* Expects an array of props which on change trigger invalidateMetrics.
 	*
-	* @type {Array}
+	* @type {String[]}
 	* @default ['remeasure']
 	* @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	*/
@@ -98,10 +98,10 @@ const defaultConfig = {
 	marqueeDirection: (str) => direction(str) === 'rtl' ? 'rtl' : 'ltr'
 };
 
-/**
+/*
  * Checks whether any of the invalidateProps has changed or not
  *
- * @param {Array} propList An array of invalidateProps
+ * @param {String[]} propList An array of invalidateProps
  * @param {Object} prev Previous props
  * @param {Object} next Next props
  * @returns {Boolean} `true` if any of the props changed

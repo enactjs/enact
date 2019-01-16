@@ -36,6 +36,7 @@ const forwardOnHide = forward('onHide');
  * In general, you'll probably want to use the `Transition` instead of `TransitionBase`.
  *
  * @class TransitionBase
+ * @ui
  * @memberof ui/Transition
  * @public
  */
@@ -292,6 +293,7 @@ const TRANSITION_STATE = {
  * properties and events.
  *
  * @class Transition
+ * @ui
  * @memberof ui/Transition
  * @public
  */
