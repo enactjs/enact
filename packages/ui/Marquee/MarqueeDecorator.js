@@ -3,14 +3,11 @@ import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
-import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
 import shallowEqual from 'recompose/shallowEqual';
 
-
-import {RemeasurableContext} from '../Remeasurable';
 import MarqueeBase from './MarqueeBase';
 import {contextTypes} from './MarqueeController';
 

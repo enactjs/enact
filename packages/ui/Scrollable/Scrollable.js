@@ -21,7 +21,6 @@ import React, {Component} from 'react';
 import {privateContextTypes as contextTypesResize} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
-import Remeasurable from '../Remeasurable';
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
@@ -401,9 +400,6 @@ class ScrollableBase extends Component {
 		this.animationInfo = null;
 
 		props.cbScrollTo(this.scrollTo);
-		this.prevVerticalScrollbarVisible = null;
-		this.prevHorizontalScrollbarVisible = null;
-		this.shouldTrigger = false;
 	}
 
 	getChildContext = () => ({
@@ -1307,19 +1303,6 @@ class ScrollableBase extends Component {
 			childRef.containerRef.scrollTop = this.scrollTop;
 			childRef.containerRef.scrollLeft = childRef.getRtlPositionX(this.scrollLeft);
 		}
-	}
-
-	shouldTriggerResize = (isHorizontalScrollbarVisible, isVerticalScrollbarVisible) => {
-		const horizontal = isHorizontalScrollbarVisible !== this.prevHorizontalScrollbarVisible;
-		const vertical = isVerticalScrollbarVisible !== this.prevVerticalScrollbarVisible;
-
-		this.prevHorizontalScrollbarVisible = isHorizontalScrollbarVisible;
-		this.prevVerticalScrollbarVisible = isVerticalScrollbarVisible;
-		if (horizontal || vertical) {
-			return !this.shouldTrigger;
-		}
-
-		return this.shouldTrigger;
 	}
 
 	render () {
