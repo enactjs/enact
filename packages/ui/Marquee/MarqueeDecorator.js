@@ -9,6 +9,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import shallowEqual from 'recompose/shallowEqual';
 
+
+import {RemeasurableContext} from '../Remeasurable';
 import MarqueeBase from './MarqueeBase';
 import {contextTypes} from './MarqueeController';
 
@@ -285,8 +287,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static contextTypes = {
-			...contextTypes,
-			...stateContextTypes
+			...contextTypes
 		}
 
 		static defaultProps = {
@@ -310,12 +311,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.timerState = TimerState.CLEAR;
 			this.distance = null;
 			this.contentFits = false;
-		}
-
-		componentWillMount () {
-			if (this.context.Subscriber) {
-				this.context.Subscriber.subscribe('resize', this.handleResize);
-			}
+			this.lastResizeValue = 0;
 		}
 
 		componentDidMount () {
@@ -346,7 +342,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.forceRestartMarquee = next.marqueeOn === 'render' || (
 					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)
 				);
-
 				this.invalidateMetrics();
 				this.cancelAnimation();
 			} else if (
@@ -385,9 +380,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.context.unregister(this);
 			}
 
-			if (this.context.Subscriber) {
-				this.context.Subscriber.unsubscribe('resize', this.handleResize);
-			}
 			off('keydown', this.handlePointerHide);
 		}
 
@@ -663,14 +655,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.stop();
 		}
 
-		handleResize = () => {
-			if (this.node && !this.props.marqueeDisabled) {
-				this.invalidateMetrics();
-				if (this.state.animating) {
-					this.cancelAnimation();
-					this.resetAnimation();
-				}
-			}
+		handleResize = ({remeasure}) => {
+			// if (this.node && !this.props.marqueeDisabled && (remeasure > this.lastResizeValue)) {
+			// 	console.log('thing')
+			// 	this.invalidateMetrics();
+			// 	if (this.state.animating) {
+			// 		this.cancelAnimation();
+			// 		this.resetAnimation();
+			// 	}
+			// 	this.lastResizeValue = remeasure;
+			// }
 		}
 
 		handleMarqueeComplete = () => {
@@ -785,22 +779,29 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.rtl;
 
 			return (
-				<Wrapped {...rest} onBlur={this.handleBlur} disabled={disabled}>
-					<MarqueeComponent
-						alignment={alignment}
-						animating={this.state.animating}
-						className={configClassName}
-						clientRef={this.cacheNode}
-						distance={this.distance}
-						onMarqueeComplete={this.handleMarqueeComplete}
-						overflow={this.state.overflow}
-						rtl={this.state.rtl}
-						speed={marqueeSpeed}
-						willAnimate={this.state.promoted}
-					>
-						{children}
-					</MarqueeComponent>
-				</Wrapped>
+				<RemeasurableContext.Consumer>
+					{value => {
+						this.handleResize(value);
+						return (
+							<Wrapped {...rest} onBlur={this.handleBlur} disabled={disabled}>
+								<MarqueeComponent
+									alignment={alignment}
+									animating={this.state.animating}
+									className={configClassName}
+									clientRef={this.cacheNode}
+									distance={this.distance}
+									onMarqueeComplete={this.handleMarqueeComplete}
+									overflow={this.state.overflow}
+									rtl={this.state.rtl}
+									speed={marqueeSpeed}
+									willAnimate={this.state.promoted}
+								>
+									{children}
+								</MarqueeComponent>
+							</Wrapped>
+						);
+					}}
+				</RemeasurableContext.Consumer>
 			);
 		}
 

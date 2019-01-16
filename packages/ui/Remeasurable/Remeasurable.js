@@ -7,26 +7,10 @@
  * @private
  */
 import React from 'react';
-import invariant from 'invariant';
-import hoc from '@enact/core/hoc';
-import {contextTypes, Publisher, Subscription} from '@enact/core/internal/PubSub';
 import {perfNow} from '@enact/core/util';
+import PropTypes from 'prop-types';
 
-/**
- * Default config for {@link ui/Remeasurable.RemeasurableDecorator}
- *
- * @memberof ui/Remeasurable.RemeasurableDecorator
- * @hocconfig
- */
-const defaultConfig = {
-	/**
-	 * Configures the event name that triggers the component
-	 *
-	 * @type {String}
-	 * @memberof ui/Remeasurable.RemeasurableDecorator.defaultConfig
-	 */
-	trigger: null
-};
+const RemeasurableContext = React.createContext({remeasure: 0});
 
 /**
  * {@link ui/Remeasurable.RemeasurableDecorator} is a higher-order component which adds the ability
@@ -37,78 +21,55 @@ const defaultConfig = {
  * @hoc
  * @private
  */
-const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {trigger} = config;
+class Remeasurable extends React.Component {
+	static propTypes = {
+		trigger: PropTypes.String
+	}
 
-	invariant(trigger, 'trigger is required by RemeasurableDecorator');
+	constructor (props) {
+		super(props);
+		this.state = {
+			remeasure: 0,
+			[props.trigger]: props[props.trigger]
+		};
+	}
 
-	return class extends React.Component {
-		static displayName = 'RemeasurableDecorator'
-
-		static contextTypes = contextTypes
-
-		static childContextTypes = contextTypes
-
-		constructor (props) {
-			super(props);
-			this.state = {
-				remeasure: null
-			};
-		}
-
-		getChildContext () {
+	static getDerivedStateFromProps = (nextProps, state) => {
+		console.log('remasur', nextProps[nextProps.trigger])
+		if (nextProps[nextProps.trigger] !== state[nextProps.trigger]) {
 			return {
-				Subscriber: this.publisher.getSubscriber()
+				remeasure: perfNow(),
+				[nextProps.trigger]: nextProps[nextProps.trigger]
 			};
 		}
 
-		componentWillMount () {
-			this.publisher = Publisher.create('resize', this.context.Subscriber);
-			this.publisher.publish({
-				remeasure: null
-			});
-
-			if (this.context.Subscriber) {
-				this.context.Subscriber.subscribe('resize', this.handleSubscription);
-			}
-		}
-
-		componentWillReceiveProps (nextProps) {
-			if (this.props[trigger] !== nextProps[trigger]) {
-				this.setState({
-					remeasure: perfNow()
-				});
-			}
-		}
-
-		componentDidUpdate (prevProps, prevState) {
-			if (this.state.remeasure !== prevState.remeasure) {
-				this.publisher.publish(this.state);
-			}
-		}
-
-		componentWillUnmount () {
-			if (this.context.Subscriber) {
-				this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
-			}
-		}
-
-		handleSubscription = ({message}) => {
-			this.updateRemeasure(message);
-		}
-
-		updateRemeasure (state) {
-			this.setState(state);
-			this.publisher.publish(state);
-		}
-
-		render () {
-			return (
-				<Wrapped {...this.props} />
-			);
-		}
+		return null;
 	};
-});
+
+	checkLatestValue (contextValue, state) {
+		if (contextValue.remeasure && contextValue.remeasure > state.remeasure) {
+			return contextValue;
+		}
+
+		return state;
+	}
+
+	render () {
+		return (
+			<RemeasurableContext.Consumer>
+				{value => {
+					const state = this.checkLatestValue(value, this.state);
+
+					return (
+						<RemeasurableContext.Provider value={{remeasure: state.remeasure}}>
+							{this.props.children}
+						</RemeasurableContext.Provider>
+					);
+				}}
+			</RemeasurableContext.Consumer>
+		);
+	}
+}
 
 
 /**
@@ -121,10 +82,6 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
  * @hoc
  * @private
  */
-const Remeasurable = Subscription({
-	channels: ['resize'],
-	mapMessageToProps: (channel, state) => state
-});
 
 export default Remeasurable;
-export {Remeasurable, RemeasurableDecorator};
+export {Remeasurable, RemeasurableContext};

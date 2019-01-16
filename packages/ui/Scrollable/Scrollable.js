@@ -21,6 +21,7 @@ import React, {Component} from 'react';
 import {privateContextTypes as contextTypesResize} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
+import Remeasurable from '../Remeasurable';
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
@@ -400,6 +401,9 @@ class ScrollableBase extends Component {
 		this.animationInfo = null;
 
 		props.cbScrollTo(this.scrollTo);
+		this.prevVerticalScrollbarVisible = null;
+		this.prevHorizontalScrollbarVisible = null;
+		this.shouldTrigger = false;
 	}
 
 	getChildContext = () => ({
@@ -409,12 +413,8 @@ class ScrollableBase extends Component {
 
 	componentWillMount () {
 		this.publisher = Publisher.create('resize', this.context.Subscriber);
-		this.publisher.publish({
-			remeasure: false
-		});
 
 		if (this.context.Subscriber) {
-			this.context.Subscriber.subscribe('resize', this.handleSubscription);
 			this.context.Subscriber.subscribe('i18n', this.handleSubscription);
 		}
 	}
@@ -489,7 +489,6 @@ class ScrollableBase extends Component {
 		off('keydown', this.onKeyDown);
 
 		if (this.context.Subscriber) {
-			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
 			this.context.Subscriber.unsubscribe('i18n', this.handleSubscription);
 		}
 	}
@@ -507,8 +506,6 @@ class ScrollableBase extends Component {
 			if (rtl !== this.state.rtl) {
 				this.setState({rtl});
 			}
-		} else if (channel === 'resize') {
-			this.publisher.publish(message);
 		}
 	}
 
@@ -1312,6 +1309,19 @@ class ScrollableBase extends Component {
 		}
 	}
 
+	shouldTriggerResize = (isHorizontalScrollbarVisible, isVerticalScrollbarVisible) => {
+		const horizontal = isHorizontalScrollbarVisible !== this.prevHorizontalScrollbarVisible;
+		const vertical = isVerticalScrollbarVisible !== this.prevVerticalScrollbarVisible;
+
+		this.prevHorizontalScrollbarVisible = isHorizontalScrollbarVisible;
+		this.prevVerticalScrollbarVisible = isVerticalScrollbarVisible;
+		if (horizontal || vertical) {
+			return !this.shouldTrigger;
+		}
+
+		return this.shouldTrigger;
+	}
+
 	render () {
 		const
 			{className, containerRenderer, noScrollByDrag, style, ...rest} = this.props,
@@ -1349,23 +1359,29 @@ class ScrollableBase extends Component {
 		delete rest.stop;
 		delete rest.verticalScrollbar;
 
-		return containerRenderer({
-			childComponentProps: rest,
-			childWrapper,
-			childWrapperProps,
-			className: scrollableClasses,
-			componentCss: css,
-			handleScroll: this.handleScroll,
-			horizontalScrollbarProps: this.horizontalScrollbarProps,
-			initChildRef: this.initChildRef,
-			initContainerRef: this.initContainerRef,
-			isHorizontalScrollbarVisible,
-			isVerticalScrollbarVisible,
-			rtl,
-			scrollTo: this.scrollTo,
-			style,
-			verticalScrollbarProps: this.verticalScrollbarProps
-		});
+		return (
+			<Remeasurable
+				trigger="resizeTrigger" resizeTrigger={this.shouldTriggerResize(isHorizontalScrollbarVisible, isVerticalScrollbarVisible)}
+			>
+				{containerRenderer({
+					childComponentProps: rest,
+					childWrapper,
+					childWrapperProps,
+					className: scrollableClasses,
+					componentCss: css,
+					handleScroll: this.handleScroll,
+					horizontalScrollbarProps: this.horizontalScrollbarProps,
+					initChildRef: this.initChildRef,
+					initContainerRef: this.initContainerRef,
+					isHorizontalScrollbarVisible,
+					isVerticalScrollbarVisible,
+					rtl,
+					scrollTo: this.scrollTo,
+					style,
+					verticalScrollbarProps: this.verticalScrollbarProps
+				})};
+			</Remeasurable>
+		);
 	}
 }
 
@@ -1414,28 +1430,31 @@ class Scrollable extends Component {
 					scrollTo,
 					style,
 					verticalScrollbarProps
-				}) => (
-					<div
-						className={className}
-						ref={initContainerRef}
-						style={style}
-					>
-						<div className={componentCss.container}>
-							<ChildWrapper {...childWrapperProps}>
-								{childRenderer({
-									...childComponentProps,
-									cbScrollTo: scrollTo,
-									className: componentCss.scrollableFill,
-									initChildRef,
-									onScroll: handleScroll,
-									rtl
-								})}
-							</ChildWrapper>
-							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
+				}) => {
+					return (
+						<div
+							className={className}
+							ref={initContainerRef}
+							style={style}
+						>
+							<div className={componentCss.container}>
+								<ChildWrapper {...childWrapperProps}>
+									{childRenderer({
+										...childComponentProps,
+										cbScrollTo: scrollTo,
+										className: componentCss.scrollableFill,
+										initChildRef,
+										onScroll: handleScroll,
+										rtl
+									})}
+								</ChildWrapper>
+								{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
+							</div>
+							{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
 						</div>
-						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
-					</div>
-				)}
+					)
+					;
+				}}
 			/>
 		);
 	}
