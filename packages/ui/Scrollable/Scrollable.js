@@ -1342,27 +1342,23 @@ class ScrollableBase extends Component {
 		delete rest.stop;
 		delete rest.verticalScrollbar;
 
-		return (
-	
-				containerRenderer({
-					childComponentProps: rest,
-					childWrapper,
-					childWrapperProps,
-					className: scrollableClasses,
-					componentCss: css,
-					handleScroll: this.handleScroll,
-					horizontalScrollbarProps: this.horizontalScrollbarProps,
-					initChildRef: this.initChildRef,
-					initContainerRef: this.initContainerRef,
-					isHorizontalScrollbarVisible,
-					isVerticalScrollbarVisible,
-					rtl,
-					scrollTo: this.scrollTo,
-					style,
-					verticalScrollbarProps: this.verticalScrollbarProps
-				})
-			
-		);
+		return containerRenderer({
+			childComponentProps: rest,
+			childWrapper,
+			childWrapperProps,
+			className: scrollableClasses,
+			componentCss: css,
+			handleScroll: this.handleScroll,
+			horizontalScrollbarProps: this.horizontalScrollbarProps,
+			initChildRef: this.initChildRef,
+			initContainerRef: this.initContainerRef,
+			isHorizontalScrollbarVisible,
+			isVerticalScrollbarVisible,
+			rtl,
+			scrollTo: this.scrollTo,
+			style,
+			verticalScrollbarProps: this.verticalScrollbarProps
+		});
 	}
 }
 
@@ -1411,31 +1407,29 @@ class Scrollable extends Component {
 					scrollTo,
 					style,
 					verticalScrollbarProps
-				}) => {
-					return (
-						<div
-							className={className}
-							ref={initContainerRef}
-							style={style}
-						>
-							<div className={componentCss.container}>
-								<ChildWrapper {...childWrapperProps}>
-									{childRenderer({
-										...childComponentProps,
-										cbScrollTo: scrollTo,
-										className: componentCss.scrollableFill,
-										initChildRef,
-										onScroll: handleScroll,
-										rtl
-									})}
-								</ChildWrapper>
-								{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
-							</div>
-							{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
+				}) => (
+					<div
+						className={className}
+						ref={initContainerRef}
+						style={style}
+					>
+						<div className={componentCss.container}>
+							<ChildWrapper {...childWrapperProps}>
+								{childRenderer({
+									...childComponentProps,
+									cbScrollTo: scrollTo,
+									className: componentCss.scrollableFill,
+									initChildRef,
+									onScroll: handleScroll,
+									rtl
+								})}
+							</ChildWrapper>
+							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
-					)
-					;
-				}}
+						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
+					</div>
+				)
+				}
 			/>
 		);
 	}

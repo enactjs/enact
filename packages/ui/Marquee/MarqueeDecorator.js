@@ -308,7 +308,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.timerState = TimerState.CLEAR;
 			this.distance = null;
 			this.contentFits = false;
-			this.lastResizeValue = 0;
 		}
 
 		componentDidMount () {
@@ -339,6 +338,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.forceRestartMarquee = next.marqueeOn === 'render' || (
 					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)
 				);
+
 				this.invalidateMetrics();
 				this.cancelAnimation();
 			} else if (
