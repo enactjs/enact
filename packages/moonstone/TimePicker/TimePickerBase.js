@@ -43,7 +43,7 @@ class HourPicker extends React.Component {
 		};
 	}
 
-	componentWillReceiveProps (nextProps) {
+	UNSAFE_componentWillReceiveProps (nextProps) {
 		const {children, value} = this.props;
 		const {children: nextChildren, value: nextValue} = nextProps;
 

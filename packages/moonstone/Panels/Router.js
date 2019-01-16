@@ -122,7 +122,7 @@ const Router = class extends React.Component {
 		this.initRoutes(props);
 	}
 
-	componentWillReceiveProps (nextProps) {
+	UNSAFE_componentWillReceiveProps (nextProps) {
 		this.initRoutes(nextProps);
 	}
 

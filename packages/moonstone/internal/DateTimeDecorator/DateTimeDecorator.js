@@ -76,7 +76,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			const newValue = this.toTime(nextProps.value);
 
 			if (nextProps.open && !this.props.open) {
@@ -100,7 +100,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		componentWillUpdate () {
+		UNSAFE_componentWillUpdate () {
 			// check for a new locale when updating
 			this.initI18n();
 		}

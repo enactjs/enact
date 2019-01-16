@@ -26,7 +26,7 @@ const I18nFontDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-u
 			fontOverrideGenerator(this.state.locale);
 		}
 
-		componentWillReceiveProps () {
+		UNSAFE_componentWillReceiveProps () {
 			this.setState((state, nextProps) => {
 				const locale = nextProps.locale || ilib.getLocale();
 				return locale !== state.locale ? {locale} : null;

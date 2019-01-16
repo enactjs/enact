@@ -238,7 +238,7 @@ class ScrollableBase extends Component {
 		configureSpotlightContainer(props);
 	}
 
-	componentWillReceiveProps (nextProps) {
+	UNSAFE_componentWillReceiveProps (nextProps) {
 		configureSpotlightContainer(nextProps);
 	}
 

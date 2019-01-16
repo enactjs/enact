@@ -139,7 +139,7 @@ class View extends React.Component {
 		};
 	}
 
-	componentWillReceiveProps (nextProps) {
+	UNSAFE_componentWillReceiveProps (nextProps) {
 		// changeDirection let's us know we need to switch mid-transition
 		this.changeDirection = this.animation ? this.props.reverseTransition !== nextProps.reverseTransition : false;
 	}

@@ -62,7 +62,7 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		componentWillMount () {
+		UNSAFE_componentWillMount () {
 			this.publisher = Publisher.create('resize', this.context.Subscriber);
 			this.publisher.publish({
 				remeasure: null
@@ -73,7 +73,7 @@ const RemeasurableDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			if (this.props[trigger] !== nextProps[trigger]) {
 				this.setState({
 					remeasure: perfNow()

@@ -81,7 +81,7 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			if (this.props.value !== nextProps.value) {
 				this.setState({useHintText: false});
 			}

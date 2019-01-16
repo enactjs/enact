@@ -54,7 +54,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SpotlightRootDecorator';
 
-		componentWillMount () {
+		UNSAFE_componentWillMount () {
 			if (typeof window === 'object') {
 				Spotlight.initialize({
 					selector: '.' + spottableClass,

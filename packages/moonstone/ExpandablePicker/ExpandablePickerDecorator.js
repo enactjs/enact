@@ -20,7 +20,7 @@ const ExpandablePickerDecorator = hoc((config, Wrapped) => {	// eslint-disable-l
 			};
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			let {value} = this.state;
 
 			// if opening or the props value has changed, use it

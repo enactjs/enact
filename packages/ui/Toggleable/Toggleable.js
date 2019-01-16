@@ -185,7 +185,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			if (this.state.controlled) {
 				this.setState({
 					active: !!nextProps[prop]

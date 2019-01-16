@@ -679,7 +679,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			on('keyup', this.handleKeyUp);
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			// Detect if the number of components has changed
 			const leftCount = countReactChildren(nextProps.leftComponents),
 				rightCount = countReactChildren(nextProps.rightComponents),

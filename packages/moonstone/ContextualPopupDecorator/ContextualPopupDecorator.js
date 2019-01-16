@@ -259,7 +259,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			const current = Spotlight.getCurrent();
 
 			if (this.props.direction !== nextProps.direction) {

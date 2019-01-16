@@ -85,7 +85,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			this.notifyController(nextProps);
 		}
 

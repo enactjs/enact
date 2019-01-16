@@ -312,7 +312,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.contentFits = false;
 		}
 
-		componentWillMount () {
+		UNSAFE_componentWillMount () {
 			if (this.context.Subscriber) {
 				this.context.Subscriber.subscribe('resize', this.handleResize);
 			}
@@ -334,7 +334,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			on('keydown', this.handlePointerHide);
 		}
 
-		componentWillReceiveProps (next) {
+		UNSAFE_componentWillReceiveProps (next) {
 			const {forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpeed, rtl} = this.props;
 			if (
 				locale !== next.locale ||

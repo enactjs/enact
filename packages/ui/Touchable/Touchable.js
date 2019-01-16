@@ -424,7 +424,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			on('mousemove', this.handleGlobalMove, document);
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			if (!this.props.disabled && nextProps.disabled) {
 				this.deactivate();
 				this.hold.end();

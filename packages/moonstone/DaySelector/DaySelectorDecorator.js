@@ -141,7 +141,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 			};
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			const {dayNameLength, locale} = nextProps;
 			if (this.props.dayNameLength !== dayNameLength || this.props.locale !== locale) {
 				this.setState(this.getLocaleState(dayNameLength, locale));

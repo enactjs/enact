@@ -56,7 +56,7 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			};
 		}
 
-		componentWillMount () {
+		UNSAFE_componentWillMount () {
 			this.publisher = Publisher.create('resize', this.context.Subscriber);
 		}
 

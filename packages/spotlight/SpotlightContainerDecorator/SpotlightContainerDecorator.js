@@ -190,7 +190,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			Spotlight.set(this.state.id, cfg);
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			const prevId = this.props.spotlightId;
 
 			let id = nextProps.spotlightId;

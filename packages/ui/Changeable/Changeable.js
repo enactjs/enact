@@ -144,7 +144,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			if (this.state.controlled) {
 				const value = nextProps[prop];
 				this.setState({value});

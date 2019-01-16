@@ -89,7 +89,7 @@ const Subscription = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {};
 		}
 
-		componentWillMount () {
+		UNSAFE_componentWillMount () {
 			if (channels && channels.length && this.context.Subscriber) {
 				channels.forEach(channel => {
 					this.context.Subscriber.subscribe(channel, this.handleSubscription);

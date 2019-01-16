@@ -173,7 +173,7 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {	// eslint-disable-l
 			this.paused = new Pause('Spinner');
 		}
 
-		componentWillMount () {
+		UNSAFE_componentWillMount () {
 			const {blockClickOn} = this.props;
 			const current = Spotlight.getCurrent();
 

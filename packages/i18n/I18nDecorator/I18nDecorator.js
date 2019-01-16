@@ -137,7 +137,7 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.loadResources(this.state.locale);
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			if (this.props.locale !== nextProps.locale) {
 				const state = this.getDerivedStateForLocale(nextProps.locale);
 				if (sync) {

@@ -400,7 +400,7 @@ class ScrollableBaseNative extends Component {
 		Subscriber: this.publisher.getSubscriber()
 	})
 
-	componentWillMount () {
+	UNSAFE_componentWillMount () {
 		this.publisher = Publisher.create('resize', this.context.Subscriber);
 		this.publisher.publish({
 			remeasure: false
@@ -416,7 +416,7 @@ class ScrollableBaseNative extends Component {
 		this.updateScrollbars();
 	}
 
-	componentWillUpdate () {
+	UNSAFE_componentWillUpdate () {
 		this.deferScrollTo = true;
 	}
 

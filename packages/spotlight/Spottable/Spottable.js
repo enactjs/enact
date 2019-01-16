@@ -190,7 +190,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			this.node = ReactDOM.findDOMNode(this);
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			const focusedWhenDisabled = this.isFocused && nextProps.disabled;
 
 			this.setState({

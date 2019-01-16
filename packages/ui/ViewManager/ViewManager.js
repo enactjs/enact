@@ -188,7 +188,7 @@ class ViewManager extends React.Component {
 		index: 0
 	}
 
-	componentWillReceiveProps (nextProps) {
+	UNSAFE_componentWillReceiveProps (nextProps) {
 		this.previousIndex = this.props.index;
 		this.checkReverse(nextProps);
 	}

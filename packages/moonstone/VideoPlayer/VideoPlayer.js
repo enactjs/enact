@@ -692,7 +692,7 @@ const VideoPlayerBase = class extends React.Component {
 		return true;
 	}
 
-	componentWillUpdate (nextProps) {
+	UNSAFE_componentWillUpdate (nextProps) {
 		const
 			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
 			{titleOffsetHeight: titleHeight} = this.state,

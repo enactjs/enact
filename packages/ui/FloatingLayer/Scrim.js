@@ -84,13 +84,13 @@ class Scrim extends React.Component {
 		};
 	}
 
-	componentWillMount () {
+	UNSAFE_componentWillMount () {
 		if (this.props.type === 'translucent') {
 			pushTranslucentScrim(this);
 		}
 	}
 
-	componentWillReceiveProps (nextProps) {
+	UNSAFE_componentWillReceiveProps (nextProps) {
 		if (this.props.type === 'translucent' && nextProps.type !== 'translucent') {
 			removeTranslucentScrim(this);
 			this.setState({visible: true});

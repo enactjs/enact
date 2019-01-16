@@ -435,7 +435,7 @@ class Transition extends React.Component {
 		}
 	}
 
-	componentWillReceiveProps (nextProps) {
+	UNSAFE_componentWillReceiveProps (nextProps) {
 		if (!this.props.visible && nextProps.visible) {
 			this.setState({
 				initialHeight: null,
@@ -450,7 +450,7 @@ class Transition extends React.Component {
 		return (this.state.initialHeight === nextState.initialHeight) || this.props.visible || nextProps.visible;
 	}
 
-	componentWillUpdate (nextProps, nextState) {
+	UNSAFE_componentWillUpdate (nextProps, nextState) {
 		if (nextState.renderState === TRANSITION_STATE.MEASURE) {
 			this.measuringJob.stop();
 		}

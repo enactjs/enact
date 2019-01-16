@@ -132,7 +132,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			if (this.props.locale !== nextProps.locale) {
 				this.translate(nextProps.locale);
 			}
