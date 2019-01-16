@@ -779,29 +779,22 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.rtl;
 
 			return (
-				<RemeasurableContext.Consumer>
-					{value => {
-						this.handleResize(value);
-						return (
-							<Wrapped {...rest} onBlur={this.handleBlur} disabled={disabled}>
-								<MarqueeComponent
-									alignment={alignment}
-									animating={this.state.animating}
-									className={configClassName}
-									clientRef={this.cacheNode}
-									distance={this.distance}
-									onMarqueeComplete={this.handleMarqueeComplete}
-									overflow={this.state.overflow}
-									rtl={this.state.rtl}
-									speed={marqueeSpeed}
-									willAnimate={this.state.promoted}
-								>
-									{children}
-								</MarqueeComponent>
-							</Wrapped>
-						);
-					}}
-				</RemeasurableContext.Consumer>
+				<Wrapped {...rest} onBlur={this.handleBlur} disabled={disabled}>
+					<MarqueeComponent
+						alignment={alignment}
+						animating={this.state.animating}
+						className={configClassName}
+						clientRef={this.cacheNode}
+						distance={this.distance}
+						onMarqueeComplete={this.handleMarqueeComplete}
+						overflow={this.state.overflow}
+						rtl={this.state.rtl}
+						speed={marqueeSpeed}
+						willAnimate={this.state.promoted}
+					>
+						{children}
+					</MarqueeComponent>
+				</Wrapped>
 			);
 		}
 

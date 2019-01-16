@@ -1360,10 +1360,8 @@ class ScrollableBase extends Component {
 		delete rest.verticalScrollbar;
 
 		return (
-			<Remeasurable
-				trigger="resizeTrigger" resizeTrigger={this.shouldTriggerResize(isHorizontalScrollbarVisible, isVerticalScrollbarVisible)}
-			>
-				{containerRenderer({
+	
+				containerRenderer({
 					childComponentProps: rest,
 					childWrapper,
 					childWrapperProps,
@@ -1379,8 +1377,8 @@ class ScrollableBase extends Component {
 					scrollTo: this.scrollTo,
 					style,
 					verticalScrollbarProps: this.verticalScrollbarProps
-				})};
-			</Remeasurable>
+				})
+			
 		);
 	}
 }
