@@ -418,7 +418,7 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
-	componentWillReceiveProps (nextProps) {
+	UNSAFE_componentWillReceiveProps (nextProps) {
 		const first = nextProps.min;
 		const last = nextProps.max;
 		const nextValue = nextProps.value;
