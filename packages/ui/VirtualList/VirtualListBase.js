@@ -52,33 +52,42 @@ const slotsRenderer = ({DraggableChild, index:firstIndex, initItemContainerRef, 
 	);
 };
 
-const SlotManager = ({
-	arrangement,
-	Draggable,
-	Droppable,
-	firstIndex,
-	initItemContainerRef,
-	itemSize,
-	slotItems,
-	slotsRenderer,
-}) => {
-	const
-		SwappableItems = Droppable({slots: slotNames}, slotsRenderer),
-		DraggableChild = Draggable('div');
+class SlotManager extends Component {
+	constructor (props) {
+		super(props);
 
-	return (
-		<SwappableItems
-			arrangeable={true}
-			arrangement={arrangement}
-			children={slotItems}
-			DraggableChild={DraggableChild}
-			index={firstIndex}
-			initItemContainerRef={initItemContainerRef}
-			itemSize={itemSize}
-			role="list"
-		/>
-	);
-};
+		this.SwappableItems = props.Droppable({slots: slotNames}, slotsRenderer);
+		this.DraggableChild = props.Draggable('div');
+	}
+
+	render () {
+		const
+			{
+				arrangement,
+				Draggable,
+				Droppable,
+				firstIndex,
+				initItemContainerRef,
+				itemSize,
+				slotItems,
+				slotsRenderer,
+			} = this.props;
+		const {DraggableChild, SwappableItems} = this;
+
+		return (
+			<SwappableItems
+				arrangeable={true}
+				arrangement={arrangement}
+				children={slotItems}
+				DraggableChild={DraggableChild}
+				index={firstIndex}
+				initItemContainerRef={initItemContainerRef}
+				itemSize={itemSize}
+				role="list"
+			/>
+		);
+	}
+}
 
 /**
  * The shape for the grid list item size
