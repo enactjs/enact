@@ -12,7 +12,7 @@ import Touchable from '../Touchable';
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
-import Registry from '../internal/Registry';
+import Registry from '@enact/core/internal/Registry';
 import {ResizeContext} from '../Remeasurable';
 
 import css from './Scrollable.less';

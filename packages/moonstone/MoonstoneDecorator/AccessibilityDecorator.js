@@ -1,7 +1,7 @@
 import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Registry from '@enact/ui/internal/Registry';
+import Registry from '@enact/core/internal/Registry';
 import {ResizeContext} from '@enact/ui/Remeasurable';
 
 /**
