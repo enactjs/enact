@@ -13,6 +13,8 @@ import Touchable from '../Touchable';
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
+import Registry from '../internal/Registry';
+import {ResizeContext} from '../Remeasurable';
 
 import css from './Scrollable.less';
 
@@ -348,11 +350,8 @@ class ScrollableBaseNative extends Component {
 		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 	}
 
-	static contextTypes = contextTypesState
-
 	static childContextTypes = {
 		...contextTypesResize,
-		...contextTypesState
 	}
 
 	static defaultProps = {
@@ -392,24 +391,14 @@ class ScrollableBaseNative extends Component {
 		// Enable the early bail out of repeated scrolling to the same position
 		this.animationInfo = null;
 
+		this.resize = Registry.create();
+
 		props.cbScrollTo(this.scrollTo);
 	}
 
 	getChildContext = () => ({
 		invalidateBounds: this.enqueueForceUpdate,
-		Subscriber: this.publisher.getSubscriber()
 	})
-
-	componentWillMount () {
-		this.publisher = Publisher.create('resize', this.context.Subscriber);
-		this.publisher.publish({
-			remeasure: false
-		});
-
-		if (this.context.Subscriber) {
-			this.context.Subscriber.subscribe('resize', this.handleSubscription);
-		}
-	}
 
 	componentDidMount () {
 		this.addEventListeners();
@@ -455,10 +444,7 @@ class ScrollableBaseNative extends Component {
 		const horizontal = isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
 		const vertical = isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
 		if (horizontal || vertical) {
-			this.publisher.publish({
-				horizontal,
-				vertical
-			});
+			this.resize.notify({});
 		}
 	}
 
@@ -471,10 +457,6 @@ class ScrollableBaseNative extends Component {
 
 		this.removeEventListeners();
 
-		if (this.context.Subscriber) {
-			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
-		}
-
 		if (this.scrollRaFId) {
 			window.cancelAnimationFrame(this.scrollRaFId);
 		}
@@ -485,12 +467,6 @@ class ScrollableBaseNative extends Component {
 	enqueueForceUpdate = () => {
 		this.childRef.calculateMetrics();
 		this.forceUpdate();
-	}
-
-	handleSubscription = ({channel, message}) => {
-		if (channel === 'resize') {
-			this.publisher.publish(message);
-		}
 	}
 
 	// constants
@@ -1357,22 +1333,33 @@ class ScrollableBaseNative extends Component {
 		delete rest.start;
 		delete rest.verticalScrollbar;
 
-		return containerRenderer({
-			childComponentProps: rest,
-			childWrapper,
-			childWrapperProps,
-			className: scrollableClasses,
-			componentCss: css,
-			horizontalScrollbarProps: this.horizontalScrollbarProps,
-			initChildRef: this.initChildRef,
-			initContainerRef: this.initContainerRef,
-			isHorizontalScrollbarVisible,
-			isVerticalScrollbarVisible,
-			rtl,
-			scrollTo: this.scrollTo,
-			style,
-			verticalScrollbarProps: this.verticalScrollbarProps
-		});
+		return (
+			<ResizeContext.Consumer>
+				{value => {
+					this.resize.setParent(value);
+					return (
+						<ResizeContext.Provider value={this.resize}>
+							{containerRenderer({
+								childComponentProps: rest,
+								childWrapper,
+								childWrapperProps,
+								className: scrollableClasses,
+								componentCss: css,
+								horizontalScrollbarProps: this.horizontalScrollbarProps,
+								initChildRef: this.initChildRef,
+								initContainerRef: this.initContainerRef,
+								isHorizontalScrollbarVisible,
+								isVerticalScrollbarVisible,
+								rtl,
+								scrollTo: this.scrollTo,
+								style,
+								verticalScrollbarProps: this.verticalScrollbarProps
+							})}
+						</ResizeContext.Provider>
+					);
+				}}
+			</ResizeContext.Consumer>
+		);
 	}
 }
 

@@ -12,6 +12,9 @@ import hoc from '@enact/core/hoc';
 import {contextTypes, Publisher, Subscription} from '@enact/core/internal/PubSub';
 import {perfNow} from '@enact/core/util';
 
+const Resize = React.createContext();
+
+
 /**
  * Default config for {@link ui/Remeasurable.RemeasurableDecorator}
  *
@@ -127,4 +130,4 @@ const Remeasurable = Subscription({
 });
 
 export default Remeasurable;
-export {Remeasurable, RemeasurableDecorator};
+export {Remeasurable, RemeasurableDecorator, Resize as ResizeContext};
