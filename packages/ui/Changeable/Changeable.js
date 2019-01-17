@@ -144,17 +144,18 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		UNSAFE_componentWillReceiveProps (nextProps) {
-			if (this.state.controlled) {
-				const value = nextProps[prop];
-				this.setState({value});
+		static getDerivedStateFromProps (props, state) {
+			if (state.controlled) {
+				const value = props[prop];
+				return {value};
 			} else {
 				warning(
-					!(prop in nextProps),
+					!(prop in props),
 					`'${prop}' specified for an uncontrolled instance of Changeable and will be
 					ignored. To make this instance of Changeable controlled, '${prop}' should be
 					specified at creation.`
 				);
+				return null;
 			}
 		}
 
