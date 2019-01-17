@@ -123,6 +123,38 @@ class DisappearTest extends React.Component {
 	}
 }
 
+class DisableOnClick extends React.Component {
+	constructor (props) {
+		super(props);
+
+		this.state = {
+			disabled: false
+		};
+	}
+
+	handleButtonDisable = () => {
+		this.setState({disabled: true});
+	}
+
+	handleButtonEnable = () => {
+		this.setState({disabled: false});
+	}
+
+	render () {
+		return (
+			<div>
+				<p>Pressing the marqueeable button will disable it. The marquee should continue and restart while the button is focused and disabled.</p>
+				<Button disabled={this.state.disabled} onClick={this.handleButtonDisable}>
+					Marqueeable Button
+				</Button>
+				<Button onClick={this.handleButtonEnable}>
+					Enable
+				</Button>
+			</div>
+		);
+	}
+}
+
 class DisableTest extends React.Component {
 	constructor (props) {
 		super(props);
@@ -376,6 +408,12 @@ storiesOf('Spotlight', module)
 		'Disappearing Spottable',
 		() => (
 			<DisappearTest />
+		)
+	)
+	.add(
+		'Disabled on Click',
+		() => (
+			<DisableOnClick />
 		)
 	)
 	.add(
