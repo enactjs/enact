@@ -19,7 +19,7 @@ import React, {Component} from 'react';
 import {privateContextTypes as contextTypesResize} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
-import Registry from '../internal/Registry';
+import Registry from '@enact/core/internal/Registry';
 import {ResizeContext} from '../Remeasurable';
 
 import ScrollAnimator from './ScrollAnimator';

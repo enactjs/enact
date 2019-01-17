@@ -1,11 +1,12 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import Registry from '../Registry';
-import {ResizeContext} from '../../../Remeasurable';
+
+const SomeContext = React.createContext();
 
 describe('Registry', () => {
 	class EmitsResize extends React.Component {
-		static contextType = ResizeContext;
+		static contextType = SomeContext;
 
 		componentDidMount () {
 			this.resize.setParent(this.context);
@@ -19,16 +20,16 @@ describe('Registry', () => {
 
 		render () {
 			return (
-				<ResizeContext.Provider value={this.resize}>
+				<SomeContext.Provider value={this.resize}>
 					<button {...this.props} onClick={this.handleClick}>Notify!</button>
 					{this.props.children}
-				</ResizeContext.Provider>
+				</SomeContext.Provider>
 			);
 		}
 	}
 
 	class UsesResize extends React.Component {
-		static contextType = ResizeContext;
+		static contextType = SomeContext;
 
 		state = {
 			number: 0
