@@ -434,9 +434,12 @@ class Transition extends React.Component {
 			this.measureInner();
 		}
 
-		if (this.context) {
-			this.setRegistry(this.context);
+		this.registry = this.context;
+
+		if (this.registry) {
+			this.registry.register(this.handleResize);
 		}
+
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -484,6 +487,9 @@ class Transition extends React.Component {
 
 	componentWillUnmount () {
 		this.measuringJob.stop();
+		if (this.registry) {
+			this.registry.unregister(this.handleResize);
+		}
 	}
 
 	measuringJob = new Job(() => {
@@ -525,19 +531,6 @@ class Transition extends React.Component {
 			}
 		}
 	}
-
-	setRegistry = registry => {
-		if (registry === this.registry) return;
-
-		if (this.registry) {
-			this.registry.unregister(this.handleResize);
-		}
-
-		this.registry = registry;
-		if (this.registry) {
-			this.registry.register(this.handleResize);
-		}
-	};
 
 	childRef = (node) => {
 		this.childNode = node;

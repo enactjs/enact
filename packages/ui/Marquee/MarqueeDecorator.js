@@ -738,19 +738,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			});
 		}
 
-		setRegistry = registry => {
-			if (registry === this.registry) return;
-
-			if (this.registry) {
-				this.registry.unregister(this.handleResize);
-			}
-
-			this.registry = registry;
-			if (this.registry) {
-				this.registry.register(this.handleResize);
-			}
-		};
-
 		renderMarquee () {
 			const {
 				alignment,
@@ -834,8 +821,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 				<ResizeContext.Consumer>
 					{(value) => {
-
-						this.setRegistry(value);
+						if (!this.registry) {
+							this.registry = value;
+							this.registry.register(this.handleResize);
+						}
 
 						if (this.props.marqueeDisabled) {
 							return this.renderWrapped();
