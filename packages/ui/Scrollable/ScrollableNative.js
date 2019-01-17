@@ -1,6 +1,5 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
@@ -351,7 +350,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	static childContextTypes = {
-		...contextTypesResize,
+		...contextTypesResize
 	}
 
 	static defaultProps = {
@@ -397,7 +396,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	getChildContext = () => ({
-		invalidateBounds: this.enqueueForceUpdate,
+		invalidateBounds: this.enqueueForceUpdate
 	})
 
 	componentDidMount () {
