@@ -379,8 +379,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.context.unregister(this);
 			}
 
-			this.setRegistry(null);
-
 			off('keydown', this.handlePointerHide);
 		}
 
