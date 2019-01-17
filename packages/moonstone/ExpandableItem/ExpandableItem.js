@@ -25,6 +25,7 @@ import last from 'ramda/src/last';
 import React from 'react';
 
 import LabeledItem from '../LabeledItem';
+import {extractVoiceProps} from '../internal/util';
 
 import Expandable from './Expandable';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
@@ -74,42 +75,6 @@ const ExpandableItemBase = kind({
 		 * @public
 		 */
 		title: PropTypes.string.isRequired,
-
-		/**
-		 * Disables voice control.
-		 *
-		 * @type {Boolean}
-		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype
-		 * @public
-		 */
-		'data-webos-voice-disabled': PropTypes.bool,
-
-		/**
-		 * The voice control group.
-		 *
-		 * @type {String}
-		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype
-		 * @public
-		 */
-		'data-webos-voice-group-label': PropTypes.string,
-
-		/**
-		 * The voice control intent.
-		 *
-		 * @type {String}
-		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype
-		 * @public
-		 */
-		'data-webos-voice-intent': PropTypes.string,
-
-		/**
-		 * The voice control label.
-		 *
-		 * @type {String}
-		 * @memberof moonstone/ExpandableItem.ExpandableItemBase.prototype
-		 * @public
-		 */
-		'data-webos-voice-label': PropTypes.string,
 
 		/**
 		 * Closes the expandable automatically when the user navigates to the `title`
@@ -282,7 +247,6 @@ const ExpandableItemBase = kind({
 	},
 
 	defaultProps: {
-		'data-webos-voice-intent': 'Select',
 		autoClose: false,
 		disabled: false,
 		lockBottom: false,
@@ -348,10 +312,6 @@ const ExpandableItemBase = kind({
 
 	render: ({
 		children,
-		'data-webos-voice-disabled': voiceDisabled,
-		'data-webos-voice-group-label': voiceGroupLabel,
-		'data-webos-voice-intent': voiceIntent,
-		'data-webos-voice-label': voiceLabel,
 		disabled,
 		handleKeyDown,
 		handleLabelKeyDown,
@@ -380,6 +340,7 @@ const ExpandableItemBase = kind({
 		delete rest.showLabel;
 
 		const ariaProps = extractAriaProps(rest);
+		const voiceProps = extractVoiceProps(rest);
 
 		return (
 			<ContainerDiv
@@ -391,13 +352,10 @@ const ExpandableItemBase = kind({
 			>
 				<LabeledItem
 					{...ariaProps}
+					{...voiceProps}
 					css={css}
 					className={labeledItemClassName}
 					data-expandable-label
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
-					data-webos-voice-intent={voiceIntent}
-					data-webos-voice-label={voiceLabel}
 					disabled={disabled}
 					label={label}
 					onTap={handleOpen}
