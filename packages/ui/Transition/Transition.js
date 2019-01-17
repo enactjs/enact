@@ -19,9 +19,10 @@
 import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
-import {contextTypes} from '@enact/core/internal/PubSub';
 import React from 'react';
 import PropTypes from 'prop-types';
+
+import {ResizeContext} from '../Remeasurable';
 
 import componentCss from './Transition.less';
 
@@ -299,6 +300,8 @@ const TRANSITION_STATE = {
  */
 class Transition extends React.Component {
 
+	static contextType = ResizeContext;
+
 	static propTypes = /** @lends ui/Transition.Transition.prototype */ {
 		/**
 		 * The node to be transitioned.
@@ -406,8 +409,6 @@ class Transition extends React.Component {
 		visible: PropTypes.bool
 	}
 
-	static contextTypes = contextTypes
-
 	static defaultProps = {
 		direction: 'up',
 		duration: 'medium',
@@ -423,6 +424,7 @@ class Transition extends React.Component {
 			initialHeight: null,
 			renderState: props.visible ? TRANSITION_STATE.READY : TRANSITION_STATE.INIT
 		};
+		this.registry = null;
 	}
 
 	componentDidMount () {
@@ -432,8 +434,8 @@ class Transition extends React.Component {
 			this.measureInner();
 		}
 
-		if (this.context.Subscriber) {
-			this.context.Subscriber.subscribe('resize', this.handleResize);
+		if (this.context) {
+			this.setRegistry(this.context);
 		}
 	}
 
@@ -482,9 +484,6 @@ class Transition extends React.Component {
 
 	componentWillUnmount () {
 		this.measuringJob.stop();
-		if (this.context.Subscriber) {
-			this.context.Subscriber.unsubscribe('resize', this.handleResize);
-		}
 	}
 
 	measuringJob = new Job(() => {
@@ -526,6 +525,19 @@ class Transition extends React.Component {
 			}
 		}
 	}
+
+	setRegistry = registry => {
+		if (registry === this.registry) return;
+
+		if (this.registry) {
+			this.registry.unregister(this.handleResize);
+		}
+
+		this.registry = registry;
+		if (this.registry) {
+			this.registry.register(this.handleResize);
+		}
+	};
 
 	childRef = (node) => {
 		this.childNode = node;

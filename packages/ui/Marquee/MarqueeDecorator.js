@@ -659,7 +659,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleResize = () => {
-			console.log('resize');
 			if (this.node && !this.props.marqueeDisabled) {
 				this.invalidateMetrics();
 				if (this.state.animating) {
@@ -745,14 +744,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (registry === this.registry) return;
 
 			if (this.registry) {
-			  this.registry.unregister(this.handleResize);
+				this.registry.unregister(this.handleResize);
 			}
 
 			this.registry = registry;
 			if (this.registry) {
-			  this.registry.register(this.handleResize);
+				this.registry.register(this.handleResize);
 			}
-		  };
+		};
 
 		renderMarquee () {
 			const {
