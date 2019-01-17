@@ -821,7 +821,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 				<ResizeContext.Consumer>
 					{(value) => {
-						if (!this.registry) {
+						if (!this.registry && value) {
 							this.registry = value;
 							this.registry.register(this.handleResize);
 						}
