@@ -11,6 +11,7 @@ import shallowEqual from 'recompose/shallowEqual';
 
 import MarqueeBase from './MarqueeBase';
 import {contextTypes} from './MarqueeController';
+import {ResizeContext} from '../Remeasurable';
 
 /**
  * Default configuration parameters for {@link ui/Marquee.MarqueeDecorator}
@@ -310,12 +311,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.timerState = TimerState.CLEAR;
 			this.distance = null;
 			this.contentFits = false;
-		}
-
-		componentWillMount () {
-			if (this.context.Subscriber) {
-				this.context.Subscriber.subscribe('resize', this.handleResize);
-			}
+			this.registry = null;
 		}
 
 		componentDidMount () {
@@ -385,9 +381,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.context.unregister(this);
 			}
 
-			if (this.context.Subscriber) {
-				this.context.Subscriber.unsubscribe('resize', this.handleResize);
-			}
+			this.setRegistry(null);
+
 			off('keydown', this.handlePointerHide);
 		}
 
@@ -664,6 +659,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleResize = () => {
+			console.log('resize');
 			if (this.node && !this.props.marqueeDisabled) {
 				this.invalidateMetrics();
 				if (this.state.animating) {
@@ -745,6 +741,19 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			});
 		}
 
+		setRegistry = registry => {
+			if (registry === this.registry) return;
+
+			if (this.registry) {
+			  this.registry.unregister(this.handleResize);
+			}
+
+			this.registry = registry;
+			if (this.registry) {
+			  this.registry.register(this.handleResize);
+			}
+		  };
+
 		renderMarquee () {
 			const {
 				alignment,
@@ -824,11 +833,21 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			if (this.props.marqueeDisabled) {
-				return this.renderWrapped();
-			} else {
-				return this.renderMarquee();
-			}
+			return (
+
+				<ResizeContext.Consumer>
+					{(value) => {
+
+						this.setRegistry(value);
+
+						if (this.props.marqueeDisabled) {
+							return this.renderWrapped();
+						} else {
+							return this.renderMarquee();
+						}
+					}}
+				</ResizeContext.Consumer>
+			);
 		}
 	};
 });

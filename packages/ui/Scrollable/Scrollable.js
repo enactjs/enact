@@ -10,7 +10,6 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
@@ -20,6 +19,8 @@ import React, {Component} from 'react';
 import {privateContextTypes as contextTypesResize} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
+import Registry from '../internal/Registry';
+import {ResizeContext} from '../Remeasurable';
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
@@ -362,11 +363,8 @@ class ScrollableBase extends Component {
 		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 	}
 
-	static contextTypes = contextTypesState
-
 	static childContextTypes = {
-		...contextTypesResize,
-		...contextTypesState
+		...contextTypesResize
 	}
 
 	static defaultProps = {
@@ -405,24 +403,14 @@ class ScrollableBase extends Component {
 		// Enable the early bail out of repeated scrolling to the same position
 		this.animationInfo = null;
 
+		this.resize = Registry.create();
+
 		props.cbScrollTo(this.scrollTo);
 	}
 
 	getChildContext = () => ({
-		invalidateBounds: this.enqueueForceUpdate,
-		Subscriber: this.publisher.getSubscriber()
+		invalidateBounds: this.enqueueForceUpdate
 	})
-
-	componentWillMount () {
-		this.publisher = Publisher.create('resize', this.context.Subscriber);
-		this.publisher.publish({
-			remeasure: false
-		});
-
-		if (this.context.Subscriber) {
-			this.context.Subscriber.subscribe('resize', this.handleSubscription);
-		}
-	}
 
 	componentDidMount () {
 		this.addEventListeners();
@@ -470,10 +458,7 @@ class ScrollableBase extends Component {
 		const horizontal = isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
 		const vertical = isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
 		if (horizontal || vertical) {
-			this.publisher.publish({
-				horizontal,
-				vertical
-			});
+			this.resize.notify({});
 		}
 	}
 
@@ -489,10 +474,6 @@ class ScrollableBase extends Component {
 		}
 
 		this.removeEventListeners();
-
-		if (this.context.Subscriber) {
-			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
-		}
 	}
 
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
@@ -500,12 +481,6 @@ class ScrollableBase extends Component {
 	enqueueForceUpdate = () => {
 		this.childRef.calculateMetrics();
 		this.forceUpdate();
-	}
-
-	handleSubscription = ({channel, message}) => {
-		if (channel === 'resize') {
-			this.publisher.publish(message);
-		}
 	}
 
 	clampScrollPosition () {
@@ -1347,23 +1322,34 @@ class ScrollableBase extends Component {
 		delete rest.stop;
 		delete rest.verticalScrollbar;
 
-		return containerRenderer({
-			childComponentProps: rest,
-			childWrapper,
-			childWrapperProps,
-			className: scrollableClasses,
-			componentCss: css,
-			handleScroll: this.handleScroll,
-			horizontalScrollbarProps: this.horizontalScrollbarProps,
-			initChildRef: this.initChildRef,
-			initContainerRef: this.initContainerRef,
-			isHorizontalScrollbarVisible,
-			isVerticalScrollbarVisible,
-			rtl,
-			scrollTo: this.scrollTo,
-			style,
-			verticalScrollbarProps: this.verticalScrollbarProps
-		});
+		return (
+			<ResizeContext.Consumer>
+				{value => {
+					this.resize.setParent(value);
+					return (
+						<ResizeContext.Provider value={this.resize}>
+							{containerRenderer({
+								childComponentProps: rest,
+								childWrapper,
+								childWrapperProps,
+								className: scrollableClasses,
+								componentCss: css,
+								handleScroll: this.handleScroll,
+								horizontalScrollbarProps: this.horizontalScrollbarProps,
+								initChildRef: this.initChildRef,
+								initContainerRef: this.initContainerRef,
+								isHorizontalScrollbarVisible,
+								isVerticalScrollbarVisible,
+								rtl,
+								scrollTo: this.scrollTo,
+								style,
+								verticalScrollbarProps: this.verticalScrollbarProps
+							})}
+						</ResizeContext.Provider>
+					);
+				}}
+			</ResizeContext.Consumer>
+		);
 	}
 }
 
