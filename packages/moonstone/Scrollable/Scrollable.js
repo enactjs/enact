@@ -156,6 +156,11 @@ class ScrollableBase extends Component {
 		focusableScrollbar: PropTypes.bool,
 
 		/**
+		 *
+		 */
+		onRendered: PropTypes.func,
+
+		/**
 		 * Specifies overscroll effects shows on which type of inputs.
 		 *
 		 * @type {Object}
@@ -752,6 +757,7 @@ class ScrollableBase extends Component {
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
 				'data-spotlight-id': spotlightId,
 				focusableScrollbar,
+				onRendered,
 				scrollDownAriaLabel,
 				scrollLeftAriaLabel,
 				scrollRightAriaLabel,
@@ -814,6 +820,7 @@ class ScrollableBase extends Component {
 									className: componentCss.scrollableFill,
 									initUiChildRef,
 									isVerticalScrollbarVisible,
+									onRendered,
 									onScroll: handleScroll,
 									onUpdate: this.handleScrollerUpdate,
 									ref: this.initChildRef,

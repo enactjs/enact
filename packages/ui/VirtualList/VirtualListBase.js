@@ -167,6 +167,11 @@ const VirtualListBaseFactory = (type) => {
 			getComponentProps: PropTypes.func,
 
 			/**
+			 *
+			 */
+			onRendered: PropTypes.func,
+
+			/**
 			 * Number of spare DOM node.
 			 * `3` is good for the default value experimentally and
 			 * this value is highly recommended not to be changed by developers.
@@ -279,6 +284,12 @@ const VirtualListBaseFactory = (type) => {
 		componentWillUpdate (nextProps, nextState) {
 			if (this.state.firstIndex === nextState.firstIndex || this.props.childProps && this.props.childProps !== nextProps.childProps) {
 				this.prevFirstIndex = -1; // force to re-render items
+			}
+		}
+
+		componentDidUpdate () {
+			if (this.props.onRendered) {
+				this.props.onRendered();
 			}
 		}
 
@@ -790,6 +801,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.isVerticalScrollbarVisible;
 			delete rest.itemRenderer;
 			delete rest.itemSize;
+			delete rest.onRendered;
 			delete rest.onUpdate;
 			delete rest.overhang;
 			delete rest.pageScroll;
