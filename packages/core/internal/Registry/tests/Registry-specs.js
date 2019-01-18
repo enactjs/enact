@@ -20,7 +20,7 @@ describe('Registry', () => {
 
 		render () {
 			return (
-				<SomeContext.Provider value={this.resize.subscriber}>
+				<SomeContext.Provider value={this.resize.register}>
 					<button {...this.props} onClick={this.handleClick}>Notify!</button>
 					{this.props.children}
 				</SomeContext.Provider>
@@ -37,13 +37,13 @@ describe('Registry', () => {
 
 		componentDidMount () {
 			if (this.context) {
-				this.context.register(this.handleResize);
+				this.resize = this.context(this.handleResize);
 			}
 		}
 
 		componentWillUnmount () {
-			if (this.context) {
-				this.context.unregister(this.handleResize);
+			if (this.resize) {
+				this.resize.unregister();
 			}
 		}
 
@@ -62,7 +62,7 @@ describe('Registry', () => {
 		}
 	}
 
-	test('should increment child on click ', () => {
+	test('should increment child on click', () => {
 		const RegistryApp = mount(
 			<EmitsResize id="a-btn">
 				<UsesResize id="a" />
@@ -77,7 +77,7 @@ describe('Registry', () => {
 		expect(expected).toBe(actual);
 	});
 
-	test('should increment both children on top click ', () => {
+	test('should increment both children on top click', () => {
 		const RegistryApp = mount(
 			<EmitsResize id="a-btn">
 				<UsesResize id="a" />
@@ -97,7 +97,7 @@ describe('Registry', () => {
 		expect(expected).toBe(actualB);
 	});
 
-	test('should increment the deepest child when we click child button ', () => {
+	test('should increment the deepest child when we click child button', () => {
 		const RegistryApp = mount(
 			<EmitsResize id="a-btn">
 				<UsesResize id="a" />
@@ -116,5 +116,28 @@ describe('Registry', () => {
 
 		expect(expectedA).toBe(actualA);
 		expect(expectedB).toBe(actualB);
+	});
+
+	test('should support removing children without error', () => {
+		const RegistryApp = mount(
+			<EmitsResize id="a-btn">
+				<UsesResize id="a" />
+				<UsesResize id="b" />
+			</EmitsResize>
+		);
+
+		RegistryApp.find('button#a-btn').simulate('click');
+
+		// changing children should be safe and not throw errors when notifying instances
+		RegistryApp.setProps({
+			children: <UsesResize id="c" />
+		});
+
+		RegistryApp.find('button#a-btn').simulate('click');
+
+		const expectedC = '1';
+		const actualC = RegistryApp.find('div#c').text();
+
+		expect(expectedC).toBe(actualC);
 	});
 });
