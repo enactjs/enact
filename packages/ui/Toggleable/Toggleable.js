@@ -188,15 +188,16 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		static getDerivedStateFromProps (props, state) {
 			if (state.controlled) {
 				return {active: !!props[prop]};
-			} else {
-				warning(
-					!(prop in props),
-					`'${prop}' specified for an uncontrolled instance of Toggleable and will be
-					ignored. To make this instance of Toggleable controlled, '${prop}' should be
-					specified at creation.`
-				);
-				return null;
 			}
+
+			warning(
+				!(prop in props),
+				`'${prop}' specified for an uncontrolled instance of Toggleable and will be
+				ignored. To make this instance of Toggleable controlled, '${prop}' should be
+				specified at creation.`
+			);
+
+			return null;
 		}
 
 		handle = handle.bind(this)

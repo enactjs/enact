@@ -147,16 +147,21 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 		static getDerivedStateFromProps (props, state) {
 			if (state.controlled) {
 				const value = props[prop];
-				return {value};
-			} else {
-				warning(
-					!(prop in props),
-					`'${prop}' specified for an uncontrolled instance of Changeable and will be
-					ignored. To make this instance of Changeable controlled, '${prop}' should be
-					specified at creation.`
-				);
-				return null;
+				if (typeof value !== 'undefined' && value !== null) {
+					return {value};
+				} else {
+					return {value: props[defaultPropKey]};
+				}
 			}
+
+			warning(
+				!(prop in props),
+				`'${prop}' specified for an uncontrolled instance of Changeable and will be
+				ignored. To make this instance of Changeable controlled, '${prop}' should be
+				specified at creation.`
+			);
+
+			return null;
 		}
 
 		handle = handle.bind(this)

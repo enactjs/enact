@@ -70,11 +70,11 @@ describe('Toggleable', () => {
 
 	describe('#prop', () => {
 		test(
-			'should use defaultActive prop when selected prop is omitted',
+			'should use defaultSelected prop when selected prop is omitted',
 			() => {
 				const Component = Toggleable(DivComponent);
 				const subject = shallow(
-					<Component defaultActive />
+					<Component defaultSelected />
 				);
 
 				const expected = 'selected';
@@ -84,10 +84,10 @@ describe('Toggleable', () => {
 			}
 		);
 
-		test('should use defaultActive prop when selected prop is null', () => {
+		test('should use defaultSelected prop when selected prop is null', () => {
 			const Component = Toggleable(DivComponent);
 			const subject = shallow(
-				<Component defaultActive selected={null} />
+				<Component defaultSelected selected={null} />
 			);
 
 			const expected = 'selected';
@@ -97,12 +97,12 @@ describe('Toggleable', () => {
 		});
 
 		test(
-			'should use defaultActive prop when selected prop is undefined',
+			'should use defaultSelected prop when selected prop is undefined',
 			() => {
 				const Component = Toggleable(DivComponent);
 				const subject = shallow(
 					// eslint-disable-next-line no-undefined
-					<Component defaultActive selected={undefined} />
+					<Component defaultSelected selected={undefined} />
 				);
 
 				const expected = 'selected';
@@ -113,11 +113,11 @@ describe('Toggleable', () => {
 		);
 
 		test(
-			'should use selected prop when both selected and defaultActive are defined',
+			'should use selected prop when both selected and defaultSelected are defined',
 			() => {
 				const Component = Toggleable(DivComponent);
 				const subject = shallow(
-					<Component defaultActive selected={false} />
+					<Component defaultSelected selected={false} />
 				);
 
 				const expected = 'selected';
@@ -230,43 +230,7 @@ describe('Toggleable', () => {
 		() => {
 			const Component = Toggleable(DivComponent);
 			const subject = mount(
-				<Component defaultActive />
-			);
-
-			subject.find(DivComponent).prop('onToggle')();
-			subject.update();
-
-			const expected = 'selected';
-			const actual = subject.find(DivComponent).getElement().props;
-
-			expect(actual).toHaveProperty(expected, true);
-		}
-	);
-
-	test(
-		'should update \'selected\' when \'onJiggle\' invoked and is not controlled',
-		() => {
-			const Component = Toggleable({toggleProp: 'onJiggle'}, DivComponent);
-			const subject = mount(
-				<Component defaultActive />
-			);
-
-			subject.find(DivComponent).prop('onJiggle')();
-			subject.update();
-
-			const expected = 'selected';
-			const actual = subject.find(DivComponent).getElement().props;
-
-			expect(actual).toHaveProperty(expected, true);
-		}
-	);
-
-	test(
-		'should not update \'selected\' when \'onToggle\' invoked and is not controlled but disabled',
-		() => {
-			const Component = Toggleable(DivComponent);
-			const subject = mount(
-				<Component defaultActive disabled />
+				<Component defaultSelected />
 			);
 
 			subject.find(DivComponent).prop('onToggle')();
@@ -280,11 +244,47 @@ describe('Toggleable', () => {
 	);
 
 	test(
+		'should update \'selected\' when \'onJiggle\' invoked and is not controlled',
+		() => {
+			const Component = Toggleable({toggleProp: 'onJiggle'}, DivComponent);
+			const subject = mount(
+				<Component defaultSelected />
+			);
+
+			subject.find(DivComponent).prop('onJiggle')();
+			subject.update();
+
+			const expected = 'selected';
+			const actual = subject.find(DivComponent).getElement().props;
+
+			expect(actual).toHaveProperty(expected, false);
+		}
+	);
+
+	test(
+		'should not update \'selected\' when \'onToggle\' invoked and is not controlled but disabled',
+		() => {
+			const Component = Toggleable(DivComponent);
+			const subject = mount(
+				<Component defaultSelected disabled />
+			);
+
+			subject.find(DivComponent).prop('onToggle')();
+			subject.update();
+
+			const expected = 'selected';
+			const actual = subject.find(DivComponent).getElement().props;
+
+			expect(actual).toHaveProperty(expected, true);
+		}
+	);
+
+	test(
 		'should not update \'selected\' when \'onActivate\' invoked and is not controlled but disabled',
 		() => {
 			const Component = Toggleable({activate: 'onActivate'}, DivComponent);
 			const subject = mount(
-				<Component defaultActive={false} disabled />
+				<Component defaultSelected={false} disabled />
 			);
 
 			subject.find(DivComponent).prop('onActivate')();
@@ -302,7 +302,7 @@ describe('Toggleable', () => {
 		() => {
 			const Component = Toggleable({deactivate: 'onDeactivate'}, DivComponent);
 			const subject = mount(
-				<Component defaultActive disabled />
+				<Component defaultSelected disabled />
 			);
 
 			subject.find(DivComponent).prop('onDeactivate')();
@@ -311,7 +311,7 @@ describe('Toggleable', () => {
 			const expected = 'selected';
 			const actual = subject.find(DivComponent).getElement().props;
 
-			expect(actual).toHaveProperty(expected, false);
+			expect(actual).toHaveProperty(expected, true);
 		}
 	);
 
@@ -406,7 +406,7 @@ describe('Toggleable', () => {
 		function () {
 			const Component = Toggleable(DivComponent);
 			const subject = mount(
-				<Component defaultActive />
+				<Component defaultSelected />
 			);
 
 			subject.setProps({selected: false});
@@ -423,10 +423,10 @@ describe('Toggleable', () => {
 		() => {
 			const Component = Toggleable({prop: 'active'}, DivComponent);
 			const subject = mount(
-				<Component defaultActive />
+				<Component defaultSelected />
 			);
 
-			subject.setProps({defaultActive: false});
+			subject.setProps({defaultSelected: false});
 
 			const expected = 'active';
 			const actual = subject.find(DivComponent).getElement().props;
