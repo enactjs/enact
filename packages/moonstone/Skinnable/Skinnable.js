@@ -12,7 +12,8 @@ const defaultConfig = {
 	skins: {
 		dark: 'moonstone',
 		light: 'moonstone-light'
-	}
+	},
+	allowedVariants: ['highContrast', 'largeText', 'grayscale']
 };
 
 /**

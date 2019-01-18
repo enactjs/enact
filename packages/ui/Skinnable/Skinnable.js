@@ -13,6 +13,8 @@
 
 import hoc from '@enact/core/hoc';
 import React from 'react';
+import classnames from 'classnames';
+import intersection from 'ramda/src/intersection';
 
 /**
  * Default config for `Skinnable`.
@@ -22,6 +24,9 @@ import React from 'react';
  * @public
  */
 const defaultConfig = {
+	// The prop to pass down to children if they want the variants prop (possibly for modification).
+	variantsProp: null,
+
 	/**
 	 * The prop in which to pass the effective skin to the wrapped component.
 	 *
@@ -50,9 +55,26 @@ const defaultConfig = {
 	 * @type {String}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
-	defaultSkin: null
+	defaultSkin: null,
+
+	// Initial collection of applied variants
+	defaultVariants: null,
+	// A complete list (array) of all supported variants
+	allowedVariants: null
 };
 
+/**
+ * Allows a component to respond to skin changes via the Context API
+ *
+ * Example:
+ * ```
+ * ```
+ *
+ * @class SkinContext
+ * @memberof ui/Skinnable
+ * @hoc
+ * @public
+ */
 const SkinContext = React.createContext(null);
 
 /**
@@ -78,42 +100,56 @@ const SkinContext = React.createContext(null);
  * @public
  */
 const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
-	const {prop, skins, defaultSkin} = config;
+	const {prop, skins, defaultSkin, allowedVariants, defaultVariants, variantsProp} = config;
 
 	function determineSkin (authorSkin, parentSkin) {
 		return authorSkin || defaultSkin || parentSkin;
 	}
 
-	function getClassName (authorSkin, parentSkin, className) {
-		const skin = skins[determineSkin(authorSkin, parentSkin)];
+	function determineVariants (authorVariants, parentVariants) {
+		return authorVariants || defaultVariants || parentVariants;
+	}
+
+	function getClassName (effectiveSkin, className, variants) {
+		const skin = skins[effectiveSkin];
 
 		// only apply the skin class if it's set and different from the "current" skin as
 		// defined by the value in context
-		if (skin) {
-			if (className) {
-				className = `${skin} ${className}`;
-			} else {
-				className = skin;
-			}
+		if (skin || variants) {
+			className = classnames(skin, variants, className);
 		}
 
 		return className;
 	}
 
+	function getVariants (variants) {
+		// Bail if anything isn't setup correctly
+		if (!allowedVariants || !allowedVariants.length || !variants) return [];
+
+		// Support both an array of variants and a string of variants
+		return intersection(allowedVariants, (variants instanceof Array ? variants : variants.split(' ')));
+	}
+
 	// eslint-disable-next-line
-	return function Skinnable ({className, skin, ...rest}) {
+	return function Skinnable ({className, skin, skinVariants, ...rest}) {
 		return (
 			<SkinContext.Consumer>
-				{parentSkin => {
+				{(value) => {
+					const {parentSkin, parentVariants} = value || {};
 					const effectiveSkin = determineSkin(skin, parentSkin);
+					const variants = getVariants(determineVariants(skinVariants, parentVariants));
 
 					if (prop) {
 						rest[prop] = effectiveSkin;
 					}
 
+					if (variantsProp) {
+						rest[variantsProp] = variants;
+					}
+
 					return (
-						<SkinContext.Provider value={effectiveSkin}>
-							<Wrapped className={getClassName(skin, parentSkin, className)} {...rest} />
+						<SkinContext.Provider value={{parentSkin: effectiveSkin, parentVariants: variants}}>
+							<Wrapped className={getClassName(effectiveSkin, className, variants)} {...rest} />
 						</SkinContext.Provider>
 					);
 				}}

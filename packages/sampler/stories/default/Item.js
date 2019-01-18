@@ -19,6 +19,7 @@ storiesOf('Moonstone', module)
 			<Item
 				disabled={boolean('disabled', Config)}
 				inline={boolean('inline', Config)}
+				skinVariants={text('skinVariants', Config, '')}
 			>
 				{text('children', Config, 'Hello Item')}
 			</Item>
