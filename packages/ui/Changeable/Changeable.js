@@ -12,7 +12,6 @@ import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
-import warning from 'warning';
 
 /**
  * Default config for {@link ui/Changeable.Changeable}.
@@ -153,13 +152,6 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 					return {value: props[defaultPropKey]};
 				}
 			}
-
-			warning(
-				!(prop in props),
-				`'${prop}' specified for an uncontrolled instance of Changeable and will be
-				ignored. To make this instance of Changeable controlled, '${prop}' should be
-				specified at creation.`
-			);
 
 			return null;
 		}

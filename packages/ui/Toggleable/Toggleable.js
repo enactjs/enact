@@ -11,7 +11,6 @@ import {cap} from '@enact/core/util';
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import warning from 'warning';
 
 /**
  * Default config for `Toggleable`.
@@ -189,13 +188,6 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			if (state.controlled) {
 				return {active: !!props[prop]};
 			}
-
-			warning(
-				!(prop in props),
-				`'${prop}' specified for an uncontrolled instance of Toggleable and will be
-				ignored. To make this instance of Toggleable controlled, '${prop}' should be
-				specified at creation.`
-			);
 
 			return null;
 		}
