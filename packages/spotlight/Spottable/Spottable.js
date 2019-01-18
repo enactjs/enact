@@ -179,6 +179,9 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 			this.isFocused = false;
 			this.isHovered = false;
+			// Used to indicate that we want to stop propagation on blur events that occur as a
+			// result of this component imperatively blurring itself on focus when spotlightDisabled
+			this.shouldPreventBlur = false;
 
 			this.state = {
 				focusedWhenDisabled: false
@@ -191,7 +194,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const focusedWhenDisabled = this.isFocused && nextProps.disabled;
+			const focusedWhenDisabled = this.isFocused && (nextProps.disabled || nextProps.spotlightDisabled);
 
 			this.setState({
 				focusedWhenDisabled
@@ -310,6 +313,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		handleBlur = (ev) => {
+			if (this.shouldPreventBlur) return;
+
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = false;
 
@@ -326,7 +331,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = (ev) => {
-			if (this.props.disabled) return;
+			if (this.props.disabled || this.props.spotlightDisabled) {
+				this.shouldPreventBlur = true;
+				ev.target.blur();
+				this.shouldPreventBlur = false;
+				return;
+			}
 
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = true;
