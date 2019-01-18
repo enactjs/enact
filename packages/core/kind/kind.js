@@ -104,7 +104,7 @@ import styles from './styles';
  * @function
  * @param  {KindConfig}    config    Component configuration
  *
- * @returns {Function}           Component
+ * @returns {Component}           Component
  * @memberof core/kind
  * @public
  */
