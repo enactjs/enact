@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Fixed
 
 - `spotlight` to improve prioritization of the contents of spotlight containers within overflow containers
+- `spotlight/Spottable` and `spotlight/SpotlightContainerDecorator` to prevent focus when `spotlightDisabled` is set
 
 ## [2.2.9] - 2019-01-11
 
@@ -39,7 +40,6 @@ No significant changes.
 ### Fixed
 
 - `spotlight` selection of elements clipped by an overflow container
-- `spotlight/Spottable` and `spotlight/SpotlightContainerDecorator` to prevent focus when `spotlightDisabled` is set
 
 ## [2.2.2] - 2018-10-15
 
