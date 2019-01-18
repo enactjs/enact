@@ -207,4 +207,27 @@ describe('Input Specs', () => {
 
 		expect(subject.find('Tooltip')).toHaveLength(0);
 	});
+
+	test('should set voice intent if specified', () => {
+		const input = mount(
+			<Input data-webos-voice-intent="Select" />
+		);
+
+		const expected = 'Select';
+		const actual = input.find('input').prop('data-webos-voice-intent');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should set voice label if specified', () => {
+		const label = 'input label';
+		const input = mount(
+			<Input data-webos-voice-label={label} />
+		);
+
+		const expected = label;
+		const actual = input.find('input').prop('data-webos-voice-label');
+
+		expect(actual).toBe(expected);
+	});
 });

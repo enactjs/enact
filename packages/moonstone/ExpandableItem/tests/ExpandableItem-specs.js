@@ -1,4 +1,6 @@
+import React from 'react';
 import {ExpandableItemBase} from '../ExpandableItem';
+import {mount} from 'enzyme';
 
 describe('ExpandableItem', () => {
 	describe('computed', () => {
@@ -33,6 +35,23 @@ describe('ExpandableItem', () => {
 
 				expect(actual).toBe(expected);
 			});
+		});
+	});
+
+	describe('Voice Control', () => {
+		test('should set "data-webos-voice-disabled" to LabeledItem when voice control is disabled', () => {
+			const children = ['option1', 'option2', 'option3'];
+
+			const expandableItem = mount(
+				<ExpandableItemBase data-webos-voice-disabled title="Item">
+					{children}
+				</ExpandableItemBase>
+			);
+
+			const expected = true;
+			const actual = expandableItem.find('LabeledItem').prop('data-webos-voice-disabled');
+
+			expect(actual).toBe(expected);
 		});
 	});
 });

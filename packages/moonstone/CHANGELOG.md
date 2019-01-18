@@ -11,6 +11,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VirtualList` to focus an item properly by `scrollTo` API immediately after a prior call to the same position
+- `moonstone/Popup` to close floating layer when the popup closes without animation
+
+## [2.2.9] - 2019-01-11
+
+### Fixed
+
+- `moonstone/Scroller` scrolling to boundary behavior for short scrollers
 
 ## [2.2.8] - 2018-12-06
 
