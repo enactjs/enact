@@ -1,6 +1,6 @@
 {
   "name": "enact",
-  "version": "2.2.3",
+  "version": "2.2.9",
   "description": "Monorepo for all Enact front end libraries.",
   "private": true,
   "scripts": {
@@ -8,7 +8,9 @@
     "bootstrap": "lerna bootstrap --concurrency 1",
     "publish": "lerna publish --skip-npm --skip-git",
     "link-all": "lerna --concurrency 1 exec -- npm --loglevel error link",
-    "unlink-all": "lerna --concurrency 1 exec -- npm --loglevel error unlink"
+    "unlink-all": "lerna --concurrency 1 exec -- npm --loglevel error unlink",
+    "test": "lerna --concurrency 1 run test",
+    "clean": "lerna clean"
   },
   "license": "Apache-2.0",
   "devDependencies": {

@@ -91,6 +91,36 @@ const VirtualListBaseFactory = (type) => {
 			itemsRenderer: PropTypes.func.isRequired,
 
 			/**
+			 * Callback method of scrollTo.
+			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			cbScrollTo: PropTypes.func,
+
+			/**
+			 * Additional props included in the object passed to the `itemsRenderer` callback.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			childProps: PropTypes.object,
+
+			/**
+			 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
+			 *
+			 * @type {Object}
+			 * @property {Number}    clientHeight    The client height of the list.
+			 * @property {Number}    clientWidth    The client width of the list.
+			 * @public
+			 */
+			clientSize: PropTypes.shape({
+				clientHeight: PropTypes.number.isRequired,
+				clientWidth: PropTypes.number.isRequired
+			}),
+
+			/**
 			 * Activates the component for voice control.
 			 *
 			 * @type {Boolean}
@@ -105,28 +135,6 @@ const VirtualListBaseFactory = (type) => {
 			 * @private
 			 */
 			'data-webos-voice-group-label': PropTypes.string,
-
-			/**
-			 * Callback method of scrollTo.
-			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
-			 *
-			 * @type {Function}
-			 * @private
-			 */
-			cbScrollTo: PropTypes.func,
-
-			/**
-			 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
-			 *
-			 * @type {Object}
-			 * @property {Number}    clientHeight    The client height of the list.
-			 * @property {Number}    clientWidth    The client width of the list.
-			 * @public
-			 */
-			clientSize: PropTypes.shape({
-				clientHeight: PropTypes.number.isRequired,
-				clientWidth: PropTypes.number.isRequired
-			}),
 
 			/**
 			 * The number of items of data the list contains.
@@ -269,7 +277,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentWillUpdate (nextProps, nextState) {
-			if (this.state.firstIndex === nextState.firstIndex) {
+			if (this.state.firstIndex === nextState.firstIndex || this.props.childProps && this.props.childProps !== nextProps.childProps) {
 				this.prevFirstIndex = -1; // force to re-render items
 			}
 		}
@@ -639,8 +647,9 @@ const VirtualListBaseFactory = (type) => {
 				{itemRenderer, getComponentProps} = this.props,
 				key = index % this.state.numOfItems,
 				itemElement = itemRenderer({
-					index,
-					key
+					...this.props.childProps,
+					key,
+					index
 				}),
 				componentProps = getComponentProps && getComponentProps(index) || {};
 
@@ -773,10 +782,12 @@ const VirtualListBaseFactory = (type) => {
 				containerClasses = this.mergeClasses(className);
 
 			delete rest.cbScrollTo;
+			delete rest.childProps;
 			delete rest.clientSize;
 			delete rest.dataSize;
 			delete rest.direction;
 			delete rest.getComponentProps;
+			delete rest.isVerticalScrollbarVisible;
 			delete rest.itemRenderer;
 			delete rest.itemSize;
 			delete rest.onUpdate;
@@ -785,7 +796,6 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.rtl;
 			delete rest.spacing;
 			delete rest.updateStatesAndBounds;
-			delete rest.isVerticalScrollbarVisible;
 
 			if (primary) {
 				this.positionItems();
@@ -841,18 +851,7 @@ const ScrollableVirtualList = (props) => (
 	/>
 );
 
-ScrollableVirtualList.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
-	/**
-	 * The layout direction of the list.
-	 *
-	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'vertical'
-	 * @public
-	 */
+ScrollableVirtualList.propTypes = {
 	direction: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 

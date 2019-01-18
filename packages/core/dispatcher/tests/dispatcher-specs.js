@@ -1,106 +1,100 @@
-/* global CustomEvent */
-
-import sinon from 'sinon';
-import {restoreErrorAndWarnings, watchErrorAndWarnings} from 'console-snoop';
-
 import {off, on, once} from '../dispatcher';
 
 describe('dispatcher', () => {
 
-	it('should register handlers on target', function () {
-		const handler = sinon.spy();
+	test('should register handlers on target', () => {
+		const handler = jest.fn();
 		on('localechange', handler, window);
 
-		const ev = new CustomEvent('localechange', {});
+		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
 
-		const expected = true;
-		const actual = handler.calledOnce;
+		const expected = 1;
+		const actual = handler.mock.calls.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should not register duplicate handlers on target', function () {
-		const handler = sinon.spy();
+	test('should not register duplicate handlers on target', () => {
+		const handler = jest.fn();
 		on('localechange', handler, window);
 		on('localechange', handler, window);
 
-		const ev = new CustomEvent('localechange', {});
+		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
 
-		const expected = true;
-		const actual = handler.calledOnce;
+		const expected = 1;
+		const actual = handler.mock.calls.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should unregister handlers on target', function () {
-		const handler = sinon.spy();
+	test('should unregister handlers on target', () => {
+		const handler = jest.fn();
 		on('localechange', handler, window);
 
-		const ev = new CustomEvent('localechange', {});
+		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
 
 		off('localechange', handler, window);
 		window.dispatchEvent(ev);
 
-		const expected = false;
-		const actual = handler.calledTwice;
+		const expected = 1;
+		const actual = handler.mock.calls.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should only call a "once" handler once', function () {
-		const handler = sinon.spy();
+	test('should only call a "once" handler once', () => {
+		const handler = jest.fn();
 		once('localechange', handler, window);
 
-		const ev = new CustomEvent('localechange', {});
+		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
 		window.dispatchEvent(ev);
 
-		const expected = true;
-		const actual = handler.calledOnce;
+		const expected = 1;
+		const actual = handler.mock.calls.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should allow unregistering a "once" before it is called', function () {
-		const handler = sinon.spy();
+	test('should allow unregistering a "once" before it is called', () => {
+		const handler = jest.fn();
 		const onceHandler = once('localechange', handler, window);
 		off('localechange', onceHandler, window);
 
-		const ev = new CustomEvent('localechange', {});
+		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
 
-		const expected = false;
-		const actual = handler.calledOnce;
+		const expected = 0;
+		const actual = handler.mock.calls.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should not block subsequent handlers when a handler throws', function () {
-		// clear enyo-console-spy so we can stub it to suppress the console.error
-		restoreErrorAndWarnings();
-		sinon.stub(console, 'error');
+	test(
+		'should not block subsequent handlers when a handler throws',
+		() => {
+			// Modify the console spy to silence error output with
+			// an empty mock implementation
+			// eslint-disable-next-line no-console
+			console.error.mockImplementation();
 
-		const throws = function () {
-			throw new Error('Thrown from handler');
-		};
-		const handler = sinon.spy();
-		on('localechange', throws, window);
-		on('localechange', handler, window);
+			const throws = function () {
+				throw new Error('Thrown from handler');
+			};
+			const handler = jest.fn();
+			on('localechange', throws, window);
+			on('localechange', handler, window);
 
-		const ev = new CustomEvent('localechange', {});
-		window.dispatchEvent(ev);
+			const ev = new window.CustomEvent('localechange', {});
+			window.dispatchEvent(ev);
 
-		// restore console.error and set up enyo-console-spy again so it can complete successfully
-		// eslint-disable-next-line no-console
-		console.error.restore();
-		watchErrorAndWarnings();
+			const expected = 1;
+			const actual = handler.mock.calls.length;
 
-		const expected = true;
-		const actual = handler.calledOnce;
-
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 });

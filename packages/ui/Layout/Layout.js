@@ -56,6 +56,7 @@ import css from './Layout.less';
  * ```
  *
  * @class Layout
+ * @ui
  * @memberof ui/Layout
  * @public
  */
@@ -188,6 +189,7 @@ const LayoutBase = kind({
  * A {@link ui/Layout.Layout} that positions its [Cells]{@link ui/Layout.Cell} vertically.
  *
  * @class Column
+ * @ui
  * @memberof ui/Layout
  * @public
  */
@@ -202,6 +204,7 @@ const Column = (props) => (
  * A {@link ui/Layout.Layout} that positions its [Cells]{@link ui/Layout.Cell} horizontally.
  *
  * @class Row
+ * @ui
  * @memberof ui/Layout
  * @public
  */

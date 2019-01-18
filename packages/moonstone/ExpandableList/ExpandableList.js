@@ -115,6 +115,14 @@ const ExpandableListBase = kind({
 		closeOnSelect: PropTypes.bool,
 
 		/**
+		 * Disables voice control.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
 		 * Disables ExpandableList and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
@@ -285,6 +293,7 @@ const ExpandableListBase = kind({
 		},
 
 		itemProps: ({
+			'data-webos-voice-disabled': voiceDisabled,
 			onSpotlightDisappear,
 			onSpotlightLeft,
 			onSpotlightRight,
@@ -294,7 +303,8 @@ const ExpandableListBase = kind({
 			onSpotlightDisappear,
 			onSpotlightLeft,
 			onSpotlightRight,
-			spotlightDisabled
+			spotlightDisabled,
+			'data-webos-voice-disabled': voiceDisabled
 		}),
 
 		// generate a label that concatenates the text of the selected items

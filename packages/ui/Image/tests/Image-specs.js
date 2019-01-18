@@ -10,7 +10,7 @@ const src = {
 };
 
 describe('Image Specs', () => {
-	it('should only have image class without sizing', function () {
+	test('should only have image class without sizing', () => {
 		const image = mount(
 			<ImageBase src={src} sizing="none" />
 		);
@@ -18,10 +18,10 @@ describe('Image Specs', () => {
 		const expected = css.image;
 		const actual = image.find('div').prop('className');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should have class for fill', function () {
+	test('should have class for fill', () => {
 		const image = mount(
 			<ImageBase src={src} sizing="fill" />
 		);
@@ -29,10 +29,10 @@ describe('Image Specs', () => {
 		const expected = true;
 		const actual = image.find('div').hasClass(css.fill);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should have class for fit', function () {
+	test('should have class for fit', () => {
 		const image = mount(
 			<ImageBase src={src} sizing="fit" />
 		);
@@ -40,11 +40,11 @@ describe('Image Specs', () => {
 		const expected = true;
 		const actual = image.find('div').hasClass(css.fit);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
 
-	it('should set role to img by default', function () {
+	test('should set role to img by default', () => {
 		const image = shallow(
 			<ImageBase src={src} sizing="fit" />
 		);
@@ -52,6 +52,6 @@ describe('Image Specs', () => {
 		const expected = 'img';
 		const actual = image.prop('role');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });

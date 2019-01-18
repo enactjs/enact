@@ -123,6 +123,38 @@ class DisappearTest extends React.Component {
 	}
 }
 
+class DisableOnClick extends React.Component {
+	constructor (props) {
+		super(props);
+
+		this.state = {
+			disabled: false
+		};
+	}
+
+	handleButtonDisable = () => {
+		this.setState({disabled: true});
+	}
+
+	handleButtonEnable = () => {
+		this.setState({disabled: false});
+	}
+
+	render () {
+		return (
+			<div>
+				<p>Pressing the marqueeable button will disable it. The marquee should continue and restart while the button is focused and disabled.</p>
+				<Button disabled={this.state.disabled} onClick={this.handleButtonDisable}>
+					Marqueeable Button
+				</Button>
+				<Button onClick={this.handleButtonEnable}>
+					Enable
+				</Button>
+			</div>
+		);
+	}
+}
+
 class DisableTest extends React.Component {
 	constructor (props) {
 		super(props);
@@ -379,6 +411,12 @@ storiesOf('Spotlight', module)
 		)
 	)
 	.add(
+		'Disabled on Click',
+		() => (
+			<DisableOnClick />
+		)
+	)
+	.add(
 		'Disabled with Pause',
 		() => (
 			<DisableTest />
@@ -400,6 +438,28 @@ storiesOf('Spotlight', module)
 		'Focused and Disabled',
 		() => (
 			<FocusedAndDisabled />
+		)
+	)
+	.add(
+		'Navigating into overflow containers',
+		() => (
+			<div>
+				<Item>Before last-focused Container + Scroller</Item>
+				<Container style={{outline: '1px dotted #ffffff80'}}>
+					<Scroller>
+						<ExpandableItem disabled title="Expandable Item">
+							<Button>Hiding!</Button>
+						</ExpandableItem>
+						<Item>Item A</Item>
+						<Item disabled>Item B</Item>
+						<Item>Item C</Item>
+						<ExpandableItem disabled title="Expandable Item">
+							<Button>Hiding!</Button>
+						</ExpandableItem>
+					</Scroller>
+				</Container>
+				<Item>After last-focused Container + Scroller</Item>
+			</div>
 		)
 	)
 	.add(

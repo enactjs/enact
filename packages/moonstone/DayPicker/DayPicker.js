@@ -14,6 +14,7 @@
  */
 
 import kind from '@enact/core/kind';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Changeable from '@enact/ui/Changeable';
 import Pure from '@enact/ui/internal/Pure';
 import compose from 'ramda/src/compose';
@@ -35,6 +36,7 @@ import {ExpandableListBase} from '../ExpandableList';
  * @class DayPickerBase
  * @memberof moonstone/DayPicker
  * @extends moonstone/ExpandableList.ExpandableListBase
+ * @omit children
  * @ui
  * @public
  */
@@ -120,6 +122,7 @@ const DayPickerDecorator = compose(
 	Pure,
 	Expandable,
 	Changeable({change: 'onSelect', prop: 'selected'}),
+	I18nContextDecorator({localeProp: 'locale'}),
 	DaySelectorDecorator
 );
 

@@ -51,6 +51,40 @@ class ExpandableListChildrenLengthUpdate extends React.Component {
 	}
 }
 
+class ExpandableListWithAddedChildren extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			list: []
+		};
+	}
+
+	setZero = () => {
+		this.setState({
+			list: []
+		});
+	}
+
+	setTen = () => {
+		this.setState({
+			list: ['a', 'b', 'c', 'd', 'e', 'a', 'b', 'c', 'd', 'e']
+		});
+	}
+
+	render () {
+		return (
+			<Scroller>
+				<Divider>Change the number of items in the list</Divider>
+				<Button onClick={this.setZero}>0</Button>
+				<Button onClick={this.setTen}>10</Button>
+				<ExpandableList title={'test'} defaultOpen>
+					{this.state.list}
+				</ExpandableList>
+			</Scroller>
+		);
+	}
+}
+
 storiesOf('ExpandableList', module)
 	.add(
 		'with children length update',
@@ -121,5 +155,11 @@ storiesOf('ExpandableList', module)
 					{optionsArray}
 				</ExpandableList>
 			</Scroller>
+		)
+	)
+	.add(
+		'with added children',
+		() => (
+			<ExpandableListWithAddedChildren />
 		)
 	);

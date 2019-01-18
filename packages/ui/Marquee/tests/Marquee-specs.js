@@ -10,110 +10,137 @@ const
 	contentSelector = `.${css.text}`;
 
 describe('Marquee', () => {
-	it('should determine the correct directionality of latin text on initial render', function () {
-		const subject = mount(
-			<Marquee>{ltrText}</Marquee>
-		);
+	test(
+		'should determine the correct directionality of latin text on initial render',
+		() => {
+			const subject = mount(
+				<Marquee>{ltrText}</Marquee>
+			);
 
-		const expected = 'ltr';
-		const actual = subject.find(contentSelector).prop('style');
+			const expected = 'ltr';
+			const actual = subject.find(contentSelector).prop('style');
 
-		expect(actual).to.have.property('direction').to.equal(expected);
-	});
+			expect(actual).toHaveProperty('direction', expected);
+		}
+	);
 
-	it('should determine the correct directionality of non-latin text on initial render', function () {
-		const subject = mount(
-			<Marquee>{rtlText}</Marquee>
-		);
+	test(
+		'should determine the correct directionality of non-latin text on initial render',
+		() => {
+			const subject = mount(
+				<Marquee>{rtlText}</Marquee>
+			);
 
-		const expected = 'rtl';
-		const actual = subject.find(contentSelector).prop('style');
+			const expected = 'rtl';
+			const actual = subject.find(contentSelector).prop('style');
 
-		expect(actual).to.have.property('direction').to.equal(expected);
-	});
+			expect(actual).toHaveProperty('direction', expected);
+		}
+	);
 
-	it('should force the directionality text if forceDirection is specified', function () {
-		const subject = mount(
-			<Marquee forceDirection="ltr">{rtlText}</Marquee>
-		);
+	test(
+		'should force the directionality text if forceDirection is specified',
+		() => {
+			const subject = mount(
+				<Marquee forceDirection="ltr">{rtlText}</Marquee>
+			);
 
-		const expected = 'ltr';
-		const actual = subject.find(contentSelector).prop('style');
+			const expected = 'ltr';
+			const actual = subject.find(contentSelector).prop('style');
 
-		expect(actual).to.have.property('direction').to.equal(expected);
-	});
+			expect(actual).toHaveProperty('direction', expected);
+		}
+	);
 
-	it('should switch directionality when the text content changes after initial render', function () {
-		const subject = mount(
-			<Marquee>{ltrText}</Marquee>
-		);
+	test(
+		'should switch directionality when the text content changes after initial render',
+		() => {
+			const subject = mount(
+				<Marquee>{ltrText}</Marquee>
+			);
 
-		subject.setProps({children: rtlText});
-		subject.update();
+			subject.setProps({children: rtlText});
+			subject.update();
 
-		const expected = 'rtl';
-		const actual = subject.find(contentSelector).prop('style');
+			const expected = 'rtl';
+			const actual = subject.find(contentSelector).prop('style');
 
-		expect(actual).to.have.property('direction').to.equal(expected);
-	});
+			expect(actual).toHaveProperty('direction', expected);
+		}
+	);
 
-	it('should not switch directionality when the text content changes after initial render and the forceDirection property was already set', function () {
-		const subject = mount(
-			<Marquee forceDirection="ltr">{ltrText}</Marquee>
-		);
+	test(
+		'should not switch directionality when the text content changes after initial render and the forceDirection property was already set',
+		() => {
+			const subject = mount(
+				<Marquee forceDirection="ltr">{ltrText}</Marquee>
+			);
 
-		subject.setProps({children: rtlText});
-		subject.update();
+			subject.setProps({children: rtlText});
+			subject.update();
 
-		const expected = 'ltr';
-		const actual = subject.find(contentSelector).prop('style');
+			const expected = 'ltr';
+			const actual = subject.find(contentSelector).prop('style');
 
-		expect(actual).to.have.property('direction').to.equal(expected);
-	});
+			expect(actual).toHaveProperty('direction', expected);
+		}
+	);
 
-	it('should override direction to RTL when forceDirection is set and locale is LTR', function () {
-		const subject = mount(
-			<Marquee forceDirection="rtl" locale="ltr" />
-		);
+	test(
+		'should override direction to RTL when forceDirection is set and locale is LTR',
+		() => {
+			const subject = mount(
+				<Marquee forceDirection="rtl" locale="ltr" />
+			);
 
-		const expected = 'rtl';
-		const actual = subject.find(contentSelector).prop('style');
+			const expected = 'rtl';
+			const actual = subject.find(contentSelector).prop('style');
 
-		expect(actual).to.have.property('direction').to.equal(expected);
-	});
+			expect(actual).toHaveProperty('direction', expected);
+		}
+	);
 
-	it('should override direction to LTR when forceDirection is set and locale is RTL', function () {
-		const subject = mount(
-			<Marquee forceDirection="ltr" locale="rtl" />
-		);
+	test(
+		'should override direction to LTR when forceDirection is set and locale is RTL',
+		() => {
+			const subject = mount(
+				<Marquee forceDirection="ltr" locale="rtl" />
+			);
 
-		const expected = 'ltr';
-		const actual = subject.find(contentSelector).prop('style');
+			const expected = 'ltr';
+			const actual = subject.find(contentSelector).prop('style');
 
-		expect(actual).to.have.property('direction').to.equal(expected);
-	});
+			expect(actual).toHaveProperty('direction', expected);
+		}
+	);
 
-	it('should have direction of RTL when forceDirection is RTL and locale is RTL', function () {
-		const subject = mount(
-			<Marquee forceDirection="rtl" locale="rtl" />
-		);
+	test(
+		'should have direction of RTL when forceDirection is RTL and locale is RTL',
+		() => {
+			const subject = mount(
+				<Marquee forceDirection="rtl" locale="rtl" />
+			);
 
-		const expected = 'rtl';
-		const actual = subject.find(contentSelector).prop('style');
+			const expected = 'rtl';
+			const actual = subject.find(contentSelector).prop('style');
 
-		expect(actual).to.have.property('direction').to.equal(expected);
-	});
+			expect(actual).toHaveProperty('direction', expected);
+		}
+	);
 
-	it('should have direction of LTR when forceDirection is LTR and locale is LTR', function () {
-		const subject = mount(
-			<Marquee forceDirection="ltr" locale="ltr" />
-		);
+	test(
+		'should have direction of LTR when forceDirection is LTR and locale is LTR',
+		() => {
+			const subject = mount(
+				<Marquee forceDirection="ltr" locale="ltr" />
+			);
 
-		const expected = 'ltr';
-		const actual = subject.find(contentSelector).prop('style');
+			const expected = 'ltr';
+			const actual = subject.find(contentSelector).prop('style');
 
-		expect(actual).to.have.property('direction').to.equal(expected);
-	});
+			expect(actual).toHaveProperty('direction', expected);
+		}
+	);
 });
 
 
@@ -121,81 +148,90 @@ describe('MarqueeBase', () => {
 
 	// Computed Property Tests
 
-	it('should not include the animate class when animating is false', function () {
-		const subject = shallow(
-			<MarqueeBase />
-		);
+	test(
+		'should not include the animate class when animating is false',
+		() => {
+			const subject = shallow(
+				<MarqueeBase />
+			);
 
-		const expected = false;
-		const actual = subject.childAt(0).hasClass(css.animate);
-		expect(actual).to.equal(expected);
-	});
+			const expected = false;
+			const actual = subject.childAt(0).hasClass(css.animate);
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should include the animate class when animating is true', function () {
+	test('should include the animate class when animating is true', () => {
 		const subject = shallow(
 			<MarqueeBase animating />
 		);
 
 		const expected = true;
 		const actual = subject.childAt(0).hasClass(css.animate);
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should not transition when animating is false', function () {
+	test('should not transition when animating is false', () => {
 		const subject = shallow(
 			<MarqueeBase />
 		);
 
 		const actual = subject.childAt(0).prop('style');
-		expect(actual).to.not.have.property('transition');
+		expect(actual).not.toHaveProperty('transition');
 	});
 
-	it('should transition when animating is true', function () {
+	test('should transition when animating is true', () => {
 		const subject = shallow(
 			<MarqueeBase animating />
 		);
 
 		const actual = subject.childAt(0).prop('style');
-		expect(actual).to.have.property('transitionDuration');
+		expect(actual).toHaveProperty('transitionDuration');
 	});
 
-	it('should set RTL direction in LTR context when the text directionality is RTL', function () {
-		const subject = shallow(
-			<MarqueeBase rtl />,
-			{context: {rtl: false}}
-		);
+	test(
+		'should set RTL direction in LTR context when the text directionality is RTL',
+		() => {
+			const subject = shallow(
+				<MarqueeBase rtl />,
+				{context: {rtl: false}}
+			);
 
-		const expected = 'rtl';
-		const actual = subject.childAt(0).prop('style').direction;
-		expect(actual).to.equal(expected);
-	});
+			const expected = 'rtl';
+			const actual = subject.childAt(0).prop('style').direction;
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should set LTR direction in RTL when the text directionality is LTR', function () {
-		const subject = shallow(
-			<MarqueeBase />,
-			{context: {rtl: true}}
-		);
+	test(
+		'should set LTR direction in RTL when the text directionality is LTR',
+		() => {
+			const subject = shallow(
+				<MarqueeBase />,
+				{context: {rtl: true}}
+			);
 
-		const expected = 'ltr';
-		const actual = subject.childAt(0).prop('style').direction;
-		expect(actual).to.equal(expected);
-	});
+			const expected = 'ltr';
+			const actual = subject.childAt(0).prop('style').direction;
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should transition from the right with LTR text', function () {
+	test('should transition from the right with LTR text', () => {
 		const subject = shallow(
 			<MarqueeBase animating distance={100} />
 		);
 
 		const actual = subject.childAt(0).prop('style');
-		expect(actual).to.have.property('right');
+		expect(actual).toHaveProperty('right');
 	});
 
-	it('should transition from the left with RTL text', function () {
+	test('should transition from the left with RTL text', () => {
 		const subject = shallow(
 			<MarqueeBase animating distance={100} rtl />
 		);
 
 		const actual = subject.childAt(0).prop('style');
-		expect(actual).to.have.property('left');
+		expect(actual).toHaveProperty('left');
 	});
 });
