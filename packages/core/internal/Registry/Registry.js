@@ -19,10 +19,8 @@ const Registry = {
 					currentParent = register(registry.notify);
 				}
 			},
-			notify (ev, exclude) {
-				instances.filter(i => {
-					return Array.isArray(exclude) ? exclude.includes(i) : i !== exclude;
-				}).forEach(f => f(ev));
+			notify (ev, exclude = () => true) {
+				instances.filter(exclude).forEach(f => f(ev));
 			},
 			register (instance) {
 				if (instances.indexOf(instance) === -1) {

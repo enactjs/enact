@@ -10,7 +10,7 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
-import {contextTypes, RadioControllerDecorator} from './RadioControllerDecorator';
+import {RadioContext, RadioControllerDecorator} from './RadioControllerDecorator';
 
 /**
  * Default config for `RadioDecorator`.
@@ -67,38 +67,28 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'RadioDecorator'
 
-		static contextTypes = contextTypes
-
-		constructor (props) {
-			super(props);
-
-			// indicates we have a controller in context with which to sync activations
-			this.sync = false;
-		}
+		static contextType = RadioContext
 
 		componentDidMount () {
-			if (this.context.registerRadioItem) {
-				this.sync = true;
-				this.context.registerRadioItem(this);
-
-				this.notifyController(this.props);
+			if (this.context) {
+				this.controller = this.context(this.handleDeactivate);
+				this.notifyController();
 			}
 		}
 
-		componentWillReceiveProps (nextProps) {
-			this.notifyController(nextProps);
+		componentDidUpdate () {
+			this.notifyController();
 		}
 
 		componentWillUnmount () {
-			if (this.sync) {
-				this.sync = false;
-				this.context.deregisterRadioItem(this);
+			if (this.controller) {
+				this.controller.unregister(this);
 			}
 		}
 
-		notifyController (props) {
-			if (this.sync && prop && props[prop]) {
-				this.context.activateRadioItem(this);
+		notifyController () {
+			if (this.controller && prop && this.props[prop]) {
+				this.controller.notify({action: 'activate'});
 			}
 		}
 
@@ -114,16 +104,16 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleActivate = () => {
-			if (this.sync) {
-				this.context.activateRadioItem(this);
+			if (this.controller) {
+				this.controller.notify({action: 'activate'});
 			}
 
 			forwardActivate(null, this.props);
 		}
 
 		handleDeactivate = () => {
-			if (this.sync) {
-				this.context.deactivateRadioItem(this);
+			if (this.controller) {
+				this.controller.notify({action: 'deactivate'});
 			}
 
 			forwardDeactivate(null, this.props);
