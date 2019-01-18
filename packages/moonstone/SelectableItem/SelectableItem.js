@@ -23,16 +23,17 @@ import componentCss from './SelectableItem.less';
 /**
  * Renders an [Item]{@link moonstone/Item} with a circle icon, by default.
  *
- * @class SelectableItem
+ * @class SelectableItemBase
  * @memberof moonstone/SelectableItem
  * @extends moonstone/ToggleItem.ToggleItemBase
+ * @omit iconComponent
  * @ui
  * @public
  */
 const SelectableItemBase = kind({
 	name: 'SelectableItem',
 
-	propTypes: /** @lends moonstone/SelectableItem.SelectableItem.prototype */ {
+	propTypes: /** @lends moonstone/SelectableItem.SelectableItemBase.prototype */ {
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.

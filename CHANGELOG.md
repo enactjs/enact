@@ -2,6 +2,64 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.2.9] - 2019-01-11
+
+### Fixed
+
+- `moonstone/Scroller` scrolling to boundary behavior for short scrollers
+
+## [2.2.8] - 2018-12-06
+
+### Fixed
+
+- `moonstone/ExpandableInput` to focus labeled item on close
+- `moonstone/ExpandableItem` to disable its spotlight container when the component is disabled
+- `moonstone/Scroller` to correctly handle scrolling focused elements and containers into view
+- `spotlight` to focus correctly within an overflow container in which the first element is another container without spottable children
+- `ui/Marquee` to display an ellipsis when changing to text that no longer fits within its bounds
+- `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` to debounce `onScrollStop` events for non-animated scrolls
+
+## [2.2.7] - 2018-11-21
+
+### Fixed
+
+- `moonstone/Picker`, `moonstone/ExpandablePicker`, `moonstone/ExpandableList`, `moonstone/IncrementSlider` to support disabling voice control
+- `ui/Marquee` to avoid very small animations
+
+## [2.2.6] - 2018-11-15
+
+### Fixed
+
+- `i18n/I18nDecorator` to allow changing the locale to a falsey value to use the device locale
+- `moonstone/VideoPlayer` to blur slider when hiding media controls
+- `moonstone/VideoPlayer` to disable pointer mode when hiding media controls via 5-way
+- `moonstone/VirtualList` and `moonstone/Scroller` to not to animate with 5-way navigation by default
+- `ui/Marquee` to handle contents which overflow their containers only slightly
+
+
+## [2.2.5] - 2018-11-05
+
+### Fixed
+
+- `moonstone/ExpandableItem` to not steal focus after closing
+- `ui/Transition` to better support layout after changing children
+
+## [2.2.4] - 2018-10-29
+
+### Fixed
+
+- `moonstone/DayPicker` separator character used between selected days in the label in fa-IR locale
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` scrolling by voice commands in RTL locales
+
+## [2.2.3] - 2018-10-22
+
+### Fixed
+
+- `moonstone/Scroller` to respect the disabled spotlight container status when handling pointer events
+- `moonstone/Scroller` to scroll to the boundary when focusing the first or last element with a minimal margin in 5-way mode
+- `moonstone/VideoPlayer` to position the slider knob correctly when beyond the left or right edge of the slider
+- `spotlight` selection of elements clipped by an overflow container
+
 ## [2.2.2] - 2018-10-15
 
 ### Fixed

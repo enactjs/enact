@@ -21,7 +21,7 @@ import css from './Checkbox.less';
 /**
  * A checkbox component, ready to use in Moonstone applications.
  *
- * `Checkbox` may be used independently to represent a togglable state but is more commonly used as
+ * `Checkbox` may be used independently to represent a toggleable state but is more commonly used as
  * part of [CheckboxItem]{@link moonstone/CheckboxItem}.
  *
  * Usage:

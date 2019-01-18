@@ -24,6 +24,7 @@ const defaultConfig = {
  *
  * @class Skinnable
  * @memberof moonstone/Skinnable
+ * @extends ui/Skinnable.Skinnable
  * @hoc
  * @public
  */

@@ -240,6 +240,11 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 			}
 
 			const type = this.calcSelectedDayType(selected);
+			const format = (list) => {
+				let separator = this.props.locale === 'fa-IR' ? '، ' : ', ';
+
+				return list.join(separator);
+			};
 
 			switch (type) {
 				case SELECTED_DAY_TYPES.EVERY_DAY :
@@ -249,7 +254,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 				case SELECTED_DAY_TYPES.EVERY_WEEKDAY :
 					return everyWeekdayText;
 				case SELECTED_DAY_TYPES.SELECTED_DAYS :
-					return selected.sort().map((dayIndex) => selectDayStrings[dayIndex]).join(', ');
+					return format(selected.sort().map((dayIndex) => selectDayStrings[dayIndex]));
 				case SELECTED_DAY_TYPES.SELECTED_NONE :
 					return '';
 			}

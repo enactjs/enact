@@ -13,6 +13,7 @@
  */
 
 import hoc from '@enact/core/hoc';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {isRtlText} from '@enact/i18n/util';
 import {
 	MarqueeBase,
@@ -22,7 +23,15 @@ import {
 
 const MarqueeDecorator = hoc({
 	marqueeDirection: (str) => isRtlText(str) ? 'rtl' : 'ltr'
-}, UiMarqueeDecorator);
+}, (config, Wrapped) => {
+	return I18nContextDecorator(
+		{rtlProp: 'rtl', localeProp: 'locale'},
+		UiMarqueeDecorator(
+			config,
+			Wrapped
+		)
+	);
+});
 
 const Marquee = MarqueeDecorator('div');
 
@@ -33,7 +42,9 @@ export {
 	 *
 	 * @see ui/Marquee.Marquee
 	 * @class Marquee
+	 * @extends ui/Marquee.Marquee
 	 * @memberof moonstone/Marquee
+	 * @ui
 	 * @public
 	 */
 	Marquee,
@@ -43,7 +54,9 @@ export {
 	 *
 	 * @see ui/Marquee.Marquee
 	 * @class MarqueeBase
+	 * @extends ui/Marquee.MarqueeBase
 	 * @memberof moonstone/Marquee
+	 * @ui
 	 * @public
 	 */
 	MarqueeBase,
@@ -54,6 +67,7 @@ export {
 	 * @see ui/Marquee.MarqueeController
 	 * @hoc
 	 * @name MarqueeController
+	 * @extends ui/Marquee.MarqueeController
 	 * @memberof moonstone/Marquee
 	 * @public
 	 */
@@ -65,6 +79,7 @@ export {
 	 * @see ui/Marquee.MarqueeDecorator
 	 * @hoc
 	 * @name MarqueeDecorator
+	 * @extends ui/Marquee.MarqueeDecorator
 	 * @memberof moonstone/Marquee
 	 * @public
 	 */

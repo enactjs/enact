@@ -16,21 +16,24 @@ describe('Resolution Specs', () => {
 		{name: 'uhd', pxPerRem: 48, width: 3840, height: 2160, aspectRatioName: 'hdtv'}
 	];
 
-	it('should select screen type whose dimensions are greater than but nearest to the screen', function () {
-		const overHD = {
-			height: 721,
-			width: 1281
-		};
+	test(
+		'should select screen type whose dimensions are greater than but nearest to the screen',
+		() => {
+			const overHD = {
+				height: 721,
+				width: 1281
+			};
 
-		defineScreenTypes(screenTypes);
+			defineScreenTypes(screenTypes);
 
-		const expected = 'fhd';
-		const actual = getScreenType(overHD);
+			const expected = 'fhd';
+			const actual = getScreenType(overHD);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should detect portrait orientation', function () {
+	test('should detect portrait orientation', () => {
 		const fhdPortrait = {
 			height: 1920,
 			width: 1080
@@ -41,44 +44,47 @@ describe('Resolution Specs', () => {
 		const expected = 'fhd';
 		const actual = getScreenType(fhdPortrait);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should calculate the base font size for the given screen type', function () {
-		const expectedFHD = '24px';
-		const actualFHD = calculateFontSize('fhd');
+	test(
+		'should calculate the base font size for the given screen type',
+		() => {
+			const expectedFHD = '24px';
+			const actualFHD = calculateFontSize('fhd');
 
-		const expectedHD = '16px';
-		const actualHD = calculateFontSize('hd');
+			const expectedHD = '16px';
+			const actualHD = calculateFontSize('hd');
 
-		expect(actualFHD).to.equal(expectedFHD);
-		expect(actualHD).to.equal(expectedHD);
-	});
+			expect(actualFHD).toBe(expectedFHD);
+			expect(actualHD).toBe(expectedHD);
+		}
+	);
 
-	it('should scale pixel measurements for the current screen', function () {
+	test('should scale pixel measurements for the current screen', () => {
 		const expectedFHD = 24 / 3;
 		const actualFHD = scale(24);
 
 		const expectedHD = 16 / 3;
 		const actualHD = scale(16);
 
-		expect(actualFHD).to.equal(expectedFHD);
-		expect(actualHD).to.equal(expectedHD);
+		expect(actualFHD).toBe(expectedFHD);
+		expect(actualHD).toBe(expectedHD);
 	});
 
-	it('should convert pixels to units', function () {
+	test('should convert pixels to units', () => {
 		const expectedFHD = '3rem';
 		const actualFHD = unit(24, 'rem');
 
 		const expectedHD = '2rem';
 		const actualHD = unit(16, 'rem');
 
-		expect(actualFHD).to.equal(expectedFHD);
-		expect(actualHD).to.equal(expectedHD);
+		expect(actualFHD).toBe(expectedFHD);
+		expect(actualHD).toBe(expectedHD);
 	});
 
 	// NOTE: Currently tough to test selectSrc because it relies on a global variable for screenType
-	it.skip('should select source for the current screen type', function () {
+	test.skip('should select source for the current screen type', function () {
 
 	});
 

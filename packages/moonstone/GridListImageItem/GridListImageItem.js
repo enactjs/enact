@@ -9,7 +9,7 @@
  * />
  *
  * @module moonstone/GridListImageItem
- * @exports GridListIamgeItem
+ * @exports GridListImageItem
  * @exports GridListImageItemBase
  * @exports GridListImageItemDecorator
  */
@@ -56,6 +56,7 @@ const GridListImageItemBase = kind({
 		 *
 		 * @type {String}
 		 * @default 'Select'
+		 * @memberof moonstone/GridListImageItem.GridListImageItemBase.prototype
 		 * @public
 		 */
 		'data-webos-voice-intent': PropTypes.string,
@@ -181,7 +182,7 @@ const GridListImageItemDecorator = compose(
  *
  * @class GridListImageItem
  * @memberof moonstone/GridListImageItem
- * @extends moonstone/GridListIamgeItem.GridListImageItemBase
+ * @extends moonstone/GridListImageItem.GridListImageItemBase
  * @mixes moonstone/GridListImageItem.GridListImageItemDecorator
  * @see moonstone/GridListImageItem.GridListImageItemBase
  * @ui
