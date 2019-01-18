@@ -20,7 +20,7 @@ import {privateContextTypes as contextTypesResize} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
 import Registry from '@enact/core/internal/Registry';
-import {ResizeContext} from '../Remeasurable';
+import {ResizeContext} from '../internal/Resize';
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
@@ -363,9 +363,7 @@ class ScrollableBase extends Component {
 		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 	}
 
-	static childContextTypes = {
-		...contextTypesResize
-	}
+	static childContextTypes = contextTypesResize
 
 	static defaultProps = {
 		cbScrollTo: nop,

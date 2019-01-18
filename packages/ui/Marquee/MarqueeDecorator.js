@@ -10,7 +10,7 @@ import shallowEqual from 'recompose/shallowEqual';
 
 import MarqueeBase from './MarqueeBase';
 import {contextTypes} from './MarqueeController';
-import {ResizeContext} from '../Remeasurable';
+import {ResizeContext} from '../internal/Resize';
 
 /**
  * Default configuration parameters for {@link ui/Marquee.MarqueeDecorator}
@@ -284,9 +284,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			rtl: PropTypes.bool
 		}
 
-		static contextTypes = {
-			...contextTypes
-		}
+		static contextTypes = contextTypes
 
 		static defaultProps = {
 			marqueeDelay: 1000,
@@ -377,6 +375,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.sync) {
 				this.sync = false;
 				this.context.unregister(this);
+			}
+
+			if (this.registry) {
+				this.registry.unregister(this.handleResize);
 			}
 
 			off('keydown', this.handlePointerHide);
@@ -816,7 +818,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			return (
-
 				<ResizeContext.Consumer>
 					{(value) => {
 						if (!this.registry && value) {

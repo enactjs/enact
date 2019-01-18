@@ -1,9 +1,8 @@
 /**
  * Allows components to register parents to cascade context changes and trigger functions
  *
- * @class Registry
- * @memberof ui/Registry
- * @ui
+ * @type Object
+ * @memberof core/Registry
  * @private
  */
 const Registry = {

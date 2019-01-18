@@ -22,7 +22,7 @@ import {Job} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {ResizeContext} from '../Remeasurable';
+import {ResizeContext} from '../internal/Resize';
 
 import componentCss from './Transition.less';
 

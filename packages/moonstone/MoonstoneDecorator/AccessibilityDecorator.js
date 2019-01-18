@@ -2,7 +2,7 @@ import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Registry from '@enact/core/internal/Registry';
-import {ResizeContext} from '@enact/ui/Remeasurable';
+import {ResizeContext} from '@enact/ui/internal/Resize';
 
 /**
  * A higher-order component that classifies an application with a target set of font sizing rules.
@@ -17,7 +17,6 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 		static contextType = ResizeContext;
 
 		static displayName = 'AccessibilityDecorator'
-
 
 		static propTypes =  /** @lends moonstone/MoonstoneDecorator.AccessibilityDecorator.prototype */ {
 			/**

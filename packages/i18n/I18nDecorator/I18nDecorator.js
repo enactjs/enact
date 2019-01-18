@@ -103,7 +103,7 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			locale: PropTypes.string
 		}
 
-		static childContextTypes = {...contextTypes}
+		static childContextTypes = contextTypes
 
 		constructor (props) {
 			super(props);
