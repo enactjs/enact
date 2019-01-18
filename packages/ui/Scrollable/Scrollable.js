@@ -1322,10 +1322,10 @@ class ScrollableBase extends Component {
 
 		return (
 			<ResizeContext.Consumer>
-				{value => {
-					this.resize.setParent(value);
+				{resizeContext => {
+					this.resize.parent = resizeContext;
 					return (
-						<ResizeContext.Provider value={this.resize}>
+						<ResizeContext.Provider value={this.resize.subscriber}>
 							{containerRenderer({
 								childComponentProps: rest,
 								childWrapper,
