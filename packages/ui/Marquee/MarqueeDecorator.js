@@ -308,7 +308,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.timerState = TimerState.CLEAR;
 			this.distance = null;
 			this.contentFits = false;
-			this.registry = null;
+			this.resizeRegistry = null;
 		}
 
 		componentDidMount () {
@@ -376,8 +376,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.context.unregister(this);
 			}
 
-			if (this.registry) {
-				this.registry.unregister(this.handleResize);
+			if (this.resizeRegistry) {
+				this.resizeRegistry.unregister(this.handleResize);
 			}
 
 			off('keydown', this.handlePointerHide);
@@ -820,10 +820,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			return (
 				<ResizeContext.Consumer>
-					{(value) => {
-						if (!this.registry && value) {
-							this.registry = value;
-							this.registry.register(this.handleResize);
+					{(register) => {
+						if (!this.resizeRegistry && register) {
+							this.resizeRegistry = register(this.handleResize);
 						}
 
 						if (this.props.marqueeDisabled) {

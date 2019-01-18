@@ -401,7 +401,7 @@ class ScrollableBase extends Component {
 		// Enable the early bail out of repeated scrolling to the same position
 		this.animationInfo = null;
 
-		this.resize = Registry.create();
+		this.resizeRegistry = Registry.create();
 
 		props.cbScrollTo(this.scrollTo);
 	}
@@ -456,7 +456,7 @@ class ScrollableBase extends Component {
 		const horizontal = isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
 		const vertical = isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
 		if (horizontal || vertical) {
-			this.resize.notify({});
+			this.resizeRegistry.notify({});
 		}
 	}
 
@@ -1323,9 +1323,9 @@ class ScrollableBase extends Component {
 		return (
 			<ResizeContext.Consumer>
 				{resizeContext => {
-					this.resize.parent = resizeContext;
+					this.resizeRegistry.parent = resizeContext;
 					return (
-						<ResizeContext.Provider value={this.resize.subscriber}>
+						<ResizeContext.Provider value={this.resizeRegistry.register}>
 							{containerRenderer({
 								childComponentProps: rest,
 								childWrapper,

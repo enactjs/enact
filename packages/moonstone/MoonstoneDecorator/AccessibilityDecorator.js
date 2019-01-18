@@ -50,16 +50,16 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 		}
 
 		componentDidMount () {
-			this.resize.parent = this.context;
+			this.resizeRegistry.parent = this.context;
 		}
 
 		componentDidUpdate (prevProps) {
 			if (prevProps.textSize !== this.props.textSize) {
-				this.resize.notify({});
+				this.resizeRegistry.notify({});
 			}
 		}
 
-		resize = Registry.create();
+		resizeRegistry = Registry.create();
 
 		render () {
 			const {className, highContrast, textSize, ...props} = this.props;
@@ -67,7 +67,7 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			const combinedClassName = className ? `${className} ${accessibilityClassName}` : accessibilityClassName;
 
 			return (
-				<ResizeContext.Provider value={this.resize.subscriber}>
+				<ResizeContext.Provider value={this.resizeRegistry.register}>
 					<Wrapped className={combinedClassName} {...props} />;
 				</ResizeContext.Provider>
 			);

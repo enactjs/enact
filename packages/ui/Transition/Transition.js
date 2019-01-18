@@ -424,7 +424,7 @@ class Transition extends React.Component {
 			initialHeight: null,
 			renderState: props.visible ? TRANSITION_STATE.READY : TRANSITION_STATE.INIT
 		};
-		this.registry = null;
+		this.resizeRegistry = null;
 	}
 
 	componentDidMount () {
@@ -434,12 +434,9 @@ class Transition extends React.Component {
 			this.measureInner();
 		}
 
-		this.registry = this.context;
-
-		if (this.registry) {
-			this.registry.register(this.handleResize);
+		if (this.context) {
+			this.resizeRegistry = this.context(this.handleResize);
 		}
-
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -487,8 +484,8 @@ class Transition extends React.Component {
 
 	componentWillUnmount () {
 		this.measuringJob.stop();
-		if (this.registry) {
-			this.registry.unregister(this.handleResize);
+		if (this.resizeRegistry) {
+			this.resizeRegistry.unregister(this.handleResize);
 		}
 	}
 
