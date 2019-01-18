@@ -9,19 +9,8 @@ const Registry = {
 	create: () => {
 		const instances = [];
 		let currentParent;
-		const registry = {
-			setParent (parent) {
-				if (currentParent) {
-					currentParent.unregister(registry.notify);
-				}
-				if (parent && parent.register) {
-					parent.register(registry.notify);
-					currentParent = parent;
-				}
-			},
-			notify (ev) {
-				instances.forEach(f => f(ev));
-			},
+
+		const subscriber = Object.freeze({
 			register (instance) {
 				if (instances.indexOf(instance) === -1) {
 					instances.push(instance);
@@ -33,7 +22,25 @@ const Registry = {
 					instances.splice(i, 1);
 				}
 			}
-		};
+		});
+
+		const registry = Object.freeze({
+			set parent (parent) {
+				if (currentParent && currentParent.unregister) {
+					currentParent.unregister(registry.notify);
+				}
+				if (parent && parent.register) {
+					parent.register(registry.notify);
+					currentParent = parent;
+				}
+			},
+			notify (ev) {
+				instances.forEach(f => f(ev));
+			},
+			get subscriber () {
+				return subscriber;
+			}
+		});
 
 		return registry;
 	}

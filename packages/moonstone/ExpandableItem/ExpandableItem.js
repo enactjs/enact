@@ -76,6 +76,25 @@ const ExpandableItemBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
+		 * Closes the expandable automatically when the user navigates to the `title`
+		 * of the component using 5-way controls; if `false`, the user must select/tap the title to
+		 * close the expandable.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		autoClose: PropTypes.bool,
+
+		/**
+		 * The contents of the expandable item displayed when `open` is `true`.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		children: PropTypes.node,
+
+		/**
 		 * Disables voice control.
 		 *
 		 * @type {Boolean}
@@ -110,25 +129,6 @@ const ExpandableItemBase = kind({
 		 * @public
 		 */
 		'data-webos-voice-label': PropTypes.string,
-
-		/**
-		 * Closes the expandable automatically when the user navigates to the `title`
-		 * of the component using 5-way controls; if `false`, the user must select/tap the title to
-		 * close the expandable.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		autoClose: PropTypes.bool,
-
-		/**
-		 * The contents of the expandable item displayed when `open` is `true`.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		children: PropTypes.node,
 
 		/**
 		 * Disables ExpandableItem and the control becomes non-interactive.

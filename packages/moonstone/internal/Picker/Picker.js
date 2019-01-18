@@ -106,6 +106,17 @@ const PickerBase = class extends React.Component {
 		min: PropTypes.number.isRequired,
 
 		/**
+		 * Accessibility hint
+		 *
+		 * For example, `hour`, `year`, and `meridiem`
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		accessibilityHint: PropTypes.string,
+
+		/**
 		 * The "aria-label" for the picker.
 		 *
 		 * While the `aria-label` will always be set on the root node, that node is only focusable
@@ -130,6 +141,22 @@ const PickerBase = class extends React.Component {
 		'aria-valuetext': PropTypes.string,
 
 		/**
+		 * Children from which to pick
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		children: PropTypes.node,
+
+		/**
+		 * Class name for component
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		className: PropTypes.string,
+
+		/**
 		 * Disables voice control.
 		 *
 		 * @type {Boolean}
@@ -146,33 +173,6 @@ const PickerBase = class extends React.Component {
 		 * @public
 		 */
 		'data-webos-voice-group-label': PropTypes.string,
-
-		/**
-		 * Accessibility hint
-		 *
-		 * For example, `hour`, `year`, and `meridiem`
-		 *
-		 * @type {String}
-		 * @default ''
-		 * @public
-		 */
-		accessibilityHint: PropTypes.string,
-
-		/**
-		 * Children from which to pick
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		children: PropTypes.node,
-
-		/**
-		 * Class name for component
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		className: PropTypes.string,
 
 		/**
 		 * The "aria-label" for the decrement button.

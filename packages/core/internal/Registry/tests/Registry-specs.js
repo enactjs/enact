@@ -9,7 +9,7 @@ describe('Registry', () => {
 		static contextType = SomeContext;
 
 		componentDidMount () {
-			this.resize.setParent(this.context);
+			this.resize.parent = this.context;
 		}
 
 		resize = Registry.create();
@@ -20,7 +20,7 @@ describe('Registry', () => {
 
 		render () {
 			return (
-				<SomeContext.Provider value={this.resize}>
+				<SomeContext.Provider value={this.resize.subscriber}>
 					<button {...this.props} onClick={this.handleClick}>Notify!</button>
 					{this.props.children}
 				</SomeContext.Provider>
