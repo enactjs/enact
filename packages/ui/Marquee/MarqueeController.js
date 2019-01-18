@@ -51,22 +51,15 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.controlled = [];
 			this.isFocused = false;
-		}
-
-		getChildContext () {
-			if (!this.childContext) {
-				this.childContext = {
-					cancel: this.handleCancel,
-					complete: this.handleComplete,
-					enter: this.handleEnter,
-					leave: this.handleLeave,
-					register: this.handleRegister,
-					start: this.handleStart,
-					unregister: this.handleUnregister
-				};
-			}
-
-			return this.childContext;
+			this.childContext = {
+				cancel: this.handleCancel,
+				complete: this.handleComplete,
+				enter: this.handleEnter,
+				leave: this.handleLeave,
+				register: this.handleRegister,
+				start: this.handleStart,
+				unregister: this.handleUnregister
+			};
 		}
 
 		componentWillUnmount () {
@@ -302,7 +295,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			return (
-				<MarqueeControllerContext.Provider value={this.getChildContext()}>
+				<MarqueeControllerContext.Provider value={this.childContext}>
 					<Wrapped {...props} />
 				</MarqueeControllerContext.Provider>
 			);
