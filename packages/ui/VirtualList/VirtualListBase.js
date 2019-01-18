@@ -63,11 +63,15 @@ const SlotManager = ({
 	slotsRenderer,
 }) => {
 	const
-		SwappableItems = Droppable({slots: slotNames}, slotsRenderer),
+		SwipableItems = (
+			Droppable({slots: slotNames},
+				slotsRenderer
+			)
+		),
 		DraggableChild = Draggable('div');
 
 	return (
-		<SwappableItems
+		<SwipableItems
 			arrangeable={true}
 			arrangement={arrangement}
 			children={slotItems}
