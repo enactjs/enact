@@ -122,14 +122,11 @@ class FloatingLayerBase extends React.Component {
 	constructor (props) {
 		super(props);
 		this.node = null;
-		this.state = {
-			nodeRendered: false
-		};
 	}
 
 	componentDidMount () {
-		if (this.props.open) {
-			this.renderNode();
+		if (this.props.open && this.node) {
+			forwardOpen(null, this.props);
 		}
 
 		if (this.context.registerFloatingLayer) {
@@ -137,18 +134,12 @@ class FloatingLayerBase extends React.Component {
 		}
 	}
 
-	UNSAFE_componentWillReceiveProps (nextProps) {
-		if (!this.props.open && nextProps.open && !this.state.nodeRendered) {
-			this.renderNode();
-		}
-	}
-
-	componentDidUpdate (prevProps, prevState) {
+	componentDidUpdate (prevProps) {
 		const {open, scrimType} = this.props;
 
 		if (prevProps.open && !open) {
 			forwardClose(null, this.props);
-		} else if (!prevProps.open && open || (open && !prevState.nodeRendered && this.state.nodeRendered)) {
+		} else if (!prevProps.open && open) {
 			forwardOpen(null, this.props);
 		}
 
@@ -204,7 +195,7 @@ class FloatingLayerBase extends React.Component {
 		const {floatLayerClassName} = this.props;
 		const floatingLayer = this.context.getFloatingLayer();
 
-		if (this.node || !floatingLayer) return;
+		if (!floatingLayer) return;
 
 		invariant(
 			this.context.getFloatingLayer,
@@ -217,16 +208,15 @@ class FloatingLayerBase extends React.Component {
 
 		floatingLayer.appendChild(this.node);
 		on('scroll', this.handleScroll, this.node);
-
-		// render children when this.node is inserted in the DOM tree.
-		this.setState({nodeRendered: true});
 	}
 
 	render () {
 		const {children, open, scrimType, ...rest} = this.props;
 
-		if (!open || !this.state.nodeRendered) {
+		if (!open) {
 			return null;
+		} else if (!this.node) {
+			this.renderNode();
 		}
 
 		delete rest.floatLayerClassName;
