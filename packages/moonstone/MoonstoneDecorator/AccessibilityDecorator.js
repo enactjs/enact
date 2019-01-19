@@ -1,8 +1,8 @@
 import hoc from '@enact/core/hoc';
-import React from 'react';
-import PropTypes from 'prop-types';
 import Registry from '@enact/core/internal/Registry';
-import {ResizeContext} from '@enact/ui/internal/Resize';
+import {ResizeContext} from '@enact/ui/Resizable';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 /**
  * A higher-order component that classifies an application with a target set of font sizing rules.

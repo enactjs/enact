@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import shallowEqual from 'recompose/shallowEqual';
 
-import {ResizeContext} from '../internal/Resize';
+import {ResizeContext} from '../Resizable';
 
 import MarqueeBase from './MarqueeBase';
 import {MarqueeControllerContext} from './MarqueeController';
