@@ -32,6 +32,7 @@
     "@enact/i18n": "^2.2.9",
     "@enact/spotlight": "^2.2.9",
     "@enact/ui": "^2.2.9",
+    "@types/react": "^16.7.18",
     "classnames": "^2.2.5",
     "eases": "^1.0.8",
     "invariant": "^2.2.2",
