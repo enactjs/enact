@@ -207,7 +207,6 @@ class ExpandableInputBase extends React.Component {
 	}
 
 	static getDerivedStateFromProps (props, state) {
-		console.log(props.open);
 		if (state.open && !props.open) {
 			return {
 				initialValue: null,
