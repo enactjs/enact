@@ -198,19 +198,34 @@ class ExpandableInputBase extends React.Component {
 		this.paused = new Pause('ExpandableInput');
 		this.pointer = false;
 		this.state = {
-			initialValue: props.value
+			initialValue: props.value,
+			open: props.open
 		};
 
 		this.handleUpDown = handleUpDown.bind(this);
 		this.handleDeactivate = handleDeactivate.bind(this);
 	}
 
+	static getDerivedStateFromProps (props, state) {
+		console.log(props.open);
+		if (state.open && !props.open) {
+			return {
+				initialValue: null,
+				open: false
+			};
+		} else if (!state.open && props.open) {
+			return {
+				initialValue: props.value,
+				open: true
+			};
+		} else {
+			return null;
+		}
+	}
+
 	componentDidUpdate(prevProps) {
 		if (prevProps.open && !this.props.open) {
 			this.paused.resume();
-			this.setState({initialValue: null});
-		} else if (!prevProps.open && this.props.open) {
-			this.setState({initialValue: this.props.value});
 		}
 	}
 
