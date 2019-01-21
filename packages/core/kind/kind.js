@@ -9,6 +9,7 @@ import React from 'react';
 
 import computed from './computed';
 import styles from './styles';
+import warning from 'warning';
 
 /**
  * @callback RenderFunction
@@ -50,7 +51,7 @@ import styles from './styles';
  * @property {String} name
  * @property {Object.<string, Function>} [propTypes]
  * @property {Object.<string, any>} [defaultProps]
- * @property {Object.<string, Function>} [contextType]
+ * @property {Object} [contextType]
  * @property {StylesBlock} [styles]
  * @property {Object.<string, HandlerFunction>} [handlers]
  * @property {Object.<string, ComputedPropFunction>} [computed]
@@ -73,9 +74,7 @@ import styles from './styles';
  *			color: 'green'
  *		},
  *		// expect backgroundColor via context
- *		contextType: {
- *			backgroundColor: PropTypes.string
- *		},
+ *		contextType: React.createContext({ backgroundColor }),
  *		// configure styles with the static className to merge with user className
  *		styles: {
  *			// include the CSS modules map so 'button' can be resolved to the local name
@@ -120,8 +119,7 @@ const kind = (config) => {
 		styles: cfgStyles
 	} = config;
 
-	// eslint-disable-next-line no-console
-	if (config.contextTypes) console.warning('"contextTypes" is deprecated. Please use "contextType"');
+	if (config.contextTypes) warning(!config.contextTypes, '"contextTypes" is deprecated. Please use "contextType"');
 
 	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;

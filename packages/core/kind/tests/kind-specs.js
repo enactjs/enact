@@ -5,6 +5,7 @@ import kind from '../kind';
 
 describe('kind', () => {
 
+	const TestContext = React.createContext();
 	const Kind = kind({
 		name: 'Kind',
 		propTypes: {
@@ -14,9 +15,7 @@ describe('kind', () => {
 		defaultProps: {
 			label: 'Label'
 		},
-		contextType: {
-			parentLabel: PropTypes.string
-		},
+		contextType: TestContext,
 		styles: {
 			className: 'kind'
 		},
