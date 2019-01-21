@@ -15,7 +15,7 @@ describe('RadioDecorator', () => {
 
 	const expectToBeActive = (controller, decorator) => {
 		expect(controller.instance().active).toBe(decorator && decorator.instance().handleDeactivate);
-	}
+	};
 
 	test('should be activated when its prop is true on mount', () => {
 		const Component = RadioDecorator({prop: 'active'}, Item);
