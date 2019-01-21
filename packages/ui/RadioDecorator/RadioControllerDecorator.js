@@ -38,7 +38,7 @@ const RadioControllerDecorator = hoc((config, Wrapped) => {	// eslint-disable-li
 			// if the active radio item isn't item and item is active, try to deactivate all the
 			// other radio items
 			if (this.active && this.active !== item) {
-				this.registry.notify({action: 'deactivate'}, i => i !== item);
+				this.registry.notify({action: 'deactivate'}, i => i === this.active);
 			}
 
 			this.active = item;

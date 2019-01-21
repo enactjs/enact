@@ -133,16 +133,6 @@ class FloatingLayerBase extends React.Component {
 		if (this.context) {
 			this.controller = this.context(this.handleNotify.bind(this));
 		}
-
-		if (this.props.open) {
-			this.renderNode();
-		}
-	}
-
-	componentWillReceiveProps (nextProps) {
-		if (!this.props.open && nextProps.open && !this.state.nodeRendered) {
-			this.renderNode();
-		}
 	}
 
 	componentDidUpdate (prevProps, prevState) {
@@ -150,8 +140,12 @@ class FloatingLayerBase extends React.Component {
 
 		if (prevProps.open && !open) {
 			forwardClose(null, this.props);
-		} else if (!prevProps.open && open || (open && !prevState.nodeRendered && this.state.nodeRendered)) {
-			forwardOpen(null, this.props);
+		} else if (!prevProps.open && open) {
+			if (!this.state.nodeRendered) {
+				this.renderNode();
+			} else if (!prevState.nodeRendered) {
+				forwardOpen(null, this.props);
+			}
 		}
 
 		if (scrimType === 'none') {
@@ -183,7 +177,14 @@ class FloatingLayerBase extends React.Component {
 	).bind(this)
 
 	setFloatingLayer ({floatingLayer}) {
+		const isNewLayer = !this.floatingLayer && floatingLayer;
 		this.floatingLayer = floatingLayer;
+
+		// the first time we have a valid floating layer container and this instance is set to open,
+		// we need to render the layer.
+		if (isNewLayer && this.props.open && !this.state.nodeRendered) {
+			this.renderNode();
+		}
 	}
 
 	handleClose = handle(

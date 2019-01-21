@@ -82,7 +82,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillUnmount () {
 			if (this.controller) {
-				this.controller.unregister(this);
+				this.controller.unregister();
 			}
 		}
 

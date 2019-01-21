@@ -1,42 +1,34 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import {FloatingLayerBase} from '../FloatingLayer';
+import FloatingLayerDecorator from '../FloatingLayerDecorator';
 
 describe('FloatingLayer Specs', () => {
-	const context = {
-		getFloatingLayer: () => document.getElementById('floatLayer')
-	};
-
-	beforeEach(() => {
-		const div = document.createElement('div');
-		div.setAttribute('id', 'floatLayer');
-		document.body.appendChild(div);
-	});
-
-	afterEach(() => {
-		const div = document.getElementById('floatLayer');
-		document.body.removeChild(div);
-	});
+	const Root = FloatingLayerDecorator('div');
 
 	test('should not render if FloatingLayer is not open', () => {
-		const wrapper = mount(
-			<FloatingLayerBase><p>Hi</p></FloatingLayerBase>,
-			{context}
+		const subject = mount(
+			<Root>
+				<FloatingLayerBase><p>Hi</p></FloatingLayerBase>
+			</Root>
 		);
 
 		const expected = null;
-		const actual = wrapper.instance().node;
+		const actual = subject.find('FloatingLayer').instance().node;
 		expect(actual).toBe(expected);
 	});
 
-	test('should render if FloatingLayer is open', () => {
-		const wrapper = mount(
-			<FloatingLayerBase open><p>Hi</p></FloatingLayerBase>,
-			{context}
+	test.only('should render if FloatingLayer is open', () => {
+		const subject = mount(
+			<Root>
+				<FloatingLayerBase open><p>Hi</p></FloatingLayerBase>
+			</Root>
 		);
 
+		console.log(subject.debug())
+
 		const expected = 1;
-		const actual = wrapper.instance().node.querySelectorAll('p').length;
+		const actual = subject.find('FloatingLayer').instance().node.querySelectorAll('p').length;
 		expect(actual).toBe(expected);
 	});
 });
