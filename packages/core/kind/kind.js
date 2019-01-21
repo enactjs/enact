@@ -120,6 +120,7 @@ const kind = (config) => {
 		styles: cfgStyles
 	} = config;
 
+	// eslint-disable-next-line no-console
 	if (config.contextTypes) console.warning('"contextTypes" is deprecated. Please use "contextType"');
 
 	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
