@@ -30,6 +30,7 @@ storiesOf('Resizable', module)
 		() => (
 			<Scroller style={{height: ri.unit(399, 'rem'), width: ri.unit(501, 'rem')}}>
 				<NoUpdate>
+					<Item marqueeOn="render">MARQUEEONRENDER ABCDE</Item>
 					<Item>ABCDEFGHIJKLMNOPQRST</Item>
 					<SelectableItem>
 						SELECTABLE ITEM ABCDEFG
@@ -37,7 +38,6 @@ storiesOf('Resizable', module)
 					<ExpandableList title={'ABCDEFGHIJKLMNOPQRS'}>
 						{data}
 					</ExpandableList>
-					<Item>dummy</Item>
 					<Item>dummy</Item>
 				</NoUpdate>
 			</Scroller>
