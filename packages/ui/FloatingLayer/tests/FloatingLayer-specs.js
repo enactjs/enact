@@ -18,14 +18,12 @@ describe('FloatingLayer Specs', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test.only('should render if FloatingLayer is open', () => {
+	test('should render if FloatingLayer is open', () => {
 		const subject = mount(
 			<Root>
 				<FloatingLayerBase open><p>Hi</p></FloatingLayerBase>
 			</Root>
 		);
-
-		console.log(subject.debug())
 
 		const expected = 1;
 		const actual = subject.find('FloatingLayer').instance().node.querySelectorAll('p').length;
