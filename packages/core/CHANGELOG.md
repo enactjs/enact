@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased] - 2019-01-21
+
+### Deprecated
+
+- `core/kind/contextType`, to be removed in 3.0.
+
 ## [2.2.9] - 2019-01-11
 
 No significant changes.
