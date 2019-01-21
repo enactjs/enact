@@ -303,7 +303,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				promoted: false,
 				rtl: determineTextDirection(null, props.rtl, props.forceDirection)
 			};
-			this.sync = false;
 			this.forceRestartMarquee = false;
 			this.timerState = TimerState.CLEAR;
 			this.distance = null;
@@ -775,7 +774,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.marqueeSpeed;
 			delete rest.remeasure;
 			delete rest.rtl;
-			delete rest.sync;
 
 			return (
 				<Wrapped {...rest} onBlur={this.handleBlur} disabled={disabled}>
@@ -812,7 +810,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.marqueeSpeed;
 			delete props.remeasure;
 			delete props.rtl;
-			delete props.sync;
 
 			return <Wrapped {...props} />;
 		}

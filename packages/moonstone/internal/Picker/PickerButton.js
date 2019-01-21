@@ -36,14 +36,12 @@ const PickerButtonBase = kind({
 
 	propTypes: {
 		disabled: PropTypes.bool,
-		enter: PropTypes.func,
 		hidden: PropTypes.bool,
 		icon: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.object
 		]),
 		joined: PropTypes.bool,
-		leave: PropTypes.func,
 		onSpotlightDisappear: PropTypes.func,
 		spotlightDisabled: PropTypes.bool
 	},
@@ -55,7 +53,7 @@ const PickerButtonBase = kind({
 	handlers: {
 		onMouseEnter: handle(
 			forward('onMouseEnter'),
-			(ev, {enter}) => {
+			(ev, props, {enter}) => {
 				if (enter) {
 					enter(null);
 				}
@@ -63,7 +61,7 @@ const PickerButtonBase = kind({
 		),
 		onMouseLeave: handle(
 			forward('onMouseLeave'),
-			(ev, {leave}) => {
+			(ev, props, {leave}) => {
 				if (leave) {
 					leave(null);
 				}
@@ -88,24 +86,21 @@ const PickerButtonBase = kind({
 			);
 		} else {
 			return (
-				<MarqueeControllerContext.Consumer>
-					{sync => (
-						<IconButton
-							{...rest}
-							backgroundOpacity="transparent"
-							disabled={disabled}
-							enter={sync && sync.enter}
-							leave={sync && sync.leave}
-							small
-						>
-							{icon}
-						</IconButton>
-					)}
-				</MarqueeControllerContext.Consumer>
+				<IconButton
+					{...rest}
+					backgroundOpacity="transparent"
+					disabled={disabled}
+					small
+				>
+					{icon}
+				</IconButton>
 			);
 		}
 	}
 });
+
+// This can be replaced with the kind config contextType when it's supported
+PickerButtonBase.contextType = MarqueeControllerContext;
 
 const PickerButton = Pure(
 	PickerButtonBase
