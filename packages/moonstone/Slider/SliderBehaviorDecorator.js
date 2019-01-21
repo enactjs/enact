@@ -61,8 +61,8 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			orientation: 'horizontal'
 		}
 
-		constructor () {
-			super();
+		constructor (props) {
+			super(props);
 
 			this.paused = new Pause();
 			this.handleActivate = this.handleActivate.bind(this);
@@ -77,14 +77,19 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				active: false,
 				dragging: false,
 				focused: false,
-				useHintText: false
+				useHintText: false,
+				valueClone: props.value
 			};
 		}
 
-		UNSAFE_componentWillReceiveProps (nextProps) {
-			if (this.props.value !== nextProps.value) {
-				this.setState({useHintText: false});
+		static getDerivedStateFromProps (nextProps, prevState) {
+			if (nextProps.value !== prevState.valueClone) {
+				return ({
+					useHintText: false,
+					valueClone: nextProps.value
+				});
 			}
+			return null;
 		}
 
 		componentWillUnmount () {
