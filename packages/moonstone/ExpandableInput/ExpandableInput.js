@@ -192,20 +192,6 @@ class ExpandableInputBase extends React.Component {
 		spotlightDisabled: false
 	}
 
-	constructor (props) {
-		super();
-
-		this.paused = new Pause('ExpandableInput');
-		this.pointer = false;
-		this.state = {
-			initialValue: props.value,
-			open: props.open
-		};
-
-		this.handleUpDown = handleUpDown.bind(this);
-		this.handleDeactivate = handleDeactivate.bind(this);
-	}
-
 	static getDerivedStateFromProps (props, state) {
 		if (state.open && !props.open) {
 			return {
@@ -222,7 +208,21 @@ class ExpandableInputBase extends React.Component {
 		}
 	}
 
-	componentDidUpdate(prevProps) {
+	constructor (props) {
+		super(props);
+
+		this.paused = new Pause('ExpandableInput');
+		this.pointer = false;
+		this.state = {
+			initialValue: props.value,
+			open: props.open
+		};
+
+		this.handleUpDown = handleUpDown.bind(this);
+		this.handleDeactivate = handleDeactivate.bind(this);
+	}
+
+	componentDidUpdate (prevProps) {
 		if (prevProps.open && !this.props.open) {
 			this.paused.resume();
 		}
