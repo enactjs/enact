@@ -106,14 +106,6 @@ const ExpandableListBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
-		 * Disables voice control.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		'data-webos-voice-disabled': PropTypes.bool,
-
-		/**
 		 * When `true` and `select` is not `'multiple'`, the expandable will be closed when an item
 		 * is selected.
 		 *
@@ -121,6 +113,14 @@ const ExpandableListBase = kind({
 		 * @public
 		 */
 		closeOnSelect: PropTypes.bool,
+
+		/**
+		 * Disables voice control.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
 
 		/**
 		 * Disables ExpandableList and the control becomes non-interactive.
