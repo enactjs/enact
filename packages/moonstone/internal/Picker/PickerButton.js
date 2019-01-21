@@ -53,17 +53,17 @@ const PickerButtonBase = kind({
 	handlers: {
 		onMouseEnter: handle(
 			forward('onMouseEnter'),
-			(ev, props, {enter}) => {
-				if (enter) {
-					enter(null);
+			(ev, props, sync) => {
+				if (sync && sync.enter) {
+					sync.enter(null);
 				}
 			}
 		),
 		onMouseLeave: handle(
 			forward('onMouseLeave'),
-			(ev, props, {leave}) => {
-				if (leave) {
-					leave(null);
+			(ev, props, sync) => {
+				if (sync && sync.leave) {
+					sync.leave(null);
 				}
 			}
 		)
