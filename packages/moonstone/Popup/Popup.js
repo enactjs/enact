@@ -241,12 +241,6 @@ const checkScrimNone = (props) => {
 		'is not supported. Use a transparent scrim to prevent spotlight focus outside of the popup');
 };
 
-const OpenState = {
-	CLOSED: 0,
-	OPENING: 1,
-	OPEN: 2
-};
-
 /**
  * A stateful component that renders a popup in a
  * [FloatingLayer]{@link ui/FloatingLayer.FloatingLayer}.
@@ -389,7 +383,6 @@ class Popup extends React.Component {
 	constructor (props) {
 		super(props);
 		this.paused = new Pause('Popup');
-		const animateOpen = this.props.noAnimation ? OpenState.OPEN : OpenState.OPENING;
 		this.state = {
 			floatLayerOpen: this.props.open,
 			popupOpen: this.props.open,
@@ -559,7 +552,7 @@ class Popup extends React.Component {
 					onCloseButtonClick={onClose}
 					onHide={this.handlePopupHide}
 					onShow={this.handlePopupShow}
-					open={this.state.popupOpen >= OpenState.OPENING}
+					open={this.state.popupOpen}
 					spotlightId={this.state.containerId}
 					spotlightRestrict="self-only"
 				/>
