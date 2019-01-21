@@ -17,6 +17,7 @@ const toFlexAlign = (align) => (
  * [Layout]{@link ui/Layout.Layout}.
  *
  * @class Cell
+ * @ui
  * @memberof ui/Layout
  * @public
  */

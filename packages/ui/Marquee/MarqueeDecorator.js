@@ -3,7 +3,6 @@ import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
-import {contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -11,6 +10,7 @@ import shallowEqual from 'recompose/shallowEqual';
 
 import MarqueeBase from './MarqueeBase';
 import {contextTypes} from './MarqueeController';
+import {ResizeContext} from '../internal/Resize';
 
 /**
  * Default configuration parameters for {@link ui/Marquee.MarqueeDecorator}
@@ -69,7 +69,7 @@ const defaultConfig = {
 	* Invalidate the distance if any property (like 'inline') changes.
 	* Expects an array of props which on change trigger invalidateMetrics.
 	*
-	* @type {Array}
+	* @type {String[]}
 	* @default ['remeasure']
 	* @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	*/
@@ -98,10 +98,10 @@ const defaultConfig = {
 	marqueeDirection: (str) => direction(str) === 'rtl' ? 'rtl' : 'ltr'
 };
 
-/**
+/*
  * Checks whether any of the invalidateProps has changed or not
  *
- * @param {Array} propList An array of invalidateProps
+ * @param {String[]} propList An array of invalidateProps
  * @param {Object} prev Previous props
  * @param {Object} next Next props
  * @returns {Boolean} `true` if any of the props changed
@@ -284,10 +284,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			rtl: PropTypes.bool
 		}
 
-		static contextTypes = {
-			...contextTypes,
-			...stateContextTypes
-		}
+		static contextTypes = contextTypes
 
 		static defaultProps = {
 			marqueeDelay: 1000,
@@ -310,12 +307,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.timerState = TimerState.CLEAR;
 			this.distance = null;
 			this.contentFits = false;
-		}
-
-		UNSAFE_componentWillMount () {
-			if (this.context.Subscriber) {
-				this.context.Subscriber.subscribe('resize', this.handleResize);
-			}
+			this.registry = null;
 		}
 
 		componentDidMount () {
@@ -385,9 +377,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.context.unregister(this);
 			}
 
-			if (this.context.Subscriber) {
-				this.context.Subscriber.unsubscribe('resize', this.handleResize);
+			if (this.registry) {
+				this.registry.unregister(this.handleResize);
 			}
+
 			off('keydown', this.handlePointerHide);
 		}
 
@@ -824,11 +817,22 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			if (this.props.marqueeDisabled) {
-				return this.renderWrapped();
-			} else {
-				return this.renderMarquee();
-			}
+			return (
+				<ResizeContext.Consumer>
+					{(value) => {
+						if (!this.registry && value) {
+							this.registry = value;
+							this.registry.register(this.handleResize);
+						}
+
+						if (this.props.marqueeDisabled) {
+							return this.renderWrapped();
+						} else {
+							return this.renderMarquee();
+						}
+					}}
+				</ResizeContext.Consumer>
+			);
 		}
 	};
 });

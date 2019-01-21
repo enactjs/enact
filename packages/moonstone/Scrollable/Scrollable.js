@@ -97,6 +97,15 @@ class ScrollableBase extends Component {
 		childRenderer: PropTypes.func.isRequired,
 
 		/**
+		 * Animate while scrolling
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		animate: PropTypes.bool,
+
+		/**
 		 * This is set to `true` by SpotlightContainerDecorator
 		 *
 		 * @type {Boolean}
@@ -121,15 +130,6 @@ class ScrollableBase extends Component {
 		 * @private
 		 */
 		'data-spotlight-id': PropTypes.string,
-
-		/**
-		 * Animate while scrolling
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		animate: PropTypes.bool,
 
 		/**
 		 * Direction of the list or the scroller.

@@ -207,7 +207,6 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {	// eslint-disable-l
  *
  * @hoc
  * @memberof moonstone/Spinner
- * @mixes moonstone/Spinner.SpinnerSpotlightDecorator
  * @mixes moonstone/Skinnable.Skinnable
  * @public
  */

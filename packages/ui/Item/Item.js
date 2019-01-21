@@ -33,10 +33,9 @@ const ItemBase = kind({
 		 * The node to be displayed as the main content of the item.
 		 *
 		 * @type {Node}
-		 * @required
 		 * @public
 		 */
-		children: PropTypes.node.isRequired,
+		children: PropTypes.node,
 
 		/**
 		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',

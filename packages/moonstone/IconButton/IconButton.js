@@ -34,6 +34,8 @@ import componentCss from './IconButton.less';
  * @memberof moonstone/IconButton
  * @extends moonstone/Button.ButtonBase
  * @extends ui/IconButton.IconButtonBase
+ * @omit buttonComponent
+ * @omit iconComponent
  * @ui
  * @public
  */
