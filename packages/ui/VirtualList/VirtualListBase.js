@@ -91,22 +91,6 @@ const VirtualListBaseFactory = (type) => {
 			itemsRenderer: PropTypes.func.isRequired,
 
 			/**
-			 * Activates the component for voice control.
-			 *
-			 * @type {Boolean}
-			 * @private
-			 */
-			'data-webos-voice-focused': PropTypes.bool,
-
-			/**
-			 * The voice control group label.
-			 *
-			 * @type {String}
-			 * @private
-			 */
-			'data-webos-voice-group-label': PropTypes.string,
-
-			/**
 			 * Callback method of scrollTo.
 			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
 			 *
@@ -135,6 +119,22 @@ const VirtualListBaseFactory = (type) => {
 				clientHeight: PropTypes.number.isRequired,
 				clientWidth: PropTypes.number.isRequired
 			}),
+
+			/**
+			 * Activates the component for voice control.
+			 *
+			 * @type {Boolean}
+			 * @private
+			 */
+			'data-webos-voice-focused': PropTypes.bool,
+
+			/**
+			 * The voice control group label.
+			 *
+			 * @type {String}
+			 * @private
+			 */
+			'data-webos-voice-group-label': PropTypes.string,
 
 			/**
 			 * The number of items of data the list contains.
@@ -851,18 +851,7 @@ const ScrollableVirtualList = (props) => (
 	/>
 );
 
-ScrollableVirtualList.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
-	/**
-	 * The layout direction of the list.
-	 *
-	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'vertical'
-	 * @public
-	 */
+ScrollableVirtualList.propTypes = {
 	direction: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 

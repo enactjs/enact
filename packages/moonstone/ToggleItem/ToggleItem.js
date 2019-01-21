@@ -122,7 +122,7 @@ const defaultConfig = {
 	 * Invalidate the distance of marquee text if any property (like 'inline') changes.
 	 * Expects an array of props which on change trigger invalidateMetrics.
 	 *
-	 * @type {Array}
+	 * @type {String[]}
 	 * @default ['inline']
 	 * @memberof moonstone/ToggleItem.ToggleItemDecorator.defaultConfig
 	 */

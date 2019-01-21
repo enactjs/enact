@@ -243,6 +243,7 @@ describe('Picker Specs', () => {
 
 			const expected = -1;
 			picker.simulate('keyDown', {keyCode: 37});
+			picker.simulate('mousedown');
 			const actual = handleChange.mock.calls[0][0].value;
 
 			expect(actual).toBe(expected);
@@ -259,6 +260,7 @@ describe('Picker Specs', () => {
 
 			const expected = 1;
 			picker.simulate('keyDown', {keyCode: 39});
+			picker.simulate('mousedown');
 			const actual = handleChange.mock.calls[0][0].value;
 
 			expect(actual).toBe(expected);
@@ -275,6 +277,7 @@ describe('Picker Specs', () => {
 
 			const expected = -1;
 			picker.simulate('keyDown', {keyCode: 40});
+			picker.simulate('mousedown');
 			const actual = handleChange.mock.calls[0][0].value;
 
 			expect(actual).toBe(expected);
@@ -291,6 +294,7 @@ describe('Picker Specs', () => {
 
 			const expected = 1;
 			picker.simulate('keyDown', {keyCode: 38});
+			picker.simulate('mousedown');
 			const actual = handleChange.mock.calls[0][0].value;
 
 			expect(actual).toBe(expected);
@@ -307,6 +311,7 @@ describe('Picker Specs', () => {
 
 			const expected = 0;
 			picker.simulate('keyDown', {keyCode: 37});
+			picker.simulate('mousedown');
 			const actual = handleChange.mock.calls.length;
 
 			expect(actual).toBe(expected);
@@ -323,6 +328,7 @@ describe('Picker Specs', () => {
 
 			const expected = 0;
 			picker.simulate('keyDown', {keyCode: 39});
+			picker.simulate('mousedown');
 			const actual = handleChange.mock.calls.length;
 
 			expect(actual).toBe(expected);
@@ -339,6 +345,7 @@ describe('Picker Specs', () => {
 
 			const expected = 0;
 			picker.simulate('keyDown', {keyCode: 40});
+			picker.simulate('mousedown');
 			const actual = handleChange.mock.calls.length;
 
 			expect(actual).toBe(expected);
@@ -355,6 +362,7 @@ describe('Picker Specs', () => {
 
 			const expected = 0;
 			picker.simulate('keyDown', {keyCode: 38});
+			picker.simulate('mousedown');
 			const actual = handleChange.mock.calls.length;
 
 			expect(actual).toBe(expected);

@@ -24,6 +24,7 @@ import componentCss from './RadioItem.less';
  * @class RadioItem
  * @memberof moonstone/RadioItem
  * @extends moonstone/ToggleItem.ToggleItem
+ * @omit iconComponent
  * @ui
  * @public
  */

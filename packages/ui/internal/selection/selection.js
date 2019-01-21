@@ -7,7 +7,7 @@ import curry from 'ramda/src/curry';
  * @param	{*|Array}	selected	One or many selected items
  *
  * @returns	{Boolean}				`true` if item is equal to or contained in `selected`
- * @public
+ * @private
  */
 const isSelected = curry(function (item, selected) {
 	return item === selected || Array.isArray(selected) && selected.indexOf(item) >= 0;
@@ -27,7 +27,7 @@ const isSelected = curry(function (item, selected) {
  * @param	{*|Array}	selected	The current selection
  *
  * @returns {*|Array}				The updated selection
- * @public
+ * @private
  */
 const select = curry(function (mode, item, selected) {
 	if (mode === 'radio') {
