@@ -35,26 +35,30 @@ class HourPicker extends React.Component {
 		value: PropTypes.number
 	}
 
-	constructor () {
-		super();
+	static getDerivedStateFromProps (props, state) {
+		const {children, value} = state;
+		const {children: nextChildren, value: nextValue} = props;
 
-		this.state = {
-			noAnimation: false
+		return {
+			children: nextChildren,
+			noAnimation: children[value] === nextChildren[nextValue],
+			value: nextValue
 		};
 	}
 
-	UNSAFE_componentWillReceiveProps (nextProps) {
-		const {children, value} = this.props;
-		const {children: nextChildren, value: nextValue} = nextProps;
+	constructor (props) {
+		super();
 
-		this.setState({
-			noAnimation: children[value] === nextChildren[nextValue]
-		});
+		this.state = {
+			children: props.children,
+			noAnimation: false,
+			value: props.value
+		};
 	}
 
 	render () {
 		return (
-			<DateComponentPicker {...this.props} {...this.state} />
+			<DateComponentPicker {...this.props} noAnimation={this.state.noAnimation} />
 		);
 	}
 }
