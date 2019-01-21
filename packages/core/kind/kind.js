@@ -50,7 +50,7 @@ import styles from './styles';
  * @property {String} name
  * @property {Object.<string, Function>} [propTypes]
  * @property {Object.<string, any>} [defaultProps]
- * @property {Object.<string, Function>} [contextTypes]
+ * @property {Object.<string, Function>} [contextType]
  * @property {StylesBlock} [styles]
  * @property {Object.<string, HandlerFunction>} [handlers]
  * @property {Object.<string, ComputedPropFunction>} [computed]
@@ -73,7 +73,7 @@ import styles from './styles';
  *			color: 'green'
  *		},
  *		// expect backgroundColor via context
- *		contextTypes: {
+ *		contextType: {
  *			backgroundColor: PropTypes.string
  *		},
  *		// configure styles with the static className to merge with user className
@@ -111,7 +111,7 @@ import styles from './styles';
 const kind = (config) => {
 	const {
 		computed: cfgComputed,
-		contextTypes,
+		contextType,
 		defaultProps,
 		handlers,
 		name,
@@ -119,6 +119,8 @@ const kind = (config) => {
 		render,
 		styles: cfgStyles
 	} = config;
+
+	if (config.contextTypes) console.warning('"contextTypes" is deprecated. Please use "contextType"');
 
 	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
@@ -135,7 +137,7 @@ const kind = (config) => {
 
 		static propTypes = propTypes
 
-		static contextTypes = contextTypes
+		static contextType = contextType
 
 		static defaultProps = defaultProps
 
