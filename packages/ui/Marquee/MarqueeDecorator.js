@@ -156,8 +156,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'ui:MarqueeDecorator'
 
-		static contextType = MarqueeControllerContext
-
 		static propTypes = /** @lends ui/Marquee.MarqueeDecorator.prototype */ {
 			/**
 			 * Text alignment value of the marquee. Valid values are `'left'`, `'right'` and `'center'`.
@@ -294,6 +292,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeResetDelay: 1000,
 			marqueeSpeed: 60
 		}
+
+		static contextType = MarqueeControllerContext
 
 		constructor (props) {
 			super(props);

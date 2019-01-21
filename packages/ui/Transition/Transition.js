@@ -437,6 +437,7 @@ class Transition extends React.Component {
 		if (this.context) {
 			this.resizeRegistry = this.context(this.handleResize);
 		}
+
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -485,7 +486,7 @@ class Transition extends React.Component {
 	componentWillUnmount () {
 		this.measuringJob.stop();
 		if (this.resizeRegistry) {
-			this.resizeRegistry.unregister(this.handleResize);
+			this.resizeRegistry.unregister();
 		}
 	}
 
