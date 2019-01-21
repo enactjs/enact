@@ -119,7 +119,7 @@ const kind = (config) => {
 		styles: cfgStyles
 	} = config;
 
-	if (config.contextTypes) warning(!config.contextTypes, '"contextTypes" is deprecated. Please use "contextType"');
+	warning(!config.contextTypes, '"contextTypes" is deprecated. Please use "contextType"');
 
 	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
