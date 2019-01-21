@@ -383,11 +383,28 @@ class Popup extends React.Component {
 		this.paused = new Pause('Popup');
 		this.state = {
 			floatLayerOpen: this.props.open,
-			popupOpen: this.props.noAnimation,
+			popupOpen: this.props.open,
 			containerId: Spotlight.add(),
 			activator: null
 		};
 		checkScrimNone(this.props);
+	}
+
+	static getDerivedStateFromProps (props, state) {
+		if (props.open && !state.popupOpen) {
+			if (!state.floatLayerOpen) {
+				return {
+					floatLayerOpen: true
+				};
+			}
+		} else if (!props.open && state.floatLayerOpen) {
+			if (state.popupOpen) {
+				return {
+					popupOpen: false
+				};
+			}
+		}
+		return null;
 	}
 
 	// Spot the content after it's mounted.
@@ -397,42 +414,11 @@ class Popup extends React.Component {
 		}
 	}
 
-	UNSAFE_componentWillReceiveProps (nextProps) {
-		// while transitioning, we set `popupOpen` with the given `open` prop value
-		if (!this.props.noAnimation && this.state.floatLayerOpen) {
-			this.setState({
-				popupOpen: nextProps.open
-			});
-		} else if (!this.props.open && nextProps.open) {
-			this.setState({
-				popupOpen: nextProps.noAnimation,
-				floatLayerOpen: true,
-				activator: Spotlight.getCurrent()
-			});
-		} else if (this.props.open && !nextProps.open) {
-			const activator = this.state.activator;
-
-			this.setState({
-				popupOpen: nextProps.noAnimation,
-				floatLayerOpen: !nextProps.noAnimation,
-				activator: nextProps.noAnimation ? null : activator
-			});
+	componentDidUpdate (prevProps) {
+		if (!this.props.noAnimation && this.props.open !== prevProps.open) {
+			this.paused.pause();
 		}
-		checkScrimNone(nextProps);
-	}
-
-	componentDidUpdate (prevProps, prevState) {
-		if (this.props.open !== prevProps.open) {
-			if (!this.props.noAnimation) {
-				this.paused.pause();
-			} else if (this.props.open) {
-				forwardShow({}, this.props);
-				this.spotPopupContent();
-			} else if (prevProps.open) {
-				forwardHide({}, this.props);
-				this.spotActivator(prevState.activator);
-			}
-		}
+		checkScrimNone(this.props);
 	}
 
 	componentWillUnmount () {
@@ -443,12 +429,14 @@ class Popup extends React.Component {
 	}
 
 	handleFloatingLayerOpen = () => {
-		if (!this.props.noAnimation) {
-			this.setState({
-				popupOpen: true
-			});
-		} else if (this.state.popupOpen && this.props.open) {
-			this.spotPopupContent();
+		this.setState({
+			activator: Spotlight.getCurrent(),
+			popupOpen: true
+		});
+
+		const current = Spotlight.getCurrent();
+		if (current) {
+			current.blur();
 		}
 	}
 
@@ -489,7 +477,7 @@ class Popup extends React.Component {
 			activator: null
 		});
 
-		if (ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
+		if (!this.props.noAnimation && ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
 			this.paused.resume();
 
 			if (!this.props.open) {
@@ -501,7 +489,7 @@ class Popup extends React.Component {
 	handlePopupShow = (ev) => {
 		forwardShow(ev, this.props);
 
-		if (ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
+		if (!this.props.noAnimation && ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
 			this.paused.resume();
 
 			if (this.props.open) {
