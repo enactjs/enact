@@ -4,7 +4,6 @@ import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
-import {on, off} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -28,21 +27,17 @@ const
 		overscrollTypeOnce: 2,
 		overscrollTypeDone: 9,
 		overscrollVelocityFactor: 300,
-		paginationPageMultiplier: 0.8,
 		scrollStopWaiting: 200,
 		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	},
 	{
 		epsilon,
-		isPageDown,
-		isPageUp,
 		nop,
 		overscrollTypeDone,
 		overscrollTypeHold,
 		overscrollTypeNone,
 		overscrollTypeOnce,
 		overscrollVelocityFactor,
-		paginationPageMultiplier,
 		scrollStopWaiting,
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
@@ -87,8 +82,9 @@ class ScrollableBaseNative extends Component {
 		applyOverscrollEffect: PropTypes.func,
 
 		/**
-		 * A callback function that receives a reference to the `scrollTo` feature. Once received,
-		 * the `scrollTo` method can be called as an imperative interface.
+		 * A callback function that receives a reference to the `scrollTo` feature.
+		 *
+		 * Once received, the `scrollTo` method can be called as an imperative interface.
 		 *
 		 * The `scrollTo` function accepts the following paramaters:
 		 * - {position: {x, y}} - Pixel value for x and/or y position
@@ -127,6 +123,7 @@ class ScrollableBaseNative extends Component {
 
 		/**
 		 * Direction of the list or the scroller.
+		 *
 		 * `'both'` could be only used for[Scroller]{@link ui/Scroller.Scroller}.
 		 *
 		 * Valid values are:
@@ -154,6 +151,15 @@ class ScrollableBaseNative extends Component {
 		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
 		/**
+		 * Prevents animated scrolling.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		noAnimation: PropTypes.bool,
+
+		/**
 		 * Prevents scroll by dragging or flicking on the list or the scroller.
 		 *
 		 * @type {Boolean}
@@ -171,14 +177,6 @@ class ScrollableBaseNative extends Component {
 		onFlick: PropTypes.func,
 
 		/**
-		 * Called when pressing a key.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onKeyDown: PropTypes.func,
-
-		/**
 		 * Called when trigerring a mousedown event.
 		 *
 		 * @type {Function}
@@ -188,6 +186,7 @@ class ScrollableBaseNative extends Component {
 
 		/**
 		 * Called when scrolling.
+		 *
 		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
 		 * It is not recommended to set this prop since it can cause performance degradation.
 		 * Use `onScrollStart` or `onScrollStop` instead.
@@ -203,6 +202,7 @@ class ScrollableBaseNative extends Component {
 
 		/**
 		 * Called when scroll starts.
+		 *
 		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
 		 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
 		 *
@@ -233,6 +233,7 @@ class ScrollableBaseNative extends Component {
 
 		/**
 		 * Called when scroll stops.
+		 *
 		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
 		 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
 		 *
@@ -291,6 +292,14 @@ class ScrollableBaseNative extends Component {
 		removeEventListeners: PropTypes.func,
 
 		/**
+		 * Indicates the content's text direction is right-to-left.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * Called to execute additional logic in a themed component after scrolling.
 		 *
 		 * @type {Function}
@@ -316,6 +325,7 @@ class ScrollableBaseNative extends Component {
 
 		/**
 		 * ScrollableNative CSS style.
+		 *
 		 * Should be defined because we manipulate style prop in render().
 		 *
 		 * @type {Object}
@@ -325,6 +335,7 @@ class ScrollableBaseNative extends Component {
 
 		/**
 		 * Specifies how to show vertical scrollbar.
+		 *
 		 * Valid values are:
 		 * * `'auto'`,
 		 * * `'visible'`, and
@@ -347,6 +358,7 @@ class ScrollableBaseNative extends Component {
 	static defaultProps = {
 		cbScrollTo: nop,
 		horizontalScrollbar: 'auto',
+		noAnimation: false,
 		noScrollByDrag: false,
 		onScroll: nop,
 		onScrollStart: nop,
@@ -359,7 +371,6 @@ class ScrollableBaseNative extends Component {
 		super(props);
 
 		this.state = {
-			rtl: false,
 			remeasure: false,
 			isHorizontalScrollbarVisible: props.horizontalScrollbar === 'visible',
 			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
@@ -376,6 +387,10 @@ class ScrollableBaseNative extends Component {
 		};
 
 		this.overscrollEnabled = !!(props.applyOverscrollEffect);
+		this.scrollRaFId = null;
+
+		// Enable the early bail out of repeated scrolling to the same position
+		this.animationInfo = null;
 
 		props.cbScrollTo(this.scrollTo);
 	}
@@ -393,15 +408,12 @@ class ScrollableBaseNative extends Component {
 
 		if (this.context.Subscriber) {
 			this.context.Subscriber.subscribe('resize', this.handleSubscription);
-			this.context.Subscriber.subscribe('i18n', this.handleSubscription);
 		}
 	}
 
 	componentDidMount () {
 		this.addEventListeners();
 		this.updateScrollbars();
-
-		on('keydown', this.onKeyDown);
 	}
 
 	componentWillUpdate () {
@@ -453,16 +465,18 @@ class ScrollableBaseNative extends Component {
 	componentWillUnmount () {
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
 		if (this.scrolling) {
-			this.forwardScrollEvent('onScrollStop');
+			this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
 		}
 		this.scrollStopJob.stop();
 
 		this.removeEventListeners();
-		off('keydown', this.onKeyDown);
 
 		if (this.context.Subscriber) {
 			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
-			this.context.Subscriber.unsubscribe('i18n', this.handleSubscription);
+		}
+
+		if (this.scrollRaFId) {
+			window.cancelAnimationFrame(this.scrollRaFId);
 		}
 	}
 
@@ -474,12 +488,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	handleSubscription = ({channel, message}) => {
-		if (channel === 'i18n') {
-			const {rtl} = message;
-			if (rtl !== this.state.rtl) {
-				this.setState({rtl});
-			}
-		} else if (channel === 'resize') {
+		if (channel === 'resize') {
 			this.publisher.publish(message);
 		}
 	}
@@ -537,7 +546,7 @@ class ScrollableBaseNative extends Component {
 
 	// event handler for browser native scroll
 
-	getRtlX = (x) => (this.state.rtl ? -x : x)
+	getRtlX = (x) => (this.props.rtl ? -x : x)
 
 	onMouseDown = (ev) => {
 		this.isScrollAnimationTargetAccumulated = false;
@@ -718,54 +727,17 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onScroll = (ev) => {
-		const
-			bounds = this.getScrollBounds(),
-			canScrollHorizontally = this.canScrollHorizontally(bounds);
-		let
-			{scrollLeft, scrollTop} = ev.target;
+		const {scrollLeft, scrollTop} = ev.target;
 
-		if (!this.scrolling) {
-			this.scrollStartOnScroll();
-		}
-
-		if (this.state.rtl && canScrollHorizontally) {
-			/* FIXME: RTL / this calculation only works for Chrome */
-			scrollLeft = bounds.maxLeft - scrollLeft;
-		}
-
-		this.scrollOnScroll(scrollLeft, scrollTop);
-
-		this.startHidingThumb();
-		this.scrollStopJob.start();
-	}
-
-	scrollByPage = (keyCode) => {
-		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
-		// scroller as a plain container
-		if (!this.state.isVerticalScrollbarVisible) return;
-
-		const
-			bounds = this.getScrollBounds(),
-			canScrollVertically = this.canScrollVertically(bounds),
-			pageDistance = (isPageUp(keyCode) ? -1 : 1) * (canScrollVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
-
-		this.lastInputType = 'pageKey';
-
-		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.pageKey);
-	}
-
-	onKeyDown = (ev) => {
-		if (this.props.onKeyDown) {
-			forward('onKeyDown', ev, this.props);
-		} else if (isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) {
-			ev.preventDefault();
-			if (!ev.repeat) {
-				this.scrollByPage(ev.keyCode);
-			}
+		if (!this.scrollRaFId) {
+			this.scrollRaFId = window.requestAnimationFrame(() => {
+				this.scrollOnScroll(scrollLeft, scrollTop);
+				this.scrollRaFId = null;
+			});
 		}
 	}
 
-	scrollToAccumulatedTarget = (delta, vertical, overscrollEffect) => {
+	scrollToAccumulatedTarget = (delta, vertical, overscrollEffect, animate) => {
 		if (!this.isScrollAnimationTargetAccumulated) {
 			this.accumulatedTargetX = this.scrollLeft;
 			this.accumulatedTargetY = this.scrollTop;
@@ -778,7 +750,7 @@ class ScrollableBaseNative extends Component {
 			this.accumulatedTargetX += delta;
 		}
 
-		this.start({targetX: this.accumulatedTargetX, targetY: this.accumulatedTargetY, overscrollEffect});
+		this.start({targetX: this.accumulatedTargetX, targetY: this.accumulatedTargetY, overscrollEffect, animate});
 	}
 
 	// overscroll effect
@@ -787,7 +759,7 @@ class ScrollableBaseNative extends Component {
 		if (position <= 0) {
 			return 'before';
 		/* If a scroll size or a client size is not integer,
-		   browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
+			 browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
 		} else if (position >= maxPosition - 1) {
 			return 'after';
 		} else {
@@ -834,7 +806,7 @@ class ScrollableBaseNative extends Component {
 			maxPos = this.getScrollBounds()[isVertical ? 'maxTop' : 'maxLeft'];
 
 		/* If a scroll size or a client size is not integer,
-		   browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
+			 browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
 		if ((edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - 1)) { // Already on the edge
 			this.applyOverscrollEffect(orientation, edge, type, ratio);
 		} else {
@@ -897,19 +869,17 @@ class ScrollableBaseNative extends Component {
 	}
 
 	checkAndApplyOverscrollEffectOnStart = (orientation, edge, targetPosition) => {
-		if (edge) {
-			if (this.isDragging) {
-				this.applyOverscrollEffectOnDrag(orientation, edge, targetPosition, overscrollTypeHold);
-			} else if (this.getOverscrollStatus(orientation, edge).type === overscrollTypeNone) {
-				this.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
-			}
+		if (this.isDragging) {
+			this.applyOverscrollEffectOnDrag(orientation, edge, targetPosition, overscrollTypeHold);
+		} else if (edge) {
+			this.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 		}
 	}
 
 	// call scroll callbacks
 
-	forwardScrollEvent (type) {
-		forward(type, {scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
+	forwardScrollEvent (type, reachedEdgeInfo) {
+		forward(type, {scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo(), reachedEdgeInfo}, this.props);
 	}
 
 	// call scroll callbacks and update scrollbars for native scroll
@@ -930,10 +900,24 @@ class ScrollableBaseNative extends Component {
 		this.lastInputType = null;
 		this.isScrollAnimationTargetAccumulated = false;
 		this.scrolling = false;
-		this.forwardScrollEvent('onScrollStop');
+		this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
+		this.startHidingThumb();
 	}
 
 	scrollOnScroll = (left, top) => {
+		const
+			bounds = this.getScrollBounds(),
+			canScrollHorizontally = this.canScrollHorizontally(bounds);
+
+		if (!this.scrolling) {
+			this.scrollStartOnScroll();
+		}
+
+		if (this.props.rtl && canScrollHorizontally) {
+			/* FIXME: RTL / this calculation only works for Chrome */
+			left = bounds.maxLeft - left;
+		}
+
 		let
 			dirHorizontal = 0,
 			dirVertical = 0;
@@ -951,9 +935,10 @@ class ScrollableBaseNative extends Component {
 			this.childRef.didScroll(this.scrollLeft, this.scrollTop, dirHorizontal, dirVertical);
 		}
 		this.forwardScrollEvent('onScroll');
+		this.scrollStopJob.start();
 	}
 
-	scrollStopJob = new Job(this.scrollStopOnScroll.bind(this), scrollStopWaiting);
+	scrollStopJob = new Job(this.scrollStopOnScroll, scrollStopWaiting);
 
 	// update scroll position
 
@@ -985,6 +970,38 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	getReachedEdgeInfo = () => {
+		const
+			bounds = this.getScrollBounds(),
+			reachedEdgeInfo = {bottom: false, left: false, right: false, top: false};
+
+		if (this.canScrollHorizontally(bounds)) {
+			const
+				rtl = this.props.rtl,
+				edge = this.getEdgeFromPosition(this.scrollLeft, bounds.maxLeft);
+
+			if (edge) { // if edge is null, no need to check which edge is reached.
+				if ((edge === 'before' && !rtl) || (edge === 'after' && rtl)) {
+					reachedEdgeInfo.left = true;
+				} else {
+					reachedEdgeInfo.right = true;
+				}
+			}
+		}
+
+		if (this.canScrollVertically(bounds)) {
+			const edge = this.getEdgeFromPosition(this.scrollTop, bounds.maxTop);
+
+			if (edge === 'before') {
+				reachedEdgeInfo.top = true;
+			} else if (edge === 'after') {
+				reachedEdgeInfo.bottom = true;
+			}
+		}
+
+		return reachedEdgeInfo;
+	}
+
 	// scroll start
 
 	start ({targetX, targetY, animate = true, overscrollEffect = false}) {
@@ -994,6 +1011,18 @@ class ScrollableBaseNative extends Component {
 			childContainerRef = childRef.containerRef,
 			bounds = this.getScrollBounds(),
 			{maxLeft, maxTop} = bounds;
+
+		const updatedAnimationInfo = {
+			targetX,
+			targetY
+		};
+
+		// bail early when scrolling to the same position
+		if (this.scrolling && this.animationInfo && this.animationInfo.targetX === targetX && this.animationInfo.targetY === targetY) {
+			return;
+		}
+
+		this.animationInfo = updatedAnimationInfo;
 
 		if (Math.abs(maxLeft - targetX) < epsilon) {
 			targetX = maxLeft;
@@ -1236,7 +1265,7 @@ class ScrollableBaseNative extends Component {
 
 		if (childRef && childRef.containerRef) {
 			if (childRef.containerRef.addEventListener) {
-				childRef.containerRef.addEventListener('scroll', this.onScroll, {capture: true});
+				childRef.containerRef.addEventListener('scroll', this.onScroll, {capture: true, passive: true});
 				childRef.containerRef.addEventListener('mousedown', this.onMouseDown);
 			}
 			this.childRef.containerRef.style.scrollBehavior = 'smooth';
@@ -1256,7 +1285,7 @@ class ScrollableBaseNative extends Component {
 		}
 
 		if (childRef && childRef.containerRef && childRef.containerRef.removeEventListener) {
-			childRef.containerRef.removeEventListener('scroll', this.onScroll, {capture: true});
+			childRef.containerRef.removeEventListener('scroll', this.onScroll, {capture: true, passive: true});
 			childRef.containerRef.removeEventListener('mousedown', this.onMouseDown);
 		}
 
@@ -1293,8 +1322,8 @@ class ScrollableBaseNative extends Component {
 
 	render () {
 		const
-			{className, containerRenderer, noScrollByDrag, style, ...rest} = this.props,
-			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl} = this.state,
+			{className, containerRenderer, noScrollByDrag, rtl, style, ...rest} = this.props,
+			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className),
 			childWrapper = noScrollByDrag ? 'div' : TouchableDiv,
 			childWrapperProps = {
@@ -1314,8 +1343,8 @@ class ScrollableBaseNative extends Component {
 		delete rest.cbScrollTo;
 		delete rest.clearOverscrollEffect;
 		delete rest.horizontalScrollbar;
+		delete rest.noAnimation;
 		delete rest.onFlick;
-		delete rest.onKeyDown;
 		delete rest.onMouseDown;
 		delete rest.onScroll;
 		delete rest.onScrollStart;

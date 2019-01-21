@@ -80,6 +80,9 @@ const LabeledIconButtonBase = kind({
 		 * Setting `selected` may be useful when the component represents a toggleable option. The
 		 * visual effect may be customized using the
 		 * [css]{@link moonstone/LabeledIconButton.LabeledIconButtonBase.css} prop.
+		 *
+		 * @type {Boolean}
+		 * @public
 		 */
 		selected: PropTypes.bool
 	},

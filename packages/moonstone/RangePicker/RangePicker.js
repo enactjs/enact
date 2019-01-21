@@ -5,6 +5,8 @@
  * <RangePicker defaultValue={70} min={0} max={100}></RangePicker>
  *
  * @module moonstone/RangePicker
+ * @exports RangePicker
+ * @exports RangePickerBase
  */
 
 import Changeable from '@enact/ui/Changeable';
@@ -26,8 +28,7 @@ const digits = (num) => {
 };
 
 /**
- * Base component of [RangePicker]{@link moonstone/RangePicker.RangePicker} which is not
- * [spottable]{@link spotlight/Spottable.Spottable}.
+ * RangePicker base component.
  *
  * @class RangePickerBase
  * @memberof moonstone/RangePicker

@@ -1,18 +1,29 @@
 /**
- * Provides Moonstone-themed Icon component with interactive togglable capabilities, upon which many
- * moonstone Icon components are based. Ex:
- * [Checkbox]{@link moonstone/Checkbox.Checkbox},
- * [FormCheckbox]{@link moonstone/FormCheckbox.FormCheckbox},
- * [Switch]{@link moonstone/Switch.Switch},
- * [the icon for RadioItem]{@link moonstone/RadioItem.RadioItem}, and
- * [the icon for SelectableItem]{@link moonstone/SelectableItem.SelectableItem}.
+ * Provides Moonstone-themed Icon component with interactive toggleable capabilities.
+ *
+ * `ToggleIcon` does not implement a visual change when a user interacts with the control and must
+ * be customized by the consumer using [css className
+ * overrides]{@link ui/ToggleIcon.ToggleIconBase.css}.
+ *
+ * Often, an [Icon value]{@link moonstone/Icon.Icon} is passed as `children` to represent the
+ * selected state but is not required. Omitting `children` allows the consumer to implement more
+ * advanced approaches such as styling the `::before` and `::after` pseudo-elements to save a DOM
+ * node.
+ *
+ * The following Moonstone components use `ToggleIcon`, and make good examples of various usages.
+ *
+ * * [Checkbox]{@link moonstone/Checkbox.Checkbox},
+ * * [FormCheckbox]{@link moonstone/FormCheckbox.FormCheckbox},
+ * * [Switch]{@link moonstone/Switch.Switch},
+ * * [RadioItem]{@link moonstone/RadioItem.RadioItem}, and
+ * * [SelectableItem]{@link moonstone/SelectableItem.SelectableItem}.
+ *
+ * @example
+ * <ToggleIcon onToggle={(props)=> console.log(props.selected)}>
+ *   check
+ * </ToggleIcon>
  *
  * @module moonstone/ToggleIcon
- * @example
- * <ToggleIcon
- * 	onToggle={(props)=> console.log(props.selected)}>
- * 	check
- * </ToggleIcon>
  * @exports ToggleIcon
  * @exports ToggleIconBase
  * @exports ToggleIconDecorator
@@ -47,7 +58,7 @@ const ToggleIconBase = kind({
 });
 
 /**
- * Moonstone-specific behaviors to apply to [ToggleIconBase]{@link moonstone/ToggleIcon.ToggleIconBase}.
+ * Moonstone-specific behaviors to apply to `ToggleIconBase`.
  *
  * @hoc
  * @memberof moonstone/ToggleIcon

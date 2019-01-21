@@ -9,7 +9,7 @@ import ScrollThumb from './ScrollThumb';
 import componentCss from './Scrollbar.less';
 
 /**
- * A Moonstone-styled base component for [Scrollable]{@link moonstone/Scrollable.Scrollbar}.
+ * A Moonstone-styled scroller base component.
  *
  * @class ScrollbarBase
  * @memberof moonstone/Scrollable

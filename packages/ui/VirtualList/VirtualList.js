@@ -22,7 +22,6 @@ import {gridListItemSizeShape, ScrollableVirtualList, ScrollableVirtualListNativ
  *
  * @class VirtualList
  * @memberof ui/VirtualList
- * @extends ui/Scrollable.Scrollable
  * @extends ui/VirtualList.VirtualListBase
  * @ui
  * @public
@@ -32,9 +31,10 @@ const VirtualList = kind({
 
 	propTypes: /** @lends ui/VirtualList.VirtualList.prototype */ {
 		/**
-		 * Size of an item for the `VirtualList`; valid value is a number.
-		 * If the direction for the list is vertical, `itemSize` means the height of an item.
-		 * For horizontal, it means the width of an item.
+		 * Size of an item for the `VirtualList`.
+		 *
+		 * Valid value is a number. If the direction for the list is vertical,
+		 * `itemSize` means the height of an item. For horizontal, it means the width of an item.
 		 *
 		 * Example:
 		 * ```
@@ -58,7 +58,6 @@ const VirtualList = kind({
  *
  * @class VirtualGridList
  * @memberof ui/VirtualList
- * @extends ui/Scrollable.Scrollable
  * @extends ui/VirtualList.VirtualListBase
  * @ui
  * @public
@@ -68,8 +67,9 @@ const VirtualGridList = kind({
 
 	propTypes: /** @lends ui/VirtualList.VirtualGridList.prototype */ {
 		/**
-		 * Size of an item for the `VirtualGridList`; valid value is an object that has `minWidth`
-		 * and `minHeight` as properties.
+		 * Size of an item for the `VirtualGridList`.
+		 *
+		 * * Valid value is an object that has `minWidth` and `minHeight` as properties.
 		 *
 		 * Example:
 		 * ```
@@ -95,13 +95,13 @@ const VirtualGridList = kind({
 
 /**
  * An unstyled scrollable virtual native list component with touch support.
+ *
  * For smooth native scrolling, web engine with below Chromium 61, should be launched
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
  *
  * @class VirtualListNative
  * @memberof ui/VirtualList
- * @extends ui/Scrollable.ScrollableNative
  * @extends ui/VirtualList.VirtualListBaseNative
  * @ui
  * @private
@@ -111,7 +111,8 @@ const VirtualListNative = kind({
 
 	propTypes: /** @lends ui/VirtualList.VirtualListNative.prototype */ {
 		/**
-		 * Size of an item for the `VirtualList`; valid value is a number.
+		 * Size of an item for the `VirtualList`.
+		 *
 		 * If the direction for the list is vertical, `itemSize` means the height of an item.
 		 * For `horizontal`, it means the width of an item.
 		 *
@@ -134,13 +135,13 @@ const VirtualListNative = kind({
 
 /**
  * An unstyled scrollable virtual native grid list component with touch support.
+ *
  * For smooth native scrolling, web engine with below Chromium 61, should be launched
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
  * The one with Chromium 61 or above, is launched to support it by default.
  *
  * @class VirtualGridListNative
  * @memberof ui/VirtualList
- * @extends ui/Scrollable.ScrollableNative
  * @extends ui/VirtualList.VirtualListBaseNative
  * @ui
  * @private
@@ -150,8 +151,9 @@ const VirtualGridListNative = kind({
 
 	propTypes: /** @lends ui/VirtualList.VirtualGridListNative.prototype */ {
 		/**
-		 * Size of an item for the `VirtualGridList`; valid value is an object that has `minWidth`
-		 * and `minHeight` as properties.
+		 * Size of an item for the `VirtualGridList`
+		 *
+		 * * Valid value is an object that has `minWidth` and `minHeight` as properties.
 		 *
 		 * Example:
 		 * ```

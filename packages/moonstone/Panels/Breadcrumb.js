@@ -1,9 +1,11 @@
+import {handle, forward, adaptEvent} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import $L from '../internal/$L';
+
 import css from './Panels.less';
 
 // Since we expose `onSelect` to handle breadcrumb selection, we need that handler to be set on a
@@ -23,6 +25,7 @@ export const breadcrumbWidth = 96;
 
 /**
  * Vertical, transparent bar used to navigate to a prior Panel.
+ *
  * [`ActivityPanels`]{@link moonstone/Panels.ActivityPanels} has one breadcrumb, and
  * [`AlwaysViewingPanels`]{@link moonstone/Panels.AlwaysViewingPanels} can have multiple stacked
  * horizontally.
@@ -68,13 +71,10 @@ const BreadcrumbBase = kind({
 	},
 
 	handlers: {
-		onSelect: (ev, {index, onSelect, onClick}) => {
-			// clear Spotlight focus
-			ev.target.blur();
-
-			if (onClick) onClick(ev);
-			if (onSelect) onSelect({index});
-		}
+		onSelect: handle(
+			forward('onClick'),
+			adaptEvent((ev, {index}) => ({type: 'onSelect', index}), forward('onSelect'))
+		)
 	},
 
 	render: ({children, index, onSelect, ...rest}) => (

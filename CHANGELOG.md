@@ -2,6 +2,156 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.2.9] - 2019-01-11
+
+### Fixed
+
+- `moonstone/Scroller` scrolling to boundary behavior for short scrollers
+
+## [2.2.8] - 2018-12-06
+
+### Fixed
+
+- `moonstone/ExpandableInput` to focus labeled item on close
+- `moonstone/ExpandableItem` to disable its spotlight container when the component is disabled
+- `moonstone/Scroller` to correctly handle scrolling focused elements and containers into view
+- `spotlight` to focus correctly within an overflow container in which the first element is another container without spottable children
+- `ui/Marquee` to display an ellipsis when changing to text that no longer fits within its bounds
+- `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` to debounce `onScrollStop` events for non-animated scrolls
+
+## [2.2.7] - 2018-11-21
+
+### Fixed
+
+- `moonstone/Picker`, `moonstone/ExpandablePicker`, `moonstone/ExpandableList`, `moonstone/IncrementSlider` to support disabling voice control
+- `ui/Marquee` to avoid very small animations
+
+## [2.2.6] - 2018-11-15
+
+### Fixed
+
+- `i18n/I18nDecorator` to allow changing the locale to a falsey value to use the device locale
+- `moonstone/VideoPlayer` to blur slider when hiding media controls
+- `moonstone/VideoPlayer` to disable pointer mode when hiding media controls via 5-way
+- `moonstone/VirtualList` and `moonstone/Scroller` to not to animate with 5-way navigation by default
+- `ui/Marquee` to handle contents which overflow their containers only slightly
+
+
+## [2.2.5] - 2018-11-05
+
+### Fixed
+
+- `moonstone/ExpandableItem` to not steal focus after closing
+- `ui/Transition` to better support layout after changing children
+
+## [2.2.4] - 2018-10-29
+
+### Fixed
+
+- `moonstone/DayPicker` separator character used between selected days in the label in fa-IR locale
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` scrolling by voice commands in RTL locales
+
+## [2.2.3] - 2018-10-22
+
+### Fixed
+
+- `moonstone/Scroller` to respect the disabled spotlight container status when handling pointer events
+- `moonstone/Scroller` to scroll to the boundary when focusing the first or last element with a minimal margin in 5-way mode
+- `moonstone/VideoPlayer` to position the slider knob correctly when beyond the left or right edge of the slider
+- `spotlight` selection of elements clipped by an overflow container
+
+## [2.2.2] - 2018-10-15
+
+### Fixed
+
+- `core/util.Job` to cancel existing scheduled `idle()` jobs before scheduling another
+- `moonstone/Scroller` stuttering when page up/down key is pressed
+- `ui/Scroller` slowed scrolling behavior when repeatedly requesting a scroll to the same position
+
+## [2.2.1] - 2018-10-09
+
+### Fixed
+
+- `i18n/ilib/DurationFmt` to respect `sync` parameter when loading strings
+- `i18n` resource loading failure due to resolving the path incorrectly
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to notify user when scrolling is not possible via voice command
+- `moonstone/TimePicker` to not read out meridiem label when changing the value
+- `spotlight` navigation into an overflow container which contains elements or containers larger than the container's bounds
+- `ui/Marquee` to prevent restarting animation after blurring just before the previous animation completed
+
+## [2.2.0] - 2018-10-02
+
+### Added
+
+- `moonstone/GridListImageItem` voice control feature support
+- `ui/Marquee.MarqueeBase` prop `willAnimate` to improve app performance by deferring animation preparation styling such as composite layer promotion
+- `ui/Skinnable` config option `prop` to configure the property in which to pass the current skin to the wrapped component
+- `ui/Transition` prop `css` to support customizable styling
+
+### Changed
+
+- `spotlight` to not explicitly `blur()` the currently focused element when focusing another, allowing the platform to manage blurring before focus
+- `ui/Cell` and `ui/Layout` to accept any type of children, since the `component` that may be set could accept any format of `children`
+
+### Fixed
+
+- `moonstone/DayPicker` to prevent closing when selecting days via voice control
+- `moonstone/VideoPlayer` to unfocus media controls when hidden
+- `moonstone/Scroller` to set correct scroll position when an expandable child is closed
+- `moonstone/Scroller` to prevent focusing children while scrolling
+- `spotlight` to correctly set focus when the window is activated
+- `spotlight` to correctly set focus when entering a restricted container
+- `ui/Touchable` to correctly handle a hold cancelled from an onHold handler
+
+## [2.1.4] - 2018-09-17
+
+### Fixed
+
+- `moonstone/Button` and `moonstone/IconButton` to style image-based icons correctly when focused and disabled
+- `moonstone/FormCheckboxItem` styling when focused and disabled
+- `moonstone/Panels` to always blur breadcrumbs when transitioning to a new panel
+- `moonstone/Scroller` to correctly set scroll position when nested item is focused
+- `moonstone/Scroller` to not adjust `scrollTop` when nested item is focused
+- `moonstone/VideoPlayer` to show correct playback rate feedback on play or pause
+- `spotlight/Spottable` to respect paused state when it becomes enabled
+- `ui/ViewManager` to emit `onWillTransition` when views are either added or removed
+
+## [2.1.3] - 2018-09-10
+
+### Fixed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effects properly on repeating wheel input
+- `moonstone/TooltipDecorator` to handle runtime error when setting `tooltipText` to an empty string
+- `moonstone/VideoPlayer` timing to read out `infoComponents` accessibility value when `moreButton` or `moreButtonColor` is pressed
+- `ui/Marquee` to stop when blurred during restart timer
+
+## [2.1.2] - 2018-09-04
+
+### Fixed
+
+- `moonstone/ExpandableItem` to prevent default browser scroll behavior when 5-way key is pressed on the first item or the last item
+- `moonstone/Scroller` scrolling behavior for focused items in 5-way mode
+- `moonstone/Scroller` to scroll container elements into view
+- `moonstone/TooltipDecorator` to update position when `tooltipText` is changed
+- `moonstone/VideoPlayer` to prevent default browser scroll behavior when navigating via 5-way
+- `moonstone/VirtuaList` to allow `onKeyDown` events to bubble
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` scrolling via page up or down keys
+- `spotlight` to prevent default browser scrolling behavior when focusing elements within a spotlight container configured with `overflow: true`
+- `ui/GridListImageItem` to properly set `selected` style
+- `ui/Marquee` positioning bug when used with CSS flexbox layouts
+
+## [2.1.1] - 2018-08-27
+
+### Changed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effects only by wheel input
+
+### Fixed
+
+- `moonstone/VideoPlayer` so that activity is detected and the `autoCloseTimeout` timer is reset when using 5-way to navigate from the media slider
+- `spotlight` to correctly handle focus with `'self-only'` containers
+- `spotlight/SpotlightContainerDecorator` to unmount config instead of remove when spotlightId is changed if it preserves id
+
 ## [2.1.0] - 2018-08-20
 
 ### Added

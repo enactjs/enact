@@ -38,7 +38,11 @@ import {
 	isContainer,
 	isContainer5WayHoldable,
 	isNavigable,
-	unmountContainer,
+	isWithinOverflowContainer,
+	mayActivateContainer,
+	notifyLeaveContainer,
+	notifyLeaveContainerFail,
+	notifyEnterContainer,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
@@ -46,7 +50,8 @@ import {
 	setContainerPreviousTarget,
 	setDefaultContainer,
 	setLastContainer,
-	setLastContainerFromTarget
+	setLastContainerFromTarget,
+	unmountContainer
 } from './container';
 
 import {
@@ -63,7 +68,8 @@ import {
 	getTargetByContainer,
 	getTargetByDirectionFromElement,
 	getTargetByDirectionFromPosition,
-	getTargetBySelector
+	getTargetBySelector,
+	isFocusable
 } from './target';
 
 import {
@@ -198,11 +204,10 @@ const Spotlight = (function () {
 			return true;
 		}
 
+		const focusOptions = isWithinOverflowContainer(elem, containerIds) ? {preventScroll: true} : null;
+
 		let silentFocus = function () {
-			if (currentFocusedElement) {
-				currentFocusedElement.blur();
-			}
-			elem.focus();
+			elem.focus(focusOptions);
 			focusChanged(elem, containerIds);
 		};
 
@@ -219,11 +224,7 @@ const Spotlight = (function () {
 			return true;
 		}
 
-		if (currentFocusedElement) {
-			currentFocusedElement.blur();
-		}
-
-		elem.focus();
+		elem.focus(focusOptions);
 
 		_duringFocusChange = false;
 
@@ -320,6 +321,14 @@ const Spotlight = (function () {
 				return false;
 			}
 
+			notifyLeaveContainer(
+				direction,
+				currentFocusedElement,
+				currentContainerIds,
+				next,
+				nextContainerIds
+			);
+
 			setContainerPreviousTarget(
 				currentContainerId,
 				direction,
@@ -327,8 +336,20 @@ const Spotlight = (function () {
 				currentFocusedElement
 			);
 
-			return focusElement(next, nextContainerIds);
+			const focused = focusElement(next, nextContainerIds);
+
+			notifyEnterContainer(
+				direction,
+				currentFocusedElement,
+				currentContainerIds,
+				next,
+				nextContainerIds
+			);
+
+			return focused;
 		}
+
+		notifyLeaveContainerFail(direction, currentFocusedElement, currentContainerIds);
 
 		return false;
 	}
@@ -373,10 +394,16 @@ const Spotlight = (function () {
 		// trying to focus something else (potentially) unless the window was previously blurred
 		if (_spotOnWindowFocus) {
 			setPlatformPointerMode();
+
 			// If the window was previously blurred while in pointer mode, the last active containerId may
 			// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
 			// to the last focused element of the last active containerId, so we use rootContainerId instead
-			if (!Spotlight.focus(getContainerLastFocusedElement(rootContainerId))) {
+			let lastFocusedElement = getContainerLastFocusedElement(rootContainerId);
+			while (isContainer(lastFocusedElement)) {
+				({lastFocusedElement} = getContainerConfig(lastFocusedElement));
+			}
+
+			if (!Spotlight.focus(lastFocusedElement)) {
 				// If the last focused element was previously also disabled (or no longer exists), we
 				// need to set focus somewhere
 				Spotlight.focus();
@@ -485,6 +512,8 @@ const Spotlight = (function () {
 		 * Initializes Spotlight. This is generally handled by
 		 * {@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}.
 		 *
+		 * @param {Object} containerDefaults Default configuration for new spotlight containers
+		 * @returns {undefined}
 		 * @public
 		 */
 		initialize: function (containerDefaults) {
@@ -547,8 +576,9 @@ const Spotlight = (function () {
 		 * Sets the config for spotlight or the specified containerID
 		 *
 		 * @function
-		 * @param {String|Object} param1 Configuration object or container ID
-		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
+		 * @param {String|Object} containerIdOrConfig  Configuration object or container ID
+		 * @param {Object}        [config]             Configuration object if container ID supplied
+		 *                                             in `containerIdOrConfig`
 		 * @returns {undefined}
 		 * @public
 		 */
@@ -561,8 +591,9 @@ const Spotlight = (function () {
 		 * object. If no container ID is supplied, a new container ID will be generated.
 		 *
 		 * @function
-		 * @param {String|Object} param1 Configuration object or container ID
-		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
+		 * @param {String|Object} containerIdOrConfig  Configuration object or container ID
+		 * @param {Object}        [config]             Configuration object if container ID supplied
+		 *                                             in `containerIdOrConfig`
 		 * @returns {String} The container ID of the container
 		 * @public
 		 */
@@ -631,6 +662,7 @@ const Spotlight = (function () {
 		/**
 		 * Pauses Spotlight
 		 *
+		 * @function
 		 * @returns {undefined}
 		 * @public
 		 */
@@ -639,6 +671,7 @@ const Spotlight = (function () {
 		/**
 		 * Resumes Spotlight
 		 *
+		 * @function
 		 * @returns {undefined}
 		 * @public
 		 */
@@ -683,14 +716,14 @@ const Spotlight = (function () {
 				const focused = focusElement(target, nextContainerIds);
 
 				if (!focused && wasContainerId) {
-					this.setActiveContainer(elem);
+					setLastContainer(elem);
 				}
 
 				return focused;
 			} else if (wasContainerId) {
 				// if we failed to find a spottable target within the provided container, we'll set
 				// it as the active container to allow it to focus itself if its contents change
-				this.setActiveContainer(elem);
+				setLastContainer(elem);
 			}
 
 			return false;
@@ -731,7 +764,8 @@ const Spotlight = (function () {
 		 * Sets or clears the default container that will receive focus.
 		 *
 		 * @function
-		 * @param {String|undefined} containerId The container ID or a falsy value to clear default container
+		 * @param {String} [containerId] The container ID or a falsy value to clear default
+		 *                               container
 		 * @returns {undefined}
 		 * @public
 		 */
@@ -750,12 +784,17 @@ const Spotlight = (function () {
 		/**
 		 * Sets the currently active container.
 		 *
+		 * Note: If the current container is restricted to 'self-only' and `containerId` is not
+		 * contained within the current container then the active container will not be updated.
+		 *
 		 * @param {String} [containerId] The id of the currently active container. If this is not
 		 *	provided, the root container is set as the currently active container.
 		 * @public
 		 */
 		setActiveContainer: function (containerId) {
-			setLastContainer(containerId || rootContainerId);
+			if (mayActivateContainer(containerId)) {
+				setLastContainer(containerId || rootContainerId);
+			}
 		},
 
 		/**
@@ -795,6 +834,7 @@ const Spotlight = (function () {
 		/**
 		 * Determines whether Spotlight is currently paused.
 		 *
+		 * @function
 		 * @returns {Boolean} `true` if Spotlight is currently paused.
 		 * @public
 		 */
@@ -812,13 +852,13 @@ const Spotlight = (function () {
 				return false;
 			}
 
-			return matchSelector('.' + spottableClass, elem);
+			return isFocusable(elem);
 		},
 
 		/**
 		 * Returns the currently spotted control.
 		 *
-		 * @returns {Object} The control that currently has focus, if available
+		 * @returns {Node} The control that currently has focus, if available
 		 * @public
 		 */
 		getCurrent: function () {
@@ -828,8 +868,8 @@ const Spotlight = (function () {
 		/**
 		 * Returns a list of spottable elements wrapped by the supplied container.
 		 *
-		 * @param {String} [containerId] The id of the container used to determine the list of spottable elements
-		 * @returns {NodeList} The spottable elements that are wrapped by the supplied container
+		 * @param {String} containerId The id of the container used to determine the list of spottable elements
+		 * @returns {Node[]} The spottable elements that are wrapped by the supplied container
 		 * @public
 		 */
 		getSpottableDescendants: function (containerId) {

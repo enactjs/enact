@@ -1,5 +1,5 @@
 /**
- * Exports the {@link spotlight/Spottable.Spottable} Higher-order Component and
+ * Exports the {@link spotlight/Spottable.Spottable} higher-order component and
  * the {@link spotlight/Spottable.spottableClass} `className`. The default export is
  * {@link spotlight/Spottable.Spottable}.
  *
@@ -73,7 +73,7 @@ const defaultConfig = {
 };
 
 /**
- * Constructs a Spotlight 5-way navigation-enabled Higher-order Component.
+ * Constructs a Spotlight 5-way navigation-enabled higher-order component.
  *
  * Example:
  * ```
@@ -194,6 +194,9 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 			this.isFocused = false;
 			this.isHovered = false;
+			// Used to indicate that we want to stop propagation on blur events that occur as a
+			// result of this component imperatively blurring itself on focus when spotlightDisabled
+			this.shouldPreventBlur = false;
 
 			this.state = {
 				focusedWhenDisabled: false,
@@ -207,7 +210,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const focusedWhenDisabled = this.isFocused && nextProps.disabled;
+			const focusedWhenDisabled = this.isFocused && (nextProps.disabled || nextProps.spotlightDisabled);
 			const {selectionKeys} = nextProps;
 
 			this.setState({
@@ -226,14 +229,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			// if the component became enabled, notify spotlight to enable restoring "lost" focus
-			if (isSpottable(this.props) && !isSpottable(prevProps)) {
+			if (isSpottable(this.props) && !isSpottable(prevProps) && !Spotlight.isPaused()) {
 				if (Spotlight.getPointerMode()) {
 					if (this.isHovered) {
 						Spotlight.setPointerMode(false);
 						Spotlight.focus(this.node);
 						Spotlight.setPointerMode(true);
 					}
-				} else if (!Spotlight.getCurrent() && !Spotlight.isPaused()) {
+				} else if (!Spotlight.getCurrent()) {
 					const containers = getContainersForNode(this.node);
 					const containerId = Spotlight.getActiveContainer();
 					if (containers.indexOf(containerId) >= 0) {
@@ -347,6 +350,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		handleBlur = (ev) => {
+			if (this.shouldPreventBlur) return;
+
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = false;
 
@@ -363,7 +368,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = (ev) => {
-			if (this.props.disabled) return;
+			if (this.props.disabled || this.props.spotlightDisabled) {
+				this.shouldPreventBlur = true;
+				ev.target.blur();
+				this.shouldPreventBlur = false;
+				return;
+			}
 
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = true;
@@ -421,7 +431,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 			return (
 				<Wrapped
-					data-preventscrollonfocus="true"
 					{...rest}
 					onBlur={this.handleBlur}
 					onFocus={this.handleFocus}

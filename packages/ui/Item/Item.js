@@ -17,6 +17,7 @@ import componentCss from './Item.less';
 
 /**
  * A basic list item component structure without any behaviors applied to it.
+ *
  * It also has support for overlay to place things before and after the main content.
  *
  * @class ItemBase
@@ -32,10 +33,9 @@ const ItemBase = kind({
 		 * The node to be displayed as the main content of the item.
 		 *
 		 * @type {Node}
-		 * @required
 		 * @public
 		 */
-		children: PropTypes.node.isRequired,
+		children: PropTypes.node,
 
 		/**
 		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',
@@ -62,7 +62,7 @@ const ItemBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, applies a disabled state to the item.
+		 * Applies a disabled state to the item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -71,7 +71,7 @@ const ItemBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * When `true`, applies inline styling to the item.
+		 * Applies inline styling to the item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -111,7 +111,7 @@ const ItemBase = kind({
 });
 
 /**
- * Adds touch support to the component it wraps.
+ * A higher-order component that adds touch support to the component it wraps.
  *
  * @hoc
  * @memberof ui/Item

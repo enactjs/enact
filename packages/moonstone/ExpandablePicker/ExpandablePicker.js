@@ -54,6 +54,15 @@ const ExpandablePickerBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * Disables voice control.
+		 *
+		 * @type {Boolean}
+		 * @memberof moonstone/ExpandablePicker.ExpandablePickerBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
 		 * The `data-webos-voice-group-label` for ExpandableItem and Picker.
 		 *
 		 * @type {String}
@@ -313,6 +322,7 @@ const ExpandablePickerBase = kind({
 
 	render: (props) => {
 		const {
+			'data-webos-voice-disabled': voiceDisabled,
 			'data-webos-voice-group-label': voiceGroupLabel,
 			checkButtonAriaLabel,
 			children,
@@ -343,6 +353,7 @@ const ExpandablePickerBase = kind({
 		return (
 			<ExpandableItemBase
 				{...rest}
+				data-webos-voice-disabled={voiceDisabled}
 				data-webos-voice-group-label={voiceGroupLabel}
 				disabled={disabled}
 				onSpotlightDisappear={onSpotlightDisappear}
@@ -355,6 +366,7 @@ const ExpandablePickerBase = kind({
 				<Picker
 					aria-label={pickerAriaLabel}
 					className={css.picker}
+					data-webos-voice-disabled={voiceDisabled}
 					data-webos-voice-group-label={voiceGroupLabel}
 					decrementAriaLabel={decrementAriaLabel}
 					decrementIcon={decrementIcon}
@@ -379,6 +391,7 @@ const ExpandablePickerBase = kind({
 				<IconButton
 					aria-label={checkButtonAriaLabel}
 					className={css.button}
+					data-webos-voice-disabled={voiceDisabled}
 					onSpotlightDisappear={onSpotlightDisappear}
 					onSpotlightDown={onSpotlightDown}
 					onSpotlightLeft={rtl ? onSpotlightLeft : null}

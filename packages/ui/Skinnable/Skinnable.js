@@ -1,5 +1,5 @@
 /**
- * Exports the {@link ui/Skinnable.Skinnable} higher-order component (HOC).
+ * A higher-order component for customizing the visual appearance throughout an application.
  *
  * This is the base-level implementation of this component. It will typically never be accessed
  * directly, and only be instantiated with a configuration once inside a visual library like
@@ -8,7 +8,6 @@
  *
  * @module ui/Skinnable
  * @exports Skinnable
- * @exports withSkinnableProps
  * @public
  */
 
@@ -16,7 +15,7 @@ import hoc from '@enact/core/hoc';
 import React from 'react';
 
 /**
- * Default config for {@link ui/Skinnable.Skinnable}.
+ * Default config for `Skinnable`.
  *
  * @memberof ui/Skinnable.Skinnable
  * @hocconfig
@@ -24,8 +23,19 @@ import React from 'react';
  */
 const defaultConfig = {
 	/**
-	 * A hash mapping the available skin names to their CSS class name. The keys are accepted as
-	 * the only valid values for the `skin` prop on the wrapped component.
+	 * The prop in which to pass the effective skin to the wrapped component.
+	 *
+	 * If left unset, the current skin will not be passed to the wrapped component.
+	 *
+	 * @type {string}
+	 * @memberof ui/Skinnable.Skinnable.defaultConfig
+	 */
+	prop: null,
+
+	/**
+	 * A hash mapping the available skin names to their CSS class name.
+	 *
+	 * The keys are accepted as the only valid values for the `skin` prop on the wrapped component.
 	 *
 	 * @type {Object}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
@@ -33,8 +43,9 @@ const defaultConfig = {
 	skins: null,
 
 	/**
-	 * Assign a default skin from the `skins` list. This will be used if the instantiator of the
-	 * wrapped component provides no value to the `skin` prop.
+	 * Assign a default skin from the `skins` list.
+	 *
+	 * This will be used if the instantiator of the wrapped component provides no value to the `skin` prop.
 	 *
 	 * @type {String}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
@@ -45,8 +56,7 @@ const defaultConfig = {
 const SkinContext = React.createContext(null);
 
 /**
- * [Skinnable]{@link ui/Skinnable.Skinnable} is a higher-order component (HOC) that assigns skinning
- * classes for the purposes of styling children components.
+ * A higher-order component that assigns skinning classes for the purposes of styling children components.
  *
  * Use the config options to specify the skins your theme has. Set this up in your theme's decorator
  * component to establish your supported skins.
@@ -68,7 +78,7 @@ const SkinContext = React.createContext(null);
  * @public
  */
 const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
-	const {skins, defaultSkin} = config;
+	const {prop, skins, defaultSkin} = config;
 
 	function determineSkin (authorSkin, parentSkin) {
 		return authorSkin || defaultSkin || parentSkin;
@@ -96,6 +106,10 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 			<SkinContext.Consumer>
 				{parentSkin => {
 					const effectiveSkin = determineSkin(skin, parentSkin);
+
+					if (prop) {
+						rest[prop] = effectiveSkin;
+					}
 
 					return (
 						<SkinContext.Provider value={effectiveSkin}>

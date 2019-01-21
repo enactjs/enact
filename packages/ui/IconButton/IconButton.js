@@ -1,5 +1,6 @@
 /**
  * An [Icon]{@link ui/Icon.Icon} that acts like a [Button]{@link ui/Button.Button}.
+ *
  * You may specify an image or a font-based icon by setting the `children` to either the path
  * to the image or a string from an [iconList]{@link ui/Icon.Icon.iconList}. This is unstyled,
  * but can easily be extended and customized by a theme or application.
@@ -81,7 +82,7 @@ const IconButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Disables the [IconButton]{@link ui/IconButton.IconButtonBase}
+		 * Disables IconButton.
 		 *
 		 * When `true`, the button is shown as disabled and does not generate
 		 * `onClick` [events]{@link /docs/developer-guide/glossary/#event}.
@@ -93,7 +94,7 @@ const IconButtonBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * The icon displayed within the [button]{@link ui/IconButton.IconButtonBase}.
+		 * The icon displayed within the IconButton.
 		 *
 		 * If not specified, `children` is used as the icon value instead.
 		 *
@@ -103,7 +104,7 @@ const IconButtonBase = kind({
 		icon: PropTypes.string,
 
 		/**
-		 * Applies the `pressed` CSS class to the [IconButton]{@link ui/IconButton.IconButtonBase}
+		 * Applies the `pressed` CSS class.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -112,7 +113,7 @@ const IconButtonBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * Applies the `selected` CSS class to the [IconButton]{@link ui/IconButton.IconButtonBase}
+		 * Applies the `selected` CSS class.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -121,7 +122,7 @@ const IconButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Applies the `small` CSS class to the [IconButton]{@link ui/IconButton.IconButtonBase}
+		 * Applies the `small` CSS class.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -171,7 +172,7 @@ const IconButtonBase = kind({
 
 
 /**
- * A higher-order component (HOC) that adds universal button behaviors to an [IconButtonBase]{@link ui/IconButton.IconButtonBase}.
+ * A higher-order component that adds universal button behaviors to an [IconButtonBase]{@link ui/IconButton.IconButtonBase}.
  *
  * @hoc
  * @memberof ui/IconButton

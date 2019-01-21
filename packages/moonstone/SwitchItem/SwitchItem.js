@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed item component and interactive togglable switch.
+ * Provides Moonstone-themed item component and interactive toggleable switch.
  *
  * @example
  * <SwitchItem>
@@ -27,6 +27,7 @@ import componentCss from './SwitchItem.less';
  * @class SwitchItem
  * @memberof moonstone/SwitchItem
  * @extends moonstone/ToggleItem.ToggleItem
+ * @omit iconComponent
  * @ui
  * @public
  */

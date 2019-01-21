@@ -42,16 +42,16 @@ const contextTypes = {
 };
 
 /**
- * {@link ui/RadioDecorator.RadioControllerDecorator} is a higher-order component (HOC) that establishes
- * a radio group context for its descendants. Any descendants that are wrapped by
- * {@link ui/RadioDecorator.RadioDecorator} will be mutually exclusive.
+ * A higher-order component that establishes a radio group context for its descendants.
+ *
+ * Any descendants that are wrapped by {@link ui/RadioDecorator.RadioDecorator} will be mutually exclusive.
  *
  * @class RadioControllerDecorator
  * @memberof ui/RadioDecorator
  * @hoc
  * @public
  */
-const RadioControllerDecorator = hoc((config, Wrapped) => {
+const RadioControllerDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 
 	return class extends React.Component {
 		static displayName = 'RadioControllerDecorator'

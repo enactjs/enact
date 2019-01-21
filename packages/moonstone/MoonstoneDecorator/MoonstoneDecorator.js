@@ -23,15 +23,17 @@ import css from './MoonstoneDecorator.less';
 import {configure} from '@enact/ui/Touchable';
 
 /**
- * Default config for {@link moonstone/MoonstoneDecorator.MoonstoneDecorator}.
+ * Default config for `MoonstoneDecorator`.
  *
- * @memberof moonstone/MoonstoneDecorator
+ * @memberof moonstone/MoonstoneDecorator.MoonstoneDecorator
  * @hocconfig
  */
 const defaultConfig = {
 	disableFullscreen: false,
 	float: true,
-	i18n: true,
+	i18n: {
+		sync: true
+	},
 	noAutoFocus: false,
 	overlay: false,
 	ri: {
@@ -43,8 +45,9 @@ const defaultConfig = {
 };
 
 /**
- * A Higher-order Component that applies Moonstone theming to an application. It also applies
- * [floating layer]{@link ui/FloatingLayer.FloatingLayerDecorator},
+ * A higher-order component that applies Moonstone theming to an application.
+ *
+ * It also applies [floating layer]{@link ui/FloatingLayer.FloatingLayerDecorator},
  * [resolution independence]{@link ui/resolution.ResolutionDecorator},
  * [skin support]{@link moonstone/Skinnable}, [spotlight]{@link spotlight.SpotlightRootDecorator}, and
  * [internationalization support]{@link i18n/I18nDecorator.I18nDecorator}. It is meant to be applied to
@@ -76,6 +79,15 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		// Apply the @enact/i18n decorator around the font decorator so the latter will update the
 		// font stylesheet when the locale changes
 		App = I18nDecorator(
+			{
+				...i18n,
+				// We use the latin fonts (with non-Latin fallback) for these languages (even though
+				// their scripts are non-latin)
+				latinLanguageOverrides: ['ko', 'ha'],
+				// We use the non-latin fonts for these languages (even though their scripts are
+				// technically considered latin)
+				nonLatinLanguageOverrides: ['vi', 'en-JP']
+			},
 			I18nFontDecorator(
 				App
 			)

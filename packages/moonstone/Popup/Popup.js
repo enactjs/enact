@@ -2,6 +2,8 @@
  * Modal component that appears at the bottom of the screen and takes up the full screen width.
  *
  * @module moonstone/Popup
+ * @exports Popup
+ * @exports PopupBase
  * @example
  * <Popup open>Hello!</Popup>
  */
@@ -39,7 +41,7 @@ const forwardHide = forward('onHide');
 const forwardShow = forward('onShow');
 
 /**
- * PopupBase is a base component of [`Popup`]{@link moonstone/Popup.Popup}.
+ * The base popup component.
  *
  * @class PopupBase
  * @memberof moonstone/Popup
@@ -239,6 +241,12 @@ const checkScrimNone = (props) => {
 		'is not supported. Use a transparent scrim to prevent spotlight focus outside of the popup');
 };
 
+const OpenState = {
+	CLOSED: 0,
+	OPENING: 1,
+	OPEN: 2
+};
+
 /**
  * A stateful component that renders a popup in a
  * [FloatingLayer]{@link ui/FloatingLayer.FloatingLayer}.
@@ -381,9 +389,10 @@ class Popup extends React.Component {
 	constructor (props) {
 		super(props);
 		this.paused = new Pause('Popup');
+		const animateOpen = this.props.noAnimation ? OpenState.OPEN : OpenState.OPENING;
 		this.state = {
 			floatLayerOpen: this.props.open,
-			popupOpen: this.props.noAnimation,
+			popupOpen: this.props.open ? animateOpen : OpenState.CLOSED,
 			containerId: Spotlight.add(),
 			activator: null
 		};
@@ -398,25 +407,20 @@ class Popup extends React.Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		// while transitioning, we set `popupOpen` with the given `open` prop value
-		if (!this.props.noAnimation && this.state.floatLayerOpen) {
+		if (!this.props.open && nextProps.open) {
 			this.setState({
-				popupOpen: nextProps.open
-			});
-		} else if (!this.props.open && nextProps.open) {
-			this.setState({
-				popupOpen: nextProps.noAnimation,
+				popupOpen: nextProps.noAnimation ? OpenState.OPEN : OpenState.CLOSED,
 				floatLayerOpen: true,
 				activator: Spotlight.getCurrent()
 			});
 		} else if (this.props.open && !nextProps.open) {
 			const activator = this.state.activator;
 
-			this.setState({
-				popupOpen: nextProps.noAnimation,
-				floatLayerOpen: !nextProps.noAnimation,
+			this.setState(state => ({
+				popupOpen: OpenState.CLOSED,
+				floatLayerOpen: state.popupOpen === OpenState.OPEN ? !nextProps.noAnimation : false,
 				activator: nextProps.noAnimation ? null : activator
-			});
+			}));
 		}
 		checkScrimNone(nextProps);
 	}
@@ -445,9 +449,9 @@ class Popup extends React.Component {
 	handleFloatingLayerOpen = () => {
 		if (!this.props.noAnimation) {
 			this.setState({
-				popupOpen: true
+				popupOpen: OpenState.OPENING
 			});
-		} else if (this.state.popupOpen && this.props.open) {
+		} else if (this.state.popupOpen === OpenState.OPEN && this.props.open) {
 			this.spotPopupContent();
 		}
 	}
@@ -500,6 +504,10 @@ class Popup extends React.Component {
 
 	handlePopupShow = (ev) => {
 		forwardShow(ev, this.props);
+
+		this.setState({
+			popupOpen: OpenState.OPEN
+		});
 
 		if (ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
 			this.paused.resume();
@@ -562,7 +570,7 @@ class Popup extends React.Component {
 					onCloseButtonClick={onClose}
 					onHide={this.handlePopupHide}
 					onShow={this.handlePopupShow}
-					open={this.state.popupOpen}
+					open={this.state.popupOpen >= OpenState.OPENING}
 					spotlightId={this.state.containerId}
 					spotlightRestrict="self-only"
 				/>

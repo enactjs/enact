@@ -20,6 +20,7 @@ let baseScreen,
 /**
  * Object that stores all of the pixel conversion factors to each keyed unit.
  *
+ * @type {Object}
  * @memberof ui/resolution
  * @public
  */
@@ -33,8 +34,10 @@ const configDefaults = {
 };
 
 /**
- * Update the common measured boundary object. This object is used as "what size screen are we
- * looking at". Providing no arguments has no effect and updates nothing.
+ * Update the common measured boundary object.
+ *
+ * This object is used as "what size screen are we looking at". Providing no arguments has no
+ * effect and updates nothing.
  *
  * @function
  * @memberOf ui/resolution
@@ -75,7 +78,9 @@ function getScreenTypeObject (type) {
 
 /**
  * Sets up screen resolution scaling capabilities by defining an array of all the screens
- * being used. These should be listed in order from smallest to largest, according to
+ * being used.
+ *
+ * These should be listed in order from smallest to largest, according to
  * width.
  *
  * The `name`, `pxPerRem`, `width`, and `aspectRatioName` properties are required for
@@ -100,7 +105,7 @@ function getScreenTypeObject (type) {
  *
  * @function
  * @memberof ui/resolution
- * @param {Array}    types    An array of objects containing screen configuration data, as in the
+ * @param {Object[]}    types    An array of objects containing screen configuration data, as in the
  *                            preceding example.
  * @returns {undefined}
  * @public
@@ -114,8 +119,9 @@ function defineScreenTypes (types) {
 }
 
 /**
- * Fetches the name of the screen type that best matches the current screen size. The best
- * match is defined as the screen type that is the closest to the screen resolution without
+ * Fetches the name of the screen type that best matches the current screen size.
+ *
+ * The best match is defined as the screen type that is the closest to the screen resolution without
  * going over. ("The Price is Right" style.)
  *
  * @function
@@ -151,11 +157,12 @@ function getScreenType (rez) {
 }
 
 /**
- * Calculate the base rem font size. This is how the magic happens. This accepts an
- * optional `screenType` name. If one isn't provided, the currently detected screen type is used.
- * This uses the config option `orientationHandling`, which when set to "scale" and the screen is
- * in portrait orientation, will dynamically calculate what the base font size should be, if the
- * width were proportionally scaled down to fit in the portrait space.
+ * Calculate the base rem font size.
+ *
+ * This is how the magic happens. This accepts an optional `screenType` name. If one isn't provided,
+ * the currently detected screen type is used. This uses the config option `orientationHandling`,
+ * which when set to "scale" and the screen is in portrait orientation, will dynamically calculate
+ * what the base font size should be, if the width were proportionally scaled down to fit in the portrait space.
  *
  * To use, put the following in your application code:
  * ```
@@ -200,7 +207,7 @@ function updateBaseFontSize (size) {
 }
 
 /**
- * Returns the CSS classes for the given `type`
+ * Returns the CSS classes for the given `type`.
  *
  * @function
  * @memberof ui/resolution
@@ -224,7 +231,7 @@ function getResolutionClasses (type = screenType) {
 }
 
 /**
- * Returns the ratio of pixels per rem for the given `type` to the pixels per rem for the base type
+ * Returns the ratio of pixels per rem for the given `type` to the pixels per rem for the base type.
  *
  * @function
  * @memberof ui/resolution
@@ -245,7 +252,7 @@ function getRiRatio (type = screenType) {
 }
 
 /**
- * Returns the pixels per rem for the given `type`
+ * Returns the pixels per rem for the given `type`.
  *
  * @memberof ui/resolution
  * @param {String}    type    Screen type
@@ -260,8 +267,9 @@ function getUnitToPixelFactors (type = screenType) {
 }
 
 /**
- * Calculates the aspect ratio of the specified screen type. If no screen type is provided,
- * the current screen type is used.
+ * Calculates the aspect ratio of the specified screen type.
+ *
+ * If no screen type is provided, the current screen type is used.
  *
  * @function
  * @memberof ui/resolution
@@ -310,7 +318,9 @@ function scale (px) {
 }
 
 /**
- * Convert to various unit formats. Useful for converting pixels to a resolution-independent
+ * Convert to various unit formats.
+ *
+ * Useful for converting pixels to a resolution-independent
  * measurement method, like "rem". Other units are available if defined in the
  * {@link ui/resolution.unitToPixelFactors} object.
  *
@@ -343,7 +353,9 @@ function unit (pixels, toUnit) {
 
 /**
  * Shorthand for when you know you need to scale some pixel value and have it converted to "rem" for
- * proper scaling. This runs {@link ui/resolution.scale} and {@link ui/resolution.unit} together.
+ * proper scaling.
+ *
+ * This runs {@link ui/resolution.scale} and {@link ui/resolution.unit} together.
  *
  * @function
  * @memberof ui/resolution
@@ -366,12 +378,13 @@ const scaleToRem = (pixels) => unit(scale(pixels), 'rem');
 
 /**
  * Selects the ideal image asset from a set of assets, based on various screen
- * resolutions: HD (720p), FHD (1080p), UHD (4k). When a `src` argument is
- * provided, `selectSrc()` will choose the best image with respect to the current
- * screen resolution. `src` may be either the traditional string, which will pass
- * straight through, or a hash/object of screen types and their asset sources
- * (keys:screen and values:src). The image sources will be used when the screen
- * resolution is less than or equal to the provided screen types.
+ * resolutions: HD (720p), FHD (1080p), UHD (4k).
+ *
+ * When a `src` argument is provided, `selectSrc()` will choose the best image with
+ * respect to the current screen resolution. `src` may be either the traditional
+ * string, which will pass straight through, or a hash/object of screen types and
+ * their asset sources (keys:screen and values:src). The image sources will be used
+ * when the screen resolution is less than or equal to the provided screen types.
  *
  * Example:
  * ```
@@ -390,14 +403,13 @@ const scaleToRem = (pixels) => unit(scale(pixels), 'rem');
  *
  * @function
  * @memberof ui/resolution
- * @param {String|ui/resolution.selectSrcSrcOptions}    src    A string containing
- *                                                             a single image source or
- *                                                             a key/value hash/object
- *                                                             containing keys representing
- *                                                             screen types (`'hd'`, `'fhd'`,
- *                                                             `'uhd'`, etc.) and values
- *                                                             containing the asset source
- *                                                             for that target screen resolution.
+ * @param {String|ui/resolution.selectSrcSrcOptions} src       A string containing a single image
+ *                                                             source or a key/value hash/object
+ *                                                             containing keys representing screen
+ *                                                             types (`'hd'`, `'fhd'`, `'uhd'`,
+ *                                                             etc.) and values containing the asset
+ *                                                             source for that target screen
+ *                                                             resolution.
  *
  * @returns {String}                                           The chosen source, given the string
  *                                                             or hash provided
@@ -419,8 +431,7 @@ function selectSrc (src) {
 }
 
 /**
- * This will need to be re-run any time the screen size changes, so all the values can be
- * re-cached.
+ * This will need to be re-run any time the screen size changes, so all the values can be re-cached.
  *
  * @function
  * @memberof ui/resolution
@@ -444,7 +455,9 @@ function init (args = {}) {
 /**
  * The current configuration
  *
+ * @type {Object}
  * @memberof ui/resolution
+ * @private
  */
 config = Object.assign({}, configDefaults);
 

@@ -1,5 +1,6 @@
 /**
  * Provides Moonstone-themed indeterminate progress indicator (spinner) components and behaviors.
+ *
  * Used for indicating to the user that something is busy and interaction is temporarily suspended.
  *
  * @example
@@ -138,8 +139,9 @@ const SpinnerBase = kind({
 });
 
 /**
- * A HOC to make sure spotlight is paused when `blockClickOn` prop is `'screen'`, and resume
- * spotlight when unmounted. However, spotlight is not paused when `blockClickOn` prop is
+ * A higher-order component that pauses spotlight when `blockClickOn` prop is `'screen'`.
+ *
+ * Resumes spotlight when unmounted. However, spotlight is not paused when `blockClickOn` prop is
  * `'container'`. Blocking spotlight within the container is up to app implementation.
  *
  * @hoc
@@ -147,7 +149,7 @@ const SpinnerBase = kind({
  * @ui
  * @private
  */
-const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
+const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
 		static displayName = 'SpinnerSpotlightDecorator';
 
@@ -205,7 +207,6 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
  *
  * @hoc
  * @memberof moonstone/Spinner
- * @mixes moonstone/Spinner.SpinnerSpotlightDecorator
  * @mixes moonstone/Skinnable.Skinnable
  * @public
  */

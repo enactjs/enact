@@ -15,9 +15,26 @@ import Popup from '../Popup';
 
 import componentCss from './Notification.less';
 
+// ENYO-5691: Workaround to fix a text rendering issue by aligning the content to the pixel grid
+const fixTransform = (node) => {
+	if (!node) return;
+
+	const parent = node.parentNode;
+	const {left, top} = parent.getBoundingClientRect();
+	const deltaY = Math.round(top) - top;
+	const deltaX = Math.round(left) - left;
+	if (deltaY !== 0 || deltaX !== 0) {
+		// on webOS, the layer promotion is necessary to resolve the text rendering issue
+		parent.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0)`;
+		parent.style.willChange = 'transform';
+	}
+};
+
 /**
- * A Moonstone styled notification component. It provides a notification modal which can be opened
- * and closed, overlaying an app. Apps will want to use {@link moonstone/Notification.Notification}.
+ * A Moonstone styled notification component.
+ *
+ * It provides a notification modal which can be opened and closed, overlaying an app. Apps will
+ * want to use {@link moonstone/Notification.Notification}.
  *
  * @class NotificationBase
  * @memberof moonstone/Notification
@@ -137,7 +154,7 @@ const NotificationBase = kind({
 	render: ({buttons, children, css, ...rest}) => {
 		return (
 			<Popup noAnimation {...rest}>
-				<div className={css.body}>
+				<div className={css.body} ref={fixTransform}>
 					{children}
 				</div>
 				{buttons ? <div className={css.buttons}>

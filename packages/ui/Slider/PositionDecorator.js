@@ -7,7 +7,7 @@ import {calcProportion} from './utils';
 
 import css from './Slider.less';
 
-const PositionDecorator = hoc((config, Wrapped) => {
+const PositionDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
 		static displayName = 'PositionDecorator'
 

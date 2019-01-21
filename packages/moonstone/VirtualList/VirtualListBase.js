@@ -11,39 +11,6 @@ import ScrollableNative from '../Scrollable/ScrollableNative';
 
 const SpotlightPlaceholder = Spottable('div');
 
-const configureSpotlight = (spotlightId, instance) => {
-	Spotlight.set(spotlightId, {
-		enterTo: 'last-focused',
-		/*
-		 * Returns the data-index as the key for last focused
-		 */
-		lastFocusedPersist: function () {
-			if (this.lastFocusedIndex != null) {
-				return {
-					container: false,
-					element: true,
-					key: this.lastFocusedIndex
-				};
-			}
-		}.bind(instance),
-		/*
-		 * Restores the data-index into the placeholder if its the only element. Tries to find a
-		 * matching child otherwise.
-		 */
-		lastFocusedRestore: ({key}, all) => {
-			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
-				all[0].dataset.index = key;
-
-				return all[0];
-			}
-
-			return all.reduce((focused, node) => {
-				return focused || Number(node.dataset.index) === key && node;
-			}, null);
-		}
-	});
-};
-
 const
 	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
 	isDown = is('down'),
@@ -104,6 +71,15 @@ const VirtualListBaseFactory = (type) => {
 			 * @private
 			 */
 			itemsRenderer: PropTypes.func.isRequired,
+
+			/**
+			 * Animate while scrolling
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @private
+			 */
+			animate: PropTypes.bool,
 
 			/**
 			 * Callback method of scrollTo.
@@ -211,6 +187,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		static defaultProps = {
+			animate: false,
 			dataSize: 0,
 			isItemDisabled: isItemDisabledDefault,
 			pageScroll: false,
@@ -223,7 +200,7 @@ const VirtualListBaseFactory = (type) => {
 
 			const {spotlightId} = props;
 			if (spotlightId) {
-				configureSpotlight(spotlightId, this);
+				this.configureSpotlight(spotlightId);
 			}
 		}
 
@@ -253,7 +230,7 @@ const VirtualListBaseFactory = (type) => {
 
 		componentWillReceiveProps (nextProps) {
 			if (nextProps.spotlightId && nextProps.spotlightId !== this.props.spotlightId) {
-				configureSpotlight(nextProps.spotlightId, this);
+				this.configureSpotlight(nextProps.spotlightId);
 			}
 		}
 
@@ -268,13 +245,14 @@ const VirtualListBaseFactory = (type) => {
 				// remove a function for preventing native scrolling by Spotlight
 				if (containerNode && containerNode.removeEventListener) {
 					containerNode.removeEventListener('scroll', this.preventScroll);
-					containerNode.removeEventListener('keydown', this.onKeyDown);
 				}
 			}
 
 			if (containerNode && containerNode.removeEventListener) {
 				containerNode.removeEventListener('keydown', this.onKeyDown);
 			}
+
+			this.resumeSpotlight();
 
 			this.setContainerDisabled(false);
 		}
@@ -301,6 +279,54 @@ const VirtualListBaseFactory = (type) => {
 					document.removeEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
 				}
 			}
+		}
+
+		configureSpotlight = (spotlightId) => {
+			const {spacing} = this.props;
+
+			Spotlight.set(spotlightId, {
+				enterTo: 'last-focused',
+				/*
+				 * Returns the data-index as the key for last focused
+				 */
+				lastFocusedPersist: this.lastFocusedPersist,
+				/*
+				 * Restores the data-index into the placeholder if its the only element. Tries to find a
+				 * matching child otherwise.
+				 */
+				lastFocusedRestore: this.lastFocusedRestore,
+				/*
+				 * Directs spotlight focus to favor straight elements that are within range of `spacing`
+				 * over oblique elements, like scroll buttons.
+				 */
+				obliqueMultiplier: spacing > 0 ? spacing : 1
+			});
+		}
+
+		lastFocusedPersist = () => {
+			if (this.lastFocusedIndex != null) {
+				return {
+					container: false,
+					element: true,
+					key: this.lastFocusedIndex
+				};
+			}
+		}
+
+		/*
+		 * Restores the data-index into the placeholder if its the only element. Tries to find a
+		 * matching child otherwise.
+		 */
+		lastFocusedRestore = ({key}, all) => {
+			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
+				all[0].dataset.index = key;
+
+				return all[0];
+			}
+
+			return all.reduce((focused, node) => {
+				return focused || Number(node.dataset.index) === key && node;
+			}, null);
 		}
 
 		/**
@@ -405,23 +431,24 @@ const VirtualListBaseFactory = (type) => {
 		getIndexToScroll = (direction, currentIndex) => {
 			const
 				{dataSize, spacing} = this.props,
-				{dimensionToExtent, primary} = this.uiRef,
+				{dimensionToExtent, primary: {clientSize, gridSize, itemSize}, scrollPosition} = this.uiRef,
 				{findSpottableItem} = this,
-				{firstVisibleIndex, lastVisibleIndex} = this.uiRef.moreInfo,
-				numOfItemsInPage = (Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent);
+				numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent,
+				firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent,
+				lastFullyVisibleIndex = Math.min(dataSize - 1, Math.floor((scrollPosition + clientSize - itemSize) / gridSize) * dimensionToExtent);
 			let candidateIndex = -1;
 
 			/* First, find a spottable item in this page */
 			if (direction === 'down') { // Page Down
-				if ((lastVisibleIndex - (lastVisibleIndex % dimensionToExtent)) > currentIndex) { // If a current focused item is in the last visible line.
+				if ((lastFullyVisibleIndex - (lastFullyVisibleIndex % dimensionToExtent)) > currentIndex) { // If a current focused item is in the last visible line.
 					candidateIndex = findSpottableItem(
-						lastVisibleIndex,
+						lastFullyVisibleIndex,
 						currentIndex - (currentIndex % dimensionToExtent) + dimensionToExtent - 1
 					);
 				}
-			} else if (firstVisibleIndex + dimensionToExtent <= currentIndex) { // Page Up,  if a current focused item is in the first visible line.
+			} else if (firstFullyVisibleIndex + dimensionToExtent <= currentIndex) { // Page Up,  if a current focused item is in the first visible line.
 				candidateIndex = findSpottableItem(
-					firstVisibleIndex,
+					firstFullyVisibleIndex,
 					currentIndex - (currentIndex % dimensionToExtent)
 				);
 			}
@@ -429,18 +456,18 @@ const VirtualListBaseFactory = (type) => {
 			/* Second, find a spottable item in the next page */
 			if (candidateIndex === -1) {
 				if (direction === 'down') { // Page Down
-					candidateIndex = findSpottableItem(lastVisibleIndex + numOfItemsInPage, lastVisibleIndex);
+					candidateIndex = findSpottableItem(lastFullyVisibleIndex + numOfItemsInPage, lastFullyVisibleIndex);
 				} else { // Page Up
-					candidateIndex = findSpottableItem(firstVisibleIndex - numOfItemsInPage, firstVisibleIndex);
+					candidateIndex = findSpottableItem(firstFullyVisibleIndex - numOfItemsInPage, firstFullyVisibleIndex);
 				}
 			}
 
 			/* Last, find a spottable item in a whole data */
 			if (candidateIndex === -1) {
 				if (direction === 'down') { // Page Down
-					candidateIndex = findSpottableItem(lastVisibleIndex + numOfItemsInPage + 1, dataSize);
+					candidateIndex = findSpottableItem(lastFullyVisibleIndex + numOfItemsInPage + 1, dataSize);
 				} else { // Page Up
-					candidateIndex = findSpottableItem(firstVisibleIndex - numOfItemsInPage - 1, -1);
+					candidateIndex = findSpottableItem(firstFullyVisibleIndex - numOfItemsInPage - 1, -1);
 				}
 			}
 
@@ -538,7 +565,7 @@ const VirtualListBaseFactory = (type) => {
 			const currentExtent = this.getExtentIndex(currentIndex);
 			let
 				nextIndex = -1,
-				animate = true,
+				animate = this.props.animate,
 				isWrapped = false,
 				spottableExtent = -1;
 
@@ -555,7 +582,7 @@ const VirtualListBaseFactory = (type) => {
 							// So we find nextIndex only when currentExtent is different from candidateExtent.
 							if (currentExtent !== candidateExtent) {
 								nextIndex = this.findNearestSpottableItemInExtent(currentIndex, candidateExtent);
-								animate = (wrap === true);
+								animate = animate && (wrap === true);
 								isWrapped = true;
 							}
 						}
@@ -583,7 +610,7 @@ const VirtualListBaseFactory = (type) => {
 							// So we find nextIndex only when currentExtent is different from candidateExtent.
 							if (currentExtent !== candidateExtent) {
 								nextIndex = this.findNearestSpottableItemInExtent(currentIndex, candidateExtent);
-								animate = (wrap === true);
+								animate = animate && (wrap === true);
 								isWrapped = true;
 							}
 						}
@@ -639,11 +666,17 @@ const VirtualListBaseFactory = (type) => {
 				this.setSpotlightContainerRestrict(keyCode, target);
 				Spotlight.setPointerMode(false);
 				if (this.jumpToSpottableItem(keyCode, repeat, target)) {
-					ev.stopPropagation();
+					// Pause Spotlight temporarily so we don't focus twice
+					Spotlight.pause();
+					document.addEventListener('keyup', this.resumeSpotlight);
 				}
 			}
 		}
 
+		resumeSpotlight = () => {
+			Spotlight.resume();
+			document.removeEventListener('keyup', this.resumeSpotlight);
+		}
 		/**
 		 * Handle global `onKeyDown` event
 		 */
@@ -849,6 +882,7 @@ const VirtualListBaseFactory = (type) => {
 				{itemRenderer, itemsRenderer, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
+			delete rest.animate;
 			delete rest.initUiChildRef;
 			delete rest.isItemDisabled;
 			delete rest.spotlightId;
@@ -930,6 +964,7 @@ const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-b
 		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...childProps}
+				animate={props.animate}
 				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
@@ -950,6 +985,15 @@ const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-b
 );
 
 ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
+	/**
+	 * Animate while scrolling
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @private
+	 */
+	animate: PropTypes.bool,
+
 	/**
 	 * Direction of the list.
 	 *
@@ -974,6 +1018,7 @@ const ScrollableVirtualListNative = (props) => (
 		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...childProps}
+				animate={props.animate}
 				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
@@ -995,6 +1040,15 @@ const ScrollableVirtualListNative = (props) => (
 
 ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
 	/**
+	 * Animate while scrolling
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @private
+	 */
+	animate: PropTypes.bool,
+
+	/**
 	 * Direction of the list.
 	 *
 	 * Valid values are:
@@ -1009,6 +1063,7 @@ ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.Virtual
 };
 
 ScrollableVirtualListNative.defaultProps = {
+	animate: false,
 	direction: 'vertical'
 };
 

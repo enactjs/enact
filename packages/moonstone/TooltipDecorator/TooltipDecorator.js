@@ -2,6 +2,9 @@
  * Moonstone styled tooltip components.
  *
  * @module moonstone/TooltipDecorator
+ * @exports TooltipDecorator
+ * @exports Tooltip
+ * @exports TooltipBase
  */
 
 import hoc from '@enact/core/hoc';
@@ -26,10 +29,11 @@ let currentTooltip; // needed to know whether or not we should stop a showing jo
  */
 const defaultConfig = {
 	/**
-	 * The name of the property which will receive the tooltip node. By default, `TooltipDecorator`
-	 * will add a new child to the wrapped component, following any other children passed in. If
-	 * a component needs to, it can specify another property to receive the tooltip and the
-	 * `children` property will not be modified.
+	 * The name of the property which will receive the tooltip node.
+	 *
+	 * By default, `TooltipDecorator` will add a new child to the wrapped component, following any
+	 * other children passed in. If a component needs to, it can specify another property to receive
+	 * the tooltip and the `children` property will not be modified.
 	 *
 	 * @type {String}
 	 * @default 'children'
@@ -39,7 +43,7 @@ const defaultConfig = {
 };
 
 /**
- * A Higher-order Component which positions [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} in
+ * A higher-order component which positions [Tooltip]{@link moonstone/TooltipDecorator.Tooltip} in
  * relation to the wrapped component.
  *
  * The tooltip is automatically displayed when the decoratorated component is focused after a set
@@ -168,6 +172,12 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		componentDidUpdate (prevProps) {
+			if (this.state.showing && prevProps.tooltipText !== this.props.tooltipText) {
+				this.setTooltipLayout();
+			}
+		}
+
 		componentWillUnmount () {
 			if (currentTooltip === this) {
 				currentTooltip = null;
@@ -180,6 +190,8 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		setTooltipLayout () {
+			if (!this.tooltipRef || !this.clientRef) return;
+
 			const position = this.props.tooltipPosition;
 			const arr = position.split(' ');
 			let tooltipDirection = null;

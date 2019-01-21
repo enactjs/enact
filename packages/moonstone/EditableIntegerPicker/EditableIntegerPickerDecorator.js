@@ -14,7 +14,7 @@ addAll({
 });
 
 /**
- *{@link moonstone/EditableIntegerPicker.EditableIntegerPickerDecorator} is a Higher-order Component
+ *{@link moonstone/EditableIntegerPicker.EditableIntegerPickerDecorator} is a higher-order component
  * which handles various functionalities of {@link moonstone/EditableIntegerPicker.EditableIntegerPicker}.
  *
  * @class EditableIntegerPickerDecorator
@@ -22,7 +22,7 @@ addAll({
  * @hoc
  * @private
  */
-const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {
+const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	// Set-up event forwarding
 	const forwardBlur = forward('onBlur');
 	const forwardChange = forward('onChange');

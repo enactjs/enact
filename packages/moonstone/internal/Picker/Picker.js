@@ -131,6 +131,15 @@ const PickerBase = class extends React.Component {
 		'aria-valuetext': PropTypes.string,
 
 		/**
+		 * Disables voice control.
+		 *
+		 * @type {Boolean}
+		 * @memberof moonstone/internal/Picker.PickerBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
 		 * The `data-webos-voice-group-label` for the IconButton of Picker.
 		 *
 		 * @type {String}
@@ -790,6 +799,7 @@ const PickerBase = class extends React.Component {
 			'aria-valuetext': ariaValueText,
 			noAnimation,
 			children,
+			'data-webos-voice-disabled': voiceDisabled,
 			'data-webos-voice-group-label': voiceGroupLabel,
 			disabled,
 			id,
@@ -859,6 +869,7 @@ const PickerBase = class extends React.Component {
 				aria-disabled={disabled}
 				aria-label={this.calcAriaLabel(valueText)}
 				className={classes}
+				data-webos-voice-disabled={voiceDisabled}
 				data-webos-voice-group-label={voiceGroupLabel}
 				data-webos-voice-intent="Select"
 				disabled={disabled}
@@ -878,6 +889,7 @@ const PickerBase = class extends React.Component {
 					aria-controls={!joined ? incrementerAriaControls : null}
 					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
+					data-webos-voice-disabled={voiceDisabled}
 					data-webos-voice-group-label={voiceGroupLabel}
 					data-webos-voice-label={joined ? this.calcButtonLabel(!reverse, valueText) : null}
 					disabled={incrementerDisabled}
@@ -915,6 +927,7 @@ const PickerBase = class extends React.Component {
 					aria-controls={!joined ? decrementerAriaControls : null}
 					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
+					data-webos-voice-disabled={voiceDisabled}
 					data-webos-voice-group-label={voiceGroupLabel}
 					data-webos-voice-label={joined ? this.calcButtonLabel(reverse, valueText) : null}
 					disabled={decrementerDisabled}

@@ -38,14 +38,16 @@ const PanelsBase = kind({
 		 * viewport.
 		 *
 		 * @see ui/ViewManager.SlideArranger
-		 * @type {Arranger}
+		 * @type {ui/ViewManager.Arranger}
 		 * @public
 		 */
 		arranger: shape,
 
 		/**
-		 * An object containing properties to be passed to each child. `aria-owns` will be added or
-		 * updated to this object to add the close button to the accessibility tree of each panel.
+		 * An object containing properties to be passed to each child.
+		 *
+		 *`aria-owns` will be added or updated to this object to add the close button to the
+		 * accessibility tree of each panel.
 		 *
 		 * @type {Object}
 		 * @public
@@ -71,6 +73,7 @@ const PanelsBase = kind({
 
 		/**
 		 * The background opacity of the application close button.
+		 *
 		 * * Values: `'translucent'`, `'lightTranslucent'`, `'transparent'`
 		 *
 		 * @type {String}

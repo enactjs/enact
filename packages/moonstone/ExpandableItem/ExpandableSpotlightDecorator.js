@@ -1,4 +1,4 @@
-import {getContainersForNode, setContainerLastFocusedElement} from '@enact/spotlight/src/container';
+import {getContainersForNode, getContainerNode, setContainerLastFocusedElement} from '@enact/spotlight/src/container';
 import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import Spotlight from '@enact/spotlight';
@@ -128,18 +128,20 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 				Spotlight.focus(label);
 			} else {
-				const containerIds = getContainersForNode(label);
+				let containerIds = getContainersForNode(label);
 
 				// when focus is not within the expandable (due to a cancel event or the close
 				// on blur from ExpandableInput, or some quick key presses), we need to fix the last
 				// focused element config so that focus can be restored to the label rather than
 				// spotlight getting lost.
 				//
-				// If there is focus somewhere else, then we only need to fix the nearest container
-				// to be the label. If there isn't focus, we need to update the entire container
-				// tree.
-				if (current) {
-					containerIds.splice(containerIds.length - 1);
+				// If there is focus or active container somewhere else, then we only need to fix
+				// the nearest containers to the label that arent also containing the currently
+				// focused element.
+				const node = current || Spotlight.getPointerMode() && getContainerNode(Spotlight.getActiveContainer());
+				if (node) {
+					const ids = getContainersForNode(node);
+					containerIds = containerIds.filter((id) => !ids.includes(id));
 				}
 
 				setContainerLastFocusedElement(label, containerIds);

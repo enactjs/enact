@@ -1,7 +1,8 @@
 /**
- * Provides a Moonstone-themed item component that accepts multiple positions for children, using
- * the usual `children` prop, as well as two additional props: `slotBefore`, and `slotAfter`.  It is
- * customizable by a theme or application.
+ * Provides a Moonstone-themed item component that accepts multiple positions for children.
+ *
+ * Using the usual `children` prop, as well as two additional props: `slotBefore`, and `slotAfter`.
+ * It is customizable by a theme or application.
  *
  * @example
  * <SlotItem autoHide="both">
@@ -41,6 +42,7 @@ import componentCss from './SlotItem.less';
  * @class SlotItemBase
  * @memberof moonstone/SlotItem
  * @extends ui/SlotItem.SlotItemBase
+ * @omit component
  * @mixes moonstone/Item.ItemBase
  * @ui
  * @public
@@ -80,7 +82,7 @@ const SlotItemBase = kind({
 });
 
 /**
- * Moonstone-specific item with overlay behaviors to apply to [Item]{@link moonstone/SlotItem.SlotItemBase}.
+ * Moonstone-specific item with overlay behaviors to apply to SlotItem.
  *
  * @class SlotItemDecorator
  * @memberof moonstone/SlotItem

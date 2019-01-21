@@ -113,12 +113,11 @@ class Hold {
 	}
 
 	handlePulse = () => {
-		const {onHold, onHoldPulse} = this.holdConfig;
-
 		const holdTime = window.performance.now() - this.holdStart;
 
 		let n = this.next;
 		while (n && n.time <= holdTime) {
+			const {events, onHold} = this.holdConfig;
 			this.pulsing = true;
 			if (onHold) {
 				onHold({
@@ -126,10 +125,20 @@ class Hold {
 					...n
 				});
 			}
-			n = this.next = this.holdConfig.events && this.holdConfig.events.shift();
+
+			// if the hold is canceled from the onHold handler, we should bail early and prevent
+			// additional hold/pulse events
+			if (!this.isHolding()) {
+				this.pulsing = false;
+				break;
+			}
+
+			n = this.next = events && events.shift();
 		}
 
 		if (this.pulsing) {
+			const {onHoldPulse} = this.holdConfig;
+
 			if (onHoldPulse) {
 				onHoldPulse({
 					type: 'onHoldPulse',

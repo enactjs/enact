@@ -122,7 +122,7 @@ const defaultConfig = {
 	 * Invalidate the distance of marquee text if any property (like 'inline') changes.
 	 * Expects an array of props which on change trigger invalidateMetrics.
 	 *
-	 * @type {Array}
+	 * @type {String[]}
 	 * @default ['inline']
 	 * @memberof moonstone/ToggleItem.ToggleItemDecorator.defaultConfig
 	 */
@@ -153,6 +153,7 @@ const ToggleItemDecorator = hoc(defaultConfig, ({invalidateProps}, Wrapped) => {
 
 /**
  * A Moonstone-styled item with built-in support for toggling, marqueed text, and `Spotlight` focus.
+ *
  * This is not intended to be used directly, but should be extended by a component that will
  * customize this component's appearance by supplying an `iconComponent` prop.
  *

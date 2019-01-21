@@ -4,10 +4,133 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` property `childProps` to support additional props included in the object passed to the `itemsRenderer` callback
+
+### Fixed
+
+- `moonstone/VirtualList` to focus an item properly by `scrollTo` API immediately after a prior call to the same position
+- `moonstone/Popup` to close floating layer when the popup closes without animation
+
+## [2.2.9] - 2019-01-11
+
+### Fixed
+
+- `moonstone/Scroller` scrolling to boundary behavior for short scrollers
+
+## [2.2.8] - 2018-12-06
+
+### Fixed
+
+- `moonstone/ExpandableInput` to focus labeled item on close
+- `moonstone/ExpandableItem` to disable its spotlight container when the component is disabled
+- `moonstone/Scroller` to correctly handle scrolling focused elements and containers into view
+
+## [2.2.7] - 2018-11-21
+
+### Fixed
+
+- `moonstone/Picker`, `moonstone/ExpandablePicker`, `moonstone/ExpandableList`, `moonstone/IncrementSlider` to support disabling voice control
+
+## [2.2.6] - 2018-11-15
+
+### Fixed
+
+- `moonstone/VideoPlayer` to blur slider when hiding media controls
+- `moonstone/VideoPlayer` to disable pointer mode when hiding media controls via 5-way
+- `moonstone/VirtualList` and `moonstone/Scroller` to not to animate with 5-way navigation by default
+
+## [2.2.5] - 2018-11-05
+
+### Fixed
+
+- `moonstone/ExpandableItem` to not steal focus after closing
+
+## [2.2.4] - 2018-10-29
+
+### Fixed
+
+- `moonstone/MoonstoneDecorator` to apply both Latin and non-Latin rules to the root element so all children inherit the correct default font rules.
+- `moonstone/Marquee`, `moonstone/MediaOverlay` to display locale-based font
+- `moonstone/DayPicker` separator character used between selected days in the label in fa-IR locale
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` scrolling by voice commands in RTL locales
+
+## [2.2.3] - 2018-10-22
+
+### Fixed
+
+- `moonstone/Scroller` to respect the disabled spotlight container status when handling pointer events
+- `moonstone/Scroller` to scroll to the boundary when focusing the first or last element with a minimal margin in 5-way mode
+- `moonstone/VideoPlayer` to position the slider knob correctly when beyond the left or right edge of the slider
+
+## [2.2.2] - 2018-10-15
+
+### Fixed
+
+- `moonstone/Scroller` stuttering when page up/down key is pressed
+
+## [2.2.1] - 2018-10-09
+
+### Fixed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to notify user when scrolling is not possible via voice command
+- `moonstone/TimePicker` to not read out meridiem label when changing the value
+
+## [2.2.0] - 2018-10-02
+
+### Added
+
+- `moonstone/GridListImageItem` voice control feature support
+
+### Fixed
+
+- `moonstone/DayPicker` to prevent closing when selecting days via voice control
+- `moonstone/VideoPlayer` to unfocus media controls when hidden
+- `moonstone/Scroller` to set correct scroll position when an expandable child is closed
+- `moonstone/Scroller` to prevent focusing children while scrolling
+
+## [2.1.4] - 2018-09-17
+
+### Fixed
+
+- `moonstone/Button` and `moonstone/IconButton` to style image-based icons correctly when focused and disabled
+- `moonstone/FormCheckboxItem` styling when focused and disabled
+- `moonstone/Panels` to always blur breadcrumbs when transitioning to a new panel
+- `moonstone/Scroller` to correctly set scroll position when nested item is focused
+- `moonstone/Scroller` to not adjust `scrollTop` when nested item is focused
+- `moonstone/VideoPlayer` to show correct playback rate feedback on play or pause
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to handle 5way navigation properly when `focusableScrollbar` is true
+
+## [2.1.3] - 2018-09-10
+
+### Fixed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effects properly on repeating wheel input
+- `moonstone/TooltipDecorator` to handle runtime error when setting `tooltipText` to an empty string
+- `moonstone/VideoPlayer` timing to read out `infoComponents` accessibility value when `moreButton` or `moreButtonColor` is pressed
+
+## [2.1.2] - 2018-09-04
+
+### Fixed
+
+- `moonstone/ExpandableItem` to prevent default browser scroll behavior when 5-way key is pressed on the first item or the last item
+- `moonstone/Scroller` scrolling behavior for focused items in 5-way mode
+- `moonstone/Scroller` to scroll container elements into view
+- `moonstone/TooltipDecorator` to update position when `tooltipText` is changed
+- `moonstone/VideoPlayer` to prevent default browser scroll behavior when navigating via 5-way
+- `moonstone/VirtuaList` to allow `onKeyDown` events to bubble
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` scrolling via page up or down keys
+
+## [2.1.1] - 2018-08-27
+
 ### Changed
 
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to show overscroll effects only by wheel input
-- `moonstone/Icon` and `moonstone/IconButton` to require `children`
+
+### Fixed
+
+- `moonstone/VideoPlayer` so that activity is detected and the `autoCloseTimeout` timer is reset when using 5-way to navigate from the media slider
 
 ### Fixed
 

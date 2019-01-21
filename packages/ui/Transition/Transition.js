@@ -1,9 +1,10 @@
 /**
- * A component that can transition its children components onto the screen, whether that's
- * from off the edge of the screen or hidden inside or behind an already-on-screen component.
- * You can switch types of transitions using the `type` property, change the direction they come in
- * from using the `direction` property, or even adjust the transition timing function using
- * `timingFunction`.
+ * A component that can transition its children components onto the screen.
+ *
+ * Transitions whether that's from off the edge of the screen or hidden inside or behind an
+ * already-on-screen component. You can switch types of transitions using the `type` property,
+ * change the direction they come in from using the `direction` property, or even adjust the
+ * transition timing function using `timingFunction`.
  *
  * @example
  * <Transition visible={true} type="slide">
@@ -22,17 +23,20 @@ import {contextTypes} from '@enact/core/internal/PubSub';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import css from './Transition.less';
+import componentCss from './Transition.less';
 
 const forwardTransitionEnd = forward('onTransitionEnd');
 const forwardOnShow = forward('onShow');
 const forwardOnHide = forward('onHide');
 
 /**
- * The stateless structure of the component, in case you want to provide all of the state yourself.
- * In general, you'll probably want to use the [stateful version]{@link ui/Transition.Transition}.
+ * The stateless structure of the component.
+ *
+ * In case you want to provide all of the state yourself.
+ * In general, you'll probably want to use the `Transition` instead of `TransitionBase`.
  *
  * @class TransitionBase
+ * @ui
  * @memberof ui/Transition
  * @public
  */
@@ -42,7 +46,9 @@ const TransitionBase = kind({
 	propTypes: /** @lends ui/Transition.TransitionBase.prototype */ {
 		/**
 		 * Provide a function to get the reference to the child node (the one with the content) at
-		 * render time. Useful if you need to measure or interact with the node directly.
+		 * render time.
+		 *
+		 *Useful if you need to measure or interact with the node directly.
 		 *
 		 * @type {Function}
 		 * @default null
@@ -79,6 +85,39 @@ const TransitionBase = kind({
 		clipWidth: PropTypes.number,
 
 		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `transition`     - The root component class
+		 * * `inner`          - The element inside the transition. This is the container for the transitioning content.
+		 * * `shown`          - Applied when content is present (visible), related to the `visible` prop/state
+		 * * `hidden`         - Applied when content is not present (hiding), related to the `visible` prop/state
+		 * * `slide`          - Applied when the `slide` `type` is set
+		 * * `fade`           - Applied when the `fade` `type` is set
+		 * * `clip`           - Applied when the `clip` `type` is set
+		 * * `up`             - Applied when the `direction` `up` is set
+		 * * `right`          - Applied when the `direction` `right` is set
+		 * * `down`           - Applied when the `direction` `down` is set
+		 * * `left`           - Applied when the `direction` `left` is set
+		 * * `short`          - Applied when the `duration` `short` is set
+		 * * `medium`         - Applied when the `duration` `medium` is set
+		 * * `long`           - Applied when the `duration` `long` is set
+		 * * `ease`           - Applied when the `timingFunction` `ease` is set
+		 * * `ease-in`        - Applied when the `timingFunction` `ease-in` is set
+		 * * `ease-out`       - Applied when the `timingFunction` `ease-out` is set
+		 * * `ease-in-out`    - Applied when the `timingFunction` `ease-in-out` is set
+		 * * `ease-in-quart`  - Applied when the `timingFunction` `ease-in-quart` is set
+		 * * `ease-out-quart` - Applied when the `timingFunction` `ease-out-quart` is set
+		 * * `linear`         - Applied when the `timingFunction` `linear` is set
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
+
+		/**
 		 * Sets the direction of transition. Where the component will move *to*; the destination.
 		 * Supported directions are: `'up'`, `'right'`, `'down'`, `'left'`.
 		 *
@@ -102,7 +141,9 @@ const TransitionBase = kind({
 		duration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 		/**
-		 * When `true`, transition animation is disabled. When `false`, visibility changes animate.
+		 * Disables transition animation.
+		 *
+		 * When `false`, visibility changes animate.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -112,7 +153,8 @@ const TransitionBase = kind({
 
 		/**
 		 * The transition timing function.
-		 * Supported function names are: `ease`, `ease-in`, `ease-out`, `ease-in-out`, `ease-in-quart`,
+		 *
+		 * * Supported function names are: `ease`, `ease-in`, `ease-out`, `ease-in-out`, `ease-in-quart`,
 		 * `ease-out-quart`, and `linear`.
 		 *
 		 * @type {String}
@@ -131,7 +173,8 @@ const TransitionBase = kind({
 
 		/**
 		 * The type of transition to affect the content.
-		 * Supported types are: `'slide'`, `'clip'`, and `'fade'`.
+		 *
+		 * * Supported types are: `'slide'`, `'clip'`, and `'fade'`.
 		 *
 		 * Details on types:
 		 *  * `'slide'` - Typically used for bringing something which is off the edge of the screen,
@@ -175,12 +218,13 @@ const TransitionBase = kind({
 	},
 
 	styles: {
-		css,
-		className: 'transition'
+		css: componentCss,
+		className: 'transition',
+		publicClassNames: true
 	},
 
 	computed: {
-		className: ({direction, duration, timingFunction, type, visible, styler}) => styler.append(
+		className: ({css, direction, duration, timingFunction, type, visible, styler}) => styler.append(
 			visible ? 'shown' : 'hidden',
 			direction && css[direction],
 			duration && css[duration],
@@ -194,7 +238,7 @@ const TransitionBase = kind({
 				};
 			}
 		},
-		style: ({clipHeight, direction, duration, type, visible, style}) => {
+		style: ({css, clipHeight, direction, duration, type, visible, style}) => {
 			if (type === 'clip') {
 				style = {
 					...style,
@@ -216,7 +260,7 @@ const TransitionBase = kind({
 		childRef: ({childRef, noAnimation, children}) => (noAnimation || !children) ? null : childRef
 	},
 
-	render: ({childRef, children, innerStyle, noAnimation, visible, ...rest}) => {
+	render: ({css, childRef, children, innerStyle, noAnimation, visible, ...rest}) => {
 		delete rest.clipHeight;
 		delete rest.clipWidth;
 		delete rest.direction;
@@ -249,6 +293,7 @@ const TRANSITION_STATE = {
  * properties and events.
  *
  * @class Transition
+ * @ui
  * @memberof ui/Transition
  * @public
  */
@@ -265,7 +310,8 @@ class Transition extends React.Component {
 
 		/**
 		 * The direction of transition (i.e. where the component will move *to*; the destination).
-		 * Supported directions are: `'up'`, `'right'`, `'down'`, `'left'`.
+		 *
+		 * * Supported directions are: `'up'`, `'right'`, `'down'`, `'left'`.
 		 *
 		 * @type {String}
 		 * @default 'up'
@@ -275,8 +321,10 @@ class Transition extends React.Component {
 
 		/**
 		 * Controls how long the transition should take.
-		 * Supported preset durations are: `'short'` (250ms), `'medium'` (500ms), and `'long'` (1s).
+		 *
+		 * * Supported preset durations are: `'short'` (250ms), `'medium'` (500ms), and `'long'` (1s).
 		 * `'medium'` (500ms) is default when no others are specified.
+		 *
 		 * Any valid CSS duration value is also accepted, e.g. "200ms" or "3s". Pure numeric values
 		 * are also supported and treated as miliseconds.
 		 *
@@ -287,7 +335,7 @@ class Transition extends React.Component {
 		duration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 		/**
-		 * A function to run after transition for hiding is finished.
+		 * Called after transition for hiding is finished.
 		 *
 		 * @type {Function}
 		 * @public
@@ -295,7 +343,7 @@ class Transition extends React.Component {
 		onHide: PropTypes.func,
 
 		/**
-		 * A function to run after transition for showing is finished.
+		 * Called after transition for showing is finished.
 		 *
 		 * @type {Function}
 		 * @public
@@ -323,7 +371,8 @@ class Transition extends React.Component {
 
 		/**
 		 * The type of transition to affect the content.
-		 * Supported types are: `'slide'`, `'clip'`, and `'fade'`.
+		 *
+		 * * Supported types are: `'slide'`, `'clip'`, and `'fade'`.
 		 *
 		 * Details on types:
 		 *  * `'slide'` - Typically used for bringing something which is off the edge of the screen,
@@ -389,8 +438,10 @@ class Transition extends React.Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		if (nextProps.visible && this.state.renderState === TRANSITION_STATE.INIT) {
+		if (!this.props.visible && nextProps.visible) {
 			this.setState({
+				initialHeight: null,
+				initialWidth: null,
 				renderState: TRANSITION_STATE.MEASURE
 			});
 		}

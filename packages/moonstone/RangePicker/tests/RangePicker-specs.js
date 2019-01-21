@@ -10,7 +10,7 @@ const decrement = (slider) => tap(slider.find('IconButton').last());
 const increment = (slider) => tap(slider.find('IconButton').first());
 
 describe('RangePicker Specs', () => {
-	it('should render a single child with the current value', function () {
+	test('should render a single child with the current value', () => {
 		const picker = mount(
 			<RangePicker min={-10} max={20} value={10} />
 		);
@@ -18,10 +18,10 @@ describe('RangePicker Specs', () => {
 		const expected = '10';
 		const actual = picker.find('PickerItem').text();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should increase by step amount on increment press', function () {
+	test('should increase by step amount on increment press', () => {
 		const picker = mount(
 			<RangePicker min={0} max={100} defaultValue={10} step={1} />
 		);
@@ -31,10 +31,10 @@ describe('RangePicker Specs', () => {
 		const expected = '11';
 		const actual = picker.find('PickerItem').first().text();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should decrease by step amount on decrement press', function () {
+	test('should decrease by step amount on decrement press', () => {
 		const picker = mount(
 			<RangePicker min={0} max={100} defaultValue={10} step={1} />
 		);
@@ -44,10 +44,10 @@ describe('RangePicker Specs', () => {
 		const expected = '9';
 		const actual = picker.find('PickerItem').first().text();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should pad the value', function () {
+	test('should pad the value', () => {
 		const picker = mount(
 			<RangePicker min={0} max={100} value={10} step={1} padded />
 		);
@@ -55,10 +55,10 @@ describe('RangePicker Specs', () => {
 		const expected = '010';
 		const actual = picker.find('PickerItem').text();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should pad the value when min has more digits than max', function () {
+	test('should pad the value when min has more digits than max', () => {
 		const picker = mount(
 			<RangePicker min={-1000} max={100} value={10} step={1} padded />
 		);
@@ -66,15 +66,15 @@ describe('RangePicker Specs', () => {
 		const expected = '0010';
 		const actual = picker.find('PickerItem').text();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should be disabled when limited to a single value', function () {
+	test('should be disabled when limited to a single value', () => {
 		const picker = mount(
 			<RangePickerBase min={0} max={0} value={0} />
 		);
 
 		const actual = picker.find('Picker').last().prop('disabled');
-		expect(actual).to.be.true();
+		expect(actual).toBe(true);
 	});
 });

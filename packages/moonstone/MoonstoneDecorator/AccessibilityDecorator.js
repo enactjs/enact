@@ -4,20 +4,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * A Higher-order Component that classifies an application with a target set of font sizing rules.
+ * A higher-order component that classifies an application with a target set of font sizing rules.
  *
  * @class AccessibilityDecorator
  * @memberof moonstone/MoonstoneDecorator
  * @hoc
  * @public
  */
-const AccessibilityDecorator = hoc((config, Wrapped) => {
+const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
 		static displayName = 'AccessibilityDecorator'
 
 		static propTypes =  /** @lends moonstone/MoonstoneDecorator.AccessibilityDecorator.prototype */ {
 			/**
 			 * Enables additional features to help users visually differentiate components.
+			 *
 			 * The UI library will be responsible for using this information to adjust
 			 * the components' contrast to this preset.
 			 *

@@ -1,19 +1,16 @@
 import kind from '@enact/core/kind';
-import {forward, handle, stop} from '@enact/core/handle';
+import {forProp, forward, handle, stop} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import css from './Marquee.less';
-
-const animated = css.text + ' ' + css.animate;
 
 const isEventSource = (ev) => ev.target === ev.currentTarget;
 
 /**
  * Marquees the children of the component.
  *
- * Generally, you would use {@link ui/Marquee.Marquee} which wraps this component with
- * {@link ui/Marquee.MarqueeDecorator} which automates the necessary calculations.
+ * For automated marquee calculations use {@link ui/Marquee.Marquee}.
  *
  * @class MarqueeBase
  * @memberof ui/Marquee
@@ -40,7 +37,7 @@ const MarqueeBase = kind({
 		alignment: PropTypes.oneOf(['left', 'right', 'center']),
 
 		/**
-		 * `true` when the component should be animating
+		 * Applies animating styles such as removing the ellipsis.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -58,7 +55,7 @@ const MarqueeBase = kind({
 		children: PropTypes.node,
 
 		/**
-		 * Function to capture a reference to the client node
+		 * Called when mounting or unmounting with a reference to the client node
 		 *
 		 * @type {Function}
 		 * @public
@@ -74,6 +71,7 @@ const MarqueeBase = kind({
 		 * * `marquee` - The root component class
 		 * * `animate` - Applied to the inner content node when the text is animating
 		 * * `text` - The inner content node
+		 * * `willAnimate` - Applied to the inner content node shortly before animation
 		 *
 		 * @type {Object}
 		 * @public
@@ -121,11 +119,24 @@ const MarqueeBase = kind({
 		 * @type {Number}
 		 * @public
 		 */
-		speed: PropTypes.number
+		speed: PropTypes.number,
+
+		/**
+		 * Indicates the marquee will animate soon.
+		 *
+		 * Should be used by the component to prepare itself for animation such as promoting
+		 * composite layers for improved performance.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 * @default false
+		 */
+		willAnimate: PropTypes.bool
 	},
 
 	defaultProps: {
-		rtl: false
+		rtl: false,
+		willAnimate: false
 	},
 
 	styles: {
@@ -136,6 +147,7 @@ const MarqueeBase = kind({
 
 	handlers: {
 		onMarqueeComplete: handle(
+			forProp('animating', true),
 			isEventSource,
 			stop,
 			(ev, props) => forward('onMarqueeComplete', {type: 'onMarqueeComplete'}, props)
@@ -143,7 +155,11 @@ const MarqueeBase = kind({
 	},
 
 	computed: {
-		clientClassName: ({animating}) => animating ? animated : css.text,
+		clientClassName: ({animating, willAnimate, styler}) => styler.join({
+			animate: animating,
+			text: true,
+			willAnimate
+		}),
 		clientStyle: ({alignment, animating, distance, overflow, rtl, speed}) => {
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
@@ -176,6 +192,7 @@ const MarqueeBase = kind({
 		delete rest.overflow;
 		delete rest.rtl;
 		delete rest.speed;
+		delete rest.willAnimate;
 
 		return (
 			<div {...rest}>

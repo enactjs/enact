@@ -46,7 +46,8 @@ const HeaderBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Header.prototype */ {
 		/**
-		 * Configures the mode of uppercasing for the [`title`]{@link moonstone/Panels.Header#title}.
+		 * Configures the mode of uppercasing for the `title`.
+		 *
 		 * * Values: `'upper'`, `'preserve'`, `'word'`, `'sentence'`
 		 *
 		 * @see i18n/Uppercase#Uppercase.casing
@@ -57,8 +58,9 @@ const HeaderBase = kind({
 		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 
 		/**
-		 * Children provided are added to the header-components area. A space for controls which
-		 * live in the header, apart from the body of the panel view.
+		 * Children provided are added to the header-components area.
+		 *
+		 * A space for controls which live in the header, apart from the body of the panel view.
 		 *
 		 * @type {Element|Element[]}
 		 */
@@ -100,6 +102,7 @@ const HeaderBase = kind({
 
 		/**
 		 * Determines what triggers the header content to start its animation.
+		 *
 		 * * Values: `'focus'`, `'hover'` and `'render'`.
 		 *
 		 * @type {String}

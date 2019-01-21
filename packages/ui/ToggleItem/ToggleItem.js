@@ -1,7 +1,9 @@
 /**
- * Unstyled toggle item components and behaviors. This is not intended to be used
- * directly, but should be extended by a component that will customize this component's appearance
- * by supplying an [iconComponent prop]{@link ui/ToggleItem.ToggleItemBase#iconComponent}.
+ * Unstyled toggle item components and behaviors.
+ *
+ * This is not intended to be used directly, but should be extended by a component that will
+ * customize this component's appearance by supplying an
+ * [iconComponent prop]{@link ui/ToggleItem.ToggleItemBase#iconComponent}.
  *
  * @module ui/ToggleItem
  * @exports ToggleItem
@@ -57,9 +59,11 @@ const ToggleItemBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * The type of component to use to render as root element. This receives the `css` prop for
-		 * theme extension and therefore must be a custom component and not a simple HTML DOM node.
-		 * Recommended component or themed derivative: [SlotItem]{@link ui/SlotItem.SlotItem}
+		 * The type of component to use to render as root element.
+		 *
+		 * This receives the `css` prop for theme extension and therefore must be a custom
+		 * component and not a simple HTML DOM node. Recommended component or themed
+		 * derivative: [SlotItem]{@link ui/SlotItem.SlotItem}
 		 *
 		 * @type {Function}
 		 * @required
@@ -68,7 +72,9 @@ const ToggleItemBase = kind({
 		component: PropTypes.func.isRequired,
 
 		/**
-		 * The `Icon` to render in this item. This component receives the `selected` prop and value,
+		 * The `Icon` to render in this item.
+		 *
+		 * This component receives the `selected` prop and value,
 		 * and must therefore respond to it in some way. It is recommended to use
 		 * [ToggleIcon]{@link ui/ToggleIcon} for this.
 		 *
@@ -92,7 +98,7 @@ const ToggleItemBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, applies a disabled visual state to the toggle item.
+		 * Applies a disabled visual state to the toggle item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -102,6 +108,7 @@ const ToggleItemBase = kind({
 
 		/**
 		 * An optional prop that lets you override the icon of the `iconComponent` component.
+		 *
 		 * This accepts any string that the [Icon]{@link ui/Icon.Icon} component supports, provided
 		 * the recommendations of `iconComponent` are followed.
 		 *
@@ -120,8 +127,7 @@ const ToggleItemBase = kind({
 		iconPosition: PropTypes.oneOf(['before', 'after']),
 
 		/**
-		 * The handler to run when the toggle item is toggled. Developers should
-		 * generally use `onToggle` instead.
+		 * Called when the toggle item is toggled. Developers should generally use `onToggle` instead.
 		 *
 		 * @type {Function}
 		 * @public
@@ -129,7 +135,7 @@ const ToggleItemBase = kind({
 		onTap: PropTypes.func,
 
 		/**
-		 * The handler to run when the toggle item is toggled.
+		 * Called when the toggle item is toggled.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -140,7 +146,7 @@ const ToggleItemBase = kind({
 		onToggle: PropTypes.func,
 
 		/**
-		 * When `true`, applies the provided `icon`.
+		 * Applies the provided `icon`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -195,7 +201,7 @@ const ToggleItemBase = kind({
 });
 
 /**
- * Adds interactive functionality to `ToggleItemBase`
+ * Adds interactive functionality to `ToggleItemBase`.
  *
  * @class ToggleItemDecorator
  * @memberof ui/ToggleItem

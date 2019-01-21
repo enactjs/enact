@@ -32,6 +32,7 @@ import React from 'react';
  * ```
  *
  * @class Announce
+ * @ui
  * @memberof ui/AnnounceDecorator
  * @public
  */
@@ -40,7 +41,9 @@ const Announce = class extends React.Component {
 
 	static propTypes = /** @lends ui/AnnounceDecorator.Announce.prototype */ {
 		/**
-		 * Time, in milliseconds, to wait to remove the alert message. Subsequent updates to the
+		 * Time, in milliseconds, to wait to remove the alert message.
+
+		 * Subsequent updates to the
 		 * message before the timeout are ignored.
 		 *
 		 * @type {Number}

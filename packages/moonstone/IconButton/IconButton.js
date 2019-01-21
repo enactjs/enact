@@ -34,6 +34,8 @@ import componentCss from './IconButton.less';
  * @memberof moonstone/IconButton
  * @extends moonstone/Button.ButtonBase
  * @extends ui/IconButton.IconButtonBase
+ * @omit buttonComponent
+ * @omit iconComponent
  * @ui
  * @public
  */
@@ -41,21 +43,6 @@ const IconButtonBase = kind({
 	name: 'IconButton',
 
 	propTypes: /** @lends moonstone/IconButton.IconButtonBase.prototype */ {
-		/**
-		 * The icon content.
-		 *
-		 * May be specified as either:
-		 *
-		 * * A string that represents an icon from the [iconList]{@link ui/Icon.Icon.iconList},
-		 * * An HTML entity string, Unicode reference or hex value (in the form '0x...'),
-		 * * A URL specifying path to an icon image, or
-		 * * An object representing a resolution independent resource (See {@link ui/resolution}).
-		 *
-		 * @type {String|Object}
-		 * @public
-		 */
-		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-
 		/**
 		 * The background-color opacity of this icon button.
 		 *

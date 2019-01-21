@@ -1,5 +1,5 @@
 /**
- * Exports the {@link ui/Toggleable.Toggleable} Higher-order Component (HOC).
+ * A higher-order component at handles toggle state.
  *
  * @module ui/Toggleable
  * @exports Toggleable
@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import warning from 'warning';
 
 /**
- * Default config for {@link ui/Toggleable.Toggleable}
+ * Default config for `Toggleable`.
  *
  * @memberof ui/Toggleable.Toggleable
  * @hocconfig
@@ -74,8 +74,9 @@ const defaultConfig = {
 	prop: 'selected',
 
 	/**
-	 * Configures the event name that toggles the component. The payload includes a toggled Boolean
-	 * value of `prop`.
+	 * Configures the event name that toggles the component.
+	 *
+	 * The payload includes a toggled Boolean value of `prop`.
 	 *
 	 * **Note**: The payload will override the original event. If a native event is set, then the native
 	 * event payload will be lost.
@@ -88,6 +89,7 @@ const defaultConfig = {
 
 	/**
 	 * Allows you to remap the incoming `toggle` callback to an event name of your choosing.
+	 *
 	 * For example, run `onToggle` when the wrapped component has an `onClick` property and you've specified
 	 * `onClick` here.
 	 *
@@ -99,8 +101,9 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/Toggleable.Toggleable} is a higher-order component (HOC) that applies a 'toggleable' behavior
- * to its wrapped component. Its default event and property can be configured when applied to a component.
+ * A higher-order component that applies a 'toggleable' behavior to its wrapped component.
+ *
+ * Its default event and property can be configured when applied to a component.
  *
  * Example:
  * ```
@@ -137,10 +140,12 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * Current toggled state. When set at construction, the component is considered
-			 * 'controlled' and will only update its internal value when updated by new props. If
-			 * undefined, the component is 'uncontrolled' and `Toggleable` will manage the toggled
-			 * state using callbacks defined by its configuration.
+			 * Current toggled state.
+			 *
+			 * When set at construction, the component is considered 'controlled' and will only
+			 * update its internal value when updated by new props. If undefined, the component
+			 * is 'uncontrolled' and `Toggleable` will manage the toggled state using callbacks
+			 * defined by its configuration.
 			 *
 			 * @type {Boolean}
 			 * @public
