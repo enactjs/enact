@@ -14,7 +14,7 @@ describe('kind', () => {
 		defaultProps: {
 			label: 'Label'
 		},
-		contextTypes: {
+		contextType: {
 			parentLabel: PropTypes.string
 		},
 		styles: {
@@ -85,8 +85,8 @@ describe('kind', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should assign contextTypes when handlers are specified', () => {
-		const actual = Kind.contextTypes != null;
+	test('should assign contextType when handlers are specified', () => {
+		const actual = Kind.contextType != null;
 		const expected = true;
 
 		expect(actual).toBe(expected);
