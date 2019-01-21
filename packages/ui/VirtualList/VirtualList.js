@@ -22,7 +22,6 @@ import {gridListItemSizeShape, ScrollableVirtualList, ScrollableVirtualListNativ
  *
  * @class VirtualList
  * @memberof ui/VirtualList
- * @extends ui/Scrollable.Scrollable
  * @extends ui/VirtualList.VirtualListBase
  * @ui
  * @public
@@ -59,7 +58,6 @@ const VirtualList = kind({
  *
  * @class VirtualGridList
  * @memberof ui/VirtualList
- * @extends ui/Scrollable.Scrollable
  * @extends ui/VirtualList.VirtualListBase
  * @ui
  * @public
@@ -104,7 +102,6 @@ const VirtualGridList = kind({
  *
  * @class VirtualListNative
  * @memberof ui/VirtualList
- * @extends ui/Scrollable.ScrollableNative
  * @extends ui/VirtualList.VirtualListBaseNative
  * @ui
  * @private
@@ -145,7 +142,6 @@ const VirtualListNative = kind({
  *
  * @class VirtualGridListNative
  * @memberof ui/VirtualList
- * @extends ui/Scrollable.ScrollableNative
  * @extends ui/VirtualList.VirtualListBaseNative
  * @ui
  * @private

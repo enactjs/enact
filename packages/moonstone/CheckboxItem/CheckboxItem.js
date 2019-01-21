@@ -39,6 +39,7 @@ import componentCss from './CheckboxItem.less';
  * @class CheckboxItem
  * @memberof moonstone/CheckboxItem
  * @extends moonstone/ToggleItem.ToggleItem
+ * @omit iconComponent
  * @ui
  * @public
  */

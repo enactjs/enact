@@ -23,6 +23,7 @@ import {wrapWithView} from './View';
  * transitioned on and off the viewport.
  *
  * @class ViewManager
+ * @ui
  * @memberof ui/ViewManager
  * @public
  */

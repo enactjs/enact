@@ -10,17 +10,17 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import {contextTypes as contextTypesState, Publisher} from '@enact/core/internal/PubSub';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
-import {on, off} from '@enact/core/dispatcher';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import {privateContextTypes as contextTypesResize} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
+import Registry from '@enact/core/internal/Registry';
+import {ResizeContext} from '../internal/Resize';
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
@@ -315,6 +315,14 @@ class ScrollableBase extends Component {
 		removeEventListeners: PropTypes.func,
 
 		/**
+		 * Indicates the content's text direction is right-to-left.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * Called to execute additional logic in a themed component when scrollTo is called.
 		 *
 		 * @type {Function}
@@ -355,12 +363,7 @@ class ScrollableBase extends Component {
 		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 	}
 
-	static contextTypes = contextTypesState
-
-	static childContextTypes = {
-		...contextTypesResize,
-		...contextTypesState
-	}
+	static childContextTypes = contextTypesResize
 
 	static defaultProps = {
 		cbScrollTo: nop,
@@ -378,7 +381,6 @@ class ScrollableBase extends Component {
 		super(props);
 
 		this.state = {
-			rtl: false,
 			remeasure: false,
 			isHorizontalScrollbarVisible: props.horizontalScrollbar === 'visible',
 			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
@@ -399,31 +401,18 @@ class ScrollableBase extends Component {
 		// Enable the early bail out of repeated scrolling to the same position
 		this.animationInfo = null;
 
+		this.resize = Registry.create();
+
 		props.cbScrollTo(this.scrollTo);
 	}
 
 	getChildContext = () => ({
-		invalidateBounds: this.enqueueForceUpdate,
-		Subscriber: this.publisher.getSubscriber()
+		invalidateBounds: this.enqueueForceUpdate
 	})
-
-	componentWillMount () {
-		this.publisher = Publisher.create('resize', this.context.Subscriber);
-		this.publisher.publish({
-			remeasure: false
-		});
-
-		if (this.context.Subscriber) {
-			this.context.Subscriber.subscribe('resize', this.handleSubscription);
-			this.context.Subscriber.subscribe('i18n', this.handleSubscription);
-		}
-	}
 
 	componentDidMount () {
 		this.addEventListeners();
 		this.updateScrollbars();
-
-		on('keydown', this.onKeyDown);
 	}
 
 	componentWillUpdate () {
@@ -467,10 +456,7 @@ class ScrollableBase extends Component {
 		const horizontal = isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
 		const vertical = isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
 		if (horizontal || vertical) {
-			this.publisher.publish({
-				horizontal,
-				vertical
-			});
+			this.resize.notify({});
 		}
 	}
 
@@ -486,12 +472,6 @@ class ScrollableBase extends Component {
 		}
 
 		this.removeEventListeners();
-		off('keydown', this.onKeyDown);
-
-		if (this.context.Subscriber) {
-			this.context.Subscriber.unsubscribe('resize', this.handleSubscription);
-			this.context.Subscriber.unsubscribe('i18n', this.handleSubscription);
-		}
 	}
 
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
@@ -499,17 +479,6 @@ class ScrollableBase extends Component {
 	enqueueForceUpdate = () => {
 		this.childRef.calculateMetrics();
 		this.forceUpdate();
-	}
-
-	handleSubscription = ({channel, message}) => {
-		if (channel === 'i18n') {
-			const {rtl} = message;
-			if (rtl !== this.state.rtl) {
-				this.setState({rtl});
-			}
-		} else if (channel === 'resize') {
-			this.publisher.publish(message);
-		}
 	}
 
 	clampScrollPosition () {
@@ -576,7 +545,7 @@ class ScrollableBase extends Component {
 
 	// drag/flick event handlers
 
-	getRtlX = (x) => (this.state.rtl ? -x : x)
+	getRtlX = (x) => (this.props.rtl ? -x : x)
 
 	onMouseDown = (ev) => {
 		this.stop();
@@ -713,7 +682,7 @@ class ScrollableBase extends Component {
 	onKeyDown = (ev) => {
 		if (this.props.onKeyDown) {
 			forward('onKeyDown', ev, this.props);
-		} else if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode)) && !ev.repeat) {
+		} else if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode))) {
 			this.scrollByPage(ev.keyCode);
 		}
 	}
@@ -884,7 +853,7 @@ class ScrollableBase extends Component {
 
 		if (this.canScrollHorizontally(bounds)) {
 			const
-				rtl = this.state.rtl,
+				rtl = this.props.rtl,
 				edge = this.getEdgeFromPosition(this.scrollLeft, bounds.maxLeft);
 
 			if (edge) { // if edge is null, no need to check which edge is reached.
@@ -933,7 +902,7 @@ class ScrollableBase extends Component {
 		};
 
 		// bail early when scrolling to the same position
-		if (this.scrolling && this.animationInfo && this.animationInfo.targetX === targetX && this.animationInfo.targetY === targetY) {
+		if (this.animator.isAnimating() && this.animationInfo && this.animationInfo.targetX === targetX && this.animationInfo.targetY === targetY) {
 			return;
 		}
 
@@ -1243,6 +1212,7 @@ class ScrollableBase extends Component {
 
 		if (containerRef && containerRef.addEventListener) {
 			containerRef.addEventListener('wheel', this.onWheel);
+			containerRef.addEventListener('keydown', this.onKeyDown);
 		}
 
 		if (childRef && childRef.containerRef) {
@@ -1262,6 +1232,7 @@ class ScrollableBase extends Component {
 
 		if (containerRef && containerRef.removeEventListener) {
 			containerRef.removeEventListener('wheel', this.onWheel);
+			containerRef.removeEventListener('keydown', this.onKeyDown);
 		}
 
 		if (childRef && childRef.containerRef && childRef.containerRef.removeEventListener) {
@@ -1314,8 +1285,8 @@ class ScrollableBase extends Component {
 
 	render () {
 		const
-			{className, containerRenderer, noScrollByDrag, style, ...rest} = this.props,
-			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl} = this.state,
+			{className, containerRenderer, noScrollByDrag, rtl, style, ...rest} = this.props,
+			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className),
 			childWrapper = noScrollByDrag ? 'div' : TouchableDiv,
 			childWrapperProps = {
@@ -1349,23 +1320,34 @@ class ScrollableBase extends Component {
 		delete rest.stop;
 		delete rest.verticalScrollbar;
 
-		return containerRenderer({
-			childComponentProps: rest,
-			childWrapper,
-			childWrapperProps,
-			className: scrollableClasses,
-			componentCss: css,
-			handleScroll: this.handleScroll,
-			horizontalScrollbarProps: this.horizontalScrollbarProps,
-			initChildRef: this.initChildRef,
-			initContainerRef: this.initContainerRef,
-			isHorizontalScrollbarVisible,
-			isVerticalScrollbarVisible,
-			rtl,
-			scrollTo: this.scrollTo,
-			style,
-			verticalScrollbarProps: this.verticalScrollbarProps
-		});
+		return (
+			<ResizeContext.Consumer>
+				{resizeContext => {
+					this.resize.parent = resizeContext;
+					return (
+						<ResizeContext.Provider value={this.resize.subscriber}>
+							{containerRenderer({
+								childComponentProps: rest,
+								childWrapper,
+								childWrapperProps,
+								className: scrollableClasses,
+								componentCss: css,
+								handleScroll: this.handleScroll,
+								horizontalScrollbarProps: this.horizontalScrollbarProps,
+								initChildRef: this.initChildRef,
+								initContainerRef: this.initContainerRef,
+								isHorizontalScrollbarVisible,
+								isVerticalScrollbarVisible,
+								rtl,
+								scrollTo: this.scrollTo,
+								style,
+								verticalScrollbarProps: this.verticalScrollbarProps
+							})}
+						</ResizeContext.Provider>
+					);
+				}}
+			</ResizeContext.Consumer>
+		);
 	}
 }
 

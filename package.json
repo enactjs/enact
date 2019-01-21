@@ -1,6 +1,6 @@
 {
   "name": "enact",
-  "version": "2.2.8",
+  "version": "2.2.9",
   "description": "Monorepo for all Enact front end libraries.",
   "private": true,
   "scripts": {

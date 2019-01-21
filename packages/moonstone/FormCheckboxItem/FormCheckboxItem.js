@@ -24,6 +24,7 @@ import componentCss from './FormCheckboxItem.less';
  * @class FormCheckboxItem
  * @memberof moonstone/FormCheckboxItem
  * @extends moonstone/ToggleItem.ToggleItem
+ * @omit iconComponent
  * @ui
  * @public
  */

@@ -6,7 +6,7 @@
  * @module spotlight/Spottable
  */
 
-import {forward, forwardWithPrevent, handle} from '@enact/core/handle';
+import {forward, forwardWithPrevent, handle, preventDefault, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import React from 'react';
@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 
 import {getContainersForNode} from '../src/container';
 import {hasPointerMoved} from '../src/pointer';
-import Spotlight from '../src/spotlight';
+import {getDirection, Spotlight} from '../src/spotlight';
 
 /**
  * The class name for spottable components. In general, you do not need to directly access this class
@@ -149,6 +149,17 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			onSpotlightUp: PropTypes.func,
 
 			/**
+			 * An array of numbers representing keyCodes that should trigger mouse event
+			 * emulation when `emulateMouse` is `true`. If a keyCode equals a directional
+			 * key, then default 5-way navigation will be prevented when that key is pressed.
+			 *
+			 * @type {Number[]}
+			 * @default [13, 16777221]
+			 * @public
+			 */
+			selectionKeys: PropTypes.arrayOf(PropTypes.number),
+
+			/**
 			 * When `true`, the component cannot be navigated using spotlight.
 			 *
 			 * @type {Boolean}
@@ -175,13 +186,21 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			tabIndex: PropTypes.number
 		}
 
+		static defaultProps = {
+			selectionKeys: [ENTER_KEY, REMOTE_OK_KEY]
+		}
+
 		constructor (props) {
 			super(props);
 			this.isFocused = false;
 			this.isHovered = false;
+			// Used to indicate that we want to stop propagation on blur events that occur as a
+			// result of this component imperatively blurring itself on focus when spotlightDisabled
+			this.shouldPreventBlur = false;
 
 			this.state = {
-				focusedWhenDisabled: false
+				focusedWhenDisabled: false,
+				selectionKeys: props.selectionKeys
 			};
 		}
 
@@ -191,10 +210,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const focusedWhenDisabled = this.isFocused && nextProps.disabled;
+			const focusedWhenDisabled = this.isFocused && (nextProps.disabled || nextProps.spotlightDisabled);
+			const {selectionKeys} = nextProps;
 
 			this.setState({
-				focusedWhenDisabled
+				focusedWhenDisabled,
+				selectionKeys
 			});
 		}
 
@@ -234,17 +255,31 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		shouldEmulateMouse = ({currentTarget, repeat, type, which}) => {
-			return emulateMouse && !repeat && (
+		shouldEmulateMouse = (ev) => {
+			if (!emulateMouse) {
+				return;
+			}
+
+			const {currentTarget, repeat, type, which} = ev;
+			const {selectionKeys} = this.state;
+
+			const keyCode = selectionKeys.find((value) => (
 				// emulate mouse events for any remote okay button event
 				which === REMOTE_OK_KEY ||
-				// or a non-keypress enter event or any enter event on a non-keyboard accessible
+				// or a non-keypress selection event or any selection event on a non-keyboard accessible
 				// control
 				(
-					which === ENTER_KEY &&
+					which === value &&
 					(type !== 'keypress' || !isKeyboardAccessible(currentTarget))
 				)
-			);
+			));
+
+			if (getDirection(keyCode)) {
+				preventDefault(ev);
+				stop(ev);
+			}
+
+			return keyCode && !repeat;
 		}
 
 		forwardSpotlightEvents = (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp}) => {
@@ -263,9 +298,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		handleSelect = (ev) => {
-			// Only apply accelerator if handling select
-			if ((ev.which === REMOTE_OK_KEY) || (ev.which === ENTER_KEY)) {
+		handleSelect = ({which}) => {
+			const {selectionKeys} = this.state;
+
+			// Only apply accelerator if handling a selection key
+			if (selectionKeys.find((value) => which === value)) {
 				if (selectCancelled || (lastSelectTarget && lastSelectTarget !== this)) {
 					return false;
 				}
@@ -275,10 +312,13 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		forwardAndResetLastSelectTarget = (ev, props) => {
+			const {keyCode} = ev;
+			const {selectionKeys} = this.state;
+			const key = selectionKeys.find((value) => keyCode === value);
 			const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
 
-			// bail early for non-enter keyup to avoid clearing lastSelectTarget prematurely
-			if (!is('enter', ev.keyCode)) {
+			// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
+			if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {
 				return notPrevented;
 			}
 
@@ -310,6 +350,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		handleBlur = (ev) => {
+			if (this.shouldPreventBlur) return;
+
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = false;
 
@@ -326,7 +368,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = (ev) => {
-			if (this.props.disabled) return;
+			if (this.props.disabled || this.props.spotlightDisabled) {
+				this.shouldPreventBlur = true;
+				ev.target.blur();
+				this.shouldPreventBlur = false;
+				return;
+			}
 
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = true;
@@ -363,6 +410,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.onSpotlightLeft;
 			delete rest.onSpotlightRight;
 			delete rest.onSpotlightUp;
+			delete rest.selectionKeys;
 			delete rest.spotlightDisabled;
 
 			if (tabIndex == null) {

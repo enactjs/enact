@@ -225,6 +225,7 @@ const Router = class extends React.Component {
  * ```
  *
  * @class Route
+ * @ui
  * @memberof moonstone/Panels
  * @public
  */

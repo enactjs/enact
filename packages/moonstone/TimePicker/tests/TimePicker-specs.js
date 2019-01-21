@@ -174,4 +174,43 @@ describe('TimePicker', () => {
 
 		expect(actual).toBe(expected);
 	});
+
+	test('should set "data-webos-voice-disabled" to hour picker when voice control is disabled', () => {
+		const subject = mount(
+			<TimePicker open title="Date" value={new Date(2000, 0, 1, 12, 30)} data-webos-voice-disabled />
+		);
+
+		const hourPicker = subject.find(`.${css.hourComponents}`).at(0);
+
+		const expected = true;
+		const actual = hourPicker.prop('data-webos-voice-disabled');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should set "data-webos-voice-disabled" to merdiem picker when voice control is disabled', () => {
+		const subject = mount(
+			<TimePicker open title="Date" value={new Date(2000, 0, 1, 12, 30)} data-webos-voice-disabled />
+		);
+
+		const meridiemPicker = subject.find(`.${css.meridiemComponent}`).at(0);
+
+		const expected = true;
+		const actual = meridiemPicker.prop('data-webos-voice-disabled');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should set "data-webos-voice-disabled" to minute picker when voice control is disabled', () => {
+		const subject = mount(
+			<TimePicker open title="Date" value={new Date(2000, 0, 1, 12, 30)} data-webos-voice-disabled />
+		);
+
+		const minutePicker = subject.find(`.${css.minutesComponents}`).at(0);
+
+		const expected = true;
+		const actual = minutePicker.prop('data-webos-voice-disabled');
+
+		expect(actual).toBe(expected);
+	});
 });
