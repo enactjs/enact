@@ -24,7 +24,7 @@ class NoUpdate extends React.Component {
 	}
 }
 
-storiesOf('Remeasurable', module)
+storiesOf('Resizable', module)
 	.add(
 		'should recalculate long marquee when scrollbar is rendered',
 		() => (
