@@ -192,22 +192,6 @@ class ExpandableInputBase extends React.Component {
 		spotlightDisabled: false
 	}
 
-	static getDerivedStateFromProps (props, state) {
-		if (state.open && !props.open) {
-			return {
-				initialValue: null,
-				open: false
-			};
-		} else if (!state.open && props.open) {
-			return {
-				initialValue: props.value,
-				open: true
-			};
-		} else {
-			return null;
-		}
-	}
-
 	constructor (props) {
 		super(props);
 
@@ -215,11 +199,22 @@ class ExpandableInputBase extends React.Component {
 		this.pointer = false;
 		this.state = {
 			initialValue: props.value,
-			open: props.open
+			prevOpen: props.open
 		};
 
 		this.handleUpDown = handleUpDown.bind(this);
 		this.handleDeactivate = handleDeactivate.bind(this);
+	}
+
+	static getDerivedStateFromProps(props, state) {
+		if (state.prevOpen !== props.open) {
+			return {
+				initialValue: props.open ? props.value : null,
+				prevOpen: !state.prevOpen
+			};
+		}
+
+		return null;
 	}
 
 	componentDidUpdate (prevProps) {
