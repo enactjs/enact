@@ -206,14 +206,13 @@ class ExpandableInputBase extends React.Component {
 		this.handleDeactivate = handleDeactivate.bind(this);
 	}
 
-	static getDerivedStateFromProps(props, state) {
-		if (state.prevOpen !== props.open) {
+	static getDerivedStateFromProps (props, state) {
+		if (props.open !== state.prevOpen) {
 			return {
 				initialValue: props.open ? props.value : null,
-				prevOpen: !state.prevOpen
+				prevOpen: props.open
 			};
 		}
-
 		return null;
 	}
 
