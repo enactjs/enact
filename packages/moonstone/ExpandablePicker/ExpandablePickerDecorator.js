@@ -16,21 +16,20 @@ const ExpandablePickerDecorator = hoc((config, Wrapped) => {	// eslint-disable-l
 			super(props);
 
 			this.state = {
-				value: props.value
+				value: props.value,
+				prevOpen: props.open
 			};
 		}
 
-		UNSAFE_componentWillReceiveProps (nextProps) {
-			let {value} = this.state;
-
-			// if opening or the props value has changed, use it
-			if (!this.props.open && nextProps.open || this.props.value !== nextProps.value) {
-				value = nextProps.value;
+		static getDerivedStateFromProps (props, state) {
+			if (state.prevOpen !== props.open && state.value !== props.value) {
+				return {
+					value: props.open ? props.value : state.value,
+					prevOpen: props.open
+				};
 			}
 
-			this.setState({
-				value
-			});
+			return null;
 		}
 
 		handlePick = (ev) => {
