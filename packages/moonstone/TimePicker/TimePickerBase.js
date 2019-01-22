@@ -35,8 +35,8 @@ class HourPicker extends React.Component {
 		value: PropTypes.number
 	}
 
-	constructor (props) {
-		super(props);
+	constructor () {
+		super();
 
 		this.state = {
 			noAnimation: false
