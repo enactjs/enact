@@ -76,8 +76,7 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.context) {
 				// Registry requires a callback but (for now at least) Resizable doesn't respond to
 				// upstream events so we're initializing a no-op function to "handle" callbacks
-				this._nop = () => {};
-				this.resize = this.context(this._nop);
+				this.resize = this.context(() => {});
 			}
 		}
 
