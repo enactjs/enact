@@ -35,10 +35,21 @@ class HourPicker extends React.Component {
 		value: PropTypes.number
 	}
 
-	shouldComponentUpdate(nextProps) {
-		const hours = this.props.hasMeridiem ? hours12 : hours24;
+	constructor (props) {
+		super(props);
 
-		return hours[this.props.value] !== hours[nextProps.value]
+		this.state = {
+			noAnimation: false
+		}
+	}
+
+	static getDerivedStateFromProps(props, state) {
+		const hours = props.hasMeridiem ? hours12 : hours24;
+
+		return {
+			noAnimation: hours[state.prevValue] === hours[props.value],
+			prevValue: props.value
+		}
 	}
 
 	render () {
@@ -46,7 +57,7 @@ class HourPicker extends React.Component {
 		const hours = hasMeridiem ? hours12 : hours24;
 
 		return (
-			<DateComponentPicker {...rest}>{hours}</DateComponentPicker>
+			<DateComponentPicker {...rest} noAnimation={this.state.noAnimation}>{hours}</DateComponentPicker>
 		);
 	}
 }
