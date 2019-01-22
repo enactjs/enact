@@ -111,6 +111,7 @@ const kind = (config) => {
 	const {
 		computed: cfgComputed,
 		contextType,
+		contextTypes,
 		defaultProps,
 		handlers,
 		name,
@@ -119,7 +120,7 @@ const kind = (config) => {
 		styles: cfgStyles
 	} = config;
 
-	warning(!config.contextTypes, '"contextTypes" is deprecated. Please use "contextType"');
+	warning(!contextTypes, `"contextTypes" used by ${name || 'a component'} but is deprecated. Please replace with "contextType" instead.`);
 
 	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
@@ -135,6 +136,8 @@ const kind = (config) => {
 		static displayName = name || 'Component'
 
 		static propTypes = propTypes
+
+		static contextTypes = contextTypes
 
 		static contextType = contextType
 
