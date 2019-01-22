@@ -118,11 +118,21 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {navigableFilter, preserveId, ...containerConfig} = config;
 
 	const stateFromProps = ({spotlightId, spotlightRestrict}) => {
-		const id = Spotlight.add(spotlightId, {restrict: spotlightRestrict});
+		const options = {restrict: spotlightRestrict};
+		const id = Spotlight.add(spotlightId || options, options);
 		return {
 			id,
-			preserveId: preserveId && id === spotlightId
+			preserveId: preserveId && id === spotlightId,
+			spotlightRestrict
 		};
+	};
+
+	const releaseContainer = ({preserveId: preserve, id}) => {
+		if (preserve) {
+			Spotlight.unmount(id);
+		} else {
+			Spotlight.remove(id);
+		}
 	};
 
 	return class extends React.Component {
@@ -174,7 +184,8 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static defaultProps = {
 			spotlightDisabled: false,
-			spotlightMuted: false
+			spotlightMuted: false,
+			spotlightRestrict: 'self-first'
 		}
 
 		constructor (props) {
@@ -190,29 +201,24 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			Spotlight.set(this.state.id, cfg);
 		}
 
-		UNSAFE_componentWillReceiveProps (nextProps) {
-			const prevId = this.props.spotlightId;
+		static getDerivedStateFromProps (props, state) {
+			const {spotlightId: id, spotlightRestrict} = props;
+			const {id: prevId, spotlightRestrict: prevSpotlightRestrict} = state;
+			const isIdChanged = prevId && id && prevId !== id;
 
-			let id = nextProps.spotlightId;
-			if (prevId !== id) {
-				this.releaseContainer(prevId);
+			if (isIdChanged) {
+				releaseContainer(state);
 			}
 
-			if (prevId !== id || this.props.spotlightRestrict !== nextProps.spotlightRestrict) {
-				this.setState(stateFromProps(nextProps));
+			if (isIdChanged || spotlightRestrict !== prevSpotlightRestrict) {
+				return stateFromProps({spotlightId: prevId, spotlightRestrict: prevSpotlightRestrict, ...props});
+			} else {
+				return null;
 			}
 		}
 
 		componentWillUnmount () {
-			this.releaseContainer(this.state.id);
-		}
-
-		releaseContainer (spotlightId) {
-			if (this.state.preserveId) {
-				Spotlight.unmount(spotlightId);
-			} else {
-				Spotlight.remove(spotlightId);
-			}
+			releaseContainer(this.state);
 		}
 
 		navigableFilter = (elem) => {
