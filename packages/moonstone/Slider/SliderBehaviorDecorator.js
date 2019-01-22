@@ -78,15 +78,15 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				dragging: false,
 				focused: false,
 				useHintText: false,
-				valueClone: props.value
+				prevValue: props.value
 			};
 		}
 
 		static getDerivedStateFromProps (props, state) {
-			if (props.value !== state.valueClone) {
+			if (props.value !== state.prevValue) {
 				return ({
 					useHintText: false,
-					valueClone: props.value
+					prevValue: props.value
 				});
 			}
 			return null;
