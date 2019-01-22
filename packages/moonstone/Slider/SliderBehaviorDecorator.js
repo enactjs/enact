@@ -84,10 +84,10 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static getDerivedStateFromProps (props, state) {
 			if (props.value !== state.prevValue) {
-				return ({
+				return {
 					useHintText: false,
 					prevValue: props.value
-				});
+				};
 			}
 			return null;
 		}
