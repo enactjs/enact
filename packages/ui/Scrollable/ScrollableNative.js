@@ -1415,6 +1415,7 @@ class ScrollableNative extends Component {
 					initContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
+					onDrop,
 					rtl,
 					scrollTo,
 					style,
@@ -1422,6 +1423,7 @@ class ScrollableNative extends Component {
 				}) => (
 					<div
 						className={className}
+						onDrop={onDrop}
 						ref={initContainerRef}
 						style={style}
 					>
