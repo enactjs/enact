@@ -119,11 +119,24 @@ const Router = class extends React.Component {
 
 	constructor (props) {
 		super(props);
-		this.initRoutes(props);
+		this.state = {
+			routes: props.routes,
+			altRoutes: props.children
+		};
+		this.initRoutes(this.state);
 	}
 
-	UNSAFE_componentWillReceiveProps (nextProps) {
-		this.initRoutes(nextProps);
+	static getDerivedStateFromProps (props) {
+		if (props.routes) {
+			return {
+				routes: props.routes
+			};
+		} else if (props.children) {
+			return {
+				children: props.children
+			};
+		}
+		return null;
 	}
 
 	/**
@@ -133,8 +146,8 @@ const Router = class extends React.Component {
 	 *
 	 * @returns {undefined}
 	 */
-	initRoutes (props) {
-		this.routes = props.routes || this.createRoutes(props.children, {});
+	initRoutes (state) {
+		this.routes = state.routes || this.createRoutes(state.children, {});
 	}
 
 	/**
@@ -169,7 +182,7 @@ const Router = class extends React.Component {
 	 */
 	createChildren () {
 		const segments = toSegments(this.props.path);
-
+		this.initRoutes(this.state);
 		let valid = true;
 		let route = this.routes;
 		const children = segments.map((segment, index) => {
@@ -186,7 +199,6 @@ const Router = class extends React.Component {
 			valid = false;
 			return null;
 		});
-
 		warning(valid, `${this.props.path} does not match the configured routes: ${stringifyRoutes(this.routes)}`);
 
 		return valid ? children : [];
