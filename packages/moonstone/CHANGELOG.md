@@ -6,18 +6,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/styles/rules.less` rules and its imports to `moonstone/MoonstoneDecorator`
-- `moonstone/styles/internal` to house internal Moonstone rules `fonts.less`, `skin.less`, and `text.less`
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` property `childProps` to support additional props included in the object passed to the `itemsRenderer` callback
 
 ### Fixed
 
 - `moonstone/VirtualList` to focus an item properly by `scrollTo` API immediately after a prior call to the same position
 - `moonstone/Popup` to close floating layer when the popup closes without animation
-
-### Removed
-
-- `moonstone/styles/rules.less`
 
 ## [2.2.9] - 2019-01-11
 
