@@ -1,14 +1,18 @@
 import Button from '@enact/moonstone/Button';
 import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
 import IconButton from '@enact/moonstone/IconButton';
-import IncrementSlider from '@enact/moonstone/IncrementSlider';
+import IncrementSlider, {IncrementSliderBase} from '@enact/moonstone/IncrementSlider';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
+import {mergeComponentMetadata} from '../../src/utils';
+import {number} from '../../src/enact-knobs';
+
 import IncrementSliderDelayValue from './components/IncrementSliderDelayValue';
 
 const ContextualPopupButton = ContextualPopupDecorator(IconButton);
+const IncrementSliderConfig = mergeComponentMetadata('IncrementSlider', IncrementSliderBase, IncrementSlider);
 
 class IncrementSliderView extends React.Component {
 
@@ -83,6 +87,28 @@ class IncrementSliderWithContextualPopup extends React.Component {
 	}
 }
 
+class IncrementSliderWithMinValue extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			value: 0
+		};
+	}
+
+	handleChange = ({value}) => this.setState({value})
+
+	render () {
+		return (
+			<div>
+				<IncrementSlider
+					min={number('min', IncrementSliderConfig)}
+					onChange={this.handleChange}
+					value={number('value', this.state.value)}
+				/>
+			</div>
+		);
+	}
+}
 
 storiesOf('IncrementSlider', module)
 	.add(
@@ -109,6 +135,15 @@ storiesOf('IncrementSlider', module)
 			<div>
 				Slider knob changes value with 5-way Interaction between ContextualPopup and Slider.
 				<IncrementSliderWithContextualPopup />
+			</div>
+		)
+	)
+	.add(
+		'with min and value',
+		() => (
+			<div>
+				Test the IncrementSlider by changing the values of min and value knobs.
+				<IncrementSliderWithMinValue />
 			</div>
 		)
 	);
