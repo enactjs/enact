@@ -40,7 +40,7 @@ class HourPicker extends React.Component {
 
 		this.state = {
 			noAnimation: false,
-			preValue: props.value
+			prevValue: props.value
 		};
 	}
 
