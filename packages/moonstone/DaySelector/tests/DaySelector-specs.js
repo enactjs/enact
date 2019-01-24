@@ -135,4 +135,24 @@ describe('DaySelector', () => {
 			expect(actual).toBe(expected);
 		}
 	);
+
+	test(
+		'should render updated day name length.',
+		() => {
+			const handleSelect = jest.fn();
+			const subject = mount(
+				<DaySelector dayNameLength={'full'} />
+			);
+
+			subject.setProps({
+				dayNameLength: 'short'
+			});
+			subject.update();
+
+			const expected = '✓S✓M✓T✓W✓T✓F✓S';
+			const actual = subject.text();
+
+			expect(actual).toBe(expected);
+		}
+	);
 });
