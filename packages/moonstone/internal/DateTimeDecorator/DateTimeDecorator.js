@@ -5,6 +5,7 @@
  * @private
  */
 
+import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import ilib from '@enact/i18n';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
@@ -62,8 +63,6 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.initI18n();
-
 			const initialValue = this.toTime(props.value);
 			const value = props.open && !initialValue ? Date.now() : initialValue;
 			this.state = {initialValue, value};
@@ -74,35 +73,6 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 					this.handlers[name] = this.handlePickerChange.bind(this, handlers[name]);
 				});
 			}
-		}
-
-		UNSAFE_componentWillReceiveProps (nextProps) {
-			const newValue = this.toTime(nextProps.value);
-
-			if (nextProps.open && !this.props.open) {
-				const value = newValue || Date.now();
-
-				// if we're opening, store the current value as the initial value for cancellation
-				this.setState({
-					initialValue: newValue,
-					pickerValue: null,
-					value
-				});
-
-				// if no value was provided, we need to emit the onChange event for the generated value
-				if (!newValue) {
-					this.emitChange(this.toIDate(value));
-				}
-			} else {
-				this.setState({
-					value: newValue
-				});
-			}
-		}
-
-		UNSAFE_componentWillUpdate () {
-			// check for a new locale when updating
-			this.initI18n();
 		}
 
 		initI18n () {
@@ -177,6 +147,33 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
+		handleOpen = (ev) => {
+			forward('onOpen', ev, this.props);
+
+			const newValue = this.toTime(this.props.value);
+			const value = newValue || Date.now();
+
+			// if we're opening, store the current value as the initial value for cancellation
+			this.setState({
+				initialValue: newValue,
+				pickerValue: null,
+				value
+			});
+
+			// if no value was provided, we need to emit the onChange event for the generated value
+			if (!newValue) {
+				this.emitChange(this.toIDate(value));
+			}
+		}
+
+		handleClose = (ev) => {
+			forward('onClose', ev, this.props);
+			const newValue = this.toTime(this.props.value);
+			this.setState({
+				value: newValue
+			});
+		}
+
 		handlePickerChange = (handler, ev) => {
 			const value = this.toIDate(this.state.value);
 			handler(ev, value, this.i18nContext);
@@ -201,6 +198,8 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
+			this.initI18n();
+
 			const value = this.toIDate(this.state.value);
 			// pickerValue is only set when cancelling to prevent the unexpected changing of the
 			// picker values before closing.
@@ -227,6 +226,8 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 					label={label}
 					order={order}
 					value={value}
+					onOpen={this.handleOpen}
+					onClose={this.handleClose}
 				/>
 			);
 		}
