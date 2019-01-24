@@ -33,7 +33,7 @@ function configure (dirname) {
 				},
 				{
 					test:/\.(c|le)ss$/,
-					exclude: /node_modules.*@enact.*\.css/,
+					exclude: /node_modules(\\|\/).*\1?@enact\1.*\.css/,
 					use: [
 						'style-loader',
 						{
@@ -74,7 +74,7 @@ function configure (dirname) {
 					]
 				},
 				{
-					test: /node_modules.*@enact.*\.css/,
+					test: /node_modules(\\|\/).*\1?@enact\1.*\.css/,
 					use: [
 						'style-loader',
 						{
