@@ -139,12 +139,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 
 		emitChange = (date) => {
-			const {onChange} = this.props;
-			if (onChange) {
-				onChange({
-					value: date ? date.getJSDate() : null
-				});
-			}
+			forward('onChange', {value: date ? date.getJSDate() : null}, this.props);
 		}
 
 		handleOpen = (ev) => {
