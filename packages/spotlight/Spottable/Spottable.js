@@ -12,6 +12,7 @@ import {is} from '@enact/core/keymap';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import shallowEqual from 'recompose/shallowEqual';
 
 import {getContainersForNode} from '../src/container';
 import {hasPointerMoved} from '../src/pointer';
@@ -192,13 +193,13 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			this.isFocused = false;
 			this.isHovered = false;
 			// Used to indicate that we want to stop propagation on blur events that occur as a
 			// result of this component imperatively blurring itself on focus when spotlightDisabled
 			this.shouldPreventBlur = false;
 
 			this.state = {
+				focused: false,
 				focusedWhenDisabled: false,
 				selectionKeys: props.selectionKeys
 			};
@@ -209,14 +210,28 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			this.node = ReactDOM.findDOMNode(this);
 		}
 
-		UNSAFE_componentWillReceiveProps (nextProps) {
-			const focusedWhenDisabled = this.isFocused && (nextProps.disabled || nextProps.spotlightDisabled);
-			const {selectionKeys} = nextProps;
+		shouldComponentUpdate (nextProps, nextState) {
+			const stateCopy = {...this.state};
+			const nextStateCopy = {...nextState};
+			delete stateCopy.focused;
+			delete nextStateCopy.focused;
 
-			this.setState({
-				focusedWhenDisabled,
-				selectionKeys
-			});
+			return (
+				!shallowEqual(stateCopy, nextStateCopy) ||
+				!shallowEqual(this.props, nextProps)
+			);
+		}
+
+		static getDerivedStateFromProps (props, state) {
+			const focusedWhenDisabled = Boolean(state.focused && (props.disabled || props.spotlightDisabled));
+
+			if (focusedWhenDisabled !== state.focusedWhenDisabled || !shallowEqual(state.selectionKeys, props.selectionKeys)) {
+				return {
+					focusedWhenDisabled,
+					selectionKeys: props.selectionKeys
+				};
+			}
+			return null;
 		}
 
 		componentDidUpdate (prevProps, prevState) {
@@ -247,7 +262,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			if (this.isFocused) {
+			if (this.state.focused) {
 				forward('onSpotlightDisappear', null, this.props);
 			}
 			if (lastSelectTarget === this) {
@@ -353,11 +368,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.shouldPreventBlur) return;
 
 			if (ev.currentTarget === ev.target) {
-				this.isFocused = false;
-
-				if (this.state.focusedWhenDisabled) {
-					this.setState({focusedWhenDisabled: false});
-				}
+				this.setState({focused: false, focusedWhenDisabled: false});
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
@@ -376,7 +387,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (ev.currentTarget === ev.target) {
-				this.isFocused = true;
+				this.setState({focused: true});
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
