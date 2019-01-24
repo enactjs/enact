@@ -16,6 +16,18 @@ import React from 'react';
 
 import {Expandable} from '../../ExpandableItem';
 
+
+/**
+ * Converts a JavaScript Date to unix time
+ *
+ * @param	{Date}	date	A Date to convert
+ *
+ * @returns	{undefined}
+ */
+const toTime = (date) => {
+	return date && date.getTime();
+};
+
 /**
  * {@link moonstone/internal/DateTimeDecorator.DateTimeDecorator} provides common behavior for
  * {@link moonstone/DatePicker.DatePicker} and {@link moonstone/TimePicker.TimePicker}.
@@ -63,7 +75,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			const initialValue = this.toTime(props.value);
+			const initialValue = toTime(props.value);
 			const value = props.open && !initialValue ? Date.now() : initialValue;
 			this.state = {initialValue, value};
 
@@ -73,6 +85,16 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 					this.handlers[name] = this.handlePickerChange.bind(this, handlers[name]);
 				});
 			}
+		}
+
+		static getDerivedStateFromProps (props, state) {
+			const propValue = toTime(props.value);
+			if (state.value !== propValue) {
+				return {
+					value: propValue
+				};
+			}
+			return null;
 		}
 
 		initI18n () {
@@ -98,17 +120,6 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 					timezone: 'local'
 				});
 			}
-		}
-
-		/**
-		 * Converts a JavaScript Date to unix time
-		 *
-		 * @param	{Date}	date	A Date to convert
-		 *
-		 * @returns	{undefined}
-		 */
-		toTime (date) {
-			return date && date.getTime();
 		}
 
 		/**
@@ -145,7 +156,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		handleOpen = (ev) => {
 			forward('onOpen', ev, this.props);
 
-			const newValue = this.toTime(this.props.value);
+			const newValue = toTime(this.props.value);
 			const value = newValue || Date.now();
 
 			// if we're opening, store the current value as the initial value for cancellation
@@ -163,7 +174,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 
 		handleClose = (ev) => {
 			forward('onClose', ev, this.props);
-			const newValue = this.toTime(this.props.value);
+			const newValue = toTime(this.props.value);
 			this.setState({
 				value: newValue
 			});
