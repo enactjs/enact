@@ -135,51 +135,55 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 				weekendStart: 6,
 				weekendEnd: 0,
 				// default strings for long and short day strings
-				fullDayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-				abbreviatedDayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-				...this.getLocaleState(props.dayNameLength, props.locale)
+				dayNameLength: props.dayNameLength,
+				locale: props.locale
 			};
 		}
 
-		UNSAFE_componentWillReceiveProps (nextProps) {
-			const {dayNameLength, locale} = nextProps;
-			if (this.props.dayNameLength !== dayNameLength || this.props.locale !== locale) {
-				this.setState(this.getLocaleState(dayNameLength, locale));
+		static getDerivedStateFromProps (props, state) {
+			if (state.dayNameLength !== props.dayNameLength || state.locale !== props.locale) {
+				return {
+					dayNameLength: props.dayNameLength,
+					locale: props.locale
+				};
 			}
+			return null;
 		}
 
-		getLocaleState (dayNameLength, locale) {
+		setLocaleDayNames () {
 			if (typeof window === 'undefined') return null;
 
 			const df = new DateFmt({length: 'full'});
-			const sdf = new DateFmt({length: dayNameLength});
+			const sdf = new DateFmt({length: this.state.dayNameLength});
 			const li = new LocaleInfo(ilib.getLocale());
 			const daysOfWeek = df.getDaysOfWeek();
 			const days = sdf.getDaysOfWeek();
 			const firstDayOfWeek = li.getFirstDayOfWeek();
 
-			const state = {
-				locale,
+			this.localeDayNames = {
 				fullDayNames: [],
-				abbreviatedDayNames: [],
-				firstDayOfWeek
+				abbreviatedDayNames: []
 			};
-
-			if (li.getWeekEndStart) {
-				state.weekendStart = this.adjustWeekends(firstDayOfWeek, li.getWeekEndStart());
-			}
-
-			if (li.getWeekEndEnd) {
-				state.weekendEnd = this.adjustWeekends(firstDayOfWeek, li.getWeekEndEnd());
-			}
 
 			for (let i = 0; i < 7; i++) {
 				const index = (i + firstDayOfWeek) % 7;
-				state.fullDayNames[i] = daysOfWeek[index];
-				state.abbreviatedDayNames[i] = days[index];
+				this.localeDayNames.fullDayNames[i] = daysOfWeek[index];
+				this.localeDayNames.abbreviatedDayNames[i] = days[index];
+			}
+		}
+
+		getLocaleWeekRange () {
+			let localeWeekendStart, localeWeekendEnd;
+			const li = new LocaleInfo(ilib.getLocale());
+			const firstDayOfWeek = li.getFirstDayOfWeek();
+			if (li.getWeekEndStart) {
+				localeWeekendStart = this.adjustWeekends(firstDayOfWeek, li.getWeekEndStart());
 			}
 
-			return state;
+			if (li.getWeekEndEnd) {
+				localeWeekendEnd = this.adjustWeekends(firstDayOfWeek, li.getWeekEndEnd());
+			}
+			return {localeWeekendStart, localeWeekendEnd};
 		}
 
 		/**
@@ -191,7 +195,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 		 */
 		calcSelectedDayType (selected) {
 			if (selected == null) return SELECTED_DAY_TYPES.SELECTED_NONE;
-
+			const {localeWeekendStart, localeWeekendEnd} = this.getLocaleWeekRange();
 			let
 				weekendStart = false,
 				weekendEnd = false,
@@ -199,14 +203,14 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 
 			const
 				length = selected.length,
-				weekendLength = this.state.weekendStart === this.state.weekendEnd ? 1 : 2;
+				weekendLength = localeWeekendStart === localeWeekendEnd ? 1 : 2;
 
 			if (length === 7) return SELECTED_DAY_TYPES.EVERY_DAY;
 
 			for (let i = 0; i < 7; i++) {
 				index = selected[i];
-				weekendStart = weekendStart || this.state.weekendStart === index;
-				weekendEnd = weekendEnd || this.state.weekendEnd === index;
+				weekendStart = weekendStart || localeWeekendStart === index;
+				weekendEnd = weekendEnd || localeWeekendEnd === index;
 			}
 
 			if (weekendStart && weekendEnd && length === weekendLength) {
@@ -260,9 +264,8 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 			}
 		}
 
-		getAriaLabel () {
+		getAriaLabel (fullDayNames) {
 			const {'aria-label': ariaLabel, selected, title} = this.props;
-			const {fullDayNames} = this.state;
 
 			if (ariaLabel != null || title == null || selected == null || selected.length === 0) {
 				return ariaLabel;
@@ -278,7 +281,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 		}
 
 		handleSelect = ({selected}) => {
-			const labels = this.state.abbreviatedDayNames;
+			const labels = this.localeDayNames.abbreviatedDayNames;
 			const content = this.getSelectedDayString(selected, labels);
 
 			forwardSelect({selected, content}, this.props);
@@ -286,8 +289,8 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 
 		render () {
 			const {selected, ...rest} = this.props;
-			const {abbreviatedDayNames, fullDayNames} = this.state;
-			const content = this.getSelectedDayString(selected, abbreviatedDayNames);
+			this.setLocaleDayNames();
+			const content = this.getSelectedDayString(selected, this.localeDayNames.abbreviatedDayNames);
 
 			delete rest.dayNameLength;
 			delete rest.everyDayText;
@@ -298,16 +301,16 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 			return (
 				<Wrapped
 					{...rest}
-					aria-label={this.getAriaLabel()}
+					aria-label={this.getAriaLabel(this.localeDayNames.fullDayNames)}
 					label={content}
 					onSelect={this.handleSelect}
 					selected={selected}
 				>
-					{abbreviatedDayNames.map((children, index) => ({
+					{this.localeDayNames.abbreviatedDayNames.map((children, index) => ({
 						children,
 						// "short" dayNameLength can result in the same name so adding index
 						key: `${index} ${children}`,
-						'aria-label': fullDayNames[index]
+						'aria-label': this.localeDayNames.fullDayNames[index]
 					}))}
 				</Wrapped>
 			);
