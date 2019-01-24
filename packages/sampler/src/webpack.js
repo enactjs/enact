@@ -33,6 +33,7 @@ function configure (dirname) {
 				},
 				{
 					test:/\.(c|le)ss$/,
+					exclude: /node_modules.*@enact.*\.css/,
 					use: [
 						'style-loader',
 						{
@@ -68,6 +69,39 @@ function configure (dirname) {
 								sourceMap: true,
 								// If resolution independence options are specified, use the LESS plugin.
 								plugins: ((app.ri) ? [new LessPluginRi(app.ri)] : [])
+							}
+						}
+					]
+				},
+				{
+					test: /node_modules.*@enact.*\.css/,
+					use: [
+						'style-loader',
+						{
+							loader: require.resolve('css-loader'),
+							options: {
+								importLoaders: 1,
+								modules: true,
+								sourceMap: true,
+								localIdentName: '[name]__[local]___[hash:base64:5]'
+							}
+						},
+						{
+							loader: require.resolve('postcss-loader'),
+							options: {
+								ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
+								sourceMap: true,
+								plugins: () => [
+									// We use PostCSS for autoprefixing only, but others could be added.
+									autoprefixer({
+										browsers: app.browsers,
+										flexbox: 'no-2009',
+										remove: false
+									}),
+									// Fix and adjust for known flexbox issues
+									// See https://github.com/philipwalton/flexbugs
+									flexbugfixes
+								]
 							}
 						}
 					]
