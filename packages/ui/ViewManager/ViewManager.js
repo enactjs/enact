@@ -192,7 +192,7 @@ class ViewManager extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			previousIndex: props.index,
+			previousIndex: null,
 			reverseTransition: null
 		};
 	}
@@ -202,13 +202,13 @@ class ViewManager extends React.Component {
 		if (props.reverseTransition != null) {
 			reverseTransition = !!props.reverseTransition;
 		} else if (props.index !== state.index) {
-			reverseTransition = props.index > state.index;
+			reverseTransition = state.index > props.index;
 		} else {
 			reverseTransition = false;
 		}
 
 		return {
-			previousIndex: props.index,
+			previousIndex: state.index,
 			reverseTransition
 		};
 	}
