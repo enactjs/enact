@@ -769,13 +769,11 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (this.state.mediaControlsVisible && prevState.infoVisible !== this.state.infoVisible) {
 			const current = Spotlight.getCurrent();
-			if (current && current.dataset && current.dataset.spotlightId === this.moreButtonSpotlightId) {
+			if (current && current.dataset.spotlightId === this.moreButtonSpotlightId) {
 				// need to blur manually to read out `infoComponent`
 				current.blur();
 			}
-			setTimeout(() => {
-				Spotlight.focus(this.moreButtonSpotlightId);
-			}, 1);
+			Spotlight.focus(this.moreButtonSpotlightId);
 		}
 	}
 
