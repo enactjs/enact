@@ -139,7 +139,6 @@ describe('DaySelector', () => {
 	test(
 		'should render updated day name length.',
 		() => {
-			const handleSelect = jest.fn();
 			const subject = mount(
 				<DaySelector dayNameLength={'full'} />
 			);
