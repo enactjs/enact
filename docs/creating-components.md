@@ -167,7 +167,7 @@ How about an example to make this more clear. Let's customize the background col
 ```css
 // CustomButton.less
 //
-@import '~@enact/moonstone/styles/skin.less';
+@import '~@enact/moonstone/styles/internal/skin.less';
 
 .button {
 	.applySkins({
