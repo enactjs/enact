@@ -7,7 +7,6 @@
 
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import ilib from '@enact/i18n';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import Changeable from '@enact/ui/Changeable';
@@ -47,6 +46,15 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		static displayName = 'DateTimeDecorator'
 
 		static propTypes = /** @lends moonstone/internal/DateTimeDecorator.DateTimeDecorator.prototype */ {
+			/**
+			 * The current locale as a
+			 * {@link https://tools.ietf.org/html/rfc5646|BCP 47 language tag}.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			locale: PropTypes.string,
+
 			/**
 			 * Handler for `onChange` events
 			 *
@@ -97,15 +105,6 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			return null;
 		}
 
-		initI18n () {
-			const locale = ilib.getLocale();
-
-			if (i18n && this.locale !== locale && typeof window === 'object') {
-				this.locale = locale;
-				this.i18nContext = i18n();
-			}
-		}
-
 		/**
 		 * Converts a Date to an IDate
 		 *
@@ -114,7 +113,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		 * @returns	{IDate}			ilib Date object
 		 */
 		toIDate (time) {
-			if (time && this.locale) {
+			if (time && this.props.locale) {
 				return DateFactory({
 					unixtime: time,
 					timezone: 'local'
@@ -182,7 +181,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 
 		handlePickerChange = (handler, ev) => {
 			const value = this.toIDate(this.state.value);
-			handler(ev, value, this.i18nContext);
+			handler(ev, value, i18n());
 			this.updateValue(value);
 		}
 
@@ -204,8 +203,6 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			this.initI18n();
-
 			const value = this.toIDate(this.state.value);
 			// pickerValue is only set when cancelling to prevent the unexpected changing of the
 			// picker values before closing.
@@ -216,12 +213,12 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			let order = defaultOrder;
 
 			// Guard for isomorphic builds
-			if (this.i18nContext) {
+			if (typeof window !== 'undefined' && i18n) {
 				if (value) {
-					label = this.i18nContext.formatter.format(value);
+					label = i18n().formatter.format(value);
 				}
-				props = customProps(this.i18nContext, pickerValue, this.props);
-				order = this.i18nContext.order;
+				props = customProps(i18n(), pickerValue, this.props);
+				order = i18n().order;
 			}
 
 			return (
@@ -240,7 +237,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 	};
 
 	return I18nContextDecorator(
-		{rtlProp: 'rtl'},
+		{rtlProp: 'rtl', localeProp: 'locale'},
 		Expandable(
 			Changeable(
 				Decorator
