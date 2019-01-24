@@ -101,6 +101,7 @@ class IncrementSliderWithMinValue extends React.Component {
 		return (
 			<div>
 				<IncrementSlider
+					max={number('max', IncrementSliderConfig)}
 					min={number('min', IncrementSliderConfig)}
 					onChange={this.handleChange}
 					value={number('value', this.state.value)}
@@ -139,7 +140,7 @@ storiesOf('IncrementSlider', module)
 		)
 	)
 	.add(
-		'with min and value',
+		'with max, min, and value',
 		() => (
 			<div>
 				Test the IncrementSlider by changing the values of min and value knobs.
