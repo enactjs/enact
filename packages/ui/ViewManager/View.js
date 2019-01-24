@@ -135,13 +135,19 @@ class View extends React.Component {
 		this.animation = null;
 		this._raf = null;
 		this.state = {
-			entering: !props.appearing
+			entering: !props.appearing,
+			changeDirection: false,
+			reverseTransition: props.reverseTransition
 		};
 	}
 
-	UNSAFE_componentWillReceiveProps (nextProps) {
-		// changeDirection let's us know we need to switch mid-transition
-		this.changeDirection = this.animation ? this.props.reverseTransition !== nextProps.reverseTransition : false;
+	static getDerivedStateFromProps (props, state) {
+		if (state.reverseTransition !== props.reverseTransition) {
+			return {
+				changeDirection: true
+			};
+		}
+		return null;
 	}
 
 	shouldComponentUpdate (nextProps) {
