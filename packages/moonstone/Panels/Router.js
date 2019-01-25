@@ -119,35 +119,6 @@ const Router = class extends React.Component {
 
 	constructor (props) {
 		super(props);
-		this.state = {
-			routes: props.routes,
-			altRoutes: props.children
-		};
-		this.initRoutes(this.state);
-	}
-
-	static getDerivedStateFromProps (props) {
-		if (props.routes) {
-			return {
-				routes: props.routes
-			};
-		} else if (props.children) {
-			return {
-				children: props.children
-			};
-		}
-		return null;
-	}
-
-	/**
-	 * Selects either `props.routes` or generates routes from `props.children`
-	 *
-	 * @param {Object} props Component props
-	 *
-	 * @returns {undefined}
-	 */
-	initRoutes (state) {
-		this.routes = state.routes || this.createRoutes(state.children, {});
 	}
 
 	/**
@@ -182,10 +153,11 @@ const Router = class extends React.Component {
 	 */
 	createChildren () {
 		const segments = toSegments(this.props.path);
-		this.initRoutes(this.state);
+		const {routes, children} = this.props;
 		let valid = true;
-		let route = this.routes;
-		const children = segments.map((segment, index) => {
+		const commputedRoutes = routes || this.createRoutes(children, {});
+		let route = commputedRoutes;
+		const childrenElements = segments.map((segment, index) => {
 			const subPath = segments.slice(0, index + 1).join('/');
 			route = route && route[segment];
 			if (route && route.$component) {
@@ -199,9 +171,9 @@ const Router = class extends React.Component {
 			valid = false;
 			return null;
 		});
-		warning(valid, `${this.props.path} does not match the configured routes: ${stringifyRoutes(this.routes)}`);
+		warning(valid, `${this.props.path} does not match the configured routes: ${stringifyRoutes(commputedRoutes)}`);
 
-		return valid ? children : [];
+		return valid ? childrenElements : [];
 	}
 
 	render () {
