@@ -137,12 +137,12 @@ class View extends React.Component {
 		this.state = {
 			entering: !props.appearing,
 			changeDirection: false,
-			reverseTransition: props.reverseTransition
+			prevReverseTransition: props.reverseTransition
 		};
 	}
 
 	static getDerivedStateFromProps (props, state) {
-		if (state.reverseTransition !== props.reverseTransition) {
+		if (state.prevReverseTransition !== props.reverseTransition) {
 			return {
 				changeDirection: true
 			};
