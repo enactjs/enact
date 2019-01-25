@@ -1,3 +1,4 @@
+import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -16,21 +17,22 @@ const ExpandablePickerDecorator = hoc((config, Wrapped) => {	// eslint-disable-l
 			super(props);
 
 			this.state = {
-				value: props.value,
-				prevOpen: props.open
+				open: false,
+				value: props.value
 			};
 		}
 
-		static getDerivedStateFromProps (props, state) {
-			if (state.prevOpen !== props.open && state.value !== props.value) {
-				return {
-					value: props.open ? props.value : state.value,
-					prevOpen: props.open
-				};
-			}
+		handle = handle.bind(this);
 
-			return null;
-		}
+		handleClose = () => this.handle(
+			forward('onClose'),
+			(ev, {value}) => this.setState({open: false})
+		);
+
+		handleOpen = this.handle(
+			forward('onOpen'),
+			(ev, {value}) => this.setState({open: true, value})
+		);
 
 		handlePick = (ev) => {
 			this.setState({
@@ -39,10 +41,10 @@ const ExpandablePickerDecorator = hoc((config, Wrapped) => {	// eslint-disable-l
 		}
 
 		render () {
-			const {value} = this.props.open ? this.state : this.props;
+			const {value} = this.state.open ? this.state : this.props;
 
 			return (
-				<Wrapped {...this.props} onPick={this.handlePick} value={value} />
+				<Wrapped {...this.props} onClose={this.handleClose} onOpen={this.handleOpen} onPick={this.handlePick} value={value} />
 			);
 		}
 	};

@@ -429,9 +429,9 @@ const ExpandablePickerBase = kind({
 const ExpandablePicker = Pure(
 	I18nContextDecorator(
 		{rtlProp: 'rtl'},
-		Expandable(
-			Changeable(
-				ExpandablePickerDecorator(
+		Changeable(
+			ExpandablePickerDecorator(
+				Expandable(
 					ExpandablePickerBase
 				)
 			)
