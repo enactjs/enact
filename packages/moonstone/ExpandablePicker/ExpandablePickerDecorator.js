@@ -17,21 +17,15 @@ const ExpandablePickerDecorator = hoc((config, Wrapped) => {	// eslint-disable-l
 			super(props);
 
 			this.state = {
-				open: false,
 				value: props.value
 			};
 		}
 
 		handle = handle.bind(this);
 
-		handleClose = () => this.handle(
-			forward('onClose'),
-			(ev, {value}) => this.setState({open: false})
-		);
-
 		handleOpen = this.handle(
 			forward('onOpen'),
-			(ev, {value}) => this.setState({open: true, value})
+			(ev, {value}) => this.setState(state => state.value === value ? null : {value})
 		);
 
 		handlePick = (ev) => {
@@ -41,10 +35,10 @@ const ExpandablePickerDecorator = hoc((config, Wrapped) => {	// eslint-disable-l
 		}
 
 		render () {
-			const {value} = this.state.open ? this.state : this.props;
+			const {value} = this.props.open ? this.state : this.props;
 
 			return (
-				<Wrapped {...this.props} onClose={this.handleClose} onOpen={this.handleOpen} onPick={this.handlePick} value={value} />
+				<Wrapped {...this.props} onOpen={this.handleOpen} onPick={this.handlePick} value={value} />
 			);
 		}
 	};
