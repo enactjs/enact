@@ -206,16 +206,6 @@ class ExpandableInputBase extends React.Component {
 		this.handleDeactivate = handleDeactivate.bind(this);
 	}
 
-	static getDerivedStateFromProps (props, state) {
-		if (props.open !== state.prevOpen) {
-			return {
-				initialValue: props.open ? props.value : null,
-				prevOpen: props.open
-			};
-		}
-		return null;
-	}
-
 	componentDidUpdate (prevProps) {
 		if (prevProps.open && !this.props.open) {
 			this.paused.resume();
@@ -270,6 +260,11 @@ class ExpandableInputBase extends React.Component {
 		this.pointer = true;
 	}
 
+	handleOpen = handle(
+		forward('onOpen'),
+		(ev, {value}) => this.setState({initialValue: value})
+	).bind(this)
+
 	handleUp = () => {
 		this.pointer = false;
 	}
@@ -303,6 +298,7 @@ class ExpandableInputBase extends React.Component {
 				onMouseDown={this.handleDown}
 				onMouseLeave={this.handleUp}
 				onMouseUp={this.handleUp}
+				onOpen={this.handleOpen}
 				open={open}
 				showLabel={type === 'password' ? 'never' : 'auto'}
 				spotlightDisabled={spotlightDisabled}
