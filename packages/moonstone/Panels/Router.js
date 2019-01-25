@@ -154,9 +154,10 @@ const Router = class extends React.Component {
 	createChildren () {
 		const segments = toSegments(this.props.path);
 		const {routes, children} = this.props;
+		const computedRoutes = routes || this.createRoutes(children, {});
+
 		let valid = true;
-		const commputedRoutes = routes || this.createRoutes(children, {});
-		let route = commputedRoutes;
+		let route = computedRoutes;
 		const childrenElements = segments.map((segment, index) => {
 			const subPath = segments.slice(0, index + 1).join('/');
 			route = route && route[segment];
@@ -171,7 +172,8 @@ const Router = class extends React.Component {
 			valid = false;
 			return null;
 		});
-		warning(valid, `${this.props.path} does not match the configured routes: ${stringifyRoutes(commputedRoutes)}`);
+
+		warning(valid, `${this.props.path} does not match the configured routes: ${stringifyRoutes(computedRoutes)}`);
 
 		return valid ? childrenElements : [];
 	}
