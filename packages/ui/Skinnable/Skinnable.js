@@ -16,6 +16,8 @@ import React from 'react';
 import classnames from 'classnames';
 import mergeWith from 'ramda/src/mergeWith';
 
+import {objectify, preferDefined} from './util';
+
 /**
  * Default config for `Skinnable`.
  *
@@ -77,31 +79,6 @@ const defaultConfig = {
  */
 const SkinContext = React.createContext(null);
 
-const objectify = (arg) => {
-	// undefined, null, empty string case
-	// bail early
-	if (!arg) return {};
-
-	if (typeof arg === 'string') {
-		// String case
-		arg = arg.split(' ');
-	} else if (arg instanceof Array) {
-		// Array case
-	} else {
-		// It's just an object already.
-		// return it unaltered
-		return arg;
-	}
-
-	// only dealing with arrays now
-	return arg.reduce((obj, a) => {
-		obj[a] = true;
-		return obj;
-	}, {});
-};
-
-const preferDefined = (a, b) => ((a != null) ? a : b);
-
 /**
  * A higher-order component that assigns skinning classes for the purposes of styling children components.
  *
@@ -133,19 +110,17 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 	}
 
 	function determineVariants (authorVariants, parentVariants) {
+		if (!allowedVariants || !(allowedVariants instanceof Array)) {
+			// There are no allowed variants, so just return an empty object, indicating that there are no viable determined variants.
+			return {};
+		}
+
 		authorVariants = objectify(authorVariants);
 		parentVariants = objectify(parentVariants);
 
-		// Start with parent vars vs config-defaults, then compare author (prop) vars, overwriting
-		// as we go, ignoring null/undefined values.
-		const mergedObj = mergeWith(
-			preferDefined,
-			mergeWith(
-				preferDefined,
-				parentVariants,
-				defaultVariants
-			),
-			authorVariants
+		// Merge all of the variants objects, preferring values in objects from left to right.
+		const mergedObj = [authorVariants, defaultVariants, parentVariants].reduce(
+			(obj, a) => mergeWith(preferDefined, obj, a)
 		);
 
 		// Clean up the merged object
@@ -168,7 +143,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 	}
 
 	function getClassName (effectiveSkin, className, variants) {
-		const skin = skins[effectiveSkin];
+		const skin = skins && skins[effectiveSkin];
 
 		// only apply the skin class if it's set and different from the "current" skin as
 		// defined by the value in context
@@ -176,7 +151,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 			className = classnames(skin, variants, className);
 		}
 
-		return className;
+		if (className) return className;
 	}
 
 	// eslint-disable-next-line no-shadow
@@ -187,6 +162,11 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 					const {parentSkin, parentVariants} = value || {};
 					const effectiveSkin = determineSkin(skin, parentSkin);
 					const variants = determineVariants(skinVariants, parentVariants);
+					const allClassNames = getClassName(effectiveSkin, className, variants);
+
+					if (allClassNames) {
+						rest.className = allClassNames;
+					}
 
 					if (prop) {
 						rest[prop] = effectiveSkin;
@@ -198,7 +178,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 
 					return (
 						<SkinContext.Provider value={{parentSkin: effectiveSkin, parentVariants: variants}}>
-							<Wrapped className={getClassName(effectiveSkin, className, variants)} {...rest} />
+							<Wrapped {...rest} />
 						</SkinContext.Provider>
 					);
 				}}
