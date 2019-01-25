@@ -132,6 +132,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VideoPlayer` so that activity is detected and the `autoCloseTimeout` timer is reset when using 5-way to navigate from the media slider
 
+### Fixed
+
+- `moonstone/Picker` to fire onChange events, due to a hold, consistently across pointer and 5-way navigation
+
 ## [2.1.0] - 2018-08-20
 
 ### Added

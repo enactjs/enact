@@ -1,7 +1,8 @@
 import hoc from '@enact/core/hoc';
-import {contextTypes, Publisher} from '@enact/core/internal/PubSub';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Registry from '@enact/core/internal/Registry';
+import {ResizeContext} from '@enact/ui/internal/Resize';
 
 /**
  * A higher-order component that classifies an application with a target set of font sizing rules.
@@ -13,6 +14,8 @@ import PropTypes from 'prop-types';
  */
 const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
+		static contextType = ResizeContext;
+
 		static displayName = 'AccessibilityDecorator'
 
 		static propTypes =  /** @lends moonstone/MoonstoneDecorator.AccessibilityDecorator.prototype */ {
@@ -41,33 +44,22 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			textSize: PropTypes.oneOf(['normal', 'large'])
 		}
 
-		static contextTypes = contextTypes
-
-		static childContextTypes = contextTypes
-
 		static defaultProps = {
 			highContrast: false,
 			textSize: 'normal'
 		}
 
-		getChildContext () {
-			return {
-				Subscriber: this.publisher.getSubscriber()
-			};
-		}
-
-		componentWillMount () {
-			this.publisher = Publisher.create('resize', this.context.Subscriber);
+		componentDidMount () {
+			this.resize.parent = this.context;
 		}
 
 		componentDidUpdate (prevProps) {
 			if (prevProps.textSize !== this.props.textSize) {
-				this.publisher.publish({
-					horizontal: true,
-					vertical: true
-				});
+				this.resize.notify({});
 			}
 		}
+
+		resize = Registry.create();
 
 		render () {
 			const {className, highContrast, textSize, ...props} = this.props;
@@ -77,7 +69,11 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			if (highContrast) variants.highContrast = true;
 			if (textSize === 'large') variants.largeText = true;
 
-			return <Wrapped className={combinedClassName} skinVariants={variants} {...props} />;
+			return (
+				<ResizeContext.Provider value={this.resize.subscriber}>
+					<Wrapped className={combinedClassName} skinVariants={variants} {...props} />;
+				</ResizeContext.Provider>
+			);
 		}
 	};
 });
