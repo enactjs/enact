@@ -104,7 +104,7 @@ const DividerBase = kind({
  * @hoc
  * @memberof moonstone/Divider
  * @mixes i18n/Uppercase.Uppercase
- * @mixes moonstone/MarqueeDecorator.MarqueeDecorator
+ * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes moonstone/Skinnable.Skinnable
  * @public
  */

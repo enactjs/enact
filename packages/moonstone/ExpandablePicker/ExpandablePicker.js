@@ -54,6 +54,14 @@ const ExpandablePickerBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * The "aria-label" for the the check button.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		checkButtonAriaLabel: PropTypes.string,
+
+		/**
 		 * Disables voice control.
 		 *
 		 * @type {Boolean}
@@ -70,14 +78,6 @@ const ExpandablePickerBase = kind({
 		 * @public
 		 */
 		'data-webos-voice-group-label': PropTypes.string,
-
-		/**
-		 * The "aria-label" for the the check button.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		checkButtonAriaLabel: PropTypes.string,
 
 		/**
 		 * The "aria-label" for the decrement button.

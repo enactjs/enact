@@ -19,7 +19,14 @@ const getImpl = (url, callback, sync) => {
 				body = req.response;
 				error = false;
 			}
-			const json = error ? null : JSON.parse(body);
+
+			let json = null;
+			try {
+				json = error ? null : JSON.parse(body);
+			} catch (e) {
+				error = 'Failed to parse ILIB JSON data';
+			}
+
 			callback(json, error);
 		});
 	} else {
@@ -39,11 +46,11 @@ const get = memoize((url) => new Promise((resolve, reject) => {
 	}, false);
 }));
 
-const iLibBase = ILIB_BASE_PATH;
-const iLibResources = ILIB_RESOURCES_PATH;
+const iLibBase = typeof ILIB_BASE_PATH === 'undefined' ? '/ilib' : ILIB_BASE_PATH;
+const iLibResources = typeof ILIB_RESOURCES_PATH === 'undefined' ? '/locale' : ILIB_RESOURCES_PATH;
 const cachePrefix = 'ENACT-ILIB-';
 const cacheKey = cachePrefix + 'CACHE-ID';
-const cacheID = ILIB_CACHE_ID;
+const cacheID = typeof ILIB_CACHE_ID === 'undefined' ? '$ILIB' : ILIB_CACHE_ID;
 
 function EnyoLoader () {
 	this.base = iLibBase;

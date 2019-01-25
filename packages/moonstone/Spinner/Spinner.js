@@ -149,7 +149,7 @@ const SpinnerBase = kind({
  * @ui
  * @private
  */
-const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
+const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SpinnerSpotlightDecorator';
 
@@ -167,14 +167,11 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {	// eslint-disable-l
 			blockClickOn: PropTypes.oneOf(['screen', 'container', null])
 		}
 
-		constructor () {
-			super();
+		constructor (props) {
+			super(props);
 
 			this.paused = new Pause('Spinner');
-		}
-
-		UNSAFE_componentWillMount () {
-			const {blockClickOn} = this.props;
+			const {blockClickOn} = props;
 			const current = Spotlight.getCurrent();
 
 			if (blockClickOn === 'screen') {
@@ -207,7 +204,6 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {	// eslint-disable-l
  *
  * @hoc
  * @memberof moonstone/Spinner
- * @mixes moonstone/Spinner.SpinnerSpotlightDecorator
  * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
