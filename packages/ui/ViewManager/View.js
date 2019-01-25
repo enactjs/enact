@@ -289,7 +289,7 @@ class View extends React.Component {
 
 		// When a new transition is initiated mid-transition, adjust time to account for the current
 		// percent complete.
-		if (this.animation && this.changeDirection) {
+		if (this.animation && this.state.changeDirection) {
 			const a = this.animation;
 			const percentComplete = (a.time - a.start) / (a.end - a.start);
 			const delta = (endTime - startTime) * (1 - percentComplete);
