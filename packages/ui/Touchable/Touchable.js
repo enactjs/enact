@@ -416,15 +416,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			handleGlobalMove.bindAs(this, 'handleGlobalMove');
 		}
 
-		componentDidMount () {
-			// ensure we clean up our internal state
-			if (platform.touch) {
-				on('touchend', this.handleGlobalUp, document);
-			}
-			on('mouseup', this.handleGlobalUp, document);
-			on('mousemove', this.handleGlobalMove, document);
-		}
-
 		static getDerivedStateFromProps (props, state) {
 			const {disabled} = props;
 			const {disabled: prevDisabled} = state;
@@ -436,6 +427,15 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				};
 			}
 			return null;
+		}
+
+		componentDidMount () {
+			// ensure we clean up our internal state
+			if (platform.touch) {
+				on('touchend', this.handleGlobalUp, document);
+			}
+			on('mouseup', this.handleGlobalUp, document);
+			on('mousemove', this.handleGlobalMove, document);
 		}
 
 		componentDidUpdate (prevProps) {
