@@ -14,7 +14,7 @@
 import hoc from '@enact/core/hoc';
 import React from 'react';
 import classnames from 'classnames';
-import intersection from 'ramda/src/intersection';
+import mergeWith from 'ramda/src/mergeWith';
 
 /**
  * Default config for `Skinnable`.
@@ -77,6 +77,31 @@ const defaultConfig = {
  */
 const SkinContext = React.createContext(null);
 
+const objectify = (arg) => {
+	// undefined, null, empty string case
+	// bail early
+	if (!arg) return {};
+
+	if (typeof arg === 'string') {
+		// String case
+		arg = arg.split(' ');
+	} else if (arg instanceof Array) {
+		// Array case
+	} else {
+		// It's just an object already.
+		// return it unaltered
+		return arg;
+	}
+
+	// only dealing with arrays now
+	return arg.reduce((obj, a) => {
+		obj[a] = true;
+		return obj;
+	}, {});
+};
+
+const preferDefined = (a, b) => ((a != null) ? a : b);
+
 /**
  * A higher-order component that assigns skinning classes for the purposes of styling children components.
  *
@@ -100,14 +125,46 @@ const SkinContext = React.createContext(null);
  * @public
  */
 const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
-	const {prop, skins, defaultSkin, allowedVariants, defaultVariants, variantsProp} = config;
+	const {prop, skins, defaultSkin, allowedVariants, variantsProp} = config;
+	const defaultVariants = objectify(config.defaultVariants);
 
 	function determineSkin (authorSkin, parentSkin) {
 		return authorSkin || defaultSkin || parentSkin;
 	}
 
 	function determineVariants (authorVariants, parentVariants) {
-		return authorVariants || defaultVariants || parentVariants;
+		authorVariants = objectify(authorVariants);
+		parentVariants = objectify(parentVariants);
+
+		// Start with parent vars vs config-defaults, then compare author (prop) vars, overwriting
+		// as we go, ignoring null/undefined values.
+		const mergedObj = mergeWith(
+			preferDefined,
+			mergeWith(
+				preferDefined,
+				parentVariants,
+				defaultVariants
+			),
+			authorVariants
+		);
+
+		// Clean up the merged object
+		for (const key in mergedObj) {
+			// Delete keys that are null or undefined and delete keys that aren't allowed
+			if (mergedObj[key] == null || !allowedVariants.includes(key)) {
+				delete mergedObj[key];
+			}
+		}
+
+		// DELETE BEFORE MERGING
+		console.group('vars');
+		console.log('auth:', authorVariants);
+		console.log('defs:', defaultVariants);
+		console.log('pare:', parentVariants);
+		console.log('merg:', mergedObj);
+		console.groupEnd();
+
+		return mergedObj;
 	}
 
 	function getClassName (effectiveSkin, className, variants) {
@@ -122,22 +179,14 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 		return className;
 	}
 
-	function getVariants (variants) {
-		// Bail if anything isn't setup correctly
-		if (!allowedVariants || !allowedVariants.length || !variants) return [];
-
-		// Support both an array of variants and a string of variants
-		return intersection(allowedVariants, (variants instanceof Array ? variants : variants.split(' ')));
-	}
-
-	// eslint-disable-next-line
+	// eslint-disable-next-line no-shadow
 	return function Skinnable ({className, skin, skinVariants, ...rest}) {
 		return (
 			<SkinContext.Consumer>
 				{(value) => {
 					const {parentSkin, parentVariants} = value || {};
 					const effectiveSkin = determineSkin(skin, parentSkin);
-					const variants = getVariants(determineVariants(skinVariants, parentVariants));
+					const variants = determineVariants(skinVariants, parentVariants);
 
 					if (prop) {
 						rest[prop] = effectiveSkin;
