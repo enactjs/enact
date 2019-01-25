@@ -891,21 +891,15 @@ class ScrollableBaseNative extends Component {
 			left = bounds.maxLeft - left;
 		}
 
-		let
-			dirHorizontal = 0,
-			dirVertical = 0;
-
 		if (left !== this.scrollLeft) {
-			dirHorizontal = Math.sign(left - this.scrollLeft);
 			this.setScrollLeft(left);
 		}
 		if (top !== this.scrollTop) {
-			dirVertical = Math.sign(top - this.scrollTop);
 			this.setScrollTop(top);
 		}
 
 		if (this.childRef.didScroll) {
-			this.childRef.didScroll(this.scrollLeft, this.scrollTop, dirHorizontal, dirVertical);
+			this.childRef.didScroll(this.scrollLeft, this.scrollTop);
 		}
 		this.forwardScrollEvent('onScroll');
 		this.scrollStopJob.start();
