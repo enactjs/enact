@@ -278,7 +278,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			if (getDirection(keyCode)) {
 				preventDefault(ev);
 				stop(ev);
-			} else if (keyboardAccessible) {
+			} else if (keyCode && keyboardAccessible) {
 				preventDefault(ev);
 			}
 
