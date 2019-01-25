@@ -712,6 +712,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
+		console.log(document.getElementById(`${this.id}_ariaProps`));
 		if (
 			!this.state.mediaControlsVisible && prevState.mediaControlsVisible !== this.state.mediaControlsVisible ||
 			!this.state.mediaSliderVisible && prevState.mediaSliderVisible !== this.state.mediaSliderVisible
@@ -771,8 +772,10 @@ const VideoPlayerBase = class extends React.Component {
 			const current = Spotlight.getCurrent();
 			if (current && current.dataset.spotlightId === this.moreButtonSpotlightId) {
 				// need to blur manually to read out `infoComponent`
+				console.log("Blur current spotlight");
 				current.blur();
 			}
+			console.log("Focus more button");
 			Spotlight.focus(this.moreButtonSpotlightId);
 		}
 	}
@@ -1744,12 +1747,12 @@ const VideoPlayerBase = class extends React.Component {
 				role: 'alert'
 			};
 		} else if (this.state.announce === AnnounceState.INFO) {
+			console.log("Insert aria-labelledby for infoComponent");
 			return {
 				'aria-labelledby': `${this.id}_info`,
 				role: 'region'
 			};
 		}
-
 		return null;
 	}
 
@@ -1845,7 +1848,7 @@ const VideoPlayerBase = class extends React.Component {
 				</Overlay>
 
 				{this.state.bottomControlsRendered ?
-					<div className={css.fullscreen} {...controlsAriaProps}>
+					<div id={this.id + '_ariaProps'} className={css.fullscreen} {...controlsAriaProps}>
 						<FeedbackContent
 							className={css.miniFeedback}
 							playbackRate={this.pulsedPlaybackRate || this.selectPlaybackRate(this.speedIndex)}
