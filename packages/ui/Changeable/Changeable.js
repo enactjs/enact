@@ -10,8 +10,9 @@
 import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
+import warning from 'warning';
 
 /**
  * Default config for {@link ui/Changeable.Changeable}.
@@ -66,6 +67,7 @@ const defaultConfig = {
 const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 	const {prop, change} = config;
 	const defaultPropKey = 'default' + cap(prop);
+	const getValue = props => props[prop] != null ? props[prop] : props[defaultPropKey];
 
 	return class extends React.PureComponent {
 		static displayName = 'Changeable'
@@ -126,32 +128,26 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			let value = props[defaultPropKey];
-			let controlled = false;
-
-			if (prop in props) {
-				if (props[prop] != null) {
-					value = props[prop];
-				}
-
-				controlled = true;
-			}
 
 			this.state = {
-				controlled,
-				value
+				value: getValue(props),
+				controlled: prop in props
 			};
 		}
 
 		static getDerivedStateFromProps (props, state) {
 			if (state.controlled) {
-				const value = props[prop];
-				if (typeof value !== 'undefined' && value !== null) {
-					return {value};
-				} else {
-					return {value: props[defaultPropKey]};
-				}
+				return {
+					value: getValue(props)
+				};
 			}
+
+			warning(
+				!(prop in props),
+				`'${prop}' specified for an uncontrolled instance of Changeable and will be
+				ignored. To make this instance of Changeable controlled, '${prop}' should be
+				specified at creation.`
+			);
 
 			return null;
 		}

@@ -8,9 +8,9 @@
 import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
-
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
+import warning from 'warning';
 
 /**
  * Default config for `Toggleable`.
@@ -117,6 +117,7 @@ const defaultConfig = {
 const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const {activate, deactivate, prop, toggle, toggleProp} = config;
 	const defaultPropKey = 'default' + cap(prop);
+	const getValue = props => Boolean(props[prop] != null ? props[prop] : props[defaultPropKey]);
 
 	return class Toggleable extends React.Component {
 		static propTypes = /** @lends ui/Toggleable.Toggleable.prototype */ {
@@ -167,27 +168,26 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			let active = props[defaultPropKey];
-			let controlled = false;
-
-			if (prop in props) {
-				if (props[prop] != null) {
-					active = props[prop];
-				}
-
-				controlled = true;
-			}
 
 			this.state = {
-				active,
-				controlled
+				active: getValue(props),
+				controlled: prop in props
 			};
 		}
 
 		static getDerivedStateFromProps (props, state) {
 			if (state.controlled) {
-				return {active: !!props[prop]};
+				return {
+					active: getValue(props)
+				};
 			}
+
+			warning(
+				!(prop in props),
+				`'${prop}' specified for an uncontrolled instance of Toggleable and will be
+				ignored. To make this instance of Toggleable controlled, '${prop}' should be
+				specified at creation.`
+			);
 
 			return null;
 		}
