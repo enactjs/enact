@@ -192,30 +192,29 @@ class ViewManager extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			previousIndex: null,
+			prevIndex: null,
 			reverseTransition: null
 		};
 	}
 
 	static getDerivedStateFromProps (props, state) {
-		let reverseTransition;
 		if (props.reverseTransition != null) {
-			reverseTransition = !!props.reverseTransition;
-		} else if (props.index !== state.index) {
-			reverseTransition = state.index > props.index;
+			return {
+				reverseTransition: !!props.reverseTransition
+			};
+		} else if (props.index !== state.prevIndex) {
+			return {
+				prevIndex: props.index,
+				reverseTransition: state.prevIndex > props.index
+			};
 		} else {
-			reverseTransition = false;
+			return null;
 		}
-
-		return {
-			previousIndex: state.index,
-			reverseTransition
-		};
 	}
 
 	render () {
 		const {arranger, childProps, children, duration, end, index, noAnimation, start, enteringDelay, enteringProp, ...rest} = this.props;
-		const {previousIndex, reverseTransition} = this.state;
+		const {prevIndex, reverseTransition} = this.state;
 		const childrenList = React.Children.toArray(children);
 
 		const from = (start || start === 0) ? start : index;
@@ -228,7 +227,7 @@ class ViewManager extends React.Component {
 			duration,
 			index,
 			noAnimation,
-			previousIndex,
+			prevIndex,
 			reverseTransition,
 			enteringDelay,
 			enteringProp,
