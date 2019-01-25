@@ -205,6 +205,18 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		static getDerivedStateFromProps (props, state) {
+			const focusedWhenDisabled = Boolean(state.focused && (props.disabled || props.spotlightDisabled));
+
+			if (focusedWhenDisabled !== state.focusedWhenDisabled || !shallowEqual(state.selectionKeys, props.selectionKeys)) {
+				return {
+					focusedWhenDisabled,
+					selectionKeys: props.selectionKeys
+				};
+			}
+			return null;
+		}
+
 		componentDidMount () {
 			// eslint-disable-next-line react/no-find-dom-node
 			this.node = ReactDOM.findDOMNode(this);
@@ -220,18 +232,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				!shallowEqual(stateCopy, nextStateCopy) ||
 				!shallowEqual(this.props, nextProps)
 			);
-		}
-
-		static getDerivedStateFromProps (props, state) {
-			const focusedWhenDisabled = Boolean(state.focused && (props.disabled || props.spotlightDisabled));
-
-			if (focusedWhenDisabled !== state.focusedWhenDisabled || !shallowEqual(state.selectionKeys, props.selectionKeys)) {
-				return {
-					focusedWhenDisabled,
-					selectionKeys: props.selectionKeys
-				};
-			}
-			return null;
 		}
 
 		componentDidUpdate (prevProps, prevState) {
