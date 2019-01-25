@@ -102,9 +102,10 @@ import styles from './styles';
  * ```
  *
  * @function
+ * @template Props
  * @param  {KindConfig}    config    Component configuration
  *
- * @returns {Component}           Component
+ * @returns {Component<Props>}           Component
  * @memberof core/kind
  * @public
  */
