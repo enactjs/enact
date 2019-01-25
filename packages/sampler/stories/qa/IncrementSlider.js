@@ -143,7 +143,7 @@ storiesOf('IncrementSlider', module)
 		'with max, min, and value',
 		() => (
 			<div>
-				Test the IncrementSlider by changing the values of min and value knobs.
+				Test the IncrementSlider by changing the values of max, min, and value knobs.
 				<IncrementSliderWithMinValue />
 			</div>
 		)
