@@ -7,7 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` property `childProps` to support additional props included in the object passed to the `itemsRenderer` callback
-- `resolution` support for 8k (UHD2) displays
+- Support for 8k (UHD2) displays
 
 ### Fixed
 
