@@ -205,6 +205,12 @@ class ExpandableInputBase extends React.Component {
 		this.handleDeactivate = handleDeactivate.bind(this);
 	}
 
+	componentDidUpdate (prevProps) {
+		if (prevProps.open && !this.props.open) {
+			this.paused.resume();
+		}
+	}
+
 	componentWillUnmount () {
 		this.paused.resume();
 	}
