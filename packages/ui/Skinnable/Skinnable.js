@@ -11,8 +11,10 @@
  * @public
  */
 
+import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import React from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import mergeWith from 'ramda/src/mergeWith';
 
@@ -26,7 +28,6 @@ import {objectify, preferDefined} from './util';
  * @public
  */
 const defaultConfig = {
-	// The prop to pass down to children if they want the variants prop (possibly for modification).
 	/**
 	 * The prop in which to pass the skinVariants value to the wrapped component. The recommended
 	 * value is "skinVariants".
@@ -182,9 +183,57 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 		if (className) return className;
 	}
 
-	// eslint-disable-next-line no-shadow, enact/prop-types
-	return function Skinnable ({className, skin, skinVariants, ...rest}) {
-		return (
+	return kind({
+		name: 'Skinnable',
+		propTypes: {
+			/**
+			 * The name of the skin a component should use to render itself. Available skins are
+			 * defined in the "defaultConfig" for this HOC.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			skin: PropTypes.string,
+
+			/**
+			 * The variant(s) on a skin that a component should use when rendering. These will
+			 * typically alter the appearance of a skin's existing definition in a way that does not
+			 * override that skin's general styling.
+			 *
+			 * Multiple data types are supported by this prop, which afford different conveniences
+			 * and abilities. String and Array are effectively the same, supporting just additions
+			 * to the variants being applied to a component, and are much more convenient. Objects
+			 * may also be used, and have the ability to disable variants being passed by their
+			 * ancestors. Objects take the format of a basic hash, with variants as key names and
+			 * true/false Booleans as values, depicting their state. If a variant is excluded from
+			 * any version of data type used to set this prop, that variant will ignored, falling
+			 * back to the defaultVariant or parent variant, in that order.
+			 *
+			 * skinVariants examples:
+			 * ```
+			 *  // String
+			 *  skinVariants="highContrast"
+			 *
+			 *  // Array
+			 *  skinVariants=['highContrast']
+			 *
+			 *  // Object
+			 *  skinVariants={
+			 *  	highContrast: true,
+			 *  	grayscale: false
+			 *  }
+			 * ```
+			 *
+			 * @type {String|Array|Object}
+			 * @public
+			 */
+			skinVariants: PropTypes.oneOfType([
+				PropTypes.string,
+				PropTypes.array,
+				PropTypes.object
+			])
+		},
+		render: ({className, skin, skinVariants, ...rest}) => (
 			<SkinContext.Consumer>
 				{(value) => {
 					const {parentSkin, parentVariants} = value || {};
@@ -211,8 +260,8 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 					);
 				}}
 			</SkinContext.Consumer>
-		);
-	};
+		)
+	});
 });
 
 export default Skinnable;
