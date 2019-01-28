@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Changed
+
+- All content-containing LESS stylesheets (not within a `styles` directory) have been renamed under the `*.module.less` extension to retain modular context with CLI 2.x.
+
 ### Fixed
 
 - `ui/Marquee` to marquee when necessary after a locale change
