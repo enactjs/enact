@@ -2,7 +2,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import Picker from '../Picker';
 import PickerItem from '../PickerItem';
-import css from '../Picker.less';
+import css from '../Picker.module.less';
 
 const tap = (node) => {
 	node.simulate('mousedown');

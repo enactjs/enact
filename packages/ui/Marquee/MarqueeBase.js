@@ -3,7 +3,7 @@ import {forProp, forward, handle, stop} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import css from './Marquee.less';
+import css from './Marquee.module.less';
 
 const isEventSource = (ev) => ev.target === ev.currentTarget;
 

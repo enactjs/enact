@@ -21,7 +21,7 @@ import $L from '../internal/$L';
 import Skinnable from '../Skinnable';
 import Tooltip from '../TooltipDecorator/Tooltip';
 
-import componentCss from './Input.less';
+import componentCss from './Input.module.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 import {calcAriaLabel, extractInputProps} from './util';

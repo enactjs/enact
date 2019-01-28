@@ -23,7 +23,7 @@ import {contextTypes} from '@enact/core/internal/PubSub';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import componentCss from './Transition.less';
+import componentCss from './Transition.module.less';
 
 const forwardTransitionEnd = forward('onTransitionEnd');
 const forwardOnShow = forward('onShow');

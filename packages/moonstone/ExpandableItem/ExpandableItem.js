@@ -29,7 +29,7 @@ import LabeledItem from '../LabeledItem';
 import Expandable from './Expandable';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 
-import css from './ExpandableItem.less';
+import css from './ExpandableItem.module.less';
 
 const isUp = is('up');
 const isDown = is('down');

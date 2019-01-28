@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 
 import ToggleIcon from '../ToggleIcon';
 
-import componentCss from './FormCheckbox.less';
+import componentCss from './FormCheckbox.module.less';
 
 /**
  * A component that represents a Boolean state, and looks like a check mark in a circle.

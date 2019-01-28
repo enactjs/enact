@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import ProgressBar from '../ProgressBar';
-import css from '../ProgressBar.less';
+import css from '../ProgressBar.module.less';
 
 describe('ProgressBar Specs', () => {
 	test('should have width of 50%', () => {

@@ -18,7 +18,7 @@ import React from 'react';
 
 import FloatingLayer from '../FloatingLayer';
 
-import componentCss from './Spinner.less';
+import componentCss from './Spinner.module.less';
 
 /**
  * A minimally styled component that controls `Spinner` positioning and interaction states.
