@@ -27,6 +27,15 @@ import {objectify, preferDefined} from './util';
  */
 const defaultConfig = {
 	// The prop to pass down to children if they want the variants prop (possibly for modification).
+	/**
+	 * The prop in which to pass the skinVariants value to the wrapped component. The recommended
+	 * value is "skinVariants".
+	 *
+	 * If left unset, the skinVariant will not be passed to the wrapped component.
+	 *
+	 * @type {String}
+	 * @memberof ui/Skinnable.Skinnable.defaultConfig
+	 */
 	variantsProp: null,
 
 	/**
@@ -34,7 +43,7 @@ const defaultConfig = {
 	 *
 	 * If left unset, the current skin will not be passed to the wrapped component.
 	 *
-	 * @type {string}
+	 * @type {String}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
 	prop: null,
@@ -52,16 +61,32 @@ const defaultConfig = {
 	/**
 	 * Assign a default skin from the `skins` list.
 	 *
-	 * This will be used if the instantiator of the wrapped component provides no value to the `skin` prop.
+	 * This will be used if the instantiator of the wrapped component provides no value to the
+	 * `skin` prop.
 	 *
 	 * @type {String}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
 	defaultSkin: null,
 
-	// Initial collection of applied variants
+	/**
+	 * Initial collection of applied variants
+	 *
+	 * This will be used if the instantiator of the wrapped component provides no value to the
+	 * `skinVariants` prop.
+	 *
+	 * @type {String|Array}
+	 * @memberof ui/Skinnable.Skinnable.defaultConfig
+	 */
 	defaultVariants: null,
-	// A complete list (array) of all supported variants
+
+	/**
+	 * A complete list of all supported variants. These will translate to CSS class names,
+	 * cammelCase is recommended for the values.
+	 *
+	 * @type {Array}
+	 * @memberof ui/Skinnable.Skinnable.defaultConfig
+	 */
 	allowedVariants: null
 };
 
@@ -70,6 +95,14 @@ const defaultConfig = {
  *
  * Example:
  * ```
+ * <App skin="dark">
+ * 	<Section>
+ * 		<Button>Gray Button</Button>
+ * 	<Section>
+ * 	<Popup skin="light">
+ * 		<Button>White Button</Button>
+ * 	</Popup>
+ * </App>
  * ```
  *
  * @class SkinContext
@@ -93,6 +126,8 @@ const SkinContext = React.createContext(null);
  * 		light: 'moonstone-light'
  * 	},
  * 	defaultTheme: 'dark'
+ * 	defaultVariants: ['highContrast'],
+ * 	allowedVariants: ['highContrast', 'largeText', 'grayscale']
  * }, App);
  * ```
  *
@@ -131,13 +166,6 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		// DELETE BEFORE MERGING
-		console.group('vars');
-		console.log('auth:', authorVariants);
-		console.log('defs:', defaultVariants);
-		console.log('pare:', parentVariants);
-		console.log('merg:', mergedObj);
-		console.groupEnd();
 
 		return mergedObj;
 	}
@@ -154,7 +182,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 		if (className) return className;
 	}
 
-	// eslint-disable-next-line no-shadow
+	// eslint-disable-next-line no-shadow, enact/prop-types
 	return function Skinnable ({className, skin, skinVariants, ...rest}) {
 		return (
 			<SkinContext.Consumer>
