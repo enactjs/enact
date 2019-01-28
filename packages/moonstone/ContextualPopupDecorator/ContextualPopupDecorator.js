@@ -268,7 +268,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 						// is on the activator and we want to re-spot it so a11y read out can occur
 						current === prevState.activator ||
 						// is within the popup
-						this.containerNode.contains(Spotlight.getCurrent())
+						this.containerNode.contains(current)
 					)
 				};
 			}
