@@ -422,7 +422,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (prevDisabled !== disabled) {
 				return {
-					...activeProp && !prevDisabled && disabled && deactivate(state),
+					...(activeProp && !prevDisabled && disabled && deactivate(state)),
 					disabled
 				};
 			}
