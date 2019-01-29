@@ -379,7 +379,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.state = {
 				active: States.Inactive,
-				disabled: props.disabled
+				prevDisabled: props.disabled
 			};
 
 			this.config = mergeConfig({
@@ -418,12 +418,12 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		static getDerivedStateFromProps (props, state) {
 			const {disabled} = props;
-			const {disabled: prevDisabled} = state;
+			const {prevDisabled} = state;
 
 			if (prevDisabled !== disabled) {
 				return {
 					...(activeProp && !prevDisabled && disabled && deactivate(state)),
-					disabled
+					prevDisabled: disabled
 				};
 			}
 			return null;
