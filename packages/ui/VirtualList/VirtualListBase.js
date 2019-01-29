@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import shallowEqual from 'recompose/shallowEqual';
 
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -224,13 +225,56 @@ const VirtualListBaseFactory = (type) => {
 		constructor (props) {
 			super(props);
 
-			this.state = {firstIndex: 0, numOfItems: 0};
+			this.state = {
+				firstIndex: 0,
+				hasDataSizeChanged: false,
+				hasMetricsChanged: false,
+				numOfItems: 0,
+				prevProps: {...props}
+			};
+
+			if (props.clientSize) {
+				this.calculateMetrics(props);
+				this.updateStatesAndBounds(props);
+			}
 		}
 
-		UNSAFE_componentWillMount () {
-			if (this.props.clientSize) {
-				this.calculateMetrics(this.props);
-				this.updateStatesAndBounds(this.props);
+		static getDerivedStateFromProps (props, state) {
+			const
+				{dataSize, direction, itemSize, overhang, spacing} = state.prevProps,
+				hasMetricsChanged = (
+					direction !== props.direction ||
+					((itemSize instanceof Object) ? (itemSize.minWidth !== props.itemSize.minWidth || itemSize.minHeight !== props.itemSize.minHeight) : itemSize !== props.itemSize) ||
+					overhang !== props.overhang ||
+					spacing !== props.spacing
+				),
+				hasDataSizeChanged = dataSize !== props.dataSize;
+			let newState = null;
+
+			if (!shallowEqual(props, state.prevProps)) {
+				newState = {
+					prevProps: ({...props})
+				};
+			}
+
+			if (hasMetricsChanged !== state.hasMetricsChanged) {
+				newState = {
+					...newState,
+					hasMetricsChanged
+				};
+			}
+
+			if (hasDataSizeChanged !== state.hasDataSizeChanged) {
+				newState = {
+					...newState,
+					hasMetricsChanged
+				};
+			}
+
+			if (newState !== null) {
+				return newState;
+			} else {
+				return null;
 			}
 		}
 
@@ -243,43 +287,8 @@ const VirtualListBaseFactory = (type) => {
 			this.setContainerSize();
 		}
 
-		// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
-		// Calling setState within componentWillReceivePropswill not trigger an additional render.
-		UNSAFE_componentWillReceiveProps (nextProps) {
-			const
-				{dataSize, direction, itemSize, overhang, rtl, spacing} = this.props,
-				hasMetricsChanged = (
-					direction !== nextProps.direction ||
-					((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
-					overhang !== nextProps.overhang ||
-					spacing !== nextProps.spacing
-				);
-
-			this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
-
-			if (hasMetricsChanged) {
-				this.calculateMetrics(nextProps);
-				this.updateStatesAndBounds(nextProps);
-				this.setContainerSize();
-			} else if (this.hasDataSizeChanged) {
-				this.updateStatesAndBounds(nextProps);
-				this.setContainerSize();
-			} else if (rtl !== nextProps.rtl) {
-				const {x, y} = this.getXY(this.scrollPosition, 0);
-
-				this.cc = [];
-				if (type === Native) {
-					this.scrollToPosition(x, y, nextProps.rtl);
-				} else {
-					this.setScrollPosition(x, y, 0, 0, nextProps.rtl);
-				}
-			}
-		}
-
-		UNSAFE_componentWillUpdate (nextProps, nextState) {
-			if (this.state.firstIndex === nextState.firstIndex || this.props.childProps && this.props.childProps !== nextProps.childProps) {
-				this.prevFirstIndex = -1; // force to re-render items
-			}
+		componentDidUpdate () {
+			this.prevFirstIndex = this.state.firstIndex;
 		}
 
 		scrollBounds = {
@@ -307,7 +316,6 @@ const VirtualListBaseFactory = (type) => {
 		maxFirstIndex = 0
 		prevFirstIndex = 0
 		curDataSize = 0
-		hasDataSizeChanged = false
 		cc = []
 		scrollPosition = 0
 
@@ -668,13 +676,14 @@ const VirtualListBaseFactory = (type) => {
 		positionItems () {
 			const
 				{dataSize} = this.props,
-				{firstIndex, numOfItems} = this.state,
+				{firstIndex, numOfItems, prevProps} = this.state,
 				{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
-				diff = firstIndex - this.prevFirstIndex,
-				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems || this.prevFirstIndex === -1) ? firstIndex : this.prevFirstIndex + numOfItems;
+				prevFirstIndex = (this.prevFirstIndex === this.state.firstIndex || this.props.childProps && prevProps.childProps !== this.props.childProps) ? -1 : this.prevFirstIndex, // force to re-render items
+				diff = firstIndex - prevFirstIndex,
+				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems || prevFirstIndex === -1) ? firstIndex : prevFirstIndex + numOfItems;
 			let
 				hideTo = 0,
-				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0 || this.prevFirstIndex === -1) ? firstIndex + numOfItems : this.prevFirstIndex;
+				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0 || prevFirstIndex === -1) ? firstIndex + numOfItems : prevFirstIndex;
 
 			if (updateFrom >= updateTo) {
 				return;
@@ -706,8 +715,6 @@ const VirtualListBaseFactory = (type) => {
 			for (let i = updateTo; i < hideTo; i++) {
 				this.applyStyleToHideNode(i);
 			}
-
-			this.prevFirstIndex = firstIndex;
 		}
 
 		getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
@@ -777,9 +784,36 @@ const VirtualListBaseFactory = (type) => {
 
 		render () {
 			const
-				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
+				{
+					className,
+					'data-webos-voice-focused': voiceFocused,
+					'data-webos-voice-group-label': voiceGroupLabel,
+					itemsRenderer,
+					style,
+					...rest
+				} = this.props,
+				{hasDataSizeChanged, hasMetricsChanged, prevProps} = this.state,
 				{cc, initItemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
+
+			// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
+			if (hasMetricsChanged) {
+				this.calculateMetrics(this.props);
+				this.updateStatesAndBounds(this.props);
+				this.setContainerSize();
+			} else if (hasDataSizeChanged) {
+				this.updateStatesAndBounds(this.props);
+				this.setContainerSize();
+			} else if (prevProps.rtl !== this.props.rtl) {
+				const {x, y} = this.getXY(this.scrollPosition, 0);
+
+				this.cc = [];
+				if (type === Native) {
+					this.scrollToPosition(x, y, this.props.rtl);
+				} else {
+					this.setScrollPosition(x, y, 0, 0, this.props.rtl);
+				}
+			}
 
 			delete rest.cbScrollTo;
 			delete rest.childProps;

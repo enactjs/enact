@@ -422,7 +422,7 @@ class ScrollableBase extends Component {
 	componentDidUpdate (prevProps, prevState) {
 		const
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-			{hasDataSizeChanged} = this.childRef;
+			{hasDataSizeChanged} = this.childRef.state || {};
 
 		// Need to sync calculated client size if it is different from the real size
 		if (this.childRef.syncClientSize) {
