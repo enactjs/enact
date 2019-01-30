@@ -350,7 +350,7 @@ storiesOf('Scroller', module)
 		'With Long Item',
 		() => (
 			<Scroller focusableScrollbar>
-				<Item>Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Text</Item>
+				<Item>Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Text</Item>
 				<ExpandableList title="Title">
 					{itemData}
 				</ExpandableList>
