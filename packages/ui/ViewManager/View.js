@@ -146,6 +146,10 @@ class View extends React.Component {
 			return {
 				changeDirection: true
 			};
+		} else if (state.prevReverseTransition === props.reverseTransition) {
+			return {
+				changeDirection: false
+			};
 		}
 		return null;
 	}
@@ -285,7 +289,6 @@ class View extends React.Component {
 				return false;
 			}
 		};
-
 
 		// When a new transition is initiated mid-transition, adjust time to account for the current
 		// percent complete.
