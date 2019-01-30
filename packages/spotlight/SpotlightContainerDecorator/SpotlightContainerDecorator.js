@@ -204,6 +204,8 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static getDerivedStateFromProps (props, state) {
 			const {spotlightId: id, spotlightRestrict} = props;
 			const {id: prevId, spotlightRestrict: prevSpotlightRestrict} = state;
+			// prevId will only be undefined the first render so this prevents releasing the
+			// container after initially creating it
 			const isIdChanged = prevId && id && prevId !== id;
 
 			if (isIdChanged) {
