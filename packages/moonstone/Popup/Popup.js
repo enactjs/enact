@@ -393,18 +393,14 @@ class Popup extends React.Component {
 	}
 
 	static getDerivedStateFromProps (props, state) {
-		if (props.open && !state.popupOpen) {
-			if (!state.floatLayerOpen) {
-				return {
-					floatLayerOpen: true
-				};
-			}
-		} else if (!props.open && state.floatLayerOpen) {
-			if (state.popupOpen) {
-				return {
-					popupOpen: false
-				};
-			}
+		if (props.open && !state.floatLayerOpen) {
+			return {
+				floatLayerOpen: true
+			};
+		} else if (!props.open && state.popupOpen) {
+			return {
+				popupOpen: false
+			};
 		}
 		return null;
 	}
@@ -417,7 +413,7 @@ class Popup extends React.Component {
 	}
 
 	componentDidUpdate (prevProps) {
-		if (!this.props.noAnimation && this.props.open !== prevProps.open) {
+		if (!this.props.noAnimation && (this.props.open !== prevProps.open)) {
 			this.paused.pause();
 		}
 		checkScrimNone(this.props);
@@ -431,12 +427,13 @@ class Popup extends React.Component {
 	}
 
 	handleFloatingLayerOpen = () => {
-		this.setState({
-			activator: Spotlight.getCurrent(),
-			popupOpen: true
-		});
-
 		const current = Spotlight.getCurrent();
+
+		this.setState(() => ({
+			activator: current,
+			popupOpen: true
+		}));
+
 		if (current) {
 			current.blur();
 		}
