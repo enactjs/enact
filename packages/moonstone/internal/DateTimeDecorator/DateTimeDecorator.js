@@ -7,6 +7,7 @@
 
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import {memoize} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import Changeable from '@enact/ui/Changeable';
@@ -41,6 +42,14 @@ const toTime = (date) => {
  */
 const DateTimeDecorator = hoc((config, Wrapped) => {
 	const {customProps, defaultOrder, handlers, i18n} = config;
+
+	const memoizedI18nConfig = memoize((/* locale */) => {
+		// Guard for isomorphic builds
+		if (typeof window !== 'undefined' && i18n) {
+			return i18n();
+		}
+		return null;
+	});
 
 	const Decorator = class extends React.Component {
 		static displayName = 'DateTimeDecorator'
@@ -212,13 +221,13 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			let props = null;
 			let order = defaultOrder;
 
-			// Guard for isomorphic builds
-			if (typeof window !== 'undefined' && i18n) {
+			const i18nConfig = memoizedI18nConfig(this.props.locale);
+			if (i18nConfig) {
 				if (value) {
-					label = i18n().formatter.format(value);
+					label = i18nConfig.formatter.format(value);
 				}
-				props = customProps(i18n(), pickerValue, this.props);
-				order = i18n().order;
+				props = customProps(i18nConfig, pickerValue, this.props);
+				order = i18nConfig.order;
 			}
 
 			return (
