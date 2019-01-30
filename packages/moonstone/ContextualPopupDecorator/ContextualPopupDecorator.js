@@ -482,21 +482,21 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			forward('onClose')
 		)
 
-		handleOpen = () => {
-			forward('onOpen', this.props);
+		handleOpen = (ev) => {
+			forward('onOpen', ev, this.props);
 			this.positionContextualPopup();
 			const current = Spotlight.getCurrent();
 			this.updateLeaveFor(current);
-			this.setState(() => ({
+			this.setState({
 				activator: current
-			}));
+			});
 		}
 
 		handleClose = () => {
 			this.updateLeaveFor(null);
-			this.setState(() => ({
+			this.setState({
 				activator: null
-			}));
+			});
 		}
 
 		handleDirectionalKey (ev) {
