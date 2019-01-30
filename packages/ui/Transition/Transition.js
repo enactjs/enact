@@ -225,11 +225,11 @@ const TransitionBase = kind({
 	},
 
 	computed: {
-		className: ({css, direction, duration, timingFunction, type, visible, styler}) => styler.append(
+		className: ({css, direction, duration, noAnimation, timingFunction, type, visible, styler}) => styler.append(
 			visible ? 'shown' : 'hidden',
 			direction && css[direction],
-			duration && css[duration],
-			timingFunction && css[timingFunction],
+			!noAnimation && duration && css[duration],
+			!noAnimation && timingFunction && css[timingFunction],
 			css[type]
 		),
 		innerStyle: ({clipWidth, direction, type}) => {
@@ -257,21 +257,18 @@ const TransitionBase = kind({
 			}
 
 			return style;
-		},
-		childRef: ({childRef, noAnimation, children}) => (noAnimation || !children) ? null : childRef
+		}
 	},
 
-	render: ({css, childRef, children, innerStyle, noAnimation, visible, ...rest}) => {
+	render: ({css, childRef, children, innerStyle, ...rest}) => {
 		delete rest.clipHeight;
 		delete rest.clipWidth;
 		delete rest.direction;
 		delete rest.duration;
+		delete rest.noAnimation;
 		delete rest.timingFunction;
 		delete rest.type;
-
-		if (noAnimation && !visible) {
-			return null;
-		}
+		delete rest.visible;
 
 		return (
 			<div {...rest}>
@@ -336,6 +333,17 @@ class Transition extends React.Component {
 		 * @public
 		 */
 		duration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+		/**
+		 * Disables transition animation.
+		 *
+		 * When `false`, visibility changes animate.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAnimation: PropTypes.bool,
 
 		/**
 		 * Called after transition for hiding is finished.
@@ -412,6 +420,7 @@ class Transition extends React.Component {
 	static defaultProps = {
 		direction: 'up',
 		duration: 'medium',
+		noAnimation: false,
 		timingFunction: 'ease-in-out',
 		type: 'slide',
 		visible: true
@@ -464,7 +473,7 @@ class Transition extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		const {visible} = this.props;
+		const {noAnimation, visible} = this.props;
 		const {initialHeight, renderState} = this.state;
 
 		// Checking that something changed that wasn't the visibility
@@ -476,7 +485,7 @@ class Transition extends React.Component {
 			this.measureInner();
 		}
 
-		if (!this.childNode) {
+		if (noAnimation) {
 			if (!prevProps.visible && visible) {
 				forwardOnShow({}, this.props);
 			} else if (prevProps.visible && !visible) {
@@ -510,10 +519,10 @@ class Transition extends React.Component {
 		forwardTransitionEnd(ev, this.props);
 
 		if (ev.target === this.childNode) {
-			if (!this.props.visible && this.props.onHide) {
-				this.props.onHide(ev);
-			} else if (this.props.visible && this.props.onShow) {
-				this.props.onShow(ev);
+			if (!this.props.visible) {
+				forwardOnHide(ev, this.props);
+			} else if (this.props.visible) {
+				forwardOnShow(ev, this.props);
 			}
 		}
 	}

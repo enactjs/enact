@@ -476,7 +476,7 @@ class Popup extends React.Component {
 			activator: null
 		});
 
-		if (!this.props.noAnimation && ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
+		if (this.props.noAnimation || ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
 			this.paused.resume();
 
 			if (!this.props.open) {
@@ -488,7 +488,7 @@ class Popup extends React.Component {
 	handlePopupShow = (ev) => {
 		forwardShow(ev, this.props);
 
-		if (!this.props.noAnimation && ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
+		if (this.props.noAnimation || ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
 			this.paused.resume();
 
 			if (this.props.open) {

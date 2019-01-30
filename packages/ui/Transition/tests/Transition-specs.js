@@ -1,6 +1,6 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import Transition from '../Transition';
+import Transition, {TransitionBase} from '../Transition';
 import css from '../Transition.less';
 
 describe('Transition Specs', () => {
@@ -41,6 +41,51 @@ describe('Transition Specs', () => {
 		const actual = wrapped.find('ChildNode').prop('style');
 
 		expect(actual).toBe(expected);
+	});
+
+
+	test('should apply \'shown\' class when visible', () => {
+		const subject = mount(
+			<TransitionBase />
+		);
+
+		const expected = 'shown';
+		const actual = subject.find('div').at(0).prop('className');
+
+		expect(actual).toContain(expected);
+	});
+
+	test('should apply \'hidden\' class when not visible', () => {
+		const subject = mount(
+			<TransitionBase visible={false} />
+		);
+
+		const expected = 'hidden';
+		const actual = subject.find('div').at(0).prop('className');
+
+		expect(actual).toContain(expected);
+	});
+
+	test('should apply \'shown\' class when visible with noAnimation', () => {
+		const subject = mount(
+			<TransitionBase noAnimation />
+		);
+
+		const expected = 'shown';
+		const actual = subject.find('div').at(0).prop('className');
+
+		expect(actual).toContain(expected);
+	});
+
+	test('should apply \'hidden\' class when not visible with noAnimation', () => {
+		const subject = mount(
+			<TransitionBase visible={false} noAnimation />
+		);
+
+		const expected = 'hidden';
+		const actual = subject.find('div').at(0).prop('className');
+
+		expect(actual).toContain(expected);
 	});
 
 	// Tests for prop and className combinations
