@@ -345,4 +345,15 @@ storiesOf('Scroller', module)
 				</Scroller>
 			</div>
 		)
+	)
+	.add(
+		'With Long Item',
+		() => (
+			<Scroller focusableScrollbar>
+				<Item>Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Text</Item>
+				<ExpandableList title="Title">
+					{itemData}
+				</ExpandableList>
+			</Scroller>
+		)
 	);
