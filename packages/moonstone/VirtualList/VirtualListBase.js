@@ -333,7 +333,7 @@ const VirtualListBaseFactory = (type) => {
 		 * Handle a Page up/down key with disabled items
 		 */
 
-		getExtentIndex = (index) => (Math.floor(index / this.uiRef.state.metrics.dimensionToExtent))
+		getExtentIndex = (index) => (Math.floor(index / this.uiRef.state.matrics.dimensionToExtent))
 
 		findSpottableItem = (indexFrom, indexTo) => {
 			const
@@ -362,7 +362,7 @@ const VirtualListBaseFactory = (type) => {
 		findSpottableItemWithPositionInExtent = (indexFrom, indexTo, position) => {
 			const
 				{dataSize} = this.props,
-				{dimensionToExtent} = this.uiRef.state.metrics;
+				{dimensionToExtent} = this.uiRef.state.matrics;
 
 			if (0 <= indexFrom && indexFrom < dataSize &&
 				-1 <= indexTo && indexTo <= dataSize &&
@@ -389,7 +389,7 @@ const VirtualListBaseFactory = (type) => {
 		findSpottableExtent = (indexFrom, isForward) => {
 			const
 				{dataSize} = this.props,
-				{dimensionToExtent} = this.uiRef.state.metrics,
+				{dimensionToExtent} = this.uiRef.state.matrics,
 				{findSpottableItem, getExtentIndex} = this,
 				firstIndexInExtent = getExtentIndex(indexFrom) * dimensionToExtent;
 			let index;
@@ -406,7 +406,7 @@ const VirtualListBaseFactory = (type) => {
 		findNearestSpottableItemInExtent = (index, extentIndex) => {
 			const
 				{dataSize, isItemDisabled} = this.props,
-				{dimensionToExtent} = this.uiRef.state.metrics,
+				{dimensionToExtent} = this.uiRef.state.matrics,
 				currentPosInExtent = clamp(0, dataSize - 1, index) % dimensionToExtent,
 				firstIndexInExtent = clamp(0, this.getExtentIndex(dataSize - 1), extentIndex) * dimensionToExtent,
 				lastIndexInExtent = clamp(firstIndexInExtent, dataSize, firstIndexInExtent + dimensionToExtent);
@@ -431,8 +431,7 @@ const VirtualListBaseFactory = (type) => {
 		getIndexToScroll = (direction, currentIndex) => {
 			const
 				{dataSize, spacing} = this.props,
-				{scrollPosition} = this.state,
-				{dimensionToExtent, primary: {clientSize, gridSize, itemSize}} = this.uiRef.state.metrics,
+				{dimensionToExtent, scrollPosition, primary: {clientSize, gridSize, itemSize}} = this.uiRef.state.matrics,
 				{findSpottableItem} = this,
 				numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent,
 				firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent,
@@ -517,7 +516,7 @@ const VirtualListBaseFactory = (type) => {
 		setSpotlightContainerRestrict = (keyCode, target) => {
 			const
 				{dataSize} = this.props,
-				{dimensionToExtent, isPrimaryDirectionVertical} = this.uiRef.state.metrics,
+				{dimensionToExtent, isPrimaryDirectionVertical} = this.uiRef.state.matrics,
 				index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
 				canMoveBackward = index >= dimensionToExtent,
 				canMoveForward = index < (dataSize - (((dataSize - 1) % dimensionToExtent) + 1));
@@ -538,7 +537,7 @@ const VirtualListBaseFactory = (type) => {
 			const
 				{cbScrollTo, dataSize, isItemDisabled, rtl, wrap} = this.props,
 				{firstIndex, numOfItems} = this.uiRef.state,
-				{dimensionToExtent, isPrimaryDirectionVertical} = this.uiRef.state.metrics,
+				{dimensionToExtent, isPrimaryDirectionVertical} = this.uiRef.state.matrics,
 				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute)),
 				isForward = (
 					isPrimaryDirectionVertical && isDown(keyCode) ||
@@ -794,11 +793,11 @@ const VirtualListBaseFactory = (type) => {
 		 * calculator
 		 */
 
-		calculatePositionOnFocus = ({item, scrollPosition = this.uiRef.state.scrollPosition}) => {
+		calculatePositionOnFocus = ({item, scrollPosition = this.uiRef.state.matrics.scrollPosition}) => {
 			const
 				{pageScroll} = this.props,
 				{numOfItems} = this.uiRef.state,
-				{primary} = this.uiRef.state.metrics,
+				{primary} = this.uiRef.state.matrics,
 				offsetToClientEnd = primary.clientSize - primary.itemSize,
 				focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
