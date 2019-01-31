@@ -3,11 +3,72 @@
 
 // Core Rules
 @import "~@enact/ui/styles/core.less";
+@import '~@enact/ui/styles/mixins.less';
+
+// Moonstone Internal Rules
+@import '../styles/internal/fonts.less';
 
 // Moonstone Rules
+@import "../styles/mixins.less";
+@import "../styles/skin.less";
 @import "../styles/variables.less";
-@import "../styles/text.less";
-@import "../styles/rules.less";
+
+/* Prevent browser's default focus treatment (at least in Chrome) */
+:focus {
+	outline: none;
+}
+
+.applySkins({
+	color: @moon-text-color;
+
+	::selection {
+		color: @moon-spotlight-text-color;
+		background-color: lighten(@moon-spotlight-bg-color, 18%);
+	}
+
+	// Spotlight
+	// This rule-set applies a generic spottable set of colors to anything with the spottable class
+	// that is a child of a skin. It's a blanket rule for components that don't technically need to
+	// be skinnable themselves, but still need to be focusable and inherit rules from their parent.
+	// The rule below this, should look identical, with the exception of the absence of the `parent`
+	// argument to the focus mixin. This allows that set of rules to prevail over this generic set.
+	//// Inherited Spottable rules (for components that aren't directly skinned)
+	.focus({
+		background-color: @moon-spotlight-bg-color;
+		color: @moon-spotlight-text-color;
+	}, parent);
+	//// Primary spottable rules (for any component with a skin applied to itself)
+	.focus({
+		background-color: @moon-spotlight-bg-color;
+		color: @moon-spotlight-text-color;
+	});
+
+	// Spotlight Muted Components
+	.muted({
+		.focus({
+			background-color: transparent;
+			color: @moon-text-color;
+		}, parent);
+	}, parent);
+
+	// Disabled Components
+	.disabled({
+		.vendor-opacity(@moon-disabled-opacity);
+
+		// Focused and disabled, must restore their natural opacity, then assign the faded text/content color
+		.focus({
+			.vendor-opacity(1);
+			color: @moon-spotlight-disabled-text-color;
+		});
+
+		cursor: default;
+
+		// Disabled children of disabled components
+		.disabled({
+			.vendor-opacity(1);
+		}, parent);
+	});
+});
 
 .root {
 	.moon-text-base(@moon-sub-header-font-size, self);
