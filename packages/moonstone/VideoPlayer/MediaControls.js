@@ -669,6 +669,15 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			}
 		}
 
+		static getDerivedStateFromProps (props) {
+			if (!props.visible) {
+				return {
+					showMoreComponents: false
+				};
+			}
+			return null;
+		}
+
 		componentDidMount () {
 			this.calculateMaxComponentCount(
 				countReactChildren(this.props.leftComponents),
@@ -679,11 +688,11 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			on('keyup', this.handleKeyUp);
 		}
 
-		UNSAFE_componentWillReceiveProps (nextProps) {
+		componentDidUpdate (prevProps, prevState) {
 			// Detect if the number of components has changed
-			const leftCount = countReactChildren(nextProps.leftComponents),
-				rightCount = countReactChildren(nextProps.rightComponents),
-				childrenCount = countReactChildren(nextProps.children);
+			const leftCount = countReactChildren(prevProps.leftComponents),
+				rightCount = countReactChildren(prevProps.rightComponents),
+				childrenCount = countReactChildren(prevProps.children);
 
 			if (
 				countReactChildren(this.props.leftComponents) !== leftCount ||
@@ -693,16 +702,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 				this.calculateMaxComponentCount(leftCount, rightCount, childrenCount);
 			}
 
-			if (this.props.visible && !nextProps.visible) {
-				this.setState(() => {
-					return {
-						showMoreComponents: false
-					};
-				});
-			}
-		}
-
-		componentDidUpdate (prevProps, prevState) {
 			if (this.state.showMoreComponents !== prevState.showMoreComponents) {
 				forwardToggleMore({showMoreComponents: this.state.showMoreComponents}, this.props);
 			}
