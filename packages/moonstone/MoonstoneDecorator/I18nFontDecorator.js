@@ -21,16 +21,14 @@ const I18nFontDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-u
 			};
 		}
 
+		static getDerivedStateFromProps (nextProps, state) {
+			const locale = nextProps.locale || ilib.getLocale();
+			return locale !== state.locale ? {locale} : null;
+		}
+
 		componentDidMount () {
 			fontGenerator(this.state.locale);
 			fontOverrideGenerator(this.state.locale);
-		}
-
-		UNSAFE_componentWillReceiveProps () {
-			this.setState((state, nextProps) => {
-				const locale = nextProps.locale || ilib.getLocale();
-				return locale !== state.locale ? {locale} : null;
-			});
 		}
 
 		componentDidUpdate (_, prevState) {
