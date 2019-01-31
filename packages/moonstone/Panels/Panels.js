@@ -57,7 +57,7 @@ const PanelsBase = kind({
 		/**
 		 * [`Panels`]{@link moonstone/Panels.Panel} to be rendered
 		 *
-		 * @type {Panel}
+		 * @type {Node}
 		 * @public
 		 */
 		children: PropTypes.node,
