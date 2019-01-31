@@ -703,8 +703,8 @@ const VideoPlayerBase = class extends React.Component {
 
 	componentDidUpdate (prevProps, prevState) {
 		if (this.titleRef && this.state.infoVisible &&
-			(!prevState.infoVisible ||
-			!equals(this.props.infoComponents, prevProps.infoComponents))) {
+			(!prevState.infoVisible || !equals(this.props.infoComponents, prevProps.infoComponents))
+		) {
 			this.titleRef.style.setProperty('--infoComponentsOffset', `${this.getHeightForElement('infoComponents')}px`);
 		}
 
