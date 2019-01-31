@@ -108,6 +108,14 @@ class Drag {
 		}
 	}
 
+	blur = () => {
+		if (!this.isDragging()) return;
+
+		if (!this.dragConfig.global) {
+			this.end();
+		}
+	}
+
 	end = () => {
 		if (!this.isDragging()) return;
 
