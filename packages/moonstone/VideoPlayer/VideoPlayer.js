@@ -1112,7 +1112,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			this.showMiniFeedback = true;
 			this.jump(jumpBy);
-			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
+			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.getDurFmt(this.props.locale), {includeHour: true}));
 		}
 	}
 
@@ -1608,7 +1608,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			if (!isNaN(seconds)) {
 				this.sliderTooltipTimeJob.throttle(seconds);
-				const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
+				const knobTime = secondsToTime(seconds, this.getDurFmt(this.props.locale), {includeHour: true});
 
 				forward('onScrub', {...ev, seconds}, this.props);
 
@@ -1629,7 +1629,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (!isNaN(seconds)) {
 			this.sliderTooltipTimeJob.throttle(seconds);
-			const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
+			const knobTime = secondsToTime(seconds, this.getDurFmt(this.props.locale), {includeHour: true});
 
 			forward('onScrub', {
 				detached: this.sliderScrubbing,
@@ -1813,7 +1813,7 @@ const VideoPlayerBase = class extends React.Component {
 			proportionSelection = selection.map(t => t / this.state.duration);
 		}
 
-		this.durfmt = this.getDurFmt(locale);
+		const durFmt = this.getDurFmt(locale);
 
 		return (
 			<RootContainer
@@ -1851,7 +1851,7 @@ const VideoPlayerBase = class extends React.Component {
 							playbackState={this.pulsedPlaybackState || this.prevCommand}
 							visible={this.state.miniFeedbackVisible && !noMiniFeedback}
 						>
-							{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
+							{secondsToTime(this.state.sliderTooltipTime, durFmt)}
 						</FeedbackContent>
 						<ControlsContainer
 							className={css.bottom + (this.state.mediaControlsVisible ? '' : ' ' + css.hidden)}
@@ -1873,7 +1873,7 @@ const VideoPlayerBase = class extends React.Component {
 									>
 										{infoComponents}
 									</MediaTitle>
-									<Times current={this.state.currentTime} total={this.state.duration} formatter={this.durfmt} />
+									<Times current={this.state.currentTime} total={this.state.duration} formatter={durFmt} />
 								</div> :
 								null
 							}
@@ -1896,7 +1896,7 @@ const VideoPlayerBase = class extends React.Component {
 								<FeedbackTooltip
 									action={this.state.feedbackAction}
 									duration={this.state.duration}
-									formatter={this.durfmt}
+									formatter={durFmt}
 									hidden={!this.state.feedbackVisible || this.state.sourceUnavailable}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
 									playbackState={this.prevCommand}
