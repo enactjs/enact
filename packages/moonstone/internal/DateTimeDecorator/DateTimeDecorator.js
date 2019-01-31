@@ -190,7 +190,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 
 		handlePickerChange = (handler, ev) => {
 			const value = this.toIDate(this.state.value);
-			handler(ev, value, i18n());
+			handler(ev, value, memoizedI18nConfig(this.props.locale));
 			this.updateValue(value);
 		}
 
