@@ -120,6 +120,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+
 			this.state = {
 				map: getTextMap(mapPropsToText, props)
 			};
