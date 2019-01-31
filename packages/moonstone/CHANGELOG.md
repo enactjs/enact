@@ -9,6 +9,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` property `childProps` to support additional props included in the object passed to the `itemsRenderer` callback
 - Support for 8k (UHD2) displays
 
+### Changed
+
+- All content-containing LESS stylesheets (not within a `styles` directory) have been renamed under the `*.module.less` extension to retain modular context with CLI 2.x.
+
 ### Fixed
 
 - `moonstone/VirtualList` to focus an item properly by `scrollTo` API immediately after a prior call to the same position

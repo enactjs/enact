@@ -9,6 +9,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/Touchable` event `onHoldEnd` to notify when a hold has been released
 - `ui/Touchable` prop `holdConfig.global` to allow a hold to continue when leaving or blurring the element
 
+### Changed
+
+- All content-containing LESS stylesheets (not within a `styles` directory) have been renamed under the `*.module.less` extension to retain modular context with CLI 2.x.
+
 ### Fixed
 
 - `ui/Touchable` to continue drag events when blurring the element when `dragConfig.global` is set
