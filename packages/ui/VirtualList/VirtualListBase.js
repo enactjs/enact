@@ -12,7 +12,7 @@ import {
 	hasMetricsChanged,
 	updateMatrics,
 	updateScrollPosition
-} from './VirtualListMatricsCalculator';
+} from './metrics';
 import css from './VirtualList.less';
 
 const
@@ -232,7 +232,7 @@ const VirtualListBaseFactory = (type) => {
 		static defaultState = {
 			cc: [],
 			firstIndex: 0,
-			matrics: {},
+			metrics: {},
 			numOfItems: 0,
 			prevProps: {},
 			scrollPosition: 0
@@ -243,7 +243,7 @@ const VirtualListBaseFactory = (type) => {
 
 			this.state = {
 				...VirtualListCore.defaultState,
-				matrics: {
+				metrics: {
 					...defaultMatrics
 				},
 				prevProps: {...props}
@@ -281,7 +281,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		// Calculate matrics for VirtualList after the 1st render to know client W/H.
+		// Calculate metrics for VirtualList after the 1st render to know client W/H.
 		componentDidMount () {
 			if (!this.props.clientSize) {
 				updateMatrics(this.props, this.state, true);
@@ -298,17 +298,17 @@ const VirtualListBaseFactory = (type) => {
 		contentRef = null
 		containerRef = null
 
-		isVertical = () => this.state.matrics.isPrimaryDirectionVertical
+		isVertical = () => this.state.metrics.isPrimaryDirectionVertical
 
-		isHorizontal = () => !this.state.matrics.isPrimaryDirectionVertical
+		isHorizontal = () => !this.state.metrics.isPrimaryDirectionVertical
 
-		getScrollBounds = () => this.state.matrics.scrollBounds
+		getScrollBounds = () => this.state.metrics.scrollBounds
 
-		getMoreInfo = () => this.state.matrics.moreInfo
+		getMoreInfo = () => this.state.metrics.moreInfo
 
 		getGridPosition (index) {
 			const
-				{dimensionToExtent, primary, secondary} = this.state.matrics,
+				{dimensionToExtent, primary, secondary} = this.state.metrics,
 				primaryPosition = Math.floor(index / dimensionToExtent) * primary.gridSize,
 				secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
 
@@ -317,7 +317,7 @@ const VirtualListBaseFactory = (type) => {
 
 		getItemPosition = (index, stickTo = 'start') => {
 			const
-				{primary} = this.state.matrics,
+				{primary} = this.state.metrics,
 				position = this.getGridPosition(index),
 				offset = (stickTo === 'start') ? 0 : primary.clientSize - primary.itemSize;
 
@@ -327,30 +327,19 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
-			(this.state.matrics.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
+			(this.state.metrics.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
 
-		getXY = (primaryPosition, secondaryPosition) => (this.state.matrics.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
-
-		getItemNode = (index) => {
-			const ref = this.itemContainerRef;
-
-			return ref ? ref.children[index % this.state.numOfItems] : null;
-		}
-
-		setContainerSize = () => {
-			const {isPrimaryDirectionVertical, scrollBounds} = this.state.matrics;
-
-			if (this.contentRef) {
-				this.contentRef.style.width = scrollBounds.scrollWidth + (isPrimaryDirectionVertical ? -1 : 0) + 'px';
-				this.contentRef.style.height = scrollBounds.scrollHeight + (isPrimaryDirectionVertical ? 0 : -1) + 'px';
-			}
-		}
+		getXY = (primaryPosition, secondaryPosition) => (this.state.metrics.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
 		getClientSize (node) {
 			return {
 				clientWidth: node.clientWidth,
 				clientHeight: node.clientHeight
 			};
+		}
+
+		calculateMetrics = () => {
+			updateMatrics(this.props, this.state, true, false);
 		}
 
 		syncClientSize () {
@@ -364,7 +353,7 @@ const VirtualListBaseFactory = (type) => {
 
 			const
 				{clientWidth, clientHeight} = props.clientSize || this.getClientSize(node),
-				{scrollBounds} = this.state.matrics;
+				{scrollBounds} = this.state.metrics;
 
 			if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
 				updateMatrics(this.props, this.state, true);
@@ -376,9 +365,18 @@ const VirtualListBaseFactory = (type) => {
 			return false;
 		}
 
+		setContainerSize = () => {
+			const {isPrimaryDirectionVertical, scrollBounds} = this.state.metrics;
+
+			if (this.contentRef) {
+				this.contentRef.style.width = scrollBounds.scrollWidth + (isPrimaryDirectionVertical ? -1 : 0) + 'px';
+				this.contentRef.style.height = scrollBounds.scrollHeight + (isPrimaryDirectionVertical ? 0 : -1) + 'px';
+			}
+		}
+
 		// Native only
 		scrollToPosition (x, y, rtl = this.props.rtl) {
-			const {isPrimaryDirectionVertical, scrollBounds} = this.state.matrics;
+			const {isPrimaryDirectionVertical, scrollBounds} = this.state.metrics;
 			if (this.containerRef) {
 				this.containerRef.scrollTo(
 					(rtl && !isPrimaryDirectionVertical) ? scrollBounds.maxLeft - x : x, y
@@ -401,6 +399,12 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
+		getItemNode = (index) => {
+			const ref = this.itemContainerRef;
+
+			return ref ? ref.children[index % this.state.numOfItems] : null;
+		}
+
 		composeStyle (width, height, primaryPosition, secondaryPosition) {
 			const
 				{x, y} = this.getXY(primaryPosition, secondaryPosition),
@@ -410,7 +414,7 @@ const VirtualListBaseFactory = (type) => {
 					transform: `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`
 				};
 
-			if (this.state.matrics.isItemSized) {
+			if (this.state.metrics.isItemSized) {
 				style.width = width;
 				style.height = height;
 			}
@@ -445,7 +449,7 @@ const VirtualListBaseFactory = (type) => {
 			const
 				{dataSize} = this.props,
 				{cc, firstIndex, numOfItems, prevProps} = this.state,
-				{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary} = this.state.matrics,
+				{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary} = this.state.metrics,
 				prevFirstIndex = (this.prevFirstIndex === this.state.firstIndex || this.props.childProps && prevProps.childProps !== this.props.childProps) ? -1 : this.prevFirstIndex, // force to re-render items
 				diff = firstIndex - prevFirstIndex,
 				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems || prevFirstIndex === -1) ? firstIndex : prevFirstIndex + numOfItems;
@@ -488,7 +492,7 @@ const VirtualListBaseFactory = (type) => {
 		initContainerRef = (ref) => {
 			if (ref) {
 				this.containerRef = ref;
-				this.state.matrics.containerRef = ref; // eslint-disable-line react/no-direct-mutation-state
+				this.state.metrics.containerRef = ref; // eslint-disable-line react/no-direct-mutation-state
 			}
 		}
 
@@ -508,7 +512,7 @@ const VirtualListBaseFactory = (type) => {
 			let containerClass = null;
 
 			if (type === Native) {
-				containerClass = (this.state.matrics.isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
+				containerClass = (this.state.metrics.isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
 			}
 
 			return classNames(css.virtualList, containerClass, className);
@@ -525,7 +529,7 @@ const VirtualListBaseFactory = (type) => {
 					...rest
 				} = this.props,
 				{cc, prevProps: {rtl: prevRtl}} = this.state,
-				{primary} = this.state.matrics,
+				{primary} = this.state.metrics,
 				{initItemContainerRef} = this,
 				containerClasses = this.mergeClasses(className),
 				metricsChanged = hasMetricsChanged(this.props, this.state);
@@ -551,7 +555,7 @@ const VirtualListBaseFactory = (type) => {
 			if (metricsChanged || this.hasDataSizeChanged) {
 				const
 					{scrollBounds} = this.state,
-					{isPrimaryDirectionVertical} = this.state.matrics,
+					{isPrimaryDirectionVertical} = this.state.metrics,
 					maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
 
 				if (this.state.scrollPosition > maxPos) {
