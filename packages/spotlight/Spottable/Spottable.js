@@ -9,10 +9,10 @@
 import {forward, forwardWithPrevent, handle, preventDefault, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
+import difference from 'ramda/src/difference';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import shallowEqual from 'recompose/shallowEqual';
 
 import {getContainersForNode} from '../src/container';
 import {hasPointerMoved} from '../src/pointer';
@@ -208,7 +208,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		static getDerivedStateFromProps (props, state) {
 			const focusedWhenDisabled = Boolean(state.focused && (props.disabled || props.spotlightDisabled));
 
-			if (focusedWhenDisabled !== state.focusedWhenDisabled || !shallowEqual(state.selectionKeys, props.selectionKeys)) {
+			if (focusedWhenDisabled !== state.focusedWhenDisabled || difference(state.selectionKeys, props.selectionKeys).length) {
 				return {
 					focusedWhenDisabled,
 					selectionKeys: props.selectionKeys
@@ -220,18 +220,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidMount () {
 			// eslint-disable-next-line react/no-find-dom-node
 			this.node = ReactDOM.findDOMNode(this);
-		}
-
-		shouldComponentUpdate (nextProps, nextState) {
-			const stateCopy = {...this.state};
-			const nextStateCopy = {...nextState};
-			delete stateCopy.focused;
-			delete nextStateCopy.focused;
-
-			return (
-				!shallowEqual(stateCopy, nextStateCopy) ||
-				!shallowEqual(this.props, nextProps)
-			);
 		}
 
 		componentDidUpdate (prevProps, prevState) {
