@@ -324,10 +324,10 @@ storiesOf('Scroller', module)
 		() => {
 			const size = number('Spacer size', 100, {max: 300, min: 0, range: true});
 			return (
-				<Scroller style={{height: ri.scale(200)}}>
+				<Scroller style={{height: ri.scaleToRem(200)}}>
 					<Item>1</Item>
-					<div style={{height: ri.scale(size), paddingLeft: ri.scale(40)}}>{size}px Spacer</div>
-					<Item style={{marginBottom: ri.scale(18)}}>3</Item>
+					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
+					<Item style={{marginBottom: ri.scaleToRem(18)}}>3</Item>
 				</Scroller>
 			);
 		}
