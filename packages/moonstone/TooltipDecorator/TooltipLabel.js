@@ -3,7 +3,7 @@ import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import css from './Tooltip.less';
+import css from './Tooltip.module.less';
 
 /**
  * {@link moonstone/TooltipDecorator.TooltipLabel} is a stateless tooltip component with

@@ -27,7 +27,7 @@ import React from 'react';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import css from './Divider.less';
+import css from './Divider.module.less';
 
 /**
  * A labeled divider component.

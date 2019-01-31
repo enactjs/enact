@@ -2,7 +2,7 @@ import React from 'react';
 import {mount, shallow} from 'enzyme';
 import {Marquee, MarqueeBase} from '../index.js';
 
-import css from '../Marquee.less';
+import css from '../Marquee.module.less';
 
 const
 	ltrText = 'This is some fine latin text.',

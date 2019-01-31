@@ -26,7 +26,7 @@ import Image from '../Image';
 import {Marquee} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import componentCss from './MediaOverlay.less';
+import componentCss from './MediaOverlay.module.less';
 
 /**
  * A media component with image and text overlay support.

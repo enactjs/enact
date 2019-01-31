@@ -20,7 +20,7 @@ import $L from '../$L';
 import PickerButton from './PickerButton';
 import SpottablePicker from './SpottablePicker';
 
-import css from './Picker.less';
+import css from './Picker.module.less';
 
 const holdConfig = {
 	events: [

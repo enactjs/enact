@@ -22,7 +22,7 @@ import Pause from '@enact/spotlight/Pause';
 import {calcAriaLabel, extractInputProps, Input} from '../Input';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 
-import css from './ExpandableInput.less';
+import css from './ExpandableInput.module.less';
 
 const handleDeactivate = handle(
 	call('shouldClose'),

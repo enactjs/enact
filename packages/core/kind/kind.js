@@ -62,7 +62,7 @@ import styles from './styles';
  *
  * Example:
  * ```
- *	import css from './Button.less';
+ *	import css from './Button.module.less';
  *	const Button = kind({
  *		// expect color and onClick properties but neither required
  *		propTypes: {

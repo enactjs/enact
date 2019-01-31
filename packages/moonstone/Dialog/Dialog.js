@@ -16,7 +16,7 @@ import IdProvider from '../internal/IdProvider';
 import {MarqueeDecorator} from '../Marquee';
 import Popup from '../Popup';
 
-import componentCss from './Dialog.less';
+import componentCss from './Dialog.module.less';
 
 const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
 

@@ -18,7 +18,7 @@ import Toggleable from '@enact/ui/Toggleable';
 import Button from '../Button';
 import Skinnable from '../Skinnable';
 
-import css from './ToggleButton.less';
+import css from './ToggleButton.module.less';
 
 /**
  * A stateless [Button]{@link moonstone/Button.Button} that can be toggled by changing its
