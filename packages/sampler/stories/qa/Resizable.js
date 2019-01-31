@@ -24,12 +24,13 @@ class NoUpdate extends React.Component {
 	}
 }
 
-storiesOf('Remeasurable', module)
+storiesOf('Resizable', module)
 	.add(
 		'should recalculate long marquee when scrollbar is rendered',
 		() => (
 			<Scroller style={{height: ri.unit(399, 'rem'), width: ri.unit(501, 'rem')}}>
 				<NoUpdate>
+					<Item marqueeOn="render">MARQUEEONRENDER ABCDE</Item>
 					<Item>ABCDEFGHIJKLMNOPQRST</Item>
 					<SelectableItem>
 						SELECTABLE ITEM ABCDEFG
@@ -37,7 +38,6 @@ storiesOf('Remeasurable', module)
 					<ExpandableList title={'ABCDEFGHIJKLMNOPQRS'}>
 						{data}
 					</ExpandableList>
-					<Item>dummy</Item>
 					<Item>dummy</Item>
 				</NoUpdate>
 			</Scroller>
