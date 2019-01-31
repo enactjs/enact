@@ -22,7 +22,7 @@ function adjustWeekends (firstDayOfWeek, day) {
 	return ((day - firstDayOfWeek + 7) % 7);
 }
 
-const memoLocaleState = memoize((key, dayNameLength, locale) => {
+const memoLocaleState = memoize((key, dayNameLength) => {
 	const df = new DateFmt({length: 'full'});
 	const sdf = new DateFmt({length: dayNameLength});
 	const li = new LocaleInfo(ilib.getLocale());
@@ -31,10 +31,11 @@ const memoLocaleState = memoize((key, dayNameLength, locale) => {
 	const firstDayOfWeek = li.getFirstDayOfWeek();
 
 	const state = {
-		locale,
-		fullDayNames: [],
 		abbreviatedDayNames: [],
-		firstDayOfWeek
+		firstDayOfWeek: 0,
+		fullDayNames: [],
+		weekendEnd: 0,
+		weekendStart: 6
 	};
 
 	if (li.getWeekEndStart) {
@@ -57,15 +58,15 @@ const memoLocaleState = memoize((key, dayNameLength, locale) => {
 function getLocaleState (dayNameLength, locale) {
 	if (typeof window === 'undefined') {
 		return {
-			firstDayOfWeek: 0,
-			weekendStart: 6,
-			weekendEnd: 0,
-			fullDayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
 			abbreviatedDayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+			firstDayOfWeek: 0,
+			fullDayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+			weekendEnd: 0,
+			weekendStart: 6
 		};
 	}
 
-	return memoLocaleState(dayNameLength + locale, dayNameLength, locale);
+	return memoLocaleState(dayNameLength + locale, dayNameLength);
 }
 
 /**
