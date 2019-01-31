@@ -176,3 +176,13 @@
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 }
+
+//
+// Mixin classes supporting advanced text
+//
+
+.locale-japanese-line-break() {
+	:global(.enact-locale-ja) & {
+		line-break: strict;
+	}
+}
