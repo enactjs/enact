@@ -669,6 +669,15 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			}
 		}
 
+		static getDerivedStateFromProps (props) {
+			if (!props.visible) {
+				return {
+					showMoreComponents: false
+				};
+			}
+			return null;
+		}
+
 		componentDidMount () {
 			this.calculateMaxComponentCount(
 				countReactChildren(this.props.leftComponents),

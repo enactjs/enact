@@ -10,6 +10,8 @@
 
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {on, off} from '@enact/core/dispatcher';
+import {memoize} from '@enact/core/util';
+
 import {adaptEvent, call, forKey, forward, forwardWithPrevent, handle, preventDefault, stopImmediate, returnsTrue} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform';
@@ -665,24 +667,12 @@ const VideoPlayerBase = class extends React.Component {
 			proportionLoaded: 0,
 			proportionPlayed: 0,
 			sourceUnavailable: true,
-			titleVisible: true,
-			durfmt: null,
-			prevLocale: null
+			titleVisible: true
 		};
 
 		if (props.setApiProvider) {
 			props.setApiProvider(this);
 		}
-	}
-
-	static getDerivedStateFromProps (props, state) {
-		if (typeof window === 'object' && props.locale !== state.prevLocale) {
-			return {
-				durfmt: new DurationFmt({length: 'medium', style: 'clock', useNative: false}),
-				prevLocale: props.locale
-			};
-		}
-		return null;
 	}
 
 	componentDidMount () {
@@ -712,10 +702,10 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		if (this.title &&
-			(this.state.infoVisible && !prevState.infoVisible ||
+		if (this.titleRef && this.state.infoVisible &&
+			(!prevState.infoVisible ||
 			!equals(this.props.infoComponents, prevProps.infoComponents))) {
-			this.title.style.setProperty('--infoComponentsOffset', `${this.getHeightForElement('infoComponents')}px`);
+			this.titleRef.style.setProperty('--infoComponentsOffset', `${this.getHeightForElement('infoComponents')}px`);
 		}
 
 		if (
@@ -802,6 +792,10 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Internal Methods
 	//
+	getDurFmt = memoize((/* locale */) => new DurationFmt({
+		length: 'medium', style: 'clock', useNative: false
+	}));
+
 	announceJob = new Job(msg => (this.announceRef && this.announceRef.announce(msg)), 200)
 
 	announce = (msg) => {
@@ -1118,7 +1112,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			this.showMiniFeedback = true;
 			this.jump(jumpBy);
-			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.state.durfmt, {includeHour: true}));
+			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
 		}
 	}
 
@@ -1614,7 +1608,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			if (!isNaN(seconds)) {
 				this.sliderTooltipTimeJob.throttle(seconds);
-				const knobTime = secondsToTime(seconds, this.state.durfmt, {includeHour: true});
+				const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
 
 				forward('onScrub', {...ev, seconds}, this.props);
 
@@ -1635,7 +1629,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (!isNaN(seconds)) {
 			this.sliderTooltipTimeJob.throttle(seconds);
-			const knobTime = secondsToTime(seconds, this.state.durfmt, {includeHour: true});
+			const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
 
 			forward('onScrub', {
 				detached: this.sliderScrubbing,
@@ -1730,8 +1724,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.video = video;
 	}
 
-	setTitle = (title) => {
-		this.title = title;
+	setTitleRef = (node) => {
+		this.titleRef = node;
 	}
 
 	setAnnounceRef = (node) => {
@@ -1761,6 +1755,7 @@ const VideoPlayerBase = class extends React.Component {
 			disabled,
 			infoComponents,
 			loading,
+			locale,
 			mediaControlsComponent,
 			noAutoPlay,
 			noMiniFeedback,
@@ -1818,6 +1813,8 @@ const VideoPlayerBase = class extends React.Component {
 			proportionSelection = selection.map(t => t / this.state.duration);
 		}
 
+		this.durfmt = this.getDurFmt(locale);
+
 		return (
 			<RootContainer
 				className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')}
@@ -1854,7 +1851,7 @@ const VideoPlayerBase = class extends React.Component {
 							playbackState={this.pulsedPlaybackState || this.prevCommand}
 							visible={this.state.miniFeedbackVisible && !noMiniFeedback}
 						>
-							{secondsToTime(this.state.sliderTooltipTime, this.state.durfmt)}
+							{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
 						</FeedbackContent>
 						<ControlsContainer
 							className={css.bottom + (this.state.mediaControlsVisible ? '' : ' ' + css.hidden)}
@@ -1870,13 +1867,13 @@ const VideoPlayerBase = class extends React.Component {
 									<MediaTitle
 										id={this.id}
 										infoVisible={this.state.infoVisible}
-										ref={this.setTitle}
+										ref={this.setTitleRef}
 										title={title}
 										visible={this.state.titleVisible && this.state.mediaControlsVisible}
 									>
 										{infoComponents}
 									</MediaTitle>
-									<Times current={this.state.currentTime} total={this.state.duration} formatter={this.state.durfmt} />
+									<Times current={this.state.currentTime} total={this.state.duration} formatter={this.durfmt} />
 								</div> :
 								null
 							}
@@ -1899,7 +1896,7 @@ const VideoPlayerBase = class extends React.Component {
 								<FeedbackTooltip
 									action={this.state.feedbackAction}
 									duration={this.state.duration}
-									formatter={this.state.durfmt}
+									formatter={this.durfmt}
 									hidden={!this.state.feedbackVisible || this.state.sourceUnavailable}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
 									playbackState={this.prevCommand}
@@ -2012,7 +2009,8 @@ const VideoPlayer = ApiDecorator(
 		'showFeedback',
 		'toggleControls'
 	]},
-	I18nContextDecorator({localeProp: 'locale'},
+	I18nContextDecorator(
+		{localeProp: 'locale'},
 		Slottable(
 			{slots: ['infoComponents', 'mediaControlsComponent', 'source', 'thumbnailComponent', 'videoComponent']},
 			FloatingLayerDecorator(
