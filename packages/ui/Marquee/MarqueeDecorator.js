@@ -326,33 +326,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			on('keydown', this.handlePointerHide);
 		}
 
-		UNSAFE_componentWillReceiveProps (next) {
-			const {forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpeed, rtl} = this.props;
-			if (
-				locale !== next.locale ||
-				rtl !== next.rtl ||
-				!shallowEqual(this.props.children, next.children) ||
-				(invalidateProps && didPropChange(invalidateProps, this.props, next))
-			) {
-				// restart marqueeOn="render" marquees or synced marquees that were animating
-				this.forceRestartMarquee = next.marqueeOn === 'render' || (
-					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)
-				);
-
-				this.invalidateMetrics();
-				this.cancelAnimation();
-			} else if (
-				next.marqueeOn !== marqueeOn ||
-				next.marqueeDisabled !== marqueeDisabled ||
-				next.marqueeSpeed !== marqueeSpeed ||
-				next.forceDirection !== forceDirection
-			) {
-				this.cancelAnimation();
-			} else if (next.disabled && this.isHovered && marqueeOn === 'focus' && this.sync) {
-				this.context.enter(this);
-			}
-		}
-
 		shouldComponentUpdate (nextProps, nextState) {
 			return (
 				!shallowEqual(this.state, nextState) ||
@@ -360,7 +333,33 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			);
 		}
 
-		componentDidUpdate () {
+		componentDidUpdate (prevProps) {
+			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpeed, rtl} = this.props;
+
+			if (
+				prevProps.locale !== locale ||
+				prevProps.rtl !== rtl ||
+				!shallowEqual(prevProps.children, children) ||
+				(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
+			) {
+				// restart marqueeOn="render" marquees or synced marquees that were animating
+				this.forceRestartMarquee = marqueeOn === 'render' || (
+					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)
+				);
+
+				this.invalidateMetrics();
+				this.cancelAnimation();
+			} else if (
+				prevProps.marqueeOn !== marqueeOn ||
+				prevProps.marqueeDisabled !== marqueeDisabled ||
+				prevProps.marqueeSpeed !== marqueeSpeed ||
+				prevProps.forceDirection !== forceDirection
+			) {
+				this.cancelAnimation();
+			} else if (disabled && this.isHovered && marqueeOn === 'focus' && this.sync) {
+				this.context.enter(this);
+			}
+
 			this.validateTextDirection();
 			if (this.shouldStartMarquee()) {
 				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
