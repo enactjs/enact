@@ -76,7 +76,7 @@ const ImageBase = kind({
 //
 // This is ripe for refactoring, and could probably move into UI to be generalized, but that's for
 // another time. -B 2018-05-01
-const ResponsiveImageDecorator = hoc((config, Wrapped) => {
+const ResponsiveImageDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
 		static displayName = 'ResponsiveImageDecorator'
 

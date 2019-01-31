@@ -11,7 +11,13 @@ import LocaleInfo from '../ilib/lib/LocaleInfo';
 import ScriptInfo from '../ilib/lib/ScriptInfo';
 
 import {initCaseMappers} from '../src/case';
-import {setResBundleLocale} from '../src/resBundle';
+
+// Returns `true` if a locale list is provided and it includes either the language (the first part
+// of the spec e.g. ko) or the entire spec (e.g. ko-KR)
+const includesLocale = (localeList, locale) => Array.isArray(localeList) && (
+	localeList.includes(locale.getLanguage()) ||
+	localeList.includes(locale.toString())
+);
 
 /**
  * Tell whether or not the given locale is considered a non-Latin locale for webOS purposes. This
@@ -21,45 +27,56 @@ import {setResBundleLocale} from '../src/resBundle';
  * @memberof i18n/locale
  * @param {ilib.Locale|string|undefined} spec locale specifier or locale object of the locale to
  *	test, or undefined to test the current locale
- * @returns {Boolean} `true` if non-Latin locale
+ * @param {Object} [options] An object configuring the request. Must include an `onLoad` member to
+ *                           receive the result.
  */
-function isNonLatinLocale (spec) {
-	const li = new LocaleInfo(spec),
-		locale = li.getLocale();
+function isNonLatinLocale (spec, options = {}) {
+	const {onLoad, latinLanguageOverrides, nonLatinLanguageOverrides, ...rest} = options;
 
-	// We use the non-latin fonts for these languages (even though their scripts are technically
-	// considered latin)
-	const nonLatinLanguageOverrides =  ['vi', 'en-JP'];
-	// We use the latin fonts (with non-Latin fallback) for these languages (even though their
-	// scripts are non-latin)
-	const latinLanguageOverrides = ['ko', 'ha'];
+	if (!onLoad) return;
 
-	return (
-		(
-			// the language actually is non-latin
-			li.getScript() !== 'Latn' ||
-			// the language is treated as non-latin
-			nonLatinLanguageOverrides.indexOf(locale.getLanguage()) !== -1 ||
-			// the combination of language and region is treated as non-latin
-			nonLatinLanguageOverrides.indexOf(locale.toString()) !== -1
-		) && (
-			// the non-latin language should be treated as latin
-			latinLanguageOverrides.indexOf(locale.getLanguage()) < 0
-		)
-	);
+	// eslint-disable-next-line no-new
+	new LocaleInfo(spec, {
+		...rest,
+		onLoad: (li) => {
+			const locale = li.getLocale();
+
+			onLoad(
+				// the language actually is non-latin and should not be treated as latin
+				(li.getScript() !== 'Latn' && !includesLocale(latinLanguageOverrides, locale)) ||
+				// the language is latin but should be treated as non-latin
+				includesLocale(nonLatinLanguageOverrides, locale)
+			);
+		}
+	});
 }
 
 /**
- * Returns `true` if current locale is a right-to-left locale
+ * Determines if current locale is a right-to-left locale.
  *
  * @memberof i18n/locale
- * @returns {Boolean} `true` if current locale is a right-to-left locale
+ * @param {Object} [options] An object configuring the request. Must include an `onLoad` member to
+ *                           receive the result.
  */
-function isRtlLocale () {
-	const li = new LocaleInfo();
-	const scriptName = li.getScript();
-	const script = new ScriptInfo(scriptName);
-	return script.getScriptDirection() === 'rtl';
+function isRtlLocale (options = {}) {
+	const {onLoad, sync} = options;
+
+	if (!onLoad) return;
+
+	// eslint-disable-next-line no-new
+	new LocaleInfo(ilib.getLocale(), {
+		...options,
+		onLoad: (li) => {
+			const scriptName = li.getScript();
+			// eslint-disable-next-line no-new
+			new ScriptInfo(scriptName, {
+				sync,
+				onLoad: (script) => {
+					onLoad(script.getScriptDirection() === 'rtl');
+				}
+			});
+		}
+	});
 }
 
 /**
@@ -88,8 +105,6 @@ const updateLocale = function (locale) {
 	// is expected and desired
 	ilib.setLocale(locale);
 	const newLocale = ilib.getLocale();
-	// we supply whatever ilib determined was actually the locale based on what was passed in
-	setResBundleLocale(newLocale);
 	// Recreate the case mappers to use the just-recently-set locale
 	initCaseMappers();
 

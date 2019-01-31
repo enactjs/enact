@@ -1,6 +1,6 @@
 // Not actually an exported module
 /*
- * Provides Moonstone-themed circle component and interactive togglable capabilities.
+ * Provides Moonstone-themed circle component and interactive toggleable capabilities.
  *
  * @module moonstone/SelectableIcon
  * @exports SelectableIcon

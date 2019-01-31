@@ -3,7 +3,7 @@ import {shallow} from 'enzyme';
 import Icon from '../Icon';
 
 describe('Icon Specs', () => {
-	it('should merge author styles with src', function () {
+	test('should merge author styles with src', () => {
 		const src = 'images/icon.png';
 		const icon = shallow(
 			<Icon style={{color: 'green'}}>
@@ -16,7 +16,7 @@ describe('Icon Specs', () => {
 			backgroundImage: `url(${src})`
 		};
 		const actual = icon.prop('style');
-		expect(actual).to.deep.equal(expected);
+		expect(actual).toEqual(expected);
 	});
 });
 

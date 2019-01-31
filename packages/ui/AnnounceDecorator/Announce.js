@@ -32,6 +32,7 @@ import React from 'react';
  * ```
  *
  * @class Announce
+ * @ui
  * @memberof ui/AnnounceDecorator
  * @public
  */

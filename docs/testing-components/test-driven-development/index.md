@@ -33,7 +33,7 @@ verify that an IconButton with `minWidth={true}` does not change the child compo
 ```js
 describe('IconButton Specs', () => {
 	
-	it('should always maintain minWidth=false for its <Button> child', function () {
+	test('should always maintain minWidth=false for its <Button> child', () => {
 		const iconButton = mount(
 			<IconButton minWidth>star</IconButton>
 		);
@@ -41,7 +41,7 @@ describe('IconButton Specs', () => {
 		const expected = false;
 		const actual = (button.prop('minWidth'));
 	
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });
 ```
@@ -64,7 +64,7 @@ This will make the test pass, but it's not a very useful IconButton.  Let's add 
 properties are applied to the Button child.
 
 ```js
-it('should apply same prop to <Button> child', function () {
+test('should apply same prop to <Button> child', function () {
 	const iconButton = mount(
 		<IconButton small>star</IconButton>
 	);
@@ -72,7 +72,7 @@ it('should apply same prop to <Button> child', function () {
 	const expected = true;
 	const actual = button.prop('small');
 	
-	expect(actual).to.equal(expected);
+	expect(actual).toBe(expected);
 });
 ```
 
@@ -85,8 +85,7 @@ solution.
 
 ## Test Method Introduction
 
-We use Mocha and Chai together for our assertions. Chai provides fluent assertions we can use within our tests. While
-there are quite a few comparisons it can help to stick to `.to.equal()` and `.to.not.equal()`.  These methods come after
+We use `Jest` for our unit testing. While there are quite a few comparisons it can help to stick to `.toBe()` and `.not.toBe()`.  These methods come after
 the `expect()` call.
 
 We use Enzyme to render our components for testing. Enzyme can render a component in one of three different ways.  Each

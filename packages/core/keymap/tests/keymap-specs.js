@@ -2,7 +2,7 @@ import * as keymap from '../';
 
 describe('keymap', () => {
 
-	it('should support adding single keyCodes for a name', function () {
+	test('should support adding single keyCodes for a name', () => {
 		keymap.add('testEnter', 13);
 
 		const expected = true;
@@ -10,20 +10,20 @@ describe('keymap', () => {
 
 		keymap.remove('testEnter', 13);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should support removing a single keyCode for a name', function () {
+	test('should support removing a single keyCode for a name', () => {
 		keymap.add('testEnter', 13);
 		keymap.remove('testEnter', 13);
 
 		const expected = false;
 		const actual = keymap.is('testEnter', 13);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should support adding an array of keyCodes for a name', function () {
+	test('should support adding an array of keyCodes for a name', () => {
 		keymap.add('testEnter', [13, 16777221]);
 
 		const expected = true;
@@ -31,20 +31,20 @@ describe('keymap', () => {
 
 		keymap.remove('testEnter', [13, 16777221]);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should support removing an array of keyCodes for a name', function () {
+	test('should support removing an array of keyCodes for a name', () => {
 		keymap.add('testEnter', [13, 16777221]);
 		keymap.remove('testEnter', [13, 16777221]);
 
 		const expected = false;
 		const actual = keymap.is('testEnter', 13) || keymap.is('testEnter', 16777221);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should support adding an map of keyCodes', function () {
+	test('should support adding an map of keyCodes', () => {
 		const map = {
 			testEnter: [13, 16777221],
 			testUp: 38,
@@ -60,10 +60,10 @@ describe('keymap', () => {
 
 		keymap.removeAll(map);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should removing an map of keyCodes', function () {
+	test('should removing an map of keyCodes', () => {
 		const map = {
 			testEnter: [13, 16777221],
 			testUp: 38,
@@ -79,10 +79,10 @@ describe('keymap', () => {
 						keymap.is('testDown', 40);
 
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should use case-insensitive names', function () {
+	test('should use case-insensitive names', () => {
 		keymap.add('testEnter', 13);
 
 		const expected = true;
@@ -90,15 +90,15 @@ describe('keymap', () => {
 
 		keymap.remove('testEnter', 13);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should not add entry with a falsy name', function () {
+	test('should not add entry with a falsy name', () => {
 		keymap.add('', 13);
 
 		const expected = false;
 		const actual = keymap.is('', 13);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });

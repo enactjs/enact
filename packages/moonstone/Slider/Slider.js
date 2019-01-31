@@ -47,6 +47,7 @@ import componentCss from './Slider.less';
  *
  * @class SliderBase
  * @extends ui/Slider.SliderBase
+ * @omit progressBarComponent
  * @memberof moonstone/Slider
  * @ui
  * @public

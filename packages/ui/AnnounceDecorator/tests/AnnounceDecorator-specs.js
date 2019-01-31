@@ -7,7 +7,7 @@ describe('AnnounceDecorator', () => {
 	// no-op wrapper
 	const Div = () => <div />;
 
-	it('should pass a function in the announce prop', function () {
+	test('should pass a function in the announce prop', () => {
 		const Component = AnnounceDecorator(Div);
 		const subject = shallow(
 			<Component />
@@ -16,10 +16,10 @@ describe('AnnounceDecorator', () => {
 		const expected = 'function';
 		const actual = typeof subject.prop('announce');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should allow prop to be configured for announce function', function () {
+	test('should allow prop to be configured for announce function', () => {
 		const prop = '__NOTIFY__';
 		const Component = AnnounceDecorator({prop}, Div);
 		const subject = shallow(
@@ -29,7 +29,7 @@ describe('AnnounceDecorator', () => {
 		const expected = 'function';
 		const actual = typeof subject.prop(prop);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 
 	});
 

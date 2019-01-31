@@ -5,7 +5,7 @@ import css from '../Transition.less';
 
 describe('Transition Specs', () => {
 	// NOTE: Feature not yet implemented
-	it.skip('should apply author classes', function () {
+	test.skip('should apply author classes', function () {
 		const className = 'classA classB';
 
 		const ChildNode = (props) => <div {...props}>Body</div>;
@@ -19,11 +19,11 @@ describe('Transition Specs', () => {
 		const expected = className;
 		const actual = wrapped.find('ChildNode').prop('className');
 
-		expect(actual).to.contain(expected);
+		expect(actual).toContain(expected);
 	});
 
 	// NOTE: Feature not yet implemented
-	it.skip('should apply author styles', function () {
+	test.skip('should apply author styles', function () {
 		const styles = {
 			color: '#000000',
 			backgroundColor: '#FFFFFF'
@@ -40,7 +40,7 @@ describe('Transition Specs', () => {
 		const expected = styles;
 		const actual = wrapped.find('ChildNode').prop('style');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
 	// Tests for prop and className combinations
@@ -75,7 +75,7 @@ describe('Transition Specs', () => {
 
 	propStyleCombination.forEach(([prop, val]) => {
 		val.forEach(([key, value]) => {
-			it(`should apply classes for ${prop}="${value}"`, function () {
+			test(`should apply classes for ${prop}="${value}"`, () => {
 				const propValue = {
 					[prop]: value
 				};
@@ -86,7 +86,7 @@ describe('Transition Specs', () => {
 				const expected = key;
 				const actual = wrapped.find('div').at(0).prop('className');
 
-				expect(actual).to.contain(expected);
+				expect(actual).toContain(expected);
 			});
 		});
 	});

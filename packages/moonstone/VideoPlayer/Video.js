@@ -274,7 +274,6 @@ const VideoDecorator = compose(
  * ```
  *
  * @class Video
- * @extends {moonstone/VideoPlayer.VideoBase}
  * @mixes ui/Slottable
  * @memberof moonstone/VideoPlayer
  * @ui

@@ -4,7 +4,7 @@ import ProgressBar from '../ProgressBar';
 import css from '../ProgressBar.less';
 
 describe('ProgressBar Specs', () => {
-	it('should have width of 50%', () => {
+	test('should have width of 50%', () => {
 		const progressBar = mount(
 			<ProgressBar
 				progress={0.5}
@@ -16,10 +16,10 @@ describe('ProgressBar Specs', () => {
 		const expected = '50%';
 		const actual = style['--ui-progressbar-proportion-end'];
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should have background width of 75%', () => {
+	test('should have background width of 75%', () => {
 		const progressBar = mount(
 			<ProgressBar
 				backgroundProgress={0.75}
@@ -31,10 +31,10 @@ describe('ProgressBar Specs', () => {
 		const expected = '75%';
 		const actual = style['--ui-progressbar-proportion-end-background'];
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should have height of 50%', () => {
+	test('should have height of 50%', () => {
 		const progressBar = mount(
 			<ProgressBar
 				progress={0.5}
@@ -47,10 +47,10 @@ describe('ProgressBar Specs', () => {
 		const expected = '50%';
 		const actual = style['--ui-progressbar-proportion-end'];
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should have background height of 50%', () => {
+	test('should have background height of 50%', () => {
 		const progressBar = mount(
 			<ProgressBar
 				progress={0.5}
@@ -64,6 +64,6 @@ describe('ProgressBar Specs', () => {
 		const expected = '75%';
 		const actual = style['--ui-progressbar-proportion-end-background'];
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });

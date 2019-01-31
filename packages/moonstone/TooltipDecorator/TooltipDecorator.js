@@ -2,6 +2,9 @@
  * Moonstone styled tooltip components.
  *
  * @module moonstone/TooltipDecorator
+ * @exports TooltipDecorator
+ * @exports Tooltip
+ * @exports TooltipBase
  */
 
 import hoc from '@enact/core/hoc';
