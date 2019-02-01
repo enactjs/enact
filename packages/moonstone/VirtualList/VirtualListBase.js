@@ -258,7 +258,7 @@ const VirtualListBaseFactory = (type) => {
 		nodeIndexToBeFocused = null
 		preservedIndex = null
 		restoreLastFocused = false
-		lastConfiguredSpotlightId = null
+		prevSpotlightId = null
 
 		setContainerDisabled = (bool) => {
 			const
@@ -297,7 +297,7 @@ const VirtualListBaseFactory = (type) => {
 				obliqueMultiplier: spacing > 0 ? spacing : 1
 			});
 
-			this.lastConfiguredSpotlightId = spotlightId;
+			this.prevSpotlightId = spotlightId;
 		}
 
 		lastFocusedPersist = () => {
@@ -884,7 +884,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.isItemDisabled;
 			delete rest.wrap;
 
-			if (spotlightId && spotlightId !== this.lastConfiguredSpotlightId) {
+			if (spotlightId && spotlightId !== this.prevSpotlightId) {
 				this.configureSpotlight(spotlightId);
 			}
 
