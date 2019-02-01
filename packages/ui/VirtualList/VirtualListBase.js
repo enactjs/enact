@@ -545,8 +545,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (metricsChanged || this.hasDataSizeChanged) {
 				const
-					{scrollBounds} = this.state,
-					{isPrimaryDirectionVertical} = this.state.metrics,
+					{isPrimaryDirectionVertical, scrollBounds} = this.state.metrics,
 					maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
 
 				if (this.state.scrollPosition > maxPos) {
