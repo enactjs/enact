@@ -303,7 +303,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				rtl: determineTextDirection(null, props.rtl, props.forceDirection)
 			};
 			this.sync = false;
-			this.forceRestartMarquee = false;
 			this.timerState = TimerState.CLEAR;
 			this.distance = null;
 			this.contentFits = false;
@@ -336,6 +335,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidUpdate (prevProps) {
 			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpeed, rtl} = this.props;
 
+			let forceRestartMarquee = false;
+
 			if (
 				prevProps.locale !== locale ||
 				prevProps.rtl !== rtl ||
@@ -343,7 +344,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
 			) {
 				// restart marqueeOn="render" marquees or synced marquees that were animating
-				this.forceRestartMarquee = marqueeOn === 'render' || (
+				forceRestartMarquee = marqueeOn === 'render' || (
 					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)
 				);
 
@@ -361,10 +362,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			this.validateTextDirection();
-			if (this.shouldStartMarquee()) {
+			if (forceRestartMarquee || this.shouldStartMarquee()) {
 				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
-			this.forceRestartMarquee = false;
 		}
 
 		componentWillUnmount () {
@@ -442,7 +442,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {disabled, marqueeDisabled, marqueeOn} = this.props;
 			return !marqueeDisabled && (
 				marqueeOn === 'render' ||
-				this.forceRestartMarquee ||
 				!this.sync && (
 					(this.isFocused && marqueeOn === 'focus' && !disabled) ||
 					(this.isHovered && (marqueeOn === 'hover' || marqueeOn === 'focus' && disabled))
