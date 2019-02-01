@@ -205,12 +205,12 @@ const calculateMetrics = function (props, state) {
 	};
 };
 
-const updateMatrics = function (props, state, initialization = false) {
+const updateMetrics = function (props, state, initialization = false) {
 	if (initialization) {
-		const nextMatrics = calculateMetrics(props, state);
+		const nextMetrics = calculateMetrics(props, state);
 
-		if (nextMatrics) {
-			state.metrics = nextMatrics;
+		if (nextMetrics) {
+			state.metrics = nextMetrics;
 		}
 		state.firstIndex = 0;
 		state.numOfItems = 0;
@@ -350,6 +350,6 @@ export {
 	defaultMetrics,
 	hasDataSizeChanged,
 	hasMetricsChanged,
-	updateMatrics,
+	updateMetrics,
 	updateScrollPosition
 };

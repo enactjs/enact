@@ -8,10 +8,10 @@ import ScrollableNative from '../Scrollable/ScrollableNative';
 
 import {
 	calculateMetrics,
-	defaultMatrics,
+	defaultMetrics,
 	hasDataSizeChanged,
 	hasMetricsChanged,
-	updateMatrics,
+	updateMetrics,
 	updateScrollPosition
 } from './metrics';
 import css from './VirtualList.less';
@@ -245,13 +245,13 @@ const VirtualListBaseFactory = (type) => {
 			this.state = {
 				...VirtualListCore.defaultState,
 				metrics: {
-					...defaultMatrics
+					...defaultMetrics
 				},
 				prevProps: {...props}
 			};
 
 			if (props.clientSize) {
-				updateMatrics(props, this.state, true);
+				updateMetrics(props, this.state, true);
 			}
 		}
 
@@ -264,7 +264,7 @@ const VirtualListBaseFactory = (type) => {
 			// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
 			if (metricsChanged || dataSizeChanged) {
 				nextState = Object.assign({}, state);
-				updateMatrics(props, nextState, metricsChanged);
+				updateMetrics(props, nextState, metricsChanged);
 			}
 
 			if (nextState !== null) {
@@ -277,7 +277,7 @@ const VirtualListBaseFactory = (type) => {
 		// Calculate metrics for VirtualList after the 1st render to know client W/H.
 		componentDidMount () {
 			if (!this.props.clientSize) {
-				updateMatrics(this.props, this.state, true);
+				updateMetrics(this.props, this.state, true);
 				this.forceUpdate();
 			}
 			this.setContainerSize();
@@ -471,7 +471,7 @@ const VirtualListBaseFactory = (type) => {
 				{scrollBounds} = this.state.metrics;
 
 			if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
-				updateMatrics(this.props, this.state, true);
+				updateMetrics(this.props, this.state, true);
 				this.forceUpdate();
 				this.setContainerSize();
 				return true;
