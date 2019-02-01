@@ -92,7 +92,7 @@
 
 // 1 arg: Generic rule applicator, accepts an entire rule-set to add for large text mode
 .moon-custom-text(@lrules) when (isruleset(@lrules)) {
-	 &:global(.largeText) {
+	&:global(.largeText) {
 		@lrules();
 	}
 }

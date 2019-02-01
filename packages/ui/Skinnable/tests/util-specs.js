@@ -1,6 +1,3 @@
-/* globals console */
-/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
-
 import {objectify, preferDefined} from '../util';
 
 describe('Skinnable/util/objectify Specs', () => {

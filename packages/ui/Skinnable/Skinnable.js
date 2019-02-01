@@ -76,16 +76,18 @@ const defaultConfig = {
 	 * This will be used if the instantiator of the wrapped component provides no value to the
 	 * `skinVariants` prop.
 	 *
-	 * @type {String|Array}
+	 * @type {String|String[]}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
 	defaultVariants: null,
 
 	/**
-	 * A complete list of all supported variants. These will translate to CSS class names,
-	 * cammelCase is recommended for the values.
+	 * A complete list of all supported variants.
 	 *
-	 * @type {Array}
+	 * These will translate to CSS class names so should not conflict with any skin names.
+	 * CamelCase is recommended for the values.
+	 *
+	 * @type {String[]}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
 	allowedVariants: null
@@ -185,7 +187,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 
 	return kind({
 		name: 'Skinnable',
-		propTypes: {
+		propTypes: /** @lends ui/Skinnable.Skinnable.prototype */{
 			/**
 			 * The name of the skin a component should use to render itself. Available skins are
 			 * defined in the "defaultConfig" for this HOC.
@@ -224,7 +226,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 			 *  }
 			 * ```
 			 *
-			 * @type {String|Array|Object}
+			 * @type {String|String[]|Object}
 			 * @public
 			 */
 			skinVariants: PropTypes.oneOfType([

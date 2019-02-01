@@ -7,12 +7,13 @@ const objectify = (arg) => {
 	if (typeof arg === 'string') {
 		// String case
 		arg = arg.split(' ');
-	} else if (arg instanceof Array) {
-		// Array case
-	} else {
+		// Process as array below
+	} else if (typeof arg === 'object' && !(arg instanceof Array)) {
 		// It's just an object already.
 		// return it unaltered
 		return arg;
+	} else if (!(arg instanceof Array)) {
+		return {};
 	}
 
 	// only dealing with arrays now
