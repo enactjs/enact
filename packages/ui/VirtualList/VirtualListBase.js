@@ -342,15 +342,6 @@ const VirtualListBaseFactory = (type) => {
 			calculateMetrics(this.props, this.state);
 		}
 
-		setContainerSize = () => {
-			const {isPrimaryDirectionVertical, scrollBounds} = this.state.metrics;
-
-			if (this.contentRef) {
-				this.contentRef.style.width = scrollBounds.scrollWidth + (isPrimaryDirectionVertical ? -1 : 0) + 'px';
-				this.contentRef.style.height = scrollBounds.scrollHeight + (isPrimaryDirectionVertical ? 0 : -1) + 'px';
-			}
-		}
-
 		syncClientSize () {
 			const
 				{props} = this,
@@ -372,6 +363,15 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			return false;
+		}
+
+		setContainerSize = () => {
+			const {isPrimaryDirectionVertical, scrollBounds} = this.state.metrics;
+
+			if (this.contentRef) {
+				this.contentRef.style.width = scrollBounds.scrollWidth + (isPrimaryDirectionVertical ? -1 : 0) + 'px';
+				this.contentRef.style.height = scrollBounds.scrollHeight + (isPrimaryDirectionVertical ? 0 : -1) + 'px';
+			}
 		}
 
 		// Native only
