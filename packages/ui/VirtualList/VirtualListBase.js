@@ -267,13 +267,6 @@ const VirtualListBaseFactory = (type) => {
 				updateMatrics(props, nextState, metricsChanged);
 			}
 
-			if (!shallowEqual(props, state.prevProps)) {
-				nextState = {
-					...nextState,
-					prevProps: props
-				};
-			}
-
 			if (nextState !== null) {
 				return nextState;
 			} else {
@@ -581,6 +574,10 @@ const VirtualListBaseFactory = (type) => {
 
 			if (primary) {
 				this.positionItems();
+			}
+
+			if (!shallowEqual(this.props, this.state.prevProps)) {
+				this.state.prevProps = this.props; // eslint-disable-line react/no-direct-mutation-state
 			}
 
 			return (
