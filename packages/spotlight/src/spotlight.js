@@ -456,6 +456,26 @@ const Spotlight = (function () {
 		}
 	}
 
+	let throttleTimer = null;
+	let throttleClientX, throttleClientY;
+
+	function throttleMouseMove (e) {
+		throttleClientX = e.clientX;
+		throttleClientY = e.clientY;
+
+		if (!throttleTimer) {
+			throttleTimer = setTimeout( () => {
+				const evt = Object.assign({}, e, {
+					clientX: throttleClientX,
+					clientY: throttleClientY,
+					target: document.elementFromPoint(throttleClientX, throttleClientY)
+				});
+				onMouseMove(evt);
+				throttleTimer = null;
+			}, 100);
+		}
+	}
+
 	function onMouseMove ({target, clientX, clientY}) {
 		if (shouldPreventNavigation()) {
 			notifyPointerMove(null, target, clientX, clientY);
