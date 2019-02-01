@@ -16,7 +16,7 @@ import React from 'react';
 
 import {validateRange} from '../internal/validators';
 
-import componentCss from './ProgressBar.less';
+import componentCss from './ProgressBar.module.less';
 
 const progressToPercent = (value) => (clamp(0, 1, value) * 100) + '%';
 const calcBarStyle = (prop, anchor, value = anchor, startProp, endProp) => {

@@ -1,0 +1,23 @@
+// FormCheckboxItem.module.less
+//
+@import "../styles/mixins.less";
+@import "../styles/skin.less";
+
+// Public
+.formCheckboxItem {
+	/* Available for customization */
+}
+
+// Interally theme our implementation using published classes from ToggleItem and ToggleIcon
+.toggleItem {
+	// Skin colors
+	.applySkins({
+		.focus({
+			background-color: transparent;
+
+			&:not([disabled]) {
+				color: @moon-text-color;
+			}
+		});
+	});
+}

@@ -2,7 +2,7 @@ import {mount} from 'enzyme';
 import React from 'react';
 
 import VirtualList from '../VirtualList';
-import css from '../VirtualList.less';
+import css from '../VirtualList.module.less';
 
 describe('VirtualList', () => {
 	let

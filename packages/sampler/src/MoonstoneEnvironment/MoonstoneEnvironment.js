@@ -9,7 +9,7 @@ import {Panels, Panel, Header} from '@enact/moonstone/Panels';
 import {boolean, select} from '../enact-knobs';
 import {selectV2} from '@storybook/addon-knobs';
 
-import css from './MoonstoneEnvironment.less';
+import css from './MoonstoneEnvironment.module.less';
 
 const globalGroup = 'Global Knobs';
 

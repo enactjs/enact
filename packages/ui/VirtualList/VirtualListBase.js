@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
-import css from './VirtualList.less';
+import css from './VirtualList.module.less';
 
 const
 	nop = () => {},

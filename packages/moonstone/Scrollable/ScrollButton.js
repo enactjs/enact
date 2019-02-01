@@ -4,7 +4,7 @@ import React from 'react';
 
 import IconButton from '../IconButton';
 
-import css from './Scrollbar.less';
+import css from './Scrollbar.module.less';
 
 /**
  * An [IconButton]{@link moonstone/IconButton.IconButton} used within
