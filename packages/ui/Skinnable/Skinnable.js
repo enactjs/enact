@@ -217,13 +217,13 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 			 *  skinVariants="highContrast"
 			 *
 			 *  // Array
-			 *  skinVariants=['highContrast']
+			 *  skinVariants={['highContrast']}
 			 *
 			 *  // Object
-			 *  skinVariants={
+			 *  skinVariants={{
 			 *  	highContrast: true,
 			 *  	grayscale: false
-			 *  }
+			 *  }}
 			 * ```
 			 *
 			 * @type {String|String[]|Object}
