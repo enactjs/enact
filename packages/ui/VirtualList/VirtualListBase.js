@@ -329,14 +329,14 @@ const VirtualListBaseFactory = (type) => {
 			clientHeight: node.clientHeight
 		})
 
-		hasDataSizeChanged () {
+		checkDataSizeChanged () {
 			const
 				{dataSize} = this.props,
 				{prevProps: {dataSize: prevDataSize}} = this.state;
 			return prevDataSize !== dataSize;
 		}
 
-		hasMetricsChanged () {
+		checkMetricsChanged () {
 			const
 				{direction, itemSize, overhang, spacing} = this.state.prevProps,
 				{props} = this;
@@ -785,10 +785,10 @@ const VirtualListBaseFactory = (type) => {
 				{cc, initItemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
 
-			this.hasDataSizeChanged = this.hasDataSizeChanged();
+			this.hasDataSizeChanged = this.checkDataSizeChanged();
 
 			// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
-			if (this.hasMetricsChanged()) {
+			if (this.checkMetricsChanged()) {
 				this.calculateMetrics(this.props);
 				this.updateStatesAndBounds(this.props);
 				this.setContainerSize();
