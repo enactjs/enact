@@ -80,11 +80,11 @@ describe('Toggleable', () => {
 				const expected = 'selected';
 				const actual = subject.find(DivComponent).props();
 
-				expect(actual).toHaveProperty(expected);
+				expect(actual).toHaveProperty(expected, true);
 			}
 		);
 
-		test('should use defaultSelected prop when selected prop is null', () => {
+		test('should use selected prop when selected prop is null', () => {
 			const Component = Toggleable(DivComponent);
 			const subject = shallow(
 				<Component defaultSelected selected={null} />
@@ -93,10 +93,27 @@ describe('Toggleable', () => {
 			const expected = 'selected';
 			const actual = subject.find(DivComponent).props();
 
-			expect(actual).toHaveProperty(expected);
+			expect(actual).toHaveProperty(expected, false);
 		});
 
 		test(
+			'should use selected prop when selected changed from truthy to null',
+			() => {
+				const Component = Toggleable(DivComponent);
+				const subject = shallow(
+					<Component defaultSelected selected />
+				);
+
+				subject.setProps({selected: null});
+
+				const expected = 'selected';
+				const actual = subject.find(DivComponent).props();
+
+				expect(actual).toHaveProperty(expected, false);
+			}
+		);
+
+		test.only(
 			'should use defaultSelected prop when selected prop is undefined',
 			() => {
 				const Component = Toggleable(DivComponent);
@@ -108,7 +125,24 @@ describe('Toggleable', () => {
 				const expected = 'selected';
 				const actual = subject.find(DivComponent).props();
 
-				expect(actual).toHaveProperty(expected);
+				expect(actual).toHaveProperty(expected, true);
+			}
+		);
+
+		test(
+			'should use selected prop when selected changed from truthy to undefined',
+			() => {
+				const Component = Toggleable(DivComponent);
+				const subject = shallow(
+					<Component defaultSelected selected />
+				);
+				// eslint-disable-next-line no-undefined
+				subject.setProps({selected: undefined});
+
+				const expected = 'selected';
+				const actual = subject.find(DivComponent).props();
+
+				expect(actual).toHaveProperty(expected, false);
 			}
 		);
 
@@ -123,7 +157,7 @@ describe('Toggleable', () => {
 				const expected = 'selected';
 				const actual = subject.find(DivComponent).props();
 
-				expect(actual).toHaveProperty(expected);
+				expect(actual).toHaveProperty(expected, false);
 			}
 		);
 	});

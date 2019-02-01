@@ -171,19 +171,19 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.state = {
 				active: getValue(props),
-				controlled: prop in props
+				controlled: typeof props[prop] !== 'undefined'
 			};
 		}
 
 		static getDerivedStateFromProps (props, state) {
 			if (state.controlled) {
 				return {
-					active: getValue(props)
+					active: Boolean(props[prop])
 				};
 			}
 
 			warning(
-				!(prop in props),
+				!(typeof props[prop] !== 'undefined'),
 				`'${prop}' specified for an uncontrolled instance of Toggleable and will be
 				ignored. To make this instance of Toggleable controlled, '${prop}' should be
 				specified at creation.`
