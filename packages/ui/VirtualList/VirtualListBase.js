@@ -227,10 +227,8 @@ const VirtualListBaseFactory = (type) => {
 
 			this.state = {
 				firstIndex: 0,
-				hasDataSizeChanged: false,
-				hasMetricsChanged: false,
 				numOfItems: 0,
-				prevProps: {...props}
+				prevProps: props
 			};
 
 			if (props.clientSize) {
@@ -336,7 +334,7 @@ const VirtualListBaseFactory = (type) => {
 				{dataSize} = this.props,
 				{prevProps: {dataSize: prevDataSize}} = this.state;
 			return prevDataSize !== dataSize;
-		};
+		}
 
 		hasMetricsChanged () {
 			const
@@ -349,7 +347,7 @@ const VirtualListBaseFactory = (type) => {
 				overhang !== props.overhang ||
 				spacing !== props.spacing
 			);
-		};
+		}
 
 		calculateMetrics (props) {
 			const
@@ -785,16 +783,16 @@ const VirtualListBaseFactory = (type) => {
 				} = this.props,
 				{prevProps} = this.state,
 				{cc, initItemContainerRef, primary} = this,
-				dataSizeChanged = this.hasDataSizeChanged(),
-				metricsChanged = this.hasMetricsChanged(),
 				containerClasses = this.mergeClasses(className);
 
+			this.hasDataSizeChanged = this.hasDataSizeChanged();
+
 			// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
-			if (metricsChanged) {
+			if (this.hasMetricsChanged()) {
 				this.calculateMetrics(this.props);
 				this.updateStatesAndBounds(this.props);
 				this.setContainerSize();
-			} else if (dataSizeChanged) {
+			} else if (this.hasDataSizeChanged) {
 				this.updateStatesAndBounds(this.props);
 				this.setContainerSize();
 			} else if (prevProps.rtl !== this.props.rtl) {
