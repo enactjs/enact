@@ -240,39 +240,10 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		static getDerivedStateFromProps (props, state) {
-			const
-				{dataSize, direction, itemSize, overhang, spacing} = state.prevProps,
-				hasMetricsChanged = (
-					direction !== props.direction ||
-					((itemSize instanceof Object) ? (itemSize.minWidth !== props.itemSize.minWidth || itemSize.minHeight !== props.itemSize.minHeight) : itemSize !== props.itemSize) ||
-					overhang !== props.overhang ||
-					spacing !== props.spacing
-				),
-				hasDataSizeChanged = dataSize !== props.dataSize;
-			let newState = null;
-
 			if (!shallowEqual(props, state.prevProps)) {
-				newState = {
-					prevProps: ({...props})
+				return {
+					prevProps: props
 				};
-			}
-
-			if (hasMetricsChanged !== state.hasMetricsChanged) {
-				newState = {
-					...newState,
-					hasMetricsChanged
-				};
-			}
-
-			if (hasDataSizeChanged !== state.hasDataSizeChanged) {
-				newState = {
-					...newState,
-					hasMetricsChanged
-				};
-			}
-
-			if (newState !== null) {
-				return newState;
 			} else {
 				return null;
 			}
@@ -359,6 +330,26 @@ const VirtualListBaseFactory = (type) => {
 			clientWidth: node.clientWidth,
 			clientHeight: node.clientHeight
 		})
+
+		hasDataSizeChanged () {
+			const
+				{dataSize} = this.props,
+				{prevProps: {dataSize: prevDataSize}} = this.state;
+			return prevDataSize !== dataSize;
+		};
+
+		hasMetricsChanged () {
+			const
+				{direction, itemSize, overhang, spacing} = this.state.prevProps,
+				{props} = this;
+
+			return (
+				direction !== props.direction ||
+				((itemSize instanceof Object) ? (itemSize.minWidth !== props.itemSize.minWidth || itemSize.minHeight !== props.itemSize.minHeight) : itemSize !== props.itemSize) ||
+				overhang !== props.overhang ||
+				spacing !== props.spacing
+			);
+		};
 
 		calculateMetrics (props) {
 			const
@@ -792,16 +783,18 @@ const VirtualListBaseFactory = (type) => {
 					style,
 					...rest
 				} = this.props,
-				{hasDataSizeChanged, hasMetricsChanged, prevProps} = this.state,
+				{prevProps} = this.state,
 				{cc, initItemContainerRef, primary} = this,
+				dataSizeChanged = this.hasDataSizeChanged(),
+				metricsChanged = this.hasMetricsChanged(),
 				containerClasses = this.mergeClasses(className);
 
 			// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
-			if (hasMetricsChanged) {
+			if (metricsChanged) {
 				this.calculateMetrics(this.props);
 				this.updateStatesAndBounds(this.props);
 				this.setContainerSize();
-			} else if (hasDataSizeChanged) {
+			} else if (dataSizeChanged) {
 				this.updateStatesAndBounds(this.props);
 				this.setContainerSize();
 			} else if (prevProps.rtl !== this.props.rtl) {
