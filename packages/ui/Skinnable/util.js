@@ -10,13 +10,16 @@ const objectify = (arg) => {
 	}
 
 	if (arg instanceof Array) {
+		// Convert array values into object properties
 		return arg.reduce((obj, a) => {
 			obj[a] = true;
 			return obj;
 		}, {});
 	} else if (typeof arg === 'object') {
+		// Can just return objects as-is
 		return arg;
 	} else {
+		// Invalid, return an empty object
 		return {};
 	}
 };
