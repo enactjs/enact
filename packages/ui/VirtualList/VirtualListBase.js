@@ -342,29 +342,6 @@ const VirtualListBaseFactory = (type) => {
 			calculateMetrics(this.props, this.state);
 		}
 
-		syncClientSize () {
-			const
-				{props} = this,
-				node = this.containerRef;
-
-			if (!props.clientSize && !node) {
-				return false;
-			}
-
-			const
-				{clientWidth, clientHeight} = props.clientSize || this.getClientSize(node),
-				{scrollBounds} = this.state.metrics;
-
-			if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
-				updateMatrics(this.props, this.state, true);
-				this.forceUpdate();
-				this.setContainerSize();
-				return true;
-			}
-
-			return false;
-		}
-
 		setContainerSize = () => {
 			const {isPrimaryDirectionVertical, scrollBounds} = this.state.metrics;
 
@@ -487,6 +464,29 @@ const VirtualListBaseFactory = (type) => {
 			for (let i = updateTo; i < hideTo; i++) {
 				this.applyStyleToHideNode(i);
 			}
+		}
+
+		syncClientSize () {
+			const
+				{props} = this,
+				node = this.containerRef;
+
+			if (!props.clientSize && !node) {
+				return false;
+			}
+
+			const
+				{clientWidth, clientHeight} = props.clientSize || this.getClientSize(node),
+				{scrollBounds} = this.state.metrics;
+
+			if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
+				updateMatrics(this.props, this.state, true);
+				this.forceUpdate();
+				this.setContainerSize();
+				return true;
+			}
+
+			return false;
 		}
 
 		initContainerRef = (ref) => {
