@@ -236,10 +236,28 @@ class ScrollableBase extends Component {
 		};
 
 		configureSpotlightContainer(props);
+
+		this.state = {
+			prevSpotlightId: props['data-spotlight-id'],
+			prevFocusableScrollbar: props.focusableScrollbar
+		};
 	}
 
-	UNSAFE_componentWillReceiveProps (nextProps) {
-		configureSpotlightContainer(nextProps);
+	static getDerivedStateFromProps (props, state) {
+		const
+			{'data-spotlight-id': spotlightId, focusableScrollbar} = props,
+			{prevSpotlightId, prevFocusableScrollbar} = state;
+
+		if (prevSpotlightId !== spotlightId || prevFocusableScrollbar !== focusableScrollbar) {
+			configureSpotlightContainer(props);
+
+			return {
+				prevSpotlightId: spotlightId,
+				prevFocusableScrollbar: focusableScrollbar
+			};
+		}
+
+		return null;
 	}
 
 	componentWillUnmount () {
