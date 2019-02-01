@@ -102,6 +102,21 @@ const mapChildren = function (children) {
  */
 const mergeChildren = unionWith(eqBy(prop('key')));
 
+const memChildMapping = memoize((prevChildren, nextChildren, prevChildrenState) => {
+	if (!childrenEquals(prevChildren, nextChildren)) {
+		const nextChildMapping = mapChildren(nextChildren);
+		const prevChildMapping = prevChildrenState;
+
+		return {
+			prevChildMapping, nextChildMapping
+		};
+	}
+
+	return {
+		prevChildMapping: null, nextChildMapping: null
+	};
+});
+
 // Cached event forwarders
 const forwardOnAppear = forward('onAppear');
 const forwardOnEnter = forward('onEnter');
@@ -216,7 +231,11 @@ class TransitionGroup extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			children: mapChildren(this.props.children)
+			children: mapChildren(this.props.children),
+			prevChildren: this.props.children,
+			prevChildMapping: null,
+			nextChildMapping: null,
+			isPrevNextChildrenEquals: false
 		};
 
 		this.hasMounted = false;
@@ -235,21 +254,34 @@ class TransitionGroup extends React.Component {
 		this.state.children.forEach(child => this.performAppear(child.key));
 	}
 
-	UNSAFE_componentWillReceiveProps (nextProps) {
-		// Avoid an unnecessary setState and reconcileChildren if the children haven't changed
-		if (!childrenEquals(this.props.children, nextProps.children)) {
-			const nextChildMapping = mapChildren(nextProps.children);
-			const prevChildMapping = this.state.children;
+	static getDerivedStateFromProps (props, state) {
+		const isPrevNextChildrenEquals = childrenEquals(state.prevChildren, props.children);
+		// Avoid an unnecessary setState if the children haven't changed
+		if (!isPrevNextChildrenEquals) {
+			const nextChildMapping = mapChildren(props.children);
+			const prevChildMapping = state.children;
 			let children = mergeChildren(nextChildMapping, prevChildMapping);
+			return {
+				children,
+				prevChildren: props.children,
+				prevChildMapping,
+				nextChildMapping,
+				isPrevNextChildrenEquals
+			};
+		}
 
+		return {
+			isPrevNextChildrenEquals
+		};
+	}
+
+	componentDidUpdate (prevProps) {
+		// Avoid an unnecessary reconcileChildren if the children haven't changed
+		if (!this.state.isPrevNextChildrenEquals) {
 			// drop children exceeding allowed size
-			const dropped = children.length > nextProps.size ? children.splice(nextProps.size) : null;
+			const dropped = this.state.children.length > prevProps.size ? this.state.children.splice(prevProps.size) : null;
 
-			this.setState({
-				children
-			}, () => {
-				this.reconcileChildren(dropped, prevChildMapping, nextChildMapping);
-			});
+			this.reconcileChildren(dropped, this.state.prevChildMapping, this.state.nextChildMapping);
 		}
 	}
 
