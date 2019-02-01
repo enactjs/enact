@@ -543,7 +543,7 @@ const Spotlight = (function () {
 				window.addEventListener('keydown', onKeyDown);
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
-				window.addEventListener('mousemove', onMouseMove);
+				window.addEventListener('mousemove', throttleMouseMove);
 				if (platform.webos) {
 					window.top.document.addEventListener('webOSMouse', handleWebOSMouseEvent);
 					window.top.document.addEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
@@ -569,7 +569,7 @@ const Spotlight = (function () {
 			window.removeEventListener('keydown', onKeyDown);
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
-			window.removeEventListener('mousemove', onMouseMove);
+			window.removeEventListener('mousemove', throttleMouseMove);
 			if (platform.webos) {
 				window.top.document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
 				window.top.document.removeEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
