@@ -117,7 +117,6 @@ const defaultConfig = {
 const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const {activate, deactivate, prop, toggle, toggleProp} = config;
 	const defaultPropKey = 'default' + cap(prop);
-	const getValue = props => Boolean(props[prop] != null ? props[prop] : props[defaultPropKey]);
 
 	return class Toggleable extends React.Component {
 		static propTypes = /** @lends ui/Toggleable.Toggleable.prototype */ {
@@ -170,7 +169,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.state = {
-				active: getValue(props),
+				active: Boolean(props[prop] != null ? props[prop] : props[defaultPropKey]),
 				controlled: typeof props[prop] !== 'undefined'
 			};
 		}

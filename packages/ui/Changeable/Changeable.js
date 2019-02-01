@@ -67,7 +67,6 @@ const defaultConfig = {
 const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 	const {prop, change} = config;
 	const defaultPropKey = 'default' + cap(prop);
-	const getValue = props => props[prop] != null ? props[prop] : props[defaultPropKey];
 
 	return class extends React.PureComponent {
 		static displayName = 'Changeable'
@@ -130,7 +129,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.state = {
-				value: getValue(props),
+				value: props[prop] != null ? props[prop] : props[defaultPropKey],
 				controlled: typeof props[prop] !== 'undefined'
 			};
 		}
