@@ -270,7 +270,7 @@ const VirtualListBaseFactory = (type) => {
 			if (!shallowEqual(props, state.prevProps)) {
 				nextState = {
 					...nextState,
-					prevProps: ({...props})
+					prevProps: props
 				};
 			}
 
@@ -331,12 +331,10 @@ const VirtualListBaseFactory = (type) => {
 
 		getXY = (primaryPosition, secondaryPosition) => (this.state.metrics.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
-		getClientSize (node) {
-			return {
-				clientWidth: node.clientWidth,
-				clientHeight: node.clientHeight
-			};
-		}
+		getClientSize = (node) => ({
+			clientWidth: node.clientWidth,
+			clientHeight: node.clientHeight
+		})
 
 		calculateMetrics = () => {
 			calculateMetrics(this.props, this.state);
@@ -466,7 +464,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		syncClientSize () {
+		syncClientSize = () => {
 			const
 				{props} = this,
 				node = this.containerRef;
