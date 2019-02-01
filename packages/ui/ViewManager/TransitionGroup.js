@@ -102,21 +102,6 @@ const mapChildren = function (children) {
  */
 const mergeChildren = unionWith(eqBy(prop('key')));
 
-const memChildMapping = memoize((prevChildren, nextChildren, prevChildrenState) => {
-	if (!childrenEquals(prevChildren, nextChildren)) {
-		const nextChildMapping = mapChildren(nextChildren);
-		const prevChildMapping = prevChildrenState;
-
-		return {
-			prevChildMapping, nextChildMapping
-		};
-	}
-
-	return {
-		prevChildMapping: null, nextChildMapping: null
-	};
-});
-
 // Cached event forwarders
 const forwardOnAppear = forward('onAppear');
 const forwardOnEnter = forward('onEnter');
