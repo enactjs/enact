@@ -7,6 +7,7 @@ import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
 import {
+	calculateMetrics,
 	defaultMatrics,
 	hasDataSizeChanged,
 	hasMetricsChanged,
@@ -251,7 +252,6 @@ const VirtualListBaseFactory = (type) => {
 
 			if (props.clientSize) {
 				updateMatrics(props, this.state, true);
-				this.forceUpdate();
 			}
 		}
 
@@ -263,7 +263,7 @@ const VirtualListBaseFactory = (type) => {
 
 			// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
 			if (metricsChanged || dataSizeChanged) {
-				nextState = Object.assign({}, this.state);
+				nextState = Object.assign({}, state);
 				updateMatrics(props, nextState, metricsChanged);
 			}
 
@@ -339,7 +339,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		calculateMetrics = () => {
-			updateMatrics(this.props, this.state, true, false);
+			calculateMetrics(this.props, this.state);
 		}
 
 		syncClientSize () {

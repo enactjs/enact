@@ -205,7 +205,7 @@ const calculateMetrics = function (props, state) {
 	};
 };
 
-const updateMatrics = function (props, state, initialization = false, updateState = true) {
+const updateMatrics = function (props, state, initialization = false) {
 	if (initialization) {
 		const nextMatrics = calculateMetrics(props, state);
 
@@ -217,73 +217,71 @@ const updateMatrics = function (props, state, initialization = false, updateStat
 		state.scrollPosition = 0;
 	}
 
-	if (updateState) {
-		const
-			{dataSize, overhang, updateStatesAndBounds: propUpdateStatesAndBounds} = props,
-			{firstIndex, scrollPosition, prevProps: {dataSize: prevDataSize}} = state,
-			{dimensionToExtent, maxFirstIndex, moreInfo, isPrimaryDirectionVertical, primary, threshold} = state.metrics;
+	const
+		{dataSize, overhang, updateStatesAndBounds: propUpdateStatesAndBounds} = props,
+		{firstIndex, scrollPosition, prevProps: {dataSize: prevDataSize}} = state,
+		{dimensionToExtent, maxFirstIndex, moreInfo, isPrimaryDirectionVertical, primary, threshold} = state.metrics;
 
-		const
-			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
-			wasFirstIndexMax = ((maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === maxFirstIndex)),
-			dataSizeDiff = dataSize - prevDataSize;
+	const
+		numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
+		wasFirstIndexMax = ((maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === maxFirstIndex)),
+		dataSizeDiff = dataSize - prevDataSize;
 
-		const isRestoredLastFocused = (propUpdateStatesAndBounds && propUpdateStatesAndBounds({
-			cbScrollTo: props.cbScrollTo,
-			numOfItems,
-			dataSize,
-			moreInfo
-		}));
+	const isRestoredLastFocused = (propUpdateStatesAndBounds && propUpdateStatesAndBounds({
+		cbScrollTo: props.cbScrollTo,
+		numOfItems,
+		dataSize,
+		moreInfo
+	}));
 
-		const nextMoreInfo = calculateMoreInfo(props, state);
-		const nextScrollBounds = calculateScrollBounds(props, state);
+	const nextMoreInfo = calculateMoreInfo(props, state);
+	const nextScrollBounds = calculateScrollBounds(props, state);
 
-		let
-			nextFirstIndex = state.firstIndex,
-			nextThreshold = state.metrics.threshold;
+	let
+		nextFirstIndex = state.firstIndex,
+		nextThreshold = state.metrics.threshold;
 
-		if (!isRestoredLastFocused) {
-			const {gridSize} = primary;
+	if (!isRestoredLastFocused) {
+		const {gridSize} = primary;
 
-			if (wasFirstIndexMax && dataSizeDiff > 0) { // If dataSize increased from bottom, we need adjust firstIndex
-				// If this is a gridlist and dataSizeDiff is smaller than 1 line, we are adjusting firstIndex without threshold change.
-				if (dimensionToExtent > 1 && dataSizeDiff < dimensionToExtent) {
-					nextFirstIndex = maxFirstIndex;
-				} else { // For other bottom adding case, we need to update firstIndex and threshold.
-					const
-						maxPos = isPrimaryDirectionVertical ? nextScrollBounds.maxTop : nextScrollBounds.maxLeft,
-						maxOfMin = maxPos - threshold.base,
-						numOfUpperLine = Math.floor(overhang / 2),
-						firstIndexFromPosition = Math.floor(scrollPosition / gridSize),
-						expectedFirstIndex = Math.max(0, firstIndexFromPosition - numOfUpperLine);
+		if (wasFirstIndexMax && dataSizeDiff > 0) { // If dataSize increased from bottom, we need adjust firstIndex
+			// If this is a gridlist and dataSizeDiff is smaller than 1 line, we are adjusting firstIndex without threshold change.
+			if (dimensionToExtent > 1 && dataSizeDiff < dimensionToExtent) {
+				nextFirstIndex = maxFirstIndex;
+			} else { // For other bottom adding case, we need to update firstIndex and threshold.
+				const
+					maxPos = isPrimaryDirectionVertical ? nextScrollBounds.maxTop : nextScrollBounds.maxLeft,
+					maxOfMin = maxPos - threshold.base,
+					numOfUpperLine = Math.floor(overhang / 2),
+					firstIndexFromPosition = Math.floor(scrollPosition / gridSize),
+					expectedFirstIndex = Math.max(0, firstIndexFromPosition - numOfUpperLine);
 
-					// To navigate with 5way, we need to adjust firstIndex to the next line
-					// since at the bottom we have num of overhang lines for upper side but none for bottom side
-					// So we add numOfUpperLine at the top and rest lines at the bottom
-					nextFirstIndex = Math.min(maxFirstIndex, expectedFirstIndex * dimensionToExtent);
-					nextThreshold = {
-						// We need to update threshold also since we moved the firstIndex
-						...threshold,
-						max: Math.min(maxPos, threshold.max + gridSize),
-						min: Math.min(maxOfMin, threshold.max - gridSize)
-					};
-				}
-			} else { // Other cases, we can keep the min value between firstIndex and maxFirstIndex. No need to change threshold
-				nextFirstIndex = Math.min(firstIndex, maxFirstIndex);
+				// To navigate with 5way, we need to adjust firstIndex to the next line
+				// since at the bottom we have num of overhang lines for upper side but none for bottom side
+				// So we add numOfUpperLine at the top and rest lines at the bottom
+				nextFirstIndex = Math.min(maxFirstIndex, expectedFirstIndex * dimensionToExtent);
+				nextThreshold = {
+					// We need to update threshold also since we moved the firstIndex
+					...threshold,
+					max: Math.min(maxPos, threshold.max + gridSize),
+					min: Math.min(maxOfMin, threshold.max - gridSize)
+				};
 			}
-		} else {
-			nextThreshold = calculateThreshold(state, nextScrollBounds);
+		} else { // Other cases, we can keep the min value between firstIndex and maxFirstIndex. No need to change threshold
+			nextFirstIndex = Math.min(firstIndex, maxFirstIndex);
 		}
-
-		state.metrics.scrollBounds = nextScrollBounds;
-		state.metrics.moreInfo = nextMoreInfo;
-		state.metrics.maxFirstIndex = calculateMaxFirstIndex(props, state, numOfItems);
-		state.metrics.threshold = nextThreshold;
-
-		state.cc = [];
-		state.firstIndex = nextFirstIndex;
-		state.numOfItems = numOfItems;
+	} else {
+		nextThreshold = calculateThreshold(state, nextScrollBounds);
 	}
+
+	state.metrics.scrollBounds = nextScrollBounds;
+	state.metrics.moreInfo = nextMoreInfo;
+	state.metrics.maxFirstIndex = calculateMaxFirstIndex(props, state, numOfItems);
+	state.metrics.threshold = nextThreshold;
+
+	state.cc = [];
+	state.firstIndex = nextFirstIndex;
+	state.numOfItems = numOfItems;
 };
 
 const updateScrollPosition = function (props, state, x, y, dirX, dirY) {
@@ -348,6 +346,7 @@ const updateScrollPosition = function (props, state, x, y, dirX, dirY) {
 
 export default defaultMetrics;
 export {
+	calculateMetrics,
 	defaultMetrics,
 	hasDataSizeChanged,
 	hasMetricsChanged,
