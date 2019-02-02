@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/Skinnable` support for `skinVariants`; a way to augment a skin by adding variations of a skin to your visuals, like large text, high contrast, or grayscale
 - `ui/Touchable` event `onHoldEnd` to notify when a hold has been released
 - `ui/Touchable` prop `holdConfig.global` to allow a hold to continue when leaving or blurring the element
 

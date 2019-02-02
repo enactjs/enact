@@ -107,7 +107,7 @@ const getPropFromURL = (propName, fallbackValue) => {
 	propName = encodeURI(propName);
 	const locationParams = window.parent.location.search;
 
-	const startIndex = locationParams.indexOf('knob-' + propName);
+	const startIndex = locationParams.indexOf('knob-' + propName + '=');
 	if (startIndex > -1) {
 		const keyIndex = locationParams.indexOf('=', startIndex);
 
