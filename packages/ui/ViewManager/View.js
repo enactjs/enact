@@ -135,23 +135,8 @@ class View extends React.Component {
 		this.animation = null;
 		this._raf = null;
 		this.state = {
-			entering: !props.appearing,
-			changeDirection: false,
-			prevReverseTransition: props.reverseTransition
+			entering: !props.appearing
 		};
-	}
-
-	static getDerivedStateFromProps (props, state) {
-		if (state.prevReverseTransition !== props.reverseTransition) {
-			return {
-				changeDirection: true
-			};
-		} else if (state.prevReverseTransition === props.reverseTransition) {
-			return {
-				changeDirection: false
-			};
-		}
-		return null;
 	}
 
 	shouldComponentUpdate (nextProps) {
@@ -160,6 +145,10 @@ class View extends React.Component {
 		}
 
 		return true;
+	}
+
+	componentDidUpdate (prevProps) {
+		this.changeDirection = this.animation ? this.props.reverseTransition !== prevProps.reverseTransition : false;
 	}
 
 	componentWillUnmount () {
@@ -292,7 +281,7 @@ class View extends React.Component {
 
 		// When a new transition is initiated mid-transition, adjust time to account for the current
 		// percent complete.
-		if (this.animation && this.state.changeDirection) {
+		if (this.animation && this.changeDirection) {
 			const a = this.animation;
 			const percentComplete = (a.time - a.start) / (a.end - a.start);
 			const delta = (endTime - startTime) * (1 - percentComplete);
