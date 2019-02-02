@@ -18,6 +18,7 @@ No significant changes.
 
 - `ui/Marquee` to display an ellipsis when changing to text that no longer fits within its bounds
 - `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` to debounce `onScrollStop` events for non-animated scrolls
+- `ui/Changeable` and `ui/Toggleable` to no longer treat components as controlled if the specified prop is explicity set to `undefined` at mount
 
 ## [2.2.7] - 2018-11-21
 
