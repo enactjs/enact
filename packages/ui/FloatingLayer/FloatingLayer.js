@@ -130,7 +130,7 @@ class FloatingLayerBase extends React.Component {
 	componentDidMount () {
 		// Must register first in order to obtain the floating layer node reference before tryinging
 		// to render into it
-		if (this.context) {
+		if (this.context && typeof this.context === 'function') {
 			this.controller = this.context(this.handleNotify.bind(this));
 		}
 	}

@@ -36,7 +36,7 @@ describe('Registry', () => {
 		};
 
 		componentDidMount () {
-			if (this.context) {
+			if (this.context && typeof this.context === 'function') {
 				this.resize = this.context(this.handleResize);
 			}
 		}

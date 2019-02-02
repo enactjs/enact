@@ -70,7 +70,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static contextType = RadioContext
 
 		componentDidMount () {
-			if (this.context) {
+			if (this.context && typeof this.context === 'function') {
 				this.controller = this.context(this.handleDeactivate);
 				this.notifyController();
 			}

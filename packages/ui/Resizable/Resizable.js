@@ -73,7 +73,7 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 		static contextType = ResizeContext
 
 		componentDidMount () {
-			if (this.context) {
+			if (this.context && typeof this.context === 'function') {
 				// Registry requires a callback but (for now at least) Resizable doesn't respond to
 				// upstream events so we're initializing a no-op function to "handle" callbacks
 				this.resize = this.context(() => {});

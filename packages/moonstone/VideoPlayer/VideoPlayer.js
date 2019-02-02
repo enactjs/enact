@@ -670,7 +670,7 @@ const VideoPlayerBase = class extends React.Component {
 		on('mousemove', this.activityDetected);
 		on('keydown', this.handleGlobalKeyDown);
 		this.startDelayedFeedbackHide();
-		if (this.context) {
+		if (this.context && typeof this.context === 'function') {
 			this.floatingLayerController = this.context(() => {});
 		}
 	}

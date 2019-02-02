@@ -434,7 +434,7 @@ class Transition extends React.Component {
 			this.measureInner();
 		}
 
-		if (this.context) {
+		if (this.context && typeof this.context === 'function') {
 			this.resizeRegistry = this.context(this.handleResize);
 		}
 

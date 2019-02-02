@@ -311,7 +311,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			if (this.context) {
+			if (this.context && this.context.register) {
 				this.context.register(this, {
 					start: this.start,
 					stop: this.stop
@@ -371,7 +371,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.clearTimeout();
 			this.promoteJob.stop();
 			this.demoteJob.stop();
-			if (this.context) {
+			if (this.context && this.context.unregister) {
 				this.context.unregister(this);
 			}
 
@@ -546,7 +546,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							promoted: true,
 							animating: true
 						});
-					} else if (this.context) {
+					} else if (this.context && this.context.complete) {
 						this.context.complete(this);
 					}
 				}, delay, TimerState.START_PENDING);
@@ -591,7 +591,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		startAnimation = (delay) => {
 			this.promote(delay);
-			if (this.context) {
+			if (this.context && this.context.start) {
 				// If we're running a timer for anything, we should let that finish, unless it's
 				// another syncstart request.  We should probably check to see if the start request
 				// is further in the future than we are so we can choose the nearer one. But, we're
@@ -619,7 +619,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				animating: false
 			});
 			// synchronized Marquees defer to the controller to restart them
-			if (this.context) {
+			if (this.context && this.context.complete) {
 				this.context.complete(this);
 			} else if (!this.state.animating) {
 				this.startAnimation();
@@ -646,7 +646,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		cancelAnimation = () => {
-			if (this.context) {
+			if (this.context && this.context.cancel) {
 				this.context.cancel(this);
 				return;
 			}
@@ -693,7 +693,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleEnter = (ev) => {
 			this.isHovered = true;
 			if (this.props.disabled || this.props.marqueeOn === 'hover') {
-				if (this.context) {
+				if (this.context && this.context.enter) {
 					this.context.enter(this);
 				} else if (!this.state.animating) {
 					this.startAnimation();
@@ -717,7 +717,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleUnhover () {
 			this.isHovered = false;
 			if (this.props.disabled || this.props.marqueeOn === 'hover') {
-				if (this.context) {
+				if (this.context && this.context.leave) {
 					this.context.leave(this);
 				} else {
 					this.cancelAnimation();

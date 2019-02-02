@@ -12,10 +12,10 @@ const Registry = {
 
 		const registry = Object.freeze({
 			set parent (register) {
-				if (currentParent) {
+				if (currentParent && currentParent.unregister) {
 					currentParent.unregister();
 				}
-				if (register) {
+				if (register && register.notify) {
 					currentParent = register(registry.notify);
 				}
 			},
