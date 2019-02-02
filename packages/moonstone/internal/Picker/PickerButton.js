@@ -9,7 +9,7 @@ import Touchable from '@enact/ui/Touchable';
 import Icon from '../../Icon';
 import IconButton from '../../IconButton';
 
-import css from './Picker.less';
+import css from './Picker.module.less';
 
 const JoinedPickerButtonBase = kind({
 	name: 'JoinedPickerButtonBase',

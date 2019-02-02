@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import FormCheckbox from '../FormCheckbox';
 import ToggleItem from '../ToggleItem';
 
-import componentCss from './FormCheckboxItem.less';
+import componentCss from './FormCheckboxItem.module.less';
 
 /**
  * Renders a form item with a checkbox component. Useful to show a selected state on an item inside a form.

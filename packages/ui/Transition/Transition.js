@@ -24,7 +24,7 @@ import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
 
-import componentCss from './Transition.less';
+import componentCss from './Transition.module.less';
 
 const forwardTransitionEnd = forward('onTransitionEnd');
 const forwardOnShow = forward('onShow');

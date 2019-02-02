@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import Spinner from '../Spinner';
-import css from '../Spinner.less';
+import css from '../Spinner.module.less';
 
 describe('Spinner Specs', () => {
 	test('should have centered class when centered prop equals true', () => {

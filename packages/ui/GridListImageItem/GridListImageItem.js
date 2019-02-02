@@ -13,7 +13,7 @@ import React from 'react';
 import Icon from '../Icon';
 import Image from '../Image';
 
-import componentCss from './GridListImageItem.less';
+import componentCss from './GridListImageItem.module.less';
 
 /**
  * A basic grid list image item without any behavior.

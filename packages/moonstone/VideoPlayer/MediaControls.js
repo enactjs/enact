@@ -20,7 +20,7 @@ import IconButton from '../IconButton';
 
 import {countReactChildren} from './util';
 
-import css from './VideoPlayer.less';
+import css from './VideoPlayer.module.less';
 
 const OuterContainer = SpotlightContainerDecorator({
 	defaultElement: [

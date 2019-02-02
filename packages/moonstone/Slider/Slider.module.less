@@ -1,0 +1,187 @@
+// Slider.module.less
+//
+@import '../styles/mixins.less';
+@import '../styles/variables.less';
+@import '../styles/skin.less';
+
+.slider {
+	position: relative;
+	margin: 0 @moon-spotlight-outset;
+	// Set both the V and H sizes here, so they can be easily overridden, both internally below and by component consumers.
+	height: @moon-slider-bar-height;
+	width: @moon-slider-bar-height;
+	box-sizing: content-box;
+	direction: ltr;
+
+	.progressBar {
+		position: relative;
+		height: 100%;
+		width: 100%;
+	}
+
+	.knob {
+		--moon-tooltip-offset: @moon-slider-tooltip-offset;
+
+		position: absolute;
+		will-change: left, bottom;
+
+		&::before {
+			content: "";
+			position: absolute;
+			height: @moon-slider-knob-height;
+			width: @moon-slider-knob-width;
+			// Vertically and horizontally center this knob.
+			// Using this method rather than -top -left so the knob is more intuitively customizable.
+			transform: @moon-translate-center scale(@moon-slider-knob-resting-state-scale);
+			border-radius: (@moon-slider-knob-height / 2);
+			border: @moon-button-border-width solid transparent;
+			box-sizing: border-box;
+			will-change: transform;
+			transition: transform ease-out 100ms;
+
+			.moon-custom-text({
+				height: @moon-slider-knob-height-large;
+				width: @moon-slider-knob-width-large;
+				border-radius: (@moon-slider-knob-height-large / 2);
+			});
+		}
+	}
+
+	.tooltip {
+		display: none;
+	}
+
+	&.horizontal {
+		@h-gap: (@moon-slider-knob-width / 2);
+		@v-gap: (@moon-slider-knob-height - @moon-slider-bar-height) / 2;
+		width: auto;
+		padding: @v-gap @h-gap;
+
+		.fill,
+		.load {
+			height: 100%;
+		}
+
+		.knob {
+			left: ~"calc(var(--ui-slider-proportion-end-knob) * 100%)";
+		}
+
+		.moon-custom-text({
+			@h-gap-large: (@moon-slider-knob-width-large / 2);
+			padding: ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2) @h-gap-large;
+		});
+	}
+
+	&.vertical {
+		@h-gap: ((@moon-slider-knob-height - @moon-slider-bar-height) / 2);
+		@v-gap: (@moon-slider-knob-width / 2);
+		padding: @v-gap @h-gap;
+		min-height: 120px;
+		display: inline-block;
+		vertical-align: top;
+
+		.fill,
+		.load {
+			width: 100%;
+		}
+
+		.knob {
+			bottom: ~"calc(var(--ui-slider-proportion-end-knob) * 100%)";
+			top: auto;
+		}
+
+		.moon-custom-text({
+			@v-gap-large: (@moon-slider-knob-width / 2);
+			padding: @v-gap-large ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2);
+		});
+	}
+
+	.spottable({
+		&.pressed,
+		&:focus {
+			.tooltip {
+				display: block;
+			}
+		}
+
+		&.pressed,
+		&:focus.activateOnFocus,
+		&:focus.active {
+			.knob::before {
+				transform: @moon-translate-center scale(1);
+			}
+		}
+	});
+
+	.applySkins({
+		.progressBar {
+			background-color: @moon-progress-bar-bg-color;
+		}
+
+		.fill {
+			background-color: @moon-progress-bar-fill-bg-color;
+		}
+
+		.load {
+			background-color: @moon-progress-bar-loaded-bg-color;
+		}
+
+		.knob::before {
+			background-color: @moon-slider-knob-bg-color;
+		}
+
+		.spottable({
+			&:focus.activateOnFocus,
+			&.active,
+			&.pressed {
+				.fill {
+					background-color: @moon-slider-spotlight-bar-color;
+				}
+			}
+
+			.focus({
+				background-color: transparent;
+
+				.knob::before {
+					background-color: @moon-slider-spotlight-knob-color;
+				}
+
+				&.active {
+					.knob::before {
+						background-color: @moon-slider-knob-bg-color;
+						border-color: @moon-slider-spotlight-knob-color;
+					}
+				}
+			});
+		});
+
+		&.noFill {
+			.fill {
+				background-color: transparent;
+			}
+
+			.spottable({
+				&.active,
+				&.pressed {
+					.fill {
+						background-color: transparent;
+					}
+				}
+			});
+		}
+	});
+}
+
+.muted({
+	.slider {
+		.applySkins({
+			.spottable({
+				.focus({
+					.knob {
+						background-color: @moon-slider-knob-bg-color;
+					}
+				});
+			});
+		});
+	}
+}, parent);

@@ -21,7 +21,7 @@ import React from 'react';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import componentCss from './Item.less';
+import componentCss from './Item.module.less';
 
 /**
  * A Moonstone styled item without any behavior.

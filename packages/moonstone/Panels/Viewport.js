@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import Spotlight from '@enact/spotlight';
 import Pause from '@enact/spotlight/Pause';
 
-import css from './Panels.less';
+import css from './Panels.module.less';
 
 /**
  * The container for a set of Panels
