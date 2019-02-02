@@ -326,6 +326,32 @@ describe('Cancelable', () => {
 			expect(actual).toEqual(expected);
 		});
 
+		test('should invoke nested modal handlers in LIFO order', () => {
+			const results = [];
+			const append = str => () => {
+				results.push(str);
+				return false;
+			};
+
+			const First = Cancelable(
+				{modal: true, onCancel: append('first')},
+				Component
+			);
+			const Second = Cancelable(
+				{modal: true, onCancel: append('second')},
+				Component
+			);
+
+			mount(<First><Second /></First>);
+
+			document.dispatchEvent(makeKeyboardEvent(27));
+
+			const expected = ['second', 'first'];
+			const actual = results;
+
+			expect(actual).toEqual(expected);
+		});
+
 		test(
 			'should not invoke modal handlers after one calls stopPropagation',
 			() => {
