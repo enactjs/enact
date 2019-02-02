@@ -160,7 +160,7 @@ describe('ViewManager', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test.skip(
+	test(
 		'should have 1 child {duration}ms after setting new {index}',
 		function (done) {
 			const duration = 50;
@@ -252,6 +252,24 @@ describe('ViewManager', () => {
 		const actual = subject.find('View').at(0).props().reverseTransition;
 
 		expect(actual).toBeFalsy();
+		done();
+	});
+
+	test('should update the View reverseTransition prop and changeDirection to true if it is updated with a smaller index prop.', done => {
+		const duration = 50;
+		const subject = mount(
+			<ViewManager index={3} duration={duration} arranger={SlideLeftArranger}>
+				<div className="view">View 1</div>
+				<div className="view">View 2</div>
+				<div className="view">View 3</div>
+				<div className="view">View 4</div>
+				<div className="view">View 5</div>
+			</ViewManager>
+		);
+
+		subject.setProps({index: 2});
+		expect(subject.find('View').at(1).state('changeDirection')).toBeTruthy();
+		expect(subject.find('View').at(1).prop('reverseTransition')).toBeTruthy();
 		done();
 	});
 });
