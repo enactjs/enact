@@ -24,7 +24,7 @@ import compose from 'ramda/src/compose';
 import {IconBase} from '../Icon';
 import Skinnable from '../Skinnable';
 
-import componentCss from './LabeledIcon.less';
+import componentCss from './LabeledIcon.module.less';
 
 // Make a basic Icon. This cuts `Pure` out of icon for a small gain.
 const Icon = Skinnable(IconBase);

@@ -7,8 +7,8 @@ import $L from '../internal/$L';
 import {DateComponentRangePicker} from '../internal/DateComponentPicker';
 import {ExpandableItemBase} from '../ExpandableItem';
 
-import css from './DatePicker.less';
-import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
+import css from './DatePicker.module.less';
+import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.module.less';
 
 /**
  * A date selection component.

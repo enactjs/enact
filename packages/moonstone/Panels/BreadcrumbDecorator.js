@@ -15,7 +15,7 @@ import BreadcrumbArranger from './BreadcrumbArranger';
 import CancelDecorator from './CancelDecorator';
 import IndexedBreadcrumbs from './IndexedBreadcrumbs';
 
-import css from './Panels.less';
+import css from './Panels.module.less';
 
 // TODO: Figure out how to document private sub-module members
 

@@ -262,6 +262,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 			const {currentTarget, repeat, type, which} = ev;
 			const {selectionKeys} = this.state;
+			const keyboardAccessible = isKeyboardAccessible(currentTarget);
 
 			const keyCode = selectionKeys.find((value) => (
 				// emulate mouse events for any remote okay button event
@@ -270,13 +271,15 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				// control
 				(
 					which === value &&
-					(type !== 'keypress' || !isKeyboardAccessible(currentTarget))
+					(type !== 'keypress' || !keyboardAccessible)
 				)
 			));
 
 			if (getDirection(keyCode)) {
 				preventDefault(ev);
 				stop(ev);
+			} else if (keyCode && keyboardAccessible) {
+				preventDefault(ev);
 			}
 
 			return keyCode && !repeat;
