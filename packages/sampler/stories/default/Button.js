@@ -25,27 +25,18 @@ storiesOf('Moonstone', module)
 		'Button',
 		withInfo({
 			text: 'The basic Button'
-		})(() => {
-			const skinVariants = {
-				highContrast: boolean('local-highContrast', Config) || false,
-				largeText: boolean('local-largeText', Config),
-				happyFace: true,
-				grayscale: boolean('local-grayscale', Config)
-			};
-			return (
-				<Button
-					onClick={action('onClick')}
-					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
-					casing={select('casing', prop.casing, Config, 'upper')}
-					disabled={boolean('disabled', Config)}
-					icon={select('icon', prop.icons, Config)}
-					minWidth={!!boolean('minWidth', Config)}
-					selected={boolean('selected', Config)}
-					small={boolean('small', Config)}
-					skinVariants={skinVariants}
-				>
-					{text('children', Config, 'click me')}
-				</Button>
-			);
-		})
+		})(() => (
+			<Button
+				onClick={action('onClick')}
+				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+				casing={select('casing', prop.casing, Config, 'upper')}
+				disabled={boolean('disabled', Config)}
+				icon={select('icon', prop.icons, Config)}
+				minWidth={!!boolean('minWidth', Config)}
+				selected={boolean('selected', Config)}
+				small={boolean('small', Config)}
+			>
+				{text('children', Config, 'click me')}
+			</Button>
+		))
 	);
