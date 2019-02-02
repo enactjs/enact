@@ -227,7 +227,7 @@ class ViewManager extends React.Component {
 			duration,
 			index,
 			noAnimation,
-			prevIndex,
+			previousIndex: prevIndex,
 			reverseTransition,
 			enteringDelay,
 			enteringProp,
