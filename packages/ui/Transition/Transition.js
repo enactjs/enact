@@ -422,6 +422,7 @@ class Transition extends React.Component {
 
 		this.state = {
 			initialHeight: null,
+			initialWidth: null,
 			prevVisible: props.visible,
 			renderState: props.visible ? TRANSITION_STATE.READY : TRANSITION_STATE.INIT
 		};

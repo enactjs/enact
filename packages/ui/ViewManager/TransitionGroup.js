@@ -215,6 +215,7 @@ class TransitionGroup extends React.Component {
 
 	constructor (props) {
 		super(props);
+
 		this.state = {
 			children: mapChildren(this.props.children),
 			isPrevNextChildrenEquals: false,
