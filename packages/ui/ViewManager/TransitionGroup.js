@@ -232,14 +232,6 @@ class TransitionGroup extends React.Component {
 		this.groupRefs = {};
 	}
 
-	componentDidMount () {
-		this.hasMounted = true;
-
-		// this isn't used by ViewManager or View at the moment but leaving it around for future
-		// flexibility
-		this.state.children.forEach(child => this.performAppear(child.key));
-	}
-
 	static getDerivedStateFromProps (props, state) {
 		const isPrevNextChildrenEquals = childrenEquals(state.prevChildren, props.children);
 		// Avoid an unnecessary setState if the children haven't changed
@@ -265,6 +257,14 @@ class TransitionGroup extends React.Component {
 			isPrevNextChildrenEquals,
 			dropped: []
 		};
+	}
+
+	componentDidMount () {
+		this.hasMounted = true;
+
+		// this isn't used by ViewManager or View at the moment but leaving it around for future
+		// flexibility
+		this.state.children.forEach(child => this.performAppear(child.key));
 	}
 
 	componentDidUpdate () {
