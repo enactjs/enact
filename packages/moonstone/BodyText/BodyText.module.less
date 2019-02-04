@@ -1,0 +1,18 @@
+// BodyText.module.less
+//
+@import '../styles/variables.less';
+@import '../styles/mixins.less';
+
+.bodyText {
+	.moon-body-text();
+
+	:global(.enact-locale-right-to-left) & {
+		text-align: right;
+
+		&.centered {
+			text-align: center;
+		}
+	}
+
+	.locale-japanese-line-break();
+}

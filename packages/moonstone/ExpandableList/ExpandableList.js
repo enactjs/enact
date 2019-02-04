@@ -27,7 +27,7 @@ import CheckboxItem from '../CheckboxItem';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import RadioItem from '../RadioItem';
 
-import css from './ExpandableList.less';
+import css from './ExpandableList.module.less';
 
 const compareChildren = (a, b) => {
 	if (!a || !b || a.length !== b.length) return false;

@@ -11,7 +11,7 @@ import {withInfo} from '@storybook/addon-info';
 
 import {boolean} from '../../src/enact-knobs';
 
-import css from './About.less';
+import css from './About.module.less';
 
 const riSafe = (style) => {
 	switch (typeof style) {

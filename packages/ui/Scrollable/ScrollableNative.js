@@ -15,7 +15,7 @@ import Scrollbar from './Scrollbar';
 import Registry from '@enact/core/internal/Registry';
 import {ResizeContext} from '../internal/Resize';
 
-import css from './Scrollable.less';
+import css from './Scrollable.module.less';
 
 const
 	constants = {

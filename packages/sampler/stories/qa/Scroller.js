@@ -1,19 +1,20 @@
 import Button from '@enact/moonstone/Button';
-import ExpandableList from '@enact/moonstone/ExpandableList';
-import Scroller from '@enact/moonstone/Scroller';
-import UiScroller from '@enact/ui/Scroller';
-import Item from '@enact/moonstone/Item';
 import Divider from '@enact/moonstone/Divider';
-import ri from '@enact/ui/resolution';
+import ExpandableList from '@enact/moonstone/ExpandableList';
 import Group from '@enact/ui/Group';
+import Item from '@enact/moonstone/Item';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ri from '@enact/ui/resolution';
+import Scroller from '@enact/moonstone/Scroller';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import React from 'react';
-import PropTypes from 'prop-types';
-import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import UiScroller from '@enact/ui/Scroller';
 
-import {boolean, select, number} from '../../src/enact-knobs';
+import {action} from '@storybook/addon-actions';
+import {storiesOf} from '@storybook/react';
+
+import {boolean, number, select} from '../../src/enact-knobs';
 
 Scroller.displayName = 'Scroller';
 
@@ -37,9 +38,9 @@ class ScrollerResizableItem extends React.Component {
 		const height = ri.unit(this.props.more ? 1500 : 400, 'rem');
 		const text = this.props.more ? 'less' : 'more';
 		const style = {
+			border: 'solid yellow',
 			position: 'relative',
-			width: '90%',
-			border: 'solid yellow'
+			width: '90%'
 		};
 		return (
 			<div style={{...style, height}}>
@@ -66,7 +67,7 @@ class ScrollerWithResizable extends React.Component {
 			<Scroller verticalScrollbar="visible">
 				<Item>Item</Item>
 				<Item>Item</Item>
-				<ScrollerResizableItem toggleMore={this.handleClick} more={this.state.more} />
+				<ScrollerResizableItem more={this.state.more} toggleMore={this.handleClick} />
 			</Scroller>
 		);
 	}
@@ -89,9 +90,9 @@ class ScrollerTopMostVisibleItemInTheScroller extends React.Component {
 		return (
 			<Scroller
 				focusableScrollbar
-				verticalScrollbar="visible"
-				style={{height: ri.scale(200)}}
 				onScrollStop={this.handleScrollStop}
+				style={{height: ri.scale(200)}}
+				verticalScrollbar="visible"
 			>
 				<Item>Item</Item>
 				<Item>Focus me, press right, then select on down arrow</Item>
@@ -111,13 +112,13 @@ class ScrollerWithTwoExpandableList extends React.Component {
 					style={{height: ri.scale(200)}}
 					direction="vertical"
 				>
-					<ExpandableList title="first" selected={0}>
+					<ExpandableList selected={0} title="first">
 						{['a', 'b', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'd']}
 					</ExpandableList>
 				</Scroller>
 				<Scroller
-					style={{height: ri.scale(200)}}
 					direction="vertical"
+					style={{height: ri.scale(200)}}
 				>
 					<ExpandableList title="second">
 						{['a', 'b', 'c', 'd']}
@@ -214,9 +215,9 @@ storiesOf('Scroller', module)
 			<Scroller focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}>
 				<Divider>Nothing selected</Divider>
 				<ExpandableList
+					closeOnSelect
 					noneText="Nothing Selected"
 					title="Default"
-					closeOnSelect
 				>
 					{['Option 1', 'Option 2', 'Option 3',
 						'Option 4', 'Option 5', 'Option 6',
@@ -231,8 +232,8 @@ storiesOf('Scroller', module)
 				<Divider>Default selected</Divider>
 				<ExpandableList
 					noneText="Nothing Selected"
-					title="Default"
 					selected={1}
+					title="Default"
 				>
 					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
@@ -240,8 +241,8 @@ storiesOf('Scroller', module)
 				<Divider>Default selected</Divider>
 				<ExpandableList
 					noneText="Nothing Selected"
-					title="Default"
 					selected={1}
+					title="Default"
 				>
 					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
@@ -249,8 +250,8 @@ storiesOf('Scroller', module)
 				<Divider>Default selected</Divider>
 				<ExpandableList
 					noneText="Nothing Selected"
-					title="Default"
 					selected={1}
+					title="Default"
 				>
 					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
@@ -258,9 +259,9 @@ storiesOf('Scroller', module)
 				<Divider>Multitple selected</Divider>
 				<ExpandableList
 					noneText="Nothing Selected"
-					title="multiple"
 					select="multiple"
 					selected={[1, 2]}
+					title="multiple"
 				>
 					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
@@ -268,9 +269,9 @@ storiesOf('Scroller', module)
 				<Divider>Long contents selected</Divider>
 				<ExpandableList
 					noneText="Nothing Selected"
-					title="multiple"
 					select="multiple"
 					selected={[18, 19]}
+					title="multiple"
 				>
 					{['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8', 'Option 9', 'Option 10', 'Option 11', 'Option 12', 'Option 13', 'Option 14', 'Option 15', 'Option 16', 'Option 17', 'Option 18', 'Option 19', 'Option 20']}
 				</ExpandableList>
@@ -321,12 +322,12 @@ storiesOf('Scroller', module)
 	.add(
 		'Test scrolling to boundary with small overflow',
 		() => {
-			const size = number('Spacer size', {min: 0, max: 300}, 100);
+			const size = number('Spacer size', 100, {max: 300, min: 0, range: true});
 			return (
-				<Scroller style={{height: 200}}>
+				<Scroller style={{height: ri.scaleToRem(200)}}>
 					<Item>1</Item>
-					<div style={{height: size}}>{size}px Spacer</div>
-					<Item style={{marginBottom: '18px'}}>3</Item>
+					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
+					<Item style={{marginBottom: ri.scaleToRem(18)}}>3</Item>
 				</Scroller>
 			);
 		}
@@ -344,5 +345,16 @@ storiesOf('Scroller', module)
 					</Group>
 				</Scroller>
 			</div>
+		)
+	)
+	.add(
+		'With Long Item',
+		() => (
+			<Scroller focusableScrollbar>
+				<Item>Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Text</Item>
+				<ExpandableList title="Title">
+					{itemData}
+				</ExpandableList>
+			</Scroller>
 		)
 	);

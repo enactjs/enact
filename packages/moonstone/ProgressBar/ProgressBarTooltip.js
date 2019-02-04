@@ -9,7 +9,7 @@ import warning from 'warning';
 
 import Tooltip from '../TooltipDecorator/Tooltip';
 
-import css from './ProgressBarTooltip.less';
+import css from './ProgressBarTooltip.module.less';
 
 const memoizedPercentFormatter = memoize((/* locale */) => new NumFmt({
 	type: 'percentage',
