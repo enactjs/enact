@@ -453,7 +453,6 @@ class Transition extends React.Component {
 		if (this.registry) {
 			this.registry.register(this.handleResize);
 		}
-
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
