@@ -2,7 +2,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 
 import Scrim from '../Scrim';
-import css from '../Scrim.less';
+import css from '../Scrim.module.less';
 
 describe('Scrim Specs', () => {
 	test('should be translucent by default', () => {

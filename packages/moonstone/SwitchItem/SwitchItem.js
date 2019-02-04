@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import Switch from '../Switch';
 import ToggleItem from '../ToggleItem';
 
-import componentCss from './SwitchItem.less';
+import componentCss from './SwitchItem.module.less';
 
 /**
  * Renders an item with a [Switch]{@link moonstone/Switch}.

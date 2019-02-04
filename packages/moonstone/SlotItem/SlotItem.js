@@ -34,7 +34,7 @@ import {ItemBase} from '../Item';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import componentCss from './SlotItem.less';
+import componentCss from './SlotItem.module.less';
 
 /**
  * A moonstone-styled SlotItem without any behavior.

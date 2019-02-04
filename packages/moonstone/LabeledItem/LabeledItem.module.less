@@ -1,0 +1,77 @@
+// LabeledItem.module.less
+//
+@import '../styles/mixins.less';
+@import '../styles/variables.less';
+@import '../styles/skin.less';
+
+.labeledItem {
+	//// Locally scoped LESS variables ////
+	// Vertically shift the text element to position it closer to the header than the line-height naturally allows
+	@text-vertical-offset: 6px;
+
+	flex-wrap: wrap;	// Allow the label to fall on the next line
+
+	// Header
+	.text {
+		display: flex;
+		width: 100%;
+		align-items: center;
+
+		.title {
+			overflow: hidden;
+		}
+		.icon {
+			margin-top: 0;
+			margin-bottom: 0;
+		}
+
+		:global(.enact-locale-right-to-left) & {
+			direction: rtl;
+		}
+	}
+
+	// Text
+	.label {
+		.moon-font(@moon-expandable-value-font-family, @moon-non-latin-font-family-light, {
+			font-weight: @moon-non-latin-body-font-weight;
+			font-size: @moon-non-latin-body-font-size;
+			line-height: @moon-non-latin-body-line-height;
+		});
+		font-size: @moon-expandable-value-font-size;
+		font-weight: @moon-expandable-value-font-weight;
+		font-style: @moon-expandable-value-font-style;
+		line-height: @moon-body-line-height;
+		text-transform: none;
+		// The following two margin values must cancel each other out, so there is zero layout impact when `text` is empty.
+		margin-top: -@text-vertical-offset;
+		margin-bottom: @text-vertical-offset;
+		// Force the label to fill the next line in the flexbox container
+		width: 100%;
+
+		.moon-custom-text-size(@moon-expandable-value-font-size-large);
+
+		:global(.enact-locale-right-to-left) & {
+			padding-left: 0;
+		}
+	}
+
+	&.with-label {
+		.label {
+			padding-bottom: 3px;
+		}
+	}
+
+	// Skin colors
+	.applySkins({
+		.label {
+			color: @moon-labeled-item-label-color;
+		}
+
+		.focus({
+			.text,
+			.label {
+				color: inherit;
+			}
+		});
+	});
+}

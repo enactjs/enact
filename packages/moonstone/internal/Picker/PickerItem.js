@@ -2,7 +2,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 
 import Marquee from '../../Marquee';
-import css from './Picker.less';
+import css from './Picker.module.less';
 
 const PickerItemBase = kind({
 	name: 'PickerItem',

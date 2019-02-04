@@ -10,7 +10,7 @@ import ApplicationCloseButton from './ApplicationCloseButton';
 import CancelDecorator from './CancelDecorator';
 import Viewport from './Viewport';
 
-import css from './Panels.less';
+import css from './Panels.module.less';
 
 /**
  * Basic Panels component without breadcrumbs or default [arranger]{@link ui/ViewManager.Arranger}
@@ -57,7 +57,7 @@ const PanelsBase = kind({
 		/**
 		 * [`Panels`]{@link moonstone/Panels.Panel} to be rendered
 		 *
-		 * @type {Panel}
+		 * @type {Node}
 		 * @public
 		 */
 		children: PropTypes.node,

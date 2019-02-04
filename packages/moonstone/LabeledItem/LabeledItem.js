@@ -30,7 +30,7 @@ const Controller = MarqueeController(
 	)
 );
 
-import componentCss from './LabeledItem.less';
+import componentCss from './LabeledItem.module.less';
 
 /**
  * A focusable component that combines marquee-able text content with a synchronized

@@ -12,7 +12,7 @@ import warning from 'warning';
 
 import {selectSrc} from '../resolution';
 
-import componentCss from './Image.less';
+import componentCss from './Image.module.less';
 
 /**
  * A basic image component designed to display images conditionally based on screen size.

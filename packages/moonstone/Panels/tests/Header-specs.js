@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import Header from '../Header';
-import css from '../Header.less';
+import css from '../Header.module.less';
 
 describe('Header Specs', () => {
 

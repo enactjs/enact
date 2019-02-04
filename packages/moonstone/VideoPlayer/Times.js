@@ -5,7 +5,7 @@ import kind from '@enact/core/kind';
 
 import {secondsToPeriod, secondsToTime} from './util';
 
-import css from './VideoPlayer.less';
+import css from './VideoPlayer.module.less';
 
 /**
  * Times {@link moonstone/VideoPlayer}.

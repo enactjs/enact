@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import Marquee from '../Marquee';
 
-import css from './VideoPlayer.less';
+import css from './VideoPlayer.module.less';
 
 /**
  * MediaTitle {@link moonstone/VideoPlayer}.
