@@ -217,10 +217,11 @@ class TransitionGroup extends React.Component {
 		super(props);
 		this.state = {
 			children: mapChildren(this.props.children),
+			isPrevNextChildrenEquals: false,
+			dropped: [],
 			prevChildren: this.props.children,
 			prevChildMapping: null,
-			nextChildMapping: null,
-			isPrevNextChildrenEquals: false
+			nextChildMapping: null
 		};
 
 		this.hasMounted = false;
@@ -246,27 +247,30 @@ class TransitionGroup extends React.Component {
 			const nextChildMapping = mapChildren(props.children);
 			const prevChildMapping = state.children;
 			let children = mergeChildren(nextChildMapping, prevChildMapping);
+
+			// drop children exceeding allowed size
+			const dropped = children.length > props.size ? children.splice(props.size) : null;
+
 			return {
 				children,
+				dropped,
+				isPrevNextChildrenEquals,
 				prevChildren: props.children,
 				prevChildMapping,
-				nextChildMapping,
-				isPrevNextChildrenEquals
+				nextChildMapping
 			};
 		}
 
 		return {
-			isPrevNextChildrenEquals
+			isPrevNextChildrenEquals,
+			dropped: []
 		};
 	}
 
-	componentDidUpdate (prevProps) {
+	componentDidUpdate () {
 		// Avoid an unnecessary reconcileChildren if the children haven't changed
 		if (!this.state.isPrevNextChildrenEquals) {
-			// drop children exceeding allowed size
-			const dropped = this.state.children.length > prevProps.size ? this.state.children.splice(prevProps.size) : null;
-
-			this.reconcileChildren(dropped, this.state.prevChildMapping, this.state.nextChildMapping);
+			this.reconcileChildren(this.state.dropped, this.state.prevChildMapping, this.state.nextChildMapping);
 		}
 	}
 
