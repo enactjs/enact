@@ -62,7 +62,7 @@ import styles from './styles';
  *
  * Example:
  * ```
- *	import css from './Button.less';
+ *	import css from './Button.module.less';
  *	const Button = kind({
  *		// expect color and onClick properties but neither required
  *		propTypes: {
@@ -102,9 +102,10 @@ import styles from './styles';
  * ```
  *
  * @function
+ * @template Props
  * @param  {KindConfig}    config    Component configuration
  *
- * @returns {Function}           Component
+ * @returns {Component<Props>}           Component
  * @memberof core/kind
  * @public
  */

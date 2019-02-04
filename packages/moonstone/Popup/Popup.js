@@ -25,7 +25,7 @@ import $L from '../internal/$L';
 import IconButton from '../IconButton';
 import Skinnable from '../Skinnable';
 
-import componentCss from './Popup.less';
+import componentCss from './Popup.module.less';
 
 const isUp = is('up');
 const TransitionContainer = SpotlightContainerDecorator(

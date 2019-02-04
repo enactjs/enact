@@ -13,7 +13,7 @@ import Slottable from '@enact/ui/Slottable';
 
 import Popup from '../Popup';
 
-import componentCss from './Notification.less';
+import componentCss from './Notification.module.less';
 
 // ENYO-5691: Workaround to fix a text rendering issue by aligning the content to the pixel grid
 const fixTransform = (node) => {

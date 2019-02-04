@@ -27,7 +27,7 @@ import Skinnable from '../Skinnable';
 import Decorator from './DaySelectorDecorator';
 import DaySelectorItem from './DaySelectorItem';
 
-import componentCss from './DaySelector.less';
+import componentCss from './DaySelector.module.less';
 
 /**
  * A Moonstone styled inline day of the week selection component.
