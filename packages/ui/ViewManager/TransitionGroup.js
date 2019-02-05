@@ -242,10 +242,10 @@ class TransitionGroup extends React.Component {
 			const prevChildMapping = this.state.children;
 			let children = mergeChildren(nextChildMapping, prevChildMapping);
 
- 			// drop children exceeding allowed size
+			// drop children exceeding allowed size
 			const dropped = children.length > nextProps.size ? children.splice(nextProps.size) : null;
 
- 			this.setState({
+			this.setState({
 				children
 			}, () => {
 				this.reconcileChildren(dropped, prevChildMapping, nextChildMapping);
