@@ -1,0 +1,24 @@
+// DateComponentPicker.module.less
+//
+@import '../../styles/mixins.less';
+@import '../../styles/variables.less';
+
+.dateComponentPickers {
+	.padding-start-end(@moon-date-component-pickers-padding, inherit);
+	display: inline-block;
+}
+
+.dateComponentPicker {
+	display: inline-block;
+	min-width: 96px;
+	text-align: center;
+	margin: 12px 0;
+	vertical-align: top;
+
+	.label {
+		.moon-body-text();
+		text-align: center;
+		padding: 18px @moon-spotlight-outset;
+		white-space: nowrap;
+	}
+}

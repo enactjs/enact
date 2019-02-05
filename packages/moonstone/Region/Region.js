@@ -6,6 +6,8 @@
  * </Region>
  *
  * @module moonstone/Region
+ * @exports Region
+ * @exports RegionBase
  */
 
 import kind from '@enact/core/kind';

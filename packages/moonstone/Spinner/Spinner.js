@@ -25,7 +25,7 @@ import $L from '../internal/$L';
 import Marquee from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import componentCss from './Spinner.less';
+import componentCss from './Spinner.module.less';
 
 /**
  * A component that shows spinning balls, with optional text as children.
@@ -207,7 +207,6 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {	// eslint-disable-l
  *
  * @hoc
  * @memberof moonstone/Spinner
- * @mixes moonstone/Spinner.SpinnerSpotlightDecorator
  * @mixes moonstone/Skinnable.Skinnable
  * @public
  */

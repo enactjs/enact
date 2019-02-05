@@ -3,7 +3,7 @@ import {mount} from 'enzyme';
 import MoonstoneDecorator from '../';
 import Spotlight from '@enact/spotlight';
 
-import css from '../MoonstoneDecorator.less';
+import css from '../MoonstoneDecorator.module.less';
 
 describe('MoonstoneDecorator', () => {
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import IncrementSlider from '../IncrementSlider';
-import css from '../IncrementSlider.less';
+import css from '../IncrementSlider.module.less';
 
 const tap = (node) => {
 	node.simulate('mousedown');

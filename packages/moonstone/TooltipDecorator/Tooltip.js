@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import Skinnable from '../Skinnable';
 
 import TooltipLabel from './TooltipLabel';
-import css from './Tooltip.less';
+import css from './Tooltip.module.less';
 
 /**
  * A stateless tooltip component with Moonstone styling applied.

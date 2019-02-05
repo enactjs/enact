@@ -4,9 +4,15 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Added
+
+- `spotlight/Spottable` property `selectionKeys`
+
 ### Fixed
 
 - `spotlight` to improve prioritization of the contents of spotlight containers within overflow containers
+- `spotlight/Spottable` and `spotlight/SpotlightContainerDecorator` to prevent focus when `spotlightDisabled` is set
+- `spotlight/Spottable` to prevent emitting multiple click events when certain node types are selected via 5-way enter
 
 ## [2.2.9] - 2019-01-11
 

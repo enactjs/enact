@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {mount, shallow} from 'enzyme';
 
 import {Popup, PopupBase} from '../Popup';
-import css from '../Popup.less';
+import css from '../Popup.module.less';
 
 describe('Popup specs', () => {
 	const options = {

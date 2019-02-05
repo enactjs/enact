@@ -8,7 +8,6 @@
 
 import {on, off} from '@enact/core/dispatcher';
 import hoc from '@enact/core/hoc';
-import {Publisher, contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -149,8 +148,7 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			locale: PropTypes.string
 		}
 
-		static contextTypes = stateContextTypes
-		static childContextTypes = {...contextTypes, ...stateContextTypes}
+		static childContextTypes = contextTypes
 
 		constructor (props) {
 			super(props);
@@ -169,12 +167,6 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			this.publisher = Publisher.create('i18n', this.context.Subscriber);
-			this.publisher.publish({
-				locale: this.state.locale,
-				rtl: this.state.rtl
-			});
-
 			if (typeof window === 'object') {
 				on('languagechange', this.handleLocaleChange, window);
 			}

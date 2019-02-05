@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import FeedbackIcon from './FeedbackIcon';
 import states from './FeedbackIcons.js';
 
-import css from './Feedback.less';
+import css from './Feedback.module.less';
 
 /**
  * Feedback {@link moonstone/VideoPlayer}. This displays the media's playback rate and other

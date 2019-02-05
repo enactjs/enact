@@ -19,11 +19,12 @@
 import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
-import {contextTypes} from '@enact/core/internal/PubSub';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import componentCss from './Transition.less';
+import {ResizeContext} from '../internal/Resize';
+
+import componentCss from './Transition.module.less';
 
 const forwardTransitionEnd = forward('onTransitionEnd');
 const forwardOnShow = forward('onShow');
@@ -36,6 +37,7 @@ const forwardOnHide = forward('onHide');
  * In general, you'll probably want to use the `Transition` instead of `TransitionBase`.
  *
  * @class TransitionBase
+ * @ui
  * @memberof ui/Transition
  * @public
  */
@@ -292,10 +294,13 @@ const TRANSITION_STATE = {
  * properties and events.
  *
  * @class Transition
+ * @ui
  * @memberof ui/Transition
  * @public
  */
 class Transition extends React.Component {
+
+	static contextType = ResizeContext;
 
 	static propTypes = /** @lends ui/Transition.Transition.prototype */ {
 		/**
@@ -404,8 +409,6 @@ class Transition extends React.Component {
 		visible: PropTypes.bool
 	}
 
-	static contextTypes = contextTypes
-
 	static defaultProps = {
 		direction: 'up',
 		duration: 'medium',
@@ -421,6 +424,7 @@ class Transition extends React.Component {
 			initialHeight: null,
 			renderState: props.visible ? TRANSITION_STATE.READY : TRANSITION_STATE.INIT
 		};
+		this.registry = null;
 	}
 
 	componentDidMount () {
@@ -430,9 +434,12 @@ class Transition extends React.Component {
 			this.measureInner();
 		}
 
-		if (this.context.Subscriber) {
-			this.context.Subscriber.subscribe('resize', this.handleResize);
+		this.registry = this.context;
+
+		if (this.registry) {
+			this.registry.register(this.handleResize);
 		}
+
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -480,8 +487,8 @@ class Transition extends React.Component {
 
 	componentWillUnmount () {
 		this.measuringJob.stop();
-		if (this.context.Subscriber) {
-			this.context.Subscriber.unsubscribe('resize', this.handleResize);
+		if (this.registry) {
+			this.registry.unregister(this.handleResize);
 		}
 	}
 
