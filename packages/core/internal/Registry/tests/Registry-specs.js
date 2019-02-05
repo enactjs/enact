@@ -5,22 +5,22 @@ import Registry from '../Registry';
 const SomeContext = React.createContext();
 
 describe('Registry', () => {
-	class EmitsResize extends React.Component {
+	class NotifiesTree extends React.Component {
 		static contextType = SomeContext;
 
 		componentDidMount () {
-			this.resize.parent = this.context;
+			this.registry.parent = this.context;
 		}
 
-		resize = Registry.create();
+		registry = Registry.create();
 
 		handleClick = () => {
-			this.resize.notify({});
+			this.registry.notify({});
 		};
 
 		render () {
 			return (
-				<SomeContext.Provider value={this.resize.register}>
+				<SomeContext.Provider value={this.registry.register}>
 					<button {...this.props} onClick={this.handleClick}>Notify!</button>
 					{this.props.children}
 				</SomeContext.Provider>
@@ -28,7 +28,7 @@ describe('Registry', () => {
 		}
 	}
 
-	class UsesResize extends React.Component {
+	class HandlesNotification extends React.Component {
 		static contextType = SomeContext;
 
 		state = {
@@ -37,13 +37,13 @@ describe('Registry', () => {
 
 		componentDidMount () {
 			if (this.context && typeof this.context === 'function') {
-				this.resize = this.context(this.handleResize);
+				this.registry = this.context(this.handleResize);
 			}
 		}
 
 		componentWillUnmount () {
-			if (this.resize) {
-				this.resize.unregister();
+			if (this.registry) {
+				this.registry.unregister();
 			}
 		}
 
@@ -64,9 +64,9 @@ describe('Registry', () => {
 
 	test('should increment child on click', () => {
 		const RegistryApp = mount(
-			<EmitsResize id="a-btn">
-				<UsesResize id="a" />
-			</EmitsResize>
+			<NotifiesTree id="a-btn">
+				<HandlesNotification id="a" />
+			</NotifiesTree>
 		);
 
 		RegistryApp.find('button#a-btn').simulate('click');
@@ -79,12 +79,12 @@ describe('Registry', () => {
 
 	test('should increment both children on top click', () => {
 		const RegistryApp = mount(
-			<EmitsResize id="a-btn">
-				<UsesResize id="a" />
-				<EmitsResize id="b-btn">
-					<UsesResize id="b" />
-				</EmitsResize>
-			</EmitsResize>
+			<NotifiesTree id="a-btn">
+				<HandlesNotification id="a" />
+				<NotifiesTree id="b-btn">
+					<HandlesNotification id="b" />
+				</NotifiesTree>
+			</NotifiesTree>
 		);
 
 		RegistryApp.find('button#a-btn').simulate('click');
@@ -99,12 +99,12 @@ describe('Registry', () => {
 
 	test('should increment the deepest child when we click child button', () => {
 		const RegistryApp = mount(
-			<EmitsResize id="a-btn">
-				<UsesResize id="a" />
-				<EmitsResize id="b-btn">
-					<UsesResize id="b" />
-				</EmitsResize>
-			</EmitsResize>
+			<NotifiesTree id="a-btn">
+				<HandlesNotification id="a" />
+				<NotifiesTree id="b-btn">
+					<HandlesNotification id="b" />
+				</NotifiesTree>
+			</NotifiesTree>
 		);
 
 		RegistryApp.find('button#b-btn').simulate('click');
@@ -120,17 +120,17 @@ describe('Registry', () => {
 
 	test('should support removing children without error', () => {
 		const RegistryApp = mount(
-			<EmitsResize id="a-btn">
-				<UsesResize id="a" />
-				<UsesResize id="b" />
-			</EmitsResize>
+			<NotifiesTree id="a-btn">
+				<HandlesNotification id="a" />
+				<HandlesNotification id="b" />
+			</NotifiesTree>
 		);
 
 		RegistryApp.find('button#a-btn').simulate('click');
 
 		// changing children should be safe and not throw errors when notifying instances
 		RegistryApp.setProps({
-			children: <UsesResize id="c" />
+			children: <HandlesNotification id="c" />
 		});
 
 		RegistryApp.find('button#a-btn').simulate('click');
