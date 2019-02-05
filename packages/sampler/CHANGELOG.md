@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 ### Changed
 
 - `moonstone/ExpandableInput` and `moonstone/Input` knob to select input type
+- `moonstone/Marquee` switched qa-sample to use `querySelector` instead of `ref`
 
 ## [2.2.9] - 2019-01-11
 
