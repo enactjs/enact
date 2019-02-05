@@ -5,8 +5,9 @@
  * @private
  */
 
+import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import ilib from '@enact/i18n';
+import {memoize} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import Changeable from '@enact/ui/Changeable';
@@ -14,6 +15,18 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {Expandable} from '../../ExpandableItem';
+
+
+/**
+ * Converts a JavaScript Date to unix time
+ *
+ * @param	{Date}	date	A Date to convert
+ *
+ * @returns	{undefined}
+ */
+const toTime = (date) => {
+	return date && date.getTime();
+};
 
 /**
  * {@link moonstone/internal/DateTimeDecorator.DateTimeDecorator} provides common behavior for
@@ -30,10 +43,27 @@ import {Expandable} from '../../ExpandableItem';
 const DateTimeDecorator = hoc((config, Wrapped) => {
 	const {customProps, defaultOrder, handlers, i18n} = config;
 
+	const memoizedI18nConfig = memoize((/* locale */) => {
+		// Guard for isomorphic builds
+		if (typeof window !== 'undefined' && i18n) {
+			return i18n();
+		}
+		return null;
+	});
+
 	const Decorator = class extends React.Component {
 		static displayName = 'DateTimeDecorator'
 
 		static propTypes = /** @lends moonstone/internal/DateTimeDecorator.DateTimeDecorator.prototype */ {
+			/**
+			 * The current locale as a
+			 * {@link https://tools.ietf.org/html/rfc5646|BCP 47 language tag}.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			locale: PropTypes.string,
+
 			/**
 			 * Handler for `onChange` events
 			 *
@@ -62,9 +92,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.initI18n();
-
-			const initialValue = this.toTime(props.value);
+			const initialValue = toTime(props.value);
 			const value = props.open && !initialValue ? Date.now() : initialValue;
 			this.state = {initialValue, value};
 
@@ -76,42 +104,14 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		componentWillReceiveProps (nextProps) {
-			const newValue = this.toTime(nextProps.value);
-
-			if (nextProps.open && !this.props.open) {
-				const value = newValue || Date.now();
-
-				// if we're opening, store the current value as the initial value for cancellation
-				this.setState({
-					initialValue: newValue,
-					pickerValue: null,
-					value
-				});
-
-				// if no value was provided, we need to emit the onChange event for the generated value
-				if (!newValue) {
-					this.emitChange(this.toIDate(value));
-				}
-			} else {
-				this.setState({
-					value: newValue
-				});
+		static getDerivedStateFromProps (props, state) {
+			const propValue = toTime(props.value);
+			if (state.value !== propValue) {
+				return {
+					value: propValue
+				};
 			}
-		}
-
-		componentWillUpdate () {
-			// check for a new locale when updating
-			this.initI18n();
-		}
-
-		initI18n () {
-			const locale = ilib.getLocale();
-
-			if (i18n && this.locale !== locale && typeof window === 'object') {
-				this.locale = locale;
-				this.i18nContext = i18n();
-			}
+			return null;
 		}
 
 		/**
@@ -122,23 +122,12 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		 * @returns	{IDate}			ilib Date object
 		 */
 		toIDate (time) {
-			if (time && this.locale) {
+			if (time && this.props.locale) {
 				return DateFactory({
 					unixtime: time,
 					timezone: 'local'
 				});
 			}
-		}
-
-		/**
-		 * Converts a JavaScript Date to unix time
-		 *
-		 * @param	{Date}	date	A Date to convert
-		 *
-		 * @returns	{undefined}
-		 */
-		toTime (date) {
-			return date && date.getTime();
 		}
 
 		/**
@@ -169,17 +158,39 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 
 		emitChange = (date) => {
-			const {onChange} = this.props;
-			if (onChange) {
-				onChange({
-					value: date ? date.getJSDate() : null
-				});
+			forward('onChange', {value: date ? date.getJSDate() : null}, this.props);
+		}
+
+		handleOpen = (ev) => {
+			forward('onOpen', ev, this.props);
+
+			const newValue = toTime(this.props.value);
+			const value = newValue || Date.now();
+
+			// if we're opening, store the current value as the initial value for cancellation
+			this.setState({
+				initialValue: newValue,
+				pickerValue: null,
+				value
+			});
+
+			// if no value was provided, we need to emit the onChange event for the generated value
+			if (!newValue) {
+				this.emitChange(this.toIDate(value));
 			}
+		}
+
+		handleClose = (ev) => {
+			forward('onClose', ev, this.props);
+			const newValue = toTime(this.props.value);
+			this.setState({
+				value: newValue
+			});
 		}
 
 		handlePickerChange = (handler, ev) => {
 			const value = this.toIDate(this.state.value);
-			handler(ev, value, this.i18nContext);
+			handler(ev, value, memoizedI18nConfig(this.props.locale));
 			this.updateValue(value);
 		}
 
@@ -210,13 +221,13 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			let props = null;
 			let order = defaultOrder;
 
-			// Guard for isomorphic builds
-			if (this.i18nContext) {
+			const i18nConfig = memoizedI18nConfig(this.props.locale);
+			if (i18nConfig) {
 				if (value) {
-					label = this.i18nContext.formatter.format(value);
+					label = i18nConfig.formatter.format(value);
 				}
-				props = customProps(this.i18nContext, pickerValue, this.props);
-				order = this.i18nContext.order;
+				props = customProps(i18nConfig, pickerValue, this.props);
+				order = i18nConfig.order;
 			}
 
 			return (
@@ -227,13 +238,15 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 					label={label}
 					order={order}
 					value={value}
+					onOpen={this.handleOpen}
+					onClose={this.handleClose}
 				/>
 			);
 		}
 	};
 
 	return I18nContextDecorator(
-		{rtlProp: 'rtl'},
+		{rtlProp: 'rtl', localeProp: 'locale'},
 		Expandable(
 			Changeable(
 				Decorator

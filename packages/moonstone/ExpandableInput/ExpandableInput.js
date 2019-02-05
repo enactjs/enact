@@ -193,7 +193,7 @@ class ExpandableInputBase extends React.Component {
 	}
 
 	constructor (props) {
-		super();
+		super(props);
 
 		this.paused = new Pause('ExpandableInput');
 		this.pointer = false;
@@ -205,16 +205,10 @@ class ExpandableInputBase extends React.Component {
 		this.handleDeactivate = handleDeactivate.bind(this);
 	}
 
-	componentWillReceiveProps (nextProps) {
-		let {initialValue} = this.state;
-		if (!this.props.open && nextProps.open) {
-			initialValue = nextProps.value;
-		} else if (this.props.open && !nextProps.open) {
+	componentDidUpdate (prevProps) {
+		if (prevProps.open && !this.props.open) {
 			this.paused.resume();
-			initialValue = null;
 		}
-
-		this.setState({initialValue});
 	}
 
 	componentWillUnmount () {
@@ -265,6 +259,11 @@ class ExpandableInputBase extends React.Component {
 		this.pointer = true;
 	}
 
+	handleOpen = handle(
+		forward('onOpen'),
+		(ev, {value}) => this.setState({initialValue: value})
+	).bind(this)
+
 	handleUp = () => {
 		this.pointer = false;
 	}
@@ -298,6 +297,7 @@ class ExpandableInputBase extends React.Component {
 				onMouseDown={this.handleDown}
 				onMouseLeave={this.handleUp}
 				onMouseUp={this.handleUp}
+				onOpen={this.handleOpen}
 				open={open}
 				showLabel={type === 'password' ? 'never' : 'auto'}
 				spotlightDisabled={spotlightDisabled}

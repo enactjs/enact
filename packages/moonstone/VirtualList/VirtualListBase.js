@@ -228,7 +228,7 @@ const VirtualListBaseFactory = (type) => {
 			}, 0);
 		}
 
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			if (nextProps.spotlightId && nextProps.spotlightId !== this.props.spotlightId) {
 				this.configureSpotlight(nextProps.spotlightId);
 			}

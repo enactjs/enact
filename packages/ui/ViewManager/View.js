@@ -139,17 +139,16 @@ class View extends React.Component {
 		};
 	}
 
-	componentWillReceiveProps (nextProps) {
-		// changeDirection let's us know we need to switch mid-transition
-		this.changeDirection = this.animation ? this.props.reverseTransition !== nextProps.reverseTransition : false;
-	}
-
 	shouldComponentUpdate (nextProps) {
 		if (nextProps.leaving) {
 			return false;
 		}
 
 		return true;
+	}
+
+	componentDidUpdate (prevProps) {
+		this.changeDirection = this.animation ? this.props.reverseTransition !== prevProps.reverseTransition : false;
 	}
 
 	componentWillUnmount () {
@@ -279,7 +278,6 @@ class View extends React.Component {
 				return false;
 			}
 		};
-
 
 		// When a new transition is initiated mid-transition, adjust time to account for the current
 		// percent complete.

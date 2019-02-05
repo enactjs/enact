@@ -235,7 +235,7 @@ class TransitionGroup extends React.Component {
 		this.state.children.forEach(child => this.performAppear(child.key));
 	}
 
-	componentWillReceiveProps (nextProps) {
+	UNSAFE_componentWillReceiveProps (nextProps) {
 		// Avoid an unnecessary setState and reconcileChildren if the children haven't changed
 		if (!childrenEquals(this.props.children, nextProps.children)) {
 			const nextChildMapping = mapChildren(nextProps.children);

@@ -10,8 +10,8 @@
 import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import warning from 'warning';
 
 /**
@@ -127,35 +127,28 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			let value = props[defaultPropKey];
-			let controlled = false;
-
-			if (prop in props) {
-				if (props[prop] != null) {
-					value = props[prop];
-				}
-
-				controlled = true;
-			}
 
 			this.state = {
-				controlled,
-				value
+				value: props[prop] != null ? props[prop] : props[defaultPropKey],
+				controlled: typeof props[prop] !== 'undefined'
 			};
 		}
 
-		componentWillReceiveProps (nextProps) {
-			if (this.state.controlled) {
-				const value = nextProps[prop];
-				this.setState({value});
-			} else {
-				warning(
-					!(prop in nextProps),
-					`'${prop}' specified for an uncontrolled instance of Changeable and will be
-					ignored. To make this instance of Changeable controlled, '${prop}' should be
-					specified at creation.`
-				);
+		static getDerivedStateFromProps (props, state) {
+			if (state.controlled) {
+				return {
+					value: props[prop]
+				};
 			}
+
+			warning(
+				!(typeof props[prop] !== 'undefined'),
+				`'${prop}' specified for an uncontrolled instance of Changeable and will be
+				ignored. To make this instance of Changeable controlled, '${prop}' should be
+				specified at creation.`
+			);
+
+			return null;
 		}
 
 		handle = handle.bind(this)

@@ -240,10 +240,6 @@ class FloatingLayerBase extends React.Component {
 	render () {
 		const {children, open, scrimType, ...rest} = this.props;
 
-		if (!open || !this.state.nodeRendered) {
-			return null;
-		}
-
 		delete rest.floatLayerClassName;
 		delete rest.floatLayerId;
 		delete rest.noAutoDismiss;
@@ -251,13 +247,17 @@ class FloatingLayerBase extends React.Component {
 		delete rest.onDismiss;
 		delete rest.onOpen;
 
-		return ReactDOM.createPortal(
-			<div {...rest}>
-				{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
-				{React.cloneElement(children, {onClick: this.stopPropagation})}
-			</div>,
-			this.node
-		);
+		if (open && this.state.nodeRendered) {
+			return ReactDOM.createPortal(
+				<div {...rest}>
+					{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
+					{React.cloneElement(children, {onClick: this.stopPropagation})}
+				</div>,
+				this.node
+			);
+		}
+
+		return null;
 	}
 }
 

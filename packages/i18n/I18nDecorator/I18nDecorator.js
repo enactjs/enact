@@ -129,13 +129,14 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.loadResources(this.state.locale);
 		}
 
-		componentWillReceiveProps (nextProps) {
-			if (this.props.locale !== nextProps.locale) {
-				const state = this.getDerivedStateForLocale(nextProps.locale);
+		componentDidUpdate (prevProps) {
+			if (this.props.locale !== prevProps.locale) {
+				const state = this.getDerivedStateForLocale(this.props.locale);
 				if (sync) {
+					// eslint-disable-next-line react/no-did-update-set-state
 					this.setState(state);
 				} else {
-					this.loadResources(nextProps.locale);
+					this.loadResources(this.props.locale);
 				}
 			}
 		}

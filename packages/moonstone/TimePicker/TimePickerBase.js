@@ -31,30 +31,40 @@ const hours12 = [
  */
 class HourPicker extends React.Component {
 	static propTypes = {
-		children: PropTypes.arrayOf(PropTypes.string),
+		hasMeridiem: PropTypes.bool,
 		value: PropTypes.number
 	}
 
-	constructor () {
-		super();
+	constructor (props) {
+		super(props);
 
 		this.state = {
-			noAnimation: false
+			noAnimation: false,
+			prevValue: props.value
 		};
 	}
 
-	componentWillReceiveProps (nextProps) {
-		const {children, value} = this.props;
-		const {children: nextChildren, value: nextValue} = nextProps;
+	static getDerivedStateFromProps (props, state) {
+		if (state.prevValue !== props.value) {
+			const hours = props.hasMeridiem ? hours12 : hours24;
 
-		this.setState({
-			noAnimation: children[value] === nextChildren[nextValue]
-		});
+			return {
+				noAnimation: hours[state.prevValue] === hours[props.value],
+				prevValue: props.value
+			};
+		}
+
+		return null;
 	}
 
 	render () {
+		const {hasMeridiem, ...rest} = this.props;
+		const hours = hasMeridiem ? hours12 : hours24;
+
 		return (
-			<DateComponentPicker {...this.props} {...this.state} />
+			<DateComponentPicker {...rest} noAnimation={this.state.noAnimation}>
+				{hours}
+			</DateComponentPicker>
 		);
 	}
 }
@@ -358,6 +368,7 @@ const TimePickerBase = kind({
 											className={css.hourComponents}
 											data-webos-voice-disabled={voiceDisabled}
 											data-webos-voice-group-label={hourLabel}
+											hasMeridiem={hasMeridiem}
 											key="hour-picker"
 											label={noLabels ? null : hourLabel}
 											onChange={onChangeHour}
@@ -368,9 +379,7 @@ const TimePickerBase = kind({
 											value={hour}
 											width={2}
 											wrap
-										>
-											{hasMeridiem ? hours12 : hours24}
-										</HourPicker>
+										/>
 									);
 								case 'm':
 									return (

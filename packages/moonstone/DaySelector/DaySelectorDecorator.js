@@ -1,6 +1,6 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {coerceArray} from '@enact/core/util';
+import {coerceArray, memoize} from '@enact/core/util';
 import ilib from '@enact/i18n';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
@@ -17,6 +17,57 @@ const SELECTED_DAY_TYPES = {
 	SELECTED_DAYS: 3,
 	SELECTED_NONE: 4
 };
+
+function adjustWeekends (firstDayOfWeek, day) {
+	return ((day - firstDayOfWeek + 7) % 7);
+}
+
+const memoLocaleState = memoize((key, dayNameLength) => {
+	const df = new DateFmt({length: 'full'});
+	const sdf = new DateFmt({length: dayNameLength});
+	const li = new LocaleInfo(ilib.getLocale());
+	const daysOfWeek = df.getDaysOfWeek();
+	const days = sdf.getDaysOfWeek();
+	const firstDayOfWeek = li.getFirstDayOfWeek();
+
+	const state = {
+		abbreviatedDayNames: [],
+		firstDayOfWeek: 0,
+		fullDayNames: [],
+		weekendEnd: 0,
+		weekendStart: 6
+	};
+
+	if (li.getWeekEndStart) {
+		state.weekendStart = adjustWeekends(firstDayOfWeek, li.getWeekEndStart());
+	}
+
+	if (li.getWeekEndEnd) {
+		state.weekendEnd = adjustWeekends(firstDayOfWeek, li.getWeekEndEnd());
+	}
+
+	for (let i = 0; i < 7; i++) {
+		const index = (i + firstDayOfWeek) % 7;
+		state.fullDayNames[i] = daysOfWeek[index];
+		state.abbreviatedDayNames[i] = days[index];
+	}
+
+	return state;
+});
+
+function getLocaleState (dayNameLength, locale) {
+	if (typeof window === 'undefined') {
+		return {
+			abbreviatedDayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+			firstDayOfWeek: 0,
+			fullDayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+			weekendEnd: 0,
+			weekendStart: 6
+		};
+	}
+
+	return memoLocaleState(dayNameLength + locale, dayNameLength);
+}
 
 /**
  * Applies Moonstone specific behaviors to
@@ -126,62 +177,6 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 			disabled: false
 		}
 
-		constructor (props) {
-			super(props);
-
-			this.state = {
-				// default indexes
-				firstDayOfWeek: 0,
-				weekendStart: 6,
-				weekendEnd: 0,
-				// default strings for long and short day strings
-				fullDayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-				abbreviatedDayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-				...this.getLocaleState(props.dayNameLength, props.locale)
-			};
-		}
-
-		componentWillReceiveProps (nextProps) {
-			const {dayNameLength, locale} = nextProps;
-			if (this.props.dayNameLength !== dayNameLength || this.props.locale !== locale) {
-				this.setState(this.getLocaleState(dayNameLength, locale));
-			}
-		}
-
-		getLocaleState (dayNameLength, locale) {
-			if (typeof window === 'undefined') return null;
-
-			const df = new DateFmt({length: 'full'});
-			const sdf = new DateFmt({length: dayNameLength});
-			const li = new LocaleInfo(ilib.getLocale());
-			const daysOfWeek = df.getDaysOfWeek();
-			const days = sdf.getDaysOfWeek();
-			const firstDayOfWeek = li.getFirstDayOfWeek();
-
-			const state = {
-				locale,
-				fullDayNames: [],
-				abbreviatedDayNames: [],
-				firstDayOfWeek
-			};
-
-			if (li.getWeekEndStart) {
-				state.weekendStart = this.adjustWeekends(firstDayOfWeek, li.getWeekEndStart());
-			}
-
-			if (li.getWeekEndEnd) {
-				state.weekendEnd = this.adjustWeekends(firstDayOfWeek, li.getWeekEndEnd());
-			}
-
-			for (let i = 0; i < 7; i++) {
-				const index = (i + firstDayOfWeek) % 7;
-				state.fullDayNames[i] = daysOfWeek[index];
-				state.abbreviatedDayNames[i] = days[index];
-			}
-
-			return state;
-		}
-
 		/**
 		 * Determines which day type should be returned, based on the selected indices.
 		 *
@@ -192,6 +187,8 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 		calcSelectedDayType (selected) {
 			if (selected == null) return SELECTED_DAY_TYPES.SELECTED_NONE;
 
+			const state = getLocaleState(this.props.dayNameLength, this.props.locale);
+
 			let
 				weekendStart = false,
 				weekendEnd = false,
@@ -199,14 +196,14 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 
 			const
 				length = selected.length,
-				weekendLength = this.state.weekendStart === this.state.weekendEnd ? 1 : 2;
+				weekendLength = state.weekendStart === state.weekendEnd ? 1 : 2;
 
 			if (length === 7) return SELECTED_DAY_TYPES.EVERY_DAY;
 
 			for (let i = 0; i < 7; i++) {
 				index = selected[i];
-				weekendStart = weekendStart || this.state.weekendStart === index;
-				weekendEnd = weekendEnd || this.state.weekendEnd === index;
+				weekendStart = weekendStart || state.weekendStart === index;
+				weekendEnd = weekendEnd || state.weekendEnd === index;
 			}
 
 			if (weekendStart && weekendEnd && length === weekendLength) {
@@ -261,8 +258,8 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 		}
 
 		getAriaLabel () {
-			const {'aria-label': ariaLabel, selected, title} = this.props;
-			const {fullDayNames} = this.state;
+			const {'aria-label': ariaLabel, dayNameLength, locale, selected, title} = this.props;
+			const {fullDayNames} = getLocaleState(dayNameLength, locale);
 
 			if (ariaLabel != null || title == null || selected == null || selected.length === 0) {
 				return ariaLabel;
@@ -273,27 +270,22 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 			return `${title} ${label}`;
 		}
 
-		adjustWeekends (firstDayOfWeek, day) {
-			return ((day - firstDayOfWeek + 7) % 7);
-		}
-
 		handleSelect = ({selected}) => {
-			const labels = this.state.abbreviatedDayNames;
+			const {dayNameLength, locale} = this.props;
+			const {abbreviatedDayNames: labels} = getLocaleState(dayNameLength, locale);
 			const content = this.getSelectedDayString(selected, labels);
 
 			forwardSelect({selected, content}, this.props);
 		}
 
 		render () {
-			const {selected, ...rest} = this.props;
-			const {abbreviatedDayNames, fullDayNames} = this.state;
+			const {dayNameLength, locale, selected, ...rest} = this.props;
+			const {abbreviatedDayNames, fullDayNames} = getLocaleState(dayNameLength, locale);
 			const content = this.getSelectedDayString(selected, abbreviatedDayNames);
 
-			delete rest.dayNameLength;
 			delete rest.everyDayText;
 			delete rest.everyWeekdayText;
 			delete rest.everyWeekendText;
-			delete rest.locale;
 
 			return (
 				<Wrapped

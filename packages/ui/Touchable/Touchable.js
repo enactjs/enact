@@ -391,7 +391,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.state = {
-				active: States.Inactive
+				active: States.Inactive,
+				prevDisabled: props.disabled
 			};
 
 			this.config = mergeConfig({
@@ -428,6 +429,19 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			handleGlobalMove.bindAs(this, 'handleGlobalMove');
 		}
 
+		static getDerivedStateFromProps (props, state) {
+			const {disabled} = props;
+			const {prevDisabled} = state;
+
+			if (prevDisabled !== disabled) {
+				return {
+					...(activeProp && !prevDisabled && disabled && deactivate(state)),
+					prevDisabled: disabled
+				};
+			}
+			return null;
+		}
+
 		componentDidMount () {
 			// ensure we clean up our internal state
 			if (platform.touch) {
@@ -437,16 +451,16 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			on('mousemove', this.handleGlobalMove, document);
 		}
 
-		componentWillReceiveProps (nextProps) {
-			if (!this.props.disabled && nextProps.disabled) {
-				this.deactivate();
+		componentDidUpdate (prevProps) {
+			if (!prevProps.disabled && this.props.disabled) {
+				this.clearTarget();
 				this.hold.end();
 			}
 
 			this.config = mergeConfig({
-				drag: nextProps.dragConfig,
-				flick: nextProps.flickConfig,
-				hold: nextProps.holdConfig
+				drag: this.props.dragConfig,
+				flick: this.props.flickConfig,
+				hold: this.props.holdConfig
 			});
 		}
 

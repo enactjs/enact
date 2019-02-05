@@ -241,12 +241,6 @@ const checkScrimNone = (props) => {
 		'is not supported. Use a transparent scrim to prevent spotlight focus outside of the popup');
 };
 
-const OpenState = {
-	CLOSED: 0,
-	OPENING: 1,
-	OPEN: 2
-};
-
 /**
  * A stateful component that renders a popup in a
  * [FloatingLayer]{@link ui/FloatingLayer.FloatingLayer}.
@@ -389,14 +383,26 @@ class Popup extends React.Component {
 	constructor (props) {
 		super(props);
 		this.paused = new Pause('Popup');
-		const animateOpen = this.props.noAnimation ? OpenState.OPEN : OpenState.OPENING;
 		this.state = {
 			floatLayerOpen: this.props.open,
-			popupOpen: this.props.open ? animateOpen : OpenState.CLOSED,
+			popupOpen: this.props.open,
 			containerId: Spotlight.add(),
 			activator: null
 		};
 		checkScrimNone(this.props);
+	}
+
+	static getDerivedStateFromProps (props, state) {
+		if (props.open && !state.floatLayerOpen) {
+			return {
+				floatLayerOpen: true
+			};
+		} else if (!props.open && state.popupOpen) {
+			return {
+				popupOpen: false
+			};
+		}
+		return null;
 	}
 
 	// Spot the content after it's mounted.
@@ -406,37 +412,11 @@ class Popup extends React.Component {
 		}
 	}
 
-	componentWillReceiveProps (nextProps) {
-		if (!this.props.open && nextProps.open) {
-			this.setState({
-				popupOpen: nextProps.noAnimation ? OpenState.OPEN : OpenState.CLOSED,
-				floatLayerOpen: true,
-				activator: Spotlight.getCurrent()
-			});
-		} else if (this.props.open && !nextProps.open) {
-			const activator = this.state.activator;
-
-			this.setState(state => ({
-				popupOpen: OpenState.CLOSED,
-				floatLayerOpen: state.popupOpen === OpenState.OPEN ? !nextProps.noAnimation : false,
-				activator: nextProps.noAnimation ? null : activator
-			}));
+	componentDidUpdate (prevProps) {
+		if (!this.props.noAnimation && (this.props.open !== prevProps.open)) {
+			this.paused.pause();
 		}
-		checkScrimNone(nextProps);
-	}
-
-	componentDidUpdate (prevProps, prevState) {
-		if (this.props.open !== prevProps.open) {
-			if (!this.props.noAnimation) {
-				this.paused.pause();
-			} else if (this.props.open) {
-				forwardShow({}, this.props);
-				this.spotPopupContent();
-			} else if (prevProps.open) {
-				forwardHide({}, this.props);
-				this.spotActivator(prevState.activator);
-			}
-		}
+		checkScrimNone(this.props);
 	}
 
 	componentWillUnmount () {
@@ -447,12 +427,15 @@ class Popup extends React.Component {
 	}
 
 	handleFloatingLayerOpen = () => {
-		if (!this.props.noAnimation) {
-			this.setState({
-				popupOpen: OpenState.OPENING
-			});
-		} else if (this.state.popupOpen === OpenState.OPEN && this.props.open) {
-			this.spotPopupContent();
+		const current = Spotlight.getCurrent();
+
+		this.setState(() => ({
+			activator: current,
+			popupOpen: true
+		}));
+
+		if (current) {
+			current.blur();
 		}
 	}
 
@@ -493,7 +476,7 @@ class Popup extends React.Component {
 			activator: null
 		});
 
-		if (ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
+		if (this.props.noAnimation || ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
 			this.paused.resume();
 
 			if (!this.props.open) {
@@ -505,11 +488,7 @@ class Popup extends React.Component {
 	handlePopupShow = (ev) => {
 		forwardShow(ev, this.props);
 
-		this.setState({
-			popupOpen: OpenState.OPEN
-		});
-
-		if (ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
+		if (this.props.noAnimation || ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
 			this.paused.resume();
 
 			if (this.props.open) {
@@ -570,7 +549,7 @@ class Popup extends React.Component {
 					onCloseButtonClick={onClose}
 					onHide={this.handlePopupHide}
 					onShow={this.handlePopupShow}
-					open={this.state.popupOpen >= OpenState.OPENING}
+					open={this.state.popupOpen}
 					spotlightId={this.state.containerId}
 					spotlightRestrict="self-only"
 				/>

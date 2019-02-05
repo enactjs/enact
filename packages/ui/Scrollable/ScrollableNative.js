@@ -398,7 +398,7 @@ class ScrollableBaseNative extends Component {
 		this.updateScrollbars();
 	}
 
-	componentWillUpdate () {
+	UNSAFE_componentWillUpdate () {
 		this.deferScrollTo = true;
 	}
 
