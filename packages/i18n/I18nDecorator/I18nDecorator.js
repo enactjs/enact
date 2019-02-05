@@ -80,7 +80,7 @@ const defaultConfig = {
 	 * ]
 	 * ```
 	 *
-	 * @type {Function[]|Object[]}
+	 * @type {Array<Function|Object>}
 	 * @default null
 	 * @public
 	 * @memberof i18n/I18nDecorator.I18nDecorator.defaultConfig
