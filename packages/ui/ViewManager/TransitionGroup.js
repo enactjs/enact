@@ -215,14 +215,8 @@ class TransitionGroup extends React.Component {
 
 	constructor (props) {
 		super(props);
-
 		this.state = {
-			children: mapChildren(this.props.children),
-			isPrevNextChildrenEquals: false,
-			dropped: [],
-			prevChildren: this.props.children,
-			prevChildMapping: null,
-			nextChildMapping: null
+			children: mapChildren(this.props.children)
 		};
 
 		this.hasMounted = false;
@@ -233,33 +227,6 @@ class TransitionGroup extends React.Component {
 		this.groupRefs = {};
 	}
 
-	static getDerivedStateFromProps (props, state) {
-		const isPrevNextChildrenEquals = childrenEquals(state.prevChildren, props.children);
-		// Avoid an unnecessary setState if the children haven't changed
-		if (!isPrevNextChildrenEquals) {
-			const nextChildMapping = mapChildren(props.children);
-			const prevChildMapping = state.children;
-			let children = mergeChildren(nextChildMapping, prevChildMapping);
-
-			// drop children exceeding allowed size
-			const dropped = children.length > props.size ? children.splice(props.size) : null;
-
-			return {
-				children,
-				dropped,
-				isPrevNextChildrenEquals,
-				prevChildren: props.children,
-				prevChildMapping,
-				nextChildMapping
-			};
-		}
-
-		return {
-			isPrevNextChildrenEquals,
-			dropped: []
-		};
-	}
-
 	componentDidMount () {
 		this.hasMounted = true;
 
@@ -268,10 +235,21 @@ class TransitionGroup extends React.Component {
 		this.state.children.forEach(child => this.performAppear(child.key));
 	}
 
-	componentDidUpdate () {
-		// Avoid an unnecessary reconcileChildren if the children haven't changed
-		if (!this.state.isPrevNextChildrenEquals) {
-			this.reconcileChildren(this.state.dropped, this.state.prevChildMapping, this.state.nextChildMapping);
+	UNSAFE_componentWillReceiveProps (nextProps) {
+		// Avoid an unnecessary setState and reconcileChildren if the children haven't changed
+		if (!childrenEquals(this.props.children, nextProps.children)) {
+			const nextChildMapping = mapChildren(nextProps.children);
+			const prevChildMapping = this.state.children;
+			let children = mergeChildren(nextChildMapping, prevChildMapping);
+
+ 			// drop children exceeding allowed size
+			const dropped = children.length > nextProps.size ? children.splice(nextProps.size) : null;
+
+ 			this.setState({
+				children
+			}, () => {
+				this.reconcileChildren(dropped, prevChildMapping, nextChildMapping);
+			});
 		}
 	}
 
