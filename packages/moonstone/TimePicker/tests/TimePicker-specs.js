@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import {TimePicker, TimePickerBase} from '../TimePicker';
-import css from '../TimePicker.less';
+import css from '../TimePicker.module.less';
 
 describe('TimePicker', () => {
 

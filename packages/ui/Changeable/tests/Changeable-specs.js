@@ -81,17 +81,34 @@ describe('Changeable', () => {
 			expect(actual).toBe(expected);
 		});
 
-		test('should use defaultValue prop when value prop is null', () => {
+		test('should use value prop when value prop is null', () => {
 			const Component = Changeable(DivComponent);
 			const subject = shallow(
 				<Component defaultValue={1} value={null} />
 			);
 
-			const expected = 1;
+			const expected = null;
 			const actual = subject.find(DivComponent).prop('value');
 
 			expect(actual).toBe(expected);
 		});
+
+		test(
+			'should use value prop when value changed from truthy to null',
+			() => {
+				const Component = Changeable(DivComponent);
+				const subject = shallow(
+					<Component defaultValue={1} value={2} />
+				);
+
+				subject.setProps({value: null});
+
+				const expected = null;
+				const actual = subject.find(DivComponent).prop('value');
+
+				expect(actual).toBe(expected);
+			}
+		);
 
 		test('should use defaultValue prop when value prop is undefined', () => {
 			const Component = Changeable(DivComponent);
@@ -105,6 +122,24 @@ describe('Changeable', () => {
 
 			expect(actual).toBe(expected);
 		});
+
+		test(
+			'should use value prop when value changed from truthy to undefined',
+			() => {
+				const Component = Changeable(DivComponent);
+				const subject = shallow(
+					<Component defaultValue={1} value={2} />
+				);
+				// eslint-disable-next-line no-undefined
+				subject.setProps({value: undefined});
+
+				// eslint-disable-next-line no-undefined
+				const expected = undefined;
+				const actual = subject.find(DivComponent).prop('value');
+
+				expect(actual).toBe(expected);
+			}
+		);
 
 		test('should use value prop when defined but falsy', () => {
 			const Component = Changeable(DivComponent);
@@ -233,7 +268,7 @@ describe('Changeable', () => {
 
 	test.skip(
 		'should not update \'value\' with new props when is not controlled',
-		function () {
+		() => {
 			const Component = Changeable(DivComponent);
 			const subject = mount(
 				<Component defaultValue={0} />

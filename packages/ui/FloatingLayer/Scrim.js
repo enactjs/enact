@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import css from './Scrim.less';
+import css from './Scrim.module.less';
 
 const transparentClassName = css.scrim + ' enact-fit ' + css.transparent;
 const translucentClassName = css.scrim + ' enact-fit ' + css.translucent;

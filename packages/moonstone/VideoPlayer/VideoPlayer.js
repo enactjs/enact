@@ -49,7 +49,7 @@ import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
 import Video from './Video';
 
-import css from './VideoPlayer.less';
+import css from './VideoPlayer.module.less';
 
 const SpottableDiv = Touchable(Spottable('div'));
 const RootContainer = SpotlightContainerDecorator(

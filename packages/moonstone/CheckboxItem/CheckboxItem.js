@@ -18,7 +18,7 @@ import React from 'react';
 import Checkbox from '../Checkbox';
 import ToggleItem from '../ToggleItem';
 
-import componentCss from './CheckboxItem.less';
+import componentCss from './CheckboxItem.module.less';
 
 /**
  * An item with a checkbox component, ready to use in Moonstone applications.

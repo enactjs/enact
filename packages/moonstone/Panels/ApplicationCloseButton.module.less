@@ -1,0 +1,12 @@
+// ApplicationCloseButton.module.less
+//
+@import '../styles/mixins.less';
+@import '../styles/variables.less';
+
+.applicationCloseButton {
+	position: absolute;
+	top: (@moon-app-keepout + @moon-spotlight-outset);
+	.position-start-end(auto, @moon-spotlight-outset * 2);
+	z-index: 1;
+	margin: 0;
+}

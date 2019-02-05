@@ -65,10 +65,13 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			const {className, highContrast, textSize, ...props} = this.props;
 			const accessibilityClassName = highContrast ? `enact-a11y-high-contrast enact-text-${textSize}` : `enact-text-${textSize}`;
 			const combinedClassName = className ? `${className} ${accessibilityClassName}` : accessibilityClassName;
+			const variants = {};
+			if (highContrast) variants.highContrast = true;
+			if (textSize === 'large') variants.largeText = true;
 
 			return (
 				<ResizeContext.Provider value={this.resize.subscriber}>
-					<Wrapped className={combinedClassName} {...props} />;
+					<Wrapped className={combinedClassName} skinVariants={variants} {...props} />;
 				</ResizeContext.Provider>
 			);
 		}

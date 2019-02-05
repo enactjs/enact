@@ -7,8 +7,8 @@ import $L from '../internal/$L';
 import {DateComponentPicker, DateComponentRangePicker} from '../internal/DateComponentPicker';
 import {ExpandableItemBase} from '../ExpandableItem';
 
-import css from './TimePicker.less';
-import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
+import css from './TimePicker.module.less';
+import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.module.less';
 
 // values to use in hour picker for 24 and 12 hour locales
 const hours24 = [

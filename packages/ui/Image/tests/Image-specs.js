@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
 import ImageBase from '../Image';
-import css from '../Image.less';
+import css from '../Image.module.less';
 
 const src = {
 	'hd': 'http://lorempixel.com/64/64/city/1/',

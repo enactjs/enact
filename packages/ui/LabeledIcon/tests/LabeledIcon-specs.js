@@ -2,7 +2,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import LabeledIcon from '../LabeledIcon';
 import CustomIcon from '../../Icon';
-import css from '../LabeledIcon.less';
+import css from '../LabeledIcon.module.less';
 
 const iconName = 'anIconName';
 const iconLabel = 'A real label';
