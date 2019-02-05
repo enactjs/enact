@@ -422,9 +422,24 @@ class Transition extends React.Component {
 
 		this.state = {
 			initialHeight: null,
+			initialWidth: null,
+			prevVisible: props.visible,
 			renderState: props.visible ? TRANSITION_STATE.READY : TRANSITION_STATE.INIT
 		};
 		this.registry = null;
+	}
+
+	static getDerivedStateFromProps (props, state) {
+		if (!state.prevVisible && props.visible) {
+			return {
+				initialHeight: null,
+				initialWidth: null,
+				prevVisible: props.visible,
+				renderState: TRANSITION_STATE.MEASURE
+			};
+		}
+
+		return null;
 	}
 
 	componentDidMount () {
@@ -439,17 +454,6 @@ class Transition extends React.Component {
 		if (this.registry) {
 			this.registry.register(this.handleResize);
 		}
-
-	}
-
-	UNSAFE_componentWillReceiveProps (nextProps) {
-		if (!this.props.visible && nextProps.visible) {
-			this.setState({
-				initialHeight: null,
-				initialWidth: null,
-				renderState: TRANSITION_STATE.MEASURE
-			});
-		}
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
@@ -457,15 +461,13 @@ class Transition extends React.Component {
 		return (this.state.initialHeight === nextState.initialHeight) || this.props.visible || nextProps.visible;
 	}
 
-	UNSAFE_componentWillUpdate (nextProps, nextState) {
-		if (nextState.renderState === TRANSITION_STATE.MEASURE) {
-			this.measuringJob.stop();
-		}
-	}
-
 	componentDidUpdate (prevProps, prevState) {
 		const {visible} = this.props;
 		const {initialHeight, renderState} = this.state;
+
+		if (this.state.renderState === TRANSITION_STATE.MEASURE) {
+			this.measuringJob.stop();
+		}
 
 		// Checking that something changed that wasn't the visibility
 		// or the initialHeight state or checking if component should be visible but doesn't have a height
