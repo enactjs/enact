@@ -122,11 +122,14 @@ class FloatingLayerBase extends React.Component {
 	constructor (props) {
 		super(props);
 		this.node = null;
+		this.state = {
+			nodeRendered: false
+		};
 	}
 
 	componentDidMount () {
-		if (this.props.open && this.node) {
-			forwardOpen(null, this.props);
+		if (this.props.open) {
+			this.renderNode();
 		}
 
 		if (this.context.registerFloatingLayer) {
@@ -134,12 +137,12 @@ class FloatingLayerBase extends React.Component {
 		}
 	}
 
-	componentDidUpdate (prevProps) {
+	componentDidUpdate (prevProps, prevState) {
 		const {open, scrimType} = this.props;
 
 		if (prevProps.open && !open) {
 			forwardClose(null, this.props);
-		} else if (!prevProps.open && open) {
+		} else if (!prevProps.open && open || (open && !prevState.nodeRendered && this.state.nodeRendered)) {
 			forwardOpen(null, this.props);
 		}
 
@@ -195,7 +198,7 @@ class FloatingLayerBase extends React.Component {
 		const {floatLayerClassName} = this.props;
 		const floatingLayer = this.context.getFloatingLayer();
 
-		if (!floatingLayer) return;
+		if (this.node || !floatingLayer) return;
 
 		invariant(
 			this.context.getFloatingLayer,
@@ -208,16 +211,14 @@ class FloatingLayerBase extends React.Component {
 
 		floatingLayer.appendChild(this.node);
 		on('scroll', this.handleScroll, this.node);
+
+		this.setState({
+			nodeRendered: true
+		});
 	}
 
 	render () {
 		const {children, open, scrimType, ...rest} = this.props;
-
-		if (!open) {
-			return null;
-		} else if (!this.node) {
-			this.renderNode();
-		}
 
 		delete rest.floatLayerClassName;
 		delete rest.floatLayerId;
@@ -226,13 +227,17 @@ class FloatingLayerBase extends React.Component {
 		delete rest.onDismiss;
 		delete rest.onOpen;
 
-		return ReactDOM.createPortal(
-			<div {...rest}>
-				{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
-				{React.cloneElement(children, {onClick: this.stopPropagation})}
-			</div>,
-			this.node
-		);
+		if (open && this.state.nodeRendered) {
+			return ReactDOM.createPortal(
+				<div {...rest}>
+					{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
+					{React.cloneElement(children, {onClick: this.stopPropagation})}
+				</div>,
+				this.node
+			);
+		}
+
+		return null;
 	}
 }
 
