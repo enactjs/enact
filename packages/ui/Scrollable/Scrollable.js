@@ -457,6 +457,7 @@ class ScrollableBase extends Component {
 	}
 
 	componentWillUnmount () {
+		this.resizeRegistry.parent = null;
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
 		if (this.scrolling) {
 			this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());

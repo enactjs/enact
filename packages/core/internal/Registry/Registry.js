@@ -15,7 +15,7 @@ const Registry = {
 				if (currentParent && currentParent.unregister) {
 					currentParent.unregister();
 				}
-				if (register && register.notify) {
+				if (register && typeof register === 'function') {
 					currentParent = register(registry.notify);
 				}
 			},

@@ -59,6 +59,10 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			}
 		}
 
+		componentWillUnmount () {
+			this.resizeRegistry.parent = null;
+		}
+
 		resizeRegistry = Registry.create();
 
 		render () {
