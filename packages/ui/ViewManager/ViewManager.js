@@ -189,33 +189,32 @@ class ViewManager extends React.Component {
 		index: 0
 	}
 
-	UNSAFE_componentWillReceiveProps (nextProps) {
-		this.previousIndex = this.props.index;
-		this.checkReverse(nextProps);
+	constructor (props) {
+		super(props);
+		this.state = {
+			prevIndex: null,
+			reverseTransition: null
+		};
 	}
 
-	/**
-	 * Determines if we should be reversing the transition based on the index of the keys of the
-	 * children.
-	 *
-	 * @param  {Object} nextProps New props
-	 * @returns {undefined}
-	 * @private
-	 */
-	checkReverse (nextProps) {
-		// null or undefined => determine automatically
-		if (nextProps.reverseTransition != null) {
-			this.reverseTransition = !!nextProps.reverseTransition;
-		} else if (this.props.index !== nextProps.index) {
-			this.reverseTransition = this.props.index > nextProps.index;
-		} else {
-			this.reverseTransition = false;
+	static getDerivedStateFromProps (props, state) {
+		if (props.reverseTransition != null) {
+			return {
+				reverseTransition: !!props.reverseTransition
+			};
+		} else if (props.index !== state.prevIndex) {
+			return {
+				prevIndex: props.index,
+				reverseTransition: state.prevIndex > props.index
+			};
 		}
+
+		return null;
 	}
 
 	render () {
 		const {arranger, childProps, children, duration, end, index, noAnimation, start, enteringDelay, enteringProp, ...rest} = this.props;
-		const {previousIndex, reverseTransition} = this;
+		const {prevIndex: previousIndex, reverseTransition} = this.state;
 		const childrenList = React.Children.toArray(children);
 
 		const from = (start || start === 0) ? start : index;

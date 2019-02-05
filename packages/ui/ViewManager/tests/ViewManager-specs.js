@@ -160,7 +160,7 @@ describe('ViewManager', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test.skip(
+	test(
 		'should have 1 child {duration}ms after setting new {index}',
 		function (done) {
 			const duration = 50;
@@ -186,7 +186,6 @@ describe('ViewManager', () => {
 		}
 	);
 
-
 	test('should have size of 1 on TransitionGroup', done => {
 		const subject = mount(
 			<ViewManager noAnimation index={0} duration={0}>
@@ -201,6 +200,58 @@ describe('ViewManager', () => {
 		const expected = 1;
 		const actual = subject.find('TransitionGroup').prop('size');
 		expect(actual).toBe(expected);
+		done();
+	});
+
+	test('should update the View reverseTransition prop.', done => {
+		const subject = mount(
+			<ViewManager noAnimation index={0} duration={0}>
+				<div className="view">View 1</div>
+				<div className="view">View 2</div>
+				<div className="view">View 3</div>
+				<div className="view">View 4</div>
+				<div className="view">View 5</div>
+			</ViewManager>
+		);
+
+		subject.setProps({reverseTransition: true});
+		const actual = subject.find('View').props().reverseTransition;
+
+		expect(actual).toBeTruthy();
+		done();
+	});
+
+	test('should update the View reverseTransition prop to true if it is updated with a smaller index prop.', done => {
+		const subject = mount(
+			<ViewManager index={2} duration={0} arranger={SlideLeftArranger}>
+				<div>View 1</div>
+				<div>View 2</div>
+				<div>View 3</div>
+				<div>View 4</div>
+				<div>View 5</div>
+			</ViewManager>
+		);
+
+		subject.setProps({index: 1});
+		const actual = subject.find('View').at(0).props().reverseTransition;
+
+		expect(actual).toBeTruthy();
+		done();
+	});
+
+	test('should update the View reverseTransition prop to false even though it is updated with a smaller index prop.', done => {
+		const subject = mount(
+			<ViewManager index={2} duration={0} arranger={SlideLeftArranger}>
+				<div>View 1</div>
+				<div>View 2</div>
+				<div>View 3</div>
+			</ViewManager>
+		);
+
+		subject.setProps({index: 1, reverseTransition: false});
+		const actual = subject.find('View').at(0).props().reverseTransition;
+
+		expect(actual).toBeFalsy();
 		done();
 	});
 });
