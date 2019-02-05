@@ -142,7 +142,14 @@ class FloatingLayerBase extends React.Component {
 
 		if (prevProps.open && !open) {
 			forwardClose(null, this.props);
-		} else if (!prevProps.open && open || (open && !prevState.nodeRendered && this.state.nodeRendered)) {
+		} else if (!prevProps.open && open) {
+			if (this.state.nodeRendered) {
+				forwardOpen(null, this.props);
+			} else {
+				this.renderNode();
+			}
+		} else if (open && !prevState.nodeRendered && this.state.nodeRendered) {
+			// an edge case where it's mounted `open`
 			forwardOpen(null, this.props);
 		}
 
@@ -212,9 +219,8 @@ class FloatingLayerBase extends React.Component {
 		floatingLayer.appendChild(this.node);
 		on('scroll', this.handleScroll, this.node);
 
-		this.setState({
-			nodeRendered: true
-		});
+		// render children when this.node is inserted in the DOM tree.
+		this.setState({nodeRendered: true});
 	}
 
 	render () {
