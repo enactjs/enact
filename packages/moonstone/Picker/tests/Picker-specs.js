@@ -1,5 +1,5 @@
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import {Picker, PickerBase} from '../Picker';
 
 describe('Picker Specs', () => {
@@ -32,15 +32,14 @@ describe('Picker Specs', () => {
 		}
 	);
 
-
 	test('should be disabled when empty', () => {
-		const picker = shallow(
+		const picker = mount(
 			<PickerBase>
 				{[]}
 			</PickerBase>
 		);
 
-		const actual = picker.find('SpottablePicker').last().prop('disabled');
+		const actual = picker.find('Picker').last().prop('disabled');
 		expect(actual).toBe(true);
 	});
 

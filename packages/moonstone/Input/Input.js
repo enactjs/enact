@@ -21,7 +21,7 @@ import $L from '../internal/$L';
 import Skinnable from '../Skinnable';
 import Tooltip from '../TooltipDecorator/Tooltip';
 
-import componentCss from './Input.less';
+import componentCss from './Input.module.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 import {calcAriaLabel, extractInputProps} from './util';
@@ -42,12 +42,6 @@ const InputBase = kind({
 	name: 'Input',
 
 	propTypes: /** @lends moonstone/Input.InputBase.prototype */ {
-
-		// TODO: Document voice control props and make public
-		'data-webos-voice-group-label': PropTypes.string,
-		'data-webos-voice-intent': PropTypes.string,
-		'data-webos-voice-label': PropTypes.string,
-
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
@@ -61,6 +55,11 @@ const InputBase = kind({
 		 * @private
 		 */
 		css: PropTypes.object,
+
+		// TODO: Document voice control props and make public
+		'data-webos-voice-group-label': PropTypes.string,
+		'data-webos-voice-intent': PropTypes.string,
+		'data-webos-voice-label': PropTypes.string,
 
 		/**
 		 * Disables Input and becomes non-interactive.

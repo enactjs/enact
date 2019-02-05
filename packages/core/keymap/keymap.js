@@ -120,7 +120,7 @@ const add = oneOrArray(addOne);
  * Registers a set of key codes.
  *
  * @function addAll
- * @param   {Object}    set  A map of names to keyCodes
+ * @param   {Object<String,Number|Number[]>}    set  A map of names to keyCodes
  *
  * @returns {undefined}
  * @memberof core/keymap

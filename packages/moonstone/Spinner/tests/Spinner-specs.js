@@ -1,11 +1,11 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import Spinner from '../Spinner';
-import css from '../Spinner.less';
+import css from '../Spinner.module.less';
 
 describe('Spinner Specs', () => {
 	test(
-		'should have not have client node when Spinner has no children',
+		'should not have client node when Spinner has no children',
 		() => {
 			const spinner = mount(
 				<Spinner />
@@ -49,7 +49,7 @@ describe('Spinner Specs', () => {
 		() => {
 			const spinner = mount(
 				<Spinner transparent>
-                    Loading...
+					Loading...
 				</Spinner>
 			);
 

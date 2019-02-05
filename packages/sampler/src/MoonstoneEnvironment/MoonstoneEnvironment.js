@@ -9,7 +9,7 @@ import {Panels, Panel, Header} from '@enact/moonstone/Panels';
 import {boolean, select} from '../enact-knobs';
 import {selectV2} from '@storybook/addon-knobs';
 
-import css from './MoonstoneEnvironment.less';
+import css from './MoonstoneEnvironment.module.less';
 
 const globalGroup = 'Global Knobs';
 
@@ -107,7 +107,7 @@ const getPropFromURL = (propName, fallbackValue) => {
 	propName = encodeURI(propName);
 	const locationParams = window.parent.location.search;
 
-	const startIndex = locationParams.indexOf('knob-' + propName);
+	const startIndex = locationParams.indexOf('knob-' + propName + '=');
 	if (startIndex > -1) {
 		const keyIndex = locationParams.indexOf('=', startIndex);
 

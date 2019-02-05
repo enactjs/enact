@@ -8,7 +8,6 @@
 
 import {on, off} from '@enact/core/dispatcher';
 import hoc from '@enact/core/hoc';
-import {Publisher, contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -104,8 +103,7 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			locale: PropTypes.string
 		}
 
-		static contextTypes = stateContextTypes
-		static childContextTypes = {...contextTypes, ...stateContextTypes}
+		static childContextTypes = contextTypes
 
 		constructor (props) {
 			super(props);
@@ -124,12 +122,6 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			this.publisher = Publisher.create('i18n', this.context.Subscriber);
-			this.publisher.publish({
-				locale: this.state.locale,
-				rtl: this.state.rtl
-			});
-
 			if (typeof window === 'object') {
 				on('languagechange', this.handleLocaleChange, window);
 			}
@@ -137,13 +129,14 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.loadResources(this.state.locale);
 		}
 
-		UNSAFE_componentWillReceiveProps (nextProps) {
-			if (this.props.locale !== nextProps.locale) {
-				const state = this.getDerivedStateForLocale(nextProps.locale);
+		componentDidUpdate (prevProps) {
+			if (this.props.locale !== prevProps.locale) {
+				const state = this.getDerivedStateForLocale(this.props.locale);
 				if (sync) {
+					// eslint-disable-next-line react/no-did-update-set-state
 					this.setState(state);
 				} else {
-					this.loadResources(nextProps.locale);
+					this.loadResources(this.props.locale);
 				}
 			}
 		}

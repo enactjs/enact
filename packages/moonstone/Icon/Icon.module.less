@@ -1,0 +1,92 @@
+// Icon.module.less
+//
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
+
+.icon {
+	width: @moon-icon-size;
+	height: @moon-icon-size;
+	background-position: center -((@moon-icon-sprite-size - @moon-icon-size) / 2);
+	background-size: @moon-icon-sprite-size (@moon-icon-sprite-size * 2);
+	background-repeat: no-repeat;
+	margin: @moon-icon-margin;
+	font-family: @moon-icon-font-family;
+	font-size: @moon-icon-font-size;
+	line-height: @moon-icon-size;
+	text-align: center;
+	position: relative;
+
+	.moon-custom-text({
+		font-size: @moon-icon-font-size-large;
+		width: @moon-icon-size-large;
+		height: @moon-icon-size-large;
+		line-height: @moon-icon-size-large;
+	});
+
+
+	&.small {
+		background-position: center -((@moon-icon-sprite-small-size - @moon-icon-small-size) / 2);
+		background-size: @moon-icon-sprite-small-size (@moon-icon-sprite-small-size * 2);
+		width: @moon-icon-small-size;
+		height: @moon-icon-small-size;
+		font-size: @moon-icon-small-font-size;
+		line-height: @moon-icon-small-size;
+
+		.moon-custom-text({
+			font-size: @moon-icon-small-font-size-large;
+			width: @moon-icon-small-size-large;
+			height: @moon-icon-small-size-large;
+			line-height: @moon-icon-small-size-large;
+		});
+
+		// .moon-taparea(@moon-icon-small-size);
+	}
+
+	&.dingbat {
+		font-family: "LG Display_Dingbat";
+		font-size: @moon-icon-size;
+		line-height: (@moon-icon-size - 8);  // Slight vertical shift to account for a lower baseline
+
+		&.small {
+			font-size: @moon-icon-small-size;
+			line-height: (@moon-icon-small-size - 4);  // Slight vertical shift to account for a lower baseline
+		}
+	}
+
+
+	// Skin colors
+	.applySkins({
+		color: inherit;
+	});
+}
+
+.focus({
+	.icon {
+		background-position: center -(@moon-icon-sprite-size + ((@moon-icon-sprite-size - @moon-icon-size) / 2));
+
+		&.small {
+			background-position: center -(@moon-icon-sprite-small-size + ((@moon-icon-sprite-small-size - @moon-icon-small-size) / 2));
+		}
+
+		.applySkins({
+			color: inherit;
+		});
+	}
+}, parent);
+
+.muted({
+	.focus({
+		.icon {
+			background-position: center -((@moon-icon-sprite-size - @moon-icon-size) / 2);
+
+			&.small {
+				background-position: center -((@moon-icon-sprite-small-size - @moon-icon-small-size) / 2);
+			}
+
+			.applySkins({
+				color: inherit;
+			});
+		}
+	}, parent);
+}, parent);

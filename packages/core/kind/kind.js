@@ -11,11 +11,58 @@ import computed from './computed';
 import styles from './styles';
 
 /**
+ * @callback RenderFunction
+ * @memberof core/kind
+ * @param {Object<string, any>} props
+ * @param {Object<string, any>} context
+ * @returns React.Element|null
+ */
+
+/**
+ * @callback ComputedPropFunction
+ * @memberof core/kind
+ * @param {Object<string, any>} props
+ * @param {Object<string, any>} context
+ * @returns any
+ */
+
+/**
+ * @callback HandlerFunction
+ * @memberof core/kind
+ * @param {any} event
+ * @param {Object<string, any>} props
+ * @param {Object<string, any>} context
+ */
+
+/**
+ * Configuration for CSS class name mapping
+ *
+ * @typedef {Object} StylesBlock
+ * @memberof core/kind
+ * @property {Object.<string, string>} css
+ * @property {String} [className]
+ * @property {Boolean|String|String[]} [publicClassNames]
+ */
+
+/**
+ * @typedef {Object} KindConfig
+ * @memberof core/kind
+ * @property {String} name
+ * @property {Object.<string, Function>} [propTypes]
+ * @property {Object.<string, any>} [defaultProps]
+ * @property {Object.<string, Function>} [contextTypes]
+ * @property {StylesBlock} [styles]
+ * @property {Object.<string, HandlerFunction>} [handlers]
+ * @property {Object.<string, ComputedPropFunction>} [computed]
+ * @property {RenderFunction} render
+ */
+
+/**
  * Creates a new component with some helpful declarative syntactic sugar.
  *
  * Example:
  * ```
- *	import css from './Button.less';
+ *	import css from './Button.module.less';
  *	const Button = kind({
  *		// expect color and onClick properties but neither required
  *		propTypes: {
@@ -55,9 +102,10 @@ import styles from './styles';
  * ```
  *
  * @function
- * @param  {Object}    config    Component configuration
+ * @template Props
+ * @param  {KindConfig}    config    Component configuration
  *
- * @returns {Function}           Component
+ * @returns {Component<Props>}           Component
  * @memberof core/kind
  * @public
  */

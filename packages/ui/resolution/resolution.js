@@ -20,6 +20,7 @@ let baseScreen,
 /**
  * Object that stores all of the pixel conversion factors to each keyed unit.
  *
+ * @type {Object}
  * @memberof ui/resolution
  * @public
  */
@@ -104,7 +105,7 @@ function getScreenTypeObject (type) {
  *
  * @function
  * @memberof ui/resolution
- * @param {Array}    types    An array of objects containing screen configuration data, as in the
+ * @param {Object[]}    types    An array of objects containing screen configuration data, as in the
  *                            preceding example.
  * @returns {undefined}
  * @public
@@ -402,7 +403,7 @@ const scaleToRem = (pixels) => unit(scale(pixels), 'rem');
  *
  * @function
  * @memberof ui/resolution
- * @param {String|ui/resolution.selectSrcSrcOptions}    src    A string containing a single image
+ * @param {String|ui/resolution.selectSrcSrcOptions} src       A string containing a single image
  *                                                             source or a key/value hash/object
  *                                                             containing keys representing screen
  *                                                             types (`'hd'`, `'fhd'`, `'uhd'`,
@@ -454,7 +455,9 @@ function init (args = {}) {
 /**
  * The current configuration
  *
+ * @type {Object}
  * @memberof ui/resolution
+ * @private
  */
 config = Object.assign({}, configDefaults);
 

@@ -57,15 +57,6 @@ const A11yDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		propTypes: /** @lends ui/A11yDecorator.A11yDecorator.prototype */ {
 			/**
-			 * Sets the value of the `aria-label` attribute for the wrapped component.
-			 *
-			 * @memberof ui/A11yDecorator.A11yDecorator.prototype
-			 * @type {String}
-			 * @public
-			 */
-			'aria-label': PropTypes.string,
-
-			/**
 			 * Sets the hint text to be read after the content.
 			 *
 			 * @type {String}
@@ -79,7 +70,16 @@ const A11yDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {String}
 			 * @public
 			 */
-			accessibilityPreHint: PropTypes.string
+			accessibilityPreHint: PropTypes.string,
+
+			/**
+			 * Sets the value of the `aria-label` attribute for the wrapped component.
+			 *
+			 * @memberof ui/A11yDecorator.A11yDecorator.prototype
+			 * @type {String}
+			 * @public
+			 */
+			'aria-label': PropTypes.string
 		},
 
 		computed: {

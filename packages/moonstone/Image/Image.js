@@ -21,7 +21,7 @@ import React from 'react';
 
 import Skinnable from '../Skinnable';
 
-import componentCss from './Image.less';
+import componentCss from './Image.module.less';
 
 /**
  * A Moonstone-styled image component without any behavior

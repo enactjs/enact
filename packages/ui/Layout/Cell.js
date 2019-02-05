@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import ri from '../resolution';
 
-import css from './Layout.less';
+import css from './Layout.module.less';
 
 const toFlexAlign = (align) => (
 	align === 'end' && 'flex-end' ||
@@ -17,6 +17,7 @@ const toFlexAlign = (align) => (
  * [Layout]{@link ui/Layout.Layout}.
  *
  * @class Cell
+ * @ui
  * @memberof ui/Layout
  * @public
  */
