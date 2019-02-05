@@ -57,10 +57,10 @@ const defaultConfig = {
 	nonLatinLanguageOverrides: null,
 
 	/**
-	 * Array of resource loaders which are invoked after a locale change.
+	 * Array of resource loaders to be invoked after a locale change.
 	 *
 	 * Each loader must be a function which accepts an object and returns either the resource when
-	 * `options.sync` is `true` or a `Promise` for the resource for `options.sync` is `false`.
+	 * `options.sync` is `true` or a `Promise` for the resource when `options.sync` is `false`.
 	 *
 	 * ```
 	 * resources: [
@@ -81,7 +81,7 @@ const defaultConfig = {
 	 * ]
 	 * ```
 	 *
-	 * @type {Array<Function|Object>}
+	 * @type {Function[]|Object[]}
 	 * @default null
 	 * @public
 	 * @memberof i18n/I18nDecorator.I18nDecorator.defaultConfig
