@@ -207,14 +207,14 @@ class ViewManager extends React.Component {
 				prevIndex: props.index,
 				reverseTransition: state.prevIndex > props.index
 			};
-		} else {
-			return null;
 		}
+
+		return null;
 	}
 
 	render () {
 		const {arranger, childProps, children, duration, end, index, noAnimation, start, enteringDelay, enteringProp, ...rest} = this.props;
-		const {prevIndex, reverseTransition} = this.state;
+		const {prevIndex: previousIndex, reverseTransition} = this.state;
 		const childrenList = React.Children.toArray(children);
 
 		const from = (start || start === 0) ? start : index;
@@ -227,7 +227,7 @@ class ViewManager extends React.Component {
 			duration,
 			index,
 			noAnimation,
-			previousIndex: prevIndex,
+			previousIndex,
 			reverseTransition,
 			enteringDelay,
 			enteringProp,
