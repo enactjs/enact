@@ -139,13 +139,17 @@ class FloatingLayerBase extends React.Component {
 		const {open, scrimType} = this.props;
 
 		if (prevProps.open && !open) {
+			// when open changes to false, forward close
 			forwardClose(null, this.props);
-		} else if (!prevProps.open && open) {
-			if (!this.state.nodeRendered) {
-				this.renderNode();
-			} else if (!prevState.nodeRendered) {
-				forwardOpen(null, this.props);
-			}
+		} else if (!prevProps.open && open && !this.state.nodeRendered) {
+			// when open changes to true and node hasn't rendered, render it
+			this.renderNode();
+		} else if (this.state.nodeRendered &&
+			(!prevState.nodeRendered || (prevState.nodeRendered && open && !prevProps.open))
+		) {
+			// when node has been rendered and either it was just rendered in this update cycle or
+			// the open prop changed in this cycle, forward open
+			forwardOpen(null, this.props);
 		}
 
 		if (scrimType === 'none') {
