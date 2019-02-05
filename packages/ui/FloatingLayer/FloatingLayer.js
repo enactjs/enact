@@ -137,18 +137,19 @@ class FloatingLayerBase extends React.Component {
 		}
 	}
 
-	UNSAFE_componentWillReceiveProps (nextProps) {
-		if (!this.props.open && nextProps.open && !this.state.nodeRendered) {
-			this.renderNode();
-		}
-	}
-
 	componentDidUpdate (prevProps, prevState) {
 		const {open, scrimType} = this.props;
 
 		if (prevProps.open && !open) {
 			forwardClose(null, this.props);
-		} else if (!prevProps.open && open || (open && !prevState.nodeRendered && this.state.nodeRendered)) {
+		} else if (!prevProps.open && open) {
+			if (this.state.nodeRendered) {
+				forwardOpen(null, this.props);
+			} else {
+				this.renderNode();
+			}
+		} else if (open && !prevState.nodeRendered && this.state.nodeRendered) {
+			// an edge case where it's mounted `open`
 			forwardOpen(null, this.props);
 		}
 
@@ -225,10 +226,6 @@ class FloatingLayerBase extends React.Component {
 	render () {
 		const {children, open, scrimType, ...rest} = this.props;
 
-		if (!open || !this.state.nodeRendered) {
-			return null;
-		}
-
 		delete rest.floatLayerClassName;
 		delete rest.floatLayerId;
 		delete rest.noAutoDismiss;
@@ -236,13 +233,17 @@ class FloatingLayerBase extends React.Component {
 		delete rest.onDismiss;
 		delete rest.onOpen;
 
-		return ReactDOM.createPortal(
-			<div {...rest}>
-				{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
-				{React.cloneElement(children, {onClick: this.stopPropagation})}
-			</div>,
-			this.node
-		);
+		if (open && this.state.nodeRendered) {
+			return ReactDOM.createPortal(
+				<div {...rest}>
+					{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
+					{React.cloneElement(children, {onClick: this.stopPropagation})}
+				</div>,
+				this.node
+			);
+		}
+
+		return null;
 	}
 }
 
