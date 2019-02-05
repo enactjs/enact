@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import Transition from '../Transition';
-import css from '../Transition.less';
+import css from '../Transition.module.less';
 
 describe('Transition Specs', () => {
 	// NOTE: Feature not yet implemented

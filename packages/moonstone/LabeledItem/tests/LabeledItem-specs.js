@@ -2,7 +2,7 @@ import React from 'react';
 import {mount, shallow} from 'enzyme';
 
 import LabeledItem from '../LabeledItem';
-import css from '../LabeledItem.less';
+import css from '../LabeledItem.module.less';
 
 describe('LabeledItem Specs', () => {
 

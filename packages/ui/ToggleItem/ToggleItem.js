@@ -20,7 +20,7 @@ import ComponentOverride from '../ComponentOverride';
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
 
-import componentCss from './ToggleItem.less';
+import componentCss from './ToggleItem.module.less';
 
 // eslint-disable-next-line
 const iconCreator = (position) => ({disabled, icon, iconComponent, selected, iconPosition}) => {

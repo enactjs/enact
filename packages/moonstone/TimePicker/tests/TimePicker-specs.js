@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import {TimePicker, TimePickerBase} from '../TimePicker';
-import css from '../TimePicker.less';
+import css from '../TimePicker.module.less';
 
 describe('TimePicker', () => {
 
@@ -23,7 +23,7 @@ describe('TimePicker', () => {
 		() => {
 			const handleChange = jest.fn();
 			const subject = mount(
-				<TimePicker onChange={handleChange} open title="Time" value={new Date(2000, 6, 15, 3, 30)} />
+				<TimePicker onChange={handleChange} open title="Time" value={new Date(2000, 6, 15, 3, 30)} locale="en-US" />
 			);
 
 			const base = subject.find('DateComponentRangePicker').first();
@@ -60,7 +60,7 @@ describe('TimePicker', () => {
 
 	test('should accept a JavaScript Date for its value prop', () => {
 		const subject = mount(
-			<TimePicker open title="Date" value={new Date(2000, 0, 1, 12, 30)} />
+			<TimePicker open title="Date" value={new Date(2000, 0, 1, 12, 30)} locale="en-US" />
 		);
 
 		const minutePicker = subject.find(`.${css.minutesComponents}`).at(0);
@@ -75,7 +75,7 @@ describe('TimePicker', () => {
 		'should accept an updated JavaScript Date for its value prop',
 		() => {
 			const subject = mount(
-				<TimePicker open title="Date" value={new Date(2000, 0, 1, 12, 30)} />
+				<TimePicker open title="Date" value={new Date(2000, 0, 1, 12, 30)} locale="en-US" />
 			);
 
 			subject.setProps({

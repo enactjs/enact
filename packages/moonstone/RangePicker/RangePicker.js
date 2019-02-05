@@ -5,6 +5,8 @@
  * <RangePicker defaultValue={70} min={0} max={100}></RangePicker>
  *
  * @module moonstone/RangePicker
+ * @exports RangePicker
+ * @exports RangePickerBase
  */
 
 import Changeable from '@enact/ui/Changeable';
