@@ -34,6 +34,7 @@
     "ramda": "^0.24.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
-    "recompose": "^0.26.0"
+    "recompose": "^0.26.0",
+    "warning": "^3.0.0"
   }
 }
