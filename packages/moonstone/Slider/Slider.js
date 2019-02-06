@@ -254,7 +254,8 @@ const SliderBase = kind({
 			activateOnFocus,
 			active
 		}),
-		tooltip: ({tooltip}) => tooltip === true ? ProgressBarTooltip : tooltip
+		tooltip: ({tooltip}) => tooltip === true ? ProgressBarTooltip : tooltip,
+		value: ({min, value}) => value || min
 	},
 
 	render: ({css, focused, tooltip, ...rest}) => {
