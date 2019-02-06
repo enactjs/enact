@@ -5,6 +5,7 @@ import kind from '../kind';
 
 describe('kind', () => {
 
+	const TestContext = React.createContext();
 	const Kind = kind({
 		name: 'Kind',
 		propTypes: {
@@ -14,9 +15,7 @@ describe('kind', () => {
 		defaultProps: {
 			label: 'Label'
 		},
-		contextTypes: {
-			parentLabel: PropTypes.string
-		},
+		contextType: TestContext,
 		styles: {
 			className: 'kind'
 		},
@@ -85,8 +84,8 @@ describe('kind', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should assign contextTypes when handlers are specified', () => {
-		const actual = Kind.contextTypes != null;
+	test('should assign contextType when handlers are specified', () => {
+		const actual = Kind.contextType != null;
 		const expected = true;
 
 		expect(actual).toBe(expected);
