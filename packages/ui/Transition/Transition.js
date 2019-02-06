@@ -22,7 +22,7 @@ import {Job} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {ResizeContext} from '../internal/Resize';
+import {ResizeContext} from '../Resizable';
 
 import componentCss from './Transition.module.less';
 
@@ -435,7 +435,7 @@ class Transition extends React.Component {
 			prevVisible: props.visible,
 			renderState: props.visible ? TRANSITION_STATE.READY : TRANSITION_STATE.INIT
 		};
-		this.registry = null;
+		this.resizeRegistry = null;
 	}
 
 	static getDerivedStateFromProps (props, state) {
@@ -458,10 +458,8 @@ class Transition extends React.Component {
 			this.measureInner();
 		}
 
-		this.registry = this.context;
-
-		if (this.registry) {
-			this.registry.register(this.handleResize);
+		if (this.context && typeof this.context === 'function') {
+			this.resizeRegistry = this.context(this.handleResize);
 		}
 	}
 
@@ -498,8 +496,8 @@ class Transition extends React.Component {
 
 	componentWillUnmount () {
 		this.measuringJob.stop();
-		if (this.registry) {
-			this.registry.unregister(this.handleResize);
+		if (this.resizeRegistry) {
+			this.resizeRegistry.unregister();
 		}
 	}
 

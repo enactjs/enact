@@ -8,9 +8,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import shallowEqual from 'recompose/shallowEqual';
 
+import {ResizeContext} from '../Resizable';
+
 import MarqueeBase from './MarqueeBase';
-import {contextTypes} from './MarqueeController';
-import {ResizeContext} from '../internal/Resize';
+import {MarqueeControllerContext} from './MarqueeController';
 
 /**
  * Default configuration parameters for {@link ui/Marquee.MarqueeDecorator}
@@ -284,8 +285,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			rtl: PropTypes.bool
 		}
 
-		static contextTypes = contextTypes
-
 		static defaultProps = {
 			marqueeDelay: 1000,
 			marqueeOn: 'focus',
@@ -293,6 +292,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeResetDelay: 1000,
 			marqueeSpeed: 60
 		}
+
+		static contextType = MarqueeControllerContext
 
 		constructor (props) {
 			super(props);
@@ -306,11 +307,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.timerState = TimerState.CLEAR;
 			this.distance = null;
 			this.contentFits = false;
-			this.registry = null;
+			this.resizeRegistry = null;
 		}
 
 		componentDidMount () {
-			if (this.context.register) {
+			if (this.context && this.context.register) {
 				this.sync = true;
 				this.context.register(this, {
 					start: this.start,
@@ -372,12 +373,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.promoteJob.stop();
 			this.demoteJob.stop();
 			if (this.sync) {
-				this.sync = false;
 				this.context.unregister(this);
 			}
 
-			if (this.registry) {
-				this.registry.unregister(this.handleResize);
+			if (this.resizeRegistry) {
+				this.resizeRegistry.unregister(this.handleResize);
 			}
 
 			off('keydown', this.handlePointerHide);
@@ -817,10 +817,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			return (
 				<ResizeContext.Consumer>
-					{(value) => {
-						if (!this.registry && value) {
-							this.registry = value;
-							this.registry.register(this.handleResize);
+					{(register) => {
+						if (!this.resizeRegistry && register) {
+							this.resizeRegistry = register(this.handleResize);
 						}
 
 						if (this.props.marqueeDisabled) {

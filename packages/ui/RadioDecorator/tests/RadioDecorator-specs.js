@@ -13,6 +13,10 @@ describe('RadioDecorator', () => {
 
 	const Controller = RadioControllerDecorator('main');
 
+	const expectToBeActive = (controller, decorator) => {
+		expect(controller.instance().active).toBe(decorator && decorator.instance().handleDeactivate);
+	};
+
 	test('should be activated when its prop is true on mount', () => {
 		const Component = RadioDecorator({prop: 'active'}, Item);
 		const subject = mount(
@@ -21,10 +25,8 @@ describe('RadioDecorator', () => {
 			</Controller>
 		);
 
-		const expected = subject.find('RadioDecorator').instance();
-		const actual = subject.instance().active;
-
-		expect(actual).toBe(expected);
+		const instance = subject.find('RadioDecorator');
+		expectToBeActive(subject, instance);
 	});
 
 	test('should not be activated when its prop is false on mount', () => {
@@ -35,10 +37,7 @@ describe('RadioDecorator', () => {
 			</Controller>
 		);
 
-		const expected = null;
-		const actual = subject.instance().active;
-
-		expect(actual).toBe(expected);
+		expectToBeActive(subject, null);
 	});
 
 	test(
@@ -58,10 +57,8 @@ describe('RadioDecorator', () => {
 				active: true
 			});
 
-			const expected = subject.find('RadioDecorator').instance();
-			const actual = subject.find('RadioControllerDecorator').instance().active;
-
-			expect(actual).toBe(expected);
+			const instance = subject.find('RadioDecorator');
+			expectToBeActive(subject.find('RadioControllerDecorator'), instance);
 		}
 	);
 
@@ -75,10 +72,8 @@ describe('RadioDecorator', () => {
 
 		subject.find('span').simulate('click');
 
-		const expected = subject.find('RadioDecorator').instance();
-		const actual = subject.instance().active;
-
-		expect(actual).toBe(expected);
+		const instance = subject.find('RadioDecorator');
+		expectToBeActive(subject, instance);
 	});
 
 	test('should be deactivated when the deactivated event fires', () => {
@@ -91,10 +86,7 @@ describe('RadioDecorator', () => {
 
 		subject.find('span').simulate('click');
 
-		const expected = null;
-		const actual = subject.instance().active;
-
-		expect(actual).toBe(expected);
+		expectToBeActive(subject, null);
 	});
 
 	test(
@@ -110,10 +102,8 @@ describe('RadioDecorator', () => {
 
 			subject.find('span').at(1).simulate('click');
 
-			const expected = subject.find('RadioDecorator').at(1).instance();
-			const actual = subject.instance().active;
-
-			expect(actual).toBe(expected);
+			const instance = subject.find('RadioDecorator').at(1);
+			expectToBeActive(subject, instance);
 		}
 	);
 
@@ -137,17 +127,14 @@ describe('RadioDecorator', () => {
 		// (activating second component in child controller) and no unexpected change happened in
 		// the parent controller (active component should remain the first component)
 
-		const childExpected = childController.find('RadioDecorator').at(1).instance();
-		const childActual = childController.at(0).instance().active;
-		expect(childActual).toBe(childExpected);
+		const childInstance = childController.find('RadioDecorator').at(1);
+		expectToBeActive(childController, childInstance);
 
-		const parentExpected = subject.find('RadioDecorator').at(0).instance();
-		const parentActual = subject.at(0).instance().active;
-		expect(parentActual).toBe(parentExpected);
+		const parentInstance = subject.find('RadioDecorator').at(0);
+		expectToBeActive(subject, parentInstance);
 	});
 
-
-	test('should not call deactivate callback on inactive items', () => {
+	test.only('should not call deactivate callback on inactive items', () => {
 		const handleDeactivate = jest.fn();
 		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
 

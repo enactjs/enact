@@ -1,8 +1,8 @@
 import hoc from '@enact/core/hoc';
-import React from 'react';
-import PropTypes from 'prop-types';
 import Registry from '@enact/core/internal/Registry';
-import {ResizeContext} from '@enact/ui/internal/Resize';
+import {ResizeContext} from '@enact/ui/Resizable';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 /**
  * A higher-order component that classifies an application with a target set of font sizing rules.
@@ -50,16 +50,20 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 		}
 
 		componentDidMount () {
-			this.resize.parent = this.context;
+			this.resizeRegistry.parent = this.context;
 		}
 
 		componentDidUpdate (prevProps) {
 			if (prevProps.textSize !== this.props.textSize) {
-				this.resize.notify({});
+				this.resizeRegistry.notify({});
 			}
 		}
 
-		resize = Registry.create();
+		componentWillUnmount () {
+			this.resizeRegistry.parent = null;
+		}
+
+		resizeRegistry = Registry.create();
 
 		render () {
 			const {className, highContrast, textSize, ...props} = this.props;
@@ -70,7 +74,7 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			if (textSize === 'large') variants.largeText = true;
 
 			return (
-				<ResizeContext.Provider value={this.resize.subscriber}>
+				<ResizeContext.Provider value={this.resizeRegistry.register}>
 					<Wrapped className={combinedClassName} skinVariants={variants} {...props} />;
 				</ResizeContext.Provider>
 			);

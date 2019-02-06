@@ -1,5 +1,5 @@
 import {on, off} from '@enact/core/dispatcher';
-import {adaptEvent, forward, forProp, handle, stop} from '@enact/core/handle';
+import {adaptEvent, forward, forProp, handle, oneOf, stop, forEventProp, call} from '@enact/core/handle';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom';
 
 import Cancelable from '../Cancelable';
 
-import {contextTypes} from './FloatingLayerDecorator';
+import {FloatingLayerContext} from './FloatingLayerDecorator';
 import Scrim from './Scrim';
 
 const forwardWithType = type => adaptEvent(
@@ -109,7 +109,7 @@ class FloatingLayerBase extends React.Component {
 		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none'])
 	}
 
-	static contextTypes = contextTypes
+	static contextType = FloatingLayerContext
 
 	static defaultProps = {
 		floatLayerClassName: 'enact-fit enact-clip enact-untouchable',
@@ -128,12 +128,10 @@ class FloatingLayerBase extends React.Component {
 	}
 
 	componentDidMount () {
-		if (this.props.open) {
-			this.renderNode();
-		}
-
-		if (this.context.registerFloatingLayer) {
-			this.context.registerFloatingLayer(this, {close: this.handleClose});
+		// Must register first in order to obtain the floating layer node reference before tryinging
+		// to render into it
+		if (this.context && typeof this.context === 'function') {
+			this.controller = this.context(this.handleNotify.bind(this));
 		}
 	}
 
@@ -141,15 +139,16 @@ class FloatingLayerBase extends React.Component {
 		const {open, scrimType} = this.props;
 
 		if (prevProps.open && !open) {
+			// when open changes to false, forward close
 			forwardClose(null, this.props);
-		} else if (!prevProps.open && open) {
-			if (this.state.nodeRendered) {
-				forwardOpen(null, this.props);
-			} else {
-				this.renderNode();
-			}
-		} else if (open && !prevState.nodeRendered && this.state.nodeRendered) {
-			// an edge case where it's mounted `open`
+		} else if (!prevProps.open && open && !this.state.nodeRendered) {
+			// when open changes to true and node hasn't rendered, render it
+			this.renderNode();
+		} else if (this.state.nodeRendered &&
+			(!prevState.nodeRendered || (prevState.nodeRendered && open && !prevProps.open))
+		) {
+			// when node has been rendered and either it was just rendered in this update cycle or
+			// the open prop changed in this cycle, forward open
 			forwardOpen(null, this.props);
 		}
 
@@ -163,16 +162,32 @@ class FloatingLayerBase extends React.Component {
 	}
 
 	componentWillUnmount () {
-		if (this.node) {
-			const floatingLayer = this.context.getFloatingLayer();
-			floatingLayer.removeChild(this.node);
+		if (this.node && this.floatingLayer) {
+			this.floatingLayer.removeChild(this.node);
 			this.node = null;
+			this.floatingLayer = null;
 		}
 
 		off('click', this.handleClick);
 
-		if (this.context.unregisterFloatingLayer) {
-			this.context.unregisterFloatingLayer(this);
+		if (this.controller) {
+			this.controller.unregister();
+		}
+	}
+
+	handleNotify = oneOf(
+		[forEventProp('action', 'close'), call('handleClose')],
+		[forEventProp('action', 'mount'), call('setFloatingLayer')]
+	).bind(this)
+
+	setFloatingLayer ({floatingLayer}) {
+		const isNewLayer = !this.floatingLayer && floatingLayer;
+		this.floatingLayer = floatingLayer;
+
+		// the first time we have a valid floating layer container and this instance is set to open,
+		// we need to render the layer.
+		if (isNewLayer && this.props.open && !this.state.nodeRendered) {
+			this.renderNode();
 		}
 	}
 
@@ -181,11 +196,11 @@ class FloatingLayerBase extends React.Component {
 		forwardDismiss
 	).bind(this)
 
-	handleClick = () => {
-		if (!this.props.noAutoDismiss && this.props.open) {
-			forwardDismiss(null, this.props);
-		}
-	}
+	handleClick = handle(
+		forProp('noAutoDismiss', false),
+		forProp('open', true),
+		forward('onDismiss')
+	).bind(this)
 
 	handleScroll = (ev) => {
 		const {currentTarget} = ev;
@@ -203,12 +218,11 @@ class FloatingLayerBase extends React.Component {
 
 	renderNode () {
 		const {floatLayerClassName} = this.props;
-		const floatingLayer = this.context.getFloatingLayer();
 
-		if (this.node || !floatingLayer) return;
+		if (this.node) return;
 
 		invariant(
-			this.context.getFloatingLayer,
+			this.floatingLayer,
 			'FloatingLayer cannot be used outside the subtree of a FloatingLayerDecorator'
 		);
 
@@ -216,7 +230,7 @@ class FloatingLayerBase extends React.Component {
 		this.node.className = floatLayerClassName;
 		this.node.style.zIndex = 100;
 
-		floatingLayer.appendChild(this.node);
+		this.floatingLayer.appendChild(this.node);
 		on('scroll', this.handleScroll, this.node);
 
 		// render children when this.node is inserted in the DOM tree.

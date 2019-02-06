@@ -1,21 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {mount} from 'enzyme';
+import {shallow} from 'enzyme';
 import Spinner from '../Spinner';
 import css from '../Spinner.module.less';
 
 describe('Spinner Specs', () => {
-	const options = {
-		context: {
-			getFloatingLayer: () => document.getElementById('floatLayer')
-		},
-		childContextTypes: {
-			getFloatingLayer: PropTypes.func
-		}
-	};
-
 	test('should have centered class when centered prop equals true', () => {
-		const spinner = mount(
+		const spinner = shallow(
 			<Spinner component="div" centered>
 				Loading...
 			</Spinner>
@@ -30,7 +20,7 @@ describe('Spinner Specs', () => {
 	test(
 		'should not have content class when Spinner has no children',
 		() => {
-			const spinner = mount(
+			const spinner = shallow(
 				<Spinner component="div" />
 			);
 
@@ -44,7 +34,7 @@ describe('Spinner Specs', () => {
 	test(
 		'should have no scrim class when blockClickOn prop equals container',
 		() => {
-			const spinner = mount(
+			const spinner = shallow(
 				<Spinner component="div" blockClickOn="container" />
 			);
 
@@ -58,7 +48,7 @@ describe('Spinner Specs', () => {
 	test(
 		'should have scrim class when blockClickOn prop equals container and when scrim prop equals true',
 		() => {
-			const spinner = mount(
+			const spinner = shallow(
 				<Spinner component="div" blockClickOn="container" scrim />
 			);
 
@@ -72,17 +62,14 @@ describe('Spinner Specs', () => {
 	test(
 		'should have FloatingLayer when blockClickOn prop equals screen',
 		() => {
-			const div = document.createElement('div');
-			div.setAttribute('id', 'floatLayer');
-			document.body.appendChild(div);
-
-			const spinner = mount(
-				<Spinner component="div" blockClickOn="screen" />,
-				options
+			const spinner = shallow(
+				<Spinner component="div" blockClickOn="screen" />
 			);
 
 			const expected = true;
-			const actual = spinner.find('FloatingLayer').exists();
+			// FloatingLayer is wrapped by Cancelable so it's undiscoverable by name with shallow
+			// mounting
+			const actual = spinner.find('Cancelable').exists();
 
 			expect(actual).toBe(expected);
 		}

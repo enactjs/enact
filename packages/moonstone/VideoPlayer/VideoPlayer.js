@@ -25,7 +25,7 @@ import {Spottable} from '@enact/spotlight/Spottable';
 import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ComponentOverride from '@enact/ui/ComponentOverride';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
-import {contextTypes} from '@enact/ui/FloatingLayer/FloatingLayerDecorator';
+import {FloatingLayerContext} from '@enact/ui/FloatingLayer/FloatingLayerDecorator';
 import Media from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
@@ -609,7 +609,7 @@ const VideoPlayerBase = class extends React.Component {
 		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element])
 	}
 
-	static contextTypes = contextTypes
+	static contextType = FloatingLayerContext
 
 	static defaultProps = {
 		autoCloseTimeout: 5000,
@@ -679,6 +679,9 @@ const VideoPlayerBase = class extends React.Component {
 		on('mousemove', this.activityDetected);
 		on('keydown', this.handleGlobalKeyDown);
 		this.startDelayedFeedbackHide();
+		if (this.context && typeof this.context === 'function') {
+			this.floatingLayerController = this.context(() => {});
+		}
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
@@ -712,7 +715,7 @@ const VideoPlayerBase = class extends React.Component {
 			!this.state.mediaControlsVisible && prevState.mediaControlsVisible !== this.state.mediaControlsVisible ||
 			!this.state.mediaSliderVisible && prevState.mediaSliderVisible !== this.state.mediaSliderVisible
 		) {
-			this.context.closeAllFloatingLayers();
+			this.floatingLayerController.notify({action: 'closeAll'});
 		}
 
 		if (this.props.spotlightId !== prevProps.spotlightId) {
@@ -787,6 +790,9 @@ const VideoPlayerBase = class extends React.Component {
 		this.renderBottomControl.stop();
 		this.sliderTooltipTimeJob.stop();
 		this.slider5WayPressJob.stop();
+		if (this.floatingLayerController) {
+			this.floatingLayerController.unregister();
+		}
 	}
 
 	//
