@@ -41,7 +41,7 @@ const defaultConfig = {
 	 * This function will receive the event payload as its only argument and should return `true` to
 	 * prevent the resize notification.
 	 *
-	 * @type {Function}
+	 * @type {String}
 	 * @default null
 	 * @memberof ui/Resizable.Resizable.defaultConfig
 	 */
@@ -76,13 +76,13 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.context && typeof this.context === 'function') {
 				// Registry requires a callback but (for now at least) Resizable doesn't respond to
 				// upstream events so we're initializing a no-op function to "handle" callbacks
-				this.resize = this.context(() => {});
+				this.resizeRegistry = this.context(() => {});
 			}
 		}
 
 		componentWillUnmount () {
-			if (this.resize) {
-				this.resize.unregister();
+			if (this.resizeRegistry) {
+				this.resizeRegistry.unregister();
 			}
 		}
 
@@ -93,8 +93,8 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 		 * @private
 		 */
 		invalidateBounds () {
-			if (this.resize) {
-				this.resize.notify({action: 'invalidateBounds'});
+			if (this.resizeRegistry) {
+				this.resizeRegistry.notify({action: 'invalidateBounds'});
 			}
 		}
 
