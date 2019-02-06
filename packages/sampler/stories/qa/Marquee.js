@@ -53,7 +53,7 @@ const MarqueeI18nSamples = I18nContextDecorator({updateLocaleProp: 'updateLocale
 const CustomItemBase = ({children, ...rest}) => (
 	<div {...rest} style={{display: 'flex', width: 300, alignItems: 'center'}}>
 		<Icon>flag</Icon>
-		<Marquee style={{flex: 1, overflow: 'hidden'}}>{children}</Marquee>
+		<Marquee id="marqueeText" style={{flex: 1, overflow: 'hidden'}}>{children}</Marquee>
 		<Icon>trash</Icon>
 	</div>
 );
@@ -75,8 +75,7 @@ class MarqueeWithShortContent extends React.Component {
 	}
 
 	componentDidMount () {
-		// This is hacky. Will break if classes change
-		this.node = document.querySelector('[class^="Panel-module__body"] [class^="Marquee-module__marquee"]');
+		this.node = document.querySelector('#marqueeText');
 		this.updateSizeInfo();
 	}
 
