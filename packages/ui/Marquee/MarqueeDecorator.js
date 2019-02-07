@@ -646,12 +646,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		cancelAnimation = () => {
+			this.stop();
+
 			if (this.sync) {
 				this.context.cancel(this);
-				return;
 			}
-
-			this.stop();
 		}
 
 		handleResize = () => {
