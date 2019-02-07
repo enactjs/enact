@@ -18,7 +18,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Touchable` to continue drag events when blurring the element when `dragConfig.global` is set
 - `ui/Marquee` to marquee when necessary after a locale change
-- `ui/Marquee` to cancel marquee when we change `marqueeOn` prop
+- `ui/Marquee` to cancel synced marquees when we change `marqueeOn` prop
 
 ## [2.2.9] - 2019-01-11
 
