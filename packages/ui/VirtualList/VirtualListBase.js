@@ -232,12 +232,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		static defaultState = {
-			cc: [],
-			firstIndex: 0,
 			metrics: {},
-			numOfItems: 0,
-			prevProps: {},
-			scrollPosition: 0
+			prevProps: {}
 		}
 
 		constructor (props) {
