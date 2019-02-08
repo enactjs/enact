@@ -6,7 +6,7 @@ import ToggleItem from '../ToggleItem';
 
 import DaySelectorCheckbox from './DaySelectorCheckbox';
 
-import css from './DaySelectorItem.less';
+import css from './DaySelectorItem.module.less';
 
 /**
  * An extension of [Item]{@link moonstone/Item.Item} that can be toggled between two states via its

@@ -19,7 +19,7 @@ import Skinnable from '../Skinnable';
 import I18nFontDecorator from './I18nFontDecorator';
 import AccessibilityDecorator from './AccessibilityDecorator';
 import screenTypes from './screenTypes.json';
-import css from './MoonstoneDecorator.less';
+import css from './MoonstoneDecorator.module.less';
 import {configure} from '@enact/ui/Touchable';
 
 /**
@@ -94,8 +94,8 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		);
 	}
 	if (spotlight) App = SpotlightRootDecorator({noAutoFocus}, App);
-	if (textSize || highContrast) App = AccessibilityDecorator(App);
 	if (skin) App = Skinnable({defaultSkin: 'dark'}, App);
+	if (textSize || highContrast) App = AccessibilityDecorator(App);
 
 	// add webOS-specific key maps
 	addAll({

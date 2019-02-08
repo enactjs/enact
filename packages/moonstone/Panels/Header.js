@@ -10,7 +10,7 @@ import ComponentOverride from '@enact/ui/ComponentOverride';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import css from './Header.less';
+import css from './Header.module.less';
 
 // Create a <h1> and Marquee component that support the uppercase attribute
 const UppercaseH1 = Uppercase('h1');		// Used by compact header, which provides its own inline strings and tags for marqueeing

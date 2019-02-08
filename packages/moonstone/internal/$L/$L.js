@@ -1,27 +1,48 @@
 /* global ILIB_MOONSTONE_PATH */
 
+import {getIStringFromBundle} from '@enact/i18n/src/resBundle';
 import ResBundle from '@enact/i18n/ilib/lib/ResBundle';
-import Locale from '@enact/i18n/ilib/lib/Locale';
 
 // The ilib.ResBundle for the active locale used by $L
 let resBundle;
 
 /**
- * Creates a new ilib.ResBundle for string translation
+ * Returns the current ilib.ResBundle
  *
- * @returns {ilib.ResBundle} New ilib.ResBundle
+ * @returns {ilib.ResBundle} Current ResBundle
  */
 function getResBundle () {
-	let currLoc = new Locale();
-	if (typeof ILIB_MOONSTONE_PATH === 'string' && (!resBundle ||
-			currLoc.getSpec() !== resBundle.getLocale().getSpec())) {
-		resBundle = new ResBundle({
+	return resBundle;
+}
+
+/**
+ * Creates a new ilib.ResBundle for string translation
+ *
+ * @param  {ilib.Locale} locale Locale for ResBundle
+ *
+ * @returns {Promise|ResBundle} Resolves with a new ilib.ResBundle
+ */
+function createResBundle (options) {
+	let opts = options;
+
+	if (typeof ILIB_MOONSTONE_PATH !== 'undefined') {
+		opts = {
 			loadParams: {
 				root: ILIB_MOONSTONE_PATH
-			}
-		});
+			},
+			...options
+		};
 	}
-	return resBundle;
+
+	if (!opts.onLoad) return;
+
+	// eslint-disable-next-line no-new
+	new ResBundle({
+		...opts,
+		onLoad: (bundle) => {
+			opts.onLoad(bundle || null);
+		}
+	});
 }
 
 /**
@@ -34,25 +55,44 @@ function clearResBundle () {
 	resBundle = null;
 }
 
+/**
+ * Set the locale for the strings that $L loads. This may reload the
+ * string resources if necessary.
+ *
+ * @param {string} spec the locale specifier
+ * @returns {ilib.ResBundle} Current ResBundle
+ */
+function setResBundle (bundle) {
+	return (resBundle = bundle);
+}
+
+function toIString (str) {
+	let rb = getResBundle();
+
+	if (!rb) {
+		createResBundle({sync: true, onLoad: setResBundle});
+	}
+
+	return getIStringFromBundle(str, rb);
+}
 
 /**
-* Localized internal Moonstone strings from iLib translations.
-*
-* @param {String} str - String to be localized.
-* @returns {String} Localized string.
-*/
+ * Maps a string or key/value object to a translated string for the current locale.
+ *
+ * @function
+ * @memberof i18n/$L
+ * @param  {String|Object} str Source string
+ *
+ * @returns {String} The translated string
+ */
 function $L (str) {
-	const rb = getResBundle();
-	const isObject = typeof str === 'object';
-	if (!rb) {
-		return isObject ? str.value : str;
-	}
-	return isObject ? rb.getString(str.value, str.key).toString() : rb.getString(str).toString();
+	return String(toIString(str));
 }
 
 export default $L;
 export {
 	$L,
-	getResBundle,
-	clearResBundle
+	clearResBundle,
+	createResBundle,
+	setResBundle
 };

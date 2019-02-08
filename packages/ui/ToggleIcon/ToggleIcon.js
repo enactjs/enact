@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
 
-import componentCss from './ToggleIcon.less';
+import componentCss from './ToggleIcon.module.less';
 
 /**
  * Represents a Boolean state, and can accept any icon to toggle.

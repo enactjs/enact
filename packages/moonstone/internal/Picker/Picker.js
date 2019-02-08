@@ -20,7 +20,7 @@ import $L from '../$L';
 import PickerButton from './PickerButton';
 import SpottablePicker from './SpottablePicker';
 
-import css from './Picker.less';
+import css from './Picker.module.less';
 
 const holdConfig = {
 	events: [
@@ -857,7 +857,9 @@ const PickerBase = class extends React.Component {
 
 		if (joined) {
 			Component = SpottableDiv;
+			spottablePickerProps.onSpotlightDisappear = onSpotlightDisappear;
 			spottablePickerProps.orientation = orientation;
+			spottablePickerProps.spotlightDisabled = spotlightDisabled;
 		} else {
 			Component = Div;
 		}

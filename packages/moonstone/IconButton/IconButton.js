@@ -25,7 +25,7 @@ import Icon from '../Icon';
 import Skinnable from '../Skinnable';
 import TooltipDecorator from '../TooltipDecorator';
 
-import componentCss from './IconButton.less';
+import componentCss from './IconButton.module.less';
 
 /**
  * A moonstone-styled icon button without any behavior.

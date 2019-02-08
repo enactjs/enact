@@ -32,7 +32,7 @@ import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 import {SlotItemBase} from '../SlotItem';
 
-import componentCss from './ToggleItem.less';
+import componentCss from './ToggleItem.module.less';
 
 /**
  * A Moonstone-styled toggle [Item]{@link moonstone/Item} without any behavior.

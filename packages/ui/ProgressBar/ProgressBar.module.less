@@ -1,0 +1,49 @@
+// ProgressBar.module.less
+//
+.progressBar {
+	--ui-progressbar-proportion-start: 0%;
+	--ui-progressbar-proportion-start-background: 0%;
+	--ui-progressbar-proportion-end: 0%;
+	--ui-progressbar-proportion-end-background: 0%;
+
+	position: relative;
+	direction: ltr;
+
+	.fill,
+	.load {
+		height: 100%;
+		position: absolute;
+	}
+
+	&.vertical {
+		display: inline-block;
+
+		.fill,
+		.load {
+			width: 100%;
+			bottom: 0;
+		}
+
+		.fill {
+			bottom: var(--ui-progressbar-proportion-start);
+			height: var(--ui-progressbar-proportion-end);
+		}
+
+		.load {
+			bottom: var(--ui-progressbar-proportion-start-background);
+			height: var(--ui-progressbar-proportion-end-background);
+		}
+	}
+
+	&.horizontal {
+		.fill {
+			left: var(--ui-progressbar-proportion-start);
+			width: var(--ui-progressbar-proportion-end);
+		}
+
+		.load {
+			left: var(--ui-progressbar-proportion-start-background);
+			width: var(--ui-progressbar-proportion-end-background);
+		}
+	}
+}

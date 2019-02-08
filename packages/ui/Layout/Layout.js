@@ -28,7 +28,7 @@ import PropTypes from 'prop-types';
 
 import {Cell, CellBase, toFlexAlign} from './Cell';
 
-import css from './Layout.less';
+import css from './Layout.module.less';
 
 /**
  * A container for `Cell`s.

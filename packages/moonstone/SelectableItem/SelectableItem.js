@@ -18,7 +18,7 @@ import {ToggleItemBase, ToggleItemDecorator} from '../ToggleItem';
 
 import SelectableIcon from './SelectableIcon';
 
-import componentCss from './SelectableItem.less';
+import componentCss from './SelectableItem.module.less';
 
 /**
  * Renders an [Item]{@link moonstone/Item} with a circle icon, by default.

@@ -14,7 +14,7 @@ import {
 	updateMetrics,
 	updateScrollPosition
 } from './metrics';
-import css from './VirtualList.less';
+import css from './VirtualList.module.less';
 
 const
 	nop = () => {},

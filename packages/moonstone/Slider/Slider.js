@@ -40,7 +40,7 @@ import {
 	handleIncrement
 } from './utils';
 
-import componentCss from './Slider.less';
+import componentCss from './Slider.module.less';
 
 /**
  * Range-selection input component.

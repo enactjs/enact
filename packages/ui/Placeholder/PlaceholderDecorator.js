@@ -1,6 +1,7 @@
 import hoc from '@enact/core/hoc';
 import React from 'react';
-import PropTypes from 'prop-types';
+
+import {PlaceholderContext} from './PlaceholderControllerDecorator';
 
 /**
  * Default config for PlaceholderDecorator.
@@ -30,21 +31,6 @@ const defaultConfig = {
 };
 
 /**
- * The context propTypes required by `PlaceholderDecorator`.
- *
- * This should be set as the `childContextTypes` of a container so that the container can notify
- * when scrolling.
- *
- * @memberof ui/Placeholder.PlaceholderDecorator
- * @public
- */
-const contextTypes = {
-	invalidateBounds: PropTypes.func,
-	registerPlaceholder: PropTypes.func,
-	unregisterPlaceholder: PropTypes.func
-};
-
-/**
  * A higher-order component that enables a container to notify the wrapped component when scrolling.
  *
  * Containers must provide `registerPlaceholder`, `unregisterPlaceholder`, and `invalidateBounds`
@@ -62,7 +48,7 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.PureComponent {
 		static displayName = 'PlaceholderDecorator'
 
-		static contextTypes = contextTypes
+		static contextType = PlaceholderContext
 
 		constructor () {
 			super();
@@ -73,25 +59,25 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			if (!this.state.visible) {
-				this.context.registerPlaceholder(this, this.update);
+			if (!this.state.visible && this.context) {
+				this.controller = this.context(this.update.bind(this));
 			}
 		}
 
 		componentDidUpdate (prevProps, prevState) {
-			if (this.state.visible && prevState.visible !== this.state.visible) {
-				this.context.invalidateBounds();
-				this.context.unregisterPlaceholder(this);
+			if (this.controller && this.state.visible && prevState.visible !== this.state.visible) {
+				// also need invalidateBounds() for scroller :(
+				this.controller.unregister();
 			}
 		}
 
 		componentWillUnmount () {
-			if (!this.state.visible) {
-				this.context.unregisterPlaceholder(this);
+			if (this.controller && !this.state.visible) {
+				this.controller.unregister();
 			}
 		}
 
-		update = ({leftThreshold, topThreshold}) => {
+		update ({leftThreshold, topThreshold}) {
 			const {offsetLeft, offsetTop, offsetHeight, offsetWidth} = this.placeholderRef;
 
 			if (offsetTop < topThreshold + offsetHeight && offsetLeft < leftThreshold + offsetWidth) {
@@ -127,6 +113,5 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 export default PlaceholderDecorator;
 export {
-	contextTypes,
 	PlaceholderDecorator
 };

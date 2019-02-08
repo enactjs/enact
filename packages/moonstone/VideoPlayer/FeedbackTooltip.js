@@ -11,7 +11,7 @@ import FeedbackContent from './FeedbackContent';
 import states from './FeedbackIcons.js';
 import {secondsToTime} from './util';
 
-import css from './FeedbackTooltip.less';
+import css from './FeedbackTooltip.module.less';
 
 /**
  * FeedbackTooltip {@link moonstone/VideoPlayer}. This displays the media's playback rate and

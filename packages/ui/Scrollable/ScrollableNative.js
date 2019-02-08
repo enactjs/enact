@@ -2,20 +2,19 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
+import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import {privateContextTypes as contextTypesResize} from '../Resizable';
+import {ResizeContext} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
-import Registry from '@enact/core/internal/Registry';
-import {ResizeContext} from '../internal/Resize';
 
-import css from './Scrollable.less';
+import css from './Scrollable.module.less';
 
 const
 	constants = {
@@ -349,8 +348,6 @@ class ScrollableBaseNative extends Component {
 		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 	}
 
-	static childContextTypes = contextTypesResize
-
 	static defaultProps = {
 		cbScrollTo: nop,
 		horizontalScrollbar: 'auto',
@@ -362,6 +359,8 @@ class ScrollableBaseNative extends Component {
 		overscrollEffectOn: {drag: false, pageKey: false, wheel: false},
 		verticalScrollbar: 'auto'
 	}
+
+	static contextType = ResizeContext
 
 	constructor (props) {
 		super(props);
@@ -388,16 +387,13 @@ class ScrollableBaseNative extends Component {
 		// Enable the early bail out of repeated scrolling to the same position
 		this.animationInfo = null;
 
-		this.resize = Registry.create();
+		this.resizeRegistry = Registry.create(this.handleResize.bind(this));
 
 		props.cbScrollTo(this.scrollTo);
 	}
 
-	getChildContext = () => ({
-		invalidateBounds: this.enqueueForceUpdate
-	})
-
 	componentDidMount () {
+		this.resizeRegistry.parent = this.context;
 		this.addEventListeners();
 		this.updateScrollbars();
 	}
@@ -441,11 +437,12 @@ class ScrollableBaseNative extends Component {
 		const horizontal = isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
 		const vertical = isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
 		if (horizontal || vertical) {
-			this.resize.notify({});
+			this.resizeRegistry.notify({});
 		}
 	}
 
 	componentWillUnmount () {
+		this.resizeRegistry.parent = null;
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
 		if (this.scrolling) {
 			this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
@@ -459,9 +456,15 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	handleResize (ev) {
+		if (ev.action === 'invalidateBounds') {
+			this.enqueueForceUpdate();
+		}
+	}
+
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
-	enqueueForceUpdate = () => {
+	enqueueForceUpdate () {
 		this.childRef.calculateMetrics();
 		this.forceUpdate();
 	}
@@ -1331,31 +1334,24 @@ class ScrollableBaseNative extends Component {
 		delete rest.verticalScrollbar;
 
 		return (
-			<ResizeContext.Consumer>
-				{resizeContext => {
-					this.resize.parent = resizeContext;
-					return (
-						<ResizeContext.Provider value={this.resize.subscriber}>
-							{containerRenderer({
-								childComponentProps: rest,
-								childWrapper,
-								childWrapperProps,
-								className: scrollableClasses,
-								componentCss: css,
-								horizontalScrollbarProps: this.horizontalScrollbarProps,
-								initChildRef: this.initChildRef,
-								initContainerRef: this.initContainerRef,
-								isHorizontalScrollbarVisible,
-								isVerticalScrollbarVisible,
-								rtl,
-								scrollTo: this.scrollTo,
-								style,
-								verticalScrollbarProps: this.verticalScrollbarProps
-							})}
-						</ResizeContext.Provider>
-					);
-				}}
-			</ResizeContext.Consumer>
+			<ResizeContext.Provider value={this.resizeRegistry.register}>
+				{containerRenderer({
+					childComponentProps: rest,
+					childWrapper,
+					childWrapperProps,
+					className: scrollableClasses,
+					componentCss: css,
+					horizontalScrollbarProps: this.horizontalScrollbarProps,
+					initChildRef: this.initChildRef,
+					initContainerRef: this.initContainerRef,
+					isHorizontalScrollbarVisible,
+					isVerticalScrollbarVisible,
+					rtl,
+					scrollTo: this.scrollTo,
+					style,
+					verticalScrollbarProps: this.verticalScrollbarProps
+				})}
+			</ResizeContext.Provider>
 		);
 	}
 }
