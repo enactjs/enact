@@ -14,8 +14,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import warning from 'warning';
 
-const UNINITIALIZED = Symbol('Unitialized');
-
 /**
  * Default config for {@link ui/Changeable.Changeable}.
  *
@@ -131,14 +129,16 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.state = {
-				value: UNINITIALIZED,
+				rendered: false,
+				value: null,
 				controlled: prop in props
 			};
 		}
 
 		static getDerivedStateFromProps (props, state) {
-			if (state.value === UNINITIALIZED) {
+			if (state.rendered === false) {
 				return {
+					rendered: true,
 					value: props[prop] != null ? props[prop] : props[defaultPropKey]
 				};
 			} else if (state.controlled) {

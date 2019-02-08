@@ -106,7 +106,6 @@ describe('Toggleable', () => {
 
 				subject.setProps({selected: null});
 
-
 				const expected = 'selected';
 				const actual = subject.find(DivComponent).props();
 

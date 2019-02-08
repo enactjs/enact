@@ -99,8 +99,6 @@ const defaultConfig = {
 	toggleProp: null
 };
 
-const UNINITIALIZED = Symbol('Unitialized');
-
 /**
  * A higher-order component that applies a 'toggleable' behavior to its wrapped component.
  *
@@ -171,14 +169,16 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.state = {
-				active: UNINITIALIZED,
+				rendered: false,
+				active: null,
 				controlled: prop in props
 			};
 		}
 
 		static getDerivedStateFromProps (props, state) {
-			if (state.active === UNINITIALIZED) {
+			if (state.rendered === false) {
 				return {
+					rendered: true,
 					active: Boolean(props[prop] != null ? props[prop] : props[defaultPropKey])
 				};
 			} else if (state.controlled) {
