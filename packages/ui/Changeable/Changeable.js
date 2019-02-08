@@ -130,7 +130,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.state = {
 				value: props[prop] != null ? props[prop] : props[defaultPropKey],
-				controlled: typeof props[prop] !== 'undefined'
+				controlled: prop in props
 			};
 		}
 
