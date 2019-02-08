@@ -696,8 +696,8 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			let
-				{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),
-				width, height;
+				width, height,
+				{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom);
 
 			width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
 			height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
