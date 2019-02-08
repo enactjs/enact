@@ -4,9 +4,14 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ## [unreleased]
 
+### Added
+
+- Story description text at the top of each sample
+
 ### Changed
 
 - `moonstone/ExpandableInput` and `moonstone/Input` knob to select input type
+- `MoonstoneEnvironment` to display background images in a more pleasant way
 
 ## [2.2.9] - 2019-01-11
 

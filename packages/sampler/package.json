@@ -23,6 +23,7 @@
     "@enact/spotlight": "^2.2.9",
     "@enact/ui": "^2.2.9",
     "@enact/webos": "^2.2.9",
+    "query-string": "^6.2.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0"
   },

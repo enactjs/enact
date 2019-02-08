@@ -4,10 +4,12 @@ import classnames from 'classnames';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import BodyText from '@enact/moonstone/BodyText';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 import {Panels, Panel, Header} from '@enact/moonstone/Panels';
 import {boolean, select} from '../enact-knobs';
 import {selectV2} from '@storybook/addon-knobs';
+import qs from 'query-string';
 
 import css from './MoonstoneEnvironment.module.less';
 
@@ -19,27 +21,28 @@ const reloadPage = () => {
 };
 
 const PanelsBase = kind({
-	name: 'MoonstoneEnvironment',
+	name: 'MoonstoneEnvironmentPanels',
 
 	propTypes: {
 		description: PropTypes.string,
 		title: PropTypes.string
 	},
 
-	render: ({children, title, description, ...rest}) => (
-		<div {...rest}>
-			<Panels onApplicationClose={reloadPage}>
-				<Panel className={css.panel}>
-					<Header type="compact" title={title} casing="preserve" />
-					{description ? (
-						<div className={css.description}>
-							<p>{description}</p>
-						</div>
-					) : null}
-					{children}
-				</Panel>
-			</Panels>
-		</div>
+	styles: {
+		css,
+		className: 'moonstoneEnvironmentPanels'
+	},
+
+	render: ({children, description, title, ...rest}) => (
+		<Panels {...rest} onApplicationClose={reloadPage}>
+			<Panel className={css.panel}>
+				<Header type="compact" title={title} casing="preserve" />
+				{description ? (
+					<BodyText className={css.description}>{description}</BodyText>
+				) : null}
+				{children}
+			</Panel>
+		</Panels>
 	)
 });
 
@@ -86,15 +89,15 @@ const backgroundLabels = {
 
 // Values of `backgroundLabels` must be kept in sync with keys of `backgroundLabelMap`.
 const backgroundLabelMap = {
-	'': {},
-	'backgroundColorful1': {background: '#bb3352 url("https://picsum.photos/1280/720?image=1080") no-repeat center/cover'},
-	'backgroundColorful2': {background: '#4e6a40 url("https://picsum.photos/1280/720?image=1063") no-repeat center/cover'},
-	'backgroundColorful3': {background: '#5985a8 url("https://picsum.photos/1280/720?image=930") no-repeat center/cover'},
-	'backgroundColorful4': {background: '#71736d url("https://picsum.photos/1280/720?image=1044") no-repeat center/cover'},
-	'backgroundColorful5': {background: '#547460 url("https://picsum.photos/1280/720?image=1053") no-repeat center/cover'},
-	'backgroundColorful6': {background: '#7c4590 url("https://picsum.photos/1280/720?image=967") no-repeat center/cover'},
-	'backgroundColorful7': {background: '#5d6542 url("https://picsum.photos/1280/720?image=1025") no-repeat center/cover'},
-	'backgroundColorful8': {background: '#555 url("https://picsum.photos/1280/720") no-repeat center/cover'}
+	'': '',
+	'backgroundColorful1': '#bb3352 url("http://picsum.photos/1280/720?image=1080") no-repeat center/cover',
+	'backgroundColorful2': '#4e6a40 url("http://picsum.photos/1280/720?image=1063") no-repeat center/cover',
+	'backgroundColorful3': '#5985a8 url("http://picsum.photos/1280/720?image=930") no-repeat center/cover',
+	'backgroundColorful4': '#71736d url("http://picsum.photos/1280/720?image=1044") no-repeat center/cover',
+	'backgroundColorful5': '#547460 url("http://picsum.photos/1280/720?image=1053") no-repeat center/cover',
+	'backgroundColorful6': '#7c4590 url("http://picsum.photos/1280/720?image=967") no-repeat center/cover',
+	'backgroundColorful7': '#5d6542 url("http://picsum.photos/1280/720?image=1025") no-repeat center/cover',
+	'backgroundColorful8': '#555 url("http://picsum.photos/1280/720") no-repeat center/cover'
 };
 
 const skins = {
@@ -102,28 +105,37 @@ const skins = {
 	'Light': 'light'
 };
 
-// NOTE: Knobs cannot set locale in fullscreen mode. This allows any knob to be taken from the URL.
-const getPropFromURL = (propName, fallbackValue) => {
-	propName = encodeURI(propName);
-	const locationParams = window.parent.location.search;
+const getArgs = (str) => {
+	return qs.parse(str || (typeof window !== 'undefined' ? window.parent.location.search : ''));
+};
 
-	const startIndex = locationParams.indexOf('knob-' + propName + '=');
-	if (startIndex > -1) {
-		const keyIndex = locationParams.indexOf('=', startIndex);
-
-		if (locationParams.indexOf('&', keyIndex) > -1 ) {
-			const valueIndex = locationParams.indexOf('&', keyIndex);
-			return locationParams.substring(keyIndex + 1, valueIndex);
-		} else {
-			return locationParams.substring(keyIndex + 1, locationParams.length);
-		}
+// This allows any prop/argument to be taken from the URL.
+const getPropFromArgs = (args, propName, fallbackValue) => {
+	if (args && typeof args[propName] !== 'undefined') {
+		return args[propName];
 	}
-
 	return fallbackValue;
 };
 
+// This allows any knob to be taken from the URL.
+const getKnobFromArgs = (args, propName, fallbackValue) => {
+	const knobVal = getPropFromArgs(args, 'knob-' + propName, fallbackValue);
+	try {
+		// If it's valid JSON, parse it and return
+		return JSON.parse(knobVal);
+	} catch (e) {
+		// If it's invalid, see what it is, and in the unknown case, just return it (string most likely).
+		if (typeof knobVal === 'undefined' || knobVal === 'undefined' || knobVal === 'void 0') {
+			return void 0;
+		}
+		return knobVal;
+	}
+};
+
 const StorybookDecorator = (story, config) => {
+	// Executing `story` here allows the story knobs to register and render before the global knobs below.
 	const sample = story();
+
 	const Config = {
 		defaultProps: {
 			locale: 'en-US',
@@ -143,10 +155,15 @@ const StorybookDecorator = (story, config) => {
 		groupId: 'Development'
 	};
 
+	if (sample && sample.props && sample.props.info) {
+		config.description = sample.props.info;
+	}
+
+	const args = getArgs();
 	const classes = {
-		aria: boolean('debug aria', DevelopmentConfig, (getPropFromURL('debug aria') === 'true')),
-		layout: boolean('debug layout', DevelopmentConfig, (getPropFromURL('debug layout') === 'true')),
-		spotlight: boolean('debug spotlight', DevelopmentConfig, (getPropFromURL('debug spotlight') === 'true'))
+		aria: boolean('debug aria', DevelopmentConfig, getKnobFromArgs(args, 'debug aria')),
+		layout: boolean('debug layout', DevelopmentConfig, getKnobFromArgs(args, 'debug layout')),
+		spotlight: boolean('debug spotlight', DevelopmentConfig, getKnobFromArgs(args, 'debug spotlight'))
 	};
 	if (Object.keys(classes).length > 0) {
 		classes.debug = true;
@@ -157,11 +174,15 @@ const StorybookDecorator = (story, config) => {
 			className={classnames(classes)}
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
-			locale={selectV2('locale', locales, 'en-US', globalGroup)}
-			textSize={boolean('large text', Config, (getPropFromURL('large text') === 'true')) ? 'large' : 'normal'}
-			highContrast={boolean('high contrast', Config, (getPropFromURL('high contrast') === 'true'))}
-			style={backgroundLabelMap[select('background', backgroundLabels, Config, getPropFromURL('background'))]}
-			skin={select('skin', skins, Config, getPropFromURL('skin'))}
+			locale={select('locale', locales, Config)}
+			textSize={boolean('large text', Config, getKnobFromArgs(args, 'large text')) ? 'large' : 'normal'}
+			highContrast={boolean('high contrast', Config, getKnobFromArgs(args, 'high contrast'))}
+			style={{
+				'--moon-env-background': backgroundLabelMap[select('background', backgroundLabels, Config, getKnobFromArgs(args, 'background'))]
+				// '--moon-env-background-filter': 'blur(' + number('background blur', Config, {range: true, min: 0, max: 10, step: 0.5}, 3) + 'px)'
+			}}
+			// data-background={backgroundLabelMap[select('background', backgroundLabels, Config, getKnobFromArgs(args, 'background'))].background}
+			skin={select('skin', skins, Config, getKnobFromArgs(args, 'skin'))}
 		>
 			{sample}
 		</Moonstone>
@@ -170,15 +191,16 @@ const StorybookDecorator = (story, config) => {
 
 const FullscreenStorybookDecorator = (story, config) => {
 	const sample = story();
+	const args = getArgs();
 	return (
 		<MoonstoneFullscreen
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
-			locale={selectV2('locale', locales, 'en-US', globalGroup)}
-			textSize={boolean('large text', (getPropFromURL('large text') === 'true')) ? 'large' : 'normal'}
-			highContrast={boolean('high contrast', (getPropFromURL('high contrast') === 'true'))}
-			style={backgroundLabelMap[select('background', backgroundLabels, getPropFromURL('background'))]}
-			skin={select('skin', skins, getPropFromURL('skin'))}
+			locale={select('locale', locales, 'en-US')}
+			textSize={boolean('large text', getKnobFromArgs(args, 'large text')) ? 'large' : 'normal'}
+			highContrast={boolean('high contrast', getKnobFromArgs(args, 'high contrast'))}
+			style={backgroundLabelMap[select('background', backgroundLabels, getKnobFromArgs(args, 'background'))]}
+			skin={select('skin', skins, getKnobFromArgs(args, 'skin'))}
 		>
 			{sample}
 		</MoonstoneFullscreen>

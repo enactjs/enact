@@ -1,6 +1,7 @@
 // MoonstoneEnvironment.module.less
 //
 @import "~@enact/moonstone/styles/variables.less";
+@import "~@enact/moonstone/styles/mixins.less";
 
 // from ~@enact/ui/styles/core.less. Can't import global mixins.
 .enact-selectable() {
@@ -16,7 +17,17 @@
 	transition: none !important;
 }
 
-.moonstone {
+.moonstoneEnvironmentPanels {
+	&::before {
+		content: "";
+		background: var(--moon-env-background);
+		position: absolute;
+		.position(0);
+		filter: blur(3px);
+		// filter: var(--moon-env-background-filter);
+		opacity: 0.5;
+	}
+
 	.description {
 		margin: 0 @moon-spotlight-outset 1em;
 
