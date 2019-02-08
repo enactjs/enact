@@ -225,29 +225,34 @@ const VirtualListBaseFactory = (type) => {
 			super(props);
 
 			this.state = {firstIndex: 0, numOfItems: 0};
-		}
-
-		UNSAFE_componentWillMount () {
-			if (this.props.clientSize) {
-				this.calculateMetrics(this.props);
-				this.updateStatesAndBounds(this.props);
-			}
+			this.updatePrevProps(props);
 		}
 
 		// Calculate metrics for VirtualList after the 1st render to know client W/H.
 		componentDidMount () {
 			if (!this.props.clientSize) {
 				this.calculateMetrics(this.props);
-				this.updateStatesAndBounds(this.props);
+				this.updateStatesAndBounds(this.props, false);
 			}
 			this.setContainerSize();
 		}
 
+		componentDidUpdate () {
+			this.updatePrevProps(this.props);
+			this.prevFirstIndex = this.state.firstIndex;
+		}
+
+		updatePrevProps (props) {
+			const {childProps, dataSize, direction, itemSize, overhang, rtl, spacing} = props;
+			this.prevProps = {childProps, dataSize, direction, itemSize, overhang, rtl, spacing};
+		}
+
 		// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
 		// Calling setState within componentWillReceivePropswill not trigger an additional render.
-		UNSAFE_componentWillReceiveProps (nextProps) {
+		updateStateFromProps () {
 			const
-				{dataSize, direction, itemSize, overhang, rtl, spacing} = this.props,
+				{dataSize, direction, itemSize, overhang, rtl, spacing} = this.prevProps,
+				nextProps = this.props,
 				hasMetricsChanged = (
 					direction !== nextProps.direction ||
 					((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
@@ -259,7 +264,9 @@ const VirtualListBaseFactory = (type) => {
 
 			if (hasMetricsChanged) {
 				this.calculateMetrics(nextProps);
-				this.updateStatesAndBounds(nextProps);
+				if (this.primary !== null ) {
+					this.updateStatesAndBounds(nextProps);
+				}
 				this.setContainerSize();
 			} else if (this.hasDataSizeChanged) {
 				this.updateStatesAndBounds(nextProps);
@@ -273,12 +280,6 @@ const VirtualListBaseFactory = (type) => {
 				} else {
 					this.setScrollPosition(x, y, 0, 0, nextProps.rtl);
 				}
-			}
-		}
-
-		UNSAFE_componentWillUpdate (nextProps, nextState) {
-			if (this.state.firstIndex === nextState.firstIndex || this.props.childProps && this.props.childProps !== nextProps.childProps) {
-				this.prevFirstIndex = -1; // force to re-render items
 			}
 		}
 
@@ -310,6 +311,7 @@ const VirtualListBaseFactory = (type) => {
 		hasDataSizeChanged = false
 		cc = []
 		scrollPosition = 0
+		prevProps = {}
 
 		contentRef = null
 		containerRef = null
@@ -421,7 +423,7 @@ const VirtualListBaseFactory = (type) => {
 			this.state.numOfItems = 0;
 		}
 
-		updateStatesAndBounds = (props) => {
+		updateStatesAndBounds = (props, slient = true) => {
 			const
 				{dataSize, overhang, updateStatesAndBounds} = props,
 				{firstIndex} = this.state,
@@ -448,7 +450,12 @@ const VirtualListBaseFactory = (type) => {
 				newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
 			}
 
-			this.setState({firstIndex: newFirstIndex, numOfItems});
+			if (slient) {
+				this.state.firstIndex = newFirstIndex; // eslint-disable-line react/no-direct-mutation-state
+				this.state.numOfItems = numOfItems; // eslint-disable-line react/no-direct-mutation-state
+			} else {
+				this.setState({firstIndex: newFirstIndex, numOfItems});
+			}
 		}
 
 		calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff) {
@@ -666,6 +673,11 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		positionItems () {
+			this.prevFirstIndex = (
+				this.prevFirstIndex === this.state.firstIndex ||
+				(this.prevProps.childProps || this.props.childProps) && this.prevProps.childProps !== this.props.childProps
+			) ? -1 : this.prevFirstIndex;
+
 			const
 				{dataSize} = this.props,
 				{firstIndex, numOfItems} = this.state,
@@ -706,8 +718,6 @@ const VirtualListBaseFactory = (type) => {
 			for (let i = updateTo; i < hideTo; i++) {
 				this.applyStyleToHideNode(i);
 			}
-
-			this.prevFirstIndex = firstIndex;
 		}
 
 		getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
@@ -737,7 +747,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
 				this.calculateMetrics(props);
-				this.updateStatesAndBounds(props);
+				this.updateStatesAndBounds(props, false);
 				this.setContainerSize();
 				return true;
 			}
@@ -796,6 +806,8 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.rtl;
 			delete rest.spacing;
 			delete rest.updateStatesAndBounds;
+
+			this.updateStateFromProps();
 
 			if (primary) {
 				this.positionItems();
