@@ -11,6 +11,7 @@ import {
 	defaultMetrics,
 	hasDataSizeChanged,
 	hasMetricsChanged,
+	initializeMetrics,
 	updateMetrics,
 	updateScrollPosition
 } from './metrics';
@@ -251,7 +252,7 @@ const VirtualListBaseFactory = (type) => {
 			};
 
 			if (props.clientSize) {
-				updateMetrics(props, this.state, true);
+				this.setState((state) => initializeMetrics(props, state));
 			}
 		}
 
@@ -259,28 +260,27 @@ const VirtualListBaseFactory = (type) => {
 			const
 				metricsChanged = hasMetricsChanged(props, state),
 				dataSizeChanged = hasDataSizeChanged(props, state);
-			let nextState = null;
 
-			// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
-			if (metricsChanged || dataSizeChanged) {
-				nextState = Object.assign({}, state);
-				updateMetrics(props, nextState, metricsChanged);
-			}
-
-			if (nextState !== null) {
-				return nextState;
-			} else {
-				return null;
-			}
+			return (metricsChanged || dataSizeChanged) ? // If dataSize has been changed, we need to update numOfItems state.
+				updateMetrics(
+					state.prevProps,
+					state,
+					props,
+					metricsChanged
+				) :
+				null;
 		}
 
 		// Calculate metrics for VirtualList after the 1st render to know client W/H.
 		componentDidMount () {
 			if (!this.props.clientSize) {
-				updateMetrics(this.props, this.state, true);
-				this.forceUpdate();
+				this.setState((state) => { // eslint-disable-line react/no-did-mount-set-state
+					const nextState = initializeMetrics(this.props, state);
+					this.setContainerSize(nextState);
+				});
+			} else {
+				this.setContainerSize(this.state);
 			}
-			this.setContainerSize();
 		}
 
 		componentDidUpdate () {
@@ -333,8 +333,8 @@ const VirtualListBaseFactory = (type) => {
 			calculateMetrics(this.props, this.state);
 		}
 
-		setContainerSize = () => {
-			const {isPrimaryDirectionVertical, scrollBounds} = this.state.metrics;
+		setContainerSize = (state) => {
+			const {isPrimaryDirectionVertical, scrollBounds} = state.metrics;
 
 			if (this.contentRef) {
 				this.contentRef.style.width = scrollBounds.scrollWidth + (isPrimaryDirectionVertical ? -1 : 0) + 'px';
@@ -471,9 +471,10 @@ const VirtualListBaseFactory = (type) => {
 				{scrollBounds} = this.state.metrics;
 
 			if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
-				updateMetrics(this.props, this.state, true);
-				this.forceUpdate();
-				this.setContainerSize();
+				this.setState((state) => {
+					const nextState = initializeMetrics(this.props, state);
+					this.setContainerSize(nextState);
+				});
 				return true;
 			}
 
@@ -557,9 +558,9 @@ const VirtualListBaseFactory = (type) => {
 				if (type === JS && this.contentRef) {
 					this.contentRef.style.transform = null;
 				}
-				this.setContainerSize();
+				this.setContainerSize(this.state);
 			} else if (this.hasDataSizeChanged) {
-				this.setContainerSize();
+				this.setContainerSize(this.state);
 			} else if (prevRtl !== this.props.rtl) {
 				const {x, y} = this.getXY(this.state.scrollPosition, 0);
 
