@@ -404,7 +404,7 @@ class Popup extends React.Component {
 		if (props.open !== state.prevOpen) {
 			if (props.open) {
 				return {
-					popupOpen: props.noAnimation ? OpenState.OPEN : OpenState.CLOSED,
+					popupOpen: props.noAnimation || state.floatLayerOpen ? OpenState.OPEN : OpenState.CLOSED,
 					floatLayerOpen: true,
 					activator: Spotlight.getCurrent(),
 					prevOpen: props.open
