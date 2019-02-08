@@ -113,7 +113,7 @@ describe('Toggleable', () => {
 			}
 		);
 
-		test.only(
+		test(
 			'should use defaultSelected prop when selected prop is undefined',
 			() => {
 				const Component = Toggleable(DivComponent);
