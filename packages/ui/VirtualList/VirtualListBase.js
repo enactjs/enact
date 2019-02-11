@@ -232,7 +232,7 @@ const VirtualListBaseFactory = (type) => {
 		componentDidMount () {
 			if (!this.props.clientSize) {
 				this.calculateMetrics(this.props);
-				this.updateStatesAndBounds(this.props, false);
+				this.updateStatesAndBounds(this.props);
 			}
 			this.setContainerSize();
 		}
@@ -240,47 +240,6 @@ const VirtualListBaseFactory = (type) => {
 		componentDidUpdate () {
 			this.updatePrevProps(this.props);
 			this.prevFirstIndex = this.state.firstIndex;
-		}
-
-		updatePrevProps (props) {
-			const {childProps, dataSize, direction, itemSize, overhang, rtl, spacing} = props;
-			this.prevProps = {childProps, dataSize, direction, itemSize, overhang, rtl, spacing};
-		}
-
-		// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
-		// Calling setState within componentWillReceivePropswill not trigger an additional render.
-		updateStateFromProps () {
-			const
-				{dataSize, direction, itemSize, overhang, rtl, spacing} = this.prevProps,
-				nextProps = this.props,
-				hasMetricsChanged = (
-					direction !== nextProps.direction ||
-					((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
-					overhang !== nextProps.overhang ||
-					spacing !== nextProps.spacing
-				);
-
-			this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
-
-			if (hasMetricsChanged) {
-				this.calculateMetrics(nextProps);
-				if (this.primary !== null ) {
-					this.updateStatesAndBounds(nextProps);
-				}
-				this.setContainerSize();
-			} else if (this.hasDataSizeChanged) {
-				this.updateStatesAndBounds(nextProps);
-				this.setContainerSize();
-			} else if (rtl !== nextProps.rtl) {
-				const {x, y} = this.getXY(this.scrollPosition, 0);
-
-				this.cc = [];
-				if (type === Native) {
-					this.scrollToPosition(x, y, nextProps.rtl);
-				} else {
-					this.setScrollPosition(x, y, 0, 0, nextProps.rtl);
-				}
-			}
 		}
 
 		scrollBounds = {
@@ -354,6 +313,11 @@ const VirtualListBaseFactory = (type) => {
 			clientHeight: node.clientHeight
 		})
 
+		updatePrevProps (props) {
+			const {childProps, dataSize, direction, itemSize, overhang, rtl, spacing} = props;
+			this.prevProps = {childProps, dataSize, direction, itemSize, overhang, rtl, spacing};
+		}
+
 		calculateMetrics (props) {
 			const
 				{clientSize, direction, itemSize, spacing} = props,
@@ -423,7 +387,7 @@ const VirtualListBaseFactory = (type) => {
 			this.state.numOfItems = 0;
 		}
 
-		updateStatesAndBounds = (props, slient = true) => {
+		updateStatesAndBounds = (props, slient = false) => {
 			const
 				{dataSize, overhang, updateStatesAndBounds} = props,
 				{firstIndex} = this.state,
@@ -747,7 +711,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
 				this.calculateMetrics(props);
-				this.updateStatesAndBounds(props, false);
+				this.updateStatesAndBounds(props);
 				this.setContainerSize();
 				return true;
 			}
@@ -788,7 +752,7 @@ const VirtualListBaseFactory = (type) => {
 		render () {
 			const
 				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
-				{cc, initItemContainerRef, primary} = this,
+				{initItemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
 
 			delete rest.cbScrollTo;
@@ -807,11 +771,41 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.spacing;
 			delete rest.updateStatesAndBounds;
 
-			this.updateStateFromProps();
+			const
+				{dataSize, direction, itemSize, overhang, rtl, spacing} = this.prevProps,
+				{props} = this,
+				hasMetricsChanged = (
+					direction !== props.direction ||
+					((itemSize instanceof Object) ? (itemSize.minWidth !== props.itemSize.minWidth || itemSize.minHeight !== props.itemSize.minHeight) : itemSize !== props.itemSize) ||
+					overhang !== props.overhang ||
+					spacing !== props.spacing
+				);
+
+			this.hasDataSizeChanged = (dataSize !== props.dataSize);
+
+			if (hasMetricsChanged || this.props.clientSize && this.primary === null && this.secondary === null) {
+				this.calculateMetrics(props);
+				this.updateStatesAndBounds(props, true);
+				this.setContainerSize();
+			} else if (this.hasDataSizeChanged) {
+				this.updateStatesAndBounds(props, true);
+				this.setContainerSize();
+			} else if (rtl !== props.rtl) {
+				const {x, y} = this.getXY(this.scrollPosition, 0);
+
+				this.cc = [];
+				if (type === Native) {
+					this.scrollToPosition(x, y, props.rtl);
+				} else {
+					this.setScrollPosition(x, y, 0, 0, props.rtl);
+				}
+			}
 
 			if (primary) {
 				this.positionItems();
 			}
+
+			const {cc} = this;
 
 			return (
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
