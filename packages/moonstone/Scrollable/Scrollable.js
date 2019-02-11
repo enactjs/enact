@@ -68,7 +68,7 @@ const navigableFilter = (elem) => {
 	}
 };
 
-const configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusableScrollbar}) => {
+const configureSpotlightContainer = (spotlightId, focusableScrollbar) => {
 	Spotlight.set(spotlightId, {
 		navigableFilter: focusableScrollbar ? null : navigableFilter
 	});
@@ -235,29 +235,7 @@ class ScrollableBase extends Component {
 			onPrevScroll: this.onScrollbarButtonClick
 		};
 
-		configureSpotlightContainer(props);
-
-		this.state = {
-			prevSpotlightId: props['data-spotlight-id'],
-			prevFocusableScrollbar: props.focusableScrollbar
-		};
-	}
-
-	static getDerivedStateFromProps (props, state) {
-		const
-			{'data-spotlight-id': spotlightId, focusableScrollbar} = props,
-			{prevSpotlightId, prevFocusableScrollbar} = state;
-
-		if (prevSpotlightId !== spotlightId || prevFocusableScrollbar !== focusableScrollbar) {
-			configureSpotlightContainer(props);
-
-			return {
-				prevSpotlightId: spotlightId,
-				prevFocusableScrollbar: focusableScrollbar
-			};
-		}
-
-		return null;
+		this.updateSpotlightContainer(props);
 	}
 
 	componentWillUnmount () {
@@ -274,6 +252,8 @@ class ScrollableBase extends Component {
 	lastScrollPositionOnFocus = null
 	indexToFocus = null
 	nodeToFocus = null
+	prevSpotlightId = ''
+	prevFocusableScrollbar = false
 
 	// voice control
 	isVoiceControl = false
@@ -284,6 +264,12 @@ class ScrollableBase extends Component {
 	overscrollJobs = {
 		horizontal: {before: null, after: null},
 		vertical: {before: null, after: null}
+	}
+
+	updateSpotlightContainer = ({'data-spotlight-id': spotlightId, focusableScrollbar}) => {
+		configureSpotlightContainer(spotlightId, focusableScrollbar);
+		this.prevSpotlightId = spotlightId;
+		this.prevFocusableScrollbar = focusableScrollbar;
 	}
 
 	onFlick = ({direction}) => {
@@ -781,7 +767,9 @@ class ScrollableBase extends Component {
 			rightButtonAriaLabel = scrollRightAriaLabel == null ? $L('scroll right') : scrollRightAriaLabel,
 			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
 
-		delete rest.focusableScrollbar;
+		if (this.prevSpotlightId !== spotlightId || this.prevFocusableScrollbar !== focusableScrollbar) {
+			this.updateSpotlightContainer(this.props);
+		}
 
 		return (
 			<UiScrollableBase
