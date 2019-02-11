@@ -84,7 +84,7 @@ describe('Toggleable', () => {
 			}
 		);
 
-		test('should use selected prop when selected prop is null', () => {
+		test('should use defaultSelected prop when selected prop is null', () => {
 			const Component = Toggleable(DivComponent);
 			const subject = shallow(
 				<Component defaultSelected selected={null} />
@@ -93,7 +93,7 @@ describe('Toggleable', () => {
 			const expected = 'selected';
 			const actual = subject.find(DivComponent).props();
 
-			expect(actual).toHaveProperty(expected, false);
+			expect(actual).toHaveProperty(expected, true);
 		});
 
 		test(
@@ -113,7 +113,7 @@ describe('Toggleable', () => {
 			}
 		);
 
-		test.only(
+		test(
 			'should use defaultSelected prop when selected prop is undefined',
 			() => {
 				const Component = Toggleable(DivComponent);

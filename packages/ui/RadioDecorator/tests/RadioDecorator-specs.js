@@ -134,7 +134,7 @@ describe('RadioDecorator', () => {
 		expectToBeActive(subject, parentInstance);
 	});
 
-	test.only('should not call deactivate callback on inactive items', () => {
+	test('should not call deactivate callback on inactive items', () => {
 		const handleDeactivate = jest.fn();
 		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
 

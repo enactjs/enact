@@ -177,7 +177,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 			disabled: false
 		}
 
-		/**
+		/*
 		 * Determines which day type should be returned, based on the selected indices.
 		 *
 		 * @param {Number[]} [selected] Array of day indexes
@@ -215,7 +215,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 			}
 		}
 
-		/**
+		/*
 		 * Determines whether it should return "Every Day", "Every Weekend", "Every Weekday" or list of
 		 * days for a given selected day type.
 		 *

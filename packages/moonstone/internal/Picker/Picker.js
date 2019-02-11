@@ -419,18 +419,6 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
-	UNSAFE_componentWillReceiveProps (nextProps) {
-		const first = nextProps.min;
-		const last = nextProps.max;
-		const nextValue = nextProps.value;
-
-		if (__DEV__) {
-			validateRange(nextValue, first, last, PickerBase.displayName);
-			validateStepped(nextValue, first, nextProps.step, PickerBase.displayName);
-			validateStepped(last, first, nextProps.step, PickerBase.displayName, '"max"');
-		}
-	}
-
 	componentDidUpdate (prevProps) {
 		if (this.props.joined && !prevProps.joined) {
 			this.containerRef.addEventListener('wheel', this.handleWheel);
@@ -805,14 +793,23 @@ const PickerBase = class extends React.Component {
 			id,
 			index,
 			joined,
+			max,
+			min,
 			onSpotlightDisappear,
 			orientation,
 			reverse,
 			spotlightDisabled,
 			step,
+			value,
 			width,
 			...rest
 		} = this.props;
+
+		if (__DEV__) {
+			validateRange(value, min, max, PickerBase.displayName);
+			validateStepped(value, min, step, PickerBase.displayName);
+			validateStepped(max, min, step, PickerBase.displayName, '"max"');
+		}
 
 		delete rest['aria-label'];
 		delete rest.accessibilityHint;
@@ -820,14 +817,11 @@ const PickerBase = class extends React.Component {
 		delete rest.decrementIcon;
 		delete rest.incrementAriaLabel;
 		delete rest.incrementIcon;
-		delete rest.max;
-		delete rest.min;
 		delete rest.onChange;
 		delete rest.onSpotlightDown;
 		delete rest.onSpotlightLeft;
 		delete rest.onSpotlightRight;
 		delete rest.onSpotlightUp;
-		delete rest.value;
 		delete rest.wrap;
 
 		const incrementIcon = selectIncIcon(this.props);

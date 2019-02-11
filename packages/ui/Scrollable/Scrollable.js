@@ -411,10 +411,6 @@ class ScrollableBase extends Component {
 		this.updateScrollbars();
 	}
 
-	UNSAFE_componentWillUpdate () {
-		this.deferScrollTo = true;
-	}
-
 	componentDidUpdate (prevProps, prevState) {
 		const
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
@@ -428,6 +424,8 @@ class ScrollableBase extends Component {
 				this.setScrollTop(0);
 			}
 		}
+
+		this.deferScrollTo = true;
 
 		this.clampScrollPosition();
 

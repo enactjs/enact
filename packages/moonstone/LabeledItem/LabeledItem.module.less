@@ -48,8 +48,6 @@
 		// Force the label to fill the next line in the flexbox container
 		width: 100%;
 
-		.moon-custom-text-size(@moon-expandable-value-font-size-large);
-
 		:global(.enact-locale-right-to-left) & {
 			padding-left: 0;
 		}
@@ -60,6 +58,13 @@
 			padding-bottom: 3px;
 		}
 	}
+
+	// Large-text mode
+	.moon-custom-text({
+		.label {
+			font-size: @moon-expandable-value-font-size-large;
+		}
+	});
 
 	// Skin colors
 	.applySkins({
