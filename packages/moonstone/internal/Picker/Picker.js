@@ -366,7 +366,7 @@ const PickerBase = class extends React.Component {
 		 * @public
 		 */
 		width: PropTypes.oneOfType([
-			PropTypes.oneOf(['small', 'medium', 'large']),
+			PropTypes.oneOf([null, 'small', 'medium', 'large']),
 			PropTypes.number
 		]),
 

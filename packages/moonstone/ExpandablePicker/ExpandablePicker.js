@@ -282,7 +282,7 @@ const ExpandablePickerBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		width: PropTypes.oneOf(['small', 'medium', 'large']),
+		width: PropTypes.oneOf([null, 'small', 'medium', 'large']),
 
 		/*
 		 * Allows picker to continue from the start of the list after it reaches the end and
