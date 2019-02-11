@@ -30,7 +30,7 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "invariant": "^2.2.2",
-    "prop-types": "^15.6.0",
+    "prop-types": "15.6.2",
     "ramda": "^0.24.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
