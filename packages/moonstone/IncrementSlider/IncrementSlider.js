@@ -40,7 +40,7 @@ import {emitChange} from '../Slider/utils';
 import SliderBehaviorDecorator from '../Slider/SliderBehaviorDecorator';
 
 import IncrementSliderButton from './IncrementSliderButton';
-import componentCss from './IncrementSlider.less';
+import componentCss from './IncrementSlider.module.less';
 
 const isDown = is('down');
 const isLeft = is('left');

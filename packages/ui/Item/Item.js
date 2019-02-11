@@ -13,7 +13,7 @@ import React from 'react';
 
 import Touchable from '../Touchable';
 
-import componentCss from './Item.less';
+import componentCss from './Item.module.less';
 
 /**
  * A basic list item component structure without any behaviors applied to it.

@@ -22,7 +22,7 @@ import React from 'react';
 
 import {ContextualPopup} from './ContextualPopup';
 
-import css from './ContextualPopupDecorator.less';
+import css from './ContextualPopupDecorator.module.less';
 
 /**
  * Default config for {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator}

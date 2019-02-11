@@ -71,7 +71,8 @@ const mergeConfig = (cfg) => {
  *     Only applies when `global` is `false`.
  *     * `'border-box'` - the default, includes the padding and border but excludes the margin.
  *     * `'content-box'` - excludes the padding, border, and margin.
- *   * `global` - When `true`, drag gestures will continue when leaving the bounds of the component.
+ *   * `global` - When `true`, drag gestures will continue when leaving the bounds of the component
+ *      or blurring the component.
  *   * `moveTolerance` - The number of pixels from the start position of the drag that the pointer
  *     may move before cancelling the drag. Defaults to `16`.
  *
@@ -87,6 +88,8 @@ const mergeConfig = (cfg) => {
  *
  *   * `cancelOnMove` - When `true`, the hold is cancelled when moving beyond the `moveTolerance`.
  *     Defaults to `false`
+ *   * `global` - When `true`, hold gestures will continue when leaving the bounds of the component
+ *      or blurring the component.
  *   * `moveTolerance` - The number of pixels from the start position of the hold that the pointer
  *     may move before cancelling the hold. Ignored when `cancelOnMove` is `false`. Defaults to
  *     `16`.

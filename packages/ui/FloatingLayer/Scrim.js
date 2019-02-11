@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import css from './Scrim.less';
+import css from './Scrim.module.less';
 
 const transparentClassName = css.scrim + ' enact-fit ' + css.transparent;
 const translucentClassName = css.scrim + ' enact-fit ' + css.translucent;
@@ -82,18 +82,24 @@ class Scrim extends React.Component {
 		this.state = {
 			visible: true
 		};
-	}
 
-	UNSAFE_componentWillMount () {
-		if (this.props.type === 'translucent') {
+		if (props.type === 'translucent') {
 			pushTranslucentScrim(this);
 		}
 	}
 
-	UNSAFE_componentWillReceiveProps (nextProps) {
-		if (this.props.type === 'translucent' && nextProps.type !== 'translucent') {
+	static getDerivedStateFromProps (props) {
+		if (props.type !== 'translucent') {
+			return {
+				visible: true
+			};
+		}
+		return null;
+	}
+
+	componentDidUpdate (prevProps) {
+		if (prevProps.type === 'translucent' && this.props.type !== 'translucent') {
 			removeTranslucentScrim(this);
-			this.setState({visible: true});
 		}
 	}
 

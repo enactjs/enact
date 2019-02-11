@@ -24,7 +24,7 @@ import {MarqueeController} from '../Marquee';
 import {Picker, PickerItem} from '../internal/Picker';
 import {validateRange} from '../internal/validators';
 
-import css from './EditableIntegerPicker.less';
+import css from './EditableIntegerPicker.module.less';
 import EditableIntegerPickerDecorator from './EditableIntegerPickerDecorator';
 
 const digits = (num) => {

@@ -176,7 +176,7 @@ const handleGlobalMove = handle(
 const handleBlur = handle(
 	forward('onBlur'),
 	call('hasFocus'),
-	call('endGesture')
+	call('blurGesture')
 );
 
 /**
@@ -338,6 +338,19 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			onHold: PropTypes.func,
+
+			/**
+			 * Event handler for the end of hold events.
+			 *
+			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `'onHoldEnd'`
+			 * * `time` - Time, in milliseconds, since the hold began
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onHoldEnd: PropTypes.func,
 
 			/**
 			 * Event handler for hold pulse events
@@ -556,6 +569,16 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
+		blurGesture () {
+			this.targetHadFocus = false;
+
+			this.hold.blur();
+			this.flick.blur();
+			this.drag.blur();
+
+			return true;
+		}
+
 		endGesture () {
 			this.targetHadFocus = false;
 
@@ -628,6 +651,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.onDown;
 			delete props.onFlick;
 			delete props.onHold;
+			delete props.onHoldEnd;
 			delete props.onHoldPulse;
 			delete props.onTap;
 			delete props.onUp;

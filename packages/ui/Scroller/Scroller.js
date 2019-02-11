@@ -14,7 +14,7 @@ import React, {Component} from 'react';
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
-import css from './Scroller.less';
+import css from './Scroller.module.less';
 
 /**
  * An unstyled base scroller component.

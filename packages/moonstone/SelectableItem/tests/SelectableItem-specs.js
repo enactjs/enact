@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import SelectableItem from '../SelectableItem';
-import css from '../SelectableIcon.less';
+import css from '../SelectableIcon.module.less';
 
 describe('SelectableItem Specs', () => {
 	test('should render no icon when not selected', () => {

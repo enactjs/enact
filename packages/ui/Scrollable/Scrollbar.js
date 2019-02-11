@@ -7,7 +7,7 @@ import ri from '../resolution';
 
 import ScrollThumb from './ScrollThumb';
 
-import componentCss from './Scrollbar.less';
+import componentCss from './Scrollbar.module.less';
 
 const
 	minThumbSize = 18, // Size in pixels

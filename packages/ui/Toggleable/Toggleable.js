@@ -8,9 +8,8 @@
 import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
-
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import warning from 'warning';
 
 /**
@@ -168,36 +167,34 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			let active = props[defaultPropKey];
-			let controlled = false;
-
-			if (prop in props) {
-				if (props[prop] != null) {
-					active = props[prop];
-				}
-
-				controlled = true;
-			}
 
 			this.state = {
-				active,
-				controlled
+				rendered: false,
+				active: null,
+				controlled: prop in props
 			};
 		}
 
-		UNSAFE_componentWillReceiveProps (nextProps) {
-			if (this.state.controlled) {
-				this.setState({
-					active: !!nextProps[prop]
-				});
-			} else {
-				warning(
-					!(prop in nextProps),
-					`'${prop}' specified for an uncontrolled instance of Toggleable and will be
-					ignored. To make this instance of Toggleable controlled, '${prop}' should be
-					specified at creation.`
-				);
+		static getDerivedStateFromProps (props, state) {
+			if (state.rendered === false) {
+				return {
+					rendered: true,
+					active: Boolean(props[prop] != null ? props[prop] : props[defaultPropKey])
+				};
+			} else if (state.controlled) {
+				return {
+					active: Boolean(props[prop])
+				};
 			}
+
+			warning(
+				!(typeof props[prop] !== 'undefined'),
+				`'${prop}' specified for an uncontrolled instance of Toggleable and will be
+				ignored. To make this instance of Toggleable controlled, '${prop}' should be
+				specified at creation.`
+			);
+
+			return null;
 		}
 
 		handle = handle.bind(this)

@@ -16,7 +16,7 @@ import React from 'react';
 import ToggleIcon from '../ToggleIcon';
 import Icon from '@enact/ui/Icon';
 
-import css from './Checkbox.less';
+import css from './Checkbox.module.less';
 
 /**
  * A checkbox component, ready to use in Moonstone applications.

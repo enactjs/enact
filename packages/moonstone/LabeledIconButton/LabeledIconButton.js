@@ -28,7 +28,7 @@ import React from 'react';
 import {IconButtonBase} from '../IconButton';
 import Skinnable from '../Skinnable';
 
-import componentCss from './LabeledIconButton.less';
+import componentCss from './LabeledIconButton.module.less';
 
 const IconButton = compose(
 	UiIconButtonDecorator,

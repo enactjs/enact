@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/kind` config property `contextType` replacing legacy `contextTypes` property
+
+### Deprecated
+
+- `core/kind` config property `contextTypes`, to be removed in 3.0.
+
 ## [2.2.9] - 2019-01-11
 
 No significant changes.

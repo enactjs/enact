@@ -19,7 +19,7 @@ import Pure from '@enact/ui/internal/Pure';
 
 import Skinnable from '../Skinnable';
 
-import componentCss from './BodyText.less';
+import componentCss from './BodyText.module.less';
 
 /**
  * A simple text block component.
