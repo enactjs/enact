@@ -76,7 +76,7 @@ const getDurFmt = (locale) => {
 	if (typeof window === 'undefined') return null;
 
 	return memoGetDurFmt(locale);
-}
+};
 
 const forwardWithState = (type) => adaptEvent(call('addStateToEvent'), forwardWithPrevent(type));
 
