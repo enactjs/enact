@@ -169,13 +169,19 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.state = {
-				active: Boolean(props[prop] != null ? props[prop] : props[defaultPropKey]),
-				controlled: typeof props[prop] !== 'undefined'
+				rendered: false,
+				active: null,
+				controlled: prop in props
 			};
 		}
 
 		static getDerivedStateFromProps (props, state) {
-			if (state.controlled) {
+			if (state.rendered === false) {
+				return {
+					rendered: true,
+					active: Boolean(props[prop] != null ? props[prop] : props[defaultPropKey])
+				};
+			} else if (state.controlled) {
 				return {
 					active: Boolean(props[prop])
 				};

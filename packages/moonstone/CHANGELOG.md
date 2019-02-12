@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [2.3.0] - 2019-02-11
 
 ### Added
 
@@ -12,7 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- All content-containing LESS stylesheets (not within a `styles` directory) have been renamed under the `*.module.less` extension to retain modular context with CLI 2.x.
+- All content-containing LESS stylesheets (not within a `styles` directory) extensions to be `*.module.less` to retain modular context with CLI 2.x.
 
 ### Fixed
 
