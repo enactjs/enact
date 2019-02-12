@@ -68,6 +68,16 @@ const ControlsContainer = SpotlightContainerDecorator(
 	'div'
 );
 
+const memoGetDurFmt = memoize((/* locale */) => new DurationFmt({
+	length: 'medium', style: 'clock', useNative: false
+}));
+
+const getDurFmt = (locale) => {
+	if (typeof window === 'undefined') return null;
+
+	return memoGetDurFmt(locale);
+}
+
 const forwardWithState = (type) => adaptEvent(call('addStateToEvent'), forwardWithPrevent(type));
 
 // provide forwarding of events on media controls
@@ -798,9 +808,6 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Internal Methods
 	//
-	getDurFmt = memoize((/* locale */) => new DurationFmt({
-		length: 'medium', style: 'clock', useNative: false
-	}));
 
 	announceJob = new Job(msg => (this.announceRef && this.announceRef.announce(msg)), 200)
 
@@ -1118,7 +1125,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			this.showMiniFeedback = true;
 			this.jump(jumpBy);
-			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.getDurFmt(this.props.locale), {includeHour: true}));
+			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, getDurFmt(this.props.locale), {includeHour: true}));
 		}
 	}
 
@@ -1614,7 +1621,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			if (!isNaN(seconds)) {
 				this.sliderTooltipTimeJob.throttle(seconds);
-				const knobTime = secondsToTime(seconds, this.getDurFmt(this.props.locale), {includeHour: true});
+				const knobTime = secondsToTime(seconds, getDurFmt(this.props.locale), {includeHour: true});
 
 				forward('onScrub', {...ev, seconds}, this.props);
 
@@ -1635,7 +1642,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (!isNaN(seconds)) {
 			this.sliderTooltipTimeJob.throttle(seconds);
-			const knobTime = secondsToTime(seconds, this.getDurFmt(this.props.locale), {includeHour: true});
+			const knobTime = secondsToTime(seconds, getDurFmt(this.props.locale), {includeHour: true});
 
 			forward('onScrub', {
 				detached: this.sliderScrubbing,
@@ -1819,7 +1826,7 @@ const VideoPlayerBase = class extends React.Component {
 			proportionSelection = selection.map(t => t / this.state.duration);
 		}
 
-		const durFmt = this.getDurFmt(locale);
+		const durFmt = getDurFmt(locale);
 
 		return (
 			<RootContainer
