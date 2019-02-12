@@ -233,7 +233,7 @@ class ScrollableBaseNative extends Component {
 	lastScrollPositionOnFocus = null
 	indexToFocus = null
 	nodeToFocus = null
-	prevSpotlightId = ''
+	prevSpotlightId // undefined
 	prevFocusableScrollbar = false
 
 	// overscroll

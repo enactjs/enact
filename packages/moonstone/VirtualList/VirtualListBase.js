@@ -258,7 +258,7 @@ const VirtualListBaseFactory = (type) => {
 		nodeIndexToBeFocused = null
 		preservedIndex = null
 		restoreLastFocused = false
-		prevSpotlightId = null
+		prevSpotlightId // undefined
 
 		setContainerDisabled = (bool) => {
 			const
