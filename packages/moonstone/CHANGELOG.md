@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Slider` to not gain focus when clicked
+- `moonstone/Slider` to prevent gaining focus when clicked when disabled
 
 ## [2.3.0] - 2019-02-11
 
