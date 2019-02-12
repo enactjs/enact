@@ -1,6 +1,6 @@
 {
   "name": "enact-sampler",
-  "version": "2.3.0-alpha.1",
+  "version": "2.3.0-alpha.3",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -28,9 +28,9 @@
       }
     },
     "@enact/core": {
-      "version": "2.3.0-alpha.1",
-      "resolved": "https://registry.npmjs.org/@enact/core/-/core-2.3.0-alpha.1.tgz",
-      "integrity": "sha512-pJluyB2YwMzK5uxk2L4jP3XzOdtbeI18SKk9JS92Y7GSL3sLX4hqk+CYyLJK27ubUbZ0/bt7TZ7JH5L3k6RdVg==",
+      "version": "2.3.0-alpha.3",
+      "resolved": "https://registry.npmjs.org/@enact/core/-/core-2.3.0-alpha.3.tgz",
+      "integrity": "sha512-sPB8tBVUitmtKLjRh8lvDlf3EqyNKFpD4/rnAEoVKKCevpMGSU7sxWpR9CGErRfqZIcyPLQMRoJy97U5yORvKQ==",
       "requires": {
         "classnames": "2.2.6",
         "invariant": "2.2.4",
@@ -69,11 +69,11 @@
       }
     },
     "@enact/i18n": {
-      "version": "2.3.0-alpha.1",
-      "resolved": "https://registry.npmjs.org/@enact/i18n/-/i18n-2.3.0-alpha.1.tgz",
-      "integrity": "sha512-SE3+/XkUFiMkV0omPt+B+/7qWXGi2HqRCWbqwDNxrTWSH287EiE8VCvenffYXSiD2Dj+ADYsP2CI4BVOZ92eeg==",
+      "version": "2.3.0-alpha.3",
+      "resolved": "https://registry.npmjs.org/@enact/i18n/-/i18n-2.3.0-alpha.3.tgz",
+      "integrity": "sha512-wIxaH1nCh5IyCzUvcPbLKWVX6T8R2WO4fW+1b24W0lsXhVz2QH1ZJSyHoIIEHLwOT7H86ojmsfi5aNCmify8PA==",
       "requires": {
-        "@enact/core": "2.3.0-alpha.1",
+        "@enact/core": "2.3.0-alpha.3",
         "prop-types": "15.6.2",
         "ramda": "0.24.1",
         "react": "16.8.1",
@@ -82,14 +82,14 @@
       }
     },
     "@enact/moonstone": {
-      "version": "2.3.0-alpha.1",
-      "resolved": "https://registry.npmjs.org/@enact/moonstone/-/moonstone-2.3.0-alpha.1.tgz",
-      "integrity": "sha512-Z/rWkGIrPgc+hBPyCpQodRYj8OC6Qp9Ap4sZXeBEbqVwOzZczybPJlGoHgN+kN3BHgrQIz5UBl4w2K46eVDPKQ==",
+      "version": "2.3.0-alpha.3",
+      "resolved": "https://registry.npmjs.org/@enact/moonstone/-/moonstone-2.3.0-alpha.3.tgz",
+      "integrity": "sha512-/QaEd7z/6RyzMM6N8Xiab3r2/3GlP2m7oLOjvZevmvC5FbUA48L8lzrJan1LRBoRGdU7BUC4rt5bkCwG+KVjSg==",
       "requires": {
-        "@enact/core": "2.3.0-alpha.1",
-        "@enact/i18n": "2.3.0-alpha.1",
-        "@enact/spotlight": "2.3.0-alpha.1",
-        "@enact/ui": "2.3.0-alpha.1",
+        "@enact/core": "2.3.0-alpha.3",
+        "@enact/i18n": "2.3.0-alpha.3",
+        "@enact/spotlight": "2.3.0-alpha.3",
+        "@enact/ui": "2.3.0-alpha.3",
         "classnames": "2.2.6",
         "eases": "1.0.8",
         "invariant": "2.2.4",
@@ -102,11 +102,11 @@
       }
     },
     "@enact/spotlight": {
-      "version": "2.3.0-alpha.1",
-      "resolved": "https://registry.npmjs.org/@enact/spotlight/-/spotlight-2.3.0-alpha.1.tgz",
-      "integrity": "sha512-/YV0unOJcHDm9JZrieaWrTPaKXk62HQ+DPxoTjzsZJKU0dZvQL8FxhR4SI2pqnYR834jmagEYGAWCtR28l8fAw==",
+      "version": "2.3.0-alpha.3",
+      "resolved": "https://registry.npmjs.org/@enact/spotlight/-/spotlight-2.3.0-alpha.3.tgz",
+      "integrity": "sha512-HQa5lP33AFk+VrOuWjhFYbvFwCRaz0zkeVdwlE2rqs4+htaawkd83sTYNGJdOoMHKzpiDa1dxkF/pPJoRLJp/A==",
       "requires": {
-        "@enact/core": "2.3.0-alpha.1",
+        "@enact/core": "2.3.0-alpha.3",
         "prop-types": "15.6.2",
         "ramda": "0.24.1",
         "react": "16.8.1",
@@ -115,11 +115,11 @@
       }
     },
     "@enact/ui": {
-      "version": "2.3.0-alpha.1",
-      "resolved": "https://registry.npmjs.org/@enact/ui/-/ui-2.3.0-alpha.1.tgz",
-      "integrity": "sha512-oWX+akfTsFL/eCPrD/QbluVNuftaM/9qSADFs47vxOgZfvmANrljN3XhQ0uHkcbr13Qpk7lq/HtLs0xtGNsmFQ==",
+      "version": "2.3.0-alpha.3",
+      "resolved": "https://registry.npmjs.org/@enact/ui/-/ui-2.3.0-alpha.3.tgz",
+      "integrity": "sha512-hrApLZEujbw/CeuRjfq8QzTwflkyDThcdkJkKisZqv17Yr7PnrJsUcwtJnKdMgZmsGqK+qiBJhWDWJTaYOg5kA==",
       "requires": {
-        "@enact/core": "2.3.0-alpha.1",
+        "@enact/core": "2.3.0-alpha.3",
         "classnames": "2.2.6",
         "direction": "1.0.2",
         "invariant": "2.2.4",
@@ -132,11 +132,11 @@
       }
     },
     "@enact/webos": {
-      "version": "2.3.0-alpha.1",
-      "resolved": "https://registry.npmjs.org/@enact/webos/-/webos-2.3.0-alpha.1.tgz",
-      "integrity": "sha512-kbbGleh5aBMY+zxD1cbdv3Y9gMxq0+iTizyGqxc1xRz5sHNKDMFCzHiooHLtNM0XqBKbTLyIJu81vRfJVNsxVA==",
+      "version": "2.3.0-alpha.3",
+      "resolved": "https://registry.npmjs.org/@enact/webos/-/webos-2.3.0-alpha.3.tgz",
+      "integrity": "sha512-ba419too7GZq7wEnlyBkC/XtGYerWB+fVBkiSt6igqV7ekarueRDWu+ya5xjpUM2VXyzxiRcIetgR7uHFnE3Pw==",
       "requires": {
-        "@enact/core": "2.3.0-alpha.1",
+        "@enact/core": "2.3.0-alpha.3",
         "prop-types": "15.6.2",
         "react": "16.8.1",
         "react-dom": "16.8.1"
