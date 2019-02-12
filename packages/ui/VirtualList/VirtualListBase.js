@@ -805,12 +805,10 @@ const VirtualListBaseFactory = (type) => {
 				this.positionItems();
 			}
 
-			const {cc} = this;
-
 			return (
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
 					<div {...rest} ref={this.initContentRef}>
-						{itemsRenderer({cc, initItemContainerRef, primary})}
+						{itemsRenderer({cc: this.cc, initItemContainerRef, primary})}
 					</div>
 				</div>
 			);
