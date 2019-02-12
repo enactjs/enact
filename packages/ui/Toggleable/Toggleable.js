@@ -173,6 +173,11 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				active: null,
 				controlled: prop in props
 			};
+
+			warning(
+				!(prop in props && defaultPropKey in props),
+				`Do not specify both '${prop}' and '${defaultPropKey}' for Toggleable instances. '${defaultPropKey}' will be ignored.`
+			);
 		}
 
 		static getDerivedStateFromProps (props, state) {
