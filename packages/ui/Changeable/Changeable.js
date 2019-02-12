@@ -133,6 +133,11 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 				value: null,
 				controlled: prop in props
 			};
+
+			warning(
+				!(prop in props && defaultPropKey in props),
+				`Do not specify both '${prop}' and '${defaultPropKey}' for Changeable instances. '${defaultPropKey}' will be ignored.`
+			);
 		}
 
 		static getDerivedStateFromProps (props, state) {
