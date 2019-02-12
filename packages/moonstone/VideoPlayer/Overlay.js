@@ -4,7 +4,7 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import css from './VideoPlayer.less';
+import css from './VideoPlayer.module.less';
 
 /**
  * Overlay {@link moonstone/VideoPlayer}. This covers the Video piece of the

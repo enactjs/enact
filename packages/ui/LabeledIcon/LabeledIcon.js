@@ -16,7 +16,7 @@ import ComponentOverride from '../ComponentOverride';
 import {CellBase, LayoutBase} from '../Layout';
 import Slottable from '../Slottable';
 
-import componentCss from './LabeledIcon.less';
+import componentCss from './LabeledIcon.module.less';
 
 /**
  * An icon component with a label.

@@ -2,6 +2,8 @@
  * Modal component that appears at the bottom of the screen and takes up the full screen width.
  *
  * @module moonstone/Popup
+ * @exports Popup
+ * @exports PopupBase
  * @example
  * <Popup open>Hello!</Popup>
  */
@@ -23,7 +25,7 @@ import $L from '../internal/$L';
 import IconButton from '../IconButton';
 import Skinnable from '../Skinnable';
 
-import componentCss from './Popup.less';
+import componentCss from './Popup.module.less';
 
 const isUp = is('up');
 const TransitionContainer = SpotlightContainerDecorator(
@@ -239,6 +241,12 @@ const checkScrimNone = (props) => {
 		'is not supported. Use a transparent scrim to prevent spotlight focus outside of the popup');
 };
 
+const OpenState = {
+	CLOSED: 0,
+	OPENING: 1,
+	OPEN: 2
+};
+
 /**
  * A stateful component that renders a popup in a
  * [FloatingLayer]{@link ui/FloatingLayer.FloatingLayer}.
@@ -381,13 +389,36 @@ class Popup extends React.Component {
 	constructor (props) {
 		super(props);
 		this.paused = new Pause('Popup');
+		const animateOpen = this.props.noAnimation ? OpenState.OPEN : OpenState.OPENING;
 		this.state = {
 			floatLayerOpen: this.props.open,
-			popupOpen: this.props.noAnimation,
+			popupOpen: this.props.open ? animateOpen : OpenState.CLOSED,
+			prevOpen: this.props.open,
 			containerId: Spotlight.add(),
 			activator: null
 		};
 		checkScrimNone(this.props);
+	}
+
+	static getDerivedStateFromProps (props, state) {
+		if (props.open !== state.prevOpen) {
+			if (props.open) {
+				return {
+					popupOpen: props.noAnimation || state.floatLayerOpen ? OpenState.OPEN : OpenState.CLOSED,
+					floatLayerOpen: true,
+					activator: Spotlight.getCurrent(),
+					prevOpen: props.open
+				};
+			} else {
+				return {
+					popupOpen: OpenState.CLOSED,
+					floatLayerOpen: state.popupOpen === OpenState.OPEN ? !props.noAnimation : false,
+					activator: props.noAnimation ? null : state.activator,
+					prevOpen: props.open
+				};
+			}
+		}
+		return null;
 	}
 
 	// Spot the content after it's mounted.
@@ -395,30 +426,6 @@ class Popup extends React.Component {
 		if (this.props.open) {
 			this.spotPopupContent();
 		}
-	}
-
-	componentWillReceiveProps (nextProps) {
-		// while transitioning, we set `popupOpen` with the given `open` prop value
-		if (!this.props.noAnimation && this.state.floatLayerOpen) {
-			this.setState({
-				popupOpen: nextProps.open
-			});
-		} else if (!this.props.open && nextProps.open) {
-			this.setState({
-				popupOpen: nextProps.noAnimation,
-				floatLayerOpen: true,
-				activator: Spotlight.getCurrent()
-			});
-		} else if (this.props.open && !nextProps.open) {
-			const activator = this.state.activator;
-
-			this.setState({
-				popupOpen: nextProps.noAnimation,
-				floatLayerOpen: !nextProps.noAnimation,
-				activator: nextProps.noAnimation ? null : activator
-			});
-		}
-		checkScrimNone(nextProps);
 	}
 
 	componentDidUpdate (prevProps, prevState) {
@@ -433,6 +440,8 @@ class Popup extends React.Component {
 				this.spotActivator(prevState.activator);
 			}
 		}
+
+		checkScrimNone(this.props);
 	}
 
 	componentWillUnmount () {
@@ -445,9 +454,9 @@ class Popup extends React.Component {
 	handleFloatingLayerOpen = () => {
 		if (!this.props.noAnimation) {
 			this.setState({
-				popupOpen: true
+				popupOpen: OpenState.OPENING
 			});
-		} else if (this.state.popupOpen && this.props.open) {
+		} else if (this.state.popupOpen === OpenState.OPEN && this.props.open) {
 			this.spotPopupContent();
 		}
 	}
@@ -500,6 +509,10 @@ class Popup extends React.Component {
 
 	handlePopupShow = (ev) => {
 		forwardShow(ev, this.props);
+
+		this.setState({
+			popupOpen: OpenState.OPEN
+		});
 
 		if (ev.currentTarget.getAttribute('data-spotlight-id') === this.state.containerId) {
 			this.paused.resume();
@@ -562,7 +575,7 @@ class Popup extends React.Component {
 					onCloseButtonClick={onClose}
 					onHide={this.handlePopupHide}
 					onShow={this.handlePopupShow}
-					open={this.state.popupOpen}
+					open={this.state.popupOpen >= OpenState.OPENING}
 					spotlightId={this.state.containerId}
 					spotlightRestrict="self-only"
 				/>

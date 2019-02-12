@@ -44,7 +44,7 @@ class StatefulSwitchItem extends React.Component {
 		};
 	}
 
-	componentWillReceiveProps (nextProps) {
+	UNSAFE_componentWillReceiveProps (nextProps) {
 		if (this.props.index !== nextProps.index) {
 			this.setState({selected: items[nextProps.index].selected});
 		}

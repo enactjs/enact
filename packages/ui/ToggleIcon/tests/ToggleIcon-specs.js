@@ -1,6 +1,5 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 
 import ToggleIcon from '../ToggleIcon';
 
@@ -11,8 +10,8 @@ const tap = (node) => {
 
 describe('ToggleIcon Specs', () => {
 
-	it('should call onToggle when tapped', function () {
-		const handleToggle = sinon.spy();
+	test('should call onToggle when tapped', () => {
+		const handleToggle = jest.fn();
 		const subject = mount(
 			<ToggleIcon onToggle={handleToggle}>
 				star
@@ -21,14 +20,14 @@ describe('ToggleIcon Specs', () => {
 
 		tap(subject);
 
-		const expected = true;
-		const actual = handleToggle.calledOnce;
+		const expected = 1;
+		const actual = handleToggle.mock.calls.length;
 
-		expect(expected).to.equal(actual);
+		expect(expected).toBe(actual);
 	});
 
-	it('should call onClick when clicked', function () {
-		const handleClick = sinon.spy();
+	test('should call onClick when clicked', () => {
+		const handleClick = jest.fn();
 		const subject = mount(
 			<ToggleIcon onClick={handleClick}>
 				star
@@ -37,14 +36,14 @@ describe('ToggleIcon Specs', () => {
 
 		subject.simulate('click');
 
-		const expected = true;
-		const actual = handleClick.calledOnce;
+		const expected = 1;
+		const actual = handleClick.mock.calls.length;
 
-		expect(expected).to.equal(actual);
+		expect(expected).toBe(actual);
 	});
 
-	it('should call onTap when tapped', function () {
-		const handleTap = sinon.spy();
+	test('should call onTap when tapped', () => {
+		const handleTap = jest.fn();
 		const subject = mount(
 			<ToggleIcon onTap={handleTap}>
 				star
@@ -53,14 +52,14 @@ describe('ToggleIcon Specs', () => {
 
 		tap(subject);
 
-		const expected = true;
-		const actual = handleTap.calledOnce;
+		const expected = 1;
+		const actual = handleTap.mock.calls.length;
 
-		expect(expected).to.equal(actual);
+		expect(expected).toBe(actual);
 	});
 
-	it('should call both onToggle and onTap when tapped', function () {
-		const handleBoth = sinon.spy();
+	test('should call both onToggle and onTap when tapped', () => {
+		const handleBoth = jest.fn();
 		const subject = mount(
 			<ToggleIcon onTap={handleBoth} onToggle={handleBoth}>
 				star
@@ -69,10 +68,10 @@ describe('ToggleIcon Specs', () => {
 
 		tap(subject);
 
-		const expected = true;
-		const actual = handleBoth.calledTwice;
+		const expected = 2;
+		const actual = handleBoth.mock.calls.length;
 
-		expect(expected).to.equal(actual);
+		expect(expected).toBe(actual);
 	});
 
 });

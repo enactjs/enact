@@ -28,7 +28,7 @@ import React from 'react';
 import {IconButtonBase} from '../IconButton';
 import Skinnable from '../Skinnable';
 
-import componentCss from './LabeledIconButton.less';
+import componentCss from './LabeledIconButton.module.less';
 
 const IconButton = compose(
 	UiIconButtonDecorator,
@@ -80,6 +80,9 @@ const LabeledIconButtonBase = kind({
 		 * Setting `selected` may be useful when the component represents a toggleable option. The
 		 * visual effect may be customized using the
 		 * [css]{@link moonstone/LabeledIconButton.LabeledIconButtonBase.css} prop.
+		 *
+		 * @type {Boolean}
+		 * @public
 		 */
 		selected: PropTypes.bool
 	},

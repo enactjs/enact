@@ -1,10 +1,10 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import RadioItem from '../RadioItem';
-import css from '../RadioItem.less';
+import css from '../RadioItem.module.less';
 
 describe('RadioItem Specs', () => {
-	it('should render correct icon when not selected', function () {
+	test('should render correct icon when not selected', () => {
 		const radioItem = mount(
 			<RadioItem>
 				Hello RadioItem
@@ -14,10 +14,10 @@ describe('RadioItem Specs', () => {
 		const expected = 0;
 		const actual = radioItem.find(`.${css.selected}`).length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should render correct icon when selected', function () {
+	test('should render correct icon when selected', () => {
 		const radioItem = mount(
 			<RadioItem selected>
 				Hello RadioItem
@@ -27,7 +27,7 @@ describe('RadioItem Specs', () => {
 		const expected = 1;
 		const actual = radioItem.find(`.${css.selected}`).length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
 });

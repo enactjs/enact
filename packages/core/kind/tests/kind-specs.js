@@ -5,6 +5,7 @@ import kind from '../kind';
 
 describe('kind', () => {
 
+	const TestContext = React.createContext();
 	const Kind = kind({
 		name: 'Kind',
 		propTypes: {
@@ -14,9 +15,7 @@ describe('kind', () => {
 		defaultProps: {
 			label: 'Label'
 		},
-		contextTypes: {
-			parentLabel: PropTypes.string
-		},
+		contextType: TestContext,
 		styles: {
 			className: 'kind'
 		},
@@ -36,23 +35,23 @@ describe('kind', () => {
 		}
 	});
 
-	it('should assign name to displayName', function () {
+	test('should assign name to displayName', () => {
 		const expected = 'Kind';
 		const actual = Kind.displayName;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should default {label} property', function () {
+	test('should default {label} property', () => {
 		const subject = <Kind prop={1} />;
 
 		const expected = 'Label';
 		const actual = subject.props.label;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should default {label} property when explicitly undefined', function () {
+	test('should default {label} property when explicitly undefined', () => {
 		// Explicitly testing for undefined
 		// eslint-disable-next-line no-undefined
 		const subject = <Kind prop={1} label={undefined} />;
@@ -60,10 +59,10 @@ describe('kind', () => {
 		const expected = 'Label';
 		const actual = subject.props.label;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should add className defined in styles', function () {
+	test('should add className defined in styles', () => {
 		const subject = mount(
 			<Kind prop={1} />
 		);
@@ -71,10 +70,10 @@ describe('kind', () => {
 		const expected = 'kind';
 		const actual = subject.find('div').prop('className');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should compute {value} property', function () {
+	test('should compute {value} property', () => {
 		const subject = mount(
 			<Kind prop={1} />
 		);
@@ -82,18 +81,18 @@ describe('kind', () => {
 		const expected = 2;
 		const actual = subject.find('div').prop('children');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should assign contextTypes when handlers are specified', function () {
-		const actual = Kind.contextTypes != null;
+	test('should assign contextType when handlers are specified', () => {
+		const actual = Kind.contextType != null;
 		const expected = true;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	describe('inline', function () {
-		it('should support a minimal kind', function () {
+	describe('inline', () => {
+		test('should support a minimal kind', () => {
 			const Minimal = kind({
 				name: 'Minimal',
 				render: () => <div />
@@ -104,10 +103,10 @@ describe('kind', () => {
 			const expected = 'div';
 			const actual = component.type;
 
-			expect(actual).to.equal(expected);
+			expect(actual).toBe(expected);
 		});
 
-		it('should set default props when prop is not passed', function () {
+		test('should set default props when prop is not passed', () => {
 			const component = Kind.inline();
 
 			// since we're inlining the output, we have to reference where the label prop lands --
@@ -116,10 +115,10 @@ describe('kind', () => {
 			const expected = 'Label';
 			const actual = component.props.title;
 
-			expect(actual).to.equal(expected);
+			expect(actual).toBe(expected);
 		});
 
-		it('should set default props when passed prop is undefined', function () {
+		test('should set default props when passed prop is undefined', () => {
 			const component = Kind.inline({
 				// explicitly testing settings undefined in this test case
 				// eslint-disable-next-line no-undefined
@@ -129,16 +128,16 @@ describe('kind', () => {
 			const expected = 'Label';
 			const actual = component.props.title;
 
-			expect(actual).to.equal(expected);
+			expect(actual).toBe(expected);
 		});
 
-		it('should include handlers', function () {
+		test('should include handlers', () => {
 			const component = Kind.inline();
 
 			const expected = 'function';
 			const actual = typeof component.props.onClick;
 
-			expect(actual).to.equal(expected);
+			expect(actual).toBe(expected);
 		});
 	});
 

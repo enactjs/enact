@@ -1,3 +1,5 @@
+import invariant from 'invariant';
+
 /**
  * Provides a convenient way to manage timed execution of functions.
  *
@@ -25,7 +27,7 @@ class Job {
 
 	run (args) {
 		// don't want to inadvertently apply Job's context on `fn`
-		this.fn.apply(null, args);
+		return this.fn.apply(null, args);
 	}
 
 	/**
@@ -76,10 +78,10 @@ class Job {
 				window.cancelIdleCallback(this.id);
 			} else if (this.type === 'raf') {
 				window.cancelAnimationFrame(this.id);
-			} else {
+			} else if (this.type === 'timeout') {
 				clearTimeout(this.id);
 			}
-			this.id = null;
+			this.id = this.type = null;
 		}
 	}
 
@@ -205,6 +207,43 @@ class Job {
 			// If requestAnimationFrame is not supported just run the function immediately
 			this.run(args);
 		}
+	}
+
+	/**
+	 * Starts the job when `promise` resolves.
+	 *
+	 * The job execution is tied to the resolution of the last `Promise` passed. Like other methods
+	 * on `Job`, calling `promise()` again with a new `Promise` will block execution of the job
+	 * until that new `Promise` resolves. Any previous `Promise`s will still resolve normally but
+	 * will not trigger job execution.
+	 *
+	 * Unlike other methods on `Job`, `promise()` returns a `Promise` which is the result of calling
+	 * `then()` on the passed `promise`. That `Promise` resolves with either the result of job
+	 * execution or `undefined` if `Promise` was superseded by a subsequent `Promise` passed as
+	 * described above.
+	 *
+	 * @method
+	 * @param   {Promise}  promise  The promise that must resolve before the job is executed
+	 *
+	 * @returns {Promise}
+	 * @memberof core/util.Job.prototype
+	 * @public
+	 */
+	promise = (promise) => {
+		invariant(
+			promise && typeof promise.then === 'function',
+			'promise expects a thenable'
+		);
+
+		this.type = 'promise';
+		this.id = promise;
+
+		return promise.then(result => {
+			if (this.id === promise) {
+				this.stop();
+				return this.run([result]);
+			}
+		});
 	}
 }
 

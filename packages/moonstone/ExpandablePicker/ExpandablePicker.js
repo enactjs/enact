@@ -28,7 +28,7 @@ import Picker from '../Picker';
 
 import ExpandablePickerDecorator from './ExpandablePickerDecorator';
 
-import css from './ExpandablePicker.less';
+import css from './ExpandablePicker.module.less';
 
 /**
  * A stateless component that renders a list of items into a picker that allows the user to select
@@ -54,6 +54,14 @@ const ExpandablePickerBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * The "aria-label" for the the check button.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		checkButtonAriaLabel: PropTypes.string,
+
+		/**
 		 * Disables voice control.
 		 *
 		 * @type {Boolean}
@@ -70,14 +78,6 @@ const ExpandablePickerBase = kind({
 		 * @public
 		 */
 		'data-webos-voice-group-label': PropTypes.string,
-
-		/**
-		 * The "aria-label" for the the check button.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		checkButtonAriaLabel: PropTypes.string,
 
 		/**
 		 * The "aria-label" for the decrement button.

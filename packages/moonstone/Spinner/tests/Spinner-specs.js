@@ -1,21 +1,24 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import Spinner from '../Spinner';
-import css from '../Spinner.less';
+import css from '../Spinner.module.less';
 
 describe('Spinner Specs', () => {
-	it('should have not have client node when Spinner has no children', function () {
-		const spinner = mount(
-			<Spinner />
-		);
+	test(
+		'should not have client node when Spinner has no children',
+		() => {
+			const spinner = mount(
+				<Spinner />
+			);
 
-		const expected = false;
-		const actual = spinner.find(`div.${css.client}`).exists();
+			const expected = false;
+			const actual = spinner.find(`div.${css.client}`).exists();
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should have a client node when Spinner has children', function () {
+	test('should have a client node when Spinner has children', () => {
 		const spinner = mount(
 			<Spinner>
 				Loading...
@@ -25,10 +28,10 @@ describe('Spinner Specs', () => {
 		const expected = true;
 		const actual = spinner.find(`div.${css.client}`).exists();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should have content class when Spinner has children', function () {
+	test('should have content class when Spinner has children', () => {
 		const spinner = mount(
 			<Spinner>
 				Loading...
@@ -38,23 +41,26 @@ describe('Spinner Specs', () => {
 		const expected = true;
 		const actual = spinner.find(`div.${css.spinner}`).hasClass(css.content);
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should have transparent class when transparent prop equals true', function () {
-		const spinner = mount(
-			<Spinner transparent>
-				Loading...
-			</Spinner>
-		);
+	test(
+		'should have transparent class when transparent prop equals true',
+		() => {
+			const spinner = mount(
+				<Spinner transparent>
+					Loading...
+				</Spinner>
+			);
 
-		const expected = true;
-		const actual = spinner.find(`div.${css.spinner}`).hasClass(css.transparent);
+			const expected = true;
+			const actual = spinner.find(`div.${css.spinner}`).hasClass(css.transparent);
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should set role to alert by default', function () {
+	test('should set role to alert by default', () => {
 		const spinner = mount(
 			<Spinner />
 		);
@@ -62,10 +68,10 @@ describe('Spinner Specs', () => {
 		const expected = 'alert';
 		const actual = spinner.find(`div.${css.spinner}`).prop('role');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should set aria-live to off by default', function () {
+	test('should set aria-live to off by default', () => {
 		const spinner = mount(
 			<Spinner />
 		);
@@ -73,6 +79,6 @@ describe('Spinner Specs', () => {
 		const expected = 'off';
 		const actual = spinner.find(`div.${css.spinner}`).prop('aria-live');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });

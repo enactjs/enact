@@ -2,14 +2,14 @@ import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {contextTypes as controlContextTypes} from '@enact/ui/Marquee/MarqueeController';
+import {MarqueeControllerContext} from '@enact/ui/Marquee/MarqueeController';
 import Pure from '@enact/ui/internal/Pure';
 import Touchable from '@enact/ui/Touchable';
 
 import Icon from '../../Icon';
 import IconButton from '../../IconButton';
 
-import css from './Picker.less';
+import css from './Picker.module.less';
 
 const JoinedPickerButtonBase = kind({
 	name: 'JoinedPickerButtonBase',
@@ -46,8 +46,6 @@ const PickerButtonBase = kind({
 		spotlightDisabled: PropTypes.bool
 	},
 
-	contextTypes: controlContextTypes,
-
 	styles: {
 		css
 	},
@@ -55,17 +53,17 @@ const PickerButtonBase = kind({
 	handlers: {
 		onMouseEnter: handle(
 			forward('onMouseEnter'),
-			(ev, props, context) => {
-				if (context.enter) {
-					context.enter(null);
+			(ev, props, sync) => {
+				if (sync && sync.enter) {
+					sync.enter(null);
 				}
 			}
 		),
 		onMouseLeave: handle(
 			forward('onMouseLeave'),
-			(ev, props, context) => {
-				if (context.leave) {
-					context.leave(null);
+			(ev, props, sync) => {
+				if (sync && sync.leave) {
+					sync.leave(null);
 				}
 			}
 		)
@@ -88,13 +86,21 @@ const PickerButtonBase = kind({
 			);
 		} else {
 			return (
-				<IconButton {...rest} backgroundOpacity="transparent" disabled={disabled} small>
+				<IconButton
+					{...rest}
+					backgroundOpacity="transparent"
+					disabled={disabled}
+					small
+				>
 					{icon}
 				</IconButton>
 			);
 		}
 	}
 });
+
+// This can be replaced with the kind config contextType when it's supported
+PickerButtonBase.contextType = MarqueeControllerContext;
 
 const PickerButton = Pure(
 	PickerButtonBase

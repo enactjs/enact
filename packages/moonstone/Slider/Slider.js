@@ -40,13 +40,14 @@ import {
 	handleIncrement
 } from './utils';
 
-import componentCss from './Slider.less';
+import componentCss from './Slider.module.less';
 
 /**
  * Range-selection input component.
  *
  * @class SliderBase
  * @extends ui/Slider.SliderBase
+ * @omit progressBarComponent
  * @memberof moonstone/Slider
  * @ui
  * @public

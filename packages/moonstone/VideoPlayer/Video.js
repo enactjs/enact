@@ -5,7 +5,7 @@ import Slottable from '@enact/ui/Slottable';
 import compose from 'ramda/src/compose';
 import React from 'react';
 
-import css from './VideoPlayer.less';
+import css from './VideoPlayer.module.less';
 
 import PropTypes from 'prop-types';
 
@@ -274,7 +274,6 @@ const VideoDecorator = compose(
  * ```
  *
  * @class Video
- * @extends {moonstone/VideoPlayer.VideoBase}
  * @mixes ui/Slottable
  * @memberof moonstone/VideoPlayer
  * @ui

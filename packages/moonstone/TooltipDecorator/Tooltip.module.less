@@ -1,0 +1,178 @@
+// Tooltip.module.less
+//
+@import '../styles/variables.less';
+@import '../styles/mixins.less';
+@import '../styles/skin.less';
+
+.tooltip {
+	position: absolute;
+
+	.tooltipArrow {
+		position: absolute;
+		width: @moon-tooltip-point-width;
+		height: @moon-tooltip-point-height;
+		transform-origin: top left;
+	}
+
+	.tooltipLabel {
+		.moon-small-button-text();
+		line-height: @moon-tooltip-label-height;
+		white-space: nowrap;
+		padding: @moon-spotlight-outset @moon-tooltip-h-padding;
+		border-radius: @moon-tooltip-border-radius;
+
+		:global(.enact-locale-right-to-left) & {
+			text-align: right;
+		}
+
+		&.multi {
+			white-space: normal;
+			.locale-japanese-line-break();
+		}
+	}
+
+	&.below {
+		&.rightArrow {
+			.tooltipArrow {
+				transform: translateY(1%) rotate(-90deg);
+				left: 0;
+			}
+
+			.tooltipLabel {
+				border-top-left-radius: 0;
+			}
+		}
+
+		&.leftArrow {
+			.tooltipArrow {
+				transform: translate(100%, 1%) rotate(-90deg) scaleY(-1);
+				right: 0;
+			}
+
+			.tooltipLabel {
+				text-align: right;
+				border-top-right-radius: 0;
+			}
+		}
+
+		&.centerArrow {
+			.tooltipArrow {
+				transform: rotate(-90deg) translate(-1%, -50%);
+				left: 50%;
+			}
+		}
+	}
+
+	&.above {
+		&.rightArrow {
+			.tooltipArrow {
+				transform: translateY(99%) rotate(-90deg) scaleX(-1);
+				left: 0;
+				bottom: 0;
+			}
+
+			.tooltipLabel {
+				border-bottom-left-radius: 0;
+			}
+		}
+
+		&.leftArrow {
+			.tooltipArrow {
+				transform: translate(100%, 99%) rotate(90deg);
+				bottom: 0;
+				right: 0;
+			}
+
+			.tooltipLabel {
+				text-align: right;
+				border-bottom-right-radius: 0;
+			}
+		}
+
+		&.centerArrow {
+			.tooltipArrow {
+				transform: rotate(90deg) translate(-1%, -50%);
+				left: 50%;
+				top: 100%;
+			}
+		}
+	}
+
+	&.left {
+		&.topArrow {
+			.tooltipArrow {
+				transform: translate(99%, 100%) scaleY(-1);
+				bottom: 0;
+				right: 0;
+			}
+
+			.tooltipLabel {
+				border-bottom-right-radius: 0;
+			}
+		}
+
+		&.bottomArrow {
+			.tooltipArrow {
+				transform: translateX(99%);
+				right: 0;
+			}
+
+			.tooltipLabel {
+				border-top-right-radius: 0;
+			}
+		}
+
+		&.middleArrow {
+			.tooltipArrow {
+				transform: translateX(100%) translateY(-50%);
+				top: 50%;
+				right: 4px;
+			}
+		}
+	}
+
+	&.right {
+		&.topArrow {
+			.tooltipArrow {
+				transform: translateX(1%) rotate(180deg);
+				top: 100%;
+				left: 0;
+			}
+
+			.tooltipLabel {
+				border-bottom-left-radius: 0;
+			}
+		}
+
+		&.bottomArrow {
+			.tooltipArrow {
+				transform: translateX(1%) scaleX(-1);
+				left: 0;
+			}
+
+			.tooltipLabel {
+				border-top-left-radius: 0;
+			}
+		}
+
+		&.middleArrow {
+			.tooltipArrow {
+				transform: translateY(-50%) scaleX(-1);
+				top: 50%;
+				left: 4px;
+			}
+		}
+	}
+
+	// Skin colors
+	.applySkins({
+		.tooltipArrow {
+			fill: @moon-tooltip-bg-color;
+		}
+
+		.tooltipLabel {
+			color: @moon-tooltip-text-color;
+			background-color: @moon-tooltip-bg-color;
+		}
+	});
+}
