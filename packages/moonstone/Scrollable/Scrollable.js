@@ -238,6 +238,12 @@ class ScrollableBase extends Component {
 		this.updateSpotlightContainer(props);
 	}
 
+	componentDidUpdate () {
+		if (this.prevSpotlightId !== this.props['data-spotlight-id'] || this.prevFocusableScrollbar !== this.props.focusableScrollbar) {
+			this.updateSpotlightContainer(this.props);
+		}
+	}
+
 	componentWillUnmount () {
 		this.stopOverscrollJob('horizontal', 'before');
 		this.stopOverscrollJob('horizontal', 'after');
@@ -766,10 +772,6 @@ class ScrollableBase extends Component {
 			upButtonAriaLabel = scrollUpAriaLabel == null ? $L('scroll up') : scrollUpAriaLabel,
 			rightButtonAriaLabel = scrollRightAriaLabel == null ? $L('scroll right') : scrollRightAriaLabel,
 			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
-
-		if (this.prevSpotlightId !== spotlightId || this.prevFocusableScrollbar !== focusableScrollbar) {
-			this.updateSpotlightContainer(this.props);
-		}
 
 		return (
 			<UiScrollableBase
