@@ -13,7 +13,7 @@ import React from 'react';
 
 import Touchable from '../Touchable';
 
-import componentCss from './Button.less';
+import componentCss from './Button.module.less';
 
 /**
  * A basic button component structure without any behaviors applied to it.

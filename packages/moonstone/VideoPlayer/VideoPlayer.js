@@ -25,7 +25,7 @@ import {Spottable} from '@enact/spotlight/Spottable';
 import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ComponentOverride from '@enact/ui/ComponentOverride';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
-import {contextTypes} from '@enact/ui/FloatingLayer/FloatingLayerDecorator';
+import {FloatingLayerContext} from '@enact/ui/FloatingLayer/FloatingLayerDecorator';
 import Media from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
@@ -49,7 +49,7 @@ import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
 import Video from './Video';
 
-import css from './VideoPlayer.less';
+import css from './VideoPlayer.module.less';
 
 const SpottableDiv = Touchable(Spottable('div'));
 const RootContainer = SpotlightContainerDecorator(
@@ -67,6 +67,16 @@ const ControlsContainer = SpotlightContainerDecorator(
 	},
 	'div'
 );
+
+const memoGetDurFmt = memoize((/* locale */) => new DurationFmt({
+	length: 'medium', style: 'clock', useNative: false
+}));
+
+const getDurFmt = (locale) => {
+	if (typeof window === 'undefined') return null;
+
+	return memoGetDurFmt(locale);
+};
 
 const forwardWithState = (type) => adaptEvent(call('addStateToEvent'), forwardWithPrevent(type));
 
@@ -609,7 +619,7 @@ const VideoPlayerBase = class extends React.Component {
 		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element])
 	}
 
-	static contextTypes = contextTypes
+	static contextType = FloatingLayerContext
 
 	static defaultProps = {
 		autoCloseTimeout: 5000,
@@ -679,6 +689,9 @@ const VideoPlayerBase = class extends React.Component {
 		on('mousemove', this.activityDetected);
 		on('keydown', this.handleGlobalKeyDown);
 		this.startDelayedFeedbackHide();
+		if (this.context && typeof this.context === 'function') {
+			this.floatingLayerController = this.context(() => {});
+		}
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
@@ -712,7 +725,7 @@ const VideoPlayerBase = class extends React.Component {
 			!this.state.mediaControlsVisible && prevState.mediaControlsVisible !== this.state.mediaControlsVisible ||
 			!this.state.mediaSliderVisible && prevState.mediaSliderVisible !== this.state.mediaSliderVisible
 		) {
-			this.context.closeAllFloatingLayers();
+			this.floatingLayerController.notify({action: 'closeAll'});
 		}
 
 		if (this.props.spotlightId !== prevProps.spotlightId) {
@@ -787,14 +800,14 @@ const VideoPlayerBase = class extends React.Component {
 		this.renderBottomControl.stop();
 		this.sliderTooltipTimeJob.stop();
 		this.slider5WayPressJob.stop();
+		if (this.floatingLayerController) {
+			this.floatingLayerController.unregister();
+		}
 	}
 
 	//
 	// Internal Methods
 	//
-	getDurFmt = memoize((/* locale */) => new DurationFmt({
-		length: 'medium', style: 'clock', useNative: false
-	}));
 
 	announceJob = new Job(msg => (this.announceRef && this.announceRef.announce(msg)), 200)
 
@@ -1112,7 +1125,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			this.showMiniFeedback = true;
 			this.jump(jumpBy);
-			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.getDurFmt(this.props.locale), {includeHour: true}));
+			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, getDurFmt(this.props.locale), {includeHour: true}));
 		}
 	}
 
@@ -1608,7 +1621,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			if (!isNaN(seconds)) {
 				this.sliderTooltipTimeJob.throttle(seconds);
-				const knobTime = secondsToTime(seconds, this.getDurFmt(this.props.locale), {includeHour: true});
+				const knobTime = secondsToTime(seconds, getDurFmt(this.props.locale), {includeHour: true});
 
 				forward('onScrub', {...ev, seconds}, this.props);
 
@@ -1629,7 +1642,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (!isNaN(seconds)) {
 			this.sliderTooltipTimeJob.throttle(seconds);
-			const knobTime = secondsToTime(seconds, this.getDurFmt(this.props.locale), {includeHour: true});
+			const knobTime = secondsToTime(seconds, getDurFmt(this.props.locale), {includeHour: true});
 
 			forward('onScrub', {
 				detached: this.sliderScrubbing,
@@ -1813,7 +1826,7 @@ const VideoPlayerBase = class extends React.Component {
 			proportionSelection = selection.map(t => t / this.state.duration);
 		}
 
-		const durFmt = this.getDurFmt(locale);
+		const durFmt = getDurFmt(locale);
 
 		return (
 			<RootContainer

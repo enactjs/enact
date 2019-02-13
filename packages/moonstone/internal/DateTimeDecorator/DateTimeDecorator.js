@@ -16,8 +16,7 @@ import React from 'react';
 
 import {Expandable} from '../../ExpandableItem';
 
-
-/**
+/*
  * Converts a JavaScript Date to unix time
  *
  * @param	{Date}	date	A Date to convert

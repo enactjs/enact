@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import Layout, {Cell} from '../Layout';
-import css from '../Layout.less';
+import css from '../Layout.module.less';
 
 describe('Layout Specs', () => {
 	const layoutPropAlign = [

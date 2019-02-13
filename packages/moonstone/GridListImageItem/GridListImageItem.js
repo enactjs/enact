@@ -26,7 +26,7 @@ import {ImageBase as Image} from '../Image';
 import {Marquee, MarqueeController} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import componentCss from './GridListImageItem.less';
+import componentCss from './GridListImageItem.module.less';
 
 const
 	defaultPlaceholder =

@@ -28,7 +28,7 @@ import Picker from '../Picker';
 
 import ExpandablePickerDecorator from './ExpandablePickerDecorator';
 
-import css from './ExpandablePicker.less';
+import css from './ExpandablePicker.module.less';
 
 /**
  * A stateless component that renders a list of items into a picker that allows the user to select

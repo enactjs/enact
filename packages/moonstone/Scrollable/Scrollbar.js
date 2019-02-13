@@ -6,7 +6,7 @@ import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
 import ScrollButtons from './ScrollButtons';
 import ScrollThumb from './ScrollThumb';
 
-import componentCss from './Scrollbar.less';
+import componentCss from './Scrollbar.module.less';
 
 /**
  * A Moonstone-styled scroller base component.

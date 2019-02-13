@@ -73,7 +73,7 @@ const offsetForBreadcrumbs = ({node}) => {
 };
 
 // Adds the data-clip attribute to allow clipping when transitioning between non-zero panels
-// CSS is enforced by Panels.less
+// CSS is enforced by Panels.module.less
 const clipForBreadcrumbs = ({from, node, percent, to}) => {
 	const viewport = node.parentNode;
 	if (to === 0 || from === 0 || percent === 0 || percent === 1) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import {DatePicker, DatePickerBase} from '../DatePicker';
-import css from '../DatePicker.less';
+import css from '../DatePicker.module.less';
 
 describe('DatePicker', () => {
 

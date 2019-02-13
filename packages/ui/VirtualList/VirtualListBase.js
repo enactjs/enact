@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
-import css from './VirtualList.less';
+import css from './VirtualList.module.less';
 
 const
 	nop = () => {},
@@ -684,8 +684,8 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			let
-				{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),
-				width, height;
+				width, height,
+				{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom);
 
 			width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
 			height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
