@@ -51,9 +51,9 @@ class StatefulSwitchItem extends React.Component {
 				prevIndex: props.index,
 				selected: items[props.index].selected
 			};
-		} else {
-			return null;
 		}
+
+		return null;
 	}
 
 	onToggle = () => {
