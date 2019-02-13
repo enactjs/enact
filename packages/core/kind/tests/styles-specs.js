@@ -1,5 +1,3 @@
-/* globals describe, it, expect */
-
 import styles from '../styles';
 
 describe('styles', () => {
