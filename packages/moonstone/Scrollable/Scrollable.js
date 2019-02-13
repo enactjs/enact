@@ -68,7 +68,7 @@ const navigableFilter = (elem) => {
 	}
 };
 
-const configureSpotlightContainer = (spotlightId, focusableScrollbar) => {
+const configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusableScrollbar}) => {
 	Spotlight.set(spotlightId, {
 		navigableFilter: focusableScrollbar ? null : navigableFilter
 	});
@@ -235,12 +235,13 @@ class ScrollableBase extends Component {
 			onPrevScroll: this.onScrollbarButtonClick
 		};
 
-		this.updateSpotlightContainer(props);
+		configureSpotlightContainer(props);
 	}
 
-	componentDidUpdate () {
-		if (this.prevSpotlightId !== this.props['data-spotlight-id'] || this.prevFocusableScrollbar !== this.props.focusableScrollbar) {
-			this.updateSpotlightContainer(this.props);
+	componentDidUpdate (prevProps) {
+		if (prevProps['data-spotlight-id'] !== this.props['data-spotlight-id'] ||
+				prevProps.focusableScrollbar !== this.props.focusableScrollbar) {
+			configureSpotlightContainer(this.props);
 		}
 	}
 
@@ -258,8 +259,6 @@ class ScrollableBase extends Component {
 	lastScrollPositionOnFocus = null
 	indexToFocus = null
 	nodeToFocus = null
-	prevSpotlightId // undefined
-	prevFocusableScrollbar = false
 
 	// voice control
 	isVoiceControl = false
@@ -270,12 +269,6 @@ class ScrollableBase extends Component {
 	overscrollJobs = {
 		horizontal: {before: null, after: null},
 		vertical: {before: null, after: null}
-	}
-
-	updateSpotlightContainer = ({'data-spotlight-id': spotlightId, focusableScrollbar}) => {
-		configureSpotlightContainer(spotlightId, focusableScrollbar);
-		this.prevSpotlightId = spotlightId;
-		this.prevFocusableScrollbar = focusableScrollbar;
 	}
 
 	onFlick = ({direction}) => {

@@ -228,7 +228,10 @@ const VirtualListBaseFactory = (type) => {
 			}, 0);
 		}
 
-		componentDidUpdate () {
+		componentDidUpdate (prevProps) {
+			if (prevProps.spotlightId !== this.props.spotlightId) {
+				this.configureSpotlight(this.props.spotlightId);
+			}
 			this.restoreFocus();
 		}
 
@@ -258,7 +261,6 @@ const VirtualListBaseFactory = (type) => {
 		nodeIndexToBeFocused = null
 		preservedIndex = null
 		restoreLastFocused = false
-		prevSpotlightId // undefined
 
 		setContainerDisabled = (bool) => {
 			const
@@ -296,8 +298,6 @@ const VirtualListBaseFactory = (type) => {
 				 */
 				obliqueMultiplier: spacing > 0 ? spacing : 1
 			});
-
-			this.prevSpotlightId = spotlightId;
 		}
 
 		lastFocusedPersist = () => {
@@ -876,17 +876,14 @@ const VirtualListBaseFactory = (type) => {
 
 		render () {
 			const
-				{itemRenderer, itemsRenderer, spotlightId, ...rest} = this.props,
+				{itemRenderer, itemsRenderer, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
 			delete rest.animate;
 			delete rest.initUiChildRef;
 			delete rest.isItemDisabled;
+			delete rest.spotlightId;
 			delete rest.wrap;
-
-			if (spotlightId && spotlightId !== this.prevSpotlightId) {
-				this.configureSpotlight(spotlightId);
-			}
 
 			return (
 				<UiBase
