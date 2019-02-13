@@ -123,7 +123,6 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		handleStart = (component) => {
 			this.cancelJob.stop();
 			if (!this.anyRunning()) {
-				// this.markAll(STATE.ready);
 				this.dispatch('start', component);
 			}
 		}
@@ -142,7 +141,9 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleReady = () => {
-			this.markAll(STATE.ready);
+			if (!this.anyRunning()) {
+				this.markAll(STATE.ready);
+			}
 		}
 
 		doCancel = () => {
