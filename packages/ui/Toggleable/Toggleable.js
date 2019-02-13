@@ -176,7 +176,8 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 			warning(
 				!(prop in props && defaultPropKey in props),
-				`Do not specify both '${prop}' and '${defaultPropKey}' for Toggleable instances. '${defaultPropKey}' will be ignored.`
+				`Do not specify both '${prop}' and '${defaultPropKey}' for Toggleable instances.
+				'${defaultPropKey}' will be ignored unless '${prop}' is 'null' or 'undefined'.`
 			);
 		}
 
