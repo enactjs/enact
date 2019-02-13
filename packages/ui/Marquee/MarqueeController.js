@@ -56,6 +56,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				complete: this.handleComplete,
 				enter: this.handleEnter,
 				leave: this.handleLeave,
+				ready: this.handleReady,
 				register: this.handleRegister,
 				start: this.handleStart,
 				unregister: this.handleUnregister
@@ -122,7 +123,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		handleStart = (component) => {
 			this.cancelJob.stop();
 			if (!this.anyRunning()) {
-				this.markAll(STATE.ready);
+				// this.markAll(STATE.ready);
 				this.dispatch('start', component);
 			}
 		}
@@ -135,9 +136,13 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		handleCancel = () => {
-			if (this.anyRunning()) {
+			if (this.anyRunning() || this.anyReady()) {
 				this.cancelJob.start();
 			}
+		}
+
+		handleReady = () => {
+			this.markAll(STATE.ready);
 		}
 
 		doCancel = () => {
@@ -280,6 +285,12 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		anyRunning () {
 			return this.controlled.reduce((res, component) => {
 				return res || (component.state === STATE.active);
+			}, false);
+		}
+
+		anyReady () {
+			return this.controlled.reduce((res, component) => {
+				return res || (component.state === STATE.ready);
 			}, false);
 		}
 

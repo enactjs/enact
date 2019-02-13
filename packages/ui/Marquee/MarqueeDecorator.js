@@ -601,6 +601,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						this.timerState !== TimerState.SYNCSTART_PENDING) {
 					return;
 				}
+
+				this.context.ready();
 				this.setTimeout(() => {
 					this.context.start();
 				}, delay, TimerState.SYNCSTART_PENDING);
@@ -646,11 +648,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		cancelAnimation = () => {
-			this.stop();
-
 			if (this.sync) {
 				this.context.cancel(this);
+				return;
 			}
+
+			this.stop();
 		}
 
 		handleResize = () => {
