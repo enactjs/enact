@@ -221,6 +221,13 @@ class TransitionGroup extends React.Component {
 	reconcileChildren (prevChildMapping, nextChildMapping) {
 		const {size} = this.props;
 
+		// if children haven't changed, there's nothing to reconcile
+		if (prevChildMapping.length === nextChildMapping.length && prevChildMapping.filter(pc => {
+			return !nextChildMapping.find(nc => nc.key === pc.key);
+		}).length === 0) {
+			return;
+		}
+
 		// remove any "dropped" children from the list of transitioning children
 		prevChildMapping.filter(child => !hasChild(child, nextChildMapping)).forEach(child => {
 			delete this.currentlyTransitioningKeys[child.key];
@@ -231,13 +238,15 @@ class TransitionGroup extends React.Component {
 			const key = child.key;
 			const hasPrev = hasChild(key, prevChildMapping);
 
-			// flag a view to enter if it's new (!hasPrev), or if it's not new (hasPrev) but is
-			// re-entering (is currently transitioning)
 			if (!hasPrev || this.currentlyTransitioningKeys[key]) {
+				// flag a view to enter if it's new (!hasPrev), or if it's not new (hasPrev) but is
+				// re-entering (is currently transitioning)
 				this.keysToEnter.push(key);
 			} else if (index < size - 1) {
+				// keep views that are less than size minus the "transition out" buffer
 				this.keysToStay.push(key);
 			} else {
+				// everything else is leaving
 				this.keysToLeave.push(key);
 			}
 		});
