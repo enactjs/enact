@@ -1,6 +1,6 @@
 {
   "name": "@enact/spotlight",
-  "version": "2.3.0-alpha.3",
+  "version": "2.3.0",
   "description": "A focus management library",
   "main": "src/spotlight.js",
   "scripts": {
@@ -21,7 +21,7 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^2.3.0-alpha.3",
+    "@enact/core": "^2.3.0",
     "prop-types": "15.6.2",
     "ramda": "^0.24.1",
     "react": "^16.7.0",

@@ -1,5 +1,3 @@
-/* globals describe, it, expect */
-
 import React from 'react';
 import {mount, shallow} from 'enzyme';
 import {GroupBase} from '../Group';
