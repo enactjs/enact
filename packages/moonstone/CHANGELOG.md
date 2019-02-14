@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Slider` to prevent gaining focus when clicked when disabled
+- `moonstone/ContextualPopupDecorator` to focus on the inner content when the ContextualPopup first opens
 
 ## [2.3.0] - 2019-02-11
 
