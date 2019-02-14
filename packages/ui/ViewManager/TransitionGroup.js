@@ -219,13 +219,15 @@ class TransitionGroup extends React.Component {
 	}
 
 	reconcileChildren (prevChildMapping, nextChildMapping) {
+		const {size} = this.props;
+
 		// remove any "dropped" children from the list of transitioning children
 		prevChildMapping.filter(child => !hasChild(child, nextChildMapping)).forEach(child => {
 			delete this.currentlyTransitioningKeys[child.key];
 		});
 
 		// mark any new child as entering
-		nextChildMapping.forEach(child => {
+		nextChildMapping.forEach((child, index) => {
 			const key = child.key;
 			const hasPrev = hasChild(key, prevChildMapping);
 
@@ -233,8 +235,10 @@ class TransitionGroup extends React.Component {
 			// re-entering (is currently transitioning)
 			if (!hasPrev || this.currentlyTransitioningKeys[key]) {
 				this.keysToEnter.push(key);
-			} else {
+			} else if (index < size - 1) {
 				this.keysToStay.push(key);
+			} else {
+				this.keysToLeave.push(key);
 			}
 		});
 
