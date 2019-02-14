@@ -33,6 +33,13 @@
   "eslintConfig": {
     "extends": "enact/strict"
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "**/*.{js,jsx,ts,tsx}",
+      "!**/*.d.ts",
+      "!ilib/**/*"
+    ]
+  },
   "dependencies": {
     "@enact/core": "^2.3.0",
     "prop-types": "15.6.2",
