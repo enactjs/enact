@@ -54,7 +54,7 @@
 
 		&.selected {
 			.icon {
-				background-color: @moon-spotlight-color;
+				background-color: @moon-radio-item-selected-indicator-color;
 			}
 		}
 	});
@@ -64,9 +64,14 @@
 .focus({
 	.toggleIcon {
 		.applySkins({
+			.icon {
+				border-color: @moon-radio-item-spotlight-indicator-border-color; //@moon-radio-item-indicator-border-color;
+			}
+
 			&.selected {
-				.icon::before {
-					background-color: @moon-radio-item-indicator-border-color;
+				.icon {
+					background-color: @moon-radio-item-selected-spotlight-indicator-color;
+					border-color: @moon-radio-item-selected-spotlight-indicator-border-color;
 				}
 			}
 		});
