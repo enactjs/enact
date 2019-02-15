@@ -269,19 +269,83 @@ describe('ViewManager', () => {
 		expect(subject.find('View div').prop('children')).toBe('View 1');
 	});
 
-	test('should updated the view when children are replaced with start and end bounds', () => {
+	test('should updated the view when children are replaced', () => {
 		const subject = mount(
-			<ViewManager index={3} start={0} end={1}>
+			<ViewManager index={0}>
+				<div key="view1">View 1</div>
+			</ViewManager>
+		);
+
+		expect(subject.find('View div').prop('children')).toBe('View 1');
+
+		subject.setProps({children: [
+			<div key="view2">View 2</div>
+		]});
+
+		expect(subject.find('View div').prop('children')).toBe('View 2');
+	});
+
+	test('should keep update the number of views when {start} updates', () => {
+		const subject = mount(
+			<ViewManager index={3} start={2} end={3}>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+				<div key="view3">View 3</div>
 				<div key="view4">View 4</div>
 			</ViewManager>
 		);
 
+		expect(subject.find('View')).toHaveLength(2);
+		expect(subject.find('View div').at(0).prop('children')).toBe('View 3');
+
+		subject.setProps({start: 1});
+
+		expect(subject.find('View')).toHaveLength(3);
+		expect(subject.find('View div').at(0).prop('children')).toBe('View 2');
+	});
+
+	test('should update the active view when {start}, {end}, and {index} update', () => {
+		const subject = mount(
+			<ViewManager index={3} start={3} end={3}>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+				<div key="view3">View 3</div>
+				<div key="view4">View 4</div>
+			</ViewManager>
+		);
+
+		expect(subject.find('View')).toHaveLength(1);
 		expect(subject.find('View div').prop('children')).toBe('View 4');
 
-		subject.setProps({index: 2, children: [
-			<div key="view3">View 3</div>
-		]});
+		subject.setProps({start: 2, end: 2, index: 2});
 
+		expect(subject.find('View')).toHaveLength(1);
 		expect(subject.find('View div').prop('children')).toBe('View 3');
+	});
+
+	test('should extend the view range when {index} is less than {start}', () => {
+		const subject = mount(
+			<ViewManager index={1} start={2} end={3}>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+				<div key="view3">View 3</div>
+				<div key="view4">View 4</div>
+			</ViewManager>
+		);
+
+		expect(subject.find('View')).toHaveLength(3);
+	});
+
+	test('should extend the view range when {index} is greater than {end}', () => {
+		const subject = mount(
+			<ViewManager index={3} start={1} end={2}>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+				<div key="view3">View 3</div>
+				<div key="view4">View 4</div>
+			</ViewManager>
+		);
+
+		expect(subject.find('View')).toHaveLength(3);
 	});
 });
