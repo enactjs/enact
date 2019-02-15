@@ -186,7 +186,7 @@ describe('ViewManager', () => {
 		}
 	);
 
-	test('should have size of 1 on TransitionGroup', done => {
+	test('should have size of 1 on TransitionGroup', () => {
 		const subject = mount(
 			<ViewManager noAnimation index={0} duration={0}>
 				<div className="view">View 1</div>
@@ -200,10 +200,9 @@ describe('ViewManager', () => {
 		const expected = 1;
 		const actual = subject.find('TransitionGroup').prop('size');
 		expect(actual).toBe(expected);
-		done();
 	});
 
-	test('should update the View reverseTransition prop.', done => {
+	test('should update the View reverseTransition prop.', () => {
 		const subject = mount(
 			<ViewManager noAnimation index={0} duration={0}>
 				<div className="view">View 1</div>
@@ -218,10 +217,9 @@ describe('ViewManager', () => {
 		const actual = subject.find('View').props().reverseTransition;
 
 		expect(actual).toBeTruthy();
-		done();
 	});
 
-	test('should update the View reverseTransition prop to true if it is updated with a smaller index prop.', done => {
+	test('should update the View reverseTransition prop to true if it is updated with a smaller index prop.', () => {
 		const subject = mount(
 			<ViewManager index={2} duration={0} arranger={SlideLeftArranger}>
 				<div>View 1</div>
@@ -236,10 +234,9 @@ describe('ViewManager', () => {
 		const actual = subject.find('View').at(0).props().reverseTransition;
 
 		expect(actual).toBeTruthy();
-		done();
 	});
 
-	test('should update the View reverseTransition prop to false even though it is updated with a smaller index prop.', done => {
+	test('should update the View reverseTransition prop to false even though it is updated with a smaller index prop.', () => {
 		const subject = mount(
 			<ViewManager index={2} duration={0} arranger={SlideLeftArranger}>
 				<div>View 1</div>
@@ -252,6 +249,39 @@ describe('ViewManager', () => {
 		const actual = subject.find('View').at(0).props().reverseTransition;
 
 		expect(actual).toBeFalsy();
-		done();
+	});
+
+	test('should updated the view when children are reordered', () => {
+		const subject = mount(
+			<ViewManager index={1}>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		expect(subject.find('View div').prop('children')).toBe('View 2');
+
+		subject.setProps({children: [
+			<div key="view2">View 2</div>,
+			<div key="view1">View 1</div>
+		]});
+
+		expect(subject.find('View div').prop('children')).toBe('View 1');
+	});
+
+	test('should updated the view when children are replaced with start and end bounds', () => {
+		const subject = mount(
+			<ViewManager index={3} start={0} end={1}>
+				<div key="view4">View 4</div>
+			</ViewManager>
+		);
+
+		expect(subject.find('View div').prop('children')).toBe('View 4');
+
+		subject.setProps({index: 2, children: [
+			<div key="view3">View 3</div>
+		]});
+
+		expect(subject.find('View div').prop('children')).toBe('View 3');
 	});
 });
