@@ -13,6 +13,7 @@ import difference from 'ramda/src/difference';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import shallowEqual from 'recompose/shallowEqual';
 
 import {getContainersForNode} from '../src/container';
 import {hasPointerMoved} from '../src/pointer';
@@ -220,6 +221,18 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidMount () {
 			// eslint-disable-next-line react/no-find-dom-node
 			this.node = ReactDOM.findDOMNode(this);
+		}
+
+		shouldComponentUpdate (nextProps, nextState) {
+			const mutatedState = {...this.state};
+			const nextMutatedState = {...nextState};
+			delete mutatedState.focused;
+			delete nextMutatedState.focused;
+
+			return (
+				!shallowEqual(mutatedState, nextMutatedState) ||
+				!shallowEqual(this.props, nextProps)
+			);
 		}
 
 		componentDidUpdate (prevProps, prevState) {
