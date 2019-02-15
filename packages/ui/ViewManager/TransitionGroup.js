@@ -196,12 +196,14 @@ class TransitionGroup extends React.Component {
 
 		if (state.firstRender) {
 			return {
-				firstRender: false,
-				children
+				activeChildren: children,
+				children,
+				firstRender: false
 			};
 		}
 
 		return {
+			activeChildren: children,
 			children: mergeChildren(children, state.children).slice(0, props.size)
 		};
 	}
@@ -215,7 +217,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		this.reconcileChildren(prevState.children, this.state.children);
+		this.reconcileChildren(prevState.children, this.state.activeChildren);
 	}
 
 	reconcileChildren (prevChildMapping, nextChildMapping) {
