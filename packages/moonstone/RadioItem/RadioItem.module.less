@@ -55,6 +55,10 @@
 		&.selected {
 			.icon {
 				background-color: @moon-radio-item-selected-indicator-color;
+				border-color: @moon-radio-item-selected-indicator-border-color;
+				&::before {
+					background-color: @moon-radio-item-selected-indicator-bg-color;
+				}
 			}
 		}
 	});
@@ -72,6 +76,9 @@
 				.icon {
 					background-color: @moon-radio-item-selected-spotlight-indicator-color;
 					border-color: @moon-radio-item-selected-spotlight-indicator-border-color;
+					&::before {
+						background-color: @moon-radio-item-selected-spotlight-indicator-bg-color;
+					}
 				}
 			}
 		});
