@@ -1,3 +1,4 @@
+@import "../styles/skin.less";
 @import '../styles/variables.less';
 
 .scrollbar {
@@ -64,5 +65,10 @@
 	/* ScrollThumb */
 	.thumbShown {
 		opacity: 1;
+		.applySkins({
+			&::before {
+				background-color: @moon-scroller-scrollthumb-bg-color;
+			}
+		});
 	}
 }

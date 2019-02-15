@@ -5,8 +5,11 @@ import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
 
 import ScrollButtons from './ScrollButtons';
 import ScrollThumb from './ScrollThumb';
+import Skinnable from '../Skinnable';
 
 import componentCss from './Scrollbar.module.less';
+
+const MoonstoneScrollThumb = Skinnable(ScrollThumb);
 
 /**
  * A Moonstone-styled scroller base component.
@@ -118,7 +121,7 @@ class ScrollbarBase extends Component {
 						ref={this.initScrollButtonsRef}
 						vertical={vertical}
 						thumbRenderer={() => ( // eslint-disable-line react/jsx-no-bind
-							<ScrollThumb
+							<MoonstoneScrollThumb
 								cbAlertThumb={cbAlertThumb}
 								key="thumb"
 								setRef={initScrollThumbRef}
