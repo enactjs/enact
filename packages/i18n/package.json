@@ -1,7 +1,7 @@
 {
   "name": "@enact/i18n",
   "main": "./src/index.js",
-  "version": "2.2.9",
+  "version": "2.3.0",
   "description": "Internationalization support for Enact using iLib",
   "scripts": {
     "clean": "enact clean",
@@ -33,9 +33,16 @@
   "eslintConfig": {
     "extends": "enact/strict"
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "**/*.{js,jsx,ts,tsx}",
+      "!**/*.d.ts",
+      "!ilib/**/*"
+    ]
+  },
   "dependencies": {
-    "@enact/core": "^2.2.9",
-    "prop-types": "^15.6.0",
+    "@enact/core": "^2.3.0",
+    "prop-types": "15.6.2",
     "ramda": "^0.24.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
