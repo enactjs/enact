@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import equals from 'ramda/src/equals';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -224,8 +225,36 @@ const VirtualListBaseFactory = (type) => {
 		constructor (props) {
 			super(props);
 
-			this.state = {firstIndex: 0, numOfItems: 0};
-			this.updatePrevProps(props);
+			this.state = {
+				firstIndex: 0,
+				numOfItems: 0,
+				prevChildProps: null,
+				prevFirstIndex: 0,
+				updateFrom: 0,
+				updateTo: 0
+			};
+			if (props.clientSize) {
+				this.calculateMetrics(props);
+				this.updateStatesAndBounds(this.props);
+			}
+		}
+
+		static getDerivedStateFromProps (props, state) {
+			const
+				isNeedToInvalidate = (
+					state.prevFirstIndex === state.firstIndex ||
+					(state.prevChildProps || props.childProps) && state.prevChildProps !== props.childProps
+				),
+				diff = state.firstIndex - state.prevFirstIndex,
+				updateTo = (-state.numOfItems >= diff || diff > 0 || isNeedToInvalidate) ? state.firstIndex + state.numOfItems : state.prevFirstIndex,
+				updateFrom = (0 >= diff || diff >= state.numOfItems || isNeedToInvalidate) ? state.firstIndex : state.prevFirstIndex + state.numOfItems,
+				nextUpdateFromAndTo = (state.updateFrom !== updateFrom || state.updateTo !== updateTo) ? {updateFrom, updateTo} : null;
+
+			return {
+				...nextUpdateFromAndTo,
+				prevChildProps: props.childProps,
+				prevFirstIndex: state.firstIndex
+			};
 		}
 
 		// Calculate metrics for VirtualList after the 1st render to know client W/H.
@@ -237,9 +266,30 @@ const VirtualListBaseFactory = (type) => {
 			this.setContainerSize();
 		}
 
-		componentDidUpdate () {
-			this.updatePrevProps(this.props);
-			this.prevFirstIndex = this.state.firstIndex;
+		componentDidUpdate (prevProps) {
+			this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize); // TODO: need to check if `this.hasDataSizeChanged` could be removed
+
+			if (
+				prevProps.direction !== this.props.direction ||
+				prevProps.overhang !== this.props.overhang ||
+				prevProps.spacing !== this.props.spacing ||
+				!equals(prevProps.itemSize, this.props.itemSize)
+			) {
+				this.calculateMetrics(props);
+				this.updateStatesAndBounds(this.props);
+				this.setContainerSize();
+			} else if (this.hasDataSizeChanged) {
+				this.updateStatesAndBounds(this.props);
+				this.setContainerSize();
+			} else if (prevProps.rtl !== this.props.rtl) {
+				const {x, y} = this.getXY(this.scrollPosition, 0);
+
+				if (type === Native) {
+					this.scrollToPosition(x, y, this.props.rtl);
+				} else {
+					this.setScrollPosition(x, y, 0, 0, this.props.rtl);
+				}
+			}
 		}
 
 		scrollBounds = {
@@ -265,12 +315,10 @@ const VirtualListBaseFactory = (type) => {
 		dimensionToExtent = 0
 		threshold = 0
 		maxFirstIndex = 0
-		prevFirstIndex = 0
 		curDataSize = 0
 		hasDataSizeChanged = false
 		cc = []
 		scrollPosition = 0
-		prevProps = {}
 
 		contentRef = null
 		containerRef = null
@@ -312,11 +360,6 @@ const VirtualListBaseFactory = (type) => {
 			clientWidth: node.clientWidth,
 			clientHeight: node.clientHeight
 		})
-
-		updatePrevProps (props) {
-			const {childProps, dataSize, direction, itemSize, overhang, rtl, spacing} = props;
-			this.prevProps = {childProps, dataSize, direction, itemSize, overhang, rtl, spacing};
-		}
 
 		calculateMetrics (props) {
 			const
@@ -387,7 +430,7 @@ const VirtualListBaseFactory = (type) => {
 			this.state.numOfItems = 0;
 		}
 
-		updateStatesAndBounds = (props, slient = false) => {
+		updateStatesAndBounds = (props) => {
 			const
 				{dataSize, overhang, updateStatesAndBounds} = props,
 				{firstIndex} = this.state,
@@ -414,12 +457,7 @@ const VirtualListBaseFactory = (type) => {
 				newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
 			}
 
-			if (slient) {
-				this.state.firstIndex = newFirstIndex; // eslint-disable-line react/no-direct-mutation-state
-				this.state.numOfItems = numOfItems; // eslint-disable-line react/no-direct-mutation-state
-			} else {
-				this.setState({firstIndex: newFirstIndex, numOfItems});
-			}
+			this.setState({firstIndex: newFirstIndex, numOfItems});
 		}
 
 		calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff) {
@@ -637,20 +675,14 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		positionItems () {
-			this.prevFirstIndex = (
-				this.prevFirstIndex === this.state.firstIndex ||
-				(this.prevProps.childProps || this.props.childProps) && this.prevProps.childProps !== this.props.childProps
-			) ? -1 : this.prevFirstIndex;
-
 			const
 				{dataSize} = this.props,
 				{firstIndex, numOfItems} = this.state,
-				{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
-				diff = firstIndex - this.prevFirstIndex,
-				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems || this.prevFirstIndex === -1) ? firstIndex : this.prevFirstIndex + numOfItems;
+				{cc, isPrimaryDirectionVertical, dimensionToExtent, primary, secondary} = this;
 			let
 				hideTo = 0,
-				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0 || this.prevFirstIndex === -1) ? firstIndex + numOfItems : this.prevFirstIndex;
+				updateFrom = cc.length ? this.state.updateFrom : firstIndex,
+				updateTo = cc.length ? this.state.updateTo : firstIndex + numOfItems;
 
 			if (updateFrom >= updateTo) {
 				return;
@@ -752,7 +784,7 @@ const VirtualListBaseFactory = (type) => {
 		render () {
 			const
 				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
-				{initItemContainerRef, primary} = this,
+				{cc, initItemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
 
 			delete rest.cbScrollTo;
@@ -771,36 +803,6 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.spacing;
 			delete rest.updateStatesAndBounds;
 
-			const
-				{dataSize, direction, itemSize, overhang, rtl, spacing} = this.prevProps,
-				{props} = this,
-				hasMetricsChanged = (
-					direction !== props.direction ||
-					((itemSize instanceof Object) ? (itemSize.minWidth !== props.itemSize.minWidth || itemSize.minHeight !== props.itemSize.minHeight) : itemSize !== props.itemSize) ||
-					overhang !== props.overhang ||
-					spacing !== props.spacing
-				);
-
-			this.hasDataSizeChanged = (dataSize !== props.dataSize);
-
-			if (hasMetricsChanged || this.props.clientSize && this.primary === null && this.secondary === null) {
-				this.calculateMetrics(props);
-				this.updateStatesAndBounds(props, true);
-				this.setContainerSize();
-			} else if (this.hasDataSizeChanged) {
-				this.updateStatesAndBounds(props, true);
-				this.setContainerSize();
-			} else if (rtl !== props.rtl) {
-				const {x, y} = this.getXY(this.scrollPosition, 0);
-
-				this.cc = [];
-				if (type === Native) {
-					this.scrollToPosition(x, y, props.rtl);
-				} else {
-					this.setScrollPosition(x, y, 0, 0, props.rtl);
-				}
-			}
-
 			if (primary) {
 				this.positionItems();
 			}
@@ -808,7 +810,7 @@ const VirtualListBaseFactory = (type) => {
 			return (
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
 					<div {...rest} ref={this.initContentRef}>
-						{itemsRenderer({cc: this.cc, initItemContainerRef, primary})}
+						{itemsRenderer({cc, initItemContainerRef, primary})}
 					</div>
 				</div>
 			);
