@@ -9,6 +9,7 @@
 import {forward, forwardWithPrevent, handle, preventDefault, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
+import difference from 'ramda/src/difference';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
@@ -192,31 +193,33 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			this.isFocused = false;
 			this.isHovered = false;
 			// Used to indicate that we want to stop propagation on blur events that occur as a
 			// result of this component imperatively blurring itself on focus when spotlightDisabled
 			this.shouldPreventBlur = false;
 
 			this.state = {
+				focused: false,
 				focusedWhenDisabled: false,
 				selectionKeys: props.selectionKeys
 			};
 		}
 
+		static getDerivedStateFromProps (props, state) {
+			const focusedWhenDisabled = Boolean(state.focused && (props.disabled || props.spotlightDisabled));
+
+			if (focusedWhenDisabled !== state.focusedWhenDisabled || difference(state.selectionKeys, props.selectionKeys).length) {
+				return {
+					focusedWhenDisabled,
+					selectionKeys: props.selectionKeys
+				};
+			}
+			return null;
+		}
+
 		componentDidMount () {
 			// eslint-disable-next-line react/no-find-dom-node
 			this.node = ReactDOM.findDOMNode(this);
-		}
-
-		componentWillReceiveProps (nextProps) {
-			const focusedWhenDisabled = this.isFocused && (nextProps.disabled || nextProps.spotlightDisabled);
-			const {selectionKeys} = nextProps;
-
-			this.setState({
-				focusedWhenDisabled,
-				selectionKeys
-			});
 		}
 
 		componentDidUpdate (prevProps, prevState) {
@@ -247,7 +250,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			if (this.isFocused) {
+			if (this.state.focused) {
 				forward('onSpotlightDisappear', null, this.props);
 			}
 			if (lastSelectTarget === this) {
@@ -262,6 +265,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 			const {currentTarget, repeat, type, which} = ev;
 			const {selectionKeys} = this.state;
+			const keyboardAccessible = isKeyboardAccessible(currentTarget);
 
 			const keyCode = selectionKeys.find((value) => (
 				// emulate mouse events for any remote okay button event
@@ -270,13 +274,15 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				// control
 				(
 					which === value &&
-					(type !== 'keypress' || !isKeyboardAccessible(currentTarget))
+					(type !== 'keypress' || !keyboardAccessible)
 				)
 			));
 
 			if (getDirection(keyCode)) {
 				preventDefault(ev);
 				stop(ev);
+			} else if (keyCode && keyboardAccessible) {
+				preventDefault(ev);
 			}
 
 			return keyCode && !repeat;
@@ -353,11 +359,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.shouldPreventBlur) return;
 
 			if (ev.currentTarget === ev.target) {
-				this.isFocused = false;
-
-				if (this.state.focusedWhenDisabled) {
-					this.setState({focusedWhenDisabled: false});
-				}
+				this.setState({focused: false, focusedWhenDisabled: false});
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
@@ -376,7 +378,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (ev.currentTarget === ev.target) {
-				this.isFocused = true;
+				this.setState({focused: true});
 			}
 
 			if (Spotlight.isMuted(ev.target)) {

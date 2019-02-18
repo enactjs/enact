@@ -17,8 +17,8 @@ import $L from '../internal/$L';
 import Scrollbar from './Scrollbar';
 import Skinnable from '../Skinnable';
 
-import overscrollCss from './OverscrollEffect.less';
-import scrollbarCss from './Scrollbar.less';
+import overscrollCss from './OverscrollEffect.module.less';
+import scrollbarCss from './Scrollbar.module.less';
 
 const
 	{
@@ -219,12 +219,10 @@ class ScrollableBaseNative extends Component {
 		configureSpotlightContainer(props);
 	}
 
-	componentWillReceiveProps (nextProps) {
-		if (
-			this.props['data-spotlight-id'] !== nextProps['data-spotlight-id'] ||
-			this.props.focusableScrollbar !== nextProps.focusableScrollbar
-		) {
-			configureSpotlightContainer(nextProps);
+	componentDidUpdate (prevProps) {
+		if (prevProps['data-spotlight-id'] !== this.props['data-spotlight-id'] ||
+				prevProps.focusableScrollbar !== this.props.focusableScrollbar) {
+			configureSpotlightContainer(this.props);
 		}
 	}
 
@@ -836,8 +834,6 @@ class ScrollableBaseNative extends Component {
 			upButtonAriaLabel = scrollUpAriaLabel == null ? $L('scroll up') : scrollUpAriaLabel,
 			rightButtonAriaLabel = scrollRightAriaLabel == null ? $L('scroll right') : scrollRightAriaLabel,
 			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
-
-		delete rest.focusableScrollbar;
 
 		return (
 			<UiScrollableBaseNative

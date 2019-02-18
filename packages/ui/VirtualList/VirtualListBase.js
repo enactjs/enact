@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
-import css from './VirtualList.less';
+import css from './VirtualList.module.less';
 
 const
 	nop = () => {},
@@ -227,7 +227,7 @@ const VirtualListBaseFactory = (type) => {
 			this.state = {firstIndex: 0, numOfItems: 0};
 		}
 
-		componentWillMount () {
+		UNSAFE_componentWillMount () {
 			if (this.props.clientSize) {
 				this.calculateMetrics(this.props);
 				this.updateStatesAndBounds(this.props);
@@ -246,7 +246,7 @@ const VirtualListBaseFactory = (type) => {
 
 		// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
 		// Calling setState within componentWillReceivePropswill not trigger an additional render.
-		componentWillReceiveProps (nextProps) {
+		UNSAFE_componentWillReceiveProps (nextProps) {
 			const
 				{dataSize, direction, itemSize, overhang, rtl, spacing} = this.props,
 				hasMetricsChanged = (
@@ -277,7 +277,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		componentWillUpdate (nextProps, nextState) {
+		UNSAFE_componentWillUpdate (nextProps, nextState) {
 			if (this.state.firstIndex === nextState.firstIndex || this.props.childProps && this.props.childProps !== nextProps.childProps) {
 				this.prevFirstIndex = -1; // force to re-render items
 			}
@@ -898,8 +898,8 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			let
-				{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),
-				width, height;
+				width, height,
+				{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom);
 
 			width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
 			height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';

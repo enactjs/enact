@@ -6,39 +6,48 @@
  * @private
  */
 const Registry = {
-	create: () => {
+	create: (handler) => {
 		const instances = [];
 		let currentParent;
 
-		const subscriber = Object.freeze({
+		const registry = Object.freeze({
+			set parent (register) {
+				if (currentParent && currentParent.unregister) {
+					currentParent.unregister();
+				}
+				if (register && typeof register === 'function') {
+					currentParent = register(registry.notify);
+				}
+			},
+			notify (ev, exclude = () => true) {
+				instances.filter(exclude).forEach(f => f(ev));
+			},
 			register (instance) {
 				if (instances.indexOf(instance) === -1) {
 					instances.push(instance);
-				}
-			},
-			unregister (instance) {
-				const i = instances.indexOf(instance);
-				if (i >= 0) {
-					instances.splice(i, 1);
-				}
-			}
-		});
 
-		const registry = Object.freeze({
-			set parent (parent) {
-				if (currentParent && currentParent.unregister) {
-					currentParent.unregister(registry.notify);
+					if (handler) {
+						handler({action: 'register'}, instance);
+					}
 				}
-				if (parent && parent.register) {
-					parent.register(registry.notify);
-					currentParent = parent;
-				}
-			},
-			notify (ev) {
-				instances.forEach(f => f(ev));
-			},
-			get subscriber () {
-				return subscriber;
+
+				return {
+					notify (ev) {
+						if (handler) {
+							handler(ev, instance);
+						}
+					},
+					unregister () {
+						const i = instances.indexOf(instance);
+						if (i >= 0) {
+							instances.splice(i, 1);
+
+							if (handler) {
+								handler({action: 'register'}, instance);
+							}
+						}
+					}
+				};
 			}
 		});
 

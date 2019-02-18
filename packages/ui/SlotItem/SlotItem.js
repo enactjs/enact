@@ -16,7 +16,7 @@ import React from 'react';
 
 import Slottable from '../Slottable';
 
-import componentCss from './SlotItem.less';
+import componentCss from './SlotItem.module.less';
 
 /**
  * A ui-styled `SlotItem` without any behavior.

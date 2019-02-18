@@ -25,7 +25,7 @@ import $L from '../internal/$L';
 import IconButton from '../IconButton';
 import Skinnable from '../Skinnable';
 
-import componentCss from './Popup.less';
+import componentCss from './Popup.module.less';
 
 const isUp = is('up');
 const TransitionContainer = SpotlightContainerDecorator(
@@ -393,10 +393,32 @@ class Popup extends React.Component {
 		this.state = {
 			floatLayerOpen: this.props.open,
 			popupOpen: this.props.open ? animateOpen : OpenState.CLOSED,
+			prevOpen: this.props.open,
 			containerId: Spotlight.add(),
 			activator: null
 		};
 		checkScrimNone(this.props);
+	}
+
+	static getDerivedStateFromProps (props, state) {
+		if (props.open !== state.prevOpen) {
+			if (props.open) {
+				return {
+					popupOpen: props.noAnimation || state.floatLayerOpen ? OpenState.OPEN : OpenState.CLOSED,
+					floatLayerOpen: true,
+					activator: Spotlight.getCurrent(),
+					prevOpen: props.open
+				};
+			} else {
+				return {
+					popupOpen: OpenState.CLOSED,
+					floatLayerOpen: state.popupOpen === OpenState.OPEN ? !props.noAnimation : false,
+					activator: props.noAnimation ? null : state.activator,
+					prevOpen: props.open
+				};
+			}
+		}
+		return null;
 	}
 
 	// Spot the content after it's mounted.
@@ -404,25 +426,6 @@ class Popup extends React.Component {
 		if (this.props.open) {
 			this.spotPopupContent();
 		}
-	}
-
-	componentWillReceiveProps (nextProps) {
-		if (!this.props.open && nextProps.open) {
-			this.setState({
-				popupOpen: nextProps.noAnimation ? OpenState.OPEN : OpenState.CLOSED,
-				floatLayerOpen: true,
-				activator: Spotlight.getCurrent()
-			});
-		} else if (this.props.open && !nextProps.open) {
-			const activator = this.state.activator;
-
-			this.setState(state => ({
-				popupOpen: OpenState.CLOSED,
-				floatLayerOpen: state.popupOpen === OpenState.OPEN ? !nextProps.noAnimation : false,
-				activator: nextProps.noAnimation ? null : activator
-			}));
-		}
-		checkScrimNone(nextProps);
 	}
 
 	componentDidUpdate (prevProps, prevState) {
@@ -437,6 +440,8 @@ class Popup extends React.Component {
 				this.spotActivator(prevState.activator);
 			}
 		}
+
+		checkScrimNone(this.props);
 	}
 
 	componentWillUnmount () {

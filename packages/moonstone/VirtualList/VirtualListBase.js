@@ -228,13 +228,10 @@ const VirtualListBaseFactory = (type) => {
 			}, 0);
 		}
 
-		componentWillReceiveProps (nextProps) {
-			if (nextProps.spotlightId && nextProps.spotlightId !== this.props.spotlightId) {
-				this.configureSpotlight(nextProps.spotlightId);
+		componentDidUpdate (prevProps) {
+			if (prevProps.spotlightId !== this.props.spotlightId) {
+				this.configureSpotlight(this.props.spotlightId);
 			}
-		}
-
-		componentDidUpdate () {
 			this.restoreFocus();
 		}
 

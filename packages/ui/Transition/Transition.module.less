@@ -1,0 +1,179 @@
+// Transition.module.less
+//
+@import "../styles/mixins.less";
+
+.transition {
+	.inner {
+		overflow: hidden;
+	}
+
+	&.slide {
+		overflow: hidden;
+
+		.inner {
+			transition-property: transform;
+			will-change: transform;
+		}
+	}
+
+	&.fade .inner {
+		transition-property: opacity;
+		will-change: opacity;
+	}
+
+	&.shown {
+		&.slide .inner {
+			transform: translate3d(0, 0, 0);
+		}
+
+		&.clip {
+			&.right,
+			&.left {
+				max-width: 100%;
+			}
+		}
+
+		&.fade .inner {
+			opacity: 1;
+		}
+	}
+
+	&.hidden {
+		&.slide {
+			&.up .inner {
+				transform: translateY(-100%);
+			}
+
+			&.right .inner {
+				transform: translateX(100%);
+			}
+
+			&.down .inner {
+				transform: translateY(100%);
+			}
+
+			&.left .inner {
+				transform: translateX(-100%);
+			}
+		}
+
+		&.clip {
+			&.up,
+			&.down {
+				height: 0;
+			}
+
+			&.right,
+			&.left {
+				max-width: 0;
+			}
+		}
+
+		&.fade .inner {
+			opacity: 0;
+		}
+	}
+
+	&.clip {
+		position: relative;
+
+		&.up,
+		&.down {
+			transition-property: height;
+			will-change: height;
+		}
+
+		&.right,
+		&.left {
+			transition-property: max-width;
+			will-change: max-width;
+
+			.inner {
+				position: relative;
+			}
+		}
+
+		&.up .inner {
+			top: 0;
+		}
+
+		&.down {
+			.inner {
+				transition-property: transform;
+				will-change: transform;
+			}
+
+			&.shown .inner {
+				transform: translate(0, 0);
+			}
+		}
+
+		&.right {
+			.inner {
+				right: 0;
+			}
+
+			&.hidden .inner {
+				transform: translateX(-100%);
+			}
+		}
+
+		&.down {
+			&.hidden .inner {
+				transform: translateY(-100%);
+			}
+		}
+	}
+
+	// Durations
+	&.short,
+	&.short .inner {
+		transition-duration: 250ms;
+	}
+
+	&.medium,
+	&.medium .inner {
+		transition-duration: 500ms;
+	}
+
+	&.long,
+	&.long .inner {
+		transition-duration: 1s;
+	}
+
+	// Timing Functions
+	&.ease,
+	&.ease .inner {
+		transition-timing-function: ease;
+	}
+
+	&.ease-in,
+	&.ease-in .inner {
+		transition-timing-function: ease-in;
+	}
+
+	&.ease-out,
+	&.ease-out .inner {
+		transition-timing-function: ease-out;
+	}
+
+	&.ease-in-out,
+	&.ease-in-out .inner {
+		transition-timing-function: ease-in-out;
+	}
+
+	&.ease-in-quart,
+	&.ease-in-quart .inner {
+		transition-timing-function: cubic-bezier(0.895, 0.030, 0.685, 0.220);
+	}
+
+	&.ease-out-quart,
+	&.ease-out-quart .inner {
+		transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+	}
+
+	&.linear,
+	&.linear .inner {
+		transition-timing-function: linear;
+	}
+}

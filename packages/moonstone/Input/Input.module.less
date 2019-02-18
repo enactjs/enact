@@ -1,0 +1,193 @@
+// Input.module.less
+//
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
+
+.input {
+	.moon-body-text();
+
+	padding: 0;
+	border: 0;
+	cursor: pointer;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex-grow: 1;
+	text-indent: 0.2em;
+
+	&[type=number] {
+		-moz-appearance: textfield;
+
+		&::-webkit-inner-spin-button,
+		&::-webkit-outer-spin-button {
+			-webkit-appearance: none;
+		}
+
+		&:hover {
+			-moz-appearance: none;
+		}
+	}
+
+	&[placeholder] {
+		text-overflow: ellipsis;
+	}
+
+	.input-placeholder({
+		.vendor-opacity(1);
+	});
+
+	.focus ({
+		cursor: text;
+	});
+
+	.disabled({
+		cursor: default;
+	});
+
+	:global(.enact-locale-right-to-left) & {
+		text-align: right;
+	}
+}
+
+.decorator {
+	display: inline-flex;
+	position: relative;
+	padding: @moon-input-padding (@moon-input-height / 2);
+	border-radius: 1008px;
+	margin: 0 (@moon-spotlight-outset / 2);
+	border: @moon-input-border-width solid transparent;
+	box-sizing: border-box;
+	vertical-align: middle;
+
+	.input,
+	.iconBefore,
+	.iconAfter {
+		line-height: @moon-input-height;
+		height: @moon-input-height;
+		vertical-align: middle;
+	}
+
+	&.small {
+		padding: 0 (@moon-input-small-height / 2);
+
+		.iconBefore,
+		.iconAfter {
+			line-height: @moon-input-small-height;
+			height: @moon-input-small-height;
+		}
+
+		.input {
+			font-size: @moon-input-small-font-size;
+			height: @moon-input-small-height;
+		}
+	}
+
+	.iconBefore,
+	.iconAfter {
+		flex: 0 0;
+	}
+
+	.iconAfter {
+		.padding-start-end(@moon-input-icon-spacing, 0);
+	}
+
+	.iconBefore {
+		.padding-start-end(0, @moon-input-icon-spacing);
+	}
+
+	// RIGBY NOTE: multiline is a NOT YET IMPLEMENTED feature that combines <input> and <textarea>
+	// into one control, to simplify input handling.
+	&.multiline {
+		display: block;
+		padding: 12px 18px;
+		border-radius: 12px;
+	}
+
+	// an Input that isn't spottable is behaviorly disabled but not visually
+	&:not(:global(.spottable)) .input {
+		pointer-events: none;
+	}
+
+	.decoratorIcon,
+	&:global(.spottable):focus .decoratorIcon {
+		width: auto;
+		margin: 0;
+	}
+
+	// Skin colors
+	.applySkins({
+		background-color: @moon-input-decorator-bg-color;
+
+		.input {
+			background: transparent;
+			color: @moon-input-text-color;
+
+			&::selection {
+				color: @moon-spotlight-text-color;
+				background-color: @moon-spotlight-bg-color;
+			}
+
+			.input-placeholder({
+				color: @moon-input-placeholder-color;
+			});
+
+			.focus({
+				color: @moon-input-text-color;
+				background-color: inherit;
+			});
+		}
+
+		&.invalid input {
+			color: @moon-red;
+		}
+
+		&:global(.spottable):focus {
+			color: @moon-input-text-color;
+			border-color: @moon-spotlight-border-color;
+			background-color: @moon-input-decorator-bg-color;
+		}
+
+		&.focused {
+			border-color: @moon-active-border-color;
+		}
+
+		.decoratorIcon,
+		&:global(.spottable):focus .decoratorIcon {
+			color: @moon-input-text-color;
+		}
+	});
+}
+
+.invalidTooltip {
+	top: 50%;
+	left: auto;
+	right: 0;
+	pointer-events: none;
+	transform: translate(100%, -100%) translateX(@moon-input-tooltip-offset);
+
+	:global(.enact-locale-right-to-left) & {
+		left: 0;
+		right: auto;
+		transform: translate(-100%, -100%) translateX(-@moon-input-tooltip-offset);
+	}
+}
+
+.muted({
+	.decorator {
+		.applySkins({
+			&:global(.spottable):focus {
+				border-color: transparent;
+			}
+
+			&.focused {
+				border-color: transparent;
+			}
+
+			.focus({
+				background-color: @moon-input-decorator-bg-color;
+				border-color: transparent;
+			});
+		});
+	}
+});

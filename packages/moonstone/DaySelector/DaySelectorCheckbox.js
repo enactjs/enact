@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Icon from '../Icon';
 import Skinnable from '../Skinnable';
 
-import css from './DaySelectorCheckbox.less';
+import css from './DaySelectorCheckbox.module.less';
 
 /**
  * A component that represents the selected state of a day within a

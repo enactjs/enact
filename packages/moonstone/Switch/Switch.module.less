@@ -1,0 +1,91 @@
+// Switch.module.less
+//
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
+
+// Interally theme our implementation using published classes from ToggleItem and ToggleIcon
+.toggleIcon {
+	border-radius: (@moon-toggleswitch-height / 2);
+	width: @moon-toggleswitch-width;
+	height: @moon-toggleswitch-height;
+	line-height: @moon-toggleswitch-height;
+	font-family: @moon-icon-font-family;
+	position: relative;
+	display: inline-block;
+	text-align: left;
+	cursor: default;
+
+	.moon-taparea(@moon-toggleswitch-height);
+
+	.icon {
+		visibility: visible;
+		left: 0;
+		width: @moon-toggleswitch-height;
+		height: inherit;
+		font-size: (@moon-toggleswitch-height * 2);
+		line-height: inherit;
+		margin: 0;
+	}
+
+	&.selected {
+		.icon {
+			left: (@moon-toggleswitch-width - @moon-toggleswitch-height);
+		}
+	}
+
+	&.animated {
+		-webkit-transition: background-color 0.2s;
+		transition: background-color 0.2s;
+
+		.icon {
+			-webkit-transition: left 0.2s, color 0.2s;
+			transition: left 0.2s, color 0.2s;
+		}
+	}
+
+	// Skin colors
+	.applySkins({
+		background-color: @moon-checkbox-toggle-switch-bg-color;
+
+		.icon {
+			background-color: transparent;
+			color: @moon-checkbox-toggle-switch-color;
+		}
+
+		&.selected {
+			background-color: @moon-checkbox-toggle-switch-selected-bg-color;
+
+			.icon {
+				color: @moon-checkbox-toggle-switch-selected-color;
+
+				// :global(.spottable):focus & {
+				// 	color: @moon-checkbox-toggle-switch-selected-color;
+				// }
+			}
+		}
+
+		.disabled({
+			background-color: @moon-checkbox-toggle-switch-bg-color;
+
+			.icon {
+				color: @moon-checkbox-toggle-switch-color;
+			}
+		});
+	});
+}
+
+// Keep the switch handle (the icon) a constant color regardless of focus state.
+.focus({
+	.toggleIcon {
+		// Skin colors
+		.applySkins({
+			.icon {
+				color: @moon-checkbox-toggle-switch-color;
+			}
+			&.selected .icon {
+				color: @moon-checkbox-toggle-switch-selected-color;
+			}
+		});
+	}
+}, parent);
