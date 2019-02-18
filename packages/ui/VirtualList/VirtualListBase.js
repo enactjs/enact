@@ -316,7 +316,6 @@ const VirtualListBaseFactory = (type) => {
 		cc = []
 		childPositionInfo = []
 		lastBaseIndex = 0
-		positionAdjustment = 0
 		scrollPosition = 0
 
 		contentRef = null
@@ -546,12 +545,6 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		applyAdjustToPosition = (info) => {
-			// TBD info.position += info.adjust;
-			info.adjust = 0;
-			return info.position;
-		}
-
 		syncSizeAfterRender () {
 			const
 				{dataSize, overhang, spacing} = this.props,
@@ -594,16 +587,14 @@ const VirtualListBaseFactory = (type) => {
 						baseIndex = 0;
 					} else {
 						// create a position info for the first index
+						// calculate the position based on assuming that all items have minimal size
 						childPositionInfo[firstIndex] = {
 							size: firstChildNode.offsetHeight,
 							baseIndex: firstIndex,
-							position: Math.floor(firstIndex / dimensionToExtent) * gridSize,
-							adjust: 0
+							position: Math.floor(firstIndex / dimensionToExtent) * gridSize
 						};
 						baseIndex = firstIndex;
 					}
-
-					this.positionAdjustment = 0;
 				}
 
 				this.lastBaseIndex = baseIndex;
@@ -616,8 +607,7 @@ const VirtualListBaseFactory = (type) => {
 						childPositionInfo[index] = {
 							size,
 							baseIndex,
-							position: childPositionInfo[index + dimensionToExtent].position - size - spacing,
-							adjust: 0
+							position: childPositionInfo[index + dimensionToExtent].position - size - spacing
 						};
 					}
 				}
@@ -630,8 +620,7 @@ const VirtualListBaseFactory = (type) => {
 						childPositionInfo[index] = {
 							size,
 							baseIndex,
-							position: this.getEndPosition(index - dimensionToExtent) + spacing,
-							adjust: 0
+							position: this.getEndPosition(index - dimensionToExtent) + spacing
 						};
 
 					} else if (info.baseIndex !== baseIndex) { // just update position if baseIndex is updated
@@ -640,6 +629,7 @@ const VirtualListBaseFactory = (type) => {
 					}
 				}
 
+				/*
 				// adjust the position for the firstIndex
 				if (0 > childPositionInfo[firstIndex].position) {
 					const gap = firstIndex * gridSize - childPositionInfo[firstIndex].position;
@@ -647,7 +637,7 @@ const VirtualListBaseFactory = (type) => {
 						info = childPositionInfo[index];
 						if (info) {
 							if (info.baseIndex === baseIndex) {
-								info.adjust += gap;
+								// info.adjust += gap; // TBD
 								info.baseIndex = firstIndex;
 							} else {
 								break;
@@ -655,22 +645,11 @@ const VirtualListBaseFactory = (type) => {
 						}
 					}
 				}
-				/*
-				else if (this.positionAdjustment > 0) {
-					for (index = 0; index < dataSize; index += dimensionToExtent) {
-						info = childPositionInfo[index];
-						if (info && info.baseIndex === baseIndex) {
-							info.adjust += this.positionAdjustment;
-						}
-					}
-
-					this.positionAdjustment = 0;
-				}
 				*/
 
 				for (index = firstIndex; index <= lastIndex; ++index) {
 					info = childPositionInfo[Math.floor(index / dimensionToExtent) * dimensionToExtent];
-					primaryPosition = this.applyAdjustToPosition(info);
+					primaryPosition = info.position;
 					secondaryPosition = (index % dimensionToExtent) * this.secondary.gridSize;
 					childNode = itemContainerRef.children[index % numOfItems];
 					// TBD vertical only for now
@@ -698,6 +677,64 @@ const VirtualListBaseFactory = (type) => {
 				this.scrollBounds.maxTop = Math.max(0, this.scrollBounds.scrollHeight - this.scrollBounds.clientHeight);
 
 				this.setContainerSize();
+			}
+		}
+
+		syncPositionAfterStop () {
+			const
+				{firstIndex, numOfItems} = this.state,
+				{dimensionToExtent, childPositionInfo} = this,
+				{gridSize} = this.primary,
+				minFirstIndexPos = Math.floor(firstIndex / dimensionToExtent) * gridSize;
+
+			if (childPositionInfo[firstIndex].position < minFirstIndexPos) {
+				const baseIndex = childPositionInfo[firstIndex].baseIndex;
+				let
+					info = null,
+					firstIndexToAdjust = firstIndex,
+					gap = 0;
+
+				for (let index = firstIndex - dimensionToExtent; index >= 0; index -= dimensionToExtent) {
+					info = childPositionInfo[index];
+					if (info) {
+						if (info.baseIndex === baseIndex) {
+							firstIndexToAdjust = index;
+						} else {
+							break;
+						}
+					} else {
+						break;
+					}
+				}
+
+				gap = Math.floor(firstIndexToAdjust / dimensionToExtent) * gridSize - childPositionInfo[firstIndexToAdjust].position;
+
+				for (let index = firstIndexToAdjust; index < this.props.dataSize; index += dimensionToExtent) {
+					info = childPositionInfo[index];
+					if (info && info.baseIndex === baseIndex) {
+						info.position += gap;
+					} else {
+						break;
+					}
+				}
+				for (let index = firstIndex; index < firstIndex + numOfItems; ++index) {
+					const
+						childNode = this.itemContainerRef.children[index % numOfItems],
+						secondaryPosition = (index % dimensionToExtent) * this.secondary.gridSize;
+
+					info = childPositionInfo[index];
+					// TBD vertical only for now
+					childNode.style.transform = `translate3d(${this.props.rtl ? -secondaryPosition : secondaryPosition}px, ${info.position}px, 0)`;
+				}
+
+				// TBD: vertical only for now
+				if (type === Native) {
+					this.containerRef.style.scrollBehavior = null;
+					this.scrollToPosition(0, this.scrollPosition + gap);
+					this.containerRef.style.scrollBehavior = 'smooth';
+				} else {
+					this.setScrollPosition(0, this.scrollPosition + gap);
+				}
 			}
 		}
 
@@ -764,6 +801,8 @@ const VirtualListBaseFactory = (type) => {
 			if (pos > threshold.max || pos < threshold.min) {
 				const overhangBefore = Math.floor(this.props.overhang / 2);
 				let firstRenderedIndex = -1, newThresholdMin = -Infinity, newThresholdMax = Infinity;
+
+				// find an item which is known as placed the first rendered item's position
 				for (index = 0; index < dataSize; index += dimensionToExtent) {
 					info = childPositionInfo[index];
 					if (info && info.position + info.size >= pos && info.position <= pos + clientSize &&
@@ -785,7 +824,7 @@ const VirtualListBaseFactory = (type) => {
 						newThresholdMin = info.position - diffToFirstIndex * gridSize;
 						newThresholdMax = newThresholdMin + gridSize;
 					}
-				} else {
+				} else { // calculate the first index based on assuming that all items have minimal size
 					const firstExtent = Math.max(
 						0,
 						Math.min(
@@ -801,27 +840,6 @@ const VirtualListBaseFactory = (type) => {
 				newFirstIndex = Math.max(0, Math.min(maxFirstIndex, newFirstIndex));
 				threshold.min = newFirstIndex === 0 ? -Infinity : newThresholdMin;
 				threshold.max = newFirstIndex === maxFirstIndex ? Infinity : newThresholdMax;
-			}
-
-			if (childPositionInfo[newFirstIndex]) {
-				const
-					compensationFactor = 0.5, // TBD the factor of slowing down the scroll to compensate positions
-					posGap = Math.floor(newFirstIndex / dimensionToExtent) * gridSize - childPositionInfo[newFirstIndex].position;
-
-				if (posGap > 0) { // need to compensate positions of items
-					this.positionAdjustment += Math.min(posGap, Math.abs(pos - this.scrollPosition) * compensationFactor);
-				}
-
-				if (this.positionAdjustment > 0) {
-					for (index = 0; index < dataSize; index += dimensionToExtent) {
-						info = childPositionInfo[index];
-						if (info && info.baseIndex === childPositionInfo[newFirstIndex].baseIndex) {
-							info.adjust += this.positionAdjustment;
-						}
-					}
-
-					this.positionAdjustment = 0;
-				}
 			}
 
 			this.syncThreshold(maxPos);
@@ -911,7 +929,7 @@ const VirtualListBaseFactory = (type) => {
 				if (++j === dimensionToExtent) {
 					secondaryPosition = 0;
 					if (childPositionInfo[i]) {
-						primaryPosition = this.applyAdjustToPosition(childPositionInfo[i]);
+						primaryPosition = childPositionInfo[i].position;
 					} else if (childPositionInfo[i - dimensionToExtent]) {
 						primaryPosition += childPositionInfo[i - dimensionToExtent].size + this.props.spacing;
 					} else {

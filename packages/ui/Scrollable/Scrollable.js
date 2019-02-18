@@ -38,7 +38,7 @@ const
 		overscrollTypeOnce: 2,
 		overscrollTypeDone: 9,
 		paginationPageMultiplier: 0.8,
-		scrollStopWaiting: 200,
+		scrollStopWaiting: 100,
 		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	},
 	{
@@ -882,7 +882,12 @@ class ScrollableBase extends Component {
 	// scroll start/stop
 
 	doScrollStop = () => {
+		const {childRef} = this;
+
 		this.scrolling = false;
+		if (childRef && childRef.syncPositionAfterStop) {
+			childRef.syncPositionAfterStop();
+		}
 		this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
 	}
 
