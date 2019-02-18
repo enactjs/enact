@@ -229,7 +229,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (props.clientSize) {
 				this.calculateMetrics(props);
-				nextState = this.getStatesAndUpdateBounds(this.props, true);
+				nextState = this.getStatesAndUpdateBounds(this.props);
 			}
 
 			this.state = {
@@ -265,6 +265,7 @@ const VirtualListBaseFactory = (type) => {
 		componentDidMount () {
 			if (!this.props.clientSize) {
 				this.calculateMetrics(this.props);
+				// eslint-disable-next-line react/no-did-mount-set-state
 				this.setState(this.getStatesAndUpdateBounds(this.props));
 			}
 			this.setContainerSize();
@@ -279,10 +280,12 @@ const VirtualListBaseFactory = (type) => {
 				prevProps.spacing !== this.props.spacing ||
 				!equals(prevProps.itemSize, this.props.itemSize)
 			) {
-				this.calculateMetrics(props);
+				this.calculateMetrics(this.props);
+				// eslint-disable-next-line react/no-did-mount-set-state
 				this.setState(this.getStatesAndUpdateBounds(this.props));
 				this.setContainerSize();
 			} else if (this.hasDataSizeChanged) {
+				// eslint-disable-next-line react/no-did-mount-set-state
 				this.setState(this.getStatesAndUpdateBounds(this.props));
 				this.setContainerSize();
 			} else if (prevProps.rtl !== this.props.rtl) {
@@ -429,7 +432,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		getStatesAndUpdateBounds = (props, slient = false) => {
+		getStatesAndUpdateBounds = (props) => {
 			const
 				{dataSize, overhang, updateStatesAndBounds} = props,
 				firstIndex = this.hasDataSizeChanged ? this.state.firstIndex : 0,
