@@ -281,11 +281,11 @@ const VirtualListBaseFactory = (type) => {
 				!equals(prevProps.itemSize, this.props.itemSize)
 			) {
 				this.calculateMetrics(this.props);
-				// eslint-disable-next-line react/no-did-mount-set-state
+				// eslint-disable-next-line react/no-did-update-set-state
 				this.setState(this.getStatesAndUpdateBounds(this.props));
 				this.setContainerSize();
 			} else if (this.hasDataSizeChanged) {
-				// eslint-disable-next-line react/no-did-mount-set-state
+				// eslint-disable-next-line react/no-did-update-set-state
 				this.setState(this.getStatesAndUpdateBounds(this.props));
 				this.setContainerSize();
 			} else if (prevProps.rtl !== this.props.rtl) {
