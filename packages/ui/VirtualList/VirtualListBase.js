@@ -233,9 +233,10 @@ const VirtualListBaseFactory = (type) => {
 				updateFrom: 0,
 				updateTo: 0
 			};
+
 			if (props.clientSize) {
 				this.calculateMetrics(props);
-				this.updateStatesAndBounds(this.props);
+				this.updateStatesAndBounds(this.props, true);
 			}
 		}
 
@@ -430,7 +431,7 @@ const VirtualListBaseFactory = (type) => {
 			this.state.numOfItems = 0;
 		}
 
-		updateStatesAndBounds = (props) => {
+		updateStatesAndBounds = (props, slient = false) => {
 			const
 				{dataSize, overhang, updateStatesAndBounds} = props,
 				{firstIndex} = this.state,
@@ -457,7 +458,12 @@ const VirtualListBaseFactory = (type) => {
 				newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
 			}
 
-			this.setState({firstIndex: newFirstIndex, numOfItems});
+			if (slient) {
+				this.state.firstIndex = newFirstIndex;
+				this.state.numOfItems = numOfItems;
+			} else {
+				this.setState({firstIndex: newFirstIndex, numOfItems});
+			}
 		}
 
 		calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff) {
