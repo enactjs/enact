@@ -120,7 +120,7 @@ storiesOf('Marquee', module)
 						marqueeDelay={number('marqueeDelay', Marquee, 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
-						marqueeOnRenderDelay={1000}
+						marqueeOnRenderDelay={number('marqueeOnRenderDelay', Marquee, 1000)}
 						marqueeResetDelay={number('marqueeResetDelay', Marquee, 1000)}
 						marqueeSpeed={number('marqueeSpeed', Marquee, 60)}
 					>
@@ -145,7 +145,7 @@ storiesOf('Marquee', module)
 						marqueeDelay={number('marqueeDelay', Marquee, 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
-						marqueeOnRenderDelay={1000}
+						marqueeOnRenderDelay={number('marqueeOnRenderDelay', Marquee, 1000)}
 						marqueeResetDelay={number('marqueeResetDelay', Marquee, 1000)}
 						marqueeSpeed={number('marqueeSpeed', Marquee, 60)}
 					>
@@ -171,7 +171,7 @@ storiesOf('Marquee', module)
 							marqueeDelay={number('marqueeDelay', Marquee, 1000)}
 							marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}
 							marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
-							marqueeOnRenderDelay={5000}
+							marqueeOnRenderDelay={number('marqueeOnRenderDelay', Marquee, 5000)}
 							marqueeResetDelay={number('marqueeResetDelay', Marquee, 1000)}
 							marqueeSpeed={number('marqueeSpeed', Marquee, 60)}
 						>
