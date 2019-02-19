@@ -87,7 +87,7 @@ describe('Toggleable', () => {
 		test('should warn when \'defaultSelected\' and \'selected\' props are provided', () => {
 			const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 			const Component = Toggleable(DivComponent);
-			const subject = shallow(
+			shallow(
 				<Component defaultSelected selected />
 			);
 

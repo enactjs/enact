@@ -84,7 +84,7 @@ describe('Changeable', () => {
 		test('should warn when \'defaultValue\' and \'value\' props are provided', () => {
 			const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 			const Component = Changeable(DivComponent);
-			const subject = shallow(
+			shallow(
 				<Component defaultValue={10} value={5} />
 			);
 
