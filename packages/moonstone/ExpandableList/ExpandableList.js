@@ -26,6 +26,7 @@ import PropTypes from 'prop-types';
 import CheckboxItem from '../CheckboxItem';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import RadioItem from '../RadioItem';
+import Skinnable from '../Skinnable';
 
 import css from './ExpandableList.module.less';
 
@@ -415,7 +416,9 @@ const ExpandableList = Pure(
 					return selectedNode;
 				}
 			},
-			ExpandableListBase
+			Skinnable(
+				ExpandableListBase
+			)
 		)
 	)
 );

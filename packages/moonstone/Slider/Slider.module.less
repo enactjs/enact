@@ -38,14 +38,16 @@
 			box-sizing: border-box;
 			will-change: transform;
 			transition: transform ease-out 100ms;
-
-			.moon-custom-text({
-				height: @moon-slider-knob-height-large;
-				width: @moon-slider-knob-width-large;
-				border-radius: (@moon-slider-knob-height-large / 2);
-			});
 		}
 	}
+
+	.moon-custom-text({
+		.knob::before {
+			height: @moon-slider-knob-height-large;
+			width: @moon-slider-knob-width-large;
+			border-radius: (@moon-slider-knob-height-large / 2);
+		}
+	});
 
 	.tooltip {
 		display: none;

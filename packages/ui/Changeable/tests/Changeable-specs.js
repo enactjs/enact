@@ -81,13 +81,13 @@ describe('Changeable', () => {
 			expect(actual).toBe(expected);
 		});
 
-		test('should use value prop when value prop is null', () => {
+		test('should use defaultValue prop when value prop is null', () => {
 			const Component = Changeable(DivComponent);
 			const subject = shallow(
 				<Component defaultValue={1} value={null} />
 			);
 
-			const expected = null;
+			const expected = 1;
 			const actual = subject.find(DivComponent).prop('value');
 
 			expect(actual).toBe(expected);

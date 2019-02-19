@@ -129,13 +129,19 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.state = {
-				value: props[prop] != null ? props[prop] : props[defaultPropKey],
-				controlled: typeof props[prop] !== 'undefined'
+				rendered: false,
+				value: null,
+				controlled: prop in props
 			};
 		}
 
 		static getDerivedStateFromProps (props, state) {
-			if (state.controlled) {
+			if (state.rendered === false) {
+				return {
+					rendered: true,
+					value: props[prop] != null ? props[prop] : props[defaultPropKey]
+				};
+			} else if (state.controlled) {
 				return {
 					value: props[prop]
 				};
