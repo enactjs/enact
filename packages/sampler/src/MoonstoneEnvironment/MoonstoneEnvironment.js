@@ -8,7 +8,6 @@ import BodyText from '@enact/moonstone/BodyText';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 import {Panels, Panel, Header} from '@enact/moonstone/Panels';
 import {boolean, select} from '../enact-knobs';
-import {selectV2} from '@storybook/addon-knobs';
 import qs from 'query-string';
 
 import css from './MoonstoneEnvironment.module.less';
