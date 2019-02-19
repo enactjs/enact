@@ -9,7 +9,6 @@
 import {forward, forwardWithPrevent, handle, preventDefault, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
-import difference from 'ramda/src/difference';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
@@ -201,18 +200,16 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.state = {
 				focused: false,
-				focusedWhenDisabled: false,
-				selectionKeys: props.selectionKeys
+				focusedWhenDisabled: false
 			};
 		}
 
 		static getDerivedStateFromProps (props, state) {
 			const focusedWhenDisabled = Boolean(state.focused && (props.disabled || props.spotlightDisabled));
 
-			if (focusedWhenDisabled !== state.focusedWhenDisabled || difference(state.selectionKeys, props.selectionKeys).length) {
+			if (focusedWhenDisabled !== state.focusedWhenDisabled) {
 				return {
-					focusedWhenDisabled,
-					selectionKeys: props.selectionKeys
+					focusedWhenDisabled
 				};
 			}
 			return null;
@@ -224,13 +221,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		shouldComponentUpdate (nextProps, nextState) {
-			const mutatedState = {...this.state};
-			const nextMutatedState = {...nextState};
-			delete mutatedState.focused;
-			delete nextMutatedState.focused;
-
 			return (
-				!shallowEqual(mutatedState, nextMutatedState) ||
+				this.state.focusedWhenDisabled !== nextState.focusedWhenDisabled ||
 				!shallowEqual(this.props, nextProps)
 			);
 		}
@@ -271,13 +263,13 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		shouldEmulateMouse = (ev) => {
+		shouldEmulateMouse = (ev, props) => {
 			if (!emulateMouse) {
 				return;
 			}
 
 			const {currentTarget, repeat, type, which} = ev;
-			const {selectionKeys} = this.state;
+			const {selectionKeys} = props;
 			const keyboardAccessible = isKeyboardAccessible(currentTarget);
 
 			const keyCode = selectionKeys.find((value) => (
@@ -317,8 +309,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		handleSelect = ({which}) => {
-			const {selectionKeys} = this.state;
+		handleSelect = ({which}, props) => {
+			const {selectionKeys} = props;
 
 			// Only apply accelerator if handling a selection key
 			if (selectionKeys.find((value) => which === value)) {
@@ -332,7 +324,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		forwardAndResetLastSelectTarget = (ev, props) => {
 			const {keyCode} = ev;
-			const {selectionKeys} = this.state;
+			const {selectionKeys} = props;
 			const key = selectionKeys.find((value) => keyCode === value);
 			const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
 
