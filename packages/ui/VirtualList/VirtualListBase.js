@@ -629,24 +629,6 @@ const VirtualListBaseFactory = (type) => {
 					}
 				}
 
-				/*
-				// adjust the position for the firstIndex
-				if (0 > childPositionInfo[firstIndex].position) {
-					const gap = firstIndex * gridSize - childPositionInfo[firstIndex].position;
-					for (index = firstIndex; index < dataSize; index += dimensionToExtent) {
-						info = childPositionInfo[index];
-						if (info) {
-							if (info.baseIndex === baseIndex) {
-								// info.adjust += gap; // TBD
-								info.baseIndex = firstIndex;
-							} else {
-								break;
-							}
-						}
-					}
-				}
-				*/
-
 				for (index = firstIndex; index <= lastIndex; ++index) {
 					info = childPositionInfo[Math.floor(index / dimensionToExtent) * dimensionToExtent];
 					primaryPosition = info.position;
@@ -682,50 +664,13 @@ const VirtualListBaseFactory = (type) => {
 
 		syncPositionAfterStop () {
 			const
-				{firstIndex, numOfItems} = this.state,
+				{firstIndex} = this.state,
 				{dimensionToExtent, childPositionInfo} = this,
-				{gridSize} = this.primary,
-				minFirstIndexPos = Math.floor(firstIndex / dimensionToExtent) * gridSize;
+				{gridSize} = this.primary;
 
-			if (childPositionInfo[firstIndex].position < minFirstIndexPos) {
-				const baseIndex = childPositionInfo[firstIndex].baseIndex;
-				let
-					info = null,
-					firstIndexToAdjust = firstIndex,
-					gap = 0;
-
-				for (let index = firstIndex - dimensionToExtent; index >= 0; index -= dimensionToExtent) {
-					info = childPositionInfo[index];
-					if (info) {
-						if (info.baseIndex === baseIndex) {
-							firstIndexToAdjust = index;
-						} else {
-							break;
-						}
-					} else {
-						break;
-					}
-				}
-
-				gap = Math.floor(firstIndexToAdjust / dimensionToExtent) * gridSize - childPositionInfo[firstIndexToAdjust].position;
-
-				for (let index = firstIndexToAdjust; index < this.props.dataSize; index += dimensionToExtent) {
-					info = childPositionInfo[index];
-					if (info && info.baseIndex === baseIndex) {
-						info.position += gap;
-					} else {
-						break;
-					}
-				}
-				for (let index = firstIndex; index < firstIndex + numOfItems; ++index) {
-					const
-						childNode = this.itemContainerRef.children[index % numOfItems],
-						secondaryPosition = (index % dimensionToExtent) * this.secondary.gridSize;
-
-					info = childPositionInfo[index];
-					// TBD vertical only for now
-					childNode.style.transform = `translate3d(${this.props.rtl ? -secondaryPosition : secondaryPosition}px, ${info.position}px, 0)`;
-				}
+			// if the position for firstIndex is smaller than the minimum position by the minimum size
+			if (childPositionInfo[firstIndex].position < Math.floor(firstIndex / dimensionToExtent) * gridSize) {
+				const gap = this.adjustItemsPosition();
 
 				// TBD: vertical only for now
 				if (type === Native) {
@@ -736,6 +681,62 @@ const VirtualListBaseFactory = (type) => {
 					this.setScrollPosition(0, this.scrollPosition + gap);
 				}
 			}
+		}
+
+		adjustItemsPosition (max = Infinity) {
+			const
+				{firstIndex} = this.state,
+				{dimensionToExtent, childPositionInfo} = this,
+				{gridSize} = this.primary,
+				baseIndex = childPositionInfo[firstIndex].baseIndex;
+			let
+				info = null,
+				firstIndexToAdjust = firstIndex,
+				gap = 0,
+				index;
+
+			for (index = firstIndex - dimensionToExtent; index >= 0; index -= dimensionToExtent) {
+				info = childPositionInfo[index];
+				if (info) {
+					if (info.baseIndex === baseIndex) {
+						firstIndexToAdjust = index;
+					} else {
+						break;
+					}
+				} else {
+					break;
+				}
+			}
+
+			gap = Math.floor(firstIndexToAdjust / dimensionToExtent) * gridSize - childPositionInfo[firstIndexToAdjust].position;
+			if (gap > 0) {
+				const {numOfItems} = this.state;
+				let node, primary, secondary;
+
+				gap = Math.min(gap, max);
+
+				for (index = firstIndexToAdjust; index < this.props.dataSize; index += dimensionToExtent) {
+					info = childPositionInfo[index];
+					if (info && info.baseIndex === baseIndex) {
+						info.position += gap;
+					} else {
+						break;
+					}
+				}
+
+				for (index = firstIndex; index < firstIndex + numOfItems; ++index) {
+					info = childPositionInfo[Math.floor(index / dimensionToExtent) * dimensionToExtent];
+					node = this.itemContainerRef.children[index % numOfItems];
+					primary = info.position;
+					secondary = (index % dimensionToExtent) * this.secondary.gridSize;
+					// TBD vertical only for now
+					node.style.transform = `translate3d(${this.props.rtl ? -secondary : secondary}px, ${primary}px, 0)`;
+				}
+
+				return gap;
+			}
+
+			return 0;
 		}
 
 		updateMoreInfo (dataSize, primaryPosition) {
@@ -797,6 +798,8 @@ const VirtualListBaseFactory = (type) => {
 			} else {
 				pos = x;
 			}
+
+			this.adjustItemsPosition(Math.abs(this.scrollPosition - pos));
 
 			if (pos > threshold.max || pos < threshold.min) {
 				const overhangBefore = Math.floor(this.props.overhang / 2);
