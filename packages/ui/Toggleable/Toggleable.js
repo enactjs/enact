@@ -161,7 +161,6 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
-			[defaultPropKey]: false,
 			disabled: false
 		}
 
