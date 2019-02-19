@@ -233,11 +233,10 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				activator: null,
 				arrowPosition: {top: 0, left: 0},
-				containerId: Spotlight.add(this.props.popupSpotlightId),
 				containerPosition: {top: 0, left: 0},
-				prevOpen: false
+				containerId: Spotlight.add(this.props.popupSpotlightId),
+				activator: null
 			};
 
 			this.overflow = {};
@@ -263,7 +262,6 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (prevProps.open && !this.props.open) {
 				const current = Spotlight.getCurrent();
 				return {
-					prevOpen: this.props.open,
 					shouldSpotActivator: (
 						// isn't set
 						!current ||
@@ -273,10 +271,6 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 						this.containerNode.contains(current)
 					)
 				};
-			} else if (prevProps.open && this.props.open) {
-				return {
-					prevOpen: this.props.open
-				}
 			}
 			return null;
 		}
@@ -288,17 +282,15 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.positionContextualPopup();
 			}
 
-			if (prevProps.open) {
-				if (this.props.open && !this.state.prevOpen) {
-					on('keydown', this.handleKeyDown);
-					on('keyup', this.handleKeyUp);
-					this.spotPopupContent();
-				} else if (!this.props.open) {
-					off('keydown', this.handleKeyDown);
-					off('keyup', this.handleKeyUp);
-					if (snapshot && snapshot.shouldSpotActivator) {
-						this.spotActivator(prevState.activator);
-					}
+			if (this.props.open && this.state.activator && !prevState.activator) {
+				on('keydown', this.handleKeyDown);
+				on('keyup', this.handleKeyUp);
+				this.spotPopupContent();
+			} else if (!this.props.open && prevProps.open) {
+				off('keydown', this.handleKeyDown);
+				off('keyup', this.handleKeyUp);
+				if (snapshot && snapshot.shouldSpotActivator) {
+					this.spotActivator(prevState.activator);
 				}
 			}
 		}
