@@ -1,5 +1,3 @@
-/* globals describe, it, expect */
-
 import computed from '../computed';
 
 describe('computed', () => {
