@@ -8,6 +8,8 @@
 @high-contrast-black: #000;
 @high-contrast-white: #fff;
 
+@high-contrast-text-color: @high-contrast-white;
+
 @moon-accent: @high-contrast-light-gray;
 @moon-spotlight-text-color: @high-contrast-black;
 
@@ -17,16 +19,14 @@
 
 // Checkbox
 // ---------------------------------------
-@moon-checkbox-check-color: @high-contrast-white;
+@moon-checkbox-check-color: @high-contrast-text-color;
 @moon-checkbox-bg-color: @high-contrast-gray;
-@moon-checkbox-spotlight-bg-color: @high-contrast-gray;
-@moon-checkbox-spotlight-color: @high-contrast-white;
+@moon-checkbox-spotlight-bg-color: @moon-checkbox-bg-color;
+@moon-checkbox-spotlight-color: @moon-checkbox-check-color;
 
 // DaySelector
 // ---------------------------------------
 @moon-day-selector-selected-bg-color: @high-contrast-light-gray;
-@moon-radio-item-selected-indicator-border-color: @high-contrast-white;
-@moon-radio-item-selected-spotlight-indicator-border-color: @high-contrast-white;
 
 // EditableIntegerPicker
 // ---------------------------------------
@@ -35,7 +35,7 @@
 
 // FormCheckbox
 // ---------------------------------------
-@moon-formcheckbox-text-color: @high-contrast-white;
+@moon-formcheckbox-text-color: @high-contrast-text-color;
 
 // Progress Bar
 // ---------------------------------------
@@ -45,12 +45,13 @@
 // ---------------------------------------
 @moon-radio-item-indicator-color: @high-contrast-gray;
 @moon-radio-item-spotlight-indicator-bg-color: @high-contrast-light-gray;
-@moon-radio-item-spotlight-indicator-border-color: @high-contrast-black;
+@moon-radio-item-spotlight-indicator-border-color: @moon-radio-item-selected-indicator-color;
 @moon-radio-item-selected-indicator-color: @high-contrast-black;
 @moon-radio-item-selected-indicator-bg-color: @high-contrast-white;
+@moon-radio-item-selected-indicator-border-color: @moon-radio-item-selected-indicator-bg-color;
 @moon-radio-item-selected-spotlight-indicator-color: transparent;
-@moon-radio-item-selected-spotlight-indicator-bg-color: @high-contrast-black;
-@moon-radio-item-selected-spotlight-indicator-border-color: @high-contrast-black;
+@moon-radio-item-selected-spotlight-indicator-bg-color: @moon-radio-item-selected-indicator-color;
+@moon-radio-item-selected-spotlight-indicator-border-color: @moon-radio-item-selected-spotlight-indicator-bg-color;
 
 // Scroller
 // ---------------------------------------
@@ -69,10 +70,10 @@
 // Toggle Colors
 // ---------------------------------------
 @moon-toggle-button-switch-on-bg-color: transparent;
-@moon-toggle-button-switch-dot-on-bg-color: @high-contrast-white;
+@moon-toggle-button-switch-dot-on-bg-color: @high-contrast-text-color;
 @moon-toggle-button-switch-dot-disabled-border-color: @moon-toggle-button-switch-disabled-border-color;
 @moon-toggle-button-switch-on-spotlight-bg-color: transparent;
 @moon-toggle-button-switch-on-spotlight-border-color: @high-contrast-black;
-@moon-toggle-button-switch-dot-on-spotlight-bg-color: @high-contrast-black;
+@moon-toggle-button-switch-dot-on-spotlight-bg-color: @moon-toggle-button-switch-on-spotlight-border-color;
 @moon-toggle-button-switch-off-spotlight-bg-color: transparent;
-@moon-toggle-button-switch-off-spotlight-border-color: @high-contrast-black;
+@moon-toggle-button-switch-off-spotlight-border-color: @moon-toggle-button-switch-on-spotlight-border-color;
