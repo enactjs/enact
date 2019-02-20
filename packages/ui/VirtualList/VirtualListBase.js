@@ -245,13 +245,13 @@ const VirtualListBaseFactory = (type) => {
 
 		static getDerivedStateFromProps (props, state) {
 			const
-				isNeedToInvalidate = (
+				shouldInvalidate = (
 					state.prevFirstIndex === state.firstIndex ||
-					(state.prevChildProps || props.childProps) && state.prevChildProps !== props.childProps
+					state.prevChildProps !== props.childProps
 				),
 				diff = state.firstIndex - state.prevFirstIndex,
-				updateTo = (-state.numOfItems >= diff || diff > 0 || isNeedToInvalidate) ? state.firstIndex + state.numOfItems : state.prevFirstIndex,
-				updateFrom = (0 >= diff || diff >= state.numOfItems || isNeedToInvalidate) ? state.firstIndex : state.prevFirstIndex + state.numOfItems,
+				updateTo = (-state.numOfItems >= diff || diff > 0 || shouldInvalidate) ? state.firstIndex + state.numOfItems : state.prevFirstIndex,
+				updateFrom = (0 >= diff || diff >= state.numOfItems || shouldInvalidate) ? state.firstIndex : state.prevFirstIndex + state.numOfItems,
 				nextUpdateFromAndTo = (state.updateFrom !== updateFrom || state.updateTo !== updateTo) ? {updateFrom, updateTo} : null;
 
 			return {
