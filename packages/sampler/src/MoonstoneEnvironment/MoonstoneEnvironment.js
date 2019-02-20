@@ -108,27 +108,21 @@ const getArgs = (str) => {
 	return qs.parse(str || (typeof window !== 'undefined' ? window.parent.location.search : ''));
 };
 
-// This allows any prop/argument to be taken from the URL.
-const getPropFromArgs = (args, propName, fallbackValue) => {
-	if (args && typeof args[propName] !== 'undefined') {
-		return args[propName];
-	}
-	return fallbackValue;
-};
-
 // This allows any knob to be taken from the URL.
 const getKnobFromArgs = (args, propName, fallbackValue) => {
-	const knobVal = getPropFromArgs(args, 'knob-' + propName, fallbackValue);
-	try {
-		// If it's valid JSON, parse it and return
-		return JSON.parse(knobVal);
-	} catch (e) {
-		// If it's invalid, see what it is, and in the unknown case, just return it (string most likely).
-		if (typeof knobVal === 'undefined' || knobVal === 'undefined' || knobVal === 'void 0') {
-			return void 0;
+	const knob = 'knob-' + propName;
+	let value = fallbackValue;
+
+	if (args && knob in args) {
+		try {
+			// If it's valid JSON, parse it
+			value = JSON.parse(args[knob]);
+		} catch (e) {
+			// no handling required; allow fallbackValue to be used
 		}
-		return knobVal;
 	}
+
+	return value;
 };
 
 const StorybookDecorator = (story, config) => {
@@ -178,9 +172,7 @@ const StorybookDecorator = (story, config) => {
 			highContrast={boolean('high contrast', Config, getKnobFromArgs(args, 'high contrast'))}
 			style={{
 				'--moon-env-background': backgroundLabelMap[select('background', backgroundLabels, Config, getKnobFromArgs(args, 'background'))]
-				// '--moon-env-background-filter': 'blur(' + number('background blur', Config, {range: true, min: 0, max: 10, step: 0.5}, 3) + 'px)'
 			}}
-			// data-background={backgroundLabelMap[select('background', backgroundLabels, Config, getKnobFromArgs(args, 'background'))].background}
 			skin={select('skin', skins, Config, getKnobFromArgs(args, 'skin'))}
 		>
 			{sample}
