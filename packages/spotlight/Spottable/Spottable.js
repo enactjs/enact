@@ -9,10 +9,10 @@
 import {forward, forwardWithPrevent, handle, preventDefault, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
+import PropTypes from 'prop-types';
+import equals from 'ramda/src/equals';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-import shallowEqual from 'recompose/shallowEqual';
 
 import {getContainersForNode} from '../src/container';
 import {hasPointerMoved} from '../src/pointer';
@@ -223,7 +223,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		shouldComponentUpdate (nextProps, nextState) {
 			return (
 				this.state.focusedWhenDisabled !== nextState.focusedWhenDisabled ||
-				!shallowEqual(this.props, nextProps)
+				!equals(this.props, nextProps)
 			);
 		}
 
