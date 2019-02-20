@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
-## [2.3.0] - 2019-02-11
+## [unreleased]
 
 ### Added
 
@@ -10,8 +10,13 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ### Changed
 
+- Background images to display in a more pleasant way
+
+## [2.3.0] - 2019-02-11
+
+### Changed
+
 - `moonstone/ExpandableInput` and `moonstone/Input` knob to select input type
-- `MoonstoneEnvironment` to display background images in a more pleasant way
 
 ## [2.2.9] - 2019-01-11
 
