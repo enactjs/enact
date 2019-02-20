@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- Story description text at the top of each sample
+
+### Changed
+
+- Background images to display in a more pleasant way
+
 ## [2.3.0] - 2019-02-11
 
 ### Changed
