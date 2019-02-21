@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- Support for high contrast colors in dark `moonstone`
+- Support for high contrast colors in dark and light `moonstone`
 
 ### Fixed
 
