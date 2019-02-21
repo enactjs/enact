@@ -237,7 +237,9 @@ class ViewManager extends React.Component {
 			childProps
 		});
 
+		delete rest.end;
 		delete rest.reverseTransition;
+		delete rest.start;
 
 		return (
 			<TransitionGroup {...rest} childFactory={childFactory} size={size} currentIndex={index}>
