@@ -12,7 +12,7 @@ import warning from 'warning';
 
 import {selectSrc} from '../resolution';
 
-import componentCss from './Image.less';
+import componentCss from './Image.module.less';
 
 /**
  * A basic image component designed to display images conditionally based on screen size.
@@ -47,6 +47,14 @@ const ImageBase = kind({
 
 	propTypes: /** @lends ui/Image.Image.prototype */ {
 		/**
+		 * String value for the alt attribute of the image.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		alt: PropTypes.string,
+
+		/**
 		 * The aria-label for the image.
 		 *
 		 * If unset, it defaults to the value of `alt`.
@@ -55,16 +63,7 @@ const ImageBase = kind({
 		 * @public
 		 * @memberof ui/Image.Image.prototype
 		 */
-		// Quoting this (necessary) makes it alphabetically sort differently...
 		'aria-label': PropTypes.string,
-
-		/**
-		 * String value for the alt attribute of the image.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		alt: PropTypes.string,
 
 		/**
 		 * Node for the children of an `Image`. Useful for overlays.

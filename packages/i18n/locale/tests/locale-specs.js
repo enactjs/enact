@@ -2,20 +2,20 @@ import '../../src/glue.js';
 import {isNonLatinLocale} from '../locale';
 
 const validate = (expected) => (actual) => {
-	expect(actual ? 'non-latin' : 'latin').to.equal(expected);
+	expect(actual ? 'non-latin' : 'latin').toBe(expected);
 };
 
 describe('locale', () => {
 
-	it('should treat "en-US" as latin locale', () => {
+	test('should treat "en-US" as latin locale', () => {
 		isNonLatinLocale('en-US', {sync: true, onLoad: validate('latin')});
 	});
 
-	it('should treat "ja-JP" as non-latin locale', () => {
+	test('should treat "ja-JP" as non-latin locale', () => {
 		isNonLatinLocale('ja-JP', {sync: true, onLoad: validate('non-latin')});
 	});
 
-	it('should treat "en-US" as non-latin locale with language override', () => {
+	test('should treat "en-US" as non-latin locale with language override', () => {
 		isNonLatinLocale('en-US', {
 			sync: true,
 			nonLatinLanguageOverrides: ['en'],
@@ -23,7 +23,7 @@ describe('locale', () => {
 		});
 	});
 
-	it('should treat "en-US" as non-latin locale with locale override', () => {
+	test('should treat "en-US" as non-latin locale with locale override', () => {
 		isNonLatinLocale('en-US', {
 			sync: true,
 			nonLatinLanguageOverrides: ['en-US'],
@@ -31,7 +31,7 @@ describe('locale', () => {
 		});
 	});
 
-	it('should treat "ja-JP" as latin locale with language override', () => {
+	test('should treat "ja-JP" as latin locale with language override', () => {
 		isNonLatinLocale('ja-JP', {
 			sync: true,
 			latinLanguageOverrides: ['ja'],
@@ -39,7 +39,7 @@ describe('locale', () => {
 		});
 	});
 
-	it('should treat "ja-JP" as latin locale with locale override', () => {
+	test('should treat "ja-JP" as latin locale with locale override', () => {
 		isNonLatinLocale('ja-JP', {
 			sync: true,
 			latinLanguageOverrides: ['ja-JP'],
@@ -47,7 +47,7 @@ describe('locale', () => {
 		});
 	});
 
-	it('should treat "en-US" as latin locale with irrelevant override', () => {
+	test('should treat "en-US" as latin locale with irrelevant override', () => {
 		isNonLatinLocale('en-US', {
 			sync: true,
 			latinLanguageOverrides: ['ja'],

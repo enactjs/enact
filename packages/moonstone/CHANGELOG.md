@@ -4,9 +4,55 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Fixed
+
+- `moonstone/Slider` to prevent gaining focus when clicked when disabled
+- `moonstone/Slider` to prevent default browser scroll behavior when 5-way directional key is pressed on an active knob
+
+## [2.3.0] - 2019-02-11
+
 ### Added
 
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` property `childProps` to support additional props included in the object passed to the `itemsRenderer` callback
+- `moonstone/Skinnable` support for `skinVariants`, to enable features like high contrast mode and large text mode
+- Support for 8k (UHD2) displays
+
+### Changed
+
+- All content-containing LESS stylesheets (not within a `styles` directory) extensions to be `*.module.less` to retain modular context with CLI 2.x.
+
+### Fixed
+
+- `moonstone/VirtualList` to focus an item properly by `scrollTo` API immediately after a prior call to the same position
+- `moonstone/Popup` to close floating layer when the popup closes without animation
+
+## [2.2.9] - 2019-01-11
+
+### Fixed
+
+- `moonstone/Scroller` scrolling to boundary behavior for short scrollers
+
+## [2.2.8] - 2018-12-06
+
+### Fixed
+
+- `moonstone/ExpandableInput` to focus labeled item on close
+- `moonstone/ExpandableItem` to disable its spotlight container when the component is disabled
+- `moonstone/Scroller` to correctly handle scrolling focused elements and containers into view
+
+## [2.2.7] - 2018-11-21
+
+### Fixed
+
+- `moonstone/Picker`, `moonstone/ExpandablePicker`, `moonstone/ExpandableList`, `moonstone/IncrementSlider` to support disabling voice control
+
+## [2.2.6] - 2018-11-15
+
+### Fixed
+
+- `moonstone/VideoPlayer` to blur slider when hiding media controls
+- `moonstone/VideoPlayer` to disable pointer mode when hiding media controls via 5-way
+- `moonstone/VirtualList` and `moonstone/Scroller` to not to animate with 5-way navigation by default
 
 ## [2.2.5] - 2018-11-05
 
@@ -98,6 +144,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VideoPlayer` so that activity is detected and the `autoCloseTimeout` timer is reset when using 5-way to navigate from the media slider
+
+### Fixed
+
+- `moonstone/Picker` to fire onChange events, due to a hold, consistently across pointer and 5-way navigation
 
 ## [2.1.0] - 2018-08-20
 

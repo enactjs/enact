@@ -10,11 +10,13 @@
 
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {on, off} from '@enact/core/dispatcher';
+import {memoize} from '@enact/core/util';
+
 import {adaptEvent, call, forKey, forward, forwardWithPrevent, handle, preventDefault, stopImmediate, returnsTrue} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform';
 import {perfNow, Job} from '@enact/core/util';
-import ilib from '@enact/i18n';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {toUpperCase} from '@enact/i18n/util';
 import Spotlight from '@enact/spotlight';
@@ -23,7 +25,7 @@ import {Spottable} from '@enact/spotlight/Spottable';
 import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ComponentOverride from '@enact/ui/ComponentOverride';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
-import {contextTypes} from '@enact/ui/FloatingLayer/FloatingLayerDecorator';
+import {FloatingLayerContext} from '@enact/ui/FloatingLayer/FloatingLayerDecorator';
 import Media from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
@@ -47,7 +49,7 @@ import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
 import Video from './Video';
 
-import css from './VideoPlayer.less';
+import css from './VideoPlayer.module.less';
 
 const SpottableDiv = Touchable(Spottable('div'));
 const RootContainer = SpotlightContainerDecorator(
@@ -65,6 +67,16 @@ const ControlsContainer = SpotlightContainerDecorator(
 	},
 	'div'
 );
+
+const memoGetDurFmt = memoize((/* locale */) => new DurationFmt({
+	length: 'medium', style: 'clock', useNative: false
+}));
+
+const getDurFmt = (locale) => {
+	if (typeof window === 'undefined') return null;
+
+	return memoGetDurFmt(locale);
+};
 
 const forwardWithState = (type) => adaptEvent(call('addStateToEvent'), forwardWithPrevent(type));
 
@@ -213,6 +225,15 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		loading: PropTypes.bool,
+
+		/**
+		 * The current locale as a
+		 * {@link https://tools.ietf.org/html/rfc5646|BCP 47 language tag}.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		locale: PropTypes.string,
 
 		/**
 		 * Overrides the default media control component to support customized behaviors.
@@ -598,7 +619,7 @@ const VideoPlayerBase = class extends React.Component {
 		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element])
 	}
 
-	static contextTypes = contextTypes
+	static contextType = FloatingLayerContext
 
 	static defaultProps = {
 		autoCloseTimeout: 5000,
@@ -632,8 +653,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderKnobProportion = 0;
 		this.mediaControlsSpotlightId = props.spotlightId + '_mediaControls';
 		this.moreButtonSpotlightId = this.mediaControlsSpotlightId + '_moreButton';
-
-		this.initI18n();
 
 		// Re-render-necessary State
 		this.state = {
@@ -670,6 +689,9 @@ const VideoPlayerBase = class extends React.Component {
 		on('mousemove', this.activityDetected);
 		on('keydown', this.handleGlobalKeyDown);
 		this.startDelayedFeedbackHide();
+		if (this.context && typeof this.context === 'function') {
+			this.floatingLayerController = this.context(() => {});
+		}
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
@@ -692,31 +714,18 @@ const VideoPlayerBase = class extends React.Component {
 		return true;
 	}
 
-	componentWillUpdate (nextProps) {
-		const
-			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
-			{titleOffsetHeight: titleHeight} = this.state,
-			shouldCalculateTitleOffset = (
-				((!titleHeight && isInfoComponentsEqual) || (titleHeight && !isInfoComponentsEqual)) &&
-				this.state.mediaControlsVisible
-			);
-
-		this.initI18n();
-
-		if (shouldCalculateTitleOffset) {
-			const titleOffsetHeight = this.getHeightForElement('infoComponents');
-			if (titleOffsetHeight) {
-				this.setState({titleOffsetHeight});
-			}
-		}
-	}
-
 	componentDidUpdate (prevProps, prevState) {
+		if (this.titleRef && this.state.infoVisible &&
+			(!prevState.infoVisible || !equals(this.props.infoComponents, prevProps.infoComponents))
+		) {
+			this.titleRef.style.setProperty('--infoComponentsOffset', `${this.getHeightForElement('infoComponents')}px`);
+		}
+
 		if (
 			!this.state.mediaControlsVisible && prevState.mediaControlsVisible !== this.state.mediaControlsVisible ||
 			!this.state.mediaSliderVisible && prevState.mediaSliderVisible !== this.state.mediaSliderVisible
 		) {
-			this.context.closeAllFloatingLayers();
+			this.floatingLayerController.notify({action: 'closeAll'});
 		}
 
 		if (this.props.spotlightId !== prevProps.spotlightId) {
@@ -729,12 +738,11 @@ const VideoPlayerBase = class extends React.Component {
 			this.stopAutoCloseTimeout();
 
 			if (!this.props.spotlightDisabled) {
-				// If last focused item were in a user specified components (e.g. leftComponents,
-				// rightComponents, children, etc.), we need to explicitly blur the element when
-				// MediaControls hide. See ENYO-5454
+				// If last focused item were in the media controls or slider, we need to explicitly
+				// blur the element when MediaControls hide. See ENYO-5648
 				const current = Spotlight.getCurrent();
-				const mediaControls = document.querySelector(`[data-spotlight-id="${this.mediaControlsSpotlightId}"]`);
-				if (current && mediaControls && mediaControls.contains(current)) {
+				const bottomControls = document.querySelector(`.${css.bottom}`);
+				if (current && bottomControls && bottomControls.contains(current)) {
 					current.blur();
 				}
 
@@ -792,11 +800,15 @@ const VideoPlayerBase = class extends React.Component {
 		this.renderBottomControl.stop();
 		this.sliderTooltipTimeJob.stop();
 		this.slider5WayPressJob.stop();
+		if (this.floatingLayerController) {
+			this.floatingLayerController.unregister();
+		}
 	}
 
 	//
 	// Internal Methods
 	//
+
 	announceJob = new Job(msg => (this.announceRef && this.announceRef.announce(msg)), 200)
 
 	announce = (msg) => {
@@ -809,16 +821,6 @@ const VideoPlayerBase = class extends React.Component {
 			return element.offsetHeight;
 		} else {
 			return 0;
-		}
-	}
-
-	initI18n = () => {
-		const locale = ilib.getLocale();
-
-		if (this.locale !== locale && typeof window === 'object') {
-			this.locale = locale;
-
-			this.durfmt = new DurationFmt({length: 'medium', style: 'clock', useNative: false});
 		}
 	}
 
@@ -1123,7 +1125,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			this.showMiniFeedback = true;
 			this.jump(jumpBy);
-			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
+			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, getDurFmt(this.props.locale), {includeHour: true}));
 		}
 	}
 
@@ -1619,7 +1621,7 @@ const VideoPlayerBase = class extends React.Component {
 
 			if (!isNaN(seconds)) {
 				this.sliderTooltipTimeJob.throttle(seconds);
-				const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
+				const knobTime = secondsToTime(seconds, getDurFmt(this.props.locale), {includeHour: true});
 
 				forward('onScrub', {...ev, seconds}, this.props);
 
@@ -1640,7 +1642,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (!isNaN(seconds)) {
 			this.sliderTooltipTimeJob.throttle(seconds);
-			const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
+			const knobTime = secondsToTime(seconds, getDurFmt(this.props.locale), {includeHour: true});
 
 			forward('onScrub', {
 				detached: this.sliderScrubbing,
@@ -1682,6 +1684,7 @@ const VideoPlayerBase = class extends React.Component {
 				this.activityDetected();
 			}
 		} else if (is('up', keyCode)) {
+			Spotlight.setPointerMode(false);
 			preventDefault(ev);
 			stopImmediate(ev);
 
@@ -1734,6 +1737,10 @@ const VideoPlayerBase = class extends React.Component {
 		this.video = video;
 	}
 
+	setTitleRef = (node) => {
+		this.titleRef = node;
+	}
+
 	setAnnounceRef = (node) => {
 		this.announceRef = node;
 	}
@@ -1761,6 +1768,7 @@ const VideoPlayerBase = class extends React.Component {
 			disabled,
 			infoComponents,
 			loading,
+			locale,
 			mediaControlsComponent,
 			noAutoPlay,
 			noMiniFeedback,
@@ -1818,6 +1826,8 @@ const VideoPlayerBase = class extends React.Component {
 			proportionSelection = selection.map(t => t / this.state.duration);
 		}
 
+		const durFmt = getDurFmt(locale);
+
 		return (
 			<RootContainer
 				className={css.videoPlayer + ' enact-fit' + (className ? ' ' + className : '')}
@@ -1854,7 +1864,7 @@ const VideoPlayerBase = class extends React.Component {
 							playbackState={this.pulsedPlaybackState || this.prevCommand}
 							visible={this.state.miniFeedbackVisible && !noMiniFeedback}
 						>
-							{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
+							{secondsToTime(this.state.sliderTooltipTime, durFmt)}
 						</FeedbackContent>
 						<ControlsContainer
 							className={css.bottom + (this.state.mediaControlsVisible ? '' : ' ' + css.hidden)}
@@ -1870,13 +1880,13 @@ const VideoPlayerBase = class extends React.Component {
 									<MediaTitle
 										id={this.id}
 										infoVisible={this.state.infoVisible}
-										style={{'--infoComponentsOffset': this.state.titleOffsetHeight + 'px'}}
+										ref={this.setTitleRef}
 										title={title}
 										visible={this.state.titleVisible && this.state.mediaControlsVisible}
 									>
 										{infoComponents}
 									</MediaTitle>
-									<Times current={this.state.currentTime} total={this.state.duration} formatter={this.durfmt} />
+									<Times current={this.state.currentTime} total={this.state.duration} formatter={durFmt} />
 								</div> :
 								null
 							}
@@ -1899,7 +1909,7 @@ const VideoPlayerBase = class extends React.Component {
 								<FeedbackTooltip
 									action={this.state.feedbackAction}
 									duration={this.state.duration}
-									formatter={this.durfmt}
+									formatter={durFmt}
 									hidden={!this.state.feedbackVisible || this.state.sourceUnavailable}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
 									playbackState={this.prevCommand}
@@ -2012,12 +2022,15 @@ const VideoPlayer = ApiDecorator(
 		'showFeedback',
 		'toggleControls'
 	]},
-	Slottable(
-		{slots: ['infoComponents', 'mediaControlsComponent', 'source', 'thumbnailComponent', 'videoComponent']},
-		FloatingLayerDecorator(
-			{floatLayerId: 'videoPlayerFloatingLayer'},
-			Skinnable(
-				VideoPlayerBase
+	I18nContextDecorator(
+		{localeProp: 'locale'},
+		Slottable(
+			{slots: ['infoComponents', 'mediaControlsComponent', 'source', 'thumbnailComponent', 'videoComponent']},
+			FloatingLayerDecorator(
+				{floatLayerId: 'videoPlayerFloatingLayer'},
+				Skinnable(
+					VideoPlayerBase
+				)
 			)
 		)
 	)

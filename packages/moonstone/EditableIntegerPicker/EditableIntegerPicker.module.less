@@ -1,0 +1,38 @@
+// EditableIntegerPicker.module.less
+//
+@import '../styles/mixins.less';
+@import '../styles/skin.less';
+@import '../styles/variables.less';
+
+.editableIntegerPicker {
+	vertical-align: middle;
+	padding: @moon-editable-integer-picker-border-size;
+
+	&.editMode {
+		box-shadow: inset 0 0 0 @moon-editable-integer-picker-border-size;  // box-shadow color inherits from `color` if one is provided
+	}
+
+	.input {
+		width: 100%;
+		text-align: center;
+		border-style: none;
+		border-width: 0;
+		font-family: inherit;
+		font-size: inherit;
+		box-sizing: border-box;
+	}
+
+	// Skin colors
+	.applySkins({
+		&.editMode {
+			background-color: @moon-editable-integer-picker-input-bg-color;
+			color: @moon-editable-integer-picker-input-text-color;
+		}
+
+		.input {
+			background-color: transparent;
+			color: inherit;
+		}
+
+	});
+}

@@ -7,8 +7,9 @@ import PropTypes from 'prop-types';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 import {Panels, Panel, Header} from '@enact/moonstone/Panels';
 import {boolean, select} from '../enact-knobs';
+import {selectV2} from '@storybook/addon-knobs';
 
-import css from './MoonstoneEnvironment.less';
+import css from './MoonstoneEnvironment.module.less';
 
 const globalGroup = 'Global Knobs';
 
@@ -56,7 +57,7 @@ const MoonstoneFullscreen = MoonstoneDecorator({overlay: false}, FullscreenBase)
 // NOTE: Locales taken from strawman. Might need to add more in the future.
 const locales = {
 	'local':                                                '',
-	'en-US - US English':                                   'en-US',
+	'en-US - US English (Default)':                         'en-US',
 	'ko-KR - Korean':                                       'ko-KR',
 	'es-ES - Spanish, with alternate weekends':             'es-ES',
 	'am-ET - Amharic, 6 meridiems':                         'am-ET',
@@ -106,7 +107,7 @@ const getPropFromURL = (propName, fallbackValue) => {
 	propName = encodeURI(propName);
 	const locationParams = window.parent.location.search;
 
-	const startIndex = locationParams.indexOf('knob-' + propName);
+	const startIndex = locationParams.indexOf('knob-' + propName + '=');
 	if (startIndex > -1) {
 		const keyIndex = locationParams.indexOf('=', startIndex);
 
@@ -156,7 +157,7 @@ const StorybookDecorator = (story, config) => {
 			className={classnames(classes)}
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
-			locale={select('locale', locales, Config, getPropFromURL('locale'))}
+			locale={selectV2('locale', locales, 'en-US', globalGroup)}
 			textSize={boolean('large text', Config, (getPropFromURL('large text') === 'true')) ? 'large' : 'normal'}
 			highContrast={boolean('high contrast', Config, (getPropFromURL('high contrast') === 'true'))}
 			style={backgroundLabelMap[select('background', backgroundLabels, Config, getPropFromURL('background'))]}
@@ -173,7 +174,7 @@ const FullscreenStorybookDecorator = (story, config) => {
 		<MoonstoneFullscreen
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
-			locale={select('locale', locales, getPropFromURL('locale', 'en-US'))}
+			locale={selectV2('locale', locales, 'en-US', globalGroup)}
 			textSize={boolean('large text', (getPropFromURL('large text') === 'true')) ? 'large' : 'normal'}
 			highContrast={boolean('high contrast', (getPropFromURL('high contrast') === 'true'))}
 			style={backgroundLabelMap[select('background', backgroundLabels, getPropFromURL('background'))]}

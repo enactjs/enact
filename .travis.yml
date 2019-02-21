@@ -8,11 +8,13 @@ cache:
 install:
     - npm config set prefer-offline true
     - npm install -g enactjs/cli#develop
+    - npm install -g codecov
     - npm install
     - npm run bootstrap
 script:
     - echo -e "\x1b\x5b35;1m*** Starting tests...\x1b\x5b0m"
-    - npm run lerna -- run test
+    - npm test -- -- -- --runInBand --coverage
+    - codecov
     - echo -e "\x1b\x5b35;1m*** Tests complete\x1b\x5b0m"
     - echo -e "\x1b\x5b35;1m*** Starting eslint...\x1b\x5b0m"
     - npm run lerna -- run lint -- -- -- --max-warnings 0 .

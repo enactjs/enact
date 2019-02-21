@@ -5,6 +5,7 @@ import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from 
 import {Job} from '@enact/core/util';
 import platform from '@enact/core/platform';
 import {forward} from '@enact/core/handle';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
@@ -16,8 +17,8 @@ import $L from '../internal/$L';
 import Scrollbar from './Scrollbar';
 import Skinnable from '../Skinnable';
 
-import overscrollCss from './OverscrollEffect.less';
-import scrollbarCss from './Scrollbar.less';
+import overscrollCss from './OverscrollEffect.module.less';
+import scrollbarCss from './Scrollbar.module.less';
 
 const
 	{
@@ -27,11 +28,11 @@ const
 		overscrollTypeDone,
 		overscrollTypeNone,
 		overscrollTypeOnce,
-		paginationPageMultiplier,
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants,
 	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
 	overscrollTimeout = 300,
+	paginationPageMultiplier = 0.8,
 	reverseDirections = {
 		down: 'up',
 		up: 'down'
@@ -75,6 +76,15 @@ class ScrollableBaseNative extends Component {
 		 * @private
 		 */
 		childRenderer: PropTypes.func.isRequired,
+
+		/**
+		 * Animate while scrolling
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		animate: PropTypes.bool,
 
 		/**
 		 * This is set to `true` by SpotlightContainerDecorator
@@ -186,6 +196,7 @@ class ScrollableBaseNative extends Component {
 
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
+		animate: false,
 		focusableScrollbar: false,
 		overscrollEffectOn: {
 			arrowKey: false,
@@ -208,12 +219,10 @@ class ScrollableBaseNative extends Component {
 		configureSpotlightContainer(props);
 	}
 
-	componentWillReceiveProps (nextProps) {
-		if (
-			this.props['data-spotlight-id'] !== nextProps['data-spotlight-id'] ||
-			this.props.focusableScrollbar !== nextProps.focusableScrollbar
-		) {
-			configureSpotlightContainer(nextProps);
+	componentDidUpdate (prevProps) {
+		if (prevProps['data-spotlight-id'] !== this.props['data-spotlight-id'] ||
+				prevProps.focusableScrollbar !== this.props.focusableScrollbar) {
+			configureSpotlightContainer(this.props);
 		}
 	}
 
@@ -520,7 +529,7 @@ class ScrollableBaseNative extends Component {
 
 	onKeyDown = (ev) => {
 		const
-			{overscrollEffectOn} = this.props,
+			{animate, overscrollEffectOn} = this.props,
 			{keyCode, repeat} = ev;
 		let
 			overscrollEffectRequired = false,
@@ -528,11 +537,11 @@ class ScrollableBaseNative extends Component {
 
 		forward('onKeyDown', ev, this.props);
 
-		this.animateOnFocus = true;
+		this.animateOnFocus = animate;
 
 		if (isPageUp(keyCode) || isPageDown(keyCode)) {
 			ev.preventDefault();
-			if (!repeat && this.hasFocus() && this.props.direction === 'vertical' || this.props.direction === 'both') {
+			if (!repeat && this.hasFocus() && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
 				Spotlight.setPointerMode(false);
 				direction = isPageUp(keyCode) ? 'up' : 'down';
 				overscrollEffectRequired = this.scrollByPage(direction) && overscrollEffectOn.pageKey;
@@ -809,6 +818,7 @@ class ScrollableBaseNative extends Component {
 	render () {
 		const
 			{
+				animate,
 				childRenderer,
 				'data-spotlight-container': spotlightContainer,
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
@@ -825,8 +835,6 @@ class ScrollableBaseNative extends Component {
 			rightButtonAriaLabel = scrollRightAriaLabel == null ? $L('scroll right') : scrollRightAriaLabel,
 			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
 
-		delete rest.focusableScrollbar;
-
 		return (
 			<UiScrollableBaseNative
 				noScrollByDrag
@@ -834,6 +842,7 @@ class ScrollableBaseNative extends Component {
 				addEventListeners={this.addEventListeners}
 				applyOverscrollEffect={this.applyOverscrollEffect}
 				clearOverscrollEffect={this.clearOverscrollEffect}
+				noAnimation={!animate}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
@@ -924,14 +933,19 @@ class ScrollableBaseNative extends Component {
  * @ui
  * @private
  */
-const ScrollableNative = Skinnable(SpotlightContainerDecorator(
-	{
-		overflow: true,
-		preserveId: true,
-		restrict: 'self-first'
-	},
-	ScrollableBaseNative
-));
+const ScrollableNative = Skinnable(
+	SpotlightContainerDecorator(
+		{
+			overflow: true,
+			preserveId: true,
+			restrict: 'self-first'
+		},
+		I18nContextDecorator(
+			{rtlProp: 'rtl'},
+			ScrollableBaseNative
+		)
+	)
+);
 
 export default ScrollableNative;
 export {
