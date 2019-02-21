@@ -251,7 +251,7 @@ describe('ViewManager', () => {
 		expect(actual).toBeFalsy();
 	});
 
-	test('should updated the view when children are reordered', () => {
+	test('should update the view when children are reordered', () => {
 		const subject = mount(
 			<ViewManager index={1}>
 				<div key="view1">View 1</div>
@@ -269,7 +269,7 @@ describe('ViewManager', () => {
 		expect(subject.find('View div').prop('children')).toBe('View 1');
 	});
 
-	test('should updated the view when children are replaced', () => {
+	test('should update the view when children are replaced', () => {
 		const subject = mount(
 			<ViewManager index={0}>
 				<div key="view1">View 1</div>
@@ -285,7 +285,7 @@ describe('ViewManager', () => {
 		expect(subject.find('View div').prop('children')).toBe('View 2');
 	});
 
-	test('should keep update the number of views when {start} updates', () => {
+	test('should update the number of views when {start} updates', () => {
 		const subject = mount(
 			<ViewManager index={3} start={2} end={3}>
 				<div key="view1">View 1</div>
