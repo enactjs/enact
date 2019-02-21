@@ -213,15 +213,18 @@ class ViewManager extends React.Component {
 	}
 
 	render () {
-		const {arranger, childProps, children, duration, end, index, noAnimation, start, enteringDelay, enteringProp, ...rest} = this.props;
+		const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, ...rest} = this.props;
+		let {end = index, start = index} = this.props;
 		const {prevIndex: previousIndex, reverseTransition} = this.state;
 		const childrenList = React.Children.toArray(children);
 
-		const from = (start || start === 0) ? start : index;
-		const to = (end || end === 0) && end >= index ? end : index;
-		const size = to - from + ((noAnimation || !arranger) ? 0 : 1);
+		if (index > end) end = index;
+		if (index < start) start = index;
 
-		const views = childrenList.slice(from, to + 1);
+		const childCount = end - start + 1;
+		const size = (noAnimation || !arranger) ? childCount : childCount + 1;
+
+		const views = childrenList.slice(start, start + childCount);
 		const childFactory = wrapWithView({
 			arranger,
 			duration,
@@ -234,10 +237,12 @@ class ViewManager extends React.Component {
 			childProps
 		});
 
+		delete rest.end;
 		delete rest.reverseTransition;
+		delete rest.start;
 
 		return (
-			<TransitionGroup {...rest} childFactory={childFactory} size={size + 1} currentIndex={index}>
+			<TransitionGroup {...rest} childFactory={childFactory} size={size} currentIndex={index}>
 				{views}
 			</TransitionGroup>
 		);
