@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `ui/Changeable` and `ui/Toggleable` to warn when both `[defaultProp]` and `[prop]` are provided
+
 ## [2.3.0] - 2019-02-11
 
 ### Added

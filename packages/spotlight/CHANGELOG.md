@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight/Spottable` to prevent unnecessary updates due to focus changes
+
 ## [2.3.0] - 2019-02-11
 
 ### Added
