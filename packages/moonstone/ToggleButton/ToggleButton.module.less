@@ -36,11 +36,10 @@
 	&.small {
 		.padding-start-end(@moon-button-small-h-padding, @moon-toggle-button-small-text-switch-gutter + @moon-button-small-h-padding + @moon-toggle-button-switch-width + @moon-toggle-button-switch-border-width);
 
-		&::before {
+		&::before, &::after {
 			.position-start-end(auto, @moon-button-small-h-padding);
 
 			top: 50%;
-			transform: translateY(-50%);
 		}
 	}
 
