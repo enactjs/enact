@@ -233,10 +233,11 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
+				activator: null,
 				arrowPosition: {top: 0, left: 0},
-				containerPosition: {top: 0, left: 0},
 				containerId: Spotlight.add(this.props.popupSpotlightId),
-				activator: null
+				containerPosition: {top: 0, left: 0},
+				renderedContent: false
 			};
 
 			this.overflow = {};
@@ -282,7 +283,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.positionContextualPopup();
 			}
 
-			if (this.props.open && this.state.activator && !prevState.activator) {
+			if (this.props.open && this.state.renderedContent && !prevState.renderedContent) {
 				on('keydown', this.handleKeyDown);
 				on('keyup', this.handleKeyUp);
 				this.spotPopupContent();
@@ -488,14 +489,16 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			const current = Spotlight.getCurrent();
 			this.updateLeaveFor(current);
 			this.setState({
-				activator: current
+				activator: current,
+				renderedContent: true
 			});
 		}
 
 		handleClose = () => {
 			this.updateLeaveFor(null);
 			this.setState({
-				activator: null
+				activator: null,
+				renderedContent: false
 			});
 		}
 
