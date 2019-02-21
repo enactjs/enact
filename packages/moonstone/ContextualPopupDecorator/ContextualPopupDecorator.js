@@ -283,7 +283,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.positionContextualPopup();
 			}
 
-			if (this.props.open && this.state.renderedContent && !prevState.renderedContent) {
+			if (this.state.renderedContent && !prevState.renderedContent) {
 				on('keydown', this.handleKeyDown);
 				on('keyup', this.handleKeyUp);
 				this.spotPopupContent();
