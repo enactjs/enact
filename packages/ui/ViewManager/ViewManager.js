@@ -221,7 +221,6 @@ class ViewManager extends React.Component {
 		if (index > end) end = index;
 		if (index < start) start = index;
 
-		// const currentIndex = index - start;
 		const childCount = end - start + 1;
 		const size = (noAnimation || !arranger) ? childCount : childCount + 1;
 
