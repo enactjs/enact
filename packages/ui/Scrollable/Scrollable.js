@@ -425,8 +425,6 @@ class ScrollableBase extends Component {
 			}
 		}
 
-		this.deferScrollTo = true;
-
 		this.clampScrollPosition();
 
 		this.addEventListeners();
@@ -1320,6 +1318,8 @@ class ScrollableBase extends Component {
 		delete rest.scrollTo;
 		delete rest.stop;
 		delete rest.verticalScrollbar;
+
+		this.deferScrollTo = true;
 
 		return (
 			<ResizeContext.Provider value={this.resizeRegistry.register}>
