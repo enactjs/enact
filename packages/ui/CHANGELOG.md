@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Changeable` and `ui/Toggleable` to warn when both `[defaultProp]` and `[prop]` are provided
 
+### Fixed
+
+- `ui/VirtualList` to scroll properly by `scrollTo` callback during the list is updated by prop changes
+
 ## [2.3.0] - 2019-02-11
 
 ### Added
