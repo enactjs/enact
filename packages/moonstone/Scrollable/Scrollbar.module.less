@@ -65,10 +65,15 @@
 	/* ScrollThumb */
 	.thumbShown {
 		opacity: 1;
-		.applySkins({
+	}
+}
+
+.applySkins({
+	.scrollbar{
+		.thumbShown {
 			&::before {
 				background-color: @moon-scroller-scrollthumb-bg-color;
 			}
-		});
+		}
 	}
-}
+});
