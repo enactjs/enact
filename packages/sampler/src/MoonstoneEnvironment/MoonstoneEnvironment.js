@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Column, Cell} from '@enact/ui/Layout';
 import BodyText from '@enact/moonstone/BodyText';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 import {Panels, Panel, Header} from '@enact/moonstone/Panels';
@@ -36,10 +37,12 @@ const PanelsBase = kind({
 		<Panels {...rest} onApplicationClose={reloadPage}>
 			<Panel className={css.panel}>
 				<Header type="compact" title={title} casing="preserve" />
-				{description ? (
-					<BodyText className={css.description}>{description}</BodyText>
-				) : null}
-				{children}
+				<Column>
+					{description ? (
+						<Cell shrink component={BodyText} className={css.description}>{description}</Cell>
+					) : null}
+					<Cell className={css.storyCell}>{children}</Cell>
+				</Column>
 			</Panel>
 		</Panels>
 	)

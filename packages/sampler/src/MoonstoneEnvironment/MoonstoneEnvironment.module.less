@@ -35,6 +35,12 @@
 		}
 	}
 
+	.storyCell > div:not([class]):not([style]):first-child {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
 	// Hack into the Info - Don't try this at home, kids
 	main > article > section > :nth-child(2) > :nth-child(3) {
 		.enact-selectable();
