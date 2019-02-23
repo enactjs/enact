@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/Repeater` prop `component` to allow customization of its base element
+
 ### Changed
 
 - `ui/Changeable` and `ui/Toggleable` to warn when both `[defaultProp]` and `[prop]` are provided
