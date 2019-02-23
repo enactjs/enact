@@ -18,7 +18,7 @@ import {validateRange} from '../internal/validators';
 
 import componentCss from './ProgressBar.module.less';
 
-const progressToPercent = (value) => (clamp(0, 1, value) * 100) + '%';
+const progressToPercent = (value) => (clamp(0, 1, value) * 100);
 const calcBarStyle = (prop, anchor, value = anchor, startProp, endProp) => {
 	let start = Math.min(anchor, value);
 	let end = Math.max(anchor, value) - start;
@@ -94,7 +94,7 @@ const ProgressBar = kind({
 		 * @default 'horizontal'
 		 * @public
 		 */
-		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+		orientation: PropTypes.string,
 
 		/**
 		 * The proportion of the filled portion of the progress bar.
