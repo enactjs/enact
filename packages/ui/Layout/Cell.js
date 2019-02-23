@@ -2,6 +2,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import ForwardRef from '../ForwardRef';
 import ri from '../resolution';
 
 import css from './Layout.module.less';
@@ -57,6 +58,14 @@ const CellBase = kind({
 		 * @public
 		 */
 		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+
+		/**
+		 * A ref instance provided by {@link ui/ForwardRef.ForwardRef}.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		forwardedRef: PropTypes.func,
 
 		/**
 		 * Sizes `Cell` to its contents.
@@ -129,18 +138,20 @@ const CellBase = kind({
 		}
 	},
 
-	render: ({component: Component, ...rest}) => {
+	render: ({component: Component, forwardedRef, ...rest}) => {
 		delete rest.align;
 		delete rest.shrink;
 		delete rest.size;
 
-		return <Component {...rest} />;
+		return <Component ref={forwardedRef} {...rest} />;
 	}
 });
 
-export default CellBase;
+const Cell = ForwardRef({prop: 'forwardedRef'}, CellBase);
+
+export default Cell;
 export {
-	CellBase as Cell,
+	Cell,
 	CellBase,
 	toFlexAlign
 };

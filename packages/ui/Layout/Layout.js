@@ -23,8 +23,11 @@
  */
 
 import kind from '@enact/core/kind';
+import compose from 'ramda/src/compose';
 import React from 'react';
 import PropTypes from 'prop-types';
+
+import ForwardRef from '../ForwardRef';
 
 import {Cell, CellBase, toFlexAlign} from './Cell';
 
@@ -102,6 +105,14 @@ const LayoutBase = kind({
 		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
+		 * A ref instance provided by {@link ui/ForwardRef.ForwardRef}.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		forwardedRef: PropTypes.func,
+
+		/**
 		 * Allows this `Layout` to have following siblings drawn on the same line as itself
 		 * instead of carving out the entire horizontal space for itself.
 		 *
@@ -175,15 +186,21 @@ const LayoutBase = kind({
 		}
 	},
 
-	render: ({component: Component, ...rest}) => {
+	render: ({component: Component, forwardedRef, ...rest}) => {
 		delete rest.align;
 		delete rest.inline;
 		delete rest.orientation;
 		delete rest.wrap;
 
-		return <Component {...rest} />;
+		return <Component {...rest} ref={forwardedRef} />;
 	}
 });
+
+const LayoutDecorator = compose(
+	ForwardRef({prop: 'forwardedRef'})
+);
+
+const Layout = LayoutDecorator(LayoutBase);
 
 /**
  * A {@link ui/Layout.Layout} that positions its [Cells]{@link ui/Layout.Cell} vertically.
@@ -193,12 +210,12 @@ const LayoutBase = kind({
  * @memberof ui/Layout
  * @public
  */
-const Column = (props) => (
+const Column = LayoutDecorator((props) => (
 	LayoutBase.inline({
 		...props,
 		orientation: 'vertical'
 	})
-);
+));
 
 /**
  * A {@link ui/Layout.Layout} that positions its [Cells]{@link ui/Layout.Cell} horizontally.
@@ -208,19 +225,20 @@ const Column = (props) => (
  * @memberof ui/Layout
  * @public
  */
-const Row = (props) => (
+const Row = LayoutDecorator((props) => (
 	LayoutBase.inline({
 		...props,
+
 		orientation: 'horizontal'
 	})
-);
+));
 
 export default LayoutBase;
 export {
 	Cell,
 	CellBase,
 	Column,
-	LayoutBase as Layout,
+	Layout,
 	LayoutBase,
 	Row
 };
