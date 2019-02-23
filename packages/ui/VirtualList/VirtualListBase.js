@@ -229,7 +229,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (props.clientSize) {
 				this.calculateMetrics(props);
-				nextState = this.getStatesAndUpdateBounds(this.props);
+				nextState = this.getStatesAndUpdateBounds(props);
 			}
 
 			this.state = {
@@ -272,8 +272,6 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
-
 			if (
 				prevProps.direction !== this.props.direction ||
 				prevProps.overhang !== this.props.overhang ||
@@ -284,9 +282,10 @@ const VirtualListBaseFactory = (type) => {
 				// eslint-disable-next-line react/no-did-update-set-state
 				this.setState(this.getStatesAndUpdateBounds(this.props));
 				this.setContainerSize();
-			} else if (this.hasDataSizeChanged) {
+			} else if (prevProps.dataSize !== this.props.dataSize) {
+				const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
 				// eslint-disable-next-line react/no-did-update-set-state
-				this.setState(this.getStatesAndUpdateBounds(this.props));
+				this.setState(newState);
 				this.setContainerSize();
 			} else if (prevProps.rtl !== this.props.rtl) {
 				const {x, y} = this.getXY(this.scrollPosition, 0);
@@ -323,7 +322,6 @@ const VirtualListBaseFactory = (type) => {
 		threshold = 0
 		maxFirstIndex = 0
 		curDataSize = 0
-		hasDataSizeChanged = false
 		cc = []
 		scrollPosition = 0
 
@@ -432,10 +430,9 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		getStatesAndUpdateBounds = (props) => {
+		getStatesAndUpdateBounds = (props, firstIndex = 0) => {
 			const
 				{dataSize, overhang, updateStatesAndBounds} = props,
-				firstIndex = this.hasDataSizeChanged ? this.state.firstIndex : 0,
 				{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 				numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 				wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
@@ -456,7 +453,7 @@ const VirtualListBaseFactory = (type) => {
 				dataSize,
 				moreInfo
 			}))) {
-				newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
+				newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff, firstIndex);
 			}
 
 			return {
@@ -465,10 +462,9 @@ const VirtualListBaseFactory = (type) => {
 			};
 		}
 
-		calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff) {
+		calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff, firstIndex) {
 			const
 				{overhang} = props,
-				{firstIndex} = this.state || {firstIndex: 0},
 				{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, scrollPosition, threshold} = this,
 				{gridSize} = primary;
 			let newFirstIndex = firstIndex;
@@ -748,7 +744,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
 				this.calculateMetrics(props);
-				this.setState(this.getStatesAndUpdateBounds(this.props));
+				this.setState(this.getStatesAndUpdateBounds(props));
 				this.setContainerSize();
 				return true;
 			}
