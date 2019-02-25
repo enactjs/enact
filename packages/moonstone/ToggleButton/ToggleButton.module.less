@@ -10,7 +10,6 @@
 	text-align: center;
 	position: relative;
 
-	&::before,
 	&::after {
 		.position-start-end(auto, @moon-button-h-padding);
 
@@ -18,26 +17,25 @@
 		content: "";
 		top: 50%;
 		border-radius: @moon-toggle-button-switch-border-radius;
-	}
-
-	&::before {
 		width: @moon-toggle-button-switch-width;
 		height: @moon-toggle-button-switch-width;
 		border-width: @moon-toggle-button-switch-border-width;
 		border-style: solid;
 		transform: translateY(-50%);
+		font-family: @moon-toggle-button-switch-icon-font-family;
+		font-size: @moon-toggle-button-switch-icon-font-size;
+		line-height: @moon-toggle-button-switch-icon-line-height;
 	}
 
-	&::after {
-		width: @moon-toggle-button-switch-width - 3px;
-		height: @moon-toggle-button-switch-width - 3px;
-		transform: translate(-36%, -50%);
+	&.selected {
+		&::after {
+			content: @moon-icon-circle;
+		}
 	}
 
 	&.small {
 		.padding-start-end(@moon-button-small-h-padding, @moon-toggle-button-small-text-switch-gutter + @moon-button-small-h-padding + @moon-toggle-button-switch-width + @moon-toggle-button-switch-border-width);
 
-		&::before,
 		&::after {
 			.position-start-end(auto, @moon-button-small-h-padding);
 
@@ -47,31 +45,24 @@
 
 	// Skin colors
 	.applySkins({
-		&::before {
+		&::after {
 			background-color: @moon-toggle-button-switch-off-bg-color;
 			border-color: @moon-toggle-button-switch-off-border-color;
-		}
-
-		&::after {
-			background-color: @moon-toggle-button-switch-dot-off-bg-color;
 		}
 
 		&.selected {
 			border-color: @moon-accent;
 
-			&::before {
+			&::after {
 				background-color: @moon-toggle-button-switch-on-bg-color;
 				border-color: @moon-toggle-button-switch-on-border-color;
-			}
-
-			&::after {
-				background-color: @moon-toggle-button-switch-dot-on-bg-color;
+				color:  @moon-toggle-button-switch-dot-on-color;
 			}
 		}
 
 		.disabled({
-			&::before {
-				background-color: @moon-toggle-button-switch-disabled-bg-color;
+			&::after {
+				color: @moon-toggle-button-switch-disabled-color;
 				border-color: @moon-toggle-button-switch-disabled-border-color;
 			}
 
@@ -85,19 +76,16 @@
 
 	.focus({
 		.applySkins({
-			&::before {
+			&::after {
 				background-color: @moon-toggle-button-switch-off-spotlight-bg-color;
 				border-color: @moon-toggle-button-switch-off-spotlight-border-color;
 			}
 
 			&.selected {
-				&::before {
+				&::after {
 					background-color: @moon-toggle-button-switch-on-spotlight-bg-color;
 					border-color: @moon-toggle-button-switch-on-spotlight-border-color;
-				}
-
-				&::after {
-					background-color: @moon-toggle-button-switch-dot-on-spotlight-bg-color;
+					color: @moon-toggle-button-switch-dot-on-spotlight-color;
 				}
 			}
 		});
