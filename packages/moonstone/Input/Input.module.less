@@ -144,12 +144,13 @@
 
 		&:global(.spottable):focus {
 			color: @moon-input-text-color;
-			border-color: @moon-spotlight-border-color;
+			border-color: @moon-input-border-focus-border-color;
 			background-color: @moon-input-decorator-bg-color;
 		}
 
 		&.focused {
-			border-color: @moon-active-border-color;
+			border-color: @moon-input-border-active-border-color;
+			box-shadow: 0px 0px 0px @moon-input-border-outline-width @moon-input-border-active-outline-color;
 		}
 
 		.decoratorIcon,
