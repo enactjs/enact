@@ -140,6 +140,7 @@ const Spinner = kind({
 
 	render: ({blockClickOn, component: Component, scrimClassName, scrimType, spinnerContainerClassName, ...rest}) =>  {
 		delete rest.centered;
+		delete rest.paused;
 		delete rest.scrim;
 
 		switch (blockClickOn) {
