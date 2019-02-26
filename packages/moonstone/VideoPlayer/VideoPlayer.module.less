@@ -424,9 +424,7 @@
 
 		.overlay {
 			&.high-contrast-scrim::after {
-				:global(.enact-a11y-high-contrast) & {
-					background: @moon-video-player-high-contrast-scrim;
-				}
+				background: linear-gradient(fade(@moon-video-player-high-contrast-scrim-gradient-color, 0%) 0%, fade(@moon-video-player-high-contrast-scrim-gradient-color, 60%) 100%);
 			}
 		}
 	});

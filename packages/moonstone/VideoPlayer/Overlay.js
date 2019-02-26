@@ -43,9 +43,7 @@ const OverlayBase = kind({
 
 const Overlay = onlyUpdateForKeys(['bottomControlsVisible', 'children'])(
 	Touchable(
-		Skinnable(
-			OverlayBase
-		)
+		OverlayBase
 	)
 );
 
