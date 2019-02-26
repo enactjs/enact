@@ -4,8 +4,6 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Skinnable from '../Skinnable';
-
 import css from './VideoPlayer.module.less';
 
 /**
