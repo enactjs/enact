@@ -67,7 +67,7 @@
 // ContextualPopup
 // ---------------------------------------
 @moon-contextual-popup-bg-color: @moon-bg-color;
-@moon-contextual-popup-border-color: rgba(0, 0, 0, 0.5);
+@moon-contextual-popup-border-color: fade(@moon-black, 50%);
 
 // Checkbox
 // ---------------------------------------
@@ -120,7 +120,7 @@
 // Input
 // ---------------------------------------
 @moon-input-text-color:               @moon-dark-gray;
-@moon-input-border-color:             rgb(234, 234, 234);
+@moon-input-border-color:             #eaeaea;
 @moon-input-textarea-color:           @moon-dark-gray;
 @moon-input-text-color:               @moon-dark-gray;
 @moon-input-placeholder-color:        #868686;
@@ -184,7 +184,7 @@
 // ---------------------------------------
 @moon-spinner-bg-color: @moon-button-bg-color;
 @moon-spinner-text-color: @moon-white;
-@moon-spinner-text-shadow-color: rgba(0, 0, 0, 0.3);
+@moon-spinner-text-shadow-color: fade(@moon-black, 0.30%);
 @moon-spinner-ball1-color: #69cdff;
 @moon-spinner-ball2-color: #ff4a4a;
 @moon-spinner-ball3-color: #ffb80d;
@@ -225,3 +225,4 @@
 @moon-video-player-subdued-text-color: #ccc;
 @moon-video-player-title-color: @moon-white;
 @moon-video-player-title-text-shadow: @moon-overlay-text-shadow;
+@moon-video-player-high-contrast-scrim: linear-gradient(fade(@moon-light-gray, 0%) 0%, fade(@moon-light-gray, 60%) 100%);
