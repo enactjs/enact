@@ -75,7 +75,7 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 
 			return (
 				<ResizeContext.Provider value={this.resizeRegistry.register}>
-					<Wrapped className={combinedClassName} skinVariants={variants} {...props} />;
+					<Wrapped className={combinedClassName} skinVariants={variants} {...props} />
 				</ResizeContext.Provider>
 			);
 		}
