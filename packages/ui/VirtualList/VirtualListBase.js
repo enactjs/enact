@@ -272,6 +272,9 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentDidUpdate (prevProps) {
+			// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
+			this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
+
 			if (
 				prevProps.direction !== this.props.direction ||
 				prevProps.overhang !== this.props.overhang ||
@@ -282,7 +285,7 @@ const VirtualListBaseFactory = (type) => {
 				// eslint-disable-next-line react/no-did-update-set-state
 				this.setState(this.getStatesAndUpdateBounds(this.props));
 				this.setContainerSize();
-			} else if (prevProps.dataSize !== this.props.dataSize) {
+			} else if (this.hasDataSizeChanged) {
 				const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
 				// eslint-disable-next-line react/no-did-update-set-state
 				this.setState(newState);
@@ -322,6 +325,7 @@ const VirtualListBaseFactory = (type) => {
 		threshold = 0
 		maxFirstIndex = 0
 		curDataSize = 0
+		hasDataSizeChanged = false
 		cc = []
 		scrollPosition = 0
 
