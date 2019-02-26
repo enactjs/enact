@@ -65,9 +65,19 @@
 			border-color: @moon-gridlist-item-spotlight-border-color;
 			background-color: @moon-gridlist-item-spotlight-bg-color;
 
+			.icon {
+				color: @moon-gridlist-item-spotlight-icon-color;
+			}
+
 			.caption,
 			.subCaption {
 				color: @moon-gridlist-item-spotlight-color;
+			}
+
+			&.selected {
+				.icon {
+					color: @moon-gridlist-item-spotlight-selected-icon-color;
+				}
 			}
 		});
 	});
