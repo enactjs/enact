@@ -1,0 +1,21 @@
+// DaySelectorItem.module.less
+//
+
+@import '../styles/mixins.less';
+@import '../styles/skin.less';
+
+.daySelectorItem {
+	// Skin colors
+	.applySkins({
+		.focus({
+			&:not([disabled]) {
+				background-color: @moon-spotlight-color;
+				color: @moon-spotlight-text-color;
+			}
+		});
+		&.selected {
+			background-color: @moon-day-selector-selected-bg-color;
+			color: @moon-spotlight-text-color;
+		}
+	})
+}

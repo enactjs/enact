@@ -9,7 +9,7 @@
  * />
  *
  * @module moonstone/GridListImageItem
- * @exports GridListIamgeItem
+ * @exports GridListImageItem
  * @exports GridListImageItemBase
  * @exports GridListImageItemDecorator
  */
@@ -26,7 +26,7 @@ import {ImageBase as Image} from '../Image';
 import {Marquee, MarqueeController} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import componentCss from './GridListImageItem.less';
+import componentCss from './GridListImageItem.module.less';
 
 const
 	defaultPlaceholder =
@@ -67,6 +67,16 @@ const GridListImageItemBase = kind({
 		 * @public
 		 */
 		css: PropTypes.object,
+
+		/**
+		 * The voice control intent.
+		 *
+		 * @type {String}
+		 * @default 'Select'
+		 * @memberof moonstone/GridListImageItem.GridListImageItemBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-intent': PropTypes.string,
 
 		/**
 		 * Placeholder image used while [source]{@link ui/GridListImageItem.GridListImageItem#source}
@@ -112,6 +122,7 @@ const GridListImageItemBase = kind({
 	},
 
 	defaultProps: {
+		'data-webos-voice-intent': 'Select',
 		placeholder: defaultPlaceholder,
 		selected: false
 	},
@@ -171,7 +182,7 @@ const GridListImageItemDecorator = compose(
  *
  * @class GridListImageItem
  * @memberof moonstone/GridListImageItem
- * @extends moonstone/GridListIamgeItem.GridListImageItemBase
+ * @extends moonstone/GridListImageItem.GridListImageItemBase
  * @mixes moonstone/GridListImageItem.GridListImageItemDecorator
  * @see moonstone/GridListImageItem.GridListImageItemBase
  * @ui

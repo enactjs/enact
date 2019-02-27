@@ -26,8 +26,9 @@ import PropTypes from 'prop-types';
 import CheckboxItem from '../CheckboxItem';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import RadioItem from '../RadioItem';
+import Skinnable from '../Skinnable';
 
-import css from './ExpandableList.less';
+import css from './ExpandableList.module.less';
 
 const compareChildren = (a, b) => {
 	if (!a || !b || a.length !== b.length) return false;
@@ -113,6 +114,14 @@ const ExpandableListBase = kind({
 		 * @public
 		 */
 		closeOnSelect: PropTypes.bool,
+
+		/**
+		 * Disables voice control.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
 
 		/**
 		 * Disables ExpandableList and the control becomes non-interactive.
@@ -285,6 +294,7 @@ const ExpandableListBase = kind({
 		},
 
 		itemProps: ({
+			'data-webos-voice-disabled': voiceDisabled,
 			onSpotlightDisappear,
 			onSpotlightLeft,
 			onSpotlightRight,
@@ -294,7 +304,8 @@ const ExpandableListBase = kind({
 			onSpotlightDisappear,
 			onSpotlightLeft,
 			onSpotlightRight,
-			spotlightDisabled
+			spotlightDisabled,
+			'data-webos-voice-disabled': voiceDisabled
 		}),
 
 		// generate a label that concatenates the text of the selected items
@@ -405,7 +416,9 @@ const ExpandableList = Pure(
 					return selectedNode;
 				}
 			},
-			ExpandableListBase
+			Skinnable(
+				ExpandableListBase
+			)
 		)
 	)
 );

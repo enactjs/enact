@@ -5,11 +5,19 @@
  * @exports Resizable
  */
 
-import {forward, handle} from '@enact/core/handle';
+import {call, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import invariant from 'invariant';
 import React from 'react';
-import PropTypes from 'prop-types';
+
+/**
+ * Used internally for things to notify children that they need to resize because of a parent
+ * update.
+ *
+ * @type Object
+ * @private
+ */
+const ResizeContext = React.createContext();
 
 /**
  * Default config for `Resizable`.
@@ -33,23 +41,11 @@ const defaultConfig = {
 	 * This function will receive the event payload as its only argument and should return `true` to
 	 * prevent the resize notification.
 	 *
-	 * @type {Function}
+	 * @type {String}
 	 * @default null
 	 * @memberof ui/Resizable.Resizable.defaultConfig
 	 */
 	resize: null
-};
-
-/**
- * The context propTypes required by `Resizable`. This should be set as the `childContextTypes` of a
- * container that needs to be notified of a resize.
- *
- * @type {Object}
- * @memberof ui/Resizable
- * @private
- */
-const contextTypes = {
-	invalidateBounds: PropTypes.func
 };
 
 /**
@@ -74,7 +70,21 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'Resizable'
 
-		static contextTypes = contextTypes
+		static contextType = ResizeContext
+
+		componentDidMount () {
+			if (this.context && typeof this.context === 'function') {
+				// Registry requires a callback but (for now at least) Resizable doesn't respond to
+				// upstream events so we're initializing a no-op function to "handle" callbacks
+				this.resizeRegistry = this.context(() => {});
+			}
+		}
+
+		componentWillUnmount () {
+			if (this.resizeRegistry) {
+				this.resizeRegistry.unregister();
+			}
+		}
 
 		/*
 		 * Notifies a container that a resize is necessary
@@ -82,9 +92,11 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 * @private
 		 */
-		invalidateBounds = () => this.context.invalidateBounds()
-
-		handle = handle.bind(this)
+		invalidateBounds () {
+			if (this.resizeRegistry) {
+				this.resizeRegistry.notify({action: 'invalidateBounds'});
+			}
+		}
 
 		/*
 		 * Handles the event that indicates a resize is necessary
@@ -94,14 +106,12 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 * @private
 		 */
-		handleResize = this.handle(
+		handleResize = handle(
 			forward(resize),
-			// stop if there isn't a container to notify
-			(ev, props, {invalidateBounds}) => !!invalidateBounds,
 			// optionally filter the event before notifying the container
 			filter,
-			this.invalidateBounds
-		)
+			call('invalidateBounds')
+		).bind(this)
 
 		render () {
 			const props = Object.assign({}, this.props);
@@ -114,6 +124,6 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 
 export default Resizable;
 export {
-	contextTypes as privateContextTypes,
-	Resizable
+	Resizable,
+	ResizeContext
 };

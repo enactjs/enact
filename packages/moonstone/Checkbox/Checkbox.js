@@ -16,12 +16,12 @@ import React from 'react';
 import ToggleIcon from '../ToggleIcon';
 import Icon from '@enact/ui/Icon';
 
-import css from './Checkbox.less';
+import css from './Checkbox.module.less';
 
 /**
  * A checkbox component, ready to use in Moonstone applications.
  *
- * `Checkbox` may be used independently to represent a togglable state but is more commonly used as
+ * `Checkbox` may be used independently to represent a toggleable state but is more commonly used as
  * part of [CheckboxItem]{@link moonstone/CheckboxItem}.
  *
  * Usage:

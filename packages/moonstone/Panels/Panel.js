@@ -6,7 +6,7 @@ import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator, {spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 
-import css from './Panel.less';
+import css from './Panel.module.less';
 
 let panelId = 0;
 

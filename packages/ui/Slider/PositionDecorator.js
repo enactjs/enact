@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 
 import {calcProportion} from './utils';
 
-import css from './Slider.less';
+import css from './Slider.module.less';
 
-const PositionDecorator = hoc((config, Wrapped) => {
+const PositionDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
 		static displayName = 'PositionDecorator'
 

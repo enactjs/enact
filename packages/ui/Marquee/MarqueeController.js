@@ -2,7 +2,6 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import React from 'react';
-import PropTypes from 'prop-types';
 
 const STATE = {
 	inactive: 0,	// Marquee is not necessary (render or focus not happened)
@@ -10,76 +9,10 @@ const STATE = {
 	ready: 2		// Marquee completed or not needed, but state is active
 };
 
-/**
- * Context propTypes for MarqueeController
- *
- * @memberof ui/Marquee.MarqueeController
- * @private
- */
-const contextTypes = {
-	/**
-	 * Called by `Marquee` instances when marqueeing is canceled (e.g. when blurring a `Marquee`
-	 * set to `marqueeOn='focus'`)
-	 *
-	 * @type {Function}
-	 * @memberof ui/Marquee.MarqueeController.contextTypes
-	 */
-	cancel: PropTypes.func,
-
-	/**
-	 * Called by `Marquee` instances when marqueeing has completed
-	 *
-	 * @type {Function}
-	 * @memberof ui/Marquee.MarqueeController.contextTypes
-	 */
-	complete: PropTypes.func,
-
-	/**
-	 * Called by `Marquee` instances when hovered
-	 *
-	 * @type {Function}
-	 * @memberof ui/Marquee.MarqueeController.contextTypes
-	 */
-	enter: PropTypes.func,
-
-	/**
-	 * Called by `Marquee` instances when unhovered
-	 *
-	 * @type {Function}
-	 * @memberof ui/Marquee.MarqueeController.contextTypes
-	 */
-	leave: PropTypes.func,
-
-	/**
-	 * Called to register a `Marquee` instance to be synchronized
-	 *
-	 * @type {Function}
-	 * @memberof ui/Marquee.MarqueeController.contextTypes
-	 */
-	register: PropTypes.func,
-
-	/**
-	 * Called by `Marquee` instances when marqueeing is started (e.g. when focusing a `Marquee`
-	 * set to `marqueeOn='focus'`). If the Marquee instance should not or does not need to marquee,
-	 * the function can return `true` to mark itself complete.
-	 *
-	 * @type {Function}
-	 * @memberof ui/Marquee.MarqueeController.contextTypes
-	 */
-	start: PropTypes.func,
-
-	/**
-	 * Called to unregister a synchronized `Marquee` instance
-	 *
-	 * @type {Function}
-	 * @memberof ui/Marquee.MarqueeController.contextTypes
-	 */
-	unregister: PropTypes.func
-};
-
+const MarqueeControllerContext = React.createContext(null);
 
 /**
- * Default configuration parameters for {@link ui/Marquee.MarqueeController}
+ * Default configuration parameters for {@link ui/Marquee.MarqueeController}.
  *
  * @type {Object}
  * @memberof ui/Marquee.MarqueeController
@@ -89,7 +22,7 @@ const defaultConfig = {
 	/**
 	 * When `true`, any `onFocus` events that bubble to the controller will start the contained
 	 * `Marquee` instances. This is useful when a component contains `Marquee` instances that need to be
-	 * started with sibling components are focused.
+	 * started when sibling components are focused.
 	 *
 	 * @type {Boolean}
 	 * @default false
@@ -113,17 +46,12 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'MarqueeController'
 
-		static childContextTypes = contextTypes;
-
 		constructor (props) {
 			super(props);
 
 			this.controlled = [];
 			this.isFocused = false;
-		}
-
-		getChildContext () {
-			return {
+			this.childContext = {
 				cancel: this.handleCancel,
 				complete: this.handleComplete,
 				enter: this.handleEnter,
@@ -367,7 +295,9 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			return (
-				<Wrapped {...props} />
+				<MarqueeControllerContext.Provider value={this.childContext}>
+					<Wrapped {...props} />
+				</MarqueeControllerContext.Provider>
 			);
 		}
 	};
@@ -376,6 +306,6 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 
 export default MarqueeController;
 export {
-	contextTypes,
-	MarqueeController
+	MarqueeController,
+	MarqueeControllerContext
 };

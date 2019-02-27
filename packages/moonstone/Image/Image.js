@@ -21,7 +21,7 @@ import React from 'react';
 
 import Skinnable from '../Skinnable';
 
-import componentCss from './Image.less';
+import componentCss from './Image.module.less';
 
 /**
  * A Moonstone-styled image component without any behavior
@@ -76,7 +76,7 @@ const ImageBase = kind({
 //
 // This is ripe for refactoring, and could probably move into UI to be generalized, but that's for
 // another time. -B 2018-05-01
-const ResponsiveImageDecorator = hoc((config, Wrapped) => {
+const ResponsiveImageDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
 		static displayName = 'ResponsiveImageDecorator'
 

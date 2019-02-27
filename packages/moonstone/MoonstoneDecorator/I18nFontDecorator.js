@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import {fontGenerator, fontOverrideGenerator} from './fontGenerator';
 
-const I18nFontDecorator = hoc((config, Wrapped) => {
+const I18nFontDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class I18nDecorator extends React.Component {
 		static displayName = 'I18nFontDecorator'
 
@@ -21,16 +21,14 @@ const I18nFontDecorator = hoc((config, Wrapped) => {
 			};
 		}
 
+		static getDerivedStateFromProps (props, state) {
+			const locale = props.locale || ilib.getLocale();
+			return locale !== state.locale ? {locale} : null;
+		}
+
 		componentDidMount () {
 			fontGenerator(this.state.locale);
 			fontOverrideGenerator(this.state.locale);
-		}
-
-		componentWillReceiveProps () {
-			this.setState((state, nextProps) => {
-				const locale = nextProps.locale || ilib.getLocale();
-				return locale !== state.locale ? {locale} : null;
-			});
 		}
 
 		componentDidUpdate (_, prevState) {

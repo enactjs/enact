@@ -4,7 +4,7 @@ import ResolutionDecorator from '../ResolutionDecorator';
 
 describe('ResolutionDecorator Specs', () => {
 
-	it('should apply resolution classes to the wrapped component', function () {
+	test('should apply resolution classes to the wrapped component', () => {
 		const Component = ResolutionDecorator('div');
 		const subject = mount(
 			<Component />
@@ -15,10 +15,10 @@ describe('ResolutionDecorator Specs', () => {
 		const expected = true;
 		const actual = (div.hasClass('enact-res-standard') && (div.hasClass('enact-orientation-landscape') || div.hasClass('enact-orientation-portrait')));
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should allow custom screen types', function () {
+	test('should allow custom screen types', () => {
 		const name = 'mhd';
 		const screens = [
 			{name: name, pxPerRem: 36, width: 1440, height: 920, aspectRatioName: 'hdtv', base: true}
@@ -31,15 +31,18 @@ describe('ResolutionDecorator Specs', () => {
 		const expected = true;
 		const actual = subject.find('div').hasClass('enact-res-mhd');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it.skip('should update the resolution when the screen is resized', function () {
+	test.skip('should update the resolution when the screen is resized', function () {
 		// TODO: write a test
 	});
 
-	it.skip('should not allow dynamic resolution updates when \'dynamic\' config option is false', function () {
-		// TODO: write a test
-	});
+	test.skip(
+		'should not allow dynamic resolution updates when \'dynamic\' config option is false',
+		function () {
+			// TODO: write a test
+		}
+	);
 
 });

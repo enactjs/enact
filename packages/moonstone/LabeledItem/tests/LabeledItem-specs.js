@@ -2,13 +2,13 @@ import React from 'react';
 import {mount, shallow} from 'enzyme';
 
 import LabeledItem from '../LabeledItem';
-import css from '../LabeledItem.less';
+import css from '../LabeledItem.module.less';
 
 describe('LabeledItem Specs', () => {
 
 	const labelClass = 'div.' + css.label;
 
-	it('should render a label (<div>) by default', function () {
+	test('should render a label (<div>) by default', () => {
 		const item = mount(
 			<LabeledItem label="The Label">I am a labeledItem</LabeledItem>
 		);
@@ -17,10 +17,10 @@ describe('LabeledItem Specs', () => {
 		const expected = 1;
 		const actual = divTag.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should not render a label if there is no \'label\' prop', function () {
+	test('should not render a label if there is no \'label\' prop', () => {
 		const item = mount(
 			<LabeledItem>I am a labeledItem</LabeledItem>
 		);
@@ -29,10 +29,10 @@ describe('LabeledItem Specs', () => {
 		const expected = 0;
 		const actual = divTag.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should create a LabeledItem that is enabled by default', function () {
+	test('should create a LabeledItem that is enabled by default', () => {
 		const item = mount(
 			<LabeledItem>I am a labeledItem</LabeledItem>
 		);
@@ -40,17 +40,20 @@ describe('LabeledItem Specs', () => {
 		const expected = 0;
 		const actual = item.find({disabled: true}).length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should have \'disabled\' HTML attribute when \'disabled=true\'', function () {
-		const item = shallow(
-			<LabeledItem disabled>I am a disabled labeledItem</LabeledItem>
-		);
+	test(
+		'should have \'disabled\' HTML attribute when \'disabled=true\'',
+		() => {
+			const item = shallow(
+				<LabeledItem disabled>I am a disabled labeledItem</LabeledItem>
+			);
 
-		const expected = 1;
-		const actual = item.find({disabled: true}).length;
+			const expected = 1;
+			const actual = item.find({disabled: true}).length;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 });

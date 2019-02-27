@@ -7,7 +7,7 @@ import Slider from '../Slider';
 import MediaKnob from './MediaKnob';
 import MediaSliderDecorator from './MediaSliderDecorator';
 
-import css from './VideoPlayer.less';
+import css from './VideoPlayer.module.less';
 
 /**
  * The base component to render a customized [Slider]{@link moonstone/Slider.Slider} for use in

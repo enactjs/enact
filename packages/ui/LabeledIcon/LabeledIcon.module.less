@@ -1,0 +1,45 @@
+// LabeledIcon.module.less
+//
+@import "../styles/mixins.less";
+
+.labeledIcon {
+	vertical-align: middle;
+
+	.disabled({
+		cursor: default;
+	});
+
+	&.inline {
+		display: inline-flex;
+	}
+
+	&.above,
+	&.below {
+		// ui/Layout defaults to height: 100% which must be suppressed here
+		height: auto;
+	}
+
+	&.above,
+	&.before,
+	&.left,
+	:global(.enact-locale-right-to-left) &.right {
+		.iconCell { order: 2; }
+		.label { order: 1; }
+	}
+	:global(.enact-locale-right-to-left) &.left {
+		.iconCell { order: 1; }
+		.label { order: 2; }
+	}
+
+	&.above,
+	&.after,
+	&.before,
+	&.below,
+	&.left,
+	&.right,
+	.icon,
+	.iconCell,
+	.label {
+		/* Public Class Names */
+	}
+}

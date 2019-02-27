@@ -25,7 +25,7 @@ import $L from '../internal/$L';
 import Marquee from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import componentCss from './Spinner.less';
+import componentCss from './Spinner.module.less';
 
 /**
  * A component that shows spinning balls, with optional text as children.
@@ -167,14 +167,11 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 			blockClickOn: PropTypes.oneOf(['screen', 'container', null])
 		}
 
-		constructor () {
-			super();
+		constructor (props) {
+			super(props);
 
 			this.paused = new Pause('Spinner');
-		}
-
-		componentWillMount () {
-			const {blockClickOn} = this.props;
+			const {blockClickOn} = props;
 			const current = Spotlight.getCurrent();
 
 			if (blockClickOn === 'screen') {
@@ -207,7 +204,6 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
  *
  * @hoc
  * @memberof moonstone/Spinner
- * @mixes moonstone/Spinner.SpinnerSpotlightDecorator
  * @mixes moonstone/Skinnable.Skinnable
  * @public
  */

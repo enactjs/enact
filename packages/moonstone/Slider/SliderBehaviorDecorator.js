@@ -49,6 +49,7 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = {
 			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+			disabled: PropTypes.bool,
 			max: PropTypes.number,
 			min: PropTypes.number,
 			orientation: PropTypes.string,
@@ -61,8 +62,8 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			orientation: 'horizontal'
 		}
 
-		constructor () {
-			super();
+		constructor (props) {
+			super(props);
 
 			this.paused = new Pause();
 			this.handleActivate = this.handleActivate.bind(this);
@@ -77,14 +78,19 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				active: false,
 				dragging: false,
 				focused: false,
-				useHintText: false
+				useHintText: false,
+				prevValue: props.value
 			};
 		}
 
-		componentWillReceiveProps (nextProps) {
-			if (this.props.value !== nextProps.value) {
-				this.setState({useHintText: false});
+		static getDerivedStateFromProps (props, state) {
+			if (props.value !== state.prevValue) {
+				return {
+					useHintText: false,
+					prevValue: props.value
+				};
 			}
+			return null;
 		}
 
 		componentWillUnmount () {
@@ -131,8 +137,10 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus (ev) {
-			forward('onFocus', ev, this.props);
-			this.setState({focused: true});
+			if (!this.props.disabled) {
+				forward('onFocus', ev, this.props);
+				this.setState({focused: true});
+			}
 		}
 
 		handleSpotlightEvents (ev) {

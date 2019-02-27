@@ -40,14 +40,20 @@ class StatefulSwitchItem extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
+			prevIndex: props.index,
 			selected: items[props.index].selected
 		};
 	}
 
-	componentWillReceiveProps (nextProps) {
-		if (this.props.index !== nextProps.index) {
-			this.setState({selected: items[nextProps.index].selected});
+	static getDerivedStateFromProps (props, state) {
+		if (state.prevIndex !== props.index) {
+			return {
+				prevIndex: props.index,
+				selected: items[props.index].selected
+			};
 		}
+
+		return null;
 	}
 
 	onToggle = () => {

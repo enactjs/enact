@@ -119,22 +119,6 @@ const Router = class extends React.Component {
 
 	constructor (props) {
 		super(props);
-		this.initRoutes(props);
-	}
-
-	componentWillReceiveProps (nextProps) {
-		this.initRoutes(nextProps);
-	}
-
-	/**
-	 * Selects either `props.routes` or generates routes from `props.children`
-	 *
-	 * @param {Object} props Component props
-	 *
-	 * @returns {undefined}
-	 */
-	initRoutes (props) {
-		this.routes = props.routes || this.createRoutes(props.children, {});
 	}
 
 	/**
@@ -169,10 +153,12 @@ const Router = class extends React.Component {
 	 */
 	createChildren () {
 		const segments = toSegments(this.props.path);
+		const {routes, children} = this.props;
+		const computedRoutes = routes || this.createRoutes(children, {});
 
 		let valid = true;
-		let route = this.routes;
-		const children = segments.map((segment, index) => {
+		let route = computedRoutes;
+		const childrenElements = segments.map((segment, index) => {
 			const subPath = segments.slice(0, index + 1).join('/');
 			route = route && route[segment];
 			if (route && route.$component) {
@@ -187,9 +173,9 @@ const Router = class extends React.Component {
 			return null;
 		});
 
-		warning(valid, `${this.props.path} does not match the configured routes: ${stringifyRoutes(this.routes)}`);
+		warning(valid, `${this.props.path} does not match the configured routes: ${stringifyRoutes(computedRoutes)}`);
 
-		return valid ? children : [];
+		return valid ? childrenElements : [];
 	}
 
 	render () {
@@ -225,6 +211,7 @@ const Router = class extends React.Component {
  * ```
  *
  * @class Route
+ * @ui
  * @memberof moonstone/Panels
  * @public
  */

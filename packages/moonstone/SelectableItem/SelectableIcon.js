@@ -1,6 +1,6 @@
 // Not actually an exported module
 /*
- * Provides Moonstone-themed circle component and interactive togglable capabilities.
+ * Provides Moonstone-themed circle component and interactive toggleable capabilities.
  *
  * @module moonstone/SelectableIcon
  * @exports SelectableIcon
@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 
 import ToggleIcon from '../ToggleIcon';
 
-import componentCss from './SelectableIcon.less';
+import componentCss from './SelectableIcon.module.less';
 
 /**
  * Renders a circle shaped component which supports a Boolean state.

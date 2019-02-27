@@ -38,6 +38,10 @@ class Flick {
 		}
 	}
 
+	blur = () => {
+		this.end();
+	}
+
 	cancel = () => {
 		this.tracking = false;
 	}

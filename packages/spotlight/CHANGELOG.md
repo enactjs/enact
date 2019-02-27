@@ -2,6 +2,83 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight/Spottable` to prevent unnecessary updates due to focus changes
+
+## [2.3.0] - 2019-02-11
+
+### Added
+
+- `spotlight/Spottable` property `selectionKeys`
+
+### Fixed
+
+- `spotlight` to improve prioritization of the contents of spotlight containers within overflow containers
+- `spotlight/Spottable` and `spotlight/SpotlightContainerDecorator` to prevent focus when `spotlightDisabled` is set
+- `spotlight/Spottable` to prevent emitting multiple click events when certain node types are selected via 5-way enter
+
+## [2.2.9] - 2019-01-11
+
+No significant changes.
+
+## [2.2.8] - 2018-12-06
+
+### Fixed
+
+- `spotlight` to focus correctly within an overflow container in which the first element is another container without spottable children
+
+## [2.2.7] - 2018-11-21
+
+No significant changes.
+
+## [2.2.6] - 2018-11-15
+
+No significant changes.
+
+## [2.2.5] - 2018-11-05
+
+No significant changes.
+
+## [2.2.4] - 2018-10-29
+
+No significant changes.
+
+## [2.2.3] - 2018-10-22
+
+### Fixed
+
+- `spotlight` selection of elements clipped by an overflow container
+
+## [2.2.2] - 2018-10-15
+
+No significant changes.
+
+## [2.2.1] - 2018-10-09
+
+### Fixed
+
+- `spotlight` navigation into an overflow container which contains elements or containers larger than the container's bounds
+
+## [2.2.0] - 2018-10-02
+
+### Changed
+
+- `spotlight` to not explicitly `blur()` the currently focused element when focusing another, allowing the platform to manage blurring before focus
+
+### Fixed
+
+- `spotlight` to correctly set focus when the window is activated
+- `spotlight` to correctly set focus when entering a restricted container
+
+## [2.1.4] - 2018-09-17
+
+### Fixed
+
+- `spotlight/Spottable` to respect paused state when it becomes enabled
+
 ## [2.1.3] - 2018-09-10
 
 No significant changes.

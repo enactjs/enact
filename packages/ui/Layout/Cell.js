@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import ri from '../resolution';
 
-import css from './Layout.less';
+import css from './Layout.module.less';
 
 const toFlexAlign = (align) => (
 	align === 'end' && 'flex-end' ||
@@ -17,6 +17,7 @@ const toFlexAlign = (align) => (
  * [Layout]{@link ui/Layout.Layout}.
  *
  * @class Cell
+ * @ui
  * @memberof ui/Layout
  * @public
  */
@@ -42,10 +43,10 @@ const CellBase = kind({
 		/**
 		 * Any valid [Node]{@link /docs/developer-guide/glossary/#node} that should be positioned in this `Cell`.
 		 *
-		 * @type {Node}
+		 * @type {Any}
 		 * @public
 		 */
-		children: PropTypes.node,
+		children: PropTypes.any,
 
 		/**
 		 * The type of component to use to render as the `Cell`. May be a DOM node name (e.g 'div',

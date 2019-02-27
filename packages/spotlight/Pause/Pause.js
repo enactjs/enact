@@ -1,6 +1,20 @@
 /**
- * Provides the {@link spotlight/Pause.Pause} class which allows consumers to pause spotlight and
- * then only resume spotlight if another caller had not also paused Spotlight.
+ * Provides a class which allows consumers to safely pause and resume spotlight without resuming
+ * another consumer's pause.
+ *
+ * When multiple components attempt to pause and resume spotlight at overlapping times using
+ * [Spotlight.pause()]{@link spotlight.Spotlight.pause} and
+ * [Spotlight.resume()]{@link spotlight.Spotlight.resume}, one component might resume spotlight when
+ * another expected it to still be paused.
+ *
+ * `Pause` helps to address this by setting a "soft lock" on the pause which informs other instances
+ * that the spotlight pause state is being controlled. When pause is locked, it can only be resumed
+ * by the instance that locked it. Subsequent calls to `pause` and `resume` on another instance of
+ * `Pause` have no effect.
+ *
+ * *Note:* The top-level [Spotlight.pause()]{@link spotlight.Spotlight.pause} and
+ * [Spotlight.resume()]{@link spotlight.Spotlight.resume} do not respect the pause locks and act as
+ * a user-space escape hatch.
  *
  * ```
  * import Pause from '@enact/spotlight/Pause';
@@ -11,15 +25,15 @@
  * // pauses spotlight
  * paused1.pause();
  *
- * // spotlight is still paused and controlling Pause is
- * // updated to paused2
+ * // has no effect because pause1 is in control
  * paused2.pause();
  *
- * // has no effect because paused2 is in control
- * paused1.resume();
+ * // has no effect because pause1 is in control
+ * paused2.resume();
  *
  * // resumes spotlight
- * paused2.resume();
+ * paused1.resume();
+ *
  * ```
  *
  * @module spotlight/Pause
@@ -61,7 +75,7 @@ class Pause {
 	 * Spotlight.
 	 *
 	 * @param {String} name The name of the pause instance
-	 * @memberof spotlight/Pause.Pause
+	 * @memberof spotlight/Pause.Pause.prototype
 	 * @constructor
 	 * @public
 	 */
@@ -77,7 +91,7 @@ class Pause {
 	 * Returns `true` when Spotlight is paused by this instance
 	 *
 	 * @returns {Boolean}
-	 * @memberof spotlight/Pause.Pause
+	 * @memberof spotlight/Pause.Pause.prototype
 	 * @public
 	 */
 	isPaused () {
@@ -88,7 +102,7 @@ class Pause {
 	 * Pauses spotlight if not currently paused
 	 *
 	 * @returns {undefined}
-	 * @memberof spotlight/Pause.Pause
+	 * @memberof spotlight/Pause.Pause.prototype
 	 * @public
 	 */
 	pause () {
@@ -101,7 +115,7 @@ class Pause {
 	 * Resumes spotlight if this instance was the last to pause spotlight
 	 *
 	 * @returns {Boolean} `true` if spotlight was resumed
-	 * @memberof spotlight/Pause.Pause
+	 * @memberof spotlight/Pause.Pause.prototype
 	 * @public
 	 */
 	resume () {

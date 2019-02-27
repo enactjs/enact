@@ -9,13 +9,61 @@ import React from 'react';
 
 import computed from './computed';
 import styles from './styles';
+import warning from 'warning';
+
+/**
+ * @callback RenderFunction
+ * @memberof core/kind
+ * @param {Object<string, any>} props
+ * @param {Object<string, any>} context
+ * @returns React.Element|null
+ */
+
+/**
+ * @callback ComputedPropFunction
+ * @memberof core/kind
+ * @param {Object<string, any>} props
+ * @param {Object<string, any>} context
+ * @returns any
+ */
+
+/**
+ * @callback HandlerFunction
+ * @memberof core/kind
+ * @param {any} event
+ * @param {Object<string, any>} props
+ * @param {Object<string, any>} context
+ */
+
+/**
+ * Configuration for CSS class name mapping
+ *
+ * @typedef {Object} StylesBlock
+ * @memberof core/kind
+ * @property {Object.<string, string>} css
+ * @property {String} [className]
+ * @property {Boolean|String|String[]} [publicClassNames]
+ */
+
+/**
+ * @typedef {Object} KindConfig
+ * @memberof core/kind
+ * @property {String} name
+ * @property {Object.<string, Function>} [propTypes]
+ * @property {Object.<string, any>} [defaultProps]
+ * @property {Object} [contextType]
+ * @property {StylesBlock} [styles]
+ * @property {Object.<string, HandlerFunction>} [handlers]
+ * @property {Object.<string, ComputedPropFunction>} [computed]
+ * @property {RenderFunction} render
+ */
 
 /**
  * Creates a new component with some helpful declarative syntactic sugar.
  *
  * Example:
  * ```
- *	import css from './Button.less';
+ *	import css from './Button.module.less';
  *	const Button = kind({
  *		// expect color and onClick properties but neither required
  *		propTypes: {
@@ -26,9 +74,7 @@ import styles from './styles';
  *			color: 'green'
  *		},
  *		// expect backgroundColor via context
- *		contextTypes: {
- *			backgroundColor: PropTypes.string
- *		},
+ *		contextType: React.createContext({ backgroundColor }),
  *		// configure styles with the static className to merge with user className
  *		styles: {
  *			// include the CSS modules map so 'button' can be resolved to the local name
@@ -55,15 +101,17 @@ import styles from './styles';
  * ```
  *
  * @function
- * @param  {Object}    config    Component configuration
+ * @template Props
+ * @param  {KindConfig}    config    Component configuration
  *
- * @returns {Function}           Component
+ * @returns {Component<Props>}           Component
  * @memberof core/kind
  * @public
  */
 const kind = (config) => {
 	const {
 		computed: cfgComputed,
+		contextType,
 		contextTypes,
 		defaultProps,
 		handlers,
@@ -72,6 +120,8 @@ const kind = (config) => {
 		render,
 		styles: cfgStyles
 	} = config;
+
+	warning(!contextTypes, `"contextTypes" used by ${name || 'a component'} but is deprecated. Please replace with "contextType" instead.`);
 
 	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
@@ -89,6 +139,8 @@ const kind = (config) => {
 		static propTypes = propTypes
 
 		static contextTypes = contextTypes
+
+		static contextType = contextType
 
 		static defaultProps = defaultProps
 

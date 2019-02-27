@@ -1,7 +1,8 @@
 import hoc from '@enact/core/hoc';
-import {contextTypes, Publisher} from '@enact/core/internal/PubSub';
-import React from 'react';
+import Registry from '@enact/core/internal/Registry';
+import {ResizeContext} from '@enact/ui/Resizable';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 /**
  * A higher-order component that classifies an application with a target set of font sizing rules.
@@ -11,8 +12,10 @@ import PropTypes from 'prop-types';
  * @hoc
  * @public
  */
-const AccessibilityDecorator = hoc((config, Wrapped) => {
+const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
+		static contextType = ResizeContext;
+
 		static displayName = 'AccessibilityDecorator'
 
 		static propTypes =  /** @lends moonstone/MoonstoneDecorator.AccessibilityDecorator.prototype */ {
@@ -41,40 +44,40 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {
 			textSize: PropTypes.oneOf(['normal', 'large'])
 		}
 
-		static contextTypes = contextTypes
-
-		static childContextTypes = contextTypes
-
 		static defaultProps = {
 			highContrast: false,
 			textSize: 'normal'
 		}
 
-		getChildContext () {
-			return {
-				Subscriber: this.publisher.getSubscriber()
-			};
-		}
-
-		componentWillMount () {
-			this.publisher = Publisher.create('resize', this.context.Subscriber);
+		componentDidMount () {
+			this.resizeRegistry.parent = this.context;
 		}
 
 		componentDidUpdate (prevProps) {
 			if (prevProps.textSize !== this.props.textSize) {
-				this.publisher.publish({
-					horizontal: true,
-					vertical: true
-				});
+				this.resizeRegistry.notify({});
 			}
 		}
+
+		componentWillUnmount () {
+			this.resizeRegistry.parent = null;
+		}
+
+		resizeRegistry = Registry.create();
 
 		render () {
 			const {className, highContrast, textSize, ...props} = this.props;
 			const accessibilityClassName = highContrast ? `enact-a11y-high-contrast enact-text-${textSize}` : `enact-text-${textSize}`;
 			const combinedClassName = className ? `${className} ${accessibilityClassName}` : accessibilityClassName;
+			const variants = {};
+			if (highContrast) variants.highContrast = true;
+			if (textSize === 'large') variants.largeText = true;
 
-			return <Wrapped className={combinedClassName} {...props} />;
+			return (
+				<ResizeContext.Provider value={this.resizeRegistry.register}>
+					<Wrapped className={combinedClassName} skinVariants={variants} {...props} />
+				</ResizeContext.Provider>
+			);
 		}
 	};
 });

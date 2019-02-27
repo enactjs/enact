@@ -18,7 +18,7 @@ import React from 'react';
 import ComponentOverride from '../ComponentOverride';
 import Touchable from '../Touchable';
 
-import componentCss from './IconButton.less';
+import componentCss from './IconButton.module.less';
 
 /**
  * A ui-styled button without any behavior.

@@ -10,7 +10,7 @@ class Hold {
 
 	isHolding = () => this.holdConfig != null
 
-	begin = (defaultConfig, {holdConfig, noResume, onHold, onHoldPulse}, {x, y}) => {
+	begin = (defaultConfig, {holdConfig, noResume, onHold, onHoldEnd, onHoldPulse}, {x, y}) => {
 		if (!onHold && !onHoldPulse) return;
 
 		this.startX = x;
@@ -20,6 +20,7 @@ class Hold {
 			...defaultConfig,
 			...holdConfig,
 			onHold,
+			onHoldEnd,
 			onHoldPulse,
 			resume: !noResume
 		};
@@ -62,8 +63,25 @@ class Hold {
 		}
 	}
 
+	blur = () => {
+		if (!this.isHolding()) return;
+
+		if (!this.holdConfig.global) {
+			this.end();
+		}
+	}
+
 	end = () => {
 		if (!this.isHolding()) return;
+
+		const {onHoldEnd} = this.holdConfig;
+		if (this.pulsing && onHoldEnd) {
+			const time = window.performance.now() - this.holdStart;
+			onHoldEnd({
+				type: 'onHoldEnd',
+				time
+			});
+		}
 
 		this.suspend();
 		this.pulsing = false;
@@ -83,7 +101,9 @@ class Hold {
 	leave = () => {
 		if (!this.isHolding()) return;
 
-		const {resume} = this.holdConfig;
+		const {global: isGlobal, resume} = this.holdConfig;
+
+		if (isGlobal) return;
 
 		if (resume) {
 			this.suspend();
@@ -113,12 +133,11 @@ class Hold {
 	}
 
 	handlePulse = () => {
-		const {onHold, onHoldPulse} = this.holdConfig;
-
 		const holdTime = window.performance.now() - this.holdStart;
 
 		let n = this.next;
 		while (n && n.time <= holdTime) {
+			const {events, onHold} = this.holdConfig;
 			this.pulsing = true;
 			if (onHold) {
 				onHold({
@@ -126,10 +145,20 @@ class Hold {
 					...n
 				});
 			}
-			n = this.next = this.holdConfig.events && this.holdConfig.events.shift();
+
+			// if the hold is canceled from the onHold handler, we should bail early and prevent
+			// additional hold/pulse events
+			if (!this.isHolding()) {
+				this.pulsing = false;
+				break;
+			}
+
+			n = this.next = events && events.shift();
 		}
 
 		if (this.pulsing) {
+			const {onHoldPulse} = this.holdConfig;
+
 			if (onHoldPulse) {
 				onHoldPulse({
 					type: 'onHoldPulse',
@@ -146,6 +175,7 @@ const defaultHoldConfig = {
 		{name: 'hold', time: 200}
 	],
 	frequency: 200,
+	global: false,
 	moveTolerance: 16
 };
 
@@ -158,6 +188,7 @@ const holdConfigPropType = PropTypes.shape({
 		})
 	),
 	frequency: PropTypes.number,
+	global: PropTypes.bool,
 	moveTolerance: PropTypes.number
 });
 
