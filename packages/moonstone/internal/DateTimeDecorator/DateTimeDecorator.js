@@ -105,7 +105,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 
 		static getDerivedStateFromProps (props, state) {
 			const propValue = toTime(props.value);
-			if (state.value !== propValue) {
+			if (propValue && !props.open && state.value !== propValue) {
 				return {
 					value: propValue
 				};
