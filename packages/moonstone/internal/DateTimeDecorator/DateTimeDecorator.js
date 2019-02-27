@@ -93,7 +93,11 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 
 			const initialValue = toTime(props.value);
 			const value = props.open && !initialValue ? Date.now() : initialValue;
-			this.state = {initialValue, value};
+			this.state = {
+				derived: false,
+				initialValue,
+				value
+			};
 
 			this.handlers = {};
 			if (handlers) {
@@ -105,12 +109,22 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 
 		static getDerivedStateFromProps (props, state) {
 			const propValue = toTime(props.value);
-			if (propValue && !props.open && state.value !== propValue) {
-				return {
-					value: propValue
-				};
+			if (state.derived) {
+				if (state.value !== propValue) {
+					return {
+						value: propValue
+					};
+				}
 			}
-			return null;
+			return {
+				derived: true
+			};
+			// if (propValue && !props.open && state.value !== propValue) {
+			// 	return {
+			// 		value: propValue
+			// 	};
+			// }
+			// return null;
 		}
 
 		/**
