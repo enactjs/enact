@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- Support for high contrast colors in dark and light `moonstone`
+
 ### Fixed
 
 - `moonstone/Slider` to prevent gaining focus when clicked when disabled

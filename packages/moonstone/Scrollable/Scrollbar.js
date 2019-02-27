@@ -5,6 +5,7 @@ import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
 
 import ScrollButtons from './ScrollButtons';
 import ScrollThumb from './ScrollThumb';
+import Skinnable from '../Skinnable';
 
 import componentCss from './Scrollbar.module.less';
 
@@ -147,7 +148,7 @@ const Scrollbar = ApiDecorator(
 		'showThumb',
 		'startHidingThumb',
 		'update'
-	]}, ScrollbarBase
+	]}, Skinnable(ScrollbarBase)
 );
 Scrollbar.displayName = 'Scrollbar';
 
