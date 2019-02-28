@@ -81,7 +81,21 @@ describe('Changeable', () => {
 			expect(actual).toBe(expected);
 		});
 
+		test('should warn when \'defaultValue\' and \'value\' props are provided', () => {
+			const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+			const Component = Changeable(DivComponent);
+			shallow(
+				<Component defaultValue={10} value={5} />
+			);
+
+			const expected = 1;
+			const actual = spy.mock.calls.length;
+
+			expect(actual).toBe(expected);
+		});
+
 		test('should use defaultValue prop when value prop is null', () => {
+			const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 			const Component = Changeable(DivComponent);
 			const subject = shallow(
 				<Component defaultValue={1} value={null} />
@@ -91,11 +105,13 @@ describe('Changeable', () => {
 			const actual = subject.find(DivComponent).prop('value');
 
 			expect(actual).toBe(expected);
+			expect(spy).toHaveBeenCalled();
 		});
 
 		test(
 			'should use value prop when value changed from truthy to null',
 			() => {
+				const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 				const Component = Changeable(DivComponent);
 				const subject = shallow(
 					<Component defaultValue={1} value={2} />
@@ -107,10 +123,12 @@ describe('Changeable', () => {
 				const actual = subject.find(DivComponent).prop('value');
 
 				expect(actual).toBe(expected);
+				expect(spy).toHaveBeenCalled();
 			}
 		);
 
 		test('should use defaultValue prop when value prop is undefined', () => {
+			const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 			const Component = Changeable(DivComponent);
 			const subject = shallow(
 				// eslint-disable-next-line no-undefined
@@ -121,11 +139,13 @@ describe('Changeable', () => {
 			const actual = subject.find(DivComponent).prop('value');
 
 			expect(actual).toBe(expected);
+			expect(spy).toHaveBeenCalled();
 		});
 
 		test(
 			'should use value prop when value changed from truthy to undefined',
 			() => {
+				const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 				const Component = Changeable(DivComponent);
 				const subject = shallow(
 					<Component defaultValue={1} value={2} />
@@ -138,10 +158,12 @@ describe('Changeable', () => {
 				const actual = subject.find(DivComponent).prop('value');
 
 				expect(actual).toBe(expected);
+				expect(spy).toHaveBeenCalled();
 			}
 		);
 
 		test('should use value prop when defined but falsy', () => {
+			const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 			const Component = Changeable(DivComponent);
 			const subject = shallow(
 				<Component defaultValue={1} value={0} />
@@ -151,11 +173,13 @@ describe('Changeable', () => {
 			const actual = subject.find(DivComponent).prop('value');
 
 			expect(actual).toBe(expected);
+			expect(spy).toHaveBeenCalled();
 		});
 
 		test(
 			'should use value prop when both value and defaultValue are defined',
 			() => {
+				const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 				const Component = Changeable(DivComponent);
 				const subject = shallow(
 					<Component defaultValue={1} value={2} />
@@ -165,6 +189,7 @@ describe('Changeable', () => {
 				const actual = subject.find(DivComponent).prop('value');
 
 				expect(actual).toBe(expected);
+				expect(spy).toHaveBeenCalled();
 			}
 		);
 	});

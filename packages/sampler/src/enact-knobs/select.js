@@ -19,12 +19,12 @@ import nullify from '../utils/nullify.js';
 
 const defaultString = ' (Default)';
 
-const select = (name, items, Config, selecetdValue) => {
+const select = (name, items, Config, selectedValue) => {
 	const labels = {};
 
 	if (typeof Config === 'string' || Config == null) {
 		// Config wasn't set, or was omitted, causing the selectedValue to be the last value. Reassignment dipsy-doodle.
-		selecetdValue = Config;
+		selectedValue = Config;
 		Config = {};
 	}
 
@@ -33,7 +33,7 @@ const select = (name, items, Config, selecetdValue) => {
 		Config.defaultProps = {};
 	}
 
-	const defaultValue = selecetdValue || Config.defaultProps[name];
+	const defaultValue = selectedValue || Config.defaultProps[name];
 
 	const defaultAppender = (key, label = key) => {
 		return key + (Config.defaultProps[name] === label ? defaultString : '');

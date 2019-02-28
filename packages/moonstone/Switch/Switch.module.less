@@ -83,8 +83,13 @@
 			.icon {
 				color: @moon-checkbox-toggle-switch-color;
 			}
-			&.selected .icon {
-				color: @moon-checkbox-toggle-switch-selected-color;
+
+			&.selected {
+				background-color: @moon-checkbox-toggle-switch-spotlight-selected-bg-color;
+
+				.icon {
+					color: @moon-checkbox-toggle-switch-spotlight-selected-color;
+				}
 			}
 		});
 	}

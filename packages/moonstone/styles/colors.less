@@ -24,7 +24,7 @@
 @moon-bg-color:      @moon-black;
 @moon-text-color:    @moon-gray;
 @moon-border-color:  #595959;
-@moon-overlay-text-shadow: 0 2px 2px rgba(0, 0, 0, 0.75);
+@moon-overlay-text-shadow: 0 2px 2px fade(@moon-black, 75%);
 
 // Disabled Opacity
 // ---------------------------------------
@@ -50,6 +50,70 @@
 // ---------------------------------------
 @moon-body-text-color:                @moon-text-color;
 
+// Button
+// ---------------------------------------
+@moon-button-text-color:              #ccc;
+@moon-button-bg-color:                @moon-dark-gray;
+@moon-button-disabled-bg-color:       @moon-darker-gray;
+@moon-button-translucent-opacity:     30%;
+@moon-button-lightTranslucent-bg-color:  @moon-white;
+@moon-button-transparent-active-text-color:  @moon-white;
+@moon-button-disabled-text-color:     @moon-dark-gray;
+@moon-button-disabled-spotlight-bg-color: @moon-spotlight-border-color;
+
+// ContextualPopup
+// ---------------------------------------
+@moon-contextual-popup-bg-color: @moon-dark-gray;
+@moon-contextual-popup-border-color: fade(@moon-black, 50%);
+
+// Checkbox
+// ---------------------------------------
+@moon-checkbox-check-color: @moon-text-color;
+@moon-checkbox-bg-color: fade(@moon-white, 30%);
+@moon-checkbox-spotlight-bg-color: fade(@moon-white, 40%);
+@moon-checkbox-spotlight-color: @moon-spotlight-text-color;
+
+// DaySelector
+// ---------------------------------------
+@moon-day-selector-border-color: @moon-white;
+@moon-day-selector-selected-bg-color: @moon-button-bg-color;
+@moon-day-selector-checkbox-bg-color: @moon-formcheckbox-bg-color;
+@moon-day-selector-checkbox-text-color: @moon-formcheckbox-text-color;
+
+// Divider
+// ---------------------------------------
+@moon-divider-text-color:             @moon-text-color;
+@moon-divider-border-color:           @moon-border-color;
+
+// EditableIntegerPicker
+// ---------------------------------------
+@moon-editable-integer-picker-input-bg-color: @moon-white;
+@moon-editable-integer-picker-input-text-color: @moon-spotlight-color;
+@moon-editable-integer-picker-input-color: inherit;
+
+// FormCheckbox
+// ---------------------------------------
+@moon-formcheckbox-bg-color: @moon-button-bg-color;
+@moon-formcheckbox-text-color: @moon-button-text-color;
+@moon-formcheckbox-border-color: fade(@moon-white, 15%);
+
+// GridListImageItem
+// ---------------------------------------
+@moon-gridlist-item-selection-color: #404040;
+@moon-gridlist-item-color: @moon-body-text-color;
+@moon-gridlist-item-icon-bg-color: @moon-white;
+@moon-gridlist-item-icon-border-color: @moon-black;
+@moon-gridlist-item-selected-color: @moon-spotlight-text-color;
+@moon-gridlist-item-selected-bg-color: @moon-gridlist-item-selection-color;
+@moon-gridlist-item-selected-border-color: @moon-gridlist-item-selection-color;
+@moon-gridlist-item-selected-icon-border-color: @moon-accent;
+@moon-gridlist-item-selected-icon-color: @moon-accent;
+@moon-gridlist-item-spotlight-color: @moon-spotlight-text-color;
+@moon-gridlist-item-spotlight-bg-color: @moon-spotlight-border-color;
+@moon-gridlist-item-spotlight-border-color: @moon-spotlight-border-color;
+@moon-gridlist-item-spotlight-icon-color: transparent;
+@moon-gridlist-item-spotlight-selected-icon-color: @moon-gridlist-item-selected-icon-color;
+
 // Header
 // ---------------------------------------
 @moon-header-text-color:              #ccc;
@@ -64,22 +128,6 @@
 @moon-header-input-bg-color:          @moon-spotlight-color;
 @moon-header-input-text-color:        @moon-spotlight-text-color;
 
-
-// Divider
-// ---------------------------------------
-@moon-divider-text-color:             @moon-text-color;
-@moon-divider-border-color:           @moon-border-color;
-
-// Button
-// ---------------------------------------
-@moon-button-text-color:              #ccc;
-@moon-button-bg-color:                @moon-dark-gray;
-@moon-button-disabled-bg-color:       @moon-darker-gray;
-@moon-button-translucent-opacity:     30%;
-@moon-button-lightTranslucent-bg-color:  @moon-white;
-@moon-button-transparent-active-text-color:  @moon-white;
-@moon-button-disabled-text-color:     @moon-dark-gray;
-
 // IconButton
 // ---------------------------------------
 @moon-icon-button-text-color:           @moon-button-text-color;
@@ -89,61 +137,26 @@
 @moon-icon-button-active-text-color:    @moon-spotlight-text-color;
 @moon-icon-button-spotlight-bg-color:   @moon-spotlight-color;
 
-// Tooltip
-// ---------------------------------------
-@moon-tooltip-bg-color:               @moon-dark-gray;
-@moon-tooltip-text-color:             @moon-white;
-
 // Input
 // ---------------------------------------
 @moon-input-text-color:               @moon-dark-gray;
-@moon-input-border-color:             rgb(234, 234, 234);
+@moon-input-border-color:             #eaeaea;
 @moon-input-textarea-color:           @moon-dark-gray;
 @moon-input-text-color:               @moon-dark-gray;
 @moon-input-placeholder-color:        #868686;
 @moon-input-decorator-bg-color:       @moon-white;
 @moon-input-decorator-border-color:   @moon-light-gray;
-
-// Toggle Colors
-// ---------------------------------------
-@moon-toggle-text-color: @moon-sub-header-text-color;
-@moon-toggle-button-switch-on-bg-color: @moon-accent;
-@moon-toggle-button-switch-on-border-color: @moon-white;
-@moon-toggle-button-switch-off-bg-color: @moon-dark-gray;
-@moon-toggle-button-switch-off-border-color: @moon-white;
-@moon-toggle-button-switch-disabled-bg-color: @moon-darker-gray;
-@moon-toggle-button-switch-disabled-border-color: #6c6c6c;
-
-// Checkbox
-// ---------------------------------------
-@moon-checkbox-check-color: @moon-text-color;
-@moon-checkbox-bg-color: fade(@moon-white, 30%);
-@moon-checkbox-bg-spotlight-color: fade(@moon-white, 40%);
-
-// DaySelector
-// ---------------------------------------
-@moon-day-selector-selected-bg-color: @moon-button-bg-color;
-@moon-day-selector-checkbox-bg-color: @moon-formcheckbox-bg-color;
-@moon-day-selector-checkbox-text-color: @moon-formcheckbox-text-color;
-
-// EditableIntegerPicker
-// ---------------------------------------
-@moon-editable-integer-picker-input-bg-color: @moon-white;
-@moon-editable-integer-picker-input-text-color: @moon-spotlight-color;
-
-// FormCheckbox
-// ---------------------------------------
-@moon-formcheckbox-bg-color: @moon-button-bg-color;
-@moon-formcheckbox-text-color: @moon-button-text-color;
-@moon-formcheckbox-border-color: fade(@moon-white, 15%);
-
-// GridListImageItem
-// ---------------------------------------
-@moon-gridlist-item-selection-color: #404040;
+@moon-input-border-focus-border-color: @moon-spotlight-border-color;
+@moon-input-border-active-border-color: @moon-active-border-color;
+@moon-input-border-active-outline-color: transparent;
 
 // LabeledItem
 // ---------------------------------------
 @moon-labeled-item-label-color: @moon-sub-header-text-color;
+
+// Notification
+// ---------------------------------------
+@moon-notification-border-color: fade(@moon-black, 30%);
 
 // Panels
 // ---------------------------------------
@@ -158,6 +171,7 @@
 @moon-picker-text-color: @moon-text-color;
 @moon-picker-joined-text-color: @moon-text-color;
 @moon-picker-joined-bg-color: transparent;
+@moon-picker-joined-fingernail-border-color: fade(@moon-black, 20%);
 
 // Popup
 // ---------------------------------------
@@ -167,8 +181,8 @@
 
 // Progress Bar
 // ---------------------------------------
-@moon-progress-bar-bg-color: rgba(128, 128, 128, 0.3);
-@moon-progress-bar-loaded-bg-color: rgba(200, 200, 200, 0.5);
+@moon-progress-bar-bg-color: fade(#808080, 30%);
+@moon-progress-bar-loaded-bg-color: fade(#c8c8c8, 50%);
 @moon-progress-bar-fill-bg-color: #f5f5f5;
 @moon-progress-bar-tooltip-text-color: @moon-white;
 @moon-progress-bar-highlighted-fill-bg-color: @moon-spotlight-bg-color;
@@ -177,6 +191,23 @@
 // ---------------------------------------
 @moon-radio-item-indicator-color: @moon-dark-gray;
 @moon-radio-item-indicator-border-color: @moon-white;
+@moon-radio-item-spotlight-indicator-bg-color: @moon-radio-item-indicator-color;
+@moon-radio-item-spotlight-indicator-border-color: @moon-radio-item-indicator-border-color;
+@moon-radio-item-selected-indicator-color: @moon-spotlight-color;
+@moon-radio-item-selected-indicator-bg-color: transparent;
+@moon-radio-item-selected-indicator-border-color: @moon-radio-item-indicator-border-color;
+@moon-radio-item-selected-spotlight-indicator-color: @moon-radio-item-indicator-border-color;
+@moon-radio-item-selected-spotlight-indicator-bg-color: transparent;
+@moon-radio-item-selected-spotlight-indicator-border-color: @moon-radio-item-indicator-border-color;
+
+// Scrollable
+// ---------------------------------------
+@moon-scrollable-overscroll-color: #ccc;
+
+
+// Scroller
+// ---------------------------------------
+@moon-scroller-scrollthumb-bg-color: fade(#666, 75%);
 
 // Slider
 // ---------------------------------------
@@ -185,12 +216,13 @@
 @moon-slider-spotlight-knob-color: @moon-spotlight-color;
 @moon-slider-spotlight-bar-color: @moon-spotlight-color;
 @moon-slider-knob-bg-color: @moon-dark-gray;
+@moon-slider-knob-active-bg-color: @moon-slider-knob-bg-color;
 
 // Spinner
 // ---------------------------------------
 @moon-spinner-bg-color: @moon-button-bg-color;
 @moon-spinner-text-color: @moon-white;
-@moon-spinner-text-shadow-color: rgba(0, 0, 0, 0.3);
+@moon-spinner-text-shadow-color: fade(@moon-black, 30%);
 @moon-spinner-ball1-color: #69cdff;
 @moon-spinner-ball2-color: #ff4a4a;
 @moon-spinner-ball3-color: #ffb80d;
@@ -201,19 +233,36 @@
 @moon-checkbox-toggle-switch-bg-color: @moon-button-bg-color;
 @moon-checkbox-toggle-switch-selected-color: @moon-spotlight-color;
 @moon-checkbox-toggle-switch-selected-bg-color: @moon-spotlight-text-color;
+@moon-checkbox-toggle-switch-spotlight-selected-bg-color: @moon-checkbox-toggle-switch-selected-bg-color;
+@moon-checkbox-toggle-switch-spotlight-selected-color: @moon-checkbox-toggle-switch-selected-color;
 
-// ContextualPopup
+// Toggle Colors
 // ---------------------------------------
-@moon-contextual-popup-bg-color: @moon-dark-gray;
-@moon-contextual-popup-border-color: rgba(0, 0, 0, 0.5);
+@moon-toggle-text-color: @moon-sub-header-text-color;
+@moon-toggle-button-switch-on-bg-color: @moon-accent;
+@moon-toggle-button-switch-on-border-color: @moon-white;
+@moon-toggle-button-switch-dot-on-color: transparent;
+@moon-toggle-button-switch-off-bg-color: @moon-dark-gray;
+@moon-toggle-button-switch-off-border-color: @moon-white;
+@moon-toggle-button-switch-disabled-color: @moon-darker-gray;
+@moon-toggle-button-switch-disabled-border-color: #6c6c6c;
+@moon-toggle-button-switch-dot-disabled-border-color: transparent;
+@moon-toggle-button-switch-on-spotlight-bg-color: @moon-toggle-button-switch-on-bg-color;
+@moon-toggle-button-switch-on-spotlight-border-color:
+@moon-toggle-button-switch-on-border-color;
+@moon-toggle-button-switch-dot-on-spotlight-color:  @moon-toggle-button-switch-dot-on-color;
+@moon-toggle-button-switch-off-spotlight-bg-color: @moon-toggle-button-switch-off-bg-color;
+@moon-toggle-button-switch-off-spotlight-border-color:
+@moon-toggle-button-switch-off-border-color;
 
-// Notification
+// Tooltip
 // ---------------------------------------
-@moon-notification-border-color: fade(@moon-black, 30%);
+@moon-tooltip-bg-color:               @moon-dark-gray;
+@moon-tooltip-text-color:             @moon-white;
 
 // VideoPlayer
 // ---------------------------------------
-@moon-video-feedback-mini-bg-color: rgba(75, 75, 75, 0.7);
+@moon-video-feedback-mini-bg-color: fade(#4b4b4b, 70%);
 @moon-video-feedback-mini-text-color: @moon-white;
 @moon-video-slider-tooltip-thumbnail-border-color: @moon-contextual-popup-border-color;
 @moon-video-player-indicator-text-color: @moon-white;
@@ -227,7 +276,4 @@
 @moon-video-player-subdued-text-color: #ccc;
 @moon-video-player-title-color: @moon-white;
 @moon-video-player-title-text-shadow: @moon-overlay-text-shadow;
-
-// Scrollable
-// ---------------------------------------
-@moon-scrollable-overscroll-color: #ccc;
+@moon-video-player-high-contrast-scrim-gradient-color: initial;
