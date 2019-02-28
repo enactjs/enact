@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `line-height` rule to base text CSS for both latin and non-latin locales
+
 ### Fixed
 
 - `moonstone/Slider` to prevent gaining focus when clicked when disabled
