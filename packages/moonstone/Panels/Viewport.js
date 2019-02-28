@@ -134,7 +134,7 @@ const ViewportBase = class extends React.Component {
 			'data-index': index
 		};
 
-		if (this.state.direction === 'forward') {
+		if (child.props.autoFocus == null && this.state.direction === 'forward') {
 			props.autoFocus = 'default-element';
 		}
 
