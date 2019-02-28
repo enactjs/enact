@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/BodyText` prop `component` to allow customization of the tag/component used to render the component
+
 ### Changed
 
 - `ui/Changeable` and `ui/Toggleable` to warn when both `[defaultProp]` and `[prop]` are provided

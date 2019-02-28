@@ -11,15 +11,19 @@
  */
 
 import kind from '@enact/core/kind';
-import UiBodyText from '@enact/ui/BodyText';
 import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
+import UiBodyText from '@enact/ui/BodyText';
 import Pure from '@enact/ui/internal/Pure';
 
+import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import componentCss from './BodyText.module.less';
+
+// Create a Marquee using BodyText as the base
+const MarqueeBodyText = MarqueeDecorator(UiBodyText);
 
 /**
  * A simple text block component.
@@ -38,6 +42,18 @@ const BodyTextBase = kind({
 
 	propTypes: /** @lends moonstone/BodyText.BodyTextBase.prototype */ {
 		/**
+		 * Centers the contents.
+		 *
+		 * Applies the `centered` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		centered: PropTypes.bool,
+
+		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
@@ -48,7 +64,21 @@ const BodyTextBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		/**
+		 * Toggles multi-line (`false`) vs single-line (`true`) behavior. `nowrap` mode
+		 * automatically enables {@link moonstone/Marquee} so long text isn't permanently occluded.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		nowrap: PropTypes.bool
+	},
+
+	defaultProps: {
+		nowrap: false
 	},
 
 	styles: {
@@ -56,10 +86,27 @@ const BodyTextBase = kind({
 		publicClassNames: 'bodyText'
 	},
 
-	render: ({css, ...rest}) => {
+	computed: {
+		className: ({nowrap, styler}) => styler.append({nowrap})
+	},
+
+	render: ({centered, css, nowrap, ...rest}) => {
+		if (nowrap) {
+			return (
+				<MarqueeBodyText
+					component="div" // Assign a new component to BodyText, since DIV is not allowed inside a P tag (the default for BodyText)
+					marqueeOn="render"
+					{...rest}
+					alignment={centered ? 'center' : null} // Centering Marquee
+					centered={centered} // Centering UiBodyText
+					css={css}
+				/>
+			);
+		}
 		return (
 			<UiBodyText
 				{...rest}
+				centered={centered}
 				css={css}
 			/>
 		);
