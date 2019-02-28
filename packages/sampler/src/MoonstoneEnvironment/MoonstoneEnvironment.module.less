@@ -35,6 +35,18 @@
 		}
 	}
 
+	// Here, we target the storybook rendering canvas div. It's inserted as a child of our Panel,
+	// but it applies position:relative, which doesn't help us when we have stories that should fill
+	// the entire panel body. This targets that inaccessible node using Panel's structure and
+	// storybook's structure to update that goofy rule to a rational one.
+	// The :not() bit targets only non-enact elements, so if a story doesn't use withInfo, and a
+	// `div` isn't added, the components aren't being told to be a different size/position.
+	.storyCell > div:not([class]):not([style]):first-child {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
 	// Hack into the Info - Don't try this at home, kids
 	main > article > section > :nth-child(2) > :nth-child(3) {
 		.enact-selectable();

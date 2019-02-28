@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import equals from 'ramda/src/equals';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -222,63 +223,81 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		constructor (props) {
+			let nextState = null;
+
 			super(props);
 
-			this.state = {firstIndex: 0, numOfItems: 0};
+			if (props.clientSize) {
+				this.calculateMetrics(props);
+				nextState = this.getStatesAndUpdateBounds(props);
+			}
+
+			this.state = {
+				firstIndex: 0,
+				numOfItems: 0,
+				prevChildProps: null,
+				prevFirstIndex: 0,
+				updateFrom: 0,
+				updateTo: 0,
+				...nextState
+			};
 		}
 
-		UNSAFE_componentWillMount () {
-			if (this.props.clientSize) {
-				this.calculateMetrics(this.props);
-				this.updateStatesAndBounds(this.props);
-			}
+		static getDerivedStateFromProps (props, state) {
+			const
+				shouldInvalidate = (
+					state.prevFirstIndex === state.firstIndex ||
+					state.prevChildProps !== props.childProps
+				),
+				diff = state.firstIndex - state.prevFirstIndex,
+				updateTo = (-state.numOfItems >= diff || diff > 0 || shouldInvalidate) ? state.firstIndex + state.numOfItems : state.prevFirstIndex,
+				updateFrom = (0 >= diff || diff >= state.numOfItems || shouldInvalidate) ? state.firstIndex : state.prevFirstIndex + state.numOfItems,
+				nextUpdateFromAndTo = (state.updateFrom !== updateFrom || state.updateTo !== updateTo) ? {updateFrom, updateTo} : null;
+
+			return {
+				...nextUpdateFromAndTo,
+				prevChildProps: props.childProps,
+				prevFirstIndex: state.firstIndex
+			};
 		}
 
 		// Calculate metrics for VirtualList after the 1st render to know client W/H.
 		componentDidMount () {
 			if (!this.props.clientSize) {
 				this.calculateMetrics(this.props);
-				this.updateStatesAndBounds(this.props);
+				// eslint-disable-next-line react/no-did-mount-set-state
+				this.setState(this.getStatesAndUpdateBounds(this.props));
 			}
 			this.setContainerSize();
 		}
 
-		// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
-		// Calling setState within componentWillReceivePropswill not trigger an additional render.
-		UNSAFE_componentWillReceiveProps (nextProps) {
-			const
-				{dataSize, direction, itemSize, overhang, rtl, spacing} = this.props,
-				hasMetricsChanged = (
-					direction !== nextProps.direction ||
-					((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
-					overhang !== nextProps.overhang ||
-					spacing !== nextProps.spacing
-				);
+		componentDidUpdate (prevProps) {
+			// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
+			this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
 
-			this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
-
-			if (hasMetricsChanged) {
-				this.calculateMetrics(nextProps);
-				this.updateStatesAndBounds(nextProps);
+			if (
+				prevProps.direction !== this.props.direction ||
+				prevProps.overhang !== this.props.overhang ||
+				prevProps.spacing !== this.props.spacing ||
+				!equals(prevProps.itemSize, this.props.itemSize)
+			) {
+				this.calculateMetrics(this.props);
+				// eslint-disable-next-line react/no-did-update-set-state
+				this.setState(this.getStatesAndUpdateBounds(this.props));
 				this.setContainerSize();
 			} else if (this.hasDataSizeChanged) {
-				this.updateStatesAndBounds(nextProps);
+				const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
+				// eslint-disable-next-line react/no-did-update-set-state
+				this.setState(newState);
 				this.setContainerSize();
-			} else if (rtl !== nextProps.rtl) {
+			} else if (prevProps.rtl !== this.props.rtl) {
 				const {x, y} = this.getXY(this.scrollPosition, 0);
 
-				this.cc = [];
 				if (type === Native) {
-					this.scrollToPosition(x, y, nextProps.rtl);
+					this.scrollToPosition(x, y, this.props.rtl);
 				} else {
 					this.setScrollPosition(x, y, nextProps.rtl);
 				}
-			}
-		}
-
-		UNSAFE_componentWillUpdate (nextProps, nextState) {
-			if (this.state.firstIndex === nextState.firstIndex || this.props.childProps && this.props.childProps !== nextProps.childProps) {
-				this.prevFirstIndex = -1; // force to re-render items
 			}
 		}
 
@@ -305,7 +324,6 @@ const VirtualListBaseFactory = (type) => {
 		dimensionToExtent = 0
 		threshold = 0
 		maxFirstIndex = 0
-		prevFirstIndex = 0
 		lastPositionedFirstIndex = 0
 		curDataSize = 0
 		hasDataSizeChanged = false
@@ -415,17 +433,11 @@ const VirtualListBaseFactory = (type) => {
 			if (type === JS && this.contentRef) {
 				this.contentRef.style.transform = null;
 			}
-
-			// eslint-disable-next-line react/no-direct-mutation-state
-			this.state.firstIndex = 0;
-			// eslint-disable-next-line react/no-direct-mutation-state
-			this.state.numOfItems = 0;
 		}
 
-		updateStatesAndBounds = (props) => {
+		getStatesAndUpdateBounds = (props, firstIndex = 0) => {
 			const
 				{dataSize, overhang, updateStatesAndBounds} = props,
-				{firstIndex} = this.state,
 				{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 				numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 				wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
@@ -446,13 +458,16 @@ const VirtualListBaseFactory = (type) => {
 				dataSize,
 				moreInfo
 			}))) {
-				newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
+				newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff, firstIndex);
 			}
 
-			this.setState({firstIndex: newFirstIndex, numOfItems});
+			return {
+				firstIndex: newFirstIndex,
+				numOfItems: numOfItems
+			};
 		}
 
-		calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff) {
+		calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff, firstIndex) {
 			const
 				{overhang} = props,
 				{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, scrollPosition, threshold} = this,
@@ -664,12 +679,11 @@ const VirtualListBaseFactory = (type) => {
 			const
 				{dataSize} = this.props,
 				{firstIndex, numOfItems} = this.state,
-				{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
-				diff = firstIndex - this.prevFirstIndex,
-				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems || this.prevFirstIndex === -1) ? firstIndex : this.prevFirstIndex + numOfItems;
+				{cc, isPrimaryDirectionVertical, dimensionToExtent, primary, secondary} = this;
 			let
 				hideTo = 0,
-				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0 || this.prevFirstIndex === -1) ? firstIndex + numOfItems : this.prevFirstIndex;
+				updateFrom = cc.length ? this.state.updateFrom : firstIndex,
+				updateTo = cc.length ? this.state.updateTo : firstIndex + numOfItems;
 
 			if (updateFrom >= updateTo) {
 				return;
@@ -701,8 +715,6 @@ const VirtualListBaseFactory = (type) => {
 			for (let i = updateTo; i < hideTo; i++) {
 				this.applyStyleToHideNode(i);
 			}
-
-			this.prevFirstIndex = firstIndex;
 		}
 
 		getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
@@ -732,7 +744,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
 				this.calculateMetrics(props);
-				this.updateStatesAndBounds(props);
+				this.setState(this.getStatesAndUpdateBounds(props));
 				this.setContainerSize();
 				return true;
 			}
