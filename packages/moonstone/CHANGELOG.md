@@ -7,11 +7,15 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/Spinner` visuals from 3 spinning balls to an energetic flexing line
+### Added
+
+- Support for high contrast colors in dark and light `moonstone`
 
 ### Fixed
 
 - `moonstone/Slider` to prevent gaining focus when clicked when disabled
 - `moonstone/Slider` to prevent default browser scroll behavior when 5-way directional key is pressed on an active knob
+- `moonstone/ContextualPopupDecorator` to correctly focus on popup content when opened
 
 ## [2.3.0] - 2019-02-11
 
