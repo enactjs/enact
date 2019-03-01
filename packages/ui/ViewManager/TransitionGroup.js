@@ -435,10 +435,10 @@ class TransitionGroup extends React.Component {
 		// Do not forward TransitionGroup props to primitive DOM nodes
 		const props = Object.assign({}, this.props);
 		props.ref = this.props.componentRef;
-		delete props.size;
 		delete props.childFactory;
-		delete props.currentIndex;
 		delete props.component;
+		delete props.componentRef;
+		delete props.currentIndex;
 		delete props.onAppear;
 		delete props.onAppear;
 		delete props.onEnter;
@@ -446,6 +446,7 @@ class TransitionGroup extends React.Component {
 		delete props.onStay;
 		delete props.onTransition;
 		delete props.onWillTransition;
+		delete props.size;
 
 		return React.createElement(
 			this.props.component,
