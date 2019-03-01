@@ -8,18 +8,6 @@ import {storiesOf} from '@storybook/react';
 
 import {select, text} from '../../src/enact-knobs';
 
-import {Marquee} from '@enact/moonstone/Marquee';
-import {Button} from '@enact/moonstone/Button';
-import {CheckboxItem} from '@enact/moonstone/CheckboxItem';
-import {ExpandableInput} from '@enact/moonstone/ExpandableInput';
-import {ExpandableList} from '@enact/moonstone/ExpandableList';
-import {FormCheckboxItem} from '@enact/moonstone/FormCheckboxItem';
-import {GridListImageItem} from '@enact/moonstone/GridListImageItem';
-import {Input} from '@enact/moonstone/Input';
-import {LabeledItem} from '@enact/moonstone/LabeledItem';
-import {SelectableItem} from '@enact/moonstone/SelectableItem';
-import {SwitchItem} from '@enact/moonstone/SwitchItem';
-
 Divider.displayName = 'Divider';
 
 const
