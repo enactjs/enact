@@ -126,33 +126,4 @@ storiesOf('Divider', module)
 				</div>
 			</Scroller>
 		)
-	).add(
-		'Tall Glyphs as Non-Latin components',
-		() => (
-			<Scroller style={{height: '100%'}}>
-				<Divider>Problem</Divider>
-				<Marquee>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</Marquee>
-				<GridListImageItem caption={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')} style={{height: 200}} />
-				<Divider>No Problem</Divider>
-				<div>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</div>
-				<BodyText>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</BodyText>
-				<Button>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</Button>
-				<CheckboxItem>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</CheckboxItem>
-				<Divider>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</Divider>
-				<ExpandableInput title={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}>
-					{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}
-				</ExpandableInput>
-				<ExpandableList title={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}>
-					{[select('children', prop.tallText, Divider, 'नरेंद्र मोदी')]}</ExpandableList>
-				<FormCheckboxItem>
-					{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}
-				</FormCheckboxItem>
-				<Input value={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')} />
-				<LabeledItem label={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}>
-					{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}
-				</LabeledItem>
-				<SelectableItem>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</SelectableItem>
-				<SwitchItem>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</SwitchItem>
-			</Scroller>
-		)
 	);
