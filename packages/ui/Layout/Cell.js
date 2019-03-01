@@ -57,7 +57,7 @@ const CellBase = kind({
 		 * @default 'div'
 		 * @public
 		 */
-		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
 		 * Called with a reference to `component`
