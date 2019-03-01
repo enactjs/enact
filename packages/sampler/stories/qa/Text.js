@@ -21,7 +21,6 @@ import {storiesOf} from '@storybook/react';
 
 import {select} from '../../src/enact-knobs';
 
-
 Divider.displayName = 'Divider';
 
 const prop = {
@@ -36,7 +35,7 @@ storiesOf('Text', module)
 	.add(
 		'Tall Glyphs as Non-Latin components',
 		() => {
-			const children = select('children', prop.tallText, Divider, 'नरेंद्र मोदी');
+			const children = select('children', prop.tallText, 'नरेंद्र मोदी');
 
 			return (
 				<Scroller style={{height: '100%'}}>
