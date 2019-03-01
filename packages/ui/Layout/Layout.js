@@ -192,7 +192,7 @@ const LayoutBase = kind({
 		delete rest.orientation;
 		delete rest.wrap;
 
-		return <Component {...rest} ref={componentRef} />;
+		return <Component ref={componentRef} {...rest} />;
 	}
 });
 
