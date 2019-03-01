@@ -110,6 +110,7 @@ class TransitionGroup extends React.Component {
 		/**
 		 * Called with a reference to `component`
 		 *
+		 * @type {Function}
 		 * @private
 		 */
 		componentRef: PropTypes.func,
