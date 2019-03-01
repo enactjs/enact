@@ -14,6 +14,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import ForwardRef from '../ForwardRef';
+
 import {shape} from './Arranger';
 import TransitionGroup from './TransitionGroup';
 import {wrapWithView} from './View';
@@ -27,7 +29,8 @@ import {wrapWithView} from './View';
  * @memberof ui/ViewManager
  * @public
  */
-class ViewManager extends React.Component {
+const ViewManagerBase = class extends React.Component {
+	static displayName = 'ViewManager'
 
 	static propTypes = /** @lends ui/ViewManager.ViewManager.prototype */ {
 		/**
@@ -64,6 +67,13 @@ class ViewManager extends React.Component {
 			PropTypes.func,
 			PropTypes.string
 		]),
+
+		/**
+		 * Called with a reference to `component`
+		 *
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Time in milliseconds to complete a transition
@@ -247,7 +257,9 @@ class ViewManager extends React.Component {
 			</TransitionGroup>
 		);
 	}
-}
+};
+
+const ViewManager = ForwardRef({prop: 'componentRef'}, ViewManagerBase);
 
 export default ViewManager;
 export {ViewManager};

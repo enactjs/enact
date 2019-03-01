@@ -12,11 +12,13 @@
 
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import React from 'react';
 
 import Slottable from '../Slottable';
 
 import componentCss from './SlotItem.module.less';
+import ForwardRef from '../ForwardRef';
 
 /**
  * A ui-styled `SlotItem` without any behavior.
@@ -63,6 +65,13 @@ const SlotItemBase = kind({
 		 * @public
 		 */
 		autoHide: PropTypes.oneOf(['after', 'before', 'both']),
+
+		/**
+		 * Called with a reference to `component`
+		 *
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -149,12 +158,13 @@ const SlotItemBase = kind({
 		)
 	},
 
-	render: ({children, component: Component, inline, slotAfter, slotBefore, ...rest}) => {
+	render: ({children, component: Component, componentRef, inline, slotAfter, slotBefore, ...rest}) => {
 		delete rest.autoHide;
 		delete rest.layout;
 
 		return (
 			<Component
+				ref={componentRef}
 				{...rest}
 				inline={inline}
 			>
@@ -175,7 +185,10 @@ const SlotItemBase = kind({
  * @hoc
  * @public
  */
-const SlotItemDecorator = Slottable({slots: ['slotAfter', 'slotBefore']});
+const SlotItemDecorator = compose(
+	ForwardRef({prop: 'componentRef'}),
+	Slottable({slots: ['slotAfter', 'slotBefore']})
+);
 
 /**
  * A ui-styled item with built-in support for slots.

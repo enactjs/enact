@@ -19,6 +19,7 @@ import React from 'react';
 import FloatingLayer from '../FloatingLayer';
 
 import componentCss from './Spinner.module.less';
+import ForwardRef from '../ForwardRef';
 
 /**
  * A minimally styled component that controls `Spinner` positioning and interaction states.
@@ -28,7 +29,7 @@ import componentCss from './Spinner.module.less';
  * @ui
  * @public
  */
-const Spinner = kind({
+const SpinnerBase = kind({
 	name: 'ui:Spinner',
 
 	propTypes: /** @lends ui/Spinner.Spinner.prototype */ {
@@ -72,6 +73,13 @@ const Spinner = kind({
 		 * @public
 		 */
 		centered: PropTypes.bool,
+
+		/**
+		 * Called with a reference to `component`
+		 *
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -128,7 +136,7 @@ const Spinner = kind({
 		)
 	},
 
-	render: ({blockClickOn, component: Component, scrimClassName, scrimType, spinnerContainerClassName, ...rest}) =>  {
+	render: ({blockClickOn, component: Component, componentRef, scrimClassName, scrimType, spinnerContainerClassName, ...rest}) =>  {
 		delete rest.centered;
 		delete rest.scrim;
 
@@ -136,7 +144,7 @@ const Spinner = kind({
 			case 'screen': {
 				return (
 					<FloatingLayer noAutoDismiss open scrimType={scrimType}>
-						<Component {...rest} />
+						<Component ref={componentRef} {...rest} />
 					</FloatingLayer>
 				);
 			}
@@ -144,20 +152,23 @@ const Spinner = kind({
 				return (
 					<div className={spinnerContainerClassName}>
 						<div className={scrimClassName} />
-						<Component {...rest} />
+						<Component ref={componentRef} {...rest} />
 					</div>
 				);
 			}
 			default: {
 				return (
-					<Component {...rest} />
+					<Component ref={componentRef} {...rest} />
 				);
 			}
 		}
 	}
 });
 
+const Spinner = ForwardRef({prop: 'componentRef'}, SpinnerBase);
+
 export default Spinner;
 export {
-	Spinner
+	Spinner,
+	SpinnerBase
 };

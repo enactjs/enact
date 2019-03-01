@@ -1,3 +1,4 @@
+import ForwardRef from '@enact/ui/ForwardRef';
 import React from 'react';
 import PropTypes from 'prop-types';
 import warning from 'warning';
@@ -36,7 +37,7 @@ const propTypes = {
  * @ui
  * @public
  */
-const Router = class extends React.Component {
+const RouterBase = class extends React.Component {
 	static displayName = 'Router'
 
 	static propTypes = /** @lends moonstone/Panels.Router.prototype */ {
@@ -66,6 +67,13 @@ const Router = class extends React.Component {
 			PropTypes.string,
 			PropTypes.func
 		]),
+
+		/**
+		 * Called with a reference to `component`
+		 *
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Routes defined as an object rather than via JSX.
@@ -179,15 +187,17 @@ const Router = class extends React.Component {
 	}
 
 	render () {
-		const {component: Component, ...rest} = this.props;
+		const {component: Component, componentRef, ...rest} = this.props;
 		const children = this.createChildren();
 
 		delete rest.path;
 		delete rest.routes;
 
-		return <Component {...rest}>{children}</Component>;
+		return <Component ref={componentRef} {...rest}>{children}</Component>;
 	}
 };
+
+const Router = ForwardRef({prop: 'componentRef'}, RouterBase);
 
 /**
  * Used with {@link moonstone/Panels.Routable} to define the `path` segment and the

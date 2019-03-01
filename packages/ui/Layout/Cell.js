@@ -60,12 +60,12 @@ const CellBase = kind({
 		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
-		 * A ref instance provided by {@link ui/ForwardRef.ForwardRef}.
+		 * Called with a reference to `component`
 		 *
 		 * @type {Function}
 		 * @private
 		 */
-		forwardedRef: PropTypes.func,
+		componentRef: PropTypes.func,
 
 		/**
 		 * Sizes `Cell` to its contents.
@@ -138,16 +138,16 @@ const CellBase = kind({
 		}
 	},
 
-	render: ({component: Component, forwardedRef, ...rest}) => {
+	render: ({component: Component, componentRef, ...rest}) => {
 		delete rest.align;
 		delete rest.shrink;
 		delete rest.size;
 
-		return <Component ref={forwardedRef} {...rest} />;
+		return <Component ref={componentRef} {...rest} />;
 	}
 });
 
-const Cell = ForwardRef({prop: 'forwardedRef'}, CellBase);
+const Cell = ForwardRef({prop: 'componentRef'}, CellBase);
 
 export default Cell;
 export {

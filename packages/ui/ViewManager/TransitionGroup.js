@@ -108,6 +108,13 @@ class TransitionGroup extends React.Component {
 		component: PropTypes.any,
 
 		/**
+		 * Called with a reference to `component`
+		 *
+		 * @private
+		 */
+		componentRef: PropTypes.func,
+
+		/**
 		 * Current Index the ViewManager is on
 		 *
 		 * @type {Number}
@@ -427,6 +434,7 @@ class TransitionGroup extends React.Component {
 
 		// Do not forward TransitionGroup props to primitive DOM nodes
 		const props = Object.assign({}, this.props);
+		props.ref = this.props.componentRef;
 		delete props.size;
 		delete props.childFactory;
 		delete props.currentIndex;

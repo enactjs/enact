@@ -9,9 +9,11 @@
 
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import React from 'react';
 
 import Touchable from '../Touchable';
+import ForwardRef from '../ForwardRef';
 
 import componentCss from './Item.module.less';
 
@@ -46,6 +48,13 @@ const ItemBase = kind({
 		 * @public
 		 */
 		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+
+		/**
+		 * Called with a reference to `component`
+		 *
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -95,11 +104,12 @@ const ItemBase = kind({
 		className: ({inline, styler}) => styler.append({inline})
 	},
 
-	render: ({component: Component, disabled, children, ...rest}) => {
+	render: ({component: Component, componentRef, disabled, children, ...rest}) => {
 		delete rest.inline;
 
 		return (
 			<Component
+				ref={componentRef}
 				{...rest}
 				aria-disabled={disabled}
 				disabled={disabled}
@@ -118,7 +128,10 @@ const ItemBase = kind({
  * @mixes ui/Touchable.Touchable
  * @public
  */
-const ItemDecorator = Touchable;
+const ItemDecorator = compose(
+	ForwardRef({prop: 'componentRef'}),
+	Touchable
+);
 
 /**
  * A minimally-styled ready-to-use list item component with touch support.
