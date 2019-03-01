@@ -285,7 +285,6 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props.open && !prevProps.open) {
 				on('keydown', this.handleKeyDown);
 				on('keyup', this.handleKeyUp);
-				this.spotPopupContent();
 			} else if (!this.props.open && prevProps.open) {
 				off('keydown', this.handleKeyDown);
 				off('keyup', this.handleKeyUp);
@@ -490,6 +489,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.setState({
 				activator: current
 			});
+			this.spotPopupContent();
 		}
 
 		handleClose = () => {

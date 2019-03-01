@@ -5,7 +5,7 @@
  * @private
  */
 
-import {forward} from '@enact/core/handle';
+import handle, {call, forKey, forProp, forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {memoize} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
@@ -91,9 +91,10 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			const initialValue = toTime(props.value);
-			const value = props.open && !initialValue ? Date.now() : initialValue;
-			this.state = {initialValue, value};
+			this.state = {
+				initialValue: null,
+				value: null
+			};
 
 			this.handlers = {};
 			if (handlers) {
@@ -104,12 +105,23 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 
 		static getDerivedStateFromProps (props, state) {
-			const propValue = toTime(props.value);
-			if (state.value !== propValue) {
+			let value = toTime(props.value);
+
+			if (props.open && !props.disabled && state.initialValue == null && state.value == null) {
+				// when the expandable opens, we cache the prop value so it can be restored on
+				// cancel and set value to be the current time if unset in order to initialize the
+				// pickers
 				return {
-					value: propValue
+					initialValue: value,
+					value: value || Date.now()
+				};
+			} else if (state.value !== value) {
+				// always respect a value change from props
+				return {
+					value
 				};
 			}
+
 			return null;
 		}
 
@@ -196,19 +208,24 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		handleCancel = () => {
 			const {initialValue, value} = this.state;
 
-			if (this.props.open) {
-				// if we're cancelling, reset our state and emit an onChange with the initial value
-				this.setState({
-					value: initialValue,
-					initialValue: null,
-					pickerValue: value
-				});
+			// if we're cancelling, reset our state and emit an onChange with the initial value
+			this.setState({
+				value: null,
+				initialValue: null,
+				pickerValue: value
+			});
 
-				if (initialValue !== value) {
-					this.emitChange(this.toIDate(initialValue));
-				}
+			if (initialValue !== value) {
+				this.emitChange(this.toIDate(initialValue));
 			}
 		}
+
+		handleKeyDown = handle(
+			forward('onKeyDown'),
+			forProp('open', true),
+			forKey('cancel'),
+			call('handleCancel')
+		).bindAs(this, 'handleKeyDown')
 
 		render () {
 			const value = this.toIDate(this.state.value);
@@ -235,10 +252,11 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 					{...props}
 					{...this.handlers}
 					label={label}
+					onKeyDown={this.handleKeyDown}
+					onClose={this.handleClose}
+					onOpen={this.handleOpen}
 					order={order}
 					value={value}
-					onOpen={this.handleOpen}
-					onClose={this.handleClose}
 				/>
 			);
 		}
