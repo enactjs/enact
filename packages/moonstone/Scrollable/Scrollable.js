@@ -13,6 +13,7 @@ import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from 
 import {Job} from '@enact/core/util';
 import platform from '@enact/core/platform';
 import {forward} from '@enact/core/handle';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
@@ -24,8 +25,8 @@ import $L from '../internal/$L';
 import Scrollbar from './Scrollbar';
 import Skinnable from '../Skinnable';
 
-import overscrollCss from './OverscrollEffect.less';
-import scrollbarCss from './Scrollbar.less';
+import overscrollCss from './OverscrollEffect.module.less';
+import scrollbarCss from './Scrollbar.module.less';
 
 const
 	{
@@ -96,6 +97,15 @@ class ScrollableBase extends Component {
 		childRenderer: PropTypes.func.isRequired,
 
 		/**
+		 * Animate while scrolling
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		animate: PropTypes.bool,
+
+		/**
 		 * This is set to `true` by SpotlightContainerDecorator
 		 *
 		 * @type {Boolean}
@@ -120,15 +130,6 @@ class ScrollableBase extends Component {
 		 * @private
 		 */
 		'data-spotlight-id': PropTypes.string,
-
-		/**
-		 * Animate while scrolling
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		animate: PropTypes.bool,
 
 		/**
 		 * Direction of the list or the scroller.
@@ -237,8 +238,11 @@ class ScrollableBase extends Component {
 		configureSpotlightContainer(props);
 	}
 
-	componentWillReceiveProps (nextProps) {
-		configureSpotlightContainer(nextProps);
+	componentDidUpdate (prevProps) {
+		if (prevProps['data-spotlight-id'] !== this.props['data-spotlight-id'] ||
+				prevProps.focusableScrollbar !== this.props.focusableScrollbar) {
+			configureSpotlightContainer(this.props);
+		}
 	}
 
 	componentWillUnmount () {
@@ -762,8 +766,6 @@ class ScrollableBase extends Component {
 			rightButtonAriaLabel = scrollRightAriaLabel == null ? $L('scroll right') : scrollRightAriaLabel,
 			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
 
-		delete rest.focusableScrollbar;
-
 		return (
 			<UiScrollableBase
 				noScrollByDrag
@@ -863,14 +865,19 @@ class ScrollableBase extends Component {
  * @ui
  * @public
  */
-const Scrollable = Skinnable(SpotlightContainerDecorator(
-	{
-		overflow: true,
-		preserveId: true,
-		restrict: 'self-first'
-	},
-	ScrollableBase
-));
+const Scrollable = Skinnable(
+	SpotlightContainerDecorator(
+		{
+			overflow: true,
+			preserveId: true,
+			restrict: 'self-first'
+		},
+		I18nContextDecorator(
+			{rtlProp: 'rtl'},
+			ScrollableBase
+		)
+	)
+);
 
 export default Scrollable;
 export {

@@ -32,7 +32,7 @@ import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 import {SlotItemBase} from '../SlotItem';
 
-import componentCss from './ToggleItem.less';
+import componentCss from './ToggleItem.module.less';
 
 /**
  * A Moonstone-styled toggle [Item]{@link moonstone/Item} without any behavior.
@@ -122,7 +122,7 @@ const defaultConfig = {
 	 * Invalidate the distance of marquee text if any property (like 'inline') changes.
 	 * Expects an array of props which on change trigger invalidateMetrics.
 	 *
-	 * @type {Array}
+	 * @type {String[]}
 	 * @default ['inline']
 	 * @memberof moonstone/ToggleItem.ToggleItemDecorator.defaultConfig
 	 */

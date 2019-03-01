@@ -336,7 +336,7 @@ describe('target', () => {
 			)
 		);
 
-		test.skip(
+		test(
 			'should find spottable element within container when "#" prefix used',
 			testScenario(
 				scenarios.nonSpottableInContainer,
@@ -354,7 +354,7 @@ describe('target', () => {
 			)
 		);
 
-		test.skip(
+		test(
 			'should return null when the node exists but is not navigable within its container',
 			testScenario(
 				scenarios.nonSpottableInContainer,
@@ -371,7 +371,7 @@ describe('target', () => {
 			)
 		);
 
-		test.skip(
+		test(
 			'should return null when the node exists but does not match the container\'s selector',
 			testScenario(
 				scenarios.nonSpottableInContainer,
@@ -386,7 +386,7 @@ describe('target', () => {
 			)
 		);
 
-		test.skip('should return null for an empty selectors', testScenario(
+		test('should return null for an empty selectors', testScenario(
 			scenarios.nonSpottableInContainer,
 			() => {
 				const expected = null;

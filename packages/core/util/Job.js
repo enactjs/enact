@@ -240,6 +240,7 @@ class Job {
 
 		return promise.then(result => {
 			if (this.id === promise) {
+				this.stop();
 				return this.run([result]);
 			}
 		});

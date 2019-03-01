@@ -139,11 +139,18 @@ storiesOf('Divider', module)
 				<Button>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</Button>
 				<CheckboxItem>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</CheckboxItem>
 				<Divider>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</Divider>
-				<ExpandableInput title={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</ExpandableInput>
-				<ExpandableList title={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}>{[select('children', prop.tallText, Divider, 'नरेंद्र मोदी')]}</ExpandableList>
-				<FormCheckboxItem>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</FormCheckboxItem>
+				<ExpandableInput title={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}>
+					{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}
+				</ExpandableInput>
+				<ExpandableList title={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}>
+					{[select('children', prop.tallText, Divider, 'नरेंद्र मोदी')]}</ExpandableList>
+				<FormCheckboxItem>
+					{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}
+				</FormCheckboxItem>
 				<Input value={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')} />
-				<LabeledItem label={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</LabeledItem>
+				<LabeledItem label={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}>
+					{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}
+				</LabeledItem>
 				<SelectableItem>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</SelectableItem>
 				<SwitchItem>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</SwitchItem>
 			</Scroller>

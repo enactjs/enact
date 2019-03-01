@@ -1,8 +1,12 @@
+import kind from '@enact/core/kind';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import Button from '@enact/moonstone/Button';
+import Divider from '@enact/moonstone/Divider';
 import Icon from '@enact/moonstone/Icon';
 import Item from '@enact/moonstone/Item';
 import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
-import ri from '@enact/ui/resolution';
 import Spottable from '@enact/spotlight/Spottable';
+import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
@@ -30,11 +34,26 @@ const RTL = [
 
 const disabledDisclaimer = (disabled) => (disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>Marquee does not visually respond to <code>disabled</code> state.</p> : <p />);
 
+const MarqueeI18nSamples = I18nContextDecorator({updateLocaleProp: 'updateLocale'}, kind({
+	name: 'I18nPanel',
+
+	handlers: {
+		updateLocale: (ev, {updateLocale}) => updateLocale('ar-SA')
+	},
+
+	render: ({updateLocale}) => (
+		<div>
+			<Divider>Remeasure marquee when locale change causes a font change with different metrics</Divider>
+			<Button onClick={updateLocale}>change locale</Button>
+		</div>
+	)
+}));
+
 // eslint-disable-next-line enact/prop-types
-const CustomItemBase = ({children, marqueeRef, ...rest}) => (
+const CustomItemBase = ({children, ...rest}) => (
 	<div {...rest} style={{display: 'flex', width: 300, alignItems: 'center'}}>
 		<Icon>flag</Icon>
-		<Marquee ref={marqueeRef} style={{flex: 1, overflow: 'hidden'}}>{children}</Marquee>
+		<Marquee id="marqueeText" style={{flex: 1, overflow: 'hidden'}}>{children}</Marquee>
 		<Icon>trash</Icon>
 	</div>
 );
@@ -56,6 +75,7 @@ class MarqueeWithShortContent extends React.Component {
 	}
 
 	componentDidMount () {
+		this.node = document.querySelector('#marqueeText');
 		this.updateSizeInfo();
 	}
 
@@ -76,15 +96,11 @@ class MarqueeWithShortContent extends React.Component {
 		this.setState(prevState => ({long: !prevState.long}));
 	}
 
-	getRef = ref => {
-		this.node = ref && ref.node;
-	}
-
 	render () {
 		return (
 			<div>
 				scrollWidth: {this.state.scrollWidth} width: {this.state.width}
-				<CustomItem marqueeRef={this.getRef} onClick={this.handleClick}>{this.state.long ? 'Very very very very very very very very very long text' : 'text'}</CustomItem>
+				<CustomItem onClick={this.handleClick}>{this.state.long ? 'Very very very very very very very very very long text' : 'text'}</CustomItem>
 			</div>
 		);
 	}
@@ -104,7 +120,7 @@ storiesOf('Marquee', module)
 						marqueeDelay={number('marqueeDelay', Marquee, 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
-						marqueeOnRenderDelay={1000}
+						marqueeOnRenderDelay={number('marqueeOnRenderDelay', Marquee, 1000)}
 						marqueeResetDelay={number('marqueeResetDelay', Marquee, 1000)}
 						marqueeSpeed={number('marqueeSpeed', Marquee, 60)}
 					>
@@ -129,7 +145,7 @@ storiesOf('Marquee', module)
 						marqueeDelay={number('marqueeDelay', Marquee, 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
-						marqueeOnRenderDelay={1000}
+						marqueeOnRenderDelay={number('marqueeOnRenderDelay', Marquee, 1000)}
 						marqueeResetDelay={number('marqueeResetDelay', Marquee, 1000)}
 						marqueeSpeed={number('marqueeSpeed', Marquee, 60)}
 					>
@@ -155,7 +171,7 @@ storiesOf('Marquee', module)
 							marqueeDelay={number('marqueeDelay', Marquee, 1000)}
 							marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}
 							marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
-							marqueeOnRenderDelay={5000}
+							marqueeOnRenderDelay={number('marqueeOnRenderDelay', Marquee, 5000)}
 							marqueeResetDelay={number('marqueeResetDelay', Marquee, 1000)}
 							marqueeSpeed={number('marqueeSpeed', Marquee, 60)}
 						>
@@ -217,6 +233,13 @@ storiesOf('Marquee', module)
 					{LTR[0]}
 				</Marquee>
 			</SpottableDiv>
+		)
+	)
+
+	.add(
+		'I18n',
+		() => (
+			<MarqueeI18nSamples />
 		)
 	)
 

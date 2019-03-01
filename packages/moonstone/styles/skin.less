@@ -5,14 +5,26 @@
 .applySkins(@componentRules) when (isruleset(@componentRules)) {
 	&:global(.moonstone) {
 		// Load the moonstone (dark) rules into this scope
-		@import './colors.less';
+		@import "./colors.less";
+
+		@componentRules();
+	}
+
+	:global(.enact-a11y-high-contrast) &:global(.moonstone.highContrast) {
+		@import "./colors-highcontrast.less";
 
 		@componentRules();
 	}
 
 	&:global(.moonstone-light) {
 		// Load the moonstone-light rules into this scope
-		@import './colors-light.less';
+		@import "./colors-light.less";
+
+		@componentRules();
+	}
+
+	:global(.enact-a11y-high-contrast) &:global(.moonstone-light.highContrast) {
+		@import "./colors-light-highcontrast.less";
 
 		@componentRules();
 	}

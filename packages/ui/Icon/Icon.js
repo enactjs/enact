@@ -11,7 +11,7 @@ import React from 'react';
 
 import ri from '../resolution';
 
-import componentCss from './Icon.less';
+import componentCss from './Icon.module.less';
 
 /**
  * Merges consumer styles with the image `src` resolved through the resolution independence module.

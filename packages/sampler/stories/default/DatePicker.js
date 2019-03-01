@@ -21,6 +21,7 @@ storiesOf('Moonstone', module)
 			<DatePicker
 				dayAriaLabel={text('dayAriaLabel', Config)}
 				dayLabel={text('dayLabel', Config)}
+				disabled={boolean('disabled', Config)}
 				monthAriaLabel={text('monthAriaLabel', Config)}
 				monthLabel={text('monthLabel', Config)}
 				noLabels={boolean('noLabels', Config)}

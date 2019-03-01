@@ -42,6 +42,14 @@ const DateComponentPickerBase = kind({
 		value: PropTypes.number.isRequired,
 
 		/**
+		 * Sets the hint string read when focusing the picker.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		accessibilityHint: PropTypes.string,
+
+		/**
 		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
 		 * to the current selected child and accessibilityHint text.
 		 *
@@ -50,14 +58,6 @@ const DateComponentPickerBase = kind({
 		 * @public
 		 */
 		'aria-valuetext': PropTypes.string,
-
-		/**
-		 * Sets the hint string read when focusing the picker.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		accessibilityHint: PropTypes.string,
 
 		/**
 		 * The label to display below the picker

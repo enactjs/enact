@@ -12,7 +12,9 @@ const defaultConfig = {
 	skins: {
 		dark: 'moonstone',
 		light: 'moonstone-light'
-	}
+	},
+	defaultVariants: ['highContrast'],
+	allowedVariants: ['highContrast', 'largeText', 'grayscale']
 };
 
 /**
@@ -24,6 +26,7 @@ const defaultConfig = {
  *
  * @class Skinnable
  * @memberof moonstone/Skinnable
+ * @extends ui/Skinnable.Skinnable
  * @hoc
  * @public
  */

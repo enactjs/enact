@@ -6,11 +6,39 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- Support for high contrast colors in dark and light `moonstone`
+
+### Fixed
+
+- `moonstone/Panels` to set child's `autoFocus` prop to `default-element` when `index` increases
+- `moonstone/Slider` to prevent gaining focus when clicked when disabled
+- `moonstone/Slider` to prevent default browser scroll behavior when 5-way directional key is pressed on an active knob
+- `moonstone/DatePicker` and `moonstone/TimePicker` to close with back/ESC
+- `moonstone/DatePicker` and `moonstone/TimePicker` value handling when open on mount
+- `moonstone/ContextualPopupDecorator` to correctly focus on popup content when opened
+
+## [2.3.0] - 2019-02-11
+
+### Added
+
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` property `childProps` to support additional props included in the object passed to the `itemsRenderer` callback
+- `moonstone/Skinnable` support for `skinVariants`, to enable features like high contrast mode and large text mode
+- Support for 8k (UHD2) displays
+
+### Changed
+
+- All content-containing LESS stylesheets (not within a `styles` directory) extensions to be `*.module.less` to retain modular context with CLI 2.x.
 
 ### Fixed
 
 - `moonstone/VirtualList` to focus an item properly by `scrollTo` API immediately after a prior call to the same position
+- `moonstone/Popup` to close floating layer when the popup closes without animation
+
+## [2.2.9] - 2019-01-11
+
+### Fixed
+
+- `moonstone/Scroller` scrolling to boundary behavior for short scrollers
 
 ## [2.2.8] - 2018-12-06
 
@@ -124,6 +152,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VideoPlayer` so that activity is detected and the `autoCloseTimeout` timer is reset when using 5-way to navigate from the media slider
+
+### Fixed
+
+- `moonstone/Picker` to fire onChange events, due to a hold, consistently across pointer and 5-way navigation
 
 ## [2.1.0] - 2018-08-20
 

@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 
 import ToggleIcon from '../ToggleIcon';
 
-import componentCss from './Switch.less';
+import componentCss from './Switch.module.less';
 
 /**
  * Renders the base level DOM structure of the component.

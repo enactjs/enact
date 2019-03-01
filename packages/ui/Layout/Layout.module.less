@@ -1,0 +1,84 @@
+// Layout.module.less
+//
+
+.layout {
+	display: flex;
+	margin: 0;
+	box-sizing: border-box;
+
+	// Children
+	.cell {
+		flex: 1 0;
+		position: relative;  // Allow content to treat cells as positionable spaces
+
+		&.grow {
+			flex: 1 1 100%;
+		}
+
+		&.shrink {
+			flex: 0 0 auto;
+		}
+	}
+
+	// Modes
+	&.horizontal {
+		flex-direction: row;
+
+		> .cell {
+			max-width: var(--cell-size);
+			&.grow {
+				width: 0;
+			}
+		}
+	}
+
+	&.vertical {
+		flex-direction: column;
+		height: 100%;
+
+		> .cell {
+			max-height: var(--cell-size);
+			&.grow {
+				height: 0;
+				align-self: normal;
+			}
+		}
+	}
+
+	&.inline {
+		display: inline-flex;
+	}
+
+	&.wrap {
+		flex-wrap: wrap;
+	}
+
+	&.nowrap {
+		flex-wrap: nowrap;
+	}
+
+	&.wrapReverse {
+		flex-wrap: wrap-reverse;
+	}
+
+	// Debug lines to help see what's going on
+	:global(.debug.layout)&,
+	:global(.debug.layout) & {
+		outline: 1px dotted teal;
+	}
+
+	.cell {
+		:global(.debug.layout)&,
+		:global(.debug.layout) & {
+			outline: 1px dashed red;
+		}
+	}
+	& .cell {                :global(.debug.layout) & { outline-color: red; }}
+	& & .cell {              :global(.debug.layout) & { outline-color: orange; }}
+	& & & .cell {            :global(.debug.layout) & { outline-color: yellow; }}
+	& & & & .cell {          :global(.debug.layout) & { outline-color: lime; }}
+	& & & & & .cell {        :global(.debug.layout) & { outline-color: cyan; }}
+	& & & & & & .cell {      :global(.debug.layout) & { outline-color: blue; }}
+	& & & & & & & .cell {    :global(.debug.layout) & { outline-color: violet; }}
+	& & & & & & & & .cell {  :global(.debug.layout) & { outline-color: lightslategray; }}
+}

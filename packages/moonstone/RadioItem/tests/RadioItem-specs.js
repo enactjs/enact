@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import RadioItem from '../RadioItem';
-import css from '../RadioItem.less';
+import css from '../RadioItem.module.less';
 
 describe('RadioItem Specs', () => {
 	test('should render correct icon when not selected', () => {

@@ -1,0 +1,93 @@
+// ToggleButton.module.less
+//
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
+
+.toggleButton {
+	.padding-start-end(@moon-button-h-padding, @moon-toggle-button-text-switch-gutter + @moon-button-h-padding + @moon-toggle-button-switch-width + @moon-toggle-button-switch-border-width);
+
+	text-align: center;
+	position: relative;
+
+	&::after {
+		.position-start-end(auto, @moon-button-h-padding);
+
+		position: absolute;
+		content: "";
+		top: 50%;
+		border-radius: @moon-toggle-button-switch-border-radius;
+		width: @moon-toggle-button-switch-width;
+		height: @moon-toggle-button-switch-width;
+		border-width: @moon-toggle-button-switch-border-width;
+		border-style: solid;
+		transform: translateY(-50%);
+		font-family: @moon-toggle-button-switch-icon-font-family;
+		font-size: @moon-toggle-button-switch-icon-font-size;
+		line-height: @moon-toggle-button-switch-icon-line-height;
+	}
+
+	&.selected {
+		&::after {
+			content: @moon-toggle-button-selected-glyph-highcontrast;
+		}
+	}
+
+	&.small {
+		.padding-start-end(@moon-button-small-h-padding, @moon-toggle-button-small-text-switch-gutter + @moon-button-small-h-padding + @moon-toggle-button-switch-width + @moon-toggle-button-switch-border-width);
+
+		&::after {
+			.position-start-end(auto, @moon-button-small-h-padding);
+
+			top: 50%;
+		}
+	}
+
+	// Skin colors
+	.applySkins({
+		&::after {
+			background-color: @moon-toggle-button-switch-off-bg-color;
+			border-color: @moon-toggle-button-switch-off-border-color;
+		}
+
+		&.selected {
+			border-color: @moon-accent;
+
+			&::after {
+				background-color: @moon-toggle-button-switch-on-bg-color;
+				border-color: @moon-toggle-button-switch-on-border-color;
+				color:  @moon-toggle-button-switch-dot-on-color;
+			}
+		}
+
+		.disabled({
+			&::after {
+				color: @moon-toggle-button-switch-disabled-color;
+				border-color: @moon-toggle-button-switch-disabled-border-color;
+			}
+
+			&.selected {
+				&::after {
+					background-color: @moon-toggle-button-switch-dot-disabled-border-color;
+				}
+			}
+		});
+	});
+
+	.focus({
+		.applySkins({
+			&::after {
+				background-color: @moon-toggle-button-switch-off-spotlight-bg-color;
+				border-color: @moon-toggle-button-switch-off-spotlight-border-color;
+			}
+
+			&.selected {
+				&::after {
+					background-color: @moon-toggle-button-switch-on-spotlight-bg-color;
+					border-color: @moon-toggle-button-switch-on-spotlight-border-color;
+					color: @moon-toggle-button-switch-dot-on-spotlight-color;
+				}
+			}
+		});
+	});
+}

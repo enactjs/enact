@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import {DatePicker, DatePickerBase} from '../DatePicker';
-import css from '../DatePicker.less';
+import css from '../DatePicker.module.less';
 
 describe('DatePicker', () => {
 
@@ -23,10 +23,11 @@ describe('DatePicker', () => {
 		() => {
 			const handleChange = jest.fn();
 			const subject = mount(
-				<DatePicker onChange={handleChange} open title="Date" value={new Date(2000, 6, 15)} />
+				<DatePicker onChange={handleChange} open title="Date" value={new Date(2000, 6, 15)} locale="en-US" />
 			);
 
 			const base = subject.find('DateComponentRangePicker').first();
+
 			base.prop('onChange')({value: 0});
 
 			const expected = 1;
@@ -60,7 +61,7 @@ describe('DatePicker', () => {
 
 	test('should accept a JavaScript Date for its value prop', () => {
 		const subject = mount(
-			<DatePicker open title="Date" value={new Date(2000, 0, 1)} />
+			<DatePicker open title="Date" value={new Date(2000, 0, 1)} locale="en-US" />
 		);
 
 		const yearPicker = subject.find(`DateComponentRangePicker.${css.year}`);
@@ -75,7 +76,7 @@ describe('DatePicker', () => {
 		'should accept an updated JavaScript Date for its value prop',
 		() => {
 			const subject = mount(
-				<DatePicker open title="Date" value={new Date(2000, 0, 1)} />
+				<DatePicker open title="Date" value={new Date(2000, 0, 1)} locale="en-US" />
 			);
 
 			subject.setProps({
@@ -171,6 +172,45 @@ describe('DatePicker', () => {
 
 		const expected = label;
 		const actual = yearPicker.prop('label');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should set "data-webos-voice-disabled" to day picker when voice control is disabled', () => {
+		const subject = mount(
+			<DatePicker open title="Date" value={new Date(2000, 0, 1)} data-webos-voice-disabled />
+		);
+
+		const dayPicker = subject.find(`DateComponentRangePicker.${css.day}`);
+
+		const expected = true;
+		const actual = dayPicker.prop('data-webos-voice-disabled');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should set "data-webos-voice-disabled" to month picker when voice control is disabled', () => {
+		const subject = mount(
+			<DatePicker open title="Date" value={new Date(2000, 0, 1)} data-webos-voice-disabled />
+		);
+
+		const monthPicker = subject.find(`DateComponentRangePicker.${css.month}`);
+
+		const expected = true;
+		const actual = monthPicker.prop('data-webos-voice-disabled');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should set "data-webos-voice-disabled" to year picker when voice control is disabled', () => {
+		const subject = mount(
+			<DatePicker open title="Date" value={new Date(2000, 0, 1)} data-webos-voice-disabled />
+		);
+
+		const yearPicker = subject.find(`DateComponentRangePicker.${css.year}`);
+
+		const expected = true;
+		const actual = yearPicker.prop('data-webos-voice-disabled');
 
 		expect(actual).toBe(expected);
 	});

@@ -110,23 +110,6 @@ describe('Router', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should compile children into route object', () => {
-		const subject = mount(
-			<Router path="/app">
-				<Route path="app" component={View}>
-					<Route path="home" component={View} />
-					<Route path="settings" component={View} />
-				</Route>
-				<Route path="admin" component={View} />
-			</Router>
-		);
-
-		const expected = JSON.stringify(routes);
-		const actual = JSON.stringify(subject.instance().routes);
-
-		expect(actual).toBe(expected);
-	});
-
 	test(
 		'should render an array of components matching the {path} using JSX routes',
 		() => {

@@ -1,3 +1,4 @@
+import ForwardRef from '@enact/ui/ForwardRef';
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
@@ -5,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import Marquee from '../Marquee';
 
-import css from './VideoPlayer.less';
+import css from './VideoPlayer.module.less';
 
 /**
  * MediaTitle {@link moonstone/VideoPlayer}.
@@ -37,6 +38,14 @@ const MediaTitleBase = kind({
 		 * @public
 		 */
 		children: PropTypes.node,
+
+		/**
+		 * Forwards a reference to the MediaTitle component.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		forwardRef: PropTypes.func,
 
 		/**
 		 * Control whether the children (infoComponents) are displayed.
@@ -94,12 +103,12 @@ const MediaTitleBase = kind({
 		})
 	},
 
-	render: ({children, childrenClassName, id, title, titleClassName, ...rest}) => {
+	render: ({children, childrenClassName, id, forwardRef, title, titleClassName, ...rest}) => {
 		delete rest.infoVisible;
 		delete rest.visible;
 
 		return (
-			<div {...rest} id={id}>
+			<div {...rest} id={id} ref={forwardRef}>
 				<Marquee id={id + '_title'} className={titleClassName} marqueeOn="render">
 					{title}
 				</Marquee>
@@ -111,7 +120,11 @@ const MediaTitleBase = kind({
 	}
 });
 
-const MediaTitle = onlyUpdateForKeys(['children', 'title', 'infoVisible', 'visible'])(MediaTitleBase);
+const MediaTitle = ForwardRef(
+	onlyUpdateForKeys(['children', 'title', 'infoVisible', 'visible'])(
+		MediaTitleBase
+	)
+);
 
 export default MediaTitle;
 export {

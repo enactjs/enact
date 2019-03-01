@@ -2,6 +2,48 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.3.0] - 2019-02-11
+
+### Deprecated
+
+- `core/kind` config property `contextTypes`, to be removed in 3.0.
+
+### Added
+
+- `core/kind` config property `contextType` replacing legacy `contextTypes` property
+- `i18n/I18nDecorator` HOC config prop `resources` to support retrieval of user-space i18n resource files on locale change
+- `i18n/I18nDecorator` HOC config prop `sync` to support asynchronous retrieval of i18n resource files
+- `i18n/I18nDecorator` HOC config props `latinLanguageOverrides` and `nonLatinLanguageOverrides` to allow consumers to configure some locales to be treated as Latin or non-Latin for the purposes of applying the `enact-locale-non-latin` global class name.
+- `i18n/Text` component to provide asynchronous text translations
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` property `childProps` to support additional props included in the object passed to the `itemsRenderer` callback
+- `moonstone/Skinnable` support for `skinVariants`, to enable features like high contrast mode and large text mode
+- Support for 8k (UHD2) displays
+- `spotlight/Spottable` property `selectionKeys`
+- `ui/Skinnable` support for `skinVariants`; a way to augment a skin by adding variations of a skin to your visuals, like large text, high contrast, or grayscale
+- `ui/Touchable` event `onHoldEnd` to notify when a hold has been released
+- `ui/Touchable` prop `holdConfig.global` to allow a hold to continue when leaving or blurring the element
+
+### Changed
+
+- All content-containing LESS stylesheets (not within a `styles` directory) extensions to be `*.module.less` to retain modular context with CLI 2.x.
+
+### Fixed
+
+- `i18n` resource loader to use intelligent defaults when the path variables are not injected
+- `moonstone/VirtualList` to focus an item properly by `scrollTo` API immediately after a prior call to the same position
+- `moonstone/Popup` to close floating layer when the popup closes without animation
+- `spotlight` to improve prioritization of the contents of spotlight containers within overflow containers
+- `spotlight/Spottable` and `spotlight/SpotlightContainerDecorator` to prevent focus when `spotlightDisabled` is set
+- `spotlight/Spottable` to prevent emitting multiple click events when certain node types are selected via 5-way enter
+- `ui/Touchable` to continue drag events when blurring the element when `dragConfig.global` is set
+- `ui/Marquee` to marquee when necessary after a locale change
+
+## [2.2.9] - 2019-01-11
+
+### Fixed
+
+- `moonstone/Scroller` scrolling to boundary behavior for short scrollers
+
 ## [2.2.8] - 2018-12-06
 
 ### Fixed

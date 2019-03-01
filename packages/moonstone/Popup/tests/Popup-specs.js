@@ -1,35 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import {mount, shallow} from 'enzyme';
 
 import {Popup, PopupBase} from '../Popup';
-import css from '../Popup.less';
+import css from '../Popup.module.less';
+
+const FloatingLayerController = FloatingLayerDecorator('div');
 
 describe('Popup specs', () => {
-	const options = {
-		context: {
-			getFloatingLayer: () => document.getElementById('floatLayer')
-		},
-		childContextTypes: {
-			getFloatingLayer: PropTypes.func
-		}
-	};
-
-	beforeEach(() => {
-		const div = document.createElement('div');
-		div.setAttribute('id', 'floatLayer');
-		document.body.appendChild(div);
-	});
-
-	afterEach(() => {
-		const div = document.getElementById('floatLayer');
-		document.body.removeChild(div);
-	});
-
 	test('should be rendered opened if open is set to true', () => {
 		const popup = mount(
-			<Popup open><div>popup</div></Popup>,
-			options
+			<FloatingLayerController>
+				<Popup open><div>popup</div></Popup>
+			</FloatingLayerController>
 		);
 
 		const expected = true;
@@ -40,8 +23,9 @@ describe('Popup specs', () => {
 
 	test('should not be rendered if open is set to false', () => {
 		const popup = mount(
-			<Popup><div>popup</div></Popup>,
-			options
+			<FloatingLayerController>
+				<Popup><div>popup</div></Popup>
+			</FloatingLayerController>
 		);
 
 		const expected = false;
@@ -54,13 +38,12 @@ describe('Popup specs', () => {
 		'should set popup close button "aria-label" to closeButtonAriaLabel',
 		() => {
 			const label = 'custom close button label';
-			const popup = mount(
-				<Popup open showCloseButton closeButtonAriaLabel={label}><div>popup</div></Popup>,
-				options
+			const popup = shallow(
+				<PopupBase showCloseButton closeButtonAriaLabel={label}><div>popup</div></PopupBase>
 			);
 
 			const expected = label;
-			const actual = popup.find('IconButton').prop('aria-label');
+			const actual = popup.find(`.${css.closeButton}`).prop('aria-label');
 
 			expect(actual).toBe(expected);
 		}
@@ -84,6 +67,30 @@ describe('Popup specs', () => {
 
 		const expected = 'dialog';
 		const actual = popup.find(`.${css.popup}`).prop('role');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should set "data-webos-voice-exclusive" when popup is open', () => {
+		const popup = mount(
+			<FloatingLayerController>
+				<Popup open><div>popup</div></Popup>
+			</FloatingLayerController>
+		);
+
+		const expected = true;
+		const actual = popup.find(`.${css.popup}`).prop('data-webos-voice-exclusive');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should set "data-webos-voice-disabled" when voice control is disabled', () => {
+		const popup = shallow(
+			<PopupBase open data-webos-voice-disabled><div>popup</div></PopupBase>
+		);
+
+		const expected = true;
+		const actual = popup.find(`.${css.popup}`).prop('data-webos-voice-disabled');
 
 		expect(actual).toBe(expected);
 	});

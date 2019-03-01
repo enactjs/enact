@@ -162,10 +162,9 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			onCancel: PropTypes.func
 		}
 
-		componentWillMount () {
-			if (modal) {
-				addModal(this);
-			}
+		constructor (props) {
+			super(props);
+			this.isFirstRender = true;
 		}
 
 		componentWillUnmount () {
@@ -215,6 +214,11 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			const props = Object.assign({}, this.props);
 			delete props.onCancel;
 			delete props[onCancel];
+
+			if (this.isFirstRender && modal) {
+				addModal(this);
+				this.isFirstRender = false;
+			}
 
 			return	modal && this.renderModal(props) ||
 					Component && this.renderWrapped(props) ||

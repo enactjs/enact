@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import IncrementSlider from '../IncrementSlider';
-import css from '../IncrementSlider.less';
+import css from '../IncrementSlider.module.less';
 
 const tap = (node) => {
 	node.simulate('mousedown');
@@ -509,6 +509,64 @@ describe('IncrementSlider Specs', () => {
 
 			const expected = 'called once';
 			const actual = callCount(handleSpotlight);
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should set "data-webos-voice-disabled" to increment button when voice control is disabled',
+		() => {
+			const incrementSlider = mount(
+				<IncrementSlider data-webos-voice-disabled value={10} />
+			);
+
+			const expected = true;
+			const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('data-webos-voice-disabled');
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should set "data-webos-voice-disabled" to decrement button when voice control is disabled',
+		() => {
+			const incrementSlider = mount(
+				<IncrementSlider data-webos-voice-disabled value={10} />
+			);
+
+			const expected = true;
+			const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('data-webos-voice-disabled');
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should set "data-webos-voice-group-label" to increment button when voice group label is set',
+		() => {
+			const label = 'voice control group label';
+			const incrementSlider = mount(
+				<IncrementSlider data-webos-voice-group-label={label} value={10} />
+			);
+
+			const expected = label;
+			const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('data-webos-voice-group-label');
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should set "data-webos-voice-group-label" to decrement button when voice group label is set',
+		() => {
+			const label = 'voice control group label';
+			const incrementSlider = mount(
+				<IncrementSlider data-webos-voice-group-label={label} value={10} />
+			);
+
+			const expected = label;
+			const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('data-webos-voice-group-label');
 
 			expect(actual).toBe(expected);
 		}

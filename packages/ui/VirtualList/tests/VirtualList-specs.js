@@ -2,6 +2,7 @@ import {mount} from 'enzyme';
 import React from 'react';
 
 import VirtualList from '../VirtualList';
+import css from '../VirtualList.module.less';
 
 describe('VirtualList', () => {
 	let
@@ -271,6 +272,51 @@ describe('VirtualList', () => {
 					expect(actual).toBe(expected);
 					done();
 				}, 0);
+			}
+		);
+	});
+
+	describe('Voice Control', () => {
+		test(
+			'should render "data-webos-voice-focused" to outermost node of VirtualList',
+			() => {
+				const subject = mount(
+					<VirtualList
+						cbScrollTo={getScrollTo}
+						clientSize={clientSize}
+						dataSize={dataSize}
+						itemRenderer={renderItem}
+						itemSize={30}
+						data-webos-voice-focused
+					/>
+				);
+
+				const expected = true;
+				const actual = subject.find(`.${css.virtualList}`).prop('data-webos-voice-focused');
+
+				expect(actual).toBe(expected);
+			}
+		);
+
+		test(
+			'should render "data-webos-voice-group-label" to outermost node of VirtualList',
+			() => {
+				const label = 'group label';
+				const subject = mount(
+					<VirtualList
+						cbScrollTo={getScrollTo}
+						clientSize={clientSize}
+						dataSize={dataSize}
+						itemRenderer={renderItem}
+						itemSize={30}
+						data-webos-voice-group-label={label}
+					/>
+				);
+
+				const expected = label;
+				const actual = subject.find(`.${css.virtualList}`).prop('data-webos-voice-group-label');
+
+				expect(actual).toBe(expected);
 			}
 		);
 	});

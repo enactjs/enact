@@ -1,0 +1,71 @@
+// ProgressBarTooltip.module.less
+//
+@import '../styles/variables.less';
+@import '../styles/mixins.less';
+
+.tooltip {
+	--tooltip-progress-proportion: 0;
+	--tooltip-progress-percent: ~"calc(var(--tooltip-progress-proportion) * 100%)";
+	--tooltip-calculated-offset: ~"calc(var(--moon-tooltip-offset, 0px) + " @moon-tooltip-point-width ~")";
+
+	@offset-large: 0;
+
+	&.horizontal {
+		left: var(--tooltip-progress-percent);
+
+		&.before {
+			top: 0;
+			transform: translateY(~"calc(-100% - var(--tooltip-calculated-offset))");
+
+			.moon-custom-text({
+				bottom: ~"calc(var(--tooltip-calculated-offset) + " @offset-large ~")";
+			});
+		}
+		&.after {
+			bottom: 0;
+			transform: translateY(~"calc(100% + var(--tooltip-calculated-offset))");
+
+			.moon-custom-text({
+				top: ~"calc(var(--tooltip-calculated-offset) + " @offset-large ~")";
+			});
+		}
+
+		&.afterMidpoint {
+			&.before {
+				transform: translateX(-100%) translateY(~"calc(-100% - var(--tooltip-calculated-offset))");
+			}
+
+			&.after {
+				transform: translateX(-100%) translateY(~"calc(100% + var(--tooltip-calculated-offset))");
+			}
+		}
+	}
+
+	&.vertical {
+		bottom: var(--tooltip-progress-percent);
+
+		// Left side
+		&.before,
+		:global(.enact-locale-right-to-left) &.before.ignoreLocale,
+		:global(.enact-locale-right-to-left) &.after {
+			right: 0;
+			transform: translate(~"calc(var(--tooltip-calculated-offset) * -1)", 50%);
+
+			.moon-custom-text({
+				transform: translate(~"calc(var(--tooltip-calculated-offset) * -1 - " @offset-large ~")", 50%);
+			});
+		}
+
+		// Right side
+		&.after,
+		:global(.enact-locale-right-to-left) &.after.ignoreLocale,
+		:global(.enact-locale-right-to-left) &.before {
+			right: auto;
+			transform: translate(var(--tooltip-calculated-offset), 50%);
+
+			.moon-custom-text({
+				transform: translate(~"calc(var(--tooltip-calculated-offset) + " @offset-large ~")", 50%);
+			});
+		}
+	}
+}

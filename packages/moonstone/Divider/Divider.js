@@ -27,7 +27,7 @@ import React from 'react';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import css from './Divider.less';
+import css from './Divider.module.less';
 
 /**
  * A labeled divider component.
@@ -104,7 +104,7 @@ const DividerBase = kind({
  * @hoc
  * @memberof moonstone/Divider
  * @mixes i18n/Uppercase.Uppercase
- * @mixes moonstone/MarqueeDecorator.MarqueeDecorator
+ * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes moonstone/Skinnable.Skinnable
  * @public
  */

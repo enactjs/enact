@@ -8,7 +8,6 @@
 
 import {on, off} from '@enact/core/dispatcher';
 import hoc from '@enact/core/hoc';
-import {Publisher, contextTypes as stateContextTypes} from '@enact/core/internal/PubSub';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -50,10 +49,43 @@ const defaultConfig = {
 	 * Array of locales that should be treated as non-latin regardless of their script.
 	 *
 	 * @type {String[]}
-	 * @public null
+	 * @default null
+	 * @public
 	 * @memberof i18n/I18nDecorator.I18nDecorator.defaultConfig
 	 */
 	nonLatinLanguageOverrides: null,
+
+	/**
+	 * Array of resource loaders to be invoked after a locale change.
+	 *
+	 * Each loader must be a function which accepts an object and returns either the resource when
+	 * `options.sync` is `true` or a `Promise` for the resource when `options.sync` is `false`.
+	 *
+	 * ```
+	 * resources: [
+	 *   (options) => new Promise((resolve, reject) => {
+	 *     fetchResource({onLoad: resolve, onError: reject});
+	 *   })
+	 * ]
+	 * ```
+	 *
+	 * If you need to handle the resource in some way on load, you can pass an object with an
+	 * `onLoad` member that will be called once all resources have been loaded. This should be used
+	 * if loading a resource has side effects that should only be applied once all loading has
+	 * completed.
+	 *
+	 * ```
+	 * resources: [
+	 *   {resource: (options) => { ... fetch ... }, onLoad: (res) => { ... apply side effect ... }}
+	 * ]
+	 * ```
+	 *
+	 * @type {Array<Function|Object>}
+	 * @default null
+	 * @public
+	 * @memberof i18n/I18nDecorator.I18nDecorator.defaultConfig
+	 */
+	resources: null,
 
 	/**
 	 * Retrieve i18n resource files synchronously
@@ -81,6 +113,18 @@ const defaultConfig = {
 const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {latinLanguageOverrides, nonLatinLanguageOverrides, sync} = config;
 
+	// Normalize the structure of the external resources to be an array of resource/onLoad pairs
+	const extResources = Array.isArray(config.resources) ? config.resources.map(res => {
+		if (!res) return;
+
+		const fn = res.resource || res;
+		const onLoad = res.onLoad;
+
+		if (typeof fn !== 'function') return;
+
+		return {resource: fn, onLoad};
+	}).filter(Boolean) : [];
+
 	return class extends React.Component {
 		static displayName = 'I18nDecorator'
 
@@ -104,8 +148,7 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			locale: PropTypes.string
 		}
 
-		static contextTypes = stateContextTypes
-		static childContextTypes = {...contextTypes, ...stateContextTypes}
+		static childContextTypes = contextTypes
 
 		constructor (props) {
 			super(props);
@@ -124,26 +167,23 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			this.publisher = Publisher.create('i18n', this.context.Subscriber);
-			this.publisher.publish({
-				locale: this.state.locale,
-				rtl: this.state.rtl
-			});
-
 			if (typeof window === 'object') {
 				on('languagechange', this.handleLocaleChange, window);
 			}
 
-			this.loadResources(this.state.locale);
+			if (!sync) {
+				this.loadResources(this.state.locale);
+			}
 		}
 
-		componentWillReceiveProps (nextProps) {
-			if (this.props.locale !== nextProps.locale) {
-				const state = this.getDerivedStateForLocale(nextProps.locale);
+		componentDidUpdate (prevProps) {
+			if (this.props.locale !== prevProps.locale) {
+				const state = this.getDerivedStateForLocale(this.props.locale);
 				if (sync) {
+					// eslint-disable-next-line react/no-did-update-set-state
 					this.setState(state);
 				} else {
-					this.loadResources(nextProps.locale);
+					this.loadResources(this.props.locale);
 				}
 			}
 		}
@@ -174,6 +214,11 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 				const bundle = wrapIlibCallback(createResBundle, options);
 				setResBundle(bundle);
+
+				extResources.forEach(({resource, onLoad}) => {
+					const result = resource(options);
+					if (onLoad) onLoad(result);
+				});
 			}
 
 			return state;
@@ -189,9 +234,11 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					nonLatinLanguageOverrides
 				}),
 				// move updating into a new method with call to setState
-				wrapIlibCallback(createResBundle, options)
-			]).then(([rtl, classes, bundle]) => {
+				wrapIlibCallback(createResBundle, options),
+				...extResources.map(res => wrapIlibCallback(res.resource, options))
+			]).then(([rtl, classes, bundle, ...userResources]) => {
 				setResBundle(bundle);
+				extResources.forEach(({onLoad}, i) => onLoad && onLoad(userResources[i]));
 
 				return {
 					locale,
@@ -259,7 +306,7 @@ const contextDefaultConfig = {
 };
 
 const I18nContextDecorator = hoc(contextDefaultConfig, (config, Wrapped) => {
-	const {localeProp, rtlProp, updateLocaleProp} = config;
+	const {loadedProp, localeProp, rtlProp, updateLocaleProp} = config;
 
 	// eslint-disable-next-line no-shadow
 	return function I18nContextDecorator (props) {
@@ -268,9 +315,13 @@ const I18nContextDecorator = hoc(contextDefaultConfig, (config, Wrapped) => {
 				{(i18nContext) => {
 
 					if (i18nContext) {
-						const {locale, rtl, updateLocale: update} = i18nContext;
+						const {loaded, locale, rtl, updateLocale: update} = i18nContext;
 
 						props = Object.assign({}, props);
+						if (loadedProp) {
+							props[loadedProp] = loaded;
+						}
+
 						if (localeProp) {
 							props[localeProp] = locale;
 						}
