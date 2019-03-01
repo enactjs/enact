@@ -17,9 +17,9 @@ describe('BodyText Specs', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should support single-line marqueeing content when `nowrap` is true', () => {
+	test('should support single-line marqueeing content when `noWrap` is true', () => {
 		const subject = mount(
-			<BodyText nowrap />
+			<BodyText noWrap />
 		);
 
 		const expected = true;
@@ -28,12 +28,12 @@ describe('BodyText Specs', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should include the nowrap class if `nowrap` is true', () => {
+	test('should include the noWrap class if `noWrap` is true', () => {
 		const subject = mount(
-			<BodyText nowrap />
+			<BodyText noWrap />
 		);
 
-		const expected = 'nowrap';
+		const expected = 'noWrap';
 		const actual = subject.find(`.${css.bodyText}`).prop('className');
 
 		expect(actual).toContain(expected);

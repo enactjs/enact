@@ -67,18 +67,18 @@ const BodyTextBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Toggles multi-line (`false`) vs single-line (`true`) behavior. `nowrap` mode
+		 * Toggles multi-line (`false`) vs single-line (`true`) behavior. `noWrap` mode
 		 * automatically enables {@link moonstone/Marquee} so long text isn't permanently occluded.
 		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @public
 		 */
-		nowrap: PropTypes.bool
+		noWrap: PropTypes.bool
 	},
 
 	defaultProps: {
-		nowrap: false
+		noWrap: false
 	},
 
 	styles: {
@@ -87,11 +87,11 @@ const BodyTextBase = kind({
 	},
 
 	computed: {
-		className: ({nowrap, styler}) => styler.append({nowrap})
+		className: ({noWrap, styler}) => styler.append({noWrap})
 	},
 
-	render: ({centered, css, nowrap, ...rest}) => {
-		if (nowrap) {
+	render: ({centered, css, noWrap, ...rest}) => {
+		if (noWrap) {
 			return (
 				<MarqueeBodyText
 					component="div" // Assign a new component to BodyText, since DIV is not allowed inside a P tag (the default for BodyText)
