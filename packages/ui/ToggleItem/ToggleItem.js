@@ -88,6 +88,7 @@ const ToggleItemBase = kind({
 		/**
 		 * Called with a reference to `component`
 		 *
+		 * @type {Function}
 		 * @private
 		 */
 		componentRef: PropTypes.func,
