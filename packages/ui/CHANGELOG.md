@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/Spinner` prop `paused` to halt the animation. Previously this was hard-coded "on", but now it can be toggled.
+
 ### Changed
 
 - `ui/Changeable` and `ui/Toggleable` to warn when both `[defaultProp]` and `[prop]` are provided

@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - Support for high contrast colors in dark and light `moonstone`
 
+### Changed
+
+- `moonstone/Spinner` visuals from 3 spinning balls to an energetic flexing line
+
 ### Fixed
 
 - `moonstone/Panels` to set child's `autoFocus` prop to `default-element` when `index` increases

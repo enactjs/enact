@@ -4,150 +4,98 @@
 @import "../styles/variables.less";
 @import "../styles/skin.less";
 
-@-webkit-keyframes spinBall {
-	0%        { -webkit-transform: rotateZ(@moon-spinner-ball-angle); }
-	/* Slow down toward the top */
-	15%       { -webkit-transform: rotateZ(160deg); }
-	25%       { -webkit-transform: rotateZ(200deg); }
-	30%       { -webkit-transform: rotateZ(225deg); }
-	/* Speed back up as the ball falls */
-	/* Impact at last ball */
-	33%       { -webkit-transform: rotateZ(360 - (@moon-spinner-ball-angle * 3)); }
-	39%, 67%  { -webkit-transform: rotateZ(360 - @moon-spinner-ball-angle); }
-	/* Small bounce forward */
-	72%       { -webkit-transform: rotateZ(360 + @moon-spinner-ball-angle + 10); }
-	79%, 100% { -webkit-transform: rotateZ(360 + @moon-spinner-ball-angle); }
+@keyframes spin {
+	@turn-offset: 2 / 8;
+	0%   { transform: rotate(0turn + @turn-offset); }
+	33%   { transform: rotate(0.25turn + @turn-offset); }
+	80%   { transform: rotate(0.7turn + @turn-offset); }
+	85%   { transform: rotate(0.75turn + @turn-offset); }
+	100%  { transform: rotate(1turn + @turn-offset); }
 }
-@-webkit-keyframes spinBall2 {
-	/* Small bounce forward */
-	0%        { -webkit-transform: rotateZ(360 - @moon-spinner-ball-angle); }
-	5%        { -webkit-transform: rotateZ(360 + @moon-spinner-ball-angle + 10); }
-	12%, 33%  { -webkit-transform: rotateZ(360 + @moon-spinner-ball-angle); }
-
-	33.01%    { -webkit-transform: rotateZ(@moon-spinner-ball-angle); }
-	/* Slow down toward the top */
-	48%       { -webkit-transform: rotateZ(160deg); }
-	58%       { -webkit-transform: rotateZ(200deg); }
-	63%       { -webkit-transform: rotateZ(225deg); }
-	/* Speed back up as the ball falls */
-	/* Impact at last ball */
-	67%       { -webkit-transform: rotateZ(360 - (@moon-spinner-ball-angle * 3)); }
-	72%, 100% { -webkit-transform: rotateZ(360 - @moon-spinner-ball-angle); }
+@keyframes rotate1 {
+	0%, 100% { transform: rotate(0turn); }
+	33% { transform: rotate((1turn / 8)); }
 }
-@-webkit-keyframes spinBall3 {
-	/* Impact at last ball */
-	0%, 100%  { -webkit-transform: rotateZ(360 - (@moon-spinner-ball-angle * 3)); }
-	5%, 33%   { -webkit-transform: rotateZ(360 - @moon-spinner-ball-angle); }
-	/* Small bounce forward */
-	38%       { -webkit-transform: rotateZ(360 + @moon-spinner-ball-angle + 10); }
-	45%, 66%  { -webkit-transform: rotateZ(360 + @moon-spinner-ball-angle); }
-
-	66.01%    { -webkit-transform: rotateZ(@moon-spinner-ball-angle); }
-	/* Slow down toward the top */
-	81%       { -webkit-transform: rotateZ(160deg); }
-	91%       { -webkit-transform: rotateZ(200deg); }
-	97%       { -webkit-transform: rotateZ(225deg); }
-	/* Speed back up as the ball falls */
+@keyframes rotate2 {
+	0%, 100% { transform: rotate(0turn); }
+	33% { transform: rotate((2turn / 8)); }
 }
-@keyframes spinBall {
-	0%        { transform: rotateZ(@moon-spinner-ball-angle); }
-	/* Slow down toward the top */
-	15%       { transform: rotateZ(160deg); }
-	25%       { transform: rotateZ(200deg); }
-	30%       { transform: rotateZ(225deg); }
-	/* Speed back up as the ball falls */
-	/* Impact at last ball */
-	33%       { transform: rotateZ(360 - (@moon-spinner-ball-angle * 3)); }
-	39%, 67%  { transform: rotateZ(360 - @moon-spinner-ball-angle); }
-	/* Small bounce forward */
-	72%       { transform: rotateZ(360 + @moon-spinner-ball-angle + 10); }
-	79%, 100% { transform: rotateZ(360 + @moon-spinner-ball-angle); }
+@keyframes rotate3 {
+	0%, 100% { transform: rotate(0turn); }
+	33% { transform: rotate((3turn / 8)); }
 }
-@keyframes spinBall2 {
-	/* Small bounce forward */
-	0%        { transform: rotateZ(360 - @moon-spinner-ball-angle); }
-	5%        { transform: rotateZ(360 + @moon-spinner-ball-angle + 10); }
-	12%, 33%  { transform: rotateZ(360 + @moon-spinner-ball-angle); }
-
-	33.01%    { transform: rotateZ(@moon-spinner-ball-angle); }
-	/* Slow down toward the top */
-	48%       { transform: rotateZ(160deg); }
-	58%       { transform: rotateZ(200deg); }
-	63%       { transform: rotateZ(225deg); }
-	/* Speed back up as the ball falls */
-	/* Impact at last ball */
-	67%       { transform: rotateZ(360 - (@moon-spinner-ball-angle * 3)); }
-	72%, 100% { transform: rotateZ(360 - @moon-spinner-ball-angle); }
-}
-@keyframes spinBall3 {
-	/* Impact at last ball */
-	0%, 100%  { transform: rotateZ(360 - (@moon-spinner-ball-angle * 3)); }
-	5%, 33%   { transform: rotateZ(360 - @moon-spinner-ball-angle); }
-	/* Small bounce forward */
-	38%       { transform: rotateZ(360 + @moon-spinner-ball-angle + 10); }
-	45%, 66%  { transform: rotateZ(360 + @moon-spinner-ball-angle); }
-
-	66.01%    { transform: rotateZ(@moon-spinner-ball-angle); }
-	/* Slow down toward the top */
-	81%       { transform: rotateZ(160deg); }
-	91%       { transform: rotateZ(200deg); }
-	97%       { transform: rotateZ(225deg); }
-	/* Speed back up as the ball falls */
+@keyframes rotate4 {
+	0%, 100% { transform: rotate(0turn); }
+	33% { transform: rotate((4turn / 8)); }
 }
 
 .spinner {
 	line-height: @moon-body-line-height;
 
-	.ballDecorator {
-		border-radius: (@moon-spinner-size / 2);
+	.bg {
 		position: relative;
+		border-radius: 999px;
 		width: @moon-spinner-size;
 		height: @moon-spinner-size;
+		padding: @moon-spinner-line-margin;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.decorator {
+		width: @moon-spinner-size;
+		height: @moon-spinner-size;
+		position: relative;
+		background-size: cover;
+		border-radius: 999px;
+		overflow: hidden;
 		margin: 0 auto;
-	}
-
-	.ball {
-		position: absolute;
-		text-align: center;
-		font-size: 90%;
-		line-height: 0.4em;
-		-webkit-animation: none @moon-spinner-time linear infinite;
+		-webkit-mask-image: radial-gradient(transparent (@moon-spinner-size / 2 - @moon-spinner-line-width - 1px), black (@moon-spinner-size / 2 - @moon-spinner-line-width)); // These colors control masking, not visible colors
 		animation: none @moon-spinner-time linear infinite;
-		-webkit-animation-play-state: paused;
+		animation-name: spin;
 		animation-play-state: paused;
-		height: @moon-spinner-ball-height;
-		width: @moon-spinner-ball-width;		// While we're using a font-icon as our ball, we need extra clearance around it, so it's not clipped by the browser's layer composer.
-		padding: 0 1px;
-		left: (50% - (@moon-spinner-ball-width / 2));
-		bottom: (50% - @moon-spinner-ball-height - @moon-spinner-ball-distance);
-		-webkit-transform-origin: center ((@moon-spinner-ball-distance / @moon-spinner-ball-height) * -100);
-		transform-origin: center ((@moon-spinner-ball-distance / @moon-spinner-ball-height) * -100);
 
-		&::after {
-			content: @moon-spinner-icon;
-			font-family: @moon-icon-font-family;
+		.fan1::before,
+		.fan1::after,
+		.fan2::before,
+		.fan2::after {
+			content: "";
+			top: 0;
+			right: 50%;
+			bottom: 50%;
+			left: 0;
+			clip-path: polygon(100% 0, 0 3%, 100% 100%); // Cut each segment into a 1/8th wedge, with a little overhang to avoid a subpixel gap from rounding error
+			transform-origin: bottom right;
 		}
-	}
-
-	.ball1 {
-		-webkit-animation-name: spinBall;
-		animation-name: spinBall;
-		-webkit-transform: rotateZ(@moon-spinner-ball-angle);
-		transform: rotateZ(@moon-spinner-ball-angle);
-	}
-
-	.ball2 {
-		-webkit-animation-name: spinBall2;
-		animation-name: spinBall2;
-		-webkit-transform: rotateZ(360 - @moon-spinner-ball-angle);
-		transform: rotateZ(360 - @moon-spinner-ball-angle);
-	}
-
-	.ball3 {
-		-webkit-animation-name: spinBall3;
-		animation-name: spinBall3;
-		-webkit-transform: rotateZ(360 - (@moon-spinner-ball-angle * 3));
-		transform: rotateZ(360 - (@moon-spinner-ball-angle * 3));
+		.fan1::before,
+		.fan1::after,
+		.fan2::before,
+		.fan2::after,
+		.cap {
+			position: absolute;
+			animation: none @moon-spinner-time linear infinite;
+			animation-name: rotate1;
+			animation-play-state: paused;
+			animation-fill-mode: both;
+		}
+		.fan1::after {
+			animation-name: rotate2;
+		}
+		.fan2::before {
+			animation-name: rotate3;
+		}
+		.fan2::after,
+		.cap {
+			animation-name: rotate4;
+		}
+		.cap {
+			top: 0;
+			right: 0;
+			bottom: 50%;
+			left: 0;
+			clip-path: circle((@moon-spinner-line-width / 2) at 50% (@moon-spinner-line-width / 2));
+			transform-origin: bottom;
+		}
 	}
 
 	.client {
@@ -161,35 +109,45 @@
 		padding: ((@moon-button-height - @moon-spinner-size) / 2);
 	}
 
-	&.running .ball {
-		-webkit-animation-play-state: running;
-		animation-play-state: running;
+	&.running .decorator {
+		// Apply the following rules to the above selector and all of these children
+		&,
+		.fan1::before,
+		.fan1::after,
+		.fan2::before,
+		.fan2::after,
+		.cap {
+			-webkit-animation-play-state: running;
+			animation-play-state: running;
+		}
 	}
 
 	// Skin colors
 	.applySkins({
 		color: @moon-spinner-text-color;
 
-		.ballDecorator {
+		.bg {
 			background-color: @moon-spinner-bg-color;
 		}
 
-		&.transparent {
-			.ballDecorator {
-				background-color: transparent;
+		.decorator {
+			background: conic-gradient(@moon-spinner-empty-color 75%, @moon-spinner-color 87.5%);
+
+			.fan1::before,
+			.fan1::after,
+			.fan2::before,
+			.fan2::after {
+				background-color: @moon-spinner-color;
+			}
+			.cap {
+				background-color: @moon-spinner-head-color;
 			}
 		}
 
-		.ball1 {
-			color: @moon-spinner-ball1-color;
-		}
-
-		.ball2 {
-			color: @moon-spinner-ball2-color;
-		}
-
-		.ball3 {
-			color: @moon-spinner-ball3-color;
+		&.transparent {
+			.bg {
+				background-color: transparent;
+			}
 		}
 
 		.client {
@@ -204,7 +162,7 @@
 		.blockClickOn {
 			// Visible scrim
 			.scrim {
-					background-color: @moon-scrim-color;
+				background-color: @moon-scrim-color;
 			}
 		}
 	});
