@@ -132,6 +132,38 @@ class App extends Component {
 export default MoonstoneDecorator(App);
 ```
 
+### Internationalization Outside of Enact
+
+#### CRA
+In order to use the [`@enact/i18n`](../../developer-guide/i18n) library for internationalization, you can [eject](https://facebook.github.io/create-react-app/docs/available-scripts#npm-run-eject)
+your CRA app, install your required Enact libraries (plus, `@enact/dev-utils`), and update the webpack configuration.
+
+```
+// package.json
+
+...
+"devDependencies" : {
+  "@enact/dev-utils": "2.0.0"
+},
+"dependencies": {
+  ...
+  "@enact/i18n": "2.3.0",
+  "@enact/moonstone": "2.3.0",
+  ...
+}
+...
+
+// webpack.config.js
+...
+const {GracefulFsPlugin, ILibPlugin} = require('@enact/dev-utils');
+...
+plugins: [
+  // new GracefulFsPlugin(), // use on Windows OS if you run into filesystem handler problems
+  new ILibPlugin()
+]
+...
+```
+
 ## Theming
 
 Enact also has support theming. This way you can take our components and style them to best fit
