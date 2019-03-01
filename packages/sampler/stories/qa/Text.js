@@ -12,6 +12,7 @@ import Input from '@enact/moonstone/Input';
 import Item from '@enact/moonstone/Item';
 import LabeledItem from '@enact/moonstone/LabeledItem';
 import Marquee from '@enact/moonstone/Marquee';
+import RadioItem from '@enact/moonstone/RadioItem';
 import Scroller from '@enact/moonstone/Scroller';
 import SelectableItem from '@enact/moonstone/SelectableItem';
 import SwitchItem from '@enact/moonstone/SwitchItem';
@@ -63,12 +64,15 @@ storiesOf('Text', module)
 					<Divider>ToggleItems</Divider>
 					<CheckboxItem>{children}</CheckboxItem>
 					<FormCheckboxItem>{children}</FormCheckboxItem>
+					<RadioItem>{children}</RadioItem>
 					<SelectableItem>{children}</SelectableItem>
 					<SwitchItem>{children}</SwitchItem>
 
-					<Divider>Headers (standard, compact, input)</Divider>
+					<Divider>Headers (Standard, Compact, Input)</Divider>
 					<Header type="standard" title={children} titleBelow={children} subTitleBelow={children} />
+					<br />
 					<Header type="compact" title={children} titleBelow={children} subTitleBelow={children} />
+					<br />
 					<Header title={children} titleBelow={children} subTitleBelow={children}>
 						<Input value={children} slot="headerInput" />
 					</Header>
