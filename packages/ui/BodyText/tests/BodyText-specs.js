@@ -52,12 +52,11 @@ describe('BodyText Specs', () => {
 	});
 
 	test('should support changing the component element', () => {
-		const componentTag = 'span';
+		const componentTag = 'address';
 		const subject = shallow(
 			<BodyText component={componentTag} />
 		);
 
-		// console.log(subject.getElement().type);
 		const expected = componentTag;
 		const actual = subject.getElement().type;
 		expect(actual).toBe(expected);
