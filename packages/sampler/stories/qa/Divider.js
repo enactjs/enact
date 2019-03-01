@@ -131,21 +131,21 @@ storiesOf('Divider', module)
 		() => (
 			<Scroller style={{height: '100%'}}>
 				<Divider>Problem</Divider>
-				<Marquee>ଇନପୁଟଗୁଡିକ</Marquee>
-				<GridListImageItem caption="ଇନପୁଟଗୁଡିକ" style={{height: 200}} />
+				<Marquee>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</Marquee>
+				<GridListImageItem caption={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')} style={{height: 200}} />
 				<Divider>No Problem</Divider>
-				<div>ଇନପୁଟଗୁଡିକ</div>
-				<BodyText>ଇନପୁଟଗୁଡିକ</BodyText>
-				<Button>ଇନପୁଟଗୁଡିକ</Button>
-				<CheckboxItem>ଇନପୁଟଗୁଡିକ</CheckboxItem>
-				<Divider>ଇନପୁଟଗୁଡିକ</Divider>
-				<ExpandableInput title="ଇନପୁଟଗୁଡିକ">ଇନପୁଟଗୁଡିକ</ExpandableInput>
-				<ExpandableList title="ଇନପୁଟଗୁଡିକ">{['ଇନପୁଟଗୁଡିକ']}</ExpandableList>
-				<FormCheckboxItem>ଇନପୁଟଗୁଡିକ</FormCheckboxItem>
-				<Input value="ଇନପୁଟଗୁଡିକ" />
-				<LabeledItem label="ଇନପୁଟଗୁଡିକ">ଇନପୁଟଗୁଡିକ</LabeledItem>
-				<SelectableItem>ଇନପୁଟଗୁଡିକ</SelectableItem>
-				<SwitchItem>ଇନପୁଟଗୁଡିକ</SwitchItem>
+				<div>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</div>
+				<BodyText>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</BodyText>
+				<Button>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</Button>
+				<CheckboxItem>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</CheckboxItem>
+				<Divider>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</Divider>
+				<ExpandableInput title={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</ExpandableInput>
+				<ExpandableList title={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}>{[select('children', prop.tallText, Divider, 'नरेंद्र मोदी')]}</ExpandableList>
+				<FormCheckboxItem>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</FormCheckboxItem>
+				<Input value={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')} />
+				<LabeledItem label={select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</LabeledItem>
+				<SelectableItem>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</SelectableItem>
+				<SwitchItem>{select('children', prop.tallText, Divider, 'नरेंद्र मोदी')}</SwitchItem>
 			</Scroller>
 		)
 	);
