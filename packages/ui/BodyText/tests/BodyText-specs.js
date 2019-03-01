@@ -50,4 +50,16 @@ describe('BodyText Specs', () => {
 		const actual = subject.hasClass(css.centered);
 		expect(actual).toBe(expected);
 	});
+
+	test('should support changing the component element', () => {
+		const componentTag = 'span';
+		const subject = shallow(
+			<BodyText component={componentTag} />
+		);
+
+		// console.log(subject.getElement().type);
+		const expected = componentTag;
+		const actual = subject.getElement().type;
+		expect(actual).toBe(expected);
+	});
 });
