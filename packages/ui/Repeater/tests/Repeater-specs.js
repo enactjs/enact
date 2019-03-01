@@ -8,6 +8,7 @@ describe('Repeater Specs', () => {
 	const stringItems = ['One', 'Two', 'Three'];
 	const objItems = stringItems.map((content, key) => ({key, content}));
 
+	const CustomRootType = (props) => <div {...props} />;
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	const CustomType = (props) => <div>{props.content}</div>;
 
@@ -17,6 +18,28 @@ describe('Repeater Specs', () => {
 		);
 
 		const expected = 'span';
+		const actual = subject.first().name();
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should accept a nodeName as root element', () => {
+		const subject = shallow(
+			<Repeater component="div" childComponent="div">{stringItems}</Repeater>
+		);
+
+		const expected = 'div';
+		const actual = subject.first().name();
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should accept a function as root element', () => {
+		const subject = shallow(
+			<Repeater component={CustomRootType} childComponent="div">{stringItems}</Repeater>
+		);
+
+		const expected = 'CustomRootType';
 		const actual = subject.first().name();
 
 		expect(actual).toBe(expected);

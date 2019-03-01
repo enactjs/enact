@@ -100,6 +100,15 @@ const SpinnerBase = kind({
 		css: PropTypes.object,
 
 		/**
+		 * Halts the animation of the spinner
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		paused: PropTypes.bool,
+
+		/**
 		 * Sets a scrim behind the spinner with the `css.scrim` class applied.
 		 *
 		 * Only has an effect when `blockClickOn` is `'screen'` or `'container'` and has no effect
@@ -114,18 +123,19 @@ const SpinnerBase = kind({
 
 	defaultProps: {
 		centered: false,
+		paused: false,
 		scrim: false
 	},
 
 	styles: {
 		css: componentCss,
-		className: 'spinner running',
+		className: 'spinner',
 		publicClassNames: true
 	},
 
 	computed: {
-		className: ({centered, styler}) => styler.append(
-			{centered}
+		className: ({centered, paused, styler}) => styler.append(
+			{centered, running: !paused}
 		),
 		scrimClassName: ({blockClickOn, scrim, styler}) => styler.join(
 			{blockClickOn, scrim}
@@ -138,6 +148,7 @@ const SpinnerBase = kind({
 
 	render: ({blockClickOn, component: Component, componentRef, scrimClassName, scrimType, spinnerContainerClassName, ...rest}) =>  {
 		delete rest.centered;
+		delete rest.paused;
 		delete rest.scrim;
 
 		switch (blockClickOn) {
