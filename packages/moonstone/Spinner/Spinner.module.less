@@ -131,7 +131,11 @@
 		}
 
 		.decorator {
-			background: conic-gradient(@moon-spinner-empty-color 75%, @moon-spinner-color 87.5%);
+			// Ideal way, but won't be supported until Chrome 69
+			// background: conic-gradient(@moon-spinner-empty-color 75%, @moon-spinner-color 87.5%);
+			background:
+				radial-gradient(circle at 0% 0%, @moon-spinner-color 20%, @moon-spinner-empty-color 40%), // Visible gradient
+				radial-gradient(circle at 35% 8%, @moon-spinner-color 15%, transparent 15%); // Filler between the closest fan and center of gradient
 
 			.fan1::before,
 			.fan1::after,
