@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `line-height` rule to base text CSS for both latin and non-latin locales
 - Support for high contrast colors in dark and light `moonstone`
 
 ### Changed
