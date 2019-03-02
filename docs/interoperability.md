@@ -104,15 +104,15 @@ the `[component].module.css` filename convention.  For earlier versions, you wil
 the CRA app and modify the webpack configuration to enable CSS modules.  This [article](https://medium.com/nulogy/how-to-use-css-modules-with-create-react-app-9e44bec2b5c2)
 is a good reference for enabling CSS modules prior to `2.0.0`. 
 
-##### `Button.module.css`
 ```css
+/* Button.module.css */
 .bg { /* public class name in Moonstone/Button */
     background-color: #a4939d !important;
 }
 ```
 
-##### `App.js`
 ```javascript
+// App.js
 import Button from '@enact/moonstone/Button';
 import { MoonstoneDecorator } from '@enact/moonstone/MoonstoneDecorator';
 import React, { Component } from 'react';
@@ -134,7 +134,7 @@ export default MoonstoneDecorator(App);
 
 ### Internationalization Outside of Enact
 
-#### CRA
+#### CRA Example
 In order to use the [`@enact/i18n`](../../developer-guide/i18n) library for internationalization, you can [eject](https://facebook.github.io/create-react-app/docs/available-scripts#npm-run-eject)
 your CRA app, install your required Enact libraries (plus, `@enact/dev-utils`), and update the webpack configuration.
 
