@@ -1,6 +1,7 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
 import BodyText from '../BodyText';
+import {Cell} from '../../Layout';
 import css from '../BodyText.module.less';
 
 describe('BodyText Specs', () => {
@@ -51,13 +52,24 @@ describe('BodyText Specs', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should support changing the component element', () => {
+	test('should support changing the component element to a different DOM node', () => {
 		const componentTag = 'address';
 		const subject = shallow(
 			<BodyText component={componentTag} />
 		);
 
 		const expected = componentTag;
+		const actual = subject.getElement().type;
+		expect(actual).toBe(expected);
+	});
+
+	test('should support changing the component element to a functional component', () => {
+		const component = Cell;
+		const subject = shallow(
+			<BodyText component={component} />
+		);
+
+		const expected = component;
 		const actual = subject.getElement().type;
 		expect(actual).toBe(expected);
 	});
