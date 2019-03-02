@@ -1,17 +1,16 @@
 // ProgressBar.module.less
 //
 .progressBar {
-	--ui-progressbar-proportion-start: 0%;
-	--ui-progressbar-proportion-start-background: 0%;
-	--ui-progressbar-proportion-end: 0%;
-	--ui-progressbar-proportion-end-background: 0%;
+	--ui-progressbar-proportion-start: 0;
+	--ui-progressbar-proportion-start-background: 0;
+	--ui-progressbar-proportion-end: 0;
+	--ui-progressbar-proportion-end-background: 0;
 
 	position: relative;
 	direction: ltr;
 
 	.fill,
 	.load {
-		height: 100%;
 		position: absolute;
 	}
 
@@ -20,30 +19,36 @@
 
 		.fill,
 		.load {
+			height: 100%;
 			width: 100%;
 			bottom: 0;
 		}
 
 		.fill {
-			bottom: var(--ui-progressbar-proportion-start);
-			height: var(--ui-progressbar-proportion-end);
+			bottom: ~"calc(var(--ui-progressbar-proportion-start) * 100%)";
+			height: ~"calc(var(--ui-progressbar-proportion-end) * 100%)";
 		}
 
 		.load {
-			bottom: var(--ui-progressbar-proportion-start-background);
-			height: var(--ui-progressbar-proportion-end-background);
+			bottom: ~"calc(var(--ui-progressbar-proportion-start-background) * 100%)";
+			height: ~"calc(var(--ui-progressbar-proportion-end-background) * 100%)";
 		}
 	}
 
 	&.horizontal {
+		.fill,
+		.load {
+			height: 100%;
+		}
+
 		.fill {
-			left: var(--ui-progressbar-proportion-start);
-			width: var(--ui-progressbar-proportion-end);
+			left: ~"calc(var(--ui-progressbar-proportion-start) * 100%)";
+			width: ~"calc(var(--ui-progressbar-proportion-end) * 100%)";
 		}
 
 		.load {
-			left: var(--ui-progressbar-proportion-start-background);
-			width: var(--ui-progressbar-proportion-end-background);
+			left: ~"calc(var(--ui-progressbar-proportion-start-background) * 100%)";
+			width: ~"calc(var(--ui-progressbar-proportion-end-background) * 100%)";
 		}
 	}
 }
