@@ -1,7 +1,6 @@
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import BodyText from '../BodyText';
-import {MarqueeDecorator} from '../../Marquee';
 import css from '../BodyText.module.less';
 
 describe('BodyText Specs', () => {
