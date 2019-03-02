@@ -8,6 +8,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import kind from '@enact/core/kind';
+import ForwardRef from '../ForwardRef/ForwardRef';
 
 /**
  * A stateless component that stamps out copies of `childComponent`.
@@ -76,6 +77,14 @@ const RepeaterBase = kind({
 		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
+		 * Called with a reference to `component`
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		componentRef: PropTypes.func,
+
+		/**
 		 * The property on each `childComponent` that receives the index of the item in the `Repeater`.
 		 *
 		 * @type {String}
@@ -115,15 +124,20 @@ const RepeaterBase = kind({
 		}
 	},
 
-	render: ({component: Component, ...rest}) => {
+	render: ({component: Component, componentRef, ...rest}) => {
 		delete rest.childComponent;
 		delete rest.childProp;
 		delete rest.indexProp;
 		delete rest.itemProps;
 
-		return <Component role="list" {...rest} />;
+		return <Component ref={componentRef} role="list" {...rest} />;
 	}
 });
 
-export default RepeaterBase;
-export {RepeaterBase as Repeater, RepeaterBase};
+const Repeater = ForwardRef({prop: 'componentRef'}, RepeaterBase);
+
+export default Repeater;
+export {
+	Repeater,
+	RepeaterBase
+};
