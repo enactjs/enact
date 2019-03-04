@@ -15,6 +15,7 @@ import {memoize} from '@enact/core/util';
 import {adaptEvent, call, forKey, forward, forwardWithPrevent, handle, preventDefault, stopImmediate, returnsTrue} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import {perfNow, Job} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
@@ -262,7 +263,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default `moonstone/VideoPlayer.MediaControls`
 		 * @public
 		 */
-		mediaControlsComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+		mediaControlsComponent: EnactPropTypes.componentOverride,
 
 		/**
 		 * Amount of time (in milliseconds), after the last user action, that the `miniFeedback`
@@ -538,10 +539,10 @@ const VideoPlayerBase = class extends React.Component {
 		 * The internal thumbnail style will not be applied to this component. This component
 		 * follows the same rules as the built-in version.
 		 *
-		 * @type {Node}
+		 * @type {String|Component|Element}
 		 * @public
 		 */
-		thumbnailComponent: PropTypes.node,
+		thumbnailComponent: EnactPropTypes.renderableOverride,
 
 		/**
 		 * Thumbnail image source to show on the slider knob.
@@ -616,7 +617,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default {@link ui/Media.Media}
 		 * @public
 		 */
-		videoComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element])
+		videoComponent: EnactPropTypes.componentOverride
 	}
 
 	static contextType = FloatingLayerContext

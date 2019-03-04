@@ -8,6 +8,7 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -84,10 +85,10 @@ const ButtonBase = kind({
 		 * class to customize its styling. If [icon]{@link ui/Button.ButtonBase.icon} is not a
 		 * string, this property is not used.
 		 *
-		 * @type {Function}
+		 * @type {Component}
 		 * @public
 		 */
-		iconComponent: PropTypes.func,
+		iconComponent: EnactPropTypes.component,
 
 		/**
 		 * Enforces a minimum width for the component.
