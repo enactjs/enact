@@ -48,7 +48,6 @@ const BodyTextBase = kind({
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		centered: PropTypes.bool,
