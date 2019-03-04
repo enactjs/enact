@@ -223,6 +223,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		constructor (props) {
+			console.log('VirtualListBase.js > constructor');
+
 			let nextState = null;
 
 			super(props);
@@ -244,6 +246,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		static getDerivedStateFromProps (props, state) {
+			console.log('VirtualListBase.js > getDerivedStateFromProps');
+
 			const
 				shouldInvalidate = (
 					state.prevFirstIndex === state.firstIndex ||
@@ -263,6 +267,8 @@ const VirtualListBaseFactory = (type) => {
 
 		// Calculate metrics for VirtualList after the 1st render to know client W/H.
 		componentDidMount () {
+			console.log('VirtualListBase.js > componentDidMount');
+
 			if (!this.props.clientSize) {
 				this.calculateMetrics(this.props);
 				// eslint-disable-next-line react/no-did-mount-set-state
@@ -272,6 +278,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentDidUpdate (prevProps) {
+			console.log('VirtualListBase.js > componentDidUpdate');
+
 			// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
 			this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
 
@@ -299,6 +307,10 @@ const VirtualListBaseFactory = (type) => {
 					this.setScrollPosition(x, y, 0, 0, this.props.rtl);
 				}
 			}
+		}
+
+		componentWillUnmount () {
+			console.log('VirtualListBase.js > componentWillUnmount');
 		}
 
 		scrollBounds = {
@@ -787,6 +799,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		render () {
+			console.log('VirtualListBase.js > render');
+
 			const
 				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
 				{cc, initItemContainerRef, primary} = this,
