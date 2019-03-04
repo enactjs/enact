@@ -2,13 +2,13 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [2.4.0] - 2019-03-04
 
 ### Added
 
 - `line-height` rule to base text CSS for both latin and non-latin locales
 - Support for high contrast colors in dark and light `moonstone`
-- `moonstone/BodyText` prop `noWrap` which automatically adds `moonstone/Marquee` support as well as limiting the content to only display one line of text
+- `moonstone/BodyText` prop `noWrap` which automatically adds `moonstone/Marquee` support as well as limits the content to only display one line of text
 
 ### Changed
 

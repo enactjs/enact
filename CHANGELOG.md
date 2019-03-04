@@ -2,6 +2,30 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.4.0] - 2019-03-04
+
+- `moonstone` `line-height` rule to base text CSS for both latin and non-latin locales
+- `moonstone` support for high contrast colors in dark and light skin
+- `moonstone/BodyText` prop `noWrap` which automatically adds `moonstone/Marquee` support as well as limits the content to only display one line of text
+- `ui/BodyText` prop `component` to allow customization of the tag/component used to render its base element
+- `ui/Repeater` prop `component` to allow customization of its base element
+- `ui/Spinner` prop `paused` to halt the animation. Previously this was hard-coded "on", but now it can be toggled.
+
+### Changed
+
+- `moonstone/Spinner` visuals from 3 spinning balls to an energetic flexing line
+- `ui/Changeable` and `ui/Toggleable` to warn when both `[defaultProp]` and `[prop]` are provided
+
+### Fixed
+
+- `moonstone/Panels` to set child's `autoFocus` prop to `default-element` when `index` increases
+- `moonstone/Slider` to prevent gaining focus when clicked when disabled
+- `moonstone/Slider` to prevent default browser scroll behavior when 5-way directional key is pressed on an active knob
+- `moonstone/DatePicker` and `moonstone/TimePicker` to close with back/ESC
+- `moonstone/DatePicker` and `moonstone/TimePicker` value handling when open on mount
+- `moonstone/ContextualPopupDecorator` to correctly focus on popup content when opened
+- `spotlight/Spottable` to prevent unnecessary updates due to focus changes
+
 ## [2.3.0] - 2019-02-11
 
 ### Deprecated
