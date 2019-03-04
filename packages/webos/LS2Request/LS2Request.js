@@ -63,6 +63,7 @@ export default class LS2Request {
 	 *	times out.  Used in conjunction with `timeout`.
 	 * @param {Boolean} options.subscribe Subscribe to service methods that support subscription.
 	 * @param {Number} options.timeout The delay in milliseconds to wait for the request to return.
+	 * @param {Object} options.mockData The mock data to return when PalmServiceBridge not found.
 	 * @returns {webos/LS2Request}
 	 * @public
 	 */
@@ -75,7 +76,8 @@ export default class LS2Request {
 		onComplete = null,
 		onTimeout = timeoutHandler,
 		subscribe = false,
-		timeout = 0
+		timeout = 0,
+		mockData = null
 	}) {
 		this.cancelled = false;
 
@@ -84,6 +86,15 @@ export default class LS2Request {
 		}
 
 		if (typeof window !== 'object' || !window.PalmServiceBridge) {
+			if (mockData) {
+				if (mockData.errorCode || mockData.returnValue === false) {
+					onFailure && onFailure(mockData);
+				} else {
+					onSuccess && onSuccess(mockData);
+				}
+				onComplete && onComplete(mockData);
+				return;
+			}
 			/* eslint no-unused-expressions: ["error", { "allowShortCircuit": true }]*/
 			onFailure && onFailure({errorCode: -1, errorText: 'PalmServiceBridge not found.', returnValue: false});
 			onComplete && onComplete({errorCode: -1, errorText: 'PalmServiceBridge not found.', returnValue: false});

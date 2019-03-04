@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `webos/LS2Request` `send()` parameters `mockData`
+
 ## [2.3.0] - 2019-02-11
 
 No significant changes.
