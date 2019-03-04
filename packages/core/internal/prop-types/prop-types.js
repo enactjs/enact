@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import {isRenderable} from '../../util';
 
 const isRequired = (fn) => {
-	fn.isRequired = function (propValue, key, componentName, location, propFullName, ...rest) {
+	fn.isRequired = function (props, key, componentName, location, propFullName, ...rest) {
+		const propValue = props[key];
 		if (typeof propValue === 'undefined') {
 			return new Error(
 				`'${propFullName}' is required for '${componentName}' but was undefined.`
@@ -16,32 +17,34 @@ const isRequired = (fn) => {
 	return fn;
 };
 
-const renderable = isRequired(function (propValue, key, componentName, location, propFullName) {
+const renderable = isRequired(function (props, key, componentName) {
+	const propValue = props[key];
 	if (propValue && !isRenderable(propValue)) {
 		return new Error(
-			`Invalid prop '${propFullName}' supplied to '${componentName}'.` +
-			`Expected a renderable value but received a '${typeof propValue}' instead.`
+			`Invalid prop '${key}' supplied to '${componentName}'. ` +
+			`Expected a renderable value but received '${typeof propValue}' instead.`
 		);
 	}
 });
 
-const component = isRequired(function (propValue, key, componentName, location, propFullName) {
+const component = isRequired(function (props, key, componentName) {
+	const propValue = props[key];
 	if (propValue && (typeof propValue === 'string' || !isRenderable(propValue))) {
 		return new Error(
-			`Invalid prop '${propFullName}' supplied to '${componentName}'.` +
-			`Expected a renderable value but received a '${typeof propValue}' instead.`
+			`Invalid prop '${key}' supplied to '${componentName}'. ` +
+			`Expected a function but received '${typeof propValue}' instead.`
 		);
 	}
 });
 
 const renderableOverride = PropTypes.oneOfType([
-	renderable,
-	PropTypes.element
+	PropTypes.element,
+	renderable
 ]);
 
 const componentOverride = PropTypes.oneOfType([
-	component,
-	PropTypes.element
+	PropTypes.element,
+	component
 ]);
 
 const EnactPropTypes = {
