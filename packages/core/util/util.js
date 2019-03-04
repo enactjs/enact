@@ -82,7 +82,12 @@ const coerceArray = function (array) {
  */
 const isRenderable = function (tag) {
 	const type = typeof tag;
-	return type === 'function' || type === 'string';
+	const symbol = String(tag.$$typeof);
+	return type === 'function' || type === 'string' || (
+		symbol === 'Symbol(react.forward_ref)' ||
+		symbol === 'Symbol(react.memo)' ||
+		symbol === 'Symbol(react.lazy)'
+	);
 };
 
 /**
