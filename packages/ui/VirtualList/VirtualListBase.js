@@ -296,7 +296,7 @@ const VirtualListBaseFactory = (type) => {
 				if (type === Native) {
 					this.scrollToPosition(x, y, this.props.rtl);
 				} else {
-					this.setScrollPosition(x, y, nextProps.rtl);
+					this.setScrollPosition(x, y, this.props.rtl);
 				}
 			}
 		}
@@ -324,7 +324,6 @@ const VirtualListBaseFactory = (type) => {
 		dimensionToExtent = 0
 		threshold = 0
 		maxFirstIndex = 0
-		lastPositionedFirstIndex = 0
 		curDataSize = 0
 		hasDataSizeChanged = false
 		cc = []
@@ -472,7 +471,7 @@ const VirtualListBaseFactory = (type) => {
 				{overhang} = props,
 				{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, scrollPosition, threshold} = this,
 				{gridSize} = primary;
-			let newFirstIndex;
+			let newFirstIndex = firstIndex;
 
 			if (wasFirstIndexMax && dataSizeDiff > 0) { // If dataSize increased from bottom, we need adjust firstIndex
 				// If this is a gridlist and dataSizeDiff is smaller than 1 line, we are adjusting firstIndex without threshold change.
@@ -496,7 +495,7 @@ const VirtualListBaseFactory = (type) => {
 					threshold.min = Math.min(maxOfMin, threshold.max - gridSize);
 				}
 			} else { // Other cases, we can keep the min value between firstIndex and maxFirstIndex. No need to change threshold
-				newFirstIndex = Math.min(this.lastPositionedFirstIndex, maxFirstIndex);
+				newFirstIndex = Math.min(firstIndex, maxFirstIndex);
 			}
 
 			return newFirstIndex;
@@ -624,7 +623,6 @@ const VirtualListBaseFactory = (type) => {
 			this.updateMoreInfo(dataSize, pos);
 
 			if (firstIndex !== newFirstIndex) {
-				this.lastPositionedFirstIndex = newFirstIndex;
 				this.setState({firstIndex: newFirstIndex});
 			}
 		}
