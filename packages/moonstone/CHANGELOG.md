@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `moonstone/TooltipDecorator` to update `Tooltip` layout on keydown and when client changes
+
 ## [2.4.0] - 2019-03-04
 
 ### Added
