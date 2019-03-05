@@ -65,6 +65,17 @@ const RepeaterBase = kind({
 		childProp: PropTypes.string,
 
 		/**
+		 * Component type to wrap around all of the repeated elements.
+		 *
+		 * This can be a string describing a DOM node or React component (e.g. `'div'` or `Layout`).
+		 *
+		 * @type {Component}
+		 * @default 'span'
+		 * @public
+		 */
+		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+
+		/**
 		 * The property on each `childComponent` that receives the index of the item in the `Repeater`.
 		 *
 		 * @type {String}
@@ -83,8 +94,9 @@ const RepeaterBase = kind({
 	},
 
 	defaultProps: {
-		indexProp: 'data-index',
-		childProp: 'children'
+		childProp: 'children',
+		component: 'span',
+		indexProp: 'data-index'
 	},
 
 	computed: {
@@ -103,13 +115,13 @@ const RepeaterBase = kind({
 		}
 	},
 
-	render: (props) => {
-		delete props.childComponent;
-		delete props.childProp;
-		delete props.indexProp;
-		delete props.itemProps;
+	render: ({component: Component, ...rest}) => {
+		delete rest.childComponent;
+		delete rest.childProp;
+		delete rest.indexProp;
+		delete rest.itemProps;
 
-		return <span role="list" {...props} />;
+		return <Component role="list" {...rest} />;
 	}
 });
 
