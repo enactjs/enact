@@ -165,6 +165,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.TOOLTIP_HEIGHT = ri.scale(18); // distance between client and tooltip's label
 			this.mutationObserver = new MutationObserver(this.setTooltipLayoutJob.start);
+			this.resizeObserver = new ResizeObserver(this.setTooltipLayoutJob.start);
 
 			this.state = {
 				showing: false,
@@ -183,6 +184,9 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillUnmount () {
 			if (currentTooltip === this) {
 				currentTooltip = null;
+
+				this.mutationObserver.disconnect();
+				this.resizeObserver.disconnect();
 				this.showTooltipJob.stop();
 				this.setTooltipLayoutJob.stop();
 			}
@@ -248,14 +252,19 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.clientRef = client;
 				currentTooltip = this;
 				this.showTooltipJob.startAfter(tooltipDelay);
-				this.mutationObserver.observe(this.clientRef, {attributes: true, childList: true, subtree: true});
+				this.mutationObserver.observe(this.clientRef, {attributes: true, childList: true});
+				this.resizeObserver.observe(this.clientRef);
 			}
 		}
 
 		hideTooltip = () => {
 			if (this.props.tooltipText) {
+				this.mutationObserver.disconnect();
+				this.resizeObserver.disconnect();
+
 				this.clientRef = null;
 				currentTooltip = null;
+
 				this.showTooltipJob.stop();
 				this.setTooltipLayoutJob.stop();
 
