@@ -164,6 +164,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.TOOLTIP_HEIGHT = ri.scale(18); // distance between client and tooltip's label
+			/* global MutationObserver ResizeObserver */
 			this.mutationObserver = new MutationObserver(this.setTooltipLayoutJob.start);
 			this.resizeObserver = new ResizeObserver(this.setTooltipLayoutJob.start);
 
