@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/VirtualList` to not resume spotlight pauses it did not initiate
+
 ## [2.2.9] - 2019-01-11
 
 ### Fixed
