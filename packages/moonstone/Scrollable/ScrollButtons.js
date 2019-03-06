@@ -145,17 +145,10 @@ class ScrollButtons extends Component {
 	}
 
 	componentDidMount () {
-		if (this.announceRef.current) {
-			this.announce = this.announceRef.current.announce;
-		}
+		this.announce = this.announceRef.current.announce;
 	}
 
 	announce = null
-
-	// elements
-
-	prevButtonNodeRef = null
-	nextButtonNodeRef = null
 
 	updateButtons = (bounds) => {
 		const
@@ -342,7 +335,7 @@ class ScrollButtons extends Component {
 			</ScrollButton>,
 			<Announce
 				key="announce"
-				ref={this.initAnnounceRef}
+				ref={this.announceRef}
 			/>
 		];
 	}

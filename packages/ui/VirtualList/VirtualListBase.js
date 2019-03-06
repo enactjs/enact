@@ -374,7 +374,7 @@ const VirtualListBaseFactory = (type) => {
 		calculateMetrics (props) {
 			const
 				{clientSize, direction, itemSize, spacing} = props,
-				node = this.containerRef.current;
+				node = this.containerRef && this.containerRef.current;
 
 			if (!clientSize && !node) {
 				return;
@@ -505,7 +505,7 @@ const VirtualListBaseFactory = (type) => {
 		calculateScrollBounds (props) {
 			const
 				{clientSize} = props,
-				node = this.containerRef.current;
+				node = this.containerRef && this.containerRef.current;
 
 			if (!clientSize && !node) {
 				return;
@@ -635,9 +635,9 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		getItemNode = (index) => {
-			const node = this.itemContainerRef.current;
+			const ref = this.itemContainerRef.current;
 
-			return node ? node.children[index % this.state.numOfItems] : null;
+			return ref ? ref.children[index % this.state.numOfItems] : null;
 		}
 
 		composeStyle (width, height, primaryPosition, secondaryPosition) {

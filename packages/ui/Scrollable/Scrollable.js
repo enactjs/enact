@@ -546,7 +546,6 @@ class ScrollableBase extends Component {
 
 	// component info
 	childRef = null
-	containerRef = null
 
 	// scroll animator
 	animator = new ScrollAnimator()

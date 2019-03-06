@@ -227,14 +227,11 @@ class ScrollableBaseNative extends Component {
 	}
 
 	componentDidMount () {
-		if (this.overscrollRefs.horizontal.current) {
-			this.createOverscrollJob('horizontal', 'before');
-			this.createOverscrollJob('horizontal', 'after');
-		}
-		if (this.overscrollRefs.vertical.current) {
-			this.createOverscrollJob('vertical', 'before');
-			this.createOverscrollJob('vertical', 'after');
-		}
+		this.createOverscrollJob('horizontal', 'before');
+		this.createOverscrollJob('horizontal', 'after');
+
+		this.createOverscrollJob('vertical', 'before');
+		this.createOverscrollJob('vertical', 'after');
 	}
 
 	componentDidUpdate (prevProps) {
@@ -347,8 +344,8 @@ class ScrollableBaseNative extends Component {
 				}
 
 				// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
-				if ((horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().contains(ev.target)) ||
-					(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().contains(ev.target))) {
+				if ((horizontalScrollbarRef.current.getContainerRef().contains(ev.target)) ||
+					(verticalScrollbarRef.current.getContainerRef().contains(ev.target))) {
 					delta = this.uiRef.current.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
 				} else if (overscrollEffectRequired) {
@@ -576,7 +573,7 @@ class ScrollableBaseNative extends Component {
 				const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
 
 				if ((horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().contains(element)) ||
-					(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().contains(element))) {
+					(verticalScrollbarRef.current.getContainerRef().contains(element))) {
 					overscrollEffectRequired = false;
 				}
 			}
@@ -837,7 +834,7 @@ class ScrollableBaseNative extends Component {
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
 				onWheel={this.onWheel}
-				ref={this.initUiRef}
+				ref={this.uiRef}
 				removeEventListeners={this.removeEventListeners}
 				scrollStopOnScroll={this.scrollStopOnScroll}
 				scrollTo={this.scrollTo}

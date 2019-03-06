@@ -246,14 +246,11 @@ class ScrollableBase extends Component {
 	}
 
 	componentDidMount () {
-		if (this.overscrollRefs.horizontal.current) {
-			this.createOverscrollJob('horizontal', 'before');
-			this.createOverscrollJob('horizontal', 'after');
-		}
-		if (this.overscrollRefs.vertical.current) {
-			this.createOverscrollJob('vertical', 'before');
-			this.createOverscrollJob('vertical', 'after');
-		}
+		this.createOverscrollJob('horizontal', 'before');
+		this.createOverscrollJob('horizontal', 'after');
+
+		this.createOverscrollJob('vertical', 'before');
+		this.createOverscrollJob('vertical', 'after');
 	}
 
 	componentDidUpdate (prevProps) {
@@ -313,8 +310,8 @@ class ScrollableBase extends Component {
 	onWheel = ({delta, horizontalScrollbarRef, verticalScrollbarRef}) => {
 		const
 			focusedItem = Spotlight.getCurrent(),
-			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current && horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
-			isVerticalScrollButtonFocused = verticalScrollbarRef.current && verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
+			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
+			isVerticalScrollButtonFocused = verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
 
 		if (focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
 			focusedItem.blur();
@@ -508,8 +505,8 @@ class ScrollableBase extends Component {
 				if (overscrollEffectRequired) {
 					const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
 
-					if ((horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().contains(element)) ||
-						(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().contains(element))) {
+					if ((horizontalScrollbarRef.current.getContainerRef().contains(element)) ||
+						(verticalScrollbarRef.current.getContainerRef().contains(element))) {
 						overscrollEffectRequired = false;
 					}
 				}
@@ -797,7 +794,7 @@ class ScrollableBase extends Component {
 						style={style}
 					>
 						<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={this.overscrollRefs.vertical}>
-							<ChildWrapper className={classNames(contentClassName, overscrollCss.overscrollFrame, overscrollCss.horizontal)} ref={this.initHorizontalOverscrollRef} {...restChildWrapperProps}>
+							<ChildWrapper className={classNames(contentClassName, overscrollCss.overscrollFrame, overscrollCss.horizontal)} ref={this.overscrollRefs.horizontal} {...restChildWrapperProps}>
 								{childRenderer({
 									...childComponentProps,
 									cbScrollTo: scrollTo,
