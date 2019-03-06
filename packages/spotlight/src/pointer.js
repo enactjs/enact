@@ -151,7 +151,7 @@ const notifyKeyDown = (keyCode, callback) => {
 	} else if (is('pointerShow', keyCode)) {
 		setPointerMode(true);
 		return true;
-	} else if (!is('nonModal', keyCode)) {
+	} else if (!is('nonModal', keyCode) && !is('cancel', keyCode)) {
 		setPointerMode(false);
 	}
 
