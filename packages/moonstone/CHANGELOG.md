@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `moonstone/Picker` to remove `max-width` of valueWrapper
+
 ## [2.4.0] - 2019-03-04
 
 ### Added
