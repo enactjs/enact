@@ -90,7 +90,7 @@ const defaultConfig = {
  */
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	const {emulateMouse} = config;
-
+	let isFocused = false;
 	return class extends React.Component {
 		static displayName = 'Spottable'
 
@@ -205,7 +205,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static getDerivedStateFromProps (props, state) {
-			const focusedWhenDisabled = Boolean(state.focused && (props.disabled || props.spotlightDisabled));
+			const focusedWhenDisabled = Boolean(isFocused && (props.disabled || props.spotlightDisabled));
 
 			if (focusedWhenDisabled !== state.focusedWhenDisabled) {
 				return {
@@ -362,9 +362,9 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleBlur = (ev) => {
 			if (this.shouldPreventBlur) return;
-
 			if (ev.currentTarget === ev.target) {
-				this.setState({focused: false, focusedWhenDisabled: false});
+				isFocused = false;
+				this.setState({focusedWhenDisabled: false});
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
@@ -381,9 +381,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				this.shouldPreventBlur = false;
 				return;
 			}
-
+			
 			if (ev.currentTarget === ev.target) {
-				this.setState({focused: true});
+				isFocused = true;
+				// this.setState({focused: true});
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
