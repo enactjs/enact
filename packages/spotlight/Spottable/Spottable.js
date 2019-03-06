@@ -364,7 +364,9 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.shouldPreventBlur) return;
 			if (ev.currentTarget === ev.target) {
 				isFocused = false;
-				this.setState({focusedWhenDisabled: false});
+				if (this.state.focusedWhenDisabled) {
+					this.setState({focusedWhenDisabled: false});
+				}
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
@@ -381,7 +383,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				this.shouldPreventBlur = false;
 				return;
 			}
-			
+
 			if (ev.currentTarget === ev.target) {
 				isFocused = true;
 				// this.setState({focused: true});
