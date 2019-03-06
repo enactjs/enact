@@ -133,7 +133,8 @@ class ScrollButtons extends Component {
 
 	constructor (props) {
 		super(props);
-
+		this.prevPrevButtonDisabled = true;
+		this.prevNextButtonDisabled = true;
 		this.state = {
 			prevButtonDisabled: true,
 			nextButtonDisabled: true
@@ -157,19 +158,24 @@ class ScrollButtons extends Component {
 			   browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
 			shouldDisableNextButton = maxPos - currentPos <= 1;
 
-		this.setState((prevState) => {
-			const
-				updatePrevButton = (prevState.prevButtonDisabled !== shouldDisablePrevButton),
-				updateNextButton = (prevState.nextButtonDisabled !== shouldDisableNextButton);
+		const
+			updatePrevButton = (this.prevPrevButtonDisabled !== shouldDisablePrevButton),
+			updateNextButton = (this.prevNextButtonDisabled !== shouldDisableNextButton);
+		this.prevPrevButtonDisabled = shouldDisablePrevButton;
+		this.prevNextButtonDisabled = shouldDisableNextButton;
 
-			if (updatePrevButton && updateNextButton) {
-				return {prevButtonDisabled: shouldDisablePrevButton, nextButtonDisabled: shouldDisableNextButton};
-			} else if (updatePrevButton) {
-				return {prevButtonDisabled: shouldDisablePrevButton};
-			} else if (updateNextButton) {
-				return {nextButtonDisabled: shouldDisableNextButton};
-			}
-		});
+		if (updatePrevButton || updateNextButton) {
+			this.setState(() => {
+				if (updatePrevButton && updateNextButton) {
+					return {prevButtonDisabled: shouldDisablePrevButton, nextButtonDisabled: shouldDisableNextButton};
+				} else if (updatePrevButton) {
+					return {prevButtonDisabled: shouldDisablePrevButton};
+				} else if (updateNextButton) {
+					return {nextButtonDisabled: shouldDisableNextButton};
+				}
+			});
+		}
+
 	}
 
 	isOneOfScrollButtonsFocused = () => {
