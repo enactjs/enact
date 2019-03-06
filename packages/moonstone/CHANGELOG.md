@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/MoonstoneDecorator` to configure Spotlight to remain in pointer mode when the Escape key is pressed
+
 ## [2.4.0] - 2019-03-04
 
 ### Added
