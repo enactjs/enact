@@ -101,7 +101,8 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	addAll({
 		cancel: 461,
 		nonModal: [
-			461,
+			27, // escape (back on PC)
+			461, // back on remote
 			415, // play
 			19, // pause
 			403, // red
