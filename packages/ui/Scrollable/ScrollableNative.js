@@ -371,13 +371,17 @@ class ScrollableBaseNative extends Component {
 			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
 		};
 
+		this.containerRef = React.createRef();
+		this.horizontalScrollbarRef = React.createRef();
+		this.verticalScrollbarRef = React.createRef();
+
 		this.horizontalScrollbarProps = {
-			ref: this.initHorizontalScrollbarRef,
+			ref: this.horizontalScrollbarRef,
 			vertical: false
 		};
 
 		this.verticalScrollbarProps = {
-			ref: this.initVerticalScrollbarRef,
+			ref: this.verticalScrollbarRef,
 			vertical: true
 		};
 
@@ -513,7 +517,6 @@ class ScrollableBaseNative extends Component {
 
 	// component info
 	childRef = null
-	containerRef = null
 
 	// scroll animator
 	animator = new ScrollAnimator()
@@ -657,8 +660,8 @@ class ScrollableBaseNative extends Component {
 					const {horizontalScrollbarRef, verticalScrollbarRef} = this;
 
 					// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
-					if ((horizontalScrollbarRef && horizontalScrollbarRef.getContainerRef().contains(ev.target)) ||
-						(verticalScrollbarRef && verticalScrollbarRef.getContainerRef().contains(ev.target))) {
+					if ((horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().contains(ev.target)) ||
+						(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().contains(ev.target))) {
 						delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 						needToHideThumb = !delta;
 					} else if (overscrollEffectRequired) {
@@ -926,7 +929,7 @@ class ScrollableBaseNative extends Component {
 		}
 
 		if (this.state.isHorizontalScrollbarVisible) {
-			this.updateThumb(this.horizontalScrollbarRef, bounds);
+			this.updateThumb(this.horizontalScrollbarRef.current, bounds);
 		}
 	}
 
@@ -940,7 +943,7 @@ class ScrollableBaseNative extends Component {
 		}
 
 		if (this.state.isVerticalScrollbarVisible) {
-			this.updateThumb(this.verticalScrollbarRef, bounds);
+			this.updateThumb(this.verticalScrollbarRef.current, bounds);
 		}
 	}
 
@@ -1131,11 +1134,11 @@ class ScrollableBaseNative extends Component {
 	// scroll bar
 
 	showThumb (bounds) {
-		if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds) && this.horizontalScrollbarRef) {
-			this.horizontalScrollbarRef.showThumb();
+		if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
+			this.horizontalScrollbarRef.current.showThumb();
 		}
-		if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds) && this.verticalScrollbarRef) {
-			this.verticalScrollbarRef.showThumb();
+		if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
+			this.verticalScrollbarRef.current.showThumb();
 		}
 	}
 
@@ -1148,11 +1151,11 @@ class ScrollableBaseNative extends Component {
 	}
 
 	startHidingThumb = () => {
-		if (this.state.isHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
-			this.horizontalScrollbarRef.startHidingThumb();
+		if (this.state.isHorizontalScrollbarVisible) {
+			this.horizontalScrollbarRef.current.startHidingThumb();
 		}
-		if (this.state.isVerticalScrollbarVisible && this.verticalScrollbarRef) {
-			this.verticalScrollbarRef.startHidingThumb();
+		if (this.state.isVerticalScrollbarVisible) {
+			this.verticalScrollbarRef.current.startHidingThumb();
 		}
 	}
 
@@ -1204,11 +1207,11 @@ class ScrollableBaseNative extends Component {
 					scrollTop: this.scrollTop
 				};
 
-			if (curHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
-				this.horizontalScrollbarRef.update(updatedBounds);
+			if (curHorizontalScrollbarVisible) {
+				this.horizontalScrollbarRef.current.update(updatedBounds);
 			}
-			if (curVerticalScrollbarVisible && this.verticalScrollbarRef) {
-				this.verticalScrollbarRef.update(updatedBounds);
+			if (curVerticalScrollbarVisible) {
+				this.verticalScrollbarRef.current.update(updatedBounds);
 			}
 			return true;
 		}
@@ -1276,23 +1279,7 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
-	initContainerRef = (ref) => {
-		if (ref) {
-			this.containerRef = ref;
-		}
-	}
 
-	initHorizontalScrollbarRef = (ref) => {
-		if (ref) {
-			this.horizontalScrollbarRef = ref;
-		}
-	}
-
-	initVerticalScrollbarRef = (ref) => {
-		if (ref) {
-			this.verticalScrollbarRef = ref;
-		}
-	}
 
 	render () {
 		const
@@ -1339,9 +1326,9 @@ class ScrollableBaseNative extends Component {
 					childWrapperProps,
 					className: scrollableClasses,
 					componentCss: css,
+					containerRef: this.containerRef,
 					horizontalScrollbarProps: this.horizontalScrollbarProps,
 					initChildRef: this.initChildRef,
-					initContainerRef: this.initContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
 					rtl,
@@ -1388,9 +1375,9 @@ class ScrollableNative extends Component {
 					childWrapperProps,
 					className,
 					componentCss,
+					containerRef,
 					horizontalScrollbarProps,
 					initChildRef,
-					initContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
 					rtl,
@@ -1400,7 +1387,7 @@ class ScrollableNative extends Component {
 				}) => (
 					<div
 						className={className}
-						ref={initContainerRef}
+						ref={containerRef}
 						style={style}
 					>
 						<div className={componentCss.container}>

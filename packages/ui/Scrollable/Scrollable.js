@@ -56,7 +56,10 @@ const
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
 
-const TouchableDiv = Touchable('div');
+const TouchableDiv = React.forwardRef((props, ref) => {
+	const Wrapper = Touchable('div');
+	return <Wrapper {...props} ref={ref} />;
+});
 
 /**
  * An unstyled component that passes scrollable behavior information as its render prop's arguments.
@@ -385,13 +388,17 @@ class ScrollableBase extends Component {
 			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
 		};
 
+		this.containerRef = React.createRef();
+		this.horizontalScrollbarRef = React.createRef();
+		this.verticalScrollbarRef = React.createRef();
+
 		this.horizontalScrollbarProps = {
-			ref: this.initHorizontalScrollbarRef,
+			ref: this.horizontalScrollbarRef,
 			vertical: false
 		};
 
 		this.verticalScrollbarProps = {
-			ref: this.initVerticalScrollbarRef,
+			ref: this.verticalScrollbarRef,
 			vertical: true
 		};
 
@@ -414,12 +421,12 @@ class ScrollableBase extends Component {
 	componentDidUpdate (prevProps, prevState) {
 		const
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-			{hasDataSizeChanged} = this.childRef;
+			{hasDataSizeChanged} = this.childRef.current;
 
 		// Need to sync calculated client size if it is different from the real size
-		if (this.childRef.syncClientSize) {
+		if (this.childRef.current.syncClientSize) {
 			// If we actually synced, we need to reset scroll position.
-			if (this.childRef.syncClientSize()) {
+			if (this.childRef.current.syncClientSize()) {
 				this.setScrollLeft(0);
 				this.setScrollTop(0);
 			}
@@ -478,7 +485,7 @@ class ScrollableBase extends Component {
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	enqueueForceUpdate () {
-		this.childRef.calculateMetrics();
+		this.childRef.current.calculateMetrics();
 		this.forceUpdate();
 	}
 
@@ -829,7 +836,7 @@ class ScrollableBase extends Component {
 		}
 
 		if (this.state.isHorizontalScrollbarVisible) {
-			this.updateThumb(this.horizontalScrollbarRef, bounds);
+			this.updateThumb(this.horizontalScrollbarRef.current, bounds);
 		}
 	}
 
@@ -843,7 +850,7 @@ class ScrollableBase extends Component {
 		}
 
 		if (this.state.isVerticalScrollbarVisible) {
-			this.updateThumb(this.verticalScrollbarRef, bounds);
+			this.updateThumb(this.verticalScrollbarRef.current, bounds);
 		}
 	}
 
@@ -995,7 +1002,7 @@ class ScrollableBase extends Component {
 			this.setScrollTop(top);
 		}
 
-		this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirX, dirY);
+		this.childRef.current.setScrollPosition(this.scrollLeft, this.scrollTop, dirX, dirY);
 		this.forwardScrollEvent('onScroll');
 	}
 
@@ -1057,11 +1064,11 @@ class ScrollableBase extends Component {
 					}
 				}
 			} else {
-				if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
-					itemPos = this.childRef.getItemPosition(opt.index, opt.stickTo);
+				if (typeof opt.index === 'number' && typeof this.childRef.current.getItemPosition === 'function') {
+					itemPos = this.childRef.current.getItemPosition(opt.index, opt.stickTo);
 				} else if (opt.node instanceof Object) {
-					if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
-						itemPos = this.childRef.getNodePosition(opt.node);
+					if (opt.node.nodeType === 1 && typeof this.childRef.current.getNodePosition === 'function') {
+						itemPos = this.childRef.current.getNodePosition(opt.node);
 					}
 				}
 				if (itemPos) {
@@ -1109,11 +1116,11 @@ class ScrollableBase extends Component {
 	// scroll bar
 
 	showThumb (bounds) {
-		if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds) && this.horizontalScrollbarRef) {
-			this.horizontalScrollbarRef.showThumb();
+		if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
+			this.horizontalScrollbarRef.current.showThumb();
 		}
-		if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds) && this.verticalScrollbarRef) {
-			this.verticalScrollbarRef.showThumb();
+		if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
+			this.verticalScrollbarRef.current.showThumb();
 		}
 	}
 
@@ -1126,11 +1133,11 @@ class ScrollableBase extends Component {
 	}
 
 	startHidingThumb = () => {
-		if (this.state.isHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
-			this.horizontalScrollbarRef.startHidingThumb();
+		if (this.state.isHorizontalScrollbarVisible) {
+			this.horizontalScrollbarRef.current.startHidingThumb();
 		}
-		if (this.state.isVerticalScrollbarVisible && this.verticalScrollbarRef) {
-			this.verticalScrollbarRef.startHidingThumb();
+		if (this.state.isVerticalScrollbarVisible) {
+			this.verticalScrollbarRef.current.startHidingThumb();
 		}
 	}
 
@@ -1182,11 +1189,11 @@ class ScrollableBase extends Component {
 					scrollTop: this.scrollTop
 				};
 
-			if (curHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
-				this.horizontalScrollbarRef.update(updatedBounds);
+			if (curHorizontalScrollbarVisible) {
+				this.horizontalScrollbarRef.current.update(updatedBounds);
 			}
-			if (curVerticalScrollbarVisible && this.verticalScrollbarRef) {
-				this.verticalScrollbarRef.update(updatedBounds);
+			if (curVerticalScrollbarVisible) {
+				this.verticalScrollbarRef.current.update(updatedBounds);
 			}
 			return true;
 		}
@@ -1196,14 +1203,14 @@ class ScrollableBase extends Component {
 	// ref
 
 	getScrollBounds () {
-		if (typeof this.childRef.getScrollBounds === 'function') {
-			return this.childRef.getScrollBounds();
+		if (typeof this.childRef.current.getScrollBounds === 'function') {
+			return this.childRef.current.getScrollBounds();
 		}
 	}
 
 	getMoreInfo () {
-		if (typeof this.childRef.getMoreInfo === 'function') {
-			return this.childRef.getMoreInfo();
+		if (typeof this.childRef.current.getMoreInfo === 'function') {
+			return this.childRef.current.getMoreInfo();
 		}
 	}
 
@@ -1211,19 +1218,19 @@ class ScrollableBase extends Component {
 	addEventListeners () {
 		const {childRef, containerRef} = this;
 
-		if (containerRef && containerRef.addEventListener) {
-			containerRef.addEventListener('wheel', this.onWheel);
-			containerRef.addEventListener('keydown', this.onKeyDown);
+		if (containerRef.current && containerRef.current.addEventListener) {
+			containerRef.current.addEventListener('wheel', this.onWheel);
+			containerRef.current.addEventListener('keydown', this.onKeyDown);
 		}
 
-		if (childRef && childRef.containerRef) {
-			if (childRef.containerRef.addEventListener) {
-				childRef.containerRef.addEventListener('mousedown', this.onMouseDown);
+		if (childRef.current && childRef.current.containerRef.current) {
+			if (childRef.current.containerRef.current.addEventListener) {
+				childRef.current.containerRef.current.addEventListener('mousedown', this.onMouseDown);
 			}
 		}
 
 		if (this.props.addEventListeners) {
-			this.props.addEventListeners(childRef.containerRef);
+			this.props.addEventListeners(childRef.current.containerRef.current);
 		}
 	}
 
@@ -1231,17 +1238,17 @@ class ScrollableBase extends Component {
 	removeEventListeners () {
 		const {childRef, containerRef} = this;
 
-		if (containerRef && containerRef.removeEventListener) {
-			containerRef.removeEventListener('wheel', this.onWheel);
-			containerRef.removeEventListener('keydown', this.onKeyDown);
+		if (containerRef.current && containerRef.current.removeEventListener) {
+			containerRef.current.removeEventListener('wheel', this.onWheel);
+			containerRef.current.removeEventListener('keydown', this.onKeyDown);
 		}
 
-		if (childRef && childRef.containerRef && childRef.containerRef.removeEventListener) {
-			childRef.containerRef.removeEventListener('mousedown', this.onMouseDown);
+		if (childRef.current && childRef.current.containerRef.current && childRef.current.containerRef.current.removeEventListener) {
+			childRef.current.containerRef.current.removeEventListener('mousedown', this.onMouseDown);
 		}
 
 		if (this.props.removeEventListeners) {
-			this.props.removeEventListeners(childRef.containerRef);
+			this.props.removeEventListeners(childRef.current.containerRef.current);
 		}
 	}
 
@@ -1253,34 +1260,16 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	initContainerRef = (ref) => {
-		if (ref) {
-			this.containerRef = ref;
-		}
-	}
-
-	initHorizontalScrollbarRef = (ref) => {
-		if (ref) {
-			this.horizontalScrollbarRef = ref;
-		}
-	}
-
-	initVerticalScrollbarRef = (ref) => {
-		if (ref) {
-			this.verticalScrollbarRef = ref;
-		}
-	}
-
 	handleScroll = () => {
 		const childRef = this.childRef;
 
 		// Prevent scroll by focus.
 		// VirtualList and VirtualGridList DO NOT receive `onscroll` event.
 		// Only Scroller could get `onscroll` event.
-		if (!this.animator.isAnimating() && childRef && childRef.containerRef && childRef.getRtlPositionX) {
+		if (!this.animator.isAnimating() && childRef.current && childRef.current.containerRef.current && childRef.current.getRtlPositionX) {
 			// For Scroller
-			childRef.containerRef.scrollTop = this.scrollTop;
-			childRef.containerRef.scrollLeft = childRef.getRtlPositionX(this.scrollLeft);
+			childRef.current.containerRef.current.scrollTop = this.scrollTop;
+			childRef.current.containerRef.current.scrollLeft = childRef.current.getRtlPositionX(this.scrollLeft);
 		}
 	}
 
@@ -1329,10 +1318,10 @@ class ScrollableBase extends Component {
 					childWrapperProps,
 					className: scrollableClasses,
 					componentCss: css,
+					containerRef: this.containerRef,
 					handleScroll: this.handleScroll,
 					horizontalScrollbarProps: this.horizontalScrollbarProps,
 					initChildRef: this.initChildRef,
-					initContainerRef: this.initContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
 					rtl,
@@ -1378,12 +1367,12 @@ class Scrollable extends Component {
 					childComponentProps,
 					childWrapper: ChildWrapper,
 					childWrapperProps,
+					containerRef,
 					className,
 					componentCss,
 					handleScroll,
 					horizontalScrollbarProps,
 					initChildRef,
-					initContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
 					rtl,
@@ -1393,7 +1382,7 @@ class Scrollable extends Component {
 				}) => (
 					<div
 						className={className}
-						ref={initContainerRef}
+						ref={containerRef}
 						style={style}
 					>
 						<div className={componentCss.container}>

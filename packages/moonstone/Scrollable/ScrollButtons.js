@@ -138,6 +138,16 @@ class ScrollButtons extends Component {
 			prevButtonDisabled: true,
 			nextButtonDisabled: true
 		};
+
+		this.announceRef = React.createRef();
+		this.nextButtonNodeRef = React.createRef();
+		this.prevButtonNodeRef = React.createRef();
+	}
+
+	componentDidMount () {
+		if (this.announceRef.current) {
+			this.announce = this.announceRef.current.announce;
+		}
 	}
 
 	announce = null
@@ -287,24 +297,6 @@ class ScrollButtons extends Component {
 		}
 	}
 
-	initAnnounceRef = (ref) => {
-		if (ref) {
-			this.announce = ref.announce;
-		}
-	}
-
-	initNextButtonRef = (ref) => {
-		if (ref) {
-			this.nextButtonNodeRef = ReactDOM.findDOMNode(ref); // eslint-disable-line react/no-find-dom-node
-		}
-	}
-
-	initPrevButtonRef = (ref) => {
-		if (ref) {
-			this.prevButtonNodeRef = ReactDOM.findDOMNode(ref); // eslint-disable-line react/no-find-dom-node
-		}
-	}
-
 	render () {
 		const
 			{disabled, nextButtonAriaLabel, previousButtonAriaLabel, rtl, thumbRenderer, vertical} = this.props,
@@ -326,7 +318,7 @@ class ScrollButtons extends Component {
 				onSpotlightLeft={this.onSpotlight}
 				onSpotlightRight={this.onSpotlight}
 				onSpotlightUp={this.onSpotlight}
-				ref={this.initPrevButtonRef}
+				ref={this.prevButtonRef}
 			>
 				{prevIcon}
 			</ScrollButton>,
@@ -344,7 +336,7 @@ class ScrollButtons extends Component {
 				onSpotlightLeft={this.onSpotlight}
 				onSpotlightRight={this.onSpotlight}
 				onSpotlightUp={this.onSpotlight}
-				ref={this.initNextButtonRef}
+				ref={this.nextButtonRef}
 			>
 				{nextIcon}
 			</ScrollButton>,
