@@ -386,7 +386,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (ev.currentTarget === ev.target) {
 				isFocused = true;
-				// this.setState({focused: true});
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
