@@ -8,7 +8,6 @@ import {forward} from '@enact/core/handle';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 

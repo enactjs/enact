@@ -2,7 +2,6 @@ import {Announce} from '@enact/ui/AnnounceDecorator';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 import Spotlight, {getDirection} from '@enact/spotlight';
 
 import $L from '../internal/$L';

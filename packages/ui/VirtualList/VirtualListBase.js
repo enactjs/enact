@@ -430,7 +430,7 @@ const VirtualListBaseFactory = (type) => {
 
 			// reset
 			this.scrollPosition = 0;
-			if (type === JS && this.contentRef.current) {
+			if (type === JS && this.contentRef && this.contentRef.current) {
 				this.contentRef.current.style.transform = null;
 			}
 		}
