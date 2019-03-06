@@ -76,6 +76,12 @@ class ScrollerBase extends Component {
 		direction: 'both'
 	}
 
+	constructor (props) {
+		super(props);
+
+		this.containerRef = React.createRef();
+	}
+
 	componentDidMount () {
 		this.calculateMetrics();
 	}
@@ -107,7 +113,7 @@ class ScrollerBase extends Component {
 
 	// for Scrollable
 	setScrollPosition (x, y) {
-		const node = this.containerRef;
+		const node = this.containerRef.current;
 
 		if (this.isVertical()) {
 			node.scrollTop = y;
@@ -121,7 +127,7 @@ class ScrollerBase extends Component {
 
 	// for ScrollableNative
 	scrollToPosition (x, y) {
-		this.containerRef.scrollTo(this.getRtlPositionX(x), y);
+		this.containerRef.current.scrollTo(this.getRtlPositionX(x), y);
 	}
 
 	// for ScrollableNative
@@ -133,8 +139,8 @@ class ScrollerBase extends Component {
 	getNodePosition = (node) => {
 		const
 			{left: nodeLeft, top: nodeTop, height: nodeHeight, width: nodeWidth} = node.getBoundingClientRect(),
-			{left: containerLeft, top: containerTop} = this.containerRef.getBoundingClientRect(),
-			{scrollLeft, scrollTop} = this.containerRef,
+			{left: containerLeft, top: containerTop} = this.containerRef.current.getBoundingClientRect(),
+			{scrollLeft, scrollTop} = this.containerRef.current,
 			left = this.isHorizontal() ? (scrollLeft + nodeLeft - containerLeft) : null,
 			top = this.isVertical() ? (scrollTop + nodeTop - containerTop) : null;
 
@@ -157,19 +163,13 @@ class ScrollerBase extends Component {
 	calculateMetrics () {
 		const
 			{scrollBounds} = this,
-			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.containerRef;
+			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.containerRef.current;
 		scrollBounds.scrollWidth = scrollWidth;
 		scrollBounds.scrollHeight = scrollHeight;
 		scrollBounds.clientWidth = clientWidth;
 		scrollBounds.clientHeight = clientHeight;
 		scrollBounds.maxLeft = Math.max(0, scrollWidth - clientWidth);
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
-	}
-
-	initContainerRef = (ref) => {
-		if (ref) {
-			this.containerRef = ref;
-		}
 	}
 
 	render () {
@@ -189,7 +189,7 @@ class ScrollerBase extends Component {
 			<div
 				{...rest}
 				className={classNames(className, css.hideNativeScrollbar)}
-				ref={this.initContainerRef}
+				ref={this.containerRef}
 				style={mergedStyle}
 			/>
 		);

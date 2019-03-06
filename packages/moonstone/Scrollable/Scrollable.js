@@ -354,7 +354,7 @@ class ScrollableBase extends Component {
 			positionFn = this.childRef.current.calculatePositionOnFocus,
 			{containerRef} = this.uiRef.current.childRef.current;
 
-		if (spotItem && positionFn && containerRef && containerRef.contains(spotItem)) {
+		if (spotItem && positionFn && containerRef.current && containerRef.current.contains(spotItem)) {
 			const lastPos = this.lastScrollPositionOnFocus;
 			let pos;
 
@@ -424,12 +424,12 @@ class ScrollableBase extends Component {
 		this.uiRef.current.lastInputType = 'pageKey';
 
 		// Should skip scroll by page when focusedItem is paging control button of Scrollbar
-		if (focusedItem && childRef.current.containerRef.contains(focusedItem)) {
+		if (focusedItem && childRef.current.containerRef.current.contains(focusedItem)) {
 			const
 				// VirtualList and Scroller have a spotlightId on containerRef
-				spotlightId = containerRef.dataset.spotlightId,
+				spotlightId = containerRef.current.dataset.spotlightId,
 				rDirection = reverseDirections[direction],
-				viewportBounds = containerRef.getBoundingClientRect(),
+				viewportBounds = containerRef.current.getBoundingClientRect(),
 				focusedItemBounds = focusedItem.getBoundingClientRect(),
 				endPoint = {
 					x: focusedItemBounds.left + focusedItemBounds.width / 2,
@@ -471,7 +471,7 @@ class ScrollableBase extends Component {
 			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		}
 
-		return current && this.uiRef.current.containerRef.contains(current);
+		return current && this.uiRef.current.containerRef.current.contains(current);
 	}
 
 	onKeyDown = (ev) => {
@@ -588,7 +588,7 @@ class ScrollableBase extends Component {
 	alertThumbAfterRendered = () => {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem && this.uiRef.current && this.uiRef.current.childRef.current.containerRef.contains(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
+		if (!Spotlight.getPointerMode() && spotItem && this.uiRef.current && this.uiRef.current.childRef.current.containerRef.current.contains(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
 			this.alertThumb();
 		}
 	}

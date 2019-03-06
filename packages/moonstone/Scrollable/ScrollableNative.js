@@ -297,12 +297,12 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onMouseOver = () => {
-		this.resetPosition = this.uiRef.current.childRef.containerRef.scrollTop;
+		this.resetPosition = this.uiRef.current.childRef.containerRef.current.scrollTop;
 	}
 
 	onMouseMove = () => {
 		if (this.resetPosition !== null) {
-			const childContainerRef = this.uiRef.current.childRef.containerRef;
+			const childContainerRef = this.uiRef.current.childRef.containerRef.current;
 			childContainerRef.style.scrollBehavior = null;
 			childContainerRef.scrollTop = this.resetPosition;
 			childContainerRef.style.scrollBehavior = 'smooth';
@@ -429,7 +429,7 @@ class ScrollableBaseNative extends Component {
 			positionFn = this.childRef.current.calculatePositionOnFocus,
 			{containerRef} = this.uiRef.current.childRef;
 
-		if (spotItem && positionFn && containerRef && containerRef.contains(spotItem)) {
+		if (spotItem && positionFn && containerRef.current && containerRef.current.contains(spotItem)) {
 			const lastPos = this.lastScrollPositionOnFocus;
 			let pos;
 
@@ -495,12 +495,12 @@ class ScrollableBaseNative extends Component {
 		this.uiRef.current.lastInputType = 'pageKey';
 
 		// Should skip scroll by page when focusedItem is paging control button of Scrollbar
-		if (focusedItem && childRef.containerRef.contains(focusedItem)) {
+		if (focusedItem && childRef.containerRef.current.contains(focusedItem)) {
 			const
 				// VirtualList and Scroller have a spotlightId on containerRef
-				spotlightId = containerRef.dataset.spotlightId,
+				spotlightId = containerRef.current.dataset.spotlightId,
 				rDirection = reverseDirections[direction],
-				viewportBounds = containerRef.getBoundingClientRect(),
+				viewportBounds = containerRef.current.getBoundingClientRect(),
 				focusedItemBounds = focusedItem.getBoundingClientRect(),
 				endPoint = {
 					x: focusedItemBounds.left + focusedItemBounds.width / 2,
@@ -542,7 +542,7 @@ class ScrollableBaseNative extends Component {
 			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		}
 
-		return current && this.uiRef.current.containerRef.contains(current);
+		return current && this.uiRef.current.containerRef.current.contains(current);
 	}
 
 	onKeyDown = (ev) => {
@@ -654,7 +654,7 @@ class ScrollableBaseNative extends Component {
 	alertThumbAfterRendered = () => {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem && this.uiRef.current && this.uiRef.current.childRef.containerRef.contains(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
+		if (!Spotlight.getPointerMode() && spotItem && this.uiRef.current && this.uiRef.current.childRef.containerRef.current.contains(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
 			this.alertThumb();
 		}
 	}
@@ -733,11 +733,11 @@ class ScrollableBaseNative extends Component {
 
 	updateFocusAfterVoiceControl = () => {
 		const spotItem = Spotlight.getCurrent();
-		if (spotItem && this.uiRef.current.containerRef.contains(spotItem)) {
+		if (spotItem && this.uiRef.current.containerRef.current.contains(spotItem)) {
 			const
-				viewportBounds = this.uiRef.current.containerRef.getBoundingClientRect(),
+				viewportBounds = this.uiRef.current.containerRef.current.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),
-				nodes = Spotlight.getSpottableDescendants(this.uiRef.current.containerRef.dataset.spotlightId),
+				nodes = Spotlight.getSpottableDescendants(this.uiRef.current.containerRef.current.dataset.spotlightId),
 				first = this.voiceControlDirection === 'vertical' ? 'top' : 'left',
 				last = this.voiceControlDirection === 'vertical' ? 'bottom' : 'right';
 

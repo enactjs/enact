@@ -207,7 +207,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentDidMount () {
-			const containerNode = this.uiRef.current.containerRef;
+			const containerNode = this.uiRef.current.containerRef.current;
 
 			this.props.initUiChildRef(this.uiRef);
 
@@ -240,7 +240,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentWillUnmount () {
-			const containerNode = this.uiRef.current.containerRef;
+			const containerNode = this.uiRef.current.containerRef.current;
 
 			if (type === JS) {
 				// remove a function for preventing native scrolling by Spotlight
@@ -489,7 +489,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (indexToScroll !== -1 && focusedIndex !== indexToScroll) {
 				if (firstIndex <= indexToScroll && indexToScroll < firstIndex + numOfItems) {
-					const node = this.uiRef.current.containerRef.querySelector(`[data-index='${indexToScroll}'].spottable`);
+					const node = this.uiRef.current.containerRef.current.querySelector(`[data-index='${indexToScroll}'].spottable`);
 
 					if (node) {
 						Spotlight.focus(node);
@@ -697,7 +697,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		focusOnItem = (index) => {
-			const item = this.uiRef.current.containerRef.querySelector(`[data-index='${index}'].spottable`);
+			const item = this.uiRef.current.containerRef.current.querySelector(`[data-index='${index}'].spottable`);
 
 			if (Spotlight.isPaused()) {
 				Spotlight.resume();
@@ -754,7 +754,7 @@ const VirtualListBaseFactory = (type) => {
 		isPlaceholderFocused = () => {
 			const current = Spotlight.getCurrent();
 
-			if (current && current.dataset.vlPlaceholder && this.uiRef.current.containerRef.contains(current)) {
+			if (current && current.dataset.vlPlaceholder && this.uiRef.current.containerRef.current.contains(current)) {
 				return true;
 			}
 
@@ -768,7 +768,7 @@ const VirtualListBaseFactory = (type) => {
 			) {
 				const
 					{spotlightId} = this.props,
-					node = this.uiRef.current.containerRef.querySelector(
+					node = this.uiRef.current.containerRef.current.querySelector(
 						`[data-spotlight-id="${spotlightId}"] [data-index="${this.preservedIndex}"]`
 					);
 
