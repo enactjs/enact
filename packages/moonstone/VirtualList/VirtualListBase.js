@@ -3,6 +3,7 @@ import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 import Spottable from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 
@@ -202,6 +203,8 @@ const VirtualListBaseFactory = (type) => {
 			if (spotlightId) {
 				this.configureSpotlight(spotlightId);
 			}
+
+			this.pause = new Pause('VirtualListBase');
 		}
 
 		componentDidMount () {
@@ -495,9 +498,7 @@ const VirtualListBaseFactory = (type) => {
 					}
 				} else {
 					// Scroll to the next spottable item without animation
-					if (!Spotlight.isPaused()) {
-						Spotlight.pause();
-					}
+					this.pause.pause();
 					focusedItem.blur();
 					this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
 				}
@@ -636,9 +637,7 @@ const VirtualListBaseFactory = (type) => {
 				} else {
 					this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
 
-					if (!Spotlight.isPaused()) {
-						Spotlight.pause();
-					}
+					this.pause.pause();
 
 					target.blur();
 
@@ -667,14 +666,14 @@ const VirtualListBaseFactory = (type) => {
 				Spotlight.setPointerMode(false);
 				if (this.jumpToSpottableItem(keyCode, repeat, target)) {
 					// Pause Spotlight temporarily so we don't focus twice
-					Spotlight.pause();
+					this.pause.pause();
 					document.addEventListener('keyup', this.resumeSpotlight);
 				}
 			}
 		}
 
 		resumeSpotlight = () => {
-			Spotlight.resume();
+			this.pause.resume();
 			document.removeEventListener('keyup', this.resumeSpotlight);
 		}
 		/**
@@ -698,9 +697,7 @@ const VirtualListBaseFactory = (type) => {
 		focusOnItem = (index) => {
 			const item = this.uiRef.containerRef.querySelector(`[data-index='${index}'].spottable`);
 
-			if (Spotlight.isPaused()) {
-				Spotlight.resume();
-			}
+			this.pause.resume();
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
 			this.isScrolledByJump = false;
