@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Spinner` animation synchronization after a rerender
 - `moonstone/VideoPlayer` to continue to show thumbnail when playback control keys are pressed
 
 ## [2.4.0] - 2019-03-04
