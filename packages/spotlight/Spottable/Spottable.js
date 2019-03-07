@@ -255,7 +255,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			if (this.state.focused) {
+			if (isFocused) {
 				forward('onSpotlightDisappear', null, this.props);
 			}
 			if (lastSelectTarget === this) {
