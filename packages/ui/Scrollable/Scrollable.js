@@ -1202,13 +1202,13 @@ class ScrollableBase extends Component {
 	// ref
 
 	getScrollBounds () {
-		if (typeof this.childRef.current.getScrollBounds === 'function') {
+		if (this.childRef && this.childRef.current && typeof this.childRef.current.getScrollBounds === 'function') {
 			return this.childRef.current.getScrollBounds();
 		}
 	}
 
 	getMoreInfo () {
-		if (typeof this.childRef.current.getMoreInfo === 'function') {
+		if (this.childRef && this.childRef.current && typeof this.childRef.current.getMoreInfo === 'function') {
 			return this.childRef.current.getMoreInfo();
 		}
 	}
