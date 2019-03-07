@@ -309,8 +309,8 @@ class ScrollableBase extends Component {
 	onWheel = ({delta, horizontalScrollbarRef, verticalScrollbarRef}) => {
 		const
 			focusedItem = Spotlight.getCurrent(),
-			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
-			isVerticalScrollButtonFocused = verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
+			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current && horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
+			isVerticalScrollButtonFocused = verticalScrollbarRef.current && verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
 
 		if (focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
 			focusedItem.blur();

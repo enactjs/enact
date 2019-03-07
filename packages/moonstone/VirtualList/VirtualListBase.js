@@ -209,8 +209,6 @@ const VirtualListBaseFactory = (type) => {
 		componentDidMount () {
 			const containerNode = this.uiRef.current.containerRef.current;
 
-			this.props.initUiChildRef(this.uiRef);
-
 			if (type === JS) {
 				// prevent native scrolling by Spotlight
 				this.preventScroll = () => {
@@ -265,6 +263,7 @@ const VirtualListBaseFactory = (type) => {
 		nodeIndexToBeFocused = null
 		preservedIndex = null
 		restoreLastFocused = false
+		uiRef = null
 
 		setContainerDisabled = (bool) => {
 			const
@@ -871,6 +870,13 @@ const VirtualListBaseFactory = (type) => {
 			(index === this.nodeIndexToBeFocused) ? {ref: (ref) => this.initItemRef(ref, index)} : {}
 		)
 
+		initUiRef = (ref) => {
+			if (ref) {
+				this.uiRef = {current: ref};
+				this.props.initUiChildRef(ref);
+			}
+		}
+
 		render () {
 			const
 				{itemRenderer, itemsRenderer, ...rest} = this.props,
@@ -893,7 +899,7 @@ const VirtualListBaseFactory = (type) => {
 							index
 						})
 					)}
-					ref={this.uiRef}
+					ref={this.initUiRef}
 					updateStatesAndBounds={this.updateStatesAndBounds}
 					itemsRenderer={(props) => { // eslint-disable-line react/jsx-no-bind
 						return itemsRenderer({

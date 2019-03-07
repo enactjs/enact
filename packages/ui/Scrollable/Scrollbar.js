@@ -154,8 +154,6 @@ class ScrollbarBase extends PureComponent {
 				vertical ? css.vertical : css.horizontal
 			);
 
-		delete rest.setRef;
-
 		return (
 			<div {...rest} className={containerClassName} ref={this.containerRef}>
 				{childRenderer({
@@ -199,6 +197,9 @@ class Scrollbar extends Component {
 			this.showThumb = showThumb;
 			this.startHidingThumb = startHidingThumb;
 			this.update = uiUpdate;
+			this.update = (bounds) => {
+				ref.update(bounds);
+			};
 		}
 	}
 
@@ -213,7 +214,7 @@ class Scrollbar extends Component {
 					return (
 						<ScrollThumb
 							key="thumb"
-							ref={scrollThumbRef}
+							setRef={scrollThumbRef}
 							vertical={vertical}
 						/>
 					);

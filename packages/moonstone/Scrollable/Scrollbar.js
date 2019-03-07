@@ -84,23 +84,20 @@ class ScrollbarBase extends Component {
 	}
 
 	componentDidMount () {
-		if (this.scrollbarRef.current) {
-			const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = this.scrollbarRef.current;
+		const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = this.scrollbarRef.current;
 
-			this.getContainerRef = getContainerRef;
-			this.showThumb = showThumb;
-			this.startHidingThumb = startHidingThumb;
-			this.uiUpdate = uiUpdate;
-		}
-		if (this.scrollButtonsRef.current) {
-			const {isOneOfScrollButtonsFocused, updateButtons} = this.scrollButtonsRef.current;
+		this.getContainerRef = getContainerRef;
+		this.showThumb = showThumb;
+		this.startHidingThumb = startHidingThumb;
+		this.uiUpdate = uiUpdate;
 
-			this.isOneOfScrollButtonsFocused = isOneOfScrollButtonsFocused;
-			this.update = (bounds) => {
-				updateButtons(bounds);
-				this.uiUpdate(bounds);
-			};
-		}
+		const {isOneOfScrollButtonsFocused, updateButtons} = this.scrollButtonsRef.current;
+
+		this.isOneOfScrollButtonsFocused = isOneOfScrollButtonsFocused;
+		this.update = (bounds) => {
+			updateButtons(bounds);
+			this.uiUpdate(bounds);
+		};
 	}
 
 	render () {

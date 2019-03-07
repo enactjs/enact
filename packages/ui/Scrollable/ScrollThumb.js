@@ -57,6 +57,8 @@ const ScrollThumb = kind({
 	}
 });
 
+// const ScrollThumb = React.forwardRef((props, ref) => <ScrollThumbBase {...props} ref={ref} />);
+
 export default ScrollThumb;
 export {
 	ScrollThumb,

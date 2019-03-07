@@ -82,17 +82,7 @@ class ScrollerBase extends Component {
 		spotlightId: PropTypes.string
 	}
 
-	constructor (props) {
-		super(props);
-
-		this.uiRef = React.createRef();
-	}
-
 	componentDidMount () {
-		if (this.uiRef.current) {
-			this.props.initUiChildRef(this.uiRef);
-		}
-
 		this.configureSpotlight();
 	}
 
@@ -110,6 +100,8 @@ class ScrollerBase extends Component {
 	componentWillUnmount () {
 		this.setContainerDisabled(false);
 	}
+
+	uiRef = null
 
 	configureSpotlight () {
 		Spotlight.set(this.props.spotlightId, {
@@ -374,6 +366,13 @@ class ScrollerBase extends Component {
 		}
 	}
 
+	initUiRef = (ref) => {
+		if (ref) {
+			this.uiRef = {current: ref};
+			this.props.initUiChildRef(ref);
+		}
+	}
+
 	render () {
 		const props = Object.assign({}, this.props);
 
@@ -384,7 +383,7 @@ class ScrollerBase extends Component {
 		return (
 			<UiScrollerBase
 				{...props}
-				ref={this.uiRef}
+				ref={this.initUiRef}
 			/>
 		);
 	}

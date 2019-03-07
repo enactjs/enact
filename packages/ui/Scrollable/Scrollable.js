@@ -1188,10 +1188,10 @@ class ScrollableBase extends Component {
 					scrollTop: this.scrollTop
 				};
 
-			if (curHorizontalScrollbarVisible) {
+			if (curHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
 				this.horizontalScrollbarRef.current.update(updatedBounds);
 			}
-			if (curVerticalScrollbarVisible) {
+			if (curVerticalScrollbarVisible && this.verticalScrollbarRef) {
 				this.verticalScrollbarRef.current.update(updatedBounds);
 			}
 			return true;
@@ -1255,7 +1255,7 @@ class ScrollableBase extends Component {
 
 	initChildRef = (ref) => {
 		if (ref) {
-			this.childRef = ref;
+			this.childRef = {current: ref};
 		}
 	}
 
