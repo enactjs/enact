@@ -223,7 +223,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		constructor (props) {
-			console.log('VirtualListBase.js > constructor');
+			console.timeStamp('⚛ [TimeStamp] <start> ui/VirtualListBase.js > constructor');
 
 			let nextState = null;
 
@@ -243,10 +243,11 @@ const VirtualListBaseFactory = (type) => {
 				updateTo: 0,
 				...nextState
 			};
+			console.timeStamp('⚛ [TimeStamp] <end> ui/VirtualListBase.js > constructor');
 		}
 
 		static getDerivedStateFromProps (props, state) {
-			console.log('VirtualListBase.js > getDerivedStateFromProps');
+			console.timeStamp('⚛ [TimeStamp] <start> ui/VirtualListBase.js > getDerivedStateFromProps');
 
 			const
 				shouldInvalidate = (
@@ -258,16 +259,20 @@ const VirtualListBaseFactory = (type) => {
 				updateFrom = (0 >= diff || diff >= state.numOfItems || shouldInvalidate) ? state.firstIndex : state.prevFirstIndex + state.numOfItems,
 				nextUpdateFromAndTo = (state.updateFrom !== updateFrom || state.updateTo !== updateTo) ? {updateFrom, updateTo} : null;
 
-			return {
+			const ret = {
 				...nextUpdateFromAndTo,
 				prevChildProps: props.childProps,
 				prevFirstIndex: state.firstIndex
 			};
+
+			console.timeStamp('⚛ [TimeStamp] <end> ui/VirtualListBase.js > getDerivedStateFromProps');
+
+			return ret;
 		}
 
 		// Calculate metrics for VirtualList after the 1st render to know client W/H.
 		componentDidMount () {
-			console.log('VirtualListBase.js > componentDidMount');
+			console.timeStamp('⚛ [TimeStamp] <start> ui/VirtualListBase.js > componentDidMount');
 
 			if (!this.props.clientSize) {
 				this.calculateMetrics(this.props);
@@ -275,10 +280,12 @@ const VirtualListBaseFactory = (type) => {
 				this.setState(this.getStatesAndUpdateBounds(this.props));
 			}
 			this.setContainerSize();
+
+			console.timeStamp('⚛ [TimeStamp] <end> ui/VirtualListBase.js > componentDidMount');
 		}
 
 		componentDidUpdate (prevProps) {
-			console.log('VirtualListBase.js > componentDidUpdate');
+			console.timeStamp('⚛ [TimeStamp] <start> ui/VirtualListBase.js > componentDidUpdate');
 
 			// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
 			this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
@@ -307,10 +314,8 @@ const VirtualListBaseFactory = (type) => {
 					this.setScrollPosition(x, y, 0, 0, this.props.rtl);
 				}
 			}
-		}
 
-		componentWillUnmount () {
-			console.log('VirtualListBase.js > componentWillUnmount');
+			console.timeStamp('⚛ [TimeStamp] <end> ui/VirtualListBase.js > componentDidUpdate');
 		}
 
 		scrollBounds = {
@@ -799,7 +804,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		render () {
-			console.log('VirtualListBase.js > render');
+			console.timeStamp('⚛ [TimeStamp] <start> ui/VirtualListBase.js > render');
 
 			const
 				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
@@ -826,13 +831,17 @@ const VirtualListBaseFactory = (type) => {
 				this.positionItems();
 			}
 
-			return (
+			const ret = (
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
 					<div {...rest} ref={this.initContentRef}>
 						{itemsRenderer({cc, initItemContainerRef, primary})}
 					</div>
 				</div>
 			);
+
+			console.timeStamp('⚛ [TimeStamp] <end> ui/VirtualListBase.js > render');
+
+			return ret;
 		}
 	};
 };

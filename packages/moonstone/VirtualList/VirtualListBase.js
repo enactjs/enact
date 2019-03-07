@@ -196,15 +196,21 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		constructor (props) {
+			console.timeStamp('⚛ [TimeStamp] <start> moonstone/VirtualListBase.js > constructor');
+
 			super(props);
 
 			const {spotlightId} = props;
 			if (spotlightId) {
 				this.configureSpotlight(spotlightId);
 			}
+
+			console.timeStamp('⚛ [TimeStamp] <end> moonstone/VirtualListBase.js > constructor');
 		}
 
 		componentDidMount () {
+			console.timeStamp('⚛ [TimeStamp] <start> moonstone/VirtualListBase.js > componentDidMount');
+
 			const containerNode = this.uiRef.containerRef;
 
 			if (type === JS) {
@@ -226,16 +232,24 @@ const VirtualListBaseFactory = (type) => {
 			setTimeout(() => {
 				this.restoreFocus();
 			}, 0);
+
+			console.timeStamp('⚛ [TimeStamp] <end> moonstone/VirtualListBase.js > componentDidMount');
 		}
 
 		componentDidUpdate (prevProps) {
+			console.timeStamp('⚛ [TimeStamp] <start> moonstone/VirtualListBase.js > componentDidUpdate');
+
 			if (prevProps.spotlightId !== this.props.spotlightId) {
 				this.configureSpotlight(this.props.spotlightId);
 			}
 			this.restoreFocus();
+
+			console.timeStamp('⚛ [TimeStamp] <end> moonstone/VirtualListBase.js > componentDidUpdate');
 		}
 
 		componentWillUnmount () {
+			console.timeStamp('⚛ [TimeStamp] <start> moonstone/VirtualListBase.js > componentWillUnmount');
+
 			const containerNode = this.uiRef.containerRef;
 
 			if (type === JS) {
@@ -252,6 +266,8 @@ const VirtualListBaseFactory = (type) => {
 			this.resumeSpotlight();
 
 			this.setContainerDisabled(false);
+
+			console.timeStamp('⚛ [TimeStamp] <end> moonstone/VirtualListBase.js > componentWillUnmount');
 		}
 
 		isScrolledBy5way = false
@@ -875,6 +891,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		render () {
+			console.timeStamp('⚛ [TimeStamp] <start> moonstone/VirtualListBase.js > render');
+
 			const
 				{itemRenderer, itemsRenderer, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
@@ -885,7 +903,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.spotlightId;
 			delete rest.wrap;
 
-			return (
+			const ret = (
 				<UiBase
 					{...rest}
 					getComponentProps={this.getComponentProps}
@@ -907,6 +925,10 @@ const VirtualListBaseFactory = (type) => {
 					}}
 				/>
 			);
+
+			console.timeStamp('⚛ [TimeStamp] <end> moonstone/VirtualListBase.js > render');
+
+			return ret;
 		}
 	};
 };

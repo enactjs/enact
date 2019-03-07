@@ -208,6 +208,8 @@ class ScrollableBaseNative extends Component {
 	}
 
 	constructor (props) {
+		// console.timeStamp('⚛ [TimeStamp] moonstone/ScrollableNative.js > constructor');
+
 		super(props);
 
 		this.scrollbarProps = {
@@ -220,6 +222,8 @@ class ScrollableBaseNative extends Component {
 	}
 
 	componentDidUpdate (prevProps) {
+		// console.timeStamp('⚛ [TimeStamp] moonstone/ScrollableNative.js > componentDidUpdate');
+
 		if (prevProps['data-spotlight-id'] !== this.props['data-spotlight-id'] ||
 				prevProps.focusableScrollbar !== this.props.focusableScrollbar) {
 			configureSpotlightContainer(this.props);
@@ -227,6 +231,8 @@ class ScrollableBaseNative extends Component {
 	}
 
 	componentWillUnmount () {
+		// console.timeStamp('⚛ [TimeStamp] moonstone/ScrollableNative.js > componentWillUnmount');
+
 		this.stopOverscrollJob('horizontal', 'before');
 		this.stopOverscrollJob('horizontal', 'after');
 		this.stopOverscrollJob('vertical', 'before');
@@ -816,6 +822,8 @@ class ScrollableBaseNative extends Component {
 	}
 
 	render () {
+		// console.timeStamp('⚛ [TimeStamp] moonstone/ScrollableNative.js > render');
+
 		const
 			{
 				animate,

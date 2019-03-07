@@ -377,7 +377,7 @@ class ScrollableBase extends Component {
 	static contextType = ResizeContext
 
 	constructor (props) {
-		console.log('Scrollable.js > constructor');
+		// console.timeStamp('⚛ [TimeStamp] ui/Scrollable.js > constructor');
 
 		super(props);
 
@@ -408,7 +408,7 @@ class ScrollableBase extends Component {
 	}
 
 	componentDidMount () {
-		console.log('Scrollable.js > componentDidMount');
+		// console.timeStamp('⚛ [TimeStamp] ui/Scrollable.js > componentDidMount');
 
 		this.resizeRegistry.parent = this.context;
 		this.addEventListeners();
@@ -416,7 +416,7 @@ class ScrollableBase extends Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		console.log('Scrollable.js > componentDidUpdate');
+		// console.timeStamp('⚛ [TimeStamp] ui/Scrollable.js > componentDidUpdate');
 
 		const
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
@@ -461,7 +461,7 @@ class ScrollableBase extends Component {
 	}
 
 	componentWillUnmount () {
-		console.log('Scrollable.js > componentWillUnmount');
+		// console.timeStamp('⚛ [TimeStamp] ui/Scrollable.js > componentWillUnmount');
 
 		this.resizeRegistry.parent = null;
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
@@ -478,7 +478,7 @@ class ScrollableBase extends Component {
 	}
 
 	static getDerivedStateFromProps (props, state) {
-		console.log('Scrollable.js > getDerivedStateFromProps');
+		// console.timeStamp('⚛ [TimeStamp] ui/Scrollable.js > getDerivedStateFromProps');
 		return null;
 	}
 
@@ -1298,7 +1298,7 @@ class ScrollableBase extends Component {
 	}
 
 	render () {
-		console.log('Scrollable.js > render');
+		// console.timeStamp('⚛ [TimeStamp] ui/Scrollable.js > render');
 
 		const
 			{className, containerRenderer, noScrollByDrag, rtl, style, ...rest} = this.props,
