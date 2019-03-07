@@ -198,21 +198,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			// result of this component imperatively blurring itself on focus when spotlightDisabled
 			this.shouldPreventBlur = false;
 
-			this.state = {
-				focused: false,
-				focusedWhenDisabled: false
-			};
-		}
-
-		static getDerivedStateFromProps (props, state) {
-			const focusedWhenDisabled = Boolean(state.focused && (props.disabled || props.spotlightDisabled));
-
-			if (focusedWhenDisabled !== state.focusedWhenDisabled) {
-				return {
-					focusedWhenDisabled
-				};
-			}
-			return null;
+			this.isFocused = false;
 		}
 
 		componentDidMount () {
@@ -220,20 +206,13 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			this.node = ReactDOM.findDOMNode(this);
 		}
 
-		shouldComponentUpdate (nextProps, nextState) {
-			return (
-				this.state.focusedWhenDisabled !== nextState.focusedWhenDisabled ||
-				!equals(this.props, nextProps)
-			);
-		}
+		componentDidUpdate (prevProps) {
+			this.isFocused = this.node && Spotlight.getCurrent() === this.node;
 
-		componentDidUpdate (prevProps, prevState) {
 			// if the component is focused and became disabled
-			if (!prevState.focusedWhenDisabled && this.state.focusedWhenDisabled) {
-				if (lastSelectTarget === this) {
-					selectCancelled = true;
-					forward('onMouseUp', null, this.props);
-				}
+			if (this.isFocused && this.props.disabled && lastSelectTarget === this && !selectCancelled) {
+				selectCancelled = true;
+				forward('onMouseUp', null, this.props);
 			}
 
 			// if the component became enabled, notify spotlight to enable restoring "lost" focus
@@ -255,7 +234,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			if (this.state.focused) {
+			if (this.isFocused) {
 				forward('onSpotlightDisappear', null, this.props);
 			}
 			if (lastSelectTarget === this) {
@@ -409,7 +388,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const {disabled, spotlightId, ...rest} = this.props;
-			const spottable = this.state.focusedWhenDisabled || isSpottable(this.props);
+			const spottable = (this.isFocused && disabled) || isSpottable(this.props);
 			let tabIndex = rest.tabIndex;
 
 			delete rest.onSpotlightDisappear;
