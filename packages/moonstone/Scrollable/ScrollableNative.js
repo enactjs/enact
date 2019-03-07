@@ -293,15 +293,15 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onMouseOver = () => {
-		this.resetPosition = this.uiRef.current.childRef.containerRef.current.scrollTop;
+		this.resetPosition = this.uiRef.current.childRef.current.containerRef.current.scrollTop;
 	}
 
 	onMouseMove = () => {
 		if (this.resetPosition !== null) {
-			const childContainerRef = this.uiRef.current.childRef.containerRef.current;
-			childContainerRef.style.scrollBehavior = null;
-			childContainerRef.scrollTop = this.resetPosition;
-			childContainerRef.style.scrollBehavior = 'smooth';
+			const childContainerRef = this.uiRef.current.childRef.current.containerRef.current;
+			childContainerRef.current.style.scrollBehavior = null;
+			childContainerRef.current.scrollTop = this.resetPosition;
+			childContainerRef.current.style.scrollBehavior = 'smooth';
 			this.resetPosition = null;
 		}
 	}
@@ -491,7 +491,7 @@ class ScrollableBaseNative extends Component {
 		this.uiRef.current.lastInputType = 'pageKey';
 
 		// Should skip scroll by page when focusedItem is paging control button of Scrollbar
-		if (focusedItem && childRef.containerRef.current.contains(focusedItem)) {
+		if (focusedItem && childRef.current.containerRef.current.contains(focusedItem)) {
 			const
 				// VirtualList and Scroller have a spotlightId on containerRef
 				spotlightId = containerRef.current.dataset.spotlightId,
@@ -571,7 +571,7 @@ class ScrollableBaseNative extends Component {
 			if (overscrollEffectRequired) {
 				const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
 
-				if ((horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().contains(element)) ||
+				if ((horizontalScrollbarRef.current.getContainerRef().contains(element)) ||
 					(verticalScrollbarRef.current.getContainerRef().contains(element))) {
 					overscrollEffectRequired = false;
 				}
@@ -623,14 +623,14 @@ class ScrollableBaseNative extends Component {
 	}
 
 	focusOnItem () {
-		const childRef = this.childRef.current;
+		const childRef = this.childRef;
 
-		if (this.indexToFocus !== null && typeof childRef.focusByIndex === 'function') {
-			childRef.focusByIndex(this.indexToFocus);
+		if (this.indexToFocus !== null && typeof childRef.current.focusByIndex === 'function') {
+			childRef.current.focusByIndex(this.indexToFocus);
 			this.indexToFocus = null;
 		}
-		if (this.nodeToFocus !== null && typeof childRef.focusOnNode === 'function') {
-			childRef.focusOnNode(this.nodeToFocus);
+		if (this.nodeToFocus !== null && typeof childRef.current.focusOnNode === 'function') {
+			childRef.current.focusOnNode(this.nodeToFocus);
 			this.nodeToFocus = null;
 		}
 	}
@@ -650,7 +650,7 @@ class ScrollableBaseNative extends Component {
 	alertThumbAfterRendered = () => {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem && this.uiRef.current && this.uiRef.current.childRef.containerRef.current.contains(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
+		if (!Spotlight.getPointerMode() && spotItem && this.uiRef.current && this.uiRef.current.childRef.current.containerRef.current.contains(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
 			this.alertThumb();
 		}
 	}
@@ -676,7 +676,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	applyOverscrollEffect = (orientation, edge, type, ratio) => {
-		const nodeRef = this.overscrollRefs[orientation];
+		const nodeRef = this.overscrollRefs[orientation].current;
 
 		if (nodeRef) {
 			nodeRef.style.setProperty(overscrollRatioPrefix + orientation + edge, ratio);
@@ -709,7 +709,7 @@ class ScrollableBaseNative extends Component {
 			childContainerRef.addEventListener('focusin', this.onFocus);
 			if (platform.webos) {
 				childContainerRef.addEventListener('webOSVoice', this.onVoice);
-				childContainerRef.setAttribute('data-webos-voice-intent', 'Scroll');
+				childContainerRef.current.setAttribute('data-webos-voice-intent', 'Scroll');
 			}
 		}
 	}

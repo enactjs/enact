@@ -557,14 +557,14 @@ class ScrollableBase extends Component {
 	}
 
 	focusOnItem () {
-		const childRef = this.childRef.current;
+		const childRef = this.childRef;
 
-		if (this.indexToFocus !== null && typeof childRef.focusByIndex === 'function') {
-			childRef.focusByIndex(this.indexToFocus);
+		if (this.indexToFocus !== null && typeof childRef.current.focusByIndex === 'function') {
+			childRef.current.focusByIndex(this.indexToFocus);
 			this.indexToFocus = null;
 		}
-		if (this.nodeToFocus !== null && typeof childRef.focusOnNode === 'function') {
-			childRef.focusOnNode(this.nodeToFocus);
+		if (this.nodeToFocus !== null && typeof childRef.current.focusOnNode === 'function') {
+			childRef.current.focusOnNode(this.nodeToFocus);
 			this.nodeToFocus = null;
 		}
 	}
@@ -641,18 +641,18 @@ class ScrollableBase extends Component {
 			childContainerRef.addEventListener('focusin', this.onFocus);
 			if (platform.webos) {
 				childContainerRef.addEventListener('webOSVoice', this.onVoice);
-				childContainerRef.setAttribute('data-webos-voice-intent', 'Scroll');
+				childContainerRef.current.setAttribute('data-webos-voice-intent', 'Scroll');
 			}
 		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	removeEventListeners = (childContainerRef) => {
-		if (childContainerRef && childContainerRef.removeEventListener) {
-			childContainerRef.removeEventListener('focusin', this.onFocus);
+		if (childContainerRef && childContainerRef.current.removeEventListener) {
+			childContainerRef.current.removeEventListener('focusin', this.onFocus);
 			if (platform.webos) {
-				childContainerRef.removeEventListener('webOSVoice', this.onVoice);
-				childContainerRef.removeAttribute('data-webos-voice-intent');
+				childContainerRef.current.removeEventListener('webOSVoice', this.onVoice);
+				childContainerRef.current.removeAttribute('data-webos-voice-intent');
 			}
 		}
 	}
