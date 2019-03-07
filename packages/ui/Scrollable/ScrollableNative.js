@@ -373,12 +373,14 @@ class ScrollableBaseNative extends Component {
 
 		this.horizontalScrollbarProps = {
 			ref: this.initHorizontalScrollbarRef,
-			vertical: false
+			vertical: false,
+			clientSize: props.clientSize
 		};
 
 		this.verticalScrollbarProps = {
 			ref: this.initVerticalScrollbarRef,
-			vertical: true
+			vertical: true,
+			clientSize: props.clientSize
 		};
 
 		this.overscrollEnabled = !!(props.applyOverscrollEffect);

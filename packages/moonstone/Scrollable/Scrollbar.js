@@ -105,11 +105,12 @@ class ScrollbarBase extends Component {
 	}
 
 	render () {
-		const {cbAlertThumb, corner, vertical, ...rest} = this.props;
+		const {cbAlertThumb, clientSize, corner, vertical, ...rest} = this.props;
 
 		return (
 			<UiScrollbarBase
 				corner={corner}
+				clientSize={clientSize}
 				css={componentCss}
 				ref={this.initScrollbarRef}
 				vertical={vertical}

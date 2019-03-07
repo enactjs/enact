@@ -136,6 +136,19 @@ class ScrollableBase extends Component {
 		clearOverscrollEffect: PropTypes.func,
 
 		/**
+		 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
+		 *
+		 * @type {Object}
+		 * @property {Number}    clientHeight    The client height of the list.
+		 * @property {Number}    clientWidth    The client width of the list.
+		 * @public
+		 */
+		clientSize: PropTypes.shape({
+			clientHeight: PropTypes.number.isRequired,
+			clientWidth: PropTypes.number.isRequired
+		}),
+
+		/**
 		 * Direction of the list or the scroller.
 		 *
 		 * `'both'` could be only used for[Scroller]{@link ui/Scroller.Scroller}.
@@ -387,12 +400,14 @@ class ScrollableBase extends Component {
 
 		this.horizontalScrollbarProps = {
 			ref: this.initHorizontalScrollbarRef,
-			vertical: false
+			vertical: false,
+			clientSize: props.clientSize
 		};
 
 		this.verticalScrollbarProps = {
 			ref: this.initVerticalScrollbarRef,
-			vertical: true
+			vertical: true,
+			clientSize: props.clientSize
 		};
 
 		this.overscrollEnabled = !!(props.applyOverscrollEffect);
@@ -1407,7 +1422,7 @@ class Scrollable extends Component {
 									rtl
 								})}
 							</ChildWrapper>
-							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
+							{isVerticalScrollbarVisible ? console.log(verticalScrollbarProps) && <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
 						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
 					</div>

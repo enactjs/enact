@@ -696,6 +696,9 @@ const Spotlight = (function () {
 			let target = elem;
 			let wasContainerId = false;
 
+			console.log('spotlight');
+			console.trace();
+
 			if (!elem) {
 				target = getTargetByContainer();
 			} else if (typeof elem === 'string') {
