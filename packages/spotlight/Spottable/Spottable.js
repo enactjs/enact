@@ -199,7 +199,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			this.shouldPreventBlur = false;
 
 			this.state = {
-				focused: false,
 				focusedWhenDisabled: false
 			};
 		}
