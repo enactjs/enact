@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/VideoPlayer` to continue to show thumbnail when playback control keys are pressed
+
 ## [2.4.0] - 2019-03-04
 
 ### Added
