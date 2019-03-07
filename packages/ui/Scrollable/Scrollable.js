@@ -1115,10 +1115,10 @@ class ScrollableBase extends Component {
 	// scroll bar
 
 	showThumb (bounds) {
-		if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
+		if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds) && this.horizontalScrollbarRef.current) {
 			this.horizontalScrollbarRef.current.showThumb();
 		}
-		if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
+		if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds) && this.verticalScrollbarRef.current) {
 			this.verticalScrollbarRef.current.showThumb();
 		}
 	}
@@ -1132,10 +1132,10 @@ class ScrollableBase extends Component {
 	}
 
 	startHidingThumb = () => {
-		if (this.state.isHorizontalScrollbarVisible) {
+		if (this.state.isHorizontalScrollbarVisible && this.horizontalScrollbarRef.current) {
 			this.horizontalScrollbarRef.current.startHidingThumb();
 		}
-		if (this.state.isVerticalScrollbarVisible) {
+		if (this.state.isVerticalScrollbarVisible && this.verticalScrollbarRef.current) {
 			this.verticalScrollbarRef.current.startHidingThumb();
 		}
 	}

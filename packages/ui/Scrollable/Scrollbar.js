@@ -197,9 +197,7 @@ class Scrollbar extends Component {
 			this.showThumb = showThumb;
 			this.startHidingThumb = startHidingThumb;
 			this.update = uiUpdate;
-			this.update = (bounds) => {
-				ref.update(bounds);
-			};
+			this.update = uiUpdate;
 		}
 	}
 

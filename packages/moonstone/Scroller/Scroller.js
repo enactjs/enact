@@ -185,7 +185,7 @@ class ScrollerBase extends Component {
 		};
 
 		const container = this.getSpotlightContainerForNode(item);
-		const scrollerBounds = this.uiRef.current.containerRef.getBoundingClientRect();
+		const scrollerBounds = this.uiRef.current.containerRef.currnet.getBoundingClientRect();
 		let {scrollHeight, scrollTop} = this.uiRef.current.containerRef;
 		let scrollTopDelta = 0;
 

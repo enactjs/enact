@@ -24,7 +24,7 @@ const ScrollThumb = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		setRef: PropTypes.object,
+		setRef: PropTypes.func,
 
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
@@ -56,8 +56,6 @@ const ScrollThumb = kind({
 		return <div {...rest} ref={setRef} />;
 	}
 });
-
-// const ScrollThumb = React.forwardRef((props, ref) => <ScrollThumbBase {...props} ref={ref} />);
 
 export default ScrollThumb;
 export {

@@ -504,8 +504,8 @@ class ScrollableBase extends Component {
 				if (overscrollEffectRequired) {
 					const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
 
-					if ((horizontalScrollbarRef.current.getContainerRef().contains(element)) ||
-						(verticalScrollbarRef.current.getContainerRef().contains(element))) {
+					if ((horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) ||
+						(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
 						overscrollEffectRequired = false;
 					}
 				}

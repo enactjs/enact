@@ -660,8 +660,8 @@ class ScrollableBaseNative extends Component {
 					const {horizontalScrollbarRef, verticalScrollbarRef} = this;
 
 					// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
-					if ((horizontalScrollbarRef.current.getContainerRef().contains(ev.target)) ||
-						(verticalScrollbarRef.current.getContainerRef().contains(ev.target))) {
+					if ((horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(ev.target)) ||
+						(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(ev.target))) {
 						delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 						needToHideThumb = !delta;
 					} else if (overscrollEffectRequired) {
