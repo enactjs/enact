@@ -135,10 +135,8 @@ class ScrollbarBase extends PureComponent {
 	hideThumbJob = new Job(this.hideThumb.bind(this), thumbHidingDelay);
 
 	calculateMetrics = () => {
-		// const trackSize = this.containerRef[this.props.vertical ? 'clientHeight' : 'clientWidth'];
 		const primaryDimenstion =  this.props.vertical ? 'clientHeight' : 'clientWidth';
 		let trackSize;
-		console.log(this.props, this.props.clientSize);
 
 		if (this.props.clientSize) {
 			trackSize = this.props.clientSize[primaryDimenstion];

@@ -1422,7 +1422,7 @@ class Scrollable extends Component {
 									rtl
 								})}
 							</ChildWrapper>
-							{isVerticalScrollbarVisible ? console.log(verticalScrollbarProps) && <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
+							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 						</div>
 						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
 					</div>
