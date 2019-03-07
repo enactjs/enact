@@ -62,11 +62,12 @@ const ToggleItemBase = kind({
 		 * This component receives the `selected` prop and value, and must therefore respond to it in some
 		 * way. It is recommended to use [ToggleIcon]{@link moonstone/ToggleIcon} for this.
 		 *
-		 * @type {String|Component|Element}
+		 * @type {Component|Element}
+		 * @default null
 		 * @required
 		 * @public
 		 */
-		iconComponent: EnactPropTypes.renderableOverride.isRequired,
+		iconComponent: EnactPropTypes.componentOverride.isRequired,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the

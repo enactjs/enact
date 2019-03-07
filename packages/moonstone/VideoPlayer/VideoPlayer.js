@@ -259,7 +259,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * * `spotlightDisabled` - `true` when spotlight is disabled for the media controls
 		 * * `visible` - `true` when the media controls should be displayed
 		 *
-		 * @type {Function|Element}
+		 * @type {Component|Element}
 		 * @default `moonstone/VideoPlayer.MediaControls`
 		 * @public
 		 */

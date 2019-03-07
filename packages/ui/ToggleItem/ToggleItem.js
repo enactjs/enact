@@ -79,11 +79,11 @@ const ToggleItemBase = kind({
 		 * and must therefore respond to it in some way. It is recommended to use
 		 * [ToggleIcon]{@link ui/ToggleIcon} for this.
 		 *
-		 * @type {String|Component|Element}
+		 * @type {Component|Element}
 		 * @required
 		 * @public
 		 */
-		iconComponent: EnactPropTypes.renderableOverride.isRequired,
+		iconComponent: EnactPropTypes.componentOverride.isRequired,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
