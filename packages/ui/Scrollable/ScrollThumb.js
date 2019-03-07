@@ -24,7 +24,7 @@ const ScrollThumb = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		setRef: PropTypes.func,
+		setRef: PropTypes.object,
 
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
