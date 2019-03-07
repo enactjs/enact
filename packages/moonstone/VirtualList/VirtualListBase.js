@@ -406,7 +406,7 @@ const VirtualListBaseFactory = (type) => {
 		findNearestSpottableItemInExtent = (index, extentIndex) => {
 			const
 				{dataSize, isItemDisabled} = this.props,
-				{dimensionToExtent} = this.uiRef,
+				{dimensionToExtent} = this.uiRef.current,
 				currentPosInExtent = clamp(0, dataSize - 1, index) % dimensionToExtent,
 				firstIndexInExtent = clamp(0, this.getExtentIndex(dataSize - 1), extentIndex) * dimensionToExtent,
 				lastIndexInExtent = clamp(firstIndexInExtent, dataSize, firstIndexInExtent + dimensionToExtent);

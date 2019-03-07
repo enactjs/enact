@@ -844,9 +844,9 @@ class ScrollableBaseNative extends Component {
 					childWrapperProps: {className: contentClassName, ...restChildWrapperProps},
 					className,
 					componentCss,
+					containerRef: uiContainerRef,
 					horizontalScrollbarProps,
 					initChildRef: initUiChildRef,
-					initContainerRef: initUiContainerRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
 					rtl,
@@ -859,7 +859,7 @@ class ScrollableBaseNative extends Component {
 						data-spotlight-container={spotlightContainer}
 						data-spotlight-container-disabled={spotlightContainerDisabled}
 						data-spotlight-id={spotlightId}
-						ref={initUiContainerRef}
+						ref={uiContainerRef}
 						style={style}
 					>
 						<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={this.overscrollRefs.vertical}>

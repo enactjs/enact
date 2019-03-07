@@ -637,10 +637,10 @@ class ScrollableBase extends Component {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	addEventListeners = (childContainerRef) => {
-		if (childContainerRef && childContainerRef.addEventListener) {
-			childContainerRef.addEventListener('focusin', this.onFocus);
+		if (childContainerRef && childContainerRef.current.addEventListener) {
+			childContainerRef.current.addEventListener('focusin', this.onFocus);
 			if (platform.webos) {
-				childContainerRef.addEventListener('webOSVoice', this.onVoice);
+				childContainerRef.current.addEventListener('webOSVoice', this.onVoice);
 				childContainerRef.current.setAttribute('data-webos-voice-intent', 'Scroll');
 			}
 		}

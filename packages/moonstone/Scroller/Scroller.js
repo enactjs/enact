@@ -185,8 +185,8 @@ class ScrollerBase extends Component {
 		};
 
 		const container = this.getSpotlightContainerForNode(item);
-		const scrollerBounds = this.uiRef.current.containerRef.currnet.getBoundingClientRect();
-		let {scrollHeight, scrollTop} = this.uiRef.current.containerRef;
+		const scrollerBounds = this.uiRef.current.containerRef.current.getBoundingClientRect();
+		let {scrollHeight, scrollTop} = this.uiRef.current.containerRef.current;
 		let scrollTopDelta = 0;
 
 		const adjustScrollTop = (v) => {
@@ -236,7 +236,7 @@ class ScrollerBase extends Component {
 	 * @private
 	 */
 	calculatePositionOnFocus = ({item, scrollPosition}) => {
-		if (!this.uiRef.current.isVertical() && !this.uiRef.current.isHorizontal() || !item || !this.uiRef.current.containerRef.contains(item)) {
+		if (!this.uiRef.current.isVertical() && !this.uiRef.current.isHorizontal() || !item || !this.uiRef.current.containerRef.current.contains(item)) {
 			return;
 		}
 
@@ -252,11 +252,11 @@ class ScrollerBase extends Component {
 				{rtl} = this.props,
 				{clientWidth} = this.uiRef.current.scrollBounds,
 				rtlDirection = rtl ? -1 : 1,
-				{left: containerLeft} = this.uiRef.current.containerRef.getBoundingClientRect(),
+				{left: containerLeft} = this.uiRef.current.containerRef.current.getBoundingClientRect(),
 				scrollLastPosition = scrollPosition ? scrollPosition : this.uiRef.current.scrollPos.left,
 				currentScrollLeft = rtl ? (this.uiRef.current.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
 				// calculation based on client position
-				newItemLeft = this.uiRef.current.containerRef.scrollLeft + (itemLeft - containerLeft);
+				newItemLeft = this.uiRef.current.containerRef.current.scrollLeft + (itemLeft - containerLeft);
 
 			if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
 				// If focus is moved to an element outside of view area (to the right), scroller will move
@@ -358,7 +358,7 @@ class ScrollerBase extends Component {
 	}
 
 	handleLeaveContainer = ({direction, target}) => {
-		const contentsContainer = this.uiRef.current.containerRef;
+		const contentsContainer = this.uiRef.current.containerRef.current;
 		// ensure we only scroll to boundary from the contents and not a scroll button which
 		// lie outside of this.uiRef.current.containerRef but within the spotlight container
 		if (contentsContainer && contentsContainer.contains(target)) {

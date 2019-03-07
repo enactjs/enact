@@ -835,7 +835,7 @@ class ScrollableBase extends Component {
 		}
 
 		if (this.state.isHorizontalScrollbarVisible) {
-			this.updateThumb(this.horizontalScrollbarRef.current, bounds);
+			this.updateThumb(this.horizontalScrollbarRef, bounds);
 		}
 	}
 
@@ -849,7 +849,7 @@ class ScrollableBase extends Component {
 		}
 
 		if (this.state.isVerticalScrollbarVisible) {
-			this.updateThumb(this.verticalScrollbarRef.current, bounds);
+			this.updateThumb(this.verticalScrollbarRef, bounds);
 		}
 	}
 
@@ -1124,7 +1124,7 @@ class ScrollableBase extends Component {
 	}
 
 	updateThumb (scrollbarRef, bounds) {
-		scrollbarRef.update({
+		scrollbarRef.current.update({
 			...bounds,
 			scrollLeft: this.scrollLeft,
 			scrollTop: this.scrollTop
@@ -1229,7 +1229,7 @@ class ScrollableBase extends Component {
 		}
 
 		if (this.props.addEventListeners) {
-			this.props.addEventListeners(childRef.current.containerRef.current);
+			this.props.addEventListeners(childRef.current.containerRef);
 		}
 	}
 

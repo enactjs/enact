@@ -139,8 +139,8 @@ class ScrollButtons extends Component {
 		};
 
 		this.announceRef = React.createRef();
-		this.nextButtonNodeRef = React.createRef();
-		this.prevButtonNodeRef = React.createRef();
+		this.nextButtonRef = React.createRef();
+		this.prevButtonRef = React.createRef();
 	}
 
 	componentDidMount () {
@@ -177,7 +177,7 @@ class ScrollButtons extends Component {
 	isOneOfScrollButtonsFocused = () => {
 		const current = Spotlight.getCurrent();
 
-		return current === this.prevButtonNodeRef || current === this.nextButtonNodeRef;
+		return current === this.prevButtonRef || current === this.nextButtonRef;
 	}
 
 	onDownPrev = () => {
@@ -207,7 +207,7 @@ class ScrollButtons extends Component {
 	}
 
 	focusOnOppositeScrollButton = (ev, direction) => {
-		const buttonNode = (ev.target === this.nextButtonNodeRef) ? this.prevButtonNodeRef : this.nextButtonNodeRef;
+		const buttonNode = (ev.target === this.nextButtonRef.current) ? this.prevButtonRef.current : this.nextButtonRef.current;
 
 		ev.stopPropagation();
 
@@ -229,8 +229,8 @@ class ScrollButtons extends Component {
 				fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right'));
 
 			// manually focus the opposite scroll button when 5way pressed
-			if ((fromNextToPrev && target === this.nextButtonNodeRef) ||
-				(fromPrevToNext && target === this.prevButtonNodeRef)) {
+			if ((fromNextToPrev && target === this.nextButtonRef.current) ||
+				(fromPrevToNext && target === this.prevButtonRef.current)) {
 				this.focusOnOppositeScrollButton(ev, direction);
 			}
 		} else {
@@ -262,7 +262,7 @@ class ScrollButtons extends Component {
 		if (isPageDown(keyCode) && !nextButtonDisabled) {
 			if (focusableScrollButtons) {
 				Spotlight.setPointerMode(false);
-				Spotlight.focus(this.nextButtonNodeRef);
+				Spotlight.focus(this.nextButtonRef.current);
 			} else {
 				this.onClickNext(ev);
 			}
@@ -280,7 +280,7 @@ class ScrollButtons extends Component {
 		if (isPageUp(keyCode) && !prevButtonDisabled) {
 			if (focusableScrollButtons) {
 				Spotlight.setPointerMode(false);
-				Spotlight.focus(this.prevButtonNodeRef);
+				Spotlight.focus(this.prevButtonRef.current);
 			} else {
 				this.onClickPrev(ev);
 			}
