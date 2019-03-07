@@ -55,10 +55,10 @@
 		animation-name: spin;
 		animation-play-state: paused;
 
-		.fan1::before,
-		.fan1::after,
-		.fan2::before,
-		.fan2::after {
+		.fan1,
+		.fan2,
+		.fan3,
+		.fan4 {
 			content: "";
 			top: 0;
 			right: 50%;
@@ -67,10 +67,10 @@
 			clip-path: polygon(100% 0, 0 3%, 100% 100%); // Cut each segment into a 1/8th wedge, with a little overhang to avoid a subpixel gap from rounding error
 			transform-origin: bottom right;
 		}
-		.fan1::before,
-		.fan1::after,
-		.fan2::before,
-		.fan2::after,
+		.fan1,
+		.fan2,
+		.fan3,
+		.fan4,
 		.cap {
 			position: absolute;
 			animation: none @moon-spinner-time linear infinite;
@@ -78,13 +78,13 @@
 			animation-play-state: paused;
 			animation-fill-mode: both;
 		}
-		.fan1::after {
+		.fan2 {
 			animation-name: rotate2;
 		}
-		.fan2::before {
+		.fan3 {
 			animation-name: rotate3;
 		}
-		.fan2::after,
+		.fan4,
 		.cap {
 			animation-name: rotate4;
 		}
@@ -112,10 +112,10 @@
 	&.running .decorator {
 		// Apply the following rules to the above selector and all of these children
 		&,
-		.fan1::before,
-		.fan1::after,
-		.fan2::before,
-		.fan2::after,
+		.fan1,
+		.fan2,
+		.fan3,
+		.fan4,
 		.cap {
 			-webkit-animation-play-state: running;
 			animation-play-state: running;
@@ -137,10 +137,10 @@
 				radial-gradient(circle at 0% 0%, @moon-spinner-color 20%, @moon-spinner-empty-color 40%), // Visible gradient
 				radial-gradient(circle at 35% 8%, @moon-spinner-color 15%, transparent 15%); // Filler between the closest fan and center of gradient
 
-			.fan1::before,
-			.fan1::after,
-			.fan2::before,
-			.fan2::after {
+			.fan1,
+			.fan2,
+			.fan3,
+			.fan4 {
 				background-color: @moon-spinner-color;
 			}
 			.cap {
