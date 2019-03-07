@@ -1001,8 +1001,7 @@ const VideoPlayerBase = class extends React.Component {
 	showFeedback = () => {
 		if (this.state.mediaControlsVisible) {
 			this.setState({
-				feedbackVisible: true,
-				feedbackAction: 'idle'
+				feedbackVisible: true
 			});
 		} else {
 			const shouldShowSlider = this.pulsedPlaybackState !== null || calcNumberValueOfPlaybackRate(this.playbackRate) !== 1;

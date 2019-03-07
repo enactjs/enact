@@ -4,9 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Changed
+### Fixed
 
-- `moonstone/TooltipDecorator` to update `Tooltip` layout on keydown and when client changes
+- `moonstone/TooltipDecorator` to position `Tooltip` correctly when the wrapped component moves or resizes
+- `moonstone/VideoPlayer` to continue to show thumbnail when playback control keys are pressed
 
 ## [2.4.0] - 2019-03-04
 
