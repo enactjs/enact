@@ -63,7 +63,6 @@ const ToggleItemBase = kind({
 		 * way. It is recommended to use [ToggleIcon]{@link moonstone/ToggleIcon} for this.
 		 *
 		 * @type {String|Component|Element}
-		 * @default null
 		 * @required
 		 * @public
 		 */
