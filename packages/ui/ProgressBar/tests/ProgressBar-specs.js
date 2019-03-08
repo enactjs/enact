@@ -1,10 +1,10 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import ProgressBar from '../ProgressBar';
-import css from '../ProgressBar.less';
+import css from '../ProgressBar.module.less';
 
 describe('ProgressBar Specs', () => {
-	it('should have width of 50%', () => {
+	test('should have width of 0.5', () => {
 		const progressBar = mount(
 			<ProgressBar
 				progress={0.5}
@@ -13,13 +13,13 @@ describe('ProgressBar Specs', () => {
 
 		const style = progressBar.find(`.${css.progressBar}`).prop('style');
 
-		const expected = '50%';
+		const expected = 0.5;
 		const actual = style['--ui-progressbar-proportion-end'];
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should have background width of 75%', () => {
+	test('should have background width of 0.75', () => {
 		const progressBar = mount(
 			<ProgressBar
 				backgroundProgress={0.75}
@@ -28,13 +28,13 @@ describe('ProgressBar Specs', () => {
 
 		const style = progressBar.find(`.${css.progressBar}`).prop('style');
 
-		const expected = '75%';
+		const expected = 0.75;
 		const actual = style['--ui-progressbar-proportion-end-background'];
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should have height of 50%', () => {
+	test('should have height of 0.5', () => {
 		const progressBar = mount(
 			<ProgressBar
 				progress={0.5}
@@ -44,13 +44,13 @@ describe('ProgressBar Specs', () => {
 
 		const style = progressBar.find(`.${css.progressBar}`).prop('style');
 
-		const expected = '50%';
+		const expected = 0.5;
 		const actual = style['--ui-progressbar-proportion-end'];
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should have background height of 50%', () => {
+	test('should have background height of 0.75', () => {
 		const progressBar = mount(
 			<ProgressBar
 				progress={0.5}
@@ -61,9 +61,9 @@ describe('ProgressBar Specs', () => {
 
 		const style = progressBar.find(`.${css.progressBar}`).prop('style');
 
-		const expected = '75%';
+		const expected = 0.75;
 		const actual = style['--ui-progressbar-proportion-end-background'];
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });

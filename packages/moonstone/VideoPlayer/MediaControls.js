@@ -20,7 +20,7 @@ import IconButton from '../IconButton';
 
 import {countReactChildren} from './util';
 
-import css from './VideoPlayer.less';
+import css from './VideoPlayer.module.less';
 
 const OuterContainer = SpotlightContainerDecorator({
 	defaultElement: [
@@ -340,9 +340,7 @@ const MediaControlsBase = kind({
 		jumpBackwardIcon: 'skipbackward',
 		jumpForwardIcon: 'skipforward',
 		spotlightId: 'mediaControls',
-		moreButtonCloseLabel: $L('Back'),
 		moreButtonColor: 'blue',
-		moreButtonLabel: $L('More'),
 		pauseIcon: 'pause',
 		playIcon: 'play',
 		visible: true
@@ -358,7 +356,7 @@ const MediaControlsBase = kind({
 		centerClassName: ({showMoreComponents, styler}) => styler.join('centerComponents', {more: showMoreComponents}),
 		playPauseClassName: ({showMoreComponents}) => showMoreComponents ? null : spotlightDefaultClass,
 		moreButtonClassName: ({showMoreComponents, styler}) => styler.join('moreButton', {[spotlightDefaultClass]: showMoreComponents}),
-		moreIconLabel: ({moreButtonCloseLabel, moreButtonLabel, showMoreComponents}) => showMoreComponents ? moreButtonCloseLabel : moreButtonLabel,
+		moreIconLabel: ({moreButtonCloseLabel = $L('Back'), moreButtonLabel = $L('More'), showMoreComponents}) => showMoreComponents ? moreButtonCloseLabel : moreButtonLabel,
 		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis'
 	},
 
@@ -669,6 +667,15 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			}
 		}
 
+		static getDerivedStateFromProps (props) {
+			if (!props.visible) {
+				return {
+					showMoreComponents: false
+				};
+			}
+			return null;
+		}
+
 		componentDidMount () {
 			this.calculateMaxComponentCount(
 				countReactChildren(this.props.leftComponents),
@@ -677,13 +684,14 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			);
 			on('keydown', this.handleKeyDown);
 			on('keyup', this.handleKeyUp);
+			on('blur', this.handleBlur, window);
 		}
 
-		componentWillReceiveProps (nextProps) {
+		componentDidUpdate (prevProps, prevState) {
 			// Detect if the number of components has changed
-			const leftCount = countReactChildren(nextProps.leftComponents),
-				rightCount = countReactChildren(nextProps.rightComponents),
-				childrenCount = countReactChildren(nextProps.children);
+			const leftCount = countReactChildren(prevProps.leftComponents),
+				rightCount = countReactChildren(prevProps.rightComponents),
+				childrenCount = countReactChildren(prevProps.children);
 
 			if (
 				countReactChildren(this.props.leftComponents) !== leftCount ||
@@ -693,16 +701,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 				this.calculateMaxComponentCount(leftCount, rightCount, childrenCount);
 			}
 
-			if (this.props.visible && !nextProps.visible) {
-				this.setState(() => {
-					return {
-						showMoreComponents: false
-					};
-				});
-			}
-		}
-
-		componentDidUpdate (prevProps, prevState) {
 			if (this.state.showMoreComponents !== prevState.showMoreComponents) {
 				forwardToggleMore({showMoreComponents: this.state.showMoreComponents}, this.props);
 			}
@@ -717,6 +715,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 		componentWillUnmount () {
 			off('keydown', this.handleKeyDown);
 			off('keyup', this.handleKeyUp);
+			off('blur', this.handleBlur, window);
 			this.stopListeningForPulses();
 		}
 
@@ -781,6 +780,11 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 					forward('onFastForward', ev, this.props);
 				}
 			}
+		}
+
+		handleBlur = () => {
+			this.stopListeningForPulses();
+			this.paused.resume();
 		}
 
 		startListeningForPulses = (keyCode) => {

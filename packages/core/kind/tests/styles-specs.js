@@ -1,5 +1,3 @@
-/* globals describe, it, expect */
-
 import styles from '../styles';
 
 describe('styles', () => {
@@ -11,7 +9,7 @@ describe('styles', () => {
 
 	// className tests
 
-	it('should add cfg.className to props', function () {
+	test('should add cfg.className to props', () => {
 		const cfg = {
 			className: 'button'
 		};
@@ -21,10 +19,10 @@ describe('styles', () => {
 		const expected = cfg.className;
 		const actual = updated.className;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should resolve cfg.className to the cfg.css map', function () {
+	test('should resolve cfg.className to the cfg.css map', () => {
 		const cfg = {
 			css,
 			className: 'button'
@@ -35,22 +33,25 @@ describe('styles', () => {
 		const expected = css.button;
 		const actual = updated.className;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should pass through props.className when cfg.className absent', function () {
-		const props = {
-			className: 'button'
-		};
-		const updated = styles({}, props);
+	test(
+		'should pass through props.className when cfg.className absent',
+		() => {
+			const props = {
+				className: 'button'
+			};
+			const updated = styles({}, props);
 
-		const expected = props.className;
-		const actual = updated.className;
+			const expected = props.className;
+			const actual = updated.className;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should append cfg.className with props.className', function () {
+	test('should append cfg.className with props.className', () => {
 		const props = {
 			className: 'custom-button'
 		};
@@ -63,29 +64,32 @@ describe('styles', () => {
 		const expected = props.className;
 		const actual = updated.className;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should resolve cfg.className and append with props.className', function () {
-		const props = {
-			className: 'custom-button'
-		};
-		const cfg = {
-			css,
-			className: 'button'
-		};
+	test(
+		'should resolve cfg.className and append with props.className',
+		() => {
+			const props = {
+				className: 'custom-button'
+			};
+			const cfg = {
+				css,
+				className: 'button'
+			};
 
-		const updated = styles(cfg, props);
+			const updated = styles(cfg, props);
 
-		const expected = props.className;
-		const actual = updated.className;
+			const expected = props.className;
+			const actual = updated.className;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
 	// style tests
 
-	it('should add cfg.style to props', function () {
+	test('should add cfg.style to props', () => {
 		const cfg = {
 			style: {
 				color: 'green'
@@ -97,10 +101,10 @@ describe('styles', () => {
 		const expected = cfg.style.color;
 		const actual = updated.style.color;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should pass through props.style when cfg.style absent', function () {
+	test('should pass through props.style when cfg.style absent', () => {
 		const props = {
 			style: {
 				color: 'green'
@@ -111,10 +115,10 @@ describe('styles', () => {
 		const expected = props.style.color;
 		const actual = updated.style.color;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should merge cfg.style and props.style', function () {
+	test('should merge cfg.style and props.style', () => {
 		const props = {
 			style: {
 				color: 'green'
@@ -131,12 +135,12 @@ describe('styles', () => {
 		const expected = 2;
 		const actual = Object.keys(updated.style).length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
 	// Doesn't support merging shorthand properties and individual properties
 	// e.g. borderWidth: 3px + border: 1px solid black = border: 3px solid black
-	it('should not merge shorthand properties', function () {
+	test('should not merge shorthand properties', () => {
 		const props = {
 			style: {
 				borderWidth: '3px'
@@ -153,39 +157,39 @@ describe('styles', () => {
 		const expected = 1;
 		const actual = Object.keys(updated.style).length;
 
-		expect(actual).to.not.equal(expected);
+		expect(actual).not.toBe(expected);
 	});
 
 	// styler tests
 
-	it('should add styler.join() to props', function () {
+	test('should add styler.join() to props', () => {
 		const updated = styles({}, {});
 
 		const expected = 'function';
 		const actual = typeof updated.styler.join;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should join classes together with a space', function () {
+	test('should join classes together with a space', () => {
 		const updated = styles({}, {});
 
 		const expected = 'abc def';
 		const actual = updated.styler.join('abc', 'def');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should resolve join classes to css map', function () {
+	test('should resolve join classes to css map', () => {
 		const updated = styles({css}, {});
 
 		const expected = css.button + ' ' + css.client;
 		const actual = updated.styler.join('button', 'client');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should not resolve author classes to css map', function () {
+	test('should not resolve author classes to css map', () => {
 		const cfg = {
 			css,
 			className: 'button'
@@ -198,10 +202,10 @@ describe('styles', () => {
 		const expected = css.button + ' button';
 		const actual = updated.className;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should append resolved class names to props.className', function () {
+	test('should append resolved class names to props.className', () => {
 		const cfg = {
 			css,
 			className: 'button'
@@ -214,6 +218,6 @@ describe('styles', () => {
 		const expected = css.button + ' button ' + css.client;
 		const actual = updated.styler.append('client');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });

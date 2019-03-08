@@ -6,6 +6,7 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import {Column, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -13,7 +14,7 @@ import React from 'react';
 import Icon from '../Icon';
 import Image from '../Image';
 
-import componentCss from './GridListImageItem.less';
+import componentCss from './GridListImageItem.module.less';
 
 /**
  * A basic grid list image item without any behavior.
@@ -38,13 +39,10 @@ const GridListImageItem = kind({
 		/**
 		 * The component used to render the captions
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @public
 		 */
-		captionComponent: PropTypes.oneOfType([
-			PropTypes.func,
-			PropTypes.string
-		]),
+		captionComponent: EnactPropTypes.renderable,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -67,20 +65,20 @@ const GridListImageItem = kind({
 		 * The component used to render the default check icon when selected.
 		 * If there is custom selectionOverlay component, this icon will not be shown.
 		 *
-		 * @type {Function}
+		 * @type {Component}
 		 * @default ui/Icon.Icon
 		 * @public
 		 */
-		iconComponent: PropTypes.func,
+		iconComponent: EnactPropTypes.component,
 
 		/**
 		 * The component used to render the image component
 		 *
-		 * @type {Function}
+		 * @type {Component}
 		 * @default ui/Image.Image
 		 * @public
 		 */
-		imageComponent: PropTypes.func,
+		imageComponent: EnactPropTypes.component,
 
 		/**
 		 * Placeholder image used while [source]{@link ui/GridListImageItem.GridListImageItem#source}

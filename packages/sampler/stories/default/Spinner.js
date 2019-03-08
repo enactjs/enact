@@ -8,8 +8,8 @@ import {withInfo} from '@storybook/addon-info';
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('Spinner', Spinner);
 Spinner.displayName = 'Spinner';
+const Config = mergeComponentMetadata('Spinner', Spinner);
 
 storiesOf('Moonstone', module)
 	.add(
@@ -67,6 +67,7 @@ storiesOf('Moonstone', module)
 					<Spinner
 						blockClickOn={select('blockClickOn', [null, 'container', 'screen'], Config)}
 						centered={boolean('centered', Config)}
+						paused={boolean('paused', Config)}
 						scrim={boolean('scrim', Config)}
 						transparent={boolean('transparent', Config)}
 					>

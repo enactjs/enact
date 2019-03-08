@@ -1,0 +1,58 @@
+// Popup.module.less
+//
+@import '../styles/mixins.less';
+@import '../styles/variables.less';
+@import '../styles/skin.less';
+
+.popup {
+	@padding-v: 24px;
+	@padding-h: @moon-spotlight-outset * 4;
+	pointer-events: auto;
+
+	.moon-text-base();
+	padding: @padding-v @padding-h;
+	box-sizing: border-box;
+
+	.closeButton {
+		position: absolute;
+		right: @moon-spotlight-outset;
+		top: @moon-spotlight-outset;
+		margin: 0;
+	}
+
+	.body {
+		// border: 1px dashed cyan;		// helpful for debugging layout. Not for production.
+		.locale-japanese-line-break();
+	}
+
+	&.reserveClose {
+		.padding-start-end(@padding-h, @moon-icon-button-small-size + @moon-spotlight-outset);
+
+		.moon-custom-text({
+			.padding-start-end(@padding-h, @moon-icon-button-small-size-large + @moon-spotlight-outset, parent);
+		});
+	}
+
+	:global(.enact-locale-right-to-left) & {
+		.closeButton {
+			right: auto;
+			left: @moon-spotlight-outset;
+		}
+	}
+
+	// Skin colors
+	.applySkins({
+		background-color: fade(@moon-popup-bg-color, @moon-popup-bg-opacity);
+
+		.closeButton {
+			color: @moon-popup-close-text-color;
+		}
+	});
+}
+
+.popupTransitionContainer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	pointer-events: none;
+}

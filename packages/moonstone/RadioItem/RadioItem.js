@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import ToggleIcon from '../ToggleIcon';
 import ToggleItem from '../ToggleItem';
 
-import componentCss from './RadioItem.less';
+import componentCss from './RadioItem.module.less';
 
 /**
  * Renders an `Item` with a radio-dot icon.
@@ -24,6 +24,7 @@ import componentCss from './RadioItem.less';
  * @class RadioItem
  * @memberof moonstone/RadioItem
  * @extends moonstone/ToggleItem.ToggleItem
+ * @omit iconComponent
  * @ui
  * @public
  */

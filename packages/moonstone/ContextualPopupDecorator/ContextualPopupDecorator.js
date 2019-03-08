@@ -10,6 +10,7 @@ import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {on, off} from '@enact/core/dispatcher';
 import {handle, forProp, forKey, forward, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import {extractAriaProps} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Spotlight, {getDirection} from '@enact/spotlight';
@@ -22,7 +23,7 @@ import React from 'react';
 
 import {ContextualPopup} from './ContextualPopup';
 
-import css from './ContextualPopupDecorator.less';
+import css from './ContextualPopupDecorator.module.less';
 
 /**
  * Default config for {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator}
@@ -75,7 +76,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @required
 			 * @public
 			 */
-			popupComponent: PropTypes.func.isRequired,
+			popupComponent: EnactPropTypes.component.isRequired,
 
 			/**
 			 * Limits the range of voice control to the popup.
@@ -236,8 +237,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 				arrowPosition: {top: 0, left: 0},
 				containerPosition: {top: 0, left: 0},
 				containerId: Spotlight.add(this.props.popupSpotlightId),
-				activator: null,
-				shouldSpotActivator: true
+				activator: null
 			};
 
 			this.overflow = {};
@@ -259,47 +259,37 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentWillReceiveProps (nextProps) {
-			const current = Spotlight.getCurrent();
-
-			if (this.props.direction !== nextProps.direction) {
-				this.adjustedDirection = nextProps.direction;
-				this.positionContextualPopup();
-			}
-
-			if (!this.props.open && nextProps.open) {
-				this.updateLeaveFor(current);
-				this.setState({
-					activator: current
-				});
-			} else if (this.props.open && !nextProps.open) {
-
-				this.updateLeaveFor(null);
-				this.setState(state => ({
-					activator: null,
-					// only spot the activator on close if spotlight ...
+		getSnapshotBeforeUpdate (prevProps, prevState) {
+			if (prevProps.open && !this.props.open) {
+				const current = Spotlight.getCurrent();
+				return {
 					shouldSpotActivator: (
 						// isn't set
 						!current ||
 						// is on the activator and we want to re-spot it so a11y read out can occur
-						current === state.activator ||
+						current === prevState.activator ||
 						// is within the popup
 						this.containerNode.contains(current)
 					)
-				}));
+				};
 			}
+			return null;
 		}
 
-		componentDidUpdate (prevProps, prevState) {
+		componentDidUpdate (prevProps, prevState, snapshot) {
+			if (prevProps.direction !== this.props.direction) {
+				this.adjustedDirection = this.props.direction;
+				// NOTE: `setState` is called and will cause re-render
+				this.positionContextualPopup();
+			}
+
 			if (this.props.open && !prevProps.open) {
 				on('keydown', this.handleKeyDown);
 				on('keyup', this.handleKeyUp);
-				this.spotPopupContent();
 			} else if (!this.props.open && prevProps.open) {
 				off('keydown', this.handleKeyDown);
 				off('keyup', this.handleKeyUp);
-
-				if (this.state.shouldSpotActivator) {
+				if (snapshot && snapshot.shouldSpotActivator) {
 					this.spotActivator(prevState.activator);
 				}
 			}
@@ -476,9 +466,6 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		getContainerNode = (node) => {
 			this.containerNode = node;
-			if (node) {
-				this.positionContextualPopup();
-			}
 		}
 
 		getClientNode = (node) => {
@@ -494,6 +481,24 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			stop,
 			forward('onClose')
 		)
+
+		handleOpen = (ev) => {
+			forward('onOpen', ev, this.props);
+			this.positionContextualPopup();
+			const current = Spotlight.getCurrent();
+			this.updateLeaveFor(current);
+			this.setState({
+				activator: current
+			});
+			this.spotPopupContent();
+		}
+
+		handleClose = () => {
+			this.updateLeaveFor(null);
+			this.setState({
+				activator: null
+			});
+		}
 
 		handleDirectionalKey (ev) {
 			// prevent default page scrolling
@@ -566,7 +571,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {'data-webos-voice-exclusive': voiceExclusive, showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, onOpen, popupProps, skin, spotlightRestrict, ...rest} = this.props;
+			const {'data-webos-voice-exclusive': voiceExclusive, showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, popupProps, skin, spotlightRestrict, ...rest} = this.props;
 			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
 			const popupPropsRef = Object.assign({}, popupProps);
 			const ariaProps = extractAriaProps(popupPropsRef);
@@ -575,6 +580,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 				rest.skin = skin;
 			}
 
+			delete rest.onOpen;
 			delete rest.popupSpotlightId;
 			delete rest.rtl;
 			delete rest.setApiProvider;
@@ -583,7 +589,14 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			return (
 				<div className={css.contextualPopupDecorator}>
-					<FloatingLayer open={open} scrimType={scrimType} noAutoDismiss={noAutoDismiss} onDismiss={onClose} onOpen={onOpen}>
+					<FloatingLayer
+						noAutoDismiss={noAutoDismiss}
+						onClose={this.handleClose}
+						onDismiss={onClose}
+						onOpen={this.handleOpen}
+						open={open}
+						scrimType={scrimType}
+					>
 						<ContextualPopupContainer
 							{...ariaProps}
 							className={popupClassName}

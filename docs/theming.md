@@ -14,10 +14,10 @@ Components built with the `kind` feature can use the `publicClassNames` key in t
 
 Sometimes, behavior is built into a component, but no visual qualities are assigned to that behavior. For example, Enact handles the `selected` state of a `Button`, and it's implemented in our `ui` package, so it's universally available to all themes. `ui` has no opinion on how this state is visually represented, so it simply exports a blank class that the consuming theme can style to its liking.
 
-Here's a simplified example of `ui/Button/Button.less`:
+Here's a simplified example of `ui/Button/Button.module.less`:
 
 ```css
-// Button.less
+// Button.module.less
 //
 @import "../styles/mixins.less";
 
@@ -52,7 +52,7 @@ import React from 'react';
 import kind from '@enact/core/kind';
 import UiButton from '@enact/ui/Button';
 
-import componentCss from './Button.less';
+import componentCss from './Button.module.less';
 
 const Button = kind({
 	name: 'CustomizedButton',
@@ -110,7 +110,7 @@ When creating customizable components it may be helpful to understand how the th
 When a LESS or CSS file is imported, the classes are inventoried and a hash map is generated of original class names to obfuscated modularized class names: `{original: obfuscated}`. Your module now has a map of all of the class names you referenced. Normally, when using `kind()` you simply pass this into the `styles` block, and indicate which one is your base class, with the `className` key.
 
 ```javascript
-import css from './Button.less';
+import css from './Button.module.less';
 ...
 {
 	css,	// Via ES6, the `css` variable is converted to {'css': css}
@@ -156,7 +156,7 @@ import React from 'react';
 import kind from '@enact/core/kind';
 import UiButton from '@enact/ui/Button';
 
-import componentCss from './Button.less';
+import componentCss from './Button.module.less';
 
 const Button = kind({
 	name: 'CustomizedButton',

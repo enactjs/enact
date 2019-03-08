@@ -23,12 +23,13 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import {Cell, CellBase, toFlexAlign} from './Cell';
 
-import css from './Layout.less';
+import css from './Layout.module.less';
 
 /**
  * A container for `Cell`s.
@@ -56,6 +57,7 @@ import css from './Layout.less';
  * ```
  *
  * @class Layout
+ * @ui
  * @memberof ui/Layout
  * @public
  */
@@ -94,11 +96,11 @@ const LayoutBase = kind({
 		 * The type of component to use to render as the `Layout`. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 * @public
 		 */
-		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		component:  EnactPropTypes.renderable,
 
 		/**
 		 * Allows this `Layout` to have following siblings drawn on the same line as itself
@@ -188,6 +190,7 @@ const LayoutBase = kind({
  * A {@link ui/Layout.Layout} that positions its [Cells]{@link ui/Layout.Cell} vertically.
  *
  * @class Column
+ * @ui
  * @memberof ui/Layout
  * @public
  */
@@ -202,6 +205,7 @@ const Column = (props) => (
  * A {@link ui/Layout.Layout} that positions its [Cells]{@link ui/Layout.Cell} horizontally.
  *
  * @class Row
+ * @ui
  * @memberof ui/Layout
  * @public
  */

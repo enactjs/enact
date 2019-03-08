@@ -22,7 +22,7 @@ The `factory` module has been replaced by the `css` override feature.
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 
-import componentCss from './Button.less';
+import componentCss from './Button.module.less';
 
 const ButtonFactory = factory({css: componentCss}, ({css}) => {
 	return kind({

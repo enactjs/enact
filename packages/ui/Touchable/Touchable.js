@@ -176,7 +176,7 @@ const handleGlobalMove = handle(
 const handleBlur = handle(
 	forward('onBlur'),
 	call('hasFocus'),
-	call('endGesture')
+	call('blurGesture')
 );
 
 /**
@@ -340,6 +340,19 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onHold: PropTypes.func,
 
 			/**
+			 * Event handler for the end of hold events.
+			 *
+			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `'onHoldEnd'`
+			 * * `time` - Time, in milliseconds, since the hold began
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onHoldEnd: PropTypes.func,
+
+			/**
 			 * Event handler for hold pulse events
 			 *
 			 * Event payload includes:
@@ -378,7 +391,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.state = {
-				active: States.Inactive
+				active: States.Inactive,
+				prevDisabled: props.disabled
 			};
 
 			this.config = mergeConfig({
@@ -415,6 +429,19 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			handleGlobalMove.bindAs(this, 'handleGlobalMove');
 		}
 
+		static getDerivedStateFromProps (props, state) {
+			const {disabled} = props;
+			const {prevDisabled} = state;
+
+			if (prevDisabled !== disabled) {
+				return {
+					...(activeProp && !prevDisabled && disabled && deactivate(state)),
+					prevDisabled: disabled
+				};
+			}
+			return null;
+		}
+
 		componentDidMount () {
 			// ensure we clean up our internal state
 			if (platform.touch) {
@@ -424,16 +451,16 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			on('mousemove', this.handleGlobalMove, document);
 		}
 
-		componentWillReceiveProps (nextProps) {
-			if (!this.props.disabled && nextProps.disabled) {
-				this.deactivate();
+		componentDidUpdate (prevProps) {
+			if (!prevProps.disabled && this.props.disabled) {
+				this.clearTarget();
 				this.hold.end();
 			}
 
 			this.config = mergeConfig({
-				drag: nextProps.dragConfig,
-				flick: nextProps.flickConfig,
-				hold: nextProps.holdConfig
+				drag: this.props.dragConfig,
+				flick: this.props.flickConfig,
+				hold: this.props.holdConfig
 			});
 		}
 
@@ -542,6 +569,16 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
+		blurGesture () {
+			this.targetHadFocus = false;
+
+			this.hold.blur();
+			this.flick.blur();
+			this.drag.blur();
+
+			return true;
+		}
+
 		endGesture () {
 			this.targetHadFocus = false;
 
@@ -614,6 +651,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.onDown;
 			delete props.onFlick;
 			delete props.onHold;
+			delete props.onHoldEnd;
 			delete props.onHoldPulse;
 			delete props.onTap;
 			delete props.onUp;

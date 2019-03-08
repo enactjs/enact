@@ -2,7 +2,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import css from './DateComponentPicker.less';
+import css from './DateComponentPicker.module.less';
 
 /**
  * {@link moonstone/internal/DataComponentPicker.DateComponentPickerChrome} provides the surrounding

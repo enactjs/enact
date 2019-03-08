@@ -13,6 +13,11 @@ const iconNames = ['', ...icons];
 const Config = mergeComponentMetadata('Input', InputBase, Input);
 Input.displayName = 'Input';
 
+// Set up some defaults for info and knobs
+const prop = {
+	type: ['text', 'number', 'password']
+};
+
 storiesOf('Moonstone', module)
 	.add(
 		'Input',
@@ -29,7 +34,7 @@ storiesOf('Moonstone', module)
 				invalidMessage={text('invalidMessage', Config)}
 				placeholder={text('placeholder', Config)}
 				small={boolean('small', Config)}
-				type={text('type', Config)}
+				type={select('type', prop.type, Config, prop.type[0])}
 			/>
 		))
 	);

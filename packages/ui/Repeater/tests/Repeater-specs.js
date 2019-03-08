@@ -8,10 +8,11 @@ describe('Repeater Specs', () => {
 	const stringItems = ['One', 'Two', 'Three'];
 	const objItems = stringItems.map((content, key) => ({key, content}));
 
+	const CustomRootType = (props) => <div {...props} />;
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	const CustomType = (props) => <div>{props.content}</div>;
 
-	it('should have a root span element', function () {
+	test('should have a root span element', () => {
 		const subject = shallow(
 			<Repeater childComponent="div">{stringItems}</Repeater>
 		);
@@ -19,10 +20,32 @@ describe('Repeater Specs', () => {
 		const expected = 'span';
 		const actual = subject.first().name();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should accept a nodeName as childComponent', function () {
+	test('should accept a nodeName as root element', () => {
+		const subject = shallow(
+			<Repeater component="div" childComponent="div">{stringItems}</Repeater>
+		);
+
+		const expected = 'div';
+		const actual = subject.first().name();
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should accept a function as root element', () => {
+		const subject = shallow(
+			<Repeater component={CustomRootType} childComponent="div">{stringItems}</Repeater>
+		);
+
+		const expected = 'CustomRootType';
+		const actual = subject.first().name();
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should accept a nodeName as childComponent', () => {
 		const subject = shallow(
 			<Repeater childComponent="div">{stringItems}</Repeater>
 		);
@@ -30,10 +53,10 @@ describe('Repeater Specs', () => {
 		const expected = 3;
 		const actual = subject.first().children().length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should accept a function as childComponent', function () {
+	test('should accept a function as childComponent', () => {
 		const subject = shallow(
 			<Repeater childComponent={CustomType}>{stringItems}</Repeater>
 		);
@@ -41,21 +64,24 @@ describe('Repeater Specs', () => {
 		const expected = 3;
 		const actual = subject.first().children().length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should create a number of children matching the length of items', function () {
-		const subject = shallow(
-			<Repeater childComponent="div">{stringItems}</Repeater>
-		);
+	test(
+		'should create a number of children matching the length of items',
+		() => {
+			const subject = shallow(
+				<Repeater childComponent="div">{stringItems}</Repeater>
+			);
 
-		const expected = stringItems.length;
-		const actual = subject.first().children().length;
+			const expected = stringItems.length;
+			const actual = subject.first().children().length;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should support an array of objects as items', function () {
+	test('should support an array of objects as items', () => {
 		const subject = shallow(
 			<Repeater childComponent={CustomType}>{objItems}</Repeater>
 		);
@@ -63,10 +89,10 @@ describe('Repeater Specs', () => {
 		const expected = objItems.length;
 		const actual = subject.first().children().length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should support passing itemProps to children', function () {
+	test('should support passing itemProps to children', () => {
 		const subject = shallow(
 			<Repeater childComponent="div" itemProps={{title: 'test'}}>{stringItems}</Repeater>
 		);
@@ -74,10 +100,10 @@ describe('Repeater Specs', () => {
 		const expected = 'test';
 		const actual = subject.first().childAt(0).prop('title');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should pass index to each child', function () {
+	test('should pass index to each child', () => {
 		const subject = shallow(
 			<Repeater childComponent="div">{stringItems}</Repeater>
 		);
@@ -85,10 +111,10 @@ describe('Repeater Specs', () => {
 		const expected = 0;
 		const actual = subject.first().childAt(0).prop('data-index');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should pass data to each child', function () {
+	test('should pass data to each child', () => {
 		const subject = shallow(
 			<Repeater childComponent="div" childProp="data-str">{stringItems}</Repeater>
 		);
@@ -96,10 +122,10 @@ describe('Repeater Specs', () => {
 		const expected = stringItems[0];
 		const actual = subject.first().childAt(0).prop('data-str');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should pass item as children to each child', function () {
+	test('should pass item as children to each child', () => {
 		const subject = shallow(
 			<Repeater childComponent="div">{stringItems}</Repeater>
 		);
@@ -107,10 +133,10 @@ describe('Repeater Specs', () => {
 		const expected = stringItems[0];
 		const actual = subject.first().childAt(0).prop('children');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should set role to list by default', function () {
+	test('should set role to list by default', () => {
 		const subject = shallow(
 			<Repeater childComponent="div">{stringItems}</Repeater>
 		);
@@ -118,10 +144,10 @@ describe('Repeater Specs', () => {
 		const expected = 'list';
 		const actual = subject.prop('role');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should allow role to be overridden', function () {
+	test('should allow role to be overridden', () => {
 		const subject = shallow(
 			<Repeater childComponent="div" role="listbox">{stringItems}</Repeater>
 		);
@@ -129,6 +155,6 @@ describe('Repeater Specs', () => {
 		const expected = 'listbox';
 		const actual = subject.prop('role');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });

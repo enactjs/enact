@@ -8,12 +8,13 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import Touchable from '../Touchable';
 
-import componentCss from './Item.less';
+import componentCss from './Item.module.less';
 
 /**
  * A basic list item component structure without any behaviors applied to it.
@@ -33,20 +34,19 @@ const ItemBase = kind({
 		 * The node to be displayed as the main content of the item.
 		 *
 		 * @type {Node}
-		 * @required
 		 * @public
 		 */
-		children: PropTypes.node.isRequired,
+		children: PropTypes.node,
 
 		/**
 		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 * @public
 		 */
-		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		component: EnactPropTypes.renderable,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the

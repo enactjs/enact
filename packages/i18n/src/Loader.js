@@ -1,23 +1,32 @@
 /* global XMLHttpRequest, ILIB_BASE_PATH, ILIB_RESOURCES_PATH, ILIB_CACHE_ID */
 
+import {memoize} from '@enact/core/util';
 import xhr from 'xhr';
 
 import Loader from '../ilib/lib/Loader';
 import LocaleInfo from '../ilib/lib/LocaleInfo';
+
 import ZoneInfoFile from './zoneinfo';
 
-const get = (url, callback) => {
+const getImpl = (url, callback, sync) => {
 	if (typeof XMLHttpRequest !== 'undefined') {
 		xhr.XMLHttpRequest = XMLHttpRequest || xhr.XMLHttpRequest;
 		let req;
-		xhr({url, sync: true, beforeSend: (r) => (req = r)}, (err, resp, body) => {
+		xhr({url, sync, beforeSend: (r) => (req = r)}, (err, resp, body) => {
 			let error = err || resp.statusCode !== 200 && resp.statusCode;
 			// false failure from chrome and file:// urls
 			if (error && req.status === 0 && req.response.length > 0) {
 				body = req.response;
 				error = false;
 			}
-			const json = error ? null : JSON.parse(body);
+
+			let json = null;
+			try {
+				json = error ? null : JSON.parse(body);
+			} catch (e) {
+				error = 'Failed to parse ILIB JSON data';
+			}
+
 			callback(json, error);
 		});
 	} else {
@@ -25,11 +34,23 @@ const get = (url, callback) => {
 	}
 };
 
-const iLibBase = ILIB_BASE_PATH;
-const iLibResources = ILIB_RESOURCES_PATH;
+const getSync = (url, callback) => getImpl(url, callback, true);
+
+const get = memoize((url) => new Promise((resolve, reject) => {
+	getImpl(url, (json, error) => {
+		if (error) {
+			reject(error);
+		} else {
+			resolve(json);
+		}
+	}, false);
+}));
+
+const iLibBase = typeof ILIB_BASE_PATH === 'undefined' ? '/ilib' : ILIB_BASE_PATH;
+const iLibResources = typeof ILIB_RESOURCES_PATH === 'undefined' ? '/locale' : ILIB_RESOURCES_PATH;
 const cachePrefix = 'ENACT-ILIB-';
 const cacheKey = cachePrefix + 'CACHE-ID';
-const cacheID = ILIB_CACHE_ID;
+const cacheID = typeof ILIB_CACHE_ID === 'undefined' ? '$ILIB' : ILIB_CACHE_ID;
 
 function EnyoLoader () {
 	this.base = iLibBase;
@@ -86,56 +107,48 @@ EnyoLoader.prototype._pathjoin = function (_root, subpath) {
  * @param {function(Array.<Object>)} callback callback to call when this function is finished
  *	attempting to load all the files that exist and can be loaded
  *
- * @returns {undefined}
+ * @returns {Promise}
  */
-EnyoLoader.prototype._loadFilesAsync = function (paths, results, params, cache, callback) {
+EnyoLoader.prototype._loadFilesAsync = function (path, params, cache) {
 	let _root = iLibResources;
 	if (params && typeof params.root !== 'undefined') {
 		_root = params.root;
 	}
-	if (paths.length > 0) {
-		let path = paths.shift(),
-			cacheItem = cache.data.shift(),
-			url;
+	let cacheItem = cache.data.shift(),
+		url;
 
-		if (this.webos && path.indexOf('zoneinfo') !== -1) {
-			results.push(this._createZoneFile(path));
-		} else if (cacheItem) {
-			results.push(cacheItem);
+	if (this.webos && path.indexOf('zoneinfo') !== -1) {
+		// TODO: Sort out async zone file loading
+		return this._createZoneFile(path);
+	} else if (cacheItem) {
+		return Promise.resolve(cacheItem);
+	}
+
+	return this.loadManifests(_root).then(() => {
+		const isRootAvailable = this.isAvailable(_root, path);
+		if (isRootAvailable) {
+			url = this._pathjoin(_root, path);
 		} else {
-			let locdata = this._pathjoin(this.base, 'locale');
-			if (this.isAvailable(_root, path)) {
-				url = this._pathjoin(_root, path);
-			} else if (this.isAvailable(locdata, path)) {
-				url = this._pathjoin(locdata, path);
-			}
-
-			let resultFunc = (json, err) => {
-				if (!err && (typeof json === 'object')) {
-					cache.update = true;
-					results.push(json);
-				} else if (path === 'localeinfo.json') {
-					results.push(LocaleInfo.defaultInfo);
-				} else {
-					// eslint-disable-next-line no-undefined
-					results.push(undefined);
-				}
-				if (paths.length > 0) {
-					this._loadFilesAsync(paths, results, params, cache, callback);
-				} else {
-					// only the bottom item on the stack will call the callback
-					callback(results);
-				}
-			};
-
-			if (url) {
-				get(url, resultFunc);
-			} else {
-				// nothing to load, so go to the next file
-				resultFunc({});
+			const localeBase = this._pathjoin(this.base, 'locale');
+			const isBaseAvailable = this.isAvailable(localeBase, path);
+			if (isBaseAvailable) {
+				url = this._pathjoin(localeBase, path);
 			}
 		}
-	}
+
+		if (url) {
+			return get(url).then(json => {
+				if (typeof json === 'object') {
+					cache.update = true;
+					return json;
+				} else if (path === 'localeinfo.json') {
+					return LocaleInfo.defaultInfo;
+				}
+			});
+		}
+
+		return null;
+	});
 };
 
 EnyoLoader.prototype._loadFilesCache = function (_root, paths) {
@@ -158,7 +171,7 @@ EnyoLoader.prototype._loadFilesCache = function (_root, paths) {
 EnyoLoader.prototype._storeFilesCache = function (_root, paths, data) {
 	if (typeof window !== 'undefined' && window.localStorage && paths.length > 0) {
 		let target = JSON.stringify(paths);
-		window.localStorage.setItem(cachePrefix + _root + '/' + paths[0], JSON.stringify({target:target, value:data}));
+		window.localStorage.setItem(cachePrefix + _root + '/' + paths[0], JSON.stringify({target: target, value: data}));
 	}
 };
 
@@ -202,12 +215,14 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 					}
 				};
 
+				this.loadManifestsSync(_root);
+
 				if (this.isAvailable(_root, path)) {
-					get(this._pathjoin(_root, path), handler);
+					getSync(this._pathjoin(_root, path), handler);
 				}
 
 				if (!found && this.isAvailable(locdata, path)) {
-					get(this._pathjoin(locdata, path), handler);
+					getSync(this._pathjoin(locdata, path), handler);
 				}
 
 				if (!found) {
@@ -233,18 +248,32 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 	}
 
 	// asynchronous
-	const results = [];
-	this._loadFilesAsync(paths.slice(0), results, params, cache, function (res) {
+	Promise.all(paths.map(path => this._loadFilesAsync(path, params, cache))).then(results => {
 		if (cache.update) {
-			this._storeFilesCache(_root, paths, res);
+			this._storeFilesCache(_root, paths, results);
 		}
 		if (typeof callback === 'function') {
-			callback.call(this, res);
+			callback.call(this, results);
 		}
-	}.bind(this));
+	});
 };
 
-EnyoLoader.prototype._loadManifest = function (_root, subpath) {
+EnyoLoader.prototype._handleManifest = function (dirpath, filepath, json) {
+	// star indicates there was no ilibmanifest.json, so always try to load files from
+	// that dir
+	if (json != null) {
+		if (typeof window !== 'undefined' && window.localStorage) {
+			window.localStorage.setItem(cachePrefix + filepath, JSON.stringify(json));
+		}
+		this.manifest[dirpath] = json.files;
+	} else {
+		this.manifest[dirpath] = '*';
+	}
+
+	return this.manifest[dirpath];
+};
+
+EnyoLoader.prototype._loadManifest = function (_root, subpath, sync) {
 	if (!this.manifest) {
 		this.manifest = {};
 	}
@@ -252,56 +281,61 @@ EnyoLoader.prototype._loadManifest = function (_root, subpath) {
 	const dirpath = this._pathjoin(_root, subpath);
 	const filepath = this._pathjoin(dirpath, 'ilibmanifest.json');
 
-	// util.print('enyo loader: loading manifest ' + filepath + '\n');
-
-	const handler = (json, err) => {
-		// console.log((!inSender.failed && json ? 'success' : 'failed'));
-		// star indicates there was no ilibmanifest.json, so always try to load files from that dir
-		if (!err && typeof json === 'object') {
-			if (typeof window !== 'undefined' && window.localStorage) {
-				window.localStorage.setItem(cachePrefix + filepath, JSON.stringify(json));
-			}
-			this.manifest[dirpath] = json.files;
-		} else {
-			this.manifest[dirpath] = '*';
-		}
-	};
+	if (this.manifest[dirpath]) {
+		return;
+	}
 
 	let cachedManifest;
 	if (typeof window !== 'undefined' && window.localStorage) {
 		cachedManifest = window.localStorage.getItem(cachePrefix + filepath);
 	}
+
 	if (cachedManifest) {
 		this.manifest[dirpath] = JSON.parse(cachedManifest).files;
-	} else {
-		get(filepath, handler);
+
+		return sync ? this.manifest[dirpath] : Promise.resolve(this.manifest[dirpath]);
 	}
+
+	if (sync) {
+		getSync(filepath, (json) => {
+			this._handleManifest(dirpath, filepath, json);
+		});
+
+		return;
+	}
+
+	return get(filepath).then(json => this._handleManifest(dirpath, filepath, json));
 };
 
-EnyoLoader.prototype._loadStandardManifests = function () {
-	// util.print('enyo loader: load manifests\n');
+EnyoLoader.prototype.loadManifests = function (_root) {
+	this._validateCache();
+	return Promise.all([
+		// standard ilib locale data
+		this._loadManifest(this.base, 'locale'),
+		// the app's resources dir
+		this._loadManifest('', iLibResources),
+		// maybe it's a custom root? If so, try to load
+		// the manifest file first in case it is there
+		this._loadManifest(_root, '')
+	]);
+};
+
+EnyoLoader.prototype.loadManifestsSync = function (_root) {
+	// load standard manifests
 	if (!this.manifest) {
 		this._validateCache();
-		this._loadManifest(this.base, 'locale'); // standard ilib locale data
-		this._loadManifest('', iLibResources);     // the app's resources dir
+		this._loadManifest(this.base, 'locale', true); // standard ilib locale data
+		this._loadManifest('', iLibResources, true);     // the app's resources dir
 	}
-};
-
-EnyoLoader.prototype.listAvailableFiles = function () {
-	// util.print('enyo loader: list available files called\n');
-	this._loadStandardManifests();
-	return this.manifest;
-};
-
-EnyoLoader.prototype.isAvailable = function (_root, path) {
-	this._loadStandardManifests();
 
 	if (!this.manifest[_root]) {
 		// maybe it's a custom root? If so, try to load
 		// the manifest file first in case it is there
-		this._loadManifest(_root, '');
+		this._loadManifest(_root, '', true);
 	}
+};
 
+EnyoLoader.prototype.isAvailable = function (_root, path) {
 	// util.print('enyo loader: isAvailable ' + path + '? ');
 	// star means attempt to load everything because there was no manifest in that dir
 	if (this.manifest[_root] === '*' || this.manifest[_root].indexOf(path) !== -1) {

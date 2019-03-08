@@ -25,7 +25,7 @@ import $L from '../internal/$L';
 import Marquee from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import componentCss from './Spinner.less';
+import componentCss from './Spinner.module.less';
 
 /**
  * A component that shows spinning balls, with optional text as children.
@@ -58,10 +58,14 @@ const SpinnerCore = kind({
 
 	render: ({children, css, ...rest}) => (
 		<div aria-live="off" role="alert" {...rest}>
-			<div className={css.ballDecorator}>
-				<div className={`${css.ball} ${css.ball1}`} />
-				<div className={`${css.ball} ${css.ball2}`} />
-				<div className={`${css.ball} ${css.ball3}`} />
+			<div className={css.bg}>
+				<div className={css.decorator}>
+					<div className={css.fan1} />
+					<div className={css.fan2} />
+					<div className={css.fan3} />
+					<div className={css.fan4} />
+					<div className={css.cap} />
+				</div>
 			</div>
 			{children ?
 				<Marquee className={css.client} marqueeOn="render" alignment="center">
@@ -149,7 +153,7 @@ const SpinnerBase = kind({
  * @ui
  * @private
  */
-const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
+const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SpinnerSpotlightDecorator';
 
@@ -167,14 +171,11 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {	// eslint-disable-l
 			blockClickOn: PropTypes.oneOf(['screen', 'container', null])
 		}
 
-		constructor () {
-			super();
+		constructor (props) {
+			super(props);
 
 			this.paused = new Pause('Spinner');
-		}
-
-		componentWillMount () {
-			const {blockClickOn} = this.props;
+			const {blockClickOn} = props;
 			const current = Spotlight.getCurrent();
 
 			if (blockClickOn === 'screen') {
@@ -207,7 +208,6 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {	// eslint-disable-l
  *
  * @hoc
  * @memberof moonstone/Spinner
- * @mixes moonstone/Spinner.SpinnerSpotlightDecorator
  * @mixes moonstone/Skinnable.Skinnable
  * @public
  */

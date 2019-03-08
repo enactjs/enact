@@ -4,7 +4,7 @@ import React from 'react';
 
 import IconButton from '../IconButton';
 
-import css from './Scrollbar.less';
+import css from './Scrollbar.module.less';
 
 /**
  * An [IconButton]{@link moonstone/IconButton.IconButton} used within
@@ -30,15 +30,6 @@ const ScrollButton = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		* Sets the hint string read when focusing the scroll bar button.
-		*
-		* @type {String}
-		* @memberof moonstone/Scrollable.ScrollButton.prototype
-		* @public
-		*/
-		'aria-label': PropTypes.string,
-
-		/**
 		 * Sets the `aria-label`.
 		 *
 		 * @type {Boolean}
@@ -46,6 +37,15 @@ const ScrollButton = kind({
 		 * @public
 		 */
 		active: PropTypes.bool,
+
+		/**
+		* Sets the hint string read when focusing the scroll bar button.
+		*
+		* @type {String}
+		* @memberof moonstone/Scrollable.ScrollButton.prototype
+		* @public
+		*/
+		'aria-label': PropTypes.string,
 
 		/**
 		 * Disables the button.

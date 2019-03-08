@@ -12,13 +12,14 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import Touchable from '../Touchable';
 
-import componentCss from './IconButton.less';
+import componentCss from './IconButton.module.less';
 
 /**
  * A ui-styled button without any behavior.
@@ -36,11 +37,11 @@ const IconButtonBase = kind({
 		 * This is the root component used to render the button and will receive all props except
 		 * `icon`.
 		 *
-		 * @type {Function|Element}
+		 * @type {Component|Element}
 		 * @required
 		 * @public
 		 */
-		buttonComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
+		buttonComponent: EnactPropTypes.componentOverride.isRequired,
 
 		/**
 		 * The component used to render the [icon]{@link ui/IconButton.IconButtonBase.icon}.
@@ -48,11 +49,11 @@ const IconButtonBase = kind({
 		 * This component will receive the `small` property set on the `IconButton` as well as the
 		 * `icon` class to customize its styling.
 		 *
-		 * @type {Function}
+		 * @type {Component}
 		 * @required
 		 * @public
 		 */
-		iconComponent: PropTypes.func.isRequired,
+		iconComponent: EnactPropTypes.component.isRequired,
 
 		/**
 		 * Additional children that follow the icon.

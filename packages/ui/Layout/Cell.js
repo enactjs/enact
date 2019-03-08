@@ -1,10 +1,11 @@
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import ri from '../resolution';
 
-import css from './Layout.less';
+import css from './Layout.module.less';
 
 const toFlexAlign = (align) => (
 	align === 'end' && 'flex-end' ||
@@ -17,6 +18,7 @@ const toFlexAlign = (align) => (
  * [Layout]{@link ui/Layout.Layout}.
  *
  * @class Cell
+ * @ui
  * @memberof ui/Layout
  * @public
  */
@@ -51,11 +53,11 @@ const CellBase = kind({
 		 * The type of component to use to render as the `Cell`. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 * @public
 		 */
-		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		component:  EnactPropTypes.renderable,
 
 		/**
 		 * Sizes `Cell` to its contents.

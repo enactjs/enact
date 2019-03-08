@@ -1,3 +1,4 @@
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import React from 'react';
 import PropTypes from 'prop-types';
 import warning from 'warning';
@@ -58,14 +59,11 @@ const Router = class extends React.Component {
 		/**
 		 * The component wrapping the rendered path
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 * @public
 		 */
-		component: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.func
-		]),
+		component: EnactPropTypes.renderable,
 
 		/**
 		 * Routes defined as an object rather than via JSX.
@@ -119,22 +117,6 @@ const Router = class extends React.Component {
 
 	constructor (props) {
 		super(props);
-		this.initRoutes(props);
-	}
-
-	componentWillReceiveProps (nextProps) {
-		this.initRoutes(nextProps);
-	}
-
-	/**
-	 * Selects either `props.routes` or generates routes from `props.children`
-	 *
-	 * @param {Object} props Component props
-	 *
-	 * @returns {undefined}
-	 */
-	initRoutes (props) {
-		this.routes = props.routes || this.createRoutes(props.children, {});
 	}
 
 	/**
@@ -169,10 +151,12 @@ const Router = class extends React.Component {
 	 */
 	createChildren () {
 		const segments = toSegments(this.props.path);
+		const {routes, children} = this.props;
+		const computedRoutes = routes || this.createRoutes(children, {});
 
 		let valid = true;
-		let route = this.routes;
-		const children = segments.map((segment, index) => {
+		let route = computedRoutes;
+		const childrenElements = segments.map((segment, index) => {
 			const subPath = segments.slice(0, index + 1).join('/');
 			route = route && route[segment];
 			if (route && route.$component) {
@@ -187,9 +171,9 @@ const Router = class extends React.Component {
 			return null;
 		});
 
-		warning(valid, `${this.props.path} does not match the configured routes: ${stringifyRoutes(this.routes)}`);
+		warning(valid, `${this.props.path} does not match the configured routes: ${stringifyRoutes(computedRoutes)}`);
 
-		return valid ? children : [];
+		return valid ? childrenElements : [];
 	}
 
 	render () {
@@ -225,6 +209,7 @@ const Router = class extends React.Component {
  * ```
  *
  * @class Route
+ * @ui
  * @memberof moonstone/Panels
  * @public
  */
@@ -235,15 +220,12 @@ Route.propTypes = {
 	 * The component to render when the `path` for this Route matches the path of the
 	 * {@link moonstone/Panels.Routable} container.
 	 *
-	 * @type {String|Function}
+	 * @type {String|Component}
 	 * @required
 	 * @public
 	 * @memberof moonstone/Panels.Route.prototype
 	 */
-	component: PropTypes.oneOfType([
-		PropTypes.string,
-		PropTypes.func
-	]).isRequired,
+	component: EnactPropTypes.renderable.isRequired,
 
 	/**
 	 * The name of the path segment
