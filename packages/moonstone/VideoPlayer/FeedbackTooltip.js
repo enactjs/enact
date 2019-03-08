@@ -1,8 +1,9 @@
 import kind from '@enact/core/kind';
-import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
-import React from 'react';
-import PropTypes from 'prop-types';
 import ComponentOverride from '@enact/ui/ComponentOverride';
+import EnactPropTypes from '@enact/core/internal/prop-types';
+import PropTypes from 'prop-types';
+import React from 'react';
+import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 
 import Image from '../Image';
 import Skinnable from '../Skinnable';
@@ -112,10 +113,10 @@ const FeedbackTooltipBase = kind({
 		 * This can be a tag name as a string, a rendered DOM node, a component, or a component
 		 * instance.
 		 *
-		 * @type {Component|Element}
+		 * @type {String|Component|Element}
 		 * @public
 		 */
-		thumbnailComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.func]),
+		thumbnailComponent: EnactPropTypes.renderableOverride,
 
 		/**
 		 * `true` if Slider knob is scrubbing.

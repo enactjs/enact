@@ -21,6 +21,7 @@
 
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -62,11 +63,10 @@ const ToggleItemBase = kind({
 		 * way. It is recommended to use [ToggleIcon]{@link moonstone/ToggleIcon} for this.
 		 *
 		 * @type {Component|Element}
-		 * @default null
 		 * @required
 		 * @public
 		 */
-		iconComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.func]).isRequired,
+		iconComponent: EnactPropTypes.componentOverride.isRequired,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
