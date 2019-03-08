@@ -6,6 +6,7 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -43,7 +44,7 @@ const BodyText = kind({
 		 * @default 'p'
 		 * @public
 		 */
-		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		component: EnactPropTypes.renderable,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
