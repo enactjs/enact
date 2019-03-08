@@ -100,7 +100,7 @@ const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, toolti
  * @memberof moonstone/TooltipDecorator
  * @param   {Object} tooltipNode		The `getBoundingClientRect` values for tooltip node
  * @param   {Object} clientNode			The `getBoundingClientRect` values for client node
- * @param	{String} arrowAnchor		Anchor position from `adjustAnchor`
+ * @param   {String} arrowAnchor		Anchor position from `adjustAnchor`
  * @param   {String} tooltipDirection	Direction of tooltip
  * @param   {Number} tooltipHeight		Tooltip height
  * @returns {Object}					Tooltip top and left position
