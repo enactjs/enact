@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 
 import css from './ScrollThumb.module.less';
 
-const nop = () => {};
-
 /**
  * An unstyled scroll thumb without any behavior.
  *
