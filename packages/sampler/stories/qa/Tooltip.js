@@ -147,22 +147,28 @@ class TooltipFollow extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			left: 30,
+			left: 0,
 			widthMinus: 180,
 			widthPlus: 30
 		};
 	}
 
 	handleWidthMinusClick = () => {
-		this.setState({widthMinus: this.state.widthMinus - 30});
+		this.setState((prevState) => {
+			return {widthMinus: prevState.widthMinus - 30};
+		});
 	}
 
 	handleWidthPlusClick = () => {
-		this.setState({widthPlus: this.state.widthPlus + 30});
+		this.setState((prevState) => {
+			return {widthPlus: prevState.widthPlus + 30};
+		});
 	}
 
 	handlePositionClick = () => {
-		this.setState({left: this.state.left + 30});
+		this.setState((prevState) => {
+			return {left: prevState.left + 30};
+		});
 	}
 
 	render = () => {
