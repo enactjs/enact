@@ -123,7 +123,7 @@ class ScrollerBase extends Component {
 			if (node.dataset.spotlightId && node.dataset.spotlightContainer && !node.dataset.expandableContainer) {
 				return node;
 			}
-		} while ((node = node.parentNode) && node !== this.uiRef.current.containerRef);
+		} while ((node = node.parentNode) && node !== this.uiRef.current.containerRef.current);
 	}
 
 	/**

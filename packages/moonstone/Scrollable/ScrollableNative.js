@@ -423,7 +423,7 @@ class ScrollableBaseNative extends Component {
 		const
 			spotItem = Spotlight.getCurrent(),
 			positionFn = this.childRef.current.calculatePositionOnFocus,
-			{containerRef} = this.uiRef.current.childRef;
+			{containerRef} = this.uiRef.current.childRef.current;
 
 		if (spotItem && positionFn && containerRef.current && containerRef.current.contains(spotItem)) {
 			const lastPos = this.lastScrollPositionOnFocus;
@@ -703,12 +703,12 @@ class ScrollableBaseNative extends Component {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	addEventListeners = (childContainerRef) => {
-		if (childContainerRef && childContainerRef.addEventListener) {
-			childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
-			childContainerRef.addEventListener('mousemove', this.onMouseMove, {capture: true});
-			childContainerRef.addEventListener('focusin', this.onFocus);
+		if (childContainerRef && childContainerRef.current.addEventListener) {
+			childContainerRef.current.addEventListener('mouseover', this.onMouseOver, {capture: true});
+			childContainerRef.current.addEventListener('mousemove', this.onMouseMove, {capture: true});
+			childContainerRef.current.addEventListener('focusin', this.onFocus);
 			if (platform.webos) {
-				childContainerRef.addEventListener('webOSVoice', this.onVoice);
+				childContainerRef.current.addEventListener('webOSVoice', this.onVoice);
 				childContainerRef.current.setAttribute('data-webos-voice-intent', 'Scroll');
 			}
 		}
@@ -716,13 +716,13 @@ class ScrollableBaseNative extends Component {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	removeEventListeners = (childContainerRef) => {
-		if (childContainerRef && childContainerRef.removeEventListener) {
-			childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
-			childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
-			childContainerRef.removeEventListener('focusin', this.onFocus);
+		if (childContainerRef && childContainerRef.current.removeEventListener) {
+			childContainerRef.current.removeEventListener('mouseover', this.onMouseOver, {capture: true});
+			childContainerRef.current.removeEventListener('mousemove', this.onMouseMove, {capture: true});
+			childContainerRef.current.removeEventListener('focusin', this.onFocus);
 			if (platform.webos) {
-				childContainerRef.removeEventListener('webOSVoice', this.onVoice);
-				childContainerRef.removeAttribute('data-webos-voice-intent');
+				childContainerRef.current.removeEventListener('webOSVoice', this.onVoice);
+				childContainerRef.current.removeAttribute('data-webos-voice-intent');
 			}
 		}
 	}

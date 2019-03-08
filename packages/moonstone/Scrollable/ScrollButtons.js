@@ -2,6 +2,7 @@ import {Announce} from '@enact/ui/AnnounceDecorator';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import Spotlight, {getDirection} from '@enact/spotlight';
 
 import $L from '../internal/$L';
@@ -177,7 +178,7 @@ class ScrollButtons extends Component {
 	isOneOfScrollButtonsFocused = () => {
 		const current = Spotlight.getCurrent();
 
-		return current === this.prevButtonRef || current === this.nextButtonRef;
+		return current === this.prevButtonRef.current || current === this.nextButtonRef.current;
 	}
 
 	onDownPrev = () => {
@@ -262,7 +263,7 @@ class ScrollButtons extends Component {
 		if (isPageDown(keyCode) && !nextButtonDisabled) {
 			if (focusableScrollButtons) {
 				Spotlight.setPointerMode(false);
-				Spotlight.focus(this.nextButtonRef.current);
+				Spotlight.focus(ReactDOM.findDOMNode(this.nextButtonRef.current));
 			} else {
 				this.onClickNext(ev);
 			}
@@ -280,7 +281,7 @@ class ScrollButtons extends Component {
 		if (isPageUp(keyCode) && !prevButtonDisabled) {
 			if (focusableScrollButtons) {
 				Spotlight.setPointerMode(false);
-				Spotlight.focus(this.prevButtonRef.current);
+				Spotlight.focus(ReactDOM.findDOMNode(this.prevButtonRef.current));
 			} else {
 				this.onClickPrev(ev);
 			}
