@@ -1,6 +1,7 @@
 import {getContainersForNode, getContainerNode, setContainerLastFocusedElement} from '@enact/spotlight/src/container';
 import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import {Job} from '@enact/core/util';
 import Spotlight from '@enact/spotlight';
 import Pause from '@enact/spotlight/Pause';
 import React from 'react';
@@ -80,10 +81,21 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			noAutoFocus: false
 		}
 
-		constructor () {
-			super();
+		constructor (props) {
+			super(props);
+
+			this.state = {
+				renderTransitionContainer: props.open
+			};
 
 			this.paused = new Pause('ExpandableItem');
+		}
+
+		static getDerivedStateFromProps (props, state) {
+			if (props.open && !state.renderTransitionContainer) {
+				return {renderTransitionContainer: true};
+			}
+			return null;
 		}
 
 		componentWillUnmount () {
@@ -198,6 +210,22 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.highlight(this.highlightContents);
 		}
 
+		handleBlur = () => {
+			this.renderJob.stop();
+		}
+
+		handleFocus = () => {
+			if (!this.state.renderTransitionContainer) {
+				this.renderJob.idle();
+			}
+		}
+
+		renderJob = new Job(() => {
+			this.setState({
+				renderTransitionContainer: true
+			});
+		})
+
 		setContainerNode = (node) => {
 			this.containerNode = ReactDOM.findDOMNode(node);	// eslint-disable-line react/no-find-dom-node
 		}
@@ -209,10 +237,13 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return (
 				<Wrapped
 					{...props}
+					onBlur={this.handleBlur}
+					onFocus={this.handleFocus}
 					onHide={this.handleHide}
 					onShow={this.handleShow}
 					onOpen={this.handleOpen}
 					onClose={this.handleClose}
+					renderTransitionContainer={this.state.renderTransitionContainer}
 					setContainerNode={this.setContainerNode}
 				/>
 			);

@@ -251,6 +251,15 @@ const ExpandableItemBase = kind({
 		open: PropTypes.bool,
 
 		/**
+		 * Renders the transition container
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		renderTransitionContainer: PropTypes.bool,
+
+		/**
 		 * Sets a reference to the root container node of the ExpandableItem.
 		 *
 		 * @type {Function}
@@ -365,6 +374,7 @@ const ExpandableItemBase = kind({
 		onSpotlightLeft,
 		onSpotlightRight,
 		onSpotlightUp,
+		renderTransitionContainer,
 		setContainerNode,
 		spotlightDisabled,
 		title,
@@ -409,20 +419,23 @@ const ExpandableItemBase = kind({
 					spotlightDisabled={spotlightDisabled}
 					titleIcon="arrowlargedown"
 				>{title}</LabeledItem>
-				<ExpandableTransitionContainer
-					data-expandable-container
-					duration="short"
-					timingFunction="ease-out-quart"
-					onHide={onHide}
-					onKeyDown={handleKeyDown}
-					onShow={onShow}
-					spotlightDisabled={transitionSpotlightDisabled}
-					type="clip"
-					direction="down"
-					visible={open}
-				>
-					{children}
-				</ExpandableTransitionContainer>
+				{renderTransitionContainer ?
+					<ExpandableTransitionContainer
+						data-expandable-container
+						duration="short"
+						timingFunction="ease-out-quart"
+						onHide={onHide}
+						onKeyDown={handleKeyDown}
+						onShow={onShow}
+						spotlightDisabled={transitionSpotlightDisabled}
+						type="clip"
+						direction="down"
+						visible={open}
+					>
+						{children}
+					</ExpandableTransitionContainer> :
+					null
+				}
 			</ContainerDiv>
 		);
 	}
