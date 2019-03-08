@@ -1151,10 +1151,10 @@ class ScrollableBaseNative extends Component {
 	}
 
 	startHidingThumb = () => {
-		if (this.state.isHorizontalScrollbarVisible) {
+		if (this.state.isHorizontalScrollbarVisible && this.horizontalScrollbarRef.current) {
 			this.horizontalScrollbarRef.current.startHidingThumb();
 		}
-		if (this.state.isVerticalScrollbarVisible) {
+		if (this.state.isVerticalScrollbarVisible && this.verticalScrollbarRef.current) {
 			this.verticalScrollbarRef.current.startHidingThumb();
 		}
 	}
@@ -1207,10 +1207,10 @@ class ScrollableBaseNative extends Component {
 					scrollTop: this.scrollTop
 				};
 
-			if (curHorizontalScrollbarVisible) {
+			if (curHorizontalScrollbarVisible && this.horizontalScrollbarRef.current) {
 				this.horizontalScrollbarRef.current.update(updatedBounds);
 			}
-			if (curVerticalScrollbarVisible) {
+			if (curVerticalScrollbarVisible && this.verticalScrollbarRef.current) {
 				this.verticalScrollbarRef.current.update(updatedBounds);
 			}
 			return true;

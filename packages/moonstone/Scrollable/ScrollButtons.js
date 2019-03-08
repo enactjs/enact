@@ -144,12 +144,6 @@ class ScrollButtons extends Component {
 		this.prevButtonRef = React.createRef();
 	}
 
-	componentDidMount () {
-		this.announce = this.announceRef.current.announce;
-	}
-
-	announce = null
-
 	updateButtons = (bounds) => {
 		const
 			{vertical} = this.props,
@@ -182,16 +176,16 @@ class ScrollButtons extends Component {
 	}
 
 	onDownPrev = () => {
-		if (this.announce) {
+		if (this.announceRef.current.announce) {
 			const {rtl, vertical} = this.props;
-			this.announce(vertical && $L('UP') || rtl && $L('RIGHT') || $L('LEFT'));
+			this.announceRef.current.announce(vertical && $L('UP') || rtl && $L('RIGHT') || $L('LEFT'));
 		}
 	}
 
 	onDownNext = () => {
-		if (this.announce) {
+		if (this.announceRef.current.announce) {
 			const {rtl, vertical} = this.props;
-			this.announce(vertical && $L('DOWN') || rtl && $L('LEFT') || $L('RIGHT'));
+			this.announceRef.current.announce(vertical && $L('DOWN') || rtl && $L('LEFT') || $L('RIGHT'));
 		}
 	}
 
@@ -263,7 +257,7 @@ class ScrollButtons extends Component {
 		if (isPageDown(keyCode) && !nextButtonDisabled) {
 			if (focusableScrollButtons) {
 				Spotlight.setPointerMode(false);
-				Spotlight.focus(ReactDOM.findDOMNode(this.nextButtonRef.current));
+				Spotlight.focus(ReactDOM.findDOMNode(this.nextButtonRef.current)); // eslint-disable-line react/no-find-dom-node
 			} else {
 				this.onClickNext(ev);
 			}
@@ -281,7 +275,7 @@ class ScrollButtons extends Component {
 		if (isPageUp(keyCode) && !prevButtonDisabled) {
 			if (focusableScrollButtons) {
 				Spotlight.setPointerMode(false);
-				Spotlight.focus(ReactDOM.findDOMNode(this.prevButtonRef.current));
+				Spotlight.focus(ReactDOM.findDOMNode(this.prevButtonRef.current)); // eslint-disable-line react/no-find-dom-node
 			} else {
 				this.onClickPrev(ev);
 			}
