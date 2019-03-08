@@ -11,6 +11,7 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
+import ForwardRef from '@enact/ui/ForwardRef';
 import {is} from '@enact/core/keymap';
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
@@ -56,10 +57,7 @@ const
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
 
-const TouchableDiv = React.forwardRef((props, ref) => {
-	const Wrapper = Touchable('div');
-	return <Wrapper {...props} ref={ref} />;
-});
+const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
 
 /**
  * An unstyled component that passes scrollable behavior information as its render prop's arguments.
@@ -1252,7 +1250,7 @@ class ScrollableBase extends Component {
 	}
 
 	handleScroll = () => {
-		const childRef = this.childRef;
+		const childRefCurrent = this.childRefCurrent;
 
 		// Prevent scroll by focus.
 		// VirtualList and VirtualGridList DO NOT receive `onscroll` event.

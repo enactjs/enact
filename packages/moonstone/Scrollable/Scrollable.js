@@ -414,13 +414,13 @@ class ScrollableBase extends Component {
 		}
 
 		const
-			{childRef, containerRef} = this.uiRef.current,
+			{childRefCurrent, containerRef} = this.uiRef.current,
 			focusedItem = Spotlight.getCurrent();
 
 		this.uiRef.current.lastInputType = 'pageKey';
 
 		// Should skip scroll by page when focusedItem is paging control button of Scrollbar
-		if (focusedItem && childRef.current.containerRef.current.contains(focusedItem)) {
+		if (focusedItem && childRefCurrent.containerRef.current.contains(focusedItem)) {
 			const
 				// VirtualList and Scroller have a spotlightId on containerRef
 				spotlightId = containerRef.current.dataset.spotlightId,
