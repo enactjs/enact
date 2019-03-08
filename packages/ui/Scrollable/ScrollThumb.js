@@ -39,10 +39,10 @@ const ScrollThumb = kind({
 		className: ({vertical, styler}) => styler.append({vertical})
 	},
 
-	render: ({setRef, ...rest}) => {
-		delete rest.vertical;
+	render: (props) => {
+		delete props.vertical;
 
-		return <div {...rest} />;
+		return <div {...props} />;
 	}
 });
 
