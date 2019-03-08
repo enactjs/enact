@@ -18,9 +18,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import FloatingLayer from '../FloatingLayer';
+import ForwardRef from '../ForwardRef';
 
 import componentCss from './Spinner.module.less';
-import ForwardRef from '../ForwardRef';
 
 /**
  * A minimally styled component that controls `Spinner` positioning and interaction states.

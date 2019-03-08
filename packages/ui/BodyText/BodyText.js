@@ -10,6 +10,8 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import ForwardRef from '../ForwardRef';
+
 import componentCss from './BodyText.module.less';
 
 /**
@@ -20,7 +22,7 @@ import componentCss from './BodyText.module.less';
  * @ui
  * @public
  */
-const BodyText = kind({
+const BodyTextBase = kind({
 	name: 'ui:BodyText',
 
 	propTypes: /** @lends ui/BodyText.BodyText.prototype */ {
@@ -45,6 +47,13 @@ const BodyText = kind({
 		 * @public
 		 */
 		component: EnactPropTypes.renderable,
+
+		/**
+		 * Called with a reference to `component`
+		 *
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -76,18 +85,22 @@ const BodyText = kind({
 		className: ({centered, styler}) => styler.append({centered})
 	},
 
-	render: ({component: Component, ...rest}) => {
+	render: ({component: Component, componentRef, ...rest}) => {
 		delete rest.centered;
 
 		return (
 			<Component
+				ref={componentRef}
 				{...rest}
 			/>
 		);
 	}
 });
 
+const BodyText = ForwardRef({prop: 'componentRef'}, BodyTextBase);
+
 export default BodyText;
 export {
-	BodyText
+	BodyText,
+	BodyTextBase
 };

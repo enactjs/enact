@@ -249,4 +249,10 @@ Route.propTypes = {
 };
 
 export default Router;
-export {Router, Route, propTypes, toSegments};
+export {
+	propTypes,
+	Route,
+	Router,
+	RouterBase,
+	toSegments
+};
