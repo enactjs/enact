@@ -19,14 +19,6 @@ const ScrollThumb = kind({
 
 	propTypes: /** @lends ui/Scrollable.ScrollThumb.prototype */ {
 		/**
-		 * The function to pass a wrapped ref.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		setRef: PropTypes.object,
-
-		/**
 		 * If `true`, the scrollbar will be oriented vertically.
 		 *
 		 * @type {Boolean}
@@ -37,7 +29,6 @@ const ScrollThumb = kind({
 	},
 
 	defaultProps: {
-		setRef: nop,
 		vertical: true
 	},
 
@@ -53,7 +44,7 @@ const ScrollThumb = kind({
 	render: ({setRef, ...rest}) => {
 		delete rest.vertical;
 
-		return <div {...rest} ref={setRef} />;
+		return <div {...rest} />;
 	}
 });
 

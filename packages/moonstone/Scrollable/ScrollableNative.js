@@ -298,7 +298,7 @@ class ScrollableBaseNative extends Component {
 
 	onMouseMove = () => {
 		if (this.resetPosition !== null) {
-			const childContainerRef = this.uiRef.current.childRef.current.containerRef.current;
+			const childContainerRef = this.uiRef.current.childRef.current.containerRef;
 			childContainerRef.current.style.scrollBehavior = null;
 			childContainerRef.current.scrollTop = this.resetPosition;
 			childContainerRef.current.style.scrollBehavior = 'smooth';

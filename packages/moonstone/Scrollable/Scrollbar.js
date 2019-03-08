@@ -109,7 +109,7 @@ class ScrollbarBase extends Component {
 				css={componentCss}
 				ref={this.scrollbarRef}
 				vertical={vertical}
-				childRenderer={({scrollThumbRef}) => ( // eslint-disable-line react/jsx-no-bind
+				childRenderer={({thumbRef}) => ( // eslint-disable-line react/jsx-no-bind
 					<ScrollButtons
 						{...rest}
 						ref={this.scrollButtonsRef}
@@ -118,7 +118,7 @@ class ScrollbarBase extends Component {
 							<ScrollThumb
 								cbAlertThumb={cbAlertThumb}
 								key="thumb"
-								setRef={scrollThumbRef}
+								ref={thumbRef}
 								vertical={vertical}
 							/>
 						)}
