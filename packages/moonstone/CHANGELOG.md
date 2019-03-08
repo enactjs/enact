@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VideoPlayer` to continue to show thumbnail when playback control keys are pressed
+- spotlight muted colors for `Checkbox`, `FormCheckbox`, `RadioItem`, `SelectableIcon`, and `Slider`.
 
 ## [2.4.0] - 2019-03-04
 
