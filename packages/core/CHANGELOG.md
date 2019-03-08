@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `core/util.isRenderable` to treat values returned by `React.lazy()`, `React.memo()`, and `React.forwardRef()` as renderable
+- `core/hoc` to support wrapping components returned by `React.lazy()`, `React.memo()`, and `React.forwardRef()`
+
 ## [2.4.0] - 2019-03-04
 
 No significant changes.
