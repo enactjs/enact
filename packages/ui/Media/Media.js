@@ -8,10 +8,11 @@
  * @exports	Media
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import {forward} from '@enact/core/handle';
 import {on, off} from '@enact/core/dispatcher';
+import {forward} from '@enact/core/handle';
+import EnactPropTypes from '@enact/core/internal/prop-types';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 /**
  * Generates a key representing the source node or nodes provided
@@ -122,11 +123,11 @@ class Media extends React.Component {
 		/**
 		 * A type of media component.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @required
 		 * @public
 		 */
-		mediaComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+		mediaComponent: EnactPropTypes.renderable.isRequired,
 
 		/**
 		 * An event map object for custom media events.

@@ -62,6 +62,8 @@ const SpinnerCore = kind({
 				<div className={css.decorator}>
 					<div className={css.fan1} />
 					<div className={css.fan2} />
+					<div className={css.fan3} />
+					<div className={css.fan4} />
 					<div className={css.cap} />
 				</div>
 			</div>

@@ -6,8 +6,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Spinner` animation synchronization after a rerender
 - `moonstone/TooltipDecorator` to position `Tooltip` correctly when the wrapped component moves or resizes
 - `moonstone/VideoPlayer` to continue to show thumbnail when playback control keys are pressed
+- `moonstone/VideoPlayer` to stop seeking by remote key when it loses focus
 
 ## [2.4.0] - 2019-03-04
 
