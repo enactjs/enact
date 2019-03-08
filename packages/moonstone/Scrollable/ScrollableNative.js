@@ -293,12 +293,12 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onMouseOver = () => {
-		this.resetPosition = this.uiRef.current.childRef.current.containerRef.current.scrollTop;
+		this.resetPosition = this.uiRef.current.childRefCurrent.containerRef.current.scrollTop;
 	}
 
 	onMouseMove = () => {
 		if (this.resetPosition !== null) {
-			const childContainerRef = this.uiRef.current.childRef.current.containerRef;
+			const childContainerRef = this.uiRef.current.childRefCurrent.containerRef;
 			childContainerRef.current.style.scrollBehavior = null;
 			childContainerRef.current.scrollTop = this.resetPosition;
 			childContainerRef.current.style.scrollBehavior = 'smooth';
@@ -423,7 +423,7 @@ class ScrollableBaseNative extends Component {
 		const
 			spotItem = Spotlight.getCurrent(),
 			positionFn = this.childRef.current.calculatePositionOnFocus,
-			{containerRef} = this.uiRef.current.childRef.current;
+			{containerRef} = this.uiRef.current.childRefCurrent;
 
 		if (spotItem && positionFn && containerRef.current && containerRef.current.contains(spotItem)) {
 			const lastPos = this.lastScrollPositionOnFocus;
@@ -650,7 +650,7 @@ class ScrollableBaseNative extends Component {
 	alertThumbAfterRendered = () => {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem && this.uiRef.current && this.uiRef.current.childRef.current.containerRef.current.contains(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
+		if (!Spotlight.getPointerMode() && spotItem && this.uiRef.current && this.uiRef.current.childRefCurrent.containerRef.current.contains(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
 			this.alertThumb();
 		}
 	}

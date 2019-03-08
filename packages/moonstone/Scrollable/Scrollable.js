@@ -348,7 +348,7 @@ class ScrollableBase extends Component {
 		const
 			spotItem = Spotlight.getCurrent(),
 			positionFn = this.childRef.current.calculatePositionOnFocus,
-			{containerRef} = this.uiRef.current.childRef.current;
+			{containerRef} = this.uiRef.current.childRefCurrent;
 
 		if (spotItem && positionFn && containerRef.current && containerRef.current.contains(spotItem)) {
 			const lastPos = this.lastScrollPositionOnFocus;
@@ -584,7 +584,7 @@ class ScrollableBase extends Component {
 	alertThumbAfterRendered = () => {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem && this.uiRef.current && this.uiRef.current.childRef.current.containerRef.current.contains(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
+		if (!Spotlight.getPointerMode() && spotItem && this.uiRef.current && this.uiRef.current.childRefCurrent.containerRef.current.contains(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
 			this.alertThumb();
 		}
 	}

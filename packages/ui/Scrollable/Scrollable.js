@@ -421,12 +421,12 @@ class ScrollableBase extends Component {
 	componentDidUpdate (prevProps, prevState) {
 		const
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-			{hasDataSizeChanged} = this.childRef.current;
+			{hasDataSizeChanged} = this.childRefCurrent;
 
 		// Need to sync calculated client size if it is different from the real size
-		if (this.childRef.current.syncClientSize) {
+		if (this.childRefCurrent.syncClientSize) {
 			// If we actually synced, we need to reset scroll position.
-			if (this.childRef.current.syncClientSize()) {
+			if (this.childRefCurrent.syncClientSize()) {
 				this.setScrollLeft(0);
 				this.setScrollTop(0);
 			}
@@ -483,7 +483,7 @@ class ScrollableBase extends Component {
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	enqueueForceUpdate () {
-		this.childRef.current.calculateMetrics();
+		this.childRefCurrent.calculateMetrics();
 		this.forceUpdate();
 	}
 
@@ -543,7 +543,7 @@ class ScrollableBase extends Component {
 	scrollToInfo = null
 
 	// component info
-	childRef = null
+	childRefCurrent = null
 
 	// scroll animator
 	animator = new ScrollAnimator()
@@ -993,7 +993,7 @@ class ScrollableBase extends Component {
 			this.setScrollTop(top);
 		}
 
-		this.childRef.current.setScrollPosition(this.scrollLeft, this.scrollTop);
+		this.childRefCurrent.setScrollPosition(this.scrollLeft, this.scrollTop);
 		this.forwardScrollEvent('onScroll');
 	}
 
@@ -1055,11 +1055,11 @@ class ScrollableBase extends Component {
 					}
 				}
 			} else {
-				if (typeof opt.index === 'number' && typeof this.childRef.current.getItemPosition === 'function') {
-					itemPos = this.childRef.current.getItemPosition(opt.index, opt.stickTo);
+				if (typeof opt.index === 'number' && typeof this.childRefCurrent.getItemPosition === 'function') {
+					itemPos = this.childRefCurrent.getItemPosition(opt.index, opt.stickTo);
 				} else if (opt.node instanceof Object) {
-					if (opt.node.nodeType === 1 && typeof this.childRef.current.getNodePosition === 'function') {
-						itemPos = this.childRef.current.getNodePosition(opt.node);
+					if (opt.node.nodeType === 1 && typeof this.childRefCurrent.getNodePosition === 'function') {
+						itemPos = this.childRefCurrent.getNodePosition(opt.node);
 					}
 				}
 				if (itemPos) {
@@ -1194,52 +1194,52 @@ class ScrollableBase extends Component {
 	// ref
 
 	getScrollBounds () {
-		if (this.childRef && this.childRef.current && typeof this.childRef.current.getScrollBounds === 'function') {
-			return this.childRef.current.getScrollBounds();
+		if (this.childRefCurrent && typeof this.childRefCurrent.getScrollBounds === 'function') {
+			return this.childRefCurrent.getScrollBounds();
 		}
 	}
 
 	getMoreInfo () {
-		if (this.childRef && this.childRef.current && typeof this.childRef.current.getMoreInfo === 'function') {
-			return this.childRef.current.getMoreInfo();
+		if (this.childRefCurrent && typeof this.childRefCurrent.getMoreInfo === 'function') {
+			return this.childRefCurrent.getMoreInfo();
 		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	addEventListeners () {
-		const {childRef, containerRef} = this;
+		const {childRefCurrent, containerRef} = this;
 
 		if (containerRef.current && containerRef.current.addEventListener) {
 			containerRef.current.addEventListener('wheel', this.onWheel);
 			containerRef.current.addEventListener('keydown', this.onKeyDown);
 		}
 
-		if (childRef.current && childRef.current.containerRef.current) {
-			if (childRef.current.containerRef.current.addEventListener) {
-				childRef.current.containerRef.current.addEventListener('mousedown', this.onMouseDown);
+		if (childRefCurrent && childRefCurrent.containerRef.current) {
+			if (childRefCurrent.containerRef.current.addEventListener) {
+				childRefCurrent.containerRef.current.addEventListener('mousedown', this.onMouseDown);
 			}
 		}
 
 		if (this.props.addEventListeners) {
-			this.props.addEventListeners(childRef.current.containerRef);
+			this.props.addEventListeners(childRefCurrent.containerRef);
 		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	removeEventListeners () {
-		const {childRef, containerRef} = this;
+		const {childRefCurrent, containerRef} = this;
 
 		if (containerRef.current && containerRef.current.removeEventListener) {
 			containerRef.current.removeEventListener('wheel', this.onWheel);
 			containerRef.current.removeEventListener('keydown', this.onKeyDown);
 		}
 
-		if (childRef.current && childRef.current.containerRef.current && childRef.current.containerRef.current.removeEventListener) {
-			childRef.current.containerRef.current.removeEventListener('mousedown', this.onMouseDown);
+		if (childRefCurrent && childRefCurrent.containerRef.current && childRefCurrent.containerRef.current.removeEventListener) {
+			childRefCurrent.containerRef.current.removeEventListener('mousedown', this.onMouseDown);
 		}
 
 		if (this.props.removeEventListeners) {
-			this.props.removeEventListeners(childRef.current.containerRef.current);
+			this.props.removeEventListeners(childRefCurrent.containerRef.current);
 		}
 	}
 
@@ -1247,7 +1247,7 @@ class ScrollableBase extends Component {
 
 	initChildRef = (ref) => {
 		if (ref) {
-			this.childRef = {current: ref};
+			this.childRefCurrent = ref.current || ref;
 		}
 	}
 
@@ -1257,10 +1257,10 @@ class ScrollableBase extends Component {
 		// Prevent scroll by focus.
 		// VirtualList and VirtualGridList DO NOT receive `onscroll` event.
 		// Only Scroller could get `onscroll` event.
-		if (!this.animator.isAnimating() && childRef.current && childRef.current.containerRef.current && childRef.current.getRtlPositionX) {
+		if (!this.animator.isAnimating() && childRefCurrent && childRefCurrent.containerRef.current && childRefCurrent.getRtlPositionX) {
 			// For Scroller
-			childRef.current.containerRef.current.scrollTop = this.scrollTop;
-			childRef.current.containerRef.current.scrollLeft = childRef.current.getRtlPositionX(this.scrollLeft);
+			childRefCurrent.containerRef.current.scrollTop = this.scrollTop;
+			childRefCurrent.containerRef.current.scrollLeft = childRefCurrent.getRtlPositionX(this.scrollLeft);
 		}
 	}
 

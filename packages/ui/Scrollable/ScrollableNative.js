@@ -405,12 +405,12 @@ class ScrollableBaseNative extends Component {
 	componentDidUpdate (prevProps, prevState) {
 		const
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-			{hasDataSizeChanged} = this.childRef;
+			{hasDataSizeChanged} = this.childRefCurrent;
 
 		// Need to sync calculated client size if it is different from the real size
-		if (this.childRef.current.syncClientSize) {
+		if (this.childRefCurrent.syncClientSize) {
 			// If we actually synced, we need to reset scroll position.
-			if (this.childRef.current.syncClientSize()) {
+			if (this.childRefCurrent.syncClientSize()) {
 				this.setScrollLeft(0);
 				this.setScrollTop(0);
 			}
@@ -465,7 +465,7 @@ class ScrollableBaseNative extends Component {
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	enqueueForceUpdate () {
-		this.childRef.current.calculateMetrics();
+		this.childRefCurrent.calculateMetrics();
 		this.forceUpdate();
 	}
 
@@ -514,7 +514,7 @@ class ScrollableBaseNative extends Component {
 	scrollToInfo = null
 
 	// component info
-	childRef = null
+	childRefCurrent = null
 
 	// scroll animator
 	animator = new ScrollAnimator()
@@ -906,8 +906,8 @@ class ScrollableBaseNative extends Component {
 			this.setScrollTop(top);
 		}
 
-		if (this.childRef.current.didScroll) {
-			this.childRef.current.didScroll(this.scrollLeft, this.scrollTop, dirHorizontal, dirVertical);
+		if (this.childRefCurrent.didScroll) {
+			this.childRefCurrent.didScroll(this.scrollLeft, this.scrollTop, dirHorizontal, dirVertical);
 		}
 		this.forwardScrollEvent('onScroll');
 		this.scrollStopJob.start();
@@ -982,8 +982,8 @@ class ScrollableBaseNative extends Component {
 	start ({targetX, targetY, animate = true, overscrollEffect = false}) {
 		const
 			{scrollLeft, scrollTop} = this,
-			childRef = this.childRef,
-			childContainerRef = childRef.current.containerRef,
+			childRefCurrent = this.childRefCurrent,
+			childContainerRef = childRefCurrent.containerRef,
 			bounds = this.getScrollBounds(),
 			{maxLeft, maxTop} = bounds;
 
@@ -1016,10 +1016,10 @@ class ScrollableBaseNative extends Component {
 		}
 
 		if (animate) {
-			childRef.current.scrollToPosition(targetX, targetY);
+			childRefCurrent.scrollToPosition(targetX, targetY);
 		} else {
 			childContainerRef.current.style.scrollBehavior = null;
-			childRef.current.scrollToPosition(targetX, targetY);
+			childRefCurrent.scrollToPosition(targetX, targetY);
 			childContainerRef.current.style.scrollBehavior = 'smooth';
 		}
 
@@ -1030,11 +1030,11 @@ class ScrollableBaseNative extends Component {
 
 	stop () {
 		const
-			childRef = this.childRef,
-			childContainerRef = childRef.current.containerRef;
+			childRefCurrent = this.childRefCurrent,
+			childContainerRef = childRefCurrent.containerRef;
 
 		childContainerRef.current.style.scrollBehavior = null;
-		childRef.current.scrollToPosition(this.scrollLeft + 0.1, this.scrollTop + 0.1);
+		childRefCurrent.scrollToPosition(this.scrollLeft + 0.1, this.scrollTop + 0.1);
 		childContainerRef.current.style.scrollBehavior = 'smooth';
 	}
 
@@ -1080,11 +1080,11 @@ class ScrollableBaseNative extends Component {
 					}
 				}
 			} else {
-				if (typeof opt.index === 'number' && typeof this.childRef.current.getItemPosition === 'function') {
-					itemPos = this.childRef.current.getItemPosition(opt.index, opt.stickTo);
+				if (typeof opt.index === 'number' && typeof this.childRefCurrent.getItemPosition === 'function') {
+					itemPos = this.childRefCurrent.getItemPosition(opt.index, opt.stickTo);
 				} else if (opt.node instanceof Object) {
-					if (opt.node.nodeType === 1 && typeof this.childRef.current.getNodePosition === 'function') {
-						itemPos = this.childRef.current.getNodePosition(opt.node);
+					if (opt.node.nodeType === 1 && typeof this.childRefCurrent.getNodePosition === 'function') {
+						itemPos = this.childRefCurrent.getNodePosition(opt.node);
 					}
 				}
 				if (itemPos) {
@@ -1219,53 +1219,53 @@ class ScrollableBaseNative extends Component {
 	// ref
 
 	getScrollBounds () {
-		if (typeof this.childRef.current.getScrollBounds === 'function') {
-			return this.childRef.current.getScrollBounds();
+		if (typeof this.childRefCurrent.getScrollBounds === 'function') {
+			return this.childRefCurrent.getScrollBounds();
 		}
 	}
 
 	getMoreInfo () {
-		if (typeof this.childRef.current.getMoreInfo === 'function') {
-			return this.childRef.current.getMoreInfo();
+		if (typeof this.childRefCurrent.getMoreInfo === 'function') {
+			return this.childRefCurrent.getMoreInfo();
 		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	addEventListeners () {
-		const {childRef, containerRef} = this;
+		const {childRefCurrent, containerRef} = this;
 
 		if (containerRef && containerRef.current.addEventListener) {
 			containerRef.current.addEventListener('wheel', this.onWheel);
 		}
 
-		if (childRef && childRef.current.containerRef) {
-			if (childRef.current.containerRef.current.addEventListener) {
-				childRef.current.containerRef.current.addEventListener('scroll', this.onScroll, {capture: true, passive: true});
-				childRef.current.containerRef.current.addEventListener('mousedown', this.onMouseDown);
+		if (childRefCurrent.containerRef) {
+			if (childRefCurrent.containerRef.current.addEventListener) {
+				childRefCurrent.containerRef.current.addEventListener('scroll', this.onScroll, {capture: true, passive: true});
+				childRefCurrent.containerRef.current.addEventListener('mousedown', this.onMouseDown);
 			}
-			this.childRef.current.containerRef.current.style.scrollBehavior = 'smooth';
+			this.childRefCurrent.containerRef.current.style.scrollBehavior = 'smooth';
 		}
 
 		if (this.props.addEventListeners) {
-			this.props.addEventListeners(childRef.current.containerRef);
+			this.props.addEventListeners(childRefCurrent.containerRef);
 		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	removeEventListeners () {
-		const {childRef, containerRef} = this;
+		const {childRefCurrent, containerRef} = this;
 
 		if (containerRef && containerRef.current.removeEventListener) {
 			containerRef.current.removeEventListener('wheel', this.onWheel);
 		}
 
-		if (childRef && childRef.current.containerRef && childRef.current.containerRef.current.removeEventListener) {
-			childRef.current.containerRef.current.removeEventListener('scroll', this.onScroll, {capture: true, passive: true});
-			childRef.current.containerRef.current.removeEventListener('mousedown', this.onMouseDown);
+		if (childRefCurrent.containerRef && childRefCurrent.containerRef.current.removeEventListener) {
+			childRefCurrent.containerRef.current.removeEventListener('scroll', this.onScroll, {capture: true, passive: true});
+			childRefCurrent.containerRef.current.removeEventListener('mousedown', this.onMouseDown);
 		}
 
 		if (this.props.removeEventListeners) {
-			this.props.removeEventListeners(childRef.current.containerRef);
+			this.props.removeEventListeners(childRefCurrent.containerRef);
 		}
 	}
 
@@ -1273,7 +1273,7 @@ class ScrollableBaseNative extends Component {
 
 	initChildRef = (ref) => {
 		if (ref) {
-			this.childRef = {current: ref};
+			this.childRefCurrent = ref.current || ref;
 		}
 	}
 

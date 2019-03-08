@@ -101,7 +101,7 @@ class ScrollerBase extends Component {
 		this.setContainerDisabled(false);
 	}
 
-	uiRef = null
+	uiRefCurrent = null
 
 	configureSpotlight () {
 		Spotlight.set(this.props.spotlightId, {
@@ -123,7 +123,7 @@ class ScrollerBase extends Component {
 			if (node.dataset.spotlightId && node.dataset.spotlightContainer && !node.dataset.expandableContainer) {
 				return node;
 			}
-		} while ((node = node.parentNode) && node !== this.uiRef.current.containerRef.current);
+		} while ((node = node.parentNode) && node !== this.uiRefCurrent.containerRef.current);
 	}
 
 	/**
@@ -185,8 +185,8 @@ class ScrollerBase extends Component {
 		};
 
 		const container = this.getSpotlightContainerForNode(item);
-		const scrollerBounds = this.uiRef.current.containerRef.current.getBoundingClientRect();
-		let {scrollHeight, scrollTop} = this.uiRef.current.containerRef.current;
+		const scrollerBounds = this.uiRefCurrent.containerRef.current.getBoundingClientRect();
+		let {scrollHeight, scrollTop} = this.uiRefCurrent.containerRef.current;
 		let scrollTopDelta = 0;
 
 		const adjustScrollTop = (v) => {
@@ -236,13 +236,13 @@ class ScrollerBase extends Component {
 	 * @private
 	 */
 	calculatePositionOnFocus = ({item, scrollPosition}) => {
-		if (!this.uiRef.current.isVertical() && !this.uiRef.current.isHorizontal() || !item || !this.uiRef.current.containerRef.current.contains(item)) {
+		if (!this.uiRefCurrent.isVertical() && !this.uiRefCurrent.isHorizontal() || !item || !this.uiRefCurrent.containerRef.current.contains(item)) {
 			return;
 		}
 
-		if (this.uiRef.current.isVertical()) {
-			this.uiRef.current.scrollPos.top = this.calculateScrollTop(item);
-		} else if (this.uiRef.current.isHorizontal()) {
+		if (this.uiRefCurrent.isVertical()) {
+			this.uiRefCurrent.scrollPos.top = this.calculateScrollTop(item);
+		} else if (this.uiRefCurrent.isHorizontal()) {
 			const {
 				left: itemLeft,
 				width: itemWidth
@@ -250,26 +250,26 @@ class ScrollerBase extends Component {
 
 			const
 				{rtl} = this.props,
-				{clientWidth} = this.uiRef.current.scrollBounds,
+				{clientWidth} = this.uiRefCurrent.scrollBounds,
 				rtlDirection = rtl ? -1 : 1,
-				{left: containerLeft} = this.uiRef.current.containerRef.current.getBoundingClientRect(),
-				scrollLastPosition = scrollPosition ? scrollPosition : this.uiRef.current.scrollPos.left,
-				currentScrollLeft = rtl ? (this.uiRef.current.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
+				{left: containerLeft} = this.uiRefCurrent.containerRef.current.getBoundingClientRect(),
+				scrollLastPosition = scrollPosition ? scrollPosition : this.uiRefCurrent.scrollPos.left,
+				currentScrollLeft = rtl ? (this.uiRefCurrent.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
 				// calculation based on client position
-				newItemLeft = this.uiRef.current.containerRef.current.scrollLeft + (itemLeft - containerLeft);
+				newItemLeft = this.uiRefCurrent.containerRef.current.scrollLeft + (itemLeft - containerLeft);
 
 			if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
 				// If focus is moved to an element outside of view area (to the right), scroller will move
 				// to the right just enough to show the current `focusedItem`. This does not apply to
 				// `focusedItem` that has a width that is bigger than `this.scrollBounds.clientWidth`.
-				this.uiRef.current.scrollPos.left += rtlDirection * ((newItemLeft + itemWidth) - (clientWidth + currentScrollLeft));
+				this.uiRefCurrent.scrollPos.left += rtlDirection * ((newItemLeft + itemWidth) - (clientWidth + currentScrollLeft));
 			} else if (newItemLeft < currentScrollLeft) {
 				// If focus is outside of the view area to the left, move scroller to the left accordingly.
-				this.uiRef.current.scrollPos.left += rtlDirection * (newItemLeft - currentScrollLeft);
+				this.uiRefCurrent.scrollPos.left += rtlDirection * (newItemLeft - currentScrollLeft);
 			}
 		}
 
-		return this.uiRef.current.scrollPos;
+		return this.uiRefCurrent.scrollPos;
 	}
 
 	focusOnNode = (node) => {
@@ -299,7 +299,7 @@ class ScrollerBase extends Component {
 	}
 
 	getNextEndPoint = (direction, oSpotBounds) => {
-		const bounds = this.uiRef.current.getScrollBounds();
+		const bounds = this.uiRefCurrent.getScrollBounds();
 
 		let oPoint = {};
 		switch (direction) {
@@ -345,22 +345,22 @@ class ScrollerBase extends Component {
 
 	scrollToBoundary = (direction) => {
 		const
-			{scrollBounds, scrollPos} = this.uiRef.current,
+			{scrollBounds, scrollPos} = this.uiRefCurrent,
 			isVerticalDirection = (direction === 'up' || direction === 'down');
 
 		if (isVerticalDirection) {
 			if (scrollPos.top > 0 && scrollPos.top < scrollBounds.maxTop) {
-				this.uiRef.current.props.cbScrollTo({align: direction === 'up' ? 'top' : 'bottom'});
+				this.uiRefCurrent.props.cbScrollTo({align: direction === 'up' ? 'top' : 'bottom'});
 			}
 		} else if (scrollPos.left > 0 && scrollPos.left < scrollBounds.maxLeft) {
-			this.uiRef.current.props.cbScrollTo({align: this.props.rtl ? reverseDirections[direction] : direction});
+			this.uiRefCurrent.props.cbScrollTo({align: this.props.rtl ? reverseDirections[direction] : direction});
 		}
 	}
 
 	handleLeaveContainer = ({direction, target}) => {
-		const contentsContainer = this.uiRef.current.containerRef.current;
+		const contentsContainer = this.uiRefCurrent.containerRef.current;
 		// ensure we only scroll to boundary from the contents and not a scroll button which
-		// lie outside of this.uiRef.current.containerRef but within the spotlight container
+		// lie outside of this.uiRefCurrent.containerRef but within the spotlight container
 		if (contentsContainer && contentsContainer.contains(target)) {
 			this.scrollToBoundary(direction);
 		}
@@ -368,7 +368,7 @@ class ScrollerBase extends Component {
 
 	initUiRef = (ref) => {
 		if (ref) {
-			this.uiRef = {current: ref};
+			this.uiRefCurrent = ref.currnet || ref;
 			this.props.initUiChildRef(ref);
 		}
 	}
