@@ -15,6 +15,7 @@
 import always from 'ramda/src/always';
 import isType from 'ramda/src/is';
 import unless from 'ramda/src/unless';
+import * as ReactIs from 'react-is';
 
 import Job from './Job';
 
@@ -81,8 +82,7 @@ const coerceArray = function (array) {
  * @public
  */
 const isRenderable = function (tag) {
-	const type = typeof tag;
-	return type === 'function' || type === 'string';
+	return ReactIs.isValidElementType(tag);
 };
 
 /**

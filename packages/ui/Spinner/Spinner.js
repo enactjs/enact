@@ -13,6 +13,7 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -43,11 +44,11 @@ const Spinner = kind({
 		 * instead refers to the "spinner" part of this component. The presence of `blockClickOn`
 		 * changes the rendering tree and where this is used.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @required
 		 * @public
 		 */
-		component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+		component: EnactPropTypes.renderable.isRequired,
 
 		/**
 		 * Determines how far the click-blocking should extend.
@@ -92,6 +93,15 @@ const Spinner = kind({
 		css: PropTypes.object,
 
 		/**
+		 * Halts the animation of the spinner
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		paused: PropTypes.bool,
+
+		/**
 		 * Sets a scrim behind the spinner with the `css.scrim` class applied.
 		 *
 		 * Only has an effect when `blockClickOn` is `'screen'` or `'container'` and has no effect
@@ -106,18 +116,19 @@ const Spinner = kind({
 
 	defaultProps: {
 		centered: false,
+		paused: false,
 		scrim: false
 	},
 
 	styles: {
 		css: componentCss,
-		className: 'spinner running',
+		className: 'spinner',
 		publicClassNames: true
 	},
 
 	computed: {
-		className: ({centered, styler}) => styler.append(
-			{centered}
+		className: ({centered, paused, styler}) => styler.append(
+			{centered, running: !paused}
 		),
 		scrimClassName: ({blockClickOn, scrim, styler}) => styler.join(
 			{blockClickOn, scrim}
@@ -130,6 +141,7 @@ const Spinner = kind({
 
 	render: ({blockClickOn, component: Component, scrimClassName, scrimType, spinnerContainerClassName, ...rest}) =>  {
 		delete rest.centered;
+		delete rest.paused;
 		delete rest.scrim;
 
 		switch (blockClickOn) {

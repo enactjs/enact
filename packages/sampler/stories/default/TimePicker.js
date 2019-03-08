@@ -17,6 +17,7 @@ storiesOf('Moonstone', module)
 			text: 'The basic TimePicker'
 		})(() => (
 			<TimePicker
+				disabled={boolean('disabled', Config)}
 				hourAriaLabel={text('hourAriaLabel', Config, '')}
 				hourLabel={text('hourLabel', Config, '')}
 				meridiemAriaLabel={text('meridiemAriaLabel', Config, '')}

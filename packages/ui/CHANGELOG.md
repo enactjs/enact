@@ -2,7 +2,13 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [2.4.0] - 2019-03-04
+
+### Added
+
+- `ui/BodyText` prop `component` to allow customization of the tag/component used to render its base element
+- `ui/Repeater` prop `component` to allow customization of its base element
+- `ui/Spinner` prop `paused` to halt the animation. Previously this was hard-coded "on", but now it can be toggled.
 
 ### Changed
 

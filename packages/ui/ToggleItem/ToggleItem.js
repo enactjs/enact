@@ -12,9 +12,10 @@
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
+import React from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import Toggleable from '../Toggleable';
@@ -65,11 +66,11 @@ const ToggleItemBase = kind({
 		 * component and not a simple HTML DOM node. Recommended component or themed
 		 * derivative: [SlotItem]{@link ui/SlotItem.SlotItem}
 		 *
-		 * @type {Function}
+		 * @type {Component}
 		 * @required
 		 * @public
 		 */
-		component: PropTypes.func.isRequired,
+		component: EnactPropTypes.component.isRequired,
 
 		/**
 		 * The `Icon` to render in this item.
@@ -82,7 +83,7 @@ const ToggleItemBase = kind({
 		 * @required
 		 * @public
 		 */
-		iconComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.func]).isRequired,
+		iconComponent: EnactPropTypes.componentOverride.isRequired,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
