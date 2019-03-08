@@ -1,9 +1,11 @@
 import kind from '@enact/core/kind';
+import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
 import TooltipDecorator from '@enact/moonstone/TooltipDecorator';
 import Input from '@enact/moonstone/Input';
 import IconButton from '@enact/moonstone/IconButton';
 import Scroller from '@enact/moonstone/Scroller';
+import Layout, {Cell} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -128,7 +130,7 @@ const IconButtonItem = kind({
 					tooltipText="tooltip"
 					{...rest}
 				>
-					{'plus'}
+					plus
 				</IconButton>
 				<IconButton
 					style={{marginLeft: '450px'}}
@@ -136,7 +138,7 @@ const IconButtonItem = kind({
 					tooltipText="tooltip"
 					{...rest}
 				>
-					{'plus'}
+					plus
 				</IconButton>
 			</div>
 		);
@@ -173,32 +175,35 @@ class TooltipFollow extends React.Component {
 
 	render = () => {
 		return (
-			<div>
-				<IconButton
-					small
-					tooltipText="tooltip"
-					onClick={this.handleWidthMinusClick}
-					style={{width: `${this.state.widthMinus}px`}}
-				>
-					{'minus'}
-				</IconButton>
-				<IconButton
-					small
-					tooltipText="tooltip"
-					onClick={this.handleWidthPlusClick}
-					style={{width: `${this.state.widthPlus}px`}}
-				>
-					{'plus'}
-				</IconButton>
-				<IconButton
-					small
-					tooltipText="tooltip"
-					onClick={this.handlePositionClick}
-					style={{left: `${this.state.left}px`}}
-				>
-					{'plus'}
-				</IconButton>
-				<Scroller>
+			<Layout orientation="vertical">
+				<Cell shrink>
+					<BodyText>Click icon buttons to resize or move</BodyText>
+					<IconButton
+						small
+						tooltipText="tooltip"
+						onClick={this.handleWidthMinusClick}
+						style={{width: `${this.state.widthMinus}px`}}
+					>
+						minus
+					</IconButton>
+					<IconButton
+						small
+						tooltipText="tooltip"
+						onClick={this.handleWidthPlusClick}
+						style={{width: `${this.state.widthPlus}px`}}
+					>
+						plus
+					</IconButton>
+					<IconButton
+						small
+						tooltipText="tooltip"
+						onClick={this.handlePositionClick}
+						style={{left: `${this.state.left}px`}}
+					>
+						plus
+					</IconButton>
+				</Cell>
+				<Cell component={Scroller}>
 					<IconButtonItem tooltipPosition="above" />
 					<IconButtonItem tooltipPosition="above center" />
 					<IconButtonItem tooltipPosition="above left" />
@@ -214,8 +219,11 @@ class TooltipFollow extends React.Component {
 					<IconButtonItem tooltipPosition="right middle" />
 					<IconButtonItem tooltipPosition="right top" />
 					<IconButtonItem />
-				</Scroller>
-			</div>
+				</Cell>
+				<Cell shrink component={BodyText} centered>
+					<i>This space left intentionally blank for bottom margin below scroller</i>
+				</Cell>
+			</Layout>
 		);
 	}
 }
