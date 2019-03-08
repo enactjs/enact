@@ -78,5 +78,22 @@ describe('windowFocus', () => {
 
 			expect(actual).toEqual(expected);
 		});
+
+		test('should continue if a handler throws', () => {
+			const fails = () => {
+				throw new Error('Failed');
+			};
+			const fn = jest.fn();
+
+			onWindowFocus(fails);
+			onWindowFocus(fn);
+
+			dispatchFocus();
+
+			const expected = 1;
+			const actual = fn.mock.calls.length;
+
+			expect(actual).toEqual(expected);
+		});
 	});
 });

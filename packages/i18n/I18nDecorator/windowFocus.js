@@ -4,9 +4,15 @@ import {onWindowReady} from '@enact/core/snapshot';
 let focused = true;
 const queue = new Set();
 
-const flush = () => {
-	queue.forEach(fn => fn());
+const invoke = (fn) => {
+	try {
+		fn();
+	} catch (e) {
+		// failing silently
+	}
 };
+
+const flush = () => queue.forEach(invoke);
 
 const onWindowFocus = (handler) => {
 	if (focused) {
