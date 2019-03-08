@@ -7,12 +7,22 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/Item`, `ui/Layout`, `ui/Repeater`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleItem`, and `ui/ViewManager` support for `ref` to gain access to the wrapped `component`
+
+## [2.4.0] - 2019-03-04
+
+### Added
+
+- `ui/BodyText` prop `component` to allow customization of the tag/component used to render its base element
 - `ui/Repeater` prop `component` to allow customization of its base element
 - `ui/Spinner` prop `paused` to halt the animation. Previously this was hard-coded "on", but now it can be toggled.
 
 ### Changed
 
 - `ui/Changeable` and `ui/Toggleable` to warn when both `[defaultProp]` and `[prop]` are provided
+
+### Fixed
+
+- `ui/VirtualList` to scroll properly by `scrollTo` callback during the list is updated by prop changes
 
 ## [2.3.0] - 2019-02-11
 

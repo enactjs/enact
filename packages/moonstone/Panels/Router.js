@@ -1,6 +1,7 @@
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import ForwardRef from '@enact/ui/ForwardRef';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import warning from 'warning';
 
 const toSegments = (path) => Array.isArray(path) ? path : path.split('/').slice(1);
@@ -59,14 +60,11 @@ const RouterBase = class extends React.Component {
 		/**
 		 * The component wrapping the rendered path
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 * @public
 		 */
-		component: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.func
-		]),
+		component: EnactPropTypes.renderable,
 
 		/**
 		 * Called with a reference to `component`
@@ -232,15 +230,12 @@ Route.propTypes = {
 	 * The component to render when the `path` for this Route matches the path of the
 	 * {@link moonstone/Panels.Routable} container.
 	 *
-	 * @type {String|Function}
+	 * @type {String|Component}
 	 * @required
 	 * @public
 	 * @memberof moonstone/Panels.Route.prototype
 	 */
-	component: PropTypes.oneOfType([
-		PropTypes.string,
-		PropTypes.func
-	]).isRequired,
+	component: EnactPropTypes.renderable.isRequired,
 
 	/**
 	 * The name of the path segment

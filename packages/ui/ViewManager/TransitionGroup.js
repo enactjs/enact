@@ -5,19 +5,20 @@
 // Using string refs from the source code of ReactTransitionGroup
 /* eslint-disable react/no-string-refs */
 
+import {forward} from '@enact/core/handle';
+import EnactPropTypes from '@enact/core/internal/prop-types';
+import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import eqBy from 'ramda/src/eqBy';
 import findIndex from 'ramda/src/findIndex';
-import {forward} from '@enact/core/handle';
 import identity from 'ramda/src/identity';
 import lte from 'ramda/src/lte';
 import prop from 'ramda/src/prop';
 import propEq from 'ramda/src/propEq';
-import React from 'react';
-import PropTypes from 'prop-types';
 import remove from 'ramda/src/remove';
 import unionWith from 'ramda/src/unionWith';
 import useWith from 'ramda/src/useWith';
+import React from 'react';
 
 /**
  * Returns the index of a child in an array found by `key` matching
@@ -102,10 +103,10 @@ class TransitionGroup extends React.Component {
 		 *
 		 * May be a DOM node or a custom React component.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 */
-		component: PropTypes.any,
+		component: EnactPropTypes.renderable,
 
 		/**
 		 * Called with a reference to `component`

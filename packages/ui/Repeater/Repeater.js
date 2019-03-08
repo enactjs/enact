@@ -5,10 +5,12 @@
  * @exports Repeater
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
 import kind from '@enact/core/kind';
-import ForwardRef from '../ForwardRef/ForwardRef';
+import EnactPropTypes from '@enact/core/internal/prop-types';
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import ForwardRef from '../ForwardRef';
 
 /**
  * A stateless component that stamps out copies of `childComponent`.
@@ -27,11 +29,11 @@ const RepeaterBase = kind({
 		 *
 		 * This can be a React component or a string describing a DOM node (e.g. `'div'`).
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @required
 		 * @public
 		 */
-		childComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+		childComponent: EnactPropTypes.renderable.isRequired,
 
 		/**
 		 * An array of data to be mapped onto the `childComponent`.
@@ -70,11 +72,11 @@ const RepeaterBase = kind({
 		 *
 		 * This can be a string describing a DOM node or React component (e.g. `'div'` or `Layout`).
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'span'
 		 * @public
 		 */
-		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		component: EnactPropTypes.renderable,
 
 		/**
 		 * Called with a reference to `component`

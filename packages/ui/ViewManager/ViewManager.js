@@ -11,8 +11,9 @@
  * @exports ViewManager
  */
 
-import React from 'react';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import ForwardRef from '../ForwardRef';
 
@@ -60,13 +61,10 @@ const ViewManagerBase = class extends React.Component {
 		/**
 		 * Type of component wrapping the children. May be a DOM node or a custom React component.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 */
-		component: PropTypes.oneOfType([
-			PropTypes.func,
-			PropTypes.string
-		]),
+		component: EnactPropTypes.renderable,
 
 		/**
 		 * Called with a reference to `component`

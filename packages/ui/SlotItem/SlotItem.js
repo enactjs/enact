@@ -11,6 +11,7 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
@@ -38,11 +39,11 @@ const SlotItemBase = kind({
 		 * This component will receive the `inline` prop and any additional unhandled props provided
 		 * to `SlotItem`. A derivative of [Item]{@link ui/Item.Item} is recommended.
 		 *
-		 * @type {Function}
+		 * @type {Component}
 		 * @required
 		 * @public
 		 */
-		component: PropTypes.func.isRequired,
+		component: EnactPropTypes.component.isRequired,
 
 		/**
 		 * Controls the visibility state of the slots.

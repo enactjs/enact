@@ -13,6 +13,7 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -44,11 +45,11 @@ const SpinnerBase = kind({
 		 * instead refers to the "spinner" part of this component. The presence of `blockClickOn`
 		 * changes the rendering tree and where this is used.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @required
 		 * @public
 		 */
-		component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+		component: EnactPropTypes.renderable.isRequired,
 
 		/**
 		 * Determines how far the click-blocking should extend.
