@@ -1,3 +1,4 @@
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import React from 'react';
 import PropTypes from 'prop-types';
 import warning from 'warning';
@@ -58,14 +59,11 @@ const Router = class extends React.Component {
 		/**
 		 * The component wrapping the rendered path
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 * @public
 		 */
-		component: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.func
-		]),
+		component: EnactPropTypes.renderable,
 
 		/**
 		 * Routes defined as an object rather than via JSX.
@@ -222,15 +220,12 @@ Route.propTypes = {
 	 * The component to render when the `path` for this Route matches the path of the
 	 * {@link moonstone/Panels.Routable} container.
 	 *
-	 * @type {String|Function}
+	 * @type {String|Component}
 	 * @required
 	 * @public
 	 * @memberof moonstone/Panels.Route.prototype
 	 */
-	component: PropTypes.oneOfType([
-		PropTypes.string,
-		PropTypes.func
-	]).isRequired,
+	component: EnactPropTypes.renderable.isRequired,
 
 	/**
 	 * The name of the path segment

@@ -1,4 +1,5 @@
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -53,11 +54,11 @@ const CellBase = kind({
 		 * The type of component to use to render as the `Cell`. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 * @public
 		 */
-		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		component:  EnactPropTypes.renderable,
 
 		/**
 		 * A ref instance provided by {@link ui/ForwardRef.ForwardRef}.

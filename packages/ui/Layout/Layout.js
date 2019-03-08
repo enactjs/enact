@@ -23,9 +23,10 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
+import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import ForwardRef from '../ForwardRef';
 
@@ -98,11 +99,11 @@ const LayoutBase = kind({
 		 * The type of component to use to render as the `Layout`. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 * @public
 		 */
-		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		component:  EnactPropTypes.renderable,
 
 		/**
 		 * A ref instance provided by {@link ui/ForwardRef.ForwardRef}.

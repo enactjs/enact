@@ -7,6 +7,7 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -32,11 +33,11 @@ const GroupBase = kind({
 		 * Component type to repeat. This can be a React component or a string describing a DOM
 		 * node (e.g. `'div'`)
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @required
 		 * @public
 		 */
-		childComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+		childComponent: EnactPropTypes.renderable.isRequired,
 
 		/**
 		 * An array of data to be mapped onto the `childComponent`.

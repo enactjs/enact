@@ -1,10 +1,12 @@
 // BodyText.module.less
 //
-@import '../styles/variables.less';
-@import '../styles/mixins.less';
+@import "../styles/variables.less";
+@import "../styles/mixins.less";
 
 .bodyText {
 	.moon-body-text();
+	margin-left: @moon-spotlight-outset;
+	margin-right: @moon-spotlight-outset;
 
 	:global(.enact-locale-right-to-left) & {
 		text-align: right;
@@ -12,6 +14,10 @@
 		&.centered {
 			text-align: center;
 		}
+	}
+
+	.noWrap {
+		/* Support for single-line, provided for extensibility */
 	}
 
 	.locale-japanese-line-break();
