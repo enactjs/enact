@@ -1,6 +1,7 @@
 import {forward} from '@enact/core/handle';
 import ForwardRef from '@enact/ui/ForwardRef';
 import {Media, getKeyFromSource} from '@enact/ui/Media';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import Slottable from '@enact/ui/Slottable';
 import compose from 'ramda/src/compose';
 import React from 'react';
@@ -61,11 +62,11 @@ const VideoBase = class extends React.Component {
 		 * The [`source`]{@link moonstone/VideoPlayer.VideoBase.source} property is passed to
 		 * the video component as a child node.
 		 *
-		 * @type {Component|Element}
+		 * @type {String|Component|Element}
 		 * @default 'video'
 		 * @public
 		 */
-		mediaComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element]),
+		mediaComponent: EnactPropTypes.renderableOverride,
 
 		/**
 		 * The video source to be preloaded. Expects a `<source>` node.

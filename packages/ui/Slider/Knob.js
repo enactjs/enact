@@ -1,6 +1,7 @@
 import kind from '@enact/core/kind';
-import React from 'react';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 
@@ -52,7 +53,7 @@ const Knob = kind({
 		 * @type {Function|Element}
 		 * @public
 		 */
-		tooltipComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+		tooltipComponent: EnactPropTypes.componentOverride,
 
 		/**
 		 * The value of the slider.
