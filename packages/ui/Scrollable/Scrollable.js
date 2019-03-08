@@ -432,8 +432,6 @@ class ScrollableBase extends Component {
 			}
 		}
 
-		this.deferScrollTo = true;
-
 		this.clampScrollPosition();
 
 		this.addEventListeners();
@@ -988,20 +986,14 @@ class ScrollableBase extends Component {
 	}
 
 	scroll = (left, top) => {
-		let
-			dirX = 0,
-			dirY = 0;
-
 		if (left !== this.scrollLeft) {
-			dirX = Math.sign(left - this.scrollLeft);
 			this.setScrollLeft(left);
 		}
 		if (top !== this.scrollTop) {
-			dirY = Math.sign(top - this.scrollTop);
 			this.setScrollTop(top);
 		}
 
-		this.childRef.current.setScrollPosition(this.scrollLeft, this.scrollTop, dirX, dirY);
+		this.childRef.current.setScrollPosition(this.scrollLeft, this.scrollTop);
 		this.forwardScrollEvent('onScroll');
 	}
 
@@ -1308,6 +1300,8 @@ class ScrollableBase extends Component {
 		delete rest.scrollTo;
 		delete rest.stop;
 		delete rest.verticalScrollbar;
+
+		this.deferScrollTo = true;
 
 		return (
 			<ResizeContext.Provider value={this.resizeRegistry.register}>

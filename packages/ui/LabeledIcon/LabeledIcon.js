@@ -8,6 +8,7 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
@@ -84,7 +85,7 @@ const LabeledIconBase = kind({
 		 * @type {String|Element|Component}
 		 * @public
 		 */
-		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.func]),
+		icon: EnactPropTypes.renderableOverride,
 
 		/**
 		 * The component used to render the `icon`.
@@ -95,7 +96,7 @@ const LabeledIconBase = kind({
 		 *
 		 * @type {Component}
 		 */
-		iconComponent: PropTypes.func,
+		iconComponent: EnactPropTypes.component,
 
 		/**
 		 * Enables this component to be used in an "inline" context.

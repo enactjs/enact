@@ -11,8 +11,9 @@
  * @exports ViewManager
  */
 
-import React from 'react';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import {shape} from './Arranger';
 import TransitionGroup from './TransitionGroup';
@@ -57,13 +58,10 @@ class ViewManager extends React.Component {
 		/**
 		 * Type of component wrapping the children. May be a DOM node or a custom React component.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 */
-		component: PropTypes.oneOfType([
-			PropTypes.func,
-			PropTypes.string
-		]),
+		component: EnactPropTypes.renderable,
 
 		/**
 		 * Time in milliseconds to complete a transition

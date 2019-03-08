@@ -13,6 +13,7 @@
 
 import kind from '@enact/core/kind';
 import ComponentOverride from '@enact/ui/ComponentOverride';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -51,11 +52,11 @@ const SwitchItemBase = kind({
 		/**
 		 * Customize the component used as the switch.
 		 *
-		 * @type {Element|Function}
+		 * @type {Element|Component}
 		 * @default {@link moonstone/Switch.Switch}
 		 * @private
 		 */
-		iconComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func])
+		iconComponent: EnactPropTypes.componentOverride
 	},
 
 	defaultProps: {

@@ -416,8 +416,6 @@ class ScrollableBaseNative extends Component {
 			}
 		}
 
-		this.deferScrollTo = true;
-
 		this.addEventListeners();
 		if (
 			hasDataSizeChanged === false &&
@@ -1317,6 +1315,8 @@ class ScrollableBaseNative extends Component {
 		delete rest.scrollTo;
 		delete rest.start;
 		delete rest.verticalScrollbar;
+
+		this.deferScrollTo = true;
 
 		return (
 			<ResizeContext.Provider value={this.resizeRegistry.register}>
