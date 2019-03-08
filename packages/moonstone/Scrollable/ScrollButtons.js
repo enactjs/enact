@@ -1,4 +1,5 @@
 import {Announce} from '@enact/ui/AnnounceDecorator';
+import ForwardRef from '@enact/ui/ForwardRef';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -9,7 +10,7 @@ import $L from '../internal/$L';
 
 import ScrollButton from './ScrollButton';
 
-const ScrollButtonWithForwardRef = React.forwardRef((props, ref) => <ScrollButton {...props} ref={ref} />);
+const RefScrollButton = ForwardRef({prop: 'ref'}, ScrollButton);
 
 const
 	nop = () => {},
@@ -294,7 +295,7 @@ class ScrollButtons extends Component {
 			nextIcon = prepareNextButton(vertical);
 
 		return [
-			<ScrollButtonWithForwardRef
+			<RefScrollButton
 				aria-label={rtl && !vertical ? nextButtonAriaLabel : previousButtonAriaLabel}
 				data-spotlight-overflow="ignore"
 				disabled={disabled || prevButtonDisabled}
@@ -310,9 +311,9 @@ class ScrollButtons extends Component {
 				ref={this.prevButtonRef}
 			>
 				{prevIcon}
-			</ScrollButtonWithForwardRef>,
+			</RefScrollButton>,
 			thumbRenderer(),
-			<ScrollButtonWithForwardRef
+			<RefScrollButton
 				aria-label={rtl && !vertical ? previousButtonAriaLabel : nextButtonAriaLabel}
 				data-spotlight-overflow="ignore"
 				disabled={disabled || nextButtonDisabled}
@@ -328,7 +329,7 @@ class ScrollButtons extends Component {
 				ref={this.nextButtonRef}
 			>
 				{nextIcon}
-			</ScrollButtonWithForwardRef>,
+			</RefScrollButton>,
 			<Announce
 				key="announce"
 				ref={this.announceRef}
