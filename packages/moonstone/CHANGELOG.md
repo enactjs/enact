@@ -6,8 +6,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Spinner` animation synchronization after a rerender
 - `moonstone/VideoPlayer` to continue to show thumbnail when playback control keys are pressed
-- spotlight muted colors for `Checkbox`, `FormCheckbox`, `RadioItem`, `SelectableIcon`, and `Slider`.
+- `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/RadioItem`, `moonstone/SelectableIcon`, and `moonstone/Slider` spotlight muted colors
+- `moonstone/VideoPlayer` to stop seeking by remote key when it loses focus
 
 ## [2.4.0] - 2019-03-04
 

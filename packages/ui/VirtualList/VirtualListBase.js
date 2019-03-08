@@ -296,7 +296,7 @@ const VirtualListBaseFactory = (type) => {
 				if (type === Native) {
 					this.scrollToPosition(x, y, this.props.rtl);
 				} else {
-					this.setScrollPosition(x, y, 0, 0, this.props.rtl);
+					this.setScrollPosition(x, y, this.props.rtl);
 				}
 			}
 		}
@@ -577,51 +577,45 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		// JS only
-		setScrollPosition (x, y, dirX, dirY, rtl = this.props.rtl) {
+		setScrollPosition (x, y, rtl = this.props.rtl) {
 			if (this.contentRef) {
 				this.contentRef.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
-				this.didScroll(x, y, dirX, dirY);
+				this.didScroll(x, y);
 			}
 		}
 
-		didScroll (x, y, dirX, dirY) {
+		didScroll (x, y) {
 			const
 				{dataSize} = this.props,
 				{firstIndex} = this.state,
 				{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds} = this,
 				{gridSize} = this.primary,
-				maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
-				minOfMax = threshold.base,
-				maxOfMin = maxPos - threshold.base;
-			let delta, numOfGridLines, newFirstIndex = firstIndex, pos, dir = 0;
+				maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
+			let newFirstIndex = firstIndex, pos;
 
 			if (isPrimaryDirectionVertical) {
 				pos = y;
-				dir = dirY;
 			} else {
 				pos = x;
-				dir = dirX;
 			}
 
-			if (dir === 1 && pos > threshold.max) {
-				delta = pos - threshold.max;
-				numOfGridLines = Math.ceil(delta / gridSize); // how many lines should we add
-				threshold.max = Math.min(maxPos, threshold.max + numOfGridLines * gridSize);
-				threshold.min = Math.min(maxOfMin, threshold.max - gridSize);
-				newFirstIndex += numOfGridLines * dimensionToExtent;
-			} else if (dir === -1 && pos < threshold.min) {
-				delta = threshold.min - pos;
-				numOfGridLines = Math.ceil(delta / gridSize);
-				threshold.max = Math.max(minOfMax, threshold.min - (numOfGridLines * gridSize - gridSize));
-				threshold.min = (threshold.max > minOfMax) ? threshold.max - gridSize : -Infinity;
-				newFirstIndex -= numOfGridLines * dimensionToExtent;
-			}
+			if (pos > threshold.max || pos < threshold.min) {
+				const
+					overhangBefore = Math.floor(this.props.overhang / 2),
+					firstExtent = Math.max(
+						0,
+						Math.min(
+							Math.floor(maxFirstIndex / dimensionToExtent),
+							Math.floor((pos - gridSize * overhangBefore) / gridSize)
+						)
+					);
+				let newThresholdMin, newThresholdMax;
 
-			if (threshold.min === -Infinity) {
-				newFirstIndex = 0;
-			} else {
-				newFirstIndex = Math.min(maxFirstIndex, newFirstIndex);
-				newFirstIndex = Math.max(0, newFirstIndex);
+				newFirstIndex = firstExtent * dimensionToExtent;
+				newThresholdMin = (firstExtent + overhangBefore) * gridSize;
+				newThresholdMax = newThresholdMin + gridSize;
+				threshold.min = newFirstIndex === 0 ? -Infinity : newThresholdMin;
+				threshold.max = newFirstIndex === maxFirstIndex ? Infinity : newThresholdMax;
 			}
 
 			this.syncThreshold(maxPos);
