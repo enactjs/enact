@@ -1,7 +1,9 @@
+import kind from '@enact/core/kind';
 import Button from '@enact/moonstone/Button';
 import TooltipDecorator from '@enact/moonstone/TooltipDecorator';
 import Input from '@enact/moonstone/Input';
 import IconButton from '@enact/moonstone/IconButton';
+import Scroller from '@enact/moonstone/Scroller';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -116,6 +118,102 @@ class ChangeableTooltip extends React.Component {
 	}
 }
 
+const IconButtonItem = kind({
+	name: 'IconButtonItem',
+	render: ({...rest}) => {
+		return (
+			<div style={{height: 100, border: 'solid 3px yellow'}}>
+				<IconButton
+					small
+					tooltipText="tooltip"
+					{...rest}
+				>
+					{'plus'}
+				</IconButton>
+				<IconButton
+					style={{marginLeft: '450px'}}
+					small
+					tooltipText="tooltip"
+					{...rest}
+				>
+					{'plus'}
+				</IconButton>
+			</div>
+		);
+	}
+});
+
+class TooltipFollow extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			left: 30,
+			widthMinus: 180,
+			widthPlus: 30
+		};
+	}
+
+	handleWidthMinusClick = () => {
+		this.setState({widthMinus: this.state.widthMinus - 30});
+	}
+
+	handleWidthPlusClick = () => {
+		this.setState({widthPlus: this.state.widthPlus + 30});
+	}
+
+	handlePositionClick = () => {
+		this.setState({left: this.state.left + 30});
+	}
+
+	render = () => {
+		return (
+			<div>
+				<IconButton
+					small
+					tooltipText="tooltip"
+					onClick={this.handleWidthMinusClick}
+					style={{width: `${this.state.widthMinus}px`}}
+				>
+					{'minus'}
+				</IconButton>
+				<IconButton
+					small
+					tooltipText="tooltip"
+					onClick={this.handleWidthPlusClick}
+					style={{width: `${this.state.widthPlus}px`}}
+				>
+					{'plus'}
+				</IconButton>
+				<IconButton
+					small
+					tooltipText="tooltip"
+					onClick={this.handlePositionClick}
+					style={{left: `${this.state.left}px`}}
+				>
+					{'plus'}
+				</IconButton>
+				<Scroller>
+					<IconButtonItem tooltipPosition="above" />
+					<IconButtonItem tooltipPosition="above center" />
+					<IconButtonItem tooltipPosition="above left" />
+					<IconButtonItem tooltipPosition="above right" />
+					<IconButtonItem tooltipPosition="below" />
+					<IconButtonItem tooltipPosition="below center" />
+					<IconButtonItem tooltipPosition="below left" />
+					<IconButtonItem tooltipPosition="below right" />
+					<IconButtonItem tooltipPosition="left bottom" />
+					<IconButtonItem tooltipPosition="left middle" />
+					<IconButtonItem tooltipPosition="left top" />
+					<IconButtonItem tooltipPosition="right bottom" />
+					<IconButtonItem tooltipPosition="right middle" />
+					<IconButtonItem tooltipPosition="right top" />
+					<IconButtonItem />
+				</Scroller>
+			</div>
+		);
+	}
+}
+
 storiesOf('Tooltip', module)
 	.add(
 		'that shows after Button is unmounted (ENYO-3809)',
@@ -127,5 +225,10 @@ storiesOf('Tooltip', module)
 		'tooltipDecorator with changeable tooltipText',
 		() => (
 			<ChangeableTooltip />
+		)
+	).add(
+		'tooltip to follow component when changed',
+		() => (
+			<TooltipFollow />
 		)
 	);
