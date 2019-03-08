@@ -101,6 +101,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	addAll({
 		cancel: 461,
 		nonModal: [
+			461,
 			415, // play
 			19, // pause
 			403, // red
