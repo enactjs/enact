@@ -221,7 +221,7 @@ class TooltipFollow extends React.Component {
 					<IconButtonItem />
 				</Cell>
 				<Cell shrink component={BodyText} centered>
-					<i>This space left intentionally blank for bottom margin below scroller</i>
+					<em>This space left intentionally blank for bottom margin below scroller</em>
 				</Cell>
 			</Layout>
 		);
