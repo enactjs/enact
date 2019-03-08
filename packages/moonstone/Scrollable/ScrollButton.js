@@ -16,7 +16,7 @@ import css from './Scrollbar.module.less';
  * @ui
  * @private
  */
-const ScrollButtonBase = kind({
+const ScrollButton = kind({
 	name: 'ScrollButton',
 
 	propTypes: /** @lends moonstone/Scrollable.ScrollButton.prototype */ {
@@ -80,8 +80,6 @@ const ScrollButtonBase = kind({
 		);
 	}
 });
-
-const ScrollButton = React.forwardRef((props, ref) => <ScrollButtonBase {...props} ref={ref} />);
 
 export default ScrollButton;
 export {

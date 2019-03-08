@@ -9,6 +9,8 @@ import $L from '../internal/$L';
 
 import ScrollButton from './ScrollButton';
 
+const ScrollButtonWithForwardRef = React.forwardRef((props, ref) => <ScrollButton {...props} ref={ref} />);
+
 const
 	nop = () => {},
 	prepareButton = (isPrev) => (isVertical) => {
@@ -292,7 +294,7 @@ class ScrollButtons extends Component {
 			nextIcon = prepareNextButton(vertical);
 
 		return [
-			<ScrollButton
+			<ScrollButtonWithForwardRef
 				aria-label={rtl && !vertical ? nextButtonAriaLabel : previousButtonAriaLabel}
 				data-spotlight-overflow="ignore"
 				disabled={disabled || prevButtonDisabled}
@@ -308,9 +310,9 @@ class ScrollButtons extends Component {
 				ref={this.prevButtonRef}
 			>
 				{prevIcon}
-			</ScrollButton>,
+			</ScrollButtonWithForwardRef>,
 			thumbRenderer(),
-			<ScrollButton
+			<ScrollButtonWithForwardRef
 				aria-label={rtl && !vertical ? previousButtonAriaLabel : nextButtonAriaLabel}
 				data-spotlight-overflow="ignore"
 				disabled={disabled || nextButtonDisabled}
@@ -326,7 +328,7 @@ class ScrollButtons extends Component {
 				ref={this.nextButtonRef}
 			>
 				{nextIcon}
-			</ScrollButton>,
+			</ScrollButtonWithForwardRef>,
 			<Announce
 				key="announce"
 				ref={this.announceRef}
