@@ -11,13 +11,13 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
-import ForwardRef from '@enact/ui/ForwardRef';
 import {is} from '@enact/core/keymap';
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
+import ForwardRef from '../ForwardRef';
 import {ResizeContext} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
