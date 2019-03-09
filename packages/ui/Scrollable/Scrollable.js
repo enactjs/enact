@@ -136,7 +136,7 @@ class ScrollableBase extends Component {
 		clearOverscrollEffect: PropTypes.func,
 
 		/**
-		 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
+		 * Client size of the container; valid values are an object that has `clientWidth` and `clientHeight`.
 		 *
 		 * @type {Object}
 		 * @property {Number}    clientHeight    The client height of the list.

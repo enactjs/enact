@@ -47,6 +47,19 @@ class ScrollbarBase extends PureComponent {
 		childRenderer: PropTypes.func.isRequired,
 
 		/**
+		 * Client size of the container; valid values are an object that has `clientWidth` and `clientHeight`.
+		 *
+		 * @type {Object}
+		 * @property {Number}    clientHeight    The client height of the list.
+		 * @property {Number}    clientWidth    The client width of the list.
+		 * @public
+		 */
+		clientSize: PropTypes.shape({
+			clientHeight: PropTypes.number.isRequired,
+			clientWidth: PropTypes.number.isRequired
+		}),
+
+		/**
 		 * If `true`, add the corner between vertical and horizontal scrollbars.
 		 *
 		 * @type {Booelan}
@@ -135,7 +148,7 @@ class ScrollbarBase extends PureComponent {
 	hideThumbJob = new Job(this.hideThumb.bind(this), thumbHidingDelay);
 
 	calculateMetrics = () => {
-		const primaryDimenstion =  this.props.vertical ? 'clientHeight' : 'clientWidth';
+		const primaryDimenstion = this.props.vertical ? 'clientHeight' : 'clientWidth';
 		let trackSize;
 
 		if (this.props.clientSize) {
