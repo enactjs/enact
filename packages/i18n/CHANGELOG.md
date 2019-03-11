@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `i18n/I18nDecorator` to defer updating the locale until window is focused
+
 ## [2.4.0] - 2019-03-04
 
 No significant changes.

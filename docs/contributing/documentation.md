@@ -170,9 +170,9 @@ Property-level documentation refers to documentation within a component or HOC. 
 In general, we do not provide jsDoc comments for methods that appear within components as we generally do not expose public methods this way.
 
 >Note: We use three types to refer to renderable items: `Node`, `Element`, and `Component`.
->* `Node` refers to anything renderable: `<div>HTML Element</div>`, `<Button>React Component</Button>`, or `'string'`;
->* `Element` to one and only one renderable thing: `<div>HTML Element</div>` or `<Button>React Component</Button>`
->* `Component` is either a string which represents the DOM node name or a function that returns a React.Element (e.g.: `'div'` or `Button`). This will typically be used to create dynamic JSX; something like: `render ({YourProp}) => { return (<YourProp />); }`
+>* `Node` refers to one or more renderable values which may be strings, booleans, or Elements: `<div>HTML Element</div>`, `<Button>React Component</Button>`, or `'string'`;
+>* `Element` is a single instance of React.Element as returned by a JSX element (or `React.createElement`): `<div>HTML Element</div>` or `<Button>React Component</Button>`
+>* `Component` is a function or class that returns a React.Element (e.g.: `'div'` or `Button`). This will typically be used to create dynamic JSX; something like: `render ({YourProp}) => { return (<YourProp />); }`
 
 ## Special Cases
 

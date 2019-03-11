@@ -87,3 +87,21 @@
 		});
 	}
 });
+
+.muted({
+	.focus({
+		.toggleIcon {
+			.applySkins({
+				&.selected {
+					.icon {
+						background-color: @moon-radio-item-selected-indicator-color;
+
+						&::before {
+							background-color: @moon-radio-item-selected-indicator-bg-color;
+						}
+					}
+				}
+			});
+		}
+	}, parent);
+}, parent);
