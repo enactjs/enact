@@ -24,6 +24,7 @@ const onWindowFocus = (handler) => {
 
 onWindowReady(() => {
 	focused = true;	// Treat window as initially focused once ready
+	flush();
 	on('focus', () => {
 		focused = true;
 		flush();
