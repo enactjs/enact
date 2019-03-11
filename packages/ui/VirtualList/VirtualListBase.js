@@ -241,6 +241,10 @@ const VirtualListBaseFactory = (type) => {
 				updateTo: 0,
 				...nextState
 			};
+
+			this.containerRef = React.createRef();
+			this.contentRef = React.createRef();
+			this.itemContainerRef = React.createRef();
 		}
 
 		static getDerivedStateFromProps (props, state) {
@@ -329,9 +333,6 @@ const VirtualListBaseFactory = (type) => {
 		cc = []
 		scrollPosition = 0
 
-		contentRef = null
-		containerRef = null
-
 		isVertical = () => this.isPrimaryDirectionVertical
 
 		isHorizontal = () => !this.isPrimaryDirectionVertical
@@ -373,7 +374,7 @@ const VirtualListBaseFactory = (type) => {
 		calculateMetrics (props) {
 			const
 				{clientSize, direction, itemSize, spacing} = props,
-				node = this.containerRef;
+				node = this.containerRef && this.containerRef.current;
 
 			if (!clientSize && !node) {
 				return;
@@ -429,8 +430,8 @@ const VirtualListBaseFactory = (type) => {
 
 			// reset
 			this.scrollPosition = 0;
-			if (type === JS && this.contentRef) {
-				this.contentRef.style.transform = null;
+			if (type === JS && this.contentRef && this.contentRef.current) {
+				this.contentRef.current.style.transform = null;
 			}
 		}
 
@@ -504,7 +505,7 @@ const VirtualListBaseFactory = (type) => {
 		calculateScrollBounds (props) {
 			const
 				{clientSize} = props,
-				node = this.containerRef;
+				node = this.containerRef && this.containerRef.current;
 
 			if (!clientSize && !node) {
 				return;
@@ -533,9 +534,9 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		setContainerSize = () => {
-			if (this.contentRef) {
-				this.contentRef.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
-				this.contentRef.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
+			if (this.contentRef.current) {
+				this.contentRef.current.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
+				this.contentRef.current.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
 			}
 		}
 
@@ -569,8 +570,8 @@ const VirtualListBaseFactory = (type) => {
 
 		// Native only
 		scrollToPosition (x, y, rtl = this.props.rtl) {
-			if (this.containerRef) {
-				this.containerRef.scrollTo(
+			if (this.containerRef.current) {
+				this.containerRef.current.scrollTo(
 					(rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y
 				);
 			}
@@ -578,8 +579,8 @@ const VirtualListBaseFactory = (type) => {
 
 		// JS only
 		setScrollPosition (x, y, rtl = this.props.rtl) {
-			if (this.contentRef) {
-				this.contentRef.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
+			if (this.contentRef.current) {
+				this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
 				this.didScroll(x, y);
 			}
 		}
@@ -628,7 +629,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		getItemNode = (index) => {
-			const ref = this.itemContainerRef;
+			const ref = this.itemContainerRef.current;
 
 			return ref ? ref.children[index % this.state.numOfItems] : null;
 		}
@@ -730,7 +731,7 @@ const VirtualListBaseFactory = (type) => {
 		syncClientSize = () => {
 			const
 				{props} = this,
-				node = this.containerRef;
+				node = this.containerRef.current;
 
 			if (!props.clientSize && !node) {
 				return false;
@@ -752,24 +753,6 @@ const VirtualListBaseFactory = (type) => {
 
 		// render
 
-		initContainerRef = (ref) => {
-			if (ref) {
-				this.containerRef = ref;
-			}
-		}
-
-		initContentRef = (ref) => {
-			if (ref) {
-				this.contentRef = ref;
-			}
-		}
-
-		initItemContainerRef = (ref) => {
-			if (ref) {
-				this.itemContainerRef = ref;
-			}
-		}
-
 		mergeClasses = (className) => {
 			let containerClass = null;
 
@@ -783,7 +766,7 @@ const VirtualListBaseFactory = (type) => {
 		render () {
 			const
 				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
-				{cc, initItemContainerRef, primary} = this,
+				{cc, itemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
 
 			delete rest.cbScrollTo;
@@ -807,9 +790,9 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			return (
-				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
-					<div {...rest} ref={this.initContentRef}>
-						{itemsRenderer({cc, initItemContainerRef, primary})}
+				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.containerRef} style={style}>
+					<div {...rest} ref={this.contentRef}>
+						{itemsRenderer({cc, itemContainerRef, primary})}
 					</div>
 				</div>
 			);
@@ -847,8 +830,8 @@ const ScrollableVirtualList = (props) => (
 		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...rest}
-				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef} role="list">{cc}</div> : null
+				itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+					cc.length ? <div ref={itemContainerRef} role="list">{cc}</div> : null
 				)}
 				ref={initChildRef}
 			/>
@@ -870,8 +853,8 @@ const ScrollableVirtualListNative = (props) => (
 		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...rest}
-				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef} role="list">{cc}</div> : null
+				itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+					cc.length ? <div ref={itemContainerRef} role="list">{cc}</div> : null
 				)}
 				ref={initChildRef}
 			/>
