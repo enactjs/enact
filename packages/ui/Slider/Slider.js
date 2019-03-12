@@ -9,6 +9,7 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
@@ -50,11 +51,11 @@ const SliderBase = kind({
 		 * the above props or a component instance (e.g. `<MyProgress customProp="value" />`) which
 		 * will have its props merged with the above props.
 		 *
-		 * @type {Function|Element}
+		 * @type {Component|Element}
 		 * @required
 		 * @public
 		 */
-		progressBarComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
+		progressBarComponent: EnactPropTypes.componentOverride.isRequired,
 
 		/**
 		 * Background progress, as a proportion between `0` and `1`.
@@ -112,11 +113,11 @@ const SliderBase = kind({
 		 *
 		 * @see {@link ui/ComponentOverride}
 		 *
-		 * @type {Function|Element}
+		 * @type {Component|Element}
 		 * @default {@link ui/Slider.Knob}
 		 * @public
 		 */
-		knobComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+		knobComponent: EnactPropTypes.componentOverride,
 
 		/**
 		 * The maximum value of the slider.
@@ -201,10 +202,10 @@ const SliderBase = kind({
 		 *
 		 * @see {@link ui/ComponentOverride}
 		 *
-		 * @type {Function|Element}
+		 * @type {Component|Element}
 		 * @public
 		 */
-		tooltipComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+		tooltipComponent: EnactPropTypes.componentOverride,
 
 		/**
 		 * The value of the slider.

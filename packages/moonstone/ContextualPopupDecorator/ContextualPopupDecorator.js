@@ -10,6 +10,7 @@ import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {on, off} from '@enact/core/dispatcher';
 import {handle, forProp, forKey, forward, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import {extractAriaProps} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Spotlight, {getDirection} from '@enact/spotlight';
@@ -75,7 +76,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @required
 			 * @public
 			 */
-			popupComponent: PropTypes.func.isRequired,
+			popupComponent: EnactPropTypes.component.isRequired,
 
 			/**
 			 * Limits the range of voice control to the popup.

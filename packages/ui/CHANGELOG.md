@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [2.4.1] - 2019-03-11
+
+### Fixed
+
+- `ui/VirtualList` to scroll properly by `scrollTo` callback during the list is updated by prop changes
+
 ## [2.4.0] - 2019-03-04
 
 ### Added

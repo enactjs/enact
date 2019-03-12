@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 
 import css from './ScrollThumb.module.less';
 
-const nop = () => {};
-
 /**
  * An unstyled scroll thumb without any behavior.
  *
@@ -19,14 +17,6 @@ const ScrollThumb = kind({
 
 	propTypes: /** @lends ui/Scrollable.ScrollThumb.prototype */ {
 		/**
-		 * The function to pass a wrapped ref.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		setRef: PropTypes.func,
-
-		/**
 		 * If `true`, the scrollbar will be oriented vertically.
 		 *
 		 * @type {Boolean}
@@ -37,7 +27,6 @@ const ScrollThumb = kind({
 	},
 
 	defaultProps: {
-		setRef: nop,
 		vertical: true
 	},
 
@@ -50,10 +39,10 @@ const ScrollThumb = kind({
 		className: ({vertical, styler}) => styler.append({vertical})
 	},
 
-	render: ({setRef, ...rest}) => {
-		delete rest.vertical;
+	render: (props) => {
+		delete props.vertical;
 
-		return <div {...rest} ref={setRef} />;
+		return <div {...props} />;
 	}
 });
 
