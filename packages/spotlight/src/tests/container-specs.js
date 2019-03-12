@@ -687,7 +687,7 @@ describe('container', () => {
 		));
 	});
 
-	describe.skip('#isNavigable', () => {
+	describe('#isNavigable', () => {
 		beforeEach(setupContainers);
 		afterEach(teardownContainers);
 
@@ -1218,5 +1218,22 @@ describe('container', () => {
 				}
 			)
 		);
+
+		test(
+			'should return an empty array for a unmounted, configured container',
+			testScenario(
+				scenarios.onlySpottables,
+				() => {
+					configureContainer('first-container', {
+						overflow: true
+					});
+
+					const expected = [];
+					const actual = getContainerNavigableElements('first-container');
+
+					expect(actual).toEqual(expected);
+				}
+			)
+		)
 	});
 });
