@@ -158,7 +158,7 @@ class ScrollbarBase extends PureComponent {
 		if (this.props.clientSize) {
 			trackSize = this.props.clientSize[primaryDimenstion];
 		} else {
-			trackSize = this.containerRef[primaryDimenstion];
+			trackSize = this.containerRef.current[primaryDimenstion];
 		}
 
 		this.minThumbSizeRatio = ri.scale(minThumbSize) / trackSize;
@@ -177,7 +177,6 @@ class ScrollbarBase extends PureComponent {
 			);
 
 		delete rest.clientSize;
-		delete rest.setRef;
 
 		return (
 			<div {...rest} className={containerClassName} ref={this.containerRef}>
