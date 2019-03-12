@@ -91,29 +91,26 @@ class ScrollbarBase extends Component {
 		if (props.setApiProvider) {
 			props.setApiProvider(this);
 		}
+
+		this.scrollbarRef = React.createRef();
+		this.scrollButtonsRef = React.createRef();
 	}
 
-	initScrollbarRef = (ref) => {
-		if (ref) {
-			const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = ref;
+	componentDidMount () {
+		const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = this.scrollbarRef.current;
 
-			this.getContainerRef = getContainerRef;
-			this.showThumb = showThumb;
-			this.startHidingThumb = startHidingThumb;
-			this.uiUpdate = uiUpdate;
-		}
-	}
+		this.getContainerRef = getContainerRef;
+		this.showThumb = showThumb;
+		this.startHidingThumb = startHidingThumb;
+		this.uiUpdate = uiUpdate;
 
-	initScrollButtonsRef = (ref) => {
-		if (ref) {
-			const {isOneOfScrollButtonsFocused, updateButtons} = ref;
+		const {isOneOfScrollButtonsFocused, updateButtons} = this.scrollButtonsRef.current;
 
-			this.isOneOfScrollButtonsFocused = isOneOfScrollButtonsFocused;
-			this.update = (bounds) => {
-				updateButtons(bounds);
-				this.uiUpdate(bounds);
-			};
-		}
+		this.isOneOfScrollButtonsFocused = isOneOfScrollButtonsFocused;
+		this.update = (bounds) => {
+			updateButtons(bounds);
+			this.uiUpdate(bounds);
+		};
 	}
 
 	render () {
@@ -124,18 +121,18 @@ class ScrollbarBase extends Component {
 				corner={corner}
 				clientSize={clientSize}
 				css={componentCss}
-				ref={this.initScrollbarRef}
+				ref={this.scrollbarRef}
 				vertical={vertical}
-				childRenderer={({initScrollThumbRef}) => ( // eslint-disable-line react/jsx-no-bind
+				childRenderer={({thumbRef}) => ( // eslint-disable-line react/jsx-no-bind
 					<ScrollButtons
 						{...rest}
-						ref={this.initScrollButtonsRef}
+						ref={this.scrollButtonsRef}
 						vertical={vertical}
 						thumbRenderer={() => ( // eslint-disable-line react/jsx-no-bind
 							<ScrollThumb
 								cbAlertThumb={cbAlertThumb}
 								key="thumb"
-								setRef={initScrollThumbRef}
+								ref={thumbRef}
 								vertical={vertical}
 							/>
 						)}

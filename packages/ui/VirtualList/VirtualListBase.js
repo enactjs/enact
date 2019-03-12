@@ -241,6 +241,10 @@ const VirtualListBaseFactory = (type) => {
 				updateTo: 0,
 				...nextState
 			};
+
+			this.containerRef = React.createRef();
+			this.contentRef = React.createRef();
+			this.itemContainerRef = React.createRef();
 		}
 
 		static getDerivedStateFromProps (props, state) {
@@ -296,7 +300,7 @@ const VirtualListBaseFactory = (type) => {
 				if (type === Native) {
 					this.scrollToPosition(x, y, this.props.rtl);
 				} else {
-					this.setScrollPosition(x, y, 0, 0, this.props.rtl);
+					this.setScrollPosition(x, y, this.props.rtl);
 				}
 			}
 		}
@@ -328,9 +332,6 @@ const VirtualListBaseFactory = (type) => {
 		hasDataSizeChanged = false
 		cc = []
 		scrollPosition = 0
-
-		contentRef = null
-		containerRef = null
 
 		isVertical = () => this.isPrimaryDirectionVertical
 
@@ -373,7 +374,7 @@ const VirtualListBaseFactory = (type) => {
 		calculateMetrics (props) {
 			const
 				{clientSize, direction, itemSize, spacing} = props,
-				node = this.containerRef;
+				node = this.containerRef && this.containerRef.current;
 
 			if (!clientSize && !node) {
 				return;
@@ -429,8 +430,8 @@ const VirtualListBaseFactory = (type) => {
 
 			// reset
 			this.scrollPosition = 0;
-			if (type === JS && this.contentRef) {
-				this.contentRef.style.transform = null;
+			if (type === JS && this.contentRef && this.contentRef.current) {
+				this.contentRef.current.style.transform = null;
 			}
 		}
 
@@ -504,7 +505,7 @@ const VirtualListBaseFactory = (type) => {
 		calculateScrollBounds (props) {
 			const
 				{clientSize} = props,
-				node = this.containerRef;
+				node = this.containerRef && this.containerRef.current;
 
 			if (!clientSize && !node) {
 				return;
@@ -533,9 +534,9 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		setContainerSize = () => {
-			if (this.contentRef) {
-				this.contentRef.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
-				this.contentRef.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
+			if (this.contentRef.current) {
+				this.contentRef.current.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
+				this.contentRef.current.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
 			}
 		}
 
@@ -569,59 +570,53 @@ const VirtualListBaseFactory = (type) => {
 
 		// Native only
 		scrollToPosition (x, y, rtl = this.props.rtl) {
-			if (this.containerRef) {
-				this.containerRef.scrollTo(
+			if (this.containerRef.current) {
+				this.containerRef.current.scrollTo(
 					(rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y
 				);
 			}
 		}
 
 		// JS only
-		setScrollPosition (x, y, dirX, dirY, rtl = this.props.rtl) {
-			if (this.contentRef) {
-				this.contentRef.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
-				this.didScroll(x, y, dirX, dirY);
+		setScrollPosition (x, y, rtl = this.props.rtl) {
+			if (this.contentRef.current) {
+				this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
+				this.didScroll(x, y);
 			}
 		}
 
-		didScroll (x, y, dirX, dirY) {
+		didScroll (x, y) {
 			const
 				{dataSize} = this.props,
 				{firstIndex} = this.state,
 				{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds} = this,
 				{gridSize} = this.primary,
-				maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
-				minOfMax = threshold.base,
-				maxOfMin = maxPos - threshold.base;
-			let delta, numOfGridLines, newFirstIndex = firstIndex, pos, dir = 0;
+				maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
+			let newFirstIndex = firstIndex, pos;
 
 			if (isPrimaryDirectionVertical) {
 				pos = y;
-				dir = dirY;
 			} else {
 				pos = x;
-				dir = dirX;
 			}
 
-			if (dir === 1 && pos > threshold.max) {
-				delta = pos - threshold.max;
-				numOfGridLines = Math.ceil(delta / gridSize); // how many lines should we add
-				threshold.max = Math.min(maxPos, threshold.max + numOfGridLines * gridSize);
-				threshold.min = Math.min(maxOfMin, threshold.max - gridSize);
-				newFirstIndex += numOfGridLines * dimensionToExtent;
-			} else if (dir === -1 && pos < threshold.min) {
-				delta = threshold.min - pos;
-				numOfGridLines = Math.ceil(delta / gridSize);
-				threshold.max = Math.max(minOfMax, threshold.min - (numOfGridLines * gridSize - gridSize));
-				threshold.min = (threshold.max > minOfMax) ? threshold.max - gridSize : -Infinity;
-				newFirstIndex -= numOfGridLines * dimensionToExtent;
-			}
+			if (pos > threshold.max || pos < threshold.min) {
+				const
+					overhangBefore = Math.floor(this.props.overhang / 2),
+					firstExtent = Math.max(
+						0,
+						Math.min(
+							Math.floor(maxFirstIndex / dimensionToExtent),
+							Math.floor((pos - gridSize * overhangBefore) / gridSize)
+						)
+					);
+				let newThresholdMin, newThresholdMax;
 
-			if (threshold.min === -Infinity) {
-				newFirstIndex = 0;
-			} else {
-				newFirstIndex = Math.min(maxFirstIndex, newFirstIndex);
-				newFirstIndex = Math.max(0, newFirstIndex);
+				newFirstIndex = firstExtent * dimensionToExtent;
+				newThresholdMin = (firstExtent + overhangBefore) * gridSize;
+				newThresholdMax = newThresholdMin + gridSize;
+				threshold.min = newFirstIndex === 0 ? -Infinity : newThresholdMin;
+				threshold.max = newFirstIndex === maxFirstIndex ? Infinity : newThresholdMax;
 			}
 
 			this.syncThreshold(maxPos);
@@ -634,7 +629,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		getItemNode = (index) => {
-			const ref = this.itemContainerRef;
+			const ref = this.itemContainerRef.current;
 
 			return ref ? ref.children[index % this.state.numOfItems] : null;
 		}
@@ -736,7 +731,7 @@ const VirtualListBaseFactory = (type) => {
 		syncClientSize = () => {
 			const
 				{props} = this,
-				node = this.containerRef;
+				node = this.containerRef.current;
 
 			if (!props.clientSize && !node) {
 				return false;
@@ -758,24 +753,6 @@ const VirtualListBaseFactory = (type) => {
 
 		// render
 
-		initContainerRef = (ref) => {
-			if (ref) {
-				this.containerRef = ref;
-			}
-		}
-
-		initContentRef = (ref) => {
-			if (ref) {
-				this.contentRef = ref;
-			}
-		}
-
-		initItemContainerRef = (ref) => {
-			if (ref) {
-				this.itemContainerRef = ref;
-			}
-		}
-
 		mergeClasses = (className) => {
 			let containerClass = null;
 
@@ -789,7 +766,7 @@ const VirtualListBaseFactory = (type) => {
 		render () {
 			const
 				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
-				{cc, initItemContainerRef, primary} = this,
+				{cc, itemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
 
 			delete rest.cbScrollTo;
@@ -813,9 +790,9 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			return (
-				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
-					<div {...rest} ref={this.initContentRef}>
-						{itemsRenderer({cc, initItemContainerRef, primary})}
+				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.containerRef} style={style}>
+					<div {...rest} ref={this.contentRef}>
+						{itemsRenderer({cc, itemContainerRef, primary})}
 					</div>
 				</div>
 			);
@@ -853,8 +830,8 @@ const ScrollableVirtualList = (props) => (
 		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...rest}
-				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef} role="list">{cc}</div> : null
+				itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+					cc.length ? <div ref={itemContainerRef} role="list">{cc}</div> : null
 				)}
 				ref={initChildRef}
 			/>
@@ -876,8 +853,8 @@ const ScrollableVirtualListNative = (props) => (
 		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...rest}
-				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef} role="list">{cc}</div> : null
+				itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+					cc.length ? <div ref={itemContainerRef} role="list">{cc}</div> : null
 				)}
 				ref={initChildRef}
 			/>

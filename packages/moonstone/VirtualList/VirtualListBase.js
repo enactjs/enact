@@ -3,6 +3,7 @@ import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 import Spottable from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 
@@ -202,10 +203,12 @@ const VirtualListBaseFactory = (type) => {
 			if (spotlightId) {
 				this.configureSpotlight(spotlightId);
 			}
+
+			this.pause = new Pause('VirtualListBase');
 		}
 
 		componentDidMount () {
-			const containerNode = this.uiRef.containerRef;
+			const containerNode = this.uiRefCurrent.containerRef.current;
 
 			if (type === JS) {
 				// prevent native scrolling by Spotlight
@@ -236,7 +239,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentWillUnmount () {
-			const containerNode = this.uiRef.containerRef;
+			const containerNode = this.uiRefCurrent.containerRef.current;
 
 			if (type === JS) {
 				// remove a function for preventing native scrolling by Spotlight
@@ -261,6 +264,7 @@ const VirtualListBaseFactory = (type) => {
 		nodeIndexToBeFocused = null
 		preservedIndex = null
 		restoreLastFocused = false
+		uiRefCurrent = null
 
 		setContainerDisabled = (bool) => {
 			const
@@ -330,7 +334,7 @@ const VirtualListBaseFactory = (type) => {
 		 * Handle a Page up/down key with disabled items
 		 */
 
-		getExtentIndex = (index) => (Math.floor(index / this.uiRef.dimensionToExtent))
+		getExtentIndex = (index) => (Math.floor(index / this.uiRefCurrent.dimensionToExtent))
 
 		findSpottableItem = (indexFrom, indexTo) => {
 			const
@@ -359,7 +363,7 @@ const VirtualListBaseFactory = (type) => {
 		findSpottableItemWithPositionInExtent = (indexFrom, indexTo, position) => {
 			const
 				{dataSize} = this.props,
-				{dimensionToExtent} = this.uiRef;
+				{dimensionToExtent} = this.uiRefCurrent;
 
 			if (0 <= indexFrom && indexFrom < dataSize &&
 				-1 <= indexTo && indexTo <= dataSize &&
@@ -386,7 +390,7 @@ const VirtualListBaseFactory = (type) => {
 		findSpottableExtent = (indexFrom, isForward) => {
 			const
 				{dataSize} = this.props,
-				{dimensionToExtent} = this.uiRef,
+				{dimensionToExtent} = this.uiRefCurrent,
 				{findSpottableItem, getExtentIndex} = this,
 				firstIndexInExtent = getExtentIndex(indexFrom) * dimensionToExtent;
 			let index;
@@ -403,7 +407,7 @@ const VirtualListBaseFactory = (type) => {
 		findNearestSpottableItemInExtent = (index, extentIndex) => {
 			const
 				{dataSize, isItemDisabled} = this.props,
-				{dimensionToExtent} = this.uiRef,
+				{dimensionToExtent} = this.uiRefCurrent,
 				currentPosInExtent = clamp(0, dataSize - 1, index) % dimensionToExtent,
 				firstIndexInExtent = clamp(0, this.getExtentIndex(dataSize - 1), extentIndex) * dimensionToExtent,
 				lastIndexInExtent = clamp(firstIndexInExtent, dataSize, firstIndexInExtent + dimensionToExtent);
@@ -428,7 +432,7 @@ const VirtualListBaseFactory = (type) => {
 		getIndexToScroll = (direction, currentIndex) => {
 			const
 				{dataSize, spacing} = this.props,
-				{dimensionToExtent, primary: {clientSize, gridSize, itemSize}, scrollPosition} = this.uiRef,
+				{dimensionToExtent, primary: {clientSize, gridSize, itemSize}, scrollPosition} = this.uiRefCurrent,
 				{findSpottableItem} = this,
 				numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent,
 				firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent,
@@ -479,22 +483,20 @@ const VirtualListBaseFactory = (type) => {
 		scrollToNextItem = ({direction, focusedItem}) => {
 			const
 				{cbScrollTo} = this.props,
-				{firstIndex, numOfItems} = this.uiRef.state,
+				{firstIndex, numOfItems} = this.uiRefCurrent.state,
 				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
 				indexToScroll = this.getIndexToScroll(direction, focusedIndex);
 
 			if (indexToScroll !== -1 && focusedIndex !== indexToScroll) {
 				if (firstIndex <= indexToScroll && indexToScroll < firstIndex + numOfItems) {
-					const node = this.uiRef.containerRef.querySelector(`[data-index='${indexToScroll}'].spottable`);
+					const node = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${indexToScroll}'].spottable`);
 
 					if (node) {
 						Spotlight.focus(node);
 					}
 				} else {
 					// Scroll to the next spottable item without animation
-					if (!Spotlight.isPaused()) {
-						Spotlight.pause();
-					}
+					this.pause.pause();
 					focusedItem.blur();
 					this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
 				}
@@ -513,7 +515,7 @@ const VirtualListBaseFactory = (type) => {
 		setSpotlightContainerRestrict = (keyCode, target) => {
 			const
 				{dataSize} = this.props,
-				{isPrimaryDirectionVertical, dimensionToExtent} = this.uiRef,
+				{isPrimaryDirectionVertical, dimensionToExtent} = this.uiRefCurrent,
 				index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
 				canMoveBackward = index >= dimensionToExtent,
 				canMoveForward = index < (dataSize - (((dataSize - 1) % dimensionToExtent) + 1));
@@ -533,8 +535,8 @@ const VirtualListBaseFactory = (type) => {
 		jumpToSpottableItem = (keyCode, repeat, target) => {
 			const
 				{cbScrollTo, dataSize, isItemDisabled, rtl, wrap} = this.props,
-				{firstIndex, numOfItems} = this.uiRef.state,
-				{dimensionToExtent, isPrimaryDirectionVertical} = this.uiRef,
+				{firstIndex, numOfItems} = this.uiRefCurrent.state,
+				{dimensionToExtent, isPrimaryDirectionVertical} = this.uiRefCurrent,
 				currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute)),
 				isForward = (
 					isPrimaryDirectionVertical && isDown(keyCode) ||
@@ -633,9 +635,7 @@ const VirtualListBaseFactory = (type) => {
 				} else {
 					this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
 
-					if (!Spotlight.isPaused()) {
-						Spotlight.pause();
-					}
+					this.pause.pause();
 
 					target.blur();
 
@@ -664,14 +664,14 @@ const VirtualListBaseFactory = (type) => {
 				Spotlight.setPointerMode(false);
 				if (this.jumpToSpottableItem(keyCode, repeat, target)) {
 					// Pause Spotlight temporarily so we don't focus twice
-					Spotlight.pause();
+					this.pause.pause();
 					document.addEventListener('keyup', this.resumeSpotlight);
 				}
 			}
 		}
 
 		resumeSpotlight = () => {
-			Spotlight.resume();
+			this.pause.resume();
 			document.removeEventListener('keyup', this.resumeSpotlight);
 		}
 		/**
@@ -693,11 +693,9 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		focusOnItem = (index) => {
-			const item = this.uiRef.containerRef.querySelector(`[data-index='${index}'].spottable`);
+			const item = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${index}'].spottable`);
 
-			if (Spotlight.isPaused()) {
-				Spotlight.resume();
-			}
+			this.pause.resume();
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
 			this.isScrolledByJump = false;
@@ -750,7 +748,7 @@ const VirtualListBaseFactory = (type) => {
 		isPlaceholderFocused = () => {
 			const current = Spotlight.getCurrent();
 
-			if (current && current.dataset.vlPlaceholder && this.uiRef.containerRef.contains(current)) {
+			if (current && current.dataset.vlPlaceholder && this.uiRefCurrent.containerRef.current.contains(current)) {
 				return true;
 			}
 
@@ -764,7 +762,7 @@ const VirtualListBaseFactory = (type) => {
 			) {
 				const
 					{spotlightId} = this.props,
-					node = this.uiRef.containerRef.querySelector(
+					node = this.uiRefCurrent.containerRef.current.querySelector(
 						`[data-spotlight-id="${spotlightId}"] [data-index="${this.preservedIndex}"]`
 					);
 
@@ -790,19 +788,19 @@ const VirtualListBaseFactory = (type) => {
 		 * calculator
 		 */
 
-		calculatePositionOnFocus = ({item, scrollPosition = this.uiRef.scrollPosition}) => {
+		calculatePositionOnFocus = ({item, scrollPosition = this.uiRefCurrent.scrollPosition}) => {
 			const
 				{pageScroll} = this.props,
-				{numOfItems} = this.uiRef.state,
-				{primary} = this.uiRef,
+				{numOfItems} = this.uiRefCurrent.state,
+				{primary} = this.uiRefCurrent,
 				offsetToClientEnd = primary.clientSize - primary.itemSize,
 				focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
 			if (!isNaN(focusedIndex)) {
-				let gridPosition = this.uiRef.getGridPosition(focusedIndex);
+				let gridPosition = this.uiRefCurrent.getGridPosition(focusedIndex);
 
 				if (numOfItems > 0 && focusedIndex % numOfItems !== this.lastFocusedIndex % numOfItems) {
-					const node = this.uiRef.getItemNode(this.lastFocusedIndex);
+					const node = this.uiRefCurrent.getItemNode(this.lastFocusedIndex);
 
 					if (node) {
 						node.blur();
@@ -820,7 +818,7 @@ const VirtualListBaseFactory = (type) => {
 						} else {
 							// This code uses the trick to change the target position slightly which will not affect the actual result
 							// since a browser ignore `scrollTo` method if the target position is same as the current position.
-							gridPosition.primaryPosition = scrollPosition + (this.uiRef.scrollPosition === scrollPosition ? 0.1 : 0);
+							gridPosition.primaryPosition = scrollPosition + (this.uiRefCurrent.scrollPosition === scrollPosition ? 0.1 : 0);
 						}
 					} else { // backward over
 						gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
@@ -831,7 +829,7 @@ const VirtualListBaseFactory = (type) => {
 				// scrondaryPosition should be 0 here.
 				gridPosition.secondaryPosition = 0;
 
-				return this.uiRef.gridPositionToItemPosition(gridPosition);
+				return this.uiRefCurrent.gridPositionToItemPosition(gridPosition);
 			}
 		}
 
@@ -861,7 +859,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		getScrollBounds = () => this.uiRef.getScrollBounds()
+		getScrollBounds = () => this.uiRefCurrent.getScrollBounds()
 
 		getComponentProps = (index) => (
 			(index === this.nodeIndexToBeFocused) ? {ref: (ref) => this.initItemRef(ref, index)} : {}
@@ -869,7 +867,7 @@ const VirtualListBaseFactory = (type) => {
 
 		initUiRef = (ref) => {
 			if (ref) {
-				this.uiRef = ref;
+				this.uiRefCurrent = ref.current || ref;
 				this.props.initUiChildRef(ref);
 			}
 		}

@@ -684,6 +684,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			);
 			on('keydown', this.handleKeyDown);
 			on('keyup', this.handleKeyUp);
+			on('blur', this.handleBlur, window);
 		}
 
 		componentDidUpdate (prevProps, prevState) {
@@ -714,6 +715,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 		componentWillUnmount () {
 			off('keydown', this.handleKeyDown);
 			off('keyup', this.handleKeyUp);
+			off('blur', this.handleBlur, window);
 			this.stopListeningForPulses();
 		}
 
@@ -778,6 +780,11 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 					forward('onFastForward', ev, this.props);
 				}
 			}
+		}
+
+		handleBlur = () => {
+			this.stopListeningForPulses();
+			this.paused.resume();
 		}
 
 		startListeningForPulses = (keyCode) => {
