@@ -18,6 +18,7 @@ import {createResBundle, setResBundle} from '../src/resBundle';
 import wrapIlibCallback from '../src/wrapIlibCallback';
 
 import getI18nClasses from './getI18nClasses';
+import {onWindowFocus} from './windowFocus';
 
 const join = (a, b) => a && b ? a + ' ' + b : (a || b || '');
 
@@ -254,7 +255,7 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleLocaleChange = () => {
-			this.updateLocale();
+			onWindowFocus(this.updateLocale);
 		}
 
 		/**
