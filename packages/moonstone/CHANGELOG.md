@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [2.4.1] - 2019-03-11
 
+### Changed
+
+- `moonstone/Picker` to display more of the selected value in wide instances
+
 ### Fixed
 
 - `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/RadioItem`, `moonstone/SelectableIcon`, and `moonstone/Slider` spotlight muted colors
