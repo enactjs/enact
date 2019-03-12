@@ -1234,6 +1234,6 @@ describe('container', () => {
 					expect(actual).toEqual(expected);
 				}
 			)
-		)
+		);
 	});
 });
