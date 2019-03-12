@@ -2,14 +2,14 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [2.4.1] - 2019-03-11
 
 ### Fixed
 
+- `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/RadioItem`, `moonstone/SelectableIcon`, and `moonstone/Slider` spotlight muted colors
 - `moonstone/Spinner` animation synchronization after a rerender
 - `moonstone/TooltipDecorator` to position `Tooltip` correctly when the wrapped component moves or resizes
 - `moonstone/VideoPlayer` to continue to show thumbnail when playback control keys are pressed
-- `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/RadioItem`, `moonstone/SelectableIcon`, and `moonstone/Slider` spotlight muted colors
 - `moonstone/VideoPlayer` to stop seeking by remote key when it loses focus
 - `moonstone/VirtualList` to only resume spotlight pauses it initiated
 
