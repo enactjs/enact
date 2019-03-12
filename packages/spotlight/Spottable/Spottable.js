@@ -200,11 +200,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.isFocused = false;
 			this.focusedWhenDisabled = false;
-
-			// mirroring to cause render
-			this.state = {
-				focusedWhenDisabled: this.focusedWhenDisabled
-			};
 		}
 
 		componentDidMount () {
@@ -212,11 +207,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			this.node = ReactDOM.findDOMNode(this);
 		}
 
-		shouldComponentUpdate (nextProps, nextState) {
-			return (
-				this.state.focusedWhenDisabled !== nextState.focusedWhenDisabled ||
-				!equals(this.props, nextProps)
-			);
+		shouldComponentUpdate (nextProps) {
+			return !equals(this.props, nextProps);
 		}
 
 		componentDidUpdate (prevProps) {
@@ -357,8 +349,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			if (ev.currentTarget === ev.target && this.focusedWhenDisabled) {
 				this.isFocused = false;
 				this.focusedWhenDisabled = false;
-				// Need to setState to trigger re-render
-				this.setState({focusedWhenDisabled: this.focusedWhenDisabled});
+				// Need trigger rerender
+				this.forceUpdate();
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
