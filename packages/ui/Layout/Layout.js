@@ -106,7 +106,7 @@ const LayoutBase = kind({
 		component:  EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to `component`
+		 * Called with a reference to [component]{@link ui/Layout.Layout#component}
 		 *
 		 * @type {Function}
 		 * @private

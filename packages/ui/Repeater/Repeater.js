@@ -79,7 +79,7 @@ const RepeaterBase = kind({
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to `component`
+		 * Called with a reference to [component]{@link ui/Repeater.Repeater#component}
 		 *
 		 * @type {Function}
 		 * @private

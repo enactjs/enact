@@ -49,7 +49,7 @@ const BodyTextBase = kind({
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to `component`
+		 * Called with a reference to [component]{@link ui/BodyText.BodyText#component}
 		 *
 		 * @private
 		 */

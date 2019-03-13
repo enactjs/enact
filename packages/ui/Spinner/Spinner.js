@@ -76,7 +76,7 @@ const SpinnerBase = kind({
 		centered: PropTypes.bool,
 
 		/**
-		 * Called with a reference to `component`
+		 * Called with a reference to [component]{@link ui/Spinner.Spinner#component}
 		 *
 		 * @private
 		 */

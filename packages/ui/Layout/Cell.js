@@ -61,7 +61,7 @@ const CellBase = kind({
 		component:  EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to `component`
+		 * Called with a reference to [component]{@link ui/Cell.Cell#component}
 		 *
 		 * @type {Function}
 		 * @private

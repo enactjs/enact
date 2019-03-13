@@ -51,7 +51,7 @@ const ItemBase = kind({
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to `component`
+		 * Called with a reference to [component]{@link ui/Item.ItemBase#component}
 		 *
 		 * @type {Function}
 		 * @private

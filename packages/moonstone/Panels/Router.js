@@ -67,7 +67,7 @@ const RouterBase = class extends React.Component {
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to `component`
+		 * Called with a reference to [component]{@link moonstone/Panels.Router#component}
 		 *
 		 * @private
 		 */

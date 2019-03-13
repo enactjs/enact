@@ -87,7 +87,7 @@ const ToggleItemBase = kind({
 		iconComponent: EnactPropTypes.componentOverride.isRequired,
 
 		/**
-		 * Called with a reference to `component`
+		 * Called with a reference to [component]{@link ui/ToggleItem.ToggleItemBase#component}
 		 *
 		 * @type {Function}
 		 * @private

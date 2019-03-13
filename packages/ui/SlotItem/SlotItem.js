@@ -68,7 +68,7 @@ const SlotItemBase = kind({
 		autoHide: PropTypes.oneOf(['after', 'before', 'both']),
 
 		/**
-		 * Called with a reference to `component`
+		 * Called with a reference to [component]{@link ui/SlotItem.SlotItemBase#component}
 		 *
 		 * @private
 		 */

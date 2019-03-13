@@ -109,7 +109,7 @@ class TransitionGroup extends React.Component {
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to `component`
+		 * Called with a reference to [component]{@link ui/ViewManager.TransitionGroup#component}
 		 *
 		 * @type {Function}
 		 * @private
