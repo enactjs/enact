@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/Layout` `ref` support so developers can safely get refs to their layout elements
+- `ui/Item`, `ui/Layout`, `ui/Repeater`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleItem`, and `ui/ViewManager` support for `ref` to gain access to the wrapped `component`
 
 ## [2.4.0] - 2019-03-04
 

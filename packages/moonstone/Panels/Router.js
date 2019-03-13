@@ -1,6 +1,7 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import React from 'react';
+import ForwardRef from '@enact/ui/ForwardRef';
 import PropTypes from 'prop-types';
+import React from 'react';
 import warning from 'warning';
 
 const toSegments = (path) => Array.isArray(path) ? path : path.split('/').slice(1);
@@ -37,7 +38,7 @@ const propTypes = {
  * @ui
  * @public
  */
-const Router = class extends React.Component {
+const RouterBase = class extends React.Component {
 	static displayName = 'Router'
 
 	static propTypes = /** @lends moonstone/Panels.Router.prototype */ {
@@ -64,6 +65,13 @@ const Router = class extends React.Component {
 		 * @public
 		 */
 		component: EnactPropTypes.renderable,
+
+		/**
+		 * Called with a reference to [component]{@link moonstone/Panels.Router#component}
+		 *
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Routes defined as an object rather than via JSX.
@@ -177,15 +185,17 @@ const Router = class extends React.Component {
 	}
 
 	render () {
-		const {component: Component, ...rest} = this.props;
+		const {component: Component, componentRef, ...rest} = this.props;
 		const children = this.createChildren();
 
 		delete rest.path;
 		delete rest.routes;
 
-		return <Component {...rest}>{children}</Component>;
+		return <Component ref={componentRef} {...rest}>{children}</Component>;
 	}
 };
+
+const Router = ForwardRef({prop: 'componentRef'}, RouterBase);
 
 /**
  * Used with {@link moonstone/Panels.Routable} to define the `path` segment and the
@@ -239,4 +249,10 @@ Route.propTypes = {
 };
 
 export default Router;
-export {Router, Route, propTypes, toSegments};
+export {
+	propTypes,
+	Route,
+	Router,
+	RouterBase,
+	toSegments
+};

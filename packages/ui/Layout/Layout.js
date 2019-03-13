@@ -106,12 +106,12 @@ const LayoutBase = kind({
 		component:  EnactPropTypes.renderable,
 
 		/**
-		 * A ref instance provided by {@link ui/ForwardRef.ForwardRef}.
+		 * Called with a reference to [component]{@link ui/Layout.Layout#component}
 		 *
 		 * @type {Function}
 		 * @private
 		 */
-		forwardedRef: PropTypes.func,
+		componentRef: PropTypes.func,
 
 		/**
 		 * Allows this `Layout` to have following siblings drawn on the same line as itself
@@ -187,18 +187,18 @@ const LayoutBase = kind({
 		}
 	},
 
-	render: ({component: Component, forwardedRef, ...rest}) => {
+	render: ({component: Component, componentRef, ...rest}) => {
 		delete rest.align;
 		delete rest.inline;
 		delete rest.orientation;
 		delete rest.wrap;
 
-		return <Component {...rest} ref={forwardedRef} />;
+		return <Component ref={componentRef} {...rest} />;
 	}
 });
 
 const LayoutDecorator = compose(
-	ForwardRef({prop: 'forwardedRef'})
+	ForwardRef({prop: 'componentRef'})
 );
 
 const Layout = LayoutDecorator(LayoutBase);

@@ -18,6 +18,7 @@ import compose from 'ramda/src/compose';
 import React from 'react';
 
 import ComponentOverride from '../ComponentOverride';
+import ForwardRef from '../ForwardRef';
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
 
@@ -84,6 +85,14 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		iconComponent: EnactPropTypes.componentOverride.isRequired,
+
+		/**
+		 * Called with a reference to [component]{@link ui/ToggleItem.ToggleItemBase#component}
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -183,13 +192,14 @@ const ToggleItemBase = kind({
 		slotAfter: iconCreator('after')
 	},
 
-	render: ({component: Component, css, children, selected, ...rest}) => {
+	render: ({component: Component, componentRef, css, children, selected, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconPosition;
 		delete rest.value;
 
 		return (
 			<Component
+				ref={componentRef}
 				role="checkbox"
 				{...rest}
 				css={css}
@@ -212,6 +222,7 @@ const ToggleItemBase = kind({
  * @public
  */
 const ToggleItemDecorator = compose(
+	ForwardRef({prop: 'componentRef'}),
 	Toggleable({toggleProp: 'onTap'}),
 	Touchable
 );
