@@ -1234,11 +1234,11 @@ class ScrollableBaseNative extends Component {
 	addEventListeners () {
 		const {childRefCurrent, containerRef} = this;
 
-		if (containerRef && containerRef.current.addEventListener) {
+		if (containerRef.current && containerRef.current.addEventListener) {
 			containerRef.current.addEventListener('wheel', this.onWheel);
 		}
 
-		if (childRefCurrent.containerRef) {
+		if (childRefCurrent.containerRef.current) {
 			if (childRefCurrent.containerRef.current.addEventListener) {
 				childRefCurrent.containerRef.current.addEventListener('scroll', this.onScroll, {capture: true, passive: true});
 				childRefCurrent.containerRef.current.addEventListener('mousedown', this.onMouseDown);
@@ -1255,11 +1255,11 @@ class ScrollableBaseNative extends Component {
 	removeEventListeners () {
 		const {childRefCurrent, containerRef} = this;
 
-		if (containerRef && containerRef.current.removeEventListener) {
+		if (containerRef.current && containerRef.current.removeEventListener) {
 			containerRef.current.removeEventListener('wheel', this.onWheel);
 		}
 
-		if (childRefCurrent.containerRef && childRefCurrent.containerRef.current.removeEventListener) {
+		if (childRefCurrent.containerRef.current && childRefCurrent.containerRef.current.removeEventListener) {
 			childRefCurrent.containerRef.current.removeEventListener('scroll', this.onScroll, {capture: true, passive: true});
 			childRefCurrent.containerRef.current.removeEventListener('mousedown', this.onMouseDown);
 		}

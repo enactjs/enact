@@ -683,7 +683,7 @@ class ScrollableBaseNative extends Component {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	addEventListeners = (childContainerRef) => {
-		if (childContainerRef && childContainerRef.current.addEventListener) {
+		if (childContainerRef.current && childContainerRef.current.addEventListener) {
 			childContainerRef.current.addEventListener('mouseover', this.onMouseOver, {capture: true});
 			childContainerRef.current.addEventListener('mousemove', this.onMouseMove, {capture: true});
 			childContainerRef.current.addEventListener('focusin', this.onFocus);
@@ -696,7 +696,7 @@ class ScrollableBaseNative extends Component {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	removeEventListeners = (childContainerRef) => {
-		if (childContainerRef && childContainerRef.current.removeEventListener) {
+		if (childContainerRef.current && childContainerRef.current.removeEventListener) {
 			childContainerRef.current.removeEventListener('mouseover', this.onMouseOver, {capture: true});
 			childContainerRef.current.removeEventListener('mousemove', this.onMouseMove, {capture: true});
 			childContainerRef.current.removeEventListener('focusin', this.onFocus);
