@@ -439,36 +439,36 @@ const VirtualListBaseFactory = (type) => {
 				lastFullyVisibleIndex = Math.min(dataSize - 1, Math.floor((scrollPosition + clientSize - itemSize) / gridSize) * dimensionToExtent);
 			let candidateIndex = -1;
 
-			/* First, find a spottable item in this page */
+			/* First, find a spottable item in the next page */
 			if (direction === 'down') { // Page Down
-				if ((lastFullyVisibleIndex - (lastFullyVisibleIndex % dimensionToExtent)) > currentIndex) { // If a current focused item is in the last visible line.
-					candidateIndex = findSpottableItem(
-						lastFullyVisibleIndex,
-						currentIndex - (currentIndex % dimensionToExtent) + dimensionToExtent - 1
-					);
-				}
-			} else if (firstFullyVisibleIndex + dimensionToExtent <= currentIndex) { // Page Up,  if a current focused item is in the first visible line.
-				candidateIndex = findSpottableItem(
-					firstFullyVisibleIndex,
-					currentIndex - (currentIndex % dimensionToExtent)
-				);
+				candidateIndex = findSpottableItem(lastFullyVisibleIndex + numOfItemsInPage, lastFullyVisibleIndex);
+			} else { // Page Up
+				candidateIndex = findSpottableItem(firstFullyVisibleIndex - numOfItemsInPage, firstFullyVisibleIndex);
 			}
 
-			/* Second, find a spottable item in the next page */
-			if (candidateIndex === -1) {
-				if (direction === 'down') { // Page Down
-					candidateIndex = findSpottableItem(lastFullyVisibleIndex + numOfItemsInPage, lastFullyVisibleIndex);
-				} else { // Page Up
-					candidateIndex = findSpottableItem(firstFullyVisibleIndex - numOfItemsInPage, firstFullyVisibleIndex);
-				}
-			}
-
-			/* Last, find a spottable item in a whole data */
+			/* Second, find a spottable item in a whole data */
 			if (candidateIndex === -1) {
 				if (direction === 'down') { // Page Down
 					candidateIndex = findSpottableItem(lastFullyVisibleIndex + numOfItemsInPage + 1, dataSize);
 				} else { // Page Up
 					candidateIndex = findSpottableItem(firstFullyVisibleIndex - numOfItemsInPage - 1, -1);
+				}
+			}
+
+			/* Last, find a spottable item in the current page */
+			if (candidateIndex === -1) {
+				if (direction === 'down') { // Page Down
+					if ((lastFullyVisibleIndex - (lastFullyVisibleIndex % dimensionToExtent)) > currentIndex) { // If a current focused item is in the last visible line.
+						candidateIndex = findSpottableItem(
+							lastFullyVisibleIndex,
+							currentIndex - (currentIndex % dimensionToExtent) + dimensionToExtent - 1
+						);
+					}
+				} else if (firstFullyVisibleIndex + dimensionToExtent <= currentIndex) { // Page Up,  if a current focused item is in the first visible line.
+					candidateIndex = findSpottableItem(
+						firstFullyVisibleIndex,
+						currentIndex - (currentIndex % dimensionToExtent)
+					);
 				}
 			}
 
@@ -480,7 +480,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		scrollToNextItem = ({direction, focusedItem}) => {
+		scrollByPage = ({direction, focusedItem}) => {
 			const
 				{cbScrollTo} = this.props,
 				{firstIndex, numOfItems} = this.uiRefCurrent.state,
@@ -489,11 +489,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (indexToScroll !== -1 && focusedIndex !== indexToScroll) {
 				if (firstIndex <= indexToScroll && indexToScroll < firstIndex + numOfItems) {
-					const node = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${indexToScroll}'].spottable`);
-
-					if (node) {
-						Spotlight.focus(node);
-					}
+					return this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${indexToScroll}'].spottable`);
 				} else {
 					// Scroll to the next spottable item without animation
 					this.pause.pause();
@@ -502,6 +498,8 @@ const VirtualListBaseFactory = (type) => {
 				}
 				cbScrollTo({index: indexToScroll, stickTo: direction === 'down' ? 'end' : 'start', animate: false});
 			}
+
+			return null;
 		}
 
 		/**

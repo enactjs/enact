@@ -298,49 +298,55 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	getNextEndPoint = (direction, oSpotBounds) => {
-		const bounds = this.uiRefCurrent.getScrollBounds();
-
+	getNextEndPoint = (direction, scrollerBounds, focusedItemBounds, pageDiff) => {
 		let oPoint = {};
 		switch (direction) {
 			case 'up':
-				oPoint.x = oSpotBounds.left;
-				oPoint.y = oSpotBounds.top - bounds.clientHeight;
+				oPoint.x = focusedItemBounds.left;
+				oPoint.y = scrollerBounds.top - scrollerBounds.height * (pageDiff);
 				break;
 			case 'left':
-				oPoint.x = oSpotBounds.left - bounds.clientWidth;
-				oPoint.y = oSpotBounds.top;
+				oPoint.x = focusedItemBounds.left - scrollerBounds.width;
+				oPoint.y = focusedItemBounds.top;
 				break;
 			case 'down':
-				oPoint.x = oSpotBounds.left;
-				oPoint.y = oSpotBounds.top + oSpotBounds.height + bounds.clientHeight;
+				oPoint.x = focusedItemBounds.left;
+				oPoint.y = scrollerBounds.top + scrollerBounds.height * (pageDiff + 1);
 				break;
 			case 'right':
-				oPoint.x = oSpotBounds.left + oSpotBounds.width + bounds.clientWidth;
-				oPoint.y = oSpotBounds.top;
+				oPoint.x = focusedItemBounds.left + focusedItemBounds.width + scrollerBounds.width;
+				oPoint.y = focusedItemBounds.top;
 				break;
 		}
 		return oPoint;
 	}
 
-	scrollToNextPage = ({direction, focusedItem, reverseDirection, spotlightId}) => {
-		const endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect());
-		let candidateNode = null;
+	scrollByPage = ({direction, focusedItem, reverseDirection, spotlightId}) => {
+		const
+			scrollerBounds = this.uiRefCurrent.containerRef.current.getBoundingClientRect(),
+			focusedItemBounds = focusedItem.getBoundingClientRect();
+		let candidateNode = null, endPoint;
+
+		/* Find a spottable item in the current page */
+		endPoint = this.getNextEndPoint(direction, scrollerBounds, focusedItemBounds, 0);
+		const candidateNodeInCurrentPage = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
 
 		/* Find a spottable item in the next page */
+		endPoint = this.getNextEndPoint(direction, scrollerBounds, focusedItemBounds, 1);
 		candidateNode = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
 
 		/* Find a spottable item in a whole data */
-		if (candidateNode === focusedItem) {
+		if (candidateNode === focusedItem || candidateNode === candidateNodeInCurrentPage) {
 			candidateNode = getTargetByDirectionFromPosition(direction, endPoint, spotlightId);
 		}
 
-		/* If there is no spottable item next to the current item */
-		if (candidateNode === focusedItem) {
+		if (candidateNode == focusedItem) {
 			return null;
+		} else if (candidateNode === candidateNodeInCurrentPage) {
+			return candidateNodeInCurrentPage;
+		} else {
+			return candidateNode;
 		}
-
-		return candidateNode;
 	}
 
 	scrollToBoundary = (direction) => {
