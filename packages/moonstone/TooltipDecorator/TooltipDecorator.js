@@ -167,6 +167,15 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.TOOLTIP_HEIGHT = ri.scale(18); // distance between client and tooltip's label
 
+			this.state = {
+				showing: false,
+				tooltipDirection: null,
+				arrowAnchor: null,
+				position: {top: 0, left: 0}
+			};
+		}
+
+		componentDidMount () {
 			if (window.MutationObserver) {
 				this.mutationObserver = new MutationObserver(this.setTooltipLayoutJob.start);
 			}
@@ -174,13 +183,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (window.ResizeObserver) {
 				this.resizeObserver = new ResizeObserver(this.setTooltipLayoutJob.start);
 			}
-
-			this.state = {
-				showing: false,
-				tooltipDirection: null,
-				arrowAnchor: null,
-				position: {top: 0, left: 0}
-			};
 		}
 
 		componentDidUpdate (prevProps) {

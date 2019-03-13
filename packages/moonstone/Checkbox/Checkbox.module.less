@@ -53,8 +53,8 @@
 		// Skin colors
 		.applySkins({
 			&:not([disabled]) {
-				background-color: @moon-checkbox-spotlight-bg-color;
 				color: @moon-checkbox-spotlight-color;
+				background-color: @moon-checkbox-spotlight-bg-color;
 			}
 		});
 	}
@@ -65,7 +65,10 @@
 		.toggleIcon {
 			// Skin colors
 			.applySkins({
-				background-color: @moon-checkbox-bg-color;
+				&:not([disabled]) {
+					color: @moon-checkbox-check-color;
+					background-color: @moon-checkbox-bg-color;
+				}
 			});
 		}
 	}, parent);
