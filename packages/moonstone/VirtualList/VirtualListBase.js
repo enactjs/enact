@@ -867,7 +867,7 @@ const VirtualListBaseFactory = (type) => {
 
 		initUiRef = (ref) => {
 			if (ref) {
-				this.uiRefCurrent = ref.current || ref;
+				this.uiRefCurrent = ref;
 				this.props.initUiChildRef(ref);
 			}
 		}
