@@ -340,7 +340,7 @@ class ScrollerBase extends Component {
 			candidateNode = getTargetByDirectionFromPosition(direction, endPoint, spotlightId);
 		}
 
-		if (candidateNode == focusedItem) {
+		if (candidateNode === focusedItem) {
 			return null;
 		} else if (candidateNode === candidateNodeInCurrentPage) {
 			return candidateNodeInCurrentPage;

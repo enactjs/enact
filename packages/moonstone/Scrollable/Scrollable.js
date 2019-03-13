@@ -9,7 +9,7 @@
 import classNames from 'classnames';
 import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {getDirection} from '@enact/spotlight';
-import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import {Job} from '@enact/core/util';
 import platform from '@enact/core/platform';
 import {forward} from '@enact/core/handle';
@@ -432,6 +432,7 @@ class ScrollableBase extends Component {
 				}
 			}
 
+			// Need to check whether an overscroll effect is needed
 			return true;
 		}
 
