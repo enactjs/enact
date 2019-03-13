@@ -1237,7 +1237,7 @@ class ScrollableBase extends Component {
 		}
 
 		if (this.props.removeEventListeners) {
-			this.props.removeEventListeners(childRefCurrent.containerRef.current);
+			this.props.removeEventListeners(childRefCurrent.containerRef);
 		}
 	}
 
