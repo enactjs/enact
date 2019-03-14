@@ -156,6 +156,26 @@ const ToggleItemBase = kind({
 		selected: PropTypes.bool,
 
 		/**
+		 * Nodes to be inserted after `children`.
+		 *
+		 * If nothing is specified, nothing, not even an empty container, is rendered in this place.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		slotImageAfter: PropTypes.node,
+
+		/**
+		 * Nodes to be inserted after `children`.
+		 *
+		 * If nothing is specified, nothing, not even an empty container, is rendered in this place.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		slotImageBefore: PropTypes.node,
+
+		/**
 		 * The value that will be sent to the `onToggle` handler.
 		 *
 		 * @type {*}
@@ -169,6 +189,8 @@ const ToggleItemBase = kind({
 		disabled: false,
 		iconPosition: 'before',
 		selected: false,
+		slotImageAfter: null,
+		slotImageBefore: null,
 		value: null
 	},
 
@@ -183,7 +205,7 @@ const ToggleItemBase = kind({
 		slotAfter: iconCreator('after')
 	},
 
-	render: ({component: Component, css, children, selected, ...rest}) => {
+	render: ({component: Component, css, children, selected, slotImageAfter, slotImageBefore, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconPosition;
 		delete rest.value;
@@ -195,7 +217,9 @@ const ToggleItemBase = kind({
 				css={css}
 				aria-checked={selected}
 			>
+				{slotImageBefore}
 				{children}
+				{slotImageAfter}
 			</Component>
 		);
 	}
