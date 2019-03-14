@@ -206,10 +206,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			this.node = ReactDOM.findDOMNode(this);
 		}
 
-		shouldComponentUpdate (nextProps) {
-			return !equals(this.props, nextProps);
-		}
-
 		componentDidUpdate (prevProps) {
 			this.isFocused = this.node && Spotlight.getCurrent() === this.node;
 
