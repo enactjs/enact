@@ -75,19 +75,21 @@ const adjustDirection = function (tooltipDirection, overflow, rtl) {
  * @private
  */
 const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, tooltipHeight) {
+	const isTooltipWide = (clientNode.left + clientNode.width + tooltipNode.width > window.innerWidth) || (clientNode.right + clientNode.width + tooltipNode.width > window.innerWidth);
+
 	if (tooltipDirection === 'above' || tooltipDirection === 'below') {
 		return {
 			isOverTop: clientNode.top - tooltipNode.height - tooltipHeight < 0,
 			isOverBottom: clientNode.bottom + tooltipNode.height + tooltipHeight > window.innerHeight,
-			isOverLeft: clientNode.left - tooltipNode.width + clientNode.width / 2 < 0,
-			isOverRight: clientNode.right + tooltipNode.width - clientNode.width / 2 > window.innerWidth
+			isOverLeft: isTooltipWide ? false : clientNode.left - tooltipNode.width + clientNode.width / 2 < 0,
+			isOverRight: isTooltipWide ? false : clientNode.right + tooltipNode.width - clientNode.width / 2 > window.innerWidth
 		};
 	} else if (tooltipDirection === 'left' || tooltipDirection === 'right') {
 		return {
 			isOverTop: clientNode.top - tooltipNode.height + clientNode.height / 2 < 0,
 			isOverBottom: clientNode.bottom + tooltipNode.height - clientNode.height / 2 > window.innerHeight,
-			isOverLeft: clientNode.left - tooltipNode.width < 0,
-			isOverRight: clientNode.right + tooltipNode.width > window.innerWidth
+			isOverLeft: isTooltipWide ? false : clientNode.left - tooltipNode.width < 0,
+			isOverRight: isTooltipWide ? false : clientNode.right + tooltipNode.width > window.innerWidth
 		};
 	}
 };
