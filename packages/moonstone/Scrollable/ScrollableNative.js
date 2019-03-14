@@ -551,7 +551,21 @@ class ScrollableBaseNative extends Component {
 
 		forward('onKeyDown', ev, this.props);
 
-		this.animateOnFocus = animate;
+		const accRate = Spotlight.getAcceleratorRate();
+		const isAccelerating = Spotlight.isAccelerating();
+		console.log(isAccelerating);
+		if (this.props.animate) {
+			this.animateOnFocus = !isAccelerating || isAccelerating && accRate < 3;
+		} else {
+			this.animateOnFocus = false;
+		}
+
+		// if (!this.animateOnFocus) {
+		// 	console.log('here');
+		// 	debugger;
+		// }
+		console.log('hi', this.animateOnFocus);
+
 
 		if (isPageUp(keyCode) || isPageDown(keyCode)) {
 			ev.preventDefault();

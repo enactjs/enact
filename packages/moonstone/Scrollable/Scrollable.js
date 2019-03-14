@@ -478,6 +478,14 @@ class ScrollableBase extends Component {
 		if (isPageUp(keyCode) || isPageDown(keyCode)) {
 			ev.preventDefault();
 		}
+		const accRate = Spotlight.getAcceleratorRate();
+		const isAccelerating = Spotlight.isAccelerating();
+		console.log(isAccelerating && accRate < 4)
+		if (this.props.animate) {
+			this.animateOnFocus = !isAccelerating || (isAccelerating && accRate < 4);
+		} else {
+			this.animateOnFocus = false;
+		}
 
 		this.animateOnFocus = this.props.animate;
 

@@ -243,7 +243,7 @@ const Spotlight = (function () {
 		}
 
 		if (__DEV__) {
-			assignFocusPreview(elem);
+			// assignFocusPreview(elem);
 		}
 	}
 

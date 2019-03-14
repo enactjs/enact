@@ -140,7 +140,7 @@ const SkinContext = React.createContext(null);
  * @public
  */
 const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
-	const MemoWrapped = React.memo(Wrapped)
+	const MemoWrapped = React.memo(Wrapped);
 	const {prop, skins, defaultSkin, allowedVariants, variantsProp} = config;
 	const defaultVariants = objectify(config.defaultVariants);
 
