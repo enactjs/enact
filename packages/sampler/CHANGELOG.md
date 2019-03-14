@@ -2,11 +2,6 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
-## [unreleased]
-
-### Added
-- QA sample for `moonstone/Notification`
-
 ## [2.4.1] - 2019-03-11
 
 No significant changes.
