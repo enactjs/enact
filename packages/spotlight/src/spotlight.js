@@ -878,6 +878,12 @@ const Spotlight = (function () {
 			}
 
 			return getSpottableDescendants(containerId);
+		},
+		isAccelerating: () => {
+			return SpotlightAccelerator.isAccelerating();
+		},
+		getAcceleratorRate: () => {
+			return SpotlightAccelerator.getSeconds();
 		}
 	};
 

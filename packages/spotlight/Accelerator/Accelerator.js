@@ -67,6 +67,8 @@ class Accelerator {
 		 * @public
 		 */
 		this.frequency = frequency;
+
+		this.seconds = 0;
 	}
 
 	/**
@@ -95,17 +97,17 @@ class Accelerator {
 					return true;
 				} else {
 					let elapsedTime = Date.now() - this.time,
-						seconds = Math.floor(elapsedTime / 1000),
 						toSkip = 0;
 
-					seconds = seconds > this.frequency.length - 1 ? this.frequency.length - 1 : seconds;
+					this.seconds = Math.floor(elapsedTime / 1000);
+					this.seconds = this.seconds > this.frequency.length - 1 ? this.frequency.length - 1 : this.seconds;
 
-					toSkip = this.frequency[seconds] - 1;
+					toSkip = this.frequency[this.seconds] - 1;
 					if (toSkip < 0) {
 						toSkip = 0;
 					}
 
-					this.accelerating = !(seconds === 0 && this.skipped === 0);
+					this.accelerating = !(this.seconds === 0 && this.skipped === 0);
 
 					if (this.skipped >= toSkip) {
 						this.skipped = 0;
@@ -161,6 +163,10 @@ class Accelerator {
 	 */
 	isAccelerating = () => {
 		return this.accelerating;
+	}
+
+	getSeconds = () => {
+		return this.seconds;
 	}
 }
 
