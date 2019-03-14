@@ -345,13 +345,15 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleBlur = (ev) => {
 			if (this.shouldPreventBlur) return;
-			this.isFocused = false;
-			if (ev.currentTarget === ev.target && this.focusedWhenDisabled) {
-				this.focusedWhenDisabled = false;
-				// We only need to trigger a rerender if a focused item becomes disabled and still needs its focus.
-				// Once it blurs we need to rerender to remove spottable so it will not spot again.
-				// The reason we don't use state is for performance reasons to avoid updates.
-				this.forceUpdate();
+			if (ev.currentTarget === ev.target) {
+				this.isFocused = false;
+				if (this.focusedWhenDisabled) {
+					this.focusedWhenDisabled = false;
+					// We only need to trigger a rerender if a focused item becomes disabled and still needs its focus.
+					// Once it blurs we need to rerender to remove spottable so it will not spot again.
+					// The reason we don't use state is for performance reasons to avoid updates.
+					this.forceUpdate();
+				}
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
