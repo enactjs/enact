@@ -12,13 +12,12 @@ const Config = mergeComponentMetadata('Notification', Notification, Popup);
 
 Notification.displayName = 'Notification';
 
-const filler = '0123456789abcdefghijklmnopqrstuvwxyz';
-
-const messageArray = [filler];
-
 class StatefulNotification extends React.Component {
 	constructor (props) {
 		super(props);
+
+		this.messageFiller = '0123456789abcdefghijklmnopqrstuvwxyz';
+		this.messageArray = [this.messageFiller];
 
 		this.state = {
 			message: this.parseMessage()
@@ -26,14 +25,14 @@ class StatefulNotification extends React.Component {
 	}
 
 	addToMessage = () => {
-		messageArray.push(filler);
+		this.messageArray.push(this.messageFiller);
 		this.setState({message: this.parseMessage()});
 	}
 
-	parseMessage = () => messageArray.join(' ')
+	parseMessage = () => this.messageArray.join(' ')
 
 	removeFromMessage = () => {
-		messageArray.pop();
+		this.messageArray.pop();
 		this.setState({message: this.parseMessage()});
 	}
 
