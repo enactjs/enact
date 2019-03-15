@@ -2,7 +2,25 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.4.1] - 2019-03-11
+
+### Fixed
+
+- `core/util.isRenderable` to treat values returned by `React.lazy()`, `React.memo()`, and `React.forwardRef()` as renderable
+- `core/hoc` to support wrapping components returned by `React.lazy()`, `React.memo()`, and `React.forwardRef()`
+- `i18n/I18nDecorator` to defer updating the locale until window is focused
+- `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/RadioItem`, `moonstone/SelectableIcon`, and `moonstone/Slider` spotlight muted colors
+- `moonstone/Spinner` animation synchronization after a rerender
+- `moonstone/TooltipDecorator` to position `Tooltip` correctly when the wrapped component moves or resizes
+- `moonstone/VideoPlayer` to continue to show thumbnail when playback control keys are pressed
+- `moonstone/VideoPlayer` to stop seeking by remote key when it loses focus
+- `moonstone/VirtualList` to only resume spotlight pauses it initiated
+- `spotlight` to remain in pointer mode when any 'cancel' key (e.g. Escape or back buttoon) is pressed
+- `ui/VirtualList` `scrollTo` callback to scroll properly during prop change updates
+
 ## [2.4.0] - 2019-03-04
+
+### Added
 
 - `moonstone` `line-height` rule to base text CSS for both latin and non-latin locales
 - `moonstone` support for high contrast colors in dark and light skin
