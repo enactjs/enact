@@ -1,6 +1,6 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import {TimePicker, TimePickerBase} from '../TimePicker';
+import TimePicker from '../TimePicker';
 import css from '../TimePicker.module.less';
 
 describe('TimePicker', () => {
@@ -38,10 +38,10 @@ describe('TimePicker', () => {
 
 	test('should omit labels when noLabels is true', () => {
 		const subject = mount(
-			<TimePickerBase hour={1} meridiem={0} meridiems={['am', 'pm']} minute={1} noLabels open order={['h', 'm']} title="Time" />
+			<TimePicker hour={1} meridiem={0} meridiems={['am', 'pm']} minute={1} noLabels open order={['h', 'm', 'a']} title="Time" />
 		);
 
-		const expected = 2;
+		const expected = 3;
 		const actual = subject.find(`.${css.timeComponents}`).children().filterWhere(c => !c.prop('label')).length;
 
 		expect(actual).toBe(expected);
@@ -49,10 +49,10 @@ describe('TimePicker', () => {
 
 	test('should create pickers arranged by order', () => {
 		const subject = mount(
-			<TimePickerBase hour={1} meridiem={0} meridiems={['am', 'pm']} minute={1} open order={['h', 'm']} title="Time" />
+			<TimePicker hour={1} meridiem={0} meridiems={['am', 'pm']} minute={1} open order={['h', 'm', 'a']} title="Time" />
 		);
 
-		const expected = ['hour', 'minute'];
+		const expected = ['hour', 'minute', 'AM / PM'];
 		const actual = subject.find(`.${css.timeComponents}`).children().map(c => c.prop('label'));
 
 		expect(actual).toEqual(expected);
