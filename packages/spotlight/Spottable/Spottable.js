@@ -10,7 +10,6 @@ import {forward, forwardWithPrevent, handle, preventDefault, stop} from '@enact/
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
-import equals from 'ramda/src/equals';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -346,7 +345,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				if (this.focusedWhenDisabled) {
 					this.focusedWhenDisabled = false;
 					// We only need to trigger a rerender if a focused item becomes disabled and still needs its focus.
-					// Once it blurs we need to rerender to remove spottable so it will not spot again.
+					// Once it blurs we need to rerender to remove the spottable class so it will not spot again.
 					// The reason we don't use state is for performance reasons to avoid updates.
 					this.forceUpdate();
 				}

@@ -5,6 +5,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ## [Unreleased]
 
 ### Fixed
+
 - `spotlight/Spottable` to prevent unnecessary updates due to focus and blur changes
 
 ## [2.4.1] - 2019-03-11
@@ -12,7 +13,6 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Fixed
 
 - `spotlight` to remain in pointer mode when any 'cancel' key (e.g. Escape or back buttoon) is pressed
-
 
 ## [2.4.0] - 2019-03-04
 
