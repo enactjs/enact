@@ -554,7 +554,6 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (activator && activator === Spotlight.getCurrent()) {
 				activator.blur();
 			}
-
 			if (!Spotlight.focus(activator)) {
 				Spotlight.focus();
 			}
