@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to remove event listeners properly
+- `moonstone/Popup` to resume spotlight pauses when closing with animation
 
 ## [2.4.1] - 2019-03-11
 

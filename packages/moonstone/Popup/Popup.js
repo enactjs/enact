@@ -243,8 +243,9 @@ const checkScrimNone = (props) => {
 
 const OpenState = {
 	CLOSED: 0,
-	OPENING: 1,
-	OPEN: 2
+	OPENINGWIHOUTANIMATION: 1,
+	OPENING: 2,
+	OPEN: 3
 };
 
 /**
@@ -389,7 +390,7 @@ class Popup extends React.Component {
 	constructor (props) {
 		super(props);
 		this.paused = new Pause('Popup');
-		const animateOpen = this.props.noAnimation ? OpenState.OPEN : OpenState.OPENING;
+		const animateOpen = this.props.noAnimation ? OpenState.OPEN : OpenState.OPENINGWIHOUTANIMATION;
 		this.state = {
 			floatLayerOpen: this.props.open,
 			popupOpen: this.props.open ? animateOpen : OpenState.CLOSED,
@@ -454,7 +455,7 @@ class Popup extends React.Component {
 	handleFloatingLayerOpen = () => {
 		if (!this.props.noAnimation) {
 			this.setState({
-				popupOpen: OpenState.OPENING
+				popupOpen: (this.state.popupOpen === OpenState.OPENINGWIHOUTANIMATION) ? OpenState.OPEN : OpenState.OPENING
 			});
 		} else if (this.state.popupOpen === OpenState.OPEN && this.props.open) {
 			this.spotPopupContent();
@@ -575,7 +576,7 @@ class Popup extends React.Component {
 					onCloseButtonClick={onClose}
 					onHide={this.handlePopupHide}
 					onShow={this.handlePopupShow}
-					open={this.state.popupOpen >= OpenState.OPENING}
+					open={this.state.popupOpen >= OpenState.OPENINGWIHOUTANIMATION}
 					spotlightId={this.state.containerId}
 					spotlightRestrict="self-only"
 				/>
