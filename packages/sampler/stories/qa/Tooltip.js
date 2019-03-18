@@ -36,7 +36,7 @@ class TooltipTest extends React.Component {
 					<TooltipButton
 						onClick={this.handleClick}
 						tooltipDelay={5000}
-						tooltipText="Tooltip!"
+						tooltipText="Tooltip position!"
 					>
 						Click me
 					</TooltipButton>
@@ -279,7 +279,7 @@ storiesOf('Tooltip', module)
 		'tooltip overflows',
 		() => (
 			<div>
-				<div style={{position: 'absolute', top: '-90px'}}>
+				<div style={{position: 'absolute', top: '-90px', display: 'flex', width: '100%', justifyContent: 'space-between'}}>
 					<TooltipNormalButton
 						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
 						tooltipDelay={number('tooltipDelay', Config, 500)}
@@ -290,8 +290,6 @@ storiesOf('Tooltip', module)
 					>
 						Top Left
 					</TooltipNormalButton>
-				</div>
-				<div style={{position: 'absolute', top: '-90px', left: '50%', transform: 'translate(-50%)'}}>
 					<TooltipNormalButton
 						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
 						tooltipDelay={number('tooltipDelay', Config, 500)}
@@ -302,8 +300,6 @@ storiesOf('Tooltip', module)
 					>
 						Top
 					</TooltipNormalButton>
-				</div>
-				<div style={{position: 'absolute', top: '-90px', right: '0'}}>
 					<TooltipNormalButton
 						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
 						tooltipDelay={number('tooltipDelay', Config, 500)}
@@ -350,7 +346,7 @@ storiesOf('Tooltip', module)
 						Right
 					</TooltipButton>
 				</div>
-				<div style={{position: 'absolute', bottom: '0'}}>
+				<div style={{position: 'absolute', bottom: '0', display: 'flex', width: '100%', justifyContent: 'space-between'}}>
 					<TooltipNormalButton
 						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
 						tooltipDelay={number('tooltipDelay', Config, 500)}
@@ -361,8 +357,6 @@ storiesOf('Tooltip', module)
 					>
 						Bottom Left
 					</TooltipNormalButton>
-				</div>
-				<div style={{position: 'absolute', bottom: '0', left: '50%', transform: 'translate(-50%)'}}>
 					<TooltipNormalButton
 						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
 						tooltipDelay={number('tooltipDelay', Config, 500)}
@@ -373,8 +367,6 @@ storiesOf('Tooltip', module)
 					>
 						Bottom
 					</TooltipNormalButton>
-				</div>
-				<div style={{position: 'absolute', bottom: '0', right: '0'}}>
 					<TooltipNormalButton
 						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
 						tooltipDelay={number('tooltipDelay', Config, 500)}

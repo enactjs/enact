@@ -48,7 +48,7 @@ const adjustDirection = function (tooltipDirection, overflow, rtl) {
 		tooltipDirection = tooltipDirection === 'left' ? 'right' : 'left';
 	}
 
-	// Flip tooltip if it overlows towards the tooltip direction
+	// Flip tooltip if it overflows towards the tooltip direction
 	if (overflow.isOverTop && tooltipDirection === 'above') {
 		tooltipDirection = 'below';
 	} else if (overflow.isOverBottom && tooltipDirection === 'below') {
@@ -81,15 +81,17 @@ const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, toolti
 		return {
 			isOverTop: clientNode.top - tooltipNode.height - tooltipHeight < 0,
 			isOverBottom: clientNode.bottom + tooltipNode.height + tooltipHeight > window.innerHeight,
-			isOverLeft: isTooltipWide ? false : clientNode.left - tooltipNode.width + clientNode.width / 2 < 0,
-			isOverRight: isTooltipWide ? false : clientNode.right + tooltipNode.width - clientNode.width / 2 > window.innerWidth
+			isOverLeft: clientNode.left - tooltipNode.width + clientNode.width / 2 < 0,
+			isOverRight: clientNode.right + tooltipNode.width - clientNode.width / 2 > window.innerWidth,
+			isOverWide: isTooltipWide
 		};
 	} else if (tooltipDirection === 'left' || tooltipDirection === 'right') {
 		return {
 			isOverTop: clientNode.top - tooltipNode.height + clientNode.height / 2 < 0,
 			isOverBottom: clientNode.bottom + tooltipNode.height - clientNode.height / 2 > window.innerHeight,
-			isOverLeft: isTooltipWide ? false : clientNode.left - tooltipNode.width < 0,
-			isOverRight: isTooltipWide ? false : clientNode.right + tooltipNode.width > window.innerWidth
+			isOverLeft: clientNode.left - tooltipNode.width < 0,
+			isOverRight: clientNode.right + tooltipNode.width > window.innerWidth,
+			isOverWide: isTooltipWide
 		};
 	}
 };
