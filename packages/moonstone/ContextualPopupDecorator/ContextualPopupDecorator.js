@@ -563,7 +563,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			});
 
 			setTimeout(() => {
-				if (Spotlight.getCurrent() === activator) {
+				if (activator && activator === Spotlight.getCurrent()) {
 					Spotlight.getCurrent().blur();
 					Spotlight.focus(activator);
 				}
