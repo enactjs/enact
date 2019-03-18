@@ -454,9 +454,9 @@ class Popup extends React.Component {
 
 	handleFloatingLayerOpen = () => {
 		if (!this.props.noAnimation) {
-			this.setState({
-				popupOpen: (this.state.popupOpen === OpenState.OPENINGWIHOUTANIMATION) ? OpenState.OPEN : OpenState.OPENING
-			});
+			this.setState((state) => ({
+				popupOpen: (state.popupOpen === OpenState.OPENINGWIHOUTANIMATION) ? OpenState.OPEN : OpenState.OPENING
+			}));
 		} else if (this.state.popupOpen === OpenState.OPEN && this.props.open) {
 			this.spotPopupContent();
 		}
