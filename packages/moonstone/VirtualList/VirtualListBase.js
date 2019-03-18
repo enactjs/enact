@@ -197,6 +197,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		constructor (props) {
+			console.log('moonstone/VirtualListBase > constructor');
+
 			super(props);
 
 			const {spotlightId} = props;
@@ -208,6 +210,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentDidMount () {
+			console.log('moonstone/VirtualListBase > componentDidMount');
+
 			const containerNode = this.uiRefCurrent.containerRef.current;
 
 			if (type === JS) {
@@ -232,6 +236,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentDidUpdate (prevProps) {
+			console.log('moonstone/VirtualListBase > componentDidUpdate');
+
 			if (prevProps.spotlightId !== this.props.spotlightId) {
 				this.configureSpotlight(this.props.spotlightId);
 			}
@@ -239,6 +245,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentWillUnmount () {
+			console.log('moonstone/VirtualListBase > componentWillUnmount');
+
 			const containerNode = this.uiRefCurrent.containerRef.current;
 
 			if (type === JS) {
@@ -873,6 +881,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		render () {
+			console.log('moonstone/VirtualListBase > render');
+
 			const
 				{itemRenderer, itemsRenderer, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();

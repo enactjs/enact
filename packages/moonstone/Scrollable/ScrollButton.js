@@ -66,6 +66,8 @@ const ScrollButton = kind({
 	},
 
 	render: ({children, disabled, ...rest}) => {
+		console.log('moonstone/ScrollButton > render');
+
 		delete rest.active;
 
 		return (

@@ -296,6 +296,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static contextType = MarqueeControllerContext
 
 		constructor (props) {
+			console.log('ui/MarqueeDecorator > constructor')
+
 			super(props);
 			this.state = {
 				animating: false,
@@ -311,6 +313,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
+			console.log('ui/MarqueeDecorator > componentDidMount')
+
 			if (this.context && this.context.register) {
 				this.sync = true;
 				this.context.register(this, {
@@ -327,6 +331,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		shouldComponentUpdate (nextProps, nextState) {
+			console.log('ui/MarqueeDecorator > shouldComponentUpdate')
+
 			return (
 				!shallowEqual(this.state, nextState) ||
 				!shallowEqual(this.props, nextProps)
@@ -334,6 +340,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
+			console.log('ui/MarqueeDecorator > componentDidUpdate')
+
 			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpeed, rtl} = this.props;
 
 			let forceRestartMarquee = false;
@@ -369,6 +377,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
+			console.log('ui/MarqueeDecorator > componentWillUnmount')
+
 			this.clearTimeout();
 			this.promoteJob.stop();
 			this.demoteJob.stop();
@@ -815,6 +825,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
+			console.log('ui/MarqueeDecorator > render')
+
 			return (
 				<ResizeContext.Consumer>
 					{(register) => {

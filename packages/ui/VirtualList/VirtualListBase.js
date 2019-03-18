@@ -223,6 +223,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		constructor (props) {
+			console.log('ui/VirtualListBase > constructor');
+
 			let nextState = null;
 
 			super(props);
@@ -267,6 +269,8 @@ const VirtualListBaseFactory = (type) => {
 
 		// Calculate metrics for VirtualList after the 1st render to know client W/H.
 		componentDidMount () {
+			console.log('ui/VirtualListBase > componentDidMount');
+
 			if (!this.props.clientSize) {
 				this.calculateMetrics(this.props);
 				// eslint-disable-next-line react/no-did-mount-set-state
@@ -276,6 +280,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentDidUpdate (prevProps) {
+			console.log('ui/VirtualListBase > componentDidUpdate');
+
 			// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
 			this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
 
@@ -764,6 +770,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		render () {
+			console.log('ui/VirtualListBase > render');
+
 			const
 				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
 				{cc, itemContainerRef, primary} = this,

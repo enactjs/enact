@@ -47,9 +47,12 @@ const VirtualList = kind({
 		itemSize: PropTypes.number.isRequired
 	},
 
-	render: (props) => (
+	render: (props) => {
+		console.log('moonstone/VirtualList > render');
+
+		return (
 		<ScrollableVirtualList {...props} />
-	)
+	);}
 });
 
 /**
@@ -86,9 +89,12 @@ const VirtualGridList = kind({
 		itemSize: gridListItemSizeShape.isRequired
 	},
 
-	render: (props) => (
+	render: (props) => {
+		console.log('moonstone/VirtualGridList > render');
+
+		return (
 		<ScrollableVirtualList {...props} />
-	)
+	)}
 });
 
 

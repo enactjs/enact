@@ -29,10 +29,14 @@ class ScrollThumb extends Component {
 	}
 
 	componentDidUpdate () {
+		console.log('moonstone/ScrollThumb > componentDidUpdate');
+
 		this.props.cbAlertThumb();
 	}
 
 	render () {
+		console.log('moonstone/ScrollThumb > render');
+
 		const props = Object.assign({}, this.props);
 
 		delete props.cbAlertThumb;

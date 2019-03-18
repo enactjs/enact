@@ -77,16 +77,22 @@ class ScrollerBase extends Component {
 	}
 
 	constructor (props) {
+		console.log('ui/ScrollerBase > constructor');
+
 		super(props);
 
 		this.containerRef = React.createRef();
 	}
 
 	componentDidMount () {
+		console.log('ui/ScrollerBase > componentDidMount');
+
 		this.calculateMetrics();
 	}
 
 	componentDidUpdate (prevProps) {
+		console.log('ui/ScrollerBase > componentDidUpdate');
+
 		this.calculateMetrics();
 		if (this.props.isVerticalScrollbarVisible && !prevProps.isVerticalScrollbarVisible) {
 			this.forceUpdate();
@@ -173,6 +179,8 @@ class ScrollerBase extends Component {
 	}
 
 	render () {
+		console.log('ui/ScrollerBase > render');
+
 		const
 			{className, style, ...rest} = this.props,
 			mergedStyle = Object.assign({}, style, {

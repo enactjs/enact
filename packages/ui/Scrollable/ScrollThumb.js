@@ -40,6 +40,8 @@ const ScrollThumb = kind({
 	},
 
 	render: (props) => {
+		console.log('ui/ScrollbarThumb > render');
+
 		delete props.vertical;
 
 		return <div {...props} />;

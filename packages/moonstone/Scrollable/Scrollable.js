@@ -226,6 +226,8 @@ class ScrollableBase extends Component {
 	}
 
 	constructor (props) {
+		console.log('moonstone/ScrollableBase > constructor');
+
 		super(props);
 
 		this.scrollbarProps = {
@@ -245,6 +247,8 @@ class ScrollableBase extends Component {
 	}
 
 	componentDidMount () {
+		console.log('moonstone/ScrollableBase > componentDidMount');
+
 		this.createOverscrollJob('horizontal', 'before');
 		this.createOverscrollJob('horizontal', 'after');
 
@@ -253,6 +257,8 @@ class ScrollableBase extends Component {
 	}
 
 	componentDidUpdate (prevProps) {
+		console.log('moonstone/ScrollableBase > componentDidUpdate');
+
 		if (prevProps['data-spotlight-id'] !== this.props['data-spotlight-id'] ||
 				prevProps.focusableScrollbar !== this.props.focusableScrollbar) {
 			configureSpotlightContainer(this.props);
@@ -260,6 +266,8 @@ class ScrollableBase extends Component {
 	}
 
 	componentWillUnmount () {
+		console.log('moonstone/ScrollableBase > componentWillUnmount');
+
 		this.stopOverscrollJob('horizontal', 'before');
 		this.stopOverscrollJob('horizontal', 'after');
 		this.stopOverscrollJob('vertical', 'before');
@@ -732,6 +740,8 @@ class ScrollableBase extends Component {
 	}
 
 	render () {
+		console.log('moonstone/ScrollableBase > render');
+
 		const
 			{
 				animate,

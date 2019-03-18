@@ -83,10 +83,14 @@ class ScrollerBase extends Component {
 	}
 
 	componentDidMount () {
+		console.log('moonstone/ScrollerBase > componentDidMount');
+
 		this.configureSpotlight();
 	}
 
 	componentDidUpdate (prevProps) {
+		console.log('moonstone/ScrollerBase > componentDidUpdate');
+
 		const {onUpdate} = this.props;
 		if (onUpdate) {
 			onUpdate();
@@ -98,6 +102,8 @@ class ScrollerBase extends Component {
 	}
 
 	componentWillUnmount () {
+		console.log('moonstone/ScrollerBase > componentWillUnmount');
+
 		this.setContainerDisabled(false);
 	}
 
@@ -374,6 +380,8 @@ class ScrollerBase extends Component {
 	}
 
 	render () {
+		console.log('moonstone/ScrollerBase > render');
+
 		const props = Object.assign({}, this.props);
 
 		delete props.initUiChildRef;

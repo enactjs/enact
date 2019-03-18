@@ -56,6 +56,8 @@ const ItemBase = kind({
 	},
 
 	render: ({css, ...rest}) => {
+		console.log('moonstone/Item > render')
+
 		return (
 			<UiItemBase
 				data-webos-voice-intent="Select"

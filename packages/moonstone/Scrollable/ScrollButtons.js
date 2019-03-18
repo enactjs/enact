@@ -134,6 +134,8 @@ class ScrollButtons extends Component {
 	}
 
 	constructor (props) {
+		console.log('moonstone/ScrollButtons > constructor');
+
 		super(props);
 
 		this.state = {
@@ -287,6 +289,8 @@ class ScrollButtons extends Component {
 	}
 
 	render () {
+		console.log('moonstone/ScrollButtons > render');
+
 		const
 			{disabled, nextButtonAriaLabel, previousButtonAriaLabel, rtl, thumbRenderer, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,

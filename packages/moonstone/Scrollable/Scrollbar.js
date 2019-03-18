@@ -73,6 +73,8 @@ class ScrollbarBase extends Component {
 	}
 
 	constructor (props) {
+		console.log('moonstone/ScrollbarBase > constructor');
+
 		super(props);
 
 		if (props.setApiProvider) {
@@ -84,6 +86,8 @@ class ScrollbarBase extends Component {
 	}
 
 	componentDidMount () {
+		console.log('moonstone/ScrollbarBase > componentDidMount');
+
 		const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = this.scrollbarRef.current;
 
 		this.getContainerRef = getContainerRef;
@@ -101,6 +105,8 @@ class ScrollbarBase extends Component {
 	}
 
 	render () {
+		console.log('moonstone/ScrollbarBase > render');
+
 		const {cbAlertThumb, corner, vertical, ...rest} = this.props;
 
 		return (

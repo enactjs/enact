@@ -378,6 +378,8 @@ class ScrollableBase extends Component {
 	static contextType = ResizeContext
 
 	constructor (props) {
+		console.log('ui/ScrollableBase > constructor');
+
 		super(props);
 
 		this.state = {
@@ -411,12 +413,16 @@ class ScrollableBase extends Component {
 	}
 
 	componentDidMount () {
+		console.log('ui/ScrollableBase > componentDidMount');
+
 		this.resizeRegistry.parent = this.context;
 		this.addEventListeners();
 		this.updateScrollbars();
 	}
 
 	componentDidUpdate (prevProps, prevState) {
+		console.log('ui/ScrollableBase > componentDidUpdate');
+
 		const
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			{hasDataSizeChanged} = this.childRefCurrent;
@@ -458,6 +464,8 @@ class ScrollableBase extends Component {
 	}
 
 	componentWillUnmount () {
+		console.log('ui/ScrollableBase > componentWillUnmount');
+
 		this.resizeRegistry.parent = null;
 		// Before call cancelAnimationFrame, you must send scrollStop Event.
 		if (this.scrolling) {
@@ -1263,6 +1271,8 @@ class ScrollableBase extends Component {
 	}
 
 	render () {
+		console.log('ui/ScrollableBase > render');
+
 		const
 			{className, containerRenderer, noScrollByDrag, rtl, style, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
@@ -1349,6 +1359,8 @@ class Scrollable extends Component {
 	}
 
 	render () {
+		console.log('ui/Scrollable > render');
+
 		const {childRenderer, ...rest} = this.props;
 
 		return (

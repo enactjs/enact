@@ -97,6 +97,8 @@ const ItemBase = kind({
 	},
 
 	render: ({component: Component, disabled, children, ...rest}) => {
+		console.log('ui/Item > render')
+
 		delete rest.inline;
 
 		return (

@@ -54,6 +54,8 @@ class ScrollAnimator {
 	 * @memberof ui/Scrollable.ScrollAnimator
 	 */
 	constructor (type) {
+		console.log('ui/ScrollAnimator > constructor');
+
 		this.timingFunction = timingFunctions[type || this.type];
 	}
 

@@ -86,6 +86,8 @@ class ScrollbarBase extends PureComponent {
 	}
 
 	constructor (props) {
+		console.log('ui/ScrollbarBase > constructor');
+
 		super(props);
 
 		this.containerRef = React.createRef();
@@ -93,14 +95,20 @@ class ScrollbarBase extends PureComponent {
 	}
 
 	componentDidMount () {
+		console.log('ui/ScrollbarBase > componentDidMount');
+
 		this.calculateMetrics();
 	}
 
 	componentDidUpdate () {
+		console.log('ui/ScrollbarBase > componentDidUpdate');
+
 		this.calculateMetrics();
 	}
 
 	componentWillUnmount () {
+		console.log('ui/ScrollbarBase > componentWillUnmount');
+
 		this.hideThumbJob.stop();
 	}
 
@@ -146,6 +154,8 @@ class ScrollbarBase extends PureComponent {
 	getContainerRef = () => (this.containerRef)
 
 	render () {
+		console.log('ui/ScrollbarBase > render');
+
 		const
 			{childRenderer, className, corner, css, vertical, ...rest} = this.props,
 			containerClassName = classNames(
@@ -202,6 +212,8 @@ class Scrollbar extends Component {
 	}
 
 	render () {
+		console.log('ui/Scrollbar > render');
+
 		const {vertical} = this.props;
 
 		return (
