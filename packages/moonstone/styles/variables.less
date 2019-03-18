@@ -55,11 +55,11 @@
 
 // Other Font Properties
 // ---------------------------------------
-@moon-font-family: "MuseoSans";        // Formerly weight: 700
-@moon-font-family-light: "MuseoSans";  // Formerly weight: 300
-@moon-font-family-small: "MuseoSans";  // Formerly weight: 500
-@moon-font-family-bold: "MuseoSans";   // Formerly weight: 900
-@moon-alt-font-family: "Moonstone Miso";
+@moon-font-family: "Moonstone";        // Formerly weight: 700
+@moon-font-family-light: "Moonstone";  // Formerly weight: 300
+@moon-font-family-small: "Moonstone";  // Formerly weight: 500
+@moon-font-family-bold: "Moonstone";   // Formerly weight: 900
+@moon-alt-font-family: "Moonstone Condensed";
 @moon-non-latin-font-family: "Moonstone LG Display";
 @moon-non-latin-font-family-light: "Moonstone LG Display";  // Formerly weight: Light
 @moon-non-latin-font-family-bold: "Moonstone LG Display";   // Formerly weight: Bold
@@ -110,7 +110,7 @@
 @moon-body-line-height: @moon-body-font-size + 6;
 @moon-non-latin-body-line-height: 1.7em;
 
-@moon-divider-font-family: "MuseoSans";
+@moon-divider-font-family: @moon-font-family;
 @moon-divider-font-weight: bold;
 @moon-divider-font-style: italic;
 @moon-divider-letter-spacing: 0;
@@ -119,12 +119,13 @@
 @moon-expandable-value-font-weight: 300;
 @moon-expandable-value-font-style: normal;
 
-@moon-button-font-family: "Moonstone Miso";
+@moon-button-font-family: @moon-alt-font-family;
 @moon-button-font-weight: bold;
 @moon-button-font-style: normal;
 @moon-button-letter-spacing: normal;
 
 @moon-icon-font-family: "Moonstone Icons";
+@moon-icon-font-family-lg: "LG Icons";
 
 // Spotlight
 // ---------------------------------------
@@ -345,7 +346,7 @@
 
 // Notification
 // ---------------------------------------
-@moon-notification-font-family: "MuseoSans";
+@moon-notification-font-family: @moon-font-family;
 @moon-notification-font-weight: 500;
 @moon-notification-font-style: normal;
 @moon-notification-border-width: 6px;
