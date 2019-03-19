@@ -203,12 +203,10 @@ class ScrollButtons extends Component {
 		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
 	}
 
-	focusOnOppositeScrollButton = (ev, direction) => {
-		const buttonNode = (ev.target === this.nextButtonRef.current) ? this.prevButtonRef.current : this.nextButtonRef.current;
-
+	focusOnOppositeScrollButton = (ev, direction, oppositeScrollButtonNode) => {
 		ev.stopPropagation();
 
-		if (!Spotlight.focus(buttonNode)) {
+		if (!Spotlight.focus(oppositeScrollButtonNode)) {
 			Spotlight.move(direction);
 		}
 	}
@@ -223,12 +221,15 @@ class ScrollButtons extends Component {
 			const
 				direction = getDirection(ev.keyCode),
 				fromNextToPrev = (vertical && direction === 'up') || (!vertical && direction === (rtl ? 'right' : 'left')),
-				fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right'));
+				fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right')),
+				nextButtonNode = ReactDOM.findDOMNode(this.nextButtonRef.current),
+				prevButtonNode = ReactDOM.findDOMNode(this.prevButtonRef.current);
 
 			// manually focus the opposite scroll button when 5way pressed
-			if ((fromNextToPrev && target === this.nextButtonRef.current) ||
-				(fromPrevToNext && target === this.prevButtonRef.current)) {
-				this.focusOnOppositeScrollButton(ev, direction);
+			if (fromNextToPrev && target === nextButtonNode) {
+				this.focusOnOppositeScrollButton(ev, direction, prevButtonNode);
+			} else if (fromPrevToNext && target === prevButtonNode) {
+				this.focusOnOppositeScrollButton(ev, direction, nextButtonNode);
 			}
 		} else {
 			// If it is vertical `Scrollable`, move focus to the left for ltr or to the right for rtl
