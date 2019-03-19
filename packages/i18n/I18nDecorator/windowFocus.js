@@ -1,7 +1,7 @@
 import {on} from '@enact/core/dispatcher';
 import {onWindowReady} from '@enact/core/snapshot';
 
-let focused = true;
+let focused = false;
 const queue = new Set();
 
 const invoke = (fn) => {
@@ -23,6 +23,8 @@ const onWindowFocus = (handler) => {
 };
 
 onWindowReady(() => {
+	focused = true;	// Treat window as initially focused once ready
+	flush();
 	on('focus', () => {
 		focused = true;
 		flush();
