@@ -140,6 +140,7 @@ const SkinContext = React.createContext(null);
  * @public
  */
 const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
+	const PureWrapped = React.memo(Wrapped);
 	const {prop, skins, defaultSkin, allowedVariants, variantsProp} = config;
 	const defaultVariants = objectify(config.defaultVariants);
 
@@ -257,7 +258,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 
 					return (
 						<SkinContext.Provider value={{parentSkin: effectiveSkin, parentVariants: variants}}>
-							<Wrapped {...rest} />
+							<PureWrapped {...rest} />
 						</SkinContext.Provider>
 					);
 				}}

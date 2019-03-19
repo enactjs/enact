@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+### [Unreleased]
+
+### Changed
+
+- `ui/Skinnable` to wrap `React.memo` around the `Wrapped` component
+
 ## [2.4.1] - 2019-03-11
 
 ### Fixed
