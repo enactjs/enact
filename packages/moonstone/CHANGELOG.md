@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to remove event listeners properly
+- `moonstone/Tooltip` to better support long tooltips
 
 ## [2.4.1] - 2019-03-11
 
