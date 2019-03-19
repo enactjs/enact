@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 
 import {Tooltip, TooltipBase} from './Tooltip';
-import {adjustDirection, adjustAnchor, calcOverflow, getPosition, getArrowPosition} from './util';
+import {adjustDirection, adjustAnchor, calcOverflow, getArrowPosition, getPosition} from './util';
 
 let currentTooltip; // needed to know whether or not we should stop a showing job when unmounting
 
