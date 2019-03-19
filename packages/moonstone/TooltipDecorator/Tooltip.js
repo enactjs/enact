@@ -44,6 +44,17 @@ const TooltipBase = kind({
 		arrowAnchor: PropTypes.oneOf(['left', 'center', 'right', 'top', 'middle', 'bottom']),
 
 		/**
+		 * Style object for tooltip arrow position.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		arrowPosition: PropTypes.shape({
+			left: PropTypes.number,
+			right: PropTypes.number
+		}),
+
+		/**
 		 * Direction of label in relation to the activator.
 		 *
 		 * * Values: `'above'`, `'below'`, `'left'`, and `'right'`
@@ -109,14 +120,14 @@ const TooltipBase = kind({
 		}
 	},
 
-	render: ({children, tooltipRef, arrowType, width, ...rest}) => {
+	render: ({children, tooltipRef, arrowType, width, arrowPosition, ...rest}) => {
 		delete rest.arrowAnchor;
 		delete rest.direction;
 		delete rest.position;
 
 		return (
 			<div {...rest}>
-				<svg className={css.tooltipArrow} viewBox="0 0 3 5">
+				<svg style={arrowPosition} className={css.tooltipArrow} viewBox="0 0 3 5">
 					<path d={arrowType} />
 				</svg>
 				<TooltipLabel tooltipRef={tooltipRef} width={width}>
