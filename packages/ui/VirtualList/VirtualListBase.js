@@ -13,6 +13,18 @@ const
 	JS = 'JS',
 	Native = 'Native';
 
+const Placeholder = ({restStyle, itemSize, ...rest}) => (
+	<div
+		style={{
+			width: itemSize.minWidth - 10,
+			height: itemSize.minHeight - 10,
+			border: '1px solid gray',
+			...restStyle
+		}}
+	/>
+);
+
+
 /**
  * The shape for the grid list item size
  * in a list for [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
@@ -245,6 +257,12 @@ const VirtualListBaseFactory = (type) => {
 				updateTo: 0,
 				...nextState
 			};
+
+			this.containerRef = React.createRef();
+			this.contentRef = React.createRef();
+			this.itemContainerRef = React.createRef();
+			this.prevY = 0;
+			this.usePlaceholder = false;
 		}
 
 		static getDerivedStateFromProps (props, state) {
@@ -624,8 +642,19 @@ const VirtualListBaseFactory = (type) => {
 			this.updateMoreInfo(dataSize, pos);
 
 			if (firstIndex !== newFirstIndex) {
-				this.setState({firstIndex: newFirstIndex});
+				this.firstIndex = newFirstIndex;
 			}
+			if (Math.abs(this.prevY - y) < 300) {
+				this.setState({firstIndex: this.firstIndex});
+				this.usePlaceholder = false;
+			} else {
+				this.usePlaceholder = true;
+			}
+			this.prevY = y;
+		}
+
+		onScrollFinalStop = () => {
+			this.setState({firstIndex: this.firstIndex});
 		}
 
 		getItemNode = (index) => {
@@ -652,13 +681,14 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		applyStyleToNewNode = (index, ...rest) => {
+			const key = index % this.state.numOfItems;
 			const
 				{itemRenderer, getComponentProps} = this.props,
-				key = index % this.state.numOfItems,
 				itemElement = itemRenderer({
 					...this.props.childProps,
 					key,
-					index
+					index,
+					placeholder: this.usePlaceholder
 				}),
 				componentProps = getComponentProps && getComponentProps(index) || {};
 
@@ -667,6 +697,12 @@ const VirtualListBaseFactory = (type) => {
 				className: classNames(css.listItem, itemElement.props.className),
 				style: {...itemElement.props.style, ...(this.composeStyle(...rest))}
 			});
+		}
+
+		applyPlaceholder = (index, ...rest) => {
+			const key = index % this.state.numOfItems;
+			const restStyle = this.composeStyle(...rest);
+			this.cc[key] = <Placeholder key={key} itemSize={this.props.itemSize} restStyle={restStyle} />;
 		}
 
 		applyStyleToHideNode = (index) => {
@@ -700,7 +736,11 @@ const VirtualListBaseFactory = (type) => {
 
 			// positioning items
 			for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
-				this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
+				if (this.usePlaceholder) {
+					this.applyPlaceholder(i, width, height, primaryPosition, secondaryPosition);
+				} else {
+					this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
+				}
 
 				if (++j === dimensionToExtent) {
 					secondaryPosition = 0;

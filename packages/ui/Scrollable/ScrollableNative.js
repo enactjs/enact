@@ -866,6 +866,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	scrollStopOnScroll = () => {
+		this.childRefCurrent.onScrollFinalStop();
 		if (this.props.scrollStopOnScroll) {
 			this.props.scrollStopOnScroll();
 		}
