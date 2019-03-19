@@ -110,7 +110,7 @@ const VirtualListBaseFactory = (type) => {
 			 * @type {Function}
 			 * @private
 			 */
-			'data-webos-voice-focused': PropTypes.bool,
+			cbScrollTo: PropTypes.func,
 
 			/**
 			 * Additional props included in the object passed to the `itemsRenderer` callback.
@@ -118,7 +118,7 @@ const VirtualListBaseFactory = (type) => {
 			 * @type {Object}
 			 * @public
 			 */
-			'data-webos-voice-group-label': PropTypes.string,
+			childProps: PropTypes.object,
 
 			/**
 			 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
@@ -128,7 +128,10 @@ const VirtualListBaseFactory = (type) => {
 			 * @property {Number}    clientWidth    The client width of the list.
 			 * @public
 			 */
-			cbScrollTo: PropTypes.func,
+			clientSize: PropTypes.shape({
+				clientHeight: PropTypes.number.isRequired,
+				clientWidth: PropTypes.number.isRequired
+			}),
 
 			/**
 			 * Activates the component for voice control.
@@ -136,7 +139,7 @@ const VirtualListBaseFactory = (type) => {
 			 * @type {Boolean}
 			 * @private
 			 */
-			childProps: PropTypes.object,
+			'data-webos-voice-focused': PropTypes.bool,
 
 			/**
 			 * The voice control group label.
@@ -144,10 +147,7 @@ const VirtualListBaseFactory = (type) => {
 			 * @type {String}
 			 * @private
 			 */
-			clientSize: PropTypes.shape({
-				clientHeight: PropTypes.number.isRequired,
-				clientWidth: PropTypes.number.isRequired
-			}),
+			'data-webos-voice-group-label': PropTypes.string,
 
 			/**
 			 * The number of items of data the list contains.
