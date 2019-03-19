@@ -677,6 +677,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			);
 			on('keydown', this.handleKeyDown);
 			on('keyup', this.handleKeyUp);
+			on('blur', this.handleBlur, window);
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -717,11 +718,18 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 		componentWillUnmount () {
 			off('keydown', this.handleKeyDown);
 			off('keyup', this.handleKeyUp);
+			off('blur', this.handleBlur, window);
 			this.stopListeningForPulses();
 		}
 
 		handleMoreClick = () => {
 			this.toggleMoreComponents();
+		}
+
+		handleBlur = () => {
+			console.log('handleBlur');
+			this.stopListeningForPulses();
+			this.paused.resume();
 		}
 
 		handleKeyDown = (ev) => {
@@ -730,7 +738,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 				no5WayJump,
 				visible
 			} = this.props;
-
+			console.log('handleKeyDown ', ev.keyCode);
 			const current = Spotlight.getCurrent();
 
 			if (!no5WayJump &&
@@ -754,7 +762,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 				rateButtonsDisabled,
 				visible
 			} = this.props;
-
+			console.log('handleKeyUp');
 			if (mediaDisabled) return;
 
 			if (visible && moreButtonColor && !moreButtonDisabled && is(moreButtonColor, ev.keyCode)) {
@@ -784,6 +792,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 		}
 
 		startListeningForPulses = (keyCode) => {
+			console.log('startListeningForPulses');
 			// Ignore new pulse calls if key code is same, otherwise start new series if we're pulsing
 			if (this.pulsing && keyCode !== this.pulsingKeyCode) {
 				this.stopListeningForPulses();
@@ -811,6 +820,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 		}
 
 		stopListeningForPulses () {
+			console.log('stopListeningForPulses');
 			this.pulsing = false;
 			if (this.keyLoop) {
 				clearTimeout(this.keyLoop);
