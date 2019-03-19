@@ -222,8 +222,8 @@ class ScrollButtons extends Component {
 				direction = getDirection(ev.keyCode),
 				fromNextToPrev = (vertical && direction === 'up') || (!vertical && direction === (rtl ? 'right' : 'left')),
 				fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right')),
-				nextButtonNode = ReactDOM.findDOMNode(this.nextButtonRef.current),
-				prevButtonNode = ReactDOM.findDOMNode(this.prevButtonRef.current);
+				nextButtonNode = ReactDOM.findDOMNode(this.nextButtonRef.current), // eslint-disable-line react/no-find-dom-node
+				prevButtonNode = ReactDOM.findDOMNode(this.prevButtonRef.current); // eslint-disable-line react/no-find-dom-node
 
 			// manually focus the opposite scroll button when 5way pressed
 			if (fromNextToPrev && target === nextButtonNode) {
