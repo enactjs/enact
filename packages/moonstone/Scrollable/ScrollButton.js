@@ -60,6 +60,8 @@ const ScrollButtonBase = kind({
 		/**
 		 * Returns a ref to the root node of the scroll button
 		 *
+		 * See: https://github.com/facebook/prop-types/issues/240
+		 *
 		 * @type {Function|Object}
 		 * @private
 		 */
