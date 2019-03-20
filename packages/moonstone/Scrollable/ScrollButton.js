@@ -55,7 +55,18 @@ const ScrollButtonBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		disabled: PropTypes.bool
+		disabled: PropTypes.bool,
+
+		/**
+		 * Returns a ref to the root node of the scroll button
+		 *
+		 * @type {Function|Object}
+		 * @private
+		 */
+		forwardRef: PropTypes.oneOfType([
+			PropTypes.func,
+			PropTypes.shape({current: PropTypes.any})
+		])
 	},
 
 	styles: {
