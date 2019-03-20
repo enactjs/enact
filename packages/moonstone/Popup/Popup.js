@@ -576,7 +576,7 @@ class Popup extends React.Component {
 					onCloseButtonClick={onClose}
 					onHide={this.handlePopupHide}
 					onShow={this.handlePopupShow}
-					open={this.state.popupOpen > OpenState.CLOSED}
+					open={this.state.popupOpen >= OpenState.OPENING}
 					spotlightId={this.state.containerId}
 					spotlightRestrict="self-only"
 				/>
