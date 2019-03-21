@@ -3,7 +3,6 @@ import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
 import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import ri from '@enact/ui/resolution';
 import React from 'react';
-import PropTypes from 'prop-types';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
@@ -23,9 +22,9 @@ const
 	renderItem = (size) => ({index, ...rest}) => {
 		const style = {height: size + 'px', ...itemStyle};
 		return (
-			<StatefulSwitchItem index={index} style={style} {...rest}>
+			<SwitchItem index={index} style={style} {...rest}>
 				{items[index].item}
-			</StatefulSwitchItem>
+			</SwitchItem>
 		);
 	};
 
@@ -44,49 +43,6 @@ const updateDataSize = (dataSize) => {
 };
 
 updateDataSize(defaultDataSize);
-
-class StatefulSwitchItem extends React.Component {
-	static propTypes = {
-		index: PropTypes.number
-	}
-
-	constructor (props) {
-		super(props);
-		this.state = {
-			prevIndex: props.index,
-			selected: items[props.index].selected
-		};
-	}
-
-	static getDerivedStateFromProps (props, state) {
-		if (state.prevIndex !== props.index) {
-			return {
-				prevIndex: props.index,
-				selected: items[props.index].selected
-			};
-		}
-
-		return null;
-	}
-
-	onToggle = () => {
-		items[this.props.index].selected = !items[this.props.index].selected;
-		this.setState(({selected}) => ({
-			selected: !selected
-		}));
-	}
-
-	render () {
-		const props = Object.assign({}, this.props);
-		delete props.index;
-
-		return (
-			<SwitchItem {...props} onToggle={this.onToggle} selected={this.state.selected}>
-				{this.props.children}
-			</SwitchItem>
-		);
-	}
-}
 
 storiesOf('VirtualList', module)
 	.add(
