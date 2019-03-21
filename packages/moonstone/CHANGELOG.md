@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to remove event listeners properly
+- `moonstone/ContextualPopupDecorator` timing to read out an activator button when the `ContextualPopup` is closed by pressing a back key of remote control
 
 ## [2.4.1] - 2019-03-11
 

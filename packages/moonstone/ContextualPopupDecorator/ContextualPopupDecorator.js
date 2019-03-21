@@ -234,10 +234,11 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
+				activator: null,
+				activatorAriaHidden: false,
 				arrowPosition: {top: 0, left: 0},
-				containerPosition: {top: 0, left: 0},
 				containerId: Spotlight.add(this.props.popupSpotlightId),
-				activator: null
+				containerPosition: {top: 0, left: 0}
 			};
 
 			this.overflow = {};
@@ -488,7 +489,8 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			const current = Spotlight.getCurrent();
 			this.updateLeaveFor(current);
 			this.setState({
-				activator: current
+				activator: current,
+				activatorAriaHidden: true
 			});
 			this.spotPopupContent();
 		}
@@ -555,6 +557,17 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (!Spotlight.focus(activator)) {
 				Spotlight.focus();
 			}
+
+			this.setState({
+				activatorAriaHidden: false
+			});
+
+			setTimeout(() => {
+				if (activator && activator === Spotlight.getCurrent()) {
+					Spotlight.getCurrent().blur();
+					Spotlight.focus(activator);
+				}
+			}, 800);
 		}
 
 		spotPopupContent = () => {
@@ -615,7 +628,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 							<PopupComponent {...popupPropsRef} />
 						</ContextualPopupContainer>
 					</FloatingLayer>
-					<div ref={this.getClientNode}>
+					<div aria-hidden={this.state.activatorAriaHidden} ref={this.getClientNode}>
 						<Wrapped {...rest} />
 					</div>
 				</div>
