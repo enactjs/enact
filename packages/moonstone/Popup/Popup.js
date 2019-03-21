@@ -422,7 +422,7 @@ class Popup extends React.Component {
 
 	// Spot the content after it's mounted.
 	componentDidMount () {
-		if (this.props.open) {
+		if (this.props.open && getContainerNode(this.state.containerId)) {
 			this.spotPopupContent();
 		}
 	}
@@ -451,12 +451,10 @@ class Popup extends React.Component {
 	}
 
 	handleFloatingLayerOpen = () => {
-		if (!this.props.noAnimation) {
-			if (this.state.popupOpen !== OpenState.OPEN) {
-				this.setState({
-					popupOpen: OpenState.OPENING
-				});
-			}
+		if (!this.props.noAnimation && this.state.popupOpen !== OpenState.OPEN) {
+			this.setState({
+				popupOpen: OpenState.OPENING
+			});
 		} else if (this.state.popupOpen === OpenState.OPEN && this.props.open) {
 			this.spotPopupContent();
 		}
