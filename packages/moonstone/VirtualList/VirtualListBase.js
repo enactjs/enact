@@ -660,53 +660,54 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		onAcceleratedKeyDown = ({keyCode, target}) => {
-
-			const
-				{cbScrollTo, dataSize, rtl, wrap} = this.props,
-				{isPrimaryDirectionVertical, dimensionToExtent, primary: {clientSize, gridSize, itemSize}, scrollPosition} = this.uiRefCurrent,
-				// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
-				index = target.dataset.index | 0;
+			const {cbScrollTo, dataSize, rtl, spacing, wrap} = this.props;
+			const {isPrimaryDirectionVertical, dimensionToExtent, primary: {clientSize, gridSize}, scrollPosition} = this.uiRefCurrent;
+			// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
+			const index = target.dataset.index | 0;
+			const isDownKey = isDown(keyCode);
+			const isLeftKey = isLeft(keyCode);
+			const isRightKey = isRight(keyCode);
+			const isUpKey = isUp(keyCode);
 
 			let isWrapped = false;
 			let nextIndex = -1;
 			this.isScrolledBy5way = false;
-			// todo: is this needed?
 			this.isScrolledByJump = false;
 
 			// this determines if animation is disabled for performance reasons while using 5way
 			// todo: use value passed in this.props.animate
-			//const shouldAnimate = true;
+			// const shouldAnimate = true;
 			const shouldAnimate = false;
 
 			if (isPrimaryDirectionVertical) {
-				if (isUp(keyCode)) {
+				if (isUpKey) {
 					nextIndex = this.findSpottableItemWithPositionInExtent(index - 1, -1, index % dimensionToExtent);
-				} else if (isDown(keyCode)) {
+				} else if (isDownKey) {
 					nextIndex = this.findSpottableItemWithPositionInExtent(index + 1, dataSize, index % dimensionToExtent);
-				} else if (isLeft(keyCode) && index % dimensionToExtent) {
+				} else if (isLeftKey && index % dimensionToExtent) {
 					nextIndex = index - 1;
-				} else if (isRight(keyCode) && index % dimensionToExtent < dimensionToExtent - 1) {
+				} else if (isRightKey && index % dimensionToExtent < dimensionToExtent - 1) {
 					nextIndex = index + 1;
 				}
-			} else if (isLeft(keyCode)) {
+			} else if (isLeftKey) {
 				nextIndex = this.findSpottableItemWithPositionInExtent(index - 1, -1, index % dimensionToExtent);
-			} else if (isRight(keyCode)) {
+			} else if (isRightKey) {
 				nextIndex = this.findSpottableItemWithPositionInExtent(index + 1, dataSize, index % dimensionToExtent);
-			} else if (isUp(keyCode) && index % dimensionToExtent) {
+			} else if (isUpKey && index % dimensionToExtent) {
 				nextIndex = index - 1;
-			} else if (isDown(keyCode) && index % dimensionToExtent < dimensionToExtent - 1) {
+			} else if (isDownKey && index % dimensionToExtent < dimensionToExtent - 1) {
 				nextIndex = index + 1;
 			}
 
 			if (!this._5WayKeyHold && nextIndex === -1 && wrap) {
 				const isForward = (
-					isPrimaryDirectionVertical && isDown(keyCode) ||
-					!isPrimaryDirectionVertical && (!rtl && isRight(keyCode) || rtl && isLeft(keyCode)) ||
+					isPrimaryDirectionVertical && isDownKey ||
+					!isPrimaryDirectionVertical && (!rtl && isRightKey || rtl && isLeftKey) ||
 					null
 				);
 				const isBackward = (
-					isPrimaryDirectionVertical && isUp(keyCode) ||
-					!isPrimaryDirectionVertical && (!rtl && isLeft(keyCode) || rtl && isRight(keyCode)) ||
+					isPrimaryDirectionVertical && isUpKey ||
+					!isPrimaryDirectionVertical && (!rtl && isLeftKey || rtl && isRightKey) ||
 					null
 				);
 
@@ -720,9 +721,12 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			if (nextIndex >= 0) {
+				const numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
+				const firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent;
+
 				const noAnimate = !shouldAnimate && (
-					nextIndex < Math.ceil(scrollPosition / gridSize) * dimensionToExtent ||
-					nextIndex > Math.min(dataSize - 1, Math.floor((scrollPosition + clientSize - itemSize) / gridSize) * dimensionToExtent)
+					nextIndex < firstFullyVisibleIndex ||
+					nextIndex > firstFullyVisibleIndex + numOfItemsInPage - 1
 				);
 
 				if (isWrapped || noAnimate) {
