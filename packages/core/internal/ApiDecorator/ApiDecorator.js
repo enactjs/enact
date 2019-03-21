@@ -12,7 +12,9 @@ import hoc from '../../hoc';
 
 // Gets a property from `provider`
 const get = (provider, name) => () => {
-	if (provider) {
+	if (typeof provider[name] === 'function') {
+		return provider[name].bind(provider);
+	} else {
 		return provider[name];
 	}
 };
