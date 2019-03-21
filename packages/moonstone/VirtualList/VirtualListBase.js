@@ -5,16 +5,19 @@ import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import Pause from '@enact/spotlight/Pause';
 import Spottable from '@enact/spotlight/Spottable';
+import Accelerator from '@enact/spotlight/Accelerator';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
+const SpotlightAccelerator = new Accelerator();
 const SpotlightPlaceholder = Spottable('div');
 
 const
 	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
 	isDown = is('down'),
+	isEnter = is('enter'),
 	isLeft = is('left'),
 	isRight = is('right'),
 	isUp = is('up'),
@@ -205,6 +208,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			this.pause = new Pause('VirtualListBase');
+			this._5WayKeyHold = false;
 		}
 
 		componentDidMount () {
@@ -224,6 +228,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (containerNode && containerNode.addEventListener) {
 				containerNode.addEventListener('keydown', this.onKeyDown);
+				containerNode.addEventListener('keyup', this.onKeyUp);
 			}
 
 			setTimeout(() => {
@@ -250,6 +255,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (containerNode && containerNode.removeEventListener) {
 				containerNode.removeEventListener('keydown', this.onKeyDown);
+				containerNode.removeEventListener('keyup', this.onKeyUp);
 			}
 
 			this.resumeSpotlight();
@@ -653,20 +659,109 @@ const VirtualListBaseFactory = (type) => {
 			return false;
 		}
 
-		onKeyDown = (ev) => {
-			const {keyCode, repeat, target} = ev;
+		onAcceleratedKeyDown = ({keyCode, target}) => {
 
+			const
+				{cbScrollTo, dataSize, rtl, wrap} = this.props,
+				{isPrimaryDirectionVertical, dimensionToExtent, primary: {clientSize, gridSize, itemSize}, scrollPosition} = this.uiRefCurrent,
+				// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
+				index = target.dataset.index | 0;
+
+			let isWrapped = false;
+			let nextIndex = -1;
+			this.isScrolledBy5way = false;
+			// todo: is this needed?
 			this.isScrolledByJump = false;
 
-			if (getDirection(keyCode)) {
-				ev.preventDefault();
-				this.setSpotlightContainerRestrict(keyCode, target);
-				Spotlight.setPointerMode(false);
-				if (this.jumpToSpottableItem(keyCode, repeat, target)) {
-					// Pause Spotlight temporarily so we don't focus twice
-					this.pause.pause();
-					document.addEventListener('keyup', this.resumeSpotlight);
+			// this determines if animation is disabled for performance reasons while using 5way
+			// todo: use value passed in this.props.animate
+			//const shouldAnimate = true;
+			const shouldAnimate = false;
+
+			if (isPrimaryDirectionVertical) {
+				if (isUp(keyCode)) {
+					nextIndex = this.findSpottableItemWithPositionInExtent(index - 1, -1, index % dimensionToExtent);
+				} else if (isDown(keyCode)) {
+					nextIndex = this.findSpottableItemWithPositionInExtent(index + 1, dataSize, index % dimensionToExtent);
+				} else if (isLeft(keyCode) && index % dimensionToExtent) {
+					nextIndex = index - 1;
+				} else if (isRight(keyCode) && index % dimensionToExtent < dimensionToExtent - 1) {
+					nextIndex = index + 1;
 				}
+			} else if (isLeft(keyCode)) {
+				nextIndex = this.findSpottableItemWithPositionInExtent(index - 1, -1, index % dimensionToExtent);
+			} else if (isRight(keyCode)) {
+				nextIndex = this.findSpottableItemWithPositionInExtent(index + 1, dataSize, index % dimensionToExtent);
+			} else if (isUp(keyCode) && index % dimensionToExtent) {
+				nextIndex = index - 1;
+			} else if (isDown(keyCode) && index % dimensionToExtent < dimensionToExtent - 1) {
+				nextIndex = index + 1;
+			}
+
+			if (!this._5WayKeyHold && nextIndex === -1 && wrap) {
+				const isForward = (
+					isPrimaryDirectionVertical && isDown(keyCode) ||
+					!isPrimaryDirectionVertical && (!rtl && isRight(keyCode) || rtl && isLeft(keyCode)) ||
+					null
+				);
+				const isBackward = (
+					isPrimaryDirectionVertical && isUp(keyCode) ||
+					!isPrimaryDirectionVertical && (!rtl && isLeft(keyCode) || rtl && isRight(keyCode)) ||
+					null
+				);
+
+				if (isForward) {
+					nextIndex = this.findSpottableItemWithPositionInExtent(0, dataSize, index % dimensionToExtent);
+					isWrapped = true;
+				} else if (isBackward) {
+					nextIndex = this.findSpottableItemWithPositionInExtent(dataSize - 1, -1, index % dimensionToExtent);
+					isWrapped = true;
+				}
+			}
+
+			if (nextIndex >= 0) {
+				const noAnimate = !shouldAnimate && (
+					nextIndex < Math.ceil(scrollPosition / gridSize) * dimensionToExtent ||
+					nextIndex > Math.min(dataSize - 1, Math.floor((scrollPosition + clientSize - itemSize) / gridSize) * dimensionToExtent)
+				);
+
+				if (isWrapped || noAnimate) {
+					this.lastFocusedIndex = nextIndex;
+					this.nodeIndexToBeFocused = nextIndex;
+					this.isScrolledBy5way = true;
+
+					if (!isWrapped && noAnimate) {
+						this.focusOnItem(nextIndex);
+					}
+
+					cbScrollTo({
+						index: nextIndex,
+						stickTo: index < nextIndex ? 'end' : 'start',
+						animate: false
+					});
+				} else {
+					this.focusOnItem(nextIndex);
+				}
+
+			} else if (!this._5WayKeyHold) {
+				Spotlight.move(getDirection(keyCode));
+			}
+		}
+
+		onKeyDown = (ev) => {
+			if (getDirection(ev.keyCode)) {
+				ev.preventDefault();
+				ev.stopPropagation();
+				Spotlight.setPointerMode(false);
+				SpotlightAccelerator.processKey(ev, this.onAcceleratedKeyDown);
+				this._5WayKeyHold = true;
+			}
+		}
+
+		onKeyUp = ({keyCode}) => {
+			if (getDirection(keyCode) || isEnter(keyCode)) {
+				SpotlightAccelerator.reset();
+				this._5WayKeyHold = false;
 			}
 		}
 
@@ -695,7 +790,6 @@ const VirtualListBaseFactory = (type) => {
 		focusOnItem = (index) => {
 			const item = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${index}'].spottable`);
 
-			this.pause.resume();
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
 			this.isScrolledByJump = false;
