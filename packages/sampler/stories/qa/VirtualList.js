@@ -19,10 +19,18 @@ const
 	items = [],
 	defaultDataSize = 1000,
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderItem = (size) => ({index, ...rest}) => {
+	renderItem = (onToggle, size) => ({index, ...rest}) => {
 		const style = {height: size + 'px', ...itemStyle};
 		return (
-			<SwitchItem index={index} style={style} {...rest}>
+			<SwitchItem
+				index={index}
+				selected={items[index].selected}
+				style={style}
+				onToggle={({selected}) => {
+					onToggle({selected, index});
+				}}
+				{...rest}
+			>
 				{items[index].item}
 			</SwitchItem>
 		);
@@ -44,6 +52,10 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
+const handleToggle = ({index, selected}) => {
+	items[index].selected = selected;
+};
+
 storiesOf('VirtualList', module)
 	.add(
 		'with more items',
@@ -53,7 +65,7 @@ storiesOf('VirtualList', module)
 				<VirtualList
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
-					itemRenderer={renderItem(itemSize)}
+					itemRenderer={renderItem(handleToggle, itemSize)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
