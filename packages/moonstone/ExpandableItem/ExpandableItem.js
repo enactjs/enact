@@ -251,13 +251,13 @@ const ExpandableItemBase = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * Renders the transition container
+		 * Prevents rendering the transition container on mount.
 		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @private
 		 */
-		renderTransitionContainer: PropTypes.bool,
+		preventTransitionContainerRender: PropTypes.bool,
 
 		/**
 		 * Sets a reference to the root container node of the ExpandableItem.
@@ -374,7 +374,7 @@ const ExpandableItemBase = kind({
 		onSpotlightLeft,
 		onSpotlightRight,
 		onSpotlightUp,
-		renderTransitionContainer,
+		preventTransitionContainerRender,
 		setContainerNode,
 		spotlightDisabled,
 		title,
@@ -419,7 +419,7 @@ const ExpandableItemBase = kind({
 					spotlightDisabled={spotlightDisabled}
 					titleIcon="arrowlargedown"
 				>{title}</LabeledItem>
-				{renderTransitionContainer ?
+				{!preventTransitionContainerRender ?
 					<ExpandableTransitionContainer
 						data-expandable-container
 						duration="short"

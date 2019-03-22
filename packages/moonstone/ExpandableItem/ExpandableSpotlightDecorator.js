@@ -8,6 +8,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
+const shouldRenderTransitionContainer = ({open}, {preventTransitionContainerRender}) => preventTransitionContainerRender && open;
+
 /**
  * Default config for {@link mooonstone/ExpandableItem.ExpandableSpotlightDecorator}
  *
@@ -84,18 +86,31 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
+			const {open} = props;
 			this.state = {
-				renderTransitionContainer: props.open
+				open: open,
+				preventTransitionContainerRender: !open
 			};
 
 			this.paused = new Pause('ExpandableItem');
 		}
 
 		static getDerivedStateFromProps (props, state) {
-			if (props.open && !state.renderTransitionContainer) {
-				return {renderTransitionContainer: true};
+			const {open} = props;
+
+			if (shouldRenderTransitionContainer(props, state)) {
+				return {open: false, preventTransitionContainerRender: false};
+			} else if (open !== state.open) {
+				return {open};
 			}
 			return null;
+		}
+
+		componentDidUpdate (prevProps, prevState) {
+			if (shouldRenderTransitionContainer(this.props, prevState)) {
+				// eslint-disable-next-line react/no-did-update-set-state
+				this.setState({open: true});
+			}
 		}
 
 		componentWillUnmount () {
@@ -215,14 +230,14 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = () => {
-			if (!this.state.renderTransitionContainer) {
+			if (this.state.preventTransitionContainerRender) {
 				this.renderJob.idle();
 			}
 		}
 
 		renderJob = new Job(() => {
 			this.setState({
-				renderTransitionContainer: true
+				preventTransitionContainerRender: false
 			});
 		})
 
@@ -231,6 +246,7 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
+			const {open, preventTransitionContainerRender} = this.state;
 			const props = Object.assign({}, this.props);
 			delete props.noAutoFocus;
 
@@ -243,7 +259,8 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onShow={this.handleShow}
 					onOpen={this.handleOpen}
 					onClose={this.handleClose}
-					renderTransitionContainer={this.state.renderTransitionContainer}
+					open={open}
+					preventTransitionContainerRender={preventTransitionContainerRender}
 					setContainerNode={this.setContainerNode}
 				/>
 			);
