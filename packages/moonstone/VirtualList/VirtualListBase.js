@@ -23,7 +23,9 @@ const
 	isUp = is('up'),
 	JS = 'JS',
 	Native = 'Native',
-	isItemDisabledDefault = () => (false);
+	isItemDisabledDefault = () => (false),
+	// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
+	getNumberValue = (index) => index | 0;
 
 /**
  * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} and
@@ -662,8 +664,7 @@ const VirtualListBaseFactory = (type) => {
 		onAcceleratedKeyDown = ({keyCode, target}) => {
 			const {animate, cbScrollTo, dataSize, rtl, spacing, wrap} = this.props;
 			const {isPrimaryDirectionVertical, dimensionToExtent, primary: {clientSize, gridSize}, scrollPosition} = this.uiRefCurrent;
-			// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
-			const index = target.dataset.index | 0;
+			const index = getNumberValue(target.dataset.index);
 			const isDownKey = isDown(keyCode);
 			const isLeftKey = isLeft(keyCode);
 			const isRightKey = isRight(keyCode);
@@ -895,7 +896,7 @@ const VirtualListBaseFactory = (type) => {
 				{numOfItems} = this.uiRefCurrent.state,
 				{primary} = this.uiRefCurrent,
 				offsetToClientEnd = primary.clientSize - primary.itemSize,
-				focusedIndex = item.getAttribute(dataIndexAttribute) | 0;
+				focusedIndex = getNumberValue(item.getAttribute(dataIndexAttribute));
 
 			if (!isNaN(focusedIndex)) {
 				let gridPosition = this.uiRefCurrent.getGridPosition(focusedIndex);
@@ -939,7 +940,7 @@ const VirtualListBaseFactory = (type) => {
 		shouldPreventOverscrollEffect = () => (this.isWrappedBy5way)
 
 		setLastFocusedNode = (node) => {
-			this.lastFocusedIndex = node.dataset && node.dataset.index | 0;
+			this.lastFocusedIndex = node.dataset && getNumberValue(node.dataset.index)
 		}
 
 		updateStatesAndBounds = ({cbScrollTo, dataSize, moreInfo, numOfItems}) => {
