@@ -8,7 +8,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-const shouldRenderTransitionContainer = ({open}, {preventTransitionContainerRender}) => preventTransitionContainerRender && open;
+const shouldRenderChildren = ({open}, {hideChildren}) => hideChildren && open;
 
 /**
  * Default config for {@link mooonstone/ExpandableItem.ExpandableSpotlightDecorator}
@@ -88,8 +88,8 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			const {open} = props;
 			this.state = {
+				hideChildren: !open,
 				open: open,
-				preventTransitionContainerRender: !open
 			};
 
 			this.paused = new Pause('ExpandableItem');
@@ -98,8 +98,8 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static getDerivedStateFromProps (props, state) {
 			const {open} = props;
 
-			if (shouldRenderTransitionContainer(props, state)) {
-				return {open: false, preventTransitionContainerRender: false};
+			if (shouldRenderChildren(props, state)) {
+				return {open: false, hideChildren: false};
 			} else if (open !== state.open) {
 				return {open};
 			}
@@ -107,7 +107,7 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps, prevState) {
-			if (shouldRenderTransitionContainer(this.props, prevState)) {
+			if (shouldRenderChildren(this.props, prevState)) {
 				// eslint-disable-next-line react/no-did-update-set-state
 				this.setState({open: true});
 			}
@@ -230,14 +230,14 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = () => {
-			if (this.state.preventTransitionContainerRender) {
+			if (this.state.hideChildren) {
 				this.renderJob.idle();
 			}
 		}
 
 		renderJob = new Job(() => {
 			this.setState({
-				preventTransitionContainerRender: false
+				hideChildren: false
 			});
 		})
 
@@ -246,13 +246,14 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {open, preventTransitionContainerRender} = this.state;
+			const {open, hideChildren} = this.state;
 			const props = Object.assign({}, this.props);
 			delete props.noAutoFocus;
 
 			return (
 				<Wrapped
 					{...props}
+					hideChildren={hideChildren}
 					onBlur={this.handleBlur}
 					onFocus={this.handleFocus}
 					onHide={this.handleHide}
@@ -260,7 +261,6 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onOpen={this.handleOpen}
 					onClose={this.handleClose}
 					open={open}
-					preventTransitionContainerRender={preventTransitionContainerRender}
 					setContainerNode={this.setContainerNode}
 				/>
 			);
