@@ -135,8 +135,6 @@ class ScrollButtons extends Component {
 
 	constructor (props) {
 		super(props);
-		this.prevPrevButtonDisabled = true;
-		this.prevNextButtonDisabled = true;
 		this.state = {
 			prevButtonDisabled: true,
 			nextButtonDisabled: true
@@ -158,10 +156,8 @@ class ScrollButtons extends Component {
 			shouldDisableNextButton = maxPos - currentPos <= 1;
 
 		const
-			updatePrevButton = (this.prevPrevButtonDisabled !== shouldDisablePrevButton),
-			updateNextButton = (this.prevNextButtonDisabled !== shouldDisableNextButton);
-		this.prevPrevButtonDisabled = shouldDisablePrevButton;
-		this.prevNextButtonDisabled = shouldDisableNextButton;
+			updatePrevButton = (this.state.prevButtonDisabled !== shouldDisablePrevButton),
+			updateNextButton = (this.state.nextButtonDisabled !== shouldDisableNextButton);
 
 		if (updatePrevButton || updateNextButton) {
 			this.setState(() => {
