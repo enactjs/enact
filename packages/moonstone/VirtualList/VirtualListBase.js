@@ -660,7 +660,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		onAcceleratedKeyDown = ({keyCode, target}) => {
-			const {cbScrollTo, dataSize, rtl, spacing, wrap} = this.props;
+			const {animate, cbScrollTo, dataSize, rtl, spacing, wrap} = this.props;
 			const {isPrimaryDirectionVertical, dimensionToExtent, primary: {clientSize, gridSize}, scrollPosition} = this.uiRefCurrent;
 			// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
 			const index = target.dataset.index | 0;
@@ -673,11 +673,6 @@ const VirtualListBaseFactory = (type) => {
 			let nextIndex = -1;
 			this.isScrolledBy5way = false;
 			this.isScrolledByJump = false;
-
-			// this determines if animation is disabled for performance reasons while using 5way
-			// todo: use value passed in this.props.animate
-			// const shouldAnimate = true;
-			const shouldAnimate = false;
 
 			if (isPrimaryDirectionVertical) {
 				if (isUpKey) {
@@ -723,28 +718,29 @@ const VirtualListBaseFactory = (type) => {
 			if (nextIndex >= 0) {
 				const numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
 				const firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent;
+				const isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
 
-				const noAnimate = !shouldAnimate && (
-					nextIndex < firstFullyVisibleIndex ||
-					nextIndex > firstFullyVisibleIndex + numOfItemsInPage - 1
-				);
-
-				if (isWrapped || noAnimate) {
-					this.lastFocusedIndex = nextIndex;
-					this.nodeIndexToBeFocused = nextIndex;
+				if (isNextItemInView) {
+					this.focusOnItem(nextIndex);
+				} else {
 					this.isScrolledBy5way = true;
 
-					if (!isWrapped && noAnimate) {
+					if (isWrapped && animate && wrap === true) {
+						this.isWrappedBy5way = true;
+						this.pause.pause();
+						target.blur();
+					} else if (!isWrapped || animate && wrap !== 'noAnimation') {
 						this.focusOnItem(nextIndex);
 					}
+
+					this.lastFocusedIndex = nextIndex;
+					this.nodeIndexToBeFocused = nextIndex;
 
 					cbScrollTo({
 						index: nextIndex,
 						stickTo: index < nextIndex ? 'end' : 'start',
-						animate: false
+						animate: !((isWrapped && wrap === 'noAnimation') || !animate)
 					});
-				} else {
-					this.focusOnItem(nextIndex);
 				}
 
 			} else if (!this._5WayKeyHold) {
@@ -793,6 +789,13 @@ const VirtualListBaseFactory = (type) => {
 
 		focusOnItem = (index) => {
 			const item = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${index}'].spottable`);
+
+			if (this.isWrappedBy5way) {
+				SpotlightAccelerator.reset();
+				this._5WayKeyHold = false;
+				this.isWrappedBy5way = false;
+				this.pause.resume();
+			}
 
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
@@ -892,7 +895,7 @@ const VirtualListBaseFactory = (type) => {
 				{numOfItems} = this.uiRefCurrent.state,
 				{primary} = this.uiRefCurrent,
 				offsetToClientEnd = primary.clientSize - primary.itemSize,
-				focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
+				focusedIndex = item.getAttribute(dataIndexAttribute) | 0;
 
 			if (!isNaN(focusedIndex)) {
 				let gridPosition = this.uiRefCurrent.getGridPosition(focusedIndex);
@@ -936,7 +939,7 @@ const VirtualListBaseFactory = (type) => {
 		shouldPreventOverscrollEffect = () => (this.isWrappedBy5way)
 
 		setLastFocusedNode = (node) => {
-			this.lastFocusedIndex = node.dataset && Number.parseInt(node.dataset.index);
+			this.lastFocusedIndex = node.dataset && node.dataset.index | 0;
 		}
 
 		updateStatesAndBounds = ({cbScrollTo, dataSize, moreInfo, numOfItems}) => {
