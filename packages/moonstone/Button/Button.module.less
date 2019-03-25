@@ -37,15 +37,15 @@
 	line-height: (@moon-button-height - (2 * @moon-button-border-width));
 	border-radius: @moon-button-border-radius;
 	min-width: @moon-button-height;
-	max-width: 300px;
+	max-width: @moon-button-max-width;
 	padding: 0 @moon-button-h-padding;
-	margin: 0 @moon-button-h-margin;
+	margin: 0 @moon-spotlight-outset; // generic global spacing between this and any other component
 	text-align: center;
 	vertical-align: middle;
 	.moon-taparea(@moon-button-height);
 
 	.moon-custom-text({
-		font-size: @moon-button-large-font-size-large;
+		font-size: @moon-button-font-size-large;
 		height: @moon-button-height-large;
 		min-width: @moon-button-height-large;
 		line-height: (@moon-button-height-large - (2 * @moon-button-border-width));
@@ -97,15 +97,17 @@
 	}
 
 	&.minWidth {
-		min-width: @moon-button-large-min-width;
+		min-width: @moon-button-min-width;
 	}
 
 	&.small {
 		.moon-small-button-text();
 		height: @moon-button-small-height;
 		min-width: @moon-button-small-height;
+		max-width: @moon-button-small-max-width;
 		line-height: (@moon-button-small-height - (2 * @moon-button-border-width));
-		padding: 0 @moon-button-small-h-padding;
+		padding-left: @moon-button-small-h-padding;
+		padding-right: @moon-button-small-h-padding;
 
 		&.minWidth {
 			min-width: @moon-button-small-min-width;
