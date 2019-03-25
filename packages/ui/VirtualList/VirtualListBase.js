@@ -227,6 +227,10 @@ const VirtualListBaseFactory = (type) => {
 
 			super(props);
 
+			this.containerRef = React.createRef();
+			this.contentRef = React.createRef();
+			this.itemContainerRef = React.createRef();
+
 			if (props.clientSize) {
 				this.calculateMetrics(props);
 				nextState = this.getStatesAndUpdateBounds(props);
@@ -241,10 +245,6 @@ const VirtualListBaseFactory = (type) => {
 				updateTo: 0,
 				...nextState
 			};
-
-			this.containerRef = React.createRef();
-			this.contentRef = React.createRef();
-			this.itemContainerRef = React.createRef();
 		}
 
 		static getDerivedStateFromProps (props, state) {
@@ -374,7 +374,7 @@ const VirtualListBaseFactory = (type) => {
 		calculateMetrics (props) {
 			const
 				{clientSize, direction, itemSize, spacing} = props,
-				node = this.containerRef && this.containerRef.current;
+				node = this.containerRef.current;
 
 			if (!clientSize && !node) {
 				return;
@@ -430,7 +430,7 @@ const VirtualListBaseFactory = (type) => {
 
 			// reset
 			this.scrollPosition = 0;
-			if (type === JS && this.contentRef && this.contentRef.current) {
+			if (type === JS && this.contentRef.current) {
 				this.contentRef.current.style.transform = null;
 			}
 		}
@@ -505,7 +505,7 @@ const VirtualListBaseFactory = (type) => {
 		calculateScrollBounds (props) {
 			const
 				{clientSize} = props,
-				node = this.containerRef && this.containerRef.current;
+				node = this.containerRef.current;
 
 			if (!clientSize && !node) {
 				return;

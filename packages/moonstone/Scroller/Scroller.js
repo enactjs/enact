@@ -368,7 +368,7 @@ class ScrollerBase extends Component {
 
 	initUiRef = (ref) => {
 		if (ref) {
-			this.uiRefCurrent = ref.currnet || ref;
+			this.uiRefCurrent = ref;
 			this.props.initUiChildRef(ref);
 		}
 	}

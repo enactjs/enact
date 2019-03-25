@@ -1232,12 +1232,12 @@ class ScrollableBase extends Component {
 			containerRef.current.removeEventListener('keydown', this.onKeyDown);
 		}
 
-		if (childRefCurrent && childRefCurrent.containerRef.current && childRefCurrent.containerRef.current.removeEventListener) {
+		if (childRefCurrent.containerRef.current && childRefCurrent.containerRef.current.removeEventListener) {
 			childRefCurrent.containerRef.current.removeEventListener('mousedown', this.onMouseDown);
 		}
 
 		if (this.props.removeEventListeners) {
-			this.props.removeEventListeners(childRefCurrent.containerRef.current);
+			this.props.removeEventListeners(childRefCurrent.containerRef);
 		}
 	}
 
@@ -1245,7 +1245,7 @@ class ScrollableBase extends Component {
 
 	initChildRef = (ref) => {
 		if (ref) {
-			this.childRefCurrent = ref.current || ref;
+			this.childRefCurrent = ref;
 		}
 	}
 
