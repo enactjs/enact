@@ -7,11 +7,11 @@
  *
  * @method
  * @memberof moonstone/TooltipDecorator
- * @param   {String}  arrowAnchor		Initial anchor position
- * @param   {String}  tooltipDirection	Direction of tooltip; value from `adjustDirection`
- * @param   {Object}  overflow			Tooltip's calculated overflow from `calcOverflow`
- * @param   {Boolean} rtl				RTL mode
- * @returns {String}					Adjusted anchor position
+ * @param   {String}  arrowAnchor       Initial anchor position
+ * @param   {String}  tooltipDirection  Direction of tooltip; value from `adjustDirection`
+ * @param   {Object}  overflow          Tooltip's calculated overflow from `calcOverflow`
+ * @param   {Boolean} rtl               RTL mode
+ * @returns {String}                    Adjusted anchor position
  * @private
  */
 const adjustAnchor = function (arrowAnchor, tooltipDirection, overflow, rtl) {
@@ -42,9 +42,9 @@ const adjustAnchor = function (arrowAnchor, tooltipDirection, overflow, rtl) {
  * @method
  * @memberof moonstone/TooltipDecorator
  * @param   {String}  tooltipDirection  Direction of tooltip
- * @param   {Object}  overflow			Tooltip's calculated overflow from `calcOverflow`
- * @param   {Boolean} rtl				RTL mode
- * @returns {String}					Adjusted tooltip direction
+ * @param   {Object}  overflow          Tooltip's calculated overflow from `calcOverflow`
+ * @param   {Boolean} rtl               RTL mode
+ * @returns {String}                    Adjusted tooltip direction
  * @private
  */
 const adjustDirection = function (tooltipDirection, overflow, rtl) {
@@ -71,11 +71,11 @@ const adjustDirection = function (tooltipDirection, overflow, rtl) {
  *
  * @method
  * @memberof moonstone/TooltipDecorator
- * @param   {Object} tooltipNode		The `getBoundingClientRect` values for tooltip node
- * @param   {Object} clientNode			The `getBoundingClientRect` values for client node
- * @param   {String} tooltipDirection	Direction of tooltip
- * @param   {Number} tooltipHeight		Tooltip height
- * @returns {Object} 					Tooltip's calculated overflow
+ * @param   {Object} tooltipNode        The `getBoundingClientRect` values for tooltip node
+ * @param   {Object} clientNode         The `getBoundingClientRect` values for client node
+ * @param   {String} tooltipDirection   Direction of tooltip
+ * @param   {Number} tooltipHeight      Tooltip height
+ * @returns {Object}                    Tooltip's calculated overflow
  * @private
  */
 const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, tooltipHeight) {
@@ -109,14 +109,14 @@ const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, toolti
  *
  * @method
  * @memberof moonstone/TooltipDecorator
- * @param   {Object} tooltipNode		The `getBoundingClientRect` values for tooltip node
- * @param   {Object} clientNode			The `getBoundingClientRect` values for client node
- * @param   {String} arrowAnchor		Anchor position from `adjustAnchor`
- * @param   {String} tooltipDirection	Direction of tooltip
- * @param   {Number} tooltipHeight		Tooltip height
- * @param   {Object} overflow			Tooltip's calculated overflow from `calcOverflow`
- * @param   {Boolean} rtl				RTL mode
- * @returns {Object}					Tooltip top and left position
+ * @param   {Object} tooltipNode        The `getBoundingClientRect` values for tooltip node
+ * @param   {Object} clientNode         The `getBoundingClientRect` values for client node
+ * @param   {String} arrowAnchor        Anchor position from `adjustAnchor`
+ * @param   {String} tooltipDirection   Direction of tooltip
+ * @param   {Number} tooltipHeight      Tooltip height
+ * @param   {Object} overflow           Tooltip's calculated overflow from `calcOverflow`
+ * @param   {Boolean} rtl               RTL mode
+ * @returns {Object}                    Tooltip top and left position
  * @private
  */
 const getPosition = function (tooltipNode, clientNode, arrowAnchor, tooltipDirection, tooltipHeight, overflow, rtl) {
@@ -171,10 +171,10 @@ const getPosition = function (tooltipNode, clientNode, arrowAnchor, tooltipDirec
  *
  * @method
  * @memberof moonstone/TooltipDecorator
- * @param   {Object}  clientNode		The `getBoundingClientRect` values for client node
- * @param   {Object}  overflow			Tooltip's calculated overflow from `calcOverflow`
- * @param   {Boolean} rtl				RTL mode
- * @returns {Object}					Tooltip anchor position
+ * @param   {Object}  clientNode        The `getBoundingClientRect` values for client node
+ * @param   {Object}  overflow          Tooltip's calculated overflow from `calcOverflow`
+ * @param   {Boolean} rtl               RTL mode
+ * @returns {Object}                    Tooltip anchor position
  * @private
  */
 const getArrowPosition = function (clientNode, overflow, rtl) {
