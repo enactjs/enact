@@ -30,6 +30,7 @@
 }
 
 .spinner {
+	@moon-spinner-size: 380px;
 	line-height: @moon-body-line-height;
 
 	.bg {
@@ -170,4 +171,29 @@
 			}
 		}
 	});
+}
+
+:global(.debug) .spinner {
+	.decorator {
+		background:
+			radial-gradient(circle at 0% 0%, white 20%, fade(white, 10%) 40%), // Visible gradient
+			radial-gradient(circle at 35% 8%, purple 15%, transparent 15%); // Filler between the closest fan and center of gradient
+
+
+		&,
+		.fan1,
+		.fan2,
+		.fan3,
+		.fan4,
+		.cap {
+			animation-duration: 10s;
+			mix-blend-mode: hard-light;
+		}
+
+		.fan1 { background-color: fade(red, 60%) }
+		.fan2 { background-color: fade(yellow, 60%) }
+		.fan3 { background-color: fade(green, 60%) }
+		.fan4 { background-color: fade(blue, 60%); }
+		.cap { background-color: orange; }
+	}
 }
