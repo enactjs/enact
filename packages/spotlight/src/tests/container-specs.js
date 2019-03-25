@@ -1220,7 +1220,7 @@ describe('container', () => {
 		);
 
 		test(
-			'should return an empty array for a unmounted, configured container',
+			'should return an empty array for an unmounted, configured container',
 			testScenario(
 				scenarios.onlySpottables,
 				() => {
