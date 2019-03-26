@@ -1,6 +1,6 @@
 /* eslint-disable enact/prop-types */
 import React from 'react';
-import {shallow, mount} from 'enzyme';
+import {mount} from 'enzyme';
 import ViewManager, {SlideLeftArranger} from '../';
 
 describe('ViewManager', () => {
@@ -54,7 +54,7 @@ describe('ViewManager', () => {
 	});
 
 	test('should render the child at {index}', () => {
-		const subject = shallow(
+		const subject = mount(
 			<ViewManager index={3}>
 				<div className="view">View 1</div>
 				<div className="view">View 2</div>
