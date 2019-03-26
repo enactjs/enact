@@ -8,7 +8,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-const shouldRenderChildren = ({open}, {hideChildren}) => hideChildren && open;
+const shouldRenderChildren = ({disabled, open}, {hideChildren}) => hideChildren && open && !disabled;
 
 /**
  * Default config for {@link mooonstone/ExpandableItem.ExpandableSpotlightDecorator}
@@ -60,6 +60,15 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes =  /** @lends moonstone/ExpandableItem.ExpandableSpotlightDecorator.prototype */ {
 			/**
+			 * Disables ExpandableSpotlightDecorator and the control becomes non-interactive.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			disabled: PropTypes.bool,
+
+			/**
 			 * When `true`, the contents of the container will not receive spotlight focus when becoming
 			 * expanded.
 			 *
@@ -80,23 +89,24 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
+			disabled: false,
 			noAutoFocus: false
 		}
 
 		constructor (props) {
 			super(props);
 
-			const {open} = props;
+			const {disabled, open} = props;
 			this.state = {
-				hideChildren: !open,
-				open: open,
+				hideChildren: !open || disabled,
+				open: open && !disabled
 			};
 
 			this.paused = new Pause('ExpandableItem');
 		}
 
 		static getDerivedStateFromProps (props, state) {
-			const {open} = props;
+			const open = props.open && !props.disabled;
 
 			if (shouldRenderChildren(props, state)) {
 				return {open: false, hideChildren: false};
