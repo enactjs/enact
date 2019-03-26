@@ -79,8 +79,9 @@ const adjustDirection = function (tooltipDirection, overflow, rtl) {
  * @private
  */
 const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, tooltipHeight) {
-	const rightDelta = tooltipNode.width > clientNode.left + (clientNode.width / 4) * 3;
-	const leftDelta = tooltipNode.width > window.innerWidth - clientNode.right - (clientNode.width / 3) * 2;
+	// get the distance of space on both the right and left side of the client node. `clientNode.width / 2` because we want the tooltip to be positioned horizontally in middle of the client node.
+	const rightDelta = tooltipNode.width > clientNode.left + (clientNode.width / 2);
+	const leftDelta = tooltipNode.width > window.innerWidth - clientNode.right - (clientNode.width / 2);
 	const isTooltipWide = (tooltipNode.width > window.innerWidth) ||
 		(leftDelta && rightDelta);
 
@@ -159,7 +160,7 @@ const getPosition = function (tooltipNode, clientNode, arrowAnchor, tooltipDirec
 
 	// When tooltip is too wide, shift the tooltip so that the first part of the tooltip is always visible. Does not affect tooltips with `tooltipDirection` of `left` and `right`
 	if (overflow.isOverWide && !(tooltipDirection === 'left' || tooltipDirection === 'right') && arrowAnchor !== 'right') {
-		position.left = rtl ? window.innerWidth - tooltipNode.width : 12;
+		position.left = rtl ? window.innerWidth - tooltipNode.width : 0;
 	}
 
 	return position;
@@ -180,7 +181,17 @@ const getPosition = function (tooltipNode, clientNode, arrowAnchor, tooltipDirec
  */
 const getArrowPosition = function (tooltipNode, clientNode, overflow, rtl) {
 	if (overflow.isOverWide) {
-		return rtl ? 1 - ((window.innerWidth - clientNode.right + (clientNode.width / 2)) / tooltipNode.width) : (clientNode.left + (clientNode.width / 2)) / tooltipNode.width;
+		const tooltipWidth = tooltipNode.width;
+		// finding out where the middle of the clientNode is and figuring out where that is in relation to the tooltip node in percentage between 0 and 1
+		const arrowPosition = rtl ? 1 - ((window.innerWidth - clientNode.right + (clientNode.width / 2)) / tooltipWidth) : (clientNode.left + (clientNode.width / 2)) / tooltipWidth;
+
+		const borderRadius = 33; // based on @moon-tooltip-border-radius
+		// max arrow position before the arrow is detached because of border radius
+		const maxArrowPosition = 1 - (borderRadius / tooltipWidth);
+		// if arrow position is above the max arrow position, use max arrow position instead
+		const adjustedArrowPosition = arrowPosition > maxArrowPosition ? maxArrowPosition : arrowPosition;
+
+		return adjustedArrowPosition;
 	}
 	return null;
 };
