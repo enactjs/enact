@@ -3,7 +3,6 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {boolean, text} from '../../src/enact-knobs';
 
-
 BodyText.displayName = 'BodyText';
 
 storiesOf('BodyText', module)
