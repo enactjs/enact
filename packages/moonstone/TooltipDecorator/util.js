@@ -29,7 +29,7 @@ const adjustAnchor = function (arrowAnchor, tooltipDirection, overflow, rtl) {
 			arrowAnchor = 'right';
 		}
 
-		if (overflow.isOverWide) {
+		if (overflow.isOverWide && tooltipDirection !== 'left' && tooltipDirection !== 'right') {
 			arrowAnchor = 'center';
 		}
 	}
@@ -181,8 +181,8 @@ const getPosition = function (tooltipNode, clientNode, arrowAnchor, tooltipDirec
  * @returns {Number}                    Tooltip anchor's left position in percentage between 0 and 1 relative to the tooltip
  * @private
  */
-const getArrowPosition = function (tooltipNode, clientNode, overflow, rtl) {
-	if (overflow.isOverWide) {
+const getArrowPosition = function (tooltipNode, clientNode, tooltipDirection, overflow, rtl) {
+	if (overflow.isOverWide && tooltipDirection !== 'left' && tooltipDirection !== 'right') {
 		const tooltipWidth = tooltipNode.width;
 		// finding out where the middle of the clientNode is and figuring out where that is in relation to the tooltip node in percentage between 0 and 1
 		const arrowPosition = rtl ? 1 - ((window.innerWidth - clientNode.right + (clientNode.width / 2)) / tooltipWidth) : (clientNode.left + (clientNode.width / 2)) / tooltipWidth;
