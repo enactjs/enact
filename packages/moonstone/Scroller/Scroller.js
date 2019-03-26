@@ -298,25 +298,13 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	getNextEndPoint = (direction, scrollerBounds, focusedItemBounds, pageDiff) => {
-		let oPoint = {};
-		switch (direction) {
-			case 'up':
-				oPoint.x = focusedItemBounds.left;
-				oPoint.y = scrollerBounds.top - scrollerBounds.height * (pageDiff);
-				break;
-			case 'left':
-				oPoint.x = focusedItemBounds.left - scrollerBounds.width;
-				oPoint.y = focusedItemBounds.top;
-				break;
-			case 'down':
-				oPoint.x = focusedItemBounds.left;
-				oPoint.y = scrollerBounds.top + scrollerBounds.height * (pageDiff + 1);
-				break;
-			case 'right':
-				oPoint.x = focusedItemBounds.left + focusedItemBounds.width + scrollerBounds.width;
-				oPoint.y = focusedItemBounds.top;
-				break;
+	getEndPoint = (direction, scrollerBounds, focusedItemBounds, isInNextPage) => {
+		const oPoint = {x: focusedItemBounds.left};
+
+		if (direction === 'up') {
+			oPoint.y = scrollerBounds.top - (isInNextPage ? scrollerBounds.height : 0);
+		} else {
+			oPoint.y = scrollerBounds.bottom + (isInNextPage ? scrollerBounds.height : 0);
 		}
 		return oPoint;
 	}
@@ -325,27 +313,36 @@ class ScrollerBase extends Component {
 		const
 			scrollerBounds = this.uiRefCurrent.containerRef.current.getBoundingClientRect(),
 			focusedItemBounds = focusedItem.getBoundingClientRect();
-		let candidateNode = null, endPoint;
 
 		/* Find a spottable item in the current page */
-		endPoint = this.getNextEndPoint(direction, scrollerBounds, focusedItemBounds, 0);
-		const candidateNodeInCurrentPage = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
+		const candidateNodeInCurrentPage = getTargetByDirectionFromPosition(
+			reverseDirection,
+			this.getEndPoint(direction, scrollerBounds, focusedItemBounds, false),
+			spotlightId
+		);
 
 		/* Find a spottable item in the next page */
-		endPoint = this.getNextEndPoint(direction, scrollerBounds, focusedItemBounds, 1);
-		candidateNode = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
-
-		/* Find a spottable item in a whole data */
-		if (candidateNode === focusedItem || candidateNode === candidateNodeInCurrentPage) {
-			candidateNode = getTargetByDirectionFromPosition(direction, endPoint, spotlightId);
+		const endPoint = this.getEndPoint(direction, scrollerBounds, focusedItemBounds, true);
+		const candidateNodeInNextPage = getTargetByDirectionFromPosition(
+			reverseDirection,
+			endPoint,
+			spotlightId
+		);
+		if (candidateNodeInNextPage !== focusedItem && candidateNodeInNextPage !== candidateNodeInCurrentPage) {
+			return candidateNodeInNextPage;
 		}
 
-		if (candidateNode === focusedItem) {
-			return null;
-		} else if (candidateNode === candidateNodeInCurrentPage) {
+		/* Find a spottable item after the next page */
+		const candidateNode = getTargetByDirectionFromPosition(direction, endPoint, spotlightId);
+		if (candidateNode !== null) {
+			return candidateNode;
+		}
+
+		/* If there is no spottable item in the next page or after the next page */
+		if (candidateNodeInCurrentPage !== focusedItem) {
 			return candidateNodeInCurrentPage;
 		} else {
-			return candidateNode;
+			return null;
 		}
 	}
 

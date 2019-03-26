@@ -492,10 +492,8 @@ class ScrollableBaseNative extends Component {
 
 		// Should skip scroll by page when focusedItem is paging control button of Scrollbar
 		if (focusedItem && childRefCurrent.containerRef.current.contains(focusedItem)) {
-			const spotlightId = containerRef.current.dataset.spotlightId;
-
 			if (this.childRef.current.scrollByPage) {
-				const next = this.childRef.current.scrollByPage({direction, focusedItem, reverseDirection: reverseDirections[direction], spotlightId});
+				const next = this.childRef.current.scrollByPage({direction, focusedItem, reverseDirection: reverseDirections[direction], spotlightId: containerRef.current.dataset.spotlightId});
 
 				if (next !== null) {
 					this.animateOnFocus = false;
