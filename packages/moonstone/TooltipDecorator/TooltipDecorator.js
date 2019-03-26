@@ -241,7 +241,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const arrowPosition = getArrowPosition(tooltipNode, clientNode, tooltipDirection, overflow, this.props.rtl);
 			const {top, left} = this.state.position;
 
-			if ((tooltipPosition.top !== top) || (tooltipPosition.left !== left)) {
+			if ((tooltipPosition.top !== top) || (tooltipPosition.left !== left) || (arrowPosition !== this.state.arrowPosition)) {
 				this.setState({
 					tooltipDirection,
 					arrowAnchor,
