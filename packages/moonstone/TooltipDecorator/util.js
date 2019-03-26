@@ -171,15 +171,16 @@ const getPosition = function (tooltipNode, clientNode, arrowAnchor, tooltipDirec
  *
  * @method
  * @memberof moonstone/TooltipDecorator
+ * @param   {Object} tooltipNode        The `getBoundingClientRect` values for tooltip node
  * @param   {Object}  clientNode        The `getBoundingClientRect` values for client node
  * @param   {Object}  overflow          Tooltip's calculated overflow from `calcOverflow`
  * @param   {Boolean} rtl               RTL mode
- * @returns {Object}                    Tooltip anchor position
+ * @returns {Number}                    Tooltip anchor's left position in percentage between 0 and 1 relative to the tooltip
  * @private
  */
-const getArrowPosition = function (clientNode, overflow, rtl) {
+const getArrowPosition = function (tooltipNode, clientNode, overflow, rtl) {
 	if (overflow.isOverWide) {
-		return rtl ? {right: `${window.innerWidth - clientNode.right + (clientNode.width / 2)}px`} : {left: `${clientNode.left + (clientNode.width / 2)}px`};
+		return rtl ? 1 - ((window.innerWidth - clientNode.right + (clientNode.width / 2)) / tooltipNode.width) : (clientNode.left + (clientNode.width / 2)) / tooltipNode.width;
 	}
 	return null;
 };

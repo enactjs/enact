@@ -44,15 +44,13 @@ const TooltipBase = kind({
 		arrowAnchor: PropTypes.oneOf(['left', 'center', 'right', 'top', 'middle', 'bottom']),
 
 		/**
-		 * Style object for tooltip arrow position.
+		 * Position of the arrow anchor. Takes values between 0 and 1.
+		 * This will be the left position percentage relative to the tooltip.
 		 *
-		 * @type {Object}
+		 * @type {Number}
 		 * @public
 		 */
-		arrowPosition: PropTypes.shape({
-			left: PropTypes.number,
-			right: PropTypes.number
-		}),
+		arrowPosition: PropTypes.number,
 
 		/**
 		 * Direction of label in relation to the activator.
@@ -109,6 +107,7 @@ const TooltipBase = kind({
 	},
 
 	computed: {
+		arrowPosition: ({arrowPosition}) => arrowPosition ? {left: `${arrowPosition * 100}%`} : null,
 		arrowType: ({arrowAnchor}) => (arrowAnchor === 'center' || arrowAnchor === 'middle') ?
 			'M0,5C0,4,1,3,3,2.5C1,2,0,1,0,0V5Z' : 'M0,5C0,3,1,0,3,0H0V5Z',
 		className: ({direction, arrowAnchor, styler}) => styler.append(direction, `${arrowAnchor}Arrow`),
