@@ -32,7 +32,7 @@ import React from 'react';
 
 import ForwardRef from '../ForwardRef';
 
-import {Cell, CellBase, toFlexAlign} from './Cell';
+import {Cell, CellBase, CellDecorator, toFlexAlign} from './Cell';
 
 import css from './Layout.module.less';
 
