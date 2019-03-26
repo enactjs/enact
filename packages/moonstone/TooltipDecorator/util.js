@@ -1,6 +1,8 @@
 // TooltipDecorator util.js
 //
 
+import ri from '@enact/ui/resolution';
+
 /**
  * Adjust anchor position for `Tooltip` based on overflow and rtl.
  * Takes the output of `adjustDirection`, and `calcOverflow`.
@@ -185,7 +187,7 @@ const getArrowPosition = function (tooltipNode, clientNode, overflow, rtl) {
 		// finding out where the middle of the clientNode is and figuring out where that is in relation to the tooltip node in percentage between 0 and 1
 		const arrowPosition = rtl ? 1 - ((window.innerWidth - clientNode.right + (clientNode.width / 2)) / tooltipWidth) : (clientNode.left + (clientNode.width / 2)) / tooltipWidth;
 
-		const borderRadius = 33; // based on @moon-tooltip-border-radius
+		const borderRadius = ri.scale(33); // based on @moon-tooltip-border-radius
 		// max arrow position before the arrow is detached because of border radius
 		const maxArrowPosition = 1 - (borderRadius / tooltipWidth);
 		// if arrow position is above the max arrow position, use max arrow position instead
