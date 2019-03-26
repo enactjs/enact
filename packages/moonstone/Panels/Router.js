@@ -35,8 +35,9 @@ const propTypes = {
  *
  * @class Router
  * @memberof moonstone/Panels
+ * @mixes ui/ForwardRef.ForwardRef
  * @ui
- * @public
+ * @private
  */
 const RouterBase = class extends React.Component {
 	static displayName = 'Router'
@@ -49,7 +50,7 @@ const RouterBase = class extends React.Component {
 		 * Panels and not a hierarchy of views as the path implies.
 		 *
 		 * May either be a URI-style path (`'/app/home/settings'`) or an array
-		 * of strings (`['app', 'home', 'settings']`)
+		 * of strings (`['app', 'home', 'settings']`).
 		 *
 		 * @type {String|String[]}
 		 * @required
@@ -58,7 +59,7 @@ const RouterBase = class extends React.Component {
 		path: propTypes.path.isRequired,
 
 		/**
-		 * The component wrapping the rendered path
+		 * The component wrapping the rendered path.
 		 *
 		 * @type {String|Component}
 		 * @default 'div'
@@ -67,7 +68,7 @@ const RouterBase = class extends React.Component {
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to [component]{@link moonstone/Panels.Router#component}
+		 * Called with a reference to [component]{@link moonstone/Panels.Router#component}.
 		 *
 		 * @private
 		 */
@@ -128,7 +129,7 @@ const RouterBase = class extends React.Component {
 	}
 
 	/**
-	 * Generates a set of routes from `children` and appends them to `routes`
+	 * Generates a set of routes from `children` and appends them to `routes`.
 	 *
 	 * @param  {React.element[]} children Array of children
 	 * @param  {Object}          routes   Route configuration object
@@ -153,7 +154,7 @@ const RouterBase = class extends React.Component {
 	}
 
 	/**
-	 * Creates an array of React.elements for the current path
+	 * Creates an array of React.elements for the current path.
 	 *
 	 * @returns {React.element[]} Children to render
 	 */
@@ -238,7 +239,7 @@ Route.propTypes = {
 	component: EnactPropTypes.renderable.isRequired,
 
 	/**
-	 * The name of the path segment
+	 * The name of the path segment.
 	 *
 	 * @type {String}
 	 * @required

@@ -183,6 +183,7 @@ const SlotItemBase = kind({
  * @class SlotItemDecorator
  * @memberof ui/SlotItem
  * @mixes ui/Slottable.Slottable
+ * @mixes ui/ForwardRef.ForwardRef
  * @hoc
  * @public
  */

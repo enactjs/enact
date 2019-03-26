@@ -127,6 +127,7 @@ const ItemBase = kind({
  *
  * @hoc
  * @memberof ui/Item
+ * @mixes ui/ForwardRef.ForwardRef
  * @mixes ui/Touchable.Touchable
  * @public
  */
@@ -139,8 +140,8 @@ const ItemDecorator = compose(
  * A minimally-styled ready-to-use list item component with touch support.
  *
  * @class Item
- * @extends ui/Item.ItemBase
  * @memberof ui/Item
+ * @extends ui/Item.ItemBase
  * @mixes ui/Item.ItemDecorator
  * @ui
  * @public

@@ -10,6 +10,8 @@
  *
  * @module ui/Spinner
  * @exports Spinner
+ * @exports SpinnerBase
+ * @exports SpinnerDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -23,9 +25,10 @@ import ForwardRef from '../ForwardRef';
 import componentCss from './Spinner.module.less';
 
 /**
- * A minimally styled component that controls `Spinner` positioning and interaction states.
+ * A minimally styled component that controls `Spinner` positioning and interaction states, without
+ * [SpinnerDecorator](ui/Spinner.SpinnerDecorator) applied.
  *
- * @class Spinner
+ * @class SpinnerBase
  * @memberof ui/Spinner
  * @ui
  * @public
@@ -33,7 +36,7 @@ import componentCss from './Spinner.module.less';
 const SpinnerBase = kind({
 	name: 'ui:Spinner',
 
-	propTypes: /** @lends ui/Spinner.Spinner.prototype */ {
+	propTypes: /** @lends ui/Spinner.SpinnerBase.prototype */ {
 		/**
 		 * A theme-supplied component that performs the animation.
 		 *
@@ -177,10 +180,32 @@ const SpinnerBase = kind({
 	}
 });
 
-const Spinner = ForwardRef({prop: 'componentRef'}, SpinnerBase);
+/**
+ * Applies Spinner behaviors
+ *
+ * @class SpinnerDecorator
+ * @memberof ui/Spinner
+ * @mixes ui/ForwardRef.ForwardRef
+ * @hoc
+ * @public
+ */
+const SpinnerDecorator = ForwardRef({prop: 'componentRef'});
+
+/**
+ * A minimally styled component that controls `Spinner` positioning and interaction states.
+ *
+ * @class Spinner
+ * @memberof ui/Spinner
+ * @extends ui/Spinner.SpinnerBase
+ * @mixes ui/Spinner.SpinnerDecorator
+ * @ui
+ * @public
+ */
+const Spinner = SpinnerDecorator(SpinnerBase);
 
 export default Spinner;
 export {
 	Spinner,
-	SpinnerBase
+	SpinnerBase,
+	SpinnerDecorator
 };

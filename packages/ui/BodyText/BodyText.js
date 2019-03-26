@@ -15,9 +15,10 @@ import ForwardRef from '../ForwardRef';
 import componentCss from './BodyText.module.less';
 
 /**
- * A simple, unstyled text block component.
+ * A simple, unstyled text block component, without
+ * [BodyTextDecorator](ui/BodyText.BodyTextDecorator) applied.
  *
- * @class BodyText
+ * @class BodyTextBase
  * @memberof ui/BodyText
  * @ui
  * @public
@@ -25,7 +26,7 @@ import componentCss from './BodyText.module.less';
 const BodyTextBase = kind({
 	name: 'ui:BodyText',
 
-	propTypes: /** @lends ui/BodyText.BodyText.prototype */ {
+	propTypes: /** @lends ui/BodyText.BodyTextBase.prototype */ {
 		/**
 		 * Centers the contents.
 		 *
@@ -97,10 +98,29 @@ const BodyTextBase = kind({
 	}
 });
 
-const BodyText = ForwardRef({prop: 'componentRef'}, BodyTextBase);
+/**
+ * Applies BodyText behaviors.
+ *
+ * @hoc
+ * @memberof ui/BodyText
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const BodyTextDecorator = ForwardRef({prop: 'componentRef'});
+
+/**
+ * A simple, unstyled text block component.
+ *
+ * @class BodyText
+ * @memberof ui/BodyText
+ * @ui
+ * @public
+ */
+const BodyText = BodyTextDecorator(BodyTextBase);
 
 export default BodyText;
 export {
 	BodyText,
-	BodyTextBase
+	BodyTextBase,
+	BodyTextDecorator
 };

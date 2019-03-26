@@ -9,6 +9,8 @@
  * @exports SlideRightArranger
  * @exports SlideTopArranger
  * @exports ViewManager
+ * @exports ViewManagerBase
+ * @exports ViewManagerDecorator
  */
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
@@ -22,18 +24,18 @@ import TransitionGroup from './TransitionGroup';
 import {wrapWithView} from './View';
 
 /**
- * A `ViewManager` controls the visibility of a configurable number of views, allowing for them to be
- * transitioned on and off the viewport.
+ * The base `ViewManager` component, without
+ * [ViewManagerDecorator](ui/ViewManager.ViewManagerDecorator) applied.
  *
- * @class ViewManager
- * @ui
+ * @class ViewManagerBase
  * @memberof ui/ViewManager
+ * @ui
  * @public
  */
 const ViewManagerBase = class extends React.Component {
 	static displayName = 'ViewManager'
 
-	static propTypes = /** @lends ui/ViewManager.ViewManager.prototype */ {
+	static propTypes = /** @lends ui/ViewManager.ViewManagerBase.prototype */ {
 		/**
 		 * Arranger to control the animation
 		 *
@@ -258,8 +260,33 @@ const ViewManagerBase = class extends React.Component {
 	}
 };
 
-const ViewManager = ForwardRef({prop: 'componentRef'}, ViewManagerBase);
+/**
+ * Applies ViewManager behaviors.
+ *
+ * @hoc
+ * @memberof ui/ViewManager
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const ViewManagerDecorator = ForwardRef({prop: 'componentRef'});
+
+/**
+ * A `ViewManager` controls the visibility of a configurable number of views, allowing for them to be
+ * transitioned on and off the viewport.
+ *
+ * @class ViewManager
+ * @memberof ui/ViewManager
+ * @extends ui/ViewManager.ViewManagerBase
+ * @mixes ui/ViewManager.ViewManagerDecorator
+ * @ui
+ * @public
+ */
+const ViewManager = ViewManagerDecorator(ViewManagerBase);
 
 export default ViewManager;
-export {ViewManager};
+export {
+	ViewManager,
+	ViewManagerBase,
+	ViewManagerDecorator
+};
 export * from './Arranger';

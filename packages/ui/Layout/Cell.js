@@ -16,17 +16,17 @@ const toFlexAlign = (align) => (
 
 /**
  * A stateless component that provides a space for your content in a
- * [Layout]{@link ui/Layout.Layout}.
+ * [Layout]{@link ui/Layout.Layout}, without [CellDecorator](ui/Layout.CellDecorator) applied.
  *
- * @class Cell
- * @ui
+ * @class CellBase
  * @memberof ui/Layout
+ * @ui
  * @public
  */
 const CellBase = kind({
 	name: 'Cell',
 
-	propTypes: /** @lends ui/Layout.Cell.prototype */ {
+	propTypes: /** @lends ui/Layout.CellBase.prototype */ {
 		/**
 		 * The alignment of `Cell`.
 		 *
@@ -148,11 +148,33 @@ const CellBase = kind({
 	}
 });
 
-const Cell = ForwardRef({prop: 'componentRef'}, CellBase);
+/**
+ * Applies Cell behaviors.
+ *
+ * @hoc
+ * @memberof ui/Layout
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const CellDecorator = ForwardRef({prop: 'componentRef'});
+
+/**
+ * A stateless component that provides a space for your content in a
+ * [Layout]{@link ui/Layout.Layout}.
+ *
+ * @class Cell
+ * @memberof ui/Layout
+ * @extends ui/Layout.CellBase
+ * @mixes ui/Layout.CellDecorator
+ * @ui
+ * @public
+ */
+const Cell = CellDecorator(CellBase);
 
 export default Cell;
 export {
 	Cell,
 	CellBase,
+	CellDecorator,
 	toFlexAlign
 };

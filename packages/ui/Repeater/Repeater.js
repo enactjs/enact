@@ -13,9 +13,10 @@ import React from 'react';
 import ForwardRef from '../ForwardRef';
 
 /**
- * A stateless component that stamps out copies of `childComponent`.
+ * A stateless component that stamps out copies of `childComponent`, without
+ * [RepeaterDecorator](ui/Repeater.RepeaterDecorator) applied.
  *
- * @class Repeater
+ * @class RepeaterBase
  * @memberof ui/Repeater
  * @ui
  * @public
@@ -23,7 +24,7 @@ import ForwardRef from '../ForwardRef';
 const RepeaterBase = kind({
 	name: 'Repeater',
 
-	propTypes: /** @lends ui/Repeater.Repeater.prototype */ {
+	propTypes: /** @lends ui/Repeater.RepeaterBase.prototype */ {
 		/**
 		 * Component type to repeat.
 		 *
@@ -136,7 +137,27 @@ const RepeaterBase = kind({
 	}
 });
 
-const Repeater = ForwardRef({prop: 'componentRef'}, RepeaterBase);
+/**
+ * Applies Repeater behaviors.
+ *
+ * @hoc
+ * @memberof ui/Repeater
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const RepeaterDecorator = ForwardRef({prop: 'componentRef'});
+
+/**
+ * A stateless component that stamps out copies of `childComponent`.
+ *
+ * @class Repeater
+ * @memberof ui/Repeater
+ * @extends ui/Repeater.RepeaterBase
+ * @mixes ui/Repeater.RepeaterDecorator
+ * @ui
+ * @public
+ */
+const Repeater = RepeaterDecorator(RepeaterBase);
 
 export default Repeater;
 export {
