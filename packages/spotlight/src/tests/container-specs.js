@@ -687,7 +687,7 @@ describe('container', () => {
 		));
 	});
 
-	describe.skip('#isNavigable', () => {
+	describe('#isNavigable', () => {
 		beforeEach(setupContainers);
 		afterEach(teardownContainers);
 
@@ -1211,6 +1211,23 @@ describe('container', () => {
 			testScenario(
 				scenarios.complexTree,
 				() => {
+					const expected = [];
+					const actual = getContainerNavigableElements('first-container');
+
+					expect(actual).toEqual(expected);
+				}
+			)
+		);
+
+		test(
+			'should return an empty array for an unmounted, configured container',
+			testScenario(
+				scenarios.onlySpottables,
+				() => {
+					configureContainer('first-container', {
+						overflow: true
+					});
+
 					const expected = [];
 					const actual = getContainerNavigableElements('first-container');
 

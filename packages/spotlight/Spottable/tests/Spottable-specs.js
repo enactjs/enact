@@ -80,24 +80,6 @@ describe('Spottable', () => {
 			expect(actual).toEqual(expected);
 		});
 
-		test('should not re-render when a non-Spottable prop does not change', () => {
-			const spy = jest.fn((props) => <div {...props} />);
-			const Component = Spottable(spy);
-
-			const subject = mount(
-				<Component data-id="123" />
-			);
-
-			subject.setProps({
-				'data-id': '123'
-			});
-
-			const expected = 1;
-			const actual = spy.mock.calls.length;
-
-			expect(actual).toEqual(expected);
-		});
-
 		test('should re-render when {selectionKeys} changes', () => {
 			const spy = jest.fn((props) => <div {...props} />);
 			const Component = Spottable(spy);
