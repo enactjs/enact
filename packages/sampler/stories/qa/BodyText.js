@@ -1,18 +1,10 @@
 import BodyText from '@enact/moonstone/BodyText';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
-import {boolean} from '../../src/enact-knobs';
-import {number, select, text} from '../../src/enact-knobs';
+import {boolean, text} from '../../src/enact-knobs';
 
 
 BodyText.displayName = 'BodyText';
-
-class LongTextBodyText extends React.Component {
-	constructor (props) {
-		super(props);
-	}
-}
 
 storiesOf('BodyText', module)
 	.add(
