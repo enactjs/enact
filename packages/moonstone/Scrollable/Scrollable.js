@@ -8,6 +8,7 @@
 
 import classNames from 'classnames';
 import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
+import {getContainerNode} from '@enact/spotlight/src/container';
 import {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {Job} from '@enact/core/util';
@@ -250,6 +251,8 @@ class ScrollableBase extends Component {
 
 		this.createOverscrollJob('vertical', 'before');
 		this.createOverscrollJob('vertical', 'after');
+
+		document.addEventListener('keydown', this.onKeyDownInBody.bind(this));
 	}
 
 	componentDidUpdate (prevProps) {
@@ -454,6 +457,13 @@ class ScrollableBase extends Component {
 
 			// Need to check whether an overscroll effect is needed
 			return true;
+		} else if (!focusedItem && this.hasFocus()) { // The container is active, but there is no spot control.
+			const
+				bounds = this.uiRef.current.getScrollBounds(),
+				pageDistance = ((direction === 'up') ? -1 : 1) * bounds.clientHeight * paginationPageMultiplier,
+				canScrollVertically = this.uiRef.current.canScrollVertically(bounds);
+
+			this.uiRef.current.scrollToAccumulatedTarget(pageDistance, canScrollVertically);
 		}
 
 		return false;
@@ -523,6 +533,32 @@ class ScrollableBase extends Component {
 						edge = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
 					this.uiRef.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 				}
+			}
+		}
+	}
+
+	// https://davidwalsh.name/get-react-component-by-dom-node
+	findReactElement (node) {
+		for (var key in node) {
+			if (key.startsWith("__reactInternalInstance$")) {
+				return node[key]._debugOwner.stateNode;
+			}
+		}
+		return null;
+	}
+
+	onKeyDownInBody = (ev) => {
+		const {keyCode} = ev;
+
+		if (isPageUp(keyCode) || isPageDown(keyCode)) {
+			const
+				activeContainerId = Spotlight.getActiveContainer(),
+				activeContainerNode = getContainerNode(activeContainerId),
+				activeContainerReactElement = this.findReactElement(activeContainerNode),
+				current = Spotlight.getCurrent();
+
+			if (activeContainerReactElement === this.uiRef.current && !current) {
+				this.onKeyDown(ev);
 			}
 		}
 	}
