@@ -1,6 +1,6 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import {DatePicker, DatePickerBase} from '../DatePicker';
+import DatePicker from '../DatePicker';
 import css from '../DatePicker.module.less';
 
 describe('DatePicker', () => {
@@ -39,10 +39,10 @@ describe('DatePicker', () => {
 
 	test('should omit labels when noLabels is true', () => {
 		const subject = mount(
-			<DatePickerBase day={1} maxDays={31} maxMonths={12} month={1} noLabels open order={['m', 'd']} title="Date" year={2000} />
+			<DatePicker day={1} maxDays={31} maxMonths={12} month={1} noLabels open order={['m', 'd', 'y']} title="Date" year={2000} />
 		);
 
-		const expected = 2;
+		const expected = 3;
 		const actual = subject.find('DateComponentRangePicker').filterWhere(c => !c.prop('label')).length;
 
 		expect(actual).toBe(expected);
@@ -50,10 +50,10 @@ describe('DatePicker', () => {
 
 	test('should create pickers arranged by order', () => {
 		const subject = mount(
-			<DatePickerBase title="Date" day={1} maxDays={31} month={1} maxMonths={12} year={2000} order={['m', 'd']} open />
+			<DatePicker title="Date" day={1} maxDays={31} month={1} maxMonths={12} year={2000} order={['m', 'd', 'y']} open />
 		);
 
-		const expected = ['month', 'day'];
+		const expected = ['month', 'day', 'year'];
 		const actual = subject.find('DateComponentRangePicker').map(c => c.prop('label'));
 
 		expect(actual).toEqual(expected);

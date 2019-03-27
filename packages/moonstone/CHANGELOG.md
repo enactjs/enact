@@ -23,6 +23,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to continue to show thumbnail when playback control keys are pressed
 - `moonstone/VideoPlayer` to stop seeking by remote key when it loses focus
 - `moonstone/VirtualList` to only resume spotlight pauses it initiated
+- `moonstone/ExpandableItem` to be better optimized on mount
 
 ## [2.4.0] - 2019-03-04
 
