@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Popup` to resume spotlight pauses when closing with animation
+- `moonstone/Panels` to check that child is valid before generating spotlightId
 
 ## [2.4.1] - 2019-03-11
 
