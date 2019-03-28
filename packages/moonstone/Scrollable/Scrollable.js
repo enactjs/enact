@@ -17,6 +17,7 @@ import {forward} from '@enact/core/handle';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
@@ -463,7 +464,9 @@ class ScrollableBase extends Component {
 				pageDistance = ((direction === 'up') ? -1 : 1) * bounds.clientHeight * paginationPageMultiplier,
 				canScrollVertically = this.uiRef.current.canScrollVertically(bounds);
 
-			this.uiRef.current.scrollToAccumulatedTarget(pageDistance, canScrollVertically);
+			this.uiRef.current.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.scrollbarButton);
+
+			return true;
 		}
 
 		return false;
@@ -537,16 +540,6 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	// https://davidwalsh.name/get-react-component-by-dom-node
-	findReactElement (node) {
-		for (var key in node) {
-			if (key.startsWith("__reactInternalInstance$")) {
-				return node[key]._debugOwner.stateNode;
-			}
-		}
-		return null;
-	}
-
 	onKeyDownInBody = (ev) => {
 		const {keyCode} = ev;
 
@@ -554,10 +547,9 @@ class ScrollableBase extends Component {
 			const
 				activeContainerId = Spotlight.getActiveContainer(),
 				activeContainerNode = getContainerNode(activeContainerId),
-				activeContainerReactElement = this.findReactElement(activeContainerNode),
 				current = Spotlight.getCurrent();
 
-			if (activeContainerReactElement === this.uiRef.current && !current) {
+			if (activeContainerNode === ReactDOM.findDOMNode(this)) {
 				this.onKeyDown(ev);
 			}
 		}
