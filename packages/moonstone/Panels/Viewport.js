@@ -128,17 +128,21 @@ const ViewportBase = class extends React.Component {
 	)
 
 	mapChildren = (children, generateId) => React.Children.map(children, (child, index) => {
-		const {spotlightId = generateId(index, 'panel-container', Spotlight.remove)} = child.props;
-		const props = {
-			spotlightId,
-			'data-index': index
-		};
+		if (child) {
+			const {spotlightId = generateId(index, 'panel-container', Spotlight.remove)} = child.props;
+			const props = {
+				spotlightId,
+				'data-index': index
+			};
 
-		if (child.props.autoFocus == null && this.state.direction === 'forward') {
-			props.autoFocus = 'default-element';
+			if (child.props.autoFocus == null && this.state.direction === 'forward') {
+				props.autoFocus = 'default-element';
+			}
+
+			return React.cloneElement(child, props);
+		} else {
+			return null;
 		}
-
-		return child ? React.cloneElement(child, props) : null;
 	})
 
 	getEnteringProp = (noAnimation) => noAnimation ? null : 'hideChildren'

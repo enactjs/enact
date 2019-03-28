@@ -7,7 +7,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll via page up/down keys when Spotlight hides
+- `moonstone/Tooltip` to better support long tooltips
 - `moonstone/Popup` to resume spotlight pauses when closing with animation
+- `moonstone/Panels` to check that child is valid before generating spotlightId
 
 ## [2.4.1] - 2019-03-11
 
@@ -23,6 +25,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to continue to show thumbnail when playback control keys are pressed
 - `moonstone/VideoPlayer` to stop seeking by remote key when it loses focus
 - `moonstone/VirtualList` to only resume spotlight pauses it initiated
+- `moonstone/ExpandableItem` to be better optimized on mount
 
 ## [2.4.0] - 2019-03-04
 
