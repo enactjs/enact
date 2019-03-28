@@ -1,0 +1,17 @@
+// MediaButton.module.less
+//
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
+.imageItemTooltip {
+	position: absolute;
+	border-width: @moon-video-slider-tooltip-thumbnail-border-width;
+	border-style: solid;
+	border-radius: 0;
+}
+
+.applySkins({
+	.imageItemTooltip {
+		border-color: @moon-video-slider-tooltip-thumbnail-border-color;
+	}
+});

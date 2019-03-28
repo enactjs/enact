@@ -4,6 +4,7 @@ import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {on, off} from '@enact/core/dispatcher';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import Pause from '@enact/spotlight/Pause';
 import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
@@ -17,6 +18,7 @@ import ReactDOM from 'react-dom';
 
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
+import MediaTooltipButton from './MediaButton';
 
 import {countReactChildren} from './util';
 
@@ -75,6 +77,8 @@ const MediaControlsBase = kind({
 		 */
 		forwardIcon: PropTypes.string,
 
+		forwardTooltipComponent: EnactPropTypes.componentOverride,
+
 		/**
 		 * Jump backward [icon]{@link moonstone/Icon.Icon} name. Accepts any
 		 * [icon]{@link moonstone/Icon.Icon} component type.
@@ -84,6 +88,8 @@ const MediaControlsBase = kind({
 		 * @public
 		 */
 		jumpBackwardIcon: PropTypes.string,
+
+		jumpBackwardTooltipComponent: EnactPropTypes.componentOverride,
 
 		/**
 		 * Disables state on the media "jump" buttons; the outer pair.
@@ -394,6 +400,8 @@ const MediaControlsBase = kind({
 		showMoreComponents,
 		spotlightDisabled,
 		spotlightId,
+		jumpBackwardTooltipComponent,
+		forwardTooltipComponent,
 		...rest
 	}) => {
 		delete rest.moreButtonCloseLabel;
@@ -407,11 +415,11 @@ const MediaControlsBase = kind({
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
 						<Container className={css.mediaControls} spotlightDisabled={showMoreComponents || spotlightDisabled}>
-							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpBackwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaTooltipButton tooltipComponent={jumpBackwardTooltipComponent} aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpBackwardIcon}</MediaTooltipButton>}
 							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{backwardIcon}</MediaButton>}
 							<MediaButton aria-label={paused ? $L('Play') : $L('Pause')} className={playPauseClassName} backgroundOpacity="translucent" disabled={mediaDisabled || playPauseButtonDisabled} onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{paused ? playIcon : pauseIcon}</MediaButton>
 							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick} spotlightDisabled={spotlightDisabled}>{forwardIcon}</MediaButton>}
-							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpForwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaTooltipButton tooltipComponent={forwardTooltipComponent} aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpForwardIcon}</MediaTooltipButton>}
 						</Container>
 						<Container className={css.moreControls} spotlightDisabled={!showMoreComponents || spotlightDisabled}>
 							{children}
