@@ -14,11 +14,17 @@
  * @exports GridListImageItemDecorator
  */
 
+import classNames from 'classnames';
 import compose from 'ramda/src/compose';
+import {forward} from '@enact/core/handle';
+import {Job} from '@enact/core/util';
 import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
+import {CellBase} from '@enact/ui/Layout';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactDOM from 'react-dom';
+import Spotlight from '@enact/spotlight';
 import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
@@ -34,8 +40,11 @@ const
 	'9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
 	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
 	'4NCg==',
-	captionComponent = (props) => (
+	marqueeComponent = (props) => (
 		<Marquee alignment="center" marqueeOn="hover" {...props} />
+	),
+	cellComponent = (props) => (
+		<CellBase {...props} />
 	);
 
 /**
@@ -132,22 +141,20 @@ const GridListImageItemBase = kind({
 		publicClassNames: ['gridListImageItem', 'icon', 'image', 'selected', 'caption', 'subCaption']
 	},
 
-	render: ({css, selectionOverlay, ...rest}) => {
+	render: ({captionComponent, css, selectionOverlay, ...rest}) => {
 		if (selectionOverlay) {
 			rest['role'] = 'checkbox';
 			rest['aria-checked'] = rest.selected;
 		}
 
-		return (
-			<UiGridListImageItem
-				{...rest}
-				captionComponent={captionComponent}
-				css={css}
-				iconComponent={Icon}
-				imageComponent={Image}
-				selectionOverlay={selectionOverlay}
-			/>
-		);
+		return UiGridListImageItem.inline({
+			...rest,
+			captionComponent,
+			css,
+			iconComponent: Icon,
+			imageComponent: Image,
+			selectionOverlay
+		});
 	}
 });
 
@@ -188,7 +195,105 @@ const GridListImageItemDecorator = compose(
  * @ui
  * @public
  */
-const GridListImageItem = GridListImageItemDecorator(GridListImageItemBase);
+const GridListImageItemFull = GridListImageItemDecorator(GridListImageItemBase);
+
+const GridListImageItemLightDecorator = compose(
+	Spottable,
+	Skinnable
+);
+const GridListImageItemLight = GridListImageItemLightDecorator(GridListImageItemBase);
+
+class GridListImageItem extends React.PureComponent {
+	static displayName = 'GridListImageItemSpotlightDecorator'
+
+	constructor (props) {
+		super(props);
+
+		this.state = {
+			lightweight: true
+		};
+		this.shouldPreventFocus = false;
+	}
+
+	componentDidUpdate (prevProps, prevState) {
+		if (prevState.lightweight && !this.state.lightweight && !Spotlight.getCurrent()) {
+			// eslint-disable-next-line react/no-find-dom-node
+			ReactDOM.findDOMNode(this).focus();
+		}
+	}
+
+	componentWillUnmount () {
+		this.renderJob.stop();
+	}
+
+	handleBlur = (ev) => {
+		forward('onBlur', ev, this.props);
+		this.shouldPreventFocus = false;
+		this.renderJob.stop();
+	}
+
+	handleFocus = (ev) => {
+		if (this.shouldPreventFocus) {
+			ev.preventDefault();
+			ev.stopPropagation();
+			this.shouldPreventFocus = false;
+			return;
+		}
+
+		if (this.state.lightweight) {
+			this.shouldPreventFocus = true;
+			this.startRenderJob();
+		} else {
+			forward('onFocus', ev, this.props);
+		}
+	}
+
+	handleMouseEnter = (ev) => {
+		if (this.state.lightweight) {
+			this.startRenderJob();
+		} else {
+			forward('onMouseEnter', ev, this.props);
+		}
+	}
+
+	handleMouseLeave = (ev) => {
+		forward('onMouseLeave', ev, this.props);
+		this.renderJob.stop();
+	}
+
+	startRenderJob = () => {
+		// 100 is a somewhat arbitrary value to avoid rendering when 5way hold events are moving focus through the item.
+		// The timing appears safe against default spotlight accelerator speeds.
+		this.renderJob.startAfter(100);
+	}
+
+	renderJob = new Job(() => {
+		this.setState({
+			lightweight: false
+		});
+	})
+
+	render () {
+		const {className, ...rest} = this.props;
+		const {lightweight} = this.state;
+		const classes = classNames(className, {[componentCss.lightweight]: lightweight});
+		const Component = lightweight ? GridListImageItemLight : GridListImageItemFull;
+		const captionComponent = lightweight ? cellComponent : marqueeComponent;
+
+		return (
+			<Component
+				{...rest}
+				captionComponent={captionComponent}
+				className={classes}
+				onBlur={this.handleBlur}
+				onFocus={this.handleFocus}
+				onMouseEnter={this.handleMouseEnter}
+				onMouseLeave={this.handleMouseLeave}
+			/>
+		);
+	}
+}
+
 
 export default GridListImageItem;
 export {
