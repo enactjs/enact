@@ -615,7 +615,7 @@ class ScrollableBaseNative extends Component {
 				activeContainerNode = getContainerNode(activeContainerId),
 				current = Spotlight.getCurrent();
 
-			if (activeContainerNode === ReactDOM.findDOMNode(this)) { // eslint-disable-line react/no-find-dom-node
+			if (!current && activeContainerNode === ReactDOM.findDOMNode(this)) { // eslint-disable-line react/no-find-dom-node
 				this.onKeyDown(ev);
 			}
 		}
