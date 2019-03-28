@@ -34,15 +34,16 @@
 	}
 
 	.input-placeholder({
-		.vendor-opacity(1);
+		.vendor-opacity(.3);
 	});
 
-	.focus ({
+	.focus({
 		cursor: text;
 	});
 
 	.disabled({
 		cursor: default;
+		.vendor-opacity(.3);
 	});
 
 	:global(.enact-locale-right-to-left) & {
@@ -53,8 +54,8 @@
 .decorator {
 	display: inline-flex;
 	position: relative;
-	padding: @moon-input-padding (@moon-input-height / 2);
-	border-radius: 1008px;
+	padding: 0 @moon-input-padding;
+	border-radius: @moon-input-border-radius;
 	margin: 0 (@moon-spotlight-outset / 2);
 	border: @moon-input-border-width solid transparent;
 	box-sizing: border-box;
@@ -78,7 +79,7 @@
 		}
 
 		.input {
-			font-size: @moon-input-small-font-size;
+			font-size: @moon-button-large-font-size;
 			height: @moon-input-small-height;
 		}
 	}
@@ -122,6 +123,7 @@
 		.input {
 			background: transparent;
 			color: @moon-input-text-color;
+			caret-color: @moon-input-caret-color;
 
 			&::selection {
 				color: @moon-spotlight-text-color;
@@ -134,7 +136,11 @@
 
 			.focus({
 				color: @moon-input-text-color;
-				background-color: inherit;
+				background-color: white;
+			});
+
+			.disabled({
+				color: @moon-input-text-disabled-color;
 			});
 		}
 
@@ -145,13 +151,22 @@
 		&:global(.spottable):focus {
 			color: @moon-input-text-color;
 			border-color: @moon-input-border-focus-border-color;
-			background-color: @moon-input-decorator-bg-color;
+			background-color: @moon-input-decorator-focus-bg-color;
 			box-shadow: 0px 0px 0px @moon-input-border-outline-width @moon-input-border-active-outline-color;
 		}
 
+		.focus({
+			background-color: white;
+		});
+
 		&.focused {
 			border-color: @moon-input-border-active-border-color;
+			background-color: @moon-input-decorator-active-bg-color;
 		}
+
+		.disabled({
+			.vendor-opacity(.3);
+		});
 
 		.decoratorIcon,
 		&:global(.spottable):focus .decoratorIcon {
