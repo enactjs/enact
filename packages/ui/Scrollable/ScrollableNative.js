@@ -1251,6 +1251,8 @@ class ScrollableBaseNative extends Component {
 
 		if (containerRef.current && containerRef.current.addEventListener) {
 			containerRef.current.addEventListener('wheel', this.onWheel);
+			containerRef.current.addEventListener('mouseenter', this.props.onMouseEnter);
+			containerRef.current.addEventListener('mouseleave', this.props.onMouseLeave);
 		}
 
 		if (childRefCurrent.containerRef.current) {

@@ -1225,6 +1225,8 @@ class ScrollableBase extends Component {
 		if (containerRef.current && containerRef.current.addEventListener) {
 			containerRef.current.addEventListener('wheel', this.onWheel);
 			containerRef.current.addEventListener('keydown', this.onKeyDown);
+			containerRef.current.addEventListener('mouseenter', this.props.onMouseEnter);
+			containerRef.current.addEventListener('mouseleave', this.props.onMouseLeave);
 		}
 
 		if (childRefCurrent && childRefCurrent.containerRef.current) {

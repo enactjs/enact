@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import {constants, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
-import {getContainerNode} from '@enact/spotlight/src/container';
 import {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {Job} from '@enact/core/util';
@@ -253,6 +252,7 @@ class ScrollableBaseNative extends Component {
 
 	// status
 	isWheeling = false
+	isHover = false
 
 	// spotlight
 	lastScrollPositionOnFocus = null
@@ -277,6 +277,18 @@ class ScrollableBaseNative extends Component {
 			ev.preventDefault();
 		} else {
 			this.childRef.current.setContainerDisabled(false);
+		}
+	}
+
+	onMouseEnter = (ev) => {
+		if (ev.target === ReactDOM.findDOMNode(this)) { // eslint-disable-line react/no-find-dom-node
+			this.isHover = true;
+		}
+	}
+
+	onMouseLeave = (ev) => {
+		if (ev.target === ReactDOM.findDOMNode(this)) { // eslint-disable-line react/no-find-dom-node
+			this.isHover = false;
 		}
 	}
 
@@ -529,7 +541,7 @@ class ScrollableBaseNative extends Component {
 
 			// Need to check whether an overscroll effect is needed
 			return true;
-		} else if (!focusedItem && this.hasFocus()) { // The container is active, but there is no spot control.
+		} else if (!focusedItem && this.isHover) { // There is the pointer in a list and no spot control in it.
 			const
 				bounds = this.uiRef.current.getScrollBounds(),
 				pageDistance = ((direction === 'up') ? -1 : 1) * bounds.clientHeight * paginationPageMultiplier,
@@ -568,7 +580,7 @@ class ScrollableBaseNative extends Component {
 
 		if (isPageUp(keyCode) || isPageDown(keyCode)) {
 			ev.preventDefault();
-			if (!repeat && this.hasFocus() && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
+			if ((!repeat && this.hasFocus() || this.isHover) && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
 				Spotlight.setPointerMode(false);
 				direction = isPageUp(keyCode) ? 'up' : 'down';
 				overscrollEffectRequired = this.scrollByPage(direction) && overscrollEffectOn.pageKey;
@@ -610,12 +622,9 @@ class ScrollableBaseNative extends Component {
 		const {keyCode} = ev;
 
 		if (isPageUp(keyCode) || isPageDown(keyCode)) {
-			const
-				activeContainerId = Spotlight.getActiveContainer(),
-				activeContainerNode = getContainerNode(activeContainerId),
-				current = Spotlight.getCurrent();
+			const current = Spotlight.getCurrent();
 
-			if (!current && activeContainerNode === ReactDOM.findDOMNode(this)) { // eslint-disable-line react/no-find-dom-node
+			if (!current && this.isHover) {
 				this.onKeyDown(ev);
 			}
 		}
@@ -860,6 +869,8 @@ class ScrollableBaseNative extends Component {
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
+				onMouseEnter={this.onMouseEnter}
+				onMouseLeave={this.onMouseLeave}
 				onWheel={this.onWheel}
 				ref={this.uiRef}
 				removeEventListeners={this.removeEventListeners}
