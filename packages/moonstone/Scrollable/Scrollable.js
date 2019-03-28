@@ -539,7 +539,7 @@ class ScrollableBase extends Component {
 
 	// https://davidwalsh.name/get-react-component-by-dom-node
 	findReactElement (node) {
-		for (let key in node) {
+		for (var key in node) {
 			if (key.startsWith("__reactInternalInstance$")) {
 				return node[key]._debugOwner.stateNode;
 			}
