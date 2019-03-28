@@ -198,6 +198,22 @@ class ScrollableBaseNative extends Component {
 		onMouseDown: PropTypes.func,
 
 		/**
+		 * Called when trigerring a mouseenter event.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onMouseEnter: PropTypes.func,
+
+		/**
+		 * Called when trigerring a mouseleave event.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onMouseLeave: PropTypes.func,
+
+		/**
 		 * Called when scrolling.
 		 *
 		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
@@ -1251,8 +1267,12 @@ class ScrollableBaseNative extends Component {
 
 		if (containerRef.current && containerRef.current.addEventListener) {
 			containerRef.current.addEventListener('wheel', this.onWheel);
-			containerRef.current.addEventListener('mouseenter', this.props.onMouseEnter);
-			containerRef.current.addEventListener('mouseleave', this.props.onMouseLeave);
+			if (this.props.onMouseEnter) {
+				containerRef.current.addEventListener('mouseenter', this.props.onMouseEnter);
+			}
+			if (this.props.onMouseLeave) {
+				containerRef.current.addEventListener('mouseleave', this.props.onMouseLeave);
+			}
 		}
 
 		if (childRefCurrent.containerRef.current) {

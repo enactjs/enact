@@ -548,8 +548,6 @@ class ScrollableBaseNative extends Component {
 				canScrollVertically = this.uiRef.current.canScrollVertically(bounds);
 
 			this.uiRef.current.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.scrollbarButton);
-
-			return true;
 		}
 
 		return false;
