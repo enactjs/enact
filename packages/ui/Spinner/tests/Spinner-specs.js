@@ -1,14 +1,14 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import Spinner from '../Spinner';
+import {SpinnerBase} from '../Spinner';
 import css from '../Spinner.module.less';
 
 describe('Spinner Specs', () => {
 	test('should have centered class when centered prop equals true', () => {
 		const spinner = shallow(
-			<Spinner component="div" centered>
+			<SpinnerBase component="div" centered>
 				Loading...
-			</Spinner>
+			</SpinnerBase>
 		);
 
 		const expected = true;
@@ -21,7 +21,7 @@ describe('Spinner Specs', () => {
 		'should not have content class when Spinner has no children',
 		() => {
 			const spinner = shallow(
-				<Spinner component="div" />
+				<SpinnerBase component="div" />
 			);
 
 			const expected = false;
@@ -35,7 +35,7 @@ describe('Spinner Specs', () => {
 		'should have no scrim class when blockClickOn prop equals container',
 		() => {
 			const spinner = shallow(
-				<Spinner component="div" blockClickOn="container" />
+				<SpinnerBase component="div" blockClickOn="container" />
 			);
 
 			const expected = false;
@@ -49,7 +49,7 @@ describe('Spinner Specs', () => {
 		'should have scrim class when blockClickOn prop equals container and when scrim prop equals true',
 		() => {
 			const spinner = shallow(
-				<Spinner component="div" blockClickOn="container" scrim />
+				<SpinnerBase component="div" blockClickOn="container" scrim />
 			);
 
 			const expected = true;
@@ -63,7 +63,7 @@ describe('Spinner Specs', () => {
 		'should have FloatingLayer when blockClickOn prop equals screen',
 		() => {
 			const spinner = shallow(
-				<Spinner component="div" blockClickOn="screen" />
+				<SpinnerBase component="div" blockClickOn="screen" />
 			);
 
 			const expected = true;

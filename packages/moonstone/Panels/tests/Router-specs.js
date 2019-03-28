@@ -4,7 +4,7 @@
 
 import React from 'react';
 import {shallow, mount} from 'enzyme';
-import {Router, Route} from '../Router';
+import {Route, Router, RouterBase} from '../Router';
 
 describe('Router', () => {
 
@@ -39,7 +39,7 @@ describe('Router', () => {
 
 	test('should render a single component matching the {path}', () => {
 		const subject = shallow(
-			<Router routes={routes} path="/app" />
+			<RouterBase routes={routes} path="/app" />
 		);
 
 		const expected = 1;
@@ -50,7 +50,7 @@ describe('Router', () => {
 
 	test('should render an array of components matching the {path}', () => {
 		const subject = shallow(
-			<Router routes={routes} path="/app/home" />
+			<RouterBase routes={routes} path="/app/home" />
 		);
 
 		const expected = 2;
@@ -63,7 +63,7 @@ describe('Router', () => {
 		'should render an array of components matching the {path} as an array',
 		() => {
 			const subject = shallow(
-				<Router routes={routes} path={['app', 'home']} />
+				<RouterBase routes={routes} path={['app', 'home']} />
 			);
 
 			const expected = 2;
@@ -81,7 +81,7 @@ describe('Router', () => {
 			console.error.mockImplementation();
 
 			const subject = shallow(
-				<Router routes={routes} path="/help" />
+				<RouterBase routes={routes} path="/help" />
 			);
 
 			const expected = 0;
@@ -151,10 +151,9 @@ describe('Router', () => {
 					<Route path="app" component={NewView} />
 				]
 			});
-			subject.update();
 
-			const expected = NewView;
-			const actual = subject.childAt(0).childAt(0).type();
+			const expected = 1;
+			const actual = subject.find(NewView).length;
 
 			expect(actual).toBe(expected);
 		}

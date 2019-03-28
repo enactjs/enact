@@ -109,6 +109,14 @@ class TransitionGroup extends React.Component {
 		component: EnactPropTypes.renderable,
 
 		/**
+		 * Called with a reference to [component]{@link ui/ViewManager.TransitionGroup#component}
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		componentRef: PropTypes.func,
+
+		/**
 		 * Current Index the ViewManager is on
 		 *
 		 * @type {Number}
@@ -428,10 +436,11 @@ class TransitionGroup extends React.Component {
 
 		// Do not forward TransitionGroup props to primitive DOM nodes
 		const props = Object.assign({}, this.props);
-		delete props.size;
+		props.ref = this.props.componentRef;
 		delete props.childFactory;
-		delete props.currentIndex;
 		delete props.component;
+		delete props.componentRef;
+		delete props.currentIndex;
 		delete props.onAppear;
 		delete props.onAppear;
 		delete props.onEnter;
@@ -439,6 +448,7 @@ class TransitionGroup extends React.Component {
 		delete props.onStay;
 		delete props.onTransition;
 		delete props.onWillTransition;
+		delete props.size;
 
 		return React.createElement(
 			this.props.component,
