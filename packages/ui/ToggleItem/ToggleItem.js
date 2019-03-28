@@ -25,7 +25,7 @@ import Touchable from '../Touchable';
 import componentCss from './ToggleItem.module.less';
 
 // eslint-disable-next-line
-const iconCreator = (position) => ({disabled, icon, iconComponent, selected, iconPosition, beforeItem}) => {
+const iconCreator = (position) => ({beforeItem, disabled, icon, iconComponent, iconPosition, selected}) => {
 	if (iconPosition === position) {
 		return (
 			<Fragment>
@@ -43,7 +43,6 @@ const iconCreator = (position) => ({disabled, icon, iconComponent, selected, ico
 	}
 };
 
-
 /**
  * A minimally styled toggle item without any behavior, ripe for extension.
  *
@@ -56,7 +55,6 @@ const ToggleItemBase = kind({
 	name: 'ui:ToggleItem',
 
 	propTypes: /** @lends ui/ToggleItem.ToggleItemBase.prototype */ {
-
 		/**
 		 * The main content of the toggle item.
 		 *
@@ -164,13 +162,32 @@ const ToggleItemBase = kind({
 		iconPosition: PropTypes.oneOf(['before', 'after']),
 
 		/**
+		 * Called when the toggle item is toggled. Developers should generally use `onToggle` instead.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onTap: PropTypes.func,
+
+		/**
+		 * Called when the toggle item is toggled.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @param {String} event.selected - Selected value of item.
+		 * @param {*} event.value - Value passed from `value` prop.
+		 * @public
+		 */
+		onToggle: PropTypes.func,
+
+		/**
 		 * Applies the provided `icon`.
 		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @public
 		 */
-		onTap: PropTypes.func,
+		selected: PropTypes.bool,
 
 		/**
 		 * The value that will be sent to the `onToggle` handler.
@@ -179,8 +196,6 @@ const ToggleItemBase = kind({
 		 * @default null
 		 * @public
 		 */
-		onToggle: PropTypes.func,
-		selected: PropTypes.bool,
 		value: PropTypes.any
 	},
 
@@ -238,7 +253,6 @@ const ToggleItemDecorator = compose(
 	Toggleable({toggleProp: 'onTap'}),
 	Touchable
 );
-
 
 /**
  * An unstyled item with built-in support for toggling.
