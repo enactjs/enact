@@ -6,6 +6,7 @@ import {Job} from '@enact/core/util';
 import platform from '@enact/core/platform';
 import {forward} from '@enact/core/handle';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
+import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
@@ -576,6 +577,10 @@ class ScrollableBaseNative extends Component {
 
 		this.animateOnFocus = animate;
 
+		if (is('pointerHide', keyCode)) {
+			this.isHover = false;
+		}
+
 		if (isPageUp(keyCode) || isPageDown(keyCode)) {
 			ev.preventDefault();
 			if ((!repeat && this.hasFocus() || this.isHover) && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
@@ -619,7 +624,7 @@ class ScrollableBaseNative extends Component {
 	onKeyDownInBody = (ev) => {
 		const {keyCode} = ev;
 
-		if (isPageUp(keyCode) || isPageDown(keyCode)) {
+		if (Spotlight.getPointerMode() && (isPageUp(keyCode) || isPageDown(keyCode))) {
 			const current = Spotlight.getCurrent();
 
 			if (!current && this.isHover) {

@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import platform from '@enact/core/platform';
 import {forward} from '@enact/core/handle';
@@ -502,6 +503,10 @@ class ScrollableBase extends Component {
 			ev.preventDefault();
 		}
 
+		if (is('pointerHide', keyCode)) {
+			this.isHover = false;
+		}
+
 		this.animateOnFocus = this.props.animate;
 
 		if (!repeat && this.hasFocus() || this.isHover) {
@@ -553,7 +558,7 @@ class ScrollableBase extends Component {
 	onKeyDownInBody = (ev) => {
 		const {keyCode} = ev;
 
-		if (isPageUp(keyCode) || isPageDown(keyCode)) {
+		if (Spotlight.getPointerMode() && (isPageUp(keyCode) || isPageDown(keyCode))) {
 			const current = Spotlight.getCurrent();
 
 			if (!current && this.isHover) {
