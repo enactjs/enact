@@ -1,0 +1,19 @@
+@import '../styles/skin.less';
+@import "../styles/mixins.less";
+
+// Public
+.toggleIconItem {
+    /* Available for customization */
+    .itemIcon {
+        background-size: auto;
+        background-position: 0;
+        width: auto;
+        height: auto;
+    }
+}
+.focus({
+	.itemIcon {
+		background-position: 0;
+	}
+}, parent);
+
