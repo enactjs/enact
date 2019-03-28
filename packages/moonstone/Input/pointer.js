@@ -12,7 +12,8 @@ const handlePointerDown = handle(
 	shouldCapture,				// If we should capture the click
 	preventDefault,				// prevent the down event bubbling
 	stop,						// (and stop propagation to support touch)
-	setCapturing(true)			// and flag that we've started capturing a down event
+	setCapturing(true),			// and flag that we've started capturing a down event
+	() => active.blur()			// and blur the active node
 );
 
 const handlePointerUp = handle(
