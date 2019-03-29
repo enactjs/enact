@@ -125,9 +125,10 @@ const parseUserAgent = (userAgent) => {
 
 /**
  * @typedef {Object} PlatformDescription
+ * @property {Object} [extra] - Additional information about the detected platform
  * @property {Boolean} gesture - `true` if the platform has native double-finger events
  * @property {Boolean} node - `true` only if `window` is `undefined`
- * @property {String} platformName - The name of the platform
+ * @property {String} [platformName] - The name of the platform, if detected
  * @property {Boolean} touch - `true` if the platform has native single-finger events
  * @property {Boolean} unknown - `true` for any unknown system
  *

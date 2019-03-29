@@ -367,13 +367,14 @@ function unit (pixels, toUnit) {
 const scaleToRem = (pixels) => unit(scale(pixels), 'rem');
 
 /**
- * The default configurable options for {@link ui/resolution.selectSrc}.
+ * The default configurable options for {@link ui/resolution.selectSrc}. Additional resolutions
+ * may be added.
  *
  * @typedef {Object} selectSrcOptions
  * @memberof ui/resolution
- * @property {String}    hd    HD / 720p Resolution image asset source URI/URL
- * @property {String}    fhd    FHD / 1080p Resolution image asset source URI/URL
- * @property {String}    uhd    UHD / 4K Resolution image asset source URI/URL
+ * @property {String}    [hd]    HD / 720p Resolution image asset source URI/URL
+ * @property {String}    [fhd]   FHD / 1080p Resolution image asset source URI/URL
+ * @property {String}    [uhd]   UHD / 4K Resolution image asset source URI/URL
  */
 
 /**
