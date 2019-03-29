@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/ContextualPopupDecorator` method `positionContextualPopup()` to correctly reposition the popup when invoked from app code
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to remove event listeners properly
 
 ## [2.4.1] - 2019-03-11
