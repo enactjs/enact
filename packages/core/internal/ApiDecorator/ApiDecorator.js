@@ -12,7 +12,9 @@ import hoc from '../../hoc';
 
 // Gets a property from `provider`
 const get = (provider, name) => () => {
-	return provider[name];
+	if (provider) {
+		return provider[name];
+	}
 };
 
 // Sets a property on `provider`
