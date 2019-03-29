@@ -74,18 +74,24 @@
 		&::before {
 			content: "";
 			position: absolute;
-			min-width: 24px;
-			height: 6px;
-			bottom: 18px;
-			left: 24px;
-			right: 24px;
-			border-radius: 6px;
+			margin-right: 18px;
+			width: 21px;
+			height: 21px;
+			border-radius: 21px;
 		}
 
 		.icon {
 			-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
 			-webkit-margin-end: @moon-button-icon-h-margin;
 		}
+	}
+
+	&.red .client::before,
+	&.green .client::before,
+	&.yellow .client::before,
+	&.blue .client::before
+	{
+		position: static;
 	}
 
 	//**

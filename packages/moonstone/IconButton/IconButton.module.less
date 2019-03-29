@@ -62,6 +62,27 @@
 		/* Exported for customization */
 	}
 
+	.client {
+		// Colored under-bar
+		&::before {
+			content: "";
+			min-width: 36px;
+			height: 6px;
+			bottom: 18px;
+			left: 24px;
+			right: 24px;
+			border-radius: 6px;
+		}
+	}
+
+	&.red .client::before,
+	&.green .client::before,
+	&.yellow .client::before,
+	&.blue .client::before
+	{
+		position: absolute;
+	}
+
 	.applySkins({
 		&.transparent {
 			.bg {
