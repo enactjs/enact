@@ -26,24 +26,6 @@
 		}
 	}
 
-	&.lightweight {
-		.caption {
-			height: initial !important;
-			overflow: hidden;
-			text-align: center;
-			text-overflow: ellipsis;
-    		white-space: pre;
-		}
-
-		.subCaption {
-			height: initial !important;
-			overflow: hidden;
-			text-align: center;
-			text-overflow: ellipsis;
-    		white-space: pre;
-		}
-	}
-
 	.caption {
 		.moon-sub-header-text();
 		padding-top: @moon-gridlist-item-caption-padding-top;
@@ -99,6 +81,14 @@
 			}
 		});
 	});
+}
+
+.lightweight {
+	height: initial !important;
+	overflow: hidden;
+	text-align: center;
+	text-overflow: ellipsis;
+	white-space: pre;
 }
 
 .muted({

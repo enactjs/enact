@@ -16,20 +16,18 @@
 
 import classNames from 'classnames';
 import compose from 'ramda/src/compose';
-import {forward} from '@enact/core/handle';
-import {Job} from '@enact/core/util';
 import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
 import {CellBase} from '@enact/ui/Layout';
+import ComponentOverride from '@enact/ui/ComponentOverride';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Spotlight from '@enact/spotlight';
 import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
 import {ImageBase as Image} from '../Image';
 import {Marquee, MarqueeController} from '../Marquee';
+import ReplaceableOnFocus from '../internal/ReplaceableOnFocus';
 import Skinnable from '../Skinnable';
 
 import componentCss from './GridListImageItem.module.less';
@@ -43,9 +41,10 @@ const
 	marqueeComponent = (props) => (
 		<Marquee alignment="center" marqueeOn="hover" {...props} />
 	),
-	cellComponent = (props) => (
-		<CellBase {...props} />
-	);
+	cellComponent = ({className, ...rest}) => {
+		const classes = classNames(className, componentCss.lightweight);
+		return (<CellBase {...rest} className={classes} />);
+	};
 
 /**
  * A Moonstone styled base component for [GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}.
@@ -203,97 +202,13 @@ const GridListImageItemLightDecorator = compose(
 );
 const GridListImageItemLight = GridListImageItemLightDecorator(GridListImageItemBase);
 
-class GridListImageItem extends React.PureComponent {
-	static displayName = 'GridListImageItemSpotlightDecorator'
-
-	constructor (props) {
-		super(props);
-
-		this.state = {
-			lightweight: true
-		};
-		this.shouldPreventFocus = false;
-	}
-
-	componentDidUpdate (prevProps, prevState) {
-		if (prevState.lightweight && !this.state.lightweight && !Spotlight.getCurrent()) {
-			// eslint-disable-next-line react/no-find-dom-node
-			ReactDOM.findDOMNode(this).focus();
-		}
-	}
-
-	componentWillUnmount () {
-		this.renderJob.stop();
-	}
-
-	handleBlur = (ev) => {
-		forward('onBlur', ev, this.props);
-		this.shouldPreventFocus = false;
-		this.renderJob.stop();
-	}
-
-	handleFocus = (ev) => {
-		if (this.shouldPreventFocus) {
-			ev.preventDefault();
-			ev.stopPropagation();
-			this.shouldPreventFocus = false;
-			return;
-		}
-
-		if (this.state.lightweight) {
-			this.shouldPreventFocus = true;
-			this.startRenderJob();
-		} else {
-			forward('onFocus', ev, this.props);
-		}
-	}
-
-	handleMouseEnter = (ev) => {
-		if (this.state.lightweight) {
-			this.startRenderJob();
-		} else {
-			forward('onMouseEnter', ev, this.props);
-		}
-	}
-
-	handleMouseLeave = (ev) => {
-		forward('onMouseLeave', ev, this.props);
-		this.renderJob.stop();
-	}
-
-	startRenderJob = () => {
-		// 100 is a somewhat arbitrary value to avoid rendering when 5way hold events are moving focus through the item.
-		// The timing appears safe against default spotlight accelerator speeds.
-		this.renderJob.startAfter(100);
-	}
-
-	renderJob = new Job(() => {
-		this.setState({
-			lightweight: false
-		});
-	})
-
-	render () {
-		const {className, ...rest} = this.props;
-		const {lightweight} = this.state;
-		const classes = classNames(className, {[componentCss.lightweight]: lightweight});
-		const Component = lightweight ? GridListImageItemLight : GridListImageItemFull;
-		const captionComponent = lightweight ? cellComponent : marqueeComponent;
-
-		return (
-			<Component
-				{...rest}
-				captionComponent={captionComponent}
-				className={classes}
-				onBlur={this.handleBlur}
-				onFocus={this.handleFocus}
-				onMouseEnter={this.handleMouseEnter}
-				onMouseLeave={this.handleMouseLeave}
-			/>
-		);
-	}
-}
-
+const GridListImageItem = (props) => (
+	<ReplaceableOnFocus
+		{...props}
+		initialComponent={<ComponentOverride component={GridListImageItemLight} captionComponent={cellComponent} />}
+		updatedComponent={<ComponentOverride component={GridListImageItemFull} captionComponent={marqueeComponent} />}
+	/>
+);
 
 export default GridListImageItem;
 export {
