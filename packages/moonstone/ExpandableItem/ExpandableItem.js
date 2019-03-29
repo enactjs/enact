@@ -140,6 +140,15 @@ const ExpandableItemBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
+		 * Prevents rendering the transition container.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		hideChildren: PropTypes.bool,
+
+		/**
 		 * The secondary, or supportive text. Typically under the `title`, a subtitle.
 		 *
 		 * @type {Node}
@@ -356,6 +365,7 @@ const ExpandableItemBase = kind({
 		handleKeyDown,
 		handleLabelKeyDown,
 		handleOpen,
+		hideChildren,
 		label,
 		labeledItemClassName,
 		open,
@@ -409,20 +419,23 @@ const ExpandableItemBase = kind({
 					spotlightDisabled={spotlightDisabled}
 					titleIcon="arrowlargedown"
 				>{title}</LabeledItem>
-				<ExpandableTransitionContainer
-					data-expandable-container
-					duration="short"
-					timingFunction="ease-out-quart"
-					onHide={onHide}
-					onKeyDown={handleKeyDown}
-					onShow={onShow}
-					spotlightDisabled={transitionSpotlightDisabled}
-					type="clip"
-					direction="down"
-					visible={open}
-				>
-					{children}
-				</ExpandableTransitionContainer>
+				{!hideChildren ?
+					<ExpandableTransitionContainer
+						data-expandable-container
+						duration="short"
+						timingFunction="ease-out-quart"
+						onHide={onHide}
+						onKeyDown={handleKeyDown}
+						onShow={onShow}
+						spotlightDisabled={transitionSpotlightDisabled}
+						type="clip"
+						direction="down"
+						visible={open}
+					>
+						{children}
+					</ExpandableTransitionContainer> :
+					null
+				}
 			</ContainerDiv>
 		);
 	}

@@ -1,6 +1,6 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import ExpandablePicker, {ExpandablePickerBase} from '../ExpandablePicker';
+import ExpandablePicker from '../ExpandablePicker';
 
 const tap = (node) => {
 	node.simulate('mousedown');
@@ -50,9 +50,9 @@ describe('ExpandablePicker Specs', () => {
 			const value = 0;
 			const handleChange = jest.fn();
 			const expandablePicker = mount(
-				<ExpandablePickerBase onChange={handleChange} open title="Options">
+				<ExpandablePicker onChange={handleChange} open title="Options">
 					{['Option one', 'Option two', 'Option three']}
-				</ExpandablePickerBase>
+				</ExpandablePicker>
 			);
 
 			const checkButton = expandablePicker.find('IconButton').last();
@@ -68,9 +68,9 @@ describe('ExpandablePicker Specs', () => {
 	test('should set "checkButtonAriaLabel" to check button', () => {
 		const label = 'custom check button aria-label';
 		const expandablePicker = mount(
-			<ExpandablePickerBase checkButtonAriaLabel={label} open title="Options">
+			<ExpandablePicker checkButtonAriaLabel={label} open title="Options">
 				{['Option one', 'Option two', 'Option three']}
-			</ExpandablePickerBase>
+			</ExpandablePicker>
 		);
 
 		const checkButton = expandablePicker.find('IconButton').at(2);
@@ -84,9 +84,9 @@ describe('ExpandablePicker Specs', () => {
 	test('should set "decrementAriaLabel" to previous button', () => {
 		const label = 'custom previous button aria-label';
 		const expandablePicker = mount(
-			<ExpandablePickerBase decrementAriaLabel={label} open title="Options">
+			<ExpandablePicker decrementAriaLabel={label} open title="Options">
 				{['Option one', 'Option two', 'Option three']}
-			</ExpandablePickerBase>
+			</ExpandablePicker>
 		);
 
 		const checkButton = expandablePicker.find('IconButton').at(1);
@@ -100,9 +100,9 @@ describe('ExpandablePicker Specs', () => {
 	test('should set "incrementAriaLabel" to next button', () => {
 		const label = 'custom next button aria-label';
 		const expandablePicker = mount(
-			<ExpandablePickerBase incrementAriaLabel={label} open title="Options">
+			<ExpandablePicker incrementAriaLabel={label} open title="Options">
 				{['Option one', 'Option two', 'Option three']}
-			</ExpandablePickerBase>
+			</ExpandablePicker>
 		);
 
 		const checkButton = expandablePicker.find('IconButton').at(0);
@@ -116,9 +116,9 @@ describe('ExpandablePicker Specs', () => {
 	test('should set "pickerAriaLabel" to joined picker', () => {
 		const label = 'custom joined picker aria-label';
 		const expandablePicker = mount(
-			<ExpandablePickerBase joined open pickerAriaLabel={label} title="Options">
+			<ExpandablePicker joined open pickerAriaLabel={label} title="Options">
 				{['Option one', 'Option two', 'Option three']}
-			</ExpandablePickerBase>
+			</ExpandablePicker>
 		);
 
 		const joinedPicker = expandablePicker.find('Picker').at(1);
@@ -133,9 +133,9 @@ describe('ExpandablePicker Specs', () => {
 		const children = ['option1', 'option2', 'option3'];
 
 		const expandablePicker = mount(
-			<ExpandablePickerBase data-webos-voice-disabled title="Options" open>
+			<ExpandablePicker data-webos-voice-disabled title="Options" open>
 				{children}
-			</ExpandablePickerBase>
+			</ExpandablePicker>
 		);
 
 		const expected = true;
@@ -148,9 +148,9 @@ describe('ExpandablePicker Specs', () => {
 		const children = ['option1', 'option2', 'option3'];
 
 		const expandablePicker = mount(
-			<ExpandablePickerBase data-webos-voice-disabled title="Options" open>
+			<ExpandablePicker data-webos-voice-disabled title="Options" open>
 				{children}
-			</ExpandablePickerBase>
+			</ExpandablePicker>
 		);
 
 		const expected = true;

@@ -1,11 +1,14 @@
 import {getContainersForNode, getContainerNode, setContainerLastFocusedElement} from '@enact/spotlight/src/container';
 import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import {Job} from '@enact/core/util';
 import Spotlight from '@enact/spotlight';
 import Pause from '@enact/spotlight/Pause';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+
+const shouldRenderChildren = ({disabled, open}, {hideChildren}) => hideChildren && open && !disabled;
 
 /**
  * Default config for {@link mooonstone/ExpandableItem.ExpandableSpotlightDecorator}
@@ -57,6 +60,15 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes =  /** @lends moonstone/ExpandableItem.ExpandableSpotlightDecorator.prototype */ {
 			/**
+			 * Disables ExpandableSpotlightDecorator and the control becomes non-interactive.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			disabled: PropTypes.bool,
+
+			/**
 			 * When `true`, the contents of the container will not receive spotlight focus when becoming
 			 * expanded.
 			 *
@@ -77,13 +89,38 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
+			disabled: false,
 			noAutoFocus: false
 		}
 
-		constructor () {
-			super();
+		constructor (props) {
+			super(props);
+
+			const {disabled, open} = props;
+			this.state = {
+				hideChildren: !open || disabled,
+				open: open && !disabled
+			};
 
 			this.paused = new Pause('ExpandableItem');
+		}
+
+		static getDerivedStateFromProps (props, state) {
+			const open = props.open && !props.disabled;
+
+			if (shouldRenderChildren(props, state)) {
+				return {open: false, hideChildren: false};
+			} else if (open !== state.open) {
+				return {open};
+			}
+			return null;
+		}
+
+		componentDidUpdate (prevProps, prevState) {
+			if (shouldRenderChildren(this.props, prevState)) {
+				// eslint-disable-next-line react/no-did-update-set-state
+				this.setState({open: true});
+			}
 		}
 
 		componentWillUnmount () {
@@ -198,21 +235,42 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.highlight(this.highlightContents);
 		}
 
+		handleBlur = () => {
+			this.renderJob.stop();
+		}
+
+		handleFocus = () => {
+			if (this.state.hideChildren) {
+				this.renderJob.idle();
+			}
+		}
+
+		renderJob = new Job(() => {
+			this.setState({
+				hideChildren: false
+			});
+		})
+
 		setContainerNode = (node) => {
 			this.containerNode = ReactDOM.findDOMNode(node);	// eslint-disable-line react/no-find-dom-node
 		}
 
 		render () {
+			const {open, hideChildren} = this.state;
 			const props = Object.assign({}, this.props);
 			delete props.noAutoFocus;
 
 			return (
 				<Wrapped
 					{...props}
+					hideChildren={hideChildren}
+					onBlur={this.handleBlur}
+					onFocus={this.handleFocus}
 					onHide={this.handleHide}
 					onShow={this.handleShow}
 					onOpen={this.handleOpen}
 					onClose={this.handleClose}
+					open={open}
 					setContainerNode={this.setContainerNode}
 				/>
 			);
