@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Item`, `ui/Layout`, `ui/Repeater`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleItem`, and `ui/ViewManager` support for `ref` to gain access to the wrapped `component`
 
+### Fixed
+
+- `ui/ToggleIcon` to not bubble `touchend` event to not double fire
+
 ## [2.4.1] - 2019-03-11
 
 ### Fixed
