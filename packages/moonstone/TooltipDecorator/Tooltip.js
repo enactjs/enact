@@ -1,5 +1,6 @@
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
+import ri from '@enact/ui/resolution';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -107,10 +108,15 @@ const TooltipBase = kind({
 	},
 
 	computed: {
-		arrowPosition: ({arrowPosition}) => arrowPosition ? {left: `${arrowPosition * 100}%`} : null,
+		labelOffset: ({arrowPosition}) => {
+			if (arrowPosition) {
+				const cappedPosition = Math.max(-0.5, Math.min(0.5, arrowPosition));
+				return {transform: `translateX(calc(${cappedPosition * 100}% - ((${cappedPosition} / 0.5) * ${ri.scale((54 / 2) + (30 / 2))}px)))`};
+			}
+		},
 		arrowType: ({arrowAnchor}) => (arrowAnchor === 'center' || arrowAnchor === 'middle') ?
 			'M0,5C0,4,1,3,3,2.5C1,2,0,1,0,0V5Z' : 'M0,5C0,3,1,0,3,0H0V5Z',
-		className: ({direction, arrowAnchor, styler}) => styler.append(direction, `${arrowAnchor}Arrow`),
+		className: ({direction, arrowAnchor, relative, styler}) => styler.append(direction, `${arrowAnchor}Arrow`, {relative, absolute: !relative}),
 		style: ({position, style}) => {
 			return {
 				...style,
@@ -119,19 +125,23 @@ const TooltipBase = kind({
 		}
 	},
 
-	render: ({children, tooltipRef, arrowType, width, arrowPosition, ...rest}) => {
+	render: ({arrowType, children, tooltipRef, width, labelOffset, ...rest}) => {
 		delete rest.arrowAnchor;
+		delete rest.arrowPosition;
 		delete rest.direction;
 		delete rest.position;
+		delete rest.relative;
 
 		return (
 			<div {...rest}>
-				<svg style={arrowPosition} className={css.tooltipArrow} viewBox="0 0 3 5">
-					<path d={arrowType} />
-				</svg>
-				<TooltipLabel tooltipRef={tooltipRef} width={width}>
-					{children}
-				</TooltipLabel>
+				<div className={css.tooltipAnchor}>
+					<svg className={css.tooltipArrow} viewBox="0 0 3 5">
+						<path d={arrowType} />
+					</svg>
+					<TooltipLabel tooltipRef={tooltipRef} width={width} style={labelOffset}>
+						{children}
+					</TooltipLabel>
+				</div>
 			</div>
 		);
 	}

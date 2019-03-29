@@ -127,16 +127,16 @@ const getPosition = function (tooltipNode, clientNode, arrowAnchor, tooltipDirec
 
 	switch (tooltipDirection) {
 		case 'above':
-			position.top = clientNode.top - tooltipNode.height - tooltipHeight;
+			position.top = clientNode.top;
 			break;
 		case 'below':
-			position.top = clientNode.bottom + tooltipHeight;
+			position.top = clientNode.bottom;
 			break;
 		case 'right':
-			position.left = clientNode.right + tooltipHeight;
+			position.left = clientNode.right;
 			break;
 		case 'left':
-			position.left = clientNode.left - tooltipNode.width - tooltipHeight;
+			position.left = clientNode.left;
 			break;
 		default:
 			position = {};
@@ -144,20 +144,8 @@ const getPosition = function (tooltipNode, clientNode, arrowAnchor, tooltipDirec
 
 	if (tooltipDirection === 'above' || tooltipDirection === 'below') {
 		position.left = clientNode.left + clientNode.width / 2;
-
-		if (arrowAnchor === 'left') {
-			position.left -= tooltipNode.width;
-		} else if (arrowAnchor === 'center') {
-			position.left -= tooltipNode.width / 2;
-		}
 	} else if (tooltipDirection === 'left' || tooltipDirection === 'right') {
 		position.top = clientNode.top + clientNode.height / 2;
-
-		if (arrowAnchor === 'top') {
-			position.top -= tooltipNode.height;
-		} else if (arrowAnchor === 'middle') {
-			position.top -= tooltipNode.height / 2;
-		}
 	}
 
 	// When tooltip is too wide, shift the tooltip so that the first part of the tooltip is always visible. Does not affect tooltips with `tooltipDirection` of `left` and `right`

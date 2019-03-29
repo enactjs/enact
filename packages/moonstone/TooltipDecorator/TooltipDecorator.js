@@ -165,7 +165,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.TOOLTIP_HEIGHT = ri.scale(18); // distance between client and tooltip's label
+			this.TOOLTIP_HEIGHT = ri.scale(0); // distance between client and tooltip's label
 
 			this.state = {
 				showing: false,
@@ -296,10 +296,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 				this.showTooltipJob.stop();
 				this.setTooltipLayoutJob.stop();
-
-				if (this.state.showing) {
-					this.setState({showing: false});
-				}
 			}
 		}
 
