@@ -135,6 +135,7 @@ class ScrollButtons extends Component {
 
 	constructor (props) {
 		super(props);
+
 		this.state = {
 			prevButtonDisabled: true,
 			nextButtonDisabled: true
