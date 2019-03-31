@@ -456,6 +456,26 @@ const Spotlight = (function () {
 		}
 	}
 
+	let throttleTimer = null;
+	let throttleClientX, throttleClientY;
+
+	function throttleMouseMove (e) {
+		throttleClientX = e.clientX;
+		throttleClientY = e.clientY;
+
+		if (!throttleTimer) {
+			throttleTimer = setTimeout( () => {
+				const evt = Object.assign({}, e, {
+					clientX: throttleClientX,
+					clientY: throttleClientY,
+					target: document.elementFromPoint(throttleClientX, throttleClientY)
+				});
+				onMouseMove(evt);
+				throttleTimer = null;
+			}, 100);
+		}
+	}
+
 	function onMouseMove ({target, clientX, clientY}) {
 		if (shouldPreventNavigation()) {
 			notifyPointerMove(null, target, clientX, clientY);
@@ -523,7 +543,7 @@ const Spotlight = (function () {
 				window.addEventListener('keydown', onKeyDown);
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
-				window.addEventListener('mousemove', onMouseMove);
+				window.addEventListener('mousemove', throttleMouseMove);
 				if (platform.webos) {
 					window.top.document.addEventListener('webOSMouse', handleWebOSMouseEvent);
 					window.top.document.addEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
@@ -549,7 +569,7 @@ const Spotlight = (function () {
 			window.removeEventListener('keydown', onKeyDown);
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
-			window.removeEventListener('mousemove', onMouseMove);
+			window.removeEventListener('mousemove', throttleMouseMove);
 			if (platform.webos) {
 				window.top.document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
 				window.top.document.removeEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
