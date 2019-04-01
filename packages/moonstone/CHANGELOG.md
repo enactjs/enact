@@ -2,14 +2,14 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [2.5.0] - 2019-04-01
 
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` method `positionContextualPopup()` to correctly reposition the popup when invoked from app code
 - `moonstone/Tooltip` to better support long tooltips
 - `moonstone/Popup` to resume spotlight pauses when closing with animation
-- `moonstone/Panels` to check that child is valid before generating spotlightId
+- `moonstone/Panels` to correctly ignore `null` children
 
 ## [2.4.1] - 2019-03-11
 
