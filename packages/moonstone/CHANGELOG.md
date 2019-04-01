@@ -2,7 +2,20 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [2.5.0] - 2019-04-01
+
+### Fixed
+
+- `moonstone/ContextualPopupDecorator` method `positionContextualPopup()` to correctly reposition the popup when invoked from app code
+- `moonstone/Tooltip` to better support long tooltips
+- `moonstone/Popup` to resume spotlight pauses when closing with animation
+- `moonstone/Panels` to correctly ignore `null` children
+
 ## [2.4.1] - 2019-03-11
+
+### Changed
+
+- `moonstone/Picker` to display more of the selected value in wide instances
 
 ### Fixed
 
@@ -12,6 +25,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to continue to show thumbnail when playback control keys are pressed
 - `moonstone/VideoPlayer` to stop seeking by remote key when it loses focus
 - `moonstone/VirtualList` to only resume spotlight pauses it initiated
+- `moonstone/ExpandableItem` to be better optimized on mount
 
 ## [2.4.0] - 2019-03-04
 

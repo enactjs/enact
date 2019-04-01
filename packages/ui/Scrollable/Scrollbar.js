@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {PureComponent, Component} from 'react';
+import ReactDOM from 'react-dom';
 
 import ri from '../resolution';
 
@@ -22,7 +23,7 @@ const
  * @param {String} value - CSS Variable value.
  */
 const setCSSVariable = (element, variable, value) => {
-	element.style.setProperty(variable, value);
+	ReactDOM.findDOMNode(element).style.setProperty(variable, value); // eslint-disable-line react/no-find-dom-node
 };
 
 /**
@@ -45,6 +46,19 @@ class ScrollbarBase extends PureComponent {
 		 * @private
 		 */
 		childRenderer: PropTypes.func.isRequired,
+
+		/**
+		 * Client size of the container; valid values are an object that has `clientWidth` and `clientHeight`.
+		 *
+		 * @type {Object}
+		 * @property {Number}    clientHeight    The client height of the list.
+		 * @property {Number}    clientWidth    The client width of the list.
+		 * @public
+		 */
+		clientSize: PropTypes.shape({
+			clientHeight: PropTypes.number.isRequired,
+			clientWidth: PropTypes.number.isRequired
+		}),
 
 		/**
 		 * If `true`, add the corner between vertical and horizontal scrollbars.
@@ -84,6 +98,13 @@ class ScrollbarBase extends PureComponent {
 		vertical: true
 	}
 
+	constructor (props) {
+		super(props);
+
+		this.containerRef = React.createRef();
+		this.thumbRef = React.createRef();
+	}
+
 	componentDidMount () {
 		this.calculateMetrics();
 	}
@@ -99,10 +120,6 @@ class ScrollbarBase extends PureComponent {
 	minThumbSizeRatio = 0
 	ignoreMode = false
 
-	// refs
-	containerRef = null
-	thumbRef = null
-
 	update = (bounds) => {
 		const
 			{vertical} = this.props,
@@ -115,13 +132,13 @@ class ScrollbarBase extends PureComponent {
 			scrollThumbPositionRatio = (scrollOrigin / (scrollSize - clientSize)),
 			scrollThumbSizeRatio = Math.max(this.minThumbSizeRatio, Math.min(1, thumbSizeRatioBase));
 
-		setCSSVariable(this.thumbRef, '--scrollbar-size-ratio', scrollThumbSizeRatio);
-		setCSSVariable(this.thumbRef, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
+		setCSSVariable(this.thumbRef.current, '--scrollbar-size-ratio', scrollThumbSizeRatio);
+		setCSSVariable(this.thumbRef.current, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
 	}
 
 	showThumb = () => {
 		this.hideThumbJob.stop();
-		this.thumbRef.classList.add(this.props.css.thumbShown);
+		ReactDOM.findDOMNode(this.thumbRef.current).classList.add(this.props.css.thumbShown); // eslint-disable-line react/no-find-dom-node
 	}
 
 	startHidingThumb = () => {
@@ -129,29 +146,25 @@ class ScrollbarBase extends PureComponent {
 	}
 
 	hideThumb = () => {
-		this.thumbRef.classList.remove(this.props.css.thumbShown);
+		ReactDOM.findDOMNode(this.thumbRef.current).classList.remove(this.props.css.thumbShown); // eslint-disable-line react/no-find-dom-node
 	}
 
 	hideThumbJob = new Job(this.hideThumb.bind(this), thumbHidingDelay);
 
 	calculateMetrics = () => {
-		const trackSize = this.containerRef[this.props.vertical ? 'clientHeight' : 'clientWidth'];
+		const primaryDimenstion = this.props.vertical ? 'clientHeight' : 'clientWidth';
+		let trackSize;
+
+		if (this.props.clientSize) {
+			trackSize = this.props.clientSize[primaryDimenstion];
+		} else {
+			trackSize = this.containerRef.current[primaryDimenstion];
+		}
+
 		this.minThumbSizeRatio = ri.scale(minThumbSize) / trackSize;
 	}
 
 	getContainerRef = () => (this.containerRef)
-
-	initContainerRef = (ref) => {
-		if (ref) {
-			this.containerRef = ref;
-		}
-	}
-
-	initScrollThumbRef = (ref) => {
-		if (ref) {
-			this.thumbRef = ref;
-		}
-	}
 
 	render () {
 		const
@@ -163,13 +176,13 @@ class ScrollbarBase extends PureComponent {
 				vertical ? css.vertical : css.horizontal
 			);
 
-		delete rest.setRef;
+		delete rest.clientSize;
 
 		return (
-			<div {...rest} className={containerClassName} ref={this.initContainerRef}>
+			<div {...rest} className={containerClassName} ref={this.containerRef}>
 				{childRenderer({
 					getContainerRef: this.getContainerRef,
-					initScrollThumbRef: this.initScrollThumbRef
+					thumbRef: this.thumbRef
 				})}
 			</div>
 		);
@@ -218,11 +231,11 @@ class Scrollbar extends Component {
 			<ScrollbarBase
 				{...this.props}
 				ref={this.setApi}
-				childRenderer={({initScrollThumbRef}) => { // eslint-disable-line react/jsx-no-bind
+				childRenderer={({thumbRef}) => { // eslint-disable-line react/jsx-no-bind
 					return (
 						<ScrollThumb
 							key="thumb"
-							setRef={initScrollThumbRef}
+							ref={thumbRef}
 							vertical={vertical}
 						/>
 					);

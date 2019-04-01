@@ -10,10 +10,13 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import ForwardRef from '../ForwardRef';
+
 /**
- * A stateless component that stamps out copies of `childComponent`.
+ * A stateless component that stamps out copies of `childComponent`, without
+ * [RepeaterDecorator](ui/Repeater.RepeaterDecorator) applied.
  *
- * @class Repeater
+ * @class RepeaterBase
  * @memberof ui/Repeater
  * @ui
  * @public
@@ -21,7 +24,7 @@ import React from 'react';
 const RepeaterBase = kind({
 	name: 'Repeater',
 
-	propTypes: /** @lends ui/Repeater.Repeater.prototype */ {
+	propTypes: /** @lends ui/Repeater.RepeaterBase.prototype */ {
 		/**
 		 * Component type to repeat.
 		 *
@@ -77,6 +80,14 @@ const RepeaterBase = kind({
 		component: EnactPropTypes.renderable,
 
 		/**
+		 * Called with a reference to [component]{@link ui/Repeater.Repeater#component}
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		componentRef: PropTypes.func,
+
+		/**
 		 * The property on each `childComponent` that receives the index of the item in the `Repeater`.
 		 *
 		 * @type {String}
@@ -116,15 +127,40 @@ const RepeaterBase = kind({
 		}
 	},
 
-	render: ({component: Component, ...rest}) => {
+	render: ({component: Component, componentRef, ...rest}) => {
 		delete rest.childComponent;
 		delete rest.childProp;
 		delete rest.indexProp;
 		delete rest.itemProps;
 
-		return <Component role="list" {...rest} />;
+		return <Component ref={componentRef} role="list" {...rest} />;
 	}
 });
 
-export default RepeaterBase;
-export {RepeaterBase as Repeater, RepeaterBase};
+/**
+ * Applies Repeater behaviors.
+ *
+ * @hoc
+ * @memberof ui/Repeater
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const RepeaterDecorator = ForwardRef({prop: 'componentRef'});
+
+/**
+ * A stateless component that stamps out copies of `childComponent`.
+ *
+ * @class Repeater
+ * @memberof ui/Repeater
+ * @extends ui/Repeater.RepeaterBase
+ * @mixes ui/Repeater.RepeaterDecorator
+ * @ui
+ * @public
+ */
+const Repeater = RepeaterDecorator(RepeaterBase);
+
+export default Repeater;
+export {
+	Repeater,
+	RepeaterBase
+};
