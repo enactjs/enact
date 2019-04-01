@@ -57,7 +57,6 @@
 	padding: 0 @moon-input-padding;
 	border-radius: @moon-input-border-radius;
 	margin: 0 (@moon-spotlight-outset / 2);
-	border: @moon-input-border-width solid transparent;
 	box-sizing: border-box;
 	vertical-align: middle;
 
@@ -155,7 +154,6 @@
 		}
 
 		.focus({
-			border-color: @moon-input-border-focus-border-color;
 			background-color: @moon-input-decorator-focus-bg-color;
 			box-shadow: 0px 0px 0px @moon-input-border-outline-width @moon-input-border-active-outline-color;
 
@@ -167,7 +165,6 @@
 		});
 
 		&.focused {
-			border-color: @moon-input-border-active-border-color;
 			background-color: @moon-input-decorator-active-bg-color;
 		}
 
@@ -199,17 +196,8 @@
 .muted({
 	.decorator {
 		.applySkins({
-			&:global(.spottable):focus {
-				border-color: transparent;
-			}
-
-			&.focused {
-				border-color: transparent;
-			}
-
 			.focus({
 				background-color: @moon-input-decorator-bg-color;
-				border-color: transparent;
 			});
 		});
 	}
