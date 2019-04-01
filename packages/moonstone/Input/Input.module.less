@@ -34,7 +34,7 @@
 	}
 
 	.input-placeholder({
-		.vendor-opacity(.3);
+		.vendor-opacity(@moon-input-disabled-opacity);
 	});
 
 	.focus({
@@ -43,7 +43,7 @@
 
 	.disabled({
 		cursor: default;
-		.vendor-opacity(.3);
+		.vendor-opacity(@moon-input-disabled-opacity);
 	});
 
 	:global(.enact-locale-right-to-left) & {
@@ -79,7 +79,7 @@
 		}
 
 		.input {
-			font-size: @moon-button-large-font-size;
+			font-size: @moon-input-small-font-size;
 			height: @moon-input-small-height;
 		}
 	}
@@ -136,7 +136,7 @@
 
 			.focus({
 				color: @moon-input-text-color;
-				background-color: white;
+				background-color: inherit;
 			});
 
 			.focused& {
@@ -154,15 +154,10 @@
 			color: @moon-red;
 		}
 
-		&:global(.spottable):focus {
-			color: @moon-input-text-color;
+		.focus({
 			border-color: @moon-input-border-focus-border-color;
 			background-color: @moon-input-decorator-focus-bg-color;
 			box-shadow: 0px 0px 0px @moon-input-border-outline-width @moon-input-border-active-outline-color;
-		}
-
-		.focus({
-			background-color: white;
 
 			.input {
 				.input-placeholder({
@@ -177,7 +172,7 @@
 		}
 
 		.disabled({
-			.vendor-opacity(.3);
+			.vendor-opacity(@moon-input-disabled-opacity);
 		});
 
 		.decoratorIcon,
