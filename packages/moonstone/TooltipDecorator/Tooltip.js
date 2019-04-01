@@ -78,6 +78,16 @@ const TooltipBase = kind({
 		}),
 
 		/**
+		 * Reconfigures the component to anchor itself to the designated edge of its container.
+		 * When this is not specified, the implication is that the component is "absolutely"
+		 * positioned, relative to the viewport, rather than its parent layer.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		relative: PropTypes.bool,
+
+		/**
 		 * Called when the tooltip mounts/unmounts, giving a reference to the DOM.
 		 *
 		 * @type {Function}
