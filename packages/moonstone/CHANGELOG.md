@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `moonstone/Scrollable` to enable touch/drag scrolling by default.  Developers can disable touch/drag scrolling by specifying the `noScrollByDrag` prop on `moonstone/Scroller` (or any `ui/Scrollable` instance)
+- `moonstone/Scrollable` to enable touch/drag scrolling when the platform has touch support
 
 ## [2.5.0] - 2019-04-01
 
