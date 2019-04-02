@@ -39,7 +39,7 @@
 @moon-spotlight-border-color:         @moon-accent;
 @moon-spotlight-color:                @moon-accent;
 @moon-active-border-color:            @moon-gray;
-@moon-active-spotlight-border-color:  @moon-white;
+@moon-active-spotlight-border-color:  #ccc;
 
 
 // ---------------------------------------
@@ -52,14 +52,22 @@
 
 // Button
 // ---------------------------------------
-@moon-button-text-color:              #ccc;
-@moon-button-bg-color:                @moon-dark-gray;
-@moon-button-disabled-bg-color:       @moon-darker-gray;
-@moon-button-translucent-opacity:     30%;
-@moon-button-lightTranslucent-bg-color:  @moon-white;
-@moon-button-transparent-active-text-color:  @moon-white;
-@moon-button-disabled-text-color:     @moon-dark-gray;
-@moon-button-disabled-spotlight-bg-color: @moon-spotlight-border-color;
+@moon-button-text-color: #ccc;
+@moon-button-bg-color: #383838;
+@moon-button-translucent-opacity: 30%;
+@moon-button-lightTranslucent-bg-color: @moon-white;
+@moon-button-transparent-active-text-color: @moon-white;
+@moon-button-disabled-text-color: @moon-dark-gray;
+@moon-button-disabled-bg-color: @moon-darker-gray;
+@moon-button-focus-text-color: @moon-spotlight-text-color;
+@moon-button-focus-bg-color: @moon-spotlight-bg-color;
+@moon-button-disabled-focus-text-color: @moon-spotlight-disabled-text-color;
+@moon-button-disabled-focus-icon-color: @moon-spotlight-text-color;
+@moon-button-disabled-focus-bg-color: @moon-spotlight-bg-color;
+@moon-button-selected-border-color: @moon-spotlight-border-color;
+@moon-button-selected-focus-text-color: @moon-spotlight-text-color;
+@moon-button-selected-focus-bg-color: @moon-spotlight-bg-color;
+@moon-button-selected-focus-border-color: @moon-active-spotlight-border-color;
 
 // ContextualPopup
 // ---------------------------------------
@@ -215,7 +223,7 @@
 @moon-slider-focus-bg-color: @moon-spotlight-color;
 @moon-slider-spotlight-knob-color: @moon-spotlight-color;
 @moon-slider-spotlight-bar-color: @moon-spotlight-color;
-@moon-slider-knob-bg-color: @moon-dark-gray;
+@moon-slider-knob-bg-color: @moon-button-bg-color;
 @moon-slider-knob-active-bg-color: @moon-slider-knob-bg-color;
 
 // Spinner
@@ -245,7 +253,7 @@
 @moon-toggle-button-switch-on-bg-color: @moon-accent;
 @moon-toggle-button-switch-on-border-color: @moon-white;
 @moon-toggle-button-switch-dot-on-color: transparent;
-@moon-toggle-button-switch-off-bg-color: @moon-dark-gray;
+@moon-toggle-button-switch-off-bg-color: @moon-button-bg-color;
 @moon-toggle-button-switch-off-border-color: @moon-white;
 @moon-toggle-button-switch-disabled-color: @moon-darker-gray;
 @moon-toggle-button-switch-disabled-border-color: #6c6c6c;

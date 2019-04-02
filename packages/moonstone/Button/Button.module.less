@@ -83,7 +83,8 @@
 		}
 
 		.icon {
-			-webkit-margin-start: 0;
+			-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
+			-webkit-margin-end: @moon-button-icon-h-margin;
 		}
 	}
 
@@ -93,7 +94,14 @@
 	//*/
 	.marquee {
 		flex-grow: 1;
-		text-align: center;
+	}
+
+	// Only center the text if there is no icon. Otherwise, the default is to just leave its
+	// alignment alone, since we don't want to try to override marquee's directionality alignment.
+	&:not(.hasIcon) {
+		.marquee {
+			text-align: center;
+		}
 	}
 
 	&.minWidth {
@@ -130,6 +138,11 @@
 			bottom: 12px;
 			left: 18px;
 			right: 18px;
+		}
+
+		.icon {
+			-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
+			-webkit-margin-end: @moon-button-icon-small-h-margin;
 		}
 	}
 
@@ -185,23 +198,23 @@
 		}
 
 		.focus({
-			color: @moon-spotlight-text-color;
+			color: @moon-button-focus-text-color;
 			background-color: transparent;
 
 			.bg {
-				background-color: @moon-spotlight-border-color;
+				background-color: @moon-button-focus-bg-color;
 			}
 
 			.disabled({
-				color: @moon-spotlight-disabled-text-color;
+				color: @moon-button-disabled-text-color;
 
 				.bg {
-					background-color: @moon-button-disabled-spotlight-bg-color;
+					background-color: @moon-button-disabled-focus-bg-color;
 				}
 
 				.icon {
 					.vendor-opacity(0.6);
-					color: @moon-spotlight-text-color;
+					color: @moon-button-disabled-focus-icon-color;
 				}
 			});
 		});
@@ -209,16 +222,16 @@
 		// 'Selected' state
 		&.selected {
 			.bg {
-				border-color: @moon-spotlight-border-color;
+				border-color: @moon-button-selected-border-color;
 			}
 
 			// 'Selected+Focus' state, seen in grouped buttons
 			.focus({
-				color: @moon-spotlight-text-color;
+				color: @moon-button-selected-focus-text-color;
 
 				.bg {
-					border-color: @moon-active-spotlight-border-color;
-					background-color: @moon-spotlight-border-color;
+					background-color: @moon-button-selected-focus-bg-color;
+					border-color: @moon-button-selected-focus-border-color;
 				}
 			});
 		}

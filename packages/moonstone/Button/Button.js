@@ -137,7 +137,6 @@ const ButtonBase = kind({
  */
 const ButtonDecorator = compose(
 	Pure,
-	Uppercase,
 	MarqueeDecorator({className: componentCss.marquee}),
 	UiButtonDecorator,
 	Spottable,

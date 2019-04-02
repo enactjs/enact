@@ -154,11 +154,12 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({minWidth, pressed, selected, small, styler}) => styler.append({
-			pressed,
-			small,
+		className: ({icon, minWidth, pressed, selected, small, styler}) => styler.append({
+			hasIcon: (!!icon),
 			minWidth,
-			selected
+			pressed,
+			selected,
+			small
 		}),
 		icon: ({css, icon, iconComponent: Icon, small}) => {
 			return (typeof icon === 'string' && Icon) ? (
