@@ -6,9 +6,7 @@
 
 .header {
 	.border-box();
-	border-top-width: @moon-header-border-top-width;
-	border-top-style: solid;
-	border-bottom-width: @moon-header-border-bottom-width;
+	border-bottom-width: 3px;
 	border-bottom-style: solid;
 	position: relative;
 	max-width: 100%;
@@ -90,6 +88,7 @@
 	// Compact Header
 	&.compact {
 		height: @moon-header-height-small;
+		height: 87px;
 
 		.input,
 		.title {
@@ -102,6 +101,10 @@
 		.titleBelow {
 			display: inline;
 		}
+
+		.headerComponents {
+			padding-inline-end: 15px;
+		}
 	}
 
 	&.fullBleed {
@@ -111,7 +114,6 @@
 	// Skin colors
 	.applySkins({
 		color: @moon-header-text-color;
-		border-top-color: @moon-header-border-color;
 		border-bottom-color: @moon-header-bottom-border-color;
 
 		&.standard {
@@ -152,5 +154,5 @@
 :global(.hasCloseButton) .header.compact,
 :global(.hasCloseButton) .header.standard .title,
 :global(.hasCloseButton) .header.standard .decorator {
-	.padding-start-end(0, @moon-spotlight-outset + @moon-icon-button-small-size + @moon-spotlight-outset);
+	.padding-start-end(0, var(--moon-panels-controls-width));
 }

@@ -1,3 +1,5 @@
+import Slottable from '@enact/ui/Slottable';
+
 import Skinnable from '../Skinnable';
 
 import {ActivityArranger} from './Arrangers';
@@ -18,11 +20,13 @@ import {PanelsBase} from './Panels';
  * @ui
  * @public
  */
-const ActivityPanels = Skinnable(BreadcrumbDecorator({
-	className: 'panels activity enact-fit',
-	max: 1,
-	panelArranger: ActivityArranger
-}, PanelsBase));
+const ActivityPanels = Slottable({slots: ['controls']},
+	Skinnable(BreadcrumbDecorator({
+		className: 'panels activity enact-fit',
+		max: 1,
+		panelArranger: ActivityArranger
+	}, PanelsBase))
+);
 
 export default ActivityPanels;
 export {ActivityPanels};

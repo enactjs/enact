@@ -1,4 +1,5 @@
 import {scale} from '@enact/ui/resolution';
+import Slottable from '@enact/ui/Slottable';
 
 import Skinnable from '../Skinnable';
 
@@ -32,11 +33,13 @@ const calcMax = () => {
  * @ui
  * @public
  */
-const AlwaysViewingPanels = Skinnable(BreadcrumbDecorator({
-	className: 'panels alwaysViewing enact-fit',
-	max: calcMax,
-	panelArranger: AlwaysViewingArranger
-}, Viewport));
+const AlwaysViewingPanels = Slottable({slots: ['controls']},
+	Skinnable(BreadcrumbDecorator({
+		className: 'panels alwaysViewing enact-fit',
+		max: calcMax,
+		panelArranger: AlwaysViewingArranger
+	}, Viewport))
+);
 
 export default AlwaysViewingPanels;
 export {AlwaysViewingPanels};
