@@ -60,6 +60,10 @@
 	box-sizing: border-box;
 	vertical-align: middle;
 
+	.input {
+		font-size: @moon-input-font-size;
+	}
+
 	.input,
 	.iconBefore,
 	.iconAfter {
@@ -69,8 +73,6 @@
 	}
 
 	&.small {
-		padding: 0 (@moon-input-small-height / 2);
-
 		.iconBefore,
 		.iconAfter {
 			line-height: @moon-input-small-height;
