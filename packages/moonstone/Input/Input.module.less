@@ -118,24 +118,13 @@
 	// Skin colors
 	.applySkins({
 		background-color: @moon-input-decorator-bg-color;
+		caret-color: @moon-input-caret-color;
 
 		.input {
 			background: transparent;
-			color: @moon-input-text-color;
-			caret-color: @moon-input-caret-color;
-
-			&::selection {
-				color: @moon-spotlight-text-color;
-				background-color: @moon-spotlight-bg-color;
-			}
 
 			.input-placeholder({
 				color: @moon-input-placeholder-color;
-			});
-
-			.focus({
-				color: @moon-input-text-color;
-				background-color: inherit;
 			});
 
 			.focused& {
@@ -143,10 +132,6 @@
 					color: @moon-input-placeholder-active-color;
 				});
 			}
-
-			.disabled({
-				color: @moon-input-text-disabled-color;
-			});
 		}
 
 		&.invalid input {
@@ -171,12 +156,12 @@
 
 		.disabled({
 			.vendor-opacity(@moon-input-disabled-opacity);
-		});
 
-		.decoratorIcon,
-		&:global(.spottable):focus .decoratorIcon {
-			color: @moon-input-text-color;
-		}
+			.input,
+			.decoratorIcon {
+				color: @moon-input-text-disabled-color;
+			}
+		});
 	});
 }
 
