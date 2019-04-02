@@ -10,6 +10,8 @@
  *
  * @module ui/Spinner
  * @exports Spinner
+ * @exports SpinnerBase
+ * @exports SpinnerDecorator
  */
 
 import kind from '@enact/core/kind';
@@ -18,21 +20,23 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import FloatingLayer from '../FloatingLayer';
+import ForwardRef from '../ForwardRef';
 
 import componentCss from './Spinner.module.less';
 
 /**
- * A minimally styled component that controls `Spinner` positioning and interaction states.
+ * A minimally styled component that controls `Spinner` positioning and interaction states, without
+ * [SpinnerDecorator](ui/Spinner.SpinnerDecorator) applied.
  *
- * @class Spinner
+ * @class SpinnerBase
  * @memberof ui/Spinner
  * @ui
  * @public
  */
-const Spinner = kind({
+const SpinnerBase = kind({
 	name: 'ui:Spinner',
 
-	propTypes: /** @lends ui/Spinner.Spinner.prototype */ {
+	propTypes: /** @lends ui/Spinner.SpinnerBase.prototype */ {
 		/**
 		 * A theme-supplied component that performs the animation.
 		 *
@@ -73,6 +77,13 @@ const Spinner = kind({
 		 * @public
 		 */
 		centered: PropTypes.bool,
+
+		/**
+		 * Called with a reference to [component]{@link ui/Spinner.Spinner#component}
+		 *
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -139,7 +150,7 @@ const Spinner = kind({
 		)
 	},
 
-	render: ({blockClickOn, component: Component, scrimClassName, scrimType, spinnerContainerClassName, ...rest}) =>  {
+	render: ({blockClickOn, component: Component, componentRef, scrimClassName, scrimType, spinnerContainerClassName, ...rest}) =>  {
 		delete rest.centered;
 		delete rest.paused;
 		delete rest.scrim;
@@ -148,7 +159,7 @@ const Spinner = kind({
 			case 'screen': {
 				return (
 					<FloatingLayer noAutoDismiss open scrimType={scrimType}>
-						<Component {...rest} />
+						<Component ref={componentRef} {...rest} />
 					</FloatingLayer>
 				);
 			}
@@ -156,20 +167,45 @@ const Spinner = kind({
 				return (
 					<div className={spinnerContainerClassName}>
 						<div className={scrimClassName} />
-						<Component {...rest} />
+						<Component ref={componentRef} {...rest} />
 					</div>
 				);
 			}
 			default: {
 				return (
-					<Component {...rest} />
+					<Component ref={componentRef} {...rest} />
 				);
 			}
 		}
 	}
 });
 
+/**
+ * Applies Spinner behaviors
+ *
+ * @class SpinnerDecorator
+ * @memberof ui/Spinner
+ * @mixes ui/ForwardRef.ForwardRef
+ * @hoc
+ * @public
+ */
+const SpinnerDecorator = ForwardRef({prop: 'componentRef'});
+
+/**
+ * A minimally styled component that controls `Spinner` positioning and interaction states.
+ *
+ * @class Spinner
+ * @memberof ui/Spinner
+ * @extends ui/Spinner.SpinnerBase
+ * @mixes ui/Spinner.SpinnerDecorator
+ * @ui
+ * @public
+ */
+const Spinner = SpinnerDecorator(SpinnerBase);
+
 export default Spinner;
 export {
-	Spinner
+	Spinner,
+	SpinnerBase,
+	SpinnerDecorator
 };

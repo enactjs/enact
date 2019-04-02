@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [2.5.0] - 2019-04-01
+
+### Fixed
+
+- `spotlight` to guard against runtime errors caused by attempting to access containers that do not exist
+- `spotlight/Spottable` to prevent unnecessary updates due to focus and blur changes
+
 ## [2.4.1] - 2019-03-11
 
 ### Fixed

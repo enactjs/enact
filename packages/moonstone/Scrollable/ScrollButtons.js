@@ -9,8 +9,6 @@ import $L from '../internal/$L';
 
 import ScrollButton from './ScrollButton';
 
-const ScrollButtonWithForwardRef = React.forwardRef((props, ref) => <ScrollButton {...props} ref={ref} />);
-
 const
 	nop = () => {},
 	prepareButton = (isPrev) => (isVertical) => {
@@ -156,19 +154,22 @@ class ScrollButtons extends Component {
 			   browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
 			shouldDisableNextButton = maxPos - currentPos <= 1;
 
-		this.setState((prevState) => {
-			const
-				updatePrevButton = (prevState.prevButtonDisabled !== shouldDisablePrevButton),
-				updateNextButton = (prevState.nextButtonDisabled !== shouldDisableNextButton);
+		const
+			updatePrevButton = (this.state.prevButtonDisabled !== shouldDisablePrevButton),
+			updateNextButton = (this.state.nextButtonDisabled !== shouldDisableNextButton);
 
-			if (updatePrevButton && updateNextButton) {
-				return {prevButtonDisabled: shouldDisablePrevButton, nextButtonDisabled: shouldDisableNextButton};
-			} else if (updatePrevButton) {
-				return {prevButtonDisabled: shouldDisablePrevButton};
-			} else if (updateNextButton) {
-				return {nextButtonDisabled: shouldDisableNextButton};
-			}
-		});
+		if (updatePrevButton || updateNextButton) {
+			this.setState(() => {
+				if (updatePrevButton && updateNextButton) {
+					return {prevButtonDisabled: shouldDisablePrevButton, nextButtonDisabled: shouldDisableNextButton};
+				} else if (updatePrevButton) {
+					return {prevButtonDisabled: shouldDisablePrevButton};
+				} else if (updateNextButton) {
+					return {nextButtonDisabled: shouldDisableNextButton};
+				}
+			});
+		}
+
 	}
 
 	isOneOfScrollButtonsFocused = () => {
@@ -294,7 +295,7 @@ class ScrollButtons extends Component {
 			nextIcon = prepareNextButton(vertical);
 
 		return [
-			<ScrollButtonWithForwardRef
+			<ScrollButton
 				aria-label={rtl && !vertical ? nextButtonAriaLabel : previousButtonAriaLabel}
 				data-spotlight-overflow="ignore"
 				disabled={disabled || prevButtonDisabled}
@@ -310,9 +311,9 @@ class ScrollButtons extends Component {
 				ref={this.prevButtonRef}
 			>
 				{prevIcon}
-			</ScrollButtonWithForwardRef>,
+			</ScrollButton>,
 			thumbRenderer(),
-			<ScrollButtonWithForwardRef
+			<ScrollButton
 				aria-label={rtl && !vertical ? previousButtonAriaLabel : nextButtonAriaLabel}
 				data-spotlight-overflow="ignore"
 				disabled={disabled || nextButtonDisabled}
@@ -328,7 +329,7 @@ class ScrollButtons extends Component {
 				ref={this.nextButtonRef}
 			>
 				{nextIcon}
-			</ScrollButtonWithForwardRef>,
+			</ScrollButton>,
 			<Announce
 				key="announce"
 				ref={this.announceRef}

@@ -1,6 +1,6 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import {ExpandableListBase} from '../ExpandableList';
+import {ExpandableList, ExpandableListBase} from '../ExpandableList';
 
 describe('ExpandableList', () => {
 	describe('#aria-multiselectable', () => {
@@ -21,9 +21,9 @@ describe('ExpandableList', () => {
 		const children = ['option1', 'option2', 'option3'];
 
 		const expandableList = mount(
-			<ExpandableListBase title="Item" open>
+			<ExpandableList title="Item" open>
 				{children}
-			</ExpandableListBase>
+			</ExpandableList>
 		);
 
 		const updatedChildren = children.concat('option4', 'option5');
@@ -54,9 +54,9 @@ describe('ExpandableList', () => {
 		const children = ['option1', 'option2', 'option3'];
 
 		const expandableList = mount(
-			<ExpandableListBase data-webos-voice-disabled title="Item" open>
+			<ExpandableList data-webos-voice-disabled title="Item" open>
 				{children}
-			</ExpandableListBase>
+			</ExpandableList>
 		);
 
 		const expected = true;

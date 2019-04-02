@@ -18,6 +18,7 @@ import compose from 'ramda/src/compose';
 import React, {Fragment} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
+import ForwardRef from '../ForwardRef';
 import Slottable from '../Slottable';
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
@@ -25,19 +26,37 @@ import Touchable from '../Touchable';
 import componentCss from './ToggleItem.module.less';
 
 // eslint-disable-next-line
-const iconCreator = (position) => ({beforeItem, disabled, icon, iconComponent, iconPosition, selected}) => {
-	if (iconPosition === position) {
+const iconCreator = (position) => ({css, disabled, icon, iconComponent, iconPosition, itemIconAfter, itemIconAfterText, itemIconBefore, itemIconBeforeText, selected}) => {
+	if (position === 'before') {
 		return (
 			<Fragment>
-				{iconPosition === 'before' && beforeItem ? beforeItem : null}
-				<ComponentOverride
-					component={iconComponent}
-					disabled={disabled}
-					selected={selected}
-				>
-					{icon}
-				</ComponentOverride>
-				{iconPosition === 'after' && beforeItem ? beforeItem : null}
+				{itemIconBefore && <ComponentOverride component={itemIconBefore} className={`${css.itemIcon} ${itemIconBefore.props.className}`} />}
+				{iconPosition === 'before' ?
+					<ComponentOverride
+						component={iconComponent}
+						disabled={disabled}
+						selected={selected}
+					>
+						{icon}
+					</ComponentOverride> : null
+				}
+				{itemIconBeforeText && <ComponentOverride component={itemIconBeforeText} className={`${css.itemIcon} ${itemIconBeforeText.props.className}`} />}
+			</Fragment>
+		);
+	} else {
+		return (
+			<Fragment>
+				{itemIconAfterText && <ComponentOverride component={itemIconAfterText} className={`${css.itemIcon} ${itemIconAfterText.props.className}`} />}
+				{iconPosition === 'after' ?
+					<ComponentOverride
+						component={iconComponent}
+						disabled={disabled}
+						selected={selected}
+					>
+						{icon}
+					</ComponentOverride> : null
+				}
+				{itemIconAfter && <ComponentOverride component={itemIconAfter} className={`${css.itemIcon} ${itemIconAfter.props.className}`} />}
 			</Fragment>
 		);
 	}
@@ -91,34 +110,13 @@ const ToggleItemBase = kind({
 		iconComponent: EnactPropTypes.componentOverride.isRequired,
 
 		/**
-		 * Nodes to be inserted after `children`.
+		 * Called with a reference to [component]{@link ui/ToggleItem.ToggleItemBase#component}
 		 *
-		 * If nothing is specified, nothing, not even an empty container, is rendered in this place.
-		 *
-		 * @type {Node}
-		 * @public
+		 * @type {Function}
+		 * @private
 		 */
-		afterText: PropTypes.node,
+		componentRef: PropTypes.func,
 
-		/**
-		 * Nodes to be inserted before `ToggleIcon`.
-		 *
-		 * If nothing is specified, nothing, not even an empty container, is rendered in this place.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		beforeItem: PropTypes.node,
-
-		/**
-		 * Nodes to be inserted before `children`.
-		 *
-		 * If nothing is specified, nothing, not even an empty container, is rendered in this place.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		beforeText: PropTypes.node,
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
@@ -160,6 +158,42 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		iconPosition: PropTypes.oneOf(['before', 'after']),
+
+		/**
+		 * The `Icon` to render in this item.
+		 * Nodes to be inserted after this component.
+
+		 * @type {Node}
+		 * @public
+		 */
+		itemIconAfter: PropTypes.node,
+
+		/**
+		 * The `Icon` to render in this item.
+		 * Nodes to be inserted after `children` in this component.
+
+		 * @type {Node}
+		 * @public
+		 */
+		itemIconAfterText: PropTypes.node,
+
+		/**
+		 * The `Icon` to render in this item.
+		 * Nodes to be inserted before this component.
+
+		 * @type {Node}
+		 * @public
+		 */
+		itemIconBefore: PropTypes.node,
+
+		/**
+		 * The `Icon` to render in this item.
+		 * Nodes to be inserted before `children` in this component.
+
+		 * @type {Node}
+		 * @public
+		 */
+		itemIconBeforeText: PropTypes.node,
 
 		/**
 		 * Called when the toggle item is toggled. Developers should generally use `onToggle` instead.
@@ -217,22 +251,24 @@ const ToggleItemBase = kind({
 		slotAfter: iconCreator('after')
 	},
 
-	render: ({component: Component, afterText, beforeText, css, children, selected, ...rest}) => {
-		delete rest.beforeItem;
+	render: ({component: Component, componentRef, css, children, selected, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconPosition;
+		delete rest.itemIconAfter;
+		delete rest.itemIconAfterText;
+		delete rest.itemIconBefore;
+		delete rest.itemIconBeforeText;
 		delete rest.value;
 
 		return (
 			<Component
+				ref={componentRef}
 				role="checkbox"
 				{...rest}
 				css={css}
 				aria-checked={selected}
 			>
-				{beforeText}
 				{children}
-				{afterText}
 			</Component>
 		);
 	}
@@ -243,13 +279,15 @@ const ToggleItemBase = kind({
  *
  * @class ToggleItemDecorator
  * @memberof ui/ToggleItem
+ * @mixes ui/ForwardRef.ForwardRef
  * @mixes ui/Touchable.Touchable
  * @mixes ui/Toggleable.Toggleable
  * @hoc
  * @public
  */
 const ToggleItemDecorator = compose(
-	Slottable({slots: ['beforeText', 'afterText']}),
+	ForwardRef({prop: 'componentRef'}),
+	Slottable({slots: ['itemIconAfter', 'itemIconAfterText', 'itemIconBefore', 'itemIconBeforeText']}),
 	Toggleable({toggleProp: 'onTap'}),
 	Touchable
 );
