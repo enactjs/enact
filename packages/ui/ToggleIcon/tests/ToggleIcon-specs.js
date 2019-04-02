@@ -82,7 +82,7 @@ describe('ToggleIcon Specs', () => {
 		expect(expected).toBe(actual);
 	});
 
-	test.only('should call both onTouchEnd only on the Icon', () => {
+	test('should call both onTouchEnd only on the Icon', () => {
 		const handleDiv = jest.fn();
 		const handleIcon = jest.fn();
 		const subject = mount(
