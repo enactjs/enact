@@ -19,7 +19,6 @@ import React from 'react';
 
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
-import {forward} from '@enact/core/handle';
 import componentCss from './ToggleIcon.module.less';
 
 /**
