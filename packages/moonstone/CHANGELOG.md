@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `moonstone/Scrollable` to enable touch/drag scrolling when the platform has touch support
+- `moonstone/Scrollable` and `moonstone/ScrollableNative` to enable touch/drag scrolling when the platform has touch support
 
 ## [2.5.0] - 2019-04-01
 
