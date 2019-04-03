@@ -194,19 +194,26 @@ const GridListImageItemDecorator = compose(
  * @ui
  * @public
  */
-const GridListImageItemFull = GridListImageItemDecorator(GridListImageItemBase);
+const GridListImageItemFullBase = GridListImageItemDecorator(GridListImageItemBase);
 
 const GridListImageItemLightDecorator = compose(
 	Spottable,
 	Skinnable
 );
-const GridListImageItemLight = GridListImageItemLightDecorator(GridListImageItemBase);
+const GridListImageItemLightBase = GridListImageItemLightDecorator(GridListImageItemBase);
+
+const GridListImageItemLight = (props) => (
+	<ComponentOverride component={GridListImageItemLightBase} captionComponent={cellComponent} {...props} />
+);
+const GridListImageItemFull = (props) => (
+	<ComponentOverride component={GridListImageItemFullBase} captionComponent={marqueeComponent} {...props} />
+);
 
 const GridListImageItem = (props) => (
 	<ReplaceableOnFocus
 		{...props}
-		initialComponent={<ComponentOverride component={GridListImageItemLight} captionComponent={cellComponent} />}
-		updatedComponent={<ComponentOverride component={GridListImageItemFull} captionComponent={marqueeComponent} />}
+		initialComponent={GridListImageItemLight}
+		updatedComponent={GridListImageItemFull}
 	/>
 );
 

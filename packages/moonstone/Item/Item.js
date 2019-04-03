@@ -109,8 +109,8 @@ const ItemLight = ItemLightDecorator(ItemBase);
 const Item = (props) => (
 	<ReplaceableOnFocus
 		{...props}
-		initialComponent={<ItemLight />}
-		updatedComponent={<ItemFull />}
+		initialComponent={ItemLight}
+		updatedComponent={ItemFull}
 	/>
 );
 

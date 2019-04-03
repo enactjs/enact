@@ -5,15 +5,14 @@ import ReactDOM from 'react-dom';
 import {forward} from '@enact/core/handle';
 import {Job} from '@enact/core/util';
 import Spotlight from '@enact/spotlight';
-import ComponentOverride from '@enact/ui/ComponentOverride';
 
 class ReplaceableOnFocus extends React.PureComponent {
 	static displayName = 'ReplaceableOnFocus'
 
 	static propTypes = {
 		disabled: PropTypes.bool,
-		initialComponent: PropTypes.element,
-		updatedComponent: PropTypes.element
+		initialComponent: PropTypes.func,
+		updatedComponent: PropTypes.func
 	}
 
 	static defaultProps = {
@@ -91,9 +90,8 @@ class ReplaceableOnFocus extends React.PureComponent {
 		const {initialComponent, updatedComponent, ...rest} = this.props;
 		const Component = this.state.updated ? updatedComponent : initialComponent;
 		return (
-			<ComponentOverride
+			<Component
 				{...rest}
-				component={Component}
 				onBlur={this.handleBlur}
 				onFocus={this.handleFocus}
 				onMouseEnter={this.handleMouseEnter}
