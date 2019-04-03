@@ -124,8 +124,6 @@ const TooltipBase = kind({
 				return {transform: `translateX(calc(${cappedPosition * 100}% - ((${cappedPosition} / 0.5) * ${ri.scale((54 / 2) + (30 / 2))}px)))`};
 			}
 		},
-		arrowType: ({arrowAnchor}) => (arrowAnchor === 'center' || arrowAnchor === 'middle') ?
-			'M0,5C0,4,1,3,3,2.5C1,2,0,1,0,0V5Z' : 'M0,5C0,3,1,0,3,0H0V5Z',
 		className: ({direction, arrowAnchor, relative, styler}) => styler.append(direction, `${arrowAnchor}Arrow`, {relative, absolute: !relative}),
 		style: ({position, style}) => {
 			return {
@@ -135,7 +133,7 @@ const TooltipBase = kind({
 		}
 	},
 
-	render: ({arrowType, children, tooltipRef, width, labelOffset, ...rest}) => {
+	render: ({children, tooltipRef, width, labelOffset, ...rest}) => {
 		delete rest.arrowAnchor;
 		delete rest.arrowPosition;
 		delete rest.direction;
@@ -145,9 +143,7 @@ const TooltipBase = kind({
 		return (
 			<div {...rest}>
 				<div className={css.tooltipAnchor}>
-					<svg className={css.tooltipArrow} viewBox="0 0 3 5">
-						<path d={arrowType} />
-					</svg>
+					<div className={css.tooltipArrow} />
 					<TooltipLabel tooltipRef={tooltipRef} width={width} style={labelOffset}>
 						{children}
 					</TooltipLabel>
