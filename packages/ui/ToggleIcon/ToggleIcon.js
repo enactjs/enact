@@ -106,13 +106,6 @@ const ToggleIconBase = kind({
 		publicClassNames: true
 	},
 
-	handlers: {
-		onTouchEnd: (ev, props) => {
-			forward('onTouchEnd', ev, props);
-			ev.stopPropagation();
-		}
-	},
-
 	computed: {
 		className: ({selected, styler}) => styler.append({selected}),
 		iconClassName: ({iconClasses, css}) => iconClasses ? `${css.icon} ${iconClasses}` : css.icon

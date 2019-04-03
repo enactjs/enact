@@ -2,19 +2,11 @@ import React from 'react';
 import {mount} from 'enzyme';
 
 import ToggleIcon from '../ToggleIcon';
-import Touchable from '../../Touchable';
 
 const tap = (node) => {
 	node.simulate('mousedown');
 	node.simulate('mouseup');
 };
-
-const touch = (node) => {
-	node.simulate('touchstart');
-	node.simulate('touchend');
-};
-
-const TouchableDiv = Touchable('div');
 
 describe('ToggleIcon Specs', () => {
 
@@ -81,29 +73,4 @@ describe('ToggleIcon Specs', () => {
 
 		expect(expected).toBe(actual);
 	});
-
-	test('should call both onTouchEnd only on the Icon', () => {
-		const handleDiv = jest.fn();
-		const handleIcon = jest.fn();
-		const subject = mount(
-			<TouchableDiv onTouchEnd={handleDiv}>
-				<ToggleIcon onTouchEnd={handleIcon}>
-					star
-				</ToggleIcon>
-			</TouchableDiv>
-		);
-		const Icon = subject.find('Toggleable');
-
-		touch(Icon);
-
-		const expectedDiv = 0;
-		const actualDiv = handleDiv.mock.calls.length;
-
-		const expectedIcon = 1;
-		const actualIcon = handleIcon.mock.calls.length;
-
-		expect(expectedDiv).toBe(actualDiv);
-		expect(expectedIcon).toBe(actualIcon);
-	});
-
 });

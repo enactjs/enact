@@ -624,19 +624,19 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		addHandlers (props) {
-			props.onClick = this.handleClick;
-			props.onMouseDown = this.handleMouseDown;
-			props.onMouseLeave = this.handleMouseLeave;
-			props.onMouseMove = this.handleMouseMove;
-			props.onMouseEnter = this.handleMouseEnter;
-			props.onMouseUp = this.handleMouseUp;
-			props.onBlur = this.handleBlur;
-
 			if (platform.touch) {
 				props.onTouchStart = this.handleTouchStart;
 				props.onTouchMove = this.handleTouchMove;
 				props.onTouchEnd = this.handleTouchEnd;
+			} else {
+				props.onClick = this.handleClick;
+				props.onMouseDown = this.handleMouseDown;
+				props.onMouseLeave = this.handleMouseLeave;
+				props.onMouseMove = this.handleMouseMove;
+				props.onMouseEnter = this.handleMouseEnter;
+				props.onMouseUp = this.handleMouseUp;
 			}
+			props.onBlur = this.handleBlur;
 		}
 
 		render () {
