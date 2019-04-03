@@ -59,10 +59,16 @@
 
 	// Include the classes that we explicitly said are customizable in the publicClassNames
 	.selected {
-		/* Exported for customization*/
+		/* Exported for customization */
 	}
 
 	.applySkins({
+		&.transparent {
+			.bg {
+				background-color: transparent;
+			}
+		}
+
 		.focus({
 			.disabled({
 				color: @moon-spotlight-disabled-text-color;
