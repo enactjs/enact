@@ -567,7 +567,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				});
 			}
 
-			this.demote();
+			if (this.state.promoted) {
+				this.demote();
+			}
 		}
 
 		/*
