@@ -3,8 +3,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {forward} from '@enact/core/handle';
-import {Job} from '@enact/core/util';
-import Spotlight from '@enact/spotlight';
+import {Job, perfNow} from '@enact/core/util';
+import {getDirection, Spotlight} from '@enact/spotlight';
 
 class ReplaceableOnFocus extends React.PureComponent {
 	static displayName = 'ReplaceableOnFocus'
@@ -26,6 +26,10 @@ class ReplaceableOnFocus extends React.PureComponent {
 			updated: false
 		};
 		this.shouldPreventFocus = false;
+	}
+
+	componentDidMount () {
+		this.mountTime = perfNow();
 	}
 
 	componentDidUpdate (prevProps, prevState) {
@@ -53,30 +57,28 @@ class ReplaceableOnFocus extends React.PureComponent {
 			return;
 		}
 
-		if (this.state.updated) {
-			forward('onFocus', ev, this.props);
-		} else {
+		forward('onFocus', ev, this.props);
+
+		// 100 is arbitrary - it accounts for when the component is focused on render, requiring an update
+		// that can't be driven by onKeyUp
+		if (Spotlight.getPointerMode() || !this.state.updated && perfNow() - this.mountTime < 100) {
 			this.shouldPreventFocus = true;
 			this.startRenderJob();
 		}
 	}
 
-	handleMouseEnter = (ev) => {
-		if (this.state.updated) {
-			forward('onMouseEnter', ev, this.props);
-		} else {
+	handleKeyUp = (ev) => {
+		forward('onKeyUp', ev, this.props);
+
+		if (getDirection(ev.keyCode) && !this.state.updated) {
 			this.startRenderJob();
 		}
 	}
 
-	handleMouseLeave = (ev) => {
-		forward('onMouseLeave', ev, this.props);
-		this.renderJob.stop();
-	}
-
 	startRenderJob = () => {
 		// 100 is a somewhat arbitrary value to avoid rendering when 5way hold events are moving focus through the item.
-		// The timing appears safe against default spotlight accelerator speeds.
+		// There are cases where a greater number is desired - when 5way is pressed in a direction that results in a minor
+		// scroll into view. Using 100, the component can update prior to the scroll stopping, causing a scroll interruption.
 		this.renderJob.startAfter(100);
 	}
 
@@ -94,8 +96,7 @@ class ReplaceableOnFocus extends React.PureComponent {
 				{...rest}
 				onBlur={this.handleBlur}
 				onFocus={this.handleFocus}
-				onMouseEnter={this.handleMouseEnter}
-				onMouseLeave={this.handleMouseLeave}
+				onKeyUp={this.handleKeyUp}
 			/>
 		);
 	}
