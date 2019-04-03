@@ -393,7 +393,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		demote () {
 			this.promoteJob.stop();
-			this.demoteJob.idle();
+			if (this.state.promoted) {
+				this.demoteJob.idle();
+			}
 		}
 
 		promote (delay = this.props.marqueeDelay) {
@@ -567,9 +569,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				});
 			}
 
-			if (this.state.promoted) {
-				this.demote();
-			}
+			this.demote();
 		}
 
 		/*
