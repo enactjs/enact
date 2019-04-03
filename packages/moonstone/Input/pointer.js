@@ -18,11 +18,7 @@ const handlePointerDown = handle(
 const handlePointerUp = handle(
 	isCapturing,				// if a down event was captured
 	preventDefault,				// prevent the up event bubbling
-	stop,						// (and stop propagation to support touch)
-	(e) => {
-		if (active !== e.target) active.blur()
-		else active.focus();
-	}
+	stop						// (and stop propagation to support touch)
 );
 
 const handlePointerClick = handle(
@@ -32,13 +28,18 @@ const handlePointerClick = handle(
 	() => active.blur()			// and blur the active node
 );
 
+const handleTouchStart = handle(
+	shouldCapture,                // If we should capture the click
+	stop,
+	setCapturing(true)            // and flag that we've started capturing a down event
+);
+
 // Lock the pointer from emitting click events until released
 const lockPointer = (target) => {
 	active = target;
 	document.addEventListener('mousedown', handlePointerDown, {capture: true});
 	document.addEventListener('mouseup', handlePointerUp, {capture: true});
-	document.addEventListener('touchstart', handlePointerDown, {capture: true});
-	document.addEventListener('touchend', handlePointerUp, {capture: true});
+	document.addEventListener('touchstart', handleTouchStart, {capture: true});
 	document.addEventListener('click', handlePointerClick, {capture: true});
 };
 
@@ -49,7 +50,6 @@ const releasePointer = (target) => {
 		document.removeEventListener('mousedown', handlePointerDown, {capture: true});
 		document.removeEventListener('mouseup', handlePointerUp, {capture: true});
 		document.removeEventListener('touchstart', handlePointerDown, {capture: true});
-		document.removeEventListener('touchend', handlePointerUp, {capture: true});
 		document.removeEventListener('click', handlePointerClick, {capture: true});
 	}
 };
