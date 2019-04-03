@@ -212,8 +212,21 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		getRelativeBounds (base, node) {
+			const {top, left, bottom, right, height, width} = node.getBoundingClientRect();
+
+			return {
+				height,
+				width,
+				bottom: bottom - base.top,
+				right: right - base.left,
+				left: left - base.left,
+				top: top - base.top
+			};
+		}
+
 		setTooltipLayout () {
-			if (!this.tooltipRef || !this.clientRef) return;
+			if (!this.tooltipRef || !this.clientRef || !this.floatingLayerNode) return;
 
 			const position = this.props.tooltipPosition;
 			const arr = position.split(' ');
@@ -230,9 +243,11 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				arrowAnchor = 'right';
 			}
 
-			const tooltipNode = this.tooltipRef.getBoundingClientRect(); // label bound
-			const clientNode = this.clientRef.getBoundingClientRect(); // client bound
-			const overflow = calcOverflow(tooltipNode, clientNode, tooltipDirection, this.TOOLTIP_HEIGHT);
+			const floatingLayerBounds = this.floatingLayerNode.getBoundingClientRect();
+			const tooltipNode = this.getRelativeBounds(floatingLayerBounds, this.tooltipRef);
+			const clientNode = this.getRelativeBounds(floatingLayerBounds, this.clientRef);
+
+			const overflow = calcOverflow(tooltipNode, clientNode, floatingLayerBounds, tooltipDirection, this.TOOLTIP_HEIGHT);
 
 			tooltipDirection = adjustDirection(tooltipDirection, overflow, this.props.rtl);
 			arrowAnchor = adjustAnchor(arrowAnchor, tooltipDirection, overflow, this.props.rtl);
@@ -358,6 +373,13 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		handleFloatingLayerOpen = ({node}) => {
+			this.floatingLayerNode = node;
+			if (node && this.state.showing) {
+				this.setTooltipLayout();
+			}
+		}
+
 		/**
 		 * Conditionally creates the FloatingLayer and Tooltip based on the presence of
 		 * `tooltipText` and returns a property bag to pass onto the Wrapped component
@@ -370,7 +392,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (tooltipText) {
 				const renderedTooltip = (
-					<FloatingLayerBase open={this.state.showing} noAutoDismiss onDismiss={this.hideTooltip} scrimType="none" key="tooltipFloatingLayer">
+					<FloatingLayerBase open={this.state.showing} noAutoDismiss onDismiss={this.hideTooltip} onOpen={this.handleFloatingLayerOpen} scrimType="none" key="tooltipFloatingLayer">
 						<Tooltip
 							aria-live="off"
 							role="alert"

@@ -17,7 +17,7 @@ const forwardWithType = type => adaptEvent(
 
 const forwardDismiss = forwardWithType('onDismiss');
 const forwardClose = forwardWithType('onClose');
-const forwardOpen = forwardWithType('onOpen');
+const forwardOpen = forward('onOpen');
 
 /**
  * A component that creates an entry point to the new render tree.
@@ -149,7 +149,7 @@ class FloatingLayerBase extends React.Component {
 		) {
 			// when node has been rendered and either it was just rendered in this update cycle or
 			// the open prop changed in this cycle, forward open
-			forwardOpen(null, this.props);
+			forwardOpen({type: 'onOpen', node: this.node}, this.props);
 		}
 
 		if (scrimType === 'none') {

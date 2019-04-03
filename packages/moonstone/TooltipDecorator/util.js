@@ -80,7 +80,7 @@ const adjustDirection = function (tooltipDirection, overflow, rtl) {
  * @returns {Object}                    Tooltip's calculated overflow
  * @private
  */
-const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, tooltipHeight) {
+const calcOverflow = function (tooltipNode, clientNode, layer, tooltipDirection, tooltipHeight) {
 	// get the distance of space on both the right and left side of the client node. `clientNode.width / 2` because we want the tooltip to be positioned horizontally in middle of the client node.
 	const rightDelta = tooltipNode.width > clientNode.left + (clientNode.width / 2);
 	const leftDelta = tooltipNode.width > window.innerWidth - clientNode.right - (clientNode.width / 2);
@@ -90,17 +90,17 @@ const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, toolti
 	if (tooltipDirection === 'above' || tooltipDirection === 'below') {
 		return {
 			isOverTop: clientNode.top - tooltipNode.height - tooltipHeight < 0,
-			isOverBottom: clientNode.bottom + tooltipNode.height + tooltipHeight > window.innerHeight,
+			isOverBottom: clientNode.bottom + tooltipNode.height + tooltipHeight > layer.height,
 			isOverLeft: clientNode.left - tooltipNode.width + clientNode.width / 2 < 0,
-			isOverRight: clientNode.right + tooltipNode.width - clientNode.width / 2 > window.innerWidth,
+			isOverRight: clientNode.right + tooltipNode.width - clientNode.width / 2 > layer.width,
 			isOverWide: isTooltipWide
 		};
 	} else if (tooltipDirection === 'left' || tooltipDirection === 'right') {
 		return {
 			isOverTop: clientNode.top - tooltipNode.height + clientNode.height / 2 < 0,
-			isOverBottom: clientNode.bottom + tooltipNode.height - clientNode.height / 2 > window.innerHeight,
+			isOverBottom: clientNode.bottom + tooltipNode.height - clientNode.height / 2 > layer.height,
 			isOverLeft: clientNode.left - tooltipNode.width < 0,
-			isOverRight: clientNode.right + tooltipNode.width > window.innerWidth,
+			isOverRight: clientNode.right + tooltipNode.width > layer.width,
 			isOverWide: isTooltipWide
 		};
 	}
