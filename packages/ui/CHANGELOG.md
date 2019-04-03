@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `ui/FloatingLayer` prop `onOpen` to include the layer's `node` in the event payload which may be required to position elements within the layer
+
 ## [2.5.0] - 2019-04-01
 
 ### Added

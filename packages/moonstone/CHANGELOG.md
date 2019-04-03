@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/TooltipDecorator` to correctly position tooltips within the bounds of non-root floating layers
+
 ## [2.5.0] - 2019-04-01
 
 ### Fixed
