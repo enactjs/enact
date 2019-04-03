@@ -19,6 +19,7 @@ import React from 'react';
 
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
+
 import componentCss from './ToggleIcon.module.less';
 
 /**

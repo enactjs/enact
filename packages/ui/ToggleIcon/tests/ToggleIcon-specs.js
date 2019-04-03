@@ -73,4 +73,5 @@ describe('ToggleIcon Specs', () => {
 
 		expect(expected).toBe(actual);
 	});
+
 });
