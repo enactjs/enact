@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/ExpandableInput` to close on touch platforms when tapping another component
+
 ## [2.5.0] - 2019-04-01
 
 ### Fixed
