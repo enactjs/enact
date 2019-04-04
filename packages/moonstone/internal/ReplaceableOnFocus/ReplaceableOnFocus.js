@@ -78,7 +78,8 @@ class ReplaceableOnFocus extends React.PureComponent {
 	startRenderJob = () => {
 		// 100 is a somewhat arbitrary value to avoid rendering when 5way hold events are moving focus through the item.
 		// There are cases where a greater number is desired - when 5way is pressed in a direction that results in a minor
-		// scroll into view. Using 100, the component can update prior to the scroll stopping, causing a scroll interruption.
+		// scroll into view. Using 100 in a VirtualListNative scenario, the component can update prior to the scroll
+		// stopping, causing a scroll interruption (TV-only).
 		this.renderJob.startAfter(100);
 	}
 
