@@ -30,7 +30,7 @@ const handlePointerClick = handle(
 
 const handleTouchStart = handle(
 	shouldCapture,                // If we should capture the click
-	stop,						  // prevent other components from handling this event
+	stop,                         // prevent other components from handling this event
 	setCapturing(true)            // and flag that we've started capturing a down event
 );
 
