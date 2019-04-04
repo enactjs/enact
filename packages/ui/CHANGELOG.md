@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Measurable` HOC and Hook for quick and convenient measuring of simple components
+
 ## [2.5.0] - 2019-04-01
 
 ### Added
