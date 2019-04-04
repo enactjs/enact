@@ -1,7 +1,6 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Uppercase from '@enact/i18n/Uppercase';
 import {isRtlText} from '@enact/i18n/util';
 import {Layout, Cell} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
@@ -12,10 +11,9 @@ import Skinnable from '../Skinnable';
 
 import css from './Header.module.less';
 
-// Create a <h1> and Marquee component that support the uppercase attribute
-const UppercaseH1 = Uppercase('h1');		// Used by compact header, which provides its own inline strings and tags for marqueeing
+// Create a <h1> and Marquee component
+const MarqueeH1 = MarqueeDecorator('h1');
 const MarqueeH2 = MarqueeDecorator('h2');
-const HeaderH1 = Uppercase(MarqueeDecorator('h1'));
 
 const CompactTitleBase = kind({
 	name: 'CompactTitle',
@@ -45,18 +43,6 @@ const HeaderBase = kind({
 	name: 'Header',
 
 	propTypes: /** @lends moonstone/Panels.Header.prototype */ {
-		/**
-		 * Configures the mode of uppercasing for the `title`.
-		 *
-		 * * Values: `'upper'`, `'preserve'`, `'word'`, `'sentence'`
-		 *
-		 * @see i18n/Uppercase#Uppercase.casing
-		 * @type {String}
-		 * @default 'upper'
-		 * @public
-		 */
-		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
-
 		/**
 		 * Children provided are added to the header-components area.
 		 *
@@ -188,7 +174,7 @@ const HeaderBase = kind({
 		subTitleBelowComponent: ({marqueeOn, subTitleBelow}) => {
 			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
 		},
-		titleOrInput: ({casing, headerInput, marqueeOn, title}) => {
+		titleOrInput: ({headerInput, marqueeOn, title}) => {
 			if (headerInput) {
 				return (
 					<Cell>
@@ -200,7 +186,7 @@ const HeaderBase = kind({
 				);
 			} else {
 				return (
-					<Cell component={HeaderH1} casing={casing} className={css.title} marqueeOn={marqueeOn}>
+					<Cell component={MarqueeH1} className={css.title} marqueeOn={marqueeOn}>
 						{title}
 					</Cell>
 				);
@@ -208,7 +194,7 @@ const HeaderBase = kind({
 		}
 	},
 
-	render: ({casing, children, direction, marqueeOn, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+	render: ({children, direction, marqueeOn, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.fullBleed;
 		delete rest.headerInput;
 		delete rest.subTitleBelow;
@@ -218,7 +204,7 @@ const HeaderBase = kind({
 			case 'compact': return (
 				<Layout component="header" aria-label={title} {...rest} align="end">
 					<Cell component={CompactTitle} title={title} titleBelow={titleBelowComponent} marqueeOn={marqueeOn} forceDirection={direction}>
-						<UppercaseH1 casing={casing} className={css.title}>{title}</UppercaseH1>
+						<h1 className={css.title}>{title}</h1>
 						{titleBelowComponent}
 					</Cell>
 					<Cell shrink component="nav" className={css.headerComponents}>{children}</Cell>

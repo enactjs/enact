@@ -6,7 +6,7 @@
 
 .header {
 	.border-box();
-	border-bottom-width: 3px;
+	border-bottom-width: @moon-header-border-bottom-width;
 	border-bottom-style: solid;
 	position: relative;
 	max-width: 100%;
@@ -101,10 +101,6 @@
 		.titleBelow {
 			display: inline;
 		}
-
-		.headerComponents {
-			padding-inline-end: 15px;
-		}
 	}
 
 	&.fullBleed {
@@ -151,8 +147,36 @@
 	});
 }
 
-:global(.hasCloseButton) .header.compact,
-:global(.hasCloseButton) .header.standard .title,
-:global(.hasCloseButton) .header.standard .decorator {
-	.padding-start-end(0, var(--moon-panels-controls-width));
+:global(.hasControls) {
+	.header.compact,
+	.header.standard .title,
+	.header.standard .decorator {
+		.padding-start-end(0, var(--moon-panels-controls-width));
+	}
+
+	.header.compact {
+		.headerComponents {
+			border-right-width: @moon-header-controls-border-width;
+			border-right-style: solid;
+			.padding-start-end(initial, @moon-header-components-separation);
+
+			:global(.enact-locale-right-to-left) & {
+				border-right-width: 0;
+				border-right-style: none;
+				border-left-width: @moon-header-controls-border-width;
+				border-left-style: solid;
+			}
+		}
+
+		.applySkins({
+			.headerComponents {
+				border-right-color: @moon-header-controls-border-color;
+
+				:global(.enact-locale-right-to-left) & {
+					border-right-color: transparent;
+					border-left-color: @moon-header-controls-border-color;
+				}
+			}
+		});
+	}
 }

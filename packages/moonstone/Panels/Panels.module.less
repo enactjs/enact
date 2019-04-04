@@ -16,14 +16,19 @@
 		top: (@moon-app-keepout + @moon-spotlight-outset);
 		.position-start-end(auto, @moon-spotlight-outset * 2);
 		z-index: 1;
+		.padding-start-end(18px, initial);
 
+		// Reset all of the custom rules from the ApplicationCloseButton.module.less so it appears as a normal Button.
 		.close {
 			position: relative;
 			z-index: auto;
 			top: auto;
 			left: auto;
 			right: auto;
+			margin: 0 @moon-button-h-margin; // Cloned from Button.module.less
 		}
+
+		.remove-margin-on-edge-children();
 	}
 
 
@@ -65,7 +70,8 @@
 	:global(.enact-locale-right-to-left) & {
 		direction: ltr;
 
-		.breadcrumbs {
+		.breadcrumbs,
+		.controls {
 			direction: rtl;
 		}
 	}

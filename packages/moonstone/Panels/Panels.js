@@ -174,8 +174,8 @@ const PanelsBase = kind({
 	},
 
 	computed: {
-		className: ({noCloseButton, styler}) => styler.append({
-			hasCloseButton: !noCloseButton
+		className: ({controls, noCloseButton, styler}) => styler.append({
+			hasControls: (!noCloseButton || !!controls) // If there is a close button or controls were specified
 		}),
 		controls: ({closeButtonAriaLabel, closeButtonBackgroundOpacity, controls, controlsRef, id, noCloseButton, onApplicationClose}) => {
 			let closeButton;
