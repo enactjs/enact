@@ -67,18 +67,28 @@
 		animation-timing-function: ease-out;
 	}
 
-	.client {
-		padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
+	.clientContainer {
+		padding: 0 @moon-button-h-padding;
 
 		// Colored dot for remote buttons
 		&::before {
-			content: "";
+			content: "O";
 			position: absolute;
 			margin-right: 18px;
 			width: 21px;
 			height: 21px;
 			border-radius: 21px;
+
+			:global(.enact-locale-right-to-left) & {
+				left: 0;
+				right: auto;
+				transform: translate(-100%, -100%) translateX(-@moon-input-tooltip-offset);
+			}
 		}
+	}
+
+	.client {
+		padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
 
 		.icon {
 			-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
@@ -86,10 +96,10 @@
 		}
 	}
 
-	&.red .client::before,
-	&.green .client::before,
-	&.yellow .client::before,
-	&.blue .client::before
+	&.red .clientContainer::before,
+	&.green .clientContainer::before,
+	&.yellow .clientContainer::before,
+	&.blue .clientContainer::before
 	{
 		position: static;
 	}
@@ -141,7 +151,7 @@
 			}
 		});
 
-		.client::before {
+		.clientContainer::before {
 			bottom: 12px;
 			left: 18px;
 			right: 18px;
@@ -170,6 +180,10 @@
 	.applySkins({
 		color: @moon-button-text-color;
 
+		.clientContainer::before {
+			color: transparent;
+		}
+
 		.bg {
 			background-color: @moon-button-bg-color;
 			border-color: transparent;
@@ -191,16 +205,16 @@
 			}
 		}
 
-		&.red .client::before {
+		&.red .clientContainer::before {
 			background-color: @moon-remote-button-red-color;
 		}
-		&.green .client::before {
+		&.green .clientContainer::before {
 			background-color: @moon-remote-button-green-color;
 		}
-		&.yellow .client::before {
+		&.yellow .clientContainer::before {
 			background-color: @moon-remote-button-yellow-color;
 		}
-		&.blue .client::before {
+		&.blue .clientContainer::before {
 			background-color: @moon-remote-button-blue-color;
 		}
 
