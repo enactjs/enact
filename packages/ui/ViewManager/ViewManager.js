@@ -9,28 +9,33 @@
  * @exports SlideRightArranger
  * @exports SlideTopArranger
  * @exports ViewManager
+ * @exports ViewManagerBase
+ * @exports ViewManagerDecorator
  */
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import ForwardRef from '../ForwardRef';
+
 import {shape} from './Arranger';
 import TransitionGroup from './TransitionGroup';
 import {wrapWithView} from './View';
 
 /**
- * A `ViewManager` controls the visibility of a configurable number of views, allowing for them to be
- * transitioned on and off the viewport.
+ * The base `ViewManager` component, without
+ * [ViewManagerDecorator](ui/ViewManager.ViewManagerDecorator) applied.
  *
- * @class ViewManager
- * @ui
+ * @class ViewManagerBase
  * @memberof ui/ViewManager
+ * @ui
  * @public
  */
-class ViewManager extends React.Component {
+const ViewManagerBase = class extends React.Component {
+	static displayName = 'ViewManager'
 
-	static propTypes = /** @lends ui/ViewManager.ViewManager.prototype */ {
+	static propTypes = /** @lends ui/ViewManager.ViewManagerBase.prototype */ {
 		/**
 		 * Arranger to control the animation
 		 *
@@ -62,6 +67,14 @@ class ViewManager extends React.Component {
 		 * @default 'div'
 		 */
 		component: EnactPropTypes.renderable,
+
+		/**
+		 * Called with a reference to [component]{@link ui/ViewManager.ViewManager#component}
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Time in milliseconds to complete a transition
@@ -245,8 +258,35 @@ class ViewManager extends React.Component {
 			</TransitionGroup>
 		);
 	}
-}
+};
+
+/**
+ * Applies ViewManager behaviors.
+ *
+ * @hoc
+ * @memberof ui/ViewManager
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const ViewManagerDecorator = ForwardRef({prop: 'componentRef'});
+
+/**
+ * A `ViewManager` controls the visibility of a configurable number of views, allowing for them to be
+ * transitioned on and off the viewport.
+ *
+ * @class ViewManager
+ * @memberof ui/ViewManager
+ * @extends ui/ViewManager.ViewManagerBase
+ * @mixes ui/ViewManager.ViewManagerDecorator
+ * @ui
+ * @public
+ */
+const ViewManager = ViewManagerDecorator(ViewManagerBase);
 
 export default ViewManager;
-export {ViewManager};
+export {
+	ViewManager,
+	ViewManagerBase,
+	ViewManagerDecorator
+};
 export * from './Arranger';

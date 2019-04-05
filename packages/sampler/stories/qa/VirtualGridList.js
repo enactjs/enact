@@ -12,6 +12,7 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('VirtualGridList', VirtualGridList, VirtualListBase, UiVirtualListBase);
 
 const
+	defaultDataSize = 1000,
 	items = [],
 	// eslint-disable-next-line enact/prop-types
 	renderItem = ({index, ...rest}) => {
@@ -27,23 +28,35 @@ const
 		);
 	};
 
-for (let i = 0; i < 1000; i++) {
+const updateDataSize = (dataSize) => {
 	const
-		count = ('00' + i).slice(-3),
-		text = `Item ${count}`,
-		subText = `SubItem ${count}`,
-		color = Math.floor((Math.random() * (0x1000000 - 0x101010)) + 0x101010).toString(16),
-		source = `http://placehold.it/300x300/${color}/ffffff&text=Image ${i}`;
+		itemNumberDigits = dataSize > 0 ? ((dataSize - 1) + '').length : 0,
+		headingZeros = Array(itemNumberDigits).join('0');
 
-	items.push({text, subText, source});
-}
+	items.length = 0;
+
+	for (let i = 0; i < dataSize; i++) {
+		const
+			count = (headingZeros + i).slice(-itemNumberDigits),
+			text = `Item ${count}`,
+			subText = `SubItem ${count}`,
+			color = Math.floor((Math.random() * (0x1000000 - 0x101010)) + 0x101010).toString(16),
+			source = `http://placehold.it/300x300/${color}/ffffff&text=Image ${i}`;
+
+		items.push({text, subText, source});
+	}
+
+	return dataSize;
+};
+
+updateDataSize(defaultDataSize);
 
 storiesOf('VirtualList.VirtualGridList', module)
 	.add(
 		'Horizontal VirtualGridList',
 		() => (
 			<VirtualGridList
-				dataSize={number('dataSize', Config, items.length)}
+				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 				direction="horizontal"
 				focusableScrollbar={boolean('focusableScrollbar', Config, false)}
 				itemRenderer={renderItem}

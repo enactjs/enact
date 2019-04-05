@@ -137,6 +137,19 @@ class ScrollableBase extends Component {
 		clearOverscrollEffect: PropTypes.func,
 
 		/**
+		 * Client size of the container; valid values are an object that has `clientWidth` and `clientHeight`.
+		 *
+		 * @type {Object}
+		 * @property {Number}    clientHeight    The client height of the list.
+		 * @property {Number}    clientWidth    The client width of the list.
+		 * @public
+		 */
+		clientSize: PropTypes.shape({
+			clientHeight: PropTypes.number.isRequired,
+			clientWidth: PropTypes.number.isRequired
+		}),
+
+		/**
 		 * Direction of the list or the scroller.
 		 *
 		 * `'both'` could be only used for[Scroller]{@link ui/Scroller.Scroller}.
@@ -392,12 +405,14 @@ class ScrollableBase extends Component {
 
 		this.horizontalScrollbarProps = {
 			ref: this.horizontalScrollbarRef,
-			vertical: false
+			vertical: false,
+			clientSize: props.clientSize
 		};
 
 		this.verticalScrollbarProps = {
 			ref: this.verticalScrollbarRef,
-			vertical: true
+			vertical: true,
+			clientSize: props.clientSize
 		};
 
 		this.overscrollEnabled = !!(props.applyOverscrollEffect);

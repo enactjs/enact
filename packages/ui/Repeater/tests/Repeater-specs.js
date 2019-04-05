@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {shallow} from 'enzyme';
-import Repeater from '../Repeater';
+import {RepeaterBase} from '../Repeater';
 
 describe('Repeater Specs', () => {
 	const stringItems = ['One', 'Two', 'Three'];
@@ -14,7 +14,7 @@ describe('Repeater Specs', () => {
 
 	test('should have a root span element', () => {
 		const subject = shallow(
-			<Repeater childComponent="div">{stringItems}</Repeater>
+			<RepeaterBase childComponent="div">{stringItems}</RepeaterBase>
 		);
 
 		const expected = 'span';
@@ -25,7 +25,7 @@ describe('Repeater Specs', () => {
 
 	test('should accept a nodeName as root element', () => {
 		const subject = shallow(
-			<Repeater component="div" childComponent="div">{stringItems}</Repeater>
+			<RepeaterBase component="div" childComponent="div">{stringItems}</RepeaterBase>
 		);
 
 		const expected = 'div';
@@ -36,7 +36,7 @@ describe('Repeater Specs', () => {
 
 	test('should accept a function as root element', () => {
 		const subject = shallow(
-			<Repeater component={CustomRootType} childComponent="div">{stringItems}</Repeater>
+			<RepeaterBase component={CustomRootType} childComponent="div">{stringItems}</RepeaterBase>
 		);
 
 		const expected = 'CustomRootType';
@@ -47,7 +47,7 @@ describe('Repeater Specs', () => {
 
 	test('should accept a nodeName as childComponent', () => {
 		const subject = shallow(
-			<Repeater childComponent="div">{stringItems}</Repeater>
+			<RepeaterBase childComponent="div">{stringItems}</RepeaterBase>
 		);
 
 		const expected = 3;
@@ -58,7 +58,7 @@ describe('Repeater Specs', () => {
 
 	test('should accept a function as childComponent', () => {
 		const subject = shallow(
-			<Repeater childComponent={CustomType}>{stringItems}</Repeater>
+			<RepeaterBase childComponent={CustomType}>{stringItems}</RepeaterBase>
 		);
 
 		const expected = 3;
@@ -71,7 +71,7 @@ describe('Repeater Specs', () => {
 		'should create a number of children matching the length of items',
 		() => {
 			const subject = shallow(
-				<Repeater childComponent="div">{stringItems}</Repeater>
+				<RepeaterBase childComponent="div">{stringItems}</RepeaterBase>
 			);
 
 			const expected = stringItems.length;
@@ -83,7 +83,7 @@ describe('Repeater Specs', () => {
 
 	test('should support an array of objects as items', () => {
 		const subject = shallow(
-			<Repeater childComponent={CustomType}>{objItems}</Repeater>
+			<RepeaterBase childComponent={CustomType}>{objItems}</RepeaterBase>
 		);
 
 		const expected = objItems.length;
@@ -94,7 +94,7 @@ describe('Repeater Specs', () => {
 
 	test('should support passing itemProps to children', () => {
 		const subject = shallow(
-			<Repeater childComponent="div" itemProps={{title: 'test'}}>{stringItems}</Repeater>
+			<RepeaterBase childComponent="div" itemProps={{title: 'test'}}>{stringItems}</RepeaterBase>
 		);
 
 		const expected = 'test';
@@ -105,7 +105,7 @@ describe('Repeater Specs', () => {
 
 	test('should pass index to each child', () => {
 		const subject = shallow(
-			<Repeater childComponent="div">{stringItems}</Repeater>
+			<RepeaterBase childComponent="div">{stringItems}</RepeaterBase>
 		);
 
 		const expected = 0;
@@ -116,7 +116,7 @@ describe('Repeater Specs', () => {
 
 	test('should pass data to each child', () => {
 		const subject = shallow(
-			<Repeater childComponent="div" childProp="data-str">{stringItems}</Repeater>
+			<RepeaterBase childComponent="div" childProp="data-str">{stringItems}</RepeaterBase>
 		);
 
 		const expected = stringItems[0];
@@ -127,7 +127,7 @@ describe('Repeater Specs', () => {
 
 	test('should pass item as children to each child', () => {
 		const subject = shallow(
-			<Repeater childComponent="div">{stringItems}</Repeater>
+			<RepeaterBase childComponent="div">{stringItems}</RepeaterBase>
 		);
 
 		const expected = stringItems[0];
@@ -138,7 +138,7 @@ describe('Repeater Specs', () => {
 
 	test('should set role to list by default', () => {
 		const subject = shallow(
-			<Repeater childComponent="div">{stringItems}</Repeater>
+			<RepeaterBase childComponent="div">{stringItems}</RepeaterBase>
 		);
 
 		const expected = 'list';
@@ -149,7 +149,7 @@ describe('Repeater Specs', () => {
 
 	test('should allow role to be overridden', () => {
 		const subject = shallow(
-			<Repeater childComponent="div" role="listbox">{stringItems}</Repeater>
+			<RepeaterBase childComponent="div" role="listbox">{stringItems}</RepeaterBase>
 		);
 
 		const expected = 'listbox';
