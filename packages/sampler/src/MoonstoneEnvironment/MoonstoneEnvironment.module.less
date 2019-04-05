@@ -66,6 +66,11 @@
 			overflow-x: auto !important;
 		}
 	}
+
+	&.webos {
+		// disable gestures on webOS platforms
+		touch-action: none;
+	}
 }
 
 // Here, we target the storybook rendering canvas div. It's inserted as a child of our Panel, but it

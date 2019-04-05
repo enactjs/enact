@@ -8,6 +8,7 @@ import {Column, Cell} from '@enact/ui/Layout';
 import BodyText from '@enact/moonstone/BodyText';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 import {Panels, Panel, Header} from '@enact/moonstone/Panels';
+import platform from '@enact/core/platform';
 import {boolean, select} from '../enact-knobs';
 import qs from 'query-string';
 
@@ -31,6 +32,10 @@ const PanelsBase = kind({
 	styles: {
 		css,
 		className: 'moonstoneEnvironmentPanels'
+	},
+
+	computed: {
+		className: ({styler}) => styler.append(platform.platformName)
 	},
 
 	render: ({children, description, title, ...rest}) => (
