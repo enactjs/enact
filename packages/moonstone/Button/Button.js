@@ -11,7 +11,6 @@
  */
 
 import kind from '@enact/core/kind';
-import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
 import {ButtonBase as UiButtonBase, ButtonDecorator as UiButtonDecorator} from '@enact/ui/Button';
 import Pure from '@enact/ui/internal/Pure';
@@ -81,6 +80,9 @@ const ButtonBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
+		// `transparent` was intentionally excluded from the adove documented exported classes as it
+		// does not appear to provide value to the end-developer, but is needed by IconButton
+		// internally for its design guidelines, which differ from Button regarding `transparent`.
 		css: PropTypes.object
 	},
 
