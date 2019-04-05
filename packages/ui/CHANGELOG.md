@@ -7,6 +7,9 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/Measurable` HOC and Hook for quick and convenient measuring of simple components
+### Fixed
+
+- `ui/Touchable` to only emit its custom events once when originating from a child instance of `Touchable`
 
 ## [2.5.0] - 2019-04-01
 

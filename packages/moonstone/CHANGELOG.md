@@ -7,6 +7,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/Panels` slot `<controls>` to easy add custom controls next to the Panels' "close" button
+### Fixed
+
+- `moonstone/ExpandableInput` to close on touch platforms when tapping another component
 
 ## [2.5.0] - 2019-04-01
 
