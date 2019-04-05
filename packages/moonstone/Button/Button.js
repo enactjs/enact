@@ -130,7 +130,6 @@ const ButtonBase = kind({
  *
  * @hoc
  * @memberof moonstone/Button
- * @mixes i18n/Uppercase.Uppercase
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes ui/Button.ButtonDecorator
  * @mixes spotlight/Spottable.Spottable
