@@ -6,10 +6,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
-- `moonstone/Button` `Uppercase` HOC and consequently the `casing` prop as it's no longer needed
+- `moonstone/Button` prop `casing` which is no longer supported
 
 ### Changed
 
+- `moonstone/Button.ButtonDecorator` to remove `i18n/Uppercase` HOC
 - `moonstone/Button` appearance to match the latest designs
 
 ### Fixed
