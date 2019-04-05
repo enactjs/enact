@@ -31,6 +31,19 @@ class ScrollbarBase extends Component {
 		cbAlertThumb: PropTypes.func,
 
 		/**
+		 * Client size of the container; valid values are an object that has `clientWidth` and `clientHeight`.
+		 *
+		 * @type {Object}
+		 * @property {Number}    clientHeight    The client height of the list.
+		 * @property {Number}    clientWidth    The client width of the list.
+		 * @public
+		 */
+		clientSize: PropTypes.shape({
+			clientHeight: PropTypes.number.isRequired,
+			clientWidth: PropTypes.number.isRequired
+		}),
+
+		/**
 		 * Adds the corner between vertical and horizontal scrollbars.
 		 *
 		 * @type {Booelan}
@@ -101,11 +114,12 @@ class ScrollbarBase extends Component {
 	}
 
 	render () {
-		const {cbAlertThumb, corner, vertical, ...rest} = this.props;
+		const {cbAlertThumb, clientSize, corner, vertical, ...rest} = this.props;
 
 		return (
 			<UiScrollbarBase
 				corner={corner}
+				clientSize={clientSize}
 				css={componentCss}
 				ref={this.scrollbarRef}
 				vertical={vertical}

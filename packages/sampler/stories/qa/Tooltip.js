@@ -10,6 +10,9 @@ import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
+import {number, object, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
+
 const TooltipButton = TooltipDecorator(Button);
 
 class TooltipTest extends React.Component {
@@ -33,7 +36,7 @@ class TooltipTest extends React.Component {
 					<TooltipButton
 						onClick={this.handleClick}
 						tooltipDelay={5000}
-						tooltipText="Tooltip!"
+						tooltipText="Tooltip position!"
 					>
 						Click me
 					</TooltipButton>
@@ -56,12 +59,12 @@ class ChangeableTooltip extends React.Component {
 	}
 
 	changeTooltipText = () => {
-		const {text} = this.state;
-		if (text === 'short') {
+		const {text: stringText} = this.state;
+		if (stringText === 'short') {
 			this.setState({text: 'long text'});
-		} else if (text === 'long text') {
+		} else if (stringText === 'long text') {
 			this.setState({text: 'very loooooooooooong text'});
-		} else if (text === 'very loooooooooooong text') {
+		} else if (stringText === 'very loooooooooooong text') {
 			this.setState({text: ''});
 		} else {
 			this.setState({text: 'short'});
@@ -228,6 +231,33 @@ class TooltipFollow extends React.Component {
 	}
 }
 
+const Config = mergeComponentMetadata('TooltipDecorator', TooltipDecorator);
+const TooltipNormalButton = TooltipDecorator(Button);
+
+const prop = {
+	tooltipPosition: {
+		'above': 'above',
+		'above center': 'above center',
+		'above left': 'above left',
+		'above right': 'above right',
+		'below': 'below',
+		'below center': 'below center',
+		'below left': 'below left',
+		'below right': 'below right',
+		'left bottom': 'left bottom',
+		'left middle': 'left middle',
+		'left top': 'left top',
+		'right bottom': 'right bottom',
+		'right middle': 'right middle',
+		'right top': 'right top'
+	},
+	ariaObject: {
+		'aria-hidden': false,
+		'aria-label': 'Tooltip Label',
+		'role': 'alert'
+	}
+};
+
 storiesOf('Tooltip', module)
 	.add(
 		'that shows after Button is unmounted (ENYO-3809)',
@@ -244,5 +274,110 @@ storiesOf('Tooltip', module)
 		'tooltip to follow component when changed',
 		() => (
 			<TooltipFollow />
+		)
+	).add(
+		'tooltip overflows',
+		() => (
+			<div>
+				<div style={{position: 'absolute', top: '-90px', display: 'flex', width: '100%', justifyContent: 'space-between'}}>
+					<TooltipNormalButton
+						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
+						tooltipDelay={number('tooltipDelay', Config, 500)}
+						tooltipText={text('tooltipText', Config, 'tooltip position!')}
+						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
+						tooltipWidth={number('tooltipWidth', Config)}
+						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
+					>
+						Top Left
+					</TooltipNormalButton>
+					<TooltipNormalButton
+						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
+						tooltipDelay={number('tooltipDelay', Config, 500)}
+						tooltipText={text('tooltipText', Config, 'tooltip position!')}
+						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
+						tooltipWidth={number('tooltipWidth', Config)}
+						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
+					>
+						Top
+					</TooltipNormalButton>
+					<TooltipNormalButton
+						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
+						tooltipDelay={number('tooltipDelay', Config, 500)}
+						tooltipText={text('tooltipText', Config, 'tooltip position!')}
+						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
+						tooltipWidth={number('tooltipWidth', Config)}
+						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
+					>
+						Top Right
+					</TooltipNormalButton>
+				</div>
+				<div style={{display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'space-between'}}>
+					<TooltipButton
+						style={{transform: 'translateY(-50%)'}}
+						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
+						tooltipDelay={number('tooltipDelay', Config, 500)}
+						tooltipText={text('tooltipText', Config, 'tooltip position!')}
+						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
+						tooltipWidth={number('tooltipWidth', Config)}
+						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
+					>
+						Left
+					</TooltipButton>
+					<TooltipButton
+						style={{transform: 'translateY(-50%)'}}
+						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
+						tooltipDelay={number('tooltipDelay', Config, 500)}
+						tooltipText={text('tooltipText', Config, 'tooltip position!')}
+						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
+						tooltipWidth={number('tooltipWidth', Config)}
+						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
+					>
+						Center
+					</TooltipButton>
+					<TooltipButton
+						style={{transform: 'translateY(-50%)'}}
+						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
+						tooltipDelay={number('tooltipDelay', Config, 500)}
+						tooltipText={text('tooltipText', Config, 'tooltip position!')}
+						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
+						tooltipWidth={number('tooltipWidth', Config)}
+						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
+					>
+						Right
+					</TooltipButton>
+				</div>
+				<div style={{position: 'absolute', bottom: '0', display: 'flex', width: '100%', justifyContent: 'space-between'}}>
+					<TooltipNormalButton
+						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
+						tooltipDelay={number('tooltipDelay', Config, 500)}
+						tooltipText={text('tooltipText', Config, 'tooltip position!')}
+						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
+						tooltipWidth={number('tooltipWidth', Config)}
+						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
+					>
+						Bottom Left
+					</TooltipNormalButton>
+					<TooltipNormalButton
+						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
+						tooltipDelay={number('tooltipDelay', Config, 500)}
+						tooltipText={text('tooltipText', Config, 'tooltip position!')}
+						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
+						tooltipWidth={number('tooltipWidth', Config)}
+						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
+					>
+						Bottom
+					</TooltipNormalButton>
+					<TooltipNormalButton
+						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
+						tooltipDelay={number('tooltipDelay', Config, 500)}
+						tooltipText={text('tooltipText', Config, 'tooltip position!')}
+						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
+						tooltipWidth={number('tooltipWidth', Config)}
+						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
+					>
+						Bottom Right
+					</TooltipNormalButton>
+				</div>
+			</div>
 		)
 	);
