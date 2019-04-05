@@ -59,7 +59,7 @@ class ChangeableTooltip extends React.Component {
 	}
 
 	changeTooltipText = () => {
-		const {stringText} = this.state;
+		const {text: stringText} = this.state;
 		if (stringText === 'short') {
 			this.setState({text: 'long text'});
 		} else if (stringText === 'long text') {
