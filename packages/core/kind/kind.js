@@ -136,14 +136,6 @@ const kind = (config) => {
 	const Component = class extends React.Component {
 		static displayName = name || 'Component'
 
-		static propTypes = propTypes
-
-		static contextTypes = contextTypes
-
-		static contextType = contextType
-
-		static defaultProps = defaultProps
-
 		constructor () {
 			super();
 			this.handlers = {};
@@ -177,6 +169,11 @@ const kind = (config) => {
 			}, this.context);
 		}
 	};
+
+	if (propTypes) Component.propTypes = propTypes;
+	if (contextTypes) Component.contextTypes = contextTypes;
+	if (contextType) Component.contextType = contextType;
+	if (defaultProps) Component.defaultProps = defaultProps;
 
 	// Decorate the Component with the computed property object in DEV for easier testability
 	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
