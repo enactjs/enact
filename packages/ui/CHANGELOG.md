@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Button` public class `.hasIcon` which is present on the root node only when an icon has been provided
+
 ## [2.4.1] - 2019-03-11
 
 ### Fixed

@@ -4,6 +4,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Removed
+
+- `moonstone/Button` `Uppercase` HOC and consequently the `casing` prop as it's no longer needed
+
+### Changed
+
+- `moonstone/Button` appearance to match the latest designs
+
 ### Fixed
 
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to remove event listeners properly
