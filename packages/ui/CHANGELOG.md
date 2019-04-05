@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/ToggleItem` support for `itemIconAfter`, `itemIconAfterText`, `itemIconBefore` and `itemIconBeforeText` slots.
+- `ui/ToggleItem` support for `itemIcon`, `itemIconPosition`.
 
 ## [2.5.0] - 2019-04-01
 

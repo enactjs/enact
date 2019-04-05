@@ -26,11 +26,11 @@ import Touchable from '../Touchable';
 import componentCss from './ToggleItem.module.less';
 
 // eslint-disable-next-line
-const iconCreator = (position) => ({css, disabled, icon, iconComponent, iconPosition, itemIconAfter, itemIconAfterText, itemIconBefore, itemIconBeforeText, selected}) => {
+const iconCreator = (position) => ({css, disabled, icon, iconComponent, iconPosition, itemIcon, itemIconPosition, selected}) => {
 	if (position === 'before') {
 		return (
 			<Fragment>
-				{itemIconBefore && <ComponentOverride component={itemIconBefore} className={`${css.itemIcon} ${itemIconBefore.props.className}`} />}
+				{itemIconPosition === 'before' && itemIcon && <ComponentOverride component={itemIcon} className={`${css.itemIcon} ${itemIcon.props.className}`} />}
 				{iconPosition === 'before' ?
 					<ComponentOverride
 						component={iconComponent}
@@ -40,13 +40,13 @@ const iconCreator = (position) => ({css, disabled, icon, iconComponent, iconPosi
 						{icon}
 					</ComponentOverride> : null
 				}
-				{itemIconBeforeText && <ComponentOverride component={itemIconBeforeText} className={`${css.itemIcon} ${itemIconBeforeText.props.className}`} />}
+				{itemIconPosition === 'beforeText' && itemIcon && <ComponentOverride component={itemIcon} className={`${css.itemIcon} ${itemIcon.props.className}`} />}
 			</Fragment>
 		);
 	} else {
 		return (
 			<Fragment>
-				{itemIconAfterText && <ComponentOverride component={itemIconAfterText} className={`${css.itemIcon} ${itemIconAfterText.props.className}`} />}
+				{itemIconPosition === 'afterText' && itemIcon && <ComponentOverride component={itemIcon} className={`${css.itemIcon} ${itemIcon.props.className}`} />}
 				{iconPosition === 'after' ?
 					<ComponentOverride
 						component={iconComponent}
@@ -56,7 +56,7 @@ const iconCreator = (position) => ({css, disabled, icon, iconComponent, iconPosi
 						{icon}
 					</ComponentOverride> : null
 				}
-				{itemIconAfter && <ComponentOverride component={itemIconAfter} className={`${css.itemIcon} ${itemIconAfter.props.className}`} />}
+				{itemIconPosition === 'after' && itemIcon && <ComponentOverride component={itemIcon} className={`${css.itemIcon} ${itemIcon.props.className}`} />}
 			</Fragment>
 		);
 	}
@@ -160,40 +160,20 @@ const ToggleItemBase = kind({
 		iconPosition: PropTypes.oneOf(['before', 'after']),
 
 		/**
-		 * The `Icon` to render in this item.
-		 * Nodes to be inserted after this component.
-
+		 * The `itemIcon` to render in this item.
+		 *
 		 * @type {Node}
 		 * @public
 		 */
-		itemIconAfter: PropTypes.node,
+		itemIcon: PropTypes.node,
 
 		/**
-		 * The `Icon` to render in this item.
-		 * Nodes to be inserted after `children` in this component.
-
-		 * @type {Node}
+		 * Specifies on which position (`'after'`, `'afterText`, `before` or `'beforeText'`) of the text the `itemIcon` appears.
+		 *
+		 * @type {String}
 		 * @public
 		 */
-		itemIconAfterText: PropTypes.node,
-
-		/**
-		 * The `Icon` to render in this item.
-		 * Nodes to be inserted before this component.
-
-		 * @type {Node}
-		 * @public
-		 */
-		itemIconBefore: PropTypes.node,
-
-		/**
-		 * The `Icon` to render in this item.
-		 * Nodes to be inserted before `children` in this component.
-
-		 * @type {Node}
-		 * @public
-		 */
-		itemIconBeforeText: PropTypes.node,
+		itemIconPosition: PropTypes.oneOf(['after', 'afterText', 'before', 'beforeText']),
 
 		/**
 		 * Called when the toggle item is toggled. Developers should generally use `onToggle` instead.
@@ -254,10 +234,8 @@ const ToggleItemBase = kind({
 	render: ({component: Component, componentRef, css, children, selected, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconPosition;
-		delete rest.itemIconAfter;
-		delete rest.itemIconAfterText;
-		delete rest.itemIconBefore;
-		delete rest.itemIconBeforeText;
+		delete rest.itemIcon;
+		delete rest.itemIconPosition;
 		delete rest.value;
 
 		return (
@@ -287,7 +265,7 @@ const ToggleItemBase = kind({
  */
 const ToggleItemDecorator = compose(
 	ForwardRef({prop: 'componentRef'}),
-	Slottable({slots: ['itemIconAfter', 'itemIconAfterText', 'itemIconBefore', 'itemIconBeforeText']}),
+	Slottable({slots: ['itemIcon']}),
 	Toggleable({toggleProp: 'onTap'}),
 	Touchable
 );
