@@ -25,12 +25,32 @@ import Touchable from '../Touchable';
 
 import componentCss from './ToggleItem.module.less';
 
+const ItemIcon = kind({
+	name: 'ItemIcon',
+	propTypes: {
+		/**
+		 * The `itemIcon` to render in this item.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		itemIcon: PropTypes.node
+	},
+	render: ({itemIcon}) => {
+		return (
+			<ComponentOverride component={itemIcon} />
+		);
+	}
+});
+
 // eslint-disable-next-line
 const iconCreator = (position) => ({css, disabled, icon, iconComponent, iconPosition, itemIcon, itemIconPosition, selected}) => {
+
+	const itemIconComponent = (itemIcon ? <ItemIcon itemIcon={itemIcon} /> : null);
 	if (position === 'before') {
 		return (
 			<Fragment>
-				{itemIconPosition === 'before' && itemIcon && <ComponentOverride component={itemIcon} className={`${css.itemIcon} ${itemIcon.props.className}`} />}
+				{itemIconPosition === 'before' && itemIconComponent}
 				{iconPosition === 'before' ?
 					<ComponentOverride
 						component={iconComponent}
@@ -40,13 +60,13 @@ const iconCreator = (position) => ({css, disabled, icon, iconComponent, iconPosi
 						{icon}
 					</ComponentOverride> : null
 				}
-				{itemIconPosition === 'beforeText' && itemIcon && <ComponentOverride component={itemIcon} className={`${css.itemIcon} ${itemIcon.props.className}`} />}
+				{itemIconPosition === 'beforeText' && itemIconComponent}
 			</Fragment>
 		);
 	} else {
 		return (
 			<Fragment>
-				{itemIconPosition === 'afterText' && itemIcon && <ComponentOverride component={itemIcon} className={`${css.itemIcon} ${itemIcon.props.className}`} />}
+				{itemIconPosition === 'afterText' && itemIconComponent}
 				{iconPosition === 'after' ?
 					<ComponentOverride
 						component={iconComponent}
@@ -56,7 +76,7 @@ const iconCreator = (position) => ({css, disabled, icon, iconComponent, iconPosi
 						{icon}
 					</ComponentOverride> : null
 				}
-				{itemIconPosition === 'after' && itemIcon && <ComponentOverride component={itemIcon} className={`${css.itemIcon} ${itemIcon.props.className}`} />}
+				{itemIconPosition === 'after' && itemIconComponent}
 			</Fragment>
 		);
 	}
