@@ -93,8 +93,8 @@ const handleLeave = handle(
 // Mouse event handlers
 
 const handleMouseDown = handle(
-	call('shouldAllowMouseEvent'),
 	forward('onMouseDown'),
+	call('shouldAllowMouseEvent'),
 	handleDown
 );
 
