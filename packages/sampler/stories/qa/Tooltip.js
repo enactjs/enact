@@ -277,98 +277,126 @@ storiesOf('Tooltip', module)
 		)
 	).add(
 		'tooltip overflows',
-		() => (
-			<div>
-				<div style={{position: 'absolute', top: '-90px', display: 'flex', width: '100%', justifyContent: 'space-between'}}>
-					<TooltipNormalButton
-						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
-						tooltipDelay={number('tooltipDelay', Config, 500)}
-						tooltipText={text('tooltipText', Config, 'tooltip position!')}
-						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
-					>
-						Top Left
-					</TooltipNormalButton>
-					<TooltipNormalButton
-						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
-						tooltipDelay={number('tooltipDelay', Config, 500)}
-						tooltipText={text('tooltipText', Config, 'tooltip position!')}
-						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
-					>
-						Top
-					</TooltipNormalButton>
-					<TooltipNormalButton
-						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
-						tooltipDelay={number('tooltipDelay', Config, 500)}
-						tooltipText={text('tooltipText', Config, 'tooltip position!')}
-						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
-					>
-						Top Right
-					</TooltipNormalButton>
-				</div>
-				<div style={{display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'space-between'}}>
-					<TooltipButton
-						style={{transform: 'translateY(-50%)'}}
-						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
-						tooltipDelay={number('tooltipDelay', Config, 500)}
-						tooltipText={text('tooltipText', Config, 'tooltip position!')}
-						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
-					>
-						Left
-					</TooltipButton>
-					<TooltipButton
-						style={{transform: 'translateY(-50%)'}}
-						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
-						tooltipDelay={number('tooltipDelay', Config, 500)}
-						tooltipText={text('tooltipText', Config, 'tooltip position!')}
-						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
-					>
-						Center
-					</TooltipButton>
-					<TooltipButton
-						style={{transform: 'translateY(-50%)'}}
-						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
-						tooltipDelay={number('tooltipDelay', Config, 500)}
-						tooltipText={text('tooltipText', Config, 'tooltip position!')}
-						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
-					>
-						Right
-					</TooltipButton>
-				</div>
-				<div style={{position: 'absolute', bottom: '0', display: 'flex', width: '100%', justifyContent: 'space-between'}}>
-					<TooltipNormalButton
-						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
-						tooltipDelay={number('tooltipDelay', Config, 500)}
-						tooltipText={text('tooltipText', Config, 'tooltip position!')}
-						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
-					>
-						Bottom Left
-					</TooltipNormalButton>
-					<TooltipNormalButton
-						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
-						tooltipDelay={number('tooltipDelay', Config, 500)}
-						tooltipText={text('tooltipText', Config, 'tooltip position!')}
-						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
-					>
-						Bottom
-					</TooltipNormalButton>
-					<TooltipNormalButton
-						tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
-						tooltipDelay={number('tooltipDelay', Config, 500)}
-						tooltipText={text('tooltipText', Config, 'tooltip position!')}
-						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
-					>
-						Bottom Right
-					</TooltipNormalButton>
-				</div>
-			</div>
-		)
+		() => {
+			const tooltipCasing = select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper');
+			const tooltipDelay = number('tooltipDelay', Config, 500);
+			const tooltipText = text('tooltipText', Config, 'tooltip position!');
+			const tooltipPosition = select('tooltipPosition', prop.tooltipPosition, Config, 'above');
+			const tooltipProps = object('tooltipProps', Config, prop.ariaObject);
+			return (
+				<Layout orientation="vertical" align="stretch space-between" className="enact-fit" style={{position: 'fixed', padding: '18px 12px'}}>
+					<Cell shrink>
+						<Layout align="center space-between">
+							<Cell shrink>
+								<TooltipNormalButton
+									tooltipCasing={tooltipCasing}
+									tooltipDelay={tooltipDelay}
+									tooltipText={tooltipText}
+									tooltipPosition={tooltipPosition}
+									tooltipProps={tooltipProps}
+								>
+									Top Left
+								</TooltipNormalButton>
+							</Cell>
+							<Cell shrink>
+								<TooltipNormalButton
+									tooltipCasing={tooltipCasing}
+									tooltipDelay={tooltipDelay}
+									tooltipText={tooltipText}
+									tooltipPosition={tooltipPosition}
+									tooltipProps={tooltipProps}
+								>
+									Top
+								</TooltipNormalButton>
+							</Cell>
+							<Cell shrink>
+								<TooltipNormalButton
+									tooltipCasing={tooltipCasing}
+									tooltipDelay={tooltipDelay}
+									tooltipText={tooltipText}
+									tooltipPosition={tooltipPosition}
+									tooltipProps={tooltipProps}
+								>
+									Top Right
+								</TooltipNormalButton>
+							</Cell>
+						</Layout>
+					</Cell>
+					<Cell shrink>
+						<Layout align="center space-between">
+							<Cell shrink>
+								<TooltipButton
+									tooltipCasing={tooltipCasing}
+									tooltipDelay={tooltipDelay}
+									tooltipText={tooltipText}
+									tooltipPosition={tooltipPosition}
+									tooltipProps={tooltipProps}
+								>
+									Left
+								</TooltipButton>
+							</Cell>
+							<Cell shrink>
+								<TooltipButton
+									tooltipCasing={tooltipCasing}
+									tooltipDelay={tooltipDelay}
+									tooltipText={tooltipText}
+									tooltipPosition={tooltipPosition}
+									tooltipProps={tooltipProps}
+								>
+									Center
+								</TooltipButton>
+							</Cell>
+							<Cell shrink>
+								<TooltipButton
+									tooltipCasing={tooltipCasing}
+									tooltipDelay={tooltipDelay}
+									tooltipText={tooltipText}
+									tooltipPosition={tooltipPosition}
+									tooltipProps={tooltipProps}
+								>
+									Right
+								</TooltipButton>
+							</Cell>
+						</Layout>
+					</Cell>
+					<Cell shrink>
+						<Layout align="center space-between">
+							<Cell shrink>
+								<TooltipNormalButton
+									tooltipCasing={tooltipCasing}
+									tooltipDelay={tooltipDelay}
+									tooltipText={tooltipText}
+									tooltipPosition={tooltipPosition}
+									tooltipProps={tooltipProps}
+								>
+									Bottom Left
+								</TooltipNormalButton>
+							</Cell>
+							<Cell shrink>
+								<TooltipNormalButton
+									tooltipCasing={tooltipCasing}
+									tooltipDelay={tooltipDelay}
+									tooltipText={tooltipText}
+									tooltipPosition={tooltipPosition}
+									tooltipProps={tooltipProps}
+								>
+									Bottom
+								</TooltipNormalButton>
+							</Cell>
+							<Cell shrink>
+								<TooltipNormalButton
+									tooltipCasing={tooltipCasing}
+									tooltipDelay={tooltipDelay}
+									tooltipText={tooltipText}
+									tooltipPosition={tooltipPosition}
+									tooltipProps={tooltipProps}
+								>
+									Bottom Right
+								</TooltipNormalButton>
+							</Cell>
+						</Layout>
+					</Cell>
+				</Layout>
+			);
+		}
 	);
