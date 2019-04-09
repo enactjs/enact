@@ -27,7 +27,7 @@ const defaultConfig = {
 	measurementProp: 'measurement',
 
 	/**
-	 * Configures the prop name to pass that represents the element to measure.
+	 * Configures the prop name to pass a function to capture a reference to the element to measure.
 	 *
 	 * @type {String}
 	 * @default 'forwardRef'
@@ -56,7 +56,7 @@ function useMeasurable () {
  *
  * Applying `Measurable` to a component will pass two additional props: function to fetch the `ref`
  * and the measurement object (currently this executes `getBoundingClientRect` returning its full
- * compliment of properties). Both prop names are configurable through the HOC config object.
+ * complement of properties). Both prop names are configurable through the HOC config object.
  *
  * Changes to the referenced node will result in new measurements being returned as props. That
  * being said, it probably is not wise to use this during animation as it may cause unwanted
