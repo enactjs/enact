@@ -51,7 +51,7 @@ const TooltipBase = kind({
 		 * @type {Number}
 		 * @public
 		 */
-		arrowPosition: PropTypes.number,
+		labelOffset: PropTypes.number,
 
 		/**
 		 * Direction of label in relation to the activator.
@@ -118,9 +118,9 @@ const TooltipBase = kind({
 	},
 
 	computed: {
-		labelOffset: ({arrowPosition}) => {
-			if (arrowPosition) {
-				const cappedPosition = Math.max(-0.5, Math.min(0.5, arrowPosition));
+		labelOffset: ({labelOffset}) => {
+			if (labelOffset) {
+				const cappedPosition = Math.max(-0.5, Math.min(0.5, labelOffset));
 				return {transform: `translateX(${cappedPosition * 100}%)`};
 				// {transform: `translateX(calc(${cappedPosition * 100}% - ((${cappedPosition} / 0.5) * ${ri.scale((54 / 2) + (30 / 2))}px)))`};
 			}
@@ -136,7 +136,7 @@ const TooltipBase = kind({
 
 	render: ({children, tooltipRef, width, labelOffset, ...rest}) => {
 		delete rest.arrowAnchor;
-		delete rest.arrowPosition;
+		delete rest.labelOffset;
 		delete rest.direction;
 		delete rest.position;
 		delete rest.relative;

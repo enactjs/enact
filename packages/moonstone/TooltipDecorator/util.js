@@ -165,7 +165,7 @@ const getPosition = function (clientNode, tooltipDirection) {
  * @returns {Number}                     Tooltip anchor's left transform position in percentage between 0 and 1 relative to the tooltip
  * @private
  */
-const getArrowPosition = function (tooltipNode, tooltipDirection, tooltipPosition, overflow, rtl) {
+const getLabelOffset = function (tooltipNode, tooltipDirection, tooltipPosition, overflow, rtl) {
 	const tooltipWidth = tooltipNode.width;
 	const labelLeftPosition = tooltipPosition.left - (tooltipWidth / 2);
 	const labelRightPosition = tooltipPosition.right + (tooltipWidth / 2) > window.innerWidth;
@@ -177,9 +177,9 @@ const getArrowPosition = function (tooltipNode, tooltipDirection, tooltipPositio
 		((labelLeftPosition < 0 && !rtl) ||
 		(labelRightPosition > window.innerWidth && rtl))
 	) {
-		const percentageDelta = labelLeftPosition / tooltipWidth * -1;
+		const labelOffset = labelLeftPosition / tooltipWidth * -1;
 
-		return percentageDelta;
+		return labelOffset;
 	}
 	return null;
 };
@@ -188,6 +188,6 @@ export {
 	adjustDirection,
 	adjustAnchor,
 	calcOverflow,
-	getArrowPosition,
+	getLabelOffset,
 	getPosition
 };

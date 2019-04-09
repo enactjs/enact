@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 
 import {Tooltip, TooltipBase} from './Tooltip';
-import {adjustDirection, adjustAnchor, calcOverflow, getArrowPosition, getPosition} from './util';
+import {adjustDirection, adjustAnchor, calcOverflow, getLabelOffset, getPosition} from './util';
 
 let currentTooltip; // needed to know whether or not we should stop a showing job when unmounting
 
@@ -238,14 +238,14 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			arrowAnchor = adjustAnchor(arrowAnchor, tooltipDirection, overflow, this.props.rtl);
 
 			const tooltipPosition = getPosition(clientNode, tooltipDirection);
-			const arrowPosition = getArrowPosition(tooltipNode, tooltipDirection, tooltipPosition, overflow, this.props.rtl);
+			const labelOffset = getLabelOffset(tooltipNode, tooltipDirection, tooltipPosition, overflow, this.props.rtl);
 			const {top, left} = this.state.position;
 
-			if ((tooltipPosition.top !== top) || (tooltipPosition.left !== left) || (arrowPosition !== this.state.arrowPosition)) {
+			if ((tooltipPosition.top !== top) || (tooltipPosition.left !== left) || (labelOffset !== this.state.labelOffset)) {
 				this.setState({
 					tooltipDirection,
 					arrowAnchor,
-					arrowPosition,
+					labelOffset,
 					position: tooltipPosition
 				});
 			}
@@ -372,7 +372,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							role="alert"
 							{...tooltipProps}
 							arrowAnchor={this.state.arrowAnchor}
-							arrowPosition={this.state.arrowPosition}
+							labelOffset={this.state.labelOffset}
 							casing={tooltipCasing}
 							direction={this.state.tooltipDirection}
 							position={this.state.position}
