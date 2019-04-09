@@ -24,7 +24,7 @@ const defaultConfig = {
 	 * @default 'measurement'
 	 * @memberof ui/Measurable.Measurable.defaultConfig
 	 */
-	measurementPropName: 'measurement',
+	measurementProp: 'measurement',
 
 	/**
 	 * Configures the prop name to pass that represents the element to measure.
@@ -33,26 +33,22 @@ const defaultConfig = {
 	 * @default 'forwardRef'
 	 * @memberof ui/Measurable.Measurable.defaultConfig
 	 */
-	refPropName: 'forwardRef'
+	refProp: 'forwardRef'
 };
 
-function defineMeasurable () {
-	return function () {
-		const [measurement, setMeasurement] = useState();
-		const ref = useCallback(node => {
-			if (node != null) {
-				setMeasurement(node ? node.getBoundingClientRect() : null);
-			}
-		}, []);
+function useMeasurable () {
+	const [measurement, setMeasurement] = useState();
+	const ref = useCallback(node => {
+		if (node != null) {
+			setMeasurement(node ? node.getBoundingClientRect() : null);
+		}
+	}, []);
 
-		return {
-			ref,
-			measurement
-		};
+	return {
+		ref,
+		measurement
 	};
 }
-
-const useMeasurable = defineMeasurable();
 
 /**
  * A higher-order component that adds the ability to measure a referenced node and get that value
@@ -75,10 +71,10 @@ const useMeasurable = defineMeasurable();
 const Measurable = hoc(defaultConfig, (configHoc, Wrapped) => {
 	return function MeasurableHoc (props) {
 		// Take the config from Measurable and insert it into a fresh instance of defineMeasurable
-		const {ref, measurement} = useMeasurable(props);
+		const {ref, measurement} = useMeasurable();
 		const measurementProps = {
-			[configHoc.refPropName]: ref,
-			[configHoc.measurementPropName]: measurement
+			[configHoc.refProp]: ref,
+			[configHoc.measurementProp]: measurement
 		};
 
 		return (<Wrapped {...props} {...measurementProps} />);
@@ -88,6 +84,5 @@ const Measurable = hoc(defaultConfig, (configHoc, Wrapped) => {
 export default Measurable;
 export {
 	Measurable,       // HOC
-	useMeasurable,    // Hook
-	defineMeasurable  // Hook definition method
+	useMeasurable    // Hook
 };

@@ -1,6 +1,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import {shape} from '@enact/ui/ViewManager';
 import Slottable from '@enact/ui/Slottable';
 import Measurable from '@enact/ui/Measurable';
@@ -175,7 +176,7 @@ const PanelsBase = kind({
 
 	computed: {
 		className: ({controls, noCloseButton, styler}) => styler.append({
-			hasControls: (!noCloseButton || !!controls) // If there is a close button or controls were specified
+			'moon-panels-hasControls': (!noCloseButton || !!controls) // If there is a close button or controls were specified
 		}),
 		controls: ({closeButtonAriaLabel, closeButtonBackgroundOpacity, controls, controlsRef, id, noCloseButton, onApplicationClose}) => {
 			let closeButton;
@@ -250,18 +251,19 @@ const PanelsBase = kind({
 	}
 });
 
-const PanelsBasePlus = Measurable({refPropName: 'controlsRef', measurementPropName: 'controlsMeasurements'}, PanelsBase);
 
-const Panels = Slottable({slots: ['controls']},
-	CancelDecorator(
-		{cancel: 'onBack'},
-		IdProvider(
-			Skinnable(
-				PanelsBase
-			)
-		)
-	)
+const PanelsDecorator = compose(
+	Slottable({slots: ['controls']}),
+	CancelDecorator({cancel: 'onBack'}),
+	Measurable({refProp: 'controlsRef', measurementProp: 'controlsMeasurements'}),
+	IdProvider,
+	Skinnable
 );
 
+const Panels = PanelsDecorator(PanelsBase);
+
 export default Panels;
-export {Panels, PanelsBasePlus as PanelsBase};
+export {
+	Panels,
+	PanelsBase
+};

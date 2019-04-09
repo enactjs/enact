@@ -1,5 +1,7 @@
 import {scale} from '@enact/ui/resolution';
 import Slottable from '@enact/ui/Slottable';
+import Measurable from '@enact/ui/Measurable';
+import compose from 'ramda/src/compose';
 
 import Skinnable from '../Skinnable';
 
@@ -23,6 +25,17 @@ const calcMax = () => {
 	}
 };
 
+const AlwaysViewingPanelsDecorator = compose(
+	Slottable({slots: ['controls']}),
+	Measurable({refProp: 'controlsRef', measurementProp: 'controlsMeasurements'}),
+	Skinnable,
+	BreadcrumbDecorator({
+		className: 'panels alwaysViewing enact-fit',
+		max: calcMax,
+		panelArranger: AlwaysViewingArranger
+	})
+);
+
 /**
  * An instance of [`Panels`]{@link moonstone/Panels.Panels} which restricts the `Panel` to the right
  * half of the screen with the left half used for breadcrumbs that allow navigating to previous
@@ -33,13 +46,7 @@ const calcMax = () => {
  * @ui
  * @public
  */
-const AlwaysViewingPanels = Slottable({slots: ['controls']},
-	Skinnable(BreadcrumbDecorator({
-		className: 'panels alwaysViewing enact-fit',
-		max: calcMax,
-		panelArranger: AlwaysViewingArranger
-	}, Viewport))
-);
+const AlwaysViewingPanels = AlwaysViewingPanelsDecorator(Viewport);
 
 export default AlwaysViewingPanels;
 export {AlwaysViewingPanels};

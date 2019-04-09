@@ -207,7 +207,7 @@ const HeaderBase = kind({
 						<h1 className={css.title}>{title}</h1>
 						{titleBelowComponent}
 					</Cell>
-					<Cell shrink component="nav" className={css.headerComponents}>{children}</Cell>
+					{children ? <Cell shrink component="nav" className={css.headerComponents}>{children}</Cell> : null}
 				</Layout>
 			);
 			// Keeping this block in case we need to add it back after discussing with UX and GUI about future plans.

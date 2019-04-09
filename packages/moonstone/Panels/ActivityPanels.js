@@ -1,10 +1,23 @@
 import Slottable from '@enact/ui/Slottable';
+import Measurable from '@enact/ui/Measurable';
+import compose from 'ramda/src/compose';
 
 import Skinnable from '../Skinnable';
 
 import {ActivityArranger} from './Arrangers';
 import BreadcrumbDecorator from './BreadcrumbDecorator';
 import {PanelsBase} from './Panels';
+
+const ActivityPanelsDecorator = compose(
+	Slottable({slots: ['controls']}),
+	Measurable({refProp: 'controlsRef', measurementProp: 'controlsMeasurements'}),
+	Skinnable,
+	BreadcrumbDecorator({
+		className: 'panels activity enact-fit',
+		max: 1,
+		panelArranger: ActivityArranger
+	})
+);
 
 /**
  * An instance of Panels in which the Panel uses the entire viewable screen with a single breadcrumb
@@ -20,13 +33,7 @@ import {PanelsBase} from './Panels';
  * @ui
  * @public
  */
-const ActivityPanels = Slottable({slots: ['controls']},
-	Skinnable(BreadcrumbDecorator({
-		className: 'panels activity enact-fit',
-		max: 1,
-		panelArranger: ActivityArranger
-	}, PanelsBase))
-);
+const ActivityPanels = ActivityPanelsDecorator(PanelsBase);
 
 export default ActivityPanels;
 export {ActivityPanels};
