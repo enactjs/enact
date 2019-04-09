@@ -285,7 +285,6 @@ storiesOf('Tooltip', module)
 						tooltipDelay={number('tooltipDelay', Config, 500)}
 						tooltipText={text('tooltipText', Config, 'tooltip position!')}
 						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipWidth={number('tooltipWidth', Config)}
 						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
 					>
 						Top Left
@@ -295,7 +294,6 @@ storiesOf('Tooltip', module)
 						tooltipDelay={number('tooltipDelay', Config, 500)}
 						tooltipText={text('tooltipText', Config, 'tooltip position!')}
 						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipWidth={number('tooltipWidth', Config)}
 						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
 					>
 						Top
@@ -305,7 +303,6 @@ storiesOf('Tooltip', module)
 						tooltipDelay={number('tooltipDelay', Config, 500)}
 						tooltipText={text('tooltipText', Config, 'tooltip position!')}
 						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipWidth={number('tooltipWidth', Config)}
 						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
 					>
 						Top Right
@@ -318,7 +315,6 @@ storiesOf('Tooltip', module)
 						tooltipDelay={number('tooltipDelay', Config, 500)}
 						tooltipText={text('tooltipText', Config, 'tooltip position!')}
 						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipWidth={number('tooltipWidth', Config)}
 						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
 					>
 						Left
@@ -329,7 +325,6 @@ storiesOf('Tooltip', module)
 						tooltipDelay={number('tooltipDelay', Config, 500)}
 						tooltipText={text('tooltipText', Config, 'tooltip position!')}
 						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipWidth={number('tooltipWidth', Config)}
 						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
 					>
 						Center
@@ -340,7 +335,6 @@ storiesOf('Tooltip', module)
 						tooltipDelay={number('tooltipDelay', Config, 500)}
 						tooltipText={text('tooltipText', Config, 'tooltip position!')}
 						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipWidth={number('tooltipWidth', Config)}
 						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
 					>
 						Right
@@ -352,7 +346,6 @@ storiesOf('Tooltip', module)
 						tooltipDelay={number('tooltipDelay', Config, 500)}
 						tooltipText={text('tooltipText', Config, 'tooltip position!')}
 						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipWidth={number('tooltipWidth', Config)}
 						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
 					>
 						Bottom Left
@@ -362,7 +355,6 @@ storiesOf('Tooltip', module)
 						tooltipDelay={number('tooltipDelay', Config, 500)}
 						tooltipText={text('tooltipText', Config, 'tooltip position!')}
 						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipWidth={number('tooltipWidth', Config)}
 						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
 					>
 						Bottom
@@ -372,7 +364,6 @@ storiesOf('Tooltip', module)
 						tooltipDelay={number('tooltipDelay', Config, 500)}
 						tooltipText={text('tooltipText', Config, 'tooltip position!')}
 						tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
-						tooltipWidth={number('tooltipWidth', Config)}
 						tooltipProps={object('tooltipProps', Config, prop.ariaObject)}
 					>
 						Bottom Right
