@@ -121,7 +121,8 @@ const TooltipBase = kind({
 		labelOffset: ({arrowPosition}) => {
 			if (arrowPosition) {
 				const cappedPosition = Math.max(-0.5, Math.min(0.5, arrowPosition));
-				return {transform: `translateX(calc(${cappedPosition * 100}% - ((${cappedPosition} / 0.5) * ${ri.scale((54 / 2) + (30 / 2))}px)))`};
+				return {transform: `translateX(${cappedPosition * 100}%)`};
+				// {transform: `translateX(calc(${cappedPosition * 100}% - ((${cappedPosition} / 0.5) * ${ri.scale((54 / 2) + (30 / 2))}px)))`};
 			}
 		},
 		className: ({direction, arrowAnchor, relative, styler}) => styler.append(direction, `${arrowAnchor}Arrow`, {relative, absolute: !relative}),
