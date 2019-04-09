@@ -37,8 +37,8 @@
     "invariant": "^2.2.2",
     "prop-types": "15.6.2",
     "ramda": "^0.24.1",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
     "recompose": "^0.26.0",
     "warning": "^3.0.0"
   }

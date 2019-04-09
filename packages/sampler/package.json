@@ -24,8 +24,8 @@
     "@enact/ui": "^2.5.0",
     "@enact/webos": "^2.5.0",
     "query-string": "^6.2.0",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0"
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
   },
   "devDependencies": {
     "@enact/dev-utils": "^0.4.0",
