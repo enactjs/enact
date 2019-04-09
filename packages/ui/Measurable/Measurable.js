@@ -83,6 +83,6 @@ const Measurable = hoc(defaultConfig, (configHoc, Wrapped) => {
 
 export default Measurable;
 export {
-	Measurable,       // HOC
-	useMeasurable    // Hook
+	Measurable,    // HOC
+	useMeasurable  // Hook
 };
