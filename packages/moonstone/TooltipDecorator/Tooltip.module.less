@@ -289,6 +289,14 @@
 		}
 	}
 
+	:global(.enact-locale-right-to-left) & {
+		direction: ltr;
+
+		.tooltipAnchor {
+			direction: rtl;
+		}
+	}
+
 	// Skin colors
 	.applySkins({
 		// Drawing the arc/arrow shape using the mixin from above
