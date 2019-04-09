@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.5.1] - 2019-04-09
+
+### Fixed
+
+- `core/kind` to address warnings raised in React 16.8.6
+- `moonstone/ExpandableInput` to close on touch platforms when tapping another component
+- `ui/Touchable` to prevent doubled events in some situations on touch devices
+
 ## [2.5.0] - 2019-04-01
 
 ### Added

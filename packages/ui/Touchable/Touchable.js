@@ -17,7 +17,6 @@ import React from 'react';
 
 import {configure, mergeConfig} from './config';
 import {activate, deactivate, pause, States} from './state';
-import {block, unblock, isNotBlocked} from './block';
 import ClickAllow from './ClickAllow';
 
 import {Drag, dragConfigPropType} from './Drag';
@@ -94,10 +93,10 @@ const handleLeave = handle(
 // Mouse event handlers
 
 const handleMouseDown = handle(
-	isNotBlocked,
 	forward('onMouseDown'),
+	call('shouldAllowMouseEvent'),
 	handleDown
-).finally(unblock);
+);
 
 const handleMouseEnter = handle(
 	forward('onMouseEnter'),
@@ -135,8 +134,6 @@ const handleClick = handle(
 
 const handleTouchStart = handle(
 	forward('onTouchStart'),
-	// block the next mousedown to prevent duplicate onDown events
-	block,
 	handleDown
 );
 
@@ -156,6 +153,8 @@ const handleTouchMove = handle(
 
 const handleTouchEnd = handle(
 	forward('onTouchEnd'),
+	// block the next mousedown to prevent duplicate touchable events
+	returnsTrue(call('setLastTouchEnd')),
 	call('isTracking'),
 	complement(call('hasTouchLeftTarget')),
 	handleUp
@@ -615,12 +614,20 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return !this.target.contains(target);
 		}
 
+		shouldAllowMouseEvent (ev) {
+			return this.clickAllow.shouldAllowMouseEvent(ev);
+		}
+
 		shouldAllowTap (ev) {
 			return this.clickAllow.shouldAllowTap(ev);
 		}
 
 		setLastMouseUp (ev) {
 			this.clickAllow.setLastMouseUp(ev);
+		}
+
+		setLastTouchEnd (ev) {
+			this.clickAllow.setLastTouchEnd(ev);
 		}
 
 		addHandlers (props) {
