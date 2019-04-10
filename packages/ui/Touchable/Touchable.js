@@ -501,18 +501,10 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				this.setState(activate);
 			}
 
-			if (ev && 'changedTouches' in ev) {
-				this.target.focus();
-			}
-
 			return true;
 		}
 
-		deactivate (ev) {
-			if (ev && 'changedTouches' in ev) {
-				this.blurJob.start(this.target);
-			}
-
+		deactivate () {
 			this.clearTarget();
 			if (activeProp) {
 				this.setState(deactivate);
