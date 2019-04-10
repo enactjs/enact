@@ -222,6 +222,8 @@ class ScrollableBaseNative extends Component {
 		this.childRef = React.createRef();
 		this.uiRef = React.createRef();
 
+		this.animateOnFocus = props.animate;
+
 		configureSpotlightContainer(props);
 	}
 
