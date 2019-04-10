@@ -62,25 +62,15 @@
 		/* Exported for customization */
 	}
 
-	.clientContainer {
-		// Colored under-bar
-		&::before {
-			content: "";
-			min-width: 36px;
-			height: 6px;
-			bottom: 18px;
-			left: 24px;
-			right: 24px;
-			border-radius: 6px;
-		}
-	}
-
-	&.red .clientContainer::before,
-	&.green .clientContainer::before,
-	&.yellow .clientContainer::before,
-	&.blue .clientContainer::before
-	{
-		position: absolute;
+	// Colored under-bar
+	&::before {
+		content: "";
+		min-width: 36px;
+		height: 6px;
+		bottom: 18px;
+		left: 24px;
+		right: 24px;
+		border-radius: 6px;
 	}
 
 	.applySkins({

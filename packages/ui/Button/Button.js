@@ -179,9 +179,7 @@ const ButtonBase = kind({
 		return (
 			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
 				<div className={css.bg} />
-				<div className={css.clientContainer}>
-					<div className={css.client}>{icon}{children}</div>
-				</div>
+				<div className={css.client}>{icon}{children}</div>
 			</div>
 		);
 	}

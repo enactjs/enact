@@ -51,6 +51,23 @@
 		line-height: (@moon-button-height-large - (2 * @moon-button-border-width));
 	});
 
+	&::before {
+		content: "";
+		position: absolute;
+		left: @moon-spotlight-outset * 2;
+		bottom: 40%;
+		margin-right: 18px;
+		width: 21px;
+		height: 21px;
+		border-radius: 21px;
+
+		:global(.enact-locale-right-to-left) & {
+			right: @moon-spotlight-outset * 2;
+			margin-right: 0;
+			margin-left: 18px;
+		}
+	}
+
 	.bg {
 		background-color: inherit;
 		border-width: @moon-button-border-width;
@@ -67,25 +84,6 @@
 		animation-timing-function: ease-out;
 	}
 
-	.clientContainer {
-		padding: 0 @moon-button-h-padding;
-
-		// Colored dot for remote buttons
-		&::before {
-			content: "O";
-			position: absolute;
-			margin-right: 18px;
-			width: 21px;
-			height: 21px;
-			border-radius: 21px;
-
-			:global(.enact-locale-right-to-left) & {
-				margin-right: 0;
-				margin-left: 18px;
-			}
-		}
-	}
-
 	.client {
 		padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
 
@@ -93,14 +91,6 @@
 			-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
 			-webkit-margin-end: @moon-button-icon-h-margin;
 		}
-	}
-
-	&.red .clientContainer::before,
-	&.green .clientContainer::before,
-	&.yellow .clientContainer::before,
-	&.blue .clientContainer::before
-	{
-		position: static;
 	}
 
 	//**
@@ -204,17 +194,19 @@
 			}
 		}
 
-		&.red .clientContainer::before {
-			background-color: @moon-remote-button-red-color;
-		}
-		&.green .clientContainer::before {
-			background-color: @moon-remote-button-green-color;
-		}
-		&.yellow .clientContainer::before {
-			background-color: @moon-remote-button-yellow-color;
-		}
-		&.blue .clientContainer::before {
-			background-color: @moon-remote-button-blue-color;
+		&::before {
+			.red& {
+				background-color: @moon-remote-button-red-color;
+			}
+			.green& {
+				background-color: @moon-remote-button-green-color;
+			}
+			.yellow& {
+				background-color: @moon-remote-button-yellow-color;
+			}
+			.blue& {
+				background-color: @moon-remote-button-blue-color;
+			}
 		}
 
 		.focus({
