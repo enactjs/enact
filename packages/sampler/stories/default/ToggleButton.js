@@ -9,8 +9,7 @@ import {mergeComponentMetadata} from '../../src/utils';
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
-	casing: ['preserve', 'sentence', 'word', 'upper']
+	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent']
 };
 
 const Config = mergeComponentMetadata('ToggleButton', ToggleButton);
