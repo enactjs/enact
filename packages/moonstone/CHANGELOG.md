@@ -4,6 +4,15 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Removed
+
+- `moonstone/Button` prop `casing` which is no longer supported
+
+### Changed
+
+- `moonstone/Button.ButtonDecorator` to remove `i18n/Uppercase` HOC
+- `moonstone/Button` appearance to match the latest designs
+
 ### Fixed
 
 - `moonstone/ExpandableInput` to close on touch platforms when tapping another component

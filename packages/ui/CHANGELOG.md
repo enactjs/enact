@@ -4,6 +4,9 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/Button` public class `.hasIcon` which is present on the root node only when an icon has been provided
 ### Fixed
 
 - `ui/Touchable` to only emit its custom events once when originating from a child instance of `Touchable`

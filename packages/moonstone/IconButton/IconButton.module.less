@@ -12,6 +12,11 @@
 	padding: 0;
 	background-size: @moon-icon-sprite-size @moon-icon-sprite-size * 2;
 	line-height: @moon-icon-size;
+	border-radius: @moon-icon-button-border-radius;
+
+	.bg {
+		border-radius: @moon-icon-button-border-radius;
+	}
 
 	&.small {
 		padding: 0;
@@ -53,12 +58,17 @@
 	}
 
 	// Include the classes that we explicitly said are customizable in the publicClassNames
-	.bg,
 	.selected {
-		/* Exported for customization*/
+		/* Exported for customization */
 	}
 
 	.applySkins({
+		&.transparent {
+			.bg {
+				background-color: transparent;
+			}
+		}
+
 		.focus({
 			.disabled({
 				color: @moon-spotlight-disabled-text-color;
