@@ -16,7 +16,6 @@ const Config = mergeComponentMetadata('Button', UIButtonBase, UIButton, ButtonBa
 // Set up some defaults for info and knobs
 const prop = {
 	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
-	casing: ['preserve', 'sentence', 'word', 'upper'],
 	icons: ['', ...Object.keys(icons)]
 };
 
