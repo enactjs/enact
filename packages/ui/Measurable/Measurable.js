@@ -1,5 +1,3 @@
-/* eslint-disable react/sort-prop-types */
-
 /**
  * A higher-order component that adds the ability to measure nodes conveniently.
  *
