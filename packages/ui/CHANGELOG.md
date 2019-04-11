@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Touchable` to prevent events firing on different nodes for the same touch action
+
 ## [2.5.1] - 2019-04-09
 
 ### Fixed
