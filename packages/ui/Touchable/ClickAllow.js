@@ -7,7 +7,7 @@ let _lastTouchEndTarget = null;
 const shouldAllowMouseDown = (ev) => {
 	return (
 		ev.target === _lastTouchEndTarget ||
-		ev.target === null
+		_lastTouchEndTarget === null
 	);
 };
 
