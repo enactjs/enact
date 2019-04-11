@@ -63,14 +63,21 @@
 	}
 
 	// Colored under-bar
-	&::before {
-		content: "";
-		min-width: 36px;
-		height: 6px;
-		bottom: 18px;
-		left: 24px;
-		right: 24px;
-		border-radius: 6px;
+	&.red,
+	&.green,
+	&.yellow,
+	&.blue {
+		&::after {
+			margin: 0;
+			min-width: 24px;
+			height: 6px;
+			bottom: 18px;
+			left: 24px;
+			right: 24px;
+			border-radius: 6px;
+			transform: none;
+			width: auto;
+		}
 	}
 
 	.applySkins({

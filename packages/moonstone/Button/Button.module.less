@@ -51,20 +51,26 @@
 		line-height: (@moon-button-height-large - (2 * @moon-button-border-width));
 	});
 
-	&::before {
-		content: "";
-		position: absolute;
-		left: @moon-spotlight-outset * 2;
-		bottom: 40%;
-		margin-right: 18px;
-		width: 21px;
-		height: 21px;
-		border-radius: 21px;
+	&.red,
+	&.green,
+	&.yellow,
+	&.blue {
+		&::after {
+			content: "";
+			position: absolute;
+			left: @moon-spotlight-outset * 2;
+			bottom: 50%;
+			transform: translateY(-50%);
+			margin-right: 18px;
+			width: 21px;
+			height: 21px;
+			border-radius: 21px;
 
-		:global(.enact-locale-right-to-left) & {
-			right: @moon-spotlight-outset * 2;
-			margin-right: 0;
-			margin-left: 18px;
+			:global(.enact-locale-right-to-left) & {
+				right: @moon-spotlight-outset * 2;
+				margin-right: 0;
+				margin-left: 18px;
+			}
 		}
 	}
 
@@ -140,10 +146,15 @@
 			}
 		});
 
-		.clientContainer::before {
-			bottom: 12px;
-			left: 18px;
-			right: 18px;
+		&.red,
+		&.green,
+		&.yellow,
+		&.blue {
+			&::after {
+				bottom: 12px;
+				left: 18px;
+				right: 18px;
+			}
 		}
 
 		.icon {
@@ -169,10 +180,6 @@
 	.applySkins({
 		color: @moon-button-text-color;
 
-		.clientContainer::before {
-			color: transparent;
-		}
-
 		.bg {
 			background-color: @moon-button-bg-color;
 			border-color: transparent;
@@ -194,7 +201,7 @@
 			}
 		}
 
-		&::before {
+		&::after {
 			.red& {
 				background-color: @moon-remote-button-red-color;
 			}
