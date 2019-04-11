@@ -39,6 +39,7 @@ const ButtonBase = kind({
 		 * * `button` - The root component class
 		 * * `bg` - The background node of the button
 		 * * `client` - The content node of the button
+		 * * `hasIcon` - Applied when there is an `icon` present
 		 * * `icon` - The icon node, when `icon` is set
 		 * * `minWidth` - Applied when `minWidth` prop is `true`
 		 * * `pressed` - Applied when `pressed` prop is `true`
@@ -154,11 +155,12 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({minWidth, pressed, selected, small, styler}) => styler.append({
-			pressed,
-			small,
+		className: ({icon, minWidth, pressed, selected, small, styler}) => styler.append({
+			hasIcon: (!!icon),
 			minWidth,
-			selected
+			pressed,
+			selected,
+			small
 		}),
 		icon: ({css, icon, iconComponent: Icon, small}) => {
 			return (typeof icon === 'string' && Icon) ? (

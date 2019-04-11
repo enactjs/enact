@@ -9,8 +9,7 @@ import {mergeComponentMetadata} from '../../src/utils';
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
-	casing: ['preserve', 'sentence', 'word', 'upper']
+	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent']
 };
 
 const Config = mergeComponentMetadata('ToggleButton', ToggleButton);
@@ -25,7 +24,6 @@ storiesOf('Moonstone', module)
 			<ToggleButton
 				aria-label="toggle button"
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
-				casing={select('casing', prop.casing, Config, 'upper')}
 				disabled={boolean('disabled', Config)}
 				onToggle={action('onToggle')}
 				small={boolean('small', Config)}

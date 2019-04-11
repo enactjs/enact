@@ -315,6 +315,7 @@ class ExpandableInputBase extends React.Component {
 					onDeactivate={this.handleDeactivate}
 					onKeyDown={this.handleInputKeyDown}
 					placeholder={placeholder}
+					small
 					spotlightDisabled={spotlightDisabled}
 					type={type}
 					value={value}

@@ -2,14 +2,15 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [2.5.1] - 2019-04-09
 
 ### Added
 
 - `ui/Measurable` HOC and Hook for quick and convenient measuring of simple components
+- `ui/Button` public class `.hasIcon` which is present on the root node only when an icon has been provided
 ### Fixed
 
-- `ui/Touchable` to only emit its custom events once when originating from a child instance of `Touchable`
+- `ui/Touchable` to prevent doubled events in some situations on touch devices
 
 ## [2.5.0] - 2019-04-01
 

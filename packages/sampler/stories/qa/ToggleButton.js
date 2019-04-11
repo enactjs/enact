@@ -10,7 +10,6 @@ ToggleButton.displayName = 'ToggleButton';
 // Set up some defaults for info and knobs
 const prop = {
 	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
-	casing: ['preserve', 'sentence', 'word', 'upper'],
 	tallText:{'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'}
 };
 
@@ -21,7 +20,6 @@ storiesOf('ToggleButton', module)
 			<ToggleButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, ToggleButton)}
-				casing={select('casing', prop.casing, ToggleButton, 'upper')}
 				disabled={boolean('disabled', ToggleButton)}
 				small={boolean('small', ToggleButton)}
 				toggleOnLabel={text('toggleOnLabel', ToggleButton, 'Loooooooooooooooooog On')}
@@ -35,7 +33,6 @@ storiesOf('ToggleButton', module)
 			<ToggleButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, ToggleButton)}
-				casing={select('casing', prop.casing, ToggleButton, 'upper')}
 				disabled={boolean('disabled', ToggleButton)}
 				small={boolean('small', ToggleButton)}
 				toggleOnLabel={select('toggleOnLabel', prop.tallText, ToggleButton, 'ิ้  ไั  ஒ  து')}
