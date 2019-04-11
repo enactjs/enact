@@ -10,7 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
-- `moonstone/Button` prop `casing` which is no longer supported
+- `moonstone/Button` and `moonstone/Panels.Header` prop `casing` which is no longer supported
 
 ### Changed
 
