@@ -6,6 +6,7 @@
  */
 
 import hoc from '@enact/core/hoc';
+import warning from 'warning';
 import React, {useState, useCallback} from 'react';
 
 /**
@@ -37,6 +38,7 @@ const defaultConfig = {
 function useMeasurable () {
 	const [measurement, setMeasurement] = useState();
 	const ref = useCallback(node => {
+		warning((!node || node.getBoundingClientRect), 'Only a DOM node can be measured. It appears that the ref is attached to a React node instead.');
 		setMeasurement((node && node.getBoundingClientRect) ? node.getBoundingClientRect() : null);
 	}, []);
 
