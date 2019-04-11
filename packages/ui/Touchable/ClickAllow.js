@@ -17,9 +17,9 @@ class ClickAllow {
 	}
 
 	shouldAllowMouseEvent (ev) {
-		const {type, timeStamp} = ev;
+		const {timeStamp} = ev;
 
-		return type.substring(0, 5) === 'mouse' && this.lastTouchEndTime !== timeStamp;
+		return this.lastTouchEndTime !== timeStamp;
 	}
 
 	shouldAllowTap (ev) {
