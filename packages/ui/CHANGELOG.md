@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [2.5.1] - 2019-04-09
+
+### Fixed
+
+- `ui/Touchable` to prevent doubled events in some situations on touch devices
+
 ## [2.5.0] - 2019-04-01
 
 ### Added

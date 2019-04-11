@@ -1,12 +1,25 @@
 class ClickAllow {
 	constructor () {
+		this.lastTouchEndTime = 0;
 		this.lastMouseUpTime = 0;
+	}
+
+	setLastTouchEnd (ev) {
+		if (ev && ev.type === 'touchend') {
+			this.lastTouchEndTime = ev.timeStamp;
+		}
 	}
 
 	setLastMouseUp (ev) {
 		if (ev && ev.type === 'mouseup') {
 			this.lastMouseUpTime = ev.timeStamp;
 		}
+	}
+
+	shouldAllowMouseEvent (ev) {
+		const {timeStamp} = ev;
+
+		return this.lastTouchEndTime !== timeStamp;
 	}
 
 	shouldAllowTap (ev) {
