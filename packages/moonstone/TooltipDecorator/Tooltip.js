@@ -1,5 +1,4 @@
 import kind from '@enact/core/kind';
-import Uppercase from '@enact/i18n/Uppercase';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -45,15 +44,6 @@ const TooltipBase = kind({
 		arrowAnchor: PropTypes.oneOf(['left', 'center', 'right', 'top', 'middle', 'bottom']),
 
 		/**
-		 * Position of the arrow anchor. Takes values between 0 and 1.
-		 * This will be the left position percentage relative to the tooltip.
-		 *
-		 * @type {Number}
-		 * @public
-		 */
-		labelOffset: PropTypes.number,
-
-		/**
 		 * Direction of label in relation to the activator.
 		 *
 		 * * Values: `'above'`, `'below'`, `'left'`, and `'right'`
@@ -63,6 +53,15 @@ const TooltipBase = kind({
 		 * @public
 		 */
 		direction: PropTypes.oneOf(['above', 'below', 'left', 'right']),
+
+		/**
+		 * Position of the arrow anchor. Takes values between 0 and 1.
+		 * This will be the left position percentage relative to the tooltip.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		labelOffset: PropTypes.number,
 
 		/**
 		 * Style object for tooltip position.
@@ -121,8 +120,10 @@ const TooltipBase = kind({
 		labelOffset: ({labelOffset}) => {
 			if (labelOffset) {
 				const cappedPosition = Math.max(-0.5, Math.min(0.5, labelOffset));
+				// console.log('labelOffset position:', labelOffset, cappedPosition);
 				return {transform: `translateX(${cappedPosition * 100}%)`};
-				// {transform: `translateX(calc(${cappedPosition * 100}% - ((${cappedPosition} / 0.5) * ${ri.scale((54 / 2) + (30 / 2))}px)))`};
+				// Offset the cap by the radius of the border + the width of the arrow
+				// return {transform: `translateX(calc(${cappedPosition * 100}% - ((${cappedPosition} / 0.5) * ${ri.scale((54 / 2) + (30 / 2))}px)))`};
 			}
 		},
 		className: ({direction, arrowAnchor, relative, styler}) => styler.append(direction, `${arrowAnchor}Arrow`, {relative, absolute: !relative}),
@@ -164,7 +165,7 @@ const TooltipBase = kind({
  * @ui
  * @public
  */
-const Tooltip = Skinnable(Uppercase(TooltipBase));
+const Tooltip = Skinnable(TooltipBase);
 
 export default Tooltip;
 export {Tooltip, TooltipBase};

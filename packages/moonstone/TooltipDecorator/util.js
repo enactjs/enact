@@ -80,27 +80,29 @@ const adjustDirection = function (tooltipDirection, overflow, rtl) {
  * @returns {Object}                    Tooltip's calculated overflow
  * @private
  */
-const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, tooltipHeight) {
+const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, tooltipHeight, edgeKeepout) {
 	// get the distance of space on both the right and left side of the client node. `clientNode.width / 2` because we want the tooltip to be positioned horizontally in middle of the client node.
-	const rightDelta = tooltipNode.width > clientNode.left + (clientNode.width / 2);
-	const leftDelta = tooltipNode.width > window.innerWidth - clientNode.right - (clientNode.width / 2);
-	const isTooltipWide = (tooltipNode.width > window.innerWidth) ||
+	const rightDelta = tooltipNode.width + edgeKeepout > clientNode.left + (clientNode.width / 2);
+	const leftDelta = tooltipNode.width + edgeKeepout > window.innerWidth - clientNode.right - (clientNode.width / 2);
+	const isTooltipWide = (tooltipNode.width + edgeKeepout > window.innerWidth) ||
 		(leftDelta && rightDelta);
 
 	if (tooltipDirection === 'above' || tooltipDirection === 'below') {
 		return {
 			isOverTop: clientNode.top - tooltipNode.height - tooltipHeight < 0,
 			isOverBottom: clientNode.bottom + tooltipNode.height + tooltipHeight > window.innerHeight,
-			isOverLeft: clientNode.left - tooltipNode.width + clientNode.width / 2 < 0,
-			isOverRight: clientNode.right + tooltipNode.width - clientNode.width / 2 > window.innerWidth,
+			isOverLeft: clientNode.left - tooltipNode.width + edgeKeepout + clientNode.width / 2 < 0,
+			isOverRight: clientNode.right + tooltipNode.width - edgeKeepout - clientNode.width / 2 > window.innerWidth,
+			isOverCenterLeft: (clientNode.left + clientNode.width / 2) - (tooltipNode.width / 2) - edgeKeepout < 0,
+			isOverCenterRight: (clientNode.right + clientNode.width / 2) + (tooltipNode.width / 2) + edgeKeepout > window.innerWidth,
 			isOverWide: isTooltipWide
 		};
 	} else if (tooltipDirection === 'left' || tooltipDirection === 'right') {
 		return {
 			isOverTop: clientNode.top - tooltipNode.height + clientNode.height / 2 < 0,
 			isOverBottom: clientNode.bottom + tooltipNode.height - clientNode.height / 2 > window.innerHeight,
-			isOverLeft: clientNode.left - tooltipNode.width < 0,
-			isOverRight: clientNode.right + tooltipNode.width > window.innerWidth,
+			isOverLeft: clientNode.left - tooltipNode.width - edgeKeepout < 0,
+			isOverRight: clientNode.right + tooltipNode.width + edgeKeepout > window.innerWidth,
 			isOverWide: isTooltipWide
 		};
 	}
@@ -165,21 +167,62 @@ const getPosition = function (clientNode, tooltipDirection) {
  * @returns {Number}                     Tooltip anchor's left transform position in percentage between 0 and 1 relative to the tooltip
  * @private
  */
-const getLabelOffset = function (tooltipNode, tooltipDirection, tooltipPosition, overflow, rtl) {
-	const tooltipWidth = tooltipNode.width;
-	const labelLeftPosition = tooltipPosition.left - (tooltipWidth / 2);
-	const labelRightPosition = tooltipPosition.right + (tooltipWidth / 2) > window.innerWidth;
+const getLabelOffset = function (tooltipNode, tooltipDirection, tooltipPosition, overflow, rtl, edgeKeepout) {
+	// This method is irrelevent to left and right anchored tooltips, skip entirely.
+	if (tooltipDirection !== 'left' && tooltipDirection !== 'right') {
+		const tooltipWidth = tooltipNode.width;
+		const labelLeftPosition = tooltipPosition.left - tooltipWidth; // Values representing if the tooltip was at the most extreme bounds possible
+		const labelRightPosition = tooltipPosition.left + tooltipWidth; // Values representing if the tooltip was at the most extreme bounds possible
 
-	if (
-		overflow.isOverWide &&
-		tooltipDirection !== 'left' &&
-		tooltipDirection !== 'right' &&
-		((labelLeftPosition < 0 && !rtl) ||
-		(labelRightPosition > window.innerWidth && rtl))
-	) {
-		const labelOffset = labelLeftPosition / tooltipWidth * -1;
+		//
+		//
+		//
+		// Figure out why the offsets don't line up and why it's not on the true edge of the moonstone space.
+		//
+		//
+		// const edgeKeepout = ri.scale(30 + 12 + 12); // Tooltip padding-left + spotlight-offset + app-keepout.
+		// const edgeKeepout = ri.scale(12 + 12); // Tooltip padding-left + spotlight-offset + app-keepout.
+		// const edgeKeepout = 0; // Tooltip padding-left + spotlight-offset + app-keepout.
 
-		return labelOffset;
+		// console.log('getLabelOffset:', tooltipDirection, Math.round(tooltipWidth), Math.round(labelLeftPosition), Math.round(labelRightPosition));
+		if (
+			overflow.isOverWide ||
+			(
+				((labelLeftPosition - (tooltipWidth / 2)) < 0) ||
+				((labelRightPosition - (tooltipWidth / 2)) > window.innerWidth)
+			)
+			// ((labelLeftPosition < 0 && !rtl) ||
+			// (labelRightPosition > window.innerWidth && rtl))
+		) {
+			let labelOffset;
+			// if (
+			// 	labelLeftPosition <
+			// 	window.innerWidth - labelRightPosition
+			// ) {
+			// Position the majority of the tooltip more to the right
+			// console.log('more to the right');
+			labelOffset = ((labelLeftPosition + (tooltipWidth / 2) - edgeKeepout) / tooltipWidth) * -1;
+			// } else {
+			// 	// Position the majority of the tooltip more to the left
+			// 	console.log('more to the left');
+			// 	labelOffset = (((labelRightPosition - window.innerWidth) - (tooltipWidth / 2) + edgeKeepout) / tooltipWidth) * -1;
+			// }
+
+			// Uh oh! we're too near the edge!
+			// determine the current percentage of the width that makes up the radius and the arrow width
+			const arrowWidth = (15 / 2);
+			const tooltipUnavailableEdge = ri.scale((54 / 2) + arrowWidth);
+			const tooltipUnavaliablePercentage = tooltipUnavailableEdge / tooltipWidth;
+
+			// cap the offset at 50% - that percentage
+			labelOffset = Math.max(-0.5 + tooltipUnavaliablePercentage, Math.min(0.5 - tooltipUnavaliablePercentage, labelOffset));
+
+			// const labelOffset = tooltipPosition.left / tooltipWidth * -1;
+			// const labelOffset = labelLeftPosition / tooltipWidth * -1;
+			// console.log('labelOffset:', (Math.round(labelOffset * 10000) / 100) + '%');
+
+			return labelOffset;
+		}
 	}
 	return null;
 };
