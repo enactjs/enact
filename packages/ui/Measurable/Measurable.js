@@ -37,9 +37,7 @@ const defaultConfig = {
 function useMeasurable () {
 	const [measurement, setMeasurement] = useState();
 	const ref = useCallback(node => {
-		if (node != null) {
-			setMeasurement(node ? node.getBoundingClientRect() : null);
-		}
+		setMeasurement((node && node.getBoundingClientRect) ? node.getBoundingClientRect() : null);
 	}, []);
 
 	return {
