@@ -2,7 +2,11 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [2.5.1] - 2019-04-09
+## [unreleased]
+
+### Added
+
+- `moonstone/Panels` slot `<controls>` to easy add custom controls next to the Panels' "close" button
 
 ### Removed
 
@@ -13,9 +17,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Button.ButtonDecorator` to remove `i18n/Uppercase` HOC
 - `moonstone/Button` appearance to match the latest designs
 
-### Added
+## [2.5.1] - 2019-04-09
 
-- `moonstone/Panels` slot `<controls>` to easy add custom controls next to the Panels' "close" button
 ### Fixed
 
 - `moonstone/ExpandableInput` to close on touch platforms when tapping another component
