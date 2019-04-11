@@ -1,3 +1,16 @@
+// It's possible that emitting `onTap` will cause a DOM change before the mousedown fires resulting
+// in multiple tap/click events for the same user action. To avoid this, we store the last touchend
+// target to compare against the next mouse down. If the target is the same (or no previous target
+// was set if no touch events are emitted), we allow the mousedown *across Touchable instances*.
+let _lastTouchEndTarget = null;
+
+const shouldAllowMouseDown = (ev) => {
+	return (
+		ev.target === _lastTouchEndTarget ||
+		ev.target === null
+	);
+};
+
 class ClickAllow {
 	constructor () {
 		this.lastTouchEndTime = 0;
@@ -7,6 +20,7 @@ class ClickAllow {
 	setLastTouchEnd (ev) {
 		if (ev && ev.type === 'touchend') {
 			this.lastTouchEndTime = ev.timeStamp;
+			_lastTouchEndTarget = ev.target;
 		}
 	}
 
@@ -19,7 +33,7 @@ class ClickAllow {
 	shouldAllowMouseEvent (ev) {
 		const {timeStamp} = ev;
 
-		return this.lastTouchEndTime !== timeStamp;
+		return this.lastTouchEndTime !== timeStamp && shouldAllowMouseDown(ev);
 	}
 
 	shouldAllowTap (ev) {
