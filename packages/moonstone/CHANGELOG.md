@@ -7,6 +7,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/SlotItem` to change `vertical-align` from `top` to `middle` to align the center
+- `moonstone/Scroller` to scroll via dragging when the platform has touch support
+
+## [2.5.1] - 2019-04-09
+
+### Fixed
+
+- `moonstone/ExpandableInput` to close on touch platforms when tapping another component
 
 ## [2.5.0] - 2019-04-01
 

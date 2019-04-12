@@ -7,6 +7,15 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/ToggleItem` support for `itemIcon`, `itemIconPosition`.
+### Fixed
+
+- `ui/Touchable` to neither force focus to components nor blur components after they are touched
+
+## [2.5.1] - 2019-04-09
+
+### Fixed
+
+- `ui/Touchable` to prevent doubled events in some situations on touch devices
 
 ## [2.5.0] - 2019-04-01
 
