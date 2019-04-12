@@ -17,6 +17,7 @@ const Config = mergeComponentMetadata('Button', UIButtonBase, UIButton, ButtonBa
 // Set up some defaults for info and knobs
 const prop = {
 	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
+	color: ['', 'red', 'green', 'yellow', 'blue'],
 	longText:{'Loooooooooooooooooog Button': 'Loooooooooooooooooog Button', 'BUTTON   WITH   EXTRA   SPACES': 'BUTTON   WITH   EXTRA   SPACES'},
 	tallText:{'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'},
 	icons: ['', ...Object.keys(icons)]
@@ -97,6 +98,7 @@ storiesOf('Button', module)
 					className={css.tapArea}
 					onClick={action('onClick')}
 					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+					color={select('color', prop.color, Config)}
 					disabled={boolean('disabled', Config)}
 					icon={select('icon', prop.icons, Config)}
 					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
@@ -109,6 +111,7 @@ storiesOf('Button', module)
 					className={css.tapArea}
 					onClick={action('onClick')}
 					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+					color={select('color', prop.color, Config)}
 					disabled={boolean('disabled', Config)}
 					icon={select('icon', prop.icons, Config)}
 					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
