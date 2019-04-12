@@ -49,6 +49,7 @@ const InputBase = kind({
 		 * The following classes are supported:
 		 *
 		 * * `decorator` - The root class name
+		 * * `focused` - Applied to the root when the <input> is focused
 		 * * `input` - The <input> class name
 		 *
 		 * @type {Object}
