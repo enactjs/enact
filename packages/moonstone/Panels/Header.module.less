@@ -36,8 +36,6 @@
 
 	.decorator {
 		padding: 0;
-		border-radius: 0;
-		border: none;
 	}
 
 	.titleBelow,
@@ -113,7 +111,7 @@
 
 		&.standard {
 			.decorator {
-				&:not(.focused) {
+				&:not(:focus-within) {
 					background-color: transparent;
 
 					.input {

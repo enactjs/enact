@@ -49,7 +49,6 @@ const InputBase = kind({
 		 * The following classes are supported:
 		 *
 		 * * `decorator` - The root class name
-		 * * `focused` - Applied to the root when the <input> is focused
 		 * * `input` - The <input> class name
 		 *
 		 * @type {Object}
@@ -79,15 +78,6 @@ const InputBase = kind({
 		 * @public
 		 */
 		dismissOnEnter: PropTypes.bool,
-
-		/**
-		 * Adds a `focused` class to the input decorator.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		focused: PropTypes.bool,
 
 		/**
 		 * The icon to be placed at the end of the input.
@@ -232,7 +222,7 @@ const InputBase = kind({
 	styles: {
 		css: componentCss,
 		className: 'decorator',
-		publicClassNames: ['decorator', 'focused', 'input']
+		publicClassNames: ['decorator', 'input']
 	},
 
 	handlers: {
@@ -248,7 +238,7 @@ const InputBase = kind({
 			const title = (value == null || value === '') ? placeholder : '';
 			return calcAriaLabel(title, type, value);
 		},
-		className: ({focused, invalid, small, styler}) => styler.append({focused, invalid, small}),
+		className: ({invalid, small, styler}) => styler.append({invalid, small}),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
 		invalidTooltip: ({css, invalid, invalidMessage = $L('Please enter a valid value.'), rtl}) => {
 			if (invalid && invalidMessage) {
@@ -267,7 +257,6 @@ const InputBase = kind({
 	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-intent' : voiceIntent, 'data-webos-voice-label': voiceLabel, ...rest}) => {
 		const inputProps = extractInputProps(rest);
 		delete rest.dismissOnEnter;
-		delete rest.focused;
 		delete rest.invalid;
 		delete rest.invalidMessage;
 		delete rest.rtl;
