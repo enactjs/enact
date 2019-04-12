@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/Panels` slot `<controls>` to easy add custom controls next to the Panels' "close" button
+- `moonstone/Panels` slot `<controls>` to easily add custom controls next to the Panels' "close" button
 
 ### Removed
 
