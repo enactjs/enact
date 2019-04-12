@@ -231,7 +231,7 @@ const InputBase = kind({
 	styles: {
 		css: componentCss,
 		className: 'decorator',
-		publicClassNames: ['decorator', 'input']
+		publicClassNames: ['decorator', 'focused', 'input']
 	},
 
 	handlers: {
