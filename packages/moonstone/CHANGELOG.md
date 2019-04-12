@@ -2,16 +2,22 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [2.5.1] - 2019-04-09
+## [unreleased]
+
+### Added
+
+- `moonstone/Panels` slot `<controls>` to easily add custom controls next to the Panels' "close" button
 
 ### Removed
 
-- `moonstone/Button` prop `casing` which is no longer supported
+- `moonstone/Button` and `moonstone/Panels.Header` prop `casing` which is no longer supported
 
 ### Changed
 
 - `moonstone/Button.ButtonDecorator` to remove `i18n/Uppercase` HOC
 - `moonstone/Button` appearance to match the latest designs
+
+## [2.5.1] - 2019-04-09
 
 ### Fixed
 

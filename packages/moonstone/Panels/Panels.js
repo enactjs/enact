@@ -1,7 +1,10 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import {shape} from '@enact/ui/ViewManager';
+import Slottable from '@enact/ui/Slottable';
+import Measurable from '@enact/ui/Measurable';
 
 import IdProvider from '../internal/IdProvider';
 import Skinnable from '../Skinnable';
@@ -83,6 +86,31 @@ const PanelsBase = kind({
 		closeButtonBackgroundOpacity: PropTypes.oneOf(['translucent', 'lightTranslucent', 'transparent']),
 
 		/**
+		 * A slot to insert additional Panels-level buttons into the global-navigation area.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		controls: PropTypes.node,
+
+		/**
+		 * The measurement bounds of the controls node
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		controlsMeasurements: PropTypes.object,
+
+		/**
+		 * The method which receives the reference node to the controls element, used to determine
+		 * the `controlsMeasurements`.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		controlsRef: PropTypes.func,
+
+		/**
 		 * Unique identifier for the Panels instance
 		 *
 		 * @type {String}
@@ -147,14 +175,15 @@ const PanelsBase = kind({
 	},
 
 	computed: {
-		className: ({noCloseButton, styler}) => styler.append({
-			hasCloseButton: !noCloseButton
+		className: ({controls, noCloseButton, styler}) => styler.append({
+			'moon-panels-hasControls': (!noCloseButton || !!controls) // If there is a close button or controls were specified
 		}),
-		applicationCloseButton: ({closeButtonAriaLabel, closeButtonBackgroundOpacity, id, noCloseButton, onApplicationClose}) => {
+		controls: ({closeButtonAriaLabel, closeButtonBackgroundOpacity, controls, controlsRef, id, noCloseButton, onApplicationClose}) => {
+			let closeButton;
 			if (!noCloseButton) {
 				const closeId = id ? `${id}_close` : null;
 
-				return (
+				closeButton = (
 					<ApplicationCloseButton
 						aria-label={closeButtonAriaLabel}
 						backgroundOpacity={closeButtonBackgroundOpacity}
@@ -162,6 +191,14 @@ const PanelsBase = kind({
 						id={closeId}
 						onApplicationClose={onApplicationClose}
 					/>
+				);
+			}
+			if (controls || closeButton) {
+				return (
+					<div className={css.controls} ref={controlsRef}>
+						{controls}
+						{closeButton}
+					</div>
 				);
 			}
 		},
@@ -181,19 +218,25 @@ const PanelsBase = kind({
 			}
 
 			return updatedChildProps;
-		}
+		},
+		style: ({controlsMeasurements, style = {}}) => (controlsMeasurements ? {
+			...style,
+			'--moon-panels-controls-width': controlsMeasurements.width + 'px'
+		} : style)
 	},
 
-	render: ({noAnimation, arranger, childProps, children, generateId, index, applicationCloseButton, ...rest}) => {
+	render: ({arranger, childProps, children, controls, generateId, index, noAnimation, ...rest}) => {
 		delete rest.closeButtonBackgroundOpacity;
 		delete rest.closeButtonAriaLabel;
+		delete rest.controlsMeasurements;
+		delete rest.controlsRef;
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
 		delete rest.onBack;
 
 		return (
 			<div {...rest}>
-				{applicationCloseButton}
+				{controls}
 				<Viewport
 					arranger={arranger}
 					childProps={childProps}
@@ -208,14 +251,19 @@ const PanelsBase = kind({
 	}
 });
 
-const Panels = CancelDecorator(
-	{cancel: 'onBack'},
-	IdProvider(
-		Skinnable(
-			PanelsBase
-		)
-	)
+
+const PanelsDecorator = compose(
+	Slottable({slots: ['controls']}),
+	CancelDecorator({cancel: 'onBack'}),
+	Measurable({refProp: 'controlsRef', measurementProp: 'controlsMeasurements'}),
+	IdProvider,
+	Skinnable
 );
 
+const Panels = PanelsDecorator(PanelsBase);
+
 export default Panels;
-export {Panels, PanelsBase};
+export {
+	Panels,
+	PanelsBase
+};

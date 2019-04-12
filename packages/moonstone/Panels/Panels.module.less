@@ -1,14 +1,23 @@
 // Panels.module.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
 
 .panels {
 	pointer-events: none;
 
 	> * {
 		pointer-events: auto;
+	}
+
+	.controls {
+		position: absolute;
+		top: (@moon-app-keepout + @moon-spotlight-outset);
+		.position-start-end(auto, @moon-spotlight-outset * 2);
+		z-index: 1;
+		.padding-start-end(18px, initial);
+		.remove-margin-on-edge-children();
 	}
 
 	.breadcrumbs {
@@ -49,7 +58,8 @@
 	:global(.enact-locale-right-to-left) & {
 		direction: ltr;
 
-		.breadcrumbs {
+		.breadcrumbs,
+		.controls {
 			direction: rtl;
 		}
 	}
@@ -141,7 +151,7 @@
 	}
 
 	&:not([data-index='0']) {
-		:global(.enact-locale-right-to-left) & .close {
+		:global(.enact-locale-right-to-left) & .controls {
 			// allocate space for breadcrumb + header margin
 			left: @moon-breadcrumb-width + @moon-spotlight-outset;
 		}

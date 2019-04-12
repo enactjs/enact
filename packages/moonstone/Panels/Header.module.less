@@ -6,8 +6,6 @@
 
 .header {
 	.border-box();
-	border-top-width: @moon-header-border-top-width;
-	border-top-style: solid;
 	border-bottom-width: @moon-header-border-bottom-width;
 	border-bottom-style: solid;
 	position: relative;
@@ -53,7 +51,7 @@
 
 	.headerComponents {
 		.remove-margin-on-edge-children();
-		.margin-start-end(@moon-spotlight-outset, 0);
+		.margin-start-end(@moon-header-components-gutter, 0);
 		margin-bottom: @moon-spotlight-outset;
 
 		white-space: nowrap;
@@ -111,7 +109,6 @@
 	// Skin colors
 	.applySkins({
 		color: @moon-header-text-color;
-		border-top-color: @moon-header-border-color;
 		border-bottom-color: @moon-header-bottom-border-color;
 
 		&.standard {
@@ -149,8 +146,36 @@
 	});
 }
 
-:global(.hasCloseButton) .header.compact,
-:global(.hasCloseButton) .header.standard .title,
-:global(.hasCloseButton) .header.standard .decorator {
-	.padding-start-end(0, @moon-spotlight-outset + @moon-icon-button-small-size + @moon-spotlight-outset);
+:global(.moon-panels-hasControls) {
+	.header.compact,
+	.header.standard .title,
+	.header.standard .decorator {
+		.padding-start-end(0, var(--moon-panels-controls-width));
+	}
+
+	.header.compact {
+		.headerComponents {
+			border-right-width: @moon-header-controls-border-width;
+			border-right-style: solid;
+			.padding-start-end(initial, @moon-header-components-separation);
+
+			:global(.enact-locale-right-to-left) & {
+				border-right-width: 0;
+				border-right-style: none;
+				border-left-width: @moon-header-controls-border-width;
+				border-left-style: solid;
+			}
+		}
+
+		.applySkins({
+			.headerComponents {
+				border-right-color: @moon-header-controls-border-color;
+
+				:global(.enact-locale-right-to-left) & {
+					border-right-color: transparent;
+					border-left-color: @moon-header-controls-border-color;
+				}
+			}
+		});
+	}
 }
