@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Scroller` to scroll via dragging when the platform has touch support
+- `moonstone/VideoPlayer` to continue to display the thumbnail image while the slider is focused
 
 ## [2.5.1] - 2019-04-09
 
