@@ -1,4 +1,5 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
+import IconButton from '@enact/moonstone/IconButton';
 import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
@@ -119,7 +120,9 @@ storiesOf('Button', module)
 					small
 				>
 					Small Button
-				</Button>
+				</Button><br />
+				<IconButton color={select('color', prop.color, Config)}>{select('icon', prop.icons, Config) || '☃'}</IconButton>
+				<IconButton small color={select('color', prop.color, Config)}>{select('icon', prop.icons, Config) || '☃'}</IconButton>
 			</div>
 		)
 	);
