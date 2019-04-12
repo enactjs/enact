@@ -51,23 +51,6 @@
 		line-height: (@moon-button-height-large - (2 * @moon-button-border-width));
 	});
 
-	&::before {
-		content: "";
-		position: absolute;
-		left: @moon-spotlight-outset * 2;
-		bottom: 40%;
-		margin-right: 18px;
-		width: 21px;
-		height: 21px;
-		border-radius: 21px;
-
-		:global(.enact-locale-right-to-left) & {
-			right: @moon-spotlight-outset * 2;
-			margin-right: 0;
-			margin-left: 18px;
-		}
-	}
-
 	.bg {
 		background-color: inherit;
 		border-width: @moon-button-border-width;
@@ -84,12 +67,66 @@
 		animation-timing-function: ease-out;
 	}
 
+	// Standard Button Scenario
+	&.red,
+	&.green,
+	&.yellow,
+	&.blue {
+		&.minWidth .client {
+			-webkit-margin-start: @moon-button-colordot-size;
+			-webkit-padding-start: @moon-spotlight-outset;
+
+			&::before {
+				content: "";
+				position: absolute;
+				left: -@moon-button-colordot-size;
+				bottom: 50%;
+				width: @moon-button-colordot-size;
+				height: @moon-button-colordot-size;
+				border-radius: @moon-button-colordot-size;
+				transform: translateY(50%);
+
+				:global(.enact-locale-right-to-left) & {
+					left: initial;
+					right: -@moon-button-colordot-size;
+				}
+			}
+		}
+	}
+
+	// IconButton-like Button scenario
+	&.red,
+	&.green,
+	&.yellow,
+	&.blue {
+		&:not(.minWidth) .client::before {
+			// Colored under-bar
+			content: "";
+			position: absolute;
+			min-width: 24px;
+			height: 6px;
+			bottom: 18px;
+			left: 24px;
+			right: 24px;
+			border-radius: 6px;
+		}
+	}
+
 	.client {
 		padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
+	}
 
-		.icon {
-			-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
-			-webkit-margin-end: @moon-button-icon-h-margin;
+	.icon {
+		-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
+		-webkit-margin-end: @moon-button-icon-h-margin;
+	}
+	// Color prop set, and minWidth prop set, update icon's margin to allow more room for the colordot
+	&.red,
+	&.green,
+	&.yellow,
+	&.blue {
+		&.minWidth .icon {
+			-webkit-margin-start: 0;
 		}
 	}
 
@@ -123,8 +160,21 @@
 		padding-left: @moon-button-small-h-padding;
 		padding-right: @moon-button-small-h-padding;
 
+		// Standard Button Scenario
 		&.minWidth {
 			min-width: @moon-button-small-min-width;
+
+			.client::before {
+				height: @moon-button-small-colordot-size;
+				width: @moon-button-small-colordot-size;
+			}
+		}
+
+		// IconButton-like Button scenario
+		&:not(.minWidth) .client::before {
+			bottom: 12px;
+			left: 18px;
+			right: 18px;
 		}
 
 		.moon-taparea(@moon-button-small-height);
@@ -140,15 +190,18 @@
 			}
 		});
 
-		.clientContainer::before {
-			bottom: 12px;
-			left: 18px;
-			right: 18px;
-		}
-
 		.icon {
 			-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
 			-webkit-margin-end: @moon-button-icon-small-h-margin;
+		}
+
+		&.red,
+		&.green,
+		&.yellow,
+		&.blue {
+			&.minWidth .icon {
+				-webkit-margin-start: 0;
+			}
 		}
 	}
 
@@ -169,10 +222,6 @@
 	.applySkins({
 		color: @moon-button-text-color;
 
-		.clientContainer::before {
-			color: transparent;
-		}
-
 		.bg {
 			background-color: @moon-button-bg-color;
 			border-color: transparent;
@@ -190,24 +239,30 @@
 			color: @moon-text-color;
 
 			.bg {
-				background-color: @moon-button-transparent-disabled-bg-color;
+				background-color: @moon-button-transparent-bg-color;
 			}
 		}
 
-		&::before {
-			.red& {
-				background-color: @moon-remote-button-red-color;
-			}
-			.green& {
-				background-color: @moon-remote-button-green-color;
-			}
-			.yellow& {
-				background-color: @moon-remote-button-yellow-color;
-			}
-			.blue& {
-				background-color: @moon-remote-button-blue-color;
-			}
+		&.red .client::before {
+			background-color: @moon-remote-button-red-color;
 		}
+		&.green .client::before {
+			background-color: @moon-remote-button-green-color;
+		}
+		&.yellow .client::before {
+			background-color: @moon-remote-button-yellow-color;
+		}
+		&.blue .client::before {
+			background-color: @moon-remote-button-blue-color;
+		}
+
+		.disabled({
+			&.transparent {
+				.bg {
+					background-color: @moon-button-transparent-disabled-bg-color;
+				}
+			}
+		});
 
 		.focus({
 			color: @moon-button-focus-text-color;
