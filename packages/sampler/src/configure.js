@@ -1,5 +1,5 @@
 import {configure, addDecorator} from '@storybook/react';
-import {withKnobsOptions} from '@storybook/addon-knobs';
+import {withKnobs} from '@storybook/addon-knobs';
 import {setDefaults} from '@storybook/addon-info';
 
 import Moonstone from '../src/MoonstoneEnvironment';
@@ -7,7 +7,7 @@ import Moonstone from '../src/MoonstoneEnvironment';
 function config (stories, mod) {
 
 	addDecorator(Moonstone);
-	addDecorator(withKnobsOptions({
+	addDecorator(withKnobs({
 		// debounce: {wait: 500}, // Same as lodash debounce.
 		timestamps: true // Doesn't emit events while user is typing.
 	}));

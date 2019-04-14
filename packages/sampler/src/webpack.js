@@ -1,143 +1,144 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const {DefinePlugin} = require('webpack');
-const autoprefixer = require('autoprefixer');
-const flexbugfixes = require('postcss-flexbugs-fixes');
-const LessPluginRi = require('resolution-independence');
-const GracefulFsPlugin = require('@enact/dev-utils/plugins/GracefulFsPlugin');
-const ILibPlugin = require('@enact/dev-utils/plugins/ILibPlugin');
-const WebOSMetaPlugin = require('@enact/dev-utils/plugins/WebOSMetaPlugin');
-const app = require('@enact/dev-utils/option-parser');
+const {optionParser: app, GracefulFsPlugin, ILibPlugin, WebOSMetaPlugin} = require('@enact/dev-utils');
 
-function configure (dirname) {
-	return {
-		devtool: 'sourcemap',
-		resolve: {
-			alias: {
-				'ilib':'@enact/i18n/ilib/lib',
-				'webpack/hot/dev-server': require.resolve('webpack/hot/dev-server')
+function configure ({config, mode}, dirname) {
+	const isProduction = mode === 'PRODUCTION';
+
+	const getStyleLoaders = (cssLoaderOptions = {}, preProcessor) => {
+		const loaders = [
+			process.env.INLINE_STYLES ? require.resolve('style-loader') : MiniCssExtractPlugin.loader,
+			{
+				loader: require.resolve('css-loader'),
+				options: Object.assign(
+					{importLoaders: preProcessor ? 2 : 1, sourceMap: true},
+					cssLoaderOptions.modules && {getLocalIdent: getCSSModuleLocalIdent},
+					cssLoaderOptions
+				)
 			},
-			modules: [path.resolve('./node_modules'), 'web_modules', 'node_modules'],
-			extensions: ['.js', '.jsx', '.es6']
+			{
+				loader: require.resolve('postcss-loader'),
+				options: {
+					ident: 'postcss',
+					sourceMap: true,
+					plugins: () =>
+						[
+							require('postcss-flexbugs-fixes'),
+							require('postcss-global-import'),
+							require('postcss-preset-env')({
+								autoprefixer: {
+									flexbox: 'no-2009',
+									remove: false
+								},
+								stage: 3,
+								features: {'custom-properties': false}
+							}),
+							app.ri && require('postcss-resolution-independence')(app.ri)
+						].filter(Boolean)
+				}
+			}
+		];
+		if (preProcessor) loaders.push(preProcessor);
+		return loaders;
+	};
+
+	const getLessStyleLoaders = cssLoaderOptions =>
+		getStyleLoaders(cssLoaderOptions, {
+			loader: require.resolve('less-loader'),
+			options: {
+				modifyVars: Object.assign({__DEV__: !isProduction}, app.accent),
+				sourceMap: true
+			}
+		});
+
+
+	// Modify stock Storybook config for Enact-tailored experience
+	config.devtool = 'sourcemap';
+	config.resolve.alias.ilib = '@enact/i18n/ilib/lib';
+	config.resolve.modules = [path.resolve('../node_modules'), 'node_modules'];
+	config.performance = {hints: false};
+
+	// Narrow rules into oneOf and add our custom rules first
+	config.module.rules = [{oneOf: config.module.rules}];
+	config.module.rules[0].oneOf.unshift(
+		{
+			test: /\.(jpe?g|gif|ico|png|svg|woff|ttf|wav|mp3|mp4|m4a|aac)$/,
+			loader: 'file-loader',
+			options: {
+				name: '[path][name].[ext]'
+			}
 		},
-		resolveLoader: {
-			modules: [path.resolve('./node_modules'), 'web_loaders', 'web_modules', 'node_loaders', 'node_modules']
-		},
-		module: {
-			rules: [
+		{
+			test: /\.(js|jsx|ts|tsx)$/,
+			exclude: /node_modules.(?!@enact)/,
+			use: [
 				{
-					test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$|\.wav$|\.mp3$/,
-					loader: 'file-loader',
+					loader: require.resolve('babel-loader'),
 					options: {
-						name: '[path][name].[ext]'
-					}
-				},
-				{
-					test:/\.(c|le)ss$/,
-					exclude: /node_modules(\\|\/).*\1?@enact\1.*\.css/,
-					use: [
-						'style-loader',
-						{
-							loader: require.resolve('css-loader'),
-							options: {
-								importLoaders: 2,
-								modules: true,
-								sourceMap: true,
-								localIdentName: '[name]__[local]___[hash:base64:5]'
-							}
-						},
-						{
-							loader: require.resolve('postcss-loader'),
-							options: {
-								ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
-								sourceMap: true,
-								plugins: () => [
-									// We use PostCSS for autoprefixing only, but others could be added.
-									autoprefixer({
-										browsers: app.browsers,
-										flexbox: 'no-2009',
-										remove: false
-									}),
-									// Fix and adjust for known flexbox issues
-									// See https://github.com/philipwalton/flexbugs
-									flexbugfixes
-								]
-							}
-						},
-						{
-							loader: require.resolve('less-loader'),
-							options: {
-								sourceMap: true,
-								// If resolution independence options are specified, use the LESS plugin.
-								plugins: ((app.ri) ? [new LessPluginRi(app.ri)] : [])
-							}
-						}
-					]
-				},
-				{
-					test: /node_modules(\\|\/).*\1?@enact\1.*\.css/,
-					use: [
-						'style-loader',
-						{
-							loader: require.resolve('css-loader'),
-							options: {
-								importLoaders: 1,
-								modules: true,
-								sourceMap: true,
-								localIdentName: '[name]__[local]___[hash:base64:5]'
-							}
-						},
-						{
-							loader: require.resolve('postcss-loader'),
-							options: {
-								ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
-								sourceMap: true,
-								plugins: () => [
-									// We use PostCSS for autoprefixing only, but others could be added.
-									autoprefixer({
-										browsers: app.browsers,
-										flexbox: 'no-2009',
-										remove: false
-									}),
-									// Fix and adjust for known flexbox issues
-									// See https://github.com/philipwalton/flexbugs
-									flexbugfixes
-								]
-							}
-						}
-					]
-				},
-				{
-					test: /\.js$|\.es6$|\.jsx$/, loader: 'babel-loader', exclude: /node_modules.(?!@*enact)/, query: {
-						extends: path.join(dirname, '.babelrc')
+						extends: path.join(dirname, '.babelrc'),
+						babelrc: false,
+						cacheDirectory: !isProduction,
+						cacheCompression: false,
+						highlightCode: true,
+						compact: isProduction
 					}
 				}
 			]
 		},
-		devServer: {
-			host: '0.0.0.0',
-			port: 8080
+		{
+			test: /\.module\.css$/,
+			use: getStyleLoaders({modules: true})
 		},
-		plugins: [
-			// Make NODE_ENV environment variable available to the JS code, for example:
-			// if (process.env.NODE_ENV === 'development') { ... }.
-			new DefinePlugin({
-				'process.env': {
-					'NODE_ENV': '"development"'
-				}
-			}),
-			// Switch the internal NodeOutputFilesystem to use graceful-fs to avoid
-			// EMFILE errors when hanndling mass amounts of files at once, such as
-			// what happens when using ilib bundles/resources.
-			new GracefulFsPlugin(),
-			// Automatically configure iLib library within @enact/i18n. Additionally,
-			// ensure the locale data files and the resource files are copied during
-			// the build to the output directory.
-			new ILibPlugin(),
-			// Automatically detect ./appinfo.json and ./webos-meta/appinfo.json files,
-			// and parses any to copy over any webOS meta assets at build time.
-			new WebOSMetaPlugin({path:path.join(dirname, 'webos-meta')})
-		]
-	};
+		{
+			test: /\.css$/,
+			// The `forceCSSModules` Enact build option can be set true to universally apply
+			// modular CSS support.
+			use: getStyleLoaders({modules: app.forceCSSModules}),
+			// Don't consider CSS imports dead code even if the
+			// containing package claims to have no side effects.
+			// Remove this when webpack adds a warning or an error for this.
+			// See https://github.com/webpack/webpack/issues/6571
+			sideEffects: true
+		},
+		{
+			test: /\.module\.less$/,
+			use: getLessStyleLoaders({modules: true})
+		},
+		{
+			test: /\.less$/,
+			use: getLessStyleLoaders({modules: app.forceCSSModules}),
+			sideEffects: true
+		}
+	);
+	// File-loader catch-all for any remaining unhandled extensions
+	config.module.rules[0].oneOf.push({
+		loader: require.resolve('file-loader'),
+		exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.ejs$/, /\.json$/],
+		options: {
+			name: '[path][name].[ext]'
+		}
+	});
+
+
+	config.plugins.push(
+		new DefinePlugin({
+			'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
+			'process.env.PUBLIC_URL': JSON.stringify('.')
+		}),
+		new GracefulFsPlugin(),
+		new ILibPlugin(),
+		//new WebOSMetaPlugin({path:path.join(dirname, 'webos-meta')})
+	);
+	if (!process.env.INLINE_STYLES) {
+		config.plugins.push(new MiniCssExtractPlugin({
+			filename: '[name].css',
+			chunkFilename: 'chunk.[name].css'
+		}));
+	}
+
+	return config;
 }
 
 module.exports = configure;

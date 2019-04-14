@@ -1,16 +1,23 @@
+import {addParameters} from '@storybook/react';
+import {create} from '@storybook/theming';
 import configure from '../src/configure';
-import {setOptions} from '@storybook/addon-options';
 
 const stories = require.context('../stories/default', true, /.js$/);
 
-setOptions({
-	name: 'ENACT SAMPLER',
-	url: 'http://enactjs.com/',
-	goFullScreen: false,
-	showStoriesPanel: true,
-	showAddonPanel: true,
-	showSearchBox: false,
-	addonPanelInRight: false
+addParameters({
+	options: {
+		theme: create({
+			base: 'light',
+			brandTitle: 'ENACT SAMPLER',
+			brandUrl: 'http://enactjs.com/'
+			// To control appearance:
+			// brandImage: 'http://url.of/some.svg',
+		}),
+		isFullscreen: false,
+		showNav: true,
+		showPanel: true,
+		panelPosition: 'left'
+	}
 });
 
 configure(stories, module);
