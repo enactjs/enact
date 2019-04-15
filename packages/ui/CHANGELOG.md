@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
+- `ui/Touchable` to prevent events firing on different nodes for the same touch action
 - `ui/Touchable` to neither force focus to components nor blur components after they are touched
 
 ## [2.5.1] - 2019-04-09
