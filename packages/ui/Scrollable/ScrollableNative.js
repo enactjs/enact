@@ -1319,6 +1319,7 @@ class ScrollableBaseNative extends Component {
 		delete rest.scrollStopOnScroll;
 		delete rest.scrollTo;
 		delete rest.start;
+		delete rest.stop;
 		delete rest.verticalScrollbar;
 
 		this.deferScrollTo = true;
