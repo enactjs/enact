@@ -258,7 +258,7 @@ storiesOf('ContextualPopupDecorator', module)
 		)
 	)
 	.add(
-		'With arrow function',
+		'with arrow function',
 		() => (
 			<ContextualPopupWithArrowFunction />
 		)
