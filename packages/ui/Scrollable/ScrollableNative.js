@@ -986,7 +986,6 @@ class ScrollableBaseNative extends Component {
 		const
 			{scrollLeft, scrollTop} = this,
 			childRefCurrent = this.childRefCurrent,
-			childContainerRef = childRefCurrent.containerRef,
 			bounds = this.getScrollBounds(),
 			{maxLeft, maxTop} = bounds;
 
@@ -1021,6 +1020,8 @@ class ScrollableBaseNative extends Component {
 		if (animate) {
 			childRefCurrent.scrollToPosition(targetX, targetY);
 		} else {
+			this.scrollLeft = targetX;
+			this.scrollTop = targetY;
 			this.stop();
 		}
 
