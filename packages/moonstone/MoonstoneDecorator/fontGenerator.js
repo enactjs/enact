@@ -11,8 +11,8 @@ const fontName = 'Moonstone LG Display';
 // Locale Configuration Block
 const fonts = {
 	'NonLatin': {
-		regular: 'LGSmartUIGlobal-Light',
-		bold:    'LGSmartUIGlobal-Regular'
+		regular: 'LG Display-Light',
+		bold:    'LG Display-Regular'
 	},
 	'am': {
 		regular: 'LG Display_Amharic'
