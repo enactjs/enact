@@ -67,11 +67,40 @@
 		animation-timing-function: ease-out;
 	}
 
-	.client {
-		padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
+	// Standard Button Scenario
+	&.red,
+	&.green,
+	&.yellow,
+	&.blue {
+		&.minWidth .client {
+			-webkit-margin-start: @moon-button-colordot-size;
+			-webkit-padding-start: @moon-spotlight-outset;
 
-		// Colored under-bar
-		&::before {
+			&::before {
+				content: "";
+				position: absolute;
+				left: -@moon-button-colordot-size;
+				bottom: 50%;
+				width: @moon-button-colordot-size;
+				height: @moon-button-colordot-size;
+				border-radius: @moon-button-colordot-size;
+				transform: translateY(50%);
+
+				:global(.enact-locale-right-to-left) & {
+					left: initial;
+					right: -@moon-button-colordot-size;
+				}
+			}
+		}
+	}
+
+	// IconButton-like Button scenario
+	&.red,
+	&.green,
+	&.yellow,
+	&.blue {
+		&:not(.minWidth) .client::before {
+			// Colored under-bar
 			content: "";
 			position: absolute;
 			min-width: 24px;
@@ -81,10 +110,23 @@
 			right: 24px;
 			border-radius: 6px;
 		}
+	}
 
-		.icon {
-			-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
-			-webkit-margin-end: @moon-button-icon-h-margin;
+	.client {
+		padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
+	}
+
+	.icon {
+		-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
+		-webkit-margin-end: @moon-button-icon-h-margin;
+	}
+	// Color prop set, and minWidth prop set, update icon's margin to allow more room for the colordot
+	&.red,
+	&.green,
+	&.yellow,
+	&.blue {
+		&.minWidth .icon {
+			-webkit-margin-start: 0;
 		}
 	}
 
@@ -118,8 +160,21 @@
 		padding-left: @moon-button-small-h-padding;
 		padding-right: @moon-button-small-h-padding;
 
+		// Standard Button Scenario
 		&.minWidth {
 			min-width: @moon-button-small-min-width;
+
+			.client::before {
+				height: @moon-button-small-colordot-size;
+				width: @moon-button-small-colordot-size;
+			}
+		}
+
+		// IconButton-like Button scenario
+		&:not(.minWidth) .client::before {
+			bottom: 12px;
+			left: 18px;
+			right: 18px;
 		}
 
 		.moon-taparea(@moon-button-small-height);
@@ -135,15 +190,18 @@
 			}
 		});
 
-		.client::before {
-			bottom: 12px;
-			left: 18px;
-			right: 18px;
-		}
-
 		.icon {
 			-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
 			-webkit-margin-end: @moon-button-icon-small-h-margin;
+		}
+
+		&.red,
+		&.green,
+		&.yellow,
+		&.blue {
+			&.minWidth .icon {
+				-webkit-margin-start: 0;
+			}
 		}
 	}
 
@@ -181,7 +239,7 @@
 			color: @moon-text-color;
 
 			.bg {
-				background-color: @moon-button-transparent-disabled-bg-color;
+				background-color: @moon-button-transparent-bg-color;
 			}
 		}
 
@@ -197,6 +255,14 @@
 		&.blue .client::before {
 			background-color: @moon-remote-button-blue-color;
 		}
+
+		.disabled({
+			&.transparent {
+				.bg {
+					background-color: @moon-button-transparent-disabled-bg-color;
+				}
+			}
+		});
 
 		.focus({
 			color: @moon-button-focus-text-color;

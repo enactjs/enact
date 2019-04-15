@@ -28,6 +28,7 @@ storiesOf('Moonstone', module)
 			<Button
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+				color={select('color', ['', 'red', 'green', 'yellow', 'blue'], Config, '')}
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', prop.icons, Config)}
 				minWidth={!!boolean('minWidth', Config)}
