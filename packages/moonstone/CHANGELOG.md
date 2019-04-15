@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Deprecated
+
+- `moonstone/Input.InputBase` prop `focused` which will be replaced in 3.0 with the `:focus-within` CSS pseudo-selector
+
 ### Fixed
 
 - `moonstone/Scroller` to scroll via dragging when the platform has touch support
