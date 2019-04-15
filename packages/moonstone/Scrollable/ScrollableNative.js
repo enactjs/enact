@@ -397,6 +397,14 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	stop = () => {
+		if (this.lastPosition) {
+			const elem = document.elementFromPoint(this.lastPosition.x, this.lastPosition.y).closest('.spottable');
+
+			Spotlight.focus(elem);
+			this.lastPosition = null;
+		}
+	}
 	// event handlers for Spotlight support
 
 	startScrollOnFocus = (pos) => {
@@ -493,36 +501,40 @@ class ScrollableBaseNative extends Component {
 		// Should skip scroll by page when focusedItem is paging control button of Scrollbar
 		if (focusedItem && childRefCurrent.containerRef.current.contains(focusedItem)) {
 			const
-				// VirtualList and Scroller have a spotlightId on containerRef
-				spotlightId = containerRef.current.dataset.spotlightId,
-				rDirection = reverseDirections[direction],
 				viewportBounds = containerRef.current.getBoundingClientRect(),
-				focusedItemBounds = focusedItem.getBoundingClientRect(),
-				endPoint = {
-					x: focusedItemBounds.left + focusedItemBounds.width / 2,
-					y: viewportBounds.top + ((direction === 'up') ? focusedItemBounds.height / 2 - 1 : viewportBounds.height - focusedItemBounds.height / 2 + 1)
-				};
-			let next = null;
+				focusedItemBounds = focusedItem.getBoundingClientRect();
 
-			/* 1. Find spottable item in viewport */
-			next = getTargetByDirectionFromPosition(rDirection, endPoint, spotlightId);
+			this.lastPosition = {
+				x: focusedItemBounds.left + focusedItemBounds.width / 2,
+				y: focusedItemBounds.y + focusedItemBounds.height / 2
+			};
 
-			if (next !== focusedItem) {
-				Spotlight.focus(next);
-			/* 2. Find spottable item out of viewport */
-			// For Scroller
-			} else if (this.childRef.current.scrollToNextPage) {
-				next = this.childRef.current.scrollToNextPage({direction, focusedItem, reverseDirection: rDirection, spotlightId});
+			const sign = (direction === 'down') ? 1 : -1;
+			const targetY = this.uiRef.current.scrollTop + viewportBounds.height * sign;
+			if (direction === 'down' && targetY < this.uiRef.current.getScrollBounds().maxTop + viewportBounds.height || direction === 'up' && targetY > viewportBounds.height * -1) {
+				this.uiRef.current.start({
+					targetX: 0, // focusedItemBounds.left,
+					targetY: this.uiRef.current.scrollTop + viewportBounds.height * sign,
+					animate: false,
+					overscrollEffect: false
+					// overscrollEffect: this.props.overscrollEffectOn[this.uiRef.current.lastInputType] && (!this.childRef.current.shouldPreventOverscrollEffect || !this.childRef.current.shouldPreventOverscrollEffect())
+				});
+			} else {
+				const
+				// VirtualList and Scroller have a spotlightId on containerRef
+					spotlightId = containerRef.current.dataset.spotlightId,
+					rDirection = reverseDirections[direction],
+					endPoint = {
+						x: focusedItemBounds.left + focusedItemBounds.width / 2,
+						y: viewportBounds.top + ((direction === 'up') ? focusedItemBounds.height / 2 - 1 : viewportBounds.height - focusedItemBounds.height / 2 + 1)
+					};
+				let next = null;
+				next = getTargetByDirectionFromPosition(rDirection, endPoint, spotlightId);
 
-				if (next !== null) {
-					this.animateOnFocus = false;
+				if (next !== focusedItem) {
 					Spotlight.focus(next);
 				}
-			// For VirtualList
-			} else if (this.childRef.current.scrollToNextItem) {
-				this.childRef.current.scrollToNextItem({direction, focusedItem, reverseDirection: rDirection, spotlightId});
 			}
-
 			// Need to check whether an overscroll effect is needed
 			return true;
 		}
@@ -838,6 +850,7 @@ class ScrollableBaseNative extends Component {
 				scrollStopOnScroll={this.scrollStopOnScroll}
 				scrollTo={this.scrollTo}
 				start={this.start}
+				stop={this.stop}
 				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
 					childComponentProps,
 					childWrapper: ChildWrapper,

@@ -337,6 +337,14 @@ class ScrollableBaseNative extends Component {
 		start: PropTypes.func,
 
 		/**
+		 * Called to execute additional logic in a themed component when scroll stops.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		stop: PropTypes.func,
+
+		/**
 		 * ScrollableNative CSS style.
 		 *
 		 * Should be defined because we manipulate style prop in render().
@@ -1013,9 +1021,7 @@ class ScrollableBaseNative extends Component {
 		if (animate) {
 			childRefCurrent.scrollToPosition(targetX, targetY);
 		} else {
-			childContainerRef.current.style.scrollBehavior = null;
-			childRefCurrent.scrollToPosition(targetX, targetY);
-			childContainerRef.current.style.scrollBehavior = 'smooth';
+			this.stop();
 		}
 
 		if (this.props.start) {
@@ -1031,6 +1037,10 @@ class ScrollableBaseNative extends Component {
 		childContainerRef.current.style.scrollBehavior = null;
 		childRefCurrent.scrollToPosition(this.scrollLeft + 0.1, this.scrollTop + 0.1);
 		childContainerRef.current.style.scrollBehavior = 'smooth';
+
+		if (this.props.stop) {
+			this.props.stop();
+		}
 	}
 
 	// scrollTo API
