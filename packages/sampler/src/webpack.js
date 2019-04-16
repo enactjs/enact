@@ -132,7 +132,7 @@ function configure ({config, mode}, dirname) {
 		}),
 		new GracefulFsPlugin(),
 		new ILibPlugin(),
-		//new WebOSMetaPlugin({path:path.join(dirname, 'webos-meta')})
+		new WebOSMetaPlugin({path:path.join(dirname, 'webos-meta')})
 	);
 	if (!process.env.INLINE_STYLES) {
 		config.plugins.push(new MiniCssExtractPlugin({
