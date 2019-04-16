@@ -259,7 +259,7 @@ const VirtualListBaseFactory = (type) => {
 				containerNode.removeEventListener('keyup', this.onKeyUp);
 			}
 
-			this.resumeSpotlight();
+			this.pause.resume();
 
 			this.setContainerDisabled(false);
 		}
@@ -491,7 +491,7 @@ const VirtualListBaseFactory = (type) => {
 			const
 				{cbScrollTo} = this.props,
 				{firstIndex, numOfItems} = this.uiRefCurrent.state,
-				focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
+				focusedIndex = getNumberValue(focusedItem.getAttribute(dataIndexAttribute)),
 				indexToScroll = this.getIndexToScroll(direction, focusedIndex);
 
 			if (indexToScroll !== -1 && focusedIndex !== indexToScroll) {
@@ -626,10 +626,6 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		resumeSpotlight = () => {
-			this.pause.resume();
-			document.removeEventListener('keyup', this.resumeSpotlight);
-		}
 		/**
 		 * Handle global `onKeyDown` event
 		 */
@@ -654,9 +650,9 @@ const VirtualListBaseFactory = (type) => {
 			if (this.isWrappedBy5way) {
 				SpotlightAccelerator.reset();
 				this.isWrappedBy5way = false;
-				this.pause.resume();
 			}
 
+			this.pause.resume();
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
 			this.isScrolledByJump = false;
@@ -696,7 +692,7 @@ const VirtualListBaseFactory = (type) => {
 				const index = placeholder.dataset.index;
 
 				if (index) {
-					this.preservedIndex = parseInt(index);
+					this.preservedIndex = getNumberValue(index);
 					this.restoreLastFocused = true;
 				}
 			}
