@@ -1,6 +1,11 @@
 {
 	"presets": [
-		 ["@babel/preset-env", {"shippedProposals": true, "modules": false}],
+		["@babel/preset-env", {
+			"shippedProposals": true,
+			"modules": false,
+			"useBuiltIns": "entry",
+			"corejs": 2
+		}],
 		"@babel/preset-react"
 	],
 	"plugins": [

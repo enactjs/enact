@@ -1,3 +1,4 @@
+import 'core-js';
 import {addParameters} from '@storybook/react';
 import {create} from '@storybook/theming';
 import configure from '../src/configure';
@@ -16,7 +17,7 @@ addParameters({
 		isFullscreen: false,
 		showNav: true,
 		showPanel: true,
-		panelPosition: 'left'
+		panelPosition: 'bottom'
 	}
 });
 
