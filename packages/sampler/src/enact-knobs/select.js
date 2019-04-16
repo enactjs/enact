@@ -1,4 +1,4 @@
-import {selectV2 as selectKnob} from '@storybook/addon-knobs';
+import {select as selectKnob} from '@storybook/addon-knobs';
 
 import nullify from '../utils/nullify.js';
 
