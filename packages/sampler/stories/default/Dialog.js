@@ -5,7 +5,6 @@ import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -16,9 +15,7 @@ Dialog.displayName = 'Dialog';
 storiesOf('Moonstone', module)
 	.add(
 		'Dialog',
-		withInfo({
-			text: 'Basic usage of Dialog'
-		})(() => (
+		() => (
 			<div>
 				<Dialog
 					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
@@ -44,5 +41,10 @@ storiesOf('Moonstone', module)
 				</Dialog>
 				<BodyText centered>Use KNOBS to interact with Dialog.</BodyText>
 			</div>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of Dialog'
+			}
+		}
 	);

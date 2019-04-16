@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean} from '../../src/enact-knobs';
 
@@ -51,7 +50,7 @@ const Pointer = kind({
 storiesOf('About', module)
 	.add(
 		'A Tour of Sampler',
-		withInfo('A Tour of Sampler')(() => (
+		() => (
 			<div style={{overflow: 'hidden', height: '100%'}}>
 				<BodyText
 					style={{margin: `0 ${riSafe(12)} 0.8em`}}
@@ -96,5 +95,5 @@ storiesOf('About', module)
 					</div>
 				</aside>
 			</div>
-		))
+		)
 	);

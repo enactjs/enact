@@ -1,7 +1,6 @@
 import LabeledIcon from '@enact/moonstone/LabeledIcon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 import {LabeledIconBase as UiLabeledIconBase, LabeledIcon as UiLabeledIcon} from '@enact/ui/LabeledIcon';
 
 import iconNames from './icons';
@@ -14,9 +13,7 @@ Config.displayName = 'LabeledIcon';
 storiesOf('Moonstone', module)
 	.add(
 		'LabeledIcon',
-		withInfo({
-			text: 'Basic usage of LabeledIcon'
-		})(() => (
+		() => (
 			<LabeledIcon
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', ['', ...iconNames], Config, 'fullscreen')}
@@ -26,5 +23,10 @@ storiesOf('Moonstone', module)
 			>
 				{text('children', Config, 'Hello LabeledIcon')}
 			</LabeledIcon>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of LabeledIcon'
+			}
+		}
 	);

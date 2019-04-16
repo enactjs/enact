@@ -5,7 +5,6 @@ import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -16,9 +15,7 @@ const Config = mergeComponentMetadata('CheckboxItem', ItemBase, Item, UiToggleIt
 storiesOf('Moonstone', module)
 	.add(
 		'CheckboxItem',
-		withInfo({
-			text: 'Basic usage of CheckboxItem'
-		})(() => (
+		() => (
 			<CheckboxItem
 				// disabled and inline have problems when set to `null` from the internal nullify...
 				disabled={boolean('disabled', Config, false)}
@@ -28,5 +25,10 @@ storiesOf('Moonstone', module)
 			>
 				{text('children', Config, 'Hello CheckboxItem')}
 			</CheckboxItem>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of CheckboxItem'
+			}
+		}
 	);

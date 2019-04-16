@@ -3,7 +3,6 @@ import TooltipDecorator, {Tooltip, TooltipBase} from '@enact/moonstone/TooltipDe
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 // import {object} from '@storybook/addon-knobs';
-import {withInfo} from '@storybook/addon-info';
 
 import {number, object, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -38,9 +37,7 @@ const prop = {
 storiesOf('Moonstone', module)
 	.add(
 		'TooltipDecorator',
-		withInfo({
-			text: 'The basic TooltipDecorator'
-		})(() => (
+		() => (
 			<div style={{textAlign: 'center'}}>
 				<TooltipButton
 					tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
@@ -53,5 +50,10 @@ storiesOf('Moonstone', module)
 					hello
 				</TooltipButton>
 			</div>
-		))
+		),
+		{
+			info: {
+				text: 'The basic TooltipDecorator'
+			}
+		}
 	);

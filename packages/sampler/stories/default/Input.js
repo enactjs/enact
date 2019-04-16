@@ -3,7 +3,6 @@ import icons from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -21,9 +20,7 @@ const prop = {
 storiesOf('Moonstone', module)
 	.add(
 		'Input',
-		withInfo({
-			text: 'The basic Input'
-		})(() => (
+		() => (
 			<Input
 				onChange={action('onChange')}
 				disabled={boolean('disabled', Config)}
@@ -36,5 +33,10 @@ storiesOf('Moonstone', module)
 				small={boolean('small', Config)}
 				type={select('type', prop.type, Config, prop.type[0])}
 			/>
-		))
+		),
+		{
+			info: {
+				text: 'The basic Input'
+			}
+		}
 	);

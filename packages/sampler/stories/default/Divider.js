@@ -1,7 +1,6 @@
 import Divider, {DividerBase} from '@enact/moonstone/Divider';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
 import {select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -19,9 +18,7 @@ const prop = {
 storiesOf('Moonstone', module)
 	.add(
 		'Divider',
-		withInfo({
-			text: 'Basic usage of Divider'
-		})(() => (
+		() => (
 			<Divider
 				casing={select('casing', prop.casing, Config)}
 				marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
@@ -29,5 +26,10 @@ storiesOf('Moonstone', module)
 			>
 				{text('children', Config, 'divider text')}
 			</Divider>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of Divider'
+			}
+		}
 	);

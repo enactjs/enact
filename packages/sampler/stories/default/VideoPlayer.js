@@ -5,7 +5,6 @@ import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, number, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -85,9 +84,7 @@ MediaControls.displayName = 'MediaControls';
 storiesOf('Moonstone', module)
 	.add(
 		'VideoPlayer',
-		withInfo({
-			text: 'The basic VideoPlayer'
-		})(() => {
+		() => {
 			const videoTitle = select('source', prop.videoTitles, Config, 'Sintel');
 			const videoSource = prop.videos[videoTitle];
 			const poster = prop.posters[videoTitle];
@@ -166,5 +163,10 @@ storiesOf('Moonstone', module)
 					</VideoPlayer>
 				</div>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'The basic VideoPlayer'
+			}
+		}
 	);

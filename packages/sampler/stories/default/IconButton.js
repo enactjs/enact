@@ -3,7 +3,6 @@ import icons from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import emptify from '../../src/utils/emptify.js';
@@ -23,9 +22,7 @@ IconButton.displayName = 'IconButton';
 storiesOf('Moonstone', module)
 	.add(
 		'IconButton',
-		withInfo({
-			text: 'The basic IconButton'
-		})(() => (
+		() => (
 			<IconButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, IconButton, '')}
@@ -37,5 +34,10 @@ storiesOf('Moonstone', module)
 			>
 				{emptify(select('src', ['', docs, factory, logo], '')) + emptify(select('icon', ['', ...icons], 'plus')) + emptify(text('custom icon', ''))}
 			</IconButton>
-		))
+		),
+		{
+			info: {
+				text: 'The basic IconButton'
+			}
+		}
 	);

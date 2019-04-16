@@ -2,7 +2,6 @@ import Image, {ImageBase, ImageDecorator} from '@enact/moonstone/Image';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {object, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -19,9 +18,7 @@ Image.displayName = 'Image';
 storiesOf('Moonstone', module)
 	.add(
 		'Image',
-		withInfo({
-			text: 'The basic Image'
-		})(() => (
+		() => (
 			<Image
 				src={object('src', Config, src)}
 				sizing={select('sizing', ['fill', 'fit', 'none'], Config, 'fill')}
@@ -49,5 +46,10 @@ storiesOf('Moonstone', module)
 					Image Boundry
 				</label>
 			</Image>
-		))
+		),
+		{
+			info: {
+				text: 'The basic Image'
+			}
+		}
 	);

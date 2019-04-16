@@ -3,7 +3,6 @@ import Divider from '@enact/moonstone/Divider';
 import iconNames from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import emptify from '../../src/utils/emptify.js';
@@ -16,9 +15,7 @@ import logo from '../../images/icon-enact-logo.svg';
 storiesOf('Moonstone', module)
 	.add(
 		'Icon',
-		withInfo({
-			text: 'Basic usage of Icon'
-		})(() => {
+		() => {
 			const small = boolean('small', Icon);
 			return (
 				<div>
@@ -33,5 +30,10 @@ storiesOf('Moonstone', module)
 					{iconNames.map((icon, index) => <Icon key={index} small={small} title={icon}>{icon}</Icon>)}
 				</div>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'Basic usage of Icon'
+			}
+		}
 	);

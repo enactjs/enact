@@ -2,7 +2,6 @@ import ToggleButton from '@enact/moonstone/ToggleButton';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -19,9 +18,7 @@ ToggleButton.displayName = 'ToggleButton';
 storiesOf('Moonstone', module)
 	.add(
 		'ToggleButton',
-		withInfo({
-			text: 'The basic ToggleButton'
-		})(() => (
+		() => (
 			<ToggleButton
 				aria-label="toggle button"
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
@@ -34,5 +31,10 @@ storiesOf('Moonstone', module)
 			>
 				Missing Toggle Label
 			</ToggleButton>
-		))
+		),
+		{
+			info: {
+				text: 'The basic ToggleButton'
+			}
+		}
 	);

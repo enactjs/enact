@@ -5,7 +5,6 @@ import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -15,9 +14,7 @@ const Config = mergeComponentMetadata('RadioItem', ItemBase, Item, UiToggleItemB
 storiesOf('Moonstone', module)
 	.add(
 		'RadioItem',
-		withInfo({
-			text: 'Basic usage of RadioItem'
-		})(() => (
+		() => (
 			<RadioItem
 				disabled={boolean('disabled', Config)}
 				inline={boolean('inline', Config)}
@@ -25,5 +22,10 @@ storiesOf('Moonstone', module)
 			>
 				{text('children', Config, 'Hello RadioItem')}
 			</RadioItem>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of RadioItem'
+			}
+		}
 	);
