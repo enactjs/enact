@@ -1,19 +1,12 @@
 import {configure, addDecorator} from '@storybook/react';
 import {withKnobs} from '@storybook/addon-knobs';
-import {setDefaults} from '@storybook/addon-info';
+import {withInfo} from '@storybook/addon-info';
 
 import Moonstone from '../src/MoonstoneEnvironment';
 
 function config (stories, mod) {
-
-	addDecorator(Moonstone);
-	addDecorator(withKnobs({
-		// debounce: {wait: 500}, // Same as lodash debounce.
-		timestamps: true // Doesn't emit events while user is typing.
-	}));
-
 	// Set addon-info defaults
-	setDefaults({
+	addDecorator(withInfo({
 		propTables: null, // Disable all propTables
 		// header: false, // Global configuration for the info addon across all of your stories.
 		// inline: true,
@@ -24,7 +17,16 @@ function config (stories, mod) {
 				height: '100%'
 			}
 		}
-	});
+	}));
+
+	// Set addon-knobs defaults
+	addDecorator(withKnobs({
+		// debounce: {wait: 500}, // Same as lodash debounce.
+		timestamps: true // Doesn't emit events while user is typing.
+	}));
+
+	// Set moonstone environment defaults
+	addDecorator(Moonstone);
 
 	function loadStories () {
 		stories.keys().forEach((filename) => stories(filename));
