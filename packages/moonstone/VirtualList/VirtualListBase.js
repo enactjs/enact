@@ -850,7 +850,15 @@ const VirtualListBaseFactory = (type) => {
 				(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
 				// If we need to restore last focus and the index is beyond the screen,
 				// we call `scrollTo` to create DOM for it.
-				cbScrollTo({index: preservedIndex, animate: false, focus: true});
+				// A little trick here; both `position` and `index` are specified.
+				// the scroll position is determined by `position` and
+				// the item specified by `index` will be focused.
+				cbScrollTo({
+					position: this.uiRefCurrent.getXY(this.uiRefCurrent.scrollPosition, 0),
+					index: preservedIndex,
+					animate: false,
+					focus: true
+				});
 				this.isScrolledByJump = true;
 
 				return true;
