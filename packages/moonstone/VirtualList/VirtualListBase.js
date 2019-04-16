@@ -260,6 +260,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			this.pause.resume();
+			SpotlightAccelerator.reset();
 
 			this.setContainerDisabled(false);
 		}
