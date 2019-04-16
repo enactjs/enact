@@ -6,6 +6,9 @@ const {optionParser: app, GracefulFsPlugin, ILibPlugin, WebOSMetaPlugin} = requi
 
 function configure ({config, mode}, dirname) {
 	const isProduction = mode === 'PRODUCTION';
+	const shouldUseSourceMap = (process.env.GENERATE_SOURCEMAP || 'true') !== 'false';
+
+	app.setEnactTargetsAsDefault();
 
 	const getStyleLoaders = (cssLoaderOptions = {}, preProcessor) => {
 		const loaders = [
@@ -13,7 +16,7 @@ function configure ({config, mode}, dirname) {
 			{
 				loader: require.resolve('css-loader'),
 				options: Object.assign(
-					{importLoaders: preProcessor ? 2 : 1, sourceMap: true},
+					{importLoaders: preProcessor ? 2 : 1, sourceMap: shouldUseSourceMap},
 					cssLoaderOptions.modules && {getLocalIdent: getCSSModuleLocalIdent},
 					cssLoaderOptions
 				)
@@ -22,7 +25,7 @@ function configure ({config, mode}, dirname) {
 				loader: require.resolve('postcss-loader'),
 				options: {
 					ident: 'postcss',
-					sourceMap: true,
+					sourceMap: shouldUseSourceMap,
 					plugins: () =>
 						[
 							require('postcss-flexbugs-fixes'),
@@ -49,13 +52,13 @@ function configure ({config, mode}, dirname) {
 			loader: require.resolve('less-loader'),
 			options: {
 				modifyVars: Object.assign({__DEV__: !isProduction}, app.accent),
-				sourceMap: true
+				sourceMap: shouldUseSourceMap
 			}
 		});
 
 
 	// Modify stock Storybook config for Enact-tailored experience
-	config.devtool = 'sourcemap';
+	config.devtool = shouldUseSourceMap && 'source-map';
 	config.resolve.alias.ilib = '@enact/i18n/ilib/lib';
 	config.resolve.modules = [path.resolve('../node_modules'), 'node_modules'];
 	config.performance = {hints: false};
