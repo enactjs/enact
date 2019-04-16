@@ -19,7 +19,6 @@ storiesOf('LabeledIcon', module)
 		() => {
 			const disabled = boolean('disabled', Config);
 			const labelPosition = select('labelPosition', ['above', 'after', 'before', 'below', 'left', 'right'], Config);
-			const small = boolean('small', Config);
 			return (
 				<Scroller>
 					<Layout wrap align="center space-between">
@@ -30,7 +29,7 @@ storiesOf('LabeledIcon', module)
 									icon={icon}
 									disabled={disabled}
 									labelPosition={labelPosition}
-									small={small}
+									size={select('size', ['small', 'medium'], Config)}
 								>{icon}</LabeledIcon>
 							</Cell>
 						)}
@@ -44,7 +43,6 @@ storiesOf('LabeledIcon', module)
 		() => {
 			const disabled = boolean('disabled', Config);
 			const labelPosition = select('labelPosition', ['above', 'after', 'before', 'below', 'left', 'right'], Config);
-			const small = boolean('small', Config);
 			return (
 				<Scroller>
 					{iconNames.map((icon) =>
@@ -54,7 +52,7 @@ storiesOf('LabeledIcon', module)
 							inline
 							disabled={disabled}
 							labelPosition={labelPosition}
-							small={small}
+							size={select('size', ['small', 'medium'], Config)}
 						>{icon}</LabeledIcon>
 					)}
 				</Scroller>

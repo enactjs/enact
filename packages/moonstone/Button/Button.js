@@ -75,6 +75,7 @@ const ButtonBase = kind({
 		 *
 		 * * `button` - The root class name
 		 * * `bg` - The background node of the button
+		 * * `medium` - Applied to a `medium` button
 		 * * `selected` - Applied to a `selected` button
 		 * * `small` - Applied to a `small` button
 		 *
@@ -86,7 +87,7 @@ const ButtonBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['button', 'bg', 'selected', 'small']
+		publicClassNames: ['button', 'bg', 'medium', 'selected', 'small']
 	},
 
 	computed: {

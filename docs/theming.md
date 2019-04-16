@@ -252,20 +252,20 @@ import ComponentOverride from '@enact/ui/ComponentOverride';
 		iconComponent: 'span'
 	},
 ...
-	render: ({buttonComponent, children, css, icon, iconComponent: Icon, small, ...rest}) => (
+	render: ({buttonComponent, children, css, icon, iconComponent: Icon, size, ...rest}) => (
 		<ComponentOverride
 			{...rest}
 			component={buttonComponent}
-			small={small}
+			size={size}
 			minWidth={false}
 		>
-			<Icon small={small} className={css.icon}>{icon}</Icon>
+			<Icon size={size} className={css.icon}>{icon}</Icon>
 			{children}
 		</ComponentOverride>
 	)
 ```
 
-The remainder of the props are spread onto the `buttonComponent` while the `small` and `minWidth` props are added directly. *(`small` could have been passed via `rest` but it is also sent to `Icon`, and we chose this approach to improve readability, rather than sending `small={rest.small}`.)*
+The remainder of the props are spread onto the `buttonComponent` while the `size` and `minWidth` props are added directly. *(`size` could have been passed via `rest` but it is also sent to `Icon`, and we chose this approach to improve readability, rather than sending `size={rest.size}`.)*
 
 ### Best practices
 

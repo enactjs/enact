@@ -75,6 +75,7 @@ const IconButtonBase = kind({
 		 *
 		 * * `iconButton` - The root class name
 		 * * `bg` - The background node of the icon button
+		 * * `medium` - Applied to a `medium` icon button
 		 * * `selected` - Applied to a `selected` icon button
 		 * * `small` - Applied to a `small` icon button
 		 *

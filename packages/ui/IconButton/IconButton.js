@@ -46,7 +46,7 @@ const IconButtonBase = kind({
 		/**
 		 * The component used to render the [icon]{@link ui/IconButton.IconButtonBase.icon}.
 		 *
-		 * This component will receive the `small` property set on the `IconButton` as well as the
+		 * This component will receive the `size` property set on the `IconButton` as well as the
 		 * `icon` class to customize its styling.
 		 *
 		 * @type {Component}
@@ -74,7 +74,8 @@ const IconButtonBase = kind({
 		 *
 		 * * `iconButton` - The root component class
 		 * * `icon` - The [icon component]{@link ui/IconButton.IconButtonBase.iconComponent} class
-		 * * `small` - Applied when `small` prop is `true`
+		 * * `medium` - Applied when `size` prop is `medium`
+		 * * `small` - Applied when `size` prop is `small`
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 *
 		 * @type {Object}
@@ -123,20 +124,24 @@ const IconButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Applies the `small` CSS class.
+		 * Applies the appropriate styling for size of the component.
 		 *
-		 * @type {Boolean}
-		 * @default false
+		 * Takes `small` or `medium`.
+		 * Other sizes can be defined and customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
+		 *
+		 * @type {String}
+		 * @default medium
 		 * @public
 		 */
-		small: PropTypes.bool
+		size: PropTypes.string
 	},
 
 	defaultProps: {
 		disabled: false,
 		pressed: false,
 		selected: false,
-		small: false
+		size: 'medium'
 	},
 
 	styles: {
@@ -146,10 +151,10 @@ const IconButtonBase = kind({
 	},
 
 	computed: {
-		className: ({small, styler}) => styler.append({small})
+		className: ({size, styler}) => styler.append(size)
 	},
 
-	render: ({buttonComponent, children, css, icon, iconComponent: Icon, small, ...rest}) => {
+	render: ({buttonComponent, children, css, icon, iconComponent: Icon, size, ...rest}) => {
 
 		// To support the simpler use case of only specifying the icon as the children within
 		// <IconButton>, this falls back on using children if icon isn't specified.
@@ -161,10 +166,10 @@ const IconButtonBase = kind({
 		return ComponentOverride({
 			...rest,
 			component: buttonComponent,
-			small: small,
+			size: size,
 			minWidth: false,
 			children: [
-				<Icon key="icon" small={small} className={css.icon}>{icon}</Icon>,
+				<Icon key="icon" size={size} className={css.icon}>{icon}</Icon>,
 				...React.Children.toArray(children)
 			]
 		});
@@ -187,7 +192,7 @@ const IconButtonDecorator = Touchable({activeProp: 'pressed'});
  *
  * Example:
  * ```
- * <IconButton small>
+ * <IconButton size="small">
  *     plus
  * </IconButton>
  * ```

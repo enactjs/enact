@@ -92,7 +92,7 @@ const LabeledIconBase = kind({
 		 *
 		 * This will receive the `icon` prop as `children` and should handle it appropriately. This
 		 * prop is ignored in the case of a component being passed into the `icon` prop. It will
-		 * also receive the `small` prop as set on the component.
+		 * also receive the `size` prop as set on the component.
 		 *
 		 * @type {Component}
 		 */
@@ -130,15 +130,17 @@ const LabeledIconBase = kind({
 		labelPosition: PropTypes.oneOf(['above', 'after', 'before', 'below', 'left', 'right']),
 
 		/**
-		 * Reduces the size of the icon component.
+		 * Applies the appropriate styling for size of the component.
 		 *
-		 * The value of `small` is forwarded on to `iconComponent`.
+		 * Takes `small` or `medium`.
+		 * Other sizes can be defined and customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
-		 * @type {Boolean}
-		 * @default false
+		 * @type {String}
+		 * @default medium
 		 * @public
 		 */
-		small: PropTypes.bool
+		size: PropTypes.string
 	},
 
 	defaultProps: {
@@ -160,7 +162,7 @@ const LabeledIconBase = kind({
 		}
 	},
 
-	render: ({css, children, disabled, icon, iconComponent, orientation, small, ...rest}) => {
+	render: ({css, children, disabled, icon, iconComponent, orientation, size, ...rest}) => {
 		let iconClassName = css.icon;
 
 		// Rearrange the props to support custom JSX components
@@ -172,11 +174,11 @@ const LabeledIconBase = kind({
 				component: icon,
 				className: iconClassName,
 				disabled,
-				small
+				size
 			});
-			// Removing small and iconComponent from CellBase
+			// Removing size and iconComponent from CellBase
 			// eslint-disable-next-line no-undefined
-			small = iconComponent = undefined;
+			size = iconComponent = undefined;
 			iconClassName = null;
 		}
 
@@ -197,7 +199,7 @@ const LabeledIconBase = kind({
 					children: icon,
 					className: (css.iconCell + ' ' + iconClassName),
 					disabled,
-					small
+					size
 				}),
 				CellBase.inline({
 					key: 'label',
