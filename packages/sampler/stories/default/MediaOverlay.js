@@ -1,7 +1,6 @@
 import MediaOverlay, {MediaOverlayBase, MediaOverlayDecorator} from '@enact/moonstone/MediaOverlay';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
 import {select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
