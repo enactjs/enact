@@ -132,7 +132,7 @@
 				color: @moon-input-placeholder-color;
 			});
 
-			.focused& {
+			&:focus-within {
 				.input-placeholder({
 					color: @moon-input-placeholder-active-color;
 				});
@@ -155,7 +155,7 @@
 			}
 		});
 
-		&.focused {
+		&:focus-within {
 			background-color: @moon-input-decorator-active-bg-color;
 		}
 

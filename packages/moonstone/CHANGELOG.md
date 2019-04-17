@@ -11,11 +11,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Removed
 
 - `moonstone/Button` and `moonstone/Panels.Header` prop `casing` which is no longer supported
+- `moonstone/Input.InputBase` prop `focused` which was used to indicate when the internal input field had focused but was replaced by the `:focus-within` pseudo-selector
 
 ### Changed
 
 - `moonstone/Button.ButtonDecorator` to remove `i18n/Uppercase` HOC
-- `moonstone/Button` appearance to match the latest designs
+- `moonstone/Button` and `moonstone/Header` appearance to match the latest designs
 
 ## [2.5.1] - 2019-04-09
 

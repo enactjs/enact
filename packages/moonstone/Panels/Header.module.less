@@ -36,8 +36,6 @@
 
 	.decorator {
 		padding: 0;
-		border-radius: 0;
-		border: none;
 	}
 
 	.titleBelow,
@@ -62,12 +60,12 @@
 		height: @moon-header-height-medium;
 
 		.title {
-			// This `margin-top: -3px;` is intended to account for the height disparity and visual
+			// This `margin-top: 2px;` is intended to account for the height disparity and visual
 			// offset when switching between Header+Input and a Standard Header's title height.
 			// The height is determined by the line-height below, but we want to maintain that as a
-			// relative unit (`em`) rather than dictate specific pixels. The -3px offset may need to
+			// relative unit (`em`) rather than dictate specific pixels. The 2px offset may need to
 			// be updated or removed to accomodate taller glyphs.
-			margin-top: -3px;
+			margin-top: 2px;
 			line-height: @moon-medium-header-line-height;
 
 			.moon-locale-non-latin({line-height: @moon-non-latin-medium-header-line-height;});
@@ -113,23 +111,16 @@
 
 		&.standard {
 			.decorator {
-				background-color: transparent;
-
-				.focus({
+				&:not(:focus-within) {
 					background-color: transparent;
 
 					.input {
-						background-color: @moon-header-input-bg-color;
-						color: @moon-header-input-text-color;
+						color: @moon-header-text-color;
 
 						.input-placeholder({
-							color: @moon-header-input-text-color;
+							color: @moon-header-text-color;
 						});
 					}
-				});
-
-				.input {
-					color: @moon-header-text-color;
 				}
 			}
 		}
@@ -149,7 +140,7 @@
 :global(.moon-panels-hasControls) {
 	.header.compact,
 	.header.standard .title,
-	.header.standard .decorator {
+	.header.standard .headerInput {
 		.padding-start-end(0, var(--moon-panels-controls-width));
 	}
 

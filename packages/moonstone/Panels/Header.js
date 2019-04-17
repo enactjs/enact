@@ -177,7 +177,7 @@ const HeaderBase = kind({
 		titleOrInput: ({headerInput, marqueeOn, title}) => {
 			if (headerInput) {
 				return (
-					<Cell>
+					<Cell className={css.headerInput}>
 						<ComponentOverride
 							component={headerInput}
 							css={css}
