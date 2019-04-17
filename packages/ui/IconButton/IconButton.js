@@ -12,6 +12,7 @@
  */
 
 import kind from '@enact/core/kind';
+import deprecate from '@enact/core/internal/deprecate';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -134,14 +135,25 @@ const IconButtonBase = kind({
 		 * @default medium
 		 * @public
 		 */
-		size: PropTypes.string
+		size: PropTypes.string,
+
+		/**
+		 * Applies the `small` CSS class.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @deprecated replaced by prop `size='small'`
+		 * @public
+		 */
+		small: PropTypes.bool
 	},
 
 	defaultProps: {
 		disabled: false,
 		pressed: false,
 		selected: false,
-		size: 'medium'
+		size: 'medium',
+		small: false
 	},
 
 	styles: {
@@ -151,10 +163,21 @@ const IconButtonBase = kind({
 	},
 
 	computed: {
-		className: ({size, styler}) => styler.append(size)
+		className: ({size, small, styler}) => styler.append({small}, size)
 	},
 
-	render: ({buttonComponent, children, css, icon, iconComponent: Icon, size, ...rest}) => {
+	render: ({buttonComponent, children, css, icon, iconComponent: Icon, size, small, ...rest}) => {
+
+		if (small) {
+			const deprecateSmall = deprecate(() => {},  {
+				name: 'ui/IconButton.IconButtonBase#small',
+				replacedBy: 'the `size` prop',
+				message: 'Use `size="small" instead`.',
+				since: '2.6.0',
+				until: '3.0.0'
+			});
+			deprecateSmall();
+		}
 
 		// To support the simpler use case of only specifying the icon as the children within
 		// <IconButton>, this falls back on using children if icon isn't specified.

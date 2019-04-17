@@ -6,6 +6,7 @@
  */
 
 import kind from '@enact/core/kind';
+import deprecate from '@enact/core/internal/deprecate';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -128,13 +129,24 @@ const Icon = kind({
 		 * @default 'medium'
 		 * @public
 		 */
-		size: PropTypes.string
+		size: PropTypes.string,
+
+		/**
+		 * Applies the `small` CSS class.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @deprecated replaced by prop `size='small'`
+		 * @public
+		 */
+		small: PropTypes.bool
 	},
 
 	defaultProps: {
 		iconList: {},
 		pressed: false,
-		size: 'medium'
+		size: 'medium',
+		small: false
 	},
 
 	styles: {
@@ -144,10 +156,11 @@ const Icon = kind({
 	},
 
 	computed: {
-		className: ({children: icon, iconList, pressed, size, styler}) => styler.append({
+		className: ({children: icon, iconList, pressed, size, small, styler}) => styler.append({
 			// If the icon isn't in our known set, apply our custom font class
 			dingbat: !(icon in iconList),
-			pressed
+			pressed,
+			small
 		}, size),
 		iconProps: ({children: iconProp, iconList, style}) => {
 			let icon = iconList[iconProp];
@@ -190,10 +203,21 @@ const Icon = kind({
 		}
 	},
 
-	render: ({iconProps, ...rest}) => {
+	render: ({iconProps, small, ...rest}) => {
 		delete rest.iconList;
 		delete rest.pressed;
 		delete rest.size;
+
+		if (small) {
+			const deprecateSmall = deprecate(() => {},  {
+				name: 'ui/Icon.IconBase#small',
+				replacedBy: 'the `size` prop',
+				message: 'Use `size="small" instead`.',
+				since: '2.6.0',
+				until: '3.0.0'
+			});
+			deprecateSmall();
+		}
 
 		return (
 			<div
