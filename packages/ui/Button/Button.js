@@ -146,7 +146,7 @@ const ButtonBase = kind({
 		 *
 		 * @type {Boolean}
 		 * @default false
-		 * @deprected replaced by prop `size='small'`
+		 * @deprecated replaced by prop `size='small'`
 		 * @public
 		 */
 		small: PropTypes.bool
