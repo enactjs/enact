@@ -8,6 +8,7 @@
  */
 
 import kind from '@enact/core/kind';
+import deprecate from '@enact/core/internal/deprecate';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -138,7 +139,17 @@ const ButtonBase = kind({
 		 * @default 'medium'
 		 * @public
 		 */
-		size: PropTypes.string
+		size: PropTypes.string,
+
+		/**
+		 * Reduces the size of the component.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @deprected replaced by prop `size='small'`
+		 * @public
+		 */
+		small: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -146,7 +157,8 @@ const ButtonBase = kind({
 		minWidth: true,
 		pressed: false,
 		selected: false,
-		size: 'medium'
+		size: 'medium',
+		small: false
 	},
 
 	styles: {
@@ -156,11 +168,12 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({icon, minWidth, pressed, selected, size, styler}) => styler.append({
+		className: ({icon, minWidth, pressed, selected, size, small, styler}) => styler.append({
 			hasIcon: (!!icon),
 			minWidth,
 			pressed,
-			selected
+			selected,
+			small
 		}, size),
 		icon: ({css, icon, iconComponent: Icon, size}) => {
 			return (typeof icon === 'string' && Icon) ? (
@@ -175,6 +188,7 @@ const ButtonBase = kind({
 		delete rest.pressed;
 		delete rest.selected;
 		delete rest.size;
+		delete rest.small;
 
 		return (
 			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
@@ -184,6 +198,31 @@ const ButtonBase = kind({
 		);
 	}
 });
+
+let ButtonBaseExternal = ButtonBase;
+if (__DEV__) {
+	const deprecateSmall = deprecate(() => {},  {
+		name: 'ui/Button.ButtonBase#small',
+		replacedBy: 'the `size` prop',
+		message: 'Use `size="small" instead`.',
+		since: '2.6.0',
+		until: '3.0.0'
+	});
+
+	// eslint-disable-next-line enact/kind-name
+	ButtonBaseExternal = kind({
+		// eslint-disable-next-line enact/prop-types
+		render: ({small, ...props}) => {
+			if (small) {
+				deprecateSmall();
+			}
+
+			return (
+				<ButtonBase {...props} />
+			);
+		}
+	});
+}
 
 /**
  * A higher-order component that adds touch support to a [ButtonBase]{@link ui/Button.ButtonBase}.
@@ -210,6 +249,7 @@ const Button = ButtonDecorator(ButtonBase);
 export default Button;
 export {
 	Button,
-	ButtonBase,
+	ButtonBaseExternal as ButtonBase,
+	ButtonBase as ButtonBaseInternal,
 	ButtonDecorator
 };
