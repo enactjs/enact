@@ -194,7 +194,7 @@ const LabeledIconBase = kind({
 				CellBase.inline({
 					key: 'icon',
 					shrink: true,
-					size: '100%',
+					cellSize: '100%',
 					component: iconComponent,
 					children: icon,
 					className: (css.iconCell + ' ' + iconClassName),

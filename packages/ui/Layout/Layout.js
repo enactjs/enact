@@ -51,11 +51,11 @@ import css from './Layout.module.less';
  * ...
  * <fieldset>
  * 	<Layout align="center">
- * 		<Cell component="label" size="40%" className={css.label} shrink>First Name</Cell>
+ * 		<Cell component="label" cellSize="40%" className={css.label} shrink>First Name</Cell>
  * 		<Cell component={Input} placeholder="First" className={css.input} />
  * 	</Layout>
  * 	<Layout align="center">
- * 		<Cell component="label" size="40%" className={css.label} shrink>Last Name</Cell>
+ * 		<Cell component="label" cellSize="40%" className={css.label} shrink>Last Name</Cell>
  * 		<Cell component={Input} placeholder="Last" className={css.input} />
  * 	</Layout>
  * </fieldset>
@@ -224,11 +224,11 @@ const LayoutDecorator = ForwardRef({prop: 'componentRef'});
  * ...
  * <fieldset>
  * 	<Layout align="center">
- * 		<Cell component="label" size="40%" className={css.label} shrink>First Name</Cell>
+ * 		<Cell component="label" cellSize="40%" className={css.label} shrink>First Name</Cell>
  * 		<Cell component={Input} placeholder="First" className={css.input} />
  * 	</Layout>
  * 	<Layout align="center">
- * 		<Cell component="label" size="40%" className={css.label} shrink>Last Name</Cell>
+ * 		<Cell component="label" cellSize="40%" className={css.label} shrink>Last Name</Cell>
  * 		<Cell component={Input} placeholder="Last" className={css.input} />
  * 	</Layout>
  * </fieldset>

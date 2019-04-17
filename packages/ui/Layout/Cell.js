@@ -90,8 +90,8 @@ const CellBase = kind({
 		 * the maximum size, shrinking as necessary, to fit the content.
 		 *
 		 * E.g.
-		 * * `size="400px"` -> cell will be 400px, regardless of the dimensions of your content
-		 * * `size="400px" shrink` -> cell will be 400px if your content is greater than 400px,
+		 * * `cellSize="400px"` -> cell will be 400px, regardless of the dimensions of your content
+		 * * `cellSize="400px" shrink` -> cell will be 400px if your content is greater than 400px,
 		 *   and will match your contents size if it's smaller
 		 *
 		 * This accepts any valid CSS measurement value string. If a numeric value is used, it will
@@ -102,7 +102,7 @@ const CellBase = kind({
 		 * @type {String|Number}
 		 * @public
 		 */
-		size: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+		cellSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 	},
 
 	defaultProps: {
@@ -116,12 +116,11 @@ const CellBase = kind({
 	},
 
 	computed: {
-		className: ({shrink, size, styler}) => styler.append({shrink, grow: (!shrink && !size)}),
-		style: ({align, shrink, size, style}) => {
-			if (typeof size === 'number') size = ri.unit(ri.scale(size), 'rem');
+		className: ({shrink, cellSize, styler}) => styler.append({shrink, grow: (!shrink && !cellSize)}),
+		style: ({align, shrink, cellSize, style}) => {
+			if (typeof cellSize === 'number') cellSize = ri.unit(ri.scale(cellSize), 'rem');
 
-			let cellSize = size;
-			if (!size) {
+			if (!cellSize) {
 				if (shrink) {
 					cellSize = '100%';
 				} else {
@@ -132,7 +131,7 @@ const CellBase = kind({
 			return {
 				...style,
 				alignSelf: toFlexAlign(align),
-				flexBasis: (shrink ? null : size),
+				flexBasis: (shrink ? null : cellSize),
 				// Setting 100% below in the presence of `shrink`` and absense of `size` prevents overflow
 				'--cell-size': cellSize
 			};
@@ -142,7 +141,7 @@ const CellBase = kind({
 	render: ({component: Component, componentRef, ...rest}) => {
 		delete rest.align;
 		delete rest.shrink;
-		delete rest.size;
+		delete rest.cellSize;
 
 		return <Component ref={componentRef} {...rest} />;
 	}
