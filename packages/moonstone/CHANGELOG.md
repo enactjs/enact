@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/EditableIntegerPicker` alignment of text when not editing the value
 - `moonstone/Scroller` to scroll via dragging when the platform has touch support
 
 ## [2.5.1] - 2019-04-09
