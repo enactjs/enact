@@ -34,6 +34,26 @@ const cap = function (str) {
 };
 
 /**
+ * Limits `value` to be between `min` and `max`.
+ *
+ * If `min` is greater than `max`, `min` is returned.
+ *
+ * @function
+ * @param   {Number}    min   The minimum value of the range
+ * @param   {Number}    max   The maximum value of the range
+ * @param   {Number}    value THe value that must be within the range
+ *
+ * @returns {Number}          The clamped value
+ * @memberof core/util
+ * @public
+ */
+const clamp = (min, max, value) => {
+	if (min > max || value < min) return min;
+	if (value > max) return max;
+	return value;
+};
+
+/**
  * If `arg` is a function, return it. Otherwise returns a function that returns `arg`.
  *
  * Example:
@@ -201,6 +221,7 @@ const memoize = (fn) => {
 
 export {
 	cap,
+	clamp,
 	coerceArray,
 	coerceFunction,
 	extractAriaProps,
