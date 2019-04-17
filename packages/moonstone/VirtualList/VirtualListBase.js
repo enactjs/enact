@@ -263,6 +263,7 @@ const VirtualListBaseFactory = (type) => {
 		lastFocusedIndex = null
 		nodeIndexToBeFocused = null
 		preservedIndex = null
+		preservedPosition = 0
 		restoreLastFocused = false
 		uiRefCurrent = null
 
@@ -309,7 +310,8 @@ const VirtualListBaseFactory = (type) => {
 				return {
 					container: false,
 					element: true,
-					key: this.lastFocusedIndex
+					key: this.lastFocusedIndex,
+					position: this.uiRefCurrent.scrollPosition
 				};
 			}
 		}
@@ -318,9 +320,10 @@ const VirtualListBaseFactory = (type) => {
 		 * Restores the data-index into the placeholder if its the only element. Tries to find a
 		 * matching child otherwise.
 		 */
-		lastFocusedRestore = ({key}, all) => {
+		lastFocusedRestore = ({key, position}, all) => {
 			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
 				all[0].dataset.index = key;
+				all[0].dataset.position = position;
 
 				return all[0];
 			}
@@ -732,10 +735,11 @@ const VirtualListBaseFactory = (type) => {
 			const placeholder = ev.currentTarget;
 
 			if (placeholder) {
-				const index = placeholder.dataset.index;
+				const {index, position} = placeholder.dataset;
 
 				if (index) {
 					this.preservedIndex = parseInt(index);
+					this.preservedPosition = parseFloat(position);
 					this.restoreLastFocused = true;
 				}
 			}
@@ -833,7 +837,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		shouldPreventScrollByFocus = () => ((type === JS) ? (this.isScrolledBy5way) : (this.isScrolledBy5way || this.isScrolledByJump))
+		shouldPreventScrollByFocus = () => ((type === Native && this.isScrolledByJump) || this.isScrolledBy5way || this.restoreLastFocused)
 
 		shouldPreventOverscrollEffect = () => (this.isWrappedBy5way)
 
@@ -842,7 +846,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		updateStatesAndBounds = ({cbScrollTo, dataSize, moreInfo, numOfItems}) => {
-			const {preservedIndex} = this;
+			const {preservedIndex, preservedPosition} = this;
 
 			if (this.restoreLastFocused &&
 				numOfItems > 0 &&
@@ -854,7 +858,7 @@ const VirtualListBaseFactory = (type) => {
 				// the scroll position is determined by `position` and
 				// the item specified by `index` will be focused.
 				cbScrollTo({
-					position: this.uiRefCurrent.getXY(this.uiRefCurrent.scrollPosition, 0),
+					position: this.uiRefCurrent.getXY(preservedPosition, 0),
 					index: preservedIndex,
 					animate: false,
 					focus: true

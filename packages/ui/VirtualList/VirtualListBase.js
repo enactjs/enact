@@ -290,9 +290,8 @@ const VirtualListBaseFactory = (type) => {
 				this.setState(this.getStatesAndUpdateBounds(this.props));
 				this.setContainerSize();
 			} else if (this.hasDataSizeChanged) {
-				const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
 				// eslint-disable-next-line react/no-did-update-set-state
-				this.setState(newState);
+				this.setState(this.getStatesAndUpdateBounds(this.props, this.state.firstIndex));
 				this.setContainerSize();
 			} else if (prevProps.rtl !== this.props.rtl) {
 				const {x, y} = this.getXY(this.scrollPosition, 0);
@@ -371,7 +370,7 @@ const VirtualListBaseFactory = (type) => {
 			clientHeight: node.clientHeight
 		})
 
-		calculateMetrics (props) {
+		calculateMetrics (props, preservePosition = false) {
 			const
 				{clientSize, direction, itemSize, spacing} = props,
 				node = this.containerRef.current;
@@ -428,10 +427,12 @@ const VirtualListBaseFactory = (type) => {
 			this.primary = primary;
 			this.secondary = secondary;
 
-			// reset
-			this.scrollPosition = 0;
-			if (type === JS && this.contentRef.current) {
-				this.contentRef.current.style.transform = null;
+			if (!preservePosition) {
+				// reset
+				this.scrollPosition = 0;
+				if (type === JS && this.contentRef.current) {
+					this.contentRef.current.style.transform = null;
+				}
 			}
 		}
 
@@ -742,8 +743,8 @@ const VirtualListBaseFactory = (type) => {
 				{scrollBounds} = this;
 
 			if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
-				this.calculateMetrics(props);
-				this.setState(this.getStatesAndUpdateBounds(props));
+				this.calculateMetrics(props, true);
+				this.setState(this.getStatesAndUpdateBounds(props, this.state.firstIndex));
 				this.setContainerSize();
 				return true;
 			}
