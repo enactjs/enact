@@ -4,6 +4,22 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/Panels` slot `<controls>` to easily add custom controls next to the Panels' "close" button
+
+### Removed
+
+- `moonstone/Button` and `moonstone/Panels.Header` prop `casing` which is no longer supported
+- `moonstone/Input.InputBase` prop `focused` which was used to indicate when the internal input field had focused but was replaced by the `:focus-within` pseudo-selector
+
+### Changed
+
+- `moonstone/Button.ButtonDecorator` to remove `i18n/Uppercase` HOC
+- `moonstone/Button` and `moonstone/Header` appearance to match the latest designs
+
+## [2.5.1] - 2019-04-09
+
 ### Fixed
 
 - `moonstone/ExpandableInput` to close on touch platforms when tapping another component

@@ -1,22 +1,22 @@
 // ----- SYSTEM FONT NAMES ------
-@font-system-src-moonstone-condensed-300:         local("LGSmartUICondTest-Light"), local("Miso"), url("../../fonts/Miso/Miso-Light.ttf") format("truetype");
-@font-system-src-moonstone-condensed-400:         local("LGSmartUICondTest-Regular"), local("Miso"), url("../../fonts/Miso/Miso-Regular.ttf") format("truetype");
-@font-system-src-moonstone-condensed-600:         local("LGSmartUICondTest-SemiBold"), local("Miso"), url("../../fonts/Miso/Miso-Bold.ttf") format("truetype");
-@font-system-src-moonstone-condensed-700:         local("LGSmartUICondTest-Bold"), local("Miso"), url("../../fonts/Miso/Miso-Bold.ttf") format("truetype");
+@font-system-src-moonstone-condensed-300:  local("LGSmartUICond-Light"), local("Miso"), url("../../fonts/Miso/Miso-Light.ttf") format("truetype");
+@font-system-src-moonstone-condensed-400:  local("LGSmartUICond-Regular"), local("Miso"), url("../../fonts/Miso/Miso-Regular.ttf") format("truetype");
+@font-system-src-moonstone-condensed-600:  local("LGSmartUICond-SemiBold"), local("Miso"), url("../../fonts/Miso/Miso-Bold.ttf") format("truetype");
+@font-system-src-moonstone-condensed-700:  local("LGSmartUICond-Bold"), local("Miso"), url("../../fonts/Miso/Miso-Bold.ttf") format("truetype");
 
-@font-system-src-moonstone-100:    local("LGSmartUITest-Light"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Thin.ttf") format("truetype");
-@font-system-src-moonstone-300:    local("LGSmartUITest-Light"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Light.ttf") format("truetype");
-@font-system-src-moonstone-500:    local("LGSmartUITest-Regular"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Medium.ttf") format("truetype");
-@font-system-src-moonstone-500-i:  local("LGSmartUITest-Regular"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-MediumItalic.ttf") format("truetype");
-@font-system-src-moonstone-600:    local("LGSmartUITest-SemiBold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Bold.ttf") format("truetype");
-@font-system-src-moonstone-700:    local("LGSmartUITest-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Bold.ttf") format("truetype");
-@font-system-src-moonstone-700-i:  local("LGSmartUITest-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-BoldItalic.ttf") format("truetype");
-@font-system-src-moonstone-900:    local("LGSmartUITest-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Black.ttf") format("truetype");
-@font-system-src-moonstone-900-i:  local("LGSmartUITest-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-BlackItalic.ttf") format("truetype");
+@font-system-src-moonstone-100:    local("LGSmartUI-Light"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Thin.ttf") format("truetype");
+@font-system-src-moonstone-300:    local("LGSmartUI-Light"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Light.ttf") format("truetype");
+@font-system-src-moonstone-500:    local("LGSmartUI-Regular"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Medium.ttf") format("truetype");
+@font-system-src-moonstone-500-i:  local("LGSmartUI-Regular"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-MediumItalic.ttf") format("truetype");
+@font-system-src-moonstone-600:    local("LGSmartUI-SemiBold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Bold.ttf") format("truetype");
+@font-system-src-moonstone-700:    local("LGSmartUI-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Bold.ttf") format("truetype");
+@font-system-src-moonstone-700-i:  local("LGSmartUI-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-BoldItalic.ttf") format("truetype");
+@font-system-src-moonstone-900:    local("LGSmartUI-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Black.ttf") format("truetype");
+@font-system-src-moonstone-900-i:  local("LGSmartUI-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-BlackItalic.ttf") format("truetype");
 
-@font-system-src-non-latin:        local("LG Display-Regular");
-@font-system-src-non-latin-light:  local("LG Display-Light");
-@font-system-src-non-latin-bold:   local("LG Display-Regular");
+@font-system-src-non-latin-300:  local("LGSmartUIGlobal-Light");
+@font-system-src-non-latin-400:  local("LGSmartUIGlobal-Regular");
+@font-system-src-non-latin-700:  local("LGSmartUIGlobal-Regular");
 
 @font-system-src-moonstone-icons:  local("Moonstone"), url("../../fonts/Moonstone.ttf") format("truetype");
 @font-system-src-lg-icons:         local("LG Display_Dingbat");
@@ -42,47 +42,47 @@
 
 /* Deprecated "Miso" font family names. Retained for legacy references. */
 /* ----- MISO ------ */
-.buildFontFamily("Moonstone Miso"; @font-system-src-moonstone-condensed-400; @font-system-src-non-latin);
-.buildFontFamily("Moonstone Miso"; @font-system-src-moonstone-condensed-300; @font-system-src-non-latin-light; 300);
-.buildFontFamily("Moonstone Miso"; @font-system-src-moonstone-condensed-700; @font-system-src-non-latin-bold; 700);
+.buildFontFamily("Moonstone Miso"; @font-system-src-moonstone-condensed-400; @font-system-src-non-latin-400);
+.buildFontFamily("Moonstone Miso"; @font-system-src-moonstone-condensed-300; @font-system-src-non-latin-300; 300);
+.buildFontFamily("Moonstone Miso"; @font-system-src-moonstone-condensed-700; @font-system-src-non-latin-700; 700);
 
 /* Deprecated "MuseoSans" font family names. Retained for legacy references. */
 /* ----- Museo Sans ------ */
-.buildFontFamily("MuseoSans"; @font-system-src-moonstone-500;   @font-system-src-non-latin);
-.buildFontFamily("MuseoSans"; @font-system-src-moonstone-500;   @font-system-src-non-latin; normal; italic);
-.buildFontFamily("MuseoSans"; @font-system-src-moonstone-100;   @font-system-src-non-latin-light; 100);
-.buildFontFamily("MuseoSans"; @font-system-src-moonstone-300;   @font-system-src-non-latin-light; 300);
-.buildFontFamily("MuseoSans"; @font-system-src-moonstone-500;   @font-system-src-non-latin; 500);
-.buildFontFamily("MuseoSans"; @font-system-src-moonstone-500-i; @font-system-src-non-latin; 500; italic);
-.buildFontFamily("MuseoSans"; @font-system-src-moonstone-700;   @font-system-src-non-latin-bold; 700);
-.buildFontFamily("MuseoSans"; @font-system-src-moonstone-700-i; @font-system-src-non-latin-bold; 700; italic);
-.buildFontFamily("MuseoSans"; @font-system-src-moonstone-900;   @font-system-src-non-latin-bold; 900);
-.buildFontFamily("MuseoSans"; @font-system-src-moonstone-900-i; @font-system-src-non-latin-bold; 900; italic);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-500;   @font-system-src-non-latin-400);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-500;   @font-system-src-non-latin-400; normal; italic);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-100;   @font-system-src-non-latin-300; 100);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-300;   @font-system-src-non-latin-300; 300);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-500;   @font-system-src-non-latin-400; 500);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-500-i; @font-system-src-non-latin-400; 500; italic);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-700;   @font-system-src-non-latin-700; 700);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-700-i; @font-system-src-non-latin-700; 700; italic);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-900;   @font-system-src-non-latin-700; 900);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-900-i; @font-system-src-non-latin-700; 900; italic);
 
 /* ----- Moonstone Condensed ------ */
-.buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-400; @font-system-src-non-latin);
-.buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-300; @font-system-src-non-latin-light; 300);
-.buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-600; @font-system-src-non-latin-bold; 600);
-.buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-700; @font-system-src-non-latin-bold; 700);
+.buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-400; @font-system-src-non-latin-400);
+.buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-300; @font-system-src-non-latin-300; 300);
+.buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-600; @font-system-src-non-latin-700; 600);
+.buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-700; @font-system-src-non-latin-700; 700);
 
 /* ----- Moonstone ------ */
-.buildFontFamily("Moonstone"; @font-system-src-moonstone-500;   @font-system-src-non-latin);
-.buildFontFamily("Moonstone"; @font-system-src-moonstone-500;   @font-system-src-non-latin; normal; italic);
-.buildFontFamily("Moonstone"; @font-system-src-moonstone-100;   @font-system-src-non-latin-light; 100);
-.buildFontFamily("Moonstone"; @font-system-src-moonstone-300;   @font-system-src-non-latin-light; 300);
-.buildFontFamily("Moonstone"; @font-system-src-moonstone-500;   @font-system-src-non-latin; 500);
-.buildFontFamily("Moonstone"; @font-system-src-moonstone-500-i; @font-system-src-non-latin; 500; italic);
-.buildFontFamily("Moonstone"; @font-system-src-moonstone-600;   @font-system-src-non-latin-bold; 600);
-.buildFontFamily("Moonstone"; @font-system-src-moonstone-700;   @font-system-src-non-latin-bold; 700);
-.buildFontFamily("Moonstone"; @font-system-src-moonstone-700-i; @font-system-src-non-latin-bold; 700; italic);
-.buildFontFamily("Moonstone"; @font-system-src-moonstone-900;   @font-system-src-non-latin-bold; 900);
-.buildFontFamily("Moonstone"; @font-system-src-moonstone-900-i; @font-system-src-non-latin-bold; 900; italic);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-500;   @font-system-src-non-latin-400);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-500;   @font-system-src-non-latin-400; normal; italic);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-100;   @font-system-src-non-latin-300; 100);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-300;   @font-system-src-non-latin-300; 300);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-500;   @font-system-src-non-latin-400; 500);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-500-i; @font-system-src-non-latin-400; 500; italic);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-600;   @font-system-src-non-latin-700; 600);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-700;   @font-system-src-non-latin-700; 700);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-700-i; @font-system-src-non-latin-700; 700; italic);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-900;   @font-system-src-non-latin-700; 900);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-900-i; @font-system-src-non-latin-700; 900; italic);
 
 /* ----- LG Display ------ */
-.buildFontFace("Moonstone LG Display"; @font-system-src-non-latin);
-.buildFontFace("Moonstone LG Display"; @font-system-src-non-latin-light; 300);
-.buildFontFace("Moonstone LG Display"; @font-system-src-non-latin; 400);
-.buildFontFace("Moonstone LG Display"; @font-system-src-non-latin-bold; 700);
+.buildFontFamily("Moonstone LG Display"; @font-system-src-non-latin-400; @font-system-src-moonstone-500);
+.buildFontFamily("Moonstone LG Display"; @font-system-src-non-latin-300; @font-system-src-moonstone-300; 300);
+.buildFontFamily("Moonstone LG Display"; @font-system-src-non-latin-400; @font-system-src-moonstone-500; 400);
+.buildFontFamily("Moonstone LG Display"; @font-system-src-non-latin-700; @font-system-src-moonstone-700; 700);
 
 /* ----- Moonstone (Icons) ------ */
 .buildFontFace("Moonstone Icons"; @font-system-src-moonstone-icons);
