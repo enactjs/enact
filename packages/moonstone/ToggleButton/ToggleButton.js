@@ -10,6 +10,7 @@
  */
 
 import kind from '@enact/core/kind';
+import deprecate from '@enact/core/internal/deprecate';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
@@ -109,6 +110,16 @@ const ToggleButtonBase = kind({
 		size: PropTypes.string,
 
 		/**
+		 * Reduces the size of the button.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @deprecated replaced by prop `size='small'`
+		 * @public
+		 */
+		small: PropTypes.bool,
+
+		/**
 		 * Button text displayed in the 'off' state.
 		 *
 		 * If not specified, `children` will be used for 'off' button text.
@@ -135,6 +146,7 @@ const ToggleButtonBase = kind({
 		disabled: false,
 		minWidth: true,
 		selected: false,
+		small: false,
 		size: 'medium',
 		toggleOffLabel: '',
 		toggleOnLabel: ''
@@ -146,7 +158,7 @@ const ToggleButtonBase = kind({
 	},
 
 	computed: {
-		className: ({selected, size, styler}) => styler.append({selected}, size),
+		className: ({selected, size, small, styler}) => styler.append({selected, small}, size),
 		children: ({children, selected, toggleOnLabel, toggleOffLabel}) => {
 			let c = children;
 			if (selected && toggleOnLabel) {
@@ -158,9 +170,20 @@ const ToggleButtonBase = kind({
 		}
 	},
 
-	render: ({selected, ...rest}) => {
+	render: ({selected, small, ...rest}) => {
 		delete rest.toggleOffLabel;
 		delete rest.toggleOnLabel;
+
+		if (small) {
+			const deprecateSmall = deprecate(() => {},  {
+				name: 'moonstone/ToggleButton.ToggleButtonBase#small',
+				replacedBy: 'the `size` prop',
+				message: 'Use `size="small" instead`.',
+				since: '2.6.0',
+				until: '3.0.0'
+			});
+			deprecateSmall();
+		}
 
 		return (
 			<Button data-webos-voice-intent="SetToggleItem" {...rest} aria-pressed={selected} selected={selected} />
