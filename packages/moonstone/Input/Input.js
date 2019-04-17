@@ -27,14 +27,6 @@ import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 import {calcAriaLabel, extractInputProps} from './util';
 
-const deprecateSmall = deprecate(() => {},  {
-	name: 'ui/Input.InputBase#small',
-	replacedBy: 'the `size` prop',
-	message: 'Use `size="small" instead`.',
-	since: '2.6.0',
-	until: '3.0.0'
-});
-
 /**
  * A Moonstone styled input component.
  *
@@ -296,7 +288,14 @@ const InputBase = kind({
 		delete rest.invalidMessage;
 		delete rest.rtl;
 
-		if (small && __DEV__) {
+		if (small) {
+			const deprecateSmall = deprecate(() => {},  {
+				name: 'moonstone/Input.InputBase#small',
+				replacedBy: 'the `size` prop',
+				message: 'Use `size="small" instead`.',
+				since: '2.6.0',
+				until: '3.0.0'
+			});
 			deprecateSmall();
 		}
 

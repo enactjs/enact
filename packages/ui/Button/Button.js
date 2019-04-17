@@ -182,13 +182,23 @@ const ButtonBase = kind({
 		}
 	},
 
-	render: ({children, css, disabled, icon, ...rest}) => {
+	render: ({children, css, disabled, icon, small, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.minWidth;
 		delete rest.pressed;
 		delete rest.selected;
 		delete rest.size;
-		delete rest.small;
+
+		if (small) {
+			const deprecateSmall = deprecate(() => {},  {
+				name: 'ui/Button.ButtonBase#small',
+				replacedBy: 'the `size` prop',
+				message: 'Use `size="small" instead`.',
+				since: '2.6.0',
+				until: '3.0.0'
+			});
+			deprecateSmall();
+		}
 
 		return (
 			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
@@ -198,31 +208,6 @@ const ButtonBase = kind({
 		);
 	}
 });
-
-let ButtonBaseExternal = ButtonBase;
-if (__DEV__) {
-	const deprecateSmall = deprecate(() => {},  {
-		name: 'ui/Button.ButtonBase#small',
-		replacedBy: 'the `size` prop',
-		message: 'Use `size="small" instead`.',
-		since: '2.6.0',
-		until: '3.0.0'
-	});
-
-	// eslint-disable-next-line enact/kind-name
-	ButtonBaseExternal = kind({
-		// eslint-disable-next-line enact/prop-types
-		render: ({small, ...props}) => {
-			if (small) {
-				deprecateSmall();
-			}
-
-			return (
-				<ButtonBase {...props} />
-			);
-		}
-	});
-}
 
 /**
  * A higher-order component that adds touch support to a [ButtonBase]{@link ui/Button.ButtonBase}.
@@ -249,7 +234,6 @@ const Button = ButtonDecorator(ButtonBase);
 export default Button;
 export {
 	Button,
-	ButtonBaseExternal as ButtonBase,
-	ButtonBase as ButtonBaseInternal,
+	ButtonBase,
 	ButtonDecorator
 };
