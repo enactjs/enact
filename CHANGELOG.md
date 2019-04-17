@@ -4,7 +4,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ## [3.0.0] - tbd
 
-### NOTE: Webkit 53 support has been dropped from this version of Enact
+> NOTE:  Support for 2019 TV platform (Blink <68) has been dropped from this version of Enact
 
 ## [2.5.1] - 2019-04-09
 
