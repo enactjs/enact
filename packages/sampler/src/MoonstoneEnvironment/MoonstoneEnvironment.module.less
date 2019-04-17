@@ -68,6 +68,17 @@
 	}
 }
 
+// Fix for the +/- buttons
+html {
+	height: 100%;
+}
+
+// Fix or scrollable tabs area
+// Notes: Storybook provides its own scroller, so we don't need to see the OS version of it.
+// :global(.simplebar-content) {
+// 	overflow: hidden;
+// }
+
 // Here, we target the storybook rendering canvas div. It's inserted as a child of our Panel, but it
 // applies position:relative, which doesn't help us when we have stories that should fill the entire
 // panel body. This targets that inaccessible node using Panel's structure and storybook's structure
