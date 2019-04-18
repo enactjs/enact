@@ -43,6 +43,27 @@ const CellBase = kind({
 		align: PropTypes.string,
 
 		/**
+		 * Sets the desired size of the Cell using any valid CSS measurement value.
+		 *
+		 * When used in conjunction with [shrink]{@link ui/Layout.Cell#shrink}, the size will be
+		 * the maximum size, shrinking as necessary, to fit the content.
+		 *
+		 * E.g.
+		 * * `cellSize="400px"` -> cell will be 400px, regardless of the dimensions of your content
+		 * * `cellSize="400px" shrink` -> cell will be 400px if your content is greater than 400px,
+		 *   and will match your contents size if it's smaller
+		 *
+		 * This accepts any valid CSS measurement value string. If a numeric value is used, it will
+		 * be treated as a pixel value and converted to a
+		 * [relative unit]{@link ui/resolution.unit} based on the rules of
+		 * [resolution independence]{@link ui/resolution}.
+		 *
+		 * @type {String|Number}
+		 * @public
+		 */
+		cellSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+		/**
 		 * Any valid [Node]{@link /docs/developer-guide/glossary/#node} that should be positioned in this `Cell`.
 		 *
 		 * @type {Any}
@@ -81,28 +102,7 @@ const CellBase = kind({
 		 * @default false
 		 * @public
 		 */
-		shrink: PropTypes.bool,
-
-		/**
-		 * Sets the desired size of the Cell using any valid CSS measurement value.
-		 *
-		 * When used in conjunction with [shrink]{@link ui/Layout.Cell#shrink}, the size will be
-		 * the maximum size, shrinking as necessary, to fit the content.
-		 *
-		 * E.g.
-		 * * `cellSize="400px"` -> cell will be 400px, regardless of the dimensions of your content
-		 * * `cellSize="400px" shrink` -> cell will be 400px if your content is greater than 400px,
-		 *   and will match your contents size if it's smaller
-		 *
-		 * This accepts any valid CSS measurement value string. If a numeric value is used, it will
-		 * be treated as a pixel value and converted to a
-		 * [relative unit]{@link ui/resolution.unit} based on the rules of
-		 * [resolution independence]{@link ui/resolution}.
-		 *
-		 * @type {String|Number}
-		 * @public
-		 */
-		cellSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+		shrink: PropTypes.bool
 	},
 
 	defaultProps: {
