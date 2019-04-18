@@ -23,12 +23,15 @@ const adjustAnchor = function (arrowAnchor, tooltipDirection, overflow, rtl) {
 		}
 
 		// Flip sideways if it overflows to the sides
-		if (overflow.isOverRight) {
+		if (arrowAnchor === 'center') {
+			// If tooltip is anchored in the center, don't flip. We'll offset it appropriately later.
+		} else if (overflow.isOverRight) {
 			arrowAnchor = 'left';
 		} else if (overflow.isOverLeft) {
 			arrowAnchor = 'right';
 		}
 
+		// If tooltip is just too wide for the whole screen, switch it to a center tooltip
 		if (overflow.isOverWide && tooltipDirection !== 'left' && tooltipDirection !== 'right') {
 			arrowAnchor = 'center';
 		}
@@ -82,19 +85,24 @@ const adjustDirection = function (tooltipDirection, overflow, rtl) {
  */
 const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, tooltipHeight, edgeKeepout) {
 	// get the distance of space on both the right and left side of the client node. `clientNode.width / 2` because we want the tooltip to be positioned horizontally in middle of the client node.
-	const rightDelta = tooltipNode.width + edgeKeepout > clientNode.left + (clientNode.width / 2);
-	const leftDelta = tooltipNode.width + edgeKeepout > window.innerWidth - clientNode.right - (clientNode.width / 2);
-	const isTooltipWide = (tooltipNode.width + edgeKeepout > window.innerWidth) ||
+	const clientHorizontalCenter = clientNode.left + (clientNode.width / 2);
+	const tooltipSafeWidth = tooltipNode.width + edgeKeepout;
+	const tooltipCenterdSafeWidth = (tooltipNode.width / 2) + edgeKeepout;
+	const rightDelta = tooltipSafeWidth > clientHorizontalCenter;
+	const leftDelta = tooltipSafeWidth > window.innerWidth - clientHorizontalCenter;
+	const isTooltipWide = (tooltipSafeWidth > window.innerWidth) ||
 		(leftDelta && rightDelta);
 
 	if (tooltipDirection === 'above' || tooltipDirection === 'below') {
 		return {
 			isOverTop: clientNode.top - tooltipNode.height - tooltipHeight < 0,
 			isOverBottom: clientNode.bottom + tooltipNode.height + tooltipHeight > window.innerHeight,
-			isOverLeft: clientNode.left - tooltipNode.width + edgeKeepout + clientNode.width / 2 < 0,
-			isOverRight: clientNode.right + tooltipNode.width + edgeKeepout - clientNode.width / 2 > window.innerWidth,
-			isOverCenterLeft: (clientNode.left + clientNode.width / 2) - (tooltipNode.width / 2) - edgeKeepout < 0,
-			isOverCenterRight: (clientNode.right + clientNode.width / 2) + (tooltipNode.width / 2) - edgeKeepout > window.innerWidth,
+			isOverLeft: clientHorizontalCenter - tooltipSafeWidth < 0,
+			isOverRight: clientHorizontalCenter + tooltipSafeWidth > window.innerWidth,
+			// isOverLeft: clientNode.left - tooltipNode.width - edgeKeepout + clientNode.width / 2 < 0,
+			// isOverRight: clientNode.right + tooltipSafeWidth - clientNode.width / 2 > window.innerWidth,
+			isOverCenterLeft: clientHorizontalCenter - tooltipCenterdSafeWidth < 0,
+			isOverCenterRight: clientHorizontalCenter + tooltipCenterdSafeWidth > window.innerWidth,
 			isOverWide: isTooltipWide
 		};
 	} else if (tooltipDirection === 'left' || tooltipDirection === 'right') {
@@ -188,29 +196,44 @@ const getLabelOffset = function (tooltipNode, tooltipDirection, tooltipPosition,
 		if (
 			overflow.isOverWide ||
 			(
-				((labelLeftPosition - (tooltipWidth / 2)) < 0) ||
-				((labelRightPosition - (tooltipWidth / 2)) > window.innerWidth)
+				overflow.isOverCenterLeft ||
+				overflow.isOverCenterRight
 			)
+			// (
+			// 	((labelLeftPosition - (tooltipWidth / 2)) < 0) ||
+			// 	((labelRightPosition - (tooltipWidth / 2)) > window.innerWidth)
+			// )
 			// ((labelLeftPosition < 0 && !rtl) ||
 			// (labelRightPosition > window.innerWidth && rtl))
 		) {
 			let labelOffset;
-			// if (
-			// 	labelLeftPosition <
-			// 	window.innerWidth - labelRightPosition
-			// ) {
-			// Position the majority of the tooltip more to the right
-			// console.log('more to the right');
-			labelOffset = ((labelLeftPosition + (tooltipWidth / 2) - edgeKeepout) / tooltipWidth) * -1;
-			// } else {
-			// 	// Position the majority of the tooltip more to the left
-			// 	console.log('more to the left');
-			// 	labelOffset = (((labelRightPosition - window.innerWidth) - (tooltipWidth / 2) + edgeKeepout) / tooltipWidth) * -1;
+			// if (overflow.isOverCenterLeft) {
+			// 	// Start shifting the label to the right (negative offset)
+			// 	labelOffset =
 			// }
+			// if (overflow.isOverCenterRight) {
+			// 	// Start shifting the label to the left (positive offset)
+			// }
+			if (
+				labelLeftPosition <
+				window.innerWidth - labelRightPosition
+			) {
+				// Position the majority of the tooltip more to the right
+				// console.log('more to the right');
+				labelOffset = ((labelLeftPosition + ((tooltipWidth / 2) - edgeKeepout)) / tooltipWidth) * -1;
+			} else {
+				// Position the majority of the tooltip more to the left
+				// console.log('more to the left');
+				labelOffset = (((labelRightPosition - window.innerWidth) - (tooltipWidth / 2) + edgeKeepout) / tooltipWidth) * -1;
+			}
 
 			// Uh oh! we're too near the edge!
 			// determine the current percentage of the width that makes up the radius and the arrow width
+			//
+			// Arrow is 15px wide total, we need to know how wide half of it is, since it's centered on the anchor point.
 			const arrowWidth = (15 / 2);
+			// Tooltip is 54px tall, divide by half to get the curve radius ,add the tooltip width
+			// to determine the distance that the anchor cannot progress past.
 			const tooltipUnavailableEdge = ri.scale((54 / 2) + arrowWidth);
 			const tooltipUnavaliablePercentage = tooltipUnavailableEdge / tooltipWidth;
 
