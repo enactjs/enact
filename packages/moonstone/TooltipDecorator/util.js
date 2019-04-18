@@ -92,9 +92,9 @@ const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, toolti
 			isOverTop: clientNode.top - tooltipNode.height - tooltipHeight < 0,
 			isOverBottom: clientNode.bottom + tooltipNode.height + tooltipHeight > window.innerHeight,
 			isOverLeft: clientNode.left - tooltipNode.width + edgeKeepout + clientNode.width / 2 < 0,
-			isOverRight: clientNode.right + tooltipNode.width - edgeKeepout - clientNode.width / 2 > window.innerWidth,
+			isOverRight: clientNode.right + tooltipNode.width + edgeKeepout - clientNode.width / 2 > window.innerWidth,
 			isOverCenterLeft: (clientNode.left + clientNode.width / 2) - (tooltipNode.width / 2) - edgeKeepout < 0,
-			isOverCenterRight: (clientNode.right + clientNode.width / 2) + (tooltipNode.width / 2) + edgeKeepout > window.innerWidth,
+			isOverCenterRight: (clientNode.right + clientNode.width / 2) + (tooltipNode.width / 2) - edgeKeepout > window.innerWidth,
 			isOverWide: isTooltipWide
 		};
 	} else if (tooltipDirection === 'left' || tooltipDirection === 'right') {
@@ -102,7 +102,7 @@ const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, toolti
 			isOverTop: clientNode.top - tooltipNode.height + clientNode.height / 2 < 0,
 			isOverBottom: clientNode.bottom + tooltipNode.height - clientNode.height / 2 > window.innerHeight,
 			isOverLeft: clientNode.left - tooltipNode.width - edgeKeepout < 0,
-			isOverRight: clientNode.right + tooltipNode.width + edgeKeepout > window.innerWidth,
+			isOverRight: clientNode.right + tooltipNode.width - edgeKeepout > window.innerWidth,
 			isOverWide: isTooltipWide
 		};
 	}
