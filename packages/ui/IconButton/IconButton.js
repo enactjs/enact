@@ -152,7 +152,6 @@ const IconButtonBase = kind({
 		disabled: false,
 		pressed: false,
 		selected: false,
-		size: 'medium',
 		small: false
 	},
 
@@ -163,7 +162,7 @@ const IconButtonBase = kind({
 	},
 
 	computed: {
-		className: ({size, small, styler}) => styler.append({small}, size)
+		className: ({size, small, styler}) => styler.append(!size && small ? 'small' : size || 'medium')
 	},
 
 	render: ({buttonComponent, children, css, icon, iconComponent: Icon, size, small, ...rest}) => {

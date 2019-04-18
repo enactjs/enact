@@ -157,7 +157,6 @@ const ButtonBase = kind({
 		minWidth: true,
 		pressed: false,
 		selected: false,
-		size: 'medium',
 		small: false
 	},
 
@@ -173,8 +172,7 @@ const ButtonBase = kind({
 			minWidth,
 			pressed,
 			selected,
-			small
-		}, size),
+		}, !size && small ? 'small' : size || 'medium'),
 		icon: ({css, icon, iconComponent: Icon, size}) => {
 			return (typeof icon === 'string' && Icon) ? (
 				<Icon size={size} className={css.icon}>{icon}</Icon>

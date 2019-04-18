@@ -147,7 +147,6 @@ const ToggleButtonBase = kind({
 		minWidth: true,
 		selected: false,
 		small: false,
-		size: 'medium',
 		toggleOffLabel: '',
 		toggleOnLabel: ''
 	},
@@ -158,7 +157,7 @@ const ToggleButtonBase = kind({
 	},
 
 	computed: {
-		className: ({selected, size, small, styler}) => styler.append({selected, small}, size),
+		className: ({selected, size, small, styler}) => styler.append({selected, small}, !size && small ? 'small' : size || 'medium'),
 		children: ({children, selected, toggleOnLabel, toggleOffLabel}) => {
 			let c = children;
 			if (selected && toggleOnLabel) {

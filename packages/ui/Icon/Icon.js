@@ -145,7 +145,6 @@ const Icon = kind({
 	defaultProps: {
 		iconList: {},
 		pressed: false,
-		size: 'medium',
 		small: false
 	},
 
@@ -159,9 +158,8 @@ const Icon = kind({
 		className: ({children: icon, iconList, pressed, size, small, styler}) => styler.append({
 			// If the icon isn't in our known set, apply our custom font class
 			dingbat: !(icon in iconList),
-			pressed,
-			small
-		}, size),
+			pressed
+		}, !size && small ? 'small' : size || 'medium'),
 		iconProps: ({children: iconProp, iconList, style}) => {
 			let icon = iconList[iconProp];
 

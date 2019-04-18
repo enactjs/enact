@@ -159,7 +159,6 @@ const LabeledIconBase = kind({
 	defaultProps: {
 		labelPosition: 'below',
 		inline: false,
-		size: 'medium',
 		small: false
 	},
 
@@ -179,6 +178,7 @@ const LabeledIconBase = kind({
 
 	render: ({css, children, disabled, icon, iconComponent, orientation, size, small, ...rest}) => {
 		let iconClassName = css.icon;
+		size = !size && small ? 'small' : size || 'medium';
 
 		if (small) {
 			const deprecateSmall = deprecate(() => {},  {
