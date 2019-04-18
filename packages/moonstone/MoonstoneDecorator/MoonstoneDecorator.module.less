@@ -13,9 +13,11 @@
 @import "../styles/skin.less";
 @import "../styles/variables.less";
 
-/* Prevent browser's default focus treatment (at least in Chrome) */
 :focus {
+	// Prevent Chrome's default focus treatment
 	outline: none;
+	// Prevent Android Chrome from highlighting tapped elements
+	-webkit-tap-highlight-color: transparent;
 }
 
 .applySkins({
