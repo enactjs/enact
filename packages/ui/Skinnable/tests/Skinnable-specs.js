@@ -204,7 +204,7 @@ describe('Skinnable Specs', () => {
 
 		const subject = mount(<SkinnableComponent skinVariants="unicase" />);
 
-		const expected = 'darkSkin unicase normal';
+		const expected = 'darkSkin normal unicase';
 		const actual = subject.find('div').prop('className');
 
 		expect(actual).toEqual(expected);
@@ -307,7 +307,7 @@ describe('Skinnable Specs', () => {
 			</SkinnableParent>
 		);
 
-		const expected = 'darkSkin smallCaps normal unicase';
+		const expected = 'darkSkin normal unicase smallCaps';
 		const actual = subject.find('div').last().prop('className');
 
 		expect(actual).toEqual(expected);
@@ -343,4 +343,35 @@ describe('Skinnable Specs', () => {
 		expect(actual).toEqual(expected);
 	});
 
+	test('should inherit an overridden default variant', () => {
+		const config = {
+			defaultSkin: 'dark',
+			defaultVariants: 'normal',
+			skins: {
+				dark: 'darkSkin',
+				light: 'lightSkin'
+			},
+			allowedVariants: ['normal', 'smallCaps', 'unicase']
+		};
+
+		const Component = (props) => (
+			<div {...props} />
+		);
+
+		const SkinnableParent = Skinnable(config, Component);
+		const SkinnableChild = Skinnable(config, Component);
+
+		const subject = mount(
+			<SkinnableParent>
+				<SkinnableChild skinVariants={{normal: false}}>
+					<SkinnableChild id="innerChild" />
+				</SkinnableChild>
+			</SkinnableParent>
+		);
+
+		const expected = 'darkSkin';
+		const actual = subject.find('div#innerChild').prop('className');
+
+		expect(actual).toEqual(expected);
+	});
 });

@@ -146,7 +146,10 @@
 
 	// Skin colors
 	.applySkins({
-		color: @moon-button-text-color;
+		&,
+		:global(.enact-a11y-high-contrast) & {
+			color: @moon-button-text-color;
+		}
 
 		.bg {
 			background-color: @moon-button-bg-color;
@@ -183,8 +186,15 @@
 		}
 
 		.focus({
-			color: @moon-spotlight-text-color;
-			background-color: transparent;
+			// The complexity below overrides the default high-contrast rules and applies
+			// non-high-contrast rules. The precedence for the general rule is too high for the
+			// basic button override rule to take effect, so we must overcome it by stacking more
+			// classes here.
+			&,
+			:global(.enact-a11y-high-contrast) &:not(:global(.highContrast)) {
+				color: @moon-spotlight-text-color;
+				background-color: transparent;
+			}
 
 			.bg {
 				background-color: @moon-spotlight-border-color;
