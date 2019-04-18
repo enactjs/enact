@@ -397,7 +397,7 @@ const ExpandablePickerBase = kind({
 					onSpotlightLeft={rtl ? onSpotlightLeft : null}
 					onSpotlightRight={!rtl ? onSpotlightRight : null}
 					onTap={onChange}
-					small
+					size="small"
 					spotlightDisabled={spotlightDisabled}
 				>check</IconButton>
 			</ExpandableItemBase>

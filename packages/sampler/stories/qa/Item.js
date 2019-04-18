@@ -71,7 +71,7 @@ storiesOf('Item', module)
 				</Item>
 				<Item>
 					<Icon
-				size={select('size', ['small', 'medium'], Config)}}>
+				size={select('size', ['small', 'medium'], Config, 'medium')}}>
 						{select('iconBefore', iconNames, Item, 'plus')}
 					</Icon>
 					{text('Text with iconBefore', Item, 'Item with text that is spottable with an icon (at the start of the string)')}
@@ -79,19 +79,19 @@ storiesOf('Item', module)
 				<Item>
 					{text('Text with iconAfter', Item, 'Item with text that is spottable with an icon(at the end of the string)')}
 					<Icon
-				size={select('size', ['small', 'medium'], Config)}}>
+				size={select('size', ['small', 'medium'], Config, 'medium')}}>
 						{select('iconAfter', iconNames, Item, 'pauseforward')}
 					</Icon>
 				</Item>
 				<Item>
 					<Icon
-				size={select('size', ['small', 'medium'], Config)}}>gear</Icon>
+				size={select('size', ['small', 'medium'], Config, 'medium')}}>gear</Icon>
 					<Icon
-				size={select('size', ['small', 'medium'], Config)}}>minus</Icon>
+				size={select('size', ['small', 'medium'], Config, 'medium')}}>minus</Icon>
 					<Icon
-				size={select('size', ['small', 'medium'], Config)}}>trash</Icon>
+				size={select('size', ['small', 'medium'], Config, 'medium')}}>trash</Icon>
 					<Icon
-				size={select('size', ['small', 'medium'], Config)}}>flag</Icon>
+				size={select('size', ['small', 'medium'], Config, 'medium')}}>flag</Icon>
 				</Item>
 			</div>
 		)

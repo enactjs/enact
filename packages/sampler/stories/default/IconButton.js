@@ -32,7 +32,7 @@ storiesOf('Moonstone', module)
 				color={select('color', ['', 'red', 'green', 'yellow', 'blue'], IconButton, '')}
 				disabled={boolean('disabled', IconButton)}
 				selected={boolean('selected', IconButton)}
-				size={select('size', ['small', 'medium'], IconButton)}
+				size={select('size', ['small', 'medium'], IconButton, 'medium')}
 				tooltipText={text('tooltipText', IconButton, '')}
 			>
 				{emptify(select('src', ['', docs, factory, logo], '')) + emptify(select('icon', ['', ...icons], 'plus')) + emptify(text('custom icon', ''))}

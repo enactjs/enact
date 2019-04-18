@@ -28,7 +28,7 @@ storiesOf('Moonstone', module)
 				casing={select('casing', prop.casing, Config, 'upper')}
 				disabled={boolean('disabled', Config)}
 				onToggle={action('onToggle')}
-				size={select('size', ['small', 'medium'], Config)}
+				size={select('size', ['small', 'medium'], Config, 'medium')}
 				toggleOffLabel={text('toggleOffLabel', Config, 'Off')}
 				toggleOnLabel={text('toggleOnLabel', Config, 'On')}
 			>

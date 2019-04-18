@@ -34,9 +34,7 @@ storiesOf('ToggleButton', module)
 			<ToggleButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, ToggleButton)}
-				casing={select('casing', prop.casing, ToggleButton, 'upper')}
-				disabled={boolean('disabled', ToggleButton)}
-				size={select('size', ['small', 'medium'], Config)}
+				disabled={boolean('disabled', ToggleButton)}				size={select('size', ['small', 'medium'], Config, 'medium')}
 				toggleOnLabel={select('toggleOnLabel', prop.tallText, ToggleButton, 'ิ้  ไั  ஒ  து')}
 				toggleOffLabel={select('toggleOffLabel', prop.tallText, ToggleButton, 'ิ้  ไั  ஒ  து')}
 			/>

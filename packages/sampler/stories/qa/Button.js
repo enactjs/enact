@@ -35,7 +35,7 @@ storiesOf('Button', module)
 				icon={select('icon', prop.icons, Config)}
 				minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
 				selected={boolean('selected', Config)}
-				size={select('size', ['small', 'medium'], Config)}
+				size={select('size', ['small', 'medium'], Config, 'medium')}
 			>
 				{select('value', prop.longText, Config, 'Loooooooooooooooooog Button')}
 			</Button>
@@ -52,7 +52,7 @@ storiesOf('Button', module)
 				icon={select('icon', prop.icons, Config)}
 				minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
 				selected={boolean('selected', Config)}
-				size={select('size', ['small', 'medium'], Config)}
+				size={select('size', ['small', 'medium'], Config, 'medium')}
 			>
 				{select('value', prop.tallText, Config, 'ิ้  ไั  ஒ  து')}
 			</Button>
@@ -69,7 +69,7 @@ storiesOf('Button', module)
 				icon={select('icon', prop.icons, Config)}
 				minWidth={storybookBoolean('minWidth', false) ? void 0 : false}
 				selected={boolean('selected', Config)}
-				size={select('size', ['small', 'medium'], Config)}
+				size={select('size', ['small', 'medium'], Config, 'medium')}
 			>
 				{text('value', Config, 'A')}
 			</Button>
@@ -87,7 +87,7 @@ storiesOf('Button', module)
 					icon={select('icon', prop.icons, Config)}
 					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
 					selected={boolean('selected', Config)}
-					size={select('size', ['small', 'medium'], Config)}
+					size={select('size', ['small', 'medium'], Config, 'medium')}
 				>
 					Normal Button
 				</Button>
@@ -107,7 +107,7 @@ storiesOf('Button', module)
 					icon={select('icon', prop.icons, Config)}
 					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
 					selected={boolean('selected', Config)}
-					size={select('size', ['small', 'medium'], Config)}
+					size={select('size', ['small', 'medium'], Config, 'medium')}
 				>
 					Normal Button
 				</Button>

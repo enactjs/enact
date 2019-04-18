@@ -141,7 +141,7 @@ const IconButtonDecorator = compose(
  *
  * Usage:
  * ```
- * <IconButton onClick={handleClick} small>
+ * <IconButton onClick={handleClick} size="small">
  *     plus
  * </IconButton>
  * ```
