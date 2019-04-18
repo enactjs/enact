@@ -128,7 +128,7 @@ const IconButtonBase = kind({
  */
 const IconButtonDecorator = compose(
 	Pure,
-	TooltipDecorator({tooltipDestinationProp: 'tooltipNode'}),
+	TooltipDecorator({tooltipDestinationProp: 'decoration'}),
 	UiIconButtonDecorator,
 	Spottable,
 	Skinnable

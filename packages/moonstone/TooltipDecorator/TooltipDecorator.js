@@ -181,10 +181,10 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			if (
+			if (this.state.showing && (
 				prevProps.tooltipText !== this.props.tooltipText ||
 				prevProps.tooltipPosition !== this.props.tooltipPosition
-			) {
+			)) {
 				this.setTooltipLayout();
 			}
 		}
@@ -373,26 +373,34 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @private
 		 */
 		renderTooltip () {
-			const {children, tooltipProps, tooltipText, tooltipWidth} = this.props;
+			const {children, tooltipRelative, tooltipProps, tooltipText, tooltipWidth} = this.props;
 
 			if (tooltipText) {
-				const renderedTooltip = (
-					<FloatingLayerBase open={this.state.showing} noAutoDismiss onDismiss={this.hideTooltip} scrimType="none" key="tooltipFloatingLayer">
-						<Tooltip
-							aria-live="off"
-							role="alert"
-							labelOffset={this.state.labelOffset}
-							{...tooltipProps}
-							arrowAnchor={this.state.arrowAnchor}
-							direction={this.state.tooltipDirection}
-							position={this.state.position}
-							tooltipRef={this.getTooltipRef}
-							width={tooltipWidth}
-						>
-							{tooltipText}
-						</Tooltip>
-					</FloatingLayerBase>
+				let renderedTooltip = (
+					<Tooltip
+						aria-live="off"
+						role="alert"
+						labelOffset={this.state.labelOffset}
+						{...tooltipProps}
+						arrowAnchor={this.state.arrowAnchor}
+						direction={this.state.tooltipDirection}
+						position={tooltipRelative ? null : this.state.position}
+						relative={tooltipRelative}
+						tooltipRef={this.getTooltipRef}
+						width={tooltipWidth}
+					>
+						{tooltipText}
+					</Tooltip>
 				);
+
+
+				if (!tooltipRelative) {
+					renderedTooltip = (
+						<FloatingLayerBase open={this.state.showing} noAutoDismiss onDismiss={this.hideTooltip} scrimType="none" key="tooltipFloatingLayer">
+							{renderedTooltip}
+						</FloatingLayerBase>
+					);
+				}
 
 				if (tooltipDestinationProp === 'children') {
 					return {
@@ -428,6 +436,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.tooltipDelay;
 			delete props.tooltipPosition;
 			delete props.tooltipProps;
+			delete props.tooltipRelative;
 			delete props.tooltipText;
 			delete props.tooltipUpdateDelay;
 			delete props.tooltipWidth;

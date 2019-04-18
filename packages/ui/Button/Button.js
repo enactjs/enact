@@ -51,6 +51,8 @@ const ButtonBase = kind({
 		 */
 		css: PropTypes.object,
 
+		decoration: PropTypes.node,
+
 		/**
 		 * Applies the `disabled` class.
 		 *
@@ -169,7 +171,7 @@ const ButtonBase = kind({
 		}
 	},
 
-	render: ({children, css, disabled, icon, ...rest}) => {
+	render: ({children, css, decoration, disabled, icon, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.minWidth;
 		delete rest.pressed;
@@ -178,6 +180,7 @@ const ButtonBase = kind({
 
 		return (
 			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
+				<div className={css.decoration}>{decoration}</div>
 				<div className={css.bg} />
 				<div className={css.client}>{icon}{children}</div>
 			</div>
