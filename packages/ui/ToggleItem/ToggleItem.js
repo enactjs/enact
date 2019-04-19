@@ -25,28 +25,11 @@ import Touchable from '../Touchable';
 
 import componentCss from './ToggleItem.module.less';
 
-const ItemIcon = kind({
-	name: 'ItemIcon',
-	propTypes: {
-		/**
-		 * The `itemIcon` to render in this item.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		itemIcon: PropTypes.node
-	},
-	render: ({itemIcon}) => {
-		return (
-			<ComponentOverride component={itemIcon} />
-		);
-	}
-});
+// eslint-disable-next-line enact/display-name,enact/prop-types
+const iconCreator = (position) => ({disabled, icon, iconComponent, iconPosition, itemIcon, itemIconPosition, selected}) => {
 
-// eslint-disable-next-line
-const iconCreator = (position) => ({css, disabled, icon, iconComponent, iconPosition, itemIcon, itemIconPosition, selected}) => {
+	const itemIconComponent = (itemIcon ? <ComponentOverride component={itemIcon} /> : null);
 
-	const itemIconComponent = (itemIcon ? <ItemIcon itemIcon={itemIcon} /> : null);
 	if (position === 'before') {
 		return (
 			<Fragment>
@@ -180,7 +163,10 @@ const ToggleItemBase = kind({
 		iconPosition: PropTypes.oneOf(['before', 'after']),
 
 		/**
-		 * The `itemIcon` to render in this item.
+		 * An additional customizable icon component with more granular positioning rules. This
+		 * should only be used *after* specifying the `icon` property, as the positioning for this
+		 * offers the ability to place this in front of or behind the existing `icon`.
+		 * See `itemIconPosition` for options.
 		 *
 		 * @type {Node}
 		 * @public
@@ -188,12 +174,18 @@ const ToggleItemBase = kind({
 		itemIcon: PropTypes.node,
 
 		/**
-		 * Specifies on which position (`'after'`, `'afterText`, `before` or `'beforeText'`) of the text the `itemIcon` appears.
+		 * Specifies on which position (`'before'`, `'beforeText'`, `'afterText'`, `'after'`) of the
+		 * text the `itemIcon` appears.
+		 *
+		 * * before - first element in the item
+		 * * beforeText - if a "before" `icon` is present, this will be between the icon and the text
+		 * * afterText - if an "after" `icon` is present, this will be between the text and the icon
+		 * * after - the last element in the item
 		 *
 		 * @type {String}
 		 * @public
 		 */
-		itemIconPosition: PropTypes.oneOf(['after', 'afterText', 'before', 'beforeText']),
+		itemIconPosition: PropTypes.oneOf(['before', 'beforeText', 'afterText', 'after']),
 
 		/**
 		 * Called when the toggle item is toggled. Developers should generally use `onToggle` instead.
