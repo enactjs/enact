@@ -19,7 +19,6 @@ import React, {Fragment} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
-import Slottable from '../Slottable';
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
 
@@ -43,13 +42,13 @@ const iconCreator = (position) => ({disabled, icon, iconComponent, iconPosition,
 						{icon}
 					</ComponentOverride> : null
 				}
-				{itemIconPosition === 'beforeText' && itemIconComponent}
+				{itemIconPosition === 'beforeChildren' && itemIconComponent}
 			</Fragment>
 		);
 	} else {
 		return (
 			<Fragment>
-				{itemIconPosition === 'afterText' && itemIconComponent}
+				{itemIconPosition === 'afterChildren' && itemIconComponent}
 				{iconPosition === 'after' ?
 					<ComponentOverride
 						component={iconComponent}
@@ -174,18 +173,19 @@ const ToggleItemBase = kind({
 		itemIcon: PropTypes.node,
 
 		/**
-		 * Specifies on which position (`'before'`, `'beforeText'`, `'afterText'`, `'after'`) of the
+		 * Specifies on which position (`'before'`, `'beforeChildren'`, `'afterChildren'`, `'after'`) of the
 		 * text the `itemIcon` appears.
 		 *
 		 * * before - first element in the item
-		 * * beforeText - if a "before" `icon` is present, this will be between the icon and the text
-		 * * afterText - if an "after" `icon` is present, this will be between the text and the icon
+		 * * beforeChildren - if a "before" `icon` is present, this will be between the icon and the text
+		 * * afterChildren - if an "after" `icon` is present, this will be between the text and the icon
 		 * * after - the last element in the item
 		 *
 		 * @type {String}
+		 * @default 'afterChildren'
 		 * @public
 		 */
-		itemIconPosition: PropTypes.oneOf(['before', 'beforeText', 'afterText', 'after']),
+		itemIconPosition: PropTypes.oneOf(['before', 'beforeChildren', 'afterChildren', 'after']),
 
 		/**
 		 * Called when the toggle item is toggled. Developers should generally use `onToggle` instead.
@@ -228,6 +228,7 @@ const ToggleItemBase = kind({
 	defaultProps: {
 		disabled: false,
 		iconPosition: 'before',
+		itemIconPosition: 'afterChildren',
 		selected: false,
 		value: null
 	},
@@ -277,7 +278,6 @@ const ToggleItemBase = kind({
  */
 const ToggleItemDecorator = compose(
 	ForwardRef({prop: 'componentRef'}),
-	Slottable({slots: ['itemIcon']}),
 	Toggleable({toggleProp: 'onTap'}),
 	Touchable
 );
