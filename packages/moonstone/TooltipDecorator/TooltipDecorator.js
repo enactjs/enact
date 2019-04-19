@@ -128,6 +128,8 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 */
 			tooltipProps: PropTypes.object,
 
+			tooltipRelative: PropTypes.object,
+
 			/**
 			 * Tooltip content.
 			 *
@@ -227,22 +229,18 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				tooltipDirection = 'above';
 				arrowAnchor = 'right';
 			}
-			// console.log('tooltipDirection 1:', tooltipDirection, arrowAnchor);
 
 			const tooltipNode = this.tooltipRef.getBoundingClientRect(); // label bound
 			const clientNode = this.clientRef.getBoundingClientRect(); // client bound
 			const overflow = calcOverflow(tooltipNode, clientNode, tooltipDirection, this.TOOLTIP_HEIGHT, ri.scale(config.screenEdgeKeepout));
 
-			// console.log('tooltipDirection before:', tooltipDirection, overflow);
 			tooltipDirection = adjustDirection(tooltipDirection, overflow, this.props.rtl, ri.scale(config.screenEdgeKeepout));
 			arrowAnchor = adjustAnchor(arrowAnchor, tooltipDirection, overflow, this.props.rtl, ri.scale(config.screenEdgeKeepout));
-			// console.log('tooltipDirection 2:', tooltipDirection, arrowAnchor, overflow);
 
 			const tooltipPosition = getPosition(clientNode, tooltipDirection);
 			const labelOffset = arrowAnchor === 'center' ? getLabelOffset(tooltipNode, tooltipDirection, tooltipPosition, overflow, this.props.rtl, ri.scale(config.screenEdgeKeepout)) : null;
 			const {top, left} = this.state.position;
 
-			// console.log('tooltipPosition:', tooltipPosition, arrowAnchor);
 			if (
 				(tooltipPosition.top !== top) ||
 				(tooltipPosition.left !== left) ||
