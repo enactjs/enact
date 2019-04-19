@@ -2,6 +2,29 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [2.5.1] - 2019-04-09
+
+### Fixed
+
+- `core/kind` to address warnings raised in React 16.8.6
+- `moonstone/ExpandableInput` to close on touch platforms when tapping another component
+- `ui/Touchable` to prevent doubled events in some situations on touch devices
+
+## [2.5.0] - 2019-04-01
+
+### Added
+
+- `ui/Item`, `ui/Layout`, `ui/Repeater`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleItem`, and `ui/ViewManager` support for `ref` to gain access to the wrapped `component`
+
+### Fixed
+
+- `moonstone/ContextualPopupDecorator` method `positionContextualPopup()` to correctly reposition the popup when invoked from app code
+- `moonstone/Tooltip` to better support long tooltips
+- `moonstone/Popup` to resume spotlight pauses when closing with animation
+- `moonstone/Panels` to correctly ignore `null` children
+- `spotlight` to guard against runtime errors caused by attempting to access containers that do not exist
+- `spotlight/Spottable` to prevent unnecessary updates due to focus and blur changes
+
 ## [2.4.1] - 2019-03-11
 
 ### Fixed

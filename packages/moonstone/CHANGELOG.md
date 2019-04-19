@@ -6,9 +6,24 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/EditableIntegerPicker` alignment of text when not editing the value
+- `moonstone/Scroller` to scroll via dragging when the platform has touch support
+- `moonstone/VideoPlayer` to continue to display the thumbnail image while the slider is focused
+
+## [2.5.1] - 2019-04-09
+
+### Fixed
+
+- `moonstone/ExpandableInput` to close on touch platforms when tapping another component
+
+## [2.5.0] - 2019-04-01
+
+### Fixed
+
+- `moonstone/ContextualPopupDecorator` method `positionContextualPopup()` to correctly reposition the popup when invoked from app code
 - `moonstone/Tooltip` to better support long tooltips
 - `moonstone/Popup` to resume spotlight pauses when closing with animation
-- `moonstone/Panels` to check that child is valid before generating spotlightId
+- `moonstone/Panels` to correctly ignore `null` children
 
 ## [2.4.1] - 2019-03-11
 

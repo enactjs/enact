@@ -4,6 +4,20 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Fixed
+
+- `ui/Skinnable` to allow overriding default `skinVariant` values
+- `ui/Touchable` to prevent events firing on different nodes for the same touch action
+- `ui/Touchable` to neither force focus to components nor blur components after they are touched
+
+## [2.5.1] - 2019-04-09
+
+### Fixed
+
+- `ui/Touchable` to prevent doubled events in some situations on touch devices
+
+## [2.5.0] - 2019-04-01
+
 ### Added
 
 - `ui/Item`, `ui/Layout`, `ui/Repeater`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleItem`, and `ui/ViewManager` support for `ref` to gain access to the wrapped `component`

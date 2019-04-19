@@ -16,7 +16,6 @@ import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import mergeWith from 'ramda/src/mergeWith';
 
 import {objectify, preferDefined} from './util';
 
@@ -157,8 +156,15 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 		parentVariants = objectify(parentVariants);
 
 		// Merge all of the variants objects, preferring values in objects from left to right.
-		const mergedObj = [authorVariants, defaultVariants, parentVariants].reduce(
-			(obj, a) => mergeWith(preferDefined, obj, a)
+		const mergedObj = [defaultVariants, parentVariants, authorVariants].reduce(
+			(obj, a) => {
+				Object.keys(a).forEach(key => {
+					obj[key] = preferDefined(a[key], obj[key]);
+				});
+
+				return obj;
+			},
+			{}
 		);
 
 		// Clean up the merged object
