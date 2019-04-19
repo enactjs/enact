@@ -6,7 +6,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/ToggleItem` support for `itemIcon`, `itemIconPosition`.
+- `ui/ToggleItem` support for `itemIcon`, `itemIconPosition` to enable developers to add additional images to any ToggleItem derived component
+
 ### Fixed
 
 - `ui/Skinnable` to allow overriding default `skinVariant` values
