@@ -156,7 +156,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: false,
 			tooltipDelay: 500,
 			tooltipPosition: 'above',
-			tooltipUpdateDelay: 1
+			tooltipUpdateDelay: 400
 		}
 
 		constructor (props) {
@@ -165,7 +165,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.TOOLTIP_HEIGHT = ri.scale(0); // distance between client and tooltip's label
 
 			this.state = {
-				showing: true,
+				showing: false,
 				tooltipDirection: null,
 				arrowAnchor: null,
 				position: {top: 0, left: 0}
@@ -238,7 +238,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			arrowAnchor = adjustAnchor(arrowAnchor, tooltipDirection, overflow, this.props.rtl, ri.scale(config.screenEdgeKeepout));
 
 			const tooltipPosition = getPosition(clientNode, tooltipDirection);
-			const labelOffset = arrowAnchor === 'center' ? getLabelOffset(tooltipNode, tooltipDirection, tooltipPosition, overflow, this.props.rtl, ri.scale(config.screenEdgeKeepout)) : null;
+			const labelOffset = arrowAnchor === 'center' ? getLabelOffset(tooltipNode, tooltipDirection, tooltipPosition, overflow) : null;
 			const {top, left} = this.state.position;
 
 			if (
@@ -287,25 +287,25 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		hideTooltip = () => {
-			// if (this.props.tooltipText) {
-			// 	if (this.mutationObserver) {
-			// 		this.mutationObserver.disconnect();
-			// 	}
+			if (this.props.tooltipText) {
+				if (this.mutationObserver) {
+					this.mutationObserver.disconnect();
+				}
 
-			// 	if (this.resizeObserver) {
-			// 		this.resizeObserver.disconnect();
-			// 	}
+				if (this.resizeObserver) {
+					this.resizeObserver.disconnect();
+				}
 
-			// 	this.clientRef = null;
-			// 	currentTooltip = null;
+				this.clientRef = null;
+				currentTooltip = null;
 
-			// 	this.showTooltipJob.stop();
-			// 	this.setTooltipLayoutJob.stop();
+				this.showTooltipJob.stop();
+				this.setTooltipLayoutJob.stop();
 
-			// 	if (this.state.showing) {
-			// 		this.setState({showing: false});
-			// 	}
-			// }
+				if (this.state.showing) {
+					this.setState({showing: false});
+				}
+			}
 		}
 
 		handle = handle.bind(this)

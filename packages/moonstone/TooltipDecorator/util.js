@@ -191,10 +191,10 @@ const getPosition = function (clientNode, tooltipDirection) {
  *
  * @method
  * @memberof moonstone/TooltipDecorator
- * @param   {Object}  tooltipNode        The `getBoundingClientRect` values for tooltip node
- * @param   {Object}  tooltipDirection   Direction of tooltip
- * @param   {Object}  tooltipPosition    Calculated tooltip position from `getPosition`
- * @param   {Object}  overflow           Tooltip's calculated overflow from `calcOverflow`
+ * @param   {Object}  tooltipNode       The `getBoundingClientRect` values for tooltip node
+ * @param   {Object}  tooltipDirection  Direction of tooltip
+ * @param   {Object}  tooltipPosition   Calculated tooltip position from `getPosition`
+ * @param   {Object}  overflow          Tooltip's calculated overflow from `calcOverflow`
  * @private
  */
 const getLabelOffset = function (tooltipNode, tooltipDirection, tooltipPosition, overflow) {

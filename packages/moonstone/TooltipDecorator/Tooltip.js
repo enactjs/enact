@@ -1,5 +1,4 @@
 import kind from '@enact/core/kind';
-import ri from '@enact/ui/resolution';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -120,10 +119,7 @@ const TooltipBase = kind({
 		labelOffset: ({labelOffset}) => {
 			if (labelOffset) {
 				const cappedPosition = Math.max(-0.5, Math.min(0.5, labelOffset));
-				// console.log('labelOffset position:', labelOffset, cappedPosition);
 				return {transform: `translateX(${cappedPosition * 100}%)`};
-				// Offset the cap by the radius of the border + the width of the arrow
-				// return {transform: `translateX(calc(${cappedPosition * 100}% - ((${cappedPosition} / 0.5) * ${ri.scale((54 / 2) + (30 / 2))}px)))`};
 			}
 		},
 		className: ({direction, arrowAnchor, relative, styler}) => styler.append(direction, `${arrowAnchor}Arrow`, {relative, absolute: !relative}),
