@@ -13,10 +13,10 @@
 @moon-white:       #fff;
 @moon-red:         #f00;
 
-@moon-remote-button-red-color:     #ff6d78; // #da3c3c; // #e71b1c;
-@moon-remote-button-green-color:   #6ff467; // #21c171; // #339966;
-@moon-remote-button-yellow-color:  #ffc600; // #dac139; // #fddb24;
-@moon-remote-button-blue-color:    #0084ff; // #5677d0; // #4764b4;
+@moon-remote-button-red-color:     #e1777e; // #ff6d78; // #da3c3c; // #e71b1c;
+@moon-remote-button-green-color:   #7fd563; // #6ff467; // #21c171; // #339966;
+@moon-remote-button-yellow-color:  #d3b85f; // #ffc600; // #dac139; // #fddb24;
+@moon-remote-button-blue-color:    #5185c1; // #0084ff; // #5677d0; // #4764b4;
 
 
 // UI Conceptual Colors
@@ -39,7 +39,7 @@
 @moon-spotlight-border-color:         @moon-accent;
 @moon-spotlight-color:                @moon-accent;
 @moon-active-border-color:            @moon-gray;
-@moon-active-spotlight-border-color:  @moon-white;
+@moon-active-spotlight-border-color:  #ccc;
 
 
 // ---------------------------------------
@@ -52,14 +52,25 @@
 
 // Button
 // ---------------------------------------
-@moon-button-text-color:              #ccc;
-@moon-button-bg-color:                @moon-dark-gray;
-@moon-button-disabled-bg-color:       @moon-darker-gray;
-@moon-button-translucent-opacity:     30%;
-@moon-button-lightTranslucent-bg-color:  @moon-white;
-@moon-button-transparent-active-text-color:  @moon-white;
-@moon-button-disabled-text-color:     @moon-dark-gray;
-@moon-button-disabled-spotlight-bg-color: @moon-spotlight-border-color;
+@moon-button-text-color: #ccc;
+@moon-button-bg-color: #383838;
+@moon-button-translucent-opacity: 30%;
+@moon-button-lightTranslucent-bg-color: @moon-white;
+@moon-button-transparent-bg-color: transparent;
+@moon-button-transparent-active-text-color: @moon-white;
+@moon-button-transparent-disabled-bg-color: @moon-button-disabled-bg-color;
+@moon-button-disabled-text-color: @moon-dark-gray;
+@moon-button-disabled-bg-color: @moon-darker-gray;
+@moon-button-focus-text-color: @moon-spotlight-text-color;
+@moon-button-focus-bg-color: @moon-spotlight-bg-color;
+@moon-button-disabled-focus-text-color: @moon-spotlight-disabled-text-color;
+@moon-button-disabled-focus-icon-color: @moon-spotlight-text-color;
+@moon-button-disabled-focus-bg-color: @moon-spotlight-bg-color;
+@moon-button-selected-bg-color: #222;
+@moon-button-selected-border-color: @moon-spotlight-border-color;
+@moon-button-selected-focus-text-color: @moon-spotlight-text-color;
+@moon-button-selected-focus-bg-color: @moon-spotlight-bg-color;
+@moon-button-selected-focus-border-color: @moon-active-spotlight-border-color;
 
 // ContextualPopup
 // ---------------------------------------
@@ -125,8 +136,7 @@
 @moon-header-full-bleed-text-color:   #f5f5f5;
 @moon-header-title-below-full-bleed-text-color: @moon-light-gray;
 @moon-header-full-bleed-border-color: fade(@moon-white, 25%);
-@moon-header-input-bg-color:          @moon-spotlight-color;
-@moon-header-input-text-color:        @moon-spotlight-text-color;
+@moon-header-controls-border-color:   #383838;
 
 // IconButton
 // ---------------------------------------
@@ -139,16 +149,21 @@
 
 // Input
 // ---------------------------------------
-@moon-input-text-color:               @moon-dark-gray;
+@moon-input-caret-color:              @moon-spotlight-bg-color;
+@moon-input-text-color:               @moon-black;
+@moon-input-text-disabled-color:      @moon-white;
 @moon-input-border-color:             #eaeaea;
 @moon-input-textarea-color:           @moon-dark-gray;
-@moon-input-text-color:               @moon-dark-gray;
-@moon-input-placeholder-color:        #868686;
-@moon-input-decorator-bg-color:       @moon-white;
+@moon-input-placeholder-color:        @moon-white;
+@moon-input-placeholder-focus-color:  @moon-input-decorator-bg-color;
+@moon-input-placeholder-active-color:  @moon-input-placeholder-focus-color;
+@moon-input-decorator-bg-color:       #aaa;
 @moon-input-decorator-border-color:   @moon-light-gray;
+@moon-input-decorator-focus-bg-color: @moon-white;
 @moon-input-border-focus-border-color: @moon-spotlight-border-color;
-@moon-input-border-active-border-color: @moon-active-border-color;
-@moon-input-border-active-outline-color: transparent;
+@moon-input-decorator-active-bg-color: @moon-input-decorator-focus-bg-color;
+@moon-input-border-active-border-color: transparent;
+@moon-input-border-active-outline-color: @moon-input-border-focus-border-color;
 
 // LabeledItem
 // ---------------------------------------
@@ -215,7 +230,7 @@
 @moon-slider-focus-bg-color: @moon-spotlight-color;
 @moon-slider-spotlight-knob-color: @moon-spotlight-color;
 @moon-slider-spotlight-bar-color: @moon-spotlight-color;
-@moon-slider-knob-bg-color: @moon-dark-gray;
+@moon-slider-knob-bg-color: @moon-button-bg-color;
 @moon-slider-knob-active-bg-color: @moon-slider-knob-bg-color;
 
 // Spinner
@@ -245,7 +260,7 @@
 @moon-toggle-button-switch-on-bg-color: @moon-accent;
 @moon-toggle-button-switch-on-border-color: @moon-white;
 @moon-toggle-button-switch-dot-on-color: transparent;
-@moon-toggle-button-switch-off-bg-color: @moon-dark-gray;
+@moon-toggle-button-switch-off-bg-color: @moon-button-bg-color;
 @moon-toggle-button-switch-off-border-color: @moon-white;
 @moon-toggle-button-switch-disabled-color: @moon-darker-gray;
 @moon-toggle-button-switch-disabled-border-color: #6c6c6c;

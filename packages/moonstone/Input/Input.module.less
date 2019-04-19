@@ -34,15 +34,16 @@
 	}
 
 	.input-placeholder({
-		.vendor-opacity(1);
+		.vendor-opacity(@moon-input-placeholder-opacity);
 	});
 
-	.focus ({
+	.focus({
 		cursor: text;
 	});
 
 	.disabled({
 		cursor: default;
+		.vendor-opacity(@moon-input-disabled-opacity);
 	});
 
 	:global(.enact-locale-right-to-left) & {
@@ -53,12 +54,15 @@
 .decorator {
 	display: inline-flex;
 	position: relative;
-	padding: @moon-input-padding (@moon-input-height / 2);
-	border-radius: 1008px;
-	margin: 0 (@moon-spotlight-outset / 2);
-	border: @moon-input-border-width solid transparent;
+	padding: @moon-input-padding;
+	border-radius: @moon-input-border-radius;
+	margin: @moon-input-margin;
 	box-sizing: border-box;
 	vertical-align: middle;
+
+	.input {
+		font-size: @moon-input-font-size;
+	}
 
 	.input,
 	.iconBefore,
@@ -69,7 +73,7 @@
 	}
 
 	&.small {
-		padding: 0 (@moon-input-small-height / 2);
+		height: @moon-input-decorator-small-height;
 
 		.iconBefore,
 		.iconAfter {
@@ -118,45 +122,51 @@
 	// Skin colors
 	.applySkins({
 		background-color: @moon-input-decorator-bg-color;
+		color: @moon-input-text-color;
+		caret-color: @moon-input-caret-color;
 
 		.input {
 			background: transparent;
-			color: @moon-input-text-color;
-
-			&::selection {
-				color: @moon-spotlight-text-color;
-				background-color: @moon-spotlight-bg-color;
-			}
 
 			.input-placeholder({
 				color: @moon-input-placeholder-color;
 			});
 
-			.focus({
-				color: @moon-input-text-color;
-				background-color: inherit;
-			});
+			&:focus-within {
+				.input-placeholder({
+					color: @moon-input-placeholder-active-color;
+				});
+			}
 		}
 
 		&.invalid input {
 			color: @moon-red;
 		}
 
-		&:global(.spottable):focus {
+		.focus({
+			background-color: @moon-input-decorator-focus-bg-color;
 			color: @moon-input-text-color;
-			border-color: @moon-input-border-focus-border-color;
-			background-color: @moon-input-decorator-bg-color;
 			box-shadow: 0px 0px 0px @moon-input-border-outline-width @moon-input-border-active-outline-color;
+
+			.input {
+				.input-placeholder({
+					color: @moon-input-placeholder-focus-color;
+				});
+			}
+		});
+
+		&:focus-within {
+			background-color: @moon-input-decorator-active-bg-color;
 		}
 
-		&.focused {
-			border-color: @moon-input-border-active-border-color;
-		}
+		.disabled({
+			.vendor-opacity(@moon-input-disabled-opacity);
 
-		.decoratorIcon,
-		&:global(.spottable):focus .decoratorIcon {
-			color: @moon-input-text-color;
-		}
+			.input,
+			.decoratorIcon {
+				color: @moon-input-text-disabled-color;
+			}
+		});
 	});
 }
 
@@ -177,17 +187,8 @@
 .muted({
 	.decorator {
 		.applySkins({
-			&:global(.spottable):focus {
-				border-color: transparent;
-			}
-
-			&.focused {
-				border-color: transparent;
-			}
-
 			.focus({
 				background-color: @moon-input-decorator-bg-color;
-				border-color: transparent;
 			});
 		});
 	}

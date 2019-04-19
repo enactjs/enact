@@ -31,6 +31,9 @@ let currentTooltip; // needed to know whether or not we should stop a showing jo
  * @hocconfig
  */
 const defaultConfig = {
+	// The space to never let the tooltip invade
+	screenEdgeKeepout: (12 + 12),
+
 	/**
 	 * The name of the property which will receive the tooltip node.
 	 *
@@ -87,16 +90,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			rtl: PropTypes.bool,
 
 			/**
-			 * The casing of `tooltipText`.
-			 *
-			 * @see i18n/Uppercase#casing
-			 * @type {String}
-			 * @default 'upper'
-			 * @public
-			 */
-			tooltipCasing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
-
-			/**
 			 * Time to wait (in milliseconds) before showing tooltip on hover.
 			 *
 			 * @type {Number}
@@ -135,6 +128,8 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 */
 			tooltipProps: PropTypes.object,
 
+			tooltipRelative: PropTypes.bool,
+
 			/**
 			 * Tooltip content.
 			 *
@@ -142,6 +137,8 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			tooltipText: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+
+			tooltipUpdateDelay: PropTypes.number,
 
 			/**
 			 * The width of tooltip content in pixels (px).
@@ -157,9 +154,9 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static defaultProps = {
 			disabled: false,
-			tooltipCasing: 'upper',
 			tooltipDelay: 500,
-			tooltipPosition: 'above'
+			tooltipPosition: 'above',
+			tooltipUpdateDelay: 1
 		}
 
 		constructor (props) {
@@ -168,7 +165,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.TOOLTIP_HEIGHT = ri.scale(0); // distance between client and tooltip's label
 
 			this.state = {
-				showing: false,
+				showing: true,
 				tooltipDirection: null,
 				arrowAnchor: null,
 				position: {top: 0, left: 0}
@@ -186,7 +183,10 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			if (this.state.showing && prevProps.tooltipText !== this.props.tooltipText) {
+			if (this.state.showing && (
+				prevProps.tooltipText !== this.props.tooltipText ||
+				prevProps.tooltipPosition !== this.props.tooltipPosition
+			)) {
 				this.setTooltipLayout();
 			}
 		}
@@ -232,16 +232,21 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			const tooltipNode = this.tooltipRef.getBoundingClientRect(); // label bound
 			const clientNode = this.clientRef.getBoundingClientRect(); // client bound
-			const overflow = calcOverflow(tooltipNode, clientNode, tooltipDirection, this.TOOLTIP_HEIGHT);
+			const overflow = calcOverflow(tooltipNode, clientNode, tooltipDirection, this.TOOLTIP_HEIGHT, ri.scale(config.screenEdgeKeepout));
 
-			tooltipDirection = adjustDirection(tooltipDirection, overflow, this.props.rtl);
-			arrowAnchor = adjustAnchor(arrowAnchor, tooltipDirection, overflow, this.props.rtl);
+			tooltipDirection = adjustDirection(tooltipDirection, overflow, this.props.rtl, ri.scale(config.screenEdgeKeepout));
+			arrowAnchor = adjustAnchor(arrowAnchor, tooltipDirection, overflow, this.props.rtl, ri.scale(config.screenEdgeKeepout));
 
 			const tooltipPosition = getPosition(clientNode, tooltipDirection);
-			const labelOffset = getLabelOffset(tooltipNode, tooltipDirection, tooltipPosition, overflow, this.props.rtl);
+			const labelOffset = arrowAnchor === 'center' ? getLabelOffset(tooltipNode, tooltipDirection, tooltipPosition, overflow, this.props.rtl, ri.scale(config.screenEdgeKeepout)) : null;
 			const {top, left} = this.state.position;
 
-			if ((tooltipPosition.top !== top) || (tooltipPosition.left !== left) || (labelOffset !== this.state.labelOffset)) {
+			if (
+				(tooltipPosition.top !== top) ||
+				(tooltipPosition.left !== left) ||
+				(labelOffset !== this.state.labelOffset) ||
+				(arrowAnchor !== this.state.arrowAnchor)
+			) {
 				this.setState({
 					tooltipDirection,
 					arrowAnchor,
@@ -261,7 +266,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		setTooltipLayoutJob = new Job(() => {
 			this.setTooltipLayout();
-		}, 400)
+		}, this.props.tooltipUpdateDelay)
 
 		showTooltip = (client) => {
 			const {tooltipDelay, tooltipText} = this.props;
@@ -282,21 +287,25 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		hideTooltip = () => {
-			if (this.props.tooltipText) {
-				if (this.mutationObserver) {
-					this.mutationObserver.disconnect();
-				}
+			// if (this.props.tooltipText) {
+			// 	if (this.mutationObserver) {
+			// 		this.mutationObserver.disconnect();
+			// 	}
 
-				if (this.resizeObserver) {
-					this.resizeObserver.disconnect();
-				}
+			// 	if (this.resizeObserver) {
+			// 		this.resizeObserver.disconnect();
+			// 	}
 
-				this.clientRef = null;
-				currentTooltip = null;
+			// 	this.clientRef = null;
+			// 	currentTooltip = null;
 
-				this.showTooltipJob.stop();
-				this.setTooltipLayoutJob.stop();
-			}
+			// 	this.showTooltipJob.stop();
+			// 	this.setTooltipLayoutJob.stop();
+
+			// 	if (this.state.showing) {
+			// 		this.setState({showing: false});
+			// 	}
+			// }
 		}
 
 		handle = handle.bind(this)
@@ -362,27 +371,34 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @private
 		 */
 		renderTooltip () {
-			const {children, tooltipCasing, tooltipProps, tooltipText, tooltipWidth} = this.props;
+			const {children, tooltipRelative, tooltipProps, tooltipText, tooltipWidth} = this.props;
 
 			if (tooltipText) {
-				const renderedTooltip = (
-					<FloatingLayerBase open={this.state.showing} noAutoDismiss onDismiss={this.hideTooltip} scrimType="none" key="tooltipFloatingLayer">
-						<Tooltip
-							aria-live="off"
-							role="alert"
-							{...tooltipProps}
-							arrowAnchor={this.state.arrowAnchor}
-							labelOffset={this.state.labelOffset}
-							casing={tooltipCasing}
-							direction={this.state.tooltipDirection}
-							position={this.state.position}
-							tooltipRef={this.getTooltipRef}
-							width={tooltipWidth}
-						>
-							{tooltipText}
-						</Tooltip>
-					</FloatingLayerBase>
+				let renderedTooltip = (
+					<Tooltip
+						aria-live="off"
+						role="alert"
+						labelOffset={this.state.labelOffset}
+						{...tooltipProps}
+						arrowAnchor={this.state.arrowAnchor}
+						direction={this.state.tooltipDirection}
+						position={tooltipRelative ? null : this.state.position}
+						relative={tooltipRelative}
+						tooltipRef={this.getTooltipRef}
+						width={tooltipWidth}
+					>
+						{tooltipText}
+					</Tooltip>
 				);
+
+
+				if (!tooltipRelative) {
+					renderedTooltip = (
+						<FloatingLayerBase open={this.state.showing} noAutoDismiss onDismiss={this.hideTooltip} scrimType="none" key="tooltipFloatingLayer">
+							{renderedTooltip}
+						</FloatingLayerBase>
+					);
+				}
 
 				if (tooltipDestinationProp === 'children') {
 					return {
@@ -417,9 +433,10 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.rtl;
 			delete props.tooltipDelay;
 			delete props.tooltipPosition;
-			delete props.tooltipCasing;
 			delete props.tooltipProps;
+			delete props.tooltipRelative;
 			delete props.tooltipText;
+			delete props.tooltipUpdateDelay;
 			delete props.tooltipWidth;
 
 			return (
@@ -435,4 +452,8 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default TooltipDecorator;
-export {TooltipDecorator, Tooltip, TooltipBase};
+export {
+	TooltipDecorator,
+	Tooltip,
+	TooltipBase
+};

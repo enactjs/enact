@@ -278,18 +278,17 @@ storiesOf('Tooltip', module)
 	).add(
 		'tooltip overflows',
 		() => {
-			const tooltipCasing = select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper');
+			const buttonAlignment = select('button alignment', {'': null, start: 'start', end: 'end'}, Config);
 			const tooltipDelay = number('tooltipDelay', Config, 500);
 			const tooltipText = text('tooltipText', Config, 'tooltip position!');
 			const tooltipPosition = select('tooltipPosition', prop.tooltipPosition, Config, 'above');
 			const tooltipProps = object('tooltipProps', Config, prop.ariaObject);
 			return (
-				<Layout orientation="vertical" align="stretch space-between" className="enact-fit" style={{position: 'fixed', padding: '18px 12px'}}>
+				<Layout orientation="vertical" align={buttonAlignment + ' space-between'} className="enact-fit" style={{position: 'fixed', padding: `${ri.unit(ri.scale(18), 'rem')} ${ri.unit(ri.scale(12), 'rem')}`}}>
 					<Cell shrink>
 						<Layout align="center space-between">
 							<Cell shrink>
 								<TooltipNormalButton
-									tooltipCasing={tooltipCasing}
 									tooltipDelay={tooltipDelay}
 									tooltipText={tooltipText}
 									tooltipPosition={tooltipPosition}
@@ -300,7 +299,6 @@ storiesOf('Tooltip', module)
 							</Cell>
 							<Cell shrink>
 								<TooltipNormalButton
-									tooltipCasing={tooltipCasing}
 									tooltipDelay={tooltipDelay}
 									tooltipText={tooltipText}
 									tooltipPosition={tooltipPosition}
@@ -311,7 +309,6 @@ storiesOf('Tooltip', module)
 							</Cell>
 							<Cell shrink>
 								<TooltipNormalButton
-									tooltipCasing={tooltipCasing}
 									tooltipDelay={tooltipDelay}
 									tooltipText={tooltipText}
 									tooltipPosition={tooltipPosition}
@@ -326,7 +323,6 @@ storiesOf('Tooltip', module)
 						<Layout align="center space-between">
 							<Cell shrink>
 								<TooltipButton
-									tooltipCasing={tooltipCasing}
 									tooltipDelay={tooltipDelay}
 									tooltipText={tooltipText}
 									tooltipPosition={tooltipPosition}
@@ -337,7 +333,6 @@ storiesOf('Tooltip', module)
 							</Cell>
 							<Cell shrink>
 								<TooltipButton
-									tooltipCasing={tooltipCasing}
 									tooltipDelay={tooltipDelay}
 									tooltipText={tooltipText}
 									tooltipPosition={tooltipPosition}
@@ -348,7 +343,6 @@ storiesOf('Tooltip', module)
 							</Cell>
 							<Cell shrink>
 								<TooltipButton
-									tooltipCasing={tooltipCasing}
 									tooltipDelay={tooltipDelay}
 									tooltipText={tooltipText}
 									tooltipPosition={tooltipPosition}
@@ -363,7 +357,6 @@ storiesOf('Tooltip', module)
 						<Layout align="center space-between">
 							<Cell shrink>
 								<TooltipNormalButton
-									tooltipCasing={tooltipCasing}
 									tooltipDelay={tooltipDelay}
 									tooltipText={tooltipText}
 									tooltipPosition={tooltipPosition}
@@ -374,7 +367,6 @@ storiesOf('Tooltip', module)
 							</Cell>
 							<Cell shrink>
 								<TooltipNormalButton
-									tooltipCasing={tooltipCasing}
 									tooltipDelay={tooltipDelay}
 									tooltipText={tooltipText}
 									tooltipPosition={tooltipPosition}
@@ -385,7 +377,6 @@ storiesOf('Tooltip', module)
 							</Cell>
 							<Cell shrink>
 								<TooltipNormalButton
-									tooltipCasing={tooltipCasing}
 									tooltipDelay={tooltipDelay}
 									tooltipText={tooltipText}
 									tooltipPosition={tooltipPosition}
