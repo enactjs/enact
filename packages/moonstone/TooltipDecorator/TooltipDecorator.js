@@ -128,7 +128,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 */
 			tooltipProps: PropTypes.object,
 
-			tooltipRelative: PropTypes.object,
+			tooltipRelative: PropTypes.bool,
 
 			/**
 			 * Tooltip content.
