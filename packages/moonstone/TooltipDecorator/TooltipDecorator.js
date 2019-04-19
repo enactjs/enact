@@ -31,7 +31,17 @@ let currentTooltip; // needed to know whether or not we should stop a showing jo
  * @hocconfig
  */
 const defaultConfig = {
-	// The space to never let the tooltip invade
+	/**
+	 * The boundary around the screen which the tooltip should never cross, typically involving
+	 * flipping to an alternate orientation or adjusting its offset to remain on screen.
+	 * The default of 24 is derived from a standard 12px screen-keepout size plus the standard
+	 * Spotlight-outset (12px) margin/padding value which keeps elements and text aligned inside a
+	 * [Panel]{@link moonstone/Panels.Panel}.
+	 *
+	 * @type {Number}
+	 * @default 24
+	 * @memberof moonstone/TooltipDecorator.TooltipDecorator.defaultConfig
+	 */
 	screenEdgeKeepout: (12 + 12),
 
 	/**
@@ -128,6 +138,16 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 */
 			tooltipProps: PropTypes.object,
 
+			/**
+			 * Determines whether your tooltip should position itself relative to its container or
+			 * relative to the screen (absolute positioning on the floating layer). When setting to
+			 * `true`, to enable relative positioning, it may be important to specify the
+			 * `tooltipDestinationProp` key in this HoC's config object. A relatively positioned
+			 * Tooltip for a `Button`, for example, must be placed in the `decoration` prop.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
 			tooltipRelative: PropTypes.bool,
 
 			/**
@@ -138,6 +158,14 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 */
 			tooltipText: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
+			/**
+			 * The interval (in milliseconds) to recheck the math for a currently showing tooltip's
+			 * positioning and orientation. Useful if your anchor element moves.
+			 *
+			 * @type {Number}
+			 * @default 500
+			 * @public
+			 */
 			tooltipUpdateDelay: PropTypes.number,
 
 			/**

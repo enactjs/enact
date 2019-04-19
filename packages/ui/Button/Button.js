@@ -51,6 +51,12 @@ const ButtonBase = kind({
 		 */
 		css: PropTypes.object,
 
+		/**
+		 * Additional DOM nodes which may be necessary for decorating the Button.
+		 *
+		 * @type {Node}
+		 * @private
+		 */
 		decoration: PropTypes.node,
 
 		/**

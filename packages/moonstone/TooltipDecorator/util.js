@@ -3,6 +3,15 @@
 
 import ri from '@enact/ui/resolution';
 
+/**
+ * Calculates the unusable space of a centered Tooltip, which the Tooltip arrow cannot be positioned,
+ * as a percentage of the Tooltip's total width.
+ *
+ * @param  {Number} tooltipWidth        The measured width of the Tooltip
+ * @return {Number}                     The percent of the width of the tooltip that the Tooltip's
+ *                                      decorations allocate for themselves (on one side).
+ * @private
+ */
 const getLabelUnavailableSpace = function (tooltipWidth) {
 	// Arrow is 15px wide total, we need to know how wide half of it is, since it's centered on the anchor point.
 	const arrowWidth = (15 / 2);
