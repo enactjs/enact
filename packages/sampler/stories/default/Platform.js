@@ -14,9 +14,8 @@ function logObject (object) {
 			} else if (value === true) {
 				value = 'true';
 			}
-			return <div key={key}>{key}: {value}</div>
-		}
-	);
+			return <div key={key}>{key}: {value}</div>;
+		});
 }
 
 storiesOf('Core', module)
