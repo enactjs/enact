@@ -3,32 +3,36 @@ import platform from '@enact/core/platform';
 import webosPlatform from '@enact/webos/platform';
 import {storiesOf} from '@storybook/react';
 import {withInfo} from '@storybook/addon-info';
+import {Scroller} from '@enact/ui/Scroller';
 
-const {gesture, platformName, touch} = platform;
-const version = platform[platformName];
-
-const deviceType = () => {
-	let device = '';
-	for (let p in webosPlatform) {
-		if (webosPlatform[p]) {
-			device = p;
+function logObject (object) {
+	return Object.keys(object)
+		.filter(key => object[key] != null)
+		.map(key => {
+			let value = object[key];
+			if (value === false) {
+				value = 'false';
+			} else if (value === true) {
+				value = 'true';
+			}
+			return <div>{key}: {value}</div>
 		}
-	}
-	return device;
-};
+	);
+}
 
 storiesOf('Core', module)
 	.add(
 		'Platform',
 		withInfo('Detection')(() => (
-			<div>
-				Detected: {platformName} {platform.webos ? `(${deviceType()})` : ''}
-				<br />
-				Version: {version}
-				<br />
-				Gesture support: {gesture ? 'true' : 'false'}
-				<br />
-				Touch support: {touch ? 'true' : 'false'}
-			</div>
+			<Scroller>
+				<h3>
+					Platform:
+				</h3>
+				{logObject(platform)}
+				<h3>
+					webOS:
+				</h3>
+				{logObject(webosPlatform)}
+			</Scroller>
 		))
 	);
