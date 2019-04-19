@@ -23,13 +23,9 @@ storiesOf('Core', module)
 		'Platform',
 		() => (
 			<Scroller>
-				<h3>
-					Platform:
-				</h3>
+				<h3>Platform:</h3>
 				{logObject(platform)}
-				<h3>
-					webOS:
-				</h3>
+				<h3>webOS:</h3>
 				{logObject(webosPlatform)}
 			</Scroller>
 		)
