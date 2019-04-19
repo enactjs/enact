@@ -8,13 +8,13 @@
 
 import classNames from 'classnames';
 import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
-import {getContainerNode} from '@enact/spotlight/src/container';
+import {forward} from '@enact/core/handle';
 import {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
-import {Job} from '@enact/core/util';
-import platform from '@enact/core/platform';
-import {forward} from '@enact/core/handle';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
+import {Job} from '@enact/core/util';
+import {onWindowReady} from '@enact/core/snapshot';
+import platform from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
@@ -74,6 +74,45 @@ const configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusabl
 		navigableFilter: focusableScrollbar ? null : navigableFilter
 	});
 };
+
+/*
+ * Track the last position of the pointer to check if a list should scroll by
+ * page up/down keys when the pointer is on a list without any focused node.
+ * `keydown` event does not occur if there is no focus on the node and
+ * its descendants, we add `keydown` handler to `document` also.
+ */
+const
+	lastPointer = {x: 0, y: 0},
+	pointerTracker = (ev) => {
+		lastPointer.x = ev.clientX;
+		lastPointer.y = ev.clientY;
+	};
+
+const
+	// An app could have lists and/or scrollers more than one,
+	// so we should test all of them when page up/down key is pressed.
+	scrollables = new Set(),
+	pageKeyHandler = (ev) => {
+		if (Spotlight.getPointerMode() && !Spotlight.getCurrent()) {
+			const
+				{x, y} = lastPointer,
+				elem = document.elementFromPoint(x, y);
+
+			if (elem) {
+				for (let s of scrollables) {
+					if (ReactDOM.findDOMNode(s).contains(elem)) { // eslint-disable-line react/no-find-dom-node
+						s.onKeyDown(ev, true);
+						break;
+					}
+				}
+			}
+		}
+	};
+
+onWindowReady(() => {
+	document.addEventListener('mousemove', pointerTracker);
+	document.addEventListener('keydown', pageKeyHandler);
+});
 
 /**
  * A Moonstone-styled component that provides horizontal and vertical scrollbars.
@@ -253,7 +292,7 @@ class ScrollableBase extends Component {
 		this.createOverscrollJob('vertical', 'before');
 		this.createOverscrollJob('vertical', 'after');
 
-		document.addEventListener('keydown', this.onKeyDownInBody.bind(this));
+		scrollables.add(this);
 	}
 
 	componentDidUpdate (prevProps) {
@@ -264,6 +303,8 @@ class ScrollableBase extends Component {
 	}
 
 	componentWillUnmount () {
+		scrollables.delete(this);
+
 		this.stopOverscrollJob('horizontal', 'before');
 		this.stopOverscrollJob('horizontal', 'after');
 		this.stopOverscrollJob('vertical', 'before');
@@ -458,13 +499,16 @@ class ScrollableBase extends Component {
 
 			// Need to check whether an overscroll effect is needed
 			return true;
-		} else if (!focusedItem && this.hasFocus()) { // The container is active, but there is no spot control.
+		} else if (!focusedItem) {
 			const
 				bounds = this.uiRef.current.getScrollBounds(),
-				pageDistance = ((direction === 'up') ? -1 : 1) * bounds.clientHeight * paginationPageMultiplier,
-				canScrollVertically = this.uiRef.current.canScrollVertically(bounds);
+				canScrollVertically = this.uiRef.current.canScrollVertically(bounds),
+				pageDistance = ((direction === 'up') ? -1 : 1) * bounds.clientHeight * paginationPageMultiplier;
 
- 			this.uiRef.current.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.scrollbarButton);
+			this.uiRef.current.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.scrollbarButton);
+
+			// Need to check whether an overscroll effect is needed
+			return true;
 		}
 
 		return false;
@@ -481,7 +525,7 @@ class ScrollableBase extends Component {
 		return current && this.uiRef.current.containerRef.current.contains(current);
 	}
 
-	onKeyDown = (ev) => {
+	onKeyDown = (ev, globalHandler = false) => {
 		const {keyCode, repeat} = ev;
 
 		forward('onKeyDown', ev, this.props);
@@ -492,7 +536,7 @@ class ScrollableBase extends Component {
 
 		this.animateOnFocus = this.props.animate;
 
-		if (!repeat && this.hasFocus()) {
+		if (!repeat && (globalHandler || this.hasFocus())) {
 			const {overscrollEffectOn} = this.props;
 			let
 				overscrollEffectRequired = false,
@@ -500,7 +544,9 @@ class ScrollableBase extends Component {
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
-					Spotlight.setPointerMode(false);
+					if (!globalHandler) {
+						Spotlight.setPointerMode(false);
+					}
 					direction = isPageUp(keyCode) ? 'up' : 'down';
 					overscrollEffectRequired = this.scrollByPage(direction) && overscrollEffectOn.pageKey;
 				}
@@ -534,22 +580,6 @@ class ScrollableBase extends Component {
 						edge = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
 					this.uiRef.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 				}
-			}
-		}
-	}
-
-	onKeyDownInBody = (ev) => {
-		const
-			{keyCode} = ev,
-			current = Spotlight.getCurrent();
-
- 		if (Spotlight.getPointerMode() && !current && (isPageUp(keyCode) || isPageDown(keyCode))) {
-			const
-				activeContainerId = Spotlight.getActiveContainer(),
-				activeContainerNode = getContainerNode(activeContainerId);
-
- 			if (activeContainerNode === ReactDOM.findDOMNode(this)) { // eslint-disable-line react/no-find-dom-node
-				this.onKeyDown(ev);
 			}
 		}
 	}
