@@ -1,5 +1,4 @@
 import {ContextualPopupDecorator} from '@enact/moonstone/ContextualPopupDecorator';
-import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 
 import Button from '@enact/moonstone/Button';
 import Divider from '@enact/moonstone/Divider';
