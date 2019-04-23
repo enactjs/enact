@@ -269,12 +269,17 @@ const EditableIntegerPickerBase = kind({
 				);
 			}
 
+			let children = label;
+			if (unit) {
+				children = `${label} ${unit}`;
+			}
+
 			return (
 				<PickerItem
 					key={value}
 					onClick={onPickerItemClick}
 				>
-					{`${label} ${unit}`}
+					{children}
 				</PickerItem>
 			);
 		},

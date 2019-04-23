@@ -265,9 +265,6 @@ class ScrollableBaseNative extends Component {
 		vertical: {before: null, after: null}
 	}
 
-	// browser native scrolling
-	resetPosition = null // prevent auto-scroll on focus by Spotlight
-
 	onMouseDown = (ev) => {
 		if (this.props['data-spotlight-container-disabled']) {
 			ev.preventDefault();
@@ -289,20 +286,6 @@ class ScrollableBaseNative extends Component {
 			direction === 'horizontal' && this.uiRef.current.canScrollHorizontally(bounds)
 		) && !this.props['data-spotlight-container-disabled']) {
 			this.childRef.current.setContainerDisabled(true);
-		}
-	}
-
-	onMouseOver = () => {
-		this.resetPosition = this.uiRef.current.childRefCurrent.containerRef.current.scrollTop;
-	}
-
-	onMouseMove = () => {
-		if (this.resetPosition !== null) {
-			const childContainerRef = this.uiRef.current.childRefCurrent.containerRef;
-			childContainerRef.current.style.scrollBehavior = null;
-			childContainerRef.current.scrollTop = this.resetPosition;
-			childContainerRef.current.style.scrollBehavior = 'smooth';
-			this.resetPosition = null;
 		}
 	}
 
@@ -704,8 +687,6 @@ class ScrollableBaseNative extends Component {
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	addEventListeners = (childContainerRef) => {
 		if (childContainerRef.current && childContainerRef.current.addEventListener) {
-			childContainerRef.current.addEventListener('mouseover', this.onMouseOver, {capture: true});
-			childContainerRef.current.addEventListener('mousemove', this.onMouseMove, {capture: true});
 			childContainerRef.current.addEventListener('focusin', this.onFocus);
 			if (platform.webos) {
 				childContainerRef.current.addEventListener('webOSVoice', this.onVoice);
@@ -717,8 +698,6 @@ class ScrollableBaseNative extends Component {
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	removeEventListeners = (childContainerRef) => {
 		if (childContainerRef.current && childContainerRef.current.removeEventListener) {
-			childContainerRef.current.removeEventListener('mouseover', this.onMouseOver, {capture: true});
-			childContainerRef.current.removeEventListener('mousemove', this.onMouseMove, {capture: true});
 			childContainerRef.current.removeEventListener('focusin', this.onFocus);
 			if (platform.webos) {
 				childContainerRef.current.removeEventListener('webOSVoice', this.onVoice);
