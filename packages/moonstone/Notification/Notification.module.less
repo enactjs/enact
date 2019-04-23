@@ -12,26 +12,15 @@
 	max-width: @moon-notification-max-width;
 	text-align: center;
 	border-radius: @moon-notification-border-radius;
+	border-style: solid;
+	border-width: @moon-notification-border-width;
 	margin-bottom: @moon-notification-margin-bottom;
 	transform: translate3d(-50%, 50%, 0);
-	padding: @moon-notification-padding-top-botton @moon-notification-padding-left-right;
+	padding: @moon-notification-padding-top-bottom @moon-notification-padding-left-right;
+	box-shadow: 0 12px 16px rgba(0,0,0,0.3);
 
 	&.wide {
 		max-width: @moon-notification-wide-width; // 4 button case
-	}
-
-	&::before {
-		content: '';
-		display: block;
-		position: absolute;
-		border-width: @moon-notification-border-width;
-		border-style: solid;
-		border-radius: @moon-notification-out-border-radius;
-		top: -@moon-notification-border-width;
-		right: -@moon-notification-border-width;
-		bottom: -@moon-notification-border-width;
-		left: -@moon-notification-border-width;
-		z-index: -1;
 	}
 
 	.body {
@@ -77,8 +66,6 @@
 
 	// Skin colors
 	.applySkins({
-		&::before {
-			border-color: @moon-notification-border-color;
-		}
+		border-color: @moon-notification-border-color;
 	});
 }
