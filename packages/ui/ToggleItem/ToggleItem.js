@@ -162,10 +162,11 @@ const ToggleItemBase = kind({
 		iconPosition: PropTypes.oneOf(['before', 'after']),
 
 		/**
-		 * An additional customizable icon component with more granular positioning rules. This
-		 * should only be used *after* specifying the `icon` property, as the positioning for this
-		 * offers the ability to place this in front of or behind the existing `icon`.
-		 * See `itemIconPosition` for options.
+		 * An additional customizable icon component.
+		 *
+		 * Supports more granular positioning rules. This should only be used *after* specifying the
+		 * `icon` property, as the positioning for this offers the ability to place this in front of
+		 * or behind the existing `icon`. See `itemIconPosition` for options.
 		 *
 		 * @type {Node}
 		 * @public
