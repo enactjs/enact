@@ -153,9 +153,9 @@ const ToggleItemBase = kind({
 		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
-		 * Specifies on which side (`'before'` or `'after'`) of the text the icon appears.
+		 * Specifies on which side (`'before'` or `'after'`) of `children` the icon appears.
 		 *
-		 * @type {String}
+		 * @type {('before'|'after')}
 		 * @default 'before'
 		 * @public
 		 */
@@ -173,15 +173,16 @@ const ToggleItemBase = kind({
 		itemIcon: PropTypes.node,
 
 		/**
-		 * Specifies on which position (`'before'`, `'beforeChildren'`, `'afterChildren'`, `'after'`) of the
-		 * text the `itemIcon` appears.
+		 * Specifies where `itemIcon` appears.
 		 *
-		 * * before - first element in the item
-		 * * beforeChildren - if a "before" `icon` is present, this will be between the icon and the text
-		 * * afterChildren - if an "after" `icon` is present, this will be between the text and the icon
-		 * * after - the last element in the item
+		 * * `'before'` - first element in the item
+		 * * `'beforeChildren'` - before `children`. If `iconPosition` is `'before'`, `icon` will be
+		 *	before `itemIcon`
+		 * * `'afterChildren'` - after `children`. If iconPosition` is `'after'`, `icon` will be
+		 *	after `itemIcon`
+		 * * `'after'` - the last element in the item
 		 *
-		 * @type {String}
+		 * @type {('before'|'beforeChildren'|'afterChildren'|'after')}
 		 * @default 'afterChildren'
 		 * @public
 		 */
