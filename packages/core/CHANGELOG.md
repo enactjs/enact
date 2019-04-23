@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 - `core/util.clamp` to safely clamp a value between min and max bounds
 
+## [2.5.2] - 2019-04-23
+
+No significant changes.
+
 ## [2.5.1] - 2019-04-09
 
 ### Fixed

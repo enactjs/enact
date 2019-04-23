@@ -1,3 +1,5 @@
+import {platform} from '@enact/core/platform';
+
 // It's possible that emitting `onTap` will cause a DOM change before the mousedown fires resulting
 // in multiple tap/click events for the same user action. To avoid this, we store the last touchend
 // target and timestamp to compare against the next mouse down. If the timestamp is different (e.g
@@ -39,7 +41,8 @@ class ClickAllow {
 	shouldAllowMouseEvent (ev) {
 		const {timeStamp} = ev;
 
-		return this.lastTouchEndTime !== timeStamp && shouldAllowMouseDown(ev);
+		// iOS Safari sends both touch and mouse events (with differing timestamps)
+		return !platform.ios && this.lastTouchEndTime !== timeStamp && shouldAllowMouseDown(ev);
 	}
 
 	shouldAllowTap (ev) {

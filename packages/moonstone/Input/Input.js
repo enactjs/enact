@@ -9,6 +9,7 @@
  * @exports InputBase
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {isRtlText} from '@enact/i18n/util';
@@ -84,6 +85,7 @@ const InputBase = kind({
 		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @deprected replaced by CSS `:focus-within` pseudo-selector
 		 * @public
 		 */
 		focused: PropTypes.bool,
@@ -296,6 +298,27 @@ const InputBase = kind({
 	}
 });
 
+let InputBaseExternal = InputBase;
+if (__DEV__) {
+	const deprecateFocused = deprecate(() => {}, {
+		name: 'moonstone/Input.InputBase#focused',
+		replacedBy: 'the :focus-within CSS pseudo-selector',
+		since: '2.6.0',
+		until: '3.0.0'
+	});
+
+	// eslint-disable-next-line enact/display-name
+	InputBaseExternal = function (props) {
+		if ('focused' in props) {
+			deprecateFocused();
+		}
+
+		return (
+			<InputBase {...props} />
+		);
+	};
+}
+
 /**
  * A Spottable, Moonstone styled input component with embedded icon support.
  *
@@ -412,5 +435,6 @@ export {
 	calcAriaLabel,
 	extractInputProps,
 	Input,
-	InputBase
+	InputBaseExternal as InputBase,
+	InputBase as InputBaseInternal
 };
