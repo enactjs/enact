@@ -2,11 +2,13 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [2.5.2] - 2019-04-23
+## [unreleased]
 
 ### Deprecated
 
-- `moonstone/Input.InputBase` prop `focused` which will be replaced in 3.0 with the `:focus-within` CSS pseudo-selector
+- `moonstone/Input.InputBase` prop `focused` which will be handled by CSS in 3.0
+
+## [2.5.2] - 2019-04-23
 
 ### Fixed
 
