@@ -7,6 +7,18 @@
 .backgroundArc (@position) {
 	background-image: radial-gradient(ellipse at @position, transparent 70%, @moon-tooltip-bg-color 71%);
 }
+.tail (@edge, @point) {
+	@stroke-color: @moon-tooltip-border-color;
+	// @stroke-color: orange;
+	// try a dropshadow as a stroke
+	background-image:
+		linear-gradient(to @edge, @stroke-color @moon-tooltip-border-width, transparent @moon-tooltip-border-width), // Edge line
+		linear-gradient(to @point @edge, @moon-tooltip-bg-color 50%, @stroke-color 50% ~"calc(50% + 1px)", transparent ~"calc(50% + 1px)"); // Diagonal line + fill
+	// @center-point: (sqrt(pow(@moon-tooltip-point-width, 2) + pow(@moon-tooltip-point-height, 2)) / 2);
+	// background-image:
+	// 	linear-gradient(to @edge, #494949 @moon-tooltip-border-width, transparent @moon-tooltip-border-width), // Edge line
+	// 	linear-gradient(to @point @edge, #4d4d4d @center-point, #494949 @center-point (@center-point + 1px), transparent (@center-point + 1px)); // Diagonal line + fill
+}
 
 .tooltip {
 	position: absolute;
@@ -57,9 +69,12 @@
 
 	.tooltipLabel {
 		.moon-small-button-text();
-		line-height: @moon-tooltip-label-height;
+		font-size: 27px;
+		// line-height: @moon-tooltip-label-height;
+		line-height: 1.5em;
 		white-space: nowrap;
-		padding: @moon-spotlight-outset @moon-tooltip-h-padding;
+		// padding: @moon-spotlight-outset @moon-tooltip-h-padding;
+		padding: @moon-tooltip-v-padding @moon-tooltip-h-padding;
 		border-radius: @moon-tooltip-border-radius;
 
 		:global(.enact-locale-right-to-left) & {
@@ -299,62 +314,75 @@
 
 	// Skin colors
 	.applySkins({
+		// filter: drop-shadow(0 7px 6px rgba(0,0,0,0.3));
+		filter: drop-shadow(@moon-tooltip-shadow);
+
 		// Drawing the arc/arrow shape using the mixin from above
 		&.below {
 			&.leftArrow {
-				.tooltipArrow {	.backgroundArc(left top);	}
+				// .tooltipArrow {	.backgroundArc(left top);	}
+				.tooltipArrow {	.tail(left; top);	}
 			}
 			&.centerArrow {
 				.tooltipArrow {	.backgroundArc(right top);	}
 				.tooltipArrow::after {	.backgroundArc(left top);	}
 			}
 			&.rightArrow {
-				.tooltipArrow {	.backgroundArc(right top);	}
+				// .tooltipArrow {	.backgroundArc(right top);	}
+				.tooltipArrow {	.tail(right; top);	}
 			}
 		}
 
 		&.above {
 			&.leftArrow {
-				.tooltipArrow {	.backgroundArc(left bottom);	}
+				// .tooltipArrow {	.backgroundArc(left bottom);	}
+				.tooltipArrow {	.tail(left; bottom);	}
 			}
 			&.centerArrow {
 				.tooltipArrow {	.backgroundArc(right bottom);	}
 				.tooltipArrow::after {	.backgroundArc(left bottom);	}
 			}
 			&.rightArrow {
-				.tooltipArrow {	.backgroundArc(right bottom);	}
+				// .tooltipArrow {	.backgroundArc(right bottom);	}
+				.tooltipArrow {	.tail(right; bottom);	}
 			}
 		}
 
 		&.left {
 			&.topArrow {
-				.tooltipArrow {	.backgroundArc(right top);	}
+				// .tooltipArrow {	.backgroundArc(right top);	}
+				.tooltipArrow {	.tail(top; right);	}
 			}
 			&.middleArrow {
 				.tooltipArrow {	.backgroundArc(right bottom);	}
 				.tooltipArrow::after {	.backgroundArc(right top);	}
 			}
 			&.bottomArrow {
-				.tooltipArrow {	.backgroundArc(right bottom);	}
+				// .tooltipArrow {	.backgroundArc(right bottom);	}
+				.tooltipArrow {	.tail(bottom; right);	}
 			}
 		}
 
 		&.right {
 			&.topArrow {
-				.tooltipArrow {	.backgroundArc(left top);	}
+				// .tooltipArrow {	.backgroundArc(left top);	}
+				.tooltipArrow {	.tail(top; left);	}
 			}
 			&.middleArrow {
 				.tooltipArrow {	.backgroundArc(left bottom);	}
 				.tooltipArrow::after {	.backgroundArc(left top);	}
 			}
 			&.bottomArrow {
-				.tooltipArrow {	.backgroundArc(left bottom);	}
+				// .tooltipArrow {	.backgroundArc(left bottom);	}
+				.tooltipArrow {	.tail(bottom; left);	}
 			}
 		}
 
 		.tooltipLabel {
 			color: @moon-tooltip-text-color;
 			background-color: @moon-tooltip-bg-color;
+			border: @moon-tooltip-border-width solid @moon-tooltip-border-color;
+			// box-shadow: @moon-tooltip-shadow;
 		}
 	});
 }
