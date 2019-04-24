@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Input.InputBase` prop `focused` which will be handled by CSS in 3.0
 
+### Fixed
+
+- `moonstone/EditableIntegerPicker`, `moonstone/Picker`, and `moonstone/RangePicker` to not error when the `min` prop exceeds the `max` prop
+
 ## [2.5.2] - 2019-04-23
 
 ### Fixed
