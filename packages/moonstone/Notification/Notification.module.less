@@ -38,23 +38,6 @@
 		& > * {
 			// Applying the margin to the children allows for the case of no children without needing removing the margin
 			margin-top: 24px;
-			.margin-start-end(@moon-notification-button-gap, 0);
-		}
-
-		& > :first-child {
-			margin-left: 0;
-
-			:global(.enact-locale-right-to-left) & {
-				margin-right: 0;
-			}
-		}
-
-		& > :last-child {
-			margin-right: 0;
-
-			:global(.enact-locale-right-to-left) & {
-				margin-right: @moon-notification-button-gap;
-			}
 		}
 	}
 
