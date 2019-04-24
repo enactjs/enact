@@ -83,7 +83,7 @@ describe('Layout Specs', () => {
 	});
 
 	const cellPropSize = [
-		['cellSize', ['100px', '50%', '5em']]
+		['size', ['100px', '50%', '5em']]
 	];
 
 	cellPropSize.forEach(([prop, vals]) => {

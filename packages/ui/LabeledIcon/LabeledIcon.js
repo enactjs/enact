@@ -179,7 +179,7 @@ const LabeledIconBase = kind({
 
 	render: ({css, children, disabled, icon, iconComponent, orientation, size, small, ...rest}) => {
 		let iconClassName = css.icon;
-		size = !size && (small ? 'small' : size || 'large');
+		size = !size && small ? 'small' : size || 'large';
 
 		if (small) {
 			const deprecateSmall = deprecate(() => {},  {
@@ -221,12 +221,16 @@ const LabeledIconBase = kind({
 				CellBase.inline({
 					key: 'icon',
 					shrink: true,
-					cellSize: '100%',
-					component: iconComponent,
-					children: icon,
-					className: (css.iconCell + ' ' + iconClassName),
-					disabled,
-					size
+					size: '100%',
+					className: css.iconCell,
+					children: [
+						iconComponent.inline({
+							children: icon,
+							size,
+							className: iconClassName,
+							disabled
+						})
+					]
 				}),
 				CellBase.inline({
 					key: 'label',
