@@ -31,7 +31,50 @@
 	}
 }
 
+// Special cases for when button is next to another button
+// small button followed by small button
+.button:first-of-type + .button {
+	// margin: 0 @moon-button-h-margin;
+	margin: 0 9px;
+	outline-color: yellow;
+
+	// .bg {
+	// 	background-color: magenta !important;
+	// }
+}
+// small button followed by button
+.button:first-of-type + .button.minWidth {
+	// margin: 0 @moon-button-h-margin;
+	margin: 0 9px;
+
+	// .bg {
+	// 	background-color: orange !important;
+	// }
+}
+// button followed by button
+.button.minWidth:first-of-type + .button {
+	// margin: 0 @moon-button-h-margin;
+	margin: 0 9px;
+
+	// .bg {
+	// 	background-color: teal !important;
+	// }
+}
+// button followed by small button
+.button.minWidth:first-of-type + .button.minWidth {
+	// margin: 0 @moon-button-h-margin;
+	margin: 0 15px;
+
+	// .bg {
+	// 	background-color: chocolate !important;
+	// }
+}
+
 .button {
+	// outline: 1px dashed;
+	outline-offset: @moon-spotlight-outset;
+
+
 	.moon-large-button-text();
 	height: @moon-button-height;
 	line-height: (@moon-button-height - (2 * @moon-button-border-width));
@@ -159,6 +202,15 @@
 		margin: 0 @moon-button-small-h-margin;
 		padding-left: @moon-button-small-h-padding;
 		padding-right: @moon-button-small-h-padding;
+		margin-left: @moon-button-small-h-margin;
+		margin-right: @moon-button-small-h-margin;
+
+		// & + .button.small {
+		// 	margin-left: 30px;
+		// 	.bg {
+		// 		background-color: lime !important;
+		// 	}
+		// }
 
 		// Standard Button Scenario
 		&.minWidth {

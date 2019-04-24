@@ -108,7 +108,10 @@ const PanelsBase = kind({
 		 * @type {Function}
 		 * @private
 		 */
-		controlsRef: PropTypes.func,
+		controlsRef: PropTypes.oneOfType([
+			PropTypes.func,
+			PropTypes.shape({current: PropTypes.any})
+		]),
 
 		/**
 		 * Unique identifier for the Panels instance
@@ -226,6 +229,11 @@ const PanelsBase = kind({
 	},
 
 	render: ({arranger, childProps, children, controls, generateId, index, noAnimation, ...rest}) => {
+		if (rest.controlsMeasurements) {
+			console.log('controlsRef:', rest.controlsMeasurements.width);
+		} else {
+			console.error('controlsMeasurements is empty', rest.controlsMeasurements);
+		}
 		delete rest.closeButtonBackgroundOpacity;
 		delete rest.closeButtonAriaLabel;
 		delete rest.controlsMeasurements;

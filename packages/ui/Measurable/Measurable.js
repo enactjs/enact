@@ -1,3 +1,4 @@
+/* global MutationObserver ResizeObserver */
 /**
  * A higher-order component that adds the ability to measure nodes conveniently.
  *
@@ -6,8 +7,8 @@
  */
 
 import hoc from '@enact/core/hoc';
-import warning from 'warning';
-import React, {useState, useCallback} from 'react';
+// import warning from 'warning';
+import React, {useState, useRef, useCallback, useLayoutEffect} from 'react';
 
 /**
  * Default config for {@link ui/Measurable.Measurable}.
@@ -37,13 +38,68 @@ const defaultConfig = {
 
 function useMeasurable () {
 	const [measurement, setMeasurement] = useState();
-	const ref = useCallback(node => {
-		warning((!node || node.getBoundingClientRect), 'Only a DOM node can be measured. It appears that the ref is attached to a React node instead.');
-		setMeasurement((node && node.getBoundingClientRect) ? node.getBoundingClientRect() : null);
-	}, []);
+	const ref = useRef(null);
+	// const cb = useCallback(node => {
+	// 	warning((!node || node.getBoundingClientRect), 'Only a DOM node can be measured. It appears that the ref is attached to a React node instead.');
+	// 	setMeasurement((node && node.getBoundingClientRect) ? node.getBoundingClientRect() : null);
+	// }, []);
+
+	const measureMe = useCallback(
+		function measureMe () {
+			if (ref.current) {
+				setMeasurement(ref.current.getBoundingClientRect());
+				// setMeasurement((ref.current && ref.current.getBoundingClientRect) ? ref.current.getBoundingClientRect() : null);
+			}
+			// console.log('measurement:', measurement);
+		},
+		[ref]
+	);
+
+	useLayoutEffect(
+		() => {
+			if (!ref.current) {
+				return;
+			}
+
+			measureMe();
+
+			if (typeof ResizeObserver === 'function') {
+				let resizeObserver = new ResizeObserver(() => measureMe());
+				resizeObserver.observe(ref.current);
+
+				return () => {
+					resizeObserver.disconnect(ref.current);
+					resizeObserver = null;
+				};
+			} else {
+				window.addEventListener('resize', measureMe);
+
+				return () => {
+					window.removeEventListener('resize', measureMe);
+				};
+			}
+		},
+		[ref.current]
+	);
+
+	// useLayoutEffect(
+	// 	() => {
+	// 		measureMe();
+	// 		// if (!ref.current) {
+
+	// 		// }
+	// 	},
+	// 	[ref.current]
+	// );
+
+
+	// useEffect(() => {
+	// 	ref;
+	// });
+
 
 	return {
-		ref,
+		ref, // : ref.current,
 		measurement
 	};
 }
