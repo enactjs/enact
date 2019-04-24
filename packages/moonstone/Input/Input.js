@@ -194,12 +194,12 @@ const InputBase = kind({
 		/**
 		 * Applies the appropriate styling for size of the component.
 		 *
-		 * Takes `small` or `medium`.
+		 * Takes `small` or `large`.
 		 * Other sizes can be defined and customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default 'medium'
+		 * @default 'large'
 		 * @public
 		 */
 		size: PropTypes.string,
@@ -240,6 +240,7 @@ const InputBase = kind({
 		dismissOnEnter: false,
 		invalid: false,
 		placeholder: '',
+		// size: 'large', // we won't set default props for `size` yet to support `small` prop
 		small: false,
 		type: 'text'
 	},
@@ -263,7 +264,7 @@ const InputBase = kind({
 			const title = (value == null || value === '') ? placeholder : '';
 			return calcAriaLabel(title, type, value);
 		},
-		className: ({focused, invalid, size, small, styler}) => styler.append({focused, invalid}, !size && small ? 'small' : size || 'medium'),
+		className: ({focused, invalid, size, small, styler}) => styler.append({focused, invalid}, size, !size && (small ? 'small' : 'large')),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
 		invalidTooltip: ({css, invalid, invalidMessage = $L('Please enter a valid value.'), rtl}) => {
 			if (invalid && invalidMessage) {

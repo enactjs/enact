@@ -131,12 +131,12 @@ const ButtonBase = kind({
 		/**
 		 * Applies the appropriate styling for size of the component.
 		 *
-		 * Takes `small` or `medium`.
+		 * Takes `small` or `large`.
 		 * Other sizes can be defined and customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default 'medium'
+		 * @default 'large'
 		 * @public
 		 */
 		size: PropTypes.string,
@@ -157,6 +157,7 @@ const ButtonBase = kind({
 		minWidth: true,
 		pressed: false,
 		selected: false,
+		// size: 'large', // we won't set default props for `size` yet to support `small` prop
 		small: false
 	},
 
@@ -172,7 +173,7 @@ const ButtonBase = kind({
 			minWidth,
 			pressed,
 			selected,
-		}, !size && small ? 'small' : size || 'medium'),
+		}, size, !size && (small ? 'small' : 'large')),
 		icon: ({css, icon, iconComponent: Icon, size}) => {
 			return (typeof icon === 'string' && Icon) ? (
 				<Icon size={size} className={css.icon}>{icon}</Icon>

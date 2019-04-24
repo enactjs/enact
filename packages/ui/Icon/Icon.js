@@ -121,12 +121,12 @@ const Icon = kind({
 		/**
 		 * Applies the appropriate styling for size of the component.
 		 *
-		 * Takes `small` or `medium`.
+		 * Takes `small` or `large`.
 		 * Other sizes can be defined and customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default 'medium'
+		 * @default 'small'
 		 * @public
 		 */
 		size: PropTypes.string,
@@ -145,6 +145,7 @@ const Icon = kind({
 	defaultProps: {
 		iconList: {},
 		pressed: false,
+		// size: 'large', // we won't set default props for `size` yet to support `small` prop
 		small: false
 	},
 
@@ -159,7 +160,7 @@ const Icon = kind({
 			// If the icon isn't in our known set, apply our custom font class
 			dingbat: !(icon in iconList),
 			pressed
-		}, !size && small ? 'small' : size || 'medium'),
+		}, size, !size && (small ? 'small' : 'large')),
 		iconProps: ({children: iconProp, iconList, style}) => {
 			let icon = iconList[iconProp];
 

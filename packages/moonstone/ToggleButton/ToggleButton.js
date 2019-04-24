@@ -99,12 +99,12 @@ const ToggleButtonBase = kind({
 		 * The button will have a larger tap target than its apparent size to allow it to be clicked
 		 * more easily.
 		 *
-		 * Takes `small` or `medium`.
+		 * Takes `small` or `large`.
 		 * Other sizes can be defined and customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default medium
+		 * @default large
 		 * @public
 		 */
 		size: PropTypes.string,
@@ -146,6 +146,7 @@ const ToggleButtonBase = kind({
 		disabled: false,
 		minWidth: true,
 		selected: false,
+		// size: 'large', // we won't set default props for `size` yet to support `small` prop
 		small: false,
 		toggleOffLabel: '',
 		toggleOnLabel: ''
@@ -157,7 +158,7 @@ const ToggleButtonBase = kind({
 	},
 
 	computed: {
-		className: ({selected, size, small, styler}) => styler.append({selected, small}, !size && small ? 'small' : size || 'medium'),
+		className: ({selected, size, small, styler}) => styler.append({selected, small}, size, !size && (small ? 'small' : 'large')),
 		children: ({children, selected, toggleOnLabel, toggleOffLabel}) => {
 			let c = children;
 			if (selected && toggleOnLabel) {
