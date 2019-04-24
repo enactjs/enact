@@ -182,6 +182,15 @@ class ScrollableBaseNative extends Component {
 		noScrollByDrag: PropTypes.bool,
 
 		/**
+		 * Prevents scroll by wheeling on the list or the scroller.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		noScrollHorizontalByWheel: PropTypes.bool,
+
+		/**
 		 * Called when flicking with a mouse or a touch screen.
 		 *
 		 * @type {Function}
@@ -366,6 +375,7 @@ class ScrollableBaseNative extends Component {
 		horizontalScrollbar: 'auto',
 		noAnimation: false,
 		noScrollByDrag: false,
+		noScrollHorizontalByWheel: false,
 		onScroll: nop,
 		onScrollStart: nop,
 		onScrollStop: nop,
@@ -637,8 +647,8 @@ class ScrollableBaseNative extends Component {
 	 */
 	onWheel = (ev) => {
 		if (this.isDragging) {
-			/* prevent native scrolling feature during dragging */
 			ev.preventDefault();
+			ev.stopPropagation();
 		} else {
 			const
 				{overscrollEffectOn} = this.props,
@@ -672,19 +682,26 @@ class ScrollableBaseNative extends Component {
 						(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(ev.target))) {
 						delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 						needToHideThumb = !delta;
+
+						ev.preventDefault();
 					} else if (overscrollEffectRequired) {
 						this.checkAndApplyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce);
 					}
+
+					ev.stopPropagation();
 				} else {
 					if (overscrollEffectRequired && (eventDelta < 0 && this.scrollTop <= 0 || eventDelta > 0 && this.scrollTop >= bounds.maxTop)) {
 						this.applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
 					}
 					needToHideThumb = true;
 				}
-			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
+			} else if (canScrollHorizontally && !this.props.noScrollHorizontalByWheel) { // this routine handles wheel events on any children for horizontal scroll.
 				if (eventDelta < 0 && this.scrollLeft > 0 || eventDelta > 0 && this.scrollLeft < bounds.maxLeft) {
 					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
+
+					ev.preventDefault();
+					ev.stopPropagation();
 				} else {
 					if (overscrollEffectRequired && (eventDelta < 0 && this.scrollLeft <= 0 || eventDelta > 0 && this.scrollLeft >= bounds.maxLeft)) {
 						this.applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
@@ -694,8 +711,6 @@ class ScrollableBaseNative extends Component {
 			}
 
 			if (delta !== 0) {
-				/* prevent native scrolling feature for vertical direction */
-				ev.preventDefault();
 				const direction = Math.sign(delta);
 				// Not to accumulate scroll position if wheel direction is different from hold direction
 				if (direction !== this.wheelDirection) {
@@ -1296,6 +1311,7 @@ class ScrollableBaseNative extends Component {
 		delete rest.clearOverscrollEffect;
 		delete rest.horizontalScrollbar;
 		delete rest.noAnimation;
+		delete rest.noScrollHorizontalByWheel;
 		delete rest.onFlick;
 		delete rest.onMouseDown;
 		delete rest.onScroll;

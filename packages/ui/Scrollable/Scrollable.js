@@ -197,6 +197,15 @@ class ScrollableBase extends Component {
 		noScrollByDrag: PropTypes.bool,
 
 		/**
+		 * Prevents scroll by wheeling on the list or the scroller.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		noScrollHorizontalByWheel: PropTypes.bool,
+
+		/**
 		 * Called when flicking with a mouse or a touch screen.
 		 *
 		 * @type {Function}
@@ -381,6 +390,7 @@ class ScrollableBase extends Component {
 		horizontalScrollbar: 'auto',
 		noAnimation: false,
 		noScrollByDrag: false,
+		noScrollHorizontalByWheel: false,
 		onScroll: nop,
 		onScrollStart: nop,
 		onScrollStop: nop,
@@ -645,9 +655,10 @@ class ScrollableBase extends Component {
 	}
 
 	onWheel = (ev) => {
-		ev.preventDefault();
-
-		if (!this.isDragging) {
+		if (this.isDragging) {
+			ev.preventDefault();
+			ev.stopPropagation();
+		} else {
 			const
 				{verticalScrollbarRef, horizontalScrollbarRef} = this,
 				bounds = this.getScrollBounds(),
@@ -663,7 +674,7 @@ class ScrollableBase extends Component {
 
 			if (canScrollVertically) {
 				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
-			} else if (canScrollHorizontally) {
+			} else if (canScrollHorizontally && !this.props.noScrollHorizontalByWheel) {
 				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 			}
 
@@ -678,6 +689,8 @@ class ScrollableBase extends Component {
 
 			if (delta !== 0) {
 				this.scrollToAccumulatedTarget(delta, canScrollVertically, this.props.overscrollEffectOn.wheel);
+				ev.preventDefault();
+				ev.stopPropagation();
 			}
 		}
 	}
@@ -1301,6 +1314,7 @@ class ScrollableBase extends Component {
 		delete rest.clearOverscrollEffect;
 		delete rest.horizontalScrollbar;
 		delete rest.noAnimation;
+		delete rest.noScrollHorizontalByWheel;
 		delete rest.onFlick;
 		delete rest.onKeyDown;
 		delete rest.onMouseDown;
