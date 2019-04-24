@@ -124,8 +124,28 @@ storiesOf('Button', module)
 					Small Button
 				</Button>
 				<Divider>IconButton</Divider>
-				<IconButton className={css.tapArea} color={select('color', prop.color, Config)}>{select('icon', prop.icons, Config) || '☃'}</IconButton>
-				<IconButton className={css.tapArea} small color={select('color', prop.color, Config)}>{select('icon', prop.icons, Config) || '☃'}</IconButton>
+				<IconButton
+					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+					className={css.tapArea}
+					color={select('color', prop.color, Config)}
+					disabled={boolean('disabled', Config)}
+					onClick={action('onClick')}
+					selected={boolean('selected', Config)}
+
+				>
+					{select('icon', prop.icons, Config) || '☃'}
+				</IconButton>
+				<IconButton
+					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+					className={css.tapArea}
+					color={select('color', prop.color, Config)}
+					disabled={boolean('disabled', Config)}
+					onClick={action('onClick')}
+					small
+					selected={boolean('selected', Config)}
+				>
+					{select('icon', prop.icons, Config) || '☃'}
+				</IconButton>
 			</div>
 		)
 	);
