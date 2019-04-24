@@ -131,7 +131,6 @@ storiesOf('Button', module)
 					disabled={boolean('disabled', Config)}
 					onClick={action('onClick')}
 					selected={boolean('selected', Config)}
-
 				>
 					{select('icon', prop.icons, Config) || '☃'}
 				</IconButton>
