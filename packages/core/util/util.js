@@ -42,7 +42,7 @@ const cap = function (str) {
  * @function
  * @param   {Number}    min   The minimum value of the range
  * @param   {Number}    max   The maximum value of the range
- * @param   {Number}    value THe value that must be within the range
+ * @param   {Number}    value The value that must be within the range
  *
  * @returns {Number}          The clamped value
  * @memberof core/util
