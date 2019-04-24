@@ -105,7 +105,7 @@ storiesOf('Header', module)
 				title={text('title', Config, 'Title is very very very very very very very long.')}
 				titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow text and header components to test positioning of header components.')}
 				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
-				marqueeOn={select('marqueeOn', ['', 'hover', 'render'], Header, '')}
+				marqueeOn={select('marqueeOn', ['hover', 'render'], Config)}
 			>
 				<Button small>On / Off</Button>
 			</Header>
@@ -119,7 +119,7 @@ storiesOf('Header', module)
 				title={text('title', Config, 'Title is very very very very very very very long.')}
 				titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow text and header components to test positioning of header components.')}
 				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
-				marqueeOn={select('marqueeOn', ['', 'hover', 'render'], Header, '')}
+				marqueeOn={select('marqueeOn', ['hover', 'render'], Config)}
 			>
 				<Button small>On / Off</Button>
 			</Header>
