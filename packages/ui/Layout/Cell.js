@@ -120,11 +120,12 @@ const CellBase = kind({
 		style: ({align, shrink, size, style}) => {
 			if (typeof size === 'number') size = ri.unit(ri.scale(size), 'rem');
 
+			let cellSize = size;
 			if (!size) {
 				if (shrink) {
-					size = '100%';
+					cellSize = '100%';
 				} else {
-					size = 'none';
+					cellSize = 'none';
 				}
 			}
 
@@ -133,7 +134,7 @@ const CellBase = kind({
 				alignSelf: toFlexAlign(align),
 				flexBasis: (shrink ? null : size),
 				// Setting 100% below in the presence of `shrink`` and absense of `size` prevents overflow
-				'--cell-size': size
+				'--cell-size': cellSize
 			};
 		}
 	},
