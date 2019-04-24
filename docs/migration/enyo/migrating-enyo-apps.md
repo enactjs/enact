@@ -43,7 +43,7 @@ properties can be shortened to just the property name.  For example, `moonstone/
 like this:
 
 ```
-    { name: 'MyButton', kind: Button, size: 'small', content: 'Click Me!'}
+    { name: 'MyButton', kind: Button, small: true, content: 'Click Me!'}
 ```
 
 In Enact, the same effect is achieved like this:

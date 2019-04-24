@@ -133,7 +133,7 @@ const LabeledIconBase = kind({
 		/**
 		 * Applies the appropriate styling for size of the component.
 		 *
-		 * Takes `small` or `medium`.
+		 * Takes `'small'` or `'medium'`.
 		 * Other sizes can be defined and customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *

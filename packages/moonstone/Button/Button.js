@@ -75,9 +75,9 @@ const ButtonBase = kind({
 		 *
 		 * * `button` - The root class name
 		 * * `bg` - The background node of the button
-		 * * `medium` - Applied to a `medium` button
+		 * * `medium` - Applied to a `size='medium'` button
 		 * * `selected` - Applied to a `selected` button
-		 * * `small` - Applied to a `small` button
+		 * * `small` - Applied to a `size='small'` button
 		 *
 		 * @type {Object}
 		 * @public

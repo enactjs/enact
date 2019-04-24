@@ -58,9 +58,9 @@ const LabeledIconButtonBase = kind({
 		 * * `labeledIconButton` - The root component class
 		 * * `icon` - The icon component class
 		 * * `label` - The label component class
-		 * * `medium` - Applied to a `medium` button
+		 * * `medium` - Applied to a `size='medium'` button
 		 * * `selected` - Applied to a `selected` button
-		 * * `small` - Applied to a `small` button
+		 * * `small` - Applied to a `size='small'` button
 		 *
 		 * @type {Object}
 		 * @public
