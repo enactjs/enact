@@ -3,6 +3,7 @@
  *
  * @module core/util
  * @exports cap
+ * @exports clamp
  * @exports coerceArray
  * @exports coerceFunction
  * @exports extractAriaProps
