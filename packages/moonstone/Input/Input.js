@@ -85,7 +85,7 @@ const InputBase = kind({
 		 *
 		 * @type {Boolean}
 		 * @default false
-		 * @deprected replaced by CSS `:focus-within` pseudo-selector
+		 * @deprecated handled by CSS in 3.0
 		 * @public
 		 */
 		focused: PropTypes.bool,
