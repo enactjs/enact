@@ -190,7 +190,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.TOOLTIP_HEIGHT = ri.scale(15); // distance between client and tooltip's label
+			this.TOOLTIP_HEIGHT = ri.scale(9); // distance between client and tooltip's label
 
 			this.state = {
 				showing: false,

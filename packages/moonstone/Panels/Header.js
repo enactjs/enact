@@ -46,6 +46,11 @@ const HeaderBase = kind({
 	name: 'Header',
 
 	propTypes: /** @lends moonstone/Panels.Header.prototype */ {
+		// Add support for Centered title, titleBelow, and subTitleBelow to support first-use designs.
+		// No need to account for headerComponents (ignore centering offset) or compact version
+		// (which should not be affected by this setting)
+		centered: PropTypes.bool,
+
 		/**
 		 * Children provided are added to the header-components area.
 		 *

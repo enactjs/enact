@@ -16,7 +16,8 @@
 @moon-sub-header-below-font-size:   30px;
 @moon-small-header-font-size:       60px;
 @moon-small-header-sub-header-font-size:   @moon-sub-header-below-font-size;
-@moon-body-font-size:               33px;
+@moon-body-font-size:               30px; // Changed to 30
+@moon-body-small-font-size:         27px; // Add a size="small" prop to BodyText that uses this size
 @moon-item-font-size:               33px;
 @moon-item-font-size-large:         39px;
 @moon-popup-header-font-size:       72px;
@@ -224,11 +225,11 @@
 
 // FormCheckbox
 // ---------------------------------------
-@moon-formcheckbox-size: (@moon-item-height * 0.65);	// Relative to `Item` height
-@moon-formcheckbox-size-large: (@moon-item-height-large * 0.65);	// Relative to `Item` height
+@moon-formcheckbox-size: (@moon-item-height * 0.55);	// Relative to `Item` height
+@moon-formcheckbox-size-large: (@moon-item-height-large * 0.55);	// Relative to `Item` height
 @moon-formcheckbox-check-icon-size: 72px;
 @moon-formcheckbox-check-icon-size-large: 84px;
-@moon-formcheckbox-border-size: 3px;
+@moon-formcheckbox-border-size: 2px;
 
 // Checkbox
 // ---------------------------------------
@@ -382,6 +383,7 @@
 
 // Tooltip
 // ---------------------------------------
+@moon-tooltip-offset: 9px;
 @moon-tooltip-point-width: 12px;
 @moon-tooltip-point-height: 12px;
 @moon-tooltip-border-width: 1px;

@@ -70,6 +70,7 @@
 	.tooltipLabel {
 		.moon-small-button-text();
 		font-size: 27px;
+		font-weight: normal;
 		// line-height: @moon-tooltip-label-height;
 		line-height: 1.5em;
 		white-space: nowrap;
@@ -90,11 +91,11 @@
 	// Positioning for the arrow and label
 	&.below {
 		.tooltipArrow {
-			top: 0.5px;
+			top: (1px + @moon-tooltip-offset);
 		}
 
 		.tooltipLabel {
-			margin-top: @moon-tooltip-point-width;
+			margin-top: (@moon-tooltip-point-height + @moon-tooltip-offset);
 		}
 
 		&.leftArrow {
@@ -127,11 +128,11 @@
 
 	&.above {
 		.tooltipArrow {
-			bottom: 0.5px;
+			bottom: (1.5px + @moon-tooltip-offset);
 		}
 
 		.tooltipLabel {
-			margin-bottom: @moon-tooltip-point-width;
+			margin-bottom: (@moon-tooltip-point-height + @moon-tooltip-offset);
 		}
 
 		&.leftArrow {
