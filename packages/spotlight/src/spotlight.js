@@ -504,6 +504,13 @@ const Spotlight = (function () {
 		}
 	}
 
+	function onTouchEnd (evt) {
+		const current = getCurrent();
+		if (current && !current.contains(evt.target)) {
+			current.blur();
+		}
+	}
+
 	/*
 	 * public methods
 	 */
@@ -524,10 +531,16 @@ const Spotlight = (function () {
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
+
+				if (platform.touch) {
+					window.addEventListener('touchend', onTouchEnd);
+				}
+
 				if (platform.webos) {
 					window.top.document.addEventListener('webOSMouse', handleWebOSMouseEvent);
 					window.top.document.addEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
 				}
+
 				setLastContainer(rootContainerId);
 				configureDefaults(containerDefaults);
 				configureContainer(rootContainerId);
