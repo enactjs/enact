@@ -41,7 +41,7 @@ const ButtonBase = kind({
 		 * * `bg` - The background node of the button
 		 * * `client` - The content node of the button
 		 * * `icon` - The icon node, when `icon` is set
-		 * * `medium` - Applied when `size` prop is `medium`
+		 * * `large` - Applied when `size` prop is `'large'`
 		 * * `minWidth` - Applied when `minWidth` prop is `true`
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 * * `selected` - Applied when `selected` prop is `true`

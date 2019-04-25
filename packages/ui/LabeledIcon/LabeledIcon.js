@@ -133,12 +133,12 @@ const LabeledIconBase = kind({
 		/**
 		 * Applies the appropriate styling for size of the component.
 		 *
-		 * Takes `'small'` or `'medium'`.
+		 * Takes `'small'` or `'large'`.
 		 * Other sizes can be defined and customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default medium
+		 * @default 'large'
 		 * @public
 		 */
 		size: PropTypes.string,
@@ -177,7 +177,7 @@ const LabeledIconBase = kind({
 		}
 	},
 
-	render: ({css, children, disabled, icon, iconComponent, orientation, size, small, ...rest}) => {
+	render: ({css, children, disabled, icon, iconComponent, inline, orientation, size, small, ...rest}) => {
 		let iconClassName = css.icon;
 		size = !size && small ? 'small' : size || 'large';
 
@@ -226,6 +226,7 @@ const LabeledIconBase = kind({
 					children: [
 						iconComponent.inline({
 							children: icon,
+							inline,
 							size,
 							className: iconClassName,
 							disabled

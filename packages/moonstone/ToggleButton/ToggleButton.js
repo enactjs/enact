@@ -104,7 +104,7 @@ const ToggleButtonBase = kind({
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default large
+		 * @default 'large'
 		 * @public
 		 */
 		size: PropTypes.string,

@@ -75,7 +75,7 @@ const IconButtonBase = kind({
 		 *
 		 * * `iconButton` - The root component class
 		 * * `icon` - The [icon component]{@link ui/IconButton.IconButtonBase.iconComponent} class
-		 * * `medium` - Applied when `size` prop is `medium`
+		 * * `large` - Applied when `size` prop is `large`
 		 * * `small` - Applied when `size` prop is `small`
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 *
@@ -127,12 +127,12 @@ const IconButtonBase = kind({
 		/**
 		 * Applies the appropriate styling for size of the component.
 		 *
-		 * Takes `'small'` or `'medium'`.
+		 * Takes `'small'` or `'large'`.
 		 * Other sizes can be defined and customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default medium
+		 * @default 'large'
 		 * @public
 		 */
 		size: PropTypes.string,

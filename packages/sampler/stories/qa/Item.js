@@ -70,28 +70,22 @@ storiesOf('Item', module)
 					{text('Disabled Text', Item, inputData.disabledText)}
 				</Item>
 				<Item>
-					<Icon
-				size={select('size', ['small', 'medium'], Config, 'medium')}}>
+					<Icon size={select('size', ['small', 'medium'], 'medium')}>
 						{select('iconBefore', iconNames, Item, 'plus')}
 					</Icon>
 					{text('Text with iconBefore', Item, 'Item with text that is spottable with an icon (at the start of the string)')}
 				</Item>
 				<Item>
 					{text('Text with iconAfter', Item, 'Item with text that is spottable with an icon(at the end of the string)')}
-					<Icon
-				size={select('size', ['small', 'medium'], Config, 'medium')}}>
+					<Icon size={select('size', ['small', 'medium'], 'medium')}>
 						{select('iconAfter', iconNames, Item, 'pauseforward')}
 					</Icon>
 				</Item>
 				<Item>
-					<Icon
-				size={select('size', ['small', 'medium'], Config, 'medium')}}>gear</Icon>
-					<Icon
-				size={select('size', ['small', 'medium'], Config, 'medium')}}>minus</Icon>
-					<Icon
-				size={select('size', ['small', 'medium'], Config, 'medium')}}>trash</Icon>
-					<Icon
-				size={select('size', ['small', 'medium'], Config, 'medium')}}>flag</Icon>
+					<Icon size={select('size', ['small', 'medium'], 'medium')}>gear</Icon>
+					<Icon size={select('size', ['small', 'medium'], 'medium')}>minus</Icon>
+					<Icon size={select('size', ['small', 'medium'], 'medium')}>trash</Icon>
+					<Icon size={select('size', ['small', 'medium'], 'medium')}>flag</Icon>
 				</Item>
 			</div>
 		)

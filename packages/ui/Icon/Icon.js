@@ -86,7 +86,7 @@ const Icon = kind({
 		 * * `icon` - The root component class
 		 * * `dingbat` - Applied when the value of [`icon`]{@link ui/Icon.Icon.icon} is not
 		 *   found in [iconList]{@link ui/Icon.Icon.iconList}
-		 * * `medium` - Applied when `size` prop is `medium`
+		 * * `large` - Applied when `size` prop is `large`
 		 * * `small` - Applied when `size` prop is `small`
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 *

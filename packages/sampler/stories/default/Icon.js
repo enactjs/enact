@@ -19,7 +19,7 @@ storiesOf('Moonstone', module)
 		withInfo({
 			text: 'Basic usage of Icon'
 		})(() => {
-			const size = select('size', ['small', 'medium'], Icon, 'medium');
+			const size = select('size', ['small', 'large'], Icon, 'large');
 			return (
 				<div>
 					<Icon
