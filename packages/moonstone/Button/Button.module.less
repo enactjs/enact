@@ -32,43 +32,43 @@
 }
 
 // Special cases for when button is next to another button
-// small button followed by small button
-.button:first-of-type + .button {
-	// margin: 0 @moon-button-h-margin;
-	margin: 0 9px;
-	outline-color: yellow;
+// // small button followed by small button
+// .button:first-of-type + .button {
+// 	// margin: 0 @moon-button-h-margin;
+// 	margin: 0 9px;
+// 	outline-color: yellow;
 
-	// .bg {
-	// 	background-color: magenta !important;
-	// }
-}
-// small button followed by button
-.button:first-of-type + .button.minWidth {
-	// margin: 0 @moon-button-h-margin;
-	margin: 0 9px;
+// 	// .bg {
+// 	// 	background-color: magenta !important;
+// 	// }
+// }
+// // small button followed by button
+// .button:first-of-type + .button.minWidth {
+// 	// margin: 0 @moon-button-h-margin;
+// 	margin: 0 9px;
 
-	// .bg {
-	// 	background-color: orange !important;
-	// }
-}
-// button followed by button
-.button.minWidth:first-of-type + .button {
-	// margin: 0 @moon-button-h-margin;
-	margin: 0 9px;
+// 	// .bg {
+// 	// 	background-color: orange !important;
+// 	// }
+// }
+// // button followed by button
+// .button.minWidth:first-of-type + .button {
+// 	// margin: 0 @moon-button-h-margin;
+// 	margin: 0 9px;
 
-	// .bg {
-	// 	background-color: teal !important;
-	// }
-}
-// button followed by small button
-.button.minWidth:first-of-type + .button.minWidth {
-	// margin: 0 @moon-button-h-margin;
-	margin: 0 15px;
+// 	// .bg {
+// 	// 	background-color: teal !important;
+// 	// }
+// }
+// // button followed by small button
+// .button.minWidth:first-of-type + .button.minWidth {
+// 	// margin: 0 @moon-button-h-margin;
+// 	margin: 0 15px;
 
-	// .bg {
-	// 	background-color: chocolate !important;
-	// }
-}
+// 	// .bg {
+// 	// 	background-color: chocolate !important;
+// 	// }
+// }
 
 .button {
 	// outline: 1px dashed;
@@ -122,10 +122,13 @@
 			&::before {
 				content: "";
 				position: absolute;
-				left: -@moon-button-colordot-size;
+				left: -27px;
+				// left: -@moon-button-colordot-size;
 				bottom: 50%;
-				width: @moon-button-colordot-size;
-				height: @moon-button-colordot-size;
+				// width: @moon-button-colordot-size;
+				// height: @moon-button-colordot-size;
+				width: 27px;
+				height: 9px;
 				border-radius: @moon-button-colordot-size;
 				transform: translateY(50%);
 
@@ -149,8 +152,8 @@
 			min-width: 24px;
 			height: 6px;
 			bottom: 18px;
-			left: 24px;
-			right: 24px;
+			left: 27px;
+			right: 27px;
 			border-radius: 6px;
 		}
 	}
@@ -217,8 +220,10 @@
 			min-width: @moon-button-small-min-width;
 
 			.client::before {
-				height: @moon-button-small-colordot-size;
-				width: @moon-button-small-colordot-size;
+				height: 9px;
+				width: 21px;
+				// height: @moon-button-small-colordot-size;
+				// width: @moon-button-small-colordot-size;
 			}
 		}
 
@@ -308,13 +313,13 @@
 			background-color: @moon-remote-button-blue-color;
 		}
 
-		.disabled({
-			&.transparent {
-				.bg {
-					background-color: @moon-button-transparent-disabled-bg-color;
-				}
-			}
-		});
+		// .disabled({
+		// 	&.transparent {
+		// 		.bg {
+		// 			background-color: @moon-button-transparent-disabled-bg-color;
+		// 		}
+		// 	}
+		// });
 
 		.focus({
 			color: @moon-button-focus-text-color;

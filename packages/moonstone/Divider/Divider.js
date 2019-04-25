@@ -74,7 +74,21 @@ const DividerBase = kind({
 		 * @public
 		 */
 		spacing: PropTypes.oneOf(['normal', 'small', 'medium', 'large', 'none'])
+		// size: PropTypes.oneOf(['normal', 'small', 'medium', 'large'])
 	},
+
+	// Divider is simplified to be a derivation of Heading
+	// Heading is added to UI where the size specifies what <h> tag is used. The size class is still applied.
+	// Spacing is automatically defaulted to the current size, with overrides possible via the `spacing` prop.
+	// The available sizes are as follows. Moonstone does not currently use title or subtitle.
+	// It is unlikely that it will (or even should) in the future, as Panels/Header is already
+	// complex enough and doesn't fit with the sizing/spacing rules defined by the UI version of this component.
+	// h1: 'title',
+	// h2: 'subtitle',
+	// h3: 'large',
+	// h4: 'medium',
+	// h5: 'small',
+	// h6: 'tiny',
 
 	defaultProps: {
 		spacing: 'normal'
@@ -86,7 +100,8 @@ const DividerBase = kind({
 	},
 
 	computed: {
-		className: ({spacing, styler}) => styler.append(spacing)
+		className: ({spacing, styler}) => styler.append({[spacing + 'Spacing']: true})
+		// className: ({spacing, styler}) => styler.append({size, [spacing + 'Spacing']: spacing || size})
 	},
 
 	render: (props) => {

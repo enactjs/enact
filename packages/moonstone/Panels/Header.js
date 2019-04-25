@@ -17,6 +17,9 @@ const MarqueeH2 = MarqueeDecorator('h2');
 
 const CompactTitleBase = kind({
 	name: 'CompactTitle',
+	styles: {
+		className: 'compactTitle'
+	},
 	render: (props) => {
 		delete props.title;
 		delete props.titleBelow;
@@ -166,7 +169,7 @@ const HeaderBase = kind({
 		titleBelowComponent: ({marqueeOn, titleBelow, type}) => {
 			switch (type) {
 				case 'compact':
-					return titleBelow ? <h2 className={css.titleBelow}>   {titleBelow}</h2> : null;
+					return titleBelow ? <h2 className={css.titleBelow}>{titleBelow}</h2> : null;
 				case 'standard':
 					return <MarqueeH2 className={css.titleBelow} marqueeOn={marqueeOn}>{(titleBelow != null && titleBelow !== '') ? titleBelow : ' '}</MarqueeH2>;
 			}

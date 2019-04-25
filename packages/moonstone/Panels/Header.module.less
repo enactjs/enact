@@ -36,6 +36,7 @@
 
 	.decorator {
 		padding: 0;
+		margin: -2px 3px 0 -3px; // Negative 3px here to allow the decorator title text to horizontally align with the rest of the header text
 	}
 
 	.titleBelow,
@@ -50,7 +51,7 @@
 	.headerComponents {
 		.remove-margin-on-edge-children();
 		.margin-start-end(@moon-header-components-gutter, 0);
-		margin-bottom: @moon-spotlight-outset;
+		margin-bottom: 18px;
 
 		white-space: nowrap;
 	}
@@ -65,8 +66,9 @@
 			// The height is determined by the line-height below, but we want to maintain that as a
 			// relative unit (`em`) rather than dictate specific pixels. The 2px offset may need to
 			// be updated or removed to accomodate taller glyphs.
-			margin-top: 2px;
+			// margin-top: 2px;
 			line-height: @moon-medium-header-line-height;
+			margin-left: -3px; // Negative 3px here to allow the title text to horizontally align with the rest of the header text
 
 			.moon-locale-non-latin({line-height: @moon-non-latin-medium-header-line-height;});
 		}
@@ -87,6 +89,10 @@
 	&.compact {
 		height: @moon-header-height-small;
 
+		.compactTitle {
+			margin-bottom: 3px;
+		}
+
 		.input,
 		.title {
 			font-size: @moon-small-header-font-size;
@@ -97,6 +103,11 @@
 
 		.titleBelow {
 			display: inline;
+			padding-inline-start: 18px;
+		}
+
+		.headerComponents {
+			margin-bottom: 15px;
 		}
 	}
 
@@ -138,7 +149,10 @@
 }
 
 :global(.moon-panels-hasControls) {
-	.header.compact,
+	.header.compact {
+		.padding-start-end(0, calc(var(--moon-panels-controls-width)));
+		// .padding-start-end(0, ~"calc(var(--moon-panels-controls-width) +" @moon-spotlight-outset ~")");
+	}
 	.header.standard .title,
 	.header.standard .headerInput {
 		.padding-start-end(0, var(--moon-panels-controls-width));
