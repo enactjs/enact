@@ -18,6 +18,24 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Button.ButtonDecorator` to remove `i18n/Uppercase` HOC
 - `moonstone/Button` and `moonstone/Header` appearance to match the latest designs
 
+## [2.5.3] - ???
+
+### Deprecated
+
+- `moonstone/Input.InputBase` prop `focused` which will be handled by CSS in 3.0
+
+### Fixed
+
+- `moonstone/EditableIntegerPicker`, `moonstone/Picker`, and `moonstone/RangePicker` to not error when the `min` prop exceeds the `max` prop
+
+## [2.5.2] - 2019-04-23
+
+### Fixed
+
+- `moonstone/EditableIntegerPicker` text alignment when not editing the value
+- `moonstone/Scroller` to scroll via dragging when the platform has touch support
+- `moonstone/VideoPlayer` to continue to display the thumbnail image while the slider is focused
+
 ## [2.5.1] - 2019-04-09
 
 ### Fixed

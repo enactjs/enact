@@ -13,11 +13,11 @@
  * @exports EditableIntegerPickerBase
  */
 
-import Changeable from '@enact/ui/Changeable';
-import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
-import PropTypes from 'prop-types';
+import {clamp} from '@enact/core/util';
+import Changeable from '@enact/ui/Changeable';
 import Pure from '@enact/ui/internal/Pure';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import {MarqueeController} from '../Marquee';
@@ -269,12 +269,17 @@ const EditableIntegerPickerBase = kind({
 				);
 			}
 
+			let children = label;
+			if (unit) {
+				children = `${label} ${unit}`;
+			}
+
 			return (
 				<PickerItem
 					key={value}
 					onClick={onPickerItemClick}
 				>
-					{`${label} ${unit}`}
+					{children}
 				</PickerItem>
 			);
 		},
