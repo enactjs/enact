@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import equals from 'ramda/src/equals';
+import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -580,7 +581,8 @@ const VirtualListBaseFactory = (type) => {
 		// JS only
 		setScrollPosition (x, y, rtl = this.props.rtl) {
 			if (this.contentRef.current) {
-				this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
+				this.contentRef.current.style.transform =
+					platform.ios ? `translate(${rtl ? x : -x}px, -${y}px)` : `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
 				this.didScroll(x, y);
 			}
 		}
@@ -640,7 +642,7 @@ const VirtualListBaseFactory = (type) => {
 				style = {
 					position: 'absolute',
 					/* FIXME: RTL / this calculation only works for Chrome */
-					transform: `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`
+					transform: platform.ios ? `translate(${this.props.rtl ? -x : x}px, ${y}px)` : `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`
 				};
 
 			if (this.isItemSized) {
@@ -664,7 +666,7 @@ const VirtualListBaseFactory = (type) => {
 
 			this.cc[key] = React.cloneElement(itemElement, {
 				...componentProps,
-				className: classNames(css.listItem, itemElement.props.className),
+				className: classNames(css.listItem, itemElement.props.className, platform.ios ? null : css.willChange),
 				style: {...itemElement.props.style, ...(this.composeStyle(...rest))}
 			});
 		}
