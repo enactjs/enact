@@ -1,8 +1,7 @@
 import {forward, stopImmediate} from '@enact/core/handle';
-import clamp from 'ramda/src/clamp';
 import equals from 'ramda/src/equals';
 import {is} from '@enact/core/keymap';
-import {cap, Job} from '@enact/core/util';
+import {cap, clamp, Job} from '@enact/core/util';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import platform from '@enact/core/platform';

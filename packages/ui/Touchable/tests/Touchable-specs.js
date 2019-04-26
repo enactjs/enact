@@ -8,13 +8,8 @@ import Touchable from '../Touchable';
 import {activate, deactivate} from '../state';
 import {configure, getConfig, resetDefaultConfig} from '../config';
 
-jest.mock('@enact/core/platform', () => {
-	return {
-		touch: true
-	};
-});
-
 describe('Touchable', () => {
+
 	const DivComponent = ({children = 'Toggle', id, onClick, onMouseDown, onMouseLeave, onMouseUp, onTouchStart, onTouchEnd}) => {
 		return (
 			<div

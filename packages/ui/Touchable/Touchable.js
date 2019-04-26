@@ -8,7 +8,6 @@
 
 import {adaptEvent, call, forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import complement from 'ramda/src/complement';
 import platform from '@enact/core/platform';
@@ -406,11 +405,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.drag = new Drag();
 			this.flick = new Flick();
 			this.hold = new Hold();
-			this.blurJob = new Job(target => {
-				if (target.blur) {
-					target.blur();
-				}
-			}, 400);
 
 			this.clickAllow = new ClickAllow();
 
@@ -466,7 +460,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillUnmount () {
 			this.clearTarget();
 			this.hold.end();
-			this.blurJob.stop();
 
 			if (platform.touch) {
 				off('touchend', this.handleGlobalUp, document);
@@ -501,18 +494,10 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				this.setState(activate);
 			}
 
-			if (ev && 'changedTouches' in ev) {
-				this.target.focus();
-			}
-
 			return true;
 		}
 
-		deactivate (ev) {
-			if (ev && 'changedTouches' in ev) {
-				this.blurJob.start(this.target);
-			}
-
+		deactivate () {
 			this.clearTarget();
 			if (activeProp) {
 				this.setState(deactivate);
