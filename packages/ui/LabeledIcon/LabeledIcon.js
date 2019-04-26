@@ -224,13 +224,14 @@ const LabeledIconBase = kind({
 					size: '100%',
 					className: css.iconCell,
 					children: [
+						iconComponent ?
 						iconComponent.inline({
 							children: icon,
 							inline,
 							size,
 							className: iconClassName,
 							disabled
-						})
+						}) : icon
 					]
 				}),
 				CellBase.inline({
