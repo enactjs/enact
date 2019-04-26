@@ -163,7 +163,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * positioning and orientation. Useful if your anchor element moves.
 			 *
 			 * @type {Number}
-			 * @default 500
+			 * @default 400
 			 * @public
 			 */
 			tooltipUpdateDelay: PropTypes.number,
@@ -189,8 +189,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-
-			this.TOOLTIP_HEIGHT = ri.scale(0); // distance between client and tooltip's label
 
 			this.state = {
 				showing: false,
@@ -243,6 +241,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		setTooltipLayout () {
 			if (!this.tooltipRef || !this.clientRef) return;
 
+			const screenEdgeKeepout = ri.scale(config.screenEdgeKeepout);
 			const position = this.props.tooltipPosition;
 			const arr = position.split(' ');
 			let tooltipDirection = null;
@@ -260,10 +259,10 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			const tooltipNode = this.tooltipRef.getBoundingClientRect(); // label bound
 			const clientNode = this.clientRef.getBoundingClientRect(); // client bound
-			const overflow = calcOverflow(tooltipNode, clientNode, tooltipDirection, this.TOOLTIP_HEIGHT, ri.scale(config.screenEdgeKeepout));
+			const overflow = calcOverflow(tooltipNode, clientNode, tooltipDirection, screenEdgeKeepout);
 
-			tooltipDirection = adjustDirection(tooltipDirection, overflow, this.props.rtl, ri.scale(config.screenEdgeKeepout));
-			arrowAnchor = adjustAnchor(arrowAnchor, tooltipDirection, overflow, this.props.rtl, ri.scale(config.screenEdgeKeepout));
+			tooltipDirection = adjustDirection(tooltipDirection, overflow, this.props.rtl);
+			arrowAnchor = adjustAnchor(arrowAnchor, tooltipDirection, overflow, this.props.rtl);
 
 			const tooltipPosition = getPosition(clientNode, tooltipDirection);
 			const labelOffset = arrowAnchor === 'center' ? getLabelOffset(tooltipNode, tooltipDirection, tooltipPosition, overflow) : null;

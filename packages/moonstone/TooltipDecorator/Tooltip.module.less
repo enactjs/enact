@@ -1,8 +1,8 @@
 // Tooltip.module.less
 //
-@import "~@enact/moonstone/styles/variables.less";
-@import "~@enact/moonstone/styles/mixins.less";
-@import "~@enact/moonstone/styles/skin.less";
+@import "../styles/variables.less";
+@import "../styles/mixins.less";
+@import "../styles/skin.less";
 
 .backgroundArc (@position) {
 	background-image: radial-gradient(ellipse at @position, transparent 70%, @moon-tooltip-bg-color 71%);
@@ -59,7 +59,7 @@
 		.moon-small-button-text();
 		line-height: @moon-tooltip-label-height;
 		white-space: nowrap;
-		padding: @moon-spotlight-outset @moon-tooltip-h-padding;
+		padding: @moon-tooltip-v-padding @moon-tooltip-h-padding;
 		border-radius: @moon-tooltip-border-radius;
 
 		:global(.enact-locale-right-to-left) & {
@@ -75,11 +75,11 @@
 	// Positioning for the arrow and label
 	&.below {
 		.tooltipArrow {
-			top: 0.5px;
+			top: (1px + @moon-tooltip-offset);
 		}
 
 		.tooltipLabel {
-			margin-top: @moon-tooltip-point-width;
+			margin-top: (@moon-tooltip-point-height + @moon-tooltip-offset);
 		}
 
 		&.leftArrow {
@@ -112,11 +112,11 @@
 
 	&.above {
 		.tooltipArrow {
-			bottom: 0.5px;
+			bottom: (1.5px + @moon-tooltip-offset);
 		}
 
 		.tooltipLabel {
-			margin-bottom: @moon-tooltip-point-width;
+			margin-bottom: (@moon-tooltip-point-height + @moon-tooltip-offset);
 		}
 
 		&.leftArrow {

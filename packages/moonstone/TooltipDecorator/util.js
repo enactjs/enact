@@ -107,7 +107,7 @@ const adjustDirection = function (tooltipDirection, overflow, rtl) {
  * @returns {Object}                    Tooltip's calculated overflow
  * @private
  */
-const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, tooltipHeight, edgeKeepout) {
+const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, edgeKeepout) {
 	// get the distance of space on both the right and left side of the client node. `clientNode.width / 2` because we want the tooltip to be positioned horizontally in middle of the client node.
 	const windowWidth = window.innerWidth;
 	const windowHeight = window.innerHeight;
@@ -119,8 +119,8 @@ const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, toolti
 	const isTooltipWide = (tooltipSafeWidth > windowWidth) || (leftDelta && rightDelta);
 
 	if (tooltipDirection === 'above' || tooltipDirection === 'below') {
-		const isOverTop = clientNode.top - tooltipNode.height - tooltipHeight;
-		const isOverBottom = clientNode.bottom + tooltipNode.height + tooltipHeight;
+		const isOverTop = clientNode.top - tooltipNode.height;
+		const isOverBottom = clientNode.bottom + tooltipNode.height;
 		const isOverLeft = clientHorizontalCenter - tooltipSafeWidth;
 		const isOverRight = clientHorizontalCenter + tooltipSafeWidth;
 		const isOverCenterLeft = clientHorizontalCenter - tooltipCenterdSafeWidth;
