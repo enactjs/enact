@@ -27,6 +27,19 @@ import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 import {calcAriaLabel, extractInputProps} from './util';
 
+const deprecateSmall = deprecate(() => 'small',  {
+	name: 'ui/Icon.IconBase#small',
+	replacedBy: 'the `size` prop',
+	message: 'Use `size="small" instead`.',
+	since: '2.6.0',
+	until: '3.0.0'
+});
+
+function getSize (size, small) {
+	small = small ? deprecateSmall() : 'large';
+	return size || small;
+}
+
 /**
  * A Moonstone styled input component.
  *
@@ -264,7 +277,7 @@ const InputBase = kind({
 			const title = (value == null || value === '') ? placeholder : '';
 			return calcAriaLabel(title, type, value);
 		},
-		className: ({focused, invalid, size, small, styler}) => styler.append({focused, invalid}, size, !size && (small ? 'small' : 'large')),
+		className: ({focused, invalid, size, small, styler}) => styler.append({focused, invalid}, getSize(size, small)),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
 		invalidTooltip: ({css, invalid, invalidMessage = $L('Please enter a valid value.'), rtl}) => {
 			if (invalid && invalidMessage) {
@@ -280,24 +293,14 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, size, small, type, value, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-intent' : voiceIntent, 'data-webos-voice-label': voiceLabel, ...rest}) => {
+	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, size, type, value, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-intent' : voiceIntent, 'data-webos-voice-label': voiceLabel, ...rest}) => {
 		const inputProps = extractInputProps(rest);
 		delete rest.dismissOnEnter;
 		delete rest.focused;
 		delete rest.invalid;
 		delete rest.invalidMessage;
 		delete rest.rtl;
-
-		if (small) {
-			const deprecateSmall = deprecate(() => {},  {
-				name: 'moonstone/Input.InputBase#small',
-				replacedBy: 'the `size` prop',
-				message: 'Use `size="small" instead`.',
-				since: '2.6.0',
-				until: '3.0.0'
-			});
-			deprecateSmall();
-		}
+		delete rest.small;
 
 		return (
 			<div {...rest} disabled={disabled}>

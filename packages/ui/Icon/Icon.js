@@ -14,6 +14,19 @@ import ri from '../resolution';
 
 import componentCss from './Icon.module.less';
 
+const deprecateSmall = deprecate(() => 'small',  {
+	name: 'ui/Icon.IconBase#small',
+	replacedBy: 'the `size` prop',
+	message: 'Use `size="small" instead`.',
+	since: '2.6.0',
+	until: '3.0.0'
+});
+
+function getSize (size, small) {
+	small = small ? deprecateSmall() : 'large';
+	return size || small;
+}
+
 /**
  * Merges consumer styles with the image `src` resolved through the resolution independence module.
  *
@@ -160,7 +173,7 @@ const Icon = kind({
 			// If the icon isn't in our known set, apply our custom font class
 			dingbat: !(icon in iconList),
 			pressed
-		}, size, !size && (small ? 'small' : 'large')),
+		}, getSize(size, small)),
 		iconProps: ({children: iconProp, iconList, style}) => {
 			let icon = iconList[iconProp];
 
@@ -206,17 +219,7 @@ const Icon = kind({
 		delete rest.iconList;
 		delete rest.pressed;
 		delete rest.size;
-
-		if (small) {
-			const deprecateSmall = deprecate(() => {},  {
-				name: 'ui/Icon.IconBase#small',
-				replacedBy: 'the `size` prop',
-				message: 'Use `size="small" instead`.',
-				since: '2.6.0',
-				until: '3.0.0'
-			});
-			deprecateSmall();
-		}
+		delete rest.small;
 
 		return (
 			<div

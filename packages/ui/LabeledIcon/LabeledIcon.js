@@ -20,6 +20,19 @@ import Slottable from '../Slottable';
 
 import componentCss from './LabeledIcon.module.less';
 
+const deprecateSmall = deprecate(() => 'small',  {
+	name: 'ui/Icon.IconBase#small',
+	replacedBy: 'the `size` prop',
+	message: 'Use `size="small" instead`.',
+	since: '2.6.0',
+	until: '3.0.0'
+});
+
+function getSize (size, small) {
+	small = small ? deprecateSmall() : 'large';
+	return size || small;
+}
+
 /**
  * An icon component with a label.
  *
@@ -179,18 +192,7 @@ const LabeledIconBase = kind({
 
 	render: ({css, children, disabled, icon, iconComponent, inline, orientation, size, small, ...rest}) => {
 		let iconClassName = css.icon;
-		size = !size && small ? 'small' : size || 'large';
-
-		if (small) {
-			const deprecateSmall = deprecate(() => {},  {
-				name: 'ui/LabeledIcon.LabeledIconBase#small',
-				replacedBy: 'the `size` prop',
-				message: 'Use `size="small" instead`.',
-				since: '2.6.0',
-				until: '3.0.0'
-			});
-			deprecateSmall();
-		}
+		size = getSize(size, small);
 
 		// Rearrange the props to support custom JSX components
 		// `icon` is normally passed to `iconComponent` as children, but if `icon` is instead a

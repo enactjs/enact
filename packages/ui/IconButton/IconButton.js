@@ -22,6 +22,23 @@ import Touchable from '../Touchable';
 
 import componentCss from './IconButton.module.less';
 
+const deprecateSmall = deprecate(() => 'small',  {
+	name: 'ui/Icon.IconBase#small',
+	replacedBy: 'the `size` prop',
+	message: 'Use `size="small" instead`.',
+	since: '2.6.0',
+	until: '3.0.0'
+});
+
+function getSizeWithWarning (size, small) {
+	small = small ? deprecateSmall() : 'large';
+	return size || small;
+}
+
+function getSize (size, small) {
+	return size || (small ? 'small' : 'large');
+}
+
 /**
  * A ui-styled button without any behavior.
  *
@@ -163,22 +180,10 @@ const IconButtonBase = kind({
 	},
 
 	computed: {
-		className: ({size, small, styler}) => styler.append(size, !size && (small ? 'small' : 'large'))
+		className: ({size, small, styler}) => styler.append(getSizeWithWarning(size, small))
 	},
 
 	render: ({buttonComponent, children, css, icon, iconComponent: Icon, size, small, ...rest}) => {
-
-		if (small) {
-			const deprecateSmall = deprecate(() => {},  {
-				name: 'ui/IconButton.IconButtonBase#small',
-				replacedBy: 'the `size` prop',
-				message: 'Use `size="small" instead`.',
-				since: '2.6.0',
-				until: '3.0.0'
-			});
-			deprecateSmall();
-		}
-
 		// To support the simpler use case of only specifying the icon as the children within
 		// <IconButton>, this falls back on using children if icon isn't specified.
 		if (!icon && children) {
@@ -189,10 +194,10 @@ const IconButtonBase = kind({
 		return ComponentOverride({
 			...rest,
 			component: buttonComponent,
-			size: size,
+			size: getSize(size, small),
 			minWidth: false,
 			children: [
-				<Icon key="icon" size={size} className={css.icon}>{icon}</Icon>,
+				<Icon key="icon" size={getSize(size, small)} className={css.icon}>{icon}</Icon>,
 				...React.Children.toArray(children)
 			]
 		});

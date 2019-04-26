@@ -21,6 +21,19 @@ import Skinnable from '../Skinnable';
 
 import css from './ToggleButton.module.less';
 
+const deprecateSmall = deprecate(() => 'small',  {
+	name: 'ui/Icon.IconBase#small',
+	replacedBy: 'the `size` prop',
+	message: 'Use `size="small" instead`.',
+	since: '2.6.0',
+	until: '3.0.0'
+});
+
+function getSize (size, small) {
+	small = small ? deprecateSmall() : 'large';
+	return size || small;
+}
+
 /**
  * A stateless [Button]{@link moonstone/Button.Button} that can be toggled by changing its
  * `selected` property.
@@ -158,7 +171,7 @@ const ToggleButtonBase = kind({
 	},
 
 	computed: {
-		className: ({selected, size, small, styler}) => styler.append({selected, small}, size, !size && (small ? 'small' : 'large')),
+		className: ({selected, size, small, styler}) => styler.append({selected}, getSize(size, small)),
 		children: ({children, selected, toggleOnLabel, toggleOffLabel}) => {
 			let c = children;
 			if (selected && toggleOnLabel) {
@@ -170,20 +183,10 @@ const ToggleButtonBase = kind({
 		}
 	},
 
-	render: ({selected, small, ...rest}) => {
+	render: ({selected, ...rest}) => {
 		delete rest.toggleOffLabel;
 		delete rest.toggleOnLabel;
-
-		if (small) {
-			const deprecateSmall = deprecate(() => {},  {
-				name: 'moonstone/ToggleButton.ToggleButtonBase#small',
-				replacedBy: 'the `size` prop',
-				message: 'Use `size="small" instead`.',
-				since: '2.6.0',
-				until: '3.0.0'
-			});
-			deprecateSmall();
-		}
+		delete rest.small;
 
 		return (
 			<Button data-webos-voice-intent="SetToggleItem" {...rest} aria-pressed={selected} selected={selected} />

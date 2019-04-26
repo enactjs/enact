@@ -17,6 +17,23 @@ import Touchable from '../Touchable';
 
 import componentCss from './Button.module.less';
 
+const deprecateSmall = deprecate(() => 'small',  {
+	name: 'ui/Icon.IconBase#small',
+	replacedBy: 'the `size` prop',
+	message: 'Use `size="small" instead`.',
+	since: '2.6.0',
+	until: '3.0.0'
+});
+
+function getSizeWithWarning (size, small) {
+	small = small ? deprecateSmall() : 'large';
+	return size || small;
+}
+
+function getSize (size, small) {
+	return size || (small ? 'small' : 'large');
+}
+
 /**
  * A basic button component structure without any behaviors applied to it.
  *
@@ -173,31 +190,21 @@ const ButtonBase = kind({
 			minWidth,
 			pressed,
 			selected,
-		}, size, !size && (small ? 'small' : 'large')),
-		icon: ({css, icon, iconComponent: Icon, size}) => {
+		}, getSizeWithWarning(size, small)),
+		icon: ({css, icon, iconComponent: Icon, size, small}) => {
 			return (typeof icon === 'string' && Icon) ? (
-				<Icon size={size} className={css.icon}>{icon}</Icon>
+				<Icon size={getSize(size, small)} className={css.icon}>{icon}</Icon>
 			) : icon;
 		}
 	},
 
-	render: ({children, css, disabled, icon, small, ...rest}) => {
+	render: ({children, css, disabled, icon, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.minWidth;
 		delete rest.pressed;
 		delete rest.selected;
 		delete rest.size;
-
-		if (small) {
-			const deprecateSmall = deprecate(() => {},  {
-				name: 'ui/Button.ButtonBase#small',
-				replacedBy: 'the `size` prop',
-				message: 'Use `size="small" instead`.',
-				since: '2.6.0',
-				until: '3.0.0'
-			});
-			deprecateSmall();
-		}
+		delete rest.small;
 
 		return (
 			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
