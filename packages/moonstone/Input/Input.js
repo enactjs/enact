@@ -254,7 +254,6 @@ const InputBase = kind({
 		invalid: false,
 		placeholder: '',
 		// size: 'large', // we won't set default props for `size` yet to support `small` prop
-		small: false,
 		type: 'text'
 	},
 

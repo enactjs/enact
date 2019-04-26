@@ -173,7 +173,6 @@ const LabeledIconBase = kind({
 		labelPosition: 'below',
 		inline: false,
 		// size: 'large', // we won't set default props for `size` yet to support `small` prop
-		small: false
 	},
 
 	styles: {

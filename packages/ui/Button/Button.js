@@ -175,7 +175,6 @@ const ButtonBase = kind({
 		pressed: false,
 		selected: false,
 		// size: 'large', // we won't set default props for `size` yet to support `small` prop
-		small: false
 	},
 
 	styles: {
