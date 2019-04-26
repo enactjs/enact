@@ -189,7 +189,7 @@ const LabeledIconBase = kind({
 		}
 	},
 
-	render: ({css, children, disabled, icon, iconComponent, inline, orientation, size, small, ...rest}) => {
+	render: ({css, children, disabled, icon, iconComponent: Icon, inline, orientation, size, small, ...rest}) => {
 		let iconClassName = css.icon;
 		size = getSize(size, small);
 
@@ -206,7 +206,7 @@ const LabeledIconBase = kind({
 			});
 			// Removing size and iconComponent from CellBase
 			// eslint-disable-next-line no-undefined
-			size = iconComponent = undefined;
+			size = Icon = undefined;
 			iconClassName = null;
 		}
 
@@ -224,16 +224,14 @@ const LabeledIconBase = kind({
 					shrink: true,
 					size: '100%',
 					className: css.iconCell,
-					children: [
-						iconComponent ?
-						iconComponent.inline({
-							children: icon,
-							inline,
-							size,
-							className: iconClassName,
-							disabled
-						}) : icon
-					]
+					children: Icon ?
+					<Icon
+						className={iconClassName}
+						disabled={disabled}
+						size={size}
+					>
+						{icon}
+					</Icon> : icon
 				}),
 				CellBase.inline({
 					key: 'label',
