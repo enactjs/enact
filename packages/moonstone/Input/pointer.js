@@ -29,6 +29,7 @@ const handlePointerUp = handle(
 const handleTap = handle(
 	isCapturing,				// if a down event was captured
 	stop,						// prevent the click event from propagating
+	preventDefault,				// prevent touchend from triggering a click after releasing lock
 	setCapturing(false),		// clear the capturing flag
 	() => active.blur()			// and blur the active node
 );
