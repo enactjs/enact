@@ -157,8 +157,8 @@ const Icon = kind({
 
 	defaultProps: {
 		iconList: {},
-		pressed: false,
-		// size: 'large', // we won't set default props for `size` yet to support `small` prop
+		pressed: false
+		// size: 'large' // we won't set default props for `size` yet to support `small` prop
 	},
 
 	styles: {
@@ -214,7 +214,7 @@ const Icon = kind({
 		}
 	},
 
-	render: ({iconProps, small, ...rest}) => {
+	render: ({iconProps, ...rest}) => {
 		delete rest.iconList;
 		delete rest.pressed;
 		delete rest.size;

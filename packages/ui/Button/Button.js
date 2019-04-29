@@ -173,8 +173,8 @@ const ButtonBase = kind({
 		disabled: false,
 		minWidth: true,
 		pressed: false,
-		selected: false,
-		// size: 'large', // we won't set default props for `size` yet to support `small` prop
+		selected: false
+		// size: 'large' // we won't set default props for `size` yet to support `small` prop
 	},
 
 	styles: {
@@ -188,7 +188,7 @@ const ButtonBase = kind({
 			hasIcon: (!!icon),
 			minWidth,
 			pressed,
-			selected,
+			selected
 		}, getSizeWithWarning(size, small)),
 		icon: ({css, icon, iconComponent: Icon, size, small}) => {
 			return (typeof icon === 'string' && Icon) ? (

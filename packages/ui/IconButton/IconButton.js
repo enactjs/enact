@@ -168,8 +168,8 @@ const IconButtonBase = kind({
 	defaultProps: {
 		disabled: false,
 		pressed: false,
-		selected: false,
-		// size: 'large', // we won't set default props for `size` yet to support `small` prop
+		selected: false
+		// size: 'large' // we won't set default props for `size` yet to support `small` prop
 	},
 
 	styles: {

@@ -171,7 +171,7 @@ const LabeledIconBase = kind({
 
 	defaultProps: {
 		labelPosition: 'below',
-		inline: false,
+		inline: false
 		// size: 'large', // we won't set default props for `size` yet to support `small` prop
 	},
 
@@ -189,7 +189,9 @@ const LabeledIconBase = kind({
 		}
 	},
 
-	render: ({css, children, disabled, icon, iconComponent: Icon, inline, orientation, size, small, ...rest}) => {
+	render: ({css, children, disabled, icon, iconComponent: Icon, orientation, size, small, ...rest}) => {
+		delete rest.inline;
+
 		let iconClassName = css.icon;
 		size = getSize(size, small);
 
@@ -225,13 +227,13 @@ const LabeledIconBase = kind({
 					size: '100%',
 					className: css.iconCell,
 					children: Icon ?
-					<Icon
-						className={iconClassName}
-						disabled={disabled}
-						size={size}
-					>
-						{icon}
-					</Icon> : icon
+						<Icon
+							className={iconClassName}
+							disabled={disabled}
+							size={size}
+						>
+							{icon}
+						</Icon> : icon
 				}),
 				CellBase.inline({
 					key: 'label',
