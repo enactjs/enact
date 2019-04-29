@@ -6,7 +6,7 @@
 // ---------------------------------------
 @moon-darker-gray: #262626;
 @moon-dark-gray:   #4d4d4d;
-@moon-gray:        #a6a6a6;
+@moon-gray:        #ccc;
 @moon-light-gray:  #ededed;
 @moon-black:       #000;
 @moon-accent:      #cf0652;
@@ -28,7 +28,7 @@
 
 // Disabled Opacity
 // ---------------------------------------
-@moon-disabled-opacity: 0.6;
+@moon-disabled-opacity: 0.3;
 @moon-disabled-translucent-opacity: 0.4;
 
 // Spotlight and State
@@ -39,7 +39,7 @@
 @moon-spotlight-border-color:         @moon-accent;
 @moon-spotlight-color:                @moon-accent;
 @moon-active-border-color:            @moon-gray;
-@moon-active-spotlight-border-color:  #ccc;
+@moon-active-spotlight-border-color:  @moon-gray;
 
 
 // ---------------------------------------
@@ -52,7 +52,7 @@
 
 // Button
 // ---------------------------------------
-@moon-button-text-color: #ccc;
+@moon-button-text-color: @moon-gray;
 @moon-button-bg-color: #383838;
 @moon-button-translucent-opacity: 30%;
 @moon-button-lightTranslucent-bg-color: @moon-white;
@@ -75,7 +75,7 @@
 // ContextualPopup
 // ---------------------------------------
 @moon-contextual-popup-bg-color: @moon-dark-gray;
-@moon-contextual-popup-border-color: fade(@moon-black, 50%);
+@moon-contextual-popup-border-color: #bbb;
 
 // Checkbox
 // ---------------------------------------
@@ -128,9 +128,9 @@
 
 // Header
 // ---------------------------------------
-@moon-header-text-color:              #ccc;
+@moon-header-text-color:              @moon-gray;
 @moon-header-sub-title-color:         @moon-text-color;
-@moon-sub-header-text-color:          @moon-text-color;
+@moon-sub-header-text-color:          #a6a6a6;
 @moon-sup-header-text-color:          @moon-text-color;
 @moon-header-border-color:            #505050;
 @moon-header-bottom-border-color:     #404040;
@@ -218,7 +218,7 @@
 
 // Scrollable
 // ---------------------------------------
-@moon-scrollable-overscroll-color: #ccc;
+@moon-scrollable-overscroll-color: @moon-gray;
 
 
 // Scroller
@@ -292,7 +292,7 @@
 @moon-video-player-slider-fill-color: fade(@moon-accent, 80%);
 @moon-video-player-slider-knob-color: @moon-white;
 @moon-video-player-slider-load-color: fade(darken(@moon-accent, 30%), 30%);
-@moon-video-player-subdued-text-color: #ccc;
+@moon-video-player-subdued-text-color: @moon-gray;
 @moon-video-player-title-color: @moon-white;
 @moon-video-player-title-text-shadow: @moon-overlay-text-shadow;
 @moon-video-player-high-contrast-scrim-gradient-color: initial;
