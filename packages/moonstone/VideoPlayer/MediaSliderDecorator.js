@@ -4,6 +4,7 @@ import {calcProportion} from '@enact/ui/Slider/utils';
 import clamp from 'ramda/src/clamp';
 import PropTypes from 'prop-types';
 import React from 'react';
+import platform from '@enact/core/platform';
 
 // decrements the MediaKnob position if we're tracking
 const decrement = (state) => {
@@ -85,6 +86,9 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 			this.handleMouseOver = this.handleMouseOver.bind(this);
 			this.handleMouseOut = this.handleMouseOut.bind(this);
 			this.handleMouseMove = this.handleMouseMove.bind(this);
+			if (platform.touch) {
+				this.handleTouchMove = this.handleTouchMove.bind(this);
+			}
 
 			handleBlur.bindAs(this, 'handleBlur');
 			handleFocus.bindAs(this, 'handleFocus');
@@ -174,6 +178,11 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 			this.move(ev.clientX);
 		}
 
+		handleTouchMove (ev) {
+			// ignores multi touch
+			this.move(ev.touches[0].clientX);
+		}
+
 		render () {
 			const {selection, ...rest} = this.props;
 			let {backgroundProgress} = this.props;
@@ -198,6 +207,7 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 					onMouseOver={this.handleMouseOver}
 					onMouseOut={this.handleMouseOut}
 					onMouseMove={this.handleMouseMove}
+					onTouchMove={platform.touch ? this.handleTouchMove : void 0}
 					preview={this.state.tracking}
 					previewProportion={this.state.x}
 					progressAnchor={progressAnchor}
