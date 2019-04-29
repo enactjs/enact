@@ -198,8 +198,12 @@
 			}
 
 			.focus({
-				background-color: @moon-spotlight-border-color;
+				background-color: @moon-picker-joined-focused-bg-color;
 				color: @moon-spotlight-text-color;
+
+				.disabled({
+					color: @moon-spotlight-disabled-text-color;
+				});
 			});
 		}
 	});
