@@ -49,7 +49,7 @@ const NotificationBase = kind({
 		 * Buttons for the Notification.
 		 *
 		 * These typically close or take action in the Notification. Buttons must have their
-		 * `size` property set to `small` and will be coerced to `small` if not specified.
+		 * `size` property set to `'small'` and will be coerced to `'small'` if not specified.
 		 *
 		 * @type {Element|Element[]}
 		 * @public

@@ -62,7 +62,7 @@ const ButtonBase = kind({
 		 * * `minWidth` - Applied when `minWidth` prop is `true`
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 * * `selected` - Applied when `selected` prop is `true`
-		 * * `small` - Applied when `size` prop is `small`
+		 * * `small` - Applied when `size` prop is `'small'`
 		 *
 		 * @type {Object}
 		 * @public
@@ -148,7 +148,7 @@ const ButtonBase = kind({
 		/**
 		 * Applies the appropriate styling for size of the component.
 		 *
-		 * Takes `small` or `large`.
+		 * Takes `'small'` or `'large'`.
 		 * Other sizes can be defined and customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
@@ -174,7 +174,7 @@ const ButtonBase = kind({
 		minWidth: true,
 		pressed: false,
 		selected: false
-		// size: 'large' // we won't set default props for `size` yet to support `small` prop
+		// size: 'large' // we won't set default props for `size` yet to support `'small'` prop
 	},
 
 	styles: {

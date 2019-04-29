@@ -99,8 +99,8 @@ const Icon = kind({
 		 * * `icon` - The root component class
 		 * * `dingbat` - Applied when the value of [`icon`]{@link ui/Icon.Icon.icon} is not
 		 *   found in [iconList]{@link ui/Icon.Icon.iconList}
-		 * * `large` - Applied when `size` prop is `large`
-		 * * `small` - Applied when `size` prop is `small`
+		 * * `large` - Applied when `size` prop is `'large'`
+		 * * `small` - Applied when `size` prop is `'small'`
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 *
 		 * @type {Object}
@@ -134,7 +134,7 @@ const Icon = kind({
 		/**
 		 * Applies the appropriate styling for size of the component.
 		 *
-		 * Takes `small` or `large`.
+		 * Takes `'small'` or `'large'`.
 		 * Other sizes can be defined and customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *

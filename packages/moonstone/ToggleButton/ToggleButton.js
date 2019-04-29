@@ -112,7 +112,7 @@ const ToggleButtonBase = kind({
 		 * The button will have a larger tap target than its apparent size to allow it to be clicked
 		 * more easily.
 		 *
-		 * Takes `small` or `large`.
+		 * Takes `'small'` or `'large'`.
 		 * Other sizes can be defined and customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *

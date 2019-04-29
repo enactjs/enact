@@ -92,8 +92,8 @@ const IconButtonBase = kind({
 		 *
 		 * * `iconButton` - The root component class
 		 * * `icon` - The [icon component]{@link ui/IconButton.IconButtonBase.iconComponent} class
-		 * * `large` - Applied when `size` prop is `large`
-		 * * `small` - Applied when `size` prop is `small`
+		 * * `large` - Applied when `size` prop is `'large'`
+		 * * `small` - Applied when `size` prop is `'small'`
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 *
 		 * @type {Object}
