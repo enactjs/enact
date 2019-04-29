@@ -151,11 +151,23 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			tooltipProps: PropTypes.object,
 
 			/**
+			 * Positions the tooltip relative to its container.
+			 *
 			 * Determines whether your tooltip should position itself relative to its container or
 			 * relative to the screen (absolute positioning on the floating layer). When setting to
 			 * `true`, to enable relative positioning, it may be important to specify the
 			 * `tooltipDestinationProp` key in this HoC's config object. A relatively positioned
 			 * Tooltip for a `Button`, for example, must be placed in the `decoration` prop.
+			 *
+			 * It may be necessary to assign the CSS rule `position` to the containing element so
+			 * relatively positioned Tooltip has a frame to "stick to" the edge of.
+			 *
+			 * Anchoring points can be visualized as follows:
+			 * ```
+			 * ┌───◎───┐
+			 * ◎       ◎
+			 * └───◎───┘
+			 * ```
 			 *
 			 * @type {Object}
 			 * @public

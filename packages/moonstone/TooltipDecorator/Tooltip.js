@@ -54,10 +54,17 @@ const TooltipBase = kind({
 		direction: PropTypes.oneOf(['above', 'below', 'left', 'right']),
 
 		/**
-		 * Position of the arrow anchor. Takes values between 0 and 1.
-		 * This will be the left position percentage relative to the tooltip.
+		 * A value representing the amount to offset the label portion of the tooltip.
+		 *
+		 * In a "center" aligned tooltip, the label may be desirable to offset to one side or the
+		 * other. This prop accepts a value betwen -0.5 and 0.5 (representing 50% to the left or
+		 * right). This defaults to 0 offset (centered). It also automatically caps the value so it
+		 * never positions the tooltip label past the anchored arrow. If the tooltip label or arrow
+		 * has non-rectangular geometry (rounded corners, a wide tail, etc), you'll need to manually
+		 * account for that in your provided offset value.
 		 *
 		 * @type {Number}
+		 * @default 0
 		 * @public
 		 */
 		labelOffset: PropTypes.number,
@@ -76,6 +83,8 @@ const TooltipBase = kind({
 		}),
 
 		/**
+		 * Anchors the tooltip relative to its container.
+		 *
 		 * Reconfigures the component to anchor itself to the designated edge of its container.
 		 * When this is not specified, the implication is that the component is "absolutely"
 		 * positioned, relative to the viewport, rather than its parent layer.
@@ -107,7 +116,8 @@ const TooltipBase = kind({
 
 	defaultProps: {
 		arrowAnchor: 'right',
-		direction: 'above'
+		direction: 'above',
+		labelOffset: 0
 	},
 
 	styles: {
