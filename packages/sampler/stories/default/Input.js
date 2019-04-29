@@ -1,4 +1,4 @@
-import Input, {InputBase} from '@enact/moonstone/Input';
+import Input, {InputBaseInternal as InputBase} from '@enact/moonstone/Input';
 import icons from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
