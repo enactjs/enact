@@ -22,7 +22,7 @@ storiesOf('Moonstone', module)
 	.add(
 		'ExpandableInput',
 		withInfo({
-			text: 'Basic usage of divider'
+			text: 'Basic usage of ExpandableInput'
 		})(() => (
 			<ExpandableInput
 				disabled={boolean('disabled', Config)}
