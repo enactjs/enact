@@ -27,10 +27,12 @@ import componentCss from './ToggleItem.module.less';
 // eslint-disable-next-line enact/display-name,enact/prop-types
 const iconCreator = (position) => ({disabled, icon, iconComponent, iconPosition, itemIcon, itemIconPosition, selected}) => {
 
+	const itemIconComponent = (itemIcon ? <ComponentOverride component={itemIcon} /> : null);
+
 	if (position === 'before') {
 		return (
 			<Fragment>
-				{itemIconPosition === 'before' && itemIcon}
+				{itemIconPosition === 'before' && itemIconComponent}
 				{iconPosition === 'before' ?
 					<ComponentOverride
 						component={iconComponent}
@@ -40,13 +42,13 @@ const iconCreator = (position) => ({disabled, icon, iconComponent, iconPosition,
 						{icon}
 					</ComponentOverride> : null
 				}
-				{itemIconPosition === 'beforeChildren' && itemIcon}
+				{itemIconPosition === 'beforeChildren' && itemIconComponent}
 			</Fragment>
 		);
 	} else {
 		return (
 			<Fragment>
-				{itemIconPosition === 'afterChildren' && itemIcon}
+				{itemIconPosition === 'afterChildren' && itemIconComponent}
 				{iconPosition === 'after' ?
 					<ComponentOverride
 						component={iconComponent}
@@ -56,7 +58,7 @@ const iconCreator = (position) => ({disabled, icon, iconComponent, iconPosition,
 						{icon}
 					</ComponentOverride> : null
 				}
-				{itemIconPosition === 'after' && itemIcon}
+				{itemIconPosition === 'after' && itemIconComponent}
 			</Fragment>
 		);
 	}

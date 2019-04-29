@@ -15,7 +15,6 @@
 import Changeable from '@enact/ui/Changeable';
 import {adaptEvent, call, forKey, forward, handle, oneOf, preventDefault, stopImmediate} from '@enact/core/handle';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import Pause from '@enact/spotlight/Pause';
@@ -262,12 +261,7 @@ class ExpandableInputBase extends React.Component {
 
 	handleOpen = handle(
 		forward('onOpen'),
-		(ev, {value}) => {
-			const n = ReactDOM.findDOMNode(this);
-			const d = n.querySelector(`.${css.decorator}`);
-			d.focus();
-			this.setState({initialValue: value});
-		}
+		(ev, {value}) => this.setState({initialValue: value})
 	).bind(this)
 
 	handleUp = () => {
