@@ -22,7 +22,7 @@ import Skinnable from '../Skinnable';
 import css from './ToggleButton.module.less';
 
 const deprecateSmall = deprecate(() => 'small',  {
-	name: 'ui/Icon.IconBase#small',
+	name: 'moonstone/ToggleButton.ToggleButtonBase#small',
 	replacedBy: 'the `size` prop',
 	message: 'Use `size="small" instead`.',
 	since: '2.6.0',

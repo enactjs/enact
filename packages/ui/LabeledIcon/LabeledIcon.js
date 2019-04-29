@@ -21,7 +21,7 @@ import Slottable from '../Slottable';
 import componentCss from './LabeledIcon.module.less';
 
 const deprecateSmall = deprecate(() => 'small',  {
-	name: 'ui/Icon.IconBase#small',
+	name: 'ui/LabeledIcon.LabeledIconBase#small',
 	replacedBy: 'the `size` prop',
 	message: 'Use `size="small" instead`.',
 	since: '2.6.0',

@@ -18,7 +18,7 @@ import Touchable from '../Touchable';
 import componentCss from './Button.module.less';
 
 const deprecateSmall = deprecate(() => 'small',  {
-	name: 'ui/Icon.IconBase#small',
+	name: 'ui/Button.ButtonBase#small',
 	replacedBy: 'the `size` prop',
 	message: 'Use `size="small" instead`.',
 	since: '2.6.0',

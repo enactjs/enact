@@ -11,7 +11,6 @@
 
 import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
-import deprecate from '@enact/core/internal/deprecate';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {isRtlText} from '@enact/i18n/util';
 import Changeable from '@enact/ui/Changeable';
@@ -29,7 +28,7 @@ import InputSpotlightDecorator from './InputSpotlightDecorator';
 import {calcAriaLabel, extractInputProps} from './util';
 
 const deprecateSmall = deprecate(() => 'small',  {
-	name: 'ui/Icon.IconBase#small',
+	name: 'moonstone/Input.InputBase#small',
 	replacedBy: 'the `size` prop',
 	message: 'Use `size="small" instead`.',
 	since: '2.6.0',
