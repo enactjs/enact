@@ -6,12 +6,26 @@
  */
 
 import kind from '@enact/core/kind';
+import deprecate from '@enact/core/internal/deprecate';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import ri from '../resolution';
 
 import componentCss from './Icon.module.less';
+
+const deprecateSmall = deprecate(() => 'small',  {
+	name: 'ui/Icon.IconBase#small',
+	replacedBy: 'the `size` prop',
+	message: 'Use `size="small" instead`.',
+	since: '2.6.0',
+	until: '3.0.0'
+});
+
+function getSize (size, small) {
+	small = small ? deprecateSmall() : 'large';
+	return size || small;
+}
 
 /**
  * Merges consumer styles with the image `src` resolved through the resolution independence module.
@@ -85,7 +99,8 @@ const Icon = kind({
 		 * * `icon` - The root component class
 		 * * `dingbat` - Applied when the value of [`icon`]{@link ui/Icon.Icon.icon} is not
 		 *   found in [iconList]{@link ui/Icon.Icon.iconList}
-		 * * `small` - Applied when `small` prop is `true`
+		 * * `large` - Applied when `size` prop is `'large'`
+		 * * `small` - Applied when `size` prop is `'small'`
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 *
 		 * @type {Object}
@@ -117,10 +132,24 @@ const Icon = kind({
 		pressed: PropTypes.bool,
 
 		/**
+		 * Applies the appropriate styling for size of the component.
+		 *
+		 * Takes `'small'` or `'large'`.
+		 * Other sizes can be defined and customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
+		 *
+		 * @type {String}
+		 * @default 'small'
+		 * @public
+		 */
+		size: PropTypes.string,
+
+		/**
 		 * Applies the `small` CSS class.
 		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @deprecated replaced by prop `size='small'`
 		 * @public
 		 */
 		small: PropTypes.bool
@@ -128,8 +157,8 @@ const Icon = kind({
 
 	defaultProps: {
 		iconList: {},
-		pressed: false,
-		small: false
+		pressed: false
+		// size: 'large' // we won't set default props for `size` yet to support `small` prop
 	},
 
 	styles: {
@@ -139,12 +168,11 @@ const Icon = kind({
 	},
 
 	computed: {
-		className: ({children: icon, iconList, pressed, small, styler}) => styler.append({
+		className: ({children: icon, iconList, pressed, size, small, styler}) => styler.append({
 			// If the icon isn't in our known set, apply our custom font class
 			dingbat: !(icon in iconList),
-			pressed,
-			small
-		}),
+			pressed
+		}, getSize(size, small)),
 		iconProps: ({children: iconProp, iconList, style}) => {
 			let icon = iconList[iconProp];
 
@@ -189,6 +217,7 @@ const Icon = kind({
 	render: ({iconProps, ...rest}) => {
 		delete rest.iconList;
 		delete rest.pressed;
+		delete rest.size;
 		delete rest.small;
 
 		return (

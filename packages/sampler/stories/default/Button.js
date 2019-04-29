@@ -35,6 +35,7 @@ storiesOf('Moonstone', module)
 				minWidth={!!boolean('minWidth', Config)}
 				selected={boolean('selected', Config)}
 				small={boolean('small', Config)}
+				size={select('size', ['small', 'large'], Config, 'large')}
 			>
 				{text('children', Config, 'click me')}
 			</Button>

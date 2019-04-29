@@ -75,8 +75,9 @@ const IconButtonBase = kind({
 		 *
 		 * * `iconButton` - The root class name
 		 * * `bg` - The background node of the icon button
+		 * * `large` - Applied to a `size='large'` icon button
 		 * * `selected` - Applied to a `selected` icon button
-		 * * `small` - Applied to a `small` icon button
+		 * * `small` - Applied to a `size='small'` icon button
 		 *
 		 * @type {Object}
 		 * @public
@@ -94,7 +95,7 @@ const IconButtonBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['iconButton', 'bg', 'selected', 'small']
+		publicClassNames: ['iconButton', 'bg', 'large', 'selected', 'small']
 	},
 
 	computed: {
@@ -140,7 +141,7 @@ const IconButtonDecorator = compose(
  *
  * Usage:
  * ```
- * <IconButton onClick={handleClick} small>
+ * <IconButton onClick={handleClick} size="small">
  *     plus
  * </IconButton>
  * ```

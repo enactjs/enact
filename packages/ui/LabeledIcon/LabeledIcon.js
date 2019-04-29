@@ -8,6 +8,7 @@
  */
 
 import kind from '@enact/core/kind';
+import deprecate from '@enact/core/internal/deprecate';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -18,6 +19,19 @@ import {CellBase, LayoutBase} from '../Layout';
 import Slottable from '../Slottable';
 
 import componentCss from './LabeledIcon.module.less';
+
+const deprecateSmall = deprecate(() => 'small',  {
+	name: 'ui/LabeledIcon.LabeledIconBase#small',
+	replacedBy: 'the `size` prop',
+	message: 'Use `size="small" instead`.',
+	since: '2.6.0',
+	until: '3.0.0'
+});
+
+function getSize (size, small) {
+	small = small ? deprecateSmall() : 'large';
+	return size || small;
+}
 
 /**
  * An icon component with a label.
@@ -92,7 +106,7 @@ const LabeledIconBase = kind({
 		 *
 		 * This will receive the `icon` prop as `children` and should handle it appropriately. This
 		 * prop is ignored in the case of a component being passed into the `icon` prop. It will
-		 * also receive the `small` prop as set on the component.
+		 * also receive the `size` prop as set on the component.
 		 *
 		 * @type {Component}
 		 */
@@ -130,12 +144,26 @@ const LabeledIconBase = kind({
 		labelPosition: PropTypes.oneOf(['above', 'after', 'before', 'below', 'left', 'right']),
 
 		/**
+		 * Applies the appropriate styling for size of the component.
+		 *
+		 * Takes `'small'` or `'large'`.
+		 * Other sizes can be defined and customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
+		 *
+		 * @type {String}
+		 * @default 'large'
+		 * @public
+		 */
+		size: PropTypes.string,
+
+		/**
 		 * Reduces the size of the icon component.
 		 *
 		 * The value of `small` is forwarded on to `iconComponent`.
 		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @deprecated replaced by prop `size='small'`
 		 * @public
 		 */
 		small: PropTypes.bool
@@ -144,6 +172,7 @@ const LabeledIconBase = kind({
 	defaultProps: {
 		labelPosition: 'below',
 		inline: false
+		// size: 'large', // we won't set default props for `size` yet to support `small` prop
 	},
 
 	styles: {
@@ -160,8 +189,11 @@ const LabeledIconBase = kind({
 		}
 	},
 
-	render: ({css, children, disabled, icon, iconComponent, orientation, small, ...rest}) => {
+	render: ({css, children, disabled, icon, iconComponent: Icon, orientation, size, small, ...rest}) => {
+		delete rest.inline;
+
 		let iconClassName = css.icon;
+		size = getSize(size, small);
 
 		// Rearrange the props to support custom JSX components
 		// `icon` is normally passed to `iconComponent` as children, but if `icon` is instead a
@@ -172,11 +204,11 @@ const LabeledIconBase = kind({
 				component: icon,
 				className: iconClassName,
 				disabled,
-				small
+				size
 			});
-			// Removing small and iconComponent from CellBase
+			// Removing size and iconComponent from CellBase
 			// eslint-disable-next-line no-undefined
-			small = iconComponent = undefined;
+			size = Icon = undefined;
 			iconClassName = null;
 		}
 
@@ -193,11 +225,15 @@ const LabeledIconBase = kind({
 					key: 'icon',
 					shrink: true,
 					size: '100%',
-					component: iconComponent,
-					children: icon,
-					className: (css.iconCell + ' ' + iconClassName),
-					disabled,
-					small
+					className: css.iconCell,
+					children: Icon ?
+						<Icon
+							className={iconClassName}
+							disabled={disabled}
+							size={size}
+						>
+							{icon}
+						</Icon> : icon
 				}),
 				CellBase.inline({
 					key: 'label',

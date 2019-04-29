@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Deprecated
 
 - `moonstone/Input.InputBase` prop `focused` which will be handled by CSS in 3.0
+- `small` prop in `moonstone/Input.InputBase` and `moonstone/ToggleButton.ToggleButtonBase`, which will be replaced by `size="small"` in 3.0
 
 ### Fixed
 

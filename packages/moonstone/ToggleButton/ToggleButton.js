@@ -10,6 +10,7 @@
  */
 
 import kind from '@enact/core/kind';
+import deprecate from '@enact/core/internal/deprecate';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
@@ -19,6 +20,19 @@ import Button from '../Button';
 import Skinnable from '../Skinnable';
 
 import css from './ToggleButton.module.less';
+
+const deprecateSmall = deprecate(() => 'small',  {
+	name: 'moonstone/ToggleButton.ToggleButtonBase#small',
+	replacedBy: 'the `size` prop',
+	message: 'Use `size="small" instead`.',
+	since: '2.6.0',
+	until: '3.0.0'
+});
+
+function getSize (size, small) {
+	small = small ? deprecateSmall() : 'large';
+	return size || small;
+}
 
 /**
  * A stateless [Button]{@link moonstone/Button.Button} that can be toggled by changing its
@@ -94,13 +108,26 @@ const ToggleButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Reduces the size of the button.
-		 *
+		 * Applies the appropriate styling for size of the component.
 		 * The button will have a larger tap target than its apparent size to allow it to be clicked
 		 * more easily.
 		 *
+		 * Takes `'small'` or `'large'`.
+		 * Other sizes can be defined and customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
+		 *
+		 * @type {String}
+		 * @default 'large'
+		 * @public
+		 */
+		size: PropTypes.string,
+
+		/**
+		 * Reduces the size of the button.
+		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @deprecated replaced by prop `size='small'`
 		 * @public
 		 */
 		small: PropTypes.bool,
@@ -132,7 +159,7 @@ const ToggleButtonBase = kind({
 		disabled: false,
 		minWidth: true,
 		selected: false,
-		small: false,
+		// size: 'large', // we won't set default props for `size` yet to support `small` prop
 		toggleOffLabel: '',
 		toggleOnLabel: ''
 	},
@@ -143,7 +170,7 @@ const ToggleButtonBase = kind({
 	},
 
 	computed: {
-		className: ({selected, small, styler}) => styler.append({selected, small}),
+		className: ({selected, size, small, styler}) => styler.append({selected}, getSize(size, small)),
 		children: ({children, selected, toggleOnLabel, toggleOffLabel}) => {
 			let c = children;
 			if (selected && toggleOnLabel) {
@@ -158,6 +185,7 @@ const ToggleButtonBase = kind({
 	render: ({selected, ...rest}) => {
 		delete rest.toggleOffLabel;
 		delete rest.toggleOnLabel;
+		delete rest.small;
 
 		return (
 			<Button data-webos-voice-intent="SetToggleItem" {...rest} aria-pressed={selected} selected={selected} />

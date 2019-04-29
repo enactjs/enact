@@ -12,6 +12,7 @@
  */
 
 import kind from '@enact/core/kind';
+import deprecate from '@enact/core/internal/deprecate';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -20,6 +21,23 @@ import ComponentOverride from '../ComponentOverride';
 import Touchable from '../Touchable';
 
 import componentCss from './IconButton.module.less';
+
+const deprecateSmall = deprecate(() => 'small',  {
+	name: 'ui/IconButton.IconButtonBase#small',
+	replacedBy: 'the `size` prop',
+	message: 'Use `size="small" instead`.',
+	since: '2.6.0',
+	until: '3.0.0'
+});
+
+function getSizeWithWarning (size, small) {
+	small = small ? deprecateSmall() : 'large';
+	return size || small;
+}
+
+function getSize (size, small) {
+	return size || (small ? 'small' : 'large');
+}
 
 /**
  * A ui-styled button without any behavior.
@@ -46,7 +64,7 @@ const IconButtonBase = kind({
 		/**
 		 * The component used to render the [icon]{@link ui/IconButton.IconButtonBase.icon}.
 		 *
-		 * This component will receive the `small` property set on the `IconButton` as well as the
+		 * This component will receive the `size` property set on the `IconButton` as well as the
 		 * `icon` class to customize its styling.
 		 *
 		 * @type {Component}
@@ -74,7 +92,8 @@ const IconButtonBase = kind({
 		 *
 		 * * `iconButton` - The root component class
 		 * * `icon` - The [icon component]{@link ui/IconButton.IconButtonBase.iconComponent} class
-		 * * `small` - Applied when `small` prop is `true`
+		 * * `large` - Applied when `size` prop is `'large'`
+		 * * `small` - Applied when `size` prop is `'small'`
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 *
 		 * @type {Object}
@@ -123,10 +142,24 @@ const IconButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
+		 * Applies the appropriate styling for size of the component.
+		 *
+		 * Takes `'small'` or `'large'`.
+		 * Other sizes can be defined and customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
+		 *
+		 * @type {String}
+		 * @default 'large'
+		 * @public
+		 */
+		size: PropTypes.string,
+
+		/**
 		 * Applies the `small` CSS class.
 		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @deprecated replaced by prop `size='small'`
 		 * @public
 		 */
 		small: PropTypes.bool
@@ -135,8 +168,8 @@ const IconButtonBase = kind({
 	defaultProps: {
 		disabled: false,
 		pressed: false,
-		selected: false,
-		small: false
+		selected: false
+		// size: 'large' // we won't set default props for `size` yet to support `small` prop
 	},
 
 	styles: {
@@ -146,11 +179,10 @@ const IconButtonBase = kind({
 	},
 
 	computed: {
-		className: ({small, styler}) => styler.append({small})
+		className: ({size, small, styler}) => styler.append(getSizeWithWarning(size, small))
 	},
 
-	render: ({buttonComponent, children, css, icon, iconComponent: Icon, small, ...rest}) => {
-
+	render: ({buttonComponent, children, css, icon, iconComponent: Icon, size, small, ...rest}) => {
 		// To support the simpler use case of only specifying the icon as the children within
 		// <IconButton>, this falls back on using children if icon isn't specified.
 		if (!icon && children) {
@@ -161,10 +193,10 @@ const IconButtonBase = kind({
 		return ComponentOverride({
 			...rest,
 			component: buttonComponent,
-			small: small,
+			size: getSize(size, small),
 			minWidth: false,
 			children: [
-				<Icon key="icon" small={small} className={css.icon}>{icon}</Icon>,
+				<Icon key="icon" size={getSize(size, small)} className={css.icon}>{icon}</Icon>,
 				...React.Children.toArray(children)
 			]
 		});
@@ -187,7 +219,7 @@ const IconButtonDecorator = Touchable({activeProp: 'pressed'});
  *
  * Example:
  * ```
- * <IconButton small>
+ * <IconButton size="small">
  *     plus
  * </IconButton>
  * ```
