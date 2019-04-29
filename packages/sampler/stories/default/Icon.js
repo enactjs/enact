@@ -5,7 +5,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {withInfo} from '@storybook/addon-info';
 
-import {boolean, select, text} from '../../src/enact-knobs';
+import {select, text} from '../../src/enact-knobs';
 import emptify from '../../src/utils/emptify.js';
 
 // import icons
