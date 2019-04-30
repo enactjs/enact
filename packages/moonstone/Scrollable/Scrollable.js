@@ -567,12 +567,12 @@ class ScrollableBase extends Component {
 
 		if (!repeat && this.hasFocus()) {
 			const {overscrollEffectOn} = this.props;
-			let
-				direction = null;
+			let direction = null;
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
 					Spotlight.setPointerMode(false);
+
 					direction = isPageUp(keyCode) ? 'up' : 'down';
 					if (this.scrollByPage(direction) && overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
 						this.checkAndApplyOverscrollEffectByDirection(direction);
@@ -582,6 +582,7 @@ class ScrollableBase extends Component {
 				const element = Spotlight.getCurrent();
 
 				this.uiRef.current.lastInputType = 'arrowKey';
+
 				direction = getDirection(keyCode);
 				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
 					const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
