@@ -101,6 +101,8 @@ const BodyTextBase = kind({
 	},
 
 	render: ({centered, css, noWrap, ...rest}) => {
+		delete rest.size;
+
 		if (noWrap) {
 			return (
 				<MarqueeBodyText
