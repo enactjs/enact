@@ -65,7 +65,31 @@ const toWordCase = (str) => {
 	return str.split(' ').map(toCapitalized).join(' ');
 };
 
+const formatContent = (casing, content) => {
+	if (typeof content !== 'string') return content;
+
+	switch (casing) {
+		case 'word':
+			return toWordCase(content);
+		case 'sentence':
+			return toCapitalized(content);
+		case 'upper':
+			return toUpperCase(content);
+	}
+
+	return content;
+};
+
+const convertCase = (casing, content) => {
+	if (Array.isArray(content)) {
+		return content.map(child => formatContent(casing, child));
+	}
+
+	return formatContent(casing, content);
+};
+
 export {
+	convertCase,
 	isRtlText,
 	toCapitalized,
 	toLowerCase,

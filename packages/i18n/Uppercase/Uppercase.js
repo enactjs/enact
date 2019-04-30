@@ -10,20 +10,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {toCapitalized, toUpperCase, toWordCase} from '../util';
-
-const isString = (content) => typeof content === 'string';
-
-const formatContent = (casing, content) => {
-	switch (casing) {
-		case 'word':
-			return toWordCase(content);
-		case 'sentence':
-			return toCapitalized(content);
-		case 'upper':
-			return toUpperCase(content);
-	}
-};
+import {convertCase} from '../util';
 
 /**
  * A higher-order component that is used to wrap an element to provide locale-aware uppercasing of
@@ -62,14 +49,7 @@ const Uppercase = hoc((config, Wrapped) => kind({	// eslint-disable-line no-unus
 	},
 
 	computed: {
-		children: ({casing, children}) => {
-			if (casing !== 'preserve' && React.Children.count(children)) {
-				return isString(children) ? formatContent(casing, children) : React.Children.map(children, (child) => {
-					return isString(child) ? formatContent(casing, child) : child;
-				});
-			}
-			return children;
-		}
+		children: ({casing, children}) => convertCase(casing, React.Children.toArray(children))
 	},
 
 	render: (props) => {
