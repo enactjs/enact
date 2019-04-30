@@ -17,6 +17,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Button.ButtonDecorator` to remove `i18n/Uppercase` HOC
 - `moonstone/Button` and `moonstone/Header` appearance to match the latest designs
+- `moonstone/Checkbox` and `moonstone/CheckboxItem` appearance to match the latest designs
 
 ## [2.5.3] - ???
 
