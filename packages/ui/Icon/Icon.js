@@ -132,7 +132,7 @@ const Icon = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * The size of the `Icon`.
+		 * The size of the button.
 		 *
 		 * Applies either the `small` or `large` CSS class which can be customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.

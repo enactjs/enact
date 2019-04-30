@@ -108,7 +108,7 @@ const ToggleButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * The size of the `ToggleButton`
+		 * The size of the button.
 		 *
 		 * The button will have a larger tap target than its apparent size to allow it to be clicked
 		 * more easily.

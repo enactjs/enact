@@ -144,7 +144,7 @@ const LabeledIconBase = kind({
 		labelPosition: PropTypes.oneOf(['above', 'after', 'before', 'below', 'left', 'right']),
 
 		/**
-		 * The size of the `LabeledIcon`.
+		 * The size of the icon.
 		 *
 		 * Applies either the `small` or `large` CSS class which can be customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
