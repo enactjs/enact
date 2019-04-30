@@ -73,11 +73,22 @@ const BodyTextBase = kind({
 		 * @default false
 		 * @public
 		 */
-		noWrap: PropTypes.bool
+		noWrap: PropTypes.bool,
+
+		/**
+		 * Sets the text size to one of the preset sizes.
+		 * Available sizes: 'large' (default) and 'small'.
+		 *
+		 * @type {('small'|'large')}
+		 * @default 'large'
+		 * @public
+		 */
+		size: PropTypes.oneOf(['small', 'large'])
 	},
 
 	defaultProps: {
-		noWrap: false
+		noWrap: false,
+		size: 'large'
 	},
 
 	styles: {
@@ -86,7 +97,7 @@ const BodyTextBase = kind({
 	},
 
 	computed: {
-		className: ({noWrap, styler}) => styler.append({noWrap})
+		className: ({noWrap, size, styler}) => styler.append(size, {noWrap})
 	},
 
 	render: ({centered, css, noWrap, ...rest}) => {
