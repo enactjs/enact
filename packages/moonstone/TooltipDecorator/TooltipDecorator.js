@@ -435,6 +435,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						direction={this.state.tooltipDirection}
 						position={tooltipRelative ? null : this.state.position}
 						relative={tooltipRelative}
+						style={{display: ((tooltipRelative && !this.state.showing) ? 'none' : null)}}
 						tooltipRef={this.getTooltipRef}
 						width={tooltipWidth}
 					>
