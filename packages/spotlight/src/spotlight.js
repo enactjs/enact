@@ -563,6 +563,11 @@ const Spotlight = (function () {
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
+
+			if (platform.touch) {
+				window.removeEventListener('touchend', onTouchEnd);
+			}
+
 			if (platform.webos) {
 				window.top.document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
 				window.top.document.removeEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
