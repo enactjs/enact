@@ -140,10 +140,10 @@ const IconButtonBase = kind({
 		/**
 		 * The size of the `IconButton`.
 		 *
-		 * Takes `'small'` or `'large'`. Other sizes can be defined and customized by
+		 * Applies either the `small` or `large` CSS class which can be customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
-		 * @type {String}
+		 * @type {('small'|'large')}
 		 * @default 'large'
 		 * @public
 		 */
