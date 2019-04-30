@@ -252,7 +252,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		handleFocus = this.handle(
-			forProp('spotlightDisabled', true),
+			forProp('data-spotlight-container-disabled', true),
 			stop,
 			this.silentBlur
 		)
