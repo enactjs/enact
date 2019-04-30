@@ -27,7 +27,7 @@ import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 import {calcAriaLabel, extractInputProps} from './util';
 
-const deprecateSmall = deprecate(() => 'small',  {
+const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
 	name: 'moonstone/Input.InputBase#small',
 	replacedBy: 'the `size` prop',
 	message: 'Use `size="small" instead`.',
@@ -36,7 +36,7 @@ const deprecateSmall = deprecate(() => 'small',  {
 });
 
 function getSize (size, small) {
-	small = small ? deprecateSmall() : 'large';
+	small = typeof small !== 'undefined' ? deprecateSmall(small) : 'large';
 	return size || small;
 }
 
@@ -206,13 +206,9 @@ const InputBase = kind({
 		rtl: PropTypes.bool,
 
 		/**
-		 * Applies the appropriate styling for size of the component.
+		 * The size of the input field.
 		 *
-		 * Takes `'small'` or `'large'`.
-		 * Other sizes can be defined and customized by
-		 * [theming]{@link /docs/developer-guide/theming/}.
-		 *
-		 * @type {String}
+		 * @type {('small'|'large')}
 		 * @default 'large'
 		 * @public
 		 */
@@ -293,14 +289,15 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, size, type, value, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-intent' : voiceIntent, 'data-webos-voice-label': voiceLabel, ...rest}) => {
+	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, size, small, type, value, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-intent' : voiceIntent, 'data-webos-voice-label': voiceLabel, ...rest}) => {
 		const inputProps = extractInputProps(rest);
 		delete rest.dismissOnEnter;
 		delete rest.focused;
 		delete rest.invalid;
 		delete rest.invalidMessage;
 		delete rest.rtl;
-		delete rest.small;
+
+		size = getSize(size, small);
 
 		return (
 			<div {...rest} disabled={disabled}>

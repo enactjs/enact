@@ -14,7 +14,7 @@ import ri from '../resolution';
 
 import componentCss from './Icon.module.less';
 
-const deprecateSmall = deprecate(() => 'small',  {
+const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
 	name: 'ui/Icon.IconBase#small',
 	replacedBy: 'the `size` prop',
 	message: 'Use `size="small" instead`.',
@@ -23,7 +23,7 @@ const deprecateSmall = deprecate(() => 'small',  {
 });
 
 function getSize (size, small) {
-	small = small ? deprecateSmall() : 'large';
+	small = typeof small !== 'undefined' ? deprecateSmall(small) : 'large';
 	return size || small;
 }
 
@@ -100,8 +100,8 @@ const Icon = kind({
 		 * * `dingbat` - Applied when the value of [`icon`]{@link ui/Icon.Icon.icon} is not
 		 *   found in [iconList]{@link ui/Icon.Icon.iconList}
 		 * * `large` - Applied when `size` prop is `'large'`
-		 * * `small` - Applied when `size` prop is `'small'`
 		 * * `pressed` - Applied when `pressed` prop is `true`
+		 * * `small` - Applied when `size` prop is `'small'`
 		 *
 		 * @type {Object}
 		 * @public
@@ -134,11 +134,10 @@ const Icon = kind({
 		/**
 		 * Applies the appropriate styling for size of the component.
 		 *
-		 * Takes `'small'` or `'large'`.
-		 * Other sizes can be defined and customized by
+		 * Takes `'small'` or `'large'`. Other sizes can be defined and customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
-		 * @type {String}
+		 * @type {('small'|'large')}
 		 * @default 'small'
 		 * @public
 		 */

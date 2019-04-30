@@ -91,7 +91,7 @@ const LabeledIconButtonBase = kind({
 	styles: {
 		css: componentCss,
 		className: 'labeledIconButton',
-		publicClassNames: ['labeledIconButton', 'icon', 'label', 'selected', 'small']
+		publicClassNames: ['labeledIconButton', 'icon', 'label', 'large', 'selected', 'small']
 	},
 
 	render: ({css, icon, selected, ...rest}) => {

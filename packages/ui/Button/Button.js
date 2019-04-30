@@ -17,7 +17,7 @@ import Touchable from '../Touchable';
 
 import componentCss from './Button.module.less';
 
-const deprecateSmall = deprecate(() => 'small',  {
+const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
 	name: 'ui/Button.ButtonBase#small',
 	replacedBy: 'the `size` prop',
 	message: 'Use `size="small" instead`.',
@@ -25,13 +25,9 @@ const deprecateSmall = deprecate(() => 'small',  {
 	until: '3.0.0'
 });
 
-function getSizeWithWarning (size, small) {
-	small = small ? deprecateSmall() : 'large';
-	return size || small;
-}
-
 function getSize (size, small) {
-	return size || (small ? 'small' : 'large');
+	small = typeof small !== 'undefined' ? deprecateSmall(small) : 'large';
+	return size || small;
 }
 
 /**
@@ -146,14 +142,12 @@ const ButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Applies the appropriate styling for size of the component.
+		 * The size of the `Button`.
 		 *
-		 * Takes `'small'` or `'large'`.
-		 * Other sizes can be defined and customized by
+		 * Applies either the `small` or `large` CSS class which can be customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
-		 * @type {String}
-		 * @default 'large'
+		 * @type {('small'|'large')}
 		 * @public
 		 */
 		size: PropTypes.string,
@@ -174,7 +168,6 @@ const ButtonBase = kind({
 		minWidth: true,
 		pressed: false,
 		selected: false
-		// size: 'large' // we won't set default props for `size` yet to support `'small'` prop
 	},
 
 	styles: {
@@ -189,7 +182,7 @@ const ButtonBase = kind({
 			minWidth,
 			pressed,
 			selected
-		}, getSizeWithWarning(size, small)),
+		}, getSize(size, small)),
 		icon: ({css, icon, iconComponent: Icon, size, small}) => {
 			return (typeof icon === 'string' && Icon) ? (
 				<Icon size={getSize(size, small)} className={css.icon}>{icon}</Icon>

@@ -22,7 +22,7 @@ import Touchable from '../Touchable';
 
 import componentCss from './IconButton.module.less';
 
-const deprecateSmall = deprecate(() => 'small',  {
+const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
 	name: 'ui/IconButton.IconButtonBase#small',
 	replacedBy: 'the `size` prop',
 	message: 'Use `size="small" instead`.',
@@ -30,13 +30,9 @@ const deprecateSmall = deprecate(() => 'small',  {
 	until: '3.0.0'
 });
 
-function getSizeWithWarning (size, small) {
-	small = small ? deprecateSmall() : 'large';
-	return size || small;
-}
-
 function getSize (size, small) {
-	return size || (small ? 'small' : 'large');
+	small = typeof small !== 'undefined' ? deprecateSmall(small) : 'large';
+	return size || small;
 }
 
 /**
@@ -142,10 +138,9 @@ const IconButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Applies the appropriate styling for size of the component.
+		 * The size of the `IconButton`.
 		 *
-		 * Takes `'small'` or `'large'`.
-		 * Other sizes can be defined and customized by
+		 * Takes `'small'` or `'large'`. Other sizes can be defined and customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
@@ -179,7 +174,7 @@ const IconButtonBase = kind({
 	},
 
 	computed: {
-		className: ({size, small, styler}) => styler.append(getSizeWithWarning(size, small))
+		className: ({size, small, styler}) => styler.append(getSize(size, small))
 	},
 
 	render: ({buttonComponent, children, css, icon, iconComponent: Icon, size, small, ...rest}) => {

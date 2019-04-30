@@ -21,7 +21,7 @@ import Skinnable from '../Skinnable';
 
 import css from './ToggleButton.module.less';
 
-const deprecateSmall = deprecate(() => 'small',  {
+const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
 	name: 'moonstone/ToggleButton.ToggleButtonBase#small',
 	replacedBy: 'the `size` prop',
 	message: 'Use `size="small" instead`.',
@@ -30,7 +30,7 @@ const deprecateSmall = deprecate(() => 'small',  {
 });
 
 function getSize (size, small) {
-	small = small ? deprecateSmall() : 'large';
+	small = typeof small !== 'undefined' ? deprecateSmall(small) : 'large';
 	return size || small;
 }
 
@@ -108,15 +108,12 @@ const ToggleButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Applies the appropriate styling for size of the component.
+		 * The size of the `ToggleButton`
+		 *
 		 * The button will have a larger tap target than its apparent size to allow it to be clicked
 		 * more easily.
 		 *
-		 * Takes `'small'` or `'large'`.
-		 * Other sizes can be defined and customized by
-		 * [theming]{@link /docs/developer-guide/theming/}.
-		 *
-		 * @type {String}
+		 * @type {('small'|'large')}
 		 * @default 'large'
 		 * @public
 		 */

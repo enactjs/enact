@@ -20,7 +20,7 @@ import Slottable from '../Slottable';
 
 import componentCss from './LabeledIcon.module.less';
 
-const deprecateSmall = deprecate(() => 'small',  {
+const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
 	name: 'ui/LabeledIcon.LabeledIconBase#small',
 	replacedBy: 'the `size` prop',
 	message: 'Use `size="small" instead`.',
@@ -29,7 +29,7 @@ const deprecateSmall = deprecate(() => 'small',  {
 });
 
 function getSize (size, small) {
-	small = small ? deprecateSmall() : 'large';
+	small = typeof small !== 'undefined' ? deprecateSmall(small) : 'large';
 	return size || small;
 }
 
