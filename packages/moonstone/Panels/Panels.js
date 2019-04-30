@@ -108,7 +108,10 @@ const PanelsBase = kind({
 		 * @type {Function}
 		 * @private
 		 */
-		controlsRef: PropTypes.func,
+		controlsRef: PropTypes.oneOfType([
+			PropTypes.func,
+			PropTypes.shape({current: PropTypes.any})
+		]),
 
 		/**
 		 * Unique identifier for the Panels instance
