@@ -17,7 +17,6 @@ import {onWindowReady} from '@enact/core/snapshot';
 import platform from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
@@ -91,17 +90,18 @@ const
 const
 	// An app could have lists and/or scrollers more than one,
 	// so we should test all of them when page up/down key is pressed.
-	scrollables = new Set(),
+	scrollables = new Map(),
 	pageKeyHandler = (ev) => {
-		if (Spotlight.getPointerMode() && !Spotlight.getCurrent()) {
+		const {keyCode} = ev;
+		if (Spotlight.getPointerMode() && !Spotlight.getCurrent() && (isPageUp(keyCode) || isPageDown(keyCode))) {
 			const
 				{x, y} = lastPointer,
 				elem = document.elementFromPoint(x, y);
 
 			if (elem) {
-				for (let s of scrollables) {
-					if (ReactDOM.findDOMNode(s).contains(elem)) { // eslint-disable-line react/no-find-dom-node
-						s.onKeyDown(ev, true);
+				for (let [key, value] of scrollables) {
+					if (value.contains(elem)) {
+						key.scrollByPageOnPointerMode(ev);
 						break;
 					}
 				}
@@ -292,7 +292,7 @@ class ScrollableBase extends Component {
 		this.createOverscrollJob('vertical', 'before');
 		this.createOverscrollJob('vertical', 'after');
 
-		scrollables.add(this);
+		scrollables.set(this, this.uiRef.current.containerRef.current);
 	}
 
 	componentDidUpdate (prevProps) {
@@ -525,7 +525,36 @@ class ScrollableBase extends Component {
 		return current && this.uiRef.current.containerRef.current.contains(current);
 	}
 
-	onKeyDown = (ev, globalHandler = false) => {
+	checkAndApplyOverscrollEffectByDirection = (direction) => {
+		const
+			orientation = (direction === 'up' || direction === 'down') ? 'vertical' : 'horizontal',
+			bounds = this.uiRef.current.getScrollBounds(),
+			scrollability = orientation === 'vertical' ? this.uiRef.current.canScrollVertically(bounds) : this.uiRef.current.canScrollHorizontally(bounds);
+
+		if (scrollability) {
+			const
+				isRtl = this.uiRef.current.state.rtl,
+				edge = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
+			this.uiRef.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
+		}
+	}
+
+	scrollByPageOnPointerMode = (ev) => {
+		const {keyCode, repeat} = ev;
+		forward('onKeyDown', ev, this.props);
+		ev.preventDefault();
+
+		this.animateOnFocus = this.props.animate;
+
+		if (!repeat && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
+			let direction = isPageUp(keyCode) ? 'up' : 'down';
+			if (this.scrollByPage(direction) && this.props.overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
+				this.checkAndApplyOverscrollEffectByDirection(direction);
+			}
+		}
+	}
+
+	onKeyDown = (ev) => {
 		const {keyCode, repeat} = ev;
 
 		forward('onKeyDown', ev, this.props);
@@ -536,49 +565,31 @@ class ScrollableBase extends Component {
 
 		this.animateOnFocus = this.props.animate;
 
-		if (!repeat && (globalHandler || this.hasFocus())) {
+		if (!repeat && this.hasFocus()) {
 			const {overscrollEffectOn} = this.props;
 			let
-				overscrollEffectRequired = false,
 				direction = null;
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
-					if (!globalHandler) {
-						Spotlight.setPointerMode(false);
-					}
+					Spotlight.setPointerMode(false);
 					direction = isPageUp(keyCode) ? 'up' : 'down';
-					overscrollEffectRequired = this.scrollByPage(direction) && overscrollEffectOn.pageKey;
+					if (this.scrollByPage(direction) && overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
+						this.checkAndApplyOverscrollEffectByDirection(direction);
+					}
 				}
 			} else if (getDirection(keyCode)) {
 				const element = Spotlight.getCurrent();
 
-				direction = getDirection(keyCode);
-
 				this.uiRef.current.lastInputType = 'arrowKey';
-
-				overscrollEffectRequired = overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null);
-				if (overscrollEffectRequired) {
+				direction = getDirection(keyCode);
+				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
 					const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
 
-					if ((horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) ||
-						(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
-						overscrollEffectRequired = false;
+					if (!(horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) &&
+						!(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
+						this.checkAndApplyOverscrollEffectByDirection(direction);
 					}
-				}
-			}
-
-			if (direction && overscrollEffectRequired) { /* if the spotlight focus will not move */
-				const
-					orientation = (direction === 'up' || direction === 'down') ? 'vertical' : 'horizontal',
-					bounds = this.uiRef.current.getScrollBounds(),
-					scrollability = orientation === 'vertical' ? this.uiRef.current.canScrollVertically(bounds) : this.uiRef.current.canScrollHorizontally(bounds);
-
-				if (scrollability) {
-					const
-						isRtl = this.uiRef.current.state.rtl,
-						edge = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
-					this.uiRef.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 				}
 			}
 		}
