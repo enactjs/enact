@@ -4,7 +4,7 @@
  * to the image or a string from an [iconList]{@link moonstone/Icon.IconBase.iconList}.
  *
  * @example
- * <IconButton small>plus</IconButton>
+ * <IconButton size="small">plus</IconButton>
  *
  * @module moonstone/IconButton
  * @exports IconButton
