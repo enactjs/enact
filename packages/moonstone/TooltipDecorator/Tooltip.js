@@ -162,12 +162,10 @@ const TooltipBase = kind({
 });
 
 /**
- * A tooltip component with Moonstone styling applied. If the Tooltip's child component is text, it
- * will be uppercased unless `casing` is set.
+ * A tooltip component with Moonstone styling applied.
  *
  * @class Tooltip
  * @memberof moonstone/TooltipDecorator
- * @mixes i18n/Uppercase.Uppercase
  * @ui
  * @public
  */

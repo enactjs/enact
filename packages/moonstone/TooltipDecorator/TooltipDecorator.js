@@ -4,9 +4,9 @@
  * Moonstone styled tooltip components.
  *
  * @module moonstone/TooltipDecorator
- * @exports TooltipDecorator
  * @exports Tooltip
  * @exports TooltipBase
+ * @exports TooltipDecorator
  */
 
 import hoc from '@enact/core/hoc';
@@ -224,11 +224,11 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidMount () {
 			if (window.MutationObserver) {
-				this.mutationObserver = new MutationObserver(this.setTooltipLayoutJob.start);
+				this.mutationObserver = new MutationObserver(this.startTooltipLayoutJob);
 			}
 
 			if (window.ResizeObserver) {
-				this.resizeObserver = new ResizeObserver(this.setTooltipLayoutJob.start);
+				this.resizeObserver = new ResizeObserver(this.startTooltipLayoutJob);
 			}
 		}
 
@@ -317,7 +317,11 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		setTooltipLayoutJob = new Job(() => {
 			this.setTooltipLayout();
-		}, this.props.tooltipUpdateDelay)
+		})
+
+		startTooltipLayoutJob = () => {
+			this.setTooltipLayoutJob.startAfter(this.props.tooltipUpdateDelay);
+		}
 
 		showTooltip = (client) => {
 			const {tooltipDelay, tooltipText} = this.props;
@@ -366,7 +370,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forward('onKeyDown'),
 			forProp('disabled', false),
 			() => {
-				this.setTooltipLayoutJob.start();
+				this.startTooltipLayoutJob();
 			}
 		);
 
@@ -505,7 +509,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 export default TooltipDecorator;
 export {
-	TooltipDecorator,
 	Tooltip,
-	TooltipBase
+	TooltipBase,
+	TooltipDecorator
 };

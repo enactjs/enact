@@ -81,15 +81,7 @@ const IconButtonBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object,
-
-		/**
-		 * An optional node to receive the tooltip from `TooltipDecorator`.
-		 *
-		 * @type {Node}
-		 * @private
-		 */
-		tooltipNode: PropTypes.node
+		css: PropTypes.object
 	},
 
 	styles: {
@@ -101,15 +93,14 @@ const IconButtonBase = kind({
 		className: ({color, styler}) => styler.append(color)
 	},
 
-	render: ({children, css, tooltipNode, ...rest}) => {
+	render: ({children, css, ...rest}) => {
 		return UiIconButtonBase.inline({
 			'data-webos-voice-intent': 'Select',
 			...rest,
 			buttonComponent: <ButtonBase css={css} />,
 			css,
 			icon: children,
-			iconComponent: Icon,
-			children: tooltipNode
+			iconComponent: Icon
 		});
 	}
 });
