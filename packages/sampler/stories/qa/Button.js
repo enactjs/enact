@@ -1,5 +1,6 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
 import IconButton from '@enact/moonstone/IconButton';
+import Divider from '@enact/moonstone/Divider';
 import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
@@ -95,6 +96,7 @@ storiesOf('Button', module)
 		'with tap area displayed',
 		() => (
 			<div>
+				<Divider>Button</Divider>
 				<Button
 					className={css.tapArea}
 					onClick={action('onClick')}
@@ -120,9 +122,29 @@ storiesOf('Button', module)
 					small
 				>
 					Small Button
-				</Button><br />
-				<IconButton color={select('color', prop.color, Config)}>{select('icon', prop.icons, Config) || '☃'}</IconButton>
-				<IconButton small color={select('color', prop.color, Config)}>{select('icon', prop.icons, Config) || '☃'}</IconButton>
+				</Button>
+				<Divider>IconButton</Divider>
+				<IconButton
+					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+					className={css.tapArea}
+					color={select('color', prop.color, Config)}
+					disabled={boolean('disabled', Config)}
+					onClick={action('onClick')}
+					selected={boolean('selected', Config)}
+				>
+					{select('icon', prop.icons, Config) || '☃'}
+				</IconButton>
+				<IconButton
+					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+					className={css.tapArea}
+					color={select('color', prop.color, Config)}
+					disabled={boolean('disabled', Config)}
+					onClick={action('onClick')}
+					small
+					selected={boolean('selected', Config)}
+				>
+					{select('icon', prop.icons, Config) || '☃'}
+				</IconButton>
 			</div>
 		)
 	);
