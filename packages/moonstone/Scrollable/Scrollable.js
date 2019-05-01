@@ -284,6 +284,19 @@ class ScrollableBase extends Component {
 		vertical: {before: null, after: null}
 	}
 
+	onDragStart = () => {
+		if (Spotlight.getCurrent()) Spotlight.getCurrent().blur();
+		if (!this.props['data-spotlight-container-disabled']) {
+			this.childRef.current.setContainerDisabled(true);
+		}
+	}
+
+	onDragEnd = () => {
+		if (!this.props['data-spotlight-container-disabled']) {
+			this.childRef.current.setContainerDisabled(false);
+		}
+	}
+
 	onFlick = ({direction}) => {
 		const bounds = this.uiRef.current.getScrollBounds();
 		const focusedItem = Spotlight.getCurrent();
@@ -759,6 +772,8 @@ class ScrollableBase extends Component {
 				applyOverscrollEffect={this.applyOverscrollEffect}
 				clearOverscrollEffect={this.clearOverscrollEffect}
 				noAnimation={!animate}
+				onDragStart={this.onDragStart}
+				onDragEnd={this.onDragEnd}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
