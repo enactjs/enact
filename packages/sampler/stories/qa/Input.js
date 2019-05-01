@@ -1,5 +1,5 @@
 import {icons} from '@enact/moonstone/Icon';
-import {Input, InputBaseInternal as InputBase} from '@enact/moonstone/Input';
+import {Input, InputBase} from '@enact/moonstone/Input';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';

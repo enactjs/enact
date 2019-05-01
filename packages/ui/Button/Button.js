@@ -52,6 +52,14 @@ const ButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
+		 * Additional DOM nodes which may be necessary for decorating the Button.
+		 *
+		 * @type {Node}
+		 * @private
+		 */
+		decoration: PropTypes.node,
+
+		/**
 		 * Applies the `disabled` class.
 		 *
 		 * When `true`, the button is shown as disabled.
@@ -169,7 +177,7 @@ const ButtonBase = kind({
 		}
 	},
 
-	render: ({children, css, disabled, icon, ...rest}) => {
+	render: ({children, css, decoration, disabled, icon, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.minWidth;
 		delete rest.pressed;
@@ -178,6 +186,9 @@ const ButtonBase = kind({
 
 		return (
 			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
+				{decoration ? (
+					<div className={css.decoration}>{decoration}</div>
+				) : null}
 				<div className={css.bg} />
 				<div className={css.client}>{icon}{children}</div>
 			</div>
