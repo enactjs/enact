@@ -30,7 +30,7 @@ import {calcAriaLabel, extractInputProps} from './util';
 const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
 	name: 'moonstone/Input.InputBase#small',
 	replacedBy: 'the `size` prop',
-	message: 'Use `size="small" instead`.',
+	message: 'Use `size="small"` instead.',
 	since: '2.6.0',
 	until: '3.0.0'
 });
@@ -218,7 +218,6 @@ const InputBase = kind({
 		 * Applies the `small` CSS class.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @deprecated replaced by prop `size='small'`
 		 * @public
 		 */

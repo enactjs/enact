@@ -20,7 +20,7 @@ import componentCss from './Button.module.less';
 const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
 	name: 'ui/Button.ButtonBase#small',
 	replacedBy: 'the `size` prop',
-	message: 'Use `size="small" instead`.',
+	message: 'Use `size="small"` instead.',
 	since: '2.6.0',
 	until: '3.0.0'
 });
@@ -148,6 +148,7 @@ const ButtonBase = kind({
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {('small'|'large')}
+		 * @default 'large'
 		 * @public
 		 */
 		size: PropTypes.string,
@@ -156,7 +157,6 @@ const ButtonBase = kind({
 		 * Reduces the size of the component.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @deprecated replaced by prop `size='small'`
 		 * @public
 		 */

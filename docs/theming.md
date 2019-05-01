@@ -32,6 +32,7 @@ Here's a simplified example of `ui/Button/Button.module.less`:
 	}
 
 	.icon,
+	&.large,
 	&.small,
 	// The selected state of the Button, applied to the base element
 	&.selected {
@@ -41,7 +42,7 @@ Here's a simplified example of `ui/Button/Button.module.less`:
 ```
 *There is a small caveat here, which is that classes will not be exported if they do not have something in their rule-set, like the `.selected` class. It must have that CSS comment `/* comment */` in place for the minifier to not prune it out. Also, a LESS style comment  `//` is not sufficient, since those are pruned out at compile-time.*
 
-In the above example, we define our base component class `.button`, then set up child element classes: `.bg` and `.icon`, we also add state classes: `.selected` and `.small`. Because this is in our `ui` package, where all of our base components are, we want to establish the common behaviors, but not the appearance, so `.icon`, `.selected`, and `.small` have no rules on them, just a CSS comment. This way, they will be available to the theme and it can choose how to visually represent those states, and not worry about the logic of *how* those are applied.
+In the above example, we define our base component class `.button`, then set up child element classes: `.bg` and `.icon`, we also add state classes: `.selected`, `large`, and `.small`. Because this is in our `ui` package, where all of our base components are, we want to establish the common behaviors, but not the appearance, so `.icon`, `.selected`, `large`, and `.small` have no rules on them, just a CSS comment. This way, they will be available to the theme and it can choose how to visually represent those states, and not worry about the logic of *how* those are applied.
 
 ### Using a UI Component
 
@@ -60,7 +61,7 @@ const Button = kind({
 	styles: {
 		css: componentCss,
 		className: 'button',
-		publicClassNames: ['button', 'bg', 'selected', 'small']
+		publicClassNames: ['button', 'bg', 'large', 'selected', 'small']
 	},
 
 	render: ({children, css, ...rest}) => (
@@ -71,7 +72,7 @@ const Button = kind({
 export default Button;
 ```
 
-In this example, we've imported the unstyled `ui/Button`, which exports all available classes for customization (by setting `publicClassNames: true`), and we've imported our LESS file where we have many styles defined for the available states that a button can be in: small, selected, pressed, disabled, etc. We also have access to the internal element classes: bg, client, and marquee. Each of these classes match one of the public class names made available by the `ui/Button` component. So what can we do with this? We, as the component authors, have access to all of the class names which were made available in the components we're using, however, we can choose to restrict the available classes being made available to our consumers. In the above example we've only chosen to export four (4) classes for customization. It is the theme's discretion to determine how customizable or rigid it should be. Moonstone, for example, is relatively rigid so it maintains consistency for its visual identity. Our `ui` package, on the other hand, is *completely* open to customization and expresses only minimal initial styling. It makes prolific use of `publicClassNames: true`, which is shorthand for allowing *all* classes to be customized.
+In this example, we've imported the unstyled `ui/Button`, which exports all available classes for customization (by setting `publicClassNames: true`), and we've imported our LESS file where we have many styles defined for the available states that a button can be in: large, small, selected, pressed, disabled, etc. We also have access to the internal element classes: bg, client, and marquee. Each of these classes match one of the public class names made available by the `ui/Button` component. So what can we do with this? We, as the component authors, have access to all of the class names which were made available in the components we're using, however, we can choose to restrict the available classes being made available to our consumers. In the above example we've only chosen to export four (4) classes for customization. It is the theme's discretion to determine how customizable or rigid it should be. Moonstone, for example, is relatively rigid so it maintains consistency for its visual identity. Our `ui` package, on the other hand, is *completely* open to customization and expresses only minimal initial styling. It makes prolific use of `publicClassNames: true`, which is shorthand for allowing *all* classes to be customized.
 
 ### Adding State Classes
 
@@ -125,7 +126,7 @@ For example, `Button` publishes the `.bg` class from `ui`. Moonstone adds its ow
 
 ### The `css` prop
 
-You can access the full collection of mapped class names via the automatically added `css` prop. The `css` prop doesn't behave like normal props, though. It does not automatically pass down to deeper layers, via props-spreading. This is because we wanted to be conscious of when we are passing classes down to another layer. When you add a `publicClassNames` key to your component, it will automatically receive the `css` prop in its collection of props, which can be used in the `render` or `computed` functions just like any other prop. To reference an earlier example, when `moonstone/Button` encounters the `css` prop, it is an object like this: 
+You can access the full collection of mapped class names via the automatically added `css` prop. The `css` prop doesn't behave like normal props, though. It does not automatically pass down to deeper layers, via props-spreading. This is because we wanted to be conscious of when we are passing classes down to another layer. When you add a `publicClassNames` key to your component, it will automatically receive the `css` prop in its collection of props, which can be used in the `render` or `computed` functions just like any other prop. To reference an earlier example, when `moonstone/Button` encounters the `css` prop, it is an object like this:
 
 ```javascript
 {
@@ -137,7 +138,7 @@ You can access the full collection of mapped class names via the automatically a
  You then simply use this object to refer to your internal elements, like this:
 
 ```jsx
-render({children, css, ...rest}) => 
+render({children, css, ...rest}) =>
 	<div {...rest}>
 		<div className={css.bg}></div>
 		{children}
@@ -164,7 +165,7 @@ const Button = kind({
 	styles: {
 		css: componentCss,
 		className: 'button',
-		publicClassNames: ['button', 'bg', 'selected', 'small']
+		publicClassNames: ['button', 'bg', 'large', 'selected', 'small']
 	},
 
 	render: ({children, css, ...rest}) => (

@@ -23,7 +23,7 @@ import componentCss from './LabeledIcon.module.less';
 const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
 	name: 'ui/LabeledIcon.LabeledIconBase#small',
 	replacedBy: 'the `size` prop',
-	message: 'Use `size="small" instead`.',
+	message: 'Use `size="small"` instead.',
 	since: '2.6.0',
 	until: '3.0.0'
 });

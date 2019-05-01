@@ -24,7 +24,7 @@ import css from './ToggleButton.module.less';
 const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
 	name: 'moonstone/ToggleButton.ToggleButtonBase#small',
 	replacedBy: 'the `size` prop',
-	message: 'Use `size="small" instead`.',
+	message: 'Use `size="small"` instead.',
 	since: '2.6.0',
 	until: '3.0.0'
 });
@@ -110,8 +110,8 @@ const ToggleButtonBase = kind({
 		/**
 		 * The size of the button.
 		 *
-		 * The button will have a larger tap target than its apparent size to allow it to be clicked
-		 * more easily.
+		 * A `'small'` button will have a larger tap target than its apparent size to allow it to be
+		 * clicked more easily.
 		 *
 		 * @type {('small'|'large')}
 		 * @default 'large'
@@ -123,7 +123,6 @@ const ToggleButtonBase = kind({
 		 * Reduces the size of the button.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @deprecated replaced by prop `size='small'`
 		 * @public
 		 */
