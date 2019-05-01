@@ -9,6 +9,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/Measurable` HOC and Hook for quick and convenient measuring of simple components
 - `ui/Button` public class `.hasIcon` which is present on the root node only when an icon has been provided
 
+### Fixed
+
+- `ui/Measurable` to remeasure after a re-layout so the measurement value is always correct
+
 ## [2.5.2] - 2019-04-23
 
 ### Fixed
