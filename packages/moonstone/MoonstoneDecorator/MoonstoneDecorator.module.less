@@ -3,20 +3,15 @@
 
 // Core Rules
 @import "~@enact/ui/styles/core.less";
-@import '~@enact/ui/styles/mixins.less';
+@import "~@enact/ui/styles/mixins.less";
 
 // Moonstone Internal Rules
-@import '../styles/internal/fonts.less';
+@import "../styles/internal/fonts.less";
 
 // Moonstone Rules
 @import "../styles/mixins.less";
 @import "../styles/skin.less";
 @import "../styles/variables.less";
-
-/* Prevent browser's default focus treatment (at least in Chrome) */
-:focus {
-	outline: none;
-}
 
 .applySkins({
 	color: @moon-text-color;
@@ -83,6 +78,13 @@
 
 	&:global(.enact-locale-right-to-left) {
 		direction: rtl;
+	}
+
+	:focus {
+		// Prevent Chrome's default focus treatment
+		outline: none;
+		// Prevent Android Chrome from highlighting tapped elements
+		-webkit-tap-highlight-color: transparent;
 	}
 
 	// Skin colors

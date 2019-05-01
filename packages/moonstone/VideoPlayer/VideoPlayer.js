@@ -1017,7 +1017,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	hideFeedback = () => {
-		if (this.state.feedbackVisible) {
+		if (this.state.feedbackVisible && this.state.feedbackAction !== 'focus') {
 			this.setState({
 				feedbackVisible: false,
 				feedbackAction: 'idle'
