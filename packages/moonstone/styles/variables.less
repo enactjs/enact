@@ -16,7 +16,8 @@
 @moon-sub-header-below-font-size:   30px;
 @moon-small-header-font-size:       60px;
 @moon-small-header-sub-header-font-size:   @moon-sub-header-below-font-size;
-@moon-body-font-size:               33px;
+@moon-body-font-size:               30px;
+@moon-body-small-font-size:         27px;
 @moon-item-font-size:               33px;
 @moon-item-font-size-large:         39px;
 @moon-popup-header-font-size:       72px;
@@ -32,6 +33,7 @@
 @moon-button-font-size-large:       48px;
 @moon-button-small-font-size:       30px;
 @moon-button-small-font-size-large: 36px;
+@moon-labeledicon-font-size:        24px;
 @moon-clock-minute-font-size:       60px;
 @moon-clock-text-font-size:         54px;
 @moon-clock-meridiem-font-size:     24px;
@@ -48,6 +50,7 @@
 @moon-non-latin-sub-header-font-size:   33px;
 @moon-non-latin-super-header-font-size: 33px;
 @moon-non-latin-body-font-size:         27px;
+@moon-non-latin-body-small-font-size:   24px;
 @moon-non-latin-divider-font-size:      27px;
 @moon-non-latin-button-large-font-size: 36px;
 @moon-non-latin-button-small-font-size: 27px;
@@ -224,11 +227,12 @@
 
 // FormCheckbox
 // ---------------------------------------
-@moon-formcheckbox-size: (@moon-item-height * 0.8);	// Relative to `Item` height
-@moon-formcheckbox-size-large: (@moon-item-height-large * 0.8);	// Relative to `Item` height
+@moon-formcheckbox-size: (@moon-item-height * 0.55);	// Relative to `Item` height
+@moon-formcheckbox-size-large: (@moon-item-height-large * 0.55);	// Relative to `Item` height
 @moon-formcheckbox-check-icon-size: 72px;
 @moon-formcheckbox-check-icon-size-large: 84px;
-@moon-formcheckbox-border-size: 3px;
+@moon-formcheckbox-border-size: 2px;
+@moon-formcheckbox-border-radius: 3px;
 
 // Checkbox
 // ---------------------------------------
@@ -245,8 +249,10 @@
 @moon-day-selector-border-radius: @moon-button-border-radius;
 @moon-day-selector-checkbox-size: @moon-formcheckbox-size;
 @moon-day-selector-checkbox-size-large: @moon-formcheckbox-size-large;
-@moon-day-selector-checkbox-check-icon-size-large: @moon-formcheckbox-check-icon-size-large;
 @moon-day-selector-checkbox-check-icon-size: @moon-formcheckbox-check-icon-size;
+@moon-day-selector-checkbox-check-icon-size-large: @moon-formcheckbox-check-icon-size-large;
+@moon-day-selector-checkbox-check-border-radius: @moon-button-border-radius;
+@moon-day-selector-checkbox-check-border-radius-large: @moon-day-selector-checkbox-check-border-radius;
 
 // ToggleButton
 // ---------------------------------------
@@ -353,8 +359,8 @@
 
 // ContextualPopup
 // ---------------------------------------
-@moon-contextual-popup-border-width: @moon-button-border-width;
-@moon-contextual-popup-border-radius: 15px;
+@moon-contextual-popup-border-width: 1px;
+@moon-contextual-popup-border-radius: 3px;
 @moon-contextual-popup-padding: 18px;
 @moon-contextual-popup-arrow-height: 30px;
 @moon-contextual-popup-arrow-width: 30px;
@@ -370,24 +376,25 @@
 @moon-notification-font-family: @moon-font-family;
 @moon-notification-font-weight: 500;
 @moon-notification-font-style: normal;
-@moon-notification-border-width: 6px;
-@moon-notification-border-radius: 15px;
-@moon-notification-out-border-radius: 18px;
-@moon-notification-button-gap: 9px;
+@moon-notification-border-width: 1px;
+@moon-notification-border-radius: 3px;
 @moon-notification-margin-bottom: 324px;
-@moon-notification-padding-left-right: 30px;
-@moon-notification-padding-top-botton: 24px;
+@moon-notification-padding-left-right: 39px;
+@moon-notification-padding-top-bottom: 24px;
 @moon-notification-min-width: 300px;
 @moon-notification-max-width: 978px;
 @moon-notification-wide-width: 1287px;
 
 // Tooltip
 // ---------------------------------------
-@moon-tooltip-point-width: 18px;
-@moon-tooltip-point-height: 30px;
-@moon-tooltip-border-radius: 33px;
+@moon-tooltip-offset: 9px;
+@moon-tooltip-point-width: 12px;
+@moon-tooltip-point-height: 12px;
+@moon-tooltip-border-width: 1px;
+@moon-tooltip-border-radius: 3px;
 @moon-tooltip-label-height: 30px;
-@moon-tooltip-h-padding: 30px;
+@moon-tooltip-h-padding: 18px;
+@moon-tooltip-v-padding: 3px;
 
 // Video
 // ---------------------------------------
