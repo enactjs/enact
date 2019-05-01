@@ -9,6 +9,8 @@
 import {forward, forwardWithPrevent, handle, preventDefault, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
+import {Job} from '@enact/core/util';
+import platform from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -47,6 +49,7 @@ const isKeyboardAccessible = (node) => {
 };
 
 const isSpottable = (props) => !props.disabled && !props.spotlightDisabled;
+const isTouched = (ev) => ev && 'changedTouches' in ev;
 
 // Last instance of spottable to be focused
 let lastSelectTarget = null;
@@ -239,6 +242,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			if (lastSelectTarget === this) {
 				lastSelectTarget = null;
 			}
+			this.touchBlurJob.stop();
 		}
 
 		shouldEmulateMouse = (ev, props) => {
@@ -287,17 +291,27 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		handleSelect = ({which}, props) => {
+		shouldPreventSelection = () => selectCancelled || (lastSelectTarget && lastSelectTarget !== this)
+
+		handleSelect = (ev, props) => {
 			const {selectionKeys} = props;
 
 			// Only apply accelerator if handling a selection key
-			if (selectionKeys.find((value) => which === value)) {
-				if (selectCancelled || (lastSelectTarget && lastSelectTarget !== this)) {
+			if (selectionKeys.find((value) => ev.which === value)) {
+				if (this.shouldPreventSelection()) {
 					return false;
 				}
 				lastSelectTarget = this;
 			}
 			return true;
+		}
+
+		shouldResetLastSelectTarget = () => {
+			const allow = lastSelectTarget === this;
+			selectCancelled = false;
+			lastSelectTarget = null;
+
+			return allow;
 		}
 
 		forwardAndResetLastSelectTarget = (ev, props) => {
@@ -311,10 +325,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				return notPrevented;
 			}
 
-			const allow = lastSelectTarget === this;
-			selectCancelled = false;
-			lastSelectTarget = null;
-			return notPrevented && allow;
+			return notPrevented && this.shouldResetLastSelectTarget();
 		}
 
 		isActionable = (ev, props) => isSpottable(props)
@@ -340,6 +351,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleBlur = (ev) => {
 			if (this.shouldPreventBlur) return;
+			this.touchBlurJob.stop();
+
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = false;
 				if (this.focusedWhenDisabled) {
@@ -391,6 +404,45 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		handleTouch = (ev) => {
+			if (this.isFocused) {
+				this.touchBlurJob.stop();
+			} else {
+				ev.currentTarget.focus();
+			}
+		}
+
+		handleTouchSelect = () => {
+			if (this.shouldPreventSelection()) {
+				return false;
+			}
+			lastSelectTarget = this;
+
+			return true;
+		}
+
+		handleTouchStart = this.handle(
+			forward('onTouchStart'),
+			isTouched,
+			({currentTarget}) => Spotlight.isSpottable(currentTarget),
+			this.handleTouchSelect,
+			this.handleTouch
+		)
+
+		handleTouchEnd = this.handle(
+			forward('onTouchEnd'),
+			isTouched,
+			this.shouldResetLastSelectTarget,
+			() => this.isFocused,
+			({currentTarget}) => this.touchBlurJob.start(currentTarget)
+		)
+
+		touchBlurJob = new Job(target => {
+			if (target.blur) {
+				target.blur();
+			}
+		}, 400)
+
 		render () {
 			const {disabled, spotlightId, spotlightDisabled, ...rest} = this.props;
 			this.focusedWhenDisabled = this.isFocused && (disabled || spotlightDisabled);
@@ -420,6 +472,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (spotlightId) {
 				rest['data-spotlight-id'] = spotlightId;
+			}
+
+			if (platform.touch) {
+				rest.onTouchStart = this.handleTouchStart;
+				rest.onTouchEnd = this.handleTouchEnd;
 			}
 
 			return (
