@@ -59,13 +59,19 @@ const compareChildren = (a, b) => {
 	return true;
 };
 
-const DropDownButton = (props) => (
-	<Button
-		{...props}
-		icon="arrowlargedown"
-		className={css.button}
-	/>
-);
+const DropDownButton = kind({
+	name: 'DropDownButton',
+	styles: {
+		css,
+		className: 'button'
+	},
+	render: (props) => (
+		<Button
+			{...props}
+			icon="arrowlargedown"
+		/>
+	)
+});
 
 const ContextualButton = ContextualPopupDecorator(DropDownButton);
 
@@ -150,7 +156,7 @@ const DropDownBase = kind({
 		}
 	},
 
-	render: ({children, hideChildren, onSelect, open, selected, title, ...rest}) => {
+	render: ({children, hideChildren, onSelect, open, selected, setContainerNode, title, ...rest}) => {
 		delete rest.inline;
 
 		const popupProps = {children, hideChildren, onSelect, open, selected};
@@ -161,7 +167,6 @@ const DropDownBase = kind({
 				small
 				popupProps={popupProps}
 				popupComponent={DropDownList}
-				popupClassName={css.dropDownList}
 				onClick={rest.onOpen}
 				open={open}
 			>
