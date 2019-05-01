@@ -137,7 +137,7 @@ const LabeledIconBase = kind({
 		 *
 		 * The 'before' and 'after' values automatically swap sides when in an RTL locale context.
 		 *
-		 * @type {String}
+		 * @type {('above'|'after'|'before'|'below'|'left'|'right')}
 		 * @default 'below'
 		 * @public
 		 */
@@ -149,7 +149,7 @@ const LabeledIconBase = kind({
 		 * Applies either the `small` or `large` CSS class which can be customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
-		 * @type {String}
+		 * @type {('large'|'small')}
 		 * @default 'large'
 		 * @public
 		 */
@@ -161,7 +161,6 @@ const LabeledIconBase = kind({
 		 * The value of `small` is forwarded on to `iconComponent`.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @deprecated replaced by prop `size='small'`
 		 * @public
 		 */
