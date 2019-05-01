@@ -104,6 +104,7 @@ const adjustDirection = function (tooltipDirection, overflow, rtl) {
  * @param   {Object} clientNode         The `getBoundingClientRect` values for client node
  * @param   {String} tooltipDirection   Direction of tooltip
  * @param   {Number} tooltipHeight      Tooltip height
+ * @param   {Number} edgeKeepout        Extra margin around the screen to avoid
  * @returns {Object}                    Tooltip's calculated overflow
  * @private
  */
@@ -119,8 +120,8 @@ const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, edgeKe
 	const isTooltipWide = (tooltipSafeWidth > windowWidth) || (leftDelta && rightDelta);
 
 	if (tooltipDirection === 'above' || tooltipDirection === 'below') {
-		const isOverTop = clientNode.top - tooltipNode.height;
-		const isOverBottom = clientNode.bottom + tooltipNode.height;
+		const isOverTop = clientNode.top - tooltipNode.height - edgeKeepout;
+		const isOverBottom = clientNode.bottom + tooltipNode.height + edgeKeepout;
 		const isOverLeft = clientHorizontalCenter - tooltipSafeWidth;
 		const isOverRight = clientHorizontalCenter + tooltipSafeWidth;
 		const isOverCenterLeft = clientHorizontalCenter - tooltipCenterdSafeWidth;
@@ -135,10 +136,10 @@ const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, edgeKe
 			isOverWide: isTooltipWide
 		};
 	} else if (tooltipDirection === 'left' || tooltipDirection === 'right') {
-		const isOverTop = clientNode.top - tooltipNode.height + clientNode.height;
-		const isOverBottom = clientNode.bottom + tooltipNode.height - (clientNode.height / 2);
+		const isOverTop = clientNode.top - tooltipNode.height + clientNode.height - edgeKeepout;
+		const isOverBottom = clientNode.bottom + tooltipNode.height - (clientNode.height / 2) + edgeKeepout;
 		const isOverLeft = clientNode.left - tooltipNode.width - edgeKeepout;
-		const isOverRight = clientNode.right + tooltipNode.width - edgeKeepout;
+		const isOverRight = clientNode.right + tooltipNode.width + edgeKeepout;
 		return {
 			isOverTop: (isOverTop < 0) ? isOverTop : false,
 			isOverBottom: (isOverBottom > windowHeight) ? (isOverBottom - windowHeight) : false,
@@ -201,7 +202,7 @@ const getPosition = function (clientNode, tooltipDirection) {
  * @method
  * @memberof moonstone/TooltipDecorator
  * @param   {Object}  tooltipNode       The `getBoundingClientRect` values for tooltip node
- * @param   {Object}  tooltipDirection  Direction of tooltip
+ * @param   {String}  tooltipDirection  Direction of tooltip
  * @param   {Object}  tooltipPosition   Calculated tooltip position from `getPosition`
  * @param   {Object}  overflow          Tooltip's calculated overflow from `calcOverflow`
  * @private

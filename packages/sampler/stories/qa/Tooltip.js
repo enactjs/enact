@@ -13,6 +13,33 @@ import {storiesOf} from '@storybook/react';
 import {number, object, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
+const Config = mergeComponentMetadata('TooltipDecorator', TooltipDecorator);
+const TooltipNormalButton = TooltipDecorator(Button);
+
+const prop = {
+	tooltipPosition: {
+		'above': 'above',
+		'above center': 'above center',
+		'above left': 'above left',
+		'above right': 'above right',
+		'below': 'below',
+		'below center': 'below center',
+		'below left': 'below left',
+		'below right': 'below right',
+		'left bottom': 'left bottom',
+		'left middle': 'left middle',
+		'left top': 'left top',
+		'right bottom': 'right bottom',
+		'right middle': 'right middle',
+		'right top': 'right top'
+	},
+	ariaObject: {
+		'aria-hidden': false,
+		'aria-label': 'Tooltip Label',
+		'role': 'alert'
+	}
+};
+
 const TooltipButton = TooltipDecorator(Button);
 
 class TooltipTest extends React.Component {
@@ -108,6 +135,7 @@ class ChangeableTooltip extends React.Component {
 					<Button onClick={this.changeTooltipText}>Change Text</Button>
 				</div>
 				<IconButton
+					tooltipPosition={select('tooltipPosition', prop.tooltipPosition, Config, 'above')}
 					tooltipText={this.state.text}
 					onClick={this.changeTooltipText}
 					style={{
@@ -231,32 +259,6 @@ class TooltipFollow extends React.Component {
 	}
 }
 
-const Config = mergeComponentMetadata('TooltipDecorator', TooltipDecorator);
-const TooltipNormalButton = TooltipDecorator(Button);
-
-const prop = {
-	tooltipPosition: {
-		'above': 'above',
-		'above center': 'above center',
-		'above left': 'above left',
-		'above right': 'above right',
-		'below': 'below',
-		'below center': 'below center',
-		'below left': 'below left',
-		'below right': 'below right',
-		'left bottom': 'left bottom',
-		'left middle': 'left middle',
-		'left top': 'left top',
-		'right bottom': 'right bottom',
-		'right middle': 'right middle',
-		'right top': 'right top'
-	},
-	ariaObject: {
-		'aria-hidden': false,
-		'aria-label': 'Tooltip Label',
-		'role': 'alert'
-	}
-};
 
 storiesOf('Tooltip', module)
 	.add(

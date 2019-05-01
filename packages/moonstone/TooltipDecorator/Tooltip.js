@@ -30,13 +30,11 @@ const TooltipBase = kind({
 		/**
 		 * Position of tooltip arrow in relation to the activator.
 		 *
-		 * * Values: `'left'`, `'center'`, `'right'`, `'top'`, `'middle'`, `'bottom'`
-		 *
 		 * Note that `'left'`, `'center'`, `'right'` are applicable when direction is in vertical
 		 * orientation (i.e. `'above'`, `'below'`), and `'top'`, `'middle'`, and `'bottom'` are
 		 * applicable when direction is in horizontal orientation (i.e. `'left'`, `'right'`)
 		 *
-		 * @type {String}
+		 * @type {('left'|'center'|'right'|'top'|'middle'|'bottom')}
 		 * @default 'right'
 		 * @public
 		 */
@@ -45,9 +43,7 @@ const TooltipBase = kind({
 		/**
 		 * Direction of label in relation to the activator.
 		 *
-		 * * Values: `'above'`, `'below'`, `'left'`, and `'right'`
-		 *
-		 * @type {String}
+		 * @type {('above'|'below'|'left'|'right')}
 		 * @default 'above'
 		 * @public
 		 */
@@ -150,9 +146,9 @@ const TooltipBase = kind({
 
 		return (
 			<div {...rest}>
-				<div className={css.tooltipAnchor}>
+				<div className={css.tooltipAnchor} ref={tooltipRef} >
 					<div className={css.tooltipArrow} />
-					<TooltipLabel tooltipRef={tooltipRef} width={width} style={labelOffset}>
+					<TooltipLabel width={width} style={labelOffset}>
 						{children}
 					</TooltipLabel>
 				</div>
