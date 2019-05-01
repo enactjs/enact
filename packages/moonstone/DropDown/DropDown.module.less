@@ -5,17 +5,21 @@
 @import "../styles/skin.less";
 
 .dropdown {
+	width: 450px;
+
 	&.inline {
 		display: inline-block;
 	}
 }
 
-.button {
-	width: 450px;
-}
-
-
 .dropDownList {
 	border-radius: 3px;
 	width: 400px;
+	max-height: 300px;
+	display: flex;
+
+	.group {
+		height: auto;
+		flex: 1 1 auto;
+	}
 }
