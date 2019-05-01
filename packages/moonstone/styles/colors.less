@@ -74,8 +74,9 @@
 
 // ContextualPopup
 // ---------------------------------------
-@moon-contextual-popup-bg-color: @moon-dark-gray;
-@moon-contextual-popup-border-color: fade(@moon-black, 50%);
+@moon-contextual-popup-bg-color: @moon-bg-color;
+@moon-contextual-popup-border-color: #bbb;
+@moon-contextual-popup-box-shadow-color: fade(@moon-black, 30%);
 
 // Checkbox
 // ---------------------------------------
@@ -173,6 +174,7 @@
 // Notification
 // ---------------------------------------
 @moon-notification-border-color: fade(@moon-black, 30%);
+@moon-notification-box-shadow-color: fade(@moon-black, 30%);
 
 // Panels
 // ---------------------------------------
@@ -276,8 +278,10 @@
 
 // Tooltip
 // ---------------------------------------
-@moon-tooltip-bg-color:               @moon-dark-gray;
-@moon-tooltip-text-color:             @moon-white;
+@moon-tooltip-bg-color:               @moon-darker-gray;
+@moon-tooltip-text-color:             @moon-button-text-color;
+@moon-tooltip-border-color:           @moon-dark-gray;
+@moon-tooltip-shadow:                 0 7px 7px fade(@moon-black, 30%);
 
 // VideoPlayer
 // ---------------------------------------
