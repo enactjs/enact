@@ -59,59 +59,44 @@ const compareChildren = (a, b) => {
 	return true;
 };
 
-
-const PureGroup = Pure(
-	{propComparators: {
-		children: compareChildren,
-		itemProps: (a, b) => (
-			a.onSpotlightDisappear === b.onSpotlightDisappear &&
-			a.onSpotlightLeft === b.onSpotlightLeft &&
-			a.onSpotlightRight === b.onSpotlightRight &&
-			a.spotlightDisabled === b.spotlightDisabled
-		)
-	}},
-	Group
-);
-
-const DropDownButton = (props) => (
-	<Button
-		{...props}
-		icon="arrowlargedown"
-		className={css.button}
-	/>
-);
+const DropDownButton = kind({
+	name: 'DropDownButton',
+	styles: {
+		css,
+		className: 'button'
+	},
+	render: (props) => (
+		<Button
+			{...props}
+			icon="arrowlargedown"
+		/>
+	)
+});
 
 const ContextualButton = ContextualPopupDecorator(DropDownButton);
 
 const DropDownList = kind({
 	name: 'DropDownList',
 
-	render: ({children, hideChildren, onHide, onSelect, onShow, open, selected, ...props}) => {
-		if (children.length > 5) {
-			return (
-				<Scroller style={{height: '200px'}}>
-					<PureGroup
-						{...props}
-						childComponent={Item}
-						onSelect={onSelect}
-						selected={selected}
-						selectedProp="selected"
-					>
-						{children}
-					</PureGroup>
-				</Scroller>
-			);
-		}
+	styles: {
+		className: 'dropDownList',
+		css
+	},
+
+	render: ({children, hideChildren, onHide, onSelect, onShow, open, selected, ...rest}) => {
 		return (
-			<Group
-				{...props}
-				childComponent={Item}
-				onSelect={onSelect}
-				selected={selected}
-				selectedProp="selected"
-			>
-				{children}
-			</Group>
+			<div {...rest}>
+				<Group
+					childComponent={Item}
+					className={css.group}
+					component={Scroller}
+					onSelect={onSelect}
+					selected={selected}
+					selectedProp="selected"
+				>
+					{children}
+				</Group>
+			</div>
 		);
 	}
 });
@@ -171,25 +156,22 @@ const DropDownBase = kind({
 		}
 	},
 
-	render: ({children, className, hideChildren, onSelect, open, selected, setContainerNode, title, ...rest}) => {
+	render: ({children, hideChildren, onSelect, open, selected, setContainerNode, title, ...rest}) => {
 		delete rest.inline;
 
 		const popupProps = {children, hideChildren, onSelect, open, selected};
 
 		return (
-			<div className={className} ref={setContainerNode}>
-				<ContextualButton
-					small
-					popupProps={popupProps}
-					popupComponent={DropDownList}
-					popupClassName={css.dropDownList}
-					onClick={rest.onOpen}
-					open={open}
-					{...rest}
-				>
-					{title}
-				</ContextualButton>
-			</div>
+			<ContextualButton
+				{...rest}
+				small
+				popupProps={popupProps}
+				popupComponent={DropDownList}
+				onClick={rest.onOpen}
+				open={open}
+			>
+				{title}
+			</ContextualButton>
 		);
 	}
 });
@@ -200,22 +182,8 @@ const DropDown = Pure(
 	}},
 	Changeable(
 		{change: 'onSelect', prop: 'selected'},
-		Expandable(
-			{
-				getChildFocusTarget: (node, {selected = 0}) => {
-					let selectedIndex = selected;
-					if (Array.isArray(selected) && selected.length) {
-						selectedIndex = selected[0];
-					}
-
-					let selectedNode = null;
-					if (node) {
-						selectedNode = node.querySelector(`[data-index="${selectedIndex}"]`);
-					}
-
-					return selectedNode;
-				}
-			},
+		Toggleable(
+			{activate: 'onOpen', deactivate: 'onClose', toggle: null, prop: 'open'},
 			DropDownBase
 		)
 	)
