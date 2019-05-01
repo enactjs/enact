@@ -105,7 +105,7 @@ const PanelsBase = kind({
 		 * The method which receives the reference node to the controls element, used to determine
 		 * the `controlsMeasurements`.
 		 *
-		 * @type {Function}
+		 * @type {Function|Object}
 		 * @private
 		 */
 		controlsRef: PropTypes.oneOfType([
