@@ -36,7 +36,8 @@ const defaultConfig = {
 	 * flipping to an alternate orientation or adjusting its offset to remain on screen.
 	 * The default of 24 is derived from a standard 12px screen-keepout size plus the standard
 	 * Spotlight-outset (12px) margin/padding value which keeps elements and text aligned inside a
-	 * [Panel]{@link moonstone/Panels.Panel}.
+	 * [Panel]{@link moonstone/Panels.Panel}. Note: This value will be scaled according to the
+	 * resolution.
 	 *
 	 * @type {Number}
 	 * @default 24
@@ -132,7 +133,9 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * requirements. Left and right directions will reverse for RTL languages. Additionally,
 			 * the tooltip will reverse direction if it will prevent overflowing off the viewport
 			 *
-			 * @type {String}
+			 * @type {('above'|'above center'|'above left'|'above right'|'below'|
+			 *  'below center'|'below left'|'below right'|'left bottom'|'left middle'|'left top'|
+			 * 	'right bottom'|'right middle'|'right top')}
 			 * @default 'above'
 			 * @public
 			 */
@@ -169,7 +172,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * └───◎───┘
 			 * ```
 			 *
-			 * @type {Object}
+			 * @type {Boolean}
 			 * @public
 			 */
 			tooltipRelative: PropTypes.bool,
