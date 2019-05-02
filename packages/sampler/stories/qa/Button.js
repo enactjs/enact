@@ -35,7 +35,7 @@ storiesOf('Button', module)
 				icon={select('icon', prop.icons, Config)}
 				minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
 				selected={boolean('selected', Config)}
-				small={boolean('small', Config)}
+				size={select('size', ['small', 'large'], Config, 'large')}
 			>
 				{select('value', prop.longText, Config, 'Loooooooooooooooooog Button')}
 			</Button>
@@ -52,7 +52,7 @@ storiesOf('Button', module)
 				icon={select('icon', prop.icons, Config)}
 				minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
 				selected={boolean('selected', Config)}
-				small={boolean('small', Config)}
+				size={select('size', ['small', 'large'], Config, 'large')}
 			>
 				{select('value', prop.tallText, Config, 'ิ้  ไั  ஒ  து')}
 			</Button>
@@ -69,7 +69,7 @@ storiesOf('Button', module)
 				icon={select('icon', prop.icons, Config)}
 				minWidth={storybookBoolean('minWidth', false) ? void 0 : false}
 				selected={boolean('selected', Config)}
-				small={boolean('small', Config)}
+				size={select('size', ['small', 'large'], Config, 'large')}
 			>
 				{text('value', Config, 'A')}
 			</Button>
@@ -87,7 +87,7 @@ storiesOf('Button', module)
 					icon={select('icon', prop.icons, Config)}
 					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
 					selected={boolean('selected', Config)}
-					small={boolean('small', Config)}
+					size={select('size', ['small', 'large'], Config, 'large')}
 				>
 					Normal Button
 				</Button>
@@ -107,7 +107,7 @@ storiesOf('Button', module)
 					icon={select('icon', prop.icons, Config)}
 					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
 					selected={boolean('selected', Config)}
-					small={boolean('small', Config)}
+					size={select('size', ['small', 'large'], Config, 'large')}
 				>
 					Normal Button
 				</Button>
@@ -120,7 +120,7 @@ storiesOf('Button', module)
 					icon={select('icon', prop.icons, Config)}
 					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
 					selected={boolean('selected', Config)}
-					small
+					size={select('size', ['small', 'large'], Config, 'large')}
 				>
 					Small Button
 				</Button>

@@ -154,19 +154,22 @@ class ScrollButtons extends Component {
 			   browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
 			shouldDisableNextButton = maxPos - currentPos <= 1;
 
-		this.setState((prevState) => {
-			const
-				updatePrevButton = (prevState.prevButtonDisabled !== shouldDisablePrevButton),
-				updateNextButton = (prevState.nextButtonDisabled !== shouldDisableNextButton);
+		const
+			updatePrevButton = (this.state.prevButtonDisabled !== shouldDisablePrevButton),
+			updateNextButton = (this.state.nextButtonDisabled !== shouldDisableNextButton);
 
-			if (updatePrevButton && updateNextButton) {
-				return {prevButtonDisabled: shouldDisablePrevButton, nextButtonDisabled: shouldDisableNextButton};
-			} else if (updatePrevButton) {
-				return {prevButtonDisabled: shouldDisablePrevButton};
-			} else if (updateNextButton) {
-				return {nextButtonDisabled: shouldDisableNextButton};
-			}
-		});
+		if (updatePrevButton || updateNextButton) {
+			this.setState(() => {
+				if (updatePrevButton && updateNextButton) {
+					return {prevButtonDisabled: shouldDisablePrevButton, nextButtonDisabled: shouldDisableNextButton};
+				} else if (updatePrevButton) {
+					return {prevButtonDisabled: shouldDisablePrevButton};
+				} else if (updateNextButton) {
+					return {nextButtonDisabled: shouldDisableNextButton};
+				}
+			});
+		}
+
 	}
 
 	isOneOfScrollButtonsFocused = () => {

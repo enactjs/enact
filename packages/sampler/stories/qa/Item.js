@@ -70,22 +70,22 @@ storiesOf('Item', module)
 					{text('Disabled Text', Item, inputData.disabledText)}
 				</Item>
 				<Item>
-					<Icon small={boolean('small', Icon)}>
+					<Icon size={select('size', ['small', 'large'], 'large')}>
 						{select('iconBefore', iconNames, Item, 'plus')}
 					</Icon>
 					{text('Text with iconBefore', Item, 'Item with text that is spottable with an icon (at the start of the string)')}
 				</Item>
 				<Item>
 					{text('Text with iconAfter', Item, 'Item with text that is spottable with an icon(at the end of the string)')}
-					<Icon small={boolean('small', Icon)}>
+					<Icon size={select('size', ['small', 'large'], 'large')}>
 						{select('iconAfter', iconNames, Item, 'pauseforward')}
 					</Icon>
 				</Item>
 				<Item>
-					<Icon small={boolean('small', Icon)}>gear</Icon>
-					<Icon small={boolean('small', Icon)}>minus</Icon>
-					<Icon small={boolean('small', Icon)}>trash</Icon>
-					<Icon small={boolean('small', Icon)}>flag</Icon>
+					<Icon size={select('size', ['small', 'large'], 'large')}>gear</Icon>
+					<Icon size={select('size', ['small', 'large'], 'large')}>minus</Icon>
+					<Icon size={select('size', ['small', 'large'], 'large')}>trash</Icon>
+					<Icon size={select('size', ['small', 'large'], 'large')}>flag</Icon>
 				</Item>
 			</div>
 		)

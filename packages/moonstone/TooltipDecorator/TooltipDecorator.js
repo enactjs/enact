@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 
 import {Tooltip, TooltipBase} from './Tooltip';
-import {adjustDirection, adjustAnchor, calcOverflow, getPosition} from './util';
+import {adjustDirection, adjustAnchor, calcOverflow, getArrowPosition, getPosition} from './util';
 
 let currentTooltip; // needed to know whether or not we should stop a showing job when unmounting
 
@@ -106,16 +106,28 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			tooltipDelay: PropTypes.number,
 
 			/**
-			 * Position of the tooltip with respect to the activating control.
+			 * Position of the tooltip with respect to the wrapped component.
 			 *
-			 * * Values: `'above'`, `'above center'`, `'above left'`, `'above right'`, `'below'`,
-			 * `'below center'`, `'below left'`, `'below right'`, `'left bottom'`, `'left middle'`,
-			 * `'left top'`, `'right bottom'`, `'right middle'`, `'right top'`
+			 * | *Value* | *Tooltip Direction* |
+			 * |---|---|
+			 * | `'above'` | Above component, flowing to the right |
+			 * | `'above center'` | Above component, centered |
+			 * | `'above left'` | Above component, flowing to the left |
+			 * | `'above right'` | Above component, flowing to the right |
+			 * | `'below'` | Below component, flowing to the right |
+			 * | `'below center'` | Below component, centered |
+			 * | `'below left'` | Below component, flowing to the left |
+			 * | `'below right'` | Below component, flowing to the right |
+			 * | `'left bottom'` | Left of the component, contents at the bottom |
+			 * | `'left middle'` | Left of the component, contents middle aligned |
+			 * | `'left top'` | Left of the component, contents at the top |
+			 * | `'right bottom'` | Right of the component, contents at the bottom |
+			 * | `'right middle'` | Right of the component, contents middle aligned |
+			 * | `'right top'` | Right of the component, contents at the top |
 			 *
-			 * The values starting with `'left`' and `'right'` place the tooltip on the side
-			 * (sideways tooltip) with two additional positions available, `'top'` and `'bottom'`,
-			 * which place the tooltip content toward the top or bottom, with the tooltip pointer
-			 * middle-aligned to the activator.
+			 * `TooltipDectorator` attempts to choose the best direction to meet layout and language
+			 * requirements. Left and right directions will reverse for RTL languages. Additionally,
+			 * the tooltip will reverse direction if it will prevent overflowing off the viewport
 			 *
 			 * @type {String}
 			 * @default 'above'
@@ -237,13 +249,15 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			tooltipDirection = adjustDirection(tooltipDirection, overflow, this.props.rtl);
 			arrowAnchor = adjustAnchor(arrowAnchor, tooltipDirection, overflow, this.props.rtl);
 
-			const tooltipPosition = getPosition(tooltipNode, clientNode, arrowAnchor, tooltipDirection, this.TOOLTIP_HEIGHT);
+			const tooltipPosition = getPosition(tooltipNode, clientNode, arrowAnchor, tooltipDirection, this.TOOLTIP_HEIGHT, overflow, this.props.rtl);
+			const arrowPosition = getArrowPosition(tooltipNode, clientNode, tooltipDirection, overflow, this.props.rtl);
 			const {top, left} = this.state.position;
 
-			if ((tooltipPosition.top !== top) || (tooltipPosition.left !== left)) {
+			if ((tooltipPosition.top !== top) || (tooltipPosition.left !== left) || (arrowPosition !== this.state.arrowPosition)) {
 				this.setState({
 					tooltipDirection,
 					arrowAnchor,
+					arrowPosition,
 					position: tooltipPosition
 				});
 			}
@@ -374,6 +388,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							role="alert"
 							{...tooltipProps}
 							arrowAnchor={this.state.arrowAnchor}
+							arrowPosition={this.state.arrowPosition}
 							casing={tooltipCasing}
 							direction={this.state.tooltipDirection}
 							position={this.state.position}

@@ -108,7 +108,7 @@ const LabeledItemBase = kind({
 		<Controller disabled={disabled} {...rest} css={css}>
 			<div className={css.text}>
 				<Marquee disabled={disabled} className={css.title}>{children}</Marquee>
-				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
+				{(titleIcon != null) ? <Icon size="small" className={css.icon}>{titleIcon}</Icon> : null}
 			</div>
 			{(label != null) ? <Marquee disabled={disabled} className={css.label}>{label}</Marquee> : null}
 		</Controller>

@@ -4,6 +4,34 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Deprecated
+
+- `small` prop in `ui/Button.ButtonBase`, `ui/Icon.IconBase`, `ui/IconButton.IconButtonBase`, and `ui/LabeledIcon.LabeledIconBase`, which will be replaced by `size="small"` in 3.0
+
+### Added
+
+- `ui/Button`, `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` prop `size`
+
+## [2.5.2] - 2019-04-23
+
+### Added
+
+- `ui/ToggleItem` props  `itemIcon` and `itemIconPosition` to support additional icons on ToggleItem-derived components
+
+### Fixed
+
+- `ui/Skinnable` to allow overriding default `skinVariant` values
+- `ui/Touchable` to prevent events firing on different nodes for the same touch action
+- `ui/Touchable` to neither force focus to components nor blur components after they are touched
+
+## [2.5.1] - 2019-04-09
+
+### Fixed
+
+- `ui/Touchable` to prevent doubled events in some situations on touch devices
+
+## [2.5.0] - 2019-04-01
+
 ### Added
 
 - `ui/Item`, `ui/Layout`, `ui/Repeater`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleItem`, and `ui/ViewManager` support for `ref` to gain access to the wrapped `component`

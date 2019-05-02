@@ -2,6 +2,26 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/util.clamp` to safely clamp a value between min and max bounds
+
+## [2.5.2] - 2019-04-23
+
+No significant changes.
+
+## [2.5.1] - 2019-04-09
+
+### Fixed
+
+- `core/kind` to address warnings raised in React 16.8.6
+
+## [2.5.0] - 2019-04-01
+
+No significant changes.
+
 ## [2.4.1] - 2019-03-11
 
 ### Fixed

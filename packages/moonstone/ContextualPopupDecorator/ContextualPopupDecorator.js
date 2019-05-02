@@ -445,7 +445,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @public
 		 * @returns {undefined}
 		 */
-		positionContextualPopup () {
+		positionContextualPopup = () => {
 			if (this.containerNode && this.clientNode) {
 				const containerNode = this.containerNode.getBoundingClientRect();
 				const {top, left, bottom, right, width, height} = this.clientNode.getBoundingClientRect();

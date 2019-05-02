@@ -78,7 +78,7 @@ class IncrementSliderWithContextualPopup extends React.Component {
 					onClose={this.handleClick}
 					open={this.state.open}
 					popupComponent={this.renderPopup}
-					small
+					size="small"
 				>
 					{'drawer'}
 				</ContextualPopupButton>

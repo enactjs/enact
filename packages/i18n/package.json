@@ -1,7 +1,7 @@
 {
   "name": "@enact/i18n",
   "main": "./src/index.js",
-  "version": "2.4.1",
+  "version": "2.5.2",
   "description": "Internationalization support for Enact using iLib",
   "scripts": {
     "clean": "enact clean",
@@ -41,7 +41,7 @@
     ]
   },
   "dependencies": {
-    "@enact/core": "^2.4.1",
+    "@enact/core": "^2.5.2",
     "prop-types": "15.6.2",
     "ramda": "^0.24.1",
     "react": "^16.7.0",

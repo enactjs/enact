@@ -401,7 +401,6 @@ class ScrollableBaseNative extends Component {
 		};
 
 		this.overscrollEnabled = !!(props.applyOverscrollEffect);
-		this.scrollRaFId = null;
 
 		// Enable the early bail out of repeated scrolling to the same position
 		this.animationInfo = null;
@@ -465,10 +464,6 @@ class ScrollableBaseNative extends Component {
 		this.scrollStopJob.stop();
 
 		this.removeEventListeners();
-
-		if (this.scrollRaFId) {
-			window.cancelAnimationFrame(this.scrollRaFId);
-		}
 	}
 
 	handleResize (ev) {
@@ -717,14 +712,33 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onScroll = (ev) => {
-		const {scrollLeft, scrollTop} = ev.target;
+		let {scrollLeft, scrollTop} = ev.target;
 
-		if (!this.scrollRaFId) {
-			this.scrollRaFId = window.requestAnimationFrame(() => {
-				this.scrollOnScroll(scrollLeft, scrollTop);
-				this.scrollRaFId = null;
-			});
+		const
+			bounds = this.getScrollBounds(),
+			canScrollHorizontally = this.canScrollHorizontally(bounds);
+
+		if (!this.scrolling) {
+			this.scrollStartOnScroll();
 		}
+
+		if (this.props.rtl && canScrollHorizontally) {
+			/* FIXME: RTL / this calculation only works for Chrome */
+			scrollLeft = bounds.maxLeft - scrollLeft;
+		}
+
+		if (scrollLeft !== this.scrollLeft) {
+			this.setScrollLeft(scrollLeft);
+		}
+		if (scrollTop !== this.scrollTop) {
+			this.setScrollTop(scrollTop);
+		}
+
+		if (this.childRefCurrent.didScroll) {
+			this.childRefCurrent.didScroll(this.scrollLeft, this.scrollTop);
+		}
+		this.forwardScrollEvent('onScroll');
+		this.scrollStopJob.start();
 	}
 
 	scrollToAccumulatedTarget = (delta, vertical, overscrollEffect, animate) => {
@@ -892,40 +906,6 @@ class ScrollableBaseNative extends Component {
 		this.scrolling = false;
 		this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
 		this.startHidingThumb();
-	}
-
-	scrollOnScroll = (left, top) => {
-		const
-			bounds = this.getScrollBounds(),
-			canScrollHorizontally = this.canScrollHorizontally(bounds);
-
-		if (!this.scrolling) {
-			this.scrollStartOnScroll();
-		}
-
-		if (this.props.rtl && canScrollHorizontally) {
-			/* FIXME: RTL / this calculation only works for Chrome */
-			left = bounds.maxLeft - left;
-		}
-
-		let
-			dirHorizontal = 0,
-			dirVertical = 0;
-
-		if (left !== this.scrollLeft) {
-			dirHorizontal = Math.sign(left - this.scrollLeft);
-			this.setScrollLeft(left);
-		}
-		if (top !== this.scrollTop) {
-			dirVertical = Math.sign(top - this.scrollTop);
-			this.setScrollTop(top);
-		}
-
-		if (this.childRefCurrent.didScroll) {
-			this.childRefCurrent.didScroll(this.scrollLeft, this.scrollTop, dirHorizontal, dirVertical);
-		}
-		this.forwardScrollEvent('onScroll');
-		this.scrollStopJob.start();
 	}
 
 	scrollStopJob = new Job(this.scrollStopOnScroll, scrollStopWaiting);
@@ -1299,11 +1279,11 @@ class ScrollableBaseNative extends Component {
 			{className, containerRenderer, noScrollByDrag, rtl, style, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className),
+			contentClasses = classNames(css.content, css.contentNative),
 			childWrapper = noScrollByDrag ? 'div' : TouchableDiv,
 			childWrapperProps = {
-				className: css.content,
+				className: contentClasses,
 				...(!noScrollByDrag && {
-					className: css.content,
 					onDrag: this.onDrag,
 					onDragEnd: this.onDragEnd,
 					onDragStart: this.onDragStart,

@@ -9,15 +9,19 @@ import {activate, deactivate} from '../state';
 import {configure, getConfig, resetDefaultConfig} from '../config';
 
 describe('Touchable', () => {
-	const DivComponent = ({onClick, onMouseDown, onMouseLeave, onMouseUp}) => {
+
+	const DivComponent = ({children = 'Toggle', id, onClick, onMouseDown, onMouseLeave, onMouseUp, onTouchStart, onTouchEnd}) => {
 		return (
 			<div
+				id={id}
 				onClick={onClick}
 				onMouseDown={onMouseDown}
 				onMouseUp={onMouseUp}
 				onMouseLeave={onMouseLeave}
+				onTouchStart={onTouchStart}
+				onTouchEnd={onTouchEnd}
 			>
-				Toggle
+				{children}
 			</div>
 		);
 	};
@@ -406,6 +410,37 @@ describe('Touchable', () => {
 					expect(actual).toBe(expected);
 				}
 			);
+		});
+	});
+
+	describe('touch', () => {
+		test('should only emit onTap once when tapping an child instance of Touchable', () => {
+			const Component = Touchable(DivComponent);
+			const handler = jest.fn();
+			const subject = mount(
+				<Component onTap={handler} id="outer">
+					<Component id="inner" />
+				</Component>
+			);
+
+			const mouseEvent = {
+				timeStamp: 1
+			};
+			const touchEvent = {
+				timeStamp: 1,
+				changedTouches: [{clientX: 0, clientY: 0}],
+				targetTouches: [{clientX: 0, clientY: 0}]
+			};
+			const inner = subject.find('div#inner');
+			inner.simulate('touchstart', touchEvent);
+			inner.simulate('touchend', touchEvent);
+			inner.simulate('mousedown', mouseEvent);
+			inner.simulate('mouseup', mouseEvent);
+
+			const expected = 1;
+			const actual = handler.mock.calls.length;
+
+			expect(actual).toBe(expected);
 		});
 	});
 });
