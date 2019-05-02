@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight/Spottable` to set focus due to touch events
+
 ## [2.5.2] - 2019-04-23
 
 No significant changes.
