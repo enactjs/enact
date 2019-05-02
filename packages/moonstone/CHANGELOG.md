@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/VideoPlayer` to correctly handle touch events while moving slider knobs
+
 ## [2.5.2] - 2019-04-23
 
 ### Fixed
