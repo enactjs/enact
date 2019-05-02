@@ -1,10 +1,10 @@
 import {adaptEvent, call, handle, forKey, forward, oneOf, preventDefault, returnsTrue, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import platform from '@enact/core/platform';
 import {calcProportion} from '@enact/ui/Slider/utils';
 import clamp from 'ramda/src/clamp';
 import PropTypes from 'prop-types';
 import React from 'react';
-import platform from '@enact/core/platform';
 
 // decrements the MediaKnob position if we're tracking
 const decrement = (state) => {
@@ -196,6 +196,10 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 
 			delete rest.onKnobMove;
 
+			if (platform.touch) {
+				rest.onTouchMove = this.handleTouchMove;
+			}
+
 			return (
 				<Wrapped
 					{...rest}
@@ -207,7 +211,6 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 					onMouseOver={this.handleMouseOver}
 					onMouseOut={this.handleMouseOut}
 					onMouseMove={this.handleMouseMove}
-					onTouchMove={platform.touch ? this.handleTouchMove : void 0}
 					preview={this.state.tracking}
 					previewProportion={this.state.x}
 					progressAnchor={progressAnchor}
