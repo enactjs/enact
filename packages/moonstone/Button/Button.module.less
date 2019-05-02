@@ -121,6 +121,18 @@
 		-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
 		-webkit-margin-end: @moon-button-icon-h-margin;
 	}
+
+	&.iconAfter {
+		.client {
+			flex-direction: row-reverse;
+
+			.icon {
+				-webkit-margin-start: @moon-button-icon-h-margin;
+				-webkit-margin-end: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
+			}
+		}
+	}
+
 	// Color prop set, and minWidth prop set, update icon's margin to allow more room for the colordot
 	&.red,
 	&.green,

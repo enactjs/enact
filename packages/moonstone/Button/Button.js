@@ -11,6 +11,7 @@
  */
 
 import kind from '@enact/core/kind';
+import {cap} from '@enact/core/util';
 import Spottable from '@enact/spotlight/Spottable';
 import {ButtonBase as UiButtonBase, ButtonDecorator as UiButtonDecorator} from '@enact/ui/Button';
 import Pure from '@enact/ui/internal/Pure';
@@ -83,7 +84,20 @@ const ButtonBase = kind({
 		// `transparent` was intentionally excluded from the adove documented exported classes as it
 		// does not appear to provide value to the end-developer, but is needed by IconButton
 		// internally for its design guidelines, which differ from Button regarding `transparent`.
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		/**
+		 * Specifies on which side (`'before'` or `'after'`) of the text the icon appears.
+		 *
+		 * @type {String}
+		 * @default 'before'
+		 * @public
+		 */
+		iconPosition: PropTypes.oneOf(['before', 'after'])
+	},
+
+	defaultProps: {
+		iconPosition: 'before'
 	},
 
 	styles: {
@@ -92,15 +106,17 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({backgroundOpacity, color, styler}) => styler.append(
+		className: ({backgroundOpacity, color, iconPosition, styler}) => styler.append(
 			backgroundOpacity,
-			color
+			color,
+			`icon${cap(iconPosition)}`
 		)
 	},
 
 	render: ({css, ...rest}) => {
 		delete rest.backgroundOpacity;
 		delete rest.color;
+		delete rest.iconPosition;
 
 		return UiButtonBase.inline({
 			'data-webos-voice-intent': 'Select',
