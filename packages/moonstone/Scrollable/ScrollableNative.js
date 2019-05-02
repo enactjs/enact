@@ -180,7 +180,7 @@ class ScrollableBaseNative extends Component {
 		 *
 		 * @type {Boolean}
 		 * @default false
-		 * @private
+		 * @public
 		 */
 		spotlightDisabled: PropTypes.bool,
 
@@ -189,7 +189,7 @@ class ScrollableBaseNative extends Component {
 		 * it to customize the spotlight container for its use case.
 		 *
 		 * @type {String}
-		 * @private
+		 * @public
 		 */
 		spotlightId: PropTypes.string
 	}
@@ -901,16 +901,9 @@ class ScrollableBaseNative extends Component {
  * @private
  */
 const ScrollableNative = Skinnable(
-	SpotlightContainerDecorator(
-		{
-			overflow: true,
-			preserveId: true,
-			restrict: 'self-first'
-		},
-		I18nContextDecorator(
-			{rtlProp: 'rtl'},
-			ScrollableBaseNative
-		)
+	I18nContextDecorator(
+		{rtlProp: 'rtl'},
+		ScrollableBaseNative
 	)
 );
 

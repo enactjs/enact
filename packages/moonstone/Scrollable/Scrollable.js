@@ -76,7 +76,7 @@ const navigableFilter = (elem) => {
 	}
 };
 
-const configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusableScrollbar}) => {
+const configureSpotlightContainer = ({spotlightId, focusableScrollbar}) => {
 	Spotlight.set(spotlightId, {
 		navigableFilter: focusableScrollbar ? null : navigableFilter
 	});
@@ -200,7 +200,7 @@ class ScrollableBase extends Component {
 		 *
 		 * @type {Boolean}
 		 * @default false
-		 * @private
+		 * @public
 		 */
 		spotlightDisabled: PropTypes.bool,
 
@@ -209,7 +209,7 @@ class ScrollableBase extends Component {
 		 * it to customize the spotlight container for its use case.
 		 *
 		 * @type {String}
-		 * @private
+		 * @public
 		 */
 		spotlightId: PropTypes.string
 	}
