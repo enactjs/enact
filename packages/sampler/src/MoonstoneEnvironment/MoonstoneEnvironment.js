@@ -62,7 +62,7 @@ const MoonstoneFullscreen = MoonstoneDecorator({overlay: false}, FullscreenBase)
 // NOTE: Locales taken from strawman. Might need to add more in the future.
 const locales = {
 	'local':                                                '',
-	'en-US - US English (Default)':                         'en-US',
+	'en-US - US English':                                   'en-US',
 	'ko-KR - Korean':                                       'ko-KR',
 	'es-ES - Spanish, with alternate weekends':             'es-ES',
 	'am-ET - Amharic, 6 meridiems':                         'am-ET',
