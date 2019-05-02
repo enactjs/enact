@@ -1,5 +1,5 @@
 /**
- * Moonstone styled labeled DropDown components and behaviors
+ * Moonstone styled DropDown components
  *
  * @example
  * <DropDown
@@ -13,7 +13,6 @@
  * @module moonstone/DropDown
  * @exports DropDown
  * @exports DropDownBase
- * @exports DropDownDecorator
  */
 
 
@@ -25,8 +24,6 @@ import kind from '@enact/core/kind';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import defaultProps from 'recompose/defaultProps';
-import setPropTypes from 'recompose/setPropTypes';
 import React from 'react';
 
 import {Button} from '../Button';
@@ -67,6 +64,8 @@ const DropDownButton = kind({
 		<Button
 			{...props}
 			icon="arrowlargedown"
+			iconPosition="after"
+			small
 		/>
 	)
 });
@@ -76,12 +75,31 @@ const ContextualButton = ContextualPopupDecorator({noArrow: true}, DropDownButto
 const DropDownList = kind({
 	name: 'DropDownList',
 
+	propTypes: /** @lends moonstone/DropDown.DropDownBase.prototype */ {
+		/**
+		 * The selections for Dropdown
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		children: PropTypes.node,
+
+		/**
+		 * Called when an item is selected.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onSelect: PropTypes.func,
+		selected: PropTypes.number
+	},
+
 	styles: {
 		className: 'dropDownList',
 		css
 	},
 
-	render: ({children, hideChildren, onHide, onSelect, onShow, open, selected, ...rest}) => {
+	render: ({children, onSelect, selected, ...rest}) => {
 		return (
 			<div {...rest}>
 				<Group
@@ -100,12 +118,12 @@ const DropDownList = kind({
 });
 
 /**
- * A DropDown component.
- *
- * is within [DropDown]{@link moonstone/DropDown.DropDown}.
+ * A stateless DropDown component.
  *
  * @class DropDownBase
  * @memberof moonstone/DropDown
+ * @extends moonstone/Button.Button
+ * @extends moonstone/ContextualPopupDecorator.ContextualPopupDecorator
  * @ui
  * @public
  */
@@ -114,15 +132,44 @@ const DropDownBase = kind({
 
 	propTypes: /** @lends moonstone/DropDown.DropDownBase.prototype */ {
 		/**
-		 * The options for Dropdown
+		 * The selections for Dropdown
 		 *
 		 * @type {Node}
 		 * @public
 		 */
-		children: PropTypes.node
+		children: PropTypes.node,
+
+		onOpen: PropTypes.func,
+
+		/**
+		 * Called when an item is selected.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onSelect: PropTypes.func,
+
+		/**
+		 * Displays the `DropDownList`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		open: PropTypes.bool,
+
+		/**
+		 * Index of the selected item.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		selected: PropTypes.number,
+		title: PropTypes.string
 	},
 
 	defaultProps: {
+		open: false
 	},
 
 	handlers: {
@@ -143,26 +190,24 @@ const DropDownBase = kind({
 	},
 
 	computed: {
-		className: ({inline, styler}) => styler.append({inline}),
 		title: ({children, selected, title}) => {
-			if (title && (typeof selected === 'undefined' || selected === null)) {
-				return title;
-			} else if (children.length && (selected || selected === 0)) {
+			const isSelectedValid = !(typeof selected === 'undefined' || selected === null || selected >= children.length || selected < 0);
+
+			if (children.length && isSelectedValid) {
 				const isArray = Array.isArray(selected);
 				return children[isArray ? selected[0] : selected];
 			}
+
+			return title;
 		}
 	},
 
-	render: ({children, hideChildren, onOpen, onSelect, open, selected, setContainerNode, title, ...rest}) => {
-		delete rest.inline;
-
-		const popupProps = {children, hideChildren, onSelect, open, selected};
+	render: ({children, onOpen, onSelect, open, selected, title, ...rest}) => {
+		const popupProps = {children, onSelect, open, selected};
 
 		return (
 			<ContextualButton
 				{...rest}
-				small
 				popupProps={popupProps}
 				popupComponent={DropDownList}
 				onClick={onOpen}
@@ -174,21 +219,50 @@ const DropDownBase = kind({
 	}
 });
 
-const DropDown = Pure(
-	{propComparators: {
+/**
+ * Applies Moonstone specific behaviors and functionality to [DropDownBase]{@link moonstone/DropDown.DropDownBase}.
+ *
+ * @hoc
+ * @memberof moonstone/DropDown
+ * @mixes ui/Changeable.Changeable
+ * @mixes ui/Toggleable.Toggleable
+ * @public
+ */
+const DropDownDecorator = compose(
+	Pure({propComparators: {
 		children: compareChildren
-	}},
-	Changeable(
-		{change: 'onSelect', prop: 'selected'},
-		Toggleable(
-			{activate: 'onOpen', deactivate: 'onClose', toggle: null, prop: 'open'},
-			DropDownBase
-		)
-	)
+	}}),
+	Changeable({
+		change: 'onSelect',
+		prop: 'selected'
+	}),
+	Toggleable({
+		activate: 'onOpen',
+		deactivate: 'onClose',
+		prop: 'open',
+		toggle: null
+	})
 );
+
+/**
+ * A DropDown.
+ *
+ * By default, `DropDown` maintains the state of its `selected` property.
+ * Supply the `defaultSelected` property to control its initial value. If you
+ * wish to directly control updates to the component, supply a value to `selected` at creation time
+ * and update it in response to `onSelected` events.
+ *
+ * @class DropDown
+ * @memberof moonstone/DropDown
+ * @extends moonstone/DropDown.DropDownBase
+ * @ui
+ * @public
+ */
+const DropDown = DropDownDecorator(DropDownBase);
 
 export default DropDown;
 export {
 	DropDown,
-	DropDownBase
+	DropDownBase,
+	DropDownDecorator
 };
