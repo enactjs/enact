@@ -47,9 +47,9 @@ const HeaderBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Header.prototype */ {
 		/**
-		 * Centers the title, titleBelow, and subTitleBelow.
+		 * Centers the `title`, `titleBelow`, and `subTitleBelow`.
 		 *
-		 * This does not affect "compact" header type.
+		 * Compact headers are not affected.
 		 *
 		 * @type {Boolean}
 		 * @public
