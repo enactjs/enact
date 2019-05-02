@@ -29,14 +29,10 @@ import defaultProps from 'recompose/defaultProps';
 import setPropTypes from 'recompose/setPropTypes';
 import React from 'react';
 
-import {Expandable} from '../ExpandableItem';
-import {ExpandableTransitionContainer} from '../ExpandableItem/ExpandableTransitionContainer';
-import {MarqueeDecorator} from '../Marquee';
 import {Button} from '../Button';
 import ContextualPopupDecorator from '../ContextualPopupDecorator';
 import {Item} from '../Item';
 import {Scroller} from '../Scroller';
-import Skinnable from '../Skinnable/Skinnable';
 
 import css from './DropDown.module.less';
 
@@ -61,10 +57,12 @@ const compareChildren = (a, b) => {
 
 const DropDownButton = kind({
 	name: 'DropDownButton',
+
 	styles: {
 		css,
 		className: 'button'
 	},
+
 	render: (props) => (
 		<Button
 			{...props}
@@ -73,7 +71,7 @@ const DropDownButton = kind({
 	)
 });
 
-const ContextualButton = ContextualPopupDecorator(DropDownButton);
+const ContextualButton = ContextualPopupDecorator({noArrow: true}, DropDownButton);
 
 const DropDownList = kind({
 	name: 'DropDownList',
@@ -156,7 +154,7 @@ const DropDownBase = kind({
 		}
 	},
 
-	render: ({children, hideChildren, onSelect, open, selected, setContainerNode, title, ...rest}) => {
+	render: ({children, hideChildren, onOpen, onSelect, open, selected, setContainerNode, title, ...rest}) => {
 		delete rest.inline;
 
 		const popupProps = {children, hideChildren, onSelect, open, selected};
@@ -167,7 +165,7 @@ const DropDownBase = kind({
 				small
 				popupProps={popupProps}
 				popupComponent={DropDownList}
-				onClick={rest.onOpen}
+				onClick={onOpen}
 				open={open}
 			>
 				{title}

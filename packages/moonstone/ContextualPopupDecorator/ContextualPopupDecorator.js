@@ -35,6 +35,16 @@ import css from './ContextualPopupDecorator.module.less';
  */
 const defaultConfig = {
 	/**
+	 * `ContextualPopup` without the arrow.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.defaultConfig
+	 * @public
+	 */
+	noArrow: false,
+
+	/**
 	 * Disables passing the `skin` prop to the wrapped component.
 	 *
 	 * @see moonstone/Skinnable.Skinnable.skin
@@ -63,7 +73,7 @@ const ContextualPopupContainer = SpotlightContainerDecorator(
 );
 
 const Decorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {noSkin, openProp} = config;
+	const {noArrow, noSkin, openProp} = config;
 
 	return class extends React.Component {
 		static displayName = 'ContextualPopupDecorator'
@@ -245,7 +255,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.adjustedDirection = this.props.direction;
 
 			this.ARROW_WIDTH = ri.scale(30); // svg arrow width. used for arrow positioning
-			this.ARROW_OFFSET = ri.scale(18); // actual distance of the svg arrow displayed to offset overlaps with the container
+			this.ARROW_OFFSET = noArrow ? 0 : ri.scale(18); // actual distance of the svg arrow displayed to offset overlaps with the container
 			this.MARGIN = ri.scale(9); // margin from an activator to the contextual popup
 			this.KEEPOUT = ri.scale(12); // keep out distance on the edge of the screen
 
@@ -610,6 +620,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 							containerPosition={this.state.containerPosition}
 							containerRef={this.getContainerNode}
 							data-webos-voice-exclusive={voiceExclusive}
+							showArrow={!noArrow}
 							skin={skin}
 							spotlightId={this.state.containerId}
 							spotlightRestrict={spotlightRestrict}

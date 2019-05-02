@@ -129,6 +129,15 @@ const ContextualPopupBase = kind({
 		onCloseButtonClick: PropTypes.func,
 
 		/**
+		 * Shows the arrow.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		showArrow: PropTypes.bool,
+
+		/**
 		 * Shows the close button.
 		 *
 		 * @type {Boolean}
@@ -167,7 +176,7 @@ const ContextualPopupBase = kind({
 		}
 	},
 
-	render: ({arrowPosition, containerPosition, containerRef, children, className, closeButton, direction, ...rest}) => {
+	render: ({arrowPosition, containerPosition, containerRef, children, className, closeButton, direction, showArrow, ...rest}) => {
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
 
@@ -177,7 +186,7 @@ const ContextualPopupBase = kind({
 					{children}
 					{closeButton}
 				</div>
-				<ContextualPopupArrow direction={direction} style={arrowPosition} />
+				{showArrow ? <ContextualPopupArrow direction={direction} style={arrowPosition} /> : null}
 			</ContextualPopupRoot>
 		);
 	}
