@@ -4,7 +4,7 @@ import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {withInfo} from '@storybook/addon-info';
 
-import {boolean, number, select, text} from '../../src/enact-knobs';
+import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('DropDown', DropDown, DropDownBase);
@@ -28,17 +28,6 @@ storiesOf('Moonstone', module)
 					title={text('title', Config, 'Dropdown')}
 				>
 					{['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5']}
-				</DropDown>
-				<DropDown
-					title="Dropdown 2"
-				>
-					{['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6']}
-				</DropDown>
-				<DropDown
-					title="Dropdown 3"
-					direction={select('direction', ['up', 'down'], Config)}
-				>
-					{['Option 1', 'Option 2']}
 				</DropDown>
 			</div>
 		))

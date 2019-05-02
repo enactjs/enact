@@ -91,6 +91,13 @@ const DropDownList = kind({
 		 * @public
 		 */
 		onSelect: PropTypes.func,
+
+		/**
+		 * Index of the selected item.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
 		selected: PropTypes.number
 	},
 
@@ -132,13 +139,30 @@ const DropDownBase = kind({
 
 	propTypes: /** @lends moonstone/DropDown.DropDownBase.prototype */ {
 		/**
-		 * The selections for Dropdown
+		 * The selection items to be displayed in the `DropDownList`.
+		 * Takes an array of strings and the strings will be used in
+		 * the generated components as the readable text.
 		 *
-		 * @type {Node}
+		 * @type {String[]}
+		 * @required
 		 * @public
 		 */
 		children: PropTypes.node,
 
+		/**
+		 * Called when the DropDown is closing.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onClose: PropTypes.func,
+
+		/**
+		 * Called when the DropDown is opening.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onOpen: PropTypes.func,
 
 		/**
@@ -165,6 +189,15 @@ const DropDownBase = kind({
 		 * @public
 		 */
 		selected: PropTypes.number,
+
+		/**
+		 * The primary title text of DropDown.
+		 * The title will be replaced if an item is selected.
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
 		title: PropTypes.string
 	},
 

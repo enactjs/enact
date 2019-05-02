@@ -114,7 +114,7 @@ const ContextualPopupBase = kind({
 		 *
 		 * Can be one of: `'up'`, `'down'`, `'left'`, or `'right'`.
 		 *
-		 * @type {String}
+		 * @type {'up'|'down'|'left'|'right'}
 		 * @default 'down'
 		 * @public
 		 */
