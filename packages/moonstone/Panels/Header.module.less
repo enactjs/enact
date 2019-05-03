@@ -36,6 +36,7 @@
 
 	.decorator {
 		padding: 0;
+		margin: -2px 3px 0 -3px; // Negative 3px here to allow the decorator title text to horizontally align with the rest of the header text
 	}
 
 	.titleBelow,
@@ -50,7 +51,7 @@
 	.headerComponents {
 		.remove-margin-on-edge-children();
 		.margin-start-end(@moon-header-components-gutter, 0);
-		margin-bottom: @moon-spotlight-outset;
+		margin-bottom: 18px;
 
 		white-space: nowrap;
 	}
@@ -60,13 +61,11 @@
 		height: @moon-header-height-medium;
 
 		.title {
-			// This `margin-top: 2px;` is intended to account for the height disparity and visual
-			// offset when switching between Header+Input and a Standard Header's title height.
 			// The height is determined by the line-height below, but we want to maintain that as a
-			// relative unit (`em`) rather than dictate specific pixels. The 2px offset may need to
-			// be updated or removed to accomodate taller glyphs.
-			margin-top: 2px;
+			// relative unit (`em`) rather than dictate specific pixels to automatically accomodate
+			// font size changes.
 			line-height: @moon-medium-header-line-height;
+			margin-left: -3px; // Negative 3px here to allow the title text to horizontally align with the rest of the header text
 
 			.moon-locale-non-latin({line-height: @moon-non-latin-medium-header-line-height;});
 		}
@@ -87,6 +86,10 @@
 	&.compact {
 		height: @moon-header-height-small;
 
+		.compactTitle {
+			margin-bottom: 3px;
+		}
+
 		.input,
 		.title {
 			font-size: @moon-small-header-font-size;
@@ -97,6 +100,11 @@
 
 		.titleBelow {
 			display: inline;
+			padding-inline-start: 18px;
+		}
+
+		.headerComponents {
+			margin-bottom: 15px;
 		}
 	}
 
