@@ -7,7 +7,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/Panels` slot `<controls>` to easily add custom controls next to the Panels' "close" button
-- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll by page up/down keys without focus on pointer mode
 
 ### Removed
 
@@ -18,6 +17,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Button.ButtonDecorator` to remove `i18n/Uppercase` HOC
 - `moonstone/Button` and `moonstone/Header` appearance to match the latest designs
+
+### Fixed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll by page up/down keys without focus in pointer mode
 
 ## [2.5.3] - ???
 
@@ -36,7 +39,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/EditableIntegerPicker` text alignment when not editing the value
 - `moonstone/Scroller` to scroll via dragging when the platform has touch support
 - `moonstone/VideoPlayer` to continue to display the thumbnail image while the slider is focused
-- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll by page up/down keys without focus on pointer mode
 
 ## [2.5.1] - 2019-04-09
 
