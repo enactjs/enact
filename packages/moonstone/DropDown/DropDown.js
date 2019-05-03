@@ -78,7 +78,7 @@ const DropDownList = kind({
 		/**
 		 * The selections for Dropdown
 		 *
-		 * @type {Node}
+		 * @type {String[]}
 		 * @public
 		 */
 		children: PropTypes.node,
@@ -278,7 +278,7 @@ const DropDownDecorator = compose(
 );
 
 /**
- * A DropDown.
+ * A Moonstone DropDown component.
  *
  * By default, `DropDown` maintains the state of its `selected` property.
  * Supply the `defaultSelected` property to control its initial value. If you

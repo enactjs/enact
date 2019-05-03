@@ -2,11 +2,11 @@ import React from 'react';
 import {mount, shallow} from 'enzyme';
 import {DropDown, DropDownBase} from '../DropDown';
 
-describe('DropDownBase', () => {
-	const title = 'Dropdown select';
+const title = 'Dropdown select';
+const children = ['option1', 'option2', 'option3'];
 
+describe('DropDownBase', () => {
 	test('should have title', () => {
-		const children = ['option1', 'option2', 'option3'];
 
 		const dropDown = mount(
 			<DropDownBase title={title}>
@@ -21,7 +21,6 @@ describe('DropDownBase', () => {
 	});
 
 	test('should have title that reflects selected option', () => {
-		const children = ['option1', 'option2', 'option3'];
 		const selectedIndex = 1;
 
 		const dropDown = mount(
@@ -38,10 +37,7 @@ describe('DropDownBase', () => {
 });
 
 describe('DropDown', () => {
-	const title = 'Dropdown select';
-
 	test('should have title that reflects default selected option', () => {
-		const children = ['option1', 'option2', 'option3'];
 		const selectedIndex = 2;
 
 		const dropDown = mount(
@@ -57,7 +53,6 @@ describe('DropDown', () => {
 	});
 
 	test('should update when children are added', () => {
-		const children = ['option1', 'option2', 'option3'];
 
 		const dropDown = shallow(
 			<DropDown title={title}>
