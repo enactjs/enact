@@ -12,10 +12,11 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
-import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
+import {onWindowReady} from '@enact/core/snapshot';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import Registry from '@enact/core/internal/Registry';
 
 import ForwardRef from '../ForwardRef';
 import {ResizeContext} from '../Resizable';
@@ -427,7 +428,7 @@ class ScrollableBase extends Component {
 
 	componentDidMount () {
 		this.resizeRegistry.parent = this.context;
-		this.addEventListeners();
+		this.addEventListeners('initial');
 		this.updateScrollbars();
 	}
 
@@ -485,6 +486,22 @@ class ScrollableBase extends Component {
 		}
 
 		this.removeEventListeners();
+	}
+
+	onResize = () => {
+		// Need to sync calculated client size if it is different from the real size
+		if (this.childRefCurrent.syncClientSize) {
+			// Sometimes when `resize` event occurs, client width and height of
+			// a list could be not accurate due to asynchronous rendering cycles.
+			// Asynchronous call of `syncClientSize` is helpful to this situation.
+			setTimeout(() => {
+				// If we actually synced, we need to reset scroll position.
+				if (this.childRefCurrent.syncClientSize()) {
+					this.setScrollLeft(0);
+					this.setScrollTop(0);
+				}
+			}, 0);
+		}
 	}
 
 	handleResize (ev) {
@@ -1219,7 +1236,7 @@ class ScrollableBase extends Component {
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
-	addEventListeners () {
+	addEventListeners (mode) {
 		const {childRefCurrent, containerRef} = this;
 
 		if (containerRef.current && containerRef.current.addEventListener) {
@@ -1235,6 +1252,12 @@ class ScrollableBase extends Component {
 
 		if (this.props.addEventListeners) {
 			this.props.addEventListeners(childRefCurrent.containerRef);
+		}
+
+		if (mode === 'initial' && this.childRefCurrent.syncClientSize) {
+			onWindowReady(() => {
+				window.addEventListener('resize', this.onResize);
+			});
 		}
 	}
 
@@ -1253,6 +1276,10 @@ class ScrollableBase extends Component {
 
 		if (this.props.removeEventListeners) {
 			this.props.removeEventListeners(childRefCurrent.containerRef);
+		}
+
+		if (this.childRefCurrent.syncClientSize && window) {
+			window.removeEventListener('resize', this.onResize);
 		}
 	}
 
