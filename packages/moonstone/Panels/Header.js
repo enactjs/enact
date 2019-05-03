@@ -55,7 +55,6 @@ const HeaderBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		// No need to account for headerComponents (ignore the resulting centering offset)
 		centered: PropTypes.bool,
 
 		/**
