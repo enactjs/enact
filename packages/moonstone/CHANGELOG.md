@@ -24,6 +24,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/FormCheckbox` and `moonstone/FormCheckboxItem` appearance to match the latest designs
 - `moonstone/Button`, `moonstone/ContextualPopupDecorator`, `moonstone/Header`, and `moonstone/Notification` appearance to match the latest designs
 
+### Fixed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll by page up/down keys without focus in pointer mode
+
 ## [2.5.3] - ???
 
 ### Deprecated
