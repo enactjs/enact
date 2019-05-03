@@ -31,7 +31,7 @@ const
 	} = constants,
 	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
 	overscrollTimeout = 300,
-	paginationPageMultiplier = 0.8,
+	paginationPageMultiplier = 0.66,
 	reverseDirections = {
 		down: 'up',
 		up: 'down'
