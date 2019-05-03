@@ -16,12 +16,15 @@
  * @exports ScrollerBase
  */
 
+import handle, {forward} from '@enact/core/handle';
 import ri from '@enact/ui/resolution';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import {Spotlight} from '@enact/spotlight';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+
+import {SharedState} from '../internal/SharedStateDecorator';
 
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -46,6 +49,8 @@ const
  */
 class ScrollerBase extends Component {
 	static displayName = 'ScrollerBase'
+
+	static contextType = SharedState
 
 	static propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
 		/**
@@ -84,6 +89,20 @@ class ScrollerBase extends Component {
 
 	componentDidMount () {
 		this.configureSpotlight();
+
+		const {userSpotlightId: spotlightId = 'scroller'} = this.props;
+		if (this.context && spotlightId) {
+			const scrollPosition = this.context.get(`${spotlightId}.scrollPosition`);
+			if (scrollPosition) {
+				this.uiRefCurrent.props.cbScrollTo({
+					position: {
+						x: scrollPosition.left,
+						y: scrollPosition.top
+					},
+					animate: false
+				});
+			}
+		}
 	}
 
 	componentDidUpdate (prevProps) {
@@ -366,6 +385,13 @@ class ScrollerBase extends Component {
 		}
 	}
 
+	handleScroll = handle(
+		forward('onScroll'),
+		(ev, {userSpotlightId: spotlightId = 'scroller'}, context) => {
+			context.set(`${spotlightId}.scrollPosition`, this.uiRefCurrent.scrollPos);
+		}
+	).bindAs(this, 'handleScroll')
+
 	initUiRef = (ref) => {
 		if (ref) {
 			this.uiRefCurrent = ref;
@@ -383,6 +409,7 @@ class ScrollerBase extends Component {
 		return (
 			<UiScrollerBase
 				{...props}
+				onScroll={this.handleScroll}
 				ref={this.initUiRef}
 			/>
 		);
@@ -407,7 +434,7 @@ const Scroller = (props) => (
 	<Scrollable
 		{...props}
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
-			return <ScrollerBase {...scrollerProps} />;
+			return <ScrollerBase {...scrollerProps} userSpotlightId={props.spotlightId} />;
 		}}
 	/>
 );

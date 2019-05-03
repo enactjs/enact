@@ -1,12 +1,12 @@
 import classnames from 'classnames';
 import {forward, handle} from '@enact/core/handle';
-import ViewManager, {shape} from '@enact/ui/ViewManager';
-import invariant from 'invariant';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import Spotlight from '@enact/spotlight';
 import Pause from '@enact/spotlight/Pause';
+import ViewManager, {shape} from '@enact/ui/ViewManager';
+import invariant from 'invariant';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 import css from './Panels.module.less';
 

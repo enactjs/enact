@@ -1,10 +1,12 @@
 import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import React from 'react';
-import PropTypes from 'prop-types';
-import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator, {spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
+import Slottable from '@enact/ui/Slottable';
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import SharedStateDecorator from '../internal/SharedStateDecorator';
 
 import css from './Panel.module.less';
 
@@ -179,17 +181,20 @@ const PanelBase = kind({
 	}
 });
 
-const Panel = SpotlightContainerDecorator(
-	{
-		// prefer any spottable within the panel body for first render
-		continue5WayHold: true,
-		defaultElement: [`.${spotlightDefaultClass}`, `.${css.body} *`],
-		enterTo: 'last-focused',
-		preserveId: true
-	},
-	Slottable(
-		{slots: ['header']},
-		PanelBase
+const Panel = SharedStateDecorator(
+	{idProp: 'spotlightId'},
+	SpotlightContainerDecorator(
+		{
+			// prefer any spottable within the panel body for first render
+			continue5WayHold: true,
+			defaultElement: [`.${spotlightDefaultClass}`, `.${css.body} *`],
+			enterTo: 'last-focused',
+			preserveId: true
+		},
+		Slottable(
+			{slots: ['header']},
+			PanelBase
+		)
 	)
 );
 
