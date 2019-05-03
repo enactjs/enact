@@ -168,6 +168,14 @@
 @moon-button-pressed-scale: 0.05;
 @moon-button-icon-h-margin: 15px;
 @moon-button-icon-small-h-margin: 15px;
+@moon-button-icon-start-margin: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
+@moon-button-icon-end-margin: @moon-button-icon-h-margin;
+@moon-button-icon-small-start-margin: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
+@moon-button-icon-small-end-margin: @moon-button-icon-small-h-margin;
+@moon-button-icon-position-after-start-margin: @moon-button-icon-end-margin;
+@moon-button-icon-position-after-end-margin: @moon-button-icon-start-margin;
+@moon-button-icon-position-after-small-start-margin: @moon-button-icon-small-end-margin;
+@moon-button-icon-position-after-small-end-margin: 0;
 @moon-button-colordot-size: 21px;
 @moon-button-small-colordot-size: 15px;
 
@@ -175,6 +183,13 @@
 // ---------------------------------------
 @moon-divider-border-width: 3px;
 @moon-divider-height: 39px;
+
+// DropDown
+// ---------------------------------------
+@moon-dropdown-border-radius: 3px;
+@moon-dropdown-width: 450px;
+@moon-dropdown-list-width: @moon-dropdown-width - (@moon-button-small-h-padding * 2); //39px; //(@moon-button-h-margin * 3);
+@moon-dropdown-list-max-height: 300px;
 
 // Icon Button
 // ---------------------------------------

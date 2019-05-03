@@ -63,7 +63,6 @@ const DropDownButton = kind({
 	render: (props) => (
 		<Button
 			{...props}
-			icon="arrowlargedown"
 			iconPosition="after"
 			small
 		/>
@@ -241,6 +240,7 @@ const DropDownBase = kind({
 		return (
 			<ContextualButton
 				{...rest}
+				icon={open ? 'arrowlargeup' : 'arrowlargedown'}
 				popupProps={popupProps}
 				popupComponent={DropDownList}
 				onClick={onOpen}
