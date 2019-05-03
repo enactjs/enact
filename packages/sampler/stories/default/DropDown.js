@@ -22,9 +22,9 @@ storiesOf('Moonstone', module)
 				<DropDown
 					direction={select('direction', ['up', 'down'], Config)}
 					disabled={boolean('disabled', Config)}
-					onSelect={action('onSelect')}
 					onClose={action('onClose')}
 					onOpen={action('onOpen')}
+					onSelect={action('onSelect')}
 					title={text('title', Config, 'Dropdown')}
 				>
 					{['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5']}
