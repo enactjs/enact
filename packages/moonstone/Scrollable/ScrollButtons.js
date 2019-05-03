@@ -287,10 +287,21 @@ class ScrollButtons extends Component {
 		}
 	}
 
+	onTouchStart = ({currentTarget}) => {
+		if (currentTarget !== Spotlight.getCurrent()) {
+			currentTarget.focus();
+		}
+	}
+
 	render () {
 		const
 			{disabled, nextButtonAriaLabel, previousButtonAriaLabel, rtl, thumbRenderer, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
+			prevDisabled = disabled || prevButtonDisabled,
+			nextDisabled = disabled || nextButtonDisabled,
+			touchProps = {onTouchStart: this.onTouchStart},
+			prevTouchProps = {...(!prevDisabled) && touchProps},
+			nextTouchProps = {...(!nextDisabled) && touchProps},
 			prevIcon = preparePrevButton(vertical),
 			nextIcon = prepareNextButton(vertical);
 
@@ -298,7 +309,7 @@ class ScrollButtons extends Component {
 			<ScrollButton
 				aria-label={rtl && !vertical ? nextButtonAriaLabel : previousButtonAriaLabel}
 				data-spotlight-overflow="ignore"
-				disabled={disabled || prevButtonDisabled}
+				disabled={prevDisabled}
 				key="prevButton"
 				onClick={this.onClickPrev}
 				onDown={this.onDownPrev}
@@ -309,6 +320,7 @@ class ScrollButtons extends Component {
 				onSpotlightRight={this.onSpotlight}
 				onSpotlightUp={this.onSpotlight}
 				ref={this.prevButtonRef}
+				{...prevTouchProps}
 			>
 				{prevIcon}
 			</ScrollButton>,
@@ -316,7 +328,7 @@ class ScrollButtons extends Component {
 			<ScrollButton
 				aria-label={rtl && !vertical ? previousButtonAriaLabel : nextButtonAriaLabel}
 				data-spotlight-overflow="ignore"
-				disabled={disabled || nextButtonDisabled}
+				disabled={nextDisabled}
 				key="nextButton"
 				onClick={this.onClickNext}
 				onDown={this.onDownNext}
@@ -327,6 +339,7 @@ class ScrollButtons extends Component {
 				onSpotlightRight={this.onSpotlight}
 				onSpotlightUp={this.onSpotlight}
 				ref={this.nextButtonRef}
+				{...nextTouchProps}
 			>
 				{nextIcon}
 			</ScrollButton>,

@@ -19,6 +19,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/EditableIntegerPicker`, `moonstone/Picker`, and `moonstone/RangePicker` to not error when the `min` prop exceeds the `max` prop
 - `moonstone/Input` refocusing on touch on iOS
 - `moonstone/VideoPlayer` to correctly handle touch events while moving slider knobs
+- `moonstone/Scroller` to set focus to scroll buttons during touch events
 
 ## [2.5.2] - 2019-04-23
 
