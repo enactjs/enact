@@ -135,8 +135,7 @@ const IconButtonDecorator = compose(
 );
 
 /**
- * `IconButton` does not have `Marquee` or `Uppercase` like `Button` has, as it should not contain
- * text.
+ * `IconButton` does not have `Marquee` like `Button` has, as it should not contain text.
  *
  * Usage:
  * ```

@@ -516,8 +516,8 @@ const VirtualListBaseFactory = (type) => {
 			const {dataSize, rtl, wrap} = this.props;
 			const {isPrimaryDirectionVertical, dimensionToExtent} = this.uiRefCurrent;
 			const isDownKey = isDown(keyCode);
-			const isLeftKey = isLeft(keyCode);
-			const isRightKey = isRight(keyCode);
+			const isLeftMovement = (!rtl && isLeft(keyCode)) || (rtl && isRight(keyCode));
+			const isRightMovement = (!rtl && isRight(keyCode)) || (rtl && isLeft(keyCode));
 			const isUpKey = isUp(keyCode);
 			let isWrapped = false;
 			let nextIndex = -1;
@@ -527,14 +527,14 @@ const VirtualListBaseFactory = (type) => {
 					nextIndex = this.findSpottableItemWithPositionInExtent(index - 1, -1, index % dimensionToExtent);
 				} else if (isDownKey) {
 					nextIndex = this.findSpottableItemWithPositionInExtent(index + 1, dataSize, index % dimensionToExtent);
-				} else if (isLeftKey && index % dimensionToExtent) {
+				} else if (isLeftMovement && index % dimensionToExtent) {
 					nextIndex = index - 1;
-				} else if (isRightKey && index % dimensionToExtent < dimensionToExtent - 1) {
+				} else if (isRightMovement && index % dimensionToExtent < dimensionToExtent - 1) {
 					nextIndex = index + 1;
 				}
-			} else if (isLeftKey) {
+			} else if (isLeftMovement) {
 				nextIndex = this.findSpottableItemWithPositionInExtent(index - 1, -1, index % dimensionToExtent);
-			} else if (isRightKey) {
+			} else if (isRightMovement) {
 				nextIndex = this.findSpottableItemWithPositionInExtent(index + 1, dataSize, index % dimensionToExtent);
 			} else if (isUpKey && index % dimensionToExtent) {
 				nextIndex = index - 1;
@@ -545,12 +545,12 @@ const VirtualListBaseFactory = (type) => {
 			if (!repeat && nextIndex === -1 && wrap) {
 				const isForward = (
 					isPrimaryDirectionVertical && isDownKey ||
-					!isPrimaryDirectionVertical && (!rtl && isRightKey || rtl && isLeftKey) ||
+					!isPrimaryDirectionVertical && isRightMovement ||
 					null
 				);
 				const isBackward = (
 					isPrimaryDirectionVertical && isUpKey ||
-					!isPrimaryDirectionVertical && (!rtl && isLeftKey || rtl && isRightKey) ||
+					!isPrimaryDirectionVertical && isLeftMovement ||
 					null
 				);
 
