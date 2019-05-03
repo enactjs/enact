@@ -18,6 +18,7 @@ const MarqueeH2 = MarqueeDecorator('h2');
 const CompactTitleBase = kind({
 	name: 'CompactTitle',
 	styles: {
+		css,
 		className: 'compactTitle'
 	},
 	render: (props) => {
