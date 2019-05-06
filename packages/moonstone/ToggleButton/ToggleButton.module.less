@@ -88,6 +88,12 @@
 					color: @moon-toggle-button-switch-dot-on-spotlight-color;
 				}
 			}
+
+			.disabled({
+				&::after {
+					opacity: @moon-disabled-opacity;
+				}
+			});
 		});
 	});
 }
