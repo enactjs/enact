@@ -79,6 +79,14 @@ class ScrollerBase extends Component {
 		rtl: PropTypes.bool,
 
 		/**
+		 * The identifier for the component for the internal purposes of tracking scroll position.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		sharedStateId: PropTypes.string,
+
+		/**
 		 * The spotlight id for the component.
 		 *
 		 * @type {String}
@@ -90,9 +98,9 @@ class ScrollerBase extends Component {
 	componentDidMount () {
 		this.configureSpotlight();
 
-		const {userSpotlightId: spotlightId = 'scroller'} = this.props;
-		if (this.context && spotlightId) {
-			const scrollPosition = this.context.get(`${spotlightId}.scrollPosition`);
+		const {sharedStateId} = this.props;
+		if (this.context && sharedStateId) {
+			const scrollPosition = this.context.get(`${sharedStateId}.scrollPosition`);
 			if (scrollPosition) {
 				this.uiRefCurrent.props.cbScrollTo({
 					position: {
@@ -434,7 +442,13 @@ const Scroller = (props) => (
 	<Scrollable
 		{...props}
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
-			return <ScrollerBase {...scrollerProps} userSpotlightId={props.spotlightId} />;
+			return (
+				<ScrollerBase
+					{...scrollerProps}
+					// eslint-disable-next-line enact/prop-types
+					sharedStateId={props.spotlightId || 'scroller'}
+				/>
+			);
 		}}
 	/>
 );
@@ -478,7 +492,13 @@ const ScrollerNative = (props) => (
 	<ScrollableNative
 		{...props}
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
-			return <ScrollerBase {...scrollerProps} />;
+			return (
+				<ScrollerBase
+					{...scrollerProps}
+					// eslint-disable-next-line enact/prop-types
+					sharedStateId={props.spotlightId || 'scroller'}
+				/>
+			);
 		}}
 	/>
 );
