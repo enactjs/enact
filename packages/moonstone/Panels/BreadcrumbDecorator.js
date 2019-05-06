@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import IdProvider from '../internal/IdProvider';
-import SharedStateDecorator from '../internal/SharedStateDecorator';
 import Skinnable from '../Skinnable';
 
 import Breadcrumb from './Breadcrumb';
@@ -259,10 +258,8 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return CancelDecorator(
 		{cancel: 'onSelectBreadcrumb'},
 		IdProvider(
-			SharedStateDecorator(
-				Skinnable(
-					Decorator
-				)
+			Skinnable(
+				Decorator
 			)
 		)
 	);

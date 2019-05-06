@@ -8,6 +8,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import SharedStateDecorator, {SharedState} from '../internal/SharedStateDecorator';
+
 import css from './Panels.module.less';
 
 /**
@@ -19,6 +21,8 @@ import css from './Panels.module.less';
  */
 const ViewportBase = class extends React.Component {
 	static displayName = 'Viewport'
+
+	static contextType = SharedState
 
 	static propTypes = /** @lends moonstone/Panels.Viewport.prototype */ {
 
@@ -87,6 +91,12 @@ const ViewportBase = class extends React.Component {
 	componentDidMount () {
 		// eslint-disable-next-line react/no-find-dom-node
 		this.node = ReactDOM.findDOMNode(this);
+	}
+
+	componentDidUpdate (prevProps) {
+		for (let i = prevProps.index; this.context && i > this.props.index; i--) {
+			this.context.delete(i);
+		}
 	}
 
 	componentWillUnmount () {
@@ -179,8 +189,10 @@ const ViewportBase = class extends React.Component {
 	}
 };
 
-export default ViewportBase;
+const Viewport = SharedStateDecorator(ViewportBase);
+
+export default Viewport;
 export {
-	ViewportBase as Viewport,
+	Viewport,
 	ViewportBase
 };

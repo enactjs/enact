@@ -184,7 +184,7 @@ const PanelsBase = kind({
 		}
 	},
 
-	render: ({noAnimation, arranger, childProps, children, generateId, index, applicationCloseButton, ...rest}) => {
+	render: ({noAnimation, arranger, childProps, children, generateId, id, index, applicationCloseButton, ...rest}) => {
 		delete rest.closeButtonBackgroundOpacity;
 		delete rest.closeButtonAriaLabel;
 		delete rest.noCloseButton;
@@ -192,12 +192,13 @@ const PanelsBase = kind({
 		delete rest.onBack;
 
 		return (
-			<div {...rest}>
+			<div {...rest} id={id}>
 				{applicationCloseButton}
 				<Viewport
 					arranger={arranger}
 					childProps={childProps}
 					generateId={generateId}
+					id={`viewport-${id}`}
 					index={index}
 					noAnimation={noAnimation}
 				>

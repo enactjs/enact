@@ -182,7 +182,7 @@ const PanelBase = kind({
 });
 
 const Panel = SharedStateDecorator(
-	{idProp: 'spotlightId'},
+	{idProp: 'data-index'},
 	SpotlightContainerDecorator(
 		{
 			// prefer any spottable within the panel body for first render
