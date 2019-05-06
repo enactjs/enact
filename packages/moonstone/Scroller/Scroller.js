@@ -395,8 +395,8 @@ class ScrollerBase extends Component {
 
 	handleScroll = handle(
 		forward('onScroll'),
-		(ev, {userSpotlightId: spotlightId = 'scroller'}, context) => {
-			context.set(`${spotlightId}.scrollPosition`, this.uiRefCurrent.scrollPos);
+		(ev, {sharedStateId = 'scroller'}, context) => {
+			context.set(`${sharedStateId}.scrollPosition`, this.uiRefCurrent.scrollPos);
 		}
 	).bindAs(this, 'handleScroll')
 
