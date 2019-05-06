@@ -284,14 +284,17 @@
 			}
 
 			.disabled({
-				color: @moon-button-disabled-text-color;
+				color: @moon-button-disabled-focus-text-color;
+
+				.client {
+					.vendor-opacity(@moon-disabled-opacity);
+				}
 
 				.bg {
 					background-color: @moon-button-disabled-focus-bg-color;
 				}
 
 				.icon {
-					.vendor-opacity(0.6);
 					color: @moon-button-disabled-focus-icon-color;
 				}
 			});
