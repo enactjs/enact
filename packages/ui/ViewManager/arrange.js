@@ -33,16 +33,13 @@ export const fadeIn = ({node, percent}) => {
 
 export const accelerate = prependTransform('translateZ(0)');
 
-const slideInOut = curry((direction, total, orientation, config) => {
-	const {percent} = config;
-	const p = total * (direction === 'out' ? percent : 1 - percent);
+const slideInOut = curry((direction, total, orientation) => {
+	const p = direction === 'out' ? total : -total;
 
-	let spec =	orientation === 'top'    && 'translateY(' + -p + '%)' ||
-				orientation === 'bottom' && 'translateY(' + p + '%)'  ||
-				orientation === 'left'   && 'translateX(' + -p + '%)' ||
-				orientation === 'right'  && 'translateX(' + p + '%)';
-
-	appendTransform(spec, config);
+	return	orientation === 'top'    && 'translateY(-1' + -p + '%)' ||
+			orientation === 'bottom' && 'translateY(' + p + '%)'  ||
+			orientation === 'left'   && 'translateX(' + -p + '%)' ||
+			orientation === 'right'  && 'translateX(' + p + '%)';
 });
 
 export const slideInPartial = slideInOut('in');

@@ -139,6 +139,11 @@ class View extends React.Component {
 		};
 	}
 
+	componentDidMount () {
+		// eslint-disable-next-line react/no-find-dom-node
+		this.node = ReactDOM.findDOMNode(this);
+	}
+
 	shouldComponentUpdate (nextProps) {
 		if (nextProps.leaving) {
 			return false;
@@ -152,15 +157,7 @@ class View extends React.Component {
 	}
 
 	componentWillUnmount () {
-		this.cancelAnimationFrame();
 		this.enteringJob.stop();
-	}
-
-	cancelAnimationFrame () {
-		if (this._raf) {
-			if (typeof window !== 'undefined') window.cancelAnimationFrame(this._raf);
-			this._raf = null;
-		}
 	}
 
 	enteringJob = new Job(() => {
@@ -235,87 +232,26 @@ class View extends React.Component {
 	 */
 	prepareTransition = (arranger, callback, noAnimation) => {
 		const {duration, index, previousIndex, reverseTransition} = this.props;
-		/* eslint react/no-find-dom-node: "off" */
-		const node = ReactDOM.findDOMNode(this);
 
-		const currentTime = perfNow();
-		let startTime = currentTime;
-		let endTime = startTime + duration;
-
-		// disable animation when the instance or props flag is true
-		noAnimation = noAnimation || this.props.noAnimation;
-
-		// Arranges the control each tick and calls the provided callback on complete
-		const fn = (start, end, time) => {
-			this.cancelAnimationFrame();
-
-			// percent is the ratio (between 0 and 1) of the current step to the total steps
-			const percent = (time - start) / (end - start);
-			if (!noAnimation && percent < 1) {
-				// the transition is still in progress so call the arranger
-				arranger({
-					node,
-					percent,
-					reverseTransition,
-					from: previousIndex,
-					to: index
-				});
-
-				return true;
-			} else {
-				// the transition is complete so clean up and ensure we fire a final arrange with
-				// a value of 1.
-				this.animation = null;
-				arranger({
-					node,
-					percent: 1,
-					reverseTransition,
-					from: previousIndex,
-					to: index
-				});
-				callback();
-
-				return false;
+		this.animation = this.node.animate(
+			arranger({
+				from: previousIndex,
+				to: index
+			}),
+			{
+				duration,
+				direction: reverseTransition ? 'reverse' : 'normal'
 			}
+		);
+
+		this.animation.onfinish = () => {
+			this.animation = null;
+			callback();
 		};
 
-		// When a new transition is initiated mid-transition, adjust time to account for the current
-		// percent complete.
-		if (this.animation && this.changeDirection) {
-			const a = this.animation;
-			const percentComplete = (a.time - a.start) / (a.end - a.start);
-			const delta = (endTime - startTime) * (1 - percentComplete);
-
-			startTime -= delta;
-			endTime -= delta;
-		}
-
-		this.transition(startTime, endTime, currentTime, fn);
-	}
-
-	/**
-	 * Calls the arranger method and schedules the next animation frame
-	 *
-	 * @param   {Number}    start    Animation start time
-	 * @param   {Number}    end      Animation end time
-	 * @param   {Number}    time     Current animation time
-	 * @param   {Function}  callback Completion callback
-	 * @returns {undefined}
-	 * @private
-	 */
-	transition = (start, end, time, callback) => {
-		const a = this.animation = this.animation || {};
-		a.start = start;
-		a.end = end;
-		a.time = time;
-
-		if (callback(start, end, time) && typeof window !== 'undefined') {
-			this._raf = window.requestAnimationFrame(() => {
-				const current = perfNow();
-				this.transition(start, end, current, callback);
-			});
-		} else {
-			this._raf = null;
+		// disable animation when the instance or props flag is true
+		if (noAnimation || this.props.noAnimation) {
+			this.animation.finish();
 		}
 	}
 

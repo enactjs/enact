@@ -26,8 +26,14 @@ import {accelerate, clearTransform, compose, reverse, slideInPartial, slideOutPa
  * @public
  */
 export const SlideArranger = ({amount = 100, enter, leave}) => ({
-	enter: reverse(compose(clearTransform, slideInPartial(amount, enter), accelerate)),
-	leave: reverse(compose(clearTransform, slideOutPartial(amount, leave), accelerate))
+	enter: () => [
+		{transform: slideInPartial(amount, enter)},
+		{transform: slideInPartial(0, enter)}
+	],
+	leave: () => [
+		{transform: slideOutPartial(0, leave)},
+		{transform: slideOutPartial(amount, leave)}
+	]
 });
 
 /**
