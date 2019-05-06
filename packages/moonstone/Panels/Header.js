@@ -17,6 +17,10 @@ const MarqueeH2 = MarqueeDecorator('h2');
 
 const CompactTitleBase = kind({
 	name: 'CompactTitle',
+	styles: {
+		css,
+		className: 'compactTitle'
+	},
 	render: (props) => {
 		delete props.title;
 		delete props.titleBelow;
@@ -43,6 +47,16 @@ const HeaderBase = kind({
 	name: 'Header',
 
 	propTypes: /** @lends moonstone/Panels.Header.prototype */ {
+		/**
+		 * Centers the `title`, `titleBelow`, and `subTitleBelow`.
+		 *
+		 * Compact headers are not affected.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		centered: PropTypes.bool,
+
 		/**
 		 * Children provided are added to the header-components area.
 		 *
@@ -163,18 +177,18 @@ const HeaderBase = kind({
 	computed: {
 		className: ({fullBleed, type, styler}) => styler.append({fullBleed}, type),
 		direction: ({title, titleBelow}) => isRtlText(title) || isRtlText(titleBelow) ? 'rtl' : 'ltr',
-		titleBelowComponent: ({marqueeOn, titleBelow, type}) => {
+		titleBelowComponent: ({centered, marqueeOn, titleBelow, type}) => {
 			switch (type) {
 				case 'compact':
-					return titleBelow ? <h2 className={css.titleBelow}>   {titleBelow}</h2> : null;
+					return titleBelow ? <h2 className={css.titleBelow}>{titleBelow}</h2> : null;
 				case 'standard':
-					return <MarqueeH2 className={css.titleBelow} marqueeOn={marqueeOn}>{(titleBelow != null && titleBelow !== '') ? titleBelow : ' '}</MarqueeH2>;
+					return <MarqueeH2 className={css.titleBelow} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>{(titleBelow != null && titleBelow !== '') ? titleBelow : ' '}</MarqueeH2>;
 			}
 		},
-		subTitleBelowComponent: ({marqueeOn, subTitleBelow}) => {
-			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
+		subTitleBelowComponent: ({centered, marqueeOn, subTitleBelow}) => {
+			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
 		},
-		titleOrInput: ({headerInput, marqueeOn, title}) => {
+		titleOrInput: ({centered, headerInput, marqueeOn, title}) => {
 			if (headerInput) {
 				return (
 					<Cell className={css.headerInput}>
@@ -186,7 +200,7 @@ const HeaderBase = kind({
 				);
 			} else {
 				return (
-					<Cell component={MarqueeH1} className={css.title} marqueeOn={marqueeOn}>
+					<Cell component={MarqueeH1} className={css.title} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>
 						{title}
 					</Cell>
 				);
@@ -195,6 +209,7 @@ const HeaderBase = kind({
 	},
 
 	render: ({children, direction, marqueeOn, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+		delete rest.centered;
 		delete rest.fullBleed;
 		delete rest.headerInput;
 		delete rest.subTitleBelow;
