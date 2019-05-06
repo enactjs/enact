@@ -3,10 +3,8 @@ import React from 'react';
 
 const SharedState = React.createContext(null);
 
-const SharedStateDecorator = hoc({defaultId: null, idProp: 'id'}, (config, Wrapped) => {
-	const {defaultId, idProp} = config;
-
-	const getId = ({[idProp]: id = defaultId}) => id;
+const SharedStateDecorator = hoc({idProp: 'id'}, (config, Wrapped) => {
+	const {idProp} = config;
 
 	return class extends React.Component {
 		static displayName = 'SharedStateDecorator'
@@ -27,7 +25,7 @@ const SharedStateDecorator = hoc({defaultId: null, idProp: 'id'}, (config, Wrapp
 		initSharedState () {
 			return {
 				set: (key, value) => {
-					const id = getId(this.props);
+					const {[idProp]: id} = this.props;
 
 					if (!id) return;
 
@@ -36,13 +34,13 @@ const SharedStateDecorator = hoc({defaultId: null, idProp: 'id'}, (config, Wrapp
 				},
 
 				get: (key) => {
-					const id = getId(this.props);
+					const {[idProp]: id} = this.props;
 
 					return this.data[id] && this.data[id][key];
 				},
 
 				delete: (key) => {
-					const id = getId(this.props);
+					const {[idProp]: id} = this.props;
 
 					if (id && this.data[id]) {
 						delete this.data[id][key];
@@ -53,7 +51,7 @@ const SharedStateDecorator = hoc({defaultId: null, idProp: 'id'}, (config, Wrapp
 
 		loadFromContext () {
 			if (this.context) {
-				const id = getId(this.props);
+				const {[idProp]: id} = this.props;
 				const data = this.context.get(id);
 
 				if (data) {
