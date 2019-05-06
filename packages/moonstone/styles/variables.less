@@ -140,13 +140,13 @@
 // ---------------------------------------
 @moon-header-height-large: 360px;
 @moon-header-height-medium: 180px;
-@moon-header-height-small: 87px;
+@moon-header-height-small: 90px;
 @moon-header-indent-width: 18px;
 @moon-header-title-subtitle-gap: 36px;
 @moon-header-border-bottom-width: 3px;
 @moon-header-indent-width: 18px;
 @moon-header-controls-border-width: 1px;
-@moon-header-components-separation: 30px;
+@moon-header-components-separation: (@moon-spotlight-outset * 2);
 @moon-header-components-gutter: 60px;
 
 // Button
@@ -269,6 +269,8 @@
 
 // Panels
 // ---------------------------------------
+@moon-panel-v-padding: @moon-app-keepout;
+@moon-panel-h-padding: (@moon-app-keepout - @moon-spotlight-outset);
 @moon-panels-handle-width: 132px;
 @moon-panel-handle-icon-font-size: 144px;
 @moon-breadcrumb-text-size: 36px;
@@ -289,7 +291,7 @@
 
 // Radio Item
 // ---------------------------------------
-@moon-radio-item-indicator-size: 20px;
+@moon-radio-item-indicator-size: 18px;
 @moon-radio-item-indicator-border: 2px;  // ### Exceptional Case ###
 	// 2px, not being a multiple of 3, poses special problems. Any math or assignment related to
 	// this value must be specifically considered as to not impose layout issues related to, for
