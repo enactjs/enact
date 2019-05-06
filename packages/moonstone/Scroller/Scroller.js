@@ -412,6 +412,7 @@ class ScrollerBase extends Component {
 
 		delete props.initUiChildRef;
 		delete props.onUpdate;
+		delete props.sharedStateId;
 		delete props.spotlightId;
 
 		return (
