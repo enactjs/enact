@@ -38,8 +38,8 @@ const ContextualPopupArrow = kind({
 
 	render: (props) => (
 		<svg {...props} viewBox="0 0 30 30">
-			<path d="M15 0 L0 18 L30 18 Z" className={css.arrowBorder} />
-			<path d="M15 9 L0 27 L30 27 Z" className={css.arrowFill} />
+			<path d="M0 18 L15 0 L30 18" className={css.arrowBorder} />
+			<path d="M15 2 L0 20 L30 20 Z" className={css.arrowFill} />
 		</svg>
 	)
 });

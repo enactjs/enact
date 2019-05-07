@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Panels` slot `<controls>` to easily add custom controls next to the Panels' "close" button
 - `moonstone/Header` prop `centered` to support immersive apps with a completely centered  design
+- `moonstone/BodyText` prop `size` to offer a new "small" size
+- `moonstone/TooltipDecorator` prop `tooltipRelative` and `moonstone/TooltipDecorator.Tooltip` prop `relative` to support relative positioning. This is an advanced feature and requires a container with specific rules. See documentation for details.
 
 ### Removed
 
@@ -19,6 +21,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Button.ButtonDecorator` to remove `i18n/Uppercase` HOC
 - `moonstone/Button` and `moonstone/Header` appearance to match the latest designs
 - `moonstone/Panel` and `moonstone/Panels` now allocate slightly more screen edge space for a cleaner look
+- `moonstone/DaySelector` to have squared check boxes to match the rest of the checkmark components
+- `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` text size to be smaller
+- `moonstone/Button`, `moonstone/ContextualPopupDecorator`, `moonstone/FormCheckbox`, `moonstone/FormCheckboxItem`, `moonstone/Header`, `moonstone/Notification`, and `moonstone/RadioItem` appearance to match the latest designs
+
+### Fixed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll by page up/down keys without focus in pointer mode
 
 ## [2.5.3] - ???
 

@@ -18,6 +18,7 @@ const MarqueeH2 = MarqueeDecorator('h2');
 const CompactTitleBase = kind({
 	name: 'CompactTitle',
 	styles: {
+		css,
 		className: 'compactTitle'
 	},
 	render: (props) => {
@@ -47,14 +48,13 @@ const HeaderBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Header.prototype */ {
 		/**
-		 * Centers the title, titleBelow, and subTitleBelow.
+		 * Centers the `title`, `titleBelow`, and `subTitleBelow`.
 		 *
-		 * This does not affect "compact" header type.
+		 * This setting has no effect on the `type="compact"` header.
 		 *
 		 * @type {Boolean}
 		 * @public
 		 */
-		// No need to account for headerComponents (ignore the resulting centering offset)
 		centered: PropTypes.bool,
 
 		/**
