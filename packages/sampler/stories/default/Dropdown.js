@@ -7,10 +7,8 @@ import {withInfo} from '@storybook/addon-info';
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('Dropdown', Dropdown, DropdownBase);
 Dropdown.displayName = 'Dropdown';
-
-
+const Config = mergeComponentMetadata('Dropdown', Dropdown, DropdownBase);
 
 storiesOf('Moonstone', module)
 	.add(
