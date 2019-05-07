@@ -27,6 +27,15 @@ import Skinnable from '../Skinnable';
 import overscrollCss from './OverscrollEffect.module.less';
 import scrollbarCss from './Scrollbar.module.less';
 
+const Container = SpotlightContainerDecorator(
+	{
+		overflow: true,
+		preserveId: true,
+		restrict: 'self-first'
+	},
+	'div'
+);
+
 const
 	{
 		animationDuration,
@@ -67,7 +76,7 @@ const navigableFilter = (elem) => {
 	}
 };
 
-const configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusableScrollbar}) => {
+const configureSpotlightContainer = ({spotlightId, focusableScrollbar}) => {
 	Spotlight.set(spotlightId, {
 		navigableFilter: focusableScrollbar ? null : navigableFilter
 	});
@@ -103,32 +112,6 @@ class ScrollableBase extends Component {
 		 * @private
 		 */
 		animate: PropTypes.bool,
-
-		/**
-		 * This is set to `true` by SpotlightContainerDecorator
-		 *
-		 * @type {Boolean}
-		 * @private
-		 */
-		'data-spotlight-container': PropTypes.bool,
-
-		/**
-		 * `false` if the content of the list or the scroller could get focus
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		'data-spotlight-container-disabled': PropTypes.bool,
-
-		/**
-		 * This is passed onto the wrapped component to allow
-		 * it to customize the spotlight container for its use case.
-		 *
-		 * @type {String}
-		 * @private
-		 */
-		'data-spotlight-id': PropTypes.string,
 
 		/**
 		 * Direction of the list or the scroller.
@@ -209,11 +192,29 @@ class ScrollableBase extends Component {
 		 * @default $L('scroll up')
 		 * @public
 		 */
-		scrollUpAriaLabel: PropTypes.string
+		scrollUpAriaLabel: PropTypes.string,
+
+
+		/**
+		 * `false` if the content of the list or the scroller could get focus
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: PropTypes.bool,
+
+		/**
+		 * This is passed onto the wrapped component to allow
+		 * it to customize the spotlight container for its use case.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		spotlightId: PropTypes.string
 	}
 
 	static defaultProps = {
-		'data-spotlight-container-disabled': false,
 		animate: false,
 		focusableScrollbar: false,
 		overscrollEffectOn: {
@@ -222,7 +223,8 @@ class ScrollableBase extends Component {
 			pageKey: false,
 			scrollbarButton: false,
 			wheel: true
-		}
+		},
+		spotlightDisabled: false
 	}
 
 	constructor (props) {
@@ -253,7 +255,7 @@ class ScrollableBase extends Component {
 	}
 
 	componentDidUpdate (prevProps) {
-		if (prevProps['data-spotlight-id'] !== this.props['data-spotlight-id'] ||
+		if (prevProps.spotlightId !== this.props.spotlightId ||
 				prevProps.focusableScrollbar !== this.props.focusableScrollbar) {
 			configureSpotlightContainer(this.props);
 		}
@@ -295,13 +297,13 @@ class ScrollableBase extends Component {
 		if ((
 			direction === 'vertical' && this.uiRef.current.canScrollVertically(bounds) ||
 			direction === 'horizontal' && this.uiRef.current.canScrollHorizontally(bounds)
-		) && !this.props['data-spotlight-container-disabled']) {
+		) && !this.props.spotlightDisabled) {
 			this.childRef.current.setContainerDisabled(true);
 		}
 	}
 
 	onMouseDown = (ev) => {
-		if (this.props['data-spotlight-container-disabled']) {
+		if (this.props.spotlightDisabled) {
 			ev.preventDefault();
 		}
 	}
@@ -318,7 +320,7 @@ class ScrollableBase extends Component {
 
 		if (delta !== 0) {
 			this.isWheeling = true;
-			if (!this.props['data-spotlight-container-disabled']) {
+			if (!this.props.spotlightDisabled) {
 				this.childRef.current.setContainerDisabled(true);
 			}
 		}
@@ -544,7 +546,7 @@ class ScrollableBase extends Component {
 	}
 
 	stop = () => {
-		if (!this.props['data-spotlight-container-disabled']) {
+		if (!this.props.spotlightDisabled) {
 			this.childRef.current.setContainerDisabled(false);
 		}
 		this.focusOnItem();
@@ -736,9 +738,8 @@ class ScrollableBase extends Component {
 			{
 				animate,
 				childRenderer,
-				'data-spotlight-container': spotlightContainer,
-				'data-spotlight-container-disabled': spotlightContainerDisabled,
-				'data-spotlight-id': spotlightId,
+				spotlightDisabled,
+				spotlightId,
 				focusableScrollbar,
 				scrollDownAriaLabel,
 				scrollLeftAriaLabel,
@@ -752,90 +753,92 @@ class ScrollableBase extends Component {
 			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
 
 		return (
-			<UiScrollableBase
-				noScrollByDrag={!platform.touch}
-				{...rest}
-				addEventListeners={this.addEventListeners}
-				applyOverscrollEffect={this.applyOverscrollEffect}
-				clearOverscrollEffect={this.clearOverscrollEffect}
-				noAnimation={!animate}
-				onFlick={this.onFlick}
-				onKeyDown={this.onKeyDown}
-				onMouseDown={this.onMouseDown}
-				onWheel={this.onWheel}
-				ref={this.uiRef}
-				removeEventListeners={this.removeEventListeners}
-				scrollTo={this.scrollTo}
-				stop={this.stop}
-				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
-					childComponentProps,
-					childWrapper: ChildWrapper,
-					childWrapperProps: {className: contentClassName, ...restChildWrapperProps},
-					className,
-					componentCss,
-					containerRef: uiContainerRef,
-					handleScroll,
-					horizontalScrollbarProps,
-					initChildRef: initUiChildRef,
-					isHorizontalScrollbarVisible,
-					isVerticalScrollbarVisible,
-					rtl,
-					scrollTo,
-					style,
-					verticalScrollbarProps
-				}) => (
-					<div
-						className={classNames(className, overscrollCss.scrollable)}
-						data-spotlight-container={spotlightContainer}
-						data-spotlight-container-disabled={spotlightContainerDisabled}
-						data-spotlight-id={spotlightId}
-						ref={uiContainerRef}
-						style={style}
-					>
-						<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={this.overscrollRefs.vertical}>
-							<ChildWrapper className={classNames(contentClassName, overscrollCss.overscrollFrame, overscrollCss.horizontal)} ref={this.overscrollRefs.horizontal} {...restChildWrapperProps}>
-								{childRenderer({
-									...childComponentProps,
-									cbScrollTo: scrollTo,
-									className: componentCss.scrollableFill,
-									initUiChildRef,
-									isVerticalScrollbarVisible,
-									onScroll: handleScroll,
-									onUpdate: this.handleScrollerUpdate,
-									ref: this.childRef,
-									rtl,
-									spotlightId
-								})}
-							</ChildWrapper>
-							{isVerticalScrollbarVisible ?
+			<Container
+				spotlightDisabled={spotlightDisabled}
+				spotlightId={spotlightId}
+			>
+				<UiScrollableBase
+					noScrollByDrag={!platform.touch}
+					{...rest}
+					addEventListeners={this.addEventListeners}
+					applyOverscrollEffect={this.applyOverscrollEffect}
+					clearOverscrollEffect={this.clearOverscrollEffect}
+					noAnimation={!animate}
+					onFlick={this.onFlick}
+					onKeyDown={this.onKeyDown}
+					onMouseDown={this.onMouseDown}
+					onWheel={this.onWheel}
+					ref={this.uiRef}
+					removeEventListeners={this.removeEventListeners}
+					scrollTo={this.scrollTo}
+					stop={this.stop}
+					containerRenderer={({ // eslint-disable-line react/jsx-no-bind
+						childComponentProps,
+						childWrapper: ChildWrapper,
+						childWrapperProps: {className: contentClassName, ...restChildWrapperProps},
+						className,
+						componentCss,
+						containerRef: uiContainerRef,
+						handleScroll,
+						horizontalScrollbarProps,
+						initChildRef: initUiChildRef,
+						isHorizontalScrollbarVisible,
+						isVerticalScrollbarVisible,
+						rtl,
+						scrollTo,
+						style,
+						verticalScrollbarProps
+					}) => (
+						<div
+							className={classNames(className, overscrollCss.scrollable)}
+							ref={uiContainerRef}
+							style={style}
+						>
+							<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={this.overscrollRefs.vertical}>
+								<ChildWrapper className={classNames(contentClassName, overscrollCss.overscrollFrame, overscrollCss.horizontal)} ref={this.overscrollRefs.horizontal} {...restChildWrapperProps}>
+									{childRenderer({
+										...childComponentProps,
+										cbScrollTo: scrollTo,
+										className: componentCss.scrollableFill,
+										initUiChildRef,
+										isVerticalScrollbarVisible,
+										onScroll: handleScroll,
+										onUpdate: this.handleScrollerUpdate,
+										ref: this.childRef,
+										rtl,
+										spotlightId
+									})}
+								</ChildWrapper>
+								{isVerticalScrollbarVisible ?
+									<Scrollbar
+										{...verticalScrollbarProps}
+										{...this.scrollbarProps}
+										disabled={!isVerticalScrollbarVisible}
+										focusableScrollButtons={focusableScrollbar}
+										nextButtonAriaLabel={downButtonAriaLabel}
+										previousButtonAriaLabel={upButtonAriaLabel}
+										rtl={rtl}
+									/> :
+									null
+								}
+							</div>
+							{isHorizontalScrollbarVisible ?
 								<Scrollbar
-									{...verticalScrollbarProps}
+									{...horizontalScrollbarProps}
 									{...this.scrollbarProps}
-									disabled={!isVerticalScrollbarVisible}
+									corner={isVerticalScrollbarVisible}
+									disabled={!isHorizontalScrollbarVisible}
 									focusableScrollButtons={focusableScrollbar}
-									nextButtonAriaLabel={downButtonAriaLabel}
-									previousButtonAriaLabel={upButtonAriaLabel}
+									nextButtonAriaLabel={rightButtonAriaLabel}
+									previousButtonAriaLabel={leftButtonAriaLabel}
 									rtl={rtl}
 								/> :
 								null
 							}
 						</div>
-						{isHorizontalScrollbarVisible ?
-							<Scrollbar
-								{...horizontalScrollbarProps}
-								{...this.scrollbarProps}
-								corner={isVerticalScrollbarVisible}
-								disabled={!isHorizontalScrollbarVisible}
-								focusableScrollButtons={focusableScrollbar}
-								nextButtonAriaLabel={rightButtonAriaLabel}
-								previousButtonAriaLabel={leftButtonAriaLabel}
-								rtl={rtl}
-							/> :
-							null
-						}
-					</div>
-				)}
-			/>
+					)}
+				/>
+			</Container>
 		);
 	}
 }
@@ -851,16 +854,9 @@ class ScrollableBase extends Component {
  * @public
  */
 const Scrollable = Skinnable(
-	SpotlightContainerDecorator(
-		{
-			overflow: true,
-			preserveId: true,
-			restrict: 'self-first'
-		},
-		I18nContextDecorator(
-			{rtlProp: 'rtl'},
-			ScrollableBase
-		)
+	I18nContextDecorator(
+		{rtlProp: 'rtl'},
+		ScrollableBase
 	)
 );
 
