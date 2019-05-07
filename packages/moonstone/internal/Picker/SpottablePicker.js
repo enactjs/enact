@@ -13,7 +13,13 @@ const SpottablePicker = kind({
 	},
 
 	computed: {
-		selectionKeys: ({orientation}) => orientation === 'horizontal' ? [37, 39] : [38, 40]
+		selectionKeys: ({disabled, orientation}) => {
+			if (disabled) {
+				return void 0;
+			} else {
+				return orientation === 'horizontal' ? [37, 39] : [38, 40];
+			}
+		}
 	},
 
 	render: ({selectionKeys, ...rest}) => {
