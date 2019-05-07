@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Button` and `moonstone/Panels.Header` prop `casing` which is no longer supported
 - `moonstone/Input.InputBase` prop `focused` which was used to indicate when the internal input field had focused but was replaced by the `:focus-within` pseudo-selector
+- `moonstone/VirtualList` and `moonstone/VirtualList.VirtualGridList` property `isItemDisabled`
 
 ### Changed
 
