@@ -11,7 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/TooltipDecorator` prop `tooltipRelative` and `moonstone/TooltipDecorator.Tooltip` prop `relative` to support relative positioning. This is an advanced feature and requires a container with specific rules. See documentation for details.
 - `moonstone/ContextualPopup` config `noArrow`
 - `moonstone/Button` prop `iconPosition`
-- `moonstone/DropDown` component
+- `moonstone/Dropdown` component
 
 ### Removed
 

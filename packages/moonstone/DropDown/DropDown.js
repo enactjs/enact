@@ -1,19 +1,19 @@
 /**
- * Moonstone styled DropDown components
+ * Moonstone styled Dropdown components
  *
  * @example
- * <DropDown
+ * <Dropdown
  * 		defaultSelected={2}
  *		inline
  *		title="Dropdown"
  * >
- *   {['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5']}
- * </DropDown>
+ *   {['Option 1', 'Option 2', 'Option 3', 'Option 4']}
+ * </Dropdown>
  *
- * @module moonstone/DropDown
- * @exports DropDown
- * @exports DropDownBase
- * @exports DropDownBaseDecorator
+ * @module moonstone/Dropdown
+ * @exports Dropdown
+ * @exports DropdownBase
+ * @exports DropdownBaseDecorator
  */
 
 
@@ -27,12 +27,12 @@ import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
 
-import {Button} from '../Button';
-import ContextualPopupDecorator from '../ContextualPopupDecorator';
-import {Item} from '../Item';
-import {Scroller} from '../Scroller';
+import {Button} from '../Button/Button';
+import ContextualPopupDecorator from '../ContextualPopupDecorator/ContextualPopupDecorator';
+import {Item} from '../Item/Item';
+import {Scroller} from '../Scroller/Scroller';
 
-import css from './DropDown.module.less';
+import css from './Dropdown.module.less';
 
 
 const compareChildren = (a, b) => {
@@ -53,8 +53,8 @@ const compareChildren = (a, b) => {
 	return true;
 };
 
-const DropDownButton = kind({
-	name: 'DropDownButton',
+const DropdownButton = kind({
+	name: 'DropdownButton',
 
 	styles: {
 		css,
@@ -70,17 +70,17 @@ const DropDownButton = kind({
 	)
 });
 
-const ContextualButton = ContextualPopupDecorator({noArrow: true}, DropDownButton);
+const ContextualButton = ContextualPopupDecorator({noArrow: true}, DropdownButton);
 
-const DropDownList = kind({
-	name: 'DropDownList',
+const DropdownList = kind({
+	name: 'DropdownList',
 
-	propTypes: /** @lends moonstone/DropDown.DropDownBase.prototype */ {
+	propTypes: /** @lends moonstone/Dropdown.DropdownBase.prototype */ {
 		/**
 		 * The selections for Dropdown
 		 *
 		 * @type {String[]}
-		 * @public
+		 * @private
 		 */
 		children: PropTypes.node,
 
@@ -88,7 +88,7 @@ const DropDownList = kind({
 		 * Called when an item is selected.
 		 *
 		 * @type {Function}
-		 * @public
+		 * @private
 		 */
 		onSelect: PropTypes.func,
 
@@ -96,7 +96,7 @@ const DropDownList = kind({
 		 * Index of the selected item.
 		 *
 		 * @type {Number}
-		 * @public
+		 * @private
 		 */
 		selected: PropTypes.number
 	},
@@ -125,21 +125,21 @@ const DropDownList = kind({
 });
 
 /**
- * A stateless DropDown component.
+ * A stateless Dropdown component.
  *
- * @class DropDownBase
- * @memberof moonstone/DropDown
+ * @class DropdownBase
+ * @memberof moonstone/Dropdown
  * @extends moonstone/Button.Button
  * @extends moonstone/ContextualPopupDecorator.ContextualPopupDecorator
  * @ui
  * @public
  */
-const DropDownBase = kind({
-	name: 'DropDown',
+const DropdownBase = kind({
+	name: 'Dropdown',
 
-	propTypes: /** @lends moonstone/DropDown.DropDownBase.prototype */ {
+	propTypes: /** @lends moonstone/Dropdown.DropdownBase.prototype */ {
 		/**
-		 * The selection items to be displayed in the `DropDownList`.
+		 * The selection items to be displayed in the `DropdownList`.
 		 * Takes an array of strings and the strings will be used in
 		 * the generated components as the readable text.
 		 *
@@ -150,7 +150,7 @@ const DropDownBase = kind({
 		children: PropTypes.node,
 
 		/**
-		 * Called when the DropDown is closing.
+		 * Called when the Dropdown is closing.
 		 *
 		 * @type {Function}
 		 * @public
@@ -158,7 +158,7 @@ const DropDownBase = kind({
 		onClose: PropTypes.func,
 
 		/**
-		 * Called when the DropDown is opening.
+		 * Called when the Dropdown is opening.
 		 *
 		 * @type {Function}
 		 * @public
@@ -174,7 +174,7 @@ const DropDownBase = kind({
 		onSelect: PropTypes.func,
 
 		/**
-		 * Displays the `DropDownList`.
+		 * Displays the `DropdownList`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -191,7 +191,7 @@ const DropDownBase = kind({
 		selected: PropTypes.number,
 
 		/**
-		 * The primary title text of DropDown.
+		 * The primary title text of Dropdown.
 		 * The title will be replaced if an item is selected.
 		 *
 		 * @type {String}
@@ -243,7 +243,7 @@ const DropDownBase = kind({
 				{...rest}
 				icon={open ? 'arrowlargeup' : 'arrowlargedown'}
 				popupProps={popupProps}
-				popupComponent={DropDownList}
+				popupComponent={DropdownList}
 				onClick={onOpen}
 				open={open}
 			>
@@ -254,15 +254,15 @@ const DropDownBase = kind({
 });
 
 /**
- * Applies Moonstone specific behaviors and functionality to [DropDownBase]{@link moonstone/DropDown.DropDownBase}.
+ * Applies Moonstone specific behaviors and functionality to [DropdownBase]{@link moonstone/Dropdown.DropdownBase}.
  *
  * @hoc
- * @memberof moonstone/DropDown
+ * @memberof moonstone/Dropdown
  * @mixes ui/Changeable.Changeable
  * @mixes ui/Toggleable.Toggleable
  * @public
  */
-const DropDownDecorator = compose(
+const DropdownDecorator = compose(
 	Pure({propComparators: {
 		children: compareChildren
 	}}),
@@ -279,24 +279,24 @@ const DropDownDecorator = compose(
 );
 
 /**
- * A Moonstone DropDown component.
+ * A Moonstone Dropdown component.
  *
- * By default, `DropDown` maintains the state of its `selected` property.
+ * By default, `Dropdown` maintains the state of its `selected` property.
  * Supply the `defaultSelected` property to control its initial value. If you
  * wish to directly control updates to the component, supply a value to `selected` at creation time
  * and update it in response to `onSelected` events.
  *
- * @class DropDown
- * @memberof moonstone/DropDown
- * @extends moonstone/DropDown.DropDownBase
+ * @class Dropdown
+ * @memberof moonstone/Dropdown
+ * @extends moonstone/Dropdown.DropdownBase
  * @ui
  * @public
  */
-const DropDown = DropDownDecorator(DropDownBase);
+const Dropdown = DropdownDecorator(DropdownBase);
 
-export default DropDown;
+export default Dropdown;
 export {
-	DropDown,
-	DropDownBase,
-	DropDownDecorator
+	Dropdown,
+	DropdownBase,
+	DropdownDecorator
 };

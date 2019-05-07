@@ -1,16 +1,16 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
-import {DropDown, DropDownBase} from '../DropDown';
+import {Dropdown, DropdownBase} from '../Dropdown';
 
 const title = 'Dropdown select';
 const children = ['option1', 'option2', 'option3'];
 
-describe('DropDown', () => {
+describe('Dropdown', () => {
 	test('should have title', () => {
 		const dropDown = mount(
-			<DropDownBase title={title}>
+			<DropdownBase title={title}>
 				{children}
-			</DropDownBase>
+			</DropdownBase>
 		);
 
 		const expected = title;
@@ -23,9 +23,9 @@ describe('DropDown', () => {
 		const selectedIndex = 1;
 
 		const dropDown = mount(
-			<DropDownBase selected={selectedIndex} title={title}>
+			<DropdownBase selected={selectedIndex} title={title}>
 				{children}
-			</DropDownBase>
+			</DropdownBase>
 		);
 
 		const expected = children[selectedIndex];
@@ -38,9 +38,9 @@ describe('DropDown', () => {
 		const selectedIndex = 2;
 
 		const dropDown = mount(
-			<DropDown defaultSelected={selectedIndex} title={title}>
+			<Dropdown defaultSelected={selectedIndex} title={title}>
 				{children}
-			</DropDown>
+			</Dropdown>
 		);
 
 		const expected = children[selectedIndex];
@@ -51,9 +51,9 @@ describe('DropDown', () => {
 
 	test('should update when children are added', () => {
 		const dropDown = shallow(
-			<DropDown title={title}>
+			<Dropdown title={title}>
 				{children}
-			</DropDown>
+			</Dropdown>
 		);
 
 		const updatedChildren = children.concat('option4', 'option5');
