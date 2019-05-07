@@ -289,6 +289,18 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	onTouchStart = () => {
+		const
+			focusedItem = Spotlight.getCurrent(),
+			{horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current,
+			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current && horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
+			isVerticalScrollButtonFocused = verticalScrollbarRef.current && verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
+
+		if (focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
+			focusedItem.blur();
+		}
+	}
+
 	/*
 	 * wheel event handler;
 	 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot support this
@@ -838,6 +850,7 @@ class ScrollableBaseNative extends Component {
 						data-spotlight-container={spotlightContainer}
 						data-spotlight-container-disabled={spotlightContainerDisabled}
 						data-spotlight-id={spotlightId}
+						onTouchStart={this.onTouchStart}
 						ref={uiContainerRef}
 						style={style}
 					>
