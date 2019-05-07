@@ -1,4 +1,4 @@
-import Dropdown, {DropdownBase} from '@enact/moonstone/DropDown/Dropdown';
+import Dropdown, {DropdownBase} from '@enact/moonstone/Dropdown';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
