@@ -12,6 +12,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Button`, `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` prop `size`
 
+### Fixed
+
+- `ui/Scrollable` to adjust its container height
+
 ## [2.5.2] - 2019-04-23
 
 ### Added
