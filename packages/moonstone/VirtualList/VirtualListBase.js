@@ -319,9 +319,7 @@ const VirtualListBaseFactory = (type) => {
 		findSpottableItem = (indexFrom, indexTo) => {
 			const
 				{dataSize} = this.props,
-				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
-				safeIndexTo = clamp(-1, dataSize, indexTo),
-				delta = (indexFrom < indexTo) ? 1 : -1;
+				safeIndexFrom = clamp(0, dataSize - 1, indexFrom);
 
 			if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
 				return -1;

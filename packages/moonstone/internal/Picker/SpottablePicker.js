@@ -9,6 +9,7 @@ const SpottablePicker = kind({
 	name: 'SpottablePicker',
 
 	propTypes: {
+		disabled: PropTypes.bool,
 		orientation: PropTypes.string
 	},
 
