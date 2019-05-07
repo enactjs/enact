@@ -19,6 +19,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/Button.ButtonDecorator` to remove `i18n/Uppercase` HOC
+- global styling rules affecting standard font-weight, disabled opacity, and LESS color variable definitions
 - `moonstone/Panel` and `moonstone/Panels` now allocate slightly more screen edge space for a cleaner look
 - `moonstone/DaySelector` to have squared check boxes to match the rest of the checkmark components
 - `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` text size to be smaller
