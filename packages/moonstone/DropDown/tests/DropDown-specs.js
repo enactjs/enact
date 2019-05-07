@@ -5,9 +5,8 @@ import {DropDown, DropDownBase} from '../DropDown';
 const title = 'Dropdown select';
 const children = ['option1', 'option2', 'option3'];
 
-describe('DropDownBase', () => {
+describe('DropDown', () => {
 	test('should have title', () => {
-
 		const dropDown = mount(
 			<DropDownBase title={title}>
 				{children}
@@ -34,9 +33,7 @@ describe('DropDownBase', () => {
 
 		expect(actual).toBe(expected);
 	});
-});
 
-describe('DropDown', () => {
 	test('should have title that reflects default selected option', () => {
 		const selectedIndex = 2;
 
@@ -53,7 +50,6 @@ describe('DropDown', () => {
 	});
 
 	test('should update when children are added', () => {
-
 		const dropDown = shallow(
 			<DropDown title={title}>
 				{children}

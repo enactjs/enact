@@ -13,6 +13,7 @@
  * @module moonstone/DropDown
  * @exports DropDown
  * @exports DropDownBase
+ * @exports DropDownBaseDecorator
  */
 
 

@@ -51,7 +51,7 @@ const ButtonBase = kind({
 		 * * `'lightTranslucent'`, and
 		 * * `'transparent'`.
 		 *
-		 * @type {translucent'|'lightTranslucent'|'transparent'}
+		 * @type {('translucent'|'lightTranslucent'|'transparent')}
 		 * @public
 		 */
 		backgroundOpacity: PropTypes.oneOf(['translucent', 'lightTranslucent', 'transparent']),
