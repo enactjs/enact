@@ -69,10 +69,14 @@
 	}
 
 	&.joined {
+		@joined-arrow-transform-resting: scale(0.7);
+		@joined-arrow-transform-focus: scale(0.95);
+		@joined-arrow-transform-active: @joined-arrow-transform-resting;
+
 		&::before {
 			.position(0);
 
-			content: '';
+			content: "";
 			display: block;
 			position: absolute;
 			border-width: 0;
@@ -92,7 +96,7 @@
 		.incrementer,
 		.decrementer {
 			will-change: transform;
-			transform: scale(0.7);
+			transform: @joined-arrow-transform-resting;
 
 			&.hidden {
 				visibility: hidden;
@@ -100,17 +104,22 @@
 		}
 
 		.focus({
-			&:not([disabled]) {
+			.incrementer,
+			.decrementer {
+				transform: @joined-arrow-transform-focus;
+			}
+
+			&.incrementing .incrementer,
+			&.decrementing .decrementer {
+				transform: @joined-arrow-transform-active;
+			}
+
+			.disabled({
 				.incrementer,
 				.decrementer {
-					transform: scale(0.95);
+					transform: @joined-arrow-transform-resting;
 				}
-
-				&.incrementing .incrementer,
-				&.decrementing .decrementer {
-					transform: scale(0.7);
-				}
-			}
+			});
 		});
 
 		&.horizontal {
