@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import equals from 'ramda/src/equals';
+import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -333,6 +334,8 @@ const VirtualListBaseFactory = (type) => {
 		cc = []
 		scrollPosition = 0
 
+		platform = platform
+
 		isVertical = () => this.isPrimaryDirectionVertical
 
 		isHorizontal = () => !this.isPrimaryDirectionVertical
@@ -570,10 +573,9 @@ const VirtualListBaseFactory = (type) => {
 
 		// Native only
 		scrollToPosition (x, y, rtl = this.props.rtl) {
+			const scrollX = (rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x;
 			if (this.containerRef.current) {
-				this.containerRef.current.scrollTo(
-					(rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y
-				);
+				this.containerRef.current.scrollTo(platform.ios || platform.safari ? -x : scrollX, y);
 			}
 		}
 
