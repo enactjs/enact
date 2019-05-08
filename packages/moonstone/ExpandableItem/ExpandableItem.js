@@ -397,7 +397,7 @@ const ExpandableItemBase = kind({
 				aria-disabled={disabled}
 				disabled={disabled}
 				ref={setContainerNode}
-				spotlightDisabled={spotlightDisabled || disabled}
+				spotlightDisabled={spotlightDisabled}
 			>
 				<LabeledItem
 					{...ariaProps}

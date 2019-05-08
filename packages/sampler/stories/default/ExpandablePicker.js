@@ -20,6 +20,7 @@ storiesOf('Moonstone', module)
 		})(() => (
 			<ExpandablePicker
 				checkButtonAriaLabel={text('checkButtonAriaLabel', Config, '')}
+				disabled={boolean('disabled', Config)}
 				decrementAriaLabel={text('decrementAriaLabel', Config, '')}
 				incrementAriaLabel={text('incrementAriaLabel', Config, '')}
 				joined={boolean('joined', Config)}
