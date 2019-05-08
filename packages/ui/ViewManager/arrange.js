@@ -36,7 +36,7 @@ export const accelerate = prependTransform('translateZ(0)');
 const slideInOut = curry((direction, total, orientation) => {
 	const p = direction === 'out' ? total : -total;
 
-	return	orientation === 'top'    && 'translateY(-1' + -p + '%)' ||
+	return	orientation === 'top'    && 'translateY(' + -p + '%)' ||
 			orientation === 'bottom' && 'translateY(' + p + '%)'  ||
 			orientation === 'left'   && 'translateX(' + -p + '%)' ||
 			orientation === 'right'  && 'translateX(' + p + '%)';

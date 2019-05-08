@@ -4,7 +4,7 @@
  */
 
 import PropTypes from 'prop-types';
-import {accelerate, clearTransform, compose, reverse, slideInPartial, slideOutPartial} from './arrange';
+import {slideInPartial, slideOutPartial} from './arrange';
 
 /**
  * An object with callback functions to arrange views within {@link ui/ViewManager.ViewManager}.
@@ -25,14 +25,14 @@ import {accelerate, clearTransform, compose, reverse, slideInPartial, slideOutPa
  * @returns {Object}            An arranger
  * @public
  */
-export const SlideArranger = ({amount = 100, enter, leave}) => ({
+export const SlideArranger = ({amount = 100, direction}) => ({
 	enter: () => [
-		{transform: slideInPartial(amount, enter)},
-		{transform: slideInPartial(0, enter)}
+		{transform: slideInPartial(amount, direction)},
+		{transform: slideInPartial(0, direction)}
 	],
 	leave: () => [
-		{transform: slideOutPartial(0, leave)},
-		{transform: slideOutPartial(amount, leave)}
+		{transform: slideOutPartial(0, direction)},
+		{transform: slideOutPartial(amount, direction)}
 	]
 });
 
@@ -43,7 +43,7 @@ export const SlideArranger = ({amount = 100, enter, leave}) => ({
  * @memberof ui/ViewManager
  * @public
  */
-export const SlideRightArranger = SlideArranger({enter: 'left', leave: 'right'});
+export const SlideRightArranger = SlideArranger({direction: 'right'});
 
 /**
  * An arranger that enters from the right and leaves to the left..
@@ -52,7 +52,7 @@ export const SlideRightArranger = SlideArranger({enter: 'left', leave: 'right'})
  * @memberof ui/ViewManager
  * @public
  */
-export const SlideLeftArranger = SlideArranger({enter: 'right', leave: 'left'});
+export const SlideLeftArranger = SlideArranger({direction: 'left'});
 
 /**
  * An arranger that enters from the bottom and leaves to the top..
@@ -61,7 +61,7 @@ export const SlideLeftArranger = SlideArranger({enter: 'right', leave: 'left'});
  * @memberof ui/ViewManager
  * @public
  */
-export const SlideTopArranger = SlideArranger({enter: 'bottom', leave: 'top'});
+export const SlideTopArranger = SlideArranger({direction: 'top'});
 
 /**
  * An arranger that enters from the top and leaves to the bottom..
@@ -70,7 +70,7 @@ export const SlideTopArranger = SlideArranger({enter: 'bottom', leave: 'top'});
  * @memberof ui/ViewManager
  * @public
  */
-export const SlideBottomArranger = SlideArranger({enter: 'top', leave: 'bottom'});
+export const SlideBottomArranger = SlideArranger({direction: 'bottom'});
 
 /**
  * propType validation for Arranger transitions

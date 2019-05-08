@@ -233,16 +233,20 @@ class View extends React.Component {
 	prepareTransition = (arranger, callback, noAnimation) => {
 		const {duration, index, previousIndex, reverseTransition} = this.props;
 
-		this.animation = this.node.animate(
-			arranger({
-				from: previousIndex,
-				to: index
-			}),
-			{
-				duration,
-				direction: reverseTransition ? 'reverse' : 'normal'
-			}
-		);
+		const keyframes = arranger({
+			from: previousIndex,
+			node: this.node,
+			reverse: reverseTransition,
+			to: index
+		});
+
+		const options = {
+			duration,
+			direction: reverseTransition ? 'reverse' : 'normal',
+			fill: 'forwards'
+		};
+
+		this.animation = this.node.animate(keyframes, options);
 
 		this.animation.onfinish = () => {
 			this.animation = null;

@@ -1,44 +1,6 @@
-import {appendTransform, clearTransform, compose, ease, endBy, reverse, slideIn, slideOut} from '@enact/ui/ViewManager/arrange';
-import quadInOut from 'eases/quad-in-out';
 import {scale, unit} from '@enact/ui/resolution';
 
 import {breadcrumbWidth} from './Breadcrumb';
-
-/*
- * Panel arrangers have a unique design requirement that varies their transition depending on the
- * direction (reverse) of the transition. This takes the two arrangement functions and returns
- * another function that picks which to call based on the value of `reverseTransition`.
- *
- * @param {Function} f forward function
- * @param {Function} b backward function
- * @returns {Function} Arrangement function
- * @private
- */
-const forwardBackward = (f, b) => (config) => {
-	const f2 = config.reverseTransition ? b : f;
-	f2(config);
-};
-
-/*
- * Utility method to apply the same easing and reset the transform before applying `fn`
- *
- * @param   {Function} fn Arrangement function
- * @returns {Function}    Composed arrangement function
- * @private
- */
-const base = (fn) => reverse(
-	ease(quadInOut,
-		compose(clearTransform, fn)
-	)
-);
-
-// Creating these here since they're composed below in forwardBackward
-const slideInRight = base(slideIn('right'));
-const slideOutLeft = base(slideOut('left'));
-
-// These are the arrangers for AlwaysViewing but also composed in Activity
-const panelEnter = forwardBackward(slideInRight, endBy(0.75, slideInRight));
-const panelLeave = forwardBackward(slideOutLeft, endBy(0.75, slideOutLeft));
 
 // Always-Viewing Arranger
 
@@ -49,8 +11,20 @@ const panelLeave = forwardBackward(slideOutLeft, endBy(0.75, slideOutLeft));
  * @private
  */
 export const AlwaysViewingArranger = {
-	enter: panelEnter,
-	leave: panelLeave
+	enter: ({reverse}) => [
+		{transform: 'translateX(100%)', offset: 0},
+		reverse ?
+			{transform: 'translateX(0)', offset: 0.75} :
+			{transform: 'translateX(100%)', offset: 0.25},
+		{transform: 'translateX(0)', offset: 1}
+	],
+	leave: ({reverse}) => [
+		{transform: 'translateX(0)', offset: 0},
+		reverse ?
+			{transform: 'translateX(-100%)', offset: 0.75} :
+			{transform: 'translateX(0)', offset: 0.25},
+		{transform: 'translateX(-100%)', offset: 1}
+	]
 };
 
 // Actvity Arranger
@@ -63,20 +37,17 @@ export const AlwaysViewingArranger = {
  * @returns {undefined}
  * @private
  */
-const offsetForBreadcrumbs = ({node}) => {
+const offsetForBreadcrumbs = (node) => {
 	const isFirst = node && node.dataset && node.dataset.index === '0';
 
-	if (!isFirst) {
-		const x = unit(scale(breadcrumbWidth), 'rem');
-		appendTransform(`translateX(${x})`, {node});
-	}
+	return `translateX(${isFirst ? 0 : unit(scale(breadcrumbWidth), 'rem')})`;
 };
 
 // Adds the data-clip attribute to allow clipping when transitioning between non-zero panels
 // CSS is enforced by Panels.module.less
-const clipForBreadcrumbs = ({from, node, percent, to}) => {
+const clipForBreadcrumbs = (node, to, from) => {
 	const viewport = node.parentNode;
-	if (to === 0 || from === 0 || percent === 0 || percent === 1) {
+	if (to === 0 || from === 0) {
 		// remove clip when moving to or from the first panel and when a transition is completing
 		delete viewport.dataset.clip;
 	} else {
@@ -92,9 +63,22 @@ const clipForBreadcrumbs = ({from, node, percent, to}) => {
  * @private
  */
 export const ActivityArranger = {
-	enter: compose(panelEnter, reverse(offsetForBreadcrumbs), clipForBreadcrumbs),
-	leave: compose(panelLeave, offsetForBreadcrumbs),
-	// Need a stay arrangement in case the initial index for ActivityPanels is > 0 so the panel is
-	// correctly offset for the breadcrumbs.
-	stay: compose(clearTransform, offsetForBreadcrumbs)
+	enter: ({node, reverse}) => [
+		{transform: `${offsetForBreadcrumbs(node)} translateX(100%)`, offset: 0},
+		reverse ?
+			{transform: offsetForBreadcrumbs(node), offset: 0.75} :
+			{transform: `${offsetForBreadcrumbs(node)} translateX(100%)`, offset: 0.25},
+		{transform: offsetForBreadcrumbs(node), offset: 1}
+	],
+	leave: ({node, reverse}) => [
+		{transform: offsetForBreadcrumbs(node), offset: 0},
+		reverse ?
+			{transform: 'translateX(-100%)', offset: 0.75} :
+			{transform: offsetForBreadcrumbs(node), offset: 0.25},
+		{transform: 'translateX(-100%)', offset: 1}
+	],
+	stay: ({node}) => [
+		{transform: offsetForBreadcrumbs(node)},
+		{transform: offsetForBreadcrumbs(node)}
+	]
 };
