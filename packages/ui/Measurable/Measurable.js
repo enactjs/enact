@@ -7,7 +7,7 @@
  */
 
 import hoc from '@enact/core/hoc';
-import React, {useState, useRef, useCallback, useLayoutEffect} from 'react';
+import React, {useState, useRef, useLayoutEffect} from 'react';
 
 /**
  * Default config for {@link ui/Measurable.Measurable}.
@@ -35,18 +35,9 @@ const defaultConfig = {
 	refProp: 'forwardRef'
 };
 
-function useMeasurable () {
+const useMeasurable = () => {
 	const [measurement, setMeasurement] = useState();
 	const ref = useRef(null);
-
-	const measureMe = useCallback(
-		function measureMe () {
-			if (ref.current) {
-				setMeasurement(ref.current.getBoundingClientRect());
-			}
-		},
-		[ref]
-	);
 
 	useLayoutEffect(
 		() => {
@@ -54,32 +45,50 @@ function useMeasurable () {
 				return;
 			}
 
-			measureMe();
-
 			if (typeof ResizeObserver === 'function') {
-				let resizeObserver = new ResizeObserver(() => measureMe());
+				let resizeObserver = new ResizeObserver((entries) => {
+					entries.forEach((entry) => {
+						if (entry.target === ref.current) {
+							// we want to measure including the padding, hence refers to `target` instead of `contentRect`
+							setMeasurement(entry.target.getBoundingClientRect());
+						}
+					});
+				});
+
 				resizeObserver.observe(ref.current);
 
 				return () => {
 					resizeObserver.disconnect(ref.current);
 					resizeObserver = null;
 				};
-			} else {
-				window.addEventListener('resize', measureMe);
+			} else if (typeof MutationObserver === 'function') {
+				// eslint-disable-next-line no-undef
+				let mutationObserver =	new MutationObserver((mutationsList) => {
+					for (let mutation of mutationsList) {
+						if (mutation.type === 'childList') {
+							setMeasurement(mutation.target.getBoundingClientRect());
+						} else if (mutation.type === 'attributes' && (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
+							setMeasurement(ref.current.getBoundingClientRect());
+						}
+					}
+				});
+
+				mutationObserver.observe(ref.current, {attributes: true, childList: true, subtree: true});
 
 				return () => {
-					window.removeEventListener('resize', measureMe);
+					mutationObserver.disconnect();
+					mutationObserver = null;
 				};
 			}
 		},
-		[ref.current]
+		[] // disconnect on unmount
 	);
 
 	return {
 		ref,
 		measurement
 	};
-}
+};
 
 /**
  * A higher-order component that adds the ability to measure a referenced node and get that value
