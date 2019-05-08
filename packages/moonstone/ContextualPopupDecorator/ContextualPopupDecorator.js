@@ -255,8 +255,8 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.adjustedDirection = this.props.direction;
 
 			this.ARROW_WIDTH = ri.scale(30); // svg arrow width. used for arrow positioning
-			this.ARROW_OFFSET = noArrow ? 0 : ri.scale(18); // actual distance of the svg arrow displayed to offset overlaps with the container
-			this.MARGIN = ri.scale(9); // margin from an activator to the contextual popup
+			this.ARROW_OFFSET = noArrow ? 0 : ri.scale(18); // actual distance of the svg arrow displayed to offset overlaps with the container. Offset is when `noArrow` is false.
+			this.MARGIN = noArrow ? ri.scale(3) : ri.scale(9); // margin from an activator to the contextual popup.
 			this.KEEPOUT = ri.scale(12); // keep out distance on the edge of the screen
 
 			if (props.setApiProvider) {

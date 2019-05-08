@@ -158,7 +158,7 @@ const ContextualPopupBase = kind({
 	},
 
 	computed: {
-		className: ({showCloseButton, styler}) => styler.append({reserveClose: showCloseButton}),
+		className: ({showArrow, showCloseButton, styler}) => styler.append({reserveClose: showCloseButton, showArrow}),
 		closeButton: ({showCloseButton, onCloseButtonClick}) => {
 			if (showCloseButton) {
 				return (
