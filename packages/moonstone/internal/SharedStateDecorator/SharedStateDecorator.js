@@ -27,7 +27,7 @@ const SharedStateDecorator = hoc({idProp: 'id'}, (config, Wrapped) => {
 				set: (key, value) => {
 					const {[idProp]: id} = this.props;
 
-					if (!id) return;
+					if (!id && id !== 0) return;
 
 					this.data[id] = this.data[id] || {};
 					this.data[id][key] = value;
