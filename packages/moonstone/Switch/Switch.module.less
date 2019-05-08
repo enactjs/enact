@@ -71,6 +71,14 @@
 			.icon {
 				color: @moon-checkbox-toggle-switch-color;
 			}
+
+			&.selected {
+				background-color: @moon-checkbox-toggle-switch-spotlight-selected-bg-color;
+
+				.icon {
+					color: @moon-checkbox-toggle-switch-spotlight-selected-color;
+				}
+			}
 		});
 	});
 }
@@ -94,3 +102,12 @@
 		});
 	}
 }, parent);
+
+// When a parent is disabled
+.disabled({
+	.toggleIcon {
+		.applySkins({
+			opacity: @moon-disabled-opacity;
+		});
+	}
+});

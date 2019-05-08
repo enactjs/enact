@@ -244,7 +244,7 @@ const HeaderBase = kind({
 								{titleBelowComponent}
 								{subTitleBelowComponent}
 							</Cell>
-							<Cell shrink component="nav" className={css.headerComponents}>{children}</Cell>
+							{children ? <Cell shrink component="nav" className={css.headerComponents}>{children}</Cell> : null}
 						</Layout>
 					</Cell>
 				</Layout>

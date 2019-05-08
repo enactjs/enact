@@ -235,6 +235,7 @@ const SliderBase = kind({
 			forward('onActivate')
 		),
 		onKeyDown: handle(
+			forProp('disabled', false),
 			forwardWithPrevent('onKeyDown'),
 			anyPass([
 				handleIncrement,
@@ -242,6 +243,7 @@ const SliderBase = kind({
 			])
 		),
 		onKeyUp: handle(
+			forProp('disabled', false),
 			forwardWithPrevent('onKeyUp'),
 			forProp('activateOnFocus', false),
 			forKey('enter'),
