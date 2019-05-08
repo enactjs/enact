@@ -14,7 +14,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Scrollable` to adjust its container height
+- `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to size properly
 
 ## [2.5.2] - 2019-04-23
 
