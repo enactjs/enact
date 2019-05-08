@@ -100,14 +100,16 @@
 		}
 
 		.focus({
-			.incrementer,
-			.decrementer {
-				transform: scale(0.95);
-			}
+			&:not([disabled]) {
+				.incrementer,
+				.decrementer {
+					transform: scale(0.95);
+				}
 
-			&.incrementing .incrementer,
-			&.decrementing .decrementer {
-				transform: scale(0.7);
+				&.incrementing .incrementer,
+				&.decrementing .decrementer {
+					transform: scale(0.7);
+				}
 			}
 		});
 

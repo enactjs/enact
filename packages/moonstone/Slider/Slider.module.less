@@ -106,11 +106,13 @@
 			}
 		}
 
-		&.pressed,
-		&:focus.activateOnFocus,
-		&:focus.active {
-			.knob::before {
-				transform: @moon-translate-center scale(1);
+		&:not([disabled]) {
+			&.pressed,
+			&:focus.activateOnFocus,
+			&:focus.active {
+				.knob::before {
+					transform: @moon-translate-center scale(1);
+				}
 			}
 		}
 	});
