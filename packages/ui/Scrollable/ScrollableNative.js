@@ -531,7 +531,7 @@ class ScrollableBaseNative extends Component {
 	animator = new ScrollAnimator()
 
 	// platform info
-	platform = platform
+	platformInfo = platform
 
 	// event handler for browser native scroll
 
@@ -728,7 +728,7 @@ class ScrollableBaseNative extends Component {
 
 		if (this.props.rtl && canScrollHorizontally) {
 			/* FIXME: RTL / this calculation only works for Chrome and Safari */
-			scrollLeft = platform.ios || platform.safari ? -scrollLeft : bounds.maxLeft - scrollLeft;
+			scrollLeft = this.platformInfo.ios || this.platformInfo.safari ? -scrollLeft : bounds.maxLeft - scrollLeft;
 		}
 
 		if (scrollLeft !== this.scrollLeft) {
