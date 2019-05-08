@@ -5,7 +5,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {withInfo} from '@storybook/addon-info';
 
-import {boolean, select, text} from '../../src/enact-knobs';
+import {select, text} from '../../src/enact-knobs';
 import emptify from '../../src/utils/emptify.js';
 
 // import icons
@@ -19,18 +19,18 @@ storiesOf('Moonstone', module)
 		withInfo({
 			text: 'Basic usage of Icon'
 		})(() => {
-			const small = boolean('small', Icon);
+			const size = select('size', ['small', 'large'], Icon, 'large');
 			return (
 				<div>
 					<Icon
-						small={small}
+						size={size}
 					>
 						{emptify(select('src', ['', docs, factory, logo], Icon, '')) + emptify(select('icon', ['', ...iconNames], Icon, 'plus')) + emptify(text('custom icon', Icon, ''))}
 					</Icon>
 					<br />
 					<br />
 					<Divider>All Icons</Divider>
-					{iconNames.map((icon, index) => <Icon key={index} small={small} title={icon}>{icon}</Icon>)}
+					{iconNames.map((icon, index) => <Icon key={index} size={size} title={icon}>{icon}</Icon>)}
 				</div>
 			);
 		})

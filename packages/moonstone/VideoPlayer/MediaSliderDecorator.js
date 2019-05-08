@@ -1,5 +1,6 @@
 import {adaptEvent, call, handle, forKey, forward, oneOf, preventDefault, returnsTrue, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import platform from '@enact/core/platform';
 import {calcProportion} from '@enact/ui/Slider/utils';
 import clamp from 'ramda/src/clamp';
 import PropTypes from 'prop-types';
@@ -85,6 +86,9 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 			this.handleMouseOver = this.handleMouseOver.bind(this);
 			this.handleMouseOut = this.handleMouseOut.bind(this);
 			this.handleMouseMove = this.handleMouseMove.bind(this);
+			if (platform.touch) {
+				this.handleTouchMove = this.handleTouchMove.bind(this);
+			}
 
 			handleBlur.bindAs(this, 'handleBlur');
 			handleFocus.bindAs(this, 'handleFocus');
@@ -174,6 +178,11 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 			this.move(ev.clientX);
 		}
 
+		handleTouchMove (ev) {
+			// ignores multi touch
+			this.move(ev.touches[0].clientX);
+		}
+
 		render () {
 			const {selection, ...rest} = this.props;
 			let {backgroundProgress} = this.props;
@@ -186,6 +195,10 @@ const MediaSliderDecorator = hoc((config, Wrapped) => {	// eslint-disable-line n
 			}
 
 			delete rest.onKnobMove;
+
+			if (platform.touch) {
+				rest.onTouchMove = this.handleTouchMove;
+			}
 
 			return (
 				<Wrapped

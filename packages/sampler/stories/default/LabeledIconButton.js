@@ -23,7 +23,7 @@ storiesOf('Moonstone', module)
 				inline={boolean('inline', Config)}
 				labelPosition={select('labelPosition', ['above', 'after', 'before', 'below', 'left', 'right'], Config)}
 				selected={boolean('selected', Config)}
-				small={boolean('small', Config)}
+				size={select('size', ['small', 'medium'], Config, 'medium')}
 			>
 				{text('children', Config, 'Hello LabeledIconButton')}
 			</LabeledIconButton>

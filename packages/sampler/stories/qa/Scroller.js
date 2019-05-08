@@ -44,7 +44,7 @@ class ScrollerResizableItem extends React.Component {
 		};
 		return (
 			<div style={{...style, height}}>
-				<Button onClick={this.props.toggleMore} small style={{position: 'absolute', bottom: 0}}>{text}</Button>
+				<Button onClick={this.props.toggleMore} size="small" style={{position: 'absolute', bottom: 0}}>{text}</Button>
 			</div>
 		);
 	}
