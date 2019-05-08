@@ -1272,8 +1272,6 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
-
-
 	render () {
 		const
 			{className, containerRenderer, noScrollByDrag, rtl, style, ...rest} = this.props,

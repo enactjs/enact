@@ -63,7 +63,7 @@
 @moon-font-family-light: "Moonstone";  // Formerly weight: 300
 @moon-font-family-small: "Moonstone";  // Formerly weight: 500
 @moon-font-family-bold: "Moonstone";   // Formerly weight: 900
-@moon-alt-font-family: "Moonstone Condensed";
+@moon-alt-font-family: "Moonstone";
 @moon-non-latin-font-family: "Moonstone LG Display";
 @moon-non-latin-font-family-light: "Moonstone LG Display";  // Formerly weight: Light
 @moon-non-latin-font-family-bold: "Moonstone LG Display";   // Formerly weight: Bold
@@ -139,13 +139,13 @@
 // ---------------------------------------
 @moon-header-height-large: 360px;
 @moon-header-height-medium: 180px;
-@moon-header-height-small: 87px;
+@moon-header-height-small: 90px;
 @moon-header-indent-width: 18px;
 @moon-header-title-subtitle-gap: 36px;
 @moon-header-border-bottom-width: 3px;
 @moon-header-indent-width: 18px;
 @moon-header-controls-border-width: 1px;
-@moon-header-components-separation: 30px;
+@moon-header-components-separation: (@moon-spotlight-outset * 2);
 @moon-header-components-gutter: 60px;
 
 // Button
@@ -168,8 +168,11 @@
 @moon-button-pressed-scale: 0.05;
 @moon-button-icon-h-margin: 15px;
 @moon-button-icon-small-h-margin: 15px;
-@moon-button-colordot-size: 21px;
-@moon-button-small-colordot-size: 15px;
+@moon-button-colordot-width: 27px;
+@moon-button-colordot-height: 9px;
+@moon-button-small-colordot-width: 21px;
+@moon-button-small-colordot-height: @moon-button-colordot-height;
+@moon-button-to-button-large-h-margin: 30px;
 
 // Divider
 // ---------------------------------------
@@ -291,7 +294,7 @@
 
 // Radio Item
 // ---------------------------------------
-@moon-radio-item-indicator-size: 20px;
+@moon-radio-item-indicator-size: 18px;
 @moon-radio-item-indicator-border: 2px;  // ### Exceptional Case ###
 	// 2px, not being a multiple of 3, poses special problems. Any math or assignment related to
 	// this value must be specifically considered as to not impose layout issues related to, for

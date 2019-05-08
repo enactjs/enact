@@ -67,51 +67,6 @@
 		animation-timing-function: ease-out;
 	}
 
-	// Standard Button Scenario
-	&.red,
-	&.green,
-	&.yellow,
-	&.blue {
-		&.minWidth .client {
-			-webkit-margin-start: @moon-button-colordot-size;
-			-webkit-padding-start: @moon-spotlight-outset;
-
-			&::before {
-				content: "";
-				position: absolute;
-				left: -@moon-button-colordot-size;
-				bottom: 50%;
-				width: @moon-button-colordot-size;
-				height: @moon-button-colordot-size;
-				border-radius: @moon-button-colordot-size;
-				transform: translateY(50%);
-
-				:global(.enact-locale-right-to-left) & {
-					left: initial;
-					right: -@moon-button-colordot-size;
-				}
-			}
-		}
-	}
-
-	// IconButton-like Button scenario
-	&.red,
-	&.green,
-	&.yellow,
-	&.blue {
-		&:not(.minWidth) .client::before {
-			// Colored under-bar
-			content: "";
-			position: absolute;
-			min-width: 24px;
-			height: 6px;
-			bottom: 18px;
-			left: 24px;
-			right: 24px;
-			border-radius: 6px;
-		}
-	}
-
 	.client {
 		padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
 		border-radius: inherit;
@@ -121,13 +76,47 @@
 		-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
 		-webkit-margin-end: @moon-button-icon-h-margin;
 	}
-	// Color prop set, and minWidth prop set, update icon's margin to allow more room for the colordot
+
 	&.red,
 	&.green,
 	&.yellow,
 	&.blue {
-		&.minWidth .icon {
-			-webkit-margin-start: 0;
+		// IconButton-like Button scenario
+		.client::before {
+			// Colored under-bar
+			content: "";
+			position: absolute;
+			bottom: 18px;
+			left: 50%;
+			width: @moon-button-colordot-width;
+			height: @moon-button-colordot-height;
+			border-radius: @moon-button-colordot-height;
+			transform: translate(-50%, 50%);
+		}
+
+		// Standard Button Scenario
+		&.minWidth {
+			// Update icon's margin to allow more room for the colordot
+			.icon {
+				-webkit-margin-start: 0;
+			}
+
+			.client {
+				-webkit-margin-start: @moon-button-colordot-width;
+				-webkit-padding-start: @moon-spotlight-outset;
+
+				&::before {
+					// Colored side-bar
+					bottom: 50%;
+					left: -@moon-button-colordot-width;
+					transform: translateY(50%);
+
+					:global(.enact-locale-right-to-left) & {
+						left: initial;
+						right: -@moon-button-colordot-width;
+					}
+				}
+			}
 		}
 	}
 
@@ -160,22 +149,34 @@
 		margin: 0 @moon-button-small-h-margin;
 		padding-left: @moon-button-small-h-padding;
 		padding-right: @moon-button-small-h-padding;
+		margin-left: @moon-button-small-h-margin;
+		margin-right: @moon-button-small-h-margin;
+
+		.icon {
+			-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
+			-webkit-margin-end: @moon-button-icon-small-h-margin;
+		}
 
 		// Standard Button Scenario
 		&.minWidth {
 			min-width: @moon-button-small-min-width;
-
-			.client::before {
-				height: @moon-button-small-colordot-size;
-				width: @moon-button-small-colordot-size;
-			}
 		}
 
-		// IconButton-like Button scenario
-		&:not(.minWidth) .client::before {
-			bottom: 12px;
-			left: 18px;
-			right: 18px;
+		&.red,
+		&.green,
+		&.yellow,
+		&.blue {
+			// IconButton-like Button scenario
+			.client::before {
+				bottom: 12px;
+				width: @moon-button-small-colordot-width;
+				height: @moon-button-small-colordot-height;
+			}
+
+			// Standard Button Scenario
+			&.minWidth .client::before {
+				bottom: 50%;
+			}
 		}
 
 		.moon-taparea(@moon-button-small-height);
@@ -191,11 +192,6 @@
 			}
 		});
 
-		.icon {
-			-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
-			-webkit-margin-end: @moon-button-icon-small-h-margin;
-		}
-
 		&.red,
 		&.green,
 		&.yellow,
@@ -204,6 +200,11 @@
 				-webkit-margin-start: 0;
 			}
 		}
+	}
+
+	// Large Button followed by another large Button has a custom wider margin between them
+	&:not(.small) + &:not(.small) {
+		margin-inline-start: (@moon-button-to-button-large-h-margin - @moon-button-h-margin);
 	}
 
 	// Button-non-disabled rules
@@ -260,13 +261,6 @@
 			background-color: @moon-remote-button-blue-color;
 		}
 
-		.disabled({
-			&.transparent {
-				.bg {
-					background-color: @moon-button-transparent-disabled-bg-color;
-				}
-			}
-		});
 
 		.focus({
 			// The complexity below overrides the default high-contrast rules and applies

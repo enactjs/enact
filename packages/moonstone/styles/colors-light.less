@@ -8,7 +8,7 @@
 // ---------------------------------------
 @moon-darker-gray: #262626;
 @moon-dark-gray:   #4d4d4d;
-@moon-gray:        #a6a6a6;
+@moon-gray:        #bbb;   // Updated from #a6a6a6, potentially this needs to be broken into a different variable to be used with any floating components with border (as their border)
 @moon-light-gray:  #ededed;
 @moon-black:       #000;
 @moon-accent:      #cf0652;
@@ -179,7 +179,13 @@
 // RadioItem
 // ---------------------------------------
 @moon-radio-item-indicator-color: @moon-dark-gray;
-@moon-radio-item-indicator-border-color: @moon-white;
+@moon-radio-item-indicator-bg-color: @moon-white;
+@moon-radio-item-focus-indicator-color: @moon-radio-item-indicator-color;
+@moon-radio-item-focus-indicator-bg-color: @moon-radio-item-indicator-bg-color;
+@moon-radio-item-selected-indicator-color: @moon-radio-item-indicator-color;
+@moon-radio-item-selected-indicator-bg-color: @moon-spotlight-color;
+@moon-radio-item-selected-focus-indicator-color: @moon-radio-item-focus-indicator-color;
+@moon-radio-item-selected-focus-indicator-bg-color: @moon-radio-item-selected-indicator-bg-color;
 
 // Scrollable
 // ---------------------------------------
