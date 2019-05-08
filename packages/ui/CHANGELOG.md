@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to size properly
+
 ## [2.5.2] - 2019-04-23
 
 ### Fixed
