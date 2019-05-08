@@ -308,6 +308,18 @@ class ScrollableBase extends Component {
 		}
 	}
 
+	onTouchStart = () => {
+		const
+			focusedItem = Spotlight.getCurrent(),
+			{horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current,
+			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current && horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
+			isVerticalScrollButtonFocused = verticalScrollbarRef.current && verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
+
+		if (focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
+			focusedItem.blur();
+		}
+	}
+
 	onWheel = ({delta, horizontalScrollbarRef, verticalScrollbarRef}) => {
 		const
 			focusedItem = Spotlight.getCurrent(),
@@ -791,6 +803,7 @@ class ScrollableBase extends Component {
 					}) => (
 						<div
 							className={classNames(className, overscrollCss.scrollable)}
+							onTouchStart={this.onTouchStart}
 							ref={uiContainerRef}
 							style={style}
 						>
