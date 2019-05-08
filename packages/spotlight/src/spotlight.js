@@ -729,6 +729,10 @@ const Spotlight = (function () {
 			return false;
 		},
 
+		focusFromPoint: function (direction, point) {
+			spotNextFromPoint(direction, point);
+		},
+
 		// move(<direction>)
 		// move(<direction>, <selector>)
 		/**
