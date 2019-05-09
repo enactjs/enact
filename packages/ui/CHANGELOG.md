@@ -15,6 +15,18 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` not to scroll by wheel at the same time when multiple lists/scrollers are nested
 
+### Deprecated
+
+- `small` prop in `ui/Button.ButtonBase`, `ui/Icon.IconBase`, `ui/IconButton.IconButtonBase`, and `ui/LabeledIcon.LabeledIconBase`, which will be replaced by `size="small"` in 3.0
+
+### Added
+
+- `ui/Button`, `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` prop `size`
+
+### Fixed
+
+- `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to size properly
+
 ## [2.5.2] - 2019-04-23
 
 ### Fixed

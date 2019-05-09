@@ -142,7 +142,7 @@ class ScrollableBaseNative extends Component {
 		 * @default false
 		 * @private
 		 */
-		noScrollHorizontalByWheel: PropTypes.bool,
+		noScrollByWheel: PropTypes.bool,
 
 		/**
 		 * Specifies overscroll effects shows on which type of inputs.
@@ -206,7 +206,7 @@ class ScrollableBaseNative extends Component {
 		'data-spotlight-container-disabled': false,
 		animate: false,
 		focusableScrollbar: false,
-		noScrollHorizontalByWheel: false,
+		noScrollByWheel: false,
 		overscrollEffectOn: {
 			arrowKey: false,
 			drag: false,
@@ -353,7 +353,7 @@ class ScrollableBaseNative extends Component {
 				}
 				needToHideThumb = true;
 			}
-		} else if (canScrollHorizontally && !this.props.noScrollHorizontalByWheel) { // this routine handles wheel events on any children for horizontal scroll.
+		} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
 			if (eventDelta < 0 && this.uiRef.current.scrollLeft > 0 || eventDelta > 0 && this.uiRef.current.scrollLeft < bounds.maxLeft) {
 				if (!this.isWheeling) {
 					if (!this.props['data-spotlight-container-disabled']) {

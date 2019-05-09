@@ -188,7 +188,7 @@ class ScrollableBaseNative extends Component {
 		 * @default false
 		 * @private
 		 */
-		noScrollHorizontalByWheel: PropTypes.bool,
+		noScrollByWheel: PropTypes.bool,
 
 		/**
 		 * Called when flicking with a mouse or a touch screen.
@@ -375,7 +375,7 @@ class ScrollableBaseNative extends Component {
 		horizontalScrollbar: 'auto',
 		noAnimation: false,
 		noScrollByDrag: false,
-		noScrollHorizontalByWheel: false,
+		noScrollByWheel: false,
 		onScroll: nop,
 		onScrollStart: nop,
 		onScrollStop: nop,
@@ -664,6 +664,14 @@ class ScrollableBaseNative extends Component {
 
 			this.lastInputType = 'wheel';
 
+			if (this.props.noScrollByWheel) {
+				if (canScrollVertically) {
+					ev.preventDefault();
+				}
+
+				return;
+			}
+
 			if (this.props.onWheel) {
 				forward('onWheel', ev, this.props);
 				return;
@@ -695,7 +703,7 @@ class ScrollableBaseNative extends Component {
 					}
 					needToHideThumb = true;
 				}
-			} else if (canScrollHorizontally && !this.props.noScrollHorizontalByWheel) { // this routine handles wheel events on any children for horizontal scroll.
+			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
 				if (eventDelta < 0 && this.scrollLeft > 0 || eventDelta > 0 && this.scrollLeft < bounds.maxLeft) {
 					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
@@ -1311,7 +1319,7 @@ class ScrollableBaseNative extends Component {
 		delete rest.clearOverscrollEffect;
 		delete rest.horizontalScrollbar;
 		delete rest.noAnimation;
-		delete rest.noScrollHorizontalByWheel;
+		delete rest.noScrollByWheel;
 		delete rest.onFlick;
 		delete rest.onMouseDown;
 		delete rest.onScroll;

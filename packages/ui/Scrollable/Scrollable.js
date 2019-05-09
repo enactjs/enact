@@ -203,7 +203,7 @@ class ScrollableBase extends Component {
 		 * @default false
 		 * @private
 		 */
-		noScrollHorizontalByWheel: PropTypes.bool,
+		noScrollByWheel: PropTypes.bool,
 
 		/**
 		 * Called when flicking with a mouse or a touch screen.
@@ -390,7 +390,7 @@ class ScrollableBase extends Component {
 		horizontalScrollbar: 'auto',
 		noAnimation: false,
 		noScrollByDrag: false,
-		noScrollHorizontalByWheel: false,
+		noScrollByWheel: false,
 		onScroll: nop,
 		onScrollStart: nop,
 		onScrollStop: nop,
@@ -672,9 +672,13 @@ class ScrollableBase extends Component {
 
 			this.lastInputType = 'wheel';
 
+			if (this.props.noScrollByWheel) {
+				return;
+			}
+
 			if (canScrollVertically) {
 				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
-			} else if (canScrollHorizontally && !this.props.noScrollHorizontalByWheel) {
+			} else if (canScrollHorizontally) {
 				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 			}
 
@@ -1314,7 +1318,7 @@ class ScrollableBase extends Component {
 		delete rest.clearOverscrollEffect;
 		delete rest.horizontalScrollbar;
 		delete rest.noAnimation;
-		delete rest.noScrollHorizontalByWheel;
+		delete rest.noScrollByWheel;
 		delete rest.onFlick;
 		delete rest.onKeyDown;
 		delete rest.onMouseDown;

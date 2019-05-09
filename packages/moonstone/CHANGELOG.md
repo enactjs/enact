@@ -38,6 +38,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/EditableIntegerPicker`, `moonstone/Picker`, and `moonstone/RangePicker` to not error when the `min` prop exceeds the `max` prop
+- `moonstone/Input` refocusing on touch on iOS
+- `moonstone/VideoPlayer` to correctly handle touch events while moving slider knobs
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to change spotlight focus due to touch events
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to scroll by wheel at the same time when multiple lists/scrollers are nested
 
 ## [2.5.2] - 2019-04-23
