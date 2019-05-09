@@ -25,7 +25,7 @@ storiesOf('Moonstone', module)
 					onSelect={action('onSelect')}
 					title={text('title', Config, 'Dropdown')}
 				>
-					{['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5']}
+					{['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6']}
 				</Dropdown>
 			</div>
 		))

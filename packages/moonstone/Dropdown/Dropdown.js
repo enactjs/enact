@@ -112,7 +112,7 @@ const DropdownList = kind({
 				<Group
 					childComponent={Item}
 					className={css.group}
-					component={Scroller}
+					component={children.length ? Scroller : null}
 					onSelect={onSelect}
 					selected={selected}
 					selectedProp="selected"
