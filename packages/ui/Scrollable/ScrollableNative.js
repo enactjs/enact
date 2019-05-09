@@ -725,8 +725,8 @@ class ScrollableBaseNative extends Component {
 
 		if (this.props.rtl && canScrollHorizontally) {
 			/* FIXME: RTL / this calculation only works for Chrome and Safari */
-			const rightEndPositionX = (platform.ios || platform.safari) ? 0 : bounds.maxLeft;
-			scrollLeft = rightEndPositionX - scrollLeft;
+			const bias = (platform.ios || platform.safari) ? 0 : bounds.maxLeft;
+			scrollLeft = bias - scrollLeft;
 		}
 
 		if (scrollLeft !== this.scrollLeft) {
