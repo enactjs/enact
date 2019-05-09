@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to size properly
+- `ui/ViewManager` to correctly handle transitioning quickly between two children
 
 ## [2.5.2] - 2019-04-23
 
