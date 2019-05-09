@@ -506,8 +506,9 @@ const Spotlight = (function () {
 
 	function onTouchEnd (evt) {
 		const current = getCurrent();
-		if (current && !current.contains(evt.target)) {
-			current.blur();
+		const target = getNavigableTarget(evt.target); // account for child controls
+		if (!current || (current && !current.contains(target))) {
+			focusElement(target, getContainersForNode(target), true);
 		}
 	}
 
