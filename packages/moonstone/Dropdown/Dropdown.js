@@ -152,6 +152,14 @@ const DropdownBase = kind({
 		children: PropTypes.node,
 
 		/**
+		 * Disables Dropdown and becomes non-interactive.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
+		/**
 		 * Called when the Dropdown is closing.
 		 *
 		 * @type {Function}
@@ -204,6 +212,7 @@ const DropdownBase = kind({
 	},
 
 	defaultProps: {
+		direction: 'down',
 		open: false
 	},
 
@@ -237,17 +246,21 @@ const DropdownBase = kind({
 		}
 	},
 
-	render: ({children, onOpen, onSelect, open, selected, title, ...rest}) => {
+	render: ({children, disabled, onOpen, onSelect, open, selected, title, ...rest}) => {
 		const popupProps = {children, onSelect, open, selected};
+
+		// `ui/Group`/`ui/Repeater` will throw an error if empty so we disable the Dropdown and prevent Dropdown to open if there are no children.
+		const openDropdown = children.length ? open : false;
 
 		return (
 			<ContextualButton
 				{...rest}
-				icon={open ? 'arrowlargeup' : 'arrowlargedown'}
+				disabled={children.length ? disabled : true}
+				icon={openDropdown ? 'arrowlargeup' : 'arrowlargedown'}
 				popupProps={popupProps}
 				popupComponent={DropdownList}
 				onClick={onOpen}
-				open={open}
+				open={openDropdown}
 			>
 				{title}
 			</ContextualButton>
