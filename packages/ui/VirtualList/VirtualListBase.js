@@ -334,8 +334,6 @@ const VirtualListBaseFactory = (type) => {
 		cc = []
 		scrollPosition = 0
 
-		platformInfo = platform
-
 		isVertical = () => this.isPrimaryDirectionVertical
 
 		isHorizontal = () => !this.isPrimaryDirectionVertical
@@ -573,9 +571,13 @@ const VirtualListBaseFactory = (type) => {
 
 		// Native only
 		scrollToPosition (x, y, rtl = this.props.rtl) {
-			const scrollX = (rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x;
 			if (this.containerRef.current) {
-				this.containerRef.current.scrollTo(this.platformInfo.ios || this.platformInfo.safari ? -x : scrollX, y);
+				if (rtl && !this.isPrimaryDirectionVertical) {
+					const rightEndPositionX = (platform.ios || platform.safari) ? 0 : this.scrollBounds.maxLeft;
+					this.containerRef.current.scrollTo(rightEndPositionX - x, y);
+				} else {
+					this.containerRef.current.scrollTo(x, y);
+				}
 			}
 		}
 
