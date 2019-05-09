@@ -596,7 +596,7 @@ const PickerBase = class extends React.Component {
 		const {keyCode} = ev;
 		forwardKeyDown(ev, this.props);
 
-		if (joined) {
+		if (joined && !this.props.disabled) {
 			const direction = getDirection(keyCode);
 
 			const directions = {
@@ -631,7 +631,7 @@ const PickerBase = class extends React.Component {
 		const {keyCode} = ev;
 		forwardKeyUp(ev, this.props);
 
-		if (joined) {
+		if (joined && !this.props.disabled) {
 			const isVertical = orientation === 'vertical' && (isUp(keyCode) || isDown(keyCode));
 			const isHorizontal = orientation === 'horizontal' && (isRight(keyCode) || isLeft(keyCode));
 
