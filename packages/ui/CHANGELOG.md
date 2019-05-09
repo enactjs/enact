@@ -4,10 +4,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
-### Fixed
-
-- `ui/ScrollableNative`, `ui/Scroller`, and `ui/VirtualListBase` to scroll correctly on iOS and Safari
-
 ### Deprecated
 
 - `small` prop in `ui/Button.ButtonBase`, `ui/Icon.IconBase`, `ui/IconButton.IconButtonBase`, and `ui/LabeledIcon.LabeledIconBase`, which will be replaced by `size="small"` in 3.0
@@ -19,6 +15,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to size properly
+- `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to scroll correctly on iOS and Safari
 
 ## [2.5.2] - 2019-04-23
 
