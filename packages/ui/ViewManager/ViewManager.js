@@ -217,7 +217,7 @@ const ViewManagerBase = class extends React.Component {
 			return {
 				index: props.index,
 				prevIndex: state.index,
-				reverseTransition: state.prevIndex > props.index
+				reverseTransition: state.index > props.index
 			};
 		}
 

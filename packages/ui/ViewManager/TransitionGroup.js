@@ -226,7 +226,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		this.reconcileChildren(prevState.children, this.state.activeChildren);
+		this.reconcileChildren(prevState.activeChildren, this.state.activeChildren);
 	}
 
 	reconcileChildren (prevChildMapping, nextChildMapping) {
