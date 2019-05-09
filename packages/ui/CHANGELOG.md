@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/Button` public class `.hasIcon` which is present on the root node only when an icon has been provided
 
 ## [2.5.2] - 2019-04-23
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` prop `noScrollByWheel` for preventing scroll by wheel
 
 ### Fixed
 

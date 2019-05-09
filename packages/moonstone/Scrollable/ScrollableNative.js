@@ -140,7 +140,7 @@ class ScrollableBaseNative extends Component {
 		 *
 		 * @type {Boolean}
 		 * @default false
-		 * @private
+		 * @public
 		 */
 		noScrollByWheel: PropTypes.bool,
 
