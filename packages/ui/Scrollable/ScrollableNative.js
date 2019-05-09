@@ -2,10 +2,11 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
-import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
+import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import Registry from '@enact/core/internal/Registry';
 
 import {ResizeContext} from '../Resizable';
 import ri from '../resolution';
@@ -723,8 +724,7 @@ class ScrollableBaseNative extends Component {
 		}
 
 		if (this.props.rtl && canScrollHorizontally) {
-			/* FIXME: RTL / this calculation only works for Chrome */
-			scrollLeft = bounds.maxLeft - scrollLeft;
+			scrollLeft = (platform.ios || platform.safari) ? -scrollLeft : bounds.maxLeft - scrollLeft;
 		}
 
 		if (scrollLeft !== this.scrollLeft) {
