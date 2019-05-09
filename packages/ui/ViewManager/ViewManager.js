@@ -213,9 +213,10 @@ const ViewManagerBase = class extends React.Component {
 			return {
 				reverseTransition: !!props.reverseTransition
 			};
-		} else if (props.index !== state.prevIndex) {
+		} else if (props.index !== state.index) {
 			return {
-				prevIndex: props.index,
+				index: props.index,
+				prevIndex: state.index,
 				reverseTransition: state.prevIndex > props.index
 			};
 		}
