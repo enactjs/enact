@@ -1,4 +1,4 @@
-/* global ResizeObserver */
+/* global ResizeObserver, MutationObserver */
 /**
  * A higher-order component that adds the ability to measure nodes conveniently.
  *
@@ -64,7 +64,6 @@ const useMeasurable = () => {
 				};
 			// Fallback support for MutationObserver
 			} else if (typeof MutationObserver === 'function') {
-				// eslint-disable-next-line no-undef
 				let mutationObserver = new MutationObserver((mutationsList) => {
 					for (let mutation of mutationsList) {
 						if (mutation.type === 'childList') {
