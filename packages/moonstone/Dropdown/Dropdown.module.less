@@ -1,6 +1,7 @@
 // Dropdown.module.less
 //
 @import "../styles/variables.less";
+@import "../styles/skin.less";
 
 .dropdown {
 	width: @moon-dropdown-width;
@@ -16,4 +17,15 @@
 		height: auto;
 		flex: 1 1 auto;
 	}
+
+	// Skin colors
+	.applySkins({
+		.group {
+			[data-selected="true"] {
+				&:not(:focus) {
+					color: @moon-dropdown-selected-text-color;
+				}
+			}
+		}
+	});
 }

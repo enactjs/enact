@@ -31,6 +31,7 @@ import {Button} from '../Button/Button';
 import ContextualPopupDecorator from '../ContextualPopupDecorator/ContextualPopupDecorator';
 import {Item} from '../Item/Item';
 import {Scroller} from '../Scroller/Scroller';
+import Skinnable from '../Skinnable';
 
 import css from './Dropdown.module.less';
 
@@ -72,57 +73,58 @@ const DropdownButton = kind({
 
 const ContextualButton = ContextualPopupDecorator({noArrow: true}, DropdownButton);
 
-const DropdownList = kind({
-	name: 'DropdownList',
+const DropdownList = Skinnable(
+	kind({
+		name: 'DropdownList',
 
-	propTypes: /** @lends moonstone/Dropdown.DropdownBase.prototype */ {
-		/**
-		 * The selections for Dropdown
-		 *
-		 * @type {String[]}
-		 * @private
-		 */
-		children: PropTypes.node,
+		propTypes: /** @lends moonstone/Dropdown.DropdownBase.prototype */ {
+			/**
+			 * The selections for Dropdown
+			 *
+			 * @type {String[]}
+			 * @private
+			 */
+			children: PropTypes.node,
 
-		/**
-		 * Called when an item is selected.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onSelect: PropTypes.func,
+			/**
+			 * Called when an item is selected.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			onSelect: PropTypes.func,
 
-		/**
-		 * Index of the selected item.
-		 *
-		 * @type {Number}
-		 * @private
-		 */
-		selected: PropTypes.number
-	},
+			/**
+			 * Index of the selected item.
+			 *
+			 * @type {Number}
+			 * @private
+			 */
+			selected: PropTypes.number
+		},
 
-	styles: {
-		className: 'dropDownList',
-		css
-	},
+		styles: {
+			className: 'dropDownList',
+			css
+		},
 
-	render: ({children, onSelect, selected, ...rest}) => {
-		return (
-			<div {...rest}>
-				<Group
-					childComponent={Item}
-					className={css.group}
-					component={children.length ? Scroller : null}
-					onSelect={onSelect}
-					selected={selected}
-					selectedProp="selected"
-				>
-					{children}
-				</Group>
-			</div>
-		);
-	}
-});
+		render: ({children, onSelect, selected, ...rest}) => {
+			return (
+				<div {...rest}>
+					<Group
+						childComponent={Item}
+						className={css.group}
+						component={children.length ? Scroller : null}
+						onSelect={onSelect}
+						selected={selected}
+					>
+						{children}
+					</Group>
+				</div>
+			);
+		}
+	})
+);
 
 /**
  * A stateless Dropdown component.
