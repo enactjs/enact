@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Header` prop `centered` to support immersive apps with a completely centered  design
 - `moonstone/BodyText` prop `size` to offer a new "small" size
 - `moonstone/TooltipDecorator` prop `tooltipRelative` and `moonstone/TooltipDecorator.Tooltip` prop `relative` to support relative positioning. This is an advanced feature and requires a container with specific rules. See documentation for details.
+- `moonstone/Spinner` prop `size` to support a new "small" size for use inside `SlotItem` components
 
 ### Removed
 
