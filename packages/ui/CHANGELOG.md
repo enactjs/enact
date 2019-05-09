@@ -8,25 +8,11 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Measurable` HOC and Hook for quick and convenient measuring of simple components
 - `ui/Button` public class `.hasIcon` which is present on the root node only when an icon has been provided
-
-## [2.5.2] - 2019-04-23
 - `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` prop `noScrollByWheel` for preventing scroll by wheel
 
 ### Fixed
 
 - `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` not to scroll by wheel at the same time when multiple lists/scrollers are nested
-
-### Deprecated
-
-- `small` prop in `ui/Button.ButtonBase`, `ui/Icon.IconBase`, `ui/IconButton.IconButtonBase`, and `ui/LabeledIcon.LabeledIconBase`, which will be replaced by `size="small"` in 3.0
-
-### Added
-
-- `ui/Button`, `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` prop `size`
-
-### Fixed
-
-- `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to size properly
 
 ## [2.5.2] - 2019-04-23
 
