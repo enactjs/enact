@@ -45,6 +45,7 @@ const useMeasurable = () => {
 				return;
 			}
 
+			// Support for ResizeObserver
 			if (typeof ResizeObserver === 'function') {
 				let resizeObserver = new ResizeObserver((entries) => {
 					entries.forEach((entry) => {
@@ -61,9 +62,10 @@ const useMeasurable = () => {
 					resizeObserver.disconnect(ref.current);
 					resizeObserver = null;
 				};
+			// Fallback support for MutationObserver
 			} else if (typeof MutationObserver === 'function') {
 				// eslint-disable-next-line no-undef
-				let mutationObserver =	new MutationObserver((mutationsList) => {
+				let mutationObserver = new MutationObserver((mutationsList) => {
 					for (let mutation of mutationsList) {
 						if (mutation.type === 'childList') {
 							setMeasurement(mutation.target.getBoundingClientRect());
