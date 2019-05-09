@@ -572,8 +572,8 @@ const VirtualListBaseFactory = (type) => {
 		// Native only
 		scrollToPosition (x, y, rtl = this.props.rtl) {
 			if (this.containerRef.current) {
-				const bias = (platform.ios || platform.safari) ? 0 : this.scrollBounds.maxLeft;
-				this.containerRef.current.scrollTo((rtl && !this.isPrimaryDirectionVertical) ? bias - x : x, y);
+				const rtlCompensator = (platform.ios || platform.safari) ? 0 : this.scrollBounds.maxLeft;
+				this.containerRef.current.scrollTo((rtl && !this.isPrimaryDirectionVertical) ? rtlCompensator - x : x, y);
 			}
 		}
 
