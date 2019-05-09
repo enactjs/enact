@@ -22,7 +22,6 @@ const
 	isUp = is('up'),
 	JS = 'JS',
 	Native = 'Native',
-	isItemDisabledDefault = () => (false),
 	// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
 	getNumberValue = (index) => index | 0;
 
@@ -113,32 +112,6 @@ const VirtualListBaseFactory = (type) => {
 			 */
 			initUiChildRef: PropTypes.func,
 
-			/**
-			 * The Function that returns `true` if the item at the index is disabled.
-			 * It is used to navigate a list properly with 5 way keys, page up key,
-			 * and page down key. If it is not supplied, it assumes that no items are disabled.
-			 *
-			 * Usage:
-			 * ```
-			 * isItemDisabled = (index) => (this.items[index].disabled)
-			 * render = () => {
-			 * 	return (
-			 * 		<VirtualList
-			 * 			dataSize={this.items.length}
-			 * 			isItemDisabled={isItemDisabled}
-			 * 			itemRenderer={this.renderItem}
-			 * 			itemSize={this.itemSize}
-			 * 		/>
-			 * 	);
-			 * }
-			 * ```
-			 *
-			 * @type {Function}
-			 * @param {Number} index
-			 * @public
-			 */
-			isItemDisabled: PropTypes.func,
-
 			/*
 			 * It scrolls by page when `true`, by item when `false`.
 			 *
@@ -194,7 +167,6 @@ const VirtualListBaseFactory = (type) => {
 		static defaultProps = {
 			animate: false,
 			dataSize: 0,
-			isItemDisabled: isItemDisabledDefault,
 			pageScroll: false,
 			spacing: 0,
 			wrap: false
@@ -350,7 +322,6 @@ const VirtualListBaseFactory = (type) => {
 				-1 <= indexTo && indexTo <= dataSize &&
 				0 <= position && position < dimensionToExtent) {
 				const
-					{isItemDisabled} = this.props,
 					direction = (indexFrom < indexTo) ? 1 : -1,
 					delta = direction * dimensionToExtent,
 					diffPosition = (indexFrom % dimensionToExtent) - position,
@@ -358,11 +329,7 @@ const VirtualListBaseFactory = (type) => {
 					// When direction is -1 (backward) and diffPosition is negative, substract dimensionToExtent.
 					startIndex = indexFrom - diffPosition + ((direction * diffPosition > 0) ? delta : 0);
 
-				for (let i = startIndex; direction * (indexTo - i) > 0; i += delta) {
-					if (!isItemDisabled(i)) {
-						return i;
-					}
-				}
+				return startIndex;
 			}
 
 			return -1;
@@ -693,7 +660,6 @@ const VirtualListBaseFactory = (type) => {
 
 			delete rest.animate;
 			delete rest.initUiChildRef;
-			delete rest.isItemDisabled;
 			delete rest.spotlightId;
 			delete rest.wrap;
 

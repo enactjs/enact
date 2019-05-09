@@ -15,13 +15,16 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Button` and `moonstone/Panels.Header` prop `casing` which is no longer supported
 - `moonstone/Input.InputBase` prop `focused` which was used to indicate when the internal input field had focused but was replaced by the `:focus-within` pseudo-selector
+- `moonstone/VirtualList` and `moonstone/VirtualList.VirtualGridList` property `isItemDisabled`
 
 ### Changed
 
 - `moonstone/Button.ButtonDecorator` to remove `i18n/Uppercase` HOC
+- global styling rules affecting standard font-weight, disabled opacity, and LESS color variable definitions
 - `moonstone/Panel` and `moonstone/Panels` now allocate slightly more screen edge space for a cleaner look
 - `moonstone/DaySelector` to have squared check boxes to match the rest of the checkmark components
 - `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` text size to be smaller
+- `moonstone/Button`, `moonstone/ContextualPopupDecorator`, `moonstone/FormCheckbox`, `moonstone/FormCheckboxItem`, `moonstone/Header`, `moonstone/Notification`, and `moonstone/Tooltip` appearance to match the latest designs
 - `moonstone/Button`, `moonstone/ContextualPopupDecorator`, `moonstone/FormCheckbox`, `moonstone/FormCheckboxItem`, `moonstone/Header`, `moonstone/Notification`, and `moonstone/RadioItem` appearance to match the latest designs
 
 ### Fixed
