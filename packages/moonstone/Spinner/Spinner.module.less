@@ -124,6 +124,19 @@
 				clip-path: circle((@moon-spinner-small-line-width / 2) at 50% (@moon-spinner-small-line-width / 2));
 			}
 		}
+
+		// Large-text mode support
+		.moon-custom-text({
+			.bg,
+			.decorator {
+				width: @moon-spinner-small-size-large;
+				height: @moon-spinner-small-size-large;
+			}
+
+			.decorator {
+				-webkit-mask-image: radial-gradient(transparent (@moon-spinner-small-size-large / 2 - @moon-spinner-small-line-width - 1px), black (@moon-spinner-small-size-large / 2 - @moon-spinner-small-line-width));
+			}
+		});
 	}
 
 	&.content {
