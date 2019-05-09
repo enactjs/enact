@@ -4,7 +4,7 @@ import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {withInfo} from '@storybook/addon-info';
 
-import {boolean, select, text} from '../../src/enact-knobs';
+import {boolean, number, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 Dropdown.displayName = 'Dropdown';
@@ -14,9 +14,11 @@ storiesOf('Moonstone', module)
 	.add(
 		'Dropdown',
 		withInfo({
-			text: 'Basic usage of Dropdown'
-		})(() => (
-			<div>
+			text: 'A quick, inline, value-selection component'
+		})(() => {
+			const itemCount = number('items', Config, {range: true, min: 0, max: 8}, 5);
+			const items = (new Array(itemCount)).fill().map((i, index) => `Option ${index + 1}`);
+			return (
 				<Dropdown
 					direction={select('direction', ['up', 'down'], Config)}
 					disabled={boolean('disabled', Config)}
@@ -25,8 +27,8 @@ storiesOf('Moonstone', module)
 					onSelect={action('onSelect')}
 					title={text('title', Config, 'Dropdown')}
 				>
-					{['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6']}
+					{items}
 				</Dropdown>
-			</div>
-		))
+			);
+		})
 	);
