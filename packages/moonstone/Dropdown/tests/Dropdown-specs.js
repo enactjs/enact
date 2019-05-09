@@ -34,6 +34,17 @@ describe('Dropdown', () => {
 		expect(actual).toBe(expected);
 	});
 
+	test('should be disabled when there is no children', () => {
+		const dropDown = mount(
+			<DropdownBase title={title} />
+		);
+
+		const expected = true;
+		const actual = dropDown.find('DropdownButton').prop('disabled');
+
+		expect(actual).toBe(expected);
+	});
+
 	test('should have title that reflects default selected option', () => {
 		const selectedIndex = 2;
 

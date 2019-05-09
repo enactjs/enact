@@ -114,7 +114,7 @@ const DropdownList = Skinnable(
 					<Group
 						childComponent={Item}
 						className={css.group}
-						component={children.length ? Scroller : null}
+						component={children ? Scroller : null}
 						onSelect={onSelect}
 						selected={selected}
 					>
@@ -237,7 +237,7 @@ const DropdownBase = kind({
 		title: ({children, selected, title}) => {
 			const isSelectedValid = !(typeof selected === 'undefined' || selected === null || selected >= children.length || selected < 0);
 
-			if (children.length && isSelectedValid) {
+			if (children && children.length && isSelectedValid) {
 				const isArray = Array.isArray(selected);
 				return children[isArray ? selected[0] : selected];
 			}
@@ -250,12 +250,13 @@ const DropdownBase = kind({
 		const popupProps = {children, onSelect, open, selected};
 
 		// `ui/Group`/`ui/Repeater` will throw an error if empty so we disable the Dropdown and prevent Dropdown to open if there are no children.
-		const openDropdown = children.length ? open : false;
+		const hasChildren = children && children.length;
+		const openDropdown = hasChildren ? open : false;
 
 		return (
 			<ContextualButton
 				{...rest}
-				disabled={children.length ? disabled : true}
+				disabled={hasChildren ? disabled : true}
 				icon={openDropdown ? 'arrowlargeup' : 'arrowlargedown'}
 				popupProps={popupProps}
 				popupComponent={DropdownList}
