@@ -504,6 +504,10 @@ const Spotlight = (function () {
 		}
 	}
 
+	function onTouchStart () {
+		setPointerMode(true);
+	}
+
 	function onTouchEnd (evt) {
 		const current = getCurrent();
 		if (current && !current.contains(evt.target)) {
@@ -533,6 +537,7 @@ const Spotlight = (function () {
 				window.addEventListener('mousemove', onMouseMove);
 
 				if (platform.touch) {
+					window.addEventListener('touchstart', onTouchStart);
 					window.addEventListener('touchend', onTouchEnd);
 				}
 
