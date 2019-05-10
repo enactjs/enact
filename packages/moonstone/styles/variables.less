@@ -27,7 +27,10 @@
 @moon-expandable-value-font-size-large:   33px;
 @moon-expandable-client-item-font-size:   27px;
 @moon-expandable-client-item-font-size-large:   33px;
-@moon-divider-font-size:            24px;
+@moon-divider-font-size:            24px; // Deprecated?
+@moon-heading-large-font-size:      36px;
+@moon-heading-medium-font-size:     33px;
+@moon-heading-small-font-size:      27px;
 @moon-notification-font-size:       30px;
 @moon-button-font-size:             39px;
 @moon-button-font-size-large:       48px;
@@ -119,6 +122,22 @@
 @moon-divider-font-weight: bold;
 @moon-divider-font-style: italic;
 @moon-divider-letter-spacing: 0;
+@moon-divider-line-height: @moon-medium-header-line-height;
+@moon-divider-non-latin-line-height: @moon-non-latin-medium-header-line-height;
+
+@moon-heading-large-font-family: @moon-font-family;
+@moon-heading-large-font-weight: 600;
+@moon-heading-large-font-style: normal;
+@moon-heading-medium-font-family: @moon-heading-large-font-family;
+@moon-heading-medium-font-weight: @moon-heading-large-font-weight;
+@moon-heading-medium-font-style: @moon-heading-large-font-style;
+@moon-heading-small-font-family: @moon-heading-large-font-family;
+@moon-heading-small-font-weight: 400;
+@moon-heading-small-font-style: @moon-heading-large-font-style;
+@moon-heading-letter-spacing: 0;
+@moon-heading-line-height: @moon-medium-header-line-height;
+@moon-heading-non-latin-font-family: @moon-non-latin-font-family-bold;
+@moon-heading-non-latin-line-height: @moon-non-latin-medium-header-line-height;
 
 @moon-expandable-value-font-family: @moon-font-family;
 @moon-expandable-value-font-weight: 300;
@@ -187,6 +206,14 @@
 // ---------------------------------------
 @moon-divider-border-width: 3px;
 @moon-divider-height: 39px;
+
+// Heading
+// ---------------------------------------
+@moon-heading-border-width: 1px;
+// @moon-heading-height: 39px;
+@moon-heading-spacing-large: 39px;
+@moon-heading-spacing-medium: 21px;
+@moon-heading-spacing-small: 9px;
 
 // Dropdown
 // ---------------------------------------
