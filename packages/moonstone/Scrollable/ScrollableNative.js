@@ -136,6 +136,15 @@ class ScrollableBaseNative extends Component {
 		focusableScrollbar: PropTypes.bool,
 
 		/**
+		 * Prevents scroll by wheeling on the list or the scroller.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noScrollByWheel: PropTypes.bool,
+
+		/**
 		 * Specifies overscroll effects shows on which type of inputs.
 		 *
 		 * @type {Object}
@@ -197,6 +206,7 @@ class ScrollableBaseNative extends Component {
 		'data-spotlight-container-disabled': false,
 		animate: false,
 		focusableScrollbar: false,
+		noScrollByWheel: false,
 		overscrollEffectOn: {
 			arrowKey: false,
 			drag: false,
@@ -330,9 +340,13 @@ class ScrollableBaseNative extends Component {
 					(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(ev.target))) {
 					delta = this.uiRef.current.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
+
+					ev.preventDefault();
 				} else if (overscrollEffectRequired) {
 					this.uiRef.current.checkAndApplyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce);
 				}
+
+				ev.stopPropagation();
 			} else {
 				if (overscrollEffectRequired && (eventDelta < 0 && this.uiRef.current.scrollTop <= 0 || eventDelta > 0 && this.uiRef.current.scrollTop >= bounds.maxTop)) {
 					this.uiRef.current.applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
@@ -349,6 +363,9 @@ class ScrollableBaseNative extends Component {
 				}
 				delta = this.uiRef.current.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				needToHideThumb = !delta;
+
+				ev.preventDefault();
+				ev.stopPropagation();
 			} else {
 				if (overscrollEffectRequired && (eventDelta < 0 && this.uiRef.current.scrollLeft <= 0 || eventDelta > 0 && this.uiRef.current.scrollLeft >= bounds.maxLeft)) {
 					this.uiRef.current.applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
