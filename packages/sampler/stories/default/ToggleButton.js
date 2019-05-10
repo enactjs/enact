@@ -26,7 +26,7 @@ storiesOf('Moonstone', module)
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 				disabled={boolean('disabled', Config)}
 				onToggle={action('onToggle')}
-				small={boolean('small', Config)}
+				size={select('size', ['small', 'large'], Config, 'large')}
 				toggleOffLabel={text('toggleOffLabel', Config, 'Off')}
 				toggleOnLabel={text('toggleOnLabel', Config, 'On')}
 			>

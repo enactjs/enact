@@ -4,13 +4,13 @@
  * @example
  * <Layout>
  * 	<Cell shrink>
- * 		<Button small>First</Button>
+ * 		<Button size="small">First</Button>
  * 	</Cell>
  * 	<Cell>
  * 		<Item>An Item with some long text in it</Item>
  * 	</Cell>
  * 	<Cell shrink>
- * 		<Button small>Last</Button>
+ * 		<Button size="small">Last</Button>
  * 	</Cell>
  * </Layout>
  *

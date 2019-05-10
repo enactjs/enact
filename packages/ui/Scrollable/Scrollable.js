@@ -1303,7 +1303,6 @@ class ScrollableBase extends Component {
 			childWrapperProps = {
 				className: css.content,
 				...(!noScrollByDrag && {
-					className: css.content,
 					onDrag: this.onDrag,
 					onDragEnd: this.onDragEnd,
 					onDragStart: this.onDragStart,

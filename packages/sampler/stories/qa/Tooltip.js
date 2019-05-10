@@ -128,9 +128,9 @@ class ChangeableTooltip extends React.Component {
 			<div>
 				<div style={style}>
 					<div>LEFT : </div>
-					<Input id="left" small type="number" onChange={this.handleChangeLeft} value={left} />
+					<Input id="left" size="small" type="number" onChange={this.handleChangeLeft} value={left} />
 					<div>TOP : </div>
-					<Input id="top" small type="number" onChange={this.handleChangeTop} value={top} />
+					<Input id="top" size="small" type="number" onChange={this.handleChangeTop} value={top} />
 					<Button onClick={this.changeTooltipText}>Change Text</Button>
 				</div>
 				<IconButton
@@ -156,7 +156,7 @@ const IconButtonItem = kind({
 		return (
 			<div style={{height: 100, border: 'solid 3px yellow'}}>
 				<IconButton
-					small
+					size="small"
 					tooltipText="tooltip"
 					{...rest}
 				>
@@ -164,7 +164,7 @@ const IconButtonItem = kind({
 				</IconButton>
 				<IconButton
 					style={{marginLeft: '450px'}}
-					small
+					size="small"
 					tooltipText="tooltip"
 					{...rest}
 				>
@@ -209,7 +209,7 @@ class TooltipFollow extends React.Component {
 				<Cell shrink>
 					<BodyText>Click icon buttons to resize or move</BodyText>
 					<IconButton
-						small
+						size="small"
 						tooltipText="tooltip"
 						onClick={this.handleWidthMinusClick}
 						style={{width: `${this.state.widthMinus}px`}}
@@ -217,7 +217,7 @@ class TooltipFollow extends React.Component {
 						minus
 					</IconButton>
 					<IconButton
-						small
+						size="small"
 						tooltipText="tooltip"
 						onClick={this.handleWidthPlusClick}
 						style={{width: `${this.state.widthPlus}px`}}
@@ -225,7 +225,7 @@ class TooltipFollow extends React.Component {
 						plus
 					</IconButton>
 					<IconButton
-						small
+						size="small"
 						tooltipText="tooltip"
 						onClick={this.handlePositionClick}
 						style={{left: `${this.state.left}px`}}

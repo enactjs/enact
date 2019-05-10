@@ -18,6 +18,23 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Measurable` to remeasure after a re-layout so the measurement value is always correct
 
+### [2.6.0] - ???
+
+### Deprecated
+
+- `small` prop in `ui/Button.ButtonBase`, `ui/Icon.IconBase`, `ui/IconButton.IconButtonBase`, and `ui/LabeledIcon.LabeledIconBase`, which will be replaced by `size="small"` in 3.0
+
+### Added
+
+- `ui/Button`, `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` prop `size`
+- `ui/ToggleItem` props  `itemIcon` and `itemIconPosition` to support additional icons on ToggleItem-derived components
+
+### Fixed
+
+- `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to size properly
+- `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to scroll correctly on iOS and Safari
+- `ui/ViewManager` to correctly handle transitioning quickly between two children
+
 ## [2.5.2] - 2019-04-23
 
 ### Fixed

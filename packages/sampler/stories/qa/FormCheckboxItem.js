@@ -21,7 +21,7 @@ class FormCheckboxItemView extends React.Component {
 			<div>
 				You can change the state by clicking the Button or FormCheckboxItem.
 				<br />
-				<Button small onClick={this.handleClick}>change state</Button>
+				<Button size="small" onClick={this.handleClick}>change state</Button>
 				<FormCheckboxItem disabled={this.state.disabled} onClick={this.handleClick}>FormCheckbox Item</FormCheckboxItem>
 			</div>
 		);

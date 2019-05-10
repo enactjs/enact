@@ -44,7 +44,7 @@ class ScrollerResizableItem extends React.Component {
 		};
 		return (
 			<div style={{...style, height}}>
-				<Button onClick={this.props.toggleMore} small style={{position: 'absolute', bottom: 0}}>{text}</Button>
+				<Button onClick={this.props.toggleMore} size="small" style={{position: 'absolute', bottom: 0}}>{text}</Button>
 			</div>
 		);
 	}
@@ -162,7 +162,7 @@ storiesOf('Scroller', module)
 		'List of things',
 		() => (
 			<Scroller
-				data-spotlight-container-disabled={boolean('data-spotlight-container-disabled', Scroller, false)}
+				spotlightDisabled={boolean('spotlightDisabled', Scroller, false)}
 				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
 			>
 				<Group childComponent={Item}>

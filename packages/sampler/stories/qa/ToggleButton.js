@@ -21,7 +21,7 @@ storiesOf('ToggleButton', module)
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, ToggleButton)}
 				disabled={boolean('disabled', ToggleButton)}
-				small={boolean('small', ToggleButton)}
+				size={select('size', ['small', 'large'], ToggleButton, 'large')}
 				toggleOnLabel={text('toggleOnLabel', ToggleButton, 'Loooooooooooooooooog On')}
 				toggleOffLabel={text('toggleOffLabel', ToggleButton, 'Loooooooooooooooooog Off')}
 			/>
@@ -34,7 +34,7 @@ storiesOf('ToggleButton', module)
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, ToggleButton)}
 				disabled={boolean('disabled', ToggleButton)}
-				small={boolean('small', ToggleButton)}
+				size={select('size', ['small', 'large'], ToggleButton, 'large')}
 				toggleOnLabel={select('toggleOnLabel', prop.tallText, ToggleButton, 'ิ้  ไั  ஒ  து')}
 				toggleOffLabel={select('toggleOffLabel', prop.tallText, ToggleButton, 'ิ้  ไั  ஒ  து')}
 			/>

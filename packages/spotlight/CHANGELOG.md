@@ -8,6 +8,12 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 - `spotlight/Spottable` to allow disabled items to be focused
 
+## [2.6.0] - ???
+
+### Fixed
+
+- `spotlight` to unspot the current element when tapping on non-spottable target on touch platforms
+
 ## [2.5.2] - 2019-04-23
 
 No significant changes.
