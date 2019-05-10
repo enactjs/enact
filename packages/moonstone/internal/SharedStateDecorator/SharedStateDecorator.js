@@ -1,4 +1,5 @@
 import hoc from '@enact/core/hoc';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const SharedState = React.createContext(null);
@@ -11,6 +12,10 @@ const SharedStateDecorator = hoc({idProp: 'id'}, (config, Wrapped) => {
 
 		static contextType = SharedState
 
+		static propTypes = {
+			noSharedState: PropTypes.bool
+		}
+
 		constructor (props) {
 			super(props);
 
@@ -22,27 +27,35 @@ const SharedStateDecorator = hoc({idProp: 'id'}, (config, Wrapped) => {
 			this.loadFromContext();
 		}
 
+		componentDidUpdate (prevProps) {
+			if (!prevProps.noSharedState && this.props.noSharedState) {
+				this.data = {};
+			} else if (prevProps.noSharedState && !this.props.noSharedState) {
+				this.loadFromContext();
+			}
+		}
+
 		initSharedState () {
 			return {
 				set: (key, value) => {
-					const {[idProp]: id} = this.props;
+					const {[idProp]: id, noSharedState} = this.props;
 
-					if (!id && id !== 0) return;
+					if (noSharedState || !id && id !== 0) return;
 
 					this.data[id] = this.data[id] || {};
 					this.data[id][key] = value;
 				},
 
 				get: (key) => {
-					const {[idProp]: id} = this.props;
+					const {[idProp]: id, noSharedState} = this.props;
 
-					return this.data[id] && this.data[id][key];
+					return noSharedState ? null : (this.data[id] && this.data[id][key]);
 				},
 
 				delete: (key) => {
-					const {[idProp]: id} = this.props;
+					const {[idProp]: id, noSharedState} = this.props;
 
-					if (id && this.data[id]) {
+					if (!noSharedState && id && this.data[id]) {
 						delete this.data[id][key];
 					}
 				}
@@ -50,8 +63,9 @@ const SharedStateDecorator = hoc({idProp: 'id'}, (config, Wrapped) => {
 		}
 
 		loadFromContext () {
-			if (this.context) {
-				const {[idProp]: id} = this.props;
+			const {[idProp]: id, noSharedState} = this.props;
+
+			if (!noSharedState && this.context) {
 				const data = this.context.get(id);
 
 				if (data) {
@@ -63,9 +77,13 @@ const SharedStateDecorator = hoc({idProp: 'id'}, (config, Wrapped) => {
 		}
 
 		render () {
+			const {...props} = this.props;
+
+			delete props.noSharedState;
+
 			return (
 				<SharedState.Provider value={this.sharedState}>
-					<Wrapped {...this.props} />
+					<Wrapped {...props} />
 				</SharedState.Provider>
 			);
 		}
