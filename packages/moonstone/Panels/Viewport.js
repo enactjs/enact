@@ -116,12 +116,14 @@ const ViewportBase = class extends React.Component {
 	handle = handle.bind(this)
 
 	handleTransition = this.handle(
+		handle.log('transition'),
 		forward('onTransition'),
 		this.removeTransitioningClass,
 		this.resume
 	)
 
 	handleWillTransition = this.handle(
+		handle.log('willtransition'),
 		forward('onWillTransition'),
 		this.addTransitioningClass,
 		this.pause

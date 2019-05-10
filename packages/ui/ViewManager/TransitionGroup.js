@@ -229,9 +229,7 @@ class TransitionGroup extends React.Component {
 		}
 
 		// remove any "dropped" children from the list of transitioning children
-		droppedKeys.forEach(key => {
-			delete this.currentlyTransitioningKeys[key];
-		});
+		droppedKeys.forEach(key => this.completeTransition(key));
 
 		// mark any new child as entering
 		nextChildKeys.forEach((key, index) => {
