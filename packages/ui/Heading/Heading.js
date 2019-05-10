@@ -46,16 +46,16 @@ const Heading = kind({
 		 * The following classes are supported:
 		 *
 		 * * `heading` - The root component class
-		 * * `title` - Applied when the size is set to "title"
-		 * * `subtitle` - Applied when the size is set to "subtitle"
-		 * * `large` - Applied when the size is set to "large"
-		 * * `medium` - Applied when the size is set to "medium"
-		 * * `small` - Applied when the size is set to "small"
-		 * * `tiny` - Applied when the size is set to "tiny"
-		 * * `largeSpacing` - Applied when the spacing is set to "large"
-		 * * `mediumSpacing` - Applied when the spacing is set to "medium"
-		 * * `smallSpacing` - Applied when the spacing is set to "small"
-		 * * `noneSpacing` - Applied when the spacing is set to "none"
+		 * * `title` - Applied when `size` is set to "title"
+		 * * `subtitle` - Applied when `size` is set to "subtitle"
+		 * * `large` - Applied when `size` is set to "large"
+		 * * `medium` - Applied when `size` is set to "medium"
+		 * * `small` - Applied when `size` is set to "small"
+		 * * `tiny` - Applied when `size` is set to "tiny"
+		 * * `largeSpacing` - Applied when `spacing` is set to "large"
+		 * * `mediumSpacing` - Applied when `spacing` is set to "medium"
+		 * * `smallSpacing` - Applied when `spacing` is set to "small"
+		 * * `noneSpacing` - Applied when `spacing` is set to "none"
 		 *
 		 * @type {Object}
 		 * @public
