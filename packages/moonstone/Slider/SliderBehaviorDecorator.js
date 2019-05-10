@@ -1,9 +1,9 @@
-import {findDOMNode} from 'react-dom';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import Pause from '@enact/spotlight/Pause';
 import platform from '@enact/core/platform';
+import Pause from '@enact/spotlight/Pause';
 import PropTypes from 'prop-types';
+import {findDOMNode} from 'react-dom';
 import React from 'react';
 
 import $L from '../internal/$L';
