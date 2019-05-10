@@ -11,6 +11,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/BodyText` prop `size` to offer a new "small" size
 - `moonstone/TooltipDecorator` prop `tooltipRelative` and `moonstone/TooltipDecorator.Tooltip` prop `relative` to support relative positioning. This is an advanced feature and requires a container with specific rules. See documentation for details.
 - `moonstone/Spinner` prop `size` to support a new "small" size for use inside `SlotItem` components
+- `moonstone/ContextualPopup` config `noArrow`
+- `moonstone/Button` prop `iconPosition`
+- `moonstone/Dropdown` component
 
 ### Removed
 
@@ -25,8 +28,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panel` and `moonstone/Panels` now allocate slightly more screen edge space for a cleaner look
 - `moonstone/DaySelector` to have squared check boxes to match the rest of the checkmark components
 - `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` text size to be smaller
-- `moonstone/Button`, `moonstone/ContextualPopupDecorator`, `moonstone/FormCheckbox`, `moonstone/FormCheckboxItem`, `moonstone/Header`, `moonstone/Notification`, and `moonstone/Tooltip` appearance to match the latest designs
-- `moonstone/Button`, `moonstone/ContextualPopupDecorator`, `moonstone/FormCheckbox`, `moonstone/FormCheckboxItem`, `moonstone/Header`, `moonstone/Notification`, and `moonstone/RadioItem` appearance to match the latest designs
+- `moonstone/Button`, `moonstone/Checkbox`, `moonstone/CheckboxItem`, `moonstone/ContextualPopupDecorator`, `moonstone/FormCheckbox`, `moonstone/FormCheckboxItem`, `moonstone/Header`, `moonstone/Notification`, `moonstone/RadioItem`, and `moonstone/Tooltip` appearance to match the latest designs
 
 ### Fixed
 

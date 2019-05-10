@@ -1,0 +1,31 @@
+// Dropdown.module.less
+//
+@import "../styles/variables.less";
+@import "../styles/skin.less";
+
+.dropdown {
+	width: @moon-dropdown-width;
+}
+
+.dropDownList {
+	border-radius: @moon-dropdown-border-radius;
+	width: @moon-dropdown-list-width;
+	max-height: @moon-dropdown-list-max-height;
+	display: flex;
+
+	.group {
+		height: auto;
+		flex: 1 1 auto;
+	}
+
+	// Skin colors
+	.applySkins({
+		.group {
+			[data-selected="true"] {
+				&:not(:focus) {
+					color: @moon-dropdown-selected-text-color;
+				}
+			}
+		}
+	});
+}

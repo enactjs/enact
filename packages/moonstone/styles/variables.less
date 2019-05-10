@@ -169,6 +169,14 @@
 @moon-button-pressed-scale: 0.05;
 @moon-button-icon-h-margin: 15px;
 @moon-button-icon-small-h-margin: 15px;
+@moon-button-icon-start-margin: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
+@moon-button-icon-end-margin: @moon-button-icon-h-margin;
+@moon-button-icon-small-start-margin: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
+@moon-button-icon-small-end-margin: @moon-button-icon-small-h-margin;
+@moon-button-icon-position-after-start-margin: @moon-button-icon-end-margin;
+@moon-button-icon-position-after-end-margin: @moon-button-icon-start-margin;
+@moon-button-icon-position-after-small-start-margin: @moon-button-icon-small-end-margin;
+@moon-button-icon-position-after-small-end-margin: 0;
 @moon-button-colordot-width: 27px;
 @moon-button-colordot-height: 9px;
 @moon-button-small-colordot-width: 21px;
@@ -179,6 +187,13 @@
 // ---------------------------------------
 @moon-divider-border-width: 3px;
 @moon-divider-height: 39px;
+
+// Dropdown
+// ---------------------------------------
+@moon-dropdown-border-radius: @moon-button-border-radius;
+@moon-dropdown-width: @moon-button-max-width;
+@moon-dropdown-list-width: (@moon-dropdown-width - (@moon-contextual-popup-padding * 2) - @moon-button-border-width);
+@moon-dropdown-list-max-height: 300px;
 
 // Icon Button
 // ---------------------------------------
@@ -236,12 +251,13 @@
 @moon-formcheckbox-check-icon-size: 72px;
 @moon-formcheckbox-check-icon-size-large: 84px;
 @moon-formcheckbox-border-size: 2px;
-@moon-formcheckbox-border-radius: 3px;
+@moon-formcheckbox-border-radius: 960px; // Generic, sufficiently large value that converts to a nice amount of rem
 
 // Checkbox
 // ---------------------------------------
-@moon-checkbox-size: 30px;
-@moon-checkbox-size-large: 36px;
+@moon-checkbox-size: 27px;
+@moon-checkbox-size-large: 33px;
+@moon-checkbox-border-radius: 960px; // Generic, sufficiently large value that converts to a nice amount of rem
 
 // DaySelector
 // ---------------------------------------
@@ -368,8 +384,9 @@
 // ContextualPopup
 // ---------------------------------------
 @moon-contextual-popup-border-width: 1px;
-@moon-contextual-popup-border-radius: 3px;
-@moon-contextual-popup-padding: 18px;
+@moon-contextual-popup-border-radius: @moon-button-border-width;
+@moon-contextual-popup-padding: @moon-spotlight-outset;
+@moon-contextual-popup-show-arrow-padding: 18px;
 @moon-contextual-popup-arrow-height: 30px;
 @moon-contextual-popup-arrow-width: 30px;
 
