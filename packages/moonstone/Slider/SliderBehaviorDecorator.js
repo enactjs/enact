@@ -98,7 +98,7 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidUpdate (prevProps, prevState) {
 			// on touch platforms, we want sliders to focus when dragging begins
 			if (platform.touch && this.state.dragging && !prevState.dragging) {
-				const thisNode = findDOMNode(this);
+				const thisNode = findDOMNode(this); // eslint-disable-line react/no-find-dom-node
 				const sliderNode = thisNode.getAttribute('role') === 'slider' ? thisNode : thisNode.querySelector('[role="slider"]');
 				sliderNode.focus();
 			}
@@ -148,7 +148,6 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus (ev) {
-			console.log('HANDLING FOCUS', ev);
 			if (!this.props.disabled) {
 				forward('onFocus', ev, this.props);
 				this.setState({focused: true});
