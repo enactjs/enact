@@ -2,8 +2,8 @@
  * A component for instantiating a section of content with a title.
  *
  * @example
- * <Heading spacing="medium">
- *   A group of related components
+ * <Heading spacing="none">
+ *   A Content Section Heading
  * </Heading>
  *
  * @module ui/Heading

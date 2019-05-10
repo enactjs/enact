@@ -4,9 +4,10 @@
  * @example
  * <Heading
  *   casing="preserve"
- *   spacing="medium"
+ *   size="large"
+ *   spacing="small"
  * >
- *   A group of related components
+ *   A Content Section Heading
  * </Heading>
  *
  * @module moonstone/Heading
