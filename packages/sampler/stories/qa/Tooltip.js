@@ -14,7 +14,7 @@ import {number, object, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('TooltipDecorator', TooltipDecorator);
-const TooltipNormalButton = TooltipDecorator(Button);
+const TooltipButton = TooltipDecorator({tooltipDestinationProp: 'decoration'}, Button);
 
 const prop = {
 	tooltipPosition: {
@@ -39,8 +39,6 @@ const prop = {
 		'role': 'alert'
 	}
 };
-
-const TooltipButton = TooltipDecorator(Button);
 
 class TooltipTest extends React.Component {
 	constructor (props) {
@@ -290,34 +288,34 @@ storiesOf('Tooltip', module)
 					<Cell shrink>
 						<Layout align="center space-between">
 							<Cell shrink>
-								<TooltipNormalButton
+								<TooltipButton
 									tooltipDelay={tooltipDelay}
 									tooltipText={tooltipText}
 									tooltipPosition={tooltipPosition}
 									tooltipProps={tooltipProps}
 								>
 									Top Left
-								</TooltipNormalButton>
+								</TooltipButton>
 							</Cell>
 							<Cell shrink>
-								<TooltipNormalButton
+								<TooltipButton
 									tooltipDelay={tooltipDelay}
 									tooltipText={tooltipText}
 									tooltipPosition={tooltipPosition}
 									tooltipProps={tooltipProps}
 								>
 									Top
-								</TooltipNormalButton>
+								</TooltipButton>
 							</Cell>
 							<Cell shrink>
-								<TooltipNormalButton
+								<TooltipButton
 									tooltipDelay={tooltipDelay}
 									tooltipText={tooltipText}
 									tooltipPosition={tooltipPosition}
 									tooltipProps={tooltipProps}
 								>
 									Top Right
-								</TooltipNormalButton>
+								</TooltipButton>
 							</Cell>
 						</Layout>
 					</Cell>
@@ -358,34 +356,34 @@ storiesOf('Tooltip', module)
 					<Cell shrink>
 						<Layout align="center space-between">
 							<Cell shrink>
-								<TooltipNormalButton
+								<TooltipButton
 									tooltipDelay={tooltipDelay}
 									tooltipText={tooltipText}
 									tooltipPosition={tooltipPosition}
 									tooltipProps={tooltipProps}
 								>
 									Bottom Left
-								</TooltipNormalButton>
+								</TooltipButton>
 							</Cell>
 							<Cell shrink>
-								<TooltipNormalButton
+								<TooltipButton
 									tooltipDelay={tooltipDelay}
 									tooltipText={tooltipText}
 									tooltipPosition={tooltipPosition}
 									tooltipProps={tooltipProps}
 								>
 									Bottom
-								</TooltipNormalButton>
+								</TooltipButton>
 							</Cell>
 							<Cell shrink>
-								<TooltipNormalButton
+								<TooltipButton
 									tooltipDelay={tooltipDelay}
 									tooltipText={tooltipText}
 									tooltipPosition={tooltipPosition}
 									tooltipProps={tooltipProps}
 								>
 									Bottom Right
-								</TooltipNormalButton>
+								</TooltipButton>
 							</Cell>
 						</Layout>
 					</Cell>
