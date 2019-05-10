@@ -4,7 +4,7 @@ import {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {Job} from '@enact/core/util';
 import platform from '@enact/core/platform';
-import {forward} from '@enact/core/handle';
+import handle, {forward} from '@enact/core/handle';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -12,6 +12,7 @@ import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import $L from '../internal/$L';
+import {SharedState} from '../internal/SharedStateDecorator';
 
 import Scrollbar from './Scrollbar';
 import Skinnable from '../Skinnable';
@@ -54,6 +55,8 @@ const configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusabl
 	});
 };
 
+const isValidId = (id) => id !== '';
+
 /**
  * A Moonstone-styled native component that provides horizontal and vertical scrollbars.
  *
@@ -65,6 +68,8 @@ const configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusabl
  */
 class ScrollableBaseNative extends Component {
 	static displayName = 'ScrollableNative'
+
+	static contextType = SharedState
 
 	static propTypes = /** @lends moonstone/ScrollableNative.ScrollableNative.prototype */ {
 		/**
@@ -134,6 +139,18 @@ class ScrollableBaseNative extends Component {
 		 * @public
 		 */
 		focusableScrollbar: PropTypes.bool,
+
+		/**
+		 * A unique identifier for the scrollable component.
+		 *
+		 * When specified and when the scrollable is within a SharedStateDecorator, the scroll
+		 * position will be shared and restored on mount if the component is destroyed and
+		 * recreated.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		id: PropTypes.string,
 
 		/**
 		 * Specifies overscroll effects shows on which type of inputs.
@@ -231,6 +248,8 @@ class ScrollableBaseNative extends Component {
 
 		this.createOverscrollJob('vertical', 'before');
 		this.createOverscrollJob('vertical', 'after');
+
+		this.restoreScrollPosition();
 	}
 
 	componentDidUpdate (prevProps) {
@@ -263,6 +282,21 @@ class ScrollableBaseNative extends Component {
 	overscrollJobs = {
 		horizontal: {before: null, after: null},
 		vertical: {before: null, after: null}
+	}
+
+	// Only intended to be used within componentDidMount, this method will fetch the last stored
+	// scroll position from SharedState and scroll (without animation) to that position
+	restoreScrollPosition () {
+		const {id} = this.props;
+		if (this.context && isValidId(id)) {
+			const scrollPosition = this.context.get(`${id}.scrollPosition`);
+			if (scrollPosition) {
+				this.uiRef.current.scrollTo({
+					position: scrollPosition,
+					animate: false
+				});
+			}
+		}
 	}
 
 	onMouseDown = (ev) => {
@@ -780,6 +814,14 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	handleScroll = handle(
+		forward('onScroll'),
+		(ev, {id}, context) => isValidId(id) && context,
+		({scrollLeft: x, scrollTop: y}, {id}, context) => {
+			context.set(`${id}.scrollPosition`, {x, y});
+		}
+	).bindAs(this, 'handleScroll')
+
 	render () {
 		const
 			{
@@ -811,6 +853,7 @@ class ScrollableBaseNative extends Component {
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
+				onScroll={this.handleScroll}
 				onWheel={this.onWheel}
 				ref={this.uiRef}
 				removeEventListeners={this.removeEventListeners}
