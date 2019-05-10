@@ -1,6 +1,8 @@
+import {findDOMNode} from 'react-dom';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import Pause from '@enact/spotlight/Pause';
+import platform from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -93,6 +95,15 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return null;
 		}
 
+		componentDidUpdate (prevProps, prevState) {
+			// on touch platforms, we want sliders to focus when dragging begins
+			if (platform.touch && this.state.dragging && !prevState.dragging) {
+				const thisNode = findDOMNode(this);
+				const sliderNode = thisNode.getAttribute('role') === 'slider' ? thisNode : thisNode.querySelector('[role="slider"]');
+				sliderNode.focus();
+			}
+		}
+
 		componentWillUnmount () {
 			this.paused.resume();
 		}
@@ -137,6 +148,7 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus (ev) {
+			console.log('HANDLING FOCUS', ev);
 			if (!this.props.disabled) {
 				forward('onFocus', ev, this.props);
 				this.setState({focused: true});
