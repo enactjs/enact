@@ -16,6 +16,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to size properly
 - `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to scroll correctly on iOS and Safari
+- `ui/ViewManager` to correctly handle transitioning quickly between two children
 
 ## [2.5.2] - 2019-04-23
 

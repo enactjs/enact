@@ -8,11 +8,9 @@
 import {forward} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
-import compose from 'ramda/src/compose';
 import eqBy from 'ramda/src/eqBy';
 import findIndex from 'ramda/src/findIndex';
 import identity from 'ramda/src/identity';
-import lte from 'ramda/src/lte';
 import prop from 'ramda/src/prop';
 import propEq from 'ramda/src/propEq';
 import remove from 'ramda/src/remove';
@@ -30,17 +28,6 @@ import React from 'react';
  * @private
  */
 const indexOfChild = useWith(findIndex, [propEq('key'), identity]);
-
-/**
- * Returns `true` if `children` contains `child`
- *
- * @param {Object} child React element to find
- * @param {Object[]} children Array of React elements
- * @returns {Boolean} `true` if `child` is present
- * @method
- * @private
- */
-const hasChild = compose(lte(0), indexOfChild);
 
 /**
  * Returns an array of non-null children
@@ -226,28 +213,41 @@ class TransitionGroup extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		this.reconcileChildren(prevState.children, this.state.activeChildren);
+		this.reconcileUnmountedChildren(prevState.children, this.state.children);
+		this.reconcileChildren(prevState.activeChildren, this.state.activeChildren);
 	}
 
-	reconcileChildren (prevChildMapping, nextChildMapping) {
+	reconcileUnmountedChildren (prevChildMapping, nextChildMapping) {
+		const nextChildKeys = nextChildMapping.map(c => c.key);
+		const prevChildKeys = prevChildMapping.map(c => c.key);
+
+		// `state.children` represents the mounted children. if a view change happens during a
+		// transition causing the View to be unmounted before it fires its callback, the
+		// currentlyTransitioningKeys map will be out of sync. To manage that, we check for keys
+		// that have fallen out of the `children` array and manually clean them up from the map.
+		prevChildKeys
+			.filter(key => !nextChildKeys.includes(key))
+			.forEach(key => this.completeTransition(key));
+	}
+
+	reconcileChildren (prevActiveChildMapping, nextActiveChildMapping) {
 		const {size} = this.props;
 
+		const nextChildKeys = nextActiveChildMapping.map(c => c.key);
+		const prevChildKeys = prevActiveChildMapping.map(c => c.key);
+		const droppedKeys = prevChildKeys.filter(key => !nextChildKeys.includes(key));
+
 		// if children haven't changed, there's nothing to reconcile
-		if (prevChildMapping.length === nextChildMapping.length && prevChildMapping.filter(pc => {
-			return !nextChildMapping.find(nc => nc.key === pc.key);
-		}).length === 0) {
+		if (prevActiveChildMapping.length === nextActiveChildMapping.length && droppedKeys.length === 0) {
 			return;
 		}
 
 		// remove any "dropped" children from the list of transitioning children
-		prevChildMapping.filter(child => !hasChild(child, nextChildMapping)).forEach(child => {
-			delete this.currentlyTransitioningKeys[child.key];
-		});
+		droppedKeys.forEach(key => this.completeTransition(key));
 
 		// mark any new child as entering
-		nextChildMapping.forEach((child, index) => {
-			const key = child.key;
-			const hasPrev = hasChild(key, prevChildMapping);
+		nextChildKeys.forEach((key, index) => {
+			const hasPrev = prevChildKeys.includes(key);
 
 			if (!hasPrev || this.currentlyTransitioningKeys[key]) {
 				// flag a view to enter if it's new (!hasPrev), or if it's not new (hasPrev) but is
@@ -263,9 +263,8 @@ class TransitionGroup extends React.Component {
 		});
 
 		// mark any previous child not remaining as leaving
-		prevChildMapping.forEach(child => {
-			const key = child.key;
-			const hasNext = hasChild(key, nextChildMapping);
+		prevChildKeys.forEach(key => {
+			const hasNext = nextChildKeys.includes(key);
 			const isRendered = Boolean(this.groupRefs[key]);
 			// flag a view to leave if it isn't in the new set (!hasNext) and it exists (isRendered)
 			if (!hasNext && isRendered) {
@@ -329,7 +328,7 @@ class TransitionGroup extends React.Component {
 
 		let currentChildMapping = mapChildren(this.props.children);
 
-		if (!currentChildMapping || !hasChild(key, currentChildMapping)) {
+		if (!currentChildMapping || !currentChildMapping.find(child => child.key === key)) {
 			// This was removed before it had fully appeared. Remove it.
 			this.performLeave(key);
 		}
