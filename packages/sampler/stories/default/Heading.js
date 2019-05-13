@@ -24,9 +24,8 @@ storiesOf('Moonstone', module)
 		'Heading',
 		withInfo({
 			text: 'A component for initiating a section of content.'
-		})(() => ([
+		})(() => (<React.Fragment>
 			<Heading
-				key="heading"
 				casing={select('casing', prop.casing, Config)}
 				marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				size={select('size', prop.size, Config)}
@@ -34,9 +33,9 @@ storiesOf('Moonstone', module)
 				withLine={boolean('withLine', Config)}
 			>
 				{text('children', Config, 'Heading text')}
-			</Heading>,
-			<BodyText key="exampleText" style={{marginTop: 0}}>
+			</Heading>
+			<BodyText style={{marginTop: 0}}>
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquam dapibus imperdiet. Morbi diam ex, vulputate eget luctus eu, gravida at ligula. Sed tristique eros sit amet iaculis varius. Phasellus rutrum augue id nulla consectetur, a vulputate velit dictum. Vestibulum ultrices tellus ac cursus condimentum. Aliquam sit amet consectetur nulla, viverra bibendum metus.
 			</BodyText>
-		]))
+		</React.Fragment>))
 	);

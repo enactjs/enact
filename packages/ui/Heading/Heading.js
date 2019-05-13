@@ -25,7 +25,7 @@ import css from './Heading.module.less';
  * @public
  */
 const Heading = kind({
-	name: 'Heading',
+	name: 'ui:Heading',
 
 	propTypes: /** @lends ui/Heading.Heading.prototype */ {
 		/**
@@ -65,7 +65,6 @@ const Heading = kind({
 		/**
 		 * Set the size of this component.
 		 *
-		 * Allowed values include:
 		 * * `'title'` and `'subtitle'` are generally considered to be used only once on a given screen.
 		 * * `'large'`, `'medium'`, `'small'`, and `'tiny'` are typically used as section headings
 		 * for content on a screen, starting with `'large'` for the first tier of information
