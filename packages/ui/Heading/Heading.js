@@ -31,9 +31,6 @@ const Heading = kind({
 		/**
 		 * The text for the label of the Heading.
 		 *
-		 * A Heading with no children (text content) will render simply as a horizontal line, with
-		 * even spacing above and below.
-		 *
 		 * @type {Node}
 		 * @public
 		 */
