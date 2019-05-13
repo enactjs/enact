@@ -98,7 +98,8 @@ const ButtonBase = kind({
 	},
 
 	defaultProps: {
-		iconPosition: 'before'
+		iconPosition: 'before',
+		size: 'small'
 	},
 
 	styles: {

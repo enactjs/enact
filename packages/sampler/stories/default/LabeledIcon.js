@@ -1,4 +1,6 @@
 import LabeledIcon from '@enact/moonstone/LabeledIcon';
+import Icon, {IconBase} from '@enact/moonstone/Icon';
+import UiIcon from '@enact/ui/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {withInfo} from '@storybook/addon-info';
@@ -8,7 +10,7 @@ import iconNames from './icons';
 import {mergeComponentMetadata} from '../../src/utils';
 import {boolean, select, text} from '../../src/enact-knobs';
 
-const Config = mergeComponentMetadata('LabeledIcon', UiLabeledIconBase, UiLabeledIcon, LabeledIcon);
+const Config = mergeComponentMetadata('LabeledIcon', UiLabeledIconBase, UiLabeledIcon, UiIcon, IconBase, Icon, LabeledIcon);
 Config.displayName = 'LabeledIcon';
 
 storiesOf('Moonstone', module)
@@ -22,7 +24,7 @@ storiesOf('Moonstone', module)
 				icon={select('icon', ['', ...iconNames], Config, 'fullscreen')}
 				inline={boolean('inline', Config)}
 				labelPosition={select('labelPosition', ['above', 'after', 'before', 'below', 'left', 'right'], Config)}
-				size={select('size', ['small', 'large'], Config, 'large')}
+				size={select('size', ['small', 'large'], Config)}
 			>
 				{text('children', Config, 'Hello LabeledIcon')}
 			</LabeledIcon>

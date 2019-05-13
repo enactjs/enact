@@ -29,7 +29,7 @@ storiesOf('LabeledIconButton', module)
 									icon={icon}
 									disabled={disabled}
 									labelPosition={labelPosition}
-									size={select('size', ['small', 'large'], Config, 'large')}
+									size={select('size', ['small', 'large'], Config)}
 								>{icon}</LabeledIconButton>
 							</Cell>
 						)}
@@ -52,7 +52,7 @@ storiesOf('LabeledIconButton', module)
 							inline
 							disabled={disabled}
 							labelPosition={labelPosition}
-							size={select('size', ['small', 'large'], Config, 'large')}
+							size={select('size', ['small', 'large'], Config)}
 						>{icon}</LabeledIconButton>
 					)}
 				</Scroller>

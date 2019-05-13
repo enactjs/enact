@@ -85,6 +85,10 @@ const IconButtonBase = kind({
 		css: PropTypes.object
 	},
 
+	defaultProps: {
+		size: 'small'
+	},
+
 	styles: {
 		css: componentCss,
 		publicClassNames: ['iconButton', 'bg', 'large', 'selected', 'small']

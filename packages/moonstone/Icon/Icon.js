@@ -34,6 +34,10 @@ import componentCss from './Icon.module.less';
 const IconBase = kind({
 	name: 'Icon',
 
+	defaultProps: {
+		size: 'small'
+	},
+
 	render: (props) => UiIcon.inline({
 		...props,
 		css: componentCss,
