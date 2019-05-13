@@ -95,8 +95,12 @@
 
 // Divider
 // ---------------------------------------
-@moon-divider-text-color:             @moon-text-color;
-@moon-divider-border-color:           @moon-border-color;
+@moon-divider-text-color: @moon-heading-text-color;  // Deprecated
+@moon-divider-border-color: @moon-heading-border-color;  // Deprecated
+
+// Dropdown
+// ---------------------------------------
+@moon-dropdown-selected-text-color: @moon-spotlight-color;
 
 // FormCheckbox
 // ---------------------------------------
@@ -120,6 +124,11 @@
 @moon-header-title-below-full-bleed-text-color: @moon-header-full-bleed-text-color;
 @moon-header-full-bleed-border-color: fade(@moon-white, 25%);
 @moon-header-controls-border-color:   @moon-border-color;
+
+// Heading
+// ---------------------------------------
+@moon-heading-text-color: @moon-text-color;
+@moon-heading-border-color: @moon-border-color;
 
 // IconButton
 // ---------------------------------------

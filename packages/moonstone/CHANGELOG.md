@@ -14,6 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ContextualPopup` config `noArrow`
 - `moonstone/Button` prop `iconPosition`
 - `moonstone/Dropdown` component
+- `moonstone/Heading` component, an improved version of `moonstone/Divider` with additional features
 
 ### Removed
 
@@ -38,6 +39,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
+- `moonstone/Divider` which will be replaced by `moonstone/Heading`
 - `moonstone/Input.InputBase` prop `focused` which will be handled by CSS in 3.0
 - `small` prop in `moonstone/Input` and `moonstone/ToggleButton`, which will be replaced by `size="small"` in 3.0
 
