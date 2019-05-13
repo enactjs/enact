@@ -199,8 +199,8 @@ const InputBase = kind({
 		/**
 		 * The size of the input field.
 		 *
-		 * @type {('small'|'large')}
-		 * @default 'large'
+		 * @type {('large'|'small')}
+		 * @default 'small'
 		 * @public
 		 */
 		size: PropTypes.string,

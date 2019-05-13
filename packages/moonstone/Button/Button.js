@@ -94,7 +94,16 @@ const ButtonBase = kind({
 		 * @default 'before'
 		 * @public
 		 */
-		iconPosition: PropTypes.oneOf(['before', 'after'])
+		iconPosition: PropTypes.oneOf(['before', 'after']),
+
+		/**
+		 * The size of the button.
+		 *
+		 * @type {('large'|'small')}
+		 * @default 'small'
+		 * @public
+		 */
+		size: PropTypes.string
 	},
 
 	defaultProps: {
