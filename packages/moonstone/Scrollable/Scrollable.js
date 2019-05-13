@@ -546,7 +546,7 @@ class ScrollableBase extends Component {
 		forward('onKeyDown', ev, this.props);
 		ev.preventDefault();
 
-		this.animateOnFocus = this.props.animate;
+		this.animateOnFocus = true;
 
 		if (!repeat && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
 			let direction = isPageUp(keyCode) ? 'up' : 'down';
