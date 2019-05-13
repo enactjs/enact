@@ -16,6 +16,7 @@
  */
 
 import kind from '@enact/core/kind';
+import deprecate from '@enact/core/internal/deprecate';
 import React from 'react';
 
 import {HeadingBase, HeadingDecorator} from '../Heading';
@@ -33,7 +34,16 @@ import {HeadingBase, HeadingDecorator} from '../Heading';
  */
 const DividerBase = kind({
 	name: 'Divider',
-	render: (props) => <HeadingBase {...props} showLine size="medium" />
+	render: (props) => {
+		deprecate({
+			name: 'moonstone/Divider',
+			replacedBy: 'moonstone/Heading',
+			message: 'Use `showLine` to enable the same under line as Divider',
+			since: '2.6.0',
+			until: '3.0.0'
+		});
+		return <HeadingBase {...props} showLine size="medium" />;
+	}
 });
 
 
