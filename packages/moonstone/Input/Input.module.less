@@ -163,7 +163,14 @@
 			.vendor-opacity(@moon-input-disabled-opacity);
 
 			.focus({
+				background-color: @moon-input-decorator-focus-disabled-bg-color;
 				.vendor-opacity(@moon-input-disabled-opacity);
+
+				.input {
+					.input-placeholder({
+						color: @moon-input-placeholder-focus-disabled-color;
+					});
+				}
 			});
 
 			.input,
