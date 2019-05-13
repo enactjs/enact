@@ -33,7 +33,7 @@ import {HeadingBase, HeadingDecorator} from '../Heading';
  */
 const DividerBase = kind({
 	name: 'Divider',
-	render: (props) => <HeadingBase {...props} withLine size="medium" />
+	render: (props) => <HeadingBase {...props} showLine size="medium" />
 });
 
 

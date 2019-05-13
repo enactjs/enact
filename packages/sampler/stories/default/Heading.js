@@ -28,9 +28,9 @@ storiesOf('Moonstone', module)
 			<Heading
 				casing={select('casing', prop.casing, Config)}
 				marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
+				showLine={boolean('showLine', Config)}
 				size={select('size', prop.size, Config)}
 				spacing={select('spacing', prop.spacing, Config)}
-				withLine={boolean('withLine', Config)}
 			>
 				{text('children', Config, 'Heading text')}
 			</Heading>

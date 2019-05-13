@@ -53,7 +53,7 @@ const HeadingBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		withLine: PropTypes.bool
+		showLine: PropTypes.bool
 	},
 
 	styles: {
@@ -62,11 +62,11 @@ const HeadingBase = kind({
 	},
 
 	computed: {
-		className: ({withLine, styler}) => styler.append({withLine})
+		className: ({showLine, styler}) => styler.append({showLine})
 	},
 
 	render: ({css, ...rest}) => {
-		delete rest.withLine;
+		delete rest.showLine;
 		return UiHeading.inline({css, ...rest});
 	}
 });
