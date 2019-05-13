@@ -2,10 +2,10 @@ import LabeledIconButton from '@enact/moonstone/LabeledIconButton';
 import {IconButtonBase} from '@enact/moonstone/IconButton';
 import Button, {ButtonBase} from '@enact/moonstone/Button';
 import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
+import {LabeledIconBase as UiLabeledIconBase, LabeledIcon as UiLabeledIcon} from '@enact/ui/LabeledIcon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {withInfo} from '@storybook/addon-info';
-import {LabeledIconBase as UiLabeledIconBase, LabeledIcon as UiLabeledIcon} from '@enact/ui/LabeledIcon';
 
 import iconNames from './icons';
 import {mergeComponentMetadata} from '../../src/utils';

@@ -1,8 +1,11 @@
 import LabeledIconButton from '@enact/moonstone/LabeledIconButton';
+import {IconButtonBase} from '@enact/moonstone/IconButton';
+import Button, {ButtonBase} from '@enact/moonstone/Button';
+import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
+import {LabeledIconBase as UiLabeledIconBase, LabeledIcon as UiLabeledIcon} from '@enact/ui/LabeledIcon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import Scroller from '@enact/ui/Scroller';
-import {LabeledIconBase as UiLabeledIconBase, LabeledIcon as UiLabeledIcon} from '@enact/ui/LabeledIcon';
 import Layout, {Cell} from '@enact/ui/Layout';
 
 import iconNames from '../default/icons';
@@ -11,7 +14,7 @@ import {mergeComponentMetadata} from '../../src/utils';
 import {boolean, select} from '../../src/enact-knobs';
 
 LabeledIconButton.displayName = 'LabeledIconButton';
-const Config = mergeComponentMetadata('LabeledIconButton', UiLabeledIconBase, UiLabeledIcon, LabeledIconButton);
+const Config = mergeComponentMetadata('LabeledIconButton', UiLabeledIconBase, UiLabeledIcon, Button, ButtonBase, UIButton, UIButtonBase, IconButtonBase, LabeledIconButton);
 
 storiesOf('LabeledIconButton', module)
 	.add(
