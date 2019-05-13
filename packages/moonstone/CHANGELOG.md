@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Deprecated
+
+- `moonstone/Divider` which has been replaced by `moonstone/Heading`
+
 ### Added
 
 - `moonstone/Panels` slot `<controls>` to easily add custom controls next to the Panels' "close" button
