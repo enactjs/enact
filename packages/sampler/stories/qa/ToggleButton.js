@@ -1,11 +1,15 @@
 import ToggleButton from '@enact/moonstone/ToggleButton';
+import Button, {ButtonBase} from '@enact/moonstone/Button';
+import UiButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
 import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
 ToggleButton.displayName = 'ToggleButton';
+const Config = mergeComponentMetadata('ToggleButton', UIButtonBase, UiButton, ButtonBase, Button, ToggleButton);
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -19,11 +23,11 @@ storiesOf('ToggleButton', module)
 		() => (
 			<ToggleButton
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, ToggleButton)}
-				disabled={boolean('disabled', ToggleButton)}
-				size={select('size', ['small', 'large'], ToggleButton, 'large')}
-				toggleOnLabel={text('toggleOnLabel', ToggleButton, 'Loooooooooooooooooog On')}
-				toggleOffLabel={text('toggleOffLabel', ToggleButton, 'Loooooooooooooooooog Off')}
+				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+				disabled={boolean('disabled', Config)}
+				size={select('size', ['small', 'large'], Config)}
+				toggleOnLabel={text('toggleOnLabel', Config, 'Loooooooooooooooooog On')}
+				toggleOffLabel={text('toggleOffLabel', Config, 'Loooooooooooooooooog Off')}
 			/>
 		)
 	)
@@ -32,11 +36,11 @@ storiesOf('ToggleButton', module)
 		() => (
 			<ToggleButton
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, ToggleButton)}
-				disabled={boolean('disabled', ToggleButton)}
-				size={select('size', ['small', 'large'], ToggleButton, 'large')}
-				toggleOnLabel={select('toggleOnLabel', prop.tallText, ToggleButton, 'ิ้  ไั  ஒ  து')}
-				toggleOffLabel={select('toggleOffLabel', prop.tallText, ToggleButton, 'ิ้  ไั  ஒ  து')}
+				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
+				disabled={boolean('disabled', Config)}
+				size={select('size', ['small', 'large'], Config)}
+				toggleOnLabel={select('toggleOnLabel', prop.tallText, Config, 'ิ้  ไั  ஒ  து')}
+				toggleOffLabel={select('toggleOffLabel', prop.tallText, Config, 'ิ้  ไั  ஒ  து')}
 			/>
 		)
 	);

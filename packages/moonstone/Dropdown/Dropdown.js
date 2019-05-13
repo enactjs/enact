@@ -66,7 +66,6 @@ const DropdownButton = kind({
 		<Button
 			{...props}
 			iconPosition="after"
-			small
 		/>
 	)
 });
