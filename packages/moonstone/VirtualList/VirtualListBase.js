@@ -332,9 +332,11 @@ const VirtualListBaseFactory = (type) => {
 					diffPosition = (indexFrom % dimensionToExtent) - position,
 					// When direction is 1 (forward) and diffPosition is positive, add dimensionToExtent.
 					// When direction is -1 (backward) and diffPosition is negative, substract dimensionToExtent.
-					startIndex = indexFrom - diffPosition + ((direction * diffPosition > 0) ? delta : 0);
+					candidateIndex = indexFrom - diffPosition + ((direction * diffPosition > 0) ? delta : 0);
 
-				return startIndex;
+				if (direction * (indexTo - candidateIndex) > 0) {
+					return candidateIndex;
+				}
 			}
 
 			return -1;
