@@ -307,14 +307,12 @@ const VirtualListBaseFactory = (type) => {
 		getExtentIndex = (index) => (Math.floor(index / this.uiRefCurrent.dimensionToExtent))
 
 		findSpottableItem = (indexFrom, indexTo) => {
-			const
-				{dataSize} = this.props,
-				safeIndexFrom = clamp(0, dataSize - 1, indexFrom);
+			const {dataSize} = this.props;
 
 			if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
 				return -1;
 			} else {
-				return safeIndexFrom;
+				return clamp(0, dataSize - 1, indexFrom);
 			}
 		}
 
@@ -340,23 +338,6 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			return -1;
-		}
-
-		findSpottableExtent = (indexFrom, isForward) => {
-			const
-				{dataSize} = this.props,
-				{dimensionToExtent} = this.uiRefCurrent,
-				{findSpottableItem, getExtentIndex} = this,
-				firstIndexInExtent = getExtentIndex(indexFrom) * dimensionToExtent;
-			let index;
-
-			if (isForward) {
-				index = findSpottableItem(firstIndexInExtent + dimensionToExtent, dataSize);
-			} else {
-				index = findSpottableItem(firstIndexInExtent - 1, -1);
-			}
-
-			return getExtentIndex(index);
 		}
 
 		findNearestSpottableItemInExtent = (index, extentIndex) => {
