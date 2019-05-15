@@ -55,6 +55,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Input` refocusing on touch on iOS
 - `moonstone/VideoPlayer` to correctly handle touch events while moving slider knobs
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to change spotlight focus due to touch events
+- `moonstone/Slider` to not scroll the viewport when dragging on touch platforms
 - `moonstone/VirtualList` and `moonstone/Scroller` to animate with 5-way navigation by default
 
 ## [2.5.2] - 2019-04-23
