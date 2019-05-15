@@ -16,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/ContextualPopupDecorator` imperative methods to be correctly bound to the instance
 - `moonstone/EditableIntegerPicker`, `moonstone/Picker`, and `moonstone/RangePicker` to not error when the `min` prop exceeds the `max` prop
 - `moonstone/Input` refocusing on touch on iOS
 - `moonstone/VideoPlayer` to correctly handle touch events while moving slider knobs
