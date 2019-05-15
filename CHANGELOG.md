@@ -2,11 +2,9 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [3.0.0] - tbd
+## [3.0.0-alpha.1] - 2019-05-15
 
 > NOTE:  Support for 2019 TV platform (Blink <68) has been dropped from this version of Enact
-
-## [3.0.0-alpha.1] - 2019-05-15
 
 ### Removed
 
