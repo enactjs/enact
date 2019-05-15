@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/ContextualPopupDecorator` imperative methods to be correctly bound to the instance
 - `moonstone/Input` refocusing on touch on iOS
 - `moonstone/VideoPlayer` to correctly handle touch events while moving slider knobs
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to change spotlight focus due to touch events
