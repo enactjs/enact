@@ -838,15 +838,15 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			this.mediaControlsNode = ReactDOM.findDOMNode(node); // eslint-disable-line react/no-find-dom-node
 		}
 
-		areMoreComponentsAvailable () {
+		areMoreComponentsAvailable = () => {
 			return this.state.showMoreComponents;
 		}
 
-		showMoreComponents () {
+		showMoreComponents = () => {
 			this.setState({showMoreComponents: true});
 		}
 
-		hideMoreComponents () {
+		hideMoreComponents = () => {
 			this.setState({showMoreComponents: false});
 		}
 
