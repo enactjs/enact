@@ -31,6 +31,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` text size to be smaller
 - `moonstone/Button`, `moonstone/Dropdown`, `moonstone/Icon`, `moonstone/IconButton`, `moonstone/Input`, and `moonstone/ToggleButton` default size to "small", which unifies their initial heights
 - `moonstone/Button`, `moonstone/Checkbox`, `moonstone/CheckboxItem`, `moonstone/ContextualPopupDecorator`, `moonstone/FormCheckbox`, `moonstone/FormCheckboxItem`, `moonstone/Header`, `moonstone/Notification`, `moonstone/RadioItem`, and `moonstone/Tooltip` appearance to match the latest designs
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` scrollbar button to gain focus when pressing a page up or down key if `focusableScrollbar` is true
 
 ### Fixed
 
@@ -55,6 +56,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Input` refocusing on touch on iOS
 - `moonstone/VideoPlayer` to correctly handle touch events while moving slider knobs
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to change spotlight focus due to touch events
+- `moonstone/Slider` to not scroll the viewport when dragging on touch platforms
 - `moonstone/VirtualList` and `moonstone/Scroller` to animate with 5-way navigation by default
 
 ## [2.5.2] - 2019-04-23
