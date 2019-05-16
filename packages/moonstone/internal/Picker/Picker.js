@@ -13,6 +13,7 @@ import Spotlight, {getDirection} from '@enact/spotlight';
 
 import Skinnable from '../../Skinnable';
 import {validateRange, validateStepped} from '../validators';
+import {extractVoiceProps} from '../util';
 
 import IdProvider from '../IdProvider';
 import $L from '../$L';
@@ -596,7 +597,7 @@ const PickerBase = class extends React.Component {
 		const {keyCode} = ev;
 		forwardKeyDown(ev, this.props);
 
-		if (joined) {
+		if (joined && !this.props.disabled) {
 			const direction = getDirection(keyCode);
 
 			const directions = {
@@ -631,7 +632,7 @@ const PickerBase = class extends React.Component {
 		const {keyCode} = ev;
 		forwardKeyUp(ev, this.props);
 
-		if (joined) {
+		if (joined && !this.props.disabled) {
 			const isVertical = orientation === 'vertical' && (isUp(keyCode) || isDown(keyCode));
 			const isHorizontal = orientation === 'horizontal' && (isRight(keyCode) || isLeft(keyCode));
 
@@ -786,8 +787,6 @@ const PickerBase = class extends React.Component {
 			'aria-valuetext': ariaValueText,
 			noAnimation,
 			children,
-			'data-webos-voice-disabled': voiceDisabled,
-			'data-webos-voice-group-label': voiceGroupLabel,
 			disabled,
 			id,
 			index,
@@ -803,6 +802,12 @@ const PickerBase = class extends React.Component {
 			width,
 			...rest
 		} = this.props;
+
+		const voiceProps = extractVoiceProps(rest);
+		const voiceLabelsExt = voiceProps['data-webos-voice-labels-ext'];
+		delete voiceProps['data-webos-voice-label'];
+		delete voiceProps['data-webos-voice-labels'];
+		delete voiceProps['data-webos-voice-labels-ext'];
 
 		if (__DEV__) {
 			validateRange(value, min, max, PickerBase.displayName);
@@ -859,14 +864,14 @@ const PickerBase = class extends React.Component {
 
 		return (
 			<Component
+				{...voiceProps}
 				{...rest}
 				aria-controls={joined ? id : null}
 				aria-disabled={disabled}
 				aria-label={this.calcAriaLabel(valueText)}
 				className={classes}
-				data-webos-voice-disabled={voiceDisabled}
-				data-webos-voice-group-label={voiceGroupLabel}
 				data-webos-voice-intent="Select"
+				data-webos-voice-labels-ext={voiceLabelsExt}
 				disabled={disabled}
 				holdConfig={holdConfig}
 				onBlur={this.handleBlur}
@@ -881,11 +886,10 @@ const PickerBase = class extends React.Component {
 				{...spottablePickerProps}
 			>
 				<PickerButton
+					{...voiceProps}
 					aria-controls={!joined ? incrementerAriaControls : null}
 					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
 					data-webos-voice-label={joined ? this.calcButtonLabel(!reverse, valueText) : null}
 					disabled={incrementerDisabled}
 					hidden={reachedEnd}
@@ -919,11 +923,10 @@ const PickerBase = class extends React.Component {
 					</PickerViewManager>
 				</div>
 				<PickerButton
+					{...voiceProps}
 					aria-controls={!joined ? decrementerAriaControls : null}
 					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
 					data-webos-voice-label={joined ? this.calcButtonLabel(reverse, valueText) : null}
 					disabled={decrementerDisabled}
 					hidden={reachedStart}

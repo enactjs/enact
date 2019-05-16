@@ -8,17 +8,17 @@
 // ---------------------------------------
 @moon-darker-gray: #262626;
 @moon-dark-gray:   #4d4d4d;
-@moon-gray:        #a6a6a6;
+@moon-gray:        #bbb;   // Updated from #a6a6a6, potentially this needs to be broken into a different variable to be used with any floating components with border (as their border)
 @moon-light-gray:  #ededed;
 @moon-black:       #000;
 @moon-accent:      #cf0652;
 @moon-white:       #fff;
 @moon-red:         #f00;
 
-@moon-remote-button-red-color:     #ff6d78; // #da3c3c; // #e71b1c;
-@moon-remote-button-green-color:   #6ff467; // #21c171; // #339966;
-@moon-remote-button-yellow-color:  #ffc600; // #dac139; // #fddb24;
-@moon-remote-button-blue-color:    #0084ff; // #5677d0; // #4764b4;
+@moon-remote-button-red-color:     #e1777e; // #ff6d78; // #da3c3c; // #e71b1c;
+@moon-remote-button-green-color:   #7fd563; // #6ff467; // #21c171; // #339966;
+@moon-remote-button-yellow-color:  #d3b85f; // #ffc600; // #dac139; // #fddb24;
+@moon-remote-button-blue-color:    #5185c1; // #0084ff; // #5677d0; // #4764b4;
 
 
 // UI Conceptual Colors
@@ -55,19 +55,31 @@
 
 // Button
 // ---------------------------------------
-@moon-button-text-color:              @moon-white;
-@moon-button-bg-color:                #686868;
-@moon-button-disabled-text-color:     #cdcdcd;
-@moon-button-disabled-bg-color:       @moon-button-bg-color;
-@moon-button-translucent-opacity:     30%;
-@moon-button-lightTranslucent-bg-color:  @moon-white;
-@moon-button-transparent-active-text-color:  @moon-text-color;
-@moon-button-disabled-text-color:     @moon-dark-gray;
+@moon-button-text-color: @moon-white;
+@moon-button-bg-color: #686868;
+@moon-button-translucent-opacity: 30%;
+@moon-button-lightTranslucent-bg-color: @moon-white;
+@moon-button-transparent-bg-color: transparent;
+@moon-button-transparent-active-text-color: @moon-text-color;
+@moon-button-transparent-disabled-bg-color: @moon-button-disabled-bg-color;
+@moon-button-disabled-text-color: #cdcdcd;
+@moon-button-disabled-bg-color: @moon-button-bg-color;
+@moon-button-focus-text-color: @moon-spotlight-text-color;
+@moon-button-focus-bg-color: @moon-spotlight-bg-color;
+@moon-button-disabled-focus-text-color: @moon-spotlight-disabled-text-color;
+@moon-button-disabled-focus-icon-color: @moon-spotlight-text-color;
+@moon-button-disabled-focus-bg-color: @moon-spotlight-bg-color;
+@moon-button-selected-bg-color: @moon-gray;
+@moon-button-selected-border-color: @moon-spotlight-border-color;
+@moon-button-selected-focus-text-color: @moon-spotlight-text-color;
+@moon-button-selected-focus-bg-color: @moon-spotlight-bg-color;
+@moon-button-selected-focus-border-color: @moon-active-spotlight-border-color;
 
 // ContextualPopup
 // ---------------------------------------
 @moon-contextual-popup-bg-color: @moon-bg-color;
-@moon-contextual-popup-border-color: fade(@moon-black, 50%);
+@moon-contextual-popup-border-color: #bbb;
+@moon-contextual-popup-box-shadow-color: fade(@moon-black, 30%);
 
 // Checkbox
 // ---------------------------------------
@@ -83,8 +95,12 @@
 
 // Divider
 // ---------------------------------------
-@moon-divider-text-color:             @moon-text-color;
-@moon-divider-border-color:           @moon-border-color;
+@moon-divider-text-color: @moon-heading-text-color;  // Deprecated
+@moon-divider-border-color: @moon-heading-border-color;  // Deprecated
+
+// Dropdown
+// ---------------------------------------
+@moon-dropdown-selected-text-color: @moon-spotlight-color;
 
 // FormCheckbox
 // ---------------------------------------
@@ -107,6 +123,12 @@
 @moon-header-full-bleed-text-color:   #f5f5f5;
 @moon-header-title-below-full-bleed-text-color: @moon-header-full-bleed-text-color;
 @moon-header-full-bleed-border-color: fade(@moon-white, 25%);
+@moon-header-controls-border-color:   @moon-border-color;
+
+// Heading
+// ---------------------------------------
+@moon-heading-text-color: @moon-text-color;
+@moon-heading-border-color: @moon-border-color;
 
 // IconButton
 // ---------------------------------------
@@ -122,18 +144,18 @@
 @moon-input-text-color:               @moon-dark-gray;
 @moon-input-border-color:             #eaeaea;
 @moon-input-textarea-color:           @moon-dark-gray;
-@moon-input-text-color:               @moon-dark-gray;
-@moon-input-placeholder-color:        #868686;
-@moon-input-decorator-bg-color:       @moon-white;
+@moon-input-placeholder-color:        @moon-white;
+@moon-input-decorator-bg-color:       #aaa;
 @moon-input-decorator-border-color:   @moon-light-gray;
 
 // LabeledItem
 // ---------------------------------------
-@moon-labeled-item-label-color: @moon-sub-header-text-color;
+@moon-labeled-item-label-color: inherit;
 
 // Notification
 // ---------------------------------------
-@moon-notification-border-color: fade(@moon-black, 30%);
+@moon-notification-border-color: #bbb;
+@moon-notification-box-shadow-color: fade(@moon-black, 30%);
 
 // Panels
 // ---------------------------------------
@@ -166,7 +188,13 @@
 // RadioItem
 // ---------------------------------------
 @moon-radio-item-indicator-color: @moon-dark-gray;
-@moon-radio-item-indicator-border-color: @moon-white;
+@moon-radio-item-indicator-bg-color: @moon-white;
+@moon-radio-item-focus-indicator-color: @moon-radio-item-indicator-color;
+@moon-radio-item-focus-indicator-bg-color: @moon-radio-item-indicator-bg-color;
+@moon-radio-item-selected-indicator-color: @moon-radio-item-indicator-color;
+@moon-radio-item-selected-indicator-bg-color: @moon-spotlight-color;
+@moon-radio-item-selected-focus-indicator-color: @moon-radio-item-focus-indicator-color;
+@moon-radio-item-selected-focus-indicator-bg-color: @moon-radio-item-selected-indicator-bg-color;
 
 // Scrollable
 // ---------------------------------------
@@ -213,6 +241,8 @@
 // ---------------------------------------
 @moon-tooltip-bg-color:               @moon-dark-gray;
 @moon-tooltip-text-color:             @moon-white;
+@moon-tooltip-border-color:           #494949;
+@moon-tooltip-shadow:                 0 7px 7px fade(@moon-black, 30%);
 
 // VideoPlayer
 // ---------------------------------------

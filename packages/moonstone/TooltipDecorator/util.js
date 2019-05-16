@@ -4,6 +4,29 @@
 import ri from '@enact/ui/resolution';
 
 /**
+ * Calculates the unusable space of a centered Tooltip, which the Tooltip arrow cannot be positioned,
+ * as a percentage of the Tooltip's total width.
+ *
+ * @param  {Number} tooltipWidth        The measured width of the Tooltip
+ * @return {Number}                     The percent of the width of the tooltip that the Tooltip's
+ *                                      decorations allocate for themselves (on one side).
+ * @private
+ */
+const getLabelUnavailableSpace = function (tooltipWidth) {
+	// Arrow is 15px wide total, we need to know how wide half of it is, since it's centered on the anchor point.
+	const arrowWidth = (15 / 2);
+
+	// Tooltip is 54px tall, divide by half to get the curve radius ,add the tooltip width
+	// to determine the distance that the anchor cannot progress past.
+	const tooltipUnavailableEdge = ri.scale((54 / 2) + arrowWidth);
+
+	// cap the offset at 50% - that percentage
+	const tooltipUnavaliablePercentage = 0.5 - (tooltipUnavailableEdge / tooltipWidth);
+
+	return tooltipUnavaliablePercentage;
+};
+
+/**
  * Adjust anchor position for `Tooltip` based on overflow and rtl.
  * Takes the output of `adjustDirection`, and `calcOverflow`.
  *
@@ -23,12 +46,15 @@ const adjustAnchor = function (arrowAnchor, tooltipDirection, overflow, rtl) {
 		}
 
 		// Flip sideways if it overflows to the sides
-		if (overflow.isOverRight) {
+		if (arrowAnchor === 'center') {
+			// If tooltip is anchored in the center, don't flip. We'll offset it appropriately later.
+		} else if (overflow.isOverRight) {
 			arrowAnchor = 'left';
 		} else if (overflow.isOverLeft) {
 			arrowAnchor = 'right';
 		}
 
+		// If tooltip is just too wide for the whole screen, switch it to a center tooltip
 		if (overflow.isOverWide && tooltipDirection !== 'left' && tooltipDirection !== 'right') {
 			arrowAnchor = 'center';
 		}
@@ -70,6 +96,7 @@ const adjustDirection = function (tooltipDirection, overflow, rtl) {
 
 /**
  * Calculates the overflow of `Tooltip` — if `Tooltip` is at the edge of the viewport.
+ * Return the amount of overflow in a particular direction if there is overflow (false otherwise).
  *
  * @method
  * @memberof moonstone/TooltipDecorator
@@ -77,30 +104,47 @@ const adjustDirection = function (tooltipDirection, overflow, rtl) {
  * @param   {Object} clientNode         The `getBoundingClientRect` values for client node
  * @param   {String} tooltipDirection   Direction of tooltip
  * @param   {Number} tooltipHeight      Tooltip height
+ * @param   {Number} edgeKeepout        Extra margin around the screen to avoid
  * @returns {Object}                    Tooltip's calculated overflow
  * @private
  */
-const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, tooltipHeight) {
+const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, edgeKeepout) {
 	// get the distance of space on both the right and left side of the client node. `clientNode.width / 2` because we want the tooltip to be positioned horizontally in middle of the client node.
-	const rightDelta = tooltipNode.width > clientNode.left + (clientNode.width / 2);
-	const leftDelta = tooltipNode.width > window.innerWidth - clientNode.right - (clientNode.width / 2);
-	const isTooltipWide = (tooltipNode.width > window.innerWidth) ||
-		(leftDelta && rightDelta);
+	const windowWidth = window.innerWidth;
+	const windowHeight = window.innerHeight;
+	const clientHorizontalCenter = clientNode.left + (clientNode.width / 2);
+	const tooltipSafeWidth = tooltipNode.width + edgeKeepout;
+	const tooltipCenterdSafeWidth = (tooltipNode.width / 2) + edgeKeepout;
+	const rightDelta = tooltipSafeWidth > clientHorizontalCenter;
+	const leftDelta = tooltipSafeWidth > windowWidth - clientHorizontalCenter;
+	const isTooltipWide = (tooltipSafeWidth > windowWidth) || (leftDelta && rightDelta);
 
 	if (tooltipDirection === 'above' || tooltipDirection === 'below') {
+		const isOverTop = clientNode.top - tooltipNode.height - edgeKeepout;
+		const isOverBottom = clientNode.bottom + tooltipNode.height + edgeKeepout;
+		const isOverLeft = clientHorizontalCenter - tooltipSafeWidth;
+		const isOverRight = clientHorizontalCenter + tooltipSafeWidth;
+		const isOverCenterLeft = clientHorizontalCenter - tooltipCenterdSafeWidth;
+		const isOverCenterRight = clientHorizontalCenter + tooltipCenterdSafeWidth;
 		return {
-			isOverTop: clientNode.top - tooltipNode.height - tooltipHeight < 0,
-			isOverBottom: clientNode.bottom + tooltipNode.height + tooltipHeight > window.innerHeight,
-			isOverLeft: clientNode.left - tooltipNode.width + clientNode.width / 2 < 0,
-			isOverRight: clientNode.right + tooltipNode.width - clientNode.width / 2 > window.innerWidth,
+			isOverTop: (isOverTop < 0) ? isOverTop : false,
+			isOverBottom: (isOverBottom > windowHeight) ? (isOverBottom - windowHeight) : false,
+			isOverLeft: (isOverLeft < 0) ? isOverLeft : false,
+			isOverRight: (isOverRight > windowWidth) ? (isOverRight - windowWidth) : false,
+			isOverCenterLeft: (isOverCenterLeft < 0) ? isOverCenterLeft : false,
+			isOverCenterRight: (isOverCenterRight > windowWidth) ? (isOverCenterRight - windowWidth) : false,
 			isOverWide: isTooltipWide
 		};
 	} else if (tooltipDirection === 'left' || tooltipDirection === 'right') {
+		const isOverTop = clientNode.top - tooltipNode.height + clientNode.height - edgeKeepout;
+		const isOverBottom = clientNode.bottom + tooltipNode.height - (clientNode.height / 2) + edgeKeepout;
+		const isOverLeft = clientNode.left - tooltipNode.width - edgeKeepout;
+		const isOverRight = clientNode.right + tooltipNode.width + edgeKeepout;
 		return {
-			isOverTop: clientNode.top - tooltipNode.height + clientNode.height / 2 < 0,
-			isOverBottom: clientNode.bottom + tooltipNode.height - clientNode.height / 2 > window.innerHeight,
-			isOverLeft: clientNode.left - tooltipNode.width < 0,
-			isOverRight: clientNode.right + tooltipNode.width > window.innerWidth,
+			isOverTop: (isOverTop < 0) ? isOverTop : false,
+			isOverBottom: (isOverBottom > windowHeight) ? (isOverBottom - windowHeight) : false,
+			isOverLeft: (isOverLeft < 0) ? isOverLeft : false,
+			isOverRight: (isOverRight > windowWidth) ? (isOverRight - windowWidth) : false,
 			isOverWide: isTooltipWide
 		};
 	}
@@ -122,21 +166,21 @@ const calcOverflow = function (tooltipNode, clientNode, tooltipDirection, toolti
  * @returns {Object}                    Tooltip top and left position
  * @private
  */
-const getPosition = function (tooltipNode, clientNode, arrowAnchor, tooltipDirection, tooltipHeight, overflow, rtl) {
+const getPosition = function (clientNode, tooltipDirection) {
 	let position = {};
 
 	switch (tooltipDirection) {
 		case 'above':
-			position.top = clientNode.top - tooltipNode.height - tooltipHeight;
+			position.top = clientNode.top;
 			break;
 		case 'below':
-			position.top = clientNode.bottom + tooltipHeight;
+			position.top = clientNode.bottom;
 			break;
 		case 'right':
-			position.left = clientNode.right + tooltipHeight;
+			position.left = clientNode.right;
 			break;
 		case 'left':
-			position.left = clientNode.left - tooltipNode.width - tooltipHeight;
+			position.left = clientNode.left;
 			break;
 		default:
 			position = {};
@@ -144,25 +188,8 @@ const getPosition = function (tooltipNode, clientNode, arrowAnchor, tooltipDirec
 
 	if (tooltipDirection === 'above' || tooltipDirection === 'below') {
 		position.left = clientNode.left + clientNode.width / 2;
-
-		if (arrowAnchor === 'left') {
-			position.left -= tooltipNode.width;
-		} else if (arrowAnchor === 'center') {
-			position.left -= tooltipNode.width / 2;
-		}
 	} else if (tooltipDirection === 'left' || tooltipDirection === 'right') {
 		position.top = clientNode.top + clientNode.height / 2;
-
-		if (arrowAnchor === 'top') {
-			position.top -= tooltipNode.height;
-		} else if (arrowAnchor === 'middle') {
-			position.top -= tooltipNode.height / 2;
-		}
-	}
-
-	// When tooltip is too wide, shift the tooltip so that the first part of the tooltip is always visible. Does not affect tooltips with `tooltipDirection` of `left` and `right`
-	if (overflow.isOverWide && !(tooltipDirection === 'left' || tooltipDirection === 'right') && arrowAnchor !== 'right') {
-		position.left = rtl ? window.innerWidth - tooltipNode.width : 0;
 	}
 
 	return position;
@@ -174,26 +201,38 @@ const getPosition = function (tooltipNode, clientNode, arrowAnchor, tooltipDirec
  *
  * @method
  * @memberof moonstone/TooltipDecorator
- * @param   {Object} tooltipNode        The `getBoundingClientRect` values for tooltip node
- * @param   {Object}  clientNode        The `getBoundingClientRect` values for client node
+ * @param   {Object}  tooltipNode       The `getBoundingClientRect` values for tooltip node
+ * @param   {String}  tooltipDirection  Direction of tooltip
+ * @param   {Object}  tooltipPosition   Calculated tooltip position from `getPosition`
  * @param   {Object}  overflow          Tooltip's calculated overflow from `calcOverflow`
- * @param   {Boolean} rtl               RTL mode
- * @returns {Number}                    Tooltip anchor's left position in percentage between 0 and 1 relative to the tooltip
  * @private
  */
-const getArrowPosition = function (tooltipNode, clientNode, tooltipDirection, overflow, rtl) {
-	if (overflow.isOverWide && tooltipDirection !== 'left' && tooltipDirection !== 'right') {
+const getLabelOffset = function (tooltipNode, tooltipDirection, tooltipPosition, overflow) {
+	// This method is irrelevent to left and right anchored tooltips, skip entirely.
+	if (tooltipDirection !== 'left' && tooltipDirection !== 'right') {
 		const tooltipWidth = tooltipNode.width;
-		// finding out where the middle of the clientNode is and figuring out where that is in relation to the tooltip node in percentage between 0 and 1
-		const arrowPosition = rtl ? 1 - ((window.innerWidth - clientNode.right + (clientNode.width / 2)) / tooltipWidth) : (clientNode.left + (clientNode.width / 2)) / tooltipWidth;
 
-		const borderRadius = ri.scale(33); // based on @moon-tooltip-border-radius
-		// max arrow position before the arrow is detached because of border radius
-		const maxArrowPosition = 1 - (borderRadius / tooltipWidth);
-		// if arrow position is above the max arrow position, use max arrow position instead
-		const adjustedArrowPosition = arrowPosition > maxArrowPosition ? maxArrowPosition : arrowPosition;
+		if (
+			overflow.isOverWide ||
+			overflow.isOverCenterLeft ||
+			overflow.isOverCenterRight
+		) {
+			let pixelOffset = 0;
 
-		return adjustedArrowPosition;
+			if (overflow.isOverCenterLeft) {
+				// Start shifting the label to the right (negative offset)
+				pixelOffset = overflow.isOverCenterLeft;
+			} else if (overflow.isOverCenterRight) {
+				// Start shifting the label to the left (positive offset)
+				pixelOffset = overflow.isOverCenterRight;
+			}
+
+			const percentageOffset = (pixelOffset / tooltipWidth) * -1;
+			const offsetBoundaryPercentage = getLabelUnavailableSpace(tooltipWidth);
+			const cappedPercentageOffset = Math.max(offsetBoundaryPercentage * -1, Math.min(offsetBoundaryPercentage, percentageOffset));
+
+			return cappedPercentageOffset;
+		}
 	}
 	return null;
 };
@@ -202,6 +241,6 @@ export {
 	adjustDirection,
 	adjustAnchor,
 	calcOverflow,
-	getArrowPosition,
+	getLabelOffset,
 	getPosition
 };

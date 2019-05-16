@@ -1,7 +1,6 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Uppercase from '@enact/i18n/Uppercase';
 import {isRtlText} from '@enact/i18n/util';
 import {Layout, Cell} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
@@ -12,13 +11,16 @@ import Skinnable from '../Skinnable';
 
 import css from './Header.module.less';
 
-// Create a <h1> and Marquee component that support the uppercase attribute
-const UppercaseH1 = Uppercase('h1');		// Used by compact header, which provides its own inline strings and tags for marqueeing
+// Create a <h1> and Marquee component
+const MarqueeH1 = MarqueeDecorator('h1');
 const MarqueeH2 = MarqueeDecorator('h2');
-const HeaderH1 = Uppercase(MarqueeDecorator('h1'));
 
 const CompactTitleBase = kind({
 	name: 'CompactTitle',
+	styles: {
+		css,
+		className: 'compactTitle'
+	},
 	render: (props) => {
 		delete props.title;
 		delete props.titleBelow;
@@ -46,16 +48,14 @@ const HeaderBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Header.prototype */ {
 		/**
-		 * Configures the mode of uppercasing for the `title`.
+		 * Centers the `title`, `titleBelow`, and `subTitleBelow`.
 		 *
-		 * * Values: `'upper'`, `'preserve'`, `'word'`, `'sentence'`
+		 * This setting has no effect on the `type="compact"` header.
 		 *
-		 * @see i18n/Uppercase#Uppercase.casing
-		 * @type {String}
-		 * @default 'upper'
+		 * @type {Boolean}
 		 * @public
 		 */
-		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
+		centered: PropTypes.bool,
 
 		/**
 		 * Children provided are added to the header-components area.
@@ -177,21 +177,21 @@ const HeaderBase = kind({
 	computed: {
 		className: ({fullBleed, type, styler}) => styler.append({fullBleed}, type),
 		direction: ({title, titleBelow}) => isRtlText(title) || isRtlText(titleBelow) ? 'rtl' : 'ltr',
-		titleBelowComponent: ({marqueeOn, titleBelow, type}) => {
+		titleBelowComponent: ({centered, marqueeOn, titleBelow, type}) => {
 			switch (type) {
 				case 'compact':
-					return titleBelow ? <h2 className={css.titleBelow}>   {titleBelow}</h2> : null;
+					return titleBelow ? <h2 className={css.titleBelow}>{titleBelow}</h2> : null;
 				case 'standard':
-					return <MarqueeH2 className={css.titleBelow} marqueeOn={marqueeOn}>{(titleBelow != null && titleBelow !== '') ? titleBelow : ' '}</MarqueeH2>;
+					return <MarqueeH2 className={css.titleBelow} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>{(titleBelow != null && titleBelow !== '') ? titleBelow : ' '}</MarqueeH2>;
 			}
 		},
-		subTitleBelowComponent: ({marqueeOn, subTitleBelow}) => {
-			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
+		subTitleBelowComponent: ({centered, marqueeOn, subTitleBelow}) => {
+			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
 		},
-		titleOrInput: ({casing, headerInput, marqueeOn, title}) => {
+		titleOrInput: ({centered, headerInput, marqueeOn, title}) => {
 			if (headerInput) {
 				return (
-					<Cell>
+					<Cell className={css.headerInput}>
 						<ComponentOverride
 							component={headerInput}
 							css={css}
@@ -200,7 +200,7 @@ const HeaderBase = kind({
 				);
 			} else {
 				return (
-					<Cell component={HeaderH1} casing={casing} className={css.title} marqueeOn={marqueeOn}>
+					<Cell component={MarqueeH1} className={css.title} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>
 						{title}
 					</Cell>
 				);
@@ -208,7 +208,8 @@ const HeaderBase = kind({
 		}
 	},
 
-	render: ({casing, children, direction, marqueeOn, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+	render: ({children, direction, marqueeOn, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+		delete rest.centered;
 		delete rest.fullBleed;
 		delete rest.headerInput;
 		delete rest.subTitleBelow;
@@ -218,10 +219,10 @@ const HeaderBase = kind({
 			case 'compact': return (
 				<Layout component="header" aria-label={title} {...rest} align="end">
 					<Cell component={CompactTitle} title={title} titleBelow={titleBelowComponent} marqueeOn={marqueeOn} forceDirection={direction}>
-						<UppercaseH1 casing={casing} className={css.title}>{title}</UppercaseH1>
+						<h1 className={css.title}>{title}</h1>
 						{titleBelowComponent}
 					</Cell>
-					<Cell shrink component="nav" className={css.headerComponents}>{children}</Cell>
+					{children ? <Cell shrink component="nav" className={css.headerComponents}>{children}</Cell> : null}
 				</Layout>
 			);
 			// Keeping this block in case we need to add it back after discussing with UX and GUI about future plans.
@@ -243,7 +244,7 @@ const HeaderBase = kind({
 								{titleBelowComponent}
 								{subTitleBelowComponent}
 							</Cell>
-							<Cell shrink component="nav" className={css.headerComponents}>{children}</Cell>
+							{children ? <Cell shrink component="nav" className={css.headerComponents}>{children}</Cell> : null}
 						</Layout>
 					</Cell>
 				</Layout>

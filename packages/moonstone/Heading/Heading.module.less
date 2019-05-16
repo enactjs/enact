@@ -1,0 +1,64 @@
+// Heading.module.less
+//
+@import "../styles/variables.less";
+@import "../styles/mixins.less";
+@import "../styles/skin.less";
+
+.heading {
+	border-bottom: @moon-heading-border-width solid transparent;
+	margin: 0 @moon-spotlight-outset (1.5 * @moon-spotlight-outset) @moon-spotlight-outset;
+	min-height: (1.5 * @moon-spotlight-outset);
+	letter-spacing: @moon-heading-letter-spacing;
+	line-height: @moon-heading-line-height;
+	.moon-font(@moon-heading-large-font-family, @moon-heading-non-latin-font-family, {
+		line-height: @moon-heading-non-latin-line-height;
+	});
+
+	&.large {
+		font-family: @moon-heading-large-font-family;
+		font-weight: @moon-heading-large-font-weight;
+		font-style: @moon-heading-large-font-style;
+		font-size: @moon-heading-large-font-size;
+	}
+	&.medium {
+		font-family: @moon-heading-medium-font-family;
+		font-weight: @moon-heading-medium-font-weight;
+		font-style: @moon-heading-medium-font-style;
+		font-size: @moon-heading-medium-font-size;
+	}
+	&.small,
+	&.tiny {
+		font-family: @moon-heading-small-font-family;
+		font-weight: @moon-heading-small-font-weight;
+		font-style: @moon-heading-small-font-style;
+		font-size: @moon-heading-small-font-size;
+	}
+
+	// Margin-bottom is set up this way so the presence of the line does not affect the height of the Heading.
+	// We simply toggle the color from transparent to "colored" below, leaving the height untouched.
+	&.largeSpacing {
+		margin-bottom: (@moon-heading-spacing-large - @moon-heading-border-width);
+		min-height: (@moon-heading-spacing-large - @moon-heading-border-width);
+	}
+	&.mediumSpacing {
+		margin-bottom: (@moon-heading-spacing-medium - @moon-heading-border-width);
+		min-height: (@moon-heading-spacing-medium - @moon-heading-border-width);
+	}
+	&.smallSpacing {
+		margin-bottom: (@moon-heading-spacing-small - @moon-heading-border-width);
+		min-height: (@moon-heading-spacing-small - @moon-heading-border-width);
+	}
+	&.noneSpacing {
+		margin-bottom: 0;
+		min-height: 0;
+	}
+
+	// Skin colors
+	.applySkins({
+		color: @moon-heading-text-color;
+
+		&.showLine {
+			border-bottom-color: @moon-heading-border-color;
+		}
+	});
+}

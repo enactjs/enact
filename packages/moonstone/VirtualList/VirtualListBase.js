@@ -23,7 +23,6 @@ const
 	isUp = is('up'),
 	JS = 'JS',
 	Native = 'Native',
-	isItemDisabledDefault = () => (false),
 	// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
 	getNumberValue = (index) => index | 0;
 
@@ -79,15 +78,6 @@ const VirtualListBaseFactory = (type) => {
 			itemsRenderer: PropTypes.func.isRequired,
 
 			/**
-			 * Animate while scrolling
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @private
-			 */
-			animate: PropTypes.bool,
-
-			/**
 			 * Callback method of scrollTo.
 			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
 			 *
@@ -113,32 +103,6 @@ const VirtualListBaseFactory = (type) => {
 			 * @private
 			 */
 			initUiChildRef: PropTypes.func,
-
-			/**
-			 * The Function that returns `true` if the item at the index is disabled.
-			 * It is used to navigate a list properly with 5 way keys, page up key,
-			 * and page down key. If it is not supplied, it assumes that no items are disabled.
-			 *
-			 * Usage:
-			 * ```
-			 * isItemDisabled = (index) => (this.items[index].disabled)
-			 * render = () => {
-			 * 	return (
-			 * 		<VirtualList
-			 * 			dataSize={this.items.length}
-			 * 			isItemDisabled={isItemDisabled}
-			 * 			itemRenderer={this.renderItem}
-			 * 			itemSize={this.itemSize}
-			 * 		/>
-			 * 	);
-			 * }
-			 * ```
-			 *
-			 * @type {Function}
-			 * @param {Number} index
-			 * @public
-			 */
-			isItemDisabled: PropTypes.func,
 
 			/*
 			 * It scrolls by page when `true`, by item when `false`.
@@ -193,9 +157,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		static defaultProps = {
-			animate: false,
 			dataSize: 0,
-			isItemDisabled: isItemDisabledDefault,
 			pageScroll: false,
 			spacing: 0,
 			wrap: false
@@ -345,27 +307,13 @@ const VirtualListBaseFactory = (type) => {
 		getExtentIndex = (index) => (Math.floor(index / this.uiRefCurrent.dimensionToExtent))
 
 		findSpottableItem = (indexFrom, indexTo) => {
-			const
-				{dataSize, isItemDisabled} = this.props,
-				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
-				safeIndexTo = clamp(-1, dataSize, indexTo),
-				delta = (indexFrom < indexTo) ? 1 : -1;
+			const {dataSize} = this.props;
 
 			if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
 				return -1;
-			} else if (isItemDisabled === isItemDisabledDefault) {
-				return safeIndexFrom;
+			} else {
+				return clamp(0, dataSize - 1, indexFrom);
 			}
-
-			if (safeIndexFrom !== safeIndexTo) {
-				for (let i = safeIndexFrom; i !== safeIndexTo; i += delta) {
-					if (!isItemDisabled(i)) {
-						return i;
-					}
-				}
-			}
-
-			return -1;
 		}
 
 		findSpottableItemWithPositionInExtent = (indexFrom, indexTo, position) => {
@@ -377,44 +325,24 @@ const VirtualListBaseFactory = (type) => {
 				-1 <= indexTo && indexTo <= dataSize &&
 				0 <= position && position < dimensionToExtent) {
 				const
-					{isItemDisabled} = this.props,
 					direction = (indexFrom < indexTo) ? 1 : -1,
 					delta = direction * dimensionToExtent,
 					diffPosition = (indexFrom % dimensionToExtent) - position,
 					// When direction is 1 (forward) and diffPosition is positive, add dimensionToExtent.
 					// When direction is -1 (backward) and diffPosition is negative, substract dimensionToExtent.
-					startIndex = indexFrom - diffPosition + ((direction * diffPosition > 0) ? delta : 0);
+					candidateIndex = indexFrom - diffPosition + ((direction * diffPosition > 0) ? delta : 0);
 
-				for (let i = startIndex; direction * (indexTo - i) > 0; i += delta) {
-					if (!isItemDisabled(i)) {
-						return i;
-					}
+				if (direction * (indexTo - candidateIndex) > 0) {
+					return candidateIndex;
 				}
 			}
 
 			return -1;
 		}
 
-		findSpottableExtent = (indexFrom, isForward) => {
-			const
-				{dataSize} = this.props,
-				{dimensionToExtent} = this.uiRefCurrent,
-				{findSpottableItem, getExtentIndex} = this,
-				firstIndexInExtent = getExtentIndex(indexFrom) * dimensionToExtent;
-			let index;
-
-			if (isForward) {
-				index = findSpottableItem(firstIndexInExtent + dimensionToExtent, dataSize);
-			} else {
-				index = findSpottableItem(firstIndexInExtent - 1, -1);
-			}
-
-			return getExtentIndex(index);
-		}
-
 		findNearestSpottableItemInExtent = (index, extentIndex) => {
 			const
-				{dataSize, isItemDisabled} = this.props,
+				{dataSize} = this.props,
 				{dimensionToExtent} = this.uiRefCurrent,
 				currentPosInExtent = clamp(0, dataSize - 1, index) % dimensionToExtent,
 				firstIndexInExtent = clamp(0, this.getExtentIndex(dataSize - 1), extentIndex) * dimensionToExtent,
@@ -425,12 +353,10 @@ const VirtualListBaseFactory = (type) => {
 				nearestIndex = -1;
 
 			for (let i = firstIndexInExtent; i < lastIndexInExtent; ++i) {
-				if (!isItemDisabled(i)) {
-					distance = Math.abs(currentPosInExtent - i % dimensionToExtent);
-					if (distance < minDistance) {
-						minDistance = distance;
-						nearestIndex = i;
-					}
+				distance = Math.abs(currentPosInExtent - i % dimensionToExtent);
+				if (distance < minDistance) {
+					minDistance = distance;
+					nearestIndex = i;
 				}
 			}
 
@@ -571,7 +497,7 @@ const VirtualListBaseFactory = (type) => {
 		 */
 
 		onAcceleratedKeyDown = ({keyCode, repeat, target}) => {
-			const {animate, cbScrollTo, spacing, wrap} = this.props;
+			const {cbScrollTo, spacing, wrap} = this.props;
 			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPosition} = this.uiRefCurrent;
 			const index = getNumberValue(target.dataset.index);
 			const {isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
@@ -589,11 +515,11 @@ const VirtualListBaseFactory = (type) => {
 				} else {
 					this.isScrolledBy5way = true;
 
-					if (isWrapped && animate && wrap === true) {
+					if (isWrapped && wrap === true) {
 						this.isWrappedBy5way = true;
 						this.pause.pause();
 						target.blur();
-					} else if (!isWrapped || animate && wrap !== 'noAnimation') {
+					} else if (!isWrapped || wrap !== 'noAnimation') {
 						this.focusOnItem(nextIndex);
 					}
 
@@ -603,7 +529,7 @@ const VirtualListBaseFactory = (type) => {
 					cbScrollTo({
 						index: nextIndex,
 						stickTo: index < nextIndex ? 'end' : 'start',
-						animate: animate && !(isWrapped && wrap === 'noAnimation')
+						animate: !(isWrapped && wrap === 'noAnimation')
 					});
 				}
 
@@ -835,9 +761,7 @@ const VirtualListBaseFactory = (type) => {
 				{itemRenderer, itemsRenderer, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
-			delete rest.animate;
 			delete rest.initUiChildRef;
-			delete rest.isItemDisabled;
 			delete rest.spotlightId;
 			delete rest.wrap;
 
@@ -917,7 +841,6 @@ const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-b
 		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...childProps}
-				animate={props.animate}
 				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
@@ -938,15 +861,6 @@ const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-b
 );
 
 ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
-	/**
-	 * Animate while scrolling
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @private
-	 */
-	animate: PropTypes.bool,
-
 	/**
 	 * Direction of the list.
 	 *
@@ -971,7 +885,6 @@ const ScrollableVirtualListNative = (props) => (
 		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...childProps}
-				animate={props.animate}
 				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
@@ -993,15 +906,6 @@ const ScrollableVirtualListNative = (props) => (
 
 ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
 	/**
-	 * Animate while scrolling
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @private
-	 */
-	animate: PropTypes.bool,
-
-	/**
 	 * Direction of the list.
 	 *
 	 * Valid values are:
@@ -1016,7 +920,6 @@ ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.Virtual
 };
 
 ScrollableVirtualListNative.defaultProps = {
-	animate: false,
 	direction: 'vertical'
 };
 

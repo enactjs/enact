@@ -37,7 +37,7 @@
 	line-height: (@moon-button-height - (2 * @moon-button-border-width));
 	border-radius: @moon-button-border-radius;
 	min-width: @moon-button-height;
-	max-width: 300px;
+	max-width: @moon-button-max-width;
 	padding: 0 @moon-button-h-padding;
 	margin: 0 @moon-button-h-margin;
 	text-align: center;
@@ -45,7 +45,7 @@
 	.moon-taparea(@moon-button-height);
 
 	.moon-custom-text({
-		font-size: @moon-button-large-font-size-large;
+		font-size: @moon-button-font-size-large;
 		height: @moon-button-height-large;
 		min-width: @moon-button-height-large;
 		line-height: (@moon-button-height-large - (2 * @moon-button-border-width));
@@ -69,21 +69,66 @@
 
 	.client {
 		padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
+		border-radius: inherit;
+	}
 
-		// Colored under-bar
-		&::before {
+	.icon {
+		-webkit-margin-start: @moon-button-icon-start-margin;
+		-webkit-margin-end: @moon-button-icon-end-margin;
+	}
+
+	&.iconAfter {
+		.client {
+			flex-direction: row-reverse;
+
+			.icon {
+				-webkit-margin-start: @moon-button-icon-position-after-start-margin;
+				-webkit-margin-end: @moon-button-icon-position-after-end-margin;
+			}
+		}
+	}
+
+	// Color prop set, and minWidth prop set, update icon's margin to allow more room for the colordot
+	&.red,
+	&.green,
+	&.yellow,
+	&.blue {
+		// IconButton-like Button scenario
+		.client::before {
+			// Colored under-bar
 			content: "";
 			position: absolute;
-			min-width: 24px;
-			height: 6px;
 			bottom: 18px;
-			left: 24px;
-			right: 24px;
-			border-radius: 6px;
+			left: 50%;
+			width: @moon-button-colordot-width;
+			height: @moon-button-colordot-height;
+			border-radius: @moon-button-colordot-height;
+			transform: translate(-50%, 50%);
 		}
 
-		.icon {
-			-webkit-margin-start: 0;
+		// Standard Button Scenario
+		&.minWidth {
+			// Update icon's margin to allow more room for the colordot
+			.icon {
+				-webkit-margin-start: 0;
+			}
+
+			.client {
+				-webkit-margin-start: @moon-button-colordot-width;
+				-webkit-padding-start: @moon-spotlight-outset;
+
+				&::before {
+					// Colored side-bar
+					bottom: 50%;
+					left: -@moon-button-colordot-width;
+					transform: translateY(50%);
+
+					:global(.enact-locale-right-to-left) & {
+						left: initial;
+						right: -@moon-button-colordot-width;
+					}
+				}
+			}
 		}
 	}
 
@@ -93,22 +138,57 @@
 	//*/
 	.marquee {
 		flex-grow: 1;
-		text-align: center;
+	}
+
+	// Only center the text if there is no icon. Otherwise, the default is to just leave its
+	// alignment alone, since we don't want to try to override marquee's directionality alignment.
+	&:not(.hasIcon) {
+		.marquee {
+			text-align: center;
+		}
 	}
 
 	&.minWidth {
-		min-width: @moon-button-large-min-width;
+		min-width: @moon-button-min-width;
 	}
 
 	&.small {
 		.moon-small-button-text();
 		height: @moon-button-small-height;
 		min-width: @moon-button-small-height;
+		max-width: @moon-button-small-max-width;
 		line-height: (@moon-button-small-height - (2 * @moon-button-border-width));
-		padding: 0 @moon-button-small-h-padding;
+		margin: 0 @moon-button-small-h-margin;
+		padding-left: @moon-button-small-h-padding;
+		padding-right: @moon-button-small-h-padding;
+		margin-left: @moon-button-small-h-margin;
+		margin-right: @moon-button-small-h-margin;
 
+		.icon {
+			-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
+			-webkit-margin-end: @moon-button-icon-small-h-margin;
+		}
+
+		// Standard Button Scenario
 		&.minWidth {
 			min-width: @moon-button-small-min-width;
+		}
+
+		&.red,
+		&.green,
+		&.yellow,
+		&.blue {
+			// IconButton-like Button scenario
+			.client::before {
+				bottom: 12px;
+				width: @moon-button-small-colordot-width;
+				height: @moon-button-small-colordot-height;
+			}
+
+			// Standard Button Scenario
+			&.minWidth .client::before {
+				bottom: 50%;
+			}
 		}
 
 		.moon-taparea(@moon-button-small-height);
@@ -124,11 +204,31 @@
 			}
 		});
 
-		.client::before {
-			bottom: 12px;
-			left: 18px;
-			right: 18px;
+		.icon {
+			-webkit-margin-start: @moon-button-icon-small-start-margin;
+			-webkit-margin-end: @moon-button-icon-small-end-margin;
 		}
+
+		&.iconAfter {
+			.client .icon {
+				-webkit-margin-start: @moon-button-icon-position-after-small-start-margin;
+				-webkit-margin-end: @moon-button-icon-position-after-small-end-margin;
+			}
+		}
+
+		&.red,
+		&.green,
+		&.yellow,
+		&.blue {
+			&.minWidth .icon {
+				-webkit-margin-start: 0;
+			}
+		}
+	}
+
+	// Large Button followed by another large Button has a custom wider margin between them
+	&:not(.small) + &:not(.small) {
+		margin-inline-start: (@moon-button-to-button-large-h-margin - @moon-button-h-margin);
 	}
 
 	// Button-non-disabled rules
@@ -168,7 +268,7 @@
 			color: @moon-text-color;
 
 			.bg {
-				background-color: transparent;
+				background-color: @moon-button-transparent-bg-color;
 			}
 		}
 
@@ -185,6 +285,7 @@
 			background-color: @moon-remote-button-blue-color;
 		}
 
+
 		.focus({
 			// The complexity below overrides the default high-contrast rules and applies
 			// non-high-contrast rules. The precedence for the general rule is too high for the
@@ -192,24 +293,27 @@
 			// classes here.
 			&,
 			:global(.enact-a11y-high-contrast) &:not(:global(.highContrast)) {
-				color: @moon-spotlight-text-color;
+				color: @moon-button-focus-text-color;
 				background-color: transparent;
 			}
 
 			.bg {
-				background-color: @moon-spotlight-border-color;
+				background-color: @moon-button-focus-bg-color;
 			}
 
 			.disabled({
-				color: @moon-spotlight-disabled-text-color;
+				color: @moon-button-disabled-focus-text-color;
+
+				.client {
+					.vendor-opacity(@moon-disabled-opacity);
+				}
 
 				.bg {
-					background-color: @moon-button-disabled-spotlight-bg-color;
+					background-color: @moon-button-disabled-focus-bg-color;
 				}
 
 				.icon {
-					.vendor-opacity(0.6);
-					color: @moon-spotlight-text-color;
+					color: @moon-button-disabled-focus-icon-color;
 				}
 			});
 		});
@@ -217,16 +321,17 @@
 		// 'Selected' state
 		&.selected {
 			.bg {
-				border-color: @moon-spotlight-border-color;
+				background-color: @moon-button-selected-bg-color;
+				border-color: @moon-button-selected-border-color;
 			}
 
 			// 'Selected+Focus' state, seen in grouped buttons
 			.focus({
-				color: @moon-spotlight-text-color;
+				color: @moon-button-selected-focus-text-color;
 
 				.bg {
-					border-color: @moon-active-spotlight-border-color;
-					background-color: @moon-spotlight-border-color;
+					background-color: @moon-button-selected-focus-bg-color;
+					border-color: @moon-button-selected-focus-border-color;
 				}
 			});
 		}
