@@ -25,7 +25,7 @@ describe('MediaControls', () => {
 
 			const instance = mediaControls.instance();
 
-			const expected = false;
+			const expected = true;
 			const actual = instance.showMoreComponents() && instance.hideMoreComponents();
 
 			expect(actual).toBe(expected);
