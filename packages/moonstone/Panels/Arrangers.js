@@ -1,6 +1,10 @@
 import {scale, unit} from '@enact/ui/resolution';
+import {arrange} from '@enact/ui/ViewManager/Arranger';
 
 import {breadcrumbWidth} from './Breadcrumb';
+
+const quadInOut = 'cubic-bezier(0.455, 0.030, 0.515, 0.955)';
+const animationOptions = {easing: quadInOut};
 
 // Always-Viewing Arranger
 
@@ -11,20 +15,28 @@ import {breadcrumbWidth} from './Breadcrumb';
  * @private
  */
 export const AlwaysViewingArranger = {
-	enter: ({reverse}) => [
-		{transform: 'translateX(100%)', offset: 0},
-		reverse ?
-			{transform: 'translateX(0)', offset: 0.75} :
-			{transform: 'translateX(100%)', offset: 0.25},
-		{transform: 'translateX(0)', offset: 1}
-	],
-	leave: ({reverse}) => [
-		{transform: 'translateX(0)', offset: 0},
-		reverse ?
-			{transform: 'translateX(-100%)', offset: 0.75} :
-			{transform: 'translateX(0)', offset: 0.25},
-		{transform: 'translateX(-100%)', offset: 1}
-	]
+	enter: (config) => {
+		const {reverse} = config;
+
+		return arrange(config, [
+			{transform: 'translateX(100%)', offset: 0},
+			reverse ?
+				{transform: 'translateX(0)', offset: 0.75} :
+				{transform: 'translateX(100%)', offset: 0.25},
+			{transform: 'translateX(0)', offset: 1}
+		], animationOptions);
+	},
+	leave: (config) => {
+		const {reverse} = config;
+
+		return arrange(config, [
+			{transform: 'translateX(0)', offset: 0},
+			reverse ?
+				{transform: 'translateX(-100%)', offset: 0.75} :
+				{transform: 'translateX(0)', offset: 0.25},
+			{transform: 'translateX(-100%)', offset: 1}
+		], animationOptions);
+	}
 };
 
 // Actvity Arranger
@@ -63,30 +75,38 @@ const clipForBreadcrumbs = (node, to, from) => {
  * @private
  */
 export const ActivityArranger = {
-	enter: ({node, reverse, to, from}) => {
+	enter: (config) => {
+		const {node, reverse, to, from} = config;
+
 		clipForBreadcrumbs(node, to, from);
 
-		return [
+		return arrange(config, [
 			{transform: `${offsetForBreadcrumbs(node)} translateX(100%)`, offset: 0},
 			reverse ?
 				{transform: offsetForBreadcrumbs(node), offset: 0.75} :
 				{transform: `${offsetForBreadcrumbs(node)} translateX(100%)`, offset: 0.25},
 			{transform: offsetForBreadcrumbs(node), offset: 1}
-		];
+		], animationOptions);
 	},
-	leave: ({node, reverse, to, from}) => {
+	leave: (config) => {
+		const {node, reverse, to, from} = config;
+
 		clipForBreadcrumbs(node, to, from);
 
-		return [
+		return arrange(config, [
 			{transform: offsetForBreadcrumbs(node), offset: 0},
 			reverse ?
 				{transform: 'translateX(-100%)', offset: 0.75} :
 				{transform: offsetForBreadcrumbs(node), offset: 0.25},
 			{transform: 'translateX(-100%)', offset: 1}
-		];
+		], animationOptions);
 	},
-	stay: ({node}) => [
-		{transform: offsetForBreadcrumbs(node)},
-		{transform: offsetForBreadcrumbs(node)}
-	]
+	stay: (config) => {
+		const {node} = config;
+
+		return arrange(config, [
+			{transform: offsetForBreadcrumbs(node)},
+			{transform: offsetForBreadcrumbs(node)}
+		], animationOptions);
+	}
 };

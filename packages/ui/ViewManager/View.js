@@ -2,7 +2,7 @@
  * Exports the {@link ui/ViewManager.View} component.
  */
 
-import {perfNow, Job} from '@enact/core/util';
+import {Job} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
@@ -236,23 +236,17 @@ class View extends React.Component {
 	prepareTransition = (arranger, callback, noAnimation) => {
 		const {duration, index, previousIndex, reverseTransition} = this.props;
 
-		const keyframes = arranger({
-			from: previousIndex,
-			node: this.node,
-			reverse: reverseTransition,
-			to: index
-		});
-
-		const options = {
-			duration,
-			direction: reverseTransition ? 'reverse' : 'normal',
-			fill: 'forwards'
-		};
-
 		if (this.animation && this.animation.playState !== 'finished' && this.changeDirection) {
 			this.animation.reverse();
 		} else {
-			this.animation = this.node.animate(keyframes, options);
+			this.animation = arranger({
+				from: previousIndex,
+				node: this.node,
+				reverse: reverseTransition,
+				to: index,
+				fill: 'forwards',
+				duration
+			});
 		}
 
 		// Must set a new handler here to ensure the right callback is invoked

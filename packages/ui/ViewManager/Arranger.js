@@ -14,6 +14,15 @@ const slideInOut = (direction, total, orientation) => {
 			orientation === 'right'  && 'translateX(' + p + '%)';
 };
 
+export const arrange = ({duration, node, reverse}, keyframes, options) => {
+	return node.animate(keyframes, {
+		duration,
+		direction: reverse ? 'reverse' : 'normal',
+		fill: 'forwards',
+		...options
+	});
+};
+
 /**
  * An object with callback functions to arrange views within {@link ui/ViewManager.ViewManager}.
  *
@@ -37,14 +46,14 @@ const slideInOut = (direction, total, orientation) => {
  * @public
  */
 export const SlideArranger = ({amount = 100, direction}) => ({
-	enter: () => [
+	enter: (config) => arrange(config, [
 		{transform: slideInOut('in', amount, direction)},
 		{transform: slideInOut('in', 0, direction)}
-	],
-	leave: () => [
+	]),
+	leave: (config) => arrange(config, [
 		{transform: slideInOut('out', 0, direction)},
 		{transform: slideInOut('out', amount, direction)}
-	]
+	])
 });
 
 /**

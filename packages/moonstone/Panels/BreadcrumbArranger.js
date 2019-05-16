@@ -1,3 +1,5 @@
+import {arrange} from '@enact/ui/ViewManager/Arranger';
+
 /**
  * Positions a breadcrumb based on its `data-index` and the current index, `to`
  *
@@ -14,8 +16,9 @@ const positionBreadcrumb = (node, index) => {
 	return `translateX(${percentX}%)`;
 };
 
-const enter = ({node, from, to, reverse}) => {
-	let x = reverse ? [
+const enter = (config) => {
+	const {node, from, to, reverse} = config;
+	const keyframes = reverse ? [
 		{transform: positionBreadcrumb(node, to)},
 		{transform: positionBreadcrumb(node, from), offset: 0.25},
 		{transform: positionBreadcrumb(node, from)}
@@ -25,7 +28,7 @@ const enter = ({node, from, to, reverse}) => {
 		{transform: positionBreadcrumb(node, to)}
 	];
 
-	return x;
+	return arrange(config, keyframes);
 };
 
 /**
