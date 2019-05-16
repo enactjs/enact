@@ -133,7 +133,6 @@ class View extends React.Component {
 	constructor (props) {
 		super(props);
 		this.animation = null;
-		this._raf = null;
 		this.state = {
 			entering: !props.appearing
 		};
@@ -158,6 +157,10 @@ class View extends React.Component {
 
 	componentWillUnmount () {
 		this.enteringJob.stop();
+		this.node = null;
+		if (this.animation) {
+			this.animation.cancel();
+		}
 	}
 
 	enteringJob = new Job(() => {
@@ -246,11 +249,20 @@ class View extends React.Component {
 			fill: 'forwards'
 		};
 
-		this.animation = this.node.animate(keyframes, options);
+		if (this.animation && this.animation.playState !== 'finished' && this.changeDirection) {
+			this.animation.reverse();
+		} else {
+			this.animation = this.node.animate(keyframes, options);
+		}
 
+		// Must set a new handler here to ensure the right callback is invoked
 		this.animation.onfinish = () => {
 			this.animation = null;
-			callback();
+			// Possible for the animation callback to still be fired after the node has been
+			// umounted if it finished before the unmount can cancel it so we check for that.
+			if (this.node) {
+				callback();
+			}
 		};
 
 		// disable animation when the instance or props flag is true
