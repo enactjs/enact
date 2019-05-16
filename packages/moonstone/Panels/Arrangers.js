@@ -63,20 +63,28 @@ const clipForBreadcrumbs = (node, to, from) => {
  * @private
  */
 export const ActivityArranger = {
-	enter: ({node, reverse}) => [
-		{transform: `${offsetForBreadcrumbs(node)} translateX(100%)`, offset: 0},
-		reverse ?
-			{transform: offsetForBreadcrumbs(node), offset: 0.75} :
-			{transform: `${offsetForBreadcrumbs(node)} translateX(100%)`, offset: 0.25},
-		{transform: offsetForBreadcrumbs(node), offset: 1}
-	],
-	leave: ({node, reverse}) => [
-		{transform: offsetForBreadcrumbs(node), offset: 0},
-		reverse ?
-			{transform: 'translateX(-100%)', offset: 0.75} :
-			{transform: offsetForBreadcrumbs(node), offset: 0.25},
-		{transform: 'translateX(-100%)', offset: 1}
-	],
+	enter: ({node, reverse, to, from}) => {
+		clipForBreadcrumbs(node, to, from);
+
+		return [
+			{transform: `${offsetForBreadcrumbs(node)} translateX(100%)`, offset: 0},
+			reverse ?
+				{transform: offsetForBreadcrumbs(node), offset: 0.75} :
+				{transform: `${offsetForBreadcrumbs(node)} translateX(100%)`, offset: 0.25},
+			{transform: offsetForBreadcrumbs(node), offset: 1}
+		];
+	},
+	leave: ({node, reverse, to, from}) => {
+		clipForBreadcrumbs(node, to, from);
+
+		return [
+			{transform: offsetForBreadcrumbs(node), offset: 0},
+			reverse ?
+				{transform: 'translateX(-100%)', offset: 0.75} :
+				{transform: offsetForBreadcrumbs(node), offset: 0.25},
+			{transform: 'translateX(-100%)', offset: 1}
+		];
+	},
 	stay: ({node}) => [
 		{transform: offsetForBreadcrumbs(node)},
 		{transform: offsetForBreadcrumbs(node)}
