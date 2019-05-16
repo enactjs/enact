@@ -28,16 +28,6 @@ const enter = ({node, from, to, reverse}) => {
 	return x;
 };
 
-const stay = ({node, from, to}) => {
-	let x = [
-		{transform: positionBreadcrumb(node, from)},
-		{transform: positionBreadcrumb(node, to), offset: 0.25},
-		{transform: positionBreadcrumb(node, to)}
-	];
-
-	return x;
-};
-
 /**
  * Arranger for panel breadcrumbs
  *

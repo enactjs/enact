@@ -4,15 +4,26 @@
  */
 
 import PropTypes from 'prop-types';
-import {slideInPartial, slideOutPartial} from './arrange';
+
+const slideInOut = (direction, total, orientation) => {
+	const p = direction === 'out' ? total : -total;
+
+	return	orientation === 'top'    && 'translateY(' + -p + '%)' ||
+			orientation === 'bottom' && 'translateY(' + p + '%)'  ||
+			orientation === 'left'   && 'translateX(' + -p + '%)' ||
+			orientation === 'right'  && 'translateX(' + p + '%)';
+};
 
 /**
  * An object with callback functions to arrange views within {@link ui/ViewManager.ViewManager}.
  *
  * @typedef {Object} Arranger
- * @property {Function} enter
- * @property {Function} leave
- * @property {Function} stay
+ * @property {Function} enter  - Returns an array of keyframes describing the animation when a view
+ *                               is entering the viewport
+ * @property {Function} leave  - Returns an array of keyframes describing the animation when a view
+ *                               is leaving the viewport
+ * @property {Function} [stay] - Returns an array of keyframes describing the animation when a view
+ *                               is remaining in the viewport
  * @memberof ui/ViewManager
  */
 
@@ -27,12 +38,12 @@ import {slideInPartial, slideOutPartial} from './arrange';
  */
 export const SlideArranger = ({amount = 100, direction}) => ({
 	enter: () => [
-		{transform: slideInPartial(amount, direction)},
-		{transform: slideInPartial(0, direction)}
+		{transform: slideInOut('in', amount, direction)},
+		{transform: slideInOut('in', 0, direction)}
 	],
 	leave: () => [
-		{transform: slideOutPartial(0, direction)},
-		{transform: slideOutPartial(amount, direction)}
+		{transform: slideInOut('out', 0, direction)},
+		{transform: slideInOut('out', amount, direction)}
 	]
 });
 
