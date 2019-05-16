@@ -33,7 +33,6 @@
     "@enact/spotlight": "^3.0.0-alpha.1",
     "@enact/ui": "^3.0.0-alpha.1",
     "classnames": "^2.2.5",
-    "eases": "^1.0.8",
     "invariant": "^2.2.2",
     "prop-types": "15.6.2",
     "ramda": "^0.24.1",
