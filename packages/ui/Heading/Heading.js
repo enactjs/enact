@@ -79,7 +79,7 @@ const Heading = kind({
 		 * The size of the spacing around the Heading.
 		 *
 		 * These have no built-in measurements, as they are intended to be defined by the theme
-		 * consuming this UI element. The values correlate with customizable classes bade available
+		 * consuming this UI element. The values correlate with customizable classes made available
 		 * by this component's `css` prop.
 		 *
 		 * Allowed values include:
