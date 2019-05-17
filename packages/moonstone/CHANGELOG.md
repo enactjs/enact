@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/RadioItem` and `moonstone/SelectableItem` icon size in large-text mode
+- `moonstone/DaySelector` item text size in large-text mode
 
 ## [3.0.0-alpha.1] - 2019-05-15
 
