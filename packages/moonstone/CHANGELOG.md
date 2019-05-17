@@ -5,7 +5,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ## [unreleased]
 
 ### Added
-- `moonstone/Heading` default prop `spacing` with value `'small'`
+
+- `moonstone/Heading` prop `spacing` with default value `'small'`
 
 ### Fixed
 
