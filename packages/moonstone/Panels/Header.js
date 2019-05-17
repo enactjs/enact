@@ -195,6 +195,7 @@ const HeaderBase = kind({
 						<ComponentOverride
 							component={headerInput}
 							css={css}
+							size="large"
 						/>
 					</Cell>
 				);
