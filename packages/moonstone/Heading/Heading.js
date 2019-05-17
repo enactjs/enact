@@ -53,7 +53,27 @@ const HeadingBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		showLine: PropTypes.bool
+		showLine: PropTypes.bool,
+
+		/**
+		 * The size of the spacing around the Heading.
+		 *
+		 * Allowed values include:
+		 * * `'auto'` (default) - Lets this value be based on the `size` prop for automatic usage.
+		 * * `'large'` - Specifically assign the `'large'` spacing.
+		 * * `'medium'` - Specifically assign the `'medium'` spacing.
+		 * * `'small'` - Specifically assign the `'small'` spacing.
+		 * * `'none'` - No spacing at all. Neighboring elements will directly touch the Heading.
+		 *
+		 * @type {('auto'|'large'|'medium'|'small'|'none')}
+		 * @default 'small'
+		 * @public
+		 */
+		spacing: PropTypes.oneOf(['auto', 'large', 'medium', 'small', 'none'])
+	},
+
+	defaultProps: {
+		spacing: 'small'
 	},
 
 	styles: {
