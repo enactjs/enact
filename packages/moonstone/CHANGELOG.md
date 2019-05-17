@@ -4,6 +4,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+- `moonstone/Heading` default prop `spacing` with value `'small'`
+
 ### Fixed
 
 - `moonstone/Header` with `Input` to not have a distracting white background color
