@@ -24,25 +24,53 @@ export const arrange = ({duration, node, reverse}, keyframes, options) => {
 };
 
 /**
- * An object with callback functions to arrange views within {@link ui/ViewManager.ViewManager}.
+ * A function that generates an animation for a given transition configuration
  *
- * @typedef {Object} Arranger
- * @property {Function} enter  - Returns an array of keyframes describing the animation when a view
- *                               is entering the viewport
- * @property {Function} leave  - Returns an array of keyframes describing the animation when a view
- *                               is leaving the viewport
- * @property {Function} [stay] - Returns an array of keyframes describing the animation when a view
- *                               is remaining in the viewport
+ * @callback ArrangerCallback
+ * @param {Object} config                                      - Animation configuration object.
+ * @param {Number} config.duration                             - Duration of the animation in ms.
+ * @param {('forwards'|'backwards'|'both'|'none')} config.fill - Animation effect should be
+ *                                                               reflected by previous state or
+ *                                                               retained after animation.
+ * @param {Number} config.from                                 - Index from which the ViewManager is
+ *                                                               transitioning.
+ * @param {Node} config.node                                   - DOM node to be animated.
+ * @param {Boolean} config.reverse                             - `true` when the animation should be
+ *                                                               reversed.
+ * @param {Number} config.to                                   - Index to which the ViewManager is
+ *                                                               transitioning.
+ * @returns {Animation} An `Animation`-compatible object
+ * @public
  * @memberof ui/ViewManager
  */
 
 /**
- * A basic arranger that must be configured with `enter` and `leave` direction
+ * An object with callback functions to arrange views within {@link ui/ViewManager.ViewManager}.
+ *
+ * @typedef {Object} Arranger
+ * @property {ArrangerCallback} enter  - Returns an array of keyframes describing the animation when
+ *                                       a view is entering the viewport.
+ * @property {ArrangerCallback} leave  - Returns an array of keyframes describing the animation when
+ *                                       a view is leaving the viewport.
+ * @property {ArrangerCallback} [stay] - Returns an array of keyframes describing the animation when
+ *                                       a view is remaining in the viewport.
+ * @public
+ * @memberof ui/ViewManager
+ */
+
+/**
+ * A basic arranger factory that must be configured with `direction` and optionally an `amount`.
  *
  * @function
  * @memberof ui/ViewManager
- * @param {Object}    config    Configuration object including `amount`, `enter` and `leave` properties
- * @returns {Object}            An arranger
+ * @param {Object}                          config              - Configuration object.
+ * @param {Object}                          [config.amount=100] - Amount, as a whole number, to
+ *                                                                "slide" where 100 is the entire
+ *                                                                size of the node along the axis of
+ *                                                                the `direction`.
+ * @param {('bottom'|'left'|'right'|'top')} config.direction    - Direction from which the view will
+ *                                                                transition.
+ * @returns {Arranger}            An arranger
  * @public
  */
 export const SlideArranger = ({amount = 100, direction}) => ({
