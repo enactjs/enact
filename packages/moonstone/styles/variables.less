@@ -328,7 +328,9 @@
 // Selectable Item
 // ---------------------------------------
 @moon-selectable-item-indicator-size: @moon-item-height;
-@moon-selectable-item-indicator-width: @moon-icon-size / 2;
+@moon-selectable-item-indicator-size-large: @moon-item-height-large;
+@moon-selectable-item-indicator-width: (@moon-icon-size / 2 - 3px);
+@moon-selectable-item-indicator-width-large: (@moon-selectable-item-indicator-width + 6px);
 
 // EditableIntegerPicker
 // ---------------------------------------
@@ -337,6 +339,7 @@
 // Radio Item
 // ---------------------------------------
 @moon-radio-item-indicator-size: 18px;
+@moon-radio-item-indicator-size-large: 24px;
 @moon-radio-item-indicator-border: 2px;  // ### Exceptional Case ###
 	// 2px, not being a multiple of 3, poses special problems. Any math or assignment related to
 	// this value must be specifically considered as to not impose layout issues related to, for
