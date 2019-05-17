@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Header` with `Input` to not have a distracting white background color
+- `moonstone/Input` caret color to match the designs (black bar on white background, white bar on black background, standard inversion)
 
 ## [3.0.0-alpha.1] - 2019-05-15
 
