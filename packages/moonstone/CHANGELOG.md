@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Header` with `Input` to not have a distracting white background color
+
 ## [3.0.0-alpha.1] - 2019-05-15
 
 ### Removed

@@ -115,16 +115,14 @@
 
 		&.standard {
 			.decorator {
-				&:not(:focus-within) {
-					background-color: transparent;
+				background-color: transparent;
 
-					.input {
+				.input {
+					color: @moon-header-text-color;
+
+					.input-placeholder({
 						color: @moon-header-text-color;
-
-						.input-placeholder({
-							color: @moon-header-text-color;
-						});
-					}
+					});
 				}
 			}
 		}
