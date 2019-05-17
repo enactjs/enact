@@ -59,7 +59,7 @@ const HeadingBase = kind({
 		 * The size of the spacing around the Heading.
 		 *
 		 * Allowed values include:
-		 * * `'auto'` (default) - Lets this value be based on the `size` prop for automatic usage.
+		 * * `'auto'` - Value is based on the `size` prop for automatic usage.
 		 * * `'large'` - Specifically assign the `'large'` spacing.
 		 * * `'medium'` - Specifically assign the `'medium'` spacing.
 		 * * `'small'` - Specifically assign the `'small'` spacing.
