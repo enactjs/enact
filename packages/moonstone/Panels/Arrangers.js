@@ -59,6 +59,7 @@ const offsetForBreadcrumbs = (node) => {
 // CSS is enforced by Panels.module.less
 const clipForBreadcrumbs = (node, to, from) => {
 	const viewport = node.parentNode;
+
 	if (to === 0 || from === 0) {
 		// remove clip when moving to or from the first panel and when a transition is completing
 		delete viewport.dataset.clip;

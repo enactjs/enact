@@ -138,11 +138,6 @@ class View extends React.Component {
 		};
 	}
 
-	componentDidMount () {
-		// eslint-disable-next-line react/no-find-dom-node
-		this.node = ReactDOM.findDOMNode(this);
-	}
-
 	shouldComponentUpdate (nextProps) {
 		if (nextProps.leaving) {
 			return false;
@@ -235,6 +230,11 @@ class View extends React.Component {
 	 */
 	prepareTransition = (arranger, callback, noAnimation) => {
 		const {duration, index, previousIndex, reverseTransition} = this.props;
+
+		// Need to ensure that we have a valid node reference before we animation. Sometimes, React
+		// will replace the node after mount causing a reference cached there to be invalid.
+		// eslint-disable-next-line react/no-find-dom-node
+		this.node = ReactDOM.findDOMNode(this);
 
 		if (this.animation && this.animation.playState !== 'finished' && this.changeDirection) {
 			this.animation.reverse();
