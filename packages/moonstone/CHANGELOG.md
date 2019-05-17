@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/RadioItem` and `moonstone/SelectableItem` icon size in large-text mode
 - `moonstone/DaySelector` item text size in large-text mode
+- `moonstone/Item` height in non-latin locales
+- `moonstone/Dropdown` popup scroller arrows showing in non-latin locales and added large-text mode support
 
 ## [3.0.0-alpha.1] - 2019-05-15
 
