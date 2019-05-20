@@ -54,13 +54,17 @@
 		// Skin colors
 		.applySkins({
 			box-shadow: none;
-			background-color: @moon-spotlight-color;
+			background-color: @moon-formcheckbox-focus-bg-color;
 
-			&:not([disabled]) {
-				.icon {
-					color: @moon-spotlight-text-color;
-				}
+			.icon {
+				color: @moon-formcheckbox-focus-text-color;
 			}
+
+			.disabled({
+				.icon {
+					opacity: @moon-disabled-opacity;
+				}
+			});
 		});
 	}
 }, parent);

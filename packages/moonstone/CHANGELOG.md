@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [3.0.0-alpha.2] - 2019-05-20
 
 ### Added
 
@@ -10,13 +10,15 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Button` background colors for translucent and lightTranslucent
+- `moonstone/Checkbox` by updating colors for both dark and light skins
+- `moonstone/DaySelector` item text size in large-text mode
+- `moonstone/Dropdown` popup scroller arrows showing in non-latin locales and added large-text mode support
+- `moonstone/FormCheckboxItem` to match the designs
 - `moonstone/Header` with `Input` to not have a distracting white background color
 - `moonstone/Input` caret color to match the designs (black bar on white background, white bar on black background, standard inversion)
-- `moonstone/RadioItem` and `moonstone/SelectableItem` icon size in large-text mode
-- `moonstone/DaySelector` item text size in large-text mode
-- `moonstone/Button` background colors for translucent and lightTranslucent
 - `moonstone/Item` height in non-latin locales
-- `moonstone/Dropdown` popup scroller arrows showing in non-latin locales and added large-text mode support
+- `moonstone/RadioItem` and `moonstone/SelectableItem` icon size in large-text mode
 
 ## [3.0.0-alpha.1] - 2019-05-15
 

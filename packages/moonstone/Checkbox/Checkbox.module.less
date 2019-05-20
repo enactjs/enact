@@ -43,7 +43,7 @@
 
 	// Skin colors
 	.applySkins({
-		color: @moon-checkbox-check-color;
+		color: @moon-checkbox-text-color;
 		background-color: @moon-checkbox-bg-color;
 	});
 }
@@ -52,10 +52,12 @@
 	.toggleIcon {
 		// Skin colors
 		.applySkins({
-			&:not([disabled]) {
-				color: @moon-checkbox-spotlight-color;
-				background-color: @moon-checkbox-spotlight-bg-color;
-			}
+			color: @moon-checkbox-focus-text-color;
+			background-color: @moon-checkbox-focus-bg-color;
+
+			.disabled({
+				opacity: @moon-disabled-opacity;
+			});
 		});
 	}
 }, parent);
@@ -66,7 +68,7 @@
 			// Skin colors
 			.applySkins({
 				&:not([disabled]) {
-					color: @moon-checkbox-check-color;
+					color: @moon-checkbox-text-color;
 					background-color: @moon-checkbox-bg-color;
 				}
 			});
