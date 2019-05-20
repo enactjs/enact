@@ -11,7 +11,7 @@
  */
 
 import kind from '@enact/core/kind';
-import Uppercase from '@enact/i18n/Uppercase';
+import {cap} from '@enact/core/util';
 import Spottable from '@enact/spotlight/Spottable';
 import {ButtonBase as UiButtonBase, ButtonDecorator as UiButtonDecorator} from '@enact/ui/Button';
 import Pure from '@enact/ui/internal/Pure';
@@ -51,7 +51,7 @@ const ButtonBase = kind({
 		 * * `'lightTranslucent'`, and
 		 * * `'transparent'`.
 		 *
-		 * @type {String}
+		 * @type {('translucent'|'lightTranslucent'|'transparent')}
 		 * @public
 		 */
 		backgroundOpacity: PropTypes.oneOf(['translucent', 'lightTranslucent', 'transparent']),
@@ -62,7 +62,7 @@ const ButtonBase = kind({
 		 * Accepts one of the following color names, which correspond with the colored buttons on a
 		 * standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`.
 		 *
-		 * @type {String}
+		 * @type {('red'|'green'|'yellow'|'blue')}
 		 * @public
 		 */
 		color: PropTypes.oneOf(['red', 'green', 'yellow', 'blue']),
@@ -82,24 +82,52 @@ const ButtonBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		// `transparent` was intentionally excluded from the adove documented exported classes as it
+		// does not appear to provide value to the end-developer, but is needed by IconButton
+		// internally for its design guidelines, which differ from Button regarding `transparent`.
+		css: PropTypes.object,
+
+		/**
+		 * Specifies on which side (`'before'` or `'after'`) of the text the icon appears.
+		 *
+		 * @type {('before'|'after')}
+		 * @default 'before'
+		 * @public
+		 */
+		iconPosition: PropTypes.oneOf(['before', 'after']),
+
+		/**
+		 * The size of the button.
+		 *
+		 * @type {('large'|'small')}
+		 * @default 'small'
+		 * @public
+		 */
+		size: PropTypes.string
+	},
+
+	defaultProps: {
+		iconPosition: 'before',
+		size: 'small'
 	},
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['button', 'bg', 'large', 'selected', 'small']
+		publicClassNames: ['button', 'bg', 'large', 'selected', 'small', 'transparent']
 	},
 
 	computed: {
-		className: ({backgroundOpacity, color, styler}) => styler.append(
+		className: ({backgroundOpacity, color, iconPosition, styler}) => styler.append(
 			backgroundOpacity,
-			color
+			color,
+			`icon${cap(iconPosition)}`
 		)
 	},
 
 	render: ({css, ...rest}) => {
 		delete rest.backgroundOpacity;
 		delete rest.color;
+		delete rest.iconPosition;
 
 		return UiButtonBase.inline({
 			'data-webos-voice-intent': 'Select',
@@ -129,7 +157,6 @@ const ButtonBase = kind({
  *
  * @hoc
  * @memberof moonstone/Button
- * @mixes i18n/Uppercase.Uppercase
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes ui/Button.ButtonDecorator
  * @mixes spotlight/Spottable.Spottable
@@ -138,7 +165,6 @@ const ButtonBase = kind({
  */
 const ButtonDecorator = compose(
 	Pure,
-	Uppercase,
 	MarqueeDecorator({className: componentCss.marquee}),
 	UiButtonDecorator,
 	Spottable,

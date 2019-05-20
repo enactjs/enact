@@ -429,6 +429,7 @@ const MediaControlsBase = kind({
 							disabled={moreButtonDisabled}
 							onClick={onMoreClick}
 							tooltipProps={{role: 'dialog'}}
+							tooltipRelative
 							tooltipText={moreIconLabel}
 							spotlightId={moreButtonSpotlightId}
 							spotlightDisabled={spotlightDisabled}

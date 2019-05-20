@@ -26,6 +26,7 @@ import React from 'react';
 import DaySelectorDecorator from '../DaySelector/DaySelectorDecorator';
 import {Expandable} from '../ExpandableItem';
 import {ExpandableListBase} from '../ExpandableList';
+import Skinnable from '../Skinnable';
 
 /**
  * A day of the week selection component.
@@ -123,7 +124,8 @@ const DayPickerDecorator = compose(
 	Expandable,
 	Changeable({change: 'onSelect', prop: 'selected'}),
 	I18nContextDecorator({localeProp: 'locale'}),
-	DaySelectorDecorator
+	DaySelectorDecorator,
+	Skinnable
 );
 
 /**

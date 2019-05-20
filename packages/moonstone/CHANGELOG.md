@@ -4,8 +4,62 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/Heading` prop `spacing` with default value `'small'`
+
+### Fixed
+
+- `moonstone/Header` with `Input` to not have a distracting white background color
+- `moonstone/Input` caret color to match the designs (black bar on white background, white bar on black background, standard inversion)
+- `moonstone/RadioItem` and `moonstone/SelectableItem` icon size in large-text mode
+- `moonstone/DaySelector` item text size in large-text mode
+- `moonstone/Button` background colors for translucent and lightTranslucent
+- `moonstone/Item` height in non-latin locales
+- `moonstone/Dropdown` popup scroller arrows showing in non-latin locales and added large-text mode support
+- `moonstone/Checkbox` by updating colors for both dark and light skins
+- `moonstone/FormCheckboxItem` to match the designs
+
+## [3.0.0-alpha.1] - 2019-05-15
+
+### Removed
+
+- `moonstone/Button` and `moonstone/Panels.Header` prop `casing` which is no longer supported
+- `moonstone/Input.InputBase` prop `focused` which was used to indicate when the internal input field had focused but was replaced by the `:focus-within` pseudo-selector
+- `moonstone/VirtualList` and `moonstone/VirtualList.VirtualGridList` property `isItemDisabled`
+
+### Added
+
+- `moonstone/BodyText` prop `size` to offer a new "small" size
+- `moonstone/Button` prop `iconPosition`
+- `moonstone/ContextualPopup` config `noArrow`
+- `moonstone/Dropdown` component
+- `moonstone/Header` prop `centered` to support immersive apps with a completely centered design
+- `moonstone/Heading` component, an improved version of `moonstone/Divider` with additional features
+- `moonstone/Panels` slot `<controls>` to easily add custom controls next to the Panels' "close" button
+- `moonstone/Spinner` prop `size` to support a new "small" size for use inside `SlotItem` components
+- `moonstone/TooltipDecorator` prop `tooltipRelative` and `moonstone/TooltipDecorator.Tooltip` prop `relative` to support relative positioning. This is an advanced feature and requires a container with specific rules. See documentation for details.
+
+### Changed
+
+- `moonstone/Button.ButtonDecorator` to remove `i18n/Uppercase` HOC
+- `moonstone/Button`, `moonstone/Checkbox`, `moonstone/CheckboxItem`, `moonstone/ContextualPopupDecorator`, `moonstone/FormCheckbox`, `moonstone/FormCheckboxItem`, `moonstone/Header`, `moonstone/Notification`, `moonstone/RadioItem`, and `moonstone/Tooltip` appearance to match the latest designs
+- `moonstone/Button`, `moonstone/Dropdown`, `moonstone/Icon`, `moonstone/IconButton`, `moonstone/Input`, and `moonstone/ToggleButton` default size to "small", which unifies their initial heights
+- `moonstone/DaySelector` to have squared check boxes to match the rest of the checkmark components
+- `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` text size to be smaller
+- `moonstone/Panel` and `moonstone/Panels` now allocate slightly more screen edge space for a cleaner look
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` scrollbar button to gain focus when pressing a page up or down key if `focusableScrollbar` is true
+- global styling rules affecting standard font-weight, disabled opacity, and LESS color variable definitions
+
+### Fixed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll by page up/down keys without focus in pointer mode
+
+## [2.6.0] - ???
+
 ### Deprecated
 
+- `moonstone/Divider` which will be replaced by `moonstone/Heading`
 - `moonstone/Input.InputBase` prop `focused` which will be handled by CSS in 3.0
 - `small` prop in `moonstone/Input` and `moonstone/ToggleButton`, which will be replaced by `size="small"` in 3.0
 

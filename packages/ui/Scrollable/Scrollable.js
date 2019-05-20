@@ -38,7 +38,7 @@ const
 		overscrollTypeHold: 1,
 		overscrollTypeOnce: 2,
 		overscrollTypeDone: 9,
-		paginationPageMultiplier: 0.8,
+		paginationPageMultiplier: 0.66,
 		scrollStopWaiting: 200,
 		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	},
@@ -186,6 +186,15 @@ class ScrollableBase extends Component {
 		 * @private
 		 */
 		noScrollByDrag: PropTypes.bool,
+
+		/**
+		 * Prevents scroll by wheeling on the list or the scroller.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noScrollByWheel: PropTypes.bool,
 
 		/**
 		 * Called when flicking with a mouse or a touch screen.
@@ -371,6 +380,7 @@ class ScrollableBase extends Component {
 		cbScrollTo: nop,
 		horizontalScrollbar: 'auto',
 		noScrollByDrag: false,
+		noScrollByWheel: false,
 		onScroll: nop,
 		onScrollStart: nop,
 		onScrollStop: nop,
@@ -635,9 +645,10 @@ class ScrollableBase extends Component {
 	}
 
 	onWheel = (ev) => {
-		ev.preventDefault();
-
-		if (!this.isDragging) {
+		if (this.isDragging) {
+			ev.preventDefault();
+			ev.stopPropagation();
+		} else {
 			const
 				{verticalScrollbarRef, horizontalScrollbarRef} = this,
 				bounds = this.getScrollBounds(),
@@ -650,6 +661,10 @@ class ScrollableBase extends Component {
 				direction;
 
 			this.lastInputType = 'wheel';
+
+			if (this.props.noScrollByWheel) {
+				return;
+			}
 
 			if (canScrollVertically) {
 				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
@@ -668,6 +683,8 @@ class ScrollableBase extends Component {
 
 			if (delta !== 0) {
 				this.scrollToAccumulatedTarget(delta, canScrollVertically, this.props.overscrollEffectOn.wheel);
+				ev.preventDefault();
+				ev.stopPropagation();
 			}
 		}
 	}
@@ -1289,6 +1306,7 @@ class ScrollableBase extends Component {
 		delete rest.cbScrollTo;
 		delete rest.clearOverscrollEffect;
 		delete rest.horizontalScrollbar;
+		delete rest.noScrollByWheel;
 		delete rest.onFlick;
 		delete rest.onKeyDown;
 		delete rest.onMouseDown;

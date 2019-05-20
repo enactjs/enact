@@ -1,8 +1,8 @@
 // LabeledItem.module.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
 
 .labeledItem {
 	//// Locally scoped LESS variables ////
@@ -77,6 +77,10 @@
 			.label {
 				color: inherit;
 			}
+		});
+
+		.disabled({
+			opacity: @moon-disabled-opacity;
 		});
 	});
 }

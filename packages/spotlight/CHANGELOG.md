@@ -2,7 +2,13 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
+## [3.0.0-alpha.1] - 2019-05-15
+
+### Changed
+
+- `spotlight/Spottable` to allow disabled items to be focused
+
+## [2.6.0] - ???
 
 ### Fixed
 

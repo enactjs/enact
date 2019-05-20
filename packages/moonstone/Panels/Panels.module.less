@@ -1,14 +1,23 @@
 // Panels.module.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
 
 .panels {
 	pointer-events: none;
 
 	> * {
 		pointer-events: auto;
+	}
+
+	.controls {
+		position: absolute;
+		top: (@moon-app-keepout + @moon-spotlight-outset);
+		.position-start-end(auto, @moon-panel-h-padding);
+		z-index: 1;
+		.padding-start-end(18px, initial);
+		.remove-margin-on-edge-children();
 	}
 
 	.breadcrumbs {
@@ -26,7 +35,7 @@
 
 			.breadcrumbHeader {
 				padding-top: 3px;
-				margin: @moon-app-keepout;
+				margin: @moon-panel-v-padding @moon-panel-h-padding;
 				font-family: @moon-super-header-font-family;
 				font-size: @moon-breadcrumb-text-size;
 			}
@@ -39,7 +48,7 @@
 		overflow: hidden;
 
 		&.transitioning::before {
-			content: '';
+			content: "";
 			position: absolute;
 			.position(0);
 			z-index: 10000;
@@ -49,7 +58,8 @@
 	:global(.enact-locale-right-to-left) & {
 		direction: ltr;
 
-		.breadcrumbs {
+		.breadcrumbs,
+		.controls {
 			direction: rtl;
 		}
 	}
@@ -59,7 +69,7 @@
 		.breadcrumbs {
 			.breadcrumb {
 				.focus({
-					background: @moon-spotlight-color;
+					background-color: @moon-spotlight-color;
 					color: @moon-spotlight-text-color;
 
 					.breadcrumbHeader {
@@ -125,13 +135,13 @@
 			clip-path: polygon(@moon-breadcrumb-width 0, 100% 0, 100% 100%, @moon-breadcrumb-width 100%);
 		}
 
-		> :not([data-index='0']) {
+		> :not([data-index="0"]) {
 			padding-left: 0;
 			width: calc(~"100% - " @moon-breadcrumb-width);
 		}
 	}
 
-	&[data-index='0'] {
+	&[data-index="0"] {
 		// prevents breadcrumbs from capturing pointer events when the first panel is visible
 		// without any breadcrumbs
 		.breadcrumbs {
@@ -140,8 +150,8 @@
 		}
 	}
 
-	&:not([data-index='0']) {
-		:global(.enact-locale-right-to-left) & .close {
+	&:not([data-index="0"]) {
+		:global(.enact-locale-right-to-left) & .controls {
 			// allocate space for breadcrumb + header margin
 			left: @moon-breadcrumb-width + @moon-spotlight-outset;
 		}
