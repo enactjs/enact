@@ -249,9 +249,7 @@ const VirtualListBaseFactory = (type) => {
 				containerNode.removeEventListener('keyup', this.onKeyUp);
 			}
 
-			this.pause.resume();
-			SpotlightAccelerator.reset();
-
+			this.resumeSpotlight();
 			this.setContainerDisabled(false);
 		}
 
@@ -598,14 +596,14 @@ const VirtualListBaseFactory = (type) => {
 				}
 
 			} else if (!repeat && Spotlight.move(getDirection(keyCode))) {
-				SpotlightAccelerator.reset();
+				this.resumeSpotlight();
 			}
 		}
 
 		onKeyDown = (ev) => {
 			if (getDirection(ev.keyCode)) {
 				ev.preventDefault();
-				ev.stopPropagation();
+				this.pause.pause();
 				Spotlight.setPointerMode(false);
 				SpotlightAccelerator.processKey(ev, this.onAcceleratedKeyDown);
 			}
@@ -613,8 +611,13 @@ const VirtualListBaseFactory = (type) => {
 
 		onKeyUp = ({keyCode}) => {
 			if (getDirection(keyCode) || isEnter(keyCode)) {
-				SpotlightAccelerator.reset();
+				this.resumeSpotlight();
 			}
+		}
+
+		resumeSpotlight = () => {
+			this.pause.resume();
+			SpotlightAccelerator.reset();
 		}
 
 		/**
@@ -639,11 +642,10 @@ const VirtualListBaseFactory = (type) => {
 			const item = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${index}'].spottable`);
 
 			if (this.isWrappedBy5way) {
-				SpotlightAccelerator.reset();
+				this.resumeSpotlight();
 				this.isWrappedBy5way = false;
 			}
 
-			this.pause.resume();
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
 			this.isScrolledByJump = false;
