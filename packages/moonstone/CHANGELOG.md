@@ -17,6 +17,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Button` background colors for translucent and lightTranslucent
 - `moonstone/Item` height in non-latin locales
 - `moonstone/Dropdown` popup scroller arrows showing in non-latin locales and added large-text mode support
+- `moonstone/FormCheckboxItem` to match the designs
 
 ## [3.0.0-alpha.1] - 2019-05-15
 
