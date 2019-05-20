@@ -503,33 +503,42 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		getNextIndex = ({index, keyCode, repeat}) => {
-			const {dataSize, rtl, wrap} = this.props;
+			const {dataSize, isItemDisabled, rtl, wrap} = this.props;
 			const {isPrimaryDirectionVertical, dimensionToExtent} = this.uiRefCurrent;
+			const column = index % dimensionToExtent;
+			const row = (index - column) % dataSize / dimensionToExtent;
 			const isDownKey = isDown(keyCode);
 			const isLeftMovement = (!rtl && isLeft(keyCode)) || (rtl && isRight(keyCode));
 			const isRightMovement = (!rtl && isRight(keyCode)) || (rtl && isLeft(keyCode));
 			const isUpKey = isUp(keyCode);
+			const isNextRow = index + dimensionToExtent < dataSize;
+			const isNextAdjacent = column < dimensionToExtent - 1 && index < (dataSize - 1);
 			let isWrapped = false;
 			let nextIndex = -1;
+			let targetIndex = -1;
 
 			if (isPrimaryDirectionVertical) {
-				if (isUpKey) {
-					nextIndex = this.findSpottableItemWithPositionInExtent(index - 1, -1, index % dimensionToExtent);
-				} else if (isDownKey) {
-					nextIndex = this.findSpottableItemWithPositionInExtent(index + 1, dataSize, index % dimensionToExtent);
-				} else if (isLeftMovement && index % dimensionToExtent) {
-					nextIndex = index - 1;
-				} else if (isRightMovement && index % dimensionToExtent < dimensionToExtent - 1) {
-					nextIndex = index + 1;
+				if (isUpKey && row) {
+					targetIndex = index - dimensionToExtent;
+				} else if (isDownKey && isNextRow) {
+					targetIndex = index + dimensionToExtent;
+				} else if (isLeftMovement && column) {
+					targetIndex = index - 1;
+				} else if (isRightMovement && isNextAdjacent) {
+					targetIndex = index + 1;
 				}
-			} else if (isLeftMovement) {
-				nextIndex = this.findSpottableItemWithPositionInExtent(index - 1, -1, index % dimensionToExtent);
-			} else if (isRightMovement) {
-				nextIndex = this.findSpottableItemWithPositionInExtent(index + 1, dataSize, index % dimensionToExtent);
-			} else if (isUpKey && index % dimensionToExtent) {
-				nextIndex = index - 1;
-			} else if (isDownKey && index % dimensionToExtent < dimensionToExtent - 1) {
-				nextIndex = index + 1;
+			} else if (isLeftMovement && row) {
+				targetIndex = index - dimensionToExtent;
+			} else if (isRightMovement && isNextRow) {
+				targetIndex = index + dimensionToExtent;
+			} else if (isUpKey && column) {
+				targetIndex = index - 1;
+			} else if (isDownKey && isNextAdjacent) {
+				targetIndex = index + 1;
+			}
+
+			if (targetIndex >= 0 && !isItemDisabled(targetIndex)) {
+				nextIndex = targetIndex;
 			}
 
 			if (!repeat && nextIndex === -1 && wrap) {
@@ -544,11 +553,11 @@ const VirtualListBaseFactory = (type) => {
 					null
 				);
 
-				if (isForward) {
-					nextIndex = this.findSpottableItemWithPositionInExtent(0, dataSize, index % dimensionToExtent);
+				if (isForward && this.findSpottableItem((row + 1) * dimensionToExtent, dataSize) < 0) {
+					nextIndex = this.findSpottableItem(0, index);
 					isWrapped = true;
-				} else if (isBackward) {
-					nextIndex = this.findSpottableItemWithPositionInExtent(dataSize - 1, -1, index % dimensionToExtent);
+				} else if (isBackward && this.findSpottableItem(-1, row * dimensionToExtent - 1) < 0) {
+					nextIndex = this.findSpottableItem(dataSize, index);
 					isWrapped = true;
 				}
 			}
