@@ -4,8 +4,8 @@ import React from 'react';
 
 const SharedState = React.createContext(null);
 
-const SharedStateDecorator = hoc({idProp: 'id'}, (config, Wrapped) => {
-	const {idProp} = config;
+const SharedStateDecorator = hoc({idProp: 'id', updateOnMount: false}, (config, Wrapped) => {
+	const {idProp, updateOnMount} = config;
 
 	return class extends React.Component {
 		static displayName = 'SharedStateDecorator'
@@ -21,6 +21,9 @@ const SharedStateDecorator = hoc({idProp: 'id'}, (config, Wrapped) => {
 
 			this.data = {};
 			this.sharedState = this.initSharedState();
+			this.state = {
+				updateOnMount: false
+			};
 		}
 
 		componentDidMount () {
@@ -35,27 +38,33 @@ const SharedStateDecorator = hoc({idProp: 'id'}, (config, Wrapped) => {
 			}
 		}
 
+		isUpdateable () {
+			const {[idProp]: id, noSharedState} = this.props;
+
+			return !noSharedState && (id || id === 0);
+		}
+
 		initSharedState () {
 			return {
 				set: (key, value) => {
-					const {[idProp]: id, noSharedState} = this.props;
+					const {[idProp]: id} = this.props;
 
-					if (noSharedState || !id && id !== 0) return;
-
-					this.data[id] = this.data[id] || {};
-					this.data[id][key] = value;
+					if (this.isUpdateable()) {
+						this.data[id] = this.data[id] || {};
+						this.data[id][key] = value;
+					}
 				},
 
 				get: (key) => {
-					const {[idProp]: id, noSharedState} = this.props;
+					const {[idProp]: id} = this.props;
 
-					return noSharedState ? null : (this.data[id] && this.data[id][key]);
+					return (this.isUpdateable() && this.data[id]) ? this.data[id][key] : null;
 				},
 
 				delete: (key) => {
-					const {[idProp]: id, noSharedState} = this.props;
+					const {[idProp]: id} = this.props;
 
-					if (!noSharedState && id && this.data[id]) {
+					if (this.isUpdateable() && this.data[id]) {
 						delete this.data[id][key];
 					}
 				}
@@ -65,13 +74,17 @@ const SharedStateDecorator = hoc({idProp: 'id'}, (config, Wrapped) => {
 		loadFromContext () {
 			const {[idProp]: id, noSharedState} = this.props;
 
-			if (!noSharedState && this.context) {
+			if (!noSharedState && this.context && this.context.get) {
 				const data = this.context.get(id);
 
 				if (data) {
 					this.data = data;
 				} else {
 					this.context.set(id, this.data);
+				}
+
+				if (updateOnMount) {
+					this.setState({updateOnMount: true});
 				}
 			}
 		}
