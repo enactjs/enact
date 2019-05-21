@@ -181,6 +181,19 @@ const PanelBase = kind({
 	}
 });
 
+/**
+ * Prevents the component from restoring any framework shared state.
+ *
+ * When `false`, the default, Panel will store state for some framework components in order to
+ * restore that state when returning to the Panel. Setting this prop to `true` will suppress that
+ * behavior and not store or retrieve any framework component state.
+ *
+ * @name noSharedState
+ * @type {Boolean}
+ * @default {false}
+ * @memberof moonstone/Panels.Panel.prototype
+ */
+
 const Panel = SharedStateDecorator(
 	{idProp: 'data-index'},
 	SpotlightContainerDecorator(

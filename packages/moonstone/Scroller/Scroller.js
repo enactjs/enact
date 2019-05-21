@@ -422,7 +422,19 @@ Scroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
 	 * @default 'both'
 	 * @public
 	 */
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+	/**
+	 * Unique identifier for the component.
+	 *
+	 * When defined and when the `Scroller` is within a [Panel]{@link moonstone/Panels.Panel}, the
+	 * `Scroller` will store its scroll position and restore that position when returning to the
+	 * `Panel`.
+	 *
+	 * @type {String}
+	 * @public
+	 */
+	id: PropTypes.string
 };
 
 Scroller.defaultProps = {
@@ -466,7 +478,19 @@ ScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototyp
 	 * @default 'both'
 	 * @public
 	 */
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+	/**
+	 * Unique identifier for the component.
+	 *
+	 * When defined and when the `Scroller` is within a [Panel]{@link moonstone/Panels.Panel}, the
+	 * `Scroller` will store its scroll position and restore that position when returning to the
+	 * `Panel`.
+	 *
+	 * @type {String}
+	 * @public
+	 */
+	id: PropTypes.string
 };
 
 ScrollerNative.defaultProps = {
