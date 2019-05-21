@@ -52,10 +52,12 @@
 	.toggleIcon {
 		// Skin colors
 		.applySkins({
-			&:not([disabled]) {
-				color: @moon-checkbox-focus-text-color;
-				background-color: @moon-checkbox-focus-bg-color;
-			}
+			color: @moon-checkbox-focus-text-color;
+			background-color: @moon-checkbox-focus-bg-color;
+
+			.disabled({
+				opacity: @moon-disabled-opacity;
+			});
 		});
 	}
 }, parent);
