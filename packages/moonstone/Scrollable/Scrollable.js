@@ -622,7 +622,8 @@ class ScrollableBase extends Component {
 		if (this.pointToFocus !== null) {
 			// no need to focus on pointer mode
 			if (!Spotlight.getPointerMode()) {
-				Spotlight.focusFromPoint(this.pointToFocus.direction, this.pointToFocus);
+				const {direction, x, y} = this.pointToFocus;
+				Spotlight.focusFromPoint(direction, {x, y});
 			}
 			this.pointToFocus = null;
 		}

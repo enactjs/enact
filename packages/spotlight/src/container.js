@@ -1089,6 +1089,7 @@ export {
 	notifyEnterContainer,
 	removeAllContainers,
 	removeContainer,
+	reverseDirections,
 	rootContainerId,
 	setContainerPreviousTarget,
 	setDefaultContainer,

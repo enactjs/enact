@@ -45,6 +45,7 @@ import {
 	notifyEnterContainer,
 	removeAllContainers,
 	removeContainer,
+	reverseDirections,
 	rootContainerId,
 	setContainerLastFocusedElement,
 	setContainerPreviousTarget,
@@ -748,7 +749,13 @@ const Spotlight = (function () {
 		},
 
 		focusFromPoint: function (direction, point) {
-			spotNextFromPoint(direction, point);
+			const node = getNavigableTarget(document.elementFromPoint(point.x, point.y));
+
+			if (node && node !== getCurrent()) {
+				focusElement(node, getContainersForNode(node), true);
+			} else {
+				spotNextFromPoint(reverseDirections[direction], point);
+			}
 		},
 
 		// move(<direction>)
