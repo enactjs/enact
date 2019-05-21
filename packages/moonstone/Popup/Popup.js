@@ -184,7 +184,7 @@ const PopupBase = kind({
 					<IconButton
 						className={css.closeButton}
 						backgroundOpacity="transparent"
-						small
+						size="small"
 						onTap={onCloseButtonClick}
 						aria-label={ariaLabel}
 					>

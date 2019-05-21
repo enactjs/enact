@@ -1,4 +1,6 @@
 import ToggleButton from '@enact/moonstone/ToggleButton';
+import Button, {ButtonBase} from '@enact/moonstone/Button';
+import UiButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
@@ -12,8 +14,8 @@ const prop = {
 	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent']
 };
 
-const Config = mergeComponentMetadata('ToggleButton', ToggleButton);
 ToggleButton.displayName = 'ToggleButton';
+const Config = mergeComponentMetadata('ToggleButton', UIButtonBase, UiButton, ButtonBase, Button, ToggleButton);
 
 storiesOf('Moonstone', module)
 	.add(
@@ -26,7 +28,7 @@ storiesOf('Moonstone', module)
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 				disabled={boolean('disabled', Config)}
 				onToggle={action('onToggle')}
-				small={boolean('small', Config)}
+				size={select('size', ['small', 'large'], Config)}
 				toggleOffLabel={text('toggleOffLabel', Config, 'Off')}
 				toggleOnLabel={text('toggleOnLabel', Config, 'On')}
 			>

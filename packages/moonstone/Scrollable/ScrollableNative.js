@@ -91,15 +91,6 @@ class ScrollableBaseNative extends Component {
 		childRenderer: PropTypes.func.isRequired,
 
 		/**
-		 * Animate while scrolling
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		animate: PropTypes.bool,
-
-		/**
 		 * This is set to `true` by SpotlightContainerDecorator
 		 *
 		 * @type {Boolean}
@@ -148,6 +139,15 @@ class ScrollableBaseNative extends Component {
 		 * @public
 		 */
 		focusableScrollbar: PropTypes.bool,
+
+		/**
+		 * Prevents scroll by wheeling on the list or the scroller.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noScrollByWheel: PropTypes.bool,
 
 		/**
 		 * Specifies overscroll effects shows on which type of inputs.
@@ -209,8 +209,8 @@ class ScrollableBaseNative extends Component {
 
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
-		animate: false,
 		focusableScrollbar: false,
+		noScrollByWheel: false,
 		overscrollEffectOn: {
 			arrowKey: false,
 			drag: false,
@@ -304,6 +304,18 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	onTouchStart = () => {
+		const
+			focusedItem = Spotlight.getCurrent(),
+			{horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current,
+			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current && horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
+			isVerticalScrollButtonFocused = verticalScrollbarRef.current && verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
+
+		if (focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
+			focusedItem.blur();
+		}
+	}
+
 	/*
 	 * wheel event handler;
 	 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot support this
@@ -345,9 +357,13 @@ class ScrollableBaseNative extends Component {
 					(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(ev.target))) {
 					delta = this.uiRef.current.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
+
+					ev.preventDefault();
 				} else if (overscrollEffectRequired) {
 					this.uiRef.current.checkAndApplyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce);
 				}
+
+				ev.stopPropagation();
 			} else {
 				if (overscrollEffectRequired && (eventDelta < 0 && this.uiRef.current.scrollTop <= 0 || eventDelta > 0 && this.uiRef.current.scrollTop >= bounds.maxTop)) {
 					this.uiRef.current.applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
@@ -364,6 +380,9 @@ class ScrollableBaseNative extends Component {
 				}
 				delta = this.uiRef.current.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				needToHideThumb = !delta;
+
+				ev.preventDefault();
+				ev.stopPropagation();
 			} else {
 				if (overscrollEffectRequired && (eventDelta < 0 && this.uiRef.current.scrollLeft <= 0 || eventDelta > 0 && this.uiRef.current.scrollLeft >= bounds.maxLeft)) {
 					this.uiRef.current.applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
@@ -544,13 +563,13 @@ class ScrollableBaseNative extends Component {
 
 	onKeyDown = (ev) => {
 		const
-			{animate, overscrollEffectOn} = this.props,
+			{overscrollEffectOn} = this.props,
 			{keyCode, repeat} = ev;
 		let direction = null;
 
 		forward('onKeyDown', ev, this.props);
 
-		this.animateOnFocus = animate;
+		this.animateOnFocus = true;
 
 		if (isPageUp(keyCode) || isPageDown(keyCode)) {
 			if (!repeat && this.hasFocus() && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
@@ -790,7 +809,6 @@ class ScrollableBaseNative extends Component {
 	render () {
 		const
 			{
-				animate,
 				childRenderer,
 				'data-spotlight-container': spotlightContainer,
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
@@ -814,7 +832,6 @@ class ScrollableBaseNative extends Component {
 				addEventListeners={this.addEventListeners}
 				applyOverscrollEffect={this.applyOverscrollEffect}
 				clearOverscrollEffect={this.clearOverscrollEffect}
-				noAnimation={!animate}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
@@ -845,6 +862,7 @@ class ScrollableBaseNative extends Component {
 						data-spotlight-container={spotlightContainer}
 						data-spotlight-container-disabled={spotlightContainerDisabled}
 						data-spotlight-id={spotlightId}
+						onTouchStart={this.onTouchStart}
 						ref={uiContainerRef}
 						style={style}
 					>

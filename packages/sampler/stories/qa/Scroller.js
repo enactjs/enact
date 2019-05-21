@@ -44,7 +44,7 @@ class ScrollerResizableItem extends React.Component {
 		};
 		return (
 			<div style={{...style, height}}>
-				<Button onClick={this.props.toggleMore} small style={{position: 'absolute', bottom: 0}}>{text}</Button>
+				<Button onClick={this.props.toggleMore} size="small" style={{position: 'absolute', bottom: 0}}>{text}</Button>
 			</div>
 		);
 	}
@@ -162,7 +162,7 @@ storiesOf('Scroller', module)
 		'List of things',
 		() => (
 			<Scroller
-				data-spotlight-container-disabled={boolean('data-spotlight-container-disabled', Scroller, false)}
+				spotlightDisabled={boolean('spotlightDisabled', Scroller, false)}
 				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
 			>
 				<Group childComponent={Item}>
@@ -357,4 +357,71 @@ storiesOf('Scroller', module)
 				</ExpandableList>
 			</Scroller>
 		)
+	)
+	.add(
+		'With Nested Scroller',
+		() => {
+			let noScrollByWheel = boolean('noScrollByWheel', Scroller, false);
+			return (
+				<Scroller
+					direction="vertical"
+					verticalScrollbar="visible"
+				>
+					<Scroller
+						direction="horizontal"
+						horizontalScrollbar="visible"
+						noScrollByWheel={noScrollByWheel}
+						style={{
+							height: 'auto',
+							width: '90%'
+						}}
+					>
+						<div
+							style={{
+								backgroundColor: '#444',
+								width: ri.unit(2400, 'rem')
+							}}
+						>
+							<Item>The first nested scroller.</Item>
+							<br />
+							<br />
+							<Item>This is the upper horizontal scroller. If noScrollByWheel is not specified, this scroller will be scrolled by wheel and the outer scroller will not be scrolled.</Item>
+							<br />
+							<br />
+							<Item>If noScrollByWheel is specified, this scroller will NOT be scrolled by wheel but the outer scroller will be scrolled.</Item>
+							<br />
+							<br />
+							<Item>To set or unset noScrollByWheel prop, click KNOBS below.</Item>
+						</div>
+					</Scroller>
+					<Scroller
+						direction="horizontal"
+						horizontalScrollbar="visible"
+						noScrollByWheel={noScrollByWheel}
+						style={{
+							height: 'auto',
+							width: '90%'
+						}}
+					>
+						<div
+							style={{
+								backgroundColor: '#444',
+								width: ri.unit(2400, 'rem')
+							}}
+						>
+							<Item>The second nested scroller.</Item>
+							<br />
+							<br />
+							<Item>This is the lower horizontal scroller. If noScrollByWheel is not specified, this scroller will be scrolled by wheel and the outer scroller will not be scrolled.</Item>
+							<br />
+							<br />
+							<Item>If noScrollByWheel is specified, this scroller will NOT be scrolled by wheel but the outer scroller will be scrolled.</Item>
+							<br />
+							<br />
+							<Item>To set or unset noScrollByWheel prop, click KNOBS below.</Item>
+						</div>
+					</Scroller>
+				</Scroller>
+			);
+		}
 	);

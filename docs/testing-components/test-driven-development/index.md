@@ -66,7 +66,7 @@ properties are applied to the Button child.
 ```js
 test('should apply same prop to <Button> child', function () {
 	const iconButton = mount(
-		<IconButton small>star</IconButton>
+		<IconButton size="small">star</IconButton>
 	);
 	const button = iconButton.find('Button');
 	const expected = true;

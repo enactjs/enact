@@ -54,8 +54,8 @@
 // ---------------------------------------
 @moon-button-text-color: @moon-gray;
 @moon-button-bg-color: #383838;
-@moon-button-translucent-opacity: 30%;
-@moon-button-lightTranslucent-bg-color: @moon-white;
+@moon-button-translucent-bg-color: fade(@moon-button-bg-color, 22%);
+@moon-button-lightTranslucent-bg-color: fade(@moon-white, 22%);
 @moon-button-transparent-bg-color: transparent;
 @moon-button-transparent-active-text-color: @moon-white;
 @moon-button-transparent-disabled-bg-color: @moon-button-disabled-bg-color;
@@ -80,10 +80,10 @@
 
 // Checkbox
 // ---------------------------------------
-@moon-checkbox-check-color: @moon-text-color;
-@moon-checkbox-bg-color: fade(@moon-white, 30%);
-@moon-checkbox-spotlight-bg-color: fade(@moon-white, 40%);
-@moon-checkbox-spotlight-color: @moon-spotlight-text-color;
+@moon-checkbox-text-color: @moon-white;
+@moon-checkbox-bg-color: fade(@moon-white, 22%);
+@moon-checkbox-focus-text-color: @moon-spotlight-text-color;
+@moon-checkbox-focus-bg-color: fade(@moon-white, 40%);
 
 // DaySelector
 // ---------------------------------------
@@ -94,8 +94,12 @@
 
 // Divider
 // ---------------------------------------
-@moon-divider-text-color:             @moon-text-color;
-@moon-divider-border-color:           @moon-border-color;
+@moon-divider-text-color: @moon-heading-text-color;  // Deprecated
+@moon-divider-border-color: @moon-heading-border-color;  // Deprecated
+
+// Dropdown
+// ---------------------------------------
+@moon-dropdown-selected-text-color: @moon-spotlight-color;
 
 // EditableIntegerPicker
 // ---------------------------------------
@@ -109,6 +113,13 @@
 @moon-formcheckbox-bg-color: fade(@moon-white, 22%);
 @moon-formcheckbox-text-color: @moon-white;
 @moon-formcheckbox-border-color: fade(@moon-white, 15%);
+@moon-formcheckbox-focus-bg-color: @moon-spotlight-color;
+@moon-formcheckbox-focus-text-color: @moon-spotlight-text-color;
+
+// FormCheckboxItem
+// ---------------------------------------
+@moon-formcheckboxitem-focus-text-color: @moon-spotlight-text-color;
+@moon-formcheckboxitem-focus-bg-color: transparent;
 
 // GridListImageItem
 // ---------------------------------------
@@ -140,6 +151,11 @@
 @moon-header-full-bleed-border-color: fade(@moon-white, 25%);
 @moon-header-controls-border-color:   #383838;
 
+// Heading
+// ---------------------------------------
+@moon-heading-text-color: @moon-text-color;
+@moon-heading-border-color: @moon-border-color;
+
 // IconButton
 // ---------------------------------------
 @moon-icon-button-text-color:           @moon-button-text-color;
@@ -151,9 +167,8 @@
 
 // Input
 // ---------------------------------------
-@moon-input-caret-color:              @moon-spotlight-bg-color;
 @moon-input-text-color:               @moon-black;
-@moon-input-text-disabled-color:      @moon-white;
+@moon-input-text-disabled-color:      fade(@moon-black, 25%);
 @moon-input-border-color:             #eaeaea;
 @moon-input-textarea-color:           @moon-dark-gray;
 @moon-input-placeholder-color:        @moon-white;
@@ -169,7 +184,7 @@
 
 // LabeledItem
 // ---------------------------------------
-@moon-labeled-item-label-color: @moon-sub-header-text-color;
+@moon-labeled-item-label-color: inherit;
 
 // Notification
 // ---------------------------------------

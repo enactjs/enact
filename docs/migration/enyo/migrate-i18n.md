@@ -63,10 +63,10 @@ const MyComponent = I18nContextDecorator(
 		render () {
 			return (
 				<div>
-					<Button onClick={this.setLocale('ar-SA')} small>ar-SA</Button>
-					<Button onClick={this.setLocale('en-US')} small>en-US</Button>
-					<Button onClick={this.setLocale('ko-KR')} small>ko-KR</Button>
-					<Button onClick={this.setLocale('th-TH')} small>th-TH</Button>
+					<Button onClick={this.setLocale('ar-SA')} size="small">ar-SA</Button>
+					<Button onClick={this.setLocale('en-US')} size="small">en-US</Button>
+					<Button onClick={this.setLocale('ko-KR')} size="small">ko-KR</Button>
+					<Button onClick={this.setLocale('th-TH')} size="small">th-TH</Button>
 				</div>
 			);
 		}

@@ -62,7 +62,7 @@ const ApplicationCloseButton = kind({
 				{...rest}
 				backgroundOpacity={backgroundOpacity}
 				onTap={onApplicationClose}
-				small
+				size="small"
 			>
 				closex
 			</IconButton>

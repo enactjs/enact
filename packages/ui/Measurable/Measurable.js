@@ -1,3 +1,4 @@
+/* global ResizeObserver, MutationObserver */
 /**
  * A higher-order component that adds the ability to measure nodes conveniently.
  *
@@ -6,8 +7,7 @@
  */
 
 import hoc from '@enact/core/hoc';
-import warning from 'warning';
-import React, {useState, useCallback} from 'react';
+import React, {useState, useRef, useLayoutEffect} from 'react';
 
 /**
  * Default config for {@link ui/Measurable.Measurable}.
@@ -35,18 +35,61 @@ const defaultConfig = {
 	refProp: 'forwardRef'
 };
 
-function useMeasurable () {
+const useMeasurable = () => {
 	const [measurement, setMeasurement] = useState();
-	const ref = useCallback(node => {
-		warning((!node || node.getBoundingClientRect), 'Only a DOM node can be measured. It appears that the ref is attached to a React node instead.');
-		setMeasurement((node && node.getBoundingClientRect) ? node.getBoundingClientRect() : null);
-	}, []);
+	const ref = useRef(null);
+
+	useLayoutEffect(
+		() => {
+			if (!ref.current) {
+				return;
+			}
+
+			// Support for ResizeObserver
+			if (typeof ResizeObserver === 'function') {
+				let resizeObserver = new ResizeObserver((entries) => {
+					entries.forEach((entry) => {
+						if (entry.target === ref.current) {
+							// we want to measure including the padding, hence refers to `target` instead of `contentRect`
+							setMeasurement(entry.target.getBoundingClientRect());
+						}
+					});
+				});
+
+				resizeObserver.observe(ref.current);
+
+				return () => {
+					resizeObserver.disconnect(ref.current);
+					resizeObserver = null;
+				};
+			// Fallback support for MutationObserver
+			} else if (typeof MutationObserver === 'function') {
+				let mutationObserver = new MutationObserver((mutationsList) => {
+					for (let mutation of mutationsList) {
+						if (mutation.type === 'childList') {
+							setMeasurement(mutation.target.getBoundingClientRect());
+						} else if (mutation.type === 'attributes' && (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
+							setMeasurement(ref.current.getBoundingClientRect());
+						}
+					}
+				});
+
+				mutationObserver.observe(ref.current, {attributes: true, childList: true, subtree: true});
+
+				return () => {
+					mutationObserver.disconnect();
+					mutationObserver = null;
+				};
+			}
+		},
+		[] // disconnect on unmount
+	);
 
 	return {
 		ref,
 		measurement
 	};
-}
+};
 
 /**
  * A higher-order component that adds the ability to measure a referenced node and get that value

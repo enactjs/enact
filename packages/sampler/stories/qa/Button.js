@@ -1,6 +1,6 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
 import IconButton from '@enact/moonstone/IconButton';
-import Divider from '@enact/moonstone/Divider';
+import Heading from '@enact/moonstone/Heading';
 import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
@@ -36,7 +36,7 @@ storiesOf('Button', module)
 				icon={select('icon', prop.icons, Config)}
 				minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
 				selected={boolean('selected', Config)}
-				small={boolean('small', Config)}
+				size={select('size', ['small', 'large'], Config)}
 			>
 				{select('value', prop.longText, Config, 'Loooooooooooooooooog Button')}
 			</Button>
@@ -52,7 +52,7 @@ storiesOf('Button', module)
 				icon={select('icon', prop.icons, Config)}
 				minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
 				selected={boolean('selected', Config)}
-				small={boolean('small', Config)}
+				size={select('size', ['small', 'large'], Config)}
 			>
 				{select('value', prop.tallText, Config, 'ิ้  ไั  ஒ  து')}
 			</Button>
@@ -68,7 +68,7 @@ storiesOf('Button', module)
 				icon={select('icon', prop.icons, Config)}
 				minWidth={storybookBoolean('minWidth', false) ? void 0 : false}
 				selected={boolean('selected', Config)}
-				small={boolean('small', Config)}
+				size={select('size', ['small', 'large'], Config)}
 			>
 				{text('value', Config, 'A')}
 			</Button>
@@ -85,7 +85,7 @@ storiesOf('Button', module)
 					icon={select('icon', prop.icons, Config)}
 					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
 					selected={boolean('selected', Config)}
-					small={boolean('small', Config)}
+					size={select('size', ['small', 'large'], Config)}
 				>
 					Normal Button
 				</Button>
@@ -96,54 +96,39 @@ storiesOf('Button', module)
 		'with tap area displayed',
 		() => (
 			<div>
-				<Divider>Button</Divider>
+				<Heading>Button</Heading>
 				<Button
 					className={css.tapArea}
 					onClick={action('onClick')}
-					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
-					color={select('color', prop.color, Config)}
 					disabled={boolean('disabled', Config)}
-					icon={select('icon', prop.icons, Config)}
-					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
-					selected={boolean('selected', Config)}
-					small={boolean('small', Config)}
+					size="large"
 				>
 					Normal Button
 				</Button>
 				<Button
 					className={css.tapArea}
 					onClick={action('onClick')}
-					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
-					color={select('color', prop.color, Config)}
 					disabled={boolean('disabled', Config)}
-					icon={select('icon', prop.icons, Config)}
-					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
-					selected={boolean('selected', Config)}
-					small
+					size="small"
 				>
 					Small Button
 				</Button>
-				<Divider>IconButton</Divider>
+				<Heading>IconButton</Heading>
 				<IconButton
-					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 					className={css.tapArea}
-					color={select('color', prop.color, Config)}
 					disabled={boolean('disabled', Config)}
 					onClick={action('onClick')}
-					selected={boolean('selected', Config)}
+					size="large"
 				>
-					{select('icon', prop.icons, Config) || '☃'}
+					star
 				</IconButton>
 				<IconButton
-					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 					className={css.tapArea}
-					color={select('color', prop.color, Config)}
 					disabled={boolean('disabled', Config)}
 					onClick={action('onClick')}
-					small
-					selected={boolean('selected', Config)}
+					size="small"
 				>
-					{select('icon', prop.icons, Config) || '☃'}
+					star
 				</IconButton>
 			</div>
 		)

@@ -50,7 +50,7 @@ const HeaderBase = kind({
 		/**
 		 * Centers the `title`, `titleBelow`, and `subTitleBelow`.
 		 *
-		 * Compact headers are not affected.
+		 * This setting has no effect on the `type="compact"` header.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -195,6 +195,7 @@ const HeaderBase = kind({
 						<ComponentOverride
 							component={headerInput}
 							css={css}
+							size="large"
 						/>
 					</Cell>
 				);

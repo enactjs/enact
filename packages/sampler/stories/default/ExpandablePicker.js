@@ -29,7 +29,7 @@ storiesOf('Moonstone', module)
 				onOpen={action('onOpen')}
 				pickerAriaLabel={text('pickerAriaLabel', Config, '')}
 				title={text('title', Config, 'Favorite Emoji')}
-				width={select('width', ['small', 'medium', 'large'], Config, 'large')}
+				width={select('width', ['small', 'medium', 'large'], Config)}
 			>
 				{emoticons}
 			</ExpandablePicker>

@@ -103,6 +103,18 @@ const SpinnerBase = kind({
 		css: PropTypes.object,
 
 		/**
+		 * Customize the size of this component.
+		 *
+		 * Recommended usage is "medium" (default) for standalone and popup scenarios, while "small"
+		 * is best suited for use inside other elements, like {@link moonstone/SlotItem.SlotItem}.
+		 *
+		 * @type {('medium'|'small')}
+		 * @default 'medium'
+		 * @public
+		 */
+		size: PropTypes.oneOf(['medium', 'small']),
+
+		/**
 		 * Removes the background color (making it transparent).
 		 *
 		 * @type {Boolean}
@@ -113,6 +125,7 @@ const SpinnerBase = kind({
 	},
 
 	defaultProps: {
+		size: 'medium',
 		transparent: false
 	},
 
@@ -122,7 +135,8 @@ const SpinnerBase = kind({
 	},
 
 	computed: {
-		className: ({children, transparent, styler}) => styler.append(
+		className: ({children, size, transparent, styler}) => styler.append(
+			size,
 			{content: !!children, transparent}
 		)
 	},

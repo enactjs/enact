@@ -17,7 +17,7 @@ storiesOf('Header', module)
 			<Header
 				title={text('title', Config, 'Title')}
 			>
-				<Button small>On / Off</Button>
+				<Button size="small">On / Off</Button>
 			</Header>
 		)
 	)
@@ -28,7 +28,7 @@ storiesOf('Header', module)
 				type="compact"
 				title={text('title', Config, 'Title')}
 			>
-				<Button small>On / Off</Button>
+				<Button size="small">On / Off</Button>
 			</Header>
 		)
 	)
@@ -61,7 +61,7 @@ storiesOf('Header', module)
 				titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 			>
-				<Button small>On / Off</Button>
+				<Button size="small">On / Off</Button>
 			</Header>
 		)
 	)
@@ -74,7 +74,7 @@ storiesOf('Header', module)
 				titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 			>
-				<Button small>On / Off</Button>
+				<Button size="small">On / Off</Button>
 			</Header>
 		)
 	)
@@ -107,7 +107,7 @@ storiesOf('Header', module)
 				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 				marqueeOn={select('marqueeOn', ['hover', 'render'], Config)}
 			>
-				<Button small>On / Off</Button>
+				<Button size="small">On / Off</Button>
 			</Header>
 		)
 	)
@@ -121,7 +121,7 @@ storiesOf('Header', module)
 				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 				marqueeOn={select('marqueeOn', ['hover', 'render'], Config)}
 			>
-				<Button small>On / Off</Button>
+				<Button size="small">On / Off</Button>
 			</Header>
 
 		)
@@ -137,7 +137,7 @@ storiesOf('Header', module)
 					titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 					subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 				>
-					<Button small>On / Off</Button>
+					<Button size="small">On / Off</Button>
 				</Header>
 			);
 		}

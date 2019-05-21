@@ -27,7 +27,10 @@
 @moon-expandable-value-font-size-large:   33px;
 @moon-expandable-client-item-font-size:   27px;
 @moon-expandable-client-item-font-size-large:   33px;
-@moon-divider-font-size:            24px;
+@moon-divider-font-size:            24px; // Deprecated?
+@moon-heading-large-font-size:      36px;
+@moon-heading-medium-font-size:     33px;
+@moon-heading-small-font-size:      27px;
 @moon-notification-font-size:       30px;
 @moon-button-font-size:             39px;
 @moon-button-font-size-large:       48px;
@@ -119,6 +122,22 @@
 @moon-divider-font-weight: bold;
 @moon-divider-font-style: italic;
 @moon-divider-letter-spacing: 0;
+@moon-divider-line-height: @moon-medium-header-line-height;
+@moon-divider-non-latin-line-height: @moon-non-latin-medium-header-line-height;
+
+@moon-heading-large-font-family: @moon-font-family;
+@moon-heading-large-font-weight: 600;
+@moon-heading-large-font-style: normal;
+@moon-heading-medium-font-family: @moon-heading-large-font-family;
+@moon-heading-medium-font-weight: @moon-heading-large-font-weight;
+@moon-heading-medium-font-style: @moon-heading-large-font-style;
+@moon-heading-small-font-family: @moon-heading-large-font-family;
+@moon-heading-small-font-weight: 400;
+@moon-heading-small-font-style: @moon-heading-large-font-style;
+@moon-heading-letter-spacing: 0;
+@moon-heading-line-height: @moon-medium-header-line-height;
+@moon-heading-non-latin-font-family: @moon-non-latin-font-family-bold;
+@moon-heading-non-latin-line-height: @moon-non-latin-medium-header-line-height;
 
 @moon-expandable-value-font-family: @moon-font-family;
 @moon-expandable-value-font-weight: 300;
@@ -169,6 +188,14 @@
 @moon-button-pressed-scale: 0.05;
 @moon-button-icon-h-margin: 15px;
 @moon-button-icon-small-h-margin: 15px;
+@moon-button-icon-start-margin: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
+@moon-button-icon-end-margin: @moon-button-icon-h-margin;
+@moon-button-icon-small-start-margin: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
+@moon-button-icon-small-end-margin: @moon-button-icon-small-h-margin;
+@moon-button-icon-position-after-start-margin: @moon-button-icon-end-margin;
+@moon-button-icon-position-after-end-margin: @moon-button-icon-start-margin;
+@moon-button-icon-position-after-small-start-margin: @moon-button-icon-small-end-margin;
+@moon-button-icon-position-after-small-end-margin: 0;
 @moon-button-colordot-width: 27px;
 @moon-button-colordot-height: 9px;
 @moon-button-small-colordot-width: 21px;
@@ -179,6 +206,21 @@
 // ---------------------------------------
 @moon-divider-border-width: 3px;
 @moon-divider-height: 39px;
+
+// Dropdown
+// ---------------------------------------
+@moon-dropdown-border-radius: @moon-button-border-radius;
+@moon-dropdown-width: @moon-button-max-width;
+@moon-dropdown-list-width: (@moon-dropdown-width - (@moon-contextual-popup-padding * 2) - @moon-button-border-width);
+@moon-dropdown-list-max-height: (5 * @moon-item-height);
+@moon-dropdown-list-max-height-large: (5 * @moon-item-height-large);
+
+// Heading
+// ---------------------------------------
+@moon-heading-border-width: 1px;
+@moon-heading-spacing-large: 39px;
+@moon-heading-spacing-medium: 21px;
+@moon-heading-spacing-small: 9px;
 
 // Icon Button
 // ---------------------------------------
@@ -213,7 +255,7 @@
 @moon-input-border-radius: @moon-input-border-width;
 @moon-input-border-width: 3px;
 @moon-input-border-outline-width: @moon-input-border-width;
-@moon-input-tooltip-offset: (@moon-input-border-width + @moon-tooltip-point-width);
+@moon-input-tooltip-offset: @moon-input-border-width;
 @moon-input-icon-spacing: 15px;
 @moon-input-height: @moon-button-height;
 @moon-input-small-height: @moon-button-small-height;
@@ -231,17 +273,18 @@
 
 // FormCheckbox
 // ---------------------------------------
-@moon-formcheckbox-size: (@moon-item-height * 0.55);	// Relative to `Item` height
-@moon-formcheckbox-size-large: (@moon-item-height-large * 0.55);	// Relative to `Item` height
+@moon-formcheckbox-size: (@moon-item-height * 0.65);	// Relative to `Item` height
+@moon-formcheckbox-size-large: (@moon-item-height-large * 0.625);	// Relative to `Item` height
 @moon-formcheckbox-check-icon-size: 72px;
 @moon-formcheckbox-check-icon-size-large: 84px;
 @moon-formcheckbox-border-size: 2px;
-@moon-formcheckbox-border-radius: 3px;
+@moon-formcheckbox-border-radius: 960px; // Generic, sufficiently large value that converts to a nice amount of rem
 
 // Checkbox
 // ---------------------------------------
-@moon-checkbox-size: 30px;
-@moon-checkbox-size-large: 36px;
+@moon-checkbox-size: 27px;
+@moon-checkbox-size-large: 33px;
+@moon-checkbox-border-radius: 960px; // Generic, sufficiently large value that converts to a nice amount of rem
 
 // DaySelector
 // ---------------------------------------
@@ -255,13 +298,13 @@
 @moon-day-selector-checkbox-size-large: @moon-formcheckbox-size-large;
 @moon-day-selector-checkbox-check-icon-size: @moon-formcheckbox-check-icon-size;
 @moon-day-selector-checkbox-check-icon-size-large: @moon-formcheckbox-check-icon-size-large;
-@moon-day-selector-checkbox-check-border-radius: @moon-button-border-radius;
+@moon-day-selector-checkbox-check-border-radius: @moon-formcheckbox-border-radius;
 @moon-day-selector-checkbox-check-border-radius-large: @moon-day-selector-checkbox-check-border-radius;
 
 // ToggleButton
 // ---------------------------------------
 @moon-toggle-button-switch-border-width: 3px;
-@moon-toggle-button-switch-border-radius: @moon-button-border-radius;
+@moon-toggle-button-switch-border-radius: 960px;
 @moon-toggle-button-switch-width: 15px;
 @moon-toggle-button-text-switch-gutter: 18px;
 @moon-toggle-button-small-text-switch-gutter: 12px;
@@ -276,7 +319,7 @@
 @moon-panel-h-padding: (@moon-app-keepout - @moon-spotlight-outset);
 @moon-panels-handle-width: 132px;
 @moon-panel-handle-icon-font-size: 144px;
-@moon-breadcrumb-text-size: 36px;
+@moon-breadcrumb-text-size: @moon-body-font-size;
 @moon-breadcrumb-width: 96px;
 
 // Toggle Item
@@ -286,7 +329,9 @@
 // Selectable Item
 // ---------------------------------------
 @moon-selectable-item-indicator-size: @moon-item-height;
-@moon-selectable-item-indicator-width: @moon-icon-size / 2;
+@moon-selectable-item-indicator-size-large: @moon-item-height-large;
+@moon-selectable-item-indicator-width: (@moon-icon-size / 2 - 3px);
+@moon-selectable-item-indicator-width-large: (@moon-selectable-item-indicator-width + 6px);
 
 // EditableIntegerPicker
 // ---------------------------------------
@@ -295,6 +340,7 @@
 // Radio Item
 // ---------------------------------------
 @moon-radio-item-indicator-size: 18px;
+@moon-radio-item-indicator-size-large: 24px;
 @moon-radio-item-indicator-border: 2px;  // ### Exceptional Case ###
 	// 2px, not being a multiple of 3, poses special problems. Any math or assignment related to
 	// this value must be specifically considered as to not impose layout issues related to, for
@@ -316,6 +362,8 @@
 // ---------------------------------------
 @moon-toggleswitch-height: 30px;
 @moon-toggleswitch-width: 60px;
+@moon-toggleswitch-height-large: 42px;
+@moon-toggleswitch-width-large: 84px;
 @moon-toggleswitch-margin: @moon-toggleswitch-width + @moon-spotlight-outset;
 
 // Progress Bar
@@ -347,9 +395,13 @@
 // Spinner
 // ---------------------------------------
 @moon-spinner-size: 72px;
+@moon-spinner-small-size: 36px;
+@moon-spinner-small-size-large: 42px;
 @moon-spinner-time: 1.25s;		// Length of the spinner animation
 @moon-spinner-line-width: 9px;
+@moon-spinner-small-line-width: 6px;
 @moon-spinner-line-margin: @moon-spotlight-outset;
+@moon-spinner-small-line-margin: 3px;
 @moon-spinner-ball-height: 15%;	// Height of the ball container
 @moon-spinner-ball-width: @moon-spinner-ball-height;	// Height of the ball container
 @moon-spinner-ball-distance: 20%;	// Distance of the ball from the center
@@ -364,8 +416,8 @@
 // ContextualPopup
 // ---------------------------------------
 @moon-contextual-popup-border-width: 1px;
-@moon-contextual-popup-border-radius: 3px;
-@moon-contextual-popup-padding: 18px;
+@moon-contextual-popup-border-radius: @moon-button-border-width;
+@moon-contextual-popup-padding: @moon-spotlight-outset;
 @moon-contextual-popup-arrow-height: 30px;
 @moon-contextual-popup-arrow-width: 30px;
 

@@ -8,6 +8,7 @@
  */
 
 import kind from '@enact/core/kind';
+import deprecate from '@enact/core/internal/deprecate';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -15,6 +16,19 @@ import React from 'react';
 import Touchable from '../Touchable';
 
 import componentCss from './Button.module.less';
+
+const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
+	name: 'ui/Button.ButtonBase#small',
+	replacedBy: 'the `size` prop',
+	message: 'Use `size="small"` instead.',
+	since: '2.6.0',
+	until: '3.0.0'
+});
+
+function getSize (size, small) {
+	small = typeof small !== 'undefined' ? deprecateSmall(small) : 'large';
+	return size || small;
+}
 
 /**
  * A basic button component structure without any behaviors applied to it.
@@ -41,10 +55,11 @@ const ButtonBase = kind({
 		 * * `client` - The content node of the button
 		 * * `hasIcon` - Applied when there is an `icon` present
 		 * * `icon` - The icon node, when `icon` is set
+		 * * `large` - Applied when `size` prop is `'large'`
 		 * * `minWidth` - Applied when `minWidth` prop is `true`
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 * * `selected` - Applied when `selected` prop is `true`
-		 * * `small` - Applied when `small` prop is `true`
+		 * * `small` - Applied when `size` prop is `'small'`
 		 *
 		 * @type {Object}
 		 * @public
@@ -90,7 +105,7 @@ const ButtonBase = kind({
 		/**
 		 * The component used to render the [icon]{@link ui/Button.ButtonBase.icon}.
 		 *
-		 * This component will receive the `small` property set on the Button as well as the `icon`
+		 * This component will receive the `size` property set on the Button as well as the `icon`
 		 * class to customize its styling. If [icon]{@link ui/Button.ButtonBase.icon} is not a
 		 * string, this property is not used.
 		 *
@@ -136,13 +151,22 @@ const ButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Reduces the size of the component.
+		 * The size of the button.
 		 *
-		 * Applies the `small` CSS class which can be customized by
+		 * Applies either the `small` or `large` CSS class which can be customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
+		 * @type {('small'|'large')}
+		 * @default 'large'
+		 * @public
+		 */
+		size: PropTypes.string,
+
+		/**
+		 * Reduces the size of the component.
+		 *
 		 * @type {Boolean}
-		 * @default false
+		 * @deprecated replaced by prop `size='small'`
 		 * @public
 		 */
 		small: PropTypes.bool
@@ -152,8 +176,7 @@ const ButtonBase = kind({
 		disabled: false,
 		minWidth: true,
 		pressed: false,
-		selected: false,
-		small: false
+		selected: false
 	},
 
 	styles: {
@@ -163,16 +186,15 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({icon, minWidth, pressed, selected, small, styler}) => styler.append({
+		className: ({icon, minWidth, pressed, selected, size, small, styler}) => styler.append({
 			hasIcon: (!!icon),
 			minWidth,
 			pressed,
-			selected,
-			small
-		}),
-		icon: ({css, icon, iconComponent: Icon, small}) => {
+			selected
+		}, getSize(size, small)),
+		icon: ({css, icon, iconComponent: Icon, size, small}) => {
 			return (typeof icon === 'string' && Icon) ? (
-				<Icon small={small} className={css.icon}>{icon}</Icon>
+				<Icon size={getSize(size, small)} className={css.icon}>{icon}</Icon>
 			) : icon;
 		}
 	},
@@ -182,6 +204,7 @@ const ButtonBase = kind({
 		delete rest.minWidth;
 		delete rest.pressed;
 		delete rest.selected;
+		delete rest.size;
 		delete rest.small;
 
 		return (

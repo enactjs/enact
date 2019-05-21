@@ -15,6 +15,7 @@
 	width: @moon-slider-bar-height;
 	box-sizing: content-box;
 	direction: ltr;
+	touch-action: none;
 
 	.progressBar {
 		position: relative;
@@ -41,6 +42,10 @@
 			transition: transform ease-out 100ms;
 		}
 	}
+
+	.disabled({
+		touch-action: auto;
+	});
 
 	.moon-custom-text({
 		.knob::before {

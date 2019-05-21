@@ -9,6 +9,7 @@
  * @exports InputBase
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {isRtlText} from '@enact/i18n/util';
@@ -20,11 +21,25 @@ import React from 'react';
 import $L from '../internal/$L';
 import Skinnable from '../Skinnable';
 import Tooltip from '../TooltipDecorator/Tooltip';
+import {extractVoiceProps} from '../internal/util';
 
 import componentCss from './Input.module.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 import {calcAriaLabel, extractInputProps} from './util';
+
+const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
+	name: 'moonstone/Input.InputBase#small',
+	replacedBy: 'the `size` prop',
+	message: 'Use `size="small"` instead.',
+	since: '2.6.0',
+	until: '3.0.0'
+});
+
+function getSize (size, small) {
+	small = typeof small !== 'undefined' ? deprecateSmall(small) : 'large';
+	return size || small;
+}
 
 /**
  * A Moonstone styled input component.
@@ -182,10 +197,19 @@ const InputBase = kind({
 		rtl: PropTypes.bool,
 
 		/**
+		 * The size of the input field.
+		 *
+		 * @type {('large'|'small')}
+		 * @default 'small'
+		 * @public
+		 */
+		size: PropTypes.string,
+
+		/**
 		 * Applies the `small` CSS class.
 		 *
 		 * @type {Boolean}
-		 * @default false
+		 * @deprecated replaced by prop `size='small'`
 		 * @public
 		 */
 		small: PropTypes.bool,
@@ -216,6 +240,7 @@ const InputBase = kind({
 		dismissOnEnter: false,
 		invalid: false,
 		placeholder: '',
+		size: 'small',
 		type: 'text'
 	},
 
@@ -238,7 +263,7 @@ const InputBase = kind({
 			const title = (value == null || value === '') ? placeholder : '';
 			return calcAriaLabel(title, type, value);
 		},
-		className: ({invalid, small, styler}) => styler.append({invalid, small}),
+		className: ({invalid, size, small, styler}) => styler.append({invalid}, getSize(size, small)),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
 		invalidTooltip: ({css, invalid, invalidMessage = $L('Please enter a valid value.'), rtl}) => {
 			if (invalid && invalidMessage) {
@@ -254,23 +279,24 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-intent' : voiceIntent, 'data-webos-voice-label': voiceLabel, ...rest}) => {
+	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, size, small, type, value, ...rest}) => {
 		const inputProps = extractInputProps(rest);
+		const voiceProps = extractVoiceProps(rest);
 		delete rest.dismissOnEnter;
 		delete rest.invalid;
 		delete rest.invalidMessage;
 		delete rest.rtl;
 
+		size = getSize(size, small);
+
 		return (
 			<div {...rest} disabled={disabled}>
-				<InputDecoratorIcon position="before" small={small}>{iconBefore}</InputDecoratorIcon>
+				<InputDecoratorIcon position="before" size={size}>{iconBefore}</InputDecoratorIcon>
 				<input
 					{...inputProps}
+					{...voiceProps}
 					aria-disabled={disabled}
 					className={css.input}
-					data-webos-voice-group-label={voiceGroupLabel}
-					data-webos-voice-intent={voiceIntent}
-					data-webos-voice-label={voiceLabel}
 					dir={dir}
 					disabled={disabled}
 					onChange={onChange}
@@ -279,7 +305,7 @@ const InputBase = kind({
 					type={type}
 					value={value}
 				/>
-				<InputDecoratorIcon position="after" small={small}>{iconAfter}</InputDecoratorIcon>
+				<InputDecoratorIcon position="after" size={size}>{iconAfter}</InputDecoratorIcon>
 				{invalidTooltip}
 			</div>
 		);

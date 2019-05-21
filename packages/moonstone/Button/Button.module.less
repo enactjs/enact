@@ -73,10 +73,22 @@
 	}
 
 	.icon {
-		-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
-		-webkit-margin-end: @moon-button-icon-h-margin;
+		-webkit-margin-start: @moon-button-icon-start-margin;
+		-webkit-margin-end: @moon-button-icon-end-margin;
 	}
 
+	&.iconAfter {
+		.client {
+			flex-direction: row-reverse;
+
+			.icon {
+				-webkit-margin-start: @moon-button-icon-position-after-start-margin;
+				-webkit-margin-end: @moon-button-icon-position-after-end-margin;
+			}
+		}
+	}
+
+	// Color prop set, and minWidth prop set, update icon's margin to allow more room for the colordot
 	&.red,
 	&.green,
 	&.yellow,
@@ -192,6 +204,18 @@
 			}
 		});
 
+		.icon {
+			-webkit-margin-start: @moon-button-icon-small-start-margin;
+			-webkit-margin-end: @moon-button-icon-small-end-margin;
+		}
+
+		&.iconAfter {
+			.client .icon {
+				-webkit-margin-start: @moon-button-icon-position-after-small-start-margin;
+				-webkit-margin-end: @moon-button-icon-position-after-small-end-margin;
+			}
+		}
+
 		&.red,
 		&.green,
 		&.yellow,
@@ -233,11 +257,11 @@
 		}
 
 		&.translucent .bg {
-			background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+			background-color: @moon-button-translucent-bg-color;
 		}
 
 		&.lightTranslucent .bg {
-			background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
+			background-color: @moon-button-lightTranslucent-bg-color;
 		}
 
 		&.transparent {
@@ -339,11 +363,11 @@
 				}
 
 				&.translucent .bg {
-					background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+					background-color: @moon-button-translucent-bg-color;
 				}
 
 				&.lightTranslucent .bg {
-					background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
+					background-color: @moon-button-lightTranslucent-bg-color;
 				}
 
 				&.transparent {
