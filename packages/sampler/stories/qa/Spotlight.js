@@ -145,7 +145,7 @@ class DisableOnClick extends React.Component {
 			<div>
 				<p>Pressing the marqueeable button will disable it. The marquee should continue and restart while the button is focused and disabled.</p>
 				<Button disabled={this.state.disabled} onClick={this.handleButtonDisable}>
-					Marqueeable Button
+					Marqueeeeeeeeeeeeeeeeeeeeeeable Button
 				</Button>
 				<Button onClick={this.handleButtonEnable}>
 					Enable
