@@ -9,6 +9,7 @@ import {withInfo} from '@storybook/addon-info';
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
+Header.displayName = 'Header';
 const Config = mergeComponentMetadata('Header', HeaderBase, Header);
 
 // Set up some defaults for info and knobs
