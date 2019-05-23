@@ -23,7 +23,7 @@ const prop = {
 			<IconButton>gear</IconButton>
 		</React.Fragment>
 	},
-	marqueeOn: ['', 'focus', 'hover', 'render'],
+	marqueeOn: ['', 'hover', 'render'],
 	type: ['compact', 'standard']
 };
 
