@@ -80,10 +80,16 @@ const DropdownList = Skinnable(
 			/**
 			 * The selections for Dropdown
 			 *
-			 * @type {String[]}
+			 * @type {String[]|Object[]}
+			 * @required
 			 * @private
 			 */
-			children: PropTypes.node,
+			children: PropTypes.oneOfType([
+				PropTypes.arrayOf(PropTypes.string),
+				PropTypes.arrayOf(PropTypes.shape({
+					key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
+				}))
+			]).isRequired,
 
 			/**
 			 * Called when an item is selected.
@@ -144,11 +150,16 @@ const DropdownBase = kind({
 		 * Takes an array of strings and the strings will be used in
 		 * the generated components as the readable text.
 		 *
-		 * @type {String[]}
+		 * @type {String[]|Object[]}
 		 * @required
 		 * @public
 		 */
-		children: PropTypes.node,
+		children: PropTypes.oneOfType([
+			PropTypes.arrayOf(PropTypes.string),
+			PropTypes.arrayOf(PropTypes.shape({
+				key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
+			}))
+		]).isRequired,
 
 		/**
 		 * Disables Dropdown and becomes non-interactive.
