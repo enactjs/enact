@@ -29,22 +29,6 @@ storiesOf('Dropdown', module)
 				{['Option 1', 'Option 2']}
 			</Dropdown>
 		)
-	)
-	.add(
-		'with 10 options',
-		() => (
-			<Dropdown
-				direction={select('direction', ['up', 'down'], Config)}
-				disabled={boolean('disabled', Config)}
-				onClose={action('onClose')}
-				onOpen={action('onOpen')}
-				onSelect={action('onSelect')}
-				size={select('size', ['small', 'large'], Config)}
-				title={text('title', Config, 'Dropdown')}
-			>
-				{items(10)}
-			</Dropdown>
-		)
 	).add(
 		'with defaultSelected in 20 options',
 		() => (
