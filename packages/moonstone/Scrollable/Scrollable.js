@@ -38,12 +38,12 @@ const
 		overscrollTypeOnce,
 		paginationPageMultiplier
 	} = constants,
-	reverseDirections = {
-		up: 'down',
-		down: 'up'
-	},
 	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
-	overscrollTimeout = 300;
+	overscrollTimeout = 300,
+	reverseDirections = {
+		down: 'up',
+		up: 'down'
+	};
 
 /**
  * The name of a custom attribute which indicates the index of an item in

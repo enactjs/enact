@@ -30,13 +30,13 @@ const
 		overscrollTypeOnce,
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants,
-	reverseDirections = {
-		up: 'down',
-		down: 'up'
-	},
 	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
 	overscrollTimeout = 300,
-	paginationPageMultiplier = 0.66;
+	paginationPageMultiplier = 0.66,
+	reverseDirections = {
+		down: 'up',
+		up: 'down'
+	};
 
 const navigableFilter = (elem) => {
 	if (
