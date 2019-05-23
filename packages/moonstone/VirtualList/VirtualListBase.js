@@ -588,11 +588,17 @@ const VirtualListBaseFactory = (type) => {
 				} else {
 					this.isScrolledBy5way = true;
 
-					if (isWrapped && wrap === true) {
+					if (isWrapped) {
+						const isNextAvailable = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${nextIndex}'].spottable`);
 						this.isWrappedBy5way = true;
-						this.pause.pause();
-						target.blur();
-					} else if (!isWrapped || wrap !== 'noAnimation') {
+
+						if (wrap === true && !isNextAvailable) {
+							this.pause.pause();
+							target.blur();
+						} else {
+							this.focusOnItem(nextIndex);
+						}
+					} else {
 						this.focusOnItem(nextIndex);
 					}
 
