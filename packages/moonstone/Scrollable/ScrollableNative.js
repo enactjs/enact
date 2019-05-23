@@ -164,15 +164,6 @@ class ScrollableBaseNative extends Component {
 		focusableScrollbar: PropTypes.bool,
 
 		/**
-		 * Prevents scroll by wheeling on the list or the scroller.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noScrollByWheel: PropTypes.bool,
-
-		/**
 		 * Specifies overscroll effects shows on which type of inputs.
 		 *
 		 * @type {Object}
@@ -233,7 +224,6 @@ class ScrollableBaseNative extends Component {
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
 		focusableScrollbar: false,
-		noScrollByWheel: false,
 		overscrollEffectOn: {
 			arrowKey: false,
 			drag: false,
@@ -307,14 +297,6 @@ class ScrollableBaseNative extends Component {
 		vertical: {before: null, after: null}
 	}
 
-	onMouseDown = (ev) => {
-		if (this.props['data-spotlight-container-disabled']) {
-			ev.preventDefault();
-		} else {
-			this.childRef.current.setContainerDisabled(false);
-		}
-	}
-
 	onFlick = ({direction}) => {
 		const bounds = this.uiRef.current.getScrollBounds();
 		const focusedItem = Spotlight.getCurrent();
@@ -328,6 +310,14 @@ class ScrollableBaseNative extends Component {
 			direction === 'horizontal' && this.uiRef.current.canScrollHorizontally(bounds)
 		) && !this.props['data-spotlight-container-disabled']) {
 			this.childRef.current.setContainerDisabled(true);
+		}
+	}
+
+	onMouseDown = (ev) => {
+		if (this.props['data-spotlight-container-disabled']) {
+			ev.preventDefault();
+		} else {
+			this.childRef.current.setContainerDisabled(false);
 		}
 	}
 
