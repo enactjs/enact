@@ -1,12 +1,12 @@
 import classNames from 'classnames';
 import {constants, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
+import {forward} from '@enact/core/handle';
 import {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
 import {Job} from '@enact/core/util';
 import {onWindowReady} from '@enact/core/snapshot';
 import platform from '@enact/core/platform';
-import {forward} from '@enact/core/handle';
-import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
@@ -64,8 +64,31 @@ const
 		lastPointer.y = ev.clientY;
 	};
 
+const
+	// An app could have lists and/or scrollers more than one,
+	// so we should test all of them when page up/down key is pressed.
+	scrollables = new Map(),
+	pageKeyHandler = (ev) => {
+		const {keyCode} = ev;
+		if (Spotlight.getPointerMode() && !Spotlight.getCurrent() && (isPageUp(keyCode) || isPageDown(keyCode))) {
+			const
+				{x, y} = lastPointer,
+				elem = document.elementFromPoint(x, y);
+
+			if (elem) {
+				for (let [key, value] of scrollables) {
+					if (value.contains(elem)) {
+						key.scrollByPageOnPointerMode(ev);
+						break;
+					}
+				}
+			}
+		}
+	};
+
 onWindowReady(() => {
 	document.addEventListener('mousemove', pointerTracker);
+	document.addEventListener('keydown', pageKeyHandler);
 });
 
 /**
@@ -245,6 +268,8 @@ class ScrollableBaseNative extends Component {
 
 		this.createOverscrollJob('vertical', 'before');
 		this.createOverscrollJob('vertical', 'after');
+
+		scrollables.set(this, this.uiRef.current.containerRef.current);
 	}
 
 	componentDidUpdate (prevProps) {
@@ -255,6 +280,8 @@ class ScrollableBaseNative extends Component {
 	}
 
 	componentWillUnmount () {
+		scrollables.delete(this);
+
 		this.stopOverscrollJob('horizontal', 'before');
 		this.stopOverscrollJob('horizontal', 'after');
 		this.stopOverscrollJob('vertical', 'before');
@@ -483,10 +510,9 @@ class ScrollableBaseNative extends Component {
 		if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || isDragging)) {
 			const
 				item = ev.target,
-				positionFn = this.childRef.current.calculatePositionOnFocus,
 				spotItem = Spotlight.getCurrent();
 
-			if (item && item === spotItem && positionFn) {
+			if (item && item === spotItem) {
 				this.calculateAndScrollTo();
 			}
 		} else if (this.childRef.current.setLastFocusedNode) {
@@ -504,7 +530,9 @@ class ScrollableBaseNative extends Component {
 		const
 			{childRefCurrent} = this.uiRef.current,
 			focusedItem = Spotlight.getCurrent(),
-			directionFactor = direction === 'up' ? -1 : 1;
+			bounds = this.uiRef.current.getScrollBounds(),
+			directionFactor = direction === 'up' ? -1 : 1,
+			pageDistance = directionFactor * bounds.clientHeight * paginationPageMultiplier;
 
 		this.uiRef.current.lastInputType = 'pageKey';
 
@@ -531,6 +559,8 @@ class ScrollableBaseNative extends Component {
 			// FIXME: Is this meaningful?
 			this.pointToFocus = {direction, x: lastPointer.x, y: lastPointer.y};
 		}
+
+		this.uiRef.current.scrollToAccumulatedTarget(pageDistance, true, this.props.overscrollEffectOn.pageKey);
 
 		// FIXME: when should this method return false?
 		return true;
@@ -561,35 +591,56 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
-	onKeyDown = (ev) => {
-		const
-			{overscrollEffectOn} = this.props,
-			{keyCode, repeat} = ev;
-		let direction = null;
-
+	scrollByPageOnPointerMode = (ev) => {
+		const {keyCode, repeat} = ev;
 		forward('onKeyDown', ev, this.props);
+		ev.preventDefault();
 
 		this.animateOnFocus = true;
 
-		if (isPageUp(keyCode) || isPageDown(keyCode)) {
-			if (!repeat && this.hasFocus() && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
-				direction = isPageUp(keyCode) ? 'up' : 'down';
-				if (this.scrollByPage(direction) && overscrollEffectOn.pageKey) {
-					this.checkAndApplyOverscrollEffectByDirection(direction);
-				}
+		if (!repeat && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
+			let direction = isPageUp(keyCode) ? 'up' : 'down';
+			if (this.scrollByPage(direction) && this.props.overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
+				this.checkAndApplyOverscrollEffectByDirection(direction);
 			}
-		} else if (!Spotlight.getPointerMode() && !repeat && this.hasFocus() && getDirection(keyCode)) {
-			const element = Spotlight.getCurrent();
+		}
+	}
 
-			this.uiRef.current.lastInputType = 'arrowKey';
+	onKeyDown = (ev) => {
+		const {keyCode, repeat} = ev;
 
-			direction = getDirection(keyCode);
-			if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
-				const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
+		forward('onKeyDown', ev, this.props);
 
-				if (!(horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) &&
-					!(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
-					this.checkAndApplyOverscrollEffectByDirection(direction);
+		if (isPageUp(keyCode) || isPageDown(keyCode)) {
+			ev.preventDefault();
+		}
+
+		this.animateOnFocus = true;
+
+		if (!repeat && this.hasFocus()) {
+			const {overscrollEffectOn} = this.props;
+			let direction = null;
+
+			if (isPageUp(keyCode) || isPageDown(keyCode)) {
+				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
+					direction = isPageUp(keyCode) ? 'up' : 'down';
+					if (this.scrollByPage(direction) && overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
+						this.checkAndApplyOverscrollEffectByDirection(direction);
+					}
+				}
+			} else if (!Spotlight.getPointerMode() && getDirection(keyCode)) {
+				const element = Spotlight.getCurrent();
+
+				this.uiRef.current.lastInputType = 'arrowKey';
+
+				direction = getDirection(keyCode);
+				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
+					const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
+
+					if (!(horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) &&
+						!(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
+						this.checkAndApplyOverscrollEffectByDirection(direction);
+					}
 				}
 			}
 		}
@@ -638,7 +689,8 @@ class ScrollableBaseNative extends Component {
 		if (this.pointToFocus !== null) {
 			// no need to focus on pointer mode
 			if (!Spotlight.getPointerMode()) {
-				Spotlight.focusFromPoint(this.pointToFocus.direction, this.pointToFocus);
+				const {direction, x, y} = this.pointToFocus;
+				Spotlight.focusFromPoint(direction, {x, y});
 			}
 			this.pointToFocus = null;
 		}

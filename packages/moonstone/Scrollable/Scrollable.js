@@ -459,15 +459,12 @@ class ScrollableBase extends Component {
 
 		const
 			{childRefCurrent} = this.uiRef.current,
-			focusedItem = Spotlight.getCurrent();
-
-		this.uiRef.current.lastInputType = 'pageKey';
-
-		// Should skip scroll by page when focusedItem is paging control button of Scrollbar
-		const
+			focusedItem = Spotlight.getCurrent(),
 			bounds = this.uiRef.current.getScrollBounds(),
 			directionFactor = direction === 'up' ? -1 : 1,
 			pageDistance = directionFactor * bounds.clientHeight * paginationPageMultiplier;
+
+		this.uiRef.current.lastInputType = 'pageKey';
 
 		if (directionFactor !== this.uiRef.current.wheelDirection) {
 			this.uiRef.current.isScrollAnimationTargetAccumulated = false;
