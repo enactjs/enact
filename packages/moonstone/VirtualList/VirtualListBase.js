@@ -799,22 +799,12 @@ const VirtualListBaseFactory = (type) => {
 			this.lastFocusedIndex = node.dataset && getNumberValue(node.dataset.index);
 		}
 
-		updateStatesAndBounds = ({cbScrollTo, dataSize, moreInfo, numOfItems}) => {
+		updateStatesAndBounds = ({dataSize, moreInfo, numOfItems}) => {
 			const {preservedIndex} = this;
 
-			if (this.restoreLastFocused &&
-				numOfItems > 0 &&
-				(preservedIndex < dataSize) &&
-				(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
-				// If we need to restore last focus and the index is beyond the screen,
-				// we call `scrollTo` to create DOM for it.
-				cbScrollTo({index: preservedIndex, animate: false, focus: true});
-				this.isScrolledByJump = true;
-
-				return true;
-			} else {
-				return false;
-			}
+			return (this.restoreLastFocused && numOfItems > 0 && preservedIndex < dataSize && (
+				preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex
+			));
 		}
 
 		getScrollBounds = () => this.uiRefCurrent.getScrollBounds()
@@ -911,6 +901,37 @@ VirtualListBase.displayName = 'VirtualListBase';
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'VirtualListBaseNative';
 
+/* eslint-disable enact/prop-types */
+const itemsRenderer = (props) => {
+	const {
+		cc,
+		handlePlaceholderFocus,
+		initItemContainerRef: initUiItemContainerRef,
+		needsScrollingPlaceholder,
+		primary
+	} = props;
+
+	return (
+		<React.Fragment>
+			{cc.length ? (
+				<div ref={initUiItemContainerRef} role="list">{cc}</div>
+			) : null}
+			{primary ? null : (
+				<SpotlightPlaceholder
+					data-index={0}
+					data-vl-placeholder
+					style={{width: 10}}
+					onFocus={handlePlaceholderFocus}
+				/>
+			)}
+			{needsScrollingPlaceholder ? (
+				<SpotlightPlaceholder />
+			) : null}
+		</React.Fragment>
+	);
+};
+/* eslint-enable enact/prop-types */
+
 const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
 	<Scrollable
 		{...props}
@@ -918,20 +939,7 @@ const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-b
 			<VirtualListBase
 				{...childProps}
 				animate={props.animate}
-				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
-					[
-						cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
-						primary ?
-							null :
-							<SpotlightPlaceholder
-								data-index={0}
-								data-vl-placeholder
-								key="1"
-								onFocus={handlePlaceholderFocus}
-							/>,
-						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
-					]
-				)}
+				itemsRenderer={itemsRenderer}
 			/>
 		)}
 	/>
@@ -972,20 +980,7 @@ const ScrollableVirtualListNative = (props) => (
 			<VirtualListBaseNative
 				{...childProps}
 				animate={props.animate}
-				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
-					[
-						cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
-						primary ?
-							null :
-							<SpotlightPlaceholder
-								data-index={0}
-								data-vl-placeholder
-								key="1"
-								onFocus={handlePlaceholderFocus}
-							/>,
-						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
-					]
-				)}
+				itemsRenderer={itemsRenderer}
 			/>
 		)}
 	/>
