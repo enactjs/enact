@@ -45,7 +45,6 @@ import {
 	notifyEnterContainer,
 	removeAllContainers,
 	removeContainer,
-	reverseDirections,
 	rootContainerId,
 	setContainerLastFocusedElement,
 	setContainerPreviousTarget,
@@ -748,13 +747,21 @@ const Spotlight = (function () {
 			return false;
 		},
 
-		focusFromPoint: function (direction, point) {
+		/**
+		 * Focuses the specified position.
+		 *
+		 * @param {Object} point Position info consists of `x` and `y` values
+		 * @param {String} direction Direction to find a spottable target when no spottable target
+		 *	is found at the specified position, one of `'left'`, `'right'`, `'up'` or `'down'`
+		 * @private
+		 */
+		focusFromPoint: function (point, direction) {
 			const node = getNavigableTarget(document.elementFromPoint(point.x, point.y));
 
 			if (node && node !== getCurrent()) {
 				focusElement(node, getContainersForNode(node), true);
 			} else {
-				spotNextFromPoint(reverseDirections[direction], point);
+				spotNextFromPoint(direction, point);
 			}
 		},
 

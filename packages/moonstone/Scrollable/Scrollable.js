@@ -38,6 +38,10 @@ const
 		overscrollTypeOnce,
 		paginationPageMultiplier
 	} = constants,
+	reverseDirections = {
+		up: 'down',
+		down: 'up'
+	},
 	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
 	overscrollTimeout = 300;
 
@@ -620,7 +624,7 @@ class ScrollableBase extends Component {
 			// no need to focus on pointer mode
 			if (!Spotlight.getPointerMode()) {
 				const {direction, x, y} = this.pointToFocus;
-				Spotlight.focusFromPoint(direction, {x, y});
+				Spotlight.focusFromPoint({x, y}, reverseDirections[direction]);
 			}
 			this.pointToFocus = null;
 		}
