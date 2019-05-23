@@ -1,5 +1,6 @@
 import clamp from 'ramda/src/clamp';
 import {is} from '@enact/core/keymap';
+import {forward, forwardWithPrevent, handle, log} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
@@ -217,10 +218,10 @@ const VirtualListBaseFactory = (type) => {
 				}
 			}
 
-			if (containerNode && containerNode.addEventListener) {
-				containerNode.addEventListener('keydown', this.onKeyDown);
-				containerNode.addEventListener('keyup', this.onKeyUp);
-			}
+			//if (containerNode && containerNode.addEventListener) {
+			//	containerNode.addEventListener('keydown', this.onKeyDown);
+			//	containerNode.addEventListener('keyup', this.onKeyUp);
+			//}
 
 			setTimeout(() => {
 				this.restoreFocus();
@@ -244,10 +245,10 @@ const VirtualListBaseFactory = (type) => {
 				}
 			}
 
-			if (containerNode && containerNode.removeEventListener) {
-				containerNode.removeEventListener('keydown', this.onKeyDown);
-				containerNode.removeEventListener('keyup', this.onKeyUp);
-			}
+			//if (containerNode && containerNode.removeEventListener) {
+			//	containerNode.removeEventListener('keydown', this.onKeyDown);
+			//	containerNode.removeEventListener('keyup', this.onKeyUp);
+			//}
 
 			this.pause.resume();
 			SpotlightAccelerator.reset();
@@ -602,20 +603,27 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		onKeyDown = (ev) => {
-			if (getDirection(ev.keyCode)) {
-				ev.preventDefault();
-				ev.stopPropagation();
-				Spotlight.setPointerMode(false);
-				SpotlightAccelerator.processKey(ev, this.onAcceleratedKeyDown);
+		onKeyDown = handle(
+			forwardWithPrevent('onKeyDown'),
+			(ev) => {
+				log(ev)(ev.defaultPrevented);
+				//if (getDirection(ev.keyCode)) {
+				//	ev.preventDefault();
+				//	ev.stopPropagation();
+				//	Spotlight.setPointerMode(false);
+				//	SpotlightAccelerator.processKey(ev, this.onAcceleratedKeyDown);
+				//}
 			}
-		}
+		).bindAs(this, 'onKeyDown')
 
-		onKeyUp = ({keyCode}) => {
-			if (getDirection(keyCode) || isEnter(keyCode)) {
-				SpotlightAccelerator.reset();
+		onKeyUp = handle(
+			forward('onKeyUp'),
+			({keyCode}) => {
+				if (getDirection(keyCode) || isEnter(keyCode)) {
+					SpotlightAccelerator.reset();
+				}
 			}
-		}
+		).bindAs(this, 'onKeyUp')
 
 		/**
 		 * Handle global `onKeyDown` event
@@ -841,6 +849,8 @@ const VirtualListBaseFactory = (type) => {
 							index
 						})
 					)}
+					onKeyDown={this.onKeyDown}
+					onKeyUp={this.onKeyUp}
 					ref={this.initUiRef}
 					updateStatesAndBounds={this.updateStatesAndBounds}
 					itemsRenderer={(props) => { // eslint-disable-line react/jsx-no-bind
