@@ -920,6 +920,8 @@ const itemsRenderer = (props) => {
 				<SpotlightPlaceholder
 					data-index={0}
 					data-vl-placeholder
+					// a zero width/height element can't be focused by spotlight so we're giving
+					// the placeholder a small size to ensure it is navigable
 					style={{width: 10}}
 					onFocus={handlePlaceholderFocus}
 				/>
