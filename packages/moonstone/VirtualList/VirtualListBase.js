@@ -79,15 +79,6 @@ const VirtualListBaseFactory = (type) => {
 			itemsRenderer: PropTypes.func.isRequired,
 
 			/**
-			 * Animate while scrolling
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @private
-			 */
-			animate: PropTypes.bool,
-
-			/**
 			 * Callback method of scrollTo.
 			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
 			 *
@@ -193,7 +184,6 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		static defaultProps = {
-			animate: false,
 			dataSize: 0,
 			isItemDisabled: isItemDisabledDefault,
 			pageScroll: false,
@@ -567,7 +557,7 @@ const VirtualListBaseFactory = (type) => {
 		 */
 
 		onAcceleratedKeyDown = ({keyCode, repeat, target}) => {
-			const {animate, cbScrollTo, spacing, wrap} = this.props;
+			const {cbScrollTo, spacing, wrap} = this.props;
 			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPosition} = this.uiRefCurrent;
 			const index = getNumberValue(target.dataset.index);
 			const {isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
@@ -587,11 +577,11 @@ const VirtualListBaseFactory = (type) => {
 				} else {
 					this.isScrolledBy5way = true;
 
-					if (isWrapped && animate && wrap === true) {
+					if (isWrapped && wrap === true) {
 						this.isWrappedBy5way = true;
 						this.pause.pause();
 						target.blur();
-					} else if (!isWrapped || animate && wrap !== 'noAnimation') {
+					} else if (!isWrapped || wrap !== 'noAnimation') {
 						this.focusOnItem(nextIndex);
 					}
 
@@ -600,7 +590,7 @@ const VirtualListBaseFactory = (type) => {
 					cbScrollTo({
 						index: nextIndex,
 						stickTo: index < nextIndex ? 'end' : 'start',
-						animate: animate && !(isWrapped && wrap === 'noAnimation')
+						animate: !(isWrapped && wrap === 'noAnimation')
 					});
 				}
 
@@ -830,7 +820,6 @@ const VirtualListBaseFactory = (type) => {
 				{itemRenderer, itemsRenderer, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
-			delete rest.animate;
 			delete rest.initUiChildRef;
 			delete rest.isItemDisabled;
 			delete rest.spotlightId;
@@ -946,7 +935,6 @@ const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-b
 		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...childProps}
-				animate={props.animate}
 				itemsRenderer={listItemsRenderer}
 			/>
 		)}
@@ -954,15 +942,6 @@ const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-b
 );
 
 ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
-	/**
-	 * Animate while scrolling
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @private
-	 */
-	animate: PropTypes.bool,
-
 	/**
 	 * Direction of the list.
 	 *
@@ -987,7 +966,6 @@ const ScrollableVirtualListNative = (props) => (
 		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...childProps}
-				animate={props.animate}
 				itemsRenderer={listItemsRenderer}
 			/>
 		)}
@@ -995,15 +973,6 @@ const ScrollableVirtualListNative = (props) => (
 );
 
 ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
-	/**
-	 * Animate while scrolling
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @private
-	 */
-	animate: PropTypes.bool,
-
 	/**
 	 * Direction of the list.
 	 *
@@ -1019,7 +988,6 @@ ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.Virtual
 };
 
 ScrollableVirtualListNative.defaultProps = {
-	animate: false,
 	direction: 'vertical'
 };
 

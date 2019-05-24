@@ -1,7 +1,9 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import platform from '@enact/core/platform';
 import Pause from '@enact/spotlight/Pause';
 import PropTypes from 'prop-types';
+import {findDOMNode} from 'react-dom';
 import React from 'react';
 
 import $L from '../internal/$L';
@@ -91,6 +93,15 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				};
 			}
 			return null;
+		}
+
+		componentDidUpdate (prevProps, prevState) {
+			// on touch platforms, we want sliders to focus when dragging begins
+			if (platform.touch && this.state.dragging && !prevState.dragging) {
+				const thisNode = findDOMNode(this); // eslint-disable-line react/no-find-dom-node
+				const sliderNode = thisNode.getAttribute('role') === 'slider' ? thisNode : thisNode.querySelector('[role="slider"]');
+				sliderNode.focus();
+			}
 		}
 
 		componentWillUnmount () {

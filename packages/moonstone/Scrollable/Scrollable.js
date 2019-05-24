@@ -101,15 +101,6 @@ class ScrollableBase extends Component {
 		childRenderer: PropTypes.func.isRequired,
 
 		/**
-		 * Animate while scrolling
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		animate: PropTypes.bool,
-
-		/**
 		 * This is set to `true` by SpotlightContainerDecorator
 		 *
 		 * @type {Boolean}
@@ -231,7 +222,6 @@ class ScrollableBase extends Component {
 
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
-		animate: false,
 		focusableScrollbar: false,
 		overscrollEffectOn: {
 			arrowKey: false,
@@ -337,6 +327,18 @@ class ScrollableBase extends Component {
 	onMouseDown = (ev) => {
 		if (this.props['data-spotlight-container-disabled']) {
 			ev.preventDefault();
+		}
+	}
+
+	onTouchStart = () => {
+		const
+			focusedItem = Spotlight.getCurrent(),
+			{horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current,
+			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current && horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
+			isVerticalScrollButtonFocused = verticalScrollbarRef.current && verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
+
+		if (focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
+			focusedItem.blur();
 		}
 	}
 
@@ -513,7 +515,7 @@ class ScrollableBase extends Component {
 			ev.preventDefault();
 		}
 
-		this.animateOnFocus = this.props.animate;
+		this.animateOnFocus = true;
 
 		if (!repeat && this.hasFocus()) {
 			const {overscrollEffectOn} = this.props;
@@ -776,7 +778,6 @@ class ScrollableBase extends Component {
 	render () {
 		const
 			{
-				animate,
 				childRenderer,
 				'data-spotlight-container': spotlightContainer,
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
@@ -800,7 +801,6 @@ class ScrollableBase extends Component {
 				addEventListeners={this.addEventListeners}
 				applyOverscrollEffect={this.applyOverscrollEffect}
 				clearOverscrollEffect={this.clearOverscrollEffect}
-				noAnimation={!animate}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
@@ -832,6 +832,7 @@ class ScrollableBase extends Component {
 						data-spotlight-container={spotlightContainer}
 						data-spotlight-container-disabled={spotlightContainerDisabled}
 						data-spotlight-id={spotlightId}
+						onTouchStart={this.onTouchStart}
 						ref={uiContainerRef}
 						style={style}
 					>
