@@ -76,11 +76,11 @@ const DropdownList = Skinnable(
 	kind({
 		name: 'DropdownList',
 
-		propTypes: /** @lends moonstone/Dropdown.DropdownBase.prototype */ {
-			/**
+		propTypes: {
+			/*
 			 * The selections for Dropdown
 			 *
-			 * @type {String[]|Object[]}
+			 * @type {String[]|Array.<{key: Number|String}>}
 			 * @private
 			 */
 			children: PropTypes.oneOfType([
@@ -90,7 +90,7 @@ const DropdownList = Skinnable(
 				}))
 			]),
 
-			/**
+			/*
 			 * Called when an item is selected.
 			 *
 			 * @type {Function}
@@ -98,7 +98,7 @@ const DropdownList = Skinnable(
 			 */
 			onSelect: PropTypes.func,
 
-			/**
+			/*
 			 * Index of the selected item.
 			 *
 			 * @type {Number}
@@ -145,11 +145,13 @@ const DropdownBase = kind({
 
 	propTypes: /** @lends moonstone/Dropdown.DropdownBase.prototype */ {
 		/**
-		 * The selection items to be displayed in the `DropdownList`.
-		 * Takes an array of strings and the strings will be used in
-		 * the generated components as the readable text.
+		 * The selection items to be displayed in the `Dropdown` when `open`.
 		 *
-		 * @type {String[]|Object[]}
+		 * Takes either an array of strings or an array of objects. When strings, the values will be
+		 * used in the generated components as the readable text. When objects, the properties will
+		 * be passed onto an `Item` component and a unique `key` property is required.
+		 *
+		 * @type {String[]|Array.<{key: (Number|String)}>}
 		 * @public
 		 */
 		children: PropTypes.oneOfType([
@@ -192,7 +194,7 @@ const DropdownBase = kind({
 		onSelect: PropTypes.func,
 
 		/**
-		 * Displays the `DropdownList`.
+		 * Displays the items.
 		 *
 		 * @type {Boolean}
 		 * @default false
