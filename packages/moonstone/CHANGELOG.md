@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to change spotlight focus due to touch events
 - `moonstone/Slider` to not scroll the viewport when dragging on touch platforms
 - `moonstone/VirtualList` and `moonstone/Scroller` to animate with 5-way navigation by default
+- `moonstone/ExpandableInput` to retain focus when touching within the input field on touch platforms
 
 ## [2.5.2] - 2019-04-23
 
