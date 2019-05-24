@@ -148,7 +148,8 @@ const DropdownBase = kind({
 		 *
 		 * Takes either an array of strings or an array of objects. When strings, the values will be
 		 * used in the generated components as the readable text. When objects, the properties will
-		 * be passed onto an `Item` component and a unique `key` property is required.
+		 * be passed onto an `Item` component and `children` as well as a unique `key` property are
+		 * required.
 		 *
 		 * @type {String[]|Array.<{key: (Number|String), children: (String|Component)}>}
 		 * @public
