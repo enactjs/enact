@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `moonstone/Scroller` to scroll when no spottable child exists in the 5-way key direction then focus a scrollbar button if `focusableScrollbar` is true
+- `moonstone/Scroller` to scroll when no spottable child exists in the pressed 5-way key direction and, when `focusableScrollbar` is set, focus the scrollbar button
 
 ## [3.0.0-alpha.2] - 2019-05-20
 
