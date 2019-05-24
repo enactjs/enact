@@ -953,7 +953,19 @@ ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBa
 	 * @default 'vertical'
 	 * @public
 	 */
-	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	/**
+	 * Unique identifier for the component.
+	 *
+	 * When defined and when the `VirtualList` is within a [Panel]{@link moonstone/Panels.Panel},
+	 * the `VirtualList` will store its scroll position and restore that position when returning to
+	 * the `Panel`.
+	 *
+	 * @type {String}
+	 * @public
+	 */
+	id: PropTypes.string
 };
 
 ScrollableVirtualList.defaultProps = {
@@ -984,7 +996,19 @@ ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.Virtual
 	 * @default 'vertical'
 	 * @public
 	 */
-	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	/**
+	 * Unique identifier for the component.
+	 *
+	 * When defined and when the `VirtualList` is within a [Panel]{@link moonstone/Panels.Panel},
+	 * the `VirtualList` will store its scroll position and restore that position when returning to
+	 * the `Panel`.
+	 *
+	 * @type {String}
+	 * @public
+	 */
+	id: PropTypes.string
 };
 
 ScrollableVirtualListNative.defaultProps = {
