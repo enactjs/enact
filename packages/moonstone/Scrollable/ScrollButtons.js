@@ -204,6 +204,10 @@ class ScrollButtons extends Component {
 		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
 	}
 
+	focusOnButton = (isPrev) => {
+		Spotlight.focus(isPrev ? this.prevButtonRef.current : this.nextButtonRef.current);
+	}
+
 	focusOnOppositeScrollButton = (ev, direction) => {
 		const buttonNode = (ev.target === this.nextButtonRef.current) ? this.prevButtonRef.current : this.nextButtonRef.current;
 
