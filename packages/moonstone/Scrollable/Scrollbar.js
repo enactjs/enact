@@ -104,13 +104,14 @@ class ScrollbarBase extends Component {
 		this.startHidingThumb = startHidingThumb;
 		this.uiUpdate = uiUpdate;
 
-		const {isOneOfScrollButtonsFocused, updateButtons} = this.scrollButtonsRef.current;
+		const {isOneOfScrollButtonsFocused, updateButtons, focusOnButton} = this.scrollButtonsRef.current;
 
 		this.isOneOfScrollButtonsFocused = isOneOfScrollButtonsFocused;
 		this.update = (bounds) => {
 			updateButtons(bounds);
 			this.uiUpdate(bounds);
 		};
+		this.focusOnButton = focusOnButton;
 	}
 
 	render () {
@@ -153,6 +154,7 @@ class ScrollbarBase extends Component {
  */
 const Scrollbar = ApiDecorator(
 	{api: [
+		'focusOnButton',
 		'getContainerRef',
 		'isOneOfScrollButtonsFocused',
 		'showThumb',

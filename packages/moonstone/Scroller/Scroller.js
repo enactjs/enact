@@ -26,12 +26,7 @@ import React, {Component} from 'react';
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
-const
-	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
-	reverseDirections = {
-		left: 'right',
-		right: 'left'
-	};
+const dataContainerDisabledAttribute = 'data-spotlight-container-disabled';
 
 /**
  * A Moonstone-styled base component for [Scroller]{@link moonstone/Scroller.Scroller}.
@@ -72,6 +67,15 @@ class ScrollerBase extends Component {
 		 * @private
 		 */
 		rtl: PropTypes.bool,
+
+		/**
+		 * Called when [Scroller]{@link moonstone/Scroller.Scroller} should be scrolled
+		 * and the focus should be moved to a scrollbar button.
+		 *
+		 * @type {function}
+		 * @private
+		 */
+		scrollAndFocusScrollbarButton: PropTypes.func,
 
 		/**
 		 * The spotlight id for the component.
@@ -343,26 +347,20 @@ class ScrollerBase extends Component {
 		return candidateNode;
 	}
 
-	scrollToBoundary = (direction) => {
-		const
-			{scrollBounds, scrollPos} = this.uiRefCurrent,
-			isVerticalDirection = (direction === 'up' || direction === 'down');
-
-		if (isVerticalDirection) {
-			if (scrollPos.top > 0 && scrollPos.top < scrollBounds.maxTop) {
-				this.uiRefCurrent.props.cbScrollTo({align: direction === 'up' ? 'top' : 'bottom'});
-			}
-		} else if (scrollPos.left > 0 && scrollPos.left < scrollBounds.maxLeft) {
-			this.uiRefCurrent.props.cbScrollTo({align: this.props.rtl ? reverseDirections[direction] : direction});
-		}
-	}
-
 	handleLeaveContainer = ({direction, target}) => {
 		const contentsContainer = this.uiRefCurrent.containerRef.current;
 		// ensure we only scroll to boundary from the contents and not a scroll button which
 		// lie outside of this.uiRefCurrent.containerRef but within the spotlight container
 		if (contentsContainer && contentsContainer.contains(target)) {
-			this.scrollToBoundary(direction);
+			const
+				{scrollBounds: {maxLeft, maxTop}, scrollPos: {left, top}} = this.uiRefCurrent,
+				isVerticalDirection = (direction === 'up' || direction === 'down'),
+				pos = isVerticalDirection ? top : left,
+				max = isVerticalDirection ? maxTop : maxLeft;
+
+			if (pos > 0 && pos < max) {
+				this.props.scrollAndFocusScrollbarButton(direction);
+			}
 		}
 	}
 
@@ -378,6 +376,7 @@ class ScrollerBase extends Component {
 
 		delete props.initUiChildRef;
 		delete props.onUpdate;
+		delete props.scrollAndFocusScrollbarButton;
 		delete props.spotlightId;
 
 		return (
