@@ -903,7 +903,7 @@ const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'VirtualListBaseNative';
 
 /* eslint-disable enact/prop-types */
-const itemsRenderer = (props) => {
+const listItemsRenderer = (props) => {
 	const {
 		cc,
 		handlePlaceholderFocus,
@@ -942,7 +942,7 @@ const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-b
 			<VirtualListBase
 				{...childProps}
 				animate={props.animate}
-				itemsRenderer={itemsRenderer}
+				itemsRenderer={listItemsRenderer}
 			/>
 		)}
 	/>
@@ -983,7 +983,7 @@ const ScrollableVirtualListNative = (props) => (
 			<VirtualListBaseNative
 				{...childProps}
 				animate={props.animate}
-				itemsRenderer={itemsRenderer}
+				itemsRenderer={listItemsRenderer}
 			/>
 		)}
 	/>
