@@ -587,17 +587,13 @@ const VirtualListBaseFactory = (type) => {
 					this.focusOnItem(nextIndex);
 				} else {
 					this.isScrolledBy5way = true;
+					this.isWrappedBy5way = isWrapped;
 
-					if (isWrapped) {
-						const isNextAvailable = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${nextIndex}'].spottable`);
-						this.isWrappedBy5way = true;
-
-						if (wrap === true && !isNextAvailable) {
-							this.pause.pause();
-							target.blur();
-						} else {
-							this.focusOnItem(nextIndex);
-						}
+					if (isWrapped && wrap === true && (
+						this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${nextIndex}'].spottable`) == null
+					)) {
+						this.pause.pause();
+						target.blur();
 					} else {
 						this.focusOnItem(nextIndex);
 					}
