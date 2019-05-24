@@ -331,6 +331,24 @@ storiesOf('Scroller', module)
 				</Scroller>
 			);
 		}
+	)
+	.add(
+		'Test scrolling to boundary with long overflow',
+		() => {
+			const size = number('Spacer size', 200, {max: 300, min: 0, range: true});
+			return (
+				<Scroller
+					style={{height: ri.scaleToRem(200)}}
+					focusableScrollbar={boolean('focusableScrollbar', {}, true)}
+				>
+					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
+					<Item>1</Item>
+					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
+					<Item>3</Item>
+					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
+				</Scroller>
+			);
+		}
 	).add(
 		'With Spotlight Target Calculation',
 		() => (
