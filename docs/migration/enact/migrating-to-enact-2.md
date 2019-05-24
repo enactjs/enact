@@ -178,7 +178,7 @@ The `preserveCase` prop has changed to `casing`.
 ```
 
 ### `ExpandableInput`
-The `onInputChange` has changed to `onChange`.
+The `onInputChange` prop has changed to `onChange`.
 #### Example
 ##### 1.x
 ```
@@ -248,7 +248,7 @@ The boolean props `horizontal` and `vertical` have been replaced by the `orienta
 ```
 The `tooltipAsPercent`, `tooltipSide`, and `tooltipForceSide` props for the built-in tooltip
 have been removed.  Use a `moonstone/IncrementSlider.IncrementSliderTooltip` and its `percent`
-and `side` props instead. `side` supports both local-aware and locale-independent values.
+and `side` props instead. `side` supports both locale-aware and locale-independent values.
 #### Example
 ##### 1.x
 ```
