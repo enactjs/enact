@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import {forward} from '@enact/core/handle';
 import equals from 'ramda/src/equals';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -168,6 +169,16 @@ const VirtualListBaseFactory = (type) => {
 			getComponentProps: PropTypes.func,
 
 			/**
+			 * Called when the range of items has updated.
+			 *
+			 * Event payload includes the `firstIndex` and `lastIndex` of the list.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			onUpdateItems: PropTypes.func,
+
+			/**
 			 * Number of spare DOM node.
 			 * `3` is good for the default value experimentally and
 			 * this value is highly recommended not to be changed by developers.
@@ -275,9 +286,13 @@ const VirtualListBaseFactory = (type) => {
 			this.setContainerSize();
 		}
 
-		componentDidUpdate (prevProps) {
+		componentDidUpdate (prevProps, prevState) {
 			// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
 			this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
+
+			if (prevState.firstIndex !== this.state.firstIndex && this.props.onUpdateItems) {
+				this.emitUpdateItems();
+			}
 
 			if (
 				prevProps.direction !== this.props.direction ||
@@ -370,6 +385,16 @@ const VirtualListBaseFactory = (type) => {
 			clientWidth: node.clientWidth,
 			clientHeight: node.clientHeight
 		})
+
+		emitUpdateItems () {
+			const {dataSize} = this.props;
+			const {firstIndex, numOfItems} = this.state;
+
+			forward('onUpdateItems', {
+				firstIndex: firstIndex,
+				lastIndex: Math.min(firstIndex + numOfItems, dataSize)
+			}, this.props);
+		}
 
 		calculateMetrics (props) {
 			const
