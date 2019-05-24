@@ -20,6 +20,7 @@
 import Changeable from '@enact/ui/Changeable';
 import Toggleable from '@enact/ui/Toggleable';
 import equals from 'ramda/src/equals';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
 import Pure from '@enact/ui/internal/Pure';
@@ -80,12 +81,12 @@ const DropdownList = Skinnable(
 			/*
 			 * The selections for Dropdown
 			 *
-			 * @type {String[]|Array.<{key: Number|String}>}
-			 * @private
+			 * @type {String[]|Array.<{key: (Number|String), children: (String|Component)}>}
 			 */
 			children: PropTypes.oneOfType([
 				PropTypes.arrayOf(PropTypes.string),
 				PropTypes.arrayOf(PropTypes.shape({
+					children: EnactPropTypes.renderable.isRequired,
 					key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 				}))
 			]),
@@ -94,7 +95,6 @@ const DropdownList = Skinnable(
 			 * Called when an item is selected.
 			 *
 			 * @type {Function}
-			 * @private
 			 */
 			onSelect: PropTypes.func,
 
@@ -102,7 +102,6 @@ const DropdownList = Skinnable(
 			 * Index of the selected item.
 			 *
 			 * @type {Number}
-			 * @private
 			 */
 			selected: PropTypes.number
 		},
@@ -151,12 +150,13 @@ const DropdownBase = kind({
 		 * used in the generated components as the readable text. When objects, the properties will
 		 * be passed onto an `Item` component and a unique `key` property is required.
 		 *
-		 * @type {String[]|Array.<{key: (Number|String)}>}
+		 * @type {String[]|Array.<{key: (Number|String), children: (String|Component)}>}
 		 * @public
 		 */
 		children: PropTypes.oneOfType([
 			PropTypes.arrayOf(PropTypes.string),
 			PropTypes.arrayOf(PropTypes.shape({
+				children: EnactPropTypes.renderable.isRequired,
 				key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 			}))
 		]),
