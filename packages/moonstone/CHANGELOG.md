@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - Fonts to correctly use the new font files and updated the international font name from "Moonstone LG Display" to "Moonstone Global"
+- `moonstone/VideoPlayer` to have correct sized control buttons
 
 ## [3.0.0-alpha.2] - 2019-05-20
 
