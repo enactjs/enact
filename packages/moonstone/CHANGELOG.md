@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/Scroller` to scroll when no spottable child exists in the pressed 5-way key direction and, when `focusableScrollbar` is set, focus the scrollbar button
+
 ### Fixed
 
 - Fonts to correctly use the new font files and updated the international font name from "Moonstone LG Display" to "Moonstone Global"
