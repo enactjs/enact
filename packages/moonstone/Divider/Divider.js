@@ -48,9 +48,10 @@ const DividerBase = kind({
 
 
 /**
- * @name DividerDecorator
  * Applies Moonstone specific behaviors to [DividerBase]{@link moonstone/Divider.DividerBase}.
  *
+ * @name DividerDecorator
+ * @class
  * @hoc
  * @memberof moonstone/Divider
  * @mixes i18n/Uppercase.Uppercase
