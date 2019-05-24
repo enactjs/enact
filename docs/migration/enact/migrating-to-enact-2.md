@@ -3,7 +3,7 @@ title: Migrating to Enact 2.0
 ---
 
 ## Overview
-This document lists changes between major versions of Enact likely to affect most apps.
+This document lists changes between Enact versions 1.x and 2.0 likely to affect most apps.
 
 ## General Changes
 
