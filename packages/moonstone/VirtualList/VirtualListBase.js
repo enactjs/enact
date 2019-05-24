@@ -584,6 +584,8 @@ const VirtualListBaseFactory = (type) => {
 				const firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent;
 				const isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
 
+				this.lastFocusedIndex = nextIndex;
+
 				if (isNextItemInView) {
 					this.focusOnItem(nextIndex);
 				} else {
@@ -597,7 +599,6 @@ const VirtualListBaseFactory = (type) => {
 						this.focusOnItem(nextIndex);
 					}
 
-					this.lastFocusedIndex = nextIndex;
 					this.nodeIndexToBeFocused = nextIndex;
 
 					cbScrollTo({
