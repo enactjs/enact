@@ -9,6 +9,9 @@ this guide.
 
 ## General Changes
 
+### spotlight
+Apps can now use `spotlight` to focus disabled items.
+
 ### webOS TV
 Enact 3.0 no longer supports the 2019 TV platform or earlier versions.
 
