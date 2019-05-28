@@ -539,9 +539,11 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		enterGesture () {
-			this.drag.enter();
-			this.hold.enter();
+		enterGesture (ev) {
+			const coords = getEventCoordinates(ev);
+
+			this.drag.enter(coords);
+			this.hold.enter(coords);
 
 			return true;
 		}

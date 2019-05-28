@@ -10,6 +10,14 @@ class Hold {
 
 	isHolding = () => this.holdConfig != null
 
+	isWithinTolerance = ({x, y}) => {
+		const {moveTolerance} = this.holdConfig;
+		const dx = this.startX - x;
+		const dy = this.startY - y;
+
+		return Math.sqrt(dx * dx + dy * dy) < moveTolerance;
+	}
+
 	begin = (defaultConfig, {holdConfig, noResume, onHold, onHoldEnd, onHoldPulse}, {x, y}) => {
 		if (!onHold && !onHoldPulse) return;
 
@@ -41,15 +49,13 @@ class Hold {
 		}
 	}
 
-	move = ({x, y}) => {
+	move = (coords) => {
 		if (!this.isHolding()) return;
 
-		const {cancelOnMove, moveTolerance, resume} = this.holdConfig;
+		const {cancelOnMove, resume} = this.holdConfig;
 
 		if (cancelOnMove) {
-			const dx = this.startX - x;
-			const dy = this.startY - y;
-			const shouldEnd = Math.sqrt(dx * dx + dy * dy) >= moveTolerance;
+			const shouldEnd = !this.isWithinTolerance(coords);
 
 			if (shouldEnd) {
 				if (resume) {
@@ -88,12 +94,12 @@ class Hold {
 		this.holdConfig = null;
 	}
 
-	enter = () => {
+	enter = (coords) => {
 		if (!this.isHolding()) return;
 
 		const {resume} = this.holdConfig;
 
-		if (resume) {
+		if (resume && this.isWithinTolerance(coords)) {
 			this.resume();
 		}
 	}
