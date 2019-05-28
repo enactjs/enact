@@ -50,7 +50,7 @@ const EditableIntegerPickerBase = kind({
 
 	propTypes: /** @lends moonstone/EditableIntegerPicker.EditableIntegerPickerBase.prototype */ {
 		/**
-		 * The maximum value selectable by the picker (inclusive).
+		 * The maximum value selectable by the picker (inclusive), and it should be evenly divisible by `step`.
 		 *
 		 * @type {Number}
 		 * @required
@@ -59,7 +59,7 @@ const EditableIntegerPickerBase = kind({
 		max: PropTypes.number.isRequired,
 
 		/**
-		 * The minimum value selectable by the picker (inclusive).
+		 * The minimum value selectable by the picker (inclusive), and it should be evenly divisible by `step`.
 		 *
 		 * @type {Number}
 		 * @required
