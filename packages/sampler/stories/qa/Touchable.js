@@ -1,3 +1,5 @@
+import kind from '@enact/core/kind';
+import PropTypes from 'prop-types';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import Touchable from '@enact/ui/Touchable';
@@ -8,6 +10,63 @@ import {action} from '@storybook/addon-actions';
 import {boolean, number} from '../../src/enact-knobs';
 
 const TouchableDiv = Touchable('div');
+
+const onInteractionEnd = () => {
+	const el = document.getElementById('touchRadius');
+	el.style.display = 'none';
+};
+const onHoldEnd = (ev) => {
+	onInteractionEnd(ev);
+	return action('onHoldEnd')(ev);
+};
+
+const TouchArea = kind({
+	name: 'TouchArea',
+
+	propTypes: {
+		moveTolerance: PropTypes.number
+	},
+
+	handlers: {
+		onInteractionStart: (ev, {moveTolerance}) => {
+			const el = document.getElementById('touchRadius');
+			const x = ev.clientX || ev.touches && ev.touches[0].clientX;
+			const y = ev.clientY || ev.touches && ev.touches[0].clientY;
+
+			el.style.display = 'block';
+			el.style.left = `${x - moveTolerance}px`;
+			el.style.top = `${y - moveTolerance}px`;
+			return false;
+		}
+	},
+
+	render: ({children, moveTolerance, onInteractionStart, ...rest}) => (<React.Fragment>
+		<TouchableDiv
+			{...rest}
+			onHoldEnd={onHoldEnd}
+			onMouseDown={onInteractionStart}
+			onMouseUp={onInteractionEnd}
+			onTouchStart={onInteractionStart}
+			onTouchEnd={onInteractionEnd}
+		>
+			{children}
+		</TouchableDiv>
+		<div
+			id="touchRadius"
+			style={{
+				display: 'none',
+				position: 'fixed',
+				height: (moveTolerance * 2) + 'px',
+				width: (moveTolerance * 2) + 'px',
+				borderRadius: '999px',
+				border: '1px solid orange',
+				backgroundColor: 'rgba(255, 180, 0, 0.3)',
+				pointerEvents: 'none',
+				touchAction: 'none'
+			}}
+		/>
+	</React.Fragment>)
+});
 
 storiesOf('Touchable', module)
 	.add(
@@ -48,44 +107,22 @@ storiesOf('Touchable', module)
 		() => {
 			const moveTolerance = number('holdConfig.moveTolerance', Button, 16, {range: true, min: 8, max: 160, step: 8});
 			const cancelOnMove = boolean('holdConfig.cancelOnMove', Button, true);
-			const onInteractionStart = (ev) => {
-				const el = document.getElementById('touchRadius');
-				const x = ev.clientX || ev.touches && ev.touches[0].clientX;
-				const y = ev.clientY || ev.touches && ev.touches[0].clientY;
-
-				el.style.display = 'block';
-				el.style.left = `${x - moveTolerance}px`;
-				el.style.top = `${y - moveTolerance}px`;
-			};
-			const onInteractionEnd = () => {
-				const el = document.getElementById('touchRadius');
-				el.style.display = 'none';
-			};
-			const onHoldEnd = (ev) => {
-				onInteractionEnd(ev);
-				return action('onHoldEnd')(ev);
-			};
-			return (<React.Fragment>
-				<TouchableDiv
+			return (
+				<TouchArea
 					holdConfig={{
 						moveTolerance,
 						cancelOnMove
 					}}
-					noResume={boolean('noResume', TouchableDiv, false)}
+					moveTolerance={moveTolerance}
+					noResume={boolean('noResume', TouchArea, false)}
 					onHold={action('onHold')}
-					onHoldEnd={onHoldEnd}
 					onHoldPulse={action('onHoldPulse', {depth: 0})}
-					onMouseDown={onInteractionStart}
-					onMouseUp={onInteractionEnd}
-					onTouchStart={onInteractionStart}
-					onTouchEnd={onInteractionEnd}
-					disabled={boolean('disabled', TouchableDiv)}
+					disabled={boolean('disabled', TouchArea)}
 					style={{marginLeft: 'auto', marginRight: 'auto', textAlign: 'center', border: '2px dashed #888', width: ri.unit(ri.scale(240), 'rem'), height: ri.unit(ri.scale(240), 'rem')}}
 				>
 					Resumable
-				</TouchableDiv>
-				<div id="touchRadius" style={{display: 'none', position: 'fixed', height: (moveTolerance * 2) + 'px', width: (moveTolerance * 2) + 'px', borderRadius: '999px', border: '1px solid orange', backgroundColor: 'rgba(255, 180, 0, 0.3)', pointerEvents: 'none', touchAction: 'none'}} />
-			</React.Fragment>);
+				</TouchArea>
+			);
 		}
 	)
 	.add(
