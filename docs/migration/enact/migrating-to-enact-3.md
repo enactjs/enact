@@ -10,7 +10,8 @@ this guide.
 ## General Changes
 
 ### spotlight
-Apps can now use `spotlight` to focus disabled items.
+`spotlight` will now focus disabled items.  You can use the `spotlightDisabled` prop on `spotlight/Spottable`
+and `spotlight/SpotlightContainerDecorator` instances if focus absolutely must be prevented.
 
 ### webOS TV
 Enact 3.0 no longer supports the 2019 TV platform or earlier versions.
