@@ -20,6 +20,7 @@
 import Changeable from '@enact/ui/Changeable';
 import Toggleable from '@enact/ui/Toggleable';
 import equals from 'ramda/src/equals';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
 import Pure from '@enact/ui/internal/Pure';
@@ -76,28 +77,31 @@ const DropdownList = Skinnable(
 	kind({
 		name: 'DropdownList',
 
-		propTypes: /** @lends moonstone/Dropdown.DropdownBase.prototype */ {
-			/**
+		propTypes: {
+			/*
 			 * The selections for Dropdown
 			 *
-			 * @type {String[]}
-			 * @private
+			 * @type {String[]|Array.<{key: (Number|String), children: (String|Component)}>}
 			 */
-			children: PropTypes.node,
+			children: PropTypes.oneOfType([
+				PropTypes.arrayOf(PropTypes.string),
+				PropTypes.arrayOf(PropTypes.shape({
+					children: EnactPropTypes.renderable.isRequired,
+					key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
+				}))
+			]),
 
-			/**
+			/*
 			 * Called when an item is selected.
 			 *
 			 * @type {Function}
-			 * @private
 			 */
 			onSelect: PropTypes.func,
 
-			/**
+			/*
 			 * Index of the selected item.
 			 *
 			 * @type {Number}
-			 * @private
 			 */
 			selected: PropTypes.number
 		},
@@ -140,15 +144,23 @@ const DropdownBase = kind({
 
 	propTypes: /** @lends moonstone/Dropdown.DropdownBase.prototype */ {
 		/**
-		 * The selection items to be displayed in the `DropdownList`.
-		 * Takes an array of strings and the strings will be used in
-		 * the generated components as the readable text.
+		 * The selection items to be displayed in the `Dropdown` when `open`.
 		 *
-		 * @type {String[]}
-		 * @required
+		 * Takes either an array of strings or an array of objects. When strings, the values will be
+		 * used in the generated components as the readable text. When objects, the properties will
+		 * be passed onto an `Item` component and `children` as well as a unique `key` property are
+		 * required.
+		 *
+		 * @type {String[]|Array.<{key: (Number|String), children: (String|Component)}>}
 		 * @public
 		 */
-		children: PropTypes.node,
+		children: PropTypes.oneOfType([
+			PropTypes.arrayOf(PropTypes.string),
+			PropTypes.arrayOf(PropTypes.shape({
+				children: EnactPropTypes.renderable.isRequired,
+				key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
+			}))
+		]),
 
 		/**
 		 * Disables Dropdown and becomes non-interactive.
@@ -183,7 +195,7 @@ const DropdownBase = kind({
 		onSelect: PropTypes.func,
 
 		/**
-		 * Displays the `DropdownList`.
+		 * Displays the items.
 		 *
 		 * @type {Boolean}
 		 * @default false
