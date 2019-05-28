@@ -249,12 +249,8 @@ const DropdownBase = kind({
 			const isSelectedValid = !(typeof selected === 'undefined' || selected === null || selected >= children.length || selected < 0);
 
 			if (children && children.length && isSelectedValid) {
-				const isArray = Array.isArray(selected);
-				if (typeof children[selected] === 'object') {
-					return children[selected].children;
-				} else {
-					return children[isArray ? selected[0] : selected];
-				}
+				const child = children[selected];
+				return typeof child === 'object' ? child.children : child;
 			}
 
 			return title;
