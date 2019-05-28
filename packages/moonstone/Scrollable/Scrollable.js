@@ -462,11 +462,12 @@ class ScrollableBase extends Component {
 		}
 
 		const
-			{childRefCurrent} = this.uiRef.current,
+			{childRefCurrent, scrollTop} = this.uiRef.current,
 			focusedItem = Spotlight.getCurrent(),
 			bounds = this.uiRef.current.getScrollBounds(),
 			directionFactor = direction === 'up' ? -1 : 1,
-			pageDistance = directionFactor * bounds.clientHeight * paginationPageMultiplier;
+			pageDistance = directionFactor * bounds.clientHeight * paginationPageMultiplier,
+			scrollPossible = scrollTop > 0 && direction === 'up' || bounds.maxTop > scrollTop && direction === 'down';
 
 		this.uiRef.current.lastInputType = 'pageKey';
 
@@ -475,28 +476,28 @@ class ScrollableBase extends Component {
 			this.uiRef.current.wheelDirection = directionFactor;
 		}
 
-		if (focusedItem) {
-			// Should do nothing when focusedItem is paging control button of Scrollbar
-			if (childRefCurrent.containerRef.current.contains(focusedItem)) {
-				const
-					clientRect = focusedItem.getBoundingClientRect(),
-					x = (clientRect.right + clientRect.left) / 2,
-					y = (clientRect.bottom + clientRect.top) / 2;
+		if (scrollPossible) {
+			if (focusedItem) {
+				// Should do nothing when focusedItem is paging control button of Scrollbar
+				if (childRefCurrent.containerRef.current.contains(focusedItem)) {
+					const
+						clientRect = focusedItem.getBoundingClientRect(),
+						x = (clientRect.right + clientRect.left) / 2,
+						y = (clientRect.bottom + clientRect.top) / 2;
 
-				focusedItem.blur();
-				if (!this.props['data-spotlight-container-disabled']) {
-					this.childRef.current.setContainerDisabled(true);
+					focusedItem.blur();
+					if (!this.props['data-spotlight-container-disabled']) {
+						this.childRef.current.setContainerDisabled(true);
+					}
+					this.pointToFocus = {direction, x, y};
 				}
-				this.pointToFocus = {direction, x, y};
+			} else {
+				this.pointToFocus = {direction, x: lastPointer.x, y: lastPointer.y};
 			}
-		} else {
-			// FIXME: Is this meaningful?
-			this.pointToFocus = {direction, x: lastPointer.x, y: lastPointer.y};
+
+			this.uiRef.current.scrollToAccumulatedTarget(pageDistance, true, this.props.overscrollEffectOn.pageKey);
 		}
 
-		this.uiRef.current.scrollToAccumulatedTarget(pageDistance, true, this.props.overscrollEffectOn.pageKey);
-
-		// FIXME: when should this method return false?
 		return true;
 	}
 

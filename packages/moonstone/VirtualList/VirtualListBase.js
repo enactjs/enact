@@ -18,6 +18,8 @@ const
 	isDown = is('down'),
 	isEnter = is('enter'),
 	isLeft = is('left'),
+	isPageUp = is('pageUp'),
+	isPageDown = is('pageDown'),
 	isRight = is('right'),
 	isUp = is('up'),
 	JS = 'JS',
@@ -428,11 +430,15 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		onKeyDown = (ev) => {
-			if (getDirection(ev.keyCode)) {
+			const {keyCode} = ev;
+
+			if (getDirection(keyCode)) {
 				ev.preventDefault();
 				ev.stopPropagation();
 				Spotlight.setPointerMode(false);
 				SpotlightAccelerator.processKey(ev, this.onAcceleratedKeyDown);
+			} else if (isPageUp(keyCode) || isPageDown(keyCode)) {
+				this.isScrolledBy5way = false;
 			}
 		}
 
