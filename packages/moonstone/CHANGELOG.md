@@ -4,9 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Fixed
+### Added
 
-- `moonstone/FormCheckbox`, `moonstone/Input`, `moonstone/ProgressBar`, `moonstone/RadioItem`, `moonstone/SwitchItem`, and `moonstone/Tooltip` light skin colors.
+- `moonstone/Panels` support for managing share state of contained components
+- `moonstone/Scroller` and `moonstone/VirtualList` support for restoring scroll position when within a `moonstone/Panels.Panel`
 
 ### Changed
 
@@ -16,6 +17,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - Fonts to correctly use the new font files and updated the international font name from "Moonstone LG Display" to "Moonstone Global"
 - `moonstone/Dropdown` `children` propType so it supports the same format as `ui/Group` (an array of strings or an array of objects with props)
+- `moonstone/FormCheckbox`, `moonstone/Input`, `moonstone/ProgressBar`, `moonstone/RadioItem`, `moonstone/SwitchItem`, and `moonstone/Tooltip` light skin colors.
 - `moonstone/VideoPlayer` to have correct sized control buttons
 
 ## [3.0.0-alpha.2] - 2019-05-20

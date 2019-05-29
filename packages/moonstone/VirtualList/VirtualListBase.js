@@ -193,10 +193,6 @@ const VirtualListBaseFactory = (type) => {
 				containerNode.addEventListener('keydown', this.onKeyDown);
 				containerNode.addEventListener('keyup', this.onKeyUp);
 			}
-
-			setTimeout(() => {
-				this.restoreFocus();
-			}, 0);
 		}
 
 		componentDidUpdate (prevProps) {
@@ -510,6 +506,8 @@ const VirtualListBaseFactory = (type) => {
 				const firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent;
 				const isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
 
+				this.lastFocusedIndex = nextIndex;
+
 				if (isNextItemInView) {
 					this.focusOnItem(nextIndex);
 				} else {
@@ -523,7 +521,6 @@ const VirtualListBaseFactory = (type) => {
 						this.focusOnItem(nextIndex);
 					}
 
-					this.lastFocusedIndex = nextIndex;
 					this.nodeIndexToBeFocused = nextIndex;
 
 					cbScrollTo({
@@ -625,6 +622,12 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
+		handleUpdateItems = ({firstIndex, lastIndex}) => {
+			if (this.restoreLastFocused && this.preservedIndex >= firstIndex && this.preservedIndex <= lastIndex) {
+				this.restoreFocus();
+			}
+		}
+
 		/**
 		 * Restore the focus of VirtualList
 		 */
@@ -656,7 +659,9 @@ const VirtualListBaseFactory = (type) => {
 					this.restoreLastFocused = false;
 
 					// try to focus the last focused item
+					this.isScrolledByJump = true;
 					const foundLastFocused = Spotlight.focus(node);
+					this.isScrolledByJump = false;
 
 					// but if that fails (because it isn't found or is disabled), focus the container so
 					// spotlight isn't lost
@@ -725,22 +730,12 @@ const VirtualListBaseFactory = (type) => {
 			this.lastFocusedIndex = node.dataset && getNumberValue(node.dataset.index);
 		}
 
-		updateStatesAndBounds = ({cbScrollTo, dataSize, moreInfo, numOfItems}) => {
+		updateStatesAndBounds = ({dataSize, moreInfo, numOfItems}) => {
 			const {preservedIndex} = this;
 
-			if (this.restoreLastFocused &&
-				numOfItems > 0 &&
-				(preservedIndex < dataSize) &&
-				(preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex)) {
-				// If we need to restore last focus and the index is beyond the screen,
-				// we call `scrollTo` to create DOM for it.
-				cbScrollTo({index: preservedIndex, animate: false, focus: true});
-				this.isScrolledByJump = true;
-
-				return true;
-			} else {
-				return false;
-			}
+			return (this.restoreLastFocused && numOfItems > 0 && preservedIndex < dataSize && (
+				preservedIndex < moreInfo.firstVisibleIndex || preservedIndex > moreInfo.lastVisibleIndex
+			));
 		}
 
 		getScrollBounds = () => this.uiRefCurrent.getScrollBounds()
@@ -778,6 +773,7 @@ const VirtualListBaseFactory = (type) => {
 							index
 						})
 					)}
+					onUpdateItems={this.handleUpdateItems}
 					ref={this.initUiRef}
 					updateStatesAndBounds={this.updateStatesAndBounds}
 					itemsRenderer={(props) => { // eslint-disable-line react/jsx-no-bind
@@ -837,26 +833,46 @@ VirtualListBase.displayName = 'VirtualListBase';
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'VirtualListBaseNative';
 
+/* eslint-disable enact/prop-types */
+const listItemsRenderer = (props) => {
+	const {
+		cc,
+		handlePlaceholderFocus,
+		initItemContainerRef: initUiItemContainerRef,
+		needsScrollingPlaceholder,
+		primary
+	} = props;
+
+	return (
+		<React.Fragment>
+			{cc.length ? (
+				<div ref={initUiItemContainerRef} role="list">{cc}</div>
+			) : null}
+			{primary ? null : (
+				<SpotlightPlaceholder
+					data-index={0}
+					data-vl-placeholder
+					// a zero width/height element can't be focused by spotlight so we're giving
+					// the placeholder a small size to ensure it is navigable
+					style={{width: 10}}
+					onFocus={handlePlaceholderFocus}
+				/>
+			)}
+			{needsScrollingPlaceholder ? (
+				<SpotlightPlaceholder />
+			) : null}
+		</React.Fragment>
+	);
+};
+/* eslint-enable enact/prop-types */
+
 const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
 	<Scrollable
 		{...props}
 		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...childProps}
-				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
-					[
-						cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
-						primary ?
-							null :
-							<SpotlightPlaceholder
-								data-index={0}
-								data-vl-placeholder
-								key="1"
-								onFocus={handlePlaceholderFocus}
-							/>,
-						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
-					]
-				)}
+				itemsRenderer={listItemsRenderer}
 			/>
 		)}
 	/>
@@ -874,7 +890,19 @@ ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBa
 	 * @default 'vertical'
 	 * @public
 	 */
-	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	/**
+	 * Unique identifier for the component.
+	 *
+	 * When defined and when the `VirtualList` is within a [Panel]{@link moonstone/Panels.Panel},
+	 * the `VirtualList` will store its scroll position and restore that position when returning to
+	 * the `Panel`.
+	 *
+	 * @type {String}
+	 * @public
+	 */
+	id: PropTypes.string
 };
 
 ScrollableVirtualList.defaultProps = {
@@ -887,20 +915,7 @@ const ScrollableVirtualListNative = (props) => (
 		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...childProps}
-				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
-					[
-						cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
-						primary ?
-							null :
-							<SpotlightPlaceholder
-								data-index={0}
-								data-vl-placeholder
-								key="1"
-								onFocus={handlePlaceholderFocus}
-							/>,
-						needsScrollingPlaceholder ? <SpotlightPlaceholder key="2" /> : null
-					]
-				)}
+				itemsRenderer={listItemsRenderer}
 			/>
 		)}
 	/>
@@ -918,7 +933,19 @@ ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.Virtual
 	 * @default 'vertical'
 	 * @public
 	 */
-	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	/**
+	 * Unique identifier for the component.
+	 *
+	 * When defined and when the `VirtualList` is within a [Panel]{@link moonstone/Panels.Panel},
+	 * the `VirtualList` will store its scroll position and restore that position when returning to
+	 * the `Panel`.
+	 *
+	 * @type {String}
+	 * @public
+	 */
+	id: PropTypes.string
 };
 
 ScrollableVirtualListNative.defaultProps = {
