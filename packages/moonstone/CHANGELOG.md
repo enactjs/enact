@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - Fonts to correctly use the new font files and updated the international font name from "Moonstone LG Display" to "Moonstone Global"
 - `moonstone/Dropdown` `children` propType so it supports the same format as `ui/Group` (an array of strings or an array of objects with props)
 - `moonstone/VideoPlayer` to have correct sized control buttons
+- high contrast colors for `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/Header`, `moonstone/RadioItem`, `moonstone/Slider`, and `moonstone/Switch`
 
 ## [3.0.0-alpha.2] - 2019-05-20
 
