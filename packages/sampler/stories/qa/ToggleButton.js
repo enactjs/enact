@@ -14,7 +14,7 @@ const Config = mergeComponentMetadata('ToggleButton', UIButtonBase, UiButton, Bu
 // Set up some defaults for info and knobs
 const prop = {
 	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
-	tallText:{'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'}
+	tallText:{'ฟิ้ ไั  ஒ  து': 'ฟิ้ ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'}
 };
 
 storiesOf('ToggleButton', module)
@@ -39,8 +39,8 @@ storiesOf('ToggleButton', module)
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 				disabled={boolean('disabled', Config)}
 				size={select('size', ['small', 'large'], Config)}
-				toggleOnLabel={select('toggleOnLabel', prop.tallText, Config, 'ิ้  ไั  ஒ  து')}
-				toggleOffLabel={select('toggleOffLabel', prop.tallText, Config, 'ิ้  ไั  ஒ  து')}
+				toggleOnLabel={select('toggleOnLabel', prop.tallText, Config, 'ฟิ้ ไั  ஒ  து')}
+				toggleOffLabel={select('toggleOffLabel', prop.tallText, Config, 'ฟิ้ ไั  ஒ  து')}
 			/>
 		)
 	);
