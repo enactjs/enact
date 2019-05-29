@@ -5,8 +5,6 @@ import SharedStateDecorator, {SharedState} from '../SharedStateDecorator';
 
 describe('SharedStateDecorator Specs', () => {
 
-	// const Base = () => <div />;
-
 	test('should provide a set method via context', () => {
 		const fn = jest.fn();
 		const Component = SharedStateDecorator(() => (
