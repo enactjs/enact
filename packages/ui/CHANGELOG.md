@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [3.0.0-alpha.3] - 2019-05-29
 
 ### Changed
 
