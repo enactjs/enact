@@ -1,72 +1,12 @@
-import kind from '@enact/core/kind';
-import PropTypes from 'prop-types';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import Touchable from '@enact/ui/Touchable';
-import ri from '@enact/ui/resolution';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
 import {boolean, number} from '../../src/enact-knobs';
 
 const TouchableDiv = Touchable('div');
-
-const onInteractionEnd = () => {
-	const el = document.getElementById('touchRadius');
-	el.style.display = 'none';
-};
-const onHoldEnd = (ev) => {
-	onInteractionEnd(ev);
-	return action('onHoldEnd')(ev);
-};
-
-const TouchArea = kind({
-	name: 'TouchArea',
-
-	propTypes: {
-		moveTolerance: PropTypes.number
-	},
-
-	handlers: {
-		onInteractionStart: (ev, {moveTolerance}) => {
-			const el = document.getElementById('touchRadius');
-			const x = ev.clientX || ev.touches && ev.touches[0].clientX;
-			const y = ev.clientY || ev.touches && ev.touches[0].clientY;
-
-			el.style.display = 'block';
-			el.style.left = `${x - moveTolerance}px`;
-			el.style.top = `${y - moveTolerance}px`;
-			return false;
-		}
-	},
-
-	render: ({children, moveTolerance, onInteractionStart, ...rest}) => (<React.Fragment>
-		<TouchableDiv
-			{...rest}
-			onHoldEnd={onHoldEnd}
-			onMouseDown={onInteractionStart}
-			onMouseUp={onInteractionEnd}
-			onTouchStart={onInteractionStart}
-			onTouchEnd={onInteractionEnd}
-		>
-			{children}
-		</TouchableDiv>
-		<div
-			id="touchRadius"
-			style={{
-				display: 'none',
-				position: 'fixed',
-				height: (moveTolerance * 2) + 'px',
-				width: (moveTolerance * 2) + 'px',
-				borderRadius: '999px',
-				border: '1px solid orange',
-				backgroundColor: 'rgba(255, 180, 0, 0.3)',
-				pointerEvents: 'none',
-				touchAction: 'none'
-			}}
-		/>
-	</React.Fragment>)
-});
 
 storiesOf('Touchable', module)
 	.add(
@@ -104,26 +44,21 @@ storiesOf('Touchable', module)
 	)
 	.add(
 		'that pauses the hold when moving beyond tolerance (16px)',
-		() => {
-			const moveTolerance = number('holdConfig.moveTolerance', Button, 16, {range: true, min: 8, max: 160, step: 8});
-			const cancelOnMove = boolean('holdConfig.cancelOnMove', Button, true);
-			return (
-				<TouchArea
-					holdConfig={{
-						moveTolerance,
-						cancelOnMove
-					}}
-					moveTolerance={moveTolerance}
-					noResume={boolean('noResume', TouchArea, false)}
-					onHold={action('onHold')}
-					onHoldPulse={action('onHoldPulse', {depth: 0})}
-					disabled={boolean('disabled', TouchArea)}
-					style={{marginLeft: 'auto', marginRight: 'auto', textAlign: 'center', border: '2px dashed #888', width: ri.unit(ri.scale(240), 'rem'), height: ri.unit(ri.scale(240), 'rem')}}
-				>
-					Resumable
-				</TouchArea>
-			);
-		}
+		() => (
+			<Button
+				holdConfig={{
+					moveTolerance: number('holdConfig.moveTolerance', Button, 16),
+					cancelOnMove: boolean('holdConfig.cancelOnMove', Button, true)
+				}}
+				noResume={boolean('noResume', Button, false)}
+				onHold={action('onHold')}
+				onHoldEnd={action('onHoldEnd')}
+				onHoldPulse={action('onHoldPulse')}
+				disabled={boolean('disabled', Button)}
+			>
+				Resumable
+			</Button>
+		)
 	)
 	.add(
 		'that does not resume when re-entering component',
@@ -145,7 +80,7 @@ storiesOf('Touchable', module)
 			<TouchableDiv
 				onFlick={action('onFlick')}
 				disabled={boolean('disabled', TouchableDiv)}
-				style={{border: '2px dashed #888', width: ri.unit(ri.scale(500), 'rem'), height: ri.unit(ri.scale(500), 'rem')}}
+				style={{border: '2px dashed #888', width: 500, height: 500}}
 			>
 				Flick within this component
 			</TouchableDiv>
@@ -164,7 +99,7 @@ storiesOf('Touchable', module)
 				onDrag={action('onDrag')}
 				onDragEnd={action('onDragEnd')}
 				disabled={boolean('disabled', TouchableDiv)}
-				style={{border: '2px dashed #888', width: ri.unit(ri.scale(500), 'rem'), height: ri.unit(ri.scale(500), 'rem')}}
+				style={{border: '2px dashed #888', width: 500, height: 500}}
 			>
 				Drag within this component. Setting <code>noResume</code> to <code>false</code> should
 				prevent drag from resuming when re-entering this component after leaving.
