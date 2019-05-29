@@ -16,6 +16,7 @@
  */
 
 import Changeable from '@enact/ui/Changeable';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import equals from 'ramda/src/equals';
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
@@ -86,13 +87,14 @@ const ExpandableListBase = kind({
 		 * item. [Read about keys](https://reactjs.org/docs/lists-and-keys.html#keys) for more
 		 * information.
 		 *
-		 * @type {String[]|Object[]}
+		 * @type {String[]|Array.<{key: (Number|String), children: (String|Component)}>}
 		 * @required
 		 * @public
 		 */
 		children: PropTypes.oneOfType([
 			PropTypes.arrayOf(PropTypes.string),
 			PropTypes.arrayOf(PropTypes.shape({
+				children: EnactPropTypes.renderable.isRequired,
 				key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 			}))
 		]).isRequired,

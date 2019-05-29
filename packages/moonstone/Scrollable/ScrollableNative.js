@@ -610,6 +610,22 @@ class ScrollableBaseNative extends Component {
 		this.uiRef.current.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, this.props.overscrollEffectOn.scrollbarButton);
 	}
 
+	scrollAndFocusScrollbarButton = (direction) => {
+		const
+			isRtl = this.uiRef.current.state.rtl,
+			isPreviousScrollButton = direction === 'up' || (isRtl ? direction === 'right' : direction === 'left'),
+			isVerticalScrollBar = direction === 'up' || direction === 'down';
+
+		this.onScrollbarButtonClick({isPreviousScrollButton, isVerticalScrollBar});
+
+		if (this.props.focusableScrollbar) {
+			const scrollbar = this.uiRef.current[
+				(isVerticalScrollBar ? 'vertical' : 'horizontal') + 'ScrollbarRef'
+			];
+			scrollbar.current.focusOnButton(isPreviousScrollButton);
+		}
+	}
+
 	scrollStopOnScroll = () => {
 		if (!this.props['data-spotlight-container-disabled']) {
 			this.childRef.current.setContainerDisabled(false);
@@ -869,6 +885,7 @@ class ScrollableBaseNative extends Component {
 									onUpdate: this.handleScrollerUpdate,
 									ref: this.childRef,
 									rtl,
+									scrollAndFocusScrollbarButton: this.scrollAndFocusScrollbarButton,
 									spotlightId
 								})}
 							</ChildWrapper>
