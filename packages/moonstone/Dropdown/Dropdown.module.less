@@ -1,5 +1,6 @@
 // Dropdown.module.less
 //
+@import "../styles/mixins.less";
 @import "../styles/variables.less";
 @import "../styles/skin.less";
 
@@ -12,6 +13,10 @@
 	width: @moon-dropdown-list-width;
 	max-height: @moon-dropdown-list-max-height;
 	display: flex;
+
+	.moon-custom-text({
+		max-height: @moon-dropdown-list-max-height-large;
+	});
 
 	.group {
 		height: auto;

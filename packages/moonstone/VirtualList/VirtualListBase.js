@@ -762,6 +762,8 @@ const VirtualListBaseFactory = (type) => {
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
 			delete rest.initUiChildRef;
+			// not used by VirtualList
+			delete rest.scrollAndFocusScrollbarButton;
 			delete rest.spotlightId;
 			delete rest.wrap;
 

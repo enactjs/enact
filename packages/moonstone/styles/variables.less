@@ -68,9 +68,9 @@
 @moon-font-family-small: "Moonstone";  // Formerly weight: 500
 @moon-font-family-bold: "Moonstone";   // Formerly weight: 900
 @moon-alt-font-family: "Moonstone";
-@moon-non-latin-font-family: "Moonstone LG Display";
-@moon-non-latin-font-family-light: "Moonstone LG Display";  // Formerly weight: Light
-@moon-non-latin-font-family-bold: "Moonstone LG Display";   // Formerly weight: Bold
+@moon-non-latin-font-family: "Moonstone Global";
+@moon-non-latin-font-family-light: "Moonstone Global";  // Formerly weight: Light
+@moon-non-latin-font-family-bold: "Moonstone Global";   // Formerly weight: Bold
 @moon-non-latin-font-weight: 500;
 @moon-non-latin-font-weight-bold: 500;
 @moon-non-latin-font-weight-light: 300;
@@ -212,7 +212,8 @@
 @moon-dropdown-border-radius: @moon-button-border-radius;
 @moon-dropdown-width: @moon-button-max-width;
 @moon-dropdown-list-width: (@moon-dropdown-width - (@moon-contextual-popup-padding * 2) - @moon-button-border-width);
-@moon-dropdown-list-max-height: 300px;
+@moon-dropdown-list-max-height: (5 * @moon-item-height);
+@moon-dropdown-list-max-height-large: (5 * @moon-item-height-large);
 
 // Heading
 // ---------------------------------------
@@ -272,8 +273,8 @@
 
 // FormCheckbox
 // ---------------------------------------
-@moon-formcheckbox-size: (@moon-item-height * 0.55);	// Relative to `Item` height
-@moon-formcheckbox-size-large: (@moon-item-height-large * 0.55);	// Relative to `Item` height
+@moon-formcheckbox-size: (@moon-item-height * 0.65);	// Relative to `Item` height
+@moon-formcheckbox-size-large: (@moon-item-height-large * 0.625);	// Relative to `Item` height
 @moon-formcheckbox-check-icon-size: 72px;
 @moon-formcheckbox-check-icon-size-large: 84px;
 @moon-formcheckbox-border-size: 2px;
@@ -328,7 +329,9 @@
 // Selectable Item
 // ---------------------------------------
 @moon-selectable-item-indicator-size: @moon-item-height;
-@moon-selectable-item-indicator-width: @moon-icon-size / 2;
+@moon-selectable-item-indicator-size-large: @moon-item-height-large;
+@moon-selectable-item-indicator-width: (@moon-icon-size / 2 - 3px);
+@moon-selectable-item-indicator-width-large: (@moon-selectable-item-indicator-width + 6px);
 
 // EditableIntegerPicker
 // ---------------------------------------
@@ -337,6 +340,7 @@
 // Radio Item
 // ---------------------------------------
 @moon-radio-item-indicator-size: 18px;
+@moon-radio-item-indicator-size-large: 24px;
 @moon-radio-item-indicator-border: 2px;  // ### Exceptional Case ###
 	// 2px, not being a multiple of 3, poses special problems. Any math or assignment related to
 	// this value must be specifically considered as to not impose layout issues related to, for
