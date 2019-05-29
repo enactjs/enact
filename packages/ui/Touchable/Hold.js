@@ -94,12 +94,12 @@ class Hold {
 		this.holdConfig = null;
 	}
 
-	enter = (coords) => {
+	enter = () => {
 		if (!this.isHolding()) return;
 
-		const {resume} = this.holdConfig;
+		const {cancelOnMove, resume} = this.holdConfig;
 
-		if (resume && this.isWithinTolerance(coords)) {
+		if (resume && !cancelOnMove) {
 			this.resume();
 		}
 	}
