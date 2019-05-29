@@ -805,6 +805,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.isVerticalScrollbarVisible;
 			delete rest.itemRenderer;
 			delete rest.itemSize;
+			delete rest.onUpdate;
 			delete rest.onUpdateItems;
 			delete rest.overhang;
 			delete rest.pageScroll;
