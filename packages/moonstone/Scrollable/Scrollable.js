@@ -381,7 +381,7 @@ class ScrollableBase extends Component {
 			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current && horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
 			isVerticalScrollButtonFocused = verticalScrollbarRef.current && verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
 
-		if (!Spotlight.isPaused() && focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
+		if (focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
 			focusedItem.blur();
 		}
 	}
