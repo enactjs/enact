@@ -18,6 +18,7 @@ const
 		boxSizing: 'border-box'
 	},
 	items = [],
+	defaultDataSize = 1000,
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (size) => ({index, ...rest}) => {
 		const style = {height: size + 'px', ...itemStyle};
@@ -28,9 +29,21 @@ const
 		);
 	};
 
-for (let i = 0; i < 1000; i++) {
-	items.push({item :'Item ' + ('00' + i).slice(-3), selected: false});
-}
+const updateDataSize = (dataSize) => {
+	const
+		itemNumberDigits = dataSize > 0 ? ((dataSize - 1) + '').length : 0,
+		headingZeros = Array(itemNumberDigits).join('0');
+
+	items.length = 0;
+
+	for (let i = 0; i < dataSize; i++) {
+		items.push({item :'Item ' + (headingZeros + i).slice(-itemNumberDigits), selected: false});
+	}
+
+	return dataSize;
+};
+
+updateDataSize(defaultDataSize);
 
 class StatefulSwitchItem extends React.Component {
 	static propTypes = {
@@ -40,14 +53,20 @@ class StatefulSwitchItem extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
+			prevIndex: props.index,
 			selected: items[props.index].selected
 		};
 	}
 
-	componentWillReceiveProps (nextProps) {
-		if (this.props.index !== nextProps.index) {
-			this.setState({selected: items[nextProps.index].selected});
+	static getDerivedStateFromProps (props, state) {
+		if (state.prevIndex !== props.index) {
+			return {
+				prevIndex: props.index,
+				selected: items[props.index].selected
+			};
 		}
+
+		return null;
 	}
 
 	onToggle = () => {
@@ -76,7 +95,7 @@ storiesOf('VirtualList', module)
 			const itemSize = ri.scale(number('itemSize', Config, 72));
 			return (
 				<VirtualList
-					dataSize={number('dataSize', Config, items.length)}
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
 					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}

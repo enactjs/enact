@@ -2,6 +2,55 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/util.clamp` to safely clamp a value between min and max bounds
+
+## [2.5.2] - 2019-04-23
+
+No significant changes.
+
+## [2.5.1] - 2019-04-09
+
+### Fixed
+
+- `core/kind` to address warnings raised in React 16.8.6
+
+## [2.5.0] - 2019-04-01
+
+No significant changes.
+
+## [2.4.1] - 2019-03-11
+
+### Fixed
+
+- `core/util.isRenderable` to treat values returned by `React.lazy()`, `React.memo()`, and `React.forwardRef()` as renderable
+- `core/hoc` to support wrapping components returned by `React.lazy()`, `React.memo()`, and `React.forwardRef()`
+
+## [2.4.0] - 2019-03-04
+
+No significant changes.
+
+## [2.3.0] - 2019-02-11
+
+### Deprecated
+
+- `core/kind` config property `contextTypes`, to be removed in 3.0.
+
+### Added
+
+- `core/kind` config property `contextType` replacing legacy `contextTypes` property
+
+## [2.2.9] - 2019-01-11
+
+No significant changes.
+
+## [2.2.8] - 2018-12-06
+
+No significant changes.
+
 ## [2.2.7] - 2018-11-21
 
 No significant changes.

@@ -1,7 +1,9 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import platform from '@enact/core/platform';
 import Pause from '@enact/spotlight/Pause';
 import PropTypes from 'prop-types';
+import {findDOMNode} from 'react-dom';
 import React from 'react';
 
 import $L from '../internal/$L';
@@ -49,6 +51,7 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = {
 			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+			disabled: PropTypes.bool,
 			max: PropTypes.number,
 			min: PropTypes.number,
 			orientation: PropTypes.string,
@@ -61,8 +64,8 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			orientation: 'horizontal'
 		}
 
-		constructor () {
-			super();
+		constructor (props) {
+			super(props);
 
 			this.paused = new Pause();
 			this.handleActivate = this.handleActivate.bind(this);
@@ -77,13 +80,27 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				active: false,
 				dragging: false,
 				focused: false,
-				useHintText: false
+				useHintText: false,
+				prevValue: props.value
 			};
 		}
 
-		componentWillReceiveProps (nextProps) {
-			if (this.props.value !== nextProps.value) {
-				this.setState({useHintText: false});
+		static getDerivedStateFromProps (props, state) {
+			if (props.value !== state.prevValue) {
+				return {
+					useHintText: false,
+					prevValue: props.value
+				};
+			}
+			return null;
+		}
+
+		componentDidUpdate (prevProps, prevState) {
+			// on touch platforms, we want sliders to focus when dragging begins
+			if (platform.touch && this.state.dragging && !prevState.dragging) {
+				const thisNode = findDOMNode(this); // eslint-disable-line react/no-find-dom-node
+				const sliderNode = thisNode.getAttribute('role') === 'slider' ? thisNode : thisNode.querySelector('[role="slider"]');
+				sliderNode.focus();
 			}
 		}
 
@@ -131,8 +148,10 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus (ev) {
-			forward('onFocus', ev, this.props);
-			this.setState({focused: true});
+			if (!this.props.disabled) {
+				forward('onFocus', ev, this.props);
+				this.setState({focused: true});
+			}
 		}
 
 		handleSpotlightEvents (ev) {

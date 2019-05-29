@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
 
-import css from './ApplicationCloseButton.less';
+import css from './ApplicationCloseButton.module.less';
 
 /**
  * An {@link moonstone/ApplicationCloseButton.ApplicationCloseButton} with `closex` icon. It is used in
@@ -69,7 +69,7 @@ const ApplicationCloseButton = kind({
 				{...rest}
 				backgroundOpacity={backgroundOpacity}
 				onTap={onApplicationClose}
-				small
+				size="small"
 			>
 				closex
 			</IconButton>

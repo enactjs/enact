@@ -1,6 +1,5 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 import {RadioControllerDecorator, RadioDecorator} from '../RadioDecorator';
 
 describe('RadioDecorator', () => {
@@ -14,7 +13,11 @@ describe('RadioDecorator', () => {
 
 	const Controller = RadioControllerDecorator('main');
 
-	it('should be activated when its prop is true on mount', function () {
+	const expectToBeActive = (controller, decorator) => {
+		expect(controller.instance().active).toBe(decorator && decorator.instance().handleDeactivate);
+	};
+
+	test('should be activated when its prop is true on mount', () => {
 		const Component = RadioDecorator({prop: 'active'}, Item);
 		const subject = mount(
 			<Controller>
@@ -22,13 +25,11 @@ describe('RadioDecorator', () => {
 			</Controller>
 		);
 
-		const expected = subject.find('RadioDecorator').instance();
-		const actual = subject.instance().active;
-
-		expect(actual).to.equal(expected);
+		const instance = subject.find('RadioDecorator');
+		expectToBeActive(subject, instance);
 	});
 
-	it('should not be activated when its prop is false on mount', function () {
+	test('should not be activated when its prop is false on mount', () => {
 		const Component = RadioDecorator({prop: 'active'}, Item);
 		const subject = mount(
 			<Controller>
@@ -36,34 +37,32 @@ describe('RadioDecorator', () => {
 			</Controller>
 		);
 
-		const expected = null;
-		const actual = subject.instance().active;
-
-		expect(actual).to.equal(expected);
+		expectToBeActive(subject, null);
 	});
 
-	it('should be activated when its prop is set to true after mount', function () {
-		const Component = RadioDecorator({prop: 'active'}, Item);
-		const Wrapper = ({active}) => (	// eslint-disable-line enact/prop-types
-			<Controller>
-				<Component active={active} />
-			</Controller>
-		);
-		const subject = mount(
-			<Wrapper />
-		);
+	test(
+		'should be activated when its prop is set to true after mount',
+		() => {
+			const Component = RadioDecorator({prop: 'active'}, Item);
+			const Wrapper = ({active}) => (	// eslint-disable-line enact/prop-types
+				<Controller>
+					<Component active={active} />
+				</Controller>
+			);
+			const subject = mount(
+				<Wrapper />
+			);
 
-		subject.setProps({
-			active: true
-		});
+			subject.setProps({
+				active: true
+			});
 
-		const expected = subject.find('RadioDecorator').instance();
-		const actual = subject.find('RadioControllerDecorator').instance().active;
+			const instance = subject.find('RadioDecorator');
+			expectToBeActive(subject.find('RadioControllerDecorator'), instance);
+		}
+	);
 
-		expect(actual).to.equal(expected);
-	});
-
-	it('should be activated when the activated event fires', function () {
+	test('should be activated when the activated event fires', () => {
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
 		const subject = mount(
 			<Controller>
@@ -73,13 +72,11 @@ describe('RadioDecorator', () => {
 
 		subject.find('span').simulate('click');
 
-		const expected = subject.find('RadioDecorator').instance();
-		const actual = subject.instance().active;
-
-		expect(actual).to.equal(expected);
+		const instance = subject.find('RadioDecorator');
+		expectToBeActive(subject, instance);
 	});
 
-	it('should be deactivated when the deactivated event fires', function () {
+	test('should be deactivated when the deactivated event fires', () => {
 		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
 		const subject = mount(
 			<Controller>
@@ -89,30 +86,28 @@ describe('RadioDecorator', () => {
 
 		subject.find('span').simulate('click');
 
-		const expected = null;
-		const actual = subject.instance().active;
-
-		expect(actual).to.equal(expected);
+		expectToBeActive(subject, null);
 	});
 
-	it('should be deactivated when the activated event fires on another instance', function () {
-		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
-		const subject = mount(
-			<Controller>
-				<Component active />
-				<Component />
-			</Controller>
-		);
+	test(
+		'should be deactivated when the activated event fires on another instance',
+		() => {
+			const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
+			const subject = mount(
+				<Controller>
+					<Component active />
+					<Component />
+				</Controller>
+			);
 
-		subject.find('span').at(1).simulate('click');
+			subject.find('span').at(1).simulate('click');
 
-		const expected = subject.find('RadioDecorator').at(1).instance();
-		const actual = subject.instance().active;
+			const instance = subject.find('RadioDecorator').at(1);
+			expectToBeActive(subject, instance);
+		}
+	);
 
-		expect(actual).to.equal(expected);
-	});
-
-	it('should not deactivate items in a ancestor controller', function () {
+	test('should not deactivate items in a ancestor controller', () => {
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
 		const subject = mount(
 			<Controller>
@@ -132,18 +127,15 @@ describe('RadioDecorator', () => {
 		// (activating second component in child controller) and no unexpected change happened in
 		// the parent controller (active component should remain the first component)
 
-		const childExpected = childController.find('RadioDecorator').at(1).instance();
-		const childActual = childController.at(0).instance().active;
-		expect(childActual).to.equal(childExpected);
+		const childInstance = childController.find('RadioDecorator').at(1);
+		expectToBeActive(childController, childInstance);
 
-		const parentExpected = subject.find('RadioDecorator').at(0).instance();
-		const parentActual = subject.at(0).instance().active;
-		expect(parentActual).to.equal(parentExpected);
+		const parentInstance = subject.find('RadioDecorator').at(0);
+		expectToBeActive(subject, parentInstance);
 	});
 
-
-	it('should not call deactivate callback on inactive items', function () {
-		const handleDeactivate = sinon.spy();
+	test('should not call deactivate callback on inactive items', () => {
+		const handleDeactivate = jest.fn();
 		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
 
 		// deactivate() is only called when there was a previously active item
@@ -166,9 +158,9 @@ describe('RadioDecorator', () => {
 		});
 
 		// verify that the deactivate handler wasn't called
-		const expected = false;
-		const actual = handleDeactivate.called;
+		const expected = 0;
+		const actual = handleDeactivate.mock.calls.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });

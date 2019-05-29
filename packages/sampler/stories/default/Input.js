@@ -1,4 +1,4 @@
-import Input, {InputBase} from '@enact/moonstone/Input';
+import Input, {InputBaseInternal as InputBase} from '@enact/moonstone/Input';
 import icons from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -12,6 +12,11 @@ const iconNames = ['', ...icons];
 
 const Config = mergeComponentMetadata('Input', InputBase, Input);
 Input.displayName = 'Input';
+
+// Set up some defaults for info and knobs
+const prop = {
+	type: ['text', 'number', 'password']
+};
 
 storiesOf('Moonstone', module)
 	.add(
@@ -28,8 +33,8 @@ storiesOf('Moonstone', module)
 				invalid={boolean('invalid', Config)}
 				invalidMessage={text('invalidMessage', Config)}
 				placeholder={text('placeholder', Config)}
-				small={boolean('small', Config)}
-				type={text('type', Config)}
+				size={select('size', ['small', 'large'], Config, 'large')}
+				type={select('type', prop.type, Config, prop.type[0])}
 			/>
 		))
 	);

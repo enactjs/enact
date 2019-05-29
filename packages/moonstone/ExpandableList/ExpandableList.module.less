@@ -1,0 +1,15 @@
+@import "../styles/variables.less";
+@import "../styles/mixins.less";
+
+.expandableList {
+	.listItem {
+		font-weight: @moon-expandable-value-font-weight;
+		font-size: @moon-expandable-client-item-font-size;
+	}
+
+	.moon-custom-text({
+		.listItem {
+			font-size: @moon-expandable-client-item-font-size-large;
+		}
+	});
+}

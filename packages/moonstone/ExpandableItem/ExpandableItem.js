@@ -25,11 +25,12 @@ import last from 'ramda/src/last';
 import React from 'react';
 
 import LabeledItem from '../LabeledItem';
+import {extractVoiceProps} from '../internal/util';
 
 import Expandable from './Expandable';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 
-import css from './ExpandableItem.less';
+import css from './ExpandableItem.module.less';
 
 const isUp = is('up');
 const isDown = is('down');
@@ -76,6 +77,25 @@ const ExpandableItemBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
+		 * Closes the expandable automatically when the user navigates to the `title`
+		 * of the component using 5-way controls; if `false`, the user must select/tap the title to
+		 * close the expandable.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		autoClose: PropTypes.bool,
+
+		/**
+		 * The contents of the expandable item displayed when `open` is `true`.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		children: PropTypes.node,
+
+		/**
 		 * Disables voice control.
 		 *
 		 * @type {Boolean}
@@ -112,25 +132,6 @@ const ExpandableItemBase = kind({
 		'data-webos-voice-label': PropTypes.string,
 
 		/**
-		 * Closes the expandable automatically when the user navigates to the `title`
-		 * of the component using 5-way controls; if `false`, the user must select/tap the title to
-		 * close the expandable.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		autoClose: PropTypes.bool,
-
-		/**
-		 * The contents of the expandable item displayed when `open` is `true`.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		children: PropTypes.node,
-
-		/**
 		 * Disables ExpandableItem and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
@@ -138,6 +139,15 @@ const ExpandableItemBase = kind({
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * Prevents rendering the transition container.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		hideChildren: PropTypes.bool,
 
 		/**
 		 * The secondary, or supportive text. Typically under the `title`, a subtitle.
@@ -348,14 +358,11 @@ const ExpandableItemBase = kind({
 
 	render: ({
 		children,
-		'data-webos-voice-disabled': voiceDisabled,
-		'data-webos-voice-group-label': voiceGroupLabel,
-		'data-webos-voice-intent': voiceIntent,
-		'data-webos-voice-label': voiceLabel,
 		disabled,
 		handleKeyDown,
 		handleLabelKeyDown,
 		handleOpen,
+		hideChildren,
 		label,
 		labeledItemClassName,
 		open,
@@ -380,6 +387,7 @@ const ExpandableItemBase = kind({
 		delete rest.showLabel;
 
 		const ariaProps = extractAriaProps(rest);
+		const voiceProps = extractVoiceProps(rest);
 
 		return (
 			<ContainerDiv
@@ -387,16 +395,14 @@ const ExpandableItemBase = kind({
 				aria-disabled={disabled}
 				disabled={disabled}
 				ref={setContainerNode}
+				spotlightDisabled={spotlightDisabled || disabled}
 			>
 				<LabeledItem
 					{...ariaProps}
+					{...voiceProps}
 					css={css}
 					className={labeledItemClassName}
 					data-expandable-label
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
-					data-webos-voice-intent={voiceIntent}
-					data-webos-voice-label={voiceLabel}
 					disabled={disabled}
 					label={label}
 					onTap={handleOpen}
@@ -408,20 +414,23 @@ const ExpandableItemBase = kind({
 					spotlightDisabled={spotlightDisabled}
 					titleIcon="arrowlargedown"
 				>{title}</LabeledItem>
-				<ExpandableTransitionContainer
-					data-expandable-container
-					duration="short"
-					timingFunction="ease-out-quart"
-					onHide={onHide}
-					onKeyDown={handleKeyDown}
-					onShow={onShow}
-					spotlightDisabled={transitionSpotlightDisabled}
-					type="clip"
-					direction="down"
-					visible={open}
-				>
-					{children}
-				</ExpandableTransitionContainer>
+				{!hideChildren ?
+					<ExpandableTransitionContainer
+						data-expandable-container
+						duration="short"
+						timingFunction="ease-out-quart"
+						onHide={onHide}
+						onKeyDown={handleKeyDown}
+						onShow={onShow}
+						spotlightDisabled={transitionSpotlightDisabled}
+						type="clip"
+						direction="down"
+						visible={open}
+					>
+						{children}
+					</ExpandableTransitionContainer> :
+					null
+				}
 			</ContainerDiv>
 		);
 	}

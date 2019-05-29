@@ -1,6 +1,6 @@
 {
   "name": "@enact/webos",
-  "version": "2.2.7",
+  "version": "2.5.2",
   "description": "webOS support library",
   "main": "index.js",
   "scripts": {
@@ -26,9 +26,9 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^2.2.7",
-    "prop-types": "^15.6.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "@enact/core": "^2.5.2",
+    "prop-types": "15.6.2",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0"
   }
 }

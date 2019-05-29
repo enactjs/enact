@@ -12,13 +12,15 @@
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
-import compose from 'ramda/src/compose';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
+import React from 'react';
+
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
 
-import componentCss from './ToggleIcon.less';
+import componentCss from './ToggleIcon.module.less';
 
 /**
  * Represents a Boolean state, and can accept any icon to toggle.
@@ -76,11 +78,11 @@ const ToggleIconBase = kind({
 		/**
 		 * The component used to render the icon.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 * @public
 		 */
-		iconComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		iconComponent: EnactPropTypes.renderable,
 
 		/**
 		 * Sets whether this control is in the 'on' or 'off' state. `true` for 'on', `false` for 'off'.

@@ -1,36 +1,28 @@
-import hoc from '@enact/core/hoc';
-import Spottable from '@enact/spotlight/Spottable';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Spottable from '@enact/spotlight/Spottable';
 
-const SpottablePicker = hoc(null, (config, Wrapped) => {
-	const Joined = Spottable(Wrapped);
+const Div = Spottable('div');
 
-	return class extends React.Component {
-		static displayName = 'SpottablePicker'
+const SpottablePicker = kind({
+	name: 'SpottablePicker',
 
-		static propTypes = {
-			joined: PropTypes.bool,
-			onSpotlightDown: PropTypes.func,
-			onSpotlightLeft: PropTypes.func,
-			onSpotlightRight: PropTypes.func,
-			onSpotlightUp: PropTypes.func
-		}
+	propTypes: {
+		orientation: PropTypes.string
+	},
 
-		render () {
-			const {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, ...rest} = this.props;
-			const Component = this.props.joined ? Joined : Wrapped;
-			return (
-				<Component
-					{...rest}
-					onPickerSpotlightDown={onSpotlightDown}
-					onPickerSpotlightLeft={onSpotlightLeft}
-					onPickerSpotlightRight={onSpotlightRight}
-					onPickerSpotlightUp={onSpotlightUp}
-				/>
-			);
-		}
-	};
+	computed: {
+		selectionKeys: ({orientation}) => orientation === 'horizontal' ? [37, 39] : [38, 40]
+	},
+
+	render: ({selectionKeys, ...rest}) => {
+		delete rest.orientation;
+
+		return (
+			<Div {...rest} selectionKeys={selectionKeys} />
+		);
+	}
 });
 
 export default SpottablePicker;

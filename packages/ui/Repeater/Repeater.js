@@ -5,14 +5,18 @@
  * @exports Repeater
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import ForwardRef from '../ForwardRef';
 
 /**
- * A stateless component that stamps out copies of `childComponent`.
+ * A stateless component that stamps out copies of `childComponent`, without
+ * [RepeaterDecorator](ui/Repeater.RepeaterDecorator) applied.
  *
- * @class Repeater
+ * @class RepeaterBase
  * @memberof ui/Repeater
  * @ui
  * @public
@@ -20,17 +24,17 @@ import kind from '@enact/core/kind';
 const RepeaterBase = kind({
 	name: 'Repeater',
 
-	propTypes: /** @lends ui/Repeater.Repeater.prototype */ {
+	propTypes: /** @lends ui/Repeater.RepeaterBase.prototype */ {
 		/**
 		 * Component type to repeat.
 		 *
 		 * This can be a React component or a string describing a DOM node (e.g. `'div'`).
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @required
 		 * @public
 		 */
-		childComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+		childComponent: EnactPropTypes.renderable.isRequired,
 
 		/**
 		 * An array of data to be mapped onto the `childComponent`.
@@ -65,6 +69,25 @@ const RepeaterBase = kind({
 		childProp: PropTypes.string,
 
 		/**
+		 * Component type to wrap around all of the repeated elements.
+		 *
+		 * This can be a string describing a DOM node or React component (e.g. `'div'` or `Layout`).
+		 *
+		 * @type {String|Component}
+		 * @default 'span'
+		 * @public
+		 */
+		component: EnactPropTypes.renderable,
+
+		/**
+		 * Called with a reference to [component]{@link ui/Repeater.Repeater#component}
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		componentRef: PropTypes.func,
+
+		/**
 		 * The property on each `childComponent` that receives the index of the item in the `Repeater`.
 		 *
 		 * @type {String}
@@ -83,8 +106,9 @@ const RepeaterBase = kind({
 	},
 
 	defaultProps: {
-		indexProp: 'data-index',
-		childProp: 'children'
+		childProp: 'children',
+		component: 'span',
+		indexProp: 'data-index'
 	},
 
 	computed: {
@@ -103,15 +127,40 @@ const RepeaterBase = kind({
 		}
 	},
 
-	render: (props) => {
-		delete props.childComponent;
-		delete props.childProp;
-		delete props.indexProp;
-		delete props.itemProps;
+	render: ({component: Component, componentRef, ...rest}) => {
+		delete rest.childComponent;
+		delete rest.childProp;
+		delete rest.indexProp;
+		delete rest.itemProps;
 
-		return <span role="list" {...props} />;
+		return <Component ref={componentRef} role="list" {...rest} />;
 	}
 });
 
-export default RepeaterBase;
-export {RepeaterBase as Repeater, RepeaterBase};
+/**
+ * Applies Repeater behaviors.
+ *
+ * @hoc
+ * @memberof ui/Repeater
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const RepeaterDecorator = ForwardRef({prop: 'componentRef'});
+
+/**
+ * A stateless component that stamps out copies of `childComponent`.
+ *
+ * @class Repeater
+ * @memberof ui/Repeater
+ * @extends ui/Repeater.RepeaterBase
+ * @mixes ui/Repeater.RepeaterDecorator
+ * @ui
+ * @public
+ */
+const Repeater = RepeaterDecorator(RepeaterBase);
+
+export default Repeater;
+export {
+	Repeater,
+	RepeaterBase
+};

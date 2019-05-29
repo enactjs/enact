@@ -6,7 +6,7 @@ import $L from '../internal/$L';
 import IconButton from '../IconButton';
 import Skinnable from '../Skinnable';
 
-import css from './ContextualPopup.less';
+import css from './ContextualPopup.module.less';
 
 /**
  * An SVG arrow for {@link moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopup}.
@@ -156,7 +156,7 @@ const ContextualPopupBase = kind({
 					<IconButton
 						className={css.closeButton}
 						backgroundOpacity="transparent"
-						small
+						size="small"
 						onTap={onCloseButtonClick}
 						aria-label={$L('Close')}
 					>

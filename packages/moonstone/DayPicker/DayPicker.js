@@ -36,6 +36,7 @@ import {ExpandableListBase} from '../ExpandableList';
  * @class DayPickerBase
  * @memberof moonstone/DayPicker
  * @extends moonstone/ExpandableList.ExpandableListBase
+ * @omit children
  * @ui
  * @public
  */

@@ -1,7 +1,12 @@
-import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
+import kind from '@enact/core/kind';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import Button from '@enact/moonstone/Button';
+import Divider from '@enact/moonstone/Divider';
+import Icon from '@enact/moonstone/Icon';
 import Item from '@enact/moonstone/Item';
-import ri from '@enact/ui/resolution';
+import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
 import Spottable from '@enact/spotlight/Spottable';
+import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
@@ -29,6 +34,78 @@ const RTL = [
 
 const disabledDisclaimer = (disabled) => (disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>Marquee does not visually respond to <code>disabled</code> state.</p> : <p />);
 
+const MarqueeI18nSamples = I18nContextDecorator({updateLocaleProp: 'updateLocale'}, kind({
+	name: 'I18nPanel',
+
+	handlers: {
+		updateLocale: (ev, {updateLocale}) => updateLocale('ar-SA')
+	},
+
+	render: ({updateLocale}) => (
+		<div>
+			<Divider>Remeasure marquee when locale change causes a font change with different metrics</Divider>
+			<Button onClick={updateLocale}>change locale</Button>
+		</div>
+	)
+}));
+
+// eslint-disable-next-line enact/prop-types
+const CustomItemBase = ({children, ...rest}) => (
+	<div {...rest} style={{display: 'flex', width: 300, alignItems: 'center'}}>
+		<Icon>flag</Icon>
+		<Marquee id="marqueeText" style={{flex: 1, overflow: 'hidden'}}>{children}</Marquee>
+		<Icon>trash</Icon>
+	</div>
+);
+
+const CustomItem = Spottable(MarqueeController(
+	{marqueeOnFocus: true},
+	CustomItemBase
+));
+
+class MarqueeWithShortContent extends React.Component {
+	constructor (props) {
+		super(props);
+
+		this.state = {
+			long: false,
+			scrollWidth: null,
+			width: null
+		};
+	}
+
+	componentDidMount () {
+		this.node = document.querySelector('#marqueeText');
+		this.updateSizeInfo();
+	}
+
+	componentDidUpdate () {
+		this.updateSizeInfo();
+	}
+
+	updateSizeInfo = () => {
+		if (this.node.scrollWidth !== this.state.scrollWidth) {
+			this.setState({
+				scrollWidth: this.node.scrollWidth,
+				width: this.node.getBoundingClientRect().width
+			});
+		}
+	}
+
+	handleClick = () => {
+		this.setState(prevState => ({long: !prevState.long}));
+	}
+
+	render () {
+		return (
+			<div>
+				scrollWidth: {this.state.scrollWidth} width: {this.state.width}
+				<CustomItem onClick={this.handleClick}>{this.state.long ? 'Very very very very very very very very very long text' : 'text'}</CustomItem>
+			</div>
+		);
+	}
+}
+
 storiesOf('Marquee', module)
 	.add(
 		'LTR',
@@ -43,7 +120,7 @@ storiesOf('Marquee', module)
 						marqueeDelay={number('marqueeDelay', Marquee, 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
-						marqueeOnRenderDelay={1000}
+						marqueeOnRenderDelay={number('marqueeOnRenderDelay', Marquee, 1000)}
 						marqueeResetDelay={number('marqueeResetDelay', Marquee, 1000)}
 						marqueeSpeed={number('marqueeSpeed', Marquee, 60)}
 					>
@@ -68,7 +145,7 @@ storiesOf('Marquee', module)
 						marqueeDelay={number('marqueeDelay', Marquee, 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
-						marqueeOnRenderDelay={1000}
+						marqueeOnRenderDelay={number('marqueeOnRenderDelay', Marquee, 1000)}
 						marqueeResetDelay={number('marqueeResetDelay', Marquee, 1000)}
 						marqueeSpeed={number('marqueeSpeed', Marquee, 60)}
 					>
@@ -94,7 +171,7 @@ storiesOf('Marquee', module)
 							marqueeDelay={number('marqueeDelay', Marquee, 1000)}
 							marqueeDisabled={boolean('marqueeDisabled', Marquee, false)}
 							marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
-							marqueeOnRenderDelay={5000}
+							marqueeOnRenderDelay={number('marqueeOnRenderDelay', Marquee, 5000)}
 							marqueeResetDelay={number('marqueeResetDelay', Marquee, 1000)}
 							marqueeSpeed={number('marqueeSpeed', Marquee, 60)}
 						>
@@ -156,5 +233,21 @@ storiesOf('Marquee', module)
 					{LTR[0]}
 				</Marquee>
 			</SpottableDiv>
+		)
+	)
+
+	.add(
+		'I18n',
+		() => (
+			<MarqueeI18nSamples />
+		)
+	)
+
+	.add(
+		'with Short Content',
+		() => (
+			<div>
+				<MarqueeWithShortContent />
+			</div>
 		)
 	);

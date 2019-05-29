@@ -1,0 +1,54 @@
+// DaySelector.module.less
+//
+
+@import '../styles/variables.less';
+@import '../styles/skin.less';
+
+
+.daySelector {
+	border-radius: @moon-day-selector-border-radius;
+	display: inline-flex;
+	white-space: nowrap;
+
+	.daySelectorItem {
+		padding: @moon-day-selector-padding;
+		border-left: inherit;
+
+		> :first-child {
+			-webkit-margin-start: @moon-day-selector-horizontal-margin;
+		}
+
+		> :last-child {
+			margin: @moon-day-selector-vertical-margin 0;
+			-webkit-margin-end: @moon-day-selector-horizontal-margin;
+		}
+	}
+
+	> :first-child {
+		border-left: initial;
+		border-radius: @moon-day-selector-border-radius 0 0 @moon-day-selector-border-radius;
+	}
+
+	> :last-child {
+		border-radius: 0 @moon-day-selector-border-radius @moon-day-selector-border-radius 0;
+		padding-right: @moon-day-selector-item-padding;
+	}
+
+	:global(.enact-locale-right-to-left) & {
+		> :first-child {
+			border-left: inherit;
+			border-radius: 0 @moon-day-selector-border-radius @moon-day-selector-border-radius 0;
+		}
+
+		> :last-child {
+			border-left: initial;
+			border-radius: @moon-day-selector-border-radius 0 0 @moon-day-selector-border-radius;
+			padding-left: @moon-day-selector-item-padding;
+			padding-right: @moon-day-selector-padding;
+		}
+	}
+
+	.applySkins({
+		border: @moon-day-selector-border-width solid @moon-day-selector-border-color;
+	});
+}

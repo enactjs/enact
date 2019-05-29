@@ -5,56 +5,18 @@
 // Using string refs from the source code of ReactTransitionGroup
 /* eslint-disable react/no-string-refs */
 
-import compose from 'ramda/src/compose';
-import eqBy from 'ramda/src/eqBy';
-import equals from 'ramda/src/equals';
-import findIndex from 'ramda/src/findIndex';
 import {forward} from '@enact/core/handle';
+import EnactPropTypes from '@enact/core/internal/prop-types';
+import PropTypes from 'prop-types';
+import eqBy from 'ramda/src/eqBy';
+import findIndex from 'ramda/src/findIndex';
 import identity from 'ramda/src/identity';
-import lte from 'ramda/src/lte';
-import map from 'ramda/src/map';
 import prop from 'ramda/src/prop';
 import propEq from 'ramda/src/propEq';
-import React from 'react';
-import PropTypes from 'prop-types';
 import remove from 'ramda/src/remove';
-import sort from 'ramda/src/sort';
 import unionWith from 'ramda/src/unionWith';
 import useWith from 'ramda/src/useWith';
-import when from 'ramda/src/when';
-
-const orderedKeys = map(when(React.isValidElement, prop('key')));
-const unorderedKeys = compose(sort((a, b) => a - b), orderedKeys);
-const unorderedEquals = useWith(equals, [unorderedKeys, unorderedKeys]);
-const orderedEquals = useWith(equals, [orderedKeys, orderedKeys]);
-
-/*
- * Compares the keys of two sets of children and returns `true` if they are equal.
- *
- * @method
- * @param  {Node[]}		prev		Array of children
- * @param  {Node[]}		next		Array of children
- * @param  {Boolean}	[ordered]	`true` to require the same order
- *
- * @returns {Boolean}				`true` if the children are the same
- */
-const childrenEquals = (prev, next, ordered = false) => {
-	const prevChildren = React.Children.toArray(prev);
-	const nextChildren = React.Children.toArray(next);
-
-	if (prevChildren.length !== nextChildren.length) {
-		return false;
-	} else if (prevChildren.length === 1 && nextChildren.length === 1) {
-		const c1 = prevChildren[0];
-		const c2 = nextChildren[0];
-
-		return equals(c1, c2);
-	} else if (ordered) {
-		return orderedEquals(prevChildren, nextChildren);
-	} else {
-		return unorderedEquals(prevChildren, nextChildren);
-	}
-};
+import React from 'react';
 
 /**
  * Returns the index of a child in an array found by `key` matching
@@ -66,17 +28,6 @@ const childrenEquals = (prev, next, ordered = false) => {
  * @private
  */
 const indexOfChild = useWith(findIndex, [propEq('key'), identity]);
-
-/**
- * Returns `true` if `children` contains `child`
- *
- * @param {Object} child React element to find
- * @param {Object[]} children Array of React elements
- * @returns {Boolean} `true` if `child` is present
- * @method
- * @private
- */
-const hasChild = compose(lte(0), indexOfChild);
 
 /**
  * Returns an array of non-null children
@@ -139,10 +90,18 @@ class TransitionGroup extends React.Component {
 		 *
 		 * May be a DOM node or a custom React component.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 */
-		component: PropTypes.any,
+		component: EnactPropTypes.renderable,
+
+		/**
+		 * Called with a reference to [component]{@link ui/ViewManager.TransitionGroup#component}
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Current Index the ViewManager is on
@@ -216,7 +175,8 @@ class TransitionGroup extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			children: mapChildren(this.props.children)
+			firstRender: true,
+			children: []
 		};
 
 		this.hasMounted = false;
@@ -224,6 +184,24 @@ class TransitionGroup extends React.Component {
 		this.keysToEnter = [];
 		this.keysToLeave = [];
 		this.keysToStay = [];
+		this.groupRefs = {};
+	}
+
+	static getDerivedStateFromProps (props, state) {
+		const children = mapChildren(props.children).slice(0, props.size);
+
+		if (state.firstRender) {
+			return {
+				activeChildren: children,
+				children,
+				firstRender: false
+			};
+		}
+
+		return {
+			activeChildren: children,
+			children: mergeChildren(children, state.children).slice(0, props.size)
+		};
 	}
 
 	componentDidMount () {
@@ -234,59 +212,65 @@ class TransitionGroup extends React.Component {
 		this.state.children.forEach(child => this.performAppear(child.key));
 	}
 
-	componentWillReceiveProps (nextProps) {
-		// Avoid an unnecessary setState and reconcileChildren if the children haven't changed
-		if (!childrenEquals(this.props.children, nextProps.children)) {
-			const nextChildMapping = mapChildren(nextProps.children);
-			const prevChildMapping = this.state.children;
-			let children = mergeChildren(nextChildMapping, prevChildMapping);
-
-			// drop children exceeding allowed size
-			const dropped = children.length > nextProps.size ? children.splice(nextProps.size) : null;
-
-			this.setState({
-				children
-			}, () => {
-				this.reconcileChildren(dropped, prevChildMapping, nextChildMapping);
-			});
-		}
+	componentDidUpdate (prevProps, prevState) {
+		this.reconcileUnmountedChildren(prevState.children, this.state.children);
+		this.reconcileChildren(prevState.activeChildren, this.state.activeChildren);
 	}
 
-	reconcileChildren (dropped, prevChildMapping, nextChildMapping) {
-		// mark any new child as entering
-		nextChildMapping.forEach(child => {
-			const key = child.key;
-			const hasPrev = hasChild(key, prevChildMapping);
-			const isDropped = dropped && hasChild(key, dropped);
-			// flag a view to enter if it isn't being dropped, if it's new (!hasPrev), or if it's
-			// not new (hasPrev) but is re-entering (is currently transitioning)
-			if (!isDropped) {
-				if (!hasPrev || this.currentlyTransitioningKeys[key]) {
-					this.keysToEnter.push(key);
-				} else {
-					this.keysToStay.push(key);
-				}
-			}
-		});
+	reconcileUnmountedChildren (prevChildMapping, nextChildMapping) {
+		const nextChildKeys = nextChildMapping.map(c => c.key);
+		const prevChildKeys = prevChildMapping.map(c => c.key);
 
-		// mark any previous child not remaining as leaving
-		prevChildMapping.forEach(child => {
-			const key = child.key;
-			const hasNext = hasChild(key, nextChildMapping);
-			const isDropped = dropped && hasChild(key, dropped);
-			// flag a view to leave if it isn't being dropped and it isn't in the new set (!hasNext)
-			if (!isDropped && !hasNext) {
+		// `state.children` represents the mounted children. if a view change happens during a
+		// transition causing the View to be unmounted before it fires its callback, the
+		// currentlyTransitioningKeys map will be out of sync. To manage that, we check for keys
+		// that have fallen out of the `children` array and manually clean them up from the map.
+		prevChildKeys
+			.filter(key => !nextChildKeys.includes(key))
+			.forEach(key => this.completeTransition(key));
+	}
+
+	reconcileChildren (prevActiveChildMapping, nextActiveChildMapping) {
+		const {size} = this.props;
+
+		const nextChildKeys = nextActiveChildMapping.map(c => c.key);
+		const prevChildKeys = prevActiveChildMapping.map(c => c.key);
+		const droppedKeys = prevChildKeys.filter(key => !nextChildKeys.includes(key));
+
+		// if children haven't changed, there's nothing to reconcile
+		if (prevActiveChildMapping.length === nextActiveChildMapping.length && droppedKeys.length === 0) {
+			return;
+		}
+
+		// remove any "dropped" children from the list of transitioning children
+		droppedKeys.forEach(key => this.completeTransition(key));
+
+		// mark any new child as entering
+		nextChildKeys.forEach((key, index) => {
+			const hasPrev = prevChildKeys.includes(key);
+
+			if (!hasPrev || this.currentlyTransitioningKeys[key]) {
+				// flag a view to enter if it's new (!hasPrev), or if it's not new (hasPrev) but is
+				// re-entering (is currently transitioning)
+				this.keysToEnter.push(key);
+			} else if (index < size - 1) {
+				// keep views that are less than size minus the "transition out" buffer
+				this.keysToStay.push(key);
+			} else {
+				// everything else is leaving
 				this.keysToLeave.push(key);
 			}
 		});
 
-		// if any views were dropped because they exceeded `size`, the can no longer be
-		// transitioning so indicate as such
-		if (dropped) {
-			dropped.forEach(child => {
-				delete this.currentlyTransitioningKeys[child.key];
-			});
-		}
+		// mark any previous child not remaining as leaving
+		prevChildKeys.forEach(key => {
+			const hasNext = nextChildKeys.includes(key);
+			const isRendered = Boolean(this.groupRefs[key]);
+			// flag a view to leave if it isn't in the new set (!hasNext) and it exists (isRendered)
+			if (!hasNext && isRendered) {
+				this.keysToLeave.push(key);
+			}
+		});
 
 		if (this.keysToEnter.length || this.keysToLeave.length) {
 			forwardOnWillTransition(null, this.props);
@@ -319,7 +303,7 @@ class TransitionGroup extends React.Component {
 	performAppear = (key) => {
 		this.currentlyTransitioningKeys[key] = true;
 
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 
 		if (component.componentWillAppear) {
 			component.componentWillAppear(
@@ -331,7 +315,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	_handleDoneAppearing = (key) => {
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 		if (component.componentDidAppear) {
 			component.componentDidAppear();
 		}
@@ -344,7 +328,7 @@ class TransitionGroup extends React.Component {
 
 		let currentChildMapping = mapChildren(this.props.children);
 
-		if (!currentChildMapping || !hasChild(key, currentChildMapping)) {
+		if (!currentChildMapping || !currentChildMapping.find(child => child.key === key)) {
 			// This was removed before it had fully appeared. Remove it.
 			this.performLeave(key);
 		}
@@ -353,7 +337,7 @@ class TransitionGroup extends React.Component {
 	performEnter = (key) => {
 		this.currentlyTransitioningKeys[key] = true;
 
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 
 		if (component.componentWillEnter) {
 			component.componentWillEnter(
@@ -365,7 +349,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	_handleDoneEntering = (key) => {
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 		if (component.componentDidEnter) {
 			component.componentDidEnter();
 		}
@@ -378,7 +362,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	performStay = (key) => {
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 
 		if (component.componentWillStay) {
 			component.componentWillStay(
@@ -390,7 +374,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	_handleDoneStaying = (key) => {
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 		if (component.componentDidStay) {
 			component.componentDidStay();
 		}
@@ -403,7 +387,7 @@ class TransitionGroup extends React.Component {
 	performLeave = (key) => {
 		this.currentlyTransitioningKeys[key] = true;
 
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 		if (component.componentWillLeave) {
 			component.componentWillLeave(this._handleDoneLeaving.bind(this, key));
 		} else {
@@ -415,7 +399,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	_handleDoneLeaving = (key) => {
-		const component = this.refs[key];
+		const component = this.groupRefs[key];
 
 		if (component.componentDidLeave) {
 			component.componentDidLeave();
@@ -433,6 +417,10 @@ class TransitionGroup extends React.Component {
 		});
 	}
 
+	storeRefs = key => node => {
+		this.groupRefs[key] = node;
+	}
+
 	render () {
 		// support wrapping arbitrary children with a component that supports the necessary
 		// lifecycle methods to animate transitions
@@ -441,16 +429,17 @@ class TransitionGroup extends React.Component {
 
 			return React.cloneElement(
 				this.props.childFactory(child),
-				{key: child.key, ref: child.key, leaving: isLeaving, appearing: !this.hasMounted}
+				{key: child.key, ref: this.storeRefs(child.key), leaving: isLeaving, appearing: !this.hasMounted}
 			);
 		});
 
 		// Do not forward TransitionGroup props to primitive DOM nodes
 		const props = Object.assign({}, this.props);
-		delete props.size;
+		props.ref = this.props.componentRef;
 		delete props.childFactory;
-		delete props.currentIndex;
 		delete props.component;
+		delete props.componentRef;
+		delete props.currentIndex;
 		delete props.onAppear;
 		delete props.onAppear;
 		delete props.onEnter;
@@ -458,6 +447,7 @@ class TransitionGroup extends React.Component {
 		delete props.onStay;
 		delete props.onTransition;
 		delete props.onWillTransition;
+		delete props.size;
 
 		return React.createElement(
 			this.props.component,

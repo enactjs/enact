@@ -38,9 +38,10 @@ import Skinnable from '../Skinnable';
 import {SliderBase} from '../Slider';
 import {emitChange} from '../Slider/utils';
 import SliderBehaviorDecorator from '../Slider/SliderBehaviorDecorator';
+import {extractVoiceProps} from '../internal/util';
 
 import IncrementSliderButton from './IncrementSliderButton';
-import componentCss from './IncrementSlider.less';
+import componentCss from './IncrementSlider.module.less';
 
 const isDown = is('down');
 const isLeft = is('left');
@@ -68,6 +69,14 @@ const IncrementSliderBase = kind({
 
 	propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderBase.prototype */ {
 		/**
+		 * Sets the knob to selected state and allows it to move via 5-way controls.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		active: PropTypes.bool,
+
+		/**
 		 * Prevents read out of both the slider and the increment and decrement
 		 * buttons.
 		 *
@@ -89,32 +98,6 @@ const IncrementSliderBase = kind({
 		'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 		/**
-		 * Disables voice control.
-		 *
-		 * @type {Boolean}
-		 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
-		 * @public
-		 */
-		'data-webos-voice-disabled': PropTypes.bool,
-
-		/**
-		 * The `data-webos-voice-group-label` for the IconButton of IncrementSlider.
-		 *
-		 * @type {String}
-		 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
-		 * @public
-		 */
-		'data-webos-voice-group-label': PropTypes.string,
-
-		/**
-		 * Sets the knob to selected state and allows it to move via 5-way controls.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		active: PropTypes.bool,
-
-		/**
 		 * Background progress, as a proportion between `0` and `1`.
 		 *
 		 * @type {Number}
@@ -131,6 +114,24 @@ const IncrementSliderBase = kind({
 		 * @private
 		 */
 		css: PropTypes.object,
+
+		/**
+		 * Disables voice control.
+		 *
+		 * @type {Boolean}
+		 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
+		 * The `data-webos-voice-group-label` for the IconButton of IncrementSlider.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-group-label': PropTypes.string,
 
 		/**
 		* Sets the hint string read when focusing the decrement button.
@@ -473,8 +474,6 @@ const IncrementSliderBase = kind({
 
 	render: ({active,
 		'aria-hidden': ariaHidden,
-		'data-webos-voice-disabled': voiceDisabled,
-		'data-webos-voice-group-label': voiceGroupLabel,
 		backgroundProgress,
 		css,
 		decrementAriaLabel,
@@ -507,6 +506,10 @@ const IncrementSliderBase = kind({
 		...rest
 	}) => {
 		const ariaProps = extractAriaProps(rest);
+		const voiceProps = extractVoiceProps(rest);
+		delete voiceProps['data-webos-voice-label'];
+		delete voiceProps['data-webos-voice-labels'];
+
 		delete rest.onSpotlightDirection;
 		delete rest.onSpotlightDown;
 		delete rest.onSpotlightLeft;
@@ -516,12 +519,11 @@ const IncrementSliderBase = kind({
 		return (
 			<div {...rest}>
 				<IncrementSliderButton
+					{...voiceProps}
 					aria-controls={!incrementDisabled ? id : null}
 					aria-hidden={ariaHidden}
 					aria-label={decrementAriaLabel}
 					className={css.decrementButton}
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={decrementDisabled}
 					onTap={onDecrement}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
@@ -554,12 +556,11 @@ const IncrementSliderBase = kind({
 					value={value}
 				/>
 				<IncrementSliderButton
+					{...voiceProps}
 					aria-controls={!decrementDisabled ? id : null}
 					aria-hidden={ariaHidden}
 					aria-label={incrementAriaLabel}
 					className={css.incrementButton}
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={incrementDisabled}
 					onTap={onIncrement}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}

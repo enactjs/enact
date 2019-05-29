@@ -4,7 +4,7 @@
  * to the image or a string from an [iconList]{@link moonstone/Icon.IconBase.iconList}.
  *
  * @example
- * <IconButton small>plus</IconButton>
+ * <IconButton size="small">plus</IconButton>
  *
  * @module moonstone/IconButton
  * @exports IconButton
@@ -25,7 +25,7 @@ import Icon from '../Icon';
 import Skinnable from '../Skinnable';
 import TooltipDecorator from '../TooltipDecorator';
 
-import componentCss from './IconButton.less';
+import componentCss from './IconButton.module.less';
 
 /**
  * A moonstone-styled icon button without any behavior.
@@ -34,6 +34,8 @@ import componentCss from './IconButton.less';
  * @memberof moonstone/IconButton
  * @extends moonstone/Button.ButtonBase
  * @extends ui/IconButton.IconButtonBase
+ * @omit buttonComponent
+ * @omit iconComponent
  * @ui
  * @public
  */
@@ -73,8 +75,9 @@ const IconButtonBase = kind({
 		 *
 		 * * `iconButton` - The root class name
 		 * * `bg` - The background node of the icon button
+		 * * `large` - Applied to a `size='large'` icon button
 		 * * `selected` - Applied to a `selected` icon button
-		 * * `small` - Applied to a `small` icon button
+		 * * `small` - Applied to a `size='small'` icon button
 		 *
 		 * @type {Object}
 		 * @public
@@ -92,7 +95,7 @@ const IconButtonBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['iconButton', 'bg', 'selected', 'small']
+		publicClassNames: ['iconButton', 'bg', 'large', 'selected', 'small']
 	},
 
 	computed: {
@@ -138,7 +141,7 @@ const IconButtonDecorator = compose(
  *
  * Usage:
  * ```
- * <IconButton onClick={handleClick} small>
+ * <IconButton onClick={handleClick} size="small">
  *     plus
  * </IconButton>
  * ```

@@ -438,5 +438,6 @@ export {
 	getTargetByContainer,
 	getTargetByDirectionFromElement,
 	getTargetByDirectionFromPosition,
-	getTargetBySelector
+	getTargetBySelector,
+	isFocusable
 };

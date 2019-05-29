@@ -2,7 +2,7 @@
  * Moonstone styled button components and behaviors.
  *
  * @example
- * <Button small>Hello Enact!</Button>
+ * <Button size="small">Hello Enact!</Button>
  *
  * @module moonstone/Button
  * @exports Button
@@ -22,7 +22,7 @@ import {IconBase} from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import componentCss from './Button.less';
+import componentCss from './Button.module.less';
 
 // Make a basic Icon in case we need it later. This cuts `Pure` out of icon for a small gain.
 const Icon = Skinnable(IconBase);
@@ -75,8 +75,9 @@ const ButtonBase = kind({
 		 *
 		 * * `button` - The root class name
 		 * * `bg` - The background node of the button
+		 * * `large` - Applied to a `size='large'` button
 		 * * `selected` - Applied to a `selected` button
-		 * * `small` - Applied to a `small` button
+		 * * `small` - Applied to a `size='small'` button
 		 *
 		 * @type {Object}
 		 * @public
@@ -86,7 +87,7 @@ const ButtonBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['button', 'bg', 'selected', 'small']
+		publicClassNames: ['button', 'bg', 'large', 'selected', 'small']
 	},
 
 	computed: {

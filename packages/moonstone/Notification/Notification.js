@@ -13,7 +13,7 @@ import Slottable from '@enact/ui/Slottable';
 
 import Popup from '../Popup';
 
-import componentCss from './Notification.less';
+import componentCss from './Notification.module.less';
 
 // ENYO-5691: Workaround to fix a text rendering issue by aligning the content to the pixel grid
 const fixTransform = (node) => {
@@ -49,7 +49,7 @@ const NotificationBase = kind({
 		 * Buttons for the Notification.
 		 *
 		 * These typically close or take action in the Notification. Buttons must have their
-		 * `small` property set and will be coerced to `small` if not specified.
+		 * `size` property set to `'small'` and will be coerced to `'small'` if not specified.
 		 *
 		 * @type {Element|Element[]}
 		 * @public
@@ -144,7 +144,7 @@ const NotificationBase = kind({
 		},
 		buttons: ({buttons}) => React.Children.map(buttons, (button) => {
 			if (button && button.props && !button.props.small) {
-				return React.cloneElement(button, {small: true});
+				return React.cloneElement(button, {size: 'small'});
 			} else {
 				return button;
 			}

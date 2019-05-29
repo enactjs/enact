@@ -1,10 +1,10 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import {ExpandableListBase} from '../ExpandableList';
+import {ExpandableList, ExpandableListBase} from '../ExpandableList';
 
 describe('ExpandableList', () => {
 	describe('#aria-multiselectable', () => {
-		it('should be true when select is multiple', function () {
+		test('should be true when select is multiple', () => {
 			const expandableList = mount(
 				<ExpandableListBase title="Item" select="multiple">
 					{['option1', 'option2', 'option3']}
@@ -13,17 +13,17 @@ describe('ExpandableList', () => {
 
 			const expected = true;
 			const actual = expandableList.find('ExpandableItem').prop('aria-multiselectable');
-			expect(actual).to.equal(expected);
+			expect(actual).toBe(expected);
 		});
 	});
 
-	it('should update when children are added', function () {
+	test('should update when children are added', () => {
 		const children = ['option1', 'option2', 'option3'];
 
 		const expandableList = mount(
-			<ExpandableListBase title="Item" open>
+			<ExpandableList title="Item" open>
 				{children}
-			</ExpandableListBase>
+			</ExpandableList>
 		);
 
 		const updatedChildren = children.concat('option4', 'option5');
@@ -32,6 +32,36 @@ describe('ExpandableList', () => {
 		const expected = 5;
 		const actual = expandableList.find('GroupItem').length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
+	});
+
+	test('should set "data-webos-voice-disabled" to LabeledItem when voice control is disabled', () => {
+		const children = ['option1', 'option2', 'option3'];
+
+		const expandableList = mount(
+			<ExpandableListBase data-webos-voice-disabled title="Item" open>
+				{children}
+			</ExpandableListBase>
+		);
+
+		const expected = true;
+		const actual = expandableList.find('LabeledItem').prop('data-webos-voice-disabled');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should set "data-webos-voice-disabled" to child item when voice control is disabled', () => {
+		const children = ['option1', 'option2', 'option3'];
+
+		const expandableList = mount(
+			<ExpandableList data-webos-voice-disabled title="Item" open>
+				{children}
+			</ExpandableList>
+		);
+
+		const expected = true;
+		const actual = expandableList.find('GroupItem').first().prop('data-webos-voice-disabled');
+
+		expect(actual).toBe(expected);
 	});
 });

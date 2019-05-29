@@ -8,7 +8,6 @@
 
 import {adaptEvent, call, forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import complement from 'ramda/src/complement';
 import platform from '@enact/core/platform';
@@ -17,7 +16,6 @@ import React from 'react';
 
 import {configure, mergeConfig} from './config';
 import {activate, deactivate, pause, States} from './state';
-import {block, unblock, isNotBlocked} from './block';
 import ClickAllow from './ClickAllow';
 
 import {Drag, dragConfigPropType} from './Drag';
@@ -94,10 +92,10 @@ const handleLeave = handle(
 // Mouse event handlers
 
 const handleMouseDown = handle(
-	isNotBlocked,
 	forward('onMouseDown'),
+	call('shouldAllowMouseEvent'),
 	handleDown
-).finally(unblock);
+);
 
 const handleMouseEnter = handle(
 	forward('onMouseEnter'),
@@ -135,8 +133,6 @@ const handleClick = handle(
 
 const handleTouchStart = handle(
 	forward('onTouchStart'),
-	// block the next mousedown to prevent duplicate onDown events
-	block,
 	handleDown
 );
 
@@ -156,6 +152,8 @@ const handleTouchMove = handle(
 
 const handleTouchEnd = handle(
 	forward('onTouchEnd'),
+	// block the next mousedown to prevent duplicate touchable events
+	returnsTrue(call('setLastTouchEnd')),
 	call('isTracking'),
 	complement(call('hasTouchLeftTarget')),
 	handleUp
@@ -176,7 +174,7 @@ const handleGlobalMove = handle(
 const handleBlur = handle(
 	forward('onBlur'),
 	call('hasFocus'),
-	call('endGesture')
+	call('blurGesture')
 );
 
 /**
@@ -340,6 +338,19 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onHold: PropTypes.func,
 
 			/**
+			 * Event handler for the end of hold events.
+			 *
+			 * Event payload includes:
+			 *
+			 * * `type` - Type of event, `'onHoldEnd'`
+			 * * `time` - Time, in milliseconds, since the hold began
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onHoldEnd: PropTypes.func,
+
+			/**
 			 * Event handler for hold pulse events
 			 *
 			 * Event payload includes:
@@ -378,7 +389,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.state = {
-				active: States.Inactive
+				active: States.Inactive,
+				prevDisabled: props.disabled
 			};
 
 			this.config = mergeConfig({
@@ -393,11 +405,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.drag = new Drag();
 			this.flick = new Flick();
 			this.hold = new Hold();
-			this.blurJob = new Job(target => {
-				if (target.blur) {
-					target.blur();
-				}
-			}, 400);
 
 			this.clickAllow = new ClickAllow();
 
@@ -415,6 +422,19 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			handleGlobalMove.bindAs(this, 'handleGlobalMove');
 		}
 
+		static getDerivedStateFromProps (props, state) {
+			const {disabled} = props;
+			const {prevDisabled} = state;
+
+			if (prevDisabled !== disabled) {
+				return {
+					...(activeProp && !prevDisabled && disabled && deactivate(state)),
+					prevDisabled: disabled
+				};
+			}
+			return null;
+		}
+
 		componentDidMount () {
 			// ensure we clean up our internal state
 			if (platform.touch) {
@@ -424,23 +444,22 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			on('mousemove', this.handleGlobalMove, document);
 		}
 
-		componentWillReceiveProps (nextProps) {
-			if (!this.props.disabled && nextProps.disabled) {
-				this.deactivate();
+		componentDidUpdate (prevProps) {
+			if (!prevProps.disabled && this.props.disabled) {
+				this.clearTarget();
 				this.hold.end();
 			}
 
 			this.config = mergeConfig({
-				drag: nextProps.dragConfig,
-				flick: nextProps.flickConfig,
-				hold: nextProps.holdConfig
+				drag: this.props.dragConfig,
+				flick: this.props.flickConfig,
+				hold: this.props.holdConfig
 			});
 		}
 
 		componentWillUnmount () {
 			this.clearTarget();
 			this.hold.end();
-			this.blurJob.stop();
 
 			if (platform.touch) {
 				off('touchend', this.handleGlobalUp, document);
@@ -475,18 +494,10 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				this.setState(activate);
 			}
 
-			if (ev && 'changedTouches' in ev) {
-				this.target.focus();
-			}
-
 			return true;
 		}
 
-		deactivate (ev) {
-			if (ev && 'changedTouches' in ev) {
-				this.blurJob.start(this.target);
-			}
-
+		deactivate () {
 			this.clearTarget();
 			if (activeProp) {
 				this.setState(deactivate);
@@ -542,6 +553,16 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
+		blurGesture () {
+			this.targetHadFocus = false;
+
+			this.hold.blur();
+			this.flick.blur();
+			this.drag.blur();
+
+			return true;
+		}
+
 		endGesture () {
 			this.targetHadFocus = false;
 
@@ -578,12 +599,20 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return !this.target.contains(target);
 		}
 
+		shouldAllowMouseEvent (ev) {
+			return this.clickAllow.shouldAllowMouseEvent(ev);
+		}
+
 		shouldAllowTap (ev) {
 			return this.clickAllow.shouldAllowTap(ev);
 		}
 
 		setLastMouseUp (ev) {
 			this.clickAllow.setLastMouseUp(ev);
+		}
+
+		setLastTouchEnd (ev) {
+			this.clickAllow.setLastTouchEnd(ev);
 		}
 
 		addHandlers (props) {
@@ -614,6 +643,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.onDown;
 			delete props.onFlick;
 			delete props.onHold;
+			delete props.onHoldEnd;
 			delete props.onHoldPulse;
 			delete props.onTap;
 			delete props.onUp;

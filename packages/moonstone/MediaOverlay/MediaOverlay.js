@@ -16,6 +16,7 @@ import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import {Layout, Cell} from '@enact/ui/Layout';
 import Media from '@enact/ui/Media';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
@@ -26,7 +27,7 @@ import Image from '../Image';
 import {Marquee} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import componentCss from './MediaOverlay.less';
+import componentCss from './MediaOverlay.module.less';
 
 /**
  * A media component with image and text overlay support.
@@ -82,11 +83,11 @@ const MediaOverlayBase = kind({
 		 * Methods:
 		 * * `load()` - load media
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'video'
 		 * @public
 		 */
-		mediaComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		mediaComponent: EnactPropTypes.renderable,
 
 		/**
 		 * Placeholder for image overlay.

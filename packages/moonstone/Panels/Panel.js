@@ -6,7 +6,7 @@ import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator, {spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 
-import css from './Panel.less';
+import css from './Panel.module.less';
 
 let panelId = 0;
 
@@ -48,6 +48,28 @@ const PanelBase = kind({
 		 * * "default-element" - The first spottable component within the body will be focused
 		 * * Custom Selector - A custom CSS selector may also be provided which will be used to find
 		 *   the target within the Panel
+		 *
+		 * When used within [Panels]{@link moonstone/Panels.Panels}, this prop may be set by
+		 * `Panels` to "default-element" when navigating "forward" to a higher index. This behavior
+		 * may be overridden by setting `autoFocus` on the `Panel` instance as a child of `Panels`
+		 * or by wrapping `Panel` with a custom component and overriding the value passed by
+		 * `Panels`.
+		 *
+		 * ```
+		 * // Panel within CustomPanel will always receive "last-focused"
+		 * const CustomPanel = (props) => <Panel {...props} autoFocus="last-focused" />;
+		 *
+		 * // The first panel will always receive "last-focused". The second panel will receive
+		 * // "default-element" when navigating from the first panel but `autoFocus` will be unset
+		 * // when navigating from the third panel and as a result will default to "last-focused".
+		 * const MyPanels = () => (
+		 *   <Panels>
+		 *     <Panel autoFocus="last-focused" />
+		 *     <Panel />
+		 *     <Panel />
+		 *   </Panels>
+		 * );
+		 * ```
 		 *
 		 * @type {String}
 		 * @default 'last-focused'

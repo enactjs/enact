@@ -1,0 +1,287 @@
+// Button.module.less
+//
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
+
+// Local scope for some math variables
+& {
+	@moon-button-pressed-scaled-up: (1 + @moon-button-pressed-scale);
+	@moon-button-pressed-scaled-down: (1 / @moon-button-pressed-scaled-up);
+
+	@-webkit-keyframes expand {
+		// Old Blink/Webkit doesn't support "@keyframes" so we must use both prefixed and non-prefixed in this section
+		60% {
+			-webkit-transform: translateZ(0) scale(@moon-button-pressed-scaled-up);
+			transform: translateZ(0) scale(@moon-button-pressed-scaled-up);
+		}
+	}
+	@-webkit-keyframes contract {
+		60% {
+			-webkit-transform: translateZ(0) scale(@moon-button-pressed-scaled-down);
+			transform: translateZ(0) scale(@moon-button-pressed-scaled-down);
+		}
+	}
+
+	@keyframes expand {
+		60% { transform: translateZ(0) scale(@moon-button-pressed-scaled-up); }
+	}
+	@keyframes contract {
+		60% { transform: translateZ(0) scale(@moon-button-pressed-scaled-down); }
+	}
+}
+
+.button {
+	.moon-large-button-text();
+	height: @moon-button-height;
+	line-height: (@moon-button-height - (2 * @moon-button-border-width));
+	border-radius: @moon-button-border-radius;
+	min-width: @moon-button-height;
+	max-width: 300px;
+	padding: 0 @moon-button-h-padding;
+	margin: 0 @moon-button-h-margin;
+	text-align: center;
+	vertical-align: middle;
+	.moon-taparea(@moon-button-height);
+
+	.moon-custom-text({
+		font-size: @moon-button-large-font-size-large;
+		height: @moon-button-height-large;
+		min-width: @moon-button-height-large;
+		line-height: (@moon-button-height-large - (2 * @moon-button-border-width));
+	});
+
+	.bg {
+		background-color: inherit;
+		border-width: @moon-button-border-width;
+		border-style: solid;
+		border-radius: @moon-button-border-radius;
+
+		transform: translateZ(0);
+		will-change: transform;
+		-webkit-animation-duration: 0.2s;
+		-webkit-animation-iteration-count: 1;
+		-webkit-animation-timing-function: ease-out;
+		animation-duration: 0.2s;
+		animation-iteration-count: 1;
+		animation-timing-function: ease-out;
+	}
+
+	.client {
+		padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
+
+		// Colored under-bar
+		&::before {
+			content: "";
+			position: absolute;
+			min-width: 24px;
+			height: 6px;
+			bottom: 18px;
+			left: 24px;
+			right: 24px;
+			border-radius: 6px;
+		}
+
+		.icon {
+			-webkit-margin-start: 0;
+		}
+	}
+
+	//**
+	//* The marquee container of the client area. Added by {@link moonstone/MarqueeDecorator}.
+	//* @public
+	//*/
+	.marquee {
+		flex-grow: 1;
+		text-align: center;
+	}
+
+	&.minWidth {
+		min-width: @moon-button-large-min-width;
+	}
+
+	&.small {
+		.moon-small-button-text();
+		height: @moon-button-small-height;
+		min-width: @moon-button-small-height;
+		line-height: (@moon-button-small-height - (2 * @moon-button-border-width));
+		padding: 0 @moon-button-small-h-padding;
+
+		&.minWidth {
+			min-width: @moon-button-small-min-width;
+		}
+
+		.moon-taparea(@moon-button-small-height);
+
+		.moon-custom-text({
+			font-size: @moon-button-small-font-size-large;
+			height: @moon-button-small-height-large;
+			min-width: @moon-button-small-height-large;
+			line-height: (@moon-button-small-height-large - (2 * @moon-button-border-width));
+
+			&.minWidth {
+				min-width: @moon-button-small-min-width;
+			}
+		});
+
+		.client::before {
+			bottom: 12px;
+			left: 18px;
+			right: 18px;
+		}
+	}
+
+	// Button-non-disabled rules
+	&:not([disabled]) {
+		.focus({
+			&.pressed,
+			&:active {
+				.bg {
+					-webkit-animation-name: expand;
+					animation-name: expand;
+				}
+			}
+		});
+	}
+
+	// Skin colors
+	.applySkins({
+		&,
+		:global(.enact-a11y-high-contrast) & {
+			color: @moon-button-text-color;
+		}
+
+		.bg {
+			background-color: @moon-button-bg-color;
+			border-color: transparent;
+		}
+
+		&.translucent .bg {
+			background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+		}
+
+		&.lightTranslucent .bg {
+			background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
+		}
+
+		&.transparent {
+			color: @moon-text-color;
+
+			.bg {
+				background-color: transparent;
+			}
+		}
+
+		&.red .client::before {
+			background-color: @moon-remote-button-red-color;
+		}
+		&.green .client::before {
+			background-color: @moon-remote-button-green-color;
+		}
+		&.yellow .client::before {
+			background-color: @moon-remote-button-yellow-color;
+		}
+		&.blue .client::before {
+			background-color: @moon-remote-button-blue-color;
+		}
+
+		.focus({
+			// The complexity below overrides the default high-contrast rules and applies
+			// non-high-contrast rules. The precedence for the general rule is too high for the
+			// basic button override rule to take effect, so we must overcome it by stacking more
+			// classes here.
+			&,
+			:global(.enact-a11y-high-contrast) &:not(:global(.highContrast)) {
+				color: @moon-spotlight-text-color;
+				background-color: transparent;
+			}
+
+			.bg {
+				background-color: @moon-spotlight-border-color;
+			}
+
+			.disabled({
+				color: @moon-spotlight-disabled-text-color;
+
+				.bg {
+					background-color: @moon-button-disabled-spotlight-bg-color;
+				}
+
+				.icon {
+					.vendor-opacity(0.6);
+					color: @moon-spotlight-text-color;
+				}
+			});
+		});
+
+		// 'Selected' state
+		&.selected {
+			.bg {
+				border-color: @moon-spotlight-border-color;
+			}
+
+			// 'Selected+Focus' state, seen in grouped buttons
+			.focus({
+				color: @moon-spotlight-text-color;
+
+				.bg {
+					border-color: @moon-active-spotlight-border-color;
+					background-color: @moon-spotlight-border-color;
+				}
+			});
+		}
+	});
+}
+
+.muted({
+	.button {
+		// Button-non-disabled rules
+		&:not([disabled]) {
+			.focus({
+				&.pressed {
+					.bg {
+						-webkit-animation-name: none;
+						animation-name: none;
+					}
+				}
+			});
+		}
+
+		// Skin colors
+		.applySkins({
+			.focus({
+				background-color: transparent;
+				color: @moon-button-text-color;
+
+				.bg {
+					background-color: @moon-button-bg-color;
+				}
+
+				&.translucent .bg {
+					background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+				}
+
+				&.lightTranslucent .bg {
+					background-color: fade(@moon-button-lightTranslucent-bg-color, @moon-button-translucent-opacity);
+				}
+
+				&.transparent {
+					color: @moon-text-color;
+
+					.bg {
+						background-color: transparent;
+					}
+				}
+			});
+
+			&.selected {
+				// 'Selected+Focus' state, seen in grouped buttons
+				.focus({
+					.bg {
+						border-color: @moon-spotlight-border-color;
+					}
+				});
+			}
+		});
+	}
+});

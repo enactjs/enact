@@ -1,0 +1,112 @@
+@import '../styles/mixins.less';
+@import '../styles/variables.less';
+@import '../styles/skin.less';
+
+.gridListImageItem {
+	box-sizing: border-box;
+	border-width: @moon-gridlist-item-border-width;
+	border-style: solid;
+
+	.icon {
+		width: @moon-gridlist-item-overlay-icon-size;
+		height: @moon-gridlist-item-overlay-icon-size;
+		line-height: @moon-gridlist-item-overlay-icon-size;
+		position: relative;
+		display: block;
+		border-width: @moon-button-border-width;
+		border-style: solid;
+		border-radius: 50%;
+		margin: 0;
+		opacity: 0.5;
+	}
+
+	&.selected {
+		.icon {
+			opacity: 1;
+		}
+	}
+
+	.caption {
+		.moon-sub-header-text();
+		padding-top: @moon-gridlist-item-caption-padding-top;
+	}
+
+	.subCaption {
+		.moon-body-text();
+		padding-top: @moon-gridlist-item-caption-padding-top;
+	}
+
+	// Skin colors
+	.applySkins({
+		border-color: transparent;
+		color: @moon-gridlist-item-color;
+
+		.icon {
+			background-color: @moon-gridlist-item-icon-bg-color;
+			border-color: @moon-gridlist-item-icon-border-color;
+			color: transparent;
+		}
+
+		&.selected {
+			border-color: @moon-gridlist-item-selected-border-color;
+			background-color: @moon-gridlist-item-selected-bg-color;
+
+			.icon {
+				border-color: @moon-gridlist-item-selected-icon-border-color;
+				color: @moon-gridlist-item-selected-icon-color;
+			}
+			.caption,
+			.subCaption {
+				color: @moon-gridlist-item-selected-color;
+			}
+		}
+
+		.focus({
+			border-color: @moon-gridlist-item-spotlight-border-color;
+			background-color: @moon-gridlist-item-spotlight-bg-color;
+
+			.icon {
+				color: @moon-gridlist-item-spotlight-icon-color;
+			}
+
+			.caption,
+			.subCaption {
+				color: @moon-gridlist-item-spotlight-color;
+			}
+
+			&.selected {
+				.icon {
+					color: @moon-gridlist-item-spotlight-selected-icon-color;
+				}
+			}
+		});
+	});
+}
+
+.muted({
+	.gridListImageItem {
+		// Skin colors
+		.applySkins({
+			.focus({
+				&:not(.selected) {
+					border-color: transparent;
+					background-color: transparent;
+
+					.caption,
+					.subCaption {
+						color: @moon-body-text-color;
+					}
+					.icon {
+						color: transparent;
+					}
+				}
+				&.selected {
+					.icon {
+						border-color: @moon-accent;
+						color: @moon-accent;
+					}
+				}
+			});
+		});
+	}
+}, parent);

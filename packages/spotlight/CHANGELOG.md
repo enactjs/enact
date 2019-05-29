@@ -2,6 +2,61 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` to unspot the current element when tapping on non-spottable target on touch platforms
+
+## [2.5.2] - 2019-04-23
+
+No significant changes.
+
+## [2.5.1] - 2019-04-09
+
+No significant changes.
+
+## [2.5.0] - 2019-04-01
+
+### Fixed
+
+- `spotlight` to guard against runtime errors caused by attempting to access containers that do not exist
+- `spotlight/Spottable` to prevent unnecessary updates due to focus and blur changes
+
+## [2.4.1] - 2019-03-11
+
+### Fixed
+
+- `spotlight` to remain in pointer mode when any 'cancel' key (e.g. Escape or back buttoon) is pressed
+
+## [2.4.0] - 2019-03-04
+
+### Fixed
+
+- `spotlight/Spottable` to prevent unnecessary updates due to focus changes
+
+## [2.3.0] - 2019-02-11
+
+### Added
+
+- `spotlight/Spottable` property `selectionKeys`
+
+### Fixed
+
+- `spotlight` to improve prioritization of the contents of spotlight containers within overflow containers
+- `spotlight/Spottable` and `spotlight/SpotlightContainerDecorator` to prevent focus when `spotlightDisabled` is set
+- `spotlight/Spottable` to prevent emitting multiple click events when certain node types are selected via 5-way enter
+
+## [2.2.9] - 2019-01-11
+
+No significant changes.
+
+## [2.2.8] - 2018-12-06
+
+### Fixed
+
+- `spotlight` to focus correctly within an overflow container in which the first element is another container without spottable children
+
 ## [2.2.7] - 2018-11-21
 
 No significant changes.

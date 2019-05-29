@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import Spotlight from '@enact/spotlight';
 import Pause from '@enact/spotlight/Pause';
 
-import css from './Panels.less';
+import css from './Panels.module.less';
 
 /**
  * The container for a set of Panels
@@ -71,6 +71,17 @@ const ViewportBase = class extends React.Component {
 		super();
 
 		this.paused = new Pause('Viewport');
+		this.state = {
+			prevIndex: -1,
+			direction: 'forward'
+		};
+	}
+
+	static getDerivedStateFromProps (props, state) {
+		return {
+			prevIndex: props.index,
+			direction: state.prevIndex > props.index ? 'backward' : 'forward'
+		};
 	}
 
 	componentDidMount () {
@@ -117,10 +128,21 @@ const ViewportBase = class extends React.Component {
 	)
 
 	mapChildren = (children, generateId) => React.Children.map(children, (child, index) => {
-		return child ? React.cloneElement(child, {
-			spotlightId: child.props.spotlightId || generateId(index, 'panel-container', Spotlight.remove),
-			'data-index': index
-		}) : null;
+		if (child) {
+			const {spotlightId = generateId(index, 'panel-container', Spotlight.remove)} = child.props;
+			const props = {
+				spotlightId,
+				'data-index': index
+			};
+
+			if (child.props.autoFocus == null && this.state.direction === 'forward') {
+				props.autoFocus = 'default-element';
+			}
+
+			return React.cloneElement(child, props);
+		} else {
+			return null;
+		}
 	})
 
 	getEnteringProp = (noAnimation) => noAnimation ? null : 'hideChildren'

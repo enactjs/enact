@@ -4,31 +4,37 @@
  * @example
  * <Layout>
  * 	<Cell shrink>
- * 		<Button small>First</Button>
+ * 		<Button size="small">First</Button>
  * 	</Cell>
  * 	<Cell>
  * 		<Item>An Item with some long text in it</Item>
  * 	</Cell>
  * 	<Cell shrink>
- * 		<Button small>Last</Button>
+ * 		<Button size="small">Last</Button>
  * 	</Cell>
  * </Layout>
  *
  * @module ui/Layout
  * @exports Cell
+ * @exports CellBase
+ * @exports CellDecorator
  * @exports Column
  * @exports Layout
  * @exports LayoutBase
+ * @exports LayoutDecorator
  * @exports Row
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
+import React from 'react';
 
-import {Cell, CellBase, toFlexAlign} from './Cell';
+import ForwardRef from '../ForwardRef';
 
-import css from './Layout.less';
+import {Cell, CellBase, CellDecorator, toFlexAlign} from './Cell';
+
+import css from './Layout.module.less';
 
 /**
  * A container for `Cell`s.
@@ -55,14 +61,15 @@ import css from './Layout.less';
  * </fieldset>
  * ```
  *
- * @class Layout
+ * @class LayoutBase
+ * @ui
  * @memberof ui/Layout
  * @public
  */
 const LayoutBase = kind({
 	name: 'LayoutBase',
 
-	propTypes: /** @lends ui/Layout.Layout.prototype */ {
+	propTypes: /** @lends ui/Layout.LayoutBase.prototype */ {
 		/**
 		 * The alignment of children.
 		 *
@@ -94,11 +101,19 @@ const LayoutBase = kind({
 		 * The type of component to use to render as the `Layout`. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 * @public
 		 */
-		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		component:  EnactPropTypes.renderable,
+
+		/**
+		 * Called with a reference to [component]{@link ui/Layout.Layout#component}
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Allows this `Layout` to have following siblings drawn on the same line as itself
@@ -174,50 +189,103 @@ const LayoutBase = kind({
 		}
 	},
 
-	render: ({component: Component, ...rest}) => {
+	render: ({component: Component, componentRef, ...rest}) => {
 		delete rest.align;
 		delete rest.inline;
 		delete rest.orientation;
 		delete rest.wrap;
 
-		return <Component {...rest} />;
+		return <Component ref={componentRef} {...rest} />;
 	}
 });
+
+/**
+ * Applies Layout behaviors.
+ *
+ * @hoc
+ * @memberof ui/Layout
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const LayoutDecorator = ForwardRef({prop: 'componentRef'});
+
+/**
+ * A container for `Cell`s.
+ *
+ * A stateless component that acts as a containing area for [Cells]{@link ui/Layout.Cell} to be
+ * positioned in a row or a column (horizontally or vertically, respectively. It supports an
+ * [orientation]{@link ui/Layout.Layout#orientation} property for laying-out its contents
+ * (`Cells`) in an organized, readable way.
+ *
+ * Example:
+ * ```
+ * import Input from '@enact/moonstone/Input';
+ * import css from './LayoutExample.less';
+ * ...
+ * <fieldset>
+ * 	<Layout align="center">
+ * 		<Cell component="label" size="40%" className={css.label} shrink>First Name</Cell>
+ * 		<Cell component={Input} placeholder="First" className={css.input} />
+ * 	</Layout>
+ * 	<Layout align="center">
+ * 		<Cell component="label" size="40%" className={css.label} shrink>Last Name</Cell>
+ * 		<Cell component={Input} placeholder="Last" className={css.input} />
+ * 	</Layout>
+ * </fieldset>
+ * ```
+ *
+ * @class Layout
+ * @memberof ui/Layout
+ * @extends ui/Layout.LayoutBase
+ * @mixes ui/ForwardRef.ForwardRef
+ * @ui
+ * @public
+ */
+const Layout = LayoutDecorator(LayoutBase);
 
 /**
  * A {@link ui/Layout.Layout} that positions its [Cells]{@link ui/Layout.Cell} vertically.
  *
  * @class Column
  * @memberof ui/Layout
+ * @extends ui/Layout.Layout
+ * @mixes ui/ForwardRef.ForwardRef
+ * @ui
  * @public
  */
-const Column = (props) => (
+const Column = LayoutDecorator((props) => (
 	LayoutBase.inline({
 		...props,
 		orientation: 'vertical'
 	})
-);
+));
 
 /**
  * A {@link ui/Layout.Layout} that positions its [Cells]{@link ui/Layout.Cell} horizontally.
  *
  * @class Row
  * @memberof ui/Layout
+ * @extends ui/Layout.Layout
+ * @mixes ui/ForwardRef.ForwardRef
+ * @ui
  * @public
  */
-const Row = (props) => (
+const Row = LayoutDecorator((props) => (
 	LayoutBase.inline({
 		...props,
+
 		orientation: 'horizontal'
 	})
-);
+));
 
 export default LayoutBase;
 export {
 	Cell,
 	CellBase,
+	CellDecorator,
 	Column,
-	LayoutBase as Layout,
+	Layout,
 	LayoutBase,
+	LayoutDecorator,
 	Row
 };

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import Skinnable from '../Skinnable';
 
 import TooltipLabel from './TooltipLabel';
-import css from './Tooltip.less';
+import css from './Tooltip.module.less';
 
 /**
  * A stateless tooltip component with Moonstone styling applied.
@@ -42,6 +42,15 @@ const TooltipBase = kind({
 		 * @public
 		 */
 		arrowAnchor: PropTypes.oneOf(['left', 'center', 'right', 'top', 'middle', 'bottom']),
+
+		/**
+		 * Position of the arrow anchor. Takes values between 0 and 1.
+		 * This will be the left position percentage relative to the tooltip.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		arrowPosition: PropTypes.number,
 
 		/**
 		 * Direction of label in relation to the activator.
@@ -98,6 +107,7 @@ const TooltipBase = kind({
 	},
 
 	computed: {
+		arrowPosition: ({arrowPosition}) => arrowPosition ? {left: `${arrowPosition * 100}%`} : null,
 		arrowType: ({arrowAnchor}) => (arrowAnchor === 'center' || arrowAnchor === 'middle') ?
 			'M0,5C0,4,1,3,3,2.5C1,2,0,1,0,0V5Z' : 'M0,5C0,3,1,0,3,0H0V5Z',
 		className: ({direction, arrowAnchor, styler}) => styler.append(direction, `${arrowAnchor}Arrow`),
@@ -109,14 +119,14 @@ const TooltipBase = kind({
 		}
 	},
 
-	render: ({children, tooltipRef, arrowType, width, ...rest}) => {
+	render: ({children, tooltipRef, arrowType, width, arrowPosition, ...rest}) => {
 		delete rest.arrowAnchor;
 		delete rest.direction;
 		delete rest.position;
 
 		return (
 			<div {...rest}>
-				<svg className={css.tooltipArrow} viewBox="0 0 3 5">
+				<svg style={arrowPosition} className={css.tooltipArrow} viewBox="0 0 3 5">
 					<path d={arrowType} />
 				</svg>
 				<TooltipLabel tooltipRef={tooltipRef} width={width}>

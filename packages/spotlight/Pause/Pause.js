@@ -75,7 +75,7 @@ class Pause {
 	 * Spotlight.
 	 *
 	 * @param {String} name The name of the pause instance
-	 * @memberof spotlight/Pause.Pause
+	 * @memberof spotlight/Pause.Pause.prototype
 	 * @constructor
 	 * @public
 	 */
@@ -91,7 +91,7 @@ class Pause {
 	 * Returns `true` when Spotlight is paused by this instance
 	 *
 	 * @returns {Boolean}
-	 * @memberof spotlight/Pause.Pause
+	 * @memberof spotlight/Pause.Pause.prototype
 	 * @public
 	 */
 	isPaused () {
@@ -102,7 +102,7 @@ class Pause {
 	 * Pauses spotlight if not currently paused
 	 *
 	 * @returns {undefined}
-	 * @memberof spotlight/Pause.Pause
+	 * @memberof spotlight/Pause.Pause.prototype
 	 * @public
 	 */
 	pause () {
@@ -115,7 +115,7 @@ class Pause {
 	 * Resumes spotlight if this instance was the last to pause spotlight
 	 *
 	 * @returns {Boolean} `true` if spotlight was resumed
-	 * @memberof spotlight/Pause.Pause
+	 * @memberof spotlight/Pause.Pause.prototype
 	 * @public
 	 */
 	resume () {

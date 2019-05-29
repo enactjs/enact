@@ -2,17 +2,14 @@
  * A higher-order component that adds a FloatingLayer adjacent to wrapped component.
  */
 
+import {call, forEventProp, oneOf} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import PropTypes from 'prop-types';
+import Registry from '@enact/core/internal/Registry';
 import React from 'react';
 
-const contextTypes = {
-	closeAllFloatingLayers: PropTypes.func,
-	getFloatingLayer: PropTypes.func,
-	getRootFloatingLayer: PropTypes.func,
-	registerFloatingLayer: PropTypes.func,
-	unregisterFloatingLayer: PropTypes.func
-};
+const forAction = forEventProp('action');
+
+const FloatingLayerContext = React.createContext();
 
 /**
  * Default config for {@link ui/FloatingLayer.FloatingLayerDecorator}.
@@ -59,24 +56,14 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'FloatingLayerDecorator'
 
-		static contextTypes = contextTypes
-
-		static childContextTypes = contextTypes
-
 		constructor (props) {
 			super(props);
+			this.registry = Registry.create(this.handleNotify);
 			this.floatingLayer = null;
-			this.layers = [];
 		}
 
-		getChildContext () {
-			return {
-				closeAllFloatingLayers: this.handleCloseAll,
-				getFloatingLayer: this.getFloatingLayer,
-				getRootFloatingLayer: this.getRootFloatingLayer,
-				registerFloatingLayer: this.handleRegister,
-				unregisterFloatingLayer: this.handleUnregister
-			};
+		componentDidMount () {
+			this.notifyMount();
 		}
 
 		getFloatingLayer = () => {
@@ -91,36 +78,20 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			);
 		}
 
-		getRootFloatingLayer = () => {
-			if (this.context.getRootFloatingLayer) {
-				return this.context.getRootFloatingLayer();
-			}
+		handleNotify = oneOf(
+			[forAction('register'), call('notifyMount')],
+			[forAction('closeAll'), call('handleCloseAll')]
+		).bind(this)
 
-			return this.getFloatingLayer();
+		handleCloseAll () {
+			this.registry.notify({action: 'close'});
 		}
 
-		handleCloseAll = () => {
-			this.layers.forEach(({component, close}) => {
-				if (component) {
-					close.call(component);
-				}
+		notifyMount () {
+			this.registry.notify({
+				action: 'mount',
+				floatingLayer: this.getFloatingLayer()
 			});
-		}
-
-		handleRegister = (component, handlers) => {
-			this.layers.push({
-				component,
-				...handlers
-			});
-		}
-
-		handleUnregister = (component) => {
-			for (let i = 0; i < this.layers.length; i++) {
-				if (this.layers[i].component === component) {
-					this.layers.splice(i, 1);
-					break;
-				}
-			}
 		}
 
 		setFloatingLayer = (node) => {
@@ -130,10 +101,12 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			const {className, ...rest} = this.props;
 			return (
-				<div className={className}>
-					<Wrapped key="floatWrapped" {...rest} className={wrappedClassName} />
-					<div id={floatLayerId} key="floatLayer" ref={this.setFloatingLayer} />
-				</div>
+				<FloatingLayerContext.Provider value={this.registry.register}>
+					<div className={className}>
+						<Wrapped key="floatWrapped" {...rest} className={wrappedClassName} />
+						<div id={floatLayerId} key="floatLayer" ref={this.setFloatingLayer} />
+					</div>
+				</FloatingLayerContext.Provider>
 			);
 		}
 	};
@@ -141,6 +114,6 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 export default FloatingLayerDecorator;
 export {
-	contextTypes,
+	FloatingLayerContext,
 	FloatingLayerDecorator
 };

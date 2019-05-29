@@ -21,6 +21,7 @@
 
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -32,7 +33,7 @@ import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 import {SlotItemBase} from '../SlotItem';
 
-import componentCss from './ToggleItem.less';
+import componentCss from './ToggleItem.module.less';
 
 /**
  * A Moonstone-styled toggle [Item]{@link moonstone/Item} without any behavior.
@@ -62,11 +63,10 @@ const ToggleItemBase = kind({
 		 * way. It is recommended to use [ToggleIcon]{@link moonstone/ToggleIcon} for this.
 		 *
 		 * @type {Component|Element}
-		 * @default null
 		 * @required
 		 * @public
 		 */
-		iconComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.func]).isRequired,
+		iconComponent: EnactPropTypes.componentOverride.isRequired,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -122,7 +122,7 @@ const defaultConfig = {
 	 * Invalidate the distance of marquee text if any property (like 'inline') changes.
 	 * Expects an array of props which on change trigger invalidateMetrics.
 	 *
-	 * @type {Array}
+	 * @type {String[]}
 	 * @default ['inline']
 	 * @memberof moonstone/ToggleItem.ToggleItemDecorator.defaultConfig
 	 */

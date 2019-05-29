@@ -2,6 +2,46 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [2.5.2] - 2019-04-23
+
+No significant changes.
+
+## [2.5.1] - 2019-04-09
+
+No significant changes.
+
+## [2.5.0] - 2019-04-01
+
+No significant changes.
+
+## [2.4.1] - 2019-03-11
+
+No significant changes.
+
+## [2.4.0] - 2019-03-04
+
+### Added
+
+- Story description text at the top of each sample
+
+### Changed
+
+- Background images to display in a more pleasant way
+
+## [2.3.0] - 2019-02-11
+
+### Changed
+
+- `moonstone/ExpandableInput` and `moonstone/Input` knob to select input type
+
+## [2.2.9] - 2019-01-11
+
+No significant changes.
+
+## [2.2.8] - 2018-12-06
+
+No significant changes.
+
 ## [2.2.7] - 2018-11-21
 
 No significant changes.

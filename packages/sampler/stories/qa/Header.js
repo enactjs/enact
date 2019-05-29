@@ -5,7 +5,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 
 import {mergeComponentMetadata} from '../../src/utils';
-import {boolean, text} from '../../src/enact-knobs';
+import {boolean, select, text} from '../../src/enact-knobs';
 
 Header.displayName = 'Header';
 const Config = mergeComponentMetadata('Header', HeaderBase, Header);
@@ -17,7 +17,7 @@ storiesOf('Header', module)
 			<Header
 				title={text('title', Config, 'Title')}
 			>
-				<Button small>On / Off</Button>
+				<Button size="small">On / Off</Button>
 			</Header>
 		)
 	)
@@ -28,7 +28,7 @@ storiesOf('Header', module)
 				type="compact"
 				title={text('title', Config, 'Title')}
 			>
-				<Button small>On / Off</Button>
+				<Button size="small">On / Off</Button>
 			</Header>
 		)
 	)
@@ -61,7 +61,7 @@ storiesOf('Header', module)
 				titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 			>
-				<Button small>On / Off</Button>
+				<Button size="small">On / Off</Button>
 			</Header>
 		)
 	)
@@ -74,7 +74,7 @@ storiesOf('Header', module)
 				titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 			>
-				<Button small>On / Off</Button>
+				<Button size="small">On / Off</Button>
 			</Header>
 		)
 	)
@@ -102,11 +102,12 @@ storiesOf('Header', module)
 		'with long text and headerComponent',
 		() => (
 			<Header
-				title={text('title', Config, 'Title')}
+				title={text('title', Config, 'Title is very very very very very very very long.')}
 				titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow text and header components to test positioning of header components.')}
 				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
+				marqueeOn={select('marqueeOn', ['hover', 'render'], Config)}
 			>
-				<Button small>On / Off</Button>
+				<Button size="small">On / Off</Button>
 			</Header>
 		)
 	)
@@ -115,11 +116,12 @@ storiesOf('Header', module)
 		() => (
 			<Header
 				type="compact"
-				title={text('title', Config, 'Title')}
+				title={text('title', Config, 'Title is very very very very very very very long.')}
 				titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow text and header components to test positioning of header components.')}
 				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
+				marqueeOn={select('marqueeOn', ['hover', 'render'], Config)}
 			>
-				<Button small>On / Off</Button>
+				<Button size="small">On / Off</Button>
 			</Header>
 
 		)
@@ -135,7 +137,7 @@ storiesOf('Header', module)
 					titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 					subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 				>
-					<Button small>On / Off</Button>
+					<Button size="small">On / Off</Button>
 				</Header>
 			);
 		}
@@ -146,7 +148,7 @@ storiesOf('Header', module)
 			const input = boolean('Input Mode', Config, true) ? <Input dismissOnEnter={boolean('Input dismissOnEnter', Config, true)} /> : null;
 			return (
 				<Header
-					title={text('title', Config, 'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  த')}
+					title={text('title', Config, 'ิ้  ไั  ஒ  த')}
 					headerInput={input}
 					titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 					subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}

@@ -68,7 +68,8 @@ import {
 	getTargetByContainer,
 	getTargetByDirectionFromElement,
 	getTargetByDirectionFromPosition,
-	getTargetBySelector
+	getTargetBySelector,
+	isFocusable
 } from './target';
 
 import {
@@ -503,6 +504,13 @@ const Spotlight = (function () {
 		}
 	}
 
+	function onTouchEnd (evt) {
+		const current = getCurrent();
+		if (current && !current.contains(evt.target)) {
+			current.blur();
+		}
+	}
+
 	/*
 	 * public methods
 	 */
@@ -511,6 +519,8 @@ const Spotlight = (function () {
 		 * Initializes Spotlight. This is generally handled by
 		 * {@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}.
 		 *
+		 * @param {Object} containerDefaults Default configuration for new spotlight containers
+		 * @returns {undefined}
 		 * @public
 		 */
 		initialize: function (containerDefaults) {
@@ -521,10 +531,16 @@ const Spotlight = (function () {
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
+
+				if (platform.touch) {
+					window.addEventListener('touchend', onTouchEnd);
+				}
+
 				if (platform.webos) {
 					window.top.document.addEventListener('webOSMouse', handleWebOSMouseEvent);
 					window.top.document.addEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
 				}
+
 				setLastContainer(rootContainerId);
 				configureDefaults(containerDefaults);
 				configureContainer(rootContainerId);
@@ -547,6 +563,11 @@ const Spotlight = (function () {
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
+
+			if (platform.touch) {
+				window.removeEventListener('touchend', onTouchEnd);
+			}
+
 			if (platform.webos) {
 				window.top.document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
 				window.top.document.removeEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
@@ -573,8 +594,9 @@ const Spotlight = (function () {
 		 * Sets the config for spotlight or the specified containerID
 		 *
 		 * @function
-		 * @param {String|Object} param1 Configuration object or container ID
-		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
+		 * @param {String|Object} containerIdOrConfig  Configuration object or container ID
+		 * @param {Object}        [config]             Configuration object if container ID supplied
+		 *                                             in `containerIdOrConfig`
 		 * @returns {undefined}
 		 * @public
 		 */
@@ -587,8 +609,9 @@ const Spotlight = (function () {
 		 * object. If no container ID is supplied, a new container ID will be generated.
 		 *
 		 * @function
-		 * @param {String|Object} param1 Configuration object or container ID
-		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
+		 * @param {String|Object} containerIdOrConfig  Configuration object or container ID
+		 * @param {Object}        [config]             Configuration object if container ID supplied
+		 *                                             in `containerIdOrConfig`
 		 * @returns {String} The container ID of the container
 		 * @public
 		 */
@@ -759,7 +782,8 @@ const Spotlight = (function () {
 		 * Sets or clears the default container that will receive focus.
 		 *
 		 * @function
-		 * @param {String|undefined} containerId The container ID or a falsy value to clear default container
+		 * @param {String} [containerId] The container ID or a falsy value to clear default
+		 *                               container
 		 * @returns {undefined}
 		 * @public
 		 */
@@ -846,13 +870,13 @@ const Spotlight = (function () {
 				return false;
 			}
 
-			return matchSelector('.' + spottableClass, elem);
+			return isFocusable(elem);
 		},
 
 		/**
 		 * Returns the currently spotted control.
 		 *
-		 * @returns {Object} The control that currently has focus, if available
+		 * @returns {Node} The control that currently has focus, if available
 		 * @public
 		 */
 		getCurrent: function () {
@@ -862,8 +886,8 @@ const Spotlight = (function () {
 		/**
 		 * Returns a list of spottable elements wrapped by the supplied container.
 		 *
-		 * @param {String} [containerId] The id of the container used to determine the list of spottable elements
-		 * @returns {NodeList} The spottable elements that are wrapped by the supplied container
+		 * @param {String} containerId The id of the container used to determine the list of spottable elements
+		 * @returns {Node[]} The spottable elements that are wrapped by the supplied container
 		 * @public
 		 */
 		getSpottableDescendants: function (containerId) {

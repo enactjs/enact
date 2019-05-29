@@ -1,14 +1,14 @@
 {
   "name": "@enact/moonstone",
-  "version": "2.2.7",
+  "version": "2.5.2",
   "description": "Large-screen/TV support library for Enact, containing a variety of UI components.",
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",
     "lint": "enact lint --strict",
-    "test": "enact test start --single-run --browsers PhantomJS",
-    "test-json": "enact test start --single-run --browsers PhantomJS --reporters json",
-    "test-watch": "enact test start --browsers PhantomJS",
+    "test": "enact test",
+    "test-json": "enact test --json",
+    "test-watch": "enact test --watch",
     "transpile": "enact transpile"
   },
   "license": "Apache-2.0",
@@ -28,17 +28,17 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^2.2.7",
-    "@enact/i18n": "^2.2.7",
-    "@enact/spotlight": "^2.2.7",
-    "@enact/ui": "^2.2.7",
+    "@enact/core": "^2.5.2",
+    "@enact/i18n": "^2.5.2",
+    "@enact/spotlight": "^2.5.2",
+    "@enact/ui": "^2.5.2",
     "classnames": "^2.2.5",
     "eases": "^1.0.8",
     "invariant": "^2.2.2",
-    "prop-types": "^15.6.0",
+    "prop-types": "15.6.2",
     "ramda": "^0.24.1",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
     "recompose": "^0.26.0",
     "warning": "^3.0.0"
   }

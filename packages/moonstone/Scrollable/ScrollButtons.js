@@ -138,14 +138,11 @@ class ScrollButtons extends Component {
 			prevButtonDisabled: true,
 			nextButtonDisabled: true
 		};
+
+		this.announceRef = React.createRef();
+		this.nextButtonRef = React.createRef();
+		this.prevButtonRef = React.createRef();
 	}
-
-	announce = null
-
-	// elements
-
-	prevButtonNodeRef = null
-	nextButtonNodeRef = null
 
 	updateButtons = (bounds) => {
 		const
@@ -157,38 +154,41 @@ class ScrollButtons extends Component {
 			   browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
 			shouldDisableNextButton = maxPos - currentPos <= 1;
 
-		this.setState((prevState) => {
-			const
-				updatePrevButton = (prevState.prevButtonDisabled !== shouldDisablePrevButton),
-				updateNextButton = (prevState.nextButtonDisabled !== shouldDisableNextButton);
+		const
+			updatePrevButton = (this.state.prevButtonDisabled !== shouldDisablePrevButton),
+			updateNextButton = (this.state.nextButtonDisabled !== shouldDisableNextButton);
 
-			if (updatePrevButton && updateNextButton) {
-				return {prevButtonDisabled: shouldDisablePrevButton, nextButtonDisabled: shouldDisableNextButton};
-			} else if (updatePrevButton) {
-				return {prevButtonDisabled: shouldDisablePrevButton};
-			} else if (updateNextButton) {
-				return {nextButtonDisabled: shouldDisableNextButton};
-			}
-		});
+		if (updatePrevButton || updateNextButton) {
+			this.setState(() => {
+				if (updatePrevButton && updateNextButton) {
+					return {prevButtonDisabled: shouldDisablePrevButton, nextButtonDisabled: shouldDisableNextButton};
+				} else if (updatePrevButton) {
+					return {prevButtonDisabled: shouldDisablePrevButton};
+				} else if (updateNextButton) {
+					return {nextButtonDisabled: shouldDisableNextButton};
+				}
+			});
+		}
+
 	}
 
 	isOneOfScrollButtonsFocused = () => {
 		const current = Spotlight.getCurrent();
 
-		return current === this.prevButtonNodeRef || current === this.nextButtonNodeRef;
+		return current === this.prevButtonRef.current || current === this.nextButtonRef.current;
 	}
 
 	onDownPrev = () => {
-		if (this.announce) {
+		if (this.announceRef.current.announce) {
 			const {rtl, vertical} = this.props;
-			this.announce(vertical && $L('UP') || rtl && $L('RIGHT') || $L('LEFT'));
+			this.announceRef.current.announce(vertical && $L('UP') || rtl && $L('RIGHT') || $L('LEFT'));
 		}
 	}
 
 	onDownNext = () => {
-		if (this.announce) {
+		if (this.announceRef.current.announce) {
 			const {rtl, vertical} = this.props;
-			this.announce(vertical && $L('DOWN') || rtl && $L('LEFT') || $L('RIGHT'));
+			this.announceRef.current.announce(vertical && $L('DOWN') || rtl && $L('LEFT') || $L('RIGHT'));
 		}
 	}
 
@@ -205,7 +205,7 @@ class ScrollButtons extends Component {
 	}
 
 	focusOnOppositeScrollButton = (ev, direction) => {
-		const buttonNode = (ev.target === this.nextButtonNodeRef) ? this.prevButtonNodeRef : this.nextButtonNodeRef;
+		const buttonNode = (ev.target === this.nextButtonRef.current) ? this.prevButtonRef.current : this.nextButtonRef.current;
 
 		ev.stopPropagation();
 
@@ -227,8 +227,8 @@ class ScrollButtons extends Component {
 				fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right'));
 
 			// manually focus the opposite scroll button when 5way pressed
-			if ((fromNextToPrev && target === this.nextButtonNodeRef) ||
-				(fromPrevToNext && target === this.prevButtonNodeRef)) {
+			if ((fromNextToPrev && target === this.nextButtonRef.current) ||
+				(fromPrevToNext && target === this.prevButtonRef.current)) {
 				this.focusOnOppositeScrollButton(ev, direction);
 			}
 		} else {
@@ -260,7 +260,7 @@ class ScrollButtons extends Component {
 		if (isPageDown(keyCode) && !nextButtonDisabled) {
 			if (focusableScrollButtons) {
 				Spotlight.setPointerMode(false);
-				Spotlight.focus(this.nextButtonNodeRef);
+				Spotlight.focus(ReactDOM.findDOMNode(this.nextButtonRef.current)); // eslint-disable-line react/no-find-dom-node
 			} else {
 				this.onClickNext(ev);
 			}
@@ -278,30 +278,12 @@ class ScrollButtons extends Component {
 		if (isPageUp(keyCode) && !prevButtonDisabled) {
 			if (focusableScrollButtons) {
 				Spotlight.setPointerMode(false);
-				Spotlight.focus(this.prevButtonNodeRef);
+				Spotlight.focus(ReactDOM.findDOMNode(this.prevButtonRef.current)); // eslint-disable-line react/no-find-dom-node
 			} else {
 				this.onClickPrev(ev);
 			}
 		} else if (isPageDown(keyCode)) {
 			this.onClickNext(ev);
-		}
-	}
-
-	initAnnounceRef = (ref) => {
-		if (ref) {
-			this.announce = ref.announce;
-		}
-	}
-
-	initNextButtonRef = (ref) => {
-		if (ref) {
-			this.nextButtonNodeRef = ReactDOM.findDOMNode(ref); // eslint-disable-line react/no-find-dom-node
-		}
-	}
-
-	initPrevButtonRef = (ref) => {
-		if (ref) {
-			this.prevButtonNodeRef = ReactDOM.findDOMNode(ref); // eslint-disable-line react/no-find-dom-node
 		}
 	}
 
@@ -326,7 +308,7 @@ class ScrollButtons extends Component {
 				onSpotlightLeft={this.onSpotlight}
 				onSpotlightRight={this.onSpotlight}
 				onSpotlightUp={this.onSpotlight}
-				ref={this.initPrevButtonRef}
+				ref={this.prevButtonRef}
 			>
 				{prevIcon}
 			</ScrollButton>,
@@ -344,13 +326,13 @@ class ScrollButtons extends Component {
 				onSpotlightLeft={this.onSpotlight}
 				onSpotlightRight={this.onSpotlight}
 				onSpotlightUp={this.onSpotlight}
-				ref={this.initNextButtonRef}
+				ref={this.nextButtonRef}
 			>
 				{nextIcon}
 			</ScrollButton>,
 			<Announce
 				key="announce"
-				ref={this.initAnnounceRef}
+				ref={this.announceRef}
 			/>
 		];
 	}

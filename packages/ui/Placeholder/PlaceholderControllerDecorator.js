@@ -1,10 +1,9 @@
 import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
+import Registry from '@enact/core/internal/Registry';
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-import {contextTypes} from './PlaceholderDecorator';
 
 /**
  * Default config for `PlaceholderControllerDecorator`.
@@ -47,6 +46,8 @@ const defaultConfig = {
 	thresholdFactor: 1.5
 };
 
+const PlaceholderContext = React.createContext();
+
 /**
  * A higher-order component (HOC) that render placeholder components.
  *
@@ -64,15 +65,6 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'PlaceholderControllerDecorator'
 
-		static childContextTypes = contextTypes
-
-		getChildContext () {
-			return {
-				registerPlaceholder: this.handleRegister,
-				unregisterPlaceholder: this.handleUnregister
-			};
-		}
-
 		componentDidMount () {
 			this.setBounds();
 			this.setThresholds(0, 0);
@@ -83,10 +75,10 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		bounds = null
-		controlled = []
 		leftThreshold = -1
 		node = null
 		topThreshold = -1
+		registry = Registry.create(this.handleRegister.bind(this))
 
 		setBounds () {
 			if (bounds != null) {
@@ -102,44 +94,26 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handleRegister = (key, callback) => {
-			this.controlled.push({callback, key});
-
-			// do not notify until we've initialized the thresholds
-			if (this.topThreshold !== -1 && this.leftThreshold !== -1) {
-				this.notifyAllJob.start(this.topThreshold, this.leftThreshold);
-			}
-		}
-
-		handleUnregister = (key) => {
-			const length = this.controlled.length;
-
-			for (let i = 0; i < length; i++) {
-				if (this.controlled[i].key === key) {
-					this.controlled.splice(i, 1);
-					break;
+		handleRegister (ev) {
+			if (ev.action === 'register') {
+				// do not notify until we've initialized the thresholds
+				if (this.topThreshold !== -1 && this.leftThreshold !== -1) {
+					this.notifyAllJob.start(this.topThreshold, this.leftThreshold);
 				}
 			}
 		}
 
 		notifyAll = (topThreshold, leftThreshold) => {
-			for (let index = this.controlled.length - 1; index >= 0; index--) {
-				const {callback} = this.controlled[index];
-
-				callback({
-					index,
-					leftThreshold,
-					topThreshold
-				});
-			}
+			this.registry.notify({
+				leftThreshold,
+				topThreshold
+			});
 		}
 
 		// queue up notifications when placeholders are first created
 		notifyAllJob = new Job(this.notifyAll, 32)
 
 		setThresholds (top, left) {
-			if (this.controlled.length === 0) return;
-
 			const {height, width} = this.bounds;
 			const topThreshold = height * thresholdFactor + top;
 			const leftThreshold = width * thresholdFactor + left;
@@ -166,10 +140,16 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (notify) props[notify] = this.handleNotify;
 
 			return (
-				<Wrapped {...props} />
+				<PlaceholderContext.Provider value={this.registry.register}>
+					<Wrapped {...props} />
+				</PlaceholderContext.Provider>
 			);
 		}
 	};
 });
 
 export default PlaceholderControllerDecorator;
+export {
+	PlaceholderContext,
+	PlaceholderControllerDecorator
+};
