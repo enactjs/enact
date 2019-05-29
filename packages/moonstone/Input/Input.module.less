@@ -62,6 +62,7 @@
 
 	.input {
 		font-size: @moon-input-font-size;
+		font-weight: @moon-input-font-weight;
 	}
 
 	.input,
@@ -122,9 +123,9 @@
 	// Skin colors
 	.applySkins({
 		background-color: @moon-input-decorator-bg-color;
-		color: @moon-input-text-color;
 
 		.input {
+			color: @moon-input-text-color;
 			background: transparent;
 
 			.input-placeholder({
@@ -144,10 +145,11 @@
 
 		.focus({
 			background-color: @moon-input-decorator-focus-bg-color;
-			color: @moon-input-text-color;
 			box-shadow: @moon-input-border-active-shadow;
 
 			.input {
+				color: @moon-input-focus-text-color;
+
 				.input-placeholder({
 					color: @moon-input-placeholder-focus-color;
 				});
@@ -156,6 +158,10 @@
 
 		&:focus-within {
 			background-color: @moon-input-decorator-active-bg-color;
+
+			.input {
+				color: @moon-input-focus-text-color;
+			}
 		}
 
 		.disabled({
