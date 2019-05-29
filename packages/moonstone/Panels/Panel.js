@@ -171,7 +171,7 @@ const PanelBase = kind({
 		delete rest.hideChildren;
 
 		return (
-			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender}>
+			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender} style={{'--spatial-navigation-contain': 'contain'}} >
 				<div className={css.header} id={headerId}>{header}</div>
 				<section className={bodyClassName}>{children}</section>
 			</article>

@@ -25,6 +25,8 @@ import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
 import {isPaused, pause, resume} from '../Pause';
 
+import './spatial-navigation-polyfill.js';
+
 import {
 	addContainer,
 	configureContainer,
@@ -429,15 +431,26 @@ const Spotlight = (function () {
 	}
 
 	function onKeyDown (evt) {
+		const keyCode = evt.keyCode;
+		const direction = getDirection(keyCode);
+
 		if (shouldPreventNavigation()) {
 			notifyKeyDown(evt.keyCode);
+			if (direction) {
+				// prevent spatial Navigation
+				preventDefault(evt);
+			}
 			return;
 		}
 
-		const keyCode = evt.keyCode;
-		const direction = getDirection(keyCode);
 		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
 
+		if (direction) {
+			// handle in spatial Navigation
+			return;
+		}
+
+		// TODO: handle Pause and Accelerate
 		if (pointerHandled || !(direction || isEnter(keyCode))) {
 			return;
 		}
@@ -449,10 +462,6 @@ const Spotlight = (function () {
 				restoreFocus();
 			}
 			_5WayKeyHold = true;
-		}
-
-		if (direction) {
-			preventDefault(evt);
 		}
 	}
 
