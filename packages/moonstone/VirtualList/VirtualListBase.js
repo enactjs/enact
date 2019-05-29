@@ -23,7 +23,6 @@ const
 	isUp = is('up'),
 	JS = 'JS',
 	Native = 'Native',
-	isItemDisabledDefault = () => (false),
 	// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
 	getNumberValue = (index) => index | 0;
 
@@ -105,32 +104,6 @@ const VirtualListBaseFactory = (type) => {
 			 */
 			initUiChildRef: PropTypes.func,
 
-			/**
-			 * The Function that returns `true` if the item at the index is disabled.
-			 * It is used to navigate a list properly with 5 way keys, page up key,
-			 * and page down key. If it is not supplied, it assumes that no items are disabled.
-			 *
-			 * Usage:
-			 * ```
-			 * isItemDisabled = (index) => (this.items[index].disabled)
-			 * render = () => {
-			 * 	return (
-			 * 		<VirtualList
-			 * 			dataSize={this.items.length}
-			 * 			isItemDisabled={isItemDisabled}
-			 * 			itemRenderer={this.renderItem}
-			 * 			itemSize={this.itemSize}
-			 * 		/>
-			 * 	);
-			 * }
-			 * ```
-			 *
-			 * @type {Function}
-			 * @param {Number} index
-			 * @public
-			 */
-			isItemDisabled: PropTypes.func,
-
 			/*
 			 * It scrolls by page when `true`, by item when `false`.
 			 *
@@ -185,7 +158,6 @@ const VirtualListBaseFactory = (type) => {
 
 		static defaultProps = {
 			dataSize: 0,
-			isItemDisabled: isItemDisabledDefault,
 			pageScroll: false,
 			spacing: 0,
 			wrap: false
@@ -331,27 +303,13 @@ const VirtualListBaseFactory = (type) => {
 		getExtentIndex = (index) => (Math.floor(index / this.uiRefCurrent.dimensionToExtent))
 
 		findSpottableItem = (indexFrom, indexTo) => {
-			const
-				{dataSize, isItemDisabled} = this.props,
-				safeIndexFrom = clamp(0, dataSize - 1, indexFrom),
-				safeIndexTo = clamp(-1, dataSize, indexTo),
-				delta = (indexFrom < indexTo) ? 1 : -1;
+			const {dataSize} = this.props;
 
 			if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
 				return -1;
-			} else if (isItemDisabled === isItemDisabledDefault) {
-				return safeIndexFrom;
+			} else {
+				return clamp(0, dataSize - 1, indexFrom);
 			}
-
-			if (safeIndexFrom !== safeIndexTo) {
-				for (let i = safeIndexFrom; i !== safeIndexTo; i += delta) {
-					if (!isItemDisabled(i)) {
-						return i;
-					}
-				}
-			}
-
-			return -1;
 		}
 
 		findSpottableItemWithPositionInExtent = (indexFrom, indexTo, position) => {
@@ -363,44 +321,24 @@ const VirtualListBaseFactory = (type) => {
 				-1 <= indexTo && indexTo <= dataSize &&
 				0 <= position && position < dimensionToExtent) {
 				const
-					{isItemDisabled} = this.props,
 					direction = (indexFrom < indexTo) ? 1 : -1,
 					delta = direction * dimensionToExtent,
 					diffPosition = (indexFrom % dimensionToExtent) - position,
 					// When direction is 1 (forward) and diffPosition is positive, add dimensionToExtent.
 					// When direction is -1 (backward) and diffPosition is negative, substract dimensionToExtent.
-					startIndex = indexFrom - diffPosition + ((direction * diffPosition > 0) ? delta : 0);
+					candidateIndex = indexFrom - diffPosition + ((direction * diffPosition > 0) ? delta : 0);
 
-				for (let i = startIndex; direction * (indexTo - i) > 0; i += delta) {
-					if (!isItemDisabled(i)) {
-						return i;
-					}
+				if (direction * (indexTo - candidateIndex) > 0) {
+					return candidateIndex;
 				}
 			}
 
 			return -1;
 		}
 
-		findSpottableExtent = (indexFrom, isForward) => {
-			const
-				{dataSize} = this.props,
-				{dimensionToExtent} = this.uiRefCurrent,
-				{findSpottableItem, getExtentIndex} = this,
-				firstIndexInExtent = getExtentIndex(indexFrom) * dimensionToExtent;
-			let index;
-
-			if (isForward) {
-				index = findSpottableItem(firstIndexInExtent + dimensionToExtent, dataSize);
-			} else {
-				index = findSpottableItem(firstIndexInExtent - 1, -1);
-			}
-
-			return getExtentIndex(index);
-		}
-
 		findNearestSpottableItemInExtent = (index, extentIndex) => {
 			const
-				{dataSize, isItemDisabled} = this.props,
+				{dataSize} = this.props,
 				{dimensionToExtent} = this.uiRefCurrent,
 				currentPosInExtent = clamp(0, dataSize - 1, index) % dimensionToExtent,
 				firstIndexInExtent = clamp(0, this.getExtentIndex(dataSize - 1), extentIndex) * dimensionToExtent,
@@ -411,12 +349,10 @@ const VirtualListBaseFactory = (type) => {
 				nearestIndex = -1;
 
 			for (let i = firstIndexInExtent; i < lastIndexInExtent; ++i) {
-				if (!isItemDisabled(i)) {
-					distance = Math.abs(currentPosInExtent - i % dimensionToExtent);
-					if (distance < minDistance) {
-						minDistance = distance;
-						nearestIndex = i;
-					}
+				distance = Math.abs(currentPosInExtent - i % dimensionToExtent);
+				if (distance < minDistance) {
+					minDistance = distance;
+					nearestIndex = i;
 				}
 			}
 
@@ -832,7 +768,8 @@ const VirtualListBaseFactory = (type) => {
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
 			delete rest.initUiChildRef;
-			delete rest.isItemDisabled;
+			// not used by VirtualList
+			delete rest.scrollAndFocusScrollbarButton;
 			delete rest.spotlightId;
 			delete rest.wrap;
 

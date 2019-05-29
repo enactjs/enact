@@ -2,6 +2,21 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- The ability to set and customize the Moonstone Decorator, Panels, Panel, and Header of `MoonstoneEnvironment`
+- `moonstone/Header` sample
+
+## [3.0.0-alpha.2] - 2019-05-20
+
+No significant changes.
+
+## [3.0.0-alpha.1] - 2019-05-15
+
+No significant changes.
+
 ## [2.5.2] - 2019-04-23
 
 No significant changes.

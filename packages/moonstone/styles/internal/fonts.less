@@ -1,221 +1,91 @@
 // ----- SYSTEM FONT NAMES ------
-@font-system-src-miso-300:         local("Miso"), url("../../fonts/Miso/Miso-Light.ttf") format("truetype");
-@font-system-src-miso-400:         local("Miso"), url("../../fonts/Miso/Miso-Regular.ttf") format("truetype");
-@font-system-src-miso-700:         local("Miso"), url("../../fonts/Miso/Miso-Bold.ttf") format("truetype");
+@font-system-src-moonstone-condensed-300:  local("LG Smart UI Cond Light"), local("LGSmartUICond-Light"), local("Miso"), url("../../fonts/Miso/Miso-Light.ttf") format("truetype");
+@font-system-src-moonstone-condensed-400:  local("LG Smart UI Cond"), local("LGSmartUICond-Regular"), local("Miso"), url("../../fonts/Miso/Miso-Regular.ttf") format("truetype");
+@font-system-src-moonstone-condensed-600:  local("LG Smart UI Cond SemiBold"), local("LGSmartUICond-SemiBold"), local("Miso"), url("../../fonts/Miso/Miso-Bold.ttf") format("truetype");
+@font-system-src-moonstone-condensed-700:  local("LG Smart UI Cond Bold"), local("LGSmartUICond-Bold"), local("Miso"), url("../../fonts/Miso/Miso-Bold.ttf") format("truetype");
 
-@font-system-src-museosans-100:    local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Thin.ttf") format("truetype");
-@font-system-src-museosans-300:    local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Light.ttf") format("truetype");
-@font-system-src-museosans-500:    local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Medium.ttf") format("truetype");
-@font-system-src-museosans-500-i:  local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-MediumItalic.ttf") format("truetype");
-@font-system-src-museosans-700:    local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Bold.ttf") format("truetype");
-@font-system-src-museosans-700-i:  local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-BoldItalic.ttf") format("truetype");
-@font-system-src-museosans-900:    local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Black.ttf") format("truetype");
-@font-system-src-museosans-900-i:  local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-BlackItalic.ttf") format("truetype");
+@font-system-src-moonstone-100:    local("LG Smart UI Light"), local("LGSmartUI-Light"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Thin.ttf") format("truetype");
+@font-system-src-moonstone-300:    local("LG Smart UI Light"), local("LGSmartUI-Light"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Light.ttf") format("truetype");
+@font-system-src-moonstone-500:    local("LG Smart UI"), local("LGSmartUI-Regular"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Medium.ttf") format("truetype");
+@font-system-src-moonstone-500-i:  local("LG Smart UI"), local("LGSmartUI-Regular"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-MediumItalic.ttf") format("truetype");
+@font-system-src-moonstone-600:    local("LG Smart UI SemiBold"), local("LGSmartUI-SemiBold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Bold.ttf") format("truetype");
+@font-system-src-moonstone-700:    local("LG Smart UI Bold"), local("LGSmartUI-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Bold.ttf") format("truetype");
+@font-system-src-moonstone-700-i:  local("LG Smart UI Bold"), local("LGSmartUI-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-BoldItalic.ttf") format("truetype");
+@font-system-src-moonstone-900:    local("LG Smart UI Bold"), local("LGSmartUI-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Black.ttf") format("truetype");
+@font-system-src-moonstone-900-i:  local("LG Smart UI Bold"), local("LGSmartUI-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-BlackItalic.ttf") format("truetype");
 
-@font-system-src-non-latin:        local("LG Display-Regular");
-@font-system-src-non-latin-light:  local("LG Display-Light");
-@font-system-src-non-latin-bold:   local("LG Display-Regular");
+@font-system-src-non-latin-300:  local("LG Smart UI Global-Light"), local("LGSmartUIGlobal-Light");
+@font-system-src-non-latin-400:  local("LG Smart UI Global-Regular"), local("LGSmartUIGlobal-Regular");
+@font-system-src-non-latin-700:  local("LG Smart UI Global-Regular"), local("LGSmartUIGlobal-Regular");
 
 @font-system-src-moonstone-icons:  local("Moonstone"), url("../../fonts/Moonstone.ttf") format("truetype");
 @font-system-src-lg-icons:         local("LG Display_Dingbat");
 
+// Fonts are ready now, but we can't distribute them in the package.
+// When should font changes go into moonstone?
+// Change the moonstone font family name, retain copy of old for legacy app code
+// Generate a single font-face rule
+.buildFontFace(@name; @src; @weight: normal; @style: normal) {
+	@font-face {
+		font-family: @name;
+		src: @src;
+		font-weight: @weight;
+		font-style: @style;
+	}
+}
 
+// Generate a pair of rules in the correct order for the fallback glyphs and the preferred glyphs
+.buildFontFamily(@name; @latin; @fallback; @weight: normal; @style: normal) {
+	.buildFontFace(@name; @fallback; @weight; @style);
+	.buildFontFace(@name; @latin; @weight; @style);
+}
+
+/* Deprecated "Miso" font family names. Retained for legacy references. */
 /* ----- MISO ------ */
+.buildFontFamily("Moonstone Miso"; @font-system-src-moonstone-condensed-400; @font-system-src-non-latin-400);
+.buildFontFamily("Moonstone Miso"; @font-system-src-moonstone-condensed-300; @font-system-src-non-latin-300; 300);
+.buildFontFamily("Moonstone Miso"; @font-system-src-moonstone-condensed-700; @font-system-src-non-latin-700; 700);
 
-@font-face {
-	font-family: "Moonstone Miso";
-	src: @font-system-src-non-latin;
-	font-weight: normal;
-	font-style: normal;
-}
-@font-face {
-	font-family: "Moonstone Miso";
-	src: @font-system-src-miso-400;
-	font-weight: normal;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: "Moonstone Miso";
-	src: @font-system-src-non-latin-bold;
-	font-weight: 700;
-	font-style: normal;
-}
-@font-face {
-	font-family: "Moonstone Miso";
-	src: @font-system-src-miso-700;
-	font-weight: 700;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: "Moonstone Miso";
-	src: @font-system-src-non-latin-light;
-	font-weight: 300;
-	font-style: normal;
-}
-@font-face {
-	font-family: "Moonstone Miso";
-	src: @font-system-src-miso-300;
-	font-weight: 300;
-	font-style: normal;
-}
-
+/* Deprecated "MuseoSans" font family names. Retained for legacy references. */
 /* ----- Museo Sans ------ */
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-500;   @font-system-src-non-latin-400);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-500;   @font-system-src-non-latin-400; normal; italic);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-100;   @font-system-src-non-latin-300; 100);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-300;   @font-system-src-non-latin-300; 300);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-500;   @font-system-src-non-latin-400; 500);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-500-i; @font-system-src-non-latin-400; 500; italic);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-700;   @font-system-src-non-latin-700; 700);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-700-i; @font-system-src-non-latin-700; 700; italic);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-900;   @font-system-src-non-latin-700; 900);
+.buildFontFamily("MuseoSans"; @font-system-src-moonstone-900-i; @font-system-src-non-latin-700; 900; italic);
 
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-non-latin;
-	font-weight: normal;
-	font-style: normal;
-}
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-museosans-500;
-	font-weight: normal;
-	font-style: normal;
-}
+/* ----- Moonstone Condensed ------ */
+.buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-400; @font-system-src-non-latin-400);
+.buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-300; @font-system-src-non-latin-300; 300);
+.buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-600; @font-system-src-non-latin-700; 600);
+.buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-700; @font-system-src-non-latin-700; 700);
 
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-non-latin-light;
-	font-weight: 100;
-	font-style: normal;
-}
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-museosans-100;
-	font-weight: 100;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-non-latin-light;
-	font-weight: 300;
-	font-style: normal;
-}
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-museosans-300;
-	font-weight: 300;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-non-latin;
-	font-weight: 500;
-	font-style: normal;
-}
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-museosans-500;
-	font-weight: 500;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-non-latin;
-	font-weight: 500;
-	font-style: italic;
-}
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-museosans-500-i;
-	font-weight: 500;
-	font-style: italic;
-}
-
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-non-latin-bold;
-	font-weight: 700;
-	font-style: normal;
-}
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-museosans-700;
-	font-weight: 700;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-non-latin-bold;
-	font-weight: 700;
-	font-style: italic;
-}
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-museosans-700-i;
-	font-weight: 700;
-	font-style: italic;
-}
-
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-non-latin-bold;
-	font-weight: 900;
-	font-style: normal;
-}
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-museosans-900;
-	font-weight: 900;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-non-latin-bold;
-	font-weight: 900;
-	font-style: italic;
-}
-@font-face {
-	font-family: "MuseoSans";
-	src: @font-system-src-museosans-900-i;
-	font-weight: 900;
-	font-style: italic;
-}
-
-/* ----- Moonstone (Icons) ------ */
-
-@font-face {
-	font-family: "Moonstone Icons";
-	src: @font-system-src-moonstone-icons;
-	font-weight: normal;
-	font-style: normal;
-}
-
-/* ----- LG Dingbats (Icons) ------ */
-
-@font-face {
-	font-family: "LG Icons";
-	src: @font-system-src-lg-icons;
-	font-weight: normal;
-	font-style: normal;
-}
+/* ----- Moonstone ------ */
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-500;   @font-system-src-non-latin-400);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-500;   @font-system-src-non-latin-400; normal; italic);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-100;   @font-system-src-non-latin-300; 100);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-300;   @font-system-src-non-latin-300; 300);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-500;   @font-system-src-non-latin-400; 500);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-500-i; @font-system-src-non-latin-400; 500; italic);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-600;   @font-system-src-non-latin-700; 600);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-700;   @font-system-src-non-latin-700; 700);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-700-i; @font-system-src-non-latin-700; 700; italic);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-900;   @font-system-src-non-latin-700; 900);
+.buildFontFamily("Moonstone"; @font-system-src-moonstone-900-i; @font-system-src-non-latin-700; 900; italic);
 
 /* ----- LG Display ------ */
+.buildFontFamily("Moonstone Global"; @font-system-src-non-latin-400; @font-system-src-moonstone-500);
+.buildFontFamily("Moonstone Global"; @font-system-src-non-latin-300; @font-system-src-moonstone-300; 300);
+.buildFontFamily("Moonstone Global"; @font-system-src-non-latin-400; @font-system-src-moonstone-500; 400);
+.buildFontFamily("Moonstone Global"; @font-system-src-non-latin-700; @font-system-src-moonstone-700; 700);
 
-@font-face {
-	/* We want "LG Display" to map to the bold variant, since that was originally the only option */
-	font-family: "Moonstone LG Display";
-	src: @font-system-src-non-latin;
-	font-weight: 400;
-	font-style: normal;
-}
-@font-face {
-	font-family: "Moonstone LG Display";
-	src: @font-system-src-non-latin-bold;
-	font-weight: 700;
-	font-style: normal;
-}
-@font-face {
-	font-family: "Moonstone LG Display";
-	src: @font-system-src-non-latin-light;
-	font-weight: 300;
-	font-style: normal;
-}
+/* ----- Moonstone (Icons) ------ */
+.buildFontFace("Moonstone Icons"; @font-system-src-moonstone-icons);
+
+/* ----- LG Dingbats (Icons) ------ */
+.buildFontFace("LG Icons"; @font-system-src-lg-icons);

@@ -148,7 +148,7 @@ storiesOf('ContextualPopupDecorator', module)
 	.add(
 		'with 5-way selectable activator',
 		() => (
-			<div style={{textAlign: 'center', marginTop: ri.unit(99, 'rem')}}>
+			<div style={{textAlign: 'center', marginTop: ri.unit(180, 'rem')}}>
 				<ContextualPopupWithActivator
 					direction={select('direction', ['up', 'down', 'left', 'right'], Config, 'down')}
 					popupComponent={renderPopup}

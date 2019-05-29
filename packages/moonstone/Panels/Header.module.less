@@ -6,8 +6,6 @@
 
 .header {
 	.border-box();
-	border-top-width: @moon-header-border-top-width;
-	border-top-style: solid;
 	border-bottom-width: @moon-header-border-bottom-width;
 	border-bottom-style: solid;
 	position: relative;
@@ -38,8 +36,7 @@
 
 	.decorator {
 		padding: 0;
-		border-radius: 0;
-		border: none;
+		margin: -2px 3px 0 -3px; // Negative 3px here to allow the decorator title text to horizontally align with the rest of the header text
 	}
 
 	.titleBelow,
@@ -53,8 +50,8 @@
 
 	.headerComponents {
 		.remove-margin-on-edge-children();
-		.margin-start-end(@moon-spotlight-outset, 0);
-		margin-bottom: @moon-spotlight-outset;
+		.margin-start-end(@moon-header-components-gutter, 0);
+		margin-bottom: 18px;
 
 		white-space: nowrap;
 	}
@@ -64,13 +61,11 @@
 		height: @moon-header-height-medium;
 
 		.title {
-			// This `margin-top: -3px;` is intended to account for the height disparity and visual
-			// offset when switching between Header+Input and a Standard Header's title height.
 			// The height is determined by the line-height below, but we want to maintain that as a
-			// relative unit (`em`) rather than dictate specific pixels. The -3px offset may need to
-			// be updated or removed to accomodate taller glyphs.
-			margin-top: -3px;
+			// relative unit (`em`) rather than dictate specific pixels to automatically accomodate
+			// font size changes.
 			line-height: @moon-medium-header-line-height;
+			margin-left: -3px; // Negative 3px here to allow the title text to horizontally align with the rest of the header text
 
 			.moon-locale-non-latin({line-height: @moon-non-latin-medium-header-line-height;});
 		}
@@ -91,6 +86,10 @@
 	&.compact {
 		height: @moon-header-height-small;
 
+		.compactTitle {
+			margin-bottom: 3px;
+		}
+
 		.input,
 		.title {
 			font-size: @moon-small-header-font-size;
@@ -101,6 +100,7 @@
 
 		.titleBelow {
 			display: inline;
+			padding-inline-start: 18px;
 		}
 	}
 
@@ -111,7 +111,6 @@
 	// Skin colors
 	.applySkins({
 		color: @moon-header-text-color;
-		border-top-color: @moon-header-border-color;
 		border-bottom-color: @moon-header-bottom-border-color;
 
 		&.standard {
@@ -120,19 +119,14 @@
 
 				.focus({
 					background-color: transparent;
-
-					.input {
-						background-color: @moon-header-input-bg-color;
-						color: @moon-header-input-text-color;
-
-						.input-placeholder({
-							color: @moon-header-input-text-color;
-						});
-					}
 				});
 
 				.input {
 					color: @moon-header-text-color;
+
+					.input-placeholder({
+						color: @moon-header-text-color;
+					});
 				}
 			}
 		}
@@ -149,8 +143,36 @@
 	});
 }
 
-:global(.hasCloseButton) .header.compact,
-:global(.hasCloseButton) .header.standard .title,
-:global(.hasCloseButton) .header.standard .decorator {
-	.padding-start-end(0, @moon-spotlight-outset + @moon-icon-button-small-size + @moon-spotlight-outset);
+:global(.moon-panels-hasControls) {
+	.header.compact,
+	.header.standard .title,
+	.header.standard .headerInput {
+		.padding-start-end(0, var(--moon-panels-controls-width));
+	}
+
+	.header.compact {
+		.headerComponents {
+			border-right-width: @moon-header-controls-border-width;
+			border-right-style: solid;
+			.padding-start-end(initial, @moon-header-components-separation);
+
+			:global(.enact-locale-right-to-left) & {
+				border-right-width: 0;
+				border-right-style: none;
+				border-left-width: @moon-header-controls-border-width;
+				border-left-style: solid;
+			}
+		}
+
+		.applySkins({
+			.headerComponents {
+				border-right-color: @moon-header-controls-border-color;
+
+				:global(.enact-locale-right-to-left) & {
+					border-right-color: transparent;
+					border-left-color: @moon-header-controls-border-color;
+				}
+			}
+		});
+	}
 }
