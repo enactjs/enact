@@ -114,7 +114,12 @@ const PanelsBase = kind({
 		]),
 
 		/**
-		 * Unique identifier for the Panels instance
+		 * Unique identifier for the Panels instance.
+		 *
+		 * When defined, `Panels` will manage the presentation state of `Panel` instances in order
+		 * to restore it when returning to the `Panel`. See
+		 * [noSharedState]{@link moonstone/Panels.Panels.noSharedState} for more details on shared
+		 * state.
 		 *
 		 * @type {String}
 		 * @public
@@ -149,6 +154,24 @@ const PanelsBase = kind({
 		noCloseButton: PropTypes.bool,
 
 		/**
+		 * Prevents maintaining shared state for framework components within this `Panels` instance.
+		 *
+		 * When `false`, each `Panel` will track the state of some framework components in order to
+		 * restore that state when the Panel is recreated. For example, the scroll position of a
+		 * `moonstone/Scroller` within a `Panel` will be saved and restored when returning to that
+		 * `Panel`.
+		 *
+		 * This only applied when navigating "back" (to a lower index) to `Panel`. When navigating
+		 * "forwards" (to a higher index), the `Panel` and its contained components will use their
+		 * default state.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noSharedState: PropTypes.bool,
+
+		/**
 		 * Called when the app close button is clicked.
 		 *
 		 * @type {Function}
@@ -169,7 +192,8 @@ const PanelsBase = kind({
 		closeButtonBackgroundOpacity: 'transparent',
 		index: 0,
 		noAnimation: false,
-		noCloseButton: false
+		noCloseButton: false,
+		noSharedState: false
 	},
 
 	styles: {
@@ -225,10 +249,11 @@ const PanelsBase = kind({
 		style: ({controlsMeasurements, style = {}}) => (controlsMeasurements ? {
 			...style,
 			'--moon-panels-controls-width': controlsMeasurements.width + 'px'
-		} : style)
+		} : style),
+		viewportId: ({id}) => id && `${id}-viewport`
 	},
 
-	render: ({arranger, childProps, children, controls, generateId, index, noAnimation, ...rest}) => {
+	render: ({arranger, childProps, children, controls, generateId, id, index, noAnimation, noSharedState, viewportId, ...rest}) => {
 		delete rest.closeButtonBackgroundOpacity;
 		delete rest.closeButtonAriaLabel;
 		delete rest.controlsMeasurements;
@@ -238,14 +263,16 @@ const PanelsBase = kind({
 		delete rest.onBack;
 
 		return (
-			<div {...rest}>
+			<div {...rest} id={id}>
 				{controls}
 				<Viewport
 					arranger={arranger}
 					childProps={childProps}
 					generateId={generateId}
+					id={viewportId}
 					index={index}
 					noAnimation={noAnimation}
+					noSharedState={noSharedState}
 				>
 					{children}
 				</Viewport>
