@@ -75,8 +75,6 @@ const configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusabl
 	});
 };
 
-const isValidId = (id) => id !== '';
-
 /*
  * Track the last position of the pointer to check if a list should scroll by
  * page up/down keys when the pointer is on a list without any focused node.
@@ -341,7 +339,7 @@ class ScrollableBase extends Component {
 	// scroll position from SharedState and scroll (without animation) to that position
 	restoreScrollPosition () {
 		const {id} = this.props;
-		if (this.context && isValidId(id)) {
+		if (id && this.context && this.context.get) {
 			const scrollPosition = this.context.get(`${id}.scrollPosition`);
 			if (scrollPosition) {
 				this.uiRef.current.scrollTo({
@@ -853,7 +851,7 @@ class ScrollableBase extends Component {
 
 	handleScroll = handle(
 		forward('onScroll'),
-		(ev, {id}, context) => isValidId(id) && context,
+		(ev, {id}, context) => id && context && context.set,
 		({scrollLeft: x, scrollTop: y}, {id}, context) => {
 			context.set(`${id}.scrollPosition`, {x, y});
 		}

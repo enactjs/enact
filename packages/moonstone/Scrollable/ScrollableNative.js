@@ -55,8 +55,6 @@ const configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusabl
 	});
 };
 
-const isValidId = (id) => id !== '';
-
 /**
  * A Moonstone-styled native component that provides horizontal and vertical scrollbars.
  *
@@ -288,7 +286,7 @@ class ScrollableBaseNative extends Component {
 	// scroll position from SharedState and scroll (without animation) to that position
 	restoreScrollPosition () {
 		const {id} = this.props;
-		if (this.context && isValidId(id)) {
+		if (id && this.context && this.context.get) {
 			const scrollPosition = this.context.get(`${id}.scrollPosition`);
 			if (scrollPosition) {
 				this.uiRef.current.scrollTo({
@@ -850,7 +848,7 @@ class ScrollableBaseNative extends Component {
 
 	handleScroll = handle(
 		forward('onScroll'),
-		(ev, {id}, context) => isValidId(id) && context,
+		(ev, {id}, context) => id && context && this.context.set,
 		({scrollLeft: x, scrollTop: y}, {id}, context) => {
 			context.set(`${id}.scrollPosition`, {x, y});
 		}

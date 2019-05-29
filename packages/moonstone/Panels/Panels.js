@@ -249,10 +249,11 @@ const PanelsBase = kind({
 		style: ({controlsMeasurements, style = {}}) => (controlsMeasurements ? {
 			...style,
 			'--moon-panels-controls-width': controlsMeasurements.width + 'px'
-		} : style)
+		} : style),
+		viewportId: ({id}) => id && `${id}-viewport`
 	},
 
-	render: ({arranger, childProps, children, controls, generateId, id, index, noAnimation, noSharedState, ...rest}) => {
+	render: ({arranger, childProps, children, controls, generateId, id, index, noAnimation, noSharedState, viewportId, ...rest}) => {
 		delete rest.closeButtonBackgroundOpacity;
 		delete rest.closeButtonAriaLabel;
 		delete rest.controlsMeasurements;
@@ -268,7 +269,7 @@ const PanelsBase = kind({
 					arranger={arranger}
 					childProps={childProps}
 					generateId={generateId}
-					id={`viewport-${id}`}
+					id={viewportId}
 					index={index}
 					noAnimation={noAnimation}
 					noSharedState={noSharedState}

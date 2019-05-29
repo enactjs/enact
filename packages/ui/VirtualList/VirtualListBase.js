@@ -291,7 +291,7 @@ const VirtualListBaseFactory = (type) => {
 			// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
 			this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
 
-			if (prevState.firstIndex !== this.state.firstIndex && this.props.onUpdateItems) {
+			if (prevState.firstIndex !== this.state.firstIndex) {
 				this.emitUpdateItems();
 			}
 
@@ -805,7 +805,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.isVerticalScrollbarVisible;
 			delete rest.itemRenderer;
 			delete rest.itemSize;
-			delete rest.onUpdate;
+			delete rest.onUpdateItems;
 			delete rest.overhang;
 			delete rest.pageScroll;
 			delete rest.rtl;
