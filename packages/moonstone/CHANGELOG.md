@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `moonstone/Dropdown` prop `select` prop to `radio`
+
 ## [3.0.0-alpha.3] - 2019-05-29
 
 ### Added
