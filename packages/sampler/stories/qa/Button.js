@@ -21,7 +21,7 @@ const prop = {
 	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
 	color: ['', 'red', 'green', 'yellow', 'blue'],
 	longText:{'Loooooooooooooooooog Button': 'Loooooooooooooooooog Button', 'BUTTON   WITH   EXTRA   SPACES': 'BUTTON   WITH   EXTRA   SPACES'},
-	tallText:{'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'},
+	tallText:{' ฟิ้ ไั  ஒ  து': ' ฟิ้ ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'},
 	icons: ['', ...Object.keys(icons)]
 };
 
@@ -54,7 +54,7 @@ storiesOf('Button', module)
 				selected={boolean('selected', Config)}
 				size={select('size', ['small', 'large'], Config)}
 			>
-				{select('value', prop.tallText, Config, 'ิ้  ไั  ஒ  து')}
+				{select('value', prop.tallText, Config, 'ฟิ้  ไั  ஒ  து')}
 			</Button>
 		)
 	)
