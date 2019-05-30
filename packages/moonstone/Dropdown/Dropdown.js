@@ -119,6 +119,7 @@ const DropdownList = Skinnable(
 						className={css.group}
 						component={children ? Scroller : null}
 						onSelect={onSelect}
+						select="radio"
 						selected={selected}
 					>
 						{children}
