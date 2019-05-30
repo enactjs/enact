@@ -24,6 +24,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` to not scroll the viewport when dragging on touch platforms
 - `moonstone/VirtualList` and `moonstone/Scroller` to animate with 5-way navigation by default
 - `moonstone/ExpandableInput` to retain focus when touching within the input field on touch platforms
+- `moonstone/ExpandableList` to not error if `selected` is passed as an array to a non-multi-select list
 
 ## [2.5.2] - 2019-04-23
 
