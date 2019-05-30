@@ -517,11 +517,12 @@ const VirtualListBaseFactory = (type) => {
 						this.isWrappedBy5way = true;
 						this.pause.pause();
 						target.blur();
+						this.nodeIndexToBeFocused = nextIndex;
 					} else if (!isWrapped || wrap !== 'noAnimation') {
 						this.focusOnItem(nextIndex);
+					} else {
+						this.nodeIndexToBeFocused = nextIndex;
 					}
-
-					this.nodeIndexToBeFocused = nextIndex;
 
 					cbScrollTo({
 						index: nextIndex,
