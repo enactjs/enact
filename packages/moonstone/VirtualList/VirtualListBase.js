@@ -1,5 +1,6 @@
 import clamp from 'ramda/src/clamp';
 import {is} from '@enact/core/keymap';
+import {forward, forwardWithPrevent, handle} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
@@ -25,7 +26,8 @@ const
 	Native = 'Native',
 	isItemDisabledDefault = () => (false),
 	// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
-	getNumberValue = (index) => index | 0;
+	getNumberValue = (index) => index | 0,
+	nop = () => {};
 
 /**
  * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} and
@@ -217,11 +219,6 @@ const VirtualListBaseFactory = (type) => {
 				}
 			}
 
-			if (containerNode && containerNode.addEventListener) {
-				containerNode.addEventListener('keydown', this.onKeyDown);
-				containerNode.addEventListener('keyup', this.onKeyUp);
-			}
-
 			setTimeout(() => {
 				this.restoreFocus();
 			}, 0);
@@ -242,11 +239,6 @@ const VirtualListBaseFactory = (type) => {
 				if (containerNode && containerNode.removeEventListener) {
 					containerNode.removeEventListener('scroll', this.preventScroll);
 				}
-			}
-
-			if (containerNode && containerNode.removeEventListener) {
-				containerNode.removeEventListener('keydown', this.onKeyDown);
-				containerNode.removeEventListener('keyup', this.onKeyUp);
 			}
 
 			this.pause.resume();
@@ -560,11 +552,9 @@ const VirtualListBaseFactory = (type) => {
 		 * Handle `onKeyDown` event
 		 */
 
-		onAcceleratedKeyDown = ({keyCode, repeat, target}) => {
+		onAcceleratedKeyDown = ({index, isWrapped, keyCode, nextIndex, repeat, target}) => {
 			const {cbScrollTo, spacing, wrap} = this.props;
 			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPosition} = this.uiRefCurrent;
-			const index = getNumberValue(target.dataset.index);
-			const {isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
 
 			this.isScrolledBy5way = false;
 			this.isScrolledByJump = false;
@@ -602,20 +592,40 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		onKeyDown = (ev) => {
-			if (getDirection(ev.keyCode)) {
-				ev.preventDefault();
-				ev.stopPropagation();
-				Spotlight.setPointerMode(false);
-				SpotlightAccelerator.processKey(ev, this.onAcceleratedKeyDown);
-			}
-		}
+		onKeyDown = handle(
+			forwardWithPrevent('onKeyDown'),
+			(ev) => {
+				const {keyCode} = ev;
 
-		onKeyUp = ({keyCode}) => {
-			if (getDirection(keyCode) || isEnter(keyCode)) {
-				SpotlightAccelerator.reset();
+				if (getDirection(keyCode)) {
+					Spotlight.setPointerMode(false);
+
+					if (SpotlightAccelerator.processKey(ev, nop)) {
+						ev.preventDefault();
+						ev.stopPropagation();
+					} else {
+						const {repeat, target} = ev;
+						const index = getNumberValue(target.dataset.index);
+						const {isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
+
+						if (nextIndex >= 0) {
+							ev.preventDefault();
+							ev.stopPropagation();
+							this.onAcceleratedKeyDown({index, isWrapped, keyCode, nextIndex, repeat, target});
+						}
+					}
+				}
 			}
-		}
+		).bindAs(this, 'onKeyDown')
+
+		onKeyUp = handle(
+			forward('onKeyUp'),
+			({keyCode}) => {
+				if (getDirection(keyCode) || isEnter(keyCode)) {
+					SpotlightAccelerator.reset();
+				}
+			}
+		).bindAs(this, 'onKeyUp')
 
 		/**
 		 * Handle global `onKeyDown` event
@@ -841,6 +851,8 @@ const VirtualListBaseFactory = (type) => {
 							index
 						})
 					)}
+					onKeyDown={this.onKeyDown}
+					onKeyUp={this.onKeyUp}
 					ref={this.initUiRef}
 					updateStatesAndBounds={this.updateStatesAndBounds}
 					itemsRenderer={(props) => { // eslint-disable-line react/jsx-no-bind
@@ -900,12 +912,14 @@ VirtualListBase.displayName = 'VirtualListBase';
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'VirtualListBaseNative';
 
-const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
+const ScrollableVirtualList = ({onKeyDown, onKeyUp, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 	<Scrollable
-		{...props}
+		{...rest}
 		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...childProps}
+				onKeyDown={onKeyDown}
+				onKeyUp={onKeyUp}
 				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
@@ -937,19 +951,39 @@ ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBa
 	 * @default 'vertical'
 	 * @public
 	 */
-	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	/**
+	 * The handler to run during a keydown event
+	 *
+	 * @type {Function}
+	 * @param {Object} event
+	 * @public
+	 */
+	onKeyDown: PropTypes.func,
+
+	/**
+	 * The handler to run during a keyup event
+	 *
+	 * @type {Function}
+	 * @param {Object} event
+	 * @public
+	 */
+	onKeyUp: PropTypes.func
 };
 
 ScrollableVirtualList.defaultProps = {
 	direction: 'vertical'
 };
 
-const ScrollableVirtualListNative = (props) => (
+const ScrollableVirtualListNative = ({onKeyDown, onKeyUp, ...rest}) => (
 	<ScrollableNative
-		{...props}
+		{...rest}
 		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...childProps}
+				onKeyDown={onKeyDown}
+				onKeyUp={onKeyUp}
 				itemsRenderer={({cc, handlePlaceholderFocus, initItemContainerRef: initUiItemContainerRef, needsScrollingPlaceholder, primary}) => ( // eslint-disable-line react/jsx-no-bind
 					[
 						cc.length ? <div key="0" ref={initUiItemContainerRef} role="list">{cc}</div> : null,
@@ -981,7 +1015,25 @@ ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.Virtual
 	 * @default 'vertical'
 	 * @public
 	 */
-	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	/**
+	 * The handler to run during a keydown event
+	 *
+	 * @type {Function}
+	 * @param {Object} event
+	 * @public
+	 */
+	onKeyDown: PropTypes.func,
+
+	/**
+	 * The handler to run during a keyup event
+	 *
+	 * @type {Function}
+	 * @param {Object} event
+	 * @public
+	 */
+	onKeyUp: PropTypes.func
 };
 
 ScrollableVirtualListNative.defaultProps = {
