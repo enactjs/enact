@@ -73,37 +73,6 @@ class ScrollerWithResizable extends React.Component {
 	}
 }
 
-class ScrollerTopMostVisibleItemInTheScroller extends React.Component {
-	componentDidMount () {
-		this.blurEvent = document.createEvent('Event');
-		this.blurEvent.initEvent('blur', true, true);
-		this.focusEvent = document.createEvent('Event');
-		this.focusEvent.initEvent('focus', true, true);
-	}
-
-	handleScrollStop = () => {
-		window.dispatchEvent(this.blurEvent);
-		window.dispatchEvent(this.focusEvent);
-	}
-
-	render () {
-		return (
-			<Scroller
-				focusableScrollbar
-				onScrollStop={this.handleScrollStop}
-				style={{height: ri.scale(200)}}
-				verticalScrollbar="visible"
-			>
-				<Item>Item</Item>
-				<Item>Focus me, press right, then select on down arrow</Item>
-				<Item>Focus should return here</Item>
-				<Item>Item</Item>
-				<Item>Item</Item>
-			</Scroller>
-		);
-	}
-}
-
 class ScrollerWithTwoExpandableList extends React.Component {
 	render () {
 		return (
@@ -282,12 +251,6 @@ storiesOf('Scroller', module)
 		'With Resizable',
 		() => (
 			<ScrollerWithResizable />
-		)
-	)
-	.add(
-		'Top Most Visible Item in the Scroller',
-		() => (
-			<ScrollerTopMostVisibleItemInTheScroller />
 		)
 	)
 	.add(
