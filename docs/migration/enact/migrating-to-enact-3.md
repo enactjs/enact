@@ -18,6 +18,25 @@ Enact 3.0 no longer supports the 2019 TV platform or earlier versions.
 
 ## moonstone
 
+### Styles
+Various styling changes have been made to support new UI/UX designs for the webOS TV platform.  In
+addition, some LESS variables have been changed or removed.  If you were importing `moonstone/styles/*.less`
+files, you may need to address these changes:
+* `@moon-button-translucent-opacity` has been removed
+* `@moon-checkbox-check-color` has been renamed to `@moon-checkbox-text-color`
+* `@moon-checkbox-spotlight-bg-color` (`@moon-checkbox-bg-spotlight-color` in `colors-light.less`) has been renamed to `@moon-checkbox-focus-bg-color`
+* `@moon-checkbox-spotlight-color` has been renamed to `@moon-checkbox-focus-text-color`
+* `@moon-header-input-bg-color` has been removed
+* `@moon-header-input-text-color` has been removed
+* `@moon-input-border-active-outline-color` has been renamed to `@moon-input-border-active-shadow`
+* `@moon-radio-item-indicator-border-color` has been removed
+* `@moon-radio-item-spotlight-indicator-bg-color` has been renamed to `@moon-radio-item-focus-indicator-bg-color`
+* `@moon-radio-item-spotlight-indicator-border-color` has been removed
+* `@moon-radio-item-selected-indicator-border-color` has been removed
+* `@moon-radio-item-selected-spotlight-indicator-color` has been renamed to `@moon-radio-item-selected-focus-indicator-color`
+* `@moon-radio-item-selected-spotlight-indicator-bg-color` has been renamed to `@moon-radio-item-selected-focus-indicator-bg-color`
+* `@moon-radio-item-selected-spotlight-indicator-border-color` has been removed
+
 ### `Button`
 The `casing` prop has been removed.
 
