@@ -3,6 +3,8 @@ import {forward} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import {validateRange, validateStepped} from '../internal/validators';
+
 import {calcProportion} from './utils';
 
 import css from './Slider.module.less';
@@ -29,8 +31,8 @@ const PositionDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-u
 			step: 1
 		}
 
-		constructor () {
-			super();
+		constructor (props) {
+			super(props);
 
 			this.handleDown = this.handleDown.bind(this);
 			this.handleDrag = this.handleDrag.bind(this);
@@ -39,6 +41,13 @@ const PositionDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-u
 			this.dragConfig = {
 				global: true
 			};
+			if (__DEV__) {
+				const {min, value = min, max, step} = props;
+
+				validateRange(value, min, max, 'Slider');
+				validateStepped(value, min, step, 'Slider');
+				validateStepped(max, min, step, 'Slider', '"max"');
+			}
 		}
 
 		emitChangeForPosition (x, y) {
