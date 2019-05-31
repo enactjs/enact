@@ -408,12 +408,6 @@ const PickerBase = class extends React.Component {
 
 		this.initContainerRef = this.initRef('containerRef');
 
-		if (__DEV__) {
-			validateRange(props.value, props.min, props.max, PickerBase.displayName);
-			validateStepped(props.value, props.min, props.step, PickerBase.displayName);
-			validateStepped(props.max, props.min, props.step, PickerBase.displayName, '"max"');
-		}
-
 		// Pressed state for this.handleUp
 		this.pickerButtonPressed = 0;
 	}

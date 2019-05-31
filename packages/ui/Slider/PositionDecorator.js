@@ -41,13 +41,6 @@ const PositionDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-u
 			this.dragConfig = {
 				global: true
 			};
-			if (__DEV__) {
-				const {min, value = min, max, step} = props;
-
-				validateRange(value, min, max, 'Slider');
-				validateStepped(value, min, step, 'Slider');
-				validateStepped(max, min, step, 'Slider', '"max"');
-			}
 		}
 
 		emitChangeForPosition (x, y) {
@@ -139,6 +132,14 @@ const PositionDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-u
 		}
 
 		render () {
+			if (__DEV__) {
+				const {min, value = min, max, step} = this.props;
+
+				validateRange(value, min, max, 'Slider');
+				validateStepped(value, min, step, 'Slider');
+				validateStepped(max, min, step, 'Slider', '"max"');
+			}
+
 			return (
 				<Wrapped
 					{...this.props}

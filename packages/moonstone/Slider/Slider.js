@@ -33,6 +33,7 @@ import React from 'react';
 
 import {ProgressBarTooltip} from '../ProgressBar';
 import Skinnable from '../Skinnable';
+import {validateStepped} from '../internal/validators';
 
 import SliderBehaviorDecorator from './SliderBehaviorDecorator';
 import {
@@ -269,8 +270,12 @@ const SliderBase = kind({
 	render: ({css, focused, tooltip, ...rest}) => {
 		delete rest.activateOnFocus;
 		delete rest.active;
-		delete rest.knobStep;
 		delete rest.onActivate;
+
+		if (__DEV__) {
+			validateStepped(rest.max, rest.min, rest.knobStep, 'Slider', '"max"', '"knobStep"');
+		}
+		delete rest.knobStep;
 
 		return (
 			<UiSlider
