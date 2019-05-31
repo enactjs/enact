@@ -53,7 +53,7 @@ const EditableIntegerPickerBase = kind({
 		/**
 		 * The maximum value selectable by the picker (inclusive).
 		 *
-		 * The value should be evenly divisible by
+		 * The range between `min` and `max` should be evenly divisible by
 		 * [step]{@link moonstone/EditableIntegerPicker.EditableIntegerPickerBase.step}.
 		 *
 		 * @type {Number}
@@ -65,7 +65,7 @@ const EditableIntegerPickerBase = kind({
 		/**
 		 * The minimum value selectable by the picker (inclusive).
 		 *
-		 * The value should be evenly divisible by
+		 * The range between `min` and `max` should be evenly divisible by
 		 * [step]{@link moonstone/EditableIntegerPicker.EditableIntegerPickerBase.step}.
 		 *
 		 * @type {Number}
@@ -185,6 +185,7 @@ const EditableIntegerPickerBase = kind({
 		 * Allow the picker to only increment or decrement by a given value.
 		 *
 		 * For example, a step of `2` would cause a picker to increment from 10 to 12 to 14, etc.
+		 * It must evenly divide into the range designated by `min` and `max`.
 		 *
 		 * @type {Number}
 		 * @default 1

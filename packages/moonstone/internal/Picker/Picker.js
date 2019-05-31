@@ -91,6 +91,9 @@ const PickerBase = class extends React.Component {
 		/**
 		 * The maximum value selectable by the picker (inclusive).
 		 *
+		 * The range between `min` and `max` should be evenly divisible by
+		 * [step]{@link moonstone/internal/Picker.PickerBase.step}.
+		 *
 		 * @type {Number}
 		 * @required
 		 * @public
@@ -99,6 +102,9 @@ const PickerBase = class extends React.Component {
 
 		/**
 		 * The minimum value selectable by the picker (inclusive).
+		 *
+		 * The range between `min` and `max` should be evenly divisible by
+		 * [step]{@link moonstone/internal/Picker.PickerBase.step}.
 		 *
 		 * @type {Number}
 		 * @required
@@ -335,8 +341,10 @@ const PickerBase = class extends React.Component {
 		spotlightDisabled: PropTypes.bool,
 
 		/**
-		 * Allow the picker to only increment or decrement by a given value. A step of `2` would
-		 * cause a picker to increment from 10 to 12 to 14, etc.
+		 * Allow the picker to only increment or decrement by a given value.
+		 *
+		 * A step of `2` would cause a picker to increment from 10 to 12 to 14, etc. It must evenly
+		 * divide into the range designated by `min` and `max`.
 		 *
 		 * @type {Number}
 		 * @default 1
