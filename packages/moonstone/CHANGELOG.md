@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Dropdown` to use radio selection which allows only changing the selection but not deselection
 
+### Fixed
+
+- high contrast colors for `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/Header`, `moonstone/RadioItem`, `moonstone/Slider`, and `moonstone/Switch`
+
 ## [3.0.0-alpha.3] - 2019-05-29
 
 ### Added

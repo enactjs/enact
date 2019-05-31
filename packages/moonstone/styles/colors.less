@@ -66,6 +66,7 @@
 @moon-button-disabled-focus-text-color: @moon-button-focus-text-color;
 @moon-button-disabled-focus-icon-color: @moon-button-focus-text-color;
 @moon-button-disabled-focus-bg-color: @moon-button-focus-bg-color;
+@moon-button-selected-text-color: @moon-button-text-color;
 @moon-button-selected-bg-color: #222;
 @moon-button-selected-border-color: @moon-spotlight-border-color;
 @moon-button-selected-focus-text-color: @moon-spotlight-text-color;
@@ -141,8 +142,8 @@
 // Header
 // ---------------------------------------
 @moon-header-text-color:              @moon-gray;
-@moon-header-sub-title-color:         @moon-text-color;
-@moon-sub-header-text-color:          #a6a6a6;
+@moon-header-sub-title-color:         #a6a6a6;
+@moon-sub-header-text-color:          @moon-header-sub-title-color;
 @moon-sup-header-text-color:          @moon-text-color;
 @moon-header-border-color:            #505050;
 @moon-header-bottom-border-color:     #404040;
@@ -168,20 +169,20 @@
 // Input
 // ---------------------------------------
 @moon-input-text-color:               @moon-black;
-@moon-input-focus-text-color:         @moon-input-text-color;
-@moon-input-text-disabled-color:      fade(@moon-black, 25%);
 @moon-input-border-color:             #eaeaea;
 @moon-input-textarea-color:           @moon-dark-gray;
 @moon-input-placeholder-color:        @moon-white;
 @moon-input-placeholder-focus-color:  @moon-input-decorator-bg-color;
-@moon-input-placeholder-active-color:  @moon-input-placeholder-focus-color;
+@moon-input-placeholder-active-color: @moon-input-placeholder-focus-color;
+@moon-input-focus-text-color:         @moon-dark-gray;
+@moon-input-disabled-text-color:      @moon-white;
 @moon-input-decorator-bg-color:       #aaa;
 @moon-input-decorator-border-color:   @moon-light-gray;
 @moon-input-decorator-focus-bg-color: @moon-white;
-@moon-input-border-focus-border-color: @moon-spotlight-border-color;
 @moon-input-decorator-active-bg-color: @moon-input-decorator-focus-bg-color;
+@moon-input-border-focus-border-color: @moon-spotlight-border-color;
 @moon-input-border-active-border-color: transparent;
-@moon-input-border-active-shadow: 0px 0px 0px 3px @moon-input-border-focus-border-color;
+@moon-input-border-active-shadow: 0 0 0 3px @moon-input-border-focus-border-color;
 
 // LabeledItem
 // ---------------------------------------
@@ -226,7 +227,7 @@
 // ---------------------------------------
 @moon-radio-item-indicator-color: @moon-white;
 @moon-radio-item-indicator-bg-color: @moon-dark-gray;
-@moon-radio-item-focus-indicator-color: @moon-white;
+@moon-radio-item-focus-indicator-color: @moon-radio-item-indicator-color;
 @moon-radio-item-focus-indicator-bg-color: @moon-radio-item-indicator-bg-color;
 @moon-radio-item-selected-indicator-color: @moon-radio-item-indicator-color;
 @moon-radio-item-selected-indicator-bg-color: @moon-spotlight-color;
@@ -248,14 +249,14 @@
 @moon-slider-focus-bg-color: @moon-spotlight-color;
 @moon-slider-spotlight-knob-color: @moon-spotlight-color;
 @moon-slider-spotlight-bar-color: @moon-spotlight-color;
-@moon-slider-knob-bg-color: @moon-button-bg-color;
+@moon-slider-knob-bg-color: @moon-dark-gray;
 @moon-slider-knob-active-bg-color: @moon-slider-knob-bg-color;
 
 // Spinner
 // ---------------------------------------
 @moon-spinner-color: @moon-white;
 @moon-spinner-head-color: @moon-spinner-color;
-@moon-spinner-empty-color: fade(@moon-white, 20%);
+@moon-spinner-empty-color: fade(@moon-spinner-color, 20%);
 @moon-spinner-bg-color: @moon-button-bg-color;
 @moon-spinner-text-color: @moon-white;
 @moon-spinner-text-shadow-color: fade(@moon-black, 30%);
@@ -265,8 +266,8 @@
 
 // Switch
 // ---------------------------------------
-@moon-checkbox-toggle-switch-color: @moon-gray;
-@moon-checkbox-toggle-switch-bg-color: @moon-button-bg-color;
+@moon-checkbox-toggle-switch-color: #a6a6a6;
+@moon-checkbox-toggle-switch-bg-color: @moon-dark-gray;
 @moon-checkbox-toggle-switch-selected-color: @moon-spotlight-color;
 @moon-checkbox-toggle-switch-selected-bg-color: @moon-spotlight-text-color;
 @moon-checkbox-toggle-switch-spotlight-selected-bg-color: @moon-checkbox-toggle-switch-selected-bg-color;
@@ -293,7 +294,7 @@
 
 // Tooltip
 // ---------------------------------------
-@moon-tooltip-bg-color:               @moon-button-bg-color;
+@moon-tooltip-bg-color:               @moon-darker-gray;
 @moon-tooltip-text-color:             @moon-button-text-color;
 @moon-tooltip-border-color:           @moon-dark-gray;
 @moon-tooltip-shadow:                 0 7px 7px fade(@moon-black, 30%);
