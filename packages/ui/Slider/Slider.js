@@ -122,6 +122,9 @@ const SliderBase = kind({
 		/**
 		 * The maximum value of the slider.
 		 *
+		 * The range between `min` and `max` should be evenly divisible by
+		 * [step]{@link ui/Slider.SliderBase.step}.
+		 *
 		 * @type {Number}
 		 * @default 100
 		 * @public
@@ -130,6 +133,9 @@ const SliderBase = kind({
 
 		/**
 		 * The minimum value of the slider.
+		 *
+		 * The range between `min` and `max` should be evenly divisible by
+		 * [step]{@link ui/Slider.SliderBase.step}.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -180,6 +186,8 @@ const SliderBase = kind({
 
 		/**
 		 * The amount to increment or decrement the value.
+		 *
+		 * It must evenly divide into the range designated by `min` and `max`.
 		 *
 		 * @type {Number}
 		 * @default 1

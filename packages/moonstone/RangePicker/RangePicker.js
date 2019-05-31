@@ -40,7 +40,10 @@ const RangePickerBase = kind({
 
 	propTypes: /** @lends moonstone/RangePicker.RangePickerBase.prototype */ {
 		/**
-		 * Maximum selectable value (inclusive).
+		 * The maximum value selectable by the picker (inclusive).
+		 *
+		 * The range between `min` and `max` should be evenly divisible by
+		 * [step]{@link moonstone/RangePicker.RangePickerBase.step}.
 		 *
 		 * @type {Number}
 		 * @required
@@ -49,7 +52,10 @@ const RangePickerBase = kind({
 		max: PropTypes.number.isRequired,
 
 		/**
-		 * Minimum selectable value (inclusive).
+		 * The minimum value selectable by the picker (inclusive).
+		 *
+		 * The range between `min` and `max` should be evenly divisible by
+		 * [step]{@link moonstone/RangePicker.RangePickerBase.step}.
 		 *
 		 * @type {Number}
 		 * @required
@@ -182,6 +188,7 @@ const RangePickerBase = kind({
 		 * The smallest value change allowed for the picker.
 		 *
 		 * For example, a step of `2` would cause the picker to increment from 0 to 2 to 4, etc.
+		 * It must evenly divide into the range designated by `min` and `max`.
 		 *
 		 * @type {Number}
 		 * @default 1
