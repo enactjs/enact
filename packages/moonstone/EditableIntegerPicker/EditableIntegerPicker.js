@@ -37,6 +37,7 @@ const digits = (num) => {
 
 /**
  * A picker component that lets the user select a number in between `min` and `max` numbers.
+ *
  * This component is not spottable. Developers are encouraged to use
  * {@link moonstone/EditableIntegerPicker.EditableIntegerPicker}.
  *
@@ -50,7 +51,10 @@ const EditableIntegerPickerBase = kind({
 
 	propTypes: /** @lends moonstone/EditableIntegerPicker.EditableIntegerPickerBase.prototype */ {
 		/**
-		 * The maximum value selectable by the picker (inclusive), and it should be evenly divisible by `step`.
+		 * The maximum value selectable by the picker (inclusive).
+		 *
+		 * The value should be evenly divisible by
+		 * [step]{@link moonstone/EditableIntegerPicker.EditableIntegerPickerBase.step}.
 		 *
 		 * @type {Number}
 		 * @required
@@ -59,7 +63,10 @@ const EditableIntegerPickerBase = kind({
 		max: PropTypes.number.isRequired,
 
 		/**
-		 * The minimum value selectable by the picker (inclusive), and it should be evenly divisible by `step`.
+		 * The minimum value selectable by the picker (inclusive).
+		 *
+		 * The value should be evenly divisible by
+		 * [step]{@link moonstone/EditableIntegerPicker.EditableIntegerPickerBase.step}.
 		 *
 		 * @type {Number}
 		 * @required
@@ -68,8 +75,9 @@ const EditableIntegerPickerBase = kind({
 		min: PropTypes.number.isRequired,
 
 		/**
-		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
-		 * to the current selected child value.
+		 * The value for the picker for accessibility read out.
+		 *
+		 * By default, `aria-valuetext` is set to the current selected child value.
 		 *
 		 * @type {String}
 		 * @memberof moonstone/EditableIntegerPicker.EditableIntegerPickerBase.prototype
@@ -78,8 +86,10 @@ const EditableIntegerPickerBase = kind({
 		'aria-valuetext': PropTypes.string,
 
 		/**
-		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
-		 * supported. Without a custom icon, the default is used.
+		 * The icon for the decrementer.
+		 *
+		 * All strings supported by [Icon]{@link moonstone/Icon.Icon} are supported. Without a
+		 * custom icon, the default is used.
 		 *
 		 * @type {String}
 		 * @public
@@ -87,8 +97,8 @@ const EditableIntegerPickerBase = kind({
 		decrementIcon: PropTypes.string,
 
 		/**
-		 * Disables the picker and prevents events from firing.
-		 * [events]{@link /docs/developer-guide/glossary/#event}.
+		 * Disables the picker and prevents [events]{@link /docs/developer-guide/glossary/#event}
+		 * from firing.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -96,7 +106,7 @@ const EditableIntegerPickerBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * When `true`, an input will be displayed instead of the picker components.
+		 * Displays the input field instead of the picker components.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -104,8 +114,10 @@ const EditableIntegerPickerBase = kind({
 		editMode: PropTypes.bool,
 
 		/**
-		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{@link moonstone/Icon.Icon} are
-		 * supported. Without a custom icon, the default is used.
+		 * The icon for the incrementer.
+		 *
+		 * All strings supported by [Icon]{@link moonstone/Icon.Icon} are supported. Without a
+		 * custom icon, the default is used.
 		 *
 		 * @type {String}
 		 * @public
@@ -113,7 +125,7 @@ const EditableIntegerPickerBase = kind({
 		incrementIcon: PropTypes.string,
 
 		/**
-		 * The method to run when the input mounts, giving a reference to the DOM.
+		 * Called when the input mounts witha reference to the DOM node.
 		 *
 		 * @type {Function}
 		 * @private
@@ -121,7 +133,7 @@ const EditableIntegerPickerBase = kind({
 		inputRef: PropTypes.func,
 
 		/**
-		 * Called when there is a blur in the input.
+		 * Called when there the input is blurred.
 		 *
 		 * @type {Function}
 		 * @public
@@ -140,18 +152,21 @@ const EditableIntegerPickerBase = kind({
 		onPickerItemClick: PropTypes.func,
 
 		/**
-		 * Sets the orientation of the picker, whether the buttons are above and below or on the
-		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
+		 * The orientation of the picker.
 		 *
-		 * @type {String}
+		 * @type {('horizontal'|'vertical')}
 		 * @default 'horizontal'
 		 * @public
 		 */
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * When `true`, pads the display value with zeros up to the number of digits of the value of
-		 * `min` or max`, whichever is greater.
+		 * Pads the display value with zeros.
+		 *
+		 * The number of zeros used is the number of digits of the value of
+		 * [min]{@link moonstone/EditableIntegerPicker.EditableIntegerPickerBase.min} or
+		 * [max]{@link moonstone/EditableIntegerPicker.EditableIntegerPickerBase.max}, whichever is
+		 * greater.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -159,7 +174,7 @@ const EditableIntegerPickerBase = kind({
 		padded: PropTypes.bool,
 
 		/**
-		 * The method to run when the picker mounts, giving a reference to the DOM.
+		 * Called when the picker mounts with a reference to the picker DOM node.
 		 *
 		 * @type {Function}
 		 * @private
@@ -167,8 +182,9 @@ const EditableIntegerPickerBase = kind({
 		pickerRef: PropTypes.func,
 
 		/**
-		 * Allow the picker to only increment or decrement by a given value. A step of `2` would
-		 * cause a picker to increment from 10 to 12 to 14, etc.
+		 * Allow the picker to only increment or decrement by a given value.
+		 *
+		 * For example, a step of `2` would cause a picker to increment from 10 to 12 to 14, etc.
 		 *
 		 * @type {Number}
 		 * @default 1
@@ -186,7 +202,7 @@ const EditableIntegerPickerBase = kind({
 		unit: PropTypes.string,
 
 		/**
-		 * The current value of the Picker to be displayed.
+		 * The current value of the Picker.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -195,15 +211,17 @@ const EditableIntegerPickerBase = kind({
 		value: PropTypes.number,
 
 		/**
-		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
-		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
-		 * word pickers, `'large'` for maximum-sized pickers.
+		 * The size of the picker.
 		 *
-		 * You may also supply a number. This number will determine the minumum size of the Picker.
+		 * `'small'`, `'medium'`, `'large'`, or set to `null` to assume auto-sizing. `'small'` is
+		 * good for numeric pickers, `'medium'` for single or short word pickers, `'large'` for
+		 * maximum-sized pickers.
+		 *
+		 * You may also supply a number which will determine the minumum size of the Picker.
 		 * Setting a number to less than the number of characters in your longest value may produce
 		 * unexpected results.
 		 *
-		 * @type {String|Number}
+		 * @type {('small'|'medium'|'large')|Number}
 		 * @default 'medium'
 		 * @public
 		 */
@@ -213,8 +231,7 @@ const EditableIntegerPickerBase = kind({
 		]),
 
 		/**
-		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
-		 * to true to allow the picker to continue from the opposite end of the list of options.
+		 * Allows the picker to increment from the max to min value and vice versa.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -304,9 +321,10 @@ const EditableIntegerPickerBase = kind({
 /**
  * A component that lets the user select a number from a range of numbers.
  *
- * By default, `EditableIntegerPicker` maintains the state of its `value` property. Supply the `defaultValue`
- * property to control its initial value. If you wish to directly control updates to the component,
- * supply a value to `value` at creation time and update it in response to `onChange` events.
+ * By default, `EditableIntegerPicker` maintains the state of its `value` property. Supply the
+ * `defaultValue` property to control its initial value. If you wish to directly control updates to
+ * the component, supply a value to `value` at creation time and update it in response to `onChange`
+ * events.
  *
  * @class EditableIntegerPicker
  * @memberof moonstone/EditableIntegerPicker
