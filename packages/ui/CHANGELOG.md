@@ -42,6 +42,7 @@ No significant changes.
 
 - `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to size properly
 - `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to scroll correctly on iOS and Safari
+- `ui/Touchable` to not misfire a hold pulse when a drag re-enters a touch target and `cancelOnMove` is set
 - `ui/ViewManager` to correctly handle transitioning quickly between two children
 
 ## [2.5.2] - 2019-04-23
