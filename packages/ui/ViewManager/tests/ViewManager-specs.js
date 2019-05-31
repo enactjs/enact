@@ -1,7 +1,9 @@
 /* eslint-disable enact/prop-types */
 import React from 'react';
 import {mount} from 'enzyme';
-import ViewManager, {SlideLeftArranger} from '../';
+import ViewManager from '../';
+
+import {MockArranger} from './test-utils';
 
 describe('ViewManager', () => {
 
@@ -96,7 +98,7 @@ describe('ViewManager', () => {
 		'should have 1 child immediately after setting new {index} with an {arranger} and {noAnimation} is false',
 		() => {
 			const subject = mount(
-				<ViewManager index={3} arranger={SlideLeftArranger} noAnimation>
+				<ViewManager index={3} arranger={MockArranger} noAnimation>
 					<div className="view">View 1</div>
 					<div className="view">View 2</div>
 					<div className="view">View 3</div>
@@ -118,7 +120,7 @@ describe('ViewManager', () => {
 		'should have 2 children immediately after setting new {index} with an {arranger}',
 		() => {
 			const subject = mount(
-				<ViewManager index={3} arranger={SlideLeftArranger}>
+				<ViewManager index={3} arranger={MockArranger}>
 					<div className="view">View 1</div>
 					<div className="view">View 2</div>
 					<div className="view">View 3</div>
@@ -221,7 +223,7 @@ describe('ViewManager', () => {
 
 	test('should update the View reverseTransition prop to true if it is updated with a smaller index prop.', () => {
 		const subject = mount(
-			<ViewManager index={2} duration={0} arranger={SlideLeftArranger}>
+			<ViewManager index={2} duration={0} arranger={MockArranger}>
 				<div>View 1</div>
 				<div>View 2</div>
 				<div>View 3</div>
@@ -238,7 +240,7 @@ describe('ViewManager', () => {
 
 	test('should update the View reverseTransition prop to false even though it is updated with a smaller index prop.', () => {
 		const subject = mount(
-			<ViewManager index={2} duration={0} arranger={SlideLeftArranger}>
+			<ViewManager index={2} duration={0} arranger={MockArranger}>
 				<div>View 1</div>
 				<div>View 2</div>
 				<div>View 3</div>

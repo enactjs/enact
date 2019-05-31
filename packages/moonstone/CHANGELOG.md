@@ -6,12 +6,24 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/Dropdown` to use radio selection which allows only changing the selection but not deselection
+
+## [3.0.0-alpha.3] - 2019-05-29
+
+### Added
+
+- `moonstone/Panels` support for managing share state of contained components
+- `moonstone/Scroller` and `moonstone/VirtualList` support for restoring scroll position when within a `moonstone/Panels.Panel`
+
+### Changed
+
 - `moonstone/Scroller` to scroll when no spottable child exists in the pressed 5-way key direction and, when `focusableScrollbar` is set, focus the scrollbar button
 
 ### Fixed
 
 - Fonts to correctly use the new font files and updated the international font name from "Moonstone LG Display" to "Moonstone Global"
 - `moonstone/Dropdown` `children` propType so it supports the same format as `ui/Group` (an array of strings or an array of objects with props)
+- `moonstone/FormCheckbox`, `moonstone/Input`, `moonstone/ProgressBar`, `moonstone/RadioItem`, `moonstone/SwitchItem`, and `moonstone/Tooltip` light skin colors.
 - `moonstone/VideoPlayer` to have correct sized control buttons
 - high contrast colors for `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/Header`, `moonstone/RadioItem`, `moonstone/Slider`, and `moonstone/Switch`
 
@@ -85,6 +97,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/ContextualPopupDecorator` imperative methods to be correctly bound to the instance
 - `moonstone/EditableIntegerPicker`, `moonstone/Picker`, and `moonstone/RangePicker` to not error when the `min` prop exceeds the `max` prop
+- `moonstone/ExpandableInput` to retain focus when touching within the input field on touch platforms
 - `moonstone/Input` refocusing on touch on iOS
 - `moonstone/VideoPlayer` to correctly handle touch events while moving slider knobs
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to change spotlight focus due to touch events

@@ -8,7 +8,7 @@
 
 import classNames from 'classnames';
 import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
-import {forward} from '@enact/core/handle';
+import handle, {forward} from '@enact/core/handle';
 import {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
@@ -21,6 +21,7 @@ import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import $L from '../internal/$L';
+import {SharedState} from '../internal/SharedStateDecorator';
 
 import Scrollbar from './Scrollbar';
 import Skinnable from '../Skinnable';
@@ -126,6 +127,8 @@ onWindowReady(() => {
 class ScrollableBase extends Component {
 	static displayName = 'Scrollable'
 
+	static contextType = SharedState
+
 	static propTypes = /** @lends moonstone/Scrollable.Scrollable.prototype */ {
 		/**
 		 * Render function.
@@ -185,6 +188,18 @@ class ScrollableBase extends Component {
 		 * @public
 		 */
 		focusableScrollbar: PropTypes.bool,
+
+		/**
+		 * A unique identifier for the scrollable component.
+		 *
+		 * When specified and when the scrollable is within a SharedStateDecorator, the scroll
+		 * position will be shared and restored on mount if the component is destroyed and
+		 * recreated.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		id: PropTypes.string,
 
 		/**
 		 * Specifies overscroll effects shows on which type of inputs.
@@ -282,6 +297,7 @@ class ScrollableBase extends Component {
 		this.createOverscrollJob('vertical', 'before');
 		this.createOverscrollJob('vertical', 'after');
 
+		this.restoreScrollPosition();
 		scrollables.set(this, this.uiRef.current.containerRef.current);
 	}
 
@@ -319,6 +335,21 @@ class ScrollableBase extends Component {
 		vertical: {before: null, after: null}
 	}
 
+	// Only intended to be used within componentDidMount, this method will fetch the last stored
+	// scroll position from SharedState and scroll (without animation) to that position
+	restoreScrollPosition () {
+		const {id} = this.props;
+		if (id && this.context && this.context.get) {
+			const scrollPosition = this.context.get(`${id}.scrollPosition`);
+			if (scrollPosition) {
+				this.uiRef.current.scrollTo({
+					position: scrollPosition,
+					animate: false
+				});
+			}
+		}
+	}
+
 	onFlick = ({direction}) => {
 		const bounds = this.uiRef.current.getScrollBounds();
 		const focusedItem = Spotlight.getCurrent();
@@ -348,7 +379,7 @@ class ScrollableBase extends Component {
 			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current && horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
 			isVerticalScrollButtonFocused = verticalScrollbarRef.current && verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
 
-		if (focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
+		if (!Spotlight.isPaused() && focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
 			focusedItem.blur();
 		}
 	}
@@ -818,6 +849,14 @@ class ScrollableBase extends Component {
 		}
 	}
 
+	handleScroll = handle(
+		forward('onScroll'),
+		(ev, {id}, context) => id && context && context.set,
+		({scrollLeft: x, scrollTop: y}, {id}, context) => {
+			context.set(`${id}.scrollPosition`, {x, y});
+		}
+	).bindAs(this, 'handleScroll')
+
 	render () {
 		const
 			{
@@ -848,6 +887,7 @@ class ScrollableBase extends Component {
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
 				onWheel={this.onWheel}
+				onScroll={this.handleScroll}
 				ref={this.uiRef}
 				removeEventListeners={this.removeEventListeners}
 				scrollTo={this.scrollTo}
