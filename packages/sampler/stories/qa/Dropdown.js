@@ -14,7 +14,7 @@ Dropdown.displayName = 'Dropdown';
 
 const list = [
 	{children: 'hello 1', 'key': 'key1', 'aria-label': 'aria 1'},
-	{children: 'hello 2', 'key': 'key2', 'aria-label': 'aria 2'},
+	{children: 'hello 2', 'key': 'key2', 'aria-label': 'aria 2', disabled: true},
 	{children: 'hello 3', 'key': 'key3', 'aria-label': 'aria 3'}
 ];
 
