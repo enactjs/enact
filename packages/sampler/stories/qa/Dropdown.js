@@ -12,6 +12,12 @@ const items = (itemCount, optionText = 'Option') => (new Array(itemCount)).fill(
 
 Dropdown.displayName = 'Dropdown';
 
+const list = [
+	{children: 'hello 1', 'key': 'key1', 'aria-label': 'aria 1'},
+	{children: 'hello 2', 'key': 'key2', 'aria-label': 'aria 2'},
+	{children: 'hello 3', 'key': 'key3', 'aria-label': 'aria 3'}
+];
+
 storiesOf('Dropdown', module)
 	.add(
 		'with 2 options for testing direction',
@@ -86,6 +92,24 @@ storiesOf('Dropdown', module)
 					title={text('title', Config, 'Dropdown')}
 				>
 					{items(5)}
+				</Dropdown>
+			</div>
+		)
+	).add(
+		'with array of children objects',
+		() => (
+			<div>
+				<Dropdown
+					direction={select('direction', ['up', 'down'], Config)}
+					disabled={boolean('disabled', Config)}
+					onClose={action('onClose')}
+					onOpen={action('onOpen')}
+					onSelect={action('onSelect')}
+					size={select('size', ['small', 'large'], Config)}
+					title={text('title', Config, 'Dropdown')}
+					style={{position: 'absolute', top: 'calc(50% - 4rem)'}}
+				>
+					{list}
 				</Dropdown>
 			</div>
 		)
