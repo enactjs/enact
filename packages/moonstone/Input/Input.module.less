@@ -126,12 +126,15 @@
 
 		.input {
 			background: transparent;
+			color: inherit;
 
 			.input-placeholder({
 				color: @moon-input-placeholder-color;
 			});
 
 			&:focus-within {
+				color: @moon-input-focus-text-color;
+
 				.input-placeholder({
 					color: @moon-input-placeholder-active-color;
 				});
@@ -144,7 +147,7 @@
 
 		.focus({
 			background-color: @moon-input-decorator-focus-bg-color;
-			color: @moon-input-text-color;
+			color: @moon-input-focus-text-color;
 			box-shadow: @moon-input-border-active-shadow;
 
 			.input {
@@ -167,7 +170,7 @@
 
 			.input,
 			.decoratorIcon {
-				color: @moon-input-text-disabled-color;
+				color: @moon-input-disabled-text-color;
 			}
 		});
 	});
