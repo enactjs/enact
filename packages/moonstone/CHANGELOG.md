@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Dropdown` to use radio selection which allows only changing the selection but not deselection
 
+### Fixed
+
+- high contrast colors for `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/Header`, `moonstone/RadioItem`, `moonstone/Slider`, and `moonstone/Switch`
+
 ## [3.0.0-alpha.3] - 2019-05-29
 
 ### Added
@@ -25,7 +29,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Dropdown` `children` propType so it supports the same format as `ui/Group` (an array of strings or an array of objects with props)
 - `moonstone/FormCheckbox`, `moonstone/Input`, `moonstone/ProgressBar`, `moonstone/RadioItem`, `moonstone/SwitchItem`, and `moonstone/Tooltip` light skin colors.
 - `moonstone/VideoPlayer` to have correct sized control buttons
-- high contrast colors for `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/Header`, `moonstone/RadioItem`, `moonstone/Slider`, and `moonstone/Switch`
 
 ## [3.0.0-alpha.2] - 2019-05-20
 
