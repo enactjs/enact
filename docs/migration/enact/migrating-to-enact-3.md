@@ -18,10 +18,12 @@ Enact 3.0 no longer supports the 2019 TV platform or earlier versions.
 
 ## moonstone
 
-### Styles
+### Style
 Various styling changes have been made to support new UI/UX designs for the webOS TV platform.  In
 addition, some LESS variables have been changed or removed.  If you were importing `moonstone/styles/*.less`
-files, you may need to address these changes:
+files, you may need to address these changes.
+
+#### colors
 * `@moon-button-translucent-opacity` has been removed
 * `@moon-checkbox-check-color` has been renamed to `@moon-checkbox-text-color`
 * `@moon-checkbox-spotlight-bg-color` (`@moon-checkbox-bg-spotlight-color` in `colors-light.less`) has been renamed to `@moon-checkbox-focus-bg-color`
@@ -36,6 +38,16 @@ files, you may need to address these changes:
 * `@moon-radio-item-selected-spotlight-indicator-color` has been renamed to `@moon-radio-item-selected-focus-indicator-color`
 * `@moon-radio-item-selected-spotlight-indicator-bg-color` has been renamed to `@moon-radio-item-selected-focus-indicator-bg-color`
 * `@moon-radio-item-selected-spotlight-indicator-border-color` has been removed
+
+#### variables
+* `@moon-button-large-font-size` has been removed
+* `@moon-button-large-font-size-large` has been removed
+* `@moon-header-border-top-width` has been removed
+* `@moon-button-large-text-size` has been removed
+* `@moon-button-small-text-size` has been removed
+* `@moon-button-large-min-width` has been renamed to `@moon-button-min-width`
+* `@moon-notification-button-gap` has been removed
+* `@moon-tooltip-h-padding` has been replaced by `@moon-tooltip-padding`
 
 ### `Button`
 The `casing` prop has been removed.
