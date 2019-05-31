@@ -25,6 +25,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` and `moonstone/Scroller` to animate with 5-way navigation by default
 - `moonstone/ExpandableInput` to retain focus when touching within the input field on touch platforms
 - `moonstone/ExpandableList` to not error if `selected` is passed as an array to a non-multi-select list
+- `moonstone/Scroller` to allow changing spotlight focus to opposite scroll button when switching to 5way mode
 
 ## [2.5.2] - 2019-04-23
 
