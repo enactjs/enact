@@ -15,11 +15,23 @@ import Marquee from '@enact/moonstone/Marquee';
 import RadioItem from '@enact/moonstone/RadioItem';
 import Scroller from '@enact/moonstone/Scroller';
 import SelectableItem from '@enact/moonstone/SelectableItem';
+import SlotItem from '@enact/moonstone/SlotItem';
 import SwitchItem from '@enact/moonstone/SwitchItem';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
 import {select} from '../../src/enact-knobs';
+
+const inputData = {
+	english : 'We name themes after gemstones',
+	arabic: 'نحن اسم المواضيع بعد الأحجار الكريمة',
+	greek : 'Ονομάζουμε θέματα μετά από πολύτιμους λίθους',
+	hebrew : 'אנו שם נושאים לאחר אבני חן',
+	japanese : '宝石にちなんでテーマに名前を付けます',
+	russian : 'Мы называем темы в честь драгоценных камней',
+	thai : 'เราตั้งชื่อธีมตามอัญมณี',
+	urdu: 'ہم گیسسٹون کے بعد موضوعات کا نام دیتے ہیں'
+};
 
 Divider.displayName = 'Divider';
 
@@ -79,4 +91,15 @@ storiesOf('Text', module)
 				</Scroller>
 			);
 		}
+	)
+	.add(
+		'Languages',
+		() => Object.keys(inputData).map(key =>
+			<SlotItem key={key}>
+				<slotBefore>
+					<span style={{minWidth: '10ex', display: 'inline-block'}}>[ {key} ]</span>
+				</slotBefore>
+				{inputData[key]}
+			</SlotItem>
+		)
 	);
