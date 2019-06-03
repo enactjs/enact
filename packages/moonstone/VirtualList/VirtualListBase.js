@@ -523,16 +523,20 @@ const VirtualListBaseFactory = (type) => {
 					this.isScrolledBy5way = true;
 					this.isWrappedBy5way = isWrapped;
 
-					if (isWrapped && wrap === true && (
+					if (isWrapped && (
 						this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${nextIndex}'].spottable`) == null
 					)) {
-						this.pause.pause();
-						target.blur();
+						if (wrap === true) {
+							this.pause.pause();
+							target.blur();
+						} else {
+							this.focusOnItem(nextIndex);
+						}
+
+						this.nodeIndexToBeFocused = nextIndex;
 					} else {
 						this.focusOnItem(nextIndex);
 					}
-
-					this.nodeIndexToBeFocused = nextIndex;
 
 					cbScrollTo({
 						index: nextIndex,

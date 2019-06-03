@@ -315,13 +315,13 @@ const ExpandableListBase = kind({
 			if (label) {
 				return label;
 			} else if (children.length && (selected || selected === 0)) {
-				const isArray = Array.isArray(selected);
-				if (select === 'multiple' && isArray) {
+				const firstSelected = Array.isArray(selected) ? selected[0] : selected;
+				if (select === 'multiple' && Array.isArray(selected)) {
 					return selected.map(i => typeof children[i] === 'object' ? children[i].children : children[i]).filter(str => !!str).join(', ');
-				} else if (typeof children[selected] === 'object') {
-					return children[selected].children;
+				} else if (typeof children[firstSelected] === 'object') {
+					return children[firstSelected].children;
 				} else {
-					return children[isArray ? selected[0] : selected];
+					return children[firstSelected];
 				}
 			}
 		},

@@ -10,7 +10,7 @@ import Layout, {Cell} from '@enact/ui/Layout';
 import iconNames from '../default/icons';
 
 import {mergeComponentMetadata} from '../../src/utils';
-import {boolean, select} from '../../src/enact-knobs';
+import {boolean, select, text} from '../../src/enact-knobs';
 
 LabeledIcon.displayName = 'LabeledIcon';
 const Config = mergeComponentMetadata('LabeledIcon', UiLabeledIconBase, UiLabeledIcon, UiIcon, IconBase, Icon, LabeledIcon);
@@ -58,6 +58,23 @@ storiesOf('LabeledIcon', module)
 						>{icon}</LabeledIcon>
 					)}
 				</Scroller>
+			);
+		}
+	)
+	.add(
+		'with tall characters',
+		() => {
+			const disabled = boolean('disabled', Config);
+			const labelPosition = select('labelPosition', ['above', 'after', 'before', 'below', 'left', 'right'], Config);
+			return (
+				<LabeledIcon
+					icon={select('icon', ['', ...iconNames], Config, 'fullscreen')}
+					inline
+					disabled={disabled}
+					labelPosition={labelPosition}
+					size={select('size', ['small', 'large'], Config)}
+				>{text('children', Config, 'ฟิ้  ไั  ஒ  து')}
+				</LabeledIcon>
 			);
 		}
 	);
