@@ -68,24 +68,24 @@
 	}
 
 	.client {
-		padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
+		padding: @moon-button-border-width 0;	// We account for the button border-width here, since that is applied to .bg, not .client. Having these match means the text doesn't overlap the border
 		border-radius: inherit;
 	}
 
 	.icon {
 		flex-shrink: 0;
-		-webkit-margin-start: @moon-button-icon-start-margin;
-		-webkit-margin-end: @moon-button-icon-end-margin;
+		-webkit-margin-start: @moon-button-icon-margin-start;
+		-webkit-margin-end: @moon-button-icon-margin-end;
 	}
 
 	&.iconAfter {
 		.client {
 			flex-direction: row-reverse;
+		}
 
-			.icon {
-				-webkit-margin-start: @moon-button-icon-position-after-start-margin;
-				-webkit-margin-end: @moon-button-icon-position-after-end-margin;
-			}
+		.icon {
+			-webkit-margin-start: @moon-button-icon-position-after-margin-start;
+			-webkit-margin-end: @moon-button-icon-position-after-margin-end;
 		}
 	}
 
@@ -116,7 +116,7 @@
 
 			.client {
 				-webkit-margin-start: @moon-button-colordot-width;
-				-webkit-padding-start: @moon-spotlight-outset;
+				-webkit-padding-start: @moon-button-icon-h-margin; // The gap between the color-dot and the content matches the space between the regular icon and the text
 
 				&::before {
 					// Colored side-bar
@@ -165,14 +165,21 @@
 		margin-left: @moon-button-small-h-margin;
 		margin-right: @moon-button-small-h-margin;
 
-		.icon {
-			-webkit-margin-start: (@moon-button-icon-small-h-margin - (@moon-button-h-padding - @moon-button-border-width));
-			-webkit-margin-end: @moon-button-icon-small-h-margin;
-		}
-
 		// Standard Button Scenario
 		&.minWidth {
 			min-width: @moon-button-small-min-width;
+		}
+
+		.icon {
+			-webkit-margin-start: @moon-button-icon-small-margin-start;
+			-webkit-margin-end: @moon-button-icon-small-margin-end;
+		}
+
+		&.iconAfter {
+			.icon {
+				-webkit-margin-start: @moon-button-icon-position-after-small-margin-start;
+				-webkit-margin-end: @moon-button-icon-position-after-small-margin-end;
+			}
 		}
 
 		&.red,
@@ -187,8 +194,30 @@
 			}
 
 			// Standard Button Scenario
-			&.minWidth .client::before {
-				bottom: 50%;
+			&.minWidth {
+				.client {
+					-webkit-margin-start: @moon-button-small-colordot-width;
+
+					&::before {
+						bottom: 50%;
+						left: -@moon-button-small-colordot-width;
+
+						:global(.enact-locale-right-to-left) & {
+							right: -@moon-button-small-colordot-width;
+						}
+					}
+				}
+
+				.icon {
+					-webkit-margin-start: 0;
+				}
+
+				&.iconAfter {
+					.icon {
+						// Override the above rule
+						-webkit-margin-start: @moon-button-icon-position-after-small-margin-start;
+					}
+				}
 			}
 		}
 
@@ -204,27 +233,6 @@
 				min-width: @moon-button-small-min-width;
 			}
 		});
-
-		.icon {
-			-webkit-margin-start: @moon-button-icon-small-start-margin;
-			-webkit-margin-end: @moon-button-icon-small-end-margin;
-		}
-
-		&.iconAfter {
-			.client .icon {
-				-webkit-margin-start: @moon-button-icon-position-after-small-start-margin;
-				-webkit-margin-end: @moon-button-icon-position-after-small-end-margin;
-			}
-		}
-
-		&.red,
-		&.green,
-		&.yellow,
-		&.blue {
-			&.minWidth .icon {
-				-webkit-margin-start: 0;
-			}
-		}
 	}
 
 	// Large Button followed by another large Button has a custom wider margin between them
