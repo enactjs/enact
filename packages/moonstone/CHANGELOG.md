@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/Dropdown` to prevent spotlight moving out of the popup
 - `moonstone/Dropdown` to use radio selection which allows only changing the selection but not deselection
 
 ### Fixed
