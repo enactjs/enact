@@ -194,9 +194,7 @@ const VirtualListBaseFactory = (type) => {
 				containerNode.addEventListener('keyup', this.onKeyUp);
 			}
 
-			setTimeout(() => {
-				this.restoreFocus();
-			}, 0);
+			this.forceUpdate();
 		}
 
 		componentDidUpdate (prevProps) {
