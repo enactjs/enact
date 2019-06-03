@@ -193,8 +193,6 @@ const VirtualListBaseFactory = (type) => {
 				containerNode.addEventListener('keydown', this.onKeyDown);
 				containerNode.addEventListener('keyup', this.onKeyUp);
 			}
-
-			this.forceUpdate();
 		}
 
 		componentDidUpdate (prevProps) {
