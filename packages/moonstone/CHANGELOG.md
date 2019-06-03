@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [3.0.0-alpha.4] - 2019-06-03
 
 ### Changed
 
@@ -11,8 +11,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- high contrast colors for `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/Header`, `moonstone/RadioItem`, `moonstone/Slider`, and `moonstone/Switch`
 - Non-Latin locale font assignments to match the new font family support in `LG Smart UI`
+- `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/Header`, `moonstone/RadioItem`, `moonstone/Slider`, and `moonstone/Switch` to render correctly in high contrast
 - `moonstone/VideoPlayer` to hide scrim for high contrast if bottom controls are hidden
 
 ## [3.0.0-alpha.3] - 2019-05-29

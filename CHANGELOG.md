@@ -2,6 +2,19 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.0.0-alpha.4] - 2019-06-03
+
+### Changed
+
+- `moonstone/Dropdown` to prevent spotlight moving out of the popup
+- `moonstone/Dropdown` to use radio selection which allows only changing the selection but not deselection
+
+### Fixed
+
+- Non-Latin locale font assignments to match the new font family support in `LG Smart UI`
+- `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/Header`, `moonstone/RadioItem`, `moonstone/Slider`, and `moonstone/Switch` to render correctly in high contrast
+- `moonstone/VideoPlayer` to hide scrim for high contrast if bottom controls are hidden
+
 ## [3.0.0-alpha.3] - 2019-05-29
 
 ### Added
