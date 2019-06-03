@@ -40,12 +40,17 @@ files, you may need to address these changes.
 * `@moon-radio-item-selected-spotlight-indicator-border-color` has been removed
 
 #### variables
-* `@moon-button-large-font-size` has been removed
-* `@moon-button-large-font-size-large` has been removed
+* `@moon-button-large-font-size` has been renamed to `@moon-button-font-size`
+* `@moon-button-large-font-size-large` has been renamed to `@moon-button-font-size-large`
 * `@moon-header-border-top-width` has been removed
 * `@moon-button-large-text-size` has been removed
 * `@moon-button-small-text-size` has been removed
 * `@moon-button-large-min-width` has been renamed to `@moon-button-min-width`
+* `@moon-icon-button-size` has been removed
+* `@moon-icon-button-size-large` has been removed
+* `@moon-icon-button-small-size` has been removed
+* `@moon-icon-button-small-size-large` has been removed
+* `@moon-notification-out-border-radius` has been removed
 * `@moon-notification-button-gap` has been removed
 * `@moon-tooltip-h-padding` has been replaced by `@moon-tooltip-padding`
 
