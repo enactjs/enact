@@ -42,10 +42,18 @@ files, you may need to address these changes.
 #### variables
 * `@moon-button-large-font-size` has been renamed to `@moon-button-font-size`
 * `@moon-button-large-font-size-large` has been renamed to `@moon-button-font-size-large`
-* `@moon-header-border-top-width` has been removed
 * `@moon-button-large-text-size` has been removed
 * `@moon-button-small-text-size` has been removed
 * `@moon-button-large-min-width` has been renamed to `@moon-button-min-width`
+* `@moon-button-icon-start-margin` has been renamed to `@moon-button-icon-margin-start`
+* `@moon-button-icon-end-margin` has been renamed to `@moon-button-icon-margin-end`
+* `@moon-button-icon-small-start-margin` has been renamed to `@moon-button-icon-small-margin-start`
+* `@moon-button-icon-small-end-margin` has been renamed to `@moon-button-icon-small-margin-end`
+* `@moon-button-icon-position-after-start-margin` has been renamed to `@moon-button-icon-position-after-margin-start`
+* `@moon-button-icon-position-after-end-margin` has been renamed to `@moon-button-icon-position-after-margin-end`
+* `@moon-button-icon-position-after-small-start-margin` has been renamed to `@moon-button-icon-position-after-small-margin-start`
+* `@moon-button-icon-position-after-small-end-margin` has been renamed to `@moon-button-icon-position-after-small-margin-end`
+* `@moon-header-border-top-width` has been removed
 * `@moon-icon-button-size` has been removed
 * `@moon-icon-button-size-large` has been removed
 * `@moon-icon-button-small-size` has been removed
