@@ -10,7 +10,8 @@
 	text-align: center;
 	position: relative;
 
-	&::after {
+
+	.bg::after {
 		.position-start-end(auto, @moon-button-h-padding);
 
 		position: absolute;
@@ -28,7 +29,7 @@
 	}
 
 	&.selected {
-		&::after {
+		.bg::after {
 			content: @moon-toggle-button-selected-glyph-highcontrast;
 		}
 	}
@@ -36,7 +37,7 @@
 	&.small {
 		.padding-start-end(@moon-button-small-h-padding, @moon-toggle-button-small-text-switch-gutter + @moon-button-small-h-padding + @moon-toggle-button-switch-width + @moon-toggle-button-switch-border-width);
 
-		&::after {
+		.bg::after {
 			.position-start-end(auto, @moon-button-small-h-padding);
 
 			top: 50%;
@@ -45,7 +46,7 @@
 
 	// Skin colors
 	.applySkins({
-		&::after {
+		.bg::after {
 			background-color: @moon-toggle-button-switch-off-bg-color;
 			border-color: @moon-toggle-button-switch-off-border-color;
 		}
@@ -53,7 +54,7 @@
 		&.selected {
 			border-color: @moon-accent;
 
-			&::after {
+			.bg::after {
 				background-color: @moon-toggle-button-switch-on-bg-color;
 				border-color: @moon-toggle-button-switch-on-border-color;
 				color:  @moon-toggle-button-switch-dot-on-color;
@@ -61,13 +62,13 @@
 		}
 
 		.disabled({
-			&::after {
+			.bg::after {
 				color: @moon-toggle-button-switch-disabled-color;
 				border-color: @moon-toggle-button-switch-disabled-border-color;
 			}
 
 			&.selected {
-				&::after {
+				.bg::after {
 					background-color: @moon-toggle-button-switch-dot-disabled-border-color;
 				}
 			}
@@ -76,13 +77,13 @@
 
 	.focus({
 		.applySkins({
-			&::after {
+			.bg::after {
 				background-color: @moon-toggle-button-switch-off-spotlight-bg-color;
 				border-color: @moon-toggle-button-switch-off-spotlight-border-color;
 			}
 
 			&.selected {
-				&::after {
+				.bg::after {
 					background-color: @moon-toggle-button-switch-on-spotlight-bg-color;
 					border-color: @moon-toggle-button-switch-on-spotlight-border-color;
 					color: @moon-toggle-button-switch-dot-on-spotlight-color;
@@ -90,7 +91,7 @@
 			}
 
 			.disabled({
-				&::after {
+				.bg::after {
 					opacity: @moon-disabled-opacity;
 				}
 			});
