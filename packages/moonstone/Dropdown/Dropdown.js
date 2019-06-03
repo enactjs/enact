@@ -274,6 +274,7 @@ const DropdownBase = kind({
 				popupComponent={DropdownList}
 				onClick={onOpen}
 				open={openDropdown}
+				spotlightRestrict="self-only"
 			>
 				{title}
 			</ContextualButton>

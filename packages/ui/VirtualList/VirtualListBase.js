@@ -283,15 +283,20 @@ const VirtualListBaseFactory = (type) => {
 				this.calculateMetrics(this.props);
 				// eslint-disable-next-line react/no-did-mount-set-state
 				this.setState(this.getStatesAndUpdateBounds(this.props));
+			} else {
+				this.emitUpdateItems();
 			}
+
 			this.setContainerSize();
 		}
 
 		componentDidUpdate (prevProps, prevState) {
+			const {firstIndex, numOfItems} = this.state;
+
 			// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
 			this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
 
-			if (prevState.firstIndex !== this.state.firstIndex) {
+			if (prevState.firstIndex !== firstIndex || prevState.numOfItems !== numOfItems) {
 				this.emitUpdateItems();
 			}
 
