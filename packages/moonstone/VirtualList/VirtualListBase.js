@@ -25,7 +25,8 @@ const
 	Native = 'Native',
 	isItemDisabledDefault = () => (false),
 	// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
-	getNumberValue = (index) => index | 0;
+	getNumberValue = (index) => index | 0,
+	nop = () => {};
 
 /**
  * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} and
@@ -619,11 +620,29 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		onKeyDown = (ev) => {
-			if (getDirection(ev.keyCode)) {
-				ev.preventDefault();
-				ev.stopPropagation();
+			const {keyCode} = ev;
+			const direction = getDirection(keyCode);
+
+			if (getDirection(keyCode)) {
 				Spotlight.setPointerMode(false);
-				SpotlightAccelerator.processKey(ev, this.onAcceleratedKeyDown);
+
+				if (SpotlightAccelerator.processKey(ev, nop)) {
+					ev.preventDefault();
+					ev.stopPropagation();
+				} else {
+					const {repeat, target} = ev;
+					const index = getNumberValue(target.dataset.index);
+					const {isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
+
+					if (nextIndex >= 0) {
+						ev.preventDefault();
+						ev.stopPropagation();
+						this.onAcceleratedKeyDown({index, isWrapped, keyCode, nextIndex, repeat, target});
+					} else if (Spotlight.move(direction) && this.uiRefCurrent.containerRef.current.contains(Spotlight.getCurrent())) {
+						ev.preventDefault();
+						ev.stopPropagation();
+					}
+				}
 			}
 		}
 
