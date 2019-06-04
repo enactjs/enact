@@ -638,7 +638,7 @@ const VirtualListBaseFactory = (type) => {
 						ev.preventDefault();
 						ev.stopPropagation();
 						this.onAcceleratedKeyDown({index, isWrapped, keyCode, nextIndex, repeat, target});
-					} else if (Spotlight.move(direction) && this.uiRefCurrent.containerRef.current.contains(Spotlight.getCurrent())) {
+					} else if (repeat || Spotlight.move(direction) && this.uiRefCurrent.containerRef.current.contains(Spotlight.getCurrent())) {
 						ev.preventDefault();
 						ev.stopPropagation();
 					}
