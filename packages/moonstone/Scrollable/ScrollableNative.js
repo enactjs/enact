@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import {constants, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
 import {getDirection} from '@enact/spotlight';
-import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {Job} from '@enact/core/util';
 import platform from '@enact/core/platform';
 import {forward} from '@enact/core/handle';
@@ -490,13 +489,15 @@ class ScrollableBaseNative extends Component {
 			let next = null;
 
 			/* 1. Find spottable item in viewport */
-			next = getTargetByDirectionFromPosition(rDirection, endPoint, spotlightId);
+			if (window.__spatialNavigation__) {
+				window.__spatialNavigation__.setStartingPoint(endPoint.x, endPoint.y);
+			}
+			Spotlight.move(rDirection);
+			next = Spotlight.getCurrent();
 
-			if (next !== focusedItem) {
-				Spotlight.focus(next);
 			/* 2. Find spottable item out of viewport */
 			// For Scroller
-			} else if (this.childRef.current.scrollToNextPage) {
+			if (next === focusedItem && this.childRef.current.scrollToNextPage) {
 				next = this.childRef.current.scrollToNextPage({direction, focusedItem, reverseDirection: rDirection, spotlightId});
 
 				if (next !== null) {
@@ -504,7 +505,7 @@ class ScrollableBaseNative extends Component {
 					Spotlight.focus(next);
 				}
 			// For VirtualList
-			} else if (this.childRef.current.scrollToNextItem) {
+			} else if (next === focusedItem && this.childRef.current.scrollToNextItem) {
 				this.childRef.current.scrollToNextItem({direction, focusedItem, reverseDirection: rDirection, spotlightId});
 			}
 
@@ -552,7 +553,7 @@ class ScrollableBaseNative extends Component {
 
 			this.uiRef.current.lastInputType = 'arrowKey';
 
-			overscrollEffectRequired = overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null);
+			overscrollEffectRequired = overscrollEffectOn.arrowKey && !(element ? Spotlight.move(direction, null, ev)  : null);
 			if (overscrollEffectRequired) {
 				const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
 

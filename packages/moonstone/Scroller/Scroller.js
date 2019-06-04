@@ -19,7 +19,6 @@
 import ri from '@enact/ui/resolution';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import {Spotlight} from '@enact/spotlight';
-import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -327,12 +326,20 @@ class ScrollerBase extends Component {
 		const endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect());
 		let candidateNode = null;
 
+		if (window.__spatialNavigation__) {
+			window.__spatialNavigation__.setStartingPoint(endPoint.x, endPoint.y);
+		}
+
 		/* Find a spottable item in the next page */
-		candidateNode = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
+		// candidateNode = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
+		Spotlight.move(reverseDirection);
+		candidateNode = Spotlight.getCurrent();
 
 		/* Find a spottable item in a whole data */
 		if (candidateNode === focusedItem) {
-			candidateNode = getTargetByDirectionFromPosition(direction, endPoint, spotlightId);
+			// candidateNode = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
+			Spotlight.move(direction);
+			candidateNode = Spotlight.getCurrent();
 		}
 
 		/* If there is no spottable item next to the current item */

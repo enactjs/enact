@@ -208,6 +208,9 @@
       // * Starting point is meaningfull when:
       // 1) starting point is inside the spatnav container
       // 2) starting point is inside the non-focusable element
+      if(elementFromPosition === null) {
+        elementFromPosition = document.body;
+      }
       if (isFocusable(elementFromPosition) && !isContainer(elementFromPosition)) {
         startingPoint = null;
       } else if (isContainer(elementFromPosition)) {
@@ -725,6 +728,8 @@
 
     // Behavior after 'navnotarget' - Getting out from the current spatnav container
     if ((!parentContainer && container) && focusingController(eventTarget.spatialNavigationSearch(dir, currentOption), dir)) return;
+
+    if (!createSpatNavEvents('notarget', currentOption.container, eventTarget, dir)) return;
 
     if ((getCSSSpatNavAction(container) === 'auto') && (option === 'visible'))
       if (scrollingController(container, dir)) return;
@@ -1654,7 +1659,8 @@
       get keyMode() { return this._keymode ? this._keymode : 'ARROW'; },
       set keyMode(mode) { this._keymode = (['SHIFTARROW', 'ARROW', 'NONE'].includes(mode)) ? mode : 'ARROW'; },
       currentInterest,
-      interest
+      interest,
+      setStartingPoint: function (x, y) {startingPoint = {x, y};}
     };
   }
 

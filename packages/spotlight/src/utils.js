@@ -105,35 +105,6 @@ function getRect (elem) {
 	return rect;
 }
 
-function getPointRect (position) {
-	const {x, y} = position;
-	return {
-		left: x,
-		top: y,
-		width: 0,
-		height: 0,
-		right: x,
-		bottom: y,
-		center: {
-			x,
-			y,
-			left: x,
-			right: x,
-			top: y,
-			bottom: y
-		}
-	};
-}
-
-function getRects (candidates) {
-	if (candidates && candidates.length > 0) {
-		return candidates.map(getRect);
-	}
-
-	return [];
-}
-
-
 function getViewportRect () {
 	const {innerWidth: width, innerHeight: height} = window;
 	const x = width / 2;
@@ -174,9 +145,7 @@ function getContainerRect (containerId) {
 export {
 	contains,
 	getContainerRect,
-	getPointRect,
 	getRect,
-	getRects,
 	intersects,
 	matchSelector,
 	parseSelector

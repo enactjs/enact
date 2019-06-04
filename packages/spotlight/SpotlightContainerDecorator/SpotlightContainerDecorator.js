@@ -302,7 +302,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			return (
-				<Wrapped style={{'--spatial-navigation-contain': 'delegable'}} {...rest} />
+				<Wrapped style={{'--spatial-navigation-contain': 'delegable', '--spatial-navigation-action': 'focus'}} {...rest} />
 			);
 		}
 	};
