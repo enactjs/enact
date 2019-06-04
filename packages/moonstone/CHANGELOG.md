@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+## Fixed
+
+- `Fonts` for non-Latin to not intermix font weights for bold when using a combination of Latin and non-Latin glyphs
+
 ## [3.0.0-alpha.4] - 2019-06-03
 
 ### Changed
