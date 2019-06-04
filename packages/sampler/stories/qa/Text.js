@@ -33,6 +33,8 @@ const inputData = {
 	urdu: 'ہم گیسسٹون کے بعد موضوعات کا نام دیتے ہیں'
 };
 
+const mixedText = 'ข้MอiคxวeาdมTผeสxมt - M混i合x文e字d';
+
 Divider.displayName = 'Divider';
 
 const prop = {
@@ -102,4 +104,33 @@ storiesOf('Text', module)
 				{inputData[key]}
 			</SlotItem>
 		)
+	)
+	.add(
+		'Mixed Scripts',
+		() => <div>
+			<SlotItem style={{fontWeight: 300}}>
+				<slotBefore>
+					<span style={{minWidth: '10ex', display: 'inline-block'}}>light</span>
+				</slotBefore>
+				{mixedText}
+			</SlotItem>
+			<SlotItem style={{fontWeight: 400}}>
+				<slotBefore>
+					<span style={{minWidth: '10ex', display: 'inline-block'}}>regular</span>
+				</slotBefore>
+				{mixedText}
+			</SlotItem>
+			<SlotItem style={{fontWeight: 600}}>
+				<slotBefore>
+					<span style={{minWidth: '10ex', display: 'inline-block'}}>semi-bold</span>
+				</slotBefore>
+				{mixedText}
+			</SlotItem>
+			<SlotItem style={{fontWeight: 700}}>
+				<slotBefore>
+					<span style={{minWidth: '10ex', display: 'inline-block'}}>bold</span>
+				</slotBefore>
+				{mixedText}
+			</SlotItem>
+		</div>
 	);
