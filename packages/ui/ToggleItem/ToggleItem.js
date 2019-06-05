@@ -11,6 +11,7 @@
  * @exports ToggleItemDecorator
  */
 
+import {adaptEvent, handle, forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
@@ -278,7 +279,7 @@ const ToggleItemBase = kind({
  */
 const ToggleItemDecorator = compose(
 	ForwardRef({prop: 'componentRef'}),
-	Toggleable({toggleProp: 'onTap'}),
+	Toggleable({toggleProp: 'onTap', eventProps: ['value']}),
 	Touchable
 );
 
