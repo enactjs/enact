@@ -17,6 +17,7 @@
 // Focused Spottable elements
 .focus(@rules; @target) when (isruleset(@rules)) and (@target = parent) {
 	.spottable({
+		&:global(.focused),
 		&:focus {
 			@rules();
 		}
@@ -24,6 +25,7 @@
 }
 .focus(@rules) when (isruleset(@rules)) {
 	.spottable({
+		&:global(.focused),
 		&:focus {
 			@rules();
 		}
