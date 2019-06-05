@@ -351,7 +351,7 @@ const ExpandableItemBase = kind({
 			autoLabel: showLabel === 'auto' && (label || noneText)
 		})),
 		label: ({label, noneText}) => (label || noneText),
-		labeledItemClassName: ({showLabel, styler}) => (styler.join(css.labeledItem, css[showLabel])),
+		labeledItemClassName: ({className, showLabel, styler}) => (styler.join(css.labeledItem, css[showLabel], className)),
 		open: ({disabled, open}) => (open && !disabled),
 		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
