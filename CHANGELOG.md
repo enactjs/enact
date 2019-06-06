@@ -126,13 +126,10 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/ExpandableList` to not error if `selected` is passed as an array to a non-multi-select list
 - `moonstone/Input` refocusing on touch on iOS
 - `moonstone/Scroller` to allow changing spotlight focus to opposite scroll button when switching to 5way mode
+- `moonstone/Scroller` and `moonstone/VirtualList` to animate with 5-way navigation by default
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to change spotlight focus due to touch events
 - `moonstone/Slider` to not scroll the viewport when dragging on touch platforms
 - `moonstone/VideoPlayer` to correctly handle touch events while moving slider knobs
-- `moonstone/VideoPlayer` to correctly handle touch events while moving slider knobs
-- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to change spotlight focus due to touch events
-- `moonstone/Slider` to not scroll the viewport when dragging on touch platforms
-- `moonstone/VirtualList` and `moonstone/Scroller` to animate with 5-way navigation by default
 - `spotlight` to unspot the current element when tapping on non-spottable target on touch platforms
 - `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to size properly
 - `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to scroll correctly on iOS and Safari
