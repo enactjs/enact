@@ -15,11 +15,10 @@
 		border-width: @moon-contextual-popup-border-width;
 		border-style: solid;
 		border-radius: @moon-contextual-popup-border-radius;
-		padding: @moon-contextual-popup-padding;
+		padding:  @moon-contextual-popup-padding;
 		background-clip: padding-box;
 		-webkit-background-clip: padding-box;
 		-moz-background-clip: padding-box;
-
 
 		.closeButton {
 			position: absolute;
@@ -70,6 +69,8 @@
 
 	// Skin colors
 	.applySkins({
+		filter: drop-shadow(0 12px 16px @moon-contextual-popup-box-shadow-color);
+
 		.container {
 			background-color: @moon-contextual-popup-bg-color;
 			border-color: @moon-contextual-popup-border-color;

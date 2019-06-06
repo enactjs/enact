@@ -1,6 +1,6 @@
 {
   "name": "enact-sampler",
-  "version": "2.5.3",
+  "version": "3.0.0-alpha.4",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -28,13 +28,13 @@
       }
     },
     "@enact/core": {
-      "version": "2.5.3",
-      "resolved": "https://registry.npmjs.org/@enact/core/-/core-2.5.3.tgz",
-      "integrity": "sha512-tPjgLjoQl6ebhZDYQZSROoGn1TFgtF8xM+e5ahqfGx9qIZLUtOvsUnFuqDI/tbtHXGva9xgC5LNDfh9jKqfpDQ==",
+      "version": "3.0.0-alpha.4",
+      "resolved": "https://registry.npmjs.org/@enact/core/-/core-3.0.0-alpha.4.tgz",
+      "integrity": "sha512-/greq9ELATxlGsj1AGcmUX8vew8nlyXOKQzxnNYvh4nGnlAEb8ZGZOCSaesjuOx/2f+oNlb94XO3G1dtMb0rsg==",
       "requires": {
         "classnames": "2.2.6",
         "invariant": "2.2.4",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "ramda": "0.24.1",
         "react": "16.8.6",
         "react-dom": "16.8.6",
@@ -52,7 +52,7 @@
         "chalk": "2.4.2",
         "console.mute": "0.3.0",
         "core-js": "2.6.9",
-        "electron-to-chromium": "1.3.149",
+        "electron-to-chromium": "1.3.144",
         "find-cache-dir": "1.0.0",
         "glob": "7.1.4",
         "graceful-fs": "4.1.15",
@@ -70,12 +70,12 @@
       }
     },
     "@enact/i18n": {
-      "version": "2.5.3",
-      "resolved": "https://registry.npmjs.org/@enact/i18n/-/i18n-2.5.3.tgz",
-      "integrity": "sha512-YB6CK+XcsoRDOaXXO+llCv51zrLIt31467yUlQjQ9bsXOaGZikKmFM9tSCBh02BLlElX88IuU2EAGGRshtAHvw==",
+      "version": "3.0.0-alpha.4",
+      "resolved": "https://registry.npmjs.org/@enact/i18n/-/i18n-3.0.0-alpha.4.tgz",
+      "integrity": "sha512-0yK3lFzfGEU7qzD9NP548p9SIdS+K1kfJPg0kQCcUrSoslxhdhn+YxShAqBoErR1/3cyb4vot+DeUs95mBN35w==",
       "requires": {
-        "@enact/core": "2.5.3",
-        "prop-types": "15.6.2",
+        "@enact/core": "3.0.0-alpha.4",
+        "prop-types": "15.7.2",
         "ramda": "0.24.1",
         "react": "16.8.6",
         "react-dom": "16.8.6",
@@ -83,18 +83,17 @@
       }
     },
     "@enact/moonstone": {
-      "version": "2.5.3",
-      "resolved": "https://registry.npmjs.org/@enact/moonstone/-/moonstone-2.5.3.tgz",
-      "integrity": "sha512-3cZYjPlF8UXQw865bHkncbpSiyuwIbfTM/Pg4aNa+1JT2zHpVXRiZfaxrJ4CAg8NX2/w00mJd6misj8SlDSc5w==",
+      "version": "3.0.0-alpha.4",
+      "resolved": "https://registry.npmjs.org/@enact/moonstone/-/moonstone-3.0.0-alpha.4.tgz",
+      "integrity": "sha512-N+hpxfJjRB+a5lMWlMwmxeQ2JxYJ7ehA5rgo2Akoq20vpEv8h+YDqgZn4GjM3JzPxyUw1P4IvjS9biD+ANrLUg==",
       "requires": {
-        "@enact/core": "2.5.3",
-        "@enact/i18n": "2.5.3",
-        "@enact/spotlight": "2.5.3",
-        "@enact/ui": "2.5.3",
+        "@enact/core": "3.0.0-alpha.4",
+        "@enact/i18n": "3.0.0-alpha.4",
+        "@enact/spotlight": "3.0.0-alpha.4",
+        "@enact/ui": "3.0.0-alpha.4",
         "classnames": "2.2.6",
-        "eases": "1.0.8",
         "invariant": "2.2.4",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "ramda": "0.24.1",
         "react": "16.8.6",
         "react-dom": "16.8.6",
@@ -103,12 +102,12 @@
       }
     },
     "@enact/spotlight": {
-      "version": "2.5.3",
-      "resolved": "https://registry.npmjs.org/@enact/spotlight/-/spotlight-2.5.3.tgz",
-      "integrity": "sha512-SIIwAZeyEjy0B6yW2kdLppe8/wD2+/Evnl3M6r89npGAQSJChlM0JE5GTdw//hrCXkb7tWlsEySWgcig2Epz8A==",
+      "version": "3.0.0-alpha.4",
+      "resolved": "https://registry.npmjs.org/@enact/spotlight/-/spotlight-3.0.0-alpha.4.tgz",
+      "integrity": "sha512-RtrO+GEsQ6G9vNcPyxM20Go3ohqv8KMTELqci7aIVDgpUqAVMUlbJC1QT/NTstEFSDp9naCiJ2PNluMqAyOKrQ==",
       "requires": {
-        "@enact/core": "2.5.3",
-        "prop-types": "15.6.2",
+        "@enact/core": "3.0.0-alpha.4",
+        "prop-types": "15.7.2",
         "ramda": "0.24.1",
         "react": "16.8.6",
         "react-dom": "16.8.6",
@@ -116,15 +115,15 @@
       }
     },
     "@enact/ui": {
-      "version": "2.5.3",
-      "resolved": "https://registry.npmjs.org/@enact/ui/-/ui-2.5.3.tgz",
-      "integrity": "sha512-PJbMqAs8LJhPXXD8yKRNnrTOW6NCy6VVLVQn1sIjL9P/RPLkGtMXdypZe7xHVsl2Y1br7HoIq3ONMrZH9xLy7w==",
+      "version": "3.0.0-alpha.4",
+      "resolved": "https://registry.npmjs.org/@enact/ui/-/ui-3.0.0-alpha.4.tgz",
+      "integrity": "sha512-RXb9Z8drVEfs9F7YKclUMIBUynlDtAXbninjyf6+niZjvyEbND3hRqxon20I7Y+eZrArctZAc+jmshu6TTzGEQ==",
       "requires": {
-        "@enact/core": "2.5.3",
+        "@enact/core": "3.0.0-alpha.4",
         "classnames": "2.2.6",
         "direction": "1.0.3",
         "invariant": "2.2.4",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "ramda": "0.24.1",
         "react": "16.8.6",
         "react-dom": "16.8.6",
@@ -133,12 +132,12 @@
       }
     },
     "@enact/webos": {
-      "version": "2.5.3",
-      "resolved": "https://registry.npmjs.org/@enact/webos/-/webos-2.5.3.tgz",
-      "integrity": "sha512-zDzQ9yZcG+qf6Hz+rF0O1MooYx1iAa6dFp1kjvxPMkzD9ZeogAUzG0A8IYWYmf5FFQkISdMAurYgbumHPbjAww==",
+      "version": "3.0.0-alpha.4",
+      "resolved": "https://registry.npmjs.org/@enact/webos/-/webos-3.0.0-alpha.4.tgz",
+      "integrity": "sha512-L3+XOVEOuCpp/j0gCYTYb1R1EMwNAwB1qAaKO+Ee8TBOhqXK5/6062Bb/ibeZG/+w069p8IWxwW3UzSjL4RY4g==",
       "requires": {
-        "@enact/core": "2.5.3",
-        "prop-types": "15.6.2",
+        "@enact/core": "3.0.0-alpha.4",
+        "prop-types": "15.7.2",
         "react": "16.8.6",
         "react-dom": "16.8.6"
       }
@@ -162,7 +161,7 @@
         "glamorous": "4.13.1",
         "global": "4.3.2",
         "make-error": "1.3.5",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "react-inspector": "2.3.1",
         "uuid": "3.3.2"
       }
@@ -181,7 +180,7 @@
         "global": "4.3.2",
         "marksy": "6.1.0",
         "nested-object-assign": "1.0.3",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "react-addons-create-fragment": "15.6.2",
         "util-deprecate": "1.0.2"
       }
@@ -199,7 +198,7 @@
         "insert-css": "2.0.0",
         "lodash.debounce": "4.0.8",
         "moment": "2.24.0",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "react-color": "2.17.3",
         "react-datetime": "2.16.3",
         "react-textarea-autosize": "5.2.1",
@@ -215,7 +214,7 @@
         "@storybook/components": "3.4.12",
         "babel-runtime": "6.26.0",
         "global": "4.3.2",
-        "prop-types": "15.6.2"
+        "prop-types": "15.7.2"
       }
     },
     "@storybook/addon-options": {
@@ -264,7 +263,7 @@
       "requires": {
         "glamor": "2.20.40",
         "glamorous": "4.13.1",
-        "prop-types": "15.6.2"
+        "prop-types": "15.7.2"
       }
     },
     "@storybook/core": {
@@ -291,7 +290,7 @@
         "json-loader": "0.5.7",
         "postcss-flexbugs-fixes": "3.3.1",
         "postcss-loader": "2.1.6",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "qs": "6.7.0",
         "serve-favicon": "2.5.0",
         "shelljs": "0.8.3",
@@ -360,7 +359,7 @@
         "@storybook/ui": "3.4.12",
         "airbnb-js-shims": "2.2.0",
         "babel-loader": "7.1.5",
-        "babel-plugin-macros": "2.6.1",
+        "babel-plugin-macros": "2.6.0",
         "babel-plugin-react-docgen": "1.9.0",
         "babel-plugin-transform-regenerator": "6.26.0",
         "babel-plugin-transform-runtime": "6.23.0",
@@ -382,7 +381,7 @@
         "json5": "0.5.1",
         "lodash.flattendeep": "4.4.0",
         "markdown-loader": "2.0.2",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "react-dev-utils": "5.0.3",
         "redux": "3.7.2",
         "uglifyjs-webpack-plugin": "1.3.0",
@@ -429,7 +428,7 @@
         "babel-runtime": "6.26.0",
         "create-react-class": "15.6.3",
         "hoist-non-react-statics": "1.2.0",
-        "prop-types": "15.6.2"
+        "prop-types": "15.7.2"
       },
       "dependencies": {
         "hoist-non-react-statics": {
@@ -469,7 +468,7 @@
         "lodash.pick": "4.4.0",
         "lodash.sortby": "4.7.0",
         "lodash.throttle": "4.1.1",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "qs": "6.7.0",
         "react-fuzzy": "0.5.2",
         "react-icons": "2.2.7",
@@ -849,7 +848,7 @@
       "dev": true,
       "requires": {
         "browserslist": "2.11.3",
-        "caniuse-lite": "1.0.30000974",
+        "caniuse-lite": "1.0.30000971",
         "normalize-range": "0.1.2",
         "num2fraction": "1.2.2",
         "postcss": "6.0.23",
@@ -1228,9 +1227,9 @@
       "dev": true
     },
     "babel-plugin-macros": {
-      "version": "2.6.1",
-      "resolved": "https://registry.npmjs.org/babel-plugin-macros/-/babel-plugin-macros-2.6.1.tgz",
-      "integrity": "sha512-6W2nwiXme6j1n2erPOnmRiWfObUhWH7Qw1LMi9XZy8cj+KtESu3T6asZvtk5bMQQjX8te35o7CFueiSdL/2NmQ==",
+      "version": "2.6.0",
+      "resolved": "https://registry.npmjs.org/babel-plugin-macros/-/babel-plugin-macros-2.6.0.tgz",
+      "integrity": "sha512-6hrXm6NIoSp+JiqhHZ6tUemhClnu//vjx9fAU5tkRCztTKxgiUpFpMDBX4yZiJIco7qkf0CPX2u4Ax3x6GCiUg==",
       "dev": true,
       "requires": {
         "@babel/runtime": "7.4.5",
@@ -2017,8 +2016,8 @@
           "integrity": "sha512-WHVocJYavUwVgVViC0ORikPHQquXwVh939TaelZ4WDqpWgTX/FsGhl/+P4qBUAGcRvtOgDgC+xftNWWp2RUTAQ==",
           "dev": true,
           "requires": {
-            "caniuse-lite": "1.0.30000974",
-            "electron-to-chromium": "1.3.149"
+            "caniuse-lite": "1.0.30000971",
+            "electron-to-chromium": "1.3.144"
           }
         }
       }
@@ -2504,8 +2503,8 @@
       "integrity": "sha512-yWu5cXT7Av6mVwzWc8lMsJMHWn4xyjSuGYi4IozbVTLUOEYPSagUB8kiMDUHA1fS3zjr8nkxkn9jdvug4BBRmA==",
       "dev": true,
       "requires": {
-        "caniuse-lite": "1.0.30000974",
-        "electron-to-chromium": "1.3.149"
+        "caniuse-lite": "1.0.30000971",
+        "electron-to-chromium": "1.3.144"
       }
     },
     "buffer": {
@@ -2636,7 +2635,7 @@
       "dev": true,
       "requires": {
         "browserslist": "1.7.7",
-        "caniuse-db": "1.0.30000974",
+        "caniuse-db": "1.0.30000971",
         "lodash.memoize": "4.1.2",
         "lodash.uniq": "4.5.0"
       },
@@ -2647,22 +2646,22 @@
           "integrity": "sha1-C9dnBCWL6CmyOYu1Dkti0aFmsLk=",
           "dev": true,
           "requires": {
-            "caniuse-db": "1.0.30000974",
-            "electron-to-chromium": "1.3.149"
+            "caniuse-db": "1.0.30000971",
+            "electron-to-chromium": "1.3.144"
           }
         }
       }
     },
     "caniuse-db": {
-      "version": "1.0.30000974",
-      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000974.tgz",
-      "integrity": "sha512-zeXkn1hbjMvXdadcyUELZnGu7OjlW3HK0956DWczM7ZJqGV4jFaPi8CidB8QiAj5xl5O9I+f7j9F0AFmXmGTpg==",
+      "version": "1.0.30000971",
+      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000971.tgz",
+      "integrity": "sha512-ubSZfYXO2KMYtCVmDez82mjodeZa+mBYWAnBMAmFBPAn4C2PY4SD0eC/diYQD4Rj1K+WNdp0vr0JDtm0SQ6GNg==",
       "dev": true
     },
     "caniuse-lite": {
-      "version": "1.0.30000974",
-      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30000974.tgz",
-      "integrity": "sha512-xc3rkNS/Zc3CmpMKuczWEdY2sZgx09BkAxfvkxlAEBTqcMHeL8QnPqhKse+5sRTi3nrw2pJwToD2WvKn1Uhvww==",
+      "version": "1.0.30000971",
+      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30000971.tgz",
+      "integrity": "sha512-TQFYFhRS0O5rdsmSbF1Wn+16latXYsQJat66f7S7lizXW1PVpWJeZw9wqqVLIjuxDRz7s7xRUj13QCfd8hKn6g==",
       "dev": true
     },
     "case-sensitive-paths-webpack-plugin": {
@@ -3391,7 +3390,7 @@
           "dev": true,
           "requires": {
             "browserslist": "1.7.7",
-            "caniuse-db": "1.0.30000974",
+            "caniuse-db": "1.0.30000971",
             "normalize-range": "0.1.2",
             "num2fraction": "1.2.2",
             "postcss": "5.2.18",
@@ -3404,8 +3403,8 @@
           "integrity": "sha1-C9dnBCWL6CmyOYu1Dkti0aFmsLk=",
           "dev": true,
           "requires": {
-            "caniuse-db": "1.0.30000974",
-            "electron-to-chromium": "1.3.149"
+            "caniuse-db": "1.0.30000971",
+            "electron-to-chromium": "1.3.144"
           }
         },
         "chalk": {
@@ -3807,11 +3806,6 @@
         "stream-shift": "1.0.0"
       }
     },
-    "eases": {
-      "version": "1.0.8",
-      "resolved": "https://registry.npmjs.org/eases/-/eases-1.0.8.tgz",
-      "integrity": "sha1-8fUGmmtu0upRD5xhEDmNY+/pruY="
-    },
     "ecc-jsbn": {
       "version": "0.1.2",
       "resolved": "https://registry.npmjs.org/ecc-jsbn/-/ecc-jsbn-0.1.2.tgz",
@@ -3836,9 +3830,9 @@
       "dev": true
     },
     "electron-to-chromium": {
-      "version": "1.3.149",
-      "resolved": "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.149.tgz",
-      "integrity": "sha512-XO+s6imdgjUS5hHDwh31fpkzxiIz7hFX8B5qnJdlP/BnzqqDF2A/YoitbGt5TknCm8dS9tIYdiXwDbarsonaFA==",
+      "version": "1.3.144",
+      "resolved": "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.144.tgz",
+      "integrity": "sha512-jNRFJpfNrYm5uJ4x0q9oYMOfbL0JPOlkNli8GS/5zEmCjnE5jAtoCo4BYajHiqSPqEeAjtTdItL4p7EZw+jSfg==",
       "dev": true
     },
     "elliptic": {
@@ -5221,7 +5215,7 @@
         "fbjs": "0.8.17",
         "inline-style-prefixer": "3.0.8",
         "object-assign": "4.1.1",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "through": "2.3.8"
       }
     },
@@ -8337,8 +8331,8 @@
           "integrity": "sha1-C9dnBCWL6CmyOYu1Dkti0aFmsLk=",
           "dev": true,
           "requires": {
-            "caniuse-db": "1.0.30000974",
-            "electron-to-chromium": "1.3.149"
+            "caniuse-db": "1.0.30000971",
+            "electron-to-chromium": "1.3.144"
           }
         },
         "chalk": {
@@ -9475,12 +9469,13 @@
       }
     },
     "prop-types": {
-      "version": "15.6.2",
-      "resolved": "https://registry.npmjs.org/prop-types/-/prop-types-15.6.2.tgz",
-      "integrity": "sha512-3pboPvLiWD7dkI3qf3KbUe6hKFKa52w+AE0VCqECtf+QHAKgOL37tTaNCnuX1nAAQ4ZhyP+kYVKf8rLmJ/feDQ==",
+      "version": "15.7.2",
+      "resolved": "https://registry.npmjs.org/prop-types/-/prop-types-15.7.2.tgz",
+      "integrity": "sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==",
       "requires": {
         "loose-envify": "1.4.0",
-        "object-assign": "4.1.1"
+        "object-assign": "4.1.1",
+        "react-is": "16.8.6"
       }
     },
     "proxy-addr": {
@@ -9559,9 +9554,9 @@
       "dev": true
     },
     "query-string": {
-      "version": "6.6.0",
-      "resolved": "https://registry.npmjs.org/query-string/-/query-string-6.6.0.tgz",
-      "integrity": "sha512-Xhvaa80rZzfvI7gYXF6ism5otKTyea90XROstBTBKiWE/tDfnIDbQwkGLguJaQBNweVCW4T9DoTe5eyox0CbZQ==",
+      "version": "6.5.0",
+      "resolved": "https://registry.npmjs.org/query-string/-/query-string-6.5.0.tgz",
+      "integrity": "sha512-TYC4hDjZSvVxLMEucDMySkuAS9UIzSbAiYGyA9GWCjLKB8fQpviFbjd20fD7uejCDxZS+ftSdBKE6DS+xucJFg==",
       "requires": {
         "decode-uri-component": "0.2.0",
         "split-on-first": "1.1.0",
@@ -9595,7 +9590,7 @@
         "array-find": "1.0.0",
         "exenv": "1.2.2",
         "inline-style-prefixer": "2.0.5",
-        "prop-types": "15.6.2"
+        "prop-types": "15.7.2"
       },
       "dependencies": {
         "inline-style-prefixer": {
@@ -9659,7 +9654,7 @@
       "requires": {
         "loose-envify": "1.4.0",
         "object-assign": "4.1.1",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "scheduler": "0.13.6"
       }
     },
@@ -9683,7 +9678,7 @@
         "@icons/material": "0.2.4",
         "lodash": "4.17.11",
         "material-colors": "1.2.6",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "reactcss": "1.2.3",
         "tinycolor2": "1.4.1"
       }
@@ -9696,7 +9691,7 @@
       "requires": {
         "create-react-class": "15.6.3",
         "object-assign": "3.0.0",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "react-onclickoutside": "6.8.0"
       },
       "dependencies": {
@@ -9798,7 +9793,7 @@
       "requires": {
         "loose-envify": "1.4.0",
         "object-assign": "4.1.1",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "scheduler": "0.13.6"
       }
     },
@@ -9817,7 +9812,7 @@
         "babel-runtime": "6.26.0",
         "classnames": "2.2.6",
         "fuse.js": "3.4.5",
-        "prop-types": "15.6.2"
+        "prop-types": "15.7.2"
       }
     },
     "react-html-attributes": {
@@ -9852,7 +9847,7 @@
       "requires": {
         "babel-runtime": "6.26.0",
         "is-dom": "1.0.9",
-        "prop-types": "15.6.2"
+        "prop-types": "15.7.2"
       }
     },
     "react-is": {
@@ -9873,7 +9868,7 @@
       "dev": true,
       "requires": {
         "exenv": "1.2.2",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "react-lifecycles-compat": "3.0.4",
         "warning": "3.0.0"
       }
@@ -9890,7 +9885,7 @@
       "integrity": "sha512-F22jqWyKB1WximT0U5HKdSuB9tmJGjjP+WUyveHxJJys3ANsljj163kCdsI6M3gdfyCVC+B2rq8sc5m2Ko02RA==",
       "dev": true,
       "requires": {
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "react-lifecycles-compat": "3.0.4",
         "react-style-proptype": "3.2.2"
       }
@@ -9901,7 +9896,7 @@
       "integrity": "sha512-ywYLSjNkxKHiZOqNlso9PZByNEY+FTyh3C+7uuziK0xFXu9xzdyfHwg4S9iyiRRoPCR4k2LqaBBsWVmSBwCWYQ==",
       "dev": true,
       "requires": {
-        "prop-types": "15.6.2"
+        "prop-types": "15.7.2"
       }
     },
     "react-textarea-autosize": {
@@ -9910,7 +9905,7 @@
       "integrity": "sha512-bx6z2I35aapr71ggw2yZIA4qhmqeTa4ZVsSaTeFvtf9kfcZppDBh2PbMt8lvbdmzEk7qbSFhAxR9vxEVm6oiMg==",
       "dev": true,
       "requires": {
-        "prop-types": "15.6.2"
+        "prop-types": "15.7.2"
       }
     },
     "react-transition-group": {
@@ -9921,7 +9916,7 @@
       "requires": {
         "dom-helpers": "3.4.0",
         "loose-envify": "1.4.0",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "react-lifecycles-compat": "3.0.4"
       }
     },
@@ -9933,7 +9928,7 @@
       "requires": {
         "babel-runtime": "6.26.0",
         "deep-equal": "1.0.1",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "radium": "0.19.6",
         "shallowequal": "0.2.2",
         "velocity-react": "1.4.3"
@@ -11706,7 +11701,7 @@
       "dev": true,
       "requires": {
         "lodash": "4.17.11",
-        "prop-types": "15.6.2",
+        "prop-types": "15.7.2",
         "react-transition-group": "2.9.0",
         "velocity-animate": "1.5.2"
       }

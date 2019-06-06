@@ -30,6 +30,10 @@
 @moon-day-selector-border-color: @high-contrast-light-gray;
 @moon-day-selector-selected-bg-color: @high-contrast-dark-gray;
 
+// EditableIntegerPicker
+// ---------------------------------------
+@moon-editable-integer-picker-shadow: inset 0 0 0 6px;
+
 // FormCheckbox
 // ---------------------------------------
 @moon-formcheckbox-text-color: @high-contrast-black;
@@ -43,7 +47,7 @@
 // Input
 // ---------------------------------------
 @moon-input-border-active-border-color: @moon-accent;
-@moon-input-border-active-outline-color: @moon-input-border-active-border-color;
+@moon-input-border-active-shadow: 0px 0px 0px 6px @moon-input-border-active-border-color;
 
 // Picker
 // ---------------------------------------
@@ -52,19 +56,6 @@
 // Progress Bar
 // ---------------------------------------
 @moon-progress-bar-fill-bg-color: @high-contrast-black;
-
-// RadioItem
-// ---------------------------------------
-@moon-radio-item-indicator-color: @high-contrast-light-gray;
-@moon-radio-item-indicator-border-color: @high-contrast-black;
-@moon-radio-item-spotlight-indicator-bg-color: @moon-dark-gray;
-@moon-radio-item-spotlight-indicator-border-color: @high-contrast-white;
-@moon-radio-item-selected-indicator-color: transparent;
-@moon-radio-item-selected-indicator-bg-color: @high-contrast-black;
-@moon-radio-item-selected-indicator-border-color: @moon-radio-item-selected-indicator-bg-color;
-@moon-radio-item-selected-spotlight-indicator-color: @moon-radio-item-selected-indicator-color;
-@moon-radio-item-selected-spotlight-indicator-bg-color: @moon-radio-item-spotlight-indicator-border-color;
-@moon-radio-item-selected-spotlight-indicator-border-color: @moon-radio-item-selected-spotlight-indicator-bg-color;
 
 // Scroller
 // ---------------------------------------
@@ -77,10 +68,10 @@
 // Switch
 // ---------------------------------------
 @moon-checkbox-toggle-switch-selected-color: @high-contrast-white;
-@moon-checkbox-toggle-switch-selected-bg-color: @high-contrast-black;
+@moon-checkbox-toggle-switch-selected-bg-color: #4d4d4d;
 
-@moon-checkbox-toggle-switch-spotlight-selected-bg-color: @moon-checkbox-toggle-switch-selected-color;
-@moon-checkbox-toggle-switch-spotlight-selected-color: @moon-checkbox-toggle-switch-selected-bg-color;
+@moon-checkbox-toggle-switch-spotlight-selected-bg-color: @moon-checkbox-toggle-switch-selected-bg-color;
+@moon-checkbox-toggle-switch-spotlight-selected-color: @moon-checkbox-toggle-switch-selected-color;
 
 // Toggle Colors
 // ---------------------------------------

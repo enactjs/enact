@@ -95,16 +95,6 @@ const InputBase = kind({
 		dismissOnEnter: PropTypes.bool,
 
 		/**
-		 * Adds a `focused` class to the input decorator.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @deprecated handled by CSS in 3.0
-		 * @public
-		 */
-		focused: PropTypes.bool,
-
-		/**
 		 * The icon to be placed at the end of the input.
 		 *
 		 * @see {@link moonstone/Icon.Icon}
@@ -209,8 +199,8 @@ const InputBase = kind({
 		/**
 		 * The size of the input field.
 		 *
-		 * @type {('small'|'large')}
-		 * @default 'large'
+		 * @type {('large'|'small')}
+		 * @default 'small'
 		 * @public
 		 */
 		size: PropTypes.string,
@@ -250,7 +240,7 @@ const InputBase = kind({
 		dismissOnEnter: false,
 		invalid: false,
 		placeholder: '',
-		// size: 'large', // we won't set default props for `size` yet to support `small` prop
+		size: 'small',
 		type: 'text'
 	},
 
@@ -273,7 +263,7 @@ const InputBase = kind({
 			const title = (value == null || value === '') ? placeholder : '';
 			return calcAriaLabel(title, type, value);
 		},
-		className: ({focused, invalid, size, small, styler}) => styler.append({focused, invalid}, getSize(size, small)),
+		className: ({invalid, size, small, styler}) => styler.append({invalid}, getSize(size, small)),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
 		invalidTooltip: ({css, invalid, invalidMessage = $L('Please enter a valid value.'), rtl}) => {
 			if (invalid && invalidMessage) {
@@ -293,7 +283,6 @@ const InputBase = kind({
 		const inputProps = extractInputProps(rest);
 		const voiceProps = extractVoiceProps(rest);
 		delete rest.dismissOnEnter;
-		delete rest.focused;
 		delete rest.invalid;
 		delete rest.invalidMessage;
 		delete rest.rtl;
@@ -322,27 +311,6 @@ const InputBase = kind({
 		);
 	}
 });
-
-let InputBaseExternal = InputBase;
-if (__DEV__) {
-	const deprecateFocused = deprecate(() => {}, {
-		name: 'moonstone/Input.InputBase#focused',
-		replacedBy: 'the :focus-within CSS pseudo-selector',
-		since: '2.6.0',
-		until: '3.0.0'
-	});
-
-	// eslint-disable-next-line enact/display-name
-	InputBaseExternal = function (props) {
-		if ('focused' in props) {
-			deprecateFocused();
-		}
-
-		return (
-			<InputBase {...props} />
-		);
-	};
-}
 
 /**
  * A Spottable, Moonstone styled input component with embedded icon support.
@@ -460,6 +428,5 @@ export {
 	calcAriaLabel,
 	extractInputProps,
 	Input,
-	InputBaseExternal as InputBase,
-	InputBase as InputBaseInternal
+	InputBase
 };

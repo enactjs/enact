@@ -2,11 +2,33 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [2.5.3] - 2019-06-06
+## [3.0.0-alpha.4] - 2019-06-03
+
+No significant changes.
+
+## [3.0.0-alpha.3] - 2019-05-29
+
+No significant changes.
+
+## [3.0.0-alpha.2] - 2019-05-20
+
+No significant changes.
+
+## [3.0.0-alpha.1] - 2019-05-15
+
+### Changed
+
+- `spotlight/Spottable` to allow disabled items to be focused
+
+## [2.6.0] - ???
 
 ### Fixed
 
 - `spotlight` to unspot the current element when tapping on non-spottable target on touch platforms
+
+## [2.5.3] - 2019-06-06
+
+No significant changes.
 
 ## [2.5.2] - 2019-04-23
 

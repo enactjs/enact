@@ -53,6 +53,7 @@ const ButtonBase = kind({
 		 * * `button` - The root component class
 		 * * `bg` - The background node of the button
 		 * * `client` - The content node of the button
+		 * * `hasIcon` - Applied when there is an `icon` present
 		 * * `icon` - The icon node, when `icon` is set
 		 * * `large` - Applied when `size` prop is `'large'`
 		 * * `minWidth` - Applied when `minWidth` prop is `true`
@@ -64,6 +65,14 @@ const ButtonBase = kind({
 		 * @public
 		 */
 		css: PropTypes.object,
+
+		/**
+		 * Additional DOM nodes which may be necessary for decorating the Button.
+		 *
+		 * @type {Node}
+		 * @private
+		 */
+		decoration: PropTypes.node,
 
 		/**
 		 * Applies the `disabled` class.
@@ -190,7 +199,7 @@ const ButtonBase = kind({
 		}
 	},
 
-	render: ({children, css, disabled, icon, ...rest}) => {
+	render: ({children, css, decoration, disabled, icon, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.minWidth;
 		delete rest.pressed;
@@ -200,6 +209,9 @@ const ButtonBase = kind({
 
 		return (
 			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
+				{decoration ? (
+					<div className={css.decoration}>{decoration}</div>
+				) : null}
 				<div className={css.bg} />
 				<div className={css.client}>{icon}{children}</div>
 			</div>

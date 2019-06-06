@@ -1,6 +1,6 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
 import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
-import iconNames from './icons';
+import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
@@ -16,8 +16,7 @@ const Config = mergeComponentMetadata('Button', UIButtonBase, UIButton, ButtonBa
 // Set up some defaults for info and knobs
 const prop = {
 	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
-	casing: ['preserve', 'sentence', 'word', 'upper'],
-	icons: ['', ...iconNames]
+	icons: ['', ...Object.keys(icons)]
 };
 
 storiesOf('Moonstone', module)
@@ -29,12 +28,13 @@ storiesOf('Moonstone', module)
 			<Button
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
-				casing={select('casing', prop.casing, Config, 'upper')}
+				color={select('color', ['', 'red', 'green', 'yellow', 'blue'], Config, '')}
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', prop.icons, Config)}
+				iconPosition={select('iconPosition', ['', 'before', 'after'], Config, '')}
 				minWidth={!!boolean('minWidth', Config)}
 				selected={boolean('selected', Config)}
-				size={select('size', ['small', 'large'], Config, 'large')}
+				size={select('size', ['small', 'large'], Config)}
 			>
 				{text('children', Config, 'click me')}
 			</Button>
