@@ -12,6 +12,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Button`, `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` prop `size`
 
+## [2.5.3] - 2019-06-06
+
 ### Fixed
 
 - `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to size properly
