@@ -28,8 +28,9 @@ storiesOf('Moonstone', module)
 					onClose={action('onClose')}
 					onOpen={action('onOpen')}
 					onSelect={action('onSelect')}
-					size={select('size', ['small', 'medium', 'large'], Config)}
+					size={select('size', ['small', 'large'], Config)}
 					title={text('title', Config, 'Dropdown')}
+					width={select('width', ['small', 'medium', 'large'], Config)}
 				>
 					{items}
 				</Dropdown>

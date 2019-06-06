@@ -16,22 +16,21 @@
  * @exports DropdownBaseDecorator
  */
 
-
+import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
+import {handle, forward} from '@enact/core/handle';
 import Changeable from '@enact/ui/Changeable';
 import Toggleable from '@enact/ui/Toggleable';
-import equals from 'ramda/src/equals';
-import EnactPropTypes from '@enact/core/internal/prop-types';
 import Group from '@enact/ui/Group';
-import kind from '@enact/core/kind';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
-import compose from 'ramda/src/compose';
+import {compose, equals} from 'ramda';
 import React from 'react';
 
-import {Button} from '../Button/Button';
+import Button from '../Button';
 import ContextualPopupDecorator from '../ContextualPopupDecorator/ContextualPopupDecorator';
-import {Item} from '../Item/Item';
-import {Scroller} from '../Scroller/Scroller';
+import Item from '../Item';
+import Scroller from '../Scroller';
 import Skinnable from '../Skinnable';
 
 import css from './Dropdown.module.less';
@@ -106,38 +105,36 @@ const DropdownList = Skinnable(
 			selected: PropTypes.number,
 
 			/**
-			 * The size of DropdownList.
+			 * The width of DropdownList.
 			 *
 			 * @type {('large'|'medium'|'small')}
 			 */
-			size: PropTypes.oneOf(['large', 'medium', 'small'])
+			width: PropTypes.oneOf(['large', 'medium', 'small'])
 		},
 
 		styles: {
-			className: 'dropDownList',
-			css
+			css,
+			className: 'dropDownList'
 		},
 
 		computed: {
-			className: ({size, styler}) => styler.append(size)
+			className: ({width, styler}) => styler.append(width)
 		},
 
 		render: ({children, onSelect, selected, ...rest}) => {
-			delete rest.size;
+			delete rest.width;
 
 			return (
-				<div {...rest}>
-					<Group
-						childComponent={Item}
-						className={css.group}
-						component={children ? Scroller : null}
-						onSelect={onSelect}
-						select="radio"
-						selected={selected}
-					>
-						{children}
-					</Group>
-				</div>
+				<Group
+					{...rest}
+					childComponent={Item}
+					component={children ? Scroller : null}
+					onSelect={onSelect}
+					select="radio"
+					selected={selected}
+				>
+					{children}
+				</Group>
 			);
 		}
 	})
@@ -226,15 +223,6 @@ const DropdownBase = kind({
 		selected: PropTypes.number,
 
 		/**
-		 * The size of Dropdown.
-		 *
-		 * @type {('large'|'medium'|'small')}
-		 * @default 'medium'
-		 * @public
-		 */
-		size: PropTypes.oneOf(['large', 'medium', 'small']),
-
-		/**
 		 * The primary title text of Dropdown.
 		 * The title will be replaced if an item is selected.
 		 *
@@ -242,25 +230,29 @@ const DropdownBase = kind({
 		 * @required
 		 * @public
 		 */
-		title: PropTypes.string
+		title: PropTypes.string,
+
+		/**
+		 * The width of Dropdown.
+		 *
+		 * @type {('large'|'medium'|'small')}
+		 * @default 'medium'
+		 * @public
+		 */
+		width: PropTypes.oneOf(['large', 'medium', 'small'])
 	},
 
 	defaultProps: {
 		direction: 'down',
 		open: false,
-		size: 'medium'
+		width: 'medium'
 	},
 
 	handlers: {
-		onSelect: (ev, {onClose, onSelect}) => {
-			if (onClose) {
-				onClose(ev);
-			}
-
-			if (onSelect) {
-				onSelect(ev);
-			}
-		}
+		onSelect: handle(
+			forward('onSelect'),
+			forward('onClose')
+		)
 	},
 
 	styles: {
@@ -269,7 +261,7 @@ const DropdownBase = kind({
 	},
 
 	computed: {
-		className: ({size, styler}) => styler.append(size),
+		className: ({width, styler}) => styler.append(width),
 		title: ({children, selected, title}) => {
 			const isSelectedValid = !(typeof selected === 'undefined' || selected === null || selected >= children.length || selected < 0);
 
@@ -282,12 +274,13 @@ const DropdownBase = kind({
 		}
 	},
 
-	render: ({children, disabled, onOpen, onSelect, open, selected, size, title, ...rest}) => {
-		const popupProps = {children, onSelect, open, selected, size};
+	render: ({children, disabled, onOpen, onSelect, open, selected, width, title, ...rest}) => {
+		const popupProps = {children, onSelect, selected, width};
 
 		// `ui/Group`/`ui/Repeater` will throw an error if empty so we disable the Dropdown and prevent Dropdown to open if there are no children.
 		const hasChildren = children && children.length;
 		const openDropdown = hasChildren ? open : false;
+		delete rest.width;
 
 		return (
 			<ContextualButton
@@ -298,7 +291,6 @@ const DropdownBase = kind({
 				popupComponent={DropdownList}
 				onClick={onOpen}
 				open={openDropdown}
-				size={size}
 				spotlightRestrict="self-only"
 			>
 				{title}
