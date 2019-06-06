@@ -19,7 +19,6 @@
 import ri from '@enact/ui/resolution';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import {Spotlight} from '@enact/spotlight';
-import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -300,51 +299,6 @@ class ScrollerBase extends Component {
 				document.removeEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
 			}
 		}
-	}
-
-	getNextEndPoint = (direction, oSpotBounds) => {
-		const bounds = this.uiRefCurrent.getScrollBounds();
-
-		let oPoint = {};
-		switch (direction) {
-			case 'up':
-				oPoint.x = oSpotBounds.left;
-				oPoint.y = oSpotBounds.top - bounds.clientHeight;
-				break;
-			case 'left':
-				oPoint.x = oSpotBounds.left - bounds.clientWidth;
-				oPoint.y = oSpotBounds.top;
-				break;
-			case 'down':
-				oPoint.x = oSpotBounds.left;
-				oPoint.y = oSpotBounds.top + oSpotBounds.height + bounds.clientHeight;
-				break;
-			case 'right':
-				oPoint.x = oSpotBounds.left + oSpotBounds.width + bounds.clientWidth;
-				oPoint.y = oSpotBounds.top;
-				break;
-		}
-		return oPoint;
-	}
-
-	scrollToNextPage = ({direction, focusedItem, reverseDirection, spotlightId}) => {
-		const endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect());
-		let candidateNode = null;
-
-		/* Find a spottable item in the next page */
-		candidateNode = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
-
-		/* Find a spottable item in a whole data */
-		if (candidateNode === focusedItem) {
-			candidateNode = getTargetByDirectionFromPosition(direction, endPoint, spotlightId);
-		}
-
-		/* If there is no spottable item next to the current item */
-		if (candidateNode === focusedItem) {
-			return null;
-		}
-
-		return candidateNode;
 	}
 
 	handleLeaveContainer = ({direction, target}) => {

@@ -1,4 +1,3 @@
-import clamp from 'ramda/src/clamp';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -19,6 +18,8 @@ const
 	isDown = is('down'),
 	isEnter = is('enter'),
 	isLeft = is('left'),
+	isPageUp = is('pageUp'),
+	isPageDown = is('pageDown'),
 	isRight = is('right'),
 	isUp = is('up'),
 	JS = 'JS',
@@ -300,18 +301,6 @@ const VirtualListBaseFactory = (type) => {
 		 * Handle a Page up/down key with disabled items
 		 */
 
-		getExtentIndex = (index) => (Math.floor(index / this.uiRefCurrent.dimensionToExtent))
-
-		findSpottableItem = (indexFrom, indexTo) => {
-			const {dataSize} = this.props;
-
-			if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
-				return -1;
-			} else {
-				return clamp(0, dataSize - 1, indexFrom);
-			}
-		}
-
 		findSpottableItemWithPositionInExtent = (indexFrom, indexTo, position) => {
 			const
 				{dataSize} = this.props,
@@ -334,104 +323,6 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			return -1;
-		}
-
-		findNearestSpottableItemInExtent = (index, extentIndex) => {
-			const
-				{dataSize} = this.props,
-				{dimensionToExtent} = this.uiRefCurrent,
-				currentPosInExtent = clamp(0, dataSize - 1, index) % dimensionToExtent,
-				firstIndexInExtent = clamp(0, this.getExtentIndex(dataSize - 1), extentIndex) * dimensionToExtent,
-				lastIndexInExtent = clamp(firstIndexInExtent, dataSize, firstIndexInExtent + dimensionToExtent);
-			let
-				minDistance = dimensionToExtent,
-				distance,
-				nearestIndex = -1;
-
-			for (let i = firstIndexInExtent; i < lastIndexInExtent; ++i) {
-				distance = Math.abs(currentPosInExtent - i % dimensionToExtent);
-				if (distance < minDistance) {
-					minDistance = distance;
-					nearestIndex = i;
-				}
-			}
-
-			return nearestIndex;
-		}
-
-		getIndexToScroll = (direction, currentIndex) => {
-			const
-				{dataSize, spacing} = this.props,
-				{dimensionToExtent, primary: {clientSize, gridSize, itemSize}, scrollPosition} = this.uiRefCurrent,
-				{findSpottableItem} = this,
-				numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent,
-				firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent,
-				lastFullyVisibleIndex = Math.min(dataSize - 1, Math.floor((scrollPosition + clientSize - itemSize) / gridSize) * dimensionToExtent);
-			let candidateIndex = -1;
-
-			/* First, find a spottable item in this page */
-			if (direction === 'down') { // Page Down
-				if ((lastFullyVisibleIndex - (lastFullyVisibleIndex % dimensionToExtent)) > currentIndex) { // If a current focused item is in the last visible line.
-					candidateIndex = findSpottableItem(
-						lastFullyVisibleIndex,
-						currentIndex - (currentIndex % dimensionToExtent) + dimensionToExtent - 1
-					);
-				}
-			} else if (firstFullyVisibleIndex + dimensionToExtent <= currentIndex) { // Page Up,  if a current focused item is in the first visible line.
-				candidateIndex = findSpottableItem(
-					firstFullyVisibleIndex,
-					currentIndex - (currentIndex % dimensionToExtent)
-				);
-			}
-
-			/* Second, find a spottable item in the next page */
-			if (candidateIndex === -1) {
-				if (direction === 'down') { // Page Down
-					candidateIndex = findSpottableItem(lastFullyVisibleIndex + numOfItemsInPage, lastFullyVisibleIndex);
-				} else { // Page Up
-					candidateIndex = findSpottableItem(firstFullyVisibleIndex - numOfItemsInPage, firstFullyVisibleIndex);
-				}
-			}
-
-			/* Last, find a spottable item in a whole data */
-			if (candidateIndex === -1) {
-				if (direction === 'down') { // Page Down
-					candidateIndex = findSpottableItem(lastFullyVisibleIndex + numOfItemsInPage + 1, dataSize);
-				} else { // Page Up
-					candidateIndex = findSpottableItem(firstFullyVisibleIndex - numOfItemsInPage - 1, -1);
-				}
-			}
-
-			/* For grid lists, find the nearest item from the current item */
-			if (candidateIndex !== -1) {
-				return this.findNearestSpottableItemInExtent(currentIndex, this.getExtentIndex(candidateIndex));
-			} else {
-				return -1;
-			}
-		}
-
-		scrollToNextItem = ({direction, focusedItem}) => {
-			const
-				{cbScrollTo} = this.props,
-				{firstIndex, numOfItems} = this.uiRefCurrent.state,
-				focusedIndex = getNumberValue(focusedItem.getAttribute(dataIndexAttribute)),
-				indexToScroll = this.getIndexToScroll(direction, focusedIndex);
-
-			if (indexToScroll !== -1 && focusedIndex !== indexToScroll) {
-				if (firstIndex <= indexToScroll && indexToScroll < firstIndex + numOfItems) {
-					const node = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${indexToScroll}'].spottable`);
-
-					if (node) {
-						Spotlight.focus(node);
-					}
-				} else {
-					// Scroll to the next spottable item without animation
-					this.pause.pause();
-					focusedItem.blur();
-					this.nodeIndexToBeFocused = this.lastFocusedIndex = indexToScroll;
-				}
-				cbScrollTo({index: indexToScroll, stickTo: direction === 'down' ? 'end' : 'start', animate: false});
-			}
 		}
 
 		getNextIndex = ({index, keyCode, repeat}) => {
@@ -551,11 +442,15 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		onKeyDown = (ev) => {
-			if (getDirection(ev.keyCode)) {
+			const {keyCode} = ev;
+
+			if (getDirection(keyCode)) {
 				ev.preventDefault();
 				ev.stopPropagation();
 				Spotlight.setPointerMode(false);
 				SpotlightAccelerator.processKey(ev, this.onAcceleratedKeyDown);
+			} else if (isPageUp(keyCode) || isPageDown(keyCode)) {
+				this.isScrolledBy5way = false;
 			}
 		}
 

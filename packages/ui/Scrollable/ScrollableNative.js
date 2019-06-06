@@ -1030,6 +1030,7 @@ class ScrollableBaseNative extends Component {
 			childRefCurrent.scrollToPosition(targetX, targetY);
 			childContainerRef.current.style.scrollBehavior = 'smooth';
 		}
+		this.scrollStopJob.start();
 
 		if (this.props.start) {
 			this.props.start(animate);
