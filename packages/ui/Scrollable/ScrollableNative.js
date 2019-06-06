@@ -2,10 +2,11 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
-import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
+import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import Registry from '@enact/core/internal/Registry';
 
 import {ResizeContext} from '../Resizable';
 import ri from '../resolution';
@@ -162,15 +163,6 @@ class ScrollableBaseNative extends Component {
 		 * @public
 		 */
 		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
-
-		/**
-		 * Prevents animated scrolling.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		noAnimation: PropTypes.bool,
 
 		/**
 		 * Prevents scroll by dragging or flicking on the list or the scroller.
@@ -364,7 +356,6 @@ class ScrollableBaseNative extends Component {
 	static defaultProps = {
 		cbScrollTo: nop,
 		horizontalScrollbar: 'auto',
-		noAnimation: false,
 		noScrollByDrag: false,
 		onScroll: nop,
 		onScrollStart: nop,
@@ -723,8 +714,7 @@ class ScrollableBaseNative extends Component {
 		}
 
 		if (this.props.rtl && canScrollHorizontally) {
-			/* FIXME: RTL / this calculation only works for Chrome */
-			scrollLeft = bounds.maxLeft - scrollLeft;
+			scrollLeft = (platform.ios || platform.safari) ? -scrollLeft : bounds.maxLeft - scrollLeft;
 		}
 
 		if (scrollLeft !== this.scrollLeft) {
@@ -741,7 +731,7 @@ class ScrollableBaseNative extends Component {
 		this.scrollStopJob.start();
 	}
 
-	scrollToAccumulatedTarget = (delta, vertical, overscrollEffect, animate) => {
+	scrollToAccumulatedTarget = (delta, vertical, overscrollEffect) => {
 		if (!this.isScrollAnimationTargetAccumulated) {
 			this.accumulatedTargetX = this.scrollLeft;
 			this.accumulatedTargetY = this.scrollTop;
@@ -754,7 +744,7 @@ class ScrollableBaseNative extends Component {
 			this.accumulatedTargetX += delta;
 		}
 
-		this.start({targetX: this.accumulatedTargetX, targetY: this.accumulatedTargetY, overscrollEffect, animate});
+		this.start({targetX: this.accumulatedTargetX, targetY: this.accumulatedTargetY, overscrollEffect});
 	}
 
 	// overscroll effect
@@ -1279,11 +1269,11 @@ class ScrollableBaseNative extends Component {
 			{className, containerRenderer, noScrollByDrag, rtl, style, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className),
+			contentClasses = classNames(css.content, css.contentNative),
 			childWrapper = noScrollByDrag ? 'div' : TouchableDiv,
 			childWrapperProps = {
-				className: css.content,
+				className: contentClasses,
 				...(!noScrollByDrag && {
-					className: css.content,
 					onDrag: this.onDrag,
 					onDragEnd: this.onDragEnd,
 					onDragStart: this.onDragStart,
@@ -1297,7 +1287,6 @@ class ScrollableBaseNative extends Component {
 		delete rest.cbScrollTo;
 		delete rest.clearOverscrollEffect;
 		delete rest.horizontalScrollbar;
-		delete rest.noAnimation;
 		delete rest.onFlick;
 		delete rest.onMouseDown;
 		delete rest.onScroll;

@@ -20,6 +20,7 @@ import React from 'react';
 import $L from '../internal/$L';
 import Skinnable from '../Skinnable';
 import Tooltip from '../TooltipDecorator/Tooltip';
+import {extractVoiceProps} from '../internal/util';
 
 import componentCss from './Input.module.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
@@ -263,8 +264,9 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-intent' : voiceIntent, 'data-webos-voice-label': voiceLabel, ...rest}) => {
+	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, ...rest}) => {
 		const inputProps = extractInputProps(rest);
+		const voiceProps = extractVoiceProps(rest);
 		delete rest.dismissOnEnter;
 		delete rest.focused;
 		delete rest.invalid;
@@ -276,11 +278,9 @@ const InputBase = kind({
 				<InputDecoratorIcon position="before" small={small}>{iconBefore}</InputDecoratorIcon>
 				<input
 					{...inputProps}
+					{...voiceProps}
 					aria-disabled={disabled}
 					className={css.input}
-					data-webos-voice-group-label={voiceGroupLabel}
-					data-webos-voice-intent={voiceIntent}
-					data-webos-voice-label={voiceLabel}
 					dir={dir}
 					disabled={disabled}
 					onChange={onChange}

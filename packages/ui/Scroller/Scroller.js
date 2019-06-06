@@ -8,6 +8,7 @@
  */
 
 import classNames from 'classnames';
+import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -109,7 +110,12 @@ class ScrollerBase extends Component {
 
 	getScrollBounds = () => this.scrollBounds
 
-	getRtlPositionX = (x) => (this.props.rtl ? this.scrollBounds.maxLeft - x : x)
+	getRtlPositionX = (x) => {
+		if (this.props.rtl) {
+			return (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
+		}
+		return x;
+	}
 
 	// for Scrollable
 	setScrollPosition (x, y) {

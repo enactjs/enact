@@ -38,6 +38,7 @@ import Skinnable from '../Skinnable';
 import {SliderBase} from '../Slider';
 import {emitChange} from '../Slider/utils';
 import SliderBehaviorDecorator from '../Slider/SliderBehaviorDecorator';
+import {extractVoiceProps} from '../internal/util';
 
 import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.module.less';
@@ -196,7 +197,8 @@ const IncrementSliderBase = kind({
 		/**
 		 * The amount to increment or decrement the position of the knob via 5-way controls.
 		 *
-		 * If not specified, `step` is used for the default value.
+		 * It must evenly divide into the range designated by `min` and `max`. If not specified,
+		 * `step` is used for the default value.
 		 *
 		 * @type {Number}
 		 * @public
@@ -206,6 +208,9 @@ const IncrementSliderBase = kind({
 		/**
 		 * The maximum value of the increment slider.
 		 *
+		 * The range between `min` and `max` should be evenly divisible by
+		 * [step]{@link moonstone/IncrementSlider.IncrementSliderBase.step}.
+		 *
 		 * @type {Number}
 		 * @default 100
 		 * @public
@@ -214,6 +219,9 @@ const IncrementSliderBase = kind({
 
 		/**
 		 * The minimum value of the increment slider.
+		 *
+		 * The range between `min` and `max` should be evenly divisible by
+		 * [step]{@link moonstone/IncrementSlider.IncrementSliderBase.step}.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -353,6 +361,8 @@ const IncrementSliderBase = kind({
 		/**
 		 * The amount to increment or decrement the value.
 		 *
+		 * It must evenly divide into the range designated by `min` and `max`.
+		 *
 		 * @type {Number}
 		 * @default 1
 		 * @public
@@ -473,8 +483,6 @@ const IncrementSliderBase = kind({
 
 	render: ({active,
 		'aria-hidden': ariaHidden,
-		'data-webos-voice-disabled': voiceDisabled,
-		'data-webos-voice-group-label': voiceGroupLabel,
 		backgroundProgress,
 		css,
 		decrementAriaLabel,
@@ -507,6 +515,10 @@ const IncrementSliderBase = kind({
 		...rest
 	}) => {
 		const ariaProps = extractAriaProps(rest);
+		const voiceProps = extractVoiceProps(rest);
+		delete voiceProps['data-webos-voice-label'];
+		delete voiceProps['data-webos-voice-labels'];
+
 		delete rest.onSpotlightDirection;
 		delete rest.onSpotlightDown;
 		delete rest.onSpotlightLeft;
@@ -516,12 +528,11 @@ const IncrementSliderBase = kind({
 		return (
 			<div {...rest}>
 				<IncrementSliderButton
+					{...voiceProps}
 					aria-controls={!incrementDisabled ? id : null}
 					aria-hidden={ariaHidden}
 					aria-label={decrementAriaLabel}
 					className={css.decrementButton}
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={decrementDisabled}
 					onTap={onDecrement}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
@@ -554,12 +565,11 @@ const IncrementSliderBase = kind({
 					value={value}
 				/>
 				<IncrementSliderButton
+					{...voiceProps}
 					aria-controls={!decrementDisabled ? id : null}
 					aria-hidden={ariaHidden}
 					aria-label={incrementAriaLabel}
 					className={css.incrementButton}
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
 					disabled={incrementDisabled}
 					onTap={onIncrement}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}

@@ -14,6 +14,7 @@ import Spotlight, {getDirection} from '@enact/spotlight';
 
 import Skinnable from '../../Skinnable';
 import {validateRange, validateStepped} from '../validators';
+import {extractVoiceProps} from '../util';
 
 import IdProvider from '../IdProvider';
 import $L from '../$L';
@@ -91,6 +92,9 @@ const PickerBase = class extends React.Component {
 		/**
 		 * The maximum value selectable by the picker (inclusive).
 		 *
+		 * The range between `min` and `max` should be evenly divisible by
+		 * [step]{@link moonstone/internal/Picker.PickerBase.step}.
+		 *
 		 * @type {Number}
 		 * @required
 		 * @public
@@ -99,6 +103,9 @@ const PickerBase = class extends React.Component {
 
 		/**
 		 * The minimum value selectable by the picker (inclusive).
+		 *
+		 * The range between `min` and `max` should be evenly divisible by
+		 * [step]{@link moonstone/internal/Picker.PickerBase.step}.
 		 *
 		 * @type {Number}
 		 * @required
@@ -335,8 +342,10 @@ const PickerBase = class extends React.Component {
 		spotlightDisabled: PropTypes.bool,
 
 		/**
-		 * Allow the picker to only increment or decrement by a given value. A step of `2` would
-		 * cause a picker to increment from 10 to 12 to 14, etc.
+		 * Allow the picker to only increment or decrement by a given value.
+		 *
+		 * A step of `2` would cause a picker to increment from 10 to 12 to 14, etc. It must evenly
+		 * divide into the range designated by `min` and `max`.
 		 *
 		 * @type {Number}
 		 * @default 1
@@ -399,12 +408,6 @@ const PickerBase = class extends React.Component {
 		};
 
 		this.initContainerRef = this.initRef('containerRef');
-
-		if (__DEV__) {
-			validateRange(props.value, props.min, props.max, PickerBase.displayName);
-			validateStepped(props.value, props.min, props.step, PickerBase.displayName);
-			validateStepped(props.max, props.min, props.step, PickerBase.displayName, '"max"');
-		}
 
 		// Pressed state for this.handleUp
 		this.pickerButtonPressed = 0;
@@ -787,8 +790,6 @@ const PickerBase = class extends React.Component {
 			'aria-valuetext': ariaValueText,
 			noAnimation,
 			children,
-			'data-webos-voice-disabled': voiceDisabled,
-			'data-webos-voice-group-label': voiceGroupLabel,
 			disabled,
 			id,
 			index,
@@ -804,6 +805,12 @@ const PickerBase = class extends React.Component {
 			width,
 			...rest
 		} = this.props;
+
+		const voiceProps = extractVoiceProps(rest);
+		const voiceLabelsExt = voiceProps['data-webos-voice-labels-ext'];
+		delete voiceProps['data-webos-voice-label'];
+		delete voiceProps['data-webos-voice-labels'];
+		delete voiceProps['data-webos-voice-labels-ext'];
 
 		if (__DEV__) {
 			validateRange(value, min, max, PickerBase.displayName);
@@ -860,14 +867,14 @@ const PickerBase = class extends React.Component {
 
 		return (
 			<Component
+				{...voiceProps}
 				{...rest}
 				aria-controls={joined ? id : null}
 				aria-disabled={disabled}
 				aria-label={this.calcAriaLabel(valueText)}
 				className={classes}
-				data-webos-voice-disabled={voiceDisabled}
-				data-webos-voice-group-label={voiceGroupLabel}
 				data-webos-voice-intent="Select"
+				data-webos-voice-labels-ext={voiceLabelsExt}
 				disabled={disabled}
 				holdConfig={holdConfig}
 				onBlur={this.handleBlur}
@@ -882,11 +889,10 @@ const PickerBase = class extends React.Component {
 				{...spottablePickerProps}
 			>
 				<PickerButton
+					{...voiceProps}
 					aria-controls={!joined ? incrementerAriaControls : null}
 					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
 					data-webos-voice-label={joined ? this.calcButtonLabel(!reverse, valueText) : null}
 					disabled={incrementerDisabled}
 					hidden={reachedEnd}
@@ -920,11 +926,10 @@ const PickerBase = class extends React.Component {
 					</PickerViewManager>
 				</div>
 				<PickerButton
+					{...voiceProps}
 					aria-controls={!joined ? decrementerAriaControls : null}
 					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
 					data-webos-voice-label={joined ? this.calcButtonLabel(reverse, valueText) : null}
 					disabled={decrementerDisabled}
 					hidden={reachedStart}
