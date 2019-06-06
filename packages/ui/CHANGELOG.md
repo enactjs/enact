@@ -2,7 +2,35 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [3.0.0-alpha.4] - 2019-06-03
+
+No significant changes.
+
+## [3.0.0-alpha.3] - 2019-05-29
+
+### Changed
+
+- `ui/ViewManager` to use Web Animations instead of animation callbacks to improve performance resulting in API changes to `Arranger` and the pre-configured arrangers `SlideArranger`, `SlideBottomArranger`, `SlideLeftArranger`, `SlideRightArranger`, and `SlideTopArranger`
+
+## [3.0.0-alpha.2] - 2019-05-20
+
+No significant changes.
+
+## [3.0.0-alpha.1] - 2019-05-15
+
+### Added
+
+- `ui/Button` public class `.hasIcon` which is present on the root node only when an icon has been provided
+- `ui/Heading` component
+- `ui/Measurable` HOC and Hook for quick and convenient measuring of simple components
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` prop `noScrollByWheel` for preventing scroll by wheel
+
+### Fixed
+
+- `ui/Measurable` to remeasure after a re-layout so the measurement value is always correct
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` not to scroll by wheel at the same time when multiple lists/scrollers are nested
+
+### [2.6.0] - ???
 
 ### Deprecated
 
@@ -11,6 +39,9 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/Button`, `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` prop `size`
+- `ui/ToggleItem` props  `itemIcon` and `itemIconPosition` to support additional icons on ToggleItem-derived components
+
+## [2.5.3] - 2019-06-06
 
 ### Fixed
 
@@ -20,10 +51,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/ViewManager` to correctly handle transitioning quickly between two children
 
 ## [2.5.2] - 2019-04-23
-
-### Added
-
-- `ui/ToggleItem` props  `itemIcon` and `itemIconPosition` to support additional icons on ToggleItem-derived components
 
 ### Fixed
 

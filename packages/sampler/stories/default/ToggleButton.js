@@ -1,4 +1,6 @@
 import ToggleButton from '@enact/moonstone/ToggleButton';
+import Button, {ButtonBase} from '@enact/moonstone/Button';
+import UiButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
@@ -9,12 +11,11 @@ import {mergeComponentMetadata} from '../../src/utils';
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
-	casing: ['preserve', 'sentence', 'word', 'upper']
+	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent']
 };
 
-const Config = mergeComponentMetadata('ToggleButton', ToggleButton);
 ToggleButton.displayName = 'ToggleButton';
+const Config = mergeComponentMetadata('ToggleButton', UIButtonBase, UiButton, ButtonBase, Button, ToggleButton);
 
 storiesOf('Moonstone', module)
 	.add(
@@ -25,10 +26,9 @@ storiesOf('Moonstone', module)
 			<ToggleButton
 				aria-label="toggle button"
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
-				casing={select('casing', prop.casing, Config, 'upper')}
 				disabled={boolean('disabled', Config)}
 				onToggle={action('onToggle')}
-				size={select('size', ['small', 'large'], Config, 'large')}
+				size={select('size', ['small', 'large'], Config)}
 				toggleOffLabel={text('toggleOffLabel', Config, 'Off')}
 				toggleOnLabel={text('toggleOnLabel', Config, 'On')}
 			>
