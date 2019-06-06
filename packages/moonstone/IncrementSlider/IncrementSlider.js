@@ -532,7 +532,7 @@ const IncrementSliderBase = kind({
 					aria-controls={!incrementDisabled ? id : null}
 					aria-hidden={ariaHidden}
 					aria-label={decrementAriaLabel}
-					className={[css.decrementButton, rest.className].join(' ')}
+					className={[css.decrementButton, rest.className.indexOf('focused') !== -1 ? 'focused' : null].join(' ')}
 					disabled={decrementDisabled}
 					onTap={onDecrement}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
