@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/Dropdown` support for `'small'`, `'medium'`, and `'large'` sizes
+- `moonstone/Dropdown` support for `'small'`, `'medium'`, and `'large'` sizes via the new `width` prop
 
 ## Fixed
 
