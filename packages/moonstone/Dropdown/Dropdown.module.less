@@ -5,14 +5,35 @@
 @import "../styles/skin.less";
 
 .dropdown {
-	width: @moon-dropdown-width;
+	&.small {
+		width: @moon-dropdown-small-width;
+	}
+
+	&.medium {
+		width: @moon-dropdown-medium-width;
+	}
+
+	&.large {
+		width: @moon-dropdown-large-width;
+	}
 }
 
 .dropDownList {
 	border-radius: @moon-dropdown-border-radius;
-	width: @moon-dropdown-list-width;
 	max-height: @moon-dropdown-list-max-height;
 	display: flex;
+
+	&.small {
+		width: @moon-dropdown-list-small-width;
+	}
+
+	&.medium {
+		width: @moon-dropdown-list-medium-width;
+	}
+
+	&.large {
+		width: @moon-dropdown-list-large-width;
+	}
 
 	.moon-custom-text({
 		max-height: @moon-dropdown-list-max-height-large;

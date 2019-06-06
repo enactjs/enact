@@ -103,7 +103,14 @@ const DropdownList = Skinnable(
 			 *
 			 * @type {Number}
 			 */
-			selected: PropTypes.number
+			selected: PropTypes.number,
+
+			/**
+			 * The size of DropdownList.
+			 *
+			 * @type {('large'|'medium'|'small')}
+			 */
+			size: PropTypes.oneOf(['large', 'medium', 'small'])
 		},
 
 		styles: {
@@ -111,7 +118,13 @@ const DropdownList = Skinnable(
 			css
 		},
 
+		computed: {
+			className: ({size, styler}) => styler.append(size)
+		},
+
 		render: ({children, onSelect, selected, ...rest}) => {
+			delete rest.size;
+
 			return (
 				<div {...rest}>
 					<Group
@@ -213,6 +226,15 @@ const DropdownBase = kind({
 		selected: PropTypes.number,
 
 		/**
+		 * The size of Dropdown.
+		 *
+		 * @type {('large'|'medium'|'small')}
+		 * @default 'medium'
+		 * @public
+		 */
+		size: PropTypes.oneOf(['large', 'medium', 'small']),
+
+		/**
 		 * The primary title text of Dropdown.
 		 * The title will be replaced if an item is selected.
 		 *
@@ -225,7 +247,8 @@ const DropdownBase = kind({
 
 	defaultProps: {
 		direction: 'down',
-		open: false
+		open: false,
+		size: 'medium'
 	},
 
 	handlers: {
@@ -246,6 +269,7 @@ const DropdownBase = kind({
 	},
 
 	computed: {
+		className: ({size, styler}) => styler.append(size),
 		title: ({children, selected, title}) => {
 			const isSelectedValid = !(typeof selected === 'undefined' || selected === null || selected >= children.length || selected < 0);
 
@@ -258,8 +282,8 @@ const DropdownBase = kind({
 		}
 	},
 
-	render: ({children, disabled, onOpen, onSelect, open, selected, title, ...rest}) => {
-		const popupProps = {children, onSelect, open, selected};
+	render: ({children, disabled, onOpen, onSelect, open, selected, size, title, ...rest}) => {
+		const popupProps = {children, onSelect, open, selected, size};
 
 		// `ui/Group`/`ui/Repeater` will throw an error if empty so we disable the Dropdown and prevent Dropdown to open if there are no children.
 		const hasChildren = children && children.length;
@@ -274,6 +298,7 @@ const DropdownBase = kind({
 				popupComponent={DropdownList}
 				onClick={onOpen}
 				open={openDropdown}
+				size={size}
 				spotlightRestrict="self-only"
 			>
 				{title}
