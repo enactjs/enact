@@ -514,6 +514,16 @@ const VirtualListBaseFactory = (type) => {
 			const isUpKey = isUp(keyCode);
 			const isNextRow = index + dimensionToExtent < dataSize;
 			const isNextAdjacent = column < dimensionToExtent - 1 && index < (dataSize - 1);
+			const isBackward = (
+				isPrimaryDirectionVertical && isUpKey ||
+				!isPrimaryDirectionVertical && isLeftMovement ||
+				null
+			);
+			const isForward = (
+				isPrimaryDirectionVertical && isDownKey ||
+				!isPrimaryDirectionVertical && isRightMovement ||
+				null
+			);
 			let isWrapped = false;
 			let nextIndex = -1;
 			let targetIndex = -1;
@@ -543,17 +553,6 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			if (!repeat && nextIndex === -1 && wrap) {
-				const isForward = (
-					isPrimaryDirectionVertical && isDownKey ||
-					!isPrimaryDirectionVertical && isRightMovement ||
-					null
-				);
-				const isBackward = (
-					isPrimaryDirectionVertical && isUpKey ||
-					!isPrimaryDirectionVertical && isLeftMovement ||
-					null
-				);
-
 				if (isForward && this.findSpottableItem((row + 1) * dimensionToExtent, dataSize) < 0) {
 					nextIndex = this.findSpottableItem(0, index);
 					isWrapped = true;
@@ -563,7 +562,7 @@ const VirtualListBaseFactory = (type) => {
 				}
 			}
 
-			return {isWrapped, nextIndex};
+			return {isBackward, isForward, isLeftMovement, isRightMovement, isWrapped, nextIndex};
 		}
 
 		/**
@@ -623,24 +622,34 @@ const VirtualListBaseFactory = (type) => {
 			const {keyCode} = ev;
 			const direction = getDirection(keyCode);
 
-			if (getDirection(keyCode)) {
+			if (direction) {
 				Spotlight.setPointerMode(false);
 
 				if (SpotlightAccelerator.processKey(ev, nop)) {
-					ev.preventDefault();
 					ev.stopPropagation();
 				} else {
 					const {repeat, target} = ev;
 					const index = getNumberValue(target.dataset.index);
-					const {isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
+					const {isBackward, isForward, isLeftMovement, isRightMovement, isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
 
 					if (nextIndex >= 0) {
 						ev.preventDefault();
 						ev.stopPropagation();
 						this.onAcceleratedKeyDown({index, isWrapped, keyCode, nextIndex, repeat, target});
-					} else if (repeat || Spotlight.move(direction) && this.uiRefCurrent.containerRef.current.contains(Spotlight.getCurrent())) {
-						ev.preventDefault();
-						ev.stopPropagation();
+					} else {
+						const {dataSize} = this.props;
+						const {dimensionToExtent} = this.uiRefCurrent;
+						const column = index % dimensionToExtent;
+						const row = (index - column) % dataSize / dimensionToExtent;
+						const isLeaving = isBackward && row === 0 ||
+							isForward && row === Math.floor((dataSize - 1) % dataSize / dimensionToExtent) ||
+							isLeftMovement && column === 0 ||
+							isRightMovement && column === dimensionToExtent - 1;
+
+						if (repeat && isLeaving || !isLeaving && Spotlight.move(direction)) {
+							ev.preventDefault();
+							ev.stopPropagation();
+						}
 					}
 				}
 			}
