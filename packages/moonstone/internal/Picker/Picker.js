@@ -891,7 +891,7 @@ const PickerBase = class extends React.Component {
 					{...voiceProps}
 					aria-controls={!joined ? incrementerAriaControls : null}
 					aria-label={this.calcIncrementLabel(valueText)}
-					className={css.incrementer}
+					className={[css.incrementer, rest.className].join(' ')}
 					data-webos-voice-label={joined ? this.calcButtonLabel(!reverse, valueText) : null}
 					disabled={incrementerDisabled}
 					hidden={reachedEnd}
