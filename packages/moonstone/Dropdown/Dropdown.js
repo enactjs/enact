@@ -104,7 +104,7 @@ const DropdownList = Skinnable(
 			 */
 			selected: PropTypes.number,
 
-			/**
+			/*
 			 * The width of DropdownList.
 			 *
 			 * @type {('large'|'medium'|'small')}
