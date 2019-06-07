@@ -68,6 +68,8 @@ const defaultConfig = {
 	 * Configures additional props to attach to the event that is sent when toggled.
 	 *
 	 * @type {String[]}
+	 * @default []
+	 * @memberof ui/Toggleable.Toggleable.defaultConfig
 	 */
 	eventProps: [],
 

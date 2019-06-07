@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Toggleable` HOC config prop `eventProps` to allow wrapped components to specify additional event information
+
+### Fixed
+
+- `ui/ToggleItem` to send its `value` prop when toggled
+
 ## [3.0.0-alpha.4] - 2019-06-03
 
 No significant changes.
@@ -39,7 +49,6 @@ No significant changes.
 ### Added
 
 - `ui/Button`, `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` prop `size`
-- `ui/Toggleable` HOC config prop `eventProps` to allow wrapped components to specify additional event information
 - `ui/ToggleItem` props  `itemIcon` and `itemIconPosition` to support additional icons on ToggleItem-derived components
 
 ## [2.5.3] - 2019-06-06
@@ -49,7 +58,6 @@ No significant changes.
 - `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to size properly
 - `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to scroll correctly on iOS and Safari
 - `ui/Touchable` to not misfire a hold pulse when a drag re-enters a touch target and `cancelOnMove` is set
-- `ui/ToggleItem` to send its `value` prop when toggled
 - `ui/ViewManager` to correctly handle transitioning quickly between two children
 
 ## [2.5.2] - 2019-04-23
