@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Toggleable` HOC config prop `eventProps` to allow wrapped components to specify additional event information
+
+### Fixed
+
+- `ui/ToggleItem` to send its `value` prop when toggled
+
 ## [3.0.0-alpha.4] - 2019-06-03
 
 No significant changes.
