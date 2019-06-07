@@ -174,11 +174,10 @@ const ToggleButtonBase = kind({
 				c = toggleOffLabel;
 			}
 			return c;
-		},
-		toggleIndicator: () => <div className={css.toggleIndicator} />
+		}
 	},
 
-	render: ({selected, toggleIndicator, ...rest}) => {
+	render: ({selected, ...rest}) => {
 		delete rest.toggleOffLabel;
 		delete rest.toggleOnLabel;
 		delete rest.small;
@@ -189,7 +188,7 @@ const ToggleButtonBase = kind({
 				aria-pressed={selected}
 				css={css}
 				data-webos-voice-intent="SetToggleItem"
-				decoration={toggleIndicator}
+				decoration={<div className={css.toggleIndicator} />}
 				selected={selected}
 			/>
 		);
