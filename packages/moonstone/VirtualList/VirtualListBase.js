@@ -283,14 +283,15 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		/*
-		 * Restores the data-index into the placeholder if its the only element. Tries to find a
-		 * matching child otherwise.
+		 * Restores the data-index into the placeholder if it exists. Tries to find a matching child
+		 * otherwise.
 		 */
 		lastFocusedRestore = ({key}, all) => {
-			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
-				all[0].dataset.index = key;
+			const placeholder = all.find(el => 'vlPlaceholder' in el.dataset);
+			if (placeholder) {
+				placeholder.dataset.index = key;
 
-				return all[0];
+				return placeholder;
 			}
 
 			return all.reduce((focused, node) => {

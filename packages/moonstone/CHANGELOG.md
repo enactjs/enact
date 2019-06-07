@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ## Fixed
 
 - `Fonts` for non-Latin to not intermix font weights for bold when using a combination of Latin and non-Latin glyphs
+- `moonstone/VirtualList` to restore focus to an item when scrollbars are visible
 
 ## [3.0.0-alpha.4] - 2019-06-03
 
