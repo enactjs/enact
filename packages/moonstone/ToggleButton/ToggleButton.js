@@ -184,10 +184,10 @@ const ToggleButtonBase = kind({
 
 		return (
 			<Button
+				data-webos-voice-intent="SetToggleItem"
 				{...rest}
 				aria-pressed={selected}
 				css={css}
-				data-webos-voice-intent="SetToggleItem"
 				decoration={<div className={css.toggleIndicator} />}
 				selected={selected}
 			/>
