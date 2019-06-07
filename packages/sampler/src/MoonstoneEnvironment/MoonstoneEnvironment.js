@@ -25,6 +25,9 @@ const PanelsBase = kind({
 
 	propTypes: {
 		description: PropTypes.string,
+		noHeader: PropTypes.bool,
+		noPanel: PropTypes.bool,
+		noPanels: PropTypes.bool,
 		title: PropTypes.string
 	},
 
@@ -33,18 +36,19 @@ const PanelsBase = kind({
 		className: 'moonstoneEnvironmentPanels'
 	},
 
-	render: ({children, description, title, ...rest}) => (
-		<Panels {...rest} onApplicationClose={reloadPage}>
-			<Panel className={css.panel}>
-				<Header type="compact" title={title} casing="preserve" />
-				<Column>
-					{description ? (
-						<Cell shrink component={BodyText} className={css.description}>{description}</Cell>
-					) : null}
-					<Cell className={css.storyCell}>{children}</Cell>
-				</Column>
-			</Panel>
-		</Panels>
+	render: ({children, description, noHeader, noPanel, noPanels, title, ...rest}) => (
+		!noPanels ? <Panels {...rest} onApplicationClose={reloadPage}>
+			{!noPanel ? <Panel className={css.panel}>
+				{!noHeader ? [<Header type="compact" title={title} casing="preserve" key="header" />,
+					<Column key="body">
+						{description ? (
+							<Cell shrink component={BodyText} className={css.description}>{description}</Cell>
+						) : null}
+						<Cell className={css.storyCell}>{children}</Cell>
+					</Column>] : children
+				}
+			</Panel> : children}
+		</Panels> : children
 	)
 });
 
@@ -177,6 +181,11 @@ const StorybookDecorator = (story, config) => {
 				'--moon-env-background': backgroundLabelMap[select('background', backgroundLabels, Config, getKnobFromArgs(args, 'background'))]
 			}}
 			skin={select('skin', skins, Config, getKnobFromArgs(args, 'skin'))}
+			noHeader={config.noHeader}
+			noPanel={config.noPanel}
+			noPanels={config.noPanels}
+			{...config.moonstoneProps}
+			{...config.panelsProps}
 		>
 			{sample}
 		</Moonstone>

@@ -20,6 +20,7 @@ storiesOf('Moonstone', module)
 		})(() => (
 			<ExpandablePicker
 				checkButtonAriaLabel={text('checkButtonAriaLabel', Config, '')}
+				disabled={boolean('disabled', Config)}
 				decrementAriaLabel={text('decrementAriaLabel', Config, '')}
 				incrementAriaLabel={text('incrementAriaLabel', Config, '')}
 				joined={boolean('joined', Config)}
@@ -28,7 +29,7 @@ storiesOf('Moonstone', module)
 				onOpen={action('onOpen')}
 				pickerAriaLabel={text('pickerAriaLabel', Config, '')}
 				title={text('title', Config, 'Favorite Emoji')}
-				width={select('width', ['small', 'medium', 'large'], Config, 'large')}
+				width={select('width', ['small', 'medium', 'large'], Config)}
 			>
 				{emoticons}
 			</ExpandablePicker>

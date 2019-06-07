@@ -18,7 +18,7 @@ describe('Spottable', () => {
 		expect(actual).toEqual(expected);
 	});
 
-	test('should not add the spottable class to a {disabled} component', () => {
+	test('should add the spottable class to a {disabled} component', () => {
 		const Component = Spottable('div');
 
 		const subject = mount(
@@ -28,7 +28,7 @@ describe('Spottable', () => {
 		const expected = 'spottable';
 		const actual = subject.find('div').prop('className');
 
-		expect(actual).not.toEqual(expected);
+		expect(actual).toEqual(expected);
 	});
 
 	test('should not add the spottable class to a {spotlightDisabled} component', () => {

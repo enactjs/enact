@@ -148,7 +148,7 @@ storiesOf('Header', module)
 			const input = boolean('Input Mode', Config, true) ? <Input dismissOnEnter={boolean('Input dismissOnEnter', Config, true)} /> : null;
 			return (
 				<Header
-					title={text('title', Config, 'ิ้  ไั  ஒ  த')}
+					title={text('title', Config, 'ฟิ้  ไั  ஒ  த')}
 					headerInput={input}
 					titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 					subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
