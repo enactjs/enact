@@ -210,8 +210,12 @@
 // Dropdown
 // ---------------------------------------
 @moon-dropdown-border-radius: @moon-button-border-radius;
-@moon-dropdown-width: @moon-button-max-width;
-@moon-dropdown-list-width: (@moon-dropdown-width - (@moon-contextual-popup-padding * 2) - @moon-button-border-width);
+@moon-dropdown-small-width: @moon-button-min-width;
+@moon-dropdown-medium-width: (@moon-dropdown-large-width - 96px);
+@moon-dropdown-large-width: @moon-button-max-width;
+@moon-dropdown-list-small-width: (@moon-dropdown-small-width - (@moon-contextual-popup-padding * 2) - @moon-button-border-width);
+@moon-dropdown-list-medium-width: (@moon-dropdown-medium-width - (@moon-contextual-popup-padding * 2) - @moon-button-border-width);
+@moon-dropdown-list-large-width: (@moon-dropdown-large-width - (@moon-contextual-popup-padding * 2) - @moon-button-border-width);
 @moon-dropdown-list-max-height: (5 * @moon-item-height);
 @moon-dropdown-list-max-height-large: (5 * @moon-item-height-large);
 
