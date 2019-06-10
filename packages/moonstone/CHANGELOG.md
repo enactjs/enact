@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Removed
+
+- `moonstone/Divider`, `moonstone/Dialog`, and `moonstone/Heading` prop `casing`
+
 ### Added
 
 - `moonstone/Dropdown` support for `'small'`, `'medium'`, and `'large'` sizes via the new `width` prop
