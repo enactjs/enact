@@ -669,7 +669,7 @@ class ScrollableBaseNative extends Component {
 				this.uiRef.current.lastInputType = 'arrowKey';
 
 				direction = getDirection(keyCode);
-				if (overscrollEffectOn.arrowKey)
+				if (overscrollEffectOn.arrowKey) {
 					if (!element) {
 						const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
 
