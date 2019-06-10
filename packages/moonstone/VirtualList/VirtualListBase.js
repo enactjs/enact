@@ -1,3 +1,4 @@
+import clamp from 'ramda/src/clamp';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -325,6 +326,16 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			return -1;
+		}
+
+		findSpottableItem = (indexFrom, indexTo) => {
+			const {dataSize} = this.props;
+
+			if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
+				return -1;
+			} else {
+				return clamp(0, dataSize - 1, indexFrom);
+			}
 		}
 
 		getNextIndex = ({index, keyCode, repeat}) => {
