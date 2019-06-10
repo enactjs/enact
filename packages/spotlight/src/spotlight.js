@@ -160,6 +160,8 @@ const Spotlight = (function () {
 	* protected methods
 	*/
 
+	let _current = null;
+
 	function preventDefault (evt) {
 		evt.preventDefault();
 		evt.stopPropagation();
@@ -172,10 +174,9 @@ const Spotlight = (function () {
 
 	function getCurrent () {
 		if (!isWindowReady()) return;
-
-		let activeElement = document.activeElement;
-		if (activeElement && activeElement !== document.body) {
-			return activeElement;
+		_current = _current || document.activeElement;
+		if (_current && _current !== document.body) {
+			return _current;
 		}
 	}
 
@@ -224,7 +225,7 @@ const Spotlight = (function () {
 			return true;
 		}
 
-		// elem.focus(focusOptions);
+		elem.focus(focusOptions);
 
 		_duringFocusChange = false;
 
@@ -233,6 +234,8 @@ const Spotlight = (function () {
 	}
 
 	function focusChanged (elem, containerIds) {
+		_current = elem;
+
 		if (!containerIds || !containerIds.length) {
 			containerIds = getContainersForNode(elem);
 		}
@@ -454,18 +457,18 @@ const Spotlight = (function () {
 		}
 
 		// TODO: handle Pause and Accelerate
-		if (pointerHandled || !(direction || isEnter(keyCode))) {
-			return;
-		}
+		// if (pointerHandled || !(direction || isEnter(keyCode))) {
+		// 	return;
+		// }
 
-		if (!isPaused() && !_pointerMoveDuringKeyPress) {
-			if (getCurrent()) {
-				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
-			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
-				restoreFocus();
-			}
-			_5WayKeyHold = true;
-		}
+		// if (!isPaused() && !_pointerMoveDuringKeyPress) {
+		// 	if (getCurrent()) {
+		// 		SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
+		// 	} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
+		// 		restoreFocus();
+		// 	}
+		// 	_5WayKeyHold = true;
+		// }
 	}
 
 	function onMouseMove ({target, clientX, clientY}) {
@@ -532,12 +535,15 @@ const Spotlight = (function () {
 	function onNavnotarget (evt) {
 		// TODO : Implement leave-for, restrict-self.
 		console.log('onNavnotarget');
+		console.log(evt);
 	}
 
 	function onNavBeforeFocus (evt) {
 		// TODO : Implement enter-to option
 		// TODO : Store last-focused element and container.
+		focusChanged(evt.target, getContainersForNode(evt.target));
 		console.log('onNavBeforeFocus');
+		console.log(evt);
 	}
 
 	/*
@@ -914,9 +920,7 @@ const Spotlight = (function () {
 		 * @returns {Node} The control that currently has focus, if available
 		 * @public
 		 */
-		getCurrent: function () {
-			return getCurrent();
-		},
+		getCurrent: getCurrent,
 
 		/**
 		 * Returns a list of spottable elements wrapped by the supplied container.

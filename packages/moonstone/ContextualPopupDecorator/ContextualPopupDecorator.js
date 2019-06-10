@@ -534,16 +534,9 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		// handle key event from contextual popup and closes the popup
-		handleContainerKeyDown = (ev) => {
-			// Note: Container will be only rendered if `open`ed, therefore no need to check for `open`
-			const direction = getDirection(ev.keyCode);
-
-			if (!direction) return;
-
-			this.handleDirectionalKey(ev);
-
+		handleContainerBlur = (ev) => {
 			// if focus moves outside the popup's container, issue the `onClose` event
-			if (Spotlight.move(direction) && !this.containerNode.contains(Spotlight.getCurrent())) {
+			if (!this.containerNode.contains(Spotlight.getCurrent())) {
 				forward('onClose', ev, this.props);
 			}
 		}
@@ -602,7 +595,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 							className={popupClassName}
 							showCloseButton={showCloseButton}
 							onCloseButtonClick={onClose}
-							onKeyDown={this.handleContainerKeyDown}
+							onBlur={this.handleContainerBlur}
 							direction={this.state.direction}
 							arrowPosition={this.state.arrowPosition}
 							containerPosition={this.state.containerPosition}
