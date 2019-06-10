@@ -12,7 +12,6 @@ const Config = mergeComponentMetadata('Divider', DividerBase, Divider);
 
 // Set up some defaults for info and knobs
 const prop = {
-	casing: ['', 'preserve', 'sentence', 'word', 'upper'],
 	marqueeOn: ['', 'hover', 'render'],
 	spacing: ['', 'normal', 'small', 'medium', 'large', 'none']
 };
@@ -24,7 +23,6 @@ storiesOf('Moonstone', module)
 			text: 'Basic usage of Divider'
 		})(() => (<React.Fragment>
 			<Divider
-				casing={select('casing', prop.casing, Config)}
 				marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				spacing={select('spacing', prop.spacing, Config)}
 			>

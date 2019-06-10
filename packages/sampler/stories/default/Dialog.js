@@ -21,7 +21,6 @@ storiesOf('Moonstone', module)
 		})(() => (
 			<div>
 				<Dialog
-					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
 					// null issue
 					noAnimation={boolean('noAnimation', Config)}
 					// null issue

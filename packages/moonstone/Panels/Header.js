@@ -39,7 +39,6 @@ const CompactTitle = MarqueeDecorator({invalidateProps: ['title', 'titleBelow']}
  *
  * @class Header
  * @memberof moonstone/Panels
- * @see i18n/Uppercase.Uppercase
  * @ui
  * @public
  */
@@ -162,7 +161,6 @@ const HeaderBase = kind({
 	},
 
 	defaultProps: {
-		casing: 'upper',
 		fullBleed: false,
 		marqueeOn: 'hover',
 		// titleAbove: '00',
@@ -230,7 +228,7 @@ const HeaderBase = kind({
 			// case 'large': return (
 			// 	<header {...rest}>
 			// 		<div className={css.titleAbove}>{titleAbove}</div>
-			// 		<h1 className={css.title}><UppercaseMarquee>{title}</UppercaseMarquee></h1>
+			// 		<h1 className={css.title}><Marquee>{title}</Marquee></h1>
 			// 		<h2 className={css.titleBelow}><Marquee>{titleBelow}</Marquee></h2>
 			// 		<h2 className={css.subTitleBelow}><Marquee>{subTitleBelow}</Marquee></h2>
 			// 		<nav className={css.headerComponents}>{children}</nav>
