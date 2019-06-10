@@ -52,7 +52,7 @@ const GroupBase = kind({
 		 * item. [Read about keys](https://reactjs.org/docs/lists-and-keys.html#keys) for more
 		 * information.
 		 *
-		 * @type {String[]|Object[]}
+		 * @type {String[]|Array.<{key: (Number|String)}>}
 		 * @required
 		 * @public
 		 */

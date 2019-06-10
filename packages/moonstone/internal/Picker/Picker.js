@@ -91,6 +91,9 @@ const PickerBase = class extends React.Component {
 		/**
 		 * The maximum value selectable by the picker (inclusive).
 		 *
+		 * The range between `min` and `max` should be evenly divisible by
+		 * [step]{@link moonstone/internal/Picker.PickerBase.step}.
+		 *
 		 * @type {Number}
 		 * @required
 		 * @public
@@ -99,6 +102,9 @@ const PickerBase = class extends React.Component {
 
 		/**
 		 * The minimum value selectable by the picker (inclusive).
+		 *
+		 * The range between `min` and `max` should be evenly divisible by
+		 * [step]{@link moonstone/internal/Picker.PickerBase.step}.
 		 *
 		 * @type {Number}
 		 * @required
@@ -335,8 +341,10 @@ const PickerBase = class extends React.Component {
 		spotlightDisabled: PropTypes.bool,
 
 		/**
-		 * Allow the picker to only increment or decrement by a given value. A step of `2` would
-		 * cause a picker to increment from 10 to 12 to 14, etc.
+		 * Allow the picker to only increment or decrement by a given value.
+		 *
+		 * A step of `2` would cause a picker to increment from 10 to 12 to 14, etc. It must evenly
+		 * divide into the range designated by `min` and `max`.
 		 *
 		 * @type {Number}
 		 * @default 1
@@ -399,12 +407,6 @@ const PickerBase = class extends React.Component {
 		};
 
 		this.initContainerRef = this.initRef('containerRef');
-
-		if (__DEV__) {
-			validateRange(props.value, props.min, props.max, PickerBase.displayName);
-			validateStepped(props.value, props.min, props.step, PickerBase.displayName);
-			validateStepped(props.max, props.min, props.step, PickerBase.displayName, '"max"');
-		}
 
 		// Pressed state for this.handleUp
 		this.pickerButtonPressed = 0;
@@ -597,7 +599,7 @@ const PickerBase = class extends React.Component {
 		const {keyCode} = ev;
 		forwardKeyDown(ev, this.props);
 
-		if (joined) {
+		if (joined && !this.props.disabled) {
 			const direction = getDirection(keyCode);
 
 			const directions = {
@@ -632,7 +634,7 @@ const PickerBase = class extends React.Component {
 		const {keyCode} = ev;
 		forwardKeyUp(ev, this.props);
 
-		if (joined) {
+		if (joined && !this.props.disabled) {
 			const isVertical = orientation === 'vertical' && (isUp(keyCode) || isDown(keyCode));
 			const isHorizontal = orientation === 'horizontal' && (isRight(keyCode) || isLeft(keyCode));
 

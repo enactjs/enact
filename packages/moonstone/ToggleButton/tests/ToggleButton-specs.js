@@ -18,7 +18,7 @@ describe('ToggleButton', () => {
 			);
 
 			const button = toggleButton.find('Button');
-			const expected = toggleOffLabel.toUpperCase();
+			const expected = toggleOffLabel;
 			const actual = button.text();
 
 			expect(actual).toBe(expected);
@@ -35,7 +35,7 @@ describe('ToggleButton', () => {
 			);
 
 			const button = toggleButton.find('Button');
-			const expected = toggleOnLabel.toUpperCase();
+			const expected = toggleOnLabel;
 			const actual = button.text();
 
 			expect(actual).toBe(expected);
@@ -52,7 +52,7 @@ describe('ToggleButton', () => {
 			);
 			const button = toggleButton.find('Button');
 
-			const expected = textChild.toUpperCase();
+			const expected = textChild;
 			const actual = button.text();
 
 			expect(actual).toBe(expected);
@@ -69,7 +69,7 @@ describe('ToggleButton', () => {
 			);
 			const button = toggleButton.find('Button');
 
-			const expected = textChild.toUpperCase();
+			const expected = textChild;
 			const actual = button.text();
 
 			expect(actual).toBe(expected);

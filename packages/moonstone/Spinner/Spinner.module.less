@@ -31,6 +31,7 @@
 
 .spinner {
 	line-height: @moon-body-line-height;
+	vertical-align: middle;
 
 	.bg {
 		position: relative;
@@ -103,6 +104,39 @@
 		font-weight: @moon-spinner-font-weight;
 		margin-top: @moon-spotlight-outset;
 		max-width: 348px;
+	}
+
+	&.small {
+		.bg,
+		.decorator {
+			width: @moon-spinner-small-size;
+			height: @moon-spinner-small-size;
+		}
+
+		.bg {
+			padding: @moon-spinner-small-line-margin;
+		}
+
+		.decorator {
+			-webkit-mask-image: radial-gradient(transparent (@moon-spinner-small-size / 2 - @moon-spinner-small-line-width - 1px), black (@moon-spinner-small-size / 2 - @moon-spinner-small-line-width));
+
+			.cap {
+				clip-path: circle((@moon-spinner-small-line-width / 2) at 50% (@moon-spinner-small-line-width / 2));
+			}
+		}
+
+		// Large-text mode support
+		.moon-custom-text({
+			.bg,
+			.decorator {
+				width: @moon-spinner-small-size-large;
+				height: @moon-spinner-small-size-large;
+			}
+
+			.decorator {
+				-webkit-mask-image: radial-gradient(transparent (@moon-spinner-small-size-large / 2 - @moon-spinner-small-line-width - 1px), black (@moon-spinner-small-size-large / 2 - @moon-spinner-small-line-width));
+			}
+		});
 	}
 
 	&.content {

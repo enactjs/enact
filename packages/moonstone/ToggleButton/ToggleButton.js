@@ -155,7 +155,6 @@ const ToggleButtonBase = kind({
 		disabled: false,
 		minWidth: true,
 		selected: false,
-		// size: 'large', // we won't set default props for `size` yet to support `small` prop
 		toggleOffLabel: '',
 		toggleOnLabel: ''
 	},
@@ -184,7 +183,14 @@ const ToggleButtonBase = kind({
 		delete rest.small;
 
 		return (
-			<Button data-webos-voice-intent="SetToggleItem" {...rest} aria-pressed={selected} selected={selected} />
+			<Button
+				data-webos-voice-intent="SetToggleItem"
+				{...rest}
+				aria-pressed={selected}
+				css={css}
+				decoration={<div className={css.toggleIndicator} />}
+				selected={selected}
+			/>
 		);
 	}
 });

@@ -117,7 +117,7 @@
 		font-size: @moon-non-latin-sub-header-font-size;
 		line-height: @moon-non-latin-body-line-height;
 	}, @target);
-	font-weight: bold;
+	font-weight: normal;
 	font-size: @font-size;
 	line-height: @moon-body-line-height;
 }
@@ -188,8 +188,7 @@
 	};
 	{
 		font-size: @non-latin-size;
-	}
-	);
+	});
 }
 
 // 1 arg: Generic rule applicator, accepts an entire rule-set to add for large text mode
@@ -272,6 +271,10 @@
 
 .moon-sub-header-text() {
 	.moon-text-base(@moon-sub-header-font-size);
+	font-weight: @moon-sub-header-font-weight;
+	font-size: @moon-sub-header-font-size;
+	font-style: @moon-sub-header-font-style;
+	letter-spacing: @moon-sub-header-letter-spacing;
 
 	.moon-locale-non-latin({
 		font-size: @moon-non-latin-sub-header-font-size;
@@ -375,7 +378,7 @@
 		font-size: @moon-non-latin-button-large-font-size;
 	});
 	font-weight: @moon-button-font-weight;
-	font-size: @moon-button-large-font-size;
+	font-size: @moon-button-font-size;
 	.font-kerning;
 }
 
@@ -389,6 +392,7 @@
 	.font-kerning;
 }
 
+// NOTE: Consider deprecation in 3.0.0
 .moon-divider-text() {
 	.moon-font(@moon-divider-font-family, @moon-non-latin-font-family-bold, {
 		font-weight: @moon-non-latin-font-weight-bold;
