@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import {constants, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
 import {getDirection} from '@enact/spotlight';
-import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import handle, {forward} from '@enact/core/handle';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
 import {Job} from '@enact/core/util';
@@ -281,6 +280,10 @@ class ScrollableBaseNative extends Component {
 		scrollables.set(this, this.uiRef.current.containerRef.current);
 
 		this.restoreScrollPosition();
+
+		if (this.uiRef.current.containerRef.current) {
+			this.uiRef.current.containerRef.current.addEventListener('navnotarget', this.onNavNoTarget);
+		}
 	}
 
 	componentDidUpdate (prevProps) {
@@ -291,6 +294,10 @@ class ScrollableBaseNative extends Component {
 	}
 
 	componentWillUnmount () {
+		if (this.uiRef.current.containerRef.current) {
+			this.uiRef.current.containerRef.current.removeEventListener('navnotarget', this.onNavNoTarget);
+		}
+
 		scrollables.delete(this);
 
 		this.stopOverscrollJob('horizontal', 'before');
@@ -643,6 +650,7 @@ class ScrollableBaseNative extends Component {
 		}
 
 		this.animateOnFocus = true;
+		this.pressDirKey = null;
 
 		if (!repeat && this.hasFocus()) {
 			const {overscrollEffectOn} = this.props;
@@ -661,14 +669,31 @@ class ScrollableBaseNative extends Component {
 				this.uiRef.current.lastInputType = 'arrowKey';
 
 				direction = getDirection(keyCode);
-				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
-					const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
+				if (overscrollEffectOn.arrowKey)
+					if (!element) {
+						const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
 
-					if (!(horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) &&
-						!(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
-						this.checkAndApplyOverscrollEffectByDirection(direction);
+						if (!(horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) &&
+							!(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
+							this.checkAndApplyOverscrollEffectByDirection(direction);
+						}
+					} else {
+						// Should be handled in onNavNoTarget
+						this.pressDirKey = direction;
 					}
 				}
+			}
+		}
+	}
+
+	onNavNoTarget = () => {
+		if (this.pressDirKey) {
+			const element = Spotlight.getCurrent();
+			const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
+
+			if (!(horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) &&
+				!(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
+				this.checkAndApplyOverscrollEffectByDirection(this.pressDirKey);
 			}
 		}
 	}
