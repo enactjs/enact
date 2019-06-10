@@ -12,7 +12,7 @@ describe('Header Specs', () => {
 			<Header><title>{msg}</title></Header>
 		);
 
-		const expected = msg.toUpperCase();
+		const expected = msg;
 		const actual = header.find('h1').text();
 
 		expect(actual).toBe(expected);

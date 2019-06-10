@@ -6,7 +6,7 @@
 .tooltip {
 	--tooltip-progress-proportion: 0;
 	--tooltip-progress-percent: ~"calc(var(--tooltip-progress-proportion) * 100%)";
-	--tooltip-calculated-offset: ~"calc(var(--moon-tooltip-offset, 0px) + " @moon-tooltip-point-width ~")";
+	--tooltip-calculated-offset: ~"var(--moon-tooltip-offset, 0px)";
 
 	@offset-large: 0;
 

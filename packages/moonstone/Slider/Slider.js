@@ -33,6 +33,7 @@ import React from 'react';
 
 import {ProgressBarTooltip} from '../ProgressBar';
 import Skinnable from '../Skinnable';
+import {validateStepped} from '../internal/validators';
 
 import SliderBehaviorDecorator from './SliderBehaviorDecorator';
 import {
@@ -98,7 +99,8 @@ const SliderBase = kind({
 		/**
 		 * The amount to increment or decrement the position of the knob via 5-way controls.
 		 *
-		 * If not specified, `step` is used for the default value.
+		 * It must evenly divide into the range designated by `min` and `max`. If not specified,
+		 * `step` is used for the default value.
 		 *
 		 * @type {Number}
 		 * @public
@@ -108,6 +110,9 @@ const SliderBase = kind({
 		/**
 		 * The maximum value of the slider.
 		 *
+		 * The range between `min` and `max` should be evenly divisible by
+		 * [step]{@link moonstone/Slider.SliderBase.step}.
+		 *
 		 * @type {Number}
 		 * @default 100
 		 * @public
@@ -116,6 +121,9 @@ const SliderBase = kind({
 
 		/**
 		 * The minimum value of the slider.
+		 *
+		 * The range between `min` and `max` should be evenly divisible by
+		 * [step]{@link moonstone/Slider.SliderBase.step}.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -159,6 +167,8 @@ const SliderBase = kind({
 
 		/**
 		 * The amount to increment or decrement the value.
+		 *
+		 * It must evenly divide into the range designated by `min` and `max`.
 		 *
 		 * @type {Number}
 		 * @default 1
@@ -235,6 +245,7 @@ const SliderBase = kind({
 			forward('onActivate')
 		),
 		onKeyDown: handle(
+			forProp('disabled', false),
 			forwardWithPrevent('onKeyDown'),
 			anyPass([
 				handleIncrement,
@@ -242,6 +253,7 @@ const SliderBase = kind({
 			])
 		),
 		onKeyUp: handle(
+			forProp('disabled', false),
 			forwardWithPrevent('onKeyUp'),
 			forProp('activateOnFocus', false),
 			forKey('enter'),
@@ -260,8 +272,12 @@ const SliderBase = kind({
 	render: ({css, focused, tooltip, ...rest}) => {
 		delete rest.activateOnFocus;
 		delete rest.active;
-		delete rest.knobStep;
 		delete rest.onActivate;
+
+		if (__DEV__) {
+			validateStepped(rest.max, rest.min, rest.knobStep, 'Slider', '"max"', '"knobStep"');
+		}
+		delete rest.knobStep;
 
 		return (
 			<UiSlider

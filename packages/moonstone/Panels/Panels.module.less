@@ -1,14 +1,23 @@
 // Panels.module.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
 
 .panels {
 	pointer-events: none;
 
 	> * {
 		pointer-events: auto;
+	}
+
+	.controls {
+		position: absolute;
+		top: (@moon-app-keepout + @moon-spotlight-outset);
+		.position-start-end(auto, @moon-panel-h-padding);
+		z-index: 1;
+		.padding-start-end(18px, initial);
+		.remove-margin-on-edge-children();
 	}
 
 	.breadcrumbs {
@@ -26,7 +35,7 @@
 
 			.breadcrumbHeader {
 				padding-top: 3px;
-				margin: @moon-app-keepout;
+				margin: @moon-panel-v-padding @moon-panel-h-padding;
 				font-family: @moon-super-header-font-family;
 				font-size: @moon-breadcrumb-text-size;
 			}
@@ -39,7 +48,7 @@
 		overflow: hidden;
 
 		&.transitioning::before {
-			content: '';
+			content: "";
 			position: absolute;
 			.position(0);
 			z-index: 10000;
@@ -49,7 +58,8 @@
 	:global(.enact-locale-right-to-left) & {
 		direction: ltr;
 
-		.breadcrumbs {
+		.breadcrumbs,
+		.controls {
 			direction: rtl;
 		}
 	}
@@ -59,7 +69,7 @@
 		.breadcrumbs {
 			.breadcrumb {
 				.focus({
-					background: @moon-spotlight-color;
+					background-color: @moon-spotlight-color;
 					color: @moon-spotlight-text-color;
 
 					.breadcrumbHeader {
@@ -69,49 +79,6 @@
 			}
 		}
 	});
-
-	// TODO: Application Close Button Support
-	// &:not(.first) {
-	// 	.moon-application-close-button {
-	// 		.enact-locale-right-to-left & {
-	// 			left: (@moon-breadcrumb-width + @moon-spotlight-outset);
-	// 		}
-	// 	}
-	// }
-
-	// TODO: Scrim, Branding
-	// .scrim {
-	// 	position: absolute;
-	// 	left: 0;
-	// 	top: 0;
-	// 	width: 100%;
-	// 	height: 100%;
-	// 	background-color: black;
-	// 	pointer-events: none;
-	// 	opacity: 0;
-	// 	transition: opacity 0.5s linear;
-	// 	-webkit-transition: opacity 0.5s linear;
-	// 	-moz-transition: opacity 0.5s linear;
-	//
-	// 	&.visible {
-	// 		opacity: 0.2;
-	// 	}
-	// }
-	//
-	// .moon-panels-panel-scrim {
-	// 	left: 0;
-	// 	width: 100%;
-	// 	background-color: @moon-panels-scrim-activity-bg-color;
-	//
-	// 	.moon-panels-branding {
-	// 		position: absolute;
-	// 		top: @moon-panel-breadcrumb-height + 12px; // breadcrumb height + padding
-	// 		width: @moon-panel-breadcrumb-inner-width;
-	// 		bottom: @moon-app-keepout;
-	// 		left: @moon-app-keepout;
-	// 		background-position: bottom center;
-	// 	}
-	// }
 }
 
 .panels.activity {
@@ -125,13 +92,13 @@
 			clip-path: polygon(@moon-breadcrumb-width 0, 100% 0, 100% 100%, @moon-breadcrumb-width 100%);
 		}
 
-		> :not([data-index='0']) {
+		> :not([data-index="0"]) {
 			padding-left: 0;
 			width: calc(~"100% - " @moon-breadcrumb-width);
 		}
 	}
 
-	&[data-index='0'] {
+	&[data-index="0"] {
 		// prevents breadcrumbs from capturing pointer events when the first panel is visible
 		// without any breadcrumbs
 		.breadcrumbs {
@@ -140,8 +107,8 @@
 		}
 	}
 
-	&:not([data-index='0']) {
-		:global(.enact-locale-right-to-left) & .close {
+	&:not([data-index="0"]) {
+		:global(.enact-locale-right-to-left) & .controls {
 			// allocate space for breadcrumb + header margin
 			left: @moon-breadcrumb-width + @moon-spotlight-outset;
 		}
@@ -156,10 +123,6 @@
 	.breadcrumbs {
 		width: 50%;
 	}
-
-	// .scrim {
-	// 	background-color: @moon-panels-scrim-always-viewing-bg-color;
-	// }
 
 	// Skin colors
 	.applySkins({
@@ -177,69 +140,3 @@
 		}
 	});
 }
-
-// Base set of styling for scrim to prevent receiving user input while transitioning
-// .moon-panels-client-wrapper:after {
-// 	position: absolute;
-// 	top: 0;
-// 	left: 0;
-// 	bottom: 0;
-// 	right: 0;
-// }
-
-// Adding the content property here, instead of above, means that this element will only appear in
-// the DOM during ".transitioning". This was altered to improve marquee animation performance.
-// Pseudo-elements without a content property cannot receive styling.
-// .moon-panels.transitioning .moon-panels-client-wrapper:after {
-// 	content: '';
-// }
-
-// TODO: Handle
-// .handle {
-// 	position: absolute;
-// 	top: 0;
-// 	left: auto;
-// 	right: -(@moon-panels-handle-width);
-// 	height: 100%;
-// 	width: @moon-panels-handle-width;
-// 	z-index: 100;
-
-// 	&:before {
-// 		position: absolute;
-// 		display: block;
-// 		height: 100%;
-// 		width: 100%;
-// 		line-height: 100vh;
-// 		margin-left: -12px;
-// 		margin-right: 12px;
-// 		background-color: @moon-panels-handle-bg-color;
-// 		// font-family: @moon-icon-font-family;
-// 		font-size: @moon-panel-handle-icon-font-size;
-// 		// content: @moon-icon-arrowlargeleft;
-// 		color: @moon-spotlight-text-color;
-// 		-webkit-transform: translate3d(0, 0, 0);
-// 		transform: translate3d(0, 0, 0);
-// 		-webkit-transition: -webkit-transform 0.2s linear, opacity 0.2s linear;
-// 		transition: transform 0.2s linear, opacity 0.2s linear;
-// 		opacity: 1;
-// 		text-align: center;
-// 	}
-
-// 	&.right:before {
-// 		// content: @moon-icon-arrowlargeright;
-// 	}
-
-// 	&.spotlight:before {
-// 		background-color: @moon-panels-spot-fg-color;
-// 		-webkit-transform: translate3d(-(@moon-panels-handle-width - 12), 0, 0);
-// 		transform: translate3d(-(@moon-panels-handle-width - 12), 0, 0);
-// 	}
-
-// 	&.stashed:before {
-// 		opacity: 0;
-// 	}
-
-// 	&.hidden {
-// 		display: none;
-// 	}
-// }

@@ -73,37 +73,6 @@ class ScrollerWithResizable extends React.Component {
 	}
 }
 
-class ScrollerTopMostVisibleItemInTheScroller extends React.Component {
-	componentDidMount () {
-		this.blurEvent = document.createEvent('Event');
-		this.blurEvent.initEvent('blur', true, true);
-		this.focusEvent = document.createEvent('Event');
-		this.focusEvent.initEvent('focus', true, true);
-	}
-
-	handleScrollStop = () => {
-		window.dispatchEvent(this.blurEvent);
-		window.dispatchEvent(this.focusEvent);
-	}
-
-	render () {
-		return (
-			<Scroller
-				focusableScrollbar
-				onScrollStop={this.handleScrollStop}
-				style={{height: ri.scale(200)}}
-				verticalScrollbar="visible"
-			>
-				<Item>Item</Item>
-				<Item>Focus me, press right, then select on down arrow</Item>
-				<Item>Focus should return here</Item>
-				<Item>Item</Item>
-				<Item>Item</Item>
-			</Scroller>
-		);
-	}
-}
-
 class ScrollerWithTwoExpandableList extends React.Component {
 	render () {
 		return (
@@ -285,12 +254,6 @@ storiesOf('Scroller', module)
 		)
 	)
 	.add(
-		'Top Most Visible Item in the Scroller',
-		() => (
-			<ScrollerTopMostVisibleItemInTheScroller />
-		)
-	)
-	.add(
 		'With Two Expandable List',
 		() => (
 			<ScrollerWithTwoExpandableList />
@@ -331,6 +294,24 @@ storiesOf('Scroller', module)
 				</Scroller>
 			);
 		}
+	)
+	.add(
+		'Test scrolling to boundary with long overflow',
+		() => {
+			const size = number('Spacer size', 200, {max: 300, min: 0, range: true});
+			return (
+				<Scroller
+					style={{height: ri.scaleToRem(200)}}
+					focusableScrollbar={boolean('focusableScrollbar', {}, true)}
+				>
+					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
+					<Item>1</Item>
+					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
+					<Item>3</Item>
+					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
+				</Scroller>
+			);
+		}
 	).add(
 		'With Spotlight Target Calculation',
 		() => (
@@ -357,4 +338,71 @@ storiesOf('Scroller', module)
 				</ExpandableList>
 			</Scroller>
 		)
+	)
+	.add(
+		'With Nested Scroller',
+		() => {
+			let noScrollByWheel = boolean('noScrollByWheel', Scroller, false);
+			return (
+				<Scroller
+					direction="vertical"
+					verticalScrollbar="visible"
+				>
+					<Scroller
+						direction="horizontal"
+						horizontalScrollbar="visible"
+						noScrollByWheel={noScrollByWheel}
+						style={{
+							height: 'auto',
+							width: '90%'
+						}}
+					>
+						<div
+							style={{
+								backgroundColor: '#444',
+								width: ri.unit(2400, 'rem')
+							}}
+						>
+							<Item>The first nested scroller.</Item>
+							<br />
+							<br />
+							<Item>This is the upper horizontal scroller. If noScrollByWheel is not specified, this scroller will be scrolled by wheel and the outer scroller will not be scrolled.</Item>
+							<br />
+							<br />
+							<Item>If noScrollByWheel is specified, this scroller will NOT be scrolled by wheel but the outer scroller will be scrolled.</Item>
+							<br />
+							<br />
+							<Item>To set or unset noScrollByWheel prop, click KNOBS below.</Item>
+						</div>
+					</Scroller>
+					<Scroller
+						direction="horizontal"
+						horizontalScrollbar="visible"
+						noScrollByWheel={noScrollByWheel}
+						style={{
+							height: 'auto',
+							width: '90%'
+						}}
+					>
+						<div
+							style={{
+								backgroundColor: '#444',
+								width: ri.unit(2400, 'rem')
+							}}
+						>
+							<Item>The second nested scroller.</Item>
+							<br />
+							<br />
+							<Item>This is the lower horizontal scroller. If noScrollByWheel is not specified, this scroller will be scrolled by wheel and the outer scroller will not be scrolled.</Item>
+							<br />
+							<br />
+							<Item>If noScrollByWheel is specified, this scroller will NOT be scrolled by wheel but the outer scroller will be scrolled.</Item>
+							<br />
+							<br />
+							<Item>To set or unset noScrollByWheel prop, click KNOBS below.</Item>
+						</div>
+					</Scroller>
+				</Scroller>
+			);
+		}
 	);
