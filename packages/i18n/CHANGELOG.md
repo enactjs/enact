@@ -2,6 +2,11 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+## Removed
+- `i18n/Uppercase` HOC
+
 ## [3.0.0-alpha.4] - 2019-06-03
 
 No significant changes.
