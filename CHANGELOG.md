@@ -2,6 +2,19 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.0.0-alpha.5] - 2019-06-10
+
+### Added
+
+- `moonstone/Dropdown` property `width` to support `'small'`, `'medium'`, and `'large'` sizes
+- `ui/Toggleable` HOC config prop `eventProps` to allow wrapped components to specify additional event information
+
+## Fixed
+
+- `Fonts` for non-Latin to not intermix font weights for bold when using a combination of Latin and non-Latin glyphs
+- `moonstone/VirtualList` to restore focus to an item when scrollbars are visible
+- `ui/ToggleItem` to send its `value` prop when toggled
+
 ## [3.0.0-alpha.4] - 2019-06-03
 
 ### Changed
