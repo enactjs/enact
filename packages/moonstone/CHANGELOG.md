@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Input.InputBase` prop `focused` which will be handled by CSS in 3.0
 - `small` prop in `moonstone/Input` and `moonstone/ToggleButton`, which will be replaced by `size="small"` in 3.0
+- `moonstone/Divider`, to be moved to `moonstone/Heading` in 3.0.0
 
 ### Added
 

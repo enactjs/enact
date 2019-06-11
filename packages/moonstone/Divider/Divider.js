@@ -15,6 +15,7 @@
  * @exports DividerDecorator
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Pure from '@enact/ui/internal/Pure';
@@ -39,6 +40,7 @@ import css from './Divider.module.less';
  * @memberof moonstone/Divider
  * @ui
  * @public
+ * @deprecated since 2.6.0. Will be moved to {@link moonstone/Heading} in 3.0.0
  */
 const DividerBase = kind({
 	name: 'Divider',
@@ -91,6 +93,13 @@ const DividerBase = kind({
 
 	render: (props) => {
 		delete props.spacing;
+
+		deprecate({
+			name: 'moonstone/Divider',
+			replacedBy: 'moonstone/Heading',
+			since: '2.6.0',
+			until: '3.0.0'
+		});
 
 		return (
 			<h3 {...props} />
