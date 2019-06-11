@@ -10,6 +10,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [3.0.0-alpha.5] - 2019-06-10
 
+### Removed
+
+- `moonstone/Divider` replaced by `moonstone/Heading`
+
 ### Added
 
 - `moonstone/Dropdown` property `width` to support `'small'`, `'medium'`, and `'large'` sizes

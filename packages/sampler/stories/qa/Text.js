@@ -1,7 +1,7 @@
 import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
-import Divider from '@enact/moonstone/Divider';
+import Heading from '@enact/moonstone/Heading';
 import ExpandableInput from '@enact/moonstone/ExpandableInput';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import ExpandablePicker from '@enact/moonstone/ExpandablePicker';
@@ -35,7 +35,7 @@ const inputData = {
 
 const mixedText = 'ข้MอiคxวeาdมTผeสxมt - M混i合x文e字d';
 
-Divider.displayName = 'Divider';
+Heading.displayName = 'Heading';
 
 const prop = {
 	tallText: [
@@ -53,35 +53,35 @@ storiesOf('Text', module)
 
 			return (
 				<Scroller style={{height: '100%'}}>
-					<Divider>Text controls (div, Divider, BodyText, Marquee)</Divider>
+					<Heading showLine>Text controls (div, Heading, BodyText, Marquee)</Heading>
 					<div>{children}</div>
-					<Divider>{children}</Divider>
+					<Heading showLine>{children}</Heading>
 					<BodyText>{children}</BodyText>
 					<Marquee>{children}</Marquee>
 
-					<Divider>Basic Form controls (Button, Input)</Divider>
+					<Heading showLine>Basic Form controls (Button, Input)</Heading>
 					<Button>{children}</Button>
 					<Input placeholder={children} />
 					<Input value={children} />
 
-					<Divider>Simple Items (Item, LabeledItem, GridListImageItem)</Divider>
+					<Heading showLine>Simple Items (Item, LabeledItem, GridListImageItem)</Heading>
 					<Item>{children}</Item>
 					<LabeledItem label={children}>{children}</LabeledItem>
 					<GridListImageItem caption={children} style={{height: 200}} />
 
-					<Divider>Expandables (Input, List, Picker)</Divider>
+					<Heading showLine>Expandables (Input, List, Picker)</Heading>
 					<ExpandableInput title={children} value={children} />
 					<ExpandableList title={children}>{[children, children, children]}</ExpandableList>
 					<ExpandablePicker title={children}>{[children, children, children]}</ExpandablePicker>
 
-					<Divider>ToggleItems</Divider>
+					<Heading showLine>ToggleItems</Heading>
 					<CheckboxItem>{children}</CheckboxItem>
 					<FormCheckboxItem>{children}</FormCheckboxItem>
 					<RadioItem>{children}</RadioItem>
 					<SelectableItem>{children}</SelectableItem>
 					<SwitchItem>{children}</SwitchItem>
 
-					<Divider>Headers (Standard, Compact, Input)</Divider>
+					<Heading showLine>Headers (Standard, Compact, Input)</Heading>
 					<Header type="standard" title={children} titleBelow={children} subTitleBelow={children} />
 					<br />
 					<Header type="compact" title={children} titleBelow={children} subTitleBelow={children} />
