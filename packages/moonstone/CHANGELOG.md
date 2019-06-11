@@ -2,13 +2,19 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Dropdown` closes if it becomes disabled after opening
+
 ## [3.0.0-alpha.5] - 2019-06-10
 
 ### Added
 
 - `moonstone/Dropdown` property `width` to support `'small'`, `'medium'`, and `'large'` sizes
 
-## Fixed
+### Fixed
 
 - `Fonts` for non-Latin to not intermix font weights for bold when using a combination of Latin and non-Latin glyphs
 - `moonstone/VirtualList` to restore focus to an item when scrollbars are visible
