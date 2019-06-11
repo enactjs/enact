@@ -157,6 +157,7 @@ const Divider = DividerDecorator(DividerBase);
  * @memberof moonstone/Divider.Divider.prototype
  * @see i18n/Uppercase#casing
  * @public
+ * @deprecated
  */
 
 /**

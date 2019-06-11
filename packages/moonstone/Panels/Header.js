@@ -54,6 +54,7 @@ const HeaderBase = kind({
 		 * @type {String}
 		 * @default 'upper'
 		 * @public
+		 * @deprecated
 		 */
 		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 

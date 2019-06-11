@@ -6,7 +6,7 @@
  * @exports DialogBase
  */
 
-import kind from '@enact/core/kind';
+ import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
@@ -55,6 +55,7 @@ const DialogBase = kind({
 		 * @type {String}
 		 * @default 'upper'
 		 * @public
+		 * @deprecated
 		 */
 		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 
