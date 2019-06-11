@@ -5,6 +5,7 @@
  * @exports Uppercase
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -24,6 +25,8 @@ const formatContent = (casing, content) => {
 			return toUpperCase(content);
 	}
 };
+
+deprecate({name: 'i18n/Uppercase', until: '3.0.0', replacedBy: 'i18n/util', since: '2.6.0'});
 
 /**
  * A higher-order component that is used to wrap an element to provide locale-aware uppercasing of
