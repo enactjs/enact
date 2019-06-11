@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Dropdown` closes if it becomes disabled after opening
+- `moonstone/Dropdown` remaining open after it becomes `disabled`
 
 ## [3.0.0-alpha.5] - 2019-06-10
 
