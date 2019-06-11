@@ -29,18 +29,4 @@ describe('Heading Specs', () => {
 
 		expect(actual).toBe(expected);
 	});
-
-	// Temporarily skipping until the theme-wide uppercase status can be officially determined.
-	test.skip('should not capitalize content when casing is "preserve"', () => {
-		const content = 'uncapped';
-
-		const heading = mount(
-			<Heading casing="preserve">{content}</Heading>
-		);
-
-		const expected = content;
-		const actual = heading.text();
-
-		expect(actual).toBe(expected);
-	});
 });

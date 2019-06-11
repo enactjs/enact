@@ -28,17 +28,4 @@ describe('Divider Specs', () => {
 
 		expect(actual).toBe(expected);
 	});
-
-	test('should not capitalize content when casing is "preserve"', () => {
-		const content = 'uncapped';
-
-		const divider = mount(
-			<Divider casing="preserve">{content}</Divider>
-		);
-
-		const expected = content;
-		const actual = divider.text();
-
-		expect(actual).toBe(expected);
-	});
 });
