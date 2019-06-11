@@ -15,7 +15,7 @@ import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import React from 'react';
+import React, {Fragment} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
@@ -24,17 +24,40 @@ import Touchable from '../Touchable';
 
 import componentCss from './ToggleItem.module.less';
 
-// eslint-disable-next-line
-const iconCreator = (position) => ({disabled, icon, iconComponent, selected, iconPosition}) => {
-	if (iconPosition === position) {
+// eslint-disable-next-line enact/display-name,enact/prop-types
+const iconCreator = (position) => ({disabled, icon, iconComponent, iconPosition, itemIcon, itemIconPosition, selected}) => {
+
+	if (position === 'before') {
 		return (
-			<ComponentOverride
-				component={iconComponent}
-				disabled={disabled}
-				selected={selected}
-			>
-				{icon}
-			</ComponentOverride>
+			<Fragment>
+				{itemIconPosition === 'before' && itemIcon}
+				{iconPosition === 'before' ?
+					<ComponentOverride
+						component={iconComponent}
+						disabled={disabled}
+						selected={selected}
+					>
+						{icon}
+					</ComponentOverride> : null
+				}
+				{itemIconPosition === 'beforeChildren' && itemIcon}
+			</Fragment>
+		);
+	} else {
+		return (
+			<Fragment>
+				{itemIconPosition === 'afterChildren' && itemIcon}
+				{iconPosition === 'after' ?
+					<ComponentOverride
+						component={iconComponent}
+						disabled={disabled}
+						selected={selected}
+					>
+						{icon}
+					</ComponentOverride> : null
+				}
+				{itemIconPosition === 'after' && itemIcon}
+			</Fragment>
 		);
 	}
 };
@@ -128,13 +151,41 @@ const ToggleItemBase = kind({
 		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
-		 * Specifies on which side (`'before'` or `'after'`) of the text the icon appears.
+		 * Specifies on which side (`'before'` or `'after'`) of `children` the icon appears.
 		 *
-		 * @type {String}
+		 * @type {('before'|'after')}
 		 * @default 'before'
 		 * @public
 		 */
 		iconPosition: PropTypes.oneOf(['before', 'after']),
+
+		/**
+		 * An additional customizable icon component.
+		 *
+		 * Supports more granular positioning rules. This should only be used *after* specifying the
+		 * `icon` property, as the positioning for this offers the ability to place this in front of
+		 * or behind the existing `icon`. See `itemIconPosition` for options.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		itemIcon: PropTypes.node,
+
+		/**
+		 * Specifies where `itemIcon` appears.
+		 *
+		 * * `'before'` - first element in the item
+		 * * `'beforeChildren'` - before `children`. If `iconPosition` is `'before'`, `icon` will be
+		 *	before `itemIcon`
+		 * * `'afterChildren'` - after `children`. If iconPosition` is `'after'`, `icon` will be
+		 *	after `itemIcon`
+		 * * `'after'` - the last element in the item
+		 *
+		 * @type {('before'|'beforeChildren'|'afterChildren'|'after')}
+		 * @default 'afterChildren'
+		 * @public
+		 */
+		itemIconPosition: PropTypes.oneOf(['before', 'beforeChildren', 'afterChildren', 'after']),
 
 		/**
 		 * Called when the toggle item is toggled. Developers should generally use `onToggle` instead.
@@ -177,6 +228,7 @@ const ToggleItemBase = kind({
 	defaultProps: {
 		disabled: false,
 		iconPosition: 'before',
+		itemIconPosition: 'afterChildren',
 		selected: false,
 		value: null
 	},
@@ -195,6 +247,8 @@ const ToggleItemBase = kind({
 	render: ({component: Component, componentRef, css, children, selected, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconPosition;
+		delete rest.itemIcon;
+		delete rest.itemIconPosition;
 		delete rest.value;
 
 		return (
@@ -224,7 +278,7 @@ const ToggleItemBase = kind({
  */
 const ToggleItemDecorator = compose(
 	ForwardRef({prop: 'componentRef'}),
-	Toggleable({toggleProp: 'onTap'}),
+	Toggleable({toggleProp: 'onTap', eventProps: ['value']}),
 	Touchable
 );
 

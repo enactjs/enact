@@ -36,7 +36,7 @@ storiesOf('Moonstone', module)
 		),
 		{
 			info: {
-				text: 'Basic usage of divider'
+				text: 'Basic usage of ExpandableInput'
 			}
 		}
 	);

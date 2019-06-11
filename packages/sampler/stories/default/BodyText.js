@@ -1,20 +1,24 @@
-import BodyText from '@enact/moonstone/BodyText';
+import BodyText, {BodyTextBase} from '@enact/moonstone/BodyText';
+import UiBodyText, {BodyTextBase as UiBodyTextBase} from '@enact/ui/BodyText';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
-import {boolean, text} from '../../src/enact-knobs';
+import {boolean, text, select} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
 BodyText.displayName = 'BodyText';
+const Config = mergeComponentMetadata('BodyText', UiBodyTextBase, UiBodyText, BodyTextBase, BodyText);
 
 storiesOf('Moonstone', module)
 	.add(
 		'BodyText',
 		() => (
 			<BodyText
-				centered={boolean('centered', BodyText)}
-				noWrap={boolean('noWrap', BodyText)}
+				centered={boolean('centered', Config)}
+				noWrap={boolean('noWrap', Config)}
+				size={select('size', ['', 'large', 'small'], Config)}
 			>
-				{text('children', BodyText, 'This is Body Text')}
+				{text('children', Config, 'This is Body Text')}
 			</BodyText>
 		),
 		{

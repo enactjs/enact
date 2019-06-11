@@ -38,8 +38,8 @@ const ContextualPopupArrow = kind({
 
 	render: (props) => (
 		<svg {...props} viewBox="0 0 30 30">
-			<path d="M15 0 L0 18 L30 18 Z" className={css.arrowBorder} />
-			<path d="M15 9 L0 27 L30 27 Z" className={css.arrowFill} />
+			<path d="M0 18 L15 0 L30 18" className={css.arrowBorder} />
+			<path d="M15 2 L0 20 L30 20 Z" className={css.arrowFill} />
 		</svg>
 	)
 });
@@ -114,7 +114,7 @@ const ContextualPopupBase = kind({
 		 *
 		 * Can be one of: `'up'`, `'down'`, `'left'`, or `'right'`.
 		 *
-		 * @type {String}
+		 * @type {('up'|'down'|'left'|'right')}
 		 * @default 'down'
 		 * @public
 		 */
@@ -127,6 +127,15 @@ const ContextualPopupBase = kind({
 		 * @public
 		 */
 		onCloseButtonClick: PropTypes.func,
+
+		/**
+		 * Shows the arrow.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		showArrow: PropTypes.bool,
 
 		/**
 		 * Shows the close button.
@@ -156,7 +165,7 @@ const ContextualPopupBase = kind({
 					<IconButton
 						className={css.closeButton}
 						backgroundOpacity="transparent"
-						small
+						size="small"
 						onTap={onCloseButtonClick}
 						aria-label={$L('Close')}
 					>
@@ -167,7 +176,7 @@ const ContextualPopupBase = kind({
 		}
 	},
 
-	render: ({arrowPosition, containerPosition, containerRef, children, className, closeButton, direction, ...rest}) => {
+	render: ({arrowPosition, containerPosition, containerRef, children, className, closeButton, direction, showArrow, ...rest}) => {
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
 
@@ -177,7 +186,7 @@ const ContextualPopupBase = kind({
 					{children}
 					{closeButton}
 				</div>
-				<ContextualPopupArrow direction={direction} style={arrowPosition} />
+				{showArrow ? <ContextualPopupArrow direction={direction} style={arrowPosition} /> : null}
 			</ContextualPopupRoot>
 		);
 	}

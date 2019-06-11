@@ -1,10 +1,13 @@
-import IconButton from '@enact/moonstone/IconButton';
+import IconButton, {IconButtonBase} from '@enact/moonstone/IconButton';
+import Button, {ButtonBase} from '@enact/moonstone/Button';
+import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import icons from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
 import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 import emptify from '../../src/utils/emptify.js';
 
 // import icons
@@ -18,6 +21,7 @@ const prop = {
 };
 
 IconButton.displayName = 'IconButton';
+const Config = mergeComponentMetadata('IconButton', Button, ButtonBase, UIButton, UIButtonBase, IconButtonBase, IconButton);
 
 storiesOf('Moonstone', module)
 	.add(
@@ -25,12 +29,12 @@ storiesOf('Moonstone', module)
 		() => (
 			<IconButton
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, IconButton, '')}
-				color={select('color', ['', 'red', 'green', 'yellow', 'blue'], IconButton, '')}
-				disabled={boolean('disabled', IconButton)}
-				selected={boolean('selected', IconButton)}
-				small={boolean('small', IconButton)}
-				tooltipText={text('tooltipText', IconButton, '')}
+				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config, '')}
+				color={select('color', ['', 'red', 'green', 'yellow', 'blue'], Config, '')}
+				disabled={boolean('disabled', Config)}
+				selected={boolean('selected', Config)}
+				size={select('size', ['small', 'large'], Config)}
+				tooltipText={text('tooltipText', Config, '')}
 			>
 				{emptify(select('src', ['', docs, factory, logo], '')) + emptify(select('icon', ['', ...icons], 'plus')) + emptify(text('custom icon', ''))}
 			</IconButton>

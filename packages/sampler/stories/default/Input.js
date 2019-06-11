@@ -30,7 +30,7 @@ storiesOf('Moonstone', module)
 				invalid={boolean('invalid', Config)}
 				invalidMessage={text('invalidMessage', Config)}
 				placeholder={text('placeholder', Config)}
-				small={boolean('small', Config)}
+				size={select('size', ['small', 'large'], Config)}
 				type={select('type', prop.type, Config, prop.type[0])}
 			/>
 		),

@@ -25,6 +25,7 @@ import last from 'ramda/src/last';
 import React from 'react';
 
 import LabeledItem from '../LabeledItem';
+import {extractVoiceProps} from '../internal/util';
 
 import Expandable from './Expandable';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
@@ -357,10 +358,6 @@ const ExpandableItemBase = kind({
 
 	render: ({
 		children,
-		'data-webos-voice-disabled': voiceDisabled,
-		'data-webos-voice-group-label': voiceGroupLabel,
-		'data-webos-voice-intent': voiceIntent,
-		'data-webos-voice-label': voiceLabel,
 		disabled,
 		handleKeyDown,
 		handleLabelKeyDown,
@@ -390,6 +387,7 @@ const ExpandableItemBase = kind({
 		delete rest.showLabel;
 
 		const ariaProps = extractAriaProps(rest);
+		const voiceProps = extractVoiceProps(rest);
 
 		return (
 			<ContainerDiv
@@ -397,17 +395,14 @@ const ExpandableItemBase = kind({
 				aria-disabled={disabled}
 				disabled={disabled}
 				ref={setContainerNode}
-				spotlightDisabled={spotlightDisabled || disabled}
+				spotlightDisabled={spotlightDisabled}
 			>
 				<LabeledItem
 					{...ariaProps}
+					{...voiceProps}
 					css={css}
 					className={labeledItemClassName}
 					data-expandable-label
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
-					data-webos-voice-intent={voiceIntent}
-					data-webos-voice-label={voiceLabel}
 					disabled={disabled}
 					label={label}
 					onTap={handleOpen}

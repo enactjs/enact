@@ -688,6 +688,9 @@ const VideoPlayerBase = class extends React.Component {
 
 	componentDidMount () {
 		on('mousemove', this.activityDetected);
+		if (platform.touch) {
+			on('touchmove', this.activityDetected);
+		}
 		on('keydown', this.handleGlobalKeyDown);
 		this.startDelayedFeedbackHide();
 		if (this.context && typeof this.context === 'function') {
@@ -791,6 +794,9 @@ const VideoPlayerBase = class extends React.Component {
 
 	componentWillUnmount () {
 		off('mousemove', this.activityDetected);
+		if (platform.touch) {
+			off('touchmove', this.activityDetected);
+		}
 		off('keydown', this.handleGlobalKeyDown);
 		this.stopRewindJob();
 		this.stopAutoCloseTimeout();
@@ -1017,7 +1023,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	hideFeedback = () => {
-		if (this.state.feedbackVisible) {
+		if (this.state.feedbackVisible && this.state.feedbackAction !== 'focus') {
 			this.setState({
 				feedbackVisible: false,
 				feedbackAction: 'idle'

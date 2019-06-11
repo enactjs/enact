@@ -1,10 +1,13 @@
 // Slider.module.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
 
 .slider {
+	@knob-transform-resting: @moon-translate-center scale(@moon-slider-knob-resting-state-scale);
+	@knob-transform-active: @moon-translate-center scale(1);
+
 	position: relative;
 	margin: 0 @moon-spotlight-outset;
 	// Set both the V and H sizes here, so they can be easily overridden, both internally below and by component consumers.
@@ -12,6 +15,7 @@
 	width: @moon-slider-bar-height;
 	box-sizing: content-box;
 	direction: ltr;
+	touch-action: none;
 
 	.progressBar {
 		position: relative;
@@ -30,9 +34,7 @@
 			position: absolute;
 			height: @moon-slider-knob-height;
 			width: @moon-slider-knob-width;
-			// Vertically and horizontally center this knob.
-			// Using this method rather than -top -left so the knob is more intuitively customizable.
-			transform: @moon-translate-center scale(@moon-slider-knob-resting-state-scale);
+			transform: @knob-transform-resting;
 			border-radius: (@moon-slider-knob-height / 2);
 			border: @moon-button-border-width solid transparent;
 			box-sizing: border-box;
@@ -40,6 +42,10 @@
 			transition: transform ease-out 100ms;
 		}
 	}
+
+	.disabled({
+		touch-action: auto;
+	});
 
 	.moon-custom-text({
 		.knob::before {
@@ -110,9 +116,19 @@
 		&:focus.activateOnFocus,
 		&:focus.active {
 			.knob::before {
-				transform: @moon-translate-center scale(1);
+				transform: @knob-transform-active;
 			}
 		}
+
+		.disabled({
+			&.pressed,
+			&:focus.activateOnFocus,
+			&:focus.active {
+				.knob::before {
+					transform: @knob-transform-resting;
+				}
+			}
+		});
 	});
 
 	.applySkins({
@@ -154,6 +170,10 @@
 						border-color: @moon-slider-spotlight-knob-color;
 					}
 				}
+
+				.disabled({
+					opacity: @moon-disabled-opacity;
+				});
 			});
 		});
 

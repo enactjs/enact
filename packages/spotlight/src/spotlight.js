@@ -504,6 +504,13 @@ const Spotlight = (function () {
 		}
 	}
 
+	function onTouchEnd (evt) {
+		const current = getCurrent();
+		if (current && !current.contains(evt.target)) {
+			current.blur();
+		}
+	}
+
 	/*
 	 * public methods
 	 */
@@ -524,10 +531,16 @@ const Spotlight = (function () {
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
+
+				if (platform.touch) {
+					window.addEventListener('touchend', onTouchEnd);
+				}
+
 				if (platform.webos) {
 					window.top.document.addEventListener('webOSMouse', handleWebOSMouseEvent);
 					window.top.document.addEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
 				}
+
 				setLastContainer(rootContainerId);
 				configureDefaults(containerDefaults);
 				configureContainer(rootContainerId);
@@ -550,6 +563,11 @@ const Spotlight = (function () {
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
+
+			if (platform.touch) {
+				window.removeEventListener('touchend', onTouchEnd);
+			}
+
 			if (platform.webos) {
 				window.top.document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
 				window.top.document.removeEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
@@ -727,6 +745,24 @@ const Spotlight = (function () {
 			}
 
 			return false;
+		},
+
+		/**
+		 * Focuses the specified position.
+		 *
+		 * @param {Object} point Position info consists of `x` and `y` values
+		 * @param {String} direction Direction to find a spottable target when no spottable target
+		 *	is found at the specified position, one of `'left'`, `'right'`, `'up'` or `'down'`
+		 * @private
+		 */
+		focusFromPoint: function (point, direction) {
+			const node = getNavigableTarget(document.elementFromPoint(point.x, point.y));
+
+			if (node && node !== getCurrent()) {
+				focusElement(node, getContainersForNode(node), true);
+			} else {
+				spotNextFromPoint(direction, point);
+			}
 		},
 
 		// move(<direction>)

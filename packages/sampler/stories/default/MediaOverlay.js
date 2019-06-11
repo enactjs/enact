@@ -2,7 +2,7 @@ import MediaOverlay, {MediaOverlayBase, MediaOverlayDecorator} from '@enact/moon
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
-import {select} from '../../src/enact-knobs';
+import {boolean, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 const prop = {
@@ -74,6 +74,7 @@ storiesOf('Moonstone', module)
 			const placeholder = prop.placeholder[placeholderName];
 			return (
 				<MediaOverlay
+					disabled={boolean('disabled', Config)}
 					imageOverlay={imageSource}
 					placeholder={placeholder}
 					text={select('text', prop.text, Config, prop.text[0])}

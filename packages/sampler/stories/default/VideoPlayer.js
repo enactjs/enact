@@ -155,10 +155,14 @@ storiesOf('Moonstone', module)
 							playPauseButtonDisabled={boolean('playPauseButtonDisabled', MediaControlsConfig)}
 							rateButtonsDisabled={boolean('rateButtonsDisabled', MediaControlsConfig)}
 						>
-							<leftComponents><IconButton backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
-							<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
-							<Button backgroundOpacity="translucent">Add To Favorites</Button>
-							<IconButton backgroundOpacity="translucent">star</IconButton>
+							<leftComponents>
+								<IconButton backgroundOpacity="translucent" size="large">fullscreen</IconButton>
+							</leftComponents>
+							<rightComponents>
+								<IconButton backgroundOpacity="translucent" size="large">flag</IconButton>
+							</rightComponents>
+							<Button backgroundOpacity="translucent" size="large">Add To Favorites</Button>
+							<IconButton backgroundOpacity="translucent" size="large">star</IconButton>
 						</MediaControls>
 					</VideoPlayer>
 				</div>

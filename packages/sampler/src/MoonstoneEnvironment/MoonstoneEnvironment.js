@@ -25,6 +25,9 @@ const PanelsBase = kind({
 
 	propTypes: {
 		description: PropTypes.string,
+		noHeader: PropTypes.bool,
+		noPanel: PropTypes.bool,
+		noPanels: PropTypes.bool,
 		title: PropTypes.string
 	},
 
@@ -33,18 +36,19 @@ const PanelsBase = kind({
 		className: 'moonstoneEnvironmentPanels'
 	},
 
-	render: ({children, description, title, ...rest}) => (
-		<Panels {...rest} onApplicationClose={reloadPage}>
-			<Panel className={css.panel}>
-				<Header type="compact" title={title} casing="preserve" />
-				<Column>
-					{description ? (
-						<Cell shrink component={BodyText} className={css.description}>{description}</Cell>
-					) : null}
-					<Cell className={css.storyCell}>{children}</Cell>
-				</Column>
-			</Panel>
-		</Panels>
+	render: ({children, description, noHeader, noPanel, noPanels, title, ...rest}) => (
+		!noPanels ? <Panels {...rest} onApplicationClose={reloadPage}>
+			{!noPanel ? <Panel className={css.panel}>
+				{!noHeader ? [<Header type="compact" title={title} casing="preserve" key="header" />,
+					<Column key="body">
+						{description ? (
+							<Cell shrink component={BodyText} className={css.description}>{description}</Cell>
+						) : null}
+						<Cell className={css.storyCell}>{children}</Cell>
+					</Column>] : children
+				}
+			</Panel> : children}
+		</Panels> : children
 	)
 });
 
@@ -62,7 +66,7 @@ const MoonstoneFullscreen = MoonstoneDecorator({overlay: false}, FullscreenBase)
 // NOTE: Locales taken from strawman. Might need to add more in the future.
 const locales = {
 	'local':                                                '',
-	'en-US - US English (Default)':                         'en-US',
+	'en-US - US English':                                   'en-US',
 	'ko-KR - Korean':                                       'ko-KR',
 	'es-ES - Spanish, with alternate weekends':             'es-ES',
 	'am-ET - Amharic, 6 meridiems':                         'am-ET',
@@ -177,6 +181,11 @@ const StorybookDecorator = (story, config) => {
 				'--moon-env-background': backgroundLabelMap[select('background', backgroundLabels, Config, getKnobFromArgs(args, 'background'))]
 			}}
 			skin={select('skin', skins, Config, getKnobFromArgs(args, 'skin'))}
+			noHeader={config.noHeader}
+			noPanel={config.noPanel}
+			noPanels={config.noPanels}
+			{...config.moonstoneProps}
+			{...config.panelsProps}
 		>
 			{sample}
 		</Moonstone>
