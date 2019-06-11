@@ -12,7 +12,6 @@
  */
 
 import kind from '@enact/core/kind';
-import deprecate from '@enact/core/internal/deprecate';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -21,19 +20,6 @@ import ComponentOverride from '../ComponentOverride';
 import Touchable from '../Touchable';
 
 import componentCss from './IconButton.module.less';
-
-const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
-	name: 'ui/IconButton.IconButtonBase#small',
-	replacedBy: 'the `size` prop',
-	message: 'Use `size="small"` instead.',
-	since: '2.6.0',
-	until: '3.0.0'
-});
-
-function getSize (size, small) {
-	small = typeof small !== 'undefined' ? deprecateSmall(small) : 'large';
-	return size || small;
-}
 
 /**
  * A ui-styled button without any behavior.
@@ -147,23 +133,14 @@ const IconButtonBase = kind({
 		 * @default 'large'
 		 * @public
 		 */
-		size: PropTypes.string,
-
-		/**
-		 * Applies the `small` CSS class.
-		 *
-		 * @type {Boolean}
-		 * @deprecated replaced by prop `size='small'`
-		 * @public
-		 */
-		small: PropTypes.bool
+		size: PropTypes.string
 	},
 
 	defaultProps: {
 		disabled: false,
 		pressed: false,
-		selected: false
-		// size: 'large' // we won't set default props for `size` yet to support `small` prop
+		selected: false,
+		size: 'large'
 	},
 
 	styles: {
@@ -173,10 +150,10 @@ const IconButtonBase = kind({
 	},
 
 	computed: {
-		className: ({size, small, styler}) => styler.append(getSize(size, small))
+		className: ({size, styler}) => styler.append(size)
 	},
 
-	render: ({buttonComponent, children, css, icon, iconComponent: Icon, size, small, ...rest}) => {
+	render: ({buttonComponent, children, css, icon, iconComponent: Icon, size, ...rest}) => {
 		// To support the simpler use case of only specifying the icon as the children within
 		// <IconButton>, this falls back on using children if icon isn't specified.
 		if (!icon && children) {
@@ -187,10 +164,10 @@ const IconButtonBase = kind({
 		return ComponentOverride({
 			...rest,
 			component: buttonComponent,
-			size: getSize(size, small),
+			size: size,
 			minWidth: false,
 			children: [
-				<Icon key="icon" size={getSize(size, small)} className={css.icon}>{icon}</Icon>,
+				<Icon key="icon" size={size} className={css.icon}>{icon}</Icon>,
 				...React.Children.toArray(children)
 			]
 		});

@@ -6,26 +6,12 @@
  */
 
 import kind from '@enact/core/kind';
-import deprecate from '@enact/core/internal/deprecate';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import ri from '../resolution';
 
 import componentCss from './Icon.module.less';
-
-const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
-	name: 'ui/Icon.IconBase#small',
-	replacedBy: 'the `size` prop',
-	message: 'Use `size="small"` instead.',
-	since: '2.6.0',
-	until: '3.0.0'
-});
-
-function getSize (size, small) {
-	small = typeof small !== 'undefined' ? deprecateSmall(small) : 'large';
-	return size || small;
-}
 
 /**
  * Merges consumer styles with the image `src` resolved through the resolution independence module.
@@ -141,22 +127,13 @@ const Icon = kind({
 		 * @default 'small'
 		 * @public
 		 */
-		size: PropTypes.string,
-
-		/**
-		 * Applies the `small` CSS class.
-		 *
-		 * @type {Boolean}
-		 * @deprecated replaced by prop `size='small'`
-		 * @public
-		 */
-		small: PropTypes.bool
+		size: PropTypes.string
 	},
 
 	defaultProps: {
 		iconList: {},
-		pressed: false
-		// size: 'large' // we won't set default props for `size` yet to support `small` prop
+		pressed: false,
+		size: 'small'
 	},
 
 	styles: {
@@ -166,11 +143,11 @@ const Icon = kind({
 	},
 
 	computed: {
-		className: ({children: icon, iconList, pressed, size, small, styler}) => styler.append({
+		className: ({children: icon, iconList, pressed, size, styler}) => styler.append({
 			// If the icon isn't in our known set, apply our custom font class
 			dingbat: !(icon in iconList),
 			pressed
-		}, getSize(size, small)),
+		}, size),
 		iconProps: ({children: iconProp, iconList, style}) => {
 			let icon = iconList[iconProp];
 
@@ -216,7 +193,6 @@ const Icon = kind({
 		delete rest.iconList;
 		delete rest.pressed;
 		delete rest.size;
-		delete rest.small;
 
 		return (
 			<div

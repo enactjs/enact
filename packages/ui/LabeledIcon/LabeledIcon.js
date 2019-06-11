@@ -8,7 +8,6 @@
  */
 
 import kind from '@enact/core/kind';
-import deprecate from '@enact/core/internal/deprecate';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -19,19 +18,6 @@ import {CellBase, LayoutBase} from '../Layout';
 import Slottable from '../Slottable';
 
 import componentCss from './LabeledIcon.module.less';
-
-const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
-	name: 'ui/LabeledIcon.LabeledIconBase#small',
-	replacedBy: 'the `size` prop',
-	message: 'Use `size="small"` instead.',
-	since: '2.6.0',
-	until: '3.0.0'
-});
-
-function getSize (size, small) {
-	small = typeof small !== 'undefined' ? deprecateSmall(small) : 'large';
-	return size || small;
-}
 
 /**
  * An icon component with a label.
@@ -153,24 +139,13 @@ const LabeledIconBase = kind({
 		 * @default 'large'
 		 * @public
 		 */
-		size: PropTypes.string,
-
-		/**
-		 * Reduces the size of the icon component.
-		 *
-		 * The value of `small` is forwarded on to `iconComponent`.
-		 *
-		 * @type {Boolean}
-		 * @deprecated replaced by prop `size='small'`
-		 * @public
-		 */
-		small: PropTypes.bool
+		size: PropTypes.string
 	},
 
 	defaultProps: {
 		labelPosition: 'below',
-		inline: false
-		// size: 'large', // we won't set default props for `size` yet to support `small` prop
+		inline: false,
+		size: 'large'
 	},
 
 	styles: {
@@ -187,11 +162,10 @@ const LabeledIconBase = kind({
 		}
 	},
 
-	render: ({css, children, disabled, icon, iconComponent: Icon, orientation, size, small, ...rest}) => {
+	render: ({css, children, disabled, icon, iconComponent: Icon, orientation, size, ...rest}) => {
 		delete rest.inline;
 
 		let iconClassName = css.icon;
-		size = getSize(size, small);
 
 		// Rearrange the props to support custom JSX components
 		// `icon` is normally passed to `iconComponent` as children, but if `icon` is instead a
