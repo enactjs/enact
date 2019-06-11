@@ -134,7 +134,8 @@ const DropdownList = Skinnable(
 					selected={selected}
 				>
 					{children.map((o, i) => {
-						const {children = o, key = i} = o; // eslint-disable-next-line no-shadow
+						// eslint-disable-next-line no-shadow
+						const {children = o, key = i} = o;
 						return ({children, key, role: 'checkbox', 'aria-checked': selected === i});
 					})}
 				</Group>
