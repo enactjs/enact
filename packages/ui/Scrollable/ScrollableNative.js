@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
+import {onWindowReady} from '@enact/core/snapshot';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -473,10 +474,14 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	handleResizeWindow = () => {
+		setTimeout(() => {this.enqueueForceUpdate();});
+	}
+
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	enqueueForceUpdate () {
-		this.childRefCurrent.calculateMetrics();
+		this.childRefCurrent.calculateMetrics(this.childRefCurrent.props);
 		this.forceUpdate();
 	}
 
@@ -1258,6 +1263,12 @@ class ScrollableBaseNative extends Component {
 		if (this.props.addEventListeners) {
 			this.props.addEventListeners(childRefCurrent.containerRef);
 		}
+
+		if (this.childRefCurrent.cc) { // For VirtualList
+			onWindowReady(() => {
+				window.addEventListener('resize', this.handleResizeWindow);
+			});
+		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
@@ -1275,6 +1286,10 @@ class ScrollableBaseNative extends Component {
 
 		if (this.props.removeEventListeners) {
 			this.props.removeEventListeners(childRefCurrent.containerRef);
+		}
+
+		if (this.childRefCurrent.cc) { // For VirtualList
+			window.removeEventListener('resize', this.handleResizeWindow);
 		}
 	}
 
