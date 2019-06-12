@@ -145,7 +145,7 @@ describe('Dropdown', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should allow members in child object ts to override injected aria values', () => {
+	test('should allow members in child object to override injected aria values', () => {
 		const dropDown = shallow(
 			<DropdownBase title={title} selected={0}>
 				{[{
