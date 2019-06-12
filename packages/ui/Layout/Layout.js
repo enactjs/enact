@@ -1,26 +1,6 @@
 /**
  * A convenient tool for laying-out content using `Layout`, `Cell`, `Row`, and `Column`.
  *
- * @example
- * <Layout>
- * 	<Cell shrink>
- * 		<Button>First</Button>
- * 	</Cell>
- * 	<Cell>
- * 		<Item>An Item with some long text in it</Item>
- * 	</Cell>
- * 	<Cell shrink>
- * 		<Button>Last</Button>
- * 	</Cell>
- * </Layout>
- *
- * The example above produces a layout like the following:
- * ```
- * ┌─┬─────┬─┐
- * │o│Item │o│
- * └─┴─────┴─┘
- * ```
- *
  * Layout is a powerful and versatile tool used for arranging content on the screen. On a conceptual
  * level, it mixes the best parts of HTML tables wtih the best parts of HTML framesets, both of
  * which were largely abandoned for their drawbacks, ignoring their strengths. A `Layout` is simply
@@ -101,6 +81,30 @@
  * Sidebar Cell and content Cell to stretch from the top to the bottom. We've also leveraged the
  * `component` prop on the header cell, which tells `Cell` to render itself as a "header" HTML tag
  * rather than its usual "div" tag.
+ *
+ * The example below produces a layout like the following:
+ * ```
+ * ┌─┬─────┬─┐
+ * │o│Item │o│
+ * └─┴─────┴─┘
+ * ```
+ *
+ * You'll notice the use of some special classes in the example: `"debug layout"`. Adding these on
+ * any element in your DOM hierarchy will enable borders in Layout and Cell to help visualize what
+ * is happening in the layout. They automatically change color the deeper in the stack they go.
+ *
+ * @example
+ * <Layout className="debug layout">
+ * 	<Cell shrink>
+ * 		<Button>First</Button>
+ * 	</Cell>
+ * 	<Cell>
+ * 		<Item>An Item with some long text in it</Item>
+ * 	</Cell>
+ * 	<Cell shrink>
+ * 		<Button>Last</Button>
+ * 	</Cell>
+ * </Layout>
  *
  * @module ui/Layout
  * @exports Cell
