@@ -118,7 +118,14 @@ const DropdownList = Skinnable(
 		},
 
 		computed: {
-			className: ({width, styler}) => styler.append(width)
+			className: ({width, styler}) => styler.append(width),
+			children: ({children, selected}) =>
+				children.filter(el => (el != null)).map((o, i) => ({
+					children: (o.children || o),
+					key: (o.key != null ? o.key : `item${i}`),
+					role: 'checkbox',
+					'aria-checked': (selected === i)
+				}))
 		},
 
 		render: ({children, onSelect, selected, ...rest}) => {
@@ -133,11 +140,7 @@ const DropdownList = Skinnable(
 					select="radio"
 					selected={selected}
 				>
-					{children.map((o, i) => {
-						// eslint-disable-next-line no-shadow
-						const {children = o, key = i} = o;
-						return ({children, key, role: 'checkbox', 'aria-checked': selected === i});
-					})}
+					{children}
 				</Group>
 			);
 		}
@@ -279,8 +282,7 @@ const DropdownBase = kind({
 	},
 
 	render: ({children, disabled, onOpen, onSelect, open, selected, width, title, ...rest}) => {
-		const role = '';
-		const popupProps = {children, onSelect, selected, width, role};
+		const popupProps = {children, onSelect, selected, width, role: ''};
 
 		// `ui/Group`/`ui/Repeater` will throw an error if empty so we disable the Dropdown and prevent Dropdown to open if there are no children.
 		const hasChildren = children && children.length;
