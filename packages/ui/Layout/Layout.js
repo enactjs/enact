@@ -36,7 +36,7 @@
  * The following scenarios are some common cases where `Layout` can truly help out. A quality of
  * `Cell` you'll see below is that when a `Cell` has no defined size, it automatically sizes to fill
  * any remaining space in the `Layout`. If there are multiple auto-sizing `Cell` components, they
- * share the space, subdividing it equally between themselves. It's great to leverage this and only
+ * share the space, subdividing it equally among themselves. It's great to leverage this and only
  * apply sizes to `Cell`s which must have defined sizes. `shrink` is one of the ways you can impose
  * size guidelines on a `Cell`. It automatically fits the size of the Cell to the size of its
  * content.
@@ -332,7 +332,7 @@ const LayoutDecorator = ForwardRef({prop: 'componentRef'});
 const Layout = LayoutDecorator(LayoutBase);
 
 /**
- * Shorthand for `<Layout orientation="vertical">`, which that positions its
+ * Shorthand for `<Layout orientation="vertical">`, which positions its
  * [Cells]{@link ui/Layout.Cell} vertically.
  * ```
  * ┌────┐
@@ -357,7 +357,7 @@ const Column = LayoutDecorator((props) => (
 ));
 
 /**
- * Shorthand for `<Layout orientation="horizontal">`, which that positions its
+ * Shorthand for `<Layout orientation="horizontal">`, which positions its
  * [Cells]{@link ui/Layout.Cell} horizontally.
  * ```
  * ┌─┬─┬─┬─┐
