@@ -34,7 +34,7 @@ describe('Dropdown', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should be disabled when there children is omitted', () => {
+	test('should be disabled when `children` is omitted', () => {
 		const dropDown = mount(
 			<DropdownBase title={title} />
 		);
@@ -45,7 +45,7 @@ describe('Dropdown', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should be disabled when there are no children', () => {
+	test('should be disabled when there are no `children`', () => {
 		const dropDown = mount(
 			<DropdownBase title={title}>
 				{[]}
@@ -58,7 +58,7 @@ describe('Dropdown', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should be disabled when there are no valid children', () => {
+	test('should be disabled when there are no valid `children`', () => {
 		const dropDown = mount(
 			<DropdownBase title={title}>
 				{[null, undefined, ''] /* eslint-disable-line no-undefined */}
@@ -102,7 +102,7 @@ describe('Dropdown', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should set the role of items to "checkbox"', () => {
+	test('should set the `role` of items to "checkbox"', () => {
 		const dropDown = shallow(
 			<DropdownBase title={title} defaultOpen>
 				{['item']}
@@ -115,7 +115,7 @@ describe('Dropdown', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should set the aria-checked state of the selected item', () => {
+	test('should set the `aria-checked` state of the `selected` item', () => {
 		const dropDown = shallow(
 			<DropdownBase title={title} selected={0}>
 				{['item']}
