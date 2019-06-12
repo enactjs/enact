@@ -475,7 +475,9 @@ class ScrollableBaseNative extends Component {
 	}
 
 	handleResizeWindow = () => {
-		setTimeout(() => {this.enqueueForceUpdate();});
+		setTimeout(() => {
+			this.enqueueForceUpdate();
+		});
 	}
 
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
