@@ -433,7 +433,8 @@
 
       if (bestTarget && isDelegableContainer(bestTarget)) {
         // if best target is delegable container, then find descendants candidate inside delegable container.
-        const innerTarget = getSpatialNavigationCandidates(bestTarget);
+        // TODO: Discuss the standardization about "mode".
+        const innerTarget = getSpatialNavigationCandidates(bestTarget, {mode: 'all'});
         const descendantsBest = innerTarget.length > 0 ? targetElement.spatialNavigationSearch(dir, {candidates: innerTarget, container: bestTarget}) : null;
         if (descendantsBest) {
           bestTarget = descendantsBest;
@@ -1660,7 +1661,7 @@
       set keyMode(mode) { this._keymode = (['SHIFTARROW', 'ARROW', 'NONE'].includes(mode)) ? mode : 'ARROW'; },
       currentInterest,
       interest,
-      setStartingPoint: function (x, y) {startingPoint = {x, y};}
+      setStartingPoint: function (x, y) {startingPoint = (x && y) ? {x, y} : null}
     };
   }
 

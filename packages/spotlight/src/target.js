@@ -27,7 +27,6 @@ function isFocusable (elem) {
 		// only verify selector for the first (immediate ancestor) container
 		verifySelector = false;
 	}
-
 	return true;
 }
 
@@ -79,11 +78,6 @@ function getTargetBySelector (selector) {
 	return null;
 }
 
-function isRestrictedContainer (containerId) {
-	const config = getContainerConfig(containerId);
-	return config && (config.enterTo === 'last-focused' || config.enterTo === 'default-element');
-}
-
 /**
  * Returns the target identified by the selector configured for the container identified by
  * `containerId` for the given `direction`. If the selector is an empty string, the method returns
@@ -127,7 +121,18 @@ function getNavigableTarget (target) {
 	return target;
 }
 
+function getDataSpotTarget (element, direction) {
+	const extSelector = element.getAttribute('data-spot-' + direction);
+	if (typeof extSelector === 'string') {
+		return getTargetBySelector(extSelector);
+	}
+}
+
+
+
 export {
+	getDataSpotTarget,
+	getLeaveForTarget,
 	getNavigableTarget,
 	getTargetByContainer,
 	getTargetBySelector,
