@@ -35,6 +35,7 @@ import Skinnable from '../Skinnable';
 
 import css from './Dropdown.module.less';
 
+const filterChildren = children => children ? children.filter(Boolean) : [];
 
 const compareChildren = (a, b) => {
 	if (!a || !b || a.length !== b.length) return false;
@@ -118,14 +119,7 @@ const DropdownList = Skinnable(
 		},
 
 		computed: {
-			className: ({width, styler}) => styler.append(width),
-			children: ({children, selected}) =>
-				children.filter(el => (el != null)).map((o, i) => ({
-					children: (o.children || o),
-					key: (o.key != null ? o.key : `item${i}`),
-					role: 'checkbox',
-					'aria-checked': (selected === i)
-				}))
+			className: ({width, styler}) => styler.append(width)
 		},
 
 		render: ({children, onSelect, selected, ...rest}) => {
@@ -268,6 +262,27 @@ const DropdownBase = kind({
 	},
 
 	computed: {
+		children: ({children, selected}) => {
+			return filterChildren(children).map((child, i) => {
+				const aria = {
+					role: 'checkbox',
+					'aria-checked': selected === i
+				};
+
+				if (typeof child === 'string') {
+					return {
+						...aria,
+						children: child,
+						key: `item${i}`
+					};
+				}
+
+				return {
+					...aria,
+					...child
+				};
+			});
+		},
 		className: ({width, styler}) => styler.append(width),
 		title: ({children, selected, title}) => {
 			const isSelectedValid = !(typeof selected === 'undefined' || selected === null || selected >= children.length || selected < 0);
@@ -285,7 +300,7 @@ const DropdownBase = kind({
 		const popupProps = {children, onSelect, selected, width, role: ''};
 
 		// `ui/Group`/`ui/Repeater` will throw an error if empty so we disable the Dropdown and prevent Dropdown to open if there are no children.
-		const hasChildren = children && children.length;
+		const hasChildren = filterChildren(children).length;
 		const openDropdown = hasChildren ? open : false;
 		delete rest.width;
 
