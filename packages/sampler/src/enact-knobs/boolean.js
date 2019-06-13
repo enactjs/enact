@@ -35,12 +35,8 @@ const boolean = (name, Config, preferredValue) => {
 
 	// Set false for default boolean props that are not defined.
 	const defaultValue = (Config.defaultProps[name] != null) ? Config.defaultProps[name] : false;
-	const knobResult = nullify(booleanKnob(name, (preferredValue != null ? preferredValue : defaultValue), Config.groupId));
 
-	// Storybook 5 Bug: Currently Storybook inteprets `null` and `undefined` boolean knob returns as
-	// empty-string. So until that is resolved upstream, we'll convert any empty-string returned by
-	// booleanKnob as `false`. Once it's fixed, the following line can simply be `return knobResult;`
-	return (knobResult === '' ? false : knobResult);
+	return nullify(booleanKnob(name, (preferredValue != null ? preferredValue : defaultValue), Config.groupId));
 };
 
 export default boolean;
