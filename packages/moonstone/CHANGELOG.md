@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Dropdown` to support voice readout
 - `moonstone/Dropdown` remaining open after it becomes `disabled`
 
 ## [3.0.0-alpha.5] - 2019-06-10
