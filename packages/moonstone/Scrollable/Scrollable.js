@@ -594,7 +594,7 @@ class ScrollableBase extends Component {
 						this.checkAndApplyOverscrollEffectByDirection(direction);
 					}
 				}
-			} else if (!Spotlight.getPointerMode() && getDirection(keyCode)) {
+			} else if (getDirection(keyCode)) {
 				const element = Spotlight.getCurrent();
 
 				this.uiRef.current.lastInputType = 'arrowKey';
