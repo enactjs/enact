@@ -1251,11 +1251,9 @@ class ScrollableBase extends Component {
 			this.props.addEventListeners(childRefCurrent.containerRef);
 		}
 
-		if (this.childRefCurrent.cc) { // For VirtualList
-			onWindowReady(() => {
-				window.addEventListener('resize', this.handleResizeWindow);
-			});
-		}
+		onWindowReady(() => {
+			window.addEventListener('resize', this.handleResizeWindow);
+		});
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
@@ -1275,9 +1273,7 @@ class ScrollableBase extends Component {
 			this.props.removeEventListeners(childRefCurrent.containerRef);
 		}
 
-		if (this.childRefCurrent.cc) { // For VirtualList
-			window.removeEventListener('resize', this.handleResizeWindow);
-		}
+		window.removeEventListener('resize', this.handleResizeWindow);
 	}
 
 	// render
