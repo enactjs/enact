@@ -91,20 +91,21 @@ const DividerBase = kind({
 		className: ({spacing, styler}) => styler.append(spacing)
 	},
 
-	render: (props) => {
-		delete props.spacing;
+	render: deprecate(
+		(props) => {
+			delete props.spacing;
 
-		deprecate({
+			return (
+				<h3 {...props} />
+			);
+		},
+		{
 			name: 'moonstone/Divider',
 			replacedBy: 'moonstone/Heading',
 			since: '2.6.0',
 			until: '3.0.0'
-		});
-
-		return (
-			<h3 {...props} />
-		);
-	}
+		}
+	)
 });
 
 /**
