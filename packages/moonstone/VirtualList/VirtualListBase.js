@@ -376,11 +376,10 @@ const VirtualListBaseFactory = (type) => {
 		 * Handle `onKeyDown` event
 		 */
 
-		onAcceleratedKeyDown = ({keyCode, repeat, target}) => {
+		onAcceleratedKeyDown = ({isWrapped, keyCode, nextIndex, repeat, target}) => {
 			const {cbScrollTo, spacing, wrap} = this.props;
 			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPosition} = this.uiRefCurrent;
 			const index = getNumberValue(target.dataset.index);
-			const {isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
 
 			this.isScrolledBy5way = false;
 			this.isScrolledByJump = false;
@@ -442,7 +441,7 @@ const VirtualListBaseFactory = (type) => {
 					if (nextIndex >= 0) {
 						ev.preventDefault();
 						ev.stopPropagation();
-						this.onAcceleratedKeyDown({index, isWrapped, keyCode, nextIndex, repeat, target});
+						this.onAcceleratedKeyDown({isWrapped, keyCode, nextIndex, repeat, target});
 					} else {
 						const {dataSize} = this.props;
 						const {dimensionToExtent} = this.uiRefCurrent;
