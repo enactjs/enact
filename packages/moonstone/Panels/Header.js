@@ -175,7 +175,7 @@ const HeaderBase = kind({
 	},
 
 	computed: {
-		className: ({fullBleed, type, styler}) => styler.append({fullBleed}, type),
+		className: ({centered, fullBleed, type, styler}) => styler.append({centered, fullBleed}, type),
 		direction: ({title, titleBelow}) => isRtlText(title) || isRtlText(titleBelow) ? 'rtl' : 'ltr',
 		titleBelowComponent: ({centered, marqueeOn, titleBelow, type}) => {
 			switch (type) {
