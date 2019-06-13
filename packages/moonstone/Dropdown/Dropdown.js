@@ -279,7 +279,7 @@ const DropdownBase = kind({
 
 		// `ui/Group`/`ui/Repeater` will throw an error if empty so we disable the Dropdown and prevent Dropdown to open if there are no children.
 		const hasChildren = children && children.length;
-		const openDropdown = hasChildren ? open : false;
+		const openDropdown = (hasChildren && !disabled) ? open : false;
 		delete rest.width;
 
 		return (
