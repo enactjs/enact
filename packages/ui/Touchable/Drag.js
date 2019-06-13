@@ -41,7 +41,7 @@ class Drag {
 		}
 
 		this.bounds = bounds;
-	};
+	}
 
 	updatePosition = (clientX, clientY) => {
 		const {maxX, maxY, minX, minY} = this.bounds;
@@ -95,7 +95,8 @@ class Drag {
 
 				if (onDragStart) {
 					onDragStart({
-						type: 'onDragStart'
+						type: 'onDragStart',
+						...coords
 					});
 				}
 			}
@@ -104,6 +105,14 @@ class Drag {
 				type: 'onDrag',
 				...coords
 			});
+		}
+	}
+
+	blur = () => {
+		if (!this.isDragging()) return;
+
+		if (!this.dragConfig.global) {
+			this.end();
 		}
 	}
 

@@ -1,28 +1,29 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 import Input from '../Input';
 import Spotlight from '@enact/spotlight';
 
+const isPaused = () => Spotlight.isPaused() ? 'paused' : 'not paused';
+
 describe('Input Specs', () => {
-	it('should have an input element', () => {
+	test('should have an input element', () => {
 		const subject = mount(
 			<Input />
 		);
 
-		expect(subject.find('input')).to.have.length(1);
+		expect(subject.find('input')).toHaveLength(1);
 	});
 
-	it('should include a placeholder if specified', () => {
+	test('should include a placeholder if specified', () => {
 		const subject = mount(
 			<Input placeholder="hello" />
 		);
 
-		expect(subject.find('input').prop('placeholder')).to.equal('hello');
+		expect(subject.find('input').prop('placeholder')).toBe('hello');
 	});
 
-	it('should callback onChange when the text changes', () => {
-		const handleChange = sinon.spy();
+	test('should callback onChange when the text changes', () => {
+		const handleChange = jest.fn();
 		const value = 'blah';
 		const evt = {target: {value: value}};
 		const subject = mount(
@@ -32,14 +33,14 @@ describe('Input Specs', () => {
 		subject.find('input').simulate('change', evt);
 
 		const expected = value;
-		const actual = handleChange.firstCall.args[0].value;
+		const actual = handleChange.mock.calls[0][0].value;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should blur input on enter if dismissOnEnter', () => {
+	test('should blur input on enter if dismissOnEnter', () => {
 		const node = document.body.appendChild(document.createElement('div'));
-		const handleChange = sinon.spy();
+		const handleChange = jest.fn();
 
 		const subject = mount(
 			<Input onBlur={handleChange} dismissOnEnter />,
@@ -47,33 +48,33 @@ describe('Input Specs', () => {
 		);
 		const input = subject.find('input');
 
-		node.querySelector('input').focus();
-		input.simulate('keyDown', {nativeEvent: {which: 13, keyCode: 13}});
+		input.simulate('mouseDown');
+		input.simulate('keyUp', {which: 13, keyCode: 13, code:13});
 		node.remove();
 
-		const expected = true;
-		const actual = handleChange.calledOnce;
+		const expected = 1;
+		const actual = handleChange.mock.calls.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should be able to be disabled', () => {
+	test('should be able to be disabled', () => {
 		const subject = mount(
 			<Input disabled />
 		);
 
-		expect(subject.find('input').prop('disabled')).to.true();
+		expect(subject.find('input').prop('disabled')).toBe(true);
 	});
 
-	it('should reflect the value if specified', () => {
+	test('should reflect the value if specified', () => {
 		const subject = mount(
 			<Input value="hello" />
 		);
 
-		expect(subject.find('input').prop('value')).to.equal('hello');
+		expect(subject.find('input').prop('value')).toBe('hello');
 	});
 
-	it('should have dir equal to rtl when there is rtl text', () => {
+	test('should have dir equal to rtl when there is rtl text', () => {
 		const subject = mount(
 			<Input value="שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקי" />
 		);
@@ -81,10 +82,10 @@ describe('Input Specs', () => {
 		const expected = 'rtl';
 		const actual = subject.find('input').prop('dir');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should have dir equal to ltr when there is ltr text', () => {
+	test('should have dir equal to ltr when there is ltr text', () => {
 		const subject = mount(
 			<Input value="content" />
 		);
@@ -92,76 +93,87 @@ describe('Input Specs', () => {
 		const expected = 'ltr';
 		const actual = subject.find('input').prop('dir');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should have dir equal to rtl when there is rtl text in the placeholder', () => {
-		const subject = mount(
-			<Input value="שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקי" />
-		);
+	test(
+		'should have dir equal to rtl when there is rtl text in the placeholder',
+		() => {
+			const subject = mount(
+				<Input value="שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקי" />
+			);
 
-		const expected = 'rtl';
-		const actual = subject.find('input').prop('dir');
+			const expected = 'rtl';
+			const actual = subject.find('input').prop('dir');
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should have dir equal to ltr when there is ltr text in the placeholder', () => {
-		const subject = mount(
-			<Input placeholder="content" />
-		);
+	test(
+		'should have dir equal to ltr when there is ltr text in the placeholder',
+		() => {
+			const subject = mount(
+				<Input placeholder="content" />
+			);
 
-		const expected = 'ltr';
-		const actual = subject.find('input').prop('dir');
+			const expected = 'ltr';
+			const actual = subject.find('input').prop('dir');
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should have dir equal to rtl when there is ltr text in the placeholder, but rtl text in value', () => {
-		const subject = mount(
-			<Input
-				placeholder="content"
-				value="שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקי"
-			/>
-		);
+	test(
+		'should have dir equal to rtl when there is ltr text in the placeholder, but rtl text in value',
+		() => {
+			const subject = mount(
+				<Input
+					placeholder="content"
+					value="שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקי"
+				/>
+			);
 
-		const expected = 'rtl';
-		const actual = subject.find('input').prop('dir');
+			const expected = 'rtl';
+			const actual = subject.find('input').prop('dir');
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should have dir equal to ltr when there is rtl text in the placeholder, but ltr text in value', () => {
-		const subject = mount(
-			<Input
-				placeholder="שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקי"
-				value="content"
-			/>
-		);
+	test(
+		'should have dir equal to ltr when there is rtl text in the placeholder, but ltr text in value',
+		() => {
+			const subject = mount(
+				<Input
+					placeholder="שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקי"
+					value="content"
+				/>
+			);
 
-		const expected = 'ltr';
-		const actual = subject.find('input').prop('dir');
+			const expected = 'ltr';
+			const actual = subject.find('input').prop('dir');
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('Should pause spotlight when input has focus', () => {
-		const pauseSpy = sinon.spy(Spotlight, 'pause');
+	test('should pause spotlight when input has focus', () => {
 		const subject = mount(
 			<Input />
 		);
 
 		subject.simulate('mouseDown');
 
-		const expected = true;
-		const actual = pauseSpy.calledOnce;
+		const expected = 'paused';
+		const actual = isPaused();
 
-		Spotlight.pause.restore();
-		expect(actual).to.equal(expected);
+		Spotlight.resume();
+
+		expect(actual).toBe(expected);
 	});
 
-	it('Should resume spotlight on unmount', () => {
-		const resumeSpy = sinon.spy(Spotlight, 'resume');
+	test('should resume spotlight on unmount', () => {
 		const subject = mount(
 			<Input />
 		);
@@ -169,26 +181,55 @@ describe('Input Specs', () => {
 		subject.simulate('mouseDown');
 		subject.unmount();
 
-		const expected = true;
-		const actual = resumeSpy.calledOnce;
+		const expected = 'not paused';
+		const actual = isPaused();
 
-		Spotlight.resume.restore();
-		expect(actual).to.equal(expected);
+		Spotlight.resume();
+
+		expect(actual).toBe(expected);
 	});
 
-	it('should display invalid message if it invalid and invalid message exists', () => {
-		const subject = mount(
-			<Input invalid invalidMessage="invalid message" />
-		);
+	// The following test is marked "skip" until the Uppercase HOC can be refactored as a utility method
+	test.skip(
+		'should display invalid message if it invalid and invalid message exists',
+		() => {
+			const subject = mount(
+				<Input invalid invalidMessage="invalid message" />
+			);
 
-		expect(subject.find('Tooltip').prop('children')).to.equal('INVALID MESSAGE');
-	});
+			expect(subject.find('Tooltip').prop('children')).toBe('Invalid Message');
+		}
+	);
 
-	it('should not display invalid message if it is valid', () => {
+	// The following test is marked "skip" until the Uppercase HOC can be refactored as a utility method
+	test.skip('should not display invalid message if it is valid', () => {
 		const subject = mount(
 			<Input invalidMessage="invalid message" />
 		);
 
-		expect(subject.find('Tooltip')).to.have.length(0);
+		expect(subject.find('Tooltip')).toHaveLength(0);
+	});
+
+	test('should set voice intent if specified', () => {
+		const input = mount(
+			<Input data-webos-voice-intent="Select" />
+		);
+
+		const expected = 'Select';
+		const actual = input.find('input').prop('data-webos-voice-intent');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should set voice label if specified', () => {
+		const label = 'input label';
+		const input = mount(
+			<Input data-webos-voice-label={label} />
+		);
+
+		const expected = label;
+		const actual = input.find('input').prop('data-webos-voice-label');
+
+		expect(actual).toBe(expected);
 	});
 });

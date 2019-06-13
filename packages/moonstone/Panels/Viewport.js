@@ -1,13 +1,16 @@
 import classnames from 'classnames';
 import {forward, handle} from '@enact/core/handle';
+import Spotlight from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 import ViewManager, {shape} from '@enact/ui/ViewManager';
 import invariant from 'invariant';
+import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-import Spotlight from '@enact/spotlight';
 
-import css from './Panels.less';
+import SharedStateDecorator, {SharedState} from '../internal/SharedStateDecorator';
+
+import css from './Panels.module.less';
 
 /**
  * The container for a set of Panels
@@ -18,6 +21,8 @@ import css from './Panels.less';
  */
 const ViewportBase = class extends React.Component {
 	static displayName = 'Viewport'
+
+	static contextType = SharedState
 
 	static propTypes = /** @lends moonstone/Panels.Viewport.prototype */ {
 
@@ -66,13 +71,36 @@ const ViewportBase = class extends React.Component {
 		noAnimation: false
 	}
 
+	constructor () {
+		super();
+
+		this.paused = new Pause('Viewport');
+		this.state = {
+			prevIndex: -1,
+			direction: 'forward'
+		};
+	}
+
+	static getDerivedStateFromProps (props, state) {
+		return {
+			prevIndex: props.index,
+			direction: state.prevIndex > props.index ? 'backward' : 'forward'
+		};
+	}
+
 	componentDidMount () {
 		// eslint-disable-next-line react/no-find-dom-node
 		this.node = ReactDOM.findDOMNode(this);
 	}
 
+	componentDidUpdate (prevProps) {
+		for (let i = prevProps.index; this.context && i > this.props.index; i--) {
+			this.context.delete(i);
+		}
+	}
+
 	componentWillUnmount () {
-		Spotlight.resume();
+		this.paused.resume();
 	}
 
 	addTransitioningClass = () => {
@@ -91,25 +119,40 @@ const ViewportBase = class extends React.Component {
 		return true;
 	}
 
+	pause = () => this.paused.pause()
+
+	resume = () => this.paused.resume()
+
 	handle = handle.bind(this)
 
 	handleTransition = this.handle(
 		forward('onTransition'),
 		this.removeTransitioningClass,
-		Spotlight.resume
+		this.resume
 	)
 
 	handleWillTransition = this.handle(
 		forward('onWillTransition'),
 		this.addTransitioningClass,
-		Spotlight.pause
+		this.pause
 	)
 
 	mapChildren = (children, generateId) => React.Children.map(children, (child, index) => {
-		return React.cloneElement(child, {
-			containerId: child.props.containerId || generateId(index, 'panel-container', Spotlight.remove),
-			'data-index': index
-		});
+		if (child) {
+			const {spotlightId = generateId(index, 'panel-container', Spotlight.remove)} = child.props;
+			const props = {
+				spotlightId,
+				'data-index': index
+			};
+
+			if (child.props.autoFocus == null && this.state.direction === 'forward') {
+				props.autoFocus = 'default-element';
+			}
+
+			return React.cloneElement(child, props);
+		} else {
+			return null;
+		}
 	})
 
 	getEnteringProp = (noAnimation) => noAnimation ? null : 'hideChildren'
@@ -146,8 +189,10 @@ const ViewportBase = class extends React.Component {
 	}
 };
 
-export default ViewportBase;
+const Viewport = SharedStateDecorator(ViewportBase);
+
+export default Viewport;
 export {
-	ViewportBase as Viewport,
+	Viewport,
 	ViewportBase
 };

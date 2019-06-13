@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
 
-import css from './Input.less';
+import css from './Input.module.less';
 
 /**
  * The stateless functional base component for {@link moonstone/Input.InputDecoratorIcon}.
@@ -23,6 +23,7 @@ const InputDecoratorIconBase = kind({
 		 * The position of the icon. Either `before` or `after`.
 		 *
 		 * @type {String}
+		 * @required
 		 */
 		position: PropTypes.oneOf(['before', 'after']).isRequired,
 
@@ -63,7 +64,7 @@ const InputDecoratorIconBase = kind({
  * @ui
  * @private
  */
-const InputDecoratorIcon = onlyUpdateForKeys(['children'])(InputDecoratorIconBase);
+const InputDecoratorIcon = onlyUpdateForKeys(['children', 'small'])(InputDecoratorIconBase);
 
 export default InputDecoratorIcon;
 export {

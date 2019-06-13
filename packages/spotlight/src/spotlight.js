@@ -17,9 +17,12 @@
  */
 
 import {is} from '@enact/core/keymap';
+import {isWindowReady} from '@enact/core/snapshot';
+import platform from '@enact/core/platform';
 
 import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
+import {isPaused, pause, resume} from '../Pause';
 
 import {
 	addContainer,
@@ -34,7 +37,11 @@ import {
 	isContainer,
 	isContainer5WayHoldable,
 	isNavigable,
-	unmountContainer,
+	isWithinOverflowContainer,
+	mayActivateContainer,
+	notifyLeaveContainer,
+	notifyLeaveContainerFail,
+	notifyEnterContainer,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
@@ -42,12 +49,14 @@ import {
 	setContainerPreviousTarget,
 	setDefaultContainer,
 	setLastContainer,
-	setLastContainerFromTarget
+	setLastContainerFromTarget,
+	unmountContainer
 } from './container';
 
 import {
 	getLastPointerPosition,
 	getPointerMode,
+	hasPointerMoved,
 	notifyKeyDown,
 	notifyPointerMove,
 	setPointerMode
@@ -58,7 +67,8 @@ import {
 	getTargetByContainer,
 	getTargetByDirectionFromElement,
 	getTargetByDirectionFromPosition,
-	getTargetBySelector
+	getTargetBySelector,
+	isFocusable
 } from './target';
 
 import {
@@ -119,7 +129,6 @@ const Spotlight = (function () {
 	/* private vars
 	*/
 	let _initialized = false;
-	let _pause = false;
 	let _duringFocusChange = false;
 
 	/*
@@ -158,13 +167,24 @@ const Spotlight = (function () {
 	}
 
 	function shouldPreventNavigation () {
-		return (!getAllContainerIds().length || _pause);
+		return isPaused() || getAllContainerIds().length === 0;
 	}
 
 	function getCurrent () {
+		if (!isWindowReady()) return;
+
 		let activeElement = document.activeElement;
 		if (activeElement && activeElement !== document.body) {
 			return activeElement;
+		}
+	}
+
+	// An extension point for updating pointer mode based on the current platform.
+	// Currently only webOS
+	function setPlatformPointerMode () {
+		const palmSystem = window.PalmSystem;
+		if (palmSystem && palmSystem.cursor) {
+			setPointerMode(palmSystem.cursor.visibility);
 		}
 	}
 
@@ -184,11 +204,10 @@ const Spotlight = (function () {
 			return true;
 		}
 
+		const focusOptions = isWithinOverflowContainer(elem, containerIds) ? {preventScroll: true} : null;
+
 		let silentFocus = function () {
-			if (currentFocusedElement) {
-				currentFocusedElement.blur();
-			}
-			elem.focus();
+			elem.focus(focusOptions);
 			focusChanged(elem, containerIds);
 		};
 
@@ -199,17 +218,13 @@ const Spotlight = (function () {
 
 		_duringFocusChange = true;
 
-		if (_pause) {
+		if (isPaused()) {
 			silentFocus();
 			_duringFocusChange = false;
 			return true;
 		}
 
-		if (currentFocusedElement) {
-			currentFocusedElement.blur();
-		}
-
-		elem.focus();
+		elem.focus(focusOptions);
 
 		_duringFocusChange = false;
 
@@ -226,6 +241,10 @@ const Spotlight = (function () {
 			setContainerLastFocusedElement(elem, containerIds);
 			setLastContainer(containerId);
 		}
+
+		if (__DEV__) {
+			assignFocusPreview(elem);
+		}
 	}
 
 	function restoreFocus () {
@@ -236,7 +255,7 @@ const Spotlight = (function () {
 			next.unshift(lastContainerId);
 
 			// only prepend last focused if it exists so that Spotlight.focus() doesn't receive
-			// a falsey target
+			// a falsy target
 			const lastFocused = getContainerLastFocusedElement(lastContainerId);
 			if (lastFocused) {
 				next.unshift(lastFocused);
@@ -246,6 +265,29 @@ const Spotlight = (function () {
 		// attempt to find a target starting with the last focused element in the last
 		// container, followed by the last container, and finally the root container
 		return next.reduce((focused, target) => focused || Spotlight.focus(target), false);
+	}
+
+	// The below should be gated on non-production environment only.
+	function assignFocusPreview (elem) {
+		const directions = ['up', 'right', 'down', 'left'],
+			nextClassBase = spottableClass + '-next-';
+
+		// Remove all previous targets
+		directions.forEach((dir) => {
+			const nextClass = nextClassBase + dir,
+				prevElems = parseSelector('.' + nextClass);
+			if (prevElems && prevElems.length !== 0) {
+				prevElems.forEach(prevElem => prevElem.classList.remove(nextClass));
+			}
+		});
+
+		// Find all next targets and identify them
+		directions.forEach((dir) => {
+			const nextElem = getTargetByDirectionFromElement(dir, elem);
+			if (nextElem) {
+				nextElem.classList.add(nextClassBase + dir);
+			}
+		});
 	}
 
 	function spotNextFromPoint (direction, position) {
@@ -279,6 +321,14 @@ const Spotlight = (function () {
 				return false;
 			}
 
+			notifyLeaveContainer(
+				direction,
+				currentFocusedElement,
+				currentContainerIds,
+				next,
+				nextContainerIds
+			);
+
 			setContainerPreviousTarget(
 				currentContainerId,
 				direction,
@@ -286,8 +336,20 @@ const Spotlight = (function () {
 				currentFocusedElement
 			);
 
-			return focusElement(next, nextContainerIds);
+			const focused = focusElement(next, nextContainerIds);
+
+			notifyEnterContainer(
+				direction,
+				currentFocusedElement,
+				currentContainerIds,
+				next,
+				nextContainerIds
+			);
+
+			return focused;
 		}
+
+		notifyLeaveContainerFail(direction, currentFocusedElement, currentContainerIds);
 
 		return false;
 	}
@@ -314,21 +376,38 @@ const Spotlight = (function () {
 		_pointerMoveDuringKeyPress = false;
 	}
 
+	function handleWebOSMouseEvent (ev) {
+		if (!isPaused() && ev && ev.detail && ev.detail.type === 'Leave') {
+			onBlur();
+		}
+	}
+
+	function handleKeyboardStateChangeEvent ({visibility}) {
+		if (!visibility) {
+			setPlatformPointerMode();
+		}
+	}
+
 	function onFocus () {
 		// Normally, there isn't focus here unless the window has been blurred above. On webOS, the
 		// platform may focus the window after the app has already focused a component so we prevent
 		// trying to focus something else (potentially) unless the window was previously blurred
 		if (_spotOnWindowFocus) {
-			const palmSystem = window.PalmSystem;
-
-			if (palmSystem && palmSystem.cursor) {
-				Spotlight.setPointerMode(palmSystem.cursor.visibility);
-			}
+			setPlatformPointerMode();
 
 			// If the window was previously blurred while in pointer mode, the last active containerId may
 			// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
 			// to the last focused element of the last active containerId, so we use rootContainerId instead
-			Spotlight.focus(getContainerLastFocusedElement(rootContainerId));
+			let lastFocusedElement = getContainerLastFocusedElement(rootContainerId);
+			while (isContainer(lastFocusedElement)) {
+				({lastFocusedElement} = getContainerConfig(lastFocusedElement));
+			}
+
+			if (!Spotlight.focus(lastFocusedElement)) {
+				// If the last focused element was previously also disabled (or no longer exists), we
+				// need to set focus somewhere
+				Spotlight.focus();
+			}
 			_spotOnWindowFocus = false;
 		}
 	}
@@ -351,6 +430,7 @@ const Spotlight = (function () {
 
 	function onKeyDown (evt) {
 		if (shouldPreventNavigation()) {
+			notifyKeyDown(evt.keyCode);
 			return;
 		}
 
@@ -358,16 +438,11 @@ const Spotlight = (function () {
 		const direction = getDirection(keyCode);
 		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
 
-		if (pointerHandled) {
-			_pointerMoveDuringKeyPress = true;
+		if (pointerHandled || !(direction || isEnter(keyCode))) {
 			return;
 		}
 
-		if (!(direction || isEnter(keyCode))) {
-			return;
-		}
-
-		if (!_pause && !_pointerMoveDuringKeyPress) {
+		if (!isPaused() && !_pointerMoveDuringKeyPress) {
 			if (getCurrent()) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
 			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
@@ -382,7 +457,10 @@ const Spotlight = (function () {
 	}
 
 	function onMouseMove ({target, clientX, clientY}) {
-		if (shouldPreventNavigation()) return;
+		if (shouldPreventNavigation()) {
+			notifyPointerMove(null, target, clientX, clientY);
+			return;
+		}
 
 		const current = getCurrent();
 		const update = notifyPointerMove(current, target, clientX, clientY);
@@ -413,7 +491,7 @@ const Spotlight = (function () {
 
 		const {target} = evt;
 
-		if (getPointerMode()) {
+		if (getPointerMode() && hasPointerMoved(evt.clientX, evt.clientY)) {
 			const next = getNavigableTarget(target); // account for child controls
 
 			if (next && next !== getCurrent()) {
@@ -426,6 +504,13 @@ const Spotlight = (function () {
 		}
 	}
 
+	function onTouchEnd (evt) {
+		const current = getCurrent();
+		if (current && !current.contains(evt.target)) {
+			current.blur();
+		}
+	}
+
 	/*
 	 * public methods
 	 */
@@ -434,6 +519,8 @@ const Spotlight = (function () {
 		 * Initializes Spotlight. This is generally handled by
 		 * {@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}.
 		 *
+		 * @param {Object} containerDefaults Default configuration for new spotlight containers
+		 * @returns {undefined}
 		 * @public
 		 */
 		initialize: function (containerDefaults) {
@@ -444,9 +531,22 @@ const Spotlight = (function () {
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
+
+				if (platform.touch) {
+					window.addEventListener('touchend', onTouchEnd);
+				}
+
+				if (platform.webos) {
+					window.top.document.addEventListener('webOSMouse', handleWebOSMouseEvent);
+					window.top.document.addEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
+				}
+
 				setLastContainer(rootContainerId);
 				configureDefaults(containerDefaults);
 				configureContainer(rootContainerId);
+				// by default, pointer mode is off but the platform's current state will override that
+				setPointerMode(false);
+				setPlatformPointerMode();
 				_initialized = true;
 			}
 		},
@@ -463,6 +563,15 @@ const Spotlight = (function () {
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
+
+			if (platform.touch) {
+				window.removeEventListener('touchend', onTouchEnd);
+			}
+
+			if (platform.webos) {
+				window.top.document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
+				window.top.document.removeEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
+			}
 			Spotlight.clear();
 			_initialized = false;
 		},
@@ -485,8 +594,9 @@ const Spotlight = (function () {
 		 * Sets the config for spotlight or the specified containerID
 		 *
 		 * @function
-		 * @param {String|Object} param1 Configuration object or container ID
-		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
+		 * @param {String|Object} containerIdOrConfig  Configuration object or container ID
+		 * @param {Object}        [config]             Configuration object if container ID supplied
+		 *                                             in `containerIdOrConfig`
 		 * @returns {undefined}
 		 * @public
 		 */
@@ -499,8 +609,9 @@ const Spotlight = (function () {
 		 * object. If no container ID is supplied, a new container ID will be generated.
 		 *
 		 * @function
-		 * @param {String|Object} param1 Configuration object or container ID
-		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
+		 * @param {String|Object} containerIdOrConfig  Configuration object or container ID
+		 * @param {Object}        [config]             Configuration object if container ID supplied
+		 *                                             in `containerIdOrConfig`
 		 * @returns {String} The container ID of the container
 		 * @public
 		 */
@@ -569,32 +680,32 @@ const Spotlight = (function () {
 		/**
 		 * Pauses Spotlight
 		 *
+		 * @function
 		 * @returns {undefined}
 		 * @public
 		 */
-		pause: function () {
-			_pause = true;
-		},
+		pause,
 
 		/**
 		 * Resumes Spotlight
 		 *
+		 * @function
 		 * @returns {undefined}
 		 * @public
 		 */
-		resume: function () {
-			_pause = false;
-		},
+		resume,
 
 		// focus()
 		// focus(<containerId>)
 		// focus(<extSelector>)
 		/**
-		 * Focuses the specified element selector or container ID or the default container. If
-		 * Spotlight is in pointer mode, focus is not changed but `elem` will be set as the last
+		 * Focuses the specified component ID, container ID, element selector, or the default
+		 * container.
+		 *
+		 * If Spotlight is in pointer mode, focus is not changed but `elem` will be set as the last
 		 * focused element of its spotlight containers.
 		 *
-		 * @param {String|Object|undefined} elem Element selector or the container ID.
+		 * @param {String|Object|undefined} elem Component ID, container, ID or element selector.
 		 *	If not supplied, the default container will be focused.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
 		 * @public
@@ -609,6 +720,9 @@ const Spotlight = (function () {
 				if (getContainerConfig(elem)) {
 					target = getTargetByContainer(elem);
 					wasContainerId = true;
+				} else if (/^[\w\d-]+$/.test(elem)) {
+					// support component IDs consisting of alphanumeric, dash, or underscore
+					target = getTargetBySelector(`[data-spotlight-id=${elem}]`);
 				} else {
 					target = getTargetBySelector(elem);
 				}
@@ -617,14 +731,38 @@ const Spotlight = (function () {
 			const nextContainerIds = getContainersForNode(target);
 			const nextContainerId = last(nextContainerIds);
 			if (isNavigable(target, nextContainerId, true)) {
-				return focusElement(target, nextContainerIds);
+				const focused = focusElement(target, nextContainerIds);
+
+				if (!focused && wasContainerId) {
+					setLastContainer(elem);
+				}
+
+				return focused;
 			} else if (wasContainerId) {
 				// if we failed to find a spottable target within the provided container, we'll set
 				// it as the active container to allow it to focus itself if its contents change
-				this.setActiveContainer(elem);
+				setLastContainer(elem);
 			}
 
 			return false;
+		},
+
+		/**
+		 * Focuses the specified position.
+		 *
+		 * @param {Object} point Position info consists of `x` and `y` values
+		 * @param {String} direction Direction to find a spottable target when no spottable target
+		 *	is found at the specified position, one of `'left'`, `'right'`, `'up'` or `'down'`
+		 * @private
+		 */
+		focusFromPoint: function (point, direction) {
+			const node = getNavigableTarget(document.elementFromPoint(point.x, point.y));
+
+			if (node && node !== getCurrent()) {
+				focusElement(node, getContainersForNode(node), true);
+			} else {
+				spotNextFromPoint(direction, point);
+			}
 		},
 
 		// move(<direction>)
@@ -662,7 +800,8 @@ const Spotlight = (function () {
 		 * Sets or clears the default container that will receive focus.
 		 *
 		 * @function
-		 * @param {String|undefined} containerId The container ID or a falsy value to clear default container
+		 * @param {String} [containerId] The container ID or a falsy value to clear default
+		 *                               container
 		 * @returns {undefined}
 		 * @public
 		 */
@@ -681,12 +820,17 @@ const Spotlight = (function () {
 		/**
 		 * Sets the currently active container.
 		 *
+		 * Note: If the current container is restricted to 'self-only' and `containerId` is not
+		 * contained within the current container then the active container will not be updated.
+		 *
 		 * @param {String} [containerId] The id of the currently active container. If this is not
 		 *	provided, the root container is set as the currently active container.
 		 * @public
 		 */
 		setActiveContainer: function (containerId) {
-			setLastContainer(containerId || rootContainerId);
+			if (mayActivateContainer(containerId)) {
+				setLastContainer(containerId || rootContainerId);
+			}
 		},
 
 		/**
@@ -720,18 +864,17 @@ const Spotlight = (function () {
 				return false;
 			}
 
-			return matchSelector('[data-container-muted="true"] .' + spottableClass, elem);
+			return matchSelector('[data-spotlight-container-muted="true"] .' + spottableClass, elem);
 		},
 
 		/**
 		 * Determines whether Spotlight is currently paused.
 		 *
+		 * @function
 		 * @returns {Boolean} `true` if Spotlight is currently paused.
 		 * @public
 		 */
-		isPaused: function () {
-			return _pause;
-		},
+		isPaused,
 
 		/**
 		 * Determines whether an element is spottable.
@@ -745,13 +888,13 @@ const Spotlight = (function () {
 				return false;
 			}
 
-			return matchSelector('.' + spottableClass, elem);
+			return isFocusable(elem);
 		},
 
 		/**
 		 * Returns the currently spotted control.
 		 *
-		 * @returns {Object} The control that currently has focus, if available
+		 * @returns {Node} The control that currently has focus, if available
 		 * @public
 		 */
 		getCurrent: function () {
@@ -761,8 +904,8 @@ const Spotlight = (function () {
 		/**
 		 * Returns a list of spottable elements wrapped by the supplied container.
 		 *
-		 * @param {String} [containerId] The id of the container used to determine the list of spottable elements
-		 * @returns {NodeList} The spottable elements that are wrapped by the supplied container
+		 * @param {String} containerId The id of the container used to determine the list of spottable elements
+		 * @returns {Node[]} The spottable elements that are wrapped by the supplied container
 		 * @public
 		 */
 		getSpottableDescendants: function (containerId) {

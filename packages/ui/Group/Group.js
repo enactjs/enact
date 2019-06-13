@@ -1,11 +1,13 @@
 /**
- * Exports the {@link ui/Group.Group} and {@link ui/Group.GroupItem}
- * components.  The default export is {@link ui/Group.Group}.
+ * Provides a component that renders a group of components given a set of data.
  *
  * @module ui/Group
+ * @exports Group
+ * @exports GroupBase
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -15,8 +17,8 @@ import Repeater from '../Repeater';
 import {GroupItem, pickGroupItemProps} from './GroupItem';
 
 /**
- * {@link ui/Group.GroupBase} is a stateless component that supports selection of its child items
- * via configurable properties and events.
+ * A stateless component that supports selection of its child items via configurable
+ * properties and events.
  *
  * @class GroupBase
  * @memberof ui/Group
@@ -31,25 +33,26 @@ const GroupBase = kind({
 		 * Component type to repeat. This can be a React component or a string describing a DOM
 		 * node (e.g. `'div'`)
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @required
 		 * @public
 		 */
-		childComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+		childComponent: EnactPropTypes.renderable.isRequired,
 
 		/**
-		 * An array of data to be mapped onto the `childComponent`. This supports two data types.
-		 * If an array of strings is provided, the strings will be used in the generated
-		 * `childComponent` as the content (i.e. passed as `children`). If an array of objects is
-		 * provided, each object will be spread onto the generated `childComponent` with no
-		 * interpretation. You'll be responsible for setting properties like `disabled`,
-		 * `className`, and setting the content using `children`.
+		 * An array of data to be mapped onto the `childComponent`.
+
+		 * This supports two data types. If an array of strings is provided, the strings will be
+		 * used in the generated `childComponent` as the content (i.e. passed as `children`). If
+		 * an array of objects is provided, each object will be spread onto the generated
+		 * `childComponent` with no interpretation. You'll be responsible for setting properties
+		 * like `disabled`, `className`, and setting the content using `children`.
 		 *
 		 * NOTE: When providing an array of objects be sure a unique `key` is assigned to each
 		 * item. [Read about keys](https://reactjs.org/docs/lists-and-keys.html#keys) for more
 		 * information.
 		 *
-		 * @type {String[]|Object[]}
+		 * @type {String[]|Array.<{key: (Number|String)}>}
 		 * @required
 		 * @public
 		 */
@@ -121,7 +124,7 @@ const GroupBase = kind({
 		/**
 		 * The index(es) of the currently activated item.
 		 *
-		 * @type {Number | Array}
+		 * @type {Number|Array}
 		 * @public
 		 */
 		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.array]),
@@ -165,8 +168,10 @@ const GroupBase = kind({
 });
 
 /**
- * {@link ui/Group.Group} supports selection of its child items via configurable properties and
+ * A component that supports selection of its child items via configurable properties and
  * events.
+ *
+ * Selected item is managed by {@link ui/Changeable.Changeable}.
  *
  * @class Group
  * @memberof ui/Group

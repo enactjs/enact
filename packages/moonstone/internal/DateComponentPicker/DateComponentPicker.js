@@ -42,6 +42,24 @@ const DateComponentPickerBase = kind({
 		value: PropTypes.number.isRequired,
 
 		/**
+		 * Sets the hint string read when focusing the picker.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		accessibilityHint: PropTypes.string,
+
+		/**
+		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
+		 * to the current selected child and accessibilityHint text.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/internal/DateComponentPicker.DateComponentPickerBase.prototype
+		 * @public
+		 */
+		'aria-valuetext': PropTypes.string,
+
+		/**
 		 * The label to display below the picker
 		 *
 		 * @type {String}
@@ -79,14 +97,19 @@ const DateComponentPickerBase = kind({
 		children: ({children}) => React.Children.map(children, (child) => (
 			<PickerItem marqueeDisabled>{child}</PickerItem>
 		)),
-		max: ({children}) => React.Children.count(children) - 1
+		max: ({children}) => React.Children.count(children) - 1,
+		voiceLabel: ({children}) => {
+			return JSON.stringify(children);
+		}
 	},
 
-	render: ({children, className, label, max, noAnimation, reverse, value, wrap, ...rest}) => (
+	render: ({'aria-valuetext': ariaValuetext, accessibilityHint, children, className, label, max, noAnimation, reverse, value, voiceLabel, wrap, ...rest}) => (
 		<DateComponentPickerChrome className={className} label={label}>
 			<Picker
 				{...rest}
-				accessibilityHint={label}
+				accessibilityHint={(accessibilityHint == null) ? label : accessibilityHint}
+				aria-valuetext={(accessibilityHint == null) ? ariaValuetext : null}
+				data-webos-voice-labels-ext={voiceLabel}
 				index={value}
 				joined
 				max={max}

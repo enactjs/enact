@@ -1,0 +1,142 @@
+// Panels.module.less
+//
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
+
+.panels {
+	pointer-events: none;
+
+	> * {
+		pointer-events: auto;
+	}
+
+	.controls {
+		position: absolute;
+		top: (@moon-app-keepout + @moon-spotlight-outset);
+		.position-start-end(auto, @moon-panel-h-padding);
+		z-index: 1;
+		.padding-start-end(18px, initial);
+		.remove-margin-on-edge-children();
+	}
+
+	.breadcrumbs {
+		position: absolute;
+		.position(0, auto, auto, 0);
+		height: 100%;
+		z-index: 10;
+		overflow: hidden;
+
+		.breadcrumb {
+			position: absolute;
+			right: 0;
+			height: 100%;
+			width: @moon-breadcrumb-width;
+
+			.breadcrumbHeader {
+				padding-top: 3px;
+				margin: @moon-panel-v-padding @moon-panel-h-padding;
+				font-family: @moon-super-header-font-family;
+				font-size: @moon-breadcrumb-text-size;
+			}
+		}
+	}
+
+	.viewport {
+		position: absolute;
+		.position(0);
+		overflow: hidden;
+
+		&.transitioning::before {
+			content: "";
+			position: absolute;
+			.position(0);
+			z-index: 10000;
+		}
+	}
+
+	:global(.enact-locale-right-to-left) & {
+		direction: ltr;
+
+		.breadcrumbs,
+		.controls {
+			direction: rtl;
+		}
+	}
+
+	// Skin colors
+	.applySkins({
+		.breadcrumbs {
+			.breadcrumb {
+				.focus({
+					background-color: @moon-spotlight-color;
+					color: @moon-spotlight-text-color;
+
+					.breadcrumbHeader {
+						border-color: @moon-spotlight-text-color;
+					}
+				});
+			}
+		}
+	});
+}
+
+.panels.activity {
+	.breadcrumbs {
+		width: @moon-breadcrumb-width;
+	}
+
+	.viewport {
+		&[data-clip] {
+			-webkit-clip-path: polygon(@moon-breadcrumb-width 0, 100% 0, 100% 100%, @moon-breadcrumb-width 100%);
+			clip-path: polygon(@moon-breadcrumb-width 0, 100% 0, 100% 100%, @moon-breadcrumb-width 100%);
+		}
+
+		> :not([data-index="0"]) {
+			padding-left: 0;
+			width: calc(~"100% - " @moon-breadcrumb-width);
+		}
+	}
+
+	&[data-index="0"] {
+		// prevents breadcrumbs from capturing pointer events when the first panel is visible
+		// without any breadcrumbs
+		.breadcrumbs {
+			z-index: -1;
+			pointer-events: none;
+		}
+	}
+
+	&:not([data-index="0"]) {
+		:global(.enact-locale-right-to-left) & .controls {
+			// allocate space for breadcrumb + header margin
+			left: @moon-breadcrumb-width + @moon-spotlight-outset;
+		}
+	}
+}
+
+.panels.alwaysViewing {
+	.viewport {
+		left: 50%;
+	}
+
+	.breadcrumbs {
+		width: 50%;
+	}
+
+	// Skin colors
+	.applySkins({
+		.viewport {
+			background-color: @moon-panels-scrim-always-viewing-bg-color;
+		}
+
+		.breadcrumbs {
+			.breadcrumb {
+				.breadcrumbHeader {
+					color: white;
+					border-top: 6px solid white;
+				}
+			}
+		}
+	});
+}

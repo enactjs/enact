@@ -2,15 +2,14 @@ import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {MarqueeControllerContext} from '@enact/ui/Marquee/MarqueeController';
 import Pure from '@enact/ui/internal/Pure';
 import Touchable from '@enact/ui/Touchable';
 
-import {controlContextTypes} from '../../Marquee';
 import Icon from '../../Icon';
 import IconButton from '../../IconButton';
-import {withSkinnableProps} from '../../Skinnable';
 
-import css from './Picker.less';
+import css from './Picker.module.less';
 
 const JoinedPickerButtonBase = kind({
 	name: 'JoinedPickerButtonBase',
@@ -24,8 +23,8 @@ const JoinedPickerButtonBase = kind({
 	},
 
 	render: ({disabled, icon, ...rest}) => (
-		<span {...rest} disabled={disabled}>
-			<Icon className={css.icon} disabled={disabled} small>{icon}</Icon>
+		<span {...rest} data-webos-voice-intent="Select" disabled={disabled}>
+			<Icon className={css.icon} disabled={disabled} size="small">{icon}</Icon>
 		</span>
 	)
 });
@@ -44,11 +43,8 @@ const PickerButtonBase = kind({
 		]),
 		joined: PropTypes.bool,
 		onSpotlightDisappear: PropTypes.func,
-		skin: PropTypes.string,
 		spotlightDisabled: PropTypes.bool
 	},
-
-	contextTypes: controlContextTypes,
 
 	styles: {
 		css
@@ -57,17 +53,17 @@ const PickerButtonBase = kind({
 	handlers: {
 		onMouseEnter: handle(
 			forward('onMouseEnter'),
-			(ev, props, context) => {
-				if (context.enter) {
-					context.enter(null);
+			(ev, props, sync) => {
+				if (sync && sync.enter) {
+					sync.enter(null);
 				}
 			}
 		),
 		onMouseLeave: handle(
 			forward('onMouseLeave'),
-			(ev, props, context) => {
-				if (context.leave) {
-					context.leave(null);
+			(ev, props, sync) => {
+				if (sync && sync.leave) {
+					sync.leave(null);
 				}
 			}
 		)
@@ -83,7 +79,6 @@ const PickerButtonBase = kind({
 		if (joined) {
 			delete rest.hidden;
 			delete rest.onSpotlightDisappear;
-			delete rest.skin;
 			delete rest.spotlightDisabled;
 
 			return (
@@ -91,7 +86,12 @@ const PickerButtonBase = kind({
 			);
 		} else {
 			return (
-				<IconButton {...rest} backgroundOpacity="transparent" disabled={disabled} small>
+				<IconButton
+					{...rest}
+					backgroundOpacity="transparent"
+					disabled={disabled}
+					size="small"
+				>
 					{icon}
 				</IconButton>
 			);
@@ -99,10 +99,11 @@ const PickerButtonBase = kind({
 	}
 });
 
+// This can be replaced with the kind config contextType when it's supported
+PickerButtonBase.contextType = MarqueeControllerContext;
+
 const PickerButton = Pure(
-	withSkinnableProps(
-		PickerButtonBase
-	)
+	PickerButtonBase
 );
 
 export default PickerButton;

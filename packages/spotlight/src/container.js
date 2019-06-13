@@ -1,3 +1,5 @@
+/* global process */
+
 /**
  * Exports methods and members for creating and maintaining spotlight containers.
  *
@@ -7,13 +9,14 @@
 
 import {coerceArray} from '@enact/core/util';
 
-import {last, matchSelector} from './utils';
+import {contains, matchSelector, getContainerRect, getRect, intersects, last} from './utils';
 
-const containerAttribute = 'data-container-id';
+const containerAttribute = 'data-spotlight-id';
 const containerConfigs   = new Map();
-const containerKey       = 'containerId';
+const containerKey       = 'spotlightId';
+const disabledKey        = 'spotlightContainerDisabled';
 const containerPrefix    = 'container-';
-const containerSelector  = `[${containerAttribute}]`;
+const containerSelector  = '[data-spotlight-container]';
 const rootContainerId    = 'spotlightRootDecorator';
 const reverseDirections = {
 	'left': 'right',
@@ -55,11 +58,16 @@ let GlobalConfig = {
 	},
 	leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
 	navigableFilter: null,
+	obliqueMultiplier: 5,
+	onEnterContainer: null,     // @private - notify the container when entering via 5-way
+	onLeaveContainer: null,      // @private - notify the container when leaving via 5-way
+	onLeaveContainerFail: null,  // @private - notify the container when failing to leave via 5-way
 	overflow: false,
 	rememberSource: false,
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
 	selector: '',           // can be a valid <extSelector> except "@" syntax.
 	selectorDisabled: false,
+	straightMultiplier: 1,
 	straightOnly: false,
 	straightOverlapThreshold: 0.5,
 	tabIndexIgnoreList: 'a, input, select, textarea, button, iframe, [contentEditable=true]'
@@ -100,7 +108,7 @@ const querySelector = (node, includeSelector, excludeSelector) => {
  * @private
  */
 const isContainerNode = (node) => {
-	return node && node.dataset && containerKey in node.dataset;
+	return node && node.dataset && 'spotlightContainer' in node.dataset;
 };
 
 /**
@@ -170,7 +178,7 @@ const isContainer = (nodeOrId) => {
  */
 const isContainerEnabled = (node) => {
 	return mapContainers(node, container => {
-		return container.dataset.containerDisabled !== 'true';
+		return container.dataset[disabledKey] !== 'true';
 	}).reduce((a, b) => a && b, true);
 };
 
@@ -186,7 +194,7 @@ const isContainerEnabled = (node) => {
 const getContainerId = (node) => node.dataset[containerKey];
 
 /**
- * Generates a CSS selector string for a currrent container if `node` is a container
+ * Generates a CSS selector string for a current container if `node` is a container
  *
  * @param   {Node}    node  Container Node
  *
@@ -273,7 +281,7 @@ const navigableFilter = (node, containerId) => {
 const getSpottableDescendants = (containerId) => {
 	const node = getContainerNode(containerId);
 
-	// if it's falsey or is a disabled container, return an empty set
+	// if it's falsy or is a disabled container, return an empty set
 	if (!node || (isContainerNode(node) && !isContainerEnabled(node))) {
 		return [];
 	}
@@ -288,7 +296,7 @@ const getSpottableDescendants = (containerId) => {
 	const subContainerSelector = getSubContainerSelector(node);
 	const candidates = querySelector(
 		node,
-		`${spottableSelector}, ${getContainerSelector(node)} ${containerSelector}:not([data-container-disabled="true"])`,
+		`${spottableSelector}, ${getContainerSelector(node)} ${containerSelector}:not([data-spotlight-container-disabled="true"])`,
 		`${subContainerSelector} ${spottableSelector}, ${subContainerSelector} ${containerSelector}`
 	);
 
@@ -419,17 +427,20 @@ function generateId () {
  * @private
  */
 const mergeConfig = (current, updated) => {
-	const cfg = Object.assign({}, current);
+	if (!updated) return current;
 
-	if (updated) {
-		Object.keys(updated).forEach(key => {
-			if (key in GlobalConfig) {
-				cfg[key] = updated[key];
+	let cfg = null;
+
+	Object.keys(updated).forEach(key => {
+		if (key in GlobalConfig && current[key] !== updated[key]) {
+			if (cfg == null) {
+				cfg = Object.assign({}, current);
 			}
-		});
-	}
+			cfg[key] = updated[key];
+		}
+	});
 
-	return cfg;
+	return cfg || current;
 };
 
 /**
@@ -462,7 +473,7 @@ const configureContainer = (...args) => {
 		containerId = generateId();
 	}
 
-	config = mergeConfig(containerConfigs.get(containerId) || GlobalConfig, config);
+	config = mergeConfig(containerConfigs.get(containerId) || {...GlobalConfig}, config);
 	containerConfigs.set(containerId, config);
 
 	return containerId;
@@ -538,12 +549,16 @@ const configureDefaults = (config) => {
  * @public
  */
 const isNavigable = (node, containerId, verify) => {
-	if (!node || (node.offsetWidth <= 0 && node.offsetHeight <= 0)) {
+	if (!node || (
+		// jsdom reports all nodes as having no size so we must skip this condition in our tests
+		process.env.NODE_ENV !== 'test' &&
+		node.offsetWidth <= 0 && node.offsetHeight <= 0
+	)) {
 		return false;
 	}
 
 	const containerNode = getContainerNode(containerId);
-	if (containerNode !== document && containerNode.dataset.containerDisabled === 'true') {
+	if (containerNode !== document && containerNode.dataset[disabledKey] === 'true') {
 		return false;
 	}
 
@@ -558,7 +573,7 @@ const isNavigable = (node, containerId, verify) => {
 /**
  * Returns the IDs of all containers
  *
- * @return {String[]}  Array of container IDs
+ * @returns {String[]}  Array of container IDs
  * @memberof spotlight/container
  * @private
  */
@@ -683,22 +698,45 @@ function getContainerNavigableElements (containerId) {
 	}
 
 	const config = getContainerConfig(containerId);
+	const {enterTo, overflow} = config;
 
-	const enterLast = config.enterTo === 'last-focused';
-	const enterDefault = config.enterTo === 'default-element';
+	const enterLast = enterTo === 'last-focused';
 	let next;
 
 	// if the container has a preferred entry point, try to find it first
 	if (enterLast) {
 		next = getContainerLastFocusedElement(containerId);
-	} else if (enterDefault) {
+	}
+
+	// try default element if last focused can't be focused
+	if (!next) {
 		next = getContainerDefaultElement(containerId);
 	}
 
-	// if there isn't a preferred entry or it wasn't found, try to find something to spot
 	if (!next) {
-		next = (!enterDefault && getContainerDefaultElement(containerId)) ||
-				getSpottableDescendants(containerId);
+		let spottables = overflow ?
+			// overflow requires deep recursion to handle selecting the children of unrestricted
+			// containers or restricted containers larger than the container
+			getDeepSpottableDescendants(containerId) :
+			getSpottableDescendants(containerId);
+
+		// if there isn't a preferred entry on an overflow container, filter the visible elements
+		if (overflow) {
+			const containerRect = getContainerRect(containerId);
+			next = containerRect && spottables.filter(element => {
+				const elementRect = getRect(element);
+				if (isContainer(element)) {
+					return intersects(containerRect, elementRect);
+				}
+
+				return contains(containerRect, getRect(element));
+			});
+		}
+
+		// otherwise, return all spottables within the container
+		if (!next) {
+			next = spottables;
+		}
 	}
 
 	return next ? coerceArray(next) : [];
@@ -719,7 +757,6 @@ function getContainerFocusTarget (containerId) {
 	restoreLastFocusedElement(containerId);
 
 	let next = getContainerNavigableElements(containerId);
-
 	// If multiple candidates returned, we need to find the first viable target since some may
 	// be empty containers which should be skipped.
 	return next.reduce((result, element) => {
@@ -826,6 +863,58 @@ function isActiveContainer (containerId) {
 	return config && config.active;
 }
 
+/**
+ * Determines if the provided container has a configured restriction.
+ *
+ * By default, returns `true` for `'self-only'` restrictions but the type of restriction can be
+ * passed as well.
+ *
+ * @param {String} containerId The container id
+ * @param {String} [restrict] The container restriction defaulted to `'self-only'`
+ * @returns {Boolean} `true` if the container has the specified restriction
+ * @private
+ */
+function isRestrictedContainer (containerId, restrict = 'self-only') {
+	const config = getContainerConfig(containerId);
+
+	return Boolean(config && config.restrict === restrict);
+}
+
+/**
+ * Determines if `innerContainerId` is inside `outerContainerId`.
+ *
+ * @param {String} outerContainerId The outer container id
+ * @param {String} innerContainerId The inner container id
+ * @returns {Boolean} `true` if both containers exist and `innerContainerId` is within
+ *                    `outerContainerId`
+ * @private
+ */
+function containsContainer (outerContainerId, innerContainerId) {
+	const outer = getContainerNode(outerContainerId);
+	const inner = getContainerNode(innerContainerId);
+
+	return Boolean(outer && inner && outer.contains(inner));
+}
+
+/**
+ * Determines if `containerId` may become the active container.
+ *
+ * @param {String} containerId Spotlight container to which focus is leaving
+ * @returns	{Boolean} `true` if the active container can change to `containerId`
+ * @private
+ */
+function mayActivateContainer (containerId) {
+	const currentContainerId = getLastContainer();
+
+	// If the current container is restricted to 'self-only' and if the next container to be
+	// activated is not inside the currently activated container, the next container should not be
+	// activated.
+	return (
+		!isRestrictedContainer(currentContainerId) ||
+		containsContainer(currentContainerId, containerId)
+	);
+}
+
 function getDefaultContainer () {
 	return isActiveContainer(_defaultContainerId) ? _defaultContainerId : '';
 }
@@ -885,6 +974,92 @@ function setLastContainerFromTarget (current, target) {
 	}
 }
 
+function isWithinOverflowContainer (target, containerIds = getContainersForNode(target)) {
+	return containerIds
+		// ignore the root container id which is set to overflow by the root decorator
+		.filter(id => id !== rootContainerId)
+		// get the config for each container
+		.map(getContainerConfig)
+		// and check if any are set to overflow
+		.some(config => config && config.overflow);
+}
+
+/**
+ * Notifies any affected containers that focus has left one of their children for another container
+ *
+ * @param {String} direction up/down/left/right
+ * @param {Node} current currently focused element
+ * @param {String[]} currentContainerIds Containers for current
+ * @param {Node} next To be focused element
+ * @param {String[]} nextContainerIds Containers for next
+ * @private
+ */
+function notifyLeaveContainer (direction, current, currentContainerIds, next, nextContainerIds) {
+	currentContainerIds.forEach(containerId => {
+		if (!nextContainerIds.includes(containerId)) {
+			const config = getContainerConfig(containerId);
+
+			if (config && config.onLeaveContainer) {
+				config.onLeaveContainer({
+					type: 'onLeaveContainer',
+					direction,
+					target: current,
+					relatedTarget: next
+				});
+			}
+		}
+	});
+}
+
+/**
+ * Notifies any containers that focus attempted to move but failed to find a target
+ *
+ * @param {String} direction up/down/left/right
+ * @param {Node} current currently focused element
+ * @param {String[]} currentContainerIds Containers for current
+ * @private
+ */
+function notifyLeaveContainerFail (direction, current, currentContainerIds) {
+	currentContainerIds.forEach(containerId => {
+		const config = getContainerConfig(containerId);
+
+		if (config && config.onLeaveContainerFail) {
+			config.onLeaveContainerFail({
+				type: 'onLeaveContainerFail',
+				direction,
+				target: current
+			});
+		}
+	});
+}
+
+/**
+ * Notifies any affected containers that one of their children has received focus.
+ *
+ * @param {String} direction up/down/left/right
+ * @param {Node} previous Previously focused element
+ * @param {String[]} previousContainerIds Containers for previous
+ * @param {Node} current Currently focused element
+ * @param {String[]} currentContainerIds Containers for current
+ * @private
+ */
+function notifyEnterContainer (direction, previous, previousContainerIds, current, currentContainerIds) {
+	currentContainerIds.forEach(containerId => {
+		if (!previousContainerIds.includes(containerId)) {
+			const config = getContainerConfig(containerId);
+
+			if (config && config.onEnterContainer) {
+				config.onEnterContainer({
+					type: 'onEnterContainer',
+					direction,
+					target: current,
+					relatedTarget: previous
+				});
+			}
+		}
+	});
+}
+
 export {
 	// Remove
 	getAllContainerIds,
@@ -912,6 +1087,11 @@ export {
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
+	isWithinOverflowContainer,
+	mayActivateContainer,
+	notifyLeaveContainer,
+	notifyLeaveContainerFail,
+	notifyEnterContainer,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,

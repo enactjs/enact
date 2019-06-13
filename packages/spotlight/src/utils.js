@@ -1,4 +1,5 @@
 import curry2 from '@enact/core/internal/fp/curry2';
+import warning from 'warning';
 
 import {getContainerNode} from './container';
 
@@ -28,16 +29,19 @@ const matchSelector = curry2((selector, elem) => {
 });
 
 function parseSelector (selector) {
-	let result;
-	if (typeof selector === 'string') {
-		result = [].slice.call(document.querySelectorAll(selector));
-	} else if (typeof selector === 'object' && selector.length) {
-		result = [].slice.call(selector);
-	} else if (typeof selector === 'object' && selector.nodeType === 1) {
-		result = [selector];
-	} else {
-		result = [];
+	let result = [];
+	try {
+		if (typeof selector === 'string') {
+			result = [].slice.call(document.querySelectorAll(selector));
+		} else if (typeof selector === 'object' && selector.length) {
+			result = [].slice.call(selector);
+		} else if (typeof selector === 'object' && selector.nodeType === 1) {
+			result = [selector];
+		}
+	} catch (ex) {
+		warning(true, `parseSelector failed for selector: ${selector}`);
 	}
+
 	return result;
 }
 
@@ -155,6 +159,10 @@ function getViewportRect () {
 
 function getContainerRect (containerId) {
 	const containerNode = getContainerNode(containerId);
+
+	if (!containerNode) {
+		return null;
+	}
 
 	if (containerNode === document) {
 		return getViewportRect();

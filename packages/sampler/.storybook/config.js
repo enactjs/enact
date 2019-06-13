@@ -1,7 +1,7 @@
 import configure from '../src/configure';
 import {setOptions} from '@storybook/addon-options';
 
-const stories = require.context('../stories/moonstone-stories', true, /.js$/);
+const stories = require.context('../stories/default', true, /.js$/);
 
 setOptions({
 	name: 'ENACT SAMPLER',
@@ -10,7 +10,7 @@ setOptions({
 	showStoriesPanel: true,
 	showAddonPanel: true,
 	showSearchBox: false,
-	addonPanelInRight: false,
+	addonPanelInRight: false
 });
 
 configure(stories, module);

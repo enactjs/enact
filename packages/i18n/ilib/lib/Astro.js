@@ -57,6 +57,7 @@ var Astro = {};
 Astro.initAstro = function(sync, loadParams, callback) {
 	if (!ilib.data.astro) {
 		Utils.loadData({
+			object: "Astro",
 			name: "astro.json", // countries in their own language 
 			locale: "-", // only need to load the root file 
 			nonLocale: true,

@@ -5,10 +5,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * {@link moonstone/IncrementSlider.IncrementSliderButton} is an
- * {@link moonstone/IconButton.IconButton} customized for
- * {@link moonstone/IncrementSlider.IncrementSlider}. It is optimized to only update when `disabled`
- * is changed to minimize unnecessary render cycles.
+ * An [IconButton]{@link moonstone/IconButton.IconButton} customized for
+ * [IncrementSlider]{@link moonstone/IncrementSlider.IncrementSlider}. It is optimized to only
+ * update when `disabled` is changed to minimize unnecessary render cycles.
  *
  * @class IncrementSliderButton
  * @memberof moonstone/IncrementSlider
@@ -31,7 +30,7 @@ const IncrementSliderButtonBase = kind({
 				onTap={onTap}
 				onHold={onTap}
 				onHoldPulse={onTap}
-				small
+				size="small"
 			/>
 		);
 	}

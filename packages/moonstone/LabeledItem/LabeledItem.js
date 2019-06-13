@@ -1,7 +1,12 @@
 /**
- * Exports the {@link moonstone/LabeledItem.LabeledItem} component.
+ * Provides Moonstone styled item with a label below.
+ *
+ * @example
+ * <LabeledItem label="Label">Hello LabeledItem</LabeledItem>
  *
  * @module moonstone/LabeledItem
+ * @exports LabeledItem
+ * @exports LabeledItemBase
  */
 
 import kind from '@enact/core/kind';
@@ -25,14 +30,18 @@ const Controller = MarqueeController(
 	)
 );
 
-import componentCss from './LabeledItem.less';
+import componentCss from './LabeledItem.module.less';
 
 /**
- * {@link moonstone/LabeledItem.LabeledItemBase} is a focusable Moonstone-styled component
- * that combines marquee-able text content with a synchronized marquee-able text label.
+ * A focusable component that combines marquee-able text content with a synchronized
+ * marquee-able text label.
  *
  * @class LabeledItemBase
  * @memberof moonstone/LabeledItem
+ * @extends moonstone/Item.ItemBase
+ * @mixes spotlight/Spottable.Spottable
+ * @mixes ui/Touchable.Touchable
+ * @mixes moonstone/Marquee.MarqueeController
  * @ui
  * @public
  */
@@ -65,7 +74,7 @@ const LabeledItemBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 * Applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -99,13 +108,23 @@ const LabeledItemBase = kind({
 		<Controller disabled={disabled} {...rest} css={css}>
 			<div className={css.text}>
 				<Marquee disabled={disabled} className={css.title}>{children}</Marquee>
-				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
+				{(titleIcon != null) ? <Icon size="small" className={css.icon}>{titleIcon}</Icon> : null}
 			</div>
 			{(label != null) ? <Marquee disabled={disabled} className={css.label}>{label}</Marquee> : null}
 		</Controller>
 	)
 });
 
+/**
+ * A Moonstone styled labeled item with built-in support for marqueed text and Spotlight focus.
+ *
+ * @class LabeledItem
+ * @memberof moonstone/LabeledItem
+ * @extends moonstone/LabeledItem.LabeledItemBase
+ * @mixes moonstone/Skinnable.Skinnable
+ * @ui
+ * @public
+ */
 const LabeledItem = Pure(
 	Skinnable(
 		LabeledItemBase

@@ -15,6 +15,7 @@ function initCaseMappers () {
 /**
  * Locale-safely convert a string to lower case.
  *
+ * @function
  * @param {String} inString String to convert to lower case
  * @returns {String} Lower-cased string
  */
@@ -28,6 +29,7 @@ const toLowerCase = function (inString) {
 /**
  * Locale-safely convert a string to upper case.
  *
+ * @function
  * @param {String} inString String to convert to upper case
  * @returns {String} Upper-cased string
  */

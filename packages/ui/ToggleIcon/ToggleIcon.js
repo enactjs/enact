@@ -1,6 +1,8 @@
 /**
- * Provides an unstyled icon component that handles interaction and toggles state between activated
- * and deactivated. Visually, it may be to be customized by a theme or application to represent any
+ * An unstyled icon component that handles interaction and toggles state between activated
+ * and deactivated.
+ *
+ * Visually, it may be to be customized by a theme or application to represent any
  * state.
  *
  * @module ui/ToggleIcon
@@ -11,12 +13,14 @@
 
 import compose from '@enact/core/internal/fp/compose';
 import kind from '@enact/core/kind';
-import React from 'react';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
+import React from 'react';
+
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
 
-import componentCss from './ToggleIcon.less';
+import componentCss from './ToggleIcon.module.less';
 
 /**
  * Represents a Boolean state, and can accept any icon to toggle.
@@ -55,7 +59,7 @@ const ToggleIconBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Sets whether this control is disabled, and non-interactive
+		 * Disables `ToggleIcon`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -74,14 +78,14 @@ const ToggleIconBase = kind({
 		/**
 		 * The component used to render the icon.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 * @public
 		 */
-		iconComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		iconComponent: EnactPropTypes.renderable,
 
 		/**
-		 * Sets whether this control is in the "on" or "off" state. `true` for on, `false` for "off".
+		 * Sets whether this control is in the 'on' or 'off' state. `true` for 'on', `false` for 'off'.
 		 *
 		 * @type {Boolean}
 		 * @default false

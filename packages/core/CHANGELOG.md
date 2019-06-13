@@ -2,6 +2,218 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [3.0.0-alpha.5] - 2019-06-10
+
+No significant changes.
+
+## [3.0.0-alpha.4] - 2019-06-03
+
+No significant changes.
+
+## [3.0.0-alpha.3] - 2019-05-29
+
+No significant changes.
+
+## [3.0.0-alpha.2] - 2019-05-20
+
+No significant changes.
+
+## [3.0.0-alpha.1] - 2019-05-15
+
+### Added
+
+- `core/util.clamp` to safely clamp a value between min and max bounds
+
+## [2.5.3] - 2019-06-06
+
+No significant changes.
+
+## [2.5.2] - 2019-04-23
+
+No significant changes.
+
+## [2.5.1] - 2019-04-09
+
+### Fixed
+
+- `core/kind` to address warnings raised in React 16.8.6
+
+## [2.5.0] - 2019-04-01
+
+No significant changes.
+
+## [2.4.1] - 2019-03-11
+
+### Fixed
+
+- `core/util.isRenderable` to treat values returned by `React.lazy()`, `React.memo()`, and `React.forwardRef()` as renderable
+- `core/hoc` to support wrapping components returned by `React.lazy()`, `React.memo()`, and `React.forwardRef()`
+
+## [2.4.0] - 2019-03-04
+
+No significant changes.
+
+## [2.3.0] - 2019-02-11
+
+### Deprecated
+
+- `core/kind` config property `contextTypes`, to be removed in 3.0.
+
+### Added
+
+- `core/kind` config property `contextType` replacing legacy `contextTypes` property
+
+## [2.2.9] - 2019-01-11
+
+No significant changes.
+
+## [2.2.8] - 2018-12-06
+
+No significant changes.
+
+## [2.2.7] - 2018-11-21
+
+No significant changes.
+
+## [2.2.6] - 2018-11-15
+
+No significant changes.
+
+## [2.2.5] - 2018-11-05
+
+No significant changes.
+
+## [2.2.4] - 2018-10-29
+
+No significant changes.
+
+## [2.2.3] - 2018-10-22
+
+No significant changes.
+
+## [2.2.2] - 2018-10-15
+
+### Fixed
+
+- `core/util.Job` to cancel existing scheduled `idle()` jobs before scheduling another
+
+## [2.2.1] - 2018-10-09
+
+No significant changes.
+
+## [2.2.0] - 2018-10-02
+
+No significant changes.
+
+## [2.1.4] - 2018-09-17
+
+No significant changes.
+
+## [2.1.3] - 2018-09-10
+
+No significant changes.
+
+## [2.1.2] - 2018-09-04
+
+No significant changes.
+
+## [2.1.1] - 2018-08-27
+
+No significant changes.
+
+## [2.1.0] - 2018-08-20
+
+No significant changes.
+
+## [2.0.2] - 2018-08-13
+
+No significant changes.
+
+## [2.0.1] - 2018-08-01
+
+No significant changes.
+
+## [2.0.0] - 2018-07-30
+
+No significant changes.
+
+## [2.0.0-rc.3] - 2018-07-23
+
+No significant changes.
+
+## [2.0.0-rc.2] - 2018-07-16
+
+No significant changes.
+
+## [2.0.0-rc.1] - 2018-07-09
+
+### Removed
+
+- `core/util.withContextFromProps` function
+
+## [2.0.0-beta.9] - 2018-07-02
+
+No significant changes.
+
+## [2.0.0-beta.8] - 2018-06-25
+
+No significant changes.
+
+## [2.0.0-beta.7] - 2018-06-11
+
+No significant changes.
+
+## [2.0.0-beta.6] - 2018-06-04
+
+No significant changes.
+
+## [2.0.0-beta.5] - 2018-05-29
+
+No significant changes.
+
+## [2.0.0-beta.4] - 2018-05-21
+
+### Added
+
+- `core/handle.handle` utility `bindAs` to facilitate debugging and binding handlers to component instances
+
+## [2.0.0-beta.3] - 2018-05-14
+
+No significant changes.
+
+## [2.0.0-beta.2] - 2018-05-07
+
+### Fixed
+
+- `core/dispatcher.on` to not add duplicate event handlers
+
+## [2.0.0-beta.1] - 2018-04-29
+
+### Added
+
+- `core/snapshot` module with `isWindowReady` method to check the window state and `onWindowReady` method to queue window-dependent callbacks for snapshot builds
+
+### Fixed
+
+- `core/util.memoize` to forward all args to memoized function
+
+## [2.0.0-alpha.8] - 2018-04-17
+
+### Added
+
+- `core/handle.adaptEvent` to adapt event payload before passing to subsequent handler
+- `core/handle.call` to invoke a named method on a bound handler
+
+## [2.0.0-alpha.7] - 2018-04-03
+
+No significant changes.
+
+## [2.0.0-alpha.6] - 2018-03-22
+
+### Removed
+
+- `core/factory` module, replaced by the `css` override feature
+
 ## [2.0.0-alpha.5] - 2018-03-07
 
 ### Removed
@@ -41,6 +253,10 @@ No significant changes.
 ### Deprecated
 
 - `core/factory`, to be removed in 2.0.0
+
+## [1.13.4] - 2018-07-30
+
+No significant changes.
 
 ## [1.13.3] - 2018-01-16
 

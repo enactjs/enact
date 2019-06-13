@@ -3,7 +3,7 @@
 	"plugins": ["dev-expression"],
 	"env": {
 		"production": {
-			"plugins": ["transform-react-inline-elements","transform-react-constant-elements"]
+			"plugins": ["transform-react-inline-elements"]
 		}
 	}
 }

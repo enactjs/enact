@@ -1,18 +1,20 @@
 /**
- * Provides unstyled grid list image item components and behaviors to be customized by a theme or application.
+ * Unstyled grid list image item components and behaviors to be customized by a theme or application.
  *
  * @module ui/GridListImageItem
- * @exports GridListIamgeItem
+ * @exports GridListImageItem
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
+import {Column, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import Icon from '../Icon';
 import Image from '../Image';
 
-import componentCss from './GridListImageItem.less';
+import componentCss from './GridListImageItem.module.less';
 
 /**
  * A basic grid list image item without any behavior.
@@ -27,15 +29,6 @@ const GridListImageItem = kind({
 
 	propTypes: /** @lends ui/GridListImageItem.GridListImageItem.prototype */ {
 		/**
-		 * The absolute URL path to the image.
-		 *
-		 * @type {String}
-		 * @required
-		 * @public
-		 */
-		source: PropTypes.string.isRequired,
-
-		/**
 		 * The primary caption to be displayed with the image.
 		 *
 		 * @type {String}
@@ -46,13 +39,10 @@ const GridListImageItem = kind({
 		/**
 		 * The component used to render the captions
 		 *
-		 * @type {Function|string}
+		 * @type {String|Component}
 		 * @public
 		 */
-		captionComponent: PropTypes.oneOfType([
-			PropTypes.func,
-			PropTypes.string
-		]),
+		captionComponent: EnactPropTypes.renderable,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -75,20 +65,20 @@ const GridListImageItem = kind({
 		 * The component used to render the default check icon when selected.
 		 * If there is custom selectionOverlay component, this icon will not be shown.
 		 *
-		 * @type {Function}
+		 * @type {Component}
 		 * @default ui/Icon.Icon
 		 * @public
 		 */
-		iconComponent: PropTypes.func,
+		iconComponent: EnactPropTypes.component,
 
 		/**
 		 * The component used to render the image component
 		 *
-		 * @type {Function}
+		 * @type {Component}
 		 * @default ui/Image.Image
 		 * @public
 		 */
-		imageComponent: PropTypes.func,
+		imageComponent: EnactPropTypes.component,
 
 		/**
 		 * Placeholder image used while [source]{@link ui/GridListImageItem.GridListImageItem#source}
@@ -100,7 +90,7 @@ const GridListImageItem = kind({
 		placeholder: PropTypes.string,
 
 		/**
-		 * When `true`, applies a selected visual effect to the image, but only if `selectionOverlayShowing`
+		 * Applies a selected visual effect to the image, but only if `selectionOverlayShowing`
 		 * is also `true`.
 		 *
 		 * @type {Boolean}
@@ -110,11 +100,12 @@ const GridListImageItem = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * The custom selection overlay component to render. A component can be a stateless functional
-		 * component, `kind()` or React component. The following is an example with custom selection
-		 * overlay kind.
+		 * The custom selection overlay component to render.
 		 *
-		 * Example Usage:
+		 * A component can be a stateless functional component, `kind()` or React component.
+		 * The following is an example with custom selection overlay kind.
+		 *
+		 * Example:
 		 * ```
 		 * const SelectionOverlay = kind({
 		 * 	render: () => <div>custom overlay</div>
@@ -129,14 +120,21 @@ const GridListImageItem = kind({
 		selectionOverlay: PropTypes.func,
 
 		/**
-		 * When `true`, a selection overlay with a centered icon is shown. When `selected` is true,
-		 * a check mark is shown.
+		 * Shows a selection overlay with a centered icon. When `selected` is true, a check mark is shown.
 		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @public
 		 */
 		selectionOverlayShowing: PropTypes.bool,
+
+		/**
+		 * The absolute URL path to the image.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		source: PropTypes.string,
 
 		/**
 		 * The second caption line to be displayed with the image.
@@ -163,9 +161,7 @@ const GridListImageItem = kind({
 
 	computed: {
 		className: ({caption, selected, styler, subCaption}) => styler.append(
-			{selected},
-			caption ? 'useCaption' : null,
-			subCaption ? 'useSubCaption' : null
+			{selected, caption, subCaption}
 		),
 		selectionOverlay: ({css, iconComponent: IconComponent, selectionOverlay: SelectionOverlay, selectionOverlayShowing}) => {
 			if (selectionOverlayShowing) {
@@ -190,13 +186,13 @@ const GridListImageItem = kind({
 		delete rest.selectionOverlayShowing;
 
 		return (
-			<div {...rest}>
-				<ImageComponent className={css.image} placeholder={placeholder} src={source}>
+			<Column {...rest} inline>
+				<Cell className={css.image} component={ImageComponent} placeholder={placeholder} src={source}>
 					{selectionOverlay}
-				</ImageComponent>
-				{caption ? (<Caption className={css.caption}>{caption}</Caption>) : null}
-				{subCaption ? (<Caption className={css.subCaption}>{subCaption}</Caption>) : null}
-			</div>
+				</Cell>
+				{caption ? (<Cell className={css.caption} component={Caption} shrink>{caption}</Cell>) : null}
+				{subCaption ? (<Cell className={css.subCaption} component={Caption} shrink>{subCaption}</Cell>) : null}
+			</Column>
 		);
 	}
 });

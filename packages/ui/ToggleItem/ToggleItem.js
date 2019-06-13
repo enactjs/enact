@@ -1,7 +1,9 @@
 /**
- * Provides Moonstone-themed toggle item components and behaviors. This is not intended to be used
- * directly, but should be extended by a component that will customize this component's appearance
- * by supplying an [iconComponent prop]{@link ui/ToggleItem.ToggleItemBase#iconComponent}.
+ * Unstyled toggle item components and behaviors.
+ *
+ * This is not intended to be used directly, but should be extended by a component that will
+ * customize this component's appearance by supplying an
+ * [iconComponent prop]{@link ui/ToggleItem.ToggleItemBase#iconComponent}.
  *
  * @module ui/ToggleItem
  * @exports ToggleItem
@@ -11,27 +13,51 @@
 
 import compose from '@enact/core/internal/fp/compose';
 import kind from '@enact/core/kind';
-import React from 'react';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
+import React, {Fragment} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
+import ForwardRef from '../ForwardRef';
 import Toggleable from '../Toggleable';
-import {RemeasurableDecorator} from '../Remeasurable';
 import Touchable from '../Touchable';
 
-import componentCss from './ToggleItem.less';
+import componentCss from './ToggleItem.module.less';
 
-// eslint-disable-next-line
-const iconCreator = (position) => ({disabled, icon, iconComponent, selected, iconPosition}) => {
-	if (iconPosition === position) {
+// eslint-disable-next-line enact/display-name,enact/prop-types
+const iconCreator = (position) => ({disabled, icon, iconComponent, iconPosition, itemIcon, itemIconPosition, selected}) => {
+
+	if (position === 'before') {
 		return (
-			<ComponentOverride
-				component={iconComponent}
-				disabled={disabled}
-				selected={selected}
-			>
-				{icon}
-			</ComponentOverride>
+			<Fragment>
+				{itemIconPosition === 'before' && itemIcon}
+				{iconPosition === 'before' ?
+					<ComponentOverride
+						component={iconComponent}
+						disabled={disabled}
+						selected={selected}
+					>
+						{icon}
+					</ComponentOverride> : null
+				}
+				{itemIconPosition === 'beforeChildren' && itemIcon}
+			</Fragment>
+		);
+	} else {
+		return (
+			<Fragment>
+				{itemIconPosition === 'afterChildren' && itemIcon}
+				{iconPosition === 'after' ?
+					<ComponentOverride
+						component={iconComponent}
+						disabled={disabled}
+						selected={selected}
+					>
+						{icon}
+					</ComponentOverride> : null
+				}
+				{itemIconPosition === 'after' && itemIcon}
+			</Fragment>
 		);
 	}
 };
@@ -49,35 +75,47 @@ const ToggleItemBase = kind({
 
 	propTypes: /** @lends ui/ToggleItem.ToggleItemBase.prototype */ {
 		/**
-		 * The string to be displayed as the main content of the toggle item.
+		 * The main content of the toggle item.
 		 *
-		 * @type {String}
+		 * @type {Node}
 		 * @required
 		 * @public
 		 */
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * The type of component to use to render as root element. This receives the `css` prop for
-		 * theme extension and therefore must be a custom component and not a simple HTML DOM node.
-		 * Recommended component or themed derivitive: [SlotItem]{@link ui/SlotItem.SlotItem}
+		 * The type of component to use to render as root element.
+		 *
+		 * This receives the `css` prop for theme extension and therefore must be a custom
+		 * component and not a simple HTML DOM node. Recommended component or themed
+		 * derivative: [SlotItem]{@link ui/SlotItem.SlotItem}
 		 *
 		 * @type {Component}
 		 * @required
 		 * @public
 		 */
-		component:  PropTypes.func.isRequired,
+		component: EnactPropTypes.component.isRequired,
 
 		/**
-		 * The Icon to render in this item. This component receives the `selected` prop and value,
+		 * The `Icon` to render in this item.
+		 *
+		 * This component receives the `selected` prop and value,
 		 * and must therefore respond to it in some way. It is recommended to use
 		 * [ToggleIcon]{@link ui/ToggleIcon} for this.
 		 *
-		 * @type {Component}
+		 * @type {Component|Element}
 		 * @required
 		 * @public
 		 */
-		iconComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
+		iconComponent: EnactPropTypes.componentOverride.isRequired,
+
+		/**
+		 * Called with a reference to [component]{@link ui/ToggleItem.ToggleItemBase#component}
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -103,33 +141,62 @@ const ToggleItemBase = kind({
 
 		/**
 		 * An optional prop that lets you override the icon of the `iconComponent` component.
-		 * This accepts any string that the [Icon]{@link ui/Icon.Icon} component supports, provided
-		 * the recomendations of `iconComponent` are followed.
 		 *
-		 * @type {String}
+		 * This accepts any string that the [Icon]{@link ui/Icon.Icon} component supports, provided
+		 * the recommendations of `iconComponent` are followed.
+		 *
+		 * @type {String|Object}
 		 * @public
 		 */
-		icon: PropTypes.string,
+		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
-		 * Specifies on which side (`before` or `after`) of the text the icon appears.
+		 * Specifies on which side (`'before'` or `'after'`) of `children` the icon appears.
 		 *
-		 * @type {String}
+		 * @type {('before'|'after')}
 		 * @default 'before'
 		 * @public
 		 */
 		iconPosition: PropTypes.oneOf(['before', 'after']),
 
 		/**
-		 * The handler to run when the toggle item is toggled. Developers should
-		 * generally use `onToggle` instead.
+		 * An additional customizable icon component.
+		 *
+		 * Supports more granular positioning rules. This should only be used *after* specifying the
+		 * `icon` property, as the positioning for this offers the ability to place this in front of
+		 * or behind the existing `icon`. See `itemIconPosition` for options.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		itemIcon: PropTypes.node,
+
+		/**
+		 * Specifies where `itemIcon` appears.
+		 *
+		 * * `'before'` - first element in the item
+		 * * `'beforeChildren'` - before `children`. If `iconPosition` is `'before'`, `icon` will be
+		 *	before `itemIcon`
+		 * * `'afterChildren'` - after `children`. If iconPosition` is `'after'`, `icon` will be
+		 *	after `itemIcon`
+		 * * `'after'` - the last element in the item
+		 *
+		 * @type {('before'|'beforeChildren'|'afterChildren'|'after')}
+		 * @default 'afterChildren'
+		 * @public
+		 */
+		itemIconPosition: PropTypes.oneOf(['before', 'beforeChildren', 'afterChildren', 'after']),
+
+		/**
+		 * Called when the toggle item is toggled. Developers should generally use `onToggle` instead.
 		 *
 		 * @type {Function}
+		 * @public
 		 */
 		onTap: PropTypes.func,
 
 		/**
-		 * The handler to run when the toggle item is toggled.
+		 * Called when the toggle item is toggled.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -140,7 +207,7 @@ const ToggleItemBase = kind({
 		onToggle: PropTypes.func,
 
 		/**
-		 * Applies the provided `icon` when the this is `true`.
+		 * Applies the provided `icon`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -150,6 +217,7 @@ const ToggleItemBase = kind({
 
 		/**
 		 * The value that will be sent to the `onToggle` handler.
+		 *
 		 * @type {*}
 		 * @default null
 		 * @public
@@ -160,6 +228,7 @@ const ToggleItemBase = kind({
 	defaultProps: {
 		disabled: false,
 		iconPosition: 'before',
+		itemIconPosition: 'afterChildren',
 		selected: false,
 		value: null
 	},
@@ -175,18 +244,20 @@ const ToggleItemBase = kind({
 		slotAfter: iconCreator('after')
 	},
 
-	render: ({component: Component, css, children, onToggle, selected, ...rest}) => {
+	render: ({component: Component, componentRef, css, children, selected, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconPosition;
+		delete rest.itemIcon;
+		delete rest.itemIconPosition;
 		delete rest.value;
 
 		return (
 			<Component
+				ref={componentRef}
 				role="checkbox"
 				{...rest}
 				css={css}
 				aria-checked={selected}
-				onTap={onToggle}
 			>
 				{children}
 			</Component>
@@ -195,26 +266,26 @@ const ToggleItemBase = kind({
 });
 
 /**
- * Adds interactive functionality to `ToggleItemBase`
+ * Adds interactive functionality to `ToggleItemBase`.
  *
  * @class ToggleItemDecorator
  * @memberof ui/ToggleItem
- * @mixes ui/Remeasurable.RemeasurableDecorator
+ * @mixes ui/ForwardRef.ForwardRef
  * @mixes ui/Touchable.Touchable
  * @mixes ui/Toggleable.Toggleable
  * @hoc
  * @public
  */
 const ToggleItemDecorator = compose(
-	RemeasurableDecorator({trigger: 'selected'}),
-	Touchable,
-	Toggleable
+	ForwardRef({prop: 'componentRef'}),
+	Toggleable({toggleProp: 'onTap', eventProps: ['value']}),
+	Touchable
 );
 
 /**
- * A Moonstone-styled item with built-in support for toggling, marqueed text, and `Spotlight` focus.
+ * An unstyled item with built-in support for toggling.
  *
- * Usage:
+ * Example:
  * ```
  * <ToggleItem icon="lock" iconPosition="before">Toggle Me</ToggleItem>
  * ```

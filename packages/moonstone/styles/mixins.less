@@ -101,3 +101,310 @@
 	padding-left: @moon-spotlight-outset;
 	padding-right: @moon-spotlight-outset;
 }
+
+//
+// Mixin classes for creating the moonstone text classes
+//
+
+// Text base provides family, weight, and size
+// Accepts 0, 1 or 2 arguments
+// The first argument allows overriding the font size, defaulting to
+// the default body font size, the 2nd argument is used privately by
+// MoonstoneDecorator to override the target of the rules.
+.moon-text-base(@font-size: @moon-body-font-size; @target: normal) {
+	.moon-font({
+		font-weight: @moon-non-latin-font-weight;
+		font-size: @moon-non-latin-sub-header-font-size;
+		line-height: @moon-non-latin-body-line-height;
+	}, @target);
+	font-weight: normal;
+	font-size: @font-size;
+	line-height: @moon-body-line-height;
+}
+
+//
+// Moonstone Font Applicator
+//
+// When only rules are provided. Default populate the @target argument.
+.moon-font(@nlrules; @target: normal) when (isruleset(@nlrules)) {
+	.moon-font(@moon-font-family, @moon-non-latin-font-family, @nlrules, @target);
+}
+// When 0, 1, or 2 strings (font family names) are provided. Default populate the @target argument so the signature stays the same.
+.moon-font(@family: @moon-font-family; @nlfamily: @moon-non-latin-font-family; @target: normal) when (isstring(@family)) and (isstring(@nlfamily)) and (isstring(@target)) {
+	.moon-font(@family, @nlfamily, {}, @target);
+}
+// When exactly 3 or 4 args are provided. Types are assumed because they went through the trouble to provide all 3 required args.
+.moon-font(@family; @nlfamily; @nlrules; @target: normal) {
+	font-family: @family;
+
+	.moon-locale-non-latin({
+		font-family: @nlfamily;
+		@nlrules();
+	}, @target);
+}
+
+// Convenience method added to simply set the font size. Please don't use this inside the framework
+// as it will generate a significant amount of selectors and rules that might not be minified.
+// The framework offers more direct and more efficient means of assigning multiple rules at once.
+// This is primarily a convenience for external app developers.
+// Usage:
+//    0 args -> default size for latin is applied to both latin and non-latin
+//    1 arg  -> that size is applied to both latin and non-latin
+//    2 args -> first is applied to latin, second to non-latin
+.moon-font-size(@font-size: @moon-body-font-size; @nlfont-size: @font-size) {
+	font-size: @font-size;
+
+	.moon-locale-non-latin({
+		font-size: @nlfont-size;
+	});
+}
+
+// Generic Non-Latin Font Rule generator
+.moon-locale-non-latin(@nlrules; @target) when (isruleset(@nlrules)) and (@target = self) {
+	&:global(.enact-locale-non-latin) {
+		@nlrules();
+	}
+}
+.moon-locale-non-latin(@nlrules; @target: normal) when (isruleset(@nlrules)) {
+	:global(.enact-locale-non-latin) & {
+		@nlrules();
+	}
+}
+
+//
+// Custom Text Size Mixins
+//
+// 1 arg: Shorthand for just setting the font size in custom-text mode
+.moon-custom-text-size(@latin-size) {
+	.moon-custom-text({
+		font-size: @latin-size;
+	});
+}
+// 2 args: Shorthand for just setting the font size of both latin and non-latin in custom-text mode
+.moon-custom-text-size(@latin-size; @non-latin-size) {
+	.moon-custom-text(
+	{
+		font-size: @latin-size;
+	};
+	{
+		font-size: @non-latin-size;
+	});
+}
+
+// 1 arg: Generic rule applicator, accepts an entire rule-set to add for large text mode
+.moon-custom-text(@lrules) when (isruleset(@lrules)) {
+	&:global(.largeText) {
+		@lrules();
+	}
+}
+// 2 args: Generic rule applicator, accepts 2 entire rule-sets to add both latin and non-latin for large text mode
+.moon-custom-text(@lrules; @nlrules) when (isruleset(@lrules)) and (isruleset(@nlrules)) {
+	&:global(.largeText) {
+		@lrules();
+	}
+	:global(.enact-locale-non-latin) &:global(.largeText) {
+		@nlrules();
+	}
+}
+
+//
+// Text definitions
+//
+
+.moon-superscript() {
+	font-size: @moon-superscript-text-size;
+	vertical-align: top;
+	margin: 0 0 0 3px;
+	padding: 0;
+
+	.moon-locale-non-latin({
+		font-family: @moon-non-latin-font-family-light;
+		font-weight: @moon-non-latin-font-weight-light;
+		font-size: @moon-non-latin-superscript-text-size;
+	});
+}
+
+.moon-pre-text() {
+	font-size: @moon-pre-text-size;
+	vertical-align: top;
+	height:  @moon-large-text-size;
+	line-height: @moon-pre-text-size;
+	margin: 12px 3px 9px 0;
+	padding: 0px;
+
+	.moon-locale-non-latin({
+		font-family: @moon-non-latin-font-family-light;
+		font-weight: @moon-non-latin-font-weight-light;
+		font-size: @moon-non-latin-pre-text-size;
+	});
+}
+
+.moon-large-text() {
+	font-size: @moon-large-text-size;
+	vertical-align: top;
+	height: @moon-large-text-size;
+	margin: 0;
+	padding: 0;
+
+	.moon-locale-non-latin({
+		font-size: @moon-non-latin-large-text-size;
+	});
+}
+
+.moon-header-text() {
+	.moon-font(@moon-header-font-family, @moon-non-latin-font-family, {
+		font-size: @moon-non-latin-header-font-size;
+		line-height: @moon-non-latin-header-text-line-height;
+	});
+	font-weight: @moon-header-font-weight;
+	font-size: @moon-header-font-size;
+	font-style: @moon-header-font-style;
+	line-height: @moon-header-line-height;
+	.font-kerning;
+}
+
+.moon-super-header-text() {
+	.moon-font(@moon-super-header-font-family, @moon-non-latin-font-family, {font-size: @moon-non-latin-super-header-font-size;});
+	font-size: @moon-super-header-font-size;
+	.font-kerning;
+}
+
+.moon-sub-header-text() {
+	.moon-text-base(@moon-sub-header-font-size);
+	font-weight: @moon-sub-header-font-weight;
+	font-size: @moon-sub-header-font-size;
+	font-style: @moon-sub-header-font-style;
+	letter-spacing: @moon-sub-header-letter-spacing;
+
+	.moon-locale-non-latin({
+		font-size: @moon-non-latin-sub-header-font-size;
+	});
+
+	.moon-small-header & {
+		font-size: @moon-small-header-sub-header-font-size;
+
+		.moon-locale-non-latin({
+			font-size: @moon-non-latin-sub-header-font-size;
+		});
+	}
+}
+
+.moon-header-sub-title-below() {
+	.moon-font(@moon-sub-header-below-font-family);
+	font-weight: @moon-sub-header-below-font-weight;
+	font-size: @moon-sub-header-below-font-size;
+}
+
+.moon-popup-header-text() {
+	.moon-font(@moon-popup-header-font-family, @moon-non-latin-font-family-bold, {
+		font-weight: @moon-non-latin-font-weight-bold;
+		font-size: @moon-non-latin-popup-header-font-size;
+	});
+	font-weight: @moon-popup-header-font-weight;
+	font-style: @moon-popup-header-font-style;
+	font-size: @moon-popup-header-font-size;
+	line-height: @moon-popup-header-line-height;
+	letter-spacing: @moon-popup-header-letter-spacing;
+	.font-kerning;
+}
+
+.moon-dialog-title() {
+	.moon-popup-header-text();
+	line-height: @moon-small-header-line-height;
+}
+
+.moon-dialog-title-below() {
+	.moon-font(@moon-dialog-title-below-font-family, @moon-non-latin-font-family);
+	font-weight: @moon-dialog-title-below-font-weight;
+	font-size: @moon-popup-sub-header-font-size;
+}
+
+.moon-dialog-content() {
+	.moon-body-text();
+	.locale-japanese-line-break();
+}
+
+.moon-notification-content() {
+	.moon-font(@moon-notification-font-family, @moon-non-latin-font-family-light);
+	font-weight: @moon-notification-font-weight;
+	font-style: @moon-notification-font-style;
+	font-size: @moon-notification-font-size;
+	line-height: @moon-body-line-height;
+	text-align: initial;
+	.moon-word-break();
+	.locale-japanese-line-break();
+}
+
+.moon-body-text() {
+	.moon-font(@moon-body-font-family, @moon-non-latin-font-family-light, {
+		font-weight: @moon-non-latin-body-font-weight;
+		font-size: @moon-non-latin-body-font-size;
+		line-height: @moon-non-latin-body-line-height;
+	});
+	font-weight: @moon-body-font-weight;
+	font-size: @moon-body-font-size;
+	// color: @moon-body-text-color;
+	line-height: @moon-body-line-height;
+	a:link {color: inherit; text-decoration:none;}
+	a:visited {color: inherit; text-decoration:none;}
+	a:hover {color: inherit; text-decoration:none;}
+	a:active {color: inherit; text-decoration:none;}
+}
+
+.moon-body-text-spacing() {
+	margin: 0 @moon-spotlight-outset @moon-grid-row-height @moon-spotlight-outset;
+}
+
+.moon-body-large-text() {
+	font-size: @moon-body-font-size + 3;
+	line-height: @moon-body-line-height + 9;
+
+	.moon-locale-non-latin({
+		font-size: @moon-non-latin-body-font-size + 3;
+		line-height: @moon-non-latin-body-line-height + 9;
+	});
+}
+
+.moon-bold-text() {
+	.moon-font(@moon-font-family-bold, @moon-non-latin-font-family-bold, {
+		font-weight: @moon-non-latin-font-weight-bold;
+	});
+	font-weight: bold;
+}
+
+.moon-large-button-text() {
+	.moon-font(@moon-button-font-family, @moon-non-latin-font-family-bold, {
+		font-weight: @moon-non-latin-font-weight-bold;
+		font-size: @moon-non-latin-button-large-font-size;
+	});
+	font-weight: @moon-button-font-weight;
+	font-size: @moon-button-font-size;
+	.font-kerning;
+}
+
+.moon-small-button-text() {
+	.moon-font(@moon-button-font-family, @moon-non-latin-font-family-bold, {
+		font-weight: @moon-non-latin-font-weight-bold;
+		font-size: @moon-non-latin-button-small-font-size;
+	});
+	font-weight: @moon-button-font-weight;
+	font-size: @moon-button-small-font-size;
+	.font-kerning;
+}
+
+// NOTE: Consider deprecation in 3.0.0
+.moon-divider-text() {
+	.moon-font(@moon-divider-font-family, @moon-non-latin-font-family-bold, {
+		font-weight: @moon-non-latin-font-weight-bold;
+		font-size: @moon-non-latin-divider-font-size;
+		font-style: normal;
+	});
+	font-size: @moon-divider-font-size;
+	font-weight: @moon-divider-font-weight;
+	font-style: @moon-divider-font-style;
+	letter-spacing: @moon-divider-letter-spacing;
+
+	:global(.enact-locale-non-italic) & {
+		font-style: normal;
+	}
+}

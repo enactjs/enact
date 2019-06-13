@@ -1,7 +1,7 @@
 /**
- * Exports the {@link i18n/$L.$L} function and {@link i18n/$L.toIString} function to map to
- * translated strings.
+ * Provides functions to map to translated strings.
  *
+ * Usage:
  * ```
  * import $L, {toIString} from '@enact/i18n/$L';
  * $L('Close');        // => "Close" in the current locale
@@ -9,15 +9,17 @@
  * ```
  *
  * @module i18n/$L
+ * @exports $L
+ * @exports $toIString
  */
 
 import '../src/glue';
-import {getResBundle} from '../src/resBundle';
-import IString from '../ilib/lib/IString';
+import {getIStringFromBundle, getResBundle} from '../src/resBundle';
 
 /**
- * Maps a string or key/value object to a translated string for the current locale
+ * Maps a string or key/value object to a translated string for the current locale.
  *
+ * @function
  * @memberof i18n/$L
  * @param  {String|Object} str Source string
  *
@@ -25,21 +27,18 @@ import IString from '../ilib/lib/IString';
  */
 function toIString (str) {
 	const rb = getResBundle();
-	const isObject = typeof str === 'object';
-	if (rb) {
-		return isObject ? rb.getString(str.value, str.key) : rb.getString(str);
-	}
 
-	return new IString(isObject ? str.value : str);
+	return getIStringFromBundle(str, rb);
 }
 
 /**
- * Maps a string or key/value object to a translated string for the current locale
+ * Maps a string or key/value object to a translated string for the current locale.
  *
+ * @function
  * @memberof i18n/$L
  * @param  {String|Object} str Source string
  *
- * @returns {String} The translated string.
+ * @returns {String} The translated string
  */
 function $L (str) {
 	return String(toIString(str));

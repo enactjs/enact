@@ -1,6 +1,8 @@
 /**
  * A basic progress bar component that can display the progress of something in a horizontal or
- * vertical bar format. A secondary independent progress indicator can be displayed, to indicate
+ * vertical bar format.
+ *
+ * A secondary independent progress indicator can be displayed, to indicate
  * an additional degree of information, often used as a background loading progress.
  *
  * @module ui/ProgressBar
@@ -14,12 +16,26 @@ import React from 'react';
 
 import {validateRange} from '../internal/validators';
 
-import componentCss from './ProgressBar.less';
+import componentCss from './ProgressBar.module.less';
 
-const progressToPercent = (value) => (clamp(0, 1, value) * 100) + '%';
+const progressToProportion = (value) => clamp(0, 1, value);
+const calcBarStyle = (prop, anchor, value = anchor, startProp, endProp) => {
+	let start = Math.min(anchor, value);
+	let end = Math.max(anchor, value) - start;
+
+	if (__DEV__) {
+		validateRange(start, 0, 1, 'ProgressBar', prop, 'min', 'max');
+		validateRange(end, 0, 1, 'ProgressBar', prop, 'min', 'max');
+	}
+
+	return {
+		[startProp]: progressToProportion(start),
+		[endProp]: progressToProportion(end)
+	};
+};
 
 /**
- * Provides unstyled progress bar component to be customized by a theme or application.
+ * An unstyled progress bar component that can be customized by a theme or application.
  *
  * @class ProgressBar
  * @memberof ui/ProgressBar
@@ -31,8 +47,9 @@ const ProgressBar = kind({
 
 	propTypes: /** @lends ui/ProgressBar.ProgressBar.prototype */ {
 		/**
-		 * The proportion of the loaded portion of the progress bar. Valid values are
-		 * between `0` and `1`.
+		 * The proportion of the loaded portion of the progress bar.
+		 *
+		 * * Valid values are between `0` and `1`.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -41,15 +58,24 @@ const ProgressBar = kind({
 		backgroundProgress: PropTypes.number,
 
 		/**
+		 * The contents to be displayed with progress bar.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		children: PropTypes.node,
+
+		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
 		 *
 		 * The following classes are supported:
 		 *
 		 * * `progressBar` - The root component class
-		 * * `fill` - The foreground node of the progress bar
-		 * * `load` - The background node of the progress bar
-		 * * `vertical` - Applied when `vertical` prop is `true`
+		 * * `fill`        - The foreground node of the progress bar
+		 * * `load`        - The background node of the progress bar
+		 * * `horizontal`  - Applied when `orientation` is `'horizontal'`
+		 * * `vertical`    - Applied when `orientation` is `'vertical'`
 		 *
 		 * @type {Object}
 		 * @public
@@ -57,8 +83,23 @@ const ProgressBar = kind({
 		css: PropTypes.object,
 
 		/**
-		 * The proportion of the filled portion of the progress bar. Valid values are
-		 * between `0` and `1`.
+		 * Sets the orientation of the slider.
+		 *
+		 * Allowed values include:
+		 *
+		 * * `'horizontal'` - A left and right orientation
+		 * * `'vertical'` - An up and down orientation
+		 *
+		 * @type {String}
+		 * @default 'horizontal'
+		 * @public
+		 */
+		orientation: PropTypes.string,
+
+		/**
+		 * The proportion of the filled portion of the progress bar.
+		 *
+		 * * Valid values are between `0` and `1`.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -67,19 +108,26 @@ const ProgressBar = kind({
 		progress: PropTypes.number,
 
 		/**
-		 * If `true` the progress bar will be oriented vertically.
+		 * Sets the point, as a proportion between 0 and 1, from which the progress bar is filled.
 		 *
-		 * @type {Boolean}
-		 * @default false
+		 * Applies to both the progress bar's `value` and `backgroundProgress`. In both cases,
+		 * setting the value of `progressAnchor` will cause the progress bar to fill from that point
+		 * down, when `value` or `backgroundProgress` is proportionally less than the anchor, or up,
+		 * when `value` or `backgroundProgress` is proportionally greater than the anchor, rather
+		 * than always from the start of the progress bar.
+		 *
+		 * @type {Number}
+		 * @default 0
 		 * @public
 		 */
-		vertical: PropTypes.bool
+		progressAnchor: PropTypes.number
 	},
 
 	defaultProps: {
 		backgroundProgress: 0,
+		orientation: 'horizontal',
 		progress: 0,
-		vertical: false
+		progressAnchor: 0
 	},
 
 	styles: {
@@ -89,22 +137,39 @@ const ProgressBar = kind({
 	},
 
 	computed: {
-		className: ({vertical, styler}) => styler.append({vertical}),
-		progressCssProp: ({vertical}) => (vertical ? 'height' : 'width')
+		className: ({orientation, styler}) => styler.append(orientation),
+		style: ({backgroundProgress, progress, progressAnchor, style}) => {
+			return {
+				...style,
+				...calcBarStyle(
+					'backgroundProgress',
+					progressAnchor,
+					backgroundProgress,
+					'--ui-progressbar-proportion-start-background',
+					'--ui-progressbar-proportion-end-background',
+				),
+				...calcBarStyle(
+					'progress',
+					progressAnchor,
+					progress,
+					'--ui-progressbar-proportion-start',
+					'--ui-progressbar-proportion-end'
+				)
+			};
+		}
 	},
 
-	render: ({backgroundProgress, css, progress, progressCssProp, ...rest}) => {
-		delete rest.vertical;
-
-		if (__DEV__) {
-			validateRange(backgroundProgress, 0, 1, 'ProgressBar', 'backgroundProgress', 'min', 'max');
-			validateRange(progress, 0, 1, 'ProgressBar', 'progress', 'min', 'max');
-		}
+	render: ({children, css, ...rest}) => {
+		delete rest.backgroundProgress;
+		delete rest.orientation;
+		delete rest.progress;
+		delete rest.progressAnchor;
 
 		return (
 			<div role="progressbar" {...rest}>
-				<div className={css.load} style={{[progressCssProp]: progressToPercent(backgroundProgress)}} />
-				<div className={css.fill} style={{[progressCssProp]: progressToPercent(progress)}} />
+				<div className={css.load} />
+				<div className={css.fill} />
+				{children}
 			</div>
 		);
 	}

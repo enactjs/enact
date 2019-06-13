@@ -1,56 +1,38 @@
 import kind from '@enact/core/kind';
+import ForwardRef from '@enact/ui/ForwardRef';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Toggleable from '@enact/ui/Toggleable';
+import ReactDOM from 'react-dom';
 
-import $L from '../internal/$L';
 import IconButton from '../IconButton';
 
-import css from './Scrollbar.less';
-
-const classNameMap = {
-	down: css.scrollbarBottomButton,
-	left: css.scrollbarLeftButton,
-	right: css.scrollbarRightButton,
-	up: css.scrollbarUpButton
-};
+import css from './Scrollbar.module.less';
 
 /**
- * A Moonstone-styled base component for [ScrollButton]{@link moonstone/Scrollable.ScrollButton}.
+ * An [IconButton]{@link moonstone/IconButton.IconButton} used within
+ * a [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
  *
- * @class ScrollButtonBase
+ * @class ScrollButton
  * @memberof moonstone/Scrollable
+ * @extends moonstone/IconButton.IconButton
  * @ui
  * @private
  */
 const ScrollButtonBase = kind({
-	name: 'ScrollButtonBase',
+	name: 'ScrollButton',
 
 	propTypes: /** @lends moonstone/Scrollable.ScrollButton.prototype */ {
 		/**
-		 * Name of icon
+		 * Name of icon.
 		 *
 		 * @type {String}
+		 * @required
 		 * @public
 		 */
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * Scroll direction for this button.
-		 *
-		 * Valid values are:
-		 * * `'down'`,
-		 * * `'left'`,
-		 * * `'right'`, and
-		 * * `'up'`.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		direction: PropTypes.oneOf(['down', 'left', 'right', 'up']).isRequired,
-
-		/**
-		 * When `true`, the `aria-label` is set.
+		 * Sets the `aria-label`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -59,13 +41,34 @@ const ScrollButtonBase = kind({
 		active: PropTypes.bool,
 
 		/**
-		 * When `true`, the component is shown as disabled and does not generate `onClick`
-		 * [events]{@glossary event}.
+		* Sets the hint string read when focusing the scroll bar button.
+		*
+		* @type {String}
+		* @memberof moonstone/Scrollable.ScrollButton.prototype
+		* @public
+		*/
+		'aria-label': PropTypes.string,
+
+		/**
+		 * Disables the button.
 		 *
 		 * @type {Boolean}
 		 * @public
 		 */
-		disabled: PropTypes.bool
+		disabled: PropTypes.bool,
+
+		/**
+		 * Returns a ref to the root node of the scroll button
+		 *
+		 * See: https://github.com/facebook/prop-types/issues/240
+		 *
+		 * @type {Function|Object}
+		 * @private
+		 */
+		forwardRef: PropTypes.oneOfType([
+			PropTypes.func,
+			PropTypes.shape({current: PropTypes.any})
+		])
 	},
 
 	styles: {
@@ -73,36 +76,38 @@ const ScrollButtonBase = kind({
 		className: 'scrollButton'
 	},
 
-	computed: {
-		'aria-label': ({disabled, direction}) => {
-			if (disabled) {
-				return null;
-			}
+	handlers: {
+		forwardRef: (node, {forwardRef}) => {
+			// Allowing findDOMNode in the absence of a means to retrieve a node ref through IconButton
+			// eslint-disable-next-line react/no-find-dom-node
+			const current = ReactDOM.findDOMNode(node);
 
-			switch (direction) {
-				case 'up':
-					return $L('scroll up');
-				case 'down':
-					return $L('scroll down');
-				case 'left':
-					return $L('scroll left');
-				case 'right':
-					return $L('scroll right');
+			// Safely handle old ref functions and new ref objects
+			switch (typeof forwardRef) {
+				case 'object':
+					forwardRef.current = current;
+					break;
+				case 'function':
+					forwardRef(current);
+					break;
 			}
-		},
-		className: ({direction, styler}) => styler.append(classNameMap[direction])
+		}
 	},
 
-	render: ({children, disabled, ...rest}) => {
+	computed: {
+		'aria-label': ({active, 'aria-label': ariaLabel}) => (active ? null : ariaLabel)
+	},
+
+	render: ({children, disabled, forwardRef, ...rest}) => {
 		delete rest.active;
-		delete rest.direction;
 
 		return (
 			<IconButton
 				{...rest}
 				backgroundOpacity="transparent"
 				disabled={disabled}
-				small
+				ref={forwardRef}
+				size="small"
 			>
 				{children}
 			</IconButton>
@@ -110,25 +115,9 @@ const ScrollButtonBase = kind({
 	}
 });
 
-
-/**
- * An [IconButton]{@link moonstone/IconButton.IconButton} used within
- * a [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
- *
- * @class ScrollButton
- * @memberof moonstone/Scrollable
- * @mixins ui/Toggleable
- * @extends moonstone/Scrollable.ScrollButtonBase
- * @ui
- * @private
- */
-const ScrollButton = Toggleable(
-	{activate: 'onFocus', deactivate: 'onBlur', toggle: null},
-	ScrollButtonBase
-);
+const ScrollButton = ForwardRef(ScrollButtonBase);
 
 export default ScrollButton;
 export {
-	ScrollButton,
-	ScrollButtonBase
+	ScrollButton
 };

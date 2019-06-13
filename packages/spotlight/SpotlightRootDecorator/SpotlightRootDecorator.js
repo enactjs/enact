@@ -1,6 +1,6 @@
 /**
  * Exports the {@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}
- * Higher-order Component.
+ * higher-order component.
  *
  * @module spotlight/SpotlightRootDecorator
  */
@@ -12,6 +12,8 @@ import Spotlight from '../src/spotlight';
 import {spottableClass} from '../Spottable';
 
 import {rootContainerId} from '../src/container';
+
+import '../styles/debug.less';
 
 /**
  * Default configuration for SpotlightRootDecorator
@@ -32,7 +34,7 @@ const defaultConfig = {
 };
 
 /**
- * Constructs a Higher-order Component that initializes and enables Spotlight
+ * Constructs a higher-order component that initializes and enables Spotlight
  * 5-way navigation within an application.
  *
  * Example:
@@ -40,7 +42,7 @@ const defaultConfig = {
  *	const App = SpotlightRootDecorator(ApplicationView);
  * ```
  * @param  {Object} defaultConfig Set of default configuration parameters
- * @param  {Function} Higher-order component
+ * @param  {Function} higher-order component
  *
  * @returns {Function} SpotlightRootDecorator
  * @memberof spotlight/SpotlightRootDecorator
@@ -52,10 +54,10 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SpotlightRootDecorator';
 
-		componentWillMount () {
-			if (typeof window === 'object') {
-				const palmSystem = window.PalmSystem;
+		constructor (props) {
+			super(props);
 
+			if (typeof window === 'object') {
 				Spotlight.initialize({
 					selector: '.' + spottableClass,
 					restrict: 'none'
@@ -64,10 +66,6 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				Spotlight.set(rootContainerId, {
 					overflow: true
 				});
-
-				if (palmSystem && palmSystem.cursor) {
-					Spotlight.setPointerMode(palmSystem.cursor.visibility);
-				}
 			}
 		}
 
@@ -83,7 +81,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		navigableFilter = (elem) => {
 			while (elem && elem !== document && elem.nodeType === 1) {
-				if (elem.getAttribute('data-container-disabled') === 'true') return false;
+				if (elem.getAttribute('data-spotlight-container-disabled') === 'true') return false;
 				elem = elem.parentNode;
 			}
 		}
@@ -96,6 +94,5 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 export default SpotlightRootDecorator;
 export {
-	rootContainerId as spotlightRootContainerName, // DEPRECATED
 	SpotlightRootDecorator
 };

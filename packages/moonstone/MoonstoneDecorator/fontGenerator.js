@@ -4,15 +4,16 @@
  * included by external developers.
  */
 // eslint-disable-next-line no-var
-var {addLocalizedFont, generateFontRules} = require('@enact/ui/internal/localized-fonts');
+var {addLocalizedFont, generateFontRules, generateFontOverrideRules} = require('@enact/ui/internal/localized-fonts');
 
-const fontName = 'Moonstone LG Display';
+const fontName = 'Moonstone Global';
 
 // Locale Configuration Block
 const fonts = {
 	'NonLatin': {
-		regular: 'LG Display-Light',
-		bold:    'LG Display-Regular'
+		// Hacky solution to add support for full-name and postscript names of the same font (support for multiple different operating systems font handling)
+		regular: 'LG Smart UI Global-Light"), local("LGSmartUIGlobal-Light',
+		bold:    'LG Smart UI Global-Regular"), local("LGSmartUIGlobal-Regular'
 	},
 	'am': {
 		regular: 'LG Display_Amharic'
@@ -76,4 +77,5 @@ addLocalizedFont(fontName, fonts);
 
 module.exports = generateFontRules;
 module.exports.fontGenerator = generateFontRules;
+module.exports.fontOverrideGenerator = generateFontOverrideRules;
 module.exports.generateFontRules = generateFontRules;

@@ -1,0 +1,25 @@
+.virtualList {
+	position: relative;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+
+	&.vertical {
+		overflow-y: scroll;
+	}
+
+	&.horizontal {
+		overflow-x: scroll;
+	}
+
+	.listItem {
+		overflow: hidden;
+		width: 100%;
+
+		will-change: transform;
+	}
+}
+
+.virtualList::-webkit-scrollbar {
+	display: none;
+}

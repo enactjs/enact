@@ -5,15 +5,27 @@
  * @private
  */
 
-import Changeable from '@enact/ui/Changeable';
-import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
+import handle, {call, forKey, forProp, forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import ilib from '@enact/i18n';
-import React from 'react';
+import {memoize} from '@enact/core/util';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
+import Changeable from '@enact/ui/Changeable';
 import PropTypes from 'prop-types';
-import {Subscription} from '@enact/core/internal/PubSub';
+import React from 'react';
 
 import {Expandable} from '../../ExpandableItem';
+
+/*
+ * Converts a JavaScript Date to unix time
+ *
+ * @param	{Date}	date	A Date to convert
+ *
+ * @returns	{undefined}
+ */
+const toTime = (date) => {
+	return date && date.getTime();
+};
 
 /**
  * {@link moonstone/internal/DateTimeDecorator.DateTimeDecorator} provides common behavior for
@@ -30,10 +42,27 @@ import {Expandable} from '../../ExpandableItem';
 const DateTimeDecorator = hoc((config, Wrapped) => {
 	const {customProps, defaultOrder, handlers, i18n} = config;
 
+	const memoizedI18nConfig = memoize((/* locale */) => {
+		// Guard for isomorphic builds
+		if (typeof window !== 'undefined' && i18n) {
+			return i18n();
+		}
+		return null;
+	});
+
 	const Decorator = class extends React.Component {
 		static displayName = 'DateTimeDecorator'
 
 		static propTypes = /** @lends moonstone/internal/DateTimeDecorator.DateTimeDecorator.prototype */ {
+			/**
+			 * The current locale as a
+			 * {@link https://tools.ietf.org/html/rfc5646|BCP 47 language tag}.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			locale: PropTypes.string,
+
 			/**
 			 * Handler for `onChange` events
 			 *
@@ -62,11 +91,10 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.initI18n();
-
-			const initialValue = this.toTime(props.value);
-			const value = props.open && !initialValue ? Date.now() : initialValue;
-			this.state = {initialValue, value};
+			this.state = {
+				initialValue: null,
+				value: null
+			};
 
 			this.handlers = {};
 			if (handlers) {
@@ -76,42 +104,25 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		componentWillReceiveProps (nextProps) {
-			const newValue = this.toTime(nextProps.value);
+		static getDerivedStateFromProps (props, state) {
+			let value = toTime(props.value);
 
-			if (nextProps.open && !this.props.open) {
-				const value = newValue || Date.now();
-
-				// if we're opening, store the current value as the initial value for cancellation
-				this.setState({
-					initialValue: newValue,
-					pickerValue: null,
+			if (props.open && !props.disabled && state.initialValue == null && state.value == null) {
+				// when the expandable opens, we cache the prop value so it can be restored on
+				// cancel and set value to be the current time if unset in order to initialize the
+				// pickers
+				return {
+					initialValue: value,
+					value: value || Date.now()
+				};
+			} else if (state.value !== value) {
+				// always respect a value change from props
+				return {
 					value
-				});
-
-				// if no value was provided, we need to emit the onChange event for the generated value
-				if (!newValue) {
-					this.emitChange(this.toIDate(value));
-				}
-			} else {
-				this.setState({
-					value: newValue
-				});
+				};
 			}
-		}
 
-		componentWillUpdate () {
-			// check for a new locale when updating
-			this.initI18n();
-		}
-
-		initI18n () {
-			const locale = ilib.getLocale();
-
-			if (i18n && this.locale !== locale && typeof window === 'object') {
-				this.locale = locale;
-				this.i18nContext = i18n();
-			}
+			return null;
 		}
 
 		/**
@@ -122,23 +133,12 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		 * @returns	{IDate}			ilib Date object
 		 */
 		toIDate (time) {
-			if (time && this.locale) {
+			if (time && this.props.locale) {
 				return DateFactory({
 					unixtime: time,
 					timezone: 'local'
 				});
 			}
-		}
-
-		/**
-		 * Converts a JavaScript Date to unix time
-		 *
-		 * @param	{Date}	date	A Date to convert
-		 *
-		 * @returns	{undefined}
-		 */
-		toTime (date) {
-			return date && date.getTime();
 		}
 
 		/**
@@ -169,36 +169,63 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 
 		emitChange = (date) => {
-			const {onChange} = this.props;
-			if (onChange) {
-				onChange({
-					value: date ? date.getJSDate() : null
-				});
+			forward('onChange', {value: date ? date.getJSDate() : null}, this.props);
+		}
+
+		handleOpen = (ev) => {
+			forward('onOpen', ev, this.props);
+
+			const newValue = toTime(this.props.value);
+			const value = newValue || Date.now();
+
+			// if we're opening, store the current value as the initial value for cancellation
+			this.setState({
+				initialValue: newValue,
+				pickerValue: null,
+				value
+			});
+
+			// if no value was provided, we need to emit the onChange event for the generated value
+			if (!newValue) {
+				this.emitChange(this.toIDate(value));
 			}
+		}
+
+		handleClose = (ev) => {
+			forward('onClose', ev, this.props);
+			const newValue = toTime(this.props.value);
+			this.setState({
+				value: newValue
+			});
 		}
 
 		handlePickerChange = (handler, ev) => {
 			const value = this.toIDate(this.state.value);
-			handler(ev, value, this.i18nContext);
+			handler(ev, value, memoizedI18nConfig(this.props.locale));
 			this.updateValue(value);
 		}
 
 		handleCancel = () => {
 			const {initialValue, value} = this.state;
 
-			if (this.props.open) {
-				// if we're cancelling, reset our state and emit an onChange with the initial value
-				this.setState({
-					value: initialValue,
-					initialValue: null,
-					pickerValue: value
-				});
+			// if we're cancelling, reset our state and emit an onChange with the initial value
+			this.setState({
+				value: null,
+				initialValue: null,
+				pickerValue: value
+			});
 
-				if (initialValue !== value) {
-					this.emitChange(this.toIDate(initialValue));
-				}
+			if (initialValue !== value) {
+				this.emitChange(this.toIDate(initialValue));
 			}
 		}
+
+		handleKeyDown = handle(
+			forward('onKeyDown'),
+			forProp('open', true),
+			forKey('cancel'),
+			call('handleCancel')
+		).bindAs(this, 'handleKeyDown')
 
 		render () {
 			const value = this.toIDate(this.state.value);
@@ -210,13 +237,13 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			let props = null;
 			let order = defaultOrder;
 
-			// Guard for isomorphic builds
-			if (this.i18nContext) {
+			const i18nConfig = memoizedI18nConfig(this.props.locale);
+			if (i18nConfig) {
 				if (value) {
-					label = this.i18nContext.formatter.format(value);
+					label = i18nConfig.formatter.format(value);
 				}
-				props = customProps(this.i18nContext, pickerValue);
-				order = this.i18nContext.order;
+				props = customProps(i18nConfig, pickerValue, this.props);
+				order = i18nConfig.order;
 			}
 
 			return (
@@ -225,6 +252,9 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 					{...props}
 					{...this.handlers}
 					label={label}
+					onKeyDown={this.handleKeyDown}
+					onClose={this.handleClose}
+					onOpen={this.handleOpen}
 					order={order}
 					value={value}
 				/>
@@ -232,8 +262,8 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 	};
 
-	return Subscription(
-		{channels: ['i18n'], mapMessageToProps: (channel, {rtl}) => ({rtl})},
+	return I18nContextDecorator(
+		{rtlProp: 'rtl', localeProp: 'locale'},
 		Expandable(
 			Changeable(
 				Decorator

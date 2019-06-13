@@ -1,18 +1,19 @@
 /**
- * Exports the {@link ui/RadioDecorator.RadioDecorator} and
- * {@link ui/RadioDecorator.RadioControllerDecorator} Higher-order Components (HOCs).
+ * A higher-order component that manages activation of components.
  *
  * @module ui/RadioDecorator
+ * @exports RadioDecorator
+ * @exports RadioControllerDecorator
  */
 
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
-import {contextTypes, RadioControllerDecorator} from './RadioControllerDecorator';
+import {RadioContext, RadioControllerDecorator} from './RadioControllerDecorator';
 
 /**
- * Default config for {@link ui/RadioDecorator.RadioDecorator}.
+ * Default config for `RadioDecorator`.
  *
  * @memberof ui/RadioDecorator.RadioDecorator
  * @hocconfig
@@ -37,7 +38,7 @@ const defaultConfig = {
 	deactivate: null,
 
 	/**
-	 * The name of a boolean prop that, when `true`, should activate the wrapped component.
+	 * The name of a boolean prop that activates the wrapped component when it is true.
 	 *
 	 * @type {String}
 	 * @default 'active'
@@ -47,9 +48,8 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/RadioDecorator.RadioDecorator} is a Higher-order Component that allows another
- * component to have a mutually exclusive relationship with other descendants of the same
- * {@link ui/RadioDecorator.RadioControllerDecorator}.
+ * A higher-order component (HOC) that allows another component to have a mutually exclusive
+ * relationship with other descendants of the same {@link ui/RadioDecorator.RadioControllerDecorator}.
  *
  * When the `activate` event for the wrapped component is called, the component is activated and the
  * previously activated component, if any, is deactivated by invoking the `deactivate` event.
@@ -67,44 +67,33 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'RadioDecorator'
 
-		static contextTypes = contextTypes
-
-		constructor (props) {
-			super(props);
-
-			// indicates we have a controller in context with which to sync activations
-			this.sync = false;
-		}
+		static contextType = RadioContext
 
 		componentDidMount () {
-			if (this.context.registerRadioItem) {
-				this.sync = true;
-				this.context.registerRadioItem(this);
-
-				this.notifyController(this.props);
+			if (this.context && typeof this.context === 'function') {
+				this.controller = this.context(this.handleDeactivate);
+				this.notifyController();
 			}
 		}
 
-		componentWillReceiveProps (nextProps) {
-			this.notifyController(nextProps);
+		componentDidUpdate () {
+			this.notifyController();
 		}
 
-		componentWillUnount () {
-			if (this.sync) {
-				this.sync = false;
-				this.context.deregisterRadioItem(this);
+		componentWillUnmount () {
+			if (this.controller) {
+				this.controller.unregister();
 			}
 		}
 
-		notifyController (props) {
-			if (this.sync && prop && props[prop]) {
-				// console.log('notify', prop, deactivate);
-				this.context.activateRadioItem(this);
+		notifyController () {
+			if (this.controller && prop && this.props[prop]) {
+				this.controller.notify({action: 'activate'});
 			}
 		}
 
-		/**
-		 * Invoked by a RadioControllerDecorator when the wrapped component should be deactivated
+		/*
+		 * Invoked by a `RadioControllerDecorator` when the wrapped component should be deactivated
 		 *
 		 * @returns {undefined}
 		 */
@@ -115,16 +104,16 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleActivate = () => {
-			if (this.sync) {
-				this.context.activateRadioItem(this);
+			if (this.controller) {
+				this.controller.notify({action: 'activate'});
 			}
 
 			forwardActivate(null, this.props);
 		}
 
 		handleDeactivate = () => {
-			if (this.sync) {
-				this.context.deactivateRadioItem(this);
+			if (this.controller) {
+				this.controller.notify({action: 'deactivate'});
 			}
 
 			forwardDeactivate(null, this.props);
@@ -139,7 +128,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				if (deactivate) props[deactivate] = this.handleDeactivate;
 			}
 
-			return <Wrapped  {...props} />;
+			return <Wrapped {...props} />;
 		}
 	};
 });
@@ -149,4 +138,3 @@ export {
 	RadioControllerDecorator,
 	RadioDecorator
 };
-

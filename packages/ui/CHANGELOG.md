@@ -2,6 +2,398 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [3.0.0-alpha.5] - 2019-06-10
+
+### Added
+
+- `ui/Toggleable` HOC config prop `eventProps` to allow wrapped components to specify additional event information
+
+### Fixed
+
+- `ui/ToggleItem` to send its `value` prop when toggled
+
+## [3.0.0-alpha.4] - 2019-06-03
+
+No significant changes.
+
+## [3.0.0-alpha.3] - 2019-05-29
+
+### Changed
+
+- `ui/ViewManager` to use Web Animations instead of animation callbacks to improve performance resulting in API changes to `Arranger` and the pre-configured arrangers `SlideArranger`, `SlideBottomArranger`, `SlideLeftArranger`, `SlideRightArranger`, and `SlideTopArranger`
+
+## [3.0.0-alpha.2] - 2019-05-20
+
+No significant changes.
+
+## [3.0.0-alpha.1] - 2019-05-15
+
+### Added
+
+- `ui/Button` public class `.hasIcon` which is present on the root node only when an icon has been provided
+- `ui/Heading` component
+- `ui/Measurable` HOC and Hook for quick and convenient measuring of simple components
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` prop `noScrollByWheel` for preventing scroll by wheel
+
+### Fixed
+
+- `ui/Measurable` to remeasure after a re-layout so the measurement value is always correct
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` not to scroll by wheel at the same time when multiple lists/scrollers are nested
+
+### [2.6.0] - ???
+
+### Deprecated
+
+- `small` prop in `ui/Button.ButtonBase`, `ui/Icon.IconBase`, `ui/IconButton.IconButtonBase`, and `ui/LabeledIcon.LabeledIconBase`, which will be replaced by `size="small"` in 3.0
+
+### Added
+
+- `ui/Button`, `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` prop `size`
+- `ui/ToggleItem` props  `itemIcon` and `itemIconPosition` to support additional icons on ToggleItem-derived components
+
+## [2.5.3] - 2019-06-06
+
+### Fixed
+
+- `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to size properly
+- `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to scroll correctly on iOS and Safari
+- `ui/Touchable` to not misfire a hold pulse when a drag re-enters a touch target and `cancelOnMove` is set
+- `ui/ViewManager` to correctly handle transitioning quickly between two children
+
+## [2.5.2] - 2019-04-23
+
+### Fixed
+
+- `ui/Skinnable` to allow overriding default `skinVariant` values
+- `ui/Touchable` to prevent events firing on different nodes for the same touch action
+- `ui/Touchable` to neither force focus to components nor blur components after they are touched
+
+## [2.5.1] - 2019-04-09
+
+### Fixed
+
+- `ui/Touchable` to prevent doubled events in some situations on touch devices
+
+## [2.5.0] - 2019-04-01
+
+### Added
+
+- `ui/Item`, `ui/Layout`, `ui/Repeater`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleItem`, and `ui/ViewManager` support for `ref` to gain access to the wrapped `component`
+
+## [2.4.1] - 2019-03-11
+
+### Fixed
+
+- `ui/VirtualList` to scroll properly by `scrollTo` callback during the list is updated by prop changes
+
+## [2.4.0] - 2019-03-04
+
+### Added
+
+- `ui/BodyText` prop `component` to allow customization of the tag/component used to render its base element
+- `ui/Repeater` prop `component` to allow customization of its base element
+- `ui/Spinner` prop `paused` to halt the animation. Previously this was hard-coded "on", but now it can be toggled.
+
+### Changed
+
+- `ui/Changeable` and `ui/Toggleable` to warn when both `[defaultProp]` and `[prop]` are provided
+
+## [2.3.0] - 2019-02-11
+
+### Added
+
+- `ui/Skinnable` support for `skinVariants`; a way to augment a skin by adding variations of a skin to your visuals, like large text, high contrast, or grayscale
+- `ui/Touchable` event `onHoldEnd` to notify when a hold has been released
+- `ui/Touchable` prop `holdConfig.global` to allow a hold to continue when leaving or blurring the element
+
+### Changed
+
+- All content-containing LESS stylesheets (not within a `styles` directory) extensions to be `*.module.less` to retain modular context with CLI 2.x.
+
+### Fixed
+
+- `ui/Touchable` to continue drag events when blurring the element when `dragConfig.global` is set
+- `ui/Marquee` to marquee when necessary after a locale change
+
+## [2.2.9] - 2019-01-11
+
+No significant changes.
+
+## [2.2.8] - 2018-12-06
+
+### Fixed
+
+- `ui/Marquee` to display an ellipsis when changing to text that no longer fits within its bounds
+- `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` to debounce `onScrollStop` events for non-animated scrolls
+- `ui/Changeable` and `ui/Toggleable` to no longer treat components as controlled if the specified prop is explicity set to `undefined` at mount
+
+## [2.2.7] - 2018-11-21
+
+### Fixed
+
+- `ui/Marquee` to avoid very small animations
+
+## [2.2.6] - 2018-11-15
+
+### Fixed
+
+- `ui/Marquee` to handle contents which overflow their containers only slightly
+
+## [2.2.5] - 2018-11-05
+
+### Fixed
+
+- `ui/Transition` to better support layout after changing children
+
+## [2.2.4] - 2018-10-29
+
+No significant changes.
+
+## [2.2.3] - 2018-10-22
+
+No significant changes.
+
+## [2.2.2] - 2018-10-15
+
+### Fixed
+
+- `ui/Scroller` slowed scrolling behavior when repeatedly requesting a scroll to the same position
+
+## [2.2.1] - 2018-10-09
+
+### Fixed
+
+- `ui/Marquee` to prevent restarting animation after blurring just before the previous animation completed
+
+## [2.2.0] - 2018-10-02
+
+### Added
+
+- `ui/Marquee.MarqueeBase` prop `willAnimate` to improve app performance by deferring animation preparation styling such as composite layer promotion
+- `ui/Skinnable` config option `prop` to configure the property in which to pass the current skin to the wrapped component
+- `ui/Transition` prop `css` to support customizable styling
+
+### Changed
+
+- `ui/Cell` and `ui/Layout` to accept any type of children, since the `component` that may be set could accept any format of `children`
+
+### Fixed
+
+- `ui/Touchable` to correctly handle a hold cancelled from an onHold handler
+- `ui/Marquee.MarqueeDecorator` to handle situations where lazily loaded CSS could cause marquee to not start correctly
+
+## [2.1.4] - 2018-09-17
+
+### Fixed
+
+- `ui/ViewManager` to emit `onWillTransition` when views are either added or removed
+
+## [2.1.3] - 2018-09-10
+
+### Fixed
+
+- `ui/Marquee` to stop when blurred during restart timer
+
+## [2.1.2] - 2018-09-04
+
+### Fixed
+
+- `ui/GridListImageItem` to properly set `selected` style
+- `ui/Marquee` positioning bug when used with CSS flexbox layouts
+
+## [2.1.1] - 2018-08-27
+
+No significant changes.
+
+## [2.1.0] - 2018-08-20
+
+### Fixed
+
+- `ui/FloatingLayer` to apply `key`s to prevent React warnings
+
+## [2.0.2] - 2018-08-13
+
+### Fixed
+
+- `ui/Image` to not display "missing image" icon when `src` fails to load
+- `ui/Image` to not require `src` prop if `placeholder` is specified
+- `ui/GridListImageItem` to not require `source` prop
+- `ui/Scrollable` to use GPU acceleration to improve rendering performance
+- `ui/Marquee` to move `position: relative` style into `animate` class to improve rendering performance
+
+## [2.0.1] - 2018-08-01
+
+No significant changes.
+
+## [2.0.0] - 2018-07-30
+
+### Added
+
+- `ui/LabeledIcon` component for a lightweight `Icon` with a label
+
+### Removed
+
+- `ui/Skinnable.withSkinnableProps` higher-order component
+
+### Fixed
+
+- `ui/Scrollable` to ignore native drag events which interfered with touch drag support
+
+## [2.0.0-rc.3] - 2018-07-23
+
+No significant changes.
+
+## [2.0.0-rc.2] - 2018-07-16
+
+No significant changes.
+
+## [2.0.0-rc.1] - 2018-07-09
+
+### Removed
+
+- `ui/FloatingLayer.contextTypes` export
+- `ui/Marquee.controlContextTypes` export
+- `ui/Placeholder.contextTypes` export
+- `ui/Resizable.contextTypes` export
+
+## [2.0.0-beta.9] - 2018-07-02
+
+No significant changes.
+
+## [2.0.0-beta.8] - 2018-06-25
+
+### Fixed
+
+- `ui/VirtualList` to allow scrolling on focus by default on webOS
+
+## [2.0.0-beta.7] - 2018-06-11
+
+### Added
+
+- `ui/FloatingLayer.FloatingLayerBase` export
+
+### Changed
+
+- `ui/FloatingLayer` to call `onOpen` only after it is rendered
+
+### Fixed
+
+- `ui/MarqueeDecorator` to stop marqueeing when using hover and pointer hides
+
+## [2.0.0-beta.6] - 2018-06-04
+
+### Fixed
+
+- `ui/FloatingLayer` to render correctly if already opened at mounting time
+
+## [2.0.0-beta.5] - 2018-05-29
+
+### Added
+
+- `ui/FloatingLayerDecorator` imperative API to close all floating layers registered in the same id
+- `ui/ProgressBar` and `ui/Slider` prop `progressAnchor` to configure from where in the progress bar or slider progress should begin
+- `ui/Slider` prop `progressBarComponent` to support customization of progress bar within a slider
+- `ui/ForwardRef` HOC to adapt `React.forwardRef` to HOC chains
+- `ui/Media` component
+
+### Fixed
+
+- `ui/MarqueeController` to update hovered state when pointer hides
+- `ui/Touchable` to end gestures when focus is lost
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to prevent items overlap with scroll buttons
+
+## [2.0.0-beta.4] - 2018-05-21
+
+### Fixed
+
+- `ui/Touchable` to guard against null events
+
+## [2.0.0-beta.3] - 2018-05-14
+
+### Changed
+
+- `ui/Marquee.MarqueeController` and `ui/Marquee.MarqueeDecorator` to prevent unnecessary focus-based updates
+
+### Added
+
+- `ui/Touchable` support to fire `onTap` when a `click` event occurs
+
+### Changed
+
+- `ui/Touchable` custom events `onDown`, `onUp`, `onMove`, and `onTap` to use the event name as the `type` rather than the shorter name (e.g. `onTap` rather than `tap`)
+- `ui/Toggleable` to forward events on `activate` and `deactivate` instead of firing toggled payload. Use `toggle` to handle toggled payload from the event.
+
+## [2.0.0-beta.2] - 2018-05-07
+
+### Fixed
+
+- `ui/Marquee` to always marquee when `marqueeOn` is set to `'render'`
+- `ui/Item` to use its natural width rather than imposing a 100% width allowing inline Items to be the correct width
+- `ui/Marquee.MarqueeDecorator` to correctly reset animation when `children` updates
+
+## [2.0.0-beta.1] - 2018-04-29
+
+### Changed
+
+- `ui/Cancelable` callback `onCancel` to accept an event with a `stopPropagation` method to prevent upstream instances from handling the event instead of using the return value from the callback to prevent propagation. When a function is passed to `onCancel`, it will now receive an event and a props object instead of only the props object. When a string is passed to `onCancel`, it will now receive an event instead of no arguments. Also when a string is passed, the event will now propagate to upstream instances unless `stopPropagation` is called.
+- `ui/Transition` property `duration` to now also support a numeric value representing milliseconds or a string representing any valid CSS duration value
+
+### Fixed
+
+- `ui/Layout.Cell` to no longer overflow when both `size` and `shrink` are set together
+- `ui/Layout` to correctly support two `align` values, allowing horizontal and vertical in one property. Previously, the transverse alignment was ignored, only allowing perpendicular alignment.
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` showing blank when `direction` prop changed after scroll position changed
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to support RTL by dynamic language changes
+
+## [2.0.0-alpha.8] - 2018-04-17
+
+### Added
+
+- `ui/Slider` as an unstyled, base range selection component
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` `role="list"`
+- `ui/Placeholder.PlaceholderControllerDecorator` config property `thresholdFactor`
+
+### Changed
+
+- `ui/Transition` property `children` to not be required
+- `ui/Transition` to fire `onShow` and `onHide` even when there are no `children`
+
+### Fixed
+
+- `ui/VirtualList.VirtualList` to re-render items when forceUpdate() called
+- `ui/ViewManager` to not initially pass the wrong value for `enteringProp` when a view initiates a transition into the viewport
+
+## [2.0.0-alpha.7] - 2018-04-03
+
+### Removed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `data` to eliminate the misunderstanding caused by the ambiguity of `data`
+
+### Fixed
+
+- `ui/Scroller` horizontal scrolling in RTL locales
+
+## [2.0.0-alpha.6] - 2018-03-22
+
+### Removed
+
+- `ui/Transition` property `clipHeight`
+- `ui/ProgressBar` property `vertical` and replaced it with `orientation`
+
+### Added
+
+- `ui/Scrollable` support for scrolling by touch
+- `ui/ProgressBar` property `orientation` to accept orientation strings like `"vertical"` and `"horizontal"`
+
+### Changed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `component` to be replaced by `itemRenderer`
+
+### Fixed
+
+- `ui/Transition` animation for `clip` for `"up"`, `"left"`, and `"right"` directions. This includes a DOM addition to the Transition markup.
+- `ui/ComponentOverride` and `ui/ToggleItem` to accept HTML DOM node tag names as strings for its `component` property
+
 ## [2.0.0-alpha.5] - 2018-03-07
 
 ### Added
@@ -11,7 +403,12 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/GridListImageItem` component
 
 ### Changed
+
 - `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` components as unstyled base components to support UI libraries
+
+### Fixed
+
+- `ui/ViewManager` to suppress `enteringProp` for views that are rendered at mount
 
 ## [2.0.0-alpha.4] - 2018-02-13
 
@@ -25,10 +422,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/Repeater` and `ui/Group` to require a unique key for each object type data
 - `ui/Toggleable` to use `'selected'` as its default `prop`, rather than `'active'`, since `'selected'` is by far the most common use case
 - `ui/Touchable` to use global gesture configuration with instance override rather than component-level configuration via HOC configs with instance override
-
-### Fixed
-
-- `ui/ViewManager` to suppress `enteringProp` for views that are rendered at mount
 
 ## [2.0.0-alpha.3] - 2018-01-18
 
@@ -71,6 +464,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Deprecated
 
 - `ui/Holdable` and `ui/Pressable`, to be replaced by `ui/Touchable` in 2.0.0
+
+## [1.13.4] - 2018-07-30
+
+No significant changes.
 
 ## [1.13.3] - 2018-01-16
 

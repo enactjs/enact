@@ -46,6 +46,14 @@ const DateComponentRangePickerBase = kind({
 		value: PropTypes.number.isRequired,
 
 		/**
+		 * Sets the hint string read when focusing the picker.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		accessibilityHint: PropTypes.string,
+
+		/**
 		 * The label to display below the picker
 		 *
 		 * @type {String}
@@ -71,11 +79,18 @@ const DateComponentRangePickerBase = kind({
 		wrap: PropTypes.bool
 	},
 
-	render: ({className, label, max, min, noAnimation, value, wrap, ...rest}) => (
+	computed: {
+		voiceLabel: ({min, max}) => {
+			return JSON.stringify([min, max]);
+		}
+	},
+
+	render: ({accessibilityHint, className, label, max, min, noAnimation, value, wrap, voiceLabel, ...rest}) => (
 		<DateComponentPickerChrome className={className} label={label}>
 			<RangePicker
 				{...rest}
-				accessibilityHint={label}
+				accessibilityHint={(accessibilityHint == null) ? label : accessibilityHint}
+				data-webos-voice-labels-ext={voiceLabel}
 				joined
 				max={max}
 				min={min}

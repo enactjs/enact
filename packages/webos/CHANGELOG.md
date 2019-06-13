@@ -2,6 +2,197 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
+## [3.0.0-alpha.5] - 2019-06-10
+
+No significant changes.
+
+## [3.0.0-alpha.4] - 2019-06-03
+
+No significant changes.
+
+## [3.0.0-alpha.3] - 2019-05-29
+
+No significant changes.
+
+## [3.0.0-alpha.2] - 2019-05-20
+
+No significant changes.
+
+## [3.0.0-alpha.1] - 2019-05-15
+
+No significant changes.
+
+## [2.5.3] - 2019-06-06
+
+No significant changes.
+
+## [2.5.2] - 2019-04-23
+
+No significant changes.
+
+## [2.5.1] - 2019-04-09
+
+No significant changes.
+
+## [2.5.0] - 2019-04-01
+
+No significant changes.
+
+## [2.4.1] - 2019-03-11
+
+No significant changes.
+
+## [2.4.0] - 2019-03-04
+
+No significant changes.
+
+## [2.3.0] - 2019-02-11
+
+No significant changes.
+
+## [2.2.9] - 2019-01-11
+
+No significant changes.
+
+## [2.2.8] - 2018-12-06
+
+No significant changes.
+
+## [2.2.7] - 2018-11-21
+
+No significant changes.
+
+## [2.2.6] - 2018-11-15
+
+No significant changes.
+
+## [2.2.5] - 2018-11-05
+
+No significant changes.
+
+## [2.2.4] - 2018-10-29
+
+No significant changes.
+
+## [2.2.3] - 2018-10-22
+
+No significant changes.
+
+## [2.2.2] - 2018-10-15
+
+No significant changes.
+
+## [2.2.1] - 2018-10-09
+
+No significant changes.
+
+## [2.2.0] - 2018-10-02
+
+No significant changes.
+
+## [2.1.4] - 2018-09-17
+
+No significant changes.
+
+## [2.1.3] - 2018-09-10
+
+No significant changes.
+
+## [2.1.2] - 2018-09-04
+
+No significant changes.
+
+## [2.1.1] - 2018-08-27
+
+No significant changes.
+
+## [2.1.0] - 2018-08-20
+
+No significant changes.
+
+## [2.0.2] - 2018-08-13
+
+No significant changes.
+
+## [2.0.1] - 2018-08-01
+
+No significant changes.
+
+## [2.0.0] - 2018-07-30
+
+No significant changes.
+
+## [2.0.0-rc.3] - 2018-07-23
+
+No significant changes.
+
+## [2.0.0-rc.2] - 2018-07-16
+
+No significant changes.
+
+## [2.0.0-rc.1] - 2018-07-09
+
+No significant changes.
+
+## [2.0.0-beta.9] - 2018-07-02
+
+No significant changes.
+
+## [2.0.0-beta.8] - 2018-06-25
+
+No significant changes.
+
+## [2.0.0-beta.7] - 2018-06-11
+
+No significant changes.
+
+## [2.0.0-beta.6] - 2018-06-04
+
+### Fixed
+
+- `webos/speech` method `readAlert` to subscribe to changes in audio guidance to improve speech response time
+
+## [2.0.0-beta.5] - 2018-05-29
+
+No significant changes.
+
+## [2.0.0-beta.4] - 2018-05-21
+
+No significant changes.
+
+## [2.0.0-beta.3] - 2018-05-14
+
+No significant changes.
+
+## [2.0.0-beta.2] - 2018-05-07
+
+No significant changes.
+
+## [2.0.0-beta.1] - 2018-04-29
+
+### Added
+
+- `webos/speech` module with `readAlert()` function and `VoiceControlDecorator` Higher-order Component
+
+### Removed
+
+- `webos/VoiceReadout` module and replaced with `webos/speech.readAlert()`
+
+## [2.0.0-alpha.8] - 2018-04-17
+
+No significant changes.
+
+## [2.0.0-alpha.7 - 2018-04-03]
+
+### Added
+
+- `webos/LS2Request` `send()` parameters `onTimeout` and `timeout`
+- `webos/LS2Request` `send()` default `onFailure` and `onTimeout` handlers
+
+## [2.0.0-alpha.6] - 2018-03-22
+
+No significant changes.
+
 ## [2.0.0-alpha.5] - 2018-03-07
 
 No significant changes.
@@ -27,6 +218,10 @@ No significant changes.
 No significant changes.
 
 ## [1.14.0] - 2018-02-23
+
+No significant changes.
+
+## [1.13.4] - 2018-07-30
 
 No significant changes.
 

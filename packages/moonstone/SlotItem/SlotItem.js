@@ -1,7 +1,18 @@
 /**
- * Provides Moonstone-themed item component that accepts multiple positions of children, using the
- * usual `children` prop, as well as two additional props: `slotBefore`, and `slotAfter`.
- * It is able to be customized by a theme or application.
+ * Provides a Moonstone-themed item component that accepts multiple positions for children.
+ *
+ * Using the usual `children` prop, as well as two additional props: `slotBefore`, and `slotAfter`.
+ * It is customizable by a theme or application.
+ *
+ * @example
+ * <SlotItem autoHide="both">
+ * 	<slotBefore>
+ * 		<Icon>flag</Icon>
+ * 		<Icon>star</Icon>
+ * 	</slotBefore>
+ * 	An Item that will show some icons before and after this text when spotted
+ * 	<Icon slot="slotAfter">trash</Icon>
+ * </SlotItem>
  *
  * @module moonstone/SlotItem
  * @exports SlotItem
@@ -13,7 +24,6 @@ import compose from '@enact/core/internal/fp/compose';
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
-import {RemeasurableDecorator} from '@enact/ui/Remeasurable';
 import {SlotItemBase as UiSlotItemBase, SlotItemDecorator as UiSlotItemDecorator} from '@enact/ui/SlotItem';
 import {ItemDecorator as UiItemDecorator} from '@enact/ui/Item';
 import Toggleable from '@enact/ui/Toggleable';
@@ -24,7 +34,7 @@ import {ItemBase} from '../Item';
 import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import componentCss from './SlotItem.less';
+import componentCss from './SlotItem.module.less';
 
 /**
  * A moonstone-styled SlotItem without any behavior.
@@ -32,6 +42,7 @@ import componentCss from './SlotItem.less';
  * @class SlotItemBase
  * @memberof moonstone/SlotItem
  * @extends ui/SlotItem.SlotItemBase
+ * @omit component
  * @mixes moonstone/Item.ItemBase
  * @ui
  * @public
@@ -56,7 +67,6 @@ const SlotItemBase = kind({
 
 	styles: {
 		css: componentCss,
-		className: 'slotItem',
 		publicClassNames: ['slotItem']
 	},
 
@@ -72,14 +82,13 @@ const SlotItemBase = kind({
 });
 
 /**
- * Moonstone-specific item with overlay behaviors to apply to [Item]{@link moonstone/SlotItem.SlotItemBase}.
+ * Moonstone-specific item with overlay behaviors to apply to SlotItem.
  *
  * @class SlotItemDecorator
  * @memberof moonstone/SlotItem
  * @mixes ui/SlotItem.SlotItemDecorator
  * @mixes ui/Toggleable
  * @mixes spotlight.Spottable
- * @mixes ui/Remeasurable.RemeasurableDecorator
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes moonstone/Skinnable
  * @hoc
@@ -93,7 +102,6 @@ const SlotItemDecorator = compose(
 	),
 	UiItemDecorator, // (Touchable)
 	Spottable,
-	RemeasurableDecorator({trigger: 'remeasure'}),
 	MarqueeDecorator({className: componentCss.content, invalidateProps: ['inline', 'autoHide', 'remeasure']}),
 	Skinnable
 );

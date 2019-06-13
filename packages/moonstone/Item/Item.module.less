@@ -1,0 +1,32 @@
+// Item.module.less
+//
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+
+.item {
+	.moon-text-base(@moon-item-font-size);
+	.moon-spotlight-padding(@moon-item-vertical-padding);
+
+	line-height: @moon-item-line-height;
+	position: relative;
+	color: inherit;
+
+	.moon-locale-non-latin({
+		line-height: @moon-item-line-height;
+	});
+
+	.moon-custom-text({
+		font-size: @moon-item-font-size-large;
+		line-height: @moon-item-line-height-large;
+
+		.moon-locale-non-latin({
+			line-height: @moon-item-line-height-large;
+		});
+	});
+
+	&.inline {
+		max-width: 240px;
+	}
+
+	.locale-japanese-line-break();
+}

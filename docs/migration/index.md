@@ -1,10 +1,9 @@
 ---
-title: Migrating from Enyo
+title: Migration Guides
 ---
 
-To aid developers migrating from Eyno, the Enact team has prepared the following documents:
+The following documents will assist developers with migrating from Enyo and previous versions of Enact:
 
-* [Enyo to Enact Component Map](./enyo-enact-component-map.md)
-* [Fittables Migration Guide](./migrate-fittables.md)
-* [Enyo Application Migration Guide](./migrating-enyo-apps.md)
-* [i18n Migration Guide](./migrate-i18n.md)
+* [Enyo Migration Guides](./enyo/index.md)
+* [Migrating to Enact 2.0](./enact/migrating-to-enact-2.md)
+* [Migrating to Enact 3.0](./enact/migrating-to-enact-3.md)

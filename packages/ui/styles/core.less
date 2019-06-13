@@ -52,4 +52,40 @@
 		-moz-user-select: text;
 		user-select: text;
 	}
+
+	// To help visually tell what's going on
+	.debug {
+		// `.debug.aria` Add in an Aria overlay to visualize what is assigned to the aria attributes
+		&.aria {
+			[aria-label]::after,
+			[aria-valuetext]::after {
+				position: absolute;
+				font-size: small;
+				font-weight: 100;
+				background-color: #ffaa0099;
+				color: white;
+				border: 1px solid #ffaa00;
+				border-radius: 0.5em;
+				border-top-left-radius: 0;
+				bottom: 0;
+				padding: 0 1ex;
+				transform: translateY(100%);
+				line-height: 1.3em;
+				z-index: 2;
+				pointer-events: none;
+			}
+
+			[aria-label]::after {
+				content: "Aria Label:\0020" attr(aria-label);
+			}
+
+			[aria-valuetext]::after {
+				content: "Aria Value:\0020" attr(aria-valuetext);
+			}
+
+			[aria-label][aria-valuetext]::after {
+				content: "Aria Label:\0020'" attr(aria-label) "'; Aria Value:\0020'" attr(aria-valuetext) "';";
+			}
+		}
+	}
 }

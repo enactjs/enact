@@ -1,17 +1,18 @@
 /**
  * Exports the {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
- * Higher-order Component and {@link spotlight/SpotlightContainerDecorator.spotlightDefaultClass}
+ * higher-order component and {@link spotlight/SpotlightContainerDecorator.spotlightDefaultClass}
  * `className`. The default export is
  * {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}.
  *
  * @module spotlight/SpotlightContainerDecorator
  */
 
-import {forward} from '@enact/core/handle';
+import {forProp, forward, handle, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import {hasPointerMoved} from '../src/pointer';
 import Spotlight from '../src/spotlight';
 
 /**
@@ -21,8 +22,11 @@ import Spotlight from '../src/spotlight';
  * @public
  */
 const spotlightDefaultClass = 'spottable-default';
-const enterEvent = 'onMouseEnter';
-const leaveEvent = 'onMouseLeave';
+
+const isNewPointerPosition = (ev) => hasPointerMoved(ev.clientX, ev.clientY);
+const not = (fn) => function () {
+	return !fn.apply(this, arguments);
+};
 
 /**
  * Default config for {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
@@ -77,7 +81,7 @@ const defaultConfig = {
 };
 
 /**
- * Constructs a Higher-order Component that allows Spotlight focus to be passed to
+ * Constructs a higher-order component that allows Spotlight focus to be passed to
  * its own configurable hierarchy of spottable child controls.
  *
  * Example:
@@ -104,7 +108,7 @@ const defaultConfig = {
  * ```
  * @param  {Object}    defaultConfig  Set of default configuration parameters. Additional parameters
  *                                    are passed as configuration to {@link spotlight/Spotlight.set}
- * @param  {Function} Higher-order component
+ * @param  {Function} higher-order component
  *
  * @returns {Function} SpotlightContainerDecorator
  * @class SpotlightContainerDecorator
@@ -112,22 +116,30 @@ const defaultConfig = {
  * @hoc
  */
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const forwardMouseEnter = forward(enterEvent);
-	const forwardMouseLeave = forward(leaveEvent);
 	const {navigableFilter, preserveId, ...containerConfig} = config;
+
+	const stateFromProps = ({spotlightId, spotlightRestrict}) => {
+		const options = {restrict: spotlightRestrict};
+		const id = Spotlight.add(spotlightId || options, options);
+		return {
+			id,
+			preserveId: preserveId && id === spotlightId,
+			spotlightRestrict
+		};
+	};
+
+	const releaseContainer = ({preserveId: preserve, id}) => {
+		if (preserve) {
+			Spotlight.unmount(id);
+		} else {
+			Spotlight.remove(id);
+		}
+	};
 
 	return class extends React.Component {
 		static displayName = 'SpotlightContainerDecorator';
 
 		static propTypes = /** @lends spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.prototype */ {
-			/**
-			 * Specifies the container id. If the value is `null`, an id will be generated.
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			containerId: PropTypes.string,
-
 			/**
 			 * When `true`, controls in the container cannot be navigated.
 			 *
@@ -136,6 +148,16 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			spotlightDisabled: PropTypes.bool,
+
+			/**
+			 * Used to identify this component within the Spotlight system.
+			 *
+			 * If the value is `null`, an id will be generated.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			spotlightId: PropTypes.string,
 
 			/**
 			 * Whether or not the container is in muted mode.
@@ -163,52 +185,46 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static defaultProps = {
 			spotlightDisabled: false,
-			spotlightMuted: false
+			spotlightMuted: false,
+			spotlightRestrict: 'self-first'
 		}
 
 		constructor (props) {
 			super(props);
 
-			this.state = {
-				id: Spotlight.add(this.props.containerId)
-			};
-		}
+			this.state = stateFromProps(props);
+			// Used to indicate that we want to stop propagation on blur events that occur as a
+			// result of this component imperatively blurring itself on focus when spotlightDisabled
+			this.shouldPreventBlur = false;
 
-		componentWillMount () {
 			const cfg = {
 				...containerConfig,
 				navigableFilter: this.navigableFilter
 			};
 
-			if (this.props.spotlightRestrict) {
-				cfg.restrict = this.props.spotlightRestrict;
-			}
-
-			Spotlight.add(this.state.id, cfg);
+			Spotlight.set(this.state.id, cfg);
 		}
 
-		componentWillReceiveProps (nextProps) {
-			if (this.props.containerId !== nextProps.containerId) {
-				Spotlight.remove(this.props.containerId);
-				Spotlight.add(nextProps.containerId);
-				this.setState({
-					id: nextProps.containerId
-				});
-			}
-		}
+		static getDerivedStateFromProps (props, state) {
+			const {spotlightId: id, spotlightRestrict} = props;
+			const {id: prevId, spotlightRestrict: prevSpotlightRestrict} = state;
+			// prevId will only be undefined the first render so this prevents releasing the
+			// container after initially creating it
+			const isIdChanged = prevId && id && prevId !== id;
 
-		componentDidUpdate (prevProps) {
-			if (this.props.spotlightRestrict !== prevProps.spotlightRestrict) {
-				Spotlight.set(this.state.id, {restrict: this.props.spotlightRestrict});
+			if (isIdChanged) {
+				releaseContainer(state);
+			}
+
+			if (isIdChanged || spotlightRestrict !== prevSpotlightRestrict) {
+				return stateFromProps({spotlightId: prevId, spotlightRestrict: prevSpotlightRestrict, ...props});
+			} else {
+				return null;
 			}
 		}
 
 		componentWillUnmount () {
-			if (preserveId) {
-				Spotlight.unmount(this.state.id);
-			} else {
-				Spotlight.remove(this.state.id);
-			}
+			releaseContainer(this.state);
 		}
 
 		navigableFilter = (elem) => {
@@ -222,44 +238,72 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		handleMouseEnter = (ev) => {
-			Spotlight.setActiveContainer(this.state.id);
-			forwardMouseEnter(ev, this.props);
+		silentBlur = ({target}) => {
+			this.shouldPreventBlur = true;
+			target.blur();
+			this.shouldPreventBlur = false;
 		}
 
-		handleMouseLeave = (ev) => {
-			if (this.props.spotlightRestrict !== 'self-only') {
-				const parentContainer = ev.currentTarget.parentNode.closest('[data-container-id]');
+		handle = handle.bind(this)
+
+		handleBlur = this.handle(
+			() => this.shouldPreventBlur,
+			stop
+		)
+
+		handleFocus = this.handle(
+			forProp('spotlightDisabled', true),
+			stop,
+			this.silentBlur
+		)
+
+		handleMouseEnter = this.handle(
+			forward('onMouseEnter'),
+			isNewPointerPosition,
+			() => Spotlight.setActiveContainer(this.state.id)
+		)
+
+		handleMouseLeave = this.handle(
+			forward('onMouseLeave'),
+			not(forProp('spotlightRestrict', 'self-only')),
+			isNewPointerPosition,
+			(ev) => {
+				const parentContainer = ev.currentTarget.parentNode.closest('[data-spotlight-container]');
 				let activeContainer = Spotlight.getActiveContainer();
 
 				// if this container is wrapped by another and this is the currently active
 				// container, move the active container to the parent
 				if (parentContainer && activeContainer === this.state.id) {
-					activeContainer = parentContainer.dataset.containerId;
+					activeContainer = parentContainer.dataset.spotlightId;
 					Spotlight.setActiveContainer(activeContainer);
 				}
 			}
-			forwardMouseLeave(ev, this.props);
-		}
+		)
 
 		render () {
 			const {spotlightDisabled, spotlightMuted, ...rest} = this.props;
 			delete rest.containerId;
+			delete rest.spotlightId;
 			delete rest.spotlightRestrict;
 
-			rest['data-container-id'] = this.state.id;
-			rest[enterEvent] = this.handleMouseEnter;
-			rest[leaveEvent] = this.handleMouseLeave;
+			rest['data-spotlight-container'] = true;
+			rest['data-spotlight-id'] = this.state.id;
+			rest.onBlurCapture = this.handleBlur;
+			rest.onFocusCapture = this.handleFocus;
+			rest.onMouseEnter = this.handleMouseEnter;
+			rest.onMouseLeave = this.handleMouseLeave;
 
 			if (spotlightDisabled) {
-				rest['data-container-disabled'] = spotlightDisabled;
+				rest['data-spotlight-container-disabled'] = spotlightDisabled;
 			}
 
 			if (spotlightMuted) {
-				rest['data-container-muted'] = spotlightMuted;
+				rest['data-spotlight-container-muted'] = spotlightMuted;
 			}
 
-			return <Wrapped {...rest} />;
+			return (
+				<Wrapped {...rest} />
+			);
 		}
 	};
 });

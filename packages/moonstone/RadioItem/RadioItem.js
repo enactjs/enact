@@ -1,5 +1,8 @@
 /**
- * Provides Moonstone-themed Item component and interactive togglable radio icon.
+ * Provides a Moonstone-themed Item component and interactive toggleable radio icon.
+ *
+ * @example
+ * <RadioItem>Item</RadioItem>
  *
  * @module moonstone/RadioItem
  * @exports RadioItem
@@ -13,14 +16,15 @@ import PropTypes from 'prop-types';
 import ToggleIcon from '../ToggleIcon';
 import ToggleItem from '../ToggleItem';
 
-import componentCss from './RadioItem.less';
+import componentCss from './RadioItem.module.less';
 
 /**
- * Renders an `Item` with a radio-dot component. Useful to show a selected state on an Item.
+ * Renders an `Item` with a radio-dot icon.
  *
  * @class RadioItem
  * @memberof moonstone/RadioItem
  * @extends moonstone/ToggleItem.ToggleItem
+ * @omit iconComponent
  * @ui
  * @public
  */
@@ -50,6 +54,7 @@ const RadioItemBase = kind({
 
 	render: (props) => (
 		<ToggleItem
+			data-webos-voice-intent="SelectRadioItem"
 			{...props}
 			css={props.css}
 			iconComponent={

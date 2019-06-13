@@ -1,0 +1,32 @@
+// BodyText.module.less
+//
+@import "../styles/variables.less";
+@import "../styles/mixins.less";
+
+.bodyText {
+	.moon-body-text();
+	margin-left: @moon-spotlight-outset;
+	margin-right: @moon-spotlight-outset;
+
+	&.small {
+		font-size: @moon-body-small-font-size;
+
+		.moon-locale-non-latin({
+			font-size: @moon-non-latin-body-small-font-size;
+		});
+	}
+
+	:global(.enact-locale-right-to-left) & {
+		text-align: right;
+
+		&.centered {
+			text-align: center;
+		}
+	}
+
+	.noWrap {
+		/* Support for single-line, provided for extensibility */
+	}
+
+	.locale-japanese-line-break();
+}

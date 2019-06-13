@@ -1,23 +1,26 @@
 /**
- * Provides unstyled scroller components and behaviors to be customized by a theme or application.
+ * Unstyled scroller components and behaviors to be customized by a theme or application.
  *
  * @module ui/Scroller
  * @exports Scroller
  * @exports ScrollerBase
+ * @exports ScrollerNative
  */
 
 import classNames from 'classnames';
+import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import Scrollable from '../Scrollable';
+import ScrollableNative from '../Scrollable/ScrollableNative';
 
-import css from './Scroller.less';
+import css from './Scroller.module.less';
 
 /**
- * An unstyled base component for Scroller{@link ui/Scroller.Scroller}.
- * In most circumstances, you will want to use the Scrollable version:
- * [Scroller]{@link ui/Scroller.Scroller}
+ * An unstyled base scroller component.
+ *
+ * In most circumstances, you will want to use the Scrollable version.
  *
  * @class ScrollerBase
  * @memberof ui/Scroller
@@ -27,7 +30,7 @@ import css from './Scroller.less';
 class ScrollerBase extends Component {
 	static displayName = 'ui:ScrollerBase'
 
-	static propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
+	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
 		children: PropTypes.node.isRequired,
 
 		/**
@@ -54,7 +57,15 @@ class ScrollerBase extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
-		 * `true` if rtl, `false` if ltr.
+		 * Prop to check context value if Scrollbar exists or not.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		isVerticalScrollbarVisible: PropTypes.bool,
+
+		/**
+		 * `true` if RTL, `false` if LTR.
 		 *
 		 * @type {Boolean}
 		 * @private
@@ -66,12 +77,21 @@ class ScrollerBase extends Component {
 		direction: 'both'
 	}
 
+	constructor (props) {
+		super(props);
+
+		this.containerRef = React.createRef();
+	}
+
 	componentDidMount () {
 		this.calculateMetrics();
 	}
 
-	componentDidUpdate () {
+	componentDidUpdate (prevProps) {
 		this.calculateMetrics();
+		if (this.props.isVerticalScrollbarVisible && !prevProps.isVerticalScrollbarVisible) {
+			this.forceUpdate();
+		}
 	}
 
 	scrollBounds = {
@@ -90,11 +110,16 @@ class ScrollerBase extends Component {
 
 	getScrollBounds = () => this.scrollBounds
 
-	getRtlPositionX = (x) => (this.props.rtl ? this.uiRef.scrollBounds.maxLeft - x : x)
+	getRtlPositionX = (x) => {
+		if (this.props.rtl) {
+			return (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
+		}
+		return x;
+	}
 
 	// for Scrollable
 	setScrollPosition (x, y) {
-		const node = this.containerRef;
+		const node = this.containerRef.current;
 
 		if (this.isVertical()) {
 			node.scrollTop = y;
@@ -108,7 +133,7 @@ class ScrollerBase extends Component {
 
 	// for ScrollableNative
 	scrollToPosition (x, y) {
-		this.containerRef.scrollTo(this.getRtlPositionX(x), y);
+		this.containerRef.current.scrollTo(this.getRtlPositionX(x), y);
 	}
 
 	// for ScrollableNative
@@ -120,8 +145,8 @@ class ScrollerBase extends Component {
 	getNodePosition = (node) => {
 		const
 			{left: nodeLeft, top: nodeTop, height: nodeHeight, width: nodeWidth} = node.getBoundingClientRect(),
-			{left: containerLeft, top: containerTop} = this.containerRef.getBoundingClientRect(),
-			{scrollLeft, scrollTop} = this.containerRef,
+			{left: containerLeft, top: containerTop} = this.containerRef.current.getBoundingClientRect(),
+			{scrollLeft, scrollTop} = this.containerRef.current,
 			left = this.isHorizontal() ? (scrollLeft + nodeLeft - containerLeft) : null,
 			top = this.isVertical() ? (scrollTop + nodeTop - containerTop) : null;
 
@@ -144,19 +169,13 @@ class ScrollerBase extends Component {
 	calculateMetrics () {
 		const
 			{scrollBounds} = this,
-			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.containerRef;
+			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.containerRef.current;
 		scrollBounds.scrollWidth = scrollWidth;
 		scrollBounds.scrollHeight = scrollHeight;
 		scrollBounds.clientWidth = clientWidth;
 		scrollBounds.clientHeight = clientHeight;
 		scrollBounds.maxLeft = Math.max(0, scrollWidth - clientWidth);
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
-	}
-
-	initContainerRef = (ref) => {
-		if (ref) {
-			this.containerRef = ref;
-		}
 	}
 
 	render () {
@@ -170,12 +189,13 @@ class ScrollerBase extends Component {
 		delete rest.cbScrollTo;
 		delete rest.direction;
 		delete rest.rtl;
+		delete rest.isVerticalScrollbarVisible;
 
 		return (
 			<div
 				{...rest}
 				className={classNames(className, css.hideNativeScrollbar)}
-				ref={this.initContainerRef}
+				ref={this.containerRef}
 				style={mergedStyle}
 			/>
 		);
@@ -185,7 +205,7 @@ class ScrollerBase extends Component {
 /**
  * An unstyled scroller.
  *
- * Usage:
+ * Example:
  * ```
  * <Scroller>Scroll me.</Scroller>
  * ```
@@ -200,14 +220,82 @@ class ScrollerBase extends Component {
 const Scroller = (props) => (
 	<Scrollable
 		{...props}
-		childRenderer={(scrollerProps) => ( // eslint-disable-line react/jsx-no-bind
-			<ScrollerBase {...scrollerProps} />
+		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
+			<ScrollerBase {...rest} ref={initChildRef} />
 		)}
 	/>
 );
 
+Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
+	/**
+	 * Direction of the scroller.
+	 *
+	 * Valid values are:
+	 * * `'both'`,
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'both'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+};
+
+Scroller.defaultProps = {
+	direction: 'both'
+};
+
+/**
+ * An unstyled native scroller, [ScrollableNative]{@link ui/Scrollable.ScrollableNative} applied.
+ * For smooth native scrolling, web engine with below Chromium 61, should be launched
+ * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
+ * The one with Chromium 61 or above, is launched to support it by default.
+ *
+ * Example:
+ * ```
+ * <ScrollerNative>Scroll me.</ScrollerNative>
+ * ```
+ *
+ * @class ScrollerNative
+ * @memberof ui/Scroller
+ * @extends ui/Scrollable.ScrollableNative
+ * @extends ui/Scrollable.ScrollerBase
+ * @ui
+ * @private
+ */
+const ScrollerNative = (props) => (
+	<ScrollableNative
+		{...props}
+		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
+			<ScrollerBase {...rest} ref={initChildRef} />
+		)}
+	/>
+);
+
+ScrollerNative.propTypes = /** @lends ui/Scroller.ScrollerNative.prototype */ {
+	/**
+	 * Direction of the scroller.
+	 *
+	 * Valid values are:
+	 * * `'both'`,
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'both'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+};
+
+ScrollerNative.defaultProps = {
+	direction: 'both'
+};
+
 export default Scroller;
 export {
 	Scroller,
-	ScrollerBase
+	ScrollerBase,
+	ScrollerNative
 };

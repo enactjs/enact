@@ -1,5 +1,6 @@
 /**
  * Provides Moonstone-themed indeterminate progress indicator (spinner) components and behaviors.
+ *
  * Used for indicating to the user that something is busy and interaction is temporarily suspended.
  *
  * @example
@@ -17,14 +18,15 @@ import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
 import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
-import Spotlight from '@enact/spotlight';
+import Pause from '@enact/spotlight/Pause';
 import UiSpinnerBase from '@enact/ui/Spinner';
+import Spotlight from '@enact/spotlight';
 
 import $L from '../internal/$L';
 import Marquee from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import componentCss from './Spinner.less';
+import componentCss from './Spinner.module.less';
 
 /**
  * A component that shows spinning balls, with optional text as children.
@@ -57,10 +59,14 @@ const SpinnerCore = kind({
 
 	render: ({children, css, ...rest}) => (
 		<div aria-live="off" role="alert" {...rest}>
-			<div className={css.ballDecorator}>
-				<div className={`${css.ball} ${css.ball1}`} />
-				<div className={`${css.ball} ${css.ball2}`} />
-				<div className={`${css.ball} ${css.ball3}`} />
+			<div className={css.bg}>
+				<div className={css.decorator}>
+					<div className={css.fan1} />
+					<div className={css.fan2} />
+					<div className={css.fan3} />
+					<div className={css.fan4} />
+					<div className={css.cap} />
+				</div>
 			</div>
 			{children ?
 				<Marquee className={css.client} marqueeOn="render" alignment="center">
@@ -98,8 +104,19 @@ const SpinnerBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, the background-color  of the spinner is transparent.
+		 * Customize the size of this component.
 		 *
+		 * Recommended usage is "medium" (default) for standalone and popup scenarios, while "small"
+		 * is best suited for use inside other elements, like {@link moonstone/SlotItem.SlotItem}.
+		 *
+		 * @type {('medium'|'small')}
+		 * @default 'medium'
+		 * @public
+		 */
+		size: PropTypes.oneOf(['medium', 'small']),
+
+		/**
+		 * Removes the background color (making it transparent).
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -109,6 +126,7 @@ const SpinnerBase = kind({
 	},
 
 	defaultProps: {
+		size: 'medium',
 		transparent: false
 	},
 
@@ -118,7 +136,8 @@ const SpinnerBase = kind({
 	},
 
 	computed: {
-		className: ({children, transparent, styler}) => styler.append(
+		className: ({children, size, transparent, styler}) => styler.append(
+			size,
 			{content: !!children, transparent}
 		)
 	},
@@ -139,11 +158,12 @@ const SpinnerBase = kind({
 });
 
 /**
- * A HOC to make sure spotlight is paused when `blockClickOn` prop is `'screen'`, and resume
- * spotlight when unmounted. However, spotlight is not paused when `blockClickOn` prop is
+ * A higher-order component that pauses spotlight when `blockClickOn` prop is `'screen'`.
+ *
+ * Resumes spotlight when unmounted. However, spotlight is not paused when `blockClickOn` prop is
  * `'container'`. Blocking spotlight within the container is up to app implementation.
  *
- * @hoc SpinnerSpotlightDecorator
+ * @hoc
  * @memberof moonstone/Spinner
  * @ui
  * @private
@@ -157,6 +177,7 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 			 * Determines how far the click-blocking should extend.
 			 *
 			 * It can be either `'screen'`, `'container'`, or `null`. `'screen'` pauses spotlight.
+			 * Changing this property to `'screen'` after creation is not supported.
 			 *
 			 * @type {String}
 			 * @default null
@@ -165,11 +186,18 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 			blockClickOn: PropTypes.oneOf(['screen', 'container', null])
 		}
 
-		componentWillMount () {
-			const {blockClickOn} = this.props;
+		constructor (props) {
+			super(props);
+
+			this.paused = new Pause('Spinner');
+			const {blockClickOn} = props;
+			const current = Spotlight.getCurrent();
 
 			if (blockClickOn === 'screen') {
-				Spotlight.pause();
+				this.paused.pause();
+				if (current) {
+					current.blur();
+				}
 			}
 		}
 
@@ -177,7 +205,8 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
 			const {blockClickOn} = this.props;
 
 			if (blockClickOn === 'screen') {
-				Spotlight.resume();
+				Spotlight.focus();
+				this.paused.resume();
 			}
 		}
 
@@ -194,8 +223,7 @@ const SpinnerSpotlightDecorator = hoc((config, Wrapped) => {
  *
  * @hoc
  * @memberof moonstone/Spinner
- * @mixes moonstone/Spinner.SpinnerSpotlightDecorator
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const SpinnerDecorator = compose(
@@ -205,7 +233,7 @@ const SpinnerDecorator = compose(
 );
 
 /**
- * A ready to use Moonstone-styled Spinner.
+ * A Moonstone-styled Spinner.
  *
  * @class Spinner
  * @memberof moonstone/Spinner

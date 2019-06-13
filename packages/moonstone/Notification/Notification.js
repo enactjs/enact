@@ -1,8 +1,9 @@
 /**
- * Exports the {@link moonstone/Notification.Notification} and {@link moonstone/Notification.NotificationBase}
- * components. The default export is {@link moonstone/Notification.Notification}.
+ * Moonstone-styled Notification components.
  *
  * @module moonstone/Notification
+ * @exports Notification
+ * @exports NotificationBase
  */
 
 import kind from '@enact/core/kind';
@@ -12,11 +13,28 @@ import Slottable from '@enact/ui/Slottable';
 
 import Popup from '../Popup';
 
-import css from './Notification.less';
+import componentCss from './Notification.module.less';
+
+// ENYO-5691: Workaround to fix a text rendering issue by aligning the content to the pixel grid
+const fixTransform = (node) => {
+	if (!node) return;
+
+	const parent = node.parentNode;
+	const {left, top} = parent.getBoundingClientRect();
+	const deltaY = Math.round(top) - top;
+	const deltaX = Math.round(left) - left;
+	if (deltaY !== 0 || deltaX !== 0) {
+		// on webOS, the layer promotion is necessary to resolve the text rendering issue
+		parent.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0)`;
+		parent.style.willChange = 'transform';
+	}
+};
 
 /**
- * {@link moonstone/Notification.NotificationBase} is a toast-like minimal popup that comes up
- * from the bottom of the screen. It requires a button to be provided and present to close it.
+ * A Moonstone styled notification component.
+ *
+ * It provides a notification modal which can be opened and closed, overlaying an app. Apps will
+ * want to use {@link moonstone/Notification.Notification}.
  *
  * @class NotificationBase
  * @memberof moonstone/Notification
@@ -28,19 +46,21 @@ const NotificationBase = kind({
 
 	propTypes: /** @lends moonstone/Notification.NotificationBase.prototype */ {
 		/**
-		 * Buttons, typically to close or take action in the Notification. Buttons must have their
-		 * `small` property set and will be coerced to `small` if not specified.
+		 * Buttons for the Notification.
 		 *
-		 * @type {Node}
+		 * These typically close or take action in the Notification. Buttons must have their
+		 * `size` property set to `'small'` and will be coerced to `'small'` if not specified.
+		 *
+		 * @type {Element|Element[]}
 		 * @public
 		 */
 		buttons: PropTypes.oneOfType([
-			PropTypes.arrayOf(PropTypes.element),
-			PropTypes.element
-		]).isRequired,
+			PropTypes.element,
+			PropTypes.arrayOf(PropTypes.element)
+		]),
 
 		/**
-		 * The contents to be displayed in the body of the Notification.
+		 * The contents for the body of the Notification.
 		 *
 		 * @type {Node}
 		 * @public
@@ -48,7 +68,20 @@ const NotificationBase = kind({
 		children: PropTypes.node,
 
 		/**
-		 * When `true`, the popup will not close when the user presses `ESC` key.
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `notification` - The root class name
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
+
+		/**
+		 * Indicates that the notification will not trigger `onClose` on the *ESC* key press.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -57,9 +90,10 @@ const NotificationBase = kind({
 		noAutoDismiss: PropTypes.bool,
 
 		/**
-		 * A function to be run when a closing action is invoked by the user. These actions include
-		 * pressing `ESC` key or clicking on the close button. It is the responsibility of the
-		 * callback to set the `open` state to false.
+		 * Called when a closing action is invoked by the user.
+		 *
+		 * These actions include pressing *ESC* key or clicking on the close button. It is the
+		 * responsibility of the callback to set the `open` state to `false`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -67,7 +101,9 @@ const NotificationBase = kind({
 		onClose: PropTypes.func,
 
 		/**
-		 * Is this control in the expanded state (true), opened, with the contents visible?
+		 * Controls the visibility of the Notification.
+		 *
+		 * By default, the Notification and its contents are not rendered until `open`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -76,7 +112,9 @@ const NotificationBase = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.
+		 * Determines the technique used to cover the screen when the notification is present.
+		 *
+		 * * Values: `'transparent'`, `'translucent'`, or `'none'`.
 		 *
 		 * @type {String}
 		 * @default 'transparent'
@@ -91,13 +129,14 @@ const NotificationBase = kind({
 	},
 
 	styles: {
-		css,
-		className: 'notification'
+		css: componentCss,
+		className: 'notification',
+		publicClassNames: ['notification']
 	},
 
 	computed: {
 		className: ({className, buttons, styler}) => {
-			if (buttons.length > 3) {
+			if (buttons && buttons.length > 3) {
 				return styler.append({wide: true});
 			} else {
 				return className;
@@ -105,22 +144,22 @@ const NotificationBase = kind({
 		},
 		buttons: ({buttons}) => React.Children.map(buttons, (button) => {
 			if (button && button.props && !button.props.small) {
-				return React.cloneElement(button, {small: true});
+				return React.cloneElement(button, {size: 'small'});
 			} else {
 				return button;
 			}
 		})
 	},
 
-	render: ({buttons, children, ...rest}) => {
+	render: ({buttons, children, css, ...rest}) => {
 		return (
 			<Popup noAnimation {...rest}>
-				<div className={css.body}>
+				<div className={css.body} ref={fixTransform}>
 					{children}
 				</div>
-				<div className={css.buttons}>
+				{buttons ? <div className={css.buttons}>
 					{buttons}
-				</div>
+				</div> : null}
 			</Popup>
 		);
 	}
@@ -128,8 +167,7 @@ const NotificationBase = kind({
 
 
 /**
- * {@link moonstone/Notification.Notification} is modal component with a message, and an area
- * for additional controls.
+ * A Moonstone styled modal component with a message, and an area for additional controls.
  *
  * @class Notification
  * @memberof moonstone/Notification

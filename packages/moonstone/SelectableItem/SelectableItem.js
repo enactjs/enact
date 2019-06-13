@@ -1,34 +1,39 @@
 /**
- * Provides Moonstone-themed item component and interactive togglable circle.
+ * Provides a Moonstone-themed [Item]{@link moonstone/Item} with an icon that toggles on and off.
+ *
+ * @example
+ * <SelectableItem>Click Me</SelectableItem>
  *
  * @module moonstone/SelectableItem
  * @exports SelectableItem
  * @exports SelectableItemBase
+ * @exports SelectableItemDecorator
  */
 
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import ToggleItem from '../ToggleItem';
+import {ToggleItemBase, ToggleItemDecorator} from '../ToggleItem';
 
 import SelectableIcon from './SelectableIcon';
 
-import componentCss from './SelectableItem.less';
+import componentCss from './SelectableItem.module.less';
 
 /**
- * Renders an item with a circle shaped component. Useful to show a selected state on an item.
+ * Renders an [Item]{@link moonstone/Item} with a circle icon, by default.
  *
- * @class SelectableItem
+ * @class SelectableItemBase
  * @memberof moonstone/SelectableItem
- * @extends moonstone/ToggleItem.ToggleItem
+ * @extends moonstone/ToggleItem.ToggleItemBase
+ * @omit iconComponent
  * @ui
  * @public
  */
 const SelectableItemBase = kind({
 	name: 'SelectableItem',
 
-	propTypes: /** @lends moonstone/SelectableItem.SelectableItem.prototype */ {
+	propTypes: /** @lends moonstone/SelectableItem.SelectableItemBase.prototype */ {
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
@@ -50,7 +55,8 @@ const SelectableItemBase = kind({
 	},
 
 	render: (props) => (
-		<ToggleItem
+		<ToggleItemBase
+			data-webos-voice-intent="SelectCheckItem"
 			{...props}
 			css={props.css}
 			iconComponent={SelectableIcon}
@@ -58,8 +64,32 @@ const SelectableItemBase = kind({
 	)
 });
 
-export default SelectableItemBase;
+/**
+ * Adds interactive toggle functionality to `SelectableItemBase`.
+ *
+ * @class SelectableItemDecorator
+ * @memberof moonstone/SelectableItem
+ * @mixes moonstone/ToggleItem.ToggleItemDecorator
+ * @hoc
+ * @public
+ */
+const SelectableItemDecorator = ToggleItemDecorator({invalidateProps: ['inline', 'selected']});
+
+/**
+ * A Moonstone-styled item with a toggle icon, marqueed text, and `Spotlight` focus.
+ *
+ * @class SelectableItem
+ * @memberof moonstone/SelectableItem
+ * @extends moonstone/SelectableItem.SelectableItemBase
+ * @mixes moonstone/SelectableItem.SelectableItemDecorator
+ * @ui
+ * @public
+ */
+const SelectableItem = SelectableItemDecorator(SelectableItemBase);
+
+export default SelectableItem;
 export {
-	SelectableItemBase as SelectableItem,
-	SelectableItemBase
+	SelectableItem,
+	SelectableItemBase,
+	SelectableItemDecorator
 };

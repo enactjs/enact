@@ -1,5 +1,10 @@
 /**
- * Provides Moonstone-themed item component and interactive togglable switch.
+ * Provides Moonstone-themed item component and interactive toggleable switch.
+ *
+ * @example
+ * <SwitchItem>
+ * 	Item
+ * </SwitchItem>
  *
  * @module moonstone/SwitchItem
  * @exports SwitchItem
@@ -7,20 +12,23 @@
  */
 
 import kind from '@enact/core/kind';
+import ComponentOverride from '@enact/ui/ComponentOverride';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import Switch from '../Switch';
 import ToggleItem from '../ToggleItem';
 
-import componentCss from './SwitchItem.less';
+import componentCss from './SwitchItem.module.less';
 
 /**
- * Renders an item with a switch component. Useful to show an on/off state.
+ * Renders an item with a [Switch]{@link moonstone/Switch}.
  *
  * @class SwitchItem
  * @memberof moonstone/SwitchItem
  * @extends moonstone/ToggleItem.ToggleItem
+ * @omit iconComponent
  * @ui
  * @public
  */
@@ -39,7 +47,20 @@ const SwitchItemBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		/**
+		 * Customize the component used as the switch.
+		 *
+		 * @type {Element|Component}
+		 * @default {@link moonstone/Switch.Switch}
+		 * @private
+		 */
+		iconComponent: EnactPropTypes.componentOverride
+	},
+
+	defaultProps: {
+		iconComponent: Switch
 	},
 
 	styles: {
@@ -48,13 +69,20 @@ const SwitchItemBase = kind({
 		publicClassNames: ['switchItem']
 	},
 
+	computed: {
+		iconComponent: ({css, iconComponent}) => (
+			<ComponentOverride
+				component={iconComponent}
+				className={css.switch}
+			/>
+		)
+	},
+
 	render: (props) => (
 		<ToggleItem
+			data-webos-voice-intent="SetToggleItem"
 			{...props}
 			css={props.css}
-			iconComponent={
-				<Switch className={componentCss.switch} />
-			}
 			iconPosition="after"
 		/>
 	)

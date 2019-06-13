@@ -1,6 +1,6 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {coerceArray} from '@enact/core/util';
+import {coerceArray, memoize} from '@enact/core/util';
 import ilib from '@enact/i18n';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
@@ -18,24 +18,93 @@ const SELECTED_DAY_TYPES = {
 	SELECTED_NONE: 4
 };
 
+function adjustWeekends (firstDayOfWeek, day) {
+	return ((day - firstDayOfWeek + 7) % 7);
+}
+
+const memoLocaleState = memoize((key, dayNameLength) => {
+	const df = new DateFmt({length: 'full'});
+	const sdf = new DateFmt({length: dayNameLength});
+	const li = new LocaleInfo(ilib.getLocale());
+	const daysOfWeek = df.getDaysOfWeek();
+	const days = sdf.getDaysOfWeek();
+	const firstDayOfWeek = li.getFirstDayOfWeek();
+
+	const state = {
+		abbreviatedDayNames: [],
+		firstDayOfWeek: 0,
+		fullDayNames: [],
+		weekendEnd: 0,
+		weekendStart: 6
+	};
+
+	if (li.getWeekEndStart) {
+		state.weekendStart = adjustWeekends(firstDayOfWeek, li.getWeekEndStart());
+	}
+
+	if (li.getWeekEndEnd) {
+		state.weekendEnd = adjustWeekends(firstDayOfWeek, li.getWeekEndEnd());
+	}
+
+	for (let i = 0; i < 7; i++) {
+		const index = (i + firstDayOfWeek) % 7;
+		state.fullDayNames[i] = daysOfWeek[index];
+		state.abbreviatedDayNames[i] = days[index];
+	}
+
+	return state;
+});
+
+function getLocaleState (dayNameLength, locale) {
+	if (typeof window === 'undefined') {
+		return {
+			abbreviatedDayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+			firstDayOfWeek: 0,
+			fullDayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+			weekendEnd: 0,
+			weekendStart: 6
+		};
+	}
+
+	return memoLocaleState(dayNameLength + locale, dayNameLength);
+}
+
 /**
- * A component that allows the user to choose day(s) of the week.
+ * Applies Moonstone specific behaviors to
+ * [DaySelector]{@link moonstone/DaySelector.DaySelectorBase}.
  *
- * @hoc DaySelectorDecorator
+ * @hoc
  * @memberof moonstone/DaySelector
  * @mixes ui/Changeable.Changeable
- * @mixes ui/Skinnable.Skinnable
- * @ui
- * @private
+ * @mixes moonstone/Skinnable.Skinnable
+ * @public
  */
-const DaySelectorDecorator = hoc((config, Wrapped) => {
+const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
 
-		static displayName = 'DaySelector'
+		static displayName = 'DaySelectorDecorator'
 
 		static propTypes = /** @lends moonstone/DaySelector.DaySelectorDecorator.prototype */ {
 			/**
-			 * When `true`, applies a disabled style and the control becomes non-interactive.
+			 * The "aria-label" for the selector.
+			 *
+			 * @memberof moonstone/DaySelector.DaySelectorDecorator.prototype
+			 * @type {String}
+			 * @private
+			 */
+			'aria-label': PropTypes.string,
+
+			/**
+			 * The format for names of days used in the label.
+			 *
+			 * @type {String}
+			 * @default 'long'
+			 * @public
+			 */
+			dayNameLength: PropTypes.oneOf(['short', 'medium', 'long', 'full']),
+
+			/**
+			 * Applies a disabled style and prevents interacting with the component.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -44,20 +113,40 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * Use long day names (Sunday, Monday..) for labels
+			 * The text displayed in the label when every day is selected.
 			 *
-			 * If `false` short text will be displayed for the the days (Sun, Mon..)
-			 *
-			 * @type {Boolean}
-			 * @default false
+			 * @type {String}
+			 * @default 'Every Day'
 			 * @public
 			 */
-			longDayLabels: PropTypes.bool,
+			everyDayText: PropTypes.string,
 
 			/**
-			 * Called when an item is selected. The first parameter will be an object containing a
-			 * `selected` member, containing the array of numbers representing the selected days, zero
-			 * indexed.
+			 * The text displayed in the label when every weekeday is selected.
+			 *
+			 * @type {String}
+			 * @default 'Every Weekday'
+			 * @public
+			 */
+			everyWeekdayText: PropTypes.string,
+
+			/**
+			 * The text displayed in the label when every weekend day is selected.
+			 *
+			 * @type {String}
+			 * @default 'Every Weekend'
+			 * @public
+			 */
+			everyWeekendText: PropTypes.string,
+
+			locale: PropTypes.string,
+
+			/**
+			 * Called when an day is selected or unselected.
+			 *
+			 * The event payload will be an object with the following members:
+			 * * `selected` - An array of numbers representing the selected days, 0 indexed
+			 * * `content` - Localized string representing the selected days
 			 *
 			 * @type {Function}
 			 * @public
@@ -70,61 +159,25 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			 * @type {Number|Number[]}
 			 * @public
 			 */
-			selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)])
+			selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)]),
+
+			/**
+			 * Used by DayPicker to generate the aria-label.
+			 *
+			 * Type set to "any" to avoid warnings if passed in some other unknown scenario
+			 *
+			 * @type {Node}
+			 * @private
+			 */
+			title: PropTypes.any
 		}
 
 		static defaultProps = {
-			disabled: false,
-			longDayLabels: false
+			dayNameLength: 'long',
+			disabled: false
 		}
 
-		constructor (props) {
-			super(props);
-
-			// default indexes
-			this.firstDayOfWeek = 0;
-			this.weekendStart = 6;
-			this.weekendEnd = 0;
-
-			// default strings for long and short day strings
-			this.longDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-			this.shortDayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-			this.initIlib();
-		}
-
-		componentWillUpdate () {
-			this.initIlib();
-		}
-
-		initIlib () {
-			const locale = ilib.getLocale();
-			if (this.locale !== locale && typeof window === 'object') {
-				this.locale = locale;
-
-				const df = new DateFmt({length: 'full'});
-				const sdf = new DateFmt({length: 'long'});
-				const li = new LocaleInfo(ilib.getLocale());
-				const daysOfWeek = df.getDaysOfWeek();
-				const days = sdf.getDaysOfWeek();
-
-				this.firstDayOfWeek = li.getFirstDayOfWeek();
-				this.weekendStart = li.getWeekEndStart ? this.adjustWeekends(li.getWeekEndStart()) : this.weekendStart;
-				this.weekendEnd = li.getWeekEndEnd ? this.adjustWeekends(li.getWeekEndEnd()) : this.weekendEnd;
-
-				for (let i = 0; i < 7; i++) {
-					const index = (i + this.firstDayOfWeek) % 7;
-					this.longDayNames[i] = daysOfWeek[index];
-					this.shortDayNames[i] = days[index];
-				}
-
-				this.everyDayText = $L('Every Day');
-				this.everyWeekdayText = $L('Every Weekday');
-				this.everyWeekendText = $L('Every Weekend');
-			}
-		}
-
-		/**
+		/*
 		 * Determines which day type should be returned, based on the selected indices.
 		 *
 		 * @param {Number[]} [selected] Array of day indexes
@@ -132,8 +185,9 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 		 * @returns {Number}
 		 */
 		calcSelectedDayType (selected) {
-			if (!selected) return SELECTED_DAY_TYPES.SELECTED_NONE;
-			selected = coerceArray(selected);
+			if (selected == null) return SELECTED_DAY_TYPES.SELECTED_NONE;
+
+			const state = getLocaleState(this.props.dayNameLength, this.props.locale);
 
 			let
 				weekendStart = false,
@@ -142,14 +196,14 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 
 			const
 				length = selected.length,
-				weekendLength = this.weekendStart === this.weekendEnd ? 1 : 2;
+				weekendLength = state.weekendStart === state.weekendEnd ? 1 : 2;
 
 			if (length === 7) return SELECTED_DAY_TYPES.EVERY_DAY;
 
 			for (let i = 0; i < 7; i++) {
 				index = selected[i];
-				weekendStart = weekendStart || this.weekendStart === index;
-				weekendEnd = weekendEnd || this.weekendEnd === index;
+				weekendStart = weekendStart || state.weekendStart === index;
+				weekendEnd = weekendEnd || state.weekendEnd === index;
 			}
 
 			if (weekendStart && weekendEnd && length === weekendLength) {
@@ -161,7 +215,7 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		/**
+		/*
 		 * Determines whether it should return "Every Day", "Every Weekend", "Every Weekday" or list of
 		 * days for a given selected day type.
 		 *
@@ -171,39 +225,82 @@ const DaySelectorDecorator = hoc((config, Wrapped) => {
 		 *
 		 * @returns {String} "Every Day", "Every Weekend", "Every Week" or list of days
 		 */
-		getSelectedDayString = (type, selected, selectDayStrings) => {
+		getSelectedDayString (selected, selectDayStrings) {
+			const {
+				everyDayText = $L('Every Day'),
+				everyWeekdayText = $L('Every Weekday'),
+				everyWeekendText = $L('Every Weekend')
+			} = this.props;
+
+			if (selected != null) {
+				selected = coerceArray(selected);
+			}
+
+			const type = this.calcSelectedDayType(selected);
+			const format = (list) => {
+				let separator = this.props.locale === 'fa-IR' ? '، ' : ', ';
+
+				return list.join(separator);
+			};
+
 			switch (type) {
 				case SELECTED_DAY_TYPES.EVERY_DAY :
-					return this.everyDayText;
+					return everyDayText;
 				case SELECTED_DAY_TYPES.EVERY_WEEKEND :
-					return this.everyWeekendText;
+					return everyWeekendText;
 				case SELECTED_DAY_TYPES.EVERY_WEEKDAY :
-					return this.everyWeekdayText;
+					return everyWeekdayText;
 				case SELECTED_DAY_TYPES.SELECTED_DAYS :
-					return selected.sort().map((dayIndex) => selectDayStrings[dayIndex]).join(', ');
+					return format(selected.sort().map((dayIndex) => selectDayStrings[dayIndex]));
 				case SELECTED_DAY_TYPES.SELECTED_NONE :
 					return '';
 			}
 		}
 
-		adjustWeekends (day) {
-			return ((day - this.firstDayOfWeek + 7) % 7);
+		getAriaLabel () {
+			const {'aria-label': ariaLabel, dayNameLength, locale, selected, title} = this.props;
+			const {fullDayNames} = getLocaleState(dayNameLength, locale);
+
+			if (ariaLabel != null || title == null || selected == null || selected.length === 0) {
+				return ariaLabel;
+			}
+
+			const label = this.getSelectedDayString(selected, fullDayNames);
+
+			return `${title} ${label}`;
 		}
 
 		handleSelect = ({selected}) => {
-			const type = this.calcSelectedDayType(selected);
-			const labels = this.props.longDayLabels ? this.longDayNames : this.shortDayNames;
-			const content = this.getSelectedDayString(type, selected, labels);
+			const {dayNameLength, locale} = this.props;
+			const {abbreviatedDayNames: labels} = getLocaleState(dayNameLength, locale);
+			const content = this.getSelectedDayString(selected, labels);
 
 			forwardSelect({selected, content}, this.props);
 		}
 
 		render () {
-			const {longDayLabels, ...rest} = this.props;
+			const {dayNameLength, locale, selected, ...rest} = this.props;
+			const {abbreviatedDayNames, fullDayNames} = getLocaleState(dayNameLength, locale);
+			const content = this.getSelectedDayString(selected, abbreviatedDayNames);
+
+			delete rest.everyDayText;
+			delete rest.everyWeekdayText;
+			delete rest.everyWeekendText;
 
 			return (
-				<Wrapped {...rest} onSelect={this.handleSelect}>
-					{longDayLabels ? this.longDayNames : this.shortDayNames}
+				<Wrapped
+					{...rest}
+					aria-label={this.getAriaLabel()}
+					label={content}
+					onSelect={this.handleSelect}
+					selected={selected}
+				>
+					{abbreviatedDayNames.map((children, index) => ({
+						children,
+						// "short" dayNameLength can result in the same name so adding index
+						key: `${index} ${children}`,
+						'aria-label': fullDayNames[index]
+					}))}
 				</Wrapped>
 			);
 		}

@@ -1,15 +1,15 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
-import sinon from 'sinon';
 
 import {addCancelHandler, Cancelable, removeCancelHandler} from '../Cancelable';
 
 describe('Cancelable', () => {
 
 	// Suite-wide setup
-	const Component = () => (
-		<div>
-			<button />
+	// eslint-disable-next-line
+	const Component = ({children, className, onKeyUp}) => (
+		<div onKeyUp={onKeyUp} className={className}>
+			{children}
 		</div>
 	);
 
@@ -17,15 +17,17 @@ describe('Cancelable', () => {
 		return {
 			keyCode,
 			nativeEvent: {
-				stopImmediatePropagation: sinon.spy()
+				stopImmediatePropagation: jest.fn()
 			}
 		};
 	};
 
+	/* eslint-disable react/jsx-no-bind */
 	const returnsTrue = () => true;
+	const stop = (ev) => ev.stopPropagation();
 
-	it('should call onCancel from prop for escape key', function () {
-		const handleCancel = sinon.spy(returnsTrue);
+	test('should call onCancel from prop for escape key', () => {
+		const handleCancel = jest.fn(returnsTrue);
 		const Comp = Cancelable(
 			{onCancel: 'onCustomEvent'},
 			Component
@@ -37,14 +39,14 @@ describe('Cancelable', () => {
 
 		subject.simulate('keyup', makeKeyEvent(27));
 
-		const expected = true;
-		const actual = handleCancel.calledOnce;
+		const expected = 1;
+		const actual = handleCancel.mock.calls.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should only call onCancel for escape key by default', function () {
-		const handleCancel = sinon.spy(returnsTrue);
+	test('should only call onCancel for escape key by default', () => {
+		const handleCancel = jest.fn(returnsTrue);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
 			Component
@@ -56,14 +58,14 @@ describe('Cancelable', () => {
 
 		subject.simulate('keyup', makeKeyEvent(27));
 
-		const expected = true;
-		const actual = handleCancel.calledOnce;
+		const expected = 1;
+		const actual = handleCancel.mock.calls.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should not call onCancel for non-escape key', function () {
-		const handleCancel = sinon.spy(returnsTrue);
+	test('should not call onCancel for non-escape key', () => {
+		const handleCancel = jest.fn(returnsTrue);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
 			Component
@@ -75,14 +77,14 @@ describe('Cancelable', () => {
 
 		subject.simulate('keyup', makeKeyEvent(42));
 
-		const expected = false;
-		const actual = handleCancel.calledOnce;
+		const expected = 0;
+		const actual = handleCancel.mock.calls.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should stop propagation for escape key', function () {
-		const handleCancel = sinon.spy(returnsTrue);
+	test('should stop propagation when handled', () => {
+		const handleCancel = jest.fn(stop);
 		const keyEvent = makeKeyEvent(27);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
@@ -95,14 +97,14 @@ describe('Cancelable', () => {
 
 		subject.simulate('keyup', keyEvent);
 
-		const expected = true;
-		const actual = keyEvent.nativeEvent.stopImmediatePropagation.calledOnce;
+		const expected = 1;
+		const actual = keyEvent.nativeEvent.stopImmediatePropagation.mock.calls.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should not stop propagation for non-escape key', function () {
-		const handleCancel = sinon.spy(returnsTrue);
+	test('should not stop propagation for not handled', () => {
+		const handleCancel = jest.fn(returnsTrue);
 		const keyEvent = makeKeyEvent(42);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
@@ -115,17 +117,17 @@ describe('Cancelable', () => {
 
 		subject.simulate('keyup', keyEvent);
 
-		const expected = false;
-		const actual = keyEvent.nativeEvent.stopImmediatePropagation.calledOnce;
+		const expected = 0;
+		const actual = keyEvent.nativeEvent.stopImmediatePropagation.mock.calls.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should forward to onKeyUp handler for any key', function () {
-		const handleKeyUp = sinon.spy();
+	test('should forward to onKeyUp handler for any key', () => {
+		const handleKeyUp = jest.fn();
 		const keyEvent = makeKeyEvent(42);
 		const Comp = Cancelable(
-			{onCancel: () => true},
+			{onCancel: returnsTrue},
 			Component
 		);
 
@@ -135,16 +137,16 @@ describe('Cancelable', () => {
 
 		subject.simulate('keyup', keyEvent);
 
-		const expected = true;
-		const actual = handleKeyUp.calledOnce;
+		const expected = 1;
+		const actual = handleKeyUp.mock.calls.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should call onCancel when additional cancel handlers pass', function () {
+	test('should call onCancel when additional cancel handlers pass', () => {
 		const customCancelHandler = (ev) => ev.keyCode === 461;
 		addCancelHandler(customCancelHandler);
-		const handleCancel = sinon.spy(returnsTrue);
+		const handleCancel = jest.fn(returnsTrue);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
 			Component
@@ -158,50 +160,146 @@ describe('Cancelable', () => {
 
 		removeCancelHandler(customCancelHandler);
 
-		const expected = true;
-		const actual = handleCancel.calledOnce;
+		const expected = 1;
+		const actual = handleCancel.mock.calls.length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	describe('modal instances', function () {
+	test(
+		'should bubble up the component tree when config handler does not call stopPropagation',
+		() => {
+			const handleCancel = jest.fn(returnsTrue);
+			const Comp = Cancelable(
+				{onCancel: handleCancel},
+				Component
+			);
+
+			const subject = mount(
+				<Comp>
+					<Comp className="second" />
+				</Comp>
+			);
+
+			subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+
+			const expected = 2;
+			const actual = handleCancel.mock.calls.length;
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+
+	test(
+		'should not bubble up the component tree when config handler calls stopPropagation',
+		() => {
+			const handleCancel = jest.fn(stop);
+			const Comp = Cancelable(
+				{onCancel: handleCancel},
+				Component
+			);
+
+			const subject = mount(
+				<Comp>
+					<Comp className="second" />
+				</Comp>
+			);
+
+			subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+
+			const expected = 1;
+			const actual = handleCancel.mock.calls.length;
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should bubble up the component tree when prop handler does not call stopPropagation',
+		() => {
+			const handleCancel = jest.fn();
+			const Comp = Cancelable(
+				{onCancel: 'onCustomEvent'},
+				Component
+			);
+
+			const subject = mount(
+				<Comp onCustomEvent={handleCancel}>
+					<Comp className="second" onCustomEvent={returnsTrue} />
+				</Comp>
+			);
+
+			subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+
+			const expected = 1;
+			const actual = handleCancel.mock.calls.length;
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should not bubble up the component tree when prop handler calls stopPropagation',
+		() => {
+			const handleCancel = jest.fn();
+			const Comp = Cancelable(
+				{onCancel: 'onCustomEvent'},
+				Component
+			);
+
+			const subject = mount(
+				<Comp onCustomEvent={handleCancel}>
+					<Comp className="second" onCustomEvent={stop} />
+				</Comp>
+			);
+
+			subject.find('Component.second').simulate('keyup', makeKeyEvent(27));
+
+			const expected = 0;
+			const actual = handleCancel.mock.calls.length;
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	describe('modal instances', () => {
 		const customEventHandler = (ev) => {
 			return ev.keyIdentifier === '27';
 		};
 
-		// PhantomJS doesn't support KeyboardEvent so we're faking it ...
 		const makeKeyboardEvent = (keyCode) => {
-			const ev = document.createEvent('KeyboardEvent');
-			ev.initKeyboardEvent('keyup', true, true, window, keyCode);
-
-			return ev;
+			return new window.KeyboardEvent('keyup', {keyCode, code: keyCode, bubbles: true});
 		};
 
-		before(() => {
+		beforeAll(() => {
 			addCancelHandler(customEventHandler);
 		});
 
-		after(() => {
+		afterAll(() => {
 			removeCancelHandler(customEventHandler);
 		});
 
-		it('should invoke handler for cancel events dispatche to the window', function () {
-			const handleCancel = sinon.spy(returnsTrue);
-			const Comp = Cancelable(
-				{modal: true, onCancel: handleCancel},
-				Component
-			);
+		test(
+			'should invoke handler for cancel events dispatch to the window',
+			() => {
+				const handleCancel = jest.fn(returnsTrue);
+				const Comp = Cancelable(
+					{modal: true, onCancel: handleCancel},
+					Component
+				);
 
-			mount(<Comp />);
-			document.dispatchEvent(makeKeyboardEvent(27));
+				mount(<Comp />);
+				document.dispatchEvent(makeKeyboardEvent(27));
 
-			const expected = true;
-			const actual = handleCancel.calledOnce;
+				const expected = 1;
+				const actual = handleCancel.mock.calls.length;
 
-			expect(actual).to.equal(expected);
-		});
+				expect(actual).toBe(expected);
+			}
+		);
 
-		it('should invoke modal handlers in LIFO order', function () {
+		test('should invoke modal handlers in LIFO order', () => {
 			const results = [];
 			const append = str => () => {
 				results.push(str);
@@ -225,30 +323,59 @@ describe('Cancelable', () => {
 			const expected = ['second', 'first'];
 			const actual = results;
 
-			expect(actual).to.deep.equal(expected);
+			expect(actual).toEqual(expected);
 		});
 
-		it('should not invoke modal handlers after one returns true', function () {
-			const handleCancel = sinon.spy(returnsTrue);
+		test('should invoke nested modal handlers in LIFO order', () => {
+			const results = [];
+			const append = str => () => {
+				results.push(str);
+				return false;
+			};
 
 			const First = Cancelable(
-				{modal: true, onCancel: handleCancel},
+				{modal: true, onCancel: append('first')},
 				Component
 			);
 			const Second = Cancelable(
-				{modal: true, onCancel: returnsTrue},
+				{modal: true, onCancel: append('second')},
 				Component
 			);
 
-			mount(<First />);
-			mount(<Second />);
+			mount(<First><Second /></First>);
 
 			document.dispatchEvent(makeKeyboardEvent(27));
 
-			const expected = false;
-			const actual = handleCancel.called;
+			const expected = ['second', 'first'];
+			const actual = results;
 
-			expect(actual).to.equal(expected);
+			expect(actual).toEqual(expected);
 		});
+
+		test(
+			'should not invoke modal handlers after one calls stopPropagation',
+			() => {
+				const handleCancel = jest.fn(returnsTrue);
+
+				const First = Cancelable(
+					{modal: true, onCancel: handleCancel},
+					Component
+				);
+				const Second = Cancelable(
+					{modal: true, onCancel: stop},
+					Component
+				);
+
+				mount(<First />);
+				mount(<Second />);
+
+				document.dispatchEvent(makeKeyboardEvent(27));
+
+				const expected = 0;
+				const actual = handleCancel.mock.calls.length;
+
+				expect(actual).toBe(expected);
+			}
+		);
 	});
 });

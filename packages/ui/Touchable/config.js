@@ -46,8 +46,9 @@ const mergeConfig = (cfg) => {
 /**
  * Configures the global gesture configuration for the application.
  *
+ * Example:
  * ```
- * // Updates the maxMoves, moveTolerance, and frequency configurations while retaining the
+ * // Updates the `maxMoves`, `moveTolerance`, and `frequency` configurations while retaining the
  * // current value of all other configurations
  * configure({
  *     flick: {
@@ -70,7 +71,8 @@ const mergeConfig = (cfg) => {
  *     Only applies when `global` is `false`.
  *     * `'border-box'` - the default, includes the padding and border but excludes the margin.
  *     * `'content-box'` - excludes the padding, border, and margin.
- *   * `global` - When `true`, drag gestures will continue when leaving the bounds of the component.
+ *   * `global` - When `true`, drag gestures will continue when leaving the bounds of the component
+ *      or blurring the component.
  *   * `moveTolerance` - The number of pixels from the start position of the drag that the pointer
  *     may move before cancelling the drag. Defaults to `16`.
  *
@@ -86,6 +88,8 @@ const mergeConfig = (cfg) => {
  *
  *   * `cancelOnMove` - When `true`, the hold is cancelled when moving beyond the `moveTolerance`.
  *     Defaults to `false`
+ *   * `global` - When `true`, hold gestures will continue when leaving the bounds of the component
+ *      or blurring the component.
  *   * `moveTolerance` - The number of pixels from the start position of the hold that the pointer
  *     may move before cancelling the hold. Ignored when `cancelOnMove` is `false`. Defaults to
  *     `16`.
@@ -94,7 +98,8 @@ const mergeConfig = (cfg) => {
  *     controls the amount of time that must pass before this `onHold` event is fired and should
  *     be a multiple of `frequency`.
  *
- * @param   {Object}     config  A partial or complete configuration object
+ * @function
+ * @param   {Object}     cfg  A partial or complete configuration object
  *
  * @returns {undefined}
  * @public

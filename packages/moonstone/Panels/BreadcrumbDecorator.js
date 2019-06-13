@@ -1,10 +1,11 @@
-import {coerceFunction} from '@enact/core/util';
 import hoc from '@enact/core/hoc';
-import invariant from 'invariant';
 import kind from '@enact/core/kind';
+import {coerceFunction} from '@enact/core/util';
 import ViewManager from '@enact/ui/ViewManager';
-import React from 'react';
+import Spotlight from '@enact/spotlight';
+import invariant from 'invariant';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import IdProvider from '../internal/IdProvider';
 import Skinnable from '../Skinnable';
@@ -14,7 +15,7 @@ import BreadcrumbArranger from './BreadcrumbArranger';
 import CancelDecorator from './CancelDecorator';
 import IndexedBreadcrumbs from './IndexedBreadcrumbs';
 
-import css from './Panels.less';
+import css from './Panels.module.less';
 
 // TODO: Figure out how to document private sub-module members
 
@@ -27,7 +28,7 @@ const defaultConfig = {
 	/**
 	 * Classes to be added to the root node
 	 *
-	 * @type {string}
+	 * @type {String}
 	 * @default null
 	 * @memberof moonstone/Panels.BreadcrumbDecorator.defaultConfig
 	 */
@@ -37,7 +38,7 @@ const defaultConfig = {
 	 * Maximum number of breadcrumbs to display. If a function, it will be called on render to
 	 * calculate the number of breadcrumbs
 	 *
-	 * @type {number|function}
+	 * @type {Number|Function}
 	 * @default 0
 	 * @memberof moonstone/Panels.BreadcrumbDecorator.defaultConfig
 	 */
@@ -46,7 +47,7 @@ const defaultConfig = {
 	/**
 	 * Arranger for Panels
 	 *
-	 * @type {object}
+	 * @type {Object}
 	 * @default null
 	 * @memberof moonstone/Panels.BreadcrumbDecorator.defaultConfig
 	 */
@@ -55,7 +56,7 @@ const defaultConfig = {
 
 
 /**
- * Higher-order Component that adds breadcrumbs to a Panels component
+ * A higher-order component that adds breadcrumbs to a Panels component
  *
  * @class BreadcrumbDecorator
  * @type {Function}
@@ -74,11 +75,11 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * Array of breadcrumbs or a function that generates an array of breadcrumbs
 			 *
-			 * @type {Function|node[]}
+			 * @type {Function|Node[]}
 			 * @default IndexedBreadcrumbs
 			 */
 			breadcrumbs: PropTypes.oneOfType([
-				PropTypes.func,							// generator
+				PropTypes.func,						// generator
 				PropTypes.arrayOf(PropTypes.node)	// static array of breadcrumbs
 			]),
 
@@ -125,7 +126,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			index: PropTypes.number,
 
 			/**
-			 * Disable breadcrumb transitions
+			 * Disable breadcrumb transitions.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -133,8 +134,8 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			noAnimation: PropTypes.bool,
 
 			/**
-			 * Handler called when a breadcrumb is clicked. The payload includes the `index` of the
-			 * selected breadcrumb
+			 * Called when a breadcrumb is clicked. The payload includes the `index` of the selected
+			 * breadcrumb
 			 *
 			 * @type {Function}
 			 */
@@ -150,6 +151,18 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		styles: {
 			css,
 			className: cfgClassName
+		},
+
+		handlers: {
+			handleBreadcrumbWillTransition: (ev, {id}) => {
+				const current = Spotlight.getCurrent();
+				if (!current) return;
+
+				const breadcrumbs = document.querySelector(`#${id} .${css.breadcrumbs}`);
+				if (breadcrumbs && breadcrumbs.contains(current)) {
+					current.blur();
+				}
+			}
 		},
 
 		computed: {
@@ -202,7 +215,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		},
 
-		render: ({breadcrumbs, childProps, children, className, generateId, id, index, noAnimation, ...rest}) => {
+		render: ({breadcrumbs, childProps, children, className, generateId, handleBreadcrumbWillTransition, id, index, noAnimation, ...rest}) => {
 			delete rest.onSelectBreadcrumb;
 
 			const count = React.Children.count(children);
@@ -220,6 +233,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						end={calcMax()}
 						index={index - 1}
 						noAnimation={noAnimation}
+						onWillTransition={handleBreadcrumbWillTransition}
 						start={0}
 					>
 						{breadcrumbs}

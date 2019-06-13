@@ -1,0 +1,99 @@
+// RadioItem.module.less
+//
+@import "../styles/variables.less";
+@import "../styles/skin.less";
+@import "../styles/mixins.less";
+
+// Public
+.radioItem {
+	/* Available for customization */
+}
+
+// Interally theme our implementation using published classes from ToggleItem and ToggleIcon
+.toggleIcon {
+	.icon {
+		width: @moon-radio-item-indicator-size;
+		height: @moon-radio-item-indicator-size;
+		border-radius: 96px;
+		flex-shrink: 0;
+		margin-right: 0;
+		margin-left: 0;
+		box-shadow: inset 0 0 0 @moon-radio-item-indicator-border;
+
+		&::before {
+			content: "";
+			position: absolute;
+			.position(4px);
+			border-radius: inherit;
+		}
+
+		.moon-custom-text({
+			width: @moon-radio-item-indicator-size-large;
+			height: @moon-radio-item-indicator-size-large;
+		});
+	}
+
+	// Skin colors
+	.applySkins({
+		.icon {
+			background-color: @moon-radio-item-indicator-bg-color;
+			color: @moon-radio-item-indicator-color;
+		}
+
+		&.selected {
+			.icon {
+				background-color: @moon-radio-item-selected-indicator-bg-color;
+				color: @moon-radio-item-selected-indicator-color;
+
+				&::before {
+					background-color: @moon-radio-item-selected-indicator-color;
+				}
+			}
+		}
+	});
+}
+
+// When a parent is focused
+.focus({
+	.toggleIcon {
+		.applySkins({
+			.icon {
+				background-color: @moon-radio-item-focus-indicator-bg-color;
+				color: @moon-radio-item-focus-indicator-color;
+			}
+
+			&.selected {
+				.icon {
+					background-color: @moon-radio-item-selected-focus-indicator-bg-color;
+					color: @moon-radio-item-selected-focus-indicator-color;
+
+					&::before {
+						background-color: @moon-radio-item-selected-focus-indicator-color;
+					}
+				}
+			}
+
+			.disabled({
+				opacity: @moon-disabled-opacity;
+			})
+		});
+	}
+});
+
+.muted({
+	.focus({
+		.toggleIcon {
+			.applySkins({
+				&.selected {
+					.icon {
+						background-color: @moon-radio-item-selected-indicator-color;
+
+						&::before {
+							background-color: @moon-radio-item-selected-indicator-bg-color;
+						}
+					}
+				}
+			});
+		}
+	}, parent);
+}, parent);

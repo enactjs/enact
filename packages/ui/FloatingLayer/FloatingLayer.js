@@ -1,17 +1,28 @@
 import {on, off} from '@enact/core/dispatcher';
+import {adaptEvent, forward, forProp, handle, oneOf, stop, forEventProp, call} from '@enact/core/handle';
 import invariant from 'invariant';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 import Cancelable from '../Cancelable';
 
-import {contextTypes} from './FloatingLayerDecorator';
+import {FloatingLayerContext} from './FloatingLayerDecorator';
 import Scrim from './Scrim';
 
+const forwardWithType = type => adaptEvent(
+	() => ({type}),
+	forward(type)
+);
+
+const forwardDismiss = forwardWithType('onDismiss');
+const forwardClose = forwardWithType('onClose');
+const forwardOpen = forwardWithType('onOpen');
+
 /**
- * {@link ui/FloatingLayer.FloatingLayerBase} is a component that creates an entry point to the new
- * render tree. This is used for modal components such as popups.
+ * A component that creates an entry point to the new render tree.
+ *
+ * This is used for modal components such as popups.
  *
  * @class FloatingLayerBase
  * @memberof ui/FloatingLayer
@@ -20,8 +31,6 @@ import Scrim from './Scrim';
  */
 class FloatingLayerBase extends React.Component {
 	static displayName = 'FloatingLayer'
-
-	static contextTypes = contextTypes
 
 	static propTypes = /** @lends ui/FloatingLayer.FloatingLayerBase.prototype */ {
 		/**
@@ -43,7 +52,7 @@ class FloatingLayerBase extends React.Component {
 		floatLayerId: PropTypes.string,
 
 		/**
-		 * When `true`, FloatingLayer will not hide when the user presses `ESC` key.
+		 * Prevents FloatingLayer from hiding when the user presses `ESC` key.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -52,7 +61,7 @@ class FloatingLayerBase extends React.Component {
 		noAutoDismiss: PropTypes.bool,
 
 		/**
-		 * A function to be run when floating layer is closed.
+		 * Called when floating layer is closed.
 		 *
 		 * @type {Function}
 		 * @public
@@ -60,7 +69,10 @@ class FloatingLayerBase extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
-		 * A function to be run when `ESC` key is pressed. The function will only invoke if
+		 * Called when a closing action is invoked.
+		 *
+		 * These actions may include pressing cancel/back (e.g. `ESC`) key or programmatically closing
+		 * by `FloatingLayerDecorator`. When cancel key is pressed, the function will only invoke if
 		 * `noAutoDismiss` is set to `false`.
 		 *
 		 * @type {Function}
@@ -69,7 +81,7 @@ class FloatingLayerBase extends React.Component {
 		onDismiss: PropTypes.func,
 
 		/**
-		 * A function to be run when floating layer is opened. It will only be invoked for the first render.
+		 * Called when floating layer is opened. It will only be invoked for the first render.
 		 *
 		 * @type {Function}
 		 * @public
@@ -77,7 +89,7 @@ class FloatingLayerBase extends React.Component {
 		onOpen: PropTypes.func,
 
 		/**
-		 * When `true`, the floating layer and its components will be rendered.
+		 * Renders the floating layer and its components.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -86,7 +98,9 @@ class FloatingLayerBase extends React.Component {
 		open: PropTypes.bool,
 
 		/**
-		 * The scrim type. It can be either `'transparent'`, `'translucent'`, or `'none'`.
+		 * The scrim type that overlays FloatingLayer.
+		 *
+		 * It can be either `'transparent'`, `'translucent'`, or `'none'`.
 		 *
 		 * @type {String}
 		 * @default 'translucent'
@@ -94,6 +108,8 @@ class FloatingLayerBase extends React.Component {
 		 */
 		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none'])
 	}
+
+	static contextType = FloatingLayerContext
 
 	static defaultProps = {
 		floatLayerClassName: 'enact-fit enact-clip enact-untouchable',
@@ -106,22 +122,34 @@ class FloatingLayerBase extends React.Component {
 	constructor (props) {
 		super(props);
 		this.node = null;
+		this.state = {
+			nodeRendered: false
+		};
 	}
 
 	componentDidMount () {
-		const {open, onOpen} = this.props;
-		if (open && onOpen) {
-			onOpen({});
+		// Must register first in order to obtain the floating layer node reference before tryinging
+		// to render into it
+		if (this.context && typeof this.context === 'function') {
+			this.controller = this.context(this.handleNotify.bind(this));
 		}
 	}
 
-	componentDidUpdate (prevProps) {
-		const {open, onClose, onOpen, scrimType} = this.props;
+	componentDidUpdate (prevProps, prevState) {
+		const {open, scrimType} = this.props;
 
-		if (prevProps.open && !open && onClose) {
-			onClose({});
-		} else if (!prevProps.open && open && onOpen) {
-			onOpen({});
+		if (prevProps.open && !open) {
+			// when open changes to false, forward close
+			forwardClose(null, this.props);
+		} else if (!prevProps.open && open && !this.state.nodeRendered) {
+			// when open changes to true and node hasn't rendered, render it
+			this.renderNode();
+		} else if (this.state.nodeRendered &&
+			(!prevState.nodeRendered || (prevState.nodeRendered && open && !prevProps.open))
+		) {
+			// when node has been rendered and either it was just rendered in this update cycle or
+			// the open prop changed in this cycle, forward open
+			forwardOpen(null, this.props);
 		}
 
 		if (scrimType === 'none') {
@@ -134,15 +162,45 @@ class FloatingLayerBase extends React.Component {
 	}
 
 	componentWillUnmount () {
-		this.node = null;
-		off('click', this.handleClick);
-	}
+		if (this.node && this.floatingLayer) {
+			this.floatingLayer.removeChild(this.node);
+			this.node = null;
+			this.floatingLayer = null;
+		}
 
-	handleClick = () => {
-		if (!this.props.noAutoDismiss && this.props.open && this.props.onDismiss) {
-			this.props.onDismiss({});
+		off('click', this.handleClick);
+
+		if (this.controller) {
+			this.controller.unregister();
 		}
 	}
+
+	handleNotify = oneOf(
+		[forEventProp('action', 'close'), call('handleClose')],
+		[forEventProp('action', 'mount'), call('setFloatingLayer')]
+	).bind(this)
+
+	setFloatingLayer ({floatingLayer}) {
+		const isNewLayer = !this.floatingLayer && floatingLayer;
+		this.floatingLayer = floatingLayer;
+
+		// the first time we have a valid floating layer container and this instance is set to open,
+		// we need to render the layer.
+		if (isNewLayer && this.props.open && !this.state.nodeRendered) {
+			this.renderNode();
+		}
+	}
+
+	handleClose = handle(
+		forProp('open', true),
+		forwardDismiss
+	).bind(this)
+
+	handleClick = handle(
+		forProp('noAutoDismiss', false),
+		forProp('open', true),
+		forward('onDismiss')
+	).bind(this)
 
 	handleScroll = (ev) => {
 		const {currentTarget} = ev;
@@ -159,31 +217,28 @@ class FloatingLayerBase extends React.Component {
 	}
 
 	renderNode () {
-		const {floatLayerClassName, open} = this.props;
-		const floatingLayer = this.context.getFloatingLayer();
+		const {floatLayerClassName} = this.props;
 
-		if (!this.node && floatingLayer && open) {
-			invariant(
-				this.context.getFloatingLayer,
-				'FloatingLayer cannot be used outside the subtree of a FloatingLayerDecorator'
-			);
+		if (this.node) return;
 
-			this.node = document.createElement('div');
-			floatingLayer.appendChild(this.node);
-			on('scroll', this.handleScroll, this.node);
-		}
+		invariant(
+			this.floatingLayer,
+			'FloatingLayer cannot be used outside the subtree of a FloatingLayerDecorator'
+		);
 
-		if (this.node) {
-			this.node.className = floatLayerClassName;
-			this.node.style.zIndex = 100;
-		}
+		this.node = document.createElement('div');
+		this.node.className = floatLayerClassName;
+		this.node.style.zIndex = 100;
 
-		return this.node;
+		this.floatingLayer.appendChild(this.node);
+		on('scroll', this.handleScroll, this.node);
+
+		// render children when this.node is inserted in the DOM tree.
+		this.setState({nodeRendered: true});
 	}
 
 	render () {
-		const props = Object.assign({}, this.props);
-		const {children, open, scrimType, ...rest} = props;
+		const {children, open, scrimType, ...rest} = this.props;
 
 		delete rest.floatLayerClassName;
 		delete rest.floatLayerId;
@@ -192,36 +247,36 @@ class FloatingLayerBase extends React.Component {
 		delete rest.onDismiss;
 		delete rest.onOpen;
 
-		const node = this.renderNode();
+		if (open && this.state.nodeRendered) {
+			return ReactDOM.createPortal(
+				<div {...rest}>
+					{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
+					{React.cloneElement(children, {onClick: this.stopPropagation})}
+				</div>,
+				this.node
+			);
+		}
 
-		return (
-			open && node ?
-				ReactDOM.createPortal(
-					<div {...rest}>
-						{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
-						{React.cloneElement(children, {onClick: this.stopPropagation})}
-					</div>,
-					node
-				) :
-				null
-		);
+		return null;
 	}
 }
 
-const handleCancel = (props) => {
-	if (props.open && !props.noAutoDismiss && props.onDismiss) {
-		props.onDismiss({});
-		return true;
-	}
-};
+const handleCancel = handle(
+	// can't use forProp safely since either could be undefined ~= false
+	(ev, {open, noAutoDismiss, onDismiss}) => open && !noAutoDismiss && onDismiss,
+	forwardDismiss,
+	stop
+);
 
 /**
- * {@link ui/FloatingLayer.FloatingLayer} is a component that creates an entry point to the new
- * render tree. This is used for modal components such as popups.
+ * FloatingLayer that mixes {@link ui/Cancelable.Cancelable} to handle FloatingLayer dismissal.
+ *
+ * This is used for modal components such as popups.
  *
  * @class FloatingLayer
  * @memberof ui/FloatingLayer
  * @ui
+ * @extends ui/FloatingLayer.FloatingLayerBase
  * @mixes ui/Cancelable.Cancelable
  * @public
  */

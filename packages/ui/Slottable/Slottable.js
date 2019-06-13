@@ -1,7 +1,10 @@
 /**
- * Exports the {@link ui/Slottable.Slottable} Higher-order Component (HOC).
+ * Provides a higher-order component that render child components into pre-designated slots.
+ *
+ * See [SlotItem]{@link ui/SlotItem.SlotItemDecorator} for the use of `Slottable`.
  *
  * @module ui/Slottable
+ * @exports Slottable
  */
 
 import hoc from '@enact/core/hoc';
@@ -13,14 +16,11 @@ import warning from 'warning';
 // omitting the `slot` property. It relies on the black box structure of a React element which could
 // change breaking this code. Without it, the slot property will cascade to a DOM node causing a
 // React warning.
-const cloneElement = (child, props, omit) => {
-	if (omit && omit in child.props) {
-		const newProps = Object.assign({}, child.props, props);
-		delete newProps[omit];
-		return React.createElement(child.type, newProps);
-	}
+const cloneElement = (child) => {
+	const newProps = Object.assign({}, child.props);
+	delete newProps.slot;
 
-	return child;
+	return React.createElement(child.type, newProps);
 };
 
 const distributeChild = (child, index, slots, props) => {
@@ -34,7 +34,10 @@ const distributeChild = (child, index, slots, props) => {
 		warning(hasUserSlot, 'The slot "%s" specified on %s does not exist', child.props.slot,
 			typeof child.type === 'string' ? child.type : (child.type.name || child.type.displayName || 'component')
 		);
-		c = hasUserSlot && cloneElement(child, {key: index}, 'slot');
+
+		if (hasUserSlot) {
+			c = cloneElement(child);
+		}
 	} else if (hasSlot(slot = child.type.defaultSlot)) {
 		c = child;
 	} else if (hasSlot(slot = child.type)) {
@@ -87,11 +90,11 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/Slottable.Slottable} is a Higher-order Component that allows wrapped components to
- * separate children into pre-designated 'slots'.  To use Slottable, you must configure it by passing in
- * a config object with the `slots` member set to an array of slot names.  Any children whose
- * `slot` or `defaultSlot` property matches a named slot or whose type matches a named slot will be placed
- * into a property of the same name on the wrapped component.
+ * A higher-order component that allows wrapped components to separate children into pre-designated 'slots'.
+ *
+ * To use `Slottable`, you must configure it by passing in a config object with the `slots` member set to an
+ * array of slot names.  Any children whose `slot` or `defaultSlot` property matches a named slot or whose
+ * type matches a named slot will be placed into a property of the same name on the wrapped component.
  *
  * @class Slottable
  * @memberof ui/Slottable

@@ -1,0 +1,373 @@
+// Tooltip.module.less
+//
+@import "../styles/variables.less";
+@import "../styles/mixins.less";
+@import "../styles/skin.less";
+
+.tail (@edge, @point) {
+	background-image:
+		linear-gradient(to @edge, @moon-tooltip-border-color @moon-tooltip-border-width, transparent @moon-tooltip-border-width), // Edge line
+		linear-gradient(to @point @edge, @moon-tooltip-bg-color 50%, @moon-tooltip-border-color 50%, @moon-tooltip-border-color ~"calc(50% + 1px)", transparent ~"calc(50% + 1px)"); // Diagonal line + fill
+}
+.centerTail (@edge, @point) {
+	background-image:
+		linear-gradient(to @point @edge, @moon-tooltip-bg-color 50%, @moon-tooltip-border-color 50%, @moon-tooltip-border-color ~"calc(50% + 1px)", transparent ~"calc(50% + 1px)"); // Diagonal line + fill
+}
+
+.tooltip {
+	position: absolute;
+
+	// You'll notice tiny adjustments to the position: 0.5px, 1px, 4px, etc. in the following code.
+	// These are to account for sub-pixel rendering on scaled or "imperfect" rendering scenarios
+	// where hairline gaps can be seen between the tail and the body.
+
+	.tooltipArrow {
+		position: absolute;
+		width: @moon-tooltip-point-width;
+		height: @moon-tooltip-point-height;
+		z-index: 1;
+	}
+	&.rightArrow,
+	&.leftArrow {
+		.tooltipArrow {
+			width: @moon-tooltip-point-height;
+			height: @moon-tooltip-point-width;
+		}
+	}
+	&.centerArrow,
+	&.middleArrow {
+		.tooltipArrow::after {
+			content: "";
+			position: absolute;
+			width: 100%;
+			height: 100%;
+		}
+	}
+	&.centerArrow .tooltipArrow {
+		width: ((@moon-tooltip-point-height / 2) + 2px);
+		height: @moon-tooltip-point-width;
+		left: 50%;
+
+		&::after {
+			right: ((@moon-tooltip-point-height / 2) + 1px);
+		}
+	}
+	&.middleArrow .tooltipArrow {
+		width: @moon-tooltip-point-width;
+		height: ((@moon-tooltip-point-height / 2) + 2px);
+		top: 50%;
+
+		&::after {
+			bottom: 99%;
+			left: 0;
+		}
+	}
+
+	.tooltipLabel {
+		.moon-small-button-text();
+		font-size: @moon-tooltip-label-font-size;
+		font-weight: @moon-tooltip-font-weight;
+		line-height: @moon-tooltip-label-height;
+		white-space: nowrap;
+		padding: @moon-tooltip-padding;
+		border-radius: @moon-tooltip-border-radius;
+
+		:global(.enact-locale-right-to-left) & {
+			text-align: right;
+		}
+
+		&.multi {
+			white-space: normal;
+			.locale-japanese-line-break();
+		}
+	}
+
+	// Positioning for the arrow and label
+	&.below {
+		.tooltipArrow {
+			top: (1px + @moon-tooltip-offset);
+		}
+
+		.tooltipLabel {
+			margin-top: (@moon-tooltip-point-height + @moon-tooltip-offset);
+		}
+
+		&.leftArrow {
+			.tooltipArrow {
+				right: 0;
+			}
+
+			.tooltipLabel {
+				text-align: right;
+				border-top-right-radius: 0;
+			}
+		}
+
+		&.centerArrow {
+			.tooltipArrow {
+				left: 50%;
+			}
+		}
+
+		&.rightArrow {
+			.tooltipArrow {
+				left: 0;
+			}
+
+			.tooltipLabel {
+				border-top-left-radius: 0;
+			}
+		}
+	}
+
+	&.above {
+		.tooltipArrow {
+			bottom: (1.5px + @moon-tooltip-offset);
+		}
+
+		.tooltipLabel {
+			margin-bottom: (@moon-tooltip-point-height + @moon-tooltip-offset);
+		}
+
+		&.leftArrow {
+			.tooltipArrow {
+				right: 0;
+			}
+
+			.tooltipLabel {
+				text-align: right;
+				border-bottom-right-radius: 0;
+			}
+		}
+
+		// Commented out because it isn't necessary to specify anything for this case at this time
+		// but kept in the code here in case we need to in the future.
+		// &.centerArrow {
+		// 	.tooltipArrow {
+		// 	}
+		// }
+
+		&.rightArrow {
+			.tooltipArrow {
+				left: 0;
+			}
+
+			.tooltipLabel {
+				border-bottom-left-radius: 0;
+			}
+		}
+	}
+
+	&.left {
+		.tooltipArrow {
+			right: (1px + @moon-tooltip-offset);
+		}
+
+		.tooltipLabel {
+			margin-right: (@moon-tooltip-point-width + @moon-tooltip-offset);
+		}
+
+		&.topArrow {
+			.tooltipArrow {
+				bottom: 0;
+			}
+
+			.tooltipLabel {
+				border-bottom-right-radius: 0;
+			}
+		}
+
+		&.middleArrow {
+			.tooltipArrow {
+				right: (1.5px + @moon-tooltip-offset);
+			}
+		}
+
+		&.bottomArrow {
+			.tooltipLabel {
+				border-top-right-radius: 0;
+			}
+		}
+	}
+
+	&.right {
+		.tooltipArrow {
+			left: (1px + @moon-tooltip-offset);
+		}
+
+		.tooltipLabel {
+			margin-left: (@moon-tooltip-point-width + @moon-tooltip-offset);
+		}
+
+		&.topArrow {
+			.tooltipArrow {
+				bottom: 0;
+			}
+
+			.tooltipLabel {
+				border-bottom-left-radius: 0;
+			}
+		}
+
+		&.middleArrow {
+			.tooltipArrow {
+				left: (1.5px + @moon-tooltip-offset);
+			}
+		}
+
+		&.bottomArrow {
+			.tooltipLabel {
+				border-top-left-radius: 0;
+			}
+		}
+	}
+
+	// Absolute positioning mode - anchor position rules
+	&.absolute {
+		width: 0;
+		height: 0;
+
+		.tooltipAnchor {
+			position: absolute;
+		}
+
+		&.below {
+			&.leftArrow .tooltipAnchor {	transform: translateX(-100%);	}
+			&.centerArrow .tooltipAnchor {	transform: translateX(-50%);	}
+			&.rightArrow .tooltipAnchor {	/* transform: translate(0, 0); */	}
+		}
+
+		&.above {
+			&.leftArrow .tooltipAnchor {	transform: translate(-100%, -100%);	}
+			&.centerArrow .tooltipAnchor {	transform: translate(-50%, -100%);	}
+			&.rightArrow .tooltipAnchor {	transform: translate(0, -100%);	}
+		}
+
+		&.left {
+			&.topArrow .tooltipAnchor {	transform: translate(-100%, -100%);	}
+			&.middleArrow .tooltipAnchor {	transform: translate(-100%, -50%);	}
+			&.bottomArrow .tooltipAnchor {	transform: translate(-100%, 0);	}
+		}
+
+		&.right {
+			&.topArrow .tooltipAnchor {	transform: translate(0, -100%);	}
+			&.middleArrow .tooltipAnchor {	transform: translate(0, -50%);	}
+			&.bottomArrow .tooltipAnchor {	/* transform: translate(0, 0); */	}
+		}
+	}
+
+	// Relative positioning mode - position rules
+	&.relative {
+		&.below {
+			top: 100%;
+
+			&.leftArrow {	right: 50%;	}
+			&.centerArrow,
+			&.rightArrow {	left: 50%;	}
+
+			&.centerArrow {	transform: translateX(-50%);	}
+		}
+
+		&.above {
+			bottom: 100%;
+
+			&.leftArrow {	right: 50%;	}
+			&.centerArrow,
+			&.rightArrow {	left: 50%;	}
+
+			&.centerArrow {	transform: translateX(-50%);	}
+		}
+
+		&.left {
+			right: 100%;
+
+			&.topArrow {	bottom: 50%;	}
+			&.middleArrow,
+			&.bottomArrow {	top: 50%;	}
+
+			&.middleArrow {	transform: translateY(-50%);	}
+		}
+
+		&.right {
+			left: 100%;
+
+			&.topArrow {	bottom: 50%;	}
+			&.middleArrow,
+			&.bottomArrow {	top: 50%;	}
+
+			&.middleArrow {	transform: translateY(-50%);	}
+		}
+	}
+
+	:global(.enact-locale-right-to-left) & {
+		direction: ltr;
+
+		.tooltipAnchor {
+			direction: rtl;
+		}
+	}
+
+	// Skin colors
+	.applySkins({
+		filter: drop-shadow(@moon-tooltip-shadow);
+
+		// Drawing the arc/arrow shape using the mixin from above
+		&.below {
+			&.leftArrow {
+				.tooltipArrow {	.tail(left; top);	}
+			}
+			&.centerArrow {
+				.tooltipArrow {	.centerTail(right; top);	}
+				.tooltipArrow::after {	.centerTail(left; top);	}
+			}
+			&.rightArrow {
+				.tooltipArrow {	.tail(right; top);	}
+			}
+		}
+
+		&.above {
+			&.leftArrow {
+				.tooltipArrow {	.tail(left; bottom);	}
+			}
+			&.centerArrow {
+				.tooltipArrow {	.centerTail(right; bottom);	}
+				.tooltipArrow::after {	.centerTail(left; bottom);	}
+			}
+			&.rightArrow {
+				.tooltipArrow {	.tail(right; bottom);	}
+			}
+		}
+
+		&.left {
+			&.topArrow {
+				.tooltipArrow {	.tail(top; right);	}
+			}
+			&.middleArrow {
+				.tooltipArrow {	.centerTail(right; bottom);	}
+				.tooltipArrow::after {	.centerTail(right; top);	}
+			}
+			&.bottomArrow {
+				.tooltipArrow {	.tail(bottom; right);	}
+			}
+		}
+
+		&.right {
+			&.topArrow {
+				.tooltipArrow {	.tail(top; left);	}
+			}
+			&.middleArrow {
+				.tooltipArrow {	.centerTail(left; bottom);	}
+				.tooltipArrow::after {	.centerTail(left; top);	}
+			}
+			&.bottomArrow {
+				.tooltipArrow {	.tail(bottom; left);	}
+			}
+		}
+
+		.tooltipLabel {
+			color: @moon-tooltip-text-color;
+			background-color: @moon-tooltip-bg-color;
+			border: @moon-tooltip-border-width solid @moon-tooltip-border-color;
+		}
+	});
+}

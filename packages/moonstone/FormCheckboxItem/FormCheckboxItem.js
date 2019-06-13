@@ -1,5 +1,8 @@
 /**
- * Provides Moonstone-themed form item component and interactive togglable checkbox.
+ * Provides Moonstone styled form item component and interactive toggleable checkbox.
+ *
+ * @example
+ * <FormCheckboxItem>A Checkbox for a form</FormCheckboxItem>
  *
  * @module moonstone/FormCheckboxItem
  * @exports FormCheckboxItem
@@ -13,7 +16,7 @@ import PropTypes from 'prop-types';
 import FormCheckbox from '../FormCheckbox';
 import ToggleItem from '../ToggleItem';
 
-import componentCss from './FormCheckboxItem.less';
+import componentCss from './FormCheckboxItem.module.less';
 
 /**
  * Renders a form item with a checkbox component. Useful to show a selected state on an item inside a form.
@@ -21,6 +24,7 @@ import componentCss from './FormCheckboxItem.less';
  * @class FormCheckboxItem
  * @memberof moonstone/FormCheckboxItem
  * @extends moonstone/ToggleItem.ToggleItem
+ * @omit iconComponent
  * @ui
  * @public
  */
@@ -50,6 +54,7 @@ const FormCheckboxItemBase = kind({
 
 	render: (props) => (
 		<ToggleItem
+			data-webos-voice-intent="SelectCheckItem"
 			{...props}
 			css={props.css}
 			iconComponent={FormCheckbox}

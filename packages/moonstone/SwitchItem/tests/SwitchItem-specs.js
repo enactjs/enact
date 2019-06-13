@@ -4,7 +4,7 @@ import SwitchItem from '../SwitchItem';
 
 describe('SwitchItem Specs', () => {
 
-	it('should contain a Switch', function () {
+	test('should contain a Switch', () => {
 
 		const switchItem = mount(
 			<SwitchItem>
@@ -15,10 +15,10 @@ describe('SwitchItem Specs', () => {
 		const expected = 1;
 		const actual = switchItem.find('Switch').length;
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should pass selected to Switch element', function () {
+	test('should pass selected to Switch element', () => {
 
 		const switchItem = mount(
 			<SwitchItem selected>
@@ -31,10 +31,10 @@ describe('SwitchItem Specs', () => {
 		const expected = true;
 		const actual = SwitchComponent.prop('selected');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should pass disabled to Switch element', function () {
+	test('should pass disabled to Switch element', () => {
 
 		const switchItem = mount(
 			<SwitchItem disabled>
@@ -47,6 +47,6 @@ describe('SwitchItem Specs', () => {
 		const expected = true;
 		const actual = SwitchComponent.prop('disabled');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });

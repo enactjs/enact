@@ -1,15 +1,15 @@
 /*
- * Exports the {@link ui/FloatingLayer.FloatingLayerDecorator} Higher-order Component (HOC).
+ * A higher-order component that adds a FloatingLayer adjacent to wrapped component.
  */
 
+import {call, forEventProp, oneOf} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import PropTypes from 'prop-types';
+import Registry from '@enact/core/internal/Registry';
 import React from 'react';
 
-const contextTypes = {
-	getFloatingLayer: PropTypes.func,
-	getRootFloatingLayer: PropTypes.func
-};
+const forAction = forEventProp('action');
+
+const FloatingLayerContext = React.createContext();
 
 /**
  * Default config for {@link ui/FloatingLayer.FloatingLayerDecorator}.
@@ -29,7 +29,9 @@ const defaultConfig = {
 	floatLayerId: 'floatLayer',
 
 	/**
-	 * Classname applied to wrapped component. It can be used when you want to only apply
+	 * Class name to be applied to wrapped component.
+
+	 * It can be used when you want to only apply
 	 * certain styles to the wrapped component and not to the float layer.
 	 *
 	 * @type {String}
@@ -41,7 +43,7 @@ const defaultConfig = {
 };
 
 /**
- * Higher-order Component that adds a FloatingLayer adjacent to wrapped component.
+ * A higher-order component that adds a FloatingLayer adjacent to wrapped component.
  *
  * @class FloatingLayerDecorator
  * @memberof ui/FloatingLayer
@@ -54,15 +56,14 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'FloatingLayerDecorator'
 
-		static contextTypes = contextTypes
+		constructor (props) {
+			super(props);
+			this.registry = Registry.create(this.handleNotify);
+			this.floatingLayer = null;
+		}
 
-		static childContextTypes = contextTypes
-
-		getChildContext () {
-			return {
-				getFloatingLayer: this.getFloatingLayer,
-				getRootFloatingLayer: this.getRootFloatingLayer
-			};
+		componentDidMount () {
+			this.notifyMount();
 		}
 
 		getFloatingLayer = () => {
@@ -70,15 +71,27 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			// as the floating layer, this.floatingLayer may not have been initialized yet since
 			// componentDidMount runs inside-out. As a fallback, we search by id but this could
 			// introduce issues (e.g. for duplicate layer ids).
-			return this.floatingLayer || document.getElementById(floatLayerId) || null;
+			return (
+				this.floatingLayer ||
+				(typeof document !== 'undefined' && document.getElementById(floatLayerId)) ||
+				null
+			);
 		}
 
-		getRootFloatingLayer = () => {
-			if (this.context.getRootFloatingLayer) {
-				return this.context.getRootFloatingLayer();
-			}
+		handleNotify = oneOf(
+			[forAction('register'), call('notifyMount')],
+			[forAction('closeAll'), call('handleCloseAll')]
+		).bind(this)
 
-			return this.getFloatingLayer();
+		handleCloseAll () {
+			this.registry.notify({action: 'close'});
+		}
+
+		notifyMount () {
+			this.registry.notify({
+				action: 'mount',
+				floatingLayer: this.getFloatingLayer()
+			});
 		}
 
 		setFloatingLayer = (node) => {
@@ -88,10 +101,12 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			const {className, ...rest} = this.props;
 			return (
-				<div className={className}>
-					<Wrapped {...rest} className={wrappedClassName} />
-					<div id={floatLayerId} ref={this.setFloatingLayer} />
-				</div>
+				<FloatingLayerContext.Provider value={this.registry.register}>
+					<div className={className}>
+						<Wrapped key="floatWrapped" {...rest} className={wrappedClassName} />
+						<div id={floatLayerId} key="floatLayer" ref={this.setFloatingLayer} />
+					</div>
+				</FloatingLayerContext.Provider>
 			);
 		}
 	};
@@ -99,6 +114,6 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 export default FloatingLayerDecorator;
 export {
-	contextTypes,
+	FloatingLayerContext,
 	FloatingLayerDecorator
 };

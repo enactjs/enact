@@ -1,13 +1,12 @@
 import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
+import Registry from '@enact/core/internal/Registry';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {contextTypes} from './PlaceholderDecorator';
-
 /**
- * Default config for {@link ui/Placeholder.PlaceholderControllerDecorator}
+ * Default config for `PlaceholderControllerDecorator`.
  *
  * @memberof ui/Placeholder.PlaceholderControllerDecorator
  * @hocconfig
@@ -15,9 +14,10 @@ import {contextTypes} from './PlaceholderDecorator';
  */
 const defaultConfig = {
 	/**
-	 * The bounds of the container represented by an object with `height` and `width` members. If
-	 * the container is a static size, this can be specified at design-time to avoid calculating the
-	 * bounds at run-time (the default behavior).
+	 * The bounds of the container represented by an object with `height` and `width` members.
+	 *
+	 * If the container is a static size, this can be specified at design-time to avoid calculating
+	 * the bounds at run-time (the default behavior).
 	 *
 	 * @type {Object}
 	 * @default null
@@ -33,12 +33,26 @@ const defaultConfig = {
 	 * @default onScroll
 	 * @memberof ui/Placeholder.PlaceholderControllerDecorator.defaultConfig
 	 */
-	notify: 'onScroll'
+	notify: 'onScroll',
+
+	/**
+	 * Multiplier used with the wrapped component's height and width to determine the threshold for
+	 * replacing the placeholder component with the true component.
+	 *
+	 * @type {Number}
+	 * @default 1.5
+	 * @memberof ui/Placeholder.PlaceholderControllerDecorator.defaultConfig
+	 */
+	thresholdFactor: 1.5
 };
 
+const PlaceholderContext = React.createContext();
+
 /**
- * {@link ui/Placeholder.PlaceholderControllerDecorator} is a Higher-order Component that can make
- * placeholders rendered or not rendered depending on `'scrollTop'` from the `'onScroll'`'s parameter.
+ * A higher-order component (HOC) that render placeholder components.
+ *
+ * Components are rendered based on their position relative to the `'scrollTop'` from the
+ * `'onScroll'`'s parameter. They are not unmounted once rendered.
  *
  * @class PlaceholderControllerDecorator
  * @memberof ui/Placeholder
@@ -46,19 +60,10 @@ const defaultConfig = {
  * @public
  */
 const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {bounds, notify} = config;
+	const {bounds, notify, thresholdFactor} = config;
 
 	return class extends React.Component {
 		static displayName = 'PlaceholderControllerDecorator'
-
-		static childContextTypes = contextTypes
-
-		getChildContext () {
-			return {
-				registerPlaceholder: this.handleRegister,
-				unregisterPlaceholder: this.handleUnregister
-			};
-		}
 
 		componentDidMount () {
 			this.setBounds();
@@ -70,10 +75,10 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		bounds = null
-		controlled = []
 		leftThreshold = -1
 		node = null
 		topThreshold = -1
+		registry = Registry.create(this.handleRegister.bind(this))
 
 		setBounds () {
 			if (bounds != null) {
@@ -89,47 +94,29 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handleRegister = (key, callback) => {
-			this.controlled.push({callback, key});
-
-			// do not notify until we've initialized the thresholds
-			if (this.topThreshold !== -1 && this.leftThreshold !== -1) {
-				this.notifyAllJob.start(this.topThreshold, this.leftThreshold);
-			}
-		}
-
-		handleUnregister = (key) => {
-			const length = this.controlled.length;
-
-			for (let i = 0; i < length; i++) {
-				if (this.controlled[i].key === key) {
-					this.controlled.splice(i, 1);
-					break;
+		handleRegister (ev) {
+			if (ev.action === 'register') {
+				// do not notify until we've initialized the thresholds
+				if (this.topThreshold !== -1 && this.leftThreshold !== -1) {
+					this.notifyAllJob.start(this.topThreshold, this.leftThreshold);
 				}
 			}
 		}
 
 		notifyAll = (topThreshold, leftThreshold) => {
-			for (let index = this.controlled.length - 1; index >= 0; index--) {
-				const {callback} = this.controlled[index];
-
-				callback({
-					index,
-					leftThreshold,
-					topThreshold
-				});
-			}
+			this.registry.notify({
+				leftThreshold,
+				topThreshold
+			});
 		}
 
 		// queue up notifications when placeholders are first created
 		notifyAllJob = new Job(this.notifyAll, 32)
 
 		setThresholds (top, left) {
-			if (this.controlled.length === 0) return;
-
 			const {height, width} = this.bounds;
-			const topThreshold = (Math.floor(top / height) + 2) * height;
-			const leftThreshold = (Math.floor(left / width) + 2) * width;
+			const topThreshold = height * thresholdFactor + top;
+			const leftThreshold = width * thresholdFactor + left;
 
 			if (this.topThreshold < topThreshold || this.leftThreshold < leftThreshold) {
 				this.notifyAll(topThreshold, leftThreshold);
@@ -153,10 +140,16 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (notify) props[notify] = this.handleNotify;
 
 			return (
-				<Wrapped {...props} />
+				<PlaceholderContext.Provider value={this.registry.register}>
+					<Wrapped {...props} />
+				</PlaceholderContext.Provider>
 			);
 		}
 	};
 });
 
 export default PlaceholderControllerDecorator;
+export {
+	PlaceholderContext,
+	PlaceholderControllerDecorator
+};

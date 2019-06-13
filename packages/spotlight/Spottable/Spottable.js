@@ -1,20 +1,21 @@
 /**
- * Exports the {@link spotlight/Spottable.Spottable} Higher-order Component and
+ * Exports the {@link spotlight/Spottable.Spottable} higher-order component and
  * the {@link spotlight/Spottable.spottableClass} `className`. The default export is
  * {@link spotlight/Spottable.Spottable}.
  *
  * @module spotlight/Spottable
  */
 
-import {forward, forwardWithPrevent, handle} from '@enact/core/handle';
+import {forward, forwardWithPrevent, handle, preventDefault, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
+import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 
 import {getContainersForNode} from '../src/container';
-import Spotlight from '../src/spotlight';
+import {hasPointerMoved} from '../src/pointer';
+import {getDirection, Spotlight} from '../src/spotlight';
 
 /**
  * The class name for spottable components. In general, you do not need to directly access this class
@@ -45,6 +46,8 @@ const isKeyboardAccessible = (node) => {
 	);
 };
 
+const isSpottable = (props) => !props.spotlightDisabled;
+
 // Last instance of spottable to be focused
 let lastSelectTarget = null;
 // Should we prevent select being passed through
@@ -70,7 +73,7 @@ const defaultConfig = {
 };
 
 /**
- * Constructs a Spotlight 5-way navigation-enabled Higher-order Component.
+ * Constructs a Spotlight 5-way navigation-enabled higher-order component.
  *
  * Example:
  * ```
@@ -146,6 +149,17 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			onSpotlightUp: PropTypes.func,
 
 			/**
+			 * An array of numbers representing keyCodes that should trigger mouse event
+			 * emulation when `emulateMouse` is `true`. If a keyCode equals a directional
+			 * key, then default 5-way navigation will be prevented when that key is pressed.
+			 *
+			 * @type {Number[]}
+			 * @default [13, 16777221]
+			 * @public
+			 */
+			selectionKeys: PropTypes.arrayOf(PropTypes.number),
+
+			/**
 			 * When `true`, the component cannot be navigated using spotlight.
 			 *
 			 * @type {Boolean}
@@ -153,6 +167,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			spotlightDisabled: PropTypes.bool,
+
+			/**
+			 * Used to identify this component within the Spotlight system
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			spotlightId: PropTypes.string,
 
 			/**
 			 * The tabIndex of the component. This value will default to -1 if left
@@ -164,10 +186,18 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			tabIndex: PropTypes.number
 		}
 
+		static defaultProps = {
+			selectionKeys: [ENTER_KEY, REMOTE_OK_KEY]
+		}
+
 		constructor (props) {
 			super(props);
-			this.isFocused = false;
 			this.isHovered = false;
+			// Used to indicate that we want to stop propagation on blur events that occur as a
+			// result of this component imperatively blurring itself on focus when spotlightDisabled
+			this.shouldPreventBlur = false;
+			this.isFocused = false;
+			this.focusedWhenDisabled = false;
 		}
 
 		componentDidMount () {
@@ -176,44 +206,23 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			// if the component is focused and became disabled,
-			if (this.isFocused && (
-				(!prevProps.disabled && this.props.disabled) ||
-				(!prevProps.spotlightDisabled && this.props.spotlightDisabled)
-			)) {
-				forward('onSpotlightDisappear', null, this.props);
-				if (lastSelectTarget === this) {
-					selectCancelled = true;
-					forward('onMouseUp', null, this.props);
-				}
+			this.isFocused = this.node && Spotlight.getCurrent() === this.node;
 
-				// if spotlight didn't move, find something else to spot starting from here
-				const current = Spotlight.getCurrent();
-				if (!current || this.node === current) {
-					this.node.blur();
-
-					if (!Spotlight.getPointerMode()) {
-						getContainersForNode(this.node).reverse().reduce((found, id) => {
-							return found || Spotlight.focus(id);
-						}, false);
-					}
-				}
+			// if the component is focused and became disabled
+			if (this.isFocused && this.props.disabled && lastSelectTarget === this && !selectCancelled) {
+				selectCancelled = true;
+				forward('onMouseUp', null, this.props);
 			}
 
 			// if the component became enabled, notify spotlight to enable restoring "lost" focus
-			if (
-				(!this.props.disabled && !this.props.spotlightDisabled) && (
-					(prevProps.disabled && !this.props.disabled) ||
-					(prevProps.spotlightDisabled && !this.props.spotlightDisabled)
-				)
-			) {
+			if (isSpottable(this.props) && !isSpottable(prevProps) && !Spotlight.isPaused()) {
 				if (Spotlight.getPointerMode()) {
 					if (this.isHovered) {
 						Spotlight.setPointerMode(false);
 						Spotlight.focus(this.node);
 						Spotlight.setPointerMode(true);
 					}
-				} else if (!Spotlight.getCurrent() && !Spotlight.isPaused()) {
+				} else if (!Spotlight.getCurrent()) {
 					const containers = getContainersForNode(this.node);
 					const containerId = Spotlight.getActiveContainer();
 					if (containers.indexOf(containerId) >= 0) {
@@ -232,17 +241,34 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		shouldEmulateMouse = ({currentTarget, repeat, type, which}) => {
-			return emulateMouse && !repeat && (
+		shouldEmulateMouse = (ev, props) => {
+			if (!emulateMouse) {
+				return;
+			}
+
+			const {currentTarget, repeat, type, which} = ev;
+			const {selectionKeys} = props;
+			const keyboardAccessible = isKeyboardAccessible(currentTarget);
+
+			const keyCode = selectionKeys.find((value) => (
 				// emulate mouse events for any remote okay button event
 				which === REMOTE_OK_KEY ||
-				// or a non-keypress enter event or any enter event on a non-keyboard accessible
+				// or a non-keypress selection event or any selection event on a non-keyboard accessible
 				// control
 				(
-					which === ENTER_KEY &&
-					(type !== 'keypress' || !isKeyboardAccessible(currentTarget))
+					which === value &&
+					(type !== 'keypress' || !keyboardAccessible)
 				)
-			);
+			));
+
+			if (getDirection(keyCode)) {
+				preventDefault(ev);
+				stop(ev);
+			} else if (keyCode && keyboardAccessible) {
+				preventDefault(ev);
+			}
+
+			return keyCode && !repeat;
 		}
 
 		forwardSpotlightEvents = (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp}) => {
@@ -261,9 +287,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		handleSelect = (ev) => {
-			// Only apply accelerator if handling select
-			if ((ev.which === REMOTE_OK_KEY) || (ev.which === ENTER_KEY)) {
+		handleSelect = ({which}, props) => {
+			const {selectionKeys} = props;
+
+			// Only apply accelerator if handling a selection key
+			if (selectionKeys.find((value) => which === value)) {
 				if (selectCancelled || (lastSelectTarget && lastSelectTarget !== this)) {
 					return false;
 				}
@@ -273,33 +301,54 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		forwardAndResetLastSelectTarget = (ev, props) => {
+			const {keyCode} = ev;
+			const {selectionKeys} = props;
+			const key = selectionKeys.find((value) => keyCode === value);
 			const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
+
+			// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
+			if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {
+				return notPrevented;
+			}
+
 			const allow = lastSelectTarget === this;
 			selectCancelled = false;
 			lastSelectTarget = null;
 			return notPrevented && allow;
 		}
 
+		isActionable = (ev, props) => isSpottable(props)
+
 		handle = handle.bind(this)
 
 		handleKeyDown = this.handle(
-			this.handleSelect,
 			forwardWithPrevent('onKeyDown'),
 			this.forwardSpotlightEvents,
+			this.isActionable,
+			this.handleSelect,
 			this.shouldEmulateMouse,
 			forward('onMouseDown')
 		)
 
 		handleKeyUp = this.handle(
 			this.forwardAndResetLastSelectTarget,
+			this.isActionable,
 			this.shouldEmulateMouse,
 			forward('onMouseUp'),
 			forward('onClick')
 		)
 
 		handleBlur = (ev) => {
+			if (this.shouldPreventBlur) return;
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = false;
+				if (this.focusedWhenDisabled) {
+					this.focusedWhenDisabled = false;
+					// We only need to trigger a rerender if a focused item becomes disabled and still needs its focus.
+					// Once it blurs we need to rerender to remove the spottable class so it will not spot again.
+					// The reason we don't use state is for performance reasons to avoid updates.
+					this.forceUpdate();
+				}
 			}
 
 			if (Spotlight.isMuted(ev.target)) {
@@ -310,6 +359,13 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = (ev) => {
+			if (this.props.spotlightDisabled) {
+				this.shouldPreventBlur = true;
+				ev.target.blur();
+				this.shouldPreventBlur = false;
+				return;
+			}
+
 			if (ev.currentTarget === ev.target) {
 				this.isFocused = true;
 			}
@@ -323,17 +379,23 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleEnter = (ev) => {
 			forward('onMouseEnter', ev, this.props);
-			this.isHovered = true;
+			if (hasPointerMoved(ev.clientX, ev.clientY)) {
+				this.isHovered = true;
+			}
 		}
 
 		handleLeave = (ev) => {
 			forward('onMouseLeave', ev, this.props);
-			this.isHovered = false;
+			if (hasPointerMoved(ev.clientX, ev.clientY)) {
+				this.isHovered = false;
+			}
 		}
 
 		render () {
-			const {disabled, spotlightDisabled, ...rest} = this.props;
-			const spottable = !disabled && !spotlightDisabled;
+			const {disabled, spotlightId, spotlightDisabled, ...rest} = this.props;
+			this.focusedWhenDisabled = this.isFocused && spotlightDisabled;
+			const spottable = this.focusedWhenDisabled || isSpottable(this.props);
+
 			let tabIndex = rest.tabIndex;
 
 			delete rest.onSpotlightDisappear;
@@ -341,6 +403,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.onSpotlightLeft;
 			delete rest.onSpotlightRight;
 			delete rest.onSpotlightUp;
+			delete rest.selectionKeys;
+			delete rest.spotlightDisabled;
 
 			if (tabIndex == null) {
 				tabIndex = -1;
@@ -352,6 +416,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				} else {
 					rest.className = spottableClass;
 				}
+			}
+
+			if (spotlightId) {
+				rest['data-spotlight-id'] = spotlightId;
 			}
 
 			return (

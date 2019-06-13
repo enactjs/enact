@@ -10,9 +10,11 @@ submitting code or documentation to the project:
 *   [Documentation Style Guide](./documentation.md) - How we use jsDoc comments to document Enact
 *   [Documenting Changes](./changelogs.md) -  The Enact `CHANGELOG.md` guidelines
 
+The source for Enact is located in the [enactjs GitHub repository](https://github.com/enactjs/enact). Our [issue tracker](https://github.com/enactjs/enact/issues) is also located on GitHub, where you can find our [roadmap](https://github.com/enactjs/enact/issues/1504).
+
 ### Contributors Welcome!
 
-Enact is an open-source project, and is developed in public on GitHub under the Apache 2.0 license. We have a core team of
+Enact is an open-source project, and is developed in public under the Apache 2.0 license. We have a core team of
 developers who work full-time on Enact, and we also welcome outside contributors to join our effort to make native-quality
 app development a reality on the web stack.
 
@@ -23,7 +25,7 @@ Here's what you need to know to get started.
 	those libraries. In general, it’s safe to say that smaller changes are more likely to be accepted than larger ones, and
 	that contributions to the “outer rings” of Enact are more likely to be accepted than things that affect the Enact core.
 
-### Contribution GuideLines
+### Contribution Guidelines
 
 We have formalized our contribution guidelines a bit to ensure we can safely accept even large contributions to the official
 project. Please read this section carefully if you are interested in contributing:
@@ -35,10 +37,7 @@ project. Please read this section carefully if you are interested in contributin
 *   To contribute a change, fork the repo, push changes to your fork, and submit a pull request to enact to have your change
 	reviewed for submission to master. For details on the GitHub pull request process, see [here](https://help.github.com/articles/using-pull-requests).
 
-*   **IMPORTANT**: All pull requests must now include the following line in the pull request comments (using your full name and email
-	address), which indicates your contribution complies to the ***[Enact Developer's Certificate of Origin v1.0](./dco.md)***:
-
-	`Enact-DCO-1.0-Signed-off-by: Joe Smith <joe@myco.com>`
+*   **IMPORTANT**: No pull requests will be accepted until the contributor has signed off on our ***[Enact Developer's Certificate of Origin v1.0](./dco.md)***. We use an automated system that validates compliance before the first pull request is accepted.
 
 	Below is a layman's description of the five points in the Enact DCO (be sure to read and agree to the full text [here](./dco.md)):
 

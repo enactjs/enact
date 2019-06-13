@@ -1,25 +1,39 @@
 /**
- * Exports the {@link moonstone/DaySelector.DaySelector} component.
+ * Moonstone styled inline day selector components.
+ *
+ * @example
+ * <DaySelector
+ *   defaultSelected={[2, 3]}
+ *   onSelect={console.log}
+ * />
  *
  * @module moonstone/DaySelector
+ * @exports	DaySelector
+ * @exports DaySelectorBase
+ * @exports DaySelectorDecorator
  */
 
 import kind from '@enact/core/kind';
-import Group from '@enact/ui/Group';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Changeable from '@enact/ui/Changeable';
+import Group from '@enact/ui/Group';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import React from 'react';
 
 import Skinnable from '../Skinnable';
 
-import DaySelectorDecorator from './DaySelectorDecorator';
+import Decorator from './DaySelectorDecorator';
 import DaySelectorItem from './DaySelectorItem';
 
-import componentCss from './DaySelector.less';
+import componentCss from './DaySelector.module.less';
 
 /**
- * A component that allows the user to choose day(s) of the week.
+ * A Moonstone styled inline day of the week selection component.
+ *
+ * This component is most often not used directly but may be composed within another component as it
+ * is within [DaySelector]{@link moonstone/DaySelector.DaySelector}.
  *
  * @class DaySelectorBase
  * @memberof moonstone/DaySelector
@@ -31,16 +45,7 @@ const DaySelectorBase = kind({
 
 	propTypes: /** @lends moonstone/DaySelector.DaySelectorBase.prototype */ {
 		/**
-		 * Array of day names
-		 *
-		 * @type {String[]}
-		 * @default false
-		 * @private
-		 */
-		children: PropTypes.arrayOf(PropTypes.string),
-
-		/**
-		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 * Disables DaySelector and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -48,9 +53,11 @@ const DaySelectorBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Called when an item is selected. The first parameter will be an object containing a
-		 * `selected` member, containing the array of numbers representing the selected days, zero
-		 * indexed.
+		 * Called when an day is selected or unselected.
+		 *
+		 * The event payload will be an object with the following members:
+		 * * `selected` - An array of numbers representing the selected days, 0 indexed
+		 * * `content` - Localized string representing the selected days
 		 *
 		 * @type {Function}
 		 * @public
@@ -75,15 +82,16 @@ const DaySelectorBase = kind({
 		className: 'daySelector'
 	},
 
-	render: ({disabled, onSelect, ...rest}) => {
+	render: (props) => {
 		return (
 			<Group
-				{...rest}
+				{...props}
 				childComponent={DaySelectorItem}
 				childSelect="onToggle"
-				disabled={disabled}
-				itemProps={{className: componentCss.daySelectorItem, disabled}}
-				onSelect={onSelect}
+				itemProps={{
+					className: componentCss.daySelectorItem,
+					disabled: props.disabled
+				}}
 				select="multiple"
 				selectedProp="selected"
 			/>
@@ -91,43 +99,46 @@ const DaySelectorBase = kind({
 	}
 });
 
+// documented in ./DaySelectorDecorator.js
+const DaySelectorDecorator = compose(
+	Pure,
+	Changeable({change: 'onSelect', prop: 'selected'}),
+	I18nContextDecorator({localeProp: 'locale'}),
+	Decorator,
+	Skinnable
+);
+
 /**
- * A component that allows the user to choose day(s) of the week.
+ * An inline day of the week selection component, ready to use in Moonstone applications.
  *
+ * `DaySelector` may be used to select one or more days of the week from a horizontal list of
+ * abbreviated day names.
+ *
+ * By default, `DaySelector` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onChange` events.
+ *
+ * Usage:
+ * ```
+ * <DaySelector
+ *   defaultSelected={[2, 3]}
+ *   longDayLabels
+ *   onSelect={handleSelect}
+ * />
+ * ```
  * @class DaySelector
  * @extends moonstone/DaySelector.DaySelectorBase
- * @mixes ui/Changeable.Changeable
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/DaySelector.DaySelectorDecorator
  * @memberof moonstone/DaySelector
  * @ui
  * @public
  */
-
-/**
- * Use long day names (Sunday, Monday..) for labels
- *
- * If `false` short text will be displayed for the the days (Sun, Mon..)
- *
- * @name longDayLabels
- * @memberof moonstone/DaySelector.DaySelector.prototype
- * @type {Boolean}
- * @default false
- * @public
- */
-
-const DaySelector = Pure(
-	Changeable(
-		{change: 'onSelect', prop: 'selected'},
-		DaySelectorDecorator(
-			Skinnable(
-				DaySelectorBase
-			)
-		)
-	)
-);
+const DaySelector = DaySelectorDecorator(DaySelectorBase);
 
 export default DaySelector;
 export {
 	DaySelector,
-	DaySelectorBase
+	DaySelectorBase,
+	DaySelectorDecorator
 };

@@ -2,7 +2,7 @@ import hoc from '@enact/core/hoc';
 import Cancelable from '@enact/ui/Cancelable';
 import Spotlight from '@enact/spotlight';
 
-import css from './Panels.less';
+import css from './Panels.module.less';
 
 const defaultConfig = {
 	cancel: null
@@ -11,7 +11,7 @@ const defaultConfig = {
 const CancelDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {cancel} = config;
 
-	function handleCancel (props) {
+	function handleCancel (ev, props) {
 		const {index, [cancel]: handler} = props;
 
 		if (index > 0 && handler && !document.querySelector(`.${css.transitioning}`)) {
@@ -25,7 +25,7 @@ const CancelDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				index: index - 1
 			});
 
-			return true;
+			ev.stopPropagation();
 		}
 	}
 

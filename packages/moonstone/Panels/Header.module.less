@@ -1,0 +1,183 @@
+// Header.module.less
+//
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
+
+.header {
+	.border-box();
+	border-bottom-width: @moon-header-border-bottom-width;
+	border-bottom-style: solid;
+	position: relative;
+	max-width: 100%;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: top left;
+	margin: 0 @moon-spotlight-outset;
+
+	// .titleAbove {
+	// 	.moon-super-header-text();
+	// }
+
+	// Remove the built-in h1 and h2 margins
+	.decorator,
+	.decorator .input,
+	.title,
+	.titleBelow,
+	.subTitleBelow {
+		margin: 0;
+	}
+
+	.decorator .input,
+	.title {
+		.moon-header-text();
+		text-indent: 0.05em;  // Fix for characters like `j` being left-truncated because of being too close to the edge
+	}
+
+	.decorator {
+		padding: 0;
+		margin: -2px 3px 0 -3px; // Negative 3px here to allow the decorator title text to horizontally align with the rest of the header text
+	}
+
+	.titleBelow,
+	.subTitleBelow {
+		.moon-sub-header-text();
+	}
+
+	.subTitleBelow {
+		.moon-header-sub-title-below();
+	}
+
+	.headerComponents {
+		.remove-margin-on-edge-children();
+		.margin-start-end(@moon-header-components-gutter, 0);
+		margin-bottom: 18px;
+
+		white-space: nowrap;
+	}
+
+	// Standard Header
+	&.standard {
+		height: @moon-header-height-medium;
+
+		.title {
+			// The height is determined by the line-height below, but we want to maintain that as a
+			// relative unit (`em`) rather than dictate specific pixels to automatically accomodate
+			// font size changes.
+			line-height: @moon-medium-header-line-height;
+			margin-left: -3px; // Negative 3px here to allow the title text to horizontally align with the rest of the header text
+
+			.moon-locale-non-latin({line-height: @moon-non-latin-medium-header-line-height;});
+		}
+
+		.decorator,
+		.input {
+			height: 100%;
+			width: 100%;
+		}
+
+		.titleBelow,
+		.subTitleBelow {
+			line-height: 1.4em;
+		}
+	}
+
+	// Compact Header
+	&.compact {
+		height: @moon-header-height-small;
+
+		.compactTitle {
+			margin-bottom: 3px;
+		}
+
+		.input,
+		.title {
+			font-size: @moon-small-header-font-size;
+			display: inline;
+
+			.moon-locale-non-latin({line-height:  @moon-non-latin-small-header-line-height;});
+		}
+
+		.titleBelow {
+			display: inline;
+			padding-inline-start: 18px;
+		}
+	}
+
+	&.fullBleed {
+		border-top-width: 0;
+	}
+
+	// Skin colors
+	.applySkins({
+		color: @moon-header-text-color;
+		border-bottom-color: @moon-header-bottom-border-color;
+
+		&.standard {
+			.decorator {
+				background-color: transparent;
+
+				.focus({
+					background-color: transparent;
+				});
+
+				.input {
+					color: @moon-header-text-color;
+
+					.input-placeholder({
+						color: @moon-header-text-color;
+					});
+				}
+			}
+
+			.titleBelow,
+			.subTitleBelow {
+				color: @moon-header-sub-title-color;
+			}
+		}
+
+		&.fullBleed {
+			border-color: @moon-header-full-bleed-border-color;
+			color: @moon-header-full-bleed-text-color;
+
+			.titleBelow,
+			.subTitleBelow {
+				color: @moon-header-title-below-full-bleed-text-color;
+			}
+		}
+	});
+}
+
+:global(.moon-panels-hasControls) {
+	.header.compact,
+	.header.standard .title,
+	.header.standard .headerInput {
+		.padding-start-end(0, var(--moon-panels-controls-width));
+	}
+
+	.header.compact {
+		.headerComponents {
+			border-right-width: @moon-header-controls-border-width;
+			border-right-style: solid;
+			.padding-start-end(initial, @moon-header-components-separation);
+
+			:global(.enact-locale-right-to-left) & {
+				border-right-width: 0;
+				border-right-style: none;
+				border-left-width: @moon-header-controls-border-width;
+				border-left-style: solid;
+			}
+		}
+
+		.applySkins({
+			.headerComponents {
+				border-right-color: @moon-header-controls-border-color;
+
+				:global(.enact-locale-right-to-left) & {
+					border-right-color: transparent;
+					border-left-color: @moon-header-controls-border-color;
+				}
+			}
+		});
+	}
+}

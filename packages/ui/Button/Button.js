@@ -1,5 +1,5 @@
 /**
- * Provides unstyled button components and behaviors to be customized by a theme or application.
+ * Unstyled button components and behaviors to be customized by a theme or application.
  *
  * @module ui/Button
  * @exports Button
@@ -7,14 +7,28 @@
  * @exports ButtonDecorator
  */
 
-import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
+import deprecate from '@enact/core/internal/deprecate';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import Touchable from '../Touchable';
 
-import componentCss from './Button.less';
+import componentCss from './Button.module.less';
+
+const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
+	name: 'ui/Button.ButtonBase#small',
+	replacedBy: 'the `size` prop',
+	message: 'Use `size="small"` instead.',
+	since: '2.6.0',
+	until: '3.0.0'
+});
+
+function getSize (size, small) {
+	small = typeof small !== 'undefined' ? deprecateSmall(small) : 'large';
+	return size || small;
+}
 
 /**
  * A basic button component structure without any behaviors applied to it.
@@ -39,11 +53,13 @@ const ButtonBase = kind({
 		 * * `button` - The root component class
 		 * * `bg` - The background node of the button
 		 * * `client` - The content node of the button
+		 * * `hasIcon` - Applied when there is an `icon` present
 		 * * `icon` - The icon node, when `icon` is set
+		 * * `large` - Applied when `size` prop is `'large'`
 		 * * `minWidth` - Applied when `minWidth` prop is `true`
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 * * `selected` - Applied when `selected` prop is `true`
-		 * * `small` - Applied when `small` prop is `true`
+		 * * `small` - Applied when `size` prop is `'small'`
 		 *
 		 * @type {Object}
 		 * @public
@@ -51,10 +67,17 @@ const ButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Disables the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * Additional DOM nodes which may be necessary for decorating the Button.
 		 *
-		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-		 * generate `onClick` [events]{@glossary event}.
+		 * @type {Node}
+		 * @private
+		 */
+		decoration: PropTypes.node,
+
+		/**
+		 * Applies the `disabled` class.
+		 *
+		 * When `true`, the button is shown as disabled.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -63,7 +86,7 @@ const ButtonBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * The icon displayed within the [button][ButtonBase]{@link ui/Button.ButtonBase}.
+		 * The icon displayed within the Button.
 		 *
 		 * The icon will be displayed before the natural reading order of the text, regardless
 		 * of locale. Any string that is valid for its {@link ui/Button.Button.iconComponent} is
@@ -82,17 +105,20 @@ const ButtonBase = kind({
 		/**
 		 * The component used to render the [icon]{@link ui/Button.ButtonBase.icon}.
 		 *
-		 * This component will receive the `small` property set on the Button as well as the `icon`
+		 * This component will receive the `size` property set on the Button as well as the `icon`
 		 * class to customize its styling. If [icon]{@link ui/Button.ButtonBase.icon} is not a
 		 * string, this property is not used.
 		 *
-		 * @type {Function}
+		 * @type {Component}
 		 * @public
 		 */
-		iconComponent: PropTypes.func,
+		iconComponent: EnactPropTypes.component,
 
 		/**
-		 * Applies the `minWidth` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * Enforces a minimum width for the component.
+		 *
+		 * Applies the `minWidth` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default true
@@ -101,7 +127,10 @@ const ButtonBase = kind({
 		minWidth: PropTypes.bool,
 
 		/**
-		 * Applies the `pressed` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * Indicates the component is depressed.
+		 *
+		 * Applies the `pressed` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -110,7 +139,10 @@ const ButtonBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * Applies the `selected` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * Indicates the component is selected.
+		 *
+		 * Applies the `selected` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -119,10 +151,22 @@ const ButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Applies the `small` CSS class to the [ButtonBase]{@link ui/Button.ButtonBase}
+		 * The size of the button.
+		 *
+		 * Applies either the `small` or `large` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
+		 *
+		 * @type {('small'|'large')}
+		 * @default 'large'
+		 * @public
+		 */
+		size: PropTypes.string,
+
+		/**
+		 * Reduces the size of the component.
 		 *
 		 * @type {Boolean}
-		 * @default false
+		 * @deprecated replaced by prop `size='small'`
 		 * @public
 		 */
 		small: PropTypes.bool
@@ -132,8 +176,7 @@ const ButtonBase = kind({
 		disabled: false,
 		minWidth: true,
 		pressed: false,
-		selected: false,
-		small: false
+		selected: false
 	},
 
 	styles: {
@@ -143,35 +186,32 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({minWidth, pressed, selected, small, styler}) => styler.append({
-			pressed,
-			small,
+		className: ({icon, minWidth, pressed, selected, size, small, styler}) => styler.append({
+			hasIcon: (!!icon),
 			minWidth,
+			pressed,
 			selected
-		}),
-		icon: ({css, icon, iconComponent: Icon, small}) => {
+		}, getSize(size, small)),
+		icon: ({css, icon, iconComponent: Icon, size, small}) => {
 			return (typeof icon === 'string' && Icon) ? (
-				<Icon small={small} className={css.icon}>{icon}</Icon>
+				<Icon size={getSize(size, small)} className={css.icon}>{icon}</Icon>
 			) : icon;
 		}
 	},
 
-	handlers: {
-		onClick: handle(
-			forProp('disabled', false),
-			forward('onClick')
-		)
-	},
-
-	render: ({children, css, disabled, icon, ...rest}) => {
+	render: ({children, css, decoration, disabled, icon, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.minWidth;
 		delete rest.pressed;
 		delete rest.selected;
+		delete rest.size;
 		delete rest.small;
 
 		return (
 			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
+				{decoration ? (
+					<div className={css.decoration}>{decoration}</div>
+				) : null}
 				<div className={css.bg} />
 				<div className={css.client}>{icon}{children}</div>
 			</div>
@@ -180,7 +220,7 @@ const ButtonBase = kind({
 });
 
 /**
- * Adds touch support to a [ButtonBase]{@link ui/Button.ButtonBase}.
+ * A higher-order component that adds touch support to a [ButtonBase]{@link ui/Button.ButtonBase}.
  *
  * @hoc
  * @memberof ui/Button

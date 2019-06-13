@@ -18,24 +18,27 @@ describe('hoc', () => {
 		return () => <Wrapped {...config} />;
 	});
 
-	it('should support HoC factory function as first argument to hoc()', function () {
-		const ImplicitNullHoC = hoc((config, Wrapped) => {
-			return () => <Wrapped {...config} />;
-		});
-		const Component = ImplicitNullHoC('span');
+	test(
+		'should support HoC factory function as first argument to hoc()',
+		() => {
+			const ImplicitNullHoC = hoc((config, Wrapped) => {
+				return () => <Wrapped {...config} />;
+			});
+			const Component = ImplicitNullHoC('span');
 
-		const subject = shallow(
-			<Component />
-		);
+			const subject = shallow(
+				<Component />
+			);
 
-		const expected = 'span';
-		const actual = subject.name();
+			const expected = 'span';
+			const actual = subject.name();
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
 
-	it('should support DOM node name as first argument to HoC', function () {
+	test('should support DOM node name as first argument to HoC', () => {
 		const Component = HoC('span');
 
 		const subject = shallow(
@@ -45,10 +48,10 @@ describe('hoc', () => {
 		const expected = 'span';
 		const actual = subject.name();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should support React component as first argument to HoC', function () {
+	test('should support React component as first argument to HoC', () => {
 		function Thing () {
 			return <div />;
 		}
@@ -61,10 +64,10 @@ describe('hoc', () => {
 		const expected = 'Thing';
 		const actual = subject.name();
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should use default config when instance config is omitted', function () {
+	test('should use default config when instance config is omitted', () => {
 		const Component = HoC('span');
 
 		const subject = mount(
@@ -74,10 +77,10 @@ describe('hoc', () => {
 		const expected = defaultConfig.color;
 		const actual = subject.find('span').prop('color');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should overwrite default config with instance config', function () {
+	test('should overwrite default config with instance config', () => {
 		const instanceConfig = {
 			color: 'green'
 		};
@@ -90,23 +93,26 @@ describe('hoc', () => {
 		const expected = instanceConfig.color;
 		const actual = subject.find('div').prop('color');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
-	it('should allow construction without default or instance configs', function () {
-		const Component = NullHoC('div');
+	test(
+		'should allow construction without default or instance configs',
+		() => {
+			const Component = NullHoC('div');
 
-		const subject = mount(
-			<Component />
-		);
+			const subject = mount(
+				<Component />
+			);
 
-		const expected = 1;
-		const actual = subject.find('div').length;
+			const expected = 1;
+			const actual = subject.find('div').length;
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should allow construction without default config', function () {
+	test('should allow construction without default config', () => {
 		const instanceConfig = {
 			color: 'green'
 		};
@@ -119,7 +125,7 @@ describe('hoc', () => {
 		const expected = instanceConfig.color;
 		const actual = subject.find('div').prop('color');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 
 });

@@ -1,4 +1,7 @@
 import {scale} from '@enact/ui/resolution';
+import Slottable from '@enact/ui/Slottable';
+import Measurable from '@enact/ui/Measurable';
+import compose from 'ramda/src/compose';
 
 import Skinnable from '../Skinnable';
 
@@ -7,7 +10,7 @@ import {breadcrumbWidth} from './Breadcrumb';
 import BreadcrumbDecorator from './BreadcrumbDecorator';
 import Viewport from './Viewport';
 
-/**
+/*
  * Calculates the number of breadcrumbs that would fit in half of the viewport
  *
  * @param {Number} viewportWidth inner width of the viewport (usually the window)
@@ -22,20 +25,28 @@ const calcMax = () => {
 	}
 };
 
+const AlwaysViewingPanelsDecorator = compose(
+	Slottable({slots: ['controls']}),
+	Measurable({refProp: 'controlsRef', measurementProp: 'controlsMeasurements'}),
+	Skinnable,
+	BreadcrumbDecorator({
+		className: 'panels alwaysViewing enact-fit',
+		max: calcMax,
+		panelArranger: AlwaysViewingArranger
+	})
+);
+
 /**
- * An instance of Panels in which the Panel uses the right half of the viewable screen with
- * breadcrumbs to the left for any panels prior to the active panel.
+ * An instance of [`Panels`]{@link moonstone/Panels.Panels} which restricts the `Panel` to the right
+ * half of the screen with the left half used for breadcrumbs that allow navigating to previous
+ * panels. Typically used for overlaying panels over a screen.
  *
  * @class AlwaysViewingPanels
  * @memberof moonstone/Panels
  * @ui
  * @public
  */
-const AlwaysViewingPanels = Skinnable(BreadcrumbDecorator({
-	className: 'panels alwaysViewing enact-fit',
-	max: calcMax,
-	panelArranger: AlwaysViewingArranger
-}, Viewport));
+const AlwaysViewingPanels = AlwaysViewingPanelsDecorator(Viewport);
 
 export default AlwaysViewingPanels;
 export {AlwaysViewingPanels};

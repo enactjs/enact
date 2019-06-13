@@ -8,63 +8,75 @@ describe('ToggleButton', () => {
 	const toggleOffLabel = 'It\'s off!';
 	const textChild = 'Toggle Me';
 
-	it('should use \'toggleOffLabel\' if toggled off and label provided', function () {
-		const toggleButton = mount(
-			<ToggleButton toggleOffLabel={toggleOffLabel}>
-				{textChild}
-			</ToggleButton>
-		);
+	test(
+		'should use \'toggleOffLabel\' if toggled off and label provided',
+		() => {
+			const toggleButton = mount(
+				<ToggleButton toggleOffLabel={toggleOffLabel}>
+					{textChild}
+				</ToggleButton>
+			);
 
-		const button = toggleButton.find('Button');
-		const expected = toggleOffLabel.toUpperCase();
-		const actual = button.text();
+			const button = toggleButton.find('Button');
+			const expected = toggleOffLabel;
+			const actual = button.text();
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should use \'toggleOnLabel\' if toggled on and label provided', function () {
-		const toggleButton = mount(
-			<ToggleButton toggleOnLabel={toggleOnLabel} selected>
-				{textChild}
-			</ToggleButton>
-		);
+	test(
+		'should use \'toggleOnLabel\' if toggled on and label provided',
+		() => {
+			const toggleButton = mount(
+				<ToggleButton toggleOnLabel={toggleOnLabel} selected>
+					{textChild}
+				</ToggleButton>
+			);
 
-		const button = toggleButton.find('Button');
-		const expected = toggleOnLabel.toUpperCase();
-		const actual = button.text();
+			const button = toggleButton.find('Button');
+			const expected = toggleOnLabel;
+			const actual = button.text();
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should use child node for label when \'toggleOffLabel\' is missing', function () {
-		const toggleButton = mount(
-			<ToggleButton toggleOnLabel={toggleOnLabel}>
-				{textChild}
-			</ToggleButton>
-		);
-		const button = toggleButton.find('Button');
+	test(
+		'should use child node for label when \'toggleOffLabel\' is missing',
+		() => {
+			const toggleButton = mount(
+				<ToggleButton toggleOnLabel={toggleOnLabel}>
+					{textChild}
+				</ToggleButton>
+			);
+			const button = toggleButton.find('Button');
 
-		const expected = textChild.toUpperCase();
-		const actual = button.text();
+			const expected = textChild;
+			const actual = button.text();
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should use child node for label when \'toggleOnLabel\' is missing', function () {
-		const toggleButton = mount(
-			<ToggleButton toggleOffLabel={toggleOffLabel} selected>
-				{textChild}
-			</ToggleButton>
-		);
-		const button = toggleButton.find('Button');
+	test(
+		'should use child node for label when \'toggleOnLabel\' is missing',
+		() => {
+			const toggleButton = mount(
+				<ToggleButton toggleOffLabel={toggleOffLabel} selected>
+					{textChild}
+				</ToggleButton>
+			);
+			const button = toggleButton.find('Button');
 
-		const expected = textChild.toUpperCase();
-		const actual = button.text();
+			const expected = textChild;
+			const actual = button.text();
 
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
-	it('should set "aria-pressed" to the value of "selected"', function () {
+	test('should set "aria-pressed" to the value of "selected"', () => {
 		const toggleButton = mount(
 			<ToggleButton toggleOffLabel={toggleOffLabel} selected={false}>
 				{textChild}
@@ -74,6 +86,6 @@ describe('ToggleButton', () => {
 		const expected = false;
 		const actual = toggleButton.find({role: 'button'}).prop('aria-pressed');
 
-		expect(actual).to.equal(expected);
+		expect(actual).toBe(expected);
 	});
 });

@@ -1,19 +1,20 @@
 /**
- * Exports the {@link ui/Toggleable.Toggleable} Higher-order Component (HOC).
+ * A higher-order component at handles toggle state.
  *
  * @module ui/Toggleable
+ * @exports Toggleable
  */
 
 import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
-
-import React from 'react';
+import {pick} from 'ramda';
 import PropTypes from 'prop-types';
+import React from 'react';
 import warning from 'warning';
 
 /**
- * Default config for {@link ui/Toggleable.Toggleable}
+ * Default config for `Toggleable`.
  *
  * @memberof ui/Toggleable.Toggleable
  * @hocconfig
@@ -22,8 +23,19 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that activates the component.
 	 *
-	 * Note: When using `activate`/`deactivate` instead of `toggle`, set `toggle` to `null` to
-	 * prevent passing the default `onToggle` prop to the wrapped component.
+	 * **Note**: When using `activate`/`deactivate`, the event payload will only forward the original
+	 * event and not include toggled `prop` value. Use `toggle` to receive toggled value from the
+	 * event payload.
+	 *
+	 * Example:
+	 * ```
+	 * const ToggleItem = Toggleable({activate: 'onFocus', deactivate: 'onBlur'}, Item);
+	 *
+	 * handleEvent = (ev) => {
+	 * 	// do something with `ev.selected` here
+	 * }
+	 *
+	 * <ToggleItem onToggle={handleEvent}>This is a toggle item</Item>
 	 *
 	 * @type {String}
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
@@ -33,13 +45,33 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that deactivates the component.
 	 *
-	 * Note: When using `activate`/`deactivate` instead of `toggle`, set `toggle` to `null` to
-	 * prevent passing the default `onToggle` prop to the wrapped component.
+	 * **Note**: When using `activate`/`deactivate`, the event payload will only forward the original
+	 * event and not include toggled `prop` value. Use `toggle` to receive toggled value from the
+	 * event payload.
 	 *
+	 * Example:
+	 * ```
+	 * const ToggleItem = Toggleable({activate: 'onFocus', deactivate: 'onBlur'}, Item);
+	 *
+	 * handleEvent = (ev) => {
+	 * 	// do something with `ev.selected` here
+	 * }
+	 *
+	 * <ToggleItem onToggle={handleEvent}>This is a toggle item</Item>
+	 * ```
 	 * @type {String}
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
 	 */
 	deactivate: null,
+
+	/**
+	 * Configures additional props to attach to the event that is sent when toggled.
+	 *
+	 * @type {String[]}
+	 * @default []
+	 * @memberof ui/Toggleable.Toggleable.defaultConfig
+	 */
+	eventProps: [],
 
 	/**
 	 * Configures the property that is passed to the wrapped component when toggled.
@@ -53,6 +85,11 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that toggles the component.
 	 *
+	 * The payload includes a toggled Boolean value of `prop`.
+	 *
+	 * **Note**: The payload will override the original event. If a native event is set, then the native
+	 * event payload will be lost.
+	 *
 	 * @type {String}
 	 * @default 'onToggle'
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
@@ -61,7 +98,8 @@ const defaultConfig = {
 
 	/**
 	 * Allows you to remap the incoming `toggle` callback to an event name of your choosing.
-	 * Ex: run `onToggle` when the wrapped component has an `onClick` property and you've specified
+	 *
+	 * For example, run `onToggle` when the wrapped component has an `onClick` property and you've specified
 	 * `onClick` here.
 	 *
 	 * @type {String}
@@ -72,10 +110,14 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/Toggleable.Toggleable} is a Higher-order Component that applies a 'Toggleable' behavior
- * to its wrapped component.  Its default event and property can be configured when applied to a component.
+ * A higher-order component that applies a 'toggleable' behavior to its wrapped component.
  *
- * By default, Toggleable applies the `active` property on click events.
+ * Its default event and property can be configured when applied to a component.
+ *
+ * Example:
+ * ```
+ * const ToggleItem = Toggleable({toggleProp: 'onClick'}, Item);
+ * ```
  *
  * @class Toggleable
  * @memberof ui/Toggleable
@@ -83,7 +125,7 @@ const defaultConfig = {
  * @public
  */
 const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const {activate, deactivate, prop, toggle, toggleProp} = config;
+	const {activate, deactivate, eventProps, prop, toggle, toggleProp} = config;
 	const defaultPropKey = 'default' + cap(prop);
 
 	return class Toggleable extends React.Component {
@@ -107,10 +149,12 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * Current toggled state. When set at construction, the component is considered
-			 * "controlled" and will only update its internal value when updated by new props. If
-			 * undefined, the component is "uncontrolled" and `Toggleable` will manage the toggled
-			 * state using callbacks defined by its configuration.
+			 * Current toggled state.
+			 *
+			 * When set at construction, the component is considered 'controlled' and will only
+			 * update its internal value when updated by new props. If undefined, the component
+			 * is 'uncontrolled' and `Toggleable` will manage the toggled state using callbacks
+			 * defined by its configuration.
 			 *
 			 * @type {Boolean}
 			 * @public
@@ -127,47 +171,50 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
-			[defaultPropKey]: false,
 			disabled: false
 		}
 
 		constructor (props) {
 			super(props);
-			let active = props[defaultPropKey];
-			let controlled = false;
-
-			if (prop in props) {
-				if (props[prop] != null) {
-					active = props[prop];
-				}
-
-				controlled = true;
-			}
 
 			this.state = {
-				active,
-				controlled
+				rendered: false,
+				active: null,
+				controlled: prop in props
 			};
+
+			warning(
+				!(prop in props && defaultPropKey in props),
+				`Do not specify both '${prop}' and '${defaultPropKey}' for Toggleable instances.
+				'${defaultPropKey}' will be ignored unless '${prop}' is 'null' or 'undefined'.`
+			);
 		}
 
-		componentWillReceiveProps (nextProps) {
-			if (this.state.controlled) {
-				this.setState({
-					active: !!nextProps[prop]
-				});
-			} else {
-				warning(
-					!(prop in nextProps),
-					`'${prop}' specified for an uncontrolled instance of Toggleable and will be
-					ignored. To make this instance of Toggleable controlled, '${prop}' should be
-					specified at creation.`
-				);
+		static getDerivedStateFromProps (props, state) {
+			if (state.rendered === false) {
+				return {
+					rendered: true,
+					active: Boolean(props[prop] != null ? props[prop] : props[defaultPropKey])
+				};
+			} else if (state.controlled) {
+				return {
+					active: Boolean(props[prop])
+				};
 			}
+
+			warning(
+				!(typeof props[prop] !== 'undefined'),
+				`'${prop}' specified for an uncontrolled instance of Toggleable and will be
+				ignored. To make this instance of Toggleable controlled, '${prop}' should be
+				specified at creation.`
+			);
+
+			return null;
 		}
 
 		handle = handle.bind(this)
 
-		forwardWithState = (evName) => (ev, props) => forward(evName, {[prop]: !this.state.active}, props)
+		forwardWithState = (evName) => (ev, props) => forward(evName, {...pick(eventProps, props), [prop]: !this.state.active}, props)
 
 		updateActive = (active) => {
 			if (!this.state.controlled) {
@@ -177,13 +224,15 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleActivate = this.handle(
 			forProp('disabled', false),
-			this.forwardWithState(activate),
+			forward(activate),
+			this.forwardWithState(toggle),
 			() => this.updateActive(true)
 		)
 
 		handleDeactivate = this.handle(
 			forProp('disabled', false),
-			this.forwardWithState(deactivate),
+			forward(deactivate),
+			this.forwardWithState(toggle),
 			() => this.updateActive(false)
 		)
 

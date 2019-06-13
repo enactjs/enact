@@ -8,21 +8,25 @@
  * @exports ProgressBar
  * @exports ProgressBarBase
  * @exports ProgressBarDecorator
+ * @exports ProgressBarTooltip
  */
 
 import compose from '@enact/core/internal/fp/compose';
 import kind from '@enact/core/kind';
+import ComponentOverride from '@enact/ui/ComponentOverride';
 import UiProgressBar from '@enact/ui/ProgressBar';
 import Pure from '@enact/ui/internal/Pure';
+import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import Skinnable from '../Skinnable';
+import {ProgressBarTooltip} from './ProgressBarTooltip';
 
-import componentCss from './ProgressBar.less';
+import componentCss from './ProgressBar.module.less';
 
 /**
- * Renders a moonstone-styled ProgressBar.
+ * Renders a moonstone-styled progress bar.
  *
  * @class ProgressBarBase
  * @memberof moonstone/ProgressBar
@@ -44,7 +48,79 @@ const ProgressBarBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		/**
+		 * Highlights the filled portion.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		highlighted: PropTypes.bool,
+
+		/**
+		 * Sets the orientation of the slider.
+		 *
+		 * * Values: `'horizontal'`, `'vertical'`
+		 *
+		 * @type {String}
+		 * @default 'horizontal'
+		 * @public
+		 */
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		/**
+		 * A number between `0` and `1` indicating the proportion of the filled portion of the bar.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		progress: PropTypes.number,
+
+		/**
+		 * Enables the built-in tooltip.
+		 *
+		 * To customize the tooltip, pass either a custom tooltip component or an instance of
+		 * [ProgressBarTooltip]{@link moonstone/ProgressBar.ProgressBarTooltip} with additional
+		 * props configured.
+		 *
+		 * The provided component will receive the following props from `ProgressBar`:
+		 *
+		 * * `orientation`  - The value of `orientation`
+		 * * `percent`      - Always `true` indicating the value should be presented as a percentage
+		 *                    rather than an absolute value
+		 * * `progress`     - The `value` as a proportion between `min` and `max`
+		 * * `visible`      - Always `true` indicating that the tooltip should be visible
+		 *
+		 * Usage:
+		 * ```
+		 * <ProgressBar
+		 *   tooltip={
+		 *     <ProgressBarTooltip side="after" />
+		 *   }
+		 * />
+		 * ```
+		 *
+		 * The tooltip may also be passed as a child via the `"tooltip"` slot. See
+		 * [Slottable]{@link ui/Slottable} for more information on how slots can be used.
+		 *
+		 * Usage:
+		 * ```
+		 * <ProgressBar>
+		 *   <ProgressBarTooltip side="after" />
+		 * </ProgressBar>
+		 * ```
+		 *
+		 * @type {Boolean|Component|Element}
+		 * @public
+		 */
+		tooltip: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.func])
+	},
+
+	defaultProps: {
+		orientation: 'horizontal',
+		progress: 0
 	},
 
 	styles: {
@@ -52,12 +128,30 @@ const ProgressBarBase = kind({
 		publicClassNames: ['progressBar']
 	},
 
-	render: (props) => {
+	computed: {
+		className: ({highlighted, styler}) => styler.append({highlighted}),
+		tooltip: ({tooltip}) => tooltip === true ? ProgressBarTooltip : tooltip
+	},
+
+	render: ({css, orientation, progress, tooltip, ...rest}) => {
+		delete rest.tooltip;
+		delete rest.highlighted;
+
 		return (
 			<UiProgressBar
-				{...props}
-				css={props.css}
-			/>
+				{...rest}
+				orientation={orientation}
+				progress={progress}
+				css={css}
+			>
+				<ComponentOverride
+					component={tooltip}
+					orientation={orientation}
+					percent
+					proportion={progress}
+					visible
+				/>
+			</UiProgressBar>
 		);
 	}
 });
@@ -67,11 +161,12 @@ const ProgressBarBase = kind({
  *
  * @hoc
  * @memberof moonstone/ProgressBar
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const ProgressBarDecorator = compose(
 	Pure,
+	Slottable({slots: ['tooltip']}),
 	Skinnable
 );
 
@@ -92,5 +187,6 @@ export default ProgressBar;
 export {
 	ProgressBar,
 	ProgressBarBase,
-	ProgressBarDecorator
+	ProgressBarDecorator,
+	ProgressBarTooltip
 };

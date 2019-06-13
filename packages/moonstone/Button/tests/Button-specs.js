@@ -1,61 +1,59 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 import Button from '../Button';
 
 describe('Button', () => {
 
-	it('should render with button text upper-cased', function () {
-		let msg = 'Hello Button!';
+	test(
+		'should have \'disabled\' HTML attribute when \'disabled\' prop is provided',
+		() => {
+			const button = mount(
+				<Button disabled>I am a disabled Button</Button>
+			);
 
-		const button = mount(
-			<Button>{msg}</Button>
-		);
+			const expected = true;
+			const actual = button.find('div').at(0).prop('disabled');
 
-		const expected = msg.toUpperCase();
-		const actual = button.text();
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should have \'disabled\' HTML attribute when \'disabled\' prop is provided', function () {
-		const button = mount(
-			<Button disabled>I am a disabled Button</Button>
-		);
-
-		const expected = true;
-		const actual = button.find('div').at(0).prop('disabled');
-
-		expect(actual).to.equal(expected);
-	});
+			expect(actual).toBe(expected);
+		}
+	);
 
 	describe('events', () => {
-		it('should call onClick when not disabled', function () {
-			const handleClick = sinon.spy();
+		test('should call onClick when not disabled', () => {
+			const handleClick = jest.fn();
 			const subject = mount(
 				<Button onClick={handleClick}>I am a disabled Button</Button>
 			);
 
 			subject.simulate('click');
 
-			const expected = true;
-			const actual = handleClick.called;
+			const expected = 1;
+			const actual = handleClick.mock.calls.length;
 
-			expect(actual).to.equal(expected);
+			expect(actual).toBe(expected);
 		});
 
-		it('should not call onClick when disabled', function () {
-			const handleClick = sinon.spy();
+		test('should not call onClick when disabled', () => {
+			const handleClick = jest.fn();
 			const subject = mount(
 				<Button disabled onClick={handleClick}>I am a disabled Button</Button>
 			);
 
 			subject.simulate('click');
 
-			const expected = false;
-			const actual = handleClick.called;
+			const expected = 0;
+			const actual = handleClick.mock.calls.length;
 
-			expect(actual).to.equal(expected);
+			expect(actual).toBe(expected);
+		});
+
+		test('should have "Select" voice intent in the node of "role=button"', () => {
+			const button = mount(<Button>Hello</Button>);
+
+			const expected = 'Select';
+			const actual = button.find('[role="button"]').prop('data-webos-voice-intent');
+
+			expect(actual).toBe(expected);
 		});
 	});
 });

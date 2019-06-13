@@ -1,39 +1,46 @@
 /**
- * Provides an unstyled indeterminate progress indicator (Spinner) component to be customized by a
- * theme or application. Basically, this positions your Spinner component where you want it on the
+ * An unstyled indeterminate progress indicator (Spinner) component to be customized by a
+ * theme or application.
+ *
+ * Basically, this positions your `Spinner` component where you want it on the
  * screen, and hooks into the interaction blocking code and scrim management.
  *
  * The theme using this component must supply a `component` element which follows the requirements
- * listed by the [component]{@link ui/Spinner.Spinner.spinnerComponent} prop documentation.
+ * listed by the [component]{@link ui/Spinner.Spinner.component} prop documentation.
  *
  * @module ui/Spinner
  * @exports Spinner
+ * @exports SpinnerBase
+ * @exports SpinnerDecorator
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import FloatingLayer from '../FloatingLayer';
+import ForwardRef from '../ForwardRef';
 
-import componentCss from './Spinner.less';
+import componentCss from './Spinner.module.less';
 
 /**
- * A minimally styled component that controls Spinner positioning and interaction states.
+ * A minimally styled component that controls `Spinner` positioning and interaction states, without
+ * [SpinnerDecorator](ui/Spinner.SpinnerDecorator) applied.
  *
- * @class Spinner
+ * @class SpinnerBase
  * @memberof ui/Spinner
  * @ui
  * @public
  */
-const Spinner = kind({
+const SpinnerBase = kind({
 	name: 'ui:Spinner',
 
-	propTypes: /** @lends ui/Spinner.Spinner.prototype */ {
+	propTypes: /** @lends ui/Spinner.SpinnerBase.prototype */ {
 		/**
-		 * A theme-supplied component that performs the animation. Theme authors can use the
-		 * `css.running` class to attach the animation CSS.
+		 * A theme-supplied component that performs the animation.
 		 *
+		 * Theme authors can use the `css.running` class to attach the animation CSS.
 		 * This element should accept a `children` prop which takes the form of an optional message
 		 * for the user.
 		 *
@@ -41,10 +48,11 @@ const Spinner = kind({
 		 * instead refers to the "spinner" part of this component. The presence of `blockClickOn`
 		 * changes the rendering tree and where this is used.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
+		 * @required
 		 * @public
 		 */
-		component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+		component: EnactPropTypes.renderable.isRequired,
 
 		/**
 		 * Determines how far the click-blocking should extend.
@@ -53,23 +61,29 @@ const Spinner = kind({
 		 * * 'screen' blocks entire screen
 		 * * 'container' blocks up to the nearest ancestor with absolute or relative positioning
 		 *
-		 * When blockClickOn is either `'screen'` or `'container'`, a translucent scrim can be added
+		 * When `blockClickOn` is either `'screen'` or `'container'`, a translucent scrim can be added
 		 * by setting [scrim]{@link ui/Spinner.Spinner#scrim} prop to `true`.
 		 *
-		 * @type {String}
+		 * @type {String|null}
 		 * @public
 		 */
 		blockClickOn: PropTypes.oneOf(['screen', 'container', null]),
 
 		/**
-		 * When `true`, the spinner is horizontally and vertically centered, relative to its
-		 * containing component.
+		 * Centers the spinner horizontally and vertically relative to its containing component.
 		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @public
 		 */
 		centered: PropTypes.bool,
+
+		/**
+		 * Called with a reference to [component]{@link ui/Spinner.Spinner#component}
+		 *
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -90,7 +104,16 @@ const Spinner = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, sets a scrim behind the spinner with the `css.scrim` class applied.
+		 * Halts the animation of the spinner
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		paused: PropTypes.bool,
+
+		/**
+		 * Sets a scrim behind the spinner with the `css.scrim` class applied.
 		 *
 		 * Only has an effect when `blockClickOn` is `'screen'` or `'container'` and has no effect
 		 * by default or when blockClickOn is `null`.
@@ -104,18 +127,19 @@ const Spinner = kind({
 
 	defaultProps: {
 		centered: false,
+		paused: false,
 		scrim: false
 	},
 
 	styles: {
 		css: componentCss,
-		className: 'spinner running',
+		className: 'spinner',
 		publicClassNames: true
 	},
 
 	computed: {
-		className: ({centered, styler}) => styler.append(
-			{centered}
+		className: ({centered, paused, styler}) => styler.append(
+			{centered, running: !paused}
 		),
 		scrimClassName: ({blockClickOn, scrim, styler}) => styler.join(
 			{blockClickOn, scrim}
@@ -126,15 +150,16 @@ const Spinner = kind({
 		)
 	},
 
-	render: ({blockClickOn, component: Component, scrimClassName, scrimType, spinnerContainerClassName, ...rest}) =>  {
+	render: ({blockClickOn, component: Component, componentRef, scrimClassName, scrimType, spinnerContainerClassName, ...rest}) =>  {
 		delete rest.centered;
+		delete rest.paused;
 		delete rest.scrim;
 
 		switch (blockClickOn) {
 			case 'screen': {
 				return (
 					<FloatingLayer noAutoDismiss open scrimType={scrimType}>
-						<Component {...rest} />
+						<Component ref={componentRef} {...rest} />
 					</FloatingLayer>
 				);
 			}
@@ -142,20 +167,45 @@ const Spinner = kind({
 				return (
 					<div className={spinnerContainerClassName}>
 						<div className={scrimClassName} />
-						<Component {...rest} />
+						<Component ref={componentRef} {...rest} />
 					</div>
 				);
 			}
 			default: {
 				return (
-					<Component {...rest} />
+					<Component ref={componentRef} {...rest} />
 				);
 			}
 		}
 	}
 });
 
+/**
+ * Applies Spinner behaviors
+ *
+ * @class SpinnerDecorator
+ * @memberof ui/Spinner
+ * @mixes ui/ForwardRef.ForwardRef
+ * @hoc
+ * @public
+ */
+const SpinnerDecorator = ForwardRef({prop: 'componentRef'});
+
+/**
+ * A minimally styled component that controls `Spinner` positioning and interaction states.
+ *
+ * @class Spinner
+ * @memberof ui/Spinner
+ * @extends ui/Spinner.SpinnerBase
+ * @mixes ui/Spinner.SpinnerDecorator
+ * @ui
+ * @public
+ */
+const Spinner = SpinnerDecorator(SpinnerBase);
+
 export default Spinner;
 export {
-	Spinner
+	Spinner,
+	SpinnerBase,
+	SpinnerDecorator
 };

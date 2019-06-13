@@ -2,12 +2,19 @@
  * Exports the {@link ui/ViewManager.View} component.
  */
 
-import {perfNow, Job} from '@enact/core/util';
+import {Job} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 
 import {shape} from './Arranger';
+
+// If the View was "appearing", then entering will always be false and this will not result in a
+// re-render. If the view should enter, state.enter will be true and this will toggle it to false
+// causing a re-render.
+const clearEntering = ({entering}) => {
+	return entering ? {entering: false} : null;
+};
 
 /**
  * A `View` wraps a set of children for {@link ui/ViewManager.ViewManager}.
@@ -26,13 +33,24 @@ class View extends React.Component {
 		 * Time in milliseconds to complete a transition
 		 *
 		 * @type {Number}
+		 * @required
+		 * @public
 		 */
 		duration: PropTypes.number.isRequired,
+
+		/**
+		 * Set to `true` when the View should 'appear' without transitioning into the viewport
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		appearing: PropTypes.bool,
 
 		/**
 		 * Arranger to control the animation
 		 *
 		 * @type {Arranger}
+		 * @public
 		 */
 		arranger: shape,
 
@@ -46,10 +64,11 @@ class View extends React.Component {
 
 		/**
 		 * Time, in milliseconds, to wait after a view has entered to inform it by passing the
-		 * `enteringProp` as false.
+		 * `enteringProp` as `false`.
 		 *
 		 * @type {Number}
 		 * @default 0
+		 * @public
 		 */
 		enteringDelay: PropTypes.number,
 
@@ -62,6 +81,7 @@ class View extends React.Component {
 		 * be notified of the change in transition.
 		 *
 		 * @type {String}
+		 * @public
 		 */
 		enteringProp: PropTypes.string,
 
@@ -73,17 +93,18 @@ class View extends React.Component {
 		index: PropTypes.number,
 
 		/**
-		 * Indicates if a view is currently leaving.
+		 * When `true`, indicates if a view is currently leaving.
 		 *
 		 * @type {Boolean}
 		 */
 		leaving: PropTypes.bool,
 
 		/**
-		 * Indicates if the transition should be animated
+		 * When `true`, indicates if the transition should be animated
 		 *
 		 * @type {Boolean}
 		 * @default true
+		 * @public
 		 */
 		noAnimation: PropTypes.bool,
 
@@ -95,7 +116,7 @@ class View extends React.Component {
 		previousIndex: PropTypes.number,
 
 		/**
-		 * Indicates if the transition should be reversed. The effect depends on how the provided
+		 * When `true`, indicates if the transition should be reversed. The effect depends on how the provided
 		 * `arranger` handles reversal.
 		 *
 		 * @type {Boolean}
@@ -105,21 +126,16 @@ class View extends React.Component {
 	}
 
 	static defaultProps = {
+		appearing: false,
 		enteringDelay: 0
 	}
 
 	constructor (props) {
 		super(props);
 		this.animation = null;
-		this._raf = null;
 		this.state = {
-			entering: false
+			entering: !props.appearing
 		};
-	}
-
-	componentWillReceiveProps (nextProps) {
-		// changeDirection let's us know we need to switch mid-transition
-		this.changeDirection = this.animation ? this.props.reverseTransition !== nextProps.reverseTransition : false;
 	}
 
 	shouldComponentUpdate (nextProps) {
@@ -130,22 +146,20 @@ class View extends React.Component {
 		return true;
 	}
 
-	componentWillUnmount () {
-		this.cancelAnimationFrame();
-		this.enteringJob.stop();
+	componentDidUpdate (prevProps) {
+		this.changeDirection = this.animation ? this.props.reverseTransition !== prevProps.reverseTransition : false;
 	}
 
-	cancelAnimationFrame () {
-		if (this._raf) {
-			if (typeof window !== 'undefined') window.cancelAnimationFrame(this._raf);
-			this._raf = null;
+	componentWillUnmount () {
+		this.enteringJob.stop();
+		this.node = null;
+		if (this.animation) {
+			this.animation.cancel();
 		}
 	}
 
 	enteringJob = new Job(() => {
-		this.setState({
-			entering: false
-		});
+		this.setState(clearEntering);
 	})
 
 	componentWillAppear (callback) {
@@ -157,10 +171,8 @@ class View extends React.Component {
 		}
 	}
 
-	setEntering () {
-		this.setState({
-			entering: true
-		});
+	componentDidAppear () {
+		this.setState(clearEntering);
 	}
 
 	// This is called at the same time as componentDidMount() for components added to an existing
@@ -168,8 +180,6 @@ class View extends React.Component {
 	// will not be called on the initial render of a TransitionGroup.
 	componentWillEnter (callback) {
 		const {arranger, reverseTransition} = this.props;
-		this.setEntering();
-
 		if (arranger) {
 			this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
 		} else {
@@ -220,88 +230,38 @@ class View extends React.Component {
 	 */
 	prepareTransition = (arranger, callback, noAnimation) => {
 		const {duration, index, previousIndex, reverseTransition} = this.props;
-		/* eslint react/no-find-dom-node: "off" */
-		const node = ReactDOM.findDOMNode(this);
 
-		const currentTime = perfNow();
-		let startTime = currentTime;
-		let endTime = startTime + duration;
+		// Need to ensure that we have a valid node reference before we animation. Sometimes, React
+		// will replace the node after mount causing a reference cached there to be invalid.
+		// eslint-disable-next-line react/no-find-dom-node
+		this.node = ReactDOM.findDOMNode(this);
 
-		// disable animation when the instance or props flag is true
-		noAnimation = noAnimation || this.props.noAnimation;
+		if (this.animation && this.animation.playState !== 'finished' && this.changeDirection) {
+			this.animation.reverse();
+		} else {
+			this.animation = arranger({
+				from: previousIndex,
+				node: this.node,
+				reverse: reverseTransition,
+				to: index,
+				fill: 'forwards',
+				duration
+			});
+		}
 
-		// Arranges the control each tick and calls the provided callback on complete
-		const fn = (start, end, time) => {
-			this.cancelAnimationFrame();
-
-			// percent is the ratio (between 0 and 1) of the current step to the total steps
-			const percent = (time - start) / (end - start);
-			if (!noAnimation && percent < 1) {
-				// the transition is still in progress so call the arranger
-				arranger({
-					node,
-					percent,
-					reverseTransition,
-					from: previousIndex,
-					to: index
-				});
-
-				return true;
-			} else {
-				// the transition is complete so clean up and ensure we fire a final arrange with
-				// a value of 1.
-				this.animation = null;
-				arranger({
-					node,
-					percent: 1,
-					reverseTransition,
-					from: previousIndex,
-					to: index
-				});
+		// Must set a new handler here to ensure the right callback is invoked
+		this.animation.onfinish = () => {
+			this.animation = null;
+			// Possible for the animation callback to still be fired after the node has been
+			// umounted if it finished before the unmount can cancel it so we check for that.
+			if (this.node) {
 				callback();
-
-				return false;
 			}
 		};
 
-
-		// When a new transition is initiated mid-transition, adjust time to account for the current
-		// percent complete.
-		if (this.animation && this.changeDirection) {
-			const a = this.animation;
-			const percentComplete = (a.time - a.start) / (a.end - a.start);
-			const delta = (endTime - startTime) * (1 - percentComplete);
-
-			startTime -= delta;
-			endTime -= delta;
-		}
-
-		this.transition(startTime, endTime, currentTime, fn);
-	}
-
-	/**
-	 * Calls the arranger method and schedules the next animation frame
-	 *
-	 * @param   {Number}    start    Animation start time
-	 * @param   {Number}    end      Animation end time
-	 * @param   {Number}    time     Current animation time
-	 * @param   {Function}  callback Completion callback
-	 * @returns {undefined}
-	 * @private
-	 */
-	transition = (start, end, time, callback) => {
-		const a = this.animation = this.animation || {};
-		a.start = start;
-		a.end = end;
-		a.time = time;
-
-		if (callback(start, end, time) && typeof window !== 'undefined') {
-			this._raf = window.requestAnimationFrame(() => {
-				const current = perfNow();
-				this.transition(start, end, current, callback);
-			});
-		} else {
-			this._raf = null;
+		// disable animation when the instance or props flag is true
+		if (noAnimation || this.props.noAnimation) {
+			this.animation.finish();
 		}
 	}
 

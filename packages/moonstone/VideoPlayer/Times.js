@@ -5,7 +5,7 @@ import kind from '@enact/core/kind';
 
 import {secondsToPeriod, secondsToTime} from './util';
 
-import css from './VideoPlayer.less';
+import css from './VideoPlayer.module.less';
 
 /**
  * Times {@link moonstone/VideoPlayer}.
@@ -23,6 +23,7 @@ const TimesBase = kind({
 		 * An instance of a Duration Formatter from i18n. {@link i18n/ilib/lib/DurationFmt.DurationFmt}
 		 *
 		 * @type {Object}
+		 * @required
 		 * @public
 		 */
 		formatter: PropTypes.object.isRequired,

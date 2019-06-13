@@ -1,5 +1,5 @@
 /**
- * Accepts and displays a block of text. Use case is similar to a paragraph tag.
+ * Moonstone styled text block components and behaviors.
  *
  * @example
  * <BodyText centered>Hello Enact!</BodyText>
@@ -12,17 +12,24 @@
 
 import compose from '@enact/core/internal/fp/compose';
 import kind from '@enact/core/kind';
-import UiBodyText from '@enact/ui/BodyText';
 import React from 'react';
 import PropTypes from 'prop-types';
+import UiBodyText from '@enact/ui/BodyText';
 import Pure from '@enact/ui/internal/Pure';
 
+import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import componentCss from './BodyText.less';
+import componentCss from './BodyText.module.less';
+
+// Create a Marquee using BodyText as the base
+const MarqueeBodyText = MarqueeDecorator(UiBodyText);
 
 /**
- * A simple implementation of a block of text.
+ * A simple text block component.
+ *
+ * This component is most often not used directly but may be composed within another component as it
+ * is within [BodyText]{@link moonstone/BodyText.BodyText}.
  *
  * @class BodyTextBase
  * @memberof moonstone/BodyText
@@ -33,7 +40,18 @@ import componentCss from './BodyText.less';
 const BodyTextBase = kind({
 	name: 'BodyText',
 
-	propTypes: /** @lends moonstone/BodyText.BodyText.prototype */ {
+	propTypes: /** @lends moonstone/BodyText.BodyTextBase.prototype */ {
+		/**
+		 * Centers the contents.
+		 *
+		 * Applies the `centered` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		centered: PropTypes.bool,
+
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
@@ -45,7 +63,32 @@ const BodyTextBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object
+		css: PropTypes.object,
+
+		/**
+		 * Toggles multi-line (`false`) vs single-line (`true`) behavior. `noWrap` mode
+		 * automatically enables {@link moonstone/Marquee} so long text isn't permanently occluded.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noWrap: PropTypes.bool,
+
+		/**
+		 * Sets the text size to one of the preset sizes.
+		 * Available sizes: 'large' (default) and 'small'.
+		 *
+		 * @type {('small'|'large')}
+		 * @default 'large'
+		 * @public
+		 */
+		size: PropTypes.oneOf(['small', 'large'])
+	},
+
+	defaultProps: {
+		noWrap: false,
+		size: 'large'
 	},
 
 	styles: {
@@ -53,10 +96,29 @@ const BodyTextBase = kind({
 		publicClassNames: 'bodyText'
 	},
 
-	render: ({css, ...rest}) => {
+	computed: {
+		className: ({noWrap, size, styler}) => styler.append(size, {noWrap})
+	},
+
+	render: ({centered, css, noWrap, ...rest}) => {
+		delete rest.size;
+
+		if (noWrap) {
+			return (
+				<MarqueeBodyText
+					component="div" // Assign a new component to BodyText, since DIV is not allowed inside a P tag (the default for BodyText)
+					marqueeOn="render"
+					{...rest}
+					alignment={centered ? 'center' : null} // Centering Marquee
+					centered={centered} // Centering UiBodyText
+					css={css}
+				/>
+			);
+		}
 		return (
 			<UiBodyText
 				{...rest}
+				centered={centered}
 				css={css}
 			/>
 		);
@@ -64,11 +126,11 @@ const BodyTextBase = kind({
 });
 
 /**
- * Moonstone-specific wrappers to apply to [BodyTextBase]{@link moonstone/BodyText.BodyTextBase}.
+ * Applies Moonstone specific behaviors to [BodyText]{@link moonstone/BodyText.BodyTextBase}.
  *
  * @hoc
  * @memberof moonstone/BodyText
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const BodyTextDecorator = compose(
@@ -77,15 +139,21 @@ const BodyTextDecorator = compose(
 );
 
 /**
- * A Moonstone-styled BodyText, ready to use.
+ * A simple text block component, ready to use in Moonstone applications.
+ *
+ * `BodyText` may be used to display a block of text and is sized and spaced appropriately for a
+ * Moonstone application.
  *
  * Usage:
  * ```
- * <BodyText>I have a Ham radio. There are many like it, but this one is mine.</BodyText>
+ * <BodyText>
+ *  I have a Ham radio. There are many like it, but this one is mine.
+ * </BodyText>
  * ```
  *
  * @class BodyText
  * @memberof moonstone/BodyText
+ * @extends moonstone/BodyText.BodyTextBase
  * @mixes moonstone/BodyText.BodyTextDecorator
  * @ui
  * @public

@@ -1,21 +1,20 @@
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
 import Skinnable from '../Skinnable';
 
-import css from './ContextualPopup.less';
+import css from './ContextualPopup.module.less';
 
 /**
- * {@link moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopupArrow} is an SVG arrow for
- * {@link moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopup}.
+ * An SVG arrow for {@link moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopup}.
  *
  * @class ContextualPopupArrow
+ * @memberof moonstone/ContextualPopupDecorator
  * @ui
  * @private
- * @memberof moonstone/ContextualPopupDecorator
  */
 const ContextualPopupArrow = kind({
 	name: 'ContextualPopupArrow',
@@ -39,8 +38,8 @@ const ContextualPopupArrow = kind({
 
 	render: (props) => (
 		<svg {...props} viewBox="0 0 30 30">
-			<path d="M15 0 L0 18 L30 18 Z" className={css.arrowBorder} />
-			<path d="M15 9 L0 27 L30 27 Z" className={css.arrowFill} />
+			<path d="M0 18 L15 0 L30 18" className={css.arrowBorder} />
+			<path d="M15 2 L0 20 L30 20 Z" className={css.arrowFill} />
 		</svg>
 	)
 });
@@ -51,8 +50,12 @@ const ContextualPopupRoot = Skinnable(
 );
 
 /**
- * {@link moonstone/ContextualPopupDecorator.ContextualPopup} is a modal component that
- * appears in context to an activator.
+ * A popup component used by
+ * [ContextualPopupDecorator]{@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} to
+ * wrap its [popupComponent]{@link moonstone/ContextualPopupDecorator.popupComponent}.
+ *
+ * `ContextualPopup` is usually not used directly but is made available for unique application use
+ * cases.
  *
  * @class ContextualPopup
  * @memberof moonstone/ContextualPopupDecorator
@@ -64,15 +67,13 @@ const ContextualPopupBase = kind({
 
 	propTypes: /** @lends moonstone/ContextualPopupDecorator.ContextualPopup.prototype */ {
 		/**
-		 * The element(s) to be displayed in the body of the popup.
+		 * The contents of the popup.
 		 *
 		 * @type {Node}
+		 * @required
 		 * @public
 		 */
-		children: PropTypes.oneOfType([
-			PropTypes.arrayOf(PropTypes.element),
-			PropTypes.element
-		]).isRequired,
+		children: PropTypes.node.isRequired,
 
 		/**
 		 * Style object for arrow position.
@@ -81,10 +82,10 @@ const ContextualPopupBase = kind({
 		 * @public
 		 */
 		arrowPosition: PropTypes.shape({
-			top: PropTypes.number,
 			bottom: PropTypes.number,
 			left: PropTypes.number,
-			right: PropTypes.number
+			right: PropTypes.number,
+			top: PropTypes.number
 		}),
 
 		/**
@@ -94,14 +95,14 @@ const ContextualPopupBase = kind({
 		 * @public
 		 */
 		containerPosition: PropTypes.shape({
-			top: PropTypes.number,
 			bottom: PropTypes.number,
 			left: PropTypes.number,
-			right: PropTypes.number
+			right: PropTypes.number,
+			top: PropTypes.number
 		}),
 
 		/**
-		 * A callback function to get the reference to the container node.
+		 * Called with the reference to the container node.
 		 *
 		 * @type {Function}
 		 * @public
@@ -109,16 +110,18 @@ const ContextualPopupBase = kind({
 		containerRef: PropTypes.func,
 
 		/**
-		 * Direction of ContextualPopup. Can be one of: `'up'`, `'down'`, `'left'`, or `'right'`.
+		 * Direction of ContextualPopup.
 		 *
-		 * @type {String}
-		 * @public
+		 * Can be one of: `'up'`, `'down'`, `'left'`, or `'right'`.
+		 *
+		 * @type {('up'|'down'|'left'|'right')}
 		 * @default 'down'
+		 * @public
 		 */
 		direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
 
 		/**
-		 * A function to be run when close button is clicked.
+		 * Called when the close button is clicked.
 		 *
 		 * @type {Function}
 		 * @public
@@ -126,11 +129,20 @@ const ContextualPopupBase = kind({
 		onCloseButtonClick: PropTypes.func,
 
 		/**
-		 * When `true`, the close button is shown; when `false`, it is hidden.
+		 * Shows the arrow.
 		 *
 		 * @type {Boolean}
-		 * @public
 		 * @default false
+		 * @public
+		 */
+		showArrow: PropTypes.bool,
+
+		/**
+		 * Shows the close button.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
 		 */
 		showCloseButton: PropTypes.bool
 	},
@@ -153,7 +165,7 @@ const ContextualPopupBase = kind({
 					<IconButton
 						className={css.closeButton}
 						backgroundOpacity="transparent"
-						small
+						size="small"
 						onTap={onCloseButtonClick}
 						aria-label={$L('Close')}
 					>
@@ -164,7 +176,7 @@ const ContextualPopupBase = kind({
 		}
 	},
 
-	render: ({arrowPosition, containerPosition, containerRef, children, className, closeButton, direction, ...rest}) => {
+	render: ({arrowPosition, containerPosition, containerRef, children, className, closeButton, direction, showArrow, ...rest}) => {
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
 
@@ -174,11 +186,14 @@ const ContextualPopupBase = kind({
 					{children}
 					{closeButton}
 				</div>
-				<ContextualPopupArrow direction={direction} style={arrowPosition} />
+				{showArrow ? <ContextualPopupArrow direction={direction} style={arrowPosition} /> : null}
 			</ContextualPopupRoot>
 		);
 	}
 });
 
 export default ContextualPopupBase;
-export {ContextualPopupBase as ContextualPopup, ContextualPopupBase};
+export {
+	ContextualPopupBase as ContextualPopup,
+	ContextualPopupBase
+};

@@ -1,0 +1,202 @@
+// Input.module.less
+//
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
+
+.input {
+	.moon-body-text();
+
+	padding: 0;
+	border: 0;
+	cursor: pointer;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex-grow: 1;
+	text-indent: 0.2em;
+
+	&[type=number] {
+		-moz-appearance: textfield;
+
+		&::-webkit-inner-spin-button,
+		&::-webkit-outer-spin-button {
+			-webkit-appearance: none;
+		}
+
+		&:hover {
+			-moz-appearance: none;
+		}
+	}
+
+	&[placeholder] {
+		text-overflow: ellipsis;
+	}
+
+	.input-placeholder({
+		.vendor-opacity(@moon-input-placeholder-opacity);
+	});
+
+	.focus({
+		cursor: text;
+	});
+
+	.disabled({
+		cursor: default;
+		.vendor-opacity(@moon-input-disabled-opacity);
+	});
+
+	:global(.enact-locale-right-to-left) & {
+		text-align: right;
+	}
+}
+
+.decorator {
+	display: inline-flex;
+	position: relative;
+	padding: @moon-input-padding;
+	border-radius: @moon-input-border-radius;
+	margin: @moon-input-margin;
+	box-sizing: border-box;
+	vertical-align: middle;
+
+	.input {
+		font-size: @moon-input-font-size;
+		font-weight: @moon-input-font-weight;
+	}
+
+	.input,
+	.iconBefore,
+	.iconAfter {
+		line-height: @moon-input-height;
+		height: @moon-input-height;
+		vertical-align: middle;
+	}
+
+	&.small {
+		height: @moon-input-decorator-small-height;
+
+		.iconBefore,
+		.iconAfter {
+			line-height: @moon-input-small-height;
+			height: @moon-input-small-height;
+		}
+
+		.input {
+			font-size: @moon-input-small-font-size;
+			height: @moon-input-small-height;
+		}
+	}
+
+	.iconBefore,
+	.iconAfter {
+		flex: 0 0;
+	}
+
+	.iconAfter {
+		.padding-start-end(@moon-input-icon-spacing, 0);
+	}
+
+	.iconBefore {
+		.padding-start-end(0, @moon-input-icon-spacing);
+	}
+
+	// RIGBY NOTE: multiline is a NOT YET IMPLEMENTED feature that combines <input> and <textarea>
+	// into one control, to simplify input handling.
+	&.multiline {
+		display: block;
+		padding: 12px 18px;
+		border-radius: 12px;
+	}
+
+	// an Input that isn't spottable is behaviorly disabled but not visually
+	&:not(:global(.spottable)) .input {
+		pointer-events: none;
+	}
+
+	.decoratorIcon,
+	&:global(.spottable):focus .decoratorIcon {
+		width: auto;
+		margin: 0;
+	}
+
+	// Skin colors
+	.applySkins({
+		background-color: @moon-input-decorator-bg-color;
+		color: @moon-input-text-color;
+
+		.input {
+			background: transparent;
+			color: inherit;
+
+			.input-placeholder({
+				color: @moon-input-placeholder-color;
+			});
+
+			&:focus-within {
+				color: @moon-input-focus-text-color;
+
+				.input-placeholder({
+					color: @moon-input-placeholder-active-color;
+				});
+			}
+		}
+
+		&.invalid input {
+			color: @moon-red;
+		}
+
+		.focus({
+			background-color: @moon-input-decorator-focus-bg-color;
+			color: @moon-input-focus-text-color;
+			box-shadow: @moon-input-border-active-shadow;
+
+			.input {
+				.input-placeholder({
+					color: @moon-input-placeholder-focus-color;
+				});
+			}
+		});
+
+		&:focus-within {
+			background-color: @moon-input-decorator-active-bg-color;
+		}
+
+		.disabled({
+			.vendor-opacity(@moon-input-disabled-opacity);
+
+			.focus({
+				.vendor-opacity(@moon-input-disabled-opacity);
+			});
+
+			.input,
+			.decoratorIcon {
+				color: @moon-input-disabled-text-color;
+			}
+		});
+	});
+}
+
+.invalidTooltip {
+	top: 50%;
+	left: auto;
+	right: 0;
+	pointer-events: none;
+	transform: translate(100%, -100%) translateX(@moon-input-tooltip-offset);
+
+	:global(.enact-locale-right-to-left) & {
+		left: 0;
+		right: auto;
+		transform: translate(-100%, -100%) translateX(-@moon-input-tooltip-offset);
+	}
+}
+
+.muted({
+	.decorator {
+		.applySkins({
+			.focus({
+				background-color: @moon-input-decorator-bg-color;
+			});
+		});
+	}
+});

@@ -1,12 +1,22 @@
 /**
- * Exports the {@link moonstone/ExpandableList.ExpandableList} and
- * {@link moonstone/ExpandableList.ExpandableListBase} components. The default export is
- * {@link moonstone/ExpandableList.ExpandableList}.
+ * Moonstone styled expandable list.
+ *
+ * @example
+ * <ExpandableList
+ *   noneText="Nothing is selected"
+ *   select="multiple"
+ *   title="Expandable List"
+ * >
+ *   {['Item 1', 'Item 2']}
+ * </ExpandableList>
  *
  * @module moonstone/ExpandableList
+ * @exports ExpandableList
+ * @exports ExpandableItemBase
  */
 
 import Changeable from '@enact/ui/Changeable';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import equals from 'ramda/src/equals';
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
@@ -17,8 +27,9 @@ import PropTypes from 'prop-types';
 import CheckboxItem from '../CheckboxItem';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import RadioItem from '../RadioItem';
+import Skinnable from '../Skinnable';
 
-import css from './ExpandableList.less';
+import css from './ExpandableList.module.less';
 
 const compareChildren = (a, b) => {
 	if (!a || !b || a.length !== b.length) return false;
@@ -52,12 +63,12 @@ const PureGroup = Pure(
 );
 
 /**
- * {@link moonstone/ExpandableList.ExpandableListBase} is a stateless component that
- * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
- * a selectable list of items.
+ * A stateless component that renders a {@link moonstone/LabeledItem.LabeledItem} that can be
+ * expanded to show a selectable list of items.
  *
  * @class ExpandableListBase
  * @memberof moonstone/ExpandableList
+ * @extends moonstone/ExpandableItem.ExpandableItemBase
  * @ui
  * @public
  */
@@ -76,13 +87,14 @@ const ExpandableListBase = kind({
 		 * item. [Read about keys](https://reactjs.org/docs/lists-and-keys.html#keys) for more
 		 * information.
 		 *
-		 * @type {String[]|Object[]}
+		 * @type {String[]|Array.<{key: (Number|String), children: (String|Component)}>}
 		 * @required
 		 * @public
 		 */
 		children: PropTypes.oneOfType([
 			PropTypes.arrayOf(PropTypes.string),
 			PropTypes.arrayOf(PropTypes.shape({
+				children: EnactPropTypes.renderable.isRequired,
 				key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 			}))
 		]).isRequired,
@@ -106,7 +118,15 @@ const ExpandableListBase = kind({
 		closeOnSelect: PropTypes.bool,
 
 		/**
-		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 * Disables voice control.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
+		 * Disables ExpandableList and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -124,8 +144,8 @@ const ExpandableListBase = kind({
 		label: PropTypes.node,
 
 		/**
-		 * When `true`, the expandable will not automatically close when the user navigates to the
-		 * `title` of the component using 5-way controls.
+		 * Keeps the expandable open when the user navigates to the `title` of the component using
+		 * 5-way controls and the user must select/tap the title to close the expandable.
 		 *
 		 * This does not affect `closeOnSelect`.
 		 *
@@ -136,7 +156,7 @@ const ExpandableListBase = kind({
 		noAutoClose: PropTypes.bool,
 
 		/**
-		 * When `true`, the user may move {@glossary Spotlight} past the bottom of the expandable
+		 * Allows the user to move [Spotlight] {@link /docs/developer-guide/glossary/#spotlight} past the bottom of the expandable
 		 * (when open) using 5-way controls.
 		 *
 		 * @type {Boolean}
@@ -162,7 +182,7 @@ const ExpandableListBase = kind({
 		onClose: PropTypes.func,
 
 		/**
-		 * Called when the expandable is opening
+		 * Called when the expandable is opening.
 		 *
 		 * @type {Function}
 		 * @public
@@ -170,7 +190,7 @@ const ExpandableListBase = kind({
 		onOpen: PropTypes.func,
 
 		/**
-		 * Called when an item is selected
+		 * Called when an item is selected.
 		 *
 		 * @type {Function}
 		 * @public
@@ -178,7 +198,7 @@ const ExpandableListBase = kind({
 		onSelect: PropTypes.func,
 
 		/**
-		 * The handler to run when the component is removed while retaining focus.
+		 * Called when the component is removed while retaining focus.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -187,7 +207,7 @@ const ExpandableListBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 * Called prior to focus leaving the expandable when the 5-way left key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -196,7 +216,7 @@ const ExpandableListBase = kind({
 		onSpotlightLeft: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 * Called prior to focus leaving the expandable when the 5-way right key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
@@ -205,7 +225,7 @@ const ExpandableListBase = kind({
 		onSpotlightRight: PropTypes.func,
 
 		/**
-		 * When `true`, the expandable is open with its contents visible
+		 * Opens the expandable with its contents visible.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -213,7 +233,7 @@ const ExpandableListBase = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * Selection mode for the list
+		 * Selection mode for the list.
 		 *
 		 * * `'single'` - Allows for 0 or 1 item to be selected. The selected item may be deselected.
 		 * * `'radio'` - Allows for 0 or 1 item to be selected. The selected item may only be
@@ -228,7 +248,7 @@ const ExpandableListBase = kind({
 		select: PropTypes.oneOf(['single', 'radio', 'multiple']),
 
 		/**
-		 * Index or array of indices of the selected item(s)
+		 * Index or array of indices of the selected item(s).
 		 *
 		 * @type {Number|Number[]}
 		 * @public
@@ -236,7 +256,7 @@ const ExpandableListBase = kind({
 		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)]),
 
 		/**
-		 * When `true`, the component cannot be navigated using spotlight.
+		 * Disables spotlight navigation into the component.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -276,6 +296,7 @@ const ExpandableListBase = kind({
 		},
 
 		itemProps: ({
+			'data-webos-voice-disabled': voiceDisabled,
 			onSpotlightDisappear,
 			onSpotlightLeft,
 			onSpotlightRight,
@@ -285,7 +306,8 @@ const ExpandableListBase = kind({
 			onSpotlightDisappear,
 			onSpotlightLeft,
 			onSpotlightRight,
-			spotlightDisabled
+			spotlightDisabled,
+			'data-webos-voice-disabled': voiceDisabled
 		}),
 
 		// generate a label that concatenates the text of the selected items
@@ -293,13 +315,13 @@ const ExpandableListBase = kind({
 			if (label) {
 				return label;
 			} else if (children.length && (selected || selected === 0)) {
-				const isArray = Array.isArray(selected);
-				if (select === 'multiple' && isArray) {
+				const firstSelected = Array.isArray(selected) ? selected[0] : selected;
+				if (select === 'multiple' && Array.isArray(selected)) {
 					return selected.map(i => typeof children[i] === 'object' ? children[i].children : children[i]).filter(str => !!str).join(', ');
-				} else if (typeof children[selected] === 'object') {
-					return children[selected].children;
+				} else if (typeof children[firstSelected] === 'object') {
+					return children[firstSelected].children;
 				} else {
-					return children[isArray ? selected[0] : selected];
+					return children[firstSelected];
 				}
 			}
 		},
@@ -354,9 +376,8 @@ const ExpandableListBase = kind({
 });
 
 /**
- * {@link moonstone/ExpandableList.ExpandableList} renders a
- * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show a selectable
- * list of items.
+ * A component that renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to
+ * show a selectable list of items.
  *
  * By default, `ExpandableList` maintains the state of its `selected` property. Supply the
  * `defaultSelected` property to control its initial value. If you wish to directly control updates
@@ -369,6 +390,7 @@ const ExpandableListBase = kind({
  *
  * @class ExpandableList
  * @memberof moonstone/ExpandableList
+ * @extends moonstone/ExpandableList.ExpandableListBase
  * @mixes moonstone/ExpandableItem.Expandable
  * @mixes ui/Changeable.Changeable
  * @ui
@@ -378,10 +400,27 @@ const ExpandableList = Pure(
 	{propComparators: {
 		children: compareChildren
 	}},
-	Expandable(
-		Changeable(
-			{change: 'onSelect', prop: 'selected'},
-			ExpandableListBase
+	Changeable(
+		{change: 'onSelect', prop: 'selected'},
+		Expandable(
+			{
+				getChildFocusTarget: (node, {selected = 0}) => {
+					let selectedIndex = selected;
+					if (Array.isArray(selected) && selected.length) {
+						selectedIndex = selected[0];
+					}
+
+					let selectedNode = null;
+					if (node) {
+						selectedNode = node.querySelector(`[data-index="${selectedIndex}"]`);
+					}
+
+					return selectedNode;
+				}
+			},
+			Skinnable(
+				ExpandableListBase
+			)
 		)
 	)
 );

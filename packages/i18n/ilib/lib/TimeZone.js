@@ -184,6 +184,7 @@ var TimeZone = function(options) {
 	if (!this.id) {
 		new LocaleInfo(this.locale, {
 			sync: this.sync,
+			loadParams: this.loadParams,
 			onLoad: ilib.bind(this, function (li) {
 				this.id = li.getTimeZone() || "Etc/UTC";
 				this._loadtzdata();
@@ -228,33 +229,34 @@ var TimeZone = function(options) {
  * }
  */
 TimeZone.prototype._loadtzdata = function () {
+	var zoneName = this.id.replace(/-/g, "m").replace(/\+/g, "p");
 	// console.log("id is: " + JSON.stringify(this.id));
-	// console.log("zoneinfo is: " + JSON.stringify(ilib.data.zoneinfo[this.id]));
-	if (!ilib.data.zoneinfo[this.id] && typeof(this.offset) === 'undefined') {
+	// console.log("zoneinfo is: " + JSON.stringify(ilib.data.zoneinfo[zoneName]));
+	if (!ilib.data.zoneinfo[zoneName] && typeof(this.offset) === 'undefined') {
 		Utils.loadData({
-			object: TimeZone, 
+			object: "TimeZone", 
 			nonlocale: true,	// locale independent 
 			name: "zoneinfo/" + this.id + ".json", 
 			sync: this.sync, 
 			loadParams: this.loadParams, 
 			callback: ilib.bind(this, function (tzdata) {
 				if (tzdata && !JSUtils.isEmpty(tzdata)) {
-					ilib.data.zoneinfo[this.id] = tzdata;
+					ilib.data.zoneinfo[zoneName] = tzdata;
 				}
-				this._initZone();
+				this._initZone(zoneName);
 			})
 		});
 	} else {
-		this._initZone();
+		this._initZone(zoneName);
 	}
 };
 
-TimeZone.prototype._initZone = function() {
+TimeZone.prototype._initZone = function(zoneName) {
 	/** 
 	 * @private
 	 * @type {{o:string,f:string,e:Object.<{m:number,r:string,t:string,z:string}>,s:Object.<{m:number,r:string,t:string,z:string,v:string,c:string}>,c:string,n:string}} 
 	 */
-	this.zone = ilib.data.zoneinfo[this.id];
+	this.zone = ilib.data.zoneinfo[zoneName];
 	if (!this.zone && typeof(this.offset) === 'undefined') {
 		this.id = "Etc/UTC";
 		this.zone = ilib.data.zoneinfo[this.id];
@@ -294,7 +296,7 @@ TimeZone._marshallIds = function (country, sync, callback) {
 	} else {
 		if (!ilib.data.zoneinfo.zonetab) {
 			Utils.loadData({
-				object: TimeZone, 
+				object: "TimeZone", 
 				nonlocale: true,	// locale independent 
 				name: "zoneinfo/zonetab.json", 
 				sync: sync, 
@@ -687,7 +689,7 @@ TimeZone.prototype._calcRuleStart = function (rule, year) {
 		});
 	} else {
 		if (rule.r.charAt(0) == 'l' || rule.r.charAt(0) == 'f') {
-			cal = CalendarFactory({type: "gregorian"});
+			cal = CalendarFactory({type: "gregorian"}); // can be synchronous
 			type = rule.r.charAt(0);
 			weekday = parseInt(rule.r.substring(1), 10);
 			day = (type === 'l') ? cal.getMonLength(rule.m, year) : 1;
@@ -801,12 +803,12 @@ TimeZone.prototype.inDaylightTime = function (date, wallTime) {
 		// check if the dst property is defined -- the intrinsic JS Date object doesn't work so
 		// well if we are in the overlap time at the end of DST, so we have to work around that
 		// problem by adding in the savings ourselves
-		var offset = 0;
+		var offset = this.offset * 60000;
 		if (typeof(date.dst) !== 'undefined' && !date.dst) {
-			offset = this.dstSavings * 60000;
+			offset += this.dstSavings * 60000;
 		}
-		
-		var d = new Date(date ? date.getTimeExtended() + offset: undefined);
+
+		var d = new Date(date ? date.getTimeExtended() - offset: undefined);
 		// the DST offset is always the one that is closest to positive infinity, no matter 
 		// if you are in the northern or southern hemisphere, east or west
 		var dst = Math.max(this.offsetJan1, this.offsetJun1);

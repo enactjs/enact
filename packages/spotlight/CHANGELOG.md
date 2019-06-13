@@ -2,6 +2,276 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [3.0.0-alpha.5] - 2019-06-10
+
+No significant changes.
+
+## [3.0.0-alpha.4] - 2019-06-03
+
+No significant changes.
+
+## [3.0.0-alpha.3] - 2019-05-29
+
+No significant changes.
+
+## [3.0.0-alpha.2] - 2019-05-20
+
+No significant changes.
+
+## [3.0.0-alpha.1] - 2019-05-15
+
+### Changed
+
+- `spotlight/Spottable` to allow disabled items to be focused
+
+## [2.6.0] - ???
+
+### Fixed
+
+- `spotlight` to unspot the current element when tapping on non-spottable target on touch platforms
+
+## [2.5.3] - 2019-06-06
+
+No significant changes.
+
+## [2.5.2] - 2019-04-23
+
+No significant changes.
+
+## [2.5.1] - 2019-04-09
+
+No significant changes.
+
+## [2.5.0] - 2019-04-01
+
+### Fixed
+
+- `spotlight` to guard against runtime errors caused by attempting to access containers that do not exist
+- `spotlight/Spottable` to prevent unnecessary updates due to focus and blur changes
+
+## [2.4.1] - 2019-03-11
+
+### Fixed
+
+- `spotlight` to remain in pointer mode when any 'cancel' key (e.g. Escape or back buttoon) is pressed
+
+## [2.4.0] - 2019-03-04
+
+### Fixed
+
+- `spotlight/Spottable` to prevent unnecessary updates due to focus changes
+
+## [2.3.0] - 2019-02-11
+
+### Added
+
+- `spotlight/Spottable` property `selectionKeys`
+
+### Fixed
+
+- `spotlight` to improve prioritization of the contents of spotlight containers within overflow containers
+- `spotlight/Spottable` and `spotlight/SpotlightContainerDecorator` to prevent focus when `spotlightDisabled` is set
+- `spotlight/Spottable` to prevent emitting multiple click events when certain node types are selected via 5-way enter
+
+## [2.2.9] - 2019-01-11
+
+No significant changes.
+
+## [2.2.8] - 2018-12-06
+
+### Fixed
+
+- `spotlight` to focus correctly within an overflow container in which the first element is another container without spottable children
+
+## [2.2.7] - 2018-11-21
+
+No significant changes.
+
+## [2.2.6] - 2018-11-15
+
+No significant changes.
+
+## [2.2.5] - 2018-11-05
+
+No significant changes.
+
+## [2.2.4] - 2018-10-29
+
+No significant changes.
+
+## [2.2.3] - 2018-10-22
+
+### Fixed
+
+- `spotlight` selection of elements clipped by an overflow container
+
+## [2.2.2] - 2018-10-15
+
+No significant changes.
+
+## [2.2.1] - 2018-10-09
+
+### Fixed
+
+- `spotlight` navigation into an overflow container which contains elements or containers larger than the container's bounds
+
+## [2.2.0] - 2018-10-02
+
+### Changed
+
+- `spotlight` to not explicitly `blur()` the currently focused element when focusing another, allowing the platform to manage blurring before focus
+
+### Fixed
+
+- `spotlight` to correctly set focus when the window is activated
+- `spotlight` to correctly set focus when entering a restricted container
+
+## [2.1.4] - 2018-09-17
+
+### Fixed
+
+- `spotlight/Spottable` to respect paused state when it becomes enabled
+
+## [2.1.3] - 2018-09-10
+
+No significant changes.
+
+## [2.1.2] - 2018-09-04
+
+### Fixed
+
+- `spotlight` to prevent default browser scrolling behavior when focusing elements within a spotlight container configured with `overflow: true`
+
+## [2.1.1] - 2018-08-27
+
+### Fixed
+
+- `spotlight` to correctly handle focus with `'self-only'` containers
+- `spotlight/SpotlightContainerDecorator` to unmount config instead of remove when spotlightId is changed if it preserves id
+
+## [2.1.0] - 2018-08-20
+
+No significant changes.
+
+## [2.0.2] - 2018-08-13
+
+### Fixed
+
+- `spotlight` to update pointer mode after hiding webOS VKB
+
+## [2.0.1] - 2018-08-01
+
+### Fixed
+
+- `spotlight` to not blur when pointer leaves floating webOS app while paused
+
+## [2.0.0] - 2018-07-30
+
+### Changed
+
+- `spotlight` to default to 5-way mode on initialization
+
+### Fixed
+
+- `spotlight` to blur when pointer leaves floating webOS app
+- `spotlight` to prevent changing the active container when the currently active container is restricted is "self-only"
+
+## [2.0.0-rc.3] - 2018-07-23
+
+### Fixed
+
+- `spotlight` to track pointer mode while paused
+
+## [2.0.0-rc.2] - 2018-07-16
+
+### Added
+
+- `spotlight` debugging to visualize which components will be targeted as the next component for any 5-way direction
+
+## [2.0.0-rc.1] - 2018-07-09
+
+No significant changes.
+
+## [2.0.0-beta.9] - 2018-07-02
+
+No significant changes.
+
+## [2.0.0-beta.8] - 2018-06-25
+
+### Fixed
+
+- `spotlight/Spottable` to retain focus for disabled component after updates
+- `spotlight/Spottable` to emulate `onMouseUp` events that occur immediately after a non-enter key press
+- `spotlight/Spottable` to prevent scroll on focus on webOS
+
+## [2.0.0-beta.7] - 2018-06-11
+
+No significant changes.
+
+## [2.0.0-beta.6] - 2018-06-04
+
+### Fixed
+
+- `spotlight` to provide more natural 5-way behavior
+- `spotlight` to handle pointer events only when pointer has moved
+- `spotlight` to update the last focused container when unable to set focus within that container
+- `spotlight/Spottable` to not trigger a scroll on focus on webOS
+
+## [2.0.0-beta.5] - 2018-05-29
+
+No significant changes.
+
+## [2.0.0-beta.4] - 2018-05-21
+
+### Fixed
+
+- `spotlight/Spottable` to not make components spottable when `spotlightDisabled` is set
+
+## [2.0.0-beta.3] - 2018-05-14
+
+### Fixed
+
+- `spotlight` to retry setting focus when the window is activated
+- `spotlight` handling of 5-way events after the pointer hides
+
+## [2.0.0-beta.2] - 2018-05-07
+
+### Fixed
+
+- `spotlight/Spottable` to not add a focused state when a component had already been set as disabled
+
+## [2.0.0-beta.1] - 2018-04-29
+
+### Changed
+
+- `spotlight/Spottable` to retain focus on a component when it becomes disabled while focused
+
+## [2.0.0-alpha.8] - 2018-04-17
+
+No significant changes.
+
+## [2.0.0-alpha.7 - 2018-04-03]
+
+### Fixed
+
+- `spotlight` to partition and prioritize next spottable elements for more natural 5-way behavior
+
+## [2.0.0-alpha.6] - 2018-03-22
+
+### Removed
+
+- `spotlight/SpotlightContainerDecorator` prop `containerId`, to be replaced by `spotlightId`
+
+### Added
+
+- `spotlight/Pause` module which acts as a semaphore for spotlight pause state
+- `spotlight/Spottable` prop `spotlightId` to simplify focusing components
+
+### Changed
+
+- `spotlight/Spotlight.focus` to support focusing by `spotlightId`
+- `spotlight` container attributes `data-container-disabled` and `data-container-muted` to be `data-spotlight-container-disabled` and `data-spotlight-container-muted`, respectively
+
 ## [2.0.0-alpha.5] - 2018-03-07
 
 No significant changes.
@@ -30,6 +300,10 @@ No significant changes.
 No significant changes.
 
 ## [1.14.0] - 2018-02-23
+
+No significant changes.
+
+## [1.13.4] - 2018-07-30
 
 No significant changes.
 

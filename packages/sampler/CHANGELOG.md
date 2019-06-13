@@ -2,6 +2,208 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [3.0.0-alpha.5] - 2019-06-10
+
+No significant changes.
+
+## [3.0.0-alpha.4] - 2019-06-03
+
+No significant changes.
+
+## [3.0.0-alpha.3] - 2019-05-29
+
+### Added
+
+- `moonstone/Header` sample
+
+## [3.0.0-alpha.2] - 2019-05-20
+
+No significant changes.
+
+## [3.0.0-alpha.1] - 2019-05-15
+
+No significant changes.
+
+## [2.5.3] - 2019-06-06
+
+No significant changes.
+
+## [2.5.2] - 2019-04-23
+
+No significant changes.
+
+## [2.5.1] - 2019-04-09
+
+No significant changes.
+
+## [2.5.0] - 2019-04-01
+
+No significant changes.
+
+## [2.4.1] - 2019-03-11
+
+No significant changes.
+
+## [2.4.0] - 2019-03-04
+
+### Added
+
+- Story description text at the top of each sample
+
+### Changed
+
+- Background images to display in a more pleasant way
+
+## [2.3.0] - 2019-02-11
+
+### Changed
+
+- `moonstone/ExpandableInput` and `moonstone/Input` knob to select input type
+
+## [2.2.9] - 2019-01-11
+
+No significant changes.
+
+## [2.2.8] - 2018-12-06
+
+No significant changes.
+
+## [2.2.7] - 2018-11-21
+
+No significant changes.
+
+## [2.2.6] - 2018-11-15
+
+### Fixed
+
+- Sampler to allow selecting the device locale
+
+## [2.2.5] - 2018-11-05
+
+No significant changes.
+
+## [2.2.4] - 2018-10-29
+
+No significant changes.
+
+## [2.2.3] - 2018-10-22
+
+No significant changes.
+
+## [2.2.2] - 2018-10-15
+
+No significant changes.
+
+## [2.2.1] - 2018-10-09
+
+No significant changes.
+
+## [2.2.0] - 2018-10-02
+
+No significant changes.
+
+## [2.1.4] - 2018-09-17
+
+No significant changes.
+
+## [2.1.3] - 2018-09-10
+
+No significant changes.
+
+## [2.1.2] - 2018-09-04
+
+No significant changes.
+
+## [2.1.1] - 2018-08-27
+
+No significant changes.
+
+## [2.1.0] - 2018-08-20
+
+### Fixed
+
+- `ui/VirtualList` sampler to use `ui/Item` instead of `moonstone/Item`
+
+## [2.0.2] - 2018-08-13
+
+No significant changes.
+
+## [2.0.1] - 2018-08-01
+
+No significant changes.
+
+## [2.0.0] - 2018-07-30
+
+No significant changes.
+
+## [2.0.0-rc.3] - 2018-07-23
+
+No significant changes.
+
+## [2.0.0-rc.2] - 2018-07-16
+
+No significant changes.
+
+## [2.0.0-rc.1] - 2018-07-09
+
+### Fixed
+
+- Inline Storybook CSS now correctly detecting feature support on WebOS against its internal Chromium version.
+
+## [2.0.0-beta.9] - 2018-07-02
+
+No significant changes.
+
+## [2.0.0-beta.8] - 2018-06-25
+
+### Changed
+
+- Sampler knobs to incorporate several useful features such as labeling the default value in the selection knob.
+
+## [2.0.0-beta.7] - 2018-06-11
+
+No significant changes.
+
+## [2.0.0-beta.6] - 2018-06-04
+
+No significant changes.
+
+## [2.0.0-beta.5] - 2018-05-29
+
+No significant changes.
+
+## [2.0.0-beta.4] - 2018-05-21
+
+### Fixed
+
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, `ui/VirtualList`, and `ui/VirtualGridList` samples to show items properly when `dataSize` is greater than 1000
+
+## [2.0.0-beta.3] - 2018-05-14
+
+No significant changes.
+
+## [2.0.0-beta.2] - 2018-05-07
+
+No significant changes.
+
+## [2.0.0-beta.1] - 2018-04-29
+
+No significant changes.
+
+## [2.0.0-alpha.8] - 2018-04-17
+
+### Added
+
+- `background` global knob to help visualize components over various background images
+
+## [2.0.0-alpha.7] - 2018-04-03
+
+No significant changes.
+
+## [2.0.0-alpha.6] - 2018-03-22
+
+No significant changes.
+
 ## [2.0.0-alpha.5] - 2018-03-07
 
 No significant changes.
@@ -29,6 +231,10 @@ No significant changes.
 No significant changes.
 
 ## [1.14.0] - 2018-02-23
+
+No significant changes.
+
+## [1.13.4] - 2018-07-30
 
 No significant changes.
 

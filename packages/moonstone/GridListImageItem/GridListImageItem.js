@@ -1,8 +1,17 @@
 /**
- * Provides Moonstone-themed grid list image item components and behaviors.
+ * Provides Moonstone styled grid list image item components and behaviors.
+ *
+ * @example
+ * <GridListImageItem
+ *   caption="image0"
+ *   source="http://placehold.it/100x100/9037ab/ffffff&text=Image0"
+ *   subCaption="sub-image0"
+ * />
  *
  * @module moonstone/GridListImageItem
- * @exports GridListIamgeItem
+ * @exports GridListImageItem
+ * @exports GridListImageItemBase
+ * @exports GridListImageItemDecorator
  */
 
 import compose from '@enact/core/internal/fp/compose';
@@ -17,7 +26,7 @@ import {ImageBase as Image} from '../Image';
 import {Marquee, MarqueeController} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import componentCss from './GridListImageItem.less';
+import componentCss from './GridListImageItem.module.less';
 
 const
 	defaultPlaceholder =
@@ -30,9 +39,10 @@ const
 	);
 
 /**
- * A moonstone-styled base component for [GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}.
+ * A Moonstone styled base component for [GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}.
  *
  * @class GridListImageItemBase
+ * @extends ui/GridListImageItem.GridListImageItem
  * @memberof moonstone/GridListImageItem
  * @ui
  * @public
@@ -59,7 +69,30 @@ const GridListImageItemBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * When `true`, applies a selected visual effect to the image, but only if `selectionOverlayShowing`
+		 * The voice control intent.
+		 *
+		 * @type {String}
+		 * @default 'Select'
+		 * @memberof moonstone/GridListImageItem.GridListImageItemBase.prototype
+		 * @public
+		 */
+		'data-webos-voice-intent': PropTypes.string,
+
+		/**
+		 * Placeholder image used while [source]{@link ui/GridListImageItem.GridListImageItem#source}
+		 * is loaded.
+		 *
+		 * @type {String}
+		 * @default 'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
+		 * '9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
+		 * 'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
+		 * '4NCg=='
+		 * @public
+		 */
+		placeholder: PropTypes.string,
+
+		/**
+		 * Applies a selected visual effect to the image, but only if `selectionOverlayShowing`
 		 * is also `true`.
 		 *
 		 * @type {Boolean}
@@ -73,7 +106,7 @@ const GridListImageItemBase = kind({
 		 * component, `kind()` or React component. The following is an example with custom selection
 		 * overlay kind.
 		 *
-		 * Example Usage:
+		 * Usage:
 		 * ```
 		 * const SelectionOverlay = kind({
 		 * 	render: () => <div>custom overlay</div>
@@ -88,9 +121,15 @@ const GridListImageItemBase = kind({
 		selectionOverlay: PropTypes.func
 	},
 
+	defaultProps: {
+		'data-webos-voice-intent': 'Select',
+		placeholder: defaultPlaceholder,
+		selected: false
+	},
+
 	styles: {
 		css: componentCss,
-		publicClassNames: ['icon', 'image', 'selected', 'caption', 'subCaption']
+		publicClassNames: ['gridListImageItem', 'icon', 'image', 'selected', 'caption', 'subCaption']
 	},
 
 	render: ({css, selectionOverlay, ...rest}) => {
@@ -106,7 +145,7 @@ const GridListImageItemBase = kind({
 				css={css}
 				iconComponent={Icon}
 				imageComponent={Image}
-				placeholder={defaultPlaceholder}
+				selectionOverlay={selectionOverlay}
 			/>
 		);
 	}
@@ -134,11 +173,16 @@ const GridListImageItemDecorator = compose(
  *
  * Usage:
  * ```
- * <GridListImageItem source="http://placehold.it/300x300/9037ab/ffffff&text=Image0" caption="image0" subCaption="sub-image0" />
+ * <GridListImageItem
+ * 	caption="image0"
+ * 	source="http://placehold.it/300x300/9037ab/ffffff&text=Image0"
+ * 	subCaption="sub-image0"
+ * />
  * ```
  *
  * @class GridListImageItem
  * @memberof moonstone/GridListImageItem
+ * @extends moonstone/GridListImageItem.GridListImageItemBase
  * @mixes moonstone/GridListImageItem.GridListImageItemDecorator
  * @see moonstone/GridListImageItem.GridListImageItemBase
  * @ui

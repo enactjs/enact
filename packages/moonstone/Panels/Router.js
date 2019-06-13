@@ -1,5 +1,7 @@
-import React from 'react';
+import EnactPropTypes from '@enact/core/internal/prop-types';
+import ForwardRef from '@enact/ui/ForwardRef';
 import PropTypes from 'prop-types';
+import React from 'react';
 import warning from 'warning';
 
 const toSegments = (path) => Array.isArray(path) ? path : path.split('/').slice(1);
@@ -24,49 +26,93 @@ const stringifyRoutes = (routes) => {
 const propTypes = {
 	path: PropTypes.oneOfType([
 		PropTypes.arrayOf(PropTypes.string),	// array of path segments
-		PropTypes.string								// URI-style path
+		PropTypes.string						// URI-style path
 	])
 };
 
 /**
- * A Router component for use with {@link moonstone/Panels.Panels}
+ * A Router component for use with [`Panels`]{@link moonstone/Panels.Panels}
  *
  * @class Router
  * @memberof moonstone/Panels
+ * @mixes ui/ForwardRef.ForwardRef
  * @ui
- * @public
+ * @private
  */
-const Router = class extends React.Component {
+const RouterBase = class extends React.Component {
 	static displayName = 'Router'
 
 	static propTypes = /** @lends moonstone/Panels.Router.prototype */ {
 		/**
-		 * List of views to render. Will be rendered as a flat array of views suitable for use in
+		 * List of views to render.
+		 *
+		 * Will be rendered as a flat array of views suitable for use in
 		 * Panels and not a hierarchy of views as the path implies.
 		 *
 		 * May either be a URI-style path (`'/app/home/settings'`) or an array
-		 * of strings (`['app', 'home', 'settings']`)
+		 * of strings (`['app', 'home', 'settings']`).
 		 *
 		 * @type {String|String[]}
+		 * @required
 		 * @public
 		 */
 		path: propTypes.path.isRequired,
 
 		/**
-		 * The component wrapping the rendered path
+		 * The component wrapping the rendered path.
 		 *
-		 * @type {String|Function}
+		 * @type {String|Component}
 		 * @default 'div'
 		 * @public
 		 */
-		component: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.func
-		]),
+		component: EnactPropTypes.renderable,
 
 		/**
-		 * Routes defined as an object rather than via JSX. If specified, `routes` will take
+		 * Called with a reference to [component]{@link moonstone/Panels.Router#component}.
+		 *
+		 * @private
+		 */
+		componentRef: PropTypes.func,
+
+		/**
+		 * Routes defined as an object rather than via JSX.
+		 *
+		 * If specified, `routes` will take
 		 * precendence over a JSX definition.
+		 *
+		 * ```JavaScript
+		 * const routes = {
+		 *   'first': {
+		 *     '$props': {
+		 *       'title': 'About Routable Panels Pattern'
+		 *     },
+		 *     '$component': AboutPanel,
+		 *     'second': {
+		 *       '$props': {
+		 *         'next': 'fourth',
+		 *         'title': 'Second'
+		 *       },
+		 *       '$component': MainPanel
+		 *     },
+		 *     'third': {
+		 *       '$props': {
+		 *         'next': 'first',
+		 *         'title': 'Third'
+		 *       },
+		 *       '$component': MainPanel,
+		 *       'fourth': {
+		 *         '$props': {
+		 *           'next': 'third',
+		 *           'title': 'Fourth'
+		 *         },
+		 *         '$component': MainPanel
+		 *       }
+		 *     }
+		 *   }
+		 * };
+		 *
+		 *	<Panels path="/app/home/settings" routes={routes} />
+		 * ```
 		 *
 		 * @type {Object}
 		 * @public
@@ -80,26 +126,10 @@ const Router = class extends React.Component {
 
 	constructor (props) {
 		super(props);
-		this.initRoutes(props);
-	}
-
-	componentWillReceiveProps (nextProps) {
-		this.initRoutes(nextProps);
 	}
 
 	/**
-	 * Selects either `props.routes` or generates routes from `props.children`
-	 *
-	 * @param {Object} props Component props
-	 *
-	 * @returns {undefined}
-	 */
-	initRoutes (props) {
-		this.routes = props.routes || this.createRoutes(props.children, {});
-	}
-
-	/**
-	 * Generates a set of routes from `children` and appends them to `routes`
+	 * Generates a set of routes from `children` and appends them to `routes`.
 	 *
 	 * @param  {React.element[]} children Array of children
 	 * @param  {Object}          routes   Route configuration object
@@ -120,28 +150,29 @@ const Router = class extends React.Component {
 				}
 			}
 		});
-
 		return routes;
 	}
 
 	/**
-	 * Creates an array of React.elements for the current path
+	 * Creates an array of React.elements for the current path.
 	 *
 	 * @returns {React.element[]} Children to render
 	 */
 	createChildren () {
 		const segments = toSegments(this.props.path);
+		const {routes, children} = this.props;
+		const computedRoutes = routes || this.createRoutes(children, {});
 
 		let valid = true;
-		let route = this.routes;
-		const children = segments.map((segment, index) => {
+		let route = computedRoutes;
+		const childrenElements = segments.map((segment, index) => {
 			const subPath = segments.slice(0, index + 1).join('/');
 			route = route && route[segment];
 			if (route && route.$component) {
 				return React.createElement(route.$component, {
 					...route.$props,
 					key: 'view$/' + subPath,
-					containerId: `panel-${subPath.replace(/\//g, '-')}`
+					spotlightId: `panel-${subPath.replace(/\//g, '-')}`
 				});
 			}
 
@@ -149,25 +180,29 @@ const Router = class extends React.Component {
 			return null;
 		});
 
-		warning(valid, `${this.props.path} does not match the configured routes: ${stringifyRoutes(this.routes)}`);
+		warning(valid, `${this.props.path} does not match the configured routes: ${stringifyRoutes(computedRoutes)}`);
 
-		return valid ? children : [];
+		return valid ? childrenElements : [];
 	}
 
 	render () {
-		const {component: Component, ...rest} = this.props;
+		const {component: Component, componentRef, ...rest} = this.props;
 		const children = this.createChildren();
 
 		delete rest.path;
 		delete rest.routes;
 
-		return <Component {...rest}>{children}</Component>;
+		return <Component ref={componentRef} {...rest}>{children}</Component>;
 	}
 };
 
+const Router = ForwardRef({prop: 'componentRef'}, RouterBase);
+
 /**
  * Used with {@link moonstone/Panels.Routable} to define the `path` segment and the
- * `component` to render. `Route` elements can be nested to build multiple level paths.
+ * `component` to render.
+ *
+ *`Route` elements can be nested to build multiple level paths.
  *
  * In the below example, `Panels` would render `SettingsPanel` with breadcrumbs to
  * navigate `AppPanel` and `HomePanel`.
@@ -185,6 +220,7 @@ const Router = class extends React.Component {
  * ```
  *
  * @class Route
+ * @ui
  * @memberof moonstone/Panels
  * @public
  */
@@ -195,19 +231,18 @@ Route.propTypes = {
 	 * The component to render when the `path` for this Route matches the path of the
 	 * {@link moonstone/Panels.Routable} container.
 	 *
-	 * @type {String|Function}
+	 * @type {String|Component}
+	 * @required
 	 * @public
 	 * @memberof moonstone/Panels.Route.prototype
 	 */
-	component: PropTypes.oneOfType([
-		PropTypes.string,
-		PropTypes.func
-	]).isRequired,
+	component: EnactPropTypes.renderable.isRequired,
 
 	/**
-	 * The name of the path segment
+	 * The name of the path segment.
 	 *
 	 * @type {String}
+	 * @required
 	 * @public
 	 * @memberof moonstone/Panels.Route.prototype
 	 */
@@ -215,4 +250,10 @@ Route.propTypes = {
 };
 
 export default Router;
-export {Router, Route, propTypes, toSegments};
+export {
+	propTypes,
+	Route,
+	Router,
+	RouterBase,
+	toSegments
+};

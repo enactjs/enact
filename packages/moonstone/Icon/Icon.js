@@ -1,5 +1,5 @@
 /**
- * Provides Moonstone-themed icon components and behaviors.
+ * Provides Moonstone styled icon components and behaviors.
  *
  * @example
  * <Icon>flag</Icon>
@@ -15,32 +15,46 @@ import compose from '@enact/core/internal/fp/compose';
 import kind from '@enact/core/kind';
 import UiIcon from '@enact/ui/Icon';
 import Pure from '@enact/ui/internal/Pure';
-import React from 'react';
+import PropTypes from 'prop-types';
 
 import Skinnable from '../Skinnable';
 
 import iconList from './IconList.js';
 
-import componentCss from './Icon.less';
+import componentCss from './Icon.module.less';
 
 /**
  * Renders a moonstone-styled icon without any behavior.
  *
  * @class IconBase
  * @memberof moonstone/Icon
+ * @extends ui/Icon.Icon
  * @ui
  * @public
  */
 const IconBase = kind({
 	name: 'Icon',
 
-	render: (props) => (
-		<UiIcon
-			{...props}
-			css={componentCss}
-			iconList={iconList}
-		/>
-	)
+	propTypes: /** @lends moonstone/Icon.IconBase.prototype */ {
+		/**
+		 * The size of the icon.
+		 *
+		 * @type {('large'|'small')}
+		 * @default 'small'
+		 * @public
+		 */
+		size: PropTypes.string
+	},
+
+	defaultProps: {
+		size: 'small'
+	},
+
+	render: (props) => UiIcon.inline({
+		...props,
+		css: componentCss,
+		iconList
+	})
 });
 
 // Let's find a way to import this list directly, and bonus feature, render our icons in the docs
@@ -130,7 +144,7 @@ const IconBase = kind({
  * @name iconList
  * @memberof moonstone/Icon
  * @constant
- * @type Object
+ * @type {Object}
  * @public
  */
 
@@ -139,7 +153,7 @@ const IconBase = kind({
  *
  * @hoc
  * @memberof moonstone/Icon
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const IconDecorator = compose(

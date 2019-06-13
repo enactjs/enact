@@ -4,7 +4,7 @@
  * to the image or a string from an [iconList]{@link moonstone/Icon.IconBase.iconList}.
  *
  * @example
- * <IconButton small>plus</IconButton>
+ * <IconButton size="small">plus</IconButton>
  *
  * @module moonstone/IconButton
  * @exports IconButton
@@ -25,13 +25,17 @@ import Icon from '../Icon';
 import Skinnable from '../Skinnable';
 import TooltipDecorator from '../TooltipDecorator';
 
-import componentCss from './IconButton.less';
+import componentCss from './IconButton.module.less';
 
 /**
  * A moonstone-styled icon button without any behavior.
  *
  * @class IconButtonBase
  * @memberof moonstone/IconButton
+ * @extends moonstone/Button.ButtonBase
+ * @extends ui/IconButton.IconButtonBase
+ * @omit buttonComponent
+ * @omit iconComponent
  * @ui
  * @public
  */
@@ -40,19 +44,17 @@ const IconButtonBase = kind({
 
 	propTypes: /** @lends moonstone/IconButton.IconButtonBase.prototype */ {
 		/**
-		 * The background-color opacity of this icon button
+		 * The background-color opacity of this icon button.
 		 *
 		 * Valid values are:
-		 * * `'opaque'`,
 		 * * `'translucent'`,
 		 * * `'lightTranslucent'`, and
 		 * * `'transparent'`.
 		 *
 		 * @type {String}
-		 * @default 'opaque'
 		 * @public
 		 */
-		backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'lightTranslucent', 'transparent']),
+		backgroundOpacity: PropTypes.oneOf(['translucent', 'lightTranslucent', 'transparent']),
 
 		/**
 		 * The color of the underline beneath the icon.
@@ -63,7 +65,7 @@ const IconButtonBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
+		color: PropTypes.oneOf(['red', 'green', 'yellow', 'blue']),
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -73,43 +75,38 @@ const IconButtonBase = kind({
 		 *
 		 * * `iconButton` - The root class name
 		 * * `bg` - The background node of the icon button
+		 * * `large` - Applied to a `size='large'` icon button
 		 * * `selected` - Applied to a `selected` icon button
+		 * * `small` - Applied to a `size='small'` icon button
 		 *
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object,
+		css: PropTypes.object
+	},
 
-		/**
-		 * An optional node to receive the tooltip from `TooltipDecorator`.
-		 *
-		 * @type {Node}
-		 * @private
-		 */
-		tooltipNode: PropTypes.node
+	defaultProps: {
+		size: 'small'
 	},
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['iconButton', 'bg', 'selected']
+		publicClassNames: ['iconButton', 'bg', 'large', 'selected', 'small']
 	},
 
 	computed: {
 		className: ({color, styler}) => styler.append(color)
 	},
 
-	render: ({children, css, tooltipNode, ...rest}) => {
-		return (
-			<UiIconButtonBase
-				{...rest}
-				buttonComponent={ButtonBase}
-				css={css}
-				icon={children}
-				iconComponent={Icon}
-			>
-				{tooltipNode}
-			</UiIconButtonBase>
-		);
+	render: ({children, css, ...rest}) => {
+		return UiIconButtonBase.inline({
+			'data-webos-voice-intent': 'Select',
+			...rest,
+			buttonComponent: <ButtonBase css={css} />,
+			css,
+			icon: children,
+			iconComponent: Icon
+		});
 	}
 });
 
@@ -122,24 +119,23 @@ const IconButtonBase = kind({
  * @mixes moonstone/TooltipDecorator.TooltipDecorator
  * @mixes ui/IconButton.IconButtonDecorator
  * @mixes spotlight/Spottable.Spottable
- * @mixes ui/Skinnable.Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
 const IconButtonDecorator = compose(
 	Pure,
-	TooltipDecorator({tooltipDestinationProp: 'tooltipNode'}),
+	TooltipDecorator({tooltipDestinationProp: 'decoration'}),
 	UiIconButtonDecorator,
 	Spottable,
 	Skinnable
 );
 
 /**
- * `IconButton` does not have `Marquee` or `Uppercase` like `Button` has, as it should not contain
- * text.
+ * `IconButton` does not have `Marquee` like `Button` has, as it should not contain text.
  *
  * Usage:
  * ```
- * <IconButton onClick={handleClick} small>
+ * <IconButton onClick={handleClick} size="small">
  *     plus
  * </IconButton>
  * ```

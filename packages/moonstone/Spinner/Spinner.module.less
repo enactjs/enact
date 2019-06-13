@@ -1,0 +1,207 @@
+// Spinner.module.less
+//
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
+
+@keyframes spin {
+	@turn-offset: 2 / 8;
+	0%   { transform: rotate(0turn + @turn-offset); }
+	33%   { transform: rotate(0.25turn + @turn-offset); }
+	80%   { transform: rotate(0.7turn + @turn-offset); }
+	85%   { transform: rotate(0.75turn + @turn-offset); }
+	100%  { transform: rotate(1turn + @turn-offset); }
+}
+@keyframes rotate1 {
+	0%, 100% { transform: rotate(0turn); }
+	33% { transform: rotate((1turn / 8)); }
+}
+@keyframes rotate2 {
+	0%, 100% { transform: rotate(0turn); }
+	33% { transform: rotate((2turn / 8)); }
+}
+@keyframes rotate3 {
+	0%, 100% { transform: rotate(0turn); }
+	33% { transform: rotate((3turn / 8)); }
+}
+@keyframes rotate4 {
+	0%, 100% { transform: rotate(0turn); }
+	33% { transform: rotate((4turn / 8)); }
+}
+
+.spinner {
+	line-height: @moon-body-line-height;
+	vertical-align: middle;
+
+	.bg {
+		position: relative;
+		border-radius: 999px;
+		width: @moon-spinner-size;
+		height: @moon-spinner-size;
+		padding: @moon-spinner-line-margin;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.decorator {
+		width: @moon-spinner-size;
+		height: @moon-spinner-size;
+		position: relative;
+		background-size: cover;
+		border-radius: 999px;
+		overflow: hidden;
+		margin: 0 auto;
+		-webkit-mask-image: radial-gradient(transparent (@moon-spinner-size / 2 - @moon-spinner-line-width - 1px), black (@moon-spinner-size / 2 - @moon-spinner-line-width)); // These colors control masking, not visible colors
+		animation: none @moon-spinner-time linear infinite;
+		animation-name: spin;
+		animation-play-state: paused;
+
+		.fan1,
+		.fan2,
+		.fan3,
+		.fan4 {
+			content: "";
+			top: 0;
+			right: 50%;
+			bottom: 50%;
+			left: 0;
+			clip-path: polygon(100% 0, 0 3%, 100% 100%); // Cut each segment into a 1/8th wedge, with a little overhang to avoid a subpixel gap from rounding error
+			transform-origin: bottom right;
+		}
+		.fan1,
+		.fan2,
+		.fan3,
+		.fan4,
+		.cap {
+			position: absolute;
+			animation: none @moon-spinner-time linear infinite;
+			animation-name: rotate1;
+			animation-play-state: paused;
+			animation-fill-mode: both;
+		}
+		.fan2 {
+			animation-name: rotate2;
+		}
+		.fan3 {
+			animation-name: rotate3;
+		}
+		.fan4,
+		.cap {
+			animation-name: rotate4;
+		}
+		.cap {
+			top: 0;
+			right: 0;
+			bottom: 50%;
+			left: 0;
+			clip-path: circle((@moon-spinner-line-width / 2) at 50% (@moon-spinner-line-width / 2));
+			transform-origin: bottom;
+		}
+	}
+
+	.client {
+		.moon-body-text();
+		font-weight: @moon-spinner-font-weight;
+		margin-top: @moon-spotlight-outset;
+		max-width: 348px;
+	}
+
+	&.small {
+		.bg,
+		.decorator {
+			width: @moon-spinner-small-size;
+			height: @moon-spinner-small-size;
+		}
+
+		.bg {
+			padding: @moon-spinner-small-line-margin;
+		}
+
+		.decorator {
+			-webkit-mask-image: radial-gradient(transparent (@moon-spinner-small-size / 2 - @moon-spinner-small-line-width - 1px), black (@moon-spinner-small-size / 2 - @moon-spinner-small-line-width));
+
+			.cap {
+				clip-path: circle((@moon-spinner-small-line-width / 2) at 50% (@moon-spinner-small-line-width / 2));
+			}
+		}
+
+		// Large-text mode support
+		.moon-custom-text({
+			.bg,
+			.decorator {
+				width: @moon-spinner-small-size-large;
+				height: @moon-spinner-small-size-large;
+			}
+
+			.decorator {
+				-webkit-mask-image: radial-gradient(transparent (@moon-spinner-small-size-large / 2 - @moon-spinner-small-line-width - 1px), black (@moon-spinner-small-size-large / 2 - @moon-spinner-small-line-width));
+			}
+		});
+	}
+
+	&.content {
+		padding: ((@moon-button-height - @moon-spinner-size) / 2);
+	}
+
+	&.running .decorator {
+		// Apply the following rules to the above selector and all of these children
+		&,
+		.fan1,
+		.fan2,
+		.fan3,
+		.fan4,
+		.cap {
+			-webkit-animation-play-state: running;
+			animation-play-state: running;
+		}
+	}
+
+	// Skin colors
+	.applySkins({
+		color: @moon-spinner-text-color;
+
+		.bg {
+			background-color: @moon-spinner-bg-color;
+		}
+
+		.decorator {
+			// Ideal way, but won't be supported until Chrome 69
+			// background: conic-gradient(@moon-spinner-empty-color 75%, @moon-spinner-color 87.5%);
+			background:
+				radial-gradient(circle at 0% 0%, @moon-spinner-color 20%, @moon-spinner-empty-color 40%), // Visible gradient
+				radial-gradient(circle at 35% 8%, @moon-spinner-color 15%, transparent 15%); // Filler between the closest fan and center of gradient
+
+			.fan1,
+			.fan2,
+			.fan3,
+			.fan4 {
+				background-color: @moon-spinner-color;
+			}
+			.cap {
+				background-color: @moon-spinner-head-color;
+			}
+		}
+
+		&.transparent {
+			.bg {
+				background-color: transparent;
+			}
+		}
+
+		.client {
+			text-shadow: 0 1px 1px @moon-spinner-text-shadow-color;
+		}
+	});
+}
+
+.spinnerContainer {
+	// Skin colors
+	.applySkins({
+		.blockClickOn {
+			// Visible scrim
+			.scrim {
+				background-color: @moon-scrim-color;
+			}
+		}
+	});
+}
