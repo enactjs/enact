@@ -6,7 +6,7 @@ const title = 'Dropdown select';
 const children = ['option1', 'option2', 'option3'];
 
 describe('Dropdown', () => {
-	test('should have title', () => {
+	test('should have `title`', () => {
 		const dropDown = mount(
 			<DropdownBase title={title}>
 				{children}
@@ -19,7 +19,20 @@ describe('Dropdown', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should have title that reflects selected option', () => {
+	test('should have `title` when `children` is invalid', () => {
+		const dropDown = mount(
+			<DropdownBase title={title}>
+				{null}
+			</DropdownBase>
+		);
+
+		const expected = title;
+		const actual = dropDown.find('.text').text();
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should have `title` that reflects `selected` option', () => {
 		const selectedIndex = 1;
 
 		const dropDown = mount(
@@ -29,6 +42,19 @@ describe('Dropdown', () => {
 		);
 
 		const expected = children[selectedIndex];
+		const actual = dropDown.find('.text').text();
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should have `title` when `selected` is invalid', () => {
+		const dropDown = mount(
+			<DropdownBase title={title} selected={-1}>
+				{children}
+			</DropdownBase>
+		);
+
+		const expected = title;
 		const actual = dropDown.find('.text').text();
 
 		expect(actual).toBe(expected);
@@ -54,34 +80,6 @@ describe('Dropdown', () => {
 
 		const expected = true;
 		const actual = dropDown.find('DropdownButton').prop('disabled');
-
-		expect(actual).toBe(expected);
-	});
-
-	test('should be disabled when there are no valid `children`', () => {
-		const dropDown = mount(
-			<DropdownBase title={title}>
-				{[null, undefined, ''] /* eslint-disable-line no-undefined */}
-			</DropdownBase>
-		);
-
-		const expected = true;
-		const actual = dropDown.find('DropdownButton').prop('disabled');
-
-		expect(actual).toBe(expected);
-	});
-
-	test('should have title that reflects default selected option', () => {
-		const selectedIndex = 2;
-
-		const dropDown = mount(
-			<Dropdown defaultSelected={selectedIndex} title={title}>
-				{children}
-			</Dropdown>
-		);
-
-		const expected = children[selectedIndex];
-		const actual = dropDown.find('.text').text();
 
 		expect(actual).toBe(expected);
 	});

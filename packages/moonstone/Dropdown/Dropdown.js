@@ -35,8 +35,6 @@ import Skinnable from '../Skinnable';
 
 import css from './Dropdown.module.less';
 
-const filterChildren = children => children ? children.filter(Boolean) : [];
-
 const compareChildren = (a, b) => {
 	if (!a || !b || a.length !== b.length) return false;
 
@@ -263,7 +261,9 @@ const DropdownBase = kind({
 
 	computed: {
 		children: ({children, selected}) => {
-			return filterChildren(children).map((child, i) => {
+			if (!Array.isArray(children)) return [];
+
+			return children.map((child, i) => {
 				const aria = {
 					role: 'checkbox',
 					'aria-checked': selected === i
@@ -285,9 +285,7 @@ const DropdownBase = kind({
 		},
 		className: ({width, styler}) => styler.append(width),
 		title: ({children, selected, title}) => {
-			const isSelectedValid = !(typeof selected === 'undefined' || selected === null || selected >= children.length || selected < 0);
-
-			if (children && children.length && isSelectedValid) {
+			if (Array.isArray(children) && children[selected] != null) {
 				const child = children[selected];
 				return typeof child === 'object' ? child.children : child;
 			}
@@ -299,8 +297,9 @@ const DropdownBase = kind({
 	render: ({children, disabled, onOpen, onSelect, open, selected, width, title, ...rest}) => {
 		const popupProps = {children, onSelect, selected, width, role: ''};
 
-		// `ui/Group`/`ui/Repeater` will throw an error if empty so we disable the Dropdown and prevent Dropdown to open if there are no children.
-		const hasChildren = filterChildren(children).length;
+		// `ui/Group`/`ui/Repeater` will throw an error if empty so we disable the Dropdown and
+		// prevent Dropdown to open if there are no children.
+		const hasChildren = children.length > 0;
 		const openDropdown = hasChildren ? open : false;
 		delete rest.width;
 
@@ -322,7 +321,8 @@ const DropdownBase = kind({
 });
 
 /**
- * Applies Moonstone specific behaviors and functionality to [DropdownBase]{@link moonstone/Dropdown.DropdownBase}.
+ * Applies Moonstone specific behaviors and functionality to
+ * [DropdownBase]{@link moonstone/Dropdown.DropdownBase}.
  *
  * @hoc
  * @memberof moonstone/Dropdown
@@ -349,10 +349,10 @@ const DropdownDecorator = compose(
 /**
  * A Moonstone Dropdown component.
  *
- * By default, `Dropdown` maintains the state of its `selected` property.
- * Supply the `defaultSelected` property to control its initial value. If you
- * wish to directly control updates to the component, supply a value to `selected` at creation time
- * and update it in response to `onSelected` events.
+ * By default, `Dropdown` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onSelected` events.
  *
  * @class Dropdown
  * @memberof moonstone/Dropdown
