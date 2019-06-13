@@ -1,10 +1,16 @@
 import {configure, addDecorator} from '@storybook/react';
+import {configureActions} from '@storybook/addon-actions';
 import {withKnobs} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
 
 import Moonstone from '../src/MoonstoneEnvironment';
 
 function config (stories, mod) {
+	configureActions({
+		// Limit the number of items logged into the actions panel
+		limit: 10
+	});
+
 	// Set addon-info defaults
 	addDecorator(withInfo({
 		propTables: null, // Disable all propTables
