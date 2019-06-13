@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## Fixed
 
-- `Header` to align centered
+- `moonstone/Header` to center text when `centered` is used and additional controls are included by `moonstone/Panels`
 - `Fonts` for non-Latin to not intermix font weights for bold when using a combination of Latin and non-Latin glyphs
 
 ## [3.0.0-alpha.4] - 2019-06-03
