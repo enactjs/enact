@@ -26,6 +26,7 @@ import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import {compose, equals} from 'ramda';
 import React from 'react';
+import warning from 'warning';
 
 import Button from '../Button';
 import ContextualPopupDecorator from '../ContextualPopupDecorator/ContextualPopupDecorator';
@@ -268,6 +269,11 @@ const DropdownBase = kind({
 					role: 'checkbox',
 					'aria-checked': selected === i
 				};
+
+				warning(
+					child != null,
+					`Unsupported null or undefined child provided at index ${i} which will not be visible when rendered.`
+				);
 
 				if (typeof child === 'string') {
 					return {
