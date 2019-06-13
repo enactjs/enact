@@ -1,6 +1,6 @@
 import classNames from 'classnames';
-import {forward} from '@enact/core/handle';
 import equals from 'ramda/src/equals';
+import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
