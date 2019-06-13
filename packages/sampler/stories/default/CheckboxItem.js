@@ -39,5 +39,6 @@ storiesOf('Moonstone', module)
 		{
 			info: {
 				text: 'Basic usage of CheckboxItem'
+			}
 		}
 	);
