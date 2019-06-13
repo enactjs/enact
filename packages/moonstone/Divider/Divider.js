@@ -40,7 +40,7 @@ import css from './Divider.module.less';
  * @memberof moonstone/Divider
  * @ui
  * @public
- * @deprecated since 2.6.0. Will be moved to {@link moonstone/Heading} in 3.0.0
+ * @deprecated since 2.6.0. Will be replaced by `moonstone/Heading` in 3.0.0
  */
 const DividerBase = kind({
 	name: 'Divider',
