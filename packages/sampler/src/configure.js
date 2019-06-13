@@ -10,7 +10,21 @@ function config (stories, mod) {
 		propTables: null, // Disable all propTables
 		// header: false, // Global configuration for the info addon across all of your stories.
 		// inline: true,
+		// Custom styling to ensure content fits well and potential scrollbars aren't under the
+		// overlay close button
 		styles: {
+			info: {
+				overflow: 'hidden',
+				padding: '25px 0px 0px 0px'
+			},
+			infoPage: {
+				overflow: 'auto',
+				height: '100%',
+				padding: '0px 20px'
+			},
+			infoBody: {
+				marginTop: '0px'
+			},
 			children: {
 				// backgroundColor: 'purple',  // For easier debugging
 				width: '100%',
