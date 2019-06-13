@@ -300,34 +300,6 @@ const VirtualListBaseFactory = (type) => {
 			}, null);
 		}
 
-		/**
-		 * Handle a Page up/down key with disabled items
-		 */
-
-		findSpottableItemWithPositionInExtent = (indexFrom, indexTo, position) => {
-			const
-				{dataSize} = this.props,
-				{dimensionToExtent} = this.uiRefCurrent;
-
-			if (0 <= indexFrom && indexFrom < dataSize &&
-				-1 <= indexTo && indexTo <= dataSize &&
-				0 <= position && position < dimensionToExtent) {
-				const
-					direction = (indexFrom < indexTo) ? 1 : -1,
-					delta = direction * dimensionToExtent,
-					diffPosition = (indexFrom % dimensionToExtent) - position,
-					// When direction is 1 (forward) and diffPosition is positive, add dimensionToExtent.
-					// When direction is -1 (backward) and diffPosition is negative, substract dimensionToExtent.
-					candidateIndex = indexFrom - diffPosition + ((direction * diffPosition > 0) ? delta : 0);
-
-				if (direction * (indexTo - candidateIndex) > 0) {
-					return candidateIndex;
-				}
-			}
-
-			return -1;
-		}
-
 		findSpottableItem = (indexFrom, indexTo) => {
 			const {dataSize} = this.props;
 
