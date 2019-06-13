@@ -330,7 +330,7 @@ const Spotlight = (function () {
 
 		// prevent focus if 5-way is being held and the next element isn't wrapped by
 		// the current element's immediate container
-		if (_5WayKeyHold && nextContainerIds.indexOf(currentContainerId) < 0 && !isContainer5WayHoldable(currentContainerId)) {
+		if (SpotlightAccelerator.isAccelerating() && nextContainerIds.indexOf(currentContainerId) < 0 && !isContainer5WayHoldable(currentContainerId)) {
 			return false;
 		}
 
@@ -360,60 +360,28 @@ const Spotlight = (function () {
 		return true;
 	}
 
-	function spotNext (direction, currentFocusedElement, currentContainerIds) {
-		const next = Spotlight.move(direction);
-		if (next) {
-			const currentContainerId = last(currentContainerIds);
-			const nextContainerIds = getContainersForNode(next);
-
-			// prevent focus if 5-way is being held and the next element isn't wrapped by
-			// the current element's immediate container
-			if (_5WayKeyHold && nextContainerIds.indexOf(currentContainerId) < 0 && !isContainer5WayHoldable(currentContainerId)) {
-				return false;
-			}
-
-			notifyLeaveContainer(
-				direction,
-				currentFocusedElement,
-				currentContainerIds,
-				next,
-				nextContainerIds
-			);
-
-			setContainerPreviousTarget(
-				currentContainerId,
-				direction,
-				next,
-				currentFocusedElement
-			);
-
-			const focused = focusElement(next, nextContainerIds);
-
-			notifyEnterContainer(
-				direction,
-				currentFocusedElement,
-				currentContainerIds,
-				next,
-				nextContainerIds
-			);
-
-			return focused;
-		}
-
-		notifyLeaveContainerFail(direction, currentFocusedElement, currentContainerIds);
-
-		return false;
-	}
-
 	function onAcceleratedKeyDown (evt) {
 		const direction = getDirection(evt.keyCode);
+		const {target} = evt;
 
-		if (!direction) return;
+		if (direction) {
+			// Check `data-spot-dir`
+			const dataSpotTarget = getDataSpotTarget(evt.target, direction);
+			if (dataSpotTarget) {
+				focusElement(dataSpotTarget, getContainersForNode(dataSpotTarget));
+				preventDefault(evt);
+				return;
+			}
 
-		const currentFocusedElement = getCurrent();
-		const currentContainerIds = getContainersForNode(currentFocusedElement);
+			// Check previous target in container
+			const previousTarget = getContainerPreviousTarget(getContainerId(target.getSpatialNavigationContainer(), direction, target));
+			if (previousTarget) {
+				focusElement(previousTarget, getContainersForNode(previousTarget));
+				preventDefault(evt);
+			}
 
-		// spotNext(direction, currentFocusedElement, currentContainerIds);
+			// Otherwise, handle in spatial Navigation.
+		}
 	}
 
 	function onBlur () {
@@ -482,7 +450,7 @@ const Spotlight = (function () {
 	}
 
 	function onKeyDown (evt) {
-		const {target, keyCode} = evt;
+		const {keyCode} = evt;
 		const direction = getDirection(keyCode);
 
 		if (shouldPreventNavigation()) {
@@ -500,37 +468,13 @@ const Spotlight = (function () {
 		}
 
 		// TODO: handle Pause and Accelerate
-
-		// const current = getCurrent();
-		// if (!isPaused() && !_pointerMoveDuringKeyPress) {
-		// 	if (getCurrent()) {
-		// 		SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
-		// 	} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
-		// 		restoreFocus();
-		// 	}
-		// 	_5WayKeyHold = true;
-		// }
-
-		if (direction) {
-			// Check `data-spot-dir`
-			const dataSpotTarget = getDataSpotTarget(target, direction);
-			if (dataSpotTarget) {
-				focusElement(dataSpotTarget, getContainersForNode(dataSpotTarget));
-				preventDefault(evt);
-				return;
+		if (!isPaused() && !_pointerMoveDuringKeyPress) {
+			if (getCurrent()) {
+				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
+			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
+				restoreFocus();
 			}
-
-			// Check previous target in container
-			const previousTarget = getContainerPreviousTarget(getContainerId(target.getSpatialNavigationContainer(), direction, target));
-			if (previousTarget) {
-				focusElement(previousTarget, getContainersForNode(previousTarget));
-				preventDefault(evt);
-				return;
-			}
-
-			// Otherwise, handle in spatial Navigation.
-
-			return;
+			_5WayKeyHold = true;
 		}
 	}
 
@@ -590,7 +534,7 @@ const Spotlight = (function () {
 
 		const targetContainer = evt.target;
 		const targetContinerId = getContainerId(targetContainer);
-		const {causedTarget, direction} = evt.detail;
+		const {causedTarget, dir} = evt.detail;
 
 		// Check restrict : self-only
 		if (isRestrictedContainer(targetContinerId)) {
@@ -600,7 +544,7 @@ const Spotlight = (function () {
 		}
 
 		// Check the leave-for option.
-		const leaveForTarget = getLeaveForTarget(targetContinerId, direction);
+		const leaveForTarget = getLeaveForTarget(targetContinerId, dir);
 		if (leaveForTarget) {
 			focusElement(leaveForTarget, getContainersForNode(leaveForTarget));
 			preventDefault(evt);
@@ -609,7 +553,7 @@ const Spotlight = (function () {
 
 		// Check previous target in parent container
 		const parentContainer = targetContainer.getSpatialNavigationContainer();
-		const previousTarget = getContainerPreviousTarget(getContainerId(parentContainer, direction, causedTarget));
+		const previousTarget = getContainerPreviousTarget(getContainerId(parentContainer, dir, causedTarget));
 		if (previousTarget) {
 			focusElement(previousTarget, getContainersForNode(previousTarget));
 			preventDefault(evt);
@@ -618,7 +562,7 @@ const Spotlight = (function () {
 
 		// There is not next target.
 		if (!parentContainer) {
-			notifyLeaveContainerFail(direction, causedTarget, getContainersForNode(causedTarget));
+			notifyLeaveContainerFail(dir, causedTarget, getContainersForNode(causedTarget));
 		}
 	}
 
@@ -627,7 +571,7 @@ const Spotlight = (function () {
 		console.log(evt);
 		console.log(document.activeElement);
 
-		const direction = evt.detail.direction;
+		const direction = evt.detail.dir;
 		const currentFocusedElement = document.activeElement;
 		const currentContainerIds = getContainersForNode(currentFocusedElement);
 		let nextElement = evt.target;
@@ -936,7 +880,6 @@ const Spotlight = (function () {
 				return false;
 			}
 
-			// return spotNext(direction, elem, containerIds);
 			window.navigate(direction);
 			return (getCurrent() !== elem);
 		},

@@ -349,10 +349,10 @@
           candidates.push(elem);
 
           if(!isContainer(elem) && elem.childElementCount) {
-            candidates = candidates.concat(getSpatialNavigationCandidates(elem));
+            candidates = candidates.concat(getSpatialNavigationCandidates(elem, option = {mode: 'all'}));
           }
         } else if (elem.childElementCount) {
-          candidates = candidates.concat(getSpatialNavigationCandidates(elem));
+          candidates = candidates.concat(getSpatialNavigationCandidates(elem, option = {mode: 'all'}));
         }
       }
     }
