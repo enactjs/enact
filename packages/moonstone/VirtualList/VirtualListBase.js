@@ -392,7 +392,7 @@ const VirtualListBaseFactory = (type) => {
 				this.lastFocusedIndex = nextIndex;
 
 				if (isNextItemInView) {
-					this.focusOnItem(nextIndex);
+					this.focusByIndex(nextIndex);
 				} else {
 					this.isScrolledBy5way = true;
 					this.isWrappedBy5way = isWrapped;
@@ -404,12 +404,12 @@ const VirtualListBaseFactory = (type) => {
 							this.pause.pause();
 							target.blur();
 						} else {
-							this.focusOnItem(nextIndex);
+							this.focusByIndex(nextIndex);
 						}
 
 						this.nodeIndexToBeFocused = nextIndex;
 					} else {
-						this.focusOnItem(nextIndex);
+						this.focusByIndex(nextIndex);
 					}
 
 					cbScrollTo({
@@ -487,7 +487,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		focusOnItem = (index) => {
+		focusByIndex = (index) => {
 			const item = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${index}'].spottable`);
 
 			if (this.isWrappedBy5way) {
@@ -504,22 +504,15 @@ const VirtualListBaseFactory = (type) => {
 		initItemRef = (ref, index) => {
 			if (ref) {
 				if (type === JS) {
-					this.focusOnItem(index);
+					this.focusByIndex(index);
 				} else {
 					// If focusing the item of VirtuallistNative, `onFocus` in Scrollable will be called.
 					// Then VirtualListNative tries to scroll again differently from VirtualList.
 					// So we would like to skip `focus` handling when focusing the item as a workaround.
 					this.isScrolledByJump = true;
-					this.focusOnItem(index);
+					this.focusByIndex(index);
 				}
 			}
-		}
-
-		focusByIndex = (index) => {
-			// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
-			setTimeout(() => {
-				this.focusOnItem(index);
-			}, 0);
 		}
 
 		/**
