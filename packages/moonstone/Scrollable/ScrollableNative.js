@@ -903,7 +903,7 @@ class ScrollableBaseNative extends Component {
 
 	handleScroll = handle(
 		forward('onScroll'),
-		(ev, {id}, context) => id && context && this.context.set,
+		(ev, {id}, context) => id && context && context.set,
 		({scrollLeft: x, scrollTop: y}, {id}, context) => {
 			context.set(`${id}.scrollPosition`, {x, y});
 		}

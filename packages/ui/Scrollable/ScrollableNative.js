@@ -54,7 +54,7 @@ const TouchableDiv = Touchable('div');
  * @private
  */
 class ScrollableBaseNative extends Component {
-	static displayName = 'ui:ScrollableNative'
+	static displayName = 'ui:ScrollableNativeBase'
 
 	static propTypes = /** @lends ui/ScrollableNative.ScrollableNative.prototype */ {
 		/**
@@ -1228,13 +1228,13 @@ class ScrollableBaseNative extends Component {
 	// ref
 
 	getScrollBounds () {
-		if (typeof this.childRefCurrent.getScrollBounds === 'function') {
+		if (this.childRefCurrent && typeof this.childRefCurrent.getScrollBounds === 'function') {
 			return this.childRefCurrent.getScrollBounds();
 		}
 	}
 
 	getMoreInfo () {
-		if (typeof this.childRefCurrent.getMoreInfo === 'function') {
+		if (this.childRefCurrent && typeof this.childRefCurrent.getMoreInfo === 'function') {
 			return this.childRefCurrent.getMoreInfo();
 		}
 	}
