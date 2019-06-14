@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `small` prop in `moonstone/Input`, `moonstone/ToggleButton`, `moonstone/Button`, `moonstone/Icon`, `moonstone/IconButton`, and `moonstone/LabeledIcon`, replaced by `size="small"`
 - `moonstone/Divider` replaced by `moonstone/Heading`
+
 ### Fixed
 
 - `moonstone/Dropdown` to support voice readout
