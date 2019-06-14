@@ -26,6 +26,7 @@ import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import {compose, equals} from 'ramda';
 import React from 'react';
+import warning from 'warning';
 
 import Button from '../Button';
 import ContextualPopupDecorator from '../ContextualPopupDecorator/ContextualPopupDecorator';
@@ -34,7 +35,6 @@ import Scroller from '../Scroller';
 import Skinnable from '../Skinnable';
 
 import css from './Dropdown.module.less';
-
 
 const compareChildren = (a, b) => {
 	if (!a || !b || a.length !== b.length) return false;
@@ -261,11 +261,37 @@ const DropdownBase = kind({
 	},
 
 	computed: {
+		children: ({children, selected}) => {
+			if (!Array.isArray(children)) return [];
+
+			return children.map((child, i) => {
+				const aria = {
+					role: 'checkbox',
+					'aria-checked': selected === i
+				};
+
+				warning(
+					child != null,
+					`Unsupported null or undefined child provided at index ${i} which will not be visible when rendered.`
+				);
+
+				if (typeof child === 'string') {
+					return {
+						...aria,
+						children: child,
+						key: `item${i}`
+					};
+				}
+
+				return {
+					...aria,
+					...child
+				};
+			});
+		},
 		className: ({width, styler}) => styler.append(width),
 		title: ({children, selected, title}) => {
-			const isSelectedValid = !(typeof selected === 'undefined' || selected === null || selected >= children.length || selected < 0);
-
-			if (children && children.length && isSelectedValid) {
+			if (Array.isArray(children) && children[selected] != null) {
 				const child = children[selected];
 				return typeof child === 'object' ? child.children : child;
 			}
@@ -275,11 +301,12 @@ const DropdownBase = kind({
 	},
 
 	render: ({children, disabled, onOpen, onSelect, open, selected, width, title, ...rest}) => {
-		const popupProps = {children, onSelect, selected, width};
+		const popupProps = {children, onSelect, selected, width, role: ''};
 
-		// `ui/Group`/`ui/Repeater` will throw an error if empty so we disable the Dropdown and prevent Dropdown to open if there are no children.
-		const hasChildren = children && children.length;
-		const openDropdown = hasChildren ? open : false;
+		// `ui/Group`/`ui/Repeater` will throw an error if empty so we disable the Dropdown and
+		// prevent Dropdown to open if there are no children.
+		const hasChildren = children.length > 0;
+		const openDropdown = hasChildren && !disabled && open;
 		delete rest.width;
 
 		return (
@@ -300,7 +327,8 @@ const DropdownBase = kind({
 });
 
 /**
- * Applies Moonstone specific behaviors and functionality to [DropdownBase]{@link moonstone/Dropdown.DropdownBase}.
+ * Applies Moonstone specific behaviors and functionality to
+ * [DropdownBase]{@link moonstone/Dropdown.DropdownBase}.
  *
  * @hoc
  * @memberof moonstone/Dropdown
@@ -327,10 +355,10 @@ const DropdownDecorator = compose(
 /**
  * A Moonstone Dropdown component.
  *
- * By default, `Dropdown` maintains the state of its `selected` property.
- * Supply the `defaultSelected` property to control its initial value. If you
- * wish to directly control updates to the component, supply a value to `selected` at creation time
- * and update it in response to `onSelected` events.
+ * By default, `Dropdown` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onSelected` events.
  *
  * @class Dropdown
  * @memberof moonstone/Dropdown
