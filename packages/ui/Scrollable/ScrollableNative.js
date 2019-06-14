@@ -475,6 +475,11 @@ class ScrollableBaseNative extends Component {
 	}
 
 	handleResizeWindow = () => {
+		this.stop();
+		this.childRefCurrent.containerRef.current.style.scrollBehavior = null;
+		this.childRefCurrent.scrollToPosition(0, 0);
+		this.childRefCurrent.containerRef.current.style.scrollBehavior = 'smooth';
+		
 		setTimeout(() => {
 			this.enqueueForceUpdate();
 		});

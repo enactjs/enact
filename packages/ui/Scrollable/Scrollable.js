@@ -495,6 +495,9 @@ class ScrollableBase extends Component {
 	}
 
 	handleResizeWindow = () => {
+		this.stop();
+		this.scroll(0, 0);
+
 		setTimeout(() => {
 			this.enqueueForceUpdate();
 		});
