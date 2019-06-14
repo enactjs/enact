@@ -7,12 +7,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Removed
 
 - `small` prop in `moonstone/Input`, `moonstone/ToggleButton`, `moonstone/Button`, `moonstone/Icon`, `moonstone/IconButton`, and `moonstone/LabeledIcon`, replaced by `size="small"`
+- `moonstone/Divider` replaced by `moonstone/Heading`
 
 ## [3.0.0-alpha.5] - 2019-06-10
-
-### Removed
-
-- `moonstone/Divider` replaced by `moonstone/Heading`
 
 ### Added
 
