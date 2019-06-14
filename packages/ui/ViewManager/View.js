@@ -127,7 +127,9 @@ class View extends React.Component {
 
 	static defaultProps = {
 		appearing: false,
-		enteringDelay: 0
+		enteringDelay: 0,
+		index: 0,
+		reverseTransition: false
 	}
 
 	constructor (props) {
