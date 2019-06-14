@@ -1,6 +1,6 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import Uppercase from '../Uppercase';
+import {privateUppercase as Uppercase} from '../Uppercase';
 import {updateLocale} from '../../locale';
 
 describe('Uppercase', () => {

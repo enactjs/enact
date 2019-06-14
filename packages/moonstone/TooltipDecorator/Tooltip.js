@@ -1,5 +1,5 @@
 import kind from '@enact/core/kind';
-import Uppercase from '@enact/i18n/Uppercase';
+import {privateUppercase as Uppercase} from '@enact/i18n/Uppercase';
 import React from 'react';
 import PropTypes from 'prop-types';
 

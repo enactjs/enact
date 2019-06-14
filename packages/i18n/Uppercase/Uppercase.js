@@ -26,8 +26,6 @@ const formatContent = (casing, content) => {
 	}
 };
 
-deprecate({name: 'i18n/Uppercase', until: '3.0.0', replacedBy: 'i18n/util', since: '2.6.0'});
-
 /**
  * A higher-order component that is used to wrap an element to provide locale-aware uppercasing of
  * `children`, provided that `children` is a single string. Other values for `children` are
@@ -83,7 +81,10 @@ const Uppercase = hoc((config, Wrapped) => kind({	// eslint-disable-line no-unus
 	}
 }));
 
-export default Uppercase;
+const WrappedUppercase = deprecate(Uppercase, {name: 'i18n/Uppercase', until: '3.0.0', replacedBy: 'i18n/util', since: '2.6.0'});
+
+export default WrappedUppercase;
 export {
-	Uppercase
+	Uppercase as privateUppercase,
+	WrappedUppercase as Uppercase
 };

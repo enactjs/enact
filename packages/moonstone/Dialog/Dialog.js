@@ -7,7 +7,7 @@
  */
 
  import kind from '@enact/core/kind';
-import Uppercase from '@enact/i18n/Uppercase';
+import {privateUppercase as Uppercase} from '@enact/i18n/Uppercase';
 import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import React from 'react';
