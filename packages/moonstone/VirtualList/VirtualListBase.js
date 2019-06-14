@@ -355,7 +355,7 @@ const VirtualListBaseFactory = (type) => {
 			const isNextItemMovement = isNextAdjacent && (isPDV && isRightMovement || !isPDV && isDownKey);
 			const isBackward = (isPDV && isUpKey || !isPDV && isLeftMovement || null);
 			const isForward = (isPDV && isDownKey || !isPDV && isRightMovement || null);
-			
+
 			let isWrapped = false;
 			let nextIndex = -1;
 			let targetIndex = -1;
