@@ -9,6 +9,11 @@
  * above/below each other (vertically) in what we refer to as a [Row]{@link ui/Layout.Row} or
  * [Column]{@link ui/Layout.Column}, respectively.
  *
+ * The `Row` and `Column` layout presets describe the direction of layout for their children. This
+ * can sometimes cause confusion. A `Row` of children naturally forms a _layout_ whose children can
+ * have the _appearance_ of columns. To keep things clear, think about the layout rather than the
+ * what the children themselves represent.
+ *
  * `Layout` is an implementation of flex-box, but with built-in rails, properties, and features to
  * help avoid common problems with flex-box; things like content overflowing, sizing quirks, and
  * positioning problems regarding content of unknown or undefined dimension.
@@ -36,7 +41,7 @@
  * </Row>
  * ```
  *
- * A "two-column" layout with equal sized columns:
+ * A "two-column" layout with equal sized cells using `Row`:
  * ```
  * ┌────┬────┐
  * │L   │R   │
@@ -49,8 +54,9 @@
  * 	<Cell>Right Column</Cell>
  * </Row>
  * ```
- * *Note:* We use `Row` here, rather than `Column` because `Row` lays its cells out horizontally,
- * while `Column` lays out its cells `vertically`.
+ * *Remember:* The cells of the `Row` are the columns in our layout. It's likely that in a complex
+ * layout `Column` would be used inside the left and right cells to arrange the components, as in
+ * the example below.
  *
  * A full-height sidebar with a header and body to the right:
  * ```
