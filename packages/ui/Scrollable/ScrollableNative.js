@@ -54,7 +54,7 @@ const TouchableDiv = Touchable('div');
  * @private
  */
 class ScrollableBaseNative extends Component {
-	static displayName = 'ui:ScrollableNativeBase'
+	static displayName = 'ui:ScrollableBaseNative'
 
 	static propTypes = /** @lends ui/ScrollableNative.ScrollableNative.prototype */ {
 		/**
