@@ -14,7 +14,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Divider from '../Divider';
+import Heading from '../Heading';
 
 /**
  * A component for grouping other components.
@@ -29,7 +29,7 @@ const RegionBase = kind({
 
 	propTypes: /** @lends moonstone/Region.Region.prototype */ {
 		/**
-		 * Title placed within an instance of [Divider]{@link moonstone/Divider.Divider} before the
+		 * Title placed within an instance of [Heading]{@link moonstone/Heading.Heading} before the
 		 * children.
 		 *
 		 * @type {String}
@@ -65,7 +65,7 @@ const RegionBase = kind({
 	render: ({'aria-label': ariaLabel, children, title, ...rest}) => {
 		return (
 			<div {...rest} role="region" aria-label={ariaLabel}>
-				<Divider>{title}</Divider>
+				<Heading showLine>{title}</Heading>
 				{children}
 			</div>
 		);
