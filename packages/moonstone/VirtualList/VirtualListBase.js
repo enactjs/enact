@@ -340,7 +340,7 @@ const VirtualListBaseFactory = (type) => {
 
 		getNextIndex = ({index, keyCode, repeat}) => {
 			const {dataSize, rtl, wrap} = this.props;
-			const {isPrimaryDirectionVertical, dimensionToExtent} = this.uiRefCurrent;
+			const {isPrimaryDirectionVertical: isPDV, dimensionToExtent} = this.uiRefCurrent;
 			const column = index % dimensionToExtent;
 			const row = (index - column) % dataSize / dimensionToExtent;
 			const isDownKey = isDown(keyCode);
@@ -349,37 +349,30 @@ const VirtualListBaseFactory = (type) => {
 			const isUpKey = isUp(keyCode);
 			const isNextRow = index + dimensionToExtent < dataSize;
 			const isNextAdjacent = column < dimensionToExtent - 1 && index < (dataSize - 1);
-			const isBackward = (
-				isPrimaryDirectionVertical && isUpKey ||
-				!isPrimaryDirectionVertical && isLeftMovement ||
-				null
-			);
-			const isForward = (
-				isPrimaryDirectionVertical && isDownKey ||
-				!isPrimaryDirectionVertical && isRightMovement ||
-				null
-			);
+			const isPreviousRowMovement = row && (isPDV && isUpKey  || !isPDV && isLeftMovement);
+			const isNextRowMovement = isPDV && isDownKey || !isPDV && isRightMovement;
+			const isPreviousItemMovement = column && (isPDV && isLeftMovement || !isPDV && isUpKey);
+			const isNextItemMovement = isNextAdjacent && (isPDV && isRightMovement || !isPDV && isDownKey);
+			const isBackward = (isPDV && isUpKey || !isPDV && isLeftMovement || null);
+			const isForward = (isPDV && isDownKey || !isPDV && isRightMovement || null);
+			
 			let isWrapped = false;
 			let nextIndex = -1;
 			let targetIndex = -1;
 
-			if (isPrimaryDirectionVertical) {
-				if (isUpKey && row) {
-					targetIndex = index - dimensionToExtent;
-				} else if (isDownKey && isNextRow) {
-					targetIndex = index + dimensionToExtent;
-				} else if (isLeftMovement && column) {
-					targetIndex = index - 1;
-				} else if (isRightMovement && isNextAdjacent) {
-					targetIndex = index + 1;
-				}
-			} else if (isLeftMovement && row) {
+			if (isPreviousRowMovement) {
 				targetIndex = index - dimensionToExtent;
-			} else if (isRightMovement && isNextRow) {
-				targetIndex = index + dimensionToExtent;
-			} else if (isUpKey && column) {
+			} else if (isNextRowMovement) {
+				if (isNextRow) {
+					targetIndex = index + dimensionToExtent;
+				} else if ( // if the next line is the last line and there is no item below the current item
+					Math.floor((index + dimensionToExtent ) / dimensionToExtent) === Math.floor((dataSize - 1) / dimensionToExtent)
+				) {
+					targetIndex = dataSize - 1;
+				}
+			} else if (isPreviousItemMovement) {
 				targetIndex = index - 1;
-			} else if (isDownKey && isNextAdjacent) {
+			} else if (isNextItemMovement) {
 				targetIndex = index + 1;
 			}
 
