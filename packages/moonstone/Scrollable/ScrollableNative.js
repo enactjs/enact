@@ -1,16 +1,15 @@
 import classNames from 'classnames';
-import {constants, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
-import {getDirection} from '@enact/spotlight';
-import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import handle, {forward} from '@enact/core/handle';
-import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
-import {Job} from '@enact/core/util';
-import {onWindowReady} from '@enact/core/snapshot';
 import platform from '@enact/core/platform';
+import {onWindowReady} from '@enact/core/snapshot';
+import {Job} from '@enact/core/util';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import {constants, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
+import Spotlight, {getDirection} from '@enact/spotlight';
+import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import Spotlight from '@enact/spotlight';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import $L from '../internal/$L';
 import {SharedState} from '../internal/SharedStateDecorator';

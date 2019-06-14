@@ -1,12 +1,12 @@
-import Accelerator from '@enact/spotlight/Accelerator';
-import clamp from 'ramda/src/clamp';
 import {is} from '@enact/core/keymap';
-import Pause from '@enact/spotlight/Pause';
-import PropTypes from 'prop-types';
-import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
+import Accelerator from '@enact/spotlight/Accelerator';
+import Pause from '@enact/spotlight/Pause';
 import Spottable from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
+import PropTypes from 'prop-types';
+import clamp from 'ramda/src/clamp';
+import React, {Component} from 'react';
 
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
