@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/ViewManager` to correctly arrange views when initially rendering a non-zero index
+
 ## [3.0.0-alpha.5] - 2019-06-10
 
 ### Added
