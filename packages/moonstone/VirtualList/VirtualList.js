@@ -22,6 +22,7 @@ import {ScrollableVirtualList, ScrollableVirtualListNative, VirtualListBase, Vir
  *
  * @class VirtualList
  * @memberof moonstone/VirtualList
+ * @extends moonstone/Scrollable.Scrollable
  * @extends moonstone/VirtualList.VirtualListBase
  * @ui
  * @public
@@ -57,6 +58,7 @@ const VirtualList = kind({
  *
  * @class VirtualGridList
  * @memberof moonstone/VirtualList
+ * @extends moonstone/Scrollable.Scrollable
  * @extends moonstone/VirtualList.VirtualListBase
  * @ui
  * @public
@@ -100,6 +102,7 @@ const VirtualGridList = kind({
  *
  * @class VirtualListNative
  * @memberof moonstone/VirtualList
+ * @extends moonstone/Scrollable.ScrollableNative
  * @extends moonstone/VirtualList.VirtualListBaseNative
  * @ui
  * @private
@@ -138,6 +141,7 @@ const VirtualListNative = kind({
  *
  * @class VirtualGridListNative
  * @memberof moonstone/VirtualList
+ * @extends moonstone/Scrollable.ScrollableNative
  * @extends moonstone/VirtualList.VirtualListBaseNative
  * @ui
  * @private

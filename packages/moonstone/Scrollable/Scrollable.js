@@ -3,7 +3,7 @@
  *
  * @module moonstone/Scrollable
  * @exports Scrollable
- * @private
+ * @public
  */
 
 import classNames from 'classnames';
@@ -125,11 +125,11 @@ onWindowReady(() => {
  * @public
  */
 class ScrollableBase extends Component {
-	static displayName = 'Scrollable'
+	static displayName = 'ScrollableBase'
 
 	static contextType = SharedState
 
-	static propTypes = /** @lends moonstone/Scrollable.Scrollable.prototype */ {
+	static propTypes = /** @lends moonstone/Scrollable.ScrollableBase.prototype */ {
 		/**
 		 * Render function.
 		 *
@@ -197,7 +197,7 @@ class ScrollableBase extends Component {
 		 * recreated.
 		 *
 		 * @type {String}
-		 * @public
+		 * @private
 		 */
 		id: PropTypes.string,
 

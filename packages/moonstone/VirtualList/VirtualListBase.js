@@ -36,7 +36,7 @@ const
  * @class VirtualListCore
  * @memberof moonstone/VirtualList
  * @ui
- * @public
+ * @private
  */
 const VirtualListBaseFactory = (type) => {
 	const UiBase = (type === JS) ? UiVirtualListBase : UiVirtualListBaseNative;
@@ -44,7 +44,7 @@ const VirtualListBaseFactory = (type) => {
 	return class VirtualListCore extends Component {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
-		static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
+		static propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 			/**
 			 * The `render` function called for each item in the list.
 			 *

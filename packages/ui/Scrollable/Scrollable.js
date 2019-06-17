@@ -5,7 +5,7 @@
  * @exports constants
  * @exports Scrollable
  * @exports ScrollableBase
- * @private
+ * @public
  */
 
 import clamp from 'ramda/src/clamp';
@@ -65,12 +65,12 @@ const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
  * @class ScrollableBase
  * @memberof ui/Scrollable
  * @ui
- * @private
+ * @public
  */
 class ScrollableBase extends Component {
 	static displayName = 'ui:ScrollableBase'
 
-	static propTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
+	static propTypes = /** @lends ui/Scrollable.ScrollableBase.prototype */ {
 		/**
 		 * Render function.
 		 *
@@ -1353,7 +1353,7 @@ class ScrollableBase extends Component {
  * @memberof ui/Scrollable
  * @extends ui/Scrollable.ScrollableBase
  * @ui
- * @private
+ * @public
  */
 class Scrollable extends Component {
 	static displayName = 'ui:Scrollable'

@@ -226,19 +226,7 @@ const Scroller = (props) => (
 	/>
 );
 
-Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
-	/**
-	 * Direction of the scroller.
-	 *
-	 * Valid values are:
-	 * * `'both'`,
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'both'
-	 * @public
-	 */
+Scroller.propTypes = {
 	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
 };
 
@@ -273,19 +261,7 @@ const ScrollerNative = (props) => (
 	/>
 );
 
-ScrollerNative.propTypes = /** @lends ui/Scroller.ScrollerNative.prototype */ {
-	/**
-	 * Direction of the scroller.
-	 *
-	 * Valid values are:
-	 * * `'both'`,
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'both'
-	 * @public
-	 */
+ScrollerNative.propTypes = {
 	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
 };
 

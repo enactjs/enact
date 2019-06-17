@@ -106,11 +106,11 @@ onWindowReady(() => {
  * @private
  */
 class ScrollableBaseNative extends Component {
-	static displayName = 'ScrollableNative'
+	static displayName = 'ScrollableBaseNative'
 
 	static contextType = SharedState
 
-	static propTypes = /** @lends moonstone/ScrollableNative.ScrollableNative.prototype */ {
+	static propTypes = /** @lends moonstone/ScrollableNative.ScrollableBaseNative.prototype */ {
 		/**
 		 * Render function.
 		 *
@@ -178,7 +178,7 @@ class ScrollableBaseNative extends Component {
 		 * recreated.
 		 *
 		 * @type {String}
-		 * @public
+		 * @private
 		 */
 		id: PropTypes.string,
 

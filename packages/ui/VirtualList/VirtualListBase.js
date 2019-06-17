@@ -33,10 +33,10 @@ const gridListItemSizeShape = PropTypes.shape({
 /**
  * The base version of the virtual list component.
  *
- * @class VirtualListBase
+ * @class VirtualListCore
  * @memberof ui/VirtualList
  * @ui
- * @public
+ * @private
  */
 const VirtualListBaseFactory = (type) => {
 	return class VirtualListCore extends Component {
@@ -840,7 +840,7 @@ const VirtualListBaseFactory = (type) => {
  * @class VirtualListBase
  * @memberof ui/VirtualList
  * @ui
- * @private
+ * @public
  */
 const VirtualListBase = VirtualListBaseFactory(JS);
 VirtualListBase.displayName = 'ui:VirtualListBase';
@@ -895,18 +895,7 @@ const ScrollableVirtualListNative = (props) => (
 	/>
 );
 
-ScrollableVirtualListNative.propTypes = /** @lends ui/VirtualList.VirtualListBaseNative.prototype */ {
-	/**
-	 * The layout direction of the list.
-	 *
-	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'vertical'
-	 * @public
-	 */
+ScrollableVirtualListNative.propTypes = {
 	direction: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 

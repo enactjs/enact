@@ -35,13 +35,37 @@ const dataContainerDisabledAttribute = 'data-spotlight-container-disabled';
  *
  * @class ScrollerBase
  * @memberof moonstone/Scroller
+ * @extends moonstone/ui.ScrollerBase
  * @ui
  * @public
  */
 class ScrollerBase extends Component {
 	static displayName = 'ScrollerBase'
 
-	static propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
+	static propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
+		/**
+		 * Direction of the scroller.
+		 *
+		 * * Values: `'both'`, `'horizontal'`, `'vertical'`.
+		 *
+		 * @type {String}
+		 * @default 'both'
+		 * @public
+		 */
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+		/**
+		 * Unique identifier for the component.
+		 *
+		 * When defined and when the `Scroller` is within a [Panel]{@link moonstone/Panels.Panel}, the
+		 * `Scroller` will store its scroll position and restore that position when returning to the
+		 * `Panel`.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		id: PropTypes.string,
+		
 		/**
 		 * Passes the instance of [Scroller]{@link ui/Scroller.Scroller}.
 		 *
@@ -83,6 +107,10 @@ class ScrollerBase extends Component {
 		 * @private
 		 */
 		spotlightId: PropTypes.string
+	}
+
+	static defaultProps = {
+		direction: 'both'
 	}
 
 	componentDidMount () {
@@ -352,6 +380,7 @@ class ScrollerBase extends Component {
  *
  * @class Scroller
  * @memberof moonstone/Scroller
+ * @extends moonstone/Scrollable.Scrollable
  * @extends moonstone/Scroller.ScrollerBase
  * @ui
  * @public
@@ -366,27 +395,7 @@ const Scroller = (props) => (
 );
 
 Scroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
-	/**
-	 * Direction of the scroller.
-	 *
-	 * * Values: `'both'`, `'horizontal'`, `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'both'
-	 * @public
-	 */
 	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
-
-	/**
-	 * Unique identifier for the component.
-	 *
-	 * When defined and when the `Scroller` is within a [Panel]{@link moonstone/Panels.Panel}, the
-	 * `Scroller` will store its scroll position and restore that position when returning to the
-	 * `Panel`.
-	 *
-	 * @type {String}
-	 * @public
-	 */
 	id: PropTypes.string
 };
 
@@ -408,6 +417,7 @@ Scroller.defaultProps = {
  *
  * @class ScrollerNative
  * @memberof moonstone/Scroller
+ * @extends moonstone/Scrollable.ScrollableNative
  * @extends moonstone/Scroller.ScrollerBase
  * @ui
  * @private
@@ -422,27 +432,7 @@ const ScrollerNative = (props) => (
 );
 
 ScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototype */ {
-	/**
-	 * Direction of the scroller.
-	 *
-	 * * Values: `'both'`, `'horizontal'`, `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'both'
-	 * @public
-	 */
 	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
-
-	/**
-	 * Unique identifier for the component.
-	 *
-	 * When defined and when the `Scroller` is within a [Panel]{@link moonstone/Panels.Panel}, the
-	 * `Scroller` will store its scroll position and restore that position when returning to the
-	 * `Panel`.
-	 *
-	 * @type {String}
-	 * @public
-	 */
 	id: PropTypes.string
 };
 
