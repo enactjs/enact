@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Dropdown` to support voice readout
 - `moonstone/Dropdown` remaining open after it becomes `disabled`
+- `moonstone/VirtualGridList` to go next line via 5-way Down even though there is no item below the current item
 
 ## [3.0.0-alpha.5] - 2019-06-10
 
