@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [3.0.0-alpha.5] - 2019-06-17
+## [3.0.0-alpha.6] - 2019-06-17
 
 ### Removed
 
