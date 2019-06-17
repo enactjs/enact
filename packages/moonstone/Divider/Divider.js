@@ -16,7 +16,7 @@
  */
 
 import kind from '@enact/core/kind';
-import Uppercase from '@enact/i18n/Uppercase';
+import {privateUppercase as Uppercase} from '@enact/i18n/Uppercase';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -157,6 +157,7 @@ const Divider = DividerDecorator(DividerBase);
  * @memberof moonstone/Divider.Divider.prototype
  * @see i18n/Uppercase#casing
  * @public
+ * @deprecated
  */
 
 /**

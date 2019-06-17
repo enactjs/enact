@@ -1,7 +1,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Uppercase from '@enact/i18n/Uppercase';
+import {privateUppercase as Uppercase} from '@enact/i18n/Uppercase';
 import {isRtlText} from '@enact/i18n/util';
 import {Layout, Cell} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
@@ -54,6 +54,7 @@ const HeaderBase = kind({
 		 * @type {String}
 		 * @default 'upper'
 		 * @public
+		 * @deprecated
 		 */
 		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 

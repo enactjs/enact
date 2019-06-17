@@ -93,6 +93,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {String}
 			 * @default 'upper'
 			 * @public
+			 * @deprecated
 			 */
 			tooltipCasing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 

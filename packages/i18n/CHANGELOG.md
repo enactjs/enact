@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+- `i18n/Uppercase`, to be replaced by `i18n/util` in 3.0.0
+
 ## [2.5.3] - 2019-06-06
 
 No significant changes.

@@ -5,6 +5,7 @@
  * @exports Uppercase
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -80,7 +81,10 @@ const Uppercase = hoc((config, Wrapped) => kind({	// eslint-disable-line no-unus
 	}
 }));
 
-export default Uppercase;
+const WrappedUppercase = deprecate(Uppercase, {name: 'i18n/Uppercase', until: '3.0.0', replacedBy: 'i18n/util', since: '2.6.0'});
+
+export default WrappedUppercase;
 export {
-	Uppercase
+	Uppercase as privateUppercase,
+	WrappedUppercase as Uppercase
 };
