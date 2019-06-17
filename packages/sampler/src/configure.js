@@ -2,6 +2,10 @@ import {configure, addDecorator} from '@storybook/react';
 import {configureActions} from '@storybook/addon-actions';
 import {withKnobs} from '@storybook/addon-knobs';
 import {withInfo} from '@storybook/addon-info';
+import {Component} from 'react';
+
+// Fix for @storybook/addon-info which always needs at least an empty object for defaultProps.
+Component.defaultProps = {};
 
 import Moonstone from '../src/MoonstoneEnvironment';
 
