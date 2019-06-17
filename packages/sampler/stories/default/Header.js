@@ -14,7 +14,6 @@ const Config = mergeComponentMetadata('Header', HeaderBase, Header);
 
 // Set up some defaults for info and knobs
 const prop = {
-	casing: ['', 'preserve', 'sentence', 'word', 'upper'],
 	children: {
 		'no buttons': null,
 		'1 button': <IconButton>gear</IconButton>,
@@ -49,7 +48,6 @@ storiesOf('Moonstone', module)
 					subTitleBelow={text('subTitleBelow', Config, 'A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.')}
 					type={select('type', prop.type, Config)}
 					centered={boolean('centered', Config)}
-					casing={select('casing', prop.casing, Config)}
 					fullBleed={boolean('fullBleed', Config)}
 					headerInput={headerInput}
 					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}

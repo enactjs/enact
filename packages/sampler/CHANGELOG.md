@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [3.0.0-alpha.5] - 2019-06-17
+
+No significant changes.
+
 ## [3.0.0-alpha.5] - 2019-06-10
 
 No significant changes.
