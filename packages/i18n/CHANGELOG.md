@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
-## [unreleased]
+## [3.0.0-alpha.5] - 2019-06-17
 
 ## Removed
 
