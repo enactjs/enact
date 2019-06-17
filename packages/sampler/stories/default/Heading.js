@@ -13,7 +13,6 @@ const Config = mergeComponentMetadata('Heading', UiHeading, HeadingBase, Heading
 
 // Set up some defaults for info and knobs
 const prop = {
-	casing: ['', 'preserve', 'sentence', 'word', 'upper'],
 	marqueeOn: ['', 'hover', 'render'],
 	size: ['', 'large', 'medium', 'small'],
 	spacing: ['', 'auto', 'large', 'medium', 'small', 'none']
@@ -26,7 +25,6 @@ storiesOf('Moonstone', module)
 			text: 'A component for initiating a section of content.'
 		})(() => (<React.Fragment>
 			<Heading
-				casing={select('casing', prop.casing, Config)}
 				marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				showLine={boolean('showLine', Config)}
 				size={select('size', prop.size, Config)}

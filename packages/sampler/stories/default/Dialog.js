@@ -7,7 +7,7 @@ import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {withInfo} from '@storybook/addon-info';
 
-import {boolean, select, text} from '../../src/enact-knobs';
+import {boolean, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('Dialog', Popup, Dialog);
@@ -21,7 +21,6 @@ storiesOf('Moonstone', module)
 		})(() => (
 			<div>
 				<Dialog
-					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], Config, 'upper')}
 					// null issue
 					noAnimation={boolean('noAnimation', Config)}
 					// null issue
