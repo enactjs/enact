@@ -2,11 +2,13 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [3.0.0-alpha.5] - 2019-06-10
+## [unreleased]
 
 ### Removed
 
 - `moonstone/Divider`, `moonstone/Dialog`, and `moonstone/Heading` prop `casing`
+
+## [3.0.0-alpha.5] - 2019-06-10
 
 ### Added
 
