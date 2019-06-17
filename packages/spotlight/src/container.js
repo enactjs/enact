@@ -876,13 +876,28 @@ function isActiveContainer (containerId) {
  * @param {String} containerId The container id
  * @param {String} [restrict] The container restriction defaulted to `'self-only'`
  * @returns {Boolean} `true` if the container has the specified restriction
- * @private
+ * @public
  */
 function isRestrictedContainer (containerId, restrict = 'self-only') {
 	const config = getContainerConfig(containerId);
 
 	return Boolean(config && config.restrict === restrict);
 }
+
+/**
+ * Determines if the provided container has a `enter-to` configuration.
+ *
+ * By default, returns `true` for `'last-focused'` or `'default-element'``
+ *
+ * @param {String} containerId The container id
+ * @returns {Boolean} `true` if the container has the specified `enter-to` configuration
+ * @public
+ */
+function hasEnterToContainer (containerId) {
+	const config = getContainerConfig(containerId);
+	return config && (config.enterTo === 'last-focused' || config.enterTo === 'default-element');
+}
+
 
 /**
  * Determines if `innerContainerId` is inside `outerContainerId`.
@@ -1063,6 +1078,7 @@ export {
 	// Maybe
 	getContainerConfig,
 	getContainerDefaultElement,
+	getContainerId,
 	getContainerLastFocusedElement,
 	getContainerNavigableElements,
 	getContainersForNode,
@@ -1080,8 +1096,10 @@ export {
 	getLastContainer,
 	getNavigableContainersForNode,
 	getSpottableDescendants,
+	hasEnterToContainer,
 	isContainer,
 	isNavigable,
+	isRestrictedContainer,
 	isWithinOverflowContainer,
 	mayActivateContainer,
 	notifyLeaveContainer,

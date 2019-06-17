@@ -10,7 +10,6 @@ import classNames from 'classnames';
 import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import handle, {forward} from '@enact/core/handle';
 import {getDirection} from '@enact/spotlight';
-import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
 import {Job} from '@enact/core/util';
 import {onWindowReady} from '@enact/core/snapshot';
@@ -299,6 +298,10 @@ class ScrollableBase extends Component {
 
 		this.restoreScrollPosition();
 		scrollables.set(this, this.uiRef.current.containerRef.current);
+
+		if (this.uiRef.current.containerRef.current) {
+			this.uiRef.current.containerRef.current.addEventListener('navnotarget', this.onNavNoTarget);
+		}
 	}
 
 	componentDidUpdate (prevProps) {
@@ -309,6 +312,10 @@ class ScrollableBase extends Component {
 	}
 
 	componentWillUnmount () {
+		if (this.uiRef.current.containerRef.current) {
+			this.uiRef.current.containerRef.current.removeEventListener('navnotarget', this.onNavNoTarget);
+		}
+
 		scrollables.delete(this);
 
 		this.stopOverscrollJob('horizontal', 'before');
@@ -584,6 +591,7 @@ class ScrollableBase extends Component {
 		}
 
 		this.animateOnFocus = true;
+		this.pressDirKey = null;
 
 		if (!repeat && this.hasFocus()) {
 			const {overscrollEffectOn} = this.props;
@@ -602,14 +610,31 @@ class ScrollableBase extends Component {
 				this.uiRef.current.lastInputType = 'arrowKey';
 
 				direction = getDirection(keyCode);
-				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
-					const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
+				if (overscrollEffectOn.arrowKey) {
+					if (!element) {
+						const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
 
-					if (!(horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) &&
-						!(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
-						this.checkAndApplyOverscrollEffectByDirection(direction);
+						if (!(horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) &&
+							!(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
+							this.checkAndApplyOverscrollEffectByDirection(direction);
+						}
+					} else {
+						// Should be handled in onNavNoTarget
+						this.pressDirKey = direction;
 					}
 				}
+			}
+		}
+	}
+
+	onNavNoTarget = () => {
+		if (this.pressDirKey) {
+			const element = Spotlight.getCurrent();
+			const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
+
+			if (!(horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) &&
+				!(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
+				this.checkAndApplyOverscrollEffectByDirection(this.pressDirKey);
 			}
 		}
 	}
