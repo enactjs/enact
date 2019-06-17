@@ -44,12 +44,12 @@ const select = (name, items, Config, selectedValue) => {
 	if (items instanceof Array) {
 		// An array of items
 		items.forEach((item) => {
-			labels[defaultAppender(item)] = item;
+			labels[defaultAppender(item)] = (item !== null ? item : '');
 		});
 	} else {
 		// Items is an object
 		for (const item in items) {
-			labels[defaultAppender(item, items[item])] = items[item];
+			labels[defaultAppender(item, items[item])] = (items[item] !== null ? items[item] : '');
 		}
 	}
 
