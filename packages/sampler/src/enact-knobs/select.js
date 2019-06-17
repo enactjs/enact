@@ -33,16 +33,18 @@ const select = (name, items, Config, selectedValue) => {
 		Config.defaultProps = {};
 	}
 
-	const defaultValue = selectedValue || Config.defaultProps[name];
+	const defaultValue = selectedValue ||
+		(typeof selectedValue !== 'string' && Config.defaultProps[name] ) ||
+		'';
 
 	const defaultAppender = (key, label = key) => {
-		return key + (Config.defaultProps[name] === label ? defaultString : ' ');
+		return (key || ' ') + (Config.defaultProps[name] === label ? defaultString : '');
 	};
 
 	if (items instanceof Array) {
 		// An array of items
 		items.forEach((item) => {
-			labels[defaultAppender(item || ' ')] = item;
+			labels[defaultAppender(item)] = item;
 		});
 	} else {
 		// Items is an object
