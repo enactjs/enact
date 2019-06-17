@@ -16,9 +16,9 @@
  * @exports ScrollerBase
  */
 
+import {Spotlight} from '@enact/spotlight';
 import ri from '@enact/ui/resolution';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
-import {Spotlight} from '@enact/spotlight';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 

@@ -2,7 +2,7 @@ import Button from '@enact/moonstone/Button';
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
 import DatePicker from '@enact/moonstone/DatePicker';
 import DayPicker from '@enact/moonstone/DayPicker';
-import Divider from '@enact/moonstone/Divider';
+import Heading from '@enact/moonstone/Heading';
 import ExpandableInput from '@enact/moonstone/ExpandableInput';
 import ExpandableItem from '@enact/moonstone/ExpandableItem';
 import ExpandableList from '@enact/moonstone/ExpandableList';
@@ -472,9 +472,9 @@ storiesOf('Spotlight', module)
 				</p>
 				<Container style={style.flexBox} spotlightMuted={boolean('spotlightMuted', Container, false)} spotlightDisabled={boolean('Container spotlightDisabled', Container, false)}>
 					<div style={style.flexItem}>
-						<Divider>
+						<Heading showLine>
 							Misc Components
-						</Divider>
+						</Heading>
 						<div style={style.flexBox}>
 							<Button
 								onSpotlightDown={action('onSpotlightDown')}
@@ -591,9 +591,9 @@ storiesOf('Spotlight', module)
 						</LabeledItem>
 					</div>
 					<div style={style.flexItem}>
-						<Divider>
+						<Heading showLine>
 							Expandables
-						</Divider>
+						</Heading>
 						<Scroller style={{height: '500px'}}>
 							<ExpandableItem
 								onSpotlightDown={action('onSpotlightDown')}

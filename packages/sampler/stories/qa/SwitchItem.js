@@ -1,6 +1,6 @@
 import SwitchItem from '@enact/moonstone/SwitchItem';
 import Group from '@enact/ui/Group';
-import Divider from '@enact/moonstone/Divider';
+import Heading from '@enact/moonstone/Heading';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
@@ -41,9 +41,9 @@ storiesOf('SwitchItem', module)
 		'Group',
 		() => (
 			<div>
-				<Divider>
+				<Heading showLine>
 					{'Switch items with normal text in a group'}
-				</Divider>
+				</Heading>
 				<Group
 					childComponent={SwitchItem}
 					itemProps={{
@@ -56,9 +56,9 @@ storiesOf('SwitchItem', module)
 				>
 					{[text('Normal Text 1', SwitchItem, inputData.normalText + 1), text('Normal Text 2', SwitchItem, inputData.normalText + 2), text('Normal Text 3', SwitchItem, inputData.normalText + 3)]}
 				</Group>
-				<Divider>
+				<Heading showLine>
 					{'Switch items with long text in a group'}
-				</Divider>
+				</Heading>
 				<Group
 					childComponent={SwitchItem}
 					itemProps={{

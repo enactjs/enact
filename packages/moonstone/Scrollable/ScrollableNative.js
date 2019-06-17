@@ -1,16 +1,15 @@
 import classNames from 'classnames';
-import {constants, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
-import {getDirection} from '@enact/spotlight';
-import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import handle, {forward} from '@enact/core/handle';
-import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
-import {Job} from '@enact/core/util';
-import {onWindowReady} from '@enact/core/snapshot';
 import platform from '@enact/core/platform';
+import {onWindowReady} from '@enact/core/snapshot';
+import {Job} from '@enact/core/util';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import {constants, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
+import Spotlight, {getDirection} from '@enact/spotlight';
+import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import Spotlight from '@enact/spotlight';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import $L from '../internal/$L';
 import {SharedState} from '../internal/SharedStateDecorator';
@@ -364,7 +363,7 @@ class ScrollableBaseNative extends Component {
 			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current && horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
 			isVerticalScrollButtonFocused = verticalScrollbarRef.current && verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
 
-		if (focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
+		if (!Spotlight.isPaused() && focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
 			focusedItem.blur();
 		}
 	}
@@ -466,6 +465,8 @@ class ScrollableBaseNative extends Component {
 			this.focusOnItem();
 		}
 	}
+
+	isContent = (element) => (element && this.uiRef.current && this.uiRef.current.childRefCurrent.containerRef.current.contains(element))
 
 	// event handlers for Spotlight support
 
@@ -634,7 +635,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onKeyDown = (ev) => {
-		const {keyCode, repeat} = ev;
+		const {keyCode, repeat, target} = ev;
 
 		forward('onKeyDown', ev, this.props);
 
@@ -649,7 +650,7 @@ class ScrollableBaseNative extends Component {
 			let direction = null;
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
-				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
+				if (this.isContent(target) && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
 					direction = isPageUp(keyCode) ? 'up' : 'down';
 					if (this.scrollByPage(direction) && overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
 						this.checkAndApplyOverscrollEffectByDirection(direction);
@@ -754,7 +755,7 @@ class ScrollableBaseNative extends Component {
 	alertThumbAfterRendered = () => {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem && this.uiRef.current && this.uiRef.current.childRefCurrent.containerRef.current.contains(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
+		if (!Spotlight.getPointerMode() && this.isContent(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
 			this.alertThumb();
 		}
 	}
@@ -903,7 +904,7 @@ class ScrollableBaseNative extends Component {
 
 	handleScroll = handle(
 		forward('onScroll'),
-		(ev, {id}, context) => id && context && this.context.set,
+		(ev, {id}, context) => id && context && context.set,
 		({scrollLeft: x, scrollTop: y}, {id}, context) => {
 			context.set(`${id}.scrollPosition`, {x, y});
 		}

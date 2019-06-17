@@ -1,7 +1,7 @@
 import {ContextualPopupDecorator} from '@enact/moonstone/ContextualPopupDecorator';
 
 import Button from '@enact/moonstone/Button';
-import Divider from '@enact/moonstone/Divider';
+import Heading from '@enact/moonstone/Heading';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -163,7 +163,7 @@ storiesOf('ContextualPopupDecorator', module)
 		'with overflows',
 		() => (
 			<div style={{position: 'relative', width: '100%', height: '100%'}}>
-				<Divider>direction Up</Divider>
+				<Heading showLine>direction Up</Heading>
 				<div style={{display: 'flex', justifyContent: 'space-between', marginBottom: ri.unit(12, 'rem')}}>
 					<ContextualPopupWithActivator
 						direction="up"
@@ -185,8 +185,8 @@ storiesOf('ContextualPopupDecorator', module)
 					</ContextualPopupWithActivator>
 				</div>
 				<div style={{display: 'flex'}}>
-					<Divider style={{flexGrow: '1'}}>direction left </Divider>
-					<Divider style={{flexGrow: '1'}}>direction right</Divider>
+					<Heading showLine style={{flexGrow: '1'}}>direction left </Heading>
+					<Heading showLine style={{flexGrow: '1'}}>direction right</Heading>
 				</div>
 				<div style={{display: 'flex', marginBottom: ri.unit(24, 'rem')}}>
 					<div style={{flexGrow: '1', display: 'flex', justifyContent: 'space-between'}}>
@@ -232,7 +232,7 @@ storiesOf('ContextualPopupDecorator', module)
 						Overflows Bottom
 					</ContextualPopupWithActivator>
 				</div>
-				<Divider>direction down</Divider>
+				<Heading showLine>direction down</Heading>
 				<div style={{display: 'flex', justifyContent: 'space-between'}}>
 					<ContextualPopupWithActivator
 						direction="down"
