@@ -366,8 +366,14 @@ const VirtualListBaseFactory = (type) => {
 			if (isPrimaryDirectionVertical) {
 				if (isUpKey && row) {
 					targetIndex = index - dimensionToExtent;
-				} else if (isDownKey && isNextRow) {
-					targetIndex = index + dimensionToExtent;
+				} else if (isDownKey) {
+					if (isNextRow) {
+						targetIndex = index + dimensionToExtent;
+					} else if ( // if the next line is the last line and there is no item below the current item
+						Math.floor((index + dimensionToExtent ) / dimensionToExtent) === Math.floor((dataSize - 1) / dimensionToExtent)
+					) {
+						targetIndex = dataSize - 1;
+					}
 				} else if (isLeftMovement && column) {
 					targetIndex = index - 1;
 				} else if (isRightMovement && isNextAdjacent) {
@@ -375,8 +381,14 @@ const VirtualListBaseFactory = (type) => {
 				}
 			} else if (isLeftMovement && row) {
 				targetIndex = index - dimensionToExtent;
-			} else if (isRightMovement && isNextRow) {
-				targetIndex = index + dimensionToExtent;
+			} else if (isRightMovement) {
+				if (isNextRow) {
+					targetIndex = index + dimensionToExtent;
+				} else if ( // if the next line is the last line and there is no item below the current item
+					Math.floor((index + dimensionToExtent ) / dimensionToExtent) === Math.floor((dataSize - 1) / dimensionToExtent)
+				) {
+					targetIndex = dataSize - 1;
+				}
 			} else if (isUpKey && column) {
 				targetIndex = index - 1;
 			} else if (isDownKey && isNextAdjacent) {
