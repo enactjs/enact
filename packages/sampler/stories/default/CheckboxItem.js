@@ -9,7 +9,7 @@ import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
 import {boolean, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {mergeComponentMetadata, nullify} from '../../src/utils';
 
 CheckboxItem.displayName = 'CheckboxItem';
 const Config = mergeComponentMetadata('CheckboxItem', ItemBase, Item, UiToggleItemBase, UiToggleItem, ToggleItem, CheckboxItem);
@@ -20,7 +20,7 @@ storiesOf('Moonstone', module)
 		() => {
 			const iconPosition = select('iconPosition', ['before', 'after'], Config);
 			const icon = select('itemIcon', ['', ...listIcons], Config);
-			const itemIcon = (icon ? <Icon small>{icon}</Icon> : null);
+			const itemIcon = nullify(icon ? <Icon small>{icon}</Icon> : null);
 			const itemIconPosition = select('itemIconPosition', [null, 'before', 'beforeChildren', 'afterChildren', 'after'], Config);
 			return (
 				<CheckboxItem
