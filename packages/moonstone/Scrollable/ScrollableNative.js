@@ -474,6 +474,8 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	isContent = (element) => (element && this.uiRef.current && this.uiRef.current.childRefCurrent.containerRef.current.contains(element))
+
 	// event handlers for Spotlight support
 
 	startScrollOnFocus = (pos) => {
@@ -641,7 +643,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onKeyDown = (ev) => {
-		const {keyCode, repeat} = ev;
+		const {keyCode, repeat, target} = ev;
 
 		forward('onKeyDown', ev, this.props);
 
@@ -657,7 +659,7 @@ class ScrollableBaseNative extends Component {
 			let direction = null;
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
-				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
+				if (this.isContent(target) && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
 					direction = isPageUp(keyCode) ? 'up' : 'down';
 					if (this.scrollByPage(direction) && overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
 						this.checkAndApplyOverscrollEffectByDirection(direction);
@@ -779,7 +781,7 @@ class ScrollableBaseNative extends Component {
 	alertThumbAfterRendered = () => {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem && this.uiRef.current && this.uiRef.current.childRefCurrent.containerRef.current.contains(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
+		if (!Spotlight.getPointerMode() && this.isContent(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
 			this.alertThumb();
 		}
 	}

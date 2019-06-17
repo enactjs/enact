@@ -41,7 +41,8 @@ const useMeasurable = () => {
 
 	useLayoutEffect(
 		() => {
-			if (!ref.current) {
+			const refToMeasure = ref.current;
+			if (!refToMeasure) {
 				return;
 			}
 
@@ -49,17 +50,17 @@ const useMeasurable = () => {
 			if (typeof ResizeObserver === 'function') {
 				let resizeObserver = new ResizeObserver((entries) => {
 					entries.forEach((entry) => {
-						if (entry.target === ref.current) {
+						if (entry.target === refToMeasure) {
 							// we want to measure including the padding, hence refers to `target` instead of `contentRect`
 							setMeasurement(entry.target.getBoundingClientRect());
 						}
 					});
 				});
 
-				resizeObserver.observe(ref.current);
+				resizeObserver.observe(refToMeasure);
 
 				return () => {
-					resizeObserver.disconnect(ref.current);
+					resizeObserver.disconnect(refToMeasure);
 					resizeObserver = null;
 				};
 			// Fallback support for MutationObserver
@@ -69,12 +70,12 @@ const useMeasurable = () => {
 						if (mutation.type === 'childList') {
 							setMeasurement(mutation.target.getBoundingClientRect());
 						} else if (mutation.type === 'attributes' && (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
-							setMeasurement(ref.current.getBoundingClientRect());
+							setMeasurement(refToMeasure.getBoundingClientRect());
 						}
 					}
 				});
 
-				mutationObserver.observe(ref.current, {attributes: true, childList: true, subtree: true});
+				mutationObserver.observe(refToMeasure, {attributes: true, childList: true, subtree: true});
 
 				return () => {
 					mutationObserver.disconnect();
