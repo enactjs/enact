@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## unreleased
+
+### Fixed
+
+- `moonstone/Dropdown` to scroll to and focus the selected item when opened
+
 ## [3.0.0-alpha.6] - 2019-06-17
 
 ### Removed

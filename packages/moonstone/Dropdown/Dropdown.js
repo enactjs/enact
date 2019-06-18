@@ -18,7 +18,8 @@
 
 import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import {handle, forward} from '@enact/core/handle';
+import {handle, forKey, forward} from '@enact/core/handle';
+import Spotlight from '@enact/spotlight';
 import Changeable from '@enact/ui/Changeable';
 import Toggleable from '@enact/ui/Toggleable';
 import Group from '@enact/ui/Group';
@@ -26,6 +27,7 @@ import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import {compose, equals} from 'ramda';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import warning from 'warning';
 
 import Button from '../Button';
@@ -53,6 +55,7 @@ const compareChildren = (a, b) => {
 
 	return true;
 };
+const isSelectedValid = ({children, selected}) => Array.isArray(children) && children[selected] != null;
 
 const DropdownButton = kind({
 	name: 'DropdownButton',
@@ -72,9 +75,9 @@ const DropdownButton = kind({
 
 const ContextualButton = ContextualPopupDecorator({noArrow: true}, DropdownButton);
 
-const DropdownList = Skinnable(
+const DropdownListBase = Skinnable(
 	kind({
-		name: 'DropdownList',
+		name: 'DropdownListBase',
 
 		propTypes: {
 			/*
@@ -96,6 +99,13 @@ const DropdownList = Skinnable(
 			 * @type {Function}
 			 */
 			onSelect: PropTypes.func,
+
+			/*
+			 * Callback function that will receive the scroller's scrollTo() method
+			 *
+			 * @type {Function}
+			 */
+			scrollTo: PropTypes.func,
 
 			/*
 			 * Index of the selected item.
@@ -121,12 +131,13 @@ const DropdownList = Skinnable(
 			className: ({width, styler}) => styler.append(width)
 		},
 
-		render: ({children, onSelect, selected, ...rest}) => {
+		render: ({children, onSelect, scrollTo, selected, ...rest}) => {
 			delete rest.width;
 
 			return (
 				<Group
 					{...rest}
+					cbScrollTo={scrollTo}
 					childComponent={Item}
 					component={children ? Scroller : null}
 					onSelect={onSelect}
@@ -139,6 +150,54 @@ const DropdownList = Skinnable(
 		}
 	})
 );
+
+class DropdownList extends React.Component {
+	static displayName = 'DropdownList'
+
+	static propTypes = {
+		/*
+		 * Index of the selected item.
+		 *
+		 * @type {Number}
+		 */
+		selected: PropTypes.number
+	}
+
+	componentDidMount () {
+		// eslint-disable-next-line react/no-find-dom-node
+		this.node = ReactDOM.findDOMNode(this);
+		Spotlight.set(this.node.dataset.spotlightId, {leaveFor: {up: '', down: ''}});
+	}
+
+	componentDidUpdate () {
+		if (isSelectedValid(this.props)) {
+			const {nodeToFocus, nodeToScroll} = this.getNodeToFocus(this.props.selected);
+
+			this.scrollTo({animate: false, node: nodeToScroll});
+			Spotlight.focus(nodeToFocus);
+		}
+	}
+
+	getNodeToFocus = (selected) => {
+		const offset = 2;
+		const scrollIndex = selected > offset ? selected - offset : 0;
+
+		return {
+			nodeToFocus: this.node.querySelector(`[data-index='${selected}']`),
+			nodeToScroll: this.node.querySelector(`[data-index='${scrollIndex}']`)
+		};
+	}
+
+	getScrollTo = (scrollTo) => {
+		this.scrollTo = scrollTo;
+	}
+
+	render () {
+		return (
+			<DropdownListBase {...this.props} scrollTo={this.getScrollTo} />
+		);
+	}
+}
 
 /**
  * A stateless Dropdown component.
@@ -249,6 +308,11 @@ const DropdownBase = kind({
 	},
 
 	handlers: {
+		onKeyDown: handle(
+			forward('onKeyDown'),
+			(ev, props) => forKey('left', ev, props) || forKey('right', ev, props),
+			forward('onClose')
+		),
 		onSelect: handle(
 			forward('onSelect'),
 			forward('onClose')
@@ -291,7 +355,7 @@ const DropdownBase = kind({
 		},
 		className: ({width, styler}) => styler.append(width),
 		title: ({children, selected, title}) => {
-			if (Array.isArray(children) && children[selected] != null) {
+			if (isSelectedValid({children, selected})) {
 				const child = children[selected];
 				return typeof child === 'object' ? child.children : child;
 			}
@@ -300,8 +364,8 @@ const DropdownBase = kind({
 		}
 	},
 
-	render: ({children, disabled, onOpen, onSelect, open, selected, width, title, ...rest}) => {
-		const popupProps = {children, onSelect, selected, width, role: ''};
+	render: ({children, disabled, onKeyDown, onOpen, onSelect, open, selected, width, title, ...rest}) => {
+		const popupProps = {children, onKeyDown, onSelect, selected, width, role: ''};
 
 		// `ui/Group`/`ui/Repeater` will throw an error if empty so we disable the Dropdown and
 		// prevent Dropdown to open if there are no children.
@@ -318,7 +382,6 @@ const DropdownBase = kind({
 				popupComponent={DropdownList}
 				onClick={onOpen}
 				open={openDropdown}
-				spotlightRestrict="self-only"
 			>
 				{title}
 			</ContextualButton>
