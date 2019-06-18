@@ -9,7 +9,7 @@ import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
 import {boolean, text, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {mergeComponentMetadata, nullify} from '../../src/utils';
 
 SwitchItem.displayName = 'SwitchItem';
 const Config = mergeComponentMetadata('SwitchItem', ItemBase, Item, UiToggleItemBase, UiToggleItem, ToggleItem, SwitchItem);
@@ -19,7 +19,7 @@ storiesOf('Moonstone', module)
 		'SwitchItem',
 		() => {
 			const icon = select('itemIcon', ['', ...listIcons], Config);
-			const itemIcon = (icon ? <Icon small>{icon}</Icon> : void 0);
+			const itemIcon = nullify(icon ? <Icon small>{icon}</Icon> : null);
 			const itemIconPosition = select('itemIconPosition', ['', 'before', 'beforeChildren', 'afterChildren', 'after'], Config);
 			return (
 				<SwitchItem
