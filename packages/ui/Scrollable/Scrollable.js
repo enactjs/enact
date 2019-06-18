@@ -495,10 +495,10 @@ class ScrollableBase extends Component {
 	}
 
 	handleResizeWindow = () => {
-		this.stop();
-		this.scroll(0, 0);
-
+		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
 		setTimeout(() => {
+			this.scrollTo({position: {x: 0, y: 0}, animate: false});
+			
 			this.enqueueForceUpdate();
 		});
 	}
@@ -1254,9 +1254,9 @@ class ScrollableBase extends Component {
 			this.props.addEventListeners(childRefCurrent.containerRef);
 		}
 
-		onWindowReady(() => {
+		if (window) {
 			window.addEventListener('resize', this.handleResizeWindow);
-		});
+		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
@@ -1276,7 +1276,9 @@ class ScrollableBase extends Component {
 			this.props.removeEventListeners(childRefCurrent.containerRef);
 		}
 
-		window.removeEventListener('resize', this.handleResizeWindow);
+		if (window) {
+			window.removeEventListener('resize', this.handleResizeWindow);
+		}
 	}
 
 	// render

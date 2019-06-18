@@ -475,12 +475,12 @@ class ScrollableBaseNative extends Component {
 	}
 
 	handleResizeWindow = () => {
-		this.stop();
-		this.childRefCurrent.containerRef.current.style.scrollBehavior = null;
-		this.childRefCurrent.scrollToPosition(0, 0);
-		this.childRefCurrent.containerRef.current.style.scrollBehavior = 'smooth';
-		
+		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
 		setTimeout(() => {
+			this.childRefCurrent.containerRef.current.style.scrollBehavior = null;
+			this.childRefCurrent.scrollToPosition(0, 0);
+			this.childRefCurrent.containerRef.current.style.scrollBehavior = 'smooth';
+			
 			this.enqueueForceUpdate();
 		});
 	}
@@ -1271,9 +1271,9 @@ class ScrollableBaseNative extends Component {
 			this.props.addEventListeners(childRefCurrent.containerRef);
 		}
 
-		onWindowReady(() => {
+		if (window) {
 			window.addEventListener('resize', this.handleResizeWindow);
-		});
+		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
@@ -1293,7 +1293,9 @@ class ScrollableBaseNative extends Component {
 			this.props.removeEventListeners(childRefCurrent.containerRef);
 		}
 
-		window.removeEventListener('resize', this.handleResizeWindow);
+		if (window) {
+			window.removeEventListener('resize', this.handleResizeWindow);
+		}
 	}
 
 	// render
