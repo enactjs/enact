@@ -80,7 +80,7 @@ locale-specific files will typically include values for "title", "keywords", and
 "description".  The other properties will keep the values inherited from the
 app's top-level `appinfo.json`.
 
-`$L()` is a convience method for `ResBundle`, it is described in the main section of the `i18n` docs [here](./index.md)
+`$L()` is a convience method for `ResBundle`, it is described in the main section of the `i18n` docs [here](./index.md#translating-strings-using-l)
 
 ## Using iLib for formatting
 
