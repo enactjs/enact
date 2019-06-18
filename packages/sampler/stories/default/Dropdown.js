@@ -4,7 +4,6 @@ import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, number, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -15,9 +14,7 @@ const Config = mergeComponentMetadata('Dropdown', UIButtonBase, UIButton, Button
 storiesOf('Moonstone', module)
 	.add(
 		'Dropdown',
-		withInfo({
-			text: 'A quick, inline, value-selection component'
-		})(() => {
+		() => {
 			const itemCount = number('items', Config, {range: true, min: 0, max: 8}, 5);
 			const items = (new Array(itemCount)).fill().map((i, index) => `Option ${index + 1}`);
 
@@ -35,5 +32,10 @@ storiesOf('Moonstone', module)
 					{items}
 				</Dropdown>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'A quick, inline, value-selection component'
+			}
+		}
 	);

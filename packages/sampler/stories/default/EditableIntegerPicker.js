@@ -3,7 +3,6 @@ import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, number, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -20,10 +19,7 @@ const prop = {
 storiesOf('Moonstone', module)
 	.add(
 		'EditableIntegerPicker',
-
-		withInfo({
-			text: 'Basic usage of EditableIntegerPicker'
-		})(() => (
+		() => (
 			<EditableIntegerPicker
 				decrementIcon={select('decrementIcon', ['', ...decrementIcons], Config)}
 				defaultValue={20}
@@ -41,5 +37,10 @@ storiesOf('Moonstone', module)
 				width={select('width', prop.width,  Config)}
 				wrap={boolean('wrap', Config)}
 			/>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of EditableIntegerPicker'
+			}
+		}
 	);

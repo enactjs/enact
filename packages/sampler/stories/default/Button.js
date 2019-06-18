@@ -4,7 +4,6 @@ import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -22,9 +21,7 @@ const prop = {
 storiesOf('Moonstone', module)
 	.add(
 		'Button',
-		withInfo({
-			text: 'The basic Button'
-		})(() => (
+		() => (
 			<Button
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
@@ -34,9 +31,14 @@ storiesOf('Moonstone', module)
 				iconPosition={select('iconPosition', ['', 'before', 'after'], Config, '')}
 				minWidth={!!boolean('minWidth', Config)}
 				selected={boolean('selected', Config)}
-				size={select('size', ['small', 'large'], Config)}
+				size={select('size', ['', 'small', 'large'], Config)}
 			>
 				{text('children', Config, 'click me')}
 			</Button>
-		))
+		),
+		{
+			info: {
+				text: 'The basic Button'
+			}
+		}
 	);

@@ -2,7 +2,6 @@ import DayPicker from '@enact/moonstone/DayPicker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 
@@ -11,9 +10,7 @@ DayPicker.displayName = 'DayPicker';
 storiesOf('Moonstone', module)
 	.add(
 		'DayPicker',
-		withInfo({
-			text: 'The basic DayPicker'
-		})(() => (
+		() => (
 			<DayPicker
 				aria-label={text('aria-label', DayPicker)}
 				dayNameLength={select('dayNameLength', ['short', 'medium', 'long', 'full'], 'long')}
@@ -27,5 +24,10 @@ storiesOf('Moonstone', module)
 				onSelect={action('onSelect')}
 				title={text('title', DayPicker, 'Day Picker')}
 			/>
-		))
+		),
+		{
+			info: {
+				text: 'The basic DayPicker'
+			}
+		}
 	);

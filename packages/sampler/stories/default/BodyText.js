@@ -2,7 +2,6 @@ import BodyText, {BodyTextBase} from '@enact/moonstone/BodyText';
 import UiBodyText, {BodyTextBase as UiBodyTextBase} from '@enact/ui/BodyText';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, text, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -13,9 +12,7 @@ const Config = mergeComponentMetadata('BodyText', UiBodyTextBase, UiBodyText, Bo
 storiesOf('Moonstone', module)
 	.add(
 		'BodyText',
-		withInfo({
-			text: 'The basic BodyText'
-		})(() => (
+		() => (
 			<BodyText
 				centered={boolean('centered', Config)}
 				noWrap={boolean('noWrap', Config)}
@@ -23,5 +20,10 @@ storiesOf('Moonstone', module)
 			>
 				{text('children', Config, 'This is Body Text')}
 			</BodyText>
-		))
+		),
+		{
+			info: {
+				text: 'The basic BodyText'
+			}
+		}
 	);

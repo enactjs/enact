@@ -4,7 +4,6 @@ import IconButton from '@enact/moonstone/IconButton';
 import Input from '@enact/moonstone/Input';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -29,9 +28,7 @@ const prop = {
 storiesOf('Moonstone', module)
 	.add(
 		'Header',
-		withInfo({
-			text: 'A block to use as a screen\'s title and description. Supports additional buttons and up to two subtitles.'
-		})((context) => {
+		context => {
 			context.noHeader = true;
 
 			const noCloseButton = boolean('noCloseButton', {displayName: 'Panels'});
@@ -55,5 +52,10 @@ storiesOf('Moonstone', module)
 					{children}
 				</Header>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'A block to use as a screen\'s title and description. Supports additional buttons and up to two subtitles.'
+			}
+		}
 	);

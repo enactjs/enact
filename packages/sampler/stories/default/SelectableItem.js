@@ -7,10 +7,9 @@ import {listIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {mergeComponentMetadata, nullify} from '../../src/utils';
 
 SelectableItem.displayName = 'SelectableItem';
 const Config = mergeComponentMetadata('SelectableItem', ItemBase, Item, UiToggleItemBase, UiToggleItem, ToggleItem, SelectableItem);
@@ -18,12 +17,10 @@ const Config = mergeComponentMetadata('SelectableItem', ItemBase, Item, UiToggle
 storiesOf('Moonstone', module)
 	.add(
 		'SelectableItem',
-		withInfo({
-			text: 'Basic usage of SelectableItem'
-		})(() => {
+		() => {
 			const iconPosition = select('iconPosition', ['before', 'after'], Config);
 			const icon = select('itemIcon', ['', ...listIcons], Config);
-			const itemIcon = (icon ? <Icon small>{icon}</Icon> : null);
+			const itemIcon = nullify(icon ? <Icon small>{icon}</Icon> : null);
 			const itemIconPosition = select('itemIconPosition', [null, 'before', 'beforeChildren', 'afterChildren', 'after'], Config);
 			return (
 				<SelectableItem
@@ -37,5 +34,10 @@ storiesOf('Moonstone', module)
 					{text('children', Config, 'Hello SelectableItem')}
 				</SelectableItem>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'Basic usage of SelectableItem'
+			}
+		}
 	);

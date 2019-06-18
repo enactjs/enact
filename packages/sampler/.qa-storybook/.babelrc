@@ -1,9 +1,23 @@
 {
-	"presets": ["env", "stage-0", "react"],
-	"plugins": ["dev-expression"],
+	"presets": [
+		["@babel/preset-env", {
+			"shippedProposals": true,
+			"modules": false,
+			"useBuiltIns": "entry",
+			"corejs": 3
+		}],
+		"@babel/preset-react"
+	],
+	"plugins": [
+		"@babel/plugin-proposal-export-default-from",
+		"@babel/plugin-proposal-export-namespace-from",
+		"@babel/plugin-syntax-dynamic-import",
+		["@babel/plugin-proposal-class-properties", {"loose": true}],
+		"babel-plugin-dev-expression"
+	],
 	"env": {
 		"production": {
-			"plugins": ["transform-react-inline-elements"]
+			"plugins": ["@babel/plugin-transform-react-inline-elements"]
 		}
 	}
 }

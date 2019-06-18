@@ -6,7 +6,6 @@ import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -79,9 +78,7 @@ UiVirtualGridList.displayName = 'VirtualGridList';
 storiesOf('UI', module)
 	.add(
 		'VirtualList.VirtualGridList',
-		withInfo({
-			text: 'Basic usage of VirtualGridList'
-		})(() => (
+		() => (
 			<UiVirtualGridList
 				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 				direction={select('direction', prop.direction, Config, 'vertical')}
@@ -94,15 +91,18 @@ storiesOf('UI', module)
 				onScrollStop={action('onScrollStop')}
 				spacing={ri.scale(number('spacing', Config, 20))}
 			/>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of VirtualGridList'
+			}
+		}
 	);
 
 storiesOf('Moonstone', module)
 	.add(
 		'VirtualList.VirtualGridList',
-		withInfo({
-			text: 'Basic usage of VirtualGridList'
-		})(() => (
+		() => (
 			<VirtualGridList
 				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 				direction={select('direction', prop.direction, Config, 'vertical')}
@@ -117,5 +117,10 @@ storiesOf('Moonstone', module)
 				spacing={ri.scale(number('spacing', Config, 20))}
 				wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"], Config)]}
 			/>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of VirtualGridList'
+			}
+		}
 	);
