@@ -102,7 +102,7 @@ storiesOf('Header', module)
 		'with long text and headerComponent',
 		() => (
 			<Header
-				title={text('title', Config, 'Title is very very very very very very very long.')}
+				title={text('title', Config, 'Title is very long with lorem ipsum dolor sit amet, consectetur adipiscing elit.')}
 				titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow text and header components to test positioning of header components.')}
 				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
 				marqueeOn={select('marqueeOn', ['hover', 'render'], Config)}
