@@ -9,6 +9,10 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 - Ensure polyfills are applied based on target browsers/platforms.
 - Updated Enact stories to use latest knob APIs.
 - Removed webOS Storybook hotfix as its no longer needed.
+## [3.0.0-alpha.6] - 2019-06-17
+
+No significant changes.
+
 ## [3.0.0-alpha.5] - 2019-06-10
 
 No significant changes.

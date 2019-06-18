@@ -1,5 +1,5 @@
 import Icon from '@enact/moonstone/Icon';
-import Divider from '@enact/moonstone/Divider';
+import Heading from '@enact/moonstone/Heading';
 import iconNames from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -26,7 +26,7 @@ storiesOf('Moonstone', module)
 					</Icon>
 					<br />
 					<br />
-					<Divider>All Icons</Divider>
+					<Heading showLine>All Icons</Heading>
 					{iconNames.map((icon, index) => <Icon key={index} size={size} title={icon}>{icon}</Icon>)}
 				</div>
 			);

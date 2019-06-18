@@ -4,7 +4,7 @@
 
 `@enact/i18n` provides a decorator that can be used to wrap a root component in a React (or Enact) application.
 This decorator provides a context to child components that can be used to determine locale text directionality
-and to update the current locale. Additionally, it provides a locale-aware `Uppercase` higher-order component (HOC).
+and to update the current locale.
 
 ## Usage
 
@@ -27,20 +27,6 @@ const MyApp = () => (
 
 const MyI18nApp = I18nDecorator(MyApp);
 ```
-
-`Uppercase` may be used independently of the app decorator. By default, it uppercases the `children` property of
-the wrapped component, provided it is a `string`.
-
-```
-import Uppercase from '@enact/i18n/Uppercase';
-
-const MyComponent = (props) => (
-    <div {...props} />
-);
-
-const MyUppercaseComponent = Uppercase(MyComponent);
-```
-Passing `preserveCase` in the props to `MyUppercaseComponent` will prevent uppercasing.
 
 ## Install
 
