@@ -8,7 +8,7 @@ We provide `iLib` for use through our `i18n` module.
 
 We will cover a good deal of how to use `iLib` inside your `Enact` app below, but we will not cover everything.
 
-If you wish to learn more about `ilib` checkout their [github](https://github.com/iLib-js/iLib) and [docs](https://github.com/iLib-js/iLib/blob/master/doc/index.md).
+If you wish to learn more about `ilib` checkout their [github](https://github.com/iLib-js/iLib) and [docs](https://github.com/iLib-js/iLib/blob/master/docs/index.md).
 
 ## Accessing iLib from Enact
 
@@ -80,7 +80,7 @@ locale-specific files will typically include values for "title", "keywords", and
 "description".  The other properties will keep the values inherited from the
 app's top-level `appinfo.json`.
 
-`$L()` is a convience method for `ResBundle`, it is described in the main section of the `i18n` docs [here](../index.md)
+`$L()` is a convience method for `ResBundle`, it is described in the main section of the `i18n` docs [here](./ilib.md)
 
 ## Using iLib for formatting
 
