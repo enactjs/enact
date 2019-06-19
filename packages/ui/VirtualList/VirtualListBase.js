@@ -33,7 +33,7 @@ const gridListItemSizeShape = PropTypes.shape({
 /**
  * The base version of the virtual list component.
  *
- * @class VirtualListBaseFactory
+ * @class VirtualListCore
  * @memberof ui/VirtualList
  * @ui
  * @private
