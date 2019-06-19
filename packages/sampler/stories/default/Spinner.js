@@ -4,7 +4,6 @@ import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -15,9 +14,7 @@ const Config = mergeComponentMetadata('Spinner', UiSpinnerBase, UiSpinner, Spinn
 storiesOf('Moonstone', module)
 	.add(
 		'Spinner',
-		withInfo({
-			text: 'Basic usage of Spinner'
-		})(() => (
+		() => (
 			<div
 				style={{
 					outline: 'teal dashed 1px',
@@ -77,5 +74,10 @@ storiesOf('Moonstone', module)
 					</Spinner>
 				</div>
 			</div>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of Spinner'
+			}
+		}
 	);

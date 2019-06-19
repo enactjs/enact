@@ -2,7 +2,6 @@ import DaySelector, {DaySelectorBase} from '@enact/moonstone/DaySelector';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -20,13 +19,16 @@ Config.defaultProps = {
 storiesOf('Moonstone', module)
 	.add(
 		'DaySelector',
-		withInfo({
-			text: 'Basic usage of DaySelector'
-		})(() => (
+		() => (
 			<DaySelector
 				disabled={boolean('disabled', Config)}
 				dayNameLength={select('dayNameLength', ['short', 'medium', 'long', 'full'], Config)}
 				onSelect={action('onSelect')}
 			/>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of DaySelector'
+			}
+		}
 	);

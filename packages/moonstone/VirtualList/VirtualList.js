@@ -10,8 +10,8 @@
  * @exports VirtualListNative
  */
 
-import {gridListItemSizeShape} from '@enact/ui/VirtualList';
 import kind from '@enact/core/kind';
+import {gridListItemSizeShape} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import React from 'react';
 

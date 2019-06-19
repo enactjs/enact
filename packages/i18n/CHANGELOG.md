@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [3.0.0-alpha.6] - 2019-06-17
+
+## Removed
+
+- `i18n/Uppercase` HOC, replaced by `i18n/util` casing functions
+
 ## [3.0.0-alpha.5] - 2019-06-10
 
 No significant changes.

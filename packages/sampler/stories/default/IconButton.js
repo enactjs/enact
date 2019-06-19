@@ -5,7 +5,6 @@ import icons from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -27,9 +26,7 @@ const Config = mergeComponentMetadata('IconButton', Button, ButtonBase, UIButton
 storiesOf('Moonstone', module)
 	.add(
 		'IconButton',
-		withInfo({
-			text: 'The basic IconButton'
-		})(() => (
+		() => (
 			<IconButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config, '')}
@@ -41,5 +38,10 @@ storiesOf('Moonstone', module)
 			>
 				{emptify(select('src', ['', docs, factory, logo], '')) + emptify(select('icon', ['', ...icons], 'plus')) + emptify(text('custom icon', ''))}
 			</IconButton>
-		))
+		),
+		{
+			info: {
+				text: 'The basic IconButton'
+			}
+		}
 	);

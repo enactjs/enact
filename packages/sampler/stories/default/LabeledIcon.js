@@ -4,7 +4,6 @@ import Icon, {IconBase} from '@enact/moonstone/Icon';
 import UiIcon from '@enact/ui/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
 import iconNames from './icons';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -16,9 +15,7 @@ const Config = mergeComponentMetadata('LabeledIcon', UiLabeledIconBase, UiLabele
 storiesOf('Moonstone', module)
 	.add(
 		'LabeledIcon',
-		withInfo({
-			text: 'Basic usage of LabeledIcon'
-		})(() => (
+		() => (
 			<LabeledIcon
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', ['', ...iconNames], Config, 'fullscreen')}
@@ -28,5 +25,10 @@ storiesOf('Moonstone', module)
 			>
 				{text('children', Config, 'Hello LabeledIcon')}
 			</LabeledIcon>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of LabeledIcon'
+			}
+		}
 	);

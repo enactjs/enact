@@ -4,7 +4,6 @@ import Button from '@enact/moonstone/Button';
 import Item from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, number, select} from '../../src/enact-knobs';
 
@@ -13,9 +12,7 @@ Layout.displayName = 'Layout';
 storiesOf('UI', module)
 	.add(
 		'Layout',
-		withInfo({
-			text: 'Basic usage of Layout'
-		})(() => (
+		() => (
 			<div className="debug" style={{height: ri.unit(399, 'rem')}}>
 				<Layout
 					align={select('align', ['start', 'center', 'stretch', 'end'], Layout, 'start')}
@@ -35,5 +32,10 @@ storiesOf('UI', module)
 					</Cell>
 				</Layout>
 			</div>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of Layout'
+			}
+		}
 	);

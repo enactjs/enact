@@ -8,7 +8,6 @@
  * @private
  */
 
-import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
@@ -16,6 +15,7 @@ import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import {onWindowReady} from '@enact/core/snapshot';
 import PropTypes from 'prop-types';
+import clamp from 'ramda/src/clamp';
 import React, {Component} from 'react';
 
 import ForwardRef from '../ForwardRef';
@@ -1210,10 +1210,10 @@ class ScrollableBase extends Component {
 					scrollTop: this.scrollTop
 				};
 
-			if (curHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
+			if (curHorizontalScrollbarVisible && this.horizontalScrollbarRef.current) {
 				this.horizontalScrollbarRef.current.update(updatedBounds);
 			}
-			if (curVerticalScrollbarVisible && this.verticalScrollbarRef) {
+			if (curVerticalScrollbarVisible && this.verticalScrollbarRef.current) {
 				this.verticalScrollbarRef.current.update(updatedBounds);
 			}
 			return true;

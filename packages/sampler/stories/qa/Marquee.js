@@ -1,7 +1,7 @@
 import kind from '@enact/core/kind';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Button from '@enact/moonstone/Button';
-import Divider from '@enact/moonstone/Divider';
+import Heading from '@enact/moonstone/Heading';
 import Icon from '@enact/moonstone/Icon';
 import Item from '@enact/moonstone/Item';
 import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
@@ -43,7 +43,7 @@ const MarqueeI18nSamples = I18nContextDecorator({updateLocaleProp: 'updateLocale
 
 	render: ({updateLocale}) => (
 		<div>
-			<Divider>Remeasure marquee when locale change causes a font change with different metrics</Divider>
+			<Heading showLine>Remeasure marquee when locale change causes a font change with different metrics</Heading>
 			<Button onClick={updateLocale}>change locale</Button>
 		</div>
 	)
