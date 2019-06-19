@@ -33,10 +33,10 @@ const gridListItemSizeShape = PropTypes.shape({
 /**
  * The base version of the virtual list component.
  *
- * @class VirtualListBase
+ * @class VirtualListBaseFactory
  * @memberof ui/VirtualList
  * @ui
- * @public
+ * @private
  */
 const VirtualListBaseFactory = (type) => {
 	return class VirtualListCore extends Component {
@@ -127,7 +127,7 @@ const VirtualListBaseFactory = (type) => {
 			 * Activates the component for voice control.
 			 *
 			 * @type {Boolean}
-			 * @private
+			 * @public
 			 */
 			'data-webos-voice-focused': PropTypes.bool,
 
@@ -135,7 +135,7 @@ const VirtualListBaseFactory = (type) => {
 			 * The voice control group label.
 			 *
 			 * @type {String}
-			 * @private
+			 * @public
 			 */
 			'data-webos-voice-group-label': PropTypes.string,
 
@@ -840,7 +840,7 @@ const VirtualListBaseFactory = (type) => {
  * @class VirtualListBase
  * @memberof ui/VirtualList
  * @ui
- * @private
+ * @public
  */
 const VirtualListBase = VirtualListBaseFactory(JS);
 VirtualListBase.displayName = 'ui:VirtualListBase';
@@ -856,6 +856,160 @@ VirtualListBase.displayName = 'ui:VirtualListBase';
  */
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'ui:VirtualListBaseNative';
+
+/**
+ * A callback function that receives a reference to the `scrollTo` feature.
+ *
+ * Once received, the `scrollTo` method can be called as an imperative interface.
+ *
+ * The `scrollTo` function accepts the following paramaters:
+ * - {position: {x, y}} - Pixel value for x and/or y position
+ * - {align} - Where the scroll area should be aligned. Values are:
+ *   `'left'`, `'right'`, `'top'`, `'bottom'`,
+ *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
+ * - {index} - Index of specific item. (`0` or positive integer)
+ *   This option is available for only `VirtualList` kind.
+ * - {node} - Node to scroll into view
+ * - {animate} - When `true`, scroll occurs with animation. When `false`, no
+ *   animation occurs.
+ * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
+ *   by `index` or `node`.
+ * > Note: Only specify one of: `position`, `align`, `index` or `node`
+ *
+ * Example:
+ * ```
+ *	// If you set cbScrollTo prop like below;
+ *	cbScrollTo: (fn) => {this.scrollTo = fn;}
+ *	// You can simply call like below;
+ *	this.scrollTo({align: 'top'}); // scroll to the top
+ * ```
+ *
+ * @name cbScrollTo
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {Function}
+ * @public
+ */
+
+/**
+ * Specifies how to show horizontal scrollbar.
+ *
+ * Valid values are:
+ * * `'auto'`,
+ * * `'visible'`, and
+ * * `'hidden'`.
+ *
+ * @name horizontalScrollbar
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @default 'auto'
+ * @public
+ */
+
+/**
+ * Prevents scroll by wheeling on the list.
+ *
+ * @name noScrollByWheel
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {Boolean}
+ * @default false
+ * @public
+ */
+
+/**
+ * Called when scrolling.
+ *
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+ * It is not recommended to set this prop since it can cause performance degradation.
+ * Use `onScrollStart` or `onScrollStop` instead.
+ *
+ * @name onScroll
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {Function}
+ * @param {Object} event
+ * @param {Number} event.scrollLeft Scroll left value.
+ * @param {Number} event.scrollTop Scroll top value.
+ * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+ * @public
+ */
+
+/**
+ * Called when scroll starts.
+ *
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+ * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
+ *
+ * Example:
+ * ```
+ * onScrollStart = ({scrollLeft, scrollTop, moreInfo}) => {
+ *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+ *     // do something with firstVisibleIndex and lastVisibleIndex
+ * }
+ *
+ * render = () => (
+ *     <VirtualList
+ *         ...
+ *         onScrollStart={this.onScrollStart}
+ *         ...
+ *     />
+ * )
+ * ```
+ *
+ * @name onScrollStart
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {Function}
+ * @param {Object} event
+ * @param {Number} event.scrollLeft Scroll left value.
+ * @param {Number} event.scrollTop Scroll top value.
+ * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+ * @public
+ */
+
+/**
+ * Called when scroll stops.
+ *
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+ * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
+ *
+ * Example:
+ * ```
+ * onScrollStop = ({scrollLeft, scrollTop, moreInfo}) => {
+ *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+ *     // do something with firstVisibleIndex and lastVisibleIndex
+ * }
+ *
+ * render = () => (
+ *     <VirtualList
+ *         ...
+ *         onScrollStop={this.onScrollStop}
+ *         ...
+ *     />
+ * )
+ * ```
+ *
+ * @name onScrollStop
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {Function}
+ * @param {Object} event
+ * @param {Number} event.scrollLeft Scroll left value.
+ * @param {Number} event.scrollTop Scroll top value.
+ * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+ * @public
+ */
+
+/**
+ * Specifies how to show vertical scrollbar.
+ *
+ * Valid values are:
+ * * `'auto'`,
+ * * `'visible'`, and
+ * * `'hidden'`.
+ *
+ * @name verticalScrollbar
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @default 'auto'
+ * @public
+ */
 
 const ScrollableVirtualList = (props) => (
 	<Scrollable
@@ -896,17 +1050,6 @@ const ScrollableVirtualListNative = (props) => (
 );
 
 ScrollableVirtualListNative.propTypes = /** @lends ui/VirtualList.VirtualListBaseNative.prototype */ {
-	/**
-	 * The layout direction of the list.
-	 *
-	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'vertical'
-	 * @public
-	 */
 	direction: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 
