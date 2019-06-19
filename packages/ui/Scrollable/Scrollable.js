@@ -497,7 +497,7 @@ class ScrollableBase extends Component {
 		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
 		setTimeout(() => {
 			this.scrollTo({position: {x: 0, y: 0}, animate: false});
-			
+
 			this.enqueueForceUpdate();
 		});
 	}

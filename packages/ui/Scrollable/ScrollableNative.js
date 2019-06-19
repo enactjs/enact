@@ -479,7 +479,7 @@ class ScrollableBaseNative extends Component {
 			this.childRefCurrent.containerRef.current.style.scrollBehavior = null;
 			this.childRefCurrent.scrollToPosition(0, 0);
 			this.childRefCurrent.containerRef.current.style.scrollBehavior = 'smooth';
-			
+
 			this.enqueueForceUpdate();
 		});
 	}
