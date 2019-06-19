@@ -13,7 +13,6 @@ import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
-import {onWindowReady} from '@enact/core/snapshot';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
 import React, {Component} from 'react';

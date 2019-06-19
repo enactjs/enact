@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
  
 - `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` support for resizing a window
+
 ## [3.0.0-alpha.6] - 2019-06-17
 
 ### Fixed
