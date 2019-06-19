@@ -332,7 +332,7 @@ const ExpandableItemBase = kind({
 			// When disabled, don't attach an event
 			if (!disabled) {
 				if (open) {
-					onClose(ev);
+					onClose && onClose(ev);
 				} else {
 					onOpen(ev);
 				}
