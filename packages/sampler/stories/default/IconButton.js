@@ -45,7 +45,7 @@ storiesOf('Moonstone', module)
 				>
 					{children}
 				</IconButton>
-			)
+			);
 		},
 		{
 			info: {
