@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/GridListImageItem` to support overriding the `image` CSS class name
+- `moonstone/Scroller` to scroll and to move focus to the paging control properly if the current item sticking to the top is only spottable
 
 ## [3.0.0-alpha.6] - 2019-06-17
 
