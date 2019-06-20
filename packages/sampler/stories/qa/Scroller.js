@@ -340,6 +340,16 @@ storiesOf('Scroller', module)
 		)
 	)
 	.add(
+		'With One Long Hieght Item',
+		() => (
+			<Scroller focusableScrollbar>
+				<div style={{height: '3000px'}}>
+ 					<Item style={{height: '2000px'}}>Long Hieght Item</Item>
+	 			</div>
+ 			</Scroller>
+		)
+	)
+	.add(
 		'With Nested Scroller',
 		() => {
 			let noScrollByWheel = boolean('noScrollByWheel', Scroller, false);
