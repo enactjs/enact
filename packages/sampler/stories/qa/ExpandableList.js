@@ -162,16 +162,4 @@ storiesOf('ExpandableList', module)
 		() => (
 			<ExpandableListWithAddedChildren />
 		)
-	)
-	.add(
-		'no onClose handler',
-		() => (
-			<ExpandableList
-				open
-				title="ExpandableList"
-				noAutoClose
-			>
-				{['children1', 'children2', 'children3']}
-			</ExpandableList>
-		)
 	);
