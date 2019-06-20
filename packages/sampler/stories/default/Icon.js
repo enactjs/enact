@@ -1,9 +1,8 @@
 import Icon from '@enact/moonstone/Icon';
-import Divider from '@enact/moonstone/Divider';
+import Heading from '@enact/moonstone/Heading';
 import iconNames from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
 import {select, text} from '../../src/enact-knobs';
 import emptify from '../../src/utils/emptify.js';
@@ -16,9 +15,7 @@ import logo from '../../images/icon-enact-logo.svg';
 storiesOf('Moonstone', module)
 	.add(
 		'Icon',
-		withInfo({
-			text: 'Basic usage of Icon'
-		})(() => {
+		() => {
 			const size = select('size', ['small', 'large'], Icon, 'large');
 			return (
 				<div>
@@ -29,9 +26,14 @@ storiesOf('Moonstone', module)
 					</Icon>
 					<br />
 					<br />
-					<Divider>All Icons</Divider>
+					<Heading showLine>All Icons</Heading>
 					{iconNames.map((icon, index) => <Icon key={index} size={size} title={icon}>{icon}</Icon>)}
 				</div>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'Basic usage of Icon'
+			}
+		}
 	);

@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class IncrementSliderDelayValue extends React.Component {
-	static displayName: 'IncrementSliderDelayValue'
+	static displayName = 'IncrementSliderDelayValue'
 
 	static propTypes = {
 		backgroundPercent: PropTypes.number,

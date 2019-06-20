@@ -189,20 +189,18 @@ describe('Input Specs', () => {
 		expect(actual).toBe(expected);
 	});
 
-	// The following test is marked "skip" until the Uppercase HOC can be refactored as a utility method
-	test.skip(
+	test(
 		'should display invalid message if it invalid and invalid message exists',
 		() => {
 			const subject = mount(
 				<Input invalid invalidMessage="invalid message" />
 			);
 
-			expect(subject.find('Tooltip').prop('children')).toBe('Invalid Message');
+			expect(subject.find('Tooltip').prop('children')).toBe('invalid message');
 		}
 	);
 
-	// The following test is marked "skip" until the Uppercase HOC can be refactored as a utility method
-	test.skip('should not display invalid message if it is valid', () => {
+	test('should not display invalid message if it is valid', () => {
 		const subject = mount(
 			<Input invalidMessage="invalid message" />
 		);

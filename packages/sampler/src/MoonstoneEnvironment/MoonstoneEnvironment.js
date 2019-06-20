@@ -39,7 +39,7 @@ const PanelsBase = kind({
 	render: ({children, description, noHeader, noPanel, noPanels, title, ...rest}) => (
 		!noPanels ? <Panels {...rest} onApplicationClose={reloadPage}>
 			{!noPanel ? <Panel className={css.panel}>
-				{!noHeader ? [<Header type="compact" title={title} casing="preserve" key="header" />,
+				{!noHeader ? [<Header type="compact" title={title} key="header" />,
 					<Column key="body">
 						{description ? (
 							<Cell shrink component={BodyText} className={css.description}>{description}</Cell>

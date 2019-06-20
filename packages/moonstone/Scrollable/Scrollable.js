@@ -7,18 +7,17 @@
  */
 
 import classNames from 'classnames';
-import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import handle, {forward} from '@enact/core/handle';
-import {getDirection} from '@enact/spotlight';
-import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
-import {I18nContextDecorator} from '@enact/i18n/I18nDecorator/I18nDecorator';
-import {Job} from '@enact/core/util';
-import {onWindowReady} from '@enact/core/snapshot';
 import platform from '@enact/core/platform';
+import {onWindowReady} from '@enact/core/snapshot';
+import {Job} from '@enact/core/util';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
+import Spotlight, {getDirection} from '@enact/spotlight';
+import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import Spotlight from '@enact/spotlight';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import $L from '../internal/$L';
 import {SharedState} from '../internal/SharedStateDecorator';
@@ -403,6 +402,8 @@ class ScrollableBase extends Component {
 		}
 	}
 
+	isContent = (element) => (element && this.uiRef.current && this.uiRef.current.childRefCurrent.containerRef.current.contains(element))
+
 	startScrollOnFocus = (pos) => {
 		if (pos) {
 			const
@@ -573,7 +574,7 @@ class ScrollableBase extends Component {
 	}
 
 	onKeyDown = (ev) => {
-		const {keyCode, repeat} = ev;
+		const {keyCode, repeat, target} = ev;
 
 		forward('onKeyDown', ev, this.props);
 
@@ -588,7 +589,7 @@ class ScrollableBase extends Component {
 			let direction = null;
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
-				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
+				if (this.isContent(target) && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
 					direction = isPageUp(keyCode) ? 'up' : 'down';
 					if (this.scrollByPage(direction) && overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
 						this.checkAndApplyOverscrollEffectByDirection(direction);
@@ -693,7 +694,7 @@ class ScrollableBase extends Component {
 	alertThumbAfterRendered = () => {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && spotItem && this.uiRef.current && this.uiRef.current.childRefCurrent.containerRef.current.contains(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
+		if (!Spotlight.getPointerMode() && this.isContent(spotItem) && this.uiRef.current.isUpdatedScrollThumb) {
 			this.alertThumb();
 		}
 	}
@@ -877,8 +878,8 @@ class ScrollableBase extends Component {
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
-				onWheel={this.onWheel}
 				onScroll={this.handleScroll}
+				onWheel={this.onWheel}
 				ref={this.uiRef}
 				removeEventListeners={this.removeEventListeners}
 				scrollTo={this.scrollTo}

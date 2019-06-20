@@ -2,6 +2,22 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [3.0.0-alpha.6] - 2019-06-17
+
+### Fixed
+
+- `ui/ViewManager` to correctly arrange views when initially rendering a non-zero index
+
+## [3.0.0-alpha.5] - 2019-06-10
+
+### Added
+
+- `ui/Toggleable` HOC config prop `eventProps` to allow wrapped components to specify additional event information
+
+### Fixed
+
+- `ui/ToggleItem` to send its `value` prop when toggled
+
 ## [3.0.0-alpha.4] - 2019-06-03
 
 No significant changes.
@@ -40,6 +56,8 @@ No significant changes.
 
 - `ui/Button`, `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` prop `size`
 - `ui/ToggleItem` props  `itemIcon` and `itemIconPosition` to support additional icons on ToggleItem-derived components
+
+## [2.5.3] - 2019-06-06
 
 ### Fixed
 

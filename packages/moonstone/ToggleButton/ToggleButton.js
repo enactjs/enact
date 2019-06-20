@@ -183,7 +183,14 @@ const ToggleButtonBase = kind({
 		delete rest.small;
 
 		return (
-			<Button css={css} data-webos-voice-intent="SetToggleItem" {...rest} aria-pressed={selected} selected={selected} />
+			<Button
+				data-webos-voice-intent="SetToggleItem"
+				{...rest}
+				aria-pressed={selected}
+				css={css}
+				decoration={<div className={css.toggleIndicator} />}
+				selected={selected}
+			/>
 		);
 	}
 });

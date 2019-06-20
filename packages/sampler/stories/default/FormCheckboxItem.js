@@ -7,10 +7,9 @@ import {listIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {mergeComponentMetadata, nullify} from '../../src/utils';
 
 FormCheckboxItem.displayName = 'FormCheckboxItem';
 const Config = mergeComponentMetadata('FormCheckboxItem', ItemBase, Item, UiToggleItemBase, UiToggleItem, ToggleItem, FormCheckboxItem);
@@ -18,12 +17,10 @@ const Config = mergeComponentMetadata('FormCheckboxItem', ItemBase, Item, UiTogg
 storiesOf('Moonstone', module)
 	.add(
 		'FormCheckboxItem',
-		withInfo({
-			text: 'Basic usage of FormCheckboxItem'
-		})(() => {
+		() => {
 			const iconPosition = select('iconPosition', ['before', 'after'], Config);
 			const icon = select('itemIcon', ['', ...listIcons], Config);
-			const itemIcon = (icon ? <Icon small>{icon}</Icon> : null);
+			const itemIcon = nullify(icon ? <Icon small>{icon}</Icon> : null);
 			const itemIconPosition = select('itemIconPosition', [null, 'before', 'beforeChildren', 'afterChildren', 'after'], Config);
 			return (
 				<FormCheckboxItem
@@ -37,5 +34,10 @@ storiesOf('Moonstone', module)
 					{text('children', Config, 'A Checkbox for a form')}
 				</FormCheckboxItem>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'Basic usage of FormCheckboxItem'
+			}
+		}
 	);

@@ -1,11 +1,12 @@
 import {is} from '@enact/core/keymap';
-import PropTypes from 'prop-types';
-import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
+import Accelerator from '@enact/spotlight/Accelerator';
 import Pause from '@enact/spotlight/Pause';
 import Spottable from '@enact/spotlight/Spottable';
-import Accelerator from '@enact/spotlight/Accelerator';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
+import PropTypes from 'prop-types';
+import clamp from 'ramda/src/clamp';
+import React, {Component} from 'react';
 
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -25,7 +26,8 @@ const
 	JS = 'JS',
 	Native = 'Native',
 	// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
-	getNumberValue = (index) => index | 0;
+	getNumberValue = (index) => index | 0,
+	nop = () => {};
 
 /**
  * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} and
@@ -282,14 +284,15 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		/*
-		 * Restores the data-index into the placeholder if its the only element. Tries to find a
-		 * matching child otherwise.
+		 * Restores the data-index into the placeholder if it exists. Tries to find a matching child
+		 * otherwise.
 		 */
 		lastFocusedRestore = ({key}, all) => {
-			if (all.length === 1 && 'vlPlaceholder' in all[0].dataset) {
-				all[0].dataset.index = key;
+			const placeholder = all.find(el => 'vlPlaceholder' in el.dataset);
+			if (placeholder) {
+				placeholder.dataset.index = key;
 
-				return all[0];
+				return placeholder;
 			}
 
 			return all.reduce((focused, node) => {
@@ -297,32 +300,14 @@ const VirtualListBaseFactory = (type) => {
 			}, null);
 		}
 
-		/**
-		 * Handle a Page up/down key with disabled items
-		 */
+		findSpottableItem = (indexFrom, indexTo) => {
+			const {dataSize} = this.props;
 
-		findSpottableItemWithPositionInExtent = (indexFrom, indexTo, position) => {
-			const
-				{dataSize} = this.props,
-				{dimensionToExtent} = this.uiRefCurrent;
-
-			if (0 <= indexFrom && indexFrom < dataSize &&
-				-1 <= indexTo && indexTo <= dataSize &&
-				0 <= position && position < dimensionToExtent) {
-				const
-					direction = (indexFrom < indexTo) ? 1 : -1,
-					delta = direction * dimensionToExtent,
-					diffPosition = (indexFrom % dimensionToExtent) - position,
-					// When direction is 1 (forward) and diffPosition is positive, add dimensionToExtent.
-					// When direction is -1 (backward) and diffPosition is negative, substract dimensionToExtent.
-					candidateIndex = indexFrom - diffPosition + ((direction * diffPosition > 0) ? delta : 0);
-
-				if (direction * (indexTo - candidateIndex) > 0) {
-					return candidateIndex;
-				}
+			if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
+				return -1;
+			} else {
+				return clamp(0, dataSize - 1, indexFrom);
 			}
-
-			return -1;
 		}
 
 		getNextIndex = ({index, keyCode, repeat}) => {
@@ -336,6 +321,16 @@ const VirtualListBaseFactory = (type) => {
 			const isUpKey = isUp(keyCode);
 			const isNextRow = index + dimensionToExtent < dataSize;
 			const isNextAdjacent = column < dimensionToExtent - 1 && index < (dataSize - 1);
+			const isBackward = (
+				isPrimaryDirectionVertical && isUpKey ||
+				!isPrimaryDirectionVertical && isLeftMovement ||
+				null
+			);
+			const isForward = (
+				isPrimaryDirectionVertical && isDownKey ||
+				!isPrimaryDirectionVertical && isRightMovement ||
+				null
+			);
 			let isWrapped = false;
 			let nextIndex = -1;
 			let targetIndex = -1;
@@ -365,17 +360,6 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			if (!repeat && nextIndex === -1 && wrap) {
-				const isForward = (
-					isPrimaryDirectionVertical && isDownKey ||
-					!isPrimaryDirectionVertical && isRightMovement ||
-					null
-				);
-				const isBackward = (
-					isPrimaryDirectionVertical && isUpKey ||
-					!isPrimaryDirectionVertical && isLeftMovement ||
-					null
-				);
-
 				if (isForward && this.findSpottableItem((row + 1) * dimensionToExtent, dataSize) < 0) {
 					nextIndex = this.findSpottableItem(0, index);
 					isWrapped = true;
@@ -385,18 +369,17 @@ const VirtualListBaseFactory = (type) => {
 				}
 			}
 
-			return {isWrapped, nextIndex};
+			return {isBackward, isForward, isLeftMovement, isRightMovement, isWrapped, nextIndex};
 		}
 
 		/**
 		 * Handle `onKeyDown` event
 		 */
 
-		onAcceleratedKeyDown = ({keyCode, repeat, target}) => {
+		onAcceleratedKeyDown = ({isWrapped, keyCode, nextIndex, repeat, target}) => {
 			const {cbScrollTo, spacing, wrap} = this.props;
 			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPosition} = this.uiRefCurrent;
 			const index = getNumberValue(target.dataset.index);
-			const {isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
 
 			this.isScrolledBy5way = false;
 			this.isScrolledByJump = false;
@@ -409,7 +392,7 @@ const VirtualListBaseFactory = (type) => {
 				this.lastFocusedIndex = nextIndex;
 
 				if (isNextItemInView) {
-					this.focusOnItem(nextIndex);
+					this.focusByIndex(nextIndex);
 				} else {
 					this.isScrolledBy5way = true;
 					this.isWrappedBy5way = isWrapped;
@@ -421,12 +404,12 @@ const VirtualListBaseFactory = (type) => {
 							this.pause.pause();
 							target.blur();
 						} else {
-							this.focusOnItem(nextIndex);
+							this.focusByIndex(nextIndex);
 						}
 
 						this.nodeIndexToBeFocused = nextIndex;
 					} else {
-						this.focusOnItem(nextIndex);
+						this.focusByIndex(nextIndex);
 					}
 
 					cbScrollTo({
@@ -443,12 +426,38 @@ const VirtualListBaseFactory = (type) => {
 
 		onKeyDown = (ev) => {
 			const {keyCode} = ev;
+			const direction = getDirection(keyCode);
 
-			if (getDirection(keyCode)) {
-				ev.preventDefault();
-				ev.stopPropagation();
+			if (direction) {
 				Spotlight.setPointerMode(false);
-				SpotlightAccelerator.processKey(ev, this.onAcceleratedKeyDown);
+
+				if (SpotlightAccelerator.processKey(ev, nop)) {
+					ev.stopPropagation();
+				} else {
+					const {repeat, target} = ev;
+					const index = getNumberValue(target.dataset.index);
+					const {isBackward, isForward, isLeftMovement, isRightMovement, isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
+
+					if (nextIndex >= 0) {
+						ev.preventDefault();
+						ev.stopPropagation();
+						this.onAcceleratedKeyDown({isWrapped, keyCode, nextIndex, repeat, target});
+					} else {
+						const {dataSize} = this.props;
+						const {dimensionToExtent} = this.uiRefCurrent;
+						const column = index % dimensionToExtent;
+						const row = (index - column) % dataSize / dimensionToExtent;
+						const isLeaving = isBackward && row === 0 ||
+							isForward && row === Math.floor((dataSize - 1) % dataSize / dimensionToExtent) ||
+							isLeftMovement && column === 0 ||
+							isRightMovement && column === dimensionToExtent - 1;
+
+						if (repeat && isLeaving || !isLeaving && Spotlight.move(direction)) {
+							ev.preventDefault();
+							ev.stopPropagation();
+						}
+					}
+				}
 			} else if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				this.isScrolledBy5way = false;
 			}
@@ -478,7 +487,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		focusOnItem = (index) => {
+		focusByIndex = (index) => {
 			const item = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${index}'].spottable`);
 
 			if (this.isWrappedBy5way) {
@@ -495,22 +504,15 @@ const VirtualListBaseFactory = (type) => {
 		initItemRef = (ref, index) => {
 			if (ref) {
 				if (type === JS) {
-					this.focusOnItem(index);
+					this.focusByIndex(index);
 				} else {
 					// If focusing the item of VirtuallistNative, `onFocus` in Scrollable will be called.
 					// Then VirtualListNative tries to scroll again differently from VirtualList.
 					// So we would like to skip `focus` handling when focusing the item as a workaround.
 					this.isScrolledByJump = true;
-					this.focusOnItem(index);
+					this.focusByIndex(index);
 				}
 			}
-		}
-
-		focusByIndex = (index) => {
-			// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
-			setTimeout(() => {
-				this.focusOnItem(index);
-			}, 0);
 		}
 
 		/**

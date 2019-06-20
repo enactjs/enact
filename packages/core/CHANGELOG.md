@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [3.0.0-alpha.6] - 2019-06-17
+
+No significant changes.
+
+## [3.0.0-alpha.5] - 2019-06-10
+
+No significant changes.
+
 ## [3.0.0-alpha.4] - 2019-06-03
 
 No significant changes.
@@ -19,6 +27,10 @@ No significant changes.
 ### Added
 
 - `core/util.clamp` to safely clamp a value between min and max bounds
+
+## [2.5.3] - 2019-06-06
+
+No significant changes.
 
 ## [2.5.2] - 2019-04-23
 

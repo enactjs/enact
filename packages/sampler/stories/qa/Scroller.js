@@ -1,5 +1,5 @@
 import Button from '@enact/moonstone/Button';
-import Divider from '@enact/moonstone/Divider';
+import Heading from '@enact/moonstone/Heading';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import Group from '@enact/ui/Group';
 import Item from '@enact/moonstone/Item';
@@ -182,7 +182,7 @@ storiesOf('Scroller', module)
 		'With Many ExpandableList',
 		() => (
 			<Scroller focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}>
-				<Divider>Nothing selected</Divider>
+				<Heading showLine>Nothing selected</Heading>
 				<ExpandableList
 					closeOnSelect
 					noneText="Nothing Selected"
@@ -198,7 +198,7 @@ storiesOf('Scroller', module)
 					]}
 				</ExpandableList>
 				<br />
-				<Divider>Default selected</Divider>
+				<Heading showLine>Default selected</Heading>
 				<ExpandableList
 					noneText="Nothing Selected"
 					selected={1}
@@ -207,7 +207,7 @@ storiesOf('Scroller', module)
 					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
 				<br />
-				<Divider>Default selected</Divider>
+				<Heading showLine>Default selected</Heading>
 				<ExpandableList
 					noneText="Nothing Selected"
 					selected={1}
@@ -216,7 +216,7 @@ storiesOf('Scroller', module)
 					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
 				<br />
-				<Divider>Default selected</Divider>
+				<Heading showLine>Default selected</Heading>
 				<ExpandableList
 					noneText="Nothing Selected"
 					selected={1}
@@ -225,7 +225,7 @@ storiesOf('Scroller', module)
 					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
 				<br />
-				<Divider>Multitple selected</Divider>
+				<Heading showLine>Multitple selected</Heading>
 				<ExpandableList
 					noneText="Nothing Selected"
 					select="multiple"
@@ -235,7 +235,7 @@ storiesOf('Scroller', module)
 					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
 				<br />
-				<Divider>Long contents selected</Divider>
+				<Heading showLine>Long contents selected</Heading>
 				<ExpandableList
 					noneText="Nothing Selected"
 					select="multiple"

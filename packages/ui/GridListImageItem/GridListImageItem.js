@@ -7,10 +7,10 @@
 
 import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import {Column, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import {Column, Cell} from '../Layout';
 import Icon from '../Icon';
 import Image from '../Image';
 

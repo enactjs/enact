@@ -4,9 +4,32 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-## Fixed
+### Fixed
 
+- `moonstone/GridListImageItem` to support overriding the `image` CSS class name
+
+## [3.0.0-alpha.6] - 2019-06-17
+
+### Removed
+
+- `moonstone/Divider`, `moonstone/Dialog`, and `moonstone/Heading` prop `casing`
+
+### Fixed
+
+- `moonstone/Dropdown` to support voice readout
+- `moonstone/Dropdown` remaining open after it becomes `disabled`
+
+## [3.0.0-alpha.5] - 2019-06-10
+
+### Added
+
+- `moonstone/Dropdown` property `width` to support `'small'`, `'medium'`, and `'large'` sizes
+
+### Fixed
+
+- `moonstone/Header` to center text when `centered` is used and additional controls are included by `moonstone/Panels`
 - `Fonts` for non-Latin to not intermix font weights for bold when using a combination of Latin and non-Latin glyphs
+- `moonstone/VirtualList` to restore focus to an item when scrollbars are visible
 
 ## [3.0.0-alpha.4] - 2019-06-03
 
@@ -107,17 +130,22 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/ContextualPopupDecorator` imperative methods to be correctly bound to the instance
 - `moonstone/EditableIntegerPicker`, `moonstone/Picker`, and `moonstone/RangePicker` to not error when the `min` prop exceeds the `max` prop
-- `moonstone/ExpandableInput` to retain focus when touching within the input field on touch platforms
-- `moonstone/Input` refocusing on touch on iOS
-- `moonstone/VideoPlayer` to correctly handle touch events while moving slider knobs
-- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to change spotlight focus due to touch events
-- `moonstone/Slider` to not scroll the viewport when dragging on touch platforms
-- `moonstone/VirtualList` and `moonstone/Scroller` to animate with 5-way navigation by default
+
+## [2.5.3] - 2019-06-06
+
+### Fixed
+
+- `moonstone/ContextualPopupDecorator` imperative methods to be correctly bound to the instance
 - `moonstone/ExpandableInput` to retain focus when touching within the input field on touch platforms
 - `moonstone/ExpandableList` to not error if `selected` is passed as an array to a non-multi-select list
 - `moonstone/Scroller` to allow changing spotlight focus to opposite scroll button when switching to 5way mode
+- `moonstone/ExpandableInput` to retain focus when touching within the input field on touch platforms
+- `moonstone/Input` refocusing on touch on iOS
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to change spotlight focus due to touch events
+- `moonstone/Slider` to not scroll the viewport when dragging on touch platforms
+- `moonstone/VideoPlayer` to correctly handle touch events while moving slider knobs
+- `moonstone/VirtualList` and `moonstone/Scroller` to animate with 5-way navigation by default
 
 ## [2.5.2] - 2019-04-23
 

@@ -3,7 +3,6 @@
  *
  * @example
  * <Divider
- *   casing="preserve"
  *   spacing="medium"
  * >
  *   A group of related components
@@ -54,12 +53,10 @@ const DividerBase = kind({
  * @class
  * @hoc
  * @memberof moonstone/Divider
- * @mixes i18n/Uppercase.Uppercase
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
-
 
 /**
  * A labeled divider component, ready to use in Moonstone applications.
@@ -69,7 +66,6 @@ const DividerBase = kind({
  * Usage:
  * ```
  * <Divider
- *   casing="preserve"
  *   spacing="medium"
  * >
  *   Related Settings
@@ -86,17 +82,6 @@ const DividerBase = kind({
  * @public
  */
 const Divider = HeadingDecorator(DividerBase);
-
-/**
- * The casing mode applied to the `children` text.
- *
- * @name casing
- * @type {String}
- * @default 'word'
- * @memberof moonstone/Divider.Divider.prototype
- * @see i18n/Uppercase#casing
- * @public
- */
 
 /**
  * Marquee animation trigger.
