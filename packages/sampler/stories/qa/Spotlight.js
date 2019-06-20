@@ -203,6 +203,7 @@ class DisableTest extends React.Component {
 }
 
 class PopupFocusTest extends React.Component {
+	static groupId = 'Popup'
 	static propTypes = {
 		noAnimation: PropTypes.bool,
 		noAutoDismiss: PropTypes.bool,

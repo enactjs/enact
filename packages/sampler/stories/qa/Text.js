@@ -49,7 +49,7 @@ storiesOf('Text', module)
 	.add(
 		'Tall Glyphs as Non-Latin components',
 		() => {
-			const children = select('children', prop.tallText, 'नरेंद्र मोदी');
+			const children = select('children', prop.tallText, {groupId: 'Text'}, 'नरेंद्र मोदी');
 
 			return (
 				<Scroller style={{height: '100%'}}>
