@@ -132,6 +132,14 @@
 				.focus({
 					background-color: transparent;
 					box-shadow: none;
+
+					.input {
+						color: @moon-header-input-focus-text-color;
+					}
+
+					.inputHighlight {
+						opacity: 1;
+					}
 				});
 
 				.input {
@@ -140,6 +148,10 @@
 					.input-placeholder({
 						color: @moon-header-text-color;
 					});
+				}
+
+				.inputHighlight {
+					background-color: @moon-header-input-focus-background-color;
 				}
 			}
 

@@ -14,7 +14,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	flex-grow: 1;
-	text-indent: 0.2em;
+	text-indent: @moon-input-text-indent;
 
 	&[type=number] {
 		-moz-appearance: textfield;
@@ -77,11 +77,13 @@
 
 	.inputHighlight {
 		position: absolute;
-		pointer-events: none;
-		max-width: 379px;
+		top: 6px;
+		height: @moon-input-highlight-height;
+		max-width: @moon-input-highlight-max-width;
 		overflow: hidden;
-		text-indent: 0.2em;
+		text-indent: @moon-input-text-indent;
 		letter-spacing: 0.1px;
+		pointer-events: none;
 		opacity: 0;
 		z-index: -1;
 	}
@@ -101,9 +103,9 @@
 		}
 
 		.inputHighlight {
-			max-width: 357px;
 			line-height: @moon-input-small-height;
 			height: @moon-input-decorator-small-height;
+			max-width: @moon-input-highlight-small-max-width;
 		}
 	}
 
@@ -167,7 +169,10 @@
 
 		.inputHighlight {
 			color: transparent;
-			background-color: @moon-spotlight-color;
+			background-color: transparent;
+			// Set `.inputHighlight` background color to make it appear that the text is highlighted
+			// when `.input` has transparent background and when `.decorator` has focus, but not `.input`.
+			// background-color: @moon-spotlight-color;
 		}
 
 		.focus({
@@ -181,9 +186,11 @@
 				});
 			}
 
-			.inputHighlight {
-				opacity: 1;
-			}
+			// Set `.inputHighlight` opacity to make it appear that the text is highlighted
+			// when `.input` has transparent background and when `.decorator` has focus, but not `.input`.
+			// .inputHighlight {
+			// 	opacity: 1;
+			// }
 		});
 
 		&:focus-within {
