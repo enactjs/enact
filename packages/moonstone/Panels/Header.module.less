@@ -22,6 +22,7 @@
 	// Remove the built-in h1 and h2 margins
 	.decorator,
 	.decorator .input,
+	.decorator .inputHighlight,
 	.title,
 	.titleBelow,
 	.subTitleBelow {
@@ -29,6 +30,7 @@
 	}
 
 	.decorator .input,
+	.decorator .inputHighlight,
 	.title {
 		.moon-header-text();
 		text-indent: 0.05em;  // Fix for characters like `j` being left-truncated because of being too close to the edge
@@ -37,6 +39,10 @@
 	.decorator {
 		padding: 0;
 		margin: -2px 3px 0 -3px; // Negative 3px here to allow the decorator title text to horizontally align with the rest of the header text
+
+		.inputHighlight {
+			max-width: none;
+		}
 	}
 
 	.titleBelow,
@@ -76,6 +82,11 @@
 			width: 100%;
 		}
 
+
+		.inputHighlight {
+			max-width: 100%;
+		}
+
 		.titleBelow,
 		.subTitleBelow {
 			line-height: 1.4em;
@@ -91,6 +102,7 @@
 		}
 
 		.input,
+		.inputHighlight,
 		.title {
 			font-size: @moon-small-header-font-size;
 			display: inline;
@@ -119,6 +131,7 @@
 
 				.focus({
 					background-color: transparent;
+					box-shadow: none;
 				});
 
 				.input {

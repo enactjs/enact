@@ -60,17 +60,30 @@
 	box-sizing: border-box;
 	vertical-align: middle;
 
-	.input {
+	.input,
+	.inputHighlight {
 		font-size: @moon-input-font-size;
 		font-weight: @moon-input-font-weight;
 	}
 
 	.input,
+	.inputHighlight,
 	.iconBefore,
 	.iconAfter {
 		line-height: @moon-input-height;
 		height: @moon-input-height;
 		vertical-align: middle;
+	}
+
+	.inputHighlight {
+		position: absolute;
+		pointer-events: none;
+		max-width: 379px;
+		overflow: hidden;
+		text-indent: 0.2em;
+		letter-spacing: 0.1px;
+		opacity: 0;
+		z-index: -1;
 	}
 
 	&.small {
@@ -85,6 +98,12 @@
 		.input {
 			font-size: @moon-input-small-font-size;
 			height: @moon-input-small-height;
+		}
+
+		.inputHighlight {
+			max-width: 357px;
+			line-height: @moon-input-small-height;
+			height: @moon-input-decorator-small-height;
 		}
 	}
 
@@ -146,6 +165,11 @@
 			color: @moon-red;
 		}
 
+		.inputHighlight {
+			color: transparent;
+			background-color: @moon-spotlight-color;
+		}
+
 		.focus({
 			background-color: @moon-input-decorator-focus-bg-color;
 			color: @moon-input-focus-text-color;
@@ -155,6 +179,10 @@
 				.input-placeholder({
 					color: @moon-input-placeholder-focus-color;
 				});
+			}
+
+			.inputHighlight {
+				opacity: 1;
 			}
 		});
 

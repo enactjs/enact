@@ -247,7 +247,7 @@ const InputBase = kind({
 	styles: {
 		css: componentCss,
 		className: 'decorator',
-		publicClassNames: ['decorator', 'input']
+		publicClassNames: ['decorator', 'input', 'inputHighlight']
 	},
 
 	handlers: {
@@ -292,6 +292,7 @@ const InputBase = kind({
 		return (
 			<div {...rest} disabled={disabled}>
 				<InputDecoratorIcon position="before" size={size}>{iconBefore}</InputDecoratorIcon>
+				<span className={css.inputHighlight}>{value}</span>
 				<input
 					{...inputProps}
 					{...voiceProps}
