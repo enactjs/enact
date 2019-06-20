@@ -334,7 +334,7 @@ const ExpandableItemBase = kind({
 				if (open) {
 					onClose && onClose(ev);
 				} else {
-					onOpen(ev);
+					onOpen && onOpen(ev);
 				}
 			}
 		}
