@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/ExpandableItem.ExpandableItemBase` to not error if `onClose` or `onOpen` was not supplied
 - `moonstone/GridListImageItem` to support overriding the `image` CSS class name
 
 ## [3.0.0-alpha.6] - 2019-06-17
