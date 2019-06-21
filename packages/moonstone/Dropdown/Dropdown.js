@@ -417,12 +417,12 @@ const DropdownBase = kind({
  * @public
  */
 const DropdownDecorator = compose(
-	I18nContextDecorator(
-		{rtlProp: 'rtl'}
-	),
 	Pure({propComparators: {
 		children: compareChildren
 	}}),
+	I18nContextDecorator(
+		{rtlProp: 'rtl'}
+	),
 	Changeable({
 		change: 'onSelect',
 		prop: 'selected'
