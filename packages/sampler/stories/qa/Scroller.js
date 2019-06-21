@@ -285,7 +285,7 @@ storiesOf('Scroller', module)
 	.add(
 		'Test scrolling to boundary with small overflow',
 		() => {
-			const size = number('Spacer size', 100, {max: 300, min: 0, range: true});
+			const size = number('Spacer size', Scroller, {max: 300, min: 0, range: true}, 100);
 			return (
 				<Scroller style={{height: ri.scaleToRem(200)}}>
 					<Item>1</Item>
@@ -298,11 +298,11 @@ storiesOf('Scroller', module)
 	.add(
 		'Test scrolling to boundary with long overflow',
 		() => {
-			const size = number('Spacer size', 200, {max: 300, min: 0, range: true});
+			const size = number('Spacer size', Scroller, {max: 300, min: 0, range: true}, 200);
 			return (
 				<Scroller
 					style={{height: ri.scaleToRem(200)}}
-					focusableScrollbar={boolean('focusableScrollbar', {}, true)}
+					focusableScrollbar={boolean('focusableScrollbar', Scroller, true)}
 				>
 					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
 					<Item>1</Item>

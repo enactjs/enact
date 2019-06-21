@@ -426,11 +426,11 @@ storiesOf('Spotlight', module)
 		'Popup Navigation',
 		() => (
 			<PopupFocusTest
-				noAnimation={boolean('noAnimation', PopupFocusTest, false)}
-				noAutoDismiss={boolean('noAutoDismiss', PopupFocusTest, false)}
-				scrimType={select('scrimType', ['none', 'transparent', 'translucent'], PopupFocusTest, 'translucent')}
-				showCloseButton={boolean('showCloseButton', PopupFocusTest, true)}
-				spotlightRestrict={select('spotlightRestrict', ['self-first', 'self-only'], PopupFocusTest, 'self-only')}
+				noAnimation={boolean('noAnimation', Popup, false)}
+				noAutoDismiss={boolean('noAutoDismiss', Popup, false)}
+				scrimType={select('scrimType', ['none', 'transparent', 'translucent'], Popup, 'translucent')}
+				showCloseButton={boolean('showCloseButton', Popup, true)}
+				spotlightRestrict={select('spotlightRestrict', ['self-first', 'self-only'], Popup, 'self-only')}
 			/>
 		)
 	)

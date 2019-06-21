@@ -1,9 +1,10 @@
 import 'core-js';
-import {addParameters} from '@storybook/react';
+import {addParameters, addDecorator} from '@storybook/react';
 import {create} from '@storybook/theming';
+import {withInfo} from '@storybook/addon-info';
 import configure from '../src/configure';
 
-const stories = require.context('../stories/default', true, /.js$/);
+const stories = require.context('../stories/default', false, /.js$/);
 
 addParameters({
 	options: {
@@ -19,5 +20,31 @@ addParameters({
 		panelPosition: 'bottom'
 	}
 });
+
+// Set addon-info defaults
+addDecorator(withInfo({
+	propTables: null, // Disable all propTables
+	// Custom styling to ensure content fits well and potential scrollbars aren't under the
+	// overlay close button
+	styles: {
+		info: {
+			overflow: 'hidden',
+			padding: '25px 0px 0px 0px'
+		},
+		infoPage: {
+			overflow: 'auto',
+			height: '100%',
+			padding: '0px 20px'
+		},
+		infoBody: {
+			marginTop: '0px'
+		},
+		children: {
+			// backgroundColor: 'purple',  // For easier debugging
+			width: '100%',
+			height: '100%'
+		}
+	}
+}));
 
 configure(stories, module);

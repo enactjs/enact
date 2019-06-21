@@ -3,7 +3,7 @@ import {addParameters} from '@storybook/react';
 import {create} from '@storybook/theming';
 import configure from '../src/configure';
 
-const stories = require.context('../stories/qa', true, /.js$/);
+const stories = require.context('../stories/qa', false, /.js$/);
 
 addParameters({
 	options: {
