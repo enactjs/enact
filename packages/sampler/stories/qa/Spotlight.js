@@ -317,18 +317,18 @@ storiesOf('Spotlight', module)
 	.add(
 		'Multiple Buttons',
 		() => (
-			<Row>
-				<Cell>
+			<Row align="center space-evenly">
+				<Cell shrink>
 					<Button onClick={action('onClick')}>
 						One
 					</Button>
 				</Cell>
-				<Cell>
+				<Cell shrink>
 					<Button onClick={action('onClick')}>
 						Two
 					</Button>
 				</Cell>
-				<Cell>
+				<Cell shrink>
 					<Button onClick={action('onClick')}>
 						Three
 					</Button>
