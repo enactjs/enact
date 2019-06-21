@@ -25,7 +25,7 @@ import ToggleItem from '@enact/moonstone/ToggleItem';
 import Scroller from '@enact/moonstone/Scroller';
 import Slider from '@enact/moonstone/Slider';
 import Spotlight from '@enact/spotlight';
-import {Row} from '@enact/ui/Layout';
+import {Row, Cell} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
@@ -297,7 +297,7 @@ class FocusedAndDisabled extends React.Component {
 				</ol>
 				<Button onClick={this.handleClear}>Enable All</Button>
 				{this.tests.map((comp, index) => (
-					<Row key={`row-${index}`}>
+					<div key={`row-${index}`}>
 						{/* eslint-disable-next-line react/jsx-no-bind */}
 						<IconButton onTap={() => this.select(index)}>
 							arrowlargeright
@@ -306,7 +306,7 @@ class FocusedAndDisabled extends React.Component {
 							disabled: this.state.index === index,
 							spotlightId: `component-${index}`
 						})}
-					</Row>
+					</div>
 				))}
 			</Scroller>
 		);
@@ -317,17 +317,23 @@ storiesOf('Spotlight', module)
 	.add(
 		'Multiple Buttons',
 		() => (
-			<div>
-				<Button onClick={action('onClick')}>
-					One
-				</Button>
-				<Button onClick={action('onClick')}>
-					Two
-				</Button>
-				<Button onClick={action('onClick')}>
-					Three
-				</Button>
-			</div>
+			<Row align="center space-evenly">
+				<Cell shrink>
+					<Button onClick={action('onClick')}>
+						One
+					</Button>
+				</Cell>
+				<Cell shrink>
+					<Button onClick={action('onClick')}>
+						Two
+					</Button>
+				</Cell>
+				<Cell shrink>
+					<Button onClick={action('onClick')}>
+						Three
+					</Button>
+				</Cell>
+			</Row>
 		)
 	)
 	.add(
