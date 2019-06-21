@@ -13,7 +13,7 @@ storiesOf('Moonstone', module)
 		() => (
 			<DayPicker
 				aria-label={text('aria-label', DayPicker)}
-				dayNameLength={select('dayNameLength', ['short', 'medium', 'long', 'full'], 'long')}
+				dayNameLength={select('dayNameLength', ['short', 'medium', 'long', 'full'], DayPicker, 'long')}
 				disabled={boolean('disabled', DayPicker)}
 				everyDayText={text('everyDayText', DayPicker)}
 				everyWeekdayText={text('everyWeekdayText', DayPicker)}

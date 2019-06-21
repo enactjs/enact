@@ -6,7 +6,6 @@ import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {boolean as storybookBoolean} from '@storybook/addon-knobs';
 import css from './Button.module.less';
 
 import {boolean, select, text} from '../../src/enact-knobs';
@@ -34,7 +33,7 @@ storiesOf('Button', module)
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', prop.icons, Config)}
-				minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
+				minWidth={boolean('minWidth', Config, true) ? void 0 : false}
 				selected={boolean('selected', Config)}
 				size={select('size', ['small', 'large'], Config)}
 			>
@@ -50,7 +49,7 @@ storiesOf('Button', module)
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', prop.icons, Config)}
-				minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
+				minWidth={boolean('minWidth', Config, true) ? void 0 : false}
 				selected={boolean('selected', Config)}
 				size={select('size', ['small', 'large'], Config)}
 			>
@@ -66,7 +65,7 @@ storiesOf('Button', module)
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', prop.icons, Config)}
-				minWidth={storybookBoolean('minWidth', false) ? void 0 : false}
+				minWidth={boolean('minWidth', Config, false) ? void 0 : false}
 				selected={boolean('selected', Config)}
 				size={select('size', ['small', 'large'], Config)}
 			>
@@ -83,7 +82,7 @@ storiesOf('Button', module)
 					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 					disabled={boolean('disabled', Config)}
 					icon={select('icon', prop.icons, Config)}
-					minWidth={storybookBoolean('minWidth', true) ? void 0 : false}
+					minWidth={boolean('minWidth', Config, true) ? void 0 : false}
 					selected={boolean('selected', Config)}
 					size={select('size', ['small', 'large'], Config)}
 				>
