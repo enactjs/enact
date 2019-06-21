@@ -25,7 +25,7 @@ import ToggleItem from '@enact/moonstone/ToggleItem';
 import Scroller from '@enact/moonstone/Scroller';
 import Slider from '@enact/moonstone/Slider';
 import Spotlight from '@enact/spotlight';
-import {Row} from '@enact/ui/Layout';
+import {Row, Cell} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
@@ -317,17 +317,23 @@ storiesOf('Spotlight', module)
 	.add(
 		'Multiple Buttons',
 		() => (
-			<div>
-				<Button onClick={action('onClick')}>
-					One
-				</Button>
-				<Button onClick={action('onClick')}>
-					Two
-				</Button>
-				<Button onClick={action('onClick')}>
-					Three
-				</Button>
-			</div>
+			<Row>
+				<Cell>
+					<Button onClick={action('onClick')}>
+						One
+					</Button>
+				</Cell>
+				<Cell>
+					<Button onClick={action('onClick')}>
+						Two
+					</Button>
+				</Cell>
+				<Cell>
+					<Button onClick={action('onClick')}>
+						Three
+					</Button>
+				</Cell>
+			</Row>
 		)
 	)
 	.add(
