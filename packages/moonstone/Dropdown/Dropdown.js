@@ -19,6 +19,7 @@
 import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {handle, forKey, forward} from '@enact/core/handle';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Spotlight from '@enact/spotlight';
 import Changeable from '@enact/ui/Changeable';
 import Toggleable from '@enact/ui/Toggleable';
@@ -56,6 +57,7 @@ const compareChildren = (a, b) => {
 	return true;
 };
 const isSelectedValid = ({children, selected}) => Array.isArray(children) && children[selected] != null;
+const scrollOffset = 2;
 
 const DropdownButton = kind({
 	name: 'DropdownButton',
@@ -167,20 +169,15 @@ class DropdownList extends React.Component {
 		// eslint-disable-next-line react/no-find-dom-node
 		this.node = ReactDOM.findDOMNode(this);
 		Spotlight.set(this.node.dataset.spotlightId, {leaveFor: {up: '', down: ''}});
+		this.isScrolledIntoView = false;
 	}
 
 	componentDidUpdate () {
-		if (isSelectedValid(this.props)) {
-			const {nodeToFocus, nodeToScroll} = this.getNodeToFocus(this.props.selected);
-
-			this.scrollTo({animate: false, node: nodeToScroll});
-			Spotlight.focus(nodeToFocus);
-		}
+		this.scrollIntoView();
 	}
 
 	getNodeToFocus = (selected) => {
-		const offset = 2;
-		const scrollIndex = selected > offset ? selected - offset : 0;
+		const scrollIndex = selected > scrollOffset ? selected - scrollOffset : 0;
 
 		return {
 			nodeToFocus: this.node.querySelector(`[data-index='${selected}']`),
@@ -190,6 +187,18 @@ class DropdownList extends React.Component {
 
 	getScrollTo = (scrollTo) => {
 		this.scrollTo = scrollTo;
+	}
+
+	scrollIntoView = () => {
+		if (!this.isScrolledIntoView) {
+			if (isSelectedValid(this.props)) {
+				const {nodeToFocus, nodeToScroll} = this.getNodeToFocus(this.props.selected);
+
+				this.scrollTo({animate: false, node: nodeToScroll});
+				Spotlight.focus(nodeToFocus);
+			}
+			this.isScrolledIntoView = true;
+		}
 	}
 
 	render () {
@@ -310,7 +319,15 @@ const DropdownBase = kind({
 	handlers: {
 		onKeyDown: handle(
 			forward('onKeyDown'),
-			(ev, props) => forKey('left', ev, props) || forKey('right', ev, props),
+			(ev, props) => {
+				const {rtl} = props;
+				const isLeft = forKey('left', ev, props);
+				const isRight = forKey('right', ev, props);
+				const isLeftMovement = !rtl && isLeft || rtl && isRight;
+				const isRightMovement = !rtl && isRight || rtl && isLeft;
+
+				return isLeftMovement && typeof ev.target.dataset.index !== 'undefined' || isRightMovement;
+			},
 			forward('onClose')
 		),
 		onSelect: handle(
@@ -400,6 +417,9 @@ const DropdownBase = kind({
  * @public
  */
 const DropdownDecorator = compose(
+	I18nContextDecorator(
+		{rtlProp: 'rtl'}
+	),
 	Pure({propComparators: {
 		children: compareChildren
 	}}),
