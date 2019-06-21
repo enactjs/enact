@@ -9,6 +9,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableItem.ExpandableItemBase` to not error if `onClose` or `onOpen` was not supplied
 - `moonstone/GridListImageItem` to support overriding the `image` CSS class name
 - `moonstone/VirtualList` to scroll to the focused item when navigating out of the viewport via 5-way
+- `moonstone/Dropdown` to scroll to and focus the selected item when opened
 
 ## [3.0.0-alpha.6] - 2019-06-17
 
