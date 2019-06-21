@@ -297,7 +297,7 @@ class FocusedAndDisabled extends React.Component {
 				</ol>
 				<Button onClick={this.handleClear}>Enable All</Button>
 				{this.tests.map((comp, index) => (
-					<Row key={`row-${index}`}>
+					<div key={`row-${index}`}>
 						{/* eslint-disable-next-line react/jsx-no-bind */}
 						<IconButton onTap={() => this.select(index)}>
 							arrowlargeright
@@ -306,7 +306,7 @@ class FocusedAndDisabled extends React.Component {
 							disabled: this.state.index === index,
 							spotlightId: `component-${index}`
 						})}
-					</Row>
+					</div>
 				))}
 			</Scroller>
 		);
