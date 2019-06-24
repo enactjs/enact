@@ -340,7 +340,7 @@ storiesOf('Scroller', module)
 		)
 	)
 	.add(
-		'With One Long Hieght Item',
+		'With One Long Height Item',
 		() => (
 			<Scroller focusableScrollbar>
 				<div style={{height: '1220px'}}>
