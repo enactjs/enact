@@ -1,11 +1,11 @@
-import SwitchItem from '@enact/moonstone/SwitchItem';
 import Item from '@enact/moonstone/Item';
+import SwitchItem from '@enact/moonstone/SwitchItem';
 import {ActivityPanels, Panel} from '@enact/moonstone/Panels';
 import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
-import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import ri from '@enact/ui/resolution';
-import React, {useState} from 'react';
+import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
+import React, {useState} from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
