@@ -22,6 +22,7 @@
 	// Remove the built-in h1 and h2 margins
 	.decorator,
 	.decorator .input,
+	.decorator .inputHighlight,
 	.title,
 	.titleBelow,
 	.subTitleBelow {
@@ -29,6 +30,7 @@
 	}
 
 	.decorator .input,
+	.decorator .inputHighlight,
 	.title {
 		.moon-header-text();
 		text-indent: 0.05em;  // Fix for characters like `j` being left-truncated because of being too close to the edge
@@ -76,6 +78,10 @@
 			width: 100%;
 		}
 
+		.inputHighlight {
+			max-width: 100%;
+		}
+
 		.titleBelow,
 		.subTitleBelow {
 			line-height: 1.4em;
@@ -91,6 +97,7 @@
 		}
 
 		.input,
+		.inputHighlight,
 		.title {
 			font-size: @moon-small-header-font-size;
 			display: inline;
@@ -119,6 +126,15 @@
 
 				.focus({
 					background-color: transparent;
+					box-shadow: none;
+
+					.input {
+						color: @moon-header-input-focus-text-color;
+					}
+
+					.inputHighlight {
+						opacity: 1;
+					}
 				});
 
 				.input {
@@ -127,6 +143,10 @@
 					.input-placeholder({
 						color: @moon-header-text-color;
 					});
+				}
+
+				.inputHighlight {
+					background-color: @moon-header-input-focus-background-color;
 				}
 			}
 

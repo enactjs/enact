@@ -33,6 +33,11 @@ const select = (name, items, Config, selectedValue) => {
 		Config.defaultProps = {};
 	}
 
+	// If there's no group ID but there is a display name, use that for the group ID
+	if (Config.displayName && !Config.groupId) {
+		Config.groupId = Config.displayName;
+	}
+
 	const defaultValue = (typeof selectedValue === 'undefined') ?
 		Config.defaultProps[name] :
 		selectedValue;

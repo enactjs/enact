@@ -498,6 +498,7 @@ const VirtualListBaseFactory = (type) => {
 									this.onAcceleratedKeyDown({keyCode, nextIndex: getNumberValue(nextTargetIndex), repeat, target});
 								}
 							}
+
 						}
 					} else if (
 						directions.right && repeat ||

@@ -92,7 +92,7 @@ storiesOf('Moonstone', module)
 				<div
 					style={{
 						transformOrigin: 'top',
-						transform: 'scale(' + number('video scale', 1, {range: true, min: 0.05, max: 1, step: 0.01}) + ')',
+						transform: 'scale(' + number('video scale', Config, {range: true, min: 0.05, max: 1, step: 0.01}, 1) + ')',
 						outline: 'teal dashed 1px',
 						height: '70vh'
 					}}
