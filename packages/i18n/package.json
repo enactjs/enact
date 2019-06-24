@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@enact/core": "^3.0.0-alpha.6",
+    "ilib-webos-tv": "^14.2.0-webostv1",
     "prop-types": "^15.7.2",
     "ramda": "^0.24.1",
     "react": "^16.8.0",

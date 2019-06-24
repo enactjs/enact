@@ -33,6 +33,7 @@
     "@enact/spotlight": "^3.0.0-alpha.6",
     "@enact/ui": "^3.0.0-alpha.6",
     "classnames": "^2.2.5",
+    "ilib-webos-tv": "^14.2.0-webostv1",
     "invariant": "^2.2.2",
     "prop-types": "^15.7.2",
     "ramda": "^0.24.1",

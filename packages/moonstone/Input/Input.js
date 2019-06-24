@@ -282,6 +282,7 @@ const InputBase = kind({
 	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, size, small, type, value, ...rest}) => {
 		const inputProps = extractInputProps(rest);
 		const voiceProps = extractVoiceProps(rest);
+		console.log('input.render', rest);
 		delete rest.dismissOnEnter;
 		delete rest.invalid;
 		delete rest.invalidMessage;

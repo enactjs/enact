@@ -1,5 +1,6 @@
+import LocaleInfo from 'ilib-webos-tv/lib/LocaleInfo';
+
 import {isNonLatinLocale, isRtlLocale} from '../locale';
-import LocaleInfo from '../ilib/lib/LocaleInfo';
 
 const base = 'enact-locale-';
 

@@ -1,7 +1,7 @@
 /* global ILIB_MOONSTONE_PATH */
 
 import {getIStringFromBundle} from '@enact/i18n/src/resBundle';
-import ResBundle from '@enact/i18n/ilib/lib/ResBundle';
+import ResBundle from 'ilib-webos-tv/lib/ResBundle';
 
 // The ilib.ResBundle for the active locale used by $L
 let resBundle;

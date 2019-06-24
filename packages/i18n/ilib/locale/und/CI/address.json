@@ -1,1 +1,0 @@
-{"formats":{"default":"{streetAddress} {locality}\n{country}","nocountry":"{streetAddress} {locality}"},"startAt":"end","fields":[{"name":"locality","line":"last","pattern":"(([A-zÀÁÂÄÇÈÉÊËÌÍÎÏÒÓÔÙÚÛàáâçèéêëìíîïòóôùúû]+)(\\s[0-9]{2})?)$"}]}
