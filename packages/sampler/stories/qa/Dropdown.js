@@ -31,6 +31,7 @@ storiesOf('Dropdown', module)
 				size={select('size', ['small', 'large'], Config)}
 				title={text('title', Config, 'Dropdown')}
 				style={{position: 'absolute', top: 'calc(50% - 4rem)'}}
+				width={select('width', ['small', 'medium', 'large'], Config)}
 			>
 				{['Option 1', 'Option 2']}
 			</Dropdown>
@@ -39,6 +40,7 @@ storiesOf('Dropdown', module)
 		'with defaultSelected in 20 options',
 		() => (
 			<Dropdown
+				defaultSelected={10}
 				direction={select('direction', ['up', 'down'], Config)}
 				disabled={boolean('disabled', Config)}
 				onClose={action('onClose')}
@@ -46,7 +48,7 @@ storiesOf('Dropdown', module)
 				onSelect={action('onSelect')}
 				size={select('size', ['small', 'large'], Config)}
 				title={text('title', Config, 'Dropdown')}
-				defaultSelected={10}
+				width={select('width', ['small', 'medium', 'large'], Config)}
 			>
 				{items(30)}
 			</Dropdown>
@@ -62,6 +64,7 @@ storiesOf('Dropdown', module)
 				onSelect={action('onSelect')}
 				size={select('size', ['small', 'large'], Config)}
 				title={text('title', Config, 'Dropdown')}
+				width={select('width', ['small', 'medium', 'large'], Config)}
 			>
 				{items(10, 'Looooooooooooooooooooooong')}
 			</Dropdown>
@@ -79,6 +82,7 @@ storiesOf('Dropdown', module)
 					size={select('size', ['small', 'large'], Config)}
 					title={text('title', Config, 'Dropdown')}
 					style={{position: 'absolute', top: 'calc(50% - 4rem)'}}
+					width={select('width', ['small', 'medium', 'large'], Config)}
 				>
 					{items(5)}
 				</Dropdown>
@@ -90,6 +94,7 @@ storiesOf('Dropdown', module)
 					onSelect={action('onSelect')}
 					size={select('size', ['small', 'large'], Config)}
 					title={text('title', Config, 'Dropdown')}
+					width={select('width', ['small', 'medium', 'large'], Config)}
 				>
 					{items(5)}
 				</Dropdown>
@@ -108,6 +113,7 @@ storiesOf('Dropdown', module)
 					size={select('size', ['small', 'large'], Config)}
 					title={text('title', Config, 'Dropdown')}
 					style={{position: 'absolute', top: 'calc(50% - 4rem)'}}
+					width={select('width', ['small', 'medium', 'large'], Config)}
 				>
 					{list}
 				</Dropdown>

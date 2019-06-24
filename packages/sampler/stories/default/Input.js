@@ -22,6 +22,7 @@ storiesOf('Moonstone', module)
 		'Input',
 		() => (
 			<Input
+				autoFocus={boolean('autoFocus', Config)}
 				onChange={action('onChange')}
 				disabled={boolean('disabled', Config)}
 				dismissOnEnter={boolean('dismissOnEnter', Config)}
