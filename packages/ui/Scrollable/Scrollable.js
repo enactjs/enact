@@ -165,6 +165,14 @@ class ScrollableBase extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
+		 * Called when resizing window
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		handleResize: PropTypes.func,
+
+		/**
 		 * Specifies how to show horizontal scrollbar.
 		 *
 		 * Valid values are:
@@ -496,6 +504,11 @@ class ScrollableBase extends Component {
 	handleResizeWindow = () => {
 		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
 		setTimeout(() => {
+			const {handleResize} = this.props;
+
+			if (handleResize) {
+				handleResize();
+			}
 			this.scrollTo({position: {x: 0, y: 0}, animate: false});
 
 			this.enqueueForceUpdate();
@@ -1322,6 +1335,7 @@ class ScrollableBase extends Component {
 		delete rest.applyOverscrollEffect;
 		delete rest.cbScrollTo;
 		delete rest.clearOverscrollEffect;
+		delete rest.handleResize;
 		delete rest.horizontalScrollbar;
 		delete rest.noScrollByWheel;
 		delete rest.onFlick;
