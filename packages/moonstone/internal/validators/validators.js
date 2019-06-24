@@ -75,6 +75,22 @@ export const validateStepped = (value, min, step, component, valueName = '"value
 		// Ignore fractional steps as floating point math can give inconsistent results (1 % 0.1 != 0)
 		if (step && step === Math.floor(step) && (value - min) % step !== 0) {
 			warn(`Warning: ${component} ${valueName} (${value}) must be evenly divisible by ${stepName} (${step})`);
+			return true;
 		}
+	}
+	return false;
+};
+
+export const validateSteppedOnce = (thing, {component, minName = 'min', stepName = 'step', valueName = 'value'}) => {
+	if (__DEV__) {
+		let displayed;
+		return (props) => {
+			if (!displayed) {
+				displayed = validateStepped(props[valueName], props[minName], props[stepName], component, valueName, stepName);
+		}
+			return thing(props);
+		};
+	} else {
+		return thing;
 	}
 };
