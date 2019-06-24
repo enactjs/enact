@@ -18,7 +18,6 @@ import {platform} from '@enact/core/platform';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {perfNow, Job} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
-import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {toUpperCase} from '@enact/i18n/util';
 import Spotlight from '@enact/spotlight';
 import {SpotlightContainerDecorator} from '@enact/spotlight/SpotlightContainerDecorator';
@@ -30,6 +29,7 @@ import {FloatingLayerContext} from '@enact/ui/FloatingLayer/FloatingLayerDecorat
 import Media from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
+import DurationFmt from 'ilib-webos-tv/lib/DurationFmt';
 import equals from 'ramda/src/equals';
 import PropTypes from 'prop-types';
 import React from 'react';

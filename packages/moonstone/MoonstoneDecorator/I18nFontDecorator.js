@@ -1,5 +1,5 @@
 import hoc from '@enact/core/hoc';
-import ilib from 'ilib-webos-tv/lib/ilib';
+import ilib from 'ilib-webos-tv';
 import React from 'react';
 import PropTypes from 'prop-types';
 

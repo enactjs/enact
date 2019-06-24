@@ -9,7 +9,7 @@
 import {on, off} from '@enact/core/dispatcher';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
-import ilib from 'ilib-webos-tv/lib/ilib';
+import ilib from 'ilib-webos-tv';
 import PropTypes from 'prop-types';
 import React from 'react';
 

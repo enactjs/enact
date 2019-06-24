@@ -7,11 +7,11 @@
  */
 
 import hoc from '@enact/core/hoc';
+import ilib from 'ilib-webos-tv';
+import IString from 'ilib-webos-tv/lib/IString';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import ilib from '../ilib/lib/ilib';
-import IString from '../ilib/lib/IString';
 import {I18nContextDecorator} from '../I18nDecorator';
 import {createResBundle, getIStringFromBundle, getResBundle} from '../src/resBundle';
 

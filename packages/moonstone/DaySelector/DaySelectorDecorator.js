@@ -1,9 +1,9 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {coerceArray, memoize} from '@enact/core/util';
-import ilib from '@enact/i18n';
-import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
-import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
+import ilib from 'ilib-webos-tv';
+import LocaleInfo from 'ilib-webos-tv/lib/LocaleInfo';
+import DateFmt from 'ilib-webos-tv/lib/DateFmt';
 import PropTypes from 'prop-types';
 import React from 'react';
 

@@ -17,11 +17,9 @@
  * limitations under the License.
  */
 
-import ilib from 'ilib-webos-tv/lib/ilib';
+import ilib from 'ilib-webos-tv';
 
 import './dates';
-
-//import ilib from '../ilib/lib/ilib';
 
 import Loader from './Loader';
 import {updateLocale} from '../locale';

@@ -9,8 +9,8 @@ import handle, {call, forKey, forProp, forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {memoize} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
-import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import Changeable from '@enact/ui/Changeable';
+import DateFactory from 'ilib-webos-tv/lib/DateFactory';
 import PropTypes from 'prop-types';
 import React from 'react';
 

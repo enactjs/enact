@@ -12,9 +12,9 @@
  * @exports DatePickerBase
  */
 
-import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
-import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 import Pure from '@enact/ui/internal/Pure';
+import DateFactory from 'ilib-webos-tv/lib/DateFactory';
+import DateFmt from 'ilib-webos-tv/lib/DateFmt';
 
 import DateTimeDecorator from '../internal/DateTimeDecorator';
 import Skinnable from '../Skinnable';

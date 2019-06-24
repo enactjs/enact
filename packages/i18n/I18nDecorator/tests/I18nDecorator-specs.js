@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-no-bind */
 
-import React from 'react';
 import {shallow, mount} from 'enzyme';
+import ilib from 'ilib-webos-tv';
+import React from 'react';
 
-import ilib from '../../ilib/lib/ilib.js';
 import {updateLocale} from '../../locale';
 import {I18nContextDecorator, I18nDecorator} from '../I18nDecorator';
 
