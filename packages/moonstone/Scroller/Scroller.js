@@ -312,7 +312,7 @@ class ScrollerBase extends Component {
 				pos = isVerticalDirection ? top : left,
 				max = isVerticalDirection ? maxTop : maxLeft;
 
-			if (pos > 0 && pos < max) {
+			if (pos >= 0 && pos <= max) {
 				this.props.scrollAndFocusScrollbarButton(direction);
 			}
 		}

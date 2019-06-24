@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/GridListImageItem` to support overriding the `image` CSS class name
 - `moonstone/VirtualList` to scroll to the focused item when navigating out of the viewport via 5-way
 - `moonstone/Dropdown` to scroll to and focus the selected item when opened
+- `moonstone/Scroller` to scroll and to move focus to the paging control properly if the current item sticking to the top is only spottable
 
 ## [3.0.0-alpha.6] - 2019-06-17
 
