@@ -1,8 +1,10 @@
 import SwitchItem from '@enact/moonstone/SwitchItem';
+import Item from '@enact/moonstone/Item';
+import {ActivityPanels, Panel} from '@enact/moonstone/Panels';
 import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
 import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import ri from '@enact/ui/resolution';
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
@@ -20,12 +22,12 @@ const
 	items = [],
 	defaultDataSize = 1000,
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderItem = (size) => ({index, ...rest}) => {
+	renderItem = (ItemComponent, size, onClick) => ({index, ...rest}) => {
 		const style = {height: size + 'px', ...itemStyle};
 		return (
-			<StatefulSwitchItem index={index} style={style} {...rest}>
+			<ItemComponent index={index} style={style} onClick={onClick} {...rest}>
 				{items[index].item}
-			</StatefulSwitchItem>
+			</ItemComponent>
 		);
 	};
 
@@ -88,6 +90,39 @@ class StatefulSwitchItem extends React.Component {
 	}
 }
 
+const InPanels = () => {
+	const itemSize = ri.scale(number('itemSize', Config, 72));
+	const [index, setIndex] = useState(0);
+	function handleSelectBreadcrumb (ev) {
+		setIndex(ev.index);
+	}
+
+	function handleSelectItem () {
+		setIndex(index === 0 ? 1 : 0);
+	}
+
+	return (
+		<ActivityPanels index={index} onSelectBreadcrumb={handleSelectBreadcrumb} noCloseButton>
+			<Panel>
+				<VirtualList
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
+					id="spotlight-list"
+					itemRenderer={renderItem(Item, itemSize, handleSelectItem)}
+					itemSize={itemSize}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
+					spacing={ri.scale(number('spacing', Config, 0))}
+					spotlightId="virtual-list"
+				/>
+			</Panel>
+			<Panel>
+				<Item onClick={handleSelectItem}>Go Back</Item>
+			</Panel>
+		</ActivityPanels>
+	);
+};
+
 storiesOf('VirtualList', module)
 	.add(
 		'with more items',
@@ -97,7 +132,7 @@ storiesOf('VirtualList', module)
 				<VirtualList
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
-					itemRenderer={renderItem(itemSize)}
+					itemRenderer={renderItem(StatefulSwitchItem, itemSize)}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
@@ -106,4 +141,8 @@ storiesOf('VirtualList', module)
 			);
 		},
 		{propTables: [Config]}
+	)
+	.add(
+		'in Panels',
+		() => <InPanels />
 	);
