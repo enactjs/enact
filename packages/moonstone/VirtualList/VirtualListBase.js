@@ -130,7 +130,7 @@ const VirtualListBaseFactory = (type) => {
 			 *
 			 * @type {Number}
 			 * @default 0
-			 * @private
+			 * @public
 			 */
 			spacing: PropTypes.number,
 
@@ -837,9 +837,7 @@ const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-b
 );
 
 ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
-	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-
-	id: PropTypes.string
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 
 ScrollableVirtualList.defaultProps = {
@@ -859,9 +857,7 @@ const ScrollableVirtualListNative = (props) => (
 );
 
 ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
-	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-
-	id: PropTypes.string
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 
 ScrollableVirtualListNative.defaultProps = {

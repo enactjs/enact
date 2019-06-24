@@ -431,9 +431,7 @@ const Scroller = (props) => (
 );
 
 Scroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
-
-	id: PropTypes.string
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
 };
 
 Scroller.defaultProps = {
@@ -468,9 +466,7 @@ const ScrollerNative = (props) => (
 );
 
 ScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototype */ {
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
-
-	id: PropTypes.string
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
 };
 
 ScrollerNative.defaultProps = {
