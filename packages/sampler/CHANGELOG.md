@@ -2,13 +2,12 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
-## [unreleased]
+## [3.0.0-alpha.7] - 2019-06-24
 
-- Upgrade to new Storybook 5.1.0-alpha.28.
-- Rewrite webpack and babel configs for modern standards and latest Enact CLI standards.
-- Ensure polyfills are applied based on target browsers/platforms.
-- Updated Enact stories to use latest knob APIs.
-- Removed webOS Storybook hotfix as its no longer needed.
+### Changed
+
+- `sampler` look and feel by updating to Storybook 5 and applying an Enact theme
+
 ## [3.0.0-alpha.6] - 2019-06-17
 
 No significant changes.
