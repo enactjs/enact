@@ -452,9 +452,13 @@ const VirtualListBaseFactory = (type) => {
 							isLeftMovement && column === 0 ||
 							isRightMovement && column === dimensionToExtent - 1;
 
-						if (repeat && isLeaving || !isLeaving && Spotlight.move(direction)) {
+						if (repeat && isLeaving) {
 							ev.preventDefault();
 							ev.stopPropagation();
+						} else if (!isLeaving && Spotlight.move(direction)) {
+							ev.preventDefault();
+							ev.stopPropagation();
+							this.onAcceleratedKeyDown({keyCode, nextIndex: getNumberValue(Spotlight.getCurrent().dataset.index), repeat, target});
 						}
 					}
 				}

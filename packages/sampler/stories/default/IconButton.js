@@ -8,7 +8,6 @@ import {action} from '@storybook/addon-actions';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
-import emptify from '../../src/utils/emptify.js';
 
 // import icons
 import docs from '../../images/icon-enact-docs.png';
@@ -26,19 +25,28 @@ const Config = mergeComponentMetadata('IconButton', Button, ButtonBase, UIButton
 storiesOf('Moonstone', module)
 	.add(
 		'IconButton',
-		() => (
-			<IconButton
-				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config, '')}
-				color={select('color', ['', 'red', 'green', 'yellow', 'blue'], Config, '')}
-				disabled={boolean('disabled', Config)}
-				selected={boolean('selected', Config)}
-				size={select('size', ['small', 'large'], Config)}
-				tooltipText={text('tooltipText', Config, '')}
-			>
-				{emptify(select('src', ['', docs, factory, logo], '')) + emptify(select('icon', ['', ...icons], 'plus')) + emptify(text('custom icon', ''))}
-			</IconButton>
-		),
+		() => {
+			const iconType = select('icon type', ['glyph', 'url src', 'custom'], Config, 'glyph');
+			let children;
+			switch (iconType) {
+				case 'glyph': children = select('icon', icons, Config, 'plus'); break;
+				case 'url src': children = select('src', [docs, factory, logo], Config, logo); break;
+				default: children = text('custom icon', Config);
+			}
+			return (
+				<IconButton
+					onClick={action('onClick')}
+					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config, '')}
+					color={select('color', ['', 'red', 'green', 'yellow', 'blue'], Config, '')}
+					disabled={boolean('disabled', Config)}
+					selected={boolean('selected', Config)}
+					size={select('size', ['small', 'large'], Config)}
+					tooltipText={text('tooltipText', Config, '')}
+				>
+					{children}
+				</IconButton>
+			);
+		},
 		{
 			info: {
 				text: 'The basic IconButton'

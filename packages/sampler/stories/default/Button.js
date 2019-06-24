@@ -29,7 +29,7 @@ storiesOf('Moonstone', module)
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', prop.icons, Config)}
 				iconPosition={select('iconPosition', ['', 'before', 'after'], Config, '')}
-				minWidth={!!boolean('minWidth', Config)}
+				minWidth={boolean('minWidth', Config) ? void 0 : false}
 				selected={boolean('selected', Config)}
 				size={select('size', ['', 'small', 'large'], Config)}
 			>
