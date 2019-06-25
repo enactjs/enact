@@ -165,6 +165,14 @@ class ScrollableBase extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
+		 * Called when resizing window
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		handleResizeWindow: PropTypes.func,
+
+		/**
 		 * Specifies how to show horizontal scrollbar.
 		 *
 		 * Valid values are:
@@ -493,10 +501,24 @@ class ScrollableBase extends Component {
 		}
 	}
 
+	handleResizeWindow = () => {
+		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
+		setTimeout(() => {
+			const {handleResizeWindow} = this.props;
+
+			if (handleResizeWindow) {
+				handleResizeWindow();
+			}
+			this.scrollTo({position: {x: 0, y: 0}, animate: false});
+
+			this.enqueueForceUpdate();
+		});
+	}
+
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	enqueueForceUpdate () {
-		this.childRefCurrent.calculateMetrics();
+		this.childRefCurrent.calculateMetrics(this.childRefCurrent.props);
 		this.forceUpdate();
 	}
 
@@ -1243,6 +1265,10 @@ class ScrollableBase extends Component {
 		if (this.props.addEventListeners) {
 			this.props.addEventListeners(childRefCurrent.containerRef);
 		}
+
+		if (window) {
+			window.addEventListener('resize', this.handleResizeWindow);
+		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
@@ -1260,6 +1286,10 @@ class ScrollableBase extends Component {
 
 		if (this.props.removeEventListeners) {
 			this.props.removeEventListeners(childRefCurrent.containerRef);
+		}
+
+		if (window) {
+			window.removeEventListener('resize', this.handleResizeWindow);
 		}
 	}
 
@@ -1305,6 +1335,7 @@ class ScrollableBase extends Component {
 		delete rest.applyOverscrollEffect;
 		delete rest.cbScrollTo;
 		delete rest.clearOverscrollEffect;
+		delete rest.handleResizeWindow;
 		delete rest.horizontalScrollbar;
 		delete rest.noScrollByWheel;
 		delete rest.onFlick;

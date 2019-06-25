@@ -760,6 +760,14 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	handleResizeWindow = () => {
+		const focusedItem = Spotlight.getCurrent();
+
+		if (focusedItem) {
+			focusedItem.blur();
+		}
+	}
+
 	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
 	handleScrollerUpdate = () => {
 		if (this.uiRef.current.scrollToInfo === null) {
@@ -936,6 +944,7 @@ class ScrollableBaseNative extends Component {
 				addEventListeners={this.addEventListeners}
 				applyOverscrollEffect={this.applyOverscrollEffect}
 				clearOverscrollEffect={this.clearOverscrollEffect}
+				handleResizeWindow={this.handleResizeWindow}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
