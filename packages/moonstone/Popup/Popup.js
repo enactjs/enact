@@ -485,11 +485,12 @@ class Popup extends React.Component {
 	handleOnNavNoTarget = (ev) => {
 		const {onClose} = this.props;
 		if (onClose && this.pressUpKey) {
+			// preventDefault to prevent spatial navigation next behavior.
+			// Do not search next target which is outside of this container.
 			ev.preventDefault();
-			// stop propagation to prevent default spotlight behavior
+			// Stop propagation to prevent handle this event on spotlight.js
 			ev.stopPropagation();
-			// set the pointer mode to false on keydown
-			Spotlight.setPointerMode(false);
+
 			onClose(ev);
 		}
 	}
