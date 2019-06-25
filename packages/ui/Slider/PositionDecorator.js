@@ -3,11 +3,16 @@ import {forward} from '@enact/core/handle';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {validateRange, validateStepped} from '../internal/validators';
+import {validateRangeOnce, validateSteppedOnce} from '../internal/validators';
 
 import {calcProportion} from './utils';
 
 import css from './Slider.module.less';
+
+
+const validateRange = validateRangeOnce((props) => props, {'component': 'PositionDecorator'});
+const validateStepValue = validateSteppedOnce((props) => props, {'component': 'PositionDecorator'});
+const validateStepMax = validateSteppedOnce((props) => props, {'component': 'PositionDecorator', valueName: 'max'});
 
 const PositionDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
@@ -134,10 +139,11 @@ const PositionDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-u
 		render () {
 			if (__DEV__) {
 				const {min, value = min, max, step} = this.props;
+				const props = {min, value: value || min, max, step};
 
-				validateRange(value, min, max, 'Slider');
-				validateStepped(value, min, step, 'Slider');
-				validateStepped(max, min, step, 'Slider', '"max"');
+				validateRange(props);
+				validateStepValue(props);
+				validateStepMax(props);
 			}
 
 			return (

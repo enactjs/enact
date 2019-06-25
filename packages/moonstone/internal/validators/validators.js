@@ -43,14 +43,33 @@ export const warn = (msg) => {
  */
 export const validateRange = (value, min, max, component, valueName = '"value"', minName = '"min"', maxName = '"max"') => {
 	if (__DEV__) {
+		let warned = false;
 		if (value < min) {
 			warn(`Warning: ${component} ${valueName} (${value}) less than ${minName} (${min})`);
+			warned = true;
 		} else if (value > max) {
 			warn(`Warning: ${component} ${valueName} (${value}) greater than ${maxName} (${max})`);
+			warned = true;
 		}
 		if (min > max) {
 			warn(`Warning: ${component} ${minName} (${min}) greater than ${maxName} (${max})`);
+			warned = true;
 		}
+		return warned;
+	}
+};
+
+export const validateRangeOnce = (thing, {component, valueName = '"value"', minName = '"min"', maxName = '"max"'}) => {
+	if (__DEV__) {
+		let displayed;
+		return (props) => {
+			if (!displayed) {
+				displayed = validateRange(props[valueName], props[minName], props[maxName], component, valueName, minName, maxName);
+			}
+			return thing(props);
+		};
+	} else {
+		return thing;
 	}
 };
 
@@ -66,7 +85,7 @@ export const validateRange = (value, min, max, component, valueName = '"value"',
  * @param {String} [valueName='value'] The name of the value property
  * @param {String} [stepName='step'] The name of the step property
  *
- * @returns {undefined}
+ * @returns {Boolean} `true` if warned
  * @memberof moonstone/internal/validators
  * @private
  */
@@ -87,7 +106,7 @@ export const validateSteppedOnce = (thing, {component, minName = 'min', stepName
 		return (props) => {
 			if (!displayed) {
 				displayed = validateStepped(props[valueName], props[minName], props[stepName], component, valueName, stepName);
-		}
+			}
 			return thing(props);
 		};
 	} else {
