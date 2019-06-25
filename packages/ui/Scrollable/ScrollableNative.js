@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
-import {Job} from '@enact/core/util';
 import {platform} from '@enact/core/platform';
 import Registry from '@enact/core/internal/Registry';
+import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
 import React, {Component} from 'react';
