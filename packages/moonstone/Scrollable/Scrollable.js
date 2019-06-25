@@ -699,7 +699,7 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	handleResize = () => {
+	handleResizeWindow = () => {
 		const focusedItem = Spotlight.getCurrent();
 
 		if (focusedItem) {
@@ -883,7 +883,7 @@ class ScrollableBase extends Component {
 				addEventListeners={this.addEventListeners}
 				applyOverscrollEffect={this.applyOverscrollEffect}
 				clearOverscrollEffect={this.clearOverscrollEffect}
-				handleResize={this.handleResize}
+				handleResizeWindow={this.handleResizeWindow}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
