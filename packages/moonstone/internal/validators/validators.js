@@ -41,7 +41,7 @@ export const warn = (msg) => {
  * @memberof moonstone/internal/validators
  * @private
  */
-export const validateRange = (value, min, max, component, valueName = '"value"', minName = '"min"', maxName = '"max"') => {
+export const validateRange = (value, min, max, component, valueName = 'value', minName = 'min', maxName = 'max') => {
 	if (__DEV__) {
 		let warned = false;
 		if (value < min) {
@@ -59,7 +59,7 @@ export const validateRange = (value, min, max, component, valueName = '"value"',
 	}
 };
 
-export const validateRangeOnce = (thing, {component, valueName = '"value"', minName = '"min"', maxName = '"max"'}) => {
+export const validateRangeOnce = (thing, {component, valueName = 'value', minName = 'min', maxName = 'max'}) => {
 	if (__DEV__) {
 		let displayed;
 		return (props) => {
@@ -89,7 +89,7 @@ export const validateRangeOnce = (thing, {component, valueName = '"value"', minN
  * @memberof moonstone/internal/validators
  * @private
  */
-export const validateStepped = (value, min, step, component, valueName = '"value"', stepName = '"step"') => {
+export const validateStepped = (value, min, step, component, valueName = 'value', stepName = 'step') => {
 	if (__DEV__) {
 		// Ignore fractional steps as floating point math can give inconsistent results (1 % 0.1 != 0)
 		if (step && step === Math.floor(step) && (value - min) % step !== 0) {

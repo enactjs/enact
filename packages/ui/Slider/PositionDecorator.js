@@ -9,7 +9,6 @@ import {calcProportion} from './utils';
 
 import css from './Slider.module.less';
 
-
 const validateRange = validateRangeOnce((props) => props, {'component': 'PositionDecorator'});
 const validateStepValue = validateSteppedOnce((props) => props, {'component': 'PositionDecorator'});
 const validateStepMax = validateSteppedOnce((props) => props, {'component': 'PositionDecorator', valueName: 'max'});
