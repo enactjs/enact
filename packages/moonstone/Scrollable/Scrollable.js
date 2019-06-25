@@ -611,16 +611,16 @@ class ScrollableBase extends Component {
 
 				direction = getDirection(keyCode);
 				if (overscrollEffectOn.arrowKey) {
-					if (!element) {
+					if (element) {
+						// Should be handled in onNavNoTarget
+						this.pressDirKey = direction;
+					} else {
 						const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
 
 						if (!(horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) &&
 							!(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
 							this.checkAndApplyOverscrollEffectByDirection(direction);
 						}
-					} else {
-						// Should be handled in onNavNoTarget
-						this.pressDirKey = direction;
 					}
 				}
 			}

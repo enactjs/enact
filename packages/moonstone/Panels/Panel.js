@@ -168,12 +168,14 @@ const PanelBase = kind({
 		headerId: ({'aria-label': label}) => label ? null : `panel_${++panelId}_header`
 	},
 
-	render: ({bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
+	render: ({bodyClassName, children, header, headerId, spotOnRender, style, ...rest}) => {
+		const mergedStyle = Object.assign({}, style, {'--spatial-navigation-contain': 'contain'});
+
 		delete rest.autoFocus;
 		delete rest.hideChildren;
 
 		return (
-			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender} style={{'--spatial-navigation-contain': 'contain', '--spatial-navigation-action': 'focus'}} >
+			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender} style={mergedStyle} >
 				<div className={css.header} id={headerId}>{header}</div>
 				<section className={bodyClassName}>{children}</section>
 			</article>

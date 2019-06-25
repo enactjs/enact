@@ -289,17 +289,34 @@ const ExpandableItemBase = kind({
 				// case here in which the children of the container are spottable and the
 				// ExpandableList use case which has an intermediate child (Group) between the
 				// spottable components and the container.
+				let onNavNoTarget = null;
+				let onNavBeforeFocus = null;
+				let container = target.getSpatialNavigationContainer();
+
 				if (autoClose && onClose && isUp(keyCode)) {
-					target.getSpatialNavigationContainer().addEventListener('navnotarget', onClose, {once: true});
+					onNavNoTarget = () => {
+						container.removeEventListener('navbeforefocus', onNavBeforeFocus);
+						onClose();
+					};
 				} else if (isDown(keyCode)) {
 					if (lockBottom) {
-						target.getSpatialNavigationContainer().addEventListener('navnotarget', (navEv) => {
+						onNavNoTarget = (navEv) => {
 							// Stop spatial navigation process.
+							container.removeEventListener('navbeforefocus', onNavBeforeFocus);
 							navEv.preventDefault();
-						}, {once: true});
+						};
 					} else if (onSpotlightDown) {
-						target.getSpatialNavigationContainer().addEventListener('navnotarget', () => onSpotlightDown(ev), {once: true});
+						onNavNoTarget = () => {
+							container.removeEventListener('navbeforefocus', onNavBeforeFocus);
+							onSpotlightDown();
+						};
 					}
+				}
+
+				if (onNavNoTarget) {
+					onNavBeforeFocus = () => container.removeEventListener('navnotarget', onNavNoTarget);
+					container.addEventListener('navnotarget', onNavNoTarget, {once: true});
+					container.addEventListener('navbeforefocus', onNavBeforeFocus, {once: true});
 				}
 			}
 		},
