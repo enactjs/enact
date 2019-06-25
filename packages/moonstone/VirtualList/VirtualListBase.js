@@ -830,17 +830,22 @@ const listItemsRenderer = (props) => {
 };
 /* eslint-enable enact/prop-types */
 
-const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
-	<Scrollable
-		{...props}
-		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBase
-				{...childProps}
-				itemsRenderer={listItemsRenderer}
-			/>
-		)}
-	/>
-);
+const ScrollableVirtualList = (props) => { // eslint-disable-line react/jsx-no-bind
+	const {focusableScrollbar} = props;
+
+	return (
+		<Scrollable
+			{...props}
+			childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
+				<VirtualListBase
+					{...childProps}
+					focusableScrollbar={focusableScrollbar}
+					itemsRenderer={listItemsRenderer}
+				/>
+			)}
+		/>
+	);
+};
 
 ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 	/**
@@ -857,6 +862,16 @@ ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBa
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
 	/**
+	 * Allows 5-way navigation to the scrollbar controls. By default, 5-way will
+	 * not move focus to the scrollbar controls.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 */
+	focusableScrollbar: PropTypes.bool,
+
+	/**
 	 * Unique identifier for the component.
 	 *
 	 * When defined and when the `VirtualList` is within a [Panel]{@link moonstone/Panels.Panel},
@@ -870,20 +885,26 @@ ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBa
 };
 
 ScrollableVirtualList.defaultProps = {
-	direction: 'vertical'
+	direction: 'vertical',
+	focusableScrollbar: false
 };
 
-const ScrollableVirtualListNative = (props) => (
-	<ScrollableNative
-		{...props}
-		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBaseNative
-				{...childProps}
-				itemsRenderer={listItemsRenderer}
-			/>
-		)}
-	/>
-);
+const ScrollableVirtualListNative = (props) => {
+	const {focusableScrollbar} = props;
+
+	return (
+		<ScrollableNative
+			{...props}
+			childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
+				<VirtualListBaseNative
+					{...childProps}
+					focusableScrollbar={focusableScrollbar}
+					itemsRenderer={listItemsRenderer}
+				/>
+			)}
+		/>
+	);
+};
 
 ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
 	/**
@@ -900,6 +921,16 @@ ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.Virtual
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
 	/**
+	 * Allows 5-way navigation to the scrollbar controls. By default, 5-way will
+	 * not move focus to the scrollbar controls.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 */
+	focusableScrollbar: PropTypes.bool,
+
+	/**
 	 * Unique identifier for the component.
 	 *
 	 * When defined and when the `VirtualList` is within a [Panel]{@link moonstone/Panels.Panel},
@@ -913,7 +944,8 @@ ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.Virtual
 };
 
 ScrollableVirtualListNative.defaultProps = {
-	direction: 'vertical'
+	direction: 'vertical',
+	focusableScrollbar: false
 };
 
 export default VirtualListBase;

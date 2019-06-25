@@ -916,7 +916,6 @@ class ScrollableBase extends Component {
 									...childComponentProps,
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
-									focusableScrollbar,
 									initUiChildRef,
 									isVerticalScrollbarVisible,
 									onScroll: handleScroll,
