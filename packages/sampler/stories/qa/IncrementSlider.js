@@ -104,7 +104,7 @@ class IncrementSliderWithMinValue extends React.Component {
 					max={number('max', IncrementSliderConfig)}
 					min={number('min', IncrementSliderConfig)}
 					onChange={this.handleChange}
-					value={number('value', this.state.value)}
+					value={number('value', IncrementSliderConfig, this.state.value)}
 				/>
 			</div>
 		);

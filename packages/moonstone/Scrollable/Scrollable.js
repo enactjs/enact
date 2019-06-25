@@ -541,7 +541,7 @@ class ScrollableBase extends Component {
 			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		}
 
-		return current && this.uiRef.current.containerRef.current.contains(current);
+		return current && this.uiRef.current && this.uiRef.current.containerRef.current.contains(current);
 	}
 
 	checkAndApplyOverscrollEffectByDirection = (direction) => {

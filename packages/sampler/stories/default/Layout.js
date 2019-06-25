@@ -8,6 +8,7 @@ import {storiesOf} from '@storybook/react';
 import {boolean, number, select} from '../../src/enact-knobs';
 
 Layout.displayName = 'Layout';
+Cell.displayName = 'Cell';
 
 storiesOf('UI', module)
 	.add(
