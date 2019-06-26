@@ -694,15 +694,24 @@ class ScrollableBaseNative extends Component {
 		const
 			isRtl = this.uiRef.current.state.rtl,
 			isPreviousScrollButton = direction === 'up' || (isRtl ? direction === 'right' : direction === 'left'),
-			isVerticalScrollBar = direction === 'up' || direction === 'down';
+			isHorizontalDirection = direction === 'left' || direction === 'right',
+			isVerticalDirection = direction === 'up' || direction === 'down';
 
-		this.onScrollbarButtonClick({isPreviousScrollButton, isVerticalScrollBar});
+		this.onScrollbarButtonClick({isPreviousScrollButton, isVerticalDirection});
 
-		if (this.props.focusableScrollbar) {
-			const scrollbar = this.uiRef.current[
-				(isVerticalScrollBar ? 'vertical' : 'horizontal') + 'ScrollbarRef'
-			];
-			scrollbar.current.focusOnButton(isPreviousScrollButton);
+		const {focusableScrollbar, direction: directionProp} = this.props;
+		if (focusableScrollbar) {
+			if (isVerticalDirection && (directionProp === 'vertical' || directionProp === 'both')) {
+				if (this.uiRef.current && this.uiRef.current.verticalScrollbarRef.current) {
+					const scrollbar = this.uiRef.current.verticalScrollbarRef;
+					scrollbar.current.focusOnButton(isPreviousScrollButton);
+				}
+			} else if (isHorizontalDirection && (directionProp === 'horizontal' || directionProp === 'both')) {
+				if (this.uiRef.current && this.uiRef.current.horizontalScrollbarRef.current) {
+					const scrollbar = this.uiRef.current.horizontalScrollbarRef;
+					scrollbar.current.focusOnButton(isPreviousScrollButton);
+				}
+			}
 		}
 	}
 
