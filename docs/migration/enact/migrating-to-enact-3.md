@@ -1,5 +1,6 @@
 ---
 title: Migrating to Enact 3.0
+toc: 2
 ---
 
 ## Overview

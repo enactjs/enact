@@ -1,5 +1,6 @@
 ---
 title: Glossary
+toc: false
 ---
 
 ## Terms
