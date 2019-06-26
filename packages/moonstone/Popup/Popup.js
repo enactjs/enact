@@ -411,7 +411,7 @@ class Popup extends React.Component {
 			} else {
 				return {
 					popupOpen: OpenState.CLOSED,
-					floatLayerOpen: state.popupOpen === OpenState.OPEN ? !props.noAnimation : false,
+					floatLayerOpen: state.popupOpen !== OpenState.CLOSED ? !props.noAnimation : false,
 					activator: props.noAnimation ? null : state.activator,
 					prevOpen: props.open
 				};
