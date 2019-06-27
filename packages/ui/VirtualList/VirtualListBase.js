@@ -355,7 +355,7 @@ const VirtualListBaseFactory = (type) => {
 		hasDataSizeChanged = false
 		cc = []
 		childPositionInfo = []
-		lastBaseIndex = 0
+		lastBaseIndex = -1
 		scrollPosition = 0
 
 		isVertical = () => this.isPrimaryDirectionVertical
@@ -593,104 +593,39 @@ const VirtualListBaseFactory = (type) => {
 			const
 				{dataSize, overhang, spacing} = this.props,
 				{firstIndex, numOfItems} = this.state,
-				{childPositionInfo, dimensionToExtent, itemContainerRef, maxFirstIndex} = this,
+				{childPositionInfo, itemContainerRef, maxFirstIndex} = this,
 				{gridSize} = this.primary,
 				lastIndex = firstIndex + numOfItems - 1,
-				numOfExtent = Math.ceil(dataSize / dimensionToExtent),
 				numOfUpperLine = Math.floor(overhang / 2);
 
 			if (itemContainerRef.current) {
-				const firstChildNode = itemContainerRef.current.children[firstIndex % numOfItems];
-				let info, baseIndex = -1, index, childNode, size, primaryPosition, secondaryPosition;
+				let index, childNode;
 
-				// find the first index which node's base index is as same as the last base index
-				// this routine is to check whether we need to keep positions of items as same as previous frame or not
-				for (index = firstIndex; index <= lastIndex; index += dimensionToExtent) {
-					info = childPositionInfo[index];
-					if (info && info.baseIndex === this.lastBaseIndex) {
-						baseIndex = this.lastBaseIndex;
-						break;
+				for (index = firstIndex; index <= lastIndex; index++) {
+					const childNode = itemContainerRef.current.children[index % numOfItems];
+
+					if (!childPositionInfo[index]) {
+						const
+							size = itemContainerRef.current.children[index % numOfItems].offsetHeight,
+							position = index === 0 ? 0 : this.getEndPosition(index - 1) + spacing;
+
+						childPositionInfo[index] = {size, position};
+					}
+					
+					if (childNode) {
+						childNode.style.transform = `translate3d(0, ${childPositionInfo[index].position}px, 0)`;
 					}
 				}
 
-				// no item needs to keep the current position, therefore we can render all items at any position
-				if (baseIndex === -1) {
-					// if firstIndex is not zero, try to set positions from the starting
-					let lastIndexBasedZero = -1;
-					for (index = firstIndex - dimensionToExtent; index >= 0; index -= dimensionToExtent) {
-						if (!childPositionInfo[index]) {
-							break;
-						} else if (childPositionInfo[index].baseIndex === 0) {
-							lastIndexBasedZero = index;
-							break;
-						}
-					}
+				this.threshold.min = firstIndex === 0 ? -Infinity : this.getEndPosition(firstIndex + numOfUpperLine * 1);
+				this.threshold.max = lastIndex === maxFirstIndex ? Infinity : this.getEndPosition(firstIndex + (numOfUpperLine + 1));
 
-					// if all position info before firstIndex exist
-					if (lastIndexBasedZero > 0) {
-						baseIndex = 0;
-					} else {
-						// create a position info for the first index
-						// calculate the position based on assuming that all items have minimal size
-						childPositionInfo[firstIndex] = {
-							size: firstChildNode.offsetHeight,
-							baseIndex: firstIndex,
-							position: Math.floor(firstIndex / dimensionToExtent) * gridSize
-						};
-						baseIndex = firstIndex;
-					}
-				}
-
-				this.lastBaseIndex = baseIndex;
-
-				// for items before baseIndex
-				for (index = baseIndex - dimensionToExtent; index >= firstIndex; index -= dimensionToExtent) {
-					if (!childPositionInfo[index] || childPositionInfo[index].baseIndex !== baseIndex) {
-						// TBD: offsetHeight / vertical only for now
-						size = itemContainerRef.current.children[index % numOfItems].offsetHeight; // TBD: the node must exist in this case
-						childPositionInfo[index] = {
-							size,
-							baseIndex,
-							position: childPositionInfo[index + dimensionToExtent].position - size - spacing
-						};
-					}
-				}
-
-				// for items after baseIndex
-				for (index = baseIndex + dimensionToExtent; index <= lastIndex; index += dimensionToExtent) {
-					info = childPositionInfo[index];
-					if (!info) { // need to measure and create info
-						size = itemContainerRef.current.children[index % numOfItems].offsetHeight; // TBD: the node must exist in this case
-						childPositionInfo[index] = {
-							size,
-							baseIndex,
-							position: this.getEndPosition(index - dimensionToExtent) + spacing
-						};
-
-					} else if (info.baseIndex !== baseIndex) { // just update position if baseIndex is updated
-						info.position = this.getEndPosition(index - dimensionToExtent) + spacing;
-						info.baseIndex = baseIndex;
-					}
-				}
-
-				for (index = firstIndex; index <= lastIndex; ++index) {
-					info = childPositionInfo[Math.floor(index / dimensionToExtent) * dimensionToExtent];
-					primaryPosition = info.position;
-					secondaryPosition = (index % dimensionToExtent) * this.secondary.gridSize;
-					childNode = itemContainerRef.current.children[index % numOfItems];
-					// TBD vertical only for now
-					childNode.style.transform = `translate3d(${this.props.rtl ? -secondaryPosition : secondaryPosition}px, ${primaryPosition}px, 0)`;
-				}
-
-				this.threshold.min = firstIndex === 0 ? -Infinity : this.getEndPosition(firstIndex + numOfUpperLine * dimensionToExtent);
-				this.threshold.max = lastIndex === maxFirstIndex ? Infinity : this.getEndPosition(firstIndex + (numOfUpperLine + 1) * dimensionToExtent);
-
-				if (childPositionInfo.filter(Boolean).length === numOfExtent) { // all item sizes are known
-					this.scrollBounds.scrollHeight = childPositionInfo.reduce((acc, cur) => acc + cur.size, 0) + (numOfExtent - 1) * spacing;
+				if (childPositionInfo.filter(Boolean).length === dataSize) { // all item sizes are known
+					this.scrollBounds.scrollHeight = childPositionInfo.reduce((acc, cur) => acc + cur.size, 0) + (dataSize - 1) * spacing;
 				} else {
-					for (index = firstIndex + numOfItems - dimensionToExtent; index < dataSize; index += dimensionToExtent) {
-						const nextInfo = childPositionInfo[index + dimensionToExtent];
-						if (!nextInfo || nextInfo.baseIndex !== childPositionInfo[firstIndex].baseIndex) {
+					for (index = firstIndex + numOfItems - 1; index < dataSize; index++) {
+						const nextInfo = childPositionInfo[index + 1];
+						if (!nextInfo) {
 							const endPosition = this.getEndPosition(index);
 							if (endPosition > this.scrollBounds.scrollHeight) {
 								this.scrollBounds.scrollHeight = endPosition;
