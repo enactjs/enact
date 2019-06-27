@@ -94,23 +94,23 @@ const VirtualGridList = kind({
 /**
  * A Moonstone-styled scrollable and spottable virtual list component with items having various height.
  *
- * @class VariousVirtualList
+ * @class VariableVirtualList
  * @memberof moonstone/VirtualList
  * @extends moonstone/VirtualList.VirtualListBase
  * @ui
  * @public
  */
-const VariousVirtualList = kind({
-	name: 'VariousVirtualList',
+const VariableVirtualList = kind({
+	name: 'VariableVirtualList',
 
-	propTypes: /** @lends moonstone/VirtualList.VariousVirtualList.prototype */ {
+	propTypes: /** @lends moonstone/VirtualList.VariableVirtualList.prototype */ {
 		/**
 		 * Size of an item for the VirtualList; valid value is a number.
-		 * A horizontal VariousVirtualList is not supported.
+		 * A horizontal VariableVirtualList is not supported.
 		 *
 		 * Usage:
 		 * ```
-		 * <VariousVirtualList itemSize={ri.scale(72)} />
+		 * <VariableVirtualList itemSize={ri.scale(72)} />
 		 * ```
 		 *
 		 * @type {Number}
@@ -208,23 +208,23 @@ const VirtualGridListNative = kind({
 /**
  * A Moonstone-styled scrollable and spottable virtual native list component with items having various height.
  *
- * @class VariousVirtualListNative
+ * @class VariableVirtualListNative
  * @memberof moonstone/VirtualList
  * @extends moonstone/VirtualList.VirtualListBaseNative
  * @ui
  * @public
  */
-const VariousVirtualListNative = kind({
-	name: 'VariousVirtualListNative',
+const VariableVirtualListNative = kind({
+	name: 'VariableVirtualListNative',
 
-	propTypes: /** @lends moonstone/VirtualList.VariousVirtualListNative.prototype */ {
+	propTypes: /** @lends moonstone/VirtualList.VariableVirtualListNative.prototype */ {
 		/**
 		 * Size of an item for the VirtualList; valid value is a number.
-		 * A horizontal VariousVirtualList is not supported.
+		 * A horizontal VariableVirtualList is not supported.
 		 *
 		 * Usage:
 		 * ```
-		 * <VariousVirtualList itemSize={ri.scale(72)} />
+		 * <VariableVirtualList itemSize={ri.scale(72)} />
 		 * ```
 		 *
 		 * @type {Number}
@@ -241,7 +241,8 @@ const VariousVirtualListNative = kind({
 
 export default VirtualList;
 export {
-	VariousVirtualList,
+	VariableVirtualList,
+	VariableVirtualListNative,
 	VirtualGridList,
 	VirtualGridListNative,
 	VirtualList,
