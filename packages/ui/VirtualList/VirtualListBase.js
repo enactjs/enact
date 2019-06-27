@@ -217,6 +217,14 @@ const VirtualListBaseFactory = (type) => {
 			spacing: PropTypes.number,
 
 			/**
+			 * Type of the list.
+			 *
+			 * @type {String}
+			 * @private
+			 */
+			type: PropTypes.string,
+
+			/**
 			 * Called to execute additional logic in a themed component when updating states and bounds.
 			 *
 			 * @type {Function}
@@ -287,7 +295,11 @@ const VirtualListBaseFactory = (type) => {
 				this.emitUpdateItems();
 			}
 
-			this.adjustVariableGridPosition();
+			if (this.props.type === 'VariableVirtualList') {
+				this.adjustVariableGridPosition();
+			} else {
+				this.setContainerSize();
+			}
 		}
 
 		componentDidUpdate (prevProps, prevState) {
@@ -325,7 +337,9 @@ const VirtualListBaseFactory = (type) => {
 				}
 			}
 
-			this.adjustVariableGridPosition();
+			if (this.props.type === 'VariableVirtualList') {
+				this.adjustVariableGridPosition();
+			}
 		}
 
 		scrollBounds = {
@@ -367,16 +381,25 @@ const VirtualListBaseFactory = (type) => {
 		getMoreInfo = () => this.moreInfo
 
 		getGridPosition (index) {
-			const
-				{variableGridMetrics, dimensionToExtent, primary, secondary} = this,
-				extent = Math.floor(index / dimensionToExtent),
-				firstIndexInExtent = extent * dimensionToExtent,
-				primaryPosition = variableGridMetrics[firstIndexInExtent] ? variableGridMetrics[firstIndexInExtent].position : extent * primary.gridSize,
-				secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
+			if (this.props.type ===' VariableVirtualList') {
+				const
+					{variableGridMetrics, dimensionToExtent, primary, secondary} = this,
+					extent = Math.floor(index / dimensionToExtent),
+					firstIndexInExtent = extent * dimensionToExtent,
+					primaryPosition = variableGridMetrics[firstIndexInExtent] ? variableGridMetrics[firstIndexInExtent].position : extent * primary.gridSize,
+					secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
 
-			return {primaryPosition, secondaryPosition};
+				return {primaryPosition, secondaryPosition};
+			} else {
+				const {dimensionToExtent, primary, secondary} = this,
+					primaryPosition = Math.floor(index / dimensionToExtent) * primary.gridSize,
+					secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
+
+				return {primaryPosition, secondaryPosition};
+			}
 		}
 
+		// For VariableVirtualList
 		getVariableGridPosition = (index) => {
 			const metrics = this.variableGridMetrics[index];
 
@@ -384,7 +407,7 @@ const VirtualListBaseFactory = (type) => {
 				const {position, size} = metrics;
 				return position + size;
 			} else {
-				return index * this.primary.gridSize - spacing;
+				return index * this.primary.gridSize - this.props.spacing;
 			}
 		}
 
@@ -468,7 +491,11 @@ const VirtualListBaseFactory = (type) => {
 
 			primary.gridSize = primary.itemSize + spacing;
 			secondary.gridSize = secondary.itemSize + spacing;
-			thresholdBase = primary.gridSize * Math.ceil(overhang / 2);
+			if (this.props.type === 'VariableVirtualList') {
+				thresholdBase = primary.gridSize * Math.ceil(overhang / 2);
+			} else {
+				thresholdBase = primary.gridSize * 2;
+			}
 
 			this.threshold = {min: -Infinity, max: thresholdBase, base: thresholdBase};
 			this.dimensionToExtent = dimensionToExtent;
@@ -651,45 +678,65 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			if (pos > threshold.max || pos < threshold.min) {
-				const overhangBefore = Math.floor(this.props.overhang / 2);
-				let firstRenderedIndex = -1, newThresholdMin = -Infinity, newThresholdMax = Infinity;
+				let newThresholdMin = -Infinity, newThresholdMax = Infinity;
 
-				// find an item which is known as placed the first rendered item's position
-				for (index = 0; index < dataSize; index += dimensionToExtent) {
-					metrics = variableGridMetrics[index];
-					if (metrics && metrics.position + metrics.size >= pos && metrics.position <= pos + clientSize &&
-						variableGridMetrics[firstIndex].baseIndex === metrics.baseIndex) {
-						firstRenderedIndex = index;
-						break;
+				if (this.props.type === 'VariableVirtualList') {
+					const overhangBefore = Math.floor(this.props.overhang / 2);
+					let firstRenderedIndex = -1;
+
+					// find an item which is known as placed the first rendered item's position
+					for (index = 0; index < dataSize; index += dimensionToExtent) {
+						metrics = variableGridMetrics[index];
+						if (metrics && metrics.position + metrics.size >= pos && metrics.position <= pos + clientSize &&
+							variableGridMetrics[firstIndex].baseIndex === metrics.baseIndex) {
+							firstRenderedIndex = index;
+							break;
+						}
 					}
-				}
 
-				// found an item which is visible within a current viewport
-				if (index < dataSize) {
-					if (metrics.position <= pos) {
-						newFirstIndex = firstRenderedIndex - overhangBefore * dimensionToExtent;
-						newThresholdMin = metrics.position;
-						newThresholdMax = newThresholdMin + metrics.size + spacing;
-					} else {
-						const diffToFirstIndex = Math.ceil((metrics.position - pos) / gridSize);
-						newFirstIndex = firstRenderedIndex - (diffToFirstIndex + overhangBefore) * dimensionToExtent;
-						newThresholdMin = metrics.position - diffToFirstIndex * gridSize;
+					// found an item which is visible within a current viewport
+					if (index < dataSize) {
+						if (metrics.position <= pos) {
+							newFirstIndex = firstRenderedIndex - overhangBefore * dimensionToExtent;
+							newThresholdMin = metrics.position;
+							newThresholdMax = newThresholdMin + metrics.size + spacing;
+						} else {
+							const diffToFirstIndex = Math.ceil((metrics.position - pos) / gridSize);
+							newFirstIndex = firstRenderedIndex - (diffToFirstIndex + overhangBefore) * dimensionToExtent;
+							newThresholdMin = metrics.position - diffToFirstIndex * gridSize;
+							newThresholdMax = newThresholdMin + gridSize;
+						}
+					} else { // calculate the first index based on assuming that all items have minimal size
+						const firstExtent = Math.max(
+							0,
+							Math.min(
+								Math.floor(maxFirstIndex / dimensionToExtent),
+								Math.floor((pos - gridSize * overhangBefore) / gridSize)
+							)
+						);
+						newFirstIndex = firstExtent * dimensionToExtent;
+						newThresholdMin = (firstExtent + overhangBefore) * gridSize;
 						newThresholdMax = newThresholdMin + gridSize;
 					}
-				} else { // calculate the first index based on assuming that all items have minimal size
-					const firstExtent = Math.max(
-						0,
-						Math.min(
-							Math.floor(maxFirstIndex / dimensionToExtent),
-							Math.floor((pos - gridSize * overhangBefore) / gridSize)
-						)
-					);
+
+					newFirstIndex = Math.max(0, Math.min(maxFirstIndex, newFirstIndex));
+				} else {
+					const
+						overhangBefore = Math.floor(this.props.overhang / 2),
+						firstExtent = Math.max(
+							0,
+							Math.min(
+								Math.floor(maxFirstIndex / dimensionToExtent),
+								Math.floor((pos - gridSize * overhangBefore) / gridSize)
+							)
+						);
+					let newThresholdMin, newThresholdMax;
+
 					newFirstIndex = firstExtent * dimensionToExtent;
 					newThresholdMin = (firstExtent + overhangBefore) * gridSize;
 					newThresholdMax = newThresholdMin + gridSize;
 				}
 
-				newFirstIndex = Math.max(0, Math.min(maxFirstIndex, newFirstIndex));
 				threshold.min = newFirstIndex === 0 ? -Infinity : newThresholdMin;
 				threshold.max = newFirstIndex === maxFirstIndex ? Infinity : newThresholdMax;
 			}
@@ -703,6 +750,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
+		// VariableVirtualList
 		adjustVariableGridPosition () {
 			const
 				{dataSize, overhang, spacing} = this.props,
@@ -831,10 +879,14 @@ const VirtualListBaseFactory = (type) => {
 
 				if (++j === dimensionToExtent) {
 					secondaryPosition = 0;
-					if (variableGridMetrics[i]) {
-						primaryPosition = variableGridMetrics[i].position;
-					} else if (variableGridMetrics[i - dimensionToExtent]) {
-						primaryPosition += variableGridMetrics[i - dimensionToExtent].size + this.props.spacing;
+					if (this.props.type === 'VariableVirtualList') {
+						if (variableGridMetrics[i]) {
+							primaryPosition = variableGridMetrics[i].position;
+						} else if (variableGridMetrics[i - dimensionToExtent]) {
+							primaryPosition += variableGridMetrics[i - dimensionToExtent].size + this.props.spacing;
+						} else {
+							primaryPosition += primary.gridSize;
+						}
 					} else {
 						primaryPosition += primary.gridSize;
 					}

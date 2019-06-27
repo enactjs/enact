@@ -91,6 +91,39 @@ const VirtualGridList = kind({
 	)
 });
 
+/**
+ * A Moonstone-styled scrollable and spottable virtual list component with items having various height.
+ *
+ * @class VariousVirtualList
+ * @memberof moonstone/VirtualList
+ * @extends moonstone/VirtualList.VirtualListBase
+ * @ui
+ * @public
+ */
+const VariousVirtualList = kind({
+	name: 'VariousVirtualList',
+
+	propTypes: /** @lends moonstone/VirtualList.VariousVirtualList.prototype */ {
+		/**
+		 * Size of an item for the VirtualList; valid value is a number.
+		 * A horizontal VariousVirtualList is not supported.
+		 *
+		 * Usage:
+		 * ```
+		 * <VariousVirtualList itemSize={ri.scale(72)} />
+		 * ```
+		 *
+		 * @type {Number}
+		 * @required
+		 * @public
+		 */
+		itemSize: PropTypes.number.isRequired
+	},
+
+	render: (props) => (
+		<ScrollableVirtualList {...props} type="VariableVirtualList" />
+	)
+});
 
 /**
  * A Moonstone-styled scrollable and spottable virtual native list component.
@@ -172,8 +205,43 @@ const VirtualGridListNative = kind({
 	)
 });
 
+/**
+ * A Moonstone-styled scrollable and spottable virtual native list component with items having various height.
+ *
+ * @class VariousVirtualListNative
+ * @memberof moonstone/VirtualList
+ * @extends moonstone/VirtualList.VirtualListBaseNative
+ * @ui
+ * @public
+ */
+const VariousVirtualListNative = kind({
+	name: 'VariousVirtualListNative',
+
+	propTypes: /** @lends moonstone/VirtualList.VariousVirtualListNative.prototype */ {
+		/**
+		 * Size of an item for the VirtualList; valid value is a number.
+		 * A horizontal VariousVirtualList is not supported.
+		 *
+		 * Usage:
+		 * ```
+		 * <VariousVirtualList itemSize={ri.scale(72)} />
+		 * ```
+		 *
+		 * @type {Number}
+		 * @required
+		 * @public
+		 */
+		itemSize: PropTypes.number.isRequired
+	},
+
+	render: (props) => (
+		<ScrollableVirtualListNative {...props} type="VariableVirtualList" />
+	)
+});
+
 export default VirtualList;
 export {
+	VariousVirtualList,
 	VirtualGridList,
 	VirtualGridListNative,
 	VirtualList,
