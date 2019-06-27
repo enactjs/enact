@@ -1,7 +1,9 @@
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import ForwardRef from '../ForwardRef';
 import ri from '../resolution';
 
 import css from './Layout.module.less';
@@ -14,17 +16,17 @@ const toFlexAlign = (align) => (
 
 /**
  * A stateless component that provides a space for your content in a
- * [Layout]{@link ui/Layout.Layout}.
+ * [Layout]{@link ui/Layout.Layout}, without [CellDecorator](ui/Layout.CellDecorator) applied.
  *
- * @class Cell
- * @ui
+ * @class CellBase
  * @memberof ui/Layout
+ * @ui
  * @public
  */
 const CellBase = kind({
 	name: 'Cell',
 
-	propTypes: /** @lends ui/Layout.Cell.prototype */ {
+	propTypes: /** @lends ui/Layout.CellBase.prototype */ {
 		/**
 		 * The alignment of `Cell`.
 		 *
@@ -52,11 +54,19 @@ const CellBase = kind({
 		 * The type of component to use to render as the `Cell`. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 * @public
 		 */
-		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		component:  EnactPropTypes.renderable,
+
+		/**
+		 * Called with a reference to [component]{@link ui/Cell.Cell#component}
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Sizes `Cell` to its contents.
@@ -129,18 +139,42 @@ const CellBase = kind({
 		}
 	},
 
-	render: ({component: Component, ...rest}) => {
+	render: ({component: Component, componentRef, ...rest}) => {
 		delete rest.align;
 		delete rest.shrink;
 		delete rest.size;
 
-		return <Component {...rest} />;
+		return <Component ref={componentRef} {...rest} />;
 	}
 });
 
-export default CellBase;
+/**
+ * Applies Cell behaviors.
+ *
+ * @hoc
+ * @memberof ui/Layout
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const CellDecorator = ForwardRef({prop: 'componentRef'});
+
+/**
+ * A stateless component that provides a space for your content in a
+ * [Layout]{@link ui/Layout.Layout}.
+ *
+ * @class Cell
+ * @memberof ui/Layout
+ * @extends ui/Layout.CellBase
+ * @mixes ui/Layout.CellDecorator
+ * @ui
+ * @public
+ */
+const Cell = CellDecorator(CellBase);
+
+export default Cell;
 export {
-	CellBase as Cell,
+	Cell,
 	CellBase,
+	CellDecorator,
 	toFlexAlign
 };

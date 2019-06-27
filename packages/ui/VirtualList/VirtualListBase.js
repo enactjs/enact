@@ -1,5 +1,8 @@
 import classNames from 'classnames';
+import {forward} from '@enact/core/handle';
+import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
+import equals from 'ramda/src/equals';
 import React, {Component} from 'react';
 
 import Scrollable from '../Scrollable';
@@ -30,10 +33,10 @@ const gridListItemSizeShape = PropTypes.shape({
 /**
  * The base version of the virtual list component.
  *
- * @class VirtualListBase
+ * @class VirtualListCore
  * @memberof ui/VirtualList
  * @ui
- * @public
+ * @private
  */
 const VirtualListBaseFactory = (type) => {
 	return class VirtualListCore extends Component {
@@ -124,7 +127,7 @@ const VirtualListBaseFactory = (type) => {
 			 * Activates the component for voice control.
 			 *
 			 * @type {Boolean}
-			 * @private
+			 * @public
 			 */
 			'data-webos-voice-focused': PropTypes.bool,
 
@@ -132,7 +135,7 @@ const VirtualListBaseFactory = (type) => {
 			 * The voice control group label.
 			 *
 			 * @type {String}
-			 * @private
+			 * @public
 			 */
 			'data-webos-voice-group-label': PropTypes.string,
 
@@ -165,6 +168,16 @@ const VirtualListBaseFactory = (type) => {
 			 * @private
 			 */
 			getComponentProps: PropTypes.func,
+
+			/**
+			 * Called when the range of items has updated.
+			 *
+			 * Event payload includes the `firstIndex` and `lastIndex` of the list.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			onUpdateItems: PropTypes.func,
 
 			/**
 			 * Number of spare DOM node.
@@ -222,68 +235,96 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		constructor (props) {
+			let nextState = null;
+
 			super(props);
 
-			this.state = {firstIndex: 0, numOfItems: 0};
+			this.containerRef = React.createRef();
+			this.contentRef = React.createRef();
+			this.itemContainerRef = React.createRef();
+
+			if (props.clientSize) {
+				this.calculateMetrics(props);
+				nextState = this.getStatesAndUpdateBounds(props);
+			}
+
+			this.state = {
+				firstIndex: 0,
+				numOfItems: 0,
+				prevChildProps: null,
+				prevFirstIndex: 0,
+				updateFrom: 0,
+				updateTo: 0,
+				...nextState
+			};
 		}
 
-		UNSAFE_componentWillMount () {
-			if (this.props.clientSize) {
-				this.calculateMetrics(this.props);
-				this.updateStatesAndBounds(this.props);
-			}
+		static getDerivedStateFromProps (props, state) {
+			const
+				shouldInvalidate = (
+					state.prevFirstIndex === state.firstIndex ||
+					state.prevChildProps !== props.childProps
+				),
+				diff = state.firstIndex - state.prevFirstIndex,
+				updateTo = (-state.numOfItems >= diff || diff > 0 || shouldInvalidate) ? state.firstIndex + state.numOfItems : state.prevFirstIndex,
+				updateFrom = (0 >= diff || diff >= state.numOfItems || shouldInvalidate) ? state.firstIndex : state.prevFirstIndex + state.numOfItems,
+				nextUpdateFromAndTo = (state.updateFrom !== updateFrom || state.updateTo !== updateTo) ? {updateFrom, updateTo} : null;
+
+			return {
+				...nextUpdateFromAndTo,
+				prevChildProps: props.childProps,
+				prevFirstIndex: state.firstIndex
+			};
 		}
 
 		// Calculate metrics for VirtualList after the 1st render to know client W/H.
 		componentDidMount () {
 			if (!this.props.clientSize) {
 				this.calculateMetrics(this.props);
-				this.updateStatesAndBounds(this.props);
+				// eslint-disable-next-line react/no-did-mount-set-state
+				this.setState(this.getStatesAndUpdateBounds(this.props));
+			} else {
+				this.emitUpdateItems();
 			}
 
 			this.syncSizeAfterRender();
 		}
 
-		// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
-		// Calling setState within componentWillReceivePropswill not trigger an additional render.
-		UNSAFE_componentWillReceiveProps (nextProps) {
-			const
-				{dataSize, direction, itemSize, overhang, rtl, spacing} = this.props,
-				hasMetricsChanged = (
-					direction !== nextProps.direction ||
-					((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
-					overhang !== nextProps.overhang ||
-					spacing !== nextProps.spacing
-				);
+		componentDidUpdate (prevProps, prevState) {
+			const {firstIndex, numOfItems} = this.state;
 
-			this.hasDataSizeChanged = (dataSize !== nextProps.dataSize);
+			// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
+			this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
 
-			if (hasMetricsChanged) {
-				this.calculateMetrics(nextProps);
-				this.updateStatesAndBounds(nextProps);
+			if (prevState.firstIndex !== firstIndex || prevState.numOfItems !== numOfItems) {
+				this.emitUpdateItems();
+			}
+
+			if (
+				prevProps.direction !== this.props.direction ||
+				prevProps.overhang !== this.props.overhang ||
+				prevProps.spacing !== this.props.spacing ||
+				!equals(prevProps.itemSize, this.props.itemSize)
+			) {
+				this.calculateMetrics(this.props);
+				// eslint-disable-next-line react/no-did-update-set-state
+				this.setState(this.getStatesAndUpdateBounds(this.props));
 				this.setContainerSize();
 			} else if (this.hasDataSizeChanged) {
-				this.updateStatesAndBounds(nextProps);
+				const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
+				// eslint-disable-next-line react/no-did-update-set-state
+				this.setState(newState);
 				this.setContainerSize();
-			} else if (rtl !== nextProps.rtl) {
+			} else if (prevProps.rtl !== this.props.rtl) {
 				const {x, y} = this.getXY(this.scrollPosition, 0);
 
-				this.cc = [];
 				if (type === Native) {
-					this.scrollToPosition(x, y, nextProps.rtl);
+					this.scrollToPosition(x, y, this.props.rtl);
 				} else {
-					this.setScrollPosition(x, y, nextProps.rtl);
+					this.setScrollPosition(x, y, this.props.rtl);
 				}
 			}
-		}
 
-		UNSAFE_componentWillUpdate (nextProps, nextState) {
-			if (this.state.firstIndex === nextState.firstIndex || this.props.childProps && this.props.childProps !== nextProps.childProps) {
-				this.prevFirstIndex = -1; // force to re-render items
-			}
-		}
-
-		componentDidUpdate () {
 			this.syncSizeAfterRender();
 		}
 
@@ -310,16 +351,12 @@ const VirtualListBaseFactory = (type) => {
 		dimensionToExtent = 0
 		threshold = 0
 		maxFirstIndex = 0
-		prevFirstIndex = 0
 		curDataSize = 0
 		hasDataSizeChanged = false
 		cc = []
 		childPositionInfo = []
 		lastBaseIndex = 0
 		scrollPosition = 0
-
-		contentRef = null
-		containerRef = null
 
 		isVertical = () => this.isPrimaryDirectionVertical
 
@@ -361,10 +398,20 @@ const VirtualListBaseFactory = (type) => {
 			clientHeight: node.clientHeight
 		})
 
+		emitUpdateItems () {
+			const {dataSize} = this.props;
+			const {firstIndex, numOfItems} = this.state;
+
+			forward('onUpdateItems', {
+				firstIndex: firstIndex,
+				lastIndex: Math.min(firstIndex + numOfItems, dataSize)
+			}, this.props);
+		}
+
 		calculateMetrics (props) {
 			const
 				{clientSize, direction, itemSize, overhang, spacing} = props,
-				node = this.containerRef;
+				node = this.containerRef.current;
 
 			if (!clientSize && !node) {
 				return;
@@ -420,20 +467,14 @@ const VirtualListBaseFactory = (type) => {
 
 			// reset
 			this.scrollPosition = 0;
-			if (type === JS && this.contentRef) {
-				this.contentRef.style.transform = null;
+			if (type === JS && this.contentRef.current) {
+				this.contentRef.current.style.transform = null;
 			}
-
-			// eslint-disable-next-line react/no-direct-mutation-state
-			this.state.firstIndex = 0;
-			// eslint-disable-next-line react/no-direct-mutation-state
-			this.state.numOfItems = 0;
 		}
 
-		updateStatesAndBounds = (props) => {
+		getStatesAndUpdateBounds = (props, firstIndex = 0) => {
 			const
 				{dataSize, overhang, updateStatesAndBounds} = props,
-				{firstIndex} = this.state,
 				{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 				numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 				wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
@@ -455,16 +496,18 @@ const VirtualListBaseFactory = (type) => {
 				dataSize,
 				moreInfo
 			}))) {
-				newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff);
+				newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff, firstIndex);
 			}
 
-			this.setState({firstIndex: newFirstIndex, numOfItems});
+			return {
+				firstIndex: newFirstIndex,
+				numOfItems: numOfItems
+			};
 		}
 
-		calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff) {
+		calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff, firstIndex) {
 			const
 				{overhang} = props,
-				{firstIndex} = this.state,
 				{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, scrollPosition, threshold} = this,
 				{gridSize} = primary;
 			let newFirstIndex = firstIndex;
@@ -499,7 +542,7 @@ const VirtualListBaseFactory = (type) => {
 		calculateScrollBounds (props) {
 			const
 				{clientSize} = props,
-				node = this.containerRef;
+				node = this.containerRef.current;
 
 			if (!clientSize && !node) {
 				return;
@@ -528,9 +571,9 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		setContainerSize = () => {
-			if (this.contentRef) {
-				this.contentRef.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
-				this.contentRef.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
+			if (this.contentRef.current) {
+				this.contentRef.current.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
+				this.contentRef.current.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
 			}
 		}
 
@@ -555,8 +598,8 @@ const VirtualListBaseFactory = (type) => {
 				numOfExtent = Math.ceil(dataSize / dimensionToExtent),
 				numOfUpperLine = Math.floor(overhang / 2);
 
-			if (itemContainerRef) {
-				const firstChildNode = itemContainerRef.children[firstIndex % numOfItems];
+			if (itemContainerRef.currnet) {
+				const firstChildNode = itemContainerRef.current.children[firstIndex % numOfItems];
 				let info, baseIndex = -1, index, childNode, size, primaryPosition, secondaryPosition;
 
 				// find the first index which node's base index is as same as the last base index
@@ -603,7 +646,7 @@ const VirtualListBaseFactory = (type) => {
 				for (index = baseIndex - dimensionToExtent; index >= firstIndex; index -= dimensionToExtent) {
 					if (!childPositionInfo[index] || childPositionInfo[index].baseIndex !== baseIndex) {
 						// TBD: offsetHeight / vertical only for now
-						size = itemContainerRef.children[index % numOfItems].offsetHeight; // TBD: the node must exist in this case
+						size = itemContainerRef.current.children[index % numOfItems].offsetHeight; // TBD: the node must exist in this case
 						childPositionInfo[index] = {
 							size,
 							baseIndex,
@@ -616,7 +659,7 @@ const VirtualListBaseFactory = (type) => {
 				for (index = baseIndex + dimensionToExtent; index <= lastIndex; index += dimensionToExtent) {
 					info = childPositionInfo[index];
 					if (!info) { // need to measure and create info
-						size = itemContainerRef.children[index % numOfItems].offsetHeight; // TBD: the node must exist in this case
+						size = itemContainerRef.current.children[index % numOfItems].offsetHeight; // TBD: the node must exist in this case
 						childPositionInfo[index] = {
 							size,
 							baseIndex,
@@ -633,7 +676,7 @@ const VirtualListBaseFactory = (type) => {
 					info = childPositionInfo[Math.floor(index / dimensionToExtent) * dimensionToExtent];
 					primaryPosition = info.position;
 					secondaryPosition = (index % dimensionToExtent) * this.secondary.gridSize;
-					childNode = itemContainerRef.children[index % numOfItems];
+					childNode = itemContainerRef.current.children[index % numOfItems];
 					// TBD vertical only for now
 					childNode.style.transform = `translate3d(${this.props.rtl ? -secondaryPosition : secondaryPosition}px, ${primaryPosition}px, 0)`;
 				}
@@ -684,16 +727,21 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		adjustItemsPosition (max = Infinity) {
+			console.log(this.state.firstIndex, this.childPositionInfo)
 			const
 				{firstIndex} = this.state,
 				{dimensionToExtent, childPositionInfo} = this,
 				{gridSize} = this.primary,
-				baseIndex = childPositionInfo[firstIndex].baseIndex;
+				baseIndex = childPositionInfo[firstIndex] ? childPositionInfo[firstIndex].baseIndex : -1;
 			let
 				info = null,
 				firstIndexToAdjust = firstIndex,
 				gap = 0,
 				index;
+
+			if (baseIndex === -1) {
+				return;
+			}
 
 			for (index = firstIndex - dimensionToExtent; index >= 0; index -= dimensionToExtent) {
 				info = childPositionInfo[index];
@@ -726,7 +774,7 @@ const VirtualListBaseFactory = (type) => {
 
 				for (index = firstIndex; index < firstIndex + numOfItems; ++index) {
 					info = childPositionInfo[Math.floor(index / dimensionToExtent) * dimensionToExtent];
-					node = this.itemContainerRef.children[index % numOfItems];
+					node = this.itemContainerRef.current.children[index % numOfItems];
 					primary = info.position;
 					secondary = (index % dimensionToExtent) * this.secondary.gridSize;
 					// TBD vertical only for now
@@ -769,17 +817,18 @@ const VirtualListBaseFactory = (type) => {
 
 		// Native only
 		scrollToPosition (x, y, rtl = this.props.rtl) {
-			if (this.containerRef) {
-				this.containerRef.scrollTo(
-					(rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y
-				);
+			if (this.containerRef.current) {
+				if (rtl) {
+					x = (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
+				}
+				this.containerRef.current.scrollTo(x, y);
 			}
 		}
 
 		// JS only
 		setScrollPosition (x, y, rtl = this.props.rtl) {
-			if (this.contentRef) {
-				this.contentRef.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
+			if (this.contentRef.current) {
+				this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
 				this.didScroll(x, y);
 			}
 		}
@@ -855,7 +904,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		getItemNode = (index) => {
-			const ref = this.itemContainerRef;
+			const ref = this.itemContainerRef.current;
 
 			return ref ? ref.children[index % this.state.numOfItems] : null;
 		}
@@ -904,12 +953,11 @@ const VirtualListBaseFactory = (type) => {
 			const
 				{dataSize} = this.props,
 				{firstIndex, numOfItems} = this.state,
-				{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc, childPositionInfo} = this,
-				diff = firstIndex - this.prevFirstIndex,
-				updateFrom = (cc.length === 0 || 0 >= diff || diff >= numOfItems || this.prevFirstIndex === -1) ? firstIndex : this.prevFirstIndex + numOfItems;
+				{cc, isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, childPositionInfo} = this;
 			let
 				hideTo = 0,
-				updateTo = (cc.length === 0 || -numOfItems >= diff || diff > 0 || this.prevFirstIndex === -1) ? firstIndex + numOfItems : this.prevFirstIndex;
+				updateFrom = cc.length ? this.state.updateFrom : firstIndex,
+				updateTo = cc.length ? this.state.updateTo : firstIndex + numOfItems;
 
 			if (updateFrom >= updateTo) {
 				return;
@@ -947,8 +995,6 @@ const VirtualListBaseFactory = (type) => {
 			for (let i = updateTo; i < hideTo; i++) {
 				this.applyStyleToHideNode(i);
 			}
-
-			this.prevFirstIndex = firstIndex;
 		}
 
 		getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
@@ -966,7 +1012,7 @@ const VirtualListBaseFactory = (type) => {
 		syncClientSize = () => {
 			const
 				{props} = this,
-				node = this.containerRef;
+				node = this.containerRef.current;
 
 			if (!props.clientSize && !node) {
 				return false;
@@ -978,7 +1024,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
 				this.calculateMetrics(props);
-				this.updateStatesAndBounds(props);
+				this.setState(this.getStatesAndUpdateBounds(props));
 				this.setContainerSize();
 				return true;
 			}
@@ -987,24 +1033,6 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		// render
-
-		initContainerRef = (ref) => {
-			if (ref) {
-				this.containerRef = ref;
-			}
-		}
-
-		initContentRef = (ref) => {
-			if (ref) {
-				this.contentRef = ref;
-			}
-		}
-
-		initItemContainerRef = (ref) => {
-			if (ref) {
-				this.itemContainerRef = ref;
-			}
-		}
 
 		mergeClasses = (className) => {
 			let containerClass = null;
@@ -1019,7 +1047,7 @@ const VirtualListBaseFactory = (type) => {
 		render () {
 			const
 				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
-				{cc, initItemContainerRef, primary} = this,
+				{cc, itemContainerRef, primary} = this,
 				containerClasses = this.mergeClasses(className);
 
 			delete rest.cbScrollTo;
@@ -1032,6 +1060,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.itemRenderer;
 			delete rest.itemSize;
 			delete rest.onUpdate;
+			delete rest.onUpdateItems;
 			delete rest.overhang;
 			delete rest.pageScroll;
 			delete rest.rtl;
@@ -1043,9 +1072,9 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			return (
-				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.initContainerRef} style={style}>
-					<div {...rest} ref={this.initContentRef}>
-						{itemsRenderer({cc, initItemContainerRef, primary})}
+				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.containerRef} style={style}>
+					<div {...rest} ref={this.contentRef}>
+						{itemsRenderer({cc, itemContainerRef, primary})}
 					</div>
 				</div>
 			);
@@ -1060,7 +1089,7 @@ const VirtualListBaseFactory = (type) => {
  * @class VirtualListBase
  * @memberof ui/VirtualList
  * @ui
- * @private
+ * @public
  */
 const VirtualListBase = VirtualListBaseFactory(JS);
 VirtualListBase.displayName = 'ui:VirtualListBase';
@@ -1077,14 +1106,168 @@ VirtualListBase.displayName = 'ui:VirtualListBase';
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'ui:VirtualListBaseNative';
 
+/**
+ * A callback function that receives a reference to the `scrollTo` feature.
+ *
+ * Once received, the `scrollTo` method can be called as an imperative interface.
+ *
+ * The `scrollTo` function accepts the following paramaters:
+ * - {position: {x, y}} - Pixel value for x and/or y position
+ * - {align} - Where the scroll area should be aligned. Values are:
+ *   `'left'`, `'right'`, `'top'`, `'bottom'`,
+ *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
+ * - {index} - Index of specific item. (`0` or positive integer)
+ *   This option is available for only `VirtualList` kind.
+ * - {node} - Node to scroll into view
+ * - {animate} - When `true`, scroll occurs with animation. When `false`, no
+ *   animation occurs.
+ * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
+ *   by `index` or `node`.
+ * > Note: Only specify one of: `position`, `align`, `index` or `node`
+ *
+ * Example:
+ * ```
+ *	// If you set cbScrollTo prop like below;
+ *	cbScrollTo: (fn) => {this.scrollTo = fn;}
+ *	// You can simply call like below;
+ *	this.scrollTo({align: 'top'}); // scroll to the top
+ * ```
+ *
+ * @name cbScrollTo
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {Function}
+ * @public
+ */
+
+/**
+ * Specifies how to show horizontal scrollbar.
+ *
+ * Valid values are:
+ * * `'auto'`,
+ * * `'visible'`, and
+ * * `'hidden'`.
+ *
+ * @name horizontalScrollbar
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @default 'auto'
+ * @public
+ */
+
+/**
+ * Prevents scroll by wheeling on the list.
+ *
+ * @name noScrollByWheel
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {Boolean}
+ * @default false
+ * @public
+ */
+
+/**
+ * Called when scrolling.
+ *
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+ * It is not recommended to set this prop since it can cause performance degradation.
+ * Use `onScrollStart` or `onScrollStop` instead.
+ *
+ * @name onScroll
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {Function}
+ * @param {Object} event
+ * @param {Number} event.scrollLeft Scroll left value.
+ * @param {Number} event.scrollTop Scroll top value.
+ * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+ * @public
+ */
+
+/**
+ * Called when scroll starts.
+ *
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+ * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
+ *
+ * Example:
+ * ```
+ * onScrollStart = ({scrollLeft, scrollTop, moreInfo}) => {
+ *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+ *     // do something with firstVisibleIndex and lastVisibleIndex
+ * }
+ *
+ * render = () => (
+ *     <VirtualList
+ *         ...
+ *         onScrollStart={this.onScrollStart}
+ *         ...
+ *     />
+ * )
+ * ```
+ *
+ * @name onScrollStart
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {Function}
+ * @param {Object} event
+ * @param {Number} event.scrollLeft Scroll left value.
+ * @param {Number} event.scrollTop Scroll top value.
+ * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+ * @public
+ */
+
+/**
+ * Called when scroll stops.
+ *
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+ * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
+ *
+ * Example:
+ * ```
+ * onScrollStop = ({scrollLeft, scrollTop, moreInfo}) => {
+ *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+ *     // do something with firstVisibleIndex and lastVisibleIndex
+ * }
+ *
+ * render = () => (
+ *     <VirtualList
+ *         ...
+ *         onScrollStop={this.onScrollStop}
+ *         ...
+ *     />
+ * )
+ * ```
+ *
+ * @name onScrollStop
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {Function}
+ * @param {Object} event
+ * @param {Number} event.scrollLeft Scroll left value.
+ * @param {Number} event.scrollTop Scroll top value.
+ * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+ * @public
+ */
+
+/**
+ * Specifies how to show vertical scrollbar.
+ *
+ * Valid values are:
+ * * `'auto'`,
+ * * `'visible'`, and
+ * * `'hidden'`.
+ *
+ * @name verticalScrollbar
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @default 'auto'
+ * @public
+ */
+
 const ScrollableVirtualList = (props) => (
 	<Scrollable
 		{...props}
 		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...rest}
-				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef} role="list">{cc}</div> : null
+				itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+					cc.length ? <div ref={itemContainerRef} role="list">{cc}</div> : null
 				)}
 				ref={initChildRef}
 			/>
@@ -1106,8 +1289,8 @@ const ScrollableVirtualListNative = (props) => (
 		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...rest}
-				itemsRenderer={({cc, initItemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={initItemContainerRef} role="list">{cc}</div> : null
+				itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+					cc.length ? <div ref={itemContainerRef} role="list">{cc}</div> : null
 				)}
 				ref={initChildRef}
 			/>
@@ -1116,17 +1299,6 @@ const ScrollableVirtualListNative = (props) => (
 );
 
 ScrollableVirtualListNative.propTypes = /** @lends ui/VirtualList.VirtualListBaseNative.prototype */ {
-	/**
-	 * The layout direction of the list.
-	 *
-	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'vertical'
-	 * @public
-	 */
 	direction: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 

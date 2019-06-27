@@ -1,7 +1,6 @@
 import Marquee from '@enact/moonstone/Marquee';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, number, select, text} from '../../src/enact-knobs';
 
@@ -10,9 +9,7 @@ Marquee.displayName = 'Marquee';
 storiesOf('Moonstone', module)
 	.add(
 		'Marquee',
-		withInfo({
-			text: 'The basic MarqueeText'
-		})(() => {
+		() => {
 			const disabled = boolean('disabled', Marquee);
 			return (
 				<section>
@@ -33,5 +30,10 @@ storiesOf('Moonstone', module)
 					{disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>Marquee does not visually respond to <code>disabled</code> state.</p> : <p />}
 				</section>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'The basic MarqueeText'
+			}
+		}
 	);

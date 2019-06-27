@@ -1,5 +1,4 @@
 import kind from '@enact/core/kind';
-import Uppercase from '@enact/i18n/Uppercase';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -31,13 +30,11 @@ const TooltipBase = kind({
 		/**
 		 * Position of tooltip arrow in relation to the activator.
 		 *
-		 * * Values: `'left'`, `'center'`, `'right'`, `'top'`, `'middle'`, `'bottom'`
-		 *
 		 * Note that `'left'`, `'center'`, `'right'` are applicable when direction is in vertical
 		 * orientation (i.e. `'above'`, `'below'`), and `'top'`, `'middle'`, and `'bottom'` are
 		 * applicable when direction is in horizontal orientation (i.e. `'left'`, `'right'`)
 		 *
-		 * @type {String}
+		 * @type {('left'|'center'|'right'|'top'|'middle'|'bottom')}
 		 * @default 'right'
 		 * @public
 		 */
@@ -46,13 +43,27 @@ const TooltipBase = kind({
 		/**
 		 * Direction of label in relation to the activator.
 		 *
-		 * * Values: `'above'`, `'below'`, `'left'`, and `'right'`
-		 *
-		 * @type {String}
+		 * @type {('above'|'below'|'left'|'right')}
 		 * @default 'above'
 		 * @public
 		 */
 		direction: PropTypes.oneOf(['above', 'below', 'left', 'right']),
+
+		/**
+		 * A value representing the amount to offset the label portion of the tooltip.
+		 *
+		 * In a "center" aligned tooltip, the label may be desirable to offset to one side or the
+		 * other. This prop accepts a value betwen -0.5 and 0.5 (representing 50% to the left or
+		 * right). This defaults to 0 offset (centered). It also automatically caps the value so it
+		 * never positions the tooltip label past the anchored arrow. If the tooltip label or arrow
+		 * has non-rectangular geometry (rounded corners, a wide tail, etc), you'll need to manually
+		 * account for that in your provided offset value.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		labelOffset: PropTypes.number,
 
 		/**
 		 * Style object for tooltip position.
@@ -66,6 +77,18 @@ const TooltipBase = kind({
 			right: PropTypes.number,
 			top: PropTypes.number
 		}),
+
+		/**
+		 * Anchors the tooltip relative to its container.
+		 *
+		 * Reconfigures the component to anchor itself to the designated edge of its container.
+		 * When this is not specified, the implication is that the component is "absolutely"
+		 * positioned, relative to the viewport, rather than its parent layer.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		relative: PropTypes.bool,
 
 		/**
 		 * Called when the tooltip mounts/unmounts, giving a reference to the DOM.
@@ -89,7 +112,8 @@ const TooltipBase = kind({
 
 	defaultProps: {
 		arrowAnchor: 'right',
-		direction: 'above'
+		direction: 'above',
+		labelOffset: 0
 	},
 
 	styles: {
@@ -98,9 +122,13 @@ const TooltipBase = kind({
 	},
 
 	computed: {
-		arrowType: ({arrowAnchor}) => (arrowAnchor === 'center' || arrowAnchor === 'middle') ?
-			'M0,5C0,4,1,3,3,2.5C1,2,0,1,0,0V5Z' : 'M0,5C0,3,1,0,3,0H0V5Z',
-		className: ({direction, arrowAnchor, styler}) => styler.append(direction, `${arrowAnchor}Arrow`),
+		labelOffset: ({labelOffset}) => {
+			if (labelOffset) {
+				const cappedPosition = Math.max(-0.5, Math.min(0.5, labelOffset));
+				return {transform: `translateX(${cappedPosition * 100}%)`};
+			}
+		},
+		className: ({direction, arrowAnchor, relative, styler}) => styler.append(direction, `${arrowAnchor}Arrow`, {relative, absolute: !relative}),
 		style: ({position, style}) => {
 			return {
 				...style,
@@ -109,35 +137,35 @@ const TooltipBase = kind({
 		}
 	},
 
-	render: ({children, tooltipRef, arrowType, width, ...rest}) => {
+	render: ({children, tooltipRef, width, labelOffset, ...rest}) => {
 		delete rest.arrowAnchor;
+		delete rest.labelOffset;
 		delete rest.direction;
 		delete rest.position;
+		delete rest.relative;
 
 		return (
 			<div {...rest}>
-				<svg className={css.tooltipArrow} viewBox="0 0 3 5">
-					<path d={arrowType} />
-				</svg>
-				<TooltipLabel tooltipRef={tooltipRef} width={width}>
-					{children}
-				</TooltipLabel>
+				<div className={css.tooltipAnchor} ref={tooltipRef} >
+					<div className={css.tooltipArrow} />
+					<TooltipLabel width={width} style={labelOffset}>
+						{children}
+					</TooltipLabel>
+				</div>
 			</div>
 		);
 	}
 });
 
 /**
- * A tooltip component with Moonstone styling applied. If the Tooltip's child component is text, it
- * will be uppercased unless `casing` is set.
+ * A tooltip component with Moonstone styling applied.
  *
  * @class Tooltip
  * @memberof moonstone/TooltipDecorator
- * @mixes i18n/Uppercase.Uppercase
  * @ui
  * @public
  */
-const Tooltip = Skinnable(Uppercase(TooltipBase));
+const Tooltip = Skinnable(TooltipBase);
 
 export default Tooltip;
 export {Tooltip, TooltipBase};

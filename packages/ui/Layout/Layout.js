@@ -1,32 +1,136 @@
 /**
- * Provides ui layout support using `Cell`, `Row`, and `Column` that uses flexbox to lay out elements.
+ * A convenient tool for laying-out content using `Layout`, `Cell`, `Row`, and `Column`.
+ *
+ * Layout is a powerful and versatile tool used for arranging content on the screen. On a conceptual
+ * level, it mixes the best parts of HTML tables wtih the best parts of HTML framesets, both of
+ * which were largely abandoned for their drawbacks, ignoring their strengths. A `Layout` is simply
+ * a container for `Cell`, the only "legal" child. Conversely, `Cell` may only be used in a
+ * `Layout`. Cells in a Layout can either be positioned next to each other (horizontally) or
+ * above/below each other (vertically) in what we refer to as a [Row]{@link ui/Layout.Row} or
+ * [Column]{@link ui/Layout.Column}, respectively.
+ *
+ * The `Row` and `Column` layout presets describe the direction of layout for their children. This
+ * can sometimes cause confusion. A `Row` of children naturally forms a _layout_ whose children can
+ * have the _appearance_ of columns. To keep things clear, think about the layout rather than the
+ * what the children themselves represent.
+ *
+ * `Layout` is an implementation of flex-box, but with built-in rails, properties, and features to
+ * help avoid common problems with flex-box; things like content overflowing, sizing quirks, and
+ * positioning problems regarding content of unknown or undefined dimension.
+ *
+ * The following scenarios are some common cases where `Layout` can truly help out. A quality of
+ * `Cell` you'll see below is that when a `Cell` has no defined size, it automatically sizes to fill
+ * any remaining space in the `Layout`. If there are multiple auto-sizing `Cell` components, they
+ * share the space, subdividing it equally among themselves. It's great to leverage this and only
+ * apply sizes to `Cell`s which must have defined sizes. `shrink` is one of the ways you can impose
+ * size guidelines on a `Cell`. It automatically fits the size of the Cell to the size of its
+ * content.
+ *
+ * A row of cells where the last one should always attach to the right side, regardless of the size
+ * of the main "content" cell:
+ * ```
+ * ┌───────┬─┐
+ * │Main   │R│
+ * └───────┴─┘
+ * ```
+ *
+ * ```
+ * <Row>
+ * 	<Cell>Main Content</Cell>
+ * 	<Cell shrink>Right Side</Cell>
+ * </Row>
+ * ```
+ *
+ * A "two-column" layout with equal sized cells using `Row`:
+ * ```
+ * ┌────┬────┐
+ * │L   │R   │
+ * └────┴────┘
+ * ```
+ *
+ * ```
+ * <Row style={{height: '100%'}}>
+ * 	<Cell>Left Column</Cell>
+ * 	<Cell>Right Column</Cell>
+ * </Row>
+ * ```
+ * *Remember:* The cells of the `Row` are the columns in our layout. It's likely that in a complex
+ * layout `Column` would be used inside the left and right cells to arrange the components, as in
+ * the example below.
+ *
+ * A full-height sidebar with a header and body to the right:
+ * ```
+ * ┌──┬──────┐
+ * │S │HEADER│
+ * │  ├──────┤
+ * │  │Body  │
+ * │  │      │
+ * └──┴──────┘
+ * ```
+ *
+ * ```
+ * <Row style={{height: '100%'}}>
+ * 	<Cell size="20%">Sidebar</Cell>
+ * 	<Cell>
+ * 		<Column>
+ * 			<Cell size={90} component="header">
+ * 				<h1>HEADER</h1>
+ * 			</Cell>
+ * 			<Cell>
+ * 				<p>Body area</p>
+ * 			</Cell>
+ * 		</Column>
+ * 	</Cell>
+ * </Row>
+ * ```
+ * *Note:* Here, we've set the height of `Row` so it fills the height of the screen, allowing the
+ * Sidebar Cell and content Cell to stretch from the top to the bottom. We've also leveraged the
+ * `component` prop on the header cell, which tells `Cell` to render itself as a "header" HTML tag
+ * rather than its usual "div" tag.
+ *
+ * The example below produces a layout like the following:
+ * ```
+ * ┌─┬─────┬─┐
+ * │o│Item │o│
+ * └─┴─────┴─┘
+ * ```
+ *
+ * You'll notice the use of some special classes in the example: `"debug layout"`. Adding these on
+ * any element in your DOM hierarchy will enable borders in Layout and Cell to help visualize what
+ * is happening in the layout. They automatically change color the deeper in the stack they go.
  *
  * @example
- * <Layout>
+ * <Layout className="debug layout">
  * 	<Cell shrink>
- * 		<Button small>First</Button>
+ * 		<Button>First</Button>
  * 	</Cell>
  * 	<Cell>
  * 		<Item>An Item with some long text in it</Item>
  * 	</Cell>
  * 	<Cell shrink>
- * 		<Button small>Last</Button>
+ * 		<Button>Last</Button>
  * 	</Cell>
  * </Layout>
  *
  * @module ui/Layout
  * @exports Cell
+ * @exports CellBase
+ * @exports CellDecorator
  * @exports Column
  * @exports Layout
  * @exports LayoutBase
+ * @exports LayoutDecorator
  * @exports Row
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
+import React from 'react';
 
-import {Cell, CellBase, toFlexAlign} from './Cell';
+import ForwardRef from '../ForwardRef';
+
+import {Cell, CellBase, CellDecorator, toFlexAlign} from './Cell';
 
 import css from './Layout.module.less';
 
@@ -55,7 +159,7 @@ import css from './Layout.module.less';
  * </fieldset>
  * ```
  *
- * @class Layout
+ * @class LayoutBase
  * @ui
  * @memberof ui/Layout
  * @public
@@ -63,7 +167,7 @@ import css from './Layout.module.less';
 const LayoutBase = kind({
 	name: 'LayoutBase',
 
-	propTypes: /** @lends ui/Layout.Layout.prototype */ {
+	propTypes: /** @lends ui/Layout.LayoutBase.prototype */ {
 		/**
 		 * The alignment of children.
 		 *
@@ -86,7 +190,7 @@ const LayoutBase = kind({
 		/**
 		 * Only [Cell]{@link ui/Layout.Cell} components are supported as children.
 		 *
-		 * @type {Any}
+		 * @type {Cell|Cell[]}
 		 * @public
 		 */
 		children: PropTypes.any,
@@ -95,11 +199,19 @@ const LayoutBase = kind({
 		 * The type of component to use to render as the `Layout`. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 * @public
 		 */
-		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+		component:  EnactPropTypes.renderable,
+
+		/**
+		 * Called with a reference to [component]{@link ui/Layout.Layout#component}
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Allows this `Layout` to have following siblings drawn on the same line as itself
@@ -175,52 +287,117 @@ const LayoutBase = kind({
 		}
 	},
 
-	render: ({component: Component, ...rest}) => {
+	render: ({component: Component, componentRef, ...rest}) => {
 		delete rest.align;
 		delete rest.inline;
 		delete rest.orientation;
 		delete rest.wrap;
 
-		return <Component {...rest} />;
+		return <Component ref={componentRef} {...rest} />;
 	}
 });
 
 /**
- * A {@link ui/Layout.Layout} that positions its [Cells]{@link ui/Layout.Cell} vertically.
+ * Applies Layout behaviors.
  *
- * @class Column
- * @ui
+ * @hoc
  * @memberof ui/Layout
+ * @mixes ui/ForwardRef.ForwardRef
  * @public
  */
-const Column = (props) => (
+const LayoutDecorator = ForwardRef({prop: 'componentRef'});
+
+/**
+ * A container for `Cell`s.
+ *
+ * A stateless component that acts as a containing area for [Cells]{@link ui/Layout.Cell} to be
+ * positioned in a row or a column (horizontally or vertically, respectively. It supports an
+ * [orientation]{@link ui/Layout.Layout#orientation} property for laying-out its contents
+ * (`Cells`) in an organized, readable way.
+ *
+ * Example:
+ * ```
+ * import Input from '@enact/moonstone/Input';
+ * import css from './LayoutExample.less';
+ * ...
+ * <fieldset>
+ * 	<Layout align="center">
+ * 		<Cell component="label" size="40%" className={css.label} shrink>First Name</Cell>
+ * 		<Cell component={Input} placeholder="First" className={css.input} />
+ * 	</Layout>
+ * 	<Layout align="center">
+ * 		<Cell component="label" size="40%" className={css.label} shrink>Last Name</Cell>
+ * 		<Cell component={Input} placeholder="Last" className={css.input} />
+ * 	</Layout>
+ * </fieldset>
+ * ```
+ *
+ * @class Layout
+ * @memberof ui/Layout
+ * @extends ui/Layout.LayoutBase
+ * @mixes ui/ForwardRef.ForwardRef
+ * @ui
+ * @public
+ */
+const Layout = LayoutDecorator(LayoutBase);
+
+/**
+ * Shorthand for `<Layout orientation="vertical">`, which positions its
+ * [Cells]{@link ui/Layout.Cell} vertically.
+ * ```
+ * ┌────┐
+ * ├────┤
+ * ├────┤
+ * ├────┤
+ * └────┘
+ * ```
+ *
+ * @class Column
+ * @memberof ui/Layout
+ * @extends ui/Layout.Layout
+ * @mixes ui/ForwardRef.ForwardRef
+ * @ui
+ * @public
+ */
+const Column = LayoutDecorator((props) => (
 	LayoutBase.inline({
 		...props,
 		orientation: 'vertical'
 	})
-);
+));
 
 /**
- * A {@link ui/Layout.Layout} that positions its [Cells]{@link ui/Layout.Cell} horizontally.
+ * Shorthand for `<Layout orientation="horizontal">`, which positions its
+ * [Cells]{@link ui/Layout.Cell} horizontally.
+ * ```
+ * ┌─┬─┬─┬─┐
+ * │ │ │ │ │
+ * └─┴─┴─┴─┘
+ * ```
  *
  * @class Row
- * @ui
  * @memberof ui/Layout
+ * @extends ui/Layout.Layout
+ * @mixes ui/ForwardRef.ForwardRef
+ * @ui
  * @public
  */
-const Row = (props) => (
+const Row = LayoutDecorator((props) => (
 	LayoutBase.inline({
 		...props,
+
 		orientation: 'horizontal'
 	})
-);
+));
 
 export default LayoutBase;
 export {
 	Cell,
 	CellBase,
+	CellDecorator,
 	Column,
-	LayoutBase as Layout,
+	Layout,
 	LayoutBase,
+	LayoutDecorator,
 	Row
 };

@@ -3,7 +3,6 @@
  *
  * @example
  * <Divider
- *   casing="preserve"
  *   spacing="medium"
  * >
  *   A group of related components
@@ -16,18 +15,10 @@
  */
 
 import kind from '@enact/core/kind';
-import Uppercase from '@enact/i18n/Uppercase';
-import Pure from '@enact/ui/internal/Pure';
-import PropTypes from 'prop-types';
-import compose from 'ramda/src/compose';
-import defaultProps from 'recompose/defaultProps';
-import setPropTypes from 'recompose/setPropTypes';
+import deprecate from '@enact/core/internal/deprecate';
 import React from 'react';
 
-import {MarqueeDecorator} from '../Marquee';
-import Skinnable from '../Skinnable';
-
-import css from './Divider.module.less';
+import {HeadingBase, HeadingDecorator} from '../Heading';
 
 /**
  * A labeled divider component.
@@ -42,85 +33,30 @@ import css from './Divider.module.less';
  */
 const DividerBase = kind({
 	name: 'Divider',
-
-	propTypes: /** @lends moonstone/Divider.DividerBase.prototype */ {
-		/**
-		 * The text for the label of the divider.
-		 *
-		 * A divider with no children (text content) will render simply as a horizontal line, with
-		 * even spacing above and below.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		children: PropTypes.node,
-
-		/**
-		 * The size of the spacing around the divider.
-		 *
-		 * Allowed values include:
-		 * * `'normal'` (default) - slightly larger than the standard spotlight spacing.
-		 * * `'small'` - same size as spotlight spacing.
-		 * * `'medium'` - 2x spotlight.
-		 * * `'large'` - 3x spotlight.
-		 * * `'none'` - no spacing at all. Neighboring elements will directly touch the divider.
-		 *
-		 * _Note:_ Spacing is separate from margin with regard to `margin-top`. It ensures a
-		 * consistent distance from the bottom horizontal line. It's safe to use `margin-top` to add
-		 * additional spacing above the divider.
-		 *
-		 * @type {String}
-		 * @default 'normal'
-		 * @public
-		 */
-		spacing: PropTypes.oneOf(['normal', 'small', 'medium', 'large', 'none'])
-	},
-
-	defaultProps: {
-		spacing: 'normal'
-	},
-
-	styles: {
-		css,
-		className: 'divider'
-	},
-
-	computed: {
-		className: ({spacing, styler}) => styler.append(spacing)
-	},
-
 	render: (props) => {
-		delete props.spacing;
-
-		return (
-			<h3 {...props} />
-		);
+		deprecate({
+			name: 'moonstone/Divider',
+			replacedBy: 'moonstone/Heading',
+			message: 'Use `showLine` to enable the same under line as Divider',
+			since: '2.6.0',
+			until: '3.0.0'
+		});
+		return <HeadingBase {...props} showLine size="medium" />;
 	}
 });
+
 
 /**
  * Applies Moonstone specific behaviors to [DividerBase]{@link moonstone/Divider.DividerBase}.
  *
+ * @name DividerDecorator
+ * @class
  * @hoc
  * @memberof moonstone/Divider
- * @mixes i18n/Uppercase.Uppercase
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes moonstone/Skinnable.Skinnable
  * @public
  */
-const DividerDecorator = compose(
-	setPropTypes({
-		marqueeOn: PropTypes.oneOf(['hover', 'render'])
-	}),
-	defaultProps({
-		casing: 'word',
-		marqueeOn: 'render'
-	}),
-	Pure,
-	Uppercase,
-	MarqueeDecorator,
-	Skinnable
-);
 
 /**
  * A labeled divider component, ready to use in Moonstone applications.
@@ -130,7 +66,6 @@ const DividerDecorator = compose(
  * Usage:
  * ```
  * <Divider
- *   casing="preserve"
  *   spacing="medium"
  * >
  *   Related Settings
@@ -146,18 +81,7 @@ const DividerDecorator = compose(
  * @ui
  * @public
  */
-const Divider = DividerDecorator(DividerBase);
-
-/**
- * The casing mode applied to the `children` text.
- *
- * @name casing
- * @type {String}
- * @default 'word'
- * @memberof moonstone/Divider.Divider.prototype
- * @see i18n/Uppercase#casing
- * @public
- */
+const Divider = HeadingDecorator(DividerBase);
 
 /**
  * Marquee animation trigger.
@@ -178,5 +102,5 @@ export default Divider;
 export {
 	Divider,
 	DividerBase,
-	DividerDecorator
+	HeadingDecorator as DividerDecorator
 };

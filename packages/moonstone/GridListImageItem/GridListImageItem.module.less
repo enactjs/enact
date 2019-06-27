@@ -36,38 +36,52 @@
 		padding-top: @moon-gridlist-item-caption-padding-top;
 	}
 
+	.image {
+		/* Public Class Names */
+	}
+
 	// Skin colors
 	.applySkins({
 		border-color: transparent;
-		color: @moon-body-text-color;
+		color: @moon-gridlist-item-color;
 
 		.icon {
-			background-color: @moon-white;
-			border-color: @moon-black;
+			background-color: @moon-gridlist-item-icon-bg-color;
+			border-color: @moon-gridlist-item-icon-border-color;
 			color: transparent;
 		}
 
 		&.selected {
-			border-color: @moon-gridlist-item-selection-color;
-			background-color: @moon-gridlist-item-selection-color;
+			border-color: @moon-gridlist-item-selected-border-color;
+			background-color: @moon-gridlist-item-selected-bg-color;
 
 			.icon {
-				border-color: @moon-accent;
-				color: @moon-accent;
+				border-color: @moon-gridlist-item-selected-icon-border-color;
+				color: @moon-gridlist-item-selected-icon-color;
 			}
 			.caption,
 			.subCaption {
-				color: @moon-spotlight-text-color;
+				color: @moon-gridlist-item-selected-color;
 			}
 		}
 
 		.focus({
-			border-color: @moon-spotlight-border-color;
-			background-color: @moon-spotlight-border-color;
+			border-color: @moon-gridlist-item-spotlight-border-color;
+			background-color: @moon-gridlist-item-spotlight-bg-color;
+
+			.icon {
+				color: @moon-gridlist-item-spotlight-icon-color;
+			}
 
 			.caption,
 			.subCaption {
-				color: @moon-spotlight-text-color;
+				color: @moon-gridlist-item-spotlight-color;
+			}
+
+			&.selected {
+				.icon {
+					color: @moon-gridlist-item-spotlight-selected-icon-color;
+				}
 			}
 		});
 	});

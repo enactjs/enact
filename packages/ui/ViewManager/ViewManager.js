@@ -9,27 +9,33 @@
  * @exports SlideRightArranger
  * @exports SlideTopArranger
  * @exports ViewManager
+ * @exports ViewManagerBase
+ * @exports ViewManagerDecorator
  */
 
-import React from 'react';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
+import React from 'react';
+
+import ForwardRef from '../ForwardRef';
 
 import {shape} from './Arranger';
 import TransitionGroup from './TransitionGroup';
 import {wrapWithView} from './View';
 
 /**
- * A `ViewManager` controls the visibility of a configurable number of views, allowing for them to be
- * transitioned on and off the viewport.
+ * The base `ViewManager` component, without
+ * [ViewManagerDecorator]{@link ui/ViewManager.ViewManagerDecorator} applied.
  *
- * @class ViewManager
- * @ui
+ * @class ViewManagerBase
  * @memberof ui/ViewManager
+ * @ui
  * @public
  */
-class ViewManager extends React.Component {
+const ViewManagerBase = class extends React.Component {
+	static displayName = 'ViewManager'
 
-	static propTypes = /** @lends ui/ViewManager.ViewManager.prototype */ {
+	static propTypes = /** @lends ui/ViewManager.ViewManagerBase.prototype */ {
 		/**
 		 * Arranger to control the animation
 		 *
@@ -57,13 +63,18 @@ class ViewManager extends React.Component {
 		/**
 		 * Type of component wrapping the children. May be a DOM node or a custom React component.
 		 *
-		 * @type {Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 */
-		component: PropTypes.oneOfType([
-			PropTypes.func,
-			PropTypes.string
-		]),
+		component: EnactPropTypes.renderable,
+
+		/**
+		 * Called with a reference to [component]{@link ui/ViewManager.ViewManager#component}
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Time in milliseconds to complete a transition
@@ -202,10 +213,11 @@ class ViewManager extends React.Component {
 			return {
 				reverseTransition: !!props.reverseTransition
 			};
-		} else if (props.index !== state.prevIndex) {
+		} else if (props.index !== state.index) {
 			return {
-				prevIndex: props.index,
-				reverseTransition: state.prevIndex > props.index
+				index: props.index,
+				prevIndex: state.index,
+				reverseTransition: state.index > props.index
 			};
 		}
 
@@ -213,15 +225,18 @@ class ViewManager extends React.Component {
 	}
 
 	render () {
-		const {arranger, childProps, children, duration, end, index, noAnimation, start, enteringDelay, enteringProp, ...rest} = this.props;
+		const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, ...rest} = this.props;
+		let {end = index, start = index} = this.props;
 		const {prevIndex: previousIndex, reverseTransition} = this.state;
 		const childrenList = React.Children.toArray(children);
 
-		const from = (start || start === 0) ? start : index;
-		const to = (end || end === 0) && end >= index ? end : index;
-		const size = to - from + ((noAnimation || !arranger) ? 0 : 1);
+		if (index > end) end = index;
+		if (index < start) start = index;
 
-		const views = childrenList.slice(from, to + 1);
+		const childCount = end - start + 1;
+		const size = (noAnimation || !arranger) ? childCount : childCount + 1;
+
+		const views = childrenList.slice(start, start + childCount);
 		const childFactory = wrapWithView({
 			arranger,
 			duration,
@@ -234,16 +249,45 @@ class ViewManager extends React.Component {
 			childProps
 		});
 
+		delete rest.end;
 		delete rest.reverseTransition;
+		delete rest.start;
 
 		return (
-			<TransitionGroup {...rest} childFactory={childFactory} size={size + 1} currentIndex={index}>
+			<TransitionGroup {...rest} childFactory={childFactory} size={size} currentIndex={index}>
 				{views}
 			</TransitionGroup>
 		);
 	}
-}
+};
+
+/**
+ * Applies ViewManager behaviors.
+ *
+ * @hoc
+ * @memberof ui/ViewManager
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const ViewManagerDecorator = ForwardRef({prop: 'componentRef'});
+
+/**
+ * A `ViewManager` controls the visibility of a configurable number of views, allowing for them to be
+ * transitioned on and off the viewport.
+ *
+ * @class ViewManager
+ * @memberof ui/ViewManager
+ * @extends ui/ViewManager.ViewManagerBase
+ * @mixes ui/ViewManager.ViewManagerDecorator
+ * @ui
+ * @public
+ */
+const ViewManager = ViewManagerDecorator(ViewManagerBase);
 
 export default ViewManager;
-export {ViewManager};
+export {
+	ViewManager,
+	ViewManagerBase,
+	ViewManagerDecorator
+};
 export * from './Arranger';

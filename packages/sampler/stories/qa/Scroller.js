@@ -1,5 +1,5 @@
 import Button from '@enact/moonstone/Button';
-import Divider from '@enact/moonstone/Divider';
+import Heading from '@enact/moonstone/Heading';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import Group from '@enact/ui/Group';
 import Item from '@enact/moonstone/Item';
@@ -44,7 +44,7 @@ class ScrollerResizableItem extends React.Component {
 		};
 		return (
 			<div style={{...style, height}}>
-				<Button onClick={this.props.toggleMore} small style={{position: 'absolute', bottom: 0}}>{text}</Button>
+				<Button onClick={this.props.toggleMore} size="small" style={{position: 'absolute', bottom: 0}}>{text}</Button>
 			</div>
 		);
 	}
@@ -68,37 +68,6 @@ class ScrollerWithResizable extends React.Component {
 				<Item>Item</Item>
 				<Item>Item</Item>
 				<ScrollerResizableItem more={this.state.more} toggleMore={this.handleClick} />
-			</Scroller>
-		);
-	}
-}
-
-class ScrollerTopMostVisibleItemInTheScroller extends React.Component {
-	componentDidMount () {
-		this.blurEvent = document.createEvent('Event');
-		this.blurEvent.initEvent('blur', true, true);
-		this.focusEvent = document.createEvent('Event');
-		this.focusEvent.initEvent('focus', true, true);
-	}
-
-	handleScrollStop = () => {
-		window.dispatchEvent(this.blurEvent);
-		window.dispatchEvent(this.focusEvent);
-	}
-
-	render () {
-		return (
-			<Scroller
-				focusableScrollbar
-				onScrollStop={this.handleScrollStop}
-				style={{height: ri.scale(200)}}
-				verticalScrollbar="visible"
-			>
-				<Item>Item</Item>
-				<Item>Focus me, press right, then select on down arrow</Item>
-				<Item>Focus should return here</Item>
-				<Item>Item</Item>
-				<Item>Item</Item>
 			</Scroller>
 		);
 	}
@@ -162,7 +131,7 @@ storiesOf('Scroller', module)
 		'List of things',
 		() => (
 			<Scroller
-				data-spotlight-container-disabled={boolean('data-spotlight-container-disabled', Scroller, false)}
+				spotlightDisabled={boolean('spotlightDisabled', Scroller, false)}
 				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
 			>
 				<Group childComponent={Item}>
@@ -213,7 +182,7 @@ storiesOf('Scroller', module)
 		'With Many ExpandableList',
 		() => (
 			<Scroller focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}>
-				<Divider>Nothing selected</Divider>
+				<Heading showLine>Nothing selected</Heading>
 				<ExpandableList
 					closeOnSelect
 					noneText="Nothing Selected"
@@ -229,7 +198,7 @@ storiesOf('Scroller', module)
 					]}
 				</ExpandableList>
 				<br />
-				<Divider>Default selected</Divider>
+				<Heading showLine>Default selected</Heading>
 				<ExpandableList
 					noneText="Nothing Selected"
 					selected={1}
@@ -238,7 +207,7 @@ storiesOf('Scroller', module)
 					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
 				<br />
-				<Divider>Default selected</Divider>
+				<Heading showLine>Default selected</Heading>
 				<ExpandableList
 					noneText="Nothing Selected"
 					selected={1}
@@ -247,7 +216,7 @@ storiesOf('Scroller', module)
 					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
 				<br />
-				<Divider>Default selected</Divider>
+				<Heading showLine>Default selected</Heading>
 				<ExpandableList
 					noneText="Nothing Selected"
 					selected={1}
@@ -256,7 +225,7 @@ storiesOf('Scroller', module)
 					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
 				<br />
-				<Divider>Multitple selected</Divider>
+				<Heading showLine>Multitple selected</Heading>
 				<ExpandableList
 					noneText="Nothing Selected"
 					select="multiple"
@@ -266,7 +235,7 @@ storiesOf('Scroller', module)
 					{['Option 1', 'Option 2', 'Option 3']}
 				</ExpandableList>
 				<br />
-				<Divider>Long contents selected</Divider>
+				<Heading showLine>Long contents selected</Heading>
 				<ExpandableList
 					noneText="Nothing Selected"
 					select="multiple"
@@ -282,12 +251,6 @@ storiesOf('Scroller', module)
 		'With Resizable',
 		() => (
 			<ScrollerWithResizable />
-		)
-	)
-	.add(
-		'Top Most Visible Item in the Scroller',
-		() => (
-			<ScrollerTopMostVisibleItemInTheScroller />
 		)
 	)
 	.add(
@@ -322,12 +285,30 @@ storiesOf('Scroller', module)
 	.add(
 		'Test scrolling to boundary with small overflow',
 		() => {
-			const size = number('Spacer size', 100, {max: 300, min: 0, range: true});
+			const size = number('Spacer size', Scroller, {max: 300, min: 0, range: true}, 100);
 			return (
 				<Scroller style={{height: ri.scaleToRem(200)}}>
 					<Item>1</Item>
 					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
 					<Item style={{marginBottom: ri.scaleToRem(18)}}>3</Item>
+				</Scroller>
+			);
+		}
+	)
+	.add(
+		'Test scrolling to boundary with long overflow',
+		() => {
+			const size = number('Spacer size', Scroller, {max: 300, min: 0, range: true}, 200);
+			return (
+				<Scroller
+					style={{height: ri.scaleToRem(200)}}
+					focusableScrollbar={boolean('focusableScrollbar', Scroller, true)}
+				>
+					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
+					<Item>1</Item>
+					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
+					<Item>3</Item>
+					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
 				</Scroller>
 			);
 		}
@@ -357,4 +338,81 @@ storiesOf('Scroller', module)
 				</ExpandableList>
 			</Scroller>
 		)
+	)
+	.add(
+		'With One Long Height Item',
+		() => (
+			<Scroller focusableScrollbar>
+				<div style={{height: '1220px'}}>
+					<Item style={{height: '1200px'}}>Long Height Item</Item>
+				</div>
+			</Scroller>
+		)
+	)
+	.add(
+		'With Nested Scroller',
+		() => {
+			let noScrollByWheel = boolean('noScrollByWheel', Scroller, false);
+			return (
+				<Scroller
+					direction="vertical"
+					verticalScrollbar="visible"
+				>
+					<Scroller
+						direction="horizontal"
+						horizontalScrollbar="visible"
+						noScrollByWheel={noScrollByWheel}
+						style={{
+							height: 'auto',
+							width: '90%'
+						}}
+					>
+						<div
+							style={{
+								backgroundColor: '#444',
+								width: ri.unit(2400, 'rem')
+							}}
+						>
+							<Item>The first nested scroller.</Item>
+							<br />
+							<br />
+							<Item>This is the upper horizontal scroller. If noScrollByWheel is not specified, this scroller will be scrolled by wheel and the outer scroller will not be scrolled.</Item>
+							<br />
+							<br />
+							<Item>If noScrollByWheel is specified, this scroller will NOT be scrolled by wheel but the outer scroller will be scrolled.</Item>
+							<br />
+							<br />
+							<Item>To set or unset noScrollByWheel prop, click KNOBS below.</Item>
+						</div>
+					</Scroller>
+					<Scroller
+						direction="horizontal"
+						horizontalScrollbar="visible"
+						noScrollByWheel={noScrollByWheel}
+						style={{
+							height: 'auto',
+							width: '90%'
+						}}
+					>
+						<div
+							style={{
+								backgroundColor: '#444',
+								width: ri.unit(2400, 'rem')
+							}}
+						>
+							<Item>The second nested scroller.</Item>
+							<br />
+							<br />
+							<Item>This is the lower horizontal scroller. If noScrollByWheel is not specified, this scroller will be scrolled by wheel and the outer scroller will not be scrolled.</Item>
+							<br />
+							<br />
+							<Item>If noScrollByWheel is specified, this scroller will NOT be scrolled by wheel but the outer scroller will be scrolled.</Item>
+							<br />
+							<br />
+							<Item>To set or unset noScrollByWheel prop, click KNOBS below.</Item>
+						</div>
+					</Scroller>
+				</Scroller>
+			);
+		}
 	);

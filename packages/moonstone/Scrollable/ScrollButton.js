@@ -1,6 +1,8 @@
 import kind from '@enact/core/kind';
+import ForwardRef from '@enact/ui/ForwardRef';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 import IconButton from '../IconButton';
 
@@ -16,7 +18,7 @@ import css from './Scrollbar.module.less';
  * @ui
  * @private
  */
-const ScrollButton = kind({
+const ScrollButtonBase = kind({
 	name: 'ScrollButton',
 
 	propTypes: /** @lends moonstone/Scrollable.ScrollButton.prototype */ {
@@ -53,7 +55,20 @@ const ScrollButton = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		disabled: PropTypes.bool
+		disabled: PropTypes.bool,
+
+		/**
+		 * Returns a ref to the root node of the scroll button
+		 *
+		 * See: https://github.com/facebook/prop-types/issues/240
+		 *
+		 * @type {Function|Object}
+		 * @private
+		 */
+		forwardRef: PropTypes.oneOfType([
+			PropTypes.func,
+			PropTypes.shape({current: PropTypes.any})
+		])
 	},
 
 	styles: {
@@ -61,11 +76,29 @@ const ScrollButton = kind({
 		className: 'scrollButton'
 	},
 
+	handlers: {
+		forwardRef: (node, {forwardRef}) => {
+			// Allowing findDOMNode in the absence of a means to retrieve a node ref through IconButton
+			// eslint-disable-next-line react/no-find-dom-node
+			const current = ReactDOM.findDOMNode(node);
+
+			// Safely handle old ref functions and new ref objects
+			switch (typeof forwardRef) {
+				case 'object':
+					forwardRef.current = current;
+					break;
+				case 'function':
+					forwardRef(current);
+					break;
+			}
+		}
+	},
+
 	computed: {
 		'aria-label': ({active, 'aria-label': ariaLabel}) => (active ? null : ariaLabel)
 	},
 
-	render: ({children, disabled, ...rest}) => {
+	render: ({children, disabled, forwardRef, ...rest}) => {
 		delete rest.active;
 
 		return (
@@ -73,13 +106,16 @@ const ScrollButton = kind({
 				{...rest}
 				backgroundOpacity="transparent"
 				disabled={disabled}
-				small
+				ref={forwardRef}
+				size="small"
 			>
 				{children}
 			</IconButton>
 		);
 	}
 });
+
+const ScrollButton = ForwardRef(ScrollButtonBase);
 
 export default ScrollButton;
 export {

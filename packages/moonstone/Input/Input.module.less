@@ -14,7 +14,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	flex-grow: 1;
-	text-indent: 0.2em;
+	text-indent: @moon-input-text-indent;
 
 	&[type=number] {
 		-moz-appearance: textfield;
@@ -34,15 +34,16 @@
 	}
 
 	.input-placeholder({
-		.vendor-opacity(1);
+		.vendor-opacity(@moon-input-placeholder-opacity);
 	});
 
-	.focus ({
+	.focus({
 		cursor: text;
 	});
 
 	.disabled({
 		cursor: default;
+		.vendor-opacity(@moon-input-disabled-opacity);
 	});
 
 	:global(.enact-locale-right-to-left) & {
@@ -53,14 +54,20 @@
 .decorator {
 	display: inline-flex;
 	position: relative;
-	padding: @moon-input-padding (@moon-input-height / 2);
-	border-radius: 1008px;
-	margin: 0 (@moon-spotlight-outset / 2);
-	border: @moon-input-border-width solid transparent;
+	padding: @moon-input-padding;
+	border-radius: @moon-input-border-radius;
+	margin: @moon-input-margin;
 	box-sizing: border-box;
 	vertical-align: middle;
 
 	.input,
+	.inputHighlight {
+		font-size: @moon-input-font-size;
+		font-weight: @moon-input-font-weight;
+	}
+
+	.input,
+	.inputHighlight,
 	.iconBefore,
 	.iconAfter {
 		line-height: @moon-input-height;
@@ -68,8 +75,21 @@
 		vertical-align: middle;
 	}
 
+	.inputHighlight {
+		position: absolute;
+		top: 6px;
+		height: @moon-input-highlight-height;
+		max-width: @moon-input-highlight-max-width;
+		overflow: hidden;
+		text-indent: @moon-input-text-indent;
+		letter-spacing: 0.1px;
+		pointer-events: none;
+		opacity: 0;
+		z-index: -1;
+	}
+
 	&.small {
-		padding: 0 (@moon-input-small-height / 2);
+		height: @moon-input-decorator-small-height;
 
 		.iconBefore,
 		.iconAfter {
@@ -80,6 +100,12 @@
 		.input {
 			font-size: @moon-input-small-font-size;
 			height: @moon-input-small-height;
+		}
+
+		.inputHighlight {
+			line-height: @moon-input-small-height;
+			height: @moon-input-decorator-small-height;
+			max-width: @moon-input-highlight-small-max-width;
 		}
 	}
 
@@ -118,44 +144,71 @@
 	// Skin colors
 	.applySkins({
 		background-color: @moon-input-decorator-bg-color;
+		color: @moon-input-text-color;
 
 		.input {
 			background: transparent;
-			color: @moon-input-text-color;
-
-			&::selection {
-				color: @moon-spotlight-text-color;
-				background-color: @moon-spotlight-bg-color;
-			}
+			color: inherit;
 
 			.input-placeholder({
 				color: @moon-input-placeholder-color;
 			});
 
-			.focus({
-				color: @moon-input-text-color;
-				background-color: inherit;
-			});
+			&:focus-within {
+				color: @moon-input-focus-text-color;
+
+				.input-placeholder({
+					color: @moon-input-placeholder-active-color;
+				});
+			}
 		}
 
 		&.invalid input {
 			color: @moon-red;
 		}
 
-		&:global(.spottable):focus {
-			color: @moon-input-text-color;
-			border-color: @moon-spotlight-border-color;
-			background-color: @moon-input-decorator-bg-color;
+		.inputHighlight {
+			color: transparent;
+			background-color: transparent;
+			// Set `.inputHighlight` background color to make it appear that the text is highlighted
+			// when `.input` has transparent background and when `.decorator` has focus, but not `.input`.
+			// background-color: @moon-spotlight-color;
 		}
 
-		&.focused {
-			border-color: @moon-active-border-color;
+		.focus({
+			background-color: @moon-input-decorator-focus-bg-color;
+			color: @moon-input-focus-text-color;
+			box-shadow: @moon-input-border-active-shadow;
+
+			.input {
+				.input-placeholder({
+					color: @moon-input-placeholder-focus-color;
+				});
+			}
+
+			// Set `.inputHighlight` opacity to make it appear that the text is highlighted
+			// when `.input` has transparent background and when `.decorator` has focus, but not `.input`.
+			// .inputHighlight {
+			// 	opacity: 1;
+			// }
+		});
+
+		&:focus-within {
+			background-color: @moon-input-decorator-active-bg-color;
 		}
 
-		.decoratorIcon,
-		&:global(.spottable):focus .decoratorIcon {
-			color: @moon-input-text-color;
-		}
+		.disabled({
+			.vendor-opacity(@moon-input-disabled-opacity);
+
+			.focus({
+				.vendor-opacity(@moon-input-disabled-opacity);
+			});
+
+			.input,
+			.decoratorIcon {
+				color: @moon-input-disabled-text-color;
+			}
+		});
 	});
 }
 
@@ -176,17 +229,8 @@
 .muted({
 	.decorator {
 		.applySkins({
-			&:global(.spottable):focus {
-				border-color: transparent;
-			}
-
-			&.focused {
-				border-color: transparent;
-			}
-
 			.focus({
 				background-color: @moon-input-decorator-bg-color;
-				border-color: transparent;
 			});
 		});
 	}

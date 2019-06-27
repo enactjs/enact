@@ -58,10 +58,14 @@ const SpinnerCore = kind({
 
 	render: ({children, css, ...rest}) => (
 		<div aria-live="off" role="alert" {...rest}>
-			<div className={css.ballDecorator}>
-				<div className={`${css.ball} ${css.ball1}`} />
-				<div className={`${css.ball} ${css.ball2}`} />
-				<div className={`${css.ball} ${css.ball3}`} />
+			<div className={css.bg}>
+				<div className={css.decorator}>
+					<div className={css.fan1} />
+					<div className={css.fan2} />
+					<div className={css.fan3} />
+					<div className={css.fan4} />
+					<div className={css.cap} />
+				</div>
 			</div>
 			{children ?
 				<Marquee className={css.client} marqueeOn="render" alignment="center">
@@ -99,6 +103,18 @@ const SpinnerBase = kind({
 		css: PropTypes.object,
 
 		/**
+		 * Customize the size of this component.
+		 *
+		 * Recommended usage is "medium" (default) for standalone and popup scenarios, while "small"
+		 * is best suited for use inside other elements, like {@link moonstone/SlotItem.SlotItem}.
+		 *
+		 * @type {('medium'|'small')}
+		 * @default 'medium'
+		 * @public
+		 */
+		size: PropTypes.oneOf(['medium', 'small']),
+
+		/**
 		 * Removes the background color (making it transparent).
 		 *
 		 * @type {Boolean}
@@ -109,6 +125,7 @@ const SpinnerBase = kind({
 	},
 
 	defaultProps: {
+		size: 'medium',
 		transparent: false
 	},
 
@@ -118,7 +135,8 @@ const SpinnerBase = kind({
 	},
 
 	computed: {
-		className: ({children, transparent, styler}) => styler.append(
+		className: ({children, size, transparent, styler}) => styler.append(
+			size,
 			{content: !!children, transparent}
 		)
 	},

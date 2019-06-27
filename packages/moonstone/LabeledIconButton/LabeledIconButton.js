@@ -58,8 +58,9 @@ const LabeledIconButtonBase = kind({
 		 * * `labeledIconButton` - The root component class
 		 * * `icon` - The icon component class
 		 * * `label` - The label component class
+		 * * `large` - Applied to a `size='large'` button
 		 * * `selected` - Applied to a `selected` button
-		 * * `small` - Applied to a `small` button
+		 * * `small` - Applied to a `size='small'` button
 		 *
 		 * @type {Object}
 		 * @public
@@ -90,7 +91,7 @@ const LabeledIconButtonBase = kind({
 	styles: {
 		css: componentCss,
 		className: 'labeledIconButton',
-		publicClassNames: ['labeledIconButton', 'icon', 'label', 'selected', 'small']
+		publicClassNames: ['labeledIconButton', 'icon', 'label', 'large', 'selected', 'small']
 	},
 
 	render: ({css, icon, selected, ...rest}) => {

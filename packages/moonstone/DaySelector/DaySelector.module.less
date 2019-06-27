@@ -1,12 +1,11 @@
 // DaySelector.module.less
 //
 
-@import '../styles/colors.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
 
 .daySelector {
-	border: @moon-day-selector-border-width solid @moon-white;
 	border-radius: @moon-day-selector-border-radius;
 	display: inline-flex;
 	white-space: nowrap;
@@ -48,4 +47,8 @@
 			padding-right: @moon-day-selector-padding;
 		}
 	}
+
+	.applySkins({
+		border: @moon-day-selector-border-width solid @moon-day-selector-border-color;
+	});
 }

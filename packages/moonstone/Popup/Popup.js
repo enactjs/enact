@@ -184,7 +184,7 @@ const PopupBase = kind({
 					<IconButton
 						className={css.closeButton}
 						backgroundOpacity="transparent"
-						small
+						size="small"
 						onTap={onCloseButtonClick}
 						aria-label={ariaLabel}
 					>
@@ -389,10 +389,9 @@ class Popup extends React.Component {
 	constructor (props) {
 		super(props);
 		this.paused = new Pause('Popup');
-		const animateOpen = this.props.noAnimation ? OpenState.OPEN : OpenState.OPENING;
 		this.state = {
 			floatLayerOpen: this.props.open,
-			popupOpen: this.props.open ? animateOpen : OpenState.CLOSED,
+			popupOpen: this.props.open ? OpenState.OPEN : OpenState.CLOSED,
 			prevOpen: this.props.open,
 			containerId: Spotlight.add(),
 			activator: null
@@ -412,7 +411,7 @@ class Popup extends React.Component {
 			} else {
 				return {
 					popupOpen: OpenState.CLOSED,
-					floatLayerOpen: state.popupOpen === OpenState.OPEN ? !props.noAnimation : false,
+					floatLayerOpen: state.popupOpen !== OpenState.CLOSED ? !props.noAnimation : false,
 					activator: props.noAnimation ? null : state.activator,
 					prevOpen: props.open
 				};
@@ -423,7 +422,7 @@ class Popup extends React.Component {
 
 	// Spot the content after it's mounted.
 	componentDidMount () {
-		if (this.props.open) {
+		if (this.props.open && getContainerNode(this.state.containerId)) {
 			this.spotPopupContent();
 		}
 	}
@@ -452,7 +451,7 @@ class Popup extends React.Component {
 	}
 
 	handleFloatingLayerOpen = () => {
-		if (!this.props.noAnimation) {
+		if (!this.props.noAnimation && this.state.popupOpen !== OpenState.OPEN) {
 			this.setState({
 				popupOpen: OpenState.OPENING
 			});

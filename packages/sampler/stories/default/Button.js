@@ -4,7 +4,6 @@ import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -16,27 +15,30 @@ const Config = mergeComponentMetadata('Button', UIButtonBase, UIButton, ButtonBa
 // Set up some defaults for info and knobs
 const prop = {
 	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
-	casing: ['preserve', 'sentence', 'word', 'upper'],
 	icons: ['', ...Object.keys(icons)]
 };
 
 storiesOf('Moonstone', module)
 	.add(
 		'Button',
-		withInfo({
-			text: 'The basic Button'
-		})(() => (
+		() => (
 			<Button
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
-				casing={select('casing', prop.casing, Config, 'upper')}
+				color={select('color', ['', 'red', 'green', 'yellow', 'blue'], Config, '')}
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', prop.icons, Config)}
-				minWidth={!!boolean('minWidth', Config)}
+				iconPosition={select('iconPosition', ['', 'before', 'after'], Config, '')}
+				minWidth={boolean('minWidth', Config) ? void 0 : false}
 				selected={boolean('selected', Config)}
-				small={boolean('small', Config)}
+				size={select('size', ['', 'small', 'large'], Config)}
 			>
 				{text('children', Config, 'click me')}
 			</Button>
-		))
+		),
+		{
+			info: {
+				text: 'The basic Button'
+			}
+		}
 	);

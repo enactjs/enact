@@ -8,7 +8,7 @@
 .toggleIcon {
 	width: @moon-formcheckbox-size;
 	height: @moon-formcheckbox-size;
-	border-radius: (@moon-formcheckbox-size / 2);
+	border-radius: @moon-formcheckbox-border-radius;
 
 	.moon-custom-text({
 		width: @moon-formcheckbox-size-large;
@@ -54,13 +54,17 @@
 		// Skin colors
 		.applySkins({
 			box-shadow: none;
-			background-color: @moon-spotlight-color;
+			background-color: @moon-formcheckbox-focus-bg-color;
 
-			&:not([disabled]) {
-				.icon {
-					color: @moon-spotlight-text-color;
-				}
+			.icon {
+				color: @moon-formcheckbox-focus-text-color;
 			}
+
+			.disabled({
+				.icon {
+					opacity: @moon-disabled-opacity;
+				}
+			});
 		});
 	}
 }, parent);
@@ -70,7 +74,12 @@
 		.toggleIcon {
 			.applySkins({
 				&:not([disabled]) {
+					box-shadow: inset 0 0 0 @moon-formcheckbox-border-size @moon-formcheckbox-border-color;
 					background-color: @moon-formcheckbox-bg-color;
+
+					.icon {
+						color: @moon-formcheckbox-text-color;
+					}
 				}
 			});
 		}

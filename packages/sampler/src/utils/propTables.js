@@ -5,6 +5,7 @@ const merge = (components, field) => {
 const mergeComponentMetadata = (displayName, ...components) => {
 	const fn = function () {};
 	fn.displayName = displayName;
+	fn.groupId = displayName;
 	fn.propTypes = merge(components, 'propTypes');
 	fn.defaultProps = merge(components, 'defaultProps');
 

@@ -2,6 +2,73 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [3.0.0-alpha.7] - 2019-06-24
+
+No significant changes.
+
+## [3.0.0-alpha.6] - 2019-06-17
+
+No significant changes.
+
+## [3.0.0-alpha.5] - 2019-06-10
+
+No significant changes.
+
+## [3.0.0-alpha.4] - 2019-06-03
+
+No significant changes.
+
+## [3.0.0-alpha.3] - 2019-05-29
+
+No significant changes.
+
+## [3.0.0-alpha.2] - 2019-05-20
+
+No significant changes.
+
+## [3.0.0-alpha.1] - 2019-05-15
+
+### Changed
+
+- `spotlight/Spottable` to allow disabled items to be focused
+
+## [2.6.0] - ???
+
+### Fixed
+
+- `spotlight` to unspot the current element when tapping on non-spottable target on touch platforms
+
+## [2.5.3] - 2019-06-06
+
+No significant changes.
+
+## [2.5.2] - 2019-04-23
+
+No significant changes.
+
+## [2.5.1] - 2019-04-09
+
+No significant changes.
+
+## [2.5.0] - 2019-04-01
+
+### Fixed
+
+- `spotlight` to guard against runtime errors caused by attempting to access containers that do not exist
+- `spotlight/Spottable` to prevent unnecessary updates due to focus and blur changes
+
+## [2.4.1] - 2019-03-11
+
+### Fixed
+
+- `spotlight` to remain in pointer mode when any 'cancel' key (e.g. Escape or back buttoon) is pressed
+
+## [2.4.0] - 2019-03-04
+
+### Fixed
+
+- `spotlight/Spottable` to prevent unnecessary updates due to focus changes
+
 ## [2.3.0] - 2019-02-11
 
 ### Added

@@ -72,9 +72,9 @@ export const validateRange = (value, min, max, component, valueName = '"value"',
  */
 export const validateStepped = (value, min, step, component, valueName = '"value"', stepName = '"step"') => {
 	if (__DEV__) {
-		if ((value - min) % step !== 0) {
+		// Ignore fractional steps as floating point math can give inconsistent results (1 % 0.1 != 0)
+		if (step && step === Math.floor(step) && (value - min) % step !== 0) {
 			warn(`Warning: ${component} ${valueName} (${value}) must be evenly divisible by ${stepName} (${step})`);
 		}
 	}
 };
-

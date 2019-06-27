@@ -1,10 +1,12 @@
+/* global MutationObserver ResizeObserver */
+
 /**
  * Moonstone styled tooltip components.
  *
  * @module moonstone/TooltipDecorator
- * @exports TooltipDecorator
  * @exports Tooltip
  * @exports TooltipBase
+ * @exports TooltipDecorator
  */
 
 import hoc from '@enact/core/hoc';
@@ -18,6 +20,7 @@ import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 
 import {Tooltip, TooltipBase} from './Tooltip';
+import {adjustDirection, adjustAnchor, calcOverflow, getLabelOffset, getPosition} from './util';
 
 let currentTooltip; // needed to know whether or not we should stop a showing job when unmounting
 
@@ -28,6 +31,20 @@ let currentTooltip; // needed to know whether or not we should stop a showing jo
  * @hocconfig
  */
 const defaultConfig = {
+	/**
+	 * The boundary around the screen which the tooltip should never cross, typically involving
+	 * flipping to an alternate orientation or adjusting its offset to remain on screen.
+	 * The default of 24 is derived from a standard 12px screen-keepout size plus the standard
+	 * Spotlight-outset (12px) margin/padding value which keeps elements and text aligned inside a
+	 * [Panel]{@link moonstone/Panels.Panel}. Note: This value will be scaled according to the
+	 * resolution.
+	 *
+	 * @type {Number}
+	 * @default 24
+	 * @memberof moonstone/TooltipDecorator.TooltipDecorator.defaultConfig
+	 */
+	screenEdgeKeepout: (12 + 12),
+
 	/**
 	 * The name of the property which will receive the tooltip node.
 	 *
@@ -84,16 +101,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			rtl: PropTypes.bool,
 
 			/**
-			 * The casing of `tooltipText`.
-			 *
-			 * @see i18n/Uppercase#casing
-			 * @type {String}
-			 * @default 'upper'
-			 * @public
-			 */
-			tooltipCasing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
-
-			/**
 			 * Time to wait (in milliseconds) before showing tooltip on hover.
 			 *
 			 * @type {Number}
@@ -103,18 +110,32 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			tooltipDelay: PropTypes.number,
 
 			/**
-			 * Position of the tooltip with respect to the activating control.
+			 * Position of the tooltip with respect to the wrapped component.
 			 *
-			 * * Values: `'above'`, `'above center'`, `'above left'`, `'above right'`, `'below'`,
-			 * `'below center'`, `'below left'`, `'below right'`, `'left bottom'`, `'left middle'`,
-			 * `'left top'`, `'right bottom'`, `'right middle'`, `'right top'`
+			 * | *Value* | *Tooltip Direction* |
+			 * |---|---|
+			 * | `'above'` | Above component, flowing to the right |
+			 * | `'above center'` | Above component, centered |
+			 * | `'above left'` | Above component, flowing to the left |
+			 * | `'above right'` | Above component, flowing to the right |
+			 * | `'below'` | Below component, flowing to the right |
+			 * | `'below center'` | Below component, centered |
+			 * | `'below left'` | Below component, flowing to the left |
+			 * | `'below right'` | Below component, flowing to the right |
+			 * | `'left bottom'` | Left of the component, contents at the bottom |
+			 * | `'left middle'` | Left of the component, contents middle aligned |
+			 * | `'left top'` | Left of the component, contents at the top |
+			 * | `'right bottom'` | Right of the component, contents at the bottom |
+			 * | `'right middle'` | Right of the component, contents middle aligned |
+			 * | `'right top'` | Right of the component, contents at the top |
 			 *
-			 * The values starting with `'left`' and `'right'` place the tooltip on the side
-			 * (sideways tooltip) with two additional positions available, `'top'` and `'bottom'`,
-			 * which place the tooltip content toward the top or bottom, with the tooltip pointer
-			 * middle-aligned to the activator.
+			 * `TooltipDectorator` attempts to choose the best direction to meet layout and language
+			 * requirements. Left and right directions will reverse for RTL languages. Additionally,
+			 * the tooltip will reverse direction if it will prevent overflowing off the viewport
 			 *
-			 * @type {String}
+			 * @type {('above'|'above center'|'above left'|'above right'|'below'|
+			 *  'below center'|'below left'|'below right'|'left bottom'|'left middle'|'left top'|
+			 * 	'right bottom'|'right middle'|'right top')}
 			 * @default 'above'
 			 * @public
 			 */
@@ -133,12 +154,46 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			tooltipProps: PropTypes.object,
 
 			/**
+			 * Positions the tooltip relative to its container.
+			 *
+			 * Determines whether your tooltip should position itself relative to its container or
+			 * relative to the screen (absolute positioning on the floating layer). When setting to
+			 * `true`, to enable relative positioning, it may be important to specify the
+			 * `tooltipDestinationProp` key in this HoC's config object. A relatively positioned
+			 * Tooltip for a `Button`, for example, must be placed in the `decoration` prop.
+			 *
+			 * It may be necessary to assign the CSS rule `position` to the containing element so
+			 * relatively positioned Tooltip has a frame to "stick to" the edge of.
+			 *
+			 * Anchoring points can be visualized as follows:
+			 * ```
+			 * ┌───◎───┐
+			 * ◎       ◎
+			 * └───◎───┘
+			 * ```
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			tooltipRelative: PropTypes.bool,
+
+			/**
 			 * Tooltip content.
 			 *
 			 * @type {Node}
 			 * @public
 			 */
 			tooltipText: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+
+			/**
+			 * The interval (in milliseconds) to recheck the math for a currently showing tooltip's
+			 * positioning and orientation. Useful if your anchor element moves.
+			 *
+			 * @type {Number}
+			 * @default 400
+			 * @public
+			 */
+			tooltipUpdateDelay: PropTypes.number,
 
 			/**
 			 * The width of tooltip content in pixels (px).
@@ -154,15 +209,13 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static defaultProps = {
 			disabled: false,
-			tooltipCasing: 'upper',
 			tooltipDelay: 500,
-			tooltipPosition: 'above'
+			tooltipPosition: 'above',
+			tooltipUpdateDelay: 400
 		}
 
 		constructor (props) {
 			super(props);
-
-			this.TOOLTIP_HEIGHT = ri.scale(18); // distance between client and tooltip's label
 
 			this.state = {
 				showing: false,
@@ -172,8 +225,22 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		componentDidUpdate (prevProps) {
-			if (this.state.showing && prevProps.tooltipText !== this.props.tooltipText) {
+		componentDidMount () {
+			if (window.MutationObserver) {
+				this.mutationObserver = new MutationObserver(this.startTooltipLayoutJob);
+			}
+
+			if (window.ResizeObserver) {
+				this.resizeObserver = new ResizeObserver(this.startTooltipLayoutJob);
+			}
+		}
+
+		componentDidUpdate (prevProps, prevState) {
+			if (this.state.showing && (
+				prevProps.tooltipText !== this.props.tooltipText ||
+				prevProps.tooltipPosition !== this.props.tooltipPosition ||
+				prevState.showing !== this.state.showing
+			)) {
 				this.setTooltipLayout();
 			}
 		}
@@ -181,7 +248,17 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillUnmount () {
 			if (currentTooltip === this) {
 				currentTooltip = null;
+
+				if (this.mutationObserver) {
+					this.mutationObserver.disconnect();
+				}
+
+				if (this.resizeObserver) {
+					this.resizeObserver.disconnect();
+				}
+
 				this.showTooltipJob.stop();
+				this.setTooltipLayoutJob.stop();
 			}
 
 			if (this.props.disabled) {
@@ -192,6 +269,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		setTooltipLayout () {
 			if (!this.tooltipRef || !this.clientRef) return;
 
+			const screenEdgeKeepout = ri.scale(config.screenEdgeKeepout);
 			const position = this.props.tooltipPosition;
 			const arr = position.split(' ');
 			let tooltipDirection = null;
@@ -209,110 +287,28 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			const tooltipNode = this.tooltipRef.getBoundingClientRect(); // label bound
 			const clientNode = this.clientRef.getBoundingClientRect(); // client bound
-			const overflow = this.calcOverflow(tooltipNode, clientNode, tooltipDirection);
+			const overflow = calcOverflow(tooltipNode, clientNode, tooltipDirection, screenEdgeKeepout);
 
-			tooltipDirection = this.adjustDirection(tooltipDirection, overflow);
-			arrowAnchor = this.adjustAnchor(arrowAnchor, tooltipDirection, overflow);
+			tooltipDirection = adjustDirection(tooltipDirection, overflow, this.props.rtl);
+			arrowAnchor = adjustAnchor(arrowAnchor, tooltipDirection, overflow, this.props.rtl);
 
-			this.setState({
-				tooltipDirection,
-				arrowAnchor,
-				position: this.getPosition(tooltipNode, clientNode, arrowAnchor, tooltipDirection)
-			});
-		}
+			const tooltipPosition = getPosition(clientNode, tooltipDirection);
+			const labelOffset = arrowAnchor === 'center' ? getLabelOffset(tooltipNode, tooltipDirection, tooltipPosition, overflow) : null;
+			const {top, left} = this.state.position;
 
-		calcOverflow (tooltip, clientNode, tooltipDirection) {
-			if (tooltipDirection === 'above' || tooltipDirection === 'below') {
-				return {
-					isOverTop: clientNode.top - tooltip.height - this.TOOLTIP_HEIGHT < 0,
-					isOverBottom: clientNode.bottom + tooltip.height + this.TOOLTIP_HEIGHT > window.innerHeight,
-					isOverLeft: clientNode.left - tooltip.width + clientNode.width / 2 < 0,
-					isOverRight: clientNode.right + tooltip.width - clientNode.width / 2 > window.innerWidth
-				};
-			} else if (tooltipDirection === 'left' || tooltipDirection === 'right') {
-				return {
-					isOverTop: clientNode.top - tooltip.height + clientNode.height / 2 < 0,
-					isOverBottom: clientNode.bottom + tooltip.height - clientNode.height / 2 > window.innerHeight,
-					isOverLeft: clientNode.left - tooltip.width < 0,
-					isOverRight: clientNode.right + tooltip.width > window.innerWidth
-				};
+			if (
+				(tooltipPosition.top !== top) ||
+				(tooltipPosition.left !== left) ||
+				(labelOffset !== this.state.labelOffset) ||
+				(arrowAnchor !== this.state.arrowAnchor)
+			) {
+				this.setState({
+					tooltipDirection,
+					arrowAnchor,
+					labelOffset,
+					position: tooltipPosition
+				});
 			}
-		}
-
-		adjustDirection (tooltipDirection, overflow) {
-			if (this.props.rtl && (tooltipDirection === 'left' || tooltipDirection === 'right')) {
-				tooltipDirection = tooltipDirection === 'left' ? 'right' : 'left';
-			}
-
-			// Flip tooltip if it overlows towards the tooltip direction
-			if (overflow.isOverTop && tooltipDirection === 'above') {
-				tooltipDirection = 'below';
-			} else if (overflow.isOverBottom && tooltipDirection === 'below') {
-				tooltipDirection = 'above';
-			} else if (overflow.isOverLeft && tooltipDirection === 'left') {
-				tooltipDirection = 'right';
-			} else if (overflow.isOverRight && tooltipDirection === 'right') {
-				tooltipDirection = 'left';
-			}
-
-			return tooltipDirection;
-		}
-
-		adjustAnchor (arrowAnchor, tooltipDirection, overflow) {
-			if (tooltipDirection === 'above' || tooltipDirection === 'below') {
-				if (this.props.rtl && arrowAnchor !== 'center') {
-					arrowAnchor = arrowAnchor === 'left' ? 'right' : 'left';
-				}
-
-				// Flip sideways if it overflows to the sides
-				if (overflow.isOverRight) {
-					arrowAnchor = 'left';
-				} else if (overflow.isOverLeft) {
-					arrowAnchor = 'right';
-				}
-			}
-
-			return arrowAnchor;
-		}
-
-		getPosition (tooltipNode, clientNode, arrowAnchor, tooltipDirection) {
-			let position = {};
-			switch (tooltipDirection) {
-				case 'above':
-					position.top = clientNode.top - tooltipNode.height - this.TOOLTIP_HEIGHT;
-					break;
-				case 'below':
-					position.top = clientNode.bottom + this.TOOLTIP_HEIGHT;
-					break;
-				case 'right':
-					position.left = clientNode.right + this.TOOLTIP_HEIGHT;
-					break;
-				case 'left':
-					position.left = clientNode.left - tooltipNode.width - this.TOOLTIP_HEIGHT;
-					break;
-				default:
-					position = {};
-			}
-
-			if (tooltipDirection === 'above' || tooltipDirection === 'below') {
-				position.left = clientNode.left + clientNode.width / 2;
-
-				if (arrowAnchor === 'left') {
-					position.left -= tooltipNode.width;
-				} else if (arrowAnchor === 'center') {
-					position.left -= tooltipNode.width / 2;
-				}
-			} else if (tooltipDirection === 'left' || tooltipDirection === 'right') {
-				position.top = clientNode.top + clientNode.height / 2;
-
-				if (arrowAnchor === 'top') {
-					position.top -= tooltipNode.height;
-				} else if (arrowAnchor === 'middle') {
-					position.top -= tooltipNode.height / 2;
-				}
-			}
-
-			return position;
 		}
 
 		showTooltipJob = new Job(() => {
@@ -323,6 +319,14 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		})
 
+		setTooltipLayoutJob = new Job(() => {
+			this.setTooltipLayout();
+		})
+
+		startTooltipLayoutJob = () => {
+			this.setTooltipLayoutJob.startAfter(this.props.tooltipUpdateDelay);
+		}
+
 		showTooltip = (client) => {
 			const {tooltipDelay, tooltipText} = this.props;
 
@@ -330,14 +334,33 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.clientRef = client;
 				currentTooltip = this;
 				this.showTooltipJob.startAfter(tooltipDelay);
+
+				if (this.mutationObserver) {
+					this.mutationObserver.observe(this.clientRef, {attributes: true, childList: true});
+				}
+
+				if (this.resizeObserver) {
+					this.resizeObserver.observe(this.clientRef);
+				}
 			}
 		}
 
 		hideTooltip = () => {
 			if (this.props.tooltipText) {
+				if (this.mutationObserver) {
+					this.mutationObserver.disconnect();
+				}
+
+				if (this.resizeObserver) {
+					this.resizeObserver.disconnect();
+				}
+
 				this.clientRef = null;
 				currentTooltip = null;
+
 				this.showTooltipJob.stop();
+				this.setTooltipLayoutJob.stop();
+
 				if (this.state.showing) {
 					this.setState({showing: false});
 				}
@@ -346,11 +369,21 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handle = handle.bind(this)
 
+		// Recalculate tooltip layout on keydown to make sure tooltip is positioned correctly in case something changes as a result of the keydown.
 		handleKeyDown = this.handle(
+			forward('onKeyDown'),
+			forProp('disabled', false),
+			() => {
+				this.startTooltipLayoutJob();
+			}
+		);
+
+		// Global keydown handler to hide the tooltip for when the pointer is hovering over disabled wrapped component (showing the tooltip), and then the pointer times out and switches to 5-way, which will trigger this keydown handler, and spotting another component.
+		handleGlobalKeyDown = this.handle(
 			forProp('disabled', true),
 			() => {
 				this.hideTooltip();
-				off('keydown', this.handleKeyDown);
+				off('keydown', this.handleGlobalKeyDown);
 			}
 		);
 
@@ -359,7 +392,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forProp('disabled', true),
 			(ev) => {
 				this.showTooltip(ev.target);
-				on('keydown', this.handleKeyDown);
+				on('keydown', this.handleGlobalKeyDown);
 			}
 		)
 
@@ -368,7 +401,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forProp('disabled', true),
 			() => {
 				this.hideTooltip();
-				off('keydown', this.handleKeyDown);
+				off('keydown', this.handleGlobalKeyDown);
 			}
 		)
 
@@ -397,26 +430,35 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @private
 		 */
 		renderTooltip () {
-			const {children, tooltipCasing, tooltipProps, tooltipText, tooltipWidth} = this.props;
+			const {children, tooltipRelative, tooltipProps, tooltipText, tooltipWidth} = this.props;
 
 			if (tooltipText) {
-				const renderedTooltip = (
-					<FloatingLayerBase open={this.state.showing} noAutoDismiss onDismiss={this.hideTooltip} scrimType="none" key="tooltipFloatingLayer">
-						<Tooltip
-							aria-live="off"
-							role="alert"
-							{...tooltipProps}
-							arrowAnchor={this.state.arrowAnchor}
-							casing={tooltipCasing}
-							direction={this.state.tooltipDirection}
-							position={this.state.position}
-							tooltipRef={this.getTooltipRef}
-							width={tooltipWidth}
-						>
-							{tooltipText}
-						</Tooltip>
-					</FloatingLayerBase>
+				let renderedTooltip = (
+					<Tooltip
+						aria-live="off"
+						role="alert"
+						labelOffset={this.state.labelOffset}
+						{...tooltipProps}
+						arrowAnchor={this.state.arrowAnchor}
+						direction={this.state.tooltipDirection}
+						position={tooltipRelative ? null : this.state.position}
+						relative={tooltipRelative}
+						style={{display: ((tooltipRelative && !this.state.showing) ? 'none' : null)}}
+						tooltipRef={this.getTooltipRef}
+						width={tooltipWidth}
+					>
+						{tooltipText}
+					</Tooltip>
 				);
+
+
+				if (!tooltipRelative) {
+					renderedTooltip = (
+						<FloatingLayerBase open={this.state.showing} noAutoDismiss onDismiss={this.hideTooltip} scrimType="none" key="tooltipFloatingLayer">
+							{renderedTooltip}
+						</FloatingLayerBase>
+					);
+				}
 
 				if (tooltipDestinationProp === 'children') {
 					return {
@@ -443,16 +485,18 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onBlur: this.handleBlur,
 					onFocus: this.handleFocus,
 					onMouseOut: this.handleMouseOut,
-					onMouseOver: this.handleMouseOver
+					onMouseOver: this.handleMouseOver,
+					onKeyDown: this.handleKeyDown
 				}
 			);
 
 			delete props.rtl;
 			delete props.tooltipDelay;
 			delete props.tooltipPosition;
-			delete props.tooltipCasing;
 			delete props.tooltipProps;
+			delete props.tooltipRelative;
 			delete props.tooltipText;
+			delete props.tooltipUpdateDelay;
 			delete props.tooltipWidth;
 
 			return (
@@ -468,4 +512,8 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default TooltipDecorator;
-export {TooltipDecorator, Tooltip, TooltipBase};
+export {
+	Tooltip,
+	TooltipBase,
+	TooltipDecorator
+};

@@ -1,18 +1,25 @@
 // SelectableItem.module.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
 
 // Interally theme our implementation using published classes from ToggleIcon
 .toggleIcon {
 	.icon {
-		@dot-size: @moon-selectable-item-indicator-size - 3px * 2;
+		@dot-size: (@moon-selectable-item-indicator-size - 3px * 2);
 
 		font-size: @dot-size;
 		text-align: left;
 		width: @moon-selectable-item-indicator-width;
 		margin: 0;
+
+		.moon-custom-text({
+			@dot-size-large: (@moon-selectable-item-indicator-size-large - 3px * 2);
+
+			font-size: @dot-size-large;
+			width: @moon-selectable-item-indicator-width-large;
+		});
 	}
 
 	&:not(.selected) {
@@ -43,5 +50,5 @@
 				color: @moon-accent;
 			});
 		}
-	});
-});
+	}, parent);
+}, parent);

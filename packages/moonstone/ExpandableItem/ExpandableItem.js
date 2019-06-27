@@ -14,6 +14,7 @@
  * @exports ExpandableItemBase
  */
 
+import handle, {forward, forProp, oneOf, returnsTrue} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import {extractAriaProps} from '@enact/core/util';
@@ -25,6 +26,7 @@ import last from 'ramda/src/last';
 import React from 'react';
 
 import LabeledItem from '../LabeledItem';
+import {extractVoiceProps} from '../internal/util';
 
 import Expandable from './Expandable';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
@@ -138,6 +140,15 @@ const ExpandableItemBase = kind({
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * Prevents rendering the transition container.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		hideChildren: PropTypes.bool,
 
 		/**
 		 * The secondary, or supportive text. Typically under the `title`, a subtitle.
@@ -318,16 +329,13 @@ const ExpandableItemBase = kind({
 				onSpotlightDown(ev);
 			}
 		},
-		handleOpen: (ev, {disabled, onClose, onOpen, open}) => {
-			// When disabled, don't attach an event
-			if (!disabled) {
-				if (open) {
-					onClose(ev);
-				} else {
-					onOpen(ev);
-				}
-			}
-		}
+		handleOpen: handle(
+			forProp('disabled', false),
+			oneOf(
+				[forProp('open', true), forward('onClose')],
+				[returnsTrue, forward('onOpen')]
+			)
+		)
 	},
 
 	styles: {
@@ -348,14 +356,11 @@ const ExpandableItemBase = kind({
 
 	render: ({
 		children,
-		'data-webos-voice-disabled': voiceDisabled,
-		'data-webos-voice-group-label': voiceGroupLabel,
-		'data-webos-voice-intent': voiceIntent,
-		'data-webos-voice-label': voiceLabel,
 		disabled,
 		handleKeyDown,
 		handleLabelKeyDown,
 		handleOpen,
+		hideChildren,
 		label,
 		labeledItemClassName,
 		open,
@@ -380,6 +385,7 @@ const ExpandableItemBase = kind({
 		delete rest.showLabel;
 
 		const ariaProps = extractAriaProps(rest);
+		const voiceProps = extractVoiceProps(rest);
 
 		return (
 			<ContainerDiv
@@ -387,17 +393,14 @@ const ExpandableItemBase = kind({
 				aria-disabled={disabled}
 				disabled={disabled}
 				ref={setContainerNode}
-				spotlightDisabled={spotlightDisabled || disabled}
+				spotlightDisabled={spotlightDisabled}
 			>
 				<LabeledItem
 					{...ariaProps}
+					{...voiceProps}
 					css={css}
 					className={labeledItemClassName}
 					data-expandable-label
-					data-webos-voice-disabled={voiceDisabled}
-					data-webos-voice-group-label={voiceGroupLabel}
-					data-webos-voice-intent={voiceIntent}
-					data-webos-voice-label={voiceLabel}
 					disabled={disabled}
 					label={label}
 					onTap={handleOpen}
@@ -409,20 +412,23 @@ const ExpandableItemBase = kind({
 					spotlightDisabled={spotlightDisabled}
 					titleIcon="arrowlargedown"
 				>{title}</LabeledItem>
-				<ExpandableTransitionContainer
-					data-expandable-container
-					duration="short"
-					timingFunction="ease-out-quart"
-					onHide={onHide}
-					onKeyDown={handleKeyDown}
-					onShow={onShow}
-					spotlightDisabled={transitionSpotlightDisabled}
-					type="clip"
-					direction="down"
-					visible={open}
-				>
-					{children}
-				</ExpandableTransitionContainer>
+				{!hideChildren ?
+					<ExpandableTransitionContainer
+						data-expandable-container
+						duration="short"
+						timingFunction="ease-out-quart"
+						onHide={onHide}
+						onKeyDown={handleKeyDown}
+						onShow={onShow}
+						spotlightDisabled={transitionSpotlightDisabled}
+						type="clip"
+						direction="down"
+						visible={open}
+					>
+						{children}
+					</ExpandableTransitionContainer> :
+					null
+				}
 			</ContainerDiv>
 		);
 	}

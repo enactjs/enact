@@ -3,7 +3,6 @@ import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -29,9 +28,7 @@ RangePicker.displayName = 'RangePicker';
 storiesOf('Moonstone', module)
 	.add(
 		'RangePicker',
-		withInfo({
-			text: 'Basic usage of RangePicker'
-		})(() => (
+		() => (
 			<RangePicker
 				onChange={action('onChange')}
 				min={number('min', Config, 0)}
@@ -47,5 +44,10 @@ storiesOf('Moonstone', module)
 				incrementIcon={select('incrementIcon', ['', ...incrementIcons], Config)}
 				decrementIcon={select('decrementIcon', ['', ...decrementIcons], Config)}
 			/>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of RangePicker'
+			}
+		}
 	);

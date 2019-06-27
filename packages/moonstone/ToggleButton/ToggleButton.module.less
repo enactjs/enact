@@ -10,35 +10,41 @@
 	text-align: center;
 	position: relative;
 
-	&::after {
+	.toggleIndicator {
 		.position-start-end(auto, @moon-button-h-padding);
 
 		position: absolute;
-		content: "";
 		top: 50%;
+		border-radius: @moon-toggle-button-switch-border-radius;
 		width: @moon-toggle-button-switch-width;
 		height: @moon-toggle-button-switch-width;
 		border-width: @moon-toggle-button-switch-border-width;
 		border-style: solid;
-		border-radius: @moon-button-border-radius;
 		transform: translateY(-50%);
+		font-family: @moon-toggle-button-switch-icon-font-family;
+		font-size: @moon-toggle-button-switch-icon-font-size;
+		line-height: @moon-toggle-button-switch-icon-line-height;
 	}
 
+	&.selected {
+		.toggleIndicator::after {
+			content: @moon-toggle-button-selected-glyph-highcontrast;
+		}
+	}
 
 	&.small {
 		.padding-start-end(@moon-button-small-h-padding, @moon-toggle-button-small-text-switch-gutter + @moon-button-small-h-padding + @moon-toggle-button-switch-width + @moon-toggle-button-switch-border-width);
 
-		&::after {
+		.toggleIndicator {
 			.position-start-end(auto, @moon-button-small-h-padding);
 
 			top: 50%;
-			transform: translateY(-50%);
 		}
 	}
 
 	// Skin colors
 	.applySkins({
-		&::after {
+		.toggleIndicator {
 			background-color: @moon-toggle-button-switch-off-bg-color;
 			border-color: @moon-toggle-button-switch-off-border-color;
 		}
@@ -46,17 +52,47 @@
 		&.selected {
 			border-color: @moon-accent;
 
-			&::after {
+			.toggleIndicator {
 				background-color: @moon-toggle-button-switch-on-bg-color;
 				border-color: @moon-toggle-button-switch-on-border-color;
+				color:  @moon-toggle-button-switch-dot-on-color;
 			}
 		}
 
 		.disabled({
-			&::after {
-				background-color: @moon-toggle-button-switch-disabled-bg-color;
+			.toggleIndicator {
+				color: @moon-toggle-button-switch-disabled-color;
 				border-color: @moon-toggle-button-switch-disabled-border-color;
 			}
+
+			&.selected {
+				.toggleIndicator {
+					background-color: @moon-toggle-button-switch-dot-disabled-border-color;
+				}
+			}
+		});
+	});
+
+	.focus({
+		.applySkins({
+			.toggleIndicator {
+				background-color: @moon-toggle-button-switch-off-spotlight-bg-color;
+				border-color: @moon-toggle-button-switch-off-spotlight-border-color;
+			}
+
+			&.selected {
+				.toggleIndicator {
+					background-color: @moon-toggle-button-switch-on-spotlight-bg-color;
+					border-color: @moon-toggle-button-switch-on-spotlight-border-color;
+					color: @moon-toggle-button-switch-dot-on-spotlight-color;
+				}
+			}
+
+			.disabled({
+				.toggleIndicator {
+					opacity: @moon-disabled-opacity;
+				}
+			});
 		});
 	});
 }

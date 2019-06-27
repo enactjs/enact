@@ -407,11 +407,11 @@ const MediaControlsBase = kind({
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
 						<Container className={css.mediaControls} spotlightDisabled={showMoreComponents || spotlightDisabled}>
-							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpBackwardIcon}</MediaButton>}
-							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{backwardIcon}</MediaButton>}
-							<MediaButton aria-label={paused ? $L('Play') : $L('Pause')} className={playPauseClassName} backgroundOpacity="translucent" disabled={mediaDisabled || playPauseButtonDisabled} onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{paused ? playIcon : pauseIcon}</MediaButton>
-							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick} spotlightDisabled={spotlightDisabled}>{forwardIcon}</MediaButton>}
-							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpForwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick} size="large" spotlightDisabled={spotlightDisabled}>{jumpBackwardIcon}</MediaButton>}
+							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick} size="large" spotlightDisabled={spotlightDisabled}>{backwardIcon}</MediaButton>}
+							<MediaButton aria-label={paused ? $L('Play') : $L('Pause')} className={playPauseClassName} backgroundOpacity="translucent" disabled={mediaDisabled || playPauseButtonDisabled} onClick={onPlayButtonClick} size="large" spotlightDisabled={spotlightDisabled}>{paused ? playIcon : pauseIcon}</MediaButton>
+							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick} size="large" spotlightDisabled={spotlightDisabled}>{forwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick} size="large" spotlightDisabled={spotlightDisabled}>{jumpForwardIcon}</MediaButton>}
 						</Container>
 						<Container className={css.moreControls} spotlightDisabled={!showMoreComponents || spotlightDisabled}>
 							{children}
@@ -429,6 +429,8 @@ const MediaControlsBase = kind({
 							disabled={moreButtonDisabled}
 							onClick={onMoreClick}
 							tooltipProps={{role: 'dialog'}}
+							tooltipRelative
+							size="large"
 							tooltipText={moreIconLabel}
 							spotlightId={moreButtonSpotlightId}
 							spotlightDisabled={spotlightDisabled}
@@ -684,6 +686,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			);
 			on('keydown', this.handleKeyDown);
 			on('keyup', this.handleKeyUp);
+			on('blur', this.handleBlur, window);
 		}
 
 		componentDidUpdate (prevProps, prevState) {
@@ -714,6 +717,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 		componentWillUnmount () {
 			off('keydown', this.handleKeyDown);
 			off('keyup', this.handleKeyUp);
+			off('blur', this.handleBlur, window);
 			this.stopListeningForPulses();
 		}
 
@@ -780,6 +784,11 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			}
 		}
 
+		handleBlur = () => {
+			this.stopListeningForPulses();
+			this.paused.resume();
+		}
+
 		startListeningForPulses = (keyCode) => {
 			// Ignore new pulse calls if key code is same, otherwise start new series if we're pulsing
 			if (this.pulsing && keyCode !== this.pulsingKeyCode) {
@@ -830,15 +839,15 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			this.mediaControlsNode = ReactDOM.findDOMNode(node); // eslint-disable-line react/no-find-dom-node
 		}
 
-		areMoreComponentsAvailable () {
+		areMoreComponentsAvailable = () => {
 			return this.state.showMoreComponents;
 		}
 
-		showMoreComponents () {
+		showMoreComponents = () => {
 			this.setState({showMoreComponents: true});
 		}
 
-		hideMoreComponents () {
+		hideMoreComponents = () => {
 			this.setState({showMoreComponents: false});
 		}
 

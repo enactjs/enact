@@ -6,23 +6,27 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+import ForwardRef from '../ForwardRef';
 
 import componentCss from './BodyText.module.less';
 
 /**
- * A simple, unstyled text block component.
+ * A simple, unstyled text block component, without
+ * [BodyTextDecorator](ui/BodyText.BodyTextDecorator) applied.
  *
- * @class BodyText
+ * @class BodyTextBase
  * @memberof ui/BodyText
  * @ui
  * @public
  */
-const BodyText = kind({
+const BodyTextBase = kind({
 	name: 'ui:BodyText',
 
-	propTypes: /** @lends ui/BodyText.BodyText.prototype */ {
+	propTypes: /** @lends ui/BodyText.BodyTextBase.prototype */ {
 		/**
 		 * Centers the contents.
 		 *
@@ -34,6 +38,23 @@ const BodyText = kind({
 		 * @public
 		 */
 		centered: PropTypes.bool,
+
+		/**
+		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',
+		 * 'p', etc.) or a custom component.
+		 *
+		 * @type {Component}
+		 * @default 'p'
+		 * @public
+		 */
+		component: EnactPropTypes.renderable,
+
+		/**
+		 * Called with a reference to [component]{@link ui/BodyText.BodyText#component}
+		 *
+		 * @private
+		 */
+		componentRef: PropTypes.func,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -51,7 +72,8 @@ const BodyText = kind({
 	},
 
 	defaultProps: {
-		centered: false
+		centered: false,
+		component: 'p'
 	},
 
 	styles: {
@@ -64,18 +86,41 @@ const BodyText = kind({
 		className: ({centered, styler}) => styler.append({centered})
 	},
 
-	render: (props) => {
-		delete props.centered;
+	render: ({component: Component, componentRef, ...rest}) => {
+		delete rest.centered;
 
 		return (
-			<p
-				{...props}
+			<Component
+				ref={componentRef}
+				{...rest}
 			/>
 		);
 	}
 });
 
+/**
+ * Applies BodyText behaviors.
+ *
+ * @hoc
+ * @memberof ui/BodyText
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const BodyTextDecorator = ForwardRef({prop: 'componentRef'});
+
+/**
+ * A simple, unstyled text block component.
+ *
+ * @class BodyText
+ * @memberof ui/BodyText
+ * @ui
+ * @public
+ */
+const BodyText = BodyTextDecorator(BodyTextBase);
+
 export default BodyText;
 export {
-	BodyText
+	BodyText,
+	BodyTextBase,
+	BodyTextDecorator
 };

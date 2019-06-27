@@ -13,11 +13,12 @@
 	// Skin colors
 	.applySkins({
 		.focus({
-			background-color: transparent;
+			color: @moon-formcheckboxitem-focus-text-color;
+			background-color: @moon-formcheckboxitem-focus-bg-color;
 
-			&:not([disabled]) {
-				color: @moon-text-color;
-			}
+			.disabled({
+				opacity: @moon-disabled-opacity;
+			});
 		});
 	});
 }

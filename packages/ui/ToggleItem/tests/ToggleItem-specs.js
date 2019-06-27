@@ -80,4 +80,21 @@ describe('ToggleItem Specs', () => {
 
 		expect(expected).toBe(actual);
 	});
+
+	test('should receive its value prop in the onToggle handler', () => {
+		const handleToggle = jest.fn();
+		const value = 100;
+		const subject = mount(
+			<ToggleItem component={SlottedItem} onToggle={handleToggle} iconComponent={CustomIcon} value={value}>
+				Toggle Item
+			</ToggleItem>
+		);
+
+		tap(subject);
+
+		const expected = value;
+		const actual = handleToggle.mock.calls[0][0].value;
+
+		expect(expected).toBe(actual);
+	});
 });

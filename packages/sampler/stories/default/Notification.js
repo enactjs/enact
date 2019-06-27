@@ -4,7 +4,6 @@ import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -16,9 +15,7 @@ Notification.displayName = 'Notification';
 storiesOf('Moonstone', module)
 	.add(
 		'Notification',
-		withInfo({
-			text: 'Basic usage of Notification'
-		})(() => (
+		() => (
 			<Notification
 				open={boolean('open', Config, true)}
 				noAutoDismiss={boolean('noAutoDismiss', Config)}
@@ -30,5 +27,10 @@ storiesOf('Moonstone', module)
 					<Button>Nevermind</Button>
 				</buttons>
 			</Notification>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of Notification'
+			}
+		}
 	);

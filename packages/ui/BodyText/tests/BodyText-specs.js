@@ -1,6 +1,7 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
-import BodyText from '../BodyText';
+import BodyText, {BodyTextBase} from '../BodyText';
+import {Cell} from '../../Layout';
 import css from '../BodyText.module.less';
 
 describe('BodyText Specs', () => {
@@ -33,7 +34,7 @@ describe('BodyText Specs', () => {
 
 	test('should not include the centered class by default', () => {
 		const subject = shallow(
-			<BodyText />
+			<BodyTextBase />
 		);
 
 		const expected = false;
@@ -43,11 +44,33 @@ describe('BodyText Specs', () => {
 
 	test('should include the centered class if `centered` is true', () => {
 		const subject = shallow(
-			<BodyText centered />
+			<BodyTextBase centered />
 		);
 
 		const expected = true;
 		const actual = subject.hasClass(css.centered);
+		expect(actual).toBe(expected);
+	});
+
+	test('should support changing the component element to a different DOM node', () => {
+		const componentTag = 'address';
+		const subject = shallow(
+			<BodyTextBase component={componentTag} />
+		);
+
+		const expected = componentTag;
+		const actual = subject.getElement().type;
+		expect(actual).toBe(expected);
+	});
+
+	test('should support changing the component element to a functional component', () => {
+		const component = Cell;
+		const subject = shallow(
+			<BodyTextBase component={component} />
+		);
+
+		const expected = component;
+		const actual = subject.getElement().type;
 		expect(actual).toBe(expected);
 	});
 });

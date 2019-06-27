@@ -5,8 +5,6 @@ import PropTypes from 'prop-types';
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
 
-import css from './ApplicationCloseButton.module.less';
-
 /**
  * An {@link moonstone/ApplicationCloseButton.ApplicationCloseButton} with `closex` icon. It is used in
  * {@link moonstone/Panels.Panels} positioned at the top right corner.
@@ -54,11 +52,6 @@ const ApplicationCloseButton = kind({
 		backgroundOpacity: 'transparent'
 	},
 
-	styles: {
-		css,
-		className: 'applicationCloseButton'
-	},
-
 	computed: {
 		'aria-label': ({'aria-label': ariaLabel}) => ariaLabel == null ? $L('Exit app') : ariaLabel
 	},
@@ -69,7 +62,7 @@ const ApplicationCloseButton = kind({
 				{...rest}
 				backgroundOpacity={backgroundOpacity}
 				onTap={onApplicationClose}
-				small
+				size="small"
 			>
 				closex
 			</IconButton>

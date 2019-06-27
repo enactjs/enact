@@ -2,7 +2,6 @@ import ExpandablePicker, {ExpandablePickerBase} from '@enact/moonstone/Expandabl
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -15,11 +14,10 @@ const emoticons = ['💥 boom', '😩🖐 facepalm', '🍩 doughnut', '👻 ghos
 storiesOf('Moonstone', module)
 	.add(
 		'ExpandablePicker',
-		withInfo({
-			text: 'Basic usage of ExpandablePicker'
-		})(() => (
+		() => (
 			<ExpandablePicker
 				checkButtonAriaLabel={text('checkButtonAriaLabel', Config, '')}
+				disabled={boolean('disabled', Config)}
 				decrementAriaLabel={text('decrementAriaLabel', Config, '')}
 				incrementAriaLabel={text('incrementAriaLabel', Config, '')}
 				joined={boolean('joined', Config)}
@@ -28,9 +26,14 @@ storiesOf('Moonstone', module)
 				onOpen={action('onOpen')}
 				pickerAriaLabel={text('pickerAriaLabel', Config, '')}
 				title={text('title', Config, 'Favorite Emoji')}
-				width={select('width', ['small', 'medium', 'large'], Config, 'large')}
+				width={select('width', ['small', 'medium', 'large'], Config)}
 			>
 				{emoticons}
 			</ExpandablePicker>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of ExpandablePicker'
+			}
+		}
 	);

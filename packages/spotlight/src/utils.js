@@ -160,6 +160,10 @@ function getViewportRect () {
 function getContainerRect (containerId) {
 	const containerNode = getContainerNode(containerId);
 
+	if (!containerNode) {
+		return null;
+	}
+
 	if (containerNode === document) {
 		return getViewportRect();
 	}

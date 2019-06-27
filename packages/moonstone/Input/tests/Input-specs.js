@@ -196,7 +196,7 @@ describe('Input Specs', () => {
 				<Input invalid invalidMessage="invalid message" />
 			);
 
-			expect(subject.find('Tooltip').prop('children')).toBe('INVALID MESSAGE');
+			expect(subject.find('Tooltip').prop('children')).toBe('invalid message');
 		}
 	);
 

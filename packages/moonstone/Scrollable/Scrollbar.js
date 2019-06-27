@@ -1,10 +1,11 @@
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
+import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
 
 import ScrollButtons from './ScrollButtons';
 import ScrollThumb from './ScrollThumb';
+import Skinnable from '../Skinnable';
 
 import componentCss from './Scrollbar.module.less';
 
@@ -28,6 +29,19 @@ class ScrollbarBase extends Component {
 		 * @private
 		 */
 		cbAlertThumb: PropTypes.func,
+
+		/**
+		 * Client size of the container; valid values are an object that has `clientWidth` and `clientHeight`.
+		 *
+		 * @type {Object}
+		 * @property {Number}    clientHeight    The client height of the list.
+		 * @property {Number}    clientWidth    The client width of the list.
+		 * @public
+		 */
+		clientSize: PropTypes.shape({
+			clientHeight: PropTypes.number.isRequired,
+			clientWidth: PropTypes.number.isRequired
+		}),
 
 		/**
 		 * Adds the corner between vertical and horizontal scrollbars.
@@ -77,51 +91,49 @@ class ScrollbarBase extends Component {
 		if (props.setApiProvider) {
 			props.setApiProvider(this);
 		}
+
+		this.scrollbarRef = React.createRef();
+		this.scrollButtonsRef = React.createRef();
 	}
 
+	componentDidMount () {
+		const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = this.scrollbarRef.current;
 
-	initScrollbarRef = (ref) => {
-		if (ref) {
-			const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = ref;
+		this.getContainerRef = getContainerRef;
+		this.showThumb = showThumb;
+		this.startHidingThumb = startHidingThumb;
+		this.uiUpdate = uiUpdate;
 
-			this.getContainerRef = getContainerRef;
-			this.showThumb = showThumb;
-			this.startHidingThumb = startHidingThumb;
-			this.uiUpdate = uiUpdate;
-		}
-	}
+		const {isOneOfScrollButtonsFocused, updateButtons, focusOnButton} = this.scrollButtonsRef.current;
 
-	initScrollButtonsRef = (ref) => {
-		if (ref) {
-			const {isOneOfScrollButtonsFocused, updateButtons} = ref;
-
-			this.isOneOfScrollButtonsFocused = isOneOfScrollButtonsFocused;
-			this.update = (bounds) => {
-				updateButtons(bounds);
-				this.uiUpdate(bounds);
-			};
-		}
+		this.isOneOfScrollButtonsFocused = isOneOfScrollButtonsFocused;
+		this.update = (bounds) => {
+			updateButtons(bounds);
+			this.uiUpdate(bounds);
+		};
+		this.focusOnButton = focusOnButton;
 	}
 
 	render () {
-		const {cbAlertThumb, corner, vertical, ...rest} = this.props;
+		const {cbAlertThumb, clientSize, corner, vertical, ...rest} = this.props;
 
 		return (
 			<UiScrollbarBase
 				corner={corner}
+				clientSize={clientSize}
 				css={componentCss}
-				ref={this.initScrollbarRef}
+				ref={this.scrollbarRef}
 				vertical={vertical}
-				childRenderer={({initScrollThumbRef}) => ( // eslint-disable-line react/jsx-no-bind
+				childRenderer={({thumbRef}) => ( // eslint-disable-line react/jsx-no-bind
 					<ScrollButtons
 						{...rest}
-						ref={this.initScrollButtonsRef}
+						ref={this.scrollButtonsRef}
 						vertical={vertical}
 						thumbRenderer={() => ( // eslint-disable-line react/jsx-no-bind
 							<ScrollThumb
 								cbAlertThumb={cbAlertThumb}
 								key="thumb"
-								setRef={initScrollThumbRef}
+								ref={thumbRef}
 								vertical={vertical}
 							/>
 						)}
@@ -142,12 +154,13 @@ class ScrollbarBase extends Component {
  */
 const Scrollbar = ApiDecorator(
 	{api: [
+		'focusOnButton',
 		'getContainerRef',
 		'isOneOfScrollButtonsFocused',
 		'showThumb',
 		'startHidingThumb',
 		'update'
-	]}, ScrollbarBase
+	]}, Skinnable(ScrollbarBase)
 );
 Scrollbar.displayName = 'Scrollbar';
 

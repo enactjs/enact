@@ -78,7 +78,7 @@ class IncrementSliderWithContextualPopup extends React.Component {
 					onClose={this.handleClick}
 					open={this.state.open}
 					popupComponent={this.renderPopup}
-					small
+					size="small"
 				>
 					{'drawer'}
 				</ContextualPopupButton>
@@ -104,7 +104,7 @@ class IncrementSliderWithMinValue extends React.Component {
 					max={number('max', IncrementSliderConfig)}
 					min={number('min', IncrementSliderConfig)}
 					onChange={this.handleChange}
-					value={number('value', this.state.value)}
+					value={number('value', IncrementSliderConfig, this.state.value)}
 				/>
 			</div>
 		);
