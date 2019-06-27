@@ -287,7 +287,7 @@ const VirtualListBaseFactory = (type) => {
 				this.emitUpdateItems();
 			}
 
-			this.syncSizeAfterRender();
+			this.adjustItemPosition();
 		}
 
 		componentDidUpdate (prevProps, prevState) {
@@ -325,7 +325,7 @@ const VirtualListBaseFactory = (type) => {
 				}
 			}
 
-			this.syncSizeAfterRender();
+			this.adjustItemPosition();
 		}
 
 		scrollBounds = {
@@ -578,69 +578,6 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		getEndPosition = (index) => {
-			const info = this.childPositionInfo[index];
-			if (info) {
-				const {position, size} = info;
-				return position + size;
-			} else {
-				const {gridSize, spacing} = this.primary;
-				return Math.floor(index / this.dimensionToExtent) * gridSize - spacing;
-			}
-		}
-
-		syncSizeAfterRender () {
-			const
-				{dataSize, overhang, spacing} = this.props,
-				{firstIndex, numOfItems} = this.state,
-				{childPositionInfo, itemContainerRef, maxFirstIndex} = this,
-				{gridSize} = this.primary,
-				lastIndex = firstIndex + numOfItems - 1,
-				numOfUpperLine = Math.floor(overhang / 2);
-
-			if (itemContainerRef.current) {
-				let index, childNode;
-
-				for (index = firstIndex; index <= lastIndex; index++) {
-					const childNode = itemContainerRef.current.children[index % numOfItems];
-
-					if (!childPositionInfo[index]) {
-						const
-							size = itemContainerRef.current.children[index % numOfItems].offsetHeight,
-							position = index === 0 ? 0 : this.getEndPosition(index - 1) + spacing;
-
-						childPositionInfo[index] = {size, position};
-					}
-					
-					if (childNode) {
-						childNode.style.transform = `translate3d(0, ${childPositionInfo[index].position}px, 0)`;
-					}
-				}
-
-				this.threshold.min = firstIndex === 0 ? -Infinity : this.getEndPosition(firstIndex + numOfUpperLine * 1);
-				this.threshold.max = lastIndex === maxFirstIndex ? Infinity : this.getEndPosition(firstIndex + (numOfUpperLine + 1));
-
-				if (childPositionInfo.filter(Boolean).length === dataSize) { // all item sizes are known
-					this.scrollBounds.scrollHeight = childPositionInfo.reduce((acc, cur) => acc + cur.size, 0) + (dataSize - 1) * spacing;
-				} else {
-					for (index = firstIndex + numOfItems - 1; index < dataSize; index++) {
-						const nextInfo = childPositionInfo[index + 1];
-						if (!nextInfo) {
-							const endPosition = this.getEndPosition(index);
-							if (endPosition > this.scrollBounds.scrollHeight) {
-								this.scrollBounds.scrollHeight = endPosition;
-							}
-
-							break;
-						}
-					}
-				}
-				this.scrollBounds.maxTop = Math.max(0, this.scrollBounds.scrollHeight - this.scrollBounds.clientHeight);
-
-				this.setContainerSize();
-			}
-		}
-
 		updateMoreInfo (dataSize, primaryPosition) {
 			const
 				{dimensionToExtent, moreInfo} = this,
@@ -752,6 +689,69 @@ const VirtualListBaseFactory = (type) => {
 
 			if (firstIndex !== newFirstIndex) {
 				this.setState({firstIndex: newFirstIndex});
+			}
+		}
+
+		getEndPosition = (index) => {
+			const info = this.childPositionInfo[index];
+			if (info) {
+				const {position, size} = info;
+				return position + size;
+			} else {
+				const {gridSize, spacing} = this.primary;
+				return Math.floor(index / this.dimensionToExtent) * gridSize - spacing;
+			}
+		}
+
+		adjustItemPosition () {
+			const
+				{dataSize, overhang, spacing} = this.props,
+				{firstIndex, numOfItems} = this.state,
+				{childPositionInfo, itemContainerRef, maxFirstIndex} = this,
+				{gridSize} = this.primary,
+				lastIndex = firstIndex + numOfItems - 1,
+				numOfUpperLine = Math.floor(overhang / 2);
+
+			if (itemContainerRef.current) {
+				let index, childNode;
+
+				for (index = firstIndex; index <= lastIndex; index++) {
+					const childNode = itemContainerRef.current.children[index % numOfItems];
+
+					if (!childPositionInfo[index]) {
+						const
+							size = itemContainerRef.current.children[index % numOfItems].offsetHeight,
+							position = index === 0 ? 0 : this.getEndPosition(index - 1) + spacing;
+
+						childPositionInfo[index] = {size, position};
+					}
+					
+					if (childNode) {
+						childNode.style.transform = `translate3d(0, ${childPositionInfo[index].position}px, 0)`;
+					}
+				}
+
+				this.threshold.min = firstIndex === 0 ? -Infinity : this.getEndPosition(firstIndex + numOfUpperLine * 1);
+				this.threshold.max = lastIndex === maxFirstIndex ? Infinity : this.getEndPosition(firstIndex + (numOfUpperLine + 1));
+
+				if (childPositionInfo.filter(Boolean).length === dataSize) { // all item sizes are known
+					this.scrollBounds.scrollHeight = childPositionInfo.reduce((acc, cur) => acc + cur.size, 0) + (dataSize - 1) * spacing;
+				} else {
+					for (index = firstIndex + numOfItems - 1; index < dataSize; index++) {
+						const nextInfo = childPositionInfo[index + 1];
+						if (!nextInfo) {
+							const endPosition = this.getEndPosition(index);
+							if (endPosition > this.scrollBounds.scrollHeight) {
+								this.scrollBounds.scrollHeight = endPosition;
+							}
+
+							break;
+						}
+					}
+				}
+				this.scrollBounds.maxTop = Math.max(0, this.scrollBounds.scrollHeight - this.scrollBounds.clientHeight);
+
+				this.setContainerSize();
 			}
 		}
 
