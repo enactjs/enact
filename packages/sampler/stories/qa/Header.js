@@ -5,154 +5,222 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 
 import {mergeComponentMetadata} from '../../src/utils';
-import {boolean, select, text} from '../../src/enact-knobs';
+import {boolean, text} from '../../src/enact-knobs';
 
 Header.displayName = 'Header';
 const Config = mergeComponentMetadata('Header', HeaderBase, Header);
 
+const inputData = {
+	tallText: 'ฟิ้  ไั  ஒ  த',
+
+	shortTitle: 'Enact',
+	shortTitleBelow: 'An app framework',
+	shortSubTitleBelow: 'Built atop React',
+	shortRtlTitle: 'כתוביות למט',
+	shortRtlTitleBelow: 'כתוביות למט',
+
+	longTitle: 'Core, The building blocks of an Enact application. Moonstone, our TV-centric UI library.',
+	longTitleBelow: 'An app development framework built atop React that’s easy to use, performant and customizable. The goal of Enact is to provide the building blocks for creating robust and maintainable applications.',
+	longSubTitleBelow: 'With over 50 components to choose from, Moonstone provides a solid base for creating applications designed for large screens. The Enact team welcomes contributions from anyone motivated to help out.'
+};
+
+const headerComponents = <Button>Header Button</Button>;
+
 storiesOf('Header', module)
 	.add(
-		'with headerComponent',
-		() => (
-			<Header
-				title={text('title', Config, 'Title')}
-			>
-				<Button size="small">On / Off</Button>
-			</Header>
-		)
-	)
-	.add(
-		'with headerComponent, Compact',
-		() => (
-			<Header
-				type="compact"
-				title={text('title', Config, 'Title')}
-			>
-				<Button size="small">On / Off</Button>
-			</Header>
-		)
-	)
-	.add(
-		'with titles below',
-		() => (
-			<Header
-				title={text('title', Config, 'Title')}
-				titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
-				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
-			/>
-		)
-	)
-	.add(
-		'with titles below, Compact',
-		() => (
-			<Header
-				type="compact"
-				title={text('title', Config, 'Title')}
-				titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
-				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
-			/>
-		)
-	)
-	.add(
-		'with titles below and headerComponent',
-		() => (
-			<Header
-				title={text('title', Config, 'Title')}
-				titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
-				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
-			>
-				<Button size="small">On / Off</Button>
-			</Header>
-		)
-	)
-	.add(
-		'with titles below and headerComponent, Compact',
-		() => (
-			<Header
-				type="compact"
-				title={text('title', Config, 'Title')}
-				titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
-				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
-			>
-				<Button size="small">On / Off</Button>
-			</Header>
-		)
-	)
-	.add(
-		'with RTL text',
-		() => (
-			<Header
-				title={text('title', Config, 'Title')}
-				titleBelow={text('titleBelow', Config, 'כתוביות למט')}
-				subTitleBelow={text('subTitleBelow', Config, 'כתוביות למט')}
-			/>
-		)
-	)
-	.add(
-		'with RTL text, Compact',
-		() => (
-			<Header
-				type="compact"
-				title={text('title', Config, 'Title')}
-				titleBelow={text('titleBelow', Config, 'כתוביות למט')}
-			/>
-		)
-	)
-	.add(
-		'with long text and headerComponent',
-		() => (
-			<Header
-				title={text('title', Config, 'Title is very long with lorem ipsum dolor sit amet, consectetur adipiscing elit.')}
-				titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow text and header components to test positioning of header components.')}
-				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
-				marqueeOn={select('marqueeOn', ['hover', 'render'], Config)}
-			>
-				<Button size="small">On / Off</Button>
-			</Header>
-		)
-	)
-	.add(
-		'with long text and headerComponent, Compact',
-		() => (
-			<Header
-				type="compact"
-				title={text('title', Config, 'Title is very very very very very very very long.')}
-				titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow text and header components to test positioning of header components.')}
-				subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
-				marqueeOn={select('marqueeOn', ['hover', 'render'], Config)}
-			>
-				<Button size="small">On / Off</Button>
-			</Header>
-
-		)
-	)
-	.add(
-		'with Input, long text and headerComponent',
-		() => {
-			const input = boolean('Input Mode', Config, true) ? <Input dismissOnEnter={boolean('Input dismissOnEnter', Config, true)} /> : null;
+		'just title',
+		context => {
+			context.noHeader = true;
+			const addHeaderComponents = boolean('add headerComponents', Config);
 			return (
 				<Header
-					title={text('title', Config, 'Title')}
-					headerInput={input}
-					titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
-					subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
+					title={text('title', Config, inputData.shortTitle)}
 				>
-					<Button size="small">On / Off</Button>
+					{addHeaderComponents ? headerComponents : null}
 				</Header>
 			);
 		}
 	)
 	.add(
-		'with Input, tall-glyphs, and titles below',
-		() => {
-			const input = boolean('Input Mode', Config, true) ? <Input dismissOnEnter={boolean('Input dismissOnEnter', Config, true)} /> : null;
+		'just title, Compact',
+		context => {
+			context.noHeader = true;
+			const addHeaderComponents = boolean('add headerComponents', Config);
 			return (
 				<Header
-					title={text('title', Config, 'ฟิ้  ไั  ஒ  த')}
+					type="compact"
+					title={text('title', Config, inputData.shortTitle)}
+				>
+					{addHeaderComponents ? headerComponents : null}
+				</Header>
+			);
+		}
+	)
+	.add(
+		'short titles',
+		context => {
+			context.noHeader = true;
+			const addHeaderComponents = boolean('add headerComponents', Config);
+			return (
+				<Header
+					title={text('title', Config, inputData.shortTitle)}
+					titleBelow={text('titleBelow', Config, inputData.shortTitleBelow)}
+					subTitleBelow={text('subTitleBelow', Config, inputData.shortSubTitleBelow)}
+				>
+					{addHeaderComponents ? headerComponents : null}
+				</Header>
+			);
+		}
+	)
+	.add(
+		'short titles, Compact',
+		context => {
+			context.noHeader = true;
+			const addHeaderComponents = boolean('add headerComponents', Config);
+			return (
+				<Header
+					type="compact"
+					title={text('title', Config, inputData.shortTitle)}
+					titleBelow={text('titleBelow', Config, inputData.shortTitleBelow)}
+					subTitleBelow={text('subTitleBelow', Config, inputData.shortSubTitleBelow)}
+				>
+					{addHeaderComponents ? headerComponents : null}
+				</Header>
+			);
+		}
+	)
+	.add(
+		'long titles',
+		context => {
+			context.noHeader = true;
+			const addHeaderComponents = boolean('add headerComponents', Config);
+			return (
+				<Header
+					title={text('title', Config, inputData.longTitle)}
+					titleBelow={text('titleBelow', Config, inputData.longTitleBelow)}
+					subTitleBelow={text('subTitleBelow', Config, inputData.longSubTitleBelow)}
+				>
+					{addHeaderComponents ? headerComponents : null}
+				</Header>
+			);
+		}
+	)
+	.add(
+		'long titles, Compact',
+		context => {
+			context.noHeader = true;
+			const addHeaderComponents = boolean('add headerComponents', Config);
+			return (
+				<Header
+					type="compact"
+					title={text('title', Config, inputData.longTitle)}
+					titleBelow={text('titleBelow', Config, inputData.longTitleBelow)}
+					subTitleBelow={text('subTitleBelow', Config, inputData.longSubTitleBelow)}
+				>
+					{addHeaderComponents ? headerComponents : null}
+				</Header>
+			);
+		}
+	)
+	.add(
+		'RTL text',
+		context => {
+			context.noHeader = true;
+			const addHeaderComponents = boolean('add headerComponents', Config);
+			return (
+				<Header
+					title={text('title', Config, inputData.shortRtlTitle)}
+					titleBelow={text('titleBelow', Config, inputData.shortRtlTitleBelow)}
+					subTitleBelow={text('subTitleBelow', Config, inputData.shortRtlTitleBelow)}
+				>
+					{addHeaderComponents ? headerComponents : null}
+				</Header>
+			);
+		}
+	)
+	.add(
+		'RTL text, Compact',
+		context => {
+			context.noHeader = true;
+			const addHeaderComponents = boolean('add headerComponents', Config);
+			return (
+				<Header
+					type="compact"
+					title={text('title', Config, inputData.shortRtlTitle)}
+					titleBelow={text('titleBelow', Config, inputData.shortRtlTitleBelow)}
+				>
+					{addHeaderComponents ? headerComponents : null}
+				</Header>
+			);
+		}
+	)
+	.add(
+		'tall-glyphs',
+		context => {
+			context.noHeader = true;
+			const addHeaderComponents = boolean('add headerComponents', Config);
+			return (
+				<Header
+					title={text('title', Config, inputData.tallText)}
+					titleBelow={text('titleBelow', Config, inputData.tallText)}
+					subTitleBelow={text('subTitleBelow', Config, inputData.tallText)}
+				>
+					{addHeaderComponents ? headerComponents : null}
+				</Header>
+			);
+		}
+	)
+	.add(
+		'tall-glyphs, Compact',
+		context => {
+			context.noHeader = true;
+			const addHeaderComponents = boolean('add headerComponents', Config);
+			return (
+				<Header
+					type="compact"
+					title={text('title', Config, inputData.tallText)}
+					titleBelow={text('titleBelow', Config, inputData.tallText)}
+				>
+					{addHeaderComponents ? headerComponents : null}
+				</Header>
+			);
+		}
+	);
+
+storiesOf('Header.Input', module)
+	.add(
+		'tall-glyphs',
+		context => {
+			context.noHeader = true;
+			const addHeaderComponents = boolean('add headerComponents', Config);
+			const input = boolean('Input Mode', Config, true) ? <Input placeholder={text('placeholder', Config, inputData.longTitle)} dismissOnEnter={boolean('Input dismissOnEnter', Config, true)} /> : null;
+			return (
+				<Header
+					title={text('title', Config, inputData.tallText)}
 					headerInput={input}
-					titleBelow={text('titleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
-					subTitleBelow={text('subTitleBelow', Config, 'This is a header sample with long titleBelow, subTitleBelow text and header components to test positioning of header components.')}
-				/>
+					titleBelow={text('titleBelow', Config, inputData.longTitleBelow)}
+					subTitleBelow={text('subTitleBelow', Config, inputData.longSubTitleBelow)}
+				>
+					{addHeaderComponents ? headerComponents : null}
+				</Header>
+			);
+		}
+	)
+	.add(
+		'long text',
+		context => {
+			context.noHeader = true;
+			const addHeaderComponents = boolean('add headerComponents', Config);
+			const input = boolean('Input Mode', Config, true) ? <Input placeholder={text('placeholder', Config, inputData.longTitle)} dismissOnEnter={boolean('Input dismissOnEnter', Config, true)} /> : null;
+			return (
+				<Header
+					headerInput={input}
+					title={text('title', Config, inputData.longTitle)}
+					titleBelow={text('titleBelow', Config, inputData.longTitleBelow)}
+					subTitleBelow={text('subTitleBelow', Config, inputData.longSubTitleBelow)}
+				>
+					{addHeaderComponents ? headerComponents : null}
+				</Header>
 			);
 		}
 	);
