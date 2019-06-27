@@ -918,12 +918,7 @@ class ScrollableBase extends Component {
 	// scroll start/stop
 
 	doScrollStop = () => {
-		const {childRef} = this;
-
 		this.scrolling = false;
-		if (childRef && childRef.syncPositionAfterStop) {
-			childRef.syncPositionAfterStop();
-		}
 		this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
 	}
 
