@@ -718,9 +718,9 @@ const VirtualListBaseFactory = (type) => {
 
 				// TBD: vertical only for now
 				if (type === Native) {
-					this.containerRef.style.scrollBehavior = null;
+					this.containerRef.current.style.scrollBehavior = null;
 					this.scrollToPosition(0, this.scrollPosition + gap);
-					this.containerRef.style.scrollBehavior = 'smooth';
+					this.containerRef.current.style.scrollBehavior = 'smooth';
 				} else {
 					this.setScrollPosition(0, this.scrollPosition + gap);
 				}

@@ -922,7 +922,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	scrollStopOnScroll = () => {
-		const {childRef} = this;
+		const {childRefCurrent} = this;
 
 		if (this.props.scrollStopOnScroll) {
 			this.props.scrollStopOnScroll();
@@ -933,8 +933,8 @@ class ScrollableBaseNative extends Component {
 		this.lastInputType = null;
 		this.isScrollAnimationTargetAccumulated = false;
 		this.scrolling = false;
-		if (childRef && childRef.syncPositionAfterStop) {
-			childRef.syncPositionAfterStop();
+		if (childRefCurrent && childRefCurrent.syncPositionAfterStop) {
+			childRefCurrent.syncPositionAfterStop();
 		}
 		this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
 		this.startHidingThumb();
