@@ -519,6 +519,7 @@ const VirtualListBaseFactory = (type) => {
 				} else { // For other bottom adding case, we need to update firstIndex and threshold.
 					const
 						maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
+						maxOfMin = maxPos - threshold.base,
 						numOfUpperLine = Math.floor(overhang / 2),
 						firstIndexFromPosition = Math.floor(scrollPosition / gridSize),
 						expectedFirstIndex = Math.max(0, firstIndexFromPosition - numOfUpperLine);
@@ -530,7 +531,7 @@ const VirtualListBaseFactory = (type) => {
 
 					// We need to update threshold also since we moved the firstIndex
 					threshold.max = Math.min(maxPos, threshold.max + gridSize);
-					threshold.min = Math.min(maxPos - threshold.base, threshold.max - gridSize);
+					threshold.min = Math.min(maxOfMin, threshold.max - gridSize);
 				}
 			} else { // Other cases, we can keep the min value between firstIndex and maxFirstIndex. No need to change threshold
 				newFirstIndex = Math.min(firstIndex, maxFirstIndex);
