@@ -636,9 +636,15 @@ class ScrollableBase extends Component {
 			isHorizontalDirection = direction === 'left' || direction === 'right',
 			isVerticalDirection = direction === 'up' || direction === 'down';
 
-		this.onScrollbarButtonClick({isPreviousScrollButton, isVerticalDirection});
-
 		const {focusableScrollbar, direction: directionProp} = this.props;
+
+		this.onScrollbarButtonClick({
+			isPreviousScrollButton,
+			isVerticalScrollBar:
+				isVerticalDirection &&
+				(directionProp === 'vertical' || directionProp === 'both')
+		});
+
 		if (focusableScrollbar) {
 			if (isVerticalDirection && (directionProp === 'vertical' || directionProp === 'both')) {
 				if (this.uiRef.current && this.uiRef.current.verticalScrollbarRef.current) {
