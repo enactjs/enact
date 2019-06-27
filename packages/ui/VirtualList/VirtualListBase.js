@@ -598,7 +598,7 @@ const VirtualListBaseFactory = (type) => {
 				numOfExtent = Math.ceil(dataSize / dimensionToExtent),
 				numOfUpperLine = Math.floor(overhang / 2);
 
-			if (itemContainerRef.currnet) {
+			if (itemContainerRef.current) {
 				const firstChildNode = itemContainerRef.current.children[firstIndex % numOfItems];
 				let info, baseIndex = -1, index, childNode, size, primaryPosition, secondaryPosition;
 
@@ -727,7 +727,6 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		adjustItemsPosition (max = Infinity) {
-			console.log(this.state.firstIndex, this.childPositionInfo)
 			const
 				{firstIndex} = this.state,
 				{dimensionToExtent, childPositionInfo} = this,
