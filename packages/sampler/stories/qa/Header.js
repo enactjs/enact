@@ -5,7 +5,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 
 import {mergeComponentMetadata} from '../../src/utils';
-import {boolean, text} from '../../src/enact-knobs';
+import {boolean, text, select} from '../../src/enact-knobs';
 
 Header.displayName = 'Header';
 const Config = mergeComponentMetadata('Header', HeaderBase, Header);
@@ -26,6 +26,10 @@ const inputData = {
 
 const headerComponents = <Button>Header Button</Button>;
 
+const prop = {
+	marqueeOn: ['hover', 'render']
+};
+
 storiesOf('Header', module)
 	.add(
 		'just title',
@@ -35,6 +39,7 @@ storiesOf('Header', module)
 			return (
 				<Header
 					title={text('title', Config, inputData.shortTitle)}
+					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				>
 					{addHeaderComponents ? headerComponents : null}
 				</Header>
@@ -50,6 +55,7 @@ storiesOf('Header', module)
 				<Header
 					type="compact"
 					title={text('title', Config, inputData.shortTitle)}
+					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				>
 					{addHeaderComponents ? headerComponents : null}
 				</Header>
@@ -66,6 +72,7 @@ storiesOf('Header', module)
 					title={text('title', Config, inputData.shortTitle)}
 					titleBelow={text('titleBelow', Config, inputData.shortTitleBelow)}
 					subTitleBelow={text('subTitleBelow', Config, inputData.shortSubTitleBelow)}
+					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				>
 					{addHeaderComponents ? headerComponents : null}
 				</Header>
@@ -83,6 +90,7 @@ storiesOf('Header', module)
 					title={text('title', Config, inputData.shortTitle)}
 					titleBelow={text('titleBelow', Config, inputData.shortTitleBelow)}
 					subTitleBelow={text('subTitleBelow', Config, inputData.shortSubTitleBelow)}
+					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				>
 					{addHeaderComponents ? headerComponents : null}
 				</Header>
@@ -99,6 +107,7 @@ storiesOf('Header', module)
 					title={text('title', Config, inputData.longTitle)}
 					titleBelow={text('titleBelow', Config, inputData.longTitleBelow)}
 					subTitleBelow={text('subTitleBelow', Config, inputData.longSubTitleBelow)}
+					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				>
 					{addHeaderComponents ? headerComponents : null}
 				</Header>
@@ -116,6 +125,7 @@ storiesOf('Header', module)
 					title={text('title', Config, inputData.longTitle)}
 					titleBelow={text('titleBelow', Config, inputData.longTitleBelow)}
 					subTitleBelow={text('subTitleBelow', Config, inputData.longSubTitleBelow)}
+					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				>
 					{addHeaderComponents ? headerComponents : null}
 				</Header>
@@ -132,6 +142,7 @@ storiesOf('Header', module)
 					title={text('title', Config, inputData.shortRtlTitle)}
 					titleBelow={text('titleBelow', Config, inputData.shortRtlTitleBelow)}
 					subTitleBelow={text('subTitleBelow', Config, inputData.shortRtlTitleBelow)}
+					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				>
 					{addHeaderComponents ? headerComponents : null}
 				</Header>
@@ -148,6 +159,7 @@ storiesOf('Header', module)
 					type="compact"
 					title={text('title', Config, inputData.shortRtlTitle)}
 					titleBelow={text('titleBelow', Config, inputData.shortRtlTitleBelow)}
+					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				>
 					{addHeaderComponents ? headerComponents : null}
 				</Header>
@@ -164,6 +176,7 @@ storiesOf('Header', module)
 					title={text('title', Config, inputData.tallText)}
 					titleBelow={text('titleBelow', Config, inputData.tallText)}
 					subTitleBelow={text('subTitleBelow', Config, inputData.tallText)}
+					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				>
 					{addHeaderComponents ? headerComponents : null}
 				</Header>
@@ -180,6 +193,7 @@ storiesOf('Header', module)
 					type="compact"
 					title={text('title', Config, inputData.tallText)}
 					titleBelow={text('titleBelow', Config, inputData.tallText)}
+					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				>
 					{addHeaderComponents ? headerComponents : null}
 				</Header>
@@ -200,6 +214,7 @@ storiesOf('Header.Input', module)
 					headerInput={input}
 					titleBelow={text('titleBelow', Config, inputData.longTitleBelow)}
 					subTitleBelow={text('subTitleBelow', Config, inputData.longSubTitleBelow)}
+					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				>
 					{addHeaderComponents ? headerComponents : null}
 				</Header>
@@ -218,6 +233,7 @@ storiesOf('Header.Input', module)
 					title={text('title', Config, inputData.longTitle)}
 					titleBelow={text('titleBelow', Config, inputData.longTitleBelow)}
 					subTitleBelow={text('subTitleBelow', Config, inputData.longSubTitleBelow)}
+					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				>
 					{addHeaderComponents ? headerComponents : null}
 				</Header>
