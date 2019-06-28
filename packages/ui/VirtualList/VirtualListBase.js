@@ -222,7 +222,7 @@ const VirtualListBaseFactory = (type) => {
 			 * Valid values are:
 			 * * `'VirtualList'`, and
 			 * * `'VariableVirtualList'`.
-			 * 
+			 *
 			 * @type {String}
 			 * @default 'VirtualList'
 			 * @private
@@ -235,7 +235,16 @@ const VirtualListBaseFactory = (type) => {
 			 * @type {Function}
 			 * @private
 			 */
-			updateStatesAndBounds: PropTypes.func
+			updateStatesAndBounds: PropTypes.func,
+
+			/**
+			 * The array for variable item size.
+			 *
+			 * @type {String}
+			 * @default 'VirtualList'
+			 * @private
+			 */
+			variableGridSizes: PropTypes.array
 		}
 
 		static defaultProps = {
@@ -737,7 +746,6 @@ const VirtualListBaseFactory = (type) => {
 								Math.floor((pos - gridSize * overhangBefore) / gridSize)
 							)
 						);
-					let newThresholdMin, newThresholdMax;
 
 					newFirstIndex = firstExtent * dimensionToExtent;
 					newThresholdMin = (firstExtent + overhangBefore) * gridSize;
@@ -767,7 +775,7 @@ const VirtualListBaseFactory = (type) => {
 				numOfUpperLine = Math.floor(overhang / 2);
 
 			if (itemContainerRef.current) {
-				let index, childNode;
+				let index;
 
 				// Cache variable item positions
 				// and adjust variable item DOM element positions
