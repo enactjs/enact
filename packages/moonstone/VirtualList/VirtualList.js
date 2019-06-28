@@ -117,11 +117,11 @@ const VariableVirtualList = kind({
 		 * @required
 		 * @public
 		 */
-		itemSize: PropTypes.number.isRequired
+		itemSize: PropTypes.any.isRequired
 	},
 
-	render: (props) => (
-		<ScrollableVirtualList {...props} type="VariableVirtualList" />
+	render: ({itemSize, ...rest}) => (
+		<ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="VariableVirtualList" variableItemSize={itemSize.size} />
 	)
 });
 
@@ -231,11 +231,11 @@ const VariableVirtualListNative = kind({
 		 * @required
 		 * @public
 		 */
-		itemSize: PropTypes.number.isRequired
+		itemSize: PropTypes.any.isRequired
 	},
 
-	render: (props) => (
-		<ScrollableVirtualListNative {...props} type="VariableVirtualList" />
+	render: ({itemSize, ...rest}) => (
+		<ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="VariableVirtualList" variableItemSize={itemSize.size} />
 	)
 });
 
