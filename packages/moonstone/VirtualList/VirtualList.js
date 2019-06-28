@@ -98,7 +98,7 @@ const VirtualGridList = kind({
  * @memberof moonstone/VirtualList
  * @extends moonstone/VirtualList.VirtualListBase
  * @ui
- * @public
+ * @private
  */
 const VariableVirtualList = kind({
 	name: 'VariableVirtualList',
@@ -212,7 +212,7 @@ const VirtualGridListNative = kind({
  * @memberof moonstone/VirtualList
  * @extends moonstone/VirtualList.VirtualListBaseNative
  * @ui
- * @public
+ * @private
  */
 const VariableVirtualListNative = kind({
 	name: 'VariableVirtualListNative',
