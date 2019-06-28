@@ -12,6 +12,7 @@
 
 import kind from '@enact/core/kind';
 import {gridListItemSizeShape} from '@enact/ui/VirtualList';
+import warning from 'warning';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -120,9 +121,19 @@ const NewVirtualList = kind({
 		itemSize: PropTypes.any.isRequired
 	},
 
-	render: ({itemSize, ...rest}) => (
-		<ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="NewVirtualList" variableGridSizes={itemSize.size} />
-	)
+	render: ({cbScrollTo, direction, itemSize, ...rest}) => {
+		warning(
+			!cbScrollTo,
+			'NewVirtualListNative does not support `cbScrollTo` prop'
+		);
+
+		warning(
+			!direction,
+			'NewVirtualListNative does not support `orientaion` prop'
+		);
+
+		return <ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="NewVirtualList" variableGridSizes={itemSize.size} />;
+	}
 });
 
 /**
@@ -234,9 +245,19 @@ const NewVirtualListNative = kind({
 		itemSize: PropTypes.any.isRequired
 	},
 
-	render: ({itemSize, ...rest}) => (
-		<ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="NewVirtualList" variableGridSizes={itemSize.size} />
-	)
+	render: ({cbScrollTo, direction, itemSize, ...rest}) => {
+		warning(
+			!cbScrollTo,
+			'NewVirtualListNative does not support `cbScrollTo` prop'
+		);
+
+		warning(
+			!direction,
+			'NewVirtualListNative does not support `orientaion` prop'
+		);
+
+		return <ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="NewVirtualList" variableGridSizes={itemSize.size} />;
+	}
 });
 
 export default VirtualList;
