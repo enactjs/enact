@@ -395,7 +395,7 @@ const VirtualListBaseFactory = (type) => {
 		getMoreInfo = () => this.moreInfo
 
 		getGridPosition (index) {
-			if (this.props.type === ' NewVirtualList') {
+			if (this.props.type === 'NewVirtualList') {
 				const
 					{dimensionToExtent, primary, secondary, variableGridPositions} = this,
 					extent = Math.floor(index / dimensionToExtent),
