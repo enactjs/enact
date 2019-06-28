@@ -106,6 +106,25 @@ const NewVirtualList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.NewVirtualList.prototype */ {
 		/**
+		 * Callback method of scrollTo.
+		 * But `'NewVirtualList'` do not support it.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		cbScrollTo: PropTypes.any,
+
+		/**
+		 * The layout direction of the list.
+		 * But `'NewVirtualList'` do not support it.
+		 *
+		 * @type {String}
+		 * @default 'vertical'
+		 * @public
+		 */
+		direction: PropTypes.any,
+
+		/**
 		 * Size of an item for the VirtualList; valid value is a number.
 		 * A horizontal NewVirtualList is not supported.
 		 *
@@ -229,6 +248,25 @@ const NewVirtualListNative = kind({
 	name: 'NewVirtualListNative',
 
 	propTypes: /** @lends moonstone/VirtualList.NewVirtualListNative.prototype */ {
+		/**
+		 * Callback method of scrollTo.
+		 * But `'NewVirtualListNative'` do not support it.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		cbScrollTo: PropTypes.any,
+
+		/**
+		 * The layout direction of the list.
+		 * But `'NewVirtualListNative'` do not support it.
+		 *
+		 * @type {String}
+		 * @default 'vertical'
+		 * @public
+		 */
+		direction: PropTypes.any,
+
 		/**
 		 * Size of an item for the VirtualList; valid value is a number.
 		 * A horizontal NewVirtualList is not supported.
