@@ -29,7 +29,13 @@ const
 	Native = 'Native',
 	// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
 	getNumberValue = (index) => index | 0,
-	nop = () => {};
+	nop = () => {},
+	moveFocusStraight = ({direction, id}) => {
+		Spotlight.set(id, {straightOnly: true});
+		const moved = Spotlight.move(direction);
+		Spotlight.set(id, {straightOnly: false});
+		return moved;
+	};
 
 /**
  * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} and
@@ -503,7 +509,7 @@ const VirtualListBaseFactory = (type) => {
 					} else if (
 						directions.right && repeat ||
 						directions.left && Spotlight.move(direction) ||
-						(directions.up || directions.down) && (repeat || Spotlight.move(direction) && currentTarget.contains(Spotlight.getCurrent()))
+						(directions.up || directions.down) && (repeat || moveFocusStraight({id: this.props.spotlightId, direction}) && currentTarget.contains(Spotlight.getCurrent()))
 					) {
 						ev.preventDefault();
 						ev.stopPropagation();
