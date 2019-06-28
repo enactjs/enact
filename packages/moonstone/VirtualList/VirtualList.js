@@ -261,7 +261,7 @@ const NewVirtualListNative = kind({
 		 * @required
 		 * @public
 		 */
-		itemSize: PropTypes.any.isRequired
+		itemSize: PropTypes.any.isRequired,
 
 		/**
 		 * Callback method of scrollTo.
