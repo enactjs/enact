@@ -121,7 +121,7 @@ const VariableVirtualList = kind({
 	},
 
 	render: ({itemSize, ...rest}) => (
-		<ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="VariableVirtualList" variableItemSize={itemSize.size} />
+		<ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="VariableVirtualList" variableGridSizes={itemSize.size} />
 	)
 });
 
@@ -235,7 +235,7 @@ const VariableVirtualListNative = kind({
 	},
 
 	render: ({itemSize, ...rest}) => (
-		<ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="VariableVirtualList" variableItemSize={itemSize.size} />
+		<ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="VariableVirtualList" variableGridSizes={itemSize.size} />
 	)
 });
 
