@@ -106,6 +106,21 @@ const NewVirtualList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.NewVirtualList.prototype */ {
 		/**
+		 * Size of an item for the VirtualList; valid value is a number.
+		 * A horizontal NewVirtualList is not supported.
+		 *
+		 * Usage:
+		 * ```
+		 * <NewVirtualList itemSize={ri.scale(72)} />
+		 * ```
+		 *
+		 * @type {Number}
+		 * @required
+		 * @public
+		 */
+		itemSize: PropTypes.any.isRequired,
+
+		/**
 		 * Callback method of scrollTo.
 		 * But `'NewVirtualList'` do not support it.
 		 *
@@ -122,22 +137,7 @@ const NewVirtualList = kind({
 		 * @default 'vertical'
 		 * @public
 		 */
-		direction: PropTypes.any,
-
-		/**
-		 * Size of an item for the VirtualList; valid value is a number.
-		 * A horizontal NewVirtualList is not supported.
-		 *
-		 * Usage:
-		 * ```
-		 * <NewVirtualList itemSize={ri.scale(72)} />
-		 * ```
-		 *
-		 * @type {Number}
-		 * @required
-		 * @public
-		 */
-		itemSize: PropTypes.any.isRequired
+		direction: PropTypes.any
 	},
 
 	render: ({cbScrollTo, direction, itemSize, ...rest}) => {
@@ -249,6 +249,21 @@ const NewVirtualListNative = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.NewVirtualListNative.prototype */ {
 		/**
+		 * Size of an item for the VirtualList; valid value is a number.
+		 * A horizontal NewVirtualList is not supported.
+		 *
+		 * Usage:
+		 * ```
+		 * <NewVirtualList itemSize={ri.scale(72)} />
+		 * ```
+		 *
+		 * @type {Number}
+		 * @required
+		 * @public
+		 */
+		itemSize: PropTypes.any.isRequired
+
+		/**
 		 * Callback method of scrollTo.
 		 * But `'NewVirtualListNative'` do not support it.
 		 *
@@ -265,22 +280,7 @@ const NewVirtualListNative = kind({
 		 * @default 'vertical'
 		 * @public
 		 */
-		direction: PropTypes.any,
-
-		/**
-		 * Size of an item for the VirtualList; valid value is a number.
-		 * A horizontal NewVirtualList is not supported.
-		 *
-		 * Usage:
-		 * ```
-		 * <NewVirtualList itemSize={ri.scale(72)} />
-		 * ```
-		 *
-		 * @type {Number}
-		 * @required
-		 * @public
-		 */
-		itemSize: PropTypes.any.isRequired
+		direction: PropTypes.any
 	},
 
 	render: ({cbScrollTo, direction, itemSize, ...rest}) => {
