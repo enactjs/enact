@@ -217,17 +217,17 @@ const VirtualListBaseFactory = (type) => {
 			spacing: PropTypes.number,
 
 			/**
-			 * Type of the list. If you want to use variable item height, you need to define it to `'VariableVirtualList'`.
+			 * Type of the list. If you want to use variable item height, you need to define it to `'NewVirtualList'`.
 			 *
 			 * Valid values are:
 			 * * `'VirtualList'`, and
-			 * * `'VariableVirtualList'`.
+			 * * `'NewVirtualList'`.
 			 *
 			 * @type {String}
 			 * @default 'VirtualList'
 			 * @private
 			 */
-			type: PropTypes.oneOf(['VirtualList', 'VariableVirtualList']),
+			type: PropTypes.oneOf(['VirtualList', 'NewVirtualList']),
 
 			/**
 			 * Called to execute additional logic in a themed component when updating states and bounds.
@@ -310,7 +310,7 @@ const VirtualListBaseFactory = (type) => {
 				this.emitUpdateItems();
 			}
 
-			if (this.props.type === 'VariableVirtualList') {
+			if (this.props.type === 'NewVirtualList') {
 				this.adjustVariableGridPosition();
 			} else {
 				this.setContainerSize();
@@ -352,7 +352,7 @@ const VirtualListBaseFactory = (type) => {
 				}
 			}
 
-			if (this.props.type === 'VariableVirtualList') {
+			if (this.props.type === 'NewVirtualList') {
 				this.adjustVariableGridPosition();
 			}
 		}
@@ -395,7 +395,7 @@ const VirtualListBaseFactory = (type) => {
 		getMoreInfo = () => this.moreInfo
 
 		getGridPosition (index) {
-			if (this.props.type === ' VariableVirtualList') {
+			if (this.props.type === ' NewVirtualList') {
 				const
 					{dimensionToExtent, primary, secondary, variableGridPositions} = this,
 					extent = Math.floor(index / dimensionToExtent),
@@ -413,7 +413,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		// For VariableVirtualList
+		// For NewVirtualList
 		getVariableGridPosition = (index) => {
 			const
 				variableGridPosition = this.variableGridPositions[index],
@@ -506,7 +506,7 @@ const VirtualListBaseFactory = (type) => {
 
 			primary.gridSize = primary.itemSize + spacing;
 			secondary.gridSize = secondary.itemSize + spacing;
-			if (this.props.type === 'VariableVirtualList') {
+			if (this.props.type === 'NewVirtualList') {
 				thresholdBase = primary.gridSize * Math.ceil(overhang / 2);
 			} else {
 				thresholdBase = primary.gridSize * 2;
@@ -695,7 +695,7 @@ const VirtualListBaseFactory = (type) => {
 			if (pos > threshold.max || pos < threshold.min) {
 				let newThresholdMin = -Infinity, newThresholdMax = Infinity;
 
-				if (this.props.type === 'VariableVirtualList') {
+				if (this.props.type === 'NewVirtualList') {
 					const overhangBefore = Math.floor(this.props.overhang / 2);
 					let firstRenderedIndex = -1;
 
@@ -765,7 +765,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		// For VariableVirtualList
+		// For NewVirtualList
 		adjustVariableGridPosition () {
 			const
 				{dataSize, overhang, spacing, variableGridSizes} = this.props,
@@ -896,7 +896,7 @@ const VirtualListBaseFactory = (type) => {
 				if (++j === dimensionToExtent) {
 					secondaryPosition = 0;
 
-					if (this.props.type === 'VariableVirtualList') {
+					if (this.props.type === 'NewVirtualList') {
 						if (variableGridPositions[i] || variableGridPositions[i] === 0) {
 							primaryPosition = variableGridPositions[i].position;
 						} else if (variableGridSizes[i]) {

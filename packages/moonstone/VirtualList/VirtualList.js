@@ -94,23 +94,23 @@ const VirtualGridList = kind({
 /**
  * A Moonstone-styled scrollable and spottable virtual list component with items having various height.
  *
- * @class VariableVirtualList
+ * @class NewVirtualList
  * @memberof moonstone/VirtualList
  * @extends moonstone/VirtualList.VirtualListBase
  * @ui
  * @private
  */
-const VariableVirtualList = kind({
-	name: 'VariableVirtualList',
+const NewVirtualList = kind({
+	name: 'NewVirtualList',
 
-	propTypes: /** @lends moonstone/VirtualList.VariableVirtualList.prototype */ {
+	propTypes: /** @lends moonstone/VirtualList.NewVirtualList.prototype */ {
 		/**
 		 * Size of an item for the VirtualList; valid value is a number.
-		 * A horizontal VariableVirtualList is not supported.
+		 * A horizontal NewVirtualList is not supported.
 		 *
 		 * Usage:
 		 * ```
-		 * <VariableVirtualList itemSize={ri.scale(72)} />
+		 * <NewVirtualList itemSize={ri.scale(72)} />
 		 * ```
 		 *
 		 * @type {Number}
@@ -121,7 +121,7 @@ const VariableVirtualList = kind({
 	},
 
 	render: ({itemSize, ...rest}) => (
-		<ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="VariableVirtualList" variableGridSizes={itemSize.size} />
+		<ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="NewVirtualList" variableGridSizes={itemSize.size} />
 	)
 });
 
@@ -208,23 +208,23 @@ const VirtualGridListNative = kind({
 /**
  * A Moonstone-styled scrollable and spottable virtual native list component with items having various height.
  *
- * @class VariableVirtualListNative
+ * @class NewVirtualListNative
  * @memberof moonstone/VirtualList
  * @extends moonstone/VirtualList.VirtualListBaseNative
  * @ui
  * @private
  */
-const VariableVirtualListNative = kind({
-	name: 'VariableVirtualListNative',
+const NewVirtualListNative = kind({
+	name: 'NewVirtualListNative',
 
-	propTypes: /** @lends moonstone/VirtualList.VariableVirtualListNative.prototype */ {
+	propTypes: /** @lends moonstone/VirtualList.NewVirtualListNative.prototype */ {
 		/**
 		 * Size of an item for the VirtualList; valid value is a number.
-		 * A horizontal VariableVirtualList is not supported.
+		 * A horizontal NewVirtualList is not supported.
 		 *
 		 * Usage:
 		 * ```
-		 * <VariableVirtualList itemSize={ri.scale(72)} />
+		 * <NewVirtualList itemSize={ri.scale(72)} />
 		 * ```
 		 *
 		 * @type {Number}
@@ -235,14 +235,14 @@ const VariableVirtualListNative = kind({
 	},
 
 	render: ({itemSize, ...rest}) => (
-		<ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="VariableVirtualList" variableGridSizes={itemSize.size} />
+		<ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="NewVirtualList" variableGridSizes={itemSize.size} />
 	)
 });
 
 export default VirtualList;
 export {
-	VariableVirtualList,
-	VariableVirtualListNative,
+	NewVirtualList,
+	NewVirtualListNative,
 	VirtualGridList,
 	VirtualGridListNative,
 	VirtualList,
