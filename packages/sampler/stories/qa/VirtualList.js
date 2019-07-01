@@ -90,8 +90,7 @@ class StatefulSwitchItem extends React.Component {
 	}
 }
 
-const InPanels = () => {
-	const itemSize = ri.scale(number('itemSize', Config, 72));
+const InPanels = (props) => {
 	const [index, setIndex] = useState(0);
 	function handleSelectBreadcrumb (ev) {
 		setIndex(ev.index);
@@ -105,15 +104,11 @@ const InPanels = () => {
 		<ActivityPanels index={index} onSelectBreadcrumb={handleSelectBreadcrumb} noCloseButton>
 			<Panel>
 				<VirtualList
-					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
-					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
 					id="spotlight-list"
-					itemRenderer={renderItem(Item, itemSize, handleSelectItem)}
-					itemSize={itemSize}
-					onScrollStart={action('onScrollStart')}
-					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', Config, 0))}
+					// eslint-disable-next-line enact/prop-types
+					itemRenderer={renderItem(Item, props.itemSize, handleSelectItem)}
 					spotlightId="virtual-list"
+					{...props}
 				/>
 			</Panel>
 			<Panel>
@@ -144,5 +139,14 @@ storiesOf('VirtualList', module)
 	)
 	.add(
 		'in Panels',
-		() => <InPanels />
+		() => (
+			<InPanels
+				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+				focusableScrollbar={boolean('focusableScrollbar', Config, false)}
+				itemSize={ri.scale(number('itemSize', Config, 72))}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
+				spacing={ri.scale(number('spacing', Config, 0))}
+			/>
+		)
 	);
