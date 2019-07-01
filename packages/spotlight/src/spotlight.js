@@ -179,7 +179,13 @@ const Spotlight = (function () {
 
 	function getCurrent () {
 		if (!isWindowReady()) return;
-		_current = _current || document.activeElement;
+
+		if (window.__spatialNavigation__ && window.__spatialNavigation__.currentInterest) {
+			_current = _current || window.__spatialNavigation__.currentInterest();
+		} else {
+			_current = _current || document.activeElement;
+		}
+
 		if (_current && _current !== document.body) {
 			return _current;
 		}
@@ -213,7 +219,11 @@ const Spotlight = (function () {
 		const focusOptions = isWithinOverflowContainer(elem, containerIds) ? {preventScroll: true} : null;
 
 		let silentFocus = function () {
-			elem.focus(focusOptions);
+			if (window.__spatialNavigation__ && window.__spatialNavigation__.interest) {
+				window.__spatialNavigation__.interest(elem);
+			} else {
+				elem.focus(focusOptions);
+			}
 			focusChanged(elem, containerIds);
 		};
 
@@ -230,7 +240,11 @@ const Spotlight = (function () {
 			return true;
 		}
 
-		elem.focus(focusOptions);
+		if (window.__spatialNavigation__ && window.__spatialNavigation__.interest) {
+			window.__spatialNavigation__.interest(elem);
+		} else {
+			elem.focus(focusOptions);
+		}
 
 		_duringFocusChange = false;
 
@@ -427,6 +441,22 @@ const Spotlight = (function () {
 	}
 
 	function onKeyUp (evt) {
+		// TODO : Should remove
+		// Temporary code. Because current interest concept can't support keydown/keyup event.
+		if (!evt.isTrusted) {
+			return;
+		}
+		if (window.__spatialNavigation__ && window.__spatialNavigation__.interest) {
+			const e = new KeyboardEvent('keyup', evt);
+			const currentInterest = getCurrent();
+			if (currentInterest && !isEnter(evt.keyCode) &&
+				evt.target !== currentInterest &&
+				currentInterest !== document.body &&
+				!currentInterest.dispatchEvent(e)) {
+				evt.preventDefault();
+			}
+		}
+
 		_pointerMoveDuringKeyPress = false;
 		const keyCode = evt.keyCode;
 
@@ -443,6 +473,22 @@ const Spotlight = (function () {
 	}
 
 	function onKeyDown (evt) {
+		// TODO : Should remove
+		// Temporary code. Because current interest concept can't support keydown/keyup event.
+		if (!evt.isTrusted) {
+			return;
+		}
+		if (window.__spatialNavigation__ && window.__spatialNavigation__.interest) {
+			const e = new KeyboardEvent('keydown', evt);
+			const currentInterest = getCurrent();
+			if (currentInterest && !isEnter(evt.keyCode) &&
+				evt.target !== currentInterest &&
+				currentInterest !== document.body &&
+				!currentInterest.dispatchEvent(e)) {
+				evt.preventDefault();
+			}
+		}
+
 		const {keyCode} = evt;
 		const direction = getDirection(keyCode);
 
@@ -604,7 +650,9 @@ const Spotlight = (function () {
 		initialize: function (containerDefaults) {
 			if (!_initialized) {
 				window.addEventListener('blur', onBlur);
+				window.addEventListener('interestblur', onBlur);
 				window.addEventListener('focus', onFocus);
+				window.addEventListener('interest', onFocus);
 				window.addEventListener('keydown', onKeyDown);
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mousemove', onMouseMove);

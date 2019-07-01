@@ -432,9 +432,9 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	calculateAndScrollTo = () => {
+	calculateAndScrollTo = (nextItem) => {
 		const
-			spotItem = Spotlight.getCurrent(),
+			spotItem = nextItem || Spotlight.getCurrent(),
 			positionFn = this.childRef.current.calculatePositionOnFocus,
 			{containerRef} = this.uiRef.current.childRefCurrent;
 
@@ -462,6 +462,25 @@ class ScrollableBase extends Component {
 
 			// update `scrollHeight`
 			this.uiRef.current.bounds.scrollHeight = this.uiRef.current.getScrollBounds().scrollHeight;
+		}
+	}
+
+	onNavBeforeFocus = (ev) => {
+		const shouldPreventScrollByFocus = this.childRef.current.shouldPreventScrollByFocus ?
+			this.childRef.current.shouldPreventScrollByFocus() :
+			false;
+
+		if (this.isWheeling) {
+			this.uiRef.current.stop();
+			this.animateOnFocus = false;
+		}
+
+		this.alertThumb();
+
+		if (!shouldPreventScrollByFocus) {
+			this.calculateAndScrollTo(ev.target);
+		} else if (this.childRef.current.setLastFocusedNode) {
+			this.childRef.current.setLastFocusedNode(ev.target);
 		}
 	}
 
@@ -775,6 +794,7 @@ class ScrollableBase extends Component {
 	addEventListeners = (childContainerRef) => {
 		if (childContainerRef.current && childContainerRef.current.addEventListener) {
 			childContainerRef.current.addEventListener('focusin', this.onFocus);
+			childContainerRef.current.addEventListener('navbeforefocus', this.onNavBeforeFocus);
 			if (platform.webos) {
 				childContainerRef.current.addEventListener('webOSVoice', this.onVoice);
 				childContainerRef.current.setAttribute('data-webos-voice-intent', 'Scroll');
@@ -786,6 +806,7 @@ class ScrollableBase extends Component {
 	removeEventListeners = (childContainerRef) => {
 		if (childContainerRef.current && childContainerRef.current.removeEventListener) {
 			childContainerRef.current.removeEventListener('focusin', this.onFocus);
+			childContainerRef.current.removeEventListener('navbeforefocus', this.onNavBeforeFocus);
 			if (platform.webos) {
 				childContainerRef.current.removeEventListener('webOSVoice', this.onVoice);
 				childContainerRef.current.removeAttribute('data-webos-voice-intent');

@@ -203,6 +203,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidMount () {
 			// eslint-disable-next-line react/no-find-dom-node
 			this.node = ReactDOM.findDOMNode(this);
+
+			if (this.node) {
+				this.node.addEventListener('interest', this.handleFocus);
+				this.node.addEventListener('interestblur', this.handleBlur);
+			}
 		}
 
 		componentDidUpdate (prevProps) {
@@ -233,6 +238,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
+			if (this.node) {
+				this.node.removeEventListener('interest', this.handleFocus);
+				this.node.removeEventListener('interestblur', this.handleBlur);
+			}
+
 			if (this.isFocused) {
 				forward('onSpotlightDisappear', null, this.props);
 			}

@@ -144,6 +144,12 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		updateFocus = (prevState) => {
 			if (this.state.node) {
 				if (Spotlight.getCurrent() !== this.state.node) {
+					// Remove interest.
+					if (window.__spatialNavigation__ && window.__spatialNavigation__.interest) {
+						window.__spatialNavigation__.interest();
+					}
+
+					// Set focus to input element.
 					this.state.node.focus();
 				}
 			}
