@@ -3,6 +3,7 @@ import Heading from '@enact/moonstone/Heading';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import Group from '@enact/ui/Group';
 import Item from '@enact/moonstone/Item';
+import {Panel} from '@enact/moonstone/Panels';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ri from '@enact/ui/resolution';
@@ -122,6 +123,34 @@ class ScrollerWithLargeContainer extends React.Component {
 					<Item>Hello</Item>
 				</Container>
 			</Scroller>
+		);
+	}
+}
+
+class ScrollerWithFocusInContainer extends React.Component {
+	constructor (props) {
+		super(props);
+	}
+
+	render = () => {
+		const {...rest} = this.props;
+
+		return (
+			<Panel {...rest} >
+				<Button style={{display: 'inline-block'}} small>focus to me</Button>
+				<Scroller focusableScrollbar style={{height: '400px', width: '300px', display: 'inline-block'}}>
+					<Item>button1</Item>
+					<Item>button2</Item>
+					<Item>button3</Item>
+					<Item>button4</Item>
+					<Item>button5</Item>
+					<Item>button6</Item>
+					<Item>button7</Item>
+					<Item>button8</Item>
+					<Item>button9</Item>
+					<div>Test Test Test Test Test Test </div>
+				</Scroller>
+			</Panel>
 		);
 	}
 }
@@ -280,6 +309,12 @@ storiesOf('Scroller', module)
 		'With Large Container',
 		() => (
 			<ScrollerWithLargeContainer />
+		)
+	)
+	.add(
+		'With Focus in Container',
+		() => (
+			<ScrollerWithFocusInContainer />
 		)
 	)
 	.add(
