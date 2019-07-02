@@ -193,7 +193,10 @@ const Spotlight = (function () {
 			_current = _current || document.activeElement;
 		}
 
-		if (_current && _current !== document.body) {
+		// TODO : With focusless concept(aka. interest), "current" is ambiguous. Need discussion.
+		// TODO : When current interest element is removed, the current element should be updated.
+		//        Currently, there is no way for this.
+		if (_current && _current !== document.body && document.body.contains(_current)) {
 			return _current;
 		}
 	}
@@ -403,6 +406,9 @@ const Spotlight = (function () {
 	function blur () {
 		const current = getCurrent();
 		if (current) {
+			if (window.__spatialNavigation__ && window.__spatialNavigation__.interest) {
+				window.__spatialNavigation__.interest();
+			}
 			current.blur();
 		}
 		onBlur();
@@ -526,7 +532,7 @@ const Spotlight = (function () {
 		if (!isPaused() && !_pointerMoveDuringKeyPress) {
 			if (getCurrent()) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
-			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
+			} else if (direction && !spotNextFromPoint(direction, getLastPointerPosition())) {
 				restoreFocus();
 			}
 			_5WayKeyHold = true;
