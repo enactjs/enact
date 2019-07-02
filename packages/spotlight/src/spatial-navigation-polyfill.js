@@ -123,6 +123,8 @@
       const dir = ARROW_KEY_CODE[e.keyCode];
       const interestKey = INTEREST_KEY_CODE[e.keyCode];
 
+      if (!e.isTrusted)
+        return;
       if (e.keyCode === TAB_KEY_CODE) {
         if (focuslessSpatialNavigation) {
           interest(null); // remove interest

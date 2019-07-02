@@ -165,6 +165,7 @@ const Spotlight = (function () {
 	* protected methods
 	*/
 
+	let _next = null;
 	let _current = null;
 
 	function preventDefault (evt) {
@@ -175,6 +176,12 @@ const Spotlight = (function () {
 
 	function shouldPreventNavigation () {
 		return isPaused() || getAllContainerIds().length === 0;
+	}
+
+	function getNext () {
+		// If there is a element that will receive focus soon,
+		// return the item.
+		if (_next) return _next;
 	}
 
 	function getCurrent () {
@@ -218,6 +225,7 @@ const Spotlight = (function () {
 
 		const focusOptions = isWithinOverflowContainer(elem, containerIds) ? {preventScroll: true} : null;
 
+		_next = elem;
 		let silentFocus = function () {
 			if (window.__spatialNavigation__ && window.__spatialNavigation__.interest) {
 				window.__spatialNavigation__.interest(elem);
@@ -253,6 +261,7 @@ const Spotlight = (function () {
 	}
 
 	function focusChanged (elem, containerIds) {
+		_next = null;
 		_current = elem;
 
 		if (!containerIds || !containerIds.length) {
@@ -391,13 +400,15 @@ const Spotlight = (function () {
 		}
 	}
 
-	function onBlur () {
+	function blur () {
 		const current = getCurrent();
-
 		if (current) {
 			current.blur();
-			_current = null;
 		}
+		onBlur();
+	}
+
+	function onBlur () {
 		_current = null;
 		Spotlight.setPointerMode(false);
 		_spotOnWindowFocus = true;
@@ -417,6 +428,8 @@ const Spotlight = (function () {
 	}
 
 	function onFocus () {
+		_next = null;
+
 		// Normally, there isn't focus here unless the window has been blurred above. On webOS, the
 		// platform may focus the window after the app has already focused a component so we prevent
 		// trying to focus something else (potentially) unless the window was previously blurred
@@ -449,11 +462,12 @@ const Spotlight = (function () {
 		if (window.__spatialNavigation__ && window.__spatialNavigation__.interest) {
 			const e = new KeyboardEvent('keyup', evt);
 			const currentInterest = getCurrent();
-			if (currentInterest && !isEnter(evt.keyCode) &&
-				evt.target !== currentInterest &&
-				currentInterest !== document.body &&
-				!currentInterest.dispatchEvent(e)) {
-				evt.preventDefault();
+			if (currentInterest && currentInterest !== evt.targe && evt.target === document.body) {
+				if (!currentInterest.dispatchEvent(e)) {
+					evt.stopPropagation();
+					evt.preventDefault();
+					return;
+				}
 			}
 		}
 
@@ -480,12 +494,14 @@ const Spotlight = (function () {
 		}
 		if (window.__spatialNavigation__ && window.__spatialNavigation__.interest) {
 			const e = new KeyboardEvent('keydown', evt);
-			const currentInterest = getCurrent();
-			if (currentInterest && !isEnter(evt.keyCode) &&
-				evt.target !== currentInterest &&
-				currentInterest !== document.body &&
-				!currentInterest.dispatchEvent(e)) {
-				evt.preventDefault();
+			const currentInterest = window.__spatialNavigation__.currentInterest();
+			if (!isEnter(evt.keyCode) &&
+				currentInterest && currentInterest !== evt.targe && evt.target === document.body) {
+				if (!currentInterest.dispatchEvent(e)) {
+					evt.stopPropagation();
+					evt.preventDefault();
+					return;
+				}
 			}
 		}
 
@@ -875,6 +891,10 @@ const Spotlight = (function () {
 			return false;
 		},
 
+		blur: blur,
+
+		notifyBlur: onBlur,
+
 		/**
 		 * Focuses the specified position.
 		 *
@@ -1027,6 +1047,14 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		getCurrent: getCurrent,
+
+		/**
+		 * Returns the next spotted control.
+		 *
+		 * @returns {Node} The control that currently has focus, if available
+		 * @public
+		 */
+		getNext: getNext,
 
 		/**
 		 * Returns a list of spottable elements wrapped by the supplied container.
