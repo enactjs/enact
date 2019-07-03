@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `core/platform` logic for webOS detection
+
 ## [3.0.0-alpha.7] - 2019-06-24
 
 No significant changes.
