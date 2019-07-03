@@ -51,16 +51,17 @@ const platforms = [
 	// Apple likes to make this complicated
 	{platform: 'ios', regex: /iP(?:hone|ad;(?: U;)? CPU) OS (\d+)/},
 	// LG webOS
-	{platform: 'webos', regex: /Web0S;.*Safari\/537.41/, forceVersion: 4, extra: {lg: 1}},
-	{platform: 'webos', regex: /Web0S;.*Safari\/538.2/, forceVersion: 4, extra: {lg: 2}},
-	{platform: 'webos', regex: /Web0S;.*Chrome\/38/, forceVersion: 4, extra: {lg: 3}},
-	{platform: 'webos', regex: /Web0S;.*Chrome\/53/, forceVersion: 4, extra: {lg: 4}},
-	// Open webOS release LuneOS
-	{platform: 'webos', regex: /LuneOS/, forceVersion: 4, extra: {luneos: 1}},
-	// webOS 4 / OpenWebOS
-	{platform: 'webos', regex: /WebAppManager|Isis|webOS\./, forceVersion: 4},
-	// webOS 1 - 3
-	{platform: 'webos', regex: /(?:web|hpw)OS\/(\d+)/},
+	{platform: 'webos', regex: /Web0S;.*Safari\/537.41/, forceVersion: 1},
+	{platform: 'webos', regex: /Web0S;.*Safari\/538.2/, forceVersion: 2},
+	{platform: 'webos', regex: /Web0S;.*Chrome\/38/, forceVersion: 3},
+	{platform: 'webos', regex: /Web0S;.*Chrome\/53/, forceVersion: 4},
+	// LuneOS
+	{platform: 'webos', regex: /LuneOS/, forceVersion: 0, extra: {luneos: 1}},
+	// Palm/HP/Open webOS
+	{platform: 'webos', regex: /WebAppManager|Isis|webOS\./, forceVersion: 0, extra: {legacy: 4}},
+	{platform: 'webos', regex: /(?:web|hpw)OS\/1/, forceVersion: 0, extra: {legacy: 1}},
+	{platform: 'webos', regex: /(?:web|hpw)OS\/2/, forceVersion: 0, extra: {legacy: 2}},
+	{platform: 'webos', regex: /(?:web|hpw)OS\/3/, forceVersion: 0, extra: {legacy: 3}},
 	// desktop Safari
 	{platform: 'safari', regex: /Version\/(\d+)[.\d]+\s+Safari/},
 	// desktop Chrome
@@ -99,7 +100,7 @@ const parseUserAgent = (userAgent) => {
 		if (m) {
 			plat.unknown = false;
 
-			if (p.forceVersion) {
+			if ('forceVersion' in p) {
 				v = p.forceVersion;
 			} else {
 				v = Number(m[1]);

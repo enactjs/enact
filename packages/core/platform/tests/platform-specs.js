@@ -19,43 +19,43 @@ describe('platform', () => {
 		const webOS1351 = 'Mozilla/5.0 (webOS/1.3.5.1; U; en-US) AppleWebKit/525.27.1 (KHTML, like Gecko) Version/1.0 Safari/525.27.1 Pre/1.1';
 		const webOS2 = 'Mozilla/5.0 (webOS/2.0.1; U; en-US) AppleWebKit/532.2 (KHTML, like Gecko) Version/1.0 Safari/532.2 Pre/1.2';
 
-		test('should return webOS 4 + LG 1', () => {
-			const expected = {webos: 4, lg: 1};
+		test('should return webOS 1', () => {
+			const expected = {webos: 1};
 			const actual = parseUserAgent(webOSTV1);
 
 			expect(actual).toMatchObject(expected);
 		});
 
-		test('should return webOS 4 + LG 2', () => {
-			const expected = {webos: 4, lg: 2};
+		test('should return webOS 2', () => {
+			const expected = {webos: 2};
 			const actual = parseUserAgent(webOSTV2);
 
 			expect(actual).toMatchObject(expected);
 		});
 
-		test('should return webOS 4 + LG 3', () => {
-			const expected = {webos: 4, lg: 3};
+		test('should return webOS 3', () => {
+			const expected = {webos: 3};
 			const actual = parseUserAgent(webOSTV3);
 
 			expect(actual).toMatchObject(expected);
 		});
 
-		test('should return webOS 4 + LG 4', () => {
-			const expected = {webos: 4, lg: 4};
+		test('should return webOS 4', () => {
+			const expected = {webos: 4};
 			const actual = parseUserAgent(webOSTV4);
 
 			expect(actual).toMatchObject(expected);
 		});
 
-		test('should return webOS 4 + LuneOS 1', () => {
-			const expected = {webos: 4, luneos: 1};
+		test('should return webOS 0 + LuneOS 1', () => {
+			const expected = {webos: 0, luneos: 1};
 
 			expect(parseUserAgent(LuneOS1)).toMatchObject(expected);
 			expect(parseUserAgent(LuneOS2)).toMatchObject(expected);
 		});
 
-		test('should return webOS 1', () => {
-			const expected = {webos: 1};
+		test('should return webOS 0 + legacy 1', () => {
+			const expected = {webos: 0, legacy: 1};
 
 			expect(parseUserAgent(webOS10)).toMatchObject(expected);
 			expect(parseUserAgent(webOS11)).toMatchObject(expected);
@@ -64,8 +64,8 @@ describe('platform', () => {
 			expect(parseUserAgent(webOS1351)).toMatchObject(expected);
 		});
 
-		test('should return webOS 2', () => {
-			const expected = {webos: 2};
+		test('should return webOS 0 + legacy 2', () => {
+			const expected = {webos: 0, legacy: 2};
 
 			expect(parseUserAgent(webOS2)).toMatchObject(expected);
 		});
