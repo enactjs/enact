@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 
 import {shallow, mount} from 'enzyme';
-import ilib from 'ilib-webos-tv';
+import ilib from 'ilib-webos-tv/lib/ilib';
 import React from 'react';
 
 import {updateLocale} from '../../locale';
