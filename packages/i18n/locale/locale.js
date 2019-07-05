@@ -6,7 +6,7 @@
  * @private
  */
 
-import ilib from 'ilib-webos-tv';
+import ilib from 'ilib-webos-tv/lib/ilib';
 import LocaleInfo from 'ilib-webos-tv/lib/LocaleInfo';
 import ScriptInfo from 'ilib-webos-tv/lib/ScriptInfo';
 

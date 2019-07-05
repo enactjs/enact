@@ -1,7 +1,7 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {coerceArray, memoize} from '@enact/core/util';
-import ilib from 'ilib-webos-tv';
+import ilib from '@enact/i18n';
 import LocaleInfo from 'ilib-webos-tv/lib/LocaleInfo';
 import DateFmt from 'ilib-webos-tv/lib/DateFmt';
 import PropTypes from 'prop-types';
