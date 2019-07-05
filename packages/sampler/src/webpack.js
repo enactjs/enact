@@ -1,4 +1,5 @@
 /* global __dirname */
+const fs = require('fs');
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
@@ -8,6 +9,11 @@ const {optionParser: app, GracefulFsPlugin, ILibPlugin, WebOSMetaPlugin} = requi
 function configure ({config, mode}, dirname) {
 	const isProduction = mode === 'PRODUCTION';
 	const shouldUseSourceMap = (process.env.GENERATE_SOURCEMAP || 'true') !== 'false';
+
+	// Determine dynamic iLib location for aliasing
+	const iLib = ['ilib-webos-tv', '@enact/i18n/node_modules/ilib-webos-tv'].find(f =>
+		fs.existsSync(path.join(app.context, 'node_modules', f))
+	);
 
 	app.setEnactTargetsAsDefault();
 
@@ -60,7 +66,8 @@ function configure ({config, mode}, dirname) {
 
 	// Modify stock Storybook config for Enact-tailored experience
 	config.devtool = shouldUseSourceMap && 'source-map';
-	config.resolve.alias.ilib = '@enact/i18n/ilib/lib';
+	config.resolve.alias['ilib$'] = '@enact/i18n';
+	config.resolve.alias['ilib'] = config.resolve.alias['@enact/i18n/ilib'] = iLib;
 	config.resolve.modules = [path.resolve(__dirname, '..', 'node_modules'), 'node_modules'];
 	config.devServer = {host: '0.0.0.0', port: 8080};
 	config.performance = {hints: false};
