@@ -75,7 +75,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	let App = Wrapped;
 	if (float) App = FloatingLayerDecorator({wrappedClassName: bgClassName}, App);
 	if (ri) App = ResolutionDecorator(ri, App);
-	//console.log('MoonsoneDecorator', i18n);
+	// console.log('MoonsoneDecorator', i18n);
 	if (i18n) {
 		// Apply the @enact/i18n decorator around the font decorator so the latter will update the
 		// font stylesheet when the locale changes

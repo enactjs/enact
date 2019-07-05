@@ -1,5 +1,5 @@
-//import IString from '../ilib/lib/IString';
-//import ResBundle from '../ilib/lib/ResBundle';
+// import IString from '../ilib/lib/IString';
+// import ResBundle from '../ilib/lib/ResBundle';
 
 import IString from 'ilib-webos-tv/lib/IString';
 import ResBundle from 'ilib-webos-tv/lib/ResBundle';
