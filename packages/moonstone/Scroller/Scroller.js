@@ -359,6 +359,7 @@ class ScrollerBase extends Component {
 const Scroller = (props) => (
 	<Scrollable
 		{...props}
+		spotlightRule="grid"
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
 			return <ScrollerBase {...scrollerProps} />;
 		}}
@@ -415,6 +416,7 @@ Scroller.defaultProps = {
 const ScrollerNative = (props) => (
 	<ScrollableNative
 		{...props}
+		spotlightRule="grid"
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
 			return <ScrollerBase {...scrollerProps} />;
 		}}

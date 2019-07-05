@@ -817,6 +817,7 @@ const listItemsRenderer = (props) => {
 const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
 	<Scrollable
 		{...props}
+		spotlightRule="grid"
 		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
 				{...childProps}
@@ -860,6 +861,7 @@ ScrollableVirtualList.defaultProps = {
 const ScrollableVirtualListNative = (props) => (
 	<ScrollableNative
 		{...props}
+		spotlightRule="grid"
 		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
 				{...childProps}

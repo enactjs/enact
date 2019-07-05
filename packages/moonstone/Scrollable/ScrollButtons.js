@@ -3,7 +3,7 @@ import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import Spotlight, {getDirection} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
 
 import $L from '../internal/$L';
 
@@ -208,55 +208,6 @@ class ScrollButtons extends Component {
 		Spotlight.focus(isPrev ? this.prevButtonRef.current : this.nextButtonRef.current);
 	}
 
-	focusOnOppositeScrollButton = (ev, direction) => {
-		const buttonNode = (ev.target === this.nextButtonRef.current) ? this.prevButtonRef.current : this.nextButtonRef.current;
-
-		ev.preventDefault();
-		ev.stopPropagation();
-		Spotlight.setPointerMode(false);
-
-		if (!Spotlight.focus(buttonNode)) {
-			Spotlight.move(direction);
-		}
-	}
-
-	onSpotlight = (ev) => {
-		const
-			{focusableScrollButtons, rtl, vertical} = this.props,
-			{target} = ev;
-
-		// We don't need to navigate manually if `focusableScrollButtons` is `false`
-		if (focusableScrollButtons) {
-			const
-				direction = getDirection(ev.keyCode),
-				fromNextToPrev = (vertical && direction === 'up') || (!vertical && direction === (rtl ? 'right' : 'left')),
-				fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right'));
-
-			// manually focus the opposite scroll button when 5way pressed
-			if ((fromNextToPrev && target === this.nextButtonRef.current) ||
-				(fromPrevToNext && target === this.prevButtonRef.current)) {
-				this.focusOnOppositeScrollButton(ev, direction);
-			}
-		} else {
-			// If it is vertical `Scrollable`, move focus to the left for ltr or to the right for rtl
-			// If is is horizontal `Scrollable`, move focus to the up
-			const direction = !vertical && 'up' || rtl && 'right' || 'left';
-
-			if (Spotlight.getPointerMode()) {
-				// When changing from "pointer" mode to "5way key" mode,
-				// a pointer is hidden and a last focused item get focused after 30ms.
-				// To make sure the content in `VirtualList` or `Scroller` to be focused after that, we used 50ms.
-				setTimeout(() => {
-					if (Spotlight.getCurrent() === target) {
-						Spotlight.move(direction);
-					}
-				}, 50);
-			} else if (Spotlight.getCurrent() === target) {
-				Spotlight.move(direction);
-			}
-		}
-	}
-
 	onKeyDownPrev = (ev) => {
 		const
 			{focusableScrollButtons} = this.props,
@@ -314,10 +265,6 @@ class ScrollButtons extends Component {
 				onDown={this.onDownPrev}
 				onHoldPulse={this.onClickPrev}
 				onKeyDown={this.onKeyDownPrev}
-				onSpotlightDown={this.onSpotlight}
-				onSpotlightLeft={this.onSpotlight}
-				onSpotlightRight={this.onSpotlight}
-				onSpotlightUp={this.onSpotlight}
 				ref={this.prevButtonRef}
 			>
 				{prevIcon}
@@ -332,10 +279,6 @@ class ScrollButtons extends Component {
 				onDown={this.onDownNext}
 				onHoldPulse={this.onClickNext}
 				onKeyDown={this.onKeyDownNext}
-				onSpotlightDown={this.onSpotlight}
-				onSpotlightLeft={this.onSpotlight}
-				onSpotlightRight={this.onSpotlight}
-				onSpotlightUp={this.onSpotlight}
 				ref={this.nextButtonRef}
 			>
 				{nextIcon}

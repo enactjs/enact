@@ -465,19 +465,12 @@ class Popup extends React.Component {
 		const keyCode = ev.keyCode;
 		const direction = getDirection(keyCode);
 		const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
+		this.pressUpKey = false;
 
 		if (direction && onClose) {
-			let focusChanged;
-
-			if (spottables && Spotlight.getCurrent() && spotlightRestrict !== 'self-only') {
-				focusChanged = Spotlight.move(direction);
-				if (focusChanged) {
-					// stop propagation to prevent default spotlight behavior
-					ev.stopPropagation();
-				}
-			}
-
-			if (!spottables || (focusChanged === false && isUp(keyCode))) {
+			if (spottables && Spotlight.getCurrent() && spotlightRestrict !== 'self-only' && isUp(keyCode)) {
+				this.pressUpKey = true;
+			} else if (!spottables) {
 				// prevent default page scrolling
 				ev.preventDefault();
 				// stop propagation to prevent default spotlight behavior
@@ -486,6 +479,19 @@ class Popup extends React.Component {
 				Spotlight.setPointerMode(false);
 				onClose(ev);
 			}
+		}
+	}
+
+	handleOnNavNoTarget = (ev) => {
+		const {onClose} = this.props;
+		if (onClose && this.pressUpKey) {
+			// preventDefault to prevent spatial navigation next behavior.
+			// Do not search next target which is outside of this container.
+			ev.preventDefault();
+			// Stop propagation to prevent handle this event on spotlight.js
+			ev.stopPropagation();
+
+			onClose(ev);
 		}
 	}
 
@@ -527,6 +533,7 @@ class Popup extends React.Component {
 		const containerNode = getContainerNode(this.state.containerId);
 
 		off('keydown', this.handleKeyDown);
+		off('navnotarget', this.handleOnNavNoTarget);
 
 		// if there is no currently-spotted control or it is wrapped by the popup's container, we
 		// know it's safe to change focus
@@ -542,6 +549,7 @@ class Popup extends React.Component {
 		const {containerId} = this.state;
 
 		on('keydown', this.handleKeyDown);
+		on('navnotarget', this.handleOnNavNoTarget);
 
 		if (!Spotlight.focus(containerId)) {
 			const current = Spotlight.getCurrent();

@@ -180,13 +180,27 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {String}
 			 * @public
 			 */
-			spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
+			spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only']),
+
+			/**
+			 * Select distance function for calculating distance in the spatial navigation.
+			 *
+			 * * `'normal'` - Use general distance function to select best candidate in spatial navigation.
+			 * * `'grid'` - Use special distance functions for grid layout to select best candidate in spatial navigation.
+			 * In the `grid` rule, aligned candidates have the highest priority.
+			 *
+			 * @type {String}
+			 * @default 'normal'
+			 * @public
+			 */
+			spotlightRule: PropTypes.oneOf(['normal', 'grid'])
 		}
 
 		static defaultProps = {
 			spotlightDisabled: false,
 			spotlightMuted: false,
-			spotlightRestrict: 'self-first'
+			spotlightRestrict: 'self-first',
+			spotlightRule: 'normal'
 		}
 
 		constructor (props) {
@@ -281,7 +295,13 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		render () {
-			const {spotlightDisabled, spotlightMuted, ...rest} = this.props;
+			const {spotlightDisabled, spotlightMuted, spotlightRule, style, ...rest} = this.props;
+			const mergedStyle = Object.assign({}, style, {
+				'--spatial-navigation-contain': 'delegable',
+				'--spatial-navigation-action': 'focus',
+				'--spatial-navigation-function': spotlightRule
+			});
+
 			delete rest.containerId;
 			delete rest.spotlightId;
 			delete rest.spotlightRestrict;
@@ -302,7 +322,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			return (
-				<Wrapped {...rest} />
+				<Wrapped style={mergedStyle} {...rest} />
 			);
 		}
 	};
