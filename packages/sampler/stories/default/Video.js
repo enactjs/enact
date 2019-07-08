@@ -1,9 +1,7 @@
 import Video from '@enact/ui/Video';
-import MediaOverlay, {MediaOverlayBase, MediaOverlayDecorator} from '@enact/moonstone/MediaOverlay';
 import React from 'react';
+import {button} from '@storybook/addon-knobs';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, select} from '../../src/enact-knobs';
 
 const playlist = [
 	'http://media.w3.org/2010/05/sintel/trailer.mp4',
@@ -20,19 +18,26 @@ class VideoSourceSwap extends React.Component {
 		this.lastIndex = playlist.length - 1;
 	}
 
-	onEnded = () => {
+	nextVideo = () => {
 		this.setState(({currentIndex, preloadIndex}) => ({
 			currentIndex: currentIndex === this.lastIndex ? 0 : currentIndex + 1,
 			preloadIndex: preloadIndex === this.lastIndex ? 0 : preloadIndex + 1
 		}));
 	}
 
+	onEnded = () => {
+		this.nextVideo();
+	}
+
 	render () {
 		return (
-			<Video autoPlay muted onEnded={this.onEnded}>
-				<source src={playlist[this.state.currentIndex]} />
-				<source src={playlist[this.state.preloadIndex]} slot="preloadSource" />
-			</Video>
+			<div>
+				{button('Next Preload Video', this.nextVideo, 'Video')}
+				<Video autoPlay muted onEnded={this.onEnded}>
+					<source src={playlist[this.state.currentIndex]} />
+					<source src={playlist[this.state.preloadIndex]} slot="preloadSource" />
+				</Video>
+			</div>
 		);
 	}
 }
@@ -43,7 +48,7 @@ storiesOf('UI', module)
 		() => {
 			return (
 				<VideoSourceSwap />
-			)
+			);
 		},
 		{
 			info: {
