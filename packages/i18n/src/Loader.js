@@ -5,9 +5,6 @@ import Loader from 'ilib/lib/Loader';
 import LocaleInfo from 'ilib/lib/LocaleInfo';
 import xhr from 'xhr';
 
-// import Loader from '../ilib/lib/Loader';
-// import LocaleInfo from '../ilib/lib/LocaleInfo';
-
 import ZoneInfoFile from './zoneinfo';
 
 const getImpl = (url, callback, sync) => {
