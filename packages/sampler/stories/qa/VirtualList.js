@@ -99,6 +99,7 @@ storiesOf('VirtualList', module)
 					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
 					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize}
+					onKeyDown={action('onKeyDown')}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 0))}
