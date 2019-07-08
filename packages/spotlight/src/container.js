@@ -71,9 +71,6 @@ let GlobalConfig = {
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
 	selector: '',           // can be a valid <extSelector> except "@" syntax.
 	selectorDisabled: false,
-	straightMultiplier: 1,
-	straightOnly: false,
-	straightOverlapThreshold: 0.5,
 	tabIndexIgnoreList: 'a, input, select, textarea, button, iframe, [contentEditable=true]'
 };
 
@@ -582,18 +579,7 @@ const isNavigable = (node, containerId, verify) => {
  * @private
  */
 const getAllContainerIds = () => {
-	const ids = [];
-	const keys = containerConfigs.keys();
-
-	// PhantomJS-friendly iterator->array conversion
-	let id;
-	while ((id = keys.next()) && !id.done) {
-		if (isActiveContainer(id.value)) {
-			ids.push(id.value);
-		}
-	}
-
-	return ids;
+	return [...containerConfigs.keys()].filter(id => isActiveContainer(id));
 };
 
 /**

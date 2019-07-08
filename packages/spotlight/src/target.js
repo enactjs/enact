@@ -8,7 +8,8 @@ import {
 	getDefaultContainer,
 	getLastContainer,
 	isContainer,
-	isNavigable
+	isNavigable,
+	isRestrictedContainer
 } from './container';
 import {
 	parseSelector
@@ -93,7 +94,7 @@ function getLeaveForTarget (containerId, direction) {
 	const config = getContainerConfig(containerId);
 
 	if (config) {
-		const target = config.restrict !== 'self-only' && config.leaveFor && config.leaveFor[direction];
+		const target = !isRestrictedContainer(containerId) && config.leaveFor && config.leaveFor[direction];
 		if (typeof target === 'string') {
 			if (target === '') {
 				return false;
