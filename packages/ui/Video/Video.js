@@ -6,22 +6,22 @@ import Slottable from '@enact/ui/Slottable';
 import compose from 'ramda/src/compose';
 import React from 'react';
 
-import css from './VideoPlayer.module.less';
+import css from './Video.module.less';
 
 import PropTypes from 'prop-types';
 
 /**
- * Adds support for preloading a video source for `VideoPlayer`.
+ * Adds support for preloading a video source for `Video`.
  *
  * @class VideoBase
- * @memberof moonstone/VideoPlayer
+ * @memberof ui/Video
  * @ui
- * @private
+ * @public
  */
 const VideoBase = class extends React.Component {
 	static displayName = 'Video'
 
-	static propTypes = /** @lends moonstone/VideoPlayer.Video.prototype */ {
+	static propTypes = /** @lends ui/Video.prototype */ {
 		/**
 		 * Video plays automatically.
 		 *
@@ -59,7 +59,7 @@ const VideoBase = class extends React.Component {
 		 * * `pause()` - pause video
 		 * * `load()` - load video
 		 *
-		 * The [`source`]{@link moonstone/VideoPlayer.VideoBase.source} property is passed to
+		 * The [`source`]{@link ui/Video.VideoBase.source} property is passed to
 		 * the video component as a child node.
 		 *
 		 * @type {String|Component|Element}
@@ -120,12 +120,12 @@ const VideoBase = class extends React.Component {
 			if (key === prevPreloadKey && preloadKey !== prevPreloadKey) {
 				// if there's source and it was the preload source
 
-				// if the preloaded video didn't error, notify VideoPlayer it is ready to reset
+				// if the preloaded video didn't error, notify Video it is ready to reset
 				if (this.preloadLoadStart) {
 					forward('onLoadStart', this.preloadLoadStart, this.props);
 				}
 
-				// emit onUpdate to give VideoPlayer an opportunity to updates its internal state
+				// emit onUpdate to give Video an opportunity to updates its internal state
 				// since it won't receive the onLoadStart or onError event
 				forward('onUpdate', {type: 'onUpdate'}, this.props);
 
@@ -251,32 +251,28 @@ const VideoDecorator = compose(
 );
 
 /**
- * Provides support for more advanced video configurations for `VideoPlayer`.
+ * Provides support for more advanced video configurations for `Video`.
  *
  * Custom Video Tag
  *
  * ```
- * <VideoPlayer>
- *   <Video mediaComponent="custom-video-element">
- *     <source src="path/to/source.mp4" />
- *   </Video>
- * </VideoPlayer>
+ * <Video mediaComponent="custom-video-element">
+ *   <source src="path/to/source.mp4" />
+ * </Video>
  * ```
  *
  * Preload Video Source
  *
  * ```
- * <VideoPlayer>
- *   <Video>
- *     <source src="path/to/source.mp4" />
- *     <source src="path/to/preload-source.mp4" slot="preloadSource" />
- *   </Video>
- * </VideoPlayer>
+ * <Video>
+ *   <source src="path/to/source.mp4" />
+ *   <source src="path/to/preload-source.mp4" slot="preloadSource" />
+ * </Video>
  * ```
  *
  * @class Video
  * @mixes ui/Slottable
- * @memberof moonstone/VideoPlayer
+ * @memberof ui/Video
  * @ui
  * @public
  */
