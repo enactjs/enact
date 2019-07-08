@@ -1,4 +1,3 @@
-// import CaseMapper from '../ilib/lib/CaseMapper';
 import CaseMapper from 'ilib/lib/CaseMapper';
 
 let toLowerCaseMapper, toUpperCaseMapper;
