@@ -16,6 +16,32 @@ describe('Icon Specs', () => {
 		expect(actual).toEqual(expected);
 	});
 
+	test('should allow single-byte characters to pass through', () => {
+		const iconName = '+';
+		const icon = shallow(
+			<Icon>
+				{iconName}
+			</Icon>
+		);
+
+		const expected = iconName;
+		const actual = icon.text();
+		expect(actual).toEqual(expected);
+	});
+
+	test('should allow multi-byte characters to pass through', () => {
+		const iconName = '󰂪';
+		const icon = shallow(
+			<Icon>
+				{iconName}
+			</Icon>
+		);
+
+		const expected = iconName;
+		const actual = icon.text();
+		expect(actual).toEqual(expected);
+	});
+
 	test('should allow pre-defined icon names as an icon', () => {
 		const iconName = 'factory';
 		const iconGlyph = 'F';
