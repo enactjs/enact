@@ -24,6 +24,7 @@
     "@enact/ui": "^3.0.0-alpha.5",
     "@enact/webos": "^3.0.0-alpha.5",
     "classnames": "^2.2.6",
+    "ilib": "^14.2.0",
     "query-string": "^6.7.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"

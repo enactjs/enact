@@ -7,8 +7,8 @@
  */
 
 import hoc from '@enact/core/hoc';
-import ilib from 'ilib-webos-tv';
-import IString from 'ilib-webos-tv/lib/IString';
+import ilib from 'ilib';
+import IString from 'ilib/lib/IString';
 import PropTypes from 'prop-types';
 import React from 'react';
 

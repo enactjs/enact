@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-import ilib from 'ilib-webos-tv';
+import ilib from 'ilib';
 
 import './dates';
 

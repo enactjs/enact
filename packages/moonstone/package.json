@@ -41,5 +41,11 @@
     "react-dom": "^16.8.0",
     "recompose": "^0.26.0",
     "warning": "^3.0.0"
+  },
+  "peerDependencies": {
+    "ilib": "^14.2.0 || ^14.2.0-webostv1"
+  },
+  "devDependencies": {
+    "ilib": "^14.2.0"
   }
 }

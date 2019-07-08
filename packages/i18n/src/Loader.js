@@ -1,8 +1,8 @@
 /* global XMLHttpRequest, ILIB_BASE_PATH, ILIB_RESOURCES_PATH, ILIB_CACHE_ID */
 
 import {memoize} from '@enact/core/util';
-import Loader from 'ilib-webos-tv/lib/Loader';
-import LocaleInfo from 'ilib-webos-tv/lib/LocaleInfo';
+import Loader from 'ilib/lib/Loader';
+import LocaleInfo from 'ilib/lib/LocaleInfo';
 import xhr from 'xhr';
 
 // import Loader from '../ilib/lib/Loader';

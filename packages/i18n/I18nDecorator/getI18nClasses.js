@@ -1,4 +1,4 @@
-import LocaleInfo from 'ilib-webos-tv/lib/LocaleInfo';
+import LocaleInfo from 'ilib/lib/LocaleInfo';
 
 import {isNonLatinLocale, isRtlLocale} from '../locale';
 

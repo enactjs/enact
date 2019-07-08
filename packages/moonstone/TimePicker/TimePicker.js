@@ -10,9 +10,9 @@
  */
 
 import Pure from '@enact/ui/internal/Pure';
-import DateFactory from 'ilib-webos-tv/lib/DateFactory';
-import DateFmt from 'ilib-webos-tv/lib/DateFmt';
-import LocaleInfo from 'ilib-webos-tv/lib/LocaleInfo';
+import DateFactory from 'ilib/lib/DateFactory';
+import DateFmt from 'ilib/lib/DateFmt';
+import LocaleInfo from 'ilib/lib/LocaleInfo';
 
 
 import DateTimeDecorator from '../internal/DateTimeDecorator';

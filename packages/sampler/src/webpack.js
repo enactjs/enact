@@ -11,7 +11,7 @@ function configure ({config, mode}, dirname) {
 	const shouldUseSourceMap = (process.env.GENERATE_SOURCEMAP || 'true') !== 'false';
 
 	// Determine dynamic iLib location for aliasing
-	const iLib = ['ilib-webos-tv', '@enact/i18n/node_modules/ilib-webos-tv'].find(f =>
+	const iLib = ['ilib', '@enact/i18n/node_modules/ilib'].find(f =>
 		fs.existsSync(path.join(app.context, 'node_modules', f))
 	);
 
@@ -66,8 +66,8 @@ function configure ({config, mode}, dirname) {
 
 	// Modify stock Storybook config for Enact-tailored experience
 	config.devtool = shouldUseSourceMap && 'source-map';
-	config.resolve.alias['ilib$'] = '@enact/i18n';
-	config.resolve.alias['ilib'] = config.resolve.alias['@enact/i18n/ilib'] = iLib;
+	// Backward compatibility for old iLib location
+	config.resolve.alias['@enact/i18n/ilib'] = iLib;
 	config.resolve.modules = [path.resolve(__dirname, '..', 'node_modules'), 'node_modules'];
 	config.devServer = {host: '0.0.0.0', port: 8080};
 	config.performance = {hints: false};

@@ -1,5 +1,5 @@
 // import CaseMapper from '../ilib/lib/CaseMapper';
-import CaseMapper from 'ilib-webos-tv/lib/CaseMapper';
+import CaseMapper from 'ilib/lib/CaseMapper';
 
 let toLowerCaseMapper, toUpperCaseMapper;
 
