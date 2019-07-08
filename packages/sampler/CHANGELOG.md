@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ilib@^14.2.0` is now a package dependency
+
 ## [3.0.0-alpha.7] - 2019-06-24
 
 ### Changed

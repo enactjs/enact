@@ -4,9 +4,17 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `ilib@^14.2.0` is now a package peer dependency, which apps will need to include
+
 ### Fixed
 
 - `moonstone/Popup` to properly handle closing in mid-transition
+
+## Changed
+
+- All iLib references modified from the former `@enact/i18n` copy to the external `ilib` package
 
 ## [3.0.0-alpha.7] - 2019-06-24
 

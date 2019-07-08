@@ -2,6 +2,20 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ilib@^14.2.0` is now a package peer dependency, which apps will need to include
+
+## Changed
+
+- All iLib references modified from the former embedded copy to the external `ilib` package
+
+## Removed
+
+-  `i18n/ilib` embedded copy of iLib in favour of the NPM package `ilib`
+
 ## [3.0.0-alpha.7] - 2019-06-24
 
 No significant changes.
