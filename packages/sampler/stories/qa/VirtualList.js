@@ -1,6 +1,6 @@
 import Item from '@enact/moonstone/Item';
 import SwitchItem from '@enact/moonstone/SwitchItem';
-import {ActivityPanels, Panel} from '@enact/moonstone/Panels';
+import {ActivityPanels, Panel, Header} from '@enact/moonstone/Panels';
 import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
@@ -17,7 +17,8 @@ const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBas
 const
 	itemStyle = {
 		borderBottom: ri.unit(3, 'rem') + ' solid #202328',
-		boxSizing: 'border-box'
+		boxSizing: 'border-box',
+		display: 'flex'
 	},
 	items = [],
 	defaultDataSize = 1000,
@@ -90,7 +91,8 @@ class StatefulSwitchItem extends React.Component {
 	}
 }
 
-const InPanels = (props) => {
+// eslint-disable-next-line enact/prop-types
+const InPanels = ({className, title, ...rest}) => {
 	const [index, setIndex] = useState(0);
 	function handleSelectBreadcrumb (ev) {
 		setIndex(ev.index);
@@ -101,17 +103,19 @@ const InPanels = (props) => {
 	}
 
 	return (
-		<ActivityPanels index={index} onSelectBreadcrumb={handleSelectBreadcrumb} noCloseButton>
+		<ActivityPanels className={className} index={index} onSelectBreadcrumb={handleSelectBreadcrumb} noCloseButton>
 			<Panel>
+				<Header type="compact" title={`${title} Panel 0`} key="header" />
 				<VirtualList
 					id="spotlight-list"
 					// eslint-disable-next-line enact/prop-types
-					itemRenderer={renderItem(Item, props.itemSize, handleSelectItem)}
+					itemRenderer={renderItem(Item, rest.itemSize, handleSelectItem)}
 					spotlightId="virtual-list"
-					{...props}
+					{...rest}
 				/>
 			</Panel>
-			<Panel>
+			<Panel title={`${title} Panel 1`}>
+				<Header type="compact" title={`${title} Panel 1`} key="header" />
 				<Item onClick={handleSelectItem}>Go Back</Item>
 			</Panel>
 		</ActivityPanels>
@@ -139,14 +143,19 @@ storiesOf('VirtualList', module)
 	)
 	.add(
 		'in Panels',
-		() => (
-			<InPanels
-				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
-				focusableScrollbar={boolean('focusableScrollbar', Config, false)}
-				itemSize={ri.scale(number('itemSize', Config, 72))}
-				onScrollStart={action('onScrollStart')}
-				onScrollStop={action('onScrollStop')}
-				spacing={ri.scale(number('spacing', Config, 0))}
-			/>
-		)
+		context => {
+			context.noPanels = true;
+			const title = `${context.kind} ${context.story}`.trim();
+			return (
+				<InPanels
+					title={title}
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
+					itemSize={ri.scale(number('itemSize', Config, 72))}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
+					spacing={ri.scale(number('spacing', Config, 0))}
+				/>
+			);
+		}
 	);
