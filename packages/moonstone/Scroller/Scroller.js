@@ -35,13 +35,14 @@ const dataContainerDisabledAttribute = 'data-spotlight-container-disabled';
  *
  * @class ScrollerBase
  * @memberof moonstone/Scroller
+ * @extends ui/Scroller.ScrollerBase
  * @ui
  * @public
  */
 class ScrollerBase extends Component {
 	static displayName = 'ScrollerBase'
 
-	static propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
+	static propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
 		/**
 		 * Passes the instance of [Scroller]{@link ui/Scroller.Scroller}.
 		 *
@@ -343,6 +344,70 @@ class ScrollerBase extends Component {
 }
 
 /**
+ * Allows 5-way navigation to the scrollbar controls. By default, 5-way will
+ * not move focus to the scrollbar controls.
+ *
+ * @name focusableScrollbar
+ * @memberof moonstone/Scroller.ScrollerBase.prototype
+ * @type {Boolean}
+ * @default false
+ * @public
+ */
+
+/**
+ * Unique identifier for the component.
+ *
+ * When defined and when the `Scroller` is within a [Panel]{@link moonstone/Panels.Panel}, the
+ * `Scroller` will store its scroll position and restore that position when returning to the
+ * `Panel`.
+ *
+ * @name id
+ * @memberof moonstone/Scroller.ScrollerBase.prototype
+ * @type {String}
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the next button in the vertical scroll bar.
+ *
+ * @name scrollDownAriaLabel
+ * @memberof moonstone/Scroller.ScrollerBase.prototype
+ * @type {String}
+ * @default $L('scroll down')
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the previous button in the horizontal scroll bar.
+ *
+ * @name scrollLeftAriaLabel
+ * @memberof moonstone/Scroller.ScrollerBase.prototype
+ * @type {String}
+ * @default $L('scroll left')
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the next button in the horizontal scroll bar.
+ *
+ * @name scrollRightAriaLabel
+ * @memberof moonstone/Scroller.ScrollerBase.prototype
+ * @type {String}
+ * @default $L('scroll right')
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the previous button in the vertical scroll bar.
+ *
+ * @name scrollUpAriaLabel
+ * @memberof moonstone/Scroller.ScrollerBase.prototype
+ * @type {String}
+ * @default $L('scroll up')
+ * @public
+ */
+
+/**
  * A Moonstone-styled Scroller, Scrollable applied.
  *
  * Usage:
@@ -366,28 +431,7 @@ const Scroller = (props) => (
 );
 
 Scroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
-	/**
-	 * Direction of the scroller.
-	 *
-	 * * Values: `'both'`, `'horizontal'`, `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'both'
-	 * @public
-	 */
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
-
-	/**
-	 * Unique identifier for the component.
-	 *
-	 * When defined and when the `Scroller` is within a [Panel]{@link moonstone/Panels.Panel}, the
-	 * `Scroller` will store its scroll position and restore that position when returning to the
-	 * `Panel`.
-	 *
-	 * @type {String}
-	 * @public
-	 */
-	id: PropTypes.string
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
 };
 
 Scroller.defaultProps = {
@@ -422,28 +466,7 @@ const ScrollerNative = (props) => (
 );
 
 ScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototype */ {
-	/**
-	 * Direction of the scroller.
-	 *
-	 * * Values: `'both'`, `'horizontal'`, `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'both'
-	 * @public
-	 */
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
-
-	/**
-	 * Unique identifier for the component.
-	 *
-	 * When defined and when the `Scroller` is within a [Panel]{@link moonstone/Panels.Panel}, the
-	 * `Scroller` will store its scroll position and restore that position when returning to the
-	 * `Panel`.
-	 *
-	 * @type {String}
-	 * @public
-	 */
-	id: PropTypes.string
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
 };
 
 ScrollerNative.defaultProps = {

@@ -6,11 +6,17 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Popup` to properly handle closing in mid-transition
+
+## [3.0.0-alpha.7] - 2019-06-24
+
+### Fixed
+
+- `moonstone/Dropdown` to scroll to and focus the selected item when opened
 - `moonstone/ExpandableItem.ExpandableItemBase` to not error if `onClose` or `onOpen` was not supplied
 - `moonstone/GridListImageItem` to support overriding the `image` CSS class name
-- `moonstone/VirtualList` to scroll to the focused item when navigating out of the viewport via 5-way
-- `moonstone/Dropdown` to scroll to and focus the selected item when opened
 - `moonstone/Scroller` to scroll and to move focus to the paging control properly if the current item sticking to the top is only spottable
+- `moonstone/VirtualList` to scroll to the focused item when navigating out of the viewport via 5-way
 
 ## [3.0.0-alpha.6] - 2019-06-17
 

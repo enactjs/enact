@@ -36,7 +36,7 @@ const
  * @class VirtualListCore
  * @memberof moonstone/VirtualList
  * @ui
- * @public
+ * @private
  */
 const VirtualListBaseFactory = (type) => {
 	const UiBase = (type === JS) ? UiVirtualListBase : UiVirtualListBaseNative;
@@ -44,7 +44,7 @@ const VirtualListBaseFactory = (type) => {
 	return class VirtualListCore extends Component {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
-		static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
+		static propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 			/**
 			 * The `render` function called for each item in the list.
 			 *
@@ -719,24 +719,6 @@ const VirtualListBase = VirtualListBaseFactory(JS);
 VirtualListBase.displayName = 'VirtualListBase';
 
 /**
- * Activates the component for voice control.
- *
- * @name data-webos-voice-focused
- * @memberof moonstone/VirtualList.VirtualListBase.prototype
- * @type {Boolean}
- * @public
- */
-
-/**
- * The voice control group label.
- *
- * @name data-webos-voice-group-label
- * @memberof moonstone/VirtualList.VirtualListBase.prototype
- * @type {String}
- * @public
- */
-
-/**
  * A Moonstone-styled base component for [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} and
  * [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative}.
  *
@@ -748,6 +730,70 @@ VirtualListBase.displayName = 'VirtualListBase';
  */
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'VirtualListBaseNative';
+
+/**
+ * Allows 5-way navigation to the scrollbar controls. By default, 5-way will
+ * not move focus to the scrollbar controls.
+ *
+ * @name focusableScrollbar
+ * @memberof moonstone/VirtualList.VirtualListBase.prototype
+ * @type {Boolean}
+ * @default false
+ * @public
+ */
+
+/**
+ * Unique identifier for the component.
+ *
+ * When defined and when the `VirtualList` is within a [Panel]{@link moonstone/Panels.Panel},
+ * the `VirtualList` will store its scroll position and restore that position when returning to
+ * the `Panel`.
+ *
+ * @name id
+ * @memberof moonstone/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the next button in the vertical scroll bar.
+ *
+ * @name scrollDownAriaLabel
+ * @memberof moonstone/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @default $L('scroll down')
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the previous button in the horizontal scroll bar.
+ *
+ * @name scrollLeftAriaLabel
+ * @memberof moonstone/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @default $L('scroll left')
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the next button in the horizontal scroll bar.
+ *
+ * @name scrollRightAriaLabel
+ * @memberof moonstone/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @default $L('scroll right')
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the previous button in the vertical scroll bar.
+ *
+ * @name scrollUpAriaLabel
+ * @memberof moonstone/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @default $L('scroll up')
+ * @public
+ */
 
 /* eslint-disable enact/prop-types */
 const listItemsRenderer = (props) => {
@@ -795,30 +841,7 @@ const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-b
 );
 
 ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
-	/**
-	 * Direction of the list.
-	 *
-	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'vertical'
-	 * @public
-	 */
-	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-
-	/**
-	 * Unique identifier for the component.
-	 *
-	 * When defined and when the `VirtualList` is within a [Panel]{@link moonstone/Panels.Panel},
-	 * the `VirtualList` will store its scroll position and restore that position when returning to
-	 * the `Panel`.
-	 *
-	 * @type {String}
-	 * @public
-	 */
-	id: PropTypes.string
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 
 ScrollableVirtualList.defaultProps = {
@@ -838,30 +861,7 @@ const ScrollableVirtualListNative = (props) => (
 );
 
 ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
-	/**
-	 * Direction of the list.
-	 *
-	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'vertical'
-	 * @public
-	 */
-	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-
-	/**
-	 * Unique identifier for the component.
-	 *
-	 * When defined and when the `VirtualList` is within a [Panel]{@link moonstone/Panels.Panel},
-	 * the `VirtualList` will store its scroll position and restore that position when returning to
-	 * the `Panel`.
-	 *
-	 * @type {String}
-	 * @public
-	 */
-	id: PropTypes.string
+	direction: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 
 ScrollableVirtualListNative.defaultProps = {
