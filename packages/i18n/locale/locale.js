@@ -6,7 +6,7 @@
  * @private
  */
 
-import ilib from 'ilib/lib/ilib';
+import ilib from 'ilib';
 import LocaleInfo from 'ilib/lib/LocaleInfo';
 import ScriptInfo from 'ilib/lib/ScriptInfo';
 

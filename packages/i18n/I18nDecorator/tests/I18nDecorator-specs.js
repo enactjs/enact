@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 
 import {shallow, mount} from 'enzyme';
-import ilib from 'ilib/lib/ilib';
+import ilib from 'ilib';
 import React from 'react';
 
 import {updateLocale} from '../../locale';
