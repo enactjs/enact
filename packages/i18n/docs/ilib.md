@@ -19,7 +19,7 @@ library that wraps `iLib`'s functionality for easy access from Enact apps.
 You can use it like this:
 
 ```javascript 
-import DateFmt from 'ilib/DateFmt';
+import DateFmt from 'ilib/lib/DateFmt';
 
 const formatter = new DateFmt({
 	date: 'dmwy',
@@ -39,7 +39,7 @@ dynamically, with each one having a name and locale.
 The locale may be specified as an option in the constructor.
 
 ```javascript
-	import ResBundle from 'ilib/ResBundle';
+	import ResBundle from 'ilib/lib/ResBundle';
 	...
 	const rb = new ResBundle({locale: "ko-KR"});
 ```
@@ -159,7 +159,7 @@ Once you create a `DateFmt` instance, you may call its `format()` method as many
 times as you want to format dates according to the given set of options.
 
 ```javascript
-	import DateFmt from 'ilib/DateFmt';
+	import DateFmt from 'ilib/lib/DateFmt';
 	...
 	const fmt = new DateFmt();
 	const d = fmt.format(date);
@@ -192,7 +192,7 @@ To create a date, you may call the factory method or use the calendar date
 directly, e.g.:
 
 ```javascript
-	import HebrewDate from 'ilib/HebrewDate';
+	import HebrewDate from 'ilib/lib/HebrewDate';
 	...
 	const now = new HebrewDate();
 ```
@@ -200,7 +200,7 @@ directly, e.g.:
 This is equivalent to the following factory method call:
 
 ```javascript
-	import dateFactory from 'ilib/DateFactory';
+	import dateFactory from 'ilib/lib/DateFactory';
 	...
 	const now = dateFactory({type: "hebrew"});
 ```
@@ -235,7 +235,7 @@ Use `ilib/CalendarFactory` as a factory method to
 create the other calendar types.
 
 ```javascript
-	import calendarFactory from 'ilib/CalendarFactory';
+	import calendarFactory from 'ilib/lib/CalendarFactory';
 	const cal = calendarFactory({
 		// looks up calendar for this locale
 		locale: "nl-NL"
@@ -269,7 +269,7 @@ may be passed to other classes such as `ilib/DateFmt`, although the specifier
 string itself is also accepted.
 
 ```javascript
-	import TimeZone from 'ilib/TimeZone';
+	import TimeZone from 'ilib/lib/TimeZone';
 	...
 	const tz = new TimeZone({
 		id: "America/Los_Angeles"
@@ -304,7 +304,7 @@ As shown in the following examples, `iLib` handles each of these cases using
 #### Numbers
 
 ```javascript
-	import NumFmt from 'ilib/NumFmt';
+	import NumFmt from 'ilib/lib/NumFmt';
 	...
 	const fmt = new NumFmt({
 		locale: "de-DE"
