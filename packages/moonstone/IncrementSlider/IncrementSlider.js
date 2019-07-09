@@ -466,18 +466,14 @@ const IncrementSliderBase = kind({
 				decrementAriaLabel = $L('press ok button to decrease the value');
 			}
 
-			return !(disabled || value <= min) ?
-				`${valueText != null ? valueText : value} ${decrementAriaLabel}` :
-				null;
+			return `${valueText != null ? valueText : value} ${decrementAriaLabel}`;
 		},
 		incrementAriaLabel: ({'aria-valuetext': valueText, incrementAriaLabel, disabled, min, max, value = min}) => {
 			if (incrementAriaLabel == null) {
 				incrementAriaLabel = $L('press ok button to increase the value');
 			}
 
-			return !(disabled || value >= max) ?
-				`${valueText != null ? valueText : value} ${incrementAriaLabel}` :
-				null;
+			return `${valueText != null ? valueText : value} ${incrementAriaLabel}`;
 		}
 	},
 
