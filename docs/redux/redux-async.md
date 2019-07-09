@@ -1,5 +1,6 @@
 ---
 title: Async Actions
+order: 2
 ---
 
 Most complex apps rely heavily on fetching data asynchronously. In this document, we present techniques used in Redux to handle an asynchronous data flow.
