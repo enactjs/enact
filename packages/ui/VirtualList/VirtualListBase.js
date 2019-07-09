@@ -353,6 +353,9 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			if (this.props.type === 'NewVirtualList') {
+				if (this.variableGridPositions.length > this.props.variableGridSizes.length) {
+					this.variableGridPositions = [...this.variableGridPositions.slice(0, this.props.variableGridSizes.length)];
+				}
 				this.adjustVariableGridPosition();
 			}
 		}
