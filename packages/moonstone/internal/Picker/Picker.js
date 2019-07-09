@@ -751,7 +751,7 @@ const PickerBase = class extends React.Component {
 			return label;
 		}
 
-		return `${valueText} ${!disabled ? (next ? $L('next item') : $L('previous item')) : ''}`;
+		return `${valueText} ${!disabled && (next ? $L('next item') : $L('previous item')) || ''}`;
 	}
 
 	calcDecrementLabel (valueText, decrementerDisabled) {
