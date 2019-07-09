@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Popup` to properly handle closing in mid-transition
+- `moonstone/Scroller` to properly move focus out of the container
 
 ## [3.0.0-alpha.7] - 2019-06-24
 
