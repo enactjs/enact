@@ -492,17 +492,20 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		focusByIndex = (index) => {
-			const item = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${index}'].spottable`);
+			// We have to focus node asynchronous since `numOfItems` state will be updated asynchronous later and VirtualList will render items after then.
+			setTimeout(() => {
+				const item = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${index}'].spottable`);
 
-			if (this.isWrappedBy5way) {
-				SpotlightAccelerator.reset();
-				this.isWrappedBy5way = false;
-			}
+				if (this.isWrappedBy5way) {
+					SpotlightAccelerator.reset();
+					this.isWrappedBy5way = false;
+				}
 
-			this.pause.resume();
-			this.focusOnNode(item);
-			this.nodeIndexToBeFocused = null;
-			this.isScrolledByJump = false;
+				this.pause.resume();
+				this.focusOnNode(item);
+				this.nodeIndexToBeFocused = null;
+				this.isScrolledByJump = false;
+			}, 0);
 		}
 
 		initItemRef = (ref, index) => {

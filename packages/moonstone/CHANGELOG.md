@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Popup` to properly handle closing in mid-transition
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to focus an item properly after jumping.
 
 ## [3.0.0-alpha.7] - 2019-06-24
 
