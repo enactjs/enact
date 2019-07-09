@@ -515,13 +515,8 @@ const VirtualListBaseFactory = (type) => {
 						ev.stopPropagation();
 					}
 				}
-			} else {
-				ev.preventDefault();
-				ev.stopPropagation();
-
-				if (isPageUp(keyCode) || isPageDown(keyCode)) {
-					this.isScrolledBy5way = false;
-				}
+			} else if (isPageUp(keyCode) || isPageDown(keyCode)) {
+				this.isScrolledBy5way = false;
 			}
 		}
 
