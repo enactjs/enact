@@ -743,7 +743,7 @@ const PickerBase = class extends React.Component {
 		return valueText;
 	}
 
-	calcButtonLabel (next, valueText) {
+	calcButtonLabel (next, valueText, disabled) {
 		const {decrementAriaLabel, incrementAriaLabel} = this.props;
 		let label = next ? incrementAriaLabel : decrementAriaLabel;
 
@@ -751,15 +751,15 @@ const PickerBase = class extends React.Component {
 			return label;
 		}
 
-		return `${valueText} ${next ? $L('next item') : $L('previous item')}`;
+		return `${valueText} ${!disabled ? (next ? $L('next item') : $L('previous item')) : ''}`;
 	}
 
-	calcDecrementLabel (valueText) {
-		return !this.props.joined ? this.calcButtonLabel(this.props.reverse, valueText) : null;
+	calcDecrementLabel (valueText, decrementerDisabled) {
+		return !this.props.joined ? this.calcButtonLabel(this.props.reverse, valueText, decrementerDisabled) : null;
 	}
 
-	calcIncrementLabel (valueText) {
-		return !this.props.joined ? this.calcButtonLabel(!this.props.reverse, valueText) : null;
+	calcIncrementLabel (valueText, incrementerDisabled) {
+		return !this.props.joined ? this.calcButtonLabel(!this.props.reverse, valueText, incrementerDisabled) : null;
 	}
 
 	calcAriaLabel (valueText) {
@@ -890,9 +890,9 @@ const PickerBase = class extends React.Component {
 				<PickerButton
 					{...voiceProps}
 					aria-controls={!joined ? incrementerAriaControls : null}
-					aria-label={this.calcIncrementLabel(valueText)}
+					aria-label={this.calcIncrementLabel(valueText, incrementerDisabled)}
 					className={css.incrementer}
-					data-webos-voice-label={joined ? this.calcButtonLabel(!reverse, valueText) : null}
+					data-webos-voice-label={joined ? this.calcButtonLabel(!reverse, valueText, incrementerDisabled) : null}
 					disabled={incrementerDisabled}
 					hidden={reachedEnd}
 					holdConfig={holdConfig}
@@ -927,9 +927,9 @@ const PickerBase = class extends React.Component {
 				<PickerButton
 					{...voiceProps}
 					aria-controls={!joined ? decrementerAriaControls : null}
-					aria-label={this.calcDecrementLabel(valueText)}
+					aria-label={this.calcDecrementLabel(valueText, decrementerDisabled)}
 					className={css.decrementer}
-					data-webos-voice-label={joined ? this.calcButtonLabel(reverse, valueText) : null}
+					data-webos-voice-label={joined ? this.calcButtonLabel(reverse, valueText, decrementerDisabled) : null}
 					disabled={decrementerDisabled}
 					hidden={reachedStart}
 					holdConfig={holdConfig}
