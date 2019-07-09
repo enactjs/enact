@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Popup` to properly handle closing in mid-transition
+- `moonstone/IncrementSlider` to support aria-label when decrement icon, increment icon, or slider is disabled
 
 ## [3.0.0-alpha.7] - 2019-06-24
 
