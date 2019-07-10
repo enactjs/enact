@@ -1,8 +1,7 @@
-import {MediaBase, MediaDecorator} from '@enact/ui/Media';
+import Video from '@enact/ui/Video';
 
 /**
  * Provides support for more advanced video configurations for `Video`.
- * Private for now until we solidify API's and dependencies.
  *
  * Custom Video Tag
  *
@@ -23,16 +22,11 @@ import {MediaBase, MediaDecorator} from '@enact/ui/Media';
  *
  * @class Video
  * @mixes ui/Slottable
- * @memberof ui/Video
+ * @memberof moonstone/VideoPlayer
  * @ui
- * @private
+ * @public
  */
-const Video = MediaDecorator(MediaBase);
-Video.defaultSlot = 'videoComponent';
-
 export default Video;
 export {
-	Video,
-	MediaBase,
-	MediaDecorator
+	Video
 };
