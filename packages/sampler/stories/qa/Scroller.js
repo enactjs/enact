@@ -3,7 +3,6 @@ import Heading from '@enact/moonstone/Heading';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import Group from '@enact/ui/Group';
 import Item from '@enact/moonstone/Item';
-import {Panel} from '@enact/moonstone/Panels';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ri from '@enact/ui/resolution';
