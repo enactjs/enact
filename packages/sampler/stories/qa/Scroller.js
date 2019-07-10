@@ -127,34 +127,6 @@ class ScrollerWithLargeContainer extends React.Component {
 	}
 }
 
-class ScrollerWithFocusInContainer extends React.Component {
-	constructor (props) {
-		super(props);
-	}
-
-	render = () => {
-		const {...rest} = this.props;
-
-		return (
-			<Panel {...rest} >
-				<Button style={{display: 'inline-block'}} small>focus to me</Button>
-				<Scroller focusableScrollbar style={{height: '400px', width: '300px', display: 'inline-block'}}>
-					<Item>button1</Item>
-					<Item>button2</Item>
-					<Item>button3</Item>
-					<Item>button4</Item>
-					<Item>button5</Item>
-					<Item>button6</Item>
-					<Item>button7</Item>
-					<Item>button8</Item>
-					<Item>button9</Item>
-					<div>Test Test Test Test Test Test </div>
-				</Scroller>
-			</Panel>
-		);
-	}
-}
-
 storiesOf('Scroller', module)
 	.add(
 		'List of things',
@@ -312,9 +284,23 @@ storiesOf('Scroller', module)
 		)
 	)
 	.add(
-		'With Focus in Container',
+		'With Focus outside Container',
 		() => (
-			<ScrollerWithFocusInContainer />
+			<div>
+				<Button style={{display: 'inline-block'}} small>focus to me</Button>
+				<Scroller focusableScrollbar style={{height: '400px', width: '300px', display: 'inline-block'}}>
+					<Item>button1</Item>
+					<Item>button2</Item>
+					<Item>button3</Item>
+					<Item>button4</Item>
+					<Item>button5</Item>
+					<Item>button6</Item>
+					<Item>button7</Item>
+					<Item>button8</Item>
+					<Item>button9</Item>
+					<div>Test Test Test Test Test Test </div>
+				</Scroller>
+			</div>
 		)
 	)
 	.add(
