@@ -7,7 +7,7 @@
  * @module spotlight/SpotlightContainerDecorator
  */
 
-import {forProp, forward, handle, stop} from '@enact/core/handle';
+import {call, forProp, forward, handle, oneOf, returnsTrue, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -246,16 +246,18 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handle = handle.bind(this)
 
-		handleBlur = this.handle(
-			() => this.shouldPreventBlur,
-			stop
-		)
+		handleBlur = oneOf(
+			[() => this.shouldPreventBlur, stop],
+			[returnsTrue, forward('onBlurCapture')]
+		).bindAs(this, 'handleBlur')
 
-		handleFocus = this.handle(
-			forProp('spotlightDisabled', true),
-			stop,
-			this.silentBlur
-		)
+		handleFocus = oneOf(
+			[forProp('spotlightDisabled', true), handle(
+				stop,
+				call('silentBlur')
+			)],
+			[returnsTrue, forward('onFocusCapture')]
+		).bindAs(this, 'handleFocus')
 
 		handleMouseEnter = this.handle(
 			forward('onMouseEnter'),
