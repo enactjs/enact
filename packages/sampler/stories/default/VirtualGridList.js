@@ -21,7 +21,7 @@ const
 	},
 	items = [],
 	defaultDataSize = 1000,
-	longContent = 'Loooooooooooooooooog Content',
+	longContent = 'Lorem ipsum dolor sit amet',
 	shouldAddLongContent = ({index, modIndex}) => (
 		index % modIndex === 0 ? ` ${longContent}` : ''
 	),
