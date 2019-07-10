@@ -287,7 +287,7 @@ storiesOf('Scroller', module)
 		() => (
 			<div>
 				<Button style={{display: 'inline-block'}} small>focus to me</Button>
-				<Scroller focusableScrollbar style={{height: '400px', width: '300px', display: 'inline-block'}}>
+				<Scroller focusableScrollbar style={{height: ri.unit(420, 'rem'), width: ri.unit(300, 'rem'), display:'inline-block'}}>
 					<Item>button1</Item>
 					<Item>button2</Item>
 					<Item>button3</Item>
