@@ -11,7 +11,10 @@
  */
 
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
+import Audio from '@enact/ui/Audio';
 import Slottable from '@enact/ui/Slottable';
+import Media from '@enact/ui/Media';
+import Video from '@enact/ui/Video';
 
 /**
  * A standard player. It behaves, responds to, and operates like a
