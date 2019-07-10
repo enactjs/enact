@@ -1,5 +1,6 @@
 ---
 title: Introduction to Redux
+order: 1
 ---
 
 ### Overview
