@@ -327,6 +327,13 @@ const VirtualListBaseFactory = (type) => {
 				this.emitUpdateItems();
 			}
 
+			if (this.props.type === 'NewVirtualList') {
+				if (this.variableGridPositions.length > this.props.variableGridSizes.length) {
+					this.variableGridPositions = [...this.variableGridPositions.slice(0, this.props.variableGridSizes.length)];
+				}
+				this.adjustVariableGridPosition();
+			}
+
 			if (
 				prevProps.direction !== this.props.direction ||
 				prevProps.overhang !== this.props.overhang ||
@@ -350,13 +357,6 @@ const VirtualListBaseFactory = (type) => {
 				} else {
 					this.setScrollPosition(x, y, this.props.rtl);
 				}
-			}
-
-			if (this.props.type === 'NewVirtualList') {
-				if (this.variableGridPositions.length > this.props.variableGridSizes.length) {
-					this.variableGridPositions = [...this.variableGridPositions.slice(0, this.props.variableGridSizes.length)];
-				}
-				this.adjustVariableGridPosition();
 			}
 		}
 
@@ -897,8 +897,8 @@ const VirtualListBaseFactory = (type) => {
 					secondaryPosition = 0;
 
 					if (this.props.type === 'NewVirtualList') {
-						if (variableGridPositions[i] || variableGridPositions[i] === 0) {
-							primaryPosition = variableGridPositions[i].position;
+						if (variableGridPositions[i + 1] || variableGridPositions[i + 1] === 0) {
+							primaryPosition = variableGridPositions[i + 1].position;
 						} else if (variableGridSizes[i]) {
 							primaryPosition += variableGridSizes[i] + this.props.spacing;
 						} else {
