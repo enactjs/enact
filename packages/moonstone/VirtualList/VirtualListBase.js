@@ -11,8 +11,6 @@ import React, {Component} from 'react';
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
-import scrollbarCss from '../Scrollable/Scrollbar.module.less';
-
 const SpotlightAccelerator = new Accelerator();
 const SpotlightPlaceholder = Spottable('div');
 
@@ -459,8 +457,13 @@ const VirtualListBaseFactory = (type) => {
 				} else {
 					const {repeat} = ev;
 					const {dimensionToExtent, isPrimaryDirectionVertical} = this.uiRefCurrent;
-					const isScrollButton = target.classList.contains(scrollbarCss.scrollButton);
 					const targetIndex = target.dataset.index;
+					const isScrollButton = (
+						// if target has an index, it must be an item so can't be a scroll button
+						!targetIndex &&
+						// if it lacks an index and is inside the scroller, it must be a button
+						target.matches(`[data-spotlight-id="${this.props.spotlightId}"] *`)
+					);
 					const index = !isScrollButton ? getNumberValue(targetIndex) : -1;
 					const {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
 					const directions = {};
