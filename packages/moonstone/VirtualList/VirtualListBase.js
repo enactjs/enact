@@ -559,6 +559,12 @@ const VirtualListBaseFactory = (type) => {
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
 			this.isScrolledByJump = false;
+
+			if (!item && index >= 0 && index < this.props.dataSize) {
+				// Item is valid but since the the dom doesn't exist yet, we set the index to focus after the ongoing update
+				this.preservedIndex = index;
+				this.restoreLastFocused = true;
+			}
 		}
 
 		initItemRef = (ref, index) => {
