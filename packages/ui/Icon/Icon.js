@@ -49,18 +49,16 @@ const mergeStyle = function (style, src) {
 };
 
 /**
- * Tests if a character is a single printable character
+ * Tests if a string appears to be a URI/URL.
  *
  * @function
  * @param	{String}	c	Character to test
  *
- * @returns	{Boolean}		`true` if c is a single character
+ * @returns	{Boolean}		`true` if c looks like a URL
  * @private
  */
-const isSingleCharacter = function (c) {
-	return	c.length === 1 ||
-			// check for 4-byte Unicode character
-			c.length === 2 && c.charCodeAt() !== c.codePointAt();
+const isUri = function (c) {
+	return (c.indexOf('/') > -1) || (c.indexOf('.') > -1);
 };
 
 /**
@@ -188,8 +186,8 @@ const Icon = kind({
 					} else if (iconProp.indexOf('0x') === 0) {
 						// Converts a hex reference in string form
 						icon = String.fromCodePoint(iconProp);
-					} else if (isSingleCharacter(iconProp)) {
-						// A single character is assumed to be an explicit icon string
+					} else if (!isUri(iconProp)) {
+						// A "simple" string is assumed to be an icon-name string
 						icon = iconProp;
 					} else {
 						// for a path or URI, add it to style
