@@ -217,12 +217,34 @@ const VirtualListBaseFactory = (type) => {
 			spacing: PropTypes.number,
 
 			/**
+			 * Type of the list. If you want to use variable item height, you need to define it to `'NewVirtualList'`.
+			 *
+			 * Valid values are:
+			 * * `'VirtualList'`, and
+			 * * `'NewVirtualList'`.
+			 *
+			 * @type {String}
+			 * @default 'VirtualList'
+			 * @private
+			 */
+			type: PropTypes.oneOf(['VirtualList', 'NewVirtualList']),
+
+			/**
 			 * Called to execute additional logic in a themed component when updating states and bounds.
 			 *
 			 * @type {Function}
 			 * @private
 			 */
-			updateStatesAndBounds: PropTypes.func
+			updateStatesAndBounds: PropTypes.func,
+
+			/**
+			 * The array for variable item size.
+			 *
+			 * @type {String}
+			 * @default 'VirtualList'
+			 * @private
+			 */
+			variableGridSizes: PropTypes.array
 		}
 
 		static defaultProps = {
@@ -231,7 +253,8 @@ const VirtualListBaseFactory = (type) => {
 			direction: 'vertical',
 			overhang: 3,
 			pageScroll: false,
-			spacing: 0
+			spacing: 0,
+			type: 'VirtualList'
 		}
 
 		constructor (props) {
@@ -287,7 +310,11 @@ const VirtualListBaseFactory = (type) => {
 				this.emitUpdateItems();
 			}
 
-			this.setContainerSize();
+			if (this.props.type === 'NewVirtualList') {
+				this.adjustVariableGridPosition();
+			} else {
+				this.setContainerSize();
+			}
 		}
 
 		componentDidUpdate (prevProps, prevState) {
@@ -324,6 +351,10 @@ const VirtualListBaseFactory = (type) => {
 					this.setScrollPosition(x, y, this.props.rtl);
 				}
 			}
+
+			if (this.props.type === 'NewVirtualList') {
+				this.adjustVariableGridPosition();
+			}
 		}
 
 		scrollBounds = {
@@ -352,6 +383,7 @@ const VirtualListBaseFactory = (type) => {
 		curDataSize = 0
 		hasDataSizeChanged = false
 		cc = []
+		variableGridPositions = []
 		scrollPosition = 0
 
 		isVertical = () => this.isPrimaryDirectionVertical
@@ -363,12 +395,36 @@ const VirtualListBaseFactory = (type) => {
 		getMoreInfo = () => this.moreInfo
 
 		getGridPosition (index) {
-			const
-				{dimensionToExtent, primary, secondary} = this,
-				primaryPosition = Math.floor(index / dimensionToExtent) * primary.gridSize,
-				secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
+			if (this.props.type === 'NewVirtualList') {
+				const
+					{dimensionToExtent, primary, secondary, variableGridPositions} = this,
+					extent = Math.floor(index / dimensionToExtent),
+					firstIndexInExtent = extent * dimensionToExtent,
+					primaryPosition = variableGridPositions[firstIndexInExtent] ? variableGridPositions[firstIndexInExtent].position : extent * primary.gridSize,
+					secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
 
-			return {primaryPosition, secondaryPosition};
+				return {primaryPosition, secondaryPosition};
+			} else {
+				const
+					{dimensionToExtent, primary, secondary} = this,
+					primaryPosition = Math.floor(index / dimensionToExtent) * primary.gridSize,
+					secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
+
+				return {primaryPosition, secondaryPosition};
+			}
+		}
+
+		// For NewVirtualList
+		getVariableGridBottomPosition = (index) => {
+			const
+				variableGridPosition = this.variableGridPositions[index],
+				variableGridSize = this.props.variableGridSizes[index];
+
+			if (variableGridPosition && (variableGridSize || variableGridSize === 0)) {
+				return variableGridPosition.position + variableGridSize;
+			} else {
+				return index * this.primary.gridSize - this.props.spacing;
+			}
 		}
 
 		getItemPosition = (index, stickTo = 'start') => {
@@ -404,7 +460,7 @@ const VirtualListBaseFactory = (type) => {
 
 		calculateMetrics (props) {
 			const
-				{clientSize, direction, itemSize, spacing} = props,
+				{clientSize, direction, itemSize, overhang, spacing} = props,
 				node = this.containerRef.current;
 
 			if (!clientSize && !node) {
@@ -451,7 +507,7 @@ const VirtualListBaseFactory = (type) => {
 
 			primary.gridSize = primary.itemSize + spacing;
 			secondary.gridSize = secondary.itemSize + spacing;
-			thresholdBase = primary.gridSize * 2;
+			thresholdBase = primary.gridSize * Math.ceil(overhang / 2);
 
 			this.threshold = {min: -Infinity, max: thresholdBase, base: thresholdBase};
 			this.dimensionToExtent = dimensionToExtent;
@@ -480,6 +536,7 @@ const VirtualListBaseFactory = (type) => {
 
 			// reset children
 			this.cc = [];
+			this.variableGridPositions = [];
 			this.calculateScrollBounds(props);
 			this.updateMoreInfo(dataSize, scrollPosition);
 
@@ -619,12 +676,12 @@ const VirtualListBaseFactory = (type) => {
 
 		didScroll (x, y) {
 			const
-				{dataSize} = this.props,
+				{dataSize, spacing, variableGridSizes} = this.props,
 				{firstIndex} = this.state,
-				{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds} = this,
-				{gridSize} = this.primary,
+				{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds, variableGridPositions} = this,
+				{clientSize, gridSize} = this.primary,
 				maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
-			let newFirstIndex = firstIndex, pos;
+			let newFirstIndex = firstIndex, index, pos, size, variableGridPosition;
 
 			if (isPrimaryDirectionVertical) {
 				pos = y;
@@ -633,20 +690,65 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			if (pos > threshold.max || pos < threshold.min) {
-				const
-					overhangBefore = Math.floor(this.props.overhang / 2),
-					firstExtent = Math.max(
-						0,
-						Math.min(
-							Math.floor(maxFirstIndex / dimensionToExtent),
-							Math.floor((pos - gridSize * overhangBefore) / gridSize)
-						)
-					);
-				let newThresholdMin, newThresholdMax;
+				let newThresholdMin = -Infinity, newThresholdMax = Infinity;
 
-				newFirstIndex = firstExtent * dimensionToExtent;
-				newThresholdMin = (firstExtent + overhangBefore) * gridSize;
-				newThresholdMax = newThresholdMin + gridSize;
+				if (this.props.type === 'NewVirtualList') {
+					const overhangBefore = Math.floor(this.props.overhang / 2);
+					let firstRenderedIndex = -1;
+
+					// find an item which is known as placed the first rendered item's position
+					for (index = 0; index < dataSize; index += dimensionToExtent) {
+						variableGridPosition = variableGridPositions[index];
+						size = variableGridSizes[index];
+						if (variableGridPosition && size && variableGridPosition.position + size >= pos && variableGridPosition.position <= pos + clientSize) {
+							firstRenderedIndex = index;
+							break;
+						}
+					}
+
+					// found an item which is visible within a current viewport
+					if (index < dataSize) {
+						if (variableGridPosition.position <= pos) {
+							newFirstIndex = firstRenderedIndex - overhangBefore * dimensionToExtent;
+							newThresholdMin = variableGridPosition.position;
+							newThresholdMax = newThresholdMin + size + spacing;
+						} else {
+							const diffToFirstIndex = Math.ceil((variableGridPosition.position - pos) / gridSize);
+							newFirstIndex = firstRenderedIndex - (diffToFirstIndex + overhangBefore) * dimensionToExtent;
+							newThresholdMin = variableGridPosition.position - diffToFirstIndex * gridSize;
+							newThresholdMax = newThresholdMin + gridSize;
+						}
+					} else { // calculate the first index based on assuming that all items have minimal size
+						const firstExtent = Math.max(
+							0,
+							Math.min(
+								Math.floor(maxFirstIndex / dimensionToExtent),
+								Math.floor((pos - gridSize * overhangBefore) / gridSize)
+							)
+						);
+
+						newFirstIndex = firstExtent * dimensionToExtent;
+						newThresholdMin = (firstExtent + overhangBefore) * gridSize;
+						newThresholdMax = newThresholdMin + gridSize;
+					}
+
+					newFirstIndex = Math.max(0, Math.min(maxFirstIndex, newFirstIndex));
+				} else {
+					const
+						overhangBefore = Math.floor(this.props.overhang / 2),
+						firstExtent = Math.max(
+							0,
+							Math.min(
+								Math.floor(maxFirstIndex / dimensionToExtent),
+								Math.floor((pos - gridSize * overhangBefore) / gridSize)
+							)
+						);
+
+					newFirstIndex = firstExtent * dimensionToExtent;
+					newThresholdMin = (firstExtent + overhangBefore) * gridSize;
+					newThresholdMax = newThresholdMin + gridSize;
+				}
+
 				threshold.min = newFirstIndex === 0 ? -Infinity : newThresholdMin;
 				threshold.max = newFirstIndex === maxFirstIndex ? Infinity : newThresholdMax;
 			}
@@ -657,6 +759,60 @@ const VirtualListBaseFactory = (type) => {
 
 			if (firstIndex !== newFirstIndex) {
 				this.setState({firstIndex: newFirstIndex});
+			}
+		}
+
+		// For NewVirtualList
+		adjustVariableGridPosition () {
+			const
+				{dataSize, overhang, spacing, variableGridSizes} = this.props,
+				{firstIndex, numOfItems} = this.state,
+				{itemContainerRef, maxFirstIndex, variableGridPositions} = this,
+				lastIndex = firstIndex + numOfItems - 1,
+				numOfUpperLine = Math.floor(overhang / 2);
+
+			if (itemContainerRef.current) {
+				let index;
+
+				// Cache variable item positions
+				// and adjust variable item DOM element positions
+				for (index = firstIndex; index <= lastIndex; index++) {
+					const childNode = itemContainerRef.current.children[index % numOfItems];
+
+					if (!variableGridPositions[index] && variableGridSizes[index]) {
+						const position = index === 0 ? 0 : this.getVariableGridBottomPosition(index - 1) + spacing;
+
+						variableGridPositions[index] = {position};
+					}
+
+					if (childNode && variableGridPositions[index]) {
+						childNode.style.transform = `translate3d(0, ${variableGridPositions[index].position}px, 0)`;
+					}
+				}
+
+				// Update threshold
+				this.threshold.min = firstIndex === 0 ? -Infinity : this.getVariableGridBottomPosition(firstIndex + numOfUpperLine * 1);
+				this.threshold.max = lastIndex === maxFirstIndex ? Infinity : this.getVariableGridBottomPosition(firstIndex + (numOfUpperLine + 1));
+
+				// Update scroll bounds
+				if (variableGridPositions.length === dataSize) { // all item sizes are known
+					this.scrollBounds.scrollHeight = variableGridSizes.reduce((acc, cur) => acc + cur, 0) + (dataSize - 1) * spacing;
+				} else {
+					for (index = firstIndex + numOfItems - 1; index < dataSize; index++) {
+						const nextInfo = variableGridPositions[index + 1];
+						if (!nextInfo) {
+							const endPosition = this.getVariableGridBottomPosition(index);
+							if (endPosition > this.scrollBounds.scrollHeight) {
+								this.scrollBounds.scrollHeight = endPosition;
+							}
+
+							break;
+						}
+					}
+				}
+				this.scrollBounds.maxTop = Math.max(0, this.scrollBounds.scrollHeight - this.scrollBounds.clientHeight);
+
+				this.setContainerSize();
 			}
 		}
 
@@ -708,9 +864,9 @@ const VirtualListBaseFactory = (type) => {
 
 		positionItems () {
 			const
-				{dataSize} = this.props,
+				{dataSize, variableGridSizes} = this.props,
 				{firstIndex, numOfItems} = this.state,
-				{cc, isPrimaryDirectionVertical, dimensionToExtent, primary, secondary} = this;
+				{cc, isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, variableGridPositions} = this;
 			let
 				hideTo = 0,
 				updateFrom = cc.length ? this.state.updateFrom : firstIndex,
@@ -736,7 +892,19 @@ const VirtualListBaseFactory = (type) => {
 
 				if (++j === dimensionToExtent) {
 					secondaryPosition = 0;
-					primaryPosition += primary.gridSize;
+
+					if (this.props.type === 'NewVirtualList') {
+						if (variableGridPositions[i] || variableGridPositions[i] === 0) {
+							primaryPosition = variableGridPositions[i].position;
+						} else if (variableGridSizes[i]) {
+							primaryPosition += variableGridSizes[i] + this.props.spacing;
+						} else {
+							primaryPosition += primary.gridSize;
+						}
+					} else {
+						primaryPosition += primary.gridSize;
+					}
+
 					j = 0;
 				} else {
 					secondaryPosition += secondary.gridSize;
@@ -817,6 +985,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.rtl;
 			delete rest.spacing;
 			delete rest.updateStatesAndBounds;
+			delete rest.variableGridSizes;
 
 			if (primary) {
 				this.positionItems();
