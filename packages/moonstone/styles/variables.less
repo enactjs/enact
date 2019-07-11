@@ -24,7 +24,7 @@
 @moon-popup-sub-header-font-size:   27px;
 @moon-popup-content-font-size:      30px;
 @moon-expandable-value-font-size:   27px;
-@moon-expandable-value-font-size-large:   33px;
+@moon-expandable-value-font-size-large:   30px;
 @moon-expandable-client-item-font-size:   27px;
 @moon-expandable-client-item-font-size-large:   33px;
 @moon-divider-font-size:            24px; // Deprecated?
@@ -116,6 +116,7 @@
 @moon-body-font-style: normal;
 // Body text line heights must be speified in px, since moon.ExpandableText requires precise line measurement
 @moon-body-line-height: @moon-body-font-size + 6;
+@moon-body-line-height-large: @moon-body-line-height + 6; // The fact that this 6 is the same number as the above 6 is coincidental. LargeText is typically 6px larger than normal.
 @moon-non-latin-body-line-height: 1.7em;
 
 @moon-divider-font-family: @moon-font-family;
@@ -199,7 +200,7 @@
 @moon-button-colordot-width: 27px;
 @moon-button-colordot-height: 9px;
 @moon-button-small-colordot-width: 21px;
-@moon-button-small-colordot-height: @moon-button-colordot-height;
+@moon-button-small-colordot-height: 6px;
 @moon-button-to-button-large-h-margin: 30px;
 
 // Divider
