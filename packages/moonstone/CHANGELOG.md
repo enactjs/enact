@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Popup` to properly handle closing in mid-transition
 
+### Moved
+
+- `moonstone/VideoPlayer.Video` logic to `ui/Media`
+
 ## [3.0.0-alpha.7] - 2019-06-24
 
 ### Fixed
