@@ -74,8 +74,8 @@ describe('Media', () => {
 	});
 
 	describe('MediaBase', () => {
-	// define `HTMLMediaElement.load` so that jsdom doesn't complain during the `MediaBase` steps
-	window.HTMLMediaElement.prototype.load = () => { /* do nothing */ };
+		// define `HTMLMediaElement.load` so that jsdom doesn't complain during the `MediaBase` steps
+		window.HTMLMediaElement.prototype.load = () => { /* do nothing */ };
 
 		test(
 			'should have two video elements given a `source` and a `preloadSource`',
