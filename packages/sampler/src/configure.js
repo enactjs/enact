@@ -17,7 +17,6 @@ function config (stories, mod) {
 	// Set addon-knobs defaults
 	addDecorator(withKnobs({
 		// debounce: {wait: 500}, // Same as lodash debounce.
-		escapeHTML: false,
 		timestamps: true // Doesn't emit events while user is typing.
 	}));
 

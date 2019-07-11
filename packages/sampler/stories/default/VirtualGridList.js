@@ -14,7 +14,7 @@ const
 	wrapOption = {
 		'false': false,
 		'true': true,
-		"'noAnimation'": 'noAnimation'
+		'&quot;noAnimation&quot;': 'noAnimation'
 	},
 	prop = {
 		direction: {'horizontal': 'horizontal', 'vertical': 'vertical'}
@@ -115,7 +115,7 @@ storiesOf('Moonstone', module)
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				spacing={ri.scale(number('spacing', Config, 20))}
-				wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"], Config)]}
+				wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 			/>
 		),
 		{

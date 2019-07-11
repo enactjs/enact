@@ -14,7 +14,7 @@ const
 	wrapOption = {
 		'false': false,
 		'true': true,
-		"'noAnimation'": 'noAnimation'
+		'&quot;noAnimation&quot;': 'noAnimation'
 	},
 	items = [],
 	defaultDataSize = 1000,
@@ -103,7 +103,7 @@ storiesOf('Moonstone', module)
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 0))}
-					wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"], Config)]}
+					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 				/>
 			);
 		},
