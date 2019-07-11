@@ -11,7 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` to allow keydown events to bubble up when not handled by the component
 - `moonstone/IncrementSlider` to support aria-label when disabled
 - Fonts to use the updated names of global fonts available in the system
-- `LabeledItem` in largeText mode to not clip the bottom of descender glyphs
+- `moonstone/LabeledItem` to not clip the bottom of descender glyphs in large text mode
 
 ## [3.0.0-alpha.7] - 2019-06-24
 
