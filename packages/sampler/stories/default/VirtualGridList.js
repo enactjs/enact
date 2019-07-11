@@ -21,6 +21,10 @@ const
 	},
 	items = [],
 	defaultDataSize = 1000,
+	longContent = 'Lorem ipsum dolor sit amet',
+	shouldAddLongContent = ({index, modIndex}) => (
+		index % modIndex === 0 ? ` ${longContent}` : ''
+	),
 	// eslint-disable-next-line enact/prop-types
 	uiRenderItem = ({index, ...rest}) => {
 		const {text, subText, source} = items[index];
@@ -58,8 +62,8 @@ const updateDataSize = (dataSize) => {
 	for (let i = 0; i < dataSize; i++) {
 		const
 			count = (headingZeros + i).slice(-itemNumberDigits),
-			text = `Item ${count}`,
-			subText = `SubItem ${count}`,
+			text = `Item ${count}${shouldAddLongContent({index: i, modIndex: 2})}`,
+			subText = `SubItem ${count}${shouldAddLongContent({index: i, modIndex: 3})}`,
 			color = Math.floor((Math.random() * (0x1000000 - 0x101010)) + 0x101010).toString(16),
 			source = `http://placehold.it/300x300/${color}/ffffff&text=Image ${i}`;
 

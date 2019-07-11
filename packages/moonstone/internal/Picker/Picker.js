@@ -814,7 +814,7 @@ const PickerBase = class extends React.Component {
 		if (__DEV__) {
 			validateRange(value, min, max, PickerBase.displayName);
 			validateStepped(value, min, step, PickerBase.displayName);
-			validateStepped(max, min, step, PickerBase.displayName, '"max"');
+			validateStepped(max, min, step, PickerBase.displayName, 'max');
 		}
 
 		delete rest['aria-label'];
