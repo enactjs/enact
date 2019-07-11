@@ -11,11 +11,12 @@
 import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import ForwardRef from '@enact/ui/ForwardRef';
-import Slottable from '@enact/ui/Slottable';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+import ForwardRef from '../ForwardRef';
+import Slottable from '../Slottable';
 
 import css from './Media.module.less';
 
