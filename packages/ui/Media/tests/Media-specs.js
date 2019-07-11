@@ -110,6 +110,20 @@ describe('Media', () => {
 				expect(actual).toBe(expected);
 			}
 		);
+
+		test(
+			'should have one video element given a `source` and a `preloadSource` with the same sources',
+			() => {
+				const mediaBase = mount(
+					<MediaBase mediaComponent="video" source={filePath} preloadSource={`${filePath}`} />
+				);
+
+				const expected = 1;
+				const actual = mediaBase.find('video').length;
+
+				expect(actual).toBe(expected);
+			}
+		);
 	});
 
 });
