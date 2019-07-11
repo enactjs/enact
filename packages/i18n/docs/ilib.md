@@ -2,9 +2,13 @@
 title: iLib
 ---
 
-Our `i18n` library is based on the wonderful [iLib](https://github.com/iLib-js/iLib) library. It provides many useful tools for things like string translation, date/time formatting, number parsing, etc.
+Our `i18n` library relies on the wonderful [iLib](https://github.com/iLib-js/iLib) library. It provides many useful tools for things like string translation, date/time formatting, number parsing, etc.
 
-We provide `iLib` for use through our `i18n` module.
+You must install [`iLib`](https://www.npmjs.com/package/ilib) as a dependency in your application to use the `i18n` module:
+
+```bash
+npm install ilib@^14.2.0
+```
 
 We will cover a good deal of how to use `iLib` inside your `Enact` app below, but we will not cover everything.
 
@@ -12,13 +16,9 @@ If you wish to learn more about `ilib` checkout their [github](https://github.co
 
 ## Accessing iLib from Enact
 
-As an Enact application developer, you will not work with `iLib` directly, but
-rather with through our `i18n` module. It is a compatibility
-library that wraps `iLib`'s functionality for easy access from Enact apps.
+You can use iLib like this:
 
-You can use it like this:
-
-```javascript 
+```javascript
 import DateFmt from 'ilib/lib/DateFmt';
 
 const formatter = new DateFmt({
@@ -71,7 +71,7 @@ resources/
 
 For the `en-GB` locale, if a string value is defined in both
 `/resources/en/strings.json` and `/resources/en/GB/strings.json`, the value from
-the latter (more-specific) file will override the value from the former file. 
+the latter (more-specific) file will override the value from the former file.
 
 It's worth noting that, in addition to strings, other localized files (such as
 `appinfo.json`) may also be placed in these hierarchical directories, with their
@@ -139,7 +139,7 @@ The formatting of dates and times can differ widely from one locale to the next:
 
 ```
 ------------------------------------
- Locale    Format         
+ Locale    Format
 --------- --------------------------
  en-US     Mo 11/12/2012 2:30pm
 
@@ -218,7 +218,7 @@ the epoch on 24 November -4713 BCE (Gregorian):
 ```
 
 To format a date in a non-Gregorian Calendar, follow the pattern of creating a
-`DateFmt` object and calling `format()` on it. 
+`DateFmt` object and calling `format()` on it.
 
 ```javascript
 	const fmt = new DateFmt({
@@ -289,7 +289,7 @@ another locale-sensitive process.
  Locale    Float           Currency       Percentage
 --------- --------------- -------------- ---------------
  en-US     1,234,567.89    $1,234.56      57.2%
- 
+
  de-DE     1.234.567,89    1.234,56 €     57,2 %
 
  fr-FR     1 234 567,89    1 234,56 €     57,2%

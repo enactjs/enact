@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `ilib@^14.2.0` is now a package peer dependency, which apps will need to include
+- `ilib@^14.2.0` as a package peer dependency, which apps will need to include
 
 ### Fixed
 
@@ -14,10 +14,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` to properly move focus out of the container
 - `moonstone/VirtualList` to allow keydown events to bubble up when not handled by the component
 - `moonstone/IncrementSlider` to support aria-label when disabled
-
-## Changed
-
-- All iLib references modified from the former `@enact/i18n` copy to the external `ilib` package
 
 ## [3.0.0-alpha.7] - 2019-06-24
 
