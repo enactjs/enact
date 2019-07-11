@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` to properly move focus out of the container
 - `moonstone/VirtualList` to allow keydown events to bubble up when not handled by the component
 - `moonstone/IncrementSlider` to support aria-label when disabled
+- `Fonts` to use the updated names of global fonts available in the system
 
 ## [3.0.0-alpha.7] - 2019-06-24
 
