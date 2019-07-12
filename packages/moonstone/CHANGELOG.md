@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/Dropdown` widths `tiny`, and `huge`
+
 ### Fixed
 
 - `moonstone/Popup` to properly handle closing in mid-transition
