@@ -640,6 +640,7 @@ class ScrollableBaseNative extends Component {
 		forward('onKeyDown', ev, this.props);
 
 		if (isPageUp(keyCode) || isPageDown(keyCode)) {
+			ev.stopPropagation();
 			ev.preventDefault();
 		}
 
