@@ -47,5 +47,11 @@
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
     "xhr": "^2.4.1"
+  },
+  "peerDependencies": {
+    "ilib": "^14.2.0 || ^14.2.0-webostv1"
+  },
+  "devDependencies": {
+    "ilib": "^14.2.0"
   }
 }

@@ -9,10 +9,11 @@
  * @exports TimePickerBase
  */
 
-import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
-import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
-import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
 import Pure from '@enact/ui/internal/Pure';
+import DateFactory from 'ilib/lib/DateFactory';
+import DateFmt from 'ilib/lib/DateFmt';
+import LocaleInfo from 'ilib/lib/LocaleInfo';
+
 
 import DateTimeDecorator from '../internal/DateTimeDecorator';
 import Skinnable from '../Skinnable';
