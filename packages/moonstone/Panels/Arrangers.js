@@ -55,19 +55,6 @@ const offsetForBreadcrumbs = (node) => {
 	return `translateX(${isFirst ? 0 : unit(scale(breadcrumbWidth), 'rem')})`;
 };
 
-// Adds the data-clip attribute to allow clipping when transitioning between non-zero panels
-// CSS is enforced by Panels.module.less
-const clipForBreadcrumbs = (node, to, from) => {
-	const viewport = node.parentNode;
-
-	if (to === 0 || from === 0) {
-		// remove clip when moving to or from the first panel and when a transition is completing
-		delete viewport.dataset.clip;
-	} else {
-		viewport.dataset.clip = 'true';
-	}
-};
-
 /**
  * Arranger that slides panels in from the right and out to the left allowing space for the single
  * breadcrumb when `to` index is greater than zero.
@@ -79,8 +66,6 @@ export const ActivityArranger = {
 	enter: (config) => {
 		const {node, reverse, to, from} = config;
 
-		clipForBreadcrumbs(node, to, from);
-
 		return arrange(config, [
 			{transform: `${offsetForBreadcrumbs(node)} translateX(100%)`, offset: 0},
 			reverse ?
@@ -91,8 +76,6 @@ export const ActivityArranger = {
 	},
 	leave: (config) => {
 		const {node, reverse, to, from} = config;
-
-		clipForBreadcrumbs(node, to, from);
 
 		return arrange(config, [
 			{transform: offsetForBreadcrumbs(node), offset: 0},
