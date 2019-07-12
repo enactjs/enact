@@ -55,6 +55,9 @@ const platforms = [
 	{platform: 'webos', regex: /Web0S;.*Safari\/538.2/, forceVersion: 2},
 	{platform: 'webos', regex: /Web0S;.*Chrome\/38/, forceVersion: 3},
 	{platform: 'webos', regex: /Web0S;.*Chrome\/53/, forceVersion: 4},
+	{platform: 'webos', regex: /Web0S;.*Chrome\/68/, forceVersion: 5},
+	// LG webOS of indeterminate version
+	{platform: 'webos', regex: /Web0S;/, forceVersion: -1},
 	// LuneOS
 	{platform: 'webos', regex: /LuneOS/, forceVersion: 0, extra: {luneos: 1}},
 	// Palm/HP/Open webOS
