@@ -63,8 +63,7 @@ const RootContainer = SpotlightContainerDecorator(
 
 const ControlsContainer = SpotlightContainerDecorator(
 	{
-		enterTo: '',
-		straightOnly: true
+		enterTo: ''
 	},
 	'div'
 );
@@ -1875,6 +1874,7 @@ const VideoPlayerBase = class extends React.Component {
 						<ControlsContainer
 							className={css.bottom + (this.state.mediaControlsVisible ? '' : ' ' + css.hidden)}
 							spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
+							spotlightRule="grid"
 						>
 							{/*
 								Info Section: Title, Description, Times

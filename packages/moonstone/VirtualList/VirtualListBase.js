@@ -11,7 +11,6 @@ import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtual
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
-const SpotlightAccelerator = new Accelerator();
 const SpotlightPlaceholder = Spottable('div');
 
 const
@@ -194,7 +193,8 @@ const VirtualListBaseFactory = (type) => {
 
 			if (containerNode && containerNode.addEventListener) {
 				containerNode.addEventListener('keydown', this.onKeyDown);
-				containerNode.addEventListener('keyup', this.onKeyUp);
+				containerNode.addEventListener('navnotarget', this.onNavNoTarget);
+				containerNode.addEventListener('navbeforefocus', this.onNavBeforeFocus);
 			}
 		}
 
@@ -217,11 +217,11 @@ const VirtualListBaseFactory = (type) => {
 
 			if (containerNode && containerNode.removeEventListener) {
 				containerNode.removeEventListener('keydown', this.onKeyDown);
-				containerNode.removeEventListener('keyup', this.onKeyUp);
+				containerNode.removeEventListener('navnotarget', this.onNavNoTarget);
+				containerNode.removeEventListener('navbeforefocus', this.onNavBeforeFocus);
 			}
 
 			this.pause.resume();
-			SpotlightAccelerator.reset();
 
 			this.setContainerDisabled(false);
 		}
@@ -338,7 +338,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		getNextIndex = ({index, keyCode, repeat}) => {
+		getNextIndex = ({index, keyCode}) => {
 			const {dataSize, rtl, wrap} = this.props;
 			const {isPrimaryDirectionVertical, dimensionToExtent} = this.uiRefCurrent;
 			const column = index % dimensionToExtent;
@@ -387,7 +387,7 @@ const VirtualListBaseFactory = (type) => {
 				nextIndex = targetIndex;
 			}
 
-			if (!repeat && nextIndex === -1 && wrap) {
+			if (!Spotlight.isAccelerating() && nextIndex === -1 && wrap) {
 				if (isForward && this.findSpottableItem((row + 1) * dimensionToExtent, dataSize) < 0) {
 					nextIndex = this.findSpottableItem(0, index);
 					isWrapped = true;
@@ -404,11 +404,11 @@ const VirtualListBaseFactory = (type) => {
 		 * Handle `onKeyDown` event
 		 */
 
-		onAcceleratedKeyDown = ({keyCode, repeat, target}) => {
+		onAcceleratedKeyDown = ({keyCode, target}) => {
 			const {cbScrollTo, spacing, wrap} = this.props;
 			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPosition} = this.uiRefCurrent;
 			const index = getNumberValue(target.dataset.index);
-			const {isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
+			const {isWrapped, nextIndex} = this.getNextIndex({index, keyCode});
 
 			this.isScrolledBy5way = false;
 			this.isScrolledByJump = false;
@@ -448,53 +448,38 @@ const VirtualListBaseFactory = (type) => {
 					});
 				}
 
-			} else if (!repeat && Spotlight.move(getDirection(keyCode))) {
-				SpotlightAccelerator.reset();
 			}
+		}
+
+		onNavNoTarget = (ev) => {
+			if (this.uiRefCurrent.containerRef.current !== ev.target) {
+				return;
+			}
+
+			const direction = ev.detail && ev.detail.dir;
+			const keyCode = {left: 37, up: 38, right: 39, down: 40}[direction];
+
+
+			const target = Spotlight.getCurrent();
+			const index = getNumberValue(target.dataset.index);
+			const {isWrapped, nextIndex} = this.getNextIndex({index, keyCode});
+
+			if (nextIndex >= 0) {
+				ev.preventDefault();
+				ev.stopPropagation();
+				this.onAcceleratedKeyDown({index, isWrapped, keyCode, nextIndex, target});
+			}
+		}
+
+		onNavBeforeFocus = (ev) => {
+			this.isScrolledBy5way = false;
+			this.isScrolledByJump = false;
 		}
 
 		onKeyDown = (ev) => {
 			const {keyCode} = ev;
-			const direction = getDirection(keyCode);
-
-			if (direction) {
-				Spotlight.setPointerMode(false);
-
-				if (SpotlightAccelerator.processKey(ev, nop)) {
-					ev.stopPropagation();
-				} else {
-					const {repeat, target} = ev;
-					const index = getNumberValue(target.dataset.index);
-					const {isBackward, isForward, isLeftMovement, isRightMovement, isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
-
-					if (nextIndex >= 0) {
-						ev.preventDefault();
-						ev.stopPropagation();
-						this.onAcceleratedKeyDown({index, isWrapped, keyCode, nextIndex, repeat, target});
-					} else {
-						const {dataSize} = this.props;
-						const {dimensionToExtent} = this.uiRefCurrent;
-						const column = index % dimensionToExtent;
-						const row = (index - column) % dataSize / dimensionToExtent;
-						const isLeaving = isBackward && row === 0 ||
-							isForward && row === Math.floor((dataSize - 1) % dataSize / dimensionToExtent) ||
-							isLeftMovement && column === 0 ||
-							isRightMovement && column === dimensionToExtent - 1;
-
-						if (repeat && isLeaving || !isLeaving && Spotlight.move(direction)) {
-							ev.preventDefault();
-							ev.stopPropagation();
-						}
-					}
-				}
-			} else if (isPageUp(keyCode) || isPageDown(keyCode)) {
+			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				this.isScrolledBy5way = false;
-			}
-		}
-
-		onKeyUp = ({keyCode}) => {
-			if (getDirection(keyCode) || isEnter(keyCode)) {
-				SpotlightAccelerator.reset();
 			}
 		}
 
@@ -520,7 +505,6 @@ const VirtualListBaseFactory = (type) => {
 			const item = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${index}'].spottable`);
 
 			if (this.isWrappedBy5way) {
-				SpotlightAccelerator.reset();
 				this.isWrappedBy5way = false;
 			}
 

@@ -300,26 +300,19 @@ const Spotlight = (function () {
 	}
 
 	function spotNextFromPoint (direction, position) {
-		const containerId = Spotlight.getActiveContainer();
-
+		// Set StartingPoint
 		if (window.__spatialNavigation__) {
 			window.__spatialNavigation__.setStartingPoint(position.x, position.y);
 		}
-		Spotlight.move(direction);
-		const next = Spotlight.getCurrent();
 
-		if (next) {
-			setContainerPreviousTarget(
-				containerId,
-				direction,
-				next,
-				getContainerLastFocusedElement(containerId)
-			);
+		const result = Spotlight.move(direction);
 
-			return focusElement(next, getContainersForNode(next));
+		// Reset StartingPoint
+		if (window.__spatialNavigation__) {
+			window.__spatialNavigation__.setStartingPoint();
 		}
 
-		return false;
+		return result;
 	}
 
 	function focusMovePrepare (direction, currentFocusedElement, nextElement) {
@@ -528,8 +521,8 @@ const Spotlight = (function () {
 
 
 	function onNavnotarget (evt) {
-		//console.log('onNavnotarget');
-		//console.log(evt);
+		// console.log('onNavnotarget');
+		// console.log(evt);
 
 		const targetContainer = evt.target;
 		const targetContinerId = getContainerId(targetContainer);
@@ -566,12 +559,13 @@ const Spotlight = (function () {
 	}
 
 	function onNavBeforeFocus (evt) {
-		//console.log('onNavBeforeFocus');
-		//console.log(evt);
-		//console.log(document.activeElement);
+		// console.log('onNavBeforeFocus');
+		// console.log(evt);
+		// console.log(document.activeElement);
+		// console.log(getCurrent());
 
 		const direction = evt.detail.dir;
-		const currentFocusedElement = document.activeElement;
+		const currentFocusedElement = getCurrent();
 		const currentContainerIds = getContainersForNode(currentFocusedElement);
 		let nextElement = evt.target;
 		const nextContainerIds = getContainersForNode(nextElement);
@@ -999,7 +993,9 @@ const Spotlight = (function () {
 			}
 
 			return getSpottableDescendants(containerId);
-		}
+		},
+
+		isAccelerating: SpotlightAccelerator.isAccelerating
 	};
 
 	return exports;
