@@ -59,12 +59,12 @@ const platforms = [
 	// LG webOS of indeterminate version
 	{platform: 'webos', regex: /Web0S;/, forceVersion: -1},
 	// LuneOS
-	{platform: 'webos', regex: /LuneOS/, forceVersion: 0, extra: {luneos: 1}},
+	{platform: 'webos', regex: /LuneOS/, forceVersion: -1, extra: {luneos: 1}},
 	// Palm/HP/Open webOS
-	{platform: 'webos', regex: /WebAppManager|Isis|webOS\./, forceVersion: 0, extra: {legacy: 4}},
-	{platform: 'webos', regex: /(?:web|hpw)OS\/1/, forceVersion: 0, extra: {legacy: 1}},
-	{platform: 'webos', regex: /(?:web|hpw)OS\/2/, forceVersion: 0, extra: {legacy: 2}},
-	{platform: 'webos', regex: /(?:web|hpw)OS\/3/, forceVersion: 0, extra: {legacy: 3}},
+	{platform: 'webos', regex: /WebAppManager|Isis|webOS\./, forceVersion: -1, extra: {legacy: 4}},
+	{platform: 'webos', regex: /(?:web|hpw)OS\/1/, forceVersion: -1, extra: {legacy: 1}},
+	{platform: 'webos', regex: /(?:web|hpw)OS\/2/, forceVersion: -1, extra: {legacy: 2}},
+	{platform: 'webos', regex: /(?:web|hpw)OS\/3/, forceVersion: -1, extra: {legacy: 3}},
 	// desktop Safari
 	{platform: 'safari', regex: /Version\/(\d+)[.\d]+\s+Safari/},
 	// desktop Chrome
