@@ -6,8 +6,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/Dropdown` widths `tiny`, and `huge`
 - `ilib@^14.2.0` as a package peer dependency, which apps will need to include
+- `moonstone/Dropdown` widths `tiny`, and `huge`
 
 ### Fixed
 
