@@ -16,7 +16,7 @@ import {adaptEvent, call, forKey, forward, forwardWithPrevent, handle, preventDe
 import {is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform';
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import {perfNow, Job} from '@enact/core/util';
+import {isRenderable, perfNow, Job} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {toUpperCase} from '@enact/i18n/util';
@@ -27,9 +27,10 @@ import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ComponentOverride from '@enact/ui/ComponentOverride';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import {FloatingLayerContext} from '@enact/ui/FloatingLayer/FloatingLayerDecorator';
-import Media from '@enact/ui/Media';
+import Media, {PreloadDecorator} from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
+import UiVideo from '@enact/ui/Video';
 import equals from 'ramda/src/equals';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -48,7 +49,6 @@ import MediaSlider from './MediaSlider';
 import FeedbackContent from './FeedbackContent';
 import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
-import Video from './Video';
 
 import css from './VideoPlayer.module.less';
 
@@ -1847,7 +1847,7 @@ const VideoPlayerBase = class extends React.Component {
 				{
 					// Duplicating logic from <ComponentOverride /> until enzyme supports forwardRef
 					VideoComponent && (
-						(typeof VideoComponent === 'function' || typeof VideoComponent === 'string') && (
+						isRenderable(VideoComponent) && (
 							<VideoComponent {...mediaProps} />
 						) || React.isValidElement(VideoComponent) && (
 							React.cloneElement(VideoComponent, mediaProps)
@@ -2041,6 +2041,9 @@ const VideoPlayer = ApiDecorator(
 		)
 	)
 );
+
+const Video = PreloadDecorator(UiVideo);
+Video.defaultSlot = 'videoComponent';
 
 export default VideoPlayer;
 export {

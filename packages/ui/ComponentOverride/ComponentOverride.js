@@ -10,6 +10,7 @@
  * @exports ComponentOverride
  */
 
+import {isRenderable} from '@enact/core/util';
 import React from 'react';
 
 /**
@@ -57,7 +58,7 @@ import React from 'react';
  */
 const ComponentOverride = ({component: Component, ...props}) => {
 	return Component && (
-		(typeof Component === 'function' || typeof Component === 'string') && (
+		(isRenderable(Component)) && (
 			<Component {...props} />
 		) || React.isValidElement(Component) && (
 			React.cloneElement(Component, props)

@@ -1,4 +1,10 @@
-import {MediaBase, MediaDecorator} from '@enact/ui/Media';
+import kind from '@enact/core/kind';
+import compose from 'ramda/src/compose';
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import ForwardRef from '../ForwardRef';
+import Media from '../Media';
 
 /**
  * Provides support for more advanced video configurations for `Video`.
@@ -27,12 +33,37 @@ import {MediaBase, MediaDecorator} from '@enact/ui/Media';
  * @ui
  * @private
  */
-const Video = MediaDecorator(MediaBase);
+const VideoBase = kind({
+	name: 'ui:Video',
+
+	propTypes: {
+		mediaComponent: PropTypes.string,
+		setMedia: PropTypes.func
+	},
+
+	defaultProps: {
+		mediaComponent: 'video'
+	},
+
+	render: ({setMedia, ...rest}) => {
+		return (
+			<Media {...rest} ref={setMedia} />
+		);
+	}
+});
+
+const VideoDecorator = compose(
+	// PreloadDecorator needs a ui/Media-compatible reference so we're forwarding on the ref to the
+	// underlying ui/Media component
+	ForwardRef({prop: 'setMedia'}),
+);
+
+const Video = VideoDecorator(VideoBase);
 Video.defaultSlot = 'videoComponent';
 
 export default Video;
 export {
 	Video,
-	MediaBase,
-	MediaDecorator
+	VideoBase,
+	VideoDecorator
 };
