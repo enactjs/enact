@@ -64,15 +64,15 @@ describe('platform', () => {
 			expect(actual).toMatchObject(expected);
 		});
 
-		test('should return webOS 0 + LuneOS 1', () => {
-			const expected = {webos: 0, luneos: 1};
+		test('should return webOS -1 + LuneOS 1', () => {
+			const expected = {webos: -1, luneos: 1};
 
 			expect(parseUserAgent(LuneOS1)).toMatchObject(expected);
 			expect(parseUserAgent(LuneOS2)).toMatchObject(expected);
 		});
 
-		test('should return webOS 0 + legacy 1', () => {
-			const expected = {webos: 0, legacy: 1};
+		test('should return webOS -1 + legacy 1', () => {
+			const expected = {webos: -1, legacy: 1};
 
 			expect(parseUserAgent(webOS10)).toMatchObject(expected);
 			expect(parseUserAgent(webOS11)).toMatchObject(expected);
@@ -81,8 +81,8 @@ describe('platform', () => {
 			expect(parseUserAgent(webOS1351)).toMatchObject(expected);
 		});
 
-		test('should return webOS 0 + legacy 2', () => {
-			const expected = {webos: 0, legacy: 2};
+		test('should return webOS -1 + legacy 2', () => {
+			const expected = {webos: -1, legacy: 2};
 
 			expect(parseUserAgent(webOS2)).toMatchObject(expected);
 		});
