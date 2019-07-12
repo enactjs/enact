@@ -12,8 +12,8 @@ const fontName = 'Moonstone Global';
 const fonts = {
 	'NonLatin': {
 		// Hacky solution to add support for full-name and postscript names of the same font (support for multiple different operating systems font handling)
-		regular: 'LG Smart UI Global-Light"), local("LGSmartUIGlobal-Light',
-		bold:    'LG Smart UI Global-Regular"), local("LGSmartUIGlobal-Regular'
+		regular: 'LG Smart UI AR HE TH Regular"), local("LGSmartUIARHETH-Regular',
+		bold:    'LG Smart UI AR HE TH SemiBold"), local("LGSmartUIARHETH-SemiBold'
 	},
 	'am': {
 		regular: 'LG Display_Amharic'

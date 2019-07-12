@@ -1,12 +1,12 @@
-import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
-import {Job} from '@enact/core/util';
 import {platform} from '@enact/core/platform';
-import PropTypes from 'prop-types';
-import React, {Component} from 'react';
 import Registry from '@enact/core/internal/Registry';
+import {Job} from '@enact/core/util';
+import PropTypes from 'prop-types';
+import clamp from 'ramda/src/clamp';
+import React, {Component} from 'react';
 
 import {ResizeContext} from '../Resizable';
 import ri from '../resolution';
@@ -54,7 +54,7 @@ const TouchableDiv = Touchable('div');
  * @private
  */
 class ScrollableBaseNative extends Component {
-	static displayName = 'ui:ScrollableNative'
+	static displayName = 'ui:ScrollableBaseNative'
 
 	static propTypes = /** @lends ui/ScrollableNative.ScrollableNative.prototype */ {
 		/**
@@ -149,6 +149,14 @@ class ScrollableBaseNative extends Component {
 		 * @private
 		 */
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+		/**
+		 * Called when resizing window
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		handleResizeWindow: PropTypes.func,
 
 		/**
 		 * Specifies how to show horizontal scrollbar.
@@ -338,16 +346,6 @@ class ScrollableBaseNative extends Component {
 		start: PropTypes.func,
 
 		/**
-		 * ScrollableNative CSS style.
-		 *
-		 * Should be defined because we manipulate style prop in render().
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		style: PropTypes.object,
-
-		/**
 		 * Specifies how to show vertical scrollbar.
 		 *
 		 * Valid values are:
@@ -473,10 +471,26 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	handleResizeWindow = () => {
+		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
+		setTimeout(() => {
+			const {handleResizeWindow} = this.props;
+
+			if (handleResizeWindow) {
+				handleResizeWindow();
+			}
+			this.childRefCurrent.containerRef.current.style.scrollBehavior = null;
+			this.childRefCurrent.scrollToPosition(0, 0);
+			this.childRefCurrent.containerRef.current.style.scrollBehavior = 'smooth';
+
+			this.enqueueForceUpdate();
+		});
+	}
+
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	enqueueForceUpdate () {
-		this.childRefCurrent.calculateMetrics();
+		this.childRefCurrent.calculateMetrics(this.childRefCurrent.props);
 		this.forceUpdate();
 	}
 
@@ -1228,13 +1242,13 @@ class ScrollableBaseNative extends Component {
 	// ref
 
 	getScrollBounds () {
-		if (typeof this.childRefCurrent.getScrollBounds === 'function') {
+		if (this.childRefCurrent && typeof this.childRefCurrent.getScrollBounds === 'function') {
 			return this.childRefCurrent.getScrollBounds();
 		}
 	}
 
 	getMoreInfo () {
-		if (typeof this.childRefCurrent.getMoreInfo === 'function') {
+		if (this.childRefCurrent && typeof this.childRefCurrent.getMoreInfo === 'function') {
 			return this.childRefCurrent.getMoreInfo();
 		}
 	}
@@ -1258,6 +1272,10 @@ class ScrollableBaseNative extends Component {
 		if (this.props.addEventListeners) {
 			this.props.addEventListeners(childRefCurrent.containerRef);
 		}
+
+		if (window) {
+			window.addEventListener('resize', this.handleResizeWindow);
+		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
@@ -1275,6 +1293,10 @@ class ScrollableBaseNative extends Component {
 
 		if (this.props.removeEventListeners) {
 			this.props.removeEventListeners(childRefCurrent.containerRef);
+		}
+
+		if (window) {
+			window.removeEventListener('resize', this.handleResizeWindow);
 		}
 	}
 
@@ -1308,6 +1330,7 @@ class ScrollableBaseNative extends Component {
 		delete rest.applyOverscrollEffect;
 		delete rest.cbScrollTo;
 		delete rest.clearOverscrollEffect;
+		delete rest.handleResizeWindow;
 		delete rest.horizontalScrollbar;
 		delete rest.noScrollByWheel;
 		delete rest.onFlick;

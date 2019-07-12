@@ -1,5 +1,6 @@
 ---
 title: Theming
+toc: 2
 ---
 
 ## Introduction

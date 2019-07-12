@@ -283,9 +283,29 @@ storiesOf('Scroller', module)
 		)
 	)
 	.add(
+		'With Focus outside Container',
+		() => (
+			<div>
+				<Button>focus to me</Button>
+				<Scroller focusableScrollbar style={{height: ri.unit(ri.scale(420), 'rem'), width: ri.unit(ri.scale(300), 'rem'), display:'inline-block'}}>
+					<Item>Item 1</Item>
+					<Item>Item 2</Item>
+					<Item>Item 3</Item>
+					<Item>Item 4</Item>
+					<Item>Item 5</Item>
+					<Item>Item 6</Item>
+					<Item>Item 7</Item>
+					<Item>Item 8</Item>
+					<Item>Item 9</Item>
+					<div>Test Test Test Test Test Test </div>
+				</Scroller>
+			</div>
+		)
+	)
+	.add(
 		'Test scrolling to boundary with small overflow',
 		() => {
-			const size = number('Spacer size', 100, {max: 300, min: 0, range: true});
+			const size = number('Spacer size', Scroller, {max: 300, min: 0, range: true}, 100);
 			return (
 				<Scroller style={{height: ri.scaleToRem(200)}}>
 					<Item>1</Item>
@@ -298,11 +318,11 @@ storiesOf('Scroller', module)
 	.add(
 		'Test scrolling to boundary with long overflow',
 		() => {
-			const size = number('Spacer size', 200, {max: 300, min: 0, range: true});
+			const size = number('Spacer size', Scroller, {max: 300, min: 0, range: true}, 200);
 			return (
 				<Scroller
 					style={{height: ri.scaleToRem(200)}}
-					focusableScrollbar={boolean('focusableScrollbar', {}, true)}
+					focusableScrollbar={boolean('focusableScrollbar', Scroller, true)}
 				>
 					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
 					<Item>1</Item>
@@ -336,6 +356,16 @@ storiesOf('Scroller', module)
 				<ExpandableList title="Title">
 					{itemData}
 				</ExpandableList>
+			</Scroller>
+		)
+	)
+	.add(
+		'With One Long Height Item',
+		() => (
+			<Scroller focusableScrollbar>
+				<div style={{height: '1220px'}}>
+					<Item style={{height: '1200px'}}>Long Height Item</Item>
+				</div>
 			</Scroller>
 		)
 	)

@@ -3,7 +3,6 @@ import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 
@@ -26,9 +25,7 @@ Picker.displayName = 'Picker';
 storiesOf('Moonstone', module)
 	.add(
 		'Picker',
-		withInfo({
-			text: 'Basic usage of Picker'
-		})(() => (
+		() => (
 			<Picker
 				aria-label={text('aria-label', Picker, '')}
 				decrementAriaLabel={text('decrementAriaLabel', Picker, '')}
@@ -45,5 +42,10 @@ storiesOf('Moonstone', module)
 			>
 				{airports}
 			</Picker>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of Picker'
+			}
+		}
 	);

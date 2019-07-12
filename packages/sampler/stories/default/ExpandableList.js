@@ -2,7 +2,6 @@ import ExpandableList, {ExpandableListBase} from '@enact/moonstone/ExpandableLis
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -13,9 +12,7 @@ ExpandableList.displayName = 'ExpandableList';
 storiesOf('Moonstone', module)
 	.add(
 		'ExpandableList',
-		withInfo({
-			text: 'Basic usage of ExpandableList'
-		})(() => (
+		() => (
 			<ExpandableList
 				closeOnSelect={boolean('closeOnSelect', Config)}
 				disabled={boolean('disabled', Config)}
@@ -30,5 +27,10 @@ storiesOf('Moonstone', module)
 			>
 				{['option1', 'option2', 'option3']}
 			</ExpandableList>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of ExpandableList'
+			}
+		}
 	);

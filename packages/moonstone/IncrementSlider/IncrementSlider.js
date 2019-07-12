@@ -461,23 +461,19 @@ const IncrementSliderBase = kind({
 		incrementDisabled: ({disabled, max, min, value = min}) => disabled || value >= max,
 		decrementIcon: ({decrementIcon, orientation}) => (decrementIcon || ((orientation === 'vertical') ? 'arrowlargedown' : 'arrowlargeleft')),
 		incrementIcon: ({incrementIcon, orientation}) => (incrementIcon || ((orientation === 'vertical') ? 'arrowlargeup' : 'arrowlargeright')),
-		decrementAriaLabel: ({'aria-valuetext': valueText, decrementAriaLabel, disabled, min, value = min}) => {
+		decrementAriaLabel: ({'aria-valuetext': valueText, decrementAriaLabel, min, value = min}) => {
 			if (decrementAriaLabel == null) {
 				decrementAriaLabel = $L('press ok button to decrease the value');
 			}
 
-			return !(disabled || value <= min) ?
-				`${valueText != null ? valueText : value} ${decrementAriaLabel}` :
-				null;
+			return `${valueText != null ? valueText : value} ${decrementAriaLabel}`;
 		},
-		incrementAriaLabel: ({'aria-valuetext': valueText, incrementAriaLabel, disabled, min, max, value = min}) => {
+		incrementAriaLabel: ({'aria-valuetext': valueText, incrementAriaLabel, min, value = min}) => {
 			if (incrementAriaLabel == null) {
 				incrementAriaLabel = $L('press ok button to increase the value');
 			}
 
-			return !(disabled || value >= max) ?
-				`${valueText != null ? valueText : value} ${incrementAriaLabel}` :
-				null;
+			return `${valueText != null ? valueText : value} ${incrementAriaLabel}`;
 		}
 	},
 

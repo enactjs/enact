@@ -14,6 +14,7 @@
  * @exports ExpandableItemBase
  */
 
+import handle, {forward, forProp, oneOf, returnsTrue} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import {extractAriaProps} from '@enact/core/util';
@@ -328,16 +329,13 @@ const ExpandableItemBase = kind({
 				onSpotlightDown(ev);
 			}
 		},
-		handleOpen: (ev, {disabled, onClose, onOpen, open}) => {
-			// When disabled, don't attach an event
-			if (!disabled) {
-				if (open) {
-					onClose(ev);
-				} else {
-					onOpen(ev);
-				}
-			}
-		}
+		handleOpen: handle(
+			forProp('disabled', false),
+			oneOf(
+				[forProp('open', true), forward('onClose')],
+				[returnsTrue, forward('onOpen')]
+			)
+		)
 	},
 
 	styles: {

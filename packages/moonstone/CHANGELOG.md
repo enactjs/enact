@@ -8,6 +8,36 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `small` prop in `moonstone/Input`, `moonstone/ToggleButton`, `moonstone/Button`, `moonstone/Icon`, `moonstone/IconButton`, and `moonstone/LabeledIcon`, replaced by `size="small"`
 - `moonstone/Divider` replaced by `moonstone/Heading`
+### Added
+
+- `ilib@^14.2.0` as a package peer dependency, which apps will need to include
+- `moonstone/Dropdown` widths `tiny`, and `huge`
+
+### Fixed
+
+- `moonstone/Popup` to properly handle closing in mid-transition
+- `moonstone/Scroller` to properly move focus out of the container
+- `moonstone/VirtualList` to allow keydown events to bubble up when not handled by the component
+- `moonstone/IncrementSlider` to support aria-label when disabled
+- Fonts to use the updated names of global fonts available in the system
+- `moonstone/LabeledItem` to not clip the bottom of descender glyphs in large text mode
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to focus an item properly after an update
+
+## [3.0.0-alpha.7] - 2019-06-24
+
+### Fixed
+
+- `moonstone/Dropdown` to scroll to and focus the selected item when opened
+- `moonstone/ExpandableItem.ExpandableItemBase` to not error if `onClose` or `onOpen` was not supplied
+- `moonstone/GridListImageItem` to support overriding the `image` CSS class name
+- `moonstone/Scroller` to scroll and to move focus to the paging control properly if the current item sticking to the top is only spottable
+- `moonstone/VirtualList` to scroll to the focused item when navigating out of the viewport via 5-way
+
+## [3.0.0-alpha.6] - 2019-06-17
+
+### Removed
+
+- `moonstone/Divider`, `moonstone/Dialog`, and `moonstone/Heading` prop `casing`
 
 ### Fixed
 
@@ -23,7 +53,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Header` to center text when `centered` is used and additional controls are included by `moonstone/Panels`
-- `Fonts` for non-Latin to not intermix font weights for bold when using a combination of Latin and non-Latin glyphs
+- Fonts for non-Latin to not intermix font weights for bold when using a combination of Latin and non-Latin glyphs
 - `moonstone/VirtualList` to restore focus to an item when scrollbars are visible
 
 ## [3.0.0-alpha.4] - 2019-06-03

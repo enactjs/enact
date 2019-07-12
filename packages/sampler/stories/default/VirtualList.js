@@ -6,7 +6,6 @@ import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -15,7 +14,7 @@ const
 	wrapOption = {
 		'false': false,
 		'true': true,
-		"'noAnimation'": 'noAnimation'
+		'&quot;noAnimation&quot;': 'noAnimation'
 	},
 	items = [],
 	defaultDataSize = 1000,
@@ -70,9 +69,7 @@ UiVirtualList.displayName = 'VirtualList';
 storiesOf('UI', module)
 	.add(
 		'VirtualList',
-		withInfo({
-			text: 'Basic usage of VirtualList'
-		})(() => {
+		() => {
 			const itemSize = ri.scale(number('itemSize', Config, 72));
 			return (
 				<UiVirtualList
@@ -84,15 +81,18 @@ storiesOf('UI', module)
 					spacing={ri.scale(number('spacing', Config, 0))}
 				/>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'Basic usage of VirtualList'
+			}
+		}
 	);
 
 storiesOf('Moonstone', module)
 	.add(
 		'VirtualList',
-		withInfo({
-			text: 'Basic usage of VirtualList'
-		})(() => {
+		() => {
 			const itemSize = ri.scale(number('itemSize', Config, 72));
 			return (
 				<VirtualList
@@ -103,8 +103,13 @@ storiesOf('Moonstone', module)
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 0))}
-					wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"], Config)]}
+					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 				/>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'Basic usage of VirtualList'
+			}
+		}
 	);

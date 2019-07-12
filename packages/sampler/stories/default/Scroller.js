@@ -4,7 +4,6 @@ import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -21,9 +20,7 @@ const
 storiesOf('UI', module)
 	.add(
 		'Scroller',
-		withInfo({
-			text: 'Basic usage of Scroller'
-		})(() => (
+		() => (
 			<UiScroller
 				direction={select('direction', prop.direction, Config, 'both')}
 				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Config, 'auto')}
@@ -48,15 +45,18 @@ storiesOf('UI', module)
 					</div>
 				</div>
 			</UiScroller>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of Scroller'
+			}
+		}
 	);
 
 storiesOf('Moonstone', module)
 	.add(
 		'Scroller',
-		withInfo({
-			text: 'Basic usage of Scroller'
-		})(() => (
+		() => (
 			<Scroller
 				direction={select('direction', prop.direction, Config, 'both')}
 				focusableScrollbar={boolean('focusableScrollbar', Config)}
@@ -82,5 +82,10 @@ storiesOf('Moonstone', module)
 					</div>
 				</div>
 			</Scroller>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of Scroller'
+			}
+		}
 	);

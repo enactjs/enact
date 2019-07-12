@@ -68,6 +68,29 @@
 	}
 }
 
+// Fix for the +/- buttons
+html {
+	height: 100%;
+	margin: 0;
+}
+
+// Fix for margin added around zoom-area
+body {
+	margin: 0;
+}
+
+// Fix or scrollable tabs area
+// Notes: Storybook provides its own scroller, so we don't need to see the OS version of it.
+// :global(.simplebar-content) {
+// 	overflow: hidden;
+// }
+
+// Storybook injects the info overlay within the MoonstoneEnvironment panels itself, so we need to
+// establish section the z-index at the same as the X button to allow the overlay to overlap it.
+.panel > section {
+	z-index: 1;
+}
+
 // Here, we target the storybook rendering canvas div. It's inserted as a child of our Panel, but it
 // applies position:relative, which doesn't help us when we have stories that should fill the entire
 // panel body. This targets that inaccessible node using Panel's structure and storybook's structure

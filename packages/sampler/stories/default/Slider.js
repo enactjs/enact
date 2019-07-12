@@ -2,7 +2,6 @@ import Slider, {SliderTooltip} from '@enact/moonstone/Slider';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -16,9 +15,7 @@ SliderTooltip.displayName = 'SliderTooltip';
 storiesOf('Moonstone', module)
 	.add(
 		'Slider',
-		withInfo({
-			text: 'Basic usage of Slider'
-		})(() => {
+		() => {
 			const side = select('side', ['after', 'before', 'left', 'right'], SliderTooltipConfig, 'before');
 			const tooltip = boolean('tooltip', SliderTooltipConfig);
 			const percent = boolean('percent', SliderTooltipConfig);
@@ -45,5 +42,10 @@ storiesOf('Moonstone', module)
 					) : null}
 				</Slider>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'Basic usage of Slider'
+			}
+		}
 	);

@@ -1,7 +1,6 @@
 import ProgressBar, {ProgressBarTooltip} from '@enact/moonstone/ProgressBar';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -15,9 +14,7 @@ ProgressBarTooltip.displayName = 'ProgressBarTooltip';
 storiesOf('Moonstone', module)
 	.add(
 		'ProgressBar',
-		withInfo({
-			text: 'The basic ProgressBar'
-		})(() => {
+		() => {
 			const side = select('side', ['after', 'before', 'left', 'right'], ProgressBarTooltipConfig, 'before');
 			const tooltip = boolean('tooltip', ProgressBarTooltipConfig);
 
@@ -37,5 +34,10 @@ storiesOf('Moonstone', module)
 					) : null}
 				</ProgressBar>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'The basic ProgressBar'
+			}
+		}
 	);

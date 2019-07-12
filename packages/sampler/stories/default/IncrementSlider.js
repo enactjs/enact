@@ -3,7 +3,6 @@ import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -16,9 +15,7 @@ IncrementSlider.displayName = 'IncrementSlider';
 storiesOf('Moonstone', module)
 	.add(
 		'IncrementSlider',
-		withInfo({
-			text: 'Basic usage of IncrementSlider'
-		})(() => {
+		() => {
 			const side = select('side', ['after', 'before', 'left', 'right'], IncrementSliderTooltipConfig, 'after');
 			const tooltip = boolean('tooltip', IncrementSliderTooltipConfig);
 			const percent = boolean('percent', IncrementSliderTooltipConfig);
@@ -45,5 +42,10 @@ storiesOf('Moonstone', module)
 					) : null}
 				</IncrementSlider>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'Basic usage of IncrementSlider'
+			}
+		}
 	);

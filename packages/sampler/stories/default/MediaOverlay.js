@@ -1,7 +1,6 @@
 import MediaOverlay, {MediaOverlayBase, MediaOverlayDecorator} from '@enact/moonstone/MediaOverlay';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -66,9 +65,7 @@ MediaOverlay.displayName = 'MediaOverlay';
 storiesOf('Moonstone', module)
 	.add(
 		'MediaOverlay',
-		withInfo({
-			text: 'The basic MediaOverlay'
-		})(() => {
+		() => {
 			const videoTitle = select('source', prop.videoTitles, Config, 'Sintel');
 			const videoSource = prop.videos[videoTitle];
 			const imageName = select('imageOverlay', prop.imageNames, Config);
@@ -86,5 +83,10 @@ storiesOf('Moonstone', module)
 					<source src={videoSource} />
 				</MediaOverlay>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'The basic MediaOverlay'
+			}
+		}
 	);

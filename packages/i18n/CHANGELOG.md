@@ -2,6 +2,26 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+## Removed
+
+-  `i18n/ilib` embedded copy of iLib in favour of the NPM package `ilib`
+
+### Added
+
+- `ilib@^14.2.0` package as a peer dependency, which apps will need to include
+
+## [3.0.0-alpha.7] - 2019-06-24
+
+No significant changes.
+
+## [3.0.0-alpha.6] - 2019-06-17
+
+## Removed
+
+- `i18n/Uppercase` HOC, replaced by `i18n/util` casing functions
+
 ## [3.0.0-alpha.5] - 2019-06-10
 
 No significant changes.

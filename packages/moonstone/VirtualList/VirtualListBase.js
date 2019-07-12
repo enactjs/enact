@@ -1,12 +1,12 @@
-import clamp from 'ramda/src/clamp';
 import {is} from '@enact/core/keymap';
-import PropTypes from 'prop-types';
-import React, {Component} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
+import Accelerator from '@enact/spotlight/Accelerator';
 import Pause from '@enact/spotlight/Pause';
 import Spottable from '@enact/spotlight/Spottable';
-import Accelerator from '@enact/spotlight/Accelerator';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
+import PropTypes from 'prop-types';
+import clamp from 'ramda/src/clamp';
+import React, {Component} from 'react';
 
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -27,7 +27,13 @@ const
 	Native = 'Native',
 	// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
 	getNumberValue = (index) => index | 0,
-	nop = () => {};
+	nop = () => {},
+	moveFocusStraight = ({direction, id}) => {
+		Spotlight.set(id, {straightOnly: true});
+		const moved = Spotlight.move(direction);
+		Spotlight.set(id, {straightOnly: false});
+		return moved;
+	};
 
 /**
  * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} and
@@ -36,7 +42,7 @@ const
  * @class VirtualListCore
  * @memberof moonstone/VirtualList
  * @ui
- * @public
+ * @private
  */
 const VirtualListBaseFactory = (type) => {
 	const UiBase = (type === JS) ? UiVirtualListBase : UiVirtualListBaseNative;
@@ -44,7 +50,7 @@ const VirtualListBaseFactory = (type) => {
 	return class VirtualListCore extends Component {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
-		static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
+		static propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 			/**
 			 * The `render` function called for each item in the list.
 			 *
@@ -97,6 +103,16 @@ const VirtualListBaseFactory = (type) => {
 			 * @public
 			 */
 			dataSize: PropTypes.number,
+
+			/**
+			 * Allows 5-way navigation to the scrollbar controls. By default, 5-way will
+			 * not move focus to the scrollbar controls.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			focusableScrollbar: PropTypes.bool,
 
 			/**
 			 * Passes the instance of [VirtualList]{@link ui/VirtualList.VirtualList}.
@@ -161,6 +177,7 @@ const VirtualListBaseFactory = (type) => {
 
 		static defaultProps = {
 			dataSize: 0,
+			focusableScrollbar: false,
 			pageScroll: false,
 			spacing: 0,
 			wrap: false
@@ -179,6 +196,7 @@ const VirtualListBaseFactory = (type) => {
 
 		componentDidMount () {
 			const containerNode = this.uiRefCurrent.containerRef.current;
+			const scrollerNode = document.querySelector(`[data-spotlight-id="${this.props.spotlightId}"]`);
 
 			if (type === JS) {
 				// prevent native scrolling by Spotlight
@@ -192,9 +210,9 @@ const VirtualListBaseFactory = (type) => {
 				}
 			}
 
-			if (containerNode && containerNode.addEventListener) {
-				containerNode.addEventListener('keydown', this.onKeyDown);
-				containerNode.addEventListener('keyup', this.onKeyUp);
+			if (scrollerNode && scrollerNode.addEventListener) {
+				scrollerNode.addEventListener('keydown', this.onKeyDown, {capture: true});
+				scrollerNode.addEventListener('keyup', this.onKeyUp, {capture: true});
 			}
 		}
 
@@ -207,6 +225,7 @@ const VirtualListBaseFactory = (type) => {
 
 		componentWillUnmount () {
 			const containerNode = this.uiRefCurrent.containerRef.current;
+			const scrollerNode = document.querySelector(`[data-spotlight-id="${this.props.spotlightId}"]`);
 
 			if (type === JS) {
 				// remove a function for preventing native scrolling by Spotlight
@@ -215,9 +234,9 @@ const VirtualListBaseFactory = (type) => {
 				}
 			}
 
-			if (containerNode && containerNode.removeEventListener) {
-				containerNode.removeEventListener('keydown', this.onKeyDown);
-				containerNode.removeEventListener('keyup', this.onKeyUp);
+			if (scrollerNode && scrollerNode.removeEventListener) {
+				scrollerNode.removeEventListener('keydown', this.onKeyDown, {capture: true});
+				scrollerNode.removeEventListener('keyup', this.onKeyUp, {capture: true});
 			}
 
 			this.pause.resume();
@@ -300,34 +319,6 @@ const VirtualListBaseFactory = (type) => {
 			}, null);
 		}
 
-		/**
-		 * Handle a Page up/down key with disabled items
-		 */
-
-		findSpottableItemWithPositionInExtent = (indexFrom, indexTo, position) => {
-			const
-				{dataSize} = this.props,
-				{dimensionToExtent} = this.uiRefCurrent;
-
-			if (0 <= indexFrom && indexFrom < dataSize &&
-				-1 <= indexTo && indexTo <= dataSize &&
-				0 <= position && position < dimensionToExtent) {
-				const
-					direction = (indexFrom < indexTo) ? 1 : -1,
-					delta = direction * dimensionToExtent,
-					diffPosition = (indexFrom % dimensionToExtent) - position,
-					// When direction is 1 (forward) and diffPosition is positive, add dimensionToExtent.
-					// When direction is -1 (backward) and diffPosition is negative, substract dimensionToExtent.
-					candidateIndex = indexFrom - diffPosition + ((direction * diffPosition > 0) ? delta : 0);
-
-				if (direction * (indexTo - candidateIndex) > 0) {
-					return candidateIndex;
-				}
-			}
-
-			return -1;
-		}
-
 		findSpottableItem = (indexFrom, indexTo) => {
 			const {dataSize} = this.props;
 
@@ -363,28 +354,30 @@ const VirtualListBaseFactory = (type) => {
 			let nextIndex = -1;
 			let targetIndex = -1;
 
-			if (isPrimaryDirectionVertical) {
-				if (isUpKey && row) {
+			if (index >= 0) {
+				if (isPrimaryDirectionVertical) {
+					if (isUpKey && row) {
+						targetIndex = index - dimensionToExtent;
+					} else if (isDownKey && isNextRow) {
+						targetIndex = index + dimensionToExtent;
+					} else if (isLeftMovement && column) {
+						targetIndex = index - 1;
+					} else if (isRightMovement && isNextAdjacent) {
+						targetIndex = index + 1;
+					}
+				} else if (isLeftMovement && row) {
 					targetIndex = index - dimensionToExtent;
-				} else if (isDownKey && isNextRow) {
+				} else if (isRightMovement && isNextRow) {
 					targetIndex = index + dimensionToExtent;
-				} else if (isLeftMovement && column) {
+				} else if (isUpKey && column) {
 					targetIndex = index - 1;
-				} else if (isRightMovement && isNextAdjacent) {
+				} else if (isDownKey && isNextAdjacent) {
 					targetIndex = index + 1;
 				}
-			} else if (isLeftMovement && row) {
-				targetIndex = index - dimensionToExtent;
-			} else if (isRightMovement && isNextRow) {
-				targetIndex = index + dimensionToExtent;
-			} else if (isUpKey && column) {
-				targetIndex = index - 1;
-			} else if (isDownKey && isNextAdjacent) {
-				targetIndex = index + 1;
-			}
 
-			if (targetIndex >= 0) {
-				nextIndex = targetIndex;
+				if (targetIndex >= 0) {
+					nextIndex = targetIndex;
+				}
 			}
 
 			if (!repeat && nextIndex === -1 && wrap) {
@@ -397,18 +390,17 @@ const VirtualListBaseFactory = (type) => {
 				}
 			}
 
-			return {isBackward, isForward, isLeftMovement, isRightMovement, isWrapped, nextIndex};
+			return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
 		}
 
 		/**
 		 * Handle `onKeyDown` event
 		 */
 
-		onAcceleratedKeyDown = ({keyCode, repeat, target}) => {
+		onAcceleratedKeyDown = ({isWrapped, keyCode, nextIndex, repeat, target}) => {
 			const {cbScrollTo, spacing, wrap} = this.props;
 			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPosition} = this.uiRefCurrent;
 			const index = getNumberValue(target.dataset.index);
-			const {isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
 
 			this.isScrolledBy5way = false;
 			this.isScrolledByJump = false;
@@ -421,7 +413,7 @@ const VirtualListBaseFactory = (type) => {
 				this.lastFocusedIndex = nextIndex;
 
 				if (isNextItemInView) {
-					this.focusOnItem(nextIndex);
+					this.focusByIndex(nextIndex);
 				} else {
 					this.isScrolledBy5way = true;
 					this.isWrappedBy5way = isWrapped;
@@ -433,12 +425,12 @@ const VirtualListBaseFactory = (type) => {
 							this.pause.pause();
 							target.blur();
 						} else {
-							this.focusOnItem(nextIndex);
+							this.focusByIndex(nextIndex);
 						}
 
 						this.nodeIndexToBeFocused = nextIndex;
 					} else {
-						this.focusOnItem(nextIndex);
+						this.focusByIndex(nextIndex);
 					}
 
 					cbScrollTo({
@@ -454,7 +446,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		onKeyDown = (ev) => {
-			const {keyCode} = ev;
+			const {currentTarget, keyCode, target} = ev;
 			const direction = getDirection(keyCode);
 
 			if (direction) {
@@ -463,28 +455,67 @@ const VirtualListBaseFactory = (type) => {
 				if (SpotlightAccelerator.processKey(ev, nop)) {
 					ev.stopPropagation();
 				} else {
-					const {repeat, target} = ev;
-					const index = getNumberValue(target.dataset.index);
-					const {isBackward, isForward, isLeftMovement, isRightMovement, isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
+					const {repeat} = ev;
+					const {dimensionToExtent, isPrimaryDirectionVertical} = this.uiRefCurrent;
+					const targetIndex = target.dataset.index;
+					const isScrollButton = (
+						// if target has an index, it must be an item so can't be a scroll button
+						!targetIndex &&
+						// if it lacks an index and is inside the scroller, it must be a button
+						target.matches(`[data-spotlight-id="${this.props.spotlightId}"] *`)
+					);
+					const index = !isScrollButton ? getNumberValue(targetIndex) : -1;
+					const {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
+					const directions = {};
 
-					if (nextIndex >= 0) {
-						ev.preventDefault();
-						ev.stopPropagation();
-						this.onAcceleratedKeyDown({index, isWrapped, keyCode, nextIndex, repeat, target});
+					if (isPrimaryDirectionVertical) {
+						directions.left = isLeftMovement;
+						directions.right = isRightMovement;
+						directions.up = isUpKey;
+						directions.down = isDownKey;
 					} else {
-						const {dataSize} = this.props;
-						const {dimensionToExtent} = this.uiRefCurrent;
-						const column = index % dimensionToExtent;
-						const row = (index - column) % dataSize / dimensionToExtent;
-						const isLeaving = isBackward && row === 0 ||
-							isForward && row === Math.floor((dataSize - 1) % dataSize / dimensionToExtent) ||
-							isLeftMovement && column === 0 ||
-							isRightMovement && column === dimensionToExtent - 1;
+						directions.left = isUpKey;
+						directions.right = isDownKey;
+						directions.up = isLeftMovement;
+						directions.down = isRightMovement;
+					}
 
-						if (repeat && isLeaving || !isLeaving && Spotlight.move(direction)) {
+					if (!isScrollButton) {
+						if (nextIndex >= 0) {
 							ev.preventDefault();
 							ev.stopPropagation();
+							this.onAcceleratedKeyDown({isWrapped, keyCode, nextIndex, repeat, target});
+						} else {
+							const {dataSize, focusableScrollbar} = this.props;
+							const column = index % dimensionToExtent;
+							const row = (index - column) % dataSize / dimensionToExtent;
+							const isLeaving = directions.up && row === 0 ||
+								directions.down && row === Math.floor((dataSize - 1) % dataSize / dimensionToExtent) ||
+								directions.left && column === 0 ||
+								directions.right && !focusableScrollbar && column === dimensionToExtent - 1;
+
+							if (repeat && isLeaving) {
+								ev.preventDefault();
+								ev.stopPropagation();
+							} else if (!isLeaving && Spotlight.move(direction)) {
+								const nextTargetIndex = Spotlight.getCurrent().dataset.index;
+
+								ev.preventDefault();
+								ev.stopPropagation();
+
+								if (typeof nextTargetIndex === 'string') {
+									this.onAcceleratedKeyDown({keyCode, nextIndex: getNumberValue(nextTargetIndex), repeat, target});
+								}
+							}
+
 						}
+					} else if (
+						directions.right && repeat ||
+						directions.left && Spotlight.move(direction) ||
+						(directions.up || directions.down) && (repeat || moveFocusStraight({id: this.props.spotlightId, direction}) && currentTarget.contains(Spotlight.getCurrent()))
+					) {
+						ev.preventDefault();
+						ev.stopPropagation();
 					}
 				}
 			} else if (isPageUp(keyCode) || isPageDown(keyCode)) {
@@ -516,39 +547,38 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		focusOnItem = (index) => {
+		focusByIndex = (index) => {
 			const item = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${index}'].spottable`);
 
-			if (this.isWrappedBy5way) {
-				SpotlightAccelerator.reset();
-				this.isWrappedBy5way = false;
-			}
+			if (!item && index >= 0 && index < this.props.dataSize) {
+				// Item is valid but since the the dom doesn't exist yet, we set the index to focus after the ongoing update
+				this.preservedIndex = index;
+				this.restoreLastFocused = true;
+			} else {
+				if (this.isWrappedBy5way) {
+					SpotlightAccelerator.reset();
+					this.isWrappedBy5way = false;
+				}
 
-			this.pause.resume();
-			this.focusOnNode(item);
-			this.nodeIndexToBeFocused = null;
-			this.isScrolledByJump = false;
+				this.pause.resume();
+				this.focusOnNode(item);
+				this.nodeIndexToBeFocused = null;
+				this.isScrolledByJump = false;
+			}
 		}
 
 		initItemRef = (ref, index) => {
 			if (ref) {
 				if (type === JS) {
-					this.focusOnItem(index);
+					this.focusByIndex(index);
 				} else {
 					// If focusing the item of VirtuallistNative, `onFocus` in Scrollable will be called.
 					// Then VirtualListNative tries to scroll again differently from VirtualList.
 					// So we would like to skip `focus` handling when focusing the item as a workaround.
 					this.isScrolledByJump = true;
-					this.focusOnItem(index);
+					this.focusByIndex(index);
 				}
 			}
-		}
-
-		focusByIndex = (index) => {
-			// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
-			setTimeout(() => {
-				this.focusOnItem(index);
-			}, 0);
 		}
 
 		/**
@@ -706,6 +736,7 @@ const VirtualListBaseFactory = (type) => {
 
 			delete rest.initUiChildRef;
 			// not used by VirtualList
+			delete rest.focusableScrollbar;
 			delete rest.scrollAndFocusScrollbarButton;
 			delete rest.spotlightId;
 			delete rest.wrap;
@@ -751,24 +782,6 @@ const VirtualListBase = VirtualListBaseFactory(JS);
 VirtualListBase.displayName = 'VirtualListBase';
 
 /**
- * Activates the component for voice control.
- *
- * @name data-webos-voice-focused
- * @memberof moonstone/VirtualList.VirtualListBase.prototype
- * @type {Boolean}
- * @public
- */
-
-/**
- * The voice control group label.
- *
- * @name data-webos-voice-group-label
- * @memberof moonstone/VirtualList.VirtualListBase.prototype
- * @type {String}
- * @public
- */
-
-/**
  * A Moonstone-styled base component for [VirtualListNative]{@link moonstone/VirtualList.VirtualListNative} and
  * [VirtualGridListNative]{@link moonstone/VirtualList.VirtualGridListNative}.
  *
@@ -780,6 +793,70 @@ VirtualListBase.displayName = 'VirtualListBase';
  */
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'VirtualListBaseNative';
+
+/**
+ * Allows 5-way navigation to the scrollbar controls. By default, 5-way will
+ * not move focus to the scrollbar controls.
+ *
+ * @name focusableScrollbar
+ * @memberof moonstone/VirtualList.VirtualListBase.prototype
+ * @type {Boolean}
+ * @default false
+ * @public
+ */
+
+/**
+ * Unique identifier for the component.
+ *
+ * When defined and when the `VirtualList` is within a [Panel]{@link moonstone/Panels.Panel},
+ * the `VirtualList` will store its scroll position and restore that position when returning to
+ * the `Panel`.
+ *
+ * @name id
+ * @memberof moonstone/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the next button in the vertical scroll bar.
+ *
+ * @name scrollDownAriaLabel
+ * @memberof moonstone/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @default $L('scroll down')
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the previous button in the horizontal scroll bar.
+ *
+ * @name scrollLeftAriaLabel
+ * @memberof moonstone/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @default $L('scroll left')
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the next button in the horizontal scroll bar.
+ *
+ * @name scrollRightAriaLabel
+ * @memberof moonstone/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @default $L('scroll right')
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the previous button in the vertical scroll bar.
+ *
+ * @name scrollUpAriaLabel
+ * @memberof moonstone/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @default $L('scroll up')
+ * @public
+ */
 
 /* eslint-disable enact/prop-types */
 const listItemsRenderer = (props) => {
@@ -814,90 +891,58 @@ const listItemsRenderer = (props) => {
 };
 /* eslint-enable enact/prop-types */
 
-const ScrollableVirtualList = (props) => ( // eslint-disable-line react/jsx-no-bind
-	<Scrollable
-		{...props}
-		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBase
-				{...childProps}
-				itemsRenderer={listItemsRenderer}
-			/>
-		)}
-	/>
-);
+const ScrollableVirtualList = (props) => { // eslint-disable-line react/jsx-no-bind
+	const {focusableScrollbar} = props;
+
+	return (
+		<Scrollable
+			{...props}
+			childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
+				<VirtualListBase
+					{...childProps}
+					focusableScrollbar={focusableScrollbar}
+					itemsRenderer={listItemsRenderer}
+				/>
+			)}
+		/>
+	);
+};
 
 ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
-	/**
-	 * Direction of the list.
-	 *
-	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'vertical'
-	 * @public
-	 */
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-
-	/**
-	 * Unique identifier for the component.
-	 *
-	 * When defined and when the `VirtualList` is within a [Panel]{@link moonstone/Panels.Panel},
-	 * the `VirtualList` will store its scroll position and restore that position when returning to
-	 * the `Panel`.
-	 *
-	 * @type {String}
-	 * @public
-	 */
-	id: PropTypes.string
+	focusableScrollbar: PropTypes.bool
 };
 
 ScrollableVirtualList.defaultProps = {
-	direction: 'vertical'
+	direction: 'vertical',
+	focusableScrollbar: false
 };
 
-const ScrollableVirtualListNative = (props) => (
-	<ScrollableNative
-		{...props}
-		childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBaseNative
-				{...childProps}
-				itemsRenderer={listItemsRenderer}
-			/>
-		)}
-	/>
-);
+const ScrollableVirtualListNative = (props) => {
+	const {focusableScrollbar} = props;
+
+	return (
+		<ScrollableNative
+			{...props}
+			childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
+				<VirtualListBaseNative
+					{...childProps}
+					focusableScrollbar={focusableScrollbar}
+					itemsRenderer={listItemsRenderer}
+				/>
+			)}
+		/>
+	);
+};
 
 ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
-	/**
-	 * Direction of the list.
-	 *
-	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'vertical'
-	 * @public
-	 */
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-
-	/**
-	 * Unique identifier for the component.
-	 *
-	 * When defined and when the `VirtualList` is within a [Panel]{@link moonstone/Panels.Panel},
-	 * the `VirtualList` will store its scroll position and restore that position when returning to
-	 * the `Panel`.
-	 *
-	 * @type {String}
-	 * @public
-	 */
-	id: PropTypes.string
+	focusableScrollbar: PropTypes.bool
 };
 
 ScrollableVirtualListNative.defaultProps = {
-	direction: 'vertical'
+	direction: 'vertical',
+	focusableScrollbar: false
 };
 
 export default VirtualListBase;

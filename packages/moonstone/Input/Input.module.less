@@ -14,7 +14,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	flex-grow: 1;
-	text-indent: 0.2em;
+	text-indent: @moon-input-text-indent;
 
 	&[type=number] {
 		-moz-appearance: textfield;
@@ -60,17 +60,32 @@
 	box-sizing: border-box;
 	vertical-align: middle;
 
-	.input {
+	.input,
+	.inputHighlight {
 		font-size: @moon-input-font-size;
 		font-weight: @moon-input-font-weight;
 	}
 
 	.input,
+	.inputHighlight,
 	.iconBefore,
 	.iconAfter {
 		line-height: @moon-input-height;
 		height: @moon-input-height;
 		vertical-align: middle;
+	}
+
+	.inputHighlight {
+		position: absolute;
+		top: 6px;
+		height: @moon-input-highlight-height;
+		max-width: @moon-input-highlight-max-width;
+		overflow: hidden;
+		text-indent: @moon-input-text-indent;
+		letter-spacing: 0.1px;
+		pointer-events: none;
+		opacity: 0;
+		z-index: -1;
 	}
 
 	&.small {
@@ -85,6 +100,12 @@
 		.input {
 			font-size: @moon-input-small-font-size;
 			height: @moon-input-small-height;
+		}
+
+		.inputHighlight {
+			line-height: @moon-input-small-height;
+			height: @moon-input-decorator-small-height;
+			max-width: @moon-input-highlight-small-max-width;
 		}
 	}
 
@@ -146,6 +167,14 @@
 			color: @moon-red;
 		}
 
+		.inputHighlight {
+			color: transparent;
+			background-color: transparent;
+			// Set `.inputHighlight` background color to make it appear that the text is highlighted
+			// when `.input` has transparent background and when `.decorator` has focus, but not `.input`.
+			// background-color: @moon-spotlight-color;
+		}
+
 		.focus({
 			background-color: @moon-input-decorator-focus-bg-color;
 			color: @moon-input-focus-text-color;
@@ -156,6 +185,12 @@
 					color: @moon-input-placeholder-focus-color;
 				});
 			}
+
+			// Set `.inputHighlight` opacity to make it appear that the text is highlighted
+			// when `.input` has transparent background and when `.decorator` has focus, but not `.input`.
+			// .inputHighlight {
+			// 	opacity: 1;
+			// }
 		});
 
 		&:focus-within {

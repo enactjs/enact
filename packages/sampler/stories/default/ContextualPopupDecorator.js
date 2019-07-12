@@ -5,7 +5,6 @@ import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -32,9 +31,7 @@ const renderPopup = () => (
 storiesOf('Moonstone', module)
 	.add(
 		'ContextualPopupDecorator',
-		withInfo({
-			text: 'Basic usage of ContextualPopupDecorator'
-		})(() => (
+		() => (
 			<div style={{textAlign: 'center', marginTop: ri.unit(99, 'rem')}}>
 				<ContextualButton
 					direction={select('direction', ['up', 'down', 'left', 'right'], Config)}
@@ -49,5 +46,10 @@ storiesOf('Moonstone', module)
 				</ContextualButton>
 				<BodyText centered>Use KNOBS to interact with the ContextualPopup.</BodyText>
 			</div>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of ContextualPopupDecorator'
+			}
+		}
 	);

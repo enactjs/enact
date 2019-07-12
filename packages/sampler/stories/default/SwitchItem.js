@@ -7,10 +7,9 @@ import {listIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, text, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {mergeComponentMetadata, nullify} from '../../src/utils';
 
 SwitchItem.displayName = 'SwitchItem';
 const Config = mergeComponentMetadata('SwitchItem', ItemBase, Item, UiToggleItemBase, UiToggleItem, ToggleItem, SwitchItem);
@@ -18,11 +17,9 @@ const Config = mergeComponentMetadata('SwitchItem', ItemBase, Item, UiToggleItem
 storiesOf('Moonstone', module)
 	.add(
 		'SwitchItem',
-		withInfo({
-			text: 'Basic usage of SwitchItem'
-		})(() => {
+		() => {
 			const icon = select('itemIcon', ['', ...listIcons], Config);
-			const itemIcon = (icon ? <Icon small>{icon}</Icon> : void 0);
+			const itemIcon = nullify(icon ? <Icon small>{icon}</Icon> : null);
 			const itemIconPosition = select('itemIconPosition', ['', 'before', 'beforeChildren', 'afterChildren', 'after'], Config);
 			return (
 				<SwitchItem
@@ -35,5 +32,10 @@ storiesOf('Moonstone', module)
 					{text('children', Config, 'Hello SwitchItem')}
 				</SwitchItem>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'Basic usage of SwitchItem'
+			}
+		}
 	);

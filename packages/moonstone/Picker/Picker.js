@@ -218,7 +218,7 @@ const PickerBase = kind({
 		value: ({value, children}) => {
 			const max = children && children.length ? children.length - 1 : 0;
 			if (__DEV__) {
-				validateRange(value, 0, max, 'Picker', '"value"', 'min', 'max index');
+				validateRange(value, 0, max, 'Picker', 'value', 'min', 'max index');
 			}
 			return clamp(0, max, value);
 		},

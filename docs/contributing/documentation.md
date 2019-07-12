@@ -50,7 +50,7 @@ Below is an example block for a component:
 
 ```
 /**
- * A Moonstone-styled button with built-in support for uppercasing, tooltips, marqueed text, and
+ * A Moonstone-styled button with built-in support for tooltips, marqueed text, and
  * Spotlight focus.
  *
  * Usage:

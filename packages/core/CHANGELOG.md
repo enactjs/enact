@@ -8,6 +8,18 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 - `core/kind` config property `contextTypes`
 
+### Fixed
+
+- `core/platform` logic for webOS detection
+
+## [3.0.0-alpha.7] - 2019-06-24
+
+No significant changes.
+
+## [3.0.0-alpha.6] - 2019-06-17
+
+No significant changes.
+
 ## [3.0.0-alpha.5] - 2019-06-10
 
 No significant changes.

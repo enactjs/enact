@@ -3,7 +3,6 @@
  *
  * @example
  * <Heading
- *   casing="preserve"
  *   size="large"
  *   spacing="small"
  * >
@@ -17,7 +16,6 @@
  */
 
 import kind from '@enact/core/kind';
-import Uppercase from '@enact/i18n/Uppercase';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -96,7 +94,6 @@ const HeadingBase = kind({
  *
  * @hoc
  * @memberof moonstone/Heading
- * @mixes i18n/Uppercase.Uppercase
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @mixes moonstone/Skinnable.Skinnable
  * @public
@@ -106,11 +103,9 @@ const HeadingDecorator = compose(
 		marqueeOn: PropTypes.oneOf(['hover', 'render'])
 	}),
 	defaultProps({
-		casing: 'word',
 		marqueeOn: 'render'
 	}),
 	Pure,
-	Uppercase,
 	MarqueeDecorator,
 	Skinnable
 );
@@ -123,7 +118,6 @@ const HeadingDecorator = compose(
  * Usage:
  * ```
  * <Heading
- *   casing="preserve"
  *   spacing="medium"
  * >
  *   Related Settings
@@ -140,17 +134,6 @@ const HeadingDecorator = compose(
  * @public
  */
 const Heading = HeadingDecorator(HeadingBase);
-
-/**
- * The casing mode applied to the `children` text.
- *
- * @name casing
- * @type {String}
- * @default 'word'
- * @memberof moonstone/Heading.Heading.prototype
- * @see i18n/Uppercase#casing
- * @public
- */
 
 /**
  * Marquee animation trigger.

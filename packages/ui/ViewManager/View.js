@@ -127,7 +127,9 @@ class View extends React.Component {
 
 	static defaultProps = {
 		appearing: false,
-		enteringDelay: 0
+		enteringDelay: 0,
+		index: 0,
+		reverseTransition: false
 	}
 
 	constructor (props) {
@@ -229,7 +231,7 @@ class View extends React.Component {
 	 * @private
 	 */
 	prepareTransition = (arranger, callback, noAnimation) => {
-		const {duration, index, previousIndex, reverseTransition} = this.props;
+		const {duration, index, previousIndex = index, reverseTransition} = this.props;
 
 		// Need to ensure that we have a valid node reference before we animation. Sometimes, React
 		// will replace the node after mount causing a reference cached there to be invalid.

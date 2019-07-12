@@ -2,6 +2,33 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.0.0-alpha.7] - 2019-06-24
+
+### Changed
+
+- `sampler` look and feel by updating to Storybook 5 and applying an Enact theme
+
+### Fixed
+
+- `moonstone/Dropdown` to scroll to and focus the selected item when opened
+- `moonstone/ExpandableItem.ExpandableItemBase` to not error if `onClose` or `onOpen` was not supplied
+- `moonstone/GridListImageItem` to support overriding the `image` CSS class name
+- `moonstone/Scroller` to scroll and to move focus to the paging control properly if the current item sticking to the top is only spottable
+- `moonstone/VirtualList` to scroll to the focused item when navigating out of the viewport via 5-way
+
+## [3.0.0-alpha.6] - 2019-06-17
+
+## Removed
+
+- `i18n/Uppercase` HOC, replaced by `i18n/util` casing functions
+- `moonstone/Divider`, `moonstone/Dialog`, and `moonstone/Heading` prop `casing`
+
+### Fixed
+
+- `moonstone/Dropdown` to support voice readout
+- `moonstone/Dropdown` remaining open after it becomes `disabled`
+- `ui/ViewManager` to correctly arrange views when initially rendering a non-zero index
+
 ## [3.0.0-alpha.5] - 2019-06-10
 
 ### Added

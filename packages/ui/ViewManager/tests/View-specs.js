@@ -219,4 +219,33 @@ describe('View', () => {
 		);
 	});
 
+	describe('arranger API', () => {
+		const arrangerStruct = {
+			from: expect.any(Number),
+			reverse: expect.any(Boolean),
+			to: expect.any(Number),
+			duration: expect.any(Number),
+			fill: expect.any(String),
+			node: expect.any(Object)
+		};
+
+		test(
+			'should pass the expected object to the arranger',
+			() => {
+				const arranger = {
+					enter: jest.fn(() => ({}))
+				};
+
+				const subject = mount(
+					<View duration={1000} arranger={arranger}>
+						<span />
+					</View>
+				);
+
+				subject.instance().componentWillEnter();
+				expect(arranger.enter).toBeCalledWith(arrangerStruct);
+			}
+		);
+	});
+
 });

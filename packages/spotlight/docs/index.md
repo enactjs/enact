@@ -1,19 +1,8 @@
 ---
 title: Spotlight
+toc: 2
 ---
 
-
-1. [What Is Spotlight?](#what-is-spotlight)
-2. [Modes](#modes)
-3. [Navigation](#navigation)
-4. [Selectors](#selectors)
-5. [SpotlightRootDecorator](#spotlightrootdecorator)
-6. [Spottable](#spottable)
-7. [Containers](#containers)
-8. [Events](#events)
-9. [Spotlight API](#spotlight-api)
-10. [HOC Parameters and Properties](#hoc-parameters-and-properties)
-11. [Examples](#examples)
 
 ## What Is Spotlight?
 
