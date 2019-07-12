@@ -9,7 +9,6 @@
  * @exports InputBase
  */
 
-import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {isRtlText} from '@enact/i18n/util';
@@ -27,19 +26,6 @@ import componentCss from './Input.module.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 import {calcAriaLabel, extractInputProps} from './util';
-
-const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
-	name: 'moonstone/Input.InputBase#small',
-	replacedBy: 'the `size` prop',
-	message: 'Use `size="small"` instead.',
-	since: '2.6.0',
-	until: '3.0.0'
-});
-
-function getSize (size, small) {
-	small = typeof small !== 'undefined' ? deprecateSmall(small) : 'large';
-	return size || small;
-}
 
 /**
  * A Moonstone styled input component.
@@ -206,15 +192,6 @@ const InputBase = kind({
 		size: PropTypes.string,
 
 		/**
-		 * Applies the `small` CSS class.
-		 *
-		 * @type {Boolean}
-		 * @deprecated replaced by prop `size='small'`
-		 * @public
-		 */
-		small: PropTypes.bool,
-
-		/**
 		 * The type of input.
 		 *
 		 * Accepted values correspond to the standard HTML5 input types.
@@ -263,7 +240,7 @@ const InputBase = kind({
 			const title = (value == null || value === '') ? placeholder : '';
 			return calcAriaLabel(title, type, value);
 		},
-		className: ({invalid, size, small, styler}) => styler.append({invalid}, getSize(size, small)),
+		className: ({invalid, size, styler}) => styler.append({invalid}, size),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
 		invalidTooltip: ({css, invalid, invalidMessage = $L('Please enter a valid value.'), rtl}) => {
 			if (invalid && invalidMessage) {
@@ -279,15 +256,13 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, size, small, type, value, ...rest}) => {
+	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, size, type, value, ...rest}) => {
 		const inputProps = extractInputProps(rest);
 		const voiceProps = extractVoiceProps(rest);
 		delete rest.dismissOnEnter;
 		delete rest.invalid;
 		delete rest.invalidMessage;
 		delete rest.rtl;
-
-		size = getSize(size, small);
 
 		return (
 			<div {...rest} disabled={disabled}>
