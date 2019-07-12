@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `ilib@^14.2.0` as a package peer dependency, which apps will need to include
+
 ### Fixed
 
 - `moonstone/Popup` to properly handle closing in mid-transition

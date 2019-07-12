@@ -1,1 +1,0 @@
-{"formats":{"default":"{streetAddress}\n{locality}\n{country}","nocountry":"{streetAddress}\n{locality}"},"startAt":"end","fields":[{"name":"locality","line":"startAtLast","pattern":"([A-zجثتبأرذدخحضصشسزفغعظطنملكقيوهـدُدِدَدٌدٍدًÀÁÂÄÇÈÉÊËÌÍÎÏÒÓÔÙÚÛàáâçèéêëìíîïòóôùúû]+)$","matchGroup":0}]}
