@@ -64,7 +64,7 @@ const offsetForBreadcrumbs = (node) => {
  */
 export const ActivityArranger = {
 	enter: (config) => {
-		const {node, reverse, to, from} = config;
+		const {node, reverse} = config;
 
 		return arrange(config, [
 			{transform: `${offsetForBreadcrumbs(node)} translateX(100%)`, offset: 0},
@@ -75,7 +75,7 @@ export const ActivityArranger = {
 		], animationOptions);
 	},
 	leave: (config) => {
-		const {node, reverse, to, from} = config;
+		const {node, reverse} = config;
 
 		return arrange(config, [
 			{transform: offsetForBreadcrumbs(node), offset: 0},
