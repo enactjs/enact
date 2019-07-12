@@ -1,6 +1,6 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import {getKeyFromSource, Media, MediaBase} from '../Media';
+import {getKeyFromSource, Media, PreloadDecorator} from '../Media';
 
 describe('Media', () => {
 	const filePath = 'path/file.mp4';
@@ -80,8 +80,9 @@ describe('Media', () => {
 		test(
 			'should have two video elements given a `source` and a `preloadSource`',
 			() => {
+				const Component = PreloadDecorator(Media);
 				const mediaBase = mount(
-					<MediaBase mediaComponent="video" source={filePath} preloadSource={`${filePath}2`} />
+					<Component mediaComponent="video" source={filePath} preloadSource={`${filePath}2`} />
 				);
 
 				const expected = 2;
@@ -94,9 +95,10 @@ describe('Media', () => {
 		test(
 			'should have two video elements given a `source` and a `preloadSource` with correct sources',
 			() => {
+				const Component = PreloadDecorator(Media);
 				const concatenatedPaths = `${filePath}${filePath}2`;
 				const mediaBase = mount(
-					<MediaBase mediaComponent="video" source={filePath} preloadSource={`${filePath}2`} />
+					<Component mediaComponent="video" source={filePath} preloadSource={`${filePath}2`} />
 				);
 				const sourceElements = mediaBase.find('source');
 				const outputPaths = sourceElements.reduce(
@@ -114,8 +116,9 @@ describe('Media', () => {
 		test(
 			'should have one video element given a `source` and a `preloadSource` with the same sources',
 			() => {
+				const Component = PreloadDecorator(Media);
 				const mediaBase = mount(
-					<MediaBase mediaComponent="video" source={filePath} preloadSource={`${filePath}`} />
+					<Component mediaComponent="video" source={filePath} preloadSource={`${filePath}`} />
 				);
 
 				const expected = 1;
