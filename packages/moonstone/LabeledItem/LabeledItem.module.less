@@ -7,7 +7,7 @@
 .labeledItem {
 	//// Locally scoped LESS variables ////
 	// Vertically shift the text element to position it closer to the header than the line-height naturally allows
-	@text-vertical-offset: 6px;
+	@text-vertical-offset: 9px;
 
 	flex-wrap: wrap;	// Allow the label to fall on the next line
 
@@ -44,7 +44,7 @@
 		text-transform: none;
 		// The following two margin values must cancel each other out, so there is zero layout impact when `text` is empty.
 		margin-top: -@text-vertical-offset;
-		margin-bottom: @text-vertical-offset;
+		padding-bottom: @text-vertical-offset;
 		// Force the label to fill the next line in the flexbox container
 		width: 100%;
 
@@ -63,6 +63,8 @@
 	.moon-custom-text({
 		.label {
 			font-size: @moon-expandable-value-font-size-large;
+			line-height: @moon-body-line-height-large;
+			padding-bottom: (@text-vertical-offset - 6px);
 		}
 	});
 
