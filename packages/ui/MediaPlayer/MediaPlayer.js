@@ -83,21 +83,30 @@ const MediaPlayerBase = class extends React.Component {
 
 	render () {
 		const {
+			audioComponent,
 			children,
 			className,
 			mediaComponent: MediaComponent,
 			style,
+			source,
 			src,
 			type,
+			videoComponent,
 			...mediaProps
 		} = this.props;
 
 		delete mediaProps.setApiProvider;
 
-		mediaProps.children = <source src={src} />;
+		let mediaComponent = null;
 
-		const mediaType = type.split('/')[0];
-		const mediaComponent = src && mediaType === 'audio' ? (<Audio {...mediaProps} />) : (<Video {...mediaProps} />);
+		if (src && type) {
+			mediaProps.children = <source src={src} />;
+
+			const mediaType = type.split('/')[0];
+			mediaComponent = src && mediaType === 'audio' ? (<Audio {...mediaProps} />) : (<Video {...mediaProps} />);
+		}
+
+		console.log('props', mediaProps)
 
 		return (
 			<div className={css.mediaPlayer + ' enact-fit' + (className ? ' ' + className : '')} style={style}>
@@ -110,7 +119,7 @@ const MediaPlayerBase = class extends React.Component {
 						) || React.isValidElement(MediaComponent) && (
 							React.cloneElement(MediaComponent, mediaProps)
 						)
-					) || mediaComponent
+					) || mediaComponent || videoComponent || audioComponent
 				}
 				<Overlay onClick={this.VideoClick}>
 					{children}
