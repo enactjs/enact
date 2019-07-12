@@ -119,9 +119,9 @@ const DropdownListBase = Skinnable(
 			/*
 			 * The width of DropdownList.
 			 *
-			 * @type {('large'|'medium'|'small')}
+			 * @type {('huge'|'large'|'medium'|'small'|'tiny')}
 			 */
-			width: PropTypes.oneOf(['large', 'medium', 'small'])
+			width: PropTypes.oneOf(['tiny', 'small', 'medium', 'large', 'huge'])
 		},
 
 		styles: {
@@ -303,11 +303,11 @@ const DropdownBase = kind({
 		/**
 		 * The width of Dropdown.
 		 *
-		 * @type {('large'|'medium'|'small')}
+		 * @type {('huge'|'large'|'medium'|'small'|'tiny')}
 		 * @default 'medium'
 		 * @public
 		 */
-		width: PropTypes.oneOf(['large', 'medium', 'small'])
+		width: PropTypes.oneOf(['tiny', 'small', 'medium', 'large', 'huge'])
 	},
 
 	defaultProps: {
