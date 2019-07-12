@@ -283,6 +283,26 @@ storiesOf('Scroller', module)
 		)
 	)
 	.add(
+		'With Focus outside Container',
+		() => (
+			<div>
+				<Button>focus to me</Button>
+				<Scroller focusableScrollbar style={{height: ri.unit(ri.scale(420), 'rem'), width: ri.unit(ri.scale(300), 'rem'), display:'inline-block'}}>
+					<Item>Item 1</Item>
+					<Item>Item 2</Item>
+					<Item>Item 3</Item>
+					<Item>Item 4</Item>
+					<Item>Item 5</Item>
+					<Item>Item 6</Item>
+					<Item>Item 7</Item>
+					<Item>Item 8</Item>
+					<Item>Item 9</Item>
+					<div>Test Test Test Test Test Test </div>
+				</Scroller>
+			</div>
+		)
+	)
+	.add(
 		'Test scrolling to boundary with small overflow',
 		() => {
 			const size = number('Spacer size', Scroller, {max: 300, min: 0, range: true}, 100);
