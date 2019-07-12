@@ -119,7 +119,7 @@ const DropdownListBase = Skinnable(
 			/*
 			 * The width of DropdownList.
 			 *
-			 * @type {('large'|'medium'|'small')}
+			 * @type {('huge'|'large'|'medium'|'small'|'tiny')}
 			 */
 			width: PropTypes.oneOf(['tiny', 'small', 'medium', 'large', 'huge'])
 		},
