@@ -20,6 +20,9 @@ import Video from '@enact/ui/Video';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Overlay from './Overlay';
+import css from './MediaPlayer.module.less';
+
 const MediaPlayerBase = class extends React.Component {
 	static displayName = 'MediaPlayerBase';
 
@@ -74,20 +77,30 @@ const MediaPlayerBase = class extends React.Component {
 	}
 
 	constructor (props) {
-		super(props)
+		super(props);
 
 	}
 
 	render () {
 		const {
+			children,
 			className,
-			style,
 			mediaComponent: MediaComponent,
+			style,
+			src,
+			type,
 			...mediaProps
 		} = this.props;
 
+		delete mediaProps.setApiProvider;
+
+		mediaProps.children = <source src={src} />;
+
+		const mediaType = type.split('/')[0];
+		const mediaComponent = src && mediaType === 'audio' ? (<Audio {...mediaProps} />) : (<Video {...mediaProps} />);
+
 		return (
-			<div className={className} style={style}>
+			<div className={css.mediaPlayer + ' enact-fit' + (className ? ' ' + className : '')} style={style}>
 				{/* Media Section */}
 				{
 					// Duplicating logic from <ComponentOverride /> until enzyme supports forwardRef
@@ -97,29 +110,15 @@ const MediaPlayerBase = class extends React.Component {
 						) || React.isValidElement(MediaComponent) && (
 							React.cloneElement(MediaComponent, mediaProps)
 						)
-					) || null
+					) || mediaComponent
 				}
+				<Overlay onClick={this.VideoClick}>
+					{children}
+				</Overlay>
 			</div>
 		);
 	}
 };
-
-// import MediaPlayer, {PlayButton, PauseButton, Slider} from '@enact/ui/MediaPlayer';
-// import Video from '@enact/ui/Video';
-// import {Row, Cell} from '@enact/ui/Layout';
-// ...
-
-// <MediaPlayer>
-//    <h1>{videoTitle}</h1>
-//    <Row>
-//       <Cell shrink><PlayButton /></Cell>
-//       <Cell shrink><PauseButton /></Cell>
-//       <Cell><Slider /></Cell>
-//    <Row>
-//    <Video>
-//       <source>{myVideoURL}</source>
-//    </Video>
-// </MediaPlayer>
 
 /**
  * A standard player. It behaves, responds to, and operates like a
