@@ -36,7 +36,7 @@
     "@babel/plugin-proposal-export-namespace-from": "^7",
     "@babel/plugin-syntax-dynamic-import": "^7",
     "@babel/plugin-transform-react-inline-elements": "^7",
-    "@enact/dev-utils": "^2.2.1",
+    "@enact/dev-utils": "^2.3.0",
     "@storybook/addon-actions": "^5.1.8",
     "@storybook/addon-info": "^5.1.8",
     "@storybook/addon-knobs": "^5.1.8",
