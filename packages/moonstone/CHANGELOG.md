@@ -6,8 +6,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
-- `small` prop in `moonstone/Input`, `moonstone/ToggleButton`, `moonstone/Button`, `moonstone/Icon`, `moonstone/IconButton`, and `moonstone/LabeledIcon`, replaced by `size="small"`
-- `moonstone/Divider` replaced by `moonstone/Heading`
+- `small` prop in `moonstone/Input`, `moonstone/ToggleButton`, `moonstone/Button`, `moonstone/Icon`, `moonstone/IconButton`, and `moonstone/LabeledIcon`, replaced by `size` prop, which accepts `"small"` or `"large"`
+- `moonstone/Divider`, replaced by `moonstone/Heading`
+
 ### Added
 
 - `ilib@^14.2.0` as a package peer dependency, which apps will need to include
