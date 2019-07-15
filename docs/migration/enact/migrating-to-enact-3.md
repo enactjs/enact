@@ -30,6 +30,19 @@ webOS TV developers can optionally use an alias for `ilib` that will provide the
 npm install ilib@ilib-webos-tv@^14.2.0-webostv.1 --save
 ```
 
+Import references using `@enact/i18n/ilib` must be updated to use `ilib`.
+
+#### Example
+##### 2.x
+```
+import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
+```
+##### 3.0
+```
+import DateFactory from 'ilib/lib/DateFactory';
+```
+**Note**: This does not apply to the `ilib` module provided by `@enact/i18n/ilib/lib/ilib'.
+
 ### spotlight
 `spotlight` will now focus disabled items.  You can use the `spotlightDisabled` prop on `spotlight/Spottable`
 and `spotlight/SpotlightContainerDecorator` instances if focus absolutely must be prevented.
