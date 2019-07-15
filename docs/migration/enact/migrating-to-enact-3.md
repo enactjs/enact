@@ -39,6 +39,9 @@ Enact 3.0 no longer supports the 2019 TV platform or earlier versions.
 
 ## moonstone
 
+### General
+Many of the Moonstone components are affected by the change from using the `small` boolean prop to the `size` text prop.  Most of them are `size="small"` by default and have larger versions when using `size="large"`.
+
 ### Style
 Various styling changes have been made to support new UI/UX designs for the webOS TV platform.  In
 addition, some LESS variables have been changed or removed.  If you were importing `moonstone/styles/*.less`
