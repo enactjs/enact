@@ -36,12 +36,13 @@ Import references using `@enact/i18n/ilib` must be updated to use `ilib`.
 ##### 2.x
 ```
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
+import ilib from '@enact/i18n/ilib/lib/ilib';
 ```
 ##### 3.0
 ```
 import DateFactory from 'ilib/lib/DateFactory';
+import ilib from '@enact/i18n/ilib';
 ```
-**Note**: This does not apply to the `ilib` module provided by `@enact/i18n/ilib/lib/ilib'.
 
 ### spotlight
 `spotlight` will now focus disabled items.  You can use the `spotlightDisabled` prop on `spotlight/Spottable`
