@@ -24,6 +24,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/LabeledItem` to not clip the bottom of descender glyphs in large text mode
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to focus an item properly after an update
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to scroll too far by page up/down keys
+- `moonstone/VirtualList.VirtualGridList` to not scroll unexpectedly when navigating to an adjacent item
 
 ## [3.0.0-alpha.7] - 2019-06-24
 
