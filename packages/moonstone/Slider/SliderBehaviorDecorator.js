@@ -5,6 +5,7 @@ import Pause from '@enact/spotlight/Pause';
 import PropTypes from 'prop-types';
 import {findDOMNode} from 'react-dom';
 import React from 'react';
+import Spotlight from '@enact/spotlight';
 
 import $L from '../internal/$L';
 
@@ -100,7 +101,7 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (platform.touch && this.state.dragging && !prevState.dragging) {
 				const thisNode = findDOMNode(this); // eslint-disable-line react/no-find-dom-node
 				const sliderNode = thisNode.getAttribute('role') === 'slider' ? thisNode : thisNode.querySelector('[role="slider"]');
-				sliderNode.focus();
+				Spotlight.focus(sliderNode);
 			}
 		}
 

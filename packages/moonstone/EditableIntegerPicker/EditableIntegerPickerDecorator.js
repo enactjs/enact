@@ -110,7 +110,7 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {	// eslint-disa
 		getInputNode = (node) => {
 			if (node) {
 				this.inputNode = node;
-				this.inputNode.focus();
+				Spotlight.focus(this.inputNode);
 			}
 		}
 

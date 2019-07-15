@@ -484,14 +484,16 @@ class Popup extends React.Component {
 
 	handleOnNavNoTarget = (ev) => {
 		const {onClose} = this.props;
-		if (onClose && this.pressUpKey) {
+		if (ev.target === getContainerNode(this.state.containerId)) {
 			// preventDefault to prevent spatial navigation next behavior.
 			// Do not search next target which is outside of this container.
 			ev.preventDefault();
 			// Stop propagation to prevent handle this event on spotlight.js
 			ev.stopPropagation();
 
-			onClose(ev);
+			if (onClose && this.pressUpKey) {
+				onClose(ev);
+			}
 		}
 	}
 
@@ -552,14 +554,10 @@ class Popup extends React.Component {
 		on('navnotarget', this.handleOnNavNoTarget);
 
 		if (!Spotlight.focus(containerId)) {
-			const current = Spotlight.getCurrent();
-
 			// In cases where the container contains no spottable controls or we're in pointer-mode, focus
 			// cannot inherently set the active container or blur the active control, so we must do that
 			// here.
-			if (current) {
-				current.blur();
-			}
+			Spotlight.blur();
 			Spotlight.setActiveContainer(containerId);
 		}
 	}

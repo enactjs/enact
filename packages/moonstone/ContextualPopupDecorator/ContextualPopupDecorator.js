@@ -478,6 +478,13 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		getContainerNode = (node) => {
 			this.containerNode = node;
+			if (this.containerNode) {
+				this.containerNode.parentElement.addEventListener('navnotarget', (ev) => {
+					forward('onClose', ev, this.props);
+					ev.preventDefault();
+					ev.stopPropagation();
+				});
+			}
 		}
 
 		getClientNode = (node) => {
@@ -547,8 +554,9 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		// handle key event from contextual popup and closes the popup
 		handleContainerBlur = (ev) => {
+			let nextItem = Spotlight.getNext() || Spotlight.getCurrent();
 			// if focus moves outside the popup's container, issue the `onClose` event
-			if (!this.containerNode.contains(Spotlight.getCurrent())) {
+			if (!this.containerNode.contains(nextItem)) {
 				forward('onClose', ev, this.props);
 			}
 		}

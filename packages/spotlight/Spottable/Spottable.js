@@ -203,6 +203,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidMount () {
 			// eslint-disable-next-line react/no-find-dom-node
 			this.node = ReactDOM.findDOMNode(this);
+
+			if (this.node) {
+				this.node.addEventListener('interest', this.handleFocus);
+				this.node.addEventListener('interestblur', this.handleInterestBlur);
+			}
 		}
 
 		componentDidUpdate (prevProps) {
@@ -233,6 +238,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
+			if (this.node) {
+				this.node.removeEventListener('interest', this.handleFocus);
+				this.node.removeEventListener('interestblur', this.handleBlur);
+			}
+
 			if (this.isFocused) {
 				forward('onSpotlightDisappear', null, this.props);
 			}
@@ -338,6 +348,26 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			forward('onClick')
 		)
 
+		handleInterestBlur = (ev) => {
+			if (this.shouldPreventBlur) return;
+			if (ev.currentTarget === ev.target) {
+				this.isFocused = false;
+				if (this.focusedWhenDisabled) {
+					this.focusedWhenDisabled = false;
+					// We only need to trigger a rerender if a focused item becomes disabled and still needs its focus.
+					// Once it blurs we need to rerender to remove the spottable class so it will not spot again.
+					// The reason we don't use state is for performance reasons to avoid updates.
+					this.forceUpdate();
+				}
+			}
+
+			if (Spotlight.isMuted(ev.target)) {
+				ev.stopPropagation();
+			} else {
+				forward('onInterestBlur', ev, this.props);
+			}
+		}
+
 		handleBlur = (ev) => {
 			if (this.shouldPreventBlur) return;
 			if (ev.currentTarget === ev.target) {
@@ -356,6 +386,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			} else {
 				forward('onBlur', ev, this.props);
 			}
+			Spotlight.notifyBlur(ev.target);
 		}
 
 		handleFocus = (ev) => {
