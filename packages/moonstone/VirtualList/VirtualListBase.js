@@ -467,6 +467,7 @@ const VirtualListBaseFactory = (type) => {
 					const index = !isScrollButton ? getNumberValue(targetIndex) : -1;
 					const {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
 					const directions = {};
+					let isLeaving = false;
 
 					if (isPrimaryDirectionVertical) {
 						directions.left = isLeftMovement;
@@ -489,7 +490,7 @@ const VirtualListBaseFactory = (type) => {
 							const {dataSize, focusableScrollbar} = this.props;
 							const column = index % dimensionToExtent;
 							const row = (index - column) % dataSize / dimensionToExtent;
-							const isLeaving = directions.up && row === 0 ||
+							isLeaving = directions.up && row === 0 ||
 								directions.down && row === Math.floor((dataSize - 1) % dataSize / dimensionToExtent) ||
 								directions.left && column === 0 ||
 								directions.right && !focusableScrollbar && column === dimensionToExtent - 1;
@@ -516,6 +517,12 @@ const VirtualListBaseFactory = (type) => {
 					) {
 						ev.preventDefault();
 						ev.stopPropagation();
+					} else if (!repeat) {
+						isLeaving = true;
+					}
+
+					if (isLeaving) {
+						SpotlightAccelerator.reset();
 					}
 				}
 			} else if (isPageUp(keyCode) || isPageDown(keyCode)) {
