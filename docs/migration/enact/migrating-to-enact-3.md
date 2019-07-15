@@ -41,7 +41,7 @@ import ilib from '@enact/i18n/ilib/lib/ilib';
 ##### 3.0
 ```
 import DateFactory from 'ilib/lib/DateFactory';
-import ilib from '@enact/i18n/ilib';
+import ilib from 'ilib/i18n/ilib';
 ```
 
 ### spotlight
