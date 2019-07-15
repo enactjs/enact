@@ -10,7 +10,6 @@
  * @exports MediaControls
  */
 
-import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import Audio from '@enact/ui/Audio';
 import Slottable from '@enact/ui/Slottable';
@@ -22,15 +21,16 @@ import React from 'react';
 
 import Overlay from './Overlay';
 import css from './MediaPlayer.module.less';
+import {isRenderable} from '@enact/core/util/util';
 
 const MediaPlayerBase = class extends React.Component {
 	static displayName = 'MediaPlayerBase';
 
 	static propTypes = /** @lends ui/MediaPlayer.MediaPlayerBase.prototype */ {
 		/**
-		 * Video component to use.
+		 * Media component to use.
 		 *
-		 * The default renders an `HTMLVideoElement`. Custom media components must have a similar
+		 * Common components to use are `<Audio>` and `<M>`. Custom media components must have a similar
 		 * API structure, exposing the following APIs:
 		 *
 		 * Properties:
@@ -64,16 +64,25 @@ const MediaPlayerBase = class extends React.Component {
 		mediaComponent: EnactPropTypes.componentOverride,
 
 		/**
-		 * The media source.
+		 * The address of the media source. The `type` prop or `mediaComponent` is required to load `src`.
 		 *
-		 * Any children `<source>` tag elements of [MediaPlayer]{@link ui/MediaPlayer} will
-		 * be sent directly to the `mediaComponent` as media sources.
+		 * The value of this attribute is ignored when the [Audio]{@link ui/Audio}, [Media]{@link ui/Media}, or [Video]{@link ui/Video} element is placed inside of [MediaPlayer]{@link ui/MediaPlayer}
 		 *
-		 * @type {Node}
-		 * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
+		 * @type {String}
 		 * @public
 		 */
-		source: PropTypes.node
+		src: PropTypes.string,
+
+		/**
+		 * The type of the media source.
+		 *
+		 * The MIME-type of the resource, optionally with a codecs parameter. See RFC 4281 for information about how to specify codecs.
+		 *
+		 * @type {String}
+		 * @see https://tools.ietf.org/html/rfc4281
+		 * @public
+		 */
+		type: PropTypes.string
 	}
 
 	constructor (props) {
@@ -83,45 +92,53 @@ const MediaPlayerBase = class extends React.Component {
 
 	render () {
 		const {
-			audioComponent,
 			children,
 			className,
 			mediaComponent: MediaComponent,
 			style,
-			source,
 			src,
 			type,
-			videoComponent,
 			...mediaProps
 		} = this.props;
 
-		delete mediaProps.setApiProvider;
-
 		let mediaComponent = null;
 
-		if (src && type) {
-			mediaProps.children = <source src={src} />;
+		if (src) {
+			// If `src` and `mediaComponent` wihtout a `<source>` are provided, pass `<source src={src} />` to `mediaComponent`
+			// If `src` and `mediaComponent` with a `<source>` are provided, the `mediaSource` takes precedence:
+			// <MediaPlayer src={playerSource}>
+			//  <Media autoPlay muted>
+			//   <source src={mediaSource} type="Media/mp4" />
+			//  </Media>
+			// </MediaPlayer>
+			if (!MediaComponent.props.children) {
+				mediaProps.children = <source src={src} />;
+			}
 
-			const mediaType = type.split('/')[0];
-			mediaComponent = src && mediaType === 'audio' ? (<Audio {...mediaProps} />) : (<Video {...mediaProps} />);
+			if (type && !MediaComponent) {
+				const mediaType = type.split('/')[0];
+				if (mediaType === 'audio') {
+					mediaComponent = <Audio {...mediaProps} />;
+				} else if (mediaType === 'video') {
+					mediaComponent = <Video {...mediaProps} />;
+				}
+			}
 		}
 
-		console.log('props', mediaProps)
-
 		return (
-			<div className={css.mediaPlayer + ' enact-fit' + (className ? ' ' + className : '')} style={style}>
+			<div className={`${css.mediaPlayer} enact-fit ${(className ? className : '')}`} style={style}>
 				{/* Media Section */}
 				{
 					// Duplicating logic from <ComponentOverride /> until enzyme supports forwardRef
 					MediaComponent && (
-						(typeof MediaComponent === 'function' || typeof MediaComponent === 'string') && (
+						isRenderable(MediaComponent) && (
 							<MediaComponent {...mediaProps} />
 						) || React.isValidElement(MediaComponent) && (
 							React.cloneElement(MediaComponent, mediaProps)
 						)
-					) || mediaComponent || videoComponent || audioComponent
+					) || mediaComponent
 				}
-				<Overlay onClick={this.VideoClick}>
+				<Overlay>
 					{children}
 				</Overlay>
 			</div>
@@ -131,12 +148,11 @@ const MediaPlayerBase = class extends React.Component {
 
 /**
  * A standard player. It behaves, responds to, and operates like a
- * `<audio>` or `<video>` tag in its support for `<source>`.  It also accepts custom tags such as `<MediaControls>`
- * for handling media playback controls and adding more controls.
+ * `<audio>` or `<video>` tag in its support for `<source>`.
  *
  * Example simple usage:
  * ```
- *	<MediaPlayer src="http://my.cat.sings/meow.mp3" type="audio/mp3" />
+ *	<MediaPlayer autoPlay src="http://my.cat.sings/meow.mp3" type="audio/mp3" />
  * ```
  * Example advanced usage:
  * ```
@@ -145,7 +161,7 @@ const MediaPlayerBase = class extends React.Component {
  *  import {Row, Cell} from '@enact/ui/Layout';
  *
  *	<MediaPlayer>
- *		<Video autPlay>
+ *		<Video autoPlay>
  *			<source src="http://my.cat.videos/boots/video-to-play-first.mp4" type="video/mp4" />
  *			<preloadSource src="http://my.cat.videos/boots/video-to-preload.mp4" type="video/mp4" />
  *		</Video>
@@ -192,26 +208,9 @@ const MediaPlayerBase = class extends React.Component {
  * @ui
  * @public
  */
-const MediaPlayer = ApiDecorator(
-	{api: [
-		'areControlsVisible',
-		'fastForward',
-		'getMediaState',
-		'getVideoNode',
-		'hideControls',
-		'jump',
-		'pause',
-		'play',
-		'rewind',
-		'seek',
-		'showControls',
-		'showFeedback',
-		'toggleControls'
-	]},
-	Slottable(
-		{slots: ['PlayButton', 'ProgressBarControls', 'source', 'thumbnailComponent', 'videoComponent']},
-			MediaPlayerBase
-	)
+const MediaPlayer = Slottable(
+	{slots: ['mediaComponent']},
+		MediaPlayerBase
 );
 
 export default MediaPlayer;

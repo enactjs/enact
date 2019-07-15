@@ -28,7 +28,7 @@ import {MediaBase, MediaDecorator} from '@enact/ui/Media';
  * @private
  */
 const Video = MediaDecorator(MediaBase);
-Video.defaultSlot = 'videoComponent';
+Video.defaultSlot = 'mediaComponent';
 
 export default Video;
 export {

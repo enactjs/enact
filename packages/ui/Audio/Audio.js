@@ -29,7 +29,7 @@ import React from 'react';
  * @private
  */
 const Audio = MediaDecorator((props) => <MediaBase {...props} mediaComponent="audio" />);
-Audio.defaultSlot = 'audioComponent';
+Audio.defaultSlot = 'mediaComponent';
 
 export default Audio;
 export {
