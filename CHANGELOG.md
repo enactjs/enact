@@ -2,6 +2,35 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.0.0-beta.1] - 2019-07-15
+
+### Removed
+
+- `core/kind` config property `contextTypes`
+- `i18n/ilib` embedded copy of iLib in favour of the NPM package `ilib`
+- `small` prop in `moonstone/Input`, `moonstone/ToggleButton`, `moonstone/Button`, `moonstone/Icon`, `moonstone/IconButton`, and `moonstone/LabeledIcon`, replaced by `size` prop, which accepts `"small"` or `"large"`
+- `moonstone/Divider`, replaced by `moonstone/Heading`
+
+### Added
+
+- `ilib@^14.2.0` package as a peer dependency for `@enact/i18n` and `@enact/moonstone`, which apps will need to include
+- `moonstone/Dropdown` widths `tiny`, and `huge`
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` support for resizing a window
+
+### Fixed
+
+- `core/platform` logic for webOS detection
+- `moonstone/Popup` to properly handle closing in mid-transition
+- `moonstone/Scroller` to properly move focus out of the container
+- `moonstone/VirtualList` to allow keydown events to bubble up when not handled by the component
+- `moonstone/IncrementSlider` to support aria-label when disabled
+- Fonts to use the updated names of global fonts available in the system
+- `moonstone/LabeledItem` to not clip the bottom of descender glyphs in large text mode
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to focus an item properly after an update
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to scroll too far by page up/down keys
+- `spotlight/SpotlightContainerDecorator` to correctly forward `onFocusCapture` and `onBlurCapture` events
+- `ui/Icon` to support arbitrary icon name strings, like in material icons
+
 ## [3.0.0-alpha.7] - 2019-06-24
 
 ### Changed
