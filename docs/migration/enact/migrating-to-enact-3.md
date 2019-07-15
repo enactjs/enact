@@ -10,6 +10,26 @@ this guide.
 
 ## General Changes
 
+### cli
+`cli` must be upgraded to version `2.4.1`.
+
+### i18n
+Apps that use `@enact/i18n` must install `ilib` as a dependency.  This includes apps that do not require `@enact/i18n` directly, but use themes or modules that do (list may or may not be complete, check module requirements):
+* `@enact/analytics`
+* `@enact/i18n` (of course!)
+* `@enact/moonstone`
+
+#### Example
+```
+npm install ilib@^14.2.0 --save
+```
+webOS TV developers can optionally use an alias for `ilib` that will provide the webOS-specific locale data for local development.  It is not required as the webOS build tools will automatically provide the correct locale data at build time.  Alias support is in `npm` version `6.9.0` or greater.
+
+#### Example
+```
+npm install ilib@ilib-webos-tv@^14.2.0-webostv.1 --save
+```
+
 ### spotlight
 `spotlight` will now focus disabled items.  You can use the `spotlightDisabled` prop on `spotlight/Spottable`
 and `spotlight/SpotlightContainerDecorator` instances if focus absolutely must be prevented.
