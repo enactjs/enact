@@ -706,12 +706,12 @@ class ScrollableBaseNative extends Component {
 	scrollAndFocusScrollbarButton = (direction) => {
 		if (this.uiRef.current) {
 			const
+				{focusableScrollbar, direction: directionProp} = this.props,
 				uiRefCurrent = this.uiRef.current,
 				isRtl = uiRefCurrent.state.rtl,
 				isPreviousScrollButton = direction === 'up' || (isRtl ? direction === 'right' : direction === 'left'),
 				isHorizontalDirection = direction === 'left' || direction === 'right',
 				isVerticalDirection = direction === 'up' || direction === 'down',
-				{focusableScrollbar, direction: directionProp} = this.props,
 				canScrollHorizontally = isHorizontalDirection && (directionProp === 'horizontal' || directionProp === 'both'),
 				canScrollingVertically = isVerticalDirection && (directionProp === 'vertical' || directionProp === 'both');
 
@@ -723,9 +723,7 @@ class ScrollableBaseNative extends Component {
 
 				if (focusableScrollbar) {
 					this.focusOnScrollButton(
-						canScrollingVertically ?
-							uiRefCurrent.verticalScrollbarRef :
-							uiRefCurrent.horizontalScrollbarRef,
+						canScrollingVertically ? uiRefCurrent.verticalScrollbarRef : uiRefCurrent.horizontalScrollbarRef,
 						isPreviousScrollButton
 					);
 				}
