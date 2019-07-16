@@ -18,15 +18,6 @@ import Media from '../Media';
  * </Video>
  * ```
  *
- * Preload Video Source
- *
- * ```
- * <Video>
- *   <source src="path/to/source.mp4" />
- *   <source src="path/to/preload-source.mp4" slot="preloadSource" />
- * </Video>
- * ```
- *
  * @class Video
  * @memberof ui/Video
  * @extends ui/Media.Media

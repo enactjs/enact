@@ -18,15 +18,6 @@ import Media from '../Media';
  * </Audio>
  * ```
  *
- * Preload Audio Source
- *
- * ```
- * <Audio>
- *   <source src="path/to/source.mp3" />
- *   <source src="path/to/preload-source.mp3" slot="preloadSource" />
- * </Audio>
- * ```
- *
  * @class Audio
  * @memberof ui/Audio
  * @extends ui/Media.Media

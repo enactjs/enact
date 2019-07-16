@@ -12,41 +12,6 @@ import {getKeyFromSource} from './utils';
 
 import css from './Media.module.less';
 
-/**
- * Adds support for preloading a media source for `Video` or `Audio`.
- *
- * The wrapped component must support the following API:
- *
- * Properties:
- * * `currentTime` {Number} - Playback index of the media in seconds
- * * `duration` {Number} - Media's entire duration in seconds
- * * `error` {Boolean} - `true` if media playback has errored.
- * * `loading` {Boolean} - `true` if media playback is loading.
- * * `paused` {Boolean} - Playing vs paused state. `true` means the media is paused
- * * `playbackRate` {Number} - Current playback rate, as a number
- * * `proportionLoaded` {Number} - A value between `0` and `1` representing the proportion of the
- *   media that has loaded
- * * `proportionPlayed` {Number} - A value between `0` and `1` representing the proportion of the
- *   media that has already been shown
- *
- * Events:
- * * `onLoadStart` - Called when the media starts to load
- * * `onPlay` - Sent when playback of the media starts after having been paused
- * * `onUpdate` - Sent when any of the properties were updated
- *
- * Methods:
- * * `play()` - play media
- * * `pause()` - pause media
- * * `load()` - load media
- *
- * The [`source`]{@link ui/Media.PreloadSupport.source} property is passed to the media component as
- * a `children`.
- *
- * @class PreloadSupport
- * @memberof ui/Media
- * @ui
- * @private
- */
 const PreloadSupport = hoc((config, Wrapped) => class extends React.Component {
 	static displayName = 'PreloadSupport'
 
@@ -232,6 +197,48 @@ const PreloadSupport = hoc((config, Wrapped) => class extends React.Component {
 	}
 });
 
+/**
+ * Adds support for preloading a media source for `Video` or `Audio`.
+ *
+ * The wrapped component must support the following API:
+ *
+ * Properties:
+ * * `currentTime` {Number} - Playback index of the media in seconds
+ * * `duration` {Number} - Media's entire duration in seconds
+ * * `error` {Boolean} - `true` if media playback has errored.
+ * * `loading` {Boolean} - `true` if media playback is loading.
+ * * `paused` {Boolean} - Playing vs paused state. `true` means the media is paused
+ * * `playbackRate` {Number} - Current playback rate, as a number
+ * * `proportionLoaded` {Number} - A value between `0` and `1` representing the proportion of the
+ *   media that has loaded
+ * * `proportionPlayed` {Number} - A value between `0` and `1` representing the proportion of the
+ *   media that has already been shown
+ *
+ * Events:
+ * * `onLoadStart` - Called when the media starts to load
+ * * `onPlay` - Sent when playback of the media starts after having been paused
+ * * `onUpdate` - Sent when any of the properties were updated
+ *
+ * Methods:
+ * * `play()` - play media
+ * * `pause()` - pause media
+ * * `load()` - load media
+ *
+ * Example:
+ * ```
+ * const MyVideo = PreloadDecorator(Video);
+ *
+ * <MyVideo>
+ *   <source src="path/to/source.mp4" />
+ *   <source src="path/to/preload-source.mp4" slot="preloadSource" />
+ * </MyVideo>
+ * ```
+ *
+ * @class PreloadDecorator
+ * @memberof ui/Media
+ * @ui
+ * @private
+ */
 const PreloadDecorator = compose(
 	ForwardRef({prop: 'setMedia'}),
 	Slottable({slots: ['source', 'preloadSource']}),
