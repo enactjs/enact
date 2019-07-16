@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scroller` not to jump to the top when right key is pressed in vertical scroller
+- `moonstone/Scroller` not to jump to the top when right key is pressed in the right most item of vertical scroller
 
 ## [3.0.0-beta.1] - 2019-07-15
 
