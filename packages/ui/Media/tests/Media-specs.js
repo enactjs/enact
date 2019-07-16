@@ -77,6 +77,27 @@ describe('Media', () => {
 		}
 	);
 
+	test(
+		'should favor source over children',
+		() => {
+			const media = mount(
+				<Media
+					mediaComponent="video"
+					source={
+						<source src={filePath} type="video/mp4" />
+					}
+				>
+					<source src={filePath} type="video/3gpp" />
+				</Media>
+			);
+
+			const expected = 'video/mp4';
+			const actual = media.find('source').prop('type');
+
+			expect(actual).toBe(expected);
+		}
+	);
+
 	describe('getKeyFromSource', () => {
 
 		test(
