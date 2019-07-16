@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
@@ -181,6 +182,7 @@ const PreloadSupport = hoc((config, Wrapped) => class extends React.Component {
 
 	render () {
 		const {
+			className,
 			preloadSource,
 			source,
 			...rest
@@ -201,7 +203,7 @@ const PreloadSupport = hoc((config, Wrapped) => class extends React.Component {
 				{sourceKey ? (
 					<Wrapped
 						{...rest}
-						className={css.media}
+						className={classNames(className, css.media)}
 						controls={false}
 						key={sourceKey}
 						preload="none"
