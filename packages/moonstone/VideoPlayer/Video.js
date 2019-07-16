@@ -1,4 +1,5 @@
-import Video from '@enact/ui/Video';
+import {PreloadDecorator} from '@enact/ui/Media';
+import UiVideo from '@enact/ui/Video';
 
 /**
  * Provides support for more advanced video configurations for `VideoPlayer`.
@@ -30,6 +31,9 @@ import Video from '@enact/ui/Video';
  * @ui
  * @public
  */
+const Video = PreloadDecorator(UiVideo);
+Video.defaultSlot = 'videoComponent';
+
 export default Video;
 export {
 	Video

@@ -26,10 +26,8 @@ import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ComponentOverride from '@enact/ui/ComponentOverride';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import {FloatingLayerContext} from '@enact/ui/FloatingLayer/FloatingLayerDecorator';
-import {PreloadDecorator} from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
-import UiVideo from '@enact/ui/Video';
 import DurationFmt from 'ilib/lib/DurationFmt';
 import equals from 'ramda/src/equals';
 import PropTypes from 'prop-types';
@@ -49,6 +47,7 @@ import MediaSlider from './MediaSlider';
 import FeedbackContent from './FeedbackContent';
 import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
+import Video from './Video';
 
 import css from './VideoPlayer.module.less';
 
@@ -68,9 +67,6 @@ const ControlsContainer = SpotlightContainerDecorator(
 	},
 	'div'
 );
-
-const Video = PreloadDecorator(UiVideo);
-Video.defaultSlot = 'videoComponent';
 
 const memoGetDurFmt = memoize((/* locale */) => new DurationFmt({
 	length: 'medium', style: 'clock', useNative: false
