@@ -768,7 +768,7 @@ const VirtualListBaseFactory = (type) => {
 		// For NewVirtualList
 		adjustVariableGridPosition () {
 			const
-				{dataSize, overhang, spacing, variableGridSizes} = this.props,
+				{dataSize, direction, overhang, spacing, variableGridSizes} = this.props,
 				{firstIndex, numOfItems} = this.state,
 				{itemContainerRef, maxFirstIndex, variableGridPositions} = this,
 				lastIndex = firstIndex + numOfItems - 1,
@@ -789,7 +789,11 @@ const VirtualListBaseFactory = (type) => {
 					}
 
 					if (childNode && variableGridPositions[index]) {
-						childNode.style.transform = `translate3d(0, ${variableGridPositions[index].position}px, 0)`;
+						if (direction === 'vertical') {
+							childNode.style.transform = `translate3d(0, ${variableGridPositions[index].position}px, 0)`;
+						} else {
+							childNode.style.transform = `translate3d(${variableGridPositions[index].position}px, 0, 0)`;
+						}
 					}
 				}
 

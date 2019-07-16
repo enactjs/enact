@@ -140,15 +140,10 @@ const NewVirtualList = kind({
 		direction: PropTypes.any
 	},
 
-	render: ({cbScrollTo, direction, itemSize, ...rest}) => {
+	render: ({cbScrollTo, itemSize, ...rest}) => {
 		warning(
 			!cbScrollTo,
 			'NewVirtualListNative does not support `cbScrollTo` prop'
-		);
-
-		warning(
-			!direction,
-			'NewVirtualListNative does not support `orientaion` prop'
 		);
 
 		return <ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="NewVirtualList" variableGridSizes={itemSize.size} />;
@@ -283,15 +278,10 @@ const NewVirtualListNative = kind({
 		direction: PropTypes.any
 	},
 
-	render: ({cbScrollTo, direction, itemSize, ...rest}) => {
+	render: ({cbScrollTo, itemSize, ...rest}) => {
 		warning(
 			!cbScrollTo,
 			'NewVirtualListNative does not support `cbScrollTo` prop'
-		);
-
-		warning(
-			!direction,
-			'NewVirtualListNative does not support `orientaion` prop'
 		);
 
 		return <ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="NewVirtualList" variableGridSizes={itemSize.size} />;
