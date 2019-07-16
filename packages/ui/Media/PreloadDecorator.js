@@ -15,7 +15,7 @@ import css from './Media.module.less';
 /**
  * Adds support for preloading a media source for `Video` or `Audio`.
  *
- * @class MediaBase
+ * @class PreloadSupport
  * @memberof ui/Media
  * @ui
  * @private
@@ -23,7 +23,7 @@ import css from './Media.module.less';
 const PreloadSupport = hoc((config, Wrapped) => class extends React.Component {
 	static displayName = 'PreloadSupport'
 
-	static propTypes = /** @lends ui/MediaBase.prototype */ {
+	static propTypes = /** @lends ui/PreloadSupport.prototype */ {
 		/**
 		 * Media plays automatically.
 		 *
@@ -61,7 +61,7 @@ const PreloadSupport = hoc((config, Wrapped) => class extends React.Component {
 		 * * `pause()` - pause video
 		 * * `load()` - load video
 		 *
-		 * The [`source`]{@link ui/Video.MediaBase.source} property is passed to
+		 * The [`source`]{@link ui/Media.PreloadSupport.source} property is passed to
 		 * the video component as a child node.
 		 *
 		 * @type {String|Component|Element}
