@@ -697,34 +697,37 @@ class ScrollableBaseNative extends Component {
 		this.uiRef.current.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, this.props.overscrollEffectOn.scrollbarButton);
 	}
 
-	scrollAndFocusScrollbarButton = (direction) => {
-		const
-			isRtl = this.uiRef.current.state.rtl,
-			isPreviousScrollButton = direction === 'up' || (isRtl ? direction === 'right' : direction === 'left'),
-			isHorizontalDirection = direction === 'left' || direction === 'right',
-			isVerticalDirection = direction === 'up' || direction === 'down',
-			canScrollHorizontally = isHorizontalDirection && (directionProp === 'horizontal' || directionProp === 'both'),
-			canScrollingVertically = isVerticalDirection && (directionProp === 'vertical' || directionProp === 'both');
-
-		const {focusableScrollbar, direction: directionProp} = this.props;
-
-		if (canScrollHorizontally || canScrollingVertically) {
-			this.onScrollbarButtonClick({
-				isPreviousScrollButton,
-				isVerticalScrollBar: canScrollingVertically
-			});
+	focusOnScrollButton (scrollbarRef, isPreviousScrollButton) {
+		if (scrollbarRef.current) {
+			scrollbarRef.current.focusOnButton(isPreviousScrollButton);
 		}
+	}
 
-		if (focusableScrollbar) {
-			if (isVerticalDirection && (directionProp === 'vertical' || directionProp === 'both')) {
-				if (this.uiRef.current && this.uiRef.current.verticalScrollbarRef.current) {
-					const scrollbar = this.uiRef.current.verticalScrollbarRef;
-					scrollbar.current.focusOnButton(isPreviousScrollButton);
-				}
-			} else if (isHorizontalDirection && (directionProp === 'horizontal' || directionProp === 'both')) {
-				if (this.uiRef.current && this.uiRef.current.horizontalScrollbarRef.current) {
-					const scrollbar = this.uiRef.current.horizontalScrollbarRef;
-					scrollbar.current.focusOnButton(isPreviousScrollButton);
+	scrollAndFocusScrollbarButton = (direction) => {
+		if (this.uiRef.current) {
+			const
+				uiRefCurrent = this.uiRef.current,
+				isRtl = uiRefCurrent.state.rtl,
+				isPreviousScrollButton = direction === 'up' || (isRtl ? direction === 'right' : direction === 'left'),
+				isHorizontalDirection = direction === 'left' || direction === 'right',
+				isVerticalDirection = direction === 'up' || direction === 'down',
+				{focusableScrollbar, direction: directionProp} = this.props,
+				canScrollHorizontally = isHorizontalDirection && (directionProp === 'horizontal' || directionProp === 'both'),
+				canScrollingVertically = isVerticalDirection && (directionProp === 'vertical' || directionProp === 'both');
+
+			if (canScrollHorizontally || canScrollingVertically) {
+				this.onScrollbarButtonClick({
+					isPreviousScrollButton,
+					isVerticalScrollBar: canScrollingVertically
+				});
+
+				if (focusableScrollbar) {
+					this.focusOnScrollButton(
+						canScrollingVertically ?
+							uiRefCurrent.verticalScrollbarRef :
+							uiRefCurrent.horizontalScrollbarRef,
+						isPreviousScrollButton
+					);
 				}
 			}
 		}
