@@ -96,13 +96,15 @@ describe('Media', () => {
 		test(
 			'should have two video elements given a `source` and a `preloadSource`',
 			() => {
-				const Component = PreloadDecorator(Media);
+				// eslint-disable-next-line no-unused-vars
+				const Video = React.forwardRef((props, ref) => null);
+				const Component = PreloadDecorator(Video);
 				const mediaBase = mount(
-					<Component mediaComponent="video" source={filePath} preloadSource={`${filePath}2`} />
+					<Component source={filePath} preloadSource={`${filePath}2`} />
 				);
 
 				const expected = 2;
-				const actual = mediaBase.find('video').length;
+				const actual = mediaBase.find(Video).length;
 
 				expect(actual).toBe(expected);
 			}
@@ -111,10 +113,12 @@ describe('Media', () => {
 		test(
 			'should have two video elements given a `source` and a `preloadSource` with correct sources',
 			() => {
-				const Component = PreloadDecorator(Media);
+				// eslint-disable-next-line no-unused-vars
+				const Video = React.forwardRef(({source}, ref) => source);
+				const Component = PreloadDecorator(Video);
 				const concatenatedPaths = `${filePath}${filePath}2`;
 				const mediaBase = mount(
-					<Component mediaComponent="video" source={filePath} preloadSource={`${filePath}2`} />
+					<Component source={filePath} preloadSource={`${filePath}2`} />
 				);
 				const sourceElements = mediaBase.find('source');
 				const outputPaths = sourceElements.reduce(
