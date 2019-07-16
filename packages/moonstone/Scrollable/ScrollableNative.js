@@ -332,6 +332,16 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+
+	isScrollButtonFocused () {
+		const {horizontalScrollbarRef: h, verticalScrollbarRef: v} = this.uiRef.current;
+
+		return (
+			h.current && h.current.isOneOfScrollButtonsFocused() ||
+			v.current && v.current.isOneOfScrollButtonsFocused()
+		);
+	}
+
 	onFlick = ({direction}) => {
 		const bounds = this.uiRef.current.getScrollBounds();
 		const focusedItem = Spotlight.getCurrent();
@@ -357,13 +367,9 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onTouchStart = () => {
-		const
-			focusedItem = Spotlight.getCurrent(),
-			{horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current,
-			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current && horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
-			isVerticalScrollButtonFocused = verticalScrollbarRef.current && verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
+		const focusedItem = Spotlight.getCurrent();
 
-		if (!Spotlight.isPaused() && focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
+		if (!Spotlight.isPaused() && focusedItem && !this.isScrollButtonFocused()) {
 			focusedItem.blur();
 		}
 	}
@@ -639,7 +645,7 @@ class ScrollableBaseNative extends Component {
 
 		forward('onKeyDown', ev, this.props);
 
-		if (isPageUp(keyCode) || isPageDown(keyCode)) {
+		if ((isPageUp(keyCode) || isPageDown(keyCode)) && !this.isScrollButtonFocused()) {
 			ev.stopPropagation();
 			ev.preventDefault();
 		}
