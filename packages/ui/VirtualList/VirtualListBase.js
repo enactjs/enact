@@ -302,6 +302,10 @@ const VirtualListBaseFactory = (type) => {
 
 		// Calculate metrics for VirtualList after the 1st render to know client W/H.
 		componentDidMount () {
+			if (this.props.type === 'NewVirtualList') {
+				this.adjustVariableGridPosition();
+			}
+
 			if (!this.props.clientSize) {
 				this.calculateMetrics(this.props);
 				// eslint-disable-next-line react/no-did-mount-set-state
@@ -310,9 +314,7 @@ const VirtualListBaseFactory = (type) => {
 				this.emitUpdateItems();
 			}
 
-			if (this.props.type === 'NewVirtualList') {
-				this.adjustVariableGridPosition();
-			} else {
+			if (this.props.type !== 'NewVirtualList') {
 				this.setContainerSize();
 			}
 		}
@@ -930,9 +932,13 @@ const VirtualListBaseFactory = (type) => {
 		getVirtualScrollDimension = () => {
 			const
 				{dimensionToExtent, primary, curDataSize} = this,
-				{spacing} = this.props;
+				{dataSize, spacing} = this.props;
 
-			return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
+			if (this.props.type === 'NewVirtualList' && this.variableGridPositions[dataSize - 1]) {
+				return this.variableGridPositions[dataSize - 1];
+			} else {
+				return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
+			}
 		}
 
 		syncClientSize = () => {
