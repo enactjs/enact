@@ -617,7 +617,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * the video component as a child node.
 		 *
 		 * @type {Component|Element}
-		 * @default {@link ui/Media.Media}
+		 * @default {@link ui/Video.Video}
 		 * @public
 		 */
 		videoComponent: EnactPropTypes.componentOverride
