@@ -2,7 +2,7 @@
  * Moonstone styled button components and behaviors.
  *
  * @example
- * <Button size="small">Hello Enact!</Button>
+ * <Button>Hello Enact!</Button>
  *
  * @module moonstone/Button
  * @exports Button

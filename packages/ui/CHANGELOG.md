@@ -3,10 +3,15 @@
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
 ## [unreleased]
+## [3.0.0-beta.1] - 2019-07-15
 
 ### Added
 
 - `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` support for resizing a window
+
+### Fixed
+
+- `ui/Icon` to support arbitrary icon name strings, like in material icons
 
 ## [3.0.0-alpha.7] - 2019-06-24
 
