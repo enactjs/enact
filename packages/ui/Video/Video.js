@@ -55,11 +55,11 @@ const VideoBase = kind({
 const VideoDecorator = compose(
 	// PreloadDecorator needs a ui/Media-compatible reference so we're forwarding on the ref to the
 	// underlying ui/Media component
-	ForwardRef({prop: 'setMedia'}),
+	ForwardRef({prop: 'setMedia'})
 );
 
 const Video = VideoDecorator(VideoBase);
-Video.defaultSlot = 'videoComponent';
+Video.defaultSlot = 'mediaComponent';
 
 export default Video;
 export {

@@ -266,7 +266,7 @@ class Media extends React.Component {
 	}
 
 	render () {
-		const {customMediaEventsMap, mediaComponent: Component, source, ...rest} = this.props;
+		const {children, customMediaEventsMap, mediaComponent: Component, source, ...rest} = this.props;
 
 		delete rest.mediaEventsMap;
 		delete rest.onUpdate;
@@ -282,7 +282,7 @@ class Media extends React.Component {
 				{...this.handledMediaEvents}
 				ref={this.mediaRef}
 			>
-				{source}
+				{children && children.type === 'source' ? children : source}
 			</Component>
 		);
 	}

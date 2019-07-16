@@ -44,6 +44,22 @@ describe('Media', () => {
 		}
 	);
 
+	test(
+		'should pass down the source element to mediaComponent',
+		() => {
+			const media = mount(
+				<Media mediaComponent="video">
+					<source src={filePath} />
+				</Media>
+			);
+
+			const expected = filePath;
+			const actual = media.find('source').prop('src');
+
+			expect(actual).toBe(expected);
+		}
+	);
+
 	describe('getKeyFromSource', () => {
 
 		test(
@@ -73,8 +89,8 @@ describe('Media', () => {
 		);
 	});
 
-	describe('MediaBase', () => {
-		// define `HTMLMediaElement.load` so that jsdom doesn't complain during the `MediaBase` steps
+	describe('PreloadDecorator', () => {
+		// define `HTMLMediaElement.load` so that jsdom doesn't throw an error for preloading tests
 		window.HTMLMediaElement.prototype.load = () => { /* do nothing */ };
 
 		test(
