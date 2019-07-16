@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/FormCheckboxItem` so it doesn't change size between normal and large text mode
+
 ## [3.0.0-beta.1] - 2019-07-15
 
 ### Removed
