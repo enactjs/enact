@@ -1,4 +1,4 @@
-import {MediaBase, MediaDecorator} from '@enact/ui/Media';
+import {MediaBase, MediaDecorator} from '../Media';
 
 /**
  * Provides support for more advanced video configurations for `Video`.

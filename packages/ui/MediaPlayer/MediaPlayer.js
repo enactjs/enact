@@ -10,10 +10,10 @@
 
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import Audio from '@enact/ui/Audio';
-import Slottable from '@enact/ui/Slottable';
-import Media from '@enact/ui/Media';
-import Video from '@enact/ui/Video';
+import Audio from '../Audio';
+import Slottable from '../Slottable';
+import Media from '../Media';
+import Video from '../Video';
 
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -157,24 +157,21 @@ const MediaPlayerBase = class extends React.Component {
 		let mediaComponent = null;
 
 		if (src) {
-			// If `src` and `mediaComponent` wihtout a `<source>` are provided, pass `<source src={src} />` to `mediaComponent`
+			// If `src` and `mediaComponent` without a `<source>` are provided, pass `<source src={src} />` to `mediaComponent`
 			// If `src` and `mediaComponent` with a `<source>` are provided, the `mediaSource` takes precedence:
 			// <MediaPlayer src={playerSource}>
 			//  <Media autoPlay muted>
 			//   <source src={mediaSource} type="Media/mp4" />
 			//  </Media>
 			// </MediaPlayer>
-			if (!MediaComponent.props.children) {
+			if (MediaComponent && MediaComponent.props && !MediaComponent.props.children) {
 				mediaProps.children = <source src={src} />;
 			}
 
 			if (type && !MediaComponent) {
 				const mediaType = type.split('/')[0];
-				if (mediaType === 'audio') {
-					mediaComponent = <Audio {...mediaProps} />;
-				} else if (mediaType === 'video') {
-					mediaComponent = <Video {...mediaProps} />;
-				}
+
+				mediaComponent = <Media {...mediaProps} mediaComponent={mediaType} />;
 			}
 		}
 
