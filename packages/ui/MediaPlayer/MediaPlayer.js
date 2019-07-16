@@ -71,9 +71,9 @@ const MediaPlayerBase = class extends React.Component {
 		setApiProvider: PropTypes.func,
 
 		/**
-		 * The address of the media source. [`type`]{@link ui/MediaPlayer.MediaPlayerBase.type} prop or `mediaComponent` is required to load `src`.
+		 * The address of the media source. [`type`]{@link ui/MediaPlayer.MediaPlayerBase.type} prop or [`mediaComponent`]{@link ui/MediaPlayer.MediaPlayerBase.mediaComponent} is required to load `src`.
 		 *
-		 * The value of this attribute is ignored when there is `src` prop is set in the `mediaComponent`.
+		 * The value of this attribute is ignored when there is `src` prop is set in the [`mediaComponent`]{@link ui/MediaPlayer.MediaPlayerBase.mediaComponent}.
 		 *
 		 * @type {String}
 		 * @public
@@ -199,8 +199,7 @@ const MediaPlayerBase = class extends React.Component {
 };
 
 /**
- * A standard player. It behaves, responds to, and operates like a
- * `<audio>` or `<video>` tag in its support for `<source>`.
+ * A standard player.
  *
  * Example simple usage:
  * ```
@@ -208,23 +207,21 @@ const MediaPlayerBase = class extends React.Component {
  * ```
  * Example advanced usage:
  * ```
- *  import MediaPlayer, {PlayButton, PauseButton, Slider} from '@enact/ui/MediaPlayer';
- *  import Video from '@enact/ui/Video';
+ *  import {MediaPlayer, Video} from '@enact/ui/MediaPlayer';
  *  import {Row, Cell} from '@enact/ui/Layout';
  *
  *	<MediaPlayer>
  *		<Video autoPlay>
  *			<source src="http://my.cat.videos/boots/video-to-play-first.mp4" type="video/mp4" />
- *			<preloadSource src="http://my.cat.videos/boots/video-to-preload.mp4" type="video/mp4" />
  *		</Video>
- *		<h1>Boots the Cat</h1>
- *		<h3>video about my cat Boots, wearing boots.</h3>
+ *		<h1 className="title">Boots the Cat</h1>
+ *		<h3 className="subtitle">video about my cat Boots, wearing boots.</h3>
  *		<Row>
  *			<Cell>
- *				<ProgressBarControls />
+ *				<CustomProgressBarControls />
  *			</Cell>
  *			<Cell shrink>
- *				<PlayButton />
+ *				<CustomPlayButton />
  *			</Cell>
  *			<Cell shrink>
  *				<CustomButton>Share this video</CustomButton>
@@ -233,7 +230,7 @@ const MediaPlayerBase = class extends React.Component {
  *	</MediaPlayer>
  * ```
  *
- * To invoke methods (e.g.: `fastForward()`) or get the current state (`getMediaState()`), store a
+ * To invoke methods (e.g.: `play()` or `pause()`) store a
  * ref to the `MediaPlayer` within your component:
  *
  * ```
