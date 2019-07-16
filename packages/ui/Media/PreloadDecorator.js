@@ -1,6 +1,5 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
@@ -14,6 +13,33 @@ import css from './Media.module.less';
 
 /**
  * Adds support for preloading a media source for `Video` or `Audio`.
+ *
+ * The wrapped component must support the following API:
+ *
+ * Properties:
+ * * `currentTime` {Number} - Playback index of the media in seconds
+ * * `duration` {Number} - Media's entire duration in seconds
+ * * `error` {Boolean} - `true` if media playback has errored.
+ * * `loading` {Boolean} - `true` if media playback is loading.
+ * * `paused` {Boolean} - Playing vs paused state. `true` means the media is paused
+ * * `playbackRate` {Number} - Current playback rate, as a number
+ * * `proportionLoaded` {Number} - A value between `0` and `1` representing the proportion of the
+ *   media that has loaded
+ * * `proportionPlayed` {Number} - A value between `0` and `1` representing the proportion of the
+ *   media that has already been shown
+ *
+ * Events:
+ * * `onLoadStart` - Called when the media starts to load
+ * * `onPlay` - Sent when playback of the media starts after having been paused
+ * * `onUpdate` - Sent when any of the properties were updated
+ *
+ * Methods:
+ * * `play()` - play media
+ * * `pause()` - pause media
+ * * `load()` - load media
+ *
+ * The [`source`]{@link ui/Media.PreloadSupport.source} property is passed to the media component as
+ * a `children`.
  *
  * @class PreloadSupport
  * @memberof ui/Media
@@ -34,44 +60,10 @@ const PreloadSupport = hoc((config, Wrapped) => class extends React.Component {
 		autoPlay: PropTypes.bool,
 
 		/**
-		 * Media component to use.
+		 * The media source to be preloaded.
 		 *
-		 * The default (`'video'`) renders an `HTMLVideoElement`. Custom video components must have
-		 * a similar API structure, exposing the following APIs:
-		 *
-		 * Properties:
-		 * * `currentTime` {Number} - Playback index of the media in seconds
-		 * * `duration` {Number} - Media's entire duration in seconds
-		 * * `error` {Boolean} - `true` if video playback has errored.
-		 * * `loading` {Boolean} - `true` if video playback is loading.
-		 * * `paused` {Boolean} - Playing vs paused state. `true` means the media is paused
-		 * * `playbackRate` {Number} - Current playback rate, as a number
-		 * * `proportionLoaded` {Number} - A value between `0` and `1`
-		 *	representing the proportion of the media that has loaded
-		 * * `proportionPlayed` {Number} - A value between `0` and `1` representing the
-		 *	proportion of the media that has already been shown
-		 *
-		 * Events:
-		 * * `onLoadStart` - Called when the video starts to load
-		 * * `onPlay` - Sent when playback of the media starts after having been paused
-		 * * `onUpdate` - Sent when any of the properties were updated
-		 *
-		 * Methods:
-		 * * `play()` - play video
-		 * * `pause()` - pause video
-		 * * `load()` - load video
-		 *
-		 * The [`source`]{@link ui/Media.PreloadSupport.source} property is passed to
-		 * the video component as a child node.
-		 *
-		 * @type {String|Component|Element}
-		 * @default 'video'
-		 * @public
-		 */
-		mediaComponent: EnactPropTypes.renderableOverride,
-
-		/**
-		 * The media source to be preloaded. Expects a `<source>` node.
+		 * Expects a [`<source>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source)
+		 * node.
 		 *
 		 * @type {Node}
 		 * @public
@@ -89,19 +81,13 @@ const PreloadSupport = hoc((config, Wrapped) => class extends React.Component {
 		/**
 		 * The media source to be played.
 		 *
-		 * Any children `<source>` elements will be sent directly to the `mediaComponent` as video
-		 * sources.
-		 *
-		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
+		 * Expects a [`<source>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source)
+		 * node.
 		 *
 		 * @type {Node}
 		 * @public
 		 */
 		source: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
-	}
-
-	static defaultProps = {
-		mediaComponent: 'video'
 	}
 
 	componentDidUpdate (prevProps) {
@@ -171,18 +157,18 @@ const PreloadSupport = hoc((config, Wrapped) => class extends React.Component {
 
 	setMedia ({setMedia} = this.props) {
 		if (setMedia) {
-			setMedia(this.video);
+			setMedia(this.media);
 		}
 	}
 
 	autoPlay () {
 		if (!this.props.autoPlay) return;
 
-		this.video.play();
+		this.media.play();
 	}
 
 	setVideoRef = (node) => {
-		this.video = node;
+		this.media = node;
 		this.setMedia();
 	}
 
@@ -197,7 +183,6 @@ const PreloadSupport = hoc((config, Wrapped) => class extends React.Component {
 		const {
 			preloadSource,
 			source,
-			mediaComponent,
 			...rest
 		} = this.props;
 
@@ -219,7 +204,6 @@ const PreloadSupport = hoc((config, Wrapped) => class extends React.Component {
 						className={css.media}
 						controls={false}
 						key={sourceKey}
-						mediaComponent={mediaComponent}
 						preload="none"
 						ref={this.setVideoRef}
 						source={React.isValidElement(source) ? source : (
@@ -233,7 +217,6 @@ const PreloadSupport = hoc((config, Wrapped) => class extends React.Component {
 						className={css.preloadMedia}
 						controls={false}
 						key={preloadKey}
-						mediaComponent={mediaComponent}
 						onLoadStart={this.handlePreloadLoadStart}
 						preload="none"
 						ref={this.setPreloadRef}
