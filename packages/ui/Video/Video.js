@@ -1,6 +1,6 @@
 import kind from '@enact/core/kind';
-import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import React from 'react';
 
 import ForwardRef from '../ForwardRef';
@@ -28,8 +28,8 @@ import Media from '../Media';
  * ```
  *
  * @class Video
- * @mixes ui/Slottable
  * @memberof ui/Video
+ * @extends ui/Media.Media
  * @ui
  * @private
  */
@@ -53,8 +53,7 @@ const VideoBase = kind({
 });
 
 const VideoDecorator = compose(
-	// PreloadDecorator needs a ui/Media-compatible reference so we're forwarding on the ref to the
-	// underlying ui/Media component
+	// ui/Media provides an imperative API so we must forwarding on the ref to it
 	ForwardRef({prop: 'setMedia'})
 );
 

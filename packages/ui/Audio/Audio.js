@@ -1,6 +1,6 @@
 import kind from '@enact/core/kind';
-import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import React from 'react';
 
 import ForwardRef from '../ForwardRef';
@@ -14,7 +14,7 @@ import Media from '../Media';
  *
  * ```
  * <Audio mediaComponent="custom-audio-element">
- *   <source src="path/to/source.mp4" />
+ *   <source src="path/to/source.mp3" />
  * </Audio>
  * ```
  *
@@ -28,8 +28,8 @@ import Media from '../Media';
  * ```
  *
  * @class Audio
- * @mixes ui/Slottable
  * @memberof ui/Audio
+ * @extends ui/Media.Media
  * @ui
  * @private
  */
@@ -42,7 +42,7 @@ const AudioBase = kind({
 	},
 
 	defaultProps: {
-		mediaComponent: 'video'
+		mediaComponent: 'audio'
 	},
 
 	render: ({setMedia, ...rest}) => {
@@ -52,9 +52,8 @@ const AudioBase = kind({
 	}
 });
 
-// const Audio = MediaDecorator((props) => <MediaBase {...props} mediaComponent="audio" />);
-// Audio.defaultSlot = 'audioComponent';
 const AudioDecorator = compose(
+	// ui/Media provides an imperative API so we must forwarding on the ref to it
 	ForwardRef({prop: 'setMedia'})
 );
 
@@ -63,5 +62,7 @@ Audio.defaultSlot = 'mediaComponent';
 
 export default Audio;
 export {
-	Audio
+	Audio,
+	AudioBase,
+	AudioDecorator
 };
