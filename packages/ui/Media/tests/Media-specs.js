@@ -60,6 +60,23 @@ describe('Media', () => {
 		}
 	);
 
+	test(
+		'should pass down all source elements to mediaComponent',
+		() => {
+			const media = mount(
+				<Media mediaComponent="video">
+					<source src={filePath} type="video/mp4" />
+					<source src={filePath} type="video/3gpp" />
+				</Media>
+			);
+
+			const expected = 2;
+			const actual = media.find('source').length;
+
+			expect(actual).toBe(expected);
+		}
+	);
+
 	describe('getKeyFromSource', () => {
 
 		test(
