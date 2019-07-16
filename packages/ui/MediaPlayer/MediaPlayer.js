@@ -10,6 +10,7 @@
 
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import {isRenderable} from '@enact/core/util/util';
 import Audio from '../Audio';
 import Slottable from '../Slottable';
 import Media from '../Media';
@@ -20,7 +21,6 @@ import React from 'react';
 
 import Overlay from './Overlay';
 import css from './MediaPlayer.module.less';
-import {isRenderable} from '@enact/core/util/util';
 
 const MediaPlayerBase = class extends React.Component {
 	static displayName = 'MediaPlayerBase';
@@ -29,7 +29,7 @@ const MediaPlayerBase = class extends React.Component {
 		/**
 		 * Media component to use.
 		 *
-		 * Common components to use are `<Audio>` and `<M>`. Custom media components must have a similar
+		 * Common components to use are [Audio]{@link ui/Audio}, [Media]{@link ui/Media}, or [Video]{@link ui/Video}. Custom media components must have a similar
 		 * API structure, exposing the following APIs:
 		 *
 		 * Properties:
@@ -53,11 +53,10 @@ const MediaPlayerBase = class extends React.Component {
 		 * * `pause()` - pause media
 		 * * `load()` - load media
 		 *
-		 * The [`source`]{@link ui/MediaPlayer.MediaPlayerBase.source} property is passed to
-		 * the media component as a child node.
+		 * The [`src`]{@link ui/MediaPlayer.MediaPlayerBase.src} property is passed to
+		 * the media component as a `<source>` child node.
 		 *
 		 * @type {Component|Element}
-		 * @default {@link ui/Media.Media}
 		 * @public
 		 */
 		mediaComponent: EnactPropTypes.componentOverride,
@@ -72,9 +71,9 @@ const MediaPlayerBase = class extends React.Component {
 		setApiProvider: PropTypes.func,
 
 		/**
-		 * The address of the media source. The `type` prop or `mediaComponent` is required to load `src`.
+		 * The address of the media source. [`type`]{@link ui/MediaPlayer.MediaPlayerBase.type} prop or `mediaComponent` is required to load `src`.
 		 *
-		 * The value of this attribute is ignored when the [Audio]{@link ui/Audio}, [Media]{@link ui/Media}, or [Video]{@link ui/Video} element is placed inside of [MediaPlayer]{@link ui/MediaPlayer}
+		 * The value of this attribute is ignored when there is `src` prop is set in the `mediaComponent`.
 		 *
 		 * @type {String}
 		 * @public
@@ -82,7 +81,7 @@ const MediaPlayerBase = class extends React.Component {
 		src: PropTypes.string,
 
 		/**
-		 * The type of the media source.
+		 * The type of the media source to be used with [`src`]{@link ui/MediaPlayer.MediaPlayerBase.src}.
 		 *
 		 * The MIME-type of the resource, optionally with a codecs parameter. See RFC 4281 for information about how to specify codecs.
 		 *
