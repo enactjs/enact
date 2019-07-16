@@ -282,7 +282,7 @@ class Media extends React.Component {
 				{...this.handledMediaEvents}
 				ref={this.mediaRef}
 			>
-				{children && children.type === 'source' ? children : source}
+				{source || children}
 			</Component>
 		);
 	}
