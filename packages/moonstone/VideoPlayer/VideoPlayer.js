@@ -27,7 +27,7 @@ import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ComponentOverride from '@enact/ui/ComponentOverride';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import {FloatingLayerContext} from '@enact/ui/FloatingLayer/FloatingLayerDecorator';
-import Media, {PreloadDecorator} from '@enact/ui/Media';
+import {PreloadDecorator} from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
 import UiVideo from '@enact/ui/Video';
@@ -68,6 +68,9 @@ const ControlsContainer = SpotlightContainerDecorator(
 	},
 	'div'
 );
+
+const Video = PreloadDecorator(UiVideo);
+Video.defaultSlot = 'videoComponent';
 
 const memoGetDurFmt = memoize((/* locale */) => new DurationFmt({
 	length: 'medium', style: 'clock', useNative: false
@@ -636,7 +639,7 @@ const VideoPlayerBase = class extends React.Component {
 		},
 		spotlightId: 'videoPlayer',
 		titleHideDelay: 5000,
-		videoComponent: Media
+		videoComponent: Video
 	}
 
 	constructor (props) {
@@ -2041,9 +2044,6 @@ const VideoPlayer = ApiDecorator(
 		)
 	)
 );
-
-const Video = PreloadDecorator(UiVideo);
-Video.defaultSlot = 'videoComponent';
 
 export default VideoPlayer;
 export {
