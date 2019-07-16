@@ -943,6 +943,7 @@ class ScrollableBase extends Component {
 									className: componentCss.scrollableFill,
 									initUiChildRef,
 									isVerticalScrollbarVisible,
+									isHorizontalScrollbarVisible,
 									onScroll: handleScroll,
 									onUpdate: this.handleScrollerUpdate,
 									ref: this.childRef,
