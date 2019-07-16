@@ -6,10 +6,9 @@
  * @exports Video
  * @exports Media
  * @exports MediaPlayer
- * @exports MediaPlayerBase
- * @exports MediaControls
  */
 
+import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import Audio from '@enact/ui/Audio';
 import Slottable from '@enact/ui/Slottable';
@@ -64,6 +63,15 @@ const MediaPlayerBase = class extends React.Component {
 		mediaComponent: EnactPropTypes.componentOverride,
 
 		/**
+		 * Registers the MediaPlayer component with an
+		 * {@link core/internal/ApiDecorator.ApiDecorator}.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		setApiProvider: PropTypes.func,
+
+		/**
 		 * The address of the media source. The `type` prop or `mediaComponent` is required to load `src`.
 		 *
 		 * The value of this attribute is ignored when the [Audio]{@link ui/Audio}, [Media]{@link ui/Media}, or [Video]{@link ui/Video} element is placed inside of [MediaPlayer]{@link ui/MediaPlayer}
@@ -88,6 +96,46 @@ const MediaPlayerBase = class extends React.Component {
 	constructor (props) {
 		super(props);
 
+		if (props.setApiProvider) {
+			props.setApiProvider(this);
+		}
+	}
+
+	setMediaRef = (media) => {
+		this.media = media;
+	}
+
+	/**
+	 * Returns the underlying media node currently used by the MediaPlayer
+	 *
+	 * @function
+	 * @memberof ui/MediaPlayer.MediaPlayerBase.prototype
+	 * @public
+	 */
+	getMediaNode = () => {
+		return this.media;
+	}
+
+	/**
+	 * Programmatically plays the current media.
+	 *
+	 * @function
+	 * @memberof ui/MediaPlayer.MediaPlayerBase.prototype
+	 * @public
+	 */
+	play = () => {
+		this.media.play();
+	}
+
+	/**
+	 * Programmatically plays the current media.
+	 *
+	 * @function
+	 * @memberof ui/MediaPlayer.MediaPlayerBase.prototype
+	 * @public
+	 */
+	pause = () => {
+		this.media.pause();
 	}
 
 	render () {
@@ -100,6 +148,11 @@ const MediaPlayerBase = class extends React.Component {
 			type,
 			...mediaProps
 		} = this.props;
+
+		delete mediaProps.setApiProvider;
+
+		mediaProps.className = css.media;
+		mediaProps.ref = this.setMediaRef;
 
 		let mediaComponent = null;
 
@@ -126,7 +179,10 @@ const MediaPlayerBase = class extends React.Component {
 		}
 
 		return (
-			<div className={`${css.mediaPlayer} enact-fit ${(className ? className : '')}`} style={style}>
+			<div
+				className={`${css.mediaPlayer} enact-fit ${(className ? className : '')}`}
+				style={style}
+			>
 				{/* Media Section */}
 				{
 					// Duplicating logic from <ComponentOverride /> until enzyme supports forwardRef
@@ -188,11 +244,11 @@ const MediaPlayerBase = class extends React.Component {
  * 	...
  *
  * 	setMediaPlayer = (node) => {
- * 		this.videoPlayer = node;
+ * 		this.mediaPlayer = node;
  * 	}
  *
  * 	play () {
- * 		this.videoPlayer.play();
+ * 		this.mediaPlayer.play();
  * 	}
  *
  * 	render () {
@@ -208,9 +264,16 @@ const MediaPlayerBase = class extends React.Component {
  * @ui
  * @public
  */
-const MediaPlayer = Slottable(
-	{slots: ['mediaComponent']},
+const MediaPlayer = ApiDecorator(
+	{api: [
+		'getMediaNode',
+		'play',
+		'pause'
+	]},
+	Slottable(
+		{slots: ['mediaComponent']},
 		MediaPlayerBase
+	)
 );
 
 export default MediaPlayer;
