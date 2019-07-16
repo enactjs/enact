@@ -2,11 +2,11 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
-## [unreleased]
+## [3.0.0-beta.1] - 2019-07-15
 
 ## Removed
 
--  `i18n/ilib` embedded copy of iLib in favour of the NPM package `ilib`
+- `i18n/ilib` embedded copy of iLib in favour of the NPM package `ilib`
 
 ### Added
 
