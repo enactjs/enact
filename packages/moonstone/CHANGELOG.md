@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [3.0.0-beta.1] - 2019-07-15
 
 ### Removed
 
@@ -16,11 +16,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- Fonts to use the updated names of global fonts available in the system
 - `moonstone/Popup` to properly handle closing in mid-transition
 - `moonstone/Scroller` to properly move focus out of the container
 - `moonstone/VirtualList` to allow keydown events to bubble up when not handled by the component
 - `moonstone/IncrementSlider` to support aria-label when disabled
-- Fonts to use the updated names of global fonts available in the system
 - `moonstone/LabeledItem` to not clip the bottom of descender glyphs in large text mode
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to focus an item properly after an update
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to scroll too far by page up/down keys

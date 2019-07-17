@@ -350,6 +350,15 @@ class ScrollableBase extends Component {
 		}
 	}
 
+	isScrollButtonFocused () {
+		const {horizontalScrollbarRef: h, verticalScrollbarRef: v} = this.uiRef.current;
+
+		return (
+			h.current && h.current.isOneOfScrollButtonsFocused() ||
+			v.current && v.current.isOneOfScrollButtonsFocused()
+		);
+	}
+
 	onFlick = ({direction}) => {
 		const bounds = this.uiRef.current.getScrollBounds();
 		const focusedItem = Spotlight.getCurrent();
@@ -373,24 +382,17 @@ class ScrollableBase extends Component {
 	}
 
 	onTouchStart = () => {
-		const
-			focusedItem = Spotlight.getCurrent(),
-			{horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current,
-			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current && horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
-			isVerticalScrollButtonFocused = verticalScrollbarRef.current && verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
+		const focusedItem = Spotlight.getCurrent();
 
-		if (!Spotlight.isPaused() && focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
+		if (!Spotlight.isPaused() && focusedItem && !this.isScrollButtonFocused()) {
 			focusedItem.blur();
 		}
 	}
 
-	onWheel = ({delta, horizontalScrollbarRef, verticalScrollbarRef}) => {
-		const
-			focusedItem = Spotlight.getCurrent(),
-			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current && horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
-			isVerticalScrollButtonFocused = verticalScrollbarRef.current && verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
+	onWheel = ({delta}) => {
+		const focusedItem = Spotlight.getCurrent();
 
-		if (focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
+		if (focusedItem && !this.isScrollButtonFocused()) {
 			focusedItem.blur();
 		}
 
@@ -578,7 +580,7 @@ class ScrollableBase extends Component {
 
 		forward('onKeyDown', ev, this.props);
 
-		if (isPageUp(keyCode) || isPageDown(keyCode)) {
+		if ((isPageUp(keyCode) || isPageDown(keyCode)) && !this.isScrollButtonFocused()) {
 			ev.stopPropagation();
 			ev.preventDefault();
 		}
