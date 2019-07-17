@@ -160,12 +160,12 @@ const HeaderBase = kind({
 		/**
 		 * Set the type of header to be used.
 		 *
-		 * * Values: `'standard'` or `'compact'`.
+		 * * Values: `'standard'`, `'compact'`, or `'dense'`.
 		 *
 		 * @type {String}
 		 * @default 'standard'
 		 */
-		type: PropTypes.oneOf(['compact', 'standard'])
+		type: PropTypes.oneOf(['compact', 'dense', 'standard'])
 	},
 
 	defaultProps: {
@@ -187,6 +187,7 @@ const HeaderBase = kind({
 			switch (type) {
 				case 'compact':
 					return titleBelow ? <h2 className={css.titleBelow}>{titleBelow}</h2> : null;
+				case 'dense':
 				case 'standard':
 					return <MarqueeH2 className={css.titleBelow} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>{(titleBelow != null && titleBelow !== '') ? titleBelow : ' '}</MarqueeH2>;
 			}
@@ -243,6 +244,7 @@ const HeaderBase = kind({
 			// 		<nav className={css.headerComponents}>{children}</nav>
 			// 	</header>
 			// );
+			case 'dense':
 			case 'standard': return (
 				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
 					{titleOrInput}

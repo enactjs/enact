@@ -59,6 +59,7 @@
 	}
 
 	// Standard Header
+	&.dense,
 	&.standard {
 		height: @moon-header-height-medium;
 
@@ -85,6 +86,17 @@
 		.titleBelow,
 		.subTitleBelow {
 			line-height: 1.4em;
+		}
+	}
+
+	// Dense Header
+	&.dense {
+		height: @moon-header-dense-height;
+
+		.title {
+			font-size: @moon-header-dense-title-font-size;
+			font-weight: @moon-header-dense-title-font-weight;
+			// line-height: @moon-header-dense-title-line-height;
 		}
 	}
 
@@ -124,6 +136,7 @@
 			border-bottom-color: transparent;
 		}
 
+		&.dense,
 		&.standard {
 			.decorator {
 				background-color: transparent;
@@ -160,6 +173,13 @@
 			}
 		}
 
+		&.dense {
+			.titleBelow,
+			.subTitleBelow {
+				color: @moon-header-dense-sub-title-color;
+			}
+		}
+
 		&.fullBleed {
 			border-color: @moon-header-full-bleed-border-color;
 			color: @moon-header-full-bleed-text-color;
@@ -174,11 +194,15 @@
 
 :global(.moon-panels-hasControls) {
 	.header.compact,
+	.header.dense .title,
+	.header.dense .headerInput,
 	.header.standard .title,
 	.header.standard .headerInput {
 		.padding-start-end(0, var(--moon-panels-controls-width));
 	}
 
+	.header.centered.dense .title,
+	.header.centered.dense .headerInput,
 	.header.centered.standard .title,
 	.header.centered.standard .headerInput {
 		.padding-start-end(var(--moon-panels-controls-width), var(--moon-panels-controls-width));
