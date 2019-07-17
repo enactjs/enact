@@ -100,6 +100,14 @@ const HeaderBase = kind({
 		headerInput: PropTypes.node,
 
 		/**
+		 * Hides a horizontal-rule (line) under the component
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		hideLine: PropTypes.bool,
+
+		/**
 		 * Determines what triggers the header content to start its animation.
 		 *
 		 * * Values: `'focus'`, `'hover'` and `'render'`.
@@ -173,7 +181,7 @@ const HeaderBase = kind({
 	},
 
 	computed: {
-		className: ({centered, fullBleed, type, styler}) => styler.append({centered, fullBleed}, type),
+		className: ({centered, fullBleed, hideLine, type, styler}) => styler.append({centered, fullBleed, hideLine}, type),
 		direction: ({title, titleBelow}) => isRtlText(title) || isRtlText(titleBelow) ? 'rtl' : 'ltr',
 		titleBelowComponent: ({centered, marqueeOn, titleBelow, type}) => {
 			switch (type) {
@@ -211,6 +219,7 @@ const HeaderBase = kind({
 		delete rest.centered;
 		delete rest.fullBleed;
 		delete rest.headerInput;
+		delete rest.hideLine;
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
 
