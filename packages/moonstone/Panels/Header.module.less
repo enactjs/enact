@@ -115,14 +115,14 @@
 		border-top-width: 0;
 	}
 
-	&.hideLine {
-		border-bottom: none;
-	}
-
 	// Skin colors
 	.applySkins({
 		color: @moon-header-text-color;
 		border-bottom-color: @moon-header-bottom-border-color;
+
+		&.hideLine {
+			border-bottom-color: transparent;
+		}
 
 		&.standard {
 			.decorator {
