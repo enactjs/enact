@@ -100,7 +100,7 @@ const HeaderBase = kind({
 		headerInput: PropTypes.node,
 
 		/**
-		 * Hides a horizontal-rule (line) under the component
+		 * Hides the horizontal-rule (line) under the component
 		 *
 		 * @type {Boolean}
 		 * @public
