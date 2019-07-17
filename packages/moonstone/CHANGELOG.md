@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Dropdown` button to not animate
+
 ## [3.0.0-beta.1] - 2019-07-15
 
 ### Removed
