@@ -63,13 +63,13 @@ const DropdownButton = kind({
 	name: 'DropdownButton',
 
 	styles: {
-		css,
-		className: 'button'
+		css
 	},
 
 	render: (props) => (
 		<Button
 			{...props}
+			css={css}
 			iconPosition="after"
 		/>
 	)

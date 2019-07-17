@@ -26,6 +26,17 @@
 		max-width: @moon-dropdown-huge-width;
 		width: @moon-dropdown-huge-width;
 	}
+
+		&:not([disabled]) {
+			.focus({
+				&.pressed,
+				&:active {
+					.bg {
+						animation-name: none;
+					}
+				}
+			});
+		}
 }
 
 .dropDownList {
