@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/ProgressBar`, `moonstone/Slider`, and `moonstone/IncrementSlider` to use the latest set of design colors
+
 ## [3.0.0-beta.1] - 2019-07-15
 
 ### Removed

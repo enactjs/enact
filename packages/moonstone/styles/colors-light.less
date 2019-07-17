@@ -199,7 +199,7 @@
 // ---------------------------------------
 @moon-progress-bar-bg-color: fade(@moon-darker-gray, 30%);
 @moon-progress-bar-loaded-bg-color: fade(@moon-darker-gray, 50%);
-@moon-progress-bar-fill-bg-color: @moon-white;
+@moon-progress-bar-fill-bg-color: @moon-spotlight-bg-color;
 @moon-progress-bar-tooltip-text-color: @moon-progress-bar-fill-bg-color;
 @moon-progress-bar-highlighted-fill-bg-color: @moon-spotlight-bg-color;
 
@@ -220,11 +220,29 @@
 
 // Slider
 // ---------------------------------------
-@moon-slider-nofocus-bg-color: @moon-white;
-@moon-slider-focus-bg-color: @moon-spotlight-color;
-@moon-slider-spotlight-knob-color: @moon-spotlight-color;
-@moon-slider-spotlight-bar-color: @moon-spotlight-color;
+@moon-slider-bar-bg-color: @moon-progress-bar-bg-color;
+@moon-slider-fill-bg-color: @moon-progress-bar-fill-bg-color;
+@moon-slider-load-bg-color: @moon-progress-bar-loaded-bg-color;
 @moon-slider-knob-bg-color: @moon-dark-gray;
+@moon-slider-knob-border-color: transparent;
+@moon-slider-focus-bar-bg-color: @moon-slider-bar-bg-color;
+@moon-slider-focus-fill-bg-color: @moon-slider-fill-bg-color;
+@moon-slider-focus-load-bg-color: @moon-slider-load-bg-color;
+@moon-slider-focus-knob-bg-color: @moon-spotlight-bg-color;
+@moon-slider-focus-knob-border-color: transparent;
+@moon-slider-active-bar-bg-color: @moon-slider-bar-bg-color;
+@moon-slider-active-fill-bg-color: @moon-slider-fill-bg-color;
+@moon-slider-active-load-bg-color: @moon-slider-load-bg-color;
+@moon-slider-active-knob-bg-color: @moon-white;
+@moon-slider-active-knob-border-color: @moon-spotlight-color;
+@moon-slider-disabled-bar-opacity: 0.4;
+@moon-slider-disabled-bar-bg-color: fadeout(@moon-slider-bar-bg-color, percentage(@moon-slider-disabled-bar-opacity), relative);
+@moon-slider-disabled-knob-bg-color: #666;
+@moon-slider-disabled-knob-border-color: transparent;
+@moon-slider-disabled-focus-bar-bg-color: fadeout(@moon-slider-focus-bar-bg-color, percentage(@moon-slider-disabled-bar-opacity), relative);
+@moon-slider-disabled-focus-knob-bg-color: @moon-spotlight-bg-color;
+@moon-slider-disabled-focus-knob-border-color: transparent;
+@moon-slider-knob-shadow: 0 3px 6px fade(black, 30%);
 
 // Spinner
 // ---------------------------------------

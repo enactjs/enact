@@ -132,50 +132,111 @@
 	});
 
 	.applySkins({
-		.progressBar {
-			background-color: @moon-progress-bar-bg-color;
+		.bar {
+			background-color: @moon-slider-bar-bg-color;
 		}
 
 		.fill {
-			background-color: @moon-progress-bar-fill-bg-color;
+			background-color: @moon-slider-fill-bg-color;
 		}
 
 		.load {
-			background-color: @moon-progress-bar-loaded-bg-color;
+			background-color: @moon-slider-load-bg-color;
 		}
 
 		.knob::before {
 			background-color: @moon-slider-knob-bg-color;
+			border-color: @moon-slider-knob-border-color;
+			box-shadow: @moon-slider-knob-shadow;
 		}
 
 		.spottable({
 			&:focus.activateOnFocus,
 			&.active,
 			&.pressed {
+				.bar {
+					background-color: @moon-slider-active-bar-bg-color;
+				}
+
 				.fill {
-					background-color: @moon-slider-spotlight-bar-color;
+					background-color: @moon-slider-active-fill-bg-color;
+				}
+
+				.load {
+					background-color: @moon-slider-active-load-bg-color;
+				}
+
+				.knob::before {
+					background-color: @moon-slider-active-knob-bg-color;
+					border-color: @moon-slider-active-knob-border-color;
 				}
 			}
 
 			.focus({
 				background-color: transparent;
 
+				.bar {
+					background-color: @moon-slider-focus-bar-bg-color;
+				}
+
+				.fill {
+					background-color: @moon-slider-focus-fill-bg-color;
+				}
+
+				.load {
+					background-color: @moon-slider-focus-load-bg-color;
+				}
+
 				.knob::before {
-					background-color: @moon-slider-spotlight-knob-color;
+					background-color: @moon-slider-focus-knob-bg-color;
+					border-color: @moon-slider-focus-knob-border-color;
 				}
 
 				&.active {
+					.bar {
+						background-color: @moon-slider-active-bar-bg-color;
+					}
+
+					.fill {
+						background-color: @moon-slider-active-fill-bg-color;
+					}
+
+					.load {
+						background-color: @moon-slider-active-load-bg-color;
+					}
+
 					.knob::before {
-						background-color: @moon-slider-knob-active-bg-color;
-						border-color: @moon-slider-spotlight-knob-color;
+						background-color: @moon-slider-active-knob-bg-color;
+						border-color: @moon-slider-active-knob-border-color;
 					}
 				}
 
 				.disabled({
-					opacity: @moon-disabled-opacity;
+					.bar {
+						opacity: @moon-slider-disabled-bar-opacity;
+					}
+
+					.knob::before {
+						background-color: @moon-slider-disabled-focus-knob-bg-color;
+						border-color: @moon-slider-focus-knob-border-color;
+					}
 				});
 			});
 		});
+
+		.disabled({
+			opacity: 1;
+
+			.bar {
+				opacity: @moon-slider-disabled-bar-opacity;
+			}
+
+			.knob::before {
+				background-color: @moon-slider-disabled-knob-bg-color;
+				border-color: @moon-slider-knob-border-color;
+			}
+		});
+
 
 		&.noFill {
 			.fill {
