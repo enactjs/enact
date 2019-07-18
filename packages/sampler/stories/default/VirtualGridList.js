@@ -114,7 +114,7 @@ storiesOf('Moonstone', module)
 				itemRenderer={renderItem}
 				itemSize={{
 					minWidth: ri.scale(number('minWidth', Config, 180)) || 0,
-					minHeight: ri.scale(number('minHeight', Config, 270)) )) 0
+					minHeight: ri.scale(number('minHeight', Config, 270)) || 0
 				}}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
