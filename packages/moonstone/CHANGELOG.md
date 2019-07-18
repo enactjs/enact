@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Panels.Header` prop `hideLine` to hide the bottom separator line
 
+### Fixed
+
+- `moonstone/Picker` accessibility read out when a button becomes disabled
+
 ## [3.0.0-beta.1] - 2019-07-15
 
 ### Removed
