@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` to attempt to restore focus through ancestor containers when the pointer hides
+
 ## [3.0.0-beta.1] - 2019-07-15
 
 ### Fixed
