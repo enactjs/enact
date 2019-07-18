@@ -11,7 +11,6 @@
 @moon-large-text-size:              48px;
 @moon-pre-text-size:                24px;
 @moon-header-font-size:             69px;
-@moon-super-header-font-size:       33px;
 @moon-header-title-below-font-size: 30px;
 @moon-header-sub-title-below-font-size: 30px;
 @moon-header-compact-font-size:     60px;
@@ -52,14 +51,13 @@
 @moon-non-latin-large-text-size:        48px;
 @moon-non-latin-pre-text-size:          24px;
 @moon-non-latin-popup-header-font-size: 66px;
-@moon-non-latin-sub-header-font-size:   33px;
-@moon-non-latin-super-header-font-size: 33px;
+@moon-non-latin-header-font-size:       57px;
+@moon-non-latin-header-title-below-font-size: 33px;
 @moon-non-latin-body-font-size:         27px;
 @moon-non-latin-body-small-font-size:   24px;
 @moon-non-latin-divider-font-size:      27px;
 @moon-non-latin-button-large-font-size: 36px;
 @moon-non-latin-button-small-font-size: 27px;
-@moon-non-latin-header-font-size:       57px;
 @moon-non-latin-expandable-client-item-font-size: 27px;
 
 // Other Font Properties
@@ -82,26 +80,19 @@
 @moon-header-letter-spacing: normal;
 @moon-header-font-style: normal;
 @moon-header-line-height: 1.3em;
-@moon-header-standard-line-height: @moon-header-line-height;
-@moon-header-compact-line-height: @moon-header-line-height;
+@moon-header-standard-title-line-height: @moon-header-line-height;
+@moon-header-compact-title-line-height: @moon-header-line-height;
 @moon-header-dense-title-font-weight: bold;
 @moon-non-latin-header-line-height: 1.5em;
-@moon-non-latin-medium-header-line-height: @moon-non-latin-header-line-height;
-@moon-non-latin-small-header-line-height: @moon-non-latin-header-line-height;
+@moon-non-latin-header-standard-title-line-height: @moon-non-latin-header-line-height;
+@moon-non-latin-header-compact-title-line-height: @moon-non-latin-header-line-height;
 
-@moon-sub-header-font-family: @moon-font-family;
-@moon-sub-header-font-weight: normal;
-@moon-sub-header-letter-spacing: 0;
-@moon-sub-header-font-style: normal;
-@moon-sub-header-line-height: 2em;
-@moon-sub-header-below-font-family: @moon-font-family;
-@moon-sub-header-below-font-weight: normal;
-
-@moon-super-header-font-family: @moon-alt-font-family;
-@moon-super-header-font-weight: normal;
-@moon-super-header-letter-spacing: normal;
-@moon-super-header-font-style: normal;
-@moon-super-header-line-height: normal;
+@moon-header-title-below-font-family: @moon-font-family;
+@moon-header-title-below-font-weight: normal;
+@moon-header-title-below-letter-spacing: 0;
+@moon-header-title-below-font-style: normal;
+@moon-header-sub-title-below-font-family: @moon-font-family;
+@moon-header-sub-title-below-font-weight: normal;
 
 @moon-popup-header-font-family: @moon-header-font-family;
 @moon-popup-header-font-weight: normal;
@@ -109,8 +100,8 @@
 @moon-popup-header-line-height: normal;
 @moon-popup-header-letter-spacing: normal;
 
-@moon-dialog-title-below-font-family: @moon-sub-header-font-family;
-@moon-dialog-title-below-font-weight: @moon-sub-header-font-weight;
+@moon-dialog-title-below-font-family: @moon-header-title-below-font-family;
+@moon-dialog-title-below-font-weight: @moon-header-title-below-font-weight;
 
 @moon-body-font-family: @moon-font-family;
 @moon-body-font-weight: 300;
@@ -126,7 +117,7 @@
 @moon-divider-font-style: italic;
 @moon-divider-letter-spacing: 0;
 @moon-divider-line-height: @moon-header-line-height;
-@moon-divider-non-latin-line-height: @moon-non-latin-medium-header-line-height;
+@moon-divider-non-latin-line-height: @moon-non-latin-header-standard-title-line-height;
 
 @moon-heading-large-font-family: @moon-font-family;
 @moon-heading-large-font-weight: 600;
@@ -140,7 +131,7 @@
 @moon-heading-letter-spacing: 0;
 @moon-heading-line-height: @moon-header-line-height;
 @moon-heading-non-latin-font-family: @moon-non-latin-font-family-bold;
-@moon-heading-non-latin-line-height: @moon-non-latin-medium-header-line-height;
+@moon-heading-non-latin-line-height: @moon-non-latin-header-standard-title-line-height;
 
 @moon-expandable-value-font-family: @moon-font-family;
 @moon-expandable-value-font-weight: 300;
@@ -331,12 +322,13 @@
 
 // Panels
 // ---------------------------------------
+@moon-panels-breadcrumb-font-family: @moon-alt-font-family;
+@moon-panels-breadcrumb-text-size: @moon-body-font-size;
+@moon-panels-breadcrumb-width: 96px;
+@moon-panels-handle-width: 132px;
 @moon-panel-v-padding: @moon-app-keepout;
 @moon-panel-h-padding: (@moon-app-keepout - @moon-spotlight-outset);
-@moon-panels-handle-width: 132px;
 @moon-panel-handle-icon-font-size: 144px;
-@moon-breadcrumb-text-size: @moon-body-font-size;
-@moon-breadcrumb-width: 96px;
 
 // Toggle Item
 // ---------------------------------------

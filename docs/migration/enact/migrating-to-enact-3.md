@@ -78,37 +78,64 @@ files, you may need to address these changes.
 * `@moon-radio-item-selected-spotlight-indicator-border-color` has been removed
 
 #### variables
-* `@moon-button-large-font-size` has been renamed to `@moon-button-font-size`
+* `@moon-breadcrumb-text-size` has been replaced by `@moon-panels-breadcrumb-text-size`
+* `@moon-breadcrumb-width` has been replaced by `@moon-panels-breadcrumb-width`
+* `@moon-button-icon-end-margin` has been renamed to `@moon-button-icon-margin-end`
+* `@moon-button-icon-position-after-end-margin` has been renamed to `@moon-button-icon-position-after-margin-end`
+* `@moon-button-icon-position-after-small-end-margin` has been renamed to `@moon-button-icon-position-after-small-margin-end`
+* `@moon-button-icon-position-after-small-start-margin` has been renamed to `@moon-button-icon-position-after-small-margin-start`
+* `@moon-button-icon-position-after-start-margin` has been renamed to `@moon-button-icon-position-after-margin-start`
+* `@moon-button-icon-small-end-margin` has been renamed to `@moon-button-icon-small-margin-end`
+* `@moon-button-icon-small-start-margin` has been renamed to `@moon-button-icon-small-margin-start`
+* `@moon-button-icon-start-margin` has been renamed to `@moon-button-icon-margin-start`
 * `@moon-button-large-font-size-large` has been renamed to `@moon-button-font-size-large`
+* `@moon-button-large-font-size` has been renamed to `@moon-button-font-size`
+* `@moon-button-large-min-width` has been renamed to `@moon-button-min-width`
 * `@moon-button-large-text-size` has been removed
 * `@moon-button-small-text-size` has been removed
-* `@moon-button-large-min-width` has been renamed to `@moon-button-min-width`
-* `@moon-button-icon-start-margin` has been renamed to `@moon-button-icon-margin-start`
-* `@moon-button-icon-end-margin` has been renamed to `@moon-button-icon-margin-end`
-* `@moon-button-icon-small-start-margin` has been renamed to `@moon-button-icon-small-margin-start`
-* `@moon-button-icon-small-end-margin` has been renamed to `@moon-button-icon-small-margin-end`
-* `@moon-button-icon-position-after-start-margin` has been renamed to `@moon-button-icon-position-after-margin-start`
-* `@moon-button-icon-position-after-end-margin` has been renamed to `@moon-button-icon-position-after-margin-end`
-* `@moon-button-icon-position-after-small-start-margin` has been renamed to `@moon-button-icon-position-after-small-margin-start`
-* `@moon-button-icon-position-after-small-end-margin` has been renamed to `@moon-button-icon-position-after-small-margin-end`
 * `@moon-header-border-top-width` has been removed
 * `@moon-header-height-large` has been removed
 * `@moon-header-height-medium` has been replaced by `@moon-header-standard-height`
 * `@moon-header-height-small` has been replaced by `@moon-header-compact-height`
-* `@moon-icon-button-size` has been removed
+* `@moon-header-sub-title-color` has been replaced by `@moon-header-title-below-text-color`
 * `@moon-icon-button-size-large` has been removed
-* `@moon-icon-button-small-size` has been removed
+* `@moon-icon-button-size` has been removed
 * `@moon-icon-button-small-size-large` has been removed
-* `@moon-medium-header-line-height` has been replaced by `@moon-header-standard-line-height`
-* `@moon-small-header-font-size` has been replaced by `@moon-header-compact-font-size`
-* `@moon-small-header-sub-header-font-size` has been replaced by `@moon-header-compact-title-below-font-size`
-* `@moon-small-header-line-height` has been replaced by `@moon-header-compact-line-height`
+* `@moon-icon-button-small-size` has been removed
+* `@moon-medium-header-line-height` has been replaced by `@moon-header-standard-title-line-height`
 * `@moon-non-latin-header-text-line-height` has been replaced by `@moon-non-latin-header-line-height`
-* `@moon-sub-header-font-size` has been replaced by `@moon-header-title-below-font-size`
-* `@moon-sub-header-below-font-size` has been replaced by `@moon-header-sub-title-below-font-size`
-* `@moon-notification-out-border-radius` has been removed
+* `@moon-non-latin-medium-header-line-height` has been replaced by `@moon-non-latin-header-standard-title-line-height`
+* `@moon-non-latin-small-header-line-height` has been replaced by `@moon-non-latin-header-compact-title-line-height`
+* `@moon-non-latin-sub-header-font-size` has been replaced by `@moon-non-latin-header-title-below-font-size`
+* `@moon-non-latin-super-header-font-size` has been removed
 * `@moon-notification-button-gap` has been removed
+* `@moon-notification-out-border-radius` has been removed
+* `@moon-small-header-font-size` has been replaced by `@moon-header-compact-font-size`
+* `@moon-small-header-line-height` has been replaced by `@moon-header-compact-title-line-height`
+* `@moon-small-header-sub-header-font-size` has been replaced by `@moon-header-compact-title-below-font-size`
+* `@moon-sub-header-below-font-family` has been replaced by `@moon-header-sub-title-below-font-family`
+* `@moon-sub-header-below-font-size` has been replaced by `@moon-header-sub-title-below-font-size`
+* `@moon-sub-header-below-font-weight` has been replaced by `@moon-header-sub-title-below-font-weight`
+* `@moon-sub-header-font-family` has been replaced by `@moon-header-title-below-font-family`
+* `@moon-sub-header-font-size` has been replaced by `@moon-header-title-below-font-size`
+* `@moon-sub-header-font-style` has been replaced by `@moon-header-title-below-font-style`
+* `@moon-sub-header-font-weight` has been replaced by `@moon-header-title-below-font-weight`
+* `@moon-sub-header-letter-spacing` has been replaced by `@moon-header-title-below-letter-spacing`
+* `@moon-sub-header-line-height` has been removed
+* `@moon-sub-header-text-color` has been replaced by `@moon-header-title-below-text-color`
+* `@moon-sup-header-text-color` has been removed
+* `@moon-super-header-font-family` has been replaced by `@moon-panels-breadcrumb-font-family`
+* `@moon-super-header-font-size` has been removed
+* `@moon-super-header-font-style` has been removed
+* `@moon-super-header-font-weight` has been removed
+* `@moon-super-header-letter-spacing` has been removed
+* `@moon-super-header-line-height` has been removed
 * `@moon-tooltip-h-padding` has been replaced by `@moon-tooltip-padding`
+
+#### mixins
+* `.moon-header-sub-title-below` has been replaced by `.moon-header-sub-title-below-text`
+* `.moon-sub-header-text` has been replaced by `.moon-header-title-below-text`
+* `.moon-super-header-text` has been removed
 
 ### `Button`
 The `casing` prop has been removed.

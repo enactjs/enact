@@ -15,10 +15,6 @@
 	background-position: top left;
 	margin: 0 @moon-spotlight-outset;
 
-	// .titleAbove {
-	// 	.moon-super-header-text();
-	// }
-
 	// Remove the built-in h1 and h2 margins
 	.decorator,
 	.decorator .input,
@@ -43,11 +39,11 @@
 
 	.titleBelow,
 	.subTitleBelow {
-		.moon-sub-header-text();
+		.moon-header-title-below-text();
 	}
 
 	.subTitleBelow {
-		.moon-header-sub-title-below();
+		.moon-header-sub-title-below-text();
 	}
 
 	.headerComponents {
@@ -67,10 +63,10 @@
 			// The height is determined by the line-height below, but we want to maintain that as a
 			// relative unit (`em`) rather than dictate specific pixels to automatically accomodate
 			// font size changes.
-			line-height: @moon-header-standard-line-height;
+			line-height: @moon-header-standard-title-line-height;
 			margin-left: -3px; // Negative 3px here to allow the title text to horizontally align with the rest of the header text
 
-			.moon-locale-non-latin({line-height: @moon-non-latin-medium-header-line-height;});
+			.moon-locale-non-latin({line-height: @moon-non-latin-header-standard-title-line-height;});
 		}
 
 		.decorator,
@@ -114,7 +110,7 @@
 			font-size: @moon-header-compact-font-size;
 			display: inline;
 
-			.moon-locale-non-latin({line-height:  @moon-non-latin-small-header-line-height;});
+			.moon-locale-non-latin({line-height:  @moon-non-latin-header-compact-title-line-height;});
 		}
 
 		.titleBelow {
@@ -169,14 +165,14 @@
 
 			.titleBelow,
 			.subTitleBelow {
-				color: @moon-header-sub-title-color;
+				color: @moon-header-title-below-text-color;
 			}
 		}
 
 		&.dense {
 			.titleBelow,
 			.subTitleBelow {
-				color: @moon-header-dense-sub-title-color;
+				color: @moon-header-dense-title-below-text-color;
 			}
 		}
 

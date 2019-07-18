@@ -114,7 +114,7 @@
 .moon-text-base(@font-size: @moon-body-font-size; @target: normal) {
 	.moon-font({
 		font-weight: @moon-non-latin-font-weight;
-		font-size: @moon-non-latin-sub-header-font-size;
+		font-size: @moon-non-latin-header-title-below-font-size;
 		line-height: @moon-non-latin-body-line-height;
 	}, @target);
 	font-weight: normal;
@@ -263,35 +263,29 @@
 	.font-kerning;
 }
 
-.moon-super-header-text() {
-	.moon-font(@moon-super-header-font-family, @moon-non-latin-font-family, {font-size: @moon-non-latin-super-header-font-size;});
-	font-size: @moon-super-header-font-size;
-	.font-kerning;
-}
-
-.moon-sub-header-text() {
+.moon-header-title-below-text() {
 	.moon-text-base(@moon-header-title-below-font-size);
-	font-weight: @moon-sub-header-font-weight;
+	font-weight: @moon-header-title-below-font-weight;
 	font-size: @moon-header-title-below-font-size;
-	font-style: @moon-sub-header-font-style;
-	letter-spacing: @moon-sub-header-letter-spacing;
+	font-style: @moon-header-title-below-font-style;
+	letter-spacing: @moon-header-title-below-letter-spacing;
 
 	.moon-locale-non-latin({
-		font-size: @moon-non-latin-sub-header-font-size;
+		font-size: @moon-non-latin-header-title-below-font-size;
 	});
 
 	.moon-small-header & {
 		font-size: @moon-header-compact-title-below-font-size;
 
 		.moon-locale-non-latin({
-			font-size: @moon-non-latin-sub-header-font-size;
+			font-size: @moon-non-latin-header-title-below-font-size;
 		});
 	}
 }
 
-.moon-header-sub-title-below() {
-	.moon-font(@moon-sub-header-below-font-family);
-	font-weight: @moon-sub-header-below-font-weight;
+.moon-header-sub-title-below-text() {
+	.moon-font(@moon-header-sub-title-below-font-family);
+	font-weight: @moon-header-sub-title-below-font-weight;
 	font-size: @moon-header-sub-title-below-font-size;
 }
 
@@ -310,7 +304,7 @@
 
 .moon-dialog-title() {
 	.moon-popup-header-text();
-	line-height: @moon-header-compact-line-height;
+	line-height: @moon-header-compact-title-line-height;
 }
 
 .moon-dialog-title-below() {

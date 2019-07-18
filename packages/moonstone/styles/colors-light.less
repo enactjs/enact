@@ -124,15 +124,13 @@
 // Header
 // ---------------------------------------
 @moon-header-text-color:              #383838;
-@moon-header-sub-title-color:         @moon-text-color;
-@moon-sub-header-text-color:          @moon-text-color;
-@moon-sup-header-text-color:          @moon-text-color;
-@moon-header-dense-sub-title-color:   @moon-header-text-color;
+@moon-header-title-below-text-color:  @moon-text-color;
+@moon-header-dense-title-below-text-color: @moon-header-text-color;
 @moon-header-border-color:            @moon-border-color;
 @moon-header-bottom-border-color:     #404040;
+@moon-header-full-bleed-border-color: fade(@moon-white, 25%);
 @moon-header-full-bleed-text-color:   #f5f5f5;
 @moon-header-title-below-full-bleed-text-color: @moon-header-full-bleed-text-color;
-@moon-header-full-bleed-border-color: fade(@moon-white, 25%);
 @moon-header-controls-border-color:   @moon-border-color;
 
 // Heading
@@ -248,7 +246,7 @@
 
 // Toggle Colors
 // ---------------------------------------
-@moon-toggle-text-color: @moon-sub-header-text-color;
+@moon-toggle-text-color: @moon-header-title-below-text-color;
 @moon-toggle-button-switch-on-bg-color: @moon-accent;
 @moon-toggle-button-switch-on-border-color: @moon-white;
 @moon-toggle-button-switch-off-bg-color: @moon-dark-gray;
