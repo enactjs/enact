@@ -73,7 +73,7 @@ storiesOf('UI', module)
 			const itemSize = ri.scale(number('itemSize', Config, 72));
 			return (
 				<UiVirtualList
-					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize)) || 0}
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 					itemRenderer={uiRenderItem(itemSize)}
 					itemSize={itemSize || 0}
 					onScrollStart={action('onScrollStart')}
@@ -96,7 +96,7 @@ storiesOf('Moonstone', module)
 			const itemSize = ri.scale(number('itemSize', Config, 72));
 			return (
 				<VirtualList
-					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize)) || 0}
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 					focusableScrollbar={boolean('focusableScrollbar', Config)}
 					itemRenderer={renderItem(itemSize)}
 					itemSize={itemSize || 0}

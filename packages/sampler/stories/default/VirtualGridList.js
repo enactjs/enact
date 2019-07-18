@@ -88,8 +88,8 @@ storiesOf('UI', module)
 				direction={select('direction', prop.direction, Config, 'vertical')}
 				itemRenderer={uiRenderItem}
 				itemSize={{
-					minWidth: ri.scale(number('minWidth', Config, 180)),
-					minHeight: ri.scale(number('minHeight', Config, 270))
+					minWidth: ri.scale(number('minWidth', Config, 180)) || 0,
+					minHeight: ri.scale(number('minHeight', Config, 270)) || 0
 				}}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
@@ -108,7 +108,7 @@ storiesOf('Moonstone', module)
 		'VirtualList.VirtualGridList',
 		() => (
 			<VirtualGridList
-				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize)) || 0}
+				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 				direction={select('direction', prop.direction, Config, 'vertical')}
 				focusableScrollbar={boolean('focusableScrollbar', Config)}
 				itemRenderer={renderItem}

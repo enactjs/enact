@@ -56,7 +56,7 @@ storiesOf('VirtualList.VirtualGridList', module)
 		'Horizontal VirtualGridList',
 		() => (
 			<VirtualGridList
-				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize)) || 0}
+				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 				direction="horizontal"
 				focusableScrollbar={boolean('focusableScrollbar', Config, false)}
 				itemRenderer={renderItem}
