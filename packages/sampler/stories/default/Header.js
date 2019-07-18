@@ -47,6 +47,7 @@ storiesOf('Moonstone', module)
 					centered={boolean('centered', Config)}
 					fullBleed={boolean('fullBleed', Config)}
 					headerInput={headerInput}
+					hideLine={boolean('hideLine', Config)}
 					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				>
 					{children}

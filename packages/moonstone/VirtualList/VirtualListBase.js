@@ -863,7 +863,7 @@ const listItemsRenderer = (props) => {
 	const {
 		cc,
 		handlePlaceholderFocus,
-		initItemContainerRef: initUiItemContainerRef,
+		itemContainerRef: initUiItemContainerRef,
 		needsScrollingPlaceholder,
 		primary
 	} = props;
