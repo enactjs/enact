@@ -62,10 +62,6 @@ const scrollOffset = 2;
 const DropdownButton = kind({
 	name: 'DropdownButton',
 
-	styles: {
-		css
-	},
-
 	render: (props) => (
 		<Button
 			{...props}
