@@ -15,7 +15,7 @@ import css from './Media.module.less';
 const PreloadSupport = hoc((config, Wrapped) => class extends React.Component {
 	static displayName = 'PreloadSupport'
 
-	static propTypes = /** @lends ui/PreloadSupport.prototype */ {
+	static propTypes = /** @lends ui/Media.PreloadDecorator.prototype */ {
 		/**
 		 * Media plays automatically.
 		 *
