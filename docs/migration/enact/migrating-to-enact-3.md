@@ -92,10 +92,20 @@ files, you may need to address these changes.
 * `@moon-button-icon-position-after-small-start-margin` has been renamed to `@moon-button-icon-position-after-small-margin-start`
 * `@moon-button-icon-position-after-small-end-margin` has been renamed to `@moon-button-icon-position-after-small-margin-end`
 * `@moon-header-border-top-width` has been removed
+* `@moon-header-height-large` has been removed
+* `@moon-header-height-medium` has been replaced by `@moon-header-standard-height`
+* `@moon-header-height-small` has been replaced by `@moon-header-compact-height`
 * `@moon-icon-button-size` has been removed
 * `@moon-icon-button-size-large` has been removed
 * `@moon-icon-button-small-size` has been removed
 * `@moon-icon-button-small-size-large` has been removed
+* `@moon-medium-header-line-height` has been replaced by `@moon-header-standard-line-height`
+* `@moon-small-header-font-size` has been replaced by `@moon-header-compact-font-size`
+* `@moon-small-header-sub-header-font-size` has been replaced by `@moon-header-compact-title-below-font-size`
+* `@moon-small-header-line-height` has been replaced by `@moon-header-compact-line-height`
+* `@moon-non-latin-header-text-line-height` has been replaced by `@moon-non-latin-header-line-height`
+* `@moon-sub-header-font-size` has been replaced by `@moon-header-title-below-font-size`
+* `@moon-sub-header-below-font-size` has been replaced by `@moon-header-sub-title-below-font-size`
 * `@moon-notification-out-border-radius` has been removed
 * `@moon-notification-button-gap` has been removed
 * `@moon-tooltip-h-padding` has been replaced by `@moon-tooltip-padding`

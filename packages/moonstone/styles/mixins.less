@@ -254,7 +254,7 @@
 .moon-header-text() {
 	.moon-font(@moon-header-font-family, @moon-non-latin-font-family, {
 		font-size: @moon-non-latin-header-font-size;
-		line-height: @moon-non-latin-header-text-line-height;
+		line-height: @moon-non-latin-header-line-height;
 	});
 	font-weight: @moon-header-font-weight;
 	font-size: @moon-header-font-size;
@@ -270,9 +270,9 @@
 }
 
 .moon-sub-header-text() {
-	.moon-text-base(@moon-sub-header-font-size);
+	.moon-text-base(@moon-header-title-below-font-size);
 	font-weight: @moon-sub-header-font-weight;
-	font-size: @moon-sub-header-font-size;
+	font-size: @moon-header-title-below-font-size;
 	font-style: @moon-sub-header-font-style;
 	letter-spacing: @moon-sub-header-letter-spacing;
 
@@ -281,7 +281,7 @@
 	});
 
 	.moon-small-header & {
-		font-size: @moon-small-header-sub-header-font-size;
+		font-size: @moon-header-compact-title-below-font-size;
 
 		.moon-locale-non-latin({
 			font-size: @moon-non-latin-sub-header-font-size;
@@ -292,7 +292,7 @@
 .moon-header-sub-title-below() {
 	.moon-font(@moon-sub-header-below-font-family);
 	font-weight: @moon-sub-header-below-font-weight;
-	font-size: @moon-sub-header-below-font-size;
+	font-size: @moon-header-sub-title-below-font-size;
 }
 
 .moon-popup-header-text() {
@@ -310,7 +310,7 @@
 
 .moon-dialog-title() {
 	.moon-popup-header-text();
-	line-height: @moon-small-header-line-height;
+	line-height: @moon-header-compact-line-height;
 }
 
 .moon-dialog-title-below() {
