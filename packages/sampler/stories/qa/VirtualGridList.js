@@ -56,13 +56,13 @@ storiesOf('VirtualList.VirtualGridList', module)
 		'Horizontal VirtualGridList',
 		() => (
 			<VirtualGridList
-				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize)) || 0}
 				direction="horizontal"
 				focusableScrollbar={boolean('focusableScrollbar', Config, false)}
 				itemRenderer={renderItem}
 				itemSize={{
-					minWidth: ri.scale(number('minWidth', Config, 180)),
-					minHeight: ri.scale(number('minHeight', Config, 270))
+					minWidth: ri.scale(number('minWidth', Config, 180)) || 0,
+					minHeight: ri.scale(number('minHeight', Config, 270)) || 0
 				}}
 				onKeyDown={action('onKeyDown')}
 				onScrollStart={action('onScrollStart')}

@@ -129,10 +129,10 @@ storiesOf('VirtualList', module)
 			const itemSize = ri.scale(number('itemSize', Config, 72));
 			return (
 				<VirtualList
-					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize)) || 0}
 					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
 					itemRenderer={renderItem(StatefulSwitchItem, itemSize)}
-					itemSize={itemSize}
+					itemSize={itemSize || 0}
 					onKeyDown={action('onKeyDown')}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
@@ -150,9 +150,9 @@ storiesOf('VirtualList', module)
 			return (
 				<InPanels
 					title={title}
-					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize)) || 0}
 					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
-					itemSize={ri.scale(number('itemSize', Config, 72))}
+					itemSize={ri.scale(number('itemSize', Config, 72)) || 0}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 0))}

@@ -108,13 +108,13 @@ storiesOf('Moonstone', module)
 		'VirtualList.VirtualGridList',
 		() => (
 			<VirtualGridList
-				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize)) || 0}
 				direction={select('direction', prop.direction, Config, 'vertical')}
 				focusableScrollbar={boolean('focusableScrollbar', Config)}
 				itemRenderer={renderItem}
 				itemSize={{
-					minWidth: ri.scale(number('minWidth', Config, 180)),
-					minHeight: ri.scale(number('minHeight', Config, 270))
+					minWidth: ri.scale(number('minWidth', Config, 180)) || 0,
+					minHeight: ri.scale(number('minHeight', Config, 270)) )) 0
 				}}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
