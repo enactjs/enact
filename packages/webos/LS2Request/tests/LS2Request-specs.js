@@ -1,4 +1,4 @@
-import LS2Request from "../LS2Request";
+import LS2Request from '../LS2Request';
 
 describe('LS2Request', () => {
 	const nop = () => {};
