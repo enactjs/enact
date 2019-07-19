@@ -195,15 +195,15 @@ const DialogBase = kind({
 				<Layout className={css.titleWrapper} orientation="vertical">
 					<Cell className={css.titleBlock}>
 						<Layout align="start space-between" className={css.titleBlock}>
-							<MarqueeH1 marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title} id={`${id}_title`}>
+							<Cell component={MarqueeH1} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title} id={`${id}_title`}>
 								{title}
-							</MarqueeH1>
-							<div className={css.buttons} id={`${id}_buttons`}>
+							</Cell>
+							<Cell className={css.buttons} id={`${id}_buttons`} shrink>
 								{buttons}
-							</div>
+							</Cell>
 						</Layout>
 					</Cell>
-					<Cell component={MarqueeH2} className={css.titleBelow} id={`${id}_titleBelow`}>
+					<Cell component={MarqueeH2} className={css.titleBelow} id={`${id}_titleBelow`} marqueeOn="hover">
 						{titleBelow}
 					</Cell>
 				</Layout>
