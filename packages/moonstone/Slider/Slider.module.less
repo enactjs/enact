@@ -111,24 +111,6 @@
 				display: block;
 			}
 		}
-
-		&.pressed,
-		&:focus.activateOnFocus,
-		&:focus.active {
-			.knob::before {
-				transform: @knob-transform-active;
-			}
-		}
-
-		.disabled({
-			&.pressed,
-			&:focus.activateOnFocus,
-			&:focus.active {
-				.knob::before {
-					transform: @knob-transform-resting;
-				}
-			}
-		});
 	});
 
 	.applySkins({
@@ -150,10 +132,37 @@
 			box-shadow: @moon-slider-knob-shadow;
 		}
 
-		.spottable({
-			&:focus.activateOnFocus,
+		.focus({
+			background-color: transparent;
+
+			.bar {
+				background-color: @moon-slider-focus-bar-bg-color;
+			}
+
+			.fill {
+				background-color: @moon-slider-focus-fill-bg-color;
+			}
+
+			.load {
+				background-color: @moon-slider-focus-load-bg-color;
+			}
+
+			.knob::before {
+				background-color: @moon-slider-focus-knob-bg-color;
+				border-color: @moon-slider-focus-knob-border-color;
+			}
+
 			&.active,
+			&.activateOnFocus,
 			&.pressed {
+				.knob::before {
+					background-color: @moon-slider-active-knob-bg-color;
+					border-color: @moon-slider-active-knob-border-color;
+					transform: @knob-transform-active;
+				}
+			}
+
+			&.active {
 				.bar {
 					background-color: @moon-slider-active-bar-bg-color;
 				}
@@ -165,62 +174,25 @@
 				.load {
 					background-color: @moon-slider-active-load-bg-color;
 				}
-
-				.knob::before {
-					background-color: @moon-slider-active-knob-bg-color;
-					border-color: @moon-slider-active-knob-border-color;
-				}
 			}
 
-			.focus({
-				background-color: transparent;
-
+			.disabled({
 				.bar {
-					background-color: @moon-slider-focus-bar-bg-color;
-				}
-
-				.fill {
-					background-color: @moon-slider-focus-fill-bg-color;
-				}
-
-				.load {
-					background-color: @moon-slider-focus-load-bg-color;
+					opacity: @moon-slider-disabled-bar-opacity;
 				}
 
 				.knob::before {
-					background-color: @moon-slider-focus-knob-bg-color;
+					background-color: @moon-slider-disabled-focus-knob-bg-color;
 					border-color: @moon-slider-focus-knob-border-color;
 				}
 
-				&.active {
-					.bar {
-						background-color: @moon-slider-active-bar-bg-color;
-					}
-
-					.fill {
-						background-color: @moon-slider-active-fill-bg-color;
-					}
-
-					.load {
-						background-color: @moon-slider-active-load-bg-color;
-					}
-
+				&.active,
+				&.activateOnFocus,
+				&.pressed {
 					.knob::before {
-						background-color: @moon-slider-active-knob-bg-color;
-						border-color: @moon-slider-active-knob-border-color;
+						transform: @knob-transform-resting;
 					}
 				}
-
-				.disabled({
-					.bar {
-						opacity: @moon-slider-disabled-bar-opacity;
-					}
-
-					.knob::before {
-						background-color: @moon-slider-disabled-focus-knob-bg-color;
-						border-color: @moon-slider-focus-knob-border-color;
-					}
-				});
 			});
 		});
 
