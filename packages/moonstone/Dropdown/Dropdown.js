@@ -62,14 +62,10 @@ const scrollOffset = 2;
 const DropdownButton = kind({
 	name: 'DropdownButton',
 
-	styles: {
-		css,
-		className: 'button'
-	},
-
 	render: (props) => (
 		<Button
 			{...props}
+			css={css}
 			iconPosition="after"
 		/>
 	)
