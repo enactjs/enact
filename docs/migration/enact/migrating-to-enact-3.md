@@ -91,6 +91,12 @@ files, you may need to address these changes.
 * `@moon-button-icon-position-after-end-margin` has been renamed to `@moon-button-icon-position-after-margin-end`
 * `@moon-button-icon-position-after-small-start-margin` has been renamed to `@moon-button-icon-position-after-small-margin-start`
 * `@moon-button-icon-position-after-small-end-margin` has been renamed to `@moon-button-icon-position-after-small-margin-end`
+* `@moon-divider-font-family` has been removed
+* `@moon-non-latin-divider-font-size` has been removed
+* `@moon-divider-font-size` has been removed
+* `@moon-divider-font-weight` has been removed
+* `@moon-divider-font-style` has been removed
+* `@moon-divider-letter-spacing` has been removed
 * `@moon-header-border-top-width` has been removed
 * `@moon-icon-button-size` has been removed
 * `@moon-icon-button-size-large` has been removed
@@ -99,6 +105,9 @@ files, you may need to address these changes.
 * `@moon-notification-out-border-radius` has been removed
 * `@moon-notification-button-gap` has been removed
 * `@moon-tooltip-h-padding` has been replaced by `@moon-tooltip-padding`
+
+### mixins
+* `.moon-divider-text` has been removed
 
 ### `Button`
 The `casing` prop has been removed.
