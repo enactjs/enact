@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/LabeledItem` to pass `marqueeOn` prop to its contents
 - `moonstone/Spinner` to use the latest designs
 - `moonstone/Tooltip` layer order so it doesn't interfere with other positioned elements, like `ContextualPopup`
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly respond to 5way directional key presses
 
 ## [3.0.0-beta.1] - 2019-07-15
 
@@ -37,7 +38,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/IncrementSlider` to support aria-label when disabled
 - `moonstone/LabeledItem` to not clip the bottom of descender glyphs in large text mode
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to scroll too far by page up/down keys
-- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly respond to 5way directional key presses
 - `moonstone/VirtualList.VirtualGridList` scrolling when navigating to an adjacent item
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to focus an item properly after an update
 
