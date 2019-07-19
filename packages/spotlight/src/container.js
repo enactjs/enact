@@ -304,6 +304,13 @@ const getSpottableDescendants = (containerId) => {
 		`${subContainerSelector} ${spottableSelector}, ${subContainerSelector} ${containerSelector}`
 	);
 
+	// if node is document, it will not have getAttribute and therefore can't have aria-owns
+	const owns = node.getAttribute && node.getAttribute('aria-owns');
+	if (owns) {
+		const ids = owns.split(' ').filter(Boolean);
+		candidates.push(...ids.map(id => document.getElementById(id)).filter(Boolean));
+	}
+
 	return candidates.filter(n => navigableFilter(n, containerId));
 };
 
