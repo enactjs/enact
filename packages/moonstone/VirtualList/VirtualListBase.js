@@ -123,6 +123,22 @@ const VirtualListBaseFactory = (type) => {
 			 */
 			initUiChildRef: PropTypes.func,
 
+			/**
+			 * Prop to check if horizontal Scrollbar exists or not.
+			 *
+			 * @type {Boolean}
+			 * @private
+			 */
+			isHorizontalScrollbarVisible: PropTypes.bool,
+
+			/**
+			 * Prop to check if vertical Scrollbar exists or not.
+			 *
+			 * @type {Boolean}
+			 * @private
+			 */
+			isVerticalScrollbarVisible: PropTypes.bool,
+
 			/*
 			 * It scrolls by page when `true`, by item when `false`.
 			 *
@@ -456,13 +472,14 @@ const VirtualListBaseFactory = (type) => {
 					ev.stopPropagation();
 				} else {
 					const {repeat} = ev;
-					const {dimensionToExtent, isPrimaryDirectionVertical, props: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible}} = this.uiRefCurrent;
+					const {isHorizontalScrollbarVisible, isVerticalScrollbarVisible, spotlightId} = this.props;
+					const {dimensionToExtent, isPrimaryDirectionVertical} = this.uiRefCurrent;
 					const targetIndex = target.dataset.index;
 					const isScrollButton = (
 						// if target has an index, it must be an item so can't be a scroll button
 						!targetIndex &&
 						// if it lacks an index and is inside the scroller, it must be a button
-						target.matches(`[data-spotlight-id="${this.props.spotlightId}"] *`)
+						target.matches(`[data-spotlight-id="${spotlightId}"] *`)
 					);
 					const index = !isScrollButton ? getNumberValue(targetIndex) : -1;
 					const {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
