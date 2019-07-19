@@ -433,8 +433,16 @@ const VirtualListBaseFactory = (type) => {
 		getItemPosition = (index, stickTo = 'start') => {
 			const
 				{primary} = this,
-				position = this.getGridPosition(index),
-				offset = (stickTo === 'start') ? 0 : primary.clientSize - primary.itemSize;
+				position = this.getGridPosition(index);
+			let  offset = 0;
+
+			if (stickTo === 'start') {
+				offset = 0;
+			} else if (this.props.type === 'NewVirtualList') {
+				offset = primary.clientSize - this.props.variableGridSizes[index];
+			} else {
+				offset = primary.clientSize - primary.itemSize;
+			}
 
 			position.primaryPosition -= offset;
 
@@ -639,6 +647,34 @@ const VirtualListBaseFactory = (type) => {
 			if (dataSize <= 0) {
 				moreInfo.firstVisibleIndex = null;
 				moreInfo.lastVisibleIndex = null;
+			} else if (this.props.type === 'NewVirtualList') {
+				const {firstIndex, numOfItems} = this.state;
+				const {isPrimaryDirectionVertical, scrollBounds: {clientWidth, clientHeight}, scrollPosition} = this;
+				const clientSize = isPrimaryDirectionVertical ? clientHeight : clientWidth;
+
+				let firstVisibleIndex = null, lastVisibleIndex = null;
+
+				for (let i = firstIndex; i < firstIndex +  numOfItems; i++) {
+					if (scrollPosition <= this.getVariableGridBottomPosition(i)) {
+						firstVisibleIndex = i;
+						break;
+					}
+				}
+
+				for (let i = firstIndex + numOfItems - 1; i >= firstIndex; i--) {
+					if (scrollPosition + clientSize >= this.getVariableGridBottomPosition(i) - this.props.variableGridSizes[i]) {
+						lastVisibleIndex = i;
+						break;
+					}
+				}
+
+				if (firstVisibleIndex > lastVisibleIndex) {
+					firstVisibleIndex = null;
+					lastVisibleIndex = null;
+				}
+
+				moreInfo.firstVisibleIndex = firstVisibleIndex;
+				moreInfo.lastVisibleIndex = lastVisibleIndex;
 			} else {
 				moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - itemSize) / gridSize) + 1) * dimensionToExtent;
 				moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent - 1);
@@ -822,6 +858,9 @@ const VirtualListBaseFactory = (type) => {
 				this.scrollBounds.maxTop = Math.max(0, this.scrollBounds.scrollHeight - this.scrollBounds.clientHeight);
 
 				this.setContainerSize();
+
+				// Update moreInfo
+				this.updateMoreInfo(dataSize, this.scrollPosition);
 			}
 		}
 

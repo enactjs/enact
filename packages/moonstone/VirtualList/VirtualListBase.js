@@ -159,6 +159,19 @@ const VirtualListBaseFactory = (type) => {
 			spotlightId: PropTypes.string,
 
 			/**
+			 * Type of the list. If you want to use variable item height, you need to define it to `'NewVirtualList'`.
+			 *
+			 * Valid values are:
+			 * * `'VirtualList'`, and
+			 * * `'NewVirtualList'`.
+			 *
+			 * @type {String}
+			 * @default 'VirtualList'
+			 * @private
+			 */
+			type: PropTypes.oneOf(['VirtualList', 'NewVirtualList']),
+
+			/**
 			 * When it's `true` and the spotlight focus cannot move to the given direction anymore by 5-way keys,
 			 * a list is scrolled with an animation to the other side and the spotlight focus moves in wraparound manner.
 			 *
@@ -180,6 +193,7 @@ const VirtualListBaseFactory = (type) => {
 			focusableScrollbar: false,
 			pageScroll: false,
 			spacing: 0,
+			type: 'VirtualList',
 			wrap: false
 		}
 
@@ -406,9 +420,29 @@ const VirtualListBaseFactory = (type) => {
 			this.isScrolledByJump = false;
 
 			if (nextIndex >= 0) {
-				const numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
-				const firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent;
-				const isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
+				let isNextItemInView = false;
+
+				if (this.props.type === 'NewVirtualList') {
+					const container = this.uiRefCurrent.containerRef.current;
+					const node = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${nextIndex}']`);
+					if (container && node) {
+						const containerRects = container.getBoundingClientRect();
+						const nodeRects = node.getBoundingClientRect();
+
+						if (
+							nodeRects.x >= containerRects.x &&
+							nodeRects.x + nodeRects.width <= containerRects.x + containerRects.width &&
+							nodeRects.y >= containerRects.y &&
+							nodeRects.y + nodeRects.height <= containerRects.y + containerRects.height
+						) {
+							isNextItemInView = true;
+						}
+					}
+				} else {
+					const numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
+					const firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent;
+					isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
+				}
 
 				this.lastFocusedIndex = nextIndex;
 
