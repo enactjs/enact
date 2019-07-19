@@ -756,11 +756,27 @@ const Spotlight = (function () {
 		 * @private
 		 */
 		focusFromPoint: function (point, direction) {
+			/*
 			const node = getNavigableTarget(document.elementFromPoint(point.x, point.y));
 
 			if (node && node !== getCurrent()) {
 				focusElement(node, getContainersForNode(node), true);
 			} else {
+				spotNextFromPoint(direction, point);
+			}
+			*/
+
+			const elemFromPoint = document.elementFromPoint(point.x, point.y);
+			let node;
+
+			node = getNavigableTarget(elemFromPoint);
+			if (node && node !== getCurrent()) {
+				focusElement(node, getContainersForNode(node), true);
+			} else {
+				node = getTargetByDirectionFromElement (direction, elemFromPoint);
+				if (node && node !== getCurrent()) {
+					focusElement(node, getContainersForNode(node), true);
+				}
 				spotNextFromPoint(direction, point);
 			}
 		},
