@@ -110,9 +110,7 @@ const HeaderBase = kind({
 		/**
 		 * Determines what triggers the header content to start its animation.
 		 *
-		 * * Values: `'focus'`, `'hover'` and `'render'`.
-		 *
-		 * @type {String}
+		 * @type {('focus'|'hover'|'render')}
 		 * @default 'hover'
 		 * @public
 		 */
@@ -160,9 +158,7 @@ const HeaderBase = kind({
 		/**
 		 * Set the type of header to be used.
 		 *
-		 * * Values: `'standard'`, `'compact'`, or `'dense'`.
-		 *
-		 * @type {String}
+		 * @type {('compact'|'dense'|'standard')}
 		 * @default 'standard'
 		 */
 		type: PropTypes.oneOf(['compact', 'dense', 'standard'])
