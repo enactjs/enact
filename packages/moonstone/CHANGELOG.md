@@ -36,8 +36,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` to allow keydown events to bubble up when not handled by the component
 - `moonstone/IncrementSlider` to support aria-label when disabled
 - `moonstone/LabeledItem` to not clip the bottom of descender glyphs in large text mode
-- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to focus an item properly after an update
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to scroll too far by page up/down keys
+- `moonstone/VirtualList.VirtualGridList` scrolling when navigating to an adjacent item
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to focus an item properly after an update
 
 ## [3.0.0-alpha.7] - 2019-06-24
 
