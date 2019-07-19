@@ -118,12 +118,12 @@ const defaultConfig = {
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {navigableFilter, preserveId, ...containerConfig} = config;
 
-	const stateFromProps = ({spotlightId, spotlightRestrict}) => {
+	const stateFromProps = ({id, spotlightId, spotlightRestrict}) => {
 		const options = {restrict: spotlightRestrict};
-		const id = Spotlight.add(spotlightId || options, options);
+		const containerId = Spotlight.add(spotlightId || id || options, options);
 		return {
-			id,
-			preserveId: preserveId && id === spotlightId,
+			id: containerId,
+			preserveId: preserveId && containerId === spotlightId,
 			spotlightRestrict
 		};
 	};
@@ -140,6 +140,16 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'SpotlightContainerDecorator';
 
 		static propTypes = /** @lends spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.prototype */ {
+			/**
+			 * Used to identify this component.
+			 *
+			 * Default value for spotlightId.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			id: PropTypes.string,
+
 			/**
 			 * When `true`, controls in the container cannot be navigated.
 			 *
@@ -206,11 +216,13 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static getDerivedStateFromProps (props, state) {
-			const {spotlightId: id, spotlightRestrict} = props;
+			const {id, spotlightId, spotlightRestrict} = props;
 			const {id: prevId, spotlightRestrict: prevSpotlightRestrict} = state;
+
+			const _id = spotlightId || id;
 			// prevId will only be undefined the first render so this prevents releasing the
 			// container after initially creating it
-			const isIdChanged = prevId && id && prevId !== id;
+			const isIdChanged = prevId && _id && prevId !== _id;
 
 			if (isIdChanged) {
 				releaseContainer(state);
