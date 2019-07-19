@@ -123,6 +123,22 @@ const VirtualListBaseFactory = (type) => {
 			 */
 			initUiChildRef: PropTypes.func,
 
+			/**
+			 * Prop to check if horizontal Scrollbar exists or not.
+			 *
+			 * @type {Boolean}
+			 * @private
+			 */
+			isHorizontalScrollbarVisible: PropTypes.bool,
+
+			/**
+			 * Prop to check if vertical Scrollbar exists or not.
+			 *
+			 * @type {Boolean}
+			 * @private
+			 */
+			isVerticalScrollbarVisible: PropTypes.bool,
+
 			/*
 			 * It scrolls by page when `true`, by item when `false`.
 			 *
@@ -461,28 +477,33 @@ const VirtualListBaseFactory = (type) => {
 					ev.stopPropagation();
 				} else {
 					const {repeat} = ev;
+					const {isHorizontalScrollbarVisible, isVerticalScrollbarVisible, spotlightId} = this.props;
 					const {dimensionToExtent, isPrimaryDirectionVertical} = this.uiRefCurrent;
 					const targetIndex = target.dataset.index;
 					const isScrollButton = (
 						// if target has an index, it must be an item so can't be a scroll button
 						!targetIndex &&
 						// if it lacks an index and is inside the scroller, it must be a button
-						target.matches(`[data-spotlight-id="${this.props.spotlightId}"] *`)
+						target.matches(`[data-spotlight-id="${spotlightId}"] *`)
 					);
 					const index = !isScrollButton ? getNumberValue(targetIndex) : -1;
 					const {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
 					const directions = {};
+					let isLeaving = false;
+					let isScrollbarVisible;
 
 					if (isPrimaryDirectionVertical) {
 						directions.left = isLeftMovement;
 						directions.right = isRightMovement;
 						directions.up = isUpKey;
 						directions.down = isDownKey;
+						isScrollbarVisible = isVerticalScrollbarVisible;
 					} else {
 						directions.left = isUpKey;
 						directions.right = isDownKey;
 						directions.up = isLeftMovement;
 						directions.down = isRightMovement;
+						isScrollbarVisible = isHorizontalScrollbarVisible;
 					}
 
 					if (!isScrollButton) {
@@ -494,10 +515,10 @@ const VirtualListBaseFactory = (type) => {
 							const {dataSize, focusableScrollbar} = this.props;
 							const column = index % dimensionToExtent;
 							const row = (index - column) % dataSize / dimensionToExtent;
-							const isLeaving = directions.up && row === 0 ||
+							isLeaving = directions.up && row === 0 ||
 								directions.down && row === Math.floor((dataSize - 1) % dataSize / dimensionToExtent) ||
 								directions.left && column === 0 ||
-								directions.right && !focusableScrollbar && column === dimensionToExtent - 1;
+								directions.right && (!focusableScrollbar || !isScrollbarVisible) && (column === dimensionToExtent - 1 || index === dataSize - 1 && row === 0);
 
 							if (repeat && isLeaving) {
 								ev.preventDefault();
@@ -521,6 +542,12 @@ const VirtualListBaseFactory = (type) => {
 					) {
 						ev.preventDefault();
 						ev.stopPropagation();
+					} else if (!repeat) {
+						isLeaving = true;
+					}
+
+					if (isLeaving) {
+						SpotlightAccelerator.reset();
 					}
 				}
 			} else if (isPageUp(keyCode) || isPageDown(keyCode)) {
