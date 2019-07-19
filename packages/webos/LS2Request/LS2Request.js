@@ -130,7 +130,7 @@ export default class LS2Request {
 		if (msg == null) {
 			parsedMsg = {
 				errorCode: -1,
-				errorText: 'No message returned',
+				errorText: `Invalid response: ${msg}`,
 				returnValue: false
 			};
 		} else {
