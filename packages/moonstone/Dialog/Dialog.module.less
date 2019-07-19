@@ -19,38 +19,50 @@
 			margin-bottom: 18px;
 		}
 	}
+
 	&.reserveClose {
-		.padding-start-end(@moon-dialog-h-padding, @moon-icon-button-small-size + @moon-spotlight-outset);
+		.padding-start-end(@moon-dialog-h-padding, (@moon-button-h-margin * 2) + @moon-icon-button-small-size + @moon-dialog-reserve-close-right-padding);
 
 		.moon-custom-text({
 			.padding-start-end(@moon-dialog-h-padding, @moon-icon-button-small-size-large + @moon-spotlight-outset, parent);
 		});
 	}
+
+	.closeButton {
+		top: @moon-dialog-close-button-top;
+		right: @moon-dialog-close-button-right;
+	}
+
 	.titleBlock {
 		max-width: 100%;
 		min-width: 0;
 	}
+
 	.title {
 		.moon-dialog-title();
-		margin: 0 0 6px;
+		margin: 0;
 	}
+
 	.titleBelow {
 		.moon-dialog-title-below();
 		margin: 0;
 	}
+
 	.titleWrapper {
 		display: flex;
 		justify-content: space-between;
 	}
+
 	.body {
 		.moon-dialog-content();
 		margin: 0;
 		position: relative;
 	}
+
 	.buttons {
 		display: flex;
-		padding-top: 24px;
 	}
+
 	.buttons > :last-child {
 		-webkit-margin-end: 0;
 	}
