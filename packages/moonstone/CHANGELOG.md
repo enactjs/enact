@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/FormCheckboxItem` so it doesn't change size between normal and large text mode
 - `moonstone/Spinner` to use the latest designs
 - `moonstone/Tooltip` layer order so it doesn't interfere with other positioned elements, like `ContextualPopup`
+- `moonstone/Panels.Header` to use the latest designs with better spacing between the titles below
 
 ## [3.0.0-beta.1] - 2019-07-15
 

@@ -250,7 +250,7 @@ const HeaderBase = kind({
 					{titleOrInput}
 					<Cell shrink size={96}>
 						<Layout align="end">
-							<Cell>
+							<Cell className={css.titlesCell}>
 								{titleBelowComponent}
 								{subTitleBelowComponent}
 							</Cell>
