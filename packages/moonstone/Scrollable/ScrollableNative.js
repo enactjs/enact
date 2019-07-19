@@ -1009,6 +1009,7 @@ class ScrollableBaseNative extends Component {
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
 									initUiChildRef,
+									isHorizontalScrollbarVisible,
 									isVerticalScrollbarVisible,
 									onUpdate: this.handleScrollerUpdate,
 									ref: this.childRef,

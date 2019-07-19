@@ -944,6 +944,7 @@ class ScrollableBase extends Component {
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
 									initUiChildRef,
+									isHorizontalScrollbarVisible,
 									isVerticalScrollbarVisible,
 									onScroll: handleScroll,
 									onUpdate: this.handleScrollerUpdate,

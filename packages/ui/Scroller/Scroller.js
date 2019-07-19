@@ -189,6 +189,7 @@ class ScrollerBase extends Component {
 		delete rest.cbScrollTo;
 		delete rest.direction;
 		delete rest.rtl;
+		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
 
 		return (
