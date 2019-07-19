@@ -90,6 +90,15 @@ const LabeledItemBase = kind({
 		label: PropTypes.node,
 
 		/**
+		 * Determines what triggers the `LabelItem`'s marquee to start its animation.
+		 *
+		 * @type {('focus'|'hover'|'render')}
+		 * @default 'focus'
+		 * @public
+		 */
+		marqueeOn: PropTypes.oneOf(['focus', 'hover', 'render']),
+
+		/**
 		 * Icon to be displayed next to the title text.
 		 *
 		 * @type {String|Object}
@@ -104,13 +113,13 @@ const LabeledItemBase = kind({
 		publicClassNames: ['labeledItem', 'icon', 'label']
 	},
 
-	render: ({children, css, disabled, label, titleIcon, ...rest}) => (
+	render: ({children, css, disabled, label, marqueeOn, titleIcon, ...rest}) => (
 		<Controller disabled={disabled} {...rest} css={css}>
 			<div className={css.text}>
-				<Marquee disabled={disabled} className={css.title}>{children}</Marquee>
+				<Marquee disabled={disabled} className={css.title} marqueeOn={marqueeOn}>{children}</Marquee>
 				{(titleIcon != null) ? <Icon size="small" className={css.icon}>{titleIcon}</Icon> : null}
 			</div>
-			{(label != null) ? <Marquee disabled={disabled} className={css.label}>{label}</Marquee> : null}
+			{(label != null) ? <Marquee disabled={disabled} className={css.label} marqueeOn={marqueeOn}>{label}</Marquee> : null}
 		</Controller>
 	)
 });

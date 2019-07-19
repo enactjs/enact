@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Dropdown` button to not animate
 - `moonstone/FormCheckboxItem` so it doesn't change size between normal and large text mode
+- `moonstone/LabeledItem` to pass `marqueeOn` prop to its contents
 - `moonstone/Spinner` to use the latest designs
 - `moonstone/Tooltip` layer order so it doesn't interfere with other positioned elements, like `ContextualPopup`
 
