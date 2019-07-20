@@ -7,12 +7,17 @@
 .heading {
 	border-bottom: @moon-heading-border-width solid transparent;
 	margin: 0 @moon-spotlight-outset (1.5 * @moon-spotlight-outset) @moon-spotlight-outset;
+	padding: @moon-heading-padding;
 	min-height: (1.5 * @moon-spotlight-outset);
 	letter-spacing: @moon-heading-letter-spacing;
 	line-height: @moon-heading-line-height;
 	.moon-font(@moon-heading-large-font-family, @moon-heading-non-latin-font-family, {
 		line-height: @moon-heading-non-latin-line-height;
 	});
+
+	&.showLine {
+		padding: @moon-heading-showline-padding;
+	}
 
 	&.large {
 		font-family: @moon-heading-large-font-family;
@@ -59,7 +64,6 @@
 
 		&.showLine {
 			border-bottom-color: @moon-heading-border-color;
-			padding-bottom: 9px;
 		}
 	});
 }
