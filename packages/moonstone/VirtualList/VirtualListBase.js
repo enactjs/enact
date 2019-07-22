@@ -28,7 +28,7 @@ const
 	// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
 	getNumberValue = (index) => index | 0,
 	nop = () => {},
-	moveFocusStraight = ({direction, ev, id}) => {
+	moveFocusStraight = ({direction, id}) => {
 		Spotlight.set(id, {straightOnly: true});
 		const moved = Spotlight.move(direction);
 		Spotlight.set(id, {straightOnly: false});
