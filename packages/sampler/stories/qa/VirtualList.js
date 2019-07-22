@@ -126,13 +126,12 @@ storiesOf('VirtualList', module)
 	.add(
 		'with more items',
 		() => {
-			const itemSize = ri.scale(number('itemSize', Config, 72));
 			return (
 				<VirtualList
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
-					itemRenderer={renderItem(StatefulSwitchItem, itemSize)}
-					itemSize={itemSize || 0}
+					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)))}
+					itemSize={ri.scale(number('itemSize', Config, 72))}
 					onKeyDown={action('onKeyDown')}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
@@ -152,7 +151,7 @@ storiesOf('VirtualList', module)
 					title={title}
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
-					itemSize={ri.scale(number('itemSize', Config, 72)) || 0}
+					itemSize={ri.scale(number('itemSize', Config, 72))}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 0))}

@@ -61,8 +61,8 @@ storiesOf('VirtualList.VirtualGridList', module)
 				focusableScrollbar={boolean('focusableScrollbar', Config, false)}
 				itemRenderer={renderItem}
 				itemSize={{
-					minWidth: ri.scale(number('minWidth', Config, 180)) || 0,
-					minHeight: ri.scale(number('minHeight', Config, 270)) || 0
+					minWidth: ri.scale(number('minWidth', Config, 180)),
+					minHeight: ri.scale(number('minHeight', Config, 270))
 				}}
 				onKeyDown={action('onKeyDown')}
 				onScrollStart={action('onScrollStart')}
