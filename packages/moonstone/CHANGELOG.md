@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/Panels.Header` prop `hideLine` to hide the bottom separator line
+- `moonstone/Panels.Header` type "dense" for "AlwaysViewing" Panels types
 
 ### Fixed
 
@@ -14,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/FormCheckboxItem` so it doesn't change size between normal and large text mode
 - `moonstone/Heading` to have a bit more space between the text and the line, when the line is present
 - `moonstone/LabeledItem` to pass `marqueeOn` prop to its contents
+- `moonstone/Picker` accessibility read out when a button becomes disabled
 - `moonstone/Spinner` to use the latest designs
 - `moonstone/Tooltip` layer order so it doesn't interfere with other positioned elements, like `ContextualPopup`
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly respond to 5way directional key presses
