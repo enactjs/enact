@@ -538,7 +538,7 @@ const VirtualListBaseFactory = (type) => {
 					} else if (
 						directions.right && repeat ||
 						directions.left && Spotlight.move(direction) ||
-						(directions.up || directions.down) && (repeat || moveFocusStraight({id: this.props.spotlightId, direction}) && currentTarget.contains(Spotlight.getCurrent()))
+						(directions.up || directions.down) && (repeat && currentTarget.contains(Spotlight.getCurrent()) || moveFocusStraight({id: this.props.spotlightId, direction}))
 					) {
 						ev.preventDefault();
 						ev.stopPropagation();
