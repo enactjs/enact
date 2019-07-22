@@ -1,1 +1,0 @@
-{"formats":{"default":"{streetAddress}\n{postalCode} {locality}\n{country}","nocountry":"{streetAddress}\n{postalCode} {locality}"},"startAt":"end","fields":[{"name":"postalCode","line":"startAtLast","pattern":"(NO-)?[0-9]{4}"},{"name":"locality","line":"last","pattern":"[AÁBDÐEÉFGHIÍJKLMNOÓPRSTUÚVXYÝÞÆÖaábdðeéfghiíjklmnoóprstuúvxyýþæö0-9\\.\\-']+"}]}

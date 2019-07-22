@@ -2,7 +2,7 @@
  * Moonstone styled button components and behaviors.
  *
  * @example
- * <Button size="small">Hello Enact!</Button>
+ * <Button>Hello Enact!</Button>
  *
  * @module moonstone/Button
  * @exports Button
@@ -85,6 +85,7 @@ const ButtonBase = kind({
 		// `transparent` was intentionally excluded from the adove documented exported classes as it
 		// does not appear to provide value to the end-developer, but is needed by IconButton
 		// internally for its design guidelines, which differ from Button regarding `transparent`.
+		// Same for `pressed` which is used by Dropdown to nullify the key-press activate animation.
 		css: PropTypes.object,
 
 		/**
@@ -113,7 +114,7 @@ const ButtonBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['button', 'bg', 'large', 'selected', 'small', 'transparent']
+		publicClassNames: ['button', 'bg', 'large', 'pressed', 'selected', 'small', 'transparent']
 	},
 
 	computed: {

@@ -51,7 +51,7 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
-storiesOf('VirtualList.VirtualGridList', module)
+storiesOf('VirtualGridList', module)
 	.add(
 		'Horizontal VirtualGridList',
 		() => (
@@ -64,6 +64,7 @@ storiesOf('VirtualList.VirtualGridList', module)
 					minWidth: ri.scale(number('minWidth', Config, 180)),
 					minHeight: ri.scale(number('minHeight', Config, 270))
 				}}
+				onKeyDown={action('onKeyDown')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				spacing={ri.scale(number('spacing', Config, 18))}

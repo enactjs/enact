@@ -123,6 +123,22 @@ const VirtualListBaseFactory = (type) => {
 			 */
 			initUiChildRef: PropTypes.func,
 
+			/**
+			 * Prop to check if horizontal Scrollbar exists or not.
+			 *
+			 * @type {Boolean}
+			 * @private
+			 */
+			isHorizontalScrollbarVisible: PropTypes.bool,
+
+			/**
+			 * Prop to check if vertical Scrollbar exists or not.
+			 *
+			 * @type {Boolean}
+			 * @private
+			 */
+			isVerticalScrollbarVisible: PropTypes.bool,
+
 			/*
 			 * It scrolls by page when `true`, by item when `false`.
 			 *
@@ -406,13 +422,18 @@ const VirtualListBaseFactory = (type) => {
 			this.isScrolledByJump = false;
 
 			if (nextIndex >= 0) {
+				const {dataSize} = this.props;
+				const column = index % dimensionToExtent;
+				const row = (index - column) % dataSize / dimensionToExtent;
+				const nextColumn = nextIndex % dimensionToExtent;
+				const nextRow = (nextIndex - nextColumn) % dataSize / dimensionToExtent;
 				const numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
 				const firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent;
 				const isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
 
 				this.lastFocusedIndex = nextIndex;
 
-				if (isNextItemInView) {
+				if (isNextItemInView || row === nextRow) {
 					this.focusByIndex(nextIndex);
 				} else {
 					this.isScrolledBy5way = true;
@@ -456,28 +477,33 @@ const VirtualListBaseFactory = (type) => {
 					ev.stopPropagation();
 				} else {
 					const {repeat} = ev;
+					const {isHorizontalScrollbarVisible, isVerticalScrollbarVisible, spotlightId} = this.props;
 					const {dimensionToExtent, isPrimaryDirectionVertical} = this.uiRefCurrent;
 					const targetIndex = target.dataset.index;
 					const isScrollButton = (
 						// if target has an index, it must be an item so can't be a scroll button
 						!targetIndex &&
 						// if it lacks an index and is inside the scroller, it must be a button
-						target.matches(`[data-spotlight-id="${this.props.spotlightId}"] *`)
+						target.matches(`[data-spotlight-id="${spotlightId}"] *`)
 					);
 					const index = !isScrollButton ? getNumberValue(targetIndex) : -1;
 					const {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
 					const directions = {};
+					let isLeaving = false;
+					let isScrollbarVisible;
 
 					if (isPrimaryDirectionVertical) {
 						directions.left = isLeftMovement;
 						directions.right = isRightMovement;
 						directions.up = isUpKey;
 						directions.down = isDownKey;
+						isScrollbarVisible = isVerticalScrollbarVisible;
 					} else {
 						directions.left = isUpKey;
 						directions.right = isDownKey;
 						directions.up = isLeftMovement;
 						directions.down = isRightMovement;
+						isScrollbarVisible = isHorizontalScrollbarVisible;
 					}
 
 					if (!isScrollButton) {
@@ -489,10 +515,10 @@ const VirtualListBaseFactory = (type) => {
 							const {dataSize, focusableScrollbar} = this.props;
 							const column = index % dimensionToExtent;
 							const row = (index - column) % dataSize / dimensionToExtent;
-							const isLeaving = directions.up && row === 0 ||
+							isLeaving = directions.up && row === 0 ||
 								directions.down && row === Math.floor((dataSize - 1) % dataSize / dimensionToExtent) ||
 								directions.left && column === 0 ||
-								directions.right && !focusableScrollbar && column === dimensionToExtent - 1;
+								directions.right && (!focusableScrollbar || !isScrollbarVisible) && (column === dimensionToExtent - 1 || index === dataSize - 1 && row === 0);
 
 							if (repeat && isLeaving) {
 								ev.preventDefault();
@@ -516,6 +542,12 @@ const VirtualListBaseFactory = (type) => {
 					) {
 						ev.preventDefault();
 						ev.stopPropagation();
+					} else if (!repeat) {
+						isLeaving = true;
+					}
+
+					if (isLeaving) {
+						SpotlightAccelerator.reset();
 					}
 				}
 			} else if (isPageUp(keyCode) || isPageDown(keyCode)) {
@@ -550,15 +582,21 @@ const VirtualListBaseFactory = (type) => {
 		focusByIndex = (index) => {
 			const item = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${index}'].spottable`);
 
-			if (this.isWrappedBy5way) {
-				SpotlightAccelerator.reset();
-				this.isWrappedBy5way = false;
-			}
+			if (!item && index >= 0 && index < this.props.dataSize) {
+				// Item is valid but since the the dom doesn't exist yet, we set the index to focus after the ongoing update
+				this.preservedIndex = index;
+				this.restoreLastFocused = true;
+			} else {
+				if (this.isWrappedBy5way) {
+					SpotlightAccelerator.reset();
+					this.isWrappedBy5way = false;
+				}
 
-			this.pause.resume();
-			this.focusOnNode(item);
-			this.nodeIndexToBeFocused = null;
-			this.isScrolledByJump = false;
+				this.pause.resume();
+				this.focusOnNode(item);
+				this.nodeIndexToBeFocused = null;
+				this.isScrolledByJump = false;
+			}
 		}
 
 		initItemRef = (ref, index) => {

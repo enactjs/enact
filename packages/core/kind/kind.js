@@ -9,7 +9,6 @@ import React from 'react';
 
 import computed from './computed';
 import styles from './styles';
-import warning from 'warning';
 
 /**
  * @callback RenderFunction
@@ -112,7 +111,6 @@ const kind = (config) => {
 	const {
 		computed: cfgComputed,
 		contextType,
-		contextTypes,
 		defaultProps,
 		handlers,
 		name,
@@ -120,8 +118,6 @@ const kind = (config) => {
 		render,
 		styles: cfgStyles
 	} = config;
-
-	warning(!contextTypes, `"contextTypes" used by ${name || 'a component'} but is deprecated. Please replace with "contextType" instead.`);
 
 	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
@@ -171,7 +167,6 @@ const kind = (config) => {
 	};
 
 	if (propTypes) Component.propTypes = propTypes;
-	if (contextTypes) Component.contextTypes = contextTypes;
 	if (contextType) Component.contextType = contextType;
 	if (defaultProps) Component.defaultProps = defaultProps;
 

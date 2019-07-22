@@ -984,6 +984,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.dataSize;
 			delete rest.direction;
 			delete rest.getComponentProps;
+			delete rest.isHorizontalScrollbarVisible;
 			delete rest.isVerticalScrollbarVisible;
 			delete rest.itemRenderer;
 			delete rest.itemSize;

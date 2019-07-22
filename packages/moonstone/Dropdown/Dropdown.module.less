@@ -5,6 +5,11 @@
 @import "../styles/skin.less";
 
 .dropdown {
+	&.tiny {
+		min-width: @moon-dropdown-tiny-width;
+		width: @moon-dropdown-tiny-width;
+	}
+
 	&.small {
 		width: @moon-dropdown-small-width;
 	}
@@ -16,11 +21,31 @@
 	&.large {
 		width: @moon-dropdown-large-width;
 	}
+
+	&.huge {
+		max-width: @moon-dropdown-huge-width;
+		width: @moon-dropdown-huge-width;
+	}
+
+	&:not([disabled]) {
+		.focus({
+			&.pressed,
+			&:active {
+				.bg {
+					animation-name: none;
+				}
+			}
+		});
+	}
 }
 
 .dropDownList {
 	border-radius: @moon-dropdown-border-radius;
 	max-height: @moon-dropdown-list-max-height;
+
+	&.tiny {
+		width: @moon-dropdown-list-tiny-width;
+	}
 
 	&.small {
 		width: @moon-dropdown-list-small-width;
@@ -32,6 +57,10 @@
 
 	&.large {
 		width: @moon-dropdown-list-large-width;
+	}
+
+	&.huge {
+		width: @moon-dropdown-list-huge-width;
 	}
 
 	.moon-custom-text({
