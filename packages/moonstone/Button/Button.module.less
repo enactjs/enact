@@ -59,9 +59,6 @@
 
 		transform: translateZ(0);
 		will-change: transform;
-		-webkit-animation-duration: 0.2s;
-		-webkit-animation-iteration-count: 1;
-		-webkit-animation-timing-function: ease-out;
 		animation-duration: 0.2s;
 		animation-iteration-count: 1;
 		animation-timing-function: ease-out;
@@ -164,6 +161,7 @@
 		padding-right: @moon-button-small-h-padding;
 		margin-left: @moon-button-small-h-margin;
 		margin-right: @moon-button-small-h-margin;
+		.moon-taparea(@moon-button-small-height);
 
 		// Standard Button Scenario
 		&.minWidth {
@@ -221,8 +219,6 @@
 			}
 		}
 
-		.moon-taparea(@moon-button-small-height);
-
 		.moon-custom-text({
 			font-size: @moon-button-small-font-size-large;
 			height: @moon-button-small-height-large;
@@ -246,7 +242,6 @@
 			&.pressed,
 			&:active {
 				.bg {
-					-webkit-animation-name: expand;
 					animation-name: expand;
 				}
 			}
@@ -360,7 +355,6 @@
 			.focus({
 				&.pressed {
 					.bg {
-						-webkit-animation-name: none;
 						animation-name: none;
 					}
 				}

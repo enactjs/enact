@@ -6,7 +6,9 @@
   "scripts": {
     "clean": "enact clean",
     "lint": "enact lint --strict",
-    "test": "echo \"No test suite\" && exit 0",
+    "test": "enact test",
+    "test-json": "enact test --json",
+    "test-watch": "enact test --watch",
     "transpile": "enact transpile"
   },
   "license": "Apache-2.0",

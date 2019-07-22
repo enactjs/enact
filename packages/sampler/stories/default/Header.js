@@ -22,7 +22,7 @@ const prop = {
 		</React.Fragment>
 	},
 	marqueeOn: ['', 'hover', 'render'],
-	type: ['compact', 'standard']
+	type: ['compact', 'dense', 'standard']
 };
 
 storiesOf('Moonstone', module)
@@ -47,6 +47,7 @@ storiesOf('Moonstone', module)
 					centered={boolean('centered', Config)}
 					fullBleed={boolean('fullBleed', Config)}
 					headerInput={headerInput}
+					hideLine={boolean('hideLine', Config)}
 					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
 				>
 					{children}
