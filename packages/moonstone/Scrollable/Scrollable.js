@@ -963,6 +963,7 @@ class ScrollableBase extends Component {
 									nextButtonAriaLabel={downButtonAriaLabel}
 									previousButtonAriaLabel={upButtonAriaLabel}
 									rtl={rtl}
+									spotlightDisabled={spotlightContainerDisabled}
 								/> :
 								null
 							}
@@ -977,6 +978,7 @@ class ScrollableBase extends Component {
 								nextButtonAriaLabel={rightButtonAriaLabel}
 								previousButtonAriaLabel={leftButtonAriaLabel}
 								rtl={rtl}
+								spotlightDisabled={spotlightContainerDisabled}
 							/> :
 							null
 						}

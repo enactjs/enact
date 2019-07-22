@@ -1027,6 +1027,7 @@ class ScrollableBaseNative extends Component {
 									nextButtonAriaLabel={downButtonAriaLabel}
 									previousButtonAriaLabel={upButtonAriaLabel}
 									rtl={rtl}
+									spotlightDisabled={spotlightContainerDisabled}
 								/> :
 								null
 							}
@@ -1041,6 +1042,7 @@ class ScrollableBaseNative extends Component {
 								nextButtonAriaLabel={rightButtonAriaLabel}
 								previousButtonAriaLabel={leftButtonAriaLabel}
 								rtl={rtl}
+								spotlightDisabled={spotlightContainerDisabled}
 							/> :
 							null
 						}

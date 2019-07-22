@@ -116,6 +116,15 @@ class ScrollButtons extends Component {
 		rtl: PropTypes.bool,
 
 		/**
+		 * When `true`, the component cannot be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: PropTypes.bool,
+
+		/**
 		 * The scrollbar will be oriented vertically.
 		 *
 		 * @type {Boolean}
@@ -128,7 +137,8 @@ class ScrollButtons extends Component {
 	static defaultProps = {
 		focusableScrollButtons: false,
 		onNextScroll: nop,
-		onPrevScroll: nop
+		onPrevScroll: nop,
+		spotlightDisabled: false
 	}
 
 	constructor (props) {
@@ -319,6 +329,7 @@ class ScrollButtons extends Component {
 				onSpotlightRight={this.onSpotlight}
 				onSpotlightUp={this.onSpotlight}
 				ref={this.prevButtonRef}
+				spotlightDisabled={this.props.spotlightDisabled}
 			>
 				{prevIcon}
 			</ScrollButton>,
@@ -337,6 +348,7 @@ class ScrollButtons extends Component {
 				onSpotlightRight={this.onSpotlight}
 				onSpotlightUp={this.onSpotlight}
 				ref={this.nextButtonRef}
+				spotlightDisabled={this.props.spotlightDisabled}
 			>
 				{nextIcon}
 			</ScrollButton>,
