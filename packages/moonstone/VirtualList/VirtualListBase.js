@@ -512,7 +512,7 @@ const VirtualListBaseFactory = (type) => {
 							ev.stopPropagation();
 							this.onAcceleratedKeyDown({isWrapped, keyCode, nextIndex, repeat, target});
 						} else {
-							const {dataSize, focusableScrollbar} = this.props;
+							const {dataSize} = this.props;
 							const column = index % dimensionToExtent;
 							const row = (index - column) % dataSize / dimensionToExtent;
 							isLeaving = directions.up && row === 0 ||
