@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/FormCheckboxItem` so it doesn't change size between normal and large text mode
 - `moonstone/Heading` to have a bit more space between the text and the line, when the line is present
 - `moonstone/LabeledItem` to pass `marqueeOn` prop to its contents
+- `moonstone/RadioItem` to have a much prettier dot in dark and light skins
 - `moonstone/Picker` accessibility read out when a button becomes disabled
 - `moonstone/ProgressBar`, `moonstone/Slider`, and `moonstone/IncrementSlider` to use the latest set of design colors
 - `moonstone/Spinner` to use the latest designs
