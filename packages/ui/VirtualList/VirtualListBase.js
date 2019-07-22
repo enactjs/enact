@@ -768,11 +768,12 @@ const VirtualListBaseFactory = (type) => {
 		// For NewVirtualList
 		adjustVariableGridPosition () {
 			const
-				{dataSize, overhang, spacing, variableGridSizes} = this.props,
+				{dataSize, direction, overhang, spacing, variableGridSizes} = this.props,
 				{firstIndex, numOfItems} = this.state,
-				{itemContainerRef, maxFirstIndex, variableGridPositions} = this,
+				{isPrimaryDirectionVertical, itemContainerRef, maxFirstIndex, variableGridPositions} = this,
 				lastIndex = firstIndex + numOfItems - 1,
-				numOfUpperLine = Math.floor(overhang / 2);
+				numOfUpperLine = Math.floor(overhang / 2),
+				scrollBoundsDimension = isPrimaryDirectionVertical ? 'scrollHeight' : 'scrollWidth';
 
 			if (itemContainerRef.current) {
 				let index;
@@ -789,7 +790,11 @@ const VirtualListBaseFactory = (type) => {
 					}
 
 					if (childNode && variableGridPositions[index]) {
-						childNode.style.transform = `translate3d(0, ${variableGridPositions[index].position}px, 0)`;
+						if (direction === 'vertical') {
+							childNode.style.transform = `translate3d(0, ${variableGridPositions[index].position}px, 0)`;
+						} else {
+							childNode.style.transform = `translate3d(${variableGridPositions[index].position}px, 0, 0)`;
+						}
 					}
 				}
 
@@ -799,14 +804,15 @@ const VirtualListBaseFactory = (type) => {
 
 				// Update scroll bounds
 				if (variableGridPositions.length === dataSize) { // all item sizes are known
-					this.scrollBounds.scrollHeight = variableGridSizes.reduce((acc, cur) => acc + cur, 0) + (dataSize - 1) * spacing;
+					this.scrollBounds[scrollBoundsDimension] =
+						variableGridSizes.reduce((acc, cur) => acc + cur, 0) + (dataSize - 1) * spacing;
 				} else {
 					for (index = firstIndex + numOfItems - 1; index < dataSize; index++) {
 						const nextInfo = variableGridPositions[index + 1];
 						if (!nextInfo) {
 							const endPosition = this.getVariableGridBottomPosition(index);
-							if (endPosition > this.scrollBounds.scrollHeight) {
-								this.scrollBounds.scrollHeight = endPosition;
+							if (endPosition > this.scrollBounds[scrollBoundsDimension]) {
+								this.scrollBounds[scrollBoundsDimension] = endPosition;
 							}
 
 							break;
