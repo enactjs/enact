@@ -93,11 +93,6 @@
 @moon-day-selector-checkbox-bg-color: @moon-formcheckbox-bg-color;
 @moon-day-selector-checkbox-text-color: @moon-formcheckbox-text-color;
 
-// Divider
-// ---------------------------------------
-@moon-divider-text-color: @moon-heading-text-color;  // Deprecated
-@moon-divider-border-color: @moon-heading-border-color;  // Deprecated
-
 // Dropdown
 // ---------------------------------------
 @moon-dropdown-selected-text-color: @moon-spotlight-color;
@@ -142,14 +137,13 @@
 // Header
 // ---------------------------------------
 @moon-header-text-color:              @moon-gray;
-@moon-header-sub-title-color:         #a6a6a6;
-@moon-sub-header-text-color:          @moon-header-sub-title-color;
-@moon-sup-header-text-color:          @moon-text-color;
+@moon-header-title-below-text-color:         #a6a6a6;
+@moon-header-dense-title-below-text-color:   @moon-header-text-color;
 @moon-header-border-color:            #505050;
 @moon-header-bottom-border-color:     #404040;
+@moon-header-full-bleed-border-color: fade(@moon-white, 25%);
 @moon-header-full-bleed-text-color:   #f5f5f5;
 @moon-header-title-below-full-bleed-text-color: @moon-light-gray;
-@moon-header-full-bleed-border-color: fade(@moon-white, 25%);
 @moon-header-controls-border-color:   #383838;
 @moon-header-input-focus-text-color:  @moon-spotlight-text-color;
 @moon-header-input-focus-background-color:   @moon-spotlight-color;
@@ -277,7 +271,7 @@
 
 // Toggle Colors
 // ---------------------------------------
-@moon-toggle-text-color: @moon-sub-header-text-color;
+@moon-toggle-text-color: @moon-header-title-below-text-color;
 @moon-toggle-button-switch-on-bg-color: @moon-accent;
 @moon-toggle-button-switch-on-border-color: @moon-white;
 @moon-toggle-button-switch-dot-on-color: transparent;
