@@ -477,7 +477,7 @@ const VirtualListBaseFactory = (type) => {
 					ev.stopPropagation();
 				} else {
 					const {repeat} = ev;
-					const {isHorizontalScrollbarVisible, isVerticalScrollbarVisible, spotlightId} = this.props;
+					const {focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, spotlightId} = this.props;
 					const {dimensionToExtent, isPrimaryDirectionVertical} = this.uiRefCurrent;
 					const targetIndex = target.dataset.index;
 					const isScrollButton = (
@@ -538,7 +538,7 @@ const VirtualListBaseFactory = (type) => {
 					} else if (
 						directions.right && repeat ||
 						directions.left && Spotlight.move(direction) ||
-						(directions.up || directions.down) && (repeat || moveFocusStraight({id: this.props.spotlightId, direction}) && currentTarget.contains(Spotlight.getCurrent()))
+						(directions.up || directions.down) && focusableScrollbar && (repeat || moveFocusStraight({id: this.props.spotlightId, direction}) && currentTarget.contains(Spotlight.getCurrent()))
 					) {
 						ev.preventDefault();
 						ev.stopPropagation();

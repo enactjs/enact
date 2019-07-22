@@ -240,7 +240,8 @@ class ScrollButtons extends Component {
 		} else {
 			// If it is vertical `Scrollable`, move focus to the left for ltr or to the right for rtl
 			// If is is horizontal `Scrollable`, move focus to the up
-			const direction = !vertical && 'up' || rtl && 'right' || 'left';
+			const spotDirection = !vertical && 'up' || rtl && 'right' || 'left';
+			const keyDirection = getDirection(ev.keyCode);
 
 			if (Spotlight.getPointerMode()) {
 				// When changing from "pointer" mode to "5way key" mode,
@@ -248,11 +249,22 @@ class ScrollButtons extends Component {
 				// To make sure the content in `VirtualList` or `Scroller` to be focused after that, we used 50ms.
 				setTimeout(() => {
 					if (Spotlight.getCurrent() === target) {
-						Spotlight.move(direction);
+						Spotlight.move(spotDirection);
 					}
 				}, 50);
 			} else if (Spotlight.getCurrent() === target) {
-				Spotlight.move(direction);
+				Spotlight.move(spotDirection);
+
+				// If 5-way up on next button or 5-way down on previous button is pressed,
+				// Spotlight moves to that direction more.
+				// So preventDefault() and stopPropagation should not be called.
+				if (!(
+					target === this.nextButtonRef.current && (vertical && keyDirection === 'up' || !vertical && keyDirection === 'left') ||
+					target === this.prevButtonRef.current && (vertical && keyDirection === 'down' || !vertical && keyDirection === 'right')
+				)) {
+					ev.preventDefault();
+					ev.stopPropagation();
+				}
 			}
 		}
 	}
