@@ -63,6 +63,7 @@ files, you may need to address these changes.
 
 #### colors
 * `@moon-button-translucent-opacity` has been removed
+* `@moon-button-letter-spacing` has been removed
 * `@moon-checkbox-check-color` has been renamed to `@moon-checkbox-text-color`
 * `@moon-checkbox-spotlight-bg-color` (`@moon-checkbox-bg-spotlight-color` in `colors-light.less`) has been renamed to `@moon-checkbox-focus-bg-color`
 * `@moon-checkbox-spotlight-color` has been renamed to `@moon-checkbox-focus-text-color`
