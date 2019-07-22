@@ -37,21 +37,25 @@
 		margin: -2px 3px 0 -3px; // Negative 3px here to allow the decorator title text to horizontally align with the rest of the header text
 	}
 
-	.titleBelow,
-	.subTitleBelow {
-		.moon-header-title-below-text();
-	}
-
-	.subTitleBelow {
-		.moon-header-sub-title-below-text();
-	}
-
 	.headerComponents {
 		.remove-margin-on-edge-children();
 		.margin-start-end(@moon-header-components-gutter, 0);
 		margin-bottom: 18px;
 
 		white-space: nowrap;
+	}
+
+	&.dense,
+	&.standard,
+	&.compact {
+		.titleBelow,
+		.subTitleBelow {
+			.moon-header-title-below-text();
+		}
+
+		.subTitleBelow {
+			.moon-header-sub-title-below-text();
+		}
 	}
 
 	// Standard Header
@@ -79,9 +83,18 @@
 			max-width: 100%;
 		}
 
-		.titleBelow,
-		.subTitleBelow {
-			line-height: 1.4em;
+		.titlesCell {
+			margin-bottom: 9px;
+		}
+	}
+
+	// Dense Header
+	&.dense {
+		height: @moon-header-dense-height;
+
+		.title {
+			font-size: @moon-header-dense-title-font-size;
+			font-weight: @moon-header-dense-title-font-weight;
 		}
 	}
 
@@ -165,13 +178,6 @@
 			.titleBelow,
 			.subTitleBelow {
 				color: @moon-header-title-below-text-color;
-			}
-		}
-
-		&.dense {
-			.titleBelow,
-			.subTitleBelow {
-				color: @moon-header-dense-title-below-text-color;
 			}
 		}
 
