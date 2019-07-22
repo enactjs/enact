@@ -8,7 +8,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Panels.Header` prop `hideLine` to hide the bottom separator line
 - `moonstone/Panels.Header` type "dense" for "AlwaysViewing" Panels types
-- `moonstone/ProgressBar` public class name `bar` to support customizing the background of the bar
 
 ### Fixed
 
