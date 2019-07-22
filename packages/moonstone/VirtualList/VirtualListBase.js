@@ -28,7 +28,7 @@ const
 	// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
 	getNumberValue = (index) => index | 0,
 	nop = () => {},
-	moveFocusStraight = ({direction, id}) => {
+	moveFocusStraight = ({direction, ev, id}) => {
 		Spotlight.set(id, {straightOnly: true});
 		const moved = Spotlight.move(direction);
 		Spotlight.set(id, {straightOnly: false});
@@ -535,15 +535,22 @@ const VirtualListBaseFactory = (type) => {
 							}
 
 						}
-					} else if (
-						directions.right && repeat ||
-						directions.left && Spotlight.move(direction) ||
-						(directions.up || directions.down) && (repeat || moveFocusStraight({id: this.props.spotlightId, direction}) && currentTarget.contains(Spotlight.getCurrent()))
-					) {
-						ev.preventDefault();
-						ev.stopPropagation();
-					} else if (!repeat) {
-						isLeaving = true;
+					} else {
+						const spottables = Spotlight.getSpottableDescendants(spotlightId);
+						const lastSpottable = spottables[spottables.length - 1];
+						const isBottomScrollButton = target === lastSpottable;
+
+						if (
+							directions.right && repeat ||
+							directions.left && Spotlight.move(direction) ||
+							(directions.up && !isBottomScrollButton || directions.down && isBottomScrollButton) && repeat ||
+							(directions.down && !isBottomScrollButton || directions.up && isBottomScrollButton) && moveFocusStraight({id: spotlightId, direction}) && currentTarget.contains(Spotlight.getCurrent())
+						) {
+							ev.preventDefault();
+							ev.stopPropagation();
+						} else if (!repeat) {
+							isLeaving = true;
+						}
 					}
 
 					if (isLeaving) {
