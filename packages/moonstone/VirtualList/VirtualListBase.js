@@ -27,13 +27,7 @@ const
 	Native = 'Native',
 	// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
 	getNumberValue = (index) => index | 0,
-	nop = () => {},
-	moveFocusStraight = ({direction, id}) => {
-		Spotlight.set(id, {straightOnly: true});
-		const moved = Spotlight.move(direction);
-		Spotlight.set(id, {straightOnly: false});
-		return moved;
-	};
+	nop = () => {};
 
 /**
  * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} and
@@ -467,7 +461,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		onKeyDown = (ev) => {
-			const {currentTarget, keyCode, target} = ev;
+			const {keyCode, target} = ev;
 			const direction = getDirection(keyCode);
 
 			if (direction) {
@@ -537,14 +531,17 @@ const VirtualListBaseFactory = (type) => {
 						}
 					} else {
 						const spottables = Spotlight.getSpottableDescendants(spotlightId);
-						const lastSpottable = spottables[spottables.length - 1];
-						const isBottomScrollButton = target === lastSpottable;
+						const spottablesTotal = spottables.length;
+						const firstScrollButton = spottables[spottablesTotal - 2];
+						const lastScrollButton = spottables[spottablesTotal - 1];
+						const isLastScrollButton = target === lastScrollButton;
 
 						if (
 							directions.right && repeat ||
 							directions.left && Spotlight.move(direction) ||
-							(directions.up && !isBottomScrollButton || directions.down && isBottomScrollButton) && repeat ||
-							(directions.down && !isBottomScrollButton || directions.up && isBottomScrollButton) && moveFocusStraight({id: spotlightId, direction}) && currentTarget.contains(Spotlight.getCurrent())
+							(directions.up && !isLastScrollButton || directions.down && isLastScrollButton) && repeat ||
+							directions.down && !isLastScrollButton && Spotlight.focus(lastScrollButton) ||
+							directions.up && isLastScrollButton && Spotlight.focus(firstScrollButton)
 						) {
 							ev.preventDefault();
 							ev.stopPropagation();
