@@ -15,7 +15,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Dropdown` button to not animate
 - `moonstone/FormCheckboxItem` so it doesn't change size between normal and large text mode
 - `moonstone/Heading` to have a bit more space between the text and the line, when the line is present
-- `moonstone/IncrementSlider`, `moonstone/ProgressBar`, and `moonstone/Slider` to use the latest set of design colors
 - `moonstone/LabeledItem` to pass `marqueeOn` prop to its contents
 - `moonstone/Picker` accessibility read out when a button becomes disabled
 - `moonstone/ProgressBar`, `moonstone/Slider`, and `moonstone/IncrementSlider` to use the latest set of design colors
