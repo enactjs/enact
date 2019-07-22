@@ -83,6 +83,8 @@ const HeaderBase = kind({
 		 * This is also a [slot]{@link ui/Slottable.Slottable}, so it can be referred
 		 * to as if it were JSX.
 		 *
+		 * Note: Only applies to `type="standard"` headers.
+		 *
 		 * Example
 		 * ```
 		 *  <Header>
@@ -191,8 +193,8 @@ const HeaderBase = kind({
 		subTitleBelowComponent: ({centered, marqueeOn, subTitleBelow}) => {
 			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
 		},
-		titleOrInput: ({centered, headerInput, marqueeOn, title}) => {
-			if (headerInput) {
+		titleOrInput: ({centered, headerInput, marqueeOn, title, type}) => {
+			if (headerInput && type === 'standard') {
 				return (
 					<Cell className={css.headerInput}>
 						<ComponentOverride
