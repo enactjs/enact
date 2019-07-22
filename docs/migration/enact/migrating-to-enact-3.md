@@ -73,12 +73,17 @@ files, you may need to address these changes.
 * `@moon-header-input-text-color` has been removed
 * `@moon-input-border-active-outline-color` has been renamed to `@moon-input-border-active-shadow`
 * `@moon-radio-item-indicator-border-color` has been removed
-* `@moon-radio-item-selected-indicator-border-color` has been removed
-* `@moon-radio-item-selected-spotlight-indicator-bg-color` has been renamed to `@moon-radio-item-selected-focus-indicator-bg-color`
-* `@moon-radio-item-selected-spotlight-indicator-border-color` has been removed
-* `@moon-radio-item-selected-spotlight-indicator-color` has been renamed to `@moon-radio-item-selected-focus-indicator-color`
 * `@moon-radio-item-spotlight-indicator-bg-color` has been renamed to `@moon-radio-item-focus-indicator-bg-color`
 * `@moon-radio-item-spotlight-indicator-border-color` has been removed
+* `@moon-radio-item-selected-indicator-border-color` has been removed
+* `@moon-radio-item-selected-spotlight-indicator-color` has been renamed to `@moon-radio-item-selected-focus-indicator-color`
+* `@moon-radio-item-selected-spotlight-indicator-bg-color` has been renamed to `@moon-radio-item-selected-focus-indicator-bg-color`
+* `@moon-radio-item-selected-spotlight-indicator-border-color` has been removed
+* `@moon-slider-nofocus-bg-color` has been renamed to `@moon-slider-bar-bg-color`
+* `@moon-slider-focus-bg-color` has been renamed to `@moon-slider-focus-bar-bg-color`
+* `@moon-slider-spotlight-bar-color` has been renamed to `@moon-slider-focus-bar-bg-color`
+* `@moon-slider-spotlight-knob-color` has been renamed to `@moon-slider-focus-knob-bg-color`
+* `@moon-slider-knob-active-bg-color` has been renamed to `@moon-slider-active-knob-bg-color`
 
 #### variables
 * `@moon-breadcrumb-text-size` has been replaced by `@moon-panels-breadcrumb-text-size`

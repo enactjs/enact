@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/ProgressBar` public class name `bar` to support customizing the background of the bar
+
 ## [3.0.0-beta.1] - 2019-07-15
 
 ### Added
