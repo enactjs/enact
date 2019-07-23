@@ -3,6 +3,7 @@
  *
  * @module core/util
  * @exports cap
+ * @exports clamp
  * @exports coerceArray
  * @exports coerceFunction
  * @exports extractAriaProps
@@ -31,6 +32,26 @@ import Job from './Job';
  */
 const cap = function (str) {
 	return str.slice(0, 1).toUpperCase() + str.slice(1);
+};
+
+/**
+ * Limits `value` to be between `min` and `max`.
+ *
+ * If `min` is greater than `max`, `min` is returned.
+ *
+ * @function
+ * @param   {Number}    min   The minimum value of the range
+ * @param   {Number}    max   The maximum value of the range
+ * @param   {Number}    value The value that must be within the range
+ *
+ * @returns {Number}          The clamped value
+ * @memberof core/util
+ * @public
+ */
+const clamp = (min, max, value) => {
+	if (min > max || value < min) return min;
+	if (value > max) return max;
+	return value;
 };
 
 /**
@@ -201,6 +222,7 @@ const memoize = (fn) => {
 
 export {
 	cap,
+	clamp,
 	coerceArray,
 	coerceFunction,
 	extractAriaProps,

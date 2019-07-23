@@ -11,12 +11,12 @@
  * @exports PickerBase
  */
 
-import Changeable from '@enact/ui/Changeable';
-import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
-import React from 'react';
-import PropTypes from 'prop-types';
+import {clamp} from '@enact/core/util';
+import Changeable from '@enact/ui/Changeable';
 import Pure from '@enact/ui/internal/Pure';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import {MarqueeController} from '../Marquee';
 import {validateRange} from '../internal/validators';
@@ -218,7 +218,7 @@ const PickerBase = kind({
 		value: ({value, children}) => {
 			const max = children && children.length ? children.length - 1 : 0;
 			if (__DEV__) {
-				validateRange(value, 0, max, 'Picker', '"value"', 'min', 'max index');
+				validateRange(value, 0, max, 'Picker', 'value', 'min', 'max index');
 			}
 			return clamp(0, max, value);
 		},

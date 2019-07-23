@@ -6,6 +6,16 @@
 // Public
 .formCheckboxItem {
 	/* Available for customization */
+
+	// FormCheckboxItem should not increase in size when in `largeText` mode
+	.moon-custom-text({
+		font-size: @moon-item-font-size;
+		line-height: @moon-item-line-height;
+
+		.moon-locale-non-latin({
+			line-height: @moon-item-line-height;
+		});
+	});
 }
 
 // Interally theme our implementation using published classes from ToggleItem and ToggleIcon
@@ -13,11 +23,12 @@
 	// Skin colors
 	.applySkins({
 		.focus({
-			background-color: transparent;
+			color: @moon-formcheckboxitem-focus-text-color;
+			background-color: @moon-formcheckboxitem-focus-bg-color;
 
-			&:not([disabled]) {
-				color: @moon-text-color;
-			}
+			.disabled({
+				opacity: @moon-disabled-opacity;
+			});
 		});
 	});
 }

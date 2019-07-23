@@ -2,6 +2,44 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
+## [3.0.0-beta.2] - 2019-07-23
+
+### Fixed
+
+- `webos/LS2Request` to return an error for a null response from a service
+
+## [3.0.0-beta.1] - 2019-07-15
+
+No significant changes.
+
+## [3.0.0-alpha.7] - 2019-06-24
+
+No significant changes.
+
+## [3.0.0-alpha.6] - 2019-06-17
+
+No significant changes.
+
+## [3.0.0-alpha.5] - 2019-06-10
+
+No significant changes.
+
+## [3.0.0-alpha.4] - 2019-06-03
+
+No significant changes.
+
+## [3.0.0-alpha.3] - 2019-05-29
+
+No significant changes.
+
+## [3.0.0-alpha.2] - 2019-05-20
+
+No significant changes.
+
+## [3.0.0-alpha.1] - 2019-05-15
+
+No significant changes.
+
 ## [2.5.3] - 2019-06-06
 
 No significant changes.

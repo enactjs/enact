@@ -1,9 +1,9 @@
-import {Announce} from '@enact/ui/AnnounceDecorator';
 import {is} from '@enact/core/keymap';
+import {Announce} from '@enact/ui/AnnounceDecorator';
+import Spotlight, {getDirection} from '@enact/spotlight';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import Spotlight, {getDirection} from '@enact/spotlight';
 
 import $L from '../internal/$L';
 
@@ -204,6 +204,10 @@ class ScrollButtons extends Component {
 		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
 	}
 
+	focusOnButton = (isPrev) => {
+		Spotlight.focus(isPrev ? this.prevButtonRef.current : this.nextButtonRef.current);
+	}
+
 	focusOnOppositeScrollButton = (ev, direction) => {
 		const buttonNode = (ev.target === this.nextButtonRef.current) ? this.prevButtonRef.current : this.nextButtonRef.current;
 
@@ -256,36 +260,40 @@ class ScrollButtons extends Component {
 	onKeyDownPrev = (ev) => {
 		const
 			{focusableScrollButtons} = this.props,
-			{nextButtonDisabled} = this.state,
+			{nextButtonDisabled, prevButtonDisabled} = this.state,
 			{keyCode} = ev;
 
-		if (isPageDown(keyCode) && !nextButtonDisabled) {
+		if (isPageDown(keyCode)) {
 			if (focusableScrollButtons) {
 				Spotlight.setPointerMode(false);
 				Spotlight.focus(ReactDOM.findDOMNode(this.nextButtonRef.current)); // eslint-disable-line react/no-find-dom-node
-			} else {
+			} else if (!nextButtonDisabled) {
 				this.onClickNext(ev);
 			}
 		} else if (isPageUp(keyCode)) {
-			this.onClickPrev(ev);
+			if (!prevButtonDisabled) {
+				this.onClickPrev(ev);
+			}
 		}
 	}
 
 	onKeyDownNext = (ev) => {
 		const
 			{focusableScrollButtons} = this.props,
-			{prevButtonDisabled} = this.state,
+			{nextButtonDisabled, prevButtonDisabled} = this.state,
 			{keyCode} = ev;
 
-		if (isPageUp(keyCode) && !prevButtonDisabled) {
+		if (isPageUp(keyCode)) {
 			if (focusableScrollButtons) {
 				Spotlight.setPointerMode(false);
 				Spotlight.focus(ReactDOM.findDOMNode(this.prevButtonRef.current)); // eslint-disable-line react/no-find-dom-node
-			} else {
+			} else if (!prevButtonDisabled) {
 				this.onClickPrev(ev);
 			}
 		} else if (isPageDown(keyCode)) {
-			this.onClickNext(ev);
+			if (!nextButtonDisabled) {
+				this.onClickNext(ev);
+			}
 		}
 	}
 

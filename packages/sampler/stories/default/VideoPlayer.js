@@ -5,7 +5,6 @@ import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, number, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -85,9 +84,7 @@ MediaControls.displayName = 'MediaControls';
 storiesOf('Moonstone', module)
 	.add(
 		'VideoPlayer',
-		withInfo({
-			text: 'The basic VideoPlayer'
-		})(() => {
+		() => {
 			const videoTitle = select('source', prop.videoTitles, Config, 'Sintel');
 			const videoSource = prop.videos[videoTitle];
 			const poster = prop.posters[videoTitle];
@@ -95,7 +92,7 @@ storiesOf('Moonstone', module)
 				<div
 					style={{
 						transformOrigin: 'top',
-						transform: 'scale(' + number('video scale', 1, {range: true, min: 0.05, max: 1, step: 0.01}) + ')',
+						transform: 'scale(' + number('video scale', Config, {range: true, min: 0.05, max: 1, step: 0.01}, 1) + ')',
 						outline: 'teal dashed 1px',
 						height: '70vh'
 					}}
@@ -158,13 +155,22 @@ storiesOf('Moonstone', module)
 							playPauseButtonDisabled={boolean('playPauseButtonDisabled', MediaControlsConfig)}
 							rateButtonsDisabled={boolean('rateButtonsDisabled', MediaControlsConfig)}
 						>
-							<leftComponents><IconButton backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
-							<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
-							<Button backgroundOpacity="translucent">Add To Favorites</Button>
-							<IconButton backgroundOpacity="translucent">star</IconButton>
+							<leftComponents>
+								<IconButton backgroundOpacity="translucent" size="large">fullscreen</IconButton>
+							</leftComponents>
+							<rightComponents>
+								<IconButton backgroundOpacity="translucent" size="large">flag</IconButton>
+							</rightComponents>
+							<Button backgroundOpacity="translucent" size="large">Add To Favorites</Button>
+							<IconButton backgroundOpacity="translucent" size="large">star</IconButton>
 						</MediaControls>
 					</VideoPlayer>
 				</div>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'The basic VideoPlayer'
+			}
+		}
 	);

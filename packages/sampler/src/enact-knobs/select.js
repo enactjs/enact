@@ -1,4 +1,4 @@
-import {selectV2 as selectKnob} from '@storybook/addon-knobs';
+import {select as selectKnob} from '@storybook/addon-knobs';
 
 import nullify from '../utils/nullify.js';
 
@@ -33,16 +33,23 @@ const select = (name, items, Config, selectedValue) => {
 		Config.defaultProps = {};
 	}
 
-	const defaultValue = selectedValue || Config.defaultProps[name];
+	// If there's no group ID but there is a display name, use that for the group ID
+	if (Config.displayName && !Config.groupId) {
+		Config.groupId = Config.displayName;
+	}
+
+	const defaultValue = (typeof selectedValue === 'undefined') ?
+		Config.defaultProps[name] :
+		selectedValue;
 
 	const defaultAppender = (key, label = key) => {
-		return key + (Config.defaultProps[name] === label ? defaultString : '');
+		return (key || ' ') + (Config.defaultProps[name] === label ? defaultString : '');
 	};
 
 	if (items instanceof Array) {
 		// An array of items
 		items.forEach((item) => {
-			labels[defaultAppender(item || '')] = item;
+			labels[defaultAppender(item)] = item;
 		});
 	} else {
 		// Items is an object

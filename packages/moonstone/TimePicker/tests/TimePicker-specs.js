@@ -71,26 +71,6 @@ describe('TimePicker', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test(
-		'should accept an updated JavaScript Date for its value prop',
-		() => {
-			const subject = mount(
-				<TimePicker open title="Date" value={new Date(2000, 0, 1, 12, 30)} locale="en-US" />
-			);
-
-			subject.setProps({
-				value: new Date(2000, 0, 1, 12, 45)
-			});
-
-			const minutePicker = subject.find(`.${css.minutesComponents}`).at(0);
-
-			const expected = 45;
-			const actual = minutePicker.prop('value');
-
-			expect(actual).toBe(expected);
-		}
-	);
-
 	test('should set "hourAriaLabel" to hour picker', () => {
 		const label = 'custom hour aria-label';
 		const subject = mount(

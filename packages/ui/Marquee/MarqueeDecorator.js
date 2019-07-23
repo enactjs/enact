@@ -226,9 +226,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * Determines what triggers the marquee to start its animation.
 			 *
-			 * Valid values are `'focus'`, `'hover'` and `'render'`. The default is `'focus'`.
-			 *
-			 * @type {String}
+			 * @type {('focus'|'hover'|'render')}
 			 * @default 'focus'
 			 * @public
 			 */

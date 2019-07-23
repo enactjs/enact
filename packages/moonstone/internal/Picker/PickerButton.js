@@ -24,7 +24,7 @@ const JoinedPickerButtonBase = kind({
 
 	render: ({disabled, icon, ...rest}) => (
 		<span {...rest} data-webos-voice-intent="Select" disabled={disabled}>
-			<Icon className={css.icon} disabled={disabled} small>{icon}</Icon>
+			<Icon className={css.icon} disabled={disabled} size="small">{icon}</Icon>
 		</span>
 	)
 });
@@ -76,8 +76,9 @@ const PickerButtonBase = kind({
 	},
 
 	render: ({disabled, icon, joined, ...rest}) => {
+		delete rest.hidden;
+
 		if (joined) {
-			delete rest.hidden;
 			delete rest.onSpotlightDisappear;
 			delete rest.spotlightDisabled;
 
@@ -90,7 +91,7 @@ const PickerButtonBase = kind({
 					{...rest}
 					backgroundOpacity="transparent"
 					disabled={disabled}
-					small
+					size="small"
 				>
 					{icon}
 				</IconButton>

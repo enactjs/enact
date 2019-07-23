@@ -104,4 +104,108 @@ describe('SpotlightContainerDecorator', () => {
 			expect(actual).toBe(expected);
 		}
 	);
+
+	test(
+		'should forward onFocusCapture events',
+		() => {
+			const spy = jest.fn();
+			let focus;
+
+			const Component = SpotlightContainerDecorator(({onFocusCapture}) => {
+				focus = onFocusCapture;
+				return <div />;
+			});
+			mount(<Component onFocusCapture={spy} />);
+
+			focus({});
+
+			const expected = 1;
+			const actual = spy.mock.calls.length;
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should suppress onFocusCapture events when spotlightDisabled',
+		() => {
+			const spy = jest.fn();
+			let focus;
+
+			const Component = SpotlightContainerDecorator(({onFocusCapture}) => {
+				focus = onFocusCapture;
+				return <div />;
+			});
+			mount(<Component onFocusCapture={spy} spotlightDisabled />);
+
+			// building out the api called on the event object + target
+			focus({
+				stopPropagation: () => true,
+				target: {
+					blur: () => true
+				}
+			});
+
+			const expected = 0;
+			const actual = spy.mock.calls.length;
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should forward onBlurCapture events',
+		() => {
+			const spy = jest.fn();
+			let blur;
+
+			const Component = SpotlightContainerDecorator(({onBlurCapture}) => {
+				blur = onBlurCapture;
+				return <div />;
+			});
+			mount(<Component onBlurCapture={spy} spotlightDisabled />);
+
+			// building out the api called on the event object + target
+			blur({
+				stopPropagation: () => true,
+				target: {
+					blur: () => blur({})
+				}
+			});
+
+			const expected = 1;
+			const actual = spy.mock.calls.length;
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should suppress onBlurCapture events when focus was suppressed',
+		() => {
+			const spy = jest.fn();
+			let focus;
+			let blur;
+
+			const Component = SpotlightContainerDecorator(({onBlurCapture, onFocusCapture}) => {
+				blur = onBlurCapture;
+				focus = onFocusCapture;
+				return <div />;
+			});
+			mount(<Component onBlurCapture={spy} spotlightDisabled />);
+
+			// building out the api called on the event object + target
+			focus({
+				stopPropagation: () => true,
+				target: {
+					// the focus handler calls blur() on the target so we're simulating that here by
+					// wiring our onBlurCapture handler directly to the invocation. This isn't a
+					// perfect modeling of the system but serves to validate the callback
+					// suppression logic.
+					blur: () => blur({})
+				}
+			});
+
+			const expected = 0;
+			const actual = spy.mock.calls.length;
+			expect(actual).toBe(expected);
+		}
+	);
 });

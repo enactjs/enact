@@ -1,6 +1,6 @@
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import css from './ScrollThumb.module.less';
 

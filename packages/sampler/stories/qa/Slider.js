@@ -1,13 +1,14 @@
 import VirtualList from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import Item from '@enact/moonstone/Item';
-
 import Slider from '@enact/moonstone/Slider';
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import {storiesOf} from '@storybook/react';
-import {withKnobs, number} from '@storybook/addon-knobs';
+
+import {number} from '../../src/enact-knobs';
+
+Slider.displayName = 'Slider';
 
 class SliderList extends React.Component {
 	static propTypes = {
@@ -96,7 +97,6 @@ class SliderList extends React.Component {
 }
 
 storiesOf('Slider', module)
-	.addDecorator(withKnobs)
 	.add(
 		'Add and Remove ',
 		() => {

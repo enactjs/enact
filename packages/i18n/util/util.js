@@ -65,6 +65,28 @@ const toWordCase = (str) => {
 	return str.split(' ').map(toCapitalized).join(' ');
 };
 
+/**
+ * Locale-safely convert a string to lower case.
+ *
+ * @name toLowerCase
+ * @function
+ * @memberof i18n/util
+ * @param {String} inString String to convert to lower case
+ * @returns {String} Lower-cased string
+ * @public
+ */
+
+/**
+ * Locale-safely convert a string to upper case.
+ *
+ * @name toUpperCase
+ * @function
+ * @memberof i18n/util
+ * @param {String} inString String to convert to upper case
+ * @returns {String} Upper-cased string
+ * @public
+ */
+
 export {
 	isRtlText,
 	toCapitalized,

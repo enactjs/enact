@@ -11,9 +11,17 @@
 	position: relative;
 	color: inherit;
 
+	.moon-locale-non-latin({
+		line-height: @moon-item-line-height;
+	});
+
 	.moon-custom-text({
 		font-size: @moon-item-font-size-large;
 		line-height: @moon-item-line-height-large;
+
+		.moon-locale-non-latin({
+			line-height: @moon-item-line-height-large;
+		});
 	});
 
 	&.inline {

@@ -92,7 +92,7 @@ const LabeledIconBase = kind({
 		 *
 		 * This will receive the `icon` prop as `children` and should handle it appropriately. This
 		 * prop is ignored in the case of a component being passed into the `icon` prop. It will
-		 * also receive the `small` prop as set on the component.
+		 * also receive the `size` prop as set on the component.
 		 *
 		 * @type {Component}
 		 */
@@ -123,27 +123,29 @@ const LabeledIconBase = kind({
 		 *
 		 * The 'before' and 'after' values automatically swap sides when in an RTL locale context.
 		 *
-		 * @type {String}
+		 * @type {('above'|'after'|'before'|'below'|'left'|'right')}
 		 * @default 'below'
 		 * @public
 		 */
 		labelPosition: PropTypes.oneOf(['above', 'after', 'before', 'below', 'left', 'right']),
 
 		/**
-		 * Reduces the size of the icon component.
+		 * The size of the icon.
 		 *
-		 * The value of `small` is forwarded on to `iconComponent`.
+		 * Applies either the `small` or `large` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
-		 * @type {Boolean}
-		 * @default false
+		 * @type {('large'|'small')}
+		 * @default 'large'
 		 * @public
 		 */
-		small: PropTypes.bool
+		size: PropTypes.string
 	},
 
 	defaultProps: {
 		labelPosition: 'below',
-		inline: false
+		inline: false,
+		size: 'large'
 	},
 
 	styles: {
@@ -160,7 +162,9 @@ const LabeledIconBase = kind({
 		}
 	},
 
-	render: ({css, children, disabled, icon, iconComponent, orientation, small, ...rest}) => {
+	render: ({css, children, disabled, icon, iconComponent: Icon, orientation, size, ...rest}) => {
+		delete rest.inline;
+
 		let iconClassName = css.icon;
 
 		// Rearrange the props to support custom JSX components
@@ -172,11 +176,11 @@ const LabeledIconBase = kind({
 				component: icon,
 				className: iconClassName,
 				disabled,
-				small
+				size
 			});
-			// Removing small and iconComponent from CellBase
+			// Removing size and iconComponent from CellBase
 			// eslint-disable-next-line no-undefined
-			small = iconComponent = undefined;
+			size = Icon = undefined;
 			iconClassName = null;
 		}
 
@@ -193,11 +197,15 @@ const LabeledIconBase = kind({
 					key: 'icon',
 					shrink: true,
 					size: '100%',
-					component: iconComponent,
-					children: icon,
-					className: (css.iconCell + ' ' + iconClassName),
-					disabled,
-					small
+					className: css.iconCell,
+					children: Icon ?
+						<Icon
+							className={iconClassName}
+							disabled={disabled}
+							size={size}
+						>
+							{icon}
+						</Icon> : icon
 				}),
 				CellBase.inline({
 					key: 'label',

@@ -1,12 +1,13 @@
-import IconButton from '@enact/moonstone/IconButton';
+import IconButton, {IconButtonBase} from '@enact/moonstone/IconButton';
+import Button, {ButtonBase} from '@enact/moonstone/Button';
+import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import icons from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
-import emptify from '../../src/utils/emptify.js';
+import {mergeComponentMetadata} from '../../src/utils';
 
 // import icons
 import docs from '../../images/icon-enact-docs.png';
@@ -19,23 +20,36 @@ const prop = {
 };
 
 IconButton.displayName = 'IconButton';
+const Config = mergeComponentMetadata('IconButton', Button, ButtonBase, UIButton, UIButtonBase, IconButtonBase, IconButton);
 
 storiesOf('Moonstone', module)
 	.add(
 		'IconButton',
-		withInfo({
-			text: 'The basic IconButton'
-		})(() => (
-			<IconButton
-				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, IconButton, '')}
-				color={select('color', ['', 'red', 'green', 'yellow', 'blue'], IconButton, '')}
-				disabled={boolean('disabled', IconButton)}
-				selected={boolean('selected', IconButton)}
-				small={boolean('small', IconButton)}
-				tooltipText={text('tooltipText', IconButton, '')}
-			>
-				{emptify(select('src', ['', docs, factory, logo], '')) + emptify(select('icon', ['', ...icons], 'plus')) + emptify(text('custom icon', ''))}
-			</IconButton>
-		))
+		() => {
+			const iconType = select('icon type', ['glyph', 'url src', 'custom'], Config, 'glyph');
+			let children;
+			switch (iconType) {
+				case 'glyph': children = select('icon', icons, Config, 'plus'); break;
+				case 'url src': children = select('src', [docs, factory, logo], Config, logo); break;
+				default: children = text('custom icon', Config);
+			}
+			return (
+				<IconButton
+					onClick={action('onClick')}
+					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config, '')}
+					color={select('color', ['', 'red', 'green', 'yellow', 'blue'], Config, '')}
+					disabled={boolean('disabled', Config)}
+					selected={boolean('selected', Config)}
+					size={select('size', ['small', 'large'], Config)}
+					tooltipText={text('tooltipText', Config, '')}
+				>
+					{children}
+				</IconButton>
+			);
+		},
+		{
+			info: {
+				text: 'The basic IconButton'
+			}
+		}
 	);

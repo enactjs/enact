@@ -8,20 +8,7 @@
 .toggleIcon {
 	width: @moon-formcheckbox-size;
 	height: @moon-formcheckbox-size;
-	border-radius: (@moon-formcheckbox-size / 2);
-
-	.moon-custom-text({
-		width: @moon-formcheckbox-size-large;
-		height: @moon-formcheckbox-size-large;
-		border-radius: (@moon-formcheckbox-size-large / 2);
-
-		.icon {
-			width: @moon-formcheckbox-size-large;
-			height: @moon-formcheckbox-size-large;
-			line-height: @moon-formcheckbox-size-large;
-			font-size: @moon-formcheckbox-check-icon-size-large;
-		}
-	});
+	border-radius: @moon-formcheckbox-border-radius;
 
 	.icon {
 		width: @moon-formcheckbox-size;
@@ -37,6 +24,15 @@
 			visibility: visible;
 		}
 	}
+
+	.moon-custom-text({
+		.icon {
+			width: @moon-formcheckbox-size;
+			height: @moon-formcheckbox-size;
+			line-height: @moon-formcheckbox-size;
+			font-size: @moon-formcheckbox-check-icon-size;
+		}
+	});
 
 	// Skin colors
 	.applySkins({
@@ -54,13 +50,17 @@
 		// Skin colors
 		.applySkins({
 			box-shadow: none;
-			background-color: @moon-spotlight-color;
+			background-color: @moon-formcheckbox-focus-bg-color;
 
-			&:not([disabled]) {
-				.icon {
-					color: @moon-spotlight-text-color;
-				}
+			.icon {
+				color: @moon-formcheckbox-focus-text-color;
 			}
+
+			.disabled({
+				.icon {
+					opacity: @moon-disabled-opacity;
+				}
+			});
 		});
 	}
 }, parent);

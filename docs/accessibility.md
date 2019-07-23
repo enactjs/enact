@@ -6,7 +6,7 @@ We recognize that applications built using our framework should be usable by any
 
 ## Roles
 
-Many of our components replace native implementations with styled, feature-filled alternatives. In some cases, this means that we lose some of the native semantic meaning and accessibility. Fortunately, this can be solved by assigning [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques#Roles) to those custom components. When possible, we've assigned the relevant role to each of our custom components but that can be overridden by users, if needed.
+We address native semantic meaning and accessibility by assigning [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques#Roles) to custom components. When possible, we've assigned the relevant role to each of our custom components which can be overridden by users if needed.
 
 ```
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
@@ -32,7 +32,7 @@ There are also a set of ARIA attributes that reflect the current state of a comp
 
 ## Custom Components
 
-We've included a few custom components that may be useful to build accessible applications. None are required but provide some syntactic sugar ease development.
+We've included a few custom components that may be useful to build accessible applications. These are not required but they can provide some syntactic sugar for ease of development.
 
 ### moonstone/Region
 

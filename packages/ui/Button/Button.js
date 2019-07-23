@@ -39,16 +39,26 @@ const ButtonBase = kind({
 		 * * `button` - The root component class
 		 * * `bg` - The background node of the button
 		 * * `client` - The content node of the button
+		 * * `hasIcon` - Applied when there is an `icon` present
 		 * * `icon` - The icon node, when `icon` is set
+		 * * `large` - Applied when `size` prop is `'large'`
 		 * * `minWidth` - Applied when `minWidth` prop is `true`
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 * * `selected` - Applied when `selected` prop is `true`
-		 * * `small` - Applied when `small` prop is `true`
+		 * * `small` - Applied when `size` prop is `'small'`
 		 *
 		 * @type {Object}
 		 * @public
 		 */
 		css: PropTypes.object,
+
+		/**
+		 * Additional DOM nodes which may be necessary for decorating the Button.
+		 *
+		 * @type {Node}
+		 * @private
+		 */
+		decoration: PropTypes.node,
 
 		/**
 		 * Applies the `disabled` class.
@@ -81,7 +91,7 @@ const ButtonBase = kind({
 		/**
 		 * The component used to render the [icon]{@link ui/Button.ButtonBase.icon}.
 		 *
-		 * This component will receive the `small` property set on the Button as well as the `icon`
+		 * This component will receive the `size` property set on the Button as well as the `icon`
 		 * class to customize its styling. If [icon]{@link ui/Button.ButtonBase.icon} is not a
 		 * string, this property is not used.
 		 *
@@ -127,24 +137,23 @@ const ButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Reduces the size of the component.
+		 * The size of the button.
 		 *
-		 * Applies the `small` CSS class which can be customized by
+		 * Applies either the `small` or `large` CSS class which can be customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
-		 * @type {Boolean}
-		 * @default false
+		 * @type {('small'|'large')}
+		 * @default 'large'
 		 * @public
 		 */
-		small: PropTypes.bool
+		size: PropTypes.string
 	},
 
 	defaultProps: {
 		disabled: false,
 		minWidth: true,
 		pressed: false,
-		selected: false,
-		small: false
+		selected: false
 	},
 
 	styles: {
@@ -154,28 +163,31 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({minWidth, pressed, selected, small, styler}) => styler.append({
-			pressed,
-			small,
+		className: ({icon, minWidth, pressed, selected, size, styler}) => styler.append({
+			hasIcon: (!!icon),
 			minWidth,
+			pressed,
 			selected
-		}),
-		icon: ({css, icon, iconComponent: Icon, small}) => {
+		}, size),
+		icon: ({css, icon, iconComponent: Icon, size}) => {
 			return (typeof icon === 'string' && Icon) ? (
-				<Icon small={small} className={css.icon}>{icon}</Icon>
+				<Icon size={size} className={css.icon}>{icon}</Icon>
 			) : icon;
 		}
 	},
 
-	render: ({children, css, disabled, icon, ...rest}) => {
+	render: ({children, css, decoration, disabled, icon, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.minWidth;
 		delete rest.pressed;
 		delete rest.selected;
-		delete rest.small;
+		delete rest.size;
 
 		return (
 			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
+				{decoration ? (
+					<div className={css.decoration}>{decoration}</div>
+				) : null}
 				<div className={css.bg} />
 				<div className={css.client}>{icon}{children}</div>
 			</div>

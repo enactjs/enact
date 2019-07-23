@@ -6,7 +6,6 @@ import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -15,13 +14,17 @@ const
 	wrapOption = {
 		'false': false,
 		'true': true,
-		"'noAnimation'": 'noAnimation'
+		'&quot;noAnimation&quot;': 'noAnimation'
 	},
 	prop = {
 		direction: {'horizontal': 'horizontal', 'vertical': 'vertical'}
 	},
 	items = [],
 	defaultDataSize = 1000,
+	longContent = 'Lorem ipsum dolor sit amet',
+	shouldAddLongContent = ({index, modIndex}) => (
+		index % modIndex === 0 ? ` ${longContent}` : ''
+	),
 	// eslint-disable-next-line enact/prop-types
 	uiRenderItem = ({index, ...rest}) => {
 		const {text, subText, source} = items[index];
@@ -59,8 +62,8 @@ const updateDataSize = (dataSize) => {
 	for (let i = 0; i < dataSize; i++) {
 		const
 			count = (headingZeros + i).slice(-itemNumberDigits),
-			text = `Item ${count}`,
-			subText = `SubItem ${count}`,
+			text = `Item ${count}${shouldAddLongContent({index: i, modIndex: 2})}`,
+			subText = `SubItem ${count}${shouldAddLongContent({index: i, modIndex: 3})}`,
 			color = Math.floor((Math.random() * (0x1000000 - 0x101010)) + 0x101010).toString(16),
 			source = `http://placehold.it/300x300/${color}/ffffff&text=Image ${i}`;
 
@@ -79,9 +82,7 @@ UiVirtualGridList.displayName = 'VirtualGridList';
 storiesOf('UI', module)
 	.add(
 		'VirtualList.VirtualGridList',
-		withInfo({
-			text: 'Basic usage of VirtualGridList'
-		})(() => (
+		() => (
 			<UiVirtualGridList
 				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 				direction={select('direction', prop.direction, Config, 'vertical')}
@@ -94,15 +95,18 @@ storiesOf('UI', module)
 				onScrollStop={action('onScrollStop')}
 				spacing={ri.scale(number('spacing', Config, 20))}
 			/>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of VirtualGridList'
+			}
+		}
 	);
 
 storiesOf('Moonstone', module)
 	.add(
 		'VirtualList.VirtualGridList',
-		withInfo({
-			text: 'Basic usage of VirtualGridList'
-		})(() => (
+		() => (
 			<VirtualGridList
 				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 				direction={select('direction', prop.direction, Config, 'vertical')}
@@ -115,7 +119,12 @@ storiesOf('Moonstone', module)
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				spacing={ri.scale(number('spacing', Config, 20))}
-				wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"], Config)]}
+				wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 			/>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of VirtualGridList'
+			}
+		}
 	);

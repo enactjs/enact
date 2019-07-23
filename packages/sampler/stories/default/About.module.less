@@ -1,9 +1,11 @@
-@import '~@enact/moonstone/styles/colors.less';
-@import '~@enact/moonstone/styles/variables.less';
+@import "~@enact/moonstone/styles/colors.less";
+@import "~@enact/moonstone/styles/variables.less";
 
 & {
 	@bg-color: @moon-spinner-ball1-color;
 	@icon-color: @moon-spinner-ball3-color;
+	@icon-size: 12px;
+	@pointer-edge-offset: 9px;
 
 	@keyframes fadeIn {
 		from {
@@ -32,21 +34,19 @@
 
 		.pointer {
 			background-color: @bg-color;
-			height: 201;
+			height: ~"calc(var(--pointer-length) - " (@icon-size / 2) ~")";
 			position: absolute;
 			text-align: center;
 			transform-origin: top center;
 			width: 3px;
 
 			.pointerIcon {
-				@iconSize: 12px;
-
 				bottom: 0;
 				color: @bg-color;
-				font-size: (@iconSize * 2);
-				width: @iconSize;
-				height: @iconSize;
-				line-height: @iconSize;
+				font-size: (@icon-size * 2);
+				width: @icon-size;
+				height: @icon-size;
+				line-height: @icon-size;
 				margin: 0;
 				position: absolute;
 				transform: translate(-50%, 50%);
@@ -67,6 +67,46 @@
 
 		&:nth-of-type(4) {
 			animation-delay: 1.8s;
+		}
+
+		&.above {
+			margin-top: var(--pointer-length);
+			margin-right: -@pointer-edge-offset;
+
+			.pointer {
+				right: @pointer-edge-offset;
+				transform: rotate(180deg);
+			}
+		}
+
+		&.right {
+			margin-top: -@pointer-edge-offset;
+			margin-right: var(--pointer-length);
+
+			.pointer {
+				top: @pointer-edge-offset;
+				transform: rotate(270deg);
+			}
+		}
+
+		&.below {
+			margin-left: -@pointer-edge-offset;
+			margin-bottom: var(--pointer-length);
+
+			.pointer {
+				top: 100%;
+				left: @pointer-edge-offset;
+			}
+		}
+
+		&.left {
+			margin-top: -@pointer-edge-offset;
+			margin-left: var(--pointer-length);
+
+			.pointer {
+				top: @pointer-edge-offset;
+				transform: rotate(90deg);
+			}
 		}
 	}
 

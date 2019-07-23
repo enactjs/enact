@@ -1,5 +1,6 @@
 ---
 title: Enact Best Practices
+toc: 2
 ---
 
 ## Overview

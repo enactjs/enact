@@ -1,10 +1,13 @@
 // Slider.module.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
 
 .slider {
+	@knob-transform-resting: @moon-translate-center scale(@moon-slider-knob-resting-state-scale);
+	@knob-transform-active: @moon-translate-center scale(1);
+
 	position: relative;
 	margin: 0 @moon-spotlight-outset;
 	// Set both the V and H sizes here, so they can be easily overridden, both internally below and by component consumers.
@@ -31,9 +34,7 @@
 			position: absolute;
 			height: @moon-slider-knob-height;
 			width: @moon-slider-knob-width;
-			// Vertically and horizontally center this knob.
-			// Using this method rather than -top -left so the knob is more intuitively customizable.
-			transform: @moon-translate-center scale(@moon-slider-knob-resting-state-scale);
+			transform: @knob-transform-resting;
 			border-radius: (@moon-slider-knob-height / 2);
 			border: @moon-button-border-width solid transparent;
 			box-sizing: border-box;
@@ -110,57 +111,104 @@
 				display: block;
 			}
 		}
-
-		&.pressed,
-		&:focus.activateOnFocus,
-		&:focus.active {
-			.knob::before {
-				transform: @moon-translate-center scale(1);
-			}
-		}
 	});
 
 	.applySkins({
-		.progressBar {
-			background-color: @moon-progress-bar-bg-color;
+		.bar {
+			background-color: @moon-slider-bar-bg-color;
 		}
 
 		.fill {
-			background-color: @moon-progress-bar-fill-bg-color;
+			background-color: @moon-slider-fill-bg-color;
 		}
 
 		.load {
-			background-color: @moon-progress-bar-loaded-bg-color;
+			background-color: @moon-slider-load-bg-color;
 		}
 
 		.knob::before {
 			background-color: @moon-slider-knob-bg-color;
+			border-color: @moon-slider-knob-border-color;
+			box-shadow: @moon-slider-knob-shadow;
 		}
 
-		.spottable({
-			&:focus.activateOnFocus,
+		.focus({
+			background-color: transparent;
+
+			.bar {
+				background-color: @moon-slider-focus-bar-bg-color;
+			}
+
+			.fill {
+				background-color: @moon-slider-focus-fill-bg-color;
+			}
+
+			.load {
+				background-color: @moon-slider-focus-load-bg-color;
+			}
+
+			.knob::before {
+				background-color: @moon-slider-focus-knob-bg-color;
+				border-color: @moon-slider-focus-knob-border-color;
+			}
+
 			&.active,
+			&.activateOnFocus,
 			&.pressed {
-				.fill {
-					background-color: @moon-slider-spotlight-bar-color;
+				.knob::before {
+					background-color: @moon-slider-active-knob-bg-color;
+					border-color: @moon-slider-active-knob-border-color;
+					transform: @knob-transform-active;
 				}
 			}
 
-			.focus({
-				background-color: transparent;
-
-				.knob::before {
-					background-color: @moon-slider-spotlight-knob-color;
+			&.active {
+				.bar {
+					background-color: @moon-slider-active-bar-bg-color;
 				}
 
-				&.active {
+				.fill {
+					background-color: @moon-slider-active-fill-bg-color;
+				}
+
+				.load {
+					background-color: @moon-slider-active-load-bg-color;
+				}
+			}
+
+			.disabled({
+				.bar {
+					opacity: @moon-slider-disabled-bar-opacity;
+				}
+
+				.knob::before {
+					background-color: @moon-slider-disabled-focus-knob-bg-color;
+					border-color: @moon-slider-focus-knob-border-color;
+				}
+
+				&.active,
+				&.activateOnFocus,
+				&.pressed {
 					.knob::before {
-						background-color: @moon-slider-knob-active-bg-color;
-						border-color: @moon-slider-spotlight-knob-color;
+						transform: @knob-transform-resting;
 					}
 				}
 			});
 		});
+
+		.disabled({
+			opacity: 1;
+
+			.bar {
+				opacity: @moon-slider-disabled-bar-opacity;
+			}
+
+			.knob::before {
+				background-color: @moon-slider-disabled-knob-bg-color;
+				border-color: @moon-slider-knob-border-color;
+			}
+		});
+
 
 		&.noFill {
 			.fill {

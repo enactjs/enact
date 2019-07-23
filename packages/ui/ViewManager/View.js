@@ -2,7 +2,7 @@
  * Exports the {@link ui/ViewManager.View} component.
  */
 
-import {perfNow, Job} from '@enact/core/util';
+import {Job} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
@@ -127,13 +127,14 @@ class View extends React.Component {
 
 	static defaultProps = {
 		appearing: false,
-		enteringDelay: 0
+		enteringDelay: 0,
+		index: 0,
+		reverseTransition: false
 	}
 
 	constructor (props) {
 		super(props);
 		this.animation = null;
-		this._raf = null;
 		this.state = {
 			entering: !props.appearing
 		};
@@ -152,14 +153,10 @@ class View extends React.Component {
 	}
 
 	componentWillUnmount () {
-		this.cancelAnimationFrame();
 		this.enteringJob.stop();
-	}
-
-	cancelAnimationFrame () {
-		if (this._raf) {
-			if (typeof window !== 'undefined') window.cancelAnimationFrame(this._raf);
-			this._raf = null;
+		this.node = null;
+		if (this.animation) {
+			this.animation.cancel();
 		}
 	}
 
@@ -234,88 +231,39 @@ class View extends React.Component {
 	 * @private
 	 */
 	prepareTransition = (arranger, callback, noAnimation) => {
-		const {duration, index, previousIndex, reverseTransition} = this.props;
-		/* eslint react/no-find-dom-node: "off" */
-		const node = ReactDOM.findDOMNode(this);
+		const {duration, index, previousIndex = index, reverseTransition} = this.props;
 
-		const currentTime = perfNow();
-		let startTime = currentTime;
-		let endTime = startTime + duration;
+		// Need to ensure that we have a valid node reference before we animation. Sometimes, React
+		// will replace the node after mount causing a reference cached there to be invalid.
+		// eslint-disable-next-line react/no-find-dom-node
+		this.node = ReactDOM.findDOMNode(this);
 
-		// disable animation when the instance or props flag is true
-		noAnimation = noAnimation || this.props.noAnimation;
+		if (this.animation && this.animation.playState !== 'finished' && this.changeDirection) {
+			this.animation.reverse();
+		} else {
+			this.animation = arranger({
+				from: previousIndex,
+				node: this.node,
+				reverse: reverseTransition,
+				to: index,
+				fill: 'forwards',
+				duration
+			});
+		}
 
-		// Arranges the control each tick and calls the provided callback on complete
-		const fn = (start, end, time) => {
-			this.cancelAnimationFrame();
-
-			// percent is the ratio (between 0 and 1) of the current step to the total steps
-			const percent = (time - start) / (end - start);
-			if (!noAnimation && percent < 1) {
-				// the transition is still in progress so call the arranger
-				arranger({
-					node,
-					percent,
-					reverseTransition,
-					from: previousIndex,
-					to: index
-				});
-
-				return true;
-			} else {
-				// the transition is complete so clean up and ensure we fire a final arrange with
-				// a value of 1.
-				this.animation = null;
-				arranger({
-					node,
-					percent: 1,
-					reverseTransition,
-					from: previousIndex,
-					to: index
-				});
+		// Must set a new handler here to ensure the right callback is invoked
+		this.animation.onfinish = () => {
+			this.animation = null;
+			// Possible for the animation callback to still be fired after the node has been
+			// umounted if it finished before the unmount can cancel it so we check for that.
+			if (this.node) {
 				callback();
-
-				return false;
 			}
 		};
 
-		// When a new transition is initiated mid-transition, adjust time to account for the current
-		// percent complete.
-		if (this.animation && this.changeDirection) {
-			const a = this.animation;
-			const percentComplete = (a.time - a.start) / (a.end - a.start);
-			const delta = (endTime - startTime) * (1 - percentComplete);
-
-			startTime -= delta;
-			endTime -= delta;
-		}
-
-		this.transition(startTime, endTime, currentTime, fn);
-	}
-
-	/**
-	 * Calls the arranger method and schedules the next animation frame
-	 *
-	 * @param   {Number}    start    Animation start time
-	 * @param   {Number}    end      Animation end time
-	 * @param   {Number}    time     Current animation time
-	 * @param   {Function}  callback Completion callback
-	 * @returns {undefined}
-	 * @private
-	 */
-	transition = (start, end, time, callback) => {
-		const a = this.animation = this.animation || {};
-		a.start = start;
-		a.end = end;
-		a.time = time;
-
-		if (callback(start, end, time) && typeof window !== 'undefined') {
-			this._raf = window.requestAnimationFrame(() => {
-				const current = perfNow();
-				this.transition(start, end, current, callback);
-			});
-		} else {
-			this._raf = null;
+		// disable animation when the instance or props flag is true
+		if (noAnimation || this.props.noAnimation) {
+			this.animation.finish();
 		}
 	}
 

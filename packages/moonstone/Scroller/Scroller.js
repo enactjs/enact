@@ -16,22 +16,16 @@
  * @exports ScrollerBase
  */
 
+import {Spotlight} from '@enact/spotlight';
 import ri from '@enact/ui/resolution';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
-import {Spotlight} from '@enact/spotlight';
-import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
-const
-	dataContainerDisabledAttribute = 'data-spotlight-container-disabled',
-	reverseDirections = {
-		left: 'right',
-		right: 'left'
-	};
+const dataContainerDisabledAttribute = 'data-spotlight-container-disabled';
 
 /**
  * A Moonstone-styled base component for [Scroller]{@link moonstone/Scroller.Scroller}.
@@ -41,13 +35,14 @@ const
  *
  * @class ScrollerBase
  * @memberof moonstone/Scroller
+ * @extends ui/Scroller.ScrollerBase
  * @ui
  * @public
  */
 class ScrollerBase extends Component {
 	static displayName = 'ScrollerBase'
 
-	static propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
+	static propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
 		/**
 		 * Passes the instance of [Scroller]{@link ui/Scroller.Scroller}.
 		 *
@@ -72,6 +67,15 @@ class ScrollerBase extends Component {
 		 * @private
 		 */
 		rtl: PropTypes.bool,
+
+		/**
+		 * Called when [Scroller]{@link moonstone/Scroller.Scroller} should be scrolled
+		 * and the focus should be moved to a scrollbar button.
+		 *
+		 * @type {function}
+		 * @private
+		 */
+		scrollAndFocusScrollbarButton: PropTypes.func,
 
 		/**
 		 * The spotlight id for the component.
@@ -298,71 +302,20 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	getNextEndPoint = (direction, oSpotBounds) => {
-		const bounds = this.uiRefCurrent.getScrollBounds();
-
-		let oPoint = {};
-		switch (direction) {
-			case 'up':
-				oPoint.x = oSpotBounds.left;
-				oPoint.y = oSpotBounds.top - bounds.clientHeight;
-				break;
-			case 'left':
-				oPoint.x = oSpotBounds.left - bounds.clientWidth;
-				oPoint.y = oSpotBounds.top;
-				break;
-			case 'down':
-				oPoint.x = oSpotBounds.left;
-				oPoint.y = oSpotBounds.top + oSpotBounds.height + bounds.clientHeight;
-				break;
-			case 'right':
-				oPoint.x = oSpotBounds.left + oSpotBounds.width + bounds.clientWidth;
-				oPoint.y = oSpotBounds.top;
-				break;
-		}
-		return oPoint;
-	}
-
-	scrollToNextPage = ({direction, focusedItem, reverseDirection, spotlightId}) => {
-		const endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect());
-		let candidateNode = null;
-
-		/* Find a spottable item in the next page */
-		candidateNode = getTargetByDirectionFromPosition(reverseDirection, endPoint, spotlightId);
-
-		/* Find a spottable item in a whole data */
-		if (candidateNode === focusedItem) {
-			candidateNode = getTargetByDirectionFromPosition(direction, endPoint, spotlightId);
-		}
-
-		/* If there is no spottable item next to the current item */
-		if (candidateNode === focusedItem) {
-			return null;
-		}
-
-		return candidateNode;
-	}
-
-	scrollToBoundary = (direction) => {
-		const
-			{scrollBounds, scrollPos} = this.uiRefCurrent,
-			isVerticalDirection = (direction === 'up' || direction === 'down');
-
-		if (isVerticalDirection) {
-			if (scrollPos.top > 0 && scrollPos.top < scrollBounds.maxTop) {
-				this.uiRefCurrent.props.cbScrollTo({align: direction === 'up' ? 'top' : 'bottom'});
-			}
-		} else if (scrollPos.left > 0 && scrollPos.left < scrollBounds.maxLeft) {
-			this.uiRefCurrent.props.cbScrollTo({align: this.props.rtl ? reverseDirections[direction] : direction});
-		}
-	}
-
 	handleLeaveContainer = ({direction, target}) => {
 		const contentsContainer = this.uiRefCurrent.containerRef.current;
 		// ensure we only scroll to boundary from the contents and not a scroll button which
 		// lie outside of this.uiRefCurrent.containerRef but within the spotlight container
 		if (contentsContainer && contentsContainer.contains(target)) {
-			this.scrollToBoundary(direction);
+			const
+				{scrollBounds: {maxLeft, maxTop}, scrollPos: {left, top}} = this.uiRefCurrent,
+				isVerticalDirection = (direction === 'up' || direction === 'down'),
+				pos = isVerticalDirection ? top : left,
+				max = isVerticalDirection ? maxTop : maxLeft;
+
+			if (pos >= 0 && pos <= max) {
+				this.props.scrollAndFocusScrollbarButton(direction);
+			}
 		}
 	}
 
@@ -378,6 +331,7 @@ class ScrollerBase extends Component {
 
 		delete props.initUiChildRef;
 		delete props.onUpdate;
+		delete props.scrollAndFocusScrollbarButton;
 		delete props.spotlightId;
 
 		return (
@@ -388,6 +342,70 @@ class ScrollerBase extends Component {
 		);
 	}
 }
+
+/**
+ * Allows 5-way navigation to the scrollbar controls. By default, 5-way will
+ * not move focus to the scrollbar controls.
+ *
+ * @name focusableScrollbar
+ * @memberof moonstone/Scroller.ScrollerBase.prototype
+ * @type {Boolean}
+ * @default false
+ * @public
+ */
+
+/**
+ * Unique identifier for the component.
+ *
+ * When defined and when the `Scroller` is within a [Panel]{@link moonstone/Panels.Panel}, the
+ * `Scroller` will store its scroll position and restore that position when returning to the
+ * `Panel`.
+ *
+ * @name id
+ * @memberof moonstone/Scroller.ScrollerBase.prototype
+ * @type {String}
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the next button in the vertical scroll bar.
+ *
+ * @name scrollDownAriaLabel
+ * @memberof moonstone/Scroller.ScrollerBase.prototype
+ * @type {String}
+ * @default $L('scroll down')
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the previous button in the horizontal scroll bar.
+ *
+ * @name scrollLeftAriaLabel
+ * @memberof moonstone/Scroller.ScrollerBase.prototype
+ * @type {String}
+ * @default $L('scroll left')
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the next button in the horizontal scroll bar.
+ *
+ * @name scrollRightAriaLabel
+ * @memberof moonstone/Scroller.ScrollerBase.prototype
+ * @type {String}
+ * @default $L('scroll right')
+ * @public
+ */
+
+/**
+ * Sets the hint string read when focusing the previous button in the vertical scroll bar.
+ *
+ * @name scrollUpAriaLabel
+ * @memberof moonstone/Scroller.ScrollerBase.prototype
+ * @type {String}
+ * @default $L('scroll up')
+ * @public
+ */
 
 /**
  * A Moonstone-styled Scroller, Scrollable applied.
@@ -413,15 +431,6 @@ const Scroller = (props) => (
 );
 
 Scroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
-	/**
-	 * Direction of the scroller.
-	 *
-	 * * Values: `'both'`, `'horizontal'`, `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'both'
-	 * @public
-	 */
 	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
 };
 
@@ -457,15 +466,6 @@ const ScrollerNative = (props) => (
 );
 
 ScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototype */ {
-	/**
-	 * Direction of the scroller.
-	 *
-	 * * Values: `'both'`, `'horizontal'`, `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'both'
-	 * @public
-	 */
 	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
 };
 

@@ -5,14 +5,14 @@ import css from '../Header.module.less';
 
 describe('Header Specs', () => {
 
-	test('should render with title text upper-cased', () => {
-		let msg = 'Upper-cased Header';
+	test('should render with title text without changing case', () => {
+		let msg = 'cRaZy-cased super Header';
 
 		const header = mount(
 			<Header><title>{msg}</title></Header>
 		);
 
-		const expected = msg.toUpperCase();
+		const expected = msg;
 		const actual = header.find('h1').text();
 
 		expect(actual).toBe(expected);

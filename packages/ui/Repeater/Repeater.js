@@ -48,7 +48,7 @@ const RepeaterBase = kind({
 		 * > **NOTE**: When an array of objects is provided, make sure a unique `key` is assigned to each
 		 * data. See https://fb.me/react-warning-keys for more information.
 		 *
-		 * @type {String[]|Object[]}
+		 * @type {String[]|Array.<{key: (Number|String)}>}
 		 * @required
 		 * @public
 		 */

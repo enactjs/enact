@@ -12,26 +12,14 @@
 	max-width: @moon-notification-max-width;
 	text-align: center;
 	border-radius: @moon-notification-border-radius;
+	border-style: solid;
+	border-width: @moon-notification-border-width;
 	margin-bottom: @moon-notification-margin-bottom;
 	transform: translate3d(-50%, 50%, 0);
-	padding: @moon-notification-padding-top-botton @moon-notification-padding-left-right;
+	padding: @moon-notification-padding-top-bottom @moon-notification-padding-left-right;
 
 	&.wide {
 		max-width: @moon-notification-wide-width; // 4 button case
-	}
-
-	&::before {
-		content: '';
-		display: block;
-		position: absolute;
-		border-width: @moon-notification-border-width;
-		border-style: solid;
-		border-radius: @moon-notification-out-border-radius;
-		top: -@moon-notification-border-width;
-		right: -@moon-notification-border-width;
-		bottom: -@moon-notification-border-width;
-		left: -@moon-notification-border-width;
-		z-index: -1;
 	}
 
 	.body {
@@ -50,23 +38,6 @@
 		& > * {
 			// Applying the margin to the children allows for the case of no children without needing removing the margin
 			margin-top: 24px;
-			.margin-start-end(@moon-notification-button-gap, 0);
-		}
-
-		& > :first-child {
-			margin-left: 0;
-
-			:global(.enact-locale-right-to-left) & {
-				margin-right: 0;
-			}
-		}
-
-		& > :last-child {
-			margin-right: 0;
-
-			:global(.enact-locale-right-to-left) & {
-				margin-right: @moon-notification-button-gap;
-			}
 		}
 	}
 
@@ -77,8 +48,7 @@
 
 	// Skin colors
 	.applySkins({
-		&::before {
-			border-color: @moon-notification-border-color;
-		}
+		border-color: @moon-notification-border-color;
+		box-shadow: 0 12px 16px @moon-notification-box-shadow-color;
 	});
 }

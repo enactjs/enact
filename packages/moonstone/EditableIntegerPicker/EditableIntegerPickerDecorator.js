@@ -128,6 +128,7 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {	// eslint-disa
 
 		handleKeyDown = (ev) => {
 			const keyCode = ev.keyCode;
+			if (this.props.disabled) return;
 			if ((is('enter', keyCode) && !this.state.isActive) || (is('numSet', keyCode) && !this.state.isActive) || (is('plus', keyCode) || is('minus', keyCode))) {
 				this.prepareInput();
 			} else if (this.state.isActive && (is('enter', keyCode) || is('cancel', keyCode) || is('up', keyCode) || is('down', keyCode))) {

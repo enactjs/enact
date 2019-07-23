@@ -72,26 +72,6 @@ describe('DatePicker', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test(
-		'should accept an updated JavaScript Date for its value prop',
-		() => {
-			const subject = mount(
-				<DatePicker open title="Date" value={new Date(2000, 0, 1)} locale="en-US" />
-			);
-
-			subject.setProps({
-				value: new Date(1900, 0, 1)
-			});
-
-			const yearPicker = subject.find(`DateComponentRangePicker.${css.year}`);
-
-			const expected = 1900;
-			const actual = yearPicker.prop('value');
-
-			expect(actual).toBe(expected);
-		}
-	);
-
 	test('should set "dayAriaLabel" to day picker', () => {
 		const label = 'custom day aria-label';
 		const subject = mount(

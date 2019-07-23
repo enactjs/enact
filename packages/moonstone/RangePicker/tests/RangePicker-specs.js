@@ -23,7 +23,7 @@ describe('RangePicker Specs', () => {
 
 	test('should increase by step amount on increment press', () => {
 		const picker = mount(
-			<RangePicker min={0} max={100} defaultValue={10} step={1} />
+			<RangePicker min={0} max={100} defaultValue={10} step={1} noAnimation />
 		);
 
 		increment(picker);
@@ -36,7 +36,7 @@ describe('RangePicker Specs', () => {
 
 	test('should decrease by step amount on decrement press', () => {
 		const picker = mount(
-			<RangePicker min={0} max={100} defaultValue={10} step={1} />
+			<RangePicker min={0} max={100} defaultValue={10} step={1} noAnimation />
 		);
 
 		decrement(picker);

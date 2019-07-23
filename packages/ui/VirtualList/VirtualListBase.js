@@ -1,7 +1,8 @@
 import classNames from 'classnames';
-import equals from 'ramda/src/equals';
+import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
+import equals from 'ramda/src/equals';
 import React, {Component} from 'react';
 
 import Scrollable from '../Scrollable';
@@ -32,10 +33,10 @@ const gridListItemSizeShape = PropTypes.shape({
 /**
  * The base version of the virtual list component.
  *
- * @class VirtualListBase
+ * @class VirtualListCore
  * @memberof ui/VirtualList
  * @ui
- * @public
+ * @private
  */
 const VirtualListBaseFactory = (type) => {
 	return class VirtualListCore extends Component {
@@ -126,7 +127,7 @@ const VirtualListBaseFactory = (type) => {
 			 * Activates the component for voice control.
 			 *
 			 * @type {Boolean}
-			 * @private
+			 * @public
 			 */
 			'data-webos-voice-focused': PropTypes.bool,
 
@@ -134,7 +135,7 @@ const VirtualListBaseFactory = (type) => {
 			 * The voice control group label.
 			 *
 			 * @type {String}
-			 * @private
+			 * @public
 			 */
 			'data-webos-voice-group-label': PropTypes.string,
 
@@ -167,6 +168,16 @@ const VirtualListBaseFactory = (type) => {
 			 * @private
 			 */
 			getComponentProps: PropTypes.func,
+
+			/**
+			 * Called when the range of items has updated.
+			 *
+			 * Event payload includes the `firstIndex` and `lastIndex` of the list.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			onUpdateItems: PropTypes.func,
 
 			/**
 			 * Number of spare DOM node.
@@ -272,13 +283,22 @@ const VirtualListBaseFactory = (type) => {
 				this.calculateMetrics(this.props);
 				// eslint-disable-next-line react/no-did-mount-set-state
 				this.setState(this.getStatesAndUpdateBounds(this.props));
+			} else {
+				this.emitUpdateItems();
 			}
+
 			this.setContainerSize();
 		}
 
-		componentDidUpdate (prevProps) {
+		componentDidUpdate (prevProps, prevState) {
+			const {firstIndex, numOfItems} = this.state;
+
 			// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
 			this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
+
+			if (prevState.firstIndex !== firstIndex || prevState.numOfItems !== numOfItems) {
+				this.emitUpdateItems();
+			}
 
 			if (
 				prevProps.direction !== this.props.direction ||
@@ -371,6 +391,16 @@ const VirtualListBaseFactory = (type) => {
 			clientWidth: node.clientWidth,
 			clientHeight: node.clientHeight
 		})
+
+		emitUpdateItems () {
+			const {dataSize} = this.props;
+			const {firstIndex, numOfItems} = this.state;
+
+			forward('onUpdateItems', {
+				firstIndex: firstIndex,
+				lastIndex: Math.min(firstIndex + numOfItems, dataSize)
+			}, this.props);
+		}
 
 		calculateMetrics (props) {
 			const
@@ -777,10 +807,12 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.dataSize;
 			delete rest.direction;
 			delete rest.getComponentProps;
+			delete rest.isHorizontalScrollbarVisible;
 			delete rest.isVerticalScrollbarVisible;
 			delete rest.itemRenderer;
 			delete rest.itemSize;
 			delete rest.onUpdate;
+			delete rest.onUpdateItems;
 			delete rest.overhang;
 			delete rest.pageScroll;
 			delete rest.rtl;
@@ -809,7 +841,7 @@ const VirtualListBaseFactory = (type) => {
  * @class VirtualListBase
  * @memberof ui/VirtualList
  * @ui
- * @private
+ * @public
  */
 const VirtualListBase = VirtualListBaseFactory(JS);
 VirtualListBase.displayName = 'ui:VirtualListBase';
@@ -825,6 +857,160 @@ VirtualListBase.displayName = 'ui:VirtualListBase';
  */
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'ui:VirtualListBaseNative';
+
+/**
+ * A callback function that receives a reference to the `scrollTo` feature.
+ *
+ * Once received, the `scrollTo` method can be called as an imperative interface.
+ *
+ * The `scrollTo` function accepts the following paramaters:
+ * - {position: {x, y}} - Pixel value for x and/or y position
+ * - {align} - Where the scroll area should be aligned. Values are:
+ *   `'left'`, `'right'`, `'top'`, `'bottom'`,
+ *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
+ * - {index} - Index of specific item. (`0` or positive integer)
+ *   This option is available for only `VirtualList` kind.
+ * - {node} - Node to scroll into view
+ * - {animate} - When `true`, scroll occurs with animation. When `false`, no
+ *   animation occurs.
+ * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
+ *   by `index` or `node`.
+ * > Note: Only specify one of: `position`, `align`, `index` or `node`
+ *
+ * Example:
+ * ```
+ *	// If you set cbScrollTo prop like below;
+ *	cbScrollTo: (fn) => {this.scrollTo = fn;}
+ *	// You can simply call like below;
+ *	this.scrollTo({align: 'top'}); // scroll to the top
+ * ```
+ *
+ * @name cbScrollTo
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {Function}
+ * @public
+ */
+
+/**
+ * Specifies how to show horizontal scrollbar.
+ *
+ * Valid values are:
+ * * `'auto'`,
+ * * `'visible'`, and
+ * * `'hidden'`.
+ *
+ * @name horizontalScrollbar
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @default 'auto'
+ * @public
+ */
+
+/**
+ * Prevents scroll by wheeling on the list.
+ *
+ * @name noScrollByWheel
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {Boolean}
+ * @default false
+ * @public
+ */
+
+/**
+ * Called when scrolling.
+ *
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+ * It is not recommended to set this prop since it can cause performance degradation.
+ * Use `onScrollStart` or `onScrollStop` instead.
+ *
+ * @name onScroll
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {Function}
+ * @param {Object} event
+ * @param {Number} event.scrollLeft Scroll left value.
+ * @param {Number} event.scrollTop Scroll top value.
+ * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+ * @public
+ */
+
+/**
+ * Called when scroll starts.
+ *
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+ * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
+ *
+ * Example:
+ * ```
+ * onScrollStart = ({scrollLeft, scrollTop, moreInfo}) => {
+ *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+ *     // do something with firstVisibleIndex and lastVisibleIndex
+ * }
+ *
+ * render = () => (
+ *     <VirtualList
+ *         ...
+ *         onScrollStart={this.onScrollStart}
+ *         ...
+ *     />
+ * )
+ * ```
+ *
+ * @name onScrollStart
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {Function}
+ * @param {Object} event
+ * @param {Number} event.scrollLeft Scroll left value.
+ * @param {Number} event.scrollTop Scroll top value.
+ * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+ * @public
+ */
+
+/**
+ * Called when scroll stops.
+ *
+ * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+ * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
+ *
+ * Example:
+ * ```
+ * onScrollStop = ({scrollLeft, scrollTop, moreInfo}) => {
+ *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+ *     // do something with firstVisibleIndex and lastVisibleIndex
+ * }
+ *
+ * render = () => (
+ *     <VirtualList
+ *         ...
+ *         onScrollStop={this.onScrollStop}
+ *         ...
+ *     />
+ * )
+ * ```
+ *
+ * @name onScrollStop
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {Function}
+ * @param {Object} event
+ * @param {Number} event.scrollLeft Scroll left value.
+ * @param {Number} event.scrollTop Scroll top value.
+ * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+ * @public
+ */
+
+/**
+ * Specifies how to show vertical scrollbar.
+ *
+ * Valid values are:
+ * * `'auto'`,
+ * * `'visible'`, and
+ * * `'hidden'`.
+ *
+ * @name verticalScrollbar
+ * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @type {String}
+ * @default 'auto'
+ * @public
+ */
 
 const ScrollableVirtualList = (props) => (
 	<Scrollable
@@ -865,17 +1051,6 @@ const ScrollableVirtualListNative = (props) => (
 );
 
 ScrollableVirtualListNative.propTypes = /** @lends ui/VirtualList.VirtualListBaseNative.prototype */ {
-	/**
-	 * The layout direction of the list.
-	 *
-	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'vertical'
-	 * @public
-	 */
 	direction: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 

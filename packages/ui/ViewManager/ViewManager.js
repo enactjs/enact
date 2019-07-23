@@ -25,7 +25,7 @@ import {wrapWithView} from './View';
 
 /**
  * The base `ViewManager` component, without
- * [ViewManagerDecorator](ui/ViewManager.ViewManagerDecorator) applied.
+ * [ViewManagerDecorator]{@link ui/ViewManager.ViewManagerDecorator} applied.
  *
  * @class ViewManagerBase
  * @memberof ui/ViewManager

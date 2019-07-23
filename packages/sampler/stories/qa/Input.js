@@ -37,6 +37,7 @@ storiesOf('Input', module)
 				invalid={boolean('invalid', Input, false)}
 				invalidMessage={text('invalidMessage', Input, InputBase.defaultProps.invalidMessage)}
 				placeholder={text('placeholder', Input)}
+				size={select('size', ['small', 'large'], Input)}
 				type={select('type', inputData.type, Input, inputData.type[0])}
 				defaultValue={inputData.longText}
 			/>
@@ -55,6 +56,7 @@ storiesOf('Input', module)
 				invalidMessage={text('invalidMessage', Input, InputBase.defaultProps.invalidMessage)}
 				placeholder={text('placeholder', Input, inputData.longPlaceHolder)}
 				type={select('type', inputData.type, Input, inputData.type[0])}
+				size={select('size', ['small', 'large'], Input)}
 			/>
 		)
 	)
@@ -70,6 +72,7 @@ storiesOf('Input', module)
 					iconBefore={select('iconBefore', iconNames, Input)}
 					placeholder={text('placeholder', Input, 'Input some tall characters')}
 					type={select('type', inputData.type, Input, inputData.type[0])}
+					size={select('size', ['small', 'large'], Input)}
 					defaultValue={inputData.tallText[0]}
 				/>
 				<Input
@@ -80,6 +83,7 @@ storiesOf('Input', module)
 					iconBefore={select('iconBefore', iconNames, Input)}
 					placeholder={text('placeholder', Input, 'Input some tall characters')}
 					type={select('type', inputData.type, Input, inputData.type[0])}
+					size={select('size', ['small', 'large'], Input)}
 					defaultValue={inputData.tallText[1]}
 				/>
 				<Input
@@ -90,6 +94,7 @@ storiesOf('Input', module)
 					iconBefore={select('iconBefore', iconNames, Input)}
 					placeholder={text('placeholder', Input, 'Input some tall characters')}
 					type={select('type', inputData.type, Input, inputData.type[0])}
+					size={select('size', ['small', 'large'], Input)}
 					defaultValue={inputData.tallText[2]}
 				/>
 			</div>
@@ -106,6 +111,7 @@ storiesOf('Input', module)
 				iconBefore={select('iconBefore', iconNames, Input)}
 				placeholder={text('placeholder', Input)}
 				type={select('type', inputData.type, Input, inputData.type[0])}
+				size={select('size', ['small', 'large'], Input)}
 				defaultValue={inputData.extraSpaceText}
 			/>
 		)
@@ -121,6 +127,7 @@ storiesOf('Input', module)
 				iconBefore={select('iconBefore', iconNames, Input)}
 				placeholder={text('placeholder', Input, 'Input RTL and LTR text together')}
 				type={select('type', inputData.type, Input, inputData.type[0])}
+				size={select('size', ['small', 'large'], Input)}
 				defaultValue={inputData.rtlAndLtr}
 			/>
 		)
@@ -138,6 +145,7 @@ storiesOf('Input', module)
 						iconBefore={select('iconBefore', iconNames, Input)}
 						placeholder={text('placeholder', Input)}
 						type={select('type', inputData.type, Input, inputData.type[0])}
+						size={select('size', ['small', 'large'], Input)}
 						defaultValue={inputData.initialValue + ' one'}
 					/>
 					<Input
@@ -148,6 +156,7 @@ storiesOf('Input', module)
 						iconBefore={select('iconBefore', iconNames, Input)}
 						placeholder={text('placeholder', Input)}
 						type={select('type', inputData.type, Input, inputData.type[0])}
+						size={select('size', ['small', 'large'], Input)}
 						defaultValue={inputData.initialValue + ' two'}
 					/>
 				</div>
@@ -160,6 +169,7 @@ storiesOf('Input', module)
 						iconBefore={select('iconBefore', iconNames, Input)}
 						placeholder={text('placeholder', Input)}
 						type={select('type', inputData.type, Input, inputData.type[0])}
+						size={select('size', ['small', 'large'], Input)}
 						defaultValue={inputData.initialValue + ' three'}
 					/>
 					<Input
@@ -170,6 +180,7 @@ storiesOf('Input', module)
 						iconBefore={select('iconBefore', iconNames, Input)}
 						placeholder={text('placeholder', Input)}
 						type={select('type', inputData.type, Input, inputData.type[0])}
+						size={select('size', ['small', 'large'], Input)}
 						defaultValue={inputData.initialValue + ' four'}
 					/>
 				</div>
@@ -186,6 +197,7 @@ storiesOf('Input', module)
 				iconAfter={select('iconAfter', iconNames, Input)}
 				iconBefore={select('iconBefore', iconNames, Input)}
 				type={inputData.type[1]}
+				size={select('size', ['small', 'large'], Input)}
 				defaultValue={inputData.initialNumericValue}
 			/>
 		)

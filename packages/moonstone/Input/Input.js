@@ -81,15 +81,6 @@ const InputBase = kind({
 		dismissOnEnter: PropTypes.bool,
 
 		/**
-		 * Adds a `focused` class to the input decorator.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		focused: PropTypes.bool,
-
-		/**
 		 * The icon to be placed at the end of the input.
 		 *
 		 * @see {@link moonstone/Icon.Icon}
@@ -192,13 +183,13 @@ const InputBase = kind({
 		rtl: PropTypes.bool,
 
 		/**
-		 * Applies the `small` CSS class.
+		 * The size of the input field.
 		 *
-		 * @type {Boolean}
-		 * @default false
+		 * @type {('large'|'small')}
+		 * @default 'small'
 		 * @public
 		 */
-		small: PropTypes.bool,
+		size: PropTypes.string,
 
 		/**
 		 * The type of input.
@@ -226,13 +217,14 @@ const InputBase = kind({
 		dismissOnEnter: false,
 		invalid: false,
 		placeholder: '',
+		size: 'small',
 		type: 'text'
 	},
 
 	styles: {
 		css: componentCss,
 		className: 'decorator',
-		publicClassNames: ['decorator', 'input']
+		publicClassNames: ['decorator', 'input', 'inputHighlight']
 	},
 
 	handlers: {
@@ -248,7 +240,7 @@ const InputBase = kind({
 			const title = (value == null || value === '') ? placeholder : '';
 			return calcAriaLabel(title, type, value);
 		},
-		className: ({focused, invalid, small, styler}) => styler.append({focused, invalid, small}),
+		className: ({invalid, size, styler}) => styler.append({invalid}, size),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
 		invalidTooltip: ({css, invalid, invalidMessage = $L('Please enter a valid value.'), rtl}) => {
 			if (invalid && invalidMessage) {
@@ -264,18 +256,18 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, small, type, value, ...rest}) => {
+	render: ({css, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, size, type, value, ...rest}) => {
 		const inputProps = extractInputProps(rest);
 		const voiceProps = extractVoiceProps(rest);
 		delete rest.dismissOnEnter;
-		delete rest.focused;
 		delete rest.invalid;
 		delete rest.invalidMessage;
 		delete rest.rtl;
 
 		return (
 			<div {...rest} disabled={disabled}>
-				<InputDecoratorIcon position="before" small={small}>{iconBefore}</InputDecoratorIcon>
+				<InputDecoratorIcon position="before" size={size}>{iconBefore}</InputDecoratorIcon>
+				<span className={css.inputHighlight}>{value ? value : placeholder}</span>
 				<input
 					{...inputProps}
 					{...voiceProps}
@@ -289,7 +281,7 @@ const InputBase = kind({
 					type={type}
 					value={value}
 				/>
-				<InputDecoratorIcon position="after" small={small}>{iconAfter}</InputDecoratorIcon>
+				<InputDecoratorIcon position="after" size={size}>{iconAfter}</InputDecoratorIcon>
 				{invalidTooltip}
 			</div>
 		);

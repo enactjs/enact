@@ -1,22 +1,20 @@
-import Spinner from '@enact/moonstone/Spinner';
+import Spinner, {SpinnerBase} from '@enact/moonstone/Spinner';
+import UiSpinner, {SpinnerBase as UiSpinnerBase} from '@enact/ui/Spinner';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 Spinner.displayName = 'Spinner';
-const Config = mergeComponentMetadata('Spinner', Spinner);
+const Config = mergeComponentMetadata('Spinner', UiSpinnerBase, UiSpinner, SpinnerBase, Spinner);
 
 storiesOf('Moonstone', module)
 	.add(
 		'Spinner',
-		withInfo({
-			text: 'Basic usage of Spinner'
-		})(() => (
+		() => (
 			<div
 				style={{
 					outline: 'teal dashed 1px',
@@ -69,11 +67,17 @@ storiesOf('Moonstone', module)
 						centered={boolean('centered', Config)}
 						paused={boolean('paused', Config)}
 						scrim={boolean('scrim', Config)}
+						size={select('size', [null, 'medium', 'small'], Config)}
 						transparent={boolean('transparent', Config)}
 					>
 						{text('content', Config, '')}
 					</Spinner>
 				</div>
 			</div>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of Spinner'
+			}
+		}
 	);

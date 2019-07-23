@@ -1,8 +1,7 @@
 import {forward, stopImmediate} from '@enact/core/handle';
-import clamp from 'ramda/src/clamp';
 import equals from 'ramda/src/equals';
 import {is} from '@enact/core/keymap';
-import {cap, Job} from '@enact/core/util';
+import {cap, clamp, Job} from '@enact/core/util';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import platform from '@enact/core/platform';
@@ -600,7 +599,7 @@ const PickerBase = class extends React.Component {
 		const {keyCode} = ev;
 		forwardKeyDown(ev, this.props);
 
-		if (joined) {
+		if (joined && !this.props.disabled) {
 			const direction = getDirection(keyCode);
 
 			const directions = {
@@ -635,7 +634,7 @@ const PickerBase = class extends React.Component {
 		const {keyCode} = ev;
 		forwardKeyUp(ev, this.props);
 
-		if (joined) {
+		if (joined && !this.props.disabled) {
 			const isVertical = orientation === 'vertical' && (isUp(keyCode) || isDown(keyCode));
 			const isHorizontal = orientation === 'horizontal' && (isRight(keyCode) || isLeft(keyCode));
 
@@ -815,7 +814,7 @@ const PickerBase = class extends React.Component {
 		if (__DEV__) {
 			validateRange(value, min, max, PickerBase.displayName);
 			validateStepped(value, min, step, PickerBase.displayName);
-			validateStepped(max, min, step, PickerBase.displayName, '"max"');
+			validateStepped(max, min, step, PickerBase.displayName, 'max');
 		}
 
 		delete rest['aria-label'];

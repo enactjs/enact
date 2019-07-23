@@ -27,7 +27,7 @@ Each module (and, consequently, directory) within Enact should have one (and onl
  * Provides Moonstone-themed button components and behaviors.
  *
  * @example
- * <Button small>Hello Enact!</Button>
+ * <Button size="small">Hello Enact!</Button>
  *
  * @module moonstone/Button
  * @exports Button
@@ -50,7 +50,7 @@ Below is an example block for a component:
 
 ```
 /**
- * A Moonstone-styled button with built-in support for uppercasing, tooltips, marqueed text, and
+ * A Moonstone-styled button with built-in support for tooltips, marqueed text, and
  * Spotlight focus.
  *
  * Usage:

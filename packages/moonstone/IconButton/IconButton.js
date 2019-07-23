@@ -4,7 +4,7 @@
  * to the image or a string from an [iconList]{@link moonstone/Icon.IconBase.iconList}.
  *
  * @example
- * <IconButton small>plus</IconButton>
+ * <IconButton size="small">plus</IconButton>
  *
  * @module moonstone/IconButton
  * @exports IconButton
@@ -75,41 +75,37 @@ const IconButtonBase = kind({
 		 *
 		 * * `iconButton` - The root class name
 		 * * `bg` - The background node of the icon button
+		 * * `large` - Applied to a `size='large'` icon button
 		 * * `selected` - Applied to a `selected` icon button
-		 * * `small` - Applied to a `small` icon button
+		 * * `small` - Applied to a `size='small'` icon button
 		 *
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object,
+		css: PropTypes.object
+	},
 
-		/**
-		 * An optional node to receive the tooltip from `TooltipDecorator`.
-		 *
-		 * @type {Node}
-		 * @private
-		 */
-		tooltipNode: PropTypes.node
+	defaultProps: {
+		size: 'small'
 	},
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['iconButton', 'bg', 'selected', 'small']
+		publicClassNames: ['iconButton', 'bg', 'large', 'selected', 'small']
 	},
 
 	computed: {
 		className: ({color, styler}) => styler.append(color)
 	},
 
-	render: ({children, css, tooltipNode, ...rest}) => {
+	render: ({children, css, ...rest}) => {
 		return UiIconButtonBase.inline({
 			'data-webos-voice-intent': 'Select',
 			...rest,
 			buttonComponent: <ButtonBase css={css} />,
 			css,
 			icon: children,
-			iconComponent: Icon,
-			children: tooltipNode
+			iconComponent: Icon
 		});
 	}
 });
@@ -128,19 +124,18 @@ const IconButtonBase = kind({
  */
 const IconButtonDecorator = compose(
 	Pure,
-	TooltipDecorator({tooltipDestinationProp: 'tooltipNode'}),
+	TooltipDecorator({tooltipDestinationProp: 'decoration'}),
 	UiIconButtonDecorator,
 	Spottable,
 	Skinnable
 );
 
 /**
- * `IconButton` does not have `Marquee` or `Uppercase` like `Button` has, as it should not contain
- * text.
+ * `IconButton` does not have `Marquee` like `Button` has, as it should not contain text.
  *
  * Usage:
  * ```
- * <IconButton onClick={handleClick} small>
+ * <IconButton onClick={handleClick} size="small">
  *     plus
  * </IconButton>
  * ```
