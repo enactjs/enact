@@ -619,7 +619,7 @@ class ScrollableBaseNative extends Component {
 
 		if (scrollability) {
 			const
-				isRtl = this.uiRef.current.state.rtl,
+				isRtl = this.uiRef.current.props.rtl,
 				edge = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
 			this.uiRef.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 		}
@@ -699,7 +699,7 @@ class ScrollableBaseNative extends Component {
 
 	scrollAndFocusScrollbarButton = (direction) => {
 		const
-			isRtl = this.uiRef.current.state.rtl,
+			isRtl = this.uiRef.current.props.rtl,
 			isPreviousScrollButton = direction === 'up' || (isRtl ? direction === 'right' : direction === 'left'),
 			isHorizontalDirection = direction === 'left' || direction === 'right',
 			isVerticalDirection = direction === 'up' || direction === 'down';
@@ -888,7 +888,7 @@ class ScrollableBaseNative extends Component {
 	onVoice = (e) => {
 		const
 			isHorizontal = this.props.direction === 'horizontal',
-			isRtl = this.uiRef.current.state.rtl,
+			isRtl = this.uiRef.current.props.rtl,
 			{scrollTop, scrollLeft} = this.uiRef.current,
 			{maxLeft, maxTop} = this.uiRef.current.getScrollBounds(),
 			verticalDirection = ['up', 'down', 'top', 'bottom'],
