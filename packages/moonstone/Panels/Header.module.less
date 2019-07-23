@@ -15,10 +15,6 @@
 	background-position: top left;
 	margin: 0 @moon-spotlight-outset;
 
-	// .titleAbove {
-	// 	.moon-super-header-text();
-	// }
-
 	// Remove the built-in h1 and h2 margins
 	.decorator,
 	.decorator .input,
@@ -41,15 +37,6 @@
 		margin: -2px 3px 0 -3px; // Negative 3px here to allow the decorator title text to horizontally align with the rest of the header text
 	}
 
-	.titleBelow,
-	.subTitleBelow {
-		.moon-sub-header-text();
-	}
-
-	.subTitleBelow {
-		.moon-header-sub-title-below();
-	}
-
 	.headerComponents {
 		.remove-margin-on-edge-children();
 		.margin-start-end(@moon-header-components-gutter, 0);
@@ -58,18 +45,32 @@
 		white-space: nowrap;
 	}
 
+	&.dense,
+	&.standard,
+	&.compact {
+		.titleBelow,
+		.subTitleBelow {
+			.moon-header-title-below-text();
+		}
+
+		.subTitleBelow {
+			.moon-header-sub-title-below-text();
+		}
+	}
+
 	// Standard Header
+	&.dense,
 	&.standard {
-		height: @moon-header-height-medium;
+		height: @moon-header-standard-height;
 
 		.title {
 			// The height is determined by the line-height below, but we want to maintain that as a
 			// relative unit (`em`) rather than dictate specific pixels to automatically accomodate
 			// font size changes.
-			line-height: @moon-medium-header-line-height;
+			line-height: @moon-header-standard-title-line-height;
 			margin-left: -3px; // Negative 3px here to allow the title text to horizontally align with the rest of the header text
 
-			.moon-locale-non-latin({line-height: @moon-non-latin-medium-header-line-height;});
+			.moon-locale-non-latin({line-height: @moon-non-latin-header-standard-title-line-height;});
 		}
 
 		.decorator,
@@ -82,15 +83,34 @@
 			max-width: 100%;
 		}
 
-		.titleBelow,
-		.subTitleBelow {
-			line-height: 1.4em;
+		.titlesCell {
+			margin-bottom: 9px;
+		}
+	}
+
+	// Dense Header
+	&.dense {
+		height: @moon-header-dense-height;
+
+		.title {
+			font-size: @moon-header-dense-title-font-size;
+			font-weight: @moon-header-dense-title-font-weight;
+		}
+	}
+
+	// Dense Header
+	&.dense {
+		height: @moon-header-dense-height;
+
+		.title {
+			font-size: @moon-header-dense-title-font-size;
+			font-weight: @moon-header-dense-title-font-weight;
 		}
 	}
 
 	// Compact Header
 	&.compact {
-		height: @moon-header-height-small;
+		height: @moon-header-compact-height;
 
 		.compactTitle {
 			margin-bottom: 3px;
@@ -99,10 +119,10 @@
 		.input,
 		.inputHighlight,
 		.title {
-			font-size: @moon-small-header-font-size;
+			font-size: @moon-header-compact-font-size;
 			display: inline;
 
-			.moon-locale-non-latin({line-height:  @moon-non-latin-small-header-line-height;});
+			.moon-locale-non-latin({line-height:  @moon-non-latin-header-compact-title-line-height;});
 		}
 
 		.titleBelow {
@@ -120,6 +140,11 @@
 		color: @moon-header-text-color;
 		border-bottom-color: @moon-header-bottom-border-color;
 
+		&.hideLine {
+			border-bottom-color: transparent;
+		}
+
+		&.dense,
 		&.standard {
 			.decorator {
 				background-color: transparent;
@@ -152,7 +177,7 @@
 
 			.titleBelow,
 			.subTitleBelow {
-				color: @moon-header-sub-title-color;
+				color: @moon-header-title-below-text-color;
 			}
 		}
 
@@ -170,11 +195,15 @@
 
 :global(.moon-panels-hasControls) {
 	.header.compact,
+	.header.dense .title,
+	.header.dense .headerInput,
 	.header.standard .title,
 	.header.standard .headerInput {
 		.padding-start-end(0, var(--moon-panels-controls-width));
 	}
 
+	.header.centered.dense .title,
+	.header.centered.dense .headerInput,
 	.header.centered.standard .title,
 	.header.centered.standard .headerInput {
 		.padding-start-end(var(--moon-panels-controls-width), var(--moon-panels-controls-width));

@@ -14,7 +14,7 @@ const
 	wrapOption = {
 		'false': false,
 		'true': true,
-		"'noAnimation'": 'noAnimation'
+		'&quot;noAnimation&quot;': 'noAnimation'
 	},
 	items = [],
 	defaultDataSize = 1000,
@@ -70,12 +70,11 @@ storiesOf('UI', module)
 	.add(
 		'VirtualList',
 		() => {
-			const itemSize = ri.scale(number('itemSize', Config, 72));
 			return (
 				<UiVirtualList
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
-					itemRenderer={uiRenderItem(itemSize)}
-					itemSize={itemSize}
+					itemRenderer={uiRenderItem(ri.scale(number('itemSize', Config, 72)))}
+					itemSize={ri.scale(number('itemSize', Config, 72))}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 0))}
@@ -93,17 +92,16 @@ storiesOf('Moonstone', module)
 	.add(
 		'VirtualList',
 		() => {
-			const itemSize = ri.scale(number('itemSize', Config, 72));
 			return (
 				<VirtualList
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 					focusableScrollbar={boolean('focusableScrollbar', Config)}
-					itemRenderer={renderItem(itemSize)}
-					itemSize={itemSize}
+					itemRenderer={renderItem(ri.scale(number('itemSize', Config, 72)))}
+					itemSize={ri.scale(number('itemSize', Config, 72))}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 0))}
-					wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"], Config)]}
+					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 				/>
 			);
 		},

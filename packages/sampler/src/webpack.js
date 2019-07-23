@@ -60,7 +60,6 @@ function configure ({config, mode}, dirname) {
 
 	// Modify stock Storybook config for Enact-tailored experience
 	config.devtool = shouldUseSourceMap && 'source-map';
-	config.resolve.alias.ilib = '@enact/i18n/ilib/lib';
 	config.resolve.modules = [path.resolve(__dirname, '..', 'node_modules'), 'node_modules'];
 	config.devServer = {host: '0.0.0.0', port: 8080};
 	config.performance = {hints: false};

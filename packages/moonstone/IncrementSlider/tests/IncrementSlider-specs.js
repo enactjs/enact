@@ -182,13 +182,13 @@ describe('IncrementSlider Specs', () => {
 	);
 
 	test(
-		'should not set decrementButton "aria-label" when decrementButton is disabled',
+		'should set decrementButton "aria-label" when decrementButton is disabled',
 		() => {
 			const incrementSlider = mount(
 				<IncrementSlider disabled value={10} />
 			);
 
-			const expected = null;
+			const expected = '10 press ok button to decrease the value';
 			const actual = incrementSlider.find(`IconButton.${css.decrementButton}`).prop('aria-label');
 
 			expect(actual).toBe(expected);
@@ -225,13 +225,13 @@ describe('IncrementSlider Specs', () => {
 	);
 
 	test(
-		'should not set incrementButton "aria-label" when incrementButton is disabled',
+		'should set incrementButton "aria-label" when incrementButton is disabled',
 		() => {
 			const incrementSlider = mount(
 				<IncrementSlider disabled value={10} />
 			);
 
-			const expected = null;
+			const expected = '10 press ok button to increase the value';
 			const actual = incrementSlider.find(`IconButton.${css.incrementButton}`).prop('aria-label');
 
 			expect(actual).toBe(expected);

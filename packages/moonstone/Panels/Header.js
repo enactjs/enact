@@ -83,6 +83,8 @@ const HeaderBase = kind({
 		 * This is also a [slot]{@link ui/Slottable.Slottable}, so it can be referred
 		 * to as if it were JSX.
 		 *
+		 * Note: Only applies to `type="standard"` headers.
+		 *
 		 * Example
 		 * ```
 		 *  <Header>
@@ -100,11 +102,17 @@ const HeaderBase = kind({
 		headerInput: PropTypes.node,
 
 		/**
+		 * Hides the horizontal-rule (line) under the component
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		hideLine: PropTypes.bool,
+
+		/**
 		 * Determines what triggers the header content to start its animation.
 		 *
-		 * * Values: `'focus'`, `'hover'` and `'render'`.
-		 *
-		 * @type {String}
+		 * @type {('focus'|'hover'|'render')}
 		 * @default 'hover'
 		 * @public
 		 */
@@ -152,12 +160,10 @@ const HeaderBase = kind({
 		/**
 		 * Set the type of header to be used.
 		 *
-		 * * Values: `'standard'` or `'compact'`.
-		 *
-		 * @type {String}
+		 * @type {('compact'|'dense'|'standard')}
 		 * @default 'standard'
 		 */
-		type: PropTypes.oneOf(['compact', 'standard'])
+		type: PropTypes.oneOf(['compact', 'dense', 'standard'])
 	},
 
 	defaultProps: {
@@ -173,12 +179,13 @@ const HeaderBase = kind({
 	},
 
 	computed: {
-		className: ({centered, fullBleed, type, styler}) => styler.append({centered, fullBleed}, type),
+		className: ({centered, fullBleed, hideLine, type, styler}) => styler.append({centered, fullBleed, hideLine}, type),
 		direction: ({title, titleBelow}) => isRtlText(title) || isRtlText(titleBelow) ? 'rtl' : 'ltr',
 		titleBelowComponent: ({centered, marqueeOn, titleBelow, type}) => {
 			switch (type) {
 				case 'compact':
 					return titleBelow ? <h2 className={css.titleBelow}>{titleBelow}</h2> : null;
+				case 'dense':
 				case 'standard':
 					return <MarqueeH2 className={css.titleBelow} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>{(titleBelow != null && titleBelow !== '') ? titleBelow : ' '}</MarqueeH2>;
 			}
@@ -186,8 +193,8 @@ const HeaderBase = kind({
 		subTitleBelowComponent: ({centered, marqueeOn, subTitleBelow}) => {
 			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
 		},
-		titleOrInput: ({centered, headerInput, marqueeOn, title}) => {
-			if (headerInput) {
+		titleOrInput: ({centered, headerInput, marqueeOn, title, type}) => {
+			if (headerInput && type === 'standard') {
 				return (
 					<Cell className={css.headerInput}>
 						<ComponentOverride
@@ -211,6 +218,7 @@ const HeaderBase = kind({
 		delete rest.centered;
 		delete rest.fullBleed;
 		delete rest.headerInput;
+		delete rest.hideLine;
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
 
@@ -234,12 +242,13 @@ const HeaderBase = kind({
 			// 		<nav className={css.headerComponents}>{children}</nav>
 			// 	</header>
 			// );
+			case 'dense':
 			case 'standard': return (
 				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
 					{titleOrInput}
 					<Cell shrink size={96}>
 						<Layout align="end">
-							<Cell>
+							<Cell className={css.titlesCell}>
 								{titleBelowComponent}
 								{subTitleBelowComponent}
 							</Cell>

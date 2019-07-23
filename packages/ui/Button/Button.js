@@ -8,7 +8,6 @@
  */
 
 import kind from '@enact/core/kind';
-import deprecate from '@enact/core/internal/deprecate';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -16,19 +15,6 @@ import React from 'react';
 import Touchable from '../Touchable';
 
 import componentCss from './Button.module.less';
-
-const deprecateSmall = deprecate((small) => small ? 'small' : 'large',  {
-	name: 'ui/Button.ButtonBase#small',
-	replacedBy: 'the `size` prop',
-	message: 'Use `size="small"` instead.',
-	since: '2.6.0',
-	until: '3.0.0'
-});
-
-function getSize (size, small) {
-	small = typeof small !== 'undefined' ? deprecateSmall(small) : 'large';
-	return size || small;
-}
 
 /**
  * A basic button component structure without any behaviors applied to it.
@@ -160,16 +146,7 @@ const ButtonBase = kind({
 		 * @default 'large'
 		 * @public
 		 */
-		size: PropTypes.string,
-
-		/**
-		 * Reduces the size of the component.
-		 *
-		 * @type {Boolean}
-		 * @deprecated replaced by prop `size='small'`
-		 * @public
-		 */
-		small: PropTypes.bool
+		size: PropTypes.string
 	},
 
 	defaultProps: {
@@ -186,15 +163,15 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({icon, minWidth, pressed, selected, size, small, styler}) => styler.append({
+		className: ({icon, minWidth, pressed, selected, size, styler}) => styler.append({
 			hasIcon: (!!icon),
 			minWidth,
 			pressed,
 			selected
-		}, getSize(size, small)),
-		icon: ({css, icon, iconComponent: Icon, size, small}) => {
+		}, size),
+		icon: ({css, icon, iconComponent: Icon, size}) => {
 			return (typeof icon === 'string' && Icon) ? (
-				<Icon size={getSize(size, small)} className={css.icon}>{icon}</Icon>
+				<Icon size={size} className={css.icon}>{icon}</Icon>
 			) : icon;
 		}
 	},
@@ -205,7 +182,6 @@ const ButtonBase = kind({
 		delete rest.pressed;
 		delete rest.selected;
 		delete rest.size;
-		delete rest.small;
 
 		return (
 			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>

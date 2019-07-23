@@ -48,7 +48,7 @@ const PanelsBase = kind({
 					</Column>] : children
 				}
 			</Panel> : children}
-		</Panels> : children
+		</Panels> : <div {...rest}>{children}</div>
 	)
 });
 

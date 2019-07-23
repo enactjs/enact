@@ -350,6 +350,15 @@ class ScrollableBase extends Component {
 		}
 	}
 
+	isScrollButtonFocused () {
+		const {horizontalScrollbarRef: h, verticalScrollbarRef: v} = this.uiRef.current;
+
+		return (
+			h.current && h.current.isOneOfScrollButtonsFocused() ||
+			v.current && v.current.isOneOfScrollButtonsFocused()
+		);
+	}
+
 	onFlick = ({direction}) => {
 		const bounds = this.uiRef.current.getScrollBounds();
 		const focusedItem = Spotlight.getCurrent();
@@ -373,24 +382,17 @@ class ScrollableBase extends Component {
 	}
 
 	onTouchStart = () => {
-		const
-			focusedItem = Spotlight.getCurrent(),
-			{horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current,
-			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current && horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
-			isVerticalScrollButtonFocused = verticalScrollbarRef.current && verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
+		const focusedItem = Spotlight.getCurrent();
 
-		if (!Spotlight.isPaused() && focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
+		if (!Spotlight.isPaused() && focusedItem && !this.isScrollButtonFocused()) {
 			focusedItem.blur();
 		}
 	}
 
-	onWheel = ({delta, horizontalScrollbarRef, verticalScrollbarRef}) => {
-		const
-			focusedItem = Spotlight.getCurrent(),
-			isHorizontalScrollButtonFocused = horizontalScrollbarRef.current && horizontalScrollbarRef.current.isOneOfScrollButtonsFocused(),
-			isVerticalScrollButtonFocused = verticalScrollbarRef.current && verticalScrollbarRef.current.isOneOfScrollButtonsFocused();
+	onWheel = ({delta}) => {
+		const focusedItem = Spotlight.getCurrent();
 
-		if (focusedItem && !isHorizontalScrollButtonFocused && !isVerticalScrollButtonFocused) {
+		if (focusedItem && !this.isScrollButtonFocused()) {
 			focusedItem.blur();
 		}
 
@@ -552,7 +554,7 @@ class ScrollableBase extends Component {
 
 		if (scrollability) {
 			const
-				isRtl = this.uiRef.current.state.rtl,
+				isRtl = this.uiRef.current.props.rtl,
 				edge = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
 			this.uiRef.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 		}
@@ -578,7 +580,8 @@ class ScrollableBase extends Component {
 
 		forward('onKeyDown', ev, this.props);
 
-		if (isPageUp(keyCode) || isPageDown(keyCode)) {
+		if ((isPageUp(keyCode) || isPageDown(keyCode)) && !this.isScrollButtonFocused()) {
+			ev.stopPropagation();
 			ev.preventDefault();
 		}
 
@@ -631,17 +634,32 @@ class ScrollableBase extends Component {
 
 	scrollAndFocusScrollbarButton = (direction) => {
 		const
-			isRtl = this.uiRef.current.state.rtl,
+			isRtl = this.uiRef.current.props.rtl,
 			isPreviousScrollButton = direction === 'up' || (isRtl ? direction === 'right' : direction === 'left'),
-			isVerticalScrollBar = direction === 'up' || direction === 'down';
+			isHorizontalDirection = direction === 'left' || direction === 'right',
+			isVerticalDirection = direction === 'up' || direction === 'down';
 
-		this.onScrollbarButtonClick({isPreviousScrollButton, isVerticalScrollBar});
+		const {focusableScrollbar, direction: directionProp} = this.props;
 
-		if (this.props.focusableScrollbar) {
-			const scrollbar = this.uiRef.current[
-				(isVerticalScrollBar ? 'vertical' : 'horizontal') + 'ScrollbarRef'
-			];
-			scrollbar.current.focusOnButton(isPreviousScrollButton);
+		this.onScrollbarButtonClick({
+			isPreviousScrollButton,
+			isVerticalScrollBar:
+				isVerticalDirection &&
+				(directionProp === 'vertical' || directionProp === 'both')
+		});
+
+		if (focusableScrollbar) {
+			if (isVerticalDirection && (directionProp === 'vertical' || directionProp === 'both')) {
+				if (this.uiRef.current && this.uiRef.current.verticalScrollbarRef.current) {
+					const scrollbar = this.uiRef.current.verticalScrollbarRef;
+					scrollbar.current.focusOnButton(isPreviousScrollButton);
+				}
+			} else if (isHorizontalDirection && (directionProp === 'horizontal' || directionProp === 'both')) {
+				if (this.uiRef.current && this.uiRef.current.horizontalScrollbarRef.current) {
+					const scrollbar = this.uiRef.current.horizontalScrollbarRef;
+					scrollbar.current.focusOnButton(isPreviousScrollButton);
+				}
+			}
 		}
 	}
 
@@ -805,7 +823,7 @@ class ScrollableBase extends Component {
 	onVoice = (e) => {
 		const
 			isHorizontal = this.props.direction === 'horizontal',
-			isRtl = this.uiRef.current.state.rtl,
+			isRtl = this.uiRef.current.props.rtl,
 			{scrollTop, scrollLeft} = this.uiRef.current,
 			{maxLeft, maxTop} = this.uiRef.current.getScrollBounds(),
 			verticalDirection = ['up', 'down', 'top', 'bottom'],
@@ -926,6 +944,7 @@ class ScrollableBase extends Component {
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
 									initUiChildRef,
+									isHorizontalScrollbarVisible,
 									isVerticalScrollbarVisible,
 									onScroll: handleScroll,
 									onUpdate: this.handleScrollerUpdate,

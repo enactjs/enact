@@ -12,52 +12,53 @@ const fontName = 'Moonstone Global';
 const fonts = {
 	'NonLatin': {
 		// Hacky solution to add support for full-name and postscript names of the same font (support for multiple different operating systems font handling)
-		regular: 'LG Smart UI Global-Light"), local("LGSmartUIGlobal-Light',
-		bold:    'LG Smart UI Global-Regular"), local("LGSmartUIGlobal-Regular'
+		regular: 'LG Smart UI AR HE TH Regular"), local("LGSmartUIARHETH-Regular',
+		bold:    'LG Smart UI AR HE TH SemiBold"), local("LGSmartUIARHETH-SemiBold'
 	},
 	'am': {
-		regular: 'LG Display_Amharic'
+		regular: 'LG Smart UI Amharic'
 	},
-	// 'bn': {
-	// 	regular: 'LG Display_Bengali'
-	// },
-	'en-JP': {
-		regular: 'LG Display_JP'
+	'bn': {
+		regular: 'LG Smart UI Bengali'
 	},
-	// 'gu': {
-	// 	regular: 'LG Display_Gujarati'
-	// },
+	'gu': {
+		regular: 'LG Smart UI Gujarati'
+	},
 	'ja': {
-		regular: 'LG Display_JP'
+		regular: 'LG Smart UI JP',
+		bold: 'LG Display_JP_Bold'
 	},
-	// 'kn': {
-	// 	regular: 'LG Display_Kannada'
-	// },
-	// 'ks': {
-	// 	regular: 'LG Display_Devanagari'
-	// },
+	'kn': {
+		regular: 'LG Smart UI Kannada'
+	},
+	'hi': {
+		regular: 'LG Smart UI Devanagari'
+	},
 	'or': {
-		regular: 'LG Display_Oriya'
+		regular: 'LG Smart UI Oriya'
+	},
+	'pa': {
+		regular: 'LG Smart UI Gurmukhi'
 	},
 	'ml': {
-		regular: 'LG Display_ML'
+		regular: 'LG Smart UI Malayalam'
 	},
-	// 'ta': {
-	// 	regular: 'LG Display_Tamil'
-	// },
-	// 'te': {
-	// 	regular: 'LG Display_Telugu'
-	// },
+	'ta': {
+		regular: 'LG Smart UI Tamil'
+	},
+	'te': {
+		regular: 'LG Smart UI Telugu'
+	},
 	'ur': {
-		regular: 'LG Display_Urdu',
+		regular: 'LG Smart UI Urdu',
 		unicodeRange:
 			'U+600-6FF,' +
 			'U+FE70-FEFE,' +
 			'U+FB50-FDFF'
 	},
 	'zh-HK': {
-		regular: 'LG Display GP4_HK',
-		bold:    'LG Display GP4_HK',
+		regular: 'LG Smart UI TC',
+		bold:    'LG Smart UI TC',
 		unicodeRange:
 			'U+0-FF,' +
 			'U+2E80-2EFF,' +
@@ -71,6 +72,9 @@ const fonts = {
 };
 
 // Duplications and alternate locale names
+fonts['as'] = fonts['bn'];
+fonts['en-JP'] = fonts['ja'];
+fonts['mr'] = fonts['hi'];
 fonts['zh-TW'] = fonts['zh-HK'];
 
 addLocalizedFont(fontName, fonts);
