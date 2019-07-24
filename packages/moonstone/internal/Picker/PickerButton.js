@@ -76,8 +76,9 @@ const PickerButtonBase = kind({
 	},
 
 	render: ({disabled, icon, joined, ...rest}) => {
+		delete rest.hidden;
+
 		if (joined) {
-			delete rest.hidden;
 			delete rest.onSpotlightDisappear;
 			delete rest.spotlightDisabled;
 
