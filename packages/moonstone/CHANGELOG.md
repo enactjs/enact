@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/VideoPlayer` more button to not clip and flip in rtl
+
 ## [3.0.0-beta.2] - 2019-07-23
 
 ### Added
