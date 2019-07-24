@@ -21,8 +21,8 @@ describe('MediaPlayer', () => {
 			<MediaPlayer src={filePath} mediaComponent={Audio} />
 		);
 
-		const expected = 'audio';
-		const actual = mediaPlayer.find('MediaBase').prop('mediaComponent');
+		const expected = 1;
+		const actual = mediaPlayer.find('audio').length;
 
 		expect(actual).toBe(expected);
 	});
