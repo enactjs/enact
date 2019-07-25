@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Panels` to treat all components within `controls` as part of the active panel for the purposes of accessibility
+- `moonstone/Panels` to allow 5-way navigation to components within `controls` when used with a `Header` with `headerInput`
+
 ## [3.0.0-beta.2] - 2019-07-23
 
 ### Added
