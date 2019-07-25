@@ -35,19 +35,6 @@ const ControlsBase = kind({
 		forwardRef: PropTypes.func,
 
 		/**
-		 * Unique identifier for the Panels instance.
-		 *
-		 * When defined, `Panels` will manage the presentation state of `Panel` instances in order
-		 * to restore it when returning to the `Panel`. See
-		 * [noSharedState]{@link moonstone/Panels.Panels.noSharedState} for more details on shared
-		 * state.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		id: PropTypes.string,
-
-		/**
 		 * Indicates the close button will not be rendered on the top right corner.
 		 *
 		 * @type {Boolean}
@@ -70,36 +57,20 @@ const ControlsBase = kind({
 		className: 'controls'
 	},
 
-	computed: {
-		closeButton: ({closeButtonAriaLabel, closeButtonBackgroundOpacity, id, noCloseButton, onApplicationClose}) => {
-			if (noCloseButton) return null;
-
-			const closeId = id ? `${id}-close` : null;
-
-			return (
-				<ApplicationCloseButton
-					aria-label={closeButtonAriaLabel}
-					backgroundOpacity={closeButtonBackgroundOpacity}
-					className={css.close}
-					id={closeId}
-					onApplicationClose={onApplicationClose}
-				/>
-			);
-		}
-	},
-
-	render: ({children, closeButton, forwardRef, ...rest}) => {
-		if (!children && !closeButton) return null;
-
-		delete rest.closeButtonAriaLabel;
-		delete rest.closeButtonBackgroundOpacity;
-		delete rest.noCloseButton;
-		delete rest.onApplicationClose;
+	render: ({children, closeButtonAriaLabel, closeButtonBackgroundOpacity, forwardRef, noCloseButton, onApplicationClose, ...rest}) => {
+		if (!children && noCloseButton) return null;
 
 		return (
 			<div {...rest} ref={forwardRef}>
 				{children}
-				{closeButton}
+				{noCloseButton ? null : (
+					<ApplicationCloseButton
+						aria-label={closeButtonAriaLabel}
+						backgroundOpacity={closeButtonBackgroundOpacity}
+						className={css.close}
+						onApplicationClose={onApplicationClose}
+					/>
+				)}
 			</div>
 		);
 	}
