@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Scroller` not to scroll horizontally via 5-way down in horizontal scroller
 - `moonstone/Scroller` not to jump to the top when right key is pressed in the right most item of vertical scroller
 
 ## [3.0.0-beta.2] - 2019-07-23
