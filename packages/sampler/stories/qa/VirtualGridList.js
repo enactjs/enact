@@ -51,7 +51,7 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
-storiesOf('VirtualList.VirtualGridList', module)
+storiesOf('VirtualGridList', module)
 	.add(
 		'Horizontal VirtualGridList',
 		() => (

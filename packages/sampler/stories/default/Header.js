@@ -22,7 +22,7 @@ const prop = {
 		</React.Fragment>
 	},
 	marqueeOn: ['', 'hover', 'render'],
-	type: ['compact', 'standard']
+	type: ['compact', 'dense', 'standard']
 };
 
 storiesOf('Moonstone', module)
