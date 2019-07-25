@@ -8,10 +8,18 @@ import ApplicationCloseButton from './ApplicationCloseButton';
 
 import css from './Panels.module.less';
 
+/**
+ * Group of controls shared across Panel instances
+ *
+ * @class ControlsBase
+ * @memberof moonstone/Panels
+ * @ui
+ * @private
+ */
 const ControlsBase = kind({
 	name: 'Controls',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Panels.ControlsBase.prototype */ {
 		/**
 		 * Additional controls displayed before the close button.
 		 *
@@ -87,6 +95,22 @@ const ControlsBase = kind({
 	}
 });
 
+/**
+ * Group of controls shared across Panel instances.
+ *
+ * ```
+ * // remove the close button and use a star icon button
+ * <Controls noCloseButton>
+ *   <IconButton>star</IconButton>
+ * </Controls>
+ * ```
+ *
+ * @class Controls
+ * @mixes spotlight/SpotlightContainerDecorator
+ * @memberof moonstone/Panels
+ * @ui
+ * @private
+ */
 const Controls = ForwardRef(SpotlightContainerDecorator(ControlsBase));
 
 export default Controls;
