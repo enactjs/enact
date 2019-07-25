@@ -554,7 +554,7 @@ class ScrollableBase extends Component {
 
 		if (scrollability) {
 			const
-				isRtl = this.uiRef.current.state.rtl,
+				isRtl = this.uiRef.current.props.rtl,
 				edge = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
 			this.uiRef.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 		}
@@ -643,7 +643,7 @@ class ScrollableBase extends Component {
 			const
 				{focusableScrollbar, direction: directionProp} = this.props,
 				uiRefCurrent = this.uiRef.current,
-				isRtl = uiRefCurrent.state.rtl,
+				isRtl = uiRefCurrent.props.rtl,
 				isPreviousScrollButton = direction === 'up' || (isRtl ? direction === 'right' : direction === 'left'),
 				isHorizontalDirection = direction === 'left' || direction === 'right',
 				isVerticalDirection = direction === 'up' || direction === 'down',
@@ -826,7 +826,7 @@ class ScrollableBase extends Component {
 	onVoice = (e) => {
 		const
 			isHorizontal = this.props.direction === 'horizontal',
-			isRtl = this.uiRef.current.state.rtl,
+			isRtl = this.uiRef.current.props.rtl,
 			{scrollTop, scrollLeft} = this.uiRef.current,
 			{maxLeft, maxTop} = this.uiRef.current.getScrollBounds(),
 			verticalDirection = ['up', 'down', 'top', 'bottom'],
@@ -947,6 +947,7 @@ class ScrollableBase extends Component {
 									cbScrollTo: scrollTo,
 									className: componentCss.scrollableFill,
 									initUiChildRef,
+									isHorizontalScrollbarVisible,
 									isVerticalScrollbarVisible,
 									onScroll: handleScroll,
 									onUpdate: this.handleScrollerUpdate,

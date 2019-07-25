@@ -126,14 +126,23 @@ export default class LS2Request {
 		this.timeoutJob.stop();
 
 		let parsedMsg;
-		try {
-			parsedMsg = JSON.parse(msg);
-		} catch (e) {
+
+		if (msg == null) {
 			parsedMsg = {
 				errorCode: -1,
-				errorText: msg,
+				errorText: `Invalid response: ${msg}`,
 				returnValue: false
 			};
+		} else {
+			try {
+				parsedMsg = JSON.parse(msg);
+			} catch (e) {
+				parsedMsg = {
+					errorCode: -1,
+					errorText: msg,
+					returnValue: false
+				};
+			}
 		}
 
 		if ((parsedMsg.errorCode || parsedMsg.returnValue === false)) {

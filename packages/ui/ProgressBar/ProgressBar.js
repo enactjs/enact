@@ -72,8 +72,9 @@ const ProgressBar = kind({
 		 * The following classes are supported:
 		 *
 		 * * `progressBar` - The root component class
-		 * * `fill`        - The foreground node of the progress bar
-		 * * `load`        - The background node of the progress bar
+		 * * `bar`         - The background node (the empty part of the progressBar)
+		 * * `fill`        - The foreground of the progress bar (`progress`)
+		 * * `load`        - The `backgroundProgress` node
 		 * * `horizontal`  - Applied when `orientation` is `'horizontal'`
 		 * * `vertical`    - Applied when `orientation` is `'vertical'`
 		 *
@@ -167,8 +168,10 @@ const ProgressBar = kind({
 
 		return (
 			<div role="progressbar" {...rest}>
-				<div className={css.load} />
-				<div className={css.fill} />
+				<div className={css.bar}>
+					<div className={css.load} />
+					<div className={css.fill} />
+				</div>
 				{children}
 			</div>
 		);
