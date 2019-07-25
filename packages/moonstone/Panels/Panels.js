@@ -1,11 +1,10 @@
 import kind from '@enact/core/kind';
-
 import Measurable from '@enact/ui/Measurable';
 import Slottable from '@enact/ui/Slottable';
 import {shape} from '@enact/ui/ViewManager';
 import PropTypes from 'prop-types';
-import React from 'react';
 import compose from 'ramda/src/compose';
+import React from 'react';
 
 import IdProvider from '../internal/IdProvider';
 import Skinnable from '../Skinnable';
@@ -15,6 +14,8 @@ import Controls from './Controls';
 import Viewport from './Viewport';
 
 import css from './Panels.module.less';
+
+const getControlsId = (id) => id && `${id}-controls`;
 
 /**
  * Basic Panels component without breadcrumbs or default [arranger]{@link ui/ViewManager.Arranger}
@@ -212,7 +213,7 @@ const PanelsBase = kind({
 			}
 
 			const updatedChildProps = Object.assign({}, childProps);
-			const controlsId = `${id}-controls`;
+			const controlsId = getControlsId(id);
 			const owns = updatedChildProps['aria-owns'];
 
 			if (owns) {
@@ -227,21 +228,20 @@ const PanelsBase = kind({
 			...style,
 			'--moon-panels-controls-width': controlsMeasurements.width + 'px'
 		} : style),
-		controlsId: ({id}) => id && `${id}-controls`,
 		viewportId: ({id}) => id && `${id}-viewport`
 	},
 
-	render: ({arranger, childProps, children, closeButtonAriaLabel, closeButtonBackgroundOpacity, controls, controlsId, controlsRef, generateId, id, index, noAnimation, noCloseButton, noSharedState, onApplicationClose, viewportId, ...rest}) => {
+	render: ({arranger, childProps, children, closeButtonAriaLabel, closeButtonBackgroundOpacity, controls, controlsRef, generateId, id, index, noAnimation, noCloseButton, noSharedState, onApplicationClose, viewportId, ...rest}) => {
 		delete rest.controlsMeasurements;
 		delete rest.onBack;
 
 		return (
 			<div {...rest} id={id}>
 				<Controls
-					noCloseButton={noCloseButton}
 					closeButtonAriaLabel={closeButtonAriaLabel}
 					closeButtonBackgroundOpacity={closeButtonBackgroundOpacity}
-					id={controlsId}
+					id={getControlsId(id)}
+					noCloseButton={noCloseButton}
 					onApplicationClose={onApplicationClose}
 					ref={controlsRef}
 				>
@@ -262,7 +262,6 @@ const PanelsBase = kind({
 		);
 	}
 });
-
 
 const PanelsDecorator = compose(
 	Slottable({slots: ['controls']}),
