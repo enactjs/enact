@@ -13,10 +13,17 @@ const ControlsBase = kind({
 
 	propTypes: {
 		/**
+		 * Additional controls displayed before the close button.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		children: PropTypes.node,
+
+		/**
 		 * Sets the hint string read when focusing the application close button.
 		 *
 		 * @type {String}
-		 * @default 'Exit app'
 		 * @public
 		 */
 		closeButtonAriaLabel: PropTypes.string,
@@ -27,18 +34,22 @@ const ControlsBase = kind({
 		 * * Values: `'translucent'`, `'lightTranslucent'`, `'transparent'`
 		 *
 		 * @type {String}
-		 * @default 'transparent'
 		 * @public
 		 */
 		closeButtonBackgroundOpacity: PropTypes.oneOf(['translucent', 'lightTranslucent', 'transparent']),
 
+		/**
+		 * Called with a reference to the root DOM node of this component.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		forwardRef: PropTypes.func,
 
 		/**
 		 * Indicates the close button will not be rendered on the top right corner.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		noCloseButton: PropTypes.bool,
