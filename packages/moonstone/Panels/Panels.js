@@ -241,6 +241,7 @@ const PanelsBase = kind({
 					closeButtonAriaLabel={closeButtonAriaLabel}
 					closeButtonBackgroundOpacity={closeButtonBackgroundOpacity}
 					id={getControlsId(id)}
+					spotlightId={getControlsId(id)}
 					noCloseButton={noCloseButton}
 					onApplicationClose={onApplicationClose}
 					ref={controlsRef}
