@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Input` disabled focus text color
+
 ## [3.0.0-beta.2] - 2019-07-23
 
 ### Added
