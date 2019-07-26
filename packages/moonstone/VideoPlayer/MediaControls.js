@@ -425,6 +425,7 @@ const MediaControlsBase = kind({
 							aria-label={moreIconLabel}
 							backgroundOpacity="translucent"
 							className={moreButtonClassName}
+							css={css}
 							color={moreButtonColor}
 							disabled={moreButtonDisabled}
 							onClick={onMoreClick}
