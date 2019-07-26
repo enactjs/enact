@@ -5,6 +5,9 @@
 @import "../styles/skin.less";
 
 .feedbackTooltip {
+	position: absolute;
+	bottom: @moon-video-slider-tooltip-position-bottom;
+
 	&.hidden {
 		display: none;
 	}
@@ -16,8 +19,6 @@
 	}
 
 	.thumbnail {
-		position: absolute;
-		bottom: (@moon-video-slider-tooltip-line-height + @moon-spotlight-outset);
 		border-width: @moon-video-slider-tooltip-thumbnail-border-width;
 		border-style: solid;
 		border-radius: 0;
@@ -41,14 +42,16 @@
 		.moon-text-base(@moon-video-slider-tooltip-font-size);
 		line-height: @moon-video-slider-tooltip-line-height;
 		white-space: nowrap;
-		position: absolute;
-		bottom: @moon-spotlight-outset;
 	}
 
 	&.afterMidpoint {
 		.thumbnail,
 		.content {
 			transform: translateX(-100%) translateX(0);
+		}
+
+		.content {
+			text-align: right;
 		}
 	}
 
