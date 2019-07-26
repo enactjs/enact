@@ -96,6 +96,14 @@ const IconButtonBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
+		 * Flip the icon horizontally or vertically.
+		 *
+		 * @type {('horizontal'|'vertical')}
+		 * @public
+		 */
+		flip: PropTypes.string,
+
+		/**
 		 * The icon displayed within the IconButton.
 		 *
 		 * If not specified, `children` is used as the icon value instead.
@@ -153,7 +161,7 @@ const IconButtonBase = kind({
 		className: ({size, styler}) => styler.append(size)
 	},
 
-	render: ({buttonComponent, children, css, icon, iconComponent: Icon, size, ...rest}) => {
+	render: ({buttonComponent, children, css, flip, icon, iconComponent: Icon, size, ...rest}) => {
 		// To support the simpler use case of only specifying the icon as the children within
 		// <IconButton>, this falls back on using children if icon isn't specified.
 		if (!icon && children) {
@@ -167,7 +175,7 @@ const IconButtonBase = kind({
 			size: size,
 			minWidth: false,
 			children: [
-				<Icon key="icon" size={size} className={css.icon}>{icon}</Icon>,
+				<Icon key="icon" flip={flip} size={size} className={css.icon}>{icon}</Icon>,
 				...React.Children.toArray(children)
 			]
 		});

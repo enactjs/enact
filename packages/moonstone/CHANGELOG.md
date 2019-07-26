@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/Icon` prop `flip` to flip the icon horizontally or vertically
+
 ### Fixed
 
 - `moonstone/VideoPlayer` more button to not clip and flip in rtl

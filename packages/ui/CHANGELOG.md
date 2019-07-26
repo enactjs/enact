@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/IconButton` prop `flip` to flip the icon horizontally or vertically
+
 ## [3.0.0-beta.2] - 2019-07-23
 
 ### Added

@@ -4,6 +4,7 @@ import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {on, off} from '@enact/core/dispatcher';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Pause from '@enact/spotlight/Pause';
 import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
@@ -36,6 +37,7 @@ const MediaButton = onlyUpdateForKeys([
 	'className',
 	'color',
 	'disabled',
+	'flip',
 	'onClick',
 	'spotlightDisabled'
 ])(IconButton);
@@ -300,6 +302,14 @@ const MediaControlsBase = kind({
 		rightComponents: PropTypes.node,
 
 		/**
+		 * Indicates rtl locale.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * When `true`, more components are visible.
 		 *
 		 * @type {Boolean}
@@ -391,6 +401,7 @@ const MediaControlsBase = kind({
 		playPauseClassName,
 		rateButtonsDisabled,
 		rightComponents,
+		rtl,
 		showMoreComponents,
 		spotlightDisabled,
 		spotlightId,
@@ -428,6 +439,7 @@ const MediaControlsBase = kind({
 							css={css}
 							color={moreButtonColor}
 							disabled={moreButtonDisabled}
+							flip={rtl ? 'horizontal' : ''}
 							onClick={onMoreClick}
 							tooltipProps={{role: 'dialog'}}
 							tooltipRelative
@@ -926,7 +938,9 @@ const MediaControls = ApiDecorator(
 		'hideMoreComponents'
 	]},
 	MediaControlsDecorator(
-		Cancelable({modal: true, onCancel: handleCancel}, MediaControlsBase)
+		Cancelable({modal: true, onCancel: handleCancel},
+			I18nContextDecorator({rtlProp: 'rtl'}, MediaControlsBase)
+		)
 	)
 );
 
