@@ -34,6 +34,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Tooltip` layer order so it doesn't interfere with other positioned elements, like `ContextualPopup`
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly respond to 5way directional key presses
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to navigate items properly in RTL languages
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly navigate from paging controls to controls out of the list
 
 ## [3.0.0-beta.1] - 2019-07-15
 
