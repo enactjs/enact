@@ -76,6 +76,14 @@ const LabeledIconButtonBase = kind({
 		icon: PropTypes.string,
 
 		/**
+		 * Flip the icon horizontally or vertically.
+		 *
+		 * @type {('both'|'horizontal'|'vertical')}
+		 * @public
+		 */
+		flip: PropTypes.string,
+
+		/**
 		 * Selects the component.
 		 *
 		 * Setting `selected` may be useful when the component represents a toggleable option. The
@@ -94,11 +102,11 @@ const LabeledIconButtonBase = kind({
 		publicClassNames: ['labeledIconButton', 'icon', 'label', 'large', 'selected', 'small']
 	},
 
-	render: ({css, icon, selected, ...rest}) => {
+	render: ({css, flip, icon, selected, ...rest}) => {
 		return UiLabeledIcon.inline({
 			...rest,
 			icon: (
-				<IconButton selected={selected}>
+				<IconButton flip={flip} selected={selected}>
 					{icon}
 				</IconButton>
 			),
