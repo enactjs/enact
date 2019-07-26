@@ -7,6 +7,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VideoPlayer` feedback tooltip non-latin overlap
+- `moonstone/Scroller` not to scroll horizontally via 5-way down in horizontal scroller
+- `moonstone/Scroller` not to jump to the top when right key is pressed in the right most item of vertical scroller
 
 ## [3.0.0-beta.2] - 2019-07-23
 
@@ -14,6 +16,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Panels.Header` prop `hideLine` to hide the bottom separator line
 - `moonstone/Panels.Header` type "dense" for "AlwaysViewing" Panels types
+
+### Changed
+
+- `moonstone/Scroller` and other scrolling components to scroll via remote page up/down buttons when the scrollbar is hidden
 
 ### Fixed
 
