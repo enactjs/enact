@@ -36,6 +36,7 @@ const fonts = {
 	}
 };
 
+// Duplications and alternate locale names
 fonts['en-JP'] = fonts['ja'];
 
 addLocalizedFont(fontName, fonts);
