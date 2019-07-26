@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Input` disabled focus text color
 - `moonstone/VideoPlayer` feedback tooltip to overlap in non-latin locale
 - `moonstone/Scroller` to no scroll horizontally via 5-way down in horizontal scroller
 - `moonstone/Scroller` to not jump to the top when right key is pressed in the right most item of a vertical scroller
