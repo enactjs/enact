@@ -54,6 +54,7 @@ storiesOf('LabeledIcon', module)
 							icon={icon}
 							inline
 							disabled={disabled}
+							flip={select('flip', ['', 'both', 'horizontal', 'vertical'], Config, '')}
 							labelPosition={labelPosition}
 							size={select('size', ['small', 'large'], Config)}
 						>{icon}</LabeledIcon>
@@ -72,6 +73,7 @@ storiesOf('LabeledIcon', module)
 					icon={select('icon', ['', ...iconNames], Config, 'fullscreen')}
 					inline
 					disabled={disabled}
+					flip={select('flip', ['', 'both', 'horizontal', 'vertical'], Config, '')}
 					labelPosition={labelPosition}
 					size={select('size', ['small', 'large'], Config)}
 				>{text('children', Config, 'ฟิ้  ไั  ஒ  து')}
