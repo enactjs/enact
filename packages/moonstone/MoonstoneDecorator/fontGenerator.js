@@ -4,7 +4,7 @@
  * included by external developers.
  */
 // eslint-disable-next-line no-var
-let {addLocalizedFont, generateFontOverrideRules} = require('@enact/ui/internal/localized-fonts');
+let {addLocalizedFont, generateFontRules, generateFontOverrideRules} = require('@enact/ui/internal/localized-fonts');
 
 const fontName = 'Moonstone';
 
