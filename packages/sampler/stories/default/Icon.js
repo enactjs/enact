@@ -20,7 +20,7 @@ storiesOf('Moonstone', module)
 	.add(
 		'Icon',
 		() => {
-			const flip = select('flip', ['', 'horizontal', 'vertical'], Config, '');
+			const flip = select('flip', ['', 'both', 'horizontal', 'vertical'], Config, '');
 			const size = select('size', ['small', 'large'], Config, 'large');
 			const iconType = select('icon type', ['glyph', 'url src', 'custom'], Config, 'glyph');
 			let children;

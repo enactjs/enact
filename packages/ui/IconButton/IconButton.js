@@ -46,7 +46,7 @@ const IconButtonBase = kind({
 		/**
 		 * The component used to render the [icon]{@link ui/IconButton.IconButtonBase.icon}.
 		 *
-		 * This component will receive the `size` property set on the `IconButton` as well as the
+		 * This component will receive the `flip` and `size` property set on the `IconButton` as well as the
 		 * `icon` class to customize its styling.
 		 *
 		 * @type {Component}
@@ -98,7 +98,7 @@ const IconButtonBase = kind({
 		/**
 		 * Flip the icon horizontally or vertically.
 		 *
-		 * @type {('horizontal'|'vertical')}
+		 * @type {('both'|'horizontal'|'vertical')}
 		 * @public
 		 */
 		flip: PropTypes.string,

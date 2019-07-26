@@ -4,17 +4,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Added
-
-- `moonstone/Icon` prop `flip` to flip the icon horizontally or vertically
-
-### Fixed
-
-- `moonstone/VideoPlayer` more button to not clip and flip in rtl
 ### Fixed
 
 - `moonstone/Input` disabled focus text color
 - `moonstone/VideoPlayer` feedback tooltip to overlap in non-latin locale
+- `moonstone/VideoPlayer` more button to not clip and flip in rtl
 - `moonstone/Scroller` to no scroll horizontally via 5-way down in horizontal scroller
 - `moonstone/Scroller` to not jump to the top when right key is pressed in the right most item of a vertical scroller
 

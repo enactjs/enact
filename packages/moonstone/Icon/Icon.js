@@ -12,7 +12,6 @@
  */
 
 import kind from '@enact/core/kind';
-import {cap} from '@enact/core/util';
 import UiIcon from '@enact/ui/Icon';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
@@ -38,14 +37,6 @@ const IconBase = kind({
 
 	propTypes: /** @lends moonstone/Icon.IconBase.prototype */ {
 		/**
-		 * Flip the icon horizontally or vertically.
-		 *
-		 * @type {('horizontal'|'vertical')}
-		 * @public
-		 */
-		flip: PropTypes.string,
-
-		/**
 		 * The size of the icon.
 		 *
 		 * @type {('large'|'small')}
@@ -57,15 +48,6 @@ const IconBase = kind({
 
 	defaultProps: {
 		size: 'small'
-	},
-
-	styles: {
-		css: componentCss,
-		publicClassNames: true
-	},
-
-	computed: {
-		className: ({flip, styler}) => styler.append(flip ? `flip${cap(flip)}` : null)
 	},
 
 	render: (props) => UiIcon.inline({
