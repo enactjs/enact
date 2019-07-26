@@ -16,6 +16,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panels.Header` prop `hideLine` to hide the bottom separator line
 - `moonstone/Panels.Header` type "dense" for "AlwaysViewing" Panels types
 
+### Changed
+
+- `moonstone/Scroller` and other scrolling components to scroll via remote page up/down buttons when the scrollbar is hidden
+
 ### Fixed
 
 - `moonstone/Dropdown` button to not animate

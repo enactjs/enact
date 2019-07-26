@@ -489,12 +489,6 @@ class ScrollableBase extends Component {
 	}
 
 	scrollByPage = (direction) => {
-		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
-		// scroller as a plain container
-		if (!this.uiRef.current.state.isVerticalScrollbarVisible) {
-			return false;
-		}
-
 		const
 			{childRefCurrent, scrollTop} = this.uiRef.current,
 			focusedItem = Spotlight.getCurrent(),
@@ -531,8 +525,6 @@ class ScrollableBase extends Component {
 
 			this.uiRef.current.scrollToAccumulatedTarget(pageDistance, true, this.props.overscrollEffectOn.pageKey);
 		}
-
-		return true;
 	}
 
 	hasFocus () {
@@ -568,8 +560,10 @@ class ScrollableBase extends Component {
 		this.animateOnFocus = true;
 
 		if (!repeat && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
-			let direction = isPageUp(keyCode) ? 'up' : 'down';
-			if (this.scrollByPage(direction) && this.props.overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
+			const direction = isPageUp(keyCode) ? 'up' : 'down';
+
+			this.scrollByPage(direction);
+			if (this.props.overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
 				this.checkAndApplyOverscrollEffectByDirection(direction);
 			}
 		}
@@ -594,7 +588,8 @@ class ScrollableBase extends Component {
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				if (this.isContent(target) && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
 					direction = isPageUp(keyCode) ? 'up' : 'down';
-					if (this.scrollByPage(direction) && overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
+					this.scrollByPage(direction);
+					if (overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
 						this.checkAndApplyOverscrollEffectByDirection(direction);
 					}
 				}
