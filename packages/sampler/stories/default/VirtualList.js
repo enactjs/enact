@@ -101,6 +101,7 @@ storiesOf('Moonstone', module)
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 0))}
+					verticalScrollbar={select('verticalScrollbar', ['auto', 'hidden', 'visible'], Config, 'auto')}
 					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 				/>
 			);

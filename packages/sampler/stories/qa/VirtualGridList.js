@@ -6,7 +6,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
-import {boolean, number} from '../../src/enact-knobs';
+import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('VirtualGridList', VirtualGridList, VirtualListBase, UiVirtualListBase);
@@ -59,6 +59,7 @@ storiesOf('VirtualGridList', module)
 				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 				direction="horizontal"
 				focusableScrollbar={boolean('focusableScrollbar', Config, false)}
+				horizontalScrollbar={select('horizontalScrollbar', ['auto', 'hidden', 'visible'], Config, 'auto')}
 				itemRenderer={renderItem}
 				itemSize={{
 					minWidth: ri.scale(number('minWidth', Config, 180)),
