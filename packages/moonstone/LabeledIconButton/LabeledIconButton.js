@@ -68,20 +68,20 @@ const LabeledIconButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * The icon displayed within the button.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		icon: PropTypes.string,
-
-		/**
 		 * Flip the icon horizontally or vertically.
 		 *
 		 * @type {('both'|'horizontal'|'vertical')}
 		 * @public
 		 */
 		flip: PropTypes.string,
+
+		/**
+		 * The icon displayed within the button.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		icon: PropTypes.string,
 
 		/**
 		 * Selects the component.
