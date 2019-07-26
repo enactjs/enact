@@ -1,6 +1,6 @@
 @import "~@enact/ui/styles/mixins.less";
 
-// Theme variables
+// Local theme font variables (not to be used externally)
 //
 @font-family-base-name: "Moonstone";
 
@@ -52,20 +52,21 @@
 };
 
 
+// Deprecated Mixin. Retained for legacy references.
 // Generate a pair of rules in the correct order for the fallback glyphs and the preferred glyphs
 .buildFontFamily(@name; @latin; @fallback; @weight: ""; @style: "") {
 	.buildFontFace(@name; @fallback; @weight; @style);
 	.buildFontFace(@name; @latin; @weight; @style);
 }
 
-/* Deprecated "Miso" font family names. Retained for legacy references. */
-/* ----- MISO ------ */
+// Deprecated "Miso" font family names. Retained for legacy references.
+/* ----- MISO - Deprecated ------ */
 .buildFontFamily("Moonstone Miso"; @font-system-src-moonstone-condensed-400; @font-system-src-non-latin-400);
 .buildFontFamily("Moonstone Miso"; @font-system-src-moonstone-condensed-300; @font-system-src-non-latin-300; 300);
 .buildFontFamily("Moonstone Miso"; @font-system-src-moonstone-condensed-700; @font-system-src-non-latin-700; 700);
 
-/* Deprecated "MuseoSans" font family names. Retained for legacy references. */
-/* ----- Museo Sans ------ */
+// Deprecated "MuseoSans" font family names. Retained for legacy references.
+/* ----- Museo Sans - Deprecated ------ */
 .buildFontFamily("MuseoSans"; @font-system-src-moonstone-400;   @font-system-src-non-latin-400);
 .buildFontFamily("MuseoSans"; @font-system-src-moonstone-400;   @font-system-src-non-latin-400; normal; italic);
 .buildFontFamily("MuseoSans"; @font-system-src-moonstone-100;   @font-system-src-non-latin-300; 100);
@@ -83,27 +84,16 @@
 .buildFontFace("@{font-family-base-name} Condensed"; @font-system-src-moonstone-condensed-300; 300);
 .buildFontFace("@{font-family-base-name} Condensed"; @font-system-src-moonstone-condensed-600; 600);
 .buildFontFace("@{font-family-base-name} Condensed"; @font-system-src-moonstone-condensed-700; 700);
-// .buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-400; @font-system-src-non-latin-400);
-// .buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-300; @font-system-src-non-latin-300; 300);
-// .buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-600; @font-system-src-non-latin-700; 600);
-// .buildFontFamily("Moonstone Condensed"; @font-system-src-moonstone-condensed-700; @font-system-src-non-latin-700; 700);
 
-/* ----- Moonstone Global ------ */
+
+/* ----- Manual Moonstone Locale Fonts (Stacking onto "Moonstone") ------ */
 .buildFontFace(@font-family-base-name; @font-system-src-non-latin-400);
 .buildFontFace(@font-family-base-name; @font-system-src-non-latin-300; 300);
 .buildFontFace(@font-family-base-name; @font-system-src-non-latin-600; 600);
 .buildFontFace(@font-family-base-name; @font-system-src-non-latin-700; 700);
 
-// vvv Legacy Discard
-// .buildFontFamily(@font-family-base-name; @font-system-src-non-latin-400; @font-system-src-moonstone-400);
-// .buildFontFamily(@font-family-base-name; @font-system-src-non-latin-300; @font-system-src-moonstone-300; 300);
-// .buildFontFamily(@font-family-base-name; @font-system-src-non-latin-400; @font-system-src-moonstone-400; 400);
-// .buildFontFamily(@font-family-base-name; @font-system-src-non-latin-700; @font-system-src-moonstone-400; 700);
-// ^^^ Legacy Discard
-
-/* Generated Fonts */
+/* ----- Generated Moonstone Locale Fonts (Stacking onto "Moonstone") ------ */
 .buildLocaleFonts(@font-family-base-name, @fonts);
-/* END Generated Fonts */
 
 /* ----- Moonstone ------ */
 // Unusuad (parked) rules are commented out.
@@ -120,23 +110,8 @@
 // .buildFontFace(@font-family-base-name; @font-system-src-moonstone-900-i; 900; italic);
 
 
-// vvv Legacy Discard
-// .buildFontFamily(@font-family-base-name; @font-system-src-moonstone-400;   @font-system-src-non-latin-400);
-// .buildFontFamily(@font-family-base-name; @font-system-src-moonstone-400;   @font-system-src-non-latin-400; normal; italic);
-// .buildFontFamily(@font-family-base-name; @font-system-src-moonstone-100;   @font-system-src-non-latin-300; 100);
-// .buildFontFamily(@font-family-base-name; @font-system-src-moonstone-300;   @font-system-src-non-latin-300; 300);
-// .buildFontFamily(@font-family-base-name; @font-system-src-moonstone-400;   @font-system-src-non-latin-400; 500);
-// .buildFontFamily(@font-family-base-name; @font-system-src-moonstone-400-i; @font-system-src-non-latin-400; 500; italic);
-// .buildFontFamily(@font-family-base-name; @font-system-src-moonstone-600;   @font-system-src-non-latin-700; 600);
-// .buildFontFamily(@font-family-base-name; @font-system-src-moonstone-700;   @font-system-src-non-latin-700; 700);
-// .buildFontFamily(@font-family-base-name; @font-system-src-moonstone-700-i; @font-system-src-non-latin-700; 700; italic);
-// .buildFontFamily(@font-family-base-name; @font-system-src-moonstone-900;   @font-system-src-non-latin-700; 900);
-// .buildFontFamily(@font-family-base-name; @font-system-src-moonstone-900-i; @font-system-src-non-latin-700; 900; italic);
-// ^^^ Legacy Discard
-
-
-/* ----- Moonstone (Icons) ------ */
+/* ----- Moonstone Icons ("Dingbat" Icons) ------ */
 .buildFontFace("@{font-family-base-name} Icons"; @font-system-src-moonstone-icons);
 
-/* ----- LG Dingbats (Icons) ------ */
+/* ----- LG Icons ("Dingbat" Icons) ------ */
 .buildFontFace("LG Icons"; @font-system-src-lg-icons);
