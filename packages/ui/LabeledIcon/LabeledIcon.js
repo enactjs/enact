@@ -77,7 +77,7 @@ const LabeledIconBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Flip the icon horizontally or vertically.
+		 * Flip the icon horizontally, vertically or both.
 		 *
 		 * @type {('both'|'horizontal'|'vertical')}
 		 * @public
