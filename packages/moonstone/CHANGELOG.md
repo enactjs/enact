@@ -11,6 +11,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VideoPlayer` more button to not clip and flip in rtl
+### Fixed
+
+- `moonstone/Input` disabled focus text color
+- `moonstone/VideoPlayer` feedback tooltip to overlap in non-latin locale
+- `moonstone/Scroller` to no scroll horizontally via 5-way down in horizontal scroller
+- `moonstone/Scroller` to not jump to the top when right key is pressed in the right most item of a vertical scroller
 
 ## [3.0.0-beta.2] - 2019-07-23
 
@@ -18,6 +24,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Panels.Header` prop `hideLine` to hide the bottom separator line
 - `moonstone/Panels.Header` type "dense" for "AlwaysViewing" Panels types
+
+### Changed
+
+- `moonstone/Scroller` and other scrolling components to scroll via remote page up/down buttons when the scrollbar is hidden
 
 ### Fixed
 
@@ -33,6 +43,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Tooltip` layer order so it doesn't interfere with other positioned elements, like `ContextualPopup`
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly respond to 5way directional key presses
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to navigate items properly in RTL languages
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly navigate from paging controls to controls out of the list
 
 ## [3.0.0-beta.1] - 2019-07-15
 
