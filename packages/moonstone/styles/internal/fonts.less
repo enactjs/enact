@@ -1,3 +1,5 @@
+@import "~@enact/ui/styles/mixins.less";
+
 // Theme variables
 //
 @font-family-base-name: "Moonstone";
@@ -50,36 +52,6 @@
 };
 
 
-.buildLocaleFonts(@f) {
-	each(@f, .(@specs, @locale) {
-		each(@specs, {
-			@f-weight: if((length(@value) >= 2), extract(@value, 2));
-			@f-style: if((length(@value) >= 3), extract(@value, 3));
-
-			.buildFontFace("@{font-family-base-name} @{locale}"; extract(@value, 1); @f-weight; @f-style);
-			.buildFontFace(@font-family-base-name;               extract(@value, 1); @f-weight; @f-style);
-		});
-	});
-};
-
-
-// Generate a single font-face rule
-.buildFontFace(@name; @src; @weight: ""; @style: "") {
-	@font-face {
-		font-family: @name;
-		src: @src;
-
-		// Conditionally add the following
-		// `length()` below refers to specifying font-weight ranges: `600 900`.
-		& when ((iskeyword(@weight)) or (isnumber(@weight)) or (length(@weight) > 1)) {
-			font-weight: @weight;
-		}
-		& when (iskeyword(@style)) {
-			font-style: @style;
-		}
-	}
-}
-
 // Generate a pair of rules in the correct order for the fallback glyphs and the preferred glyphs
 .buildFontFamily(@name; @latin; @fallback; @weight: ""; @style: "") {
 	.buildFontFace(@name; @fallback; @weight; @style);
@@ -130,10 +102,11 @@
 // ^^^ Legacy Discard
 
 /* Generated Fonts */
-.buildLocaleFonts(@fonts);
+.buildLocaleFonts(@font-family-base-name, @fonts);
 /* END Generated Fonts */
 
 /* ----- Moonstone ------ */
+// Unusuad (parked) rules are commented out.
 .buildFontFace(@font-family-base-name; @font-system-src-moonstone-400;   );
 .buildFontFace(@font-family-base-name; @font-system-src-moonstone-400;   ""; italic);
 // .buildFontFace(@font-family-base-name; @font-system-src-moonstone-100;   100);

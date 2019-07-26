@@ -181,6 +181,73 @@
 // Mixin classes supporting advanced text
 //
 
+/**
+ * Generate a pair of @font-face rules for a given name and "collection" of locale fonts.
+ *
+ * This creates two (2) referenceable font-family names, one that "stacks" onto the provided "base"
+ * name, the other suffixed with the locale name. E.g. "FontName" and "FontName Locale".
+ *
+ * Example:
+ * ```
+ * @fonts: {
+ * 	as: local("LG Smart UI Bengali"); // same as `bn`
+ * 	bn: local("LG Smart UI Bengali");
+ * 	en-JP: local("LG Smart UI JP") "", local("LG Display_JP_Bold") 700; // same as `ja`
+ * 	ja: local("LG Smart UI JP") "", local("LG Display_JP_Bold") 700;
+ * };
+ * ```
+ *
+ * List of supported "options" per locale key, in the following order:
+ * * single font source - Typically a reference to a local() font or a url() font.
+ * * font-weight - Optional, Numbers (100, 500, 700, etc) and keywords (normal, bold, etc) are supported.
+ * 	Empty-string represents "null" or default. This excludes the weight rule from the generated code.
+ * * font-style - Optional, Keywords (normal, italic, etc) are supported.
+ *
+ * OPTIONALLY: repeat the options above after a comma (,) for multiple weights/styles/options based on the same name.
+ *
+ * @param  {String} @baseName The name used as the basis for the generated font-family.
+ * @param  {Object} @f        Object of keys with values detailing the font variants and options.
+ */
+.buildLocaleFonts(@fontName, @f) {
+	each(@f, .(@specs, @locale) {
+		each(@specs, {
+			@f-weight: if((length(@value) >= 2), extract(@value, 2));
+			@f-style: if((length(@value) >= 3), extract(@value, 3));
+
+			.buildFontFace("@{fontName} @{locale}"; extract(@value, 1); @f-weight; @f-style);
+			.buildFontFace(@fontName;               extract(@value, 1); @f-weight; @f-style);
+		});
+	});
+};
+
+/**
+ * Generate a single @font-face rule.
+ *
+ * List of supported "options" per locale key, in the following order:
+ * @param  {String} font-family name   The generated font name, referenceable via
+ *                                     `font-family: <name>;` in normal CSS.
+ * @param  {URL} single font source    Typically a reference to a local() font or a url() font.
+ * @param  {Number|Keyword|""} font-weight  Optional, Numbers (100, 500, 700, etc) and keywords
+ *                                     (normal, bold, etc) are supported. Empty-string represents
+ *                                     "null" or default. This excludes the weight rule from the generated code.
+ * @param  {Keyword} font-style        Optional, Keywords (normal, italic, etc) are supported.
+ */
+.buildFontFace(@name; @src; @weight: ""; @style: "") {
+	@font-face {
+		font-family: @name;
+		src: @src;
+
+		// Conditionally add the following
+		// `length()` below refers to specifying font-weight ranges: `600 900`.
+		& when ((iskeyword(@weight)) or (isnumber(@weight)) or (length(@weight) > 1)) {
+			font-weight: @weight;
+		}
+		& when (iskeyword(@style)) {
+			font-style: @style;
+		}
+	}
+}
+
 .locale-japanese-line-break() {
 	:global(.enact-locale-ja) & {
 		line-break: strict;
