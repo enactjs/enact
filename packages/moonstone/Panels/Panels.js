@@ -40,7 +40,7 @@ const PanelsBase = kind({
 		 * Set of functions that control how the panels are transitioned into and out of the
 		 * viewport.
 		 *
-		 * @see ui/ViewManager.SlideArranger
+		 * @see {@link ui/ViewManager.SlideArranger}
 		 * @type {ui/ViewManager.Arranger}
 		 * @public
 		 */

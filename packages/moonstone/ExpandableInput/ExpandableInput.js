@@ -155,7 +155,7 @@ class ExpandableInputBase extends React.Component {
 		 * The placeholder text to display.
 		 *
 		 * @type {String}
-		 * @see moonstone/Input.Input#placeholder
+		 * @see {@link moonstone/Input.Input#placeholder}
 		 * @public
 		 */
 		placeholder: PropTypes.string,
@@ -173,7 +173,7 @@ class ExpandableInputBase extends React.Component {
 		 * The type of input. Accepted values correspond to the standard HTML5 input types.
 		 *
 		 * @type {String}
-		 * @see moonstone/Input.Input#type
+		 * @see {@link moonstone/Input.Input#type}
 		 * @public
 		 */
 		type: PropTypes.string,
@@ -182,7 +182,7 @@ class ExpandableInputBase extends React.Component {
 		 * The value of the input.
 		 *
 		 * @type {String|Number}
-		 * @see moonstone/Input.Input#value
+		 * @see {@link moonstone/Input.Input#value}
 		 * @public
 		 */
 		value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])

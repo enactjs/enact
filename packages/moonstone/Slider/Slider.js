@@ -360,7 +360,7 @@ const Slider = SliderDecorator(SliderBase);
  * [ProgressBar]{@link moonstone/ProgressBar.ProgressBar}, or
  * [Slider]{@link moonstone/Slider.Slider}.
  *
- * @see moonstone/ProgressBar.ProgressBarTooltip
+ * @see {@link moonstone/ProgressBar.ProgressBarTooltip}
  * @class SliderTooltip
  * @memberof moonstone/Slider
  * @ui

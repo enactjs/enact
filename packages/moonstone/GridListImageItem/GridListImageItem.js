@@ -184,7 +184,7 @@ const GridListImageItemDecorator = compose(
  * @memberof moonstone/GridListImageItem
  * @extends moonstone/GridListImageItem.GridListImageItemBase
  * @mixes moonstone/GridListImageItem.GridListImageItemDecorator
- * @see moonstone/GridListImageItem.GridListImageItemBase
+ * @see {@link moonstone/GridListImageItem.GridListImageItemBase}
  * @ui
  * @public
  */

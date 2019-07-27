@@ -80,9 +80,8 @@ import styles from './styles';
  *			css,
  *			className: 'button'
  *		},
- *		// add event handlers that are cached between calls to prevent recreating each call. This
- *		// wraps the returned component with a `React.Component`. Any handlers are added to the
- *		// props passed to `render()`.  See also core/handle.
+ *		// add event handlers that are cached between calls to prevent recreating each call. Any
+ *		// handlers are added to the props passed to `render()`.  See core/handle.
  *		handlers: {
  *			onKeyDown: (evt, props) => { .... }
  *		},
@@ -111,6 +110,7 @@ import styles from './styles';
  *
  * @returns {Component<Props>}           Component
  * @memberof core/kind
+ * @see {@link core/handle}
  * @public
  */
 const kind = (config) => {
