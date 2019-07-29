@@ -6,7 +6,6 @@
  * locale matches the corrosponding locale for the font (defined in this component's code).
  *
  */
-// eslint-disable-next-line no-var
 let {addLocalizedFont, generateFontRules, generateFontOverrideRules} = require('@enact/ui/internal/localized-fonts');
 
 const fontName = 'Moonstone';
