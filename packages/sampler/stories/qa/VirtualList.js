@@ -9,7 +9,7 @@ import React, {useState} from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
-import {boolean, number} from '../../src/enact-knobs';
+import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBase, UiVirtualListBase);
@@ -126,17 +126,17 @@ storiesOf('VirtualList', module)
 	.add(
 		'with more items',
 		() => {
-			const itemSize = ri.scale(number('itemSize', Config, 72));
 			return (
 				<VirtualList
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
-					itemRenderer={renderItem(StatefulSwitchItem, itemSize)}
-					itemSize={itemSize}
+					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)))}
+					itemSize={ri.scale(number('itemSize', Config, 72))}
 					onKeyDown={action('onKeyDown')}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 0))}
+					verticalScrollbar={select('verticalScrollbar', ['auto', 'hidden', 'visible'], Config, 'auto')}
 				/>
 			);
 		},
@@ -156,6 +156,7 @@ storiesOf('VirtualList', module)
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 0))}
+					verticalScrollbar={select('verticalScrollbar', ['auto', 'hidden', 'visible'], Config, 'auto')}
 				/>
 			);
 		}
