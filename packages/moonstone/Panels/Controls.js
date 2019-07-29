@@ -52,7 +52,10 @@ const ControlsBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		forwardRef: PropTypes.func,
+		forwardRef: PropTypes.oneOfType([
+			PropTypes.func,
+			PropTypes.shape({current: PropTypes.any})
+		]),
 
 		/**
 		 * Indicates the close button will not be rendered on the top right corner.
