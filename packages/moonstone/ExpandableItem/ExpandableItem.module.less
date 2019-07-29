@@ -45,14 +45,7 @@
 		}
 	}
 
-	.disabled({
+	.moon-disabled({
 		opacity: 1;
 	});
-
-	// Enforce disabled opacity in high contrast
-	:global(.enact-a11y-high-contrast) &:global(.moonstone.highContrast) {
-		.disabled({
-			opacity: 1;
-		});
-	}
 }
