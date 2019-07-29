@@ -192,21 +192,19 @@ const DialogBase = kind({
 
 		return (
 			<Popup {...rest} aria-labelledby={`${id}_title ${id}_titleBelow ${id}_children ${id}_buttons`} css={css}>
-				<Layout className={css.titleWrapper} orientation="vertical">
-					<Cell className={css.titleBlock}>
-						<Layout align="start space-between" className={css.titleBlock}>
-							<Cell component={MarqueeH1} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title} id={`${id}_title`}>
-								{title}
-							</Cell>
-							<Cell className={css.buttons} id={`${id}_buttons`} shrink>
-								{buttons}
-							</Cell>
-						</Layout>
-					</Cell>
-					<Cell component={MarqueeH2} className={css.titleBelow} id={`${id}_titleBelow`} marqueeOn="hover">
+				<div className={css.titleWrapper}>
+					<Layout align="start space-between">
+						<Cell component={MarqueeH1} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title} id={`${id}_title`}>
+							{title}
+						</Cell>
+						<Cell className={css.buttons} id={`${id}_buttons`} shrink>
+							{buttons}
+						</Cell>
+					</Layout>
+					<MarqueeH2 className={css.titleBelow} id={`${id}_titleBelow`} marqueeOn="hover">
 						{titleBelow}
-					</Cell>
-				</Layout>
+					</MarqueeH2>
+				</div>
 				<div className={css.body} id={`${id}_children`}>
 					{children}
 				</div>

@@ -1,10 +1,8 @@
 // Dialog.module.less
 //
-@import '~@enact/ui/styles/mixins.less';
-
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
 
 .dialog {
 	position: relative;
@@ -15,7 +13,6 @@
 			border-bottom-width: @moon-header-border-bottom-width;
 			border-bottom-style: solid;
 			padding-bottom: 18px;
-			border-bottom-width: 3px;
 			margin-bottom: 18px;
 		}
 	}
@@ -33,11 +30,6 @@
 		right: @moon-dialog-close-button-right;
 	}
 
-	.titleBlock {
-		max-width: 100%;
-		min-width: 0;
-	}
-
 	.title {
 		.moon-dialog-title();
 		line-height: @moon-dialog-title-line-height;
@@ -51,23 +43,22 @@
 		margin: 0;
 	}
 
-	.titleWrapper {
-		display: flex;
-		justify-content: space-between;
-	}
-
 	.body {
 		.moon-dialog-content();
 		margin: 0;
 		position: relative;
 	}
 
-	.buttons {
-		display: flex;
-	}
 
 	.buttons > :last-child {
 		-webkit-margin-end: 0;
+	}
+
+	:global(.enact-locale-right-to-left) & {
+		.closeButton {
+			right: auto;
+			left: @moon-dialog-close-button-right;
+		}
 	}
 
 	// Skin colors
