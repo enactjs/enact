@@ -4,29 +4,15 @@ import Button from '@enact/moonstone/Button';
 import Icon from '@enact/moonstone/Icon';
 import React from 'react';
 import PropTypes from 'prop-types';
-import ri from '@enact/ui/resolution';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
 import {boolean} from '../../src/enact-knobs';
+import {riSafe} from '../../src/utils';
 
 import css from './About.module.less';
 
 const edgeDotKeepout = 6;
-
-const riSafe = (style) => {
-	switch (typeof style) {
-		case 'object':
-			for (let rule in style) {
-				if (typeof style[rule] === 'number') {
-					style[rule] = ri.unit(ri.scale(style[rule]), 'rem');
-				}
-			}
-			return style;
-		default:
-			return ri.unit(ri.scale(style), 'rem');
-	}
-};
 
 const HintDialog = kind({
 	name: 'HintDialog',
