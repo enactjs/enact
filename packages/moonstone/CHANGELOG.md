@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/LabeledIconButton` prop `flip` to flip the icon horizontally, vertically, or both
+
 ### Fixed
 
 - `moonstone/Input` disabled focus text color
