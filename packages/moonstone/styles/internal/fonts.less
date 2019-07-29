@@ -29,8 +29,8 @@
 @font-system-src-lg-icons:         local("LG Smart UI Dingbat");
 
 // Localized fonts
-// Order correlates with load and priority order. Latter fonts are stacked on top of earlier fonts.
-// In the case of glyphs existing in two fonts, the latter glyphs will be used.
+// Order correlates with load and priority order. Later fonts are stacked on top of earlier fonts.
+// In the case of glyphs existing in two fonts, the later glyphs will be used.
 @fonts: {
 	am: local("LG Smart UI Amharic");
 	as: local("LG Smart UI Bengali"); // same as `bn`
@@ -96,7 +96,7 @@
 .buildLocaleFonts(@font-family-base-name, @fonts);
 
 /* ----- Moonstone ------ */
-// Unusuad (parked) rules are commented out.
+// Unused (parked) rules are commented out.
 .buildFontFace(@font-family-base-name; @font-system-src-moonstone-400;   );
 .buildFontFace(@font-family-base-name; @font-system-src-moonstone-400;   ""; italic);
 // .buildFontFace(@font-family-base-name; @font-system-src-moonstone-100;   100);
