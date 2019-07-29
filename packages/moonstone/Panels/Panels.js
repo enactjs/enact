@@ -235,13 +235,15 @@ const PanelsBase = kind({
 		delete rest.controlsMeasurements;
 		delete rest.onBack;
 
+		const controlsId = getControlsId(id);
+
 		return (
 			<div {...rest} id={id}>
 				<Controls
 					closeButtonAriaLabel={closeButtonAriaLabel}
 					closeButtonBackgroundOpacity={closeButtonBackgroundOpacity}
-					id={getControlsId(id)}
-					spotlightId={getControlsId(id)}
+					id={controlsId}
+					spotlightId={controlsId}
 					noCloseButton={noCloseButton}
 					onApplicationClose={onApplicationClose}
 					ref={controlsRef}
