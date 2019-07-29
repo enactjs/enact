@@ -49,7 +49,7 @@ const ControlsBase = kind({
 		/**
 		 * Called with a reference to the root DOM node of this component.
 		 *
-		 * @type {Function}
+		 * @type {Function|Object}
 		 * @public
 		 */
 		forwardRef: PropTypes.oneOfType([
