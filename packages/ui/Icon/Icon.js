@@ -150,14 +150,17 @@ const Icon = kind({
 	},
 
 	computed: {
-		className: ({children: icon, flip, iconList, pressed, size, styler}) => styler.append({
-			// If the icon isn't in our known set, apply our custom font class
-			dingbat: !(icon in iconList),
-			pressed
+		className: ({children: icon, flip, iconList, pressed, size, styler}) => {
+			return styler.append(
+				{
+					// If the icon isn't in our known set, apply our custom font class
+					dingbat: !(icon in iconList),
+					pressed
+				},
+				flip ? `flip${cap(flip)}` : null,
+				size
+			);
 		},
-		flip ? `flip${cap(flip)}` : null,
-		size
-		),
 		iconProps: ({children: iconProp, iconList, style}) => {
 			let icon = iconList[iconProp];
 
