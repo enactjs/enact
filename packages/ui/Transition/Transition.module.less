@@ -3,6 +3,16 @@
 @import "../styles/mixins.less";
 
 .transition {
+	&.hide,
+	&.hidden,
+	&.hiding,
+	&.showing,
+	&.shown,
+	&.show {
+		/* Available for override */
+		// opacity: 1;
+	}
+
 	.inner {
 		overflow: hidden;
 	}
@@ -21,7 +31,7 @@
 		will-change: opacity;
 	}
 
-	&.shown {
+	&.show {
 		&.slide .inner {
 			transform: translate3d(0, 0, 0);
 		}
@@ -38,7 +48,7 @@
 		}
 	}
 
-	&.hidden {
+	&.hide {
 		&.slide {
 			&.up .inner {
 				transform: translateY(-100%);

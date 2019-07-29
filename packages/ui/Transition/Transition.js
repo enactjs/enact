@@ -30,6 +30,17 @@ const forwardTransitionEnd = forward('onTransitionEnd');
 const forwardOnShow = forward('onShow');
 const forwardOnHide = forward('onHide');
 
+const TRANSITION_STATE = {
+	INIT: 0,		// closed and unmeasured
+	MEASURE: 1,		// open but need to measure
+	READY: 2,		// measured and ready
+
+	HIDDEN: 3,		// Transitions have completed, in a resting state, hidden
+	HIDING: 4,		// Transitions are in progress, transitioning to a resting state
+	SHOWING: 5,		// Transitions are in progress, transitioning to a resting state
+	SHOWN: 6		// Transitions have completed, in a resting state, visible
+};
+
 /**
  * The stateless structure of the component.
  *
@@ -93,8 +104,12 @@ const TransitionBase = kind({
 		 *
 		 * * `transition`     - The root component class
 		 * * `inner`          - The element inside the transition. This is the container for the transitioning content.
-		 * * `shown`          - Applied when content is present (visible), related to the `visible` prop/state
-		 * * `hidden`         - Applied when content is not present (hiding), related to the `visible` prop/state
+		 * * `show`           - Applied when the `visible={true}` transition begins, will remain after the transition has completed
+		 * * `showing`        - Applied when the `visible={true}` transition begins, removed when it has completed
+		 * * `shown`          - Applied after the `visible={true}` transition finishes
+		 * * `hide`           - Applied when the `visible={false}` transition begins, will remain after the transition has completed
+		 * * `hiding`         - Applied when the `visible={false}` transition begins, removed when it has completed
+		 * * `hidden`         - Applied after the `visible={false}` transition finishes
 		 * * `slide`          - Applied when the `slide` `type` is set
 		 * * `fade`           - Applied when the `fade` `type` is set
 		 * * `clip`           - Applied when the `clip` `type` is set
@@ -173,6 +188,15 @@ const TransitionBase = kind({
 		]),
 
 		/**
+		 * Assigns class names based on the current state of the transition: hidden, hiding,
+		 * showing, or shown.
+		 *
+		 * @type {Number}
+		 * @private
+		 */
+		transitionState: PropTypes.number,
+
+		/**
 		 * The type of transition to affect the content.
 		 *
 		 * * Supported types are: `'slide'`, `'clip'`, and `'fade'`.
@@ -225,12 +249,18 @@ const TransitionBase = kind({
 	},
 
 	computed: {
-		className: ({css, direction, duration, noAnimation, timingFunction, type, visible, styler}) => styler.append(
-			visible ? 'shown' : 'hidden',
+		className: ({css, direction, duration, noAnimation, timingFunction, transitionState, type, visible, styler}) => styler.append(
+			visible ? 'show' : 'hide',
 			direction && css[direction],
 			!noAnimation && duration && css[duration],
 			!noAnimation && timingFunction && css[timingFunction],
-			css[type]
+			css[type],
+			{
+				hidden: (transitionState === TRANSITION_STATE.HIDDEN),
+				hiding: (transitionState === TRANSITION_STATE.HIDING),
+				showing: (transitionState === TRANSITION_STATE.SHOWING),
+				shown: (transitionState === TRANSITION_STATE.SHOWN)
+			}
 		),
 		innerStyle: ({clipWidth, direction, type}) => {
 			if (type === 'clip' && (direction === 'left' || direction === 'right')) {
@@ -267,6 +297,7 @@ const TransitionBase = kind({
 		delete rest.duration;
 		delete rest.noAnimation;
 		delete rest.timingFunction;
+		delete rest.transitionState;
 		delete rest.type;
 		delete rest.visible;
 
@@ -279,12 +310,6 @@ const TransitionBase = kind({
 		);
 	}
 });
-
-const TRANSITION_STATE = {
-	INIT: 0,		// closed and unmeasured
-	MEASURE: 1,		// open but need to measure
-	READY: 2		// measured and ready
-};
 
 /**
  * A stateful component that allows for applying transitions to its child items via configurable
@@ -433,22 +458,35 @@ class Transition extends React.Component {
 			initialHeight: null,
 			initialWidth: null,
 			prevVisible: props.visible,
-			renderState: props.visible ? TRANSITION_STATE.READY : TRANSITION_STATE.INIT
+			renderState: (props.visible ? TRANSITION_STATE.READY : TRANSITION_STATE.INIT),
+			transitionState: (props.visible ? TRANSITION_STATE.SHOWN : TRANSITION_STATE.HIDDEN)
 		};
 		this.resizeRegistry = null;
 	}
 
 	static getDerivedStateFromProps (props, state) {
-		if (!state.prevVisible && props.visible) {
-			return {
-				initialHeight: null,
-				initialWidth: null,
-				prevVisible: props.visible,
-				renderState: TRANSITION_STATE.MEASURE
-			};
+		const newState = {};
+
+		if (state.prevVisible !== props.visible) {
+			newState.prevVisible = props.visible;
+
+			if (props.noAnimation) {
+				// Set the finished transition state, since we aren't animating
+				newState.transitionState = (props.visible ? TRANSITION_STATE.SHOWN : TRANSITION_STATE.HIDDEN);
+			} else {
+				// Starting the transition to visible
+				newState.transitionState = (props.visible ? TRANSITION_STATE.SHOWING : TRANSITION_STATE.HIDING);
+			}
 		}
 
-		return null;
+		if (!state.prevVisible && props.visible) {
+			newState.initialHeight = null;
+			newState.initialWidth = null;
+			newState.prevVisible = props.visible;
+			newState.renderState = TRANSITION_STATE.MEASURE;
+		}
+
+		return (Object.keys(newState).length ? newState : null);
 	}
 
 	componentDidMount () {
@@ -491,6 +529,24 @@ class Transition extends React.Component {
 			} else if (prevProps.visible && !visible) {
 				forwardOnHide({}, this.props);
 			}
+			// noAnimation post-flight is handled by getDerivedStateFromProps
+		}
+
+		if (!noAnimation) {
+			// Post-flight transition actions
+			if (
+				prevState.transitionState === TRANSITION_STATE.SHOWING &&
+				this.state.transitionState === TRANSITION_STATE.SHOWN
+			) {
+				// Endng the transition to visible
+				forwardOnShow({}, this.props);
+			} else if (
+				prevState.transitionState === TRANSITION_STATE.HIDING &&
+				this.state.transitionState === TRANSITION_STATE.HIDDEN
+			) {
+				// Endng the transition to hidden
+				forwardOnHide({}, this.props);
+			}
 		}
 	}
 
@@ -520,9 +576,9 @@ class Transition extends React.Component {
 
 		if (ev.target === this.childNode) {
 			if (!this.props.visible) {
-				forwardOnHide(ev, this.props);
+				this.setState({transitionState: TRANSITION_STATE.HIDDEN});
 			} else if (this.props.visible) {
-				forwardOnShow(ev, this.props);
+				this.setState({transitionState: TRANSITION_STATE.SHOWN});
 			}
 		}
 	}
@@ -559,13 +615,14 @@ class Transition extends React.Component {
 			// transition container with its children so we can measure. Measuring will cause a
 			// state change to trigger the animation.
 			case TRANSITION_STATE.MEASURE: return (
-				<TransitionBase {...props} childRef={this.childRef} visible={false} />
+				<TransitionBase {...props} childRef={this.childRef} transitionState={this.state.transitionState} visible={false} />
 			);
 
 			case TRANSITION_STATE.READY: return (
 				<TransitionBase
 					{...props}
 					childRef={this.childRef}
+					transitionState={this.state.transitionState}
 					visible={visible}
 					clipHeight={this.state.initialHeight}
 					clipWidth={this.state.initialWidth}
