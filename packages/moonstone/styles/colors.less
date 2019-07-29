@@ -137,8 +137,7 @@
 // Header
 // ---------------------------------------
 @moon-header-text-color:              @moon-gray;
-@moon-header-title-below-text-color:         #a6a6a6;
-@moon-header-dense-title-below-text-color:   @moon-header-text-color;
+@moon-header-title-below-text-color:  #a6a6a6;
 @moon-header-border-color:            #505050;
 @moon-header-bottom-border-color:     #404040;
 @moon-header-full-bleed-border-color: fade(@moon-white, 25%);
@@ -171,7 +170,7 @@
 @moon-input-placeholder-focus-color:  @moon-input-decorator-bg-color;
 @moon-input-placeholder-active-color: @moon-input-placeholder-focus-color;
 @moon-input-focus-text-color:         @moon-dark-gray;
-@moon-input-disabled-text-color:      @moon-white;
+@moon-input-disabled-text-color:      inherit;
 @moon-input-decorator-bg-color:       #aaa;
 @moon-input-decorator-border-color:   @moon-light-gray;
 @moon-input-decorator-focus-bg-color: @moon-white;
@@ -213,9 +212,9 @@
 
 // Progress Bar
 // ---------------------------------------
-@moon-progress-bar-bg-color: fade(@moon-gray, 30%);
-@moon-progress-bar-loaded-bg-color: fade(@moon-light-gray, 50%);
-@moon-progress-bar-fill-bg-color: @moon-white;
+@moon-progress-bar-bg-color: fade(@moon-gray, 20%);
+@moon-progress-bar-loaded-bg-color: fade(@moon-light-gray, 20%);
+@moon-progress-bar-fill-bg-color: @moon-spotlight-bg-color;
 @moon-progress-bar-tooltip-text-color: @moon-white;
 @moon-progress-bar-highlighted-fill-bg-color: @moon-spotlight-bg-color;
 
@@ -224,11 +223,11 @@
 @moon-radio-item-indicator-color: @moon-white;
 @moon-radio-item-indicator-bg-color: @moon-dark-gray;
 @moon-radio-item-focus-indicator-color: @moon-radio-item-indicator-color;
-@moon-radio-item-focus-indicator-bg-color: @moon-radio-item-indicator-bg-color;
+@moon-radio-item-focus-indicator-bg-color: fade(#a6a6a6, 50%);
 @moon-radio-item-selected-indicator-color: @moon-radio-item-indicator-color;
-@moon-radio-item-selected-indicator-bg-color: @moon-spotlight-color;
+@moon-radio-item-selected-indicator-bg-color: @moon-radio-item-indicator-bg-color;
 @moon-radio-item-selected-focus-indicator-color: @moon-radio-item-selected-indicator-color;
-@moon-radio-item-selected-focus-indicator-bg-color: @moon-radio-item-selected-indicator-bg-color;
+@moon-radio-item-selected-focus-indicator-bg-color: @moon-radio-item-focus-indicator-bg-color;
 
 // Scrollable
 // ---------------------------------------
@@ -241,12 +240,29 @@
 
 // Slider
 // ---------------------------------------
-@moon-slider-nofocus-bg-color: @moon-white;
-@moon-slider-focus-bg-color: @moon-spotlight-color;
-@moon-slider-spotlight-knob-color: @moon-spotlight-color;
-@moon-slider-spotlight-bar-color: @moon-spotlight-color;
-@moon-slider-knob-bg-color: @moon-dark-gray;
-@moon-slider-knob-active-bg-color: @moon-slider-knob-bg-color;
+@moon-slider-bar-bg-color: @moon-progress-bar-bg-color;
+@moon-slider-fill-bg-color: @moon-progress-bar-fill-bg-color;
+@moon-slider-load-bg-color: @moon-progress-bar-loaded-bg-color;
+@moon-slider-knob-bg-color: @moon-white;
+@moon-slider-knob-border-color: transparent;
+@moon-slider-focus-bar-bg-color: @moon-slider-bar-bg-color;
+@moon-slider-focus-fill-bg-color: @moon-slider-fill-bg-color;
+@moon-slider-focus-load-bg-color: @moon-slider-load-bg-color;
+@moon-slider-focus-knob-bg-color: @moon-spotlight-bg-color;
+@moon-slider-focus-knob-border-color: transparent;
+@moon-slider-active-bar-bg-color: @moon-slider-bar-bg-color;
+@moon-slider-active-fill-bg-color: @moon-slider-fill-bg-color;
+@moon-slider-active-load-bg-color: @moon-slider-load-bg-color;
+@moon-slider-active-knob-bg-color: @moon-slider-knob-bg-color;
+@moon-slider-active-knob-border-color: @moon-spotlight-color;
+@moon-slider-disabled-bar-opacity: 0.4;
+@moon-slider-disabled-bar-bg-color: fadeout(@moon-slider-bar-bg-color, percentage(@moon-slider-disabled-bar-opacity), relative);
+@moon-slider-disabled-knob-bg-color: #666;
+@moon-slider-disabled-knob-border-color: transparent;
+@moon-slider-disabled-focus-bar-bg-color: fadeout(@moon-slider-focus-bar-bg-color, percentage(@moon-slider-disabled-bar-opacity), relative);
+@moon-slider-disabled-focus-knob-bg-color: @moon-spotlight-bg-color;
+@moon-slider-disabled-focus-knob-border-color: transparent;
+@moon-slider-knob-shadow: 0 3px 6px fade(black, 50%);
 
 // Spinner
 // ---------------------------------------

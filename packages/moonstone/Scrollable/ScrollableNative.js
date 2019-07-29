@@ -554,12 +554,6 @@ class ScrollableBaseNative extends Component {
 	}
 
 	scrollByPage = (direction) => {
-		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
-		// scroller as a plain container
-		if (!this.uiRef.current.state.isVerticalScrollbarVisible) {
-			return false;
-		}
-
 		const
 			{childRefCurrent, scrollTop} = this.uiRef.current,
 			focusedItem = Spotlight.getCurrent(),
@@ -596,8 +590,6 @@ class ScrollableBaseNative extends Component {
 
 			this.uiRef.current.scrollToAccumulatedTarget(pageDistance, true, this.props.overscrollEffectOn.pageKey);
 		}
-
-		return true;
 	}
 
 	hasFocus () {
@@ -619,7 +611,7 @@ class ScrollableBaseNative extends Component {
 
 		if (scrollability) {
 			const
-				isRtl = this.uiRef.current.state.rtl,
+				isRtl = this.uiRef.current.props.rtl,
 				edge = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
 			this.uiRef.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 		}
@@ -633,8 +625,10 @@ class ScrollableBaseNative extends Component {
 		this.animateOnFocus = true;
 
 		if (!repeat && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
-			let direction = isPageUp(keyCode) ? 'up' : 'down';
-			if (this.scrollByPage(direction) && this.props.overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
+			const direction = isPageUp(keyCode) ? 'up' : 'down';
+
+			this.scrollByPage(direction);
+			if (this.props.overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
 				this.checkAndApplyOverscrollEffectByDirection(direction);
 			}
 		}
@@ -659,7 +653,8 @@ class ScrollableBaseNative extends Component {
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				if (this.isContent(target) && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
 					direction = isPageUp(keyCode) ? 'up' : 'down';
-					if (this.scrollByPage(direction) && overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
+					this.scrollByPage(direction);
+					if (overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
 						this.checkAndApplyOverscrollEffectByDirection(direction);
 					}
 				}
@@ -697,32 +692,35 @@ class ScrollableBaseNative extends Component {
 		this.uiRef.current.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, this.props.overscrollEffectOn.scrollbarButton);
 	}
 
+	focusOnScrollButton (scrollbarRef, isPreviousScrollButton) {
+		if (scrollbarRef.current) {
+			scrollbarRef.current.focusOnButton(isPreviousScrollButton);
+		}
+	}
+
 	scrollAndFocusScrollbarButton = (direction) => {
-		const
-			isRtl = this.uiRef.current.state.rtl,
-			isPreviousScrollButton = direction === 'up' || (isRtl ? direction === 'right' : direction === 'left'),
-			isHorizontalDirection = direction === 'left' || direction === 'right',
-			isVerticalDirection = direction === 'up' || direction === 'down';
+		if (this.uiRef.current) {
+			const
+				{focusableScrollbar, direction: directionProp} = this.props,
+				uiRefCurrent = this.uiRef.current,
+				isRtl = uiRefCurrent.props.rtl,
+				isPreviousScrollButton = direction === 'up' || (isRtl ? direction === 'right' : direction === 'left'),
+				isHorizontalDirection = direction === 'left' || direction === 'right',
+				isVerticalDirection = direction === 'up' || direction === 'down',
+				canScrollHorizontally = isHorizontalDirection && (directionProp === 'horizontal' || directionProp === 'both'),
+				canScrollingVertically = isVerticalDirection && (directionProp === 'vertical' || directionProp === 'both');
 
-		const {focusableScrollbar, direction: directionProp} = this.props;
+			if (canScrollHorizontally || canScrollingVertically) {
+				this.onScrollbarButtonClick({
+					isPreviousScrollButton,
+					isVerticalScrollBar: canScrollingVertically
+				});
 
-		this.onScrollbarButtonClick({
-			isPreviousScrollButton,
-			isVerticalScrollBar:
-				isVerticalDirection &&
-				(directionProp === 'vertical' || directionProp === 'both')
-		});
-
-		if (focusableScrollbar) {
-			if (isVerticalDirection && (directionProp === 'vertical' || directionProp === 'both')) {
-				if (this.uiRef.current && this.uiRef.current.verticalScrollbarRef.current) {
-					const scrollbar = this.uiRef.current.verticalScrollbarRef;
-					scrollbar.current.focusOnButton(isPreviousScrollButton);
-				}
-			} else if (isHorizontalDirection && (directionProp === 'horizontal' || directionProp === 'both')) {
-				if (this.uiRef.current && this.uiRef.current.horizontalScrollbarRef.current) {
-					const scrollbar = this.uiRef.current.horizontalScrollbarRef;
-					scrollbar.current.focusOnButton(isPreviousScrollButton);
+				if (focusableScrollbar) {
+					this.focusOnScrollButton(
+						canScrollingVertically ? uiRefCurrent.verticalScrollbarRef : uiRefCurrent.horizontalScrollbarRef,
+						isPreviousScrollButton
+					);
 				}
 			}
 		}
@@ -888,7 +886,7 @@ class ScrollableBaseNative extends Component {
 	onVoice = (e) => {
 		const
 			isHorizontal = this.props.direction === 'horizontal',
-			isRtl = this.uiRef.current.state.rtl,
+			isRtl = this.uiRef.current.props.rtl,
 			{scrollTop, scrollLeft} = this.uiRef.current,
 			{maxLeft, maxTop} = this.uiRef.current.getScrollBounds(),
 			verticalDirection = ['up', 'down', 'top', 'bottom'],

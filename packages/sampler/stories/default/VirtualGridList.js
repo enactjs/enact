@@ -111,6 +111,7 @@ storiesOf('Moonstone', module)
 				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 				direction={select('direction', prop.direction, Config, 'vertical')}
 				focusableScrollbar={boolean('focusableScrollbar', Config)}
+				horizontalScrollbar={select('horizontalScrollbar', ['auto', 'hidden', 'visible'], Config, 'auto')}
 				itemRenderer={renderItem}
 				itemSize={{
 					minWidth: ri.scale(number('minWidth', Config, 180)),
@@ -119,6 +120,7 @@ storiesOf('Moonstone', module)
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				spacing={ri.scale(number('spacing', Config, 20))}
+				verticalScrollbar={select('verticalScrollbar', ['auto', 'hidden', 'visible'], Config, 'auto')}
 				wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 			/>
 		),
