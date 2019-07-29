@@ -702,10 +702,6 @@ class ScrollableBase extends Component {
 	}
 
 	scrollByPage = (keyCode) => {
-		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
-		// scroller as a plain container
-		if (!this.state.isVerticalScrollbarVisible) return;
-
 		const
 			bounds = this.getScrollBounds(),
 			canScrollVertically = this.canScrollVertically(bounds),
