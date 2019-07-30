@@ -6,9 +6,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- Fonts to properly display all localized fonts when representing glyphs from any locale. Everything is consolidated under the single "Moonstone" font-family name.
 - `moonstone/Input` disabled focus text color
 - `moonstone/VideoPlayer` feedback tooltip to overlap in non-latin locale
-- `moonstone/Scroller` to no scroll horizontally via 5-way down in horizontal scroller
+- `moonstone/Scroller` to not scroll horizontally via 5-way down in horizontal scroller
 - `moonstone/Scroller` to not jump to the top when right key is pressed in the right most item of a vertical scroller
 
 ## [3.0.0-beta.2] - 2019-07-23
