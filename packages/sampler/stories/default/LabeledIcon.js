@@ -21,6 +21,7 @@ storiesOf('Moonstone', module)
 				icon={select('icon', ['', ...iconNames], Config, 'fullscreen')}
 				inline={boolean('inline', Config)}
 				labelPosition={select('labelPosition', ['above', 'after', 'before', 'below', 'left', 'right'], Config)}
+				flip={select('flip', ['', 'both', 'horizontal', 'vertical'], Config, '')}
 				size={select('size', ['small', 'large'], Config)}
 			>
 				{text('children', Config, 'Hello LabeledIcon')}

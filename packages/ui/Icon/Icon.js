@@ -6,6 +6,7 @@
  */
 
 import kind from '@enact/core/kind';
+import {cap} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -93,6 +94,14 @@ const Icon = kind({
 		css: PropTypes.object,
 
 		/**
+		 * Flip the icon horizontally, vertically or both.
+		 *
+		 * @type {('both'|'horizontal'|'vertical')}
+		 * @public
+		 */
+		flip: PropTypes.string,
+
+		/**
 		 * The full list (hash) of supported icons.
 		 *
 		 * The keys of this hash are the unique names of each icon. The values are the unicode
@@ -141,11 +150,17 @@ const Icon = kind({
 	},
 
 	computed: {
-		className: ({children: icon, iconList, pressed, size, styler}) => styler.append({
-			// If the icon isn't in our known set, apply our custom font class
-			dingbat: !(icon in iconList),
-			pressed
-		}, size),
+		className: ({children: icon, flip, iconList, pressed, size, styler}) => {
+			return styler.append(
+				{
+					// If the icon isn't in our known set, apply our custom font class
+					dingbat: !(icon in iconList),
+					pressed
+				},
+				flip ? `flip${cap(flip)}` : null,
+				size
+			);
+		},
 		iconProps: ({children: iconProp, iconList, style}) => {
 			let icon = iconList[iconProp];
 
