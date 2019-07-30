@@ -376,6 +376,18 @@
 @moon-toggleswitch-width-large: 84px;
 @moon-toggleswitch-margin: @moon-toggleswitch-width + @moon-spotlight-outset;
 
+// Popup
+// ---------------------------------------
+@moon-popup-padding-top: 24px;
+@moon-popup-padding-right: 36px;
+@moon-popup-padding-bottom: @moon-popup-padding-top;
+@moon-popup-padding-left: @moon-popup-padding-right;
+@moon-popup-body-margin-top: (@moon-popup-padding-top - 9px);
+@moon-popup-body-margin-right: (@moon-popup-padding-right - 9px);
+@moon-popup-body-margin-bottom: (@moon-popup-padding-bottom - 15px);
+@moon-popup-body-margin-left: @moon-popup-body-margin-right;
+@moon-popup-closecontainer-separation: @moon-spotlight-outset;
+
 // Progress Bar
 // ---------------------------------------
 @moon-progress-bar-height: 6px;
@@ -433,14 +445,11 @@
 
 // Dialog
 // ---------------------------------------
-@moon-dialog-top-padding: 42px;
-@moon-dialog-h-padding: 42px;
-@moon-dialog-bottom-padding: 24px;
-@moon-dialog-reserve-close-right-padding: (@moon-button-h-margin * 2) + @moon-icon-button-small-size + @moon-dialog-bottom-padding;
-@moon-dialog-reserve-close-right-padding-size-large: (@moon-button-h-margin * 2) + @moon-icon-button-small-size-large + @moon-dialog-bottom-padding;
-@moon-dialog-close-button-top: @moon-dialog-top-padding;
-@moon-dialog-close-button-right: @moon-dialog-bottom-padding;
-@moon-dialog-title-right-padding: @moon-button-h-margin;
+@moon-dialog-padding-top: 42px;
+@moon-dialog-padding-right: 42px;
+@moon-dialog-padding-bottom: 24px;
+@moon-dialog-padding-left: @moon-dialog-padding-right;
+@moon-dialog-closecontainer-separation: 18px;
 
 // Notification
 // ---------------------------------------

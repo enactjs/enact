@@ -5,8 +5,14 @@
 @import "../styles/skin.less";
 
 .dialog {
+	// Local variables to make this easier to read
+	@dialog-padding-top: (@moon-dialog-padding-top - @moon-popup-body-margin-top);
+	@dialog-padding-right: (@moon-dialog-padding-right - @moon-popup-body-margin-right);
+	@dialog-padding-bottom: (@moon-dialog-padding-bottom - @moon-popup-body-margin-bottom);
+	@dialog-padding-left: (@moon-dialog-padding-left - @moon-popup-body-margin-left);
+
 	position: relative;
-	padding: @moon-dialog-top-padding @moon-dialog-h-padding @moon-dialog-bottom-padding;
+	padding: @dialog-padding-top @dialog-padding-right @dialog-padding-bottom @dialog-padding-left;
 
 	&.showDivider {
 		.titleWrapper {
@@ -18,21 +24,15 @@
 	}
 
 	&.reserveClose {
-		.padding-start-end(@moon-dialog-h-padding, @moon-dialog-reserve-close-right-padding);
-
-		.moon-custom-text({
-			.padding-start-end(@moon-dialog-h-padding, @moon-dialog-reserve-close-right-padding-size-large);
-		});
+		.padding-start-end(@dialog-padding-left, @moon-dialog-padding-right); // Note the subtile name difference between these two variables. This is intentional.
 	}
 
-	.closeButton {
-		top: @moon-dialog-close-button-top;
-		right: @moon-dialog-close-button-right;
+	.closeContainer {
+		margin-top: @moon-popup-body-margin-top;
+		.margin-start-end(@moon-dialog-closecontainer-separation, auto);
 	}
 
 	.title {
-		.padding-start-end(0, @moon-dialog-title-right-padding);
-
 		.moon-dialog-title();
 		line-height: @moon-dialog-title-line-height;
 		font-size: @moon-dialog-title-font-size;
@@ -54,13 +54,6 @@
 
 	.buttons > :last-child {
 		-webkit-margin-end: 0;
-	}
-
-	:global(.enact-locale-right-to-left) & {
-		.closeButton {
-			right: auto;
-			left: @moon-dialog-close-button-right;
-		}
 	}
 
 	// Skin colors
