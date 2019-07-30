@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/LabeledIconButton` prop `flip` to flip the icon horizontally, vertically, or both
+
 ### Fixed
 
 - Fonts to properly display all localized fonts when representing glyphs from any locale. Everything is consolidated under the single "Moonstone" font-family name.
@@ -11,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panels` to treat all components within `controls` as part of the active panel for the purposes of accessibility
 - `moonstone/Panels` to allow 5-way navigation to components within `controls` when used with a `Header` with `headerInput`
 - `moonstone/VideoPlayer` feedback tooltip to overlap in non-latin locale
+- `moonstone/VideoPlayer` more button to not clip and flip in rtl
 - `moonstone/Scroller` to not scroll horizontally via 5-way down in horizontal scroller
 - `moonstone/Scroller` to not jump to the top when right key is pressed in the right most item of a vertical scroller
 - `moonstone/Tooltip` arrow gap

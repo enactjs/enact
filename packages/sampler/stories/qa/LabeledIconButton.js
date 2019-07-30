@@ -31,6 +31,7 @@ storiesOf('LabeledIconButton', module)
 									style={{marginLeft: 0, marginRight: 0}}
 									icon={icon}
 									disabled={disabled}
+									flip={select('flip', ['', 'both', 'horizontal', 'vertical'], Config, '')}
 									labelPosition={labelPosition}
 									size={select('size', ['small', 'large'], Config)}
 								>{icon}</LabeledIconButton>
@@ -54,6 +55,7 @@ storiesOf('LabeledIconButton', module)
 							icon={icon}
 							inline
 							disabled={disabled}
+							flip={select('flip', ['', 'both', 'horizontal', 'vertical'], Config, '')}
 							labelPosition={labelPosition}
 							size={select('size', ['small', 'large'], Config)}
 						>{icon}</LabeledIconButton>
