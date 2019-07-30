@@ -179,7 +179,7 @@ describe('Panels Specs', () => {
 					id
 				};
 
-				const expected = `${id}_close`;
+				const expected = `${id}-controls`;
 				const actual = PanelsBase.computed.childProps(props)['aria-owns'];
 
 				expect(actual).toBe(expected);
@@ -197,7 +197,7 @@ describe('Panels Specs', () => {
 					id
 				};
 
-				const expected = `${ariaOwns} ${id}_close`;
+				const expected = `${ariaOwns} ${id}-controls`;
 				const actual = PanelsBase.computed.childProps(props)['aria-owns'];
 
 				expect(actual).toBe(expected);
