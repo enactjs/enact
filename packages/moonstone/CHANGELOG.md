@@ -7,6 +7,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/LabeledIconButton` prop `flip` to flip the icon horizontally, vertically, or both
+- `moonstone/Popup` public class names `body` and `closeContainer`
+
+### Changed
+
+- `moonstone/Dialog` appearance to match the latest designs
 
 ### Fixed
 

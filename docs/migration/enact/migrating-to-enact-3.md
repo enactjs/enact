@@ -160,6 +160,7 @@ files, you may need to address these changes.
 #### mixins
 * `.moon-divider-text` has been removed
 * `.moon-header-sub-title-below` has been replaced by `.moon-header-sub-title-below-text`
+* `.moon-popup-header-text` has been removed
 * `.moon-sub-header-text` has been replaced by `.moon-header-title-below-text`
 * `.moon-super-header-text` has been removed
 

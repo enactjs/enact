@@ -7,7 +7,6 @@
 .notification {
 	position: relative;
 	left: 50%;
-	width: fit-content;
 	min-width: @moon-notification-min-width;
 	max-width: @moon-notification-max-width;
 	text-align: center;
@@ -23,6 +22,11 @@
 	}
 
 	.body {
+		width: fit-content;
+		margin: 0;
+	}
+
+	.notificationBody {
 		.moon-notification-content();
 
 		:global(.enact-locale-ja) &,
