@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Popup` public class names `body` and `closeContainer`
 
+### Changed
+
+- `moonstone/Dialog` appearance to match the latest designs
+
 ### Fixed
 
 - `moonstone/Input` disabled focus text color
