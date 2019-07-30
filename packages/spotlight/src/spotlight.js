@@ -32,6 +32,7 @@ import {
 	getAllContainerIds,
 	getContainerConfig,
 	getContainerLastFocusedElement,
+	getContainerNode,
 	getContainersForNode,
 	getLastContainer,
 	getSpottableDescendants,
@@ -249,10 +250,11 @@ const Spotlight = (function () {
 
 	function restoreFocus () {
 		const lastContainerId = getLastContainer();
-		const next = [rootContainerId];
+		let next;
 
 		if (lastContainerId) {
-			next.unshift(lastContainerId);
+			// walk up the chain of containers from the last to attempt to find a target
+			next = getContainersForNode(getContainerNode(lastContainerId)).reverse();
 
 			// only prepend last focused if it exists so that Spotlight.focus() doesn't receive
 			// a falsy target
@@ -260,6 +262,8 @@ const Spotlight = (function () {
 			if (lastFocused) {
 				next.unshift(lastFocused);
 			}
+		} else {
+			next = [rootContainerId];
 		}
 
 		// attempt to find a target starting with the last focused element in the last

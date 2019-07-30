@@ -142,7 +142,7 @@ describe('Panels Specs', () => {
 
 	describe('computed', () => {
 		describe('childProps', () => {
-			test('should not add aria-owns when noCloseButton is true', () => {
+			test('should not add aria-owns when noCloseButton is true and no controls', () => {
 				const id = 'id';
 				const childProps = {};
 				const props = {
@@ -179,7 +179,7 @@ describe('Panels Specs', () => {
 					id
 				};
 
-				const expected = `${id}_close`;
+				const expected = `${id}-controls`;
 				const actual = PanelsBase.computed.childProps(props)['aria-owns'];
 
 				expect(actual).toBe(expected);
@@ -197,7 +197,26 @@ describe('Panels Specs', () => {
 					id
 				};
 
-				const expected = `${ariaOwns} ${id}_close`;
+				const expected = `${ariaOwns} ${id}-controls`;
+				const actual = PanelsBase.computed.childProps(props)['aria-owns'];
+
+				expect(actual).toBe(expected);
+			});
+
+			test('should append aria-owns with noCloseButton and controls', () => {
+				const id = 'id';
+				const ariaOwns = ':allthethings:';
+				const childProps = {
+					'aria-owns': ariaOwns
+				};
+				const props = {
+					childProps,
+					controls: <div>Hello</div>,
+					noCloseButton: true,
+					id
+				};
+
+				const expected = `${ariaOwns} ${id}-controls`;
 				const actual = PanelsBase.computed.childProps(props)['aria-owns'];
 
 				expect(actual).toBe(expected);

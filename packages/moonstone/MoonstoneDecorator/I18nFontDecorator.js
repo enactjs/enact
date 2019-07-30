@@ -3,7 +3,7 @@ import ilib from '@enact/i18n';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {fontGenerator, fontOverrideGenerator} from './fontGenerator';
+import {fontOverrideGenerator} from './fontGenerator';
 
 const I18nFontDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class I18nDecorator extends React.Component {
@@ -27,7 +27,6 @@ const I18nFontDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-u
 		}
 
 		componentDidMount () {
-			fontGenerator(this.state.locale);
 			fontOverrideGenerator(this.state.locale);
 		}
 
