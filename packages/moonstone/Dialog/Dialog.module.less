@@ -18,10 +18,10 @@
 	}
 
 	&.reserveClose {
-		.padding-start-end(@moon-dialog-h-padding, (@moon-button-h-margin * 2) + @moon-icon-button-small-size + @moon-dialog-reserve-close-right-padding);
+		.padding-start-end(@moon-dialog-h-padding, @moon-dialog-reserve-close-right-padding);
 
 		.moon-custom-text({
-			.padding-start-end(@moon-dialog-h-padding, @moon-icon-button-small-size-large + @moon-spotlight-outset, parent);
+			.padding-start-end(@moon-dialog-h-padding, @moon-dialog-reserve-close-right-padding-size-large);
 		});
 	}
 
@@ -31,6 +31,8 @@
 	}
 
 	.title {
+		.padding-start-end(0, @moon-dialog-title-right-padding);
+
 		.moon-dialog-title();
 		line-height: @moon-dialog-title-line-height;
 		font-size: @moon-dialog-title-font-size;

@@ -436,9 +436,11 @@
 @moon-dialog-top-padding: 42px;
 @moon-dialog-h-padding: 42px;
 @moon-dialog-bottom-padding: 24px;
-@moon-dialog-reserve-close-right-padding: @moon-dialog-bottom-padding;
+@moon-dialog-reserve-close-right-padding: (@moon-button-h-margin * 2) + @moon-icon-button-small-size + @moon-dialog-bottom-padding;
+@moon-dialog-reserve-close-right-padding-size-large: (@moon-button-h-margin * 2) + @moon-icon-button-small-size-large + @moon-dialog-bottom-padding;
 @moon-dialog-close-button-top: @moon-dialog-top-padding;
 @moon-dialog-close-button-right: @moon-dialog-bottom-padding;
+@moon-dialog-title-right-padding: @moon-button-h-margin;
 
 // Notification
 // ---------------------------------------
