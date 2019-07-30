@@ -11,11 +11,10 @@ import {Job} from '@enact/core/util';
 
 const refs = {};
 
-const adjustPath = path => {
-	if (path.slice(-1) !== '/') {
-		path += '/';
-	}
-	return path;
+const servicePath = (path, method) => {
+	if (!path.startsWith('luna://')) path = 'luna://' + path;
+	if (path.slice(-1) !== '/' && method) path += '/';
+	return path + method;
 };
 
 const invalid = msg => ({
@@ -45,9 +44,9 @@ const cancel = key => {
  * @returns {Promise}
  * @public
  */
-function luna (service, {method, parameters, timeout = 0, ...rest} = {}) {
+function luna (service = '', {method = '', parameters, timeout = 0, ...rest} = {}) {
 	return new Promise((resolve, reject) => {
-		if (typeof window !== 'object' || !window.PalmServiceBridge) {
+		if (typeof window === 'undefined' || !window.PalmServiceBridge) {
 			reject({errorCode: -1, errorText: 'PalmServiceBridge not found.', returnValue: false});
 			console.error('PalmServiceBridge not found.');
 		} else {
@@ -83,7 +82,7 @@ function luna (service, {method, parameters, timeout = 0, ...rest} = {}) {
 				}, timeout);
 			}
 
-			refs[ts].bridge.call(adjustPath(service) + method, JSON.stringify(parameters || rest));
+			refs[ts].bridge.call(servicePath(service, method), JSON.stringify(parameters || rest));
 		}
 	});
 }

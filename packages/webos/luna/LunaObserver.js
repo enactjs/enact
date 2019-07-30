@@ -11,11 +11,10 @@ import {Job} from '@enact/core/util';
 
 const refs = {};
 
-const adjustPath = path => {
-	if (path.slice(-1) !== '/') {
-		path += '/';
-	}
-	return path;
+const servicePath = (path, method) => {
+	if (!path.startsWith('luna://')) path = 'luna://' + path;
+	if (path.slice(-1) !== '/' && method) path += '/';
+	return path + method;
 };
 
 const invalid = msg => ({
@@ -59,7 +58,7 @@ class LunaObserver {
 	 * @returns {undefined}
 	 * @public
 	 */
-	observe (service, {method, parameters, timeout = 0, ...rest} = {}) {
+	observe (service = '', {method = '', parameters, timeout = 0, ...rest} = {}) {
 		if (this.observing) return;
 		this.observing = true;
 
@@ -95,7 +94,7 @@ class LunaObserver {
 				}, timeout);
 			}
 
-			refs[this.ts].bridge.call(adjustPath(service) + method, JSON.stringify(params));
+			refs[this.ts].bridge.call(servicePath(service, method), JSON.stringify(params));
 		}
 	}
 
