@@ -16,7 +16,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panels` to allow 5-way navigation to components within `controls` when used with a `Header` with `headerInput`
 - `moonstone/VideoPlayer` feedback tooltip to overlap in non-latin locale
 - `moonstone/VideoPlayer` more button to not clip and flip in rtl
-- `moonstone/Scroller` to no scroll horizontally via 5-way down in horizontal scroller
 - `moonstone/Scroller` to not scroll horizontally via 5-way down in horizontal scroller
 - `moonstone/Scroller` to not jump to the top when right key is pressed in the right most item of a vertical scroller
 - `moonstone/Tooltip` arrow gap
