@@ -76,6 +76,7 @@ const PopupBase = kind({
 		 *
 		 * The following classes are supported:
 		 *
+		 * * `closButton` - Applied to the close button when the close button is shown
 		 * * `popup` - The root class name
 		 * * `reserveClose` - Applied when the close button is shown and space must be allocated for it
 		 *
