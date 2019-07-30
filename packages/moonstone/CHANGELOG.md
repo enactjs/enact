@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableList`, and `moonstone/TimePicker` disabled opacity
+- `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableList`, and `moonstone/TimePicker` disabled opacity in high contrast mode
 - `moonstone/Input` disabled focus text color
 - `moonstone/VideoPlayer` feedback tooltip to overlap in non-latin locale
 - `moonstone/Scroller` to no scroll horizontally via 5-way down in horizontal scroller
