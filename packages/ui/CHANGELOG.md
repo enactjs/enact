@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` not to miss mouse inputs on a scrollbar
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` to suppress spotlight on scrollbars when `spotlightDisabled`
 
 ## [3.0.0-beta.2] - 2019-07-23
 
