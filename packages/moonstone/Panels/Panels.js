@@ -207,8 +207,8 @@ const PanelsBase = kind({
 		className: ({controls, noCloseButton, styler}) => styler.append({
 			'moon-panels-hasControls': (!noCloseButton || !!controls) // If there is a close button or controls were specified
 		}),
-		childProps: ({childProps, id, noCloseButton}) => {
-			if (noCloseButton || !id) {
+		childProps: ({childProps, controls, id, noCloseButton}) => {
+			if ((noCloseButton && !controls) || !id) {
 				return childProps;
 			}
 
