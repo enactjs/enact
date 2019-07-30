@@ -1,19 +1,21 @@
 import kind from '@enact/core/kind';
-import React from 'react';
+import Measurable from '@enact/ui/Measurable';
+import Slottable from '@enact/ui/Slottable';
+import {shape} from '@enact/ui/ViewManager';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {shape} from '@enact/ui/ViewManager';
-import Slottable from '@enact/ui/Slottable';
-import Measurable from '@enact/ui/Measurable';
+import React from 'react';
 
 import IdProvider from '../internal/IdProvider';
 import Skinnable from '../Skinnable';
 
-import ApplicationCloseButton from './ApplicationCloseButton';
 import CancelDecorator from './CancelDecorator';
+import Controls from './Controls';
 import Viewport from './Viewport';
 
 import css from './Panels.module.less';
+
+const getControlsId = (id) => id && `${id}-controls`;
 
 /**
  * Basic Panels component without breadcrumbs or default [arranger]{@link ui/ViewManager.Arranger}
@@ -205,43 +207,19 @@ const PanelsBase = kind({
 		className: ({controls, noCloseButton, styler}) => styler.append({
 			'moon-panels-hasControls': (!noCloseButton || !!controls) // If there is a close button or controls were specified
 		}),
-		controls: ({closeButtonAriaLabel, closeButtonBackgroundOpacity, controls, controlsRef, id, noCloseButton, onApplicationClose}) => {
-			let closeButton;
-			if (!noCloseButton) {
-				const closeId = id ? `${id}_close` : null;
-
-				closeButton = (
-					<ApplicationCloseButton
-						aria-label={closeButtonAriaLabel}
-						backgroundOpacity={closeButtonBackgroundOpacity}
-						className={css.close}
-						id={closeId}
-						onApplicationClose={onApplicationClose}
-					/>
-				);
-			}
-			if (controls || closeButton) {
-				return (
-					<div className={css.controls} ref={controlsRef}>
-						{controls}
-						{closeButton}
-					</div>
-				);
-			}
-		},
-		childProps: ({childProps, id, noCloseButton}) => {
-			if (noCloseButton || !id) {
+		childProps: ({childProps, controls, id, noCloseButton}) => {
+			if ((noCloseButton && !controls) || !id) {
 				return childProps;
 			}
 
 			const updatedChildProps = Object.assign({}, childProps);
-			const closeId = `${id}_close`;
+			const controlsId = getControlsId(id);
 			const owns = updatedChildProps['aria-owns'];
 
 			if (owns) {
-				updatedChildProps['aria-owns'] = `${owns} ${closeId}`;
+				updatedChildProps['aria-owns'] = `${owns} ${controlsId}`;
 			} else {
-				updatedChildProps['aria-owns'] = closeId;
+				updatedChildProps['aria-owns'] = controlsId;
 			}
 
 			return updatedChildProps;
@@ -253,18 +231,25 @@ const PanelsBase = kind({
 		viewportId: ({id}) => id && `${id}-viewport`
 	},
 
-	render: ({arranger, childProps, children, controls, generateId, id, index, noAnimation, noSharedState, viewportId, ...rest}) => {
-		delete rest.closeButtonBackgroundOpacity;
-		delete rest.closeButtonAriaLabel;
+	render: ({arranger, childProps, children, closeButtonAriaLabel, closeButtonBackgroundOpacity, controls, controlsRef, generateId, id, index, noAnimation, noCloseButton, noSharedState, onApplicationClose, viewportId, ...rest}) => {
 		delete rest.controlsMeasurements;
-		delete rest.controlsRef;
-		delete rest.noCloseButton;
-		delete rest.onApplicationClose;
 		delete rest.onBack;
+
+		const controlsId = getControlsId(id);
 
 		return (
 			<div {...rest} id={id}>
-				{controls}
+				<Controls
+					closeButtonAriaLabel={closeButtonAriaLabel}
+					closeButtonBackgroundOpacity={closeButtonBackgroundOpacity}
+					id={controlsId}
+					spotlightId={controlsId}
+					noCloseButton={noCloseButton}
+					onApplicationClose={onApplicationClose}
+					ref={controlsRef}
+				>
+					{controls}
+				</Controls>
 				<Viewport
 					arranger={arranger}
 					childProps={childProps}
@@ -280,7 +265,6 @@ const PanelsBase = kind({
 		);
 	}
 });
-
 
 const PanelsDecorator = compose(
 	Slottable({slots: ['controls']}),
