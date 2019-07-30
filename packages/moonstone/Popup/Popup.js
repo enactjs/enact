@@ -78,7 +78,8 @@ const PopupBase = kind({
 		 * The following classes are supported:
 		 *
 		 * * `popup` - The root class name
-		 * * `closeContainer` - Applied to the close button' container
+		 * * `body` - Applied to the body content container
+		 * * `closeContainer` - Applied to the close button's container
 		 * * `reserveClose` - Applied when the close button is shown and space must be allocated for it
 		 *
 		 * @type {Object}
@@ -173,7 +174,7 @@ const PopupBase = kind({
 	styles: {
 		css: componentCss,
 		className: 'popup',
-		publicClassNames: ['popup', 'closeContainer', 'reserveClose']
+		publicClassNames: ['popup', 'body', 'closeContainer', 'reserveClose']
 	},
 
 	computed: {

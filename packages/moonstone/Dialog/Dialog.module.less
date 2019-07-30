@@ -5,14 +5,9 @@
 @import "../styles/skin.less";
 
 .dialog {
-	// Local variables to make this easier to read
-	@dialog-padding-top: (@moon-dialog-padding-top - @moon-popup-body-margin-top);
-	@dialog-padding-right: (@moon-dialog-padding-right - @moon-popup-body-margin-right);
-	@dialog-padding-bottom: (@moon-dialog-padding-bottom - @moon-popup-body-margin-bottom);
-	@dialog-padding-left: (@moon-dialog-padding-left - @moon-popup-body-margin-left);
-
 	position: relative;
-	padding: @dialog-padding-top @dialog-padding-right @dialog-padding-bottom @dialog-padding-left;
+	padding: @moon-dialog-padding-top @moon-dialog-padding-right @moon-dialog-padding-bottom @moon-dialog-padding-left;
+	.padding-start-end(@moon-dialog-padding-left, @moon-dialog-padding-right);
 
 	&.showDivider {
 		.titleWrapper {
@@ -24,11 +19,19 @@
 	}
 
 	&.reserveClose {
-		.padding-start-end(@dialog-padding-left, @moon-dialog-padding-right); // Note the subtile name difference between these two variables. This is intentional.
+		.body {
+			margin: 0;
+			.margin-start-end(0, 0);
+		}
+	}
+
+	// Override Popup .body so our rules here are simpler
+	.body {
+		margin: 0;
+		.margin-start-end(0, 0);
 	}
 
 	.closeContainer {
-		margin-top: @moon-popup-body-margin-top;
 		.margin-start-end(@moon-dialog-closecontainer-separation, auto);
 	}
 
@@ -46,7 +49,7 @@
 		margin: 0;
 	}
 
-	.body {
+	.dialogBody {
 		.moon-dialog-content();
 		margin: 0;
 		position: relative;

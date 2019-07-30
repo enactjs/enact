@@ -205,7 +205,7 @@ const DialogBase = kind({
 						{titleBelow}
 					</MarqueeH2>
 				</div>
-				<div className={css.body} id={`${id}_children`}>
+				<div className={css.dialogBody} id={`${id}_children`}>
 					{children}
 				</div>
 			</Popup>
