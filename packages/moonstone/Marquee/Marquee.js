@@ -40,7 +40,7 @@ export {
 	/**
 	 * A block element which will marquee its contents
 	 *
-	 * @see ui/Marquee.Marquee
+	 * @see {@link ui/Marquee.Marquee}
 	 * @class Marquee
 	 * @extends ui/Marquee.Marquee
 	 * @memberof moonstone/Marquee
@@ -52,7 +52,7 @@ export {
 	/**
 	 * Internal component to provide marquee markup
 	 *
-	 * @see ui/Marquee.Marquee
+	 * @see {@link ui/Marquee.Marquee}
 	 * @class MarqueeBase
 	 * @extends ui/Marquee.MarqueeBase
 	 * @memberof moonstone/Marquee
@@ -64,7 +64,7 @@ export {
 	/**
 	 * Adds ability to control descendant marquee instances to a component
 	 *
-	 * @see ui/Marquee.MarqueeController
+	 * @see {@link ui/Marquee.MarqueeController}
 	 * @hoc
 	 * @name MarqueeController
 	 * @extends ui/Marquee.MarqueeController
@@ -76,7 +76,7 @@ export {
 	/**
 	 * Adds marquee behavior to a component
 	 *
-	 * @see ui/Marquee.MarqueeDecorator
+	 * @see {@link ui/Marquee.MarqueeDecorator}
 	 * @hoc
 	 * @name MarqueeDecorator
 	 * @extends ui/Marquee.MarqueeDecorator

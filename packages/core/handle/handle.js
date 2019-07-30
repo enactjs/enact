@@ -500,7 +500,7 @@ const forKeyCode = handle.forKeyCode = forEventProp('keyCode');
  * );
  * ```
  *
- * @see      core/keymap
+ * @see      {@link core/keymap}
  * @method   forKey
  * @param    {String}    name   Name from {@link core/keymap}
  * @param    {Object}    ev     Event payload
