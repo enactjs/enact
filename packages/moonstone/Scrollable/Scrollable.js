@@ -14,7 +14,8 @@ import {Job} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import Spotlight, {getDirection} from '@enact/spotlight';
-import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
+import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import {getRect, intersects} from '@enact/spotlight/src/utils';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -665,6 +666,7 @@ class ScrollableBase extends Component {
 		if (!this.props['data-spotlight-container-disabled']) {
 			this.childRef.current.setContainerDisabled(false);
 		}
+		//console.log('Scrollable.stop', this.lastScrollPositionOnFocus);
 		this.focusOnItem();
 		this.lastScrollPositionOnFocus = null;
 		this.isWheeling = false;
@@ -673,6 +675,15 @@ class ScrollableBase extends Component {
 			this.updateFocusAfterVoiceControl();
 		}
 	}
+
+	getTargetInViewByDirectionFromPosition = (direction, position, container) => {
+		const target = getTargetByDirectionFromPosition(direction, position, Spotlight.getActiveContainer());
+
+		return target && intersects(
+			getRect(container),
+			getRect(target)
+		) && target;
+	};
 
 	focusOnItem () {
 		const childRef = this.childRef;
@@ -689,7 +700,15 @@ class ScrollableBase extends Component {
 			// no need to focus on pointer mode
 			if (!Spotlight.getPointerMode()) {
 				const {direction, x, y} = this.pointToFocus;
-				Spotlight.focusFromPoint({x, y}, reverseDirections[direction]);
+				const position = {x, y};
+				const {current: {containerRef: {current}}} = this.uiRef;
+				const target =
+					this.getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current) ||
+					this.getTargetInViewByDirectionFromPosition(direction, position, current);
+
+				if (target) {
+					Spotlight.focus(target);
+				}
 			}
 			this.pointToFocus = null;
 		}

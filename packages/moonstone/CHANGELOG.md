@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` feedback tooltip to overlap in non-latin locale
 - `moonstone/Scroller` to no scroll horizontally via 5-way down in horizontal scroller
 - `moonstone/Scroller` to not jump to the top when right key is pressed in the right most item of a vertical scroller
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to correctly set focus after scrolling by page up/down keys
 
 ## [3.0.0-beta.2] - 2019-07-23
 
