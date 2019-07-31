@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [3.0.0-rc.1] - 2019-07-31
 
 ### Added
 
@@ -12,18 +12,21 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/Dialog` appearance to match the latest designs
+- `moonstone/Scroller` and other scrolling components to scroll via remote page up/down buttons when the scrollbar is hidden
 
 ### Fixed
 
-- Fonts to properly display all localized fonts when representing glyphs from any locale. Everything is consolidated under the single "Moonstone" font-family name.
-- `moonstone/Input` disabled focus text color
-- `moonstone/Panels` to treat all components within `controls` as part of the active panel for the purposes of accessibility
+- `moonstone` fonts be consolidated under "Moonstone" font-family to properly display all localized fonts when representing glyphs from any locale
+- `moonstone/Input` text color when focused and disabled
 - `moonstone/Panels` to allow 5-way navigation to components within `controls` when used with a `Header` with `headerInput`
-- `moonstone/VideoPlayer` feedback tooltip to overlap in non-latin locale
-- `moonstone/VideoPlayer` more button to not clip and flip in rtl
-- `moonstone/Scroller` to not scroll horizontally via 5-way down in horizontal scroller
+- `moonstone/Panels` to treat all components within `controls` as part of the active panel for the purposes of accessibility
 - `moonstone/Scroller` to not jump to the top when right key is pressed in the right most item of a vertical scroller
+- `moonstone/Scroller` to not scroll horizontally via 5-way down in horizontal scroller
 - `moonstone/Tooltip` arrow gap
+- `moonstone/VideoPlayer` feedback tooltip to overlap in non-latin locale
+- `moonstone/VideoPlayer` more button tooltip to not clip or reverse text in RTL locales
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to navigate items properly in RTL languages
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly navigate from paging controls to controls out of the list
 
 ## [3.0.0-beta.2] - 2019-07-23
 
@@ -31,10 +34,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Panels.Header` prop `hideLine` to hide the bottom separator line
 - `moonstone/Panels.Header` type "dense" for "AlwaysViewing" Panels types
-
-### Changed
-
-- `moonstone/Scroller` and other scrolling components to scroll via remote page up/down buttons when the scrollbar is hidden
 
 ### Fixed
 
@@ -49,8 +48,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Spinner` to use the latest designs
 - `moonstone/Tooltip` layer order so it doesn't interfere with other positioned elements, like `ContextualPopup`
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly respond to 5way directional key presses
-- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to navigate items properly in RTL languages
-- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly navigate from paging controls to controls out of the list
 
 ## [3.0.0-beta.1] - 2019-07-15
 
