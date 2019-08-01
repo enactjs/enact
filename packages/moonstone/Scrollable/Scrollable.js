@@ -14,6 +14,7 @@ import {Job} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import Spotlight, {getDirection} from '@enact/spotlight';
+import {spottableClass} from '@enact/spotlight/Spottable';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {getRect, intersects} from '@enact/spotlight/src/utils';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
@@ -114,6 +115,13 @@ onWindowReady(() => {
 	document.addEventListener('mousemove', pointerTracker);
 	document.addEventListener('keydown', pageKeyHandler);
 });
+
+const isIntersecting = (elem, container) => elem && intersects(getRect(container), getRect(elem));
+const getIntersectingElement = (elem, container) => isIntersecting(elem, container) && elem;
+const getTargetInViewByDirectionFromPosition = (direction, position, container) => {
+	const target = getTargetByDirectionFromPosition(direction, position, Spotlight.getActiveContainer());
+	return getIntersectingElement(target, container);
+};
 
 /**
  * A Moonstone-styled component that provides horizontal and vertical scrollbars.
@@ -676,15 +684,6 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	getTargetInViewByDirectionFromPosition = (direction, position, container) => {
-		const target = getTargetByDirectionFromPosition(direction, position, Spotlight.getActiveContainer());
-
-		return target && intersects(
-			getRect(container),
-			getRect(target)
-		) && target;
-	};
-
 	focusOnItem () {
 		const childRef = this.childRef;
 
@@ -702,9 +701,11 @@ class ScrollableBase extends Component {
 				const {direction, x, y} = this.pointToFocus;
 				const position = {x, y};
 				const {current: {containerRef: {current}}} = this.uiRef;
+				const elemFromPoint = document.elementFromPoint(x, y);
 				const target =
-					this.getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current) ||
-					this.getTargetInViewByDirectionFromPosition(direction, position, current);
+					getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
+					getTargetInViewByDirectionFromPosition(direction, position, current) ||
+					getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current);
 
 				if (target) {
 					Spotlight.focus(target);
