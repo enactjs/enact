@@ -77,6 +77,14 @@ const LabeledIconBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
+		 * Flip the icon horizontally, vertically or both.
+		 *
+		 * @type {('both'|'horizontal'|'vertical')}
+		 * @public
+		 */
+		flip: PropTypes.string,
+
+		/**
 		 * The icon.
 		 *
 		 * This will be passed as `children` to the `iconComponent`, unless you supply a React
@@ -92,7 +100,7 @@ const LabeledIconBase = kind({
 		 *
 		 * This will receive the `icon` prop as `children` and should handle it appropriately. This
 		 * prop is ignored in the case of a component being passed into the `icon` prop. It will
-		 * also receive the `size` prop as set on the component.
+		 * also receive the `flip` and `size` props as set on the component.
 		 *
 		 * @type {Component}
 		 */
@@ -162,7 +170,7 @@ const LabeledIconBase = kind({
 		}
 	},
 
-	render: ({css, children, disabled, icon, iconComponent: Icon, orientation, size, ...rest}) => {
+	render: ({css, children, disabled, flip, icon, iconComponent: Icon, orientation, size, ...rest}) => {
 		delete rest.inline;
 
 		let iconClassName = css.icon;
@@ -202,6 +210,7 @@ const LabeledIconBase = kind({
 						<Icon
 							className={iconClassName}
 							disabled={disabled}
+							flip={flip}
 							size={size}
 						>
 							{icon}

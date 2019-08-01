@@ -68,6 +68,14 @@ const LabeledIconButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
+		 * Flip the icon horizontally, vertically or both.
+		 *
+		 * @type {('both'|'horizontal'|'vertical')}
+		 * @public
+		 */
+		flip: PropTypes.string,
+
+		/**
 		 * The icon displayed within the button.
 		 *
 		 * @type {String}
@@ -94,11 +102,11 @@ const LabeledIconButtonBase = kind({
 		publicClassNames: ['labeledIconButton', 'icon', 'label', 'large', 'selected', 'small']
 	},
 
-	render: ({css, icon, selected, ...rest}) => {
+	render: ({css, flip, icon, selected, ...rest}) => {
 		return UiLabeledIcon.inline({
 			...rest,
 			icon: (
-				<IconButton selected={selected}>
+				<IconButton flip={flip} selected={selected}>
 					{icon}
 				</IconButton>
 			),

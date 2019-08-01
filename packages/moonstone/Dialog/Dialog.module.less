@@ -1,56 +1,61 @@
 // Dialog.module.less
 //
-@import '~@enact/ui/styles/mixins.less';
-
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
 
 .dialog {
 	position: relative;
-	padding: @moon-dialog-top-padding @moon-dialog-h-padding @moon-dialog-bottom-padding;
+	padding: @moon-dialog-padding-top @moon-dialog-padding-right @moon-dialog-padding-bottom @moon-dialog-padding-left;
+	.padding-start-end(@moon-dialog-padding-left, @moon-dialog-padding-right);
 
 	&.showDivider {
 		.titleWrapper {
 			border-bottom-width: @moon-header-border-bottom-width;
 			border-bottom-style: solid;
 			padding-bottom: 18px;
-			border-bottom-width: 3px;
 			margin-bottom: 18px;
 		}
 	}
-	&.reserveClose {
-		.padding-start-end(@moon-dialog-h-padding, @moon-icon-button-small-size + @moon-spotlight-outset);
 
-		.moon-custom-text({
-			.padding-start-end(@moon-dialog-h-padding, @moon-icon-button-small-size-large + @moon-spotlight-outset, parent);
-		});
+	&.reserveClose {
+		.body {
+			margin: 0;
+			.margin-start-end(0, 0);
+		}
 	}
-	.titleBlock {
-		max-width: 100%;
-		min-width: 0;
+
+	// Override Popup .body so our rules here are simpler
+	.body {
+		margin: 0;
+		.margin-start-end(0, 0);
 	}
+
+	.closeContainer {
+		.margin-start-end(@moon-dialog-closecontainer-separation, auto);
+	}
+
 	.title {
+		.padding-start-end(0, @moon-dialog-title-padding-right);
 		.moon-dialog-title();
-		margin: 0 0 6px;
+		line-height: @moon-dialog-title-line-height;
+		font-size: @moon-dialog-title-font-size;
+		font-weight: @moon-dialog-title-font-weight;
+		margin: 0;
 	}
+
 	.titleBelow {
 		.moon-dialog-title-below();
 		margin: 0;
 	}
-	.titleWrapper {
-		display: flex;
-		justify-content: space-between;
-	}
-	.body {
+
+	.dialogBody {
 		.moon-dialog-content();
 		margin: 0;
 		position: relative;
 	}
-	.buttons {
-		display: flex;
-		padding-top: 24px;
-	}
+
+
 	.buttons > :last-child {
 		-webkit-margin-end: 0;
 	}

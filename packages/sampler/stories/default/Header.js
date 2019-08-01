@@ -21,6 +21,14 @@ const prop = {
 			<IconButton>gear</IconButton>
 		</React.Fragment>
 	},
+	controls: {
+		'no buttons': null,
+		'1 button': <IconButton>gear</IconButton>,
+		'2 buttons': <React.Fragment>
+			<IconButton>star</IconButton>
+			<IconButton>gear</IconButton>
+		</React.Fragment>
+	},
 	marqueeOn: ['', 'hover', 'render'],
 	type: ['compact', 'dense', 'standard']
 };
@@ -31,14 +39,11 @@ storiesOf('Moonstone', module)
 		context => {
 			context.noHeader = true;
 
-			const noCloseButton = boolean('noCloseButton', {displayName: 'Panels'});
-			context.panelsProps = {noCloseButton: noCloseButton || false};
-
 			const headerInput = boolean('headerInput', Config) ? <Input placeholder="placeholder text" /> : null;
 			const childrenSelection = select('children', ['no buttons', '1 button', '2 buttons'], Config);
 			const children = prop.children[childrenSelection];
 
-			return (
+			const story = (
 				<Header
 					title={text('title', Config, 'The Matrix')}
 					titleBelow={text('titleBelow', Config, 'Free your mind')}
@@ -53,6 +58,13 @@ storiesOf('Moonstone', module)
 					{children}
 				</Header>
 			);
+
+			context.panelsProps = {
+				controls: prop.controls[select('controls', ['no buttons', '1 button', '2 buttons'], {displayName: 'Panels'})],
+				noCloseButton: boolean('noCloseButton', {displayName: 'Panels'}) || false
+			};
+
+			return story;
 		},
 		{
 			info: {
