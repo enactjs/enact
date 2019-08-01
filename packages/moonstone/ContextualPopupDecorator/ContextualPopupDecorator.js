@@ -47,7 +47,7 @@ const defaultConfig = {
 	/**
 	 * Disables passing the `skin` prop to the wrapped component.
 	 *
-	 * @see moonstone/Skinnable.Skinnable.skin
+	 * @see {@link moonstone/Skinnable.Skinnable.skin}
 	 * @type {Boolean}
 	 * @default false
 	 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.defaultConfig
@@ -211,7 +211,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * [ContextualPopup]{@link moonstone/ContextualPopupDecorator.ContextualPopup} and not
 			 * to the popup's activator component.
 			 *
-			 * @see moonstone/Skinnable.Skinnable.skin
+			 * @see {@link moonstone/Skinnable.Skinnable.skin}
 			 * @type {String}
 			 * @public
 			 */

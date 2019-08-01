@@ -133,7 +133,16 @@ const scenarios = {
 			}),
 			spottable({id: 'afterSubcontainer'}),
 		)
-	})
+	}),
+	owned: join(
+		spottable({id: 's1'}),
+		node({id: 'n1'}),
+		container({
+			[containerAttribute]: 'container',
+			'aria-owns': 's1 n1',
+			children: spottable({id: 's2'})
+		})
+	)
 };
 
 const setupContainers = () => {
@@ -284,6 +293,19 @@ describe('container', () => {
 			() => {
 				const expected = ['c1', 's1', 'c2', 's2'];
 				const actual = getSpottableDescendants(rootContainerId).map(n => n.getAttribute('name'));
+
+				expect(actual).toEqual(expected);
+			}
+		));
+
+		test('should include owned nodes', testScenario(
+			scenarios.owned,
+			() => {
+				configureContainer('container');
+
+				// owned nodes follow internal nodes
+				const expected = ['s2', 's1'];
+				const actual = getSpottableDescendants('container').map(n => n.getAttribute('id'));
 
 				expect(actual).toEqual(expected);
 			}
