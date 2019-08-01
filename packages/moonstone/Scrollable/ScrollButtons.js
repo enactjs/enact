@@ -282,8 +282,8 @@ class ScrollButtons extends Component {
 				Spotlight.setPointerMode(false);
 				Spotlight.focus(ReactDOM.findDOMNode(this.nextButtonRef.current)); // eslint-disable-line react/no-find-dom-node
 			} else if (!nextButtonDisabled) {
-				this.onClickNext(ev);
 				preventDefault(ev);
+				this.onClickNext(ev);
 			}
 		} else if (isPageUp(keyCode)) {
 			if (!prevButtonDisabled) {
