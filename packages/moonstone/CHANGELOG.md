@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Scroller` and other scrolling components to properly scroll via remote page up/down buttons when nested within another scrolling component
+
 ## [3.0.0-rc.1] - 2019-07-31
 
 ### Added
@@ -21,7 +27,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panels` to allow 5-way navigation to components within `controls` when used with a `Header` with `headerInput`
 - `moonstone/Panels` to treat all components within `controls` as part of the active panel for the purposes of accessibility
 - `moonstone/Scroller` to not jump to the top when right key is pressed in the right most item of a vertical scroller
-- `moonstone/Scroller` and other scrolling components to properly scroll via remote page up/down buttons when nested within another scrolling component
 - `moonstone/Scroller` to not scroll horizontally via 5-way down in horizontal scroller
 - `moonstone/Tooltip` arrow gap
 - `moonstone/VideoPlayer` feedback tooltip to overlap in non-latin locale
