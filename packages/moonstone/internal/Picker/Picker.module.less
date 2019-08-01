@@ -161,15 +161,18 @@
 		width: 300px;
 	}
 
-	&.small,
-	&.medium,
-	&.large {
-		.valueWrapper {
-			position: relative;
+	&.horizontal {
+		&.small,
+		&.medium,
+		&.large {
+			.valueWrapper {
+				position: relative;
 
-			.item {
-				position: absolute;
-				.position(0);
+				.item {
+					position: absolute;
+					.position(0);
+					transform: translateX(100%);
+				}
 			}
 		}
 	}
@@ -186,6 +189,7 @@
 		.item {
 			position: absolute;
 			.position(0);
+			transform: translateY(100%);
 		}
 	}
 
