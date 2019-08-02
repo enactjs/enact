@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Scroller` and other scrolling components to properly scroll via remote page up/down buttons when nested within another scrolling component
+
 ## [3.0.0-rc.1] - 2019-07-31
 
 ### Added
