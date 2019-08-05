@@ -26,7 +26,8 @@ for (let i = 0; i < 100; i++) {
 const
 	prop = {
 		direction: ['both', 'horizontal', 'vertical'],
-		horizontalScrollbar: ['auto', 'hidden', 'visible']
+		horizontalScrollbar: ['auto', 'hidden', 'visible'],
+		verticalScrollbar: ['auto', 'hidden', 'visible']
 	};
 
 class ScrollerResizableItem extends React.Component {
@@ -174,6 +175,35 @@ storiesOf('Scroller', module)
 							Button {i + 1}
 						</Button>
 					))}
+				</div>
+			</Scroller>
+		)
+	)
+	.add(
+		'Both scroll',
+		() => (
+			<Scroller
+				direction={select('direction', prop.direction, Scroller, 'both')}
+				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
+				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Scroller, 'auto')}
+				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, Scroller, 'auto')}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
+			>
+				<div
+					style={{
+						width: ri.unit(4400, 'rem'),
+						height: ri.unit(4000, 'rem'),
+						padding: '1px'
+					}}
+				>
+					{[...Array(10)].map((y, j) => <div key={j + 1}>{(
+						[...Array(10)].map((x, i) => (
+							<Button key={i + 1} style={{width: '200px', height: '50px', margin: '25px'}}>
+								Button {j * 10 + i + 1}
+							</Button>
+						))
+					)}</div>)}
 				</div>
 			</Scroller>
 		)
