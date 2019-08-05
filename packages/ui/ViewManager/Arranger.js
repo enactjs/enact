@@ -81,6 +81,10 @@ export const SlideArranger = ({amount = 100, direction}) => ({
 	leave: (config) => arrange(config, [
 		{transform: slideInOut('out', 0, direction)},
 		{transform: slideInOut('out', amount, direction)}
+	]),
+	stay: (config) => arrange(config, [
+		{transform: slideInOut('in', 0, direction)},
+		{transform: slideInOut('in', 0, direction)}
 	])
 });
 
