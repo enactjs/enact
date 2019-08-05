@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- additional icons to `moonstone/Icon`
+
 ### Fixed
 
 - `moonstone/Picker` to avoid overlapping items on render

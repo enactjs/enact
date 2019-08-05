@@ -76,5 +76,42 @@ export default {
 	repeatdownload    : 0x0F00A8,  // repeat_download
 	view360           : 0x0F00A9,  // view_360
 	view360off        : 0x0F00AA,  // view_360_off
-	info              : 0x0F00AB  // info
+	info              : 0x0F00AB,  // info
+	cycle             : 0x0F00B1,  // cycle
+	bluetoothoff      : 0x0F00B4,  // bluetooth_off
+	verticalellipsis  : 0x0F00B5,  // vertical_ellipsis
+	arrowcurveright   : 0x0F00B6,  // arrow_curve_right
+	picture           : 0x0F00BA,  // picture
+	home              : 0x0F00BB,  // home
+	warning           : 0x0F00BC,  // warning
+	scroll            : 0x0F00BD,  // scroll
+	denselistdrawer   : 0x0F00BE,  // list_big_action
+	starminus         : 0x0F00BF,  // star_minus
+	liverecord        : 0x0F00C1,  // live_record
+	liveplay          : 0x0F00C2,  // live_play
+	contrast          : 0x0F00C3,  // contrast
+	edit              : 0x0F00C4,  // edit
+	trashlock         : 0x0F00C7,  // trash_lock
+	volumecycle       : 0x0F00CB,  // volume_cycle
+	movecursor        : 0x0F00CC,  // move_cursor
+	refresh           : 0x0F00CE,  // refresh
+	question          : 0x0F00CF,  // question_mark
+	questionreversed  : 0x0F00D0,  // reversed_question_mark
+	s                 : 0x0F00D1,  // s
+	cycleone          : 0x0F00DF,  // cycle_one
+	cyclea            : 0x0F00E0,  // cycle_a
+	cyclex            : 0x0F00E1,  // cycle_x
+	speakers          : 0x0F00E5,  // speakers
+	koreansubtitles   : 0x0F00E8,  // korean_subtitles
+	chinesesubtitles  : 0x0F00E9,  // chinese_subtitles
+	fryingpan         : 0x0F00EF,  // frying_pan
+	musicnoteplus     : 0x0F00F1,  // music_note_plus
+	files             : 0x0F00F2,  // files
+	arrowupdown       : 0x0F00F4,  // arrow_updown
+	brightness        : 0x0F00F9,  // brightness
+	download          : 0x0F00FA,  // download
+	musicnoteplusminus: 0x0F00FD,  // music_note_plus_minus
+	font              : 0x0F00FE,  // font
+	musicon           : 0x0F00FF,  // music_on
+	musicoff          : 0x0F0100   // music_off
 };
