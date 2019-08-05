@@ -272,9 +272,13 @@ class ScrollButtons extends Component {
 
 	onKeyDownPrev = (ev) => {
 		const
-			{focusableScrollButtons} = this.props,
+			{focusableScrollButtons, vertical} = this.props,
 			{nextButtonDisabled, prevButtonDisabled} = this.state,
 			{keyCode} = ev;
+
+		if (!vertical) {
+			return;
+		}
 
 		if (isPageDown(keyCode)) {
 			if (focusableScrollButtons) {
@@ -295,9 +299,13 @@ class ScrollButtons extends Component {
 
 	onKeyDownNext = (ev) => {
 		const
-			{focusableScrollButtons} = this.props,
+			{focusableScrollButtons, vertical} = this.props,
 			{nextButtonDisabled, prevButtonDisabled} = this.state,
 			{keyCode} = ev;
+
+		if (!vertical) {
+			return;
+		}
 
 		if (isPageUp(keyCode)) {
 			if (focusableScrollButtons) {

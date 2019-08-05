@@ -16,15 +16,22 @@ const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBas
 
 const
 	itemStyle = {
-		borderBottom: ri.unit(3, 'rem') + ' solid #202328',
 		boxSizing: 'border-box',
 		display: 'flex'
 	},
+	borderStyle = ri.unit(3, 'rem') + ' solid #202328',
 	items = [],
 	defaultDataSize = 1000,
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderItem = (ItemComponent, size, onClick) => ({index, ...rest}) => {
-		const style = {height: size + 'px', ...itemStyle};
+	renderItem = (ItemComponent, size, vertical, onClick) => ({index, ...rest}) => {
+		const style = {
+			...(
+				vertical ?
+					{borderBottom: borderStyle, height: size + 'px'} :
+					{borderRight: borderStyle, height: '100%', width: size + 'px', writingMode: 'vertical-lr'}
+			),
+			...itemStyle
+		};
 		return (
 			<ItemComponent index={index} style={style} onClick={onClick} {...rest}>
 				{items[index].item}
@@ -109,7 +116,7 @@ const InPanels = ({className, title, ...rest}) => {
 				<VirtualList
 					id="spotlight-list"
 					// eslint-disable-next-line enact/prop-types
-					itemRenderer={renderItem(Item, rest.itemSize, handleSelectItem)}
+					itemRenderer={renderItem(Item, rest.itemSize, true, handleSelectItem)}
 					spotlightId="virtual-list"
 					{...rest}
 				/>
@@ -124,13 +131,33 @@ const InPanels = ({className, title, ...rest}) => {
 
 storiesOf('VirtualList', module)
 	.add(
+		'horizontal scroll',
+		() => {
+			return (
+				<VirtualList
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+					direction="horizontal"
+					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
+					itemRenderer={renderItem(Item, ri.scale(number('itemSize', Config, 72)), false)}
+					itemSize={ri.scale(number('itemSize', Config, 72))}
+					onKeyDown={action('onKeyDown')}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
+					spacing={ri.scale(number('spacing', Config, 0))}
+					verticalScrollbar={select('verticalScrollbar', ['auto', 'hidden', 'visible'], Config, 'auto')}
+				/>
+			);
+		},
+		{propTables: [Config]}
+	)
+	.add(
 		'with more items',
 		() => {
 			return (
 				<VirtualList
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
-					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)))}
+					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)), true)}
 					itemSize={ri.scale(number('itemSize', Config, 72))}
 					onKeyDown={action('onKeyDown')}
 					onScrollStart={action('onScrollStart')}
