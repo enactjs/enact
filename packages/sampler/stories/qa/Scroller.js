@@ -180,7 +180,7 @@ storiesOf('Scroller', module)
 		)
 	)
 	.add(
-		'Both scroll',
+		'With Spottable Components',
 		() => (
 			<Scroller
 				direction={select('direction', prop.direction, Scroller, 'both')}
