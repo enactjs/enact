@@ -243,22 +243,21 @@ class ScrollButtons extends Component {
 			isRightMovement = !rtl && direction === 'right' || rtl && direction === 'left',
 			isUp = direction === 'up',
 			isNextButton = target === this.nextButtonRef.current,
-			isPrevButton = target === this.prevButtonRef.current;
+			isPrevButton = target === this.prevButtonRef.current,
+			fromNextToPrev = vertical ? isUp : isLeftMovement,
+			fromPrevToNext = vertical ? isDown : isRightMovement,
+			isTowardOppositeButton = isNextButton && fromNextToPrev || isPrevButton && fromPrevToNext;
 
 		// We don't need to navigate manually if `focusableScrollButtons` is `false`
 		if (focusableScrollButtons) {
-			const
-				fromNextToPrev = vertical ? isUp : isLeftMovement,
-				fromPrevToNext = vertical ? isDown : isRightMovement;
-
 			// manually focus the opposite scroll button when 5way pressed
-			if (fromNextToPrev && isNextButton || fromPrevToNext && isPrevButton) {
+			if (isTowardOppositeButton) {
 				this.focusOnOppositeScrollButton(ev, direction);
 			}
 		} else {
-			// If it is vertical `Scrollable`, move focus to the left for ltr or to the right for rtl
-			// If is is horizontal `Scrollable`, move focus to the up
 			const
+				// If it is vertical `Scrollable`, move focus to the left for ltr or to the right for rtl
+				// If is is horizontal `Scrollable`, move focus to the up
 				directionToContent = !vertical && 'up' || rtl && 'right' || 'left',
 				isDirectionToLeave =
 					vertical && isRightMovement ||
@@ -268,19 +267,21 @@ class ScrollButtons extends Component {
 					!vertical && isPrevButton && isLeftMovement ||
 					!vertical && isNextButton && isRightMovement;
 
-			preventDefault(ev);
-			if (!isDirectionToLeave || !Spotlight.move(direction)) {
-				if (Spotlight.getPointerMode()) {
-					// When changing from "pointer" mode to "5way key" mode,
-					// a pointer is hidden and a last focused item get focused after 30ms.
-					// To make sure the content in `VirtualList` or `Scroller` to be focused after that, we used 50ms.
-					setTimeout(() => {
-						if (Spotlight.getCurrent() === target) {
-							Spotlight.move(directionToContent);
-						}
-					}, 50);
-				} else if (Spotlight.getCurrent() === target) {
-					Spotlight.move(directionToContent);
+			if (!isTowardOppositeButton) {
+				preventDefault(ev);
+				if (!isDirectionToLeave || !Spotlight.move(direction)) {
+					if (Spotlight.getPointerMode()) {
+						// When changing from "pointer" mode to "5way key" mode,
+						// a pointer is hidden and a last focused item get focused after 30ms.
+						// To make sure the content in `VirtualList` or `Scroller` to be focused after that, we used 50ms.
+						setTimeout(() => {
+							if (Spotlight.getCurrent() === target) {
+								Spotlight.move(directionToContent);
+							}
+						}, 50);
+					} else if (Spotlight.getCurrent() === target) {
+						Spotlight.move(directionToContent);
+					}
 				}
 			}
 		}
