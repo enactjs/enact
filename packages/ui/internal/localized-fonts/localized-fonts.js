@@ -66,7 +66,7 @@ const buildFontDefinitionCss = function (locale, buildOverrides) {
 	const
 		matchLang = locale.match(/\b([a-z]{2})\b/),
 		language = matchLang && matchLang[1],
-		matchReg = locale.match(/\b([A-Z]{2}|[0-9]{3})\b/),
+		matchReg = locale.match(/\b([A-Z]{2}|[0-9]{3}|[a-zA-Z]{4})\b/),
 		region = matchReg && matchReg[1];
 
 	let fontDefinitionCss = '';
