@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import React, {useState} from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {VirtualListNative} from '@enact/moonstone/VirtualList';
 
 import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
@@ -46,15 +45,6 @@ const updateDataSize = (dataSize) => {
 
 	return dataSize;
 };
-
-let items2 = [];
-for (let i = 0; i < 10; i++) {
-	const
-		count = ('00' + i).slice(-3),
-		text = `Item ${count}`;
-
-	items2.push({text});
-}
 
 updateDataSize(defaultDataSize);
 
@@ -132,44 +122,6 @@ const InPanels = ({className, title, ...rest}) => {
 	);
 };
 
-class VirtualListWithExtraItems extends React.PureComponent {
-	constructor (props) {
-		super(props);
-	}
-
-	renderItem = ({index, ...rest}) => {
-		const {text} = items2[index];
-
-		return (
-			<Item
-				{...rest}
-			>{text}</Item>
-		);
-	}
-
-	render () {
-		return (
-			<Panel>
-				<VirtualListNative
-					focusableScrollbar
-					itemRenderer={this.renderItem}
-					dataSize={10}
-					direction="vertical"
-					horizontalScrollbar="hidden"
-					verticalScrollbar="visible"
-					itemSize={60}
-					spacing={20}
-					style={{height: 400}}
-				/>
-				<Item>extra item1</Item>
-				<Item>extra item2</Item>
-				<Item>extra item3</Item>
-			</Panel>
-		);
-	}
-}
-
-
 storiesOf('VirtualList', module)
 	.add(
 		'with more items',
@@ -208,10 +160,4 @@ storiesOf('VirtualList', module)
 				/>
 			);
 		}
-	)
-	.add(
-		'with extra items',
-		() => (
-			<VirtualListWithExtraItems />
-		)
 	);
