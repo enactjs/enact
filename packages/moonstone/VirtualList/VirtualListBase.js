@@ -404,19 +404,6 @@ const VirtualListBaseFactory = (type) => {
 			return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
 		}
 
-		getScrollButtons = () => {
-			const {spotlightId} = this.props;
-			const {containerRef: {current}} = this.uiRefCurrent;
-
-			return [...document.querySelectorAll(`[data-spotlight-id="${spotlightId}"] ${spottableSelector}`)]
-				.reduce((result, item, index, spottables) => {
-					if (!current.contains(item)) {
-						result[index === spottables.length - 1 ? 'last' : 'first'] = item;
-					}
-					return result;
-				}, {});
-		}
-
 		/**
 		 * Handle `onKeyDown` event
 		 */
@@ -544,21 +531,7 @@ const VirtualListBaseFactory = (type) => {
 
 						}
 					} else {
-						const {first, last} = this.getScrollButtons();
-						const isLastScrollButton = target === last;
-
-						if (
-							directions.right && repeat ||
-							directions.left && Spotlight.move(direction) ||
-							(directions.up && !isLastScrollButton || directions.down && isLastScrollButton) && repeat ||
-							directions.down && !isLastScrollButton && (focusableScrollbar && Spotlight.focus(last) || Spotlight.move(direction)) ||
-							directions.up && isLastScrollButton && (focusableScrollbar && Spotlight.focus(first) || Spotlight.move(direction))
-						) {
-							ev.preventDefault();
-							ev.stopPropagation();
-						} else if (!repeat) {
-							isLeaving = true;
-						}
+						isLeaving = true;
 					}
 
 					if (isLeaving) {
