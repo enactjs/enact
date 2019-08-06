@@ -7,28 +7,6 @@
 @import "~@enact/ui/styles/mixins.less";
 @import "./variables.less";
 
-// /**
-//  * Add or override disabled rules that persists through
-//  * Moonstone and Moonstone-light high contrast modes
-//  *
-//  */
-.moon-disabled(@rules) {
-	.disabled({
-		@rules();
-	});
-
-	:global(.enact-a11y-high-contrast) &:global(.moonstone.highContrast) {
-		.disabled({
-			@rules();
-		});
-	}
-	:global(.enact-a11y-high-contrast) &:global(.moonstone-light.highContrast) {
-		.disabled({
-			@rules();
-		});
-	}
-}
-
 .moon-taparea(@element-size) when (@moon-button-small-tap-area-height > @element-size) {
 	// Take the size of the minimum tappable area, and subtract the element's current size.
 	@_tap-offset: -((@moon-button-small-tap-area-height - @element-size) / 2);
