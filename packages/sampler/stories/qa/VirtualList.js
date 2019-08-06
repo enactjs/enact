@@ -1,6 +1,7 @@
 import Item from '@enact/moonstone/Item';
-import SwitchItem from '@enact/moonstone/SwitchItem';
 import {ActivityPanels, Panel, Header} from '@enact/moonstone/Panels';
+import Scroller from '@enact/moonstone/Scroller';
+import SwitchItem from '@enact/moonstone/SwitchItem';
 import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
@@ -19,9 +20,17 @@ const
 		boxSizing: 'border-box',
 		display: 'flex'
 	},
+	listStyle = {
+		height: '200px'
+	},
 	borderStyle = ri.unit(3, 'rem') + ' solid #202328',
 	items = [],
 	defaultDataSize = 1000,
+	wrapOption = {
+		'false': false,
+		'true': true,
+		'&quot;noAnimation&quot;': 'noAnimation'
+	},
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (ItemComponent, size, vertical, onClick) => ({index, ...rest}) => {
 		const style = {
@@ -131,21 +140,31 @@ const InPanels = ({className, title, ...rest}) => {
 
 storiesOf('VirtualList', module)
 	.add(
-		'horizontal scroll',
+		'horizontal scroll in Scroller',
 		() => {
+			const listProps = {
+				dataSize: updateDataSize(number('dataSize', Config, defaultDataSize)),
+				direction: 'horizontal',
+				focusableScrollbar: boolean('focusableScrollbar', Config, false),
+				horizontalScrollbar: select('horizontalScrollbar', ['auto', 'hidden', 'visible'], Config, 'auto'),
+				itemRenderer: renderItem(Item, ri.scale(number('itemSize', Config, 72)), false),
+				itemSize: ri.scale(number('itemSize', Config, 72)),
+				noScrollByWheel: boolean('noScrollByWheel', Config, false),
+				onKeyDown: action('onKeyDown'),
+				onScrollStart: action('onScrollStart'),
+				onScrollStop: action('onScrollStop'),
+				spacing: ri.scale(number('spacing', Config, 0)),
+				style: listStyle,
+				verticalScrollbar: select('verticalScrollbar', ['auto', 'hidden', 'visible'], Config, 'auto'),
+				wrap: wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]
+			};
+
 			return (
-				<VirtualList
-					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
-					direction="horizontal"
-					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
-					itemRenderer={renderItem(Item, ri.scale(number('itemSize', Config, 72)), false)}
-					itemSize={ri.scale(number('itemSize', Config, 72))}
-					onKeyDown={action('onKeyDown')}
-					onScrollStart={action('onScrollStart')}
-					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', Config, 0))}
-					verticalScrollbar={select('verticalScrollbar', ['auto', 'hidden', 'visible'], Config, 'auto')}
-				/>
+				<Scroller >
+					<VirtualList {...listProps} key="1" />
+					<VirtualList {...listProps} key="2" />
+					<VirtualList {...listProps} key="3" />
+				</Scroller>
 			);
 		},
 		{propTables: [Config]}

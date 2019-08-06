@@ -277,6 +277,7 @@ class ScrollButtons extends Component {
 			{keyCode} = ev;
 
 		if (!vertical) {
+			ev.preventDefault();
 			return;
 		}
 
@@ -304,6 +305,7 @@ class ScrollButtons extends Component {
 			{keyCode} = ev;
 
 		if (!vertical) {
+			ev.preventDefault();
 			return;
 		}
 
