@@ -1,5 +1,6 @@
 import Icon, {IconBase} from '@enact/moonstone/Icon';
 import Heading from '@enact/moonstone/Heading';
+import Scroller from '@enact/moonstone/Scroller';
 import UiIcon from '@enact/ui/Icon';
 import iconNames from './icons';
 import React from 'react';
@@ -30,7 +31,7 @@ storiesOf('Moonstone', module)
 				default: children = text('custom icon', Config);
 			}
 			return (
-				<div>
+				<Scroller style={{height: '100%'}}>
 					<Icon flip={flip} size={size}>
 						{children}
 					</Icon>
@@ -38,7 +39,7 @@ storiesOf('Moonstone', module)
 					<br />
 					<Heading showLine>All Icons</Heading>
 					{iconNames.map((icon, index) => <Icon key={index} flip={flip} size={size} title={icon}>{icon}</Icon>)}
-				</div>
+				</Scroller>
 			);
 		},
 		{
