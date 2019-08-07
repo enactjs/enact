@@ -291,7 +291,8 @@ class ScrollButtons extends Component {
 					preventDefault(ev);
 					this.onClickNext(ev);
 				}
-			} else if (!prevButtonDisabled) {
+			} else {
+				if (!prevButtonDisabled) {
 					preventDefault(ev);
 					this.onClickPrev(ev);
 				}
@@ -320,7 +321,8 @@ class ScrollButtons extends Component {
 					preventDefault(ev);
 					this.onClickPrev(ev);
 				}
-			} else if (!nextButtonDisabled) {
+			} else {
+				if (!nextButtonDisabled) {
 					preventDefault(ev);
 					this.onClickNext(ev);
 				}
