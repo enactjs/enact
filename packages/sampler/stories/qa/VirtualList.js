@@ -4,6 +4,7 @@ import Scroller from '@enact/moonstone/Scroller';
 import SwitchItem from '@enact/moonstone/SwitchItem';
 import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
+import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import React, {useState} from 'react';
@@ -13,7 +14,7 @@ import {action} from '@storybook/addon-actions';
 import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBase, UiVirtualListBase);
+const Config = mergeComponentMetadata('VirtualList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
 
 const
 	itemStyle = {
@@ -175,14 +176,17 @@ storiesOf('VirtualList', module)
 			return (
 				<VirtualList
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
-					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
+					focusableScrollbar={boolean('focusableScrollbar', Config)}
 					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)), true)}
 					itemSize={ri.scale(number('itemSize', Config, 72))}
+					noScrollByWheel={boolean('noScrollByWheel', Config)}
 					onKeyDown={action('onKeyDown')}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', Config, 0))}
-					verticalScrollbar={select('verticalScrollbar', ['auto', 'hidden', 'visible'], Config, 'auto')}
+					spacing={ri.scale(number('spacing', Config))}
+					spotlightDisabled={boolean('spotlightDisabled', Config, false)}
+					verticalScrollbar={select('verticalScrollbar', ['auto', 'hidden', 'visible'], Config)}
+					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 				/>
 			);
 		},
@@ -197,12 +201,16 @@ storiesOf('VirtualList', module)
 				<InPanels
 					title={title}
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
-					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
+					focusableScrollbar={boolean('focusableScrollbar', Config)}
 					itemSize={ri.scale(number('itemSize', Config, 72))}
+					noScrollByWheel={boolean('noScrollByWheel', Config)}
+					onKeyDown={action('onKeyDown')}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', Config, 0))}
-					verticalScrollbar={select('verticalScrollbar', ['auto', 'hidden', 'visible'], Config, 'auto')}
+					spacing={ri.scale(number('spacing', Config))}
+					spotlightDisabled={boolean('spotlightDisabled', Config, false)}
+					verticalScrollbar={select('verticalScrollbar', ['auto', 'hidden', 'visible'], Config)}
+					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 				/>
 			);
 		}
