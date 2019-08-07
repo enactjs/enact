@@ -12,7 +12,6 @@
 
 import kind from '@enact/core/kind';
 import {gridListItemSizeShape} from '@enact/ui/VirtualList';
-import warning from 'warning';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -41,16 +40,27 @@ const VirtualList = kind({
 		 * <VirtualList itemSize={ri.scale(72)} />
 		 * ```
 		 *
-		 * @type {Number}
+		 * @type {Number||Object}
 		 * @required
 		 * @public
 		 */
-		itemSize: PropTypes.number.isRequired
+		itemSize: PropTypes.oneOfType([PropTypes.number, PropTypes.object]).isRequired
 	},
 
-	render: (props) => (
-		<ScrollableVirtualList {...props} />
-	)
+	render: ({itemSize, ...rest}) => {
+		const props = itemSize && itemSize.minSize ?
+			{
+				type: 'NewVirtualList',
+				itemSize: itemSize.minSize,
+				variableGridSizes: itemSize.size
+			} :
+			{
+				type: 'VirtualList',
+				itemSize
+			};
+
+		return (<ScrollableVirtualList {...rest} {...props} />);
+	}
 });
 
 /**
@@ -93,64 +103,6 @@ const VirtualGridList = kind({
 });
 
 /**
- * A Moonstone-styled scrollable and spottable virtual list component with items having various height.
- *
- * @class NewVirtualList
- * @memberof moonstone/VirtualList
- * @extends moonstone/VirtualList.VirtualListBase
- * @ui
- * @private
- */
-const NewVirtualList = kind({
-	name: 'NewVirtualList',
-
-	propTypes: /** @lends moonstone/VirtualList.NewVirtualList.prototype */ {
-		/**
-		 * Size of an item for the VirtualList; valid value is a number.
-		 * A horizontal NewVirtualList is not supported.
-		 *
-		 * Usage:
-		 * ```
-		 * <NewVirtualList itemSize={ri.scale(72)} />
-		 * ```
-		 *
-		 * @type {Number}
-		 * @required
-		 * @public
-		 */
-		itemSize: PropTypes.any.isRequired,
-
-		/**
-		 * Callback method of scrollTo.
-		 * But `'NewVirtualList'` do not support it.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		cbScrollTo: PropTypes.any,
-
-		/**
-		 * The layout direction of the list.
-		 * But `'NewVirtualList'` do not support it.
-		 *
-		 * @type {String}
-		 * @default 'vertical'
-		 * @public
-		 */
-		direction: PropTypes.any
-	},
-
-	render: ({cbScrollTo, itemSize, ...rest}) => {
-		warning(
-			!cbScrollTo,
-			'NewVirtualListNative does not support `cbScrollTo` prop'
-		);
-
-		return <ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="NewVirtualList" variableGridSizes={itemSize.size} />;
-	}
-});
-
-/**
  * A Moonstone-styled scrollable and spottable virtual native list component.
  * For smooth native scrolling, web engine with below Chromium 61, should be launched
  * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
@@ -176,16 +128,27 @@ const VirtualListNative = kind({
 		 * <VirtualListNative itemSize={ri.scale(72)} />
 		 * ```
 		 *
-		 * @type {Number}
+		 * @type {Number|Object}
 		 * @required
 		 * @public
 		 */
-		itemSize: PropTypes.number.isRequired
+		itemSize: PropTypes.oneOfType([PropTypes.number, PropTypes.object]).isRequired
 	},
 
-	render: (props) => (
-		<ScrollableVirtualListNative {...props} />
-	)
+	render: ({itemSize, ...rest}) => {
+		const props = itemSize && itemSize.minSize ?
+			{
+				type: 'NewVirtualList',
+				itemSize: itemSize.minSize,
+				variableGridSizes: itemSize.size
+			} :
+			{
+				type: 'VirtualList',
+				itemSize
+			};
+
+		return (<ScrollableVirtualListNative {...rest} {...props} />);
+	}
 });
 
 /**
@@ -230,68 +193,8 @@ const VirtualGridListNative = kind({
 	)
 });
 
-/**
- * A Moonstone-styled scrollable and spottable virtual native list component with items having various height.
- *
- * @class NewVirtualListNative
- * @memberof moonstone/VirtualList
- * @extends moonstone/VirtualList.VirtualListBaseNative
- * @ui
- * @private
- */
-const NewVirtualListNative = kind({
-	name: 'NewVirtualListNative',
-
-	propTypes: /** @lends moonstone/VirtualList.NewVirtualListNative.prototype */ {
-		/**
-		 * Size of an item for the VirtualList; valid value is a number.
-		 * A horizontal NewVirtualList is not supported.
-		 *
-		 * Usage:
-		 * ```
-		 * <NewVirtualList itemSize={ri.scale(72)} />
-		 * ```
-		 *
-		 * @type {Number}
-		 * @required
-		 * @public
-		 */
-		itemSize: PropTypes.any.isRequired,
-
-		/**
-		 * Callback method of scrollTo.
-		 * But `'NewVirtualListNative'` do not support it.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		cbScrollTo: PropTypes.any,
-
-		/**
-		 * The layout direction of the list.
-		 * But `'NewVirtualListNative'` do not support it.
-		 *
-		 * @type {String}
-		 * @default 'vertical'
-		 * @public
-		 */
-		direction: PropTypes.any
-	},
-
-	render: ({cbScrollTo, itemSize, ...rest}) => {
-		warning(
-			!cbScrollTo,
-			'NewVirtualListNative does not support `cbScrollTo` prop'
-		);
-
-		return <ScrollableVirtualListNative {...rest} itemSize={itemSize.minSize} type="NewVirtualList" variableGridSizes={itemSize.size} />;
-	}
-});
-
 export default VirtualList;
 export {
-	NewVirtualList,
-	NewVirtualListNative,
 	VirtualGridList,
 	VirtualGridListNative,
 	VirtualList,
