@@ -361,17 +361,19 @@ class ScrollableBase extends Component {
 		stop: PropTypes.func,
 
 		/**
-		 * Type of the list. If you want to use variable item height, you need to define it to `'NewVirtualList'`.
+		 * Type of the list.
+		 * If you want to use variable item size, you need to define it to `'VariableVirtualList'`.
 		 *
 		 * Valid values are:
 		 * * `'VirtualList'`, and
-		 * * `'NewVirtualList'`.
+		 * * `'VirtualGridList'`, and
+		 * * `'VariableVirtualList'`.
 		 *
 		 * @type {String}
 		 * @default 'VirtualList'
 		 * @private
 		 */
-		type: PropTypes.oneOf(['VirtualList', 'NewVirtualList']),
+		type: PropTypes.oneOf(['VirtualList', 'VirtualGridList', 'VariableVirtualList']),
 
 		/**
 		 * Specifies how to show vertical scrollbar.
@@ -434,10 +436,10 @@ class ScrollableBase extends Component {
 
 		this.resizeRegistry = Registry.create(this.handleResize.bind(this));
 
-		if (props.type === 'NewVirtualList') {
+		if (props.type === 'VariableVirtualList') {
 			warning(
 				!props.cbScrollTo,
-				'NewVirtualListNative does not support `cbScrollTo` prop'
+				'VirtualListNative with `minSize` in `itemSize` prop does not support `cbScrollTo` prop'
 			);
 		} else {
 			props.cbScrollTo(this.scrollTo);

@@ -170,17 +170,19 @@ const VirtualListBaseFactory = (type) => {
 			spotlightId: PropTypes.string,
 
 			/**
-			 * Type of the list. If you want to use variable item height, you need to define it to `'NewVirtualList'`.
+			 * Type of the list.
+			 * If you want to use variable item size, you need to define it to `'VariableVirtualList'`.
 			 *
 			 * Valid values are:
-			 * * `'VirtualList'`, and
-			 * * `'NewVirtualList'`.
+			 * * `'VirtualList'`,
+			 * * `'VirtualGridList'`, and
+			 * * `'VariableVirtualList'`.
 			 *
 			 * @type {String}
 			 * @default 'VirtualList'
 			 * @private
 			 */
-			type: PropTypes.oneOf(['VirtualList', 'NewVirtualList']),
+			type: PropTypes.oneOf(['VirtualList', 'VirtualGridList', 'VariableVirtualList']),
 
 			/**
 			 * When it's `true` and the spotlight focus cannot move to the given direction anymore by 5-way keys,
@@ -451,7 +453,7 @@ const VirtualListBaseFactory = (type) => {
 				const nextRow = (nextIndex - nextColumn) % dataSize / dimensionToExtent;
 				let isNextItemInView = false;
 
-				if (this.props.type === 'NewVirtualList') {
+				if (this.props.type === 'VariableVirtualList') {
 					const container = this.uiRefCurrent.containerRef.current;
 					const node = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${nextIndex}']`);
 					if (container && node) {

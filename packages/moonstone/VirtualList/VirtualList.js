@@ -52,7 +52,7 @@ const VirtualList = kind({
 	render: ({itemSize, ...rest}) => {
 		const props = itemSize && itemSize.minSize ?
 			{
-				type: 'NewVirtualList',
+				type: 'VariableVirtualList',
 				itemSize: itemSize.minSize,
 				variableGridSizes: itemSize.size
 			} :
@@ -100,7 +100,7 @@ const VirtualGridList = kind({
 	},
 
 	render: (props) => (
-		<ScrollableVirtualList {...props} />
+		<ScrollableVirtualList {...props} type="VirtualGridList" />
 	)
 });
 
@@ -142,7 +142,7 @@ const VirtualListNative = kind({
 	render: ({itemSize, ...rest}) => {
 		const props = itemSize && itemSize.minSize ?
 			{
-				type: 'NewVirtualList',
+				type: 'VariableVirtualList',
 				itemSize: itemSize.minSize,
 				variableGridSizes: itemSize.size
 			} :
@@ -193,7 +193,7 @@ const VirtualGridListNative = kind({
 	},
 
 	render: (props) => (
-		<ScrollableVirtualListNative {...props} />
+		<ScrollableVirtualListNative {...props} type="VirtualGridList" />
 	)
 });
 
