@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone` disabled focus appearance to match the latest designs
 - `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableList`, and `moonstone/TimePicker` disabled opacity in high contrast mode
 - `moonstone/Picker` to avoid overlapping items on render
 - `moonstone/Scroller` and other scrolling components to properly scroll via remote page up/down buttons when nested within another scrolling component

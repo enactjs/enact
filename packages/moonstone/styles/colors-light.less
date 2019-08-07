@@ -30,7 +30,7 @@
 
 // Disabled Opacity
 // ---------------------------------------
-@moon-disabled-opacity: 0.3;
+@moon-disabled-opacity: 0.4;
 @moon-disabled-translucent-opacity: 0.4;
 
 // Spotlight and State
@@ -143,18 +143,19 @@
 
 // Input
 // ---------------------------------------
-@moon-input-text-color:               @moon-white;
 @moon-input-border-color:             #eaeaea;
 @moon-input-textarea-color:           @moon-dark-gray;
 @moon-input-placeholder-color:        @moon-white;
 @moon-input-placeholder-focus-color:  @moon-input-decorator-bg-color;
 @moon-input-placeholder-active-color: @moon-input-placeholder-focus-color;
 @moon-input-focus-text-color:         @moon-dark-gray;
+@moon-input-disabled-focus-text-color: fade(@moon-input-text-color, @moon-disabled-opacity-percentage);
 @moon-input-disabled-text-color:      inherit;
 @moon-input-decorator-bg-color:       #aaa;
 @moon-input-decorator-border-color:   @moon-light-gray;
 @moon-input-decorator-focus-bg-color: @moon-white;
 @moon-input-decorator-active-bg-color: @moon-input-decorator-focus-bg-color;
+@moon-input-decorator-disabled-focus-bg-color: fade(@moon-input-decorator-bg-color, @moon-disabled-opacity-percentage);
 @moon-input-border-focus-border-color: @moon-spotlight-border-color;
 @moon-input-border-active-border-color: transparent;
 @moon-input-border-active-shadow: 0 0 0 3px @moon-input-border-focus-border-color;
