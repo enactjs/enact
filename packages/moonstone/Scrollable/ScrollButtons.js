@@ -245,13 +245,12 @@ class ScrollButtons extends Component {
 			isNextButton = target === this.nextButtonRef.current,
 			isPrevButton = target === this.prevButtonRef.current,
 			fromNextToPrev = vertical ? isUp : isLeftMovement,
-			fromPrevToNext = vertical ? isDown : isRightMovement,
-			isTowardOppositeButton = isNextButton && fromNextToPrev || isPrevButton && fromPrevToNext;
+			fromPrevToNext = vertical ? isDown : isRightMovement;
 
 		// We don't need to navigate manually if `focusableScrollButtons` is `false`
 		if (focusableScrollButtons) {
 			// manually focus the opposite scroll button when 5way pressed
-			if (isTowardOppositeButton) {
+			if (isNextButton && fromNextToPrev || isPrevButton && fromPrevToNext) {
 				this.focusOnOppositeScrollButton(ev, direction);
 			}
 		} else {
@@ -263,9 +262,9 @@ class ScrollButtons extends Component {
 					vertical && (isRightMovement || isPrevButton && isUp || isNextButton && isDown) ||
 					!vertical && (isDown || isPrevButton && isLeftMovement || isNextButton && isRightMovement);
 
-			if (!isTowardOppositeButton) {
+			if (isDirectionToLeave) {
 				preventDefault(ev);
-				if (!isDirectionToLeave || !Spotlight.move(direction)) {
+				if (!Spotlight.move(direction)) {
 					if (Spotlight.getPointerMode()) {
 						// When changing from "pointer" mode to "5way key" mode,
 						// a pointer is hidden and a last focused item get focused after 30ms.
