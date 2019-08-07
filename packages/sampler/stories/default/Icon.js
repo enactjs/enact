@@ -16,6 +16,7 @@ import logo from '../../images/icon-enact-logo.svg';
 
 Icon.displayName = 'Icon';
 const Config = mergeComponentMetadata('Icon', UiIcon, IconBase, Icon);
+const sortedIconNames = iconNames.sort();
 
 storiesOf('Moonstone', module)
 	.add(
@@ -26,7 +27,7 @@ storiesOf('Moonstone', module)
 			const iconType = select('icon type', ['glyph', 'url src', 'custom'], Config, 'glyph');
 			let children;
 			switch (iconType) {
-				case 'glyph': children = select('icon', iconNames, Config, 'plus'); break;
+				case 'glyph': children = select('icon', sortedIconNames, Config, 'plus'); break;
 				case 'url src': children = select('src', [docs, factory, logo], Config, logo); break;
 				default: children = text('custom icon', Config);
 			}
@@ -38,7 +39,7 @@ storiesOf('Moonstone', module)
 					<br />
 					<br />
 					<Heading showLine>All Icons</Heading>
-					{iconNames.map((icon, index) => <Icon key={index} flip={flip} size={size} title={icon}>{icon}</Icon>)}
+					{sortedIconNames.map((icon, index) => <Icon key={index} flip={flip} size={size} title={icon}>{icon}</Icon>)}
 				</Scroller>
 			);
 		},

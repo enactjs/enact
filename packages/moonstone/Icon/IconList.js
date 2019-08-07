@@ -77,7 +77,7 @@ export default {
 	view360           : 0x0F00A9,  // view_360
 	view360off        : 0x0F00AA,  // view_360_off
 	info              : 0x0F00AB,  // info
-	cycle             : 0x0F00B1,  // cycle
+	repeattrack       : 0x0F00B1,  // repeat_track
 	bluetoothoff      : 0x0F00B4,  // bluetooth_off
 	verticalellipsis  : 0x0F00B5,  // vertical_ellipsis
 	arrowcurveright   : 0x0F00B6,  // arrow_curve_right
@@ -85,7 +85,7 @@ export default {
 	home              : 0x0F00BB,  // home
 	warning           : 0x0F00BC,  // warning
 	scroll            : 0x0F00BD,  // scroll
-	denselistdrawer   : 0x0F00BE,  // list_big_action
+	densedrawer       : 0x0F00BE,  // dense_drawer
 	starminus         : 0x0F00BF,  // star_minus
 	liverecord        : 0x0F00C1,  // live_record
 	liveplay          : 0x0F00C2,  // live_play
@@ -98,19 +98,19 @@ export default {
 	question          : 0x0F00CF,  // question_mark
 	questionreversed  : 0x0F00D0,  // reversed_question_mark
 	s                 : 0x0F00D1,  // s
-	cycleone          : 0x0F00DF,  // cycle_one
-	cyclea            : 0x0F00E0,  // cycle_a
-	cyclex            : 0x0F00E1,  // cycle_x
+	repeatone         : 0x0F00DF,  // repeat_one
+	repeatall         : 0x0F00E0,  // repeat_all
+	repeatnone        : 0x0F00E1,  // repeat_none
 	speakers          : 0x0F00E5,  // speakers
 	koreansubtitles   : 0x0F00E8,  // korean_subtitles
 	chinesesubtitles  : 0x0F00E9,  // chinese_subtitles
-	fryingpan         : 0x0F00EF,  // frying_pan
-	musicnoteplus     : 0x0F00F1,  // music_note_plus
+	searchfilled      : 0x0F00EF,  // search_filled
+	playlistadd       : 0x0F00F1,  // playlist_add
 	files             : 0x0F00F2,  // files
 	arrowupdown       : 0x0F00F4,  // arrow_updown
 	brightness        : 0x0F00F9,  // brightness
 	download          : 0x0F00FA,  // download
-	musicnoteplusminus: 0x0F00FD,  // music_note_plus_minus
+	playlistedit      : 0x0F00FD,  // playlist_edit
 	font              : 0x0F00FE,  // font
 	musicon           : 0x0F00FF,  // music_on
 	musicoff          : 0x0F0100   // music_off
