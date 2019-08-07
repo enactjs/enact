@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- additional icons to `moonstone/Icon`
+- `moonstone/Icon.icons` entries for new icons
 
 ### Fixed
 
