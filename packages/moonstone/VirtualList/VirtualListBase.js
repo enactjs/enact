@@ -2,7 +2,7 @@ import {is} from '@enact/core/keymap';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import Accelerator from '@enact/spotlight/Accelerator';
 import Pause from '@enact/spotlight/Pause';
-import Spottable from '@enact/spotlight/Spottable';
+import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
@@ -28,12 +28,7 @@ const
 	// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
 	getNumberValue = (index) => index | 0,
 	nop = () => {},
-	moveFocusStraight = ({direction, id}) => {
-		Spotlight.set(id, {straightOnly: true});
-		const moved = Spotlight.move(direction);
-		Spotlight.set(id, {straightOnly: false});
-		return moved;
-	};
+	spottableSelector = `.${spottableClass}`;
 
 /**
  * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} and
@@ -423,6 +418,19 @@ const VirtualListBaseFactory = (type) => {
 			return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
 		}
 
+		getScrollButtons = () => {
+			const {spotlightId} = this.props;
+			const {containerRef: {current}} = this.uiRefCurrent;
+
+			return [...document.querySelectorAll(`[data-spotlight-id="${spotlightId}"] ${spottableSelector}`)]
+				.reduce((result, item, index, spottables) => {
+					if (!current.contains(item)) {
+						result[index === spottables.length - 1 ? 'last' : 'first'] = item;
+					}
+					return result;
+				}, {});
+		}
+
 		/**
 		 * Handle `onKeyDown` event
 		 */
@@ -474,7 +482,7 @@ const VirtualListBaseFactory = (type) => {
 					this.isWrappedBy5way = isWrapped;
 
 					if (isWrapped && (
-						this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${nextIndex}'].spottable`) == null
+						this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${nextIndex}']${spottableSelector}`) == null
 					)) {
 						if (wrap === true) {
 							this.pause.pause();
@@ -501,7 +509,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		onKeyDown = (ev) => {
-			const {currentTarget, keyCode, target} = ev;
+			const {keyCode, target} = ev;
 			const direction = getDirection(keyCode);
 
 			if (direction) {
@@ -511,7 +519,7 @@ const VirtualListBaseFactory = (type) => {
 					ev.stopPropagation();
 				} else {
 					const {repeat} = ev;
-					const {isHorizontalScrollbarVisible, isVerticalScrollbarVisible, spotlightId} = this.props;
+					const {focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, spotlightId} = this.props;
 					const {dimensionToExtent, isPrimaryDirectionVertical} = this.uiRefCurrent;
 					const targetIndex = target.dataset.index;
 					const isScrollButton = (
@@ -546,7 +554,7 @@ const VirtualListBaseFactory = (type) => {
 							ev.stopPropagation();
 							this.onAcceleratedKeyDown({isWrapped, keyCode, nextIndex, repeat, target});
 						} else {
-							const {dataSize, focusableScrollbar} = this.props;
+							const {dataSize} = this.props;
 							const column = index % dimensionToExtent;
 							const row = (index - column) % dataSize / dimensionToExtent;
 							isLeaving = directions.up && row === 0 ||
@@ -569,15 +577,22 @@ const VirtualListBaseFactory = (type) => {
 							}
 
 						}
-					} else if (
-						directions.right && repeat ||
-						directions.left && Spotlight.move(direction) ||
-						(directions.up || directions.down) && (repeat || moveFocusStraight({id: this.props.spotlightId, direction}) && currentTarget.contains(Spotlight.getCurrent()))
-					) {
-						ev.preventDefault();
-						ev.stopPropagation();
-					} else if (!repeat) {
-						isLeaving = true;
+					} else {
+						const {first, last} = this.getScrollButtons();
+						const isLastScrollButton = target === last;
+
+						if (
+							directions.right && repeat ||
+							directions.left && Spotlight.move(direction) ||
+							(directions.up && !isLastScrollButton || directions.down && isLastScrollButton) && repeat ||
+							directions.down && !isLastScrollButton && (focusableScrollbar && Spotlight.focus(last) || Spotlight.move(direction)) ||
+							directions.up && isLastScrollButton && (focusableScrollbar && Spotlight.focus(first) || Spotlight.move(direction))
+						) {
+							ev.preventDefault();
+							ev.stopPropagation();
+						} else if (!repeat) {
+							isLeaving = true;
+						}
 					}
 
 					if (isLeaving) {
@@ -614,7 +629,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		focusByIndex = (index) => {
-			const item = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${index}'].spottable`);
+			const item = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${index}']${spottableSelector}`);
 
 			if (!item && index >= 0 && index < this.props.dataSize) {
 				// Item is valid but since the the dom doesn't exist yet, we set the index to focus after the ongoing update

@@ -103,7 +103,7 @@
 							transform: translateY(~"calc(var(--infoComponentsOffset) * -1)") translateZ(0);
 						}
 
-						.moon-locale-non-latin({line-height: @moon-non-latin-header-text-line-height;});
+						.moon-locale-non-latin({line-height: @moon-non-latin-header-line-height;});
 					}
 
 					// Badges and title components
@@ -323,12 +323,6 @@
 						.centerComponents.more {
 							transform: translateX(100%);
 						}
-					}
-				}
-
-				:global(.enact-locale-right-to-left) & {
-					.moreButton {
-						transform: scaleX(-1);
 					}
 				}
 			}

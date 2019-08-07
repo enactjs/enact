@@ -114,7 +114,7 @@
 .moon-text-base(@font-size: @moon-body-font-size; @target: normal) {
 	.moon-font({
 		font-weight: @moon-non-latin-font-weight;
-		font-size: @moon-non-latin-sub-header-font-size;
+		font-size: @moon-non-latin-base-font-size;
 		line-height: @moon-non-latin-body-line-height;
 	}, @target);
 	font-weight: normal;
@@ -254,7 +254,7 @@
 .moon-header-text() {
 	.moon-font(@moon-header-font-family, @moon-non-latin-font-family, {
 		font-size: @moon-non-latin-header-font-size;
-		line-height: @moon-non-latin-header-text-line-height;
+		line-height: @moon-non-latin-header-line-height;
 	});
 	font-weight: @moon-header-font-weight;
 	font-size: @moon-header-font-size;
@@ -263,54 +263,33 @@
 	.font-kerning;
 }
 
-.moon-super-header-text() {
-	.moon-font(@moon-super-header-font-family, @moon-non-latin-font-family, {font-size: @moon-non-latin-super-header-font-size;});
-	font-size: @moon-super-header-font-size;
-	.font-kerning;
-}
-
-.moon-sub-header-text() {
-	.moon-text-base(@moon-sub-header-font-size);
-	font-weight: @moon-sub-header-font-weight;
-	font-size: @moon-sub-header-font-size;
-	font-style: @moon-sub-header-font-style;
-	letter-spacing: @moon-sub-header-letter-spacing;
+.moon-header-title-below-text() {
+	.moon-text-base(@moon-header-title-below-font-size);
+	font-weight: @moon-header-title-below-font-weight;
+	font-size: @moon-header-title-below-font-size;
+	font-style: @moon-header-title-below-font-style;
+	letter-spacing: @moon-header-title-below-letter-spacing;
+	line-height: @moon-header-standard-title-below-line-height;
 
 	.moon-locale-non-latin({
-		font-size: @moon-non-latin-sub-header-font-size;
+		font-size: @moon-non-latin-header-title-below-font-size;
+		line-height: @moon-non-latin-header-standard-title-below-line-height;
 	});
-
-	.moon-small-header & {
-		font-size: @moon-small-header-sub-header-font-size;
-
-		.moon-locale-non-latin({
-			font-size: @moon-non-latin-sub-header-font-size;
-		});
-	}
 }
 
-.moon-header-sub-title-below() {
-	.moon-font(@moon-sub-header-below-font-family);
-	font-weight: @moon-sub-header-below-font-weight;
-	font-size: @moon-sub-header-below-font-size;
-}
+.moon-header-sub-title-below-text() {
+	.moon-font(@moon-header-sub-title-below-font-family);
+	font-weight: @moon-header-sub-title-below-font-weight;
+	font-size: @moon-header-sub-title-below-font-size;
+	line-height: @moon-header-standard-sub-title-below-line-height;
 
-.moon-popup-header-text() {
-	.moon-font(@moon-popup-header-font-family, @moon-non-latin-font-family-bold, {
-		font-weight: @moon-non-latin-font-weight-bold;
-		font-size: @moon-non-latin-popup-header-font-size;
+	.moon-locale-non-latin({
+		line-height: @moon-non-latin-header-standard-sub-title-below-line-height;
 	});
-	font-weight: @moon-popup-header-font-weight;
-	font-style: @moon-popup-header-font-style;
-	font-size: @moon-popup-header-font-size;
-	line-height: @moon-popup-header-line-height;
-	letter-spacing: @moon-popup-header-letter-spacing;
-	.font-kerning;
 }
 
 .moon-dialog-title() {
-	.moon-popup-header-text();
-	line-height: @moon-small-header-line-height;
+	.moon-header-text();
 }
 
 .moon-dialog-title-below() {
@@ -373,38 +352,25 @@
 }
 
 .moon-large-button-text() {
-	.moon-font(@moon-button-font-family, @moon-non-latin-font-family-bold, {
-		font-weight: @moon-non-latin-font-weight-bold;
+	.moon-font(@moon-button-font-family, @moon-non-latin-button-font-family, {
 		font-size: @moon-non-latin-button-large-font-size;
+		font-style: @moon-non-latin-button-font-style;
+		font-weight: @moon-non-latin-button-large-font-weight;
 	});
-	font-weight: @moon-button-font-weight;
 	font-size: @moon-button-font-size;
+	font-style: @moon-button-font-style;
+	font-weight: @moon-button-font-weight;
 	.font-kerning;
 }
 
 .moon-small-button-text() {
-	.moon-font(@moon-button-font-family, @moon-non-latin-font-family-bold, {
-		font-weight: @moon-non-latin-font-weight-bold;
+	.moon-font(@moon-button-small-font-family, @moon-non-latin-button-font-family, {
 		font-size: @moon-non-latin-button-small-font-size;
+		font-style: @moon-non-latin-button-small-font-style;
+		font-weight: @moon-non-latin-button-small-font-weight;
 	});
-	font-weight: @moon-button-font-weight;
 	font-size: @moon-button-small-font-size;
+	font-style: @moon-button-small-font-style;
+	font-weight: @moon-button-small-font-weight;
 	.font-kerning;
-}
-
-// NOTE: Consider deprecation in 3.0.0
-.moon-divider-text() {
-	.moon-font(@moon-divider-font-family, @moon-non-latin-font-family-bold, {
-		font-weight: @moon-non-latin-font-weight-bold;
-		font-size: @moon-non-latin-divider-font-size;
-		font-style: normal;
-	});
-	font-size: @moon-divider-font-size;
-	font-weight: @moon-divider-font-weight;
-	font-style: @moon-divider-font-style;
-	letter-spacing: @moon-divider-letter-spacing;
-
-	:global(.enact-locale-non-italic) & {
-		font-style: normal;
-	}
 }

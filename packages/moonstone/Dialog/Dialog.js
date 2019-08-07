@@ -10,6 +10,7 @@ import kind from '@enact/core/kind';
 import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import React from 'react';
+import {Layout, Cell} from '@enact/ui/Layout';
 
 import IdProvider from '../internal/IdProvider';
 import {MarqueeDecorator} from '../Marquee';
@@ -18,6 +19,7 @@ import Popup from '../Popup';
 import componentCss from './Dialog.module.less';
 
 const MarqueeH1 = MarqueeDecorator('h1');
+const MarqueeH2 = MarqueeDecorator('h2');
 
 /**
  * A modal dialog component.
@@ -191,19 +193,19 @@ const DialogBase = kind({
 		return (
 			<Popup {...rest} aria-labelledby={`${id}_title ${id}_titleBelow ${id}_children ${id}_buttons`} css={css}>
 				<div className={css.titleWrapper}>
-					<div className={css.titleBlock}>
-						<MarqueeH1 marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title} id={`${id}_title`}>
+					<Layout align="start space-between">
+						<Cell component={MarqueeH1} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title} id={`${id}_title`}>
 							{title}
-						</MarqueeH1>
-						<h2 className={css.titleBelow} id={`${id}_titleBelow`}>
-							{titleBelow}
-						</h2>
-					</div>
-					<div className={css.buttons} id={`${id}_buttons`}>
-						{buttons}
-					</div>
+						</Cell>
+						<Cell className={css.buttons} id={`${id}_buttons`} shrink>
+							{buttons}
+						</Cell>
+					</Layout>
+					<MarqueeH2 className={css.titleBelow} id={`${id}_titleBelow`} marqueeOn="hover">
+						{titleBelow}
+					</MarqueeH2>
 				</div>
-				<div className={css.body} id={`${id}_children`}>
+				<div className={css.dialogBody} id={`${id}_children`}>
 					{children}
 				</div>
 			</Popup>

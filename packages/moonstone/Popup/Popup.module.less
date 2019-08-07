@@ -1,42 +1,39 @@
 // Popup.module.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
 
 .popup {
-	@padding-v: 24px;
-	@padding-h: @moon-spotlight-outset * 4;
-	pointer-events: auto;
+	// Local variables to make this easier to read
+	@popup-padding-top: (@moon-popup-padding-top - @moon-popup-body-margin-top);
+	@popup-padding-right: (@moon-popup-padding-right - @moon-popup-body-margin-right);
+	@popup-padding-bottom: (@moon-popup-padding-bottom - @moon-popup-body-margin-bottom);
+	@popup-padding-left: (@moon-popup-padding-left - @moon-popup-body-margin-left);
 
 	.moon-text-base();
-	padding: @padding-v @padding-h;
+	padding: @popup-padding-top @popup-padding-right @popup-padding-bottom @popup-padding-left;
+	.padding-start-end(@popup-padding-left, @popup-padding-right);
 	box-sizing: border-box;
-
-	.closeButton {
-		position: absolute;
-		right: @moon-spotlight-outset;
-		top: @moon-spotlight-outset;
-		margin: 0;
-	}
+	pointer-events: auto;
 
 	.body {
-		// border: 1px dashed cyan;		// helpful for debugging layout. Not for production.
+		margin: @moon-popup-body-margin-top @moon-popup-body-margin-right @moon-popup-body-margin-bottom @moon-popup-body-margin-left;
+		.margin-start-end(@moon-popup-body-margin-left, @moon-popup-body-margin-right);
 		.locale-japanese-line-break();
 	}
 
-	&.reserveClose {
-		.padding-start-end(@padding-h, @moon-icon-button-small-size + @moon-spotlight-outset);
-
-		.moon-custom-text({
-			.padding-start-end(@padding-h, @moon-icon-button-small-size-large + @moon-spotlight-outset, parent);
-		});
+	.closeContainer {
+		.margin-start-end(@moon-popup-closecontainer-separation, 0);
 	}
 
-	:global(.enact-locale-right-to-left) & {
-		.closeButton {
-			right: auto;
-			left: @moon-spotlight-outset;
+	.closeButton {
+		margin: 0;
+	}
+
+	&.reserveClose {
+		.body {
+			.margin-start-end(@moon-popup-body-margin-left, 0); // Remove the spacing on the body, since closeContainer handles this.
 		}
 	}
 

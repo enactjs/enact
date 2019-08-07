@@ -79,7 +79,7 @@ describe('Popup specs', () => {
 		);
 
 		const expected = true;
-		const actual = popup.find(`.${css.popup}`).prop('data-webos-voice-exclusive');
+		const actual = popup.find(`.${css.popup}`).first().prop('data-webos-voice-exclusive');
 
 		expect(actual).toBe(expected);
 	});

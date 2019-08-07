@@ -20,6 +20,7 @@ storiesOf('Moonstone', module)
 	.add(
 		'Icon',
 		() => {
+			const flip = select('flip', ['', 'both', 'horizontal', 'vertical'], Config, '');
 			const size = select('size', ['small', 'large'], Config, 'large');
 			const iconType = select('icon type', ['glyph', 'url src', 'custom'], Config, 'glyph');
 			let children;
@@ -30,13 +31,13 @@ storiesOf('Moonstone', module)
 			}
 			return (
 				<div>
-					<Icon size={size}>
+					<Icon flip={flip} size={size}>
 						{children}
 					</Icon>
 					<br />
 					<br />
 					<Heading showLine>All Icons</Heading>
-					{iconNames.map((icon, index) => <Icon key={index} size={size} title={icon}>{icon}</Icon>)}
+					{iconNames.map((icon, index) => <Icon key={index} flip={flip} size={size} title={icon}>{icon}</Icon>)}
 				</div>
 			);
 		},

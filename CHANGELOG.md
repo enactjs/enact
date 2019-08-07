@@ -2,6 +2,59 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.0.0-rc.1] - 2019-07-31
+
+### Added
+
+- `moonstone/LabeledIconButton` prop `flip` to flip the icon horizontally, vertically, or both
+- `moonstone/Popup` public class names `body` and `closeContainer`
+- `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` prop `flip` to flip the icon horizontally, vertically, or both
+
+### Changed
+
+- `moonstone/Dialog` appearance to match the latest designs
+- `moonstone/Scroller` and other scrolling components to scroll via remote page up/down buttons when the scrollbar is hidden
+- `spotlight` containers to include nodes identified on the `aria-owns` attribute of the container node as candidates within that container
+
+### Fixed
+
+- `moonstone` fonts be consolidated under "Moonstone" font-family to properly display all localized fonts when representing glyphs from any locale
+- `moonstone/Input` text color when focused and disabled
+- `moonstone/Panels` to allow 5-way navigation to components within `controls` when used with a `Header` with `headerInput`
+- `moonstone/Panels` to treat all components within `controls` as part of the active panel for the purposes of accessibility
+- `moonstone/Scroller` to not jump to the top when right key is pressed in the right most item of a vertical scroller
+- `moonstone/Scroller` to not scroll horizontally via 5-way down in horizontal scroller
+- `moonstone/Tooltip` arrow gap
+- `moonstone/VideoPlayer` feedback tooltip to overlap in non-latin locale
+- `moonstone/VideoPlayer` more button tooltip to not clip or reverse text in RTL locales
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to navigate items properly in RTL languages
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly navigate from paging controls to controls out of the list
+- `spotlight` to attempt to restore focus through ancestor containers when the pointer hides
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` to handle mouse down events on scrollbars
+
+## [3.0.0-beta.2] - 2019-07-23
+
+### Added
+
+- `moonstone/Panels.Header` prop `hideLine` to hide the bottom separator line
+- `moonstone/Panels.Header` type "dense" for "AlwaysViewing" Panels types
+
+### Fixed
+
+- `moonstone/Dropdown` button to not animate
+- `moonstone/FormCheckboxItem` so it doesn't change size between normal and large text mode
+- `moonstone/Heading` to have a bit more space between the text and the line, when the line is present
+- `moonstone/LabeledItem` to pass `marqueeOn` prop to its contents
+- `moonstone/Panels.Header` to use the latest designs with better spacing between the titles below
+- `moonstone/Picker` accessibility read out when a button becomes disabled
+- `moonstone/ProgressBar`, `moonstone/Slider`, and `moonstone/IncrementSlider` to use the latest set of design colors
+- `moonstone/RadioItem` to have a much prettier dot in dark and light skins
+- `moonstone/Spinner` to use the latest designs
+- `moonstone/Tooltip` layer order so it doesn't interfere with other positioned elements, like `ContextualPopup`
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly respond to 5way directional key presses
+- `ui/ProgressBar` public class name `bar` to support customizing the background of the bar
+- `webos/LS2Request` to return an error for a null response from a service
+
 ## [3.0.0-beta.1] - 2019-07-15
 
 ### Removed

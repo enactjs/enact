@@ -32,6 +32,7 @@ storiesOf('Moonstone', module)
 					<title>{text('title', Config, 'Hello Dialog')}</title>
 					<titleBelow>{text('titleBelow', Config, 'This is an organized dialog')}</titleBelow>
 					<span>This dialog has content in it and can be very useful for organizing information
+							for the user. This dialog has content in it and can be very useful for organizing information
 							for the user.</span>
 					<buttons>
 						<Button>Ok</Button>

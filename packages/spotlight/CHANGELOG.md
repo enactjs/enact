@@ -2,6 +2,20 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [3.0.0-rc.1] - 2019-07-31
+
+### Changed
+
+- `spotlight` containers to include nodes identified on the `aria-owns` attribute of the container node as candidates within that container
+
+### Fixed
+
+- `spotlight` to attempt to restore focus through ancestor containers when the pointer hides
+
+## [3.0.0-beta.2] - 2019-07-23
+
+No significant changes.
+
 ## [3.0.0-beta.1] - 2019-07-15
 
 ### Fixed

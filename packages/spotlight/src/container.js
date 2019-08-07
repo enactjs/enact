@@ -273,6 +273,29 @@ const navigableFilter = (node, containerId) => {
 };
 
 /**
+ * Determines nodes that are owned by `node` based on `aria-owns`.
+ *
+ * @param   {Node}   node          Owner
+ *
+ * @returns {Node[]}               Array of owned nodes
+ * @memberof spotlight/container
+ * @private
+ */
+const getOwnedNodes = (node, selector) => {
+	// if node is document, it will not have getAttribute and therefore can't have aria-owns
+	const owns = node && node.getAttribute && node.getAttribute('aria-owns');
+	if (owns) {
+		const ids = owns.split(' ');
+		return ids
+			.map(id => id && document.getElementById(id))
+			.filter(Boolean)
+			.filter(n => isContainerNode(n) || matchSelector(selector, n));
+	}
+
+	return [];
+};
+
+/**
  * Determines all spottable elements and containers that are directly contained by the container
  * identified by `containerId` and no other subcontainers.
  *
@@ -303,6 +326,8 @@ const getSpottableDescendants = (containerId) => {
 		`${spottableSelector}, ${getContainerSelector(node)} ${containerSelector}:not([data-spotlight-container-disabled="true"])`,
 		`${subContainerSelector} ${spottableSelector}, ${subContainerSelector} ${containerSelector}`
 	);
+
+	candidates.push(...getOwnedNodes(node, selector));
 
 	return candidates.filter(n => navigableFilter(n, containerId));
 };

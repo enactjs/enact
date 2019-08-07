@@ -702,10 +702,6 @@ class ScrollableBase extends Component {
 	}
 
 	scrollByPage = (keyCode) => {
-		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
-		// scroller as a plain container
-		if (!this.state.isVerticalScrollbarVisible) return;
-
 		const
 			bounds = this.getScrollBounds(),
 			canScrollVertically = this.canScrollVertically(bounds),
@@ -1244,12 +1240,7 @@ class ScrollableBase extends Component {
 		if (containerRef.current && containerRef.current.addEventListener) {
 			containerRef.current.addEventListener('wheel', this.onWheel);
 			containerRef.current.addEventListener('keydown', this.onKeyDown);
-		}
-
-		if (childRefCurrent && childRefCurrent.containerRef.current) {
-			if (childRefCurrent.containerRef.current.addEventListener) {
-				childRefCurrent.containerRef.current.addEventListener('mousedown', this.onMouseDown);
-			}
+			containerRef.current.addEventListener('mousedown', this.onMouseDown);
 		}
 
 		if (this.props.addEventListeners) {
@@ -1268,10 +1259,7 @@ class ScrollableBase extends Component {
 		if (containerRef.current && containerRef.current.removeEventListener) {
 			containerRef.current.removeEventListener('wheel', this.onWheel);
 			containerRef.current.removeEventListener('keydown', this.onKeyDown);
-		}
-
-		if (childRefCurrent.containerRef.current && childRefCurrent.containerRef.current.removeEventListener) {
-			childRefCurrent.containerRef.current.removeEventListener('mousedown', this.onMouseDown);
+			containerRef.current.removeEventListener('mousedown', this.onMouseDown);
 		}
 
 		if (this.props.removeEventListeners) {
