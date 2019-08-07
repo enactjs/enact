@@ -76,5 +76,42 @@ export default {
 	repeatdownload    : 0x0F00A8,  // repeat_download
 	view360           : 0x0F00A9,  // view_360
 	view360off        : 0x0F00AA,  // view_360_off
-	info              : 0x0F00AB  // info
+	info              : 0x0F00AB,  // info
+	repeattrack       : 0x0F00B1,  // repeat_track
+	bluetoothoff      : 0x0F00B4,  // bluetooth_off
+	verticalellipsis  : 0x0F00B5,  // vertical_ellipsis
+	arrowcurveright   : 0x0F00B6,  // arrow_curve_right
+	picture           : 0x0F00BA,  // picture
+	home              : 0x0F00BB,  // home
+	warning           : 0x0F00BC,  // warning
+	scroll            : 0x0F00BD,  // scroll
+	densedrawer       : 0x0F00BE,  // dense_drawer
+	starminus         : 0x0F00BF,  // star_minus
+	liverecord        : 0x0F00C1,  // live_record
+	liveplay          : 0x0F00C2,  // live_play
+	contrast          : 0x0F00C3,  // contrast
+	edit              : 0x0F00C4,  // edit
+	trashlock         : 0x0F00C7,  // trash_lock
+	volumecycle       : 0x0F00CB,  // volume_cycle
+	movecursor        : 0x0F00CC,  // move_cursor
+	refresh           : 0x0F00CE,  // refresh
+	question          : 0x0F00CF,  // question_mark
+	questionreversed  : 0x0F00D0,  // reversed_question_mark
+	s                 : 0x0F00D1,  // s
+	repeatone         : 0x0F00DF,  // repeat_one
+	repeatall         : 0x0F00E0,  // repeat_all
+	repeatnone        : 0x0F00E1,  // repeat_none
+	speakers          : 0x0F00E5,  // speakers
+	koreansubtitles   : 0x0F00E8,  // korean_subtitles
+	chinesesubtitles  : 0x0F00E9,  // chinese_subtitles
+	searchfilled      : 0x0F00EF,  // search_filled
+	playlistadd       : 0x0F00F1,  // playlist_add
+	files             : 0x0F00F2,  // files
+	arrowupdown       : 0x0F00F4,  // arrow_updown
+	brightness        : 0x0F00F9,  // brightness
+	download          : 0x0F00FA,  // download
+	playlistedit      : 0x0F00FD,  // playlist_edit
+	font              : 0x0F00FE,  // font
+	musicon           : 0x0F00FF,  // music_on
+	musicoff          : 0x0F0100   // music_off
 };

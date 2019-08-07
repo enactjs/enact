@@ -26,6 +26,7 @@ import last from 'ramda/src/last';
 import React from 'react';
 
 import LabeledItem from '../LabeledItem';
+import Skinnable from '../Skinnable';
 import {extractVoiceProps} from '../internal/util';
 
 import Expandable from './Expandable';
@@ -450,7 +451,9 @@ const ExpandableItemBase = kind({
  * @public
  */
 const ExpandableItem = Expandable(
-	ExpandableItemBase
+	Skinnable(
+		ExpandableItemBase
+	)
 );
 
 export default ExpandableItem;
