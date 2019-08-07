@@ -239,8 +239,8 @@ class ScrollButtons extends Component {
 			{target} = ev,
 			direction = getDirection(ev.keyCode),
 			isDown = direction === 'down',
-			isLeftMovement = !rtl && direction === 'left' || rtl && direction === 'right',
-			isRightMovement = !rtl && direction === 'right' || rtl && direction === 'left',
+			isLeftMovement = direction === (rtl ? 'right' : 'left'),
+			isRightMovement = direction === (rtl ? 'left' : 'right'),
 			isUp = direction === 'up',
 			isNextButton = target === this.nextButtonRef.current,
 			isPrevButton = target === this.prevButtonRef.current,
@@ -260,12 +260,8 @@ class ScrollButtons extends Component {
 				// If is is horizontal `Scrollable`, move focus to the up
 				directionToContent = !vertical && 'up' || rtl && 'right' || 'left',
 				isDirectionToLeave =
-					vertical && isRightMovement ||
-					vertical && isPrevButton && isUp ||
-					vertical && isNextButton && isDown ||
-					!vertical && isDown ||
-					!vertical && isPrevButton && isLeftMovement ||
-					!vertical && isNextButton && isRightMovement;
+					vertical && (isRightMovement || isPrevButton && isUp || isNextButton && isDown) ||
+					!vertical && (isDown || isPrevButton && isLeftMovement || isNextButton && isRightMovement);
 
 			if (!isTowardOppositeButton) {
 				preventDefault(ev);
