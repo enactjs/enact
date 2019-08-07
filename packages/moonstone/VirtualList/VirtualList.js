@@ -11,7 +11,7 @@
  */
 
 import kind from '@enact/core/kind';
-import {gridListItemSizeShape} from '@enact/ui/VirtualList';
+import {gridListItemSizeShape, listDifferentItemSizeShape} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -31,7 +31,9 @@ const VirtualList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 		/**
-		 * Size of an item for the VirtualList; valid value is a number.
+		 * Size of an item for the VirtualList; valid value is a number generally.
+		 * For different item size, value is an object that has `minSize`
+		 * and `size` as properties.
 		 * If the direction for the list is vertical, itemSize means the height of an item.
 		 * For horizontal, it means the width of an item.
 		 *
@@ -40,11 +42,11 @@ const VirtualList = kind({
 		 * <VirtualList itemSize={ri.scale(72)} />
 		 * ```
 		 *
-		 * @type {Number||Object}
+		 * @type {Number||ui/VirtualList.listDifferentItemSizeShape}
 		 * @required
 		 * @public
 		 */
-		itemSize: PropTypes.oneOfType([PropTypes.number, PropTypes.object]).isRequired
+		itemSize: PropTypes.oneOfType([PropTypes.number, PropTypes.PropTypes.listDifferentItemSizeShape]).isRequired
 	},
 
 	render: ({itemSize, ...rest}) => {
@@ -120,6 +122,8 @@ const VirtualListNative = kind({
 	propTypes: /** @lends moonstone/VirtualList.VirtualListNative.prototype */ {
 		/**
 		 * Size of an item for the VirtualList; valid value is a number.
+		 * For different item size, value is an object that has `minSize`
+		 * and `size` as properties.
 		 * If the direction for the list is vertical, itemSize means the height of an item.
 		 * For horizontal, it means the width of an item.
 		 *
@@ -128,11 +132,11 @@ const VirtualListNative = kind({
 		 * <VirtualListNative itemSize={ri.scale(72)} />
 		 * ```
 		 *
-		 * @type {Number|Object}
+		 * @type {Number|ui/VirtualList.listDifferentItemSizeShape}
 		 * @required
 		 * @public
 		 */
-		itemSize: PropTypes.oneOfType([PropTypes.number, PropTypes.object]).isRequired
+		itemSize: PropTypes.oneOfType([PropTypes.number, PropTypes.listDifferentItemSizeShape]).isRequired
 	},
 
 	render: ({itemSize, ...rest}) => {

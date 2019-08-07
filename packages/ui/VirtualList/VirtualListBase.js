@@ -21,13 +21,28 @@ const
  *
  * @typedef {Object} gridListItemSizeShape
  * @memberof ui/VirtualList
- * @property {Number}    minWidth    The minimum width of the grid list item.
- * @property {Number}    minHeight    The minimum height of the grid list item.
+ * @property {Number} minWidth The minimum width of the grid list item.
+ * @property {Number} minHeight The minimum height of the grid list item.
  * @public
  */
 const gridListItemSizeShape = PropTypes.shape({
 	minHeight: PropTypes.number.isRequired,
 	minWidth: PropTypes.number.isRequired
+});
+
+/**
+ * The shape for the list different item size
+ * in a list for [VirtualList]{@link ui/VirtualList.VirtualList}.
+ *
+ * @typedef {Object} listDifferentItemSizeShape
+ * @memberof ui/VirtualList
+ * @property {Number} minWidth The minimum width of the grid list item.
+ * @property {Number[]} minHeight The minimum height of the grid list item.
+ * @public
+ */
+const listDifferentItemSizeShape = PropTypes.shape({
+	minSize: PropTypes.number.isRequired,
+	size: PropTypes.arrayOf(PropTypes.number).isRequired
 });
 
 /**
@@ -1278,6 +1293,7 @@ ScrollableVirtualListNative.defaultProps = {
 export default VirtualListBase;
 export {
 	gridListItemSizeShape,
+	listDifferentItemSizeShape,
 	ScrollableVirtualList,
 	ScrollableVirtualListNative,
 	VirtualListBase,
