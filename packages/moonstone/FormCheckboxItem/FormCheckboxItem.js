@@ -14,7 +14,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import FormCheckbox from '../FormCheckbox';
-import ToggleItem from '../ToggleItem';
+import {ToggleItemBase, ToggleItemDecorator} from '../ToggleItem';
 
 import componentCss from './FormCheckboxItem.module.less';
 
@@ -52,18 +52,22 @@ const FormCheckboxItemBase = kind({
 		publicClassNames: ['formCheckboxItem']
 	},
 
-	render: (props) => (
-		<ToggleItem
+	render: ({children, css, ...props}) => (
+		<ToggleItemBase
 			data-webos-voice-intent="SelectCheckItem"
 			{...props}
-			css={props.css}
+			css={css}
 			iconComponent={FormCheckbox}
-		/>
+		>
+			<span className={componentCss.content}>{children}</span>
+		</ToggleItemBase>
 	)
 });
 
-export default FormCheckboxItemBase;
+const FormCheckboxItem = ToggleItemDecorator(FormCheckboxItemBase);
+
+export default FormCheckboxItem;
 export {
-	FormCheckboxItemBase as FormCheckboxItem,
+	FormCheckboxItem,
 	FormCheckboxItemBase
 };

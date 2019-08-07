@@ -27,7 +27,11 @@
 			background-color: @moon-formcheckboxitem-focus-bg-color;
 
 			.disabled({
-				opacity: @moon-disabled-opacity;
+				opacity: 1;
+
+				.content {
+					opacity: @moon-disabled-opacity;
+				}
 			});
 		});
 	});
