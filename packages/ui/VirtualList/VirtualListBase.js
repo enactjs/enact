@@ -661,7 +661,7 @@ const VirtualListBaseFactory = (type) => {
 		updateMoreInfo (dataSize, primaryPosition) {
 			const
 				{dimensionToExtent, moreInfo} = this,
-				{itemSize, gridSize} = this.primary;
+				{itemSize, gridSize, clientSize} = this.primary;
 
 			if (dataSize <= 0) {
 				moreInfo.firstVisibleIndex = null;
@@ -669,7 +669,7 @@ const VirtualListBaseFactory = (type) => {
 			} else if (this.props.type === 'VariableVirtualList') {
 				const {firstIndex, numOfItems} = this.state;
 				const {isPrimaryDirectionVertical, scrollBounds: {clientWidth, clientHeight}, scrollPosition} = this;
-				const clientSize = isPrimaryDirectionVertical ? clientHeight : clientWidth;
+				const size = isPrimaryDirectionVertical ? clientHeight : clientWidth;
 
 				let firstVisibleIndex = null, lastVisibleIndex = null;
 
@@ -681,7 +681,7 @@ const VirtualListBaseFactory = (type) => {
 				}
 
 				for (let i = firstIndex + numOfItems - 1; i >= firstIndex; i--) {
-					if (scrollPosition + clientSize >= this.getVariableGridBottomPosition(i) - this.props.variableGridSizes[i]) {
+					if (scrollPosition + size >= this.getVariableGridBottomPosition(i) - this.props.variableGridSizes[i]) {
 						lastVisibleIndex = i;
 						break;
 					}
