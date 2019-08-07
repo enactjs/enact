@@ -2,19 +2,21 @@ const fontMap = {};
 let currentLocale = null;
 
 // Generate a single font-face rule
-const buildFont = function (inOptions) {
-	if (!inOptions && !inOptions.name) {
+const buildFont = function (config) {
+	if (!config && !config.name) {
 		return '';
 	}
 	let strOut = '@font-face { \n' +
-		`  font-family: "${inOptions.name}";\n` +
-		`  font-weight: ${inOptions.weight || 'normal'};\n`;
+		`  font-family: "${config.name}";\n`;
 
-	if (inOptions.localName) {
-		strOut += `  src: local("${inOptions.localName}");\n`;
+	if (config.weight) {
+		strOut += `  font-weight: ${config.weight};\n`;
 	}
-	if (inOptions.unicodeRange) {
-		strOut += `  unicode-range: ${inOptions.unicodeRange};\n`;
+	if (config.localName) {
+		strOut += `  src: local("${config.localName}");\n`;
+	}
+	if (config.unicodeRange) {
+		strOut += `  unicode-range: ${config.unicodeRange};\n`;
 	}
 	strOut += '} \n';
 	return strOut;
@@ -30,23 +32,30 @@ const buildFontSet = function (fontName, fonts, strLang, bitDefault) {
 		strOut += buildFont({
 			name,
 			localName: fonts[strLang].regular,
-			weight: 400,
-			unicodeRange: fonts[strLang].unicodeRange
-		});
-
-		// Build Bold
-		strOut += buildFont({
-			name,
-			localName: (fonts[strLang].bold || fonts[strLang].regular), // fallback to regular
-			weight: 700,
 			unicodeRange: fonts[strLang].unicodeRange
 		});
 
 		// Build Light
 		strOut += buildFont({
 			name,
-			localName: (fonts[strLang].light || fonts[strLang].regular), // fallback to regular
+			localName: (fonts[strLang].light || fonts[strLang].regular),
 			weight: 300,
+			unicodeRange: fonts[strLang].unicodeRange
+		});
+
+		// Build SemiBold
+		strOut += buildFont({
+			name,
+			localName: (fonts[strLang].semibold || fonts[strLang].bold || fonts[strLang].regular),
+			weight: 600,
+			unicodeRange: fonts[strLang].unicodeRange
+		});
+
+		// Build Bold
+		strOut += buildFont({
+			name,
+			localName: (fonts[strLang].bold || fonts[strLang].regular),
+			weight: 700,
 			unicodeRange: fonts[strLang].unicodeRange
 		});
 	}

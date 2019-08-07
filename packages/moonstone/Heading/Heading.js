@@ -146,7 +146,7 @@ const Heading = HeadingDecorator(HeadingBase);
  * @type {String}
  * @default 'render'
  * @memberof moonstone/Heading.Heading.prototype
- * @see moonstone/Marquee.Marquee
+ * @see {@link moonstone/Marquee.Marquee}
  * @public
  */
 

@@ -47,7 +47,7 @@ import styles from './styles';
 /**
  * @typedef {Object} KindConfig
  * @memberof core/kind
- * @property {String} name
+ * @property {String} [name]
  * @property {Object.<string, Function>} [propTypes]
  * @property {Object.<string, any>} [defaultProps]
  * @property {Object} [contextType]
@@ -80,7 +80,12 @@ import styles from './styles';
  *			css,
  *			className: 'button'
  *		},
- *		// add some computed properties
+ *		// add event handlers that are cached between calls to prevent recreating each call. Any
+ *		// handlers are added to the props passed to `render()`.  See core/handle.
+ *		handlers: {
+ *			onKeyDown: (evt, props) => { .... }
+ *		},
+ *		// add some computed properties, these are added to props passed to `render()`
  *		computed: {
  *			// border color will be the color prepended by 'light'
  *			borderColor: ({color}) => 'light' + color,
@@ -105,6 +110,7 @@ import styles from './styles';
  *
  * @returns {Component<Props>}           Component
  * @memberof core/kind
+ * @see {@link core/handle}
  * @public
  */
 const kind = (config) => {

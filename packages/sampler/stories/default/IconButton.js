@@ -39,6 +39,7 @@ storiesOf('Moonstone', module)
 					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config, '')}
 					color={select('color', ['', 'red', 'green', 'yellow', 'blue'], Config, '')}
 					disabled={boolean('disabled', Config)}
+					flip={select('flip', ['', 'both', 'horizontal', 'vertical'], Config, '')}
 					selected={boolean('selected', Config)}
 					size={select('size', ['small', 'large'], Config)}
 					tooltipText={text('tooltipText', Config, '')}
