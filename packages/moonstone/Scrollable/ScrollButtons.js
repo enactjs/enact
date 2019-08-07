@@ -234,40 +234,42 @@ class ScrollButtons extends Component {
 	}
 
 	onSpotlight = (ev) => {
-		const
-			{focusableScrollButtons, rtl, vertical} = this.props,
-			{target} = ev,
-			direction = getDirection(ev.keyCode),
-			isDown = direction === 'down',
-			isLeftMovement = direction === (rtl ? 'right' : 'left'),
-			isRightMovement = direction === (rtl ? 'left' : 'right'),
-			isUp = direction === 'up',
-			isNextButton = target === this.nextButtonRef.current,
-			isPrevButton = target === this.prevButtonRef.current;
-
-		// We don't need to navigate manually if `focusableScrollButtons` is `false`
-		if (focusableScrollButtons) {
+		const direction = getDirection(ev.keyCode);
+		if (direction) {
 			const
-				fromNextToPrev = vertical ? isUp : isLeftMovement,
-				fromPrevToNext = vertical ? isDown : isRightMovement;
+				{focusableScrollButtons, rtl, vertical} = this.props,
+				{target} = ev,
+				isDown = direction === 'down',
+				isLeftMovement = direction === (rtl ? 'right' : 'left'),
+				isRightMovement = direction === (rtl ? 'left' : 'right'),
+				isUp = direction === 'up',
+				isNextButton = target === this.nextButtonRef.current,
+				isPrevButton = target === this.prevButtonRef.current;
 
-			// manually focus the opposite scroll button when 5way pressed
-			if (isNextButton && fromNextToPrev || isPrevButton && fromPrevToNext) {
-				this.focusOnOppositeScrollButton(ev, direction);
-			}
-		} else {
-			const
-				// If it is vertical `Scrollable`, move focus to the left for ltr or to the right for rtl
-				// If is is horizontal `Scrollable`, move focus to the up
-				directionToContent = !vertical && 'up' || rtl && 'right' || 'left',
-				isDirectionToLeave =
-					vertical && (isRightMovement || isPrevButton && isUp || isNextButton && isDown) ||
-					!vertical && (isDown || isPrevButton && isLeftMovement || isNextButton && isRightMovement);
+			// We don't need to navigate manually if `focusableScrollButtons` is `false`
+			if (focusableScrollButtons) {
+				const
+					fromNextToPrev = vertical ? isUp : isLeftMovement,
+					fromPrevToNext = vertical ? isDown : isRightMovement;
 
-			if (isDirectionToLeave) {
-				preventDefault(ev);
-				if (!Spotlight.move(direction) && Spotlight.getCurrent() === target) {
-					Spotlight.move(directionToContent);
+				// manually focus the opposite scroll button when 5way pressed
+				if (isNextButton && fromNextToPrev || isPrevButton && fromPrevToNext) {
+					this.focusOnOppositeScrollButton(ev, direction);
+				}
+			} else {
+				const
+					// If it is vertical `Scrollable`, move focus to the left for ltr or to the right for rtl
+					// If is is horizontal `Scrollable`, move focus to the up
+					directionToContent = !vertical && 'up' || rtl && 'right' || 'left',
+					isDirectionToLeave =
+						vertical && (isRightMovement || isPrevButton && isUp || isNextButton && isDown) ||
+						!vertical && (isDown || isPrevButton && isLeftMovement || isNextButton && isRightMovement);
+
+				if (isDirectionToLeave) {
+					preventDefault(ev);
+					if (!Spotlight.move(direction) && Spotlight.getCurrent() === target) {
+						Spotlight.move(directionToContent);
+					}
 				}
 			}
 		}
