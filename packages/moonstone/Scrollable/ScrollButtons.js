@@ -266,19 +266,8 @@ class ScrollButtons extends Component {
 
 			if (isDirectionToLeave) {
 				preventDefault(ev);
-				if (!Spotlight.move(direction)) {
-					if (Spotlight.getPointerMode()) {
-						// When changing from "pointer" mode to "5way key" mode,
-						// a pointer is hidden and a last focused item get focused after 30ms.
-						// To make sure the content in `VirtualList` or `Scroller` to be focused after that, we used 50ms.
-						setTimeout(() => {
-							if (Spotlight.getCurrent() === target) {
-								Spotlight.move(directionToContent);
-							}
-						}, 50);
-					} else if (Spotlight.getCurrent() === target) {
-						Spotlight.move(directionToContent);
-					}
+				if (!Spotlight.move(direction) && Spotlight.getCurrent() === target) {
+					Spotlight.move(directionToContent);
 				}
 			}
 		}
