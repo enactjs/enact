@@ -9,6 +9,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Picker` to avoid overlapping items on render
 - `moonstone/Scroller` and other scrolling components to properly scroll via remote page up/down buttons when nested within another scrolling component
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll via a page up or down key when focus is on any vertical paging control while in pointer mode
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly navigate from paging controls to items by 5-way key
 
 ## [3.0.0-rc.1] - 2019-07-31
 
