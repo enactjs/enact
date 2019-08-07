@@ -1,7 +1,8 @@
 import React from 'react';
-import {VirtualListNative} from '@enact/moonstone/VirtualList';
+import {Column, Cell} from '@enact/ui/Layout';
 import Item from '@enact/moonstone/Item';
 import {Panel} from '@enact/moonstone/Panels';
+import {VirtualListNative} from '@enact/moonstone/VirtualList';
 
 import {storiesOf} from '@storybook/react';
 
@@ -26,8 +27,9 @@ class VirtualListWithExtraItems extends React.PureComponent {
 
 	render () {
 		return (
-			<Panel>
-				<VirtualListNative
+			<Column>
+				<Cell
+					component={VirtualListNative}
 					focusableScrollbar
 					itemRenderer={this.renderItem}
 					dataSize={10}
@@ -36,12 +38,11 @@ class VirtualListWithExtraItems extends React.PureComponent {
 					verticalScrollbar="visible"
 					itemSize={60}
 					spacing={20}
-					style={{height: 400}}
 				/>
-				<Item>extra item1</Item>
-				<Item>extra item2</Item>
-				<Item>extra item3</Item>
-			</Panel>
+				<Cell shrink component={Item}>extra item1</Cell>
+				<Cell shrink component={Item}>extra item2</Cell>
+				<Cell shrink component={Item}>extra item3</Cell>
+			</Column>
 		);
 	}
 }
