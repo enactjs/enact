@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone` to support custom font for zh-Hans locale
+- `moonstone` to support custom font for simplified Chinese
 - `moonstone` disabled focus appearance to match the latest designs
 - `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableList`, and `moonstone/TimePicker` disabled opacity in high contrast mode
 - `moonstone/Picker` to avoid overlapping items on render

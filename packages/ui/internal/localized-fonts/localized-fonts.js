@@ -66,7 +66,9 @@ const buildFontDefinitionCss = function (locale, buildOverrides) {
 	const
 		matchLang = locale.match(/\b([a-z]{2})\b/),
 		language = matchLang && matchLang[1],
-		matchReg = locale.match(/\b([A-Z]{2}|[0-9]{3}|[a-zA-Z]{4})\b/),
+		matchScript = locale.match(/\b([a-z]{4})\b/i),
+		script = matchScript && matchScript[1],
+		matchReg = locale.match(/\b([A-Z]{2}|[0-9]{3})\b/),
 		region = matchReg && matchReg[1];
 
 	let fontDefinitionCss = '';
@@ -80,12 +82,19 @@ const buildFontDefinitionCss = function (locale, buildOverrides) {
 				fontDefinitionCss += buildFontSet(fontName, fonts, lang);
 			} else {
 				// Set up the override for locale-specific font.
-				// la = language, re = region; `la-RE`
-				const [la, re] = lang.split('-');
-				if (la === language) {
-					if (!re || (re && re === region)) {
-						fontDefinitionCss += buildFontSet(fontName, fonts, lang, true);
-					}
+				// la = language, sc = script, re = region; `la-RE` or `zh-Hans-HK`
+				let [la, sc, re] = lang.split('-');
+
+				// if script is not specified, fall back to second part representing region
+				if (!re && sc && sc.length === 2) {
+					re = sc;
+					sc = null;
+				}
+
+				const matchesRegion = re ? re === region : true;
+				const matchesScript = sc ? sc === script : true;
+				if (la === language && matchesRegion && matchesScript) {
+					fontDefinitionCss += buildFontSet(fontName, fonts, lang, true);
 				}
 			}
 		}
