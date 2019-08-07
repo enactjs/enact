@@ -401,8 +401,10 @@ const VirtualListBaseFactory = (type) => {
 		curDataSize = 0
 		hasDataSizeChanged = false
 		cc = []
-		variableGridPositions = []
 		scrollPosition = 0
+
+		// For NewVirtualList
+		variableGridPositions = []
 
 		isVertical = () => this.isPrimaryDirectionVertical
 
@@ -562,7 +564,7 @@ const VirtualListBaseFactory = (type) => {
 
 			// reset children
 			this.cc = [];
-			this.variableGridPositions = [];
+			this.variableGridPositions = []; // For NewVirtualList
 			this.calculateScrollBounds(props);
 			this.updateMoreInfo(dataSize, scrollPosition);
 
