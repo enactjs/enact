@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/Icon.icons` entries for new icons
+
 ### Fixed
 
 - `moonstone` disabled focus appearance to match the latest designs
