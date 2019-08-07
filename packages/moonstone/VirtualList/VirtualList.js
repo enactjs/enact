@@ -46,7 +46,7 @@ const VirtualList = kind({
 		 * @required
 		 * @public
 		 */
-		itemSize: PropTypes.oneOfType([PropTypes.number, PropTypes.PropTypes.listDifferentItemSizeShape]).isRequired
+		itemSize: PropTypes.oneOfType([PropTypes.number, listDifferentItemSizeShape]).isRequired
 	},
 
 	render: ({itemSize, ...rest}) => {
@@ -136,7 +136,7 @@ const VirtualListNative = kind({
 		 * @required
 		 * @public
 		 */
-		itemSize: PropTypes.oneOfType([PropTypes.number, PropTypes.listDifferentItemSizeShape]).isRequired
+		itemSize: PropTypes.oneOfType([PropTypes.number, listDifferentItemSizeShape]).isRequired
 	},
 
 	render: ({itemSize, ...rest}) => {

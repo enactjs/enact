@@ -246,7 +246,6 @@ const VirtualListBaseFactory = (type) => {
 			 */
 			type: PropTypes.oneOf(['VirtualList', 'VirtualGridList', 'VariableVirtualList']),
 
-
 			/**
 			 * Called to execute additional logic in a themed component when updating states and bounds.
 			 *
@@ -662,7 +661,7 @@ const VirtualListBaseFactory = (type) => {
 		updateMoreInfo (dataSize, primaryPosition) {
 			const
 				{dimensionToExtent, moreInfo} = this,
-				{itemSize, gridSize, clientSize} = this.primary;
+				{itemSize, gridSize} = this.primary;
 
 			if (dataSize <= 0) {
 				moreInfo.firstVisibleIndex = null;
