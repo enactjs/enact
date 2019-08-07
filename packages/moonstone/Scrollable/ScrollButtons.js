@@ -290,7 +290,7 @@ class ScrollButtons extends Component {
 			{keyCode} = ev;
 
 		if (isPageDown(keyCode)) {
-			if (focusableScrollButtons) {
+			if (focusableScrollButtons && !Spotlight.getPointerMode()) {
 				preventDefault(ev);
 				Spotlight.setPointerMode(false);
 				Spotlight.focus(ReactDOM.findDOMNode(this.nextButtonRef.current)); // eslint-disable-line react/no-find-dom-node
@@ -313,7 +313,7 @@ class ScrollButtons extends Component {
 			{keyCode} = ev;
 
 		if (isPageUp(keyCode)) {
-			if (focusableScrollButtons) {
+			if (focusableScrollButtons && !Spotlight.getPointerMode()) {
 				preventDefault(ev);
 				Spotlight.setPointerMode(false);
 				Spotlight.focus(ReactDOM.findDOMNode(this.prevButtonRef.current)); // eslint-disable-line react/no-find-dom-node
