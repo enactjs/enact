@@ -1,4 +1,4 @@
-import {scale, unit} from '@enact/ui/resolution';
+import {scale} from '@enact/ui/resolution';
 import {arrange} from '@enact/ui/ViewManager/Arranger';
 
 import {breadcrumbWidth} from './Breadcrumb';
