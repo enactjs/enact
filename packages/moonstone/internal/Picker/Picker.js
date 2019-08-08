@@ -787,7 +787,6 @@ const PickerBase = class extends React.Component {
 		const {active} = this.state;
 		const {
 			'aria-valuetext': ariaValueText,
-			noAnimation,
 			children,
 			disabled,
 			id,
@@ -823,6 +822,7 @@ const PickerBase = class extends React.Component {
 		delete rest.decrementIcon;
 		delete rest.incrementAriaLabel;
 		delete rest.incrementIcon;
+		delete rest.noAnimation;
 		delete rest.onChange;
 		delete rest.onSpotlightDown;
 		delete rest.onSpotlightLeft;
@@ -839,10 +839,8 @@ const PickerBase = class extends React.Component {
 		const incrementerDisabled = disabled || reachedEnd;
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
 
-		let arranger;
-		if (!noAnimation && !disabled) {
-			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
-		}
+		let arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
+		let noAnimation = this.props.noAnimation || disabled;
 
 		let sizingPlaceholder = null;
 		if (typeof width === 'number' && width > 0) {
