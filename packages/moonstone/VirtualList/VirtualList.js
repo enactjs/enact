@@ -42,7 +42,7 @@ const VirtualList = kind({
 		 * <VirtualList itemSize={ri.scale(72)} />
 		 * ```
 		 *
-		 * @type {Number||ui/VirtualList.listDifferentItemSizeShape}
+		 * @type {Number|ui/VirtualList.listDifferentItemSizeShape}
 		 * @required
 		 * @public
 		 */
