@@ -42,7 +42,7 @@ const gridListItemSizeShape = PropTypes.shape({
  */
 const listDifferentItemSizeShape = PropTypes.shape({
 	minSize: PropTypes.number.isRequired,
-	size: PropTypes.arrayOf(PropTypes.number).isRequired
+	size: PropTypes.arrayOf(PropTypes.number)
 });
 
 /**
