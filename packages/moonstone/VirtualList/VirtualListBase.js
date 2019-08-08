@@ -1,3 +1,4 @@
+import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import {is} from '@enact/core/keymap';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import Accelerator from '@enact/spotlight/Accelerator';
@@ -531,7 +532,10 @@ const VirtualListBaseFactory = (type) => {
 
 						}
 					} else {
-						isLeaving = true;
+						const possibleTarget = getTargetByDirectionFromElement(direction, target);
+						if (possibleTarget && !ev.currentTarget.contains(possibleTarget)) {
+							isLeaving = true;
+						}
 					}
 
 					if (isLeaving) {

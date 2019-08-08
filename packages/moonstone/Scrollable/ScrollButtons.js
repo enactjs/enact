@@ -1,3 +1,4 @@
+import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import {is} from '@enact/core/keymap';
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import Spotlight, {getDirection} from '@enact/spotlight';
@@ -266,10 +267,15 @@ class ScrollButtons extends Component {
 						!vertical && (isDown || isPrevButton && isLeftMovement || isNextButton && isRightMovement);
 
 				if (isDirectionToLeave) {
-					preventDefault(ev);
-					if (!Spotlight.move(direction) && Spotlight.getCurrent() === target) {
+					if (!getTargetByDirectionFromElement(direction, target)) {
+						// move focus into contents and stop bubbling
+						preventDefault(ev);
 						Spotlight.move(directionToContent);
 					}
+				} else {
+					// move focus directly to stop bubbling
+					preventDefault(ev);
+					Spotlight.move(direction);
 				}
 			}
 		}
