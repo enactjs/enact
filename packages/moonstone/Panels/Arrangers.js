@@ -6,7 +6,7 @@ import {breadcrumbWidth} from './Breadcrumb';
 const quadInOut = 'cubic-bezier(0.455, 0.030, 0.515, 0.955)';
 const animationOptions = {easing: quadInOut};
 
-const getTranslateX = (node, factor = 1) => {
+const getHorizontalTranslation = (node, factor = 1) => {
 	const width = node.getBoundingClientRect().width;
 
 	return `translateX(${width * factor}px)`;
@@ -23,7 +23,7 @@ const getTranslateX = (node, factor = 1) => {
 export const AlwaysViewingArranger = {
 	enter: (config) => {
 		const {node, reverse} = config;
-		const transform = getTranslateX(node);
+		const transform = getHorizontalTranslation(node);
 
 		return arrange(config, [
 			{transform, offset: 0},
@@ -35,7 +35,7 @@ export const AlwaysViewingArranger = {
 	},
 	leave: (config) => {
 		const {node, reverse} = config;
-		const transform = getTranslateX(node, -1);
+		const transform = getHorizontalTranslation(node, -1);
 
 		return arrange(config, [
 			{transform: 'translateX(0)', offset: 0},
@@ -73,7 +73,7 @@ const offsetForBreadcrumbs = (node) => {
 export const ActivityArranger = {
 	enter: (config) => {
 		const {node, reverse} = config;
-		const transform = getTranslateX(node);
+		const transform = getHorizontalTranslation(node);
 
 		return arrange(config, [
 			{transform: `${offsetForBreadcrumbs(node)} ${transform}`, offset: 0},
@@ -85,7 +85,7 @@ export const ActivityArranger = {
 	},
 	leave: (config) => {
 		const {node, reverse} = config;
-		const transform = getTranslateX(node, -1);
+		const transform = getHorizontalTranslation(node, -1);
 
 		return arrange(config, [
 			{transform: offsetForBreadcrumbs(node), offset: 0},
