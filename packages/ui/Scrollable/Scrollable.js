@@ -16,6 +16,7 @@ import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
 import React, {Component} from 'react';
+import warning from 'warning';
 
 import ForwardRef from '../ForwardRef';
 import {ResizeContext} from '../Resizable';
@@ -360,6 +361,21 @@ class ScrollableBase extends Component {
 		stop: PropTypes.func,
 
 		/**
+		 * Type of the list.
+		 * If you want to use variable item size, you need to define it to `'VariableVirtualList'`.
+		 *
+		 * Valid values are:
+		 * * `'VirtualList'`, and
+		 * * `'VirtualGridList'`, and
+		 * * `'VariableVirtualList'`.
+		 *
+		 * @type {String}
+		 * @default 'VirtualList'
+		 * @private
+		 */
+		type: PropTypes.oneOf(['VirtualList', 'VirtualGridList', 'VariableVirtualList']),
+
+		/**
 		 * Specifies how to show vertical scrollbar.
 		 *
 		 * Valid values are:
@@ -420,7 +436,14 @@ class ScrollableBase extends Component {
 
 		this.resizeRegistry = Registry.create(this.handleResize.bind(this));
 
-		props.cbScrollTo(this.scrollTo);
+		if (props.type === 'VariableVirtualList') {
+			warning(
+				props.cbScrollTo === nop,
+				'VirtualList with `minSize` in `itemSize` prop does not support `cbScrollTo` prop'
+			);
+		} else {
+			props.cbScrollTo(this.scrollTo);
+		}
 	}
 
 	componentDidMount () {
