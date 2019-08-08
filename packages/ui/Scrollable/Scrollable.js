@@ -438,8 +438,8 @@ class ScrollableBase extends Component {
 
 		if (props.type === 'VariableVirtualList') {
 			warning(
-				!props.cbScrollTo,
-				'VirtualListNative with `minSize` in `itemSize` prop does not support `cbScrollTo` prop'
+				props.cbScrollTo == nop,
+				'VirtualList with `minSize` in `itemSize` prop does not support `cbScrollTo` prop'
 			);
 		} else {
 			props.cbScrollTo(this.scrollTo);
