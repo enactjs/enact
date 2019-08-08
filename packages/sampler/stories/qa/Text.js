@@ -25,6 +25,7 @@ import {select} from '../../src/enact-knobs';
 const inputData = {
 	english: 'We name themes after gemstones',
 	arabic: 'نحن اسم المواضيع بعد الأحجار الكريمة',
+	chinese: '星期日 星期一 星期二 星期三 星期四 星期五 星期六',
 	greek: 'Ονομάζουμε θέματα μετά από πολύτιμους λίθους',
 	hebrew: 'אנו שם נושאים לאחר אבני חן',
 	japanese: '宝石にちなんでテーマに名前を付けます',

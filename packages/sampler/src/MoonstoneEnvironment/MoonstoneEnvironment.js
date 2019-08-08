@@ -73,6 +73,7 @@ const locales = {
 	'th-TH - Thai, with tall characters':                   'th-TH',
 	'ar-SA - Arabic, RTL and standard font':                'ar-SA',
 	'ur-PK - Urdu, RTL and custom Urdu font':               'ur-PK',
+	'zh-Hans-HK - Simplified Chinese, custom Hans font':    'zh-Hans-HK',
 	'zh-Hant-HK - Traditional Chinese, custom Hant font':   'zh-Hant-HK',
 	'vi-VN - Vietnamese, Special non-latin font handling':  'vi-VN',
 	'ta-IN - Tamil, custom Indian font':                    'ta-IN',
