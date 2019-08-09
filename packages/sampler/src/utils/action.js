@@ -1,7 +1,7 @@
 import {action} from '@storybook/addon-actions';
 
 const safeAction = (name, include = ['type']) => {
-	const myAction = action(name);
+	const handler = action(name);
 	return (ev) => {
 		// If it's a React synthetic event, extract the type member and drop the rest
 		if (ev.nativeEvent) {
@@ -12,7 +12,7 @@ const safeAction = (name, include = ['type']) => {
 			}, {});
 		}
 
-		myAction(ev);
+		handler(ev);
 	};
 };
 
