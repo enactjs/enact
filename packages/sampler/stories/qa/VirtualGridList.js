@@ -14,6 +14,9 @@ const Config = mergeComponentMetadata('VirtualGridList', UiVirtualListBase, UiSc
 
 const
 	defaultDataSize = 1000,
+	prop = {
+		scrollbarOption: ['auto', 'hidden', 'visible']
+	},
 	wrapOption = {
 		false: false,
 		true: true,
@@ -65,7 +68,7 @@ storiesOf('VirtualGridList', module)
 				dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 				direction="horizontal"
 				focusableScrollbar={boolean('focusableScrollbar', Config)}
-				horizontalScrollbar={select('horizontalScrollbar', ['auto', 'hidden', 'visible'], Config)}
+				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
 				itemRenderer={renderItem}
 				itemSize={{
 					minWidth: ri.scale(number('minWidth', Config, 180)),
@@ -77,6 +80,7 @@ storiesOf('VirtualGridList', module)
 				onScrollStop={action('onScrollStop')}
 				spacing={ri.scale(number('spacing', Config, 18))}
 				spotlightDisabled={boolean('spotlightDisabled', Config, false)}
+				verticalScrollbar={select('verticaltalScrollbar', prop.scrollbarOption, Config)}
 				wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 			/>
 		),

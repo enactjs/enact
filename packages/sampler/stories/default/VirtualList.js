@@ -77,6 +77,7 @@ storiesOf('UI', module)
 			return (
 				<UiVirtualList
 					dataSize={updateDataSize(number('dataSize', UiVirtualListConfig, defaultDataSize))}
+					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, UiVirtualListConfig)}
 					itemRenderer={uiRenderItem(ri.scale(number('itemSize', UiVirtualListConfig, 72)))}
 					itemSize={ri.scale(number('itemSize', UiVirtualListConfig, 72))}
 					noScrollByWheel={boolean('noScrollByWheel', UiVirtualListConfig)}
@@ -103,6 +104,7 @@ storiesOf('Moonstone', module)
 				<VirtualList
 					dataSize={updateDataSize(number('dataSize', VirtualListConfig, defaultDataSize))}
 					focusableScrollbar={boolean('focusableScrollbar', VirtualListConfig)}
+					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, VirtualListConfig)}
 					itemRenderer={renderItem(ri.scale(number('itemSize', VirtualListConfig, 72)))}
 					itemSize={ri.scale(number('itemSize', VirtualListConfig, 72))}
 					noScrollByWheel={boolean('noScrollByWheel', VirtualListConfig)}
