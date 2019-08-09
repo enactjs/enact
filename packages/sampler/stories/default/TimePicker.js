@@ -1,7 +1,7 @@
 import TimePicker from '@enact/moonstone/TimePicker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '../../src/utils/action';
 
 import {boolean, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';

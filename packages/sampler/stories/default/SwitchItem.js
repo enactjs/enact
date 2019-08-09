@@ -6,7 +6,7 @@ import Icon from '@enact/moonstone/Icon';
 import {listIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '../../src/utils/action';
 
 import {boolean, text, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata, nullify} from '../../src/utils';

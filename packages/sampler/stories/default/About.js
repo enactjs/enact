@@ -6,7 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '../../src/utils/action';
 
 import {boolean} from '../../src/enact-knobs';
 

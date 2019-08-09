@@ -31,7 +31,7 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import React from 'react';
 import PropTypes from 'prop-types';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '../../src/utils/action';
 
 import docs from '../../images/icon-enact-docs.png';
 import {boolean, select} from '../../src/enact-knobs';

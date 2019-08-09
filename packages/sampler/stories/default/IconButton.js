@@ -4,7 +4,7 @@ import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import icons from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '../../src/utils/action';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';

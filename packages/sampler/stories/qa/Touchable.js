@@ -5,7 +5,7 @@ import React from 'react';
 import Touchable from '@enact/ui/Touchable';
 import ri from '@enact/ui/resolution';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '../../src/utils/action';
 
 import {boolean, number} from '../../src/enact-knobs';
 

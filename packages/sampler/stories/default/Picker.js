@@ -2,7 +2,7 @@ import Picker from '@enact/moonstone/Picker';
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '../../src/utils/action';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 

@@ -7,7 +7,7 @@ import ToggleButton from '@enact/moonstone/ToggleButton';
 import Group from '@enact/ui/Group';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '../../src/utils/action';
 
 import {boolean, select} from '../../src/enact-knobs';
 

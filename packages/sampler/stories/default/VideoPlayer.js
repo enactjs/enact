@@ -4,7 +4,7 @@ import IconButton from '@enact/moonstone/IconButton';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '../../src/utils/action';
 
 import {boolean, number, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';

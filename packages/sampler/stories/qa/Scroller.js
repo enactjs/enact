@@ -11,7 +11,7 @@ import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import UiScroller from '@enact/ui/Scroller';
 
-import {action} from '@storybook/addon-actions';
+import {action} from '../../src/utils/action';
 import {storiesOf} from '@storybook/react';
 
 import {boolean, number, select} from '../../src/enact-knobs';

@@ -1,7 +1,7 @@
 import DatePicker, {DatePickerBase} from '@enact/moonstone/DatePicker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '../../src/utils/action';
 
 import {boolean, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata, removeProps} from '../../src/utils';

@@ -5,7 +5,7 @@ import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '../../src/utils/action';
 import css from './Button.module.less';
 
 import {boolean, select, text} from '../../src/enact-knobs';
