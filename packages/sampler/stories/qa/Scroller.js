@@ -174,6 +174,7 @@ storiesOf('Scroller', module)
 		'Horizontal scroll',
 		() => (
 			<Scroller
+				direction={select('direction', prop.direction, Scroller, 'horizontal')}
 				focusableScrollbar={boolean('focusableScrollbar', Config)}
 				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
 				noScrollByWheel={boolean('noScrollByWheel', Config)}
@@ -235,7 +236,6 @@ storiesOf('Scroller', module)
 				noScrollByWheel={boolean('noScrollByWheel', Config)}
 				spotlightDisabled={boolean('spotlightDisabled', Config, false)}
 				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
-
 			>
 				<Heading showLine>Nothing selected</Heading>
 				<ExpandableList
