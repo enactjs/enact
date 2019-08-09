@@ -68,7 +68,6 @@ class ScrollerWithResizable extends React.Component {
 	render () {
 		return (
 			<Scroller
-				focusableScrollbar={boolean('focusableScrollbar', Config)}
 				verticalScrollbar="visible"
 			>
 				<Item>Item</Item>
@@ -174,7 +173,7 @@ storiesOf('Scroller', module)
 		'Horizontal scroll',
 		() => (
 			<Scroller
-				direction={select('direction', prop.direction, Scroller, 'horizontal')}
+				direction={select('direction', prop.direction, Config, 'horizontal')}
 				focusableScrollbar={boolean('focusableScrollbar', Config)}
 				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
 				noScrollByWheel={boolean('noScrollByWheel', Config)}
@@ -202,12 +201,14 @@ storiesOf('Scroller', module)
 		'With Spottable Components',
 		() => (
 			<Scroller
-				direction={select('direction', prop.direction, Scroller, 'both')}
-				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
-				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Scroller, 'auto')}
-				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, Scroller, 'auto')}
+				direction={select('direction', prop.direction, Config)}
+				focusableScrollbar={boolean('focusableScrollbar', Config)}
+				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
+				noScrollByWheel={boolean('noScrollByWheel', Config)}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
+				spotlightDisabled={boolean('spotlightDisabled', Config, false)}
+				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
 			>
 				<div
 					style={{
