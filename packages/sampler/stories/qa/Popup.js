@@ -5,9 +5,9 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import Toggleable from '@enact/ui/Toggleable';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '../../src/utils/action';
 
 import {boolean, select, text} from '../../src/enact-knobs';
+import {action} from '../../src/utils';
 
 Popup.displayName = 'Popup';
 

@@ -1,10 +1,9 @@
 import DaySelector, {DaySelectorBase} from '@enact/moonstone/DaySelector';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '../../src/utils/action';
 
 import {boolean, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 DaySelector.displayName = 'DaySelector';
 const Config = mergeComponentMetadata('DaySelector', DaySelectorBase, DaySelector);

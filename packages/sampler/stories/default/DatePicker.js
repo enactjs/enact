@@ -1,10 +1,9 @@
 import DatePicker, {DatePickerBase} from '@enact/moonstone/DatePicker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '../../src/utils/action';
 
 import {boolean, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata, removeProps} from '../../src/utils';
+import {action, mergeComponentMetadata, removeProps} from '../../src/utils';
 
 const Config = mergeComponentMetadata('DatePicker', DatePickerBase, DatePicker);
 removeProps(Config, 'year defaultOpen day maxDays maxMonths month onChangeDate onChangeMonth onChangeYear order');

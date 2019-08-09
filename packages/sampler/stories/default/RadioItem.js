@@ -6,10 +6,9 @@ import Icon from '@enact/moonstone/Icon';
 import {listIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '../../src/utils/action';
 
 import {boolean, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata, nullify} from '../../src/utils';
+import {action, mergeComponentMetadata, nullify} from '../../src/utils';
 
 RadioItem.displayName = 'RadioItem';
 const Config = mergeComponentMetadata('RadioItem', ItemBase, Item, UiToggleItemBase, UiToggleItem, ToggleItem, RadioItem);

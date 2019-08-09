@@ -2,10 +2,9 @@ import Input, {InputBase} from '@enact/moonstone/Input';
 import icons from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '../../src/utils/action';
 
 import {boolean, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 const iconNames = ['', ...icons];
 

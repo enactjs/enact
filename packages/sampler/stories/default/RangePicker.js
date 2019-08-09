@@ -2,11 +2,9 @@ import RangePicker, {RangePickerBase} from '@enact/moonstone/RangePicker';
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '../../src/utils/action';
 
 import {boolean, number, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
-import nullify from '../../src/utils/nullify.js';
+import {action, mergeComponentMetadata, nullify} from '../../src/utils';
 
 const Config = mergeComponentMetadata('RangePicker', RangePickerBase, RangePicker);
 

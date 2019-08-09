@@ -27,15 +27,15 @@ import Slider from '@enact/moonstone/Slider';
 import Spotlight from '@enact/spotlight';
 import {Row, Cell, Column} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
+import Pause from '@enact/spotlight/Pause';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {storiesOf} from '@storybook/react';
-import {action} from '../../src/utils/action';
 
 import docs from '../../images/icon-enact-docs.png';
 import {boolean, select} from '../../src/enact-knobs';
-import Pause from '@enact/spotlight/Pause';
+import {action} from '../../src/utils';
 
 const Container = SpotlightContainerDecorator(
 	{enterTo: 'last-focused'},

@@ -2,10 +2,9 @@ import Popup from '@enact/moonstone/Popup';
 import BodyText from '@enact/moonstone/BodyText';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '../../src/utils/action';
 
 import {boolean, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('Popup', Popup);
 

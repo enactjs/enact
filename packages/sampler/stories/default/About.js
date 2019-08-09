@@ -6,9 +6,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 import {storiesOf} from '@storybook/react';
-import {action} from '../../src/utils/action';
 
 import {boolean} from '../../src/enact-knobs';
+import {action} from '../../src/utils';
 
 import css from './About.module.less';
 
