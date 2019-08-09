@@ -494,10 +494,12 @@ class ScrollableBaseNative extends Component {
 				scrollVertically = bounds.maxTop > 0 && Math.abs(top - this.uiRef.current.scrollTop) > epsilon;
 
 			if (scrollHorizontally || scrollVertically) {
+				const animate = this.animateOnFocus && Math.abs(this.uiRef.current.scrollLeft - left) < 250;
+
 				this.uiRef.current.start({
 					targetX: left,
 					targetY: top,
-					animate: this.animateOnFocus,
+					animate,
 					overscrollEffect: this.props.overscrollEffectOn[this.uiRef.current.lastInputType] && (!this.childRef.current.shouldPreventOverscrollEffect || !this.childRef.current.shouldPreventOverscrollEffect())
 				});
 				this.lastScrollPositionOnFocus = pos;
