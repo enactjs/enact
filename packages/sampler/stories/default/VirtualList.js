@@ -67,7 +67,7 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
-const UiVirtualListConfig = mergeComponentMetadata('UiVirtualList', UiVirtualListBase, UiScrollableBase);
+const UiVirtualListConfig = mergeComponentMetadata('VirtualList', UiVirtualListBase, UiScrollableBase);
 const VirtualListConfig = mergeComponentMetadata('VirtualList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
 
 storiesOf('UI', module)

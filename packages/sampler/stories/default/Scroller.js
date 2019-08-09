@@ -16,7 +16,7 @@ const
 		scrollbarOption: ['auto', 'hidden', 'visible']
 	};
 
-const UiScrollerConfig = mergeComponentMetadata('UiScroller', UiScrollerBase, UiScrollableBase, UiScroller);
+const UiScrollerConfig = mergeComponentMetadata('Scroller', UiScrollerBase, UiScrollableBase, UiScroller);
 const ScrollerConfig = mergeComponentMetadata('Scroller', UiScrollableBase, ScrollableBase, Scroller);
 
 storiesOf('UI', module)
