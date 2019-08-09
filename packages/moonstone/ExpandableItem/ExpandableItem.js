@@ -26,7 +26,6 @@ import last from 'ramda/src/last';
 import React from 'react';
 
 import LabeledItem from '../LabeledItem';
-import Skinnable from '../Skinnable';
 import {extractVoiceProps} from '../internal/util';
 
 import Expandable from './Expandable';
@@ -392,7 +391,6 @@ const ExpandableItemBase = kind({
 			<ContainerDiv
 				{...rest}
 				aria-disabled={disabled}
-				disabled={disabled}
 				ref={setContainerNode}
 				spotlightDisabled={spotlightDisabled}
 			>
@@ -451,9 +449,7 @@ const ExpandableItemBase = kind({
  * @public
  */
 const ExpandableItem = Expandable(
-	Skinnable(
-		ExpandableItemBase
-	)
+	ExpandableItemBase
 );
 
 export default ExpandableItem;
