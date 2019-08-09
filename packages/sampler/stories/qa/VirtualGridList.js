@@ -15,8 +15,8 @@ const Config = mergeComponentMetadata('VirtualList', UiVirtualListBase, UiScroll
 const
 	defaultDataSize = 1000,
 	wrapOption = {
-		'false': false,
-		'true': true,
+		false: false,
+		true: true,
 		'&quot;noAnimation&quot;': 'noAnimation'
 	},
 	items = [],

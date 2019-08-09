@@ -13,12 +13,12 @@ import {mergeComponentMetadata} from '../../src/utils';
 
 const
 	wrapOption = {
-		'false': false,
-		'true': true,
+		false: false,
+		true: true,
 		'&quot;noAnimation&quot;': 'noAnimation'
 	},
 	prop = {
-		direction: {'horizontal': 'horizontal', 'vertical': 'vertical'},
+		direction: {horizontal: 'horizontal', vertical: 'vertical'},
 		scrollbarOption: ['auto', 'hidden', 'visible']
 	},
 	items = [],
