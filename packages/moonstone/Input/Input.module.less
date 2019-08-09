@@ -72,15 +72,14 @@
 
 	.inputHighlight {
 		position: absolute;
-		top: 6px;
+		top: 50%;
+		transform: translateY(-50%);
 		height: @moon-input-highlight-height;
 		max-width: @moon-input-highlight-max-width;
 		overflow: hidden;
-		text-indent: @moon-input-text-indent;
 		letter-spacing: 0.1px;
 		pointer-events: none;
 		opacity: 0;
-		z-index: -1;
 	}
 
 	&.small {
@@ -157,6 +156,15 @@
 					color: @moon-input-placeholder-active-color;
 				});
 			}
+		}
+
+		.inputHighlightContainer {
+			position: absolute;
+			height: 100%;
+			width: 100%;
+			left: 0;
+			box-sizing: border-box;
+			z-index: -1;
 		}
 
 		&.invalid input {

@@ -267,7 +267,9 @@ const InputBase = kind({
 		return (
 			<div {...rest} disabled={disabled}>
 				<InputDecoratorIcon position="before" size={size}>{iconBefore}</InputDecoratorIcon>
-				<span className={css.inputHighlight}>{value ? value : placeholder}</span>
+				<div className={`${css.input} ${css.inputHighlightContainer}`}>
+					<span className={css.inputHighlight}>{value ? value : placeholder}</span>
+				</div>
 				<input
 					{...inputProps}
 					{...voiceProps}
