@@ -80,6 +80,7 @@
 		letter-spacing: 0.1px;
 		pointer-events: none;
 		opacity: 0;
+		z-index: -1;
 	}
 
 	&.small {
@@ -156,15 +157,6 @@
 					color: @moon-input-placeholder-active-color;
 				});
 			}
-		}
-
-		.inputHighlightContainer {
-			position: absolute;
-			height: 100%;
-			width: 100%;
-			left: 0;
-			box-sizing: border-box;
-			z-index: -1;
 		}
 
 		&.invalid input {
