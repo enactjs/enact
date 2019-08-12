@@ -51,12 +51,12 @@ const ProgressBarBase = kind({
 		css: PropTypes.object,
 
 		/**
-		 * Highlights the filled portion.
+		 * No highlights the filled portion.
 		 *
 		 * @type {Boolean}
 		 * @public
 		 */
-		highlighted: PropTypes.bool,
+		noHighlighted: PropTypes.bool,
 
 		/**
 		 * Sets the orientation of the slider.
@@ -129,13 +129,13 @@ const ProgressBarBase = kind({
 	},
 
 	computed: {
-		className: ({highlighted, styler}) => styler.append({highlighted}),
+		className: ({noHighlighted, styler}) => styler.append({noHighlighted}),
 		tooltip: ({tooltip}) => tooltip === true ? ProgressBarTooltip : tooltip
 	},
 
 	render: ({css, orientation, progress, tooltip, ...rest}) => {
 		delete rest.tooltip;
-		delete rest.highlighted;
+		delete rest.noHighlighted;
 
 		return (
 			<UiProgressBar
