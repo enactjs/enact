@@ -148,6 +148,15 @@ class ScrollableBase extends Component {
 		childRenderer: PropTypes.func.isRequired,
 
 		/**
+		 * Animate while scrolling
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		animate: PropTypes.bool,
+
+		/**
 		 * This is set to `true` by SpotlightContainerDecorator
 		 *
 		 * @type {Boolean}
@@ -269,6 +278,7 @@ class ScrollableBase extends Component {
 
 	static defaultProps = {
 		'data-spotlight-container-disabled': false,
+		animate: false,
 		focusableScrollbar: false,
 		overscrollEffectOn: {
 			arrowKey: false,
@@ -566,7 +576,7 @@ class ScrollableBase extends Component {
 		forward('onKeyDown', ev, this.props);
 		ev.preventDefault();
 
-		this.animateOnFocus = true;
+		this.animateOnFocus = this.props.animate;
 
 		if (!repeat && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
 			const direction = isPageUp(keyCode) ? 'up' : 'down';
@@ -588,7 +598,7 @@ class ScrollableBase extends Component {
 			ev.preventDefault();
 		}
 
-		this.animateOnFocus = true;
+		this.animateOnFocus = this.props.animate;
 
 		if (!repeat && this.hasFocus()) {
 			const {overscrollEffectOn} = this.props;
@@ -896,6 +906,7 @@ class ScrollableBase extends Component {
 	render () {
 		const
 			{
+				animate,
 				childRenderer,
 				'data-spotlight-container': spotlightContainer,
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
@@ -920,6 +931,7 @@ class ScrollableBase extends Component {
 				applyOverscrollEffect={this.applyOverscrollEffect}
 				clearOverscrollEffect={this.clearOverscrollEffect}
 				handleResizeWindow={this.handleResizeWindow}
+				noAnimation={!animate}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
