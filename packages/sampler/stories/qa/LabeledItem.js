@@ -21,8 +21,7 @@ storiesOf('LabeledItem', module)
 		() => (
 			<Scroller style={{height: '100%'}}>
 				<div>
-					<Heading showLine style={{paddingTop: '30px'}} />
-					<Heading showLine>Long children and Short label</Heading>
+					<Heading showLine style={{paddingTop: '30px'}} >Long children and Short label</Heading>
 					<LabeledItem
 						label={text('label', LabeledItem, inputData.shortLabel)}
 					>
@@ -46,7 +45,7 @@ storiesOf('LabeledItem', module)
 					<Heading showLine style={{paddingTop: '30px'}}>Marquee starts on render </Heading>
 					<LabeledItem
 						disabled={boolean('disabled', LabeledItem)}
-						marqueeOn={select('marqueeOn', ['hover (Default)', 'render'], LabeledItem, 'hover')}
+						marqueeOn="render"
 						label={text('label', LabeledItem, inputData.shortLabel)}
 					>
 						{text('children', LabeledItem, inputData.longChildren)}
