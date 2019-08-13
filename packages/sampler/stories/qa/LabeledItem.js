@@ -1,5 +1,6 @@
 import Heading from '@enact/moonstone/Heading';
 import LabeledItem from '@enact/moonstone/LabeledItem';
+import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
 import React from 'react';
 import Scroller from '@enact/moonstone/Scroller';
 import {storiesOf} from '@storybook/react';
@@ -20,29 +21,33 @@ storiesOf('LabeledItem', module)
 		() => (
 			<Scroller style={{height: '100%'}}>
 				<div>
-					<Heading showLine style={{paddingTop: '10px'}} />
+					<Heading showLine style={{paddingTop: '30px'}} />
 					<Heading showLine>Long children and Short label</Heading>
 					<LabeledItem
-						disabled={boolean('disabled', LabeledItem)}
 						label={text('label', LabeledItem, inputData.shortLabel)}
 					>
 						{text('children', LabeledItem, inputData.longChildren)}
 					</LabeledItem>
 
-					<Heading showLine style={{paddingTop: '10px'}} />
-					<Heading showLine>Short children and Long label</Heading>
+					<Heading showLine style={{paddingTop: '30px'}}>Short children and Long label</Heading>
 					<LabeledItem
-						disabled={boolean('disabled', LabeledItem)}
 						label={text('label2', LabeledItem, inputData.longLabel)}
 					>
 						{text('children2', LabeledItem, inputData.shortChildren)}
 					</LabeledItem>
 
-					<Heading showLine style={{paddingTop: '10px'}} />
-					<Heading showLine>Long children and Long label</Heading>
+					<Heading showLine style={{paddingTop: '30px'}}>Long children and Long label</Heading>
+					<LabeledItem
+						label={text('label2', LabeledItem, inputData.longLabel)}
+					>
+						{text('children', LabeledItem, inputData.longChildren)}
+					</LabeledItem>
+
+					<Heading showLine style={{paddingTop: '30px'}}>Marquee starts on render </Heading>
 					<LabeledItem
 						disabled={boolean('disabled', LabeledItem)}
-						label={text('label2', LabeledItem, inputData.longLabel)}
+						marqueeOn={select('marqueeOn', ['hover (Default)', 'render'], LabeledItem, 'hover')}
+						label={text('label', LabeledItem, inputData.shortLabel)}
 					>
 						{text('children', LabeledItem, inputData.longChildren)}
 					</LabeledItem>
