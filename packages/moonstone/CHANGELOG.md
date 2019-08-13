@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to correctly scroll to a selected component when focused via 5way
+
 ## [3.0.0-rc.2] - 2019-08-08
 
 ### Added
