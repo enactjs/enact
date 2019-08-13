@@ -309,6 +309,7 @@ class ScrollableBaseNative extends Component {
 
 	// status
 	isWheeling = false
+	isKeyDownRepeat = false
 
 	// spotlight
 	lastScrollPositionOnFocus = null
@@ -497,7 +498,7 @@ class ScrollableBaseNative extends Component {
 				this.uiRef.current.start({
 					targetX: left,
 					targetY: top,
-					animate: this.animateOnFocus,
+					animate: this.animateOnFocus && !this.isKeyDownRepeat,
 					overscrollEffect: this.props.overscrollEffectOn[this.uiRef.current.lastInputType] && (!this.childRef.current.shouldPreventOverscrollEffect || !this.childRef.current.shouldPreventOverscrollEffect())
 				});
 				this.lastScrollPositionOnFocus = pos;
@@ -643,8 +644,14 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	onKeyUp = (ev) => {
+		this.isKeyDownRepeat = false;
+	}
+
 	onKeyDown = (ev) => {
 		const {keyCode, repeat, target} = ev;
+
+		this.isKeyDownRepeat = ev.repeat;
 
 		forward('onKeyDown', ev, this.props);
 
@@ -986,6 +993,7 @@ class ScrollableBaseNative extends Component {
 				handleResizeWindow={this.handleResizeWindow}
 				onFlick={this.onFlick}
 				onKeyDown={this.onKeyDown}
+				onKeyUp={this.onKeyUp}
 				onMouseDown={this.onMouseDown}
 				onScroll={this.handleScroll}
 				onWheel={this.onWheel}
