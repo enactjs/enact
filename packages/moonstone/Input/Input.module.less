@@ -33,17 +33,12 @@
 		text-overflow: ellipsis;
 	}
 
-	.input-placeholder({
-		.vendor-opacity(@moon-input-placeholder-opacity);
-	});
-
 	.focus({
 		cursor: text;
 	});
 
 	.disabled({
 		cursor: default;
-		.vendor-opacity(@moon-input-disabled-opacity);
 	});
 
 	:global(.enact-locale-right-to-left) & {
@@ -151,6 +146,7 @@
 			color: inherit;
 
 			.input-placeholder({
+				.vendor-opacity(@moon-input-placeholder-opacity);
 				color: @moon-input-placeholder-color;
 			});
 
@@ -201,12 +197,30 @@
 			.vendor-opacity(@moon-input-disabled-opacity);
 
 			.focus({
-				.vendor-opacity(@moon-input-disabled-opacity);
+				background-color: @moon-input-decorator-disabled-focus-bg-color;
+
+				.input,
+				.decoratorIcon {
+					.vendor-opacity(1);
+					color: @moon-input-disabled-focus-text-color;
+
+					.input-placeholder({
+						.vendor-opacity(@moon-input-disabled-opacity);
+					});
+				}
 			});
 
 			.input,
 			.decoratorIcon {
+				.vendor-opacity(@moon-input-disabled-opacity);
 				color: @moon-input-disabled-text-color;
+			}
+
+			.input {
+				.input-placeholder({
+					.vendor-opacity(1);
+					color: @moon-input-placeholder-disabled-color;
+				});
 			}
 		});
 	});

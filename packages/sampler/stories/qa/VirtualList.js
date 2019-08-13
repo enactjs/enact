@@ -1,8 +1,10 @@
 import Item from '@enact/moonstone/Item';
-import SwitchItem from '@enact/moonstone/SwitchItem';
 import {ActivityPanels, Panel, Header} from '@enact/moonstone/Panels';
+import Scroller from '@enact/moonstone/Scroller';
+import SwitchItem from '@enact/moonstone/SwitchItem';
 import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
+import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import React, {useState} from 'react';
@@ -12,19 +14,37 @@ import {action} from '@storybook/addon-actions';
 import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBase, UiVirtualListBase);
+const Config = mergeComponentMetadata('VirtualList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
 
 const
 	itemStyle = {
-		borderBottom: ri.unit(3, 'rem') + ' solid #202328',
 		boxSizing: 'border-box',
 		display: 'flex'
 	},
+	listStyle = {
+		height: '200px'
+	},
+	borderStyle = ri.unit(3, 'rem') + ' solid #202328',
 	items = [],
 	defaultDataSize = 1000,
+	prop = {
+		scrollbarOption: ['auto', 'hidden', 'visible']
+	},
+	wrapOption = {
+		false: false,
+		true: true,
+		'&quot;noAnimation&quot;': 'noAnimation'
+	},
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderItem = (ItemComponent, size, onClick) => ({index, ...rest}) => {
-		const style = {height: size + 'px', ...itemStyle};
+	renderItem = (ItemComponent, size, vertical, onClick) => ({index, ...rest}) => {
+		const style = {
+			...(
+				vertical ?
+					{borderBottom: borderStyle, height: size + 'px'} :
+					{borderRight: borderStyle, height: '100%', width: size + 'px', writingMode: 'vertical-lr'}
+			),
+			...itemStyle
+		};
 		return (
 			<ItemComponent index={index} style={style} onClick={onClick} {...rest}>
 				{items[index].item}
@@ -109,7 +129,7 @@ const InPanels = ({className, title, ...rest}) => {
 				<VirtualList
 					id="spotlight-list"
 					// eslint-disable-next-line enact/prop-types
-					itemRenderer={renderItem(Item, rest.itemSize, handleSelectItem)}
+					itemRenderer={renderItem(Item, rest.itemSize, true, handleSelectItem)}
 					spotlightId="virtual-list"
 					{...rest}
 				/>
@@ -124,19 +144,53 @@ const InPanels = ({className, title, ...rest}) => {
 
 storiesOf('VirtualList', module)
 	.add(
+		'horizontal scroll in Scroller',
+		() => {
+			const listProps = {
+				dataSize: updateDataSize(number('dataSize', Config, defaultDataSize)),
+				direction: 'horizontal',
+				focusableScrollbar: boolean('focusableScrollbar', Config),
+				horizontalScrollbar: select('horizontalScrollbar', prop.scrollbarOption, Config),
+				itemRenderer: renderItem(Item, ri.scale(number('itemSize', Config, 72)), false),
+				itemSize: ri.scale(number('itemSize', Config, 72)),
+				noScrollByWheel: boolean('noScrollByWheel', Config),
+				onKeyDown: action('onKeyDown'),
+				onScrollStart: action('onScrollStart'),
+				onScrollStop: action('onScrollStop'),
+				spacing: ri.scale(number('spacing', Config)),
+				style: listStyle,
+				verticalScrollbar: select('verticalScrollbar', prop.scrollbarOption, Config),
+				wrap: wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]
+			};
+
+			return (
+				<Scroller >
+					<VirtualList {...listProps} key="1" />
+					<VirtualList {...listProps} key="2" />
+					<VirtualList {...listProps} key="3" />
+				</Scroller>
+			);
+		},
+		{propTables: [Config]}
+	)
+	.add(
 		'with more items',
 		() => {
 			return (
 				<VirtualList
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
-					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
-					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)))}
+					focusableScrollbar={boolean('focusableScrollbar', Config)}
+					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
+					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)), true)}
 					itemSize={ri.scale(number('itemSize', Config, 72))}
+					noScrollByWheel={boolean('noScrollByWheel', Config)}
 					onKeyDown={action('onKeyDown')}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', Config, 0))}
-					verticalScrollbar={select('verticalScrollbar', ['auto', 'hidden', 'visible'], Config, 'auto')}
+					spacing={ri.scale(number('spacing', Config))}
+					spotlightDisabled={boolean('spotlightDisabled', Config, false)}
+					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
+					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 				/>
 			);
 		},
@@ -151,12 +205,17 @@ storiesOf('VirtualList', module)
 				<InPanels
 					title={title}
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
-					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
+					focusableScrollbar={boolean('focusableScrollbar', Config)}
+					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
 					itemSize={ri.scale(number('itemSize', Config, 72))}
+					noScrollByWheel={boolean('noScrollByWheel', Config)}
+					onKeyDown={action('onKeyDown')}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', Config, 0))}
-					verticalScrollbar={select('verticalScrollbar', ['auto', 'hidden', 'visible'], Config, 'auto')}
+					spacing={ri.scale(number('spacing', Config))}
+					spotlightDisabled={boolean('spotlightDisabled', Config, false)}
+					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
+					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 				/>
 			);
 		}
