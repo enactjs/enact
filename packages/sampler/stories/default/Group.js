@@ -7,9 +7,9 @@ import ToggleButton from '@enact/moonstone/ToggleButton';
 import Group from '@enact/ui/Group';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 
 import {boolean, select} from '../../src/enact-knobs';
+import {action} from '../../src/utils';
 
 // Set up some defaults for info and knobs
 const prop = {

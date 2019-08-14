@@ -4,9 +4,9 @@ import PickerAddRemove from './components/PickerAddRemove';
 import PickerRTL from './components/PickerRTL';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 
 import {boolean, select} from '../../src/enact-knobs';
+import {action} from '../../src/utils';
 
 Picker.displayName = 'Picker';
 

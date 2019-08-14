@@ -6,10 +6,9 @@ import Icon from '@enact/moonstone/Icon';
 import {listIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 
 import {boolean, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata, nullify} from '../../src/utils';
+import {action, mergeComponentMetadata, nullify} from '../../src/utils';
 
 FormCheckboxItem.displayName = 'FormCheckboxItem';
 const Config = mergeComponentMetadata('FormCheckboxItem', ItemBase, Item, UiToggleItemBase, UiToggleItem, ToggleItem, FormCheckboxItem);

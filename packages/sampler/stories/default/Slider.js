@@ -1,10 +1,9 @@
 import Slider, {SliderTooltip} from '@enact/moonstone/Slider';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 
 import {boolean, number, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 const SliderConfig = mergeComponentMetadata('Slider', Slider);
 const SliderTooltipConfig = mergeComponentMetadata('SliderTooltip', SliderTooltip);

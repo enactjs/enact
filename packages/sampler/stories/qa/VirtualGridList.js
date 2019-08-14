@@ -5,10 +5,9 @@ import ri from '@enact/ui/resolution';
 import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 
 import {boolean, number, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('VirtualGridList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
 
