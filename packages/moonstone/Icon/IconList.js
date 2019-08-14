@@ -50,7 +50,7 @@ export default {
 	star              : 0x0F0028, // star_full
 	hollowstar        : 0x0F0029, // star_empty
 	halfstar          : 0x0F002A, // star_half
-	gear              : 0x0F002B, // gear
+	gear              : 0x0F00CD, // gear
 	plug              : 0x0F002C, // input
 	lock              : 0x0F002D,  // lock
 	forward15         : 0x0F0041,  // forward15
