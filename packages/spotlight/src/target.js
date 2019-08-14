@@ -1,3 +1,4 @@
+import clamp from 'ramda/src/clamp';
 import last from 'ramda/src/last';
 
 import {
@@ -433,8 +434,78 @@ function getNavigableTarget (target) {
 	return target;
 }
 
+const getOffsetDistanceToTargetFromPosition = (distance, direction, {x, y}, {left, right, top, bottom}) => {
+	if (direction === 'left' || direction === 'right') {
+		if (y > bottom) {
+			distance += y - bottom;
+		} else if (y < top) {
+			distance += top - y;
+		}
+	} else if (x > right) {
+		distance += x - right;
+	} else if (x < left) {
+		distance += left - x;
+	}
+
+	return distance;
+};
+
+const getDistanceToTargetFromPosition = (direction, position, elementRect) => {
+	const {x, y} = position;
+	let distance;
+
+	if (direction === 'left') {
+		distance = x - elementRect.right;
+	} else if (direction === 'right') {
+		distance = elementRect.left - x;
+	} else if (direction === 'up') {
+		distance = y - elementRect.bottom;
+	} else if (direction === 'down') {
+		distance = elementRect.top - y;
+	}
+
+	return getOffsetDistanceToTargetFromPosition(clamp(0, Math.abs(distance), distance), direction, position, elementRect);
+};
+
+const getNearestTargetsInContainerFromPosition = (position, containerId) => {
+	return ['up', 'left', 'right', 'down'].reduce((result, direction) => {
+		const target = getTargetByDirectionFromPosition(direction, position, containerId);
+
+		if (target) {
+			result.push({
+				direction,
+				target
+			});
+		}
+
+		return result;
+	}, []);
+};
+
+const getNearestTargetInContainerFromPosition = (position, containerId) => {
+	const targets = getNearestTargetsInContainerFromPosition(position, containerId);
+
+	if (!targets.length) {
+		return;
+	}
+
+	targets.forEach((item) => {
+		const {direction, target} = item;
+		item.distance = getDistanceToTargetFromPosition(direction, position, getRect(target));
+	});
+
+	targets.sort((a, b) => a.distance - b.distance);
+	return targets[0].target;
+};
+
+const getNearestTargetFromPosition = (position, containerId) => (
+	getNavigableTarget(document.elementFromPoint(position.x, position.y)) ||
+	getNearestTargetInContainerFromPosition(position, containerId)
+);
+
 export {
 	getNavigableTarget,
+	getNearestTargetFromPosition,
 	getTargetByContainer,
 	getTargetByDirectionFromElement,
 	getTargetByDirectionFromPosition,
