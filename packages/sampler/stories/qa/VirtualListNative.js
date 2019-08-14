@@ -15,7 +15,6 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('VirtualListNative', UiVirtualListBaseNative, UiScrollableBaseNative, VirtualListBase);
 
 const
-	defaultDataSize = 10,
 	prop = {
 		scrollbarOption: ['auto', 'hidden', 'visible']
 	},
@@ -32,7 +31,7 @@ storiesOf('VirtualListNative', module)
 			<Column>
 				<Cell
 					component={VirtualListNative}
-					dataSize={number('dataSize', Config, defaultDataSize)}
+					dataSize={number('dataSize', Config, 10)}
 					direction="vertical"
 					focusableScrollbar={boolean('focusableScrollbar', Config)}
 					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
@@ -47,8 +46,7 @@ storiesOf('VirtualListNative', module)
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 20))}
-					spotlightDisabled={boolean('spotlightDisabled(for all items)', Config, false)
-					}
+					spotlightDisabled={boolean('spotlightDisabled(for all items)', Config, false)}
 					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
 					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 				/>
