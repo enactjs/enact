@@ -1,15 +1,14 @@
 import Item from '@enact/moonstone/Item';
-import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
 import {Item as UiItem} from '@enact/ui/Item';
-import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
-import {VirtualList as UiVirtualList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
-import ri from '@enact/ui/resolution';
-import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 import React from 'react';
+import ri from '@enact/ui/resolution';
+import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
+import {storiesOf} from '@storybook/react';
+import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualList as UiVirtualList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 
 import {boolean, number, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 const
 	wrapOption = {
