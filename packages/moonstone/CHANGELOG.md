@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Panels` animation performance issues on low powered hardware
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to correctly scroll to a selected component when focused via 5way
 
 ## [3.0.0-rc.2] - 2019-08-08
@@ -19,7 +20,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone` to support custom font for simplified Chinese
 - `moonstone` disabled focus appearance to match the latest designs
 - `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableList`, and `moonstone/TimePicker` disabled opacity in high contrast mode
-- `moonstone/Panels` animation performance issues on low powered hardware
 - `moonstone/Picker` to avoid overlapping items on render
 - `moonstone/Scroller` and other scrolling components to properly scroll via remote page up/down buttons when nested within another scrolling component
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll via a page up or down key when focus is on any vertical paging control while in pointer mode
