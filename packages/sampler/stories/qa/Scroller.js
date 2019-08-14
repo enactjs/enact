@@ -6,16 +6,19 @@ import Item from '@enact/moonstone/Item';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ri from '@enact/ui/resolution';
+import {ScrollableBase} from '@enact/moonstone/Scrollable';
 import Scroller from '@enact/moonstone/Scroller';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import UiScroller from '@enact/ui/Scroller';
+import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
+
 import {storiesOf} from '@storybook/react';
 
 import {boolean, number, select} from '../../src/enact-knobs';
-import {action} from '../../src/utils';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
-Scroller.displayName = 'Scroller';
+const Config = mergeComponentMetadata('Scroller', UiScrollableBase, ScrollableBase, Scroller);
 
 const itemData = [];
 for (let i = 0; i < 100; i++) {
@@ -25,8 +28,7 @@ for (let i = 0; i < 100; i++) {
 const
 	prop = {
 		direction: ['both', 'horizontal', 'vertical'],
-		horizontalScrollbar: ['auto', 'hidden', 'visible'],
-		verticalScrollbar: ['auto', 'hidden', 'visible']
+		scrollbarOption: ['auto', 'hidden', 'visible']
 	};
 
 class ScrollerResizableItem extends React.Component {
@@ -64,7 +66,9 @@ class ScrollerWithResizable extends React.Component {
 
 	render () {
 		return (
-			<Scroller verticalScrollbar="visible">
+			<Scroller
+				verticalScrollbar="visible"
+			>
 				<Item>Item</Item>
 				<Item>Item</Item>
 				<ScrollerResizableItem more={this.state.more} toggleMore={this.handleClick} />
@@ -75,6 +79,7 @@ class ScrollerWithResizable extends React.Component {
 
 class ScrollerWithTwoExpandableList extends React.Component {
 	render () {
+
 		return (
 			<div>
 				<Scroller
@@ -131,8 +136,11 @@ storiesOf('Scroller', module)
 		'List of things',
 		() => (
 			<Scroller
-				spotlightDisabled={boolean('spotlightDisabled', Scroller, false)}
-				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
+				focusableScrollbar={boolean('focusableScrollbar', Config)}
+				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
+				noScrollByWheel={boolean('noScrollByWheel', Config)}
+				spotlightDisabled={boolean('spotlightDisabled', Config, false)}
+				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
 			>
 				<Group childComponent={Item}>
 					{itemData}
@@ -143,7 +151,14 @@ storiesOf('Scroller', module)
 	.add(
 		'With ExpandableList',
 		() => (
-			<Scroller focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}>
+			<Scroller
+				focusableScrollbar={boolean('focusableScrollbar', Config)}
+				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
+				noScrollByWheel={boolean('noScrollByWheel', Config)}
+				spotlightDisabled={boolean('spotlightDisabled', Config, false)}
+				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
+			>
+
 				<ExpandableList
 					closeOnSelect
 					title="Expandable List in Scroller"
@@ -157,11 +172,14 @@ storiesOf('Scroller', module)
 		'Horizontal scroll',
 		() => (
 			<Scroller
-				direction={select('direction', prop.direction, Scroller, 'horizontal')}
-				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
-				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Scroller, 'auto')}
+				direction={select('direction', prop.direction, Config, 'horizontal')}
+				focusableScrollbar={boolean('focusableScrollbar', Config)}
+				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
+				noScrollByWheel={boolean('noScrollByWheel', Config)}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
+				spotlightDisabled={boolean('spotlightDisabled', Config, false)}
+				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
 			>
 				<div
 					style={{
@@ -182,12 +200,14 @@ storiesOf('Scroller', module)
 		'With Spottable Components',
 		() => (
 			<Scroller
-				direction={select('direction', prop.direction, Scroller, 'both')}
-				focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}
-				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Scroller, 'auto')}
-				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, Scroller, 'auto')}
+				direction={select('direction', prop.direction, Config)}
+				focusableScrollbar={boolean('focusableScrollbar', Config)}
+				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
+				noScrollByWheel={boolean('noScrollByWheel', Config)}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
+				spotlightDisabled={boolean('spotlightDisabled', Config, false)}
+				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
 			>
 				<div
 					style={{
@@ -210,7 +230,13 @@ storiesOf('Scroller', module)
 	.add(
 		'With Many ExpandableList',
 		() => (
-			<Scroller focusableScrollbar={boolean('focusableScrollbar', Scroller, false)}>
+			<Scroller
+				focusableScrollbar={boolean('focusableScrollbar', Config)}
+				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
+				noScrollByWheel={boolean('noScrollByWheel', Config)}
+				spotlightDisabled={boolean('spotlightDisabled', Config, false)}
+				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
+			>
 				<Heading showLine>Nothing selected</Heading>
 				<ExpandableList
 					closeOnSelect
@@ -351,7 +377,7 @@ storiesOf('Scroller', module)
 			return (
 				<Scroller
 					style={{height: ri.scaleToRem(200)}}
-					focusableScrollbar={boolean('focusableScrollbar', Scroller, true)}
+					focusableScrollbar={boolean('focusableScrollbar', Config, true)}
 				>
 					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
 					<Item>1</Item>
@@ -401,7 +427,7 @@ storiesOf('Scroller', module)
 	.add(
 		'With Nested Scroller',
 		() => {
-			let noScrollByWheel = boolean('noScrollByWheel', Scroller, false);
+			let noScrollByWheel = boolean('noScrollByWheel', Config);
 			return (
 				<Scroller
 					direction="vertical"

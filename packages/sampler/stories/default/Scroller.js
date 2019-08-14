@@ -1,31 +1,34 @@
-import {Scroller as UiScroller} from '@enact/ui/Scroller';
-import Scroller from '@enact/moonstone/Scroller';
-import ri from '@enact/ui/resolution';
 import React from 'react';
+import ri from '@enact/ui/resolution';
+import {ScrollableBase} from '@enact/moonstone/Scrollable';
+import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
+import Scroller from '@enact/moonstone/Scroller';
+import {Scroller as UiScroller, ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import {storiesOf} from '@storybook/react';
 
 import {boolean, select} from '../../src/enact-knobs';
 import {action, mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('Scroller', Scroller, UiScroller);
-
 const
 	prop = {
 		direction: ['both', 'horizontal', 'vertical'],
-		horizontalScrollbar: ['auto', 'hidden', 'visible'],
-		verticalScrollbar: ['auto', 'hidden', 'visible']
+		scrollbarOption: ['auto', 'hidden', 'visible']
 	};
+
+const UiScrollerConfig = mergeComponentMetadata('Scroller', UiScrollerBase, UiScrollableBase, UiScroller);
+const ScrollerConfig = mergeComponentMetadata('Scroller', UiScrollableBase, ScrollableBase, Scroller);
 
 storiesOf('UI', module)
 	.add(
 		'Scroller',
 		() => (
 			<UiScroller
-				direction={select('direction', prop.direction, Config, 'both')}
-				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Config, 'auto')}
+				direction={select('direction', prop.direction, UiScrollerConfig)}
+				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, UiScrollerConfig)}
+				noScrollByWheel={boolean('noScrollByWheel', UiScrollerConfig)}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, Config, 'auto')}
+				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, UiScrollerConfig)}
 			>
 				<div
 					style={{
@@ -57,12 +60,14 @@ storiesOf('Moonstone', module)
 		'Scroller',
 		() => (
 			<Scroller
-				direction={select('direction', prop.direction, Config, 'both')}
-				focusableScrollbar={boolean('focusableScrollbar', Config)}
-				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, Config, 'auto')}
+				direction={select('direction', prop.direction, ScrollerConfig)}
+				focusableScrollbar={boolean('focusableScrollbar', ScrollerConfig)}
+				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, ScrollerConfig)}
+				noScrollByWheel={boolean('noScrollByWheel', ScrollerConfig)}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, Config, 'auto')}
+				spotlightDisabled={boolean('spotlightDisabled', ScrollerConfig, false)}
+				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, ScrollerConfig)}
 			>
 				<div
 					style={{

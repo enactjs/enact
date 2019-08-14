@@ -11,9 +11,9 @@ import {arrange} from '@enact/ui/ViewManager/Arranger';
 const positionBreadcrumb = (node, index) => {
 	const crumbIndex = node.dataset.index;
 	const x = (index - crumbIndex);
-	const percentX = x * -100;
+	const pixelOffset = -x * node.getBoundingClientRect().width;
 
-	return `translateX(${percentX}%)`;
+	return `translateX(${pixelOffset}px)`;
 };
 
 const enter = (config) => {
