@@ -93,6 +93,9 @@ class ScrollerWithTwoExpandableList extends React.Component {
 				<Scroller
 					direction="vertical"
 					style={{height: ri.scale(200)}}
+					onKeyDown={action('onKeyDown')}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
 				>
 					<ExpandableList title="second">
 						{['a', 'b', 'c', 'd']}
@@ -139,6 +142,9 @@ storiesOf('Scroller', module)
 				focusableScrollbar={boolean('focusableScrollbar', Config)}
 				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
 				noScrollByWheel={boolean('noScrollByWheel', Config)}
+				onKeyDown={action('onKeyDown')}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
 				spotlightDisabled={boolean('spotlightDisabled', Config, false)}
 				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
 			>
@@ -155,6 +161,9 @@ storiesOf('Scroller', module)
 				focusableScrollbar={boolean('focusableScrollbar', Config)}
 				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
 				noScrollByWheel={boolean('noScrollByWheel', Config)}
+				onKeyDown={action('onKeyDown')}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
 				spotlightDisabled={boolean('spotlightDisabled', Config, false)}
 				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
 			>
@@ -176,6 +185,7 @@ storiesOf('Scroller', module)
 				focusableScrollbar={boolean('focusableScrollbar', Config)}
 				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
 				noScrollByWheel={boolean('noScrollByWheel', Config)}
+				onKeyDown={action('onKeyDown')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				spotlightDisabled={boolean('spotlightDisabled', Config, false)}
@@ -204,6 +214,7 @@ storiesOf('Scroller', module)
 				focusableScrollbar={boolean('focusableScrollbar', Config)}
 				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
 				noScrollByWheel={boolean('noScrollByWheel', Config)}
+				onKeyDown={action('onKeyDown')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				spotlightDisabled={boolean('spotlightDisabled', Config, false)}
@@ -234,6 +245,9 @@ storiesOf('Scroller', module)
 				focusableScrollbar={boolean('focusableScrollbar', Config)}
 				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
 				noScrollByWheel={boolean('noScrollByWheel', Config)}
+				onKeyDown={action('onKeyDown')}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
 				spotlightDisabled={boolean('spotlightDisabled', Config, false)}
 				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
 			>
