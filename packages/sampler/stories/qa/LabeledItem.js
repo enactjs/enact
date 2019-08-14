@@ -1,12 +1,10 @@
 import Heading from '@enact/moonstone/Heading';
 import LabeledItem from '@enact/moonstone/LabeledItem';
-import React from 'react';
 import Scroller from '@enact/moonstone/Scroller';
+import React from 'react';
 import {storiesOf} from '@storybook/react';
 
-import {boolean, text} from '../../src/enact-knobs';
-
-LabeledItem.displayName = 'LabeledItem';
+import {boolean, select, text} from '../../src/enact-knobs';
 
 const inputData = {
 	longLabel : 'label starts - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ac tellus in velit ornare commodo. Nam dignissim fringilla nulla, sit amet hendrerit sapien laoreet quis. Praesent quis tellus non diam viverra feugiat. In quis mattis purus, quis tristique mi. Mauris vitae tellus tempus, convallis ligula id, laoreet eros. Nullam eu tempus odio, non mollis tellus. Phasellus vitae iaculis nisl. = label ends',
@@ -18,7 +16,7 @@ const inputData = {
 
 storiesOf('LabeledItem', module)
 	.add(
-		'with different text lenght',
+		'with different text length',
 		() => (
 			<Scroller style={{height: '100%'}}>
 				<div>
@@ -55,8 +53,8 @@ storiesOf('LabeledItem', module)
 		() => (
 			<div>
 				<LabeledItem
-					spotlightDisabled
-					marqueeOn="render"
+					spotlightDisabled={boolean('spotlightDisabled', LabeledItem, true)}
+					marqueeOn={select('marqueeOn', ['render', 'hover'], LabeledItem, 'render')}
 					label={text('label', LabeledItem, inputData.shortLabel)}
 				>
 					{text('children', LabeledItem, inputData.mediumChildren)}
