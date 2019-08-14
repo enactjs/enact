@@ -104,8 +104,9 @@ class ScrollbarBase extends Component {
 		this.startHidingThumb = startHidingThumb;
 		this.uiUpdate = uiUpdate;
 
-		const {isOneOfScrollButtonsFocused, updateButtons, focusOnButton} = this.scrollButtonsRef.current;
+		const {checkAndApplyOverscrollEffect, isOneOfScrollButtonsFocused, updateButtons, focusOnButton} = this.scrollButtonsRef.current;
 
+		this.checkAndApplyOverscrollEffect = checkAndApplyOverscrollEffect;
 		this.isOneOfScrollButtonsFocused = isOneOfScrollButtonsFocused;
 		this.update = (bounds) => {
 			updateButtons(bounds);
@@ -156,6 +157,7 @@ const Scrollbar = ApiDecorator(
 	{api: [
 		'focusOnButton',
 		'getContainerRef',
+		'checkAndApplyOverscrollEffect',
 		'isOneOfScrollButtonsFocused',
 		'showThumb',
 		'startHidingThumb',

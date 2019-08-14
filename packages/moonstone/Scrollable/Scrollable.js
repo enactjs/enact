@@ -595,11 +595,15 @@ class ScrollableBase extends Component {
 			let direction = null;
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
-				if (this.isContent(target) && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
-					direction = isPageUp(keyCode) ? 'up' : 'down';
-					this.scrollByPage(direction);
-					if (overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
-						this.checkAndApplyOverscrollEffectByDirection(direction);
+				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
+					if (this.isContent(target)) {
+						direction = isPageUp(keyCode) ? 'up' : 'down';
+						this.scrollByPage(direction);
+						if (overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
+							this.checkAndApplyOverscrollEffectByDirection(direction);
+						}
+					} else if (this.props.overscrollEffectOn.pageKey) {
+						this.uiRef.current.verticalScrollbarRef.current.checkAndApplyOverscrollEffect(keyCode, this.uiRef.current.checkAndApplyOverscrollEffect);
 					}
 				}
 			} else if (getDirection(keyCode)) {

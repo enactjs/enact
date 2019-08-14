@@ -2,6 +2,7 @@ import Item from '@enact/moonstone/Item';
 import {ActivityPanels, Panel, Header} from '@enact/moonstone/Panels';
 import Scroller from '@enact/moonstone/Scroller';
 import SwitchItem from '@enact/moonstone/SwitchItem';
+import {ScrollableBase} from '@enact/moonstone/Scrollable';
 import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
@@ -14,7 +15,7 @@ import {action} from '@storybook/addon-actions';
 import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const Config = mergeComponentMetadata('VirtualList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
+const Config = mergeComponentMetadata('VirtualList', UiVirtualListBase, UiScrollableBase, VirtualListBase, ScrollableBase);
 
 const
 	itemStyle = {
@@ -187,6 +188,36 @@ storiesOf('VirtualList', module)
 					onKeyDown={action('onKeyDown')}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
+					spacing={ri.scale(number('spacing', Config))}
+					spotlightDisabled={boolean('spotlightDisabled', Config, false)}
+					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
+					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
+				/>
+			);
+		},
+		{propTables: [Config]}
+	)
+	.add(
+		'with Overscroll Effect',
+		() => {
+			return (
+				<VirtualList
+					dataSize={updateDataSize(number('dataSize', Config, 10))}
+					focusableScrollbar={boolean('focusableScrollbar', Config)}
+					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
+					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)), true)}
+					itemSize={ri.scale(number('itemSize', Config, 72))}
+					noScrollByWheel={boolean('noScrollByWheel', Config)}
+					onKeyDown={action('onKeyDown')}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
+					overscrollEffectOn={{
+						arrowKey: boolean('overscrollEffectOn arrowKey', Config, false),
+						drag: boolean('overscrollEffectOn drag', Config),
+						pageKey: boolean('overscrollEffectOn pageKey', Config),
+						scrollbarButton: boolean('overscrollEffectOn scrollbarButton', Config),
+						wheel: boolean('overscrollEffectOn wheel', Config, true)
+					}}
 					spacing={ri.scale(number('spacing', Config))}
 					spotlightDisabled={boolean('spotlightDisabled', Config, false)}
 					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}

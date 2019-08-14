@@ -780,7 +780,7 @@ class ScrollableBase extends Component {
 		this.setOverscrollStatus(orientation, edge, type === overscrollTypeOnce ? overscrollTypeDone : type, ratio);
 	}
 
-	checkAndApplyOverscrollEffect = (orientation, edge, type, ratio = 1) => {
+	checkAndApplyOverscrollEffect = (orientation, edge, type = overscrollTypeOnce, ratio = 1) => {
 		const
 			isVertical = (orientation === 'vertical'),
 			curPos = isVertical ? this.scrollTop : this.scrollLeft,
