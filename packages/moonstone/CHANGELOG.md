@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Header` input highlight positioning
 - `moonstone/MediaOverlay` to not mute media playback
 - `moonstone/Panels` animation performance issues on low powered hardware
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to correctly scroll to a selected component when focused via 5way
