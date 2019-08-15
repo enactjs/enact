@@ -4,16 +4,13 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ## [3.0.0-rc.3] - 2019-08-15
 
-### Changed
-
-- `sampler` to limit the fields included in the Actions tab to improve serialization performance on low-powered hardware
-
 ### Fixed
 
 - `moonstone/Header` input highlight positioning
 - `moonstone/MediaOverlay` to not mute media playback
 - `moonstone/Panels` animation performance issues on low powered hardware
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to correctly scroll to a selected component when focused via 5way
+- `sampler` to limit the fields included in the Actions tab to improve serialization performance on low-powered hardware
 - `spotlight` to attempt to restore focus to an element nearest the pointer position when the pointer hides within an overflow container
 - `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to retain the proper scroll position when updating the `itemSize` or `spacing` props
 
