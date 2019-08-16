@@ -6,6 +6,8 @@ import {storiesOf} from '@storybook/react';
 import {boolean, select, text} from '../../src/enact-knobs';
 import {action} from '../../src/utils';
 
+ExpandableInput.displayName = 'ExpandableInput';
+
 const iconNames = ['', ...Object.keys(icons)];
 
 storiesOf('ExpandableInput', module)
