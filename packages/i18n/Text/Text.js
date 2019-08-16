@@ -164,7 +164,8 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				if (!resBundle) return;
 
 				const translated = props.reduce((obj, prop) => {
-					obj[prop].translated = String(getIStringFromBundle(obj[prop].text, resBundle));
+					const text = obj[prop].text || obj[prop];
+					obj[prop].translated = String(getIStringFromBundle(text, resBundle));
 
 					return obj;
 				}, {...map});
@@ -177,7 +178,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		canRender () {
 			const entries = Object.values(this.state.map);
-			for (const entry in entries) {
+			for (const entry of entries) {
 				if (entry.translated === false && entry.defaultText === false) {
 					return false;
 				}
