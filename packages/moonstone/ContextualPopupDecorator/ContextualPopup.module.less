@@ -45,6 +45,9 @@
 		height: @moon-contextual-popup-arrow-height;
 		width: @moon-contextual-popup-arrow-width;
 
+		// PLAT-84596: Coax the arrow onto a GPU layer to work around a rendering issue in Chromium
+		will-change: transform;
+
 		&.up {
 			transform: rotate(180deg);
 		}
