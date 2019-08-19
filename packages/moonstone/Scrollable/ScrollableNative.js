@@ -660,11 +660,15 @@ class ScrollableBaseNative extends Component {
 			let direction = null;
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
-				if (this.isContent(target) && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
-					direction = isPageUp(keyCode) ? 'up' : 'down';
-					this.scrollByPage(direction);
-					if (overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
-						this.checkAndApplyOverscrollEffectByDirection(direction);
+				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
+					if (this.isContent(target)) {
+						direction = isPageUp(keyCode) ? 'up' : 'down';
+						this.scrollByPage(direction);
+						if (overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
+							this.checkAndApplyOverscrollEffectByDirection(direction);
+						}
+					} else if (this.props.overscrollEffectOn.pageKey) {
+						this.uiRef.current.verticalScrollbarRef.current.checkAndApplyOverscrollEffect(keyCode, this.uiRef.current.checkAndApplyOverscrollEffect, overscrollTypeOnce);
 					}
 				}
 			} else if (!Spotlight.getPointerMode() && getDirection(keyCode)) {
@@ -985,7 +989,6 @@ class ScrollableBaseNative extends Component {
 				clearOverscrollEffect={this.clearOverscrollEffect}
 				handleResizeWindow={this.handleResizeWindow}
 				onFlick={this.onFlick}
-				onKeyDown={this.onKeyDown}
 				onMouseDown={this.onMouseDown}
 				onScroll={this.handleScroll}
 				onWheel={this.onWheel}
@@ -1015,6 +1018,7 @@ class ScrollableBaseNative extends Component {
 						data-spotlight-container={spotlightContainer}
 						data-spotlight-container-disabled={spotlightContainerDisabled}
 						data-spotlight-id={spotlightId}
+						onKeyDown={this.onKeyDown}
 						onTouchStart={this.onTouchStart}
 						ref={uiContainerRef}
 						style={style}

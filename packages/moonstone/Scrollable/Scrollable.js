@@ -603,7 +603,7 @@ class ScrollableBase extends Component {
 							this.checkAndApplyOverscrollEffectByDirection(direction);
 						}
 					} else if (this.props.overscrollEffectOn.pageKey) {
-						this.uiRef.current.verticalScrollbarRef.current.checkAndApplyOverscrollEffect(keyCode, this.uiRef.current.checkAndApplyOverscrollEffect);
+						this.uiRef.current.verticalScrollbarRef.current.checkAndApplyOverscrollEffect(keyCode, this.uiRef.current.checkAndApplyOverscrollEffect, overscrollTypeOnce);
 					}
 				}
 			} else if (getDirection(keyCode)) {

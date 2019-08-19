@@ -192,11 +192,11 @@ class ScrollButtons extends Component {
 		return current === this.prevButtonRef.current || current === this.nextButtonRef.current;
 	}
 
-	checkAndApplyOverscrollEffect = (keyCode, checkAndApplyOverscrollEffect) => {
+	checkAndApplyOverscrollEffect = (keyCode, checkAndApplyOverscrollEffect, type) => {
 		if (isPageUp(keyCode) && this.state.prevButtonDisabled) {
-			checkAndApplyOverscrollEffect('vertical', 'before');
+			checkAndApplyOverscrollEffect('vertical', 'before', type);
 		} else if (isPageDown(keyCode) && this.state.nextButtonDisabled) {
-			checkAndApplyOverscrollEffect('vertical', 'after');
+			checkAndApplyOverscrollEffect('vertical', 'after', type);
 		}
 	}
 
