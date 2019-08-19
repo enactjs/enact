@@ -15,6 +15,7 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('VirtualListNative', UiVirtualListBaseNative, UiScrollableBaseNative, VirtualListBase);
 
 const
+	items = [],
 	prop = {
 		scrollbarOption: ['auto', 'hidden', 'visible']
 	},
@@ -24,6 +25,20 @@ const
 		'&quot;noAnimation&quot;': 'noAnimation'
 	};
 
+const updateDataSize = (dataSize) => {
+	const
+		itemNumberDigits = dataSize > 0 ? ((dataSize - 1) + '').length : 0,
+		headingZeros = Array(itemNumberDigits).join('0');
+
+	items.length = 0;
+
+	for (let i = 0; i < dataSize; i++) {
+		items.push('Item ' + (headingZeros + i).slice(-itemNumberDigits));
+	}
+
+	return dataSize;
+};
+
 storiesOf('VirtualListNative', module)
 	.add(
 		'with extra items',
@@ -31,14 +46,13 @@ storiesOf('VirtualListNative', module)
 			<Column>
 				<Cell
 					component={VirtualListNative}
-					dataSize={number('dataSize', Config, 10)}
+					dataSize={updateDataSize(number('dataSize', Config, 10))}
 					direction="vertical"
 					focusableScrollbar={boolean('focusableScrollbar', Config)}
 					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
 					// eslint-disable-next-line react/jsx-no-bind
 					itemRenderer={({index, ...rest}) => {
-						const text = 'Item ' + index;
-						return (<Item {...rest}>{text}</Item>);
+						return (<Item {...rest}>{items[index]}</Item>);
 					}}
 					itemSize={ri.scale(number('itemSize', Config, 60))}
 					noScrollByWheel={boolean('noScrollByWheel', Config)}
