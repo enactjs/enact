@@ -451,33 +451,44 @@ const VirtualListBaseFactory = (type) => {
 				const row = (index - column) % dataSize / dimensionToExtent;
 				const nextColumn = nextIndex % dimensionToExtent;
 				const nextRow = (nextIndex - nextColumn) % dataSize / dimensionToExtent;
-				let isNextItemInView = false;
+				let
+					isNextItemInView = false,
+					isCurrentItemInView = false;
 
 				if (this.props.type === 'VariableVirtualList') {
 					const container = this.uiRefCurrent.containerRef.current;
-					const node = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${nextIndex}']`);
-					if (container && node) {
-						const containerRects = container.getBoundingClientRect();
-						const nodeRects = node.getBoundingClientRect();
+					const inView = [index, nextIndex].map((index) => {
+						const node = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${index}']`);
 
-						if (
-							nodeRects.x >= containerRects.x &&
-							nodeRects.x + nodeRects.width <= containerRects.x + containerRects.width &&
-							nodeRects.y >= containerRects.y &&
-							nodeRects.y + nodeRects.height <= containerRects.y + containerRects.height
-						) {
-							isNextItemInView = true;
+						if (container && node) {
+							const containerRects = container.getBoundingClientRect();
+							const nodeRects = node.getBoundingClientRect();
+
+							if (
+								nodeRects.x >= containerRects.x &&
+								nodeRects.x + nodeRects.width <= containerRects.x + containerRects.width &&
+								nodeRects.y >= containerRects.y &&
+								nodeRects.y + nodeRects.height <= containerRects.y + containerRects.height
+							) {
+								return true;
+							}
 						}
-					}
+
+						return false;
+					});
+					isCurrentItemInView = inView[0];
+					isNextItemInView = inView[1];
+					console.log(inView);
 				} else {
 					const numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
 					const firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent;
+					isCurrentItemInView = index >= firstFullyVisibleIndex && index < firstFullyVisibleIndex + numOfItemsInPage;
 					isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
 				}
 
 				this.lastFocusedIndex = nextIndex;
 
-				if (isNextItemInView || row === nextRow) {
+				if (isNextItemInView && (isCurrentItemInView || numOfItemsInPage !== dimensionToExtent) || row === nextRow) {
 					this.focusByIndex(nextIndex);
 				} else {
 					this.isScrolledBy5way = true;

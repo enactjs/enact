@@ -2,6 +2,35 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.0.0-rc.3] - 2019-08-15
+
+### Fixed
+
+- `moonstone/Header` input highlight positioning
+- `moonstone/MediaOverlay` to not mute media playback
+- `moonstone/Panels` animation performance issues on low powered hardware
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to correctly scroll to a selected component when focused via 5way
+- `sampler` to limit the fields included in the Actions tab to improve serialization performance on low-powered hardware
+- `spotlight` to attempt to restore focus to an element nearest the pointer position when the pointer hides within an overflow container
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to retain the proper scroll position when updating the `itemSize` or `spacing` props
+
+## [3.0.0-rc.2] - 2019-08-08
+
+### Added
+
+- `moonstone/Icon.icons` entries for new icons
+
+### Fixed
+
+- `moonstone` to support custom font for simplified Chinese
+- `moonstone` disabled focus appearance to match the latest designs
+- `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableList`, and `moonstone/TimePicker` disabled opacity in high contrast mode
+- `moonstone/Picker` to avoid overlapping items on render
+- `moonstone/Scroller` and other scrolling components to properly scroll via remote page up/down buttons when nested within another scrolling component
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll via a page up or down key when focus is on any vertical paging control while in pointer mode
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to correctly set focus after scrolling by page up/down keys
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to scroll via a page up or down key when focus is on any horizontal paging control
+
 ## [3.0.0-rc.1] - 2019-07-31
 
 ### Added
