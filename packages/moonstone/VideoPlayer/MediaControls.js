@@ -82,7 +82,7 @@ const MediaControlsBase = kind({
 		 * [icon]{@link moonstone/Icon.Icon} component type.
 		 *
 		 * @type {String}
-		 * @default 'skipbackward'
+		 * @default 'jumpbackward'
 		 * @public
 		 */
 		jumpBackwardIcon: PropTypes.string,
@@ -100,7 +100,7 @@ const MediaControlsBase = kind({
 		 * [icon]{@link moonstone/Icon.Icon} component type.
 		 *
 		 * @type {String}
-		 * @default 'skipforward'
+		 * @default 'jumpforward'
 		 * @public
 		 */
 		jumpForwardIcon: PropTypes.string,
@@ -347,8 +347,8 @@ const MediaControlsBase = kind({
 	defaultProps: {
 		backwardIcon: 'backward',
 		forwardIcon: 'forward',
-		jumpBackwardIcon: 'skipbackward',
-		jumpForwardIcon: 'skipforward',
+		jumpBackwardIcon: 'jumpbackward',
+		jumpForwardIcon: 'jumpforward',
 		spotlightId: 'mediaControls',
 		moreButtonColor: 'blue',
 		pauseIcon: 'pause',
