@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [3.0.0-rc.3] - 2019-08-15
+
+### Fixed
+
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to retain the proper scroll position when updating the `itemSize` or `spacing` props
+
+## [3.0.0-rc.2] - 2019-08-08
+
+No significant changes.
+
 ## [3.0.0-rc.1] - 2019-07-31
 
 ### Added

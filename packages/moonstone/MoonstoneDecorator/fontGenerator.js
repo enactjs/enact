@@ -32,6 +32,9 @@ const fonts = {
 	'ja': {
 		regular: 'LG Smart UI JP',
 		bold: 'LG Display_JP_Bold'
+	},
+	'zh-Hans': {
+		regular: 'LG Smart UI SC'
 	}
 };
 

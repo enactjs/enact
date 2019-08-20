@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [3.0.0-rc.3] - 2019-08-15
+
+### Fixed
+
+- `spotlight` to attempt to restore focus to an element nearest the pointer position when the pointer hides within an overflow container
+
+## [3.0.0-rc.2] - 2019-08-08
+
+No significant changes.
+
 ## [3.0.0-rc.1] - 2019-07-31
 
 ### Changed

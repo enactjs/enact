@@ -2,10 +2,9 @@ import IncrementSlider, {IncrementSliderBase, IncrementSliderTooltip} from '@ena
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 
 import {boolean, number, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 const IncrementSliderConfig = mergeComponentMetadata('IncrementSlider', IncrementSliderBase, IncrementSlider);
 const IncrementSliderTooltipConfig = mergeComponentMetadata('IncrementSliderTooltip', IncrementSliderTooltip);

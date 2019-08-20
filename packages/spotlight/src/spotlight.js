@@ -66,6 +66,7 @@ import {
 
 import {
 	getNavigableTarget,
+	getNearestTargetFromPosition,
 	getTargetByContainer,
 	getTargetByDirectionFromElement,
 	getTargetByDirectionFromPosition,
@@ -253,12 +254,16 @@ const Spotlight = (function () {
 		let next;
 
 		if (lastContainerId) {
+			const position = getLastPointerPosition();
+
 			// walk up the chain of containers from the last to attempt to find a target
 			next = getContainersForNode(getContainerNode(lastContainerId)).reverse();
 
 			// only prepend last focused if it exists so that Spotlight.focus() doesn't receive
 			// a falsy target
-			const lastFocused = getContainerLastFocusedElement(lastContainerId);
+			const lastFocused = getContainerConfig(lastContainerId).overflow && getNearestTargetFromPosition(position, lastContainerId) ||
+				getContainerLastFocusedElement(lastContainerId);
+
 			if (lastFocused) {
 				next.unshift(lastFocused);
 			}
@@ -749,24 +754,6 @@ const Spotlight = (function () {
 			}
 
 			return false;
-		},
-
-		/**
-		 * Focuses the specified position.
-		 *
-		 * @param {Object} point Position info consists of `x` and `y` values
-		 * @param {String} direction Direction to find a spottable target when no spottable target
-		 *	is found at the specified position, one of `'left'`, `'right'`, `'up'` or `'down'`
-		 * @private
-		 */
-		focusFromPoint: function (point, direction) {
-			const node = getNavigableTarget(document.elementFromPoint(point.x, point.y));
-
-			if (node && node !== getCurrent()) {
-				focusElement(node, getContainersForNode(node), true);
-			} else {
-				spotNextFromPoint(direction, point);
-			}
 		},
 
 		// move(<direction>)

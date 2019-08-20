@@ -306,23 +306,28 @@ const VirtualListBaseFactory = (type) => {
 				prevProps.spacing !== this.props.spacing ||
 				!equals(prevProps.itemSize, this.props.itemSize)
 			) {
+				const {x, y} = this.getXY(this.scrollPosition, 0);
+
 				this.calculateMetrics(this.props);
 				// eslint-disable-next-line react/no-did-update-set-state
 				this.setState(this.getStatesAndUpdateBounds(this.props));
 				this.setContainerSize();
+
+				const {clientHeight, clientWidth, scrollHeight, scrollWidth} = this.scrollBounds;
+				const xMax = scrollWidth - clientWidth;
+				const yMax = scrollHeight - clientHeight;
+
+				this.updateScrollPosition({
+					x: xMax > x ? x : xMax,
+					y: yMax > y ? y : yMax
+				});
 			} else if (this.hasDataSizeChanged) {
 				const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
 				// eslint-disable-next-line react/no-did-update-set-state
 				this.setState(newState);
 				this.setContainerSize();
 			} else if (prevProps.rtl !== this.props.rtl) {
-				const {x, y} = this.getXY(this.scrollPosition, 0);
-
-				if (type === Native) {
-					this.scrollToPosition(x, y, this.props.rtl);
-				} else {
-					this.setScrollPosition(x, y, this.props.rtl);
-				}
+				this.updateScrollPosition(this.getXY(this.scrollPosition, 0));
 			}
 		}
 
@@ -353,6 +358,14 @@ const VirtualListBaseFactory = (type) => {
 		hasDataSizeChanged = false
 		cc = []
 		scrollPosition = 0
+
+		updateScrollPosition = ({x, y}, rtl = this.props.rtl) => {
+			if (type === Native) {
+				this.scrollToPosition(x, y, rtl);
+			} else {
+				this.setScrollPosition(x, y, rtl);
+			}
+		}
 
 		isVertical = () => this.isPrimaryDirectionVertical
 

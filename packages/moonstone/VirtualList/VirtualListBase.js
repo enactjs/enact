@@ -425,11 +425,12 @@ const VirtualListBaseFactory = (type) => {
 				const nextRow = (nextIndex - nextColumn) % dataSize / dimensionToExtent;
 				const numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
 				const firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent;
+				const isCurrentItemInView = index >= firstFullyVisibleIndex && index < firstFullyVisibleIndex + numOfItemsInPage;
 				const isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
 
 				this.lastFocusedIndex = nextIndex;
 
-				if (isNextItemInView || row === nextRow) {
+				if (isNextItemInView && (isCurrentItemInView || numOfItemsInPage !== dimensionToExtent) || row === nextRow) {
 					this.focusByIndex(nextIndex);
 				} else {
 					this.isScrolledBy5way = true;

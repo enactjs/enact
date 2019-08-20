@@ -391,7 +391,6 @@ const ExpandableItemBase = kind({
 			<ContainerDiv
 				{...rest}
 				aria-disabled={disabled}
-				disabled={disabled}
 				ref={setContainerNode}
 				spotlightDisabled={spotlightDisabled}
 			>

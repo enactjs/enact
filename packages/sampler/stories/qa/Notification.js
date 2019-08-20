@@ -3,10 +3,9 @@ import Popup from '@enact/moonstone/Popup';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 
 import {boolean} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('Notification', Notification, Popup);
 

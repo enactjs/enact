@@ -4,7 +4,7 @@ import {storiesOf} from '@storybook/react';
 
 import {boolean, number, select} from '../../src/enact-knobs';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('ProgressBar', ProgressBarBase, ProgressBar);
 
