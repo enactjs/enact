@@ -6,11 +6,10 @@ import ri from '@enact/ui/resolution';
 import {ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
 import {VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList/VirtualListBase';
 
-import {action} from '@storybook/addon-actions';
 import {storiesOf} from '@storybook/react';
 
 import {boolean, number, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('VirtualListNative', UiVirtualListBaseNative, UiScrollableBaseNative, VirtualListBase);
 

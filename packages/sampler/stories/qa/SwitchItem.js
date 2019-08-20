@@ -3,9 +3,9 @@ import Group from '@enact/ui/Group';
 import Heading from '@enact/moonstone/Heading';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 
 import {boolean, text} from '../../src/enact-knobs';
+import {action} from '../../src/utils';
 
 SwitchItem.displayName = 'SwitchItem';
 

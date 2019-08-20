@@ -13,11 +13,10 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import UiScroller from '@enact/ui/Scroller';
 import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 
-import {action} from '@storybook/addon-actions';
 import {storiesOf} from '@storybook/react';
 
 import {boolean, number, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('Scroller', UiScrollableBase, ScrollableBase, Scroller);
 

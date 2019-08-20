@@ -4,10 +4,9 @@ import UiToggleItem, {ToggleItemBase as UiToggleItemBase} from '@enact/ui/Toggle
 import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 
-import {mergeComponentMetadata} from '../../src/utils';
 import {boolean} from '../../src/enact-knobs';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 RadioItem.displayName = 'RaditoItem';
 const Config = mergeComponentMetadata('RadioItem', ItemBase, Item, UiToggleItemBase, UiToggleItem, ToggleItem, RadioItem);

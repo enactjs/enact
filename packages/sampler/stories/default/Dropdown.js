@@ -3,10 +3,9 @@ import Button, {ButtonBase} from '@enact/moonstone/Button';
 import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 
 import {boolean, number, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 Dropdown.displayName = 'Dropdown';
 const Config = mergeComponentMetadata('Dropdown', UIButtonBase, UIButton, ButtonBase, Button, DropdownBase, Dropdown);

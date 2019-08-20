@@ -1,15 +1,14 @@
 import {GridListImageItem} from '@enact/moonstone/GridListImageItem';
-import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
 import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
 import ri from '@enact/ui/resolution';
-import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
-import {VirtualGridList as UiVirtualGridList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
-import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 import React from 'react';
+import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
+import {storiesOf} from '@storybook/react';
+import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualGridList as UiVirtualGridList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 
 import {boolean, number, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 const
 	wrapOption = {

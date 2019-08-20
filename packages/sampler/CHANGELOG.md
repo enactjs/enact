@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [3.0.0-rc.3] - 2019-08-15
+
+### Fixed
+
+- `sampler` to limit the fields included in the Actions tab to improve serialization performance on low-powered hardware
+
 ## [3.0.0-rc.2] - 2019-08-08
 
 No significant changes.

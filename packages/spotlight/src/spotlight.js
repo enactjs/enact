@@ -66,6 +66,7 @@ import {
 
 import {
 	getNavigableTarget,
+	getNearestTargetFromPosition,
 	getTargetByContainer,
 	getTargetByDirectionFromElement,
 	getTargetByDirectionFromPosition,
@@ -253,12 +254,16 @@ const Spotlight = (function () {
 		let next;
 
 		if (lastContainerId) {
+			const position = getLastPointerPosition();
+
 			// walk up the chain of containers from the last to attempt to find a target
 			next = getContainersForNode(getContainerNode(lastContainerId)).reverse();
 
 			// only prepend last focused if it exists so that Spotlight.focus() doesn't receive
 			// a falsy target
-			const lastFocused = getContainerLastFocusedElement(lastContainerId);
+			const lastFocused = getContainerConfig(lastContainerId).overflow && getNearestTargetFromPosition(position, lastContainerId) ||
+				getContainerLastFocusedElement(lastContainerId);
+
 			if (lastFocused) {
 				next.unshift(lastFocused);
 			}
