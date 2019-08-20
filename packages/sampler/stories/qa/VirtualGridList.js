@@ -1,9 +1,10 @@
-import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
-import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList/VirtualListBase';
+import React from 'react';
 import GridListImageItem from '@enact/moonstone/GridListImageItem';
+import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
-import React from 'react';
+import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList/VirtualListBase';
+
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
