@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/ContextualPopupDecorator` arrow rendering issue in Chromium
+
 ## [3.0.0-rc.3] - 2019-08-15
 
 ### Fixed
