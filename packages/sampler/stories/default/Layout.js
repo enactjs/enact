@@ -20,10 +20,10 @@ storiesOf('UI', module)
 					orientation={select('orientation', ['horizontal', 'vertical'], Layout, 'horizontal')}
 				>
 					<Cell size={number('cell size', Cell, {range: true, min: 0, max: 300, step: 5}, 100) + 'px'} shrink>
-						<Button small>First</Button>
+						<Button>First</Button>
 					</Cell>
 					<Cell shrink={boolean('shrinkable cell', Cell)}>
-						<Button small>Second</Button>
+						<Button>Second</Button>
 					</Cell>
 					<Cell>
 						<Item>An auto-sizing Item that has a marquee so it will always show the full text string even if it&apos;s too long to fit</Item>
