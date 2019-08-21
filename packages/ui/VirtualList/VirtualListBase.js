@@ -449,7 +449,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		// For VariableVirtualList
-		getVariableGridBottomPosition = (index) => {
+		getItemBottomPosition = (index) => {
 			const
 				variableGridPosition = this.variableGridPositions[index],
 				variableGridSize = this.props.itemSizes[index];
@@ -459,6 +459,11 @@ const VirtualListBaseFactory = (type) => {
 			} else {
 				return index * this.primary.gridSize - this.props.spacing;
 			}
+		}
+
+		// For VariableVirtualList
+		getItemTopPositionFromPreviousItemBottomPosition = (index, spacing) => {
+			return index === 0 ? 0 : this.getItemBottomPosition(index - 1) + spacing;
 		}
 
 		getItemPosition = (index, stickTo = 'start') => {
@@ -686,14 +691,14 @@ const VirtualListBaseFactory = (type) => {
 				let firstVisibleIndex = null, lastVisibleIndex = null;
 
 				for (let i = firstIndex; i < firstIndex +  numOfItems; i++) {
-					if (scrollPosition <= this.getVariableGridBottomPosition(i)) {
+					if (scrollPosition <= this.getItemBottomPosition(i)) {
 						firstVisibleIndex = i;
 						break;
 					}
 				}
 
 				for (let i = firstIndex + numOfItems - 1; i >= firstIndex; i--) {
-					if (scrollPosition + size >= this.getVariableGridBottomPosition(i) - this.props.itemSizes[i]) {
+					if (scrollPosition + size >= this.getItemBottomPosition(i) - this.props.itemSizes[i]) {
 						lastVisibleIndex = i;
 						break;
 					}
@@ -833,64 +838,95 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		// For VariableVirtualList
-		adjustVariableGridPosition () {
+		calculateAndCacheItemPosition (index) {
+			const {itemSizes} = this.props;
+
+			if (!this.variableGridPositions[index] && itemSizes[index]) {
+				const
+					{spacing} = this.props,
+					position = this.getItemTopPositionFromPreviousItemBottomPosition(index, spacing);
+
+				this.variableGridPositions[index] = {position};
+			}
+		}
+
+		applyItemPositionToDOMElement (index) {
 			const
-				{dataSize, direction, overhang, spacing, itemSizes} = this.props,
+				{direction} = this.props,
+				{numOfItems} = this.state,
+				{variableGridPositions} = this,
+				childNode = this.itemContainerRef.current.children[index % numOfItems];
+
+			if (childNode && variableGridPositions[index]) {
+				if (direction === 'vertical') {
+					childNode.style.transform = `translate3d(0, ${variableGridPositions[index].position}px, 0)`;
+				} else {
+					childNode.style.transform = `translate3d(${variableGridPositions[index].position}px, 0, 0)`;
+				}
+			}
+		}
+
+		updateThresholdWithItemPosition (firstIndex, lastIndex, maxFirstIndex) {
+			const
+				{overhang} = this.props,
+				numOfUpperLine = Math.floor(overhang / 2);
+
+			this.threshold.min = firstIndex === 0 ? -Infinity : this.getItemBottomPosition(firstIndex + numOfUpperLine);
+			this.threshold.max = lastIndex === maxFirstIndex ? Infinity : this.getItemBottomPosition(firstIndex + (numOfUpperLine + 1));
+		}
+
+		updateScrollBoundsWithItemPositions () {
+			const
+				{dataSize, itemSizes} = this.props,
 				{firstIndex, numOfItems} = this.state,
-				{isPrimaryDirectionVertical, itemContainerRef, maxFirstIndex, variableGridPositions} = this,
-				lastIndex = firstIndex + numOfItems - 1,
-				numOfUpperLine = Math.floor(overhang / 2),
+				{isPrimaryDirectionVertical, variableGridPositions} = this,
 				scrollBoundsDimension = isPrimaryDirectionVertical ? 'scrollHeight' : 'scrollWidth';
 
-			if (itemContainerRef.current) {
-				let index;
+			if (variableGridPositions.length === dataSize) { // all item sizes are known
+				this.scrollBounds[scrollBoundsDimension] =
+					itemSizes.reduce((acc, cur) => acc + cur, 0) + (dataSize - 1) * spacing;
+			} else {
+				for (let index = firstIndex + numOfItems - 1; index < dataSize; index++) {
+					const nextInfo = variableGridPositions[index + 1];
+					if (!nextInfo) {
+						const endPosition = this.getItemBottomPosition(index);
+						if (endPosition > this.scrollBounds[scrollBoundsDimension]) {
+							this.scrollBounds[scrollBoundsDimension] = endPosition;
+						}
+
+						break;
+					}
+				}
+			}
+
+			this.scrollBounds.maxTop = Math.max(0, this.scrollBounds.scrollHeight - this.scrollBounds.clientHeight);
+		}
+
+		adjustVariableGridPosition () {
+			if (this.itemContainerRef.current) {
+				const
+					{dataSize, direction, spacing, itemSizes} = this.props,
+					{firstIndex, numOfItems} = this.state,
+					{itemContainerRef, maxFirstIndex, variableGridPositions} = this,
+					lastIndex = firstIndex + numOfItems - 1;
 
 				// Cache variable item positions
 				// and adjust variable item DOM element positions
-				for (index = firstIndex; index <= lastIndex; index++) {
-					const childNode = itemContainerRef.current.children[index % numOfItems];
-
-					if (!variableGridPositions[index] && itemSizes[index]) {
-						const position = index === 0 ? 0 : this.getVariableGridBottomPosition(index - 1) + spacing;
-
-						variableGridPositions[index] = {position};
-					}
-
-					if (childNode && variableGridPositions[index]) {
-						if (direction === 'vertical') {
-							childNode.style.transform = `translate3d(0, ${variableGridPositions[index].position}px, 0)`;
-						} else {
-							childNode.style.transform = `translate3d(${variableGridPositions[index].position}px, 0, 0)`;
-						}
-					}
+				for (let index = firstIndex; index <= lastIndex; index++) {
+					this.calculateAndCacheItemPosition(index);
+					this.applyItemPositionToDOMElement(index);
 				}
 
-				// Update threshold
-				this.threshold.min = firstIndex === 0 ? -Infinity : this.getVariableGridBottomPosition(firstIndex + numOfUpperLine * 1);
-				this.threshold.max = lastIndex === maxFirstIndex ? Infinity : this.getVariableGridBottomPosition(firstIndex + (numOfUpperLine + 1));
+				// Update threshold based on this.variableGridPositions
+				this.updateThresholdWithItemPosition(firstIndex, lastIndex, maxFirstIndex);
 
-				// Update scroll bounds
-				if (variableGridPositions.length === dataSize) { // all item sizes are known
-					this.scrollBounds[scrollBoundsDimension] =
-						itemSizes.reduce((acc, cur) => acc + cur, 0) + (dataSize - 1) * spacing;
-				} else {
-					for (index = firstIndex + numOfItems - 1; index < dataSize; index++) {
-						const nextInfo = variableGridPositions[index + 1];
-						if (!nextInfo) {
-							const endPosition = this.getVariableGridBottomPosition(index);
-							if (endPosition > this.scrollBounds[scrollBoundsDimension]) {
-								this.scrollBounds[scrollBoundsDimension] = endPosition;
-							}
+				// Update scroll bounds based on this.variableGridPositions
+				this.updateScrollBoundsWithItemPositions();
 
-							break;
-						}
-					}
-				}
-				this.scrollBounds.maxTop = Math.max(0, this.scrollBounds.scrollHeight - this.scrollBounds.clientHeight);
-
+				// Set container size based on this.scrollbounds
 				this.setContainerSize();
 
-				// Update moreInfo
+				// Update moreInfo based on this.variableGridPositions
 				this.updateMoreInfo(dataSize, this.scrollPosition);
 			}
 		}
