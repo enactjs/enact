@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` arrow rendering issue in Chromium
+- `moonstone/EditableIntegerPicker` to properly rerender when the edited value is invalid
 
 ## [3.0.0-rc.3] - 2019-08-15
 
