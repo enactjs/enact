@@ -360,21 +360,6 @@ class ScrollableBase extends Component {
 		stop: PropTypes.func,
 
 		/**
-		 * Type of the list.
-		 * If you want to use variable item size, you need to define it to `'VariableVirtualList'`.
-		 *
-		 * Valid values are:
-		 * * `'VirtualList'`, and
-		 * * `'VirtualGridList'`, and
-		 * * `'VariableVirtualList'`.
-		 *
-		 * @type {String}
-		 * @default 'VirtualList'
-		 * @private
-		 */
-		type: PropTypes.oneOf(['VirtualList', 'VirtualGridList', 'VariableVirtualList']),
-
-		/**
 		 * Specifies how to show vertical scrollbar.
 		 *
 		 * Valid values are:
