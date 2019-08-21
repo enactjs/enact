@@ -190,7 +190,7 @@ const VirtualListBaseFactory = (type) => {
 			 * @type {Number[]}
 			 * @private
 			 */
-			itemSizes: PropTypes.array,
+			itemSizes: PropTypes.arrayOf(PropTypes.number),
 
 			/**
 			 * Called when the range of items has updated.
