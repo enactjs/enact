@@ -7,6 +7,7 @@ import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtual
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
 import React, {Component} from 'react';
+import warning from 'warning';
 
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -453,7 +454,8 @@ const VirtualListBaseFactory = (type) => {
 				const nextRow = (nextIndex - nextColumn) % dataSize / dimensionToExtent;
 				let
 					isNextItemInView = false,
-					isCurrentItemInView = false;
+					isCurrentItemInView = false,
+					numOfItemsInPage;
 
 				if (this.props.type === 'VariableVirtualList') {
 					const container = this.uiRefCurrent.containerRef.current;
@@ -476,12 +478,12 @@ const VirtualListBaseFactory = (type) => {
 
 						return false;
 					});
+					numOfItemsInPage = dimensionToExtent;
 					isCurrentItemInView = inView[0];
 					isNextItemInView = inView[1];
-					console.log(inView);
 				} else {
-					const numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
 					const firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent;
+					numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
 					isCurrentItemInView = index >= firstFullyVisibleIndex && index < firstFullyVisibleIndex + numOfItemsInPage;
 					isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
 				}
@@ -1014,6 +1016,11 @@ ScrollableVirtualList.defaultProps = {
 
 const ScrollableVirtualListNative = (props) => {
 	const {focusableScrollbar} = props;
+
+	warning(
+		props.type !== 'VariableVirtualList' || !props.cbScrollTo,
+		'VirtualList with `minSize` in `itemSize` prop does not support `cbScrollTo` prop'
+	);
 
 	return (
 		<ScrollableNative

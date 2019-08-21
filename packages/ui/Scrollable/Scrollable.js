@@ -16,7 +16,6 @@ import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
 import React, {Component} from 'react';
-import warning from 'warning';
 
 import ForwardRef from '../ForwardRef';
 import {ResizeContext} from '../Resizable';
@@ -436,14 +435,7 @@ class ScrollableBase extends Component {
 
 		this.resizeRegistry = Registry.create(this.handleResize.bind(this));
 
-		if (props.type === 'VariableVirtualList') {
-			warning(
-				props.cbScrollTo === nop,
-				'VirtualList with `minSize` in `itemSize` prop does not support `cbScrollTo` prop'
-			);
-		} else {
-			props.cbScrollTo(this.scrollTo);
-		}
+		props.cbScrollTo(this.scrollTo);
 	}
 
 	componentDidMount () {

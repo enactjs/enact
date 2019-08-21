@@ -11,7 +11,7 @@
  */
 
 import kind from '@enact/core/kind';
-import {gridListItemSizeShape, listDifferentItemSizeShape} from '@enact/ui/VirtualList';
+import {gridListItemSizeShape, itemSizesShape} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -42,11 +42,11 @@ const VirtualList = kind({
 		 * <VirtualList itemSize={ri.scale(72)} />
 		 * ```
 		 *
-		 * @type {Number|ui/VirtualList.listDifferentItemSizeShape}
+		 * @type {Number|ui/VirtualList.itemSizesShape}
 		 * @required
 		 * @public
 		 */
-		itemSize: PropTypes.oneOfType([PropTypes.number, listDifferentItemSizeShape]).isRequired
+		itemSize: PropTypes.oneOfType([PropTypes.number, itemSizesShape]).isRequired
 	},
 
 	render: ({itemSize, ...rest}) => {
@@ -54,7 +54,7 @@ const VirtualList = kind({
 			{
 				type: 'VariableVirtualList',
 				itemSize: itemSize.minSize,
-				variableGridSizes: itemSize.size
+				itemSizes: itemSize.size
 			} :
 			{
 				type: 'VirtualList',
@@ -132,11 +132,11 @@ const VirtualListNative = kind({
 		 * <VirtualListNative itemSize={ri.scale(72)} />
 		 * ```
 		 *
-		 * @type {Number|ui/VirtualList.listDifferentItemSizeShape}
+		 * @type {Number|ui/VirtualList.itemSizesShape}
 		 * @required
 		 * @public
 		 */
-		itemSize: PropTypes.oneOfType([PropTypes.number, listDifferentItemSizeShape]).isRequired
+		itemSize: PropTypes.oneOfType([PropTypes.number, itemSizesShape]).isRequired
 	},
 
 	render: ({itemSize, ...rest}) => {
@@ -144,7 +144,7 @@ const VirtualListNative = kind({
 			{
 				type: 'VariableVirtualList',
 				itemSize: itemSize.minSize,
-				variableGridSizes: itemSize.size
+				itemSizes: itemSize.size
 			} :
 			{
 				type: 'VirtualList',
