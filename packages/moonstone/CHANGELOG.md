@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` arrow rendering issue in Chromium
+- Language-specific fonts so they always use the correct typeface for their locale
 
 ## [3.0.0-rc.3] - 2019-08-15
 
