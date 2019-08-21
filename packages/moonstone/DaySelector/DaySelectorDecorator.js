@@ -77,6 +77,9 @@ function getLocaleState (dayNameLength, locale) {
  * @memberof moonstone/DaySelector
  * @mixes ui/Changeable.Changeable
  * @mixes moonstone/Skinnable.Skinnable
+ * @omit onChange
+ * @omit value
+ * @omit defaultValue
  * @public
  */
 const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
