@@ -164,9 +164,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				if (!resBundle) return;
 
 				const translated = props.reduce((obj, prop) => {
-					const text = obj[prop].text || obj[prop];
-					obj[prop].translated = String(getIStringFromBundle(text, resBundle));
-
+					obj[prop].translated = String(getIStringFromBundle(obj[prop].text, resBundle));
 					return obj;
 				}, {...map});
 
