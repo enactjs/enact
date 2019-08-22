@@ -87,9 +87,9 @@ class ScrollerWithTwoExpandableList extends React.Component {
 			<div>
 				<Scroller
 					direction="vertical"
-					onKeyDown={action('onKeyDown (1st scroller)')}
-					onScrollStart={action('onScrollStart (1st scroller)')}
-					onScrollStop={action('onScrollStop (1st scroller)')}
+					onKeyDown={action('onKeyDown (1st Scroller)')}
+					onScrollStart={action('onScrollStart (1st Scroller)')}
+					onScrollStop={action('onScrollStop (1st Scroller)')}
 					style={{height: ri.scale(200)}}
 				>
 					<ExpandableList selected={0} title="first">
@@ -99,9 +99,9 @@ class ScrollerWithTwoExpandableList extends React.Component {
 				<Scroller
 					direction="vertical"
 					style={{height: ri.scale(200)}}
-					onKeyDown={action('onKeyDown (2nd scroller)')}
-					onScrollStart={action('onScrollStart (2nd scroller)')}
-					onScrollStop={action('onScrollStop (2nd scroller)')}
+					onKeyDown={action('onKeyDown (2nd Scroller)')}
+					onScrollStart={action('onScrollStart (2nd Scroller)')}
+					onScrollStop={action('onScrollStop (2nd Scroller)')}
 				>
 					<ExpandableList title="second">
 						{['a', 'b', 'c', 'd']}
@@ -503,9 +503,9 @@ storiesOf('Scroller', module)
 						direction="horizontal"
 						horizontalScrollbar="visible"
 						noScrollByWheel={noScrollByWheel}
-						onKeyDown={action('onKeyDown (nested 1st scroller)')}
-						onScrollStart={action('onScrollStart (nested 1st scroller)')}
-						onScrollStop={action('onScrollStop (nested 1st scroller)')}
+						onKeyDown={action('onKeyDown (Nested 1st Scroller)')}
+						onScrollStart={action('onScrollStart (Nested 1st Scroller)')}
+						onScrollStop={action('onScrollStop (Nested 1st Scroller)')}
 						style={{
 							height: 'auto',
 							width: '90%'
@@ -533,9 +533,9 @@ storiesOf('Scroller', module)
 						direction="horizontal"
 						horizontalScrollbar="visible"
 						noScrollByWheel={noScrollByWheel}
-						onKeyDown={action('onKeyDown (nested 2nd scroller)')}
-						onScrollStart={action('onScrollStart (nested 2nd scroller)')}
-						onScrollStop={action('onScrollStop (nested 2nd scroller)')}
+						onKeyDown={action('onKeyDown (Nested 2nd Scroller)')}
+						onScrollStart={action('onScrollStart (Nested 2nd Scroller)')}
+						onScrollStop={action('onScrollStop (Nested 2nd Scroller)')}
 						style={{
 							height: 'auto',
 							width: '90%'
