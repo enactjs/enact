@@ -5,9 +5,9 @@ import React from 'react';
 import Touchable from '@enact/ui/Touchable';
 import ri from '@enact/ui/resolution';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 
 import {boolean, number} from '../../src/enact-knobs';
+import {action} from '../../src/utils';
 
 const TouchableDiv = Touchable('div');
 

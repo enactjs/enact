@@ -140,7 +140,6 @@ const MediaOverlayBase = kind({
 					className={css.media}
 					controls={false}
 					mediaComponent={mediaComponent}
-					muted
 					source={source}
 				/>
 				{imageOverlay ? (
