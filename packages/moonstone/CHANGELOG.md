@@ -2,12 +2,11 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [Unreleased]
+## [unreleased]
 
 ### Changed
 
-- `moonstone/ProgressBar` prop `highlighted` to `noHighlighted` for using white fill bg color
-## [unreleased]
+- `moonstone/ProgressBar` to use white fill bg color with prop `highlighted`
 
 ### Fixed
 
