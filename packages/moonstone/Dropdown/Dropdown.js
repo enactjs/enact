@@ -454,7 +454,7 @@ const DropdownDecorator = compose(
  * @public
  */
 
- /**
+/**
  * Index of the selected item.
  *
  * @name selected
@@ -463,7 +463,7 @@ const DropdownDecorator = compose(
  * @public
  */
 
- /**
+/**
  * The initial selected index when `selected` is not defined.
  *
  * @name defaultSelected
