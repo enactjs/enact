@@ -46,30 +46,30 @@
 	pa: local("LG Smart UI Gurmukhi");
 	ta: local("LG Smart UI Tamil");
 	te: local("LG Smart UI Telugu");
-	ur: local("LG Smart UI Urdu");
-	zh-HK: local("LG Smart UI TC"), local("LG Smart UI TC") 300, local("LG Smart UI TC") 600, local("LG Smart UI TC") 700;
-	zh-TW: local("LG Smart UI TC"), local("LG Smart UI TC") 300, local("LG Smart UI TC") 600, local("LG Smart UI TC") 700; // same as `zh-HK`
+	ur: local("LG Smart UI_Urdu") normal 300 600 700;
+	zh-HK: local("LG Smart UI TC") normal 300 600 700;
+	zh-TW: local("LG Smart UI TC") normal 300 600 700; // same as `zh-HK`
 
 	// DEV NOTE: This is the closest proximity to a collection of unit tests that we have to test this system.
-	// name:						local("name");
-	// nameWeight:					local("name") 100;
-	// nameWeightRange:			local("name") 100 900;
-	// nameWeightStyle:			local("name") 100 italic;
-	// nameWeightRangeStyle:		local("name") 100 900 italic;
-	// nameRepeat:					local("name"), local("name2");
-	// nameWeightRepeat:			local("name") 100, local("name2") 200;
-	// nameWeightRepeat2ndWeight:	local("name"), local("name2") 200;
-	// nameWeightRangeRepeat:		local("name") 100 900, local("name2") 200 800;
-	// nameWeightStyleRepeat:		local("name") 100 italic, local("name2") 200 normal;
-	// nameWeightRangeStyleRepeat:	local("name") 100 900 italic, local("name2") 200 800 normal;
+	// name:							local("name");
+	// nameRepeat:						local("name"), local("name2");
+	// nameWeight:						local("name") 100;
+	// nameMultipleWeight:				local("name") 100 900;
+	// nameWeightStyle:				local("name") 100 italic;
+	// nameMultipleWeightStyle:		local("name") 100 900 italic;
+	// nameWeightRepeat:				local("name") 100, local("name2") 200;
+	// nameWeightRepeat2ndWeight:		local("name"), local("name2") 200;
+	// nameMultipleWeightRepeat:		local("name") 100 900, local("name2") 200 800;
+	// nameWeightStyleRepeat:			local("name") 100 italic, local("name2") 200 normal;
+	// nameMultipleWeightStyleRepeat:	local("name") 100 900 italic, local("name2") 200 800 normal;
 };
 
 
 // Deprecated Mixin. Retained for legacy references.
 // Generate a pair of rules in the correct order for the fallback glyphs and the preferred glyphs
-.buildFontFamily(@name; @latin; @fallback; @weight: normal; @style: ""; @stretch: "") {
-	.buildFontFace(@name; @fallback; @weight; @style; @stretch);
-	.buildFontFace(@name; @latin; @weight; @style; @stretch);
+.buildFontFamily(@name; @latin; @fallback; @weight: normal; @style: "") {
+	.buildFontFace(@name; @fallback; @weight; @style);
+	.buildFontFace(@name; @latin; @weight; @style);
 }
 
 // Deprecated "Miso" font family names. Retained for legacy references.
@@ -94,10 +94,10 @@
 
 /* ----- Moonstone Condensed ------ */
 // This collection of fonts is now accessible via the standard CSS rule – `font-stretch: condensed;`
-.buildFontFace(@font-family-base-name; @font-system-src-moonstone-condensed-400; ""; ""; condensed);
-.buildFontFace(@font-family-base-name; @font-system-src-moonstone-condensed-300; 300; ""; condensed);
-.buildFontFace(@font-family-base-name; @font-system-src-moonstone-condensed-600; 600; ""; condensed);
-.buildFontFace(@font-family-base-name; @font-system-src-moonstone-condensed-700; 700; ""; condensed);
+.buildFontFace(@font-family-base-name; @font-system-src-moonstone-condensed-400; { font-stretch: condensed; });
+.buildFontFace(@font-family-base-name; @font-system-src-moonstone-condensed-300; { font-stretch: condensed; font-weight: 300; });
+.buildFontFace(@font-family-base-name; @font-system-src-moonstone-condensed-600; { font-stretch: condensed; font-weight: 600; });
+.buildFontFace(@font-family-base-name; @font-system-src-moonstone-condensed-700; { font-stretch: condensed; font-weight: 700; });
 
 
 /* ----- Manual Moonstone Locale Fonts (Stacking onto "Moonstone") ------ */
