@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/EditableIntegerPicker` to properly rerender when the edited value is invalid
 - `moonstone/FormCheckboxItem` to marquee its contents
 - `moonstone/VideoPlayer` to have correct jump forward/backward icon
+- Language-specific fonts so they always use the correct typeface for their locale
 
 ## [3.0.0-rc.3] - 2019-08-15
 

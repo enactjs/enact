@@ -177,6 +177,22 @@
 	-moz-box-sizing: border-box;
 }
 
+// Helpful debugging way to understand how LESS variables are being interpreted
+.debugLessTypes(@value) {
+	:global(.debugLessTypes) {
+		value: @value;
+		isnumber: isnumber(@value);
+		isstring: isstring(@value);
+		iscolor: iscolor(@value);
+		iskeyword: iskeyword(@value);
+		isurl: isurl(@value);
+		ispixel: ispixel(@value);
+		isem: isem(@value);
+		ispercentage: ispercentage(@value);
+		isruleset: isruleset(@value);
+	}
+}
+
 //
 // Mixin classes supporting advanced text
 //
@@ -192,15 +208,17 @@
 //  * @fonts: {
 //  * 	as: local("LG Smart UI Bengali"); // same as `bn`
 //  * 	bn: local("LG Smart UI Bengali");
-//  * 	en-JP: local("LG Smart UI JP") "", local("LG Display_JP_Bold") 700; // same as `ja`
-//  * 	ja: local("LG Smart UI JP") "", local("LG Display_JP_Bold") 700;
+//  * 	en-JP: local("LG Smart UI JP"), local("LG Display_JP_Bold") 700; // same as `ja`
+//  * 	ja: local("LG Smart UI JP"), local("LG Display_JP_Bold") 700; // Generates 2 entries, one for JP set to "normal" (default) weight and another for JP_Bold set to 700 weight
+//  * 	ur: local("LG Smart UI_Urdu") normal 300 600 700; // Generates 4 entries, one for each weight
 //  * };
 //  * ```
 //  *
 //  * List of supported "options" per locale key, in the following order:
 //  * * single font source - Typically a reference to a local() font or a url() font.
 //  * * font-weight - Optional, Numbers (100, 500, 700, etc) and keywords (normal, bold, etc) are supported.
-//  * 	Empty-string represents "null" or default. This excludes the weight rule from the generated code.
+//  * 	Empty-string represents "null". This excludes the font-weight rule from the generated code.
+//  * 	Multiple weights can be supplied to generate multiple sets of face rules for a single source file
 //  * * font-style - Optional, Keywords (normal, italic, etc) are supported.
 //  *
 //  * OPTIONALLY: repeat the options above after a comma (,) for multiple weights/styles/options based on the same name.
@@ -208,15 +226,76 @@
 //  * @param  {String} @baseName The name used as the basis for the generated font-family.
 //  * @param  {Object} @f        Object of keys with values detailing the font variants and options.
 //  */
-.buildLocaleFonts(@fontName, @f) {
-	each(@f, .(@specs, @locale) {
-		each(@specs, {
-			@f-weight: if((length(@value) >= 2), extract(@value, 2));
-			@f-style: if((length(@value) >= 3), extract(@value, 3));
 
-			.buildFontFace("@{fontName} @{locale}"; extract(@value, 1); @f-weight; @f-style);
-			.buildFontFace(@fontName;               extract(@value, 1); @f-weight; @f-style);
-		});
+.buildLocaleFont(@fontName; @locale; @src; @rules) when (isruleset(@rules)) {
+	.buildFontFace("@{fontName} @{locale}"; @src; @rules);
+	.buildFontFace(@fontName;               @src; @rules);
+}
+.buildLocaleFont(@fontName; @locale; @args) when (default()) {
+	@src: extract(@args, 1);
+	@argLast: extract(@args, length(@args));  // optional style value
+
+	@styleExists: boolean((@argLast = italic) or (@argLast = oblique));  // List all valid font-style values here (except for "normal" since that is a shared keyword with font-weight)
+	@style: if(@styleExists, @argLast);
+	@lastWeightArgIndex: if(@styleExists, length(@args) - 1, length(@args));  // It's possible this could get confused if "normal" or "bold" is used as the last weight. Please use a number as the last weight.
+
+	// Please retain the following comment for future debugging purposes. This gives insight into how the definition values are being interpreted.
+	// :global(.debug-buildLocaleFont@{fontName}-@{locale}) {
+	// 	fontName: @fontName;
+	// 	locale: @locale;
+	// 	args: @args;
+	// 	args-count: length(@args);
+	// 	last-weight-arg-index: @lastWeightArgIndex;
+	// 	src: @src;
+	// 	styleExists: @styleExists;
+	// 	style: @style;
+	// }
+
+	// Run when there are 2 or more arguments
+	each(range(2, @lastWeightArgIndex), .(@argIndex) {
+		@weight: extract(@args, @argIndex);
+		.buildFontFace("@{fontName} @{locale}"; @src; @weight; @style);
+		.buildFontFace(@fontName;               @src; @weight; @style);
+	});
+
+	// Run when there are 1 or fewer arguments
+	& when (length(@args) <= 1) {
+		// There aren't any additional arguments, so weight and style can be safely omitted from the following calls
+		.buildFontFace("@{fontName} @{locale}"; @src);
+		.buildFontFace(@fontName;               @src);
+	}
+};
+
+.buildLocaleFonts(@fontName; @f) {
+	each(@f, .(@specs, @locale) {
+		// Determine if we're working with a collection of font definitions or an individual definition
+		@isCollection: if(((length(@specs) > 1) and ((length(extract(@specs, 1)) > 1) or (length(extract(@specs, 2)) > 1))), true, false);
+
+		// :global(.debug-buildLocaleFonts-@{locale}) {
+		// 	is-collection: @isCollection;
+		// }
+
+		// Interpret collections of font definitions: [(set1) (set2) (set3)]
+		& when (@isCollection) {
+			each(@specs, {
+				.buildLocaleFont(@fontName; @locale; @value);
+			});
+		}
+		// Interpret individual font defiintions: (set1)
+		& when (not(@isCollection)) {
+			.buildLocaleFont(@fontName; @locale; @specs);
+		}
+		// .debugLessTypes(@specs);
+
+		// Note: The above `when` code will ignore defiintions like the following, because the way
+		// LESS works, it can't (at this time) differentiate between a space separated list and a
+		// comma separated list, making it impossible to differentiate a single set of font rules
+		// with multiple values vs multiple sets with a single value in each.
+		//   {
+		//     nameRepeat: local("name"), local("name2");
+		//   }
+		//   Ex: `local("name") 400` vs `local("name"), local("name2")`
+		// In this case, only the first value will be used, second, ignored.
 	});
 };
 
@@ -232,11 +311,17 @@
 //  *                                     "null" or default. This excludes the weight rule from the generated code.
 //  * @param  {Keyword} font-style        Optional, Keywords (normal, italic, etc) are supported.
 //  */
-.buildFontFace(@name; @src; @weight: ""; @style: "") {
+
+.buildFontFace(@name; @src; @rules) when (isruleset(@rules)) {
 	@font-face {
 		font-family: @name;
 		src: @src;
-
+		@rules();
+	}
+}
+// The default version of this mixin (below) is the shorthand version, which rearranges its arguments into the format the above mixin expects.
+.buildFontFace(@name; @src; @weight: normal; @style: "") when (default()) {
+	.buildFontFace(@name; @src; {
 		// Conditionally add the following
 		// `length()` below refers to specifying font-weight ranges: `600 900`.
 		& when ((iskeyword(@weight)) or (isnumber(@weight)) or (length(@weight) > 1)) {
@@ -245,7 +330,7 @@
 		& when (iskeyword(@style)) {
 			font-style: @style;
 		}
-	}
+	});
 }
 
 .locale-japanese-line-break() {
