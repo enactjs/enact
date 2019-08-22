@@ -5,15 +5,15 @@
 @font-family-base-name: "Moonstone";
 
 // ----- SYSTEM FONT NAMES ------
-@font-system-src-moonstone-condensed-300:  local("LG Smart UI Cond Light"), local("LGSmartUICond-Light"), local("Miso"), url("../../fonts/Miso/Miso-Light.ttf") format("truetype");
-@font-system-src-moonstone-condensed-400:  local("LG Smart UI Cond"), local("LGSmartUICond-Regular"), local("Miso"), url("../../fonts/Miso/Miso-Regular.ttf") format("truetype");
-@font-system-src-moonstone-condensed-600:  local("LG Smart UI Cond SemiBold"), local("LGSmartUICond-SemiBold"), local("Miso"), url("../../fonts/Miso/Miso-Bold.ttf") format("truetype");
-@font-system-src-moonstone-condensed-700:  local("LG Smart UI Cond Bold"), local("LGSmartUICond-Bold"), local("Miso"), url("../../fonts/Miso/Miso-Bold.ttf") format("truetype");
+@font-system-src-moonstone-condensed-300:  local("LG Smart UI Condensed Light"), local("LGSmartUICondensed-Light"), local("Miso"), url("../../fonts/Miso/Miso-Light.ttf") format("truetype");
+@font-system-src-moonstone-condensed-400:  local("LG Smart UI Condensed Regular"), local("LGSmartUICondensed-Regular"), local("Miso"), url("../../fonts/Miso/Miso-Regular.ttf") format("truetype");
+@font-system-src-moonstone-condensed-600:  local("LG Smart UI Condensed SemiBold"), local("LGSmartUICondensed-SemiBold"), local("Miso"), url("../../fonts/Miso/Miso-Bold.ttf") format("truetype");
+@font-system-src-moonstone-condensed-700:  local("LG Smart UI Condensed Bold"), local("LGSmartUICondensed-Bold"), local("Miso"), url("../../fonts/Miso/Miso-Bold.ttf") format("truetype");
 
 @font-system-src-moonstone-100:    local("LG Smart UI Light"), local("LGSmartUI-Light"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Thin.ttf") format("truetype");
 @font-system-src-moonstone-300:    local("LG Smart UI Light"), local("LGSmartUI-Light"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Light.ttf") format("truetype");
-@font-system-src-moonstone-400:    local("LG Smart UI"), local("LGSmartUI-Regular"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Medium.ttf") format("truetype");
-@font-system-src-moonstone-400-i:  local("LG Smart UI"), local("LGSmartUI-Regular"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-MediumItalic.ttf") format("truetype");
+@font-system-src-moonstone-400:    local("LG Smart UI Regular"), local("LGSmartUI-Regular"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Medium.ttf") format("truetype");
+@font-system-src-moonstone-400-i:  local("LG Smart UI Regular"), local("LGSmartUI-Regular"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-MediumItalic.ttf") format("truetype");
 @font-system-src-moonstone-600:    local("LG Smart UI SemiBold"), local("LGSmartUI-SemiBold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Bold.ttf") format("truetype");
 @font-system-src-moonstone-700:    local("LG Smart UI Bold"), local("LGSmartUI-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Bold.ttf") format("truetype");
 @font-system-src-moonstone-700-i:  local("LG Smart UI Bold"), local("LGSmartUI-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-BoldItalic.ttf") format("truetype");
@@ -46,15 +46,28 @@
 	pa: local("LG Smart UI Gurmukhi");
 	ta: local("LG Smart UI Tamil");
 	te: local("LG Smart UI Telugu");
-	ur: local("LG Smart UI Urdu");
-	zh-HK: local("LG Smart UI TC");
-	zh-TW: local("LG Smart UI TC"); // same as `zh-HK`
+	ur: local("LG Smart UI Urdu") normal 300 600 700;
+	zh-HK: local("LG Smart UI TC") normal 300 600 700;
+	zh-TW: local("LG Smart UI TC") normal 300 600 700; // same as `zh-HK`
+
+	// DEV NOTE: This is the closest proximity to a collection of unit tests that we have to test this system.
+	// name:							local("name");
+	// nameRepeat:						local("name"), local("name2");
+	// nameWeight:						local("name") 100;
+	// nameMultipleWeight:				local("name") 100 900;
+	// nameWeightStyle:				local("name") 100 italic;
+	// nameMultipleWeightStyle:		local("name") 100 900 italic;
+	// nameWeightRepeat:				local("name") 100, local("name2") 200;
+	// nameWeightRepeat2ndWeight:		local("name"), local("name2") 200;
+	// nameMultipleWeightRepeat:		local("name") 100 900, local("name2") 200 800;
+	// nameWeightStyleRepeat:			local("name") 100 italic, local("name2") 200 normal;
+	// nameMultipleWeightStyleRepeat:	local("name") 100 900 italic, local("name2") 200 800 normal;
 };
 
 
 // Deprecated Mixin. Retained for legacy references.
 // Generate a pair of rules in the correct order for the fallback glyphs and the preferred glyphs
-.buildFontFamily(@name; @latin; @fallback; @weight: ""; @style: "") {
+.buildFontFamily(@name; @latin; @fallback; @weight: normal; @style: "") {
 	.buildFontFace(@name; @fallback; @weight; @style);
 	.buildFontFace(@name; @latin; @weight; @style);
 }
@@ -80,10 +93,11 @@
 
 
 /* ----- Moonstone Condensed ------ */
-.buildFontFace("@{font-family-base-name} Condensed"; @font-system-src-moonstone-condensed-400);
-.buildFontFace("@{font-family-base-name} Condensed"; @font-system-src-moonstone-condensed-300; 300);
-.buildFontFace("@{font-family-base-name} Condensed"; @font-system-src-moonstone-condensed-600; 600);
-.buildFontFace("@{font-family-base-name} Condensed"; @font-system-src-moonstone-condensed-700; 700);
+// This collection of fonts is now accessible via the standard CSS rule – `font-stretch: condensed;`
+.buildFontFace(@font-family-base-name; @font-system-src-moonstone-condensed-400; { font-stretch: condensed; });
+.buildFontFace(@font-family-base-name; @font-system-src-moonstone-condensed-300; { font-stretch: condensed; font-weight: 300; });
+.buildFontFace(@font-family-base-name; @font-system-src-moonstone-condensed-600; { font-stretch: condensed; font-weight: 600; });
+.buildFontFace(@font-family-base-name; @font-system-src-moonstone-condensed-700; { font-stretch: condensed; font-weight: 700; });
 
 
 /* ----- Manual Moonstone Locale Fonts (Stacking onto "Moonstone") ------ */
@@ -93,7 +107,7 @@
 .buildFontFace(@font-family-base-name; @font-system-src-non-latin-700; 700);
 
 /* ----- Generated Moonstone Locale Fonts (Stacking onto "Moonstone") ------ */
-.buildLocaleFonts(@font-family-base-name, @fonts);
+.buildLocaleFonts(@font-family-base-name; @fonts);
 
 /* ----- Moonstone ------ */
 // Unused (parked) rules are commented out.
