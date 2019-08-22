@@ -7,6 +7,7 @@ import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtual
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
 import React, {Component} from 'react';
+import warning from 'warning';
 
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -133,6 +134,14 @@ const VirtualListBaseFactory = (type) => {
 			 * @private
 			 */
 			isVerticalScrollbarVisible: PropTypes.bool,
+
+			/**
+			 * The array for individually sized items.
+			 *
+			 * @type {Number[]}
+			 * @private
+			 */
+			itemSizes: PropTypes.array,
 
 			/*
 			 * It scrolls by page when `true`, by item when `false`.
@@ -435,10 +444,41 @@ const VirtualListBaseFactory = (type) => {
 				const row = (index - column) % dataSize / dimensionToExtent;
 				const nextColumn = nextIndex % dimensionToExtent;
 				const nextRow = (nextIndex - nextColumn) % dataSize / dimensionToExtent;
-				const numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
-				const firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent;
-				const isCurrentItemInView = index >= firstFullyVisibleIndex && index < firstFullyVisibleIndex + numOfItemsInPage;
-				const isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
+				let
+					isNextItemInView = false,
+					isCurrentItemInView = false,
+					numOfItemsInPage;
+
+				if (this.props.itemSizes) {
+					const container = this.uiRefCurrent.containerRef.current;
+					const inView = [index, nextIndex].map((i) => {
+						const node = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${i}']`);
+
+						if (container && node) {
+							const containerRects = container.getBoundingClientRect();
+							const nodeRects = node.getBoundingClientRect();
+
+							if (
+								nodeRects.x >= containerRects.x &&
+								nodeRects.x + nodeRects.width <= containerRects.x + containerRects.width &&
+								nodeRects.y >= containerRects.y &&
+								nodeRects.y + nodeRects.height <= containerRects.y + containerRects.height
+							) {
+								return true;
+							}
+						}
+
+						return false;
+					});
+					numOfItemsInPage = dimensionToExtent;
+					isCurrentItemInView = inView[0];
+					isNextItemInView = inView[1];
+				} else {
+					const firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent;
+					numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
+					isCurrentItemInView = index >= firstFullyVisibleIndex && index < firstFullyVisibleIndex + numOfItemsInPage;
+					isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
+				}
 
 				this.lastFocusedIndex = nextIndex;
 
@@ -942,6 +982,11 @@ const listItemsRenderer = (props) => {
 const ScrollableVirtualList = (props) => { // eslint-disable-line react/jsx-no-bind
 	const {focusableScrollbar} = props;
 
+	warning(
+		!props.itemSizes || !props.cbScrollTo,
+		'VirtualList with `minSize` in `itemSize` prop does not support `cbScrollTo` prop'
+	);
+
 	return (
 		<Scrollable
 			{...props}
@@ -957,8 +1002,10 @@ const ScrollableVirtualList = (props) => { // eslint-disable-line react/jsx-no-b
 };
 
 ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
+	cbScrollTo: PropTypes.func,
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-	focusableScrollbar: PropTypes.bool
+	focusableScrollbar: PropTypes.bool,
+	itemSizes: PropTypes.array
 };
 
 ScrollableVirtualList.defaultProps = {
@@ -968,6 +1015,11 @@ ScrollableVirtualList.defaultProps = {
 
 const ScrollableVirtualListNative = (props) => {
 	const {focusableScrollbar} = props;
+
+	warning(
+		!props.itemSizes || !props.cbScrollTo,
+		'VirtualList with `minSize` in `itemSize` prop does not support `cbScrollTo` prop'
+	);
 
 	return (
 		<ScrollableNative
@@ -984,8 +1036,10 @@ const ScrollableVirtualListNative = (props) => {
 };
 
 ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
+	cbScrollTo: PropTypes.func,
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-	focusableScrollbar: PropTypes.bool
+	focusableScrollbar: PropTypes.bool,
+	itemSizes: PropTypes.array
 };
 
 ScrollableVirtualListNative.defaultProps = {
