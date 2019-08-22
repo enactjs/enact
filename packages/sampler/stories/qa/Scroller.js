@@ -67,6 +67,9 @@ class ScrollerWithResizable extends React.Component {
 	render () {
 		return (
 			<Scroller
+				onKeyDown={action('onKeyDown')}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
 				verticalScrollbar="visible"
 			>
 				<Item>Item</Item>
@@ -83,8 +86,11 @@ class ScrollerWithTwoExpandableList extends React.Component {
 		return (
 			<div>
 				<Scroller
-					style={{height: ri.scale(200)}}
 					direction="vertical"
+					onKeyDown={action('onKeyDown (1st scroller)')}
+					onScrollStart={action('onScrollStart (1st scroller)')}
+					onScrollStop={action('onScrollStop (1st scroller)')}
+					style={{height: ri.scale(200)}}
 				>
 					<ExpandableList selected={0} title="first">
 						{['a', 'b', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'd']}
@@ -93,9 +99,9 @@ class ScrollerWithTwoExpandableList extends React.Component {
 				<Scroller
 					direction="vertical"
 					style={{height: ri.scale(200)}}
-					onKeyDown={action('onKeyDown')}
-					onScrollStart={action('onScrollStart')}
-					onScrollStop={action('onScrollStop')}
+					onKeyDown={action('onKeyDown (2nd scroller)')}
+					onScrollStart={action('onScrollStart (2nd scroller)')}
+					onScrollStop={action('onScrollStop (2nd scroller)')}
 				>
 					<ExpandableList title="second">
 						{['a', 'b', 'c', 'd']}
@@ -117,7 +123,14 @@ class ScrollerWithLargeContainer extends React.Component {
 
 	render () {
 		return (
-			<Scroller focusableScrollbar spotlightId="scroller" style={{height: 200}}>
+			<Scroller
+				focusableScrollbar
+				onKeyDown={action('onKeyDown')}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
+				spotlightId="scroller"
+				style={{height: 200}}
+			>
 				<Container>
 					<Item>Hello</Item>
 					<Item>Hello</Item>
@@ -332,12 +345,20 @@ storiesOf('Scroller', module)
 		'With Two ui:Scroller',
 		() => (
 			<div style={{display: 'flex', height: ri.unit(399, 'rem')}}>
-				<UiScroller>
+				<UiScroller
+					onKeyDown={action('onKeyDown')}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
+				>
 					<Group childComponent={Item}>
 						{itemData}
 					</Group>
 				</UiScroller>
-				<UiScroller>
+				<UiScroller
+					onKeyDown={action('onKeyDown')}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
+				>
 					<Group childComponent={Item}>
 						{itemData}
 					</Group>
@@ -356,7 +377,13 @@ storiesOf('Scroller', module)
 		() => (
 			<div>
 				<Button>focus to me</Button>
-				<Scroller focusableScrollbar style={{height: ri.unit(ri.scale(420), 'rem'), width: ri.unit(ri.scale(300), 'rem'), display:'inline-block'}}>
+				<Scroller
+					focusableScrollbar
+					onKeyDown={action('onKeyDown')}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
+					style={{height: ri.unit(ri.scale(420), 'rem'), width: ri.unit(ri.scale(300), 'rem'), display:'inline-block'}}
+				>
 					<Item>Item 1</Item>
 					<Item>Item 2</Item>
 					<Item>Item 3</Item>
@@ -376,7 +403,12 @@ storiesOf('Scroller', module)
 		() => {
 			const size = number('Spacer size', Scroller, {max: 300, min: 0, range: true}, 100);
 			return (
-				<Scroller style={{height: ri.scaleToRem(200)}}>
+				<Scroller
+					onKeyDown={action('onKeyDown')}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
+					style={{height: ri.scaleToRem(200)}}
+				>
 					<Item>1</Item>
 					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
 					<Item style={{marginBottom: ri.scaleToRem(18)}}>3</Item>
@@ -390,8 +422,11 @@ storiesOf('Scroller', module)
 			const size = number('Spacer size', Scroller, {max: 300, min: 0, range: true}, 200);
 			return (
 				<Scroller
-					style={{height: ri.scaleToRem(200)}}
 					focusableScrollbar={boolean('focusableScrollbar', Config, true)}
+					onKeyDown={action('onKeyDown')}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
+					style={{height: ri.scaleToRem(200)}}
 				>
 					<div style={{height: ri.scaleToRem(size), paddingLeft: ri.scaleToRem(40)}}>{size}px Spacer</div>
 					<Item>1</Item>
@@ -408,6 +443,9 @@ storiesOf('Scroller', module)
 				<Button>hello</Button>
 				<Scroller
 					focusableScrollbar
+					onKeyDown={action('onKeyDown')}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
 					style={{height: 400}}
 				>
 					<Group childComponent={Item}>
@@ -420,7 +458,12 @@ storiesOf('Scroller', module)
 	.add(
 		'With Long Item',
 		() => (
-			<Scroller focusableScrollbar>
+			<Scroller
+				focusableScrollbar
+				onKeyDown={action('onKeyDown')}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
+			>
 				<Item>Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Text</Item>
 				<ExpandableList title="Title">
 					{itemData}
@@ -431,7 +474,12 @@ storiesOf('Scroller', module)
 	.add(
 		'With One Long Height Item',
 		() => (
-			<Scroller focusableScrollbar>
+			<Scroller
+				focusableScrollbar
+				onKeyDown={action('onKeyDown')}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
+			>
 				<div style={{height: '1220px'}}>
 					<Item style={{height: '1200px'}}>Long Height Item</Item>
 				</div>
@@ -445,12 +493,19 @@ storiesOf('Scroller', module)
 			return (
 				<Scroller
 					direction="vertical"
+					onKeyDown={action('onKeyDown')}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
+
 					verticalScrollbar="visible"
 				>
 					<Scroller
 						direction="horizontal"
 						horizontalScrollbar="visible"
 						noScrollByWheel={noScrollByWheel}
+						onKeyDown={action('onKeyDown (nested 1st scroller)')}
+						onScrollStart={action('onScrollStart (nested 1st scroller)')}
+						onScrollStop={action('onScrollStop (nested 1st scroller)')}
 						style={{
 							height: 'auto',
 							width: '90%'
@@ -478,6 +533,9 @@ storiesOf('Scroller', module)
 						direction="horizontal"
 						horizontalScrollbar="visible"
 						noScrollByWheel={noScrollByWheel}
+						onKeyDown={action('onKeyDown (nested 2nd scroller)')}
+						onScrollStart={action('onScrollStart (nested 2nd scroller)')}
+						onScrollStop={action('onScrollStop (nested 2nd scroller)')}
 						style={{
 							height: 'auto',
 							width: '90%'
