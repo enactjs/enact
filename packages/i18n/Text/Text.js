@@ -256,7 +256,6 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
  *
  * @class Text
  * @memberof i18n/Text
- * @extends React.ComponentType
  * @mixes i18n/Text.TextDecorator
  * @ui
  * @public
