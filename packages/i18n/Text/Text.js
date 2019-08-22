@@ -115,12 +115,15 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends i18n/Text.TextDecorator.prototype */ {
 			/**
-			 * The string to be translated.
+			 * Passed to the wrapped component.
 			 *
-			 * @type {String}
+			 * If `mapPropsToText` is `null` and `children` is a string, the string will be
+			 * translated before being passed to the wrapped component.
+			 *
+			 * @type {*}
 			 * @public
 			 */
-			children: PropTypes.string,
+			children: PropTypes.any,
 
 			/**
 			 * The locale for translation.
@@ -261,6 +264,16 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
  * @public
  */
 const Text = TextDecorator(STRING_ONLY);
+
+/**
+ * The string to be translated.
+ *
+ * @name children
+ * @memberof i18n/Text.Text.prototype
+ * @type {String}
+ * @public
+ */
+
 
 export default Text;
 export {
