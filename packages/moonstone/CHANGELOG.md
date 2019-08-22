@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` arrow rendering issue in Chromium
+- `moonstone/FormCheckboxItem` to marquee its contents
 - `moonstone/VideoPlayer` to have correct jump forward/backward icon
 
 ## [3.0.0-rc.3] - 2019-08-15
