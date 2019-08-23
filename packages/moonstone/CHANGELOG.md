@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `moonstone/Dropdown` to add new size `x-large`
+
 ## [3.0.0-rc.4] - 2019-08-22
 
 ### Fixed
