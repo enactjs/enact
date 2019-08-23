@@ -92,6 +92,13 @@ const DropdownListBase = Skinnable(
 			]),
 
 			/*
+			 * The initial selected index when `selected` is not defined.
+			 *
+			 * @type {Number}
+			 */
+			defaultSelected: PropTypes.number,
+
+			/*
 			 * Called when an item is selected.
 			 *
 			 * @type {Function}
@@ -211,6 +218,7 @@ class DropdownList extends React.Component {
  * @memberof moonstone/Dropdown
  * @extends moonstone/Button.Button
  * @extends moonstone/ContextualPopupDecorator.ContextualPopupDecorator
+ * @omit popupComponent
  * @ui
  * @public
  */
@@ -410,6 +418,11 @@ const DropdownBase = kind({
  * @memberof moonstone/Dropdown
  * @mixes ui/Changeable.Changeable
  * @mixes ui/Toggleable.Toggleable
+ * @omit selected
+ * @omit defaultSelected
+ * @omit value
+ * @omit defaultValue
+ * @omit onChange
  * @public
  */
 const DropdownDecorator = compose(
@@ -430,6 +443,34 @@ const DropdownDecorator = compose(
 		toggle: null
 	})
 );
+
+/**
+ * Displays the items.
+ *
+ * @name open
+ * @memberof moonstone/Dropdown.DropdownDecorator.prototype
+ * @type {Boolean}
+ * @default false
+ * @public
+ */
+
+/**
+ * Index of the selected item.
+ *
+ * @name selected
+ * @memberof moonstone/Dropdown.DropdownDecorator.prototype
+ * @type {Number}
+ * @public
+ */
+
+/**
+ * The initial selected index when `selected` is not defined.
+ *
+ * @name defaultSelected
+ * @memberof moonstone/Dropdown.DropdownDecorator.prototype
+ * @type {Number}
+ * @public
+ */
 
 /**
  * A Moonstone Dropdown component.

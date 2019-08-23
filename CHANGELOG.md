@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.0.0-rc.4] - 2019-08-22
+
+### Fixed
+
+- `i18n/Text` to generate a proper TypeScript definition and to properly detect if translations were available when async
+- `moonstone/ContextualPopupDecorator` arrow rendering issue in Chromium
+- `moonstone/EditableIntegerPicker` to properly rerender when the edited value is invalid
+- `moonstone/FormCheckboxItem` to marquee its contents
+- `moonstone/VideoPlayer` to have correct jump forward/backward icon
+- `ui/styles/mixins.less` mixins: `.buildLocaleFont`, `.buildLocaleFonts`, `.buildFontFace` to properly support font-weight ranges, font-weight default values, and font-stretch values
+- Language-specific fonts so they always use the correct typeface for their locale
+
 ## [3.0.0-rc.3] - 2019-08-15
 
 ### Fixed
