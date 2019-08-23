@@ -995,6 +995,7 @@ class ScrollableBase extends Component {
 									disabled={!isVerticalScrollbarVisible}
 									focusableScrollButtons={focusableScrollbar}
 									nextButtonAriaLabel={downButtonAriaLabel}
+									onKeyDownButton={this.onKeyDown}
 									preventBubblingOnKeyDown={preventBubblingOnKeyDown}
 									previousButtonAriaLabel={upButtonAriaLabel}
 									rtl={rtl}
@@ -1010,6 +1011,7 @@ class ScrollableBase extends Component {
 								disabled={!isHorizontalScrollbarVisible}
 								focusableScrollButtons={focusableScrollbar}
 								nextButtonAriaLabel={rightButtonAriaLabel}
+								onKeyDownButton={this.onKeyDown}
 								preventBubblingOnKeyDown={preventBubblingOnKeyDown}
 								previousButtonAriaLabel={leftButtonAriaLabel}
 								rtl={rtl}
