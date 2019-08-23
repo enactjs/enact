@@ -18,7 +18,7 @@ storiesOf('Moonstone', module)
 		'SwitchItem',
 		() => {
 			const icon = select('itemIcon', ['', ...listIcons], Config);
-			const itemIcon = nullify(icon ? <Icon small>{icon}</Icon> : null);
+			const itemIcon = nullify(icon ? <Icon>{icon}</Icon> : null);
 			const itemIconPosition = select('itemIconPosition', ['', 'before', 'beforeChildren', 'afterChildren', 'after'], Config);
 			return (
 				<SwitchItem

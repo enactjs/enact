@@ -162,6 +162,9 @@ const DayPickerDecorator = compose(
  * @extends moonstone/DayPicker.DayPickerBase
  * @mixes moonstone/ExpandableItem.Expandable
  * @mixes ui/Changeable.Changeable
+ * @omit onChange
+ * @omit value
+ * @omit defaultValue
  * @ui
  * @public
  */

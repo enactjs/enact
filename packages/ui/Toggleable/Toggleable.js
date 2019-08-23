@@ -134,6 +134,8 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * Default toggled state applied at construction when the toggled prop is `undefined` or
 			 * `null`.
 			 *
+			 * @name defaultSelected
+			 * @memberof ui/Toggleable.Toggleable.prototype
 			 * @type {Boolean}
 			 * @default false
 			 * @public
@@ -156,6 +158,8 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * is 'uncontrolled' and `Toggleable` will manage the toggled state using callbacks
 			 * defined by its configuration.
 			 *
+			 * @name selected
+			 * @memberof ui/Toggleable.Toggleable.prototype
 			 * @type {Boolean}
 			 * @public
 			 */
@@ -164,6 +168,8 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * Event callback to notify that state should be toggled.
 			 *
+			 * @name onToggle
+			 * @memberof ui/Toggleable.Toggleable.prototype
 			 * @type {Function}
 			 * @public
 			 */

@@ -20,7 +20,7 @@ storiesOf('Moonstone', module)
 		() => {
 			const iconPosition = select('iconPosition', ['before', 'after'], Config);
 			const icon = select('itemIcon', ['', ...listIcons], Config);
-			const itemIcon = nullify(icon ? <Icon small>{icon}</Icon> : null);
+			const itemIcon = nullify(icon ? <Icon>{icon}</Icon> : null);
 			const itemIconPosition = select('itemIconPosition', [null, 'before', 'beforeChildren', 'afterChildren', 'after'], Config);
 			return (
 				<CheckboxItem

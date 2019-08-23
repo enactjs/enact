@@ -1,3 +1,5 @@
+import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 import Item from '@enact/moonstone/Item';
 import {ActivityPanels, Panel, Header} from '@enact/moonstone/Panels';
 import Scroller from '@enact/moonstone/Scroller';
@@ -6,8 +8,7 @@ import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
-import PropTypes from 'prop-types';
-import React, {useState} from 'react';
+
 import {storiesOf} from '@storybook/react';
 
 import {boolean, number, select} from '../../src/enact-knobs';

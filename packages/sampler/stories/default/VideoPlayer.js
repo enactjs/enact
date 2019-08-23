@@ -138,10 +138,10 @@ storiesOf('Moonstone', module)
 							backwardIcon={select('backwardIcon', icons, MediaControlsConfig, 'backward')}
 							forwardIcon={select('forwardIcon', icons, MediaControlsConfig, 'forward')}
 							initialJumpDelay={number('initialJumpDelay', MediaControlsConfig, 400)}
-							jumpBackwardIcon={select('jumpBackwardIcon', icons, MediaControlsConfig, 'skipbackward')}
+							jumpBackwardIcon={select('jumpBackwardIcon', icons, MediaControlsConfig, 'jumpbackward')}
 							jumpButtonsDisabled={boolean('jumpButtonsDisabled', MediaControlsConfig)}
 							jumpDelay={number('jumpDelay', MediaControlsConfig, 200)}
-							jumpForwardIcon={select('jumpForwardIcon', icons, MediaControlsConfig, 'skipforward')}
+							jumpForwardIcon={select('jumpForwardIcon', icons, MediaControlsConfig, 'jumpforward')}
 							moreButtonCloseLabel={text('moreButtonCloseLabel', MediaControlsConfig)}
 							moreButtonColor={select('moreButtonColor', prop.moreButtonColor, MediaControlsConfig, '')}
 							moreButtonDisabled={boolean('moreButtonDisabled', MediaControlsConfig)}

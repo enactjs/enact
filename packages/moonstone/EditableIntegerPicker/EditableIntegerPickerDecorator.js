@@ -62,6 +62,14 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {	// eslint-disa
 			disabled: PropTypes.bool,
 
 			/**
+			 * Disables transition animation.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			noAnimation: PropTypes.bool,
+
+			/**
 			 * The value displayed in the picker.
 			 *
 			 * @type {Number}
@@ -80,14 +88,18 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {	// eslint-disa
 			this.paused = new Pause('EditableIntegerPickerDecorator');
 			this.state = {
 				isActive: false,
-				value: props.value
+				value: props.value,
+				// Animation is disabled on the picker when activating edit mode and enabled on the
+				// next onChange event. The `noAnimation` prop takes precedence over this.
+				noAnimation: false
 			};
 		}
 
 		handleChange = (ev) => {
 			if (!this.state.isActive) {
 				this.setState({
-					value: this.validateValue(parseInt(ev.value))
+					value: this.validateValue(parseInt(ev.value)),
+					noAnimation: false
 				});
 			}
 			forwardChange(ev, this.props);
@@ -95,7 +107,8 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {	// eslint-disa
 
 		prepareInput = () => {
 			this.setState({
-				isActive: true
+				isActive: true,
+				noAnimation: true
 			});
 			this.freezeSpotlight(true);
 		}
@@ -159,6 +172,7 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {	// eslint-disa
 					editMode={this.state.isActive}
 					inputRef={this.getInputNode}
 					joined
+					noAnimation={this.props.noAnimation || this.state.noAnimation}
 					onChange={this.handleChange}
 					onPickerItemClick={this.handleClick}
 					onInputBlur={this.handleBlur}
