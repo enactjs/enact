@@ -27,9 +27,11 @@ const
 	prepareNextButton = prepareButton(false),
 	isPageUp = is('pageUp'),
 	isPageDown = is('pageDown'),
-	preventDefault = (ev) => {
+	consumeEvent = (ev, preventBubbling) => {
 		ev.preventDefault();
-		ev.stopPropagation();
+		if (preventBubbling) {
+			ev.stopPropagation();
+		}
 	};
 
 /**
@@ -103,6 +105,19 @@ class ScrollButtons extends Component {
 		 * @public
 		 */
 		onPrevScroll: PropTypes.func,
+
+		/**
+		 * Specifies preventing keydown events from bubbling up to applications.
+		 * Valid values are `'none'`, and `'programmatic'`.
+		 *
+		 * When it is `'none'`, every keydown event is bubbled.
+		 * When it is `'programmatic'`, an event bubbling is not allowed for a keydown input
+		 * which invokes programmatic spotlight moving.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
 
 		/**
 		 * Sets the hint string read when focusing the previous button in the scroll bar.
@@ -226,7 +241,7 @@ class ScrollButtons extends Component {
 	focusOnOppositeScrollButton = (ev, direction) => {
 		const buttonNode = (ev.target === this.nextButtonRef.current) ? this.prevButtonRef.current : this.nextButtonRef.current;
 
-		preventDefault(ev);
+		consumeEvent(ev, this.props.preventBubblingOnKeyDown === 'programmatic');
 		Spotlight.setPointerMode(false);
 
 		if (!Spotlight.focus(buttonNode)) {
@@ -234,11 +249,46 @@ class ScrollButtons extends Component {
 		}
 	}
 
-	onKeyDownButton = (ev, position, buttonDisabled, oppositeButtonDisabled, oppositeButtonRef, oppositeButtonClick) => {
+	onSpotlight = (ev) => {
 		const
-			{focusableScrollButtons, vertical} = this.props,
+			{focusableScrollButtons, rtl, vertical} = this.props,
+			{target} = ev;
+
+		// We don't need to navigate manually if `focusableScrollButtons` is `false`
+		if (focusableScrollButtons) {
+			const
+				direction = getDirection(ev.keyCode),
+				fromNextToPrev = (vertical && direction === 'up') || (!vertical && direction === (rtl ? 'right' : 'left')),
+				fromPrevToNext = (vertical && direction === 'down') || (!vertical && direction === (rtl ? 'left' : 'right'));
+
+			// manually focus the opposite scroll button when 5way pressed
+			if ((fromNextToPrev && target === this.nextButtonRef.current) ||
+				(fromPrevToNext && target === this.prevButtonRef.current)) {
+				this.focusOnOppositeScrollButton(ev, direction);
+			}
+		}
+	}
+
+	onKeyDownButton = (ev, position) => {
+		const
+			{focusableScrollButtons, vertical, preventBubblingOnKeyDown} = this.props,
 			{keyCode} = ev,
-			direction = getDirection(ev.keyCode);
+			direction = getDirection(ev.keyCode),
+			preventBubbling = preventBubblingOnKeyDown === 'programmatic',
+			isNextButton = position === 'next',
+			isPrevButton = position === 'prev',
+			nextButton = {
+				disabled: this.state.nextButtonDisabled,
+				ref: this.nextButtonRef.current,
+				click: this.onClickNext
+			},
+			prevButton = {
+				disabled: this.state.prevButtonDisabled,
+				ref: this.prevButtonRef.current,
+				click: this.onClickPrev
+			},
+			currentButton = isPrevButton ? prevButton : nextButton,
+			oppositeButton = isPrevButton ? nextButton : prevButton;
 
 		if (isPageDown(keyCode) || isPageUp(keyCode)) {
 			if (!vertical) {
@@ -247,18 +297,18 @@ class ScrollButtons extends Component {
 				return;
 			}
 
-			if (isPageDown(keyCode)) {
+			if (isPrevButton && isPageDown(keyCode) || isNextButton && isPageUp(keyCode)) {
 				if (focusableScrollButtons && !Spotlight.getPointerMode()) {
-					preventDefault(ev);
+					consumeEvent(ev, preventBubbling);
 					Spotlight.setPointerMode(false);
-					Spotlight.focus(ReactDOM.findDOMNode(oppositeButtonRef)); // eslint-disable-line react/no-find-dom-node
-				} else if (!oppositeButtonDisabled) {
-					preventDefault(ev);
-					oppositeButtonClick(ev);
+					Spotlight.focus(ReactDOM.findDOMNode(oppositeButton.ref)); // eslint-disable-line react/no-find-dom-node
+				} else if (!oppositeButton.disabled) {
+					consumeEvent(ev, preventBubbling);
+					oppositeButton.click(ev);
 				}
-			} else if (!buttonDisabled) {
-				preventDefault(ev);
-				this.onClickPrev(ev);
+			} else if (!currentButton.disabled) {
+				consumeEvent(ev, preventBubbling);
+				currentButton.click(ev);
 			}
 		} else if (direction) {
 			const
@@ -267,14 +317,14 @@ class ScrollButtons extends Component {
 				isLeftMovement = direction === (rtl ? 'right' : 'left'),
 				isRightMovement = direction === (rtl ? 'left' : 'right'),
 				isUp = direction === 'up',
-				isNextButton = position === 'next',
-				isPrevButton = position === 'prev',
 				fromNextToPrev = vertical ? isUp : isLeftMovement,
 				fromPrevToNext = vertical ? isDown : isRightMovement;
 
-			// manually focus the opposite scroll button when 5way pressed
 			if (isNextButton && fromNextToPrev || isPrevButton && fromPrevToNext) {
-				this.focusOnOppositeScrollButton(ev, direction);
+				// If we allow bubbling, this case will be handled in `onSpotlight` AFTER app's keydown handler.
+				if (focusableScrollButtons && preventBubbling) {
+					this.focusOnOppositeScrollButton(ev, direction);
+				}
 			} else {
 				const
 					// If it is vertical `Scrollable`, move focus to the left for ltr or to the right for rtl
@@ -286,13 +336,12 @@ class ScrollButtons extends Component {
 
 				if (isDirectionToLeave) {
 					if (!getTargetByDirectionFromElement(direction, ev.target)) {
-						// move focus into contents and stop bubbling
-						preventDefault(ev);
+						// move focus into contents and allow bubbling
 						Spotlight.move(directionToContent);
 					}
-				} else {
+				} else if (preventBubbling) {
 					// move focus directly to stop bubbling
-					preventDefault(ev);
+					consumeEvent(ev, preventBubbling);
 					Spotlight.move(direction);
 				}
 			}
@@ -300,11 +349,11 @@ class ScrollButtons extends Component {
 	}
 
 	onKeyDownPrev = (ev) => {
-		this.onKeyDownButton(ev, 'prev', this.state.prevButtonDisabled, this.state.nextButtonDisabled, this.nextButtonRef.current, this.onClickNext);
+		this.onKeyDownButton(ev, 'prev');
 	}
 
 	onKeyDownNext = (ev) => {
-		this.onKeyDownButton(ev, 'next', this.state.nextButtonDisabled, this.state.prevButtonDisabled, this.prevButtonRef.current, this.onClickPrev);
+		this.onKeyDownButton(ev, 'next');
 	}
 
 	render () {
@@ -323,6 +372,10 @@ class ScrollButtons extends Component {
 				onClick={this.onClickPrev}
 				onDown={this.onDownPrev}
 				onHoldPulse={this.onClickPrev}
+				onSpotlightDown={this.onSpotlight}
+				onSpotlightLeft={this.onSpotlight}
+				onSpotlightRight={this.onSpotlight}
+				onSpotlightUp={this.onSpotlight}
 				ref={this.prevButtonRef}
 			>
 				{prevIcon}
@@ -336,6 +389,10 @@ class ScrollButtons extends Component {
 				onClick={this.onClickNext}
 				onDown={this.onDownNext}
 				onHoldPulse={this.onClickNext}
+				onSpotlightDown={this.onSpotlight}
+				onSpotlightLeft={this.onSpotlight}
+				onSpotlightRight={this.onSpotlight}
+				onSpotlightUp={this.onSpotlight}
 				ref={this.nextButtonRef}
 			>
 				{nextIcon}

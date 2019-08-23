@@ -935,12 +935,14 @@ const ScrollableVirtualList = (props) => { // eslint-disable-line react/jsx-no-b
 
 ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-	focusableScrollbar: PropTypes.bool
+	focusableScrollbar: PropTypes.bool,
+	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic'])
 };
 
 ScrollableVirtualList.defaultProps = {
 	direction: 'vertical',
-	focusableScrollbar: false
+	focusableScrollbar: false,
+	preventBubblingOnKeyDown: 'programmatic'
 };
 
 const ScrollableVirtualListNative = (props) => {
@@ -962,12 +964,14 @@ const ScrollableVirtualListNative = (props) => {
 
 ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.VirtualListBaseNative.prototype */ {
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-	focusableScrollbar: PropTypes.bool
+	focusableScrollbar: PropTypes.bool,
+	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic'])
 };
 
 ScrollableVirtualListNative.defaultProps = {
 	direction: 'vertical',
-	focusableScrollbar: false
+	focusableScrollbar: false,
+	preventBubblingOnKeyDown: 'programmatic'
 };
 
 export default VirtualListBase;
