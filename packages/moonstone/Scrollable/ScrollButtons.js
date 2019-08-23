@@ -299,15 +299,15 @@ class ScrollButtons extends Component {
 
 			if (isPrevButton && isPageDown(keyCode) || isNextButton && isPageUp(keyCode)) {
 				if (focusableScrollButtons && !Spotlight.getPointerMode()) {
-					consumeEvent(ev, preventBubbling);
+					consumeEvent(ev, true);
 					Spotlight.setPointerMode(false);
 					Spotlight.focus(ReactDOM.findDOMNode(oppositeButton.ref)); // eslint-disable-line react/no-find-dom-node
 				} else if (!oppositeButton.disabled) {
-					consumeEvent(ev, preventBubbling);
+					consumeEvent(ev, true);
 					oppositeButton.click(ev);
 				}
 			} else if (!currentButton.disabled) {
-				consumeEvent(ev, preventBubbling);
+				consumeEvent(ev, true);
 				currentButton.click(ev);
 			}
 		} else if (direction) {
