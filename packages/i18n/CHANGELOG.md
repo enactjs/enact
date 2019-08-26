@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [3.0.0-rc.4] - 2019-08-22
+
+### Fixed
+
+- `i18n/Text` to generate a proper TypeScript definition and to properly detect if translations were available when async
+
 ## [3.0.0-rc.3] - 2019-08-15
 
 No significant changes.

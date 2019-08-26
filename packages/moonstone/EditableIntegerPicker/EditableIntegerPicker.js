@@ -280,7 +280,7 @@ const EditableIntegerPickerBase = kind({
 				return (
 					<input
 						className={css.input}
-						key={value}
+						key="edit"
 						onBlur={onInputBlur}
 						ref={inputRef}
 					/>

@@ -113,8 +113,26 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const Decorator = class extends React.Component {
 		static displayName = 'TextDecorator'
 
-		static propTypes = {
-			children: PropTypes.string,
+		static propTypes = /** @lends i18n/Text.TextDecorator.prototype */ {
+			/**
+			 * Passed to the wrapped component.
+			 *
+			 * If `mapPropsToText` is `null` and `children` is a string, the string will be
+			 * translated before being passed to the wrapped component.
+			 *
+			 * @type {*}
+			 * @public
+			 */
+			children: PropTypes.any,
+
+			/**
+			 * The locale for translation.
+			 *
+			 * If not supplied, the current locale is used.
+			 *
+			 * @type {String}
+			 * @public
+			 */
 			locale: PropTypes.string
 		}
 
@@ -165,7 +183,6 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 				const translated = props.reduce((obj, prop) => {
 					obj[prop].translated = String(getIStringFromBundle(obj[prop].text, resBundle));
-
 					return obj;
 				}, {...map});
 
@@ -177,7 +194,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		canRender () {
 			const entries = Object.values(this.state.map);
-			for (const entry in entries) {
+			for (const entry of entries) {
 				if (entry.translated === false && entry.defaultText === false) {
 					return false;
 				}
@@ -242,9 +259,21 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
  *
  * @class Text
  * @memberof i18n/Text
+ * @mixes i18n/Text.TextDecorator
+ * @ui
  * @public
  */
 const Text = TextDecorator(STRING_ONLY);
+
+/**
+ * The string to be translated.
+ *
+ * @name children
+ * @memberof i18n/Text.Text.prototype
+ * @type {String}
+ * @public
+ */
+
 
 export default Text;
 export {
