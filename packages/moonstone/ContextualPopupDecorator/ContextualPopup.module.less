@@ -35,10 +35,21 @@
 	.moon-custom-text({
 		.container {
 			&.reserveClose {
-				.padding-start-end(@moon-contextual-popup-padding, @moon-icon-button-small-size-large + @moon-spotlight-outset, parent);
+				.padding-start-end(@moon-contextual-popup-padding, @moon-icon-button-small-size-large + @moon-spotlight-outset);
 			}
 		}
 	});
+
+	:global(.enact-locale-right-to-left) & {
+		.container {
+			direction: rtl;
+
+			.closeButton {
+				right: auto;
+				left: @moon-spotlight-outset;
+			}
+		}
+	}
 
 	.arrow {
 		position: absolute;
@@ -56,17 +67,6 @@
 		}
 		&.right {
 			transform: rotate(-90deg);
-		}
-	}
-
-	:global(.enact-locale-right-to-left) & {
-		.container {
-			direction: rtl;
-
-			.closeButton {
-				right: auto;
-				left: @moon-spotlight-outset;
-			}
 		}
 	}
 
