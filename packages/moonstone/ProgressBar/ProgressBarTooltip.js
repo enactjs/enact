@@ -45,6 +45,15 @@ const ProgressBarTooltipBase = kind({
 
 	propTypes: /** @lends moonstone/ProgressBar.ProgressBarTooltip.prototype */{
 		/**
+		 * Disables tooltip reversal if proportion is greater than 0.5.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		noTooltipFlip: PropTypes.bool,
+
+		/**
 		 * Sets the orientation of the tooltip based on the orientation of the bar.
 		 *
 		 * 'vertical' sends the tooltip to one of the sides, 'horizontal'  positions it above the bar.
@@ -113,6 +122,7 @@ const ProgressBarTooltipBase = kind({
 	},
 
 	defaultProps: {
+		noTooltipFlip: false,
 		orientation: 'horizontal',
 		percent: false,
 		proportion: 0,
@@ -135,21 +145,21 @@ const ProgressBarTooltipBase = kind({
 
 			return children;
 		},
-		className: ({orientation, proportion, side, styler}) => {
+		className: ({orientation, proportion, side, noTooltipFlip, styler}) => {
 			side = getSide(orientation, side);
 
 			return styler.append(
 				orientation,
 				{
-					afterMidpoint: proportion > 0.5,
+					afterMidpoint: !noTooltipFlip && proportion > 0.5,
 					ignoreLocale: side === 'left' || side === 'right'
 				},
 				(side === 'before' || side === 'left') ? 'before' : 'after'
 			);
 		},
-		arrowAnchor: ({proportion, orientation}) => {
+		arrowAnchor: ({proportion, orientation, noTooltipFlip}) => {
 			if (orientation === 'vertical') return 'middle';
-			return proportion > 0.5 ? 'left' : 'right';
+			return !noTooltipFlip && proportion > 0.5 ? 'left' : 'right';
 		},
 		direction: ({orientation, rtl, side}) => {
 			side = getSide(orientation, side);
@@ -180,6 +190,7 @@ const ProgressBarTooltipBase = kind({
 	render: ({children, visible, ...rest}) => {
 		if (!visible) return null;
 
+		delete rest.noTooltipFlip;
 		delete rest.orientation;
 		delete rest.percent;
 		delete rest.proportion;

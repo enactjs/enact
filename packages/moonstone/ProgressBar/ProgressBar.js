@@ -59,6 +59,15 @@ const ProgressBarBase = kind({
 		highlighted: PropTypes.bool,
 
 		/**
+		 * Disables tooltip reversal if proportion is greater than 0.5.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noTooltipFlip: PropTypes.bool,
+
+		/**
 		 * Sets the orientation of the slider.
 		 *
 		 * * Values: `'horizontal'`, `'vertical'`
@@ -119,6 +128,7 @@ const ProgressBarBase = kind({
 	},
 
 	defaultProps: {
+		noTooltipFlip: false,
 		orientation: 'horizontal',
 		progress: 0
 	},
@@ -133,7 +143,7 @@ const ProgressBarBase = kind({
 		tooltip: ({tooltip}) => tooltip === true ? ProgressBarTooltip : tooltip
 	},
 
-	render: ({css, orientation, progress, tooltip, ...rest}) => {
+	render: ({css, noTooltipFlip, orientation, progress, tooltip, ...rest}) => {
 		delete rest.tooltip;
 		delete rest.highlighted;
 
@@ -146,6 +156,7 @@ const ProgressBarBase = kind({
 			>
 				<ComponentOverride
 					component={tooltip}
+					noTooltipFlip={noTooltipFlip}
 					orientation={orientation}
 					percent
 					proportion={progress}

@@ -17,12 +17,14 @@ storiesOf('Moonstone', module)
 		() => {
 			const side = select('side', ['after', 'before', 'left', 'right'], ProgressBarTooltipConfig, 'before');
 			const tooltip = boolean('tooltip', ProgressBarTooltipConfig);
+			const noTooltipFlip = boolean('noTooltipFlip', ProgressBarTooltipConfig);
 
 			return (
 				<ProgressBar
 					backgroundProgress={number('backgroundProgress', ProgressBarConfig, {range: true, min: 0, max: 1, step: 0.01}, 0.5)}
 					disabled={boolean('disabled', ProgressBarConfig)}
 					highlighted={boolean('highlighted', ProgressBarConfig)}
+					noTooltipFlip={boolean('noTooltipFlip', ProgressBarConfig)}
 					orientation={select('orientation', ['horizontal', 'vertical'], ProgressBarConfig, 'horizontal')}
 					progress={number('progress', ProgressBarConfig, {range: true, min: 0, max: 1, step: 0.01}, 0.4)}
 					side={select('side', ['after', 'before', 'left', 'right'], ProgressBarConfig, 'before')}
@@ -30,6 +32,7 @@ storiesOf('Moonstone', module)
 					{tooltip ? (
 						<ProgressBarTooltip
 							side={side}
+							noTooltipFlip={noTooltipFlip}
 						/>
 					) : null}
 				</ProgressBar>
