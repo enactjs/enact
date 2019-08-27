@@ -2,6 +2,7 @@ import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import Spotlight from '@enact/spotlight';
+import ri from '@enact/ui/resolution';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
@@ -98,7 +99,7 @@ const DropdownListBase = kind({
 	computed: {
 		className: ({width, styler}) => styler.append(width),
 		dataSize: ({children}) => children ? children.length : 0,
-		itemSize: ({skinVariants}) => skinVariants && skinVariants.largeText ? 72 : 60
+		itemSize: ({skinVariants}) => ri.scale(skinVariants && skinVariants.largeText ? 72 : 60)
 	},
 
 	render: ({dataSize, itemSize, scrollTo, ...rest}) => {
