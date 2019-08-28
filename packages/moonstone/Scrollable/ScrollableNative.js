@@ -509,7 +509,8 @@ class ScrollableBaseNative extends Component {
 		const
 			spotItem = Spotlight.getCurrent(),
 			positionFn = this.childRef.current.calculatePositionOnFocus,
-			{containerRef} = this.uiRef.current.childRefCurrent;
+			{containerRef} = this.uiRef.current.childRefCurrent,
+			containerNode = containerRef.current;
 
 		if (spotItem && positionFn && containerRef.current && containerRef.current.contains(spotItem)) {
 			const lastPos = this.lastScrollPositionOnFocus;
@@ -518,7 +519,17 @@ class ScrollableBaseNative extends Component {
 			// If scroll animation is ongoing, we need to pass last target position to
 			// determine correct scroll position.
 			if (this.uiRef.current.scrolling && lastPos) {
-				pos = positionFn({item: spotItem, scrollPosition: (this.props.direction !== 'horizontal') ? lastPos.top : lastPos.left});
+				const containerRect = getRect(containerNode);
+				const itemRect = getRect(spotItem);
+				let scrollPosition;
+
+				if (this.props.direction === 'horizontal' || this.props.direction === 'both' && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {
+					scrollPosition = lastPos.left;
+				} else if (this.props.direction === 'vertical' || this.props.direction === 'both' && !(itemRect.top >= containerRect.top && itemRect.bottom <= containerRect.bottom)) {
+					scrollPosition = lastPos.top;
+				}
+
+				pos = positionFn({item: spotItem, scrollPosition});
 			} else {
 				// scrollInfo passes in current `scrollHeight` and `scrollTop` before calculations
 				const
