@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` layout in large text mode in RTL locales
+- `moonstone/VirtualList.VirtualList` dynamically extended item scrolling into view properly
 
 ## [3.0.0-rc.4] - 2019-08-22
 
