@@ -432,7 +432,7 @@ const VirtualListBaseFactory = (type) => {
 
 		onAcceleratedKeyDown = ({isWrapped, keyCode, nextIndex, repeat, target}) => {
 			const {cbScrollTo, spacing, wrap} = this.props;
-			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPosition} = this.uiRefCurrent;
+			const {dimensionToExtent, moreInfo: {firstVisibleIndex, lastVisibleIndex}, primary: {clientSize, gridSize}, scrollPosition} = this.uiRefCurrent;
 			const index = getNumberValue(target.dataset.index);
 
 			this.isScrolledBy5way = false;
@@ -470,7 +470,7 @@ const VirtualListBaseFactory = (type) => {
 
 						return false;
 					});
-					numOfItemsInPage = dimensionToExtent;
+					numOfItemsInPage = Math.max(lastVisibleIndex - firstVisibleIndex, 0);
 					isCurrentItemInView = inView[0];
 					isNextItemInView = inView[1];
 				} else {
