@@ -1,4 +1,5 @@
 import kind from '@enact/core/kind';
+import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import Spotlight from '@enact/spotlight';
@@ -23,10 +24,10 @@ const DropdownListBase = kind({
 
 	propTypes: {
 		/*
-		* The selections for Dropdown
-		*
-		* @type {String[]|Array.<{key: (Number|String), children: (String|Component)}>}
-		*/
+		 * The selections for Dropdown
+		 *
+		 * @type {String[]|Array.<{key: (Number|String), children: (String|Component)}>}
+		 */
 		children: PropTypes.oneOfType([
 			PropTypes.arrayOf(PropTypes.string),
 			PropTypes.arrayOf(PropTypes.shape({
@@ -36,24 +37,24 @@ const DropdownListBase = kind({
 		]),
 
 		/*
-		* Called when an item is selected.
-		*
-		* @type {Function}
-		*/
+		 * Called when an item is selected.
+		 *
+		 * @type {Function}
+		 */
 		onSelect: PropTypes.func,
 
 		/*
-		* Callback function that will receive the scroller's scrollTo() method
-		*
-		* @type {Function}
-		*/
+		 * Callback function that will receive the scroller's scrollTo() method
+		 *
+		 * @type {Function}
+		 */
 		scrollTo: PropTypes.func,
 
 		/*
-		* Index of the selected item.
-		*
-		* @type {Number}
-		*/
+		 * Index of the selected item.
+		 *
+		 * @type {Number}
+		 */
 		selected: PropTypes.number,
 
 		/*
@@ -66,10 +67,10 @@ const DropdownListBase = kind({
 		skinVariants: PropTypes.object,
 
 		/*
-		* The width of DropdownList.
-		*
-		* @type {('huge'|'large'|'medium'|'small'|'tiny')}
-		*/
+		 * The width of DropdownList.
+		 *
+		 * @type {('huge'|'large'|'medium'|'small'|'tiny')}
+		 */
 		width: PropTypes.oneOf(['tiny', 'small', 'medium', 'large', 'huge'])
 	},
 
@@ -79,7 +80,9 @@ const DropdownListBase = kind({
 	},
 
 	handlers: {
-		itemRenderer: ({index, ...rest}, {children, onSelect}) => {
+		itemRenderer: ({index, ...rest}, props) => {
+			const {children, selected} = props;
+
 			let child = children[index];
 			if (typeof child === 'string') {
 				child = {children: child};
@@ -89,8 +92,9 @@ const DropdownListBase = kind({
 				<Item
 					{...rest}
 					{...child}
+					data-selected={index === selected}
 					// eslint-disable-next-line react/jsx-no-bind
-					onClick={() => onSelect({selected: index})}
+					onClick={() => forward('onSelect', {selected: index}, props)}
 				/>
 			);
 		}
@@ -127,10 +131,10 @@ const DropdownListSpotlightDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = {
 			/*
-			* Index of the selected item.
-			*
-			* @type {Number}
-			*/
+			 * Index of the selected item.
+			 *
+			 * @type {Number}
+			 */
 			selected: PropTypes.number
 		}
 
@@ -145,26 +149,20 @@ const DropdownListSpotlightDecorator = hoc((config, Wrapped) => {
 			this.scrollIntoView();
 		}
 
-		getNodeToFocus = (selected) => {
-			const scrollIndex = selected > scrollOffset ? selected - scrollOffset : 0;
-
-			return {
-				nodeToFocus: this.node.querySelector(`[data-index='${selected}']`),
-				nodeToScroll: this.node.querySelector(`[data-index='${scrollIndex}']`)
-			};
-		}
-
 		getScrollTo = (scrollTo) => {
 			this.scrollTo = scrollTo;
 		}
 
 		scrollIntoView = () => {
+			const {selected} = this.props;
+
 			if (!this.isScrolledIntoView) {
 				if (isSelectedValid(this.props)) {
-					const {nodeToFocus, nodeToScroll} = this.getNodeToFocus(this.props.selected);
+					const scrollIndex = selected > scrollOffset ? selected - scrollOffset : 0;
+					const selectedNode = this.node.querySelector(`[data-index='${selected}']`);
 
-					this.scrollTo({animate: false, node: nodeToScroll});
-					Spotlight.focus(nodeToFocus);
+					this.scrollTo({animate: false, index: scrollIndex});
+					Spotlight.focus(selectedNode);
 				}
 				this.isScrolledIntoView = true;
 			}
