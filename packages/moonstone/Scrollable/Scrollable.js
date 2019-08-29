@@ -439,8 +439,7 @@ class ScrollableBase extends Component {
 		const
 			spotItem = Spotlight.getCurrent(),
 			positionFn = this.childRef.current.calculatePositionOnFocus,
-			{containerRef} = this.uiRef.current.childRefCurrent,
-			containerNode = containerRef.current;
+			containerNode = this.uiRef.current.childRefCurrent.containerRef.current;
 
 		if (spotItem && positionFn && containerNode && containerNode.contains(spotItem)) {
 			const lastPos = this.lastScrollPositionOnFocus;

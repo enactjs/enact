@@ -291,14 +291,12 @@ class ScrollerBase extends Component {
 		const containerRect = getRect(containerNode);
 		const itemRect = getRect(item);
 
-		if (!contains(containerRect, itemRect)) {
-			if (horizontal && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {
-				this.uiRefCurrent.scrollPos.left = this.calculateScrollLeft(item, scrollPosition);
-			}
+		if (horizontal && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {
+			this.uiRefCurrent.scrollPos.left = this.calculateScrollLeft(item, scrollPosition);
+		}
 
-			if (vertical && !(itemRect.top >= containerRect.top && itemRect.bottom <= containerRect.bottom)) {
-				this.uiRefCurrent.scrollPos.top = this.calculateScrollTop(item);
-			}
+		if (vertical && !(itemRect.top >= containerRect.top && itemRect.bottom <= containerRect.bottom)) {
+			this.uiRefCurrent.scrollPos.top = this.calculateScrollTop(item);
 		}
 
 		return this.uiRefCurrent.scrollPos;
