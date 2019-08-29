@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/ContextualPopupDecorator` layout in large text mode in RTL locales
 - `moonstone/Dropdown` performance when using many options
+- `moonstone/Slider` progress bar fill color when focused with `noFill` set
 
 ## [3.0.0-rc.4] - 2019-08-22
 
