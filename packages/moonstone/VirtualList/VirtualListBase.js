@@ -470,7 +470,7 @@ const VirtualListBaseFactory = (type) => {
 
 						return false;
 					});
-					numOfItemsInPage = Math.max(lastVisibleIndex - firstVisibleIndex, 0);
+					numOfItemsInPage = Math.max(lastVisibleIndex - firstVisibleIndex + 1, 0);
 					isCurrentItemInView = inView[0];
 					isNextItemInView = inView[1];
 				} else {
