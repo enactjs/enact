@@ -17,7 +17,7 @@
  */
 
 import {Spotlight} from '@enact/spotlight';
-import {contains, getRect} from '@enact/spotlight/src/utils';
+import {getRect} from '@enact/spotlight/src/utils';
 import ri from '@enact/ui/resolution';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import PropTypes from 'prop-types';
