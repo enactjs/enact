@@ -14,7 +14,7 @@ storiesOf('Moonstone', module)
 	.add(
 		'Dropdown',
 		() => {
-			const itemCount = number('items', Config, {range: true, min: 0, max: 8}, 5);
+			const itemCount = number('items', Config, {range: true, min: 0, max: 50}, 5);
 			const items = (new Array(itemCount)).fill().map((i, index) => `Option ${index + 1}`);
 
 			return (
