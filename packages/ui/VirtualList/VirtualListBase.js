@@ -1058,7 +1058,7 @@ const VirtualListBaseFactory = (type) => {
 
 		// render
 
-		mergeClasses = (className) => {
+		makeContainerClasses = (className) => {
 			let containerClass = null;
 
 			if (type === Native) {
@@ -1068,11 +1068,14 @@ const VirtualListBaseFactory = (type) => {
 			return classNames(css.virtualList, containerClass, className);
 		}
 
+		makeContentClasses = () => (type === Native ? null : css.willChange)
+
 		render () {
 			const
 				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
 				{cc, itemContainerRef, primary} = this,
-				containerClasses = this.mergeClasses(className);
+				containerClasses = this.makeContainerClasses(className),
+				contentClasses = this.makeContentClasses();
 
 			delete rest.cbScrollTo;
 			delete rest.childProps;
@@ -1099,7 +1102,7 @@ const VirtualListBaseFactory = (type) => {
 
 			return (
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.containerRef} style={style}>
-					<div {...rest} ref={this.contentRef}>
+					<div {...rest} className={contentClasses} ref={this.contentRef}>
 						{itemsRenderer({cc, itemContainerRef, primary})}
 					</div>
 				</div>
