@@ -2,6 +2,7 @@
  * Provides the {@link spotlight/Accelerator.Accelerator} class.
  *
  * @module spotlight/Accelerator
+ * @exports Accelerator
  */
 
 /**
