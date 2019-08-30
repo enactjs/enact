@@ -195,7 +195,7 @@ class ScrollerBase extends Component {
 		return (
 			<div
 				{...rest}
-				className={classNames(className, css.willChange, css.hideNativeScrollbar)}
+				className={classNames(className, css.scroller)}
 				ref={this.containerRef}
 				style={mergedStyle}
 			/>
