@@ -361,7 +361,7 @@ class ScrollerBase extends Component {
  *
  * @class Scroller
  * @memberof ui/Scroller
- * @extends ui/Scrollable.ScrollerBase
+ * @extends ui/Scroller.ScrollerBase
  * @ui
  * @public
  */
@@ -395,8 +395,7 @@ Scroller.defaultProps = {
  *
  * @class ScrollerNative
  * @memberof ui/Scroller
- * @extends ui/Scrollable.ScrollableNative
- * @extends ui/Scrollable.ScrollerBase
+ * @extends ui/Scroller.ScrollerBase
  * @ui
  * @private
  */

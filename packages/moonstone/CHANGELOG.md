@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Dropdown` performance when using many options
 - `moonstone/Slider` progress bar fill color when focused with `noFill` set
 - `moonstone/Scroller` to correctly handle horizontally scrolling focused elements into view when using a `direction` value of `'both'`
+- `moonstone/Skinnable` TypeScript signature
 
 ## [3.0.0-rc.4] - 2019-08-22
 
