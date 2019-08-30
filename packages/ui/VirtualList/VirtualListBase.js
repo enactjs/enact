@@ -1058,7 +1058,7 @@ const VirtualListBaseFactory = (type) => {
 
 		// render
 
-		makeContainerClasses (className) {
+		getContainerClasses (className) {
 			let containerClass = null;
 
 			if (type === Native) {
@@ -1068,7 +1068,7 @@ const VirtualListBaseFactory = (type) => {
 			return classNames(css.virtualList, containerClass, className);
 		}
 
-		makeContentClasses () {
+		getContentClasses () {
 			return type === Native ? null : css.content;
 		}
 
@@ -1076,8 +1076,8 @@ const VirtualListBaseFactory = (type) => {
 			const
 				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
 				{cc, itemContainerRef, primary} = this,
-				containerClasses = this.makeContainerClasses(className),
-				contentClasses = this.makeContentClasses();
+				containerClasses = this.getContainerClasses(className),
+				contentClasses = this.getContentClasses();
 
 			delete rest.cbScrollTo;
 			delete rest.childProps;
