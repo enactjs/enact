@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Scroller` TypeScript signatures
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to apply `will-change` CSS property to the proper node
 
 ## [3.0.0-rc.4] - 2019-08-22
 
