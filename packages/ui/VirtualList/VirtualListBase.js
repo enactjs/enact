@@ -1058,17 +1058,19 @@ const VirtualListBaseFactory = (type) => {
 
 		// render
 
-		makeContainerClasses = (className) => {
+		makeContainerClasses (className) {
 			let containerClass = null;
 
 			if (type === Native) {
-				containerClass = (this.isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
+				containerClass = this.isPrimaryDirectionVertical ? css.vertical : css.horizontal;
 			}
 
 			return classNames(css.virtualList, containerClass, className);
 		}
 
-		makeContentClasses = () => (type === Native ? null : css.willChange)
+		makeContentClasses () {
+			return type === Native ? null : css.content;
+		}
 
 		render () {
 			const
