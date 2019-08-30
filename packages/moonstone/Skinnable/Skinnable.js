@@ -2,6 +2,7 @@
  * Exports the {@link moonstone/Skinnable.Skinnable} higher-order component (HOC).
  *
  * @module moonstone/Skinnable
+ * @exports Skinnable
  * @public
  */
 

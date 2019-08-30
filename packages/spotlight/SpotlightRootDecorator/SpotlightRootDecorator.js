@@ -3,6 +3,7 @@
  * higher-order component.
  *
  * @module spotlight/SpotlightRootDecorator
+ * @exports SpotlightRootDecorator
  */
 
 import hoc from '@enact/core/hoc';
