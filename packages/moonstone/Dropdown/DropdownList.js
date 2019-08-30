@@ -125,6 +125,15 @@ const DropdownListBase = kind({
 	}
 });
 
+const ReadyState = {
+	// Initial state. Scrolling and focusing pending
+	INIT: 0,
+	// Scroll requested
+	SCROLLED: 1,
+	// Focus completed or not required
+	DONE: 2
+};
+
 const DropdownListSpotlightDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'DropdownListSpotlightDecorator'
@@ -138,39 +147,59 @@ const DropdownListSpotlightDecorator = hoc((config, Wrapped) => {
 			selected: PropTypes.number
 		}
 
+		constructor (props) {
+			super(props);
+
+			this.state = {
+				ready: isSelectedValid(props) ? ReadyState.INIT : ReadyState.DONE
+			};
+		}
+
 		componentDidMount () {
 			// eslint-disable-next-line react/no-find-dom-node
 			this.node = ReactDOM.findDOMNode(this);
-			Spotlight.set(this.node.dataset.spotlightId, {leaveFor: {up: '', down: ''}});
-			this.isScrolledIntoView = false;
+			Spotlight.set(this.node.dataset.spotlightId, {
+				defaultElement: '[data-selected="true"]',
+				enterTo: 'default-element',
+				leaveFor: {up: '', down: ''}
+			});
 		}
 
 		componentDidUpdate () {
-			this.scrollIntoView();
+			if (this.state.ready === ReadyState.INIT) {
+				this.scrollIntoView();
+			} else if (this.state.ready === ReadyState.SCROLLED) {
+				this.focusSelected();
+			}
 		}
 
-		getScrollTo = (scrollTo) => {
+		setScrollTo = (scrollTo) => {
 			this.scrollTo = scrollTo;
 		}
 
 		scrollIntoView = () => {
 			const {selected} = this.props;
+			let ready = ReadyState.DONE;
 
-			if (!this.isScrolledIntoView) {
-				if (isSelectedValid(this.props)) {
-					const scrollIndex = selected > scrollOffset ? selected - scrollOffset : 0;
-					const selectedNode = this.node.querySelector(`[data-index='${selected}']`);
+			if (isSelectedValid(this.props)) {
+				const index = selected > scrollOffset ? selected - scrollOffset : 0;
 
-					this.scrollTo({animate: false, index: scrollIndex});
-					Spotlight.focus(selectedNode);
-				}
-				this.isScrolledIntoView = true;
+				this.scrollTo({animate: false, index});
+				ready = ReadyState.SCROLLED;
+			}
+
+			this.setState({ready});
+		}
+
+		focusSelected () {
+			if (Spotlight.focus(this.node.dataset.spotlightId)) {
+				this.setState({ready: ReadyState.DONE});
 			}
 		}
 
 		render () {
 			return (
-				<Wrapped {...this.props} scrollTo={this.getScrollTo} />
+				<Wrapped {...this.props} scrollTo={this.setScrollTo} />
 			);
 		}
 	};
