@@ -432,7 +432,7 @@ const VirtualListBaseFactory = (type) => {
 
 		onAcceleratedKeyDown = ({isWrapped, keyCode, nextIndex, repeat, target}) => {
 			const {cbScrollTo, spacing, wrap} = this.props;
-			const {dimensionToExtent, moreInfo: {firstVisibleIndex, lastVisibleIndex}, primary: {clientSize, gridSize}, scrollPosition} = this.uiRefCurrent;
+			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPositionTarget} = this.uiRefCurrent;
 			const index = getNumberValue(target.dataset.index);
 
 			this.isScrolledBy5way = false;
@@ -450,31 +450,12 @@ const VirtualListBaseFactory = (type) => {
 					numOfItemsInPage;
 
 				if (this.props.itemSizes) {
-					const container = this.uiRefCurrent.containerRef.current;
-					const inView = [index, nextIndex].map((i) => {
-						const node = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${i}']`);
-
-						if (container && node) {
-							const containerRects = container.getBoundingClientRect();
-							const nodeRects = node.getBoundingClientRect();
-
-							if (
-								nodeRects.x >= containerRects.x &&
-								nodeRects.x + nodeRects.width <= containerRects.x + containerRects.width &&
-								nodeRects.y >= containerRects.y &&
-								nodeRects.y + nodeRects.height <= containerRects.y + containerRects.height
-							) {
-								return true;
-							}
-						}
-
-						return false;
-					});
-					numOfItemsInPage = Math.max(lastVisibleIndex - firstVisibleIndex + 1, 0);
-					isCurrentItemInView = inView[0];
-					isNextItemInView = inView[1];
+					isCurrentItemInView = this.uiRefCurrent.itemPositions[index].position >= scrollPositionTarget &&
+						this.uiRefCurrent.getItemBottomPosition(index) <= scrollPositionTarget + clientSize;
+					isNextItemInView = this.uiRefCurrent.itemPositions[nextIndex].position >= scrollPositionTarget &&
+						this.uiRefCurrent.getItemBottomPosition(nextIndex) <= scrollPositionTarget + clientSize;
 				} else {
-					const firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent;
+					const firstFullyVisibleIndex = Math.ceil(scrollPositionTarget / gridSize) * dimensionToExtent;
 					numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
 					isCurrentItemInView = index >= firstFullyVisibleIndex && index < firstFullyVisibleIndex + numOfItemsInPage;
 					isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
@@ -482,7 +463,8 @@ const VirtualListBaseFactory = (type) => {
 
 				this.lastFocusedIndex = nextIndex;
 
-				if (isNextItemInView && (isCurrentItemInView || numOfItemsInPage !== dimensionToExtent) || row === nextRow) {
+				// VirtualGridList does not support different item size yet. So we don't need to consider the condition related with it.
+				if (isNextItemInView || !this.props.itemSizes && (numOfItemsInPage !== dimensionToExtent || row === nextRow)) {
 					this.focusByIndex(nextIndex);
 				} else {
 					this.isScrolledBy5way = true;
