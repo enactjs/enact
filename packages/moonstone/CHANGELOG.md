@@ -12,7 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` progress bar fill color when focused with `noFill` set
 - `moonstone/Scroller` to correctly handle horizontally scrolling focused elements into view when using a `direction` value of `'both'`
 - `moonstone/Skinnable` TypeScript signature
-- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to render the first item properly when the function as a parameter of the `cbScrollTo` prop in them is called
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to render the first item properly when the `dataSize` prop is updated and the function as a parameter of the `cbScrollTo` prop is called
 
 ## [3.0.0-rc.4] - 2019-08-22
 
