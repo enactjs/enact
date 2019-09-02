@@ -298,6 +298,8 @@ class ScrollButtons extends Component {
 				currentButton.click(ev);
 			}
 		} else if (direction) {
+			Spotlight.setPointerMode(false);
+
 			const
 				{rtl} = this.props,
 				isDown = direction === 'down',
@@ -327,9 +329,7 @@ class ScrollButtons extends Component {
 				if (isDirectionToLeave) {
 					if (!focusableScrollButtons && !getTargetByDirectionFromElement(direction, ev.target)) {
 						// move focus into contents and allow bubbling
-						consumeEvent(ev);
 						Spotlight.move(directionToContent);
-						forward('onKeyDownButton', ev, this.props);
 					}
 				} else if (preventBubbling) {
 					// move focus directly to stop bubbling
