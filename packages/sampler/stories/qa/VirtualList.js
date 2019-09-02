@@ -142,6 +142,34 @@ const InPanels = ({className, title, ...rest}) => {
 	);
 };
 
+// eslint-disable-next-line enact/prop-types
+class VirtualListWithCBScrollTo extends React.Component {
+	static propTypes = {
+		dataSize: PropTypes.number
+	}
+
+	componentDidUpdate (prevProps) {
+		if (this.props.dataSize !== prevProps.dataSize) {
+			this.scrollTo({animate: false, focus: false, index: 0});
+		}
+	}
+
+	scrollTo = null
+
+	getScrollTo = (scrollTo) => {
+		this.scrollTo = scrollTo;
+	}
+
+	render () {
+		return (
+			<VirtualList
+				{...this.props}
+				cbScrollTo={this.getScrollTo}
+			/>
+		);
+	}
+}
+
 storiesOf('VirtualList', module)
 	.add(
 		'horizontal scroll in Scroller',
@@ -219,4 +247,27 @@ storiesOf('VirtualList', module)
 				/>
 			);
 		}
+	)
+	.add(
+		'call cbScrollTo() when dataSize changes',
+		() => {
+			return (
+				<VirtualListWithCBScrollTo
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+					focusableScrollbar={boolean('focusableScrollbar', Config)}
+					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
+					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)), true)}
+					itemSize={ri.scale(number('itemSize', Config, 72))}
+					noScrollByWheel={boolean('noScrollByWheel', Config)}
+					onKeyDown={action('onKeyDown')}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
+					spacing={ri.scale(number('spacing', Config))}
+					spotlightDisabled={boolean('spotlightDisabled', Config, false)}
+					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
+					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
+				/>
+			);
+		},
+		{propTables: [Config]}
 	);
