@@ -249,23 +249,13 @@ storiesOf('VirtualList', module)
 		}
 	)
 	.add(
-		'call cbScrollTo() when dataSize changes',
+		'scrolling to 0 whenever dataSize changes',
 		() => {
 			return (
 				<VirtualListWithCBScrollTo
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
-					focusableScrollbar={boolean('focusableScrollbar', Config)}
-					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
 					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)), true)}
 					itemSize={ri.scale(number('itemSize', Config, 72))}
-					noScrollByWheel={boolean('noScrollByWheel', Config)}
-					onKeyDown={action('onKeyDown')}
-					onScrollStart={action('onScrollStart')}
-					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', Config))}
-					spotlightDisabled={boolean('spotlightDisabled', Config, false)}
-					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
-					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 				/>
 			);
 		},
