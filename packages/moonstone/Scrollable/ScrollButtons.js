@@ -1,9 +1,9 @@
-import {Announce} from '@enact/ui/AnnounceDecorator';
 import {is} from '@enact/core/keymap';
+import {Announce} from '@enact/ui/AnnounceDecorator';
+import Spotlight, {getDirection} from '@enact/spotlight';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import Spotlight, {getDirection} from '@enact/spotlight';
 
 import $L from '../internal/$L';
 
@@ -25,7 +25,11 @@ const
 	preparePrevButton = prepareButton(true),
 	prepareNextButton = prepareButton(false),
 	isPageUp = is('pageUp'),
-	isPageDown = is('pageDown');
+	isPageDown = is('pageDown'),
+	preventDefault = (ev) => {
+		ev.preventDefault();
+		ev.stopPropagation();
+	};
 
 /**
  * A Moonstone-styled scroll buttons. It is used in [Scrollbar]{@link moonstone/Scrollable.Scrollbar}.
@@ -144,6 +148,16 @@ class ScrollButtons extends Component {
 		this.prevButtonRef = React.createRef();
 	}
 
+	componentDidMount () {
+		this.nextButtonRef.current.addEventListener('keydown', this.onKeyDownNext);
+		this.prevButtonRef.current.addEventListener('keydown', this.onKeyDownPrev);
+	}
+
+	componentWillUnmount () {
+		this.nextButtonRef.current.removeEventListener('keydown', this.onKeyDownNext);
+		this.prevButtonRef.current.removeEventListener('keydown', this.onKeyDownPrev);
+	}
+
 	updateButtons = (bounds) => {
 		const
 			{vertical} = this.props,
@@ -204,11 +218,14 @@ class ScrollButtons extends Component {
 		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
 	}
 
+	focusOnButton = (isPrev) => {
+		Spotlight.focus(isPrev ? this.prevButtonRef.current : this.nextButtonRef.current);
+	}
+
 	focusOnOppositeScrollButton = (ev, direction) => {
 		const buttonNode = (ev.target === this.nextButtonRef.current) ? this.prevButtonRef.current : this.nextButtonRef.current;
 
-		ev.preventDefault();
-		ev.stopPropagation();
+		preventDefault(ev);
 		Spotlight.setPointerMode(false);
 
 		if (!Spotlight.focus(buttonNode)) {
@@ -255,37 +272,57 @@ class ScrollButtons extends Component {
 
 	onKeyDownPrev = (ev) => {
 		const
-			{focusableScrollButtons} = this.props,
-			{nextButtonDisabled} = this.state,
+			{focusableScrollButtons, vertical} = this.props,
+			{nextButtonDisabled, prevButtonDisabled} = this.state,
 			{keyCode} = ev;
 
-		if (isPageDown(keyCode) && !nextButtonDisabled) {
-			if (focusableScrollButtons) {
-				Spotlight.setPointerMode(false);
-				Spotlight.focus(ReactDOM.findDOMNode(this.nextButtonRef.current)); // eslint-disable-line react/no-find-dom-node
-			} else {
-				this.onClickNext(ev);
+		if (isPageDown(keyCode) || isPageUp(keyCode)) {
+			if (!vertical) {
+				ev.preventDefault();
+				return;
 			}
-		} else if (isPageUp(keyCode)) {
-			this.onClickPrev(ev);
+
+			if (isPageDown(keyCode)) {
+				if (focusableScrollButtons && !Spotlight.getPointerMode()) {
+					preventDefault(ev);
+					Spotlight.setPointerMode(false);
+					Spotlight.focus(ReactDOM.findDOMNode(this.nextButtonRef.current)); // eslint-disable-line react/no-find-dom-node
+				} else if (!nextButtonDisabled) {
+					preventDefault(ev);
+					this.onClickNext(ev);
+				}
+			} else if (!prevButtonDisabled) {
+				preventDefault(ev);
+				this.onClickPrev(ev);
+			}
 		}
 	}
 
 	onKeyDownNext = (ev) => {
 		const
-			{focusableScrollButtons} = this.props,
-			{prevButtonDisabled} = this.state,
+			{focusableScrollButtons, vertical} = this.props,
+			{nextButtonDisabled, prevButtonDisabled} = this.state,
 			{keyCode} = ev;
 
-		if (isPageUp(keyCode) && !prevButtonDisabled) {
-			if (focusableScrollButtons) {
-				Spotlight.setPointerMode(false);
-				Spotlight.focus(ReactDOM.findDOMNode(this.prevButtonRef.current)); // eslint-disable-line react/no-find-dom-node
-			} else {
-				this.onClickPrev(ev);
+		if (isPageDown(keyCode) || isPageUp(keyCode)) {
+			if (!vertical) {
+				ev.preventDefault();
+				return;
 			}
-		} else if (isPageDown(keyCode)) {
-			this.onClickNext(ev);
+
+			if (isPageUp(keyCode)) {
+				if (focusableScrollButtons && !Spotlight.getPointerMode()) {
+					preventDefault(ev);
+					Spotlight.setPointerMode(false);
+					Spotlight.focus(ReactDOM.findDOMNode(this.prevButtonRef.current)); // eslint-disable-line react/no-find-dom-node
+				} else if (!prevButtonDisabled) {
+					preventDefault(ev);
+					this.onClickPrev(ev);
+				}
+			} else if (!nextButtonDisabled) {
+				preventDefault(ev);
+				this.onClickNext(ev);
+			}
 		}
 	}
 
@@ -305,7 +342,6 @@ class ScrollButtons extends Component {
 				onClick={this.onClickPrev}
 				onDown={this.onDownPrev}
 				onHoldPulse={this.onClickPrev}
-				onKeyDown={this.onKeyDownPrev}
 				onSpotlightDown={this.onSpotlight}
 				onSpotlightLeft={this.onSpotlight}
 				onSpotlightRight={this.onSpotlight}
@@ -323,7 +359,6 @@ class ScrollButtons extends Component {
 				onClick={this.onClickNext}
 				onDown={this.onDownNext}
 				onHoldPulse={this.onClickNext}
-				onKeyDown={this.onKeyDownNext}
 				onSpotlightDown={this.onSpotlight}
 				onSpotlightLeft={this.onSpotlight}
 				onSpotlightRight={this.onSpotlight}

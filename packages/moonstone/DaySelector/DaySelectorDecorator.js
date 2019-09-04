@@ -2,8 +2,8 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {coerceArray, memoize} from '@enact/core/util';
 import ilib from '@enact/i18n';
-import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
-import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
+import DateFmt from 'ilib/lib/DateFmt';
+import LocaleInfo from 'ilib/lib/LocaleInfo';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -77,6 +77,9 @@ function getLocaleState (dayNameLength, locale) {
  * @memberof moonstone/DaySelector
  * @mixes ui/Changeable.Changeable
  * @mixes moonstone/Skinnable.Skinnable
+ * @omit onChange
+ * @omit value
+ * @omit defaultValue
  * @public
  */
 const DaySelectorDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars

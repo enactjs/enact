@@ -8,13 +8,13 @@
  * @private
  */
 
-import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
+import clamp from 'ramda/src/clamp';
 import React, {Component} from 'react';
 
 import ForwardRef from '../ForwardRef';
@@ -38,7 +38,7 @@ const
 		overscrollTypeHold: 1,
 		overscrollTypeOnce: 2,
 		overscrollTypeDone: 9,
-		paginationPageMultiplier: 0.8,
+		paginationPageMultiplier: 0.66,
 		scrollStopWaiting: 200,
 		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	},
@@ -165,6 +165,14 @@ class ScrollableBase extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
+		 * Called when resizing window
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		handleResizeWindow: PropTypes.func,
+
+		/**
 		 * Specifies how to show horizontal scrollbar.
 		 *
 		 * Valid values are:
@@ -186,6 +194,15 @@ class ScrollableBase extends Component {
 		 * @private
 		 */
 		noScrollByDrag: PropTypes.bool,
+
+		/**
+		 * Prevents scroll by wheeling on the list or the scroller.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noScrollByWheel: PropTypes.bool,
 
 		/**
 		 * Called when flicking with a mouse or a touch screen.
@@ -343,16 +360,6 @@ class ScrollableBase extends Component {
 		stop: PropTypes.func,
 
 		/**
-		 * Scrollable CSS style.
-		 *
-		 * Should be defined because we manipulate style prop in render().
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		style: PropTypes.object,
-
-		/**
 		 * Specifies how to show vertical scrollbar.
 		 *
 		 * Valid values are:
@@ -371,6 +378,7 @@ class ScrollableBase extends Component {
 		cbScrollTo: nop,
 		horizontalScrollbar: 'auto',
 		noScrollByDrag: false,
+		noScrollByWheel: false,
 		onScroll: nop,
 		onScrollStart: nop,
 		onScrollStop: nop,
@@ -483,10 +491,24 @@ class ScrollableBase extends Component {
 		}
 	}
 
+	handleResizeWindow = () => {
+		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
+		setTimeout(() => {
+			const {handleResizeWindow} = this.props;
+
+			if (handleResizeWindow) {
+				handleResizeWindow();
+			}
+			this.scrollTo({position: {x: 0, y: 0}, animate: false});
+
+			this.enqueueForceUpdate();
+		});
+	}
+
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	enqueueForceUpdate () {
-		this.childRefCurrent.calculateMetrics();
+		this.childRefCurrent.calculateMetrics(this.childRefCurrent.props);
 		this.forceUpdate();
 	}
 
@@ -635,9 +657,10 @@ class ScrollableBase extends Component {
 	}
 
 	onWheel = (ev) => {
-		ev.preventDefault();
-
-		if (!this.isDragging) {
+		if (this.isDragging) {
+			ev.preventDefault();
+			ev.stopPropagation();
+		} else {
 			const
 				{verticalScrollbarRef, horizontalScrollbarRef} = this,
 				bounds = this.getScrollBounds(),
@@ -650,6 +673,10 @@ class ScrollableBase extends Component {
 				direction;
 
 			this.lastInputType = 'wheel';
+
+			if (this.props.noScrollByWheel) {
+				return;
+			}
 
 			if (canScrollVertically) {
 				delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
@@ -668,15 +695,13 @@ class ScrollableBase extends Component {
 
 			if (delta !== 0) {
 				this.scrollToAccumulatedTarget(delta, canScrollVertically, this.props.overscrollEffectOn.wheel);
+				ev.preventDefault();
+				ev.stopPropagation();
 			}
 		}
 	}
 
 	scrollByPage = (keyCode) => {
-		// Only scroll by page when the vertical scrollbar is visible. Otherwise, treat the
-		// scroller as a plain container
-		if (!this.state.isVerticalScrollbarVisible) return;
-
 		const
 			bounds = this.getScrollBounds(),
 			canScrollVertically = this.canScrollVertically(bounds),
@@ -1183,10 +1208,10 @@ class ScrollableBase extends Component {
 					scrollTop: this.scrollTop
 				};
 
-			if (curHorizontalScrollbarVisible && this.horizontalScrollbarRef) {
+			if (curHorizontalScrollbarVisible && this.horizontalScrollbarRef.current) {
 				this.horizontalScrollbarRef.current.update(updatedBounds);
 			}
-			if (curVerticalScrollbarVisible && this.verticalScrollbarRef) {
+			if (curVerticalScrollbarVisible && this.verticalScrollbarRef.current) {
 				this.verticalScrollbarRef.current.update(updatedBounds);
 			}
 			return true;
@@ -1215,16 +1240,15 @@ class ScrollableBase extends Component {
 		if (containerRef.current && containerRef.current.addEventListener) {
 			containerRef.current.addEventListener('wheel', this.onWheel);
 			containerRef.current.addEventListener('keydown', this.onKeyDown);
-		}
-
-		if (childRefCurrent && childRefCurrent.containerRef.current) {
-			if (childRefCurrent.containerRef.current.addEventListener) {
-				childRefCurrent.containerRef.current.addEventListener('mousedown', this.onMouseDown);
-			}
+			containerRef.current.addEventListener('mousedown', this.onMouseDown);
 		}
 
 		if (this.props.addEventListeners) {
 			this.props.addEventListeners(childRefCurrent.containerRef);
+		}
+
+		if (window) {
+			window.addEventListener('resize', this.handleResizeWindow);
 		}
 	}
 
@@ -1235,14 +1259,15 @@ class ScrollableBase extends Component {
 		if (containerRef.current && containerRef.current.removeEventListener) {
 			containerRef.current.removeEventListener('wheel', this.onWheel);
 			containerRef.current.removeEventListener('keydown', this.onKeyDown);
-		}
-
-		if (childRefCurrent.containerRef.current && childRefCurrent.containerRef.current.removeEventListener) {
-			childRefCurrent.containerRef.current.removeEventListener('mousedown', this.onMouseDown);
+			containerRef.current.removeEventListener('mousedown', this.onMouseDown);
 		}
 
 		if (this.props.removeEventListeners) {
 			this.props.removeEventListeners(childRefCurrent.containerRef);
+		}
+
+		if (window) {
+			window.removeEventListener('resize', this.handleResizeWindow);
 		}
 	}
 
@@ -1288,7 +1313,9 @@ class ScrollableBase extends Component {
 		delete rest.applyOverscrollEffect;
 		delete rest.cbScrollTo;
 		delete rest.clearOverscrollEffect;
+		delete rest.handleResizeWindow;
 		delete rest.horizontalScrollbar;
+		delete rest.noScrollByWheel;
 		delete rest.onFlick;
 		delete rest.onKeyDown;
 		delete rest.onMouseDown;

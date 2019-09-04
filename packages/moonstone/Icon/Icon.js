@@ -14,6 +14,7 @@
 import kind from '@enact/core/kind';
 import UiIcon from '@enact/ui/Icon';
 import Pure from '@enact/ui/internal/Pure';
+import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 
 import Skinnable from '../Skinnable';
@@ -33,6 +34,21 @@ import componentCss from './Icon.module.less';
  */
 const IconBase = kind({
 	name: 'Icon',
+
+	propTypes: /** @lends moonstone/Icon.IconBase.prototype */ {
+		/**
+		 * The size of the icon.
+		 *
+		 * @type {('large'|'small')}
+		 * @default 'small'
+		 * @public
+		 */
+		size: PropTypes.string
+	},
+
+	defaultProps: {
+		size: 'small'
+	},
 
 	render: (props) => UiIcon.inline({
 		...props,
@@ -123,6 +139,43 @@ const IconBase = kind({
  * view360
  * view360off
  * info
+ * cycle
+ * bluetoothoff
+ * verticalellipsis
+ * arrowcurveright
+ * picture
+ * home
+ * warning
+ * scroll
+ * denselistdrawer
+ * starminus
+ * liverecord
+ * liveplay
+ * contrast
+ * edit
+ * trashlock
+ * volumecycle
+ * movecursor
+ * refresh
+ * question
+ * questionreversed
+ * s
+ * cycleone
+ * cyclea
+ * cyclex
+ * speakers
+ * koreansubtitles
+ * chinesesubtitles
+ * fryingpan
+ * musicnoteplus
+ * files
+ * arrowupdown
+ * brightness
+ * download
+ * musicnoteplusminus
+ * font
+ * musicon
+ * musicoff
  * ```
  *
  * @name iconList

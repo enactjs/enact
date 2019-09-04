@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class PickerAddRemove extends React.Component {
-	static displayName: 'PickerAddRemove'
+	static displayName = 'PickerAddRemove'
 
 	static propTypes = {
 		disabled: PropTypes.bool,

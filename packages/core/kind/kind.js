@@ -9,7 +9,6 @@ import React from 'react';
 
 import computed from './computed';
 import styles from './styles';
-import warning from 'warning';
 
 /**
  * @callback RenderFunction
@@ -48,7 +47,7 @@ import warning from 'warning';
 /**
  * @typedef {Object} KindConfig
  * @memberof core/kind
- * @property {String} name
+ * @property {String} [name]
  * @property {Object.<string, Function>} [propTypes]
  * @property {Object.<string, any>} [defaultProps]
  * @property {Object} [contextType]
@@ -81,7 +80,12 @@ import warning from 'warning';
  *			css,
  *			className: 'button'
  *		},
- *		// add some computed properties
+ *		// add event handlers that are cached between calls to prevent recreating each call. Any
+ *		// handlers are added to the props passed to `render()`.  See core/handle.
+ *		handlers: {
+ *			onKeyDown: (evt, props) => { .... }
+ *		},
+ *		// add some computed properties, these are added to props passed to `render()`
  *		computed: {
  *			// border color will be the color prepended by 'light'
  *			borderColor: ({color}) => 'light' + color,
@@ -106,13 +110,13 @@ import warning from 'warning';
  *
  * @returns {Component<Props>}           Component
  * @memberof core/kind
+ * @see {@link core/handle}
  * @public
  */
 const kind = (config) => {
 	const {
 		computed: cfgComputed,
 		contextType,
-		contextTypes,
 		defaultProps,
 		handlers,
 		name,
@@ -120,8 +124,6 @@ const kind = (config) => {
 		render,
 		styles: cfgStyles
 	} = config;
-
-	warning(!contextTypes, `"contextTypes" used by ${name || 'a component'} but is deprecated. Please replace with "contextType" instead.`);
 
 	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
@@ -171,7 +173,6 @@ const kind = (config) => {
 	};
 
 	if (propTypes) Component.propTypes = propTypes;
-	if (contextTypes) Component.contextTypes = contextTypes;
 	if (contextType) Component.contextType = contextType;
 	if (defaultProps) Component.defaultProps = defaultProps;
 

@@ -83,10 +83,10 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				...i18n,
 				// We use the latin fonts (with non-Latin fallback) for these languages (even though
 				// their scripts are non-latin)
-				latinLanguageOverrides: ['ko', 'ha'],
+				latinLanguageOverrides: ['ko', 'ha', 'el', 'bg', 'mk', 'mn', 'ru', 'uk', 'kk'],
 				// We use the non-latin fonts for these languages (even though their scripts are
 				// technically considered latin)
-				nonLatinLanguageOverrides: ['vi', 'en-JP']
+				nonLatinLanguageOverrides: ['en-JP']
 			},
 			I18nFontDecorator(
 				App

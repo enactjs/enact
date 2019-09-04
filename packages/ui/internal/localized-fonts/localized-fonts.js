@@ -2,19 +2,21 @@ const fontMap = {};
 let currentLocale = null;
 
 // Generate a single font-face rule
-const buildFont = function (inOptions) {
-	if (!inOptions && !inOptions.name) {
+const buildFont = function (config) {
+	if (!config && !config.name) {
 		return '';
 	}
 	let strOut = '@font-face { \n' +
-		`  font-family: "${inOptions.name}";\n` +
-		`  font-weight: ${inOptions.weight || 'normal'};\n`;
+		`  font-family: "${config.name}";\n`;
 
-	if (inOptions.localName) {
-		strOut += `  src: local("${inOptions.localName}");\n`;
+	if (config.weight) {
+		strOut += `  font-weight: ${config.weight};\n`;
 	}
-	if (inOptions.unicodeRange) {
-		strOut += `  unicode-range: ${inOptions.unicodeRange};\n`;
+	if (config.localName) {
+		strOut += `  src: local("${config.localName}");\n`;
+	}
+	if (config.unicodeRange) {
+		strOut += `  unicode-range: ${config.unicodeRange};\n`;
 	}
 	strOut += '} \n';
 	return strOut;
@@ -30,23 +32,30 @@ const buildFontSet = function (fontName, fonts, strLang, bitDefault) {
 		strOut += buildFont({
 			name,
 			localName: fonts[strLang].regular,
-			weight: 400,
-			unicodeRange: fonts[strLang].unicodeRange
-		});
-
-		// Build Bold
-		strOut += buildFont({
-			name,
-			localName: (fonts[strLang].bold || fonts[strLang].regular), // fallback to regular
-			weight: 700,
 			unicodeRange: fonts[strLang].unicodeRange
 		});
 
 		// Build Light
 		strOut += buildFont({
 			name,
-			localName: (fonts[strLang].light || fonts[strLang].regular), // fallback to regular
+			localName: (fonts[strLang].light || fonts[strLang].regular),
 			weight: 300,
+			unicodeRange: fonts[strLang].unicodeRange
+		});
+
+		// Build SemiBold
+		strOut += buildFont({
+			name,
+			localName: (fonts[strLang].semibold || fonts[strLang].bold || fonts[strLang].regular),
+			weight: 600,
+			unicodeRange: fonts[strLang].unicodeRange
+		});
+
+		// Build Bold
+		strOut += buildFont({
+			name,
+			localName: (fonts[strLang].bold || fonts[strLang].regular),
+			weight: 700,
 			unicodeRange: fonts[strLang].unicodeRange
 		});
 	}
@@ -57,6 +66,8 @@ const buildFontDefinitionCss = function (locale, buildOverrides) {
 	const
 		matchLang = locale.match(/\b([a-z]{2})\b/),
 		language = matchLang && matchLang[1],
+		matchScript = locale.match(/\b([a-z]{4})\b/i),
+		script = matchScript && matchScript[1],
 		matchReg = locale.match(/\b([A-Z]{2}|[0-9]{3})\b/),
 		region = matchReg && matchReg[1];
 
@@ -71,12 +82,19 @@ const buildFontDefinitionCss = function (locale, buildOverrides) {
 				fontDefinitionCss += buildFontSet(fontName, fonts, lang);
 			} else {
 				// Set up the override for locale-specific font.
-				// la = language, re = region; `la-RE`
-				const [la, re] = lang.split('-');
-				if (la === language) {
-					if (!re || (re && re === region)) {
-						fontDefinitionCss += buildFontSet(fontName, fonts, lang, true);
-					}
+				// la = language, sc = script, re = region; `la-RE` or `zh-Hans-HK`
+				let [la, sc, re] = lang.split('-');
+
+				// if script is not specified, fall back to second part representing region
+				if (!re && sc && sc.length === 2) {
+					re = sc;
+					sc = null;
+				}
+
+				const matchesRegion = re ? re === region : true;
+				const matchesScript = sc ? sc === script : true;
+				if (la === language && matchesRegion && matchesScript) {
+					fontDefinitionCss += buildFontSet(fontName, fonts, lang, true);
 				}
 			}
 		}

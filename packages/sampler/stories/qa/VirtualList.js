@@ -1,31 +1,54 @@
+import React, {useState} from 'react';
+import PropTypes from 'prop-types';
+import Item from '@enact/moonstone/Item';
+import {ActivityPanels, Panel, Header} from '@enact/moonstone/Panels';
+import Scroller from '@enact/moonstone/Scroller';
 import SwitchItem from '@enact/moonstone/SwitchItem';
 import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
-import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import ri from '@enact/ui/resolution';
-import React from 'react';
-import PropTypes from 'prop-types';
+import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
+import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
+
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 
-import {boolean, number} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {boolean, number, select} from '../../src/enact-knobs';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBase, UiVirtualListBase);
+const Config = mergeComponentMetadata('VirtualList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
 
 const
 	itemStyle = {
-		borderBottom: ri.unit(3, 'rem') + ' solid #202328',
-		boxSizing: 'border-box'
+		boxSizing: 'border-box',
+		display: 'flex'
 	},
+	listStyle = {
+		height: '200px'
+	},
+	borderStyle = ri.unit(3, 'rem') + ' solid #202328',
 	items = [],
 	defaultDataSize = 1000,
+	prop = {
+		scrollbarOption: ['auto', 'hidden', 'visible']
+	},
+	wrapOption = {
+		false: false,
+		true: true,
+		'&quot;noAnimation&quot;': 'noAnimation'
+	},
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderItem = (size) => ({index, ...rest}) => {
-		const style = {height: size + 'px', ...itemStyle};
+	renderItem = (ItemComponent, size, vertical, onClick) => ({index, ...rest}) => {
+		const style = {
+			...(
+				vertical ?
+					{borderBottom: borderStyle, height: size + 'px'} :
+					{borderRight: borderStyle, height: '100%', width: size + 'px', writingMode: 'vertical-lr'}
+			),
+			...itemStyle
+		};
 		return (
-			<StatefulSwitchItem index={index} style={style} {...rest}>
+			<ItemComponent index={index} style={style} onClick={onClick} {...rest}>
 				{items[index].item}
-			</StatefulSwitchItem>
+			</ItemComponent>
 		);
 	};
 
@@ -88,20 +111,151 @@ class StatefulSwitchItem extends React.Component {
 	}
 }
 
+// eslint-disable-next-line enact/prop-types
+const InPanels = ({className, title, ...rest}) => {
+	const [index, setIndex] = useState(0);
+	function handleSelectBreadcrumb (ev) {
+		setIndex(ev.index);
+	}
+
+	function handleSelectItem () {
+		setIndex(index === 0 ? 1 : 0);
+	}
+
+	return (
+		<ActivityPanels className={className} index={index} onSelectBreadcrumb={handleSelectBreadcrumb} noCloseButton>
+			<Panel>
+				<Header type="compact" title={`${title} Panel 0`} key="header" />
+				<VirtualList
+					id="spotlight-list"
+					// eslint-disable-next-line enact/prop-types
+					itemRenderer={renderItem(Item, rest.itemSize, true, handleSelectItem)}
+					spotlightId="virtual-list"
+					{...rest}
+				/>
+			</Panel>
+			<Panel title={`${title} Panel 1`}>
+				<Header type="compact" title={`${title} Panel 1`} key="header" />
+				<Item onClick={handleSelectItem}>Go Back</Item>
+			</Panel>
+		</ActivityPanels>
+	);
+};
+
+// eslint-disable-next-line enact/prop-types
+class VirtualListWithCBScrollTo extends React.Component {
+	static propTypes = {
+		dataSize: PropTypes.number
+	}
+
+	componentDidUpdate (prevProps) {
+		if (this.props.dataSize !== prevProps.dataSize) {
+			this.scrollTo({animate: false, focus: false, index: 0});
+		}
+	}
+
+	scrollTo = null
+
+	getScrollTo = (scrollTo) => {
+		this.scrollTo = scrollTo;
+	}
+
+	render () {
+		return (
+			<VirtualList
+				{...this.props}
+				cbScrollTo={this.getScrollTo}
+			/>
+		);
+	}
+}
+
 storiesOf('VirtualList', module)
+	.add(
+		'horizontal scroll in Scroller',
+		() => {
+			const listProps = {
+				dataSize: updateDataSize(number('dataSize', Config, defaultDataSize)),
+				direction: 'horizontal',
+				focusableScrollbar: boolean('focusableScrollbar', Config),
+				horizontalScrollbar: select('horizontalScrollbar', prop.scrollbarOption, Config),
+				itemRenderer: renderItem(Item, ri.scale(number('itemSize', Config, 72)), false),
+				itemSize: ri.scale(number('itemSize', Config, 72)),
+				noScrollByWheel: boolean('noScrollByWheel', Config),
+				onKeyDown: action('onKeyDown'),
+				onScrollStart: action('onScrollStart'),
+				onScrollStop: action('onScrollStop'),
+				spacing: ri.scale(number('spacing', Config)),
+				style: listStyle,
+				verticalScrollbar: select('verticalScrollbar', prop.scrollbarOption, Config),
+				wrap: wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]
+			};
+
+			return (
+				<Scroller >
+					<VirtualList {...listProps} key="1" />
+					<VirtualList {...listProps} key="2" />
+					<VirtualList {...listProps} key="3" />
+				</Scroller>
+			);
+		},
+		{propTables: [Config]}
+	)
 	.add(
 		'with more items',
 		() => {
-			const itemSize = ri.scale(number('itemSize', Config, 72));
 			return (
 				<VirtualList
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
-					focusableScrollbar={boolean('focusableScrollbar', Config, false)}
-					itemRenderer={renderItem(itemSize)}
-					itemSize={itemSize}
+					focusableScrollbar={boolean('focusableScrollbar', Config)}
+					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
+					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)), true)}
+					itemSize={ri.scale(number('itemSize', Config, 72))}
+					noScrollByWheel={boolean('noScrollByWheel', Config)}
+					onKeyDown={action('onKeyDown')}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', Config, 0))}
+					spacing={ri.scale(number('spacing', Config))}
+					spotlightDisabled={boolean('spotlightDisabled', Config, false)}
+					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
+					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
+				/>
+			);
+		},
+		{propTables: [Config]}
+	)
+	.add(
+		'in Panels',
+		context => {
+			context.noPanels = true;
+			const title = `${context.kind} ${context.story}`.trim();
+			return (
+				<InPanels
+					title={title}
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+					focusableScrollbar={boolean('focusableScrollbar', Config)}
+					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
+					itemSize={ri.scale(number('itemSize', Config, 72))}
+					noScrollByWheel={boolean('noScrollByWheel', Config)}
+					onKeyDown={action('onKeyDown')}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
+					spacing={ri.scale(number('spacing', Config))}
+					spotlightDisabled={boolean('spotlightDisabled', Config, false)}
+					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
+					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
+				/>
+			);
+		}
+	)
+	.add(
+		'scrolling to 0 whenever dataSize changes',
+		() => {
+			return (
+				<VirtualListWithCBScrollTo
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)), true)}
+					itemSize={ri.scale(number('itemSize', Config, 72))}
 				/>
 			);
 		},

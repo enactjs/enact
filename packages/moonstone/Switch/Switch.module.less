@@ -16,6 +16,13 @@
 	text-align: left;
 	cursor: default;
 
+	.moon-custom-text({
+		width: @moon-toggleswitch-width-large;
+		height: @moon-toggleswitch-height-large;
+		border-radius: (@moon-toggleswitch-height-large / 2);
+	});
+
+
 	.moon-taparea(@moon-toggleswitch-height);
 
 	.icon {
@@ -31,6 +38,10 @@
 	&.selected {
 		.icon {
 			left: (@moon-toggleswitch-width - @moon-toggleswitch-height);
+
+			.moon-custom-text({
+				left: (@moon-toggleswitch-width-large - @moon-toggleswitch-height-large);
+			});
 		}
 	}
 
@@ -67,13 +78,31 @@
 
 		.disabled({
 			background-color: @moon-checkbox-toggle-switch-bg-color;
+			opacity: @moon-disabled-opacity;
 
 			.icon {
 				color: @moon-checkbox-toggle-switch-color;
 			}
+
+			&.selected {
+				background-color: @moon-checkbox-toggle-switch-spotlight-selected-bg-color;
+
+				.icon {
+					color: @moon-checkbox-toggle-switch-spotlight-selected-color;
+				}
+			}
 		});
 	});
 }
+
+// When a parent is disabled
+.disabled({
+	.toggleIcon {
+		.applySkins({
+			opacity: 1;
+		});
+	}
+});
 
 // Keep the switch handle (the icon) a constant color regardless of focus state.
 .focus({
@@ -93,4 +122,12 @@
 			}
 		});
 	}
+
+	.disabled({
+		.toggleIcon {
+			.applySkins({
+				opacity: @moon-disabled-opacity;
+			});
+		}
+	});
 }, parent);

@@ -2,11 +2,9 @@ import ExpandableInput, {ExpandableInputBase} from '@enact/moonstone/ExpandableI
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 const iconNames = ['', ...Object.keys(icons)];
 
@@ -21,9 +19,7 @@ const prop = {
 storiesOf('Moonstone', module)
 	.add(
 		'ExpandableInput',
-		withInfo({
-			text: 'Basic usage of ExpandableInput'
-		})(() => (
+		() => (
 			<ExpandableInput
 				disabled={boolean('disabled', Config)}
 				iconAfter={select('iconAfter', iconNames, Config)}
@@ -36,5 +32,10 @@ storiesOf('Moonstone', module)
 				placeholder={text('placeholder', Config, 'placeholder')}
 				type={select('type', prop.type, Config, prop.type[0])}
 			/>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of ExpandableInput'
+			}
+		}
 	);

@@ -8,6 +8,7 @@
 import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
+import {pick} from 'ramda';
 import PropTypes from 'prop-types';
 import React from 'react';
 import warning from 'warning';
@@ -64,6 +65,15 @@ const defaultConfig = {
 	deactivate: null,
 
 	/**
+	 * Configures additional props to attach to the event that is sent when toggled.
+	 *
+	 * @type {String[]}
+	 * @default []
+	 * @memberof ui/Toggleable.Toggleable.defaultConfig
+	 */
+	eventProps: [],
+
+	/**
 	 * Configures the property that is passed to the wrapped component when toggled.
 	 *
 	 * @type {String}
@@ -115,7 +125,7 @@ const defaultConfig = {
  * @public
  */
 const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const {activate, deactivate, prop, toggle, toggleProp} = config;
+	const {activate, deactivate, eventProps, prop, toggle, toggleProp} = config;
 	const defaultPropKey = 'default' + cap(prop);
 
 	return class Toggleable extends React.Component {
@@ -124,6 +134,8 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * Default toggled state applied at construction when the toggled prop is `undefined` or
 			 * `null`.
 			 *
+			 * @name defaultSelected
+			 * @memberof ui/Toggleable.Toggleable.prototype
 			 * @type {Boolean}
 			 * @default false
 			 * @public
@@ -146,6 +158,8 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * is 'uncontrolled' and `Toggleable` will manage the toggled state using callbacks
 			 * defined by its configuration.
 			 *
+			 * @name selected
+			 * @memberof ui/Toggleable.Toggleable.prototype
 			 * @type {Boolean}
 			 * @public
 			 */
@@ -154,6 +168,8 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * Event callback to notify that state should be toggled.
 			 *
+			 * @name onToggle
+			 * @memberof ui/Toggleable.Toggleable.prototype
 			 * @type {Function}
 			 * @public
 			 */
@@ -204,7 +220,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		handle = handle.bind(this)
 
-		forwardWithState = (evName) => (ev, props) => forward(evName, {[prop]: !this.state.active}, props)
+		forwardWithState = (evName) => (ev, props) => forward(evName, {...pick(eventProps, props), [prop]: !this.state.active}, props)
 
 		updateActive = (active) => {
 			if (!this.state.controlled) {

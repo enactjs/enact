@@ -4,19 +4,6 @@ import Button from '../Button';
 
 describe('Button', () => {
 
-	test('should render with button text upper-cased', () => {
-		let msg = 'Hello Button!';
-
-		const button = mount(
-			<Button>{msg}</Button>
-		);
-
-		const expected = msg.toUpperCase();
-		const actual = button.text();
-
-		expect(actual).toBe(expected);
-	});
-
 	test(
 		'should have \'disabled\' HTML attribute when \'disabled\' prop is provided',
 		() => {

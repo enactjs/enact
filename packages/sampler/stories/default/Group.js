@@ -7,10 +7,9 @@ import ToggleButton from '@enact/moonstone/ToggleButton';
 import Group from '@enact/ui/Group';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select} from '../../src/enact-knobs';
+import {action} from '../../src/utils';
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -30,9 +29,7 @@ Group.displayName = 'Group';
 storiesOf('UI', module)
 	.add(
 		'Group',
-		withInfo({
-			text: 'Basic usage of Group'
-		})(() => (
+		() => (
 			<Group
 				childComponent={getComponent(select('childComponent', Object.keys(prop.children), Group, 'CheckboxItem'))}
 				itemProps={{
@@ -45,5 +42,10 @@ storiesOf('UI', module)
 			>
 				{['Item 1', 'Item 2', 'Item 3']}
 			</Group>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of Group'
+			}
+		}
 	);

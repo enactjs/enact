@@ -2,6 +2,72 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [3.0.0] - 2019-09-03
+
+No significant changes.
+
+## [3.0.0-rc.4] - 2019-08-22
+
+### Fixed
+
+- `i18n/Text` to generate a proper TypeScript definition and to properly detect if translations were available when async
+
+## [3.0.0-rc.3] - 2019-08-15
+
+No significant changes.
+
+## [3.0.0-rc.2] - 2019-08-08
+
+No significant changes.
+
+## [3.0.0-rc.1] - 2019-07-31
+
+No significant changes.
+
+## [3.0.0-beta.2] - 2019-07-23
+
+No significant changes.
+
+## [3.0.0-beta.1] - 2019-07-15
+
+## Removed
+
+- `i18n/ilib` embedded copy of iLib in favour of the NPM package `ilib`
+
+### Added
+
+- `ilib@^14.2.0` package as a peer dependency, which apps will need to include
+
+## [3.0.0-alpha.7] - 2019-06-24
+
+No significant changes.
+
+## [3.0.0-alpha.6] - 2019-06-17
+
+## Removed
+
+- `i18n/Uppercase` HOC, replaced by `i18n/util` casing functions
+
+## [3.0.0-alpha.5] - 2019-06-10
+
+No significant changes.
+
+## [3.0.0-alpha.4] - 2019-06-03
+
+No significant changes.
+
+## [3.0.0-alpha.3] - 2019-05-29
+
+No significant changes.
+
+## [3.0.0-alpha.2] - 2019-05-20
+
+No significant changes.
+
+## [3.0.0-alpha.1] - 2019-05-15
+
+No significant changes.
+
 ## [2.5.3] - 2019-06-06
 
 No significant changes.

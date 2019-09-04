@@ -40,22 +40,6 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     />
     ```
 
-*   If there are some disabled items in a list, we need to pass `isItemDisabled` prop as a function to check if the item at the index which is the first argument in the function is disabled. If the prop is not supplied, it assumes that no items are disabeld.
-
-    ```
-    isItemDisabled = (index) => (this.items[index].disabled)
-    render = () => {
-      return (
-          <VirtualList
-              dataSize={this.items.length}
-              isItemDisabled={isItemDisabled}
-              itemRenderer={this.renderItem}
-              itemSize={this.itemSize}
-          />
-      );
-    }
-    ```
-
 ### Common rules of Items for VirtualList/VirtualGridList
 
 *   A renderer for an item should be specified in `itemRenderer` prop in VirtualList.

@@ -42,7 +42,7 @@ const CheckboxBase = kind({
 		/**
 		 * The icon displayed when `selected`.
 		 *
-		 * @see moonstone/Icon.Icon.children
+		 * @see {@link moonstone/Icon.Icon.children}
 		 * @type {String|Object}
 		 * @default	'check'
 		 * @public

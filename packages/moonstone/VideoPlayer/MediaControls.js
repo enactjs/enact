@@ -4,6 +4,7 @@ import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {on, off} from '@enact/core/dispatcher';
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Pause from '@enact/spotlight/Pause';
 import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
@@ -36,6 +37,7 @@ const MediaButton = onlyUpdateForKeys([
 	'className',
 	'color',
 	'disabled',
+	'flip',
 	'onClick',
 	'spotlightDisabled'
 ])(IconButton);
@@ -80,7 +82,7 @@ const MediaControlsBase = kind({
 		 * [icon]{@link moonstone/Icon.Icon} component type.
 		 *
 		 * @type {String}
-		 * @default 'skipbackward'
+		 * @default 'jumpbackward'
 		 * @public
 		 */
 		jumpBackwardIcon: PropTypes.string,
@@ -98,7 +100,7 @@ const MediaControlsBase = kind({
 		 * [icon]{@link moonstone/Icon.Icon} component type.
 		 *
 		 * @type {String}
-		 * @default 'skipforward'
+		 * @default 'jumpforward'
 		 * @public
 		 */
 		jumpForwardIcon: PropTypes.string,
@@ -300,6 +302,14 @@ const MediaControlsBase = kind({
 		rightComponents: PropTypes.node,
 
 		/**
+		 * Indicates rtl locale.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * When `true`, more components are visible.
 		 *
 		 * @type {Boolean}
@@ -337,8 +347,8 @@ const MediaControlsBase = kind({
 	defaultProps: {
 		backwardIcon: 'backward',
 		forwardIcon: 'forward',
-		jumpBackwardIcon: 'skipbackward',
-		jumpForwardIcon: 'skipforward',
+		jumpBackwardIcon: 'jumpbackward',
+		jumpForwardIcon: 'jumpforward',
 		spotlightId: 'mediaControls',
 		moreButtonColor: 'blue',
 		pauseIcon: 'pause',
@@ -391,6 +401,7 @@ const MediaControlsBase = kind({
 		playPauseClassName,
 		rateButtonsDisabled,
 		rightComponents,
+		rtl,
 		showMoreComponents,
 		spotlightDisabled,
 		spotlightId,
@@ -407,11 +418,11 @@ const MediaControlsBase = kind({
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
 						<Container className={css.mediaControls} spotlightDisabled={showMoreComponents || spotlightDisabled}>
-							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpBackwardIcon}</MediaButton>}
-							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick} spotlightDisabled={spotlightDisabled}>{backwardIcon}</MediaButton>}
-							<MediaButton aria-label={paused ? $L('Play') : $L('Pause')} className={playPauseClassName} backgroundOpacity="translucent" disabled={mediaDisabled || playPauseButtonDisabled} onClick={onPlayButtonClick} spotlightDisabled={spotlightDisabled}>{paused ? playIcon : pauseIcon}</MediaButton>
-							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick} spotlightDisabled={spotlightDisabled}>{forwardIcon}</MediaButton>}
-							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick} spotlightDisabled={spotlightDisabled}>{jumpForwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaButton aria-label={$L('Previous')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick} size="large" spotlightDisabled={spotlightDisabled}>{jumpBackwardIcon}</MediaButton>}
+							{noRateButtons ? null : <MediaButton aria-label={$L('Rewind')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick} size="large" spotlightDisabled={spotlightDisabled}>{backwardIcon}</MediaButton>}
+							<MediaButton aria-label={paused ? $L('Play') : $L('Pause')} className={playPauseClassName} backgroundOpacity="translucent" disabled={mediaDisabled || playPauseButtonDisabled} onClick={onPlayButtonClick} size="large" spotlightDisabled={spotlightDisabled}>{paused ? playIcon : pauseIcon}</MediaButton>
+							{noRateButtons ? null : <MediaButton aria-label={$L('Fast Forward')} backgroundOpacity="translucent" disabled={mediaDisabled || rateButtonsDisabled} onClick={onForwardButtonClick} size="large" spotlightDisabled={spotlightDisabled}>{forwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaButton aria-label={$L('Next')} backgroundOpacity="translucent" disabled={mediaDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick} size="large" spotlightDisabled={spotlightDisabled}>{jumpForwardIcon}</MediaButton>}
 						</Container>
 						<Container className={css.moreControls} spotlightDisabled={!showMoreComponents || spotlightDisabled}>
 							{children}
@@ -427,8 +438,11 @@ const MediaControlsBase = kind({
 							className={moreButtonClassName}
 							color={moreButtonColor}
 							disabled={moreButtonDisabled}
+							flip={rtl ? 'horizontal' : ''}
 							onClick={onMoreClick}
 							tooltipProps={{role: 'dialog'}}
+							tooltipRelative
+							size="large"
 							tooltipText={moreIconLabel}
 							spotlightId={moreButtonSpotlightId}
 							spotlightDisabled={spotlightDisabled}
@@ -923,7 +937,9 @@ const MediaControls = ApiDecorator(
 		'hideMoreComponents'
 	]},
 	MediaControlsDecorator(
-		Cancelable({modal: true, onCancel: handleCancel}, MediaControlsBase)
+		Cancelable({modal: true, onCancel: handleCancel},
+			I18nContextDecorator({rtlProp: 'rtl'}, MediaControlsBase)
+		)
 	)
 );
 

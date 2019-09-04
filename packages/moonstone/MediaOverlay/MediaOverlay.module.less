@@ -1,6 +1,6 @@
-@import '../styles/skin.less';
-@import '../styles/variables.less';
-@import '../styles/mixins.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
 
 .mediaOverlay {
 	display: block;
@@ -23,7 +23,7 @@
 	}
 
 	.textLayout {
-		margin: @moon-mediaoverlay-spotlight-outset-width * 2;
+		margin: (@moon-mediaoverlay-spotlight-outset-width * 2);
 	}
 
 	.image {
@@ -35,4 +35,22 @@
 	.text {
 		font-weight: @moon-mediaoverlay-font-weight;
 	}
+
+	.applySkins({
+		.disabled({
+			// The global disabled rule handles the non-focused state, so no rules are necessary here.
+
+			.focus({
+				opacity: @moon-disabled-opacity;
+
+				.media,
+				.image,
+				.textLayout {
+					// We're setting the parent's opacity, so we need to "unset" the children,
+					// so they don't get double-set, becoming more transparent than our intent.
+					opacity: 1;
+				}
+			});
+		});
+	});
 }

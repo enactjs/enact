@@ -325,7 +325,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			return (
 				<Component
 					{...props}
-					focused={this.state.focused === 'input'}
 					onBlur={this.onBlur}
 					onMouseDown={this.onMouseDown}
 					onFocus={this.onFocus}

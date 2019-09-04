@@ -1,1 +1,0 @@
-{"formats":{"default":"{streetAddress} {region}\n{country}","nocountry":"{streetAddress} {region}"},"startAt":"end","fields":[{"name":"region","line":"last","pattern":["Conakry","Basse-Guinée","Moyenne-Guinée","Haute-Guinée","Guinée forestière"]}]}

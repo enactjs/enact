@@ -36,6 +36,42 @@ describe('ExpandableItem', () => {
 				expect(actual).toBe(expected);
 			});
 		});
+
+		describe('handlers', () => {
+			test('should call onClose when there is a prop onClose', () => {
+				const children = ['option1', 'option2', 'option3'];
+				const handleClose = jest.fn();
+
+				const expandableItem = mount(
+					<ExpandableItemBase onClose={handleClose} title="Item" noneText="hello" open>
+						{children}
+					</ExpandableItemBase>
+				);
+				const item = expandableItem.find('LabeledItem');
+				item.simulate('click');
+				const expected = 1;
+				const actual = handleClose.mock.calls.length;
+
+				expect(actual).toBe(expected);
+			});
+
+			test('should call onOpen when there is a prop onOpen', () => {
+				const children = ['option1', 'option2', 'option3'];
+				const handleOpen = jest.fn();
+
+				const expandableItem = mount(
+					<ExpandableItemBase onOpen={handleOpen} title="Item" noneText="hello">
+						{children}
+					</ExpandableItemBase>
+				);
+				const item = expandableItem.find('LabeledItem');
+				item.simulate('click');
+				const expected = 1;
+				const actual = handleOpen.mock.calls.length;
+
+				expect(actual).toBe(expected);
+			});
+		});
 	});
 
 	describe('Voice Control', () => {

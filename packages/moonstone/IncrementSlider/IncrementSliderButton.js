@@ -30,7 +30,7 @@ const IncrementSliderButtonBase = kind({
 				onTap={onTap}
 				onHold={onTap}
 				onHoldPulse={onTap}
-				small
+				size="small"
 			/>
 		);
 	}

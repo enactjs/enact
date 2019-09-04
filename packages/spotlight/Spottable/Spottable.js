@@ -1,9 +1,9 @@
 /**
- * Exports the {@link spotlight/Spottable.Spottable} higher-order component and
- * the {@link spotlight/Spottable.spottableClass} `className`. The default export is
- * {@link spotlight/Spottable.Spottable}.
+ * Adds spottability to components.
  *
  * @module spotlight/Spottable
+ * @exports Spottable
+ * @exports spottableClass
  */
 
 import {forward, forwardWithPrevent, handle, preventDefault, stop} from '@enact/core/handle';
@@ -46,7 +46,7 @@ const isKeyboardAccessible = (node) => {
 	);
 };
 
-const isSpottable = (props) => !props.disabled && !props.spotlightDisabled;
+const isSpottable = (props) => !props.spotlightDisabled;
 
 // Last instance of spottable to be focused
 let lastSelectTarget = null;
@@ -359,7 +359,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = (ev) => {
-			if (this.props.disabled || this.props.spotlightDisabled) {
+			if (this.props.spotlightDisabled) {
 				this.shouldPreventBlur = true;
 				ev.target.blur();
 				this.shouldPreventBlur = false;
@@ -393,7 +393,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const {disabled, spotlightId, spotlightDisabled, ...rest} = this.props;
-			this.focusedWhenDisabled = this.isFocused && (disabled || spotlightDisabled);
+			this.focusedWhenDisabled = this.isFocused && spotlightDisabled;
 			const spottable = this.focusedWhenDisabled || isSpottable(this.props);
 
 			let tabIndex = rest.tabIndex;

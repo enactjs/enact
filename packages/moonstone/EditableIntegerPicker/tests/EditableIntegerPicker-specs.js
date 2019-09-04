@@ -25,7 +25,7 @@ describe('EditableIntegerPicker', () => {
 
 	test('should increase by step amount on increment press', () => {
 		const picker = mount(
-			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={10} />
+			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={10} noAnimation />
 		);
 		increment(picker);
 		const expected = 20;
@@ -35,7 +35,7 @@ describe('EditableIntegerPicker', () => {
 
 	test('should decrease by step amount on decrement press', () => {
 		const picker = mount(
-			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={10} />
+			<EditableIntegerPicker min={0} max={100} defaultValue={10} step={10} noAnimation />
 		);
 		decrement(picker);
 		const expected = 0;
@@ -82,7 +82,7 @@ describe('EditableIntegerPicker', () => {
 		() => {
 			const node = document.body.appendChild(document.createElement('div'));
 			const picker = mount(
-				<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} />,
+				<EditableIntegerPicker min={0} max={100} defaultValue={10} step={1} noAnimation />,
 				{attachTo: node}
 			);
 

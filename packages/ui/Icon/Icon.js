@@ -6,6 +6,7 @@
  */
 
 import kind from '@enact/core/kind';
+import {cap} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -35,18 +36,16 @@ const mergeStyle = function (style, src) {
 };
 
 /**
- * Tests if a character is a single printable character
+ * Tests if a string appears to be a URI/URL.
  *
  * @function
  * @param	{String}	c	Character to test
  *
- * @returns	{Boolean}		`true` if c is a single character
+ * @returns	{Boolean}		`true` if c looks like a URL
  * @private
  */
-const isSingleCharacter = function (c) {
-	return	c.length === 1 ||
-			// check for 4-byte Unicode character
-			c.length === 2 && c.charCodeAt() !== c.codePointAt();
+const isUri = function (c) {
+	return (c.indexOf('/') > -1) || (c.indexOf('.') > -1);
 };
 
 /**
@@ -85,13 +84,22 @@ const Icon = kind({
 		 * * `icon` - The root component class
 		 * * `dingbat` - Applied when the value of [`icon`]{@link ui/Icon.Icon.icon} is not
 		 *   found in [iconList]{@link ui/Icon.Icon.iconList}
-		 * * `small` - Applied when `small` prop is `true`
+		 * * `large` - Applied when `size` prop is `'large'`
 		 * * `pressed` - Applied when `pressed` prop is `true`
+		 * * `small` - Applied when `size` prop is `'small'`
 		 *
 		 * @type {Object}
 		 * @public
 		 */
 		css: PropTypes.object,
+
+		/**
+		 * Flip the icon horizontally, vertically or both.
+		 *
+		 * @type {('both'|'horizontal'|'vertical')}
+		 * @public
+		 */
+		flip: PropTypes.string,
 
 		/**
 		 * The full list (hash) of supported icons.
@@ -117,19 +125,22 @@ const Icon = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * Applies the `small` CSS class.
+		 * The size of the button.
 		 *
-		 * @type {Boolean}
-		 * @default false
+		 * Applies either the `small` or `large` CSS class which can be customized by
+		 * [theming]{@link /docs/developer-guide/theming/}.
+		 *
+		 * @type {('small'|'large')}
+		 * @default 'small'
 		 * @public
 		 */
-		small: PropTypes.bool
+		size: PropTypes.string
 	},
 
 	defaultProps: {
 		iconList: {},
 		pressed: false,
-		small: false
+		size: 'small'
 	},
 
 	styles: {
@@ -139,12 +150,17 @@ const Icon = kind({
 	},
 
 	computed: {
-		className: ({children: icon, iconList, pressed, small, styler}) => styler.append({
-			// If the icon isn't in our known set, apply our custom font class
-			dingbat: !(icon in iconList),
-			pressed,
-			small
-		}),
+		className: ({children: icon, flip, iconList, pressed, size, styler}) => {
+			return styler.append(
+				{
+					// If the icon isn't in our known set, apply our custom font class
+					dingbat: !(icon in iconList),
+					pressed
+				},
+				flip ? `flip${cap(flip)}` : null,
+				size
+			);
+		},
 		iconProps: ({children: iconProp, iconList, style}) => {
 			let icon = iconList[iconProp];
 
@@ -162,8 +178,8 @@ const Icon = kind({
 					} else if (iconProp.indexOf('0x') === 0) {
 						// Converts a hex reference in string form
 						icon = String.fromCodePoint(iconProp);
-					} else if (isSingleCharacter(iconProp)) {
-						// A single character is assumed to be an explicit icon string
+					} else if (!isUri(iconProp)) {
+						// A "simple" string is assumed to be an icon-name string
 						icon = iconProp;
 					} else {
 						// for a path or URI, add it to style
@@ -189,7 +205,7 @@ const Icon = kind({
 	render: ({iconProps, ...rest}) => {
 		delete rest.iconList;
 		delete rest.pressed;
-		delete rest.small;
+		delete rest.size;
 
 		return (
 			<div

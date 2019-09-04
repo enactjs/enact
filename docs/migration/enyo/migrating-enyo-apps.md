@@ -49,7 +49,7 @@ like this:
 In Enact, the same effect is achieved like this:
 
 ```
-    <Button small>Click Me!</Button>
+    <Button size="small">Click Me!</Button>
 ```
 
 Enact declarations are similar yet simpler than their Enyo counterparts. Further, some options and components

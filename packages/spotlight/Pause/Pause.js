@@ -37,6 +37,10 @@
  * ```
  *
  * @module spotlight/Pause
+ * @exports Pause
+ * @exports isPaused
+ * @exports pause
+ * @exports resume
  */
 
 let paused = false;

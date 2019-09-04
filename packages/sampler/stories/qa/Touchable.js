@@ -5,9 +5,9 @@ import React from 'react';
 import Touchable from '@enact/ui/Touchable';
 import ri from '@enact/ui/resolution';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 
 import {boolean, number} from '../../src/enact-knobs';
+import {action} from '../../src/utils';
 
 const TouchableDiv = Touchable('div');
 
@@ -105,8 +105,8 @@ storiesOf('Touchable', module)
 	.add(
 		'that pauses the hold when moving beyond tolerance (16px)',
 		() => {
-			const moveTolerance = number('holdConfig.moveTolerance', Button, 16, {range: true, min: 8, max: 160, step: 8});
-			const cancelOnMove = boolean('holdConfig.cancelOnMove', Button, true);
+			const moveTolerance = number('holdConfig moveTolerance', Button, 16, {range: true, min: 8, max: 160, step: 8});
+			const cancelOnMove = boolean('holdConfig cancelOnMove', Button, true) || false;
 			return (
 				<TouchArea
 					holdConfig={{
@@ -156,8 +156,8 @@ storiesOf('Touchable', module)
 		() => (
 			<TouchableDiv
 				dragConfig={{
-					global: boolean('dragConfig.global', TouchableDiv, false),
-					moveTolerance: number('dragConfig.moveTolerance', TouchableDiv, 16)
+					global: boolean('dragConfig global', TouchableDiv, false) || false,
+					moveTolerance: number('dragConfig moveTolerance', TouchableDiv, 16)
 				}}
 				noResume={boolean('noResume', TouchableDiv, false)}
 				onDragStart={action('onDragStart')}

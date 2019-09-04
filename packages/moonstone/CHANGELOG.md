@@ -2,6 +2,259 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [3.0.0] - 2019-09-03
+
+### Fixed
+
+- `moonstone/ContextualPopupDecorator` layout in large text mode in RTL locales
+- `moonstone/Dropdown` performance when using many options
+- `moonstone/ProgressBar` fill color when `highlighted` is set
+- `moonstone/Scroller` to correctly handle horizontally scrolling focused elements into view when using a `direction` value of `'both'`
+- `moonstone/Skinnable` TypeScript signature
+- `moonstone/Slider` progress bar fill color when focused with `noFill` set
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to render the first item properly when the `dataSize` prop is updated and the function as a parameter of the `cbScrollTo` prop is called
+
+## [3.0.0-rc.4] - 2019-08-22
+
+### Fixed
+
+- `moonstone/ContextualPopupDecorator` arrow rendering issue in Chromium
+- `moonstone/EditableIntegerPicker` to properly rerender when the edited value is invalid
+- `moonstone/FormCheckboxItem` to marquee its contents
+- `moonstone/VideoPlayer` to have correct jump forward/backward icon
+- Language-specific fonts so they always use the correct typeface for their locale
+
+## [3.0.0-rc.3] - 2019-08-15
+
+### Fixed
+
+- `moonstone/Header` input highlight positioning
+- `moonstone/MediaOverlay` to not mute media playback
+- `moonstone/Panels` animation performance issues on low powered hardware
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to correctly scroll to a selected component when focused via 5way
+
+## [3.0.0-rc.2] - 2019-08-08
+
+### Added
+
+- `moonstone/Icon.icons` entries for new icons
+
+### Fixed
+
+- `moonstone` to support custom font for simplified Chinese
+- `moonstone` disabled focus appearance to match the latest designs
+- `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableList`, and `moonstone/TimePicker` disabled opacity in high contrast mode
+- `moonstone/Picker` to avoid overlapping items on render
+- `moonstone/Scroller` and other scrolling components to properly scroll via remote page up/down buttons when nested within another scrolling component
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll via a page up or down key when focus is on any vertical paging control while in pointer mode
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to correctly set focus after scrolling by page up/down keys
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to scroll via a page up or down key when focus is on any horizontal paging control
+
+## [3.0.0-rc.1] - 2019-07-31
+
+### Added
+
+- `moonstone/LabeledIconButton` prop `flip` to flip the icon horizontally, vertically, or both
+- `moonstone/Popup` public class names `body` and `closeContainer`
+
+### Changed
+
+- `moonstone/Dialog` appearance to match the latest designs
+- `moonstone/Scroller` and other scrolling components to scroll via remote page up/down buttons when the scrollbar is hidden
+
+### Fixed
+
+- `moonstone` fonts be consolidated under "Moonstone" font-family to properly display all localized fonts when representing glyphs from any locale
+- `moonstone/Input` text color when focused and disabled
+- `moonstone/Panels` to allow 5-way navigation to components within `controls` when used with a `Header` with `headerInput`
+- `moonstone/Panels` to treat all components within `controls` as part of the active panel for the purposes of accessibility
+- `moonstone/Scroller` to not jump to the top when right key is pressed in the right most item of a vertical scroller
+- `moonstone/Scroller` to not scroll horizontally via 5-way down in horizontal scroller
+- `moonstone/Tooltip` arrow gap
+- `moonstone/VideoPlayer` feedback tooltip to overlap in non-latin locale
+- `moonstone/VideoPlayer` more button tooltip to not clip or reverse text in RTL locales
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to navigate items properly in RTL languages
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly navigate from paging controls to controls out of the list
+
+## [3.0.0-beta.2] - 2019-07-23
+
+### Added
+
+- `moonstone/Panels.Header` prop `hideLine` to hide the bottom separator line
+- `moonstone/Panels.Header` type "dense" for "AlwaysViewing" Panels types
+
+### Fixed
+
+- `moonstone/Dropdown` button to not animate
+- `moonstone/FormCheckboxItem` so it doesn't change size between normal and large text mode
+- `moonstone/Heading` to have a bit more space between the text and the line, when the line is present
+- `moonstone/LabeledItem` to pass `marqueeOn` prop to its contents
+- `moonstone/Panels.Header` to use the latest designs with better spacing between the titles below
+- `moonstone/Picker` accessibility read out when a button becomes disabled
+- `moonstone/ProgressBar`, `moonstone/Slider`, and `moonstone/IncrementSlider` to use the latest set of design colors
+- `moonstone/RadioItem` to have a much prettier dot in dark and light skins
+- `moonstone/Spinner` to use the latest designs
+- `moonstone/Tooltip` layer order so it doesn't interfere with other positioned elements, like `ContextualPopup`
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly respond to 5way directional key presses
+
+## [3.0.0-beta.1] - 2019-07-15
+
+### Removed
+
+- `small` prop in `moonstone/Input`, `moonstone/ToggleButton`, `moonstone/Button`, `moonstone/Icon`, `moonstone/IconButton`, and `moonstone/LabeledIcon`, replaced by `size` prop, which accepts `"small"` or `"large"`
+- `moonstone/Divider`, replaced by `moonstone/Heading`
+
+### Added
+
+- `ilib@^14.2.0` as a package peer dependency, which apps will need to include
+- `moonstone/Dropdown` widths `tiny`, and `huge`
+
+### Fixed
+
+- Fonts to use the updated names of global fonts available in the system
+- `moonstone/Popup` to properly handle closing in mid-transition
+- `moonstone/Scroller` to properly move focus out of the container
+- `moonstone/VirtualList` to allow keydown events to bubble up when not handled by the component
+- `moonstone/IncrementSlider` to support aria-label when disabled
+- `moonstone/LabeledItem` to not clip the bottom of descender glyphs in large text mode
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to scroll too far by page up/down keys
+- `moonstone/VirtualList.VirtualGridList` scrolling when navigating to an adjacent item
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to focus an item properly after an update
+
+## [3.0.0-alpha.7] - 2019-06-24
+
+### Fixed
+
+- `moonstone/Dropdown` to scroll to and focus the selected item when opened
+- `moonstone/ExpandableItem.ExpandableItemBase` to not error if `onClose` or `onOpen` was not supplied
+- `moonstone/GridListImageItem` to support overriding the `image` CSS class name
+- `moonstone/Scroller` to scroll and to move focus to the paging control properly if the current item sticking to the top is only spottable
+- `moonstone/VirtualList` to scroll to the focused item when navigating out of the viewport via 5-way
+
+## [3.0.0-alpha.6] - 2019-06-17
+
+### Removed
+
+- `moonstone/Divider`, `moonstone/Dialog`, and `moonstone/Heading` prop `casing`
+
+### Fixed
+
+- `moonstone/Dropdown` to support voice readout
+- `moonstone/Dropdown` remaining open after it becomes `disabled`
+
+## [3.0.0-alpha.5] - 2019-06-10
+
+### Added
+
+- `moonstone/Dropdown` property `width` to support `'small'`, `'medium'`, and `'large'` sizes
+
+### Fixed
+
+- `moonstone/Panels.Header` to center text when `centered` is used and additional controls are included by `moonstone/Panels`
+- Fonts for non-Latin to not intermix font weights for bold when using a combination of Latin and non-Latin glyphs
+- `moonstone/VirtualList` to restore focus to an item when scrollbars are visible
+
+## [3.0.0-alpha.4] - 2019-06-03
+
+### Changed
+
+- `moonstone/Dropdown` to prevent spotlight moving out of the popup
+- `moonstone/Dropdown` to use radio selection which allows only changing the selection but not deselection
+
+### Fixed
+
+- Non-Latin locale font assignments to match the new font family support in `LG Smart UI`
+- `moonstone/Checkbox`, `moonstone/FormCheckbox`, `moonstone/Panels.Header`, `moonstone/RadioItem`, `moonstone/Slider`, and `moonstone/Switch` to render correctly in high contrast
+- `moonstone/VideoPlayer` to hide scrim for high contrast if bottom controls are hidden
+
+## [3.0.0-alpha.3] - 2019-05-29
+
+### Added
+
+- `moonstone/Panels` support for managing share state of contained components
+- `moonstone/Scroller` and `moonstone/VirtualList` support for restoring scroll position when within a `moonstone/Panels.Panel`
+
+### Changed
+
+- `moonstone/Scroller` to scroll when no spottable child exists in the pressed 5-way key direction and, when `focusableScrollbar` is set, focus the scrollbar button
+
+### Fixed
+
+- Fonts to correctly use the new font files and updated the international font name from "Moonstone LG Display" to "Moonstone Global"
+- `moonstone/Dropdown` `children` propType so it supports the same format as `ui/Group` (an array of strings or an array of objects with props)
+- `moonstone/FormCheckbox`, `moonstone/Input`, `moonstone/ProgressBar`, `moonstone/RadioItem`, `moonstone/SwitchItem`, and `moonstone/Tooltip` light skin colors.
+- `moonstone/VideoPlayer` to have correct sized control buttons
+
+## [3.0.0-alpha.2] - 2019-05-20
+
+### Added
+
+- `moonstone/Heading` prop `spacing` with default value `'small'`
+
+### Fixed
+
+- `moonstone/Button` background colors for translucent and lightTranslucent
+- `moonstone/Checkbox` by updating colors for both dark and light skins
+- `moonstone/DaySelector` item text size in large-text mode
+- `moonstone/Dropdown` popup scroller arrows showing in non-latin locales and added large-text mode support
+- `moonstone/FormCheckboxItem` to match the designs
+- `moonstone/Panels.Header` with `Input` to not have a distracting white background color
+- `moonstone/Input` caret color to match the designs (black bar on white background, white bar on black background, standard inversion)
+- `moonstone/Item` height in non-latin locales
+- `moonstone/RadioItem` and `moonstone/SelectableItem` icon size in large-text mode
+
+## [3.0.0-alpha.1] - 2019-05-15
+
+### Removed
+
+- `moonstone/Button` and `moonstone/Panels.Header` prop `casing` which is no longer supported
+- `moonstone/Input.InputBase` prop `focused` which was used to indicate when the internal input field had focused but was replaced by the `:focus-within` pseudo-selector
+- `moonstone/VirtualList` and `moonstone/VirtualList.VirtualGridList` property `isItemDisabled`
+
+### Added
+
+- `moonstone/BodyText` prop `size` to offer a new "small" size
+- `moonstone/Button` prop `iconPosition`
+- `moonstone/ContextualPopup` config `noArrow`
+- `moonstone/Dropdown` component
+- `moonstone/Panels.Header` prop `centered` to support immersive apps with a completely centered design
+- `moonstone/Heading` component, an improved version of `moonstone/Divider` with additional features
+- `moonstone/Panels` slot `<controls>` to easily add custom controls next to the Panels' "close" button
+- `moonstone/Spinner` prop `size` to support a new "small" size for use inside `SlotItem` components
+- `moonstone/TooltipDecorator` prop `tooltipRelative` and `moonstone/TooltipDecorator.Tooltip` prop `relative` to support relative positioning. This is an advanced feature and requires a container with specific rules. See documentation for details.
+
+### Changed
+
+- `moonstone/Button.ButtonDecorator` to remove `i18n/Uppercase` HOC
+- `moonstone/Button`, `moonstone/Checkbox`, `moonstone/CheckboxItem`, `moonstone/ContextualPopupDecorator`, `moonstone/FormCheckbox`, `moonstone/FormCheckboxItem`, `moonstone/Panels.Header`, `moonstone/Notification`, `moonstone/RadioItem`, and `moonstone/Tooltip` appearance to match the latest designs
+- `moonstone/Button`, `moonstone/Dropdown`, `moonstone/Icon`, `moonstone/IconButton`, `moonstone/Input`, and `moonstone/ToggleButton` default size to "small", which unifies their initial heights
+- `moonstone/DaySelector` to have squared check boxes to match the rest of the checkmark components
+- `moonstone/LabeledIcon` and `moonstone/LabeledIconButton` text size to be smaller
+- `moonstone/Panel` and `moonstone/Panels` now allocate slightly more screen edge space for a cleaner look
+- `moonstone/Scroller.Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` scrollbar button to gain focus when pressing a page up or down key if `focusableScrollbar` is true
+- global styling rules affecting standard font-weight, disabled opacity, and LESS color variable definitions
+
+### Fixed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll by page up/down keys without focus in pointer mode
+
+## [2.6.0] - ???
+
+### Deprecated
+
+- `moonstone/Divider` which will be replaced by `moonstone/Heading`
+- `moonstone/Input.InputBase` prop `focused` which will be handled by CSS in 3.0
+- `small` prop in `moonstone/Input` and `moonstone/ToggleButton`, which will be replaced by `size="small"` in 3.0
+
+### Added
+
+- `moonstone/Input` and `moonstone/ToggleButton` prop `size`
+- `moonstone/Button`, `moonstone/IconButton`, and `moonstone/LabeledIconButton` public class name `large` to support customizing the style for the new `size` prop on `ui/Button`
+
+### Fixed
+
+- `moonstone/EditableIntegerPicker`, `moonstone/Picker`, and `moonstone/RangePicker` to not error when the `min` prop exceeds the `max` prop
+
 ## [2.5.3] - 2019-06-06
 
 ### Fixed
@@ -9,8 +262,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ContextualPopupDecorator` imperative methods to be correctly bound to the instance
 - `moonstone/ExpandableInput` to retain focus when touching within the input field on touch platforms
 - `moonstone/ExpandableList` to not error if `selected` is passed as an array to a non-multi-select list
-- `moonstone/Input` refocusing on touch on iOS
 - `moonstone/Scroller` to allow changing spotlight focus to opposite scroll button when switching to 5way mode
+- `moonstone/ExpandableInput` to retain focus when touching within the input field on touch platforms
+- `moonstone/Input` refocusing on touch on iOS
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to change spotlight focus due to touch events
 - `moonstone/Slider` to not scroll the viewport when dragging on touch platforms
 - `moonstone/VideoPlayer` to correctly handle touch events while moving slider knobs
@@ -787,7 +1041,7 @@ No significant changes.
 - `moonstone/VirtualList` to scroll correctly using page down key with disabled items
 - `moonstone/Scroller` and other scrolling components to not cause a script error when scrollbar is not rendered
 - `moonstone/Picker` incrementer and decrementer to not change size when focused
-- `moonstone/Header` to use a slightly smaller font size for `title` in non-latin locales and a line-height for `titleBelow` and `subTitleBelow` that better meets the needs of tall-glyph languages like Tamil and Thai, as well as latin locales
+- `moonstone/Panels.Header` to use a slightly smaller font size for `title` in non-latin locales and a line-height for `titleBelow` and `subTitleBelow` that better meets the needs of tall-glyph languages like Tamil and Thai, as well as latin locales
 - `moonstone/Scroller` and `moonstone/VirtualList` to keep spotlight when pressing a 5-way control while scrolling
 - `moonstone/Panels` to prevent user interaction with panel contents during transition
 - `moonstone/Slider` and related components to correctly position knob for `detachedKnob` on mouse down and fire value where mouse was positioned on mouse up
@@ -806,8 +1060,8 @@ No significant changes.
 - `moonstone/Divider` to pass `marqueeOn` prop
 - `moonstone/Slider` to fire `onChange` on mouse up and key up
 - `moonstone/VideoPlayer` to show knob when pressed
-- `moonstone/Header` to layout `titleBelow` and `subTitleBelow` correctly
-- `moonstone/Header` to use correct font-weight for `subTitleBelow`
+- `moonstone/Panels.Header` to layout `titleBelow` and `subTitleBelow` correctly
+- `moonstone/Panels.Header` to use correct font-weight for `subTitleBelow`
 - `moonstone/VirtualList` to restore focus correctly for lists only slightly larger than the viewport
 
 ## [1.12.0] - 2017-10-27
@@ -849,9 +1103,9 @@ No significant changes.
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to scroll by 5-way keys right after wheeling
 - `moonstone/VirtualList` not to move focus when a current item and the last item are located at the same line and pressing a page down key
 - `moonstone/Slider` knob to follow while dragging for detached knob
-- `moonstone/Header` to layout header row correctly in `standard` type
+- `moonstone/Panels.Header` to layout header row correctly in `standard` type
 - `moonstone/Input` to not dismiss on-screen keyboard when dragging cursor out of input box
-- `moonstone/Header` RTL `line-height` issue
+- `moonstone/Panels.Header` RTL `line-height` issue
 - `moonstone/Panels` to render children on idle
 - `moonstone/Scroller` and other scrolling components to limit muted spotlight container scrims to their bounds
 - `moonstone/Input` to always forward `onKeyUp` event
@@ -1073,7 +1327,7 @@ No significant changes.
 - `moonstone/VideoPlayer` to focus on hover over play/pause button when video is loading
 - `moonstone/VideoPlayer` to update and display proper time while moving knob when video is paused
 - `moonstone/VideoPlayer` long title overlap issues
-- `moonstone/Header` to apply `marqueeOn` prop to `subTitleBelow` and `titleBelow`
+- `moonstone/Panels.Header` to apply `marqueeOn` prop to `subTitleBelow` and `titleBelow`
 - `moonstone/Picker` wheeling in `moonstone/Scroller`
 - `moonstone/IncrementSlider` and `moonstone/Picker` to read value changes when selecting buttons
 
@@ -1128,7 +1382,7 @@ No significant changes.
 
 - `moonstone/ContextualPopupDecorator` close button to account for large text size
 - `moonstone/ContextualPopupDecorator` to not spot controls other than its activator when navigating out via 5-way
-- `moonstone/Header` to set the value of `marqueeOn` for all types of headers
+- `moonstone/Panels.Header` to set the value of `marqueeOn` for all types of headers
 
 ## [1.4.0] - 2017-06-29
 

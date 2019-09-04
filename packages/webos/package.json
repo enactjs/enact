@@ -1,12 +1,14 @@
 {
   "name": "@enact/webos",
-  "version": "2.5.3",
+  "version": "3.0.0",
   "description": "webOS support library",
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",
     "lint": "enact lint --strict",
-    "test": "echo \"No test suite\" && exit 0",
+    "test": "enact test",
+    "test-json": "enact test --json",
+    "test-watch": "enact test --watch",
     "transpile": "enact transpile"
   },
   "license": "Apache-2.0",
@@ -26,9 +28,9 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^2.5.3",
-    "prop-types": "15.6.2",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0"
+    "@enact/core": "^3.0.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
   }
 }

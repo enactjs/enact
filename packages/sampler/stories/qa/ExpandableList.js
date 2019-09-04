@@ -1,14 +1,13 @@
 import Button from '@enact/moonstone/Button';
-import Divider from '@enact/moonstone/Divider';
+import Heading from '@enact/moonstone/Heading';
 import ExpandableList, {ExpandableListBase} from '@enact/moonstone/ExpandableList';
 import Scroller from '@enact/moonstone/Scroller';
 import {RadioControllerDecorator} from '@enact/ui/RadioDecorator';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
 
 import {boolean, text, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('ExpandableList', ExpandableList, ExpandableListBase);
 
@@ -42,7 +41,7 @@ class ExpandableListChildrenLengthUpdate extends React.Component {
 		return (
 			<div>
 				<Button onClick={this.updateValue}>update value</Button>
-				<Divider />
+				<Heading showLine />
 				<ExpandableList {...this.props}>
 					{prop.listArray[this.state.index]}
 				</ExpandableList>
@@ -74,7 +73,7 @@ class ExpandableListWithAddedChildren extends React.Component {
 	render () {
 		return (
 			<Scroller>
-				<Divider>Change the number of items in the list</Divider>
+				<Heading showLine>Change the number of items in the list</Heading>
 				<Button onClick={this.setZero}>0</Button>
 				<Button onClick={this.setTen}>10</Button>
 				<ExpandableList title={'test'} defaultOpen>

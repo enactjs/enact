@@ -14,6 +14,8 @@
  * The default export is {@link spotlight.Spotlight}.
  *
  * @module spotlight
+ * @exports default Spotlight
+ * @exports getDirection
  */
 
 import {is} from '@enact/core/keymap';
@@ -32,6 +34,7 @@ import {
 	getAllContainerIds,
 	getContainerConfig,
 	getContainerLastFocusedElement,
+	getContainerNode,
 	getContainersForNode,
 	getLastContainer,
 	getSpottableDescendants,
@@ -65,6 +68,7 @@ import {
 
 import {
 	getNavigableTarget,
+	getNearestTargetFromPosition,
 	getTargetByContainer,
 	getTargetByDirectionFromElement,
 	getTargetByDirectionFromPosition,
@@ -249,17 +253,24 @@ const Spotlight = (function () {
 
 	function restoreFocus () {
 		const lastContainerId = getLastContainer();
-		const next = [rootContainerId];
+		let next;
 
 		if (lastContainerId) {
-			next.unshift(lastContainerId);
+			const position = getLastPointerPosition();
+
+			// walk up the chain of containers from the last to attempt to find a target
+			next = getContainersForNode(getContainerNode(lastContainerId)).reverse();
 
 			// only prepend last focused if it exists so that Spotlight.focus() doesn't receive
 			// a falsy target
-			const lastFocused = getContainerLastFocusedElement(lastContainerId);
+			const lastFocused = getContainerConfig(lastContainerId).overflow && getNearestTargetFromPosition(position, lastContainerId) ||
+				getContainerLastFocusedElement(lastContainerId);
+
 			if (lastFocused) {
 				next.unshift(lastFocused);
 			}
+		} else {
+			next = [rootContainerId];
 		}
 
 		// attempt to find a target starting with the last focused element in the last

@@ -1,37 +1,51 @@
-import Icon from '@enact/moonstone/Icon';
-import Divider from '@enact/moonstone/Divider';
+import Icon, {IconBase} from '@enact/moonstone/Icon';
+import Heading from '@enact/moonstone/Heading';
+import Scroller from '@enact/moonstone/Scroller';
+import UiIcon from '@enact/ui/Icon';
 import iconNames from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
-import {boolean, select, text} from '../../src/enact-knobs';
-import emptify from '../../src/utils/emptify.js';
+import {select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '../../src/utils';
 
 // import icons
 import docs from '../../images/icon-enact-docs.png';
 import factory from '../../images/icon-enact-factory.svg';
 import logo from '../../images/icon-enact-logo.svg';
 
+Icon.displayName = 'Icon';
+const Config = mergeComponentMetadata('Icon', UiIcon, IconBase, Icon);
+const sortedIconNames = iconNames.sort();
+
 storiesOf('Moonstone', module)
 	.add(
 		'Icon',
-		withInfo({
-			text: 'Basic usage of Icon'
-		})(() => {
-			const small = boolean('small', Icon);
+		() => {
+			const flip = select('flip', ['', 'both', 'horizontal', 'vertical'], Config, '');
+			const size = select('size', ['small', 'large'], Config, 'large');
+			const iconType = select('icon type', ['glyph', 'url src', 'custom'], Config, 'glyph');
+			let children;
+			switch (iconType) {
+				case 'glyph': children = select('icon', sortedIconNames, Config, 'plus'); break;
+				case 'url src': children = select('src', [docs, factory, logo], Config, logo); break;
+				default: children = text('custom icon', Config);
+			}
 			return (
-				<div>
-					<Icon
-						small={small}
-					>
-						{emptify(select('src', ['', docs, factory, logo], Icon, '')) + emptify(select('icon', ['', ...iconNames], Icon, 'plus')) + emptify(text('custom icon', Icon, ''))}
+				<Scroller style={{height: '100%'}}>
+					<Icon flip={flip} size={size}>
+						{children}
 					</Icon>
 					<br />
 					<br />
-					<Divider>All Icons</Divider>
-					{iconNames.map((icon, index) => <Icon key={index} small={small} title={icon}>{icon}</Icon>)}
-				</div>
+					<Heading showLine>All Icons</Heading>
+					{sortedIconNames.map((icon, index) => <Icon key={index} flip={flip} size={size} title={icon}>{icon}</Icon>)}
+				</Scroller>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'Basic usage of Icon'
+			}
+		}
 	);

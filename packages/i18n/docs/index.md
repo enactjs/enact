@@ -2,27 +2,21 @@
 title: i18n (Internationalization)
 ---
 
-* [Overview](#overview)
-* [Using I18nDecorator](#using-i18ndecorator)
-* [Locale-Specific CSS](#locale-specific-css)
-* [Translating Strings using $L()](#translating-strings-using-l)
-* [Updating Locale](#updating-locale)
-* [iLib](#ilib)
-* [Sample i18n App](#sample)
-
 ## Overview
 
-This guide details how to use some of i18n library's features. For an overview of the modules supplied with the library please see [I18nDecorator](../../modules/i18n/I18nDecorator/) and [Uppercase](../../modules/i18n/Uppercase/). This library incorporates the [iLib](https://github.com/iLib-js/iLib) internationalization library.
+This guide details how to use some of i18n library's features. For an overview of the modules supplied with the library please see [I18nDecorator](../../modules/i18n/I18nDecorator/) and [Text](../../modules/i18n/Text/). This library incorporates the [iLib](https://github.com/iLib-js/iLib) internationalization library.
 
 ## Using I18nDecorator
 
 `I18nDecorator` is a higher-order component (HOC) that provides easy access to locale information. Applications wishing to receive locale information can wrap the root component with the HOC. It is not necessary to use `I18nDecorator` directly for applications using `MoonstoneDecorator`.
 
-The HOC works by passing locale information to the app through [context](https://reactjs.org/docs/context.html) and CSS classes. It contains three properties via context:
+The HOC works by passing locale information to the app through [context](https://reactjs.org/docs/context.html) and CSS classes. It passes three properties via context:
 
 * `locale` - a string representing the current locale
-* `rtl` - if `true` then the locale is a right-to-left language.
-* `updateLocale` - a function to update the locale of the app.
+* `rtl` - if `true` then the locale is a right-to-left language
+* `updateLocale` - a function to update the locale of the app
+
+When not using `MoosntoneDecorator`, be sure to apply the classes passed from `I18nDecorator` to the root component.
 
 ### Accessing I18nDecorator context properties
 
@@ -124,6 +118,13 @@ Many localization companies are able to provide translations in this format.
 The string returned from a call to `$L()` will be the translated string for the
 current UI locale. If a different locale or a bundle with a different name is
 needed, use `ResBundle` directly instead of `$L()`.
+
+Translation files should be placed into locale specific directories and added to the `resources/ilibmanifest.json` file:
+
+```javascript
+{
+	"files": ["en/US/strings.json", "ja/JP/strings.json", ...]
+}
 
 ## Updating Locale
 

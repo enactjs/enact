@@ -1,5 +1,6 @@
 ---
 title: Introduction to Redux
+order: 1
 ---
 
 ### Overview
@@ -9,6 +10,8 @@ This document provides a high-level overview of Redux and how it is used.
 ### What is Redux?
 
 Redux is a library that allows you to manage application state. It closely follows React's Flux data flow model and works well with React, though it does not require it. State management has become more complicated due to a mixing of mutability and asynchronicity, and redux tries to resolve this issue by make state mutation **predictable**.
+
+We recommend using the most recent version of Redux. To see which version of Redux is appropriate, refer to the [Redux Installation Instructions](https://react-redux.js.org/introduction/quick-start#installation).
 
 #### Three Principles of Redux
 
@@ -38,13 +41,13 @@ An action is just a POJO (unless you use middleware as described) that contains 
 // A simple action
 {
 	type: 'INCREMENT',
-} 
+}
 
-// A basic Flux Standard Action (FSA): 
+// A basic Flux Standard Action (FSA):
 {
   type: 'ADD_TODO',
   payload: {
-    text: 'Do something.'  
+    text: 'Do something.'
   }
 }
 

@@ -7,10 +7,10 @@
  */
 
 import kind from '@enact/core/kind';
-import Uppercase from '@enact/i18n/Uppercase';
 import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import React from 'react';
+import {Layout, Cell} from '@enact/ui/Layout';
 
 import IdProvider from '../internal/IdProvider';
 import {MarqueeDecorator} from '../Marquee';
@@ -18,7 +18,8 @@ import Popup from '../Popup';
 
 import componentCss from './Dialog.module.less';
 
-const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
+const MarqueeH1 = MarqueeDecorator('h1');
+const MarqueeH2 = MarqueeDecorator('h2');
 
 /**
  * A modal dialog component.
@@ -47,16 +48,6 @@ const DialogBase = kind({
 			PropTypes.element,
 			PropTypes.arrayOf(PropTypes.element)
 		]),
-
-		/**
-		 * The casing mode applied to the `title` text.
-		 *
-		 * @see i18n/Uppercase#casing
-		 * @type {String}
-		 * @default 'upper'
-		 * @public
-		 */
-		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 
 		/**
 		 * The contents of the body of the component.
@@ -178,7 +169,6 @@ const DialogBase = kind({
 	},
 
 	defaultProps: {
-		casing: 'upper',
 		noAnimation: false,
 		noDivider: false,
 		open: false,
@@ -197,25 +187,25 @@ const DialogBase = kind({
 		titleBelow: ({title, titleBelow}) => title ? titleBelow : ''
 	},
 
-	render: ({buttons, casing, css, children, id, title, titleBelow, ...rest}) => {
+	render: ({buttons, css, children, id, title, titleBelow, ...rest}) => {
 		delete rest.noDivider;
 
 		return (
 			<Popup {...rest} aria-labelledby={`${id}_title ${id}_titleBelow ${id}_children ${id}_buttons`} css={css}>
 				<div className={css.titleWrapper}>
-					<div className={css.titleBlock}>
-						<MarqueeH1 casing={casing} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title} id={`${id}_title`}>
+					<Layout align="start space-between">
+						<Cell component={MarqueeH1} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title} id={`${id}_title`}>
 							{title}
-						</MarqueeH1>
-						<h2 className={css.titleBelow} id={`${id}_titleBelow`}>
-							{titleBelow}
-						</h2>
-					</div>
-					<div className={css.buttons} id={`${id}_buttons`}>
-						{buttons}
-					</div>
+						</Cell>
+						<Cell className={css.buttons} id={`${id}_buttons`} shrink>
+							{buttons}
+						</Cell>
+					</Layout>
+					<MarqueeH2 className={css.titleBelow} id={`${id}_titleBelow`} marqueeOn="hover">
+						{titleBelow}
+					</MarqueeH2>
 				</div>
-				<div className={css.body} id={`${id}_children`}>
+				<div className={css.dialogBody} id={`${id}_children`}>
 					{children}
 				</div>
 			</Popup>

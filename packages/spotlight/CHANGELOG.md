@@ -2,11 +2,85 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [2.5.3] - 2019-06-06
+## [3.0.0] - 2019-09-03
+
+### Fixed
+
+- `spotlight` TypeScript signatures
+
+## [3.0.0-rc.4] - 2019-08-22
+
+No significant changes.
+
+## [3.0.0-rc.3] - 2019-08-15
+
+### Fixed
+
+- `spotlight` to attempt to restore focus to an element nearest the pointer position when the pointer hides within an overflow container
+
+## [3.0.0-rc.2] - 2019-08-08
+
+No significant changes.
+
+## [3.0.0-rc.1] - 2019-07-31
+
+### Changed
+
+- `spotlight` containers to include nodes identified on the `aria-owns` attribute of the container node as candidates within that container
+
+### Fixed
+
+- `spotlight` to attempt to restore focus through ancestor containers when the pointer hides
+
+## [3.0.0-beta.2] - 2019-07-23
+
+No significant changes.
+
+## [3.0.0-beta.1] - 2019-07-15
+
+### Fixed
+
+- `spotlight/SpotlightContainerDecorator` to correctly forward `onFocusCapture` and `onBlurCapture` events
+
+## [3.0.0-alpha.7] - 2019-06-24
+
+No significant changes.
+
+## [3.0.0-alpha.6] - 2019-06-17
+
+No significant changes.
+
+## [3.0.0-alpha.5] - 2019-06-10
+
+No significant changes.
+
+## [3.0.0-alpha.4] - 2019-06-03
+
+No significant changes.
+
+## [3.0.0-alpha.3] - 2019-05-29
+
+No significant changes.
+
+## [3.0.0-alpha.2] - 2019-05-20
+
+No significant changes.
+
+## [3.0.0-alpha.1] - 2019-05-15
+
+### Changed
+
+- `spotlight/Spottable` to allow disabled items to be focused
+
+## [2.6.0] - ???
 
 ### Fixed
 
 - `spotlight` to unspot the current element when tapping on non-spottable target on touch platforms
+
+## [2.5.3] - 2019-06-06
+
+No significant changes.
 
 ## [2.5.2] - 2019-04-23
 

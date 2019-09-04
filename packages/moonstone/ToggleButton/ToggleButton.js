@@ -94,16 +94,16 @@ const ToggleButtonBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Reduces the size of the button.
+		 * The size of the button.
 		 *
-		 * The button will have a larger tap target than its apparent size to allow it to be clicked
-		 * more easily.
+		 * A `'small'` button will have a larger tap target than its apparent size to allow it to be
+		 * clicked more easily.
 		 *
-		 * @type {Boolean}
-		 * @default false
+		 * @type {('small'|'large')}
+		 * @default 'large'
 		 * @public
 		 */
-		small: PropTypes.bool,
+		size: PropTypes.string,
 
 		/**
 		 * Button text displayed in the 'off' state.
@@ -132,7 +132,6 @@ const ToggleButtonBase = kind({
 		disabled: false,
 		minWidth: true,
 		selected: false,
-		small: false,
 		toggleOffLabel: '',
 		toggleOnLabel: ''
 	},
@@ -143,7 +142,7 @@ const ToggleButtonBase = kind({
 	},
 
 	computed: {
-		className: ({selected, small, styler}) => styler.append({selected, small}),
+		className: ({selected, size, styler}) => styler.append({selected}, size),
 		children: ({children, selected, toggleOnLabel, toggleOffLabel}) => {
 			let c = children;
 			if (selected && toggleOnLabel) {
@@ -160,7 +159,14 @@ const ToggleButtonBase = kind({
 		delete rest.toggleOnLabel;
 
 		return (
-			<Button data-webos-voice-intent="SetToggleItem" {...rest} aria-pressed={selected} selected={selected} />
+			<Button
+				data-webos-voice-intent="SetToggleItem"
+				{...rest}
+				aria-pressed={selected}
+				css={css}
+				decoration={<div className={css.toggleIndicator} />}
+				selected={selected}
+			/>
 		);
 	}
 });

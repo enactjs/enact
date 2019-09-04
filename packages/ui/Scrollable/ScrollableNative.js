@@ -1,12 +1,12 @@
-import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
-import {Job} from '@enact/core/util';
 import {platform} from '@enact/core/platform';
-import PropTypes from 'prop-types';
-import React, {Component} from 'react';
 import Registry from '@enact/core/internal/Registry';
+import {Job} from '@enact/core/util';
+import PropTypes from 'prop-types';
+import clamp from 'ramda/src/clamp';
+import React, {Component} from 'react';
 
 import {ResizeContext} from '../Resizable';
 import ri from '../resolution';
@@ -54,7 +54,7 @@ const TouchableDiv = Touchable('div');
  * @private
  */
 class ScrollableBaseNative extends Component {
-	static displayName = 'ui:ScrollableNative'
+	static displayName = 'ui:ScrollableBaseNative'
 
 	static propTypes = /** @lends ui/ScrollableNative.ScrollableNative.prototype */ {
 		/**
@@ -151,6 +151,14 @@ class ScrollableBaseNative extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
+		 * Called when resizing window
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		handleResizeWindow: PropTypes.func,
+
+		/**
 		 * Specifies how to show horizontal scrollbar.
 		 *
 		 * Valid values are:
@@ -172,6 +180,15 @@ class ScrollableBaseNative extends Component {
 		 * @private
 		 */
 		noScrollByDrag: PropTypes.bool,
+
+		/**
+		 * Prevents scroll by wheeling on the list or the scroller.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noScrollByWheel: PropTypes.bool,
 
 		/**
 		 * Called when flicking with a mouse or a touch screen.
@@ -329,16 +346,6 @@ class ScrollableBaseNative extends Component {
 		start: PropTypes.func,
 
 		/**
-		 * ScrollableNative CSS style.
-		 *
-		 * Should be defined because we manipulate style prop in render().
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		style: PropTypes.object,
-
-		/**
 		 * Specifies how to show vertical scrollbar.
 		 *
 		 * Valid values are:
@@ -357,6 +364,7 @@ class ScrollableBaseNative extends Component {
 		cbScrollTo: nop,
 		horizontalScrollbar: 'auto',
 		noScrollByDrag: false,
+		noScrollByWheel: false,
 		onScroll: nop,
 		onScrollStart: nop,
 		onScrollStop: nop,
@@ -463,10 +471,26 @@ class ScrollableBaseNative extends Component {
 		}
 	}
 
+	handleResizeWindow = () => {
+		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
+		setTimeout(() => {
+			const {handleResizeWindow} = this.props;
+
+			if (handleResizeWindow) {
+				handleResizeWindow();
+			}
+			this.childRefCurrent.containerRef.current.style.scrollBehavior = null;
+			this.childRefCurrent.scrollToPosition(0, 0);
+			this.childRefCurrent.containerRef.current.style.scrollBehavior = 'smooth';
+
+			this.enqueueForceUpdate();
+		});
+	}
+
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	enqueueForceUpdate () {
-		this.childRefCurrent.calculateMetrics();
+		this.childRefCurrent.calculateMetrics(this.childRefCurrent.props);
 		this.forceUpdate();
 	}
 
@@ -628,8 +652,8 @@ class ScrollableBaseNative extends Component {
 	 */
 	onWheel = (ev) => {
 		if (this.isDragging) {
-			/* prevent native scrolling feature during dragging */
 			ev.preventDefault();
+			ev.stopPropagation();
 		} else {
 			const
 				{overscrollEffectOn} = this.props,
@@ -644,6 +668,14 @@ class ScrollableBaseNative extends Component {
 				needToHideThumb = false;
 
 			this.lastInputType = 'wheel';
+
+			if (this.props.noScrollByWheel) {
+				if (canScrollVertically) {
+					ev.preventDefault();
+				}
+
+				return;
+			}
 
 			if (this.props.onWheel) {
 				forward('onWheel', ev, this.props);
@@ -663,9 +695,13 @@ class ScrollableBaseNative extends Component {
 						(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(ev.target))) {
 						delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 						needToHideThumb = !delta;
+
+						ev.preventDefault();
 					} else if (overscrollEffectRequired) {
 						this.checkAndApplyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce);
 					}
+
+					ev.stopPropagation();
 				} else {
 					if (overscrollEffectRequired && (eventDelta < 0 && this.scrollTop <= 0 || eventDelta > 0 && this.scrollTop >= bounds.maxTop)) {
 						this.applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
@@ -676,6 +712,9 @@ class ScrollableBaseNative extends Component {
 				if (eventDelta < 0 && this.scrollLeft > 0 || eventDelta > 0 && this.scrollLeft < bounds.maxLeft) {
 					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
+
+					ev.preventDefault();
+					ev.stopPropagation();
 				} else {
 					if (overscrollEffectRequired && (eventDelta < 0 && this.scrollLeft <= 0 || eventDelta > 0 && this.scrollLeft >= bounds.maxLeft)) {
 						this.applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
@@ -685,8 +724,6 @@ class ScrollableBaseNative extends Component {
 			}
 
 			if (delta !== 0) {
-				/* prevent native scrolling feature for vertical direction */
-				ev.preventDefault();
 				const direction = Math.sign(delta);
 				// Not to accumulate scroll position if wheel direction is different from hold direction
 				if (direction !== this.wheelDirection) {
@@ -1007,6 +1044,7 @@ class ScrollableBaseNative extends Component {
 			childRefCurrent.scrollToPosition(targetX, targetY);
 			childContainerRef.current.style.scrollBehavior = 'smooth';
 		}
+		this.scrollStopJob.start();
 
 		if (this.props.start) {
 			this.props.start(animate);
@@ -1204,13 +1242,13 @@ class ScrollableBaseNative extends Component {
 	// ref
 
 	getScrollBounds () {
-		if (typeof this.childRefCurrent.getScrollBounds === 'function') {
+		if (this.childRefCurrent && typeof this.childRefCurrent.getScrollBounds === 'function') {
 			return this.childRefCurrent.getScrollBounds();
 		}
 	}
 
 	getMoreInfo () {
-		if (typeof this.childRefCurrent.getMoreInfo === 'function') {
+		if (this.childRefCurrent && typeof this.childRefCurrent.getMoreInfo === 'function') {
 			return this.childRefCurrent.getMoreInfo();
 		}
 	}
@@ -1221,18 +1259,22 @@ class ScrollableBaseNative extends Component {
 
 		if (containerRef.current && containerRef.current.addEventListener) {
 			containerRef.current.addEventListener('wheel', this.onWheel);
+			containerRef.current.addEventListener('mousedown', this.onMouseDown);
 		}
 
 		if (childRefCurrent.containerRef.current) {
 			if (childRefCurrent.containerRef.current.addEventListener) {
 				childRefCurrent.containerRef.current.addEventListener('scroll', this.onScroll, {capture: true, passive: true});
-				childRefCurrent.containerRef.current.addEventListener('mousedown', this.onMouseDown);
 			}
 			this.childRefCurrent.containerRef.current.style.scrollBehavior = 'smooth';
 		}
 
 		if (this.props.addEventListeners) {
 			this.props.addEventListeners(childRefCurrent.containerRef);
+		}
+
+		if (window) {
+			window.addEventListener('resize', this.handleResizeWindow);
 		}
 	}
 
@@ -1242,15 +1284,19 @@ class ScrollableBaseNative extends Component {
 
 		if (containerRef.current && containerRef.current.removeEventListener) {
 			containerRef.current.removeEventListener('wheel', this.onWheel);
+			containerRef.current.removeEventListener('mousedown', this.onMouseDown);
 		}
 
 		if (childRefCurrent.containerRef.current && childRefCurrent.containerRef.current.removeEventListener) {
 			childRefCurrent.containerRef.current.removeEventListener('scroll', this.onScroll, {capture: true, passive: true});
-			childRefCurrent.containerRef.current.removeEventListener('mousedown', this.onMouseDown);
 		}
 
 		if (this.props.removeEventListeners) {
 			this.props.removeEventListeners(childRefCurrent.containerRef);
+		}
+
+		if (window) {
+			window.removeEventListener('resize', this.handleResizeWindow);
 		}
 	}
 
@@ -1261,8 +1307,6 @@ class ScrollableBaseNative extends Component {
 			this.childRefCurrent = ref.current || ref;
 		}
 	}
-
-
 
 	render () {
 		const
@@ -1286,7 +1330,9 @@ class ScrollableBaseNative extends Component {
 		delete rest.applyOverscrollEffect;
 		delete rest.cbScrollTo;
 		delete rest.clearOverscrollEffect;
+		delete rest.handleResizeWindow;
 		delete rest.horizontalScrollbar;
+		delete rest.noScrollByWheel;
 		delete rest.onFlick;
 		delete rest.onMouseDown;
 		delete rest.onScroll;

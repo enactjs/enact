@@ -5,15 +5,15 @@ import IconButton from '../IconButton';
 describe('IconButton Specs', () => {
 
 	test(
-		'should apply same \'small\' prop to both <Icon> and <Button> children',
+		'should apply same \'size\' prop to both <Icon> and <Button> children',
 		() => {
 			const iconButton = mount(
-				<IconButton small>star</IconButton>
+				<IconButton size="small">star</IconButton>
 			);
 			const icon = iconButton.find('Icon');
 			const button = iconButton.find('Button');
 			const expected = true;
-			const actual = (icon.prop('small') === button.prop('small'));
+			const actual = (icon.prop('size') === button.prop('size'));
 
 			expect(actual).toBe(expected);
 		}
@@ -33,4 +33,3 @@ describe('IconButton Specs', () => {
 		}
 	);
 });
-

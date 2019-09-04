@@ -25,6 +25,9 @@ const PanelsBase = kind({
 
 	propTypes: {
 		description: PropTypes.string,
+		noHeader: PropTypes.bool,
+		noPanel: PropTypes.bool,
+		noPanels: PropTypes.bool,
 		title: PropTypes.string
 	},
 
@@ -33,18 +36,19 @@ const PanelsBase = kind({
 		className: 'moonstoneEnvironmentPanels'
 	},
 
-	render: ({children, description, title, ...rest}) => (
-		<Panels {...rest} onApplicationClose={reloadPage}>
-			<Panel className={css.panel}>
-				<Header type="compact" title={title} casing="preserve" />
-				<Column>
-					{description ? (
-						<Cell shrink component={BodyText} className={css.description}>{description}</Cell>
-					) : null}
-					<Cell className={css.storyCell}>{children}</Cell>
-				</Column>
-			</Panel>
-		</Panels>
+	render: ({children, description, noHeader, noPanel, noPanels, title, ...rest}) => (
+		!noPanels ? <Panels {...rest} onApplicationClose={reloadPage}>
+			{!noPanel ? <Panel className={css.panel}>
+				{!noHeader ? [<Header type="compact" title={title} key="header" />,
+					<Column key="body">
+						{description ? (
+							<Cell shrink component={BodyText} className={css.description}>{description}</Cell>
+						) : null}
+						<Cell className={css.storyCell}>{children}</Cell>
+					</Column>] : children
+				}
+			</Panel> : children}
+		</Panels> : <div {...rest}>{children}</div>
 	)
 });
 
@@ -69,8 +73,10 @@ const locales = {
 	'th-TH - Thai, with tall characters':                   'th-TH',
 	'ar-SA - Arabic, RTL and standard font':                'ar-SA',
 	'ur-PK - Urdu, RTL and custom Urdu font':               'ur-PK',
+	'zh-Hans-HK - Simplified Chinese, custom Hans font':    'zh-Hans-HK',
 	'zh-Hant-HK - Traditional Chinese, custom Hant font':   'zh-Hant-HK',
 	'vi-VN - Vietnamese, Special non-latin font handling':  'vi-VN',
+	'ta-IN - Tamil, custom Indian font':                    'ta-IN',
 	'ja-JP - Japanese, custom Japanese font':               'ja-JP',
 	'en-JP - English, custom Japanese font':                'en-JP'
 };
@@ -177,6 +183,11 @@ const StorybookDecorator = (story, config) => {
 				'--moon-env-background': backgroundLabelMap[select('background', backgroundLabels, Config, getKnobFromArgs(args, 'background'))]
 			}}
 			skin={select('skin', skins, Config, getKnobFromArgs(args, 'skin'))}
+			noHeader={config.noHeader}
+			noPanel={config.noPanel}
+			noPanels={config.noPanels}
+			{...config.moonstoneProps}
+			{...config.panelsProps}
 		>
 			{sample}
 		</Moonstone>

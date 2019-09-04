@@ -27,14 +27,6 @@ const TooltipLabel = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * The method to run when the tooltip mounts/unmounts, giving a reference to the DOM.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		tooltipRef: PropTypes.func,
-
-		/**
 		 * The width of tooltip content in pixels (px). If the content goes over the given width,
 		 * then it will automatically wrap. When `null`, content does not wrap.
 		 *
@@ -60,11 +52,11 @@ const TooltipLabel = kind({
 		}
 	},
 
-	render: ({children, tooltipRef, ...rest}) => {
+	render: ({children, ...rest}) => {
 		delete rest.width;
 
 		return (
-			<div {...rest} ref={tooltipRef}>
+			<div {...rest}>
 				{children}
 			</div>
 		);

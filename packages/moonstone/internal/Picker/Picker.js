@@ -1,8 +1,7 @@
 import {forward, stopImmediate} from '@enact/core/handle';
-import clamp from 'ramda/src/clamp';
 import equals from 'ramda/src/equals';
 import {is} from '@enact/core/keymap';
-import {cap, Job} from '@enact/core/util';
+import {cap, clamp, Job} from '@enact/core/util';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import platform from '@enact/core/platform';
@@ -600,7 +599,7 @@ const PickerBase = class extends React.Component {
 		const {keyCode} = ev;
 		forwardKeyDown(ev, this.props);
 
-		if (joined) {
+		if (joined && !this.props.disabled) {
 			const direction = getDirection(keyCode);
 
 			const directions = {
@@ -635,7 +634,7 @@ const PickerBase = class extends React.Component {
 		const {keyCode} = ev;
 		forwardKeyUp(ev, this.props);
 
-		if (joined) {
+		if (joined && !this.props.disabled) {
 			const isVertical = orientation === 'vertical' && (isUp(keyCode) || isDown(keyCode));
 			const isHorizontal = orientation === 'horizontal' && (isRight(keyCode) || isLeft(keyCode));
 
@@ -788,7 +787,6 @@ const PickerBase = class extends React.Component {
 		const {active} = this.state;
 		const {
 			'aria-valuetext': ariaValueText,
-			noAnimation,
 			children,
 			disabled,
 			id,
@@ -815,7 +813,7 @@ const PickerBase = class extends React.Component {
 		if (__DEV__) {
 			validateRange(value, min, max, PickerBase.displayName);
 			validateStepped(value, min, step, PickerBase.displayName);
-			validateStepped(max, min, step, PickerBase.displayName, '"max"');
+			validateStepped(max, min, step, PickerBase.displayName, 'max');
 		}
 
 		delete rest['aria-label'];
@@ -824,6 +822,7 @@ const PickerBase = class extends React.Component {
 		delete rest.decrementIcon;
 		delete rest.incrementAriaLabel;
 		delete rest.incrementIcon;
+		delete rest.noAnimation;
 		delete rest.onChange;
 		delete rest.onSpotlightDown;
 		delete rest.onSpotlightLeft;
@@ -840,10 +839,8 @@ const PickerBase = class extends React.Component {
 		const incrementerDisabled = disabled || reachedEnd;
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
 
-		let arranger;
-		if (!noAnimation && !disabled) {
-			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
-		}
+		let arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
+		let noAnimation = this.props.noAnimation || disabled;
 
 		let sizingPlaceholder = null;
 		if (typeof width === 'number' && width > 0) {

@@ -10,6 +10,7 @@
 
 import {is} from '@enact/core/keymap';
 import {on, off} from '@enact/core/dispatcher';
+import {Row, Cell} from '@enact/ui/Layout';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -77,6 +78,8 @@ const PopupBase = kind({
 		 * The following classes are supported:
 		 *
 		 * * `popup` - The root class name
+		 * * `body` - Applied to the body content container
+		 * * `closeContainer` - Applied to the close button's container
 		 * * `reserveClose` - Applied when the close button is shown and space must be allocated for it
 		 *
 		 * @type {Object}
@@ -171,7 +174,7 @@ const PopupBase = kind({
 	styles: {
 		css: componentCss,
 		className: 'popup',
-		publicClassNames: ['popup', 'reserveClose']
+		publicClassNames: ['popup', 'body', 'closeContainer', 'reserveClose']
 	},
 
 	computed: {
@@ -181,15 +184,17 @@ const PopupBase = kind({
 				const ariaLabel = (closeButtonAriaLabel == null) ? $L('Close') : closeButtonAriaLabel;
 
 				return (
-					<IconButton
-						className={css.closeButton}
-						backgroundOpacity="transparent"
-						small
-						onTap={onCloseButtonClick}
-						aria-label={ariaLabel}
-					>
-						closex
-					</IconButton>
+					<Cell shrink className={css.closeContainer}>
+						<IconButton
+							className={css.closeButton}
+							backgroundOpacity="transparent"
+							size="small"
+							onTap={onCloseButtonClick}
+							aria-label={ariaLabel}
+						>
+							closex
+						</IconButton>
+					</Cell>
 				);
 			}
 		}
@@ -214,16 +219,16 @@ const PopupBase = kind({
 				type="slide"
 				visible={open}
 			>
-				<div
+				<Row
 					aria-live="off"
 					role="alert"
 					{...rest}
 				>
-					<div className={css.body}>
+					<Cell className={css.body}>
 						{children}
-					</div>
+					</Cell>
 					{closeButton}
-				</div>
+				</Row>
 			</TransitionContainer>
 		);
 	}
@@ -411,7 +416,7 @@ class Popup extends React.Component {
 			} else {
 				return {
 					popupOpen: OpenState.CLOSED,
-					floatLayerOpen: state.popupOpen === OpenState.OPEN ? !props.noAnimation : false,
+					floatLayerOpen: state.popupOpen !== OpenState.CLOSED ? !props.noAnimation : false,
 					activator: props.noAnimation ? null : state.activator,
 					prevOpen: props.open
 				};

@@ -50,12 +50,21 @@ const platforms = [
 	// iOS 3 - 5
 	// Apple likes to make this complicated
 	{platform: 'ios', regex: /iP(?:hone|ad;(?: U;)? CPU) OS (\d+)/},
-	// webOS 1 - 3
-	{platform: 'webos', regex: /(?:web|hpw)OS\/(\d+)/},
-	// webOS 4 / OpenWebOS
-	{platform: 'webos', regex: /WebAppManager|Isis|webOS\./, forceVersion: 4},
-	// Open webOS release LuneOS
-	{platform: 'webos', regex: /LuneOS/, forceVersion: 4, extra: {luneos: 1}},
+	// LG webOS
+	{platform: 'webos', regex: /Web0S;.*Safari\/537.41/, forceVersion: 1},
+	{platform: 'webos', regex: /Web0S;.*Safari\/538.2/, forceVersion: 2},
+	{platform: 'webos', regex: /Web0S;.*Chrome\/38/, forceVersion: 3},
+	{platform: 'webos', regex: /Web0S;.*Chrome\/53/, forceVersion: 4},
+	{platform: 'webos', regex: /Web0S;.*Chrome\/68/, forceVersion: 5},
+	// LG webOS of indeterminate version
+	{platform: 'webos', regex: /Web0S;/, forceVersion: -1},
+	// LuneOS
+	{platform: 'webos', regex: /LuneOS/, forceVersion: -1, extra: {luneos: 1}},
+	// Palm/HP/Open webOS
+	{platform: 'webos', regex: /WebAppManager|Isis|webOS\./, forceVersion: -1, extra: {legacy: 4}},
+	{platform: 'webos', regex: /(?:web|hpw)OS\/1/, forceVersion: -1, extra: {legacy: 1}},
+	{platform: 'webos', regex: /(?:web|hpw)OS\/2/, forceVersion: -1, extra: {legacy: 2}},
+	{platform: 'webos', regex: /(?:web|hpw)OS\/3/, forceVersion: -1, extra: {legacy: 3}},
 	// desktop Safari
 	{platform: 'safari', regex: /Version\/(\d+)[.\d]+\s+Safari/},
 	// desktop Chrome
@@ -80,11 +89,46 @@ const ua = () => {
 
 let _platform;
 
+const parseUserAgent = (userAgent) => {
+	let plat = {
+		gesture: hasGesture(),
+		node: false,
+		touch: hasTouch(),
+		unknown: true
+	};
+
+	for (let i = 0, p, m, v; (p = platforms[i]); i++) {
+		m = p.regex.exec(userAgent);
+
+		if (m) {
+			plat.unknown = false;
+
+			if ('forceVersion' in p) {
+				v = p.forceVersion;
+			} else {
+				v = Number(m[1]);
+			}
+			plat[p.platform] = v;
+			if (p.extra) {
+				plat = {
+					...plat,
+					...p.extra
+				};
+			}
+			plat.platformName = p.platform;
+			break;
+		}
+	}
+
+	return plat;
+};
+
 /**
  * @typedef {Object} PlatformDescription
+ * @property {Object} [extra] - Additional information about the detected platform
  * @property {Boolean} gesture - `true` if the platform has native double-finger events
  * @property {Boolean} node - `true` only if `window` is `undefined`
- * @property {String} platformName - The name of the platform
+ * @property {String} [platformName] - The name of the platform, if detected
  * @property {Boolean} touch - `true` if the platform has native single-finger events
  * @property {Boolean} unknown - `true` for any unknown system
  *
@@ -115,36 +159,7 @@ const detect = () => {
 
 	const userAgent = ua();
 
-	_platform = {
-		gesture: hasGesture(),
-		node: false,
-		touch: hasTouch(),
-		unknown: true
-	};
-
-	for (let i = 0, p, m, v; (p = platforms[i]); i++) {
-		m = p.regex.exec(userAgent);
-		if (m) {
-			_platform.unknown = false;
-
-			if (p.forceVersion) {
-				v = p.forceVersion;
-			} else {
-				v = Number(m[1]);
-			}
-			_platform[p.platform] = v;
-			if (p.extra) {
-				_platform = {
-					..._platform,
-					...p.extra
-				};
-			}
-			_platform.platformName = p.platform;
-			break;
-		}
-	}
-
-	return _platform;
+	return (_platform = parseUserAgent(userAgent));
 };
 
 /**
@@ -176,5 +191,6 @@ const platform = {};
 export default platform;
 export {
 	detect,
+	parseUserAgent,
 	platform
 };

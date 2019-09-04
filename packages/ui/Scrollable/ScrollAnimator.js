@@ -1,5 +1,5 @@
-import clamp from 'ramda/src/clamp';
 import {perfNow} from '@enact/core/util';
+import clamp from 'ramda/src/clamp';
 
 const
 	// Use eases library

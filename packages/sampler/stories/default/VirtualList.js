@@ -1,21 +1,23 @@
-import {Item as UiItem} from '@enact/ui/Item';
 import Item from '@enact/moonstone/Item';
-import {VirtualList as UiVirtualList} from '@enact/ui/VirtualList';
-import VirtualList from '@enact/moonstone/VirtualList';
-import ri from '@enact/ui/resolution';
+import {Item as UiItem} from '@enact/ui/Item';
 import React from 'react';
+import ri from '@enact/ui/resolution';
+import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
+import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualList as UiVirtualList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 
 import {boolean, number, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 const
 	wrapOption = {
-		'false': false,
-		'true': true,
-		"'noAnimation'": 'noAnimation'
+		false: false,
+		true: true,
+		'&quot;noAnimation&quot;': 'noAnimation'
+	},
+	prop = {
+		scrollbarOption: ['auto', 'hidden', 'visible']
 	},
 	items = [],
 	defaultDataSize = 1000,
@@ -64,47 +66,59 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
-const Config = mergeComponentMetadata('VirtualList', UiVirtualList, VirtualList);
-UiVirtualList.displayName = 'VirtualList';
+const UiVirtualListConfig = mergeComponentMetadata('VirtualList', UiVirtualListBase, UiScrollableBase);
+const VirtualListConfig = mergeComponentMetadata('VirtualList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
 
 storiesOf('UI', module)
 	.add(
 		'VirtualList',
-		withInfo({
-			text: 'Basic usage of VirtualList'
-		})(() => {
-			const itemSize = ri.scale(number('itemSize', Config, 72));
+		() => {
 			return (
 				<UiVirtualList
-					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
-					itemRenderer={uiRenderItem(itemSize)}
-					itemSize={itemSize}
+					dataSize={updateDataSize(number('dataSize', UiVirtualListConfig, defaultDataSize))}
+					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, UiVirtualListConfig)}
+					itemRenderer={uiRenderItem(ri.scale(number('itemSize', UiVirtualListConfig, 72)))}
+					itemSize={ri.scale(number('itemSize', UiVirtualListConfig, 72))}
+					noScrollByWheel={boolean('noScrollByWheel', UiVirtualListConfig)}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', Config, 0))}
+					spacing={ri.scale(number('spacing', UiVirtualListConfig))}
+					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, UiVirtualListConfig)}
 				/>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'Basic usage of VirtualList'
+			}
+		}
 	);
+
 
 storiesOf('Moonstone', module)
 	.add(
 		'VirtualList',
-		withInfo({
-			text: 'Basic usage of VirtualList'
-		})(() => {
-			const itemSize = ri.scale(number('itemSize', Config, 72));
+		() => {
 			return (
 				<VirtualList
-					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
-					focusableScrollbar={boolean('focusableScrollbar', Config)}
-					itemRenderer={renderItem(itemSize)}
-					itemSize={itemSize}
+					dataSize={updateDataSize(number('dataSize', VirtualListConfig, defaultDataSize))}
+					focusableScrollbar={boolean('focusableScrollbar', VirtualListConfig)}
+					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, VirtualListConfig)}
+					itemRenderer={renderItem(ri.scale(number('itemSize', VirtualListConfig, 72)))}
+					itemSize={ri.scale(number('itemSize', VirtualListConfig, 72))}
+					noScrollByWheel={boolean('noScrollByWheel', VirtualListConfig)}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', Config, 0))}
-					wrap={wrapOption[select('wrap', ['false', 'true', "'noAnimation'"], Config)]}
+					spacing={ri.scale(number('spacing', VirtualListConfig))}
+					spotlightDisabled={boolean('spotlightDisabled', VirtualListConfig, false)}
+					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, VirtualListConfig)}
+					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], VirtualListConfig)]}
 				/>
 			);
-		})
+		},
+		{
+			info: {
+				text: 'Basic usage of VirtualList'
+			}
+		}
 	);

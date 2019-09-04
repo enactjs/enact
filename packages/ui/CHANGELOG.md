@@ -2,6 +2,115 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [3.0.0] - 2019-09-03
+
+### Fixed
+
+- `ui/Scroller` TypeScript signatures
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to apply `will-change` CSS property to the proper node
+
+## [3.0.0-rc.4] - 2019-08-22
+
+### Fixed
+
+- `ui/styles/mixins.less` mixins: `.buildLocaleFont`, `.buildLocaleFonts`, `.buildFontFace` to properly support font-weight ranges, font-weight default values, and font-stretch values
+
+## [3.0.0-rc.3] - 2019-08-15
+
+### Fixed
+
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to retain the proper scroll position when updating the `itemSize` or `spacing` props
+- `ui/Toggleable` TypeScript definitions
+
+## [3.0.0-rc.2] - 2019-08-08
+
+No significant changes.
+
+## [3.0.0-rc.1] - 2019-07-31
+
+### Added
+
+- `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` prop `flip` to flip the icon horizontally, vertically, or both
+
+### Fixed
+
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` to handle mouse down events on scrollbars
+
+## [3.0.0-beta.2] - 2019-07-23
+
+### Added
+
+- `ui/ProgressBar` public class name `bar` to support customizing the background of the bar
+
+## [3.0.0-beta.1] - 2019-07-15
+
+### Added
+
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` support for resizing a window
+
+### Fixed
+
+- `ui/Icon` to support arbitrary icon name strings, like in material icons
+
+## [3.0.0-alpha.7] - 2019-06-24
+
+No significant changes.
+
+## [3.0.0-alpha.6] - 2019-06-17
+
+### Fixed
+
+- `ui/ViewManager` to correctly arrange views when initially rendering a non-zero index
+
+## [3.0.0-alpha.5] - 2019-06-10
+
+### Added
+
+- `ui/Toggleable` HOC config prop `eventProps` to allow wrapped components to specify additional event information
+
+### Fixed
+
+- `ui/ToggleItem` to send its `value` prop when toggled
+
+## [3.0.0-alpha.4] - 2019-06-03
+
+No significant changes.
+
+## [3.0.0-alpha.3] - 2019-05-29
+
+### Changed
+
+- `ui/ViewManager` to use Web Animations instead of animation callbacks to improve performance resulting in API changes to `Arranger` and the pre-configured arrangers `SlideArranger`, `SlideBottomArranger`, `SlideLeftArranger`, `SlideRightArranger`, and `SlideTopArranger`
+
+## [3.0.0-alpha.2] - 2019-05-20
+
+No significant changes.
+
+## [3.0.0-alpha.1] - 2019-05-15
+
+### Added
+
+- `ui/Button` public class `.hasIcon` which is present on the root node only when an icon has been provided
+- `ui/Heading` component
+- `ui/Measurable` HOC and Hook for quick and convenient measuring of simple components
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` prop `noScrollByWheel` for preventing scroll by wheel
+
+### Fixed
+
+- `ui/Measurable` to remeasure after a re-layout so the measurement value is always correct
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` not to scroll by wheel at the same time when multiple lists/scrollers are nested
+
+### [2.6.0] - ???
+
+### Deprecated
+
+- `small` prop in `ui/Button.ButtonBase`, `ui/Icon.IconBase`, `ui/IconButton.IconButtonBase`, and `ui/LabeledIcon.LabeledIconBase`, which will be replaced by `size="small"` in 3.0
+
+### Added
+
+- `ui/Button`, `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` prop `size`
+- `ui/ToggleItem` props  `itemIcon` and `itemIconPosition` to support additional icons on ToggleItem-derived components
+
 ## [2.5.3] - 2019-06-06
 
 ### Fixed

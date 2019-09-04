@@ -3,11 +3,9 @@ import Icon from '@enact/moonstone/Icon';
 import Item from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {action, mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('ExpandableItem', Expandable, ExpandableItem, ExpandableItemBase);
 ExpandableItem.displayName = 'ExpandableItem';
@@ -17,9 +15,7 @@ Item.displayName = 'Item';
 storiesOf('Moonstone', module)
 	.add(
 		'ExpandableItem',
-		withInfo({
-			text: 'Basic usage of ExpandableItem'
-		})(() => (
+		() => (
 			<ExpandableItem
 				autoClose={boolean('autoClose', Config)}
 				disabled={boolean('disabled', Config)}
@@ -38,5 +34,10 @@ storiesOf('Moonstone', module)
 					<Icon>star</Icon> You could include other components as well <Icon>star</Icon>
 				</Item>
 			</ExpandableItem>
-		))
+		),
+		{
+			info: {
+				text: 'Basic usage of ExpandableItem'
+			}
+		}
 	);

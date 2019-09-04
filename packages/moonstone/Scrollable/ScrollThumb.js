@@ -1,6 +1,6 @@
+import {ScrollThumb as UiScrollThumb} from '@enact/ui/Scrollable/Scrollbar';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import {ScrollThumb as UiScrollThumb} from '@enact/ui/Scrollable/Scrollbar';
 
 const nop = () => {};
 
