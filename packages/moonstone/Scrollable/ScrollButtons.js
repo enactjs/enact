@@ -320,12 +320,19 @@ class ScrollButtons extends Component {
 					// If it is vertical `Scrollable`, move focus to the left for ltr or to the right for rtl
 					// If is is horizontal `Scrollable`, move focus to the up
 					directionToContent = !vertical && 'up' || rtl && 'right' || 'left',
+					isLeavingDown = vertical && isNextButton && isDown,
+					isLeavingUp = vertical && isPrevButton && isUp,
+					isLeavingLeft = !vertical && isPrevButton && isLeftMovement,
+					isLeavingRight = !vertical && isNextButton && isRightMovement,
 					isDirectionToLeave =
-						vertical && (isRightMovement || isPrevButton && isUp || isNextButton && isDown) ||
-						!vertical && (isDown || isPrevButton && isLeftMovement || isNextButton && isRightMovement);
+						(vertical && isRightMovement || isLeavingUp || isLeavingDown) ||
+						(!vertical && isDown || isLeavingLeft || isLeavingRight);
 
 				if (isDirectionToLeave) {
 					if (!focusableScrollButtons && !getTargetByDirectionFromElement(direction, ev.target)) {
+						if (preventBubbling && isLeavingDown || isLeavingUp || isLeavingLeft || isLeavingRight) {
+							consumeEvent(ev);
+						}
 						// move focus into contents and allow bubbling
 						Spotlight.move(directionToContent);
 					}
