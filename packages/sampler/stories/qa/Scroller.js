@@ -401,7 +401,7 @@ storiesOf('Scroller', module)
 	.add(
 		'Test scrolling to boundary with small overflow',
 		() => {
-			const size = number('Spacer size', Scroller, {max: 300, min: 0, range: true}, 100);
+			const size = number('Spacer size', Config, {max: 300, min: 0, range: true}, 100);
 			return (
 				<Scroller
 					onKeyDown={action('onKeyDown')}
@@ -419,7 +419,7 @@ storiesOf('Scroller', module)
 	.add(
 		'Test scrolling to boundary with long overflow',
 		() => {
-			const size = number('Spacer size', Scroller, {max: 300, min: 0, range: true}, 200);
+			const size = number('Spacer size', Config, {max: 300, min: 0, range: true}, 200);
 			return (
 				<Scroller
 					focusableScrollbar={boolean('focusableScrollbar', Config, true)}
