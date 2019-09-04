@@ -446,18 +446,14 @@ const VirtualListBaseFactory = (type) => {
 				const nextRow = (nextIndex - nextColumn) % dataSize / dimensionToExtent;
 				let
 					isNextItemInView = false,
-					isCurrentItemInView = false,
 					numOfItemsInPage;
 
 				if (this.props.itemSizes) {
-					isCurrentItemInView = this.uiRefCurrent.itemPositions[index].position >= scrollPositionTarget &&
-						this.uiRefCurrent.getItemBottomPosition(index) <= scrollPositionTarget + clientSize;
 					isNextItemInView = this.uiRefCurrent.itemPositions[nextIndex].position >= scrollPositionTarget &&
 						this.uiRefCurrent.getItemBottomPosition(nextIndex) <= scrollPositionTarget + clientSize;
 				} else {
 					const firstFullyVisibleIndex = Math.ceil(scrollPositionTarget / gridSize) * dimensionToExtent;
 					numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
-					isCurrentItemInView = index >= firstFullyVisibleIndex && index < firstFullyVisibleIndex + numOfItemsInPage;
 					isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
 				}
 
