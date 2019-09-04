@@ -3,6 +3,7 @@
  * higher-order component.
  *
  * @module spotlight/SpotlightRootDecorator
+ * @exports SpotlightRootDecorator
  */
 
 import hoc from '@enact/core/hoc';
@@ -41,11 +42,12 @@ const defaultConfig = {
  * ```
  *	const App = SpotlightRootDecorator(ApplicationView);
  * ```
- * @param  {Object} defaultConfig Set of default configuration parameters
- * @param  {Function} higher-order component
  *
- * @returns {Function} SpotlightRootDecorator
+ * @class SpotlightRootDecorator
  * @memberof spotlight/SpotlightRootDecorator
+ * @param  {Object} defaultConfig Set of default configuration parameters
+ * @param  {Function} Wrapped higher-order component
+ * @returns {Function} SpotlightRootDecorator
  * @hoc
  */
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {

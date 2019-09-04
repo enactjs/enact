@@ -17,6 +17,7 @@
  */
 
 import {Spotlight} from '@enact/spotlight';
+import {getRect} from '@enact/spotlight/src/utils';
 import ri from '@enact/ui/resolution';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import PropTypes from 'prop-types';
@@ -229,6 +230,45 @@ class ScrollerBase extends Component {
 	}
 
 	/**
+	 * Calculates the new `scrollLeft`.
+	 *
+	 * @param {Node} focusedItem node
+	 * @param {Number} scrollPosition last target position, passed when scroll animation is ongoing
+	 *
+	 * @returns {Number} Calculated `scrollLeft`
+	 * @private
+	 */
+	calculateScrollLeft = (item, scrollPosition) => {
+		const {
+			left: itemLeft,
+			width: itemWidth
+		} = this.getFocusedItemBounds(item);
+
+		const
+			{rtl} = this.props,
+			{clientWidth} = this.uiRefCurrent.scrollBounds,
+			rtlDirection = rtl ? -1 : 1,
+			{left: containerLeft} = this.uiRefCurrent.containerRef.current.getBoundingClientRect(),
+			scrollLastPosition = scrollPosition ? scrollPosition : this.uiRefCurrent.scrollPos.left,
+			currentScrollLeft = rtl ? (this.uiRefCurrent.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
+			// calculation based on client position
+			newItemLeft = this.uiRefCurrent.containerRef.current.scrollLeft + (itemLeft - containerLeft);
+		let nextScrollLeft = this.uiRefCurrent.scrollPos.left;
+
+		if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
+			// If focus is moved to an element outside of view area (to the right), scroller will move
+			// to the right just enough to show the current `focusedItem`. This does not apply to
+			// `focusedItem` that has a width that is bigger than `this.scrollBounds.clientWidth`.
+			nextScrollLeft += rtlDirection * ((newItemLeft + itemWidth) - (clientWidth + currentScrollLeft));
+		} else if (newItemLeft < currentScrollLeft) {
+			// If focus is outside of the view area to the left, move scroller to the left accordingly.
+			nextScrollLeft += rtlDirection * (newItemLeft - currentScrollLeft);
+		}
+
+		return nextScrollLeft;
+	}
+
+	/**
 	 * Calculates the new top and left position for scroller based on focusedItem.
 	 *
 	 * @param {Node} item node
@@ -240,37 +280,23 @@ class ScrollerBase extends Component {
 	 * @private
 	 */
 	calculatePositionOnFocus = ({item, scrollPosition}) => {
-		if (!this.uiRefCurrent.isVertical() && !this.uiRefCurrent.isHorizontal() || !item || !this.uiRefCurrent.containerRef.current.contains(item)) {
+		const containerNode = this.uiRefCurrent.containerRef.current;
+		const horizontal = this.uiRefCurrent.isHorizontal();
+		const vertical = this.uiRefCurrent.isVertical();
+
+		if (!vertical && !horizontal || !item || !containerNode.contains(item)) {
 			return;
 		}
 
-		if (this.uiRefCurrent.isVertical()) {
+		const containerRect = getRect(containerNode);
+		const itemRect = getRect(item);
+
+		if (horizontal && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {
+			this.uiRefCurrent.scrollPos.left = this.calculateScrollLeft(item, scrollPosition);
+		}
+
+		if (vertical && !(itemRect.top >= containerRect.top && itemRect.bottom <= containerRect.bottom)) {
 			this.uiRefCurrent.scrollPos.top = this.calculateScrollTop(item);
-		} else if (this.uiRefCurrent.isHorizontal()) {
-			const {
-				left: itemLeft,
-				width: itemWidth
-			} = this.getFocusedItemBounds(item);
-
-			const
-				{rtl} = this.props,
-				{clientWidth} = this.uiRefCurrent.scrollBounds,
-				rtlDirection = rtl ? -1 : 1,
-				{left: containerLeft} = this.uiRefCurrent.containerRef.current.getBoundingClientRect(),
-				scrollLastPosition = scrollPosition ? scrollPosition : this.uiRefCurrent.scrollPos.left,
-				currentScrollLeft = rtl ? (this.uiRefCurrent.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
-				// calculation based on client position
-				newItemLeft = this.uiRefCurrent.containerRef.current.scrollLeft + (itemLeft - containerLeft);
-
-			if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
-				// If focus is moved to an element outside of view area (to the right), scroller will move
-				// to the right just enough to show the current `focusedItem`. This does not apply to
-				// `focusedItem` that has a width that is bigger than `this.scrollBounds.clientWidth`.
-				this.uiRefCurrent.scrollPos.left += rtlDirection * ((newItemLeft + itemWidth) - (clientWidth + currentScrollLeft));
-			} else if (newItemLeft < currentScrollLeft) {
-				// If focus is outside of the view area to the left, move scroller to the left accordingly.
-				this.uiRefCurrent.scrollPos.left += rtlDirection * (newItemLeft - currentScrollLeft);
-			}
 		}
 
 		return this.uiRefCurrent.scrollPos;

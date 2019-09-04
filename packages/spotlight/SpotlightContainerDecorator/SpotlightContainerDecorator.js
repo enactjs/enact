@@ -1,10 +1,8 @@
 /**
- * Exports the {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
- * higher-order component and {@link spotlight/SpotlightContainerDecorator.spotlightDefaultClass}
- * `className`. The default export is
- * {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}.
+ * A component for managing groups of spottable components.
  *
  * @module spotlight/SpotlightContainerDecorator
+ * @exports SpotlightContainerDecorator
  */
 
 import {call, forProp, forward, handle, oneOf, returnsTrue, stop} from '@enact/core/handle';

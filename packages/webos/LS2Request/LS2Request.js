@@ -12,9 +12,8 @@ import {Job} from '@enact/core/util';
 const refs = {};
 
 const adjustPath = (path) => {
-	if (path.slice(-1) !== '/') {
-		path += '/';
-	}
+	if (!/^(luna|palm):\/\//.test(path)) path = 'luna://' + path;
+	if (path.slice(-1) !== '/') path += '/';
 	return path;
 };
 
@@ -52,7 +51,7 @@ export default class LS2Request {
 	 * @method
 	 * @memberof webos/LS2Request.LS2Request.prototype
 	 * @param {Object} options Options for the LS2 Request call
-	 * @param {String} options.service The name of the LS2 service.  Do not include 'luna://'.
+	 * @param {String} options.service The name of the LS2 service.
 	 * @param {String} options.method The name of the method.
 	 * @param {Object} options.parameters Any parameters required by the service method.
 	 * @param {Function} options.onSuccess The success handler for the request.

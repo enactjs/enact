@@ -14,6 +14,8 @@
  * The default export is {@link spotlight.Spotlight}.
  *
  * @module spotlight
+ * @exports default Spotlight
+ * @exports getDirection
  */
 
 import {is} from '@enact/core/keymap';
