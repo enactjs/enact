@@ -465,7 +465,10 @@ const VirtualListBaseFactory = (type) => {
 
 				// VirtualGridList does not support different item size yet. So we don't need to consider the condition related with it.
 				if (isNextItemInView || !this.props.itemSizes && (numOfItemsInPage !== dimensionToExtent || row === nextRow)) {
+					// The next item could be still out of viewport. So we need to prevent scrolling into view with `isScrolledBy5way` flag.
+					this.isScrolledBy5way = true;
 					this.focusByIndex(nextIndex);
+					this.isScrolledBy5way = false;
 				} else {
 					this.isScrolledBy5way = true;
 					this.isWrappedBy5way = isWrapped;
