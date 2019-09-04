@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Scroller` to restore focus properly when pressing page up after holding 5-way down
+
 ## [3.0.0] - 2019-09-03
 
 ### Fixed
