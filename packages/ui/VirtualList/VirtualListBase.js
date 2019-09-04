@@ -816,9 +816,7 @@ const VirtualListBaseFactory = (type) => {
 			this.scrollPosition = pos;
 			this.updateMoreInfo(dataSize, pos);
 
-			if (firstIndex !== newFirstIndex) {
-				this.setState({firstIndex: newFirstIndex});
-			}
+			this.setState({firstIndex: newFirstIndex});
 		}
 
 		// For individually sized item
