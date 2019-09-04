@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Notification` to fit the width of popup
+
 ## [3.0.0] - 2019-09-03
 
 ### Fixed
