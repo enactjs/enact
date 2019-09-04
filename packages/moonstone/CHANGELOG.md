@@ -2,6 +2,11 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## unreleased
+
+### Fixed
+- `moonstone/FormCheckboxItem` to apply `opacity` to `itemicon` when disabled and focused
+
 ## [3.0.0] - 2019-09-03
 
 ### Fixed
@@ -11,7 +16,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ProgressBar` fill color when `highlighted` is set
 - `moonstone/Scroller` to correctly handle horizontally scrolling focused elements into view when using a `direction` value of `'both'`
 - `moonstone/Skinnable` TypeScript signature
-- `moonstone/FormCheckboxItem` to apply `opacity` when disabled and focused
 - `moonstone/Slider` progress bar fill color when focused with `noFill` set
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to render the first item properly when the `dataSize` prop is updated and the function as a parameter of the `cbScrollTo` prop is called
 
