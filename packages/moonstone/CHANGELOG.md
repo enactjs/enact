@@ -7,7 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` layout in large text mode in RTL locales
-- `moonstone/VirtualList.VirtualList` not to scroll when a fully visible item get focus.
+- `moonstone/VirtualList.VirtualList` not to scroll when the item which will be in viewport gets focus
 
 ## [3.0.0-rc.4] - 2019-08-22
 
