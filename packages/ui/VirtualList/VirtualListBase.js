@@ -327,6 +327,9 @@ const VirtualListBaseFactory = (type) => {
 				this.emitUpdateItems();
 			}
 
+			// When an item expands or shrinks,
+			// we need to calculate the item position again and
+			// the item needs to scroll into view if the item does not show fully.
 			if (this.props.itemSizes) {
 				if (this.itemPositions.length > this.props.itemSizes.length) {
 					// The item with `this.props.itemSizes.length` index is not rendered yet.
@@ -337,24 +340,26 @@ const VirtualListBaseFactory = (type) => {
 					this.itemPositions = [...this.itemPositions.slice(0, this.props.itemSizes.length)];
 					this.adjustItemPositionWithItemSize();
 				} else {
-					const indexToScroll = this.indexToScrollIntoView;
+					const {indexToScrollIntoView} = this;
 
 					this.adjustItemPositionWithItemSize();
 
-					if (indexToScroll !== -1) {
+					if (indexToScrollIntoView !== -1) {
+						// Currently we support expandable items in only vertical VirtualList.
+						// So the top and bottom of the boundaries are checked.
 						const
 							scrollBounds = {top: this.scrollPosition, bottom: this.scrollPosition + this.scrollBounds.clientHeight},
-							itemBounds = {top: this.getGridPosition(indexToScroll).primaryPosition, bottom: this.getItemBottomPosition(indexToScroll)};
+							itemBounds = {top: this.getGridPosition(indexToScrollIntoView).primaryPosition, bottom: this.getItemBottomPosition(indexToScrollIntoView)};
 
 						if (itemBounds.top < scrollBounds.top) {
 							this.props.cbScrollTo({
-								index: indexToScroll,
+								index: indexToScrollIntoView,
 								stickTo: 'start',
 								animate: true
 							});
 						} else if (itemBounds.bottom > scrollBounds.bottom) {
 							this.props.cbScrollTo({
-								index: indexToScroll,
+								index: indexToScrollIntoView,
 								stickTo: 'end',
 								animate: true
 							});
