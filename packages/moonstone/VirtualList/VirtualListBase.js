@@ -456,7 +456,10 @@ const VirtualListBaseFactory = (type) => {
 
 				this.lastFocusedIndex = nextIndex;
 
-				if (isNextItemInView || row === nextRow) {
+				if (
+					isNextItemInView ||
+					row === nextRow // Needed when the number of the visible row is 1 and the number of the fully visible row is 0.
+				) {
 					// The next item could be still out of viewport. So we need to prevent scrolling into view with `isScrolledBy5way` flag.
 					this.isScrolledBy5way = true;
 					this.focusByIndex(nextIndex);
