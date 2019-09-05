@@ -2,10 +2,11 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## unreleased
+## [unreleased]
 
 ### Fixed
-- `moonstone/FormCheckboxItem` to apply `opacity` to `itemicon` when disabled and focused
+
+- `moonstone/FormCheckboxItem` icon opacity when disabled and focused
 
 ## [3.0.0] - 2019-09-03
 
