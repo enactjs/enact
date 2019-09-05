@@ -10,7 +10,7 @@ import classNames from 'classnames';
 import handle, {forward} from '@enact/core/handle';
 import platform from '@enact/core/platform';
 import {onWindowReady} from '@enact/core/snapshot';
-import {Job} from '@enact/core/util';
+import {clamp, Job} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import Spotlight, {getDirection} from '@enact/spotlight';
@@ -439,16 +439,26 @@ class ScrollableBase extends Component {
 		const
 			spotItem = Spotlight.getCurrent(),
 			positionFn = this.childRef.current.calculatePositionOnFocus,
-			{containerRef} = this.uiRef.current.childRefCurrent;
+			containerNode = this.uiRef.current.childRefCurrent.containerRef.current;
 
-		if (spotItem && positionFn && containerRef.current && containerRef.current.contains(spotItem)) {
+		if (spotItem && positionFn && containerNode && containerNode.contains(spotItem)) {
 			const lastPos = this.lastScrollPositionOnFocus;
 			let pos;
 
 			// If scroll animation is ongoing, we need to pass last target position to
 			// determine correct scroll position.
 			if (this.uiRef.current.animator.isAnimating() && lastPos) {
-				pos = positionFn({item: spotItem, scrollPosition: (this.props.direction !== 'horizontal') ? lastPos.top : lastPos.left});
+				const containerRect = getRect(containerNode);
+				const itemRect = getRect(spotItem);
+				let scrollPosition;
+
+				if (this.props.direction === 'horizontal' || this.props.direction === 'both' && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {
+					scrollPosition = lastPos.left;
+				} else if (this.props.direction === 'vertical' || this.props.direction === 'both' && !(itemRect.top >= containerRect.top && itemRect.bottom <= containerRect.bottom)) {
+					scrollPosition = lastPos.top;
+				}
+
+				pos = positionFn({item: spotItem, scrollPosition});
 			} else {
 				// scrollInfo passes in current `scrollHeight` and `scrollTop` before calculations
 				const
@@ -518,9 +528,10 @@ class ScrollableBase extends Component {
 				// Should do nothing when focusedItem is paging control button of Scrollbar
 				if (childRefCurrent.containerRef.current.contains(focusedItem)) {
 					const
+						contentRect = this.uiRef.current.childRefCurrent.containerRef.current.getBoundingClientRect(),
 						clientRect = focusedItem.getBoundingClientRect(),
-						x = (clientRect.right + clientRect.left) / 2,
-						y = (clientRect.bottom + clientRect.top) / 2;
+						x = clamp(contentRect.left, contentRect.right, (clientRect.right + clientRect.left) / 2),
+						y = clamp(contentRect.top, contentRect.bottom, (clientRect.bottom + clientRect.top) / 2);
 
 					focusedItem.blur();
 					if (!this.props['data-spotlight-container-disabled']) {
@@ -702,13 +713,15 @@ class ScrollableBase extends Component {
 				const position = {x, y};
 				const {current: {containerRef: {current}}} = this.uiRef;
 				const elemFromPoint = document.elementFromPoint(x, y);
-				const target =
-					getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
-					getTargetInViewByDirectionFromPosition(direction, position, current) ||
-					getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current);
+				if (elemFromPoint) {
+					const target =
+						getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
+						getTargetInViewByDirectionFromPosition(direction, position, current) ||
+						getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current);
 
-				if (target) {
-					Spotlight.focus(target);
+					if (target) {
+						Spotlight.focus(target);
+					}
 				}
 			}
 			this.pointToFocus = null;

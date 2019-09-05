@@ -142,6 +142,34 @@ const InPanels = ({className, title, ...rest}) => {
 	);
 };
 
+// eslint-disable-next-line enact/prop-types
+class VirtualListWithCBScrollTo extends React.Component {
+	static propTypes = {
+		dataSize: PropTypes.number
+	}
+
+	componentDidUpdate (prevProps) {
+		if (this.props.dataSize !== prevProps.dataSize) {
+			this.scrollTo({animate: false, focus: false, index: 0});
+		}
+	}
+
+	scrollTo = null
+
+	getScrollTo = (scrollTo) => {
+		this.scrollTo = scrollTo;
+	}
+
+	render () {
+		return (
+			<VirtualList
+				{...this.props}
+				cbScrollTo={this.getScrollTo}
+			/>
+		);
+	}
+}
+
 storiesOf('VirtualList', module)
 	.add(
 		'horizontal scroll in Scroller',
@@ -219,4 +247,17 @@ storiesOf('VirtualList', module)
 				/>
 			);
 		}
+	)
+	.add(
+		'scrolling to 0 whenever dataSize changes',
+		() => {
+			return (
+				<VirtualListWithCBScrollTo
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)), true)}
+					itemSize={ri.scale(number('itemSize', Config, 72))}
+				/>
+			);
+		},
+		{propTables: [Config]}
 	);

@@ -16,26 +16,22 @@
  * @exports DropdownBaseDecorator
  */
 
+import {handle, forKey, forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import {handle, forKey, forward} from '@enact/core/handle';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
-import Spotlight from '@enact/spotlight';
 import Changeable from '@enact/ui/Changeable';
-import Toggleable from '@enact/ui/Toggleable';
-import Group from '@enact/ui/Group';
 import Pure from '@enact/ui/internal/Pure';
+import Toggleable from '@enact/ui/Toggleable';
 import PropTypes from 'prop-types';
 import {compose, equals} from 'ramda';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import warning from 'warning';
 
 import Button from '../Button';
-import ContextualPopupDecorator from '../ContextualPopupDecorator/ContextualPopupDecorator';
-import Item from '../Item';
-import Scroller from '../Scroller';
-import Skinnable from '../Skinnable';
+import ContextualPopupDecorator from '../ContextualPopupDecorator';
+
+import DropdownList, {isSelectedValid} from './DropdownList';
 
 import css from './Dropdown.module.less';
 
@@ -56,8 +52,6 @@ const compareChildren = (a, b) => {
 
 	return true;
 };
-const isSelectedValid = ({children, selected}) => Array.isArray(children) && children[selected] != null;
-const scrollOffset = 2;
 
 const DropdownButton = kind({
 	name: 'DropdownButton',
@@ -72,144 +66,6 @@ const DropdownButton = kind({
 });
 
 const ContextualButton = ContextualPopupDecorator({noArrow: true}, DropdownButton);
-
-const DropdownListBase = Skinnable(
-	kind({
-		name: 'DropdownListBase',
-
-		propTypes: {
-			/*
-			 * The selections for Dropdown
-			 *
-			 * @type {String[]|Array.<{key: (Number|String), children: (String|Component)}>}
-			 */
-			children: PropTypes.oneOfType([
-				PropTypes.arrayOf(PropTypes.string),
-				PropTypes.arrayOf(PropTypes.shape({
-					children: EnactPropTypes.renderable.isRequired,
-					key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
-				}))
-			]),
-
-			/*
-			 * The initial selected index when `selected` is not defined.
-			 *
-			 * @type {Number}
-			 */
-			defaultSelected: PropTypes.number,
-
-			/*
-			 * Called when an item is selected.
-			 *
-			 * @type {Function}
-			 */
-			onSelect: PropTypes.func,
-
-			/*
-			 * Callback function that will receive the scroller's scrollTo() method
-			 *
-			 * @type {Function}
-			 */
-			scrollTo: PropTypes.func,
-
-			/*
-			 * Index of the selected item.
-			 *
-			 * @type {Number}
-			 */
-			selected: PropTypes.number,
-
-			/*
-			 * The width of DropdownList.
-			 *
-			 * @type {('huge'|'large'|'medium'|'small'|'tiny')}
-			 */
-			width: PropTypes.oneOf(['tiny', 'small', 'medium', 'large', 'huge'])
-		},
-
-		styles: {
-			css,
-			className: 'dropDownList'
-		},
-
-		computed: {
-			className: ({width, styler}) => styler.append(width)
-		},
-
-		render: ({children, onSelect, scrollTo, selected, ...rest}) => {
-			delete rest.width;
-
-			return (
-				<Group
-					{...rest}
-					cbScrollTo={scrollTo}
-					childComponent={Item}
-					component={children ? Scroller : null}
-					onSelect={onSelect}
-					select="radio"
-					selected={selected}
-				>
-					{children}
-				</Group>
-			);
-		}
-	})
-);
-
-class DropdownList extends React.Component {
-	static displayName = 'DropdownList'
-
-	static propTypes = {
-		/*
-		 * Index of the selected item.
-		 *
-		 * @type {Number}
-		 */
-		selected: PropTypes.number
-	}
-
-	componentDidMount () {
-		// eslint-disable-next-line react/no-find-dom-node
-		this.node = ReactDOM.findDOMNode(this);
-		Spotlight.set(this.node.dataset.spotlightId, {leaveFor: {up: '', down: ''}});
-		this.isScrolledIntoView = false;
-	}
-
-	componentDidUpdate () {
-		this.scrollIntoView();
-	}
-
-	getNodeToFocus = (selected) => {
-		const scrollIndex = selected > scrollOffset ? selected - scrollOffset : 0;
-
-		return {
-			nodeToFocus: this.node.querySelector(`[data-index='${selected}']`),
-			nodeToScroll: this.node.querySelector(`[data-index='${scrollIndex}']`)
-		};
-	}
-
-	getScrollTo = (scrollTo) => {
-		this.scrollTo = scrollTo;
-	}
-
-	scrollIntoView = () => {
-		if (!this.isScrolledIntoView) {
-			if (isSelectedValid(this.props)) {
-				const {nodeToFocus, nodeToScroll} = this.getNodeToFocus(this.props.selected);
-
-				this.scrollTo({animate: false, node: nodeToScroll});
-				Spotlight.focus(nodeToFocus);
-			}
-			this.isScrolledIntoView = true;
-		}
-	}
-
-	render () {
-		return (
-			<DropdownListBase {...this.props} scrollTo={this.getScrollTo} />
-		);
-	}
-}
 
 /**
  * A stateless Dropdown component.
