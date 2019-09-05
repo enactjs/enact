@@ -439,28 +439,25 @@ const VirtualListBaseFactory = (type) => {
 			this.isScrolledByJump = false;
 
 			if (nextIndex >= 0) {
-				const {dataSize} = this.props;
-				const column = index % dimensionToExtent;
-				const row = (index - column) % dataSize / dimensionToExtent;
-				const nextColumn = nextIndex % dimensionToExtent;
-				const nextRow = (nextIndex - nextColumn) % dataSize / dimensionToExtent;
-				let
-					isNextItemInView = false,
-					numOfItemsInPage;
+				const
+					row = Math.floor(index / dimensionToExtent),
+					nextRow = Math.floor(nextIndex / dimensionToExtent);
+				let isNextItemInView = false;
 
 				if (this.props.itemSizes) {
 					isNextItemInView = this.uiRefCurrent.itemPositions[nextIndex].position >= scrollPositionTarget &&
 						this.uiRefCurrent.getItemBottomPosition(nextIndex) <= scrollPositionTarget + clientSize;
 				} else {
-					const firstFullyVisibleIndex = Math.ceil(scrollPositionTarget / gridSize) * dimensionToExtent;
-					numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
+					const
+						firstFullyVisibleIndex = Math.ceil(scrollPositionTarget / gridSize) * dimensionToExtent,
+						numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
 					isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
 				}
 
 				this.lastFocusedIndex = nextIndex;
 
 				// VirtualGridList does not support different item size yet.
-				if (isNextItemInView && (this.props.itemSizes || numOfItemsInPage !== dimensionToExtent) || !this.props.itemSizes && row === nextRow) {
+				if (isNextItemInView || row === nextRow) {
 					// The next item could be still out of viewport. So we need to prevent scrolling into view with `isScrolledBy5way` flag.
 					this.isScrolledBy5way = true;
 					this.focusByIndex(nextIndex);
