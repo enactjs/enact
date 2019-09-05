@@ -456,7 +456,6 @@ const VirtualListBaseFactory = (type) => {
 
 				this.lastFocusedIndex = nextIndex;
 
-				// VirtualGridList does not support different item size yet.
 				if (isNextItemInView || row === nextRow) {
 					// The next item could be still out of viewport. So we need to prevent scrolling into view with `isScrolledBy5way` flag.
 					this.isScrolledBy5way = true;

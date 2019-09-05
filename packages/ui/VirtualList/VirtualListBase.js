@@ -738,6 +738,9 @@ const VirtualListBaseFactory = (type) => {
 			if (this.contentRef.current) {
 				this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
 
+				// The `x`, `y` as parameters in scrollToPosition() are the position when stopping scrolling.
+				// But the `x`, `y` as parameters in setScrollPosition() are the position between current position and the position stopping scrolling.
+				// To know the position when stopping scrolling here, `targetX` and `targetY` are passed and cached in `this.scrollPositionTarget`.
 				if (this.isPrimaryDirectionVertical) {
 					this.scrollPositionTarget = targetY;
 				} else {
