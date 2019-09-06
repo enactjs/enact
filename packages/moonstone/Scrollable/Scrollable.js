@@ -544,6 +544,28 @@ class ScrollableBase extends Component {
 			}
 
 			this.uiRef.current.scrollToAccumulatedTarget(pageDistance, true, this.props.overscrollEffectOn.pageKey);
+		} else if (!Spotlight.getPointerMode()) { // no need to focus on pointer mode
+			const
+				contentNode = this.uiRef.current.childRefCurrent.containerRef.current,
+				originNode = focusedItem || contentNode,
+				contentRect = contentNode.getBoundingClientRect(),
+				originRect = originNode.getBoundingClientRect(),
+				x = (originRect.left + originRect.right) / 2,
+				y = direction === 'up' ? contentRect.top : contentRect.bottom,
+				position = {x, y},
+				{current: {containerRef: {current}}} = this.uiRef,
+				target = getTargetInViewByDirectionFromPosition(
+					reverseDirections[direction],
+					position,
+					current
+				);
+
+			if (target) {
+				if (target !== focusedItem) {
+					Spotlight.focus(target);
+				}
+				this.pointToFocus = null;
+			}
 		}
 	}
 
