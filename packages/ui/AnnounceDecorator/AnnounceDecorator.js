@@ -34,7 +34,8 @@ const defaultConfig = {
  * called to alert the user for accessibility notifications.
  *
  * By default, the function is passed in the `announce` prop but may be customized by specifying the
- * `prop` config member.
+ * `prop` config member. In addition to the configured prop, this HoC also adds an additional child
+ * component to the passed `children` prop.
  *
  * Example:
  * ```
