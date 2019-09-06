@@ -108,6 +108,7 @@ class IncrementSliderWithMinValue extends React.Component {
 				value: props.value
 			};
 		}
+		return null;
 	}
 
 	handleChange = ({value}) => this.setState({value})
