@@ -75,8 +75,13 @@ const defaultConfig = {
 /**
  * Constructs a Spotlight 5-way navigation-enabled higher-order component.
  *
+ * Note: This HoC passes a number of props to the wrapped component that should be passed to the
+ * main DOM node.
+ *
  * Example:
  * ```
+ *	const Component = ({myProp, ...rest}) => (<div {...rest}>
+ *	...
  *	const SpottableComponent = Spottable(Component);
  * ```
  * @class Spottable
