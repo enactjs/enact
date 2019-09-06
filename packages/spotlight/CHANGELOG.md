@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [3.0.0] - 2019-09-03
+
+### Fixed
+
+- `spotlight` TypeScript signatures
+
 ## [3.0.0-rc.4] - 2019-08-22
 
 No significant changes.

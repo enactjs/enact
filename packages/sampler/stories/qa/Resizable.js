@@ -8,7 +8,7 @@ import SelectableItem from '@enact/moonstone/SelectableItem';
 
 const data = [
 	'a',
-	'ABCDEFGHIJKLMNOPQRSTUVW',
+	'ABCDEFGHIJKLMNOPQRSTUVW12345',
 	'c'
 ];
 
@@ -48,7 +48,7 @@ storiesOf('Resizable', module)
 		() => (
 			<Scroller style={{height: ri.unit(399, 'rem'), width: ri.unit(501, 'rem')}}>
 				<SelectableItem>
-					SELECTABLE ITEM ABCDEFG
+					SELECTABLE ITEM ABCDEFGHIJ
 				</SelectableItem>
 			</Scroller>
 		)

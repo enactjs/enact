@@ -816,9 +816,7 @@ const VirtualListBaseFactory = (type) => {
 			this.scrollPosition = pos;
 			this.updateMoreInfo(dataSize, pos);
 
-			if (firstIndex !== newFirstIndex) {
-				this.setState({firstIndex: newFirstIndex});
-			}
+			this.setState({firstIndex: newFirstIndex});
 		}
 
 		// For individually sized item
@@ -1058,21 +1056,26 @@ const VirtualListBaseFactory = (type) => {
 
 		// render
 
-		mergeClasses = (className) => {
+		getContainerClasses (className) {
 			let containerClass = null;
 
 			if (type === Native) {
-				containerClass = (this.isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
+				containerClass = this.isPrimaryDirectionVertical ? css.vertical : css.horizontal;
 			}
 
 			return classNames(css.virtualList, containerClass, className);
+		}
+
+		getContentClasses () {
+			return type === Native ? null : css.content;
 		}
 
 		render () {
 			const
 				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
 				{cc, itemContainerRef, primary} = this,
-				containerClasses = this.mergeClasses(className);
+				containerClasses = this.getContainerClasses(className),
+				contentClasses = this.getContentClasses();
 
 			delete rest.cbScrollTo;
 			delete rest.childProps;
@@ -1099,7 +1102,7 @@ const VirtualListBaseFactory = (type) => {
 
 			return (
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.containerRef} style={style}>
-					<div {...rest} ref={this.contentRef}>
+					<div {...rest} className={contentClasses} ref={this.contentRef}>
 						{itemsRenderer({cc, itemContainerRef, primary})}
 					</div>
 				</div>
