@@ -8,12 +8,16 @@
 import kind from '@enact/core/kind';
 import Button from '@enact/moonstone/Button';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
+import React from 'react';
 
 const MyApp = kind({
-    name: 'MyApp',
-    render: () => (<Button>Hello, Enact!</Button>);
+	name: 'MyApp',
+	render: () => (<Button>Hello, Enact!</Button>)
 });
+
 const MyMoonstoneApp = MoonstoneDecorator(MyApp);
+
+export default MyMoonstoneApp;
 ```
 
 > Note: The moonstone decorator must be applied to the base component. This decorator also applies
