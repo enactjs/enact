@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Changed
+
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to move spotlight to the last item when unable to scroll by page up/down keys
+
 ### Fixed
 
 - `moonstone/Scroller` to restore focus properly when pressing page up after holding 5-way down
