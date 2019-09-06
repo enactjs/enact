@@ -52,22 +52,14 @@ const FormCheckboxItemBase = kind({
 		publicClassNames: ['formCheckboxItem']
 	},
 
-	computed: {
-		itemIcon: ({css, itemIcon}) => {
-			return itemIcon ? (
-				<span className={css.itemIcon}>{itemIcon}</span>
-			) : null;
-		}
-	},
-
 	render: ({children, css, ...props}) => (
 		<ToggleItemBase
 			data-webos-voice-intent="SelectCheckItem"
 			{...props}
 			css={css}
-			iconComponent={FormCheckbox}
+			iconComponent={<FormCheckbox className={componentCss.toggleIcon} />}
 		>
-			<span className={componentCss.content}>{children}</span>
+			{children}
 		</ToggleItemBase>
 	)
 });

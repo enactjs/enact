@@ -67,7 +67,7 @@ const SlotItemBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['slotItem']
+		publicClassNames: ['slotItem', 'slot']
 	},
 
 	render: (props) => {
