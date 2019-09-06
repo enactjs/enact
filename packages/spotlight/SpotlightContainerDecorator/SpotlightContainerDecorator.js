@@ -87,7 +87,9 @@ const defaultConfig = {
  *
  * Example:
  * ```
- *	const Component = ({myProp, ...rest}) => (<div {...rest}>
+ *	const Component = ({myProp, ...rest}) => (
+ *    <div {...rest}>{myProp}</div>
+ *  );
  *	...
  *	const DefaultContainer = SpotlightContainerDecorator(Component);
  *	const FocusDefaultContainer = SpotlightContainerDecorator({enterTo: 'default-element'}, Component);

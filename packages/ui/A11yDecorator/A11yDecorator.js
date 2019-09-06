@@ -39,7 +39,9 @@ const defaultConfig = {
  *
  * Usage:
  * ```
- * const MyComponentBase = ({myProp, ...rest}) => (<div {...rest}>
+ * const MyComponentBase = ({myProp, ...rest}) => (
+ *    <div {...rest}>{myProp}</div>
+ *  );
  * ...
  * const MyComponent = A11yDecorator(MyComponentBase);
  *

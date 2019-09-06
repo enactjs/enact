@@ -80,7 +80,9 @@ const defaultConfig = {
  *
  * Example:
  * ```
- *	const Component = ({myProp, ...rest}) => (<div {...rest}>
+ *	const Component = ({myProp, ...rest}) => (
+ *    <div {...rest}>{myProp}</div>
+ *  );
  *	...
  *	const SpottableComponent = Spottable(Component);
  * ```

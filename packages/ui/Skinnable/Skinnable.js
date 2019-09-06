@@ -128,7 +128,7 @@ const SkinContext = React.createContext(null);
  * const MyApp = ({skinName, ...rest) => (<div {...props}>{skinName}</div>);
  * ...
  * App = Skinnable({
- *  prop: 'skinName',
+ * 	prop: 'skinName',
  * 	skins: {
  * 		dark: 'moonstone',
  * 		light: 'moonstone-light'

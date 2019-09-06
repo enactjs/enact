@@ -86,7 +86,9 @@ add('cancel', 27);
  * ```
  * import Cancelable from '@enact/ui/Cancelable';
  *
- * const MyComponent = ({myProp, ...rest}) => (<div {...rest}>
+ * const MyComponent = ({myProp, ...rest}) => (
+ *    <div {...rest}>{myProp}</div>
+ *  );
  * ...
  * const CancelableComponent = Cancelable(
  *   {cancel: function (ev, props) {
