@@ -59,7 +59,7 @@ const ProgressBarBase = kind({
 		highlighted: PropTypes.bool,
 
 		/**
-		 * Disables tooltip reversal if proportion is greater than 0.5.
+		 * Disables horizontal tooltip reversal if proportion is greater than 0.5.
 		 *
 		 * @type {Boolean}
 		 * @default false

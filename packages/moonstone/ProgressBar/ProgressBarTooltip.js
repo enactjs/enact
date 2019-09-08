@@ -45,7 +45,7 @@ const ProgressBarTooltipBase = kind({
 
 	propTypes: /** @lends moonstone/ProgressBar.ProgressBarTooltip.prototype */{
 		/**
-		 * Disables tooltip reversal if proportion is greater than 0.5.
+		 * Disables horizontal tooltip reversal if proportion is greater than 0.5.
 		 *
 		 * @type {Boolean}
 		 * @default false
