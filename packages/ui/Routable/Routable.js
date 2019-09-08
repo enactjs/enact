@@ -4,36 +4,38 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {Router, propTypes, toSegments} from './Router';
+import Route from './Route';
+import Router from './Router';
+import {propTypes, toSegments} from './util';
 
 /**
- * Default config for [`Routable`]{@link moonstone/Panels.Routable}.
+ * Default config for [`Routable`]{@link ui/Routable.Routable}.
  *
- * @memberof moonstone/Panels.Routable
+ * @memberof ui/Routable.Routable
  * @hocconfig
  */
 const defaultConfig = {
 	/**
 	 * The event to listen to for path changes.
 	 *
-	 * This defines the actual name of the [navigate]{@link moonstone/Panels.Routable#navigate}
+	 * This defines the actual name of the [navigate]{@link ui/Routable.Routable#navigate}
 	 * property.
 	 *
 	 * @type {String}
 	 * @required
-	 * @memberof moonstone/Panels.Routable.defaultConfig
+	 * @memberof ui/Routable.Routable.defaultConfig
 	 */
 	navigate: null
 };
 
 /**
- * A higher-order component that provides support for Routes as children of Panels which are
- * selected via `path` instead of the usual flat array of Panels.
+ * A higher-order component that provides support for mapping Routes as children of a component
+ * which are selected via `path` instead of the usual flat array.
  *
  * When using `Routable` you must specify the `navigate` config option.
  *
  * @class Routable
- * @memberof moonstone/Panels
+ * @memberof ui/Routable
  * @hoc
  * @public
  */
@@ -45,7 +47,7 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 	return kind({
 		name: 'Routable',
 
-		propTypes: /** @lends moonstone/Panels.Routable.prototype */ {
+		propTypes: /** @lends ui/Routable.Routable.prototype */ {
 			/**
 			 * Path to the active panel.
 			 *
@@ -99,4 +101,7 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default Routable;
-export {Routable};
+export {
+	Routable,
+	Route
+};

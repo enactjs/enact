@@ -4,31 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import warning from 'warning';
 
-const toSegments = (path) => Array.isArray(path) ? path : path.split('/').slice(1);
-
-const getPaths = (routes, base) => {
-	let result = [];
-	Object.keys(routes).filter(s => s[0] !== '$').forEach(p => {
-		const path = base + '/' + p;
-		result.push(path);
-		result = result.concat(getPaths(routes[p], path));
-	});
-
-	return result;
-};
-
-const stringifyRoutes = (routes) => {
-	const pad = '\n\t';
-	const paths = getPaths(routes, '');
-	return pad + paths.join(pad);
-};
-
-const propTypes = {
-	path: PropTypes.oneOfType([
-		PropTypes.arrayOf(PropTypes.string),	// array of path segments
-		PropTypes.string						// URI-style path
-	])
-};
+import {propTypes, stringifyRoutes, toSegments} from './util';
 
 /**
  * A Router component for use with [`Panels`]{@link moonstone/Panels.Panels}
@@ -198,62 +174,8 @@ const RouterBase = class extends React.Component {
 
 const Router = ForwardRef({prop: 'componentRef'}, RouterBase);
 
-/**
- * Used with {@link moonstone/Panels.Routable} to define the `path` segment and the
- * `component` to render.
- *
- *`Route` elements can be nested to build multiple level paths.
- *
- * In the below example, `Panels` would render `SettingsPanel` with breadcrumbs to
- * navigate `AppPanel` and `HomePanel`.
- *
- * ```
- *	<Panels path="/app/home/settings" onSelectBreadcrumb={this.handleNavigate}>
- *		<Route path="app" component={AppPanel}>
- *			<Route path="home" component={HomePanel}>
- *				<Route path="settings" component={SettingsPanel} />
- *			</Route>
- *		</Route>
- *		<Route path="admin" component={AdminPanel} />
- *		<Route path="help" component={HelpPanel} />
- *	</Panels>
- * ```
- *
- * @class Route
- * @ui
- * @memberof moonstone/Panels
- * @public
- */
-const Route = () => null;
-
-Route.propTypes = {
-	/**
-	 * The component to render when the `path` for this Route matches the path of the
-	 * {@link moonstone/Panels.Routable} container.
-	 *
-	 * @type {String|Component}
-	 * @required
-	 * @public
-	 * @memberof moonstone/Panels.Route.prototype
-	 */
-	component: EnactPropTypes.renderable.isRequired,
-
-	/**
-	 * The name of the path segment.
-	 *
-	 * @type {String}
-	 * @required
-	 * @public
-	 * @memberof moonstone/Panels.Route.prototype
-	 */
-	path: PropTypes.string.isRequired
-};
-
 export default Router;
 export {
-	propTypes,
-	Route,
 	Router,
-	RouterBase,
-	toSegments
+	RouterBase
 };

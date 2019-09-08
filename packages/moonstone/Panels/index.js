@@ -13,14 +13,14 @@
  * @exports Route
  */
 
+import Routable, {Route} from '@enact/ui/Routable';
+
 import ActivityPanels from './ActivityPanels';
 import AlwaysViewingPanels from './AlwaysViewingPanels';
 import Breadcrumb from './Breadcrumb';
 import Header, {HeaderBase} from './Header';
 import Panel from './Panel';
 import Panels from './Panels';
-import Routable from './Routable';
-import {Route} from './Router';
 
 export default Panels;
 export {
