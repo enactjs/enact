@@ -48,7 +48,7 @@ const ProgressBarTooltipBase = kind({
 		 * Disables tooltip reversal if proportion is greater than 0.5.
 		 *
 		 * @type {Boolean}
-		 * @default true
+		 * @default false
 		 * @public
 		 */
 		noTooltipFlip: PropTypes.bool,
