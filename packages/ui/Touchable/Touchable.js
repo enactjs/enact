@@ -199,6 +199,9 @@ const defaultConfig = {
  * and `onTap` -- across mouse and touch interfaces along with support for common gestures including
  * `onFlick`, `onDrag`, `onHold`, and `onHoldPulse`.
  *
+ * Note: This HoC passes a number of props to the wrapped component that should be passed to the
+ * main DOM node or consumed by the wrapped compoment.
+ *
  * @class Touchable
  * @memberof ui/Touchable
  * @hoc
