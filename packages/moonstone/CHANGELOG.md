@@ -8,6 +8,34 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Dropdown` to add new size `x-large`
 
+### Fixed
+
+- `moonstone/Header` to fix font size of `titleBelow` and `subTitleBelow`
+- `moonstone/Dropdown` to apply `tiny` width
+
+## [3.0.1] - 2019-09-09
+
+### Fixed
+
+- `moonstone/Button` text alignment when `color` is set
+- `moonstone/FormCheckboxItem` opacity of `itemIcon` value when focused and disabled
+- `moonstone/Notification` to shrink to fit small content
+- `moonstone/Scroller` to restore focus properly when pressing page up after holding 5-way down
+- `moonstone/Switch` colors to improve visibility
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly navigate from paging controls to items by 5-way key when `focusableScrollbar` is false
+
+## [3.0.0] - 2019-09-03
+
+### Fixed
+
+- `moonstone/ContextualPopupDecorator` layout in large text mode in RTL locales
+- `moonstone/Dropdown` performance when using many options
+- `moonstone/ProgressBar` fill color when `highlighted` is set
+- `moonstone/Scroller` to correctly handle horizontally scrolling focused elements into view when using a `direction` value of `'both'`
+- `moonstone/Skinnable` TypeScript signature
+- `moonstone/Slider` progress bar fill color when focused with `noFill` set
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to render the first item properly when the `dataSize` prop is updated and the function as a parameter of the `cbScrollTo` prop is called
+
 ## [3.0.0-rc.4] - 2019-08-22
 
 ### Fixed

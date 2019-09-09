@@ -2,6 +2,7 @@
  * Exports the {@link moonstone/Skinnable.Skinnable} higher-order component (HOC).
  *
  * @module moonstone/Skinnable
+ * @exports Skinnable
  * @public
  */
 
@@ -23,6 +24,9 @@ const defaultConfig = {
  * `Skinnable` comes pre-configured for Moonstone's supported skins: "dark" (default) and "light".
  * It is used to apply the relevant skinning classes to each component and has been used to
  * pre-select specific skins for some components.
+ *
+ * Note: This HoC passes `className` to the wrapped component. It must be passed to the main DOM
+ * node.
  *
  * @class Skinnable
  * @memberof moonstone/Skinnable

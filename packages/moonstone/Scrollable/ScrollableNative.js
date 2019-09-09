@@ -212,6 +212,20 @@ class ScrollableBaseNative extends Component {
 		}),
 
 		/**
+		 * Specifies preventing keydown events from bubbling up to applications.
+		 * Valid values are `'none'`, and `'programmatic'`.
+		 *
+		 * When it is `'none'`, every keydown event is bubbled.
+		 * When it is `'programmatic'`, an event bubbling is not allowed for a keydown input
+		 * which invokes programmatic spotlight moving.
+		 *
+		 * @type {String}
+		 * @default 'none'
+		 * @private
+		 */
+		preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
+
+		/**
 		 * Sets the hint string read when focusing the next button in the vertical scroll bar.
 		 *
 		 * @type {String}
@@ -257,7 +271,8 @@ class ScrollableBaseNative extends Component {
 			pageKey: false,
 			scrollbarButton: false,
 			wheel: true
-		}
+		},
+		preventBubblingOnKeyDown: 'none'
 	}
 
 	constructor (props) {
@@ -509,16 +524,26 @@ class ScrollableBaseNative extends Component {
 		const
 			spotItem = Spotlight.getCurrent(),
 			positionFn = this.childRef.current.calculatePositionOnFocus,
-			{containerRef} = this.uiRef.current.childRefCurrent;
+			containerNode = this.uiRef.current.childRefCurrent.containerRef.current;
 
-		if (spotItem && positionFn && containerRef.current && containerRef.current.contains(spotItem)) {
+		if (spotItem && positionFn && containerNode && containerNode.contains(spotItem)) {
 			const lastPos = this.lastScrollPositionOnFocus;
 			let pos;
 
 			// If scroll animation is ongoing, we need to pass last target position to
 			// determine correct scroll position.
 			if (this.uiRef.current.scrolling && lastPos) {
-				pos = positionFn({item: spotItem, scrollPosition: (this.props.direction !== 'horizontal') ? lastPos.top : lastPos.left});
+				const containerRect = getRect(containerNode);
+				const itemRect = getRect(spotItem);
+				let scrollPosition;
+
+				if (this.props.direction === 'horizontal' || this.props.direction === 'both' && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {
+					scrollPosition = lastPos.left;
+				} else if (this.props.direction === 'vertical' || this.props.direction === 'both' && !(itemRect.top >= containerRect.top && itemRect.bottom <= containerRect.bottom)) {
+					scrollPosition = lastPos.top;
+				}
+
+				pos = positionFn({item: spotItem, scrollPosition});
 			} else {
 				// scrollInfo passes in current `scrollHeight` and `scrollTop` before calculations
 				const
@@ -965,6 +990,7 @@ class ScrollableBaseNative extends Component {
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
 				'data-spotlight-id': spotlightId,
 				focusableScrollbar,
+				preventBubblingOnKeyDown,
 				scrollDownAriaLabel,
 				scrollLeftAriaLabel,
 				scrollRightAriaLabel,
@@ -1042,6 +1068,8 @@ class ScrollableBaseNative extends Component {
 									disabled={!isVerticalScrollbarVisible}
 									focusableScrollButtons={focusableScrollbar}
 									nextButtonAriaLabel={downButtonAriaLabel}
+									onKeyDownButton={this.onKeyDown}
+									preventBubblingOnKeyDown={preventBubblingOnKeyDown}
 									previousButtonAriaLabel={upButtonAriaLabel}
 									rtl={rtl}
 								/> :
@@ -1056,6 +1084,8 @@ class ScrollableBaseNative extends Component {
 								disabled={!isHorizontalScrollbarVisible}
 								focusableScrollButtons={focusableScrollbar}
 								nextButtonAriaLabel={rightButtonAriaLabel}
+								onKeyDownButton={this.onKeyDown}
+								preventBubblingOnKeyDown={preventBubblingOnKeyDown}
 								previousButtonAriaLabel={leftButtonAriaLabel}
 								rtl={rtl}
 							/> :

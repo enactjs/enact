@@ -1,10 +1,8 @@
 /**
- * Exports the {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
- * higher-order component and {@link spotlight/SpotlightContainerDecorator.spotlightDefaultClass}
- * `className`. The default export is
- * {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}.
+ * A component for managing groups of spottable components.
  *
  * @module spotlight/SpotlightContainerDecorator
+ * @exports SpotlightContainerDecorator
  */
 
 import {call, forProp, forward, handle, oneOf, returnsTrue, stop} from '@enact/core/handle';
@@ -81,11 +79,18 @@ const defaultConfig = {
 };
 
 /**
- * Constructs a higher-order component that allows Spotlight focus to be passed to
- * its own configurable hierarchy of spottable child controls.
+ * Constructs a higher-order component that allows Spotlight focus to be passed to its own
+ * configurable hierarchy of spottable child controls.
+ *
+ * Note: This HoC passes a number of props to the wrapped component that should be passed to the
+ * main DOM node.
  *
  * Example:
  * ```
+ *	const Component = ({myProp, ...rest}) => (
+ *		<div {...rest}>{myProp}</div>
+ *	);
+ *	...
  *	const DefaultContainer = SpotlightContainerDecorator(Component);
  *	const FocusDefaultContainer = SpotlightContainerDecorator({enterTo: 'default-element'}, Component);
  * ```

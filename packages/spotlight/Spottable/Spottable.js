@@ -1,9 +1,9 @@
 /**
- * Exports the {@link spotlight/Spottable.Spottable} higher-order component and
- * the {@link spotlight/Spottable.spottableClass} `className`. The default export is
- * {@link spotlight/Spottable.Spottable}.
+ * Adds spottability to components.
  *
  * @module spotlight/Spottable
+ * @exports Spottable
+ * @exports spottableClass
  */
 
 import {forward, forwardWithPrevent, handle, preventDefault, stop} from '@enact/core/handle';
@@ -75,8 +75,15 @@ const defaultConfig = {
 /**
  * Constructs a Spotlight 5-way navigation-enabled higher-order component.
  *
+ * Note: This HoC passes a number of props to the wrapped component that should be passed to the
+ * main DOM node.
+ *
  * Example:
  * ```
+ *	const Component = ({myProp, ...rest}) => (
+ *		<div {...rest}>{myProp}</div>
+ *	);
+ *	...
  *	const SpottableComponent = Spottable(Component);
  * ```
  * @class Spottable

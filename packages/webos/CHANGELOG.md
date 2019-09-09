@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
+## [3.0.1] - 2019-09-09
+
+No significant changes.
+
+## [3.0.0] - 2019-09-03
+
+### Changed
+
+- `webos/LS2Request` to automatically prefix `luna://` service protocol when absent
+
 ## [3.0.0-rc.4] - 2019-08-22
 
 No significant changes.

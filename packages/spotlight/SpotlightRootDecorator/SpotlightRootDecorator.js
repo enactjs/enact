@@ -3,6 +3,7 @@
  * higher-order component.
  *
  * @module spotlight/SpotlightRootDecorator
+ * @exports SpotlightRootDecorator
  */
 
 import hoc from '@enact/core/hoc';
@@ -34,18 +35,21 @@ const defaultConfig = {
 };
 
 /**
- * Constructs a higher-order component that initializes and enables Spotlight
- * 5-way navigation within an application.
+ * Constructs a higher-order component that initializes and enables Spotlight 5-way navigation
+ * within an application.
+ *
+ * No additional properties are passed to the wrapped component.
  *
  * Example:
  * ```
  *	const App = SpotlightRootDecorator(ApplicationView);
  * ```
- * @param  {Object} defaultConfig Set of default configuration parameters
- * @param  {Function} higher-order component
  *
- * @returns {Function} SpotlightRootDecorator
+ * @class SpotlightRootDecorator
  * @memberof spotlight/SpotlightRootDecorator
+ * @param  {Object} defaultConfig Set of default configuration parameters
+ * @param  {Function} Wrapped higher-order component
+ * @returns {Function} SpotlightRootDecorator
  * @hoc
  */
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
