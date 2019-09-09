@@ -140,7 +140,7 @@
 
 	// Only center the text if there is no icon. Otherwise, the default is to just leave its
 	// alignment alone, since we don't want to try to override marquee's directionality alignment.
-	&:not(.hasIcon) {
+	&:not(.hasIcon):not(.hasColor) {
 		.marquee {
 			text-align: center;
 		}
