@@ -550,7 +550,7 @@ class ScrollableBase extends Component {
 						yAdjust = isUp ? 1 : -1,
 						x = clamp(contentRect.left, contentRect.right, (clientRect.right + clientRect.left) / 2),
 						y = bounds.maxTop <= scrollTop + pageDistance || 0 >= scrollTop + pageDistance ?
-							contentRect[direction === 'up' ? 'top' : 'bottom'] + yAdjust :
+							contentRect[isUp ? 'top' : 'bottom'] + yAdjust :
 							clamp(contentRect.top, contentRect.bottom, (clientRect.bottom + clientRect.top) / 2);
 
 					focusedItem.blur();
