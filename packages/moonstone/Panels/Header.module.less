@@ -58,7 +58,7 @@
 		}
 	}
 
-	// Standard Header
+	// Standard and Dense Header
 	&.dense,
 	&.standard {
 		height: @moon-header-standard-height;
@@ -83,8 +83,12 @@
 			max-width: 100%;
 		}
 
+	}
+
+	// Standard Header
+	&.standard {
 		.titlesCell {
-			margin-bottom: 15px;
+			margin-bottom: 9px;
 		}
 	}
 
@@ -95,6 +99,10 @@
 		.title {
 			font-size: @moon-header-dense-title-font-size;
 			font-weight: @moon-header-dense-title-font-weight;
+		}
+
+		.titlesCell {
+			margin-bottom: 15px;
 		}
 
 		.titleBelow,
