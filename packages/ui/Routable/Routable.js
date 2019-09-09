@@ -77,6 +77,8 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 			handleNavigate: ({path}, {path: currentPath, [navigate]: handler}) => {
 				if (!path) return;
 
+				// This is still a pretty naive implementation of relative pathing. More will need
+				// to be done here to fully support this capability (e.g. parent path support).
 				if (path[0] === '.') {
 					const currentSegments = toSegments(currentPath);
 					const nextSegments = toSegments(path);
@@ -86,8 +88,8 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 
 				handler({path});
 			},
-			// Adds `path` to the payload of navigate handler in the same format (String, or String[])
-			// as the current path prop.
+			// Adds `path` to the payload of navigate handler in the same format (String, or
+			// String[]) as the current path prop.
 			[navigate]: ({index, ...rest}, {path, [navigate]: handler}) => {
 				if (handler) {
 					const p = toSegments(path).slice(0, index + 1);
