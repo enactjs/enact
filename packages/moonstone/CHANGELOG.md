@@ -2,13 +2,18 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Header` to fix font size of `titleBelow` and `subTitleBelow`
+
 ## [3.0.1] - 2019-09-09
 
 ### Fixed
 
 - `moonstone/Button` text alignment when `color` is set
 - `moonstone/FormCheckboxItem` opacity of `itemIcon` value when focused and disabled
-- `moonstone/Header` to fix font size of `titleBelow` and `subTitleBelow`
 - `moonstone/Notification` to shrink to fit small content
 - `moonstone/Scroller` to restore focus properly when pressing page up after holding 5-way down
 - `moonstone/Switch` colors to improve visibility
