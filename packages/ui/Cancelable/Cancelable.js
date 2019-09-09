@@ -79,10 +79,17 @@ add('cancel', 27);
  * function. If the component handles the event and wants to prevent upstream components from also
  * handling the event, the callback should invoke `stopPropagation()` on the event object.
  *
+ * Note: This HoC passes a number of props to the wrapped component that should be passed to the
+ * main DOM node.
+ *
  * Usage of config function:
  * ```
  * import Cancelable from '@enact/ui/Cancelable';
  *
+ * const MyComponent = ({myProp, ...rest}) => (
+ *    <div {...rest}>{myProp}</div>
+ *  );
+ * ...
  * const CancelableComponent = Cancelable(
  *   {cancel: function (ev, props) {
  *     // Can inspect either the `onCancel` event, `ev`, and/or the `props` to determine how
