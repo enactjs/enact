@@ -590,13 +590,15 @@ class ScrollableBaseNative extends Component {
 
 		if (scrollPossible) {
 			if (focusedItem) {
+				const contentNode = childRefCurrent.containerRef.current;
 				// Should do nothing when focusedItem is paging control button of Scrollbar
-				if (childRefCurrent.containerRef.current.contains(focusedItem)) {
+				if (contentNode.contains(focusedItem)) {
 					const
 						clientRect = focusedItem.getBoundingClientRect(),
 						x = (clientRect.right + clientRect.left) / 2,
-						y = (clientRect.bottom + clientRect.top) / 2;
-
+						y = bounds.maxTop - epsilon < scrollTop + pageDistance || epsilon > scrollTop + pageDistance ?
+							contentNode.getBoundingClientRect()[direction === 'up' ? 'top' : 'bottom'] :
+							(clientRect.bottom + clientRect.top) / 2;
 					focusedItem.blur();
 					if (!this.props['data-spotlight-container-disabled']) {
 						this.childRef.current.setContainerDisabled(true);
@@ -608,28 +610,6 @@ class ScrollableBaseNative extends Component {
 			}
 
 			this.uiRef.current.scrollToAccumulatedTarget(pageDistance, true, this.props.overscrollEffectOn.pageKey);
-		} else if (!Spotlight.getPointerMode()) { // no need to focus on pointer mode
-			const
-				contentNode = this.uiRef.current.childRefCurrent.containerRef.current,
-				originNode = focusedItem || contentNode,
-				contentRect = contentNode.getBoundingClientRect(),
-				originRect = originNode.getBoundingClientRect(),
-				x = (originRect.left + originRect.right) / 2,
-				y = direction === 'up' ? contentRect.top : contentRect.bottom,
-				position = {x, y},
-				{current: {containerRef: {current}}} = this.uiRef,
-				target = getTargetInViewByDirectionFromPosition(
-					reverseDirections[direction],
-					position,
-					current
-				);
-
-			if (target) {
-				if (target !== focusedItem) {
-					Spotlight.focus(target);
-				}
-				this.pointToFocus = null;
-			}
 		}
 	}
 
