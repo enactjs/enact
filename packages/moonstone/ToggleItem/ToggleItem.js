@@ -95,11 +95,10 @@ const ToggleItemBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['toggleItem']
+		publicClassNames: ['toggleItem', 'slot']
 	},
 
 	render: (props) => {
-
 		return (
 			<UiToggleItem
 				role="checkbox"

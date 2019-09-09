@@ -10,7 +10,7 @@ import classNames from 'classnames';
 import handle, {forward} from '@enact/core/handle';
 import platform from '@enact/core/platform';
 import {onWindowReady} from '@enact/core/snapshot';
-import {Job} from '@enact/core/util';
+import {clamp, Job} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import Spotlight, {getDirection} from '@enact/spotlight';
@@ -231,6 +231,20 @@ class ScrollableBase extends Component {
 		}),
 
 		/**
+		 * Specifies preventing keydown events from bubbling up to applications.
+		 * Valid values are `'none'`, and `'programmatic'`.
+		 *
+		 * When it is `'none'`, every keydown event is bubbled.
+		 * When it is `'programmatic'`, an event bubbling is not allowed for a keydown input
+		 * which invokes programmatic spotlight moving.
+		 *
+		 * @type {String}
+		 * @default 'none'
+		 * @private
+		 */
+		preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
+
+		/**
 		 * Sets the hint string read when focusing the next button in the vertical scroll bar.
 		 *
 		 * @type {String}
@@ -276,7 +290,8 @@ class ScrollableBase extends Component {
 			pageKey: false,
 			scrollbarButton: false,
 			wheel: true
-		}
+		},
+		preventBubblingOnKeyDown: 'none'
 	}
 
 	constructor (props) {
@@ -528,9 +543,10 @@ class ScrollableBase extends Component {
 				// Should do nothing when focusedItem is paging control button of Scrollbar
 				if (childRefCurrent.containerRef.current.contains(focusedItem)) {
 					const
+						contentRect = this.uiRef.current.childRefCurrent.containerRef.current.getBoundingClientRect(),
 						clientRect = focusedItem.getBoundingClientRect(),
-						x = (clientRect.right + clientRect.left) / 2,
-						y = (clientRect.bottom + clientRect.top) / 2;
+						x = clamp(contentRect.left, contentRect.right, (clientRect.right + clientRect.left) / 2),
+						y = clamp(contentRect.top, contentRect.bottom, (clientRect.bottom + clientRect.top) / 2);
 
 					focusedItem.blur();
 					if (!this.props['data-spotlight-container-disabled']) {
@@ -712,13 +728,15 @@ class ScrollableBase extends Component {
 				const position = {x, y};
 				const {current: {containerRef: {current}}} = this.uiRef;
 				const elemFromPoint = document.elementFromPoint(x, y);
-				const target =
-					getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
-					getTargetInViewByDirectionFromPosition(direction, position, current) ||
-					getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current);
+				if (elemFromPoint) {
+					const target =
+						getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
+						getTargetInViewByDirectionFromPosition(direction, position, current) ||
+						getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current);
 
-				if (target) {
-					Spotlight.focus(target);
+					if (target) {
+						Spotlight.focus(target);
+					}
 				}
 			}
 			this.pointToFocus = null;
@@ -911,6 +929,7 @@ class ScrollableBase extends Component {
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
 				'data-spotlight-id': spotlightId,
 				focusableScrollbar,
+				preventBubblingOnKeyDown,
 				scrollDownAriaLabel,
 				scrollLeftAriaLabel,
 				scrollRightAriaLabel,
@@ -989,6 +1008,8 @@ class ScrollableBase extends Component {
 									disabled={!isVerticalScrollbarVisible}
 									focusableScrollButtons={focusableScrollbar}
 									nextButtonAriaLabel={downButtonAriaLabel}
+									onKeyDownButton={this.onKeyDown}
+									preventBubblingOnKeyDown={preventBubblingOnKeyDown}
 									previousButtonAriaLabel={upButtonAriaLabel}
 									rtl={rtl}
 								/> :
@@ -1003,6 +1024,8 @@ class ScrollableBase extends Component {
 								disabled={!isHorizontalScrollbarVisible}
 								focusableScrollButtons={focusableScrollbar}
 								nextButtonAriaLabel={rightButtonAriaLabel}
+								onKeyDownButton={this.onKeyDown}
+								preventBubblingOnKeyDown={preventBubblingOnKeyDown}
 								previousButtonAriaLabel={leftButtonAriaLabel}
 								rtl={rtl}
 							/> :

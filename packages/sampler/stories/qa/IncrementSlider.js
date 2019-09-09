@@ -3,6 +3,7 @@ import ContextualPopupDecorator from '@enact/moonstone/ContextualPopupDecorator'
 import IconButton from '@enact/moonstone/IconButton';
 import IncrementSlider, {IncrementSliderBase} from '@enact/moonstone/IncrementSlider';
 import ri from '@enact/ui/resolution';
+import PropTypes from 'prop-types';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
@@ -88,11 +89,26 @@ class IncrementSliderWithContextualPopup extends React.Component {
 }
 
 class IncrementSliderWithMinValue extends React.Component {
+	static propTypes = {
+		value: PropTypes.number
+	}
+
 	constructor (props) {
 		super(props);
 		this.state = {
+			propValue: props.value,
 			value: 0
 		};
+	}
+
+	static getDerivedStateFromProps (props, state) {
+		if (props.value !== state.propValue) {
+			return {
+				propValue: props.value,
+				value: props.value
+			};
+		}
+		return null;
 	}
 
 	handleChange = ({value}) => this.setState({value})
@@ -104,7 +120,7 @@ class IncrementSliderWithMinValue extends React.Component {
 					max={number('max', IncrementSliderConfig)}
 					min={number('min', IncrementSliderConfig)}
 					onChange={this.handleChange}
-					value={number('value', IncrementSliderConfig, this.state.value)}
+					value={this.state.value}
 				/>
 			</div>
 		);
@@ -144,7 +160,7 @@ storiesOf('IncrementSlider', module)
 		() => (
 			<div>
 				Test the IncrementSlider by changing the values of max, min, and value knobs.
-				<IncrementSliderWithMinValue />
+				<IncrementSliderWithMinValue value={number('value', IncrementSliderConfig, 0)} />
 			</div>
 		)
 	);

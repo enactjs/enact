@@ -57,9 +57,9 @@ const FormCheckboxItemBase = kind({
 			data-webos-voice-intent="SelectCheckItem"
 			{...props}
 			css={css}
-			iconComponent={FormCheckbox}
+			iconComponent={<FormCheckbox className={componentCss.toggleIcon} />}
 		>
-			<span className={componentCss.content}>{children}</span>
+			{children}
 		</ToggleItemBase>
 	)
 });

@@ -2,6 +2,17 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [3.0.1] - 2019-09-09
+
+### Fixed
+
+- `moonstone/Button` text alignment when `color` is set
+- `moonstone/FormCheckboxItem` opacity of `itemIcon` value when focused and disabled
+- `moonstone/Notification` to shrink to fit small content
+- `moonstone/Scroller` to restore focus properly when pressing page up after holding 5-way down
+- `moonstone/Switch` colors to improve visibility
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to properly navigate from paging controls to items by 5-way key when `focusableScrollbar` is false
+
 ## [3.0.0] - 2019-09-03
 
 ### Fixed

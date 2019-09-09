@@ -141,6 +141,20 @@ const PopupBase = kind({
 		showCloseButton: PropTypes.bool,
 
 		/**
+		 * Tells the body element to shrink to the size of the content.
+		 *
+		 * Popup is composed of a [Layout]{@link ui/Layout.Layout} and [Cells]{@link ui/Layout.Cell}.
+		 * This informs the body cell to use the [shrink]{@link ui/Layout.Cell#shrink} property so
+		 * it will match the dimensions of its contents rather than expand to the width of the
+		 * Popup's assigned dimensions.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		shrinkBody: PropTypes.bool,
+
+		/**
 		 * The container id for {@link spotlight/Spotlight}.
 		 *
 		 * @type {String}
@@ -168,6 +182,7 @@ const PopupBase = kind({
 		noAnimation: false,
 		open: false,
 		showCloseButton: false,
+		shrinkBody: false,
 		spotlightRestrict: 'self-only'
 	},
 
@@ -200,7 +215,7 @@ const PopupBase = kind({
 		}
 	},
 
-	render: ({children, closeButton, css, noAnimation, onHide, onShow, open, spotlightId, spotlightRestrict, ...rest}) => {
+	render: ({children, closeButton, css, noAnimation, onHide, onShow, open, shrinkBody, spotlightId, spotlightRestrict, ...rest}) => {
 		delete rest.closeButtonAriaLabel;
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
@@ -224,7 +239,7 @@ const PopupBase = kind({
 					role="alert"
 					{...rest}
 				>
-					<Cell className={css.body}>
+					<Cell className={css.body} shrink={shrinkBody}>
 						{children}
 					</Cell>
 					{closeButton}
