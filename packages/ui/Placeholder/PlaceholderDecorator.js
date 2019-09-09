@@ -36,6 +36,8 @@ const defaultConfig = {
  * Containers must provide `registerPlaceholder`, `unregisterPlaceholder`, and `invalidateBounds`
  * methods via React's context for `PlaceholderDecorator` instances.
  *
+ * No additional properties are passed to the wrapped component.
+ *
  * @class PlaceholderDecorator
  * @memberof ui/Placeholder
  * @hoc

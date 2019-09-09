@@ -43,7 +43,11 @@ const defaultConfig = {
 };
 
 /**
- * A higher-order component that adds a FloatingLayer adjacent to wrapped component.
+ * A higher-order component that adds a FloatingLayer adjacent to the wrapped component.
+ *
+ * Any classes passed to the FloatingLayerDecorator will be applied to a wrapper surrounding the
+ * wrapped component and the floating layer. If specified in the config, `wrappedClassName` will be
+ * passed as `className` to the wrapped component.
  *
  * @class FloatingLayerDecorator
  * @memberof ui/FloatingLayer
