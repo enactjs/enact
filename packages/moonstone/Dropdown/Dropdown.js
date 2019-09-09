@@ -230,7 +230,7 @@ const DropdownBase = kind({
 				};
 			});
 		},
-		className: ({width, styler}) => styler.append(width),
+		className: ({width, styler}) => styler.append(`${width}Width`),
 		title: ({children, selected, title}) => {
 			if (isSelectedValid({children, selected})) {
 				const child = children[selected];
