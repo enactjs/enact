@@ -4,9 +4,10 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import {Link, Linkable} from './Link';
 import Route from './Route';
 import Router from './Router';
-import {propTypes, toSegments} from './util';
+import {propTypes, toSegments, RouteContext} from './util';
 
 /**
  * Default config for [`Routable`]{@link ui/Routable.Routable}.
@@ -73,6 +74,18 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 		},
 
 		handlers: {
+			handleNavigate: ({path}, {path: currentPath, [navigate]: handler}) => {
+				if (!path) return;
+
+				if (path[0] === '.') {
+					const currentSegments = toSegments(currentPath);
+					const nextSegments = toSegments(path);
+
+					path = '/' + currentSegments.concat(nextSegments).join('/');
+				}
+
+				handler({path});
+			},
 			// Adds `path` to the payload of navigate handler in the same format (String, or String[])
 			// as the current path prop.
 			[navigate]: ({index, ...rest}, {path, [navigate]: handler}) => {
@@ -92,16 +105,23 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 			index: ({path}) => toSegments(path).length - 1
 		},
 
-		render: ({children, index, path, ...rest}) => (
-			<Router {...rest} path={path} component={Wrapped} index={index}>
-				{children}
-			</Router>
-		)
+		render: ({children, handleNavigate, index, path, ...rest}) => {
+			return (
+				<RouteContext.Provider value={{navigate: handleNavigate, path}}>
+					<Router {...rest} path={path} component={Wrapped} index={index}>
+						{children}
+					</Router>
+				</RouteContext.Provider>
+			);
+		}
 	});
 });
 
 export default Routable;
 export {
+	Link,
+	Linkable,
 	Routable,
-	Route
+	Route,
+	RouteContext
 };

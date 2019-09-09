@@ -1,4 +1,7 @@
 import PropTypes from 'prop-types';
+import React from 'react';
+
+const RouteContext = React.createContext(null);
 
 const toSegments = (path) => Array.isArray(path) ? path : path.split('/').slice(1);
 
@@ -29,5 +32,6 @@ const propTypes = {
 export {
 	propTypes,
 	stringifyRoutes,
-	toSegments
+	toSegments,
+	RouteContext
 };
