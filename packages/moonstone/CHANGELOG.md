@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scroller` to restore focus properly when newly target is container in voice control
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to restore focus properly when newly target is container in voice control
 - `moonstone/Button` text alignment when `color` is set
 - `moonstone/FormCheckboxItem` opacity of `itemIcon` value when focused and disabled
 - `moonstone/Notification` to shrink to fit small content
