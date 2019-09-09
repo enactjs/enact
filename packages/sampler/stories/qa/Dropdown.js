@@ -31,7 +31,7 @@ storiesOf('Dropdown', module)
 				size={select('size', ['small', 'large'], Config)}
 				title={text('title', Config, 'Dropdown')}
 				style={{position: 'absolute', top: 'calc(50% - 4rem)'}}
-				width={select('width', ['tiny', 'small', 'medium', 'large', 'huge'], Config)}
+				width={select('width', ['tiny', 'small', 'medium', 'large', 'x-large', 'huge'], Config)}
 			>
 				{['Option 1', 'Option 2']}
 			</Dropdown>
@@ -48,7 +48,7 @@ storiesOf('Dropdown', module)
 				onSelect={action('onSelect')}
 				size={select('size', ['small', 'large'], Config)}
 				title={text('title', Config, 'Dropdown')}
-				width={select('width', ['tiny', 'small', 'medium', 'large', 'huge'], Config)}
+				width={select('width', ['tiny', 'small', 'medium', 'large', 'x-large', 'huge'], Config)}
 			>
 				{items(30)}
 			</Dropdown>
@@ -64,7 +64,7 @@ storiesOf('Dropdown', module)
 				onSelect={action('onSelect')}
 				size={select('size', ['small', 'large'], Config)}
 				title={text('title', Config, 'Dropdown')}
-				width={select('width', ['tiny', 'small', 'medium', 'large', 'huge'], Config)}
+				width={select('width', ['tiny', 'small', 'medium', 'large', 'x-large', 'huge'], Config)}
 			>
 				{items(10, 'Looooooooooooooooooooooong')}
 			</Dropdown>
@@ -82,7 +82,7 @@ storiesOf('Dropdown', module)
 					size={select('size', ['small', 'large'], Config)}
 					title={text('title', Config, 'Dropdown')}
 					style={{position: 'absolute', top: 'calc(50% - 4rem)'}}
-					width={select('width', ['tiny', 'small', 'medium', 'large', 'huge'], Config)}
+					width={select('width', ['tiny', 'small', 'medium', 'large', 'x-large', 'huge'], Config)}
 				>
 					{items(5)}
 				</Dropdown>
@@ -94,7 +94,7 @@ storiesOf('Dropdown', module)
 					onSelect={action('onSelect')}
 					size={select('size', ['small', 'large'], Config)}
 					title={text('title', Config, 'Dropdown')}
-					width={select('width', ['tiny', 'small', 'medium', 'large', 'huge'], Config)}
+					width={select('width', ['tiny', 'small', 'medium', 'large', 'x-large', 'huge'], Config)}
 				>
 					{items(5)}
 				</Dropdown>
@@ -113,7 +113,7 @@ storiesOf('Dropdown', module)
 					size={select('size', ['small', 'large'], Config)}
 					title={text('title', Config, 'Dropdown')}
 					style={{position: 'absolute', top: 'calc(50% - 4rem)'}}
-					width={select('width', ['tiny', 'small', 'medium', 'large', 'huge'], Config)}
+					width={select('width', ['tiny', 'small', 'medium', 'large', 'x-large', 'huge'], Config)}
 				>
 					{list}
 				</Dropdown>
