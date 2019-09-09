@@ -914,7 +914,12 @@ class ScrollableBaseNative extends Component {
 				for (let i = 0; i < nodes.length; i++) {
 					const nodeBounds = nodes[i].getBoundingClientRect();
 					if (nodeBounds[first] > viewportBounds[first] && nodeBounds[last] < viewportBounds[last]) {
-						Spotlight.focus(nodes[i]);
+						const node = nodes[i];
+						if (node && node.dataset && 'spotlightContainer' in node.dataset) {
+							Spotlight.focus(`@${node.dataset.spotlightId}`);
+						} else {
+							Spotlight.focus(node);
+						}
 						break;
 					}
 				}
