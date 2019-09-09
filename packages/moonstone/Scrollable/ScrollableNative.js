@@ -610,9 +610,11 @@ class ScrollableBaseNative extends Component {
 				if (contentNode.contains(focusedItem)) {
 					const
 						clientRect = focusedItem.getBoundingClientRect(),
+						isUp = direction === 'up',
+						yAdjust = isUp ? 1 : -1,
 						x = (clientRect.right + clientRect.left) / 2,
 						y = bounds.maxTop - epsilon < scrollTop + pageDistance || epsilon > scrollTop + pageDistance ?
-							contentNode.getBoundingClientRect()[direction === 'up' ? 'top' : 'bottom'] :
+							contentNode.getBoundingClientRect()[isUp ? 'top' : 'bottom'] + yAdjust :
 							(clientRect.bottom + clientRect.top) / 2;
 					focusedItem.blur();
 					if (!this.props['data-spotlight-container-disabled']) {
