@@ -7,10 +7,10 @@ import warning from 'warning';
 import {propTypes, stringifyRoutes, toSegments} from './util';
 
 /**
- * A Router component for use with [`Panels`]{@link moonstone/Panels.Panels}
+ * A Router component for use with [`ViewManager`]{@link ui/ViewManager.ViewManager}
  *
  * @class Router
- * @memberof moonstone/Panels
+ * @memberof ui/Routable
  * @mixes ui/ForwardRef.ForwardRef
  * @ui
  * @private
@@ -18,7 +18,7 @@ import {propTypes, stringifyRoutes, toSegments} from './util';
 const RouterBase = class extends React.Component {
 	static displayName = 'Router'
 
-	static propTypes = /** @lends moonstone/Panels.Router.prototype */ {
+	static propTypes = /** @lends ui/Routable.Router.prototype */ {
 		/**
 		 * List of views to render.
 		 *
@@ -44,7 +44,7 @@ const RouterBase = class extends React.Component {
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to [component]{@link moonstone/Panels.Router#component}.
+		 * Called with a reference to [component]{@link ui/Routable.Router#component}.
 		 *
 		 * @private
 		 */
