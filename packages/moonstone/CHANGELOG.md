@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Header` to fix font size of `titleBelow` and `subTitleBelow`
+- `moonstone/Dropdown` to apply `tiny` width
 
 ## [3.0.1] - 2019-09-09
 
