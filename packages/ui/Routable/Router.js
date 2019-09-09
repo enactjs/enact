@@ -1,8 +1,9 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import ForwardRef from '@enact/ui/ForwardRef';
 import PropTypes from 'prop-types';
 import React from 'react';
 import warning from 'warning';
+
+import ForwardRef from '../ForwardRef';
 
 import {propTypes, stringifyRoutes, toSegments} from './util';
 

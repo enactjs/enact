@@ -32,6 +32,30 @@ export {
 	Panel,
 	Panels,
 	Panels as PanelsBase,
+
+	/**
+	 * A higher-order component that provides support for mapping Routes as children of a component
+	 * which are selected via `path` instead of the usual flat array.
+	 *
+	 * @see {@link ui/Routable.Routable}
+	 * @hoc
+	 * @name Routable
+	 * @extends ui/Routable.Routable
+	 * @memberof moonstone/Panels
+	 * @public
+	 */
 	Routable,
+
+	/**
+	 * Used with {@link ui/Routable.Routable} to define the `path` segment and the
+	 * `component` to render.
+	 *
+	 * @see {@link ui/Routable.Route}
+	 * @ui
+	 * @name Route
+	 * @extends ui/Routable.Route
+	 * @memberof moonstone/Panels
+	 * @public
+	 */
 	Route
 };

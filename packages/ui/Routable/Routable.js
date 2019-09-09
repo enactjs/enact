@@ -1,8 +1,8 @@
 import hoc from '@enact/core/hoc';
-import invariant from 'invariant';
 import kind from '@enact/core/kind';
-import React from 'react';
+import invariant from 'invariant';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import {Link, Linkable} from './Link';
 import Route from './Route';
