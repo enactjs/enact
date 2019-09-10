@@ -172,7 +172,7 @@ class VirtualListWithCBScrollTo extends React.Component {
 
 const VirtualListWithCachedScrollStopParam = EventCacheable({type: 'onScrollStop'}, VirtualList);
 
-class VirtualListLogginScrollInformation extends React.Component {
+class VirtualListLoggingScrollInformation extends React.Component {
 	constructor (props) {
 		super(props);
 
@@ -305,7 +305,7 @@ storiesOf('VirtualList', module)
 		'logging scroll information every 5 seconds',
 		() => {
 			return (
-				<VirtualListLogginScrollInformation
+				<VirtualListLoggingScrollInformation
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)), true)}
 					itemSize={ri.scale(number('itemSize', Config, 72))}
