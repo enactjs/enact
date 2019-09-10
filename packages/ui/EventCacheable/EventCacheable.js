@@ -2,7 +2,7 @@ import React from 'react';
 import hoc from '@enact/core/hoc';
 
 const EventCacheable = hoc((config = {defaultEvent: null, type: null}, Wrapped) => {
-    const {defaultEvent, type} = config;
+	const {defaultEvent, type} = config;
 
 	return class EventParamCacheableBase extends React.Component {
 		cachedEvent = defaultEvent || null
