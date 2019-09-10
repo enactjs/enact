@@ -527,9 +527,10 @@ class ScrollableBase extends Component {
 			{childRefCurrent, scrollTop} = this.uiRef.current,
 			focusedItem = Spotlight.getCurrent(),
 			bounds = this.uiRef.current.getScrollBounds(),
-			directionFactor = direction === 'up' ? -1 : 1,
+			isUp = direction === 'up',
+			directionFactor = isUp ? -1 : 1,
 			pageDistance = directionFactor * bounds.clientHeight * paginationPageMultiplier,
-			scrollPossible = scrollTop > 0 && direction === 'up' || bounds.maxTop > scrollTop && direction === 'down';
+			scrollPossible = isUp ? scrollTop > 0 : bounds.maxTop > scrollTop;
 
 		this.uiRef.current.lastInputType = 'pageKey';
 
@@ -546,7 +547,6 @@ class ScrollableBase extends Component {
 					const
 						contentRect = contentNode.getBoundingClientRect(),
 						clientRect = focusedItem.getBoundingClientRect(),
-						isUp = direction === 'up',
 						yAdjust = isUp ? 1 : -1,
 						x = clamp(contentRect.left, contentRect.right, (clientRect.right + clientRect.left) / 2),
 						y = bounds.maxTop <= scrollTop + pageDistance || 0 >= scrollTop + pageDistance ?
