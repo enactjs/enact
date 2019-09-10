@@ -170,7 +170,7 @@ class VirtualListWithCBScrollTo extends React.Component {
 	}
 }
 
-const VirtualListWithCachedScrollStopParam = EventCacheable({type: 'onScrollStop'}, VirtualList);
+const VirtualListWithCachedScrollStopEvent = EventCacheable({type: 'onScrollStop'}, VirtualList);
 
 class VirtualListLoggingScrollInformation extends React.Component {
 	constructor (props) {
@@ -191,9 +191,9 @@ class VirtualListLoggingScrollInformation extends React.Component {
 		clearInterval(this.intervalID);
 	}
 
-	scrollTo = null
-	intervalID = null
 	handler = action('setInterval');
+	intervalID = null
+	scrollTo = null
 
 	getScrollTo = (scrollTo) => {
 		this.scrollTo = scrollTo;
@@ -201,10 +201,10 @@ class VirtualListLoggingScrollInformation extends React.Component {
 
 	render () {
 		return (
-			<VirtualListWithCachedScrollStopParam
+			<VirtualListWithCachedScrollStopEvent
 				{...this.props}
-				ref={this.listRef}
 				cbScrollTo={this.getScrollTo}
+				ref={this.listRef}
 			/>
 		);
 	}
