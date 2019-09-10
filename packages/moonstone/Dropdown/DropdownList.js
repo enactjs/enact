@@ -87,6 +87,7 @@ const DropdownListBase = kind({
 			if (typeof child === 'string') {
 				child = {children: child};
 			}
+			const data = child.children;
 
 			return (
 				<Item
@@ -94,7 +95,7 @@ const DropdownListBase = kind({
 					{...child}
 					data-selected={index === selected}
 					// eslint-disable-next-line react/jsx-no-bind
-					onClick={() => forward('onSelect', {selected: index}, props)}
+					onClick={() => forward('onSelect', {data, selected: index}, props)}
 				/>
 			);
 		}
