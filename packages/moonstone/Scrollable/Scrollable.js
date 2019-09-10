@@ -609,8 +609,7 @@ class ScrollableBase extends Component {
 
 		forward('onKeyDown', ev, this.props);
 
-		if ((isPageUp(keyCode) || isPageDown(keyCode)) && !this.isScrollButtonFocused()) {
-			ev.stopPropagation();
+		if (isPageUp(keyCode) || isPageDown(keyCode)) {
 			ev.preventDefault();
 		}
 
@@ -622,6 +621,7 @@ class ScrollableBase extends Component {
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				if (this.isContent(target) && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
+					ev.stopPropagation();
 					direction = isPageUp(keyCode) ? 'up' : 'down';
 					this.scrollByPage(direction);
 					if (overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
