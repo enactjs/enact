@@ -13,20 +13,23 @@ import {I18nContextDecorator, I18nDecorator} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 
 const MyComponent = I18nContextDecorator(
-    {rtlProp: 'rtl'},
-    (props) => (
-        <div>{props.rtl ? 'right to left' : 'left to right'}</div>
-    )
+	{rtlProp: 'rtl'},
+	(props) => (
+		<div>{props.rtl ? 'right to left' : 'left to right'}</div>
+	)
 );
 
 const MyApp = () => (
-    <div>
-        <MyComponent />
-    </div>
+	<div>
+		<MyComponent />
+	</div>
 );
 
 const MyI18nApp = I18nDecorator(MyApp);
+
+export default MyI18nApp;
 ```
+**Note**: The `@enact/i18n` module will attempt to determine the locale automatically.  Pass a `locale` prop (`"en-US"` for example) to this component where it is rendered to test.
 
 ## Install
 

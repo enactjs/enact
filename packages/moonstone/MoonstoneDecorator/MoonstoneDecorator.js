@@ -47,15 +47,18 @@ const defaultConfig = {
 /**
  * A higher-order component that applies Moonstone theming to an application.
  *
- * It also applies [floating layer]{@link ui/FloatingLayer.FloatingLayerDecorator},
- * [resolution independence]{@link ui/resolution.ResolutionDecorator},
- * [skin support]{@link moonstone/Skinnable}, [spotlight]{@link spotlight.SpotlightRootDecorator}, and
- * [internationalization support]{@link i18n/I18nDecorator.I18nDecorator}. It is meant to be applied to
- * the root element of an app.
+ * It also applies [floating layer]{@link ui/FloatingLayer.FloatingLayerDecorator}, [resolution
+ * independence]{@link ui/resolution.ResolutionDecorator}, [skin
+ * support]{@link moonstone/Skinnable}, [spotlight]{@link spotlight.SpotlightRootDecorator}, and
+ * [internationalization support]{@link i18n/I18nDecorator.I18nDecorator}. It is meant to be applied
+ * to the root element of an app.
  *
- * [Skins]{@link moonstone/Skinnable} provide a way to change the coloration of your app. The currently
- * supported skins for Moonstone are "moonstone" (the default, dark skin) and "moonstone-light".
- * Use the `skin` property to assign a skin. Ex: `<DecoratedApp skin="light" />`
+ * [Skins]{@link moonstone/Skinnable} provide a way to change the coloration of your app. The
+ * currently supported skins for Moonstone are "moonstone" (the default, dark skin) and
+ * "moonstone-light". Use the `skin` property to assign a skin. Ex: `<DecoratedApp skin="light" />`
+ *
+ * Note: This HoC passes `className` to the wrapped component. It must be passed to the main DOM
+ * node.
  *
  * @class MoonstoneDecorator
  * @memberof moonstone/MoonstoneDecorator

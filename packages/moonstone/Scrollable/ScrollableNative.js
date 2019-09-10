@@ -212,6 +212,20 @@ class ScrollableBaseNative extends Component {
 		}),
 
 		/**
+		 * Specifies preventing keydown events from bubbling up to applications.
+		 * Valid values are `'none'`, and `'programmatic'`.
+		 *
+		 * When it is `'none'`, every keydown event is bubbled.
+		 * When it is `'programmatic'`, an event bubbling is not allowed for a keydown input
+		 * which invokes programmatic spotlight moving.
+		 *
+		 * @type {String}
+		 * @default 'none'
+		 * @private
+		 */
+		preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
+
+		/**
 		 * Sets the hint string read when focusing the next button in the vertical scroll bar.
 		 *
 		 * @type {String}
@@ -257,7 +271,8 @@ class ScrollableBaseNative extends Component {
 			pageKey: false,
 			scrollbarButton: false,
 			wheel: true
-		}
+		},
+		preventBubblingOnKeyDown: 'none'
 	}
 
 	constructor (props) {
@@ -975,6 +990,7 @@ class ScrollableBaseNative extends Component {
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
 				'data-spotlight-id': spotlightId,
 				focusableScrollbar,
+				preventBubblingOnKeyDown,
 				scrollDownAriaLabel,
 				scrollLeftAriaLabel,
 				scrollRightAriaLabel,
@@ -1052,6 +1068,8 @@ class ScrollableBaseNative extends Component {
 									disabled={!isVerticalScrollbarVisible}
 									focusableScrollButtons={focusableScrollbar}
 									nextButtonAriaLabel={downButtonAriaLabel}
+									onKeyDownButton={this.onKeyDown}
+									preventBubblingOnKeyDown={preventBubblingOnKeyDown}
 									previousButtonAriaLabel={upButtonAriaLabel}
 									rtl={rtl}
 								/> :
@@ -1066,6 +1084,8 @@ class ScrollableBaseNative extends Component {
 								disabled={!isHorizontalScrollbarVisible}
 								focusableScrollButtons={focusableScrollbar}
 								nextButtonAriaLabel={rightButtonAriaLabel}
+								onKeyDownButton={this.onKeyDown}
+								preventBubblingOnKeyDown={preventBubblingOnKeyDown}
 								previousButtonAriaLabel={leftButtonAriaLabel}
 								rtl={rtl}
 							/> :

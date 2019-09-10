@@ -28,13 +28,21 @@ const defaultConfig = {
 };
 
 /**
- * A higher-order component that adds support for hint text to be read before and/or after the content.
+ * A higher-order component that adds support for hint text to be read before and/or after the
+ * content.
  *
  * By default, the `children` prop is used as the source of the components content but may be
  * configured by passing a different `prop` to the HOC configuration.
  *
+ * Note: This HoC passes a number of props to the wrapped component that should be passed to the
+ * main DOM node.
+ *
  * Usage:
  * ```
+ * const MyComponentBase = ({myProp, ...rest}) => (
+ *    <div {...rest}>{myProp}</div>
+ *  );
+ * ...
  * const MyComponent = A11yDecorator(MyComponentBase);
  *
  * // passes an aria-label property to MyComponentBase with accessibilityPreHint and
