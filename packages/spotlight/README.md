@@ -12,15 +12,19 @@ computer-with-mouse.
 
 ```
 import kind from '@enact/core/kind';
-import {SpotlightRootDecorator, Spottable} from '@enact/spotlight';
+import React from 'react';
+import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator'
+import Spottable from '@enact/spotlight/Spottable'
 
 const MySpottableComponent = Spottable('div');
 
 const MyApp = kind({
-    name: 'MyApp',
-    render: () => (<MySpottableComponent>Hello, Enact!</MySpottableComponent>)
+	name: 'MyApp',
+	render: () => (<MySpottableComponent>Hello, Enact!</MySpottableComponent>)
 });
 const MySpotlightApp = SpotlightRootDecorator(MyApp);
+
+export default MySpotlightApp;
 ```
 
 See the [docs](docs/) for more information.

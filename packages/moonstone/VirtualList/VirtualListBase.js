@@ -1,3 +1,4 @@
+import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import {is} from '@enact/core/keymap';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import Accelerator from '@enact/spotlight/Accelerator';
@@ -413,19 +414,6 @@ const VirtualListBaseFactory = (type) => {
 			return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
 		}
 
-		getScrollButtons = () => {
-			const {spotlightId} = this.props;
-			const {containerRef: {current}} = this.uiRefCurrent;
-
-			return [...document.querySelectorAll(`[data-spotlight-id="${spotlightId}"] ${spottableSelector}`)]
-				.reduce((result, item, index, spottables) => {
-					if (!current.contains(item)) {
-						result[index === spottables.length - 1 ? 'last' : 'first'] = item;
-					}
-					return result;
-				}, {});
-		}
-
 		/**
 		 * Handle `onKeyDown` event
 		 */
@@ -565,19 +553,8 @@ const VirtualListBaseFactory = (type) => {
 
 						}
 					} else {
-						const {first, last} = this.getScrollButtons();
-						const isLastScrollButton = target === last;
-
-						if (
-							directions.right && repeat ||
-							directions.left && Spotlight.move(direction) ||
-							(directions.up && !isLastScrollButton || directions.down && isLastScrollButton) && repeat ||
-							directions.down && !isLastScrollButton && (focusableScrollbar && Spotlight.focus(last) || Spotlight.move(direction)) ||
-							directions.up && isLastScrollButton && (focusableScrollbar && Spotlight.focus(first) || Spotlight.move(direction))
-						) {
-							ev.preventDefault();
-							ev.stopPropagation();
-						} else if (!repeat) {
+						const possibleTarget = getTargetByDirectionFromElement(direction, target);
+						if (possibleTarget && !ev.currentTarget.contains(possibleTarget)) {
 							isLeaving = true;
 						}
 					}
@@ -985,12 +962,14 @@ ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBa
 	cbScrollTo: PropTypes.func,
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
 	focusableScrollbar: PropTypes.bool,
-	itemSizes: PropTypes.array
+	itemSizes: PropTypes.array,
+	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic'])
 };
 
 ScrollableVirtualList.defaultProps = {
 	direction: 'vertical',
-	focusableScrollbar: false
+	focusableScrollbar: false,
+	preventBubblingOnKeyDown: 'programmatic'
 };
 
 const ScrollableVirtualListNative = (props) => {
@@ -1019,12 +998,14 @@ ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.Virtual
 	cbScrollTo: PropTypes.func,
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
 	focusableScrollbar: PropTypes.bool,
-	itemSizes: PropTypes.array
+	itemSizes: PropTypes.array,
+	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic'])
 };
 
 ScrollableVirtualListNative.defaultProps = {
 	direction: 'vertical',
-	focusableScrollbar: false
+	focusableScrollbar: false,
+	preventBubblingOnKeyDown: 'programmatic'
 };
 
 export default VirtualListBase;

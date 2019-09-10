@@ -327,11 +327,47 @@ const VirtualListBaseFactory = (type) => {
 				this.emitUpdateItems();
 			}
 
+			// When an item expands or shrinks,
+			// we need to calculate the item position again and
+			// the item needs to scroll into view if the item does not show fully.
 			if (this.props.itemSizes) {
 				if (this.itemPositions.length > this.props.itemSizes.length) {
+					// The item with `this.props.itemSizes.length` index is not rendered yet.
+					// So the item could scroll into view after it rendered.
+					// To do it, `this.props.itemSizes.length` value is cached in `this.indexToScrollIntoView`.
+					this.indexToScrollIntoView = this.props.itemSizes.length;
+
 					this.itemPositions = [...this.itemPositions.slice(0, this.props.itemSizes.length)];
+					this.adjustItemPositionWithItemSize();
+				} else {
+					const {indexToScrollIntoView} = this;
+
+					this.adjustItemPositionWithItemSize();
+
+					if (indexToScrollIntoView !== -1) {
+						// Currently we support expandable items in only vertical VirtualList.
+						// So the top and bottom of the boundaries are checked.
+						const
+							scrollBounds = {top: this.scrollPosition, bottom: this.scrollPosition + this.scrollBounds.clientHeight},
+							itemBounds = {top: this.getGridPosition(indexToScrollIntoView).primaryPosition, bottom: this.getItemBottomPosition(indexToScrollIntoView)};
+
+						if (itemBounds.top < scrollBounds.top) {
+							this.props.cbScrollTo({
+								index: indexToScrollIntoView,
+								stickTo: 'start',
+								animate: true
+							});
+						} else if (itemBounds.bottom > scrollBounds.bottom) {
+							this.props.cbScrollTo({
+								index: indexToScrollIntoView,
+								stickTo: 'end',
+								animate: true
+							});
+						}
+					}
+
+					this.indexToScrollIntoView = -1;
 				}
-				this.adjustItemPositionWithItemSize();
 			}
 
 			if (
@@ -396,6 +432,7 @@ const VirtualListBaseFactory = (type) => {
 
 		// For individually sized item
 		itemPositions = []
+		indexToScrollIntoView = -1
 
 		updateScrollPosition = ({x, y}, rtl = this.props.rtl) => {
 			if (type === Native) {

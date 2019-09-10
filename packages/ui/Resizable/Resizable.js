@@ -27,22 +27,25 @@ const ResizeContext = React.createContext();
  */
 const defaultConfig = {
 	/**
-	 * Configures the event name that will indicate a resize of a container may be necessary.
+	 * A handler to process the `resize` event.
 	 *
-	 * @type {String}
+	 * It should return a truthy value if the event should trigger a resize.
+	 *
+	 * @type {Function}
 	 * @default null
+	 * @see {@link core/handle}
 	 * @memberof ui/Resizable.Resizable.defaultConfig
 	 */
 	filter: null,
 
 	/**
-	 * Configures a function that can filter the event to limit when the container is notified.
+	 * The name of the event on the wrapped component to listen to for size changes.
 	 *
-	 * This function will receive the event payload as its only argument and should return `true` to
-	 * prevent the resize notification.
+	 * This event name will be passed to the wrapped component and will also be forwarded (if
+	 * needed) to the parent component.
 	 *
 	 * @type {String}
-	 * @default null
+	 * @required
 	 * @memberof ui/Resizable.Resizable.defaultConfig
 	 */
 	resize: null
@@ -56,6 +59,9 @@ const defaultConfig = {
  *
  * Containers must provide an `invalidateBounds` method via React's context in order for `Resizable`
  * instances to notify it of resize.
+ *
+ * The wrapped component must respond to the configured
+ * [resize]{@link ui/Resizable.Resizable.defaultConfig.resize} event.
  *
  * @class Resizable
  * @memberof ui/Resizable

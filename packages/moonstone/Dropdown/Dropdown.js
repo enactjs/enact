@@ -163,11 +163,11 @@ const DropdownBase = kind({
 		/**
 		 * The width of Dropdown.
 		 *
-		 * @type {('huge'|'large'|'medium'|'small'|'tiny')}
+		 * @type {('huge'|'large'|'x-large'|'medium'|'small'|'tiny')}
 		 * @default 'medium'
 		 * @public
 		 */
-		width: PropTypes.oneOf(['tiny', 'small', 'medium', 'large', 'huge'])
+		width: PropTypes.oneOf(['tiny', 'small', 'medium', 'large', 'x-large', 'huge'])
 	},
 
 	defaultProps: {
@@ -230,7 +230,7 @@ const DropdownBase = kind({
 				};
 			});
 		},
-		className: ({width, styler}) => styler.append(width),
+		className: ({width, styler}) => styler.append(`${width}Width`),
 		title: ({children, selected, title}) => {
 			if (isSelectedValid({children, selected})) {
 				const child = children[selected];

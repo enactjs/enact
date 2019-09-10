@@ -69,9 +69,9 @@ const DropdownListBase = kind({
 		/*
 		 * The width of DropdownList.
 		 *
-		 * @type {('huge'|'large'|'medium'|'small'|'tiny')}
+		 * @type {('huge'|'x-large'|'large'|'medium'|'small'|'tiny')}
 		 */
-		width: PropTypes.oneOf(['tiny', 'small', 'medium', 'large', 'huge'])
+		width: PropTypes.oneOf(['tiny', 'small', 'medium', 'large', 'x-large', 'huge'])
 	},
 
 	styles: {
