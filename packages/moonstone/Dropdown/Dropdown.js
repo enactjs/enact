@@ -128,6 +128,10 @@ const DropdownBase = kind({
 		/**
 		 * Called when an item is selected.
 		 *
+		 * The event payload will be an object with the following members:
+		 * * `data` - The value for the option as received in the `children` prop
+		 * * `selected` - Number representing the selected option, 0 indexed
+		 *
 		 * @type {Function}
 		 * @public
 		 */

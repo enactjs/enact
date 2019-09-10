@@ -12,7 +12,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Header` to fix font size of `titleBelow` and `subTitleBelow`
 - `moonstone/Dropdown` to apply `tiny` width
+- `moonstone/Dropdown` to include selected `data` in the `onSelect` handler
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` spotlight behavior to focus the last item when reaching the bounds after scroll by page up or down
+- `moonstone/VirtualList.VirtualList` dynamically extended item scrolling into view properly
 
 ## [3.0.1] - 2019-09-09
 
