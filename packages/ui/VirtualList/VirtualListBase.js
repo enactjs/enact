@@ -393,8 +393,13 @@ const VirtualListBaseFactory = (type) => {
 				});
 			} else if (this.hasDataSizeChanged) {
 				const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
-				// eslint-disable-next-line react/no-did-update-set-state
-				this.setState(newState);
+				// We need to call `setState` asynchronously.
+				// If not, the `firstIndex` in the state will be overridden
+				// by calling `scrollTo` in `ui/Scrollable` and updating the `firstIndex` again.
+				setTimeout(() => {
+					// eslint-disable-next-line react/no-did-update-set-state
+					this.setState(newState);
+				});
 				this.setContainerSize();
 			} else if (prevProps.rtl !== this.props.rtl) {
 				this.updateScrollPosition(this.getXY(this.scrollPosition, 0));
