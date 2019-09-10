@@ -5,6 +5,7 @@ import {ActivityPanels, Panel, Header} from '@enact/moonstone/Panels';
 import Scroller from '@enact/moonstone/Scroller';
 import SwitchItem from '@enact/moonstone/SwitchItem';
 import VirtualList, {VirtualListBase} from '@enact/moonstone/VirtualList';
+import EventCacheable from '@enact/ui/EventCacheable';
 import ri from '@enact/ui/resolution';
 import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
@@ -142,7 +143,6 @@ const InPanels = ({className, title, ...rest}) => {
 	);
 };
 
-// eslint-disable-next-line enact/prop-types
 class VirtualListWithCBScrollTo extends React.Component {
 	static propTypes = {
 		dataSize: PropTypes.number
@@ -164,6 +164,46 @@ class VirtualListWithCBScrollTo extends React.Component {
 		return (
 			<VirtualList
 				{...this.props}
+				cbScrollTo={this.getScrollTo}
+			/>
+		);
+	}
+}
+
+const VirtualListWithCachedScrollStopParam = EventCacheable({type: 'onScrollStop'}, VirtualList);
+
+class VirtualListLogginScrollInformation extends React.Component {
+	constructor (props) {
+		super(props);
+
+		this.listRef = React.createRef();
+	}
+
+	componentDidMount (prevProps) {
+		this.scrollTo({animate: false, focus: false, index: 10});
+
+		this.intervalID = setInterval(() => {
+			this.handler(this.listRef.current.getEvent());
+		}, 5000);
+	}
+
+	componentWillUnmount () {
+		clearInterval(this.intervalID);
+	}
+
+	scrollTo = null
+	intervalID = null
+	handler = action('setInterval');
+
+	getScrollTo = (scrollTo) => {
+		this.scrollTo = scrollTo;
+	}
+
+	render () {
+		return (
+			<VirtualListWithCachedScrollStopParam
+				{...this.props}
+				ref={this.listRef}
 				cbScrollTo={this.getScrollTo}
 			/>
 		);
@@ -253,6 +293,19 @@ storiesOf('VirtualList', module)
 		() => {
 			return (
 				<VirtualListWithCBScrollTo
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)), true)}
+					itemSize={ri.scale(number('itemSize', Config, 72))}
+				/>
+			);
+		},
+		{propTables: [Config]}
+	)
+	.add(
+		'logging scroll information every 5 seconds',
+		() => {
+			return (
+				<VirtualListLogginScrollInformation
 					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
 					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)), true)}
 					itemSize={ri.scale(number('itemSize', Config, 72))}
