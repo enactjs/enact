@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/Dropdown` to add new size `x-large`
+
 ### Fixed
 
 - `moonstone/Header` to fix font size of `titleBelow` and `subTitleBelow`
