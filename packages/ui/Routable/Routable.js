@@ -3,11 +3,12 @@ import kind from '@enact/core/kind';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
 import React from 'react';
+import warning from 'warning';
 
 import {Link, Linkable} from './Link';
 import Route from './Route';
 import Router from './Router';
-import {propTypes, toSegments, RouteContext} from './util';
+import {propTypes, toSegments, RouteContext, resolve} from './util';
 
 /**
  * Default config for [`Routable`]{@link ui/Routable.Routable}.
@@ -75,18 +76,11 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handlers: {
 			handleNavigate: ({path}, {path: currentPath, [navigate]: handler}) => {
-				if (!path) return;
+				path = resolve(currentPath, path);
 
-				// This is still a pretty naive implementation of relative pathing. More will need
-				// to be done here to fully support this capability (e.g. parent path support).
-				if (path[0] === '.') {
-					const currentSegments = toSegments(currentPath);
-					const nextSegments = toSegments(path);
+				warning(path, `Path "${path}" was invalid from current path "${currentPath}"`);
 
-					path = '/' + currentSegments.concat(nextSegments).join('/');
-				}
-
-				handler({path});
+				if (path) handler({path});
 			},
 			// Adds `path` to the payload of navigate handler in the same format (String, or
 			// String[]) as the current path prop.
