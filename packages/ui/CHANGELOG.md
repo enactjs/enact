@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/EventCacheable` to cache the event as a parameter of a configured event prop
 
+## [3.0.1] - 2019-09-09
+
+No significant changes.
+
 ## [3.0.0] - 2019-09-03
 
 ### Fixed
