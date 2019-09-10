@@ -8,6 +8,17 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to move spotlight to the last item when they reached the top or the bottom after scroll by page
 
+### Added
+
+- `moonstone/Dropdown` to add new size `x-large`
+
+### Fixed
+
+- `moonstone/Header` to fix font size of `titleBelow` and `subTitleBelow`
+- `moonstone/Dropdown` to apply `tiny` width
+
+## [3.0.1] - 2019-09-09
+
 ### Fixed
 
 - `moonstone/Button` text alignment when `color` is set

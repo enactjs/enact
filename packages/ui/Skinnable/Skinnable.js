@@ -120,9 +120,15 @@ const SkinContext = React.createContext(null);
  * Use the config options to specify the skins your theme has. Set this up in your theme's decorator
  * component to establish your supported skins.
  *
+ * Note: This HoC passes `className` to the wrapped component. It must be passed to the main DOM
+ * node. Additionally, it can be configured to pass the skin and skin variant as props.
+ *
  * Example:
  * ```
+ * const MyApp = ({skinName, ...rest) => (<div {...props}>{skinName}</div>);
+ * ...
  * App = Skinnable({
+ * 	prop: 'skinName',
  * 	skins: {
  * 		dark: 'moonstone',
  * 		light: 'moonstone-light'
@@ -130,7 +136,7 @@ const SkinContext = React.createContext(null);
  * 	defaultTheme: 'dark'
  * 	defaultVariants: ['highContrast'],
  * 	allowedVariants: ['highContrast', 'largeText', 'grayscale']
- * }, App);
+ * }, MyApp);
  * ```
  *
  * @class Skinnable
