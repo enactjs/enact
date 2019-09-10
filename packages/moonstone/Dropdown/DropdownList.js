@@ -87,7 +87,7 @@ const DropdownListBase = kind({
 			if (typeof child === 'string') {
 				child = {children: child};
 			}
-			const data = child[children];
+			const data = child.children;
 
 			return (
 				<Item
