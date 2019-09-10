@@ -84,10 +84,10 @@ const DropdownListBase = kind({
 			const {children, selected} = props;
 
 			let child = children[index];
-			const data = child;
 			if (typeof child === 'string') {
 				child = {children: child};
 			}
+			const data = child.children;
 
 			return (
 				<Item
