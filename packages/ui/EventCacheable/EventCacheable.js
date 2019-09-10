@@ -1,30 +1,35 @@
-import React from 'react';
+import {forward, handle, call} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import React from 'react';
 
-const EventCacheable = hoc((config = {defaultEvent: null, type: null}, Wrapped) => {
+const defaultConfig = {defaultEvent: null, type: null};
+
+const EventCacheable = hoc(defaultConfig, (config, Wrapped) => {
 	const {defaultEvent, type} = config;
 
-	return class EventParamCacheableBase extends React.Component {
+	return class EventCacheableBase extends React.Component {
 		cachedEvent = defaultEvent || null
 
 		getEvent = () => (this.cachedEvent)
 
-		setEvent = (event) => {
-			this.cachedEvent = event;
-		}
-
-		eventHandler = (ev) => {
+		setEvent = (ev) => {
 			this.cachedEvent = ev;
 		}
 
+		eventHandler = handle(
+			forward(type),
+			call('setEvent'),
+		).bindAs(this, 'eventHandler')
+
 		render () {
-			const eventHandler = type ? {[type]: this.eventHandler} : null;
+			const props = {...this.props};
+
+			if (type) {
+				props[type] = this.eventHandler;
+			}
 
 			return (
-				<Wrapped
-					{...this.props}
-					{...eventHandler}
-				/>
+				<Wrapped {...props} />
 			);
 		}
 	};

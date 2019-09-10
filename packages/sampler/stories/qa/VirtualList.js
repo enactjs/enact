@@ -179,7 +179,7 @@ class VirtualListLogginScrollInformation extends React.Component {
 		this.listRef = React.createRef();
 	}
 
-	componentDidMount (prevProps) {
+	componentDidMount () {
 		this.scrollTo({animate: false, focus: false, index: 10});
 
 		this.intervalID = setInterval(() => {
