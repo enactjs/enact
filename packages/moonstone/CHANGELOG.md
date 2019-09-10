@@ -7,12 +7,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/Dropdown` to add new size `x-large`
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` ability to change of the role
 
 ### Fixed
 
 - `moonstone/Header` to fix font size of `titleBelow` and `subTitleBelow`
 - `moonstone/Dropdown` to apply `tiny` width
 - `moonstone/VirtualList.VirtualList` dynamically extended item scrolling into view properly
+- `moonstone/Dropdown` accessibility read out when an item is focused
 
 ## [3.0.1] - 2019-09-09
 

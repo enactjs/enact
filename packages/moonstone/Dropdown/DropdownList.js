@@ -81,7 +81,9 @@ const DropdownListBase = kind({
 
 	handlers: {
 		itemRenderer: ({index, ...rest}, props) => {
-			const {children, selected} = props;
+			const
+				{children, selected} = props,
+				posinset = index + 1;
 
 			let child = children[index];
 			if (typeof child === 'string') {
@@ -92,6 +94,8 @@ const DropdownListBase = kind({
 				<Item
 					{...rest}
 					{...child}
+					aria-posinset={posinset}
+					aria-setsize={children.length}
 					data-selected={index === selected}
 					// eslint-disable-next-line react/jsx-no-bind
 					onClick={() => forward('onSelect', {selected: index}, props)}
@@ -119,6 +123,7 @@ const DropdownListBase = kind({
 				cbScrollTo={scrollTo}
 				dataSize={dataSize}
 				itemSize={itemSize}
+				role="group"
 				style={{height: itemSize * dataSize}}
 			/>
 		);
