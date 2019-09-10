@@ -117,6 +117,7 @@ const DropdownListBase = kind({
 		return (
 			<VirtualList
 				{...rest}
+				role="group"
 				cbScrollTo={scrollTo}
 				dataSize={dataSize}
 				itemSize={itemSize}

@@ -153,6 +153,15 @@ const VirtualListBaseFactory = (type) => {
 			 */
 			pageScroll: PropTypes.bool,
 
+			/*
+			 * The ARIA role for the list
+			 *
+			 * @type {String}
+			 * @default 'list'
+			 * @private
+			 */
+			role: PropTypes.string,
+
 			/**
 			 * `true` if rtl, `false` if ltr.
 			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
@@ -200,6 +209,7 @@ const VirtualListBaseFactory = (type) => {
 			dataSize: 0,
 			focusableScrollbar: false,
 			pageScroll: false,
+			role: 'list',
 			spacing: 0,
 			wrap: false
 		}
@@ -796,7 +806,7 @@ const VirtualListBaseFactory = (type) => {
 
 		render () {
 			const
-				{itemRenderer, itemsRenderer, ...rest} = this.props,
+				{itemRenderer, itemsRenderer, role, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
 			delete rest.initUiChildRef;
@@ -824,7 +834,8 @@ const VirtualListBaseFactory = (type) => {
 						return itemsRenderer({
 							...props,
 							handlePlaceholderFocus: this.handlePlaceholderFocus,
-							needsScrollingPlaceholder
+							needsScrollingPlaceholder,
+							role
 						});
 					}}
 				/>
@@ -930,13 +941,14 @@ const listItemsRenderer = (props) => {
 		handlePlaceholderFocus,
 		itemContainerRef: initUiItemContainerRef,
 		needsScrollingPlaceholder,
-		primary
+		primary,
+		role
 	} = props;
 
 	return (
 		<React.Fragment>
 			{cc.length ? (
-				<div ref={initUiItemContainerRef} role="list">{cc}</div>
+				<div ref={initUiItemContainerRef} role={role}>{cc}</div>
 			) : null}
 			{primary ? null : (
 				<SpotlightPlaceholder
