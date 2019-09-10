@@ -48,7 +48,7 @@ const resolve = (base = '/', path) => {
 		} else if (p === '..') {
 			// if we're down the root and we encounter a parent path, return
 			if (base.length === 0) return;
-			// otherwise, remoove a level from base
+			// otherwise, remove a level from base
 			base.pop();
 		} else {
 			// put back the current element so it can be included in the output path
