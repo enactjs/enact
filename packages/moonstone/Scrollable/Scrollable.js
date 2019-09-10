@@ -527,9 +527,10 @@ class ScrollableBase extends Component {
 			{childRefCurrent, scrollTop} = this.uiRef.current,
 			focusedItem = Spotlight.getCurrent(),
 			bounds = this.uiRef.current.getScrollBounds(),
-			directionFactor = direction === 'up' ? -1 : 1,
+			isUp = direction === 'up',
+			directionFactor = isUp ? -1 : 1,
 			pageDistance = directionFactor * bounds.clientHeight * paginationPageMultiplier,
-			scrollPossible = scrollTop > 0 && direction === 'up' || bounds.maxTop > scrollTop && direction === 'down';
+			scrollPossible = isUp ? scrollTop > 0 : bounds.maxTop > scrollTop;
 
 		this.uiRef.current.lastInputType = 'pageKey';
 
@@ -540,13 +541,17 @@ class ScrollableBase extends Component {
 
 		if (scrollPossible) {
 			if (focusedItem) {
+				const contentNode = childRefCurrent.containerRef.current;
 				// Should do nothing when focusedItem is paging control button of Scrollbar
-				if (childRefCurrent.containerRef.current.contains(focusedItem)) {
+				if (contentNode.contains(focusedItem)) {
 					const
-						contentRect = this.uiRef.current.childRefCurrent.containerRef.current.getBoundingClientRect(),
+						contentRect = contentNode.getBoundingClientRect(),
 						clientRect = focusedItem.getBoundingClientRect(),
+						yAdjust = isUp ? 1 : -1,
 						x = clamp(contentRect.left, contentRect.right, (clientRect.right + clientRect.left) / 2),
-						y = clamp(contentRect.top, contentRect.bottom, (clientRect.bottom + clientRect.top) / 2);
+						y = bounds.maxTop <= scrollTop + pageDistance || 0 >= scrollTop + pageDistance ?
+							contentRect[isUp ? 'top' : 'bottom'] + yAdjust :
+							clamp(contentRect.top, contentRect.bottom, (clientRect.bottom + clientRect.top) / 2);
 
 					focusedItem.blur();
 					if (!this.props['data-spotlight-container-disabled']) {
