@@ -27,6 +27,9 @@ const resolve = (base = '/', path) => {
 	// We could resolve to base but we want to consider this an error condition
 	if (!path) return;
 
+	// convert a base array to a string for simpler normalization
+	if (base instanceof Array) base = base.join('/');
+
 	// normalize base to have a leading slash
 	if (!base.startsWith('/')) base = '/' + base;
 
