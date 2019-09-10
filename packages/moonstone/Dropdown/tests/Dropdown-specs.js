@@ -182,5 +182,41 @@ describe('Dropdown', () => {
 
 			expect(actual).toEqual(expected);
 		});
+
+		test('should pass string as `data` in `onSelect` callback when `children` is a string', () => {
+			const handler = jest.fn();
+			const dropDown = mount(
+				<DropdownList onSelect={handler}>
+					{children}
+				</DropdownList>
+			);
+
+			dropDown.find('Item').at(0).simulate('click');
+
+			const expected = 'option1'
+			const actual = handler.mock.calls[0][0].data;
+
+			expect(actual).toBe(expected);
+		});
+
+		test('should pass object as `data` in `onSelect` callback when `children` is a object', () => {
+			const handler = jest.fn();
+			const dropDown = mount(
+				<DropdownList onSelect={handler}>
+					{[
+						{key: 'o1', children: 'option 1'},
+						{key: 'o2', children: 'option 2'},
+						{key: 'o3', children: 'option 3'}
+					]}
+				</DropdownList>
+			);
+
+			dropDown.find('Item').at(0).simulate('click');
+
+			const expected = {key: 'o1', children: 'option 1'};
+			const actual = handler.mock.calls[0][0].data;
+
+			expect(actual).toEqual(expected);
+		});
 	});
 });
