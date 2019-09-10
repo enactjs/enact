@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Dropdown` to include selected `data` in the `onSelect` handler
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` spotlight behavior to focus the last item when reaching the bounds after scroll by page up or down
 - `moonstone/VirtualList.VirtualList` dynamically extended item scrolling into view properly
+- Language-specific fonts(`LG Smart UI AR HE TH` and the almost of India fonts) assigning bug
 
 ## [3.0.1] - 2019-09-09
 
