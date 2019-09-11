@@ -100,11 +100,14 @@ const defaultConfig = {
 };
 
 /**
- * A higher-order component that is used to wrap the root element in an app. It provides an `rtl` member on the
- * context of the wrapped component, allowing the children to check the current text directionality as well as
- * an `updateLocale` method that can be used to update the current locale.
+ * A higher-order component that is used to wrap the root element in an app. It provides an `rtl`
+ * member on the context of the wrapped component, allowing the children to check the current text
+ * directionality as well as an `updateLocale` method that can be used to update the current locale.
  *
  * There are no configurable options on this HOC.
+ *
+ * Note: This HoC passes `className` to the wrapped component. It must be passed to the main DOM
+ * node.
  *
  * @class I18nDecorator
  * @memberof i18n/I18nDecorator

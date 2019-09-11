@@ -35,8 +35,10 @@ const defaultConfig = {
 };
 
 /**
- * Constructs a higher-order component that initializes and enables Spotlight
- * 5-way navigation within an application.
+ * Constructs a higher-order component that initializes and enables Spotlight 5-way navigation
+ * within an application.
+ *
+ * No additional properties are passed to the wrapped component.
  *
  * Example:
  * ```

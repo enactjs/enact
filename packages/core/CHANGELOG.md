@@ -2,6 +2,20 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/platform` member `touchscreen` to detect the presence of a touchscreen separately from support for touch events
+
+### Fixed
+
+- `core/platform` touch event detection
+
+## [3.0.1] - 2019-09-09
+
+No significant changes.
+
 ## [3.0.0] - 2019-09-03
 
 No significant changes.

@@ -69,9 +69,9 @@ const DropdownListBase = kind({
 		/*
 		 * The width of DropdownList.
 		 *
-		 * @type {('huge'|'large'|'medium'|'small'|'tiny')}
+		 * @type {('huge'|'x-large'|'large'|'medium'|'small'|'tiny')}
 		 */
-		width: PropTypes.oneOf(['tiny', 'small', 'medium', 'large', 'huge'])
+		width: PropTypes.oneOf(['tiny', 'small', 'medium', 'large', 'x-large', 'huge'])
 	},
 
 	styles: {
@@ -87,6 +87,7 @@ const DropdownListBase = kind({
 			if (typeof child === 'string') {
 				child = {children: child};
 			}
+			const data = child.children;
 
 			return (
 				<Item
@@ -94,7 +95,7 @@ const DropdownListBase = kind({
 					{...child}
 					data-selected={index === selected}
 					// eslint-disable-next-line react/jsx-no-bind
-					onClick={() => forward('onSelect', {selected: index}, props)}
+					onClick={() => forward('onSelect', {data, selected: index}, props)}
 				/>
 			);
 		}
@@ -119,6 +120,7 @@ const DropdownListBase = kind({
 				cbScrollTo={scrollTo}
 				dataSize={dataSize}
 				itemSize={itemSize}
+				role="group"
 				style={{height: itemSize * dataSize}}
 			/>
 		);

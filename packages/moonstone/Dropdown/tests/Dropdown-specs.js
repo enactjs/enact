@@ -1,6 +1,7 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
 import {Dropdown, DropdownBase} from '../Dropdown';
+import DropdownList from '../DropdownList';
 
 const title = 'Dropdown select';
 const children = ['option1', 'option2', 'option3'];
@@ -163,5 +164,23 @@ describe('Dropdown', () => {
 		const actual = dropDown.prop('popupProps').children[0];
 
 		expect(actual).toMatchObject(expected);
+	});
+
+	describe('DropdownList', () => {
+		test('should include `data` and `selected` in `onSelect` callback', () => {
+			const handler = jest.fn();
+			const dropDown = mount(
+				<DropdownList onSelect={handler}>
+					{children}
+				</DropdownList>
+			);
+
+			dropDown.find('Item').at(0).simulate('click');
+
+			const expected = {data: 'option1', selected: 0};
+			const actual = handler.mock.calls[0][0];
+
+			expect(actual).toEqual(expected);
+		});
 	});
 });

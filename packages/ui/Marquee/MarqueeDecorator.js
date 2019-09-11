@@ -127,6 +127,9 @@ const TimerState = {
 /**
  * A higher-order component that provides marquee functionalities.
  *
+ * Note: This HoC passes additional properties to the wrapped component and wraps the `children`
+ * prop with an additional component necessary for rendering the marquee.
+ *
  * @class MarqueeDecorator
  * @memberof ui/Marquee
  * @hoc
