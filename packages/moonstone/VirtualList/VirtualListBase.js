@@ -144,7 +144,7 @@ const VirtualListBaseFactory = (type) => {
 			 */
 			itemSizes: PropTypes.array,
 
-			/*
+			/**
 			 * It scrolls by page when `true`, by item when `false`.
 			 *
 			 * @type {Boolean}
@@ -159,7 +159,7 @@ const VirtualListBaseFactory = (type) => {
 			 *
 			 * @type {String}
 			 * @default 'list'
-			 * @publie
+			 * @public
 			 */
 			role: PropTypes.string,
 

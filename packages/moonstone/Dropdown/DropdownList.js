@@ -81,9 +81,7 @@ const DropdownListBase = kind({
 
 	handlers: {
 		itemRenderer: ({index, ...rest}, props) => {
-			const
-				{children, selected} = props,
-				posinset = index + 1;
+			const {children, selected} = props;
 
 			let child = children[index];
 			if (typeof child === 'string') {
@@ -94,8 +92,6 @@ const DropdownListBase = kind({
 				<Item
 					{...rest}
 					{...child}
-					aria-posinset={posinset}
-					aria-setsize={children.length}
 					data-selected={index === selected}
 					// eslint-disable-next-line react/jsx-no-bind
 					onClick={() => forward('onSelect', {selected: index}, props)}

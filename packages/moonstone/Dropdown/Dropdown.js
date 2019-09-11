@@ -208,7 +208,9 @@ const DropdownBase = kind({
 			return children.map((child, i) => {
 				const aria = {
 					role: 'checkbox',
-					'aria-checked': selected === i
+					'aria-checked': selected === i,
+					'aria-posinset': i + 1,
+					'aria-setsize': children.length
 				};
 
 				warning(
