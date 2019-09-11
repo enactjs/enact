@@ -21,6 +21,7 @@ const hasGesture = () => {
 
 const hasTouch = () => {
 	return Boolean(
+		('TouchEvent' in window) ||
 		('ontouchstart' in window) ||
 		window.navigator.msMaxTouchPoints ||
 		(window.navigator.msManipulationViewsEnabled && window.navigator.maxTouchPoints)
