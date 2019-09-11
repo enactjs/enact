@@ -278,7 +278,7 @@ const returnsTrue = handle.returnsTrue = function (handler) {
  *
  * const callsCustomMethod = handle(
  *	callOnEvent('customMethod'),
- *	(ev) => console.log('ev.customMethod() was called')
+ *	(ev) => console.log('ev.customMethod() was called', ev)
  * );
  * ```
  *
@@ -287,6 +287,7 @@ const returnsTrue = handle.returnsTrue = function (handler) {
  * @param    {Object}     ev          Event payload
  *
  * @returns  {Boolean}                Always returns `true`
+ * @curried
  * @memberof core/handle
  * @private
  */
@@ -310,7 +311,7 @@ const callOnEvent = handle.callOnEvent = curry((methodName, ev) => {
  *
  * const logWhenXEqualsZero = handle(
  *   forEventProp('x', 0),
- *   (ev) => console.log('ev.x was equal to zero')
+ *   (ev) => console.log('ev.x was equal to zero', ev)
  * );
  * ```
  *
@@ -320,6 +321,7 @@ const callOnEvent = handle.callOnEvent = curry((methodName, ev) => {
  * @param    {Object}      ev     Event payload
  *
  * @returns  {Boolean}            Returns `true` if `prop` on `event` strictly equals `value`
+ * @curried
  * @memberof core/handle
  * @public
  */
@@ -338,7 +340,7 @@ const forEventProp = handle.forEventProp = curry((prop, value, ev) => {
  *
  * const forwardAndLog = handle(
  *   forward('onClick'),
- *   (ev) => console.log('event forwarded to onClick from props')
+ *   (ev) => console.log('event forwarded to onClick from props', ev)
  * );
  * ```
  *
@@ -348,6 +350,7 @@ const forEventProp = handle.forEventProp = curry((prop, value, ev) => {
  * @param    {Object}    props  Props object
  *
  * @returns  {Boolean}          Always returns `true`
+ * @curried
  * @memberof core/handle
  * @public
  */
@@ -369,7 +372,7 @@ const forward = handle.forward = curry(named((name, ev, props) => {
  *
  * const preventAndLog = handle(
  *   preventDefault,
- *   (ev) => console.log('preventDefault called')
+ *   (ev) => console.log('preventDefault called', ev)
  * );
  * ```
  *
@@ -393,7 +396,7 @@ const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
  *
  * const forwardPreventDefault = handle(
  *   forwardWithPrevent('onClick'),
- *   (ev) => console.log('default action')
+ *   (ev) => console.log('default action', ev)
  * );
  * ```
  *
@@ -403,6 +406,7 @@ const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
  * @param    {Object}    props  Props object
  *
  * @returns  {Boolean}          Returns `true` if default action is prevented
+ * @curried
  * @memberof core/handle
  * @private
  */
@@ -428,7 +432,7 @@ const forwardWithPrevent = handle.forwardWithPrevent = curry(named((name, ev, pr
  *
  * const stopAndLog = handle(
  *   stop,
- *   (ev) => console.log('stopPropagation called')
+ *   (ev) => console.log('stopPropagation called', ev)
  * );
  * ```
  *
@@ -450,7 +454,7 @@ const stop = handle.stop = named(callOnEvent('stopPropagation'), 'stop');
  *
  * const stopImmediateAndLog = handle(
  *   stopImmediate,
- *   (ev) => console.log('stopImmediatePropagation called')
+ *   (ev) => console.log('stopImmediatePropagation called', ev)
  * );
  * ```
  *
@@ -472,7 +476,7 @@ const stopImmediate = handle.stopImmediate = callOnEvent('stopImmediatePropagati
  *
  * const logForEscapeKey = handle(
  *   forKeyCode(27),
- *   (ev) => console.log('Escape key pressed down')
+ *   (ev) => console.log('Escape key pressed down', ev)
  * );
  * ```
  *
@@ -481,6 +485,7 @@ const stopImmediate = handle.stopImmediate = callOnEvent('stopImmediatePropagati
  * @param    {Object}    ev     Event payload
  *
  * @returns  {Boolean}          Returns `true` if `event.keyCode` strictly equals `value`
+ * @curried
  * @memberof core/handle
  * @public
  */
@@ -496,7 +501,7 @@ const forKeyCode = handle.forKeyCode = forEventProp('keyCode');
  *
  * const logForEnterKey = handle(
  *   forKey('enter'),
- *   (ev) => console.log('Enter key pressed down')
+ *   (ev) => console.log('Enter key pressed down', ev)
  * );
  * ```
  *
@@ -506,6 +511,7 @@ const forKeyCode = handle.forKeyCode = forEventProp('keyCode');
  * @param    {Object}    ev     Event payload
  *
  * @returns  {Boolean}          Returns `true` if `event.keyCode` is mapped to `name`
+ * @curried
  * @memberof core/handle
  * @public
  */
@@ -522,7 +528,7 @@ const forKey = handle.forKey = curry((name, ev) => {
  *
  * const logWhenChecked = handle(
  *   forProp('checked', true),
- *   (ev) => console.log('checked prop is true')
+ *   (ev) => console.log('checked prop is true', ev)
  * );
  * ```
  *
@@ -533,6 +539,7 @@ const forKey = handle.forKey = curry((name, ev) => {
  * @param    {Object}    props  Props object
  *
  * @returns  {Boolean}          `true` if the value of `props[prop]` strictly equals `value`
+ * @curried
  * @memberof core/handle
  * @public
  */
@@ -560,6 +567,7 @@ const forProp = handle.forProp = curry((prop, value, ev, props) => {
  * @param    {...*}       [args]   Any args passed are logged
  *
  * @returns  {Boolean}             Always returns `true`
+ * @curried
  * @memberof core/handle
  * @public
  */
@@ -647,6 +655,7 @@ const call = function (method) {
  * @param    {...*}      [args]   Additional args passed to both `adapter` and `handler`
  *
  * @returns  {Object}             New event payload
+ * @curried
  * @memberof core/handle
  * @public
  */
