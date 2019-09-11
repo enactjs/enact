@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/platform` detection for `TouchEvent`
+
 ## [3.0.1] - 2019-09-09
 
 No significant changes.
