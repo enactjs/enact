@@ -154,7 +154,7 @@ const VirtualListBaseFactory = (type) => {
 			pageScroll: PropTypes.bool,
 
 			/**
-			 * The role for the list.
+			 * The ARIA role for the list.
 			 *
 			 * @type {String}
 			 * @default 'list'
