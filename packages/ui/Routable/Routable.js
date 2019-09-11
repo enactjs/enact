@@ -1,3 +1,11 @@
+/**
+ * Utilities for working with routes.
+ *
+ * @module ui/Routable
+ * @exports Routable
+ * @exports Route
+ */
+
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import invariant from 'invariant';

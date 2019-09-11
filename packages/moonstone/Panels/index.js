@@ -47,7 +47,7 @@ export {
 	Routable,
 
 	/**
-	 * Used with {@link ui/Routable.Routable} to define the `path` segment and the
+	 * Used with {@link moonstone/Panels.Routable} to define the `path` segment and the
 	 * `component` to render.
 	 *
 	 * @see {@link ui/Routable.Route}
