@@ -1008,7 +1008,7 @@ class ScrollableBaseNative extends Component {
 
 		return (
 			<UiScrollableBaseNative
-				noScrollByDrag={!platform.touch}
+				noScrollByDrag={!platform.touchscreen}
 				{...rest}
 				addEventListeners={this.addEventListeners}
 				applyOverscrollEffect={this.applyOverscrollEffect}
