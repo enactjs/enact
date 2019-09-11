@@ -1,12 +1,12 @@
 import kind from '@enact/core/kind';
 import Measurable from '@enact/ui/Measurable';
 import Slottable from '@enact/ui/Slottable';
+import IdProvider from '@enact/ui/internal/IdProvider';
 import {shape} from '@enact/ui/ViewManager';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
 
-import IdProvider from '../internal/IdProvider';
 import Skinnable from '../Skinnable';
 
 import CancelDecorator from './CancelDecorator';

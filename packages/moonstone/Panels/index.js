@@ -13,14 +13,14 @@
  * @exports Route
  */
 
+import Routable, {Route} from '@enact/ui/Routable';
+
 import ActivityPanels from './ActivityPanels';
 import AlwaysViewingPanels from './AlwaysViewingPanels';
 import Breadcrumb from './Breadcrumb';
 import Header, {HeaderBase} from './Header';
 import Panel from './Panel';
 import Panels from './Panels';
-import Routable from './Routable';
-import {Route} from './Router';
 
 export default Panels;
 export {
@@ -32,6 +32,30 @@ export {
 	Panel,
 	Panels,
 	Panels as PanelsBase,
+
+	/**
+	 * A higher-order component that provides support for mapping Routes as children of a component
+	 * which are selected via `path` instead of the usual flat array.
+	 *
+	 * @see {@link ui/Routable.Routable}
+	 * @hoc
+	 * @name Routable
+	 * @extends ui/Routable.Routable
+	 * @memberof moonstone/Panels
+	 * @public
+	 */
 	Routable,
+
+	/**
+	 * Used with {@link moonstone/Panels.Routable} to define the `path` segment and the
+	 * `component` to render.
+	 *
+	 * @see {@link ui/Routable.Route}
+	 * @ui
+	 * @name Route
+	 * @extends ui/Routable.Route
+	 * @memberof moonstone/Panels
+	 * @public
+	 */
 	Route
 };
