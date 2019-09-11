@@ -2,7 +2,6 @@ import {
 	configureContainer,
 	configureDefaults,
 	containerAttribute,
-	getSpottableDescendants,
 	removeAllContainers,
 	rootContainerId,
 	setLastContainer
@@ -108,7 +107,7 @@ describe('Spotlight', () => {
 			(root) => {
 				configureContainer('first-container');
 
-				const n = root.querySelector('[data-spotlight-id="first-container"]')
+				const n = root.querySelector('[data-spotlight-id="first-container"]');
 				const fn = mockFocus(n.querySelector('.spottable'));
 				Spotlight.focus(n);
 
@@ -132,7 +131,7 @@ describe('Spotlight', () => {
 			(root) => {
 				configureContainer('first-container');
 
-				const n = root.querySelector('[data-spotlight-id="first-container"]')
+				const n = root.querySelector('[data-spotlight-id="first-container"]');
 				const fn = mockFocus(n.querySelector('.spottable'));
 				Spotlight.focus('[data-spotlight-id="first-container"]');
 
