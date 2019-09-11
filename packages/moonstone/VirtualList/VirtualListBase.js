@@ -155,7 +155,6 @@ const VirtualListBaseFactory = (type) => {
 
 			/**
 			 * The role for the list.
-			 * If unset, it defaults to the `list` of `role`
 			 *
 			 * @type {String}
 			 * @default 'list'
