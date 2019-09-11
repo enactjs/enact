@@ -7,7 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/Dropdown` to add new size `x-large`
-- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` ability to change of the role
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` prop `role` to set its ARIA `role`
 
 ### Fixed
 
