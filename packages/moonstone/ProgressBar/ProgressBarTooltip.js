@@ -16,17 +16,9 @@ const memoizedPercentFormatter = memoize((/* locale */) => new NumFmt({
 	useNative: false
 }));
 
-const getSide = (orientation, side) => {
-	const valid = orientation === 'vertical' || (
-		orientation === 'horizontal' && (side === 'before' || side === 'after')
-	);
-
-	warning(
-		valid,
-		'The value of `side` must be either "after" or "before" when `orientation` is "horizontal"'
-	);
-
-	return valid ? side : 'before';
+const getSideInfo = (side) => {
+	const sideInfo = side.split(' ');
+	return {dir: sideInfo[0], tooltipSide: sideInfo[1]};
 };
 
 /**
@@ -93,14 +85,18 @@ const ProgressBarTooltipBase = kind({
 		 *   current locale's text direction) a `vertical` ProgressBar/Slider
 		 * * `'before'` renders above a `horizontal` ProgressBar/Slider and before (respecting the
 		 *   current locale's text direction) a `vertical` ProgressBar/Slider
-		 * * `'left'` renders to the left of a `vertical` ProgressBar/Slider regardless of locale
-		 * * `'right'` renders to the right of a `vertical` ProgressBar/Slider regardless of locale
+		 * * `'left'` renders to the left of a `horizontal` ProgressBar/Slider regardless of locale and
+		 *   it will be ignored when orientation is `vertical`
+		 * * `'right'` renders to the right of a `horizontal` ProgressBar/Slider regardless of locale and
+		 *   it will be ignored when orientation is `vertical`
+		 * * `'auto'` always renders regard of locale and it will flip when proprtion is greater than 0.5 and
+		 *   orientation is `horizontal`
 		 *
 		 * @type {String}
 		 * @default 'before'
 		 * @public
 		 */
-		side: PropTypes.oneOf(['after', 'before', 'left', 'right']),
+		side: PropTypes.oneOfType(['before auto', 'before left', 'before right', 'after auto', 'after left', 'after right']),
 
 		/**
 		 * Visibility of the tooltip
@@ -116,7 +112,7 @@ const ProgressBarTooltipBase = kind({
 		orientation: 'horizontal',
 		percent: false,
 		proportion: 0,
-		side: 'before',
+		side: 'before auto',
 		visible: false
 	},
 
@@ -136,38 +132,42 @@ const ProgressBarTooltipBase = kind({
 			return children;
 		},
 		className: ({orientation, proportion, side, styler}) => {
-			side = getSide(orientation, side);
-
+			const info = getSideInfo(side);
 			return styler.append(
 				orientation,
 				{
 					afterMidpoint: proportion > 0.5,
-					ignoreLocale: side === 'left' || side === 'right'
+					ignoreLocale: info.tooltipSide === 'auto'
 				},
-				(side === 'before' || side === 'left') ? 'before' : 'after'
+				info.dir
 			);
 		},
-		arrowAnchor: ({proportion, orientation}) => {
+		arrowAnchor: ({proportion, orientation, side}) => {
+			const info = getSideInfo(side);
 			if (orientation === 'vertical') return 'middle';
-			return proportion > 0.5 ? 'left' : 'right';
+			if (info.tooltipSide === 'auto') {
+				return (proportion > 0.5)  ? 'left' : 'right';
+			} else {
+				return info.tooltipSide;
+			}
 		},
 		direction: ({orientation, rtl, side}) => {
-			side = getSide(orientation, side);
-
+			const info = getSideInfo(side);
 			let dir = 'right';
 			if (orientation === 'vertical') {
-				if (
-					// forced to the left
-					side === 'left' ||
-					// LTR before
-					(!rtl && side === 'before') ||
-					// RTL after
-					(rtl && side === 'after')
-				) {
-					dir = 'left';
+				if (info.tooltipSide === 'auto') {
+					if (rtl) {
+						dir = info.dir === 'before' ? 'right' : 'left';
+					} else {
+						dir = info.dir === 'before' ? 'left' : 'right';
+					}
+				} else if (info.dir === 'before') {
+					dir = rtl ? 'right' : 'left';
+				} else {
+					dir = rtl ? 'left' : 'right';
 				}
 			} else {
-				dir = side === 'before' ? 'above' : 'below';
+				dir = info.dir === 'before' ? 'above' : 'below';
 			}
 			return dir;
 		},

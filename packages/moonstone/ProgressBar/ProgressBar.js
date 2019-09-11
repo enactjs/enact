@@ -79,6 +79,18 @@ const ProgressBarBase = kind({
 		progress: PropTypes.number,
 
 		/**
+		 * Sets the side of the ProgressBarTooltip.
+		 * The second word like "left" or "right" will be ignored when `orientation` is "vertical".
+		 *
+		 * * Values: `'after auto'`, `'after left'`, `'after right'`, `'before auto'`, `'before left'`, `'before right'`
+		 *
+		 * @type {String}
+		 * @default 'before auto'
+		 * @public
+		 */
+		side: PropTypes.oneOfType(['after auto', 'after left', 'after right', 'before auto', 'before left', 'before right']),
+
+		/**
 		 * Enables the built-in tooltip.
 		 *
 		 * To customize the tooltip, pass either a custom tooltip component or an instance of
@@ -120,7 +132,8 @@ const ProgressBarBase = kind({
 
 	defaultProps: {
 		orientation: 'horizontal',
-		progress: 0
+		progress: 0,
+		side: 'before auto'
 	},
 
 	styles: {
@@ -133,7 +146,7 @@ const ProgressBarBase = kind({
 		tooltip: ({tooltip}) => tooltip === true ? ProgressBarTooltip : tooltip
 	},
 
-	render: ({css, orientation, progress, tooltip, ...rest}) => {
+	render: ({css, orientation, progress, side, tooltip, ...rest}) => {
 		delete rest.tooltip;
 		delete rest.highlighted;
 
@@ -149,6 +162,7 @@ const ProgressBarBase = kind({
 					orientation={orientation}
 					percent
 					proportion={progress}
+					side={side}
 					visible
 				/>
 			</UiProgressBar>
