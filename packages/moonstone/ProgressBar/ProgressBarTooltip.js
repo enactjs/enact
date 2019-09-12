@@ -66,6 +66,49 @@ const ProgressBarTooltipBase = kind({
 		percent: PropTypes.bool,
 
 		/**
+		 * Position of the tooltip with respect to the wrapped component.
+		 *
+		 * | *Value* | *Tooltip Direction* |
+		 * |---|---|
+		 * | `'above'` | Above component, flowing to the right |
+		 * | `'above center'` | Above component, centered |
+		 * | `'above left'` | Above component, flowing to the left |
+		 * | `'above right'` | Above component, flowing to the right |
+		 * | `'below'` | Below component, flowing to the right |
+		 * | `'below center'` | Below component, centered |
+		 * | `'below left'` | Below component, flowing to the left |
+		 * | `'below right'` | Below component, flowing to the right |
+		 * | `'left bottom'` | Left of the component, contents at the bottom |
+		 * | `'left middle'` | Left of the component, contents middle aligned |
+		 * | `'left top'` | Left of the component, contents at the top |
+		 * | `'right bottom'` | Right of the component, contents at the bottom |
+		 * | `'right middle'` | Right of the component, contents middle aligned |
+		 * | `'right top'` | Right of the component, contents at the top |
+		 *
+		 * `TooltipDectorator` attempts to choose the best direction to meet layout and language
+		 * requirements. Left and right directions will reverse for RTL languages. Additionally,
+		 * the tooltip will reverse direction if it will prevent overflowing off the viewport
+		 *
+		 * @type {('above'|'above center'|'above left'|'above right'|'below'|
+		 *  'below center'|'below left'|'below right'|'left bottom'|'left middle'|'left top'|
+		 * 	'right bottom'|'right middle'|'right top')}
+		 * @default 'above'
+		 * @public
+		 */
+		position: PropTypes.oneOf([
+			'above' /* default center */
+			'above before', /* above and left in LTR, above and right in RTL */
+			'above left', /* above and left */
+			'above center', /* above and center */
+			'above right' /* above and right */
+			'above after' /* above and right in LTR, above and left in RTL */
+			'before'
+			'above', 'above center', 'above left', 'above right',
+			'below', 'below center', 'below left', 'below right',
+			'left bottom', 'left middle', 'left top',
+			'right bottom', 'right middle', 'right top']),
+
+		/**
 		 * The proportion of the filled part of the bar.
 		 *
 		 * * Should be a number between 0 and 1.
