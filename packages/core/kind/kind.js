@@ -52,8 +52,8 @@ import styles from './styles';
  * @property {Object.<string, any>} [defaultProps]
  * @property {Object} [contextType]
  * @property {StylesBlock} [styles]
- * @property {Object.<string, HandlerFunction>} [handlers]
- * @property {Object.<string, ComputedPropFunction>} [computed]
+ * @property {Object.<string, HandlerFunction | Function>} [handlers]
+ * @property {Object.<string, ComputedPropFunction | Function>} [computed]
  * @property {RenderFunction} render
  */
 
