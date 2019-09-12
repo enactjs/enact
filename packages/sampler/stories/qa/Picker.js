@@ -5,7 +5,7 @@ import PickerRTL from './components/PickerRTL';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
-import {boolean, select} from '../../src/enact-knobs';
+import {boolean, select, number} from '../../src/enact-knobs';
 import {action} from '../../src/utils';
 
 Picker.displayName = 'Picker';
@@ -171,5 +171,20 @@ storiesOf('Picker', module)
 			>
 				{pickerList.orderedList}
 			</PickerRTL>
+		)
+	)
+	.add(
+		'with variable size',
+		() => (
+			<Picker
+				joined={boolean('joined', Picker)}
+				noAnimation={boolean('noAnimation', Picker)}
+				style={{
+					width: number('CSS Width', Picker, {range: true, min: 100, max: 500, step: 10}, 400)
+				}}
+				width={select('width', prop.width, Picker, '')}
+			>
+				{pickerList.vegetables}
+			</Picker>
 		)
 	);
