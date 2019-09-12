@@ -179,6 +179,7 @@ storiesOf('Picker', module)
 			<Picker
 				joined={boolean('joined', Picker)}
 				noAnimation={boolean('noAnimation', Picker)}
+				orientation={select('orientation', prop.orientation, Picker, 'horizontal')}
 				style={{
 					width: number('CSS Width', Picker, {range: true, min: 100, max: 500, step: 10}, 400)
 				}}
