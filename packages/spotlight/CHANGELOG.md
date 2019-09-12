@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Added
 
-- `spotlight` support for passing a spottable node or a container node to `Spotlight.focus()`
+- `spotlight` support for passing a spottable node or a container node or selector to `Spotlight.focus()`
 
 ## [3.0.1] - 2019-09-09
 
