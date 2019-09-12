@@ -45,6 +45,7 @@ const forEachObj = curry(function (fn, set) {
  * @param   {Number|Number[]} keyCode  A key code or array of key codes
  *
  * @returns {undefined}
+ * @curried
  * @memberof core/keymap
  * @private
  */
@@ -64,6 +65,7 @@ const oneOrArray = curry(function (fn, name, keyCode) {
  * @param   {Number}    keyCode  A key code
  *
  * @returns {undefined}
+ * @curried
  * @memberof core/keymap
  * @private
  */
@@ -87,6 +89,7 @@ const addOne = curry(function (name, keyCode) {
  * @param   {Number}    keyCode  A key code
  *
  * @returns {undefined}
+ * @curried
  * @memberof core/keymap
  * @private
  */
@@ -111,6 +114,7 @@ const removeOne = curry(function (name, keyCode) {
  * @param   {Number|Number[]} keyCode  A key code or array of key codes
  *
  * @returns {undefined}
+ * @curried
  * @memberof core/keymap
  * @public
  */
@@ -123,6 +127,7 @@ const add = oneOrArray(addOne);
  * @param   {Object<String,Number|Number[]>}    set  A map of names to keyCodes
  *
  * @returns {undefined}
+ * @curried
  * @memberof core/keymap
  * @public
  */
@@ -136,6 +141,7 @@ const addAll = forEachObj(add);
  * @param   {Number|Number[]} keyCode  A key code or array of key codes
  *
  * @returns {undefined}
+ * @curried
  * @memberof core/keymap
  * @public
  */
@@ -148,6 +154,7 @@ const remove = oneOrArray(removeOne);
  * @param   {Object}    set  A map of names to keyCodes
  *
  * @returns {undefined}
+ * @curried
  * @memberof core/keymap
  * @public
  */
@@ -161,6 +168,7 @@ const removeAll = forEachObj(remove);
  * @param   {Number}    keyCode  A key code
  *
  * @returns {Boolean}            `true` if `keyCode` is mapped to `name`
+ * @curried
  * @memberof core/keymap
  * @public
  */
