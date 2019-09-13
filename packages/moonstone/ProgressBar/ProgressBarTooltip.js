@@ -11,6 +11,7 @@ import Tooltip from '../TooltipDecorator/Tooltip';
 
 import css from './ProgressBarTooltip.module.less';
 
+// prop-type validator that warns on invalid orientation + position
 const validatePosition = (base) => (props, key, componentName, location, propFullName, ...rest) => {
 	const {position} = props;
 	let result = base(props, key, componentName, location, propFullName, ...rest);
@@ -38,6 +39,7 @@ const memoizedPercentFormatter = memoize((/* locale */) => new NumFmt({
 
 const getDefaultPosition = (orientation) => orientation === 'horizontal' ? 'above' : 'before';
 
+// Returns an array of keywords with horizontal first and vetical second
 const getSide = (orientation, side, position) => {
 	warning(
 		!side,
