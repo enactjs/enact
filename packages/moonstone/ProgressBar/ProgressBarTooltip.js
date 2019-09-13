@@ -44,21 +44,35 @@ const getSide = (orientation, side, position) => {
 		'side is deprecated'
 	);
 
-	if (!side) {
+	if (position || !side) {
 		position = position || getDefaultPosition(orientation);
 
-		switch (position) {
-			case 'above':
-			case 'below':
-				return ['auto', position];
-			case 'after':
-			case 'before':
-			case 'left':
-			case 'right':
-				return [position, 'auto'];
-			default:
-				// "(above|below) (left|right)"
-				return position.split(' ').reverse();
+		if (orientation === 'horizontal') {
+			switch (position) {
+				case 'above':
+				case 'below':
+					return ['auto', position];
+				case 'after':
+				case 'before':
+				case 'left':
+				case 'right':
+					// invalid values for horizontal so use defaults
+					return ['auto', 'above'];
+				default:
+					// "(above|below) (left|right)"
+					return position.split(' ').reverse();
+			}
+		} else {
+			switch (position) {
+				case 'after':
+				case 'before':
+				case 'left':
+				case 'right':
+					return [position, 'above'];
+				default:
+					// invalid values for horizontal so use defaults
+					return ['before', 'auto'];
+			}
 		}
 	} else {
 		const valid = orientation === 'vertical' || (
