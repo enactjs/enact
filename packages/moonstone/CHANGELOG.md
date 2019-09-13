@@ -4,9 +4,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Deprecated
+
+- `moonstone/ProgressBar.ProgressBarTooltip` and `moonstone/Slider.SliderTooltip` prop `side`, will be replaced by `position` in 4.0.0
+
 ### Added
 
 - `moonstone/Dropdown` to add new size `x-large`
+- `moonstone/ProgressBar.ProgressBarTooltip` and `moonstone/Slider.SliderTooltip` prop `position`, replacing `side`
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` prop `role` to set its ARIA `role`
 
 ### Fixed
