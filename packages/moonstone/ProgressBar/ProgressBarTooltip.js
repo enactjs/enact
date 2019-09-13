@@ -51,15 +51,14 @@ const getSide = (orientation, side, position) => {
 				case 'above':
 				case 'below':
 					return ['auto', position];
-				case 'after':
-				case 'before':
-				case 'left':
-				case 'right':
+				case 'above left':
+				case 'above right':
+				case 'below left':
+				case 'below right':
+					return position.split(' ').reverse();
+				default:
 					// invalid values for horizontal so use defaults
 					return ['auto', 'above'];
-				default:
-					// "(above|below) (left|right)"
-					return position.split(' ').reverse();
 			}
 		} else {
 			switch (position) {
@@ -132,7 +131,13 @@ const ProgressBarTooltipBase = kind({
 		 * Position of the tooltip with respect to the progress bar.
 		 *
 		 * * For `orientation="horizontal"` progress bars, the default value is `'above'`.
-		 * * For `orientation="vertical"` progress bars, the default value is `'above'`.
+		 * * For `orientation="vertical"` progress bars, the default value is `'before'`.
+		 *
+		 * When using `'before'` or `'after'` alone or in any of the below combinations, `'before'`
+		 * will position the tooltip on the side of the current locale's text directionality. In LTR
+		 * locales, it will be on the left; in RTL locales, it will be on the right. Similarly,
+		 * `'after'` will position the tooltip on the oppoosite side: the right side for LTR and
+		 * left for RTL.
 		 *
 		 * Valid values when `orientation="horizontal"`
 		 *
@@ -142,7 +147,7 @@ const ProgressBarTooltipBase = kind({
 		 * | `'above left'` | Above component, flowing to the left |
 		 * | `'above before'` | Above component, flowing to the start of text |
 		 * | `'above right'` | Above component, flowing to the right |
-		 * | `'above after'` | Above component, flowing to the end of text |=
+		 * | `'above after'` | Above component, flowing to the end of text |
 		 * | `'below'` | Below component, flowing to the nearest end |
 		 * | `'below left'` | Below component, flowing to the left |
 		 * | `'below before'` | Below component, flowing to the start of text |
