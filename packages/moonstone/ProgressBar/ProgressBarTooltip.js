@@ -16,17 +16,47 @@ const memoizedPercentFormatter = memoize((/* locale */) => new NumFmt({
 	useNative: false
 }));
 
-const getSide = (orientation, side) => {
-	const valid = orientation === 'vertical' || (
-		orientation === 'horizontal' && (side === 'before' || side === 'after')
-	);
+const getDefaultPosition = (orientation) => orientation === 'horizontal' ? 'above' : 'before';
 
+const getSide = (orientation, side, position) => {
 	warning(
-		valid,
-		'The value of `side` must be either "after" or "before" when `orientation` is "horizontal"'
+		!side,
+		'side is deprecated'
 	);
 
-	return valid ? side : 'before';
+	if (!side) {
+		position = position || getDefaultPosition(orientation);
+
+		switch (position) {
+			case 'above':
+			case 'below':
+				return ['auto', position];
+			case 'after':
+			case 'before':
+			case 'left':
+			case 'right':
+				return [position, 'auto'];
+			default:
+				// "(above|below) (left|right)"
+				return position.split(' ').reverse();
+		}
+	} else {
+		const valid = orientation === 'vertical' || (
+			orientation === 'horizontal' && (side === 'before' || side === 'after')
+		);
+
+		warning(
+			valid,
+			'The value of `side` must be either "after" or "before" when `orientation` is "horizontal"'
+		);
+
+		if (orientation === 'horizontal') {
+			// Testing for 'after' so if side === left or right, we default to "above"
+			return [side === 'after' ? 'below' : 'above', 'auto'];
+		}
+
+		return [side, 'auto'];
+	}
 };
 
 /**
@@ -85,28 +115,28 @@ const ProgressBarTooltipBase = kind({
 		 * | `'right middle'` | Right of the component, contents middle aligned |
 		 * | `'right top'` | Right of the component, contents at the top |
 		 *
-		 * `TooltipDectorator` attempts to choose the best direction to meet layout and language
-		 * requirements. Left and right directions will reverse for RTL languages. Additionally,
-		 * the tooltip will reverse direction if it will prevent overflowing off the viewport
-		 *
-		 * @type {('above'|'above center'|'above left'|'above right'|'below'|
-		 *  'below center'|'below left'|'below right'|'left bottom'|'left middle'|'left top'|
-		 * 	'right bottom'|'right middle'|'right top')}
+		 * @type {...}
 		 * @default 'above'
 		 * @public
 		 */
 		position: PropTypes.oneOf([
-			'above' /* default center */
-			'above before', /* above and left in LTR, above and right in RTL */
+			'above', /* above and auto flipping */
+			'above before', /* above and left */
 			'above left', /* above and left */
-			'above center', /* above and center */
-			'above right' /* above and right */
-			'above after' /* above and right in LTR, above and left in RTL */
-			'before'
-			'above', 'above center', 'above left', 'above right',
-			'below', 'below center', 'below left', 'below right',
-			'left bottom', 'left middle', 'left top',
-			'right bottom', 'right middle', 'right top']),
+			'above after', /* above and right */
+			'above right', /* above and right */
+
+			'before', /* left and middle in LTR, right and middle in RTL */
+			'left', /* left and middle */
+			'right', /* right and middle in LTR, left and middle in RTL */
+			'after', /* right and middle in LTR, left and middle in RTL */
+
+			'below', /* below and auto flipping */
+			'below left', /* below and left */
+			'below before', /* below and left */
+			'below right', /* below and right */
+			'below after' /* below and right */
+		]),
 
 		/**
 		 * The proportion of the filled part of the bar.
@@ -159,7 +189,6 @@ const ProgressBarTooltipBase = kind({
 		orientation: 'horizontal',
 		percent: false,
 		proportion: 0,
-		side: 'before',
 		visible: false
 	},
 
@@ -178,39 +207,54 @@ const ProgressBarTooltipBase = kind({
 
 			return children;
 		},
-		className: ({orientation, proportion, side, styler}) => {
-			side = getSide(orientation, side);
+		className: ({orientation, position, proportion, side, styler}) => {
+			const [h, v] = getSide(orientation, side, position);
 
 			return styler.append(
 				orientation,
 				{
-					afterMidpoint: proportion > 0.5,
-					ignoreLocale: side === 'left' || side === 'right'
-				},
-				(side === 'before' || side === 'left') ? 'before' : 'after'
+					above: v === 'above',
+					below: v === 'below',
+					before: h === 'before',
+					after: h === 'after',
+					left: h === 'left' || (h === 'auto' && proportion <= 0.5),
+					right: h === 'right' || (h === 'auto' && proportion > 0.5)
+				}
 			);
 		},
-		arrowAnchor: ({proportion, orientation}) => {
+		arrowAnchor: ({orientation, position, proportion, rtl}) => {
 			if (orientation === 'vertical') return 'middle';
-			return proportion > 0.5 ? 'left' : 'right';
+
+			const [h] = getSide(orientation, false, position);
+			switch (h) {
+				case 'auto':
+					return proportion > 0.5 ? 'left' : 'right';
+				case 'before':
+					return rtl ? 'right' : 'left';
+				case 'after':
+					return rtl ? 'left' : 'right';
+				case 'left':
+				case 'right':
+					return h;
+			}
 		},
-		direction: ({orientation, rtl, side}) => {
-			side = getSide(orientation, side);
+		direction: ({orientation, position, rtl, side}) => {
+			const [h, v] = getSide(orientation, side, position);
 
 			let dir = 'right';
 			if (orientation === 'vertical') {
 				if (
 					// forced to the left
-					side === 'left' ||
+					h === 'left' ||
 					// LTR before
-					(!rtl && side === 'before') ||
+					(!rtl && h === 'before') ||
 					// RTL after
-					(rtl && side === 'after')
+					(rtl && h === 'after')
 				) {
 					dir = 'left';
 				}
 			} else {
-				dir = side === 'before' ? 'above' : 'below';
+				dir = v !== 'below' ? 'above' : 'below';
 			}
 			return dir;
 		},
@@ -225,6 +269,7 @@ const ProgressBarTooltipBase = kind({
 
 		delete rest.orientation;
 		delete rest.percent;
+		delete rest.position;
 		delete rest.proportion;
 		delete rest.rtl;
 		delete rest.side;

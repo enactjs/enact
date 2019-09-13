@@ -15,8 +15,9 @@ storiesOf('Moonstone', module)
 	.add(
 		'ProgressBar',
 		() => {
-			const side = select('side', ['after', 'before', 'left', 'right'], ProgressBarTooltipConfig, 'before');
 			const tooltip = boolean('tooltip', ProgressBarTooltipConfig);
+			const position = select('position', ['', 'above', 'above left', 'above right', 'above before', 'above after', 'before', 'left', 'right', 'after', 'below', 'below left', 'below right', 'below before', 'below after'], ProgressBarTooltipConfig, '');
+			const side = select('side (Deprecated)', ['', 'after', 'before', 'left', 'right'], ProgressBarTooltipConfig, '');
 
 			return (
 				<ProgressBar
@@ -25,10 +26,10 @@ storiesOf('Moonstone', module)
 					highlighted={boolean('highlighted', ProgressBarConfig)}
 					orientation={select('orientation', ['horizontal', 'vertical'], ProgressBarConfig, 'horizontal')}
 					progress={number('progress', ProgressBarConfig, {range: true, min: 0, max: 1, step: 0.01}, 0.4)}
-					side={select('side', ['after', 'before', 'left', 'right'], ProgressBarConfig, 'before')}
 				>
 					{tooltip ? (
 						<ProgressBarTooltip
+							position={position}
 							side={side}
 						/>
 					) : null}
