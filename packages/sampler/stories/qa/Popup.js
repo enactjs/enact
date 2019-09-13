@@ -30,6 +30,59 @@ const PopupFromSelfOnlyContainer = Toggleable(
 	)
 );
 
+class PopupResumeFocusAfterOpenState extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			isPopup: false,
+			isNotification: false
+		};
+	}
+
+	handlePopup = () => {
+		this.setState({
+			isPopup: true
+		});
+
+		setTimeout(() => {
+			this.setState({
+				isPopup: false
+			});
+		}, 200);
+	}
+
+	handleClose = () => {
+		this.setState({
+			isPopup: false
+		});
+	}
+
+	handleNotification = () => {
+		this.setState({
+			isNotification: false
+		});
+	}
+
+	render () {
+		return (
+			<div>
+				<Button onClick={this.handlePopup}>open</Button>
+				<Button>hello</Button>
+				<Popup open={this.state.isPopup} onClose={this.handleDismiss}>
+					<Button>
+						<Button onClick={this.handleClose}>close</Button>
+					</Button>
+				</Popup>
+				<Notification open={this.state.isNotification}>
+					<Button>
+						<Button onClick={this.handleNotification}>close</Button>
+					</Button>
+				</Notification>
+			</div>
+		);
+	}
+}
+
 storiesOf('Popup', module)
 	.add(
 		'using spotlightRestrict',
@@ -65,5 +118,11 @@ storiesOf('Popup', module)
 		'from self-only container',
 		() => (
 			<PopupFromSelfOnlyContainer />
+		)
+	)
+	.add(
+		'resume focus after open state',
+		() => (
+			<PopupResumeFocusAfterOpenState />
 		)
 	);
