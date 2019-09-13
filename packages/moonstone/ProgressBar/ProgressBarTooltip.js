@@ -13,6 +13,7 @@ import Tooltip from '../TooltipDecorator/Tooltip';
 import css from './ProgressBarTooltip.module.less';
 
 // prop-type validator that warns on invalid orientation + position
+/* istanbul ignore next */
 const validatePosition = (base) => (props, key, componentName, location, propFullName, ...rest) => {
 	const {position} = props;
 	let result = base(props, key, componentName, location, propFullName, ...rest);
@@ -263,12 +264,12 @@ const ProgressBarTooltipBase = kind({
 			return styler.append(
 				orientation,
 				{
-					above: v === 'above',
-					below: v === 'below',
-					before: h === 'before',
-					after: h === 'after',
-					left: h === 'left' || (h === 'auto' && proportion <= 0.5),
-					right: h === 'right' || (h === 'auto' && proportion > 0.5)
+					above: (v === 'above'),
+					below: (v === 'below'),
+					before: (h === 'before'),
+					after: (h === 'after'),
+					left: (h === 'left' || (h === 'auto' && proportion <= 0.5)),
+					right: (h === 'right' || (h === 'auto' && proportion > 0.5))
 				}
 			);
 		},
