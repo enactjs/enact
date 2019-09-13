@@ -51,8 +51,12 @@ const getSide = (orientation, side, position) => {
 				case 'above':
 				case 'below':
 					return ['auto', position];
+				case 'above after':
+				case 'above before':
 				case 'above left':
 				case 'above right':
+				case 'below after':
+				case 'below before':
 				case 'below left':
 				case 'below right':
 					return position.split(' ').reverse();
