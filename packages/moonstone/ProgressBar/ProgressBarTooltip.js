@@ -96,27 +96,29 @@ const ProgressBarTooltipBase = kind({
 		percent: PropTypes.bool,
 
 		/**
-		 * Position of the tooltip with respect to the wrapped component.
+		 * Position of the tooltip with respect to the progress bar.
+		 *
+		 * * For `orientation="horizontal"` progress bars, the default value is `'above'`.
+		 * * For `orientation="vertical"` progress bars, the default value is `'above'`.
 		 *
 		 * | *Value* | *Tooltip Direction* |
 		 * |---|---|
-		 * | `'above'` | Above component, flowing to the right |
-		 * | `'above center'` | Above component, centered |
+		 * | `'above'` | Above component, flowing to the nearest end |
 		 * | `'above left'` | Above component, flowing to the left |
+		 * | `'above before'` | Above component, flowing to the start of text |
 		 * | `'above right'` | Above component, flowing to the right |
-		 * | `'below'` | Below component, flowing to the right |
-		 * | `'below center'` | Below component, centered |
+		 * | `'above after'` | Above component, flowing to the end of text |=
+		 * | `'below'` | Below component, flowing to the nearest end |
 		 * | `'below left'` | Below component, flowing to the left |
+		 * | `'below before'` | Below component, flowing to the start of text |
 		 * | `'below right'` | Below component, flowing to the right |
-		 * | `'left bottom'` | Left of the component, contents at the bottom |
-		 * | `'left middle'` | Left of the component, contents middle aligned |
-		 * | `'left top'` | Left of the component, contents at the top |
-		 * | `'right bottom'` | Right of the component, contents at the bottom |
-		 * | `'right middle'` | Right of the component, contents middle aligned |
-		 * | `'right top'` | Right of the component, contents at the top |
+		 * | `'below after'` | Below component, flowing to the end of text |
+		 * | `'left'` | Left of the component, contents middle aligned |
+		 * | `'before'` | Start of text side of the component, contents middle aligned |
+		 * | `'right'` | right of the component, contents middle aligned |
+		 * | `'after'` | End of text side of the component, contents middle aligned |
 		 *
-		 * @type {...}
-		 * @default 'above'
+		 * @type {('above'|'above before'|'above left'|'above after'|'above right'|'below'|'below left'|'below before'|'below right'|'below after'|'left'|'before'|'right'|'after')}
 		 * @public
 		 */
 		position: PropTypes.oneOf([
@@ -126,16 +128,16 @@ const ProgressBarTooltipBase = kind({
 			'above after', /* above and right */
 			'above right', /* above and right */
 
-			'before', /* left and middle in LTR, right and middle in RTL */
-			'left', /* left and middle */
-			'right', /* right and middle in LTR, left and middle in RTL */
-			'after', /* right and middle in LTR, left and middle in RTL */
-
 			'below', /* below and auto flipping */
 			'below left', /* below and left */
 			'below before', /* below and left */
 			'below right', /* below and right */
-			'below after' /* below and right */
+			'below after', /* below and right */
+
+			'left', /* left and middle */
+			'before', /* left and middle in LTR, right and middle in RTL */
+			'right', /* right and middle in LTR, left and middle in RTL */
+			'after' /* right and middle in LTR, left and middle in RTL */
 		]),
 
 		/**
@@ -170,7 +172,7 @@ const ProgressBarTooltipBase = kind({
 		 * * `'right'` renders to the right of a `vertical` ProgressBar/Slider regardless of locale
 		 *
 		 * @type {String}
-		 * @default 'before'
+		 * @deprecated Deprecated since 3.1 until 4.0 in favor of `position`
 		 * @public
 		 */
 		side: PropTypes.oneOf(['after', 'before', 'left', 'right']),
