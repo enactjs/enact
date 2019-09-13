@@ -82,6 +82,20 @@ import curry from 'ramda/src/curry';
 
 import {is} from '../keymap';
 
+/**
+ * @callback EventHandler
+ * @memberof core/handle
+ * @param {any} event
+ */
+
+/**
+ * @callback HandlerFunction
+ * @memberof core/handle
+ * @param {Object} event
+ * @param {Object<string, any>} props
+ * @param {Object<string, any>} context
+ */
+
 // Accepts an array of handlers, sanitizes them, and returns a handler function
 // compose(allPass, map(makeSafeHandler));
 const makeHandler = (handlers) => {
@@ -149,9 +163,9 @@ const decorateHandleFunction = (fn) => {
  * of the returned value.
  *
  * @method   handle
- * @param    {...Function}  handlers List of handlers to process the event.
+ * @param    {...HandlerFunction}  handlers List of handlers to process the event.
  *
- * @returns  {Function}	    A function that accepts an event which is dispatched to each of the
+ * @returns  {EventHandler}	A function that accepts an event which is dispatched to each of the
  *                          provided handlers.
  * @memberof core/handle
  * @public
@@ -222,7 +236,7 @@ const handle = function (...handlers) {
  * @method   oneOf
  * @param    {...Function[]}  handlers List of conditions and handlers to process the event
  *
- * @returns  {Function}	    A function that accepts an event which is dispatched to each of the
+ * @returns  {HandlerFunction} A function that accepts an event which is dispatched to each of the
  *                          conditions and, if it passes, onto the provided handler.
  * @memberof core/handle
  * @public
@@ -253,7 +267,7 @@ const oneOf = handle.oneOf = function (...handlers) {
  * @method   returnsTrue
  * @param    {Function}  [handler]  Handler function called before returning `true`.
  *
- * @returns  {Function}	   A function that returns true
+ * @returns  {HandlerFunction}	   A function that returns true
  * @memberof core/handle
  * @public
  */
@@ -286,7 +300,7 @@ const returnsTrue = handle.returnsTrue = function (handler) {
  * @param    {String}     methodName  Name of the method to call on the event
  * @param    {Object}     ev          Event payload
  *
- * @returns  {Boolean}                Always returns `true`
+ * @returns  {HandlerFunction}        Returns a function that always returns `true`
  * @curried
  * @memberof core/handle
  * @private
@@ -320,7 +334,8 @@ const callOnEvent = handle.callOnEvent = curry((methodName, ev) => {
  * @param    {*}           value  Value of property
  * @param    {Object}      ev     Event payload
  *
- * @returns  {Boolean}            Returns `true` if `prop` on `event` strictly equals `value`
+ * @returns  {HandlerFunction}    Returns a function that returns `true` if `prop` on `event`
+ *                                strictly equals `value`
  * @curried
  * @memberof core/handle
  * @public
@@ -349,7 +364,7 @@ const forEventProp = handle.forEventProp = curry((prop, value, ev) => {
  * @param    {Object}    ev     Event payload
  * @param    {Object}    props  Props object
  *
- * @returns  {Boolean}          Always returns `true`
+ * @returns  {HandlerFunction}  Returns a function that always returns `true`
  * @curried
  * @memberof core/handle
  * @public
@@ -379,7 +394,7 @@ const forward = handle.forward = curry(named((name, ev, props) => {
  * @method   preventDefault
  * @param    {Object}        ev  Event payload
  *
- * @returns  {Boolean}           Always returns `true`
+ * @returns  {HandlerFunction}   Returns a function that always returns `true`
  * @memberof core/handle
  * @public
  */
@@ -405,7 +420,8 @@ const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
  * @param    {Object}    ev     Event payload
  * @param    {Object}    props  Props object
  *
- * @returns  {Boolean}          Returns `true` if default action is prevented
+ * @returns  {HandlerFunction}  Returns a function that returns `true` if default action is
+ *                              prevented
  * @curried
  * @memberof core/handle
  * @private
@@ -439,7 +455,8 @@ const forwardWithPrevent = handle.forwardWithPrevent = curry(named((name, ev, pr
  * @method   stop
  * @param    {Object}   ev  Event payload
  *
- * @returns  {Boolean}      Always returns `true`
+ * @returns  {HandlerFunction}   Returns a function that always returns `true`
+ * @curried
  * @memberof core/handle
  * @public
  */
@@ -461,7 +478,8 @@ const stop = handle.stop = named(callOnEvent('stopPropagation'), 'stop');
  * @method   stopImmediate
  * @param    {Object}       ev  Event payload
  *
- * @returns  {Boolean}          Always returns `true`
+ * @returns  {HandlerFunction}  Returns a function that always returns `true`
+ * @curried
  * @memberof core/handle
  * @public
  */
@@ -484,7 +502,8 @@ const stopImmediate = handle.stopImmediate = callOnEvent('stopImmediatePropagati
  * @param    {Number}    value  `keyCode` to test
  * @param    {Object}    ev     Event payload
  *
- * @returns  {Boolean}          Returns `true` if `event.keyCode` strictly equals `value`
+ * @returns  {HandlerFunction}  Returns a function that returns `true` if `event.keyCode` strictly
+ *                              equals `value`
  * @curried
  * @memberof core/handle
  * @public
@@ -510,7 +529,8 @@ const forKeyCode = handle.forKeyCode = forEventProp('keyCode');
  * @param    {String}    name   Name from {@link core/keymap}
  * @param    {Object}    ev     Event payload
  *
- * @returns  {Boolean}          Returns `true` if `event.keyCode` is mapped to `name`
+ * @returns  {HandlerFunction}  Returns a function that returns `true` if `event.keyCode` is mapped
+ *                              to `name`
  * @curried
  * @memberof core/handle
  * @public
@@ -538,7 +558,8 @@ const forKey = handle.forKey = curry((name, ev) => {
  * @param    {Object}    ev     Event payload
  * @param    {Object}    props  Props object
  *
- * @returns  {Boolean}          `true` if the value of `props[prop]` strictly equals `value`
+ * @returns  {HandlerFunction}  Returns a function that returns `true` if the value of `props[prop]`
+ *                              strictly equals `value`
  * @curried
  * @memberof core/handle
  * @public
@@ -566,7 +587,7 @@ const forProp = handle.forProp = curry((prop, value, ev, props) => {
  * @param    {Object}     ev       Event payload
  * @param    {...*}       [args]   Any args passed are logged
  *
- * @returns  {Boolean}             Always returns `true`
+ * @returns  {HandlerFunction}     Returns a function that always returns `true`
  * @curried
  * @memberof core/handle
  * @public
@@ -613,7 +634,7 @@ const log = handle.log = curry((message, ev, ...args) => {
  * @method   call
  * @param    {String}     method  Name of method
  *
- * @returns  {Boolean}            Returns the value returned by `method`, or `false` if the method
+ * @returns  {HandlerFunction}    Returns the value returned by `method`, or `false` if the method
  *                                does not exist
  * @memberof core/handle
  * @public
@@ -654,7 +675,7 @@ const call = function (method) {
  * @param    {Function}  handler  Handler to call with the new event payload
  * @param    {...*}      [args]   Additional args passed to both `adapter` and `handler`
  *
- * @returns  {Function}             New event payload
+ * @returns  {HandlerFunction}    New event payload
  * @curried
  * @memberof core/handle
  * @public
