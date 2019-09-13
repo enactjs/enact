@@ -86,7 +86,7 @@ const getSide = (orientation, side, position) => {
 
 		if (orientation === 'horizontal') {
 			// Testing for 'after' so if side === left or right, we default to "above"
-			return [side === 'after' ? 'below' : 'above', 'auto'];
+			return ['auto', side === 'after' ? 'below' : 'above'];
 		}
 
 		return [side, 'auto'];
