@@ -91,8 +91,8 @@ import {is} from '../keymap';
 /**
  * @callback HandlerFunction
  * @memberof core/handle
- * @param {Object} event
- * @param {Object<string, any>} props
+ * @param {Object<string, any>} event
+ * @param {any} props
  * @param {Object<string, any>} context
  */
 
