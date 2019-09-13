@@ -11,6 +11,26 @@ import Tooltip from '../TooltipDecorator/Tooltip';
 
 import css from './ProgressBarTooltip.module.less';
 
+const validatePosition = (base) => (props, key, componentName, location, propFullName, ...rest) => {
+	const {position} = props;
+	let result = base(props, key, componentName, location, propFullName, ...rest);
+
+	if (!result && position) {
+		const orientation = props.orientation || 'horizontal';
+		const hasVerticalValue = ['before', 'after', 'left', 'right'].includes(position);
+		if (
+			(orientation === 'vertical' && !hasVerticalValue) ||
+			(orientation === 'horizontal' && hasVerticalValue)
+		) {
+			result = new Error(
+				`'${key}' value '${position}' is not a valid value for the orientation '${orientation}'`
+			);
+		}
+	}
+
+	return result;
+};
+
 const memoizedPercentFormatter = memoize((/* locale */) => new NumFmt({
 	type: 'percentage',
 	useNative: false
@@ -128,7 +148,7 @@ const ProgressBarTooltipBase = kind({
 		 * @type {('above'|'above before'|'above left'|'above after'|'above right'|'below'|'below left'|'below before'|'below right'|'below after'|'left'|'before'|'right'|'after')}
 		 * @public
 		 */
-		position: PropTypes.oneOf([
+		position: validatePosition(PropTypes.oneOf([
 			// horizontal
 			'above',
 			'above before',
@@ -146,7 +166,7 @@ const ProgressBarTooltipBase = kind({
 			'before',
 			'right',
 			'after'
-		]),
+		])),
 
 		/**
 		 * The proportion of the filled part of the bar.
