@@ -15,15 +15,20 @@ storiesOf('Moonstone', module)
 	.add(
 		'Slider',
 		() => {
-			const side = select('side', ['after', 'before', 'left', 'right'], SliderTooltipConfig, 'before');
+			// added here to force Storybook to put the Slider tab first
+			const disabled = boolean('disabled', SliderConfig);
+
+			// tooltip is first so it appears at the top of the tab. the rest are alphabetical
 			const tooltip = boolean('tooltip', SliderTooltipConfig);
 			const percent = boolean('percent', SliderTooltipConfig);
+			const position = select('position', ['', 'above', 'above left', 'above right', 'above before', 'above after', 'before', 'left', 'right', 'after', 'below', 'below left', 'below right', 'below before', 'below after'], SliderTooltipConfig, '');
+			const side = select('side (Deprecated)', ['', 'after', 'before', 'left', 'right'], SliderTooltipConfig, '');
 
 			return (
 				<Slider
 					activateOnFocus={boolean('activateOnFocus', SliderConfig)}
 					backgroundProgress={number('backgroundProgress', SliderConfig, {range: true, min: 0, max: 1, step: 0.01}, 0.5)}
-					disabled={boolean('disabled', SliderConfig)}
+					disabled={disabled}
 					knobStep={number('knobStep', SliderConfig)}
 					max={number('max', SliderConfig, 10)}
 					min={number('min', SliderConfig, 0)}
@@ -36,6 +41,7 @@ storiesOf('Moonstone', module)
 					{tooltip ? (
 						<SliderTooltip
 							percent={percent}
+							position={position}
 							side={side}
 						/>
 					) : null}
