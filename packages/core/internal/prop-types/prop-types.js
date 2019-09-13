@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 
 import {isRenderable} from '../../util';
 
+import deprecate from '../deprecate';
+
 const isRequired = (fn) => {
 	fn.isRequired = function (props, key, componentName, location, propFullName, ...rest) {
 		const propValue = props[key];
@@ -47,9 +49,18 @@ const componentOverride = PropTypes.oneOfType([
 	component
 ]);
 
+const deprecated = (base, config) => {
+	const warn = deprecate(() => true, config);
+	return (props, key, ...rest) => {
+		if (props[key] != null) warn();
+		return base(props, key, ...rest);
+	};
+};
+
 const EnactPropTypes = {
 	component,
 	componentOverride,
+	deprecated,
 	renderable,
 	renderableOverride
 };

@@ -3,7 +3,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 
 import {boolean, number, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {mergeComponentMetadata, nullify} from '../../src/utils';
 
 const ProgressBarConfig = mergeComponentMetadata('ProgressBar', ProgressBar);
 const ProgressBarTooltipConfig = mergeComponentMetadata('ProgressBarTooltip', ProgressBarTooltip);
@@ -21,7 +21,7 @@ storiesOf('Moonstone', module)
 			// tooltip is first so it appears at the top of the tab. the rest are alphabetical
 			const tooltip = boolean('tooltip', ProgressBarTooltipConfig);
 			const position = select('position', ['', 'above', 'above left', 'above right', 'above before', 'above after', 'before', 'left', 'right', 'after', 'below', 'below left', 'below right', 'below before', 'below after'], ProgressBarTooltipConfig, '');
-			const side = select('side (Deprecated)', ['', 'after', 'before', 'left', 'right'], ProgressBarTooltipConfig, '');
+			const side = nullify(select('side (Deprecated)', ['', 'after', 'before', 'left', 'right'], ProgressBarTooltipConfig, ''));
 
 			return (
 				<ProgressBar

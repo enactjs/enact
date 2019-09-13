@@ -3,7 +3,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 
 import {boolean, number, select} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata} from '../../src/utils';
+import {action, mergeComponentMetadata, nullify} from '../../src/utils';
 
 const SliderConfig = mergeComponentMetadata('Slider', Slider);
 const SliderTooltipConfig = mergeComponentMetadata('SliderTooltip', SliderTooltip);
@@ -22,7 +22,7 @@ storiesOf('Moonstone', module)
 			const tooltip = boolean('tooltip', SliderTooltipConfig);
 			const percent = boolean('percent', SliderTooltipConfig);
 			const position = select('position', ['', 'above', 'above left', 'above right', 'above before', 'above after', 'before', 'left', 'right', 'after', 'below', 'below left', 'below right', 'below before', 'below after'], SliderTooltipConfig, '');
-			const side = select('side (Deprecated)', ['', 'after', 'before', 'left', 'right'], SliderTooltipConfig, '');
+			const side = nullify(select('side (Deprecated)', ['', 'after', 'before', 'left', 'right'], SliderTooltipConfig, ''));
 
 			return (
 				<Slider

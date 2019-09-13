@@ -1,3 +1,4 @@
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import {memoize} from '@enact/core/util';
 import ilib from '@enact/i18n';
@@ -41,11 +42,6 @@ const getDefaultPosition = (orientation) => orientation === 'horizontal' ? 'abov
 
 // Returns an array of keywords with horizontal first and vetical second
 const getSide = (orientation, side, position) => {
-	warning(
-		!side,
-		'side is deprecated'
-	);
-
 	if (position || !side) {
 		position = position || getDefaultPosition(orientation);
 
@@ -219,7 +215,15 @@ const ProgressBarTooltipBase = kind({
 		 * @deprecated Deprecated since 3.1 until 4.0 in favor of `position`
 		 * @public
 		 */
-		side: PropTypes.oneOf(['after', 'before', 'left', 'right']),
+		side: EnactPropTypes.deprecated(
+			PropTypes.oneOf(['after', 'before', 'left', 'right']),
+			{
+				name: 'side',
+				since: '3.1.0',
+				until: '4.0.0',
+				replacedBy: 'position'
+			}
+		),
 
 		/**
 		 * Visibility of the tooltip
