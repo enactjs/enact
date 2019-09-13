@@ -101,6 +101,8 @@ const ProgressBarTooltipBase = kind({
 		 * * For `orientation="horizontal"` progress bars, the default value is `'above'`.
 		 * * For `orientation="vertical"` progress bars, the default value is `'above'`.
 		 *
+		 * Valid values when `orientation="horizontal"`
+		 *
 		 * | *Value* | *Tooltip Direction* |
 		 * |---|---|
 		 * | `'above'` | Above component, flowing to the nearest end |
@@ -113,6 +115,11 @@ const ProgressBarTooltipBase = kind({
 		 * | `'below before'` | Below component, flowing to the start of text |
 		 * | `'below right'` | Below component, flowing to the right |
 		 * | `'below after'` | Below component, flowing to the end of text |
+		 *
+		 * Valid values when `orientation="vertical"`
+		 *
+		 * | *Value* | *Tooltip Direction* |
+		 * |---|---|
 		 * | `'left'` | Left of the component, contents middle aligned |
 		 * | `'before'` | Start of text side of the component, contents middle aligned |
 		 * | `'right'` | right of the component, contents middle aligned |
@@ -122,22 +129,23 @@ const ProgressBarTooltipBase = kind({
 		 * @public
 		 */
 		position: PropTypes.oneOf([
-			'above', /* above and auto flipping */
-			'above before', /* above and left */
-			'above left', /* above and left */
-			'above after', /* above and right */
-			'above right', /* above and right */
+			// horizontal
+			'above',
+			'above before',
+			'above left',
+			'above after',
+			'above right',
+			'below',
+			'below left',
+			'below before',
+			'below right',
+			'below after',
 
-			'below', /* below and auto flipping */
-			'below left', /* below and left */
-			'below before', /* below and left */
-			'below right', /* below and right */
-			'below after', /* below and right */
-
-			'left', /* left and middle */
-			'before', /* left and middle in LTR, right and middle in RTL */
-			'right', /* right and middle in LTR, left and middle in RTL */
-			'after' /* right and middle in LTR, left and middle in RTL */
+			// vertical
+			'left',
+			'before',
+			'right',
+			'after'
 		]),
 
 		/**
