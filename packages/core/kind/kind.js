@@ -21,17 +21,17 @@ import styles from './styles';
 /**
  * @callback ComputedPropFunction
  * @memberof core/kind
- * @param {Object<string, any>} props
- * @param {Object<string, any>} context
+ * @param {Object<string, any>} [props]
+ * @param {Object<string, any>} [context]
  * @returns any
  */
 
 /**
  * @callback HandlerFunction
  * @memberof core/kind
- * @param {any} event
- * @param {Object<string, any>} props
- * @param {Object<string, any>} context
+ * @param {any} [event]
+ * @param {Object<string, any>} [props]
+ * @param {Object<string, any>} [context]
  */
 
 /**
@@ -52,8 +52,8 @@ import styles from './styles';
  * @property {Object.<string, any>} [defaultProps]
  * @property {Object} [contextType]
  * @property {StylesBlock} [styles]
- * @property {Object.<string, HandlerFunction | Function>} [handlers]
- * @property {Object.<string, ComputedPropFunction | Function>} [computed]
+ * @property {Object.<string, HandlerFunction>} [handlers]
+ * @property {Object.<string, ComputedPropFunction>} [computed]
  * @property {RenderFunction} render
  */
 
