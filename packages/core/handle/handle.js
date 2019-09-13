@@ -655,6 +655,7 @@ const call = function (method) {
  * @param    {...*}      [args]   Additional args passed to both `adapter` and `handler`
  *
  * @returns  {Function}             New event payload
+ * @curried
  * @memberof core/handle
  * @public
  */
