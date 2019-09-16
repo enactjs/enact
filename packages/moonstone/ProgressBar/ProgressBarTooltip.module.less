@@ -10,34 +10,55 @@
 
 	@offset-large: 0;
 
+	.before (@ruleset) {
+		&.left,
+		&.before,
+		:global(.enact-locale-right-to-left) &.after {
+			@ruleset();
+		}
+	}
+
+	.after (@ruleset) {
+		&.right,
+		&.after,
+		:global(.enact-locale-right-to-left) &.before {
+			@ruleset();
+		}
+	}
+
 	&.horizontal {
 		left: var(--tooltip-progress-percent);
 
-		&.before {
+		&.above {
 			top: 0;
-			transform: translateY(~"calc(-100% - var(--tooltip-calculated-offset))");
+
+			.before({
+				transform: translateY(~"calc(-100% - var(--tooltip-calculated-offset))");
+			});
+
+			.after({
+				transform: translateX(-100%) translateY(~"calc(-100% - var(--tooltip-calculated-offset))");
+			});
 
 			.moon-custom-text({
 				bottom: ~"calc(var(--tooltip-calculated-offset) + " @offset-large ~")";
 			});
 		}
-		&.after {
+
+		&.below {
 			bottom: 0;
-			transform: translateY(~"calc(100% + var(--tooltip-calculated-offset))");
+
+			.before({
+				transform: translateY(~"calc(100% + var(--tooltip-calculated-offset))");
+			});
+
+			.after({
+				transform: translateX(-100%) translateY(~"calc(100% + var(--tooltip-calculated-offset))");
+			});
 
 			.moon-custom-text({
 				top: ~"calc(var(--tooltip-calculated-offset) + " @offset-large ~")";
 			});
-		}
-
-		&.afterMidpoint {
-			&.before {
-				transform: translateX(-100%) translateY(~"calc(-100% - var(--tooltip-calculated-offset))");
-			}
-
-			&.after {
-				transform: translateX(-100%) translateY(~"calc(100% + var(--tooltip-calculated-offset))");
-			}
 		}
 	}
 
@@ -45,27 +66,23 @@
 		bottom: var(--tooltip-progress-percent);
 
 		// Left side
-		&.before,
-		:global(.enact-locale-right-to-left) &.before.ignoreLocale,
-		:global(.enact-locale-right-to-left) &.after {
+		.before({
 			right: 0;
 			transform: translate(~"calc(var(--tooltip-calculated-offset) * -1)", 50%);
 
 			.moon-custom-text({
 				transform: translate(~"calc(var(--tooltip-calculated-offset) * -1 - " @offset-large ~")", 50%);
 			});
-		}
+		});
 
 		// Right side
-		&.after,
-		:global(.enact-locale-right-to-left) &.after.ignoreLocale,
-		:global(.enact-locale-right-to-left) &.before {
+		.after({
 			right: auto;
 			transform: translate(var(--tooltip-calculated-offset), 50%);
 
 			.moon-custom-text({
 				transform: translate(~"calc(var(--tooltip-calculated-offset) + " @offset-large ~")", 50%);
 			});
-		}
+		});
 	}
 }
