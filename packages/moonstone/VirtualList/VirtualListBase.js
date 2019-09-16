@@ -428,8 +428,8 @@ const VirtualListBaseFactory = (type) => {
 		 */
 
 		onAcceleratedKeyDown = ({isWrapped, keyCode, nextIndex, repeat, target}) => {
-			const {cbScrollTo, spacing, wrap} = this.props;
-			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPositionTarget} = this.uiRefCurrent;
+			const {cbScrollTo, dataSize, spacing, wrap} = this.props;
+			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPosition, scrollPositionTarget} = this.uiRefCurrent;
 			const index = getNumberValue(target.dataset.index);
 
 			this.isScrolledBy5way = false;
@@ -447,16 +447,16 @@ const VirtualListBaseFactory = (type) => {
 				} else {
 					const
 						firstFullyVisibleIndex = Math.ceil(scrollPositionTarget / gridSize) * dimensionToExtent,
-						numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
-					isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
+						lastFullyVisibleIndex = Math.min(
+							dataSize - 1,
+							Math.floor((scrollPositionTarget + clientSize + spacing) / gridSize) * dimensionToExtent - 1
+						);
+					isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < lastFullyVisibleIndex;
 				}
 
 				this.lastFocusedIndex = nextIndex;
 
-				if (
-					isNextItemInView ||
-					row === nextRow // Needed when the number of the visible row is 1 and the number of the fully visible row is 0.
-				) {
+				if (isNextItemInView) {
 					// The next item could be still out of viewport. So we need to prevent scrolling into view with `isScrolledBy5way` flag.
 					this.isScrolledBy5way = true;
 					this.focusByIndex(nextIndex);
