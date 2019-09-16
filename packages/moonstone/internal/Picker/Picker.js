@@ -1,22 +1,23 @@
 import {forward, stopImmediate} from '@enact/core/handle';
-import equals from 'ramda/src/equals';
 import {is} from '@enact/core/keymap';
-import {cap, clamp, Job} from '@enact/core/util';
-import React from 'react';
-import ReactDOM from 'react-dom';
 import platform from '@enact/core/platform';
-import PropTypes from 'prop-types';
+import {cap, clamp, Job} from '@enact/core/util';
+import IdProvider from '@enact/ui/internal/IdProvider';
 import Touchable from '@enact/ui/Touchable';
-import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import Spotlight, {getDirection} from '@enact/spotlight';
+import PropTypes from 'prop-types';
+import equals from 'ramda/src/equals';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import shouldUpdate from 'recompose/shouldUpdate';
 
 import Skinnable from '../../Skinnable';
+
+import $L from '../$L';
 import {validateRange, validateStepped} from '../validators';
 import {extractVoiceProps} from '../util';
 
-import IdProvider from '../IdProvider';
-import $L from '../$L';
 import PickerButton from './PickerButton';
 import SpottablePicker from './SpottablePicker';
 

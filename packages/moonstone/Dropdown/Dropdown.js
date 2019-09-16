@@ -128,6 +128,10 @@ const DropdownBase = kind({
 		/**
 		 * Called when an item is selected.
 		 *
+		 * The event payload will be an object with the following members:
+		 * * `data` - The value for the option as received in the `children` prop
+		 * * `selected` - Number representing the selected option, 0 indexed
+		 *
 		 * @type {Function}
 		 * @public
 		 */
@@ -163,11 +167,11 @@ const DropdownBase = kind({
 		/**
 		 * The width of Dropdown.
 		 *
-		 * @type {('huge'|'large'|'medium'|'small'|'tiny')}
+		 * @type {('huge'|'large'|'x-large'|'medium'|'small'|'tiny')}
 		 * @default 'medium'
 		 * @public
 		 */
-		width: PropTypes.oneOf(['tiny', 'small', 'medium', 'large', 'huge'])
+		width: PropTypes.oneOf(['tiny', 'small', 'medium', 'large', 'x-large', 'huge'])
 	},
 
 	defaultProps: {
@@ -208,7 +212,9 @@ const DropdownBase = kind({
 			return children.map((child, i) => {
 				const aria = {
 					role: 'checkbox',
-					'aria-checked': selected === i
+					'aria-checked': selected === i,
+					'aria-posinset': i + 1,
+					'aria-setsize': children.length
 				};
 
 				warning(
@@ -230,7 +236,7 @@ const DropdownBase = kind({
 				};
 			});
 		},
-		className: ({width, styler}) => styler.append(width),
+		className: ({width, styler}) => styler.append(`${width}Width`),
 		title: ({children, selected, title}) => {
 			if (isSelectedValid({children, selected})) {
 				const child = children[selected];
