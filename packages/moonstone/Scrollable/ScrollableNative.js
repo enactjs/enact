@@ -82,10 +82,16 @@ const
 				elem = document.elementFromPoint(x, y);
 
 			if (elem) {
-				for (let [key, value] of scrollables) {
+				for (const [key, value] of scrollables) {
 					if (value.contains(elem)) {
-						key.scrollByPageOnPointerMode(ev);
-						break;
+						/* To handle page keys in nested scrollable components,
+						 * break the loop only when `scrollByPageOnPointerMode` returns `true`.
+						 * This approach assumes that an inner scrollable component is
+						 * mounted earlier than an outer scrollable component.
+						 */
+						if (key.scrollByPageOnPointerMode(ev)) {
+							break;
+						}
 					}
 				}
 			}
@@ -665,7 +671,11 @@ class ScrollableBaseNative extends Component {
 			if (this.props.overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
 				this.checkAndApplyOverscrollEffectByDirection(direction);
 			}
+
+			return true; // means consumed
 		}
+
+		return false; // means to be propagated
 	}
 
 	onKeyDown = (ev) => {
