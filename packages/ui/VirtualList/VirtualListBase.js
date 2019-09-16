@@ -1326,14 +1326,14 @@ VirtualListBaseNative.displayName = 'ui:VirtualListBaseNative';
  * @public
  */
 
-const ScrollableVirtualList = (props) => (
+const ScrollableVirtualList = ({role, ...rest}) => (
 	<Scrollable
-		{...props}
-		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
+		{...rest}
+		childRenderer={({initChildRef, ...childRest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
-				{...rest}
+				{...childRest}
 				itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={itemContainerRef} role="list">{cc}</div> : null
+					cc.length ? <div ref={itemContainerRef} role={role}>{cc}</div> : null
 				)}
 				ref={initChildRef}
 			/>
@@ -1342,21 +1342,23 @@ const ScrollableVirtualList = (props) => (
 );
 
 ScrollableVirtualList.propTypes = {
-	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+	role: PropTypes.string
 };
 
 ScrollableVirtualList.defaultProps = {
-	direction: 'vertical'
+	direction: 'vertical',
+	role: 'list'
 };
 
-const ScrollableVirtualListNative = (props) => (
+const ScrollableVirtualListNative = ({role, ...rest}) => (
 	<ScrollableNative
-		{...props}
-		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
+		{...rest}
+		childRenderer={({initChildRef, ...childRest}) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBaseNative
-				{...rest}
+				{...childRest}
 				itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={itemContainerRef} role="list">{cc}</div> : null
+					cc.length ? <div ref={itemContainerRef} role={role}>{cc}</div> : null
 				)}
 				ref={initChildRef}
 			/>
@@ -1365,11 +1367,13 @@ const ScrollableVirtualListNative = (props) => (
 );
 
 ScrollableVirtualListNative.propTypes = /** @lends ui/VirtualList.VirtualListBaseNative.prototype */ {
-	direction: PropTypes.oneOf(['horizontal', 'vertical'])
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+	role: PropTypes.string
 };
 
 ScrollableVirtualListNative.defaultProps = {
-	direction: 'vertical'
+	direction: 'vertical',
+	role: 'list'
 };
 
 export default VirtualListBase;

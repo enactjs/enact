@@ -6,10 +6,10 @@ let GlobalId = 0;
 const ID_KEY = '$$ID$$';
 
 /**
- * Default config for {@link moonstone/Panels.IdProvider}
+ * Default config for {@link ui/IdProvider.IdProvider}
  *
  * @hocconfig
- * @memberof moonstone/Panels.IdProvider
+ * @memberof ui/IdProvider.IdProvider
  */
 const defaultConfig = {
 	/**
@@ -17,7 +17,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default generateId
-	 * @memberof moonstone/Panels.IdProvider.defaultConfig
+	 * @memberof ui/IdProvider.IdProvider.defaultConfig
 	 */
 	generateProp: 'generateId',
 
@@ -26,7 +26,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default id
-	 * @memberof moonstone/Panels.IdProvider.defaultConfig
+	 * @memberof ui/IdProvider.IdProvider.defaultConfig
 	 */
 	idProp: 'id',
 
@@ -35,7 +35,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'c_'
-	 * @memberof moonstone/Panels.IdProvider.defaultConfig
+	 * @memberof ui/IdProvider.IdProvider.defaultConfig
 	 */
 	prefix: 'c_'
 };
@@ -46,7 +46,7 @@ const defaultConfig = {
  * @class IdProvider
  * @hoc
  * @private
- * @memberof moonstone/Panels
+ * @memberof ui/IdProvider
  */
 const IdProvider = hoc(defaultConfig, (config, Wrapped) => {
 	const {generateProp, idProp, prefix} = config;

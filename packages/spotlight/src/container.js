@@ -1100,6 +1100,7 @@ export {
 	configureDefaults,
 	configureContainer,
 	getContainerFocusTarget,
+	getContainerId,
 	getContainerPreviousTarget,
 	getDefaultContainer,
 	getLastContainer,
