@@ -1062,8 +1062,7 @@ const VirtualListBaseFactory = (type) => {
 
 		getVirtualScrollDimension = () => {
 			if (this.props.itemSizes) {
-				debugger;
-				return this.props.itemSizes.reduce((total, size) => total + size, 0);
+				return this.props.itemSizes.reduce((total, size) => total + size);
 			} else {
 				const
 					{dimensionToExtent, primary, curDataSize} = this,
