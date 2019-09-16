@@ -5,6 +5,7 @@ import {
 	getAllContainerIds,
 	getContainerConfig,
 	getContainerFocusTarget,
+	getContainerId,
 	getContainerNode,
 	getContainerPreviousTarget,
 	getContainersForNode,
@@ -82,6 +83,11 @@ function getTargetBySelector (selector) {
 
 	const next = parseSelector(selector)[0];
 	if (next) {
+
+		if (isContainer(next)) {
+			return getTargetByContainer(getContainerId(next));
+		}
+
 		const nextContainerIds = getContainersForNode(next);
 		if (isNavigable(next, last(nextContainerIds), true)) {
 			return next;

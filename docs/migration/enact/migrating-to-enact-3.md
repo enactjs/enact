@@ -11,7 +11,7 @@ this guide.
 ## General Changes
 
 ### cli
-`cli` must be upgraded to version `2.4.1`.
+`cli` must be upgraded to version `2.4.1` or newer.
 
 ### i18n
 Apps that use `@enact/i18n` must install `ilib` as a dependency.  This includes apps that do not require `@enact/i18n` directly, but use themes or modules that do (list may or may not be complete, check module requirements):

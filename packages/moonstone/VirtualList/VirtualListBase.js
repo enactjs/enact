@@ -144,7 +144,7 @@ const VirtualListBaseFactory = (type) => {
 			 */
 			itemSizes: PropTypes.array,
 
-			/*
+			/**
 			 * It scrolls by page when `true`, by item when `false`.
 			 *
 			 * @type {Boolean}
@@ -152,6 +152,15 @@ const VirtualListBaseFactory = (type) => {
 			 * @private
 			 */
 			pageScroll: PropTypes.bool,
+
+			/**
+			 * The ARIA role for the list.
+			 *
+			 * @type {String}
+			 * @default 'list'
+			 * @public
+			 */
+			role: PropTypes.string,
 
 			/**
 			 * `true` if rtl, `false` if ltr.
@@ -776,7 +785,7 @@ const VirtualListBaseFactory = (type) => {
 
 		render () {
 			const
-				{itemRenderer, itemsRenderer, ...rest} = this.props,
+				{itemRenderer, itemsRenderer, role, ...rest} = this.props,
 				needsScrollingPlaceholder = this.isNeededScrollingPlaceholder();
 
 			delete rest.initUiChildRef;
@@ -792,7 +801,7 @@ const VirtualListBaseFactory = (type) => {
 					getComponentProps={this.getComponentProps}
 					itemRenderer={({index, ...itemRest}) => ( // eslint-disable-line react/jsx-no-bind
 						itemRenderer({
-							... itemRest,
+							...itemRest,
 							[dataIndexAttribute]: index,
 							index
 						})
@@ -804,7 +813,8 @@ const VirtualListBaseFactory = (type) => {
 						return itemsRenderer({
 							...props,
 							handlePlaceholderFocus: this.handlePlaceholderFocus,
-							needsScrollingPlaceholder
+							needsScrollingPlaceholder,
+							role
 						});
 					}}
 				/>
@@ -910,13 +920,14 @@ const listItemsRenderer = (props) => {
 		handlePlaceholderFocus,
 		itemContainerRef: initUiItemContainerRef,
 		needsScrollingPlaceholder,
-		primary
+		primary,
+		role
 	} = props;
 
 	return (
 		<React.Fragment>
 			{cc.length ? (
-				<div ref={initUiItemContainerRef} role="list">{cc}</div>
+				<div ref={initUiItemContainerRef} role={role}>{cc}</div>
 			) : null}
 			{primary ? null : (
 				<SpotlightPlaceholder
@@ -936,22 +947,21 @@ const listItemsRenderer = (props) => {
 };
 /* eslint-enable enact/prop-types */
 
-const ScrollableVirtualList = (props) => { // eslint-disable-line react/jsx-no-bind
-	const {focusableScrollbar} = props;
-
+const ScrollableVirtualList = ({role, ...rest}) => { // eslint-disable-line react/jsx-no-bind
 	warning(
-		!props.itemSizes || !props.cbScrollTo,
+		!rest.itemSizes || !rest.cbScrollTo,
 		'VirtualList with `minSize` in `itemSize` prop does not support `cbScrollTo` prop'
 	);
 
 	return (
 		<Scrollable
-			{...props}
+			{...rest}
 			childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 				<VirtualListBase
 					{...childProps}
-					focusableScrollbar={focusableScrollbar}
+					focusableScrollbar={rest.focusableScrollbar}
 					itemsRenderer={listItemsRenderer}
+					role={role}
 				/>
 			)}
 		/>
@@ -963,31 +973,32 @@ ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBa
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
 	focusableScrollbar: PropTypes.bool,
 	itemSizes: PropTypes.array,
-	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic'])
+	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
+	role: PropTypes.string
 };
 
 ScrollableVirtualList.defaultProps = {
 	direction: 'vertical',
 	focusableScrollbar: false,
-	preventBubblingOnKeyDown: 'programmatic'
+	preventBubblingOnKeyDown: 'programmatic',
+	role: 'list'
 };
 
-const ScrollableVirtualListNative = (props) => {
-	const {focusableScrollbar} = props;
-
+const ScrollableVirtualListNative = ({role, ...rest}) => {
 	warning(
-		!props.itemSizes || !props.cbScrollTo,
+		!rest.itemSizes || !rest.cbScrollTo,
 		'VirtualList with `minSize` in `itemSize` prop does not support `cbScrollTo` prop'
 	);
 
 	return (
 		<ScrollableNative
-			{...props}
+			{...rest}
 			childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 				<VirtualListBaseNative
 					{...childProps}
-					focusableScrollbar={focusableScrollbar}
+					focusableScrollbar={rest.focusableScrollbar}
 					itemsRenderer={listItemsRenderer}
+					role={role}
 				/>
 			)}
 		/>
@@ -999,13 +1010,15 @@ ScrollableVirtualListNative.propTypes = /** @lends moonstone/VirtualList.Virtual
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
 	focusableScrollbar: PropTypes.bool,
 	itemSizes: PropTypes.array,
-	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic'])
+	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
+	role: PropTypes.string
 };
 
 ScrollableVirtualListNative.defaultProps = {
 	direction: 'vertical',
 	focusableScrollbar: false,
-	preventBubblingOnKeyDown: 'programmatic'
+	preventBubblingOnKeyDown: 'programmatic',
+	role: 'list'
 };
 
 export default VirtualListBase;
