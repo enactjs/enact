@@ -82,6 +82,20 @@ import curry from 'ramda/src/curry';
 
 import {is} from '../keymap';
 
+/**
+ * @callback EventHandler
+ * @memberof core/handle
+ * @param {any} event
+ */
+
+/**
+ * @callback HandlerFunction
+ * @memberof core/handle
+ * @param {Object<string, any>} event
+ * @param {any} props
+ * @param {Object<string, any>} context
+ */
+
 // Accepts an array of handlers, sanitizes them, and returns a handler function
 // compose(allPass, map(makeSafeHandler));
 const makeHandler = (handlers) => {
@@ -149,9 +163,9 @@ const decorateHandleFunction = (fn) => {
  * of the returned value.
  *
  * @method   handle
- * @param    {...Function}  handlers List of handlers to process the event.
+ * @param    {...HandlerFunction}  handlers List of handlers to process the event.
  *
- * @returns  {Function}	    A function that accepts an event which is dispatched to each of the
+ * @returns  {EventHandler}	A function that accepts an event which is dispatched to each of the
  *                          provided handlers.
  * @memberof core/handle
  * @public
@@ -222,7 +236,7 @@ const handle = function (...handlers) {
  * @method   oneOf
  * @param    {...Function[]}  handlers List of conditions and handlers to process the event
  *
- * @returns  {Function}	    A function that accepts an event which is dispatched to each of the
+ * @returns  {HandlerFunction} A function that accepts an event which is dispatched to each of the
  *                          conditions and, if it passes, onto the provided handler.
  * @memberof core/handle
  * @public
@@ -237,7 +251,7 @@ const oneOf = handle.oneOf = function (...handlers) {
  *
  * Example:
  * ```
- * // Used to coerce an existing function into a handler change
+ * // Used to coerce an existing function into a handler
  * const coercedHandler = handle(
  *   returnsTrue(doesSomething),
  *   willAlwaysBeCalled
@@ -253,12 +267,12 @@ const oneOf = handle.oneOf = function (...handlers) {
  * @method   returnsTrue
  * @param    {Function}  [handler]  Handler function called before returning `true`.
  *
- * @returns  {Function}	   A function that returns true
+ * @returns  {HandlerFunction}	   A function that returns `true`
  * @memberof core/handle
  * @public
  */
 const returnsTrue = handle.returnsTrue = function (handler) {
-	if (handler) {
+	if (handler && typeof handler === 'function') {
 		return named(function (...args) {
 			handler.apply(this, args);
 
@@ -286,7 +300,7 @@ const returnsTrue = handle.returnsTrue = function (handler) {
  * @param    {String}     methodName  Name of the method to call on the event
  * @param    {Object}     ev          Event payload
  *
- * @returns  {Boolean}                Always returns `true`
+ * @returns  {true}                   Always returns `true`
  * @curried
  * @memberof core/handle
  * @private
@@ -349,7 +363,7 @@ const forEventProp = handle.forEventProp = curry((prop, value, ev) => {
  * @param    {Object}    ev     Event payload
  * @param    {Object}    props  Props object
  *
- * @returns  {Boolean}          Always returns `true`
+ * @returns  {true}             Always returns `true`
  * @curried
  * @memberof core/handle
  * @public
@@ -379,7 +393,7 @@ const forward = handle.forward = curry(named((name, ev, props) => {
  * @method   preventDefault
  * @param    {Object}        ev  Event payload
  *
- * @returns  {Boolean}           Always returns `true`
+ * @returns  {true}              Always returns `true`
  * @memberof core/handle
  * @public
  */
@@ -439,7 +453,8 @@ const forwardWithPrevent = handle.forwardWithPrevent = curry(named((name, ev, pr
  * @method   stop
  * @param    {Object}   ev  Event payload
  *
- * @returns  {Boolean}      Always returns `true`
+ * @returns  {true}         Always returns `true`
+ * @curried
  * @memberof core/handle
  * @public
  */
@@ -461,7 +476,8 @@ const stop = handle.stop = named(callOnEvent('stopPropagation'), 'stop');
  * @method   stopImmediate
  * @param    {Object}       ev  Event payload
  *
- * @returns  {Boolean}          Always returns `true`
+ * @returns  {true}             Always returns `true`
+ * @curried
  * @memberof core/handle
  * @public
  */
@@ -538,7 +554,7 @@ const forKey = handle.forKey = curry((name, ev) => {
  * @param    {Object}    ev     Event payload
  * @param    {Object}    props  Props object
  *
- * @returns  {Boolean}          `true` if the value of `props[prop]` strictly equals `value`
+ * @returns  {Boolean}          Returns `true` if the value of `props[prop]` strictly equals `value`
  * @curried
  * @memberof core/handle
  * @public
@@ -566,7 +582,7 @@ const forProp = handle.forProp = curry((prop, value, ev, props) => {
  * @param    {Object}     ev       Event payload
  * @param    {...*}       [args]   Any args passed are logged
  *
- * @returns  {Boolean}             Always returns `true`
+ * @returns  {true}                Always returns `true`
  * @curried
  * @memberof core/handle
  * @public
@@ -613,7 +629,7 @@ const log = handle.log = curry((message, ev, ...args) => {
  * @method   call
  * @param    {String}     method  Name of method
  *
- * @returns  {Boolean}            Returns the value returned by `method`, or `false` if the method
+ * @returns  {HandlerFunction}    Returns the value returned by `method`, or `false` if the method
  *                                does not exist
  * @memberof core/handle
  * @public
@@ -654,7 +670,7 @@ const call = function (method) {
  * @param    {Function}  handler  Handler to call with the new event payload
  * @param    {...*}      [args]   Additional args passed to both `adapter` and `handler`
  *
- * @returns  {Object}             New event payload
+ * @returns  {HandlerFunction}    New event payload
  * @curried
  * @memberof core/handle
  * @public

@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ### Fixed
 
+- `core/kind` and `core/handle` documentation to support better typescript definitions
 - `core/platform` touch event detection
 
 ## [3.0.1] - 2019-09-09
