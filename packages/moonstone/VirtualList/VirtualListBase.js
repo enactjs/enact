@@ -448,7 +448,7 @@ const VirtualListBaseFactory = (type) => {
 							dataSize - 1,
 							Math.floor((scrollPositionTarget + clientSize + spacing) / gridSize) * dimensionToExtent - 1
 						);
-					isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < lastFullyVisibleIndex;
+					isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex <= lastFullyVisibleIndex;
 				}
 
 				this.lastFocusedIndex = nextIndex;
