@@ -3,7 +3,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 
 import {boolean, number, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {mergeComponentMetadata, nullify} from '../../src/utils';
 
 const ProgressBarConfig = mergeComponentMetadata('ProgressBar', ProgressBar);
 const ProgressBarTooltipConfig = mergeComponentMetadata('ProgressBarTooltip', ProgressBarTooltip);
@@ -15,20 +15,25 @@ storiesOf('Moonstone', module)
 	.add(
 		'ProgressBar',
 		() => {
-			const side = select('side', ['after', 'before', 'left', 'right'], ProgressBarTooltipConfig, 'before');
+			// added here to force Storybook to put the ProgressBar tab first
+			const disabled = boolean('disabled', ProgressBarConfig);
+
+			// tooltip is first so it appears at the top of the tab. the rest are alphabetical
 			const tooltip = boolean('tooltip', ProgressBarTooltipConfig);
+			const position = select('position', ['', 'above', 'above left', 'above right', 'above before', 'above after', 'before', 'left', 'right', 'after', 'below', 'below left', 'below right', 'below before', 'below after'], ProgressBarTooltipConfig, '');
+			const side = nullify(select('side (Deprecated)', ['', 'after', 'before', 'left', 'right'], ProgressBarTooltipConfig, ''));
 
 			return (
 				<ProgressBar
 					backgroundProgress={number('backgroundProgress', ProgressBarConfig, {range: true, min: 0, max: 1, step: 0.01}, 0.5)}
-					disabled={boolean('disabled', ProgressBarConfig)}
+					disabled={disabled}
 					highlighted={boolean('highlighted', ProgressBarConfig)}
 					orientation={select('orientation', ['horizontal', 'vertical'], ProgressBarConfig, 'horizontal')}
 					progress={number('progress', ProgressBarConfig, {range: true, min: 0, max: 1, step: 0.01}, 0.4)}
-					side={select('side', ['after', 'before', 'left', 'right'], ProgressBarConfig, 'before')}
 				>
 					{tooltip ? (
 						<ProgressBarTooltip
+							position={position}
 							side={side}
 						/>
 					) : null}
