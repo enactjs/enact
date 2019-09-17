@@ -8,6 +8,13 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to show items properly when reducing data size
 
+## [3.1.0] - 2019-09-16
+
+### Added
+
+- `ui/Routable` module
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` prop `role` to set its ARIA `role`
+
 ## [3.0.1] - 2019-09-09
 
 No significant changes.

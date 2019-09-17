@@ -15,7 +15,7 @@ storiesOf('Moonstone', module)
 	.add(
 		'IncrementSlider',
 		() => {
-			const side = select('side', ['after', 'before', 'left', 'right'], IncrementSliderTooltipConfig, 'after');
+			const side = select('side (Deprecated)', ['after', 'before', 'left', 'right'], IncrementSliderTooltipConfig, 'after');
 			const tooltip = boolean('tooltip', IncrementSliderTooltipConfig);
 			const percent = boolean('percent', IncrementSliderTooltipConfig);
 

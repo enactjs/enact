@@ -4,7 +4,8 @@
 
 import React from 'react';
 import {shallow, mount} from 'enzyme';
-import {Route, Router, RouterBase} from '../Router';
+import Route from '../Route';
+import {Router, RouterBase} from '../Router';
 
 describe('Router', () => {
 

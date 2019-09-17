@@ -25,13 +25,13 @@ import kind from '@enact/core/kind';
 import {extractAriaProps} from '@enact/core/util';
 import Spottable from '@enact/spotlight/Spottable';
 import Changeable from '@enact/ui/Changeable';
+import IdProvider from '@enact/ui/internal/IdProvider';
 import Slottable from '@enact/ui/Slottable';
 import Pure from '@enact/ui/internal/Pure';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
 
-import IdProvider from '../internal/IdProvider';
 import $L from '../internal/$L';
 import {ProgressBarTooltip} from '../ProgressBar';
 import Skinnable from '../Skinnable';

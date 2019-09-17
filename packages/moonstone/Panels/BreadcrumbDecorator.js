@@ -1,13 +1,13 @@
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import {coerceFunction} from '@enact/core/util';
+import IdProvider from '@enact/ui/internal/IdProvider';
 import ViewManager from '@enact/ui/ViewManager';
 import Spotlight from '@enact/spotlight';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import IdProvider from '../internal/IdProvider';
 import Skinnable from '../Skinnable';
 
 import Breadcrumb from './Breadcrumb';

@@ -21,9 +21,22 @@ const hasGesture = () => {
 
 const hasTouch = () => {
 	return Boolean(
+		('TouchEvent' in window) ||
 		('ontouchstart' in window) ||
 		window.navigator.msMaxTouchPoints ||
 		(window.navigator.msManipulationViewsEnabled && window.navigator.maxTouchPoints)
+	);
+};
+
+// Adapted from https://patrickhlauke.github.io/touch/touchscreen-detection/
+// I've omitted the touch event fallback since that is covered by hasTouch and we're less concerned
+// with legacy browsers used in touchscreen environments.
+const hasTouchScreen = () => {
+	return (
+		// if Pointer Events are supported, just check maxTouchPoints
+		(window.PointerEvent && ('maxTouchPoints' in window.navigator) && window.navigator.maxTouchPoints > 0) ||
+		// check for any-pointer:coarse which mostly means touchscreen
+		(window.matchMedia && window.matchMedia('(any-pointer:coarse)').matches)
 	);
 };
 
@@ -94,6 +107,7 @@ const parseUserAgent = (userAgent) => {
 		gesture: hasGesture(),
 		node: false,
 		touch: hasTouch(),
+		touchscreen: hasTouchScreen(),
 		unknown: true
 	};
 
@@ -130,6 +144,7 @@ const parseUserAgent = (userAgent) => {
  * @property {Boolean} node - `true` only if `window` is `undefined`
  * @property {String} [platformName] - The name of the platform, if detected
  * @property {Boolean} touch - `true` if the platform has native single-finger events
+ * @property {Boolean} touchsreen - `true` if the platform has a touch screen
  * @property {Boolean} unknown - `true` for any unknown system
  *
  * @memberof core/platform
@@ -176,6 +191,7 @@ const platform = {};
 	'node',
 	'platformName',
 	'touch',
+	'touchscreen',
 	'unknown',
 	...uniq(platforms.map(p => p.platform))
 ].forEach(name => {
