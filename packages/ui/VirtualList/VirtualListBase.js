@@ -1061,11 +1061,15 @@ const VirtualListBaseFactory = (type) => {
 		getScrollWidth = () => (this.isPrimaryDirectionVertical ? this.scrollBounds.clientWidth : this.getVirtualScrollDimension())
 
 		getVirtualScrollDimension = () => {
-			const
-				{dimensionToExtent, primary, curDataSize} = this,
-				{spacing} = this.props;
+			if (this.props.itemSizes) {
+				return this.props.itemSizes.reduce((total, size, index) => (total + size + (index > 0 ? this.props.spacing : 0)), 0);
+			} else {
+				const
+					{dimensionToExtent, primary, curDataSize} = this,
+					{spacing} = this.props;
 
-			return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
+				return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
+			}
 		}
 
 		syncClientSize = () => {

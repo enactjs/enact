@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/VirtualList.VirtualList` to scroll properly when an item gets focus in VirtualList with different item size
+
 ## [3.1.0] - 2019-09-16
 
 ### Deprecated
