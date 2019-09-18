@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` not to scroll when the item which will be in viewport gets focus
+- `moonstone/VirtualList.VirtualList` to scroll properly when an item gets focus in VirtualList with different item size
 
 ## [3.1.0] - 2019-09-16
 
