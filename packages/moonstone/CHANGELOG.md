@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Input` text color
 - `moonstone/VirtualList.VirtualList` to scroll properly when an item gets focus in VirtualList with different item size
 
 ## [3.1.0] - 2019-09-16
@@ -24,7 +25,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Header` to fix font size of `titleBelow` and `subTitleBelow`
 - `moonstone/Dropdown` to apply `tiny` width
-- `moonstone/Input` to update text color
 - `moonstone/Dropdown` to include selected `data` in the `onSelect` handler
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` spotlight behavior to focus the last item when reaching the bounds after scroll by page up or down
 - `moonstone/VirtualList.VirtualList` to allow a dynamically resized item to scroll into view properly
