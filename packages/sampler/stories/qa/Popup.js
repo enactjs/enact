@@ -34,8 +34,7 @@ class PopupResumeFocusAfterOpenState extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			isPopup: false,
-			isNotification: false
+			isPopup: false
 		};
 	}
 
@@ -51,33 +50,14 @@ class PopupResumeFocusAfterOpenState extends React.Component {
 		}, 200);
 	}
 
-	handleClose = () => {
-		this.setState({
-			isPopup: false
-		});
-	}
-
-	handleNotification = () => {
-		this.setState({
-			isNotification: false
-		});
-	}
-
 	render () {
 		return (
 			<div>
-				<Button onClick={this.handlePopup}>open</Button>
-				<Button>hello</Button>
-				<Popup open={this.state.isPopup} onClose={this.handleDismiss}>
-					<Button>
-						<Button onClick={this.handleClose}>close</Button>
-					</Button>
+				<div>Popup will open and dismiss immediately, ensure spotlight still functional.</div>
+				<Button onClick={this.handlePopup}>Open popup</Button>
+				<Popup open={this.state.isPopup}>
+					<Button>close</Button>
 				</Popup>
-				<Notification open={this.state.isNotification}>
-					<Button>
-						<Button onClick={this.handleNotification}>close</Button>
-					</Button>
-				</Notification>
 			</div>
 		);
 	}
