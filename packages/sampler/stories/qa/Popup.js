@@ -56,9 +56,7 @@ class PopupResumeFocusAfterOpenState extends React.Component {
 				<div>Popup will open and dismiss immediately, ensure spotlight still functional.</div>
 				<Button onClick={this.handlePopup}>Open popup</Button>
 				<Popup open={this.state.isPopup}>
-					<buttons>
-						<Button>close</Button>
-					</buttons>
+					<Button>close</Button>
 				</Popup>
 			</div>
 		);
