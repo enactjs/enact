@@ -436,6 +436,11 @@ const VirtualListBaseFactory = (type) => {
 			this.isScrolledByJump = false;
 
 			if (nextIndex >= 0) {
+				const
+					row = Math.floor(index / dimensionToExtent),
+					nextRow = Math.floor(nextIndex / dimensionToExtent),
+					start = this.uiRefCurrent.getGridPosition(nextIndex).primaryPosition,
+					end = this.uiRefCurrent.getGridPosition(nextIndex).primaryPosition + gridSize;
 				let isNextItemInView = false;
 
 				if (this.props.itemSizes) {
@@ -458,6 +463,8 @@ const VirtualListBaseFactory = (type) => {
 					this.isScrolledBy5way = true;
 					this.focusByIndex(nextIndex);
 					this.isScrolledBy5way = false;
+				} else if (row === nextRow && (start < scrollPositionTarget || end > scrollPositionTarget + clientSize)) {
+					this.focusByIndex(nextIndex);
 				} else {
 					this.isScrolledBy5way = true;
 					this.isWrappedBy5way = isWrapped;
@@ -483,7 +490,6 @@ const VirtualListBaseFactory = (type) => {
 						animate: !(isWrapped && wrap === 'noAnimation')
 					});
 				}
-
 			} else if (!repeat && Spotlight.move(getDirection(keyCode))) {
 				SpotlightAccelerator.reset();
 			}
