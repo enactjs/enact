@@ -428,6 +428,7 @@ const VirtualListBaseFactory = (type) => {
 		hasDataSizeChanged = false
 		cc = []
 		scrollPosition = 0
+		scrollPositionTarget = 0
 
 		// For individually sized item
 		itemPositions = []
@@ -437,7 +438,7 @@ const VirtualListBaseFactory = (type) => {
 			if (type === Native) {
 				this.scrollToPosition(x, y, rtl);
 			} else {
-				this.setScrollPosition(x, y, rtl);
+				this.setScrollPosition(x, y, rtl, x, y);
 			}
 		}
 
@@ -758,14 +759,31 @@ const VirtualListBaseFactory = (type) => {
 				if (rtl) {
 					x = (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
 				}
+
+				if (this.isPrimaryDirectionVertical) {
+					this.scrollPositionTarget = y;
+				} else {
+					this.scrollPositionTarget = x;
+				}
+
 				this.containerRef.current.scrollTo(x, y);
 			}
 		}
 
 		// JS only
-		setScrollPosition (x, y, rtl = this.props.rtl) {
+		setScrollPosition (x, y, rtl = this.props.rtl, targetX = 0, targetY = 0) {
 			if (this.contentRef.current) {
 				this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
+
+				// The `x`, `y` as parameters in scrollToPosition() are the position when stopping scrolling.
+				// But the `x`, `y` as parameters in setScrollPosition() are the position between current position and the position stopping scrolling.
+				// To know the position when stopping scrolling here, `targetX` and `targetY` are passed and cached in `this.scrollPositionTarget`.
+				if (this.isPrimaryDirectionVertical) {
+					this.scrollPositionTarget = targetY;
+				} else {
+					this.scrollPositionTarget = targetX;
+				}
+
 				this.didScroll(x, y);
 			}
 		}
