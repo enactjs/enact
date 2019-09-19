@@ -1,39 +1,51 @@
-import hoc from '@enact/core/hoc';
-import invariant from 'invariant';
-import kind from '@enact/core/kind';
-import React from 'react';
-import PropTypes from 'prop-types';
+/**
+ * Utilities for working with routes.
+ *
+ * @module ui/Routable
+ * @exports Routable
+ * @exports Route
+ */
 
-import {Router, propTypes, toSegments} from './Router';
+import hoc from '@enact/core/hoc';
+import kind from '@enact/core/kind';
+import invariant from 'invariant';
+import PropTypes from 'prop-types';
+import React from 'react';
+import warning from 'warning';
+
+import {Link, Linkable} from './Link';
+import Route from './Route';
+import Router from './Router';
+import {propTypes, toSegments, RouteContext, resolve} from './util';
 
 /**
- * Default config for [`Routable`]{@link moonstone/Panels.Routable}.
+ * Default config for [`Routable`]{@link ui/Routable.Routable}.
  *
- * @memberof moonstone/Panels.Routable
+ * @memberof ui/Routable.Routable
  * @hocconfig
  */
 const defaultConfig = {
 	/**
 	 * The event to listen to for path changes.
 	 *
-	 * This defines the actual name of the [navigate]{@link moonstone/Panels.Routable#navigate}
+	 * This defines the actual name of the [navigate]{@link ui/Routable.Routable#navigate}
 	 * property.
 	 *
 	 * @type {String}
 	 * @required
-	 * @memberof moonstone/Panels.Routable.defaultConfig
+	 * @memberof ui/Routable.Routable.defaultConfig
 	 */
 	navigate: null
 };
 
 /**
- * A higher-order component that provides support for Routes as children of Panels which are
- * selected via `path` instead of the usual flat array of Panels.
+ * A higher-order component that provides support for mapping Routes as children of a component
+ * which are selected via `path` instead of the usual flat array.
  *
  * When using `Routable` you must specify the `navigate` config option.
  *
  * @class Routable
- * @memberof moonstone/Panels
+ * @memberof ui/Routable
  * @hoc
  * @public
  */
@@ -45,7 +57,7 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 	return kind({
 		name: 'Routable',
 
-		propTypes: /** @lends moonstone/Panels.Routable.prototype */ {
+		propTypes: /** @lends ui/Routable.Routable.prototype */ {
 			/**
 			 * Path to the active panel.
 			 *
@@ -71,8 +83,15 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 		},
 
 		handlers: {
-			// Adds `path` to the payload of navigate handler in the same format (String, or String[])
-			// as the current path prop.
+			handleNavigate: ({path}, {path: currentPath, [navigate]: handler}) => {
+				path = resolve(currentPath, path);
+
+				warning(path, `Path "${path}" was invalid from current path "${currentPath}"`);
+
+				if (path) handler({path});
+			},
+			// Adds `path` to the payload of navigate handler in the same format (String, or
+			// String[]) as the current path prop.
 			[navigate]: ({index, ...rest}, {path, [navigate]: handler}) => {
 				if (handler) {
 					const p = toSegments(path).slice(0, index + 1);
@@ -90,13 +109,23 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 			index: ({path}) => toSegments(path).length - 1
 		},
 
-		render: ({children, index, path, ...rest}) => (
-			<Router {...rest} path={path} component={Wrapped} index={index}>
-				{children}
-			</Router>
-		)
+		render: ({children, handleNavigate, index, path, ...rest}) => {
+			return (
+				<RouteContext.Provider value={{navigate: handleNavigate, path}}>
+					<Router {...rest} path={path} component={Wrapped} index={index}>
+						{children}
+					</Router>
+				</RouteContext.Provider>
+			);
+		}
 	});
 });
 
 export default Routable;
-export {Routable};
+export {
+	Link,
+	Linkable,
+	Routable,
+	Route,
+	RouteContext
+};

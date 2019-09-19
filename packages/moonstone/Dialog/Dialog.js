@@ -7,12 +7,12 @@
  */
 
 import kind from '@enact/core/kind';
+import IdProvider from '@enact/ui/internal/IdProvider';
+import {Layout, Cell} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Layout, Cell} from '@enact/ui/Layout';
 
-import IdProvider from '../internal/IdProvider';
 import {MarqueeDecorator} from '../Marquee';
 import Popup from '../Popup';
 

@@ -948,7 +948,7 @@ class ScrollableBase extends Component {
 
 		return (
 			<UiScrollableBase
-				noScrollByDrag={!platform.touch}
+				noScrollByDrag={!platform.touchscreen}
 				{...rest}
 				addEventListeners={this.addEventListeners}
 				applyOverscrollEffect={this.applyOverscrollEffect}
