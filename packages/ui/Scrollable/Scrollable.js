@@ -205,6 +205,30 @@ class ScrollableBase extends Component {
 		noScrollByWheel: PropTypes.bool,
 
 		/**
+		 * Called when trigerring a drag event.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onDrag: PropTypes.func,
+
+		/**
+		 * Called when trigerring a dragend event.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onDragEnd: PropTypes.func,
+
+		/**
+		 * Called when trigerring a dragstart event.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onDragStart: PropTypes.func,
+
+		/**
 		 * Called when flicking with a mouse or a touch screen.
 		 *
 		 * @type {Function}
@@ -589,6 +613,10 @@ class ScrollableBase extends Component {
 		this.isDragging = true;
 		this.dragStartX = this.scrollLeft + this.getRtlX(ev.x);
 		this.dragStartY = this.scrollTop + ev.y;
+
+		if (this.props.onDragStart) {
+			forward('onDragStart', ev, this.props);
+		}
 	}
 
 	onDrag = (ev) => {
@@ -604,6 +632,10 @@ class ScrollableBase extends Component {
 			animate: false,
 			overscrollEffect: this.props.overscrollEffectOn.drag
 		});
+
+		if (this.props.onDrag) {
+			forward('onDrag', ev, this.props);
+		}
 	}
 
 	onDragEnd = (ev) => {
@@ -627,6 +659,10 @@ class ScrollableBase extends Component {
 		}
 
 		this.flickTarget = null;
+
+		if (this.props.onDragEnd) {
+			forward('onDragEnd', ev, this.props);
+		}
 	}
 
 	onFlick = (ev) => {
@@ -1304,8 +1340,7 @@ class ScrollableBase extends Component {
 					onDrag: this.onDrag,
 					onDragEnd: this.onDragEnd,
 					onDragStart: this.onDragStart,
-					onFlick: this.onFlick,
-					onTouchStart: this.onTouchStart
+					onFlick: this.onFlick
 				})
 			};
 
