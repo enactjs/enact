@@ -95,15 +95,6 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return null;
 		}
 
-		componentDidUpdate (prevProps, prevState) {
-			// on touch platforms, we want sliders to focus when dragging begins
-			if (platform.touch && this.state.dragging && !prevState.dragging) {
-				const thisNode = findDOMNode(this); // eslint-disable-line react/no-find-dom-node
-				const sliderNode = thisNode.getAttribute('role') === 'slider' ? thisNode : thisNode.querySelector('[role="slider"]');
-				sliderNode.focus();
-			}
-		}
-
 		componentWillUnmount () {
 			this.paused.resume();
 		}
@@ -126,6 +117,14 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return value;
 		}
 
+		focusSlider () {
+			let slider = findDOMNode(this); // eslint-disable-line react/no-find-dom-node
+			if (slider.getAttribute('role') !== 'slider') {
+				slider = slider.querySelector('[role="slider"]');
+			}
+			slider.focus();
+		}
+
 		handleActivate () {
 			forward('onActivate', {type: 'onActivate'}, this.props);
 			this.setState(toggleActive);
@@ -138,6 +137,10 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleDragStart () {
+			// on platforms with a touchscreen, we want to focus slider when dragging begins
+			if (platform.touchscreen) {
+				this.focusSlider();
+			}
 			this.paused.pause();
 			this.setState({dragging: true});
 		}
