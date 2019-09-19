@@ -42,7 +42,7 @@ function createResBundle (options) {
 
 	// Swap out app cache for moonstone's
 	const appCache = ilib.data;
-	ilib.data = cache;
+	ilib.data = global.moonstoneILibCache || cache;
 
 	// eslint-disable-next-line no-new
 	new ResBundle({
