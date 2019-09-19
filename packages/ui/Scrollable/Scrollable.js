@@ -676,7 +676,7 @@ class ScrollableBase extends Component {
 		);
 
 		if (this.props.onFlick) {
-			forward('onFlick', ev, this.props);
+			forward('onFlick', {...ev, flickTarget: this.flickTarget}, this.props);
 		}
 	}
 
