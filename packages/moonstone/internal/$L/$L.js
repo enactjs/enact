@@ -2,9 +2,13 @@
 
 import {getIStringFromBundle} from '@enact/i18n/src/resBundle';
 import ResBundle from 'ilib/lib/ResBundle';
+import ilib from 'ilib';
 
 // The ilib.ResBundle for the active locale used by $L
 let resBundle;
+
+// The ilib.data cache object for moonstone ilib usage
+let cache = {};
 
 /**
  * Returns the current ilib.ResBundle
@@ -36,10 +40,15 @@ function createResBundle (options) {
 
 	if (!opts.onLoad) return;
 
+	// Swap out app cache for moonstone's
+	const appCache = ilib.data;
+	ilib.data = global.moonstoneILibCache || cache;
+
 	// eslint-disable-next-line no-new
 	new ResBundle({
 		...opts,
 		onLoad: (bundle) => {
+			ilib.data = appCache;
 			opts.onLoad(bundle || null);
 		}
 	});
@@ -52,6 +61,7 @@ function createResBundle (options) {
 function clearResBundle () {
 	delete ResBundle.strings;
 	delete ResBundle.sysres;
+	cache = {};
 	resBundle = null;
 }
 
