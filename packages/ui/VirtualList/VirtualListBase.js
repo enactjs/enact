@@ -318,7 +318,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentDidUpdate (prevProps, prevState) {
-			this.deferScrollTo = false;
+			let deferScrollTo = false;
 
 			const {firstIndex, numOfItems} = this.state;
 
@@ -394,26 +394,24 @@ const VirtualListBaseFactory = (type) => {
 					y: yMax > y ? y : yMax
 				});
 
-				this.deferScrollTo = true;
+				deferScrollTo = true;
 			} else if (this.hasDataSizeChanged) {
 				const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
 				// eslint-disable-next-line react/no-did-update-set-state
 				this.setState(newState);
 				this.setContainerSize();
 
-				this.deferScrollTo = true;
+				deferScrollTo = true;
 			} else if (prevProps.rtl !== this.props.rtl) {
 				this.updateScrollPosition(this.getXY(this.scrollPosition, 0));
 			}
 
 			const maxPos = this.isPrimaryDirectionVertical ? this.scrollBounds.maxTop : this.scrollBounds.maxLeft;
 
-			if (!this.deferScrollTo && this.scrollPosition > maxPos) {
+			if (!deferScrollTo && this.scrollPosition > maxPos) {
 				this.props.cbScrollTo({position: (this.isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 			}
 		}
-
-		deferScrollTo = false
 
 		scrollBounds = {
 			clientWidth: 0,
