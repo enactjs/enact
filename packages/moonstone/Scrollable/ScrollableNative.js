@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import handle, {forward} from '@enact/core/handle';
 import platform from '@enact/core/platform';
 import {onWindowReady} from '@enact/core/snapshot';
-import {Job} from '@enact/core/util';
+import {clamp, Job} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {constants, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
 import Spotlight, {getDirection} from '@enact/spotlight';
@@ -610,12 +610,14 @@ class ScrollableBaseNative extends Component {
 				// Should do nothing when focusedItem is paging control button of Scrollbar
 				if (contentNode.contains(focusedItem)) {
 					const
+						contentRect = contentNode.getBoundingClientRect(),
 						clientRect = focusedItem.getBoundingClientRect(),
 						yAdjust = isUp ? 1 : -1,
-						x = (clientRect.right + clientRect.left) / 2,
+						x = clamp(contentRect.left, contentRect.right, (clientRect.right + clientRect.left) / 2),
 						y = bounds.maxTop - epsilon < scrollTop + pageDistance || epsilon > scrollTop + pageDistance ?
 							contentNode.getBoundingClientRect()[isUp ? 'top' : 'bottom'] + yAdjust :
-							(clientRect.bottom + clientRect.top) / 2;
+							clamp(contentRect.top, contentRect.bottom, (clientRect.bottom + clientRect.top) / 2);
+
 					focusedItem.blur();
 					if (!this.props['data-spotlight-container-disabled']) {
 						this.childRef.current.setContainerDisabled(true);
@@ -796,7 +798,7 @@ class ScrollableBaseNative extends Component {
 				const {current: {containerRef: {current}}} = this.uiRef;
 				const elemFromPoint = document.elementFromPoint(x, y);
 				const target =
-					getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
+					elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
 					getTargetInViewByDirectionFromPosition(direction, position, current) ||
 					getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current);
 

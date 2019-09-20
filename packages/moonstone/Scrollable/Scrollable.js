@@ -733,15 +733,13 @@ class ScrollableBase extends Component {
 				const position = {x, y};
 				const {current: {containerRef: {current}}} = this.uiRef;
 				const elemFromPoint = document.elementFromPoint(x, y);
-				if (elemFromPoint) {
-					const target =
-						getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
-						getTargetInViewByDirectionFromPosition(direction, position, current) ||
-						getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current);
+				const target =
+					elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
+					getTargetInViewByDirectionFromPosition(direction, position, current) ||
+					getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current);
 
-					if (target) {
-						Spotlight.focus(target);
-					}
+				if (target) {
+					Spotlight.focus(target);
 				}
 			}
 			this.pointToFocus = null;
