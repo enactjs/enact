@@ -101,10 +101,16 @@ const
 				elem = document.elementFromPoint(x, y);
 
 			if (elem) {
-				for (let [key, value] of scrollables) {
+				for (const [key, value] of scrollables) {
 					if (value.contains(elem)) {
-						key.scrollByPageOnPointerMode(ev);
-						break;
+						/* To handle page keys in nested scrollable components,
+						 * break the loop only when `scrollByPageOnPointerMode` returns `true`.
+						 * This approach assumes that an inner scrollable component is
+						 * mounted earlier than an outer scrollable component.
+						 */
+						if (key.scrollByPageOnPointerMode(ev)) {
+							break;
+						}
 					}
 				}
 			}
@@ -606,7 +612,11 @@ class ScrollableBase extends Component {
 			if (this.props.overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
 				this.checkAndApplyOverscrollEffectByDirection(direction);
 			}
+
+			return true; // means consumed
 		}
+
+		return false; // means to be propagated
 	}
 
 	onKeyDown = (ev) => {
@@ -614,8 +624,7 @@ class ScrollableBase extends Component {
 
 		forward('onKeyDown', ev, this.props);
 
-		if ((isPageUp(keyCode) || isPageDown(keyCode)) && !this.isScrollButtonFocused()) {
-			ev.stopPropagation();
+		if (isPageUp(keyCode) || isPageDown(keyCode)) {
 			ev.preventDefault();
 		}
 
@@ -627,6 +636,7 @@ class ScrollableBase extends Component {
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				if (this.isContent(target) && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
+					ev.stopPropagation();
 					direction = isPageUp(keyCode) ? 'up' : 'down';
 					this.scrollByPage(direction);
 					if (overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
@@ -733,15 +743,13 @@ class ScrollableBase extends Component {
 				const position = {x, y};
 				const {current: {containerRef: {current}}} = this.uiRef;
 				const elemFromPoint = document.elementFromPoint(x, y);
-				if (elemFromPoint) {
-					const target =
-						getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
-						getTargetInViewByDirectionFromPosition(direction, position, current) ||
-						getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current);
+				const target =
+					elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
+					getTargetInViewByDirectionFromPosition(direction, position, current) ||
+					getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current);
 
-					if (target) {
-						Spotlight.focus(target);
-					}
+				if (target) {
+					Spotlight.focus(target);
 				}
 			}
 			this.pointToFocus = null;

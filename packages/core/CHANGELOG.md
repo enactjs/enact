@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `core/kind` documentation of `handlers` and `computed` functions to support better Typescript definitions
+
 ## [3.1.0] - 2019-09-16
 
 ### Added
