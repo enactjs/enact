@@ -456,8 +456,16 @@ const VirtualListBaseFactory = (type) => {
 					{dimensionToExtent, primary, secondary, itemPositions} = this,
 					extent = Math.floor(index / dimensionToExtent),
 					firstIndexInExtent = extent * dimensionToExtent,
-					primaryPosition = itemPositions[firstIndexInExtent] ? itemPositions[firstIndexInExtent].position : extent * primary.gridSize,
 					secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
+				let primaryPosition = extent * primary.gridSize;
+
+				if (!itemPositions[firstIndexInExtent]) {
+					// Cache individually sized item positions
+					for (let i = itemPositions.length; i <= index; i++) {
+						this.calculateAndCacheItemPosition(i);
+					}
+				}
+				primaryPosition = itemPositions[firstIndexInExtent].position;
 
 				return {primaryPosition, secondaryPosition};
 			} else {
@@ -908,13 +916,12 @@ const VirtualListBaseFactory = (type) => {
 		updateThresholdWithItemPosition () {
 			const
 				{overhang} = this.props,
-				{firstIndex, numOfItems} = this.state,
+				{firstIndex} = this.state,
 				{maxFirstIndex} = this,
-				lastIndex = firstIndex + numOfItems - 1,
 				numOfUpperLine = Math.floor(overhang / 2);
 
 			this.threshold.min = firstIndex === 0 ? -Infinity : this.getItemBottomPosition(firstIndex + numOfUpperLine);
-			this.threshold.max = lastIndex === maxFirstIndex ? Infinity : this.getItemBottomPosition(firstIndex + (numOfUpperLine + 1));
+			this.threshold.max = firstIndex === maxFirstIndex ? Infinity : this.getItemBottomPosition(firstIndex + (numOfUpperLine + 1));
 		}
 
 		// For individually sized item
