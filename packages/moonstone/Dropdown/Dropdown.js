@@ -16,7 +16,7 @@
  * @exports DropdownBaseDecorator
  */
 
-import {handle, forKey, forward} from '@enact/core/handle';
+import {handle, forKey, forward, forProp} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
@@ -197,6 +197,9 @@ const DropdownBase = kind({
 		onSelect: handle(
 			forward('onSelect'),
 			forward('onClose')
+		),
+		handleOpen: handle(
+			forProp('open', false), forward('onOpen')
 		)
 	},
 
@@ -247,13 +250,14 @@ const DropdownBase = kind({
 		}
 	},
 
-	render: ({children, disabled, onKeyDown, onOpen, onSelect, open, selected, width, title, ...rest}) => {
+	render: ({children, disabled, handleOpen, onKeyDown, onSelect, open, selected, width, title, ...rest}) => {
 		const popupProps = {children, onKeyDown, onSelect, selected, width, role: ''};
 
 		// `ui/Group`/`ui/Repeater` will throw an error if empty so we disable the Dropdown and
 		// prevent Dropdown to open if there are no children.
 		const hasChildren = children.length > 0;
 		const openDropdown = hasChildren && !disabled && open;
+		delete rest.onOpen;
 		delete rest.width;
 
 		return (
@@ -263,7 +267,7 @@ const DropdownBase = kind({
 				icon={openDropdown ? 'arrowlargeup' : 'arrowlargedown'}
 				popupProps={popupProps}
 				popupComponent={DropdownList}
-				onClick={onOpen}
+				onClick={handleOpen}
 				open={openDropdown}
 			>
 				{title}
