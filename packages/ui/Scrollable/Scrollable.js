@@ -969,7 +969,7 @@ class ScrollableBase extends Component {
 		if (animate) {
 			this.animator.animate(this.scrollAnimation(this.animationInfo));
 		} else {
-			this.scroll(targetX, targetY);
+			this.scroll(targetX, targetY, targetX, targetY);
 			this.stop();
 		}
 	}
@@ -1003,17 +1003,17 @@ class ScrollableBase extends Component {
 				}
 			}
 
-			this.scroll(curTargetX, curTargetY);
+			this.scroll(curTargetX, curTargetY, targetX, targetY);
 			if (!toBeContinued) {
 				this.stop();
 			}
 		} else {
-			this.scroll(targetX, targetY);
+			this.scroll(targetX, targetY, targetX, targetY);
 			this.stop();
 		}
 	}
 
-	scroll = (left, top) => {
+	scroll = (left, top, ...rest) => {
 		if (left !== this.scrollLeft) {
 			this.setScrollLeft(left);
 		}
@@ -1021,7 +1021,7 @@ class ScrollableBase extends Component {
 			this.setScrollTop(top);
 		}
 
-		this.childRefCurrent.setScrollPosition(this.scrollLeft, this.scrollTop);
+		this.childRefCurrent.setScrollPosition(this.scrollLeft, this.scrollTop, this.props.rtl, ...rest);
 		this.forwardScrollEvent('onScroll');
 	}
 

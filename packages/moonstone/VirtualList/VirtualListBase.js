@@ -428,58 +428,42 @@ const VirtualListBaseFactory = (type) => {
 		 */
 
 		onAcceleratedKeyDown = ({isWrapped, keyCode, nextIndex, repeat, target}) => {
-			const {cbScrollTo, spacing, wrap} = this.props;
-			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPosition} = this.uiRefCurrent;
+			const {cbScrollTo, dataSize, spacing, wrap} = this.props;
+			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPositionTarget} = this.uiRefCurrent;
 			const index = getNumberValue(target.dataset.index);
 
 			this.isScrolledBy5way = false;
 			this.isScrolledByJump = false;
 
 			if (nextIndex >= 0) {
-				const {dataSize} = this.props;
-				const column = index % dimensionToExtent;
-				const row = (index - column) % dataSize / dimensionToExtent;
-				const nextColumn = nextIndex % dimensionToExtent;
-				const nextRow = (nextIndex - nextColumn) % dataSize / dimensionToExtent;
-				let
-					isNextItemInView = false,
-					isCurrentItemInView = false,
-					numOfItemsInPage;
+				const
+					row = Math.floor(index / dimensionToExtent),
+					nextRow = Math.floor(nextIndex / dimensionToExtent),
+					start = this.uiRefCurrent.getGridPosition(nextIndex).primaryPosition,
+					end = this.uiRefCurrent.getGridPosition(nextIndex).primaryPosition + gridSize;
+				let isNextItemInView = false;
 
 				if (this.props.itemSizes) {
-					const container = this.uiRefCurrent.containerRef.current;
-					const inView = [index, nextIndex].map((i) => {
-						const node = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${i}']`);
-
-						if (container && node) {
-							const containerRects = container.getBoundingClientRect();
-							const nodeRects = node.getBoundingClientRect();
-
-							if (
-								nodeRects.x >= containerRects.x &&
-								nodeRects.x + nodeRects.width <= containerRects.x + containerRects.width &&
-								nodeRects.y >= containerRects.y &&
-								nodeRects.y + nodeRects.height <= containerRects.y + containerRects.height
-							) {
-								return true;
-							}
-						}
-
-						return false;
-					});
-					numOfItemsInPage = dimensionToExtent;
-					isCurrentItemInView = inView[0];
-					isNextItemInView = inView[1];
+					isNextItemInView = this.uiRefCurrent.itemPositions[nextIndex].position >= scrollPositionTarget &&
+						this.uiRefCurrent.getItemBottomPosition(nextIndex) <= scrollPositionTarget + clientSize;
 				} else {
-					const firstFullyVisibleIndex = Math.ceil(scrollPosition / gridSize) * dimensionToExtent;
-					numOfItemsInPage = Math.floor((clientSize + spacing) / gridSize) * dimensionToExtent;
-					isCurrentItemInView = index >= firstFullyVisibleIndex && index < firstFullyVisibleIndex + numOfItemsInPage;
-					isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex < firstFullyVisibleIndex + numOfItemsInPage;
+					const
+						firstFullyVisibleIndex = Math.ceil(scrollPositionTarget / gridSize) * dimensionToExtent,
+						lastFullyVisibleIndex = Math.min(
+							dataSize - 1,
+							Math.floor((scrollPositionTarget + clientSize + spacing) / gridSize) * dimensionToExtent - 1
+						);
+					isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex <= lastFullyVisibleIndex;
 				}
 
 				this.lastFocusedIndex = nextIndex;
 
-				if (isNextItemInView && (isCurrentItemInView || numOfItemsInPage !== dimensionToExtent) || row === nextRow) {
+				if (isNextItemInView) {
+					// The next item could be still out of viewport. So we need to prevent scrolling into view with `isScrolledBy5way` flag.
+					this.isScrolledBy5way = true;
+					this.focusByIndex(nextIndex);
+					this.isScrolledBy5way = false;
+				} else if (row === nextRow && (start < scrollPositionTarget || end > scrollPositionTarget + clientSize)) {
 					this.focusByIndex(nextIndex);
 				} else {
 					this.isScrolledBy5way = true;
@@ -506,7 +490,6 @@ const VirtualListBaseFactory = (type) => {
 						animate: !(isWrapped && wrap === 'noAnimation')
 					});
 				}
-
 			} else if (!repeat && Spotlight.move(getDirection(keyCode))) {
 				SpotlightAccelerator.reset();
 			}
