@@ -198,8 +198,10 @@ const DropdownBase = kind({
 			forward('onSelect'),
 			forward('onClose')
 		),
-		handleOpen: handle(
-			forProp('open', false), forward('onOpen')
+		onOpen: handle(
+			forward('onClick'),
+			forProp('open', false),
+			forward('onOpen')
 		)
 	},
 
@@ -250,7 +252,7 @@ const DropdownBase = kind({
 		}
 	},
 
-	render: ({children, disabled, handleOpen, onKeyDown, onSelect, open, selected, width, title, ...rest}) => {
+	render: ({children, disabled, onKeyDown, onOpen, onSelect, open, selected, width, title, ...rest}) => {
 		const popupProps = {children, onKeyDown, onSelect, selected, width, role: ''};
 
 		// `ui/Group`/`ui/Repeater` will throw an error if empty so we disable the Dropdown and
@@ -267,7 +269,7 @@ const DropdownBase = kind({
 				icon={openDropdown ? 'arrowlargeup' : 'arrowlargedown'}
 				popupProps={popupProps}
 				popupComponent={DropdownList}
-				onClick={handleOpen}
+				onClick={onOpen}
 				open={openDropdown}
 			>
 				{title}
