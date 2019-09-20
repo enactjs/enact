@@ -609,14 +609,11 @@ class ScrollableBase extends Component {
 	onDragStart = (ev) => {
 		if (ev.type === 'dragstart') return;
 
+		forward('onDragStart', ev, this.props);
 		this.stop();
 		this.isDragging = true;
 		this.dragStartX = this.scrollLeft + this.getRtlX(ev.x);
 		this.dragStartY = this.scrollTop + ev.y;
-
-		if (this.props.onDragStart) {
-			forward('onDragStart', ev, this.props);
-		}
 	}
 
 	onDrag = (ev) => {
@@ -626,16 +623,13 @@ class ScrollableBase extends Component {
 
 		this.lastInputType = 'drag';
 
+		forward('onDrag', ev, this.props);
 		this.start({
 			targetX: (direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
 			targetY: (direction === 'horizontal') ? 0 : this.dragStartY - ev.y, // 'vertical' or 'both'
 			animate: false,
 			overscrollEffect: this.props.overscrollEffectOn.drag
 		});
-
-		if (this.props.onDrag) {
-			forward('onDrag', ev, this.props);
-		}
 	}
 
 	onDragEnd = (ev) => {
@@ -643,6 +637,7 @@ class ScrollableBase extends Component {
 
 		this.isDragging = false;
 
+		forward('onDragEnd', ev, this.props);
 		if (this.flickTarget) {
 			const {targetX, targetY, duration} = this.flickTarget;
 
@@ -659,10 +654,6 @@ class ScrollableBase extends Component {
 		}
 
 		this.flickTarget = null;
-
-		if (this.props.onDragEnd) {
-			forward('onDragEnd', ev, this.props);
-		}
 	}
 
 	onFlick = (ev) => {
