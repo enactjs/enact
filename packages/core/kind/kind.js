@@ -29,7 +29,7 @@ import styles from './styles';
 /**
  * @callback HandlerFunction
  * @memberof core/kind
- * @param {any} event
+ * @param {Object<string, any>} event
  * @param {Object<string, any>} props
  * @param {Object<string, any>} context
  */
