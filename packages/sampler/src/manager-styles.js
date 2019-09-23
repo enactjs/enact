@@ -13,6 +13,14 @@ const styles = `
 	button[title="Toggle background grid"] {
 		display: none;
 	}
+
+	button[title='Shortcuts']::after {
+		display: none;
+	}
+
+	a[href='/?path=/settings/about'] {
+        display: none;
+    }
 `;
 
 const e = document.createElement('style');
