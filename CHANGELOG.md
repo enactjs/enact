@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.1.1] - 2019-09-23
+
+### Fixed
+
+- `core/kind` documentation of `handlers` and `computed` functions to support better Typescript definitions
+- `moonstone` internationalization resource loading
+- `moonstone/Dropdown` to only call `onOpen` when closed
+- `moonstone/Input` text color
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to correctly set focus to items scrolling into the viewport
+- `moonstone/VirtualList.VirtualList` to scroll properly when a different sized item gains focus
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to show items properly when reducing data size
+
 ## [3.1.0] - 2019-09-16
 
 ### Deprecated
@@ -16,7 +28,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` prop `role` to set the ARIA `role`
 - `spotlight` support for passing a spottable node or a container node or selector to `Spotlight.focus()`
 - `ui/Routable` module
-- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` prop `role` to set its ARIA `role`
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` prop `role` to set the ARIA `role`
 
 ### Fixed
 
