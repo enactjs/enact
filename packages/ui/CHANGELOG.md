@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [3.1.1] - 2019-09-23
 
 ### Fixed
 
@@ -13,7 +13,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/Routable` module
-- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` prop `role` to set its ARIA `role`
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` prop `role` to set the ARIA `role`
 
 ## [3.0.1] - 2019-09-09
 
