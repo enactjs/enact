@@ -318,6 +318,8 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		componentDidUpdate (prevProps, prevState) {
+			let deferScrollTo = false;
+
 			const {firstIndex, numOfItems} = this.state;
 
 			// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
@@ -391,13 +393,23 @@ const VirtualListBaseFactory = (type) => {
 					x: xMax > x ? x : xMax,
 					y: yMax > y ? y : yMax
 				});
+
+				deferScrollTo = true;
 			} else if (this.hasDataSizeChanged) {
 				const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
 				// eslint-disable-next-line react/no-did-update-set-state
 				this.setState(newState);
 				this.setContainerSize();
+
+				deferScrollTo = true;
 			} else if (prevProps.rtl !== this.props.rtl) {
 				this.updateScrollPosition(this.getXY(this.scrollPosition, 0));
+			}
+
+			const maxPos = this.isPrimaryDirectionVertical ? this.scrollBounds.maxTop : this.scrollBounds.maxLeft;
+
+			if (!deferScrollTo && this.scrollPosition > maxPos) {
+				this.props.cbScrollTo({position: (this.isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 			}
 		}
 
@@ -428,6 +440,7 @@ const VirtualListBaseFactory = (type) => {
 		hasDataSizeChanged = false
 		cc = []
 		scrollPosition = 0
+		scrollPositionTarget = 0
 
 		// For individually sized item
 		itemPositions = []
@@ -437,7 +450,7 @@ const VirtualListBaseFactory = (type) => {
 			if (type === Native) {
 				this.scrollToPosition(x, y, rtl);
 			} else {
-				this.setScrollPosition(x, y, rtl);
+				this.setScrollPosition(x, y, rtl, x, y);
 			}
 		}
 
@@ -450,23 +463,27 @@ const VirtualListBaseFactory = (type) => {
 		getMoreInfo = () => this.moreInfo
 
 		getGridPosition (index) {
+			const {dimensionToExtent, itemPositions, primary, secondary} = this;
+			const secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
+			const extent = Math.floor(index / dimensionToExtent);
+			let primaryPosition;
+
 			if (this.props.itemSizes) {
-				const
-					{dimensionToExtent, primary, secondary, itemPositions} = this,
-					extent = Math.floor(index / dimensionToExtent),
-					firstIndexInExtent = extent * dimensionToExtent,
-					primaryPosition = itemPositions[firstIndexInExtent] ? itemPositions[firstIndexInExtent].position : extent * primary.gridSize,
-					secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
+				const firstIndexInExtent = extent * dimensionToExtent;
 
-				return {primaryPosition, secondaryPosition};
+				if (!itemPositions[firstIndexInExtent]) {
+					// Cache individually sized item positions
+					for (let i = itemPositions.length; i <= index; i++) {
+						this.calculateAndCacheItemPosition(i);
+					}
+				}
+
+				primaryPosition = itemPositions[firstIndexInExtent].position;
 			} else {
-				const
-					{dimensionToExtent, primary, secondary} = this,
-					primaryPosition = Math.floor(index / dimensionToExtent) * primary.gridSize,
-					secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
-
-				return {primaryPosition, secondaryPosition};
+				primaryPosition = extent * primary.gridSize;
 			}
+
+			return {primaryPosition, secondaryPosition};
 		}
 
 		// For individually sized item
@@ -683,10 +700,6 @@ const VirtualListBaseFactory = (type) => {
 			maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
 
 			this.syncThreshold(maxPos);
-
-			if (this.scrollPosition > maxPos) {
-				this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
-			}
 		}
 
 		setContainerSize = () => {
@@ -758,14 +771,31 @@ const VirtualListBaseFactory = (type) => {
 				if (rtl) {
 					x = (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
 				}
+
+				if (this.isPrimaryDirectionVertical) {
+					this.scrollPositionTarget = y;
+				} else {
+					this.scrollPositionTarget = x;
+				}
+
 				this.containerRef.current.scrollTo(x, y);
 			}
 		}
 
 		// JS only
-		setScrollPosition (x, y, rtl = this.props.rtl) {
+		setScrollPosition (x, y, rtl = this.props.rtl, targetX = 0, targetY = 0) {
 			if (this.contentRef.current) {
 				this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
+
+				// The `x`, `y` as parameters in scrollToPosition() are the position when stopping scrolling.
+				// But the `x`, `y` as parameters in setScrollPosition() are the position between current position and the position stopping scrolling.
+				// To know the position when stopping scrolling here, `targetX` and `targetY` are passed and cached in `this.scrollPositionTarget`.
+				if (this.isPrimaryDirectionVertical) {
+					this.scrollPositionTarget = targetY;
+				} else {
+					this.scrollPositionTarget = targetX;
+				}
+
 				this.didScroll(x, y);
 			}
 		}
@@ -890,13 +920,12 @@ const VirtualListBaseFactory = (type) => {
 		updateThresholdWithItemPosition () {
 			const
 				{overhang} = this.props,
-				{firstIndex, numOfItems} = this.state,
+				{firstIndex} = this.state,
 				{maxFirstIndex} = this,
-				lastIndex = firstIndex + numOfItems - 1,
 				numOfUpperLine = Math.floor(overhang / 2);
 
 			this.threshold.min = firstIndex === 0 ? -Infinity : this.getItemBottomPosition(firstIndex + numOfUpperLine);
-			this.threshold.max = lastIndex === maxFirstIndex ? Infinity : this.getItemBottomPosition(firstIndex + (numOfUpperLine + 1));
+			this.threshold.max = firstIndex === maxFirstIndex ? Infinity : this.getItemBottomPosition(firstIndex + (numOfUpperLine + 1));
 		}
 
 		// For individually sized item
@@ -1061,11 +1090,15 @@ const VirtualListBaseFactory = (type) => {
 		getScrollWidth = () => (this.isPrimaryDirectionVertical ? this.scrollBounds.clientWidth : this.getVirtualScrollDimension())
 
 		getVirtualScrollDimension = () => {
-			const
-				{dimensionToExtent, primary, curDataSize} = this,
-				{spacing} = this.props;
+			if (this.props.itemSizes) {
+				return this.props.itemSizes.reduce((total, size, index) => (total + size + (index > 0 ? this.props.spacing : 0)), 0);
+			} else {
+				const
+					{dimensionToExtent, primary, curDataSize} = this,
+					{spacing} = this.props;
 
-			return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
+				return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
+			}
 		}
 
 		syncClientSize = () => {

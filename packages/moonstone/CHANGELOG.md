@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [3.1.1] - 2019-09-23
+
+### Fixed
+
+- `moonstone` internationalization resource loading
+- `moonstone/Dropdown` to only call `onOpen` when closed
+- `moonstone/Input` text color
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` to correctly set focus to items scrolling into the viewport
+- `moonstone/VirtualList.VirtualList` to scroll properly when a different sized item gains focus
+
 ## [3.1.0] - 2019-09-16
 
 ### Deprecated
@@ -22,6 +32,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` spotlight behavior to focus the last item when reaching the bounds after scroll by page up or down
 - `moonstone/VirtualList.VirtualList` to allow a dynamically resized item to scroll into view properly
 - `moonstone/Dropdown` accessibility read out when an item is focused
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll properly when page key is pressed on a horizontal list or scroller inside a vertical list or scroller
 
 ## [3.0.1] - 2019-09-09
 

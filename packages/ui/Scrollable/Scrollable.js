@@ -205,6 +205,30 @@ class ScrollableBase extends Component {
 		noScrollByWheel: PropTypes.bool,
 
 		/**
+		 * Called when trigerring a drag event.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onDrag: PropTypes.func,
+
+		/**
+		 * Called when trigerring a dragend event.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onDragEnd: PropTypes.func,
+
+		/**
+		 * Called when trigerring a dragstart event.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onDragStart: PropTypes.func,
+
+		/**
 		 * Called when flicking with a mouse or a touch screen.
 		 *
 		 * @type {Function}
@@ -585,6 +609,7 @@ class ScrollableBase extends Component {
 	onDragStart = (ev) => {
 		if (ev.type === 'dragstart') return;
 
+		forward('onDragStart', ev, this.props);
 		this.stop();
 		this.isDragging = true;
 		this.dragStartX = this.scrollLeft + this.getRtlX(ev.x);
@@ -598,6 +623,7 @@ class ScrollableBase extends Component {
 
 		this.lastInputType = 'drag';
 
+		forward('onDrag', ev, this.props);
 		this.start({
 			targetX: (direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
 			targetY: (direction === 'horizontal') ? 0 : this.dragStartY - ev.y, // 'vertical' or 'both'
@@ -611,6 +637,7 @@ class ScrollableBase extends Component {
 
 		this.isDragging = false;
 
+		forward('onDragEnd', ev, this.props);
 		if (this.flickTarget) {
 			const {targetX, targetY, duration} = this.flickTarget;
 
@@ -969,7 +996,7 @@ class ScrollableBase extends Component {
 		if (animate) {
 			this.animator.animate(this.scrollAnimation(this.animationInfo));
 		} else {
-			this.scroll(targetX, targetY);
+			this.scroll(targetX, targetY, targetX, targetY);
 			this.stop();
 		}
 	}
@@ -1003,17 +1030,17 @@ class ScrollableBase extends Component {
 				}
 			}
 
-			this.scroll(curTargetX, curTargetY);
+			this.scroll(curTargetX, curTargetY, targetX, targetY);
 			if (!toBeContinued) {
 				this.stop();
 			}
 		} else {
-			this.scroll(targetX, targetY);
+			this.scroll(targetX, targetY, targetX, targetY);
 			this.stop();
 		}
 	}
 
-	scroll = (left, top) => {
+	scroll = (left, top, ...rest) => {
 		if (left !== this.scrollLeft) {
 			this.setScrollLeft(left);
 		}
@@ -1021,7 +1048,7 @@ class ScrollableBase extends Component {
 			this.setScrollTop(top);
 		}
 
-		this.childRefCurrent.setScrollPosition(this.scrollLeft, this.scrollTop);
+		this.childRefCurrent.setScrollPosition(this.scrollLeft, this.scrollTop, this.props.rtl, ...rest);
 		this.forwardScrollEvent('onScroll');
 	}
 
@@ -1304,8 +1331,7 @@ class ScrollableBase extends Component {
 					onDrag: this.onDrag,
 					onDragEnd: this.onDragEnd,
 					onDragStart: this.onDragStart,
-					onFlick: this.onFlick,
-					onTouchStart: this.onTouchStart
+					onFlick: this.onFlick
 				})
 			};
 
