@@ -451,13 +451,13 @@ const VirtualListBaseFactory = (type) => {
 		getMoreInfo = () => this.moreInfo
 
 		getGridPosition (index) {
+			const {dimensionToExtent, itemPositions, primary, secondary} = this;
+			const secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
+			const extent = Math.floor(index / dimensionToExtent);
+			let primaryPosition;
+
 			if (this.props.itemSizes) {
-				const
-					{dimensionToExtent, primary, secondary, itemPositions} = this,
-					extent = Math.floor(index / dimensionToExtent),
-					firstIndexInExtent = extent * dimensionToExtent,
-					secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
-				let primaryPosition = extent * primary.gridSize;
+				const firstIndexInExtent = extent * dimensionToExtent;
 
 				if (!itemPositions[firstIndexInExtent]) {
 					// Cache individually sized item positions
@@ -465,17 +465,13 @@ const VirtualListBaseFactory = (type) => {
 						this.calculateAndCacheItemPosition(i);
 					}
 				}
+
 				primaryPosition = itemPositions[firstIndexInExtent].position;
-
-				return {primaryPosition, secondaryPosition};
 			} else {
-				const
-					{dimensionToExtent, primary, secondary} = this,
-					primaryPosition = Math.floor(index / dimensionToExtent) * primary.gridSize,
-					secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
-
-				return {primaryPosition, secondaryPosition};
+				primaryPosition = extent * primary.gridSize;
 			}
+
+			return {primaryPosition, secondaryPosition};
 		}
 
 		// For individually sized item
