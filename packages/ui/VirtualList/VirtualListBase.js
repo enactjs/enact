@@ -451,23 +451,27 @@ const VirtualListBaseFactory = (type) => {
 		getMoreInfo = () => this.moreInfo
 
 		getGridPosition (index) {
+			const {dimensionToExtent, itemPositions, primary, secondary} = this;
+			const secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
+			const extent = Math.floor(index / dimensionToExtent);
+			let primaryPosition;
+
 			if (this.props.itemSizes) {
-				const
-					{dimensionToExtent, primary, secondary, itemPositions} = this,
-					extent = Math.floor(index / dimensionToExtent),
-					firstIndexInExtent = extent * dimensionToExtent,
-					primaryPosition = itemPositions[firstIndexInExtent] ? itemPositions[firstIndexInExtent].position : extent * primary.gridSize,
-					secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
+				const firstIndexInExtent = extent * dimensionToExtent;
 
-				return {primaryPosition, secondaryPosition};
+				if (!itemPositions[firstIndexInExtent]) {
+					// Cache individually sized item positions
+					for (let i = itemPositions.length; i <= index; i++) {
+						this.calculateAndCacheItemPosition(i);
+					}
+				}
+
+				primaryPosition = itemPositions[firstIndexInExtent].position;
 			} else {
-				const
-					{dimensionToExtent, primary, secondary} = this,
-					primaryPosition = Math.floor(index / dimensionToExtent) * primary.gridSize,
-					secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
-
-				return {primaryPosition, secondaryPosition};
+				primaryPosition = extent * primary.gridSize;
 			}
+
+			return {primaryPosition, secondaryPosition};
 		}
 
 		// For individually sized item
@@ -908,13 +912,12 @@ const VirtualListBaseFactory = (type) => {
 		updateThresholdWithItemPosition () {
 			const
 				{overhang} = this.props,
-				{firstIndex, numOfItems} = this.state,
+				{firstIndex} = this.state,
 				{maxFirstIndex} = this,
-				lastIndex = firstIndex + numOfItems - 1,
 				numOfUpperLine = Math.floor(overhang / 2);
 
 			this.threshold.min = firstIndex === 0 ? -Infinity : this.getItemBottomPosition(firstIndex + numOfUpperLine);
-			this.threshold.max = lastIndex === maxFirstIndex ? Infinity : this.getItemBottomPosition(firstIndex + (numOfUpperLine + 1));
+			this.threshold.max = firstIndex === maxFirstIndex ? Infinity : this.getItemBottomPosition(firstIndex + (numOfUpperLine + 1));
 		}
 
 		// For individually sized item
