@@ -68,6 +68,8 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
+const updateItemSize = ({minSize, dataSize, size}) => ({minSize, size: new Array(dataSize).fill(size)});
+
 class StatefulSwitchItem extends React.Component {
 	static propTypes = {
 		index: PropTypes.number
@@ -219,6 +221,26 @@ storiesOf('VirtualList', module)
 					spotlightDisabled={boolean('spotlightDisabled', Config, false)}
 					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
 					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
+				/>
+			);
+		},
+		{propTables: [Config]}
+	)
+	.add(
+		'with small item min size and large item size',
+		() => {
+			return (
+				<VirtualList
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+					direction="horizontal"
+					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
+					itemRenderer={renderItem(Item, ri.scale(number('size', Config, 200)), false)}
+					itemSize={updateItemSize({
+						minSize: ri.scale(number('minSize', Config, 10)),
+						dataSize: number('dataSize', Config, defaultDataSize),
+						size: ri.scale(number('size', Config, 200))
+					})}
+					spacing={ri.scale(number('spacing', Config))}
 				/>
 			);
 		},
