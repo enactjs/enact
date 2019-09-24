@@ -679,7 +679,7 @@ const call = function (method) {
  * @param    {EventAdapter}     adapter  Function to adapt the event payload
  * @param    {HandlerFunction}  handler  Handler to call with the handler function
  *
- * @returns  {HandlerFunction}           Returns value of the handler function
+ * @returns  {HandlerFunction}           Returns an [event handler]{@link core/handle.HandlerFunction} (suitable for passing to handle) that returns the result of handler
  * @curried
  * @memberof core/handle
  * @public
