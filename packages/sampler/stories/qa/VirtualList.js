@@ -236,7 +236,7 @@ storiesOf('VirtualList', module)
 					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
 					itemRenderer={renderItem(Item, ri.scale(number('size', Config, 200)), false)}
 					itemSize={updateItemSize({
-						minSize: ri.scale(number('minSize', Config, 10)),
+						minSize: ri.scale(number('minSize', Config, 1)),
 						dataSize: number('dataSize', Config, defaultDataSize),
 						size: ri.scale(number('size', Config, 200))
 					})}
