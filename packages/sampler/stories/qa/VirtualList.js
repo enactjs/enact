@@ -280,9 +280,5 @@ storiesOf('VirtualList', module)
 				/>
 			);
 		},
-		{
-			info: {
-				text: 'Basic usage of VirtualList'
-			}
-		}
+		{propTables: [Config]}
 	);
