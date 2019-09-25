@@ -260,4 +260,29 @@ storiesOf('VirtualList', module)
 			);
 		},
 		{propTables: [Config]}
+	)
+	.add(
+		'overscrollEffectOn',
+		() => {
+			return (
+				<VirtualList
+					overscrollEffectOn={{
+						arrowKey: false,
+						drag: false,
+						pageKey: true,
+						scrollbarButton: false,
+						wheel: false
+					}}
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+					focusableScrollbar={boolean('focusableScrollbar', Config)}
+					itemRenderer={renderItem(StatefulSwitchItem, ri.scale(number('itemSize', Config, 72)), true)}
+					itemSize={ri.scale(number('itemSize', Config, 72))}
+				/>
+			);
+		},
+		{
+			info: {
+				text: 'Basic usage of VirtualList'
+			}
+		}
 	);
