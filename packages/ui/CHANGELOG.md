@@ -3,6 +3,11 @@
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
 ## [unreleased]
+
+### Added
+
+- `ui/Button` to warn if `icon` and `children` props aren't passed
+
 ## [3.1.1] - 2019-09-23
 
 ### Fixed
