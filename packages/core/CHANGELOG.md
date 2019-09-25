@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `core/handle` documentation for even better Typescript output
+
 ## [3.1.1] - 2019-09-23
 
 ### Fixed
