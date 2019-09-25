@@ -96,7 +96,7 @@ import {is} from '../keymap';
  * @param {Object<string, any>} context
  */
 
- /**
+/**
  * @callback EventAdapter
  * @memberof core/handle
  * @param {any} event
