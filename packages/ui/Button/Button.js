@@ -11,7 +11,6 @@ import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
-import warning from 'warning';
 
 import Touchable from '../Touchable';
 
@@ -181,8 +180,6 @@ const ButtonBase = kind({
 		delete rest.pressed;
 		delete rest.selected;
 		delete rest.size;
-
-		warning(icon || children, 'Button requires that either the "icon" or "children" props be specified.');
 
 		return (
 			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
