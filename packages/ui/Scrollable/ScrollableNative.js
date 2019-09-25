@@ -777,9 +777,7 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onKeyDown = (ev) => {
-		if (this.props.onKeyDown) {
-			forward('onKeyDown', ev, this.props);
-		}
+		forward('onKeyDown', ev, this.props);
 	}
 
 	scrollToAccumulatedTarget = (delta, vertical, overscrollEffect) => {
