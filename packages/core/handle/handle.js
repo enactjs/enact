@@ -102,7 +102,7 @@ import {is} from '../keymap';
  * @param {any} event
  * @param {Object<string, any>} props
  * @param {Object<string, any>} context
- * @returns {Object<string, any>}
+ * @returns {any}
  */
 
 
