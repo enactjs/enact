@@ -433,6 +433,8 @@ const VirtualListBaseFactory = (type) => {
 		isPrimaryDirectionVertical = true
 		isItemSized = false
 
+		isNeededToUpdateBounds = false
+
 		dimensionToExtent = 0
 		threshold = 0
 		maxFirstIndex = 0
@@ -615,6 +617,12 @@ const VirtualListBaseFactory = (type) => {
 				wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
 				dataSizeDiff = dataSize - this.curDataSize;
 			let newFirstIndex = firstIndex;
+
+			// When calling setState() except in didScroll(), `isNeededToUpdateBounds` should be `true`
+			// so that setState() in didScroll() could be called to override state.
+			// Before calling setState() except in didScroll(), getStatesAndUpdateBounds() is always called.
+			// So `isNeededToUpdateBounds` is true here.
+			this.isNeededToUpdateBounds = true;
 
 			this.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
 			this.curDataSize = dataSize;
@@ -883,7 +891,9 @@ const VirtualListBaseFactory = (type) => {
 			this.scrollPosition = pos;
 			this.updateMoreInfo(dataSize, pos);
 
-			this.setState({firstIndex: newFirstIndex});
+			if (this.isNeededToUpdateBounds || firstIndex !== newFirstIndex) {
+				this.setState({firstIndex: newFirstIndex});
+			}
 		}
 
 		// For individually sized item
@@ -1169,6 +1179,8 @@ const VirtualListBaseFactory = (type) => {
 			if (primary) {
 				this.positionItems();
 			}
+
+			this.isNeededToUpdateBounds = false;
 
 			return (
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.containerRef} style={style}>
