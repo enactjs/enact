@@ -3,6 +3,11 @@
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
 ## [unreleased]
+
+### Fixed
+
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to scroll speedfully when wheeling
+
 ## [3.1.1] - 2019-09-23
 
 ### Fixed
