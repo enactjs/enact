@@ -16,7 +16,7 @@
  * @exports DropdownBaseDecorator
  */
 
-import {handle, forKey, forward} from '@enact/core/handle';
+import {handle, forKey, forward, forProp} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
@@ -197,6 +197,11 @@ const DropdownBase = kind({
 		onSelect: handle(
 			forward('onSelect'),
 			forward('onClose')
+		),
+		onOpen: handle(
+			forward('onClick'),
+			forProp('open', false),
+			forward('onOpen')
 		)
 	},
 
@@ -254,6 +259,7 @@ const DropdownBase = kind({
 		// prevent Dropdown to open if there are no children.
 		const hasChildren = children.length > 0;
 		const openDropdown = hasChildren && !disabled && open;
+
 		delete rest.width;
 
 		return (

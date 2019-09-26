@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import handle, {forward} from '@enact/core/handle';
 import platform from '@enact/core/platform';
 import {onWindowReady} from '@enact/core/snapshot';
-import {Job} from '@enact/core/util';
+import {clamp, Job} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {constants, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
 import Spotlight, {getDirection} from '@enact/spotlight';
@@ -82,10 +82,16 @@ const
 				elem = document.elementFromPoint(x, y);
 
 			if (elem) {
-				for (let [key, value] of scrollables) {
+				for (const [key, value] of scrollables) {
 					if (value.contains(elem)) {
-						key.scrollByPageOnPointerMode(ev);
-						break;
+						/* To handle page keys in nested scrollable components,
+						 * break the loop only when `scrollByPageOnPointerMode` returns `true`.
+						 * This approach assumes that an inner scrollable component is
+						 * mounted earlier than an outer scrollable component.
+						 */
+						if (key.scrollByPageOnPointerMode(ev)) {
+							break;
+						}
 					}
 				}
 			}
@@ -610,12 +616,14 @@ class ScrollableBaseNative extends Component {
 				// Should do nothing when focusedItem is paging control button of Scrollbar
 				if (contentNode.contains(focusedItem)) {
 					const
+						contentRect = contentNode.getBoundingClientRect(),
 						clientRect = focusedItem.getBoundingClientRect(),
 						yAdjust = isUp ? 1 : -1,
-						x = (clientRect.right + clientRect.left) / 2,
+						x = clamp(contentRect.left, contentRect.right, (clientRect.right + clientRect.left) / 2),
 						y = bounds.maxTop - epsilon < scrollTop + pageDistance || epsilon > scrollTop + pageDistance ?
 							contentNode.getBoundingClientRect()[isUp ? 'top' : 'bottom'] + yAdjust :
-							(clientRect.bottom + clientRect.top) / 2;
+							clamp(contentRect.top, contentRect.bottom, (clientRect.bottom + clientRect.top) / 2);
+
 					focusedItem.blur();
 					if (!this.props['data-spotlight-container-disabled']) {
 						this.childRef.current.setContainerDisabled(true);
@@ -669,7 +677,11 @@ class ScrollableBaseNative extends Component {
 			if (this.props.overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
 				this.checkAndApplyOverscrollEffectByDirection(direction);
 			}
+
+			return true; // means consumed
 		}
+
+		return false; // means to be propagated
 	}
 
 	onKeyDown = (ev) => {
@@ -677,8 +689,7 @@ class ScrollableBaseNative extends Component {
 
 		forward('onKeyDown', ev, this.props);
 
-		if ((isPageUp(keyCode) || isPageDown(keyCode)) && !this.isScrollButtonFocused()) {
-			ev.stopPropagation();
+		if (isPageUp(keyCode) || isPageDown(keyCode)) {
 			ev.preventDefault();
 		}
 
@@ -690,6 +701,7 @@ class ScrollableBaseNative extends Component {
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				if (this.isContent(target) && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
+					ev.stopPropagation();
 					direction = isPageUp(keyCode) ? 'up' : 'down';
 					this.scrollByPage(direction);
 					if (overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
@@ -796,7 +808,7 @@ class ScrollableBaseNative extends Component {
 				const {current: {containerRef: {current}}} = this.uiRef;
 				const elemFromPoint = document.elementFromPoint(x, y);
 				const target =
-					getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
+					elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
 					getTargetInViewByDirectionFromPosition(direction, position, current) ||
 					getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current);
 

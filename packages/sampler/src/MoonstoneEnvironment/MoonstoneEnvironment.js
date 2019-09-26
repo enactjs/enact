@@ -69,7 +69,7 @@ const locales = {
 	'en-US - US English':                                   'en-US',
 	'ko-KR - Korean':                                       'ko-KR',
 	'es-ES - Spanish, with alternate weekends':             'es-ES',
-	'am-ET - Amharic, 6 meridiems':                         'am-ET',
+	'am-ET - Amharic, 5 meridiems':                         'am-ET',
 	'th-TH - Thai, with tall characters':                   'th-TH',
 	'ar-SA - Arabic, RTL and standard font':                'ar-SA',
 	'ur-PK - Urdu, RTL and custom Urdu font':               'ur-PK',

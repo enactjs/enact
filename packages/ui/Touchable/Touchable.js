@@ -133,6 +133,7 @@ const handleClick = handle(
 
 const handleTouchStart = handle(
 	forward('onTouchStart'),
+	returnsTrue(call('startTouch')),
 	handleDown
 );
 
@@ -156,6 +157,7 @@ const handleTouchEnd = handle(
 	returnsTrue(call('setLastTouchEnd')),
 	call('isTracking'),
 	complement(call('hasTouchLeftTarget')),
+	returnsTrue(call('endTouch')),
 	handleUp
 );
 
@@ -475,19 +477,9 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		setTarget (target) {
 			this.target = target;
-
-			if (platform.touch) {
-				on('contextmenu', preventDefault);
-				this.targetBounds = this.target.getBoundingClientRect();
-			}
 		}
 
 		clearTarget () {
-			if (platform.touch) {
-				off('contextmenu', preventDefault);
-				this.targetBounds = null;
-			}
-
 			this.target = null;
 		}
 
@@ -518,6 +510,16 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		// Gesture Support
+
+		startTouch ({currentTarget}) {
+			on('contextmenu', preventDefault);
+			this.targetBounds = currentTarget.getBoundingClientRect();
+		}
+
+		endTouch () {
+			off('contextmenu', preventDefault);
+			this.targetBounds = null;
+		}
 
 		startGesture (ev, props) {
 			const coords = getEventCoordinates(ev);
