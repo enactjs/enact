@@ -28,8 +28,6 @@ const ButtonBase = kind({
 	name: 'ui:Button',
 
 	propTypes: /** @lends ui/Button.ButtonBase.prototype */ {
-		children: PropTypes.node.isRequired,
-
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal Elements and states of this component.
