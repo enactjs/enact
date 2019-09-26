@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Button` to not require `children`
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to scroll smoothly when wheeling
 
 ## [3.1.1] - 2019-09-23
 
