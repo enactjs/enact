@@ -321,7 +321,7 @@ const VirtualListBaseFactory = (type) => {
 			let deferScrollTo = false;
 			const {firstIndex, numOfItems} = this.state;
 
-			this.isNeededToUpdateBounds = false;
+			this.shouldUpdateBounds = false;
 
 			// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
 			this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
@@ -434,7 +434,7 @@ const VirtualListBaseFactory = (type) => {
 		isPrimaryDirectionVertical = true
 		isItemSized = false
 
-		isNeededToUpdateBounds = false
+		shouldUpdateBounds = false
 
 		dimensionToExtent = 0
 		threshold = 0
@@ -619,11 +619,11 @@ const VirtualListBaseFactory = (type) => {
 				dataSizeDiff = dataSize - this.curDataSize;
 			let newFirstIndex = firstIndex;
 
-			// When calling setState() except in didScroll(), `isNeededToUpdateBounds` should be `true`
+			// When calling setState() except in didScroll(), `shouldUpdateBounds` should be `true`
 			// so that setState() in didScroll() could be called to override state.
 			// Before calling setState() except in didScroll(), getStatesAndUpdateBounds() is always called.
-			// So `isNeededToUpdateBounds` is true here.
-			this.isNeededToUpdateBounds = true;
+			// So `shouldUpdateBounds` is true here.
+			this.shouldUpdateBounds = true;
 
 			this.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
 			this.curDataSize = dataSize;
@@ -892,7 +892,7 @@ const VirtualListBaseFactory = (type) => {
 			this.scrollPosition = pos;
 			this.updateMoreInfo(dataSize, pos);
 
-			if (this.isNeededToUpdateBounds || firstIndex !== newFirstIndex) {
+			if (this.shouldUpdateBounds || firstIndex !== newFirstIndex) {
 				this.setState({firstIndex: newFirstIndex});
 			}
 		}
