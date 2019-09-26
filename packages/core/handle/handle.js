@@ -91,10 +91,20 @@ import {is} from '../keymap';
 /**
  * @callback HandlerFunction
  * @memberof core/handle
- * @param {Object<string, any>} event
- * @param {any} props
+ * @param {any} event
+ * @param {Object<string, any>} props
  * @param {Object<string, any>} context
  */
+
+/**
+ * @callback EventAdapter
+ * @memberof core/handle
+ * @param {any} event
+ * @param {Object<string, any>} props
+ * @param {Object<string, any>} context
+ * @returns {any}
+ */
+
 
 // Accepts an array of handlers, sanitizes them, and returns a handler function
 // compose(allPass, map(makeSafeHandler));
@@ -666,11 +676,10 @@ const call = function (method) {
  * ```
  *
  * @method   adaptEvent
- * @param    {Function}  adapter  Function to adapt the event payload
- * @param    {Function}  handler  Handler to call with the new event payload
- * @param    {...*}      [args]   Additional args passed to both `adapter` and `handler`
+ * @param    {EventAdapter}     adapter  Function to adapt the event payload
+ * @param    {HandlerFunction}  handler  Handler to call with the handler function
  *
- * @returns  {HandlerFunction}    New event payload
+ * @returns  {HandlerFunction}           Returns an [event handler]{@link core/handle.HandlerFunction} (suitable for passing to handle) that returns the result of `handler`
  * @curried
  * @memberof core/handle
  * @public
