@@ -111,15 +111,6 @@ import {is} from '../keymap';
  * @returns {any}
  */
 
-/**
- * An entry for {@link core/handle.oneOf}.
- *
- * If the return of the first handler is truthy, the second handler is executed
- *
- * @typedef {[HandlerFunction, HandlerFunction]} OneOfEntry
- * @memberof core/handle
- */
-
 // Accepts an array of handlers, sanitizes them, and returns a handler function
 // compose(allPass, map(makeSafeHandler));
 const makeHandler = (handlers) => {
@@ -258,10 +249,10 @@ const handle = function (...handlers) {
  * ```
  *
  * @method   oneOf
- * @param    {...OneOfEntry}  handlers List of conditions and handlers to process the event
+ * @param    {...[HandlerFunction, HandlerFunction]}  handlers List of conditions and handlers to process the event
  *
  * @returns  {HandlerFunction} A function that accepts an event which is dispatched to each of the
- *                          conditions and, if it passes, onto the provided handler.
+ *                             conditions and, if it passes, onto the provided handler.
  * @memberof core/handle
  * @public
  */
