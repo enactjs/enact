@@ -319,8 +319,9 @@ const VirtualListBaseFactory = (type) => {
 
 		componentDidUpdate (prevProps, prevState) {
 			let deferScrollTo = false;
-
 			const {firstIndex, numOfItems} = this.state;
+
+			this.isNeededToUpdateBounds = false;
 
 			// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
 			this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
@@ -1179,8 +1180,6 @@ const VirtualListBaseFactory = (type) => {
 			if (primary) {
 				this.positionItems();
 			}
-
-			this.isNeededToUpdateBounds = false;
 
 			return (
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.containerRef} style={style}>
