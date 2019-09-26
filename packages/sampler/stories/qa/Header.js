@@ -16,13 +16,13 @@ const inputData = {
 	shortTitle: 'Enact',
 	shortTitleBelow: 'An app framework',
 	shortSubTitleBelow: 'Built atop React',
-	shortRtlTitle: 'כתוביות למט ',
+	shortRtlTitle: 'כתוביות למט',
 	shortRtlTitleBelow: 'כתוביות למט',
 
 	longTitle: 'Core, The building blocks of an Enact application. Moonstone, our TV-centric UI library.',
 	longTitleBelow: 'An app development framework built atop React that’s easy to use, performant and customizable. The goal of Enact is to provide the building blocks for creating robust and maintainable applications.',
 	longSubTitleBelow: 'With over 50 components to choose from, Moonstone provides a solid base for creating applications designed for large screens. The Enact team welcomes contributions from anyone motivated to help out.',
-	longRtlTitle: 'כתוביות למט כתוביות למט סביבה לימודית מתוקשבת מבית מטח שינויים מרחיקי לכת": כנס מט"ח מציג את המהפכות בעולם החינוך'
+	longRtlTitle: 'غينيا واستمر العصبة ضرب قد. وباءت الأمريكي الأوربيين هو به،, هو العالم، الثقيلة بال. مع وايرلندا الأوروبيّون كان, قد بحق أسابيع العظمى واعتلاء. انه كل وإقامة المواد.'
 };
 
 const headerComponents = <Button>Header Button</Button>;
