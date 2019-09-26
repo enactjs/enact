@@ -20,7 +20,6 @@
 @font-system-src-moonstone-900:    local("LG Smart UI Bold"), local("LGSmartUI-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-Black.ttf") format("truetype");
 @font-system-src-moonstone-900-i:  local("LG Smart UI Bold"), local("LGSmartUI-Bold"), local("Museo Sans"), url("../../fonts/MuseoSans/MuseoSans-BlackItalic.ttf") format("truetype");
 
-// Deprecated variables. Retained for legacy references.
 @font-system-src-non-latin-300:  local("LG Smart UI AR HE TH Regular"), local("LGSmartUIARHETH-Regular");
 @font-system-src-non-latin-400:  local("LG Smart UI AR HE TH Regular"), local("LGSmartUIARHETH-Regular");
 @font-system-src-non-latin-600:  local("LG Smart UI AR HE TH SemiBold"), local("LGSmartUIARHETH-SemiBold");
@@ -41,6 +40,7 @@
 	he: local("LG Smart UI AR HE TH") normal 300 600 700;
 	hi: local("LG Smart UI Devanagari");
 	kn: local("LG Smart UI Kannada");
+	ja: local("LG Smart UI JP") normal 300 600 700;
 	ml: local("LG Smart UI Malayalam") normal 300 600 700;
 	mr: local("LG Smart UI Devanagari"); // same as `hi`
 	or: local("LG Smart UI Oriya");
@@ -48,6 +48,7 @@
 	ta: local("LG Smart UI Tamil") normal 300 600 700;
 	te: local("LG Smart UI Telugu");
 	th: local("LG Smart UI AR HE TH") normal 300 600 700;
+	ur: local("LG Smart UI_Urdu") normal 300 600 700;
 	zh-HK: local("LG Smart UI TC") normal 300 600 700;
 	zh-TW: local("LG Smart UI TC") normal 300 600 700; // same as `zh-HK`
 
@@ -99,6 +100,13 @@
 .buildFontFace(@font-family-base-name; @font-system-src-moonstone-condensed-300; { font-stretch: condensed; font-weight: 300; });
 .buildFontFace(@font-family-base-name; @font-system-src-moonstone-condensed-600; { font-stretch: condensed; font-weight: 600; });
 .buildFontFace(@font-family-base-name; @font-system-src-moonstone-condensed-700; { font-stretch: condensed; font-weight: 700; });
+
+
+/* ----- Manual Moonstone Locale Fonts (Stacking onto "Moonstone") ------ */
+.buildFontFace(@font-family-base-name; @font-system-src-non-latin-400; normal);
+.buildFontFace(@font-family-base-name; @font-system-src-non-latin-300; 300);
+.buildFontFace(@font-family-base-name; @font-system-src-non-latin-600; 600);
+.buildFontFace(@font-family-base-name; @font-system-src-non-latin-700; 700);
 
 /* ----- Generated Moonstone Locale Fonts (Stacking onto "Moonstone") ------ */
 .buildLocaleFonts(@font-family-base-name; @fonts);
