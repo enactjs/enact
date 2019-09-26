@@ -435,33 +435,35 @@ const Spotlight = (function () {
 	}
 
 	function handlePointerHide () {
+		console.log('handlePointerHide', getCurrent());
 		if (!getCurrent()) {
 			restoreFocus();
 		}
 	}
 
 	function onKeyDown (evt) {
-		if (shouldPreventNavigation()) {
-			notifyKeyDown(evt.keyCode);
-			return;
-		}
+		console.log('onKeyDown', evt.key, evt.keyCode, getCurrent());
+		//if (shouldPreventNavigation()) {
+		//	notifyKeyDown(evt.keyCode);
+		//	return;
+		//}
 
 		const keyCode = evt.keyCode;
 		const direction = getDirection(keyCode);
-		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
+		//const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
 
-		if (pointerHandled || !(direction || isEnter(keyCode))) {
-			return;
-		}
+		//if (pointerHandled || !(direction || isEnter(keyCode))) {
+		//	return;
+		//}
 
-		if (!isPaused() && !_pointerMoveDuringKeyPress) {
+		//if (!isPaused() && !_pointerMoveDuringKeyPress) {
 			if (getCurrent()) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
 			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
 				restoreFocus();
 			}
 			_5WayKeyHold = true;
-		}
+		//}
 
 		if (direction) {
 			preventDefault(evt);
