@@ -11,11 +11,13 @@ class Flick {
 		return this.tracking;
 	}
 
-	begin = (config, {onFlick}, coords) => {
-		this.minVelocity = config.minVelocity;
-		this.maxMoves = config.maxMoves;
+	begin = ({maxDuration, maxMoves, minVelocity}, {onFlick}, coords) => {
+		this.minVelocity = minVelocity;
+		this.maxMoves = maxMoves;
 
-		this.cancelJob.startAfter(config.maxDuration);
+		if (maxDuration !== null) {
+			this.cancelJob.startAfter(maxDuration);
+		}
 		this.tracking = !!onFlick;
 		this.moves.length = 0;
 		this.onFlick = onFlick;

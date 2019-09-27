@@ -31,6 +31,7 @@ const
 	constants = {
 		animationDuration: 1000,
 		epsilon: 1,
+		flickConfig: {maxDuration: null},
 		isPageDown: is('pageDown'),
 		isPageUp: is('pageUp'),
 		nop: () => {},
@@ -45,6 +46,7 @@ const
 	{
 		animationDuration,
 		epsilon,
+		flickConfig,
 		isPageDown,
 		isPageUp,
 		nop,
@@ -1328,6 +1330,7 @@ class ScrollableBase extends Component {
 			childWrapperProps = {
 				className: css.content,
 				...(!noScrollByDrag && {
+					flickConfig,
 					onDrag: this.onDrag,
 					onDragEnd: this.onDragEnd,
 					onDragStart: this.onDragStart,
