@@ -27,6 +27,9 @@ const
 	borderStyle = ri.unit(3, 'rem') + ' solid #202328',
 	items = [],
 	defaultDataSize = 1000,
+	defaultDataSizeForSmallMinLargeSize = 5,
+	defaultItemSize = 500,
+	defaultMinItemSize = 100,
 	prop = {
 		scrollbarOption: ['auto', 'hidden', 'visible']
 	},
@@ -231,14 +234,14 @@ storiesOf('VirtualList', module)
 		() => {
 			return (
 				<VirtualList
-					dataSize={updateDataSize(number('dataSize', Config, defaultDataSize))}
+					dataSize={updateDataSize(number('dataSize', Config, defaultDataSizeForSmallMinLargeSize))}
 					direction="horizontal"
 					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, Config)}
-					itemRenderer={renderItem(Item, ri.scale(number('size', Config, 200)), false)}
+					itemRenderer={renderItem(Item, ri.scale(number('size', Config, defaultItemSize)), false)}
 					itemSize={updateItemSize({
-						minSize: ri.scale(number('minSize', Config, 1)),
-						dataSize: number('dataSize', Config, defaultDataSize),
-						size: ri.scale(number('size', Config, 200))
+						minSize: ri.scale(number('minSize', Config, defaultMinItemSize)),
+						dataSize: number('dataSize', Config, defaultDataSizeForSmallMinLargeSize),
+						size: ri.scale(number('size', Config, defaultItemSize))
 					})}
 					spacing={ri.scale(number('spacing', Config))}
 				/>
