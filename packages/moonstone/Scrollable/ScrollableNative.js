@@ -699,22 +699,17 @@ class ScrollableBaseNative extends Component {
 			const {overscrollEffectOn} = this.props;
 			let direction = null;
 
-			if ((isPageUp(keyCode) || isPageDown(keyCode)) && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
-				const
-					{scrollTop} = this.uiRef.current,
-					{maxTop} = this.uiRef.current.getScrollBounds();
-
-				if (this.isContent(target)) {
-					ev.stopPropagation();
+			if (isPageUp(keyCode) || isPageDown(keyCode)) {
+				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
 					direction = isPageUp(keyCode) ? 'up' : 'down';
-					this.scrollByPage(direction);
-					if (overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
+
+					if (this.isContent(target)) {
+						ev.stopPropagation();
+						this.scrollByPage(direction);
+					}
+					if (overscrollEffectOn.pageKey) {
 						this.checkAndApplyOverscrollEffectByDirection(direction);
 					}
-				} else if (isPageUp(keyCode) && this.isReachedEdge(scrollTop, 0)) {
-					this.uiRef.current.checkAndApplyOverscrollEffect('vertical', 'before', overscrollTypeOnce);
-				} else if (isPageDown(keyCode) && this.isReachedEdge(scrollTop, maxTop)) {
-					this.uiRef.current.checkAndApplyOverscrollEffect('vertical', 'after', overscrollTypeOnce);
 				}
 			} else if (!Spotlight.getPointerMode() && getDirection(keyCode)) {
 				const element = Spotlight.getCurrent();
