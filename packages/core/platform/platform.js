@@ -134,6 +134,11 @@ const parseUserAgent = (userAgent) => {
 		}
 	}
 
+	// PLAT-86381 - Workaround for detecting touchscreen on webOS
+	if (plat.webos && !plat.touchscreen && 'ontouchstart' in window) {
+		plat.touchscreen = true;
+	}
+
 	return plat;
 };
 
