@@ -33,7 +33,7 @@ const fonts = {
 		regular: 'LG Smart UI JP'
 	},
 	'ur': {
-		regular: ['LG Smart UI_Urdu', 'LGSmartUIUrdu'] // This needs 2 references because the "full name" differs from the "family name". To target this font file directly in all OSs we must also include the "postscript name" in addition to the "full name".
+		regular: ['LG Smart UI Urdu', 'LGSmartUIUrdu'] // This needs 2 references because the "full name" differs from the "family name". To target this font file directly in all OSs we must also include the "postscript name" in addition to the "full name".
 	},
 	'zh-Hans': {
 		regular: 'LG Smart UI SC'
