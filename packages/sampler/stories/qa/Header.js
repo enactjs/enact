@@ -16,8 +16,8 @@ const inputData = {
 	shortTitle: 'Enact',
 	shortTitleBelow: 'An app framework',
 	shortSubTitleBelow: 'Built atop React',
-	shortRtlTitle: 'כתוביות למט',
-	shortRtlTitleBelow: 'כתוביות למט',
+	shortRtlTitle: 'غينيا واستمر',
+	shortRtlTitleBelow: 'غينيا واستمر',
 
 	longTitle: 'Core, The building blocks of an Enact application. Moonstone, our TV-centric UI library.',
 	longTitleBelow: 'An app development framework built atop React that’s easy to use, performant and customizable. The goal of Enact is to provide the building blocks for creating robust and maintainable applications.',
