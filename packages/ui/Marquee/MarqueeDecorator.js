@@ -266,7 +266,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default '50%'
 			 * @public
 			 */
-			marqueePadding: PropTypes.number,
+			marqueePadding: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 			/**
 			 * Number of milliseconds to wait before resetting the marquee position after it
