@@ -48,7 +48,7 @@ like this:
 
 In Enact, the same effect is achieved like this:
 
-```html
+```js
 <Button size="small">Click Me!</Button>
 ```
 

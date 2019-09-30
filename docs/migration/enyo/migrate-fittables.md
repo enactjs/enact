@@ -43,7 +43,7 @@ Fittable example, the `FittableColumnsLayout` component behaves as a row (the ch
 
 This is a simple example of creating a `FittableColumnsLayout` style with Enact and flexbox. This
 example uses inline `style` tags, though using CSS classes would be preferable.
-```html
+```js
 <div style={{display: "flex"}}>
 	<div style="width: 5em;">A</div>
 	<div style={{flexGrow: 1}}>B</div>
