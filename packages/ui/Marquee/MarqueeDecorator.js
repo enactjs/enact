@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import shallowEqual from 'recompose/shallowEqual';
 
+import {scale} from '../resolution';
 import {ResizeContext} from '../Resizable';
 
 import MarqueeBase from './MarqueeBase';
@@ -247,6 +248,18 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeOnRenderDelay: PropTypes.number,
 
 			/**
+			 * Amount of padding between the instances of the content when animating.
+			 *
+			 * May either be a number indicating the number of pixels or a string indicating the
+			 * percentage relative to the width of the component.
+			 *
+			 * @type {String | Number}
+			 * @default '50%'
+			 * @public
+			 */
+			marqueePadding: PropTypes.number,
+
+			/**
 			 * Number of milliseconds to wait before resetting the marquee position after it
 			 * finishes.
 			 *
@@ -290,6 +303,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeDelay: 1000,
 			marqueeOn: 'focus',
 			marqueeOnRenderDelay: 1000,
+			marqueePadding: '50%',
 			marqueeResetDelay: 1000,
 			marqueeSpeed: 60
 		}
@@ -488,6 +502,21 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		getPadding (width) {
+			const {marqueePadding} = this.props;
+
+			if (typeof marqueePadding === 'string') {
+				if (/^\d+(.\d+)?%$/.test(marqueePadding)) {
+					return width * Number.parseFloat(marqueePadding) / 100;
+				}
+
+				// warning for invalid string value;
+				return 0;
+			}
+
+			return scale(marqueePadding);
+		}
+
 		/*
 		 * Calculates the distance the marquee must travel to reveal all of the content
 		 *
@@ -495,8 +524,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{Number}			Distance to travel in pixels
 		 */
 		calculateDistance (node) {
-			const rect = node.getBoundingClientRect();
-			const distance = Math.abs(node.scrollWidth - rect.width);
+			const {width} = node.getBoundingClientRect();
+			const {scrollWidth} = node;
+			const overflow = scrollWidth - width;
+			const distance = overflow > 5 ? overflow + scrollWidth + this.getPadding(width) : 0;
+
 			return distance;
 		}
 
@@ -788,6 +820,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						distance={this.distance}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}
+						padding={this.props.marqueePadding}
 						rtl={this.state.rtl}
 						speed={marqueeSpeed}
 						willAnimate={this.state.promoted}

@@ -105,6 +105,15 @@ const MarqueeBase = kind({
 		overflow: PropTypes.oneOf(['clip', 'ellipsis']),
 
 		/**
+		 * Amount of padding, in pixels, between the instances of the content
+		 *
+		 * @type {Number}
+		 * @eefault 0
+		 * @public
+		 */
+		padding: PropTypes.number,
+
+		/**
 		 * `true` if the directionality of the content is right-to-left
 		 *
 		 * @type {Boolean}
@@ -135,6 +144,7 @@ const MarqueeBase = kind({
 	},
 
 	defaultProps: {
+		padding: 0,
 		rtl: false,
 		willAnimate: false
 	},
@@ -181,10 +191,11 @@ const MarqueeBase = kind({
 			}
 
 			return style;
-		}
+		},
+		duplicate: ({distance, willAnimate}) => willAnimate && distance > 0
 	},
 
-	render: ({children, clientClassName, clientRef, clientStyle, onMarqueeComplete, ...rest}) => {
+	render: ({children, clientClassName, clientRef, clientStyle, duplicate, onMarqueeComplete, padding, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;
@@ -203,6 +214,12 @@ const MarqueeBase = kind({
 					onTransitionEnd={onMarqueeComplete}
 				>
 					{children}
+					{duplicate ? (
+						<React.Fragment>
+							<div style={{display: 'inline-block', width: padding}} />
+							{children}
+						</React.Fragment>
+					) : null}
 				</div>
 			</div>
 		);
