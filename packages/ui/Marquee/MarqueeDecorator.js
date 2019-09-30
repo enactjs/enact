@@ -314,7 +314,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 			this.state = {
 				animating: false,
-				overflow: 'ellipsis',
 				promoted: false,
 				rtl: determineTextDirection(null, props.rtl, props.forceDirection)
 			};
@@ -476,10 +475,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.distance = null;
 			// Assume the marquee does not fit until calculations show otherwise
 			this.contentFits = false;
-
-			this.setState(state => {
-				return state.overflow === 'ellipsis' ? null : {overflow: 'ellipsis'};
-			});
 		}
 
 		/*
@@ -494,11 +489,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (node && this.distance == null && !this.props.marqueeDisabled) {
 				this.distance = this.calculateDistance(node);
 				this.contentFits = !this.shouldAnimate(this.distance);
-
-				const overflow = this.calculateTextOverflow(this.distance);
-				this.setState(state => {
-					return state.overflow === overflow ? null : {overflow};
-				});
 			}
 		}
 
@@ -527,25 +517,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {width} = node.getBoundingClientRect();
 			const {scrollWidth} = node;
 			const overflow = scrollWidth - width;
-			const distance = overflow > 5 ? overflow + scrollWidth + this.getPadding(width) : 0;
 
-			return distance;
-		}
+			if (this.shouldAnimate(overflow)) {
+				return overflow + scrollWidth + this.getPadding(width);
+			}
 
-		/*
-		 * A custom overflow-determining method to reflect real-world truncation/ellipsis
-		 * calculation. This catches an edge case that the browser typically does not, where the
-		 * size of the text area is the same size as the container (zero distance difference), but
-		 * the browser still inserts an ellipsis due to a non-visible part of the last glyph's
-		 * render box overflowing the parent container size.
-		 * This scenario should not induce a marquee animation or ellipsis, so we directly set
-		 * Marquee to not use an ellipsis, and instead just clip the non-visible part of the glyph.
-		 *
-		 * @param	{Number}	distance	Amount of overflow in pixels
-		 * @returns	{String}				text-overflow value
-		 */
-		calculateTextOverflow (distance) {
-			return distance < 1 ? 'clip' : 'ellipsis';
+			return 0;
 		}
 
 		/*
@@ -819,7 +796,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						clientRef={this.cacheNode}
 						distance={this.distance}
 						onMarqueeComplete={this.handleMarqueeComplete}
-						overflow={this.state.overflow}
 						padding={this.props.marqueePadding}
 						rtl={this.state.rtl}
 						speed={marqueeSpeed}
