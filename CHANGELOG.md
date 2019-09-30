@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.1.2] - 2019-09-30
+
+### Fixed
+
+- `core/handle` documentation for even better Typescript output
+- `moonstone` language-specific (`LG Smart UI AR HE TH`) and Indian font assignment
+- `ui/Button` to not require `children`
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to scroll smoothly when wheeling
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` to scroll correctly after performing flick events
+
 ## [3.1.1] - 2019-09-23
 
 ### Fixed
