@@ -15,9 +15,15 @@
 	overflow: hidden;
 	text-align: left;
 
+	&.gradation {
+		-webkit-mask-image: -webkit-gradient(linear, left top, right top, color-stop(0.9,  rgba(0,0,0,1)), color-stop(1,  rgba(0,0,0,0)));
+		:global(.enact-locale-right-to-left) & {
+			-webkit-mask-image: -webkit-gradient(linear, right top, left top, color-stop(0.9,  rgba(0,0,0,1)), color-stop(1,  rgba(0,0,0,0)));
+		}
+	}
+
 	.text {
 		pointer-events: none;
-		text-overflow: ellipsis;
 		overflow: hidden;
 		width: 100%;
 		white-space: pre !important;

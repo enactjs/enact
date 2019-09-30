@@ -155,20 +155,22 @@ const MarqueeBase = kind({
 	},
 
 	computed: {
+		className: ({overflow, styler}) => (styler.append({
+			gradation: overflow === 'ellipsis'
+		})),
 		clientClassName: ({animating, willAnimate, styler}) => styler.join({
 			animate: animating,
 			text: true,
 			willAnimate
 		}),
-		clientStyle: ({alignment, animating, distance, overflow, rtl, speed}) => {
+		clientStyle: ({alignment, animating, distance, rtl, speed}) => {
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
 			const direction = rtl ? 'rtl' : 'ltr';
 			const sideProperty = rtl ? 'left' : 'right';
 			const style = {
 				direction,
-				textAlign: alignment,
-				textOverflow: overflow
+				textAlign: alignment
 			};
 
 			if (animating) {

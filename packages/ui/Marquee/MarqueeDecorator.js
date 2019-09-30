@@ -124,6 +124,8 @@ const TimerState = {
 	SYNCSTART_PENDING: 3	// Waiting to alert Controller that we want to start marqueeing
 };
 
+const SPACING = 30;
+
 /**
  * A higher-order component that provides marquee functionalities.
  *
@@ -478,10 +480,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
 			if (node && this.distance == null && !this.props.marqueeDisabled) {
-				this.distance = this.calculateDistance(node);
-				this.contentFits = !this.shouldAnimate(this.distance);
+				const {distance: originalDistance, scrollWidth} = this.calculateDistance(node);
+				this.contentFits = !this.shouldAnimate(originalDistance);
+				this.distance = scrollWidth + SPACING;
 
-				const overflow = this.calculateTextOverflow(this.distance);
+				const overflow = this.calculateTextOverflow(originalDistance);
 				this.setState(state => {
 					return state.overflow === overflow ? null : {overflow};
 				});
@@ -497,7 +500,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		calculateDistance (node) {
 			const rect = node.getBoundingClientRect();
 			const distance = Math.abs(node.scrollWidth - rect.width);
-			return distance;
+			return {
+				distance,
+				scrollWidth: node.scrollWidth
+			};
 		}
 
 		/*
@@ -582,7 +588,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		tryStartingAnimation = (delay) => {
 			if (this.state.animating || this.timerState !== TimerState.CLEAR) return;
-
 			this.startAnimation(delay);
 		}
 
@@ -730,6 +735,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		cacheNode = (node) => {
 			this.node = node;
+			this.calculateMetrics();
 		}
 
 		validateTextDirection () {
@@ -752,6 +758,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const marqueeOnFocus = marqueeOn === 'focus';
 			const marqueeOnHover = marqueeOn === 'hover';
 			const marqueeOnRender = marqueeOn === 'render';
+
+			const spacing = {[this.state.rtl ? 'marginRight' : 'marginLeft']: SPACING};
 
 			if (marqueeOnFocus && !disabled) {
 				rest[focus] = this.handleFocus;
@@ -792,7 +800,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						speed={marqueeSpeed}
 						willAnimate={this.state.promoted}
 					>
-						{children}
+						<span>{children}</span>
+						{this.state.animating ? <span style={spacing}>{children}</span> : null}
 					</MarqueeComponent>
 				</Wrapped>
 			);
