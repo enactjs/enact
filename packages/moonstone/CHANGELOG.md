@@ -2,11 +2,11 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [3.1.2] - 2019-09-30
 
 ### Fixed
 
-- Language-specific (`LG Smart UI AR HE TH`) and Indian font assignment
+- `moonstone` language-specific (`LG Smart UI AR HE TH`) and Indian font assignment
 
 ## [3.1.1] - 2019-09-23
 

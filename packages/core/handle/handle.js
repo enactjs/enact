@@ -83,12 +83,16 @@ import curry from 'ramda/src/curry';
 import {is} from '../keymap';
 
 /**
+ * The signature for event handlers
+ *
  * @callback EventHandler
  * @memberof core/handle
  * @param {any} event
  */
 
 /**
+ * The signature for event handling functions supported by `handle` and related functions
+ *
  * @callback HandlerFunction
  * @memberof core/handle
  * @param {any} event
@@ -97,6 +101,8 @@ import {is} from '../keymap';
  */
 
 /**
+ * The signature for {@link core/handle.adaptEvent} parameter `adapter`
+ *
  * @callback EventAdapter
  * @memberof core/handle
  * @param {any} event
@@ -104,7 +110,6 @@ import {is} from '../keymap';
  * @param {Object<string, any>} context
  * @returns {any}
  */
-
 
 // Accepts an array of handlers, sanitizes them, and returns a handler function
 // compose(allPass, map(makeSafeHandler));
@@ -244,10 +249,10 @@ const handle = function (...handlers) {
  * ```
  *
  * @method   oneOf
- * @param    {...Function[]}  handlers List of conditions and handlers to process the event
+ * @param    {...[HandlerFunction, HandlerFunction]}  handlers List of conditions and handlers to process the event
  *
  * @returns  {HandlerFunction} A function that accepts an event which is dispatched to each of the
- *                          conditions and, if it passes, onto the provided handler.
+ *                             conditions and, if it passes, onto the provided handler.
  * @memberof core/handle
  * @public
  */
