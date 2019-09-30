@@ -177,7 +177,7 @@ const MarqueeBase = kind({
 			const sideProperty = rtl ? 'left' : 'right';
 			const style = {
 				direction,
-				overflow,
+				textOverflow: overflow,
 				textAlign: alignment
 			};
 

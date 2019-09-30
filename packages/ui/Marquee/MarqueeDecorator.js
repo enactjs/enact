@@ -248,6 +248,15 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeOnRenderDelay: PropTypes.number,
 
 			/**
+			 * Visual indicator of additional content.
+			 *
+			 * @type {('ellipsis'|'fade')}
+			 * @default '50%'
+			 * @public
+			 */
+			marqueeOverflow: PropTypes.oneOf(['ellipsis', 'fade']),
+
+			/**
 			 * Amount of padding between the instances of the content when animating.
 			 *
 			 * May either be a number indicating the number of pixels or a string indicating the
@@ -303,6 +312,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeDelay: 1000,
 			marqueeOn: 'focus',
 			marqueeOnRenderDelay: 1000,
+			marqueeOverflow: 'fade',
 			marqueePadding: '50%',
 			marqueeResetDelay: 1000,
 			marqueeSpeed: 60
@@ -754,6 +764,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				children,
 				disabled,
 				marqueeOn,
+				marqueeOverflow,
+				marqueePadding,
 				marqueeSpeed,
 				...rest
 			} = this.props;
@@ -761,6 +773,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const marqueeOnFocus = marqueeOn === 'focus';
 			const marqueeOnHover = marqueeOn === 'hover';
 			const marqueeOnRender = marqueeOn === 'render';
+			const overflow = marqueeOverflow === 'fade' ? 'clip' : 'overflow';
 
 			if (marqueeOnFocus && !disabled) {
 				rest[focus] = this.handleFocus;
@@ -796,7 +809,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						clientRef={this.cacheNode}
 						distance={this.distance}
 						onMarqueeComplete={this.handleMarqueeComplete}
-						padding={this.props.marqueePadding}
+						overflow={marqueeOverflow}
+						padding={marqueePadding}
 						rtl={this.state.rtl}
 						speed={marqueeSpeed}
 						willAnimate={this.state.promoted}
@@ -818,6 +832,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.marqueeDisabled;
 			delete props.marqueeOn;
 			delete props.marqueeOnRenderDelay;
+			delete props.marqueeOverflow;
+			delete props.marqueePadding;
 			delete props.marqueeResetDelay;
 			delete props.marqueeSpeed;
 			delete props.remeasure;
