@@ -20,6 +20,7 @@ import css from './Scrollable.module.less';
 const
 	constants = {
 		epsilon: 1,
+		flickConfig: {maxDuration: null},
 		isPageDown: is('pageDown'),
 		isPageUp: is('pageUp'),
 		nop: () => {},
@@ -33,6 +34,7 @@ const
 	},
 	{
 		epsilon,
+		flickConfig,
 		nop,
 		overscrollTypeDone,
 		overscrollTypeHold,
@@ -1318,6 +1320,7 @@ class ScrollableBaseNative extends Component {
 			childWrapperProps = {
 				className: contentClasses,
 				...(!noScrollByDrag && {
+					flickConfig,
 					onDrag: this.onDrag,
 					onDragEnd: this.onDragEnd,
 					onDragStart: this.onDragStart,

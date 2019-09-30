@@ -30,8 +30,10 @@ const fontName = 'Moonstone';
 // };
 const fonts = {
 	'ja': {
-		regular: 'LG Smart UI JP',
-		bold: 'LG Display_JP_Bold'
+		regular: 'LG Smart UI JP'
+	},
+	'ur': {
+		regular: ['LG Smart UI Urdu', 'LGSmartUIUrdu'] // This needs 2 references because the "full name" differs from the "family name". To target this font file directly in all OSs we must also include the "postscript name" in addition to the "full name".
 	},
 	'zh-Hans': {
 		regular: 'LG Smart UI SC'

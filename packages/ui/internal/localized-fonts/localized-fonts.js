@@ -13,7 +13,14 @@ const buildFont = function (config) {
 		strOut += `  font-weight: ${config.weight};\n`;
 	}
 	if (config.localName) {
-		strOut += `  src: local("${config.localName}");\n`;
+		// Accept a string or an array. If it's a string convert it into an array
+		if (typeof config.localName === 'string') {
+			config.localName = [config.localName];
+		}
+		// Take our array and update each of its elements to be CSS "local()" strings
+		config.localName = config.localName.map(f => `local("${f}")`);
+		// Join all our strings together with a comma, so it's a valid CSS `src` rule
+		strOut += `  src: ${config.localName.join(', ')};\n`;
 	}
 	if (config.unicodeRange) {
 		strOut += `  unicode-range: ${config.unicodeRange};\n`;

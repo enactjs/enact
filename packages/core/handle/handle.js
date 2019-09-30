@@ -83,17 +83,32 @@ import curry from 'ramda/src/curry';
 import {is} from '../keymap';
 
 /**
+ * The signature for event handlers
+ *
  * @callback EventHandler
  * @memberof core/handle
  * @param {any} event
  */
 
 /**
+ * The signature for event handling functions supported by `handle` and related functions
+ *
  * @callback HandlerFunction
  * @memberof core/handle
- * @param {Object<string, any>} event
- * @param {any} props
+ * @param {any} event
+ * @param {Object<string, any>} props
  * @param {Object<string, any>} context
+ */
+
+/**
+ * The signature for {@link core/handle.adaptEvent} parameter `adapter`
+ *
+ * @callback EventAdapter
+ * @memberof core/handle
+ * @param {any} event
+ * @param {Object<string, any>} props
+ * @param {Object<string, any>} context
+ * @returns {any}
  */
 
 // Accepts an array of handlers, sanitizes them, and returns a handler function
@@ -234,10 +249,10 @@ const handle = function (...handlers) {
  * ```
  *
  * @method   oneOf
- * @param    {...Function[]}  handlers List of conditions and handlers to process the event
+ * @param    {...[HandlerFunction, HandlerFunction]}  handlers List of conditions and handlers to process the event
  *
  * @returns  {HandlerFunction} A function that accepts an event which is dispatched to each of the
- *                          conditions and, if it passes, onto the provided handler.
+ *                             conditions and, if it passes, onto the provided handler.
  * @memberof core/handle
  * @public
  */
@@ -666,11 +681,10 @@ const call = function (method) {
  * ```
  *
  * @method   adaptEvent
- * @param    {Function}  adapter  Function to adapt the event payload
- * @param    {Function}  handler  Handler to call with the new event payload
- * @param    {...*}      [args]   Additional args passed to both `adapter` and `handler`
+ * @param    {EventAdapter}     adapter  Function to adapt the event payload
+ * @param    {HandlerFunction}  handler  Handler to call with the handler function
  *
- * @returns  {HandlerFunction}    New event payload
+ * @returns  {HandlerFunction}           Returns an [event handler]{@link core/handle.HandlerFunction} (suitable for passing to handle) that returns the result of `handler`
  * @curried
  * @memberof core/handle
  * @public
