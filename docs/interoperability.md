@@ -16,7 +16,7 @@ When creating an app using `enact create`, it creates app boilerplate that is se
 
 You can include components just like you normally would by using `import`.
 
-```JavaScript
+```js
 import { Button } from 'reactstrap';
 
 const App = kind({
@@ -32,7 +32,7 @@ const App = kind({
 
 For libraries like bootstrap, you can also import the css in your `App.less` file.
 
-```less
+```css
 @global-import 'bootstrap/dist/css/bootstrap.css';
 ```
 
@@ -55,7 +55,7 @@ At this point you can use core Enact features (`kind` with computed props) and u
 components (`ui/Button`).
 
 
-```JavaScript
+```js
 import kind from '@enact/core/kind';
 import Button from '@enact/ui/Button';
 
@@ -70,7 +70,7 @@ const App = kind({
 
 You can even use `Moonstone` themed components after installing `@enact/moonstone`.
 
-```javascript
+```js
 import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
 import { MoonstoneDecorator } from '@enact/moonstone/MoonstoneDecorator';
@@ -111,7 +111,7 @@ is a good reference for enabling CSS modules prior to `2.0.0`.
 }
 ```
 
-```javascript
+```js
 // App.js
 import Button from '@enact/moonstone/Button';
 import { MoonstoneDecorator } from '@enact/moonstone/MoonstoneDecorator';
@@ -138,7 +138,7 @@ export default MoonstoneDecorator(App);
 In order to use the [`@enact/i18n`](../../developer-guide/i18n) library for internationalization, you can [eject](https://facebook.github.io/create-react-app/docs/available-scripts#npm-run-eject)
 your CRA app, install your required Enact libraries (plus, `@enact/dev-utils`), and update the webpack configuration.
 
-```
+```json
 // package.json
 
 ...

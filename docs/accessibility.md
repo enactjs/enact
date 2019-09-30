@@ -8,7 +8,7 @@ We recognize that applications built using our framework should be usable by any
 
 We address native semantic meaning and accessibility by assigning [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques#Roles) to custom components. When possible, we've assigned the relevant role to each of our custom components which can be overridden by users if needed.
 
-```
+```js
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
 import React from 'react';
 
@@ -59,7 +59,7 @@ const App = () => {
 
 [ui/A11yDecorator](../../modules/ui/A11yDecorator/) is a Higher-Order Component that helps provide constant hint text to precede or follow the `aria-label` for a component. This is most useful in cases where the `aria-label` changes but the content before or after it is constant.
 
-```
+```js
 import A11yDecorator from '@enact/ui/A11yDecorator';
 
 import CustomComponent from './components/CustomComponent';
@@ -85,7 +85,7 @@ const App = (props) => {
 
 [ui/AnnounceDecorator](../../modules/ui/AnnounceDecorator/) provides a Higher-Order Component that adds the ability for the Wrapped component to notify the user of a state change. It provides a callback to the Wrapped component that can be called with a string which is inserted into a node with the [`alert` role](https://www.w3.org/TR/wai-aria/#alert) to notify the user.
 
-```
+```js
 import AnnounceDecorator from '@enact/ui/AnnounceDecorator';
 import React from 'react';
 

@@ -38,7 +38,7 @@ For the following sample, the `'Badge'` component accepts the `children` and `gr
 `greeting` having a default of `'Hello, my name is ...'`. It applies the `'badge'` `className` (combined
 with any passed-in `className`), it computes a new value for `children` and renders the result.
 
-```javascript
+```js
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -131,7 +131,7 @@ a component.
 
 Here's a simple example to illustrate:
 
-```javascript
+```js
 const Countable = hoc({prop: 'data-count'}, (config, Wrapped) => {
 	return class extends React.Component {
 		constructor (props) {
@@ -182,7 +182,7 @@ How about an example to make this more clear. Let's customize the background col
 
 Then, in our component we'll just apply the imported LESS file to the component with the `css` property.
 
-```javascript
+```js
 import React from 'react';
 import kind from '@enact/core/kind';
 import Button from '@enact/moonstone/Button';
@@ -202,7 +202,7 @@ export default CustomButton;
 
 Now, all we do in our app is import this `CustomButton` like any other, and it will be styled with our custom styling.
 
-```javascript
+```js
 import CustomButton from './CustomButton';
 
 ...

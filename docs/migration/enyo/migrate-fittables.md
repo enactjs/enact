@@ -20,7 +20,7 @@ component to 'fit' the available space after the other child components were ren
 
 This example demonstrates a simple usage of Fittables.  Note that only one child component can have
 `fit: true`.  The named `fitter` component will stretch to fill the space of `fittableColumn`.
-```
+```js
 ...
 components: [
 	{name: 'fittableColumn', layoutKind: FittableColumnsLayout, components: [
@@ -43,7 +43,7 @@ Fittable example, the `FittableColumnsLayout` component behaves as a row (the ch
 
 This is a simple example of creating a `FittableColumnsLayout` style with Enact and flexbox. This
 example uses inline `style` tags, though using CSS classes would be preferable.
-```
+```html
 <div style={{display: "flex"}}>
 	<div style="width: 5em;">A</div>
 	<div style={{flexGrow: 1}}>B</div>
