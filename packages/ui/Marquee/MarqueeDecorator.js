@@ -251,7 +251,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * Visual indicator of additional content.
 			 *
 			 * @type {('ellipsis'|'fade')}
-			 * @default '50%'
+			 * @default 'fade'
 			 * @public
 			 */
 			marqueeOverflow: PropTypes.oneOf(['ellipsis', 'fade']),
