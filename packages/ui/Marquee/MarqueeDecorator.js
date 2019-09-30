@@ -481,6 +481,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		invalidateMetrics () {
+			this.padding = 0;
 			// Null distance is the special value to allow recalculation
 			this.distance = null;
 			// Assume the marquee does not fit until calculations show otherwise
@@ -497,7 +498,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
 			if (node && this.distance == null && !this.props.marqueeDisabled) {
-				this.distance = this.calculateDistance(node);
+				const {width} = node.getBoundingClientRect();
+				const {scrollWidth} = node;
+
+				this.padding = this.getPadding(width);
+				this.distance = this.calculateDistance(width, scrollWidth, this.padding);
 				this.contentFits = !this.shouldAnimate(this.distance);
 			}
 		}
@@ -520,16 +525,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		/*
 		 * Calculates the distance the marquee must travel to reveal all of the content
 		 *
-		 * @param	{DOMNode}	node	DOM Node to measure
-		 * @returns	{Number}			Distance to travel in pixels
+		 * @param	{Number}	width        Width of the node
+		 * @param	{Number}	scrollWidth  Width of the node if it were unbounded
+		 * @param	{Number}	padding      Horizontal padding
+		 * @returns	{Number}                 Distance to travel in pixels
 		 */
-		calculateDistance (node) {
-			const {width} = node.getBoundingClientRect();
-			const {scrollWidth} = node;
+		calculateDistance (width, scrollWidth, padding) {
 			const overflow = scrollWidth - width;
 
 			if (this.shouldAnimate(overflow)) {
-				return overflow + scrollWidth + this.getPadding(width);
+				return overflow + scrollWidth + padding;
 			}
 
 			return 0;
@@ -765,7 +770,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				disabled,
 				marqueeOn,
 				marqueeOverflow,
-				marqueePadding,
 				marqueeSpeed,
 				...rest
 			} = this.props;
@@ -773,7 +777,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const marqueeOnFocus = marqueeOn === 'focus';
 			const marqueeOnHover = marqueeOn === 'hover';
 			const marqueeOnRender = marqueeOn === 'render';
-			const overflow = marqueeOverflow === 'fade' ? 'clip' : 'overflow';
+			const overflow = marqueeOverflow === 'ellipsis' ? 'ellipsis' : 'clip';
 
 			if (marqueeOnFocus && !disabled) {
 				rest[focus] = this.handleFocus;
@@ -795,6 +799,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.marqueeDelay;
 			delete rest.marqueeDisabled;
 			delete rest.marqueeOnRenderDelay;
+			delete rest.marqueePadding;
 			delete rest.marqueeResetDelay;
 			delete rest.marqueeSpeed;
 			delete rest.remeasure;
@@ -809,8 +814,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						clientRef={this.cacheNode}
 						distance={this.distance}
 						onMarqueeComplete={this.handleMarqueeComplete}
-						overflow={marqueeOverflow}
-						padding={marqueePadding}
+						overflow={overflow}
+						padding={this.padding}
 						rtl={this.state.rtl}
 						speed={marqueeSpeed}
 						willAnimate={this.state.promoted}
