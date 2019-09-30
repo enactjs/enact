@@ -534,7 +534,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const overflow = scrollWidth - width;
 
 			if (this.shouldAnimate(overflow)) {
-				return overflow + scrollWidth + padding;
+				return scrollWidth + padding;
 			}
 
 			return 0;
