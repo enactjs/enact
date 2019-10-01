@@ -70,6 +70,7 @@ const MarqueeBase = kind({
 		 *
 		 * * `marquee` - The root component class
 		 * * `animate` - Applied to the inner content node when the text is animating
+		 * * `padding` - The spacing node used between the repeated content
 		 * * `text` - The inner content node
 		 * * `willAnimate` - Applied to the inner content node shortly before animation
 		 *
@@ -108,7 +109,7 @@ const MarqueeBase = kind({
 		 * Amount of padding, in pixels, between the instances of the content
 		 *
 		 * @type {Number}
-		 * @eefault 0
+		 * @default 0
 		 * @public
 		 */
 		padding: PropTypes.number,
@@ -165,12 +166,13 @@ const MarqueeBase = kind({
 	},
 
 	computed: {
+		className: ({willAnimate, styler}) => styler.append({willAnimate}),
 		clientClassName: ({animating, willAnimate, styler}) => styler.join({
 			animate: animating,
 			text: true,
 			willAnimate
 		}),
-		clientStyle: ({alignment, animating, distance, overflow, rtl, speed}) => {
+		clientStyle: ({alignment, animating, distance, overflow, padding, rtl, speed}) => {
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
 			const direction = rtl ? 'rtl' : 'ltr';
@@ -178,7 +180,8 @@ const MarqueeBase = kind({
 			const style = {
 				direction,
 				textAlign: alignment,
-				textOverflow: overflow
+				textOverflow: overflow,
+				'--ui-marquee-padding': padding
 			};
 
 			if (animating) {
@@ -195,12 +198,13 @@ const MarqueeBase = kind({
 		duplicate: ({distance, willAnimate}) => willAnimate && distance > 0
 	},
 
-	render: ({children, clientClassName, clientRef, clientStyle, duplicate, onMarqueeComplete, padding, ...rest}) => {
+	render: ({children, clientClassName, clientRef, clientStyle, duplicate, onMarqueeComplete, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;
 		delete rest.onMarqueeComplete;
 		delete rest.overflow;
+		delete rest.padding;
 		delete rest.rtl;
 		delete rest.speed;
 		delete rest.willAnimate;
@@ -216,7 +220,7 @@ const MarqueeBase = kind({
 					{children}
 					{duplicate ? (
 						<React.Fragment>
-							<div style={{display: 'inline-block', width: padding}} />
+							<div className={css.padding} />
 							{children}
 						</React.Fragment>
 					) : null}

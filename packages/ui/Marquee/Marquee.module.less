@@ -14,8 +14,32 @@
 	white-space: pre !important;
 	overflow: hidden;
 	text-align: left;
+	-webkit-mask-image: -webkit-gradient(
+		linear,
+		left top,
+		right top,
+		from(rgba(0,0,0,1)),
+		color-stop(0.9, rgba(0,0,0,1)),
+		to(rgba(0,0,0,0))
+	);
+
+	// using willAnimate allows the fade to remain during the reset pause since the GPU layer isn't
+	// removed until marquee is cancelled
+	&.willAnimate {
+		-webkit-mask-image: -webkit-gradient(
+			linear,
+			left top,
+			right top,
+			from(rgba(0,0,0,0)),
+			color-stop(0.1, rgba(0,0,0,1)),
+			color-stop(0.9, rgba(0,0,0,1)),
+			to(rgba(0,0,0,0))
+		);
+	}
 
 	.text {
+		--ui-marquee-padding: 0;
+
 		pointer-events: none;
 		text-overflow: clip;
 		overflow: hidden;
@@ -31,6 +55,11 @@
 
 		&.animate {
 			overflow: visible;
+		}
+
+		.padding {
+			display: inline-block;
+			width: calc(1px * var(--ui-marquee-padding, 0));
 		}
 	}
 

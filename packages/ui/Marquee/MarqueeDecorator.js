@@ -262,6 +262,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * May either be a number indicating the number of pixels or a string indicating the
 			 * percentage relative to the width of the component.
 			 *
+			 * *Note:* When using a number, the value should be based on 1920x1080 display and
+			 * will be scaled automatically for the current resolution using {@link ui/resolution}.
+			 *
 			 * @type {String | Number}
 			 * @default '50%'
 			 * @public
@@ -358,13 +361,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpeed, rtl} = this.props;
+			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueePadding, marqueeSpeed, rtl} = this.props;
 
 			let forceRestartMarquee = false;
 
 			if (
 				prevProps.locale !== locale ||
 				prevProps.rtl !== rtl ||
+				prevProps.marqueePadding !== marqueePadding ||
 				!shallowEqual(prevProps.children, children) ||
 				(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
 			) {
@@ -511,7 +515,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {marqueePadding} = this.props;
 
 			if (typeof marqueePadding === 'string') {
-				if (/^\d+(.\d+)?%$/.test(marqueePadding)) {
+				if (/^\d+(\.\d+)?%$/.test(marqueePadding)) {
 					return width * Number.parseFloat(marqueePadding) / 100;
 				}
 
