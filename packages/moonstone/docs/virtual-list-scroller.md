@@ -15,7 +15,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     *   `itemRenderer`: The render function for an item of the list.
     *   Example
 
-        ```
+        ```js
         <VirtualList
             dataSize={this.items.length}
             itemRenderer={this.renderItem}
@@ -31,7 +31,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
 *   If you want to provide spacing or other numeric properties, you have to specify them surrounded by braces, not by quotes.
 
-    ```
+    ```js
     <VirtualList
         dataSize={this.items.length} //<-- numeric property
         itemRenderer={this.renderItem}
@@ -51,7 +51,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 *   If you want to scroll the list via 5-way navigation on the certain component in an item, you should pass `data-index` prop.
 *   Example:
 
-    ```
+    ```js
     //.js
     items = []
     ...
@@ -76,7 +76,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
 *   If you create a custom item, make sure you are passing props from parents (render function) to the child.
 
-    ```
+    ```js
     //MyListItem.js
     const MyListItem = kind({
         .....
@@ -110,7 +110,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 *   `source` prop should be set to URL path. (e.g. `source="http://XXXX/image.png"` , `source="../assets/image.png"`)
 *   Example:
 
-    ```
+    ```js
     renderItem = ({index, ...rest}) => {
         const {text, subText, source} = this.items[index];
         return (
@@ -133,13 +133,14 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 *   You can specify the scrollable direction with `direction` props. Valid values are `both`, `horizontal`, and `vertical`.
 *   Example:
 
-    ```
+    ```css
     //.less
     .scroller {
         height: 550px;
         width: 480px;
     }
-
+    ```
+    ```js
     //.js
     <Scroller
         className={css.scroller}
@@ -164,7 +165,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
         *   [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
 *   Example:
 
-    ```
+    ```js
     class SampleApp extends React.Component {
         constructor (props) {
             super(props);
@@ -196,7 +197,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
 *   Example:
 
-    ```
+    ```js
     this.scrollTo({position: {y: 100}, animate: false}); // scroll y position to 100px without animation
     this.scrollTo({position: {x: 100, y: 200}); // scroll to (100px, 200px) position; animation is enabled if omitted
     this.scrollTo({align: 'bottom'}); // scroll to the bottom
@@ -216,7 +217,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 *   It is recommended not to call `setState()` in `onScroll` event callback.
 *   Example:
 
-    ```
+    ```js
     //app.js
     ...
     handlerOnScrollStart = () => {

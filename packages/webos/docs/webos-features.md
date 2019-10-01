@@ -12,7 +12,7 @@ Included within the webOS system itself are the following custom document events
 
 To listen for these events, you can use the global dispatcher's `on()` method.
 
-```
+```js
 import {off, on} from '@enact/core/dispatcher';
 ...
 const handleLaunch = () => {
