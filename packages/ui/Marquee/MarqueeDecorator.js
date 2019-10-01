@@ -261,6 +261,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 *
 			 * May either be a number indicating the number of pixels or a string indicating the
 			 * percentage relative to the width of the component.
+			 * 
+			 * *Note:* Only applicable when using `marqueeOverflow="fade"`.
 			 *
 			 * *Note:* When using a number, the value should be based on 1920x1080 display and
 			 * will be scaled automatically for the current resolution using {@link ui/resolution}.
