@@ -13,7 +13,7 @@ We use `redux-thunk` middleware to enable asynchronous requests to work with syn
 
 For example, you can create an async incrementer as follows:
 
-```javascript
+```js
 const INCREMENT_COUNTER = 'INCREMENT_COUNTER';
 
 function increment() {
@@ -37,7 +37,7 @@ A combination of `redux-thunk` and `LS2Request` allows us to fetch and display d
 
 At the root level, we use `<Provider />` to pass store down the component hierarchy.
 
-```javascript
+```js
 import React from 'react';
 import {render} from 'react-dom';
 import {Provider} from 'react-redux';
@@ -55,7 +55,7 @@ render(
 
 Store is configured to accept thunk middleware
 
-```javascript
+```js
 import {createStore, applyMiddleware} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import systemSettingsReducer from '../reducers';
@@ -72,7 +72,7 @@ export default function configureStore (initialState) {
 
 Here we create a thunk action creator which returns a function instead of a plain object. It is also possible to dispatch an action or request at the beginning.
 
-```javascript
+```js
 import LS2Request from '@enact/webos/LS2Request';
 function receiveSystemSettings (res) {
 	return {
@@ -98,7 +98,7 @@ export const getSystemSettings = params => dispatch => {
 
 Reducer receives a payload and creates a new state.
 
-```javascript
+```js
 export default function systemSettingsReducer (state = {}, action) {
 	switch (action.type) {
 		case 'RECEIVE_SYSTEM_SETTINGS':
@@ -111,7 +111,7 @@ export default function systemSettingsReducer (state = {}, action) {
 
 Connected container dispatches ``getSystemSettings`` on componentDidMount and renders a ``pictureMode`` prop that's been hooked up with a redux store.
 
-```javascript
+```js
 import React from 'react';
 import {connect} from 'react-redux';
 import {getSystemSettings} from '../actions';

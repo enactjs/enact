@@ -79,27 +79,27 @@ In this example, we've imported the unstyled `ui/Button`, which exports all avai
 
 Moonstone also adds its own props, which are specific to Moonstone; things like the `backgroundOpacity` prop and the `color` prop. They are added to the example above via the `computed` block:
 
-```javascript
-	computed: {
-		className: ({backgroundOpacity, color, styler}) => styler.append(
-			backgroundOpacity,
-			color
-		)
-	},
+```js
+computed: {
+	className: ({backgroundOpacity, color, styler}) => styler.append(
+		backgroundOpacity,
+		color
+	)
+},
 ```
 
 These props are sent to our `styler.append` feature, which in this case, takes the value of these prop variables and applies them directly as class names. Setting `<Button color="red">` appends the `.red` class to the component. If you were wanting a Boolean state class, something like the following would do the job:
 
 ```javascript
-	computed: {
-		className: ({backgroundOpacity, color, ready, styler}) => styler.append(
-			backgroundOpacity,
-			color,
-			{
-				ready
-			}
-		)
-	},
+computed: {
+	className: ({backgroundOpacity, color, ready, styler}) => styler.append(
+		backgroundOpacity,
+		color,
+		{
+			ready
+		}
+	)
+},
 ```
 This would apply the `.ready` class, only if the `ready` prop was truthy, like so:  `<Button color="red" ready>` and not in this this case:  `<Button color="red">`.
 
@@ -111,7 +111,7 @@ When creating customizable components it may be helpful to understand how the th
 
 When a LESS or CSS file is imported, the classes are inventoried and a hash map is generated of original class names to obfuscated modularized class names: `{original: obfuscated}`. Your module now has a map of all of the class names you referenced. Normally, when using `kind()` you simply pass this into the `styles` block, and indicate which one is your base class, with the `className` key.
 
-```javascript
+```js
 import css from './Button.module.less';
 ...
 {
@@ -129,7 +129,7 @@ For example, `Button` publishes the `.bg` class from `ui`. Moonstone adds its ow
 
 You can access the full collection of mapped class names via the automatically added `css` prop. The `css` prop doesn't behave like normal props, though. It does not automatically pass down to deeper layers, via props-spreading. This is because we wanted to be conscious of when we are passing classes down to another layer. When you add a `publicClassNames` key to your component, it will automatically receive the `css` prop in its collection of props, which can be used in the `render` or `computed` functions just like any other prop. To reference an earlier example, when `moonstone/Button` encounters the `css` prop, it is an object like this:
 
-```javascript
+```js
 {
 	button: 'ui_Button_button moonstone_Button_button',
 	bg: 'ui_Button_bg moonstone_Button_bg'
@@ -153,7 +153,7 @@ Conveniently, the base class name is applied automatically to the `className` pr
 
 Let's look at our combined example again.
 
-```jsx
+```js
 import React from 'react';
 import kind from '@enact/core/kind';
 import UiButton from '@enact/ui/Button';
@@ -193,7 +193,7 @@ Typically, we'll represent the state of a component using a class. The presence 
 
 Something like the following is easy to read, understand, maintain, and extend:
 
-```less
+```css
 .slider {
 	&.horizontal {
 		max-width: 500px;
@@ -215,7 +215,7 @@ Something like the following is easy to read, understand, maintain, and extend:
 
 Meanwhile, thanks to `kind()`, the code to implement multiple formats is as simple as the following:
 
-```javascript
+```js
 const Slider = kind({
 	name: 'Slider',
 
@@ -245,7 +245,7 @@ Conventionally, the base element is overridable using the prop `component`, and 
 
 Enact includes a great feature for merging author and consumer props onto one component to make this process much simpler. Below is an example of how `ui/IconButton` is composed:
 
-```
+```js
 import ComponentOverride from '@enact/ui/ComponentOverride';
 
 ...

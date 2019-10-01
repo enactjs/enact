@@ -18,7 +18,7 @@ If you wish to learn more about `ilib` checkout their [github](https://github.co
 
 You can use iLib like this:
 
-```javascript
+```js
 import DateFmt from 'ilib/lib/DateFmt';
 
 const formatter = new DateFmt({
@@ -38,7 +38,7 @@ dynamically, with each one having a name and locale.
 
 The locale may be specified as an option in the constructor.
 
-```javascript
+```js
 	import ResBundle from 'ilib/lib/ResBundle';
 	...
 	const rb = new ResBundle({locale: "ko-KR"});
@@ -46,7 +46,7 @@ The locale may be specified as an option in the constructor.
 
 In practical terms, `ResBundle`'s most important method is `getString()`.
 
-```javascript
+```js
 	const str = toIString("My Label");
 ```
 
@@ -58,7 +58,7 @@ found in these directories.
 In the layered structure of the locale directories, values from deeper levels
 override those from nearer the surface, as in the following example:
 
-```
+```none
 resources/
 	en/
 		strings.json - shared strings for all English
@@ -91,7 +91,7 @@ directly to use it. Its `format()` method allows for
 interpolation of named parameters into the string.  The following syntax is
 recommended:
 
-```javascript
+```js
 	import {toIString} from 'i18n/$L'
 
 	const template = toIString("There are {n} objects.");
@@ -117,7 +117,7 @@ string.
 translators to adjust strings to handle plurals properly for their respective
 languages.
 
-```javascript
+```js
 	const number = 3;
 	const template = toIString( "0#There are no objects.|1#There is 1 object.|#There are {n} objects.");
 	const str = template.formatChoice(number, {n: number});
@@ -129,7 +129,7 @@ languages.
 "many") for languages with complex rules for pluralization, such as Russian or
 Serbian.
 
-```javascript
+```js
 	const template = toIString( "0#There are no objects.|few#There are a few ({n}) objects.|#There are many objects. ({n})");
 ```
 
@@ -137,7 +137,7 @@ Serbian.
 
 The formatting of dates and times can differ widely from one locale to the next:
 
-```
+```none
 ------------------------------------
  Locale    Format
 --------- --------------------------
@@ -158,7 +158,7 @@ constructor accepts various options, which control how the formatter behaves.
 Once you create a `DateFmt` instance, you may call its `format()` method as many
 times as you want to format dates according to the given set of options.
 
-```javascript
+```js
 	import DateFmt from 'ilib/lib/DateFmt';
 	...
 	const fmt = new DateFmt();
@@ -177,7 +177,7 @@ Among the options you may specify are the following:
 	use words (e.g., Sunday may be expressed as "S", "Su", "Sun", or "Sunday")
 * Which time zone to format for
 
-```javascript
+```js
 	const fmt = new DateFmt({ locale: "tr-TR",
 		type: "date", date: "dmy", timezone: "Europe/Istanbul"
 	});
@@ -191,7 +191,7 @@ with the default being the familiar Gregorian calendar.
 To create a date, you may call the factory method or use the calendar date
 directly, e.g.:
 
-```javascript
+```js
 	import HebrewDate from 'ilib/lib/HebrewDate';
 	...
 	const now = new HebrewDate();
@@ -199,7 +199,7 @@ directly, e.g.:
 
 This is equivalent to the following factory method call:
 
-```javascript
+```js
 	import dateFactory from 'ilib/lib/DateFactory';
 	...
 	const now = dateFactory({type: "hebrew"});
@@ -209,7 +209,7 @@ Dates may be converted between calendars via a "Julian Day" number.  A Julian
 Day is the number of whole days and fractions of a day since the beginning of
 the epoch on 24 November -4713 BCE (Gregorian):
 
-```javascript
+```js
 	const now = dateFactory();
 	// now.year is currently 2013
 	const jd = now.getJulianDay();
@@ -220,7 +220,7 @@ the epoch on 24 November -4713 BCE (Gregorian):
 To format a date in a non-Gregorian Calendar, follow the pattern of creating a
 `DateFmt` object and calling `format()` on it.
 
-```javascript
+```js
 	const fmt = new DateFmt({
 		length: "full",
 		locale: "en-US",
@@ -234,7 +234,7 @@ The value of `d` is `"Adar 27, 5773 11:47PM PDT"`.
 Use `ilib/CalendarFactory` as a factory method to
 create the other calendar types.
 
-```javascript
+```js
 	import calendarFactory from 'ilib/lib/CalendarFactory';
 	const cal = calendarFactory({
 		// looks up calendar for this locale
@@ -268,7 +268,7 @@ specified using the IANA convention of "continent/city" (e.g.,
 may be passed to other classes such as `ilib/DateFmt`, although the specifier
 string itself is also accepted.
 
-```javascript
+```js
 	import TimeZone from 'ilib/lib/TimeZone';
 	...
 	const tz = new TimeZone({
@@ -284,7 +284,7 @@ string itself is also accepted.
 The formatting of numeric values--in numbers, currency, and percentages--is
 another locale-sensitive process.
 
-```
+```none
 --------------------------------------------------------
  Locale    Float           Currency       Percentage
 --------- --------------- -------------- ---------------
@@ -303,7 +303,7 @@ As shown in the following examples, `iLib` handles each of these cases using
 
 #### Numbers
 
-```javascript
+```js
 	import NumFmt from 'ilib/lib/NumFmt';
 	...
 	const fmt = new NumFmt({
@@ -316,7 +316,7 @@ As shown in the following examples, `iLib` handles each of these cases using
 
 #### Currency
 
-```javascript
+```js
 	const fmt = new NumFmt({
 		style: "currency",
 		currency: "EUR",
@@ -329,7 +329,7 @@ As shown in the following examples, `iLib` handles each of these cases using
 
 #### Percentages
 
-```javascript
+```js
 	const fmt = new NumFmt({
 		style: "percentage",
 		maxFractionDigits: 2,

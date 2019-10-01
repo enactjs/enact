@@ -8,7 +8,7 @@ Locale may be explicitly set by setting `props` on the decorator or by calling t
 
 Context is the easiest way to update the locale. Call the `updateLocale` function, passing the locale string (e.g. `context.updateLocale('en-US')`:
 
-```javascript
+```js
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 
@@ -30,7 +30,7 @@ The other way to update locale is to send a prop down through the decorator (dir
 
 A typical app looks like this:
 
-```javascript
+```js
 //Typically inside app.js
 export default MoonstoneDecorator(App);
 
@@ -52,7 +52,7 @@ The `<App />` component in `index.js` can receive props. The decorator accepts a
 
 An example usage may look like this:
 
-```javascript
+```js
 
 const AppWrapped = (props) => (
 	<App locale={props.locale}/>
@@ -63,7 +63,7 @@ In a deeply nested app, passing `props` back to the root element can get messy. 
 
 Using `redux`, a connected component can be used as shown below:
 
-```javascript
+```js
 // Inside app.js
 const mapStateToProps = (state) => (
 	{
@@ -82,7 +82,7 @@ Using `context` and Redux together has one major problem. When relying on using 
 
 The reason is that `connect` only checks to see if `props` have changed, not `context`. If you only update `context` then the component will not re-render. To circumvent this you must use `connect` with the option `pure` set to `false` like this:
 
-```javascript
+```js
 export default connect(mapStateToProps, mapDispatchToProps, null, {pure: false})(LocaleSwitch);
 ```
 

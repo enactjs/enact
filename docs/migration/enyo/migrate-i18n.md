@@ -22,7 +22,7 @@ The `I18nDecorator` is usually applied at the root level of an application and p
 
 **Current:** `$L()`
 
-```
+```js
 import $L from '@enact/i18n/$L';
 
 const MyTranslatedString = $L('Hello World');
@@ -34,7 +34,7 @@ const MyTranslatedString = $L('Hello World');
 
 **Current:** `toIString()`
 
-```
+```js
 import {toIString} from '@enact/i18n/$L';
 
 const MyIString = toIString('Hello IString');
@@ -47,7 +47,7 @@ const MyIStringText = MyIString.toString();
 
 **Current:** The `updateLocale()` method is available for any component whose ancestor is wrapped with the `I18nDecorator`, which provides this method as part of the [Context API](https://reactjs.org/docs/context.html). `I18nDecorator` provides easy access via the `I18nContextDecorator` HOC which can provide the locale, rtl state, and `updateLocale` method via props by specifying the `localeProp`, `rtlProp`, and `updateLocaleProp` configuration options, respectively.
 
-```
+```js
 import Button from '@enact/moonstone/Button';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import React from 'react';
@@ -80,7 +80,7 @@ const MyComponent = I18nContextDecorator(
 
 **Current:** The `rtl` state method is available for any component whose ancestor is wrapped with the `I18nDecorator`, which provides this value as part of the [Context API](https://reactjs.org/docs/context.html). `I18nDecorator` provides easy access via the `I18nContextDecorator` HOC which can provide the locale, rtl state, and `updateLocale` method via props by specifying the `localeProp`, `rtlProp`, and `updateLocaleProp` configuration options, respectively.
 
-```
+```js
 import Button from '@enact/moonstone/Button';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import React from 'react';
@@ -105,7 +105,7 @@ const MyComponent = I18nContextDecorator(
 
 **Current:** `isRtlText()` provided by `@enact/i18n/util`
 
-```
+```js
 import {isRtlText} from '@enact/i18n/util';
 
 const isHebrewRtl = isRtlText('שועל החום');

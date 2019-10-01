@@ -19,7 +19,7 @@ The `factory` module has been replaced by the `css` override feature.
 
 #### Example
 ##### 1.x
-```
+```js
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 
@@ -62,7 +62,7 @@ const CustomizedButton = ButtonFactory({css: buttonCss});
 ...
 ```
 ##### 2.0
-```
+```js
 ...
 import Button from '@enact/ui/Button';
 
@@ -91,13 +91,13 @@ caching the result of calling the SFC directly.
 can do shallow compares of `String` children in `shouldComponentUpdate` instead.
 #### Example
 ##### 1.x
-```
+```js
 shouldComponentUpdate (nextProps) {
 	return !childrenEquals(this.props.children, nextProps.children);
 }
 ```
 ##### 2.0
-```
+```js
 shouldComponentUpdate (nextProps) {
 	return this.props.children !== nextProps.children;
 }
@@ -117,12 +117,12 @@ The exports for `ButtonFactory` and `ButtonBaseFactory` have been removed.  If y
 these, you should use `ui/Button` and `ui/ButtonBase` instead.
 #### Example
 ##### 1.x
-```
+```js
 import {ButtonFactory} from '@enact/moonstone/Button';
 import {ButtonBaseFactory} from '@enact/moonstone/Button';
 ```
 ##### 2.0
-```
+```js
 import Button from '@enact/ui/Button';
 import {ButtonBase} from '@enact/ui/Button';
 ```
@@ -130,11 +130,11 @@ import {ButtonBase} from '@enact/ui/Button';
 Automatic tooltip support has been removed.  It can be easily added using `moonstone/TooltipDecorator`.
 #### Example
 ##### 1.x
-```
+```js
 import Button from '@enact/ui/Button';
 ```
 ##### 2.0
-```
+```js
 import BasicButton from '@enact/ui/Button';
 import TooltipDecorator from '@enact/ui/TooltipDecorator';
 
@@ -144,11 +144,11 @@ const Button = TooltipDecorator(BasicButton);
 The `popupContainerId` prop has changed to `popupSpotlightId`.
 #### Example
 ##### 1.x
-```
+```js
 <ContextualPopup popupContainerId="popupSpotlightContainer" />
 ```
 ##### 2.0
-```
+```js
 <ContextualPopup popupSpotlightId="popupSpotlightContainer" />
 ```
 
@@ -156,12 +156,12 @@ The `popupContainerId` prop has changed to `popupSpotlightId`.
 The `preserveCase` and `showDivider` props have changed to `casing` and `noDivider`, respectively.
 #### Example
 ##### 1.x
-```
+```js
 <Dialog preserveCase showDivider />  // preserve casing and show divider
 <Dialog preserveCase />  // preserve casing and do not show divider
 ```
 ##### 2.0
-```
+```js
 <Dialog casing="preserve" /> // preserve casing and show divider
 <Dialog casing="preserve" noDivider /> // preserve casing and do not show divider
 ```
@@ -170,11 +170,11 @@ The `preserveCase` and `showDivider` props have changed to `casing` and `noDivid
 The `preserveCase` prop has changed to `casing`.
 #### Example
 ##### 1.x
-```
+```js
 <Divider preserveCase />
 ```
 ##### 2.0
-```
+```js
 <Divider casing="preserve" />
 ```
 
@@ -182,7 +182,7 @@ The `preserveCase` prop has changed to `casing`.
 The `onInputChange` prop has changed to `onChange`.
 #### Example
 ##### 1.x
-```
+```js
 const handleChange = () => {
     // do something when the input changes
 };
@@ -190,7 +190,7 @@ const handleChange = () => {
 <ExpandableInput onInputChange={handleChange} />
 ```
 ##### 2.0
-```
+```js
 const handleChange = () => {
     // do something when the input changes
 };
@@ -210,12 +210,12 @@ The exports for `IconButtonFactory` and `IconButtonBaseFactory` have been remove
 imported these, you should use `ui/IconButton` and `ui/IconButtonBase` instead.
 #### Example
 ##### 1.x
-```
+```js
 import {IconButtonFactory} from '@enact/moonstone/IconButton';
 import {IconButtonBaseFactory} from '@enact/moonstone/IconButton';
 ```
 ##### 2.0
-```
+```js
 import IconButton from '@enact/ui/IconButton';
 import {IconButtonBase} from '@enact/ui/IconButton';
 ```
@@ -226,24 +226,24 @@ code imported these, you should use `moonstone/IncrementSlider` and `moonstone/I
 instead.
 #### Example
 ##### 1.x
-```
+```js
 import {IncrementSliderFactory} from '@enact/moonstone/IncrementSlider';
 import {IncrementSliderBaseFactory} from '@enact/moonstone/IncrementSlider';
 ```
 ##### 2.0
-```
+```js
 import IncrementSlider from '@enact/moonstone/IncrementSlider';
 import {IncrementSliderBase} from '@enact/moonstone/IncrementSlider';
 ```
 The boolean props `horizontal` and `vertical` have been replaced by the `orientation` prop.
 #### Example
 ##### 1.x
-```
+```js
 <IncrementSlider /> // `horizontal` prop is `true` by default.
 <IncrementSlider vertical />
 ```
 ##### 2.0
-```
+```js
 <IncrementSlider /> // `orientation` prop is `"horizontal"` by default.
 <IncrementSlider orientation="vertical" />
 ```
@@ -252,11 +252,11 @@ have been removed.  Use a `moonstone/IncrementSlider.IncrementSliderTooltip` and
 and `side` props instead. `side` supports both locale-aware and locale-independent values.
 #### Example
 ##### 1.x
-```
+```js
 <IncrementSlider orientation="vertical" tooltip tooltipAsPercent tooltipForceSide tooltipSide="after" />
 ```
 ##### 2.0
-```
+```js
 ...
 import {IncrementSlider, IncrementSliderTooltip} from '@enact/moonstone/IncrementSlider';
 ...
@@ -281,11 +281,11 @@ These components are all replaced by `moonstone/SlotItem`.
 This component is replaced by `moonstone/Marquee`.
 #### Example
 ##### 1.x
-```
+```js
 import {MarqueeText} from '@enact/moonstone/Marquee';
 ```
 ##### 2.0
-```
+```js
 import Marquee from '@enact/moonstone/Marquee';
 ```
 
@@ -296,11 +296,11 @@ This HOC has been replaced by `MoonstoneDecorator.AccessibilityDecorator`.
 The `preserveCase` prop has changed to `casing`.
 #### Example
 ##### 1.x
-```
+```js
 <Header preserveCase />
 ```
 ##### 2.0
-```
+```js
 <Header casing="preserve" />
 ```
 
@@ -308,12 +308,12 @@ The `preserveCase` prop has changed to `casing`.
 The `noAutoFocus` prop has changed to `autoFocus`.
 #### Example
 ##### 1.x
-```
+```js
 <Panel /> // automatically focus the Panel
 <Panel noAutoFocus /> // do not automatically focus the Panel
 ```
 ##### 2.0
-```
+```js
 <Panel /> // automatically focus the Panel
 <Panel autoFocus="none" /> // do not automatically focus the Panel
 ```
@@ -322,11 +322,11 @@ The `noAutoFocus` prop has changed to `autoFocus`.
 The `containerId` prop has changed to `spotlightId`.
 #### Example
 ##### 1.x
-```
+```js
 <Popup containerId="spotlightContainer" />
 ```
 ##### 2.0
-```
+```js
 <Popup spotlightId="spotlightContainer" />
 ```
 
@@ -334,12 +334,12 @@ The `containerId` prop has changed to `spotlightId`.
 The boolean props `horizontal` and `vertical` have been replaced by the `orientation` prop.
 #### Example
 ##### 1.x
-```
+```js
 <ProgressBar /> // `horizontal` prop is `true` by default.
 <ProgressBar vertical />
 ```
 ##### 2.0
-```
+```js
 <ProgressBar /> // `orientation` prop is `"horizontal"` by default.
 <ProgressBar orientation="vertical" />
 ```
@@ -348,12 +348,12 @@ The boolean props `horizontal` and `vertical` have been replaced by the `orienta
 The boolean props `horizontal` and `vertical` have been replaced by the `direction` prop.
 #### Example
 ##### 1.x
-```
+```js
 <Scroller /> // `horizontal` prop is `true` by default.
 <Scroller vertical />
 ```
 ##### 2.0
-```
+```js
 <Scroller /> // `direction` prop is `"horizontal"` by default.
 <Scroller direction="vertical" />
 ```
@@ -361,7 +361,7 @@ The `scrollTo` method's `indexToFocus` option has been removed.  Use the `focus`
 scroll by `index` (only applicable for components like `VirtualList`) or `node`.
 #### Example
 ##### 1.x
-```
+```js
 ...
 const cbScrollTo = () => {
 	this.scrollTo({indexToFocus: 1});
@@ -371,7 +371,7 @@ const cbScrollTo = () => {
 ...
 ```
 ##### 2.0
-```
+```js
 ...
 const cbScrollTo = () => {
 	this.scrollTo({focus: true, index: 1});
@@ -386,24 +386,24 @@ The exports for `SliderFactory` and `SliderBaseFactory` have been removed.  If y
 imported these, you should use `ui/Slider` and `ui/SliderBase` instead.
 #### Example
 ##### 1.x
-```
+```js
 import {SliderFactory} from '@enact/moonstone/Slider';
 import {SliderBaseFactory} from '@enact/moonstone/Slider';
 ```
 ##### 2.0
-```
+```js
 import Slider from '@enact/ui/Slider';
 import {SliderBase} from '@enact/ui/Slider';
 ```
 The boolean props `horizontal` and `vertical` have been replaced by the `orientation` prop.
 #### Example
 ##### 1.x
-```
+```js
 <Slider /> // `horizontal` prop is `true` by default.
 <Slider vertical />
 ```
 ##### 2.0
-```
+```js
 <Slider /> // `orientation` prop is `"horizontal"` by default.
 <Slider orientation="vertical" />
 ```
@@ -412,11 +412,11 @@ have been removed.  Use a `moonstone/Slider.SliderTooltip` and its `percent` and
 instead. `side` supports both local-aware and locale-independent values.
 #### Example
 ##### 1.x
-```
+```js
 <Slider orientation="vertical" tooltip tooltipAsPercent tooltipForceSide tooltipSide="after" />
 ```
 ##### 2.0
-```
+```js
 ...
 import {Slider, SliderTooltip} from '@enact/moonstone/Slider';
 ...
@@ -434,12 +434,12 @@ The `detachedKnob`, `scrubbing` and `onKnobMove` props have been removed with no
 The boolean props `horizontal` and `vertical` have been replaced by the `orientation` prop.
 #### Example
 ##### 1.x
-```
+```js
 <SliderTooltip /> // `horizontal` prop is `true` by default.
 <SliderTooltip vertical />
 ```
 ##### 2.0
-```
+```js
 <SliderTooltip /> // `orientation` prop is `"horizontal"` by default.
 <SliderTooltip orientation="vertical" />
 ```
@@ -448,7 +448,7 @@ The boolean props `horizontal` and `vertical` have been replaced by the `orienta
 The `tooltipPreserveCase` prop has changed to `tooltipCasing`.
 #### Example
 ##### 1.x
-```
+```js
 import BasicButton from '@enact/ui/Button';
 import TooltipDecorator from '@enact/ui/TooltipDecorator';
 
@@ -457,7 +457,7 @@ const Button = TooltipDecorator(BasicButton);
 <Button tooltipPreserveCase />
 ```
 ##### 2.0
-```
+```js
 import BasicButton from '@enact/ui/Button';
 import TooltipDecorator from '@enact/ui/TooltipDecorator';
 
@@ -474,7 +474,7 @@ The `containerId` prop has changed to `spotlightId`.
 <VideoPlayer containerId="spotlightContainer" />
 ```
 ##### 2.0
-```
+```js
 <VideoPlayer spotlightId="spotlightContainer" />
 ```
 The `tooltipHideDelay` prop has been removed with no replacement.
@@ -487,7 +487,7 @@ The `component` and `data` props are replaced by `itemRenderer`.  `itemRenderer`
 return the component to render from a set of arbitrary items given an index.
 #### Example
 ##### 1.x
-```
+```js
 ...
 import Item from '@enact/moonstone/Item';
 const items = [];
@@ -509,7 +509,7 @@ const ListItem = ({data, index}) => {
 ...
 ```
 ##### 2.0
-```
+```js
 ...
 import Item from '@enact/moonstone/Item';
 const items = [];
@@ -538,7 +538,7 @@ The `scrollTo` method's `indexToFocus` option has been removed.  Use the `focus`
 scroll by `index` or `node`.
 #### Example
 ##### 1.x
-```
+```js
 ...
 const cbScrollTo = () => {
 	this.scrollTo({indexToFocus: 1});
@@ -548,7 +548,7 @@ const cbScrollTo = () => {
 ...
 ```
 ##### 2.0
-```
+```js
 ...
 const cbScrollTo = () => {
 	this.scrollTo({focus: true, index: 1});
@@ -561,7 +561,7 @@ The `component` and `data` props are replaced by `itemRenderer`.  `itemRenderer`
 the component to render from a set of arbitrary items given an index.
 #### Example
 ##### 1.x
-```
+```js
 ...
 import Item from '@enact/moonstone/Item';
 const items = [];
@@ -583,7 +583,7 @@ const ListItem = ({data, index}) => {
 ...
 ```
 ##### 2.0
-```
+```js
 ...
 import Item from '@enact/moonstone/Item';
 const items = [];
@@ -613,7 +613,7 @@ in calls to `Spotlight.focus()`. In cases where you might have added a custom da
 you can now use `spotlightId` instead.
 #### Example
 ##### 1.x
-```
+```js
 ...
 	<MyComponent data-component-id="my-first-component" />
 ...
@@ -621,7 +621,7 @@ you can now use `spotlightId` instead.
 ...
 ```
 ##### 2.0
-```
+```js
 ...
 	<MyComponent spotlightId="my-first-component" />
 ...
@@ -633,13 +633,13 @@ you can now use `spotlightId` instead.
 The `containerId` prop has changed to `spotlightId`.
 #### Example
 ##### 1.x
-```
+```js
 const MyComponent = ...;
 const MyContainer = SpotlightContainerDecorator(MyComponent);
 <MyContainer containerId="spotlightContainer" />
 ```
 ##### 2.0
-```
+```js
 const MyComponent = ...;
 const MyContainer = SpotlightContainerDecorator(MyComponent);
 <MyContainer spotlightId="spotlightContainer" />
@@ -665,13 +665,13 @@ for more information.
 The default `prop` for the default HOC configuration is changed from `'active'` to `'selected'`.
 #### Example
 ##### 1.x
-```
+```js
 const MyComponent = ...;
 const MyToggleComponent = Toggleable(MyComponent); // toggle prop is `active`
 const MyOtherToggleComponent = Toggleable({prop: 'selected'}, MyComponent); // toggle prop is `selected`
 ```
 ##### 2.0
-```
+```js
 const MyComponent = ...;
 const MyToggleComponent = Toggleable(MyComponent); // toggle prop is `selected`
 const MyOtherToggleComponent = Toggleable({prop: 'active'}, MyComponent); // toggle prop is `active`
@@ -689,10 +689,10 @@ The `clipHeight` prop has been removed.  The base component's `clipHeight` is no
 This module (which only had exported `readAlert`) has been replaced by `webos/speech/readAlert`.
 #### Example
 ##### 1.x
-```
+```js
 import {readAlert} from `@enact/webos/VoiceReadout`;
 ```
 ##### 2.0
-```
+```js
 import {readAlert} from `@enact/webos/speech`;
 ```
