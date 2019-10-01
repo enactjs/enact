@@ -52,7 +52,6 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 *   Example:
 
     ```js
-    //.js
     items = []
     ...
     renderItem = ({index, ...rest}) => {
@@ -134,14 +133,12 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 *   Example:
 
     ```css
-    //.less
     .scroller {
         height: 550px;
         width: 480px;
     }
     ```
     ```js
-    //.js
     <Scroller
         className={css.scroller}
         direction="both"
