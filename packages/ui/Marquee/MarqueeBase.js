@@ -7,6 +7,8 @@ import css from './Marquee.module.less';
 
 const isEventSource = (ev) => ev.target === ev.currentTarget;
 
+const shouldFade = (distance, overflow) => distance > 0 && overflow === 'clip';
+
 /**
  * Marquees the children of the component.
  *
@@ -70,7 +72,9 @@ const MarqueeBase = kind({
 		 *
 		 * * `marquee` - The root component class
 		 * * `animate` - Applied to the inner content node when the text is animating
+		 * * `fade` - Applied to the root when `overflow="clip"` and text overflows
 		 * * `padding` - The spacing node used between the repeated content
+		 * * `rtl` - Applied to the root when `rtl` prop is set
 		 * * `text` - The inner content node
 		 * * `willAnimate` - Applied to the inner content node shortly before animation
 		 *
@@ -166,7 +170,11 @@ const MarqueeBase = kind({
 	},
 
 	computed: {
-		className: ({willAnimate, styler}) => styler.append({willAnimate}),
+		className: ({distance, overflow, rtl, willAnimate, styler}) => styler.append({
+			fade: shouldFade(distance, overflow),
+			rtl,
+			willAnimate
+		}),
 		clientClassName: ({animating, willAnimate, styler}) => styler.join({
 			animate: animating,
 			text: true,
@@ -195,7 +203,9 @@ const MarqueeBase = kind({
 
 			return style;
 		},
-		duplicate: ({distance, willAnimate}) => willAnimate && distance > 0
+		duplicate: ({distance, overflow, willAnimate}) => {
+			return willAnimate && shouldFade(distance, overflow);
+		}
 	},
 
 	render: ({children, clientClassName, clientRef, clientStyle, duplicate, onMarqueeComplete, ...rest}) => {

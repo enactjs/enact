@@ -361,7 +361,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueePadding, marqueeSpeed, rtl} = this.props;
+			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeOverflow, marqueePadding, marqueeSpeed, rtl} = this.props;
 
 			let forceRestartMarquee = false;
 
@@ -369,6 +369,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				prevProps.locale !== locale ||
 				prevProps.rtl !== rtl ||
 				prevProps.marqueePadding !== marqueePadding ||
+				prevProps.marqueeOverflow !== marqueeOverflow ||
 				!shallowEqual(prevProps.children, children) ||
 				(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
 			) {
@@ -535,10 +536,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{Number}                 Distance to travel in pixels
 		 */
 		calculateDistance (width, scrollWidth, padding) {
+			const {marqueeOverflow} = this.props;
 			const overflow = scrollWidth - width;
 
 			if (this.shouldAnimate(overflow)) {
-				return scrollWidth + padding;
+				return marqueeOverflow === 'ellipsis' ? overflow : scrollWidth + padding;
 			}
 
 			return 0;

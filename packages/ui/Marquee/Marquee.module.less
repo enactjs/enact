@@ -14,27 +14,44 @@
 	white-space: pre !important;
 	overflow: hidden;
 	text-align: left;
-	-webkit-mask-image: -webkit-gradient(
-		linear,
-		left top,
-		right top,
-		from(rgba(0,0,0,1)),
-		color-stop(0.9, rgba(0,0,0,1)),
-		to(rgba(0,0,0,0))
-	);
 
-	// using willAnimate allows the fade to remain during the reset pause since the GPU layer isn't
-	// removed until marquee is cancelled
-	&.willAnimate {
+	&.fade {
+		// fade left side only
 		-webkit-mask-image: -webkit-gradient(
 			linear,
 			left top,
 			right top,
-			from(rgba(0,0,0,0)),
-			color-stop(0.1, rgba(0,0,0,1)),
+			from(rgba(0,0,0,1)),
 			color-stop(0.9, rgba(0,0,0,1)),
 			to(rgba(0,0,0,0))
 		);
+
+		&.rtl {
+			// fade right side only
+			-webkit-mask-image: -webkit-gradient(
+				linear,
+				left top,
+				right top,
+				from(rgba(0,0,0,0)),
+				color-stop(0.1, rgba(0,0,0,1)),
+				to(rgba(0,0,0,1))
+			);
+		}
+
+		// using willAnimate allows the fade to remain during the reset pause since the GPU layer isn't
+		// removed until marquee is cancelled
+		&.willAnimate {
+			// fade both sides
+			-webkit-mask-image: -webkit-gradient(
+				linear,
+				left top,
+				right top,
+				from(rgba(0,0,0,0)),
+				color-stop(0.1, rgba(0,0,0,1)),
+				color-stop(0.9, rgba(0,0,0,1)),
+				to(rgba(0,0,0,0))
+			);
+		}
 	}
 
 	.text {
