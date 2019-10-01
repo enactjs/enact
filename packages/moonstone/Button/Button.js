@@ -82,9 +82,9 @@ const ButtonBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		// `transparent` was intentionally excluded from the adove documented exported classes as it
-		// does not appear to provide value to the end-developer, but is needed by IconButton
-		// internally for its design guidelines, which differ from Button regarding `transparent`.
+		// `transparent` and  `client` were intentionally excluded from the adove documented
+		// exported classes as it does not appear to provide value to the end-developer, but is
+		// needed by IconButton internally for its design guidelines.
 		// Same for `pressed` which is used by Dropdown to nullify the key-press activate animation.
 		css: PropTypes.object,
 
@@ -114,7 +114,7 @@ const ButtonBase = kind({
 
 	styles: {
 		css: componentCss,
-		publicClassNames: ['button', 'bg', 'large', 'pressed', 'selected', 'small', 'transparent']
+		publicClassNames: ['button', 'bg', 'client', 'large', 'pressed', 'selected', 'small', 'transparent']
 	},
 
 	computed: {
