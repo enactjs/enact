@@ -17,11 +17,11 @@
 
 	&.fade {
 		// fade left side only
-		mask-image: linear-gradient(to right, transparent, black 48px);
+		mask-image: linear-gradient(to left, transparent, black 48px);
 
 		&.rtl {
 			// fade right side only
-			mask-image: linear-gradient(to left, transparent, black 48px);
+			mask-image: linear-gradient(to right, transparent, black 48px);
 		}
 
 		// using willAnimate allows the fade to remain during the reset pause since the GPU layer isn't
