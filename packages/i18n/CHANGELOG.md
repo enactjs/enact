@@ -139,7 +139,7 @@ No significant changes.
 
 ### Fixed
 
-- `i18n/I18nDecorator` to allow changing the locale to a falsey value to use the device locale
+- `i18n/I18nDecorator` to allow changing the locale to a falsy value to use the device locale
 
 ## [2.2.5] - 2018-11-05
 

@@ -449,7 +449,7 @@ const Decorator = hoc(defaultConfig, (config, Wrapped) => {
 		/**
 		 * Position the popup in relation to the activator.
 		 *
-		 * Position is based on the dimensions of the popup and its avitvator. If the popup does not
+		 * Position is based on the dimensions of the popup and its activator. If the popup does not
 		 * fit in the specified direction, it will automatically flip to the opposite direction.
 		 *
 		 * @method

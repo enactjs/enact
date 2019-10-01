@@ -422,7 +422,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/VideoPlayer` to continue to show thumbnail when playback control keys are pressed
 - `moonstone/VideoPlayer` to stop seeking by remote key when it loses focus
 - `moonstone/VirtualList` to only resume spotlight pauses it initiated
-- `spotlight` to remain in pointer mode when any 'cancel' key (e.g. Escape or back buttoon) is pressed
+- `spotlight` to remain in pointer mode when any 'cancel' key (e.g. Escape or back button) is pressed
 - `ui/VirtualList` `scrollTo` callback to scroll properly during prop change updates
 
 ## [2.4.0] - 2019-03-04
@@ -515,7 +515,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Fixed
 
-- `i18n/I18nDecorator` to allow changing the locale to a falsey value to use the device locale
+- `i18n/I18nDecorator` to allow changing the locale to a falsy value to use the device locale
 - `moonstone/VideoPlayer` to blur slider when hiding media controls
 - `moonstone/VideoPlayer` to disable pointer mode when hiding media controls via 5-way
 - `moonstone/VirtualList` and `moonstone/Scroller` to not to animate with 5-way navigation by default
@@ -619,7 +619,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/Scroller` to scroll container elements into view
 - `moonstone/TooltipDecorator` to update position when `tooltipText` is changed
 - `moonstone/VideoPlayer` to prevent default browser scroll behavior when navigating via 5-way
-- `moonstone/VirtuaList` to allow `onKeyDown` events to bubble
+- `moonstone/VirtualList` to allow `onKeyDown` events to bubble
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` scrolling via page up or down keys
 - `spotlight` to prevent default browser scrolling behavior when focusing elements within a spotlight container configured with `overflow: true`
 - `ui/GridListImageItem` to properly set `selected` style
@@ -975,7 +975,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/ProgressBar` props `tooltipSide` and `tooltipForceSide`, to be replaced by `moonstone/ProgressBar.ProgressBarTooltip` prop `side`
 - `moonstone/Slider` props `detachedKnob`, `onDecrement`, `onIncrement`, `scrubbing`, and `onKnobMove`
 - `moonstone/VideoPlayer` property `tooltipHideDelay`
-- `moonstone/VideoPlayer` props `backwardIcon`, `forwardIcon`, `initialJumpDelay`, `jumpBackwardIcon`, `jumpButtonsDisabled`, `jumpDelay`, `jumpForwadIcon`, `leftComponents`, `moreButtonCloseLabel`, `moreButtonColor`, `moreButtonDisabled`, `moreButtonLabel`, `no5WayJump`, `noJumpButtons`, `noRateButtons`, `pauseIcon`, `playIcon`, `rateButtonsDisabled`, and `rightComponents`, replaced by corresponding props on `moonstone/VideoPlayer.MediaControls`
+- `moonstone/VideoPlayer` props `backwardIcon`, `forwardIcon`, `initialJumpDelay`, `jumpBackwardIcon`, `jumpButtonsDisabled`, `jumpDelay`, `jumpForwardIcon`, `leftComponents`, `moreButtonCloseLabel`, `moreButtonColor`, `moreButtonDisabled`, `moreButtonLabel`, `no5WayJump`, `noJumpButtons`, `noRateButtons`, `pauseIcon`, `playIcon`, `rateButtonsDisabled`, and `rightComponents`, replaced by corresponding props on `moonstone/VideoPlayer.MediaControls`
 - `moonstone/VideoPlayer` props `onBackwardButtonClick`, `onForwardButtonClick`, `onJumpBackwardButtonClick`, `onJumpForwardButtonClick`, and `onPlayButtonClick`, replaced by `onRewind`, `onFastForward`, `onJumpBackward`, `onJumpForward`, `onPause`, and `onPlay`, respectively
 - `webos/VoiceReadout` module and replaced with `webos/speech.readAlert()`
 
@@ -1389,13 +1389,13 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Changed
 
-- `moonston/ExpandableList` to become `disabled` if there are no children
+- `moonstone/ExpandableList` to become `disabled` if there are no children
 - `spotlight` to handle key events to preserve pointer mode for specific keys
 
 ### Fixed
 
 - `moonstone/Scroller` to apply scroll position on vertical or horizontal Scroller when child gets a focus
-- `moonstone/Scroller.Scrollable` to scroll withtout animation when panel is changed
+- `moonstone/Scroller.Scrollable` to scroll without animation when panel is changed
 - `moonstone/ContextualPopup` padding to not overlap close button
 - `moonstone/Scroller.Scrollable` and `moonstone/Scroller` to change focus via page up/down only when the scrollbar is visible
 - `moonstone/Picker` to only increment one value on hold
@@ -1851,7 +1851,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/VideoPlayer`'s more/less button to use updated arrow icon
 - `spotlight/SpotlightContainerDecorator` config property, `enterTo`, default value to be `null` rather than `'last-focused'`
 - `spotlight` container handling to address known issues and improve testability
--`ui/View` to prevent re-renders on views leaving the `ViewManager`
+- `ui/View` to prevent re-renders on views leaving the `ViewManager`
 
 ### Fixed
 
@@ -2182,7 +2182,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Removed
 
-- the `src` property from `moonstone/Icon` and `moonston/IconButton`. Use the support for URLs in
+- the `src` property from `moonstone/Icon` and `moonstone/IconButton`. Use the support for URLs in
 	the `children` property as noted above.
 
 ### Fixed

@@ -189,7 +189,7 @@ class ScrollButtons extends Component {
 			maxPos = vertical ? bounds.maxTop : bounds.maxLeft,
 			shouldDisablePrevButton = currentPos <= 0,
 			/* If a scroll size or a client size is not integer,
-			   browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
+			   browser's max scroll position could be smaller than maxPos by 1 pixel.*/
 			shouldDisableNextButton = maxPos - currentPos <= 1;
 
 		const

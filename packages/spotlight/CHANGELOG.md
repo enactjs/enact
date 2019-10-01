@@ -119,7 +119,7 @@ No significant changes.
 
 ### Fixed
 
-- `spotlight` to remain in pointer mode when any 'cancel' key (e.g. Escape or back buttoon) is pressed
+- `spotlight` to remain in pointer mode when any 'cancel' key (e.g. Escape or back button) is pressed
 
 ## [2.4.0] - 2019-03-04
 

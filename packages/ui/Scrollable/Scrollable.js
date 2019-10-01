@@ -103,7 +103,7 @@ class ScrollableBase extends Component {
 		 *
 		 * Once received, the `scrollTo` method can be called as an imperative interface.
 		 *
-		 * The `scrollTo` function accepts the following paramaters:
+		 * The `scrollTo` function accepts the following parameters:
 		 * - {position: {x, y}} - Pixel value for x and/or y position
 		 * - {align} - Where the scroll area should be aligned. Values are:
 		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
@@ -207,7 +207,7 @@ class ScrollableBase extends Component {
 		noScrollByWheel: PropTypes.bool,
 
 		/**
-		 * Called when trigerring a drag event.
+		 * Called when triggering a drag event.
 		 *
 		 * @type {Function}
 		 * @private
@@ -215,7 +215,7 @@ class ScrollableBase extends Component {
 		onDrag: PropTypes.func,
 
 		/**
-		 * Called when trigerring a dragend event.
+		 * Called when triggering a dragend event.
 		 *
 		 * @type {Function}
 		 * @private
@@ -223,7 +223,7 @@ class ScrollableBase extends Component {
 		onDragEnd: PropTypes.func,
 
 		/**
-		 * Called when trigerring a dragstart event.
+		 * Called when triggering a dragstart event.
 		 *
 		 * @type {Function}
 		 * @private
@@ -247,7 +247,7 @@ class ScrollableBase extends Component {
 		onKeyDown: PropTypes.func,
 
 		/**
-		 * Called when trigerring a mousedown event.
+		 * Called when triggering a mousedown event.
 		 *
 		 * @type {Function}
 		 * @private
@@ -1059,7 +1059,7 @@ class ScrollableBase extends Component {
 		this.lastInputType = null;
 		this.isScrollAnimationTargetAccumulated = false;
 		this.startHidingThumb();
-		if (this.overscrollEnabled && !this.isDragging) { // not check this.props.overscrollEffectOn for safty
+		if (this.overscrollEnabled && !this.isDragging) { // not check this.props.overscrollEffectOn for safety
 			this.clearAllOverscrollEffects();
 		}
 		if (this.props.stop) {
@@ -1085,13 +1085,13 @@ class ScrollableBase extends Component {
 		if (opt instanceof Object) {
 			if (opt.position instanceof Object) {
 				if (canScrollHorizontally) {
-					// We need '!=' to check if opt.potision.x is null or undefined
+					// We need '!=' to check if opt.position.x is null or undefined
 					left = opt.position.x != null ? opt.position.x : this.scrollLeft;
 				} else {
 					left = 0;
 				}
 				if (canScrollVertically) {
-					// We need '!=' to check if opt.potision.y is null or undefined
+					// We need '!=' to check if opt.position.y is null or undefined
 					top = opt.position.y != null ? opt.position.y : this.scrollTop;
 				} else {
 					top = 0;
