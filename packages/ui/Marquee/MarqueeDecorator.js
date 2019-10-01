@@ -351,6 +351,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.validateTextDirection();
 			if (this.props.marqueeOn === 'render') {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
+			} else if (this.props.marqueeOverflow === 'fade') {
+				this.calculateMetrics();
+				this.setState({
+					promoted: false
+				});
 			}
 			on('keydown', this.handlePointerHide);
 		}

@@ -17,40 +17,18 @@
 
 	&.fade {
 		// fade left side only
-		-webkit-mask-image: -webkit-gradient(
-			linear,
-			left top,
-			right top,
-			from(rgba(0,0,0,1)),
-			color-stop(0.9, rgba(0,0,0,1)),
-			to(rgba(0,0,0,0))
-		);
+		mask-image: linear-gradient(to right, transparent, black 48px);
 
 		&.rtl {
 			// fade right side only
-			-webkit-mask-image: -webkit-gradient(
-				linear,
-				left top,
-				right top,
-				from(rgba(0,0,0,0)),
-				color-stop(0.1, rgba(0,0,0,1)),
-				to(rgba(0,0,0,1))
-			);
+			mask-image: linear-gradient(to left, transparent, black 48px);
 		}
 
 		// using willAnimate allows the fade to remain during the reset pause since the GPU layer isn't
 		// removed until marquee is cancelled
 		&.willAnimate {
 			// fade both sides
-			-webkit-mask-image: -webkit-gradient(
-				linear,
-				left top,
-				right top,
-				from(rgba(0,0,0,0)),
-				color-stop(0.1, rgba(0,0,0,1)),
-				color-stop(0.9, rgba(0,0,0,1)),
-				to(rgba(0,0,0,0))
-			);
+			mask-image: linear-gradient(to right, transparent 0, black 48px, black calc(100% - 48px), transparent 100%);
 		}
 	}
 
