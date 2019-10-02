@@ -202,7 +202,7 @@ const defaultConfig = {
  * `onFlick`, `onDrag`, `onHold`, and `onHoldPulse`.
  *
  * Note: This HoC passes a number of props to the wrapped component that should be passed to the
- * main DOM node or consumed by the wrapped compoment.
+ * main DOM node or consumed by the wrapped component.
  *
  * @class Touchable
  * @memberof ui/Touchable

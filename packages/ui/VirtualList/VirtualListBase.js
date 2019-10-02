@@ -1221,7 +1221,7 @@ VirtualListBaseNative.displayName = 'ui:VirtualListBaseNative';
  *
  * Once received, the `scrollTo` method can be called as an imperative interface.
  *
- * The `scrollTo` function accepts the following paramaters:
+ * The `scrollTo` function accepts the following parameters:
  * - {position: {x, y}} - Pixel value for x and/or y position
  * - {align} - Where the scroll area should be aligned. Values are:
  *   `'left'`, `'right'`, `'top'`, `'bottom'`,
