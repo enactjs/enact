@@ -15,6 +15,25 @@
 	overflow: hidden;
 	text-align: left;
 
+	.text {
+		--ui-marquee-padding: 0;
+
+		display: inline-block;
+		pointer-events: none;
+		transition-property: left, right;
+		transition-timing-function: linear;
+		position: relative;
+
+		&.willAnimate {
+			will-change: left, right;
+		}
+
+		.padding {
+			display: inline-block;
+			width: calc(1px * var(--ui-marquee-padding, 0));
+		}
+	}
+
 	&.fade {
 		// fade left side only
 		mask-image: linear-gradient(to left, transparent, black 48px);
@@ -26,35 +45,28 @@
 
 		// using willAnimate allows the fade to remain during the reset pause since the GPU layer isn't
 		// removed until marquee is cancelled
-		&.willAnimate {
+		&.animate {
 			// fade both sides
 			mask-image: linear-gradient(to right, transparent 0, black 48px, black calc(100% - 48px), transparent 100%);
 		}
+
+		.text {
+			text-overflow: clip;
+		}
 	}
 
-	.text {
-		--ui-marquee-padding: 0;
-
-		pointer-events: none;
-		text-overflow: clip;
-		overflow: hidden;
-		width: 100%;
-		white-space: pre !important;
-		transition-property: left, right;
-		transition-timing-function: linear;
-		position: relative;
-
-		&.willAnimate {
-			will-change: left, right;
+	&.ellipsis {
+		.text {
+			display: block;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: pre !important;
 		}
 
 		&.animate {
-			overflow: visible;
-		}
-
-		.padding {
-			display: inline-block;
-			width: calc(1px * var(--ui-marquee-padding, 0));
+			.text {
+				overflow: visible;
+			}
 		}
 	}
 

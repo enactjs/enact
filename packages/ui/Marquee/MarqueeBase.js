@@ -9,6 +9,16 @@ const isEventSource = (ev) => ev.target === ev.currentTarget;
 
 const shouldFade = (distance, overflow) => distance > 0 && overflow === 'clip';
 
+const addFade = (entries, observer) => {
+	const last = entries.pop();
+
+	if (last.intersectionRatio < 1) {
+		last.target.parentNode.classList.add(css.fade);
+	}
+
+	observer.disconnect();
+};
+
 /**
  * Marquees the children of the component.
  *
@@ -161,6 +171,14 @@ const MarqueeBase = kind({
 	},
 
 	handlers: {
+		clientRef: (node, props) => {
+			forward('clientRef', node, props);
+
+			if (node && global.IntersectionObserver && props.overflow === 'clip') {
+				const root = node.parentNode;
+				new global.IntersectionObserver(addFade, {root}).observe(node);
+			}
+		},
 		onMarqueeComplete: handle(
 			forProp('animating', true),
 			isEventSource,
@@ -170,10 +188,11 @@ const MarqueeBase = kind({
 	},
 
 	computed: {
-		className: ({distance, overflow, rtl, willAnimate, styler}) => styler.append({
+		className: ({distance, overflow, rtl, animating, styler}) => styler.append({
+			animate: animating,
+			ellipsis: overflow === 'ellipsis',
 			fade: shouldFade(distance, overflow),
-			rtl,
-			willAnimate
+			rtl
 		}),
 		clientClassName: ({animating, willAnimate, styler}) => styler.join({
 			animate: animating,

@@ -505,7 +505,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
 			if (node && this.distance == null && !this.props.marqueeDisabled) {
-				const {width} = node.getBoundingClientRect();
+				const {width} = node.parentNode.getBoundingClientRect();
 				const {scrollWidth} = node;
 
 				this.padding = this.getPadding(width);
