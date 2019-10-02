@@ -46,8 +46,17 @@
 	&.blue {
 		line-height: 42px;
 
+		.client::before {
+			height: @moon-icon-button-colordot-height;
+		}
+
 		&.small {
 			line-height: 30px;
+
+
+			.client::before {
+				height: @moon-icon-button-small-colordot-height;
+			}
 		}
 	}
 
