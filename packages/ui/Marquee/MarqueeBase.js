@@ -188,9 +188,8 @@ const MarqueeBase = kind({
 	},
 
 	computed: {
-		className: ({distance, overflow, rtl, animating, styler}) => styler.append({
+		className: ({distance, overflow, rtl, animating, styler}) => styler.append(overflow, {
 			animate: animating,
-			ellipsis: overflow === 'ellipsis',
 			fade: shouldFade(distance, overflow),
 			rtl
 		}),
