@@ -11,8 +11,9 @@ const shouldFade = (distance, overflow) => distance > 0 && overflow === 'clip';
 
 const addFade = (entries, observer) => {
 	const last = entries.pop();
+	const delta = last.boundingClientRect.width - last.intersectionRect.width;
 
-	if (last.intersectionRatio < 1) {
+	if (delta > 1) {
 		last.target.parentNode.classList.add(css.fade);
 	}
 
