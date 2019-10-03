@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [3.1.2] - 2019-09-30
+
+No significant changes.
+
 ## [3.1.1] - 2019-09-23
 
 No significant changes.
@@ -115,7 +119,7 @@ No significant changes.
 
 ### Fixed
 
-- `spotlight` to remain in pointer mode when any 'cancel' key (e.g. Escape or back buttoon) is pressed
+- `spotlight` to remain in pointer mode when any 'cancel' key (e.g. Escape or back button) is pressed
 
 ## [2.4.0] - 2019-03-04
 

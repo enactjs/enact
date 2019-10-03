@@ -20,6 +20,7 @@ import css from './Scrollable.module.less';
 const
 	constants = {
 		epsilon: 1,
+		flickConfig: {maxDuration: null},
 		isPageDown: is('pageDown'),
 		isPageUp: is('pageUp'),
 		nop: () => {},
@@ -33,6 +34,7 @@ const
 	},
 	{
 		epsilon,
+		flickConfig,
 		nop,
 		overscrollTypeDone,
 		overscrollTypeHold,
@@ -87,7 +89,7 @@ class ScrollableBaseNative extends Component {
 		 *
 		 * Once received, the `scrollTo` method can be called as an imperative interface.
 		 *
-		 * The `scrollTo` function accepts the following paramaters:
+		 * The `scrollTo` function accepts the following parameters:
 		 * - {position: {x, y}} - Pixel value for x and/or y position
 		 * - {align} - Where the scroll area should be aligned. Values are:
 		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
@@ -207,7 +209,7 @@ class ScrollableBaseNative extends Component {
 		onKeyDown: PropTypes.func,
 
 		/**
-		 * Called when trigerring a mousedown event.
+		 * Called when triggering a mousedown event.
 		 *
 		 * @type {Function}
 		 * @private
@@ -802,7 +804,7 @@ class ScrollableBaseNative extends Component {
 		if (position <= 0) {
 			return 'before';
 		/* If a scroll size or a client size is not integer,
-			 browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
+			 browser's max scroll position could be smaller than maxPos by 1 pixel.*/
 		} else if (position >= maxPosition - 1) {
 			return 'after';
 		} else {
@@ -849,7 +851,7 @@ class ScrollableBaseNative extends Component {
 			maxPos = this.getScrollBounds()[isVertical ? 'maxTop' : 'maxLeft'];
 
 		/* If a scroll size or a client size is not integer,
-			 browsers's max scroll position could be smaller than maxPos by 1 pixel.*/
+			 browser's max scroll position could be smaller than maxPos by 1 pixel.*/
 		if ((edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - 1)) { // Already on the edge
 			this.applyOverscrollEffect(orientation, edge, type, ratio);
 		} else {
@@ -937,7 +939,7 @@ class ScrollableBaseNative extends Component {
 		if (this.props.scrollStopOnScroll) {
 			this.props.scrollStopOnScroll();
 		}
-		if (this.overscrollEnabled && !this.isDragging) { // not check this.props.overscrollEffectOn for safty
+		if (this.overscrollEnabled && !this.isDragging) { // not check this.props.overscrollEffectOn for safety
 			this.clearAllOverscrollEffects();
 		}
 		this.lastInputType = null;
@@ -1088,13 +1090,13 @@ class ScrollableBaseNative extends Component {
 		if (opt instanceof Object) {
 			if (opt.position instanceof Object) {
 				if (canScrollHorizontally) {
-					// We need '!=' to check if opt.potision.x is null or undefined
+					// We need '!=' to check if opt.position.x is null or undefined
 					left = opt.position.x != null ? opt.position.x : this.scrollLeft;
 				} else {
 					left = 0;
 				}
 				if (canScrollVertically) {
-					// We need '!=' to check if opt.potision.y is null or undefined
+					// We need '!=' to check if opt.position.y is null or undefined
 					top = opt.position.y != null ? opt.position.y : this.scrollTop;
 				} else {
 					top = 0;
@@ -1332,6 +1334,7 @@ class ScrollableBaseNative extends Component {
 			childWrapperProps = {
 				className: contentClasses,
 				...(!noScrollByDrag && {
+					flickConfig,
 					onDrag: this.onDrag,
 					onDragEnd: this.onDragEnd,
 					onDragStart: this.onDragStart,

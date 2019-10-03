@@ -55,14 +55,14 @@ navigation actions.  This is mainly a convenience function used for preventing n
 5-way behavior and setting focus on specific spottable components that may not normally
 be in the next component to be spotted.
 
-```javascript
+```js
 handleSpotlightDown = (e) => {
 	e.preventDefault();
 	e.stopPropagation();
 	Spotlight.focus('[data-component-id="myButton"]');
 }
 ```
-```jsx harmony
+```js
 <Button data-component-id='myButton'>Source Button</Button>
 <Button onSpotlightDown={this.handleSpotlightDown}>Target Button</Button>
 ```
@@ -83,7 +83,7 @@ its cache of available Spottable controls. So for example, if your container DOM
 by the need to set focus on a newly-created default Spottable control, you will be unable to spot the control by
 calling focus on the container.
 
-```javascript
+```js
 Spotlight.focus('container-name');
 ```
 
@@ -91,7 +91,7 @@ Be default, Spotlight will not always update its cache of available Spottable co
 set focus. This is done for performance reasons. Instead, you can supply a `querySelector` string that will allow
 Spotlight to parse the selector, re-indexing the available Spottable controls.
 
-```javascript
+```js
 Spotlight.focus('[data-container-id="container-name"] .spottable');
 ```
 
@@ -103,7 +103,7 @@ and managing navigation event listeners.
 To use Spotlight in an application, simply import and wrap the `SpotlightRootDecorator`
 HOC around your application view:
 
-```javascript
+```js
 import ApplicationView from './ApplicationView';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
 const App = SpotlightRootDecorator(ApplicationView);
@@ -117,7 +117,7 @@ by default in its `MoonstoneDecorator` HOC.
 In order to make a control focus-enabled (or "spottable") with Spotlight, simply
 wrap your base control with the `Spottable` HOC, like so:
 
-```javascript
+```js
     import Spottable from '@enact/spotlight/Spottable';
     import Component from './Component';
     const SpottableComponent = Spottable(Component);
@@ -139,7 +139,7 @@ question has never been focused, it passes focus to its first spottable child.
 To define a container, wrap your base control with the `SpotlightContainerDecorator`
 HOC:
 
-```javascript
+```js
 import kind from '@enact/core/kind';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 const Container = SpotlightContainerDecorator(kind({
@@ -160,7 +160,7 @@ as the leaves--of the Spotlight navigation tree.
 A `spotlightDisabled` property may be applied to the container to temporarily disable the specified container's
 spottable controls:
 
-```javascript
+```js
 import kind from '@enact/core/kind';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 const Container = SpotlightContainerDecorator('div');
@@ -192,7 +192,7 @@ In order to use the Spotlight API, simply import Spotlight into your application
 any of its available methods to manipulate how your application responds to navigation
 events.
 
-```javascript
+```js
 import Spotlight from '@enact/spotlight';
 ```
 
@@ -223,7 +223,7 @@ Parameters in the form of an object can be passed as an initial argument to a HO
 Spotlight control. In these cases, the HOC parameter should remain static and unchanged in the
 life-cycle of the control.
 
-```javascript
+```js
 import Spottable from '@enact/spotlight/Spottable';
 // spottable control that doesn't emit `onClick` events when pressing the enter key
 const Control = Spottable({emulateMouse: false}, 'div');
@@ -234,7 +234,7 @@ const Control = Spottable({emulateMouse: false}, 'div');
 Spotlight HOCs are able to use properties that are passed to them via parent controls. These properties
 are passed like in any other Enact component.
 
-```javascript
+```js
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 
@@ -329,7 +329,7 @@ happen if you disabled the container using `spotlightDisabled`.
 
 Restricts or prioritizes focus to the controls in the current container.
 
-```javascript
+```js
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Component from './Component';
 const Container = SpotlightContainerDecorator({enterTo: 'last-focused', restrict: 'self-only'}, Component);
@@ -339,7 +339,7 @@ const Container = SpotlightContainerDecorator({enterTo: 'last-focused', restrict
 
 #### Basic usage
 
-```javascript
+```js
 import kind from '@enact/core/kind';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
 import Spottable from '@enact/spotlight/Spottable';

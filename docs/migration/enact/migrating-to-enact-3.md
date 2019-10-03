@@ -20,13 +20,13 @@ Apps that use `@enact/i18n` must install `ilib` as a dependency.  This includes 
 * `@enact/moonstone`
 
 #### Example
-```
+```bash
 npm install ilib@^14.2.0 --save
 ```
 webOS TV developers can optionally use an alias for `ilib` that will provide the webOS-specific locale data for local development.  It is not required as the webOS build tools will automatically provide the correct locale data at build time.  Alias support is in `npm` version `6.9.0` or greater.
 
 #### Example
-```
+```bash
 npm install ilib@ilib-webos-tv@^14.2.0-webostv.1 --save
 ```
 
@@ -34,12 +34,12 @@ Import references using `@enact/i18n/ilib` must be updated to use `ilib`.
 
 #### Example
 ##### 2.x
-```
+```js
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import ilib from '@enact/i18n/ilib/lib/ilib';
 ```
 ##### 3.0
-```
+```js
 import DateFactory from 'ilib/lib/DateFactory';
 import ilib from 'ilib/lib/ilib';
 ```
@@ -175,11 +175,11 @@ The `small` boolean prop has been replaced by the `size` prop.
 
 #### Example
 ##### 2.x
-```
+```js
 <Input small />
 ```
 ##### 3.0
-```
+```js
 <Input size="small" />
 ```
 
@@ -191,7 +191,7 @@ pseudo-selector.
 #### Example
 ##### 2.x
 `CustomInput.js`
-```
+```js
 ...
 import {Input} from '@enact/moonstone';
 import kind from '@enact/core/kind';
@@ -214,7 +214,7 @@ const CustomInput = kind({
 });
 ```
 `CustomInput.less`
-```
+```css
 .customInput {
     &.inputFocused {
         border: 10px solid pink;
@@ -223,7 +223,7 @@ const CustomInput = kind({
 ```
 ##### 3.0
 `CustomInput.js`
-```
+```js
 ...
 import {Input} from '@enact/moonstone';
 import kind from '@enact/core/kind';
@@ -243,7 +243,7 @@ const CustomInput = kind({
 });
 ```
 `CustomInput.less`
-```
+```css
 .customInput {
     & :focus-within {
         border: 10px solid pink;
@@ -259,11 +259,11 @@ The `small` boolean prop has been replaced by the `size` prop.
 
 #### Example
 ##### 2.x
-```
+```js
 <ToggleButton small />
 ```
 ##### 3.0
-```
+```js
 <ToggleButton size="small" />
 ```
 
@@ -280,7 +280,7 @@ The `small` boolean prop has been replaced by the `size` prop.
 
 #### Example
 ##### 2.x
-```
+```js
 ...
 import {ButtonBase as Button} from '@enact/ui/Button';
 ...
@@ -288,7 +288,7 @@ import {ButtonBase as Button} from '@enact/ui/Button';
 ...
 ```
 ##### 3.0
-```
+```js
 ...
 import {ButtonBase as Button} from '@enact/ui/Button';
 ...
@@ -301,7 +301,7 @@ The `small` boolean prop has been replaced by the `size` prop.
 
 #### Example
 ##### 2.x
-```
+```js
 ...
 import {IconBase as Icon} from '@enact/ui/Icon';
 ...
@@ -309,7 +309,7 @@ import {IconBase as Icon} from '@enact/ui/Icon';
 ...
 ```
 ##### 3.0
-```
+```js
 ...
 import {IconBase as Icon} from '@enact/ui/Icon';
 ...
@@ -322,7 +322,7 @@ The `small` boolean prop has been replaced by the `size` prop.
 
 #### Example
 ##### 2.x
-```
+```js
 ...
 import {IconButtonBase as IconButton} from '@enact/ui/IconButton';
 ...
@@ -330,7 +330,7 @@ import {IconButtonBase as IconButton} from '@enact/ui/IconButton';
 ...
 ```
 ##### 3.0
-```
+```js
 ...
 import {IconButtonBase as IconButton} from '@enact/ui/IconButton';
 ...
@@ -343,7 +343,7 @@ The `small` boolean prop has been replaced by the `size` prop.
 
 #### Example
 ##### 2.x
-```
+```js
 ...
 import {LabeledIconBase as LabeledIcon} from '@enact/ui/LabeledIcon';
 ...
@@ -351,7 +351,7 @@ import {LabeledIconBase as LabeledIcon} from '@enact/ui/LabeledIcon';
 ...
 ```
 ##### 3.0
-```
+```js
 ...
 import {LabeledIconBase as LabeledIcon} from '@enact/ui/LabeledIcon';
 ...

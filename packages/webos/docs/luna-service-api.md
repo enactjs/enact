@@ -11,25 +11,25 @@ The Enact framework provides `@enact/webos/LS2Request` for developers to interac
 
 #### Example
 
-```
-	import LS2Request from '@enact/webos/LS2Request';
-	
-	...
-	
-	startNetwork = () => {
-		// to cancel a request you must store a reference
-		this.findNetworkReq = new LS2Request().send({
-			service: 'luna://com.webos.service.wifi',
-			method: 'findnetworks',
-			onSuccess: this.findNetworkSuccess
+```js
+import LS2Request from '@enact/webos/LS2Request';
+
+...
+
+startNetwork = () => {
+	// to cancel a request you must store a reference
+	this.findNetworkReq = new LS2Request().send({
+		service: 'luna://com.webos.service.wifi',
+		method: 'findnetworks',
+		onSuccess: this.findNetworkSuccess
+	});
+}
+
+findNetworkSuccess = (res) => {
+	if (res.foundNetworks) {
+		this.setState({
+			foundNetworks: res.foundNetworks
 		});
 	}
-	
-	findNetworkSuccess = (res) => {
-		if (res.foundNetworks) {
-			this.setState({
-				foundNetworks: res.foundNetworks
-			});
-		}
-	}
+}
 ```

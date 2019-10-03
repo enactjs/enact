@@ -18,7 +18,7 @@ const styles = `
 		display: none;
 	}
 
-	a[href='/?path=/settings/about'] {
+	a[href$='/?path=/settings/about'] {
         display: none;
     }
 `;
