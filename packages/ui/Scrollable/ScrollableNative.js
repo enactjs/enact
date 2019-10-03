@@ -201,6 +201,14 @@ class ScrollableBaseNative extends Component {
 		onFlick: PropTypes.func,
 
 		/**
+		 * Called when pressing a key.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onKeyDown: PropTypes.func,
+
+		/**
 		 * Called when triggering a mousedown event.
 		 *
 		 * @type {Function}
@@ -770,6 +778,10 @@ class ScrollableBaseNative extends Component {
 		this.scrollStopJob.start();
 	}
 
+	onKeyDown = (ev) => {
+		forward('onKeyDown', ev, this.props);
+	}
+
 	scrollToAccumulatedTarget = (delta, vertical, overscrollEffect) => {
 		if (!this.isScrollAnimationTargetAccumulated) {
 			this.accumulatedTargetX = this.scrollLeft;
@@ -1261,6 +1273,7 @@ class ScrollableBaseNative extends Component {
 
 		if (containerRef.current && containerRef.current.addEventListener) {
 			containerRef.current.addEventListener('wheel', this.onWheel);
+			containerRef.current.addEventListener('keydown', this.onKeyDown);
 			containerRef.current.addEventListener('mousedown', this.onMouseDown);
 		}
 
@@ -1286,6 +1299,7 @@ class ScrollableBaseNative extends Component {
 
 		if (containerRef.current && containerRef.current.removeEventListener) {
 			containerRef.current.removeEventListener('wheel', this.onWheel);
+			containerRef.current.removeEventListener('keydown', this.onKeyDown);
 			containerRef.current.removeEventListener('mousedown', this.onMouseDown);
 		}
 
@@ -1337,6 +1351,7 @@ class ScrollableBaseNative extends Component {
 		delete rest.horizontalScrollbar;
 		delete rest.noScrollByWheel;
 		delete rest.onFlick;
+		delete rest.onKeyDown;
 		delete rest.onMouseDown;
 		delete rest.onScroll;
 		delete rest.onScrollStart;
