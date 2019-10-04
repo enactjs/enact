@@ -1,4 +1,6 @@
 import kind from '@enact/core/kind';
+import {forward, handle, returnsTrue} from '@enact/core/handle';
+import Spotlight from '@enact/spotlight';
 import Measurable from '@enact/ui/Measurable';
 import Slottable from '@enact/ui/Slottable';
 import IdProvider from '@enact/ui/internal/IdProvider';
@@ -203,6 +205,19 @@ const PanelsBase = kind({
 		className: 'panels enact-fit'
 	},
 
+	handlers: {
+		onWillTransition: handle(
+			returnsTrue(() => {
+				const node = Spotlight.getCurrent();
+
+				if (node) {
+					node.dispatchEvent(new Event('willtransition'))
+				}
+			}),
+			forward('onWillTransition')
+		)
+	},
+
 	computed: {
 		className: ({controls, noCloseButton, styler}) => styler.append({
 			'moon-panels-hasControls': (!noCloseButton || !!controls) // If there is a close button or controls were specified
@@ -231,7 +246,7 @@ const PanelsBase = kind({
 		viewportId: ({id}) => id && `${id}-viewport`
 	},
 
-	render: ({arranger, childProps, children, closeButtonAriaLabel, closeButtonBackgroundOpacity, controls, controlsRef, generateId, id, index, noAnimation, noCloseButton, noSharedState, onApplicationClose, viewportId, ...rest}) => {
+	render: ({arranger, childProps, children, closeButtonAriaLabel, closeButtonBackgroundOpacity, controls, controlsRef, generateId, id, index, noAnimation, noCloseButton, noSharedState, onApplicationClose, onWillTransition, viewportId, ...rest}) => {
 		delete rest.controlsMeasurements;
 		delete rest.onBack;
 
@@ -258,6 +273,7 @@ const PanelsBase = kind({
 					index={index}
 					noAnimation={noAnimation}
 					noSharedState={noSharedState}
+					onWillTransition={onWillTransition}
 				>
 					{children}
 				</Viewport>

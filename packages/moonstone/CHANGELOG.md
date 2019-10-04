@@ -7,7 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Button` `color` bar height
-- `moonstone/TooltipDecorator` to hide a tooltip when leaving via clicking and pressing a key
+- `moonstone/TooltipDecorator` and `moonstone/Panels` to hide a tooltip moving a panel
 
 ## [3.1.2] - 2019-09-30
 

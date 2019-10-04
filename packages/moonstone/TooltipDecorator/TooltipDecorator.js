@@ -16,6 +16,7 @@ import {forward, handle, forProp} from '@enact/core/handle';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
+import {findDOMNode} from 'react-dom';
 import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 
@@ -233,6 +234,8 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (window.ResizeObserver) {
 				this.resizeObserver = new ResizeObserver(this.startTooltipLayoutJob);
 			}
+
+			findDOMNode(this).addEventListener('willtransition', this.handleWilltransition);
 		}
 
 		componentDidUpdate (prevProps, prevState) {
@@ -264,6 +267,8 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props.disabled) {
 				off('keydown', this.handleKeyDown);
 			}
+
+			findDOMNode(this).removeEventListener('willtransition', this.handleWilltransition);
 		}
 
 		setTooltipLayout () {
@@ -380,6 +385,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		// Global keydown handler to hide the tooltip for when the pointer is hovering over disabled wrapped component (showing the tooltip), and then the pointer times out and switches to 5-way, which will trigger this keydown handler, and spotting another component.
 		handleGlobalKeyDown = this.handle(
+			forProp('disabled', true),
 			() => {
 				this.hideTooltip();
 				off('keydown', this.handleGlobalKeyDown);
@@ -401,6 +407,10 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				off('keydown', this.handleGlobalKeyDown);
 			}
 		)
+
+		handleWilltransition = this.handle(
+			this.hideTooltip
+		).bindAs(this, 'handleWilltransition')
 
 		handleFocus = this.handle(
 			forward('onFocus'),
