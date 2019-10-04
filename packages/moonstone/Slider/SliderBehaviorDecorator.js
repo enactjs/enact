@@ -151,10 +151,8 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus (ev) {
-			if (!this.props.disabled) {
-				forward('onFocus', ev, this.props);
-				this.setState({focused: true});
-			}
+			forward('onFocus', ev, this.props);
+			this.setState({focused: true});
 		}
 
 		handleSpotlightEvents (ev) {
