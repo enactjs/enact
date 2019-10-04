@@ -350,7 +350,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		hideTooltip = (ev) => {
+		hideTooltip = () => {
 			if (this.props.tooltipText) {
 				if (this.mutationObserver) {
 					this.mutationObserver.disconnect();

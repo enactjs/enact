@@ -211,7 +211,7 @@ const PanelsBase = kind({
 				const node = Spotlight.getCurrent();
 
 				if (node) {
-					node.dispatchEvent(new CustomEvent('willtransition'));
+					node.dispatchEvent(new CustomEvent('willtransition')); // eslint-disable-line no-undef
 				}
 			}),
 			forward('onWillTransition')
