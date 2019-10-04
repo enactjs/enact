@@ -405,6 +405,13 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		)
 
+		handleMouseLeave = this.handle(
+			forward('onMouseLeave'),
+			() => {
+				this.hideTooltip();
+			}
+		)
+
 		handleFocus = this.handle(
 			forward('onFocus'),
 			({target}) => this.showTooltip(target)
@@ -485,6 +492,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onBlur: this.handleBlur,
 					onFocus: this.handleFocus,
 					onMouseOut: this.handleMouseOut,
+					onMouseLeave: this.handleMouseLeave,
 					onMouseOver: this.handleMouseOver,
 					onKeyDown: this.handleKeyDown
 				}
