@@ -235,7 +235,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.resizeObserver = new ResizeObserver(this.startTooltipLayoutJob);
 			}
 
-			findDOMNode(this).addEventListener('willtransition', this.handleWilltransition);
+			findDOMNode(this).addEventListener('willtransition', this.handleWilltransition); // eslint-disable-line react/no-find-dom-node
 		}
 
 		componentDidUpdate (prevProps, prevState) {
@@ -268,7 +268,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				off('keydown', this.handleKeyDown);
 			}
 
-			findDOMNode(this).removeEventListener('willtransition', this.handleWilltransition);
+			findDOMNode(this).removeEventListener('willtransition', this.handleWilltransition); // eslint-disable-line react/no-find-dom-node
 		}
 
 		setTooltipLayout () {
@@ -350,7 +350,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		hideTooltip = () => {
+		hideTooltip = (ev) => {
 			if (this.props.tooltipText) {
 				if (this.mutationObserver) {
 					this.mutationObserver.disconnect();
@@ -394,6 +394,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleMouseOver = this.handle(
 			forward('onMouseOver'),
+			forProp('disabled', true),
 			(ev) => {
 				this.showTooltip(ev.target);
 				on('keydown', this.handleGlobalKeyDown);
@@ -402,6 +403,7 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleMouseOut = this.handle(
 			forward('onMouseOut'),
+			forProp('disabled', true),
 			() => {
 				this.hideTooltip();
 				off('keydown', this.handleGlobalKeyDown);

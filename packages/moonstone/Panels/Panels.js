@@ -211,7 +211,7 @@ const PanelsBase = kind({
 				const node = Spotlight.getCurrent();
 
 				if (node) {
-					node.dispatchEvent(new Event('willtransition'))
+					node.dispatchEvent(new CustomEvent('willtransition'));
 				}
 			}),
 			forward('onWillTransition')
