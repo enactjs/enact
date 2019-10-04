@@ -374,7 +374,11 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forward('onKeyDown'),
 			forProp('disabled', false),
 			() => {
-				this.startTooltipLayoutJob();
+				if (this.state.showing) {
+					this.hideTooltip();
+				} else {
+					this.startTooltipLayoutJob();
+				}
 			}
 		);
 
