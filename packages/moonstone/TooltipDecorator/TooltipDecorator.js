@@ -380,7 +380,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		// Global keydown handler to hide the tooltip for when the pointer is hovering over disabled wrapped component (showing the tooltip), and then the pointer times out and switches to 5-way, which will trigger this keydown handler, and spotting another component.
 		handleGlobalKeyDown = this.handle(
-			forProp('disabled', true),
 			() => {
 				this.hideTooltip();
 				off('keydown', this.handleGlobalKeyDown);
@@ -389,7 +388,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleMouseOver = this.handle(
 			forward('onMouseOver'),
-			forProp('disabled', true),
 			(ev) => {
 				this.showTooltip(ev.target);
 				on('keydown', this.handleGlobalKeyDown);
@@ -398,7 +396,6 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleMouseOut = this.handle(
 			forward('onMouseOut'),
-			forProp('disabled', true),
 			() => {
 				this.hideTooltip();
 				off('keydown', this.handleGlobalKeyDown);
