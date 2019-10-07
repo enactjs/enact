@@ -170,14 +170,10 @@ const MarqueeBase = kind({
 	},
 
 	computed: {
-		className: ({distance, overflow, rtl, willAnimate, styler}) => styler.append(overflow, {
+		className: ({animating, distance, overflow, rtl, willAnimate, styler}) => styler.append({
+			animate: animating,
 			fade: shouldFade(distance, overflow),
 			rtl,
-			willAnimate
-		}),
-		clientClassName: ({animating, willAnimate, styler}) => styler.join({
-			animate: animating,
-			text: true,
 			willAnimate
 		}),
 		clientStyle: ({alignment, animating, distance, overflow, padding, rtl, speed}) => {
@@ -208,7 +204,7 @@ const MarqueeBase = kind({
 		}
 	},
 
-	render: ({children, clientClassName, clientRef, clientStyle, duplicate, onMarqueeComplete, ...rest}) => {
+	render: ({children, clientRef, clientStyle, duplicate, onMarqueeComplete, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;
@@ -222,7 +218,7 @@ const MarqueeBase = kind({
 		return (
 			<div {...rest}>
 				<div
-					className={clientClassName}
+					className={css.text}
 					ref={clientRef}
 					style={clientStyle}
 					onTransitionEnd={onMarqueeComplete}

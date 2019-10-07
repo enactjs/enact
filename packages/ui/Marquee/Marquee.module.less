@@ -1,28 +1,6 @@
 // Marquee.module.less
 //
 
-/*
-    &.fade {
-        // fade left side only
-        -webkit-mask-box-image: linear-gradient(to right, transparent, black 48px, black calc(100% - 48px), transparent);
-        transition: -webkit-mask-box-image-outset 0.5s ease;
-        -webkit-mask-box-image-outset: 0 48px 0 96px;
-        -webkit-mask-box-image-width: 0 48px 0 48px;
-
-        &.rtl {
-            // fade right side only
-            -webkit-mask-box-image-outset: 0 96px 0 48px;
-        }
-
-        // using willAnimate allows the fade to remain during the reset pause since the GPU layer isn't
-        // removed until marquee is cancelled
-        &.willAnimate {
-            // fade both sides
-            -webkit-mask-box-image-outset: 0 48px 0 48px;
-        }
-	}
-*/
-
 .marquee {
 	// NOTE: Keeping this around for now to validate if we want to use box layout instead of white-space
 	// This obscure set of code implements single-line ellipsis-clipped text that doesn't interfere with layout.
@@ -31,43 +9,30 @@
 	// display: -webkit-box;
 	// -webkit-box-orient: block-axis;
 	// -webkit-line-clamp: 1;
-
-	--ui-marquee-padding: 0;
-	--ui-marquee-fade-size: 48px;
+	@ui-marquee-fade-width: 48px;
 
 	width: auto;
 	white-space: pre !important;
 	overflow: hidden;
 	text-align: left;
 
-	// "Fade" style but the fade class hasn't been applied yet because measurement hasn't occurred.
-	&.clip {
-		-webkit-mask-box-image: linear-gradient(
-			to right,
-			transparent,
-			black var(--ui-marquee-fade-size),
-			black calc(100% - var(--ui-marquee-fade-size)),
-			transparent
-		);	
-		-webkit-mask-box-image-outset: 0 calc(2 * var(--ui-marquee-fade-size)) 0 calc(2 * var(--ui-marquee-fade-size));
-		-webkit-mask-box-image-width: 0 var(--ui-marquee-fade-size) 0 var(--ui-marquee-fade-size);
-	}
-
 	&.fade {
-		// fade left side only		
-        -webkit-mask-box-image-outset: 0 var(--ui-marquee-fade-size) 0 calc(2 * var(--ui-marquee-fade-size));
-        transition: -webkit-mask-box-image-outset 0.5s ease;
+		// fade left side only
+		-webkit-mask-box-image: linear-gradient(to right, transparent, black @ui-marquee-fade-width, black calc(100% - @ui-marquee-fade-width), transparent);
+	    transition: -webkit-mask-box-image-outset 250ms ease;
+	    -webkit-mask-box-image-outset: 0 @ui-marquee-fade-width 0 (@ui-marquee-fade-width * 2);
+		-webkit-mask-box-image-width: 0 @ui-marquee-fade-width 0 @ui-marquee-fade-width;
 
 		&.rtl {
 			// fade right side only
-			-webkit-mask-box-image-outset: 0 calc(2 * var(--ui-marquee-fade-size)) 0 var(--ui-marquee-fade-size);
+			-webkit-mask-box-image-outset: 0 (@ui-marquee-fade-width * 2) 0 @ui-marquee-fade-width;
 		}
 
 		// using willAnimate allows the fade to remain during the reset pause since the GPU layer isn't
 		// removed until marquee is cancelled
-		&.willAnimate {
+		&.animate {
 			// fade both sides
-			-webkit-mask-box-image-outset: 0 var(--ui-marquee-fade-size) 0 var(--ui-marquee-fade-size);
+			-webkit-mask-box-image-outset: 0 @ui-marquee-fade-width 0 @ui-marquee-fade-width;
 		}
 	}
 
@@ -83,18 +48,18 @@
 		transition-timing-function: linear;
 		position: relative;
 
-		&.willAnimate {
-			will-change: left, right;
-		}
-
-		&.animate {
-			overflow: visible;
-		}
-
 		.padding {
 			display: inline-block;
 			width: calc(1px * var(--ui-marquee-padding, 0));
 		}
+	}
+
+	&.willAnimate .text {
+		will-change: left, right;
+	}
+
+	&.animate .text {
+		overflow: visible;
 	}
 
 	:global(.enact-locale-right-to-left) & {
