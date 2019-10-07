@@ -38,7 +38,6 @@
 	width: auto;
 	white-space: pre !important;
 	overflow: hidden;
-	text-align: left;
 	direction: ltr;
 
 	.text {
@@ -107,7 +106,10 @@
 	}
 
 	&.rtl {
-		text-align: right;
 		direction: rtl;
 	}
+
+	&.leftAligned   { text-align: left; }
+	&.rightAligned  { text-align: right; }
+	&.centerAligned { text-align: center; }
 }

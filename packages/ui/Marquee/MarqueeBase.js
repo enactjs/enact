@@ -189,22 +189,25 @@ const MarqueeBase = kind({
 	},
 
 	computed: {
-		className: ({distance, overflow, rtl, animating, styler}) => styler.append(overflow, {
-			animate: animating,
-			fade: shouldFade(distance, overflow),
-			rtl
-		}),
+		className: ({alignment, distance, overflow, rtl, animating, styler}) => styler.append(
+			alignment ? alignment + 'Aligned' : null,
+			overflow,
+			{
+				animate: animating,
+				fade: shouldFade(distance, overflow),
+				rtl
+			}
+		),
 		clientClassName: ({animating, willAnimate, styler}) => styler.join({
 			animate: animating,
 			text: true,
 			willAnimate
 		}),
-		clientStyle: ({alignment, animating, distance, overflow, padding, rtl, speed}) => {
+		clientStyle: ({animating, distance, overflow, padding, rtl, speed}) => {
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
 			const sideProperty = rtl ? 'left' : 'right';
 			const style = {
-				textAlign: alignment,
 				textOverflow: overflow,
 				'--ui-marquee-padding': padding
 			};
