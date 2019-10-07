@@ -147,35 +147,44 @@ const IconBase = kind({
  * home
  * warning
  * scroll
- * denselistdrawer
+ * densedrawer
  * starminus
  * liverecord
  * liveplay
  * contrast
  * edit
  * trashlock
+ * arrowrightskip
  * volumecycle
  * movecursor
  * refresh
  * question
  * questionreversed
  * s
- * cycleone
- * cyclea
- * cyclex
+ * repeatone
+ * repeatall
+ * repeatnone
  * speakers
  * koreansubtitles
  * chinesesubtitles
- * fryingpan
- * musicnoteplus
+ * arrowleftprevious
+ * searchfilled
+ * zoomin
+ * zoomout
+ * playlistadd
  * files
  * arrowupdown
  * brightness
  * download
- * musicnoteplusminus
+ * playlistedit
  * font
  * musicon
  * musicoff
+ * liverecordone
+ * liveflagone
+ * shuffle
+ * sleep
+ * notification
  * ```
  *
  * @name iconList
