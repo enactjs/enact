@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Button` `color` bar height
 - `moonstone/Slider` to show `tooltip` when disabled
+- `moonstone/TooltipDecorator` to keep showing when changing from pointer mode to 5-way mode
 
 ## [3.1.2] - 2019-09-30
 
