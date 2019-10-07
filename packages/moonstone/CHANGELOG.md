@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Button` `color` bar height
+- `moonstone/Slider` to show `tooltip` when disabled
 
 ## [3.1.2] - 2019-09-30
 

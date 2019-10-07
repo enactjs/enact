@@ -51,7 +51,6 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = {
 			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-			disabled: PropTypes.bool,
 			max: PropTypes.number,
 			min: PropTypes.number,
 			orientation: PropTypes.string,
@@ -151,10 +150,8 @@ const SliderBehaviorDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus (ev) {
-			if (!this.props.disabled) {
-				forward('onFocus', ev, this.props);
-				this.setState({focused: true});
-			}
+			forward('onFocus', ev, this.props);
+			this.setState({focused: true});
 		}
 
 		handleSpotlightEvents (ev) {
