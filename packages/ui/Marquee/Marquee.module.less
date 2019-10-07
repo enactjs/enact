@@ -39,6 +39,7 @@
 	white-space: pre !important;
 	overflow: hidden;
 	text-align: left;
+	direction: ltr;
 
 	.text {
 		display: inline-block;
@@ -105,7 +106,8 @@
 		}
 	}
 
-	:global(.enact-locale-right-to-left) & {
+	&.rtl {
 		text-align: right;
+		direction: rtl;
 	}
 }
