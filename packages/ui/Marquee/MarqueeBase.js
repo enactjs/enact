@@ -83,8 +83,14 @@ const MarqueeBase = kind({
 		 *
 		 * * `marquee` - The root component class
 		 * * `animate` - Applied to the inner content node when the text is animating
+		 * * `centerAligned` - Applied when `alignment="center"`
+		 * * `clip` - Applied to the root when `overflow="clip"`
+		 * * `ellipsis` - Applied to the root when `overflow="ellipsis"`
 		 * * `fade` - Applied to the root when `overflow="clip"` and text overflows
+		 * * `leftAligned` - Applied when `alignment="left"`
 		 * * `padding` - The spacing node used between the repeated content
+		 * * `rightAligned` - Applied when `alignment="right"`
+		 * * `rootAnimate` - Applied to the root node when the text is animating
 		 * * `rtl` - Applied to the root when `rtl` prop is set
 		 * * `text` - The inner content node
 		 * * `willAnimate` - Applied to the inner content node shortly before animation
@@ -193,7 +199,7 @@ const MarqueeBase = kind({
 			alignment ? alignment + 'Aligned' : null,
 			overflow,
 			{
-				animate: animating,
+				rootAnimate: animating,
 				fade: shouldFade(distance, overflow),
 				rtl
 			}
