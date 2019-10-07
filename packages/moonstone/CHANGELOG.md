@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/Icon` to add new icons
+
 ### Fixed
 
 - `moonstone/Button` `color` bar height
