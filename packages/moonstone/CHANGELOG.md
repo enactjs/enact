@@ -7,7 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Button` `color` bar height
-- `moonstone/TooltipDecorator` to keep showing it when changing from pointer mode to 5-way key mode
+- `moonstone/TooltipDecorator` to keep showing when changing from pointer mode to 5-way mode
 
 ## [3.1.2] - 2019-09-30
 
