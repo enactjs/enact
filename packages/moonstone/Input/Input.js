@@ -51,6 +51,7 @@ const InputBase = kind({
 		 *
 		 * * `decorator` - The root class name
 		 * * `input` - The <input> class name
+		 * * `inputHighlight` - The class used to make input text appear highlighted when `.decorator` has focus, but not `.input`
 		 *
 		 * @type {Object}
 		 * @private
