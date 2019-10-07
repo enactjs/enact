@@ -559,9 +559,11 @@ class ScrollableBaseNative extends Component {
 	getRtlX = (x) => (this.props.rtl ? -x : x)
 
 	onMouseDown = (ev) => {
-		this.isScrollAnimationTargetAccumulated = false;
-		this.stop();
-		forward('onMouseDown', ev, this.props);
+		if (this.props.onMouseDown) {
+			forward('onMouseDown', ev, this.props);
+		} else {
+			this.stop();
+		}
 	}
 
 	onTouchStart = () => {

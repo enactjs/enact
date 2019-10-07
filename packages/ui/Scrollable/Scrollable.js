@@ -604,8 +604,11 @@ class ScrollableBase extends Component {
 	getRtlX = (x) => (this.props.rtl ? -x : x)
 
 	onMouseDown = (ev) => {
-		this.stop();
-		forward('onMouseDown', ev, this.props);
+		if (this.props.onMouseDown) {
+			forward('onMouseDown', ev, this.props);
+		} else {
+			this.stop();
+		}
 	}
 
 	onDragStart = (ev) => {
