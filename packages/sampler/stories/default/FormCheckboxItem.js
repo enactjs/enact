@@ -1,4 +1,3 @@
-import FormCheckbox from '@enact/moonstone/FormCheckbox';
 import FormCheckboxItem from '@enact/moonstone/FormCheckboxItem';
 import ToggleItem from '@enact/moonstone/ToggleItem';
 import UiToggleItem, {ToggleItemBase as UiToggleItemBase} from '@enact/ui/ToggleItem';
@@ -39,12 +38,5 @@ storiesOf('Moonstone', module)
 			info: {
 				text: 'Basic usage of FormCheckboxItem'
 			}
-		}
-	).add(
-		'FormCheckbox',
-		() => {
-			return (
-				<FormCheckbox />
-			);
 		}
 	);
