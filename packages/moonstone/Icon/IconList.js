@@ -87,11 +87,11 @@ export default {
 	scroll            : 0x0F00BD,  // scroll
 	densedrawer       : 0x0F00BE,  // dense_drawer
 	starminus         : 0x0F00BF,  // star_minus
-	liverecord        : 0x0F00C1,  // live_record
 	liveplay          : 0x0F00C2,  // live_play
 	contrast          : 0x0F00C3,  // contrast
 	edit              : 0x0F00C4,  // edit
 	trashlock         : 0x0F00C7,  // trash_lock
+	arrowrightskip    : 0x0F00CA,  // arrow_right_skip
 	volumecycle       : 0x0F00CB,  // volume_cycle
 	movecursor        : 0x0F00CC,  // move_cursor
 	refresh           : 0x0F00CE,  // refresh
@@ -104,7 +104,9 @@ export default {
 	speakers          : 0x0F00E5,  // speakers
 	koreansubtitles   : 0x0F00E8,  // korean_subtitles
 	chinesesubtitles  : 0x0F00E9,  // chinese_subtitles
-	searchfilled      : 0x0F00EF,  // search_filled
+	arrowleftprevious : 0x0F00EC,  // arrow_left_previous
+	zoomin            : 0x0F00EF,  // zoom_in
+	zoomout           : 0x0F00F0,  // zoom_out
 	playlistadd       : 0x0F00F1,  // playlist_add
 	files             : 0x0F00F2,  // files
 	arrowupdown       : 0x0F00F4,  // arrow_updown
@@ -113,5 +115,10 @@ export default {
 	playlistedit      : 0x0F00FD,  // playlist_edit
 	font              : 0x0F00FE,  // font
 	musicon           : 0x0F00FF,  // music_on
-	musicoff          : 0x0F0100   // music_off
+	musicoff          : 0x0F0100,  // music_off
+	liverecordone     : 0x0F0101,  // live_record_one
+	liveflagone       : 0x0F0102,  // live_flag_one
+	shuffle           : 0x0F0103,  // shuffle
+	sleep             : 0x0F0104,  // sleep
+	notification      : 0x0F0105   // notification
 };

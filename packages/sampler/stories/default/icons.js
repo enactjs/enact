@@ -69,7 +69,46 @@ const mediaIcons = [
 	'repeatdownload',
 	'view360',
 	'view360off',
-	'info'
+	'info',
+	'repeattrack',
+	'bluetoothoff',
+	'verticalellipsis',
+	'picture',
+	'home',
+	'warning',
+	'scroll',
+	'densedrawer',
+	'liveplay',
+	'contrast',
+	'edit',
+	'trashlock',
+	'volumecycle',
+	'movecursor',
+	'refresh',
+	'question',
+	'questionreversed',
+	's',
+	'repeatone',
+	'repeatall',
+	'repeatnone',
+	'speakers',
+	'koreansubtitles',
+	'chinesesubtitles',
+	'zoomin',
+	'zoomout',
+	'playlistadd',
+	'files',
+	'brightness',
+	'download',
+	'playlistedit',
+	'font',
+	'musicon',
+	'musicoff',
+	'liverecordone',
+	'liveflagone',
+	'shuffle',
+	'sleep',
+	'notification'
 ];
 
 const arrowIcons = [
@@ -80,13 +119,18 @@ const arrowIcons = [
 	'arrowsmallup',
 	'arrowsmalldown',
 	'arrowsmallleft',
-	'arrowsmallright'
+	'arrowsmallright',
+	'arrowcurveright',
+	'arrowrightskip',
+	'arrowleftprevious',
+	'arrowupdown'
 ];
 
 const starIcons = [
 	'star',
 	'hollowstar',
-	'halfstar'
+	'halfstar',
+	'starminus'
 ];
 
 export default Object.keys(icons);
