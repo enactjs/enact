@@ -318,7 +318,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeOn: 'focus',
 			marqueeOnRenderDelay: 1000,
 			marqueeOverflow: 'fade',
-			marqueePadding: '50%',
+			marqueePadding: 48,
 			marqueeResetDelay: 1000,
 			marqueeSpeed: 60
 		}
