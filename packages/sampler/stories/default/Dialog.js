@@ -33,6 +33,10 @@ storiesOf('Moonstone', module)
 					<span>This dialog has content in it and can be very useful for organizing information
 							for the user. This dialog has content in it and can be very useful for organizing information
 							for the user.</span>
+					<buttons>
+						<Button>Ok</Button>
+						<Button>Nevermind</Button>
+					</buttons>
 				</Dialog>
 				<BodyText centered>Use KNOBS to interact with Dialog.</BodyText>
 			</div>
