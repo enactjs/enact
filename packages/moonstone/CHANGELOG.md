@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Button` `color` bar height
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to stop scrolling when clicking on paging controls
 
 ## [3.1.2] - 2019-09-30
 
