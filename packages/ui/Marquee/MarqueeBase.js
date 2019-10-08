@@ -106,15 +106,6 @@ const MarqueeBase = kind({
 		overflow: PropTypes.oneOf(['clip', 'ellipsis']),
 
 		/**
-		 * Amount of spacing, in pixels, between the instances of the content
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		spacing: PropTypes.number,
-
-		/**
 		 * `true` if the directionality of the content is right-to-left
 		 *
 		 * @type {Boolean}
@@ -122,6 +113,15 @@ const MarqueeBase = kind({
 		 * @default false
 		 */
 		rtl: PropTypes.bool,
+
+		/**
+		 * Amount of spacing, in pixels, between the instances of the content
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		spacing: PropTypes.number,
 
 		/**
 		 * Speed of marquee animation in pixels/second.
