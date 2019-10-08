@@ -70,6 +70,7 @@ const MarqueeBase = kind({
 		 *
 		 * * `marquee` - The root component class
 		 * * `animate` - Applied to the inner content node when the text is animating
+		 * * `padding` - The spacing node used between the repeated content
 		 * * `text` - The inner content node
 		 * * `willAnimate` - Applied to the inner content node shortly before animation
 		 *
@@ -99,10 +100,19 @@ const MarqueeBase = kind({
 		/**
 		 * Text overflow setting. Either `'clip'` or `'ellipsis'`
 		 *
-		 * @type {String}
+		 * @type {('clip','ellipsis')}
 		 * @public
 		 */
 		overflow: PropTypes.oneOf(['clip', 'ellipsis']),
+
+		/**
+		 * Amount of padding, in pixels, between the instances of the content
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		padding: PropTypes.number,
 
 		/**
 		 * `true` if the directionality of the content is right-to-left
@@ -135,6 +145,7 @@ const MarqueeBase = kind({
 	},
 
 	defaultProps: {
+		padding: 0,
 		rtl: false,
 		willAnimate: false
 	},
@@ -160,12 +171,13 @@ const MarqueeBase = kind({
 			text: true,
 			willAnimate
 		}),
-		clientStyle: ({alignment, animating, distance, overflow, rtl, speed}) => {
+		clientStyle: ({alignment, animating, distance, overflow, padding, rtl, speed}) => {
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
 			const direction = rtl ? 'rtl' : 'ltr';
 			const sideProperty = rtl ? 'left' : 'right';
 			const style = {
+				'--ui-marquee-padding': padding,
 				direction,
 				textAlign: alignment,
 				textOverflow: overflow
@@ -181,15 +193,19 @@ const MarqueeBase = kind({
 			}
 
 			return style;
+		},
+		duplicate: ({distance, willAnimate}) => {
+			return willAnimate && distance > 0;
 		}
 	},
 
-	render: ({children, clientClassName, clientRef, clientStyle, onMarqueeComplete, ...rest}) => {
+	render: ({children, clientClassName, clientRef, clientStyle, duplicate, onMarqueeComplete, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;
 		delete rest.onMarqueeComplete;
 		delete rest.overflow;
+		delete rest.padding;
 		delete rest.rtl;
 		delete rest.speed;
 		delete rest.willAnimate;
@@ -203,6 +219,12 @@ const MarqueeBase = kind({
 					onTransitionEnd={onMarqueeComplete}
 				>
 					{children}
+					{duplicate ? (
+						<React.Fragment>
+							<div className={css.padding} />
+							{children}
+						</React.Fragment>
+					) : null}
 				</div>
 			</div>
 		);
