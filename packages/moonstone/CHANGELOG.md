@@ -14,6 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` to show `tooltip` when disabled
 - `moonstone/TooltipDecorator` to keep showing when changing from pointer mode to 5-way mode
 - `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` not to stop scrolling when clicking on paging controls
+- `moonstone/FormCheckbox` and `moonstone/RadioItem` high contrast colors
 
 ## [3.1.2] - 2019-09-30
 
