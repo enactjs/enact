@@ -389,8 +389,8 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onMouseDown = (ev) => {
-		if (!this.isScrollButtonFocused()) {
-			this.uiRef.current.stop();
+		if (this.isScrollButtonFocused()) {
+			ev.preventDefault();
 		}
 
 		if (this.props['data-spotlight-container-disabled']) {
