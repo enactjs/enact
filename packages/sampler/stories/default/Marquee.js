@@ -31,7 +31,6 @@ storiesOf('Moonstone', module)
 						marqueeDisabled={boolean('marqueeDisabled', Marquee)}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
 						marqueeOnRenderDelay={1000}
-						marqueeOverflow={select('marqueeOverflow', ['ellipsis', 'fade'], Marquee, 'fade')}
 						marqueePadding={padding()}
 						marqueeResetDelay={number('marqueeResetDelay', Marquee, 1000)}
 						marqueeSpeed={number('marqueeSpeed', Marquee, 60)}
