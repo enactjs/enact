@@ -70,7 +70,7 @@ const MarqueeBase = kind({
 		 *
 		 * * `marquee` - The root component class
 		 * * `animate` - Applied to the inner content node when the text is animating
-		 * * `padding` - The spacing node used between the repeated content
+		 * * `spacing` - The spacing node used between the repeated content
 		 * * `text` - The inner content node
 		 * * `willAnimate` - Applied to the inner content node shortly before animation
 		 *
@@ -106,13 +106,13 @@ const MarqueeBase = kind({
 		overflow: PropTypes.oneOf(['clip', 'ellipsis']),
 
 		/**
-		 * Amount of padding, in pixels, between the instances of the content
+		 * Amount of spacing, in pixels, between the instances of the content
 		 *
 		 * @type {Number}
 		 * @default 0
 		 * @public
 		 */
-		padding: PropTypes.number,
+		spacing: PropTypes.number,
 
 		/**
 		 * `true` if the directionality of the content is right-to-left
@@ -145,7 +145,7 @@ const MarqueeBase = kind({
 	},
 
 	defaultProps: {
-		padding: 0,
+		spacing: 0,
 		rtl: false,
 		willAnimate: false
 	},
@@ -171,13 +171,13 @@ const MarqueeBase = kind({
 			text: true,
 			willAnimate
 		}),
-		clientStyle: ({alignment, animating, distance, overflow, padding, rtl, speed}) => {
+		clientStyle: ({alignment, animating, distance, overflow, spacing, rtl, speed}) => {
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
 			const direction = rtl ? 'rtl' : 'ltr';
 			const sideProperty = rtl ? 'left' : 'right';
 			const style = {
-				'--ui-marquee-padding': padding,
+				'--ui-marquee-spacing': spacing,
 				direction,
 				textAlign: alignment,
 				textOverflow: overflow
@@ -205,7 +205,7 @@ const MarqueeBase = kind({
 		delete rest.distance;
 		delete rest.onMarqueeComplete;
 		delete rest.overflow;
-		delete rest.padding;
+		delete rest.spacing;
 		delete rest.rtl;
 		delete rest.speed;
 		delete rest.willAnimate;
@@ -221,7 +221,7 @@ const MarqueeBase = kind({
 					{children}
 					{duplicate ? (
 						<React.Fragment>
-							<div className={css.padding} />
+							<div className={css.spacing} />
 							{children}
 						</React.Fragment>
 					) : null}

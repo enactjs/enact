@@ -11,8 +11,8 @@ storiesOf('Moonstone', module)
 		'Marquee',
 		() => {
 			// fn to parse the padding value which is invoked later to keep the knob ordered
-			const padding = () => {
-				const value = text('marqueePadding', Marquee, '50%');
+			const spacing = () => {
+				const value = text('marqueeSpacing', Marquee, '50%');
 				if (value && value.indexOf('%') > 0) {
 					return value;
 				}
@@ -31,8 +31,8 @@ storiesOf('Moonstone', module)
 						marqueeDisabled={boolean('marqueeDisabled', Marquee)}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], Marquee, 'render')}
 						marqueeOnRenderDelay={1000}
-						marqueePadding={padding()}
 						marqueeResetDelay={number('marqueeResetDelay', Marquee, 1000)}
+						marqueeSpacing={spacing()}
 						marqueeSpeed={number('marqueeSpeed', Marquee, 60)}
 						style={{width: '400px'}}
 					>
