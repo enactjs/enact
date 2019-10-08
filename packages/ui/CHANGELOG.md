@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Marquee` prop `marqueePadding` and CSS class `padding` to configure the padding between the repeated content
+
 ## [3.1.2] - 2019-09-30
 
 ### Fixed
