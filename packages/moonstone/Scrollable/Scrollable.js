@@ -406,6 +406,10 @@ class ScrollableBase extends Component {
 	}
 
 	onMouseDown = (ev) => {
+		if (this.isScrollButtonFocused()) {
+			ev.preventDefault();
+		}
+
 		if (this.props['data-spotlight-container-disabled']) {
 			ev.preventDefault();
 		}

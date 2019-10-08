@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import {forward} from '@enact/core/handle';
+import handle, {forward, forwardWithPrevent} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform';
 import Registry from '@enact/core/internal/Registry';
@@ -558,11 +558,10 @@ class ScrollableBaseNative extends Component {
 
 	getRtlX = (x) => (this.props.rtl ? -x : x)
 
-	onMouseDown = (ev) => {
-		this.isScrollAnimationTargetAccumulated = false;
-		this.stop();
-		forward('onMouseDown', ev, this.props);
-	}
+	onMouseDown = handle(
+		forwardWithPrevent('onMouseDown'),
+		this.stop
+	).bindAs(this, 'onMouseDown')
 
 	onTouchStart = () => {
 		this.isTouching = true;
