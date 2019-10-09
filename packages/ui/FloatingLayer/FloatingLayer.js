@@ -133,6 +133,10 @@ class FloatingLayerBase extends React.Component {
 		if (this.context && typeof this.context === 'function') {
 			this.controller = this.context(this.handleNotify.bind(this));
 		}
+
+		if (this.props.scrimType === 'none' && this.props.open) {
+			on('click', this.handleClick);
+		}
 	}
 
 	componentDidUpdate (prevProps, prevState) {

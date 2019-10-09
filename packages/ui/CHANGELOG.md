@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/FloatingLayer` to properly respond to click events if set to open when mounted
+
 ## [3.1.2] - 2019-09-30
 
 ### Fixed
