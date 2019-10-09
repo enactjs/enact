@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [3.1.3] - 2019-10-09
+
+### Fixed
+
+- `ui/FloatingLayer` to be dismissable when `open` on mount
+
 ## [3.1.2] - 2019-09-30
 
 ### Fixed
@@ -210,7 +216,7 @@ No significant changes.
 
 - `ui/Marquee` to display an ellipsis when changing to text that no longer fits within its bounds
 - `ui/VirtualList`, `ui/VirtualGridList`, and `ui/Scroller` to debounce `onScrollStop` events for non-animated scrolls
-- `ui/Changeable` and `ui/Toggleable` to no longer treat components as controlled if the specified prop is explicity set to `undefined` at mount
+- `ui/Changeable` and `ui/Toggleable` to no longer treat components as controlled if the specified prop is explicitly set to `undefined` at mount
 
 ## [2.2.7] - 2018-11-21
 
@@ -708,7 +714,7 @@ No significant changes.
 
 ### Changed
 
--`ui/View` to prevent re-renders on views leaving the `ViewManager`
+- `ui/View` to prevent re-renders on views leaving the `ViewManager`
 
 ## [1.1.0] - 2017-04-21
 

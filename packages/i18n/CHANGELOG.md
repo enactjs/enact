@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [3.1.3] - 2019-10-09
+
+No significant changes.
+
 ## [3.1.2] - 2019-09-30
 
 No significant changes.
@@ -139,7 +143,7 @@ No significant changes.
 
 ### Fixed
 
-- `i18n/I18nDecorator` to allow changing the locale to a falsey value to use the device locale
+- `i18n/I18nDecorator` to allow changing the locale to a falsy value to use the device locale
 
 ## [2.2.5] - 2018-11-05
 

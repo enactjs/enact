@@ -406,6 +406,10 @@ class ScrollableBase extends Component {
 	}
 
 	onMouseDown = (ev) => {
+		if (this.isScrollButtonFocused()) {
+			ev.preventDefault();
+		}
+
 		if (this.props['data-spotlight-container-disabled']) {
 			ev.preventDefault();
 		}
@@ -635,11 +639,14 @@ class ScrollableBase extends Component {
 			let direction = null;
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
-				if (this.isContent(target) && (this.props.direction === 'vertical' || this.props.direction === 'both')) {
-					ev.stopPropagation();
+				if (this.props.direction === 'vertical' || this.props.direction === 'both') {
 					direction = isPageUp(keyCode) ? 'up' : 'down';
-					this.scrollByPage(direction);
-					if (overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
+
+					if (this.isContent(target)) {
+						ev.stopPropagation();
+						this.scrollByPage(direction);
+					}
+					if (overscrollEffectOn.pageKey) {
 						this.checkAndApplyOverscrollEffectByDirection(direction);
 					}
 				}

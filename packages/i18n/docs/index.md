@@ -22,7 +22,7 @@ When not using `MoosntoneDecorator`, be sure to apply the classes passed from `I
 
 The following example demonstrates using `I18nContextDecorator` with a component:
 
-```javascript
+```js
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 
 const SomeComponent = I18nContextDecorator(
@@ -82,7 +82,7 @@ main Enact library.
 
 It can be used as follows:
 
-```javascript
+```js
 import $L from '@enact/i18n/$L';
 
 const translatedString = $L('Some String');
@@ -105,12 +105,12 @@ you'll want to create a script to do this.)
 
 The `strings.json` files should contain the translations in JSON format, i.e.:
 
-```javascript
-	{
-		"source string1": "translated string1",
-		"source string2": "translated string2",
-		...
-	}
+```json
+{
+	"source string1": "translated string1",
+	"source string2": "translated string2",
+	...
+}
 ```
 
 Many localization companies are able to provide translations in this format.
@@ -121,10 +121,11 @@ needed, use `ResBundle` directly instead of `$L()`.
 
 Translation files should be placed into locale specific directories and added to the `resources/ilibmanifest.json` file:
 
-```javascript
+```json
 {
 	"files": ["en/US/strings.json", "ja/JP/strings.json", ...]
 }
+```
 
 ## Updating Locale
 

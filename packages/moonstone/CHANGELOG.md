@@ -2,6 +2,20 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [3.1.3] - 2019-10-09
+
+### Added
+
+- `moonstone/Icon` icons
+
+### Fixed
+
+- `moonstone/Button` `color` bar height
+- `moonstone/Slider` to show `tooltip` when disabled
+- `moonstone/TooltipDecorator` to keep showing when changing from pointer mode to 5-way mode
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll correctly when clicking on paging controls during a scroll event
+- `moonstone/FormCheckbox` and `moonstone/RadioItem` high contrast colors
+
 ## [3.1.2] - 2019-09-30
 
 ### Fixed
@@ -502,7 +516,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` to scroll container elements into view
 - `moonstone/TooltipDecorator` to update position when `tooltipText` is changed
 - `moonstone/VideoPlayer` to prevent default browser scroll behavior when navigating via 5-way
-- `moonstone/VirtuaList` to allow `onKeyDown` events to bubble
+- `moonstone/VirtualList` to allow `onKeyDown` events to bubble
 - `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` scrolling via page up or down keys
 
 ## [2.1.1] - 2018-08-27
@@ -798,7 +812,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ProgressBar` props `tooltipSide` and `tooltipForceSide`, to be replaced by `moonstone/ProgressBar.ProgressBarTooltip` prop `side`
 - `moonstone/Slider` props `detachedKnob`, `onDecrement`, `onIncrement`, `scrubbing`, and `onKnobMove`
 - `moonstone/VideoPlayer` property `tooltipHideDelay`
-- `moonstone/VideoPlayer` props `backwardIcon`, `forwardIcon`, `initialJumpDelay`, `jumpBackwardIcon`, `jumpButtonsDisabled`, `jumpDelay`, `jumpForwadIcon`, `leftComponents`, `moreButtonCloseLabel`, `moreButtonColor`, `moreButtonDisabled`, `moreButtonLabel`, `no5WayJump`, `noJumpButtons`, `noRateButtons`, `pauseIcon`, `playIcon`, `rateButtonsDisabled`, and `rightComponents`, replaced by corresponding props on `moonstone/VideoPlayer.MediaControls`
+- `moonstone/VideoPlayer` props `backwardIcon`, `forwardIcon`, `initialJumpDelay`, `jumpBackwardIcon`, `jumpButtonsDisabled`, `jumpDelay`, `jumpForwardIcon`, `leftComponents`, `moreButtonCloseLabel`, `moreButtonColor`, `moreButtonDisabled`, `moreButtonLabel`, `no5WayJump`, `noJumpButtons`, `noRateButtons`, `pauseIcon`, `playIcon`, `rateButtonsDisabled`, and `rightComponents`, replaced by corresponding props on `moonstone/VideoPlayer.MediaControls`
 - `moonstone/VideoPlayer` props `onBackwardButtonClick`, `onForwardButtonClick`, `onJumpBackwardButtonClick`, `onJumpForwardButtonClick`, and `onPlayButtonClick`, replaced by `onRewind`, `onFastForward`, `onJumpBackward`, `onJumpForward`, `onPause`, and `onPlay`, respectively
 
 ### Added
@@ -1800,7 +1814,7 @@ No changes.
 - LESS mixins that belong in `@enact/ui`, so that only moonstone-specific mixins are contained in
 this module. When authoring components and importing mixins, only the local mixins need to be
 imported, as they already import the general mixins.
-- the `src` property from `moonstone/Icon` and `moonston/IconButton`. Use the support for URLs in
+- the `src` property from `moonstone/Icon` and `moonstone/IconButton`. Use the support for URLs in
 	the `children` property as noted above.
 - the `height` property from `moonstone/IncrementSlider` and `moonstone/Slider`
 

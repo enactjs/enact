@@ -40,7 +40,7 @@ export default (props) => (
 This component is so simple that, if this were the imaginary world where things never change, there
 would be no reason to convert this to `kind()`. But, let's do it anyhow:
 
-```
+```js
 import kind from '@enact/core/kind';
 
 export default kind({
@@ -52,7 +52,7 @@ It's a little more verbose, but not too bad.
 
 Now, let's say we want to cheer on a specific person. We'll need to add a prop for that:
 
-```
+```js
 export default ({name, ...rest}) => (
 	<div {...rest}>Hooray, {name}!</div>
 );
@@ -60,7 +60,7 @@ export default ({name, ...rest}) => (
 
 The `kind()` conversion is pretty similar (we're going to leave out the `import` line for brevity):
 
-```
+```js
 export default kind({
 	render: ({name, ...rest}) => (
 		<div {...rest}>Hooray, {name}!</div>
@@ -71,7 +71,7 @@ export default kind({
 Then, we get told we need to validate the type of `name` so that we don't get any funny data passed
 in. `PropTypes` (import not shown) to the rescue:
 
-```
+```js
 const Hooray = ({name, ...rest}) => (
 	<div {...rest}>Hooray, {name}!</div>
 );
@@ -85,7 +85,7 @@ export default Hooray;
 
 Not too bad yet. Let's see what happens with the `kind()` version:
 
-```
+```js
 export default kind({
 	propTypes: {
 		name: PropTypes.string
@@ -102,7 +102,7 @@ left if the name is not supplied. We have two approaches here: we could create a
 formatted like we want or we could drop a ternary into the jsx markup. Let's go with the first to
 keep our jsx as clean as possible:
 
-```
+```js
 const Hooray = ({name, ...rest}) => {
 	const formattedName = name ? ', ' + name : '';
 
@@ -118,7 +118,7 @@ export default Hooray;
 
 Our simple little SFC is getting complicated. Let's see what we could do with `kind()`:
 
-```
+```js
 export default kind({
 	propTypes: {
 		name: PropTypes.string
@@ -143,7 +143,7 @@ But, we also know that our consumer may want to pass in one, too. So, we'll have
 use an npm module like [classnames](https://www.npmjs.com/package/classnames). How's it look now?
 Let's see:
 
-```
+```js
 import classNames from 'classnames';
 import css from './hooray.less';
 
@@ -163,7 +163,7 @@ export default Hooray;
 
 With `kind()`:
 
-```
+```js
 import css from './hooray.less';
 
 export default kind({

@@ -30,7 +30,7 @@ this.importantButNotHighPriority.idle();
 
 Sometimes a function will execute too often. For instance, let's take something like an `onWheel` event. This event may fire too often for out liking, causing reduced performance and ultimately a bad user experience. To throttle it, we can do something like:
 
-```javascript
+```js
 import {Job} from '@enact/core/util';
 
 // We can set up Job like so this.
@@ -73,7 +73,7 @@ enact pack --production --isomorphic
 
 [`perfNow`](../../modules/core/util/#perfNow) is useful for getting higher resolution timestamps to see how long a set of functions take. It's a nice little wrapper around [`window.performance.now`](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now) that will fall back to [`Date.now`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now). 
 
-```javascript
+```js
 import {perfNow} from '@enact/core/util';
 
 const firstTime = perfNow();
@@ -115,7 +115,7 @@ While this is great, we may want to add some custom timestamps to this log. To a
 
 We can use it like this:
 
-```javascript
+```js
 import {perfLog} from '@enact/webos/pmloglib'
 
 perfLog('APP_INTERACTIVE', 'AppLaunch', 'com.webos.app.coolapp');
@@ -123,7 +123,7 @@ perfLog('APP_INTERACTIVE', 'AppLaunch', 'com.webos.app.coolapp');
 
 The above will now output the same thing we previously had, but with more info.
 
-```
+```bash
 Process                        MsgID                     Time(s)  +Diff(s)  Extra
 surface-manager-starfish       IM_KEY_INPUT              0.0      +0.0      key_value:0 key_code:272
 sam                            APP_LAUNCH                0.009    +0.009    status:start_prelaunching

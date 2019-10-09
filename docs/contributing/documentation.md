@@ -8,7 +8,7 @@ Almost all documentation for Enact is generated directly from the source code or
 
 In-line documentation uses standard [jsDoc tags](http://usejsdoc.org/) with some additional Enact-specific tags. In-line documentation appears within comment blocks that begin with double asterisks:
 
-```
+```js
 /**
  * jsdoc Comment
  */
@@ -22,7 +22,7 @@ There are three general levels of documentation that will appear within the sour
 
 Each module (and, consequently, directory) within Enact should have one (and only one) file that includes the `@module` tag. The name of the module should be prefixed with the name of the package that contains it (e.g. `moonstone/Button`). Each module has a limited number of exports so they should be documented within the module block using the `@exports` tag. The module description should not list the exports or repeat information that should appear at the component level.
 
-```
+```js
 /**
  * Provides Moonstone-themed button components and behaviors.
  *
@@ -48,7 +48,7 @@ Class level documentation includes components and higher-order components (HOCs)
 
 Below is an example block for a component:
 
-```
+```js
 /**
  * A Moonstone-styled button with built-in support for tooltips, marqueed text, and
  * Spotlight focus.
@@ -80,7 +80,7 @@ Below is an example block for a component:
 
 Below is an example of HOC declaration:
 
-```
+```js
 /**
  * A higher-order component that provides a consistent set of pointer events -- `onDown`, `onUp`,
  * and `onTap` -- across mouse and touch interfaces along with support for common gestures including
@@ -98,7 +98,7 @@ Below is an example of HOC declaration:
 
 HOCs that include configurable options should be documented as follows:
 
-```
+```js
 /**
  * Default config for {@link ui/Touchable.Touchable}.
  *
@@ -125,39 +125,39 @@ const defaultConfig = {
 
 Property-level documentation refers to documentation within a component or HOC. In particular, this refers to the public API provided via properties. Each component (even those within HOCs) that has a `propTypes` member should be documented as follows:
 
-```
-	propTypes: /** @lends moonstone/ExpandableList.ExpandableListBase.prototype */ {
-		/**
-		 * The items to be displayed in the list
-		 *
-		 * @type {String[]}
-		 * @required
-		 * @public
-		 */
-		children: PropTypes.arrayOf(PropTypes.string).isRequired,
-		...
-		/**
-		 * Selection mode for the list
-		 *
-		 * * `'single'` - Allows for 0 or 1 item to be selected. The selected item may be deselected.
-		 * * `'radio'` - Allows for 0 or 1 item to be selected. The selected item may only be
-		 *    deselected by selecting another item.
-		 * * `'multiple'` - Allows 0 to _n_ items to be selected. Each item may be selected or
-		 *    deselected.
-		 *
-		 * @type {String}
-		 * @default 'single'
-		 * @public
-		 */
-		select: PropTypes.oneOf(['single', 'radio', 'multiple']),
+```js
+propTypes: /** @lends moonstone/ExpandableList.ExpandableListBase.prototype */ {
+/**
+	* The items to be displayed in the list
+	*
+	* @type {String[]}
+	* @required
+	* @public
+	*/
+children: PropTypes.arrayOf(PropTypes.string).isRequired,
+...
+/**
+	* Selection mode for the list
+	*
+	* * `'single'` - Allows for 0 or 1 item to be selected. The selected item may be deselected.
+	* * `'radio'` - Allows for 0 or 1 item to be selected. The selected item may only be
+	*    deselected by selecting another item.
+	* * `'multiple'` - Allows 0 to _n_ items to be selected. Each item may be selected or
+	*    deselected.
+	*
+	* @type {String}
+	* @default 'single'
+	* @public
+	*/
+select: PropTypes.oneOf(['single', 'radio', 'multiple']),
 
-		/**
-		 * Index or array of indices of the selected item(s)
-		 *
-		 * @type {Number|Number[]}
-		 * @public
-		 */
-		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)])
+/**
+	* Index or array of indices of the selected item(s)
+	*
+	* @type {Number|Number[]}
+	* @public
+	*/
+selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)])
 
 ```
 
@@ -178,7 +178,7 @@ In general, we do not provide jsDoc comments for methods that appear within comp
 
 There are some special cases that appear within the Enact framework. One example is `core/dispatcher`, which exports a set of utility functions. In this file, there are no class-level exports and all the functions are documented using jsDoc tags.  Here is the documentation for the `on` function:
 
-```
+```js
 /**
  * Adds a new global event listener
  *
