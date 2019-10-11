@@ -56,7 +56,7 @@ const releasePointer = (target) => {
 		active = null;
 		document.removeEventListener('mousedown', handlePointerDown, {capture: true});
 		document.removeEventListener('mouseup', handlePointerUp, {capture: true});
-		document.removeEventListener('touchstart', handlePointerDown, {capture: true});
+		document.removeEventListener('touchstart', handleTouchStart, {capture: true});
 		document.removeEventListener('touchend', handleTap, {capture: true});
 		document.removeEventListener('click', handleTap, {capture: true});
 	}
