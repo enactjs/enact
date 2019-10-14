@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Icon` icon sizes
+
 ## [3.1.3] - 2019-10-09
 
 ### Added
