@@ -143,9 +143,11 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 		updateFocus = (prevState) => {
 			// focus node if `InputSpotlightDecorator` is pausing Spotlight or if Spotlight is paused
-			if (this.state.node &&
-			Spotlight.getCurrent() !== this.state.node &&
-			(this.paused.isPaused() || !Spotlight.isPaused())) {
+			if (
+				this.state.node &&
+				Spotlight.getCurrent() !== this.state.node &&
+				(this.paused.isPaused() || !Spotlight.isPaused())
+			) {
 				this.state.node.focus();
 			}
 
