@@ -10,6 +10,13 @@ import {storiesOf} from '@storybook/react';
 import {boolean, number, select} from '../../src/enact-knobs';
 import {action, mergeComponentMetadata} from '../../src/utils';
 
+// *************************************************
+import {Panel, Header} from '@enact/moonstone/Panels';
+import Button from '@enact/moonstone/Button';
+import ContexturePopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
+import Item from '@enact/moonstone/Item';
+
+
 const Config = mergeComponentMetadata('VirtualGridList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
 
 const
@@ -60,6 +67,109 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
+// *************************************************
+let itemList = [];
+for (let i = 0; i < 60; i++) {
+	itemList.push('item' + i);
+}
+
+const ContexturePopupButton = ContexturePopupDecorator(Button);
+
+let lastIndex = 0;
+
+class MyVirtualList extends React.Component {
+	componentDidMount () {
+		// console.log('######CDM');
+		this.scrollTo({index: lastIndex, animate: false, focus: true});
+	}
+
+	closePopup (index) {
+		lastIndex = index;
+		this.props.closePopup();
+	}
+
+	renderItem = ({index, ...rest}) => {
+		return (
+			/* eslint-disable react/jsx-no-bind */
+			<Item key={index} onClick={() => this.closePopup(index)} {...rest}>{itemList[index]}</Item>
+		);
+	};
+
+	getScrollTo = (scrollTo) => {
+		this.scrollTo = scrollTo;
+	}
+
+	render () {
+		let props = {...this.props};
+		delete props.closePopup;
+
+		return (
+			<div {...props} style={{width: '915px', height: '600px'}}>
+				<VirtualGridList
+					dataSize={itemList.length}
+					itemRenderer={this.renderItem}
+					itemSize={{minWidth: ri.scale(285), minHeight: ri.scale(60)}}
+					direction="vertical"
+					spacing={ri.scale(0)}
+					cbScrollTo={this.getScrollTo}
+				/>
+			</div>
+		);
+	}
+}
+
+
+
+
+
+// **************************************************
+class Sample extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			isPopup: false
+		};
+	}
+
+	renderPopup = ({...rest}) => {
+		return (
+			<MyVirtualList {...rest} closePopup={this.closePopup} />
+		);
+	}
+
+	openPopup = () => {
+		this.setState({isPopup: true});
+	}
+
+	closePopup = () => {
+		this.setState({isPopup: false});
+	}
+
+	handleOpen = () => {
+		// console.log('onOpen');
+	}
+
+	render () {
+		return (
+			<Panel>
+				<Header title="test" />
+				<ContexturePopupButton
+					small
+					open={this.state.isPopup}
+					popupComponent={this.renderPopup}
+					onClick={this.openPopup}
+					direction="right"
+					showCloseButton
+					spotlightRestrict="self-only"
+					onOpen={this.handleOpen}
+				>
+					CAT
+				</ContexturePopupButton>
+			</Panel>
+		);
+	}
+}
+
 storiesOf('VirtualGridList', module)
 	.add(
 		'Horizontal VirtualGridList',
@@ -85,4 +195,10 @@ storiesOf('VirtualGridList', module)
 			/>
 		),
 		{propTables: [Config]}
+	)
+	.add(
+		'MySample',
+		() => (
+			<Sample />
+		)
 	);
