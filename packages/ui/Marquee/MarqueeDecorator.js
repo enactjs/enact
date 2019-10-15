@@ -787,7 +787,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {
 				alignment,
 				children,
-				css,
 				disabled,
 				marqueeOn,
 				marqueeSpeed,
@@ -831,7 +830,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						animating={this.state.animating}
 						className={configClassName}
 						clientRef={this.cacheNode}
-						css={css}
 						distance={this.distance}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}

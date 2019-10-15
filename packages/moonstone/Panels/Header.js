@@ -6,7 +6,7 @@ import {Layout, Cell} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
 import ComponentOverride from '@enact/ui/ComponentOverride';
 
-import {MarqueeDecorator} from '../Marquee';
+import {MarqueeDecorator, MarqueeBase} from '../Marquee';
 import Skinnable from '../Skinnable';
 
 import css from './Header.module.less';
@@ -16,8 +16,14 @@ const marqueeCss = {
 	spacing: css.spacing
 };
 
+const TitleMarquee = (props) => {
+	return (
+		<MarqueeBase {...props} css={marqueeCss} />
+	);
+};
+
 // Create a <h1> and Marquee component
-const MarqueeH1 = MarqueeDecorator('h1');
+const MarqueeH1 = MarqueeDecorator({component: TitleMarquee}, 'h1');
 const MarqueeH2 = MarqueeDecorator('h2');
 
 const CompactTitleBase = kind({
