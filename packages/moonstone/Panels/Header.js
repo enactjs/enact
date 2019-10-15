@@ -27,8 +27,8 @@ const CompactTitleBase = kind({
 		className: 'compactTitle'
 	},
 	render: (props) => {
-		delete props.title;
-		delete props.titleBelow;
+		delete props.title;			// eslint-disable-line enact/prop-types
+		delete props.titleBelow;	// eslint-disable-line enact/prop-types
 
 		return (
 			<div {...props} />

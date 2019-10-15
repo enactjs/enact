@@ -2,6 +2,21 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.1.3] - 2019-10-09
+
+### Added
+
+- `moonstone/Icon` icons
+
+### Fixed
+
+- `moonstone/Button` `color` bar height
+- `moonstone/Slider` to show `tooltip` when disabled
+- `moonstone/TooltipDecorator` to keep showing when changing from pointer mode to 5-way mode
+- `moonstone/Scroller`, `moonstone/VirtualList.VirtualGridList`, and `moonstone/VirtualList.VirtualList` to scroll correctly when clicking on paging controls during a scroll event
+- `moonstone/FormCheckbox` and `moonstone/RadioItem` high contrast colors
+- `ui/FloatingLayer` to be dismissable when `open` on mount
+
 ## [3.1.2] - 2019-09-30
 
 ### Fixed
