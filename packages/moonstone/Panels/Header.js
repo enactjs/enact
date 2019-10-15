@@ -11,6 +11,11 @@ import Skinnable from '../Skinnable';
 
 import css from './Header.module.less';
 
+// Extract the spacing class to override the title Marquee instance
+const marqueeCss = {
+	spacing: css.spacing
+};
+
 // Create a <h1> and Marquee component
 const MarqueeH1 = MarqueeDecorator('h1');
 const MarqueeH2 = MarqueeDecorator('h2');
@@ -206,8 +211,10 @@ const HeaderBase = kind({
 				);
 			} else {
 				return (
-					<Cell component={MarqueeH1} className={css.title} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>
-						{title}
+					<Cell>
+						<MarqueeH1 className={css.title} css={marqueeCss} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>
+							{title}
+						</MarqueeH1>
 					</Cell>
 				);
 			}

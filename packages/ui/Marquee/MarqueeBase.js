@@ -3,7 +3,7 @@ import {forProp, forward, handle, stop} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import css from './Marquee.module.less';
+import componentCss from './Marquee.module.less';
 
 const isEventSource = (ev) => ev.target === ev.currentTarget;
 
@@ -151,7 +151,7 @@ const MarqueeBase = kind({
 	},
 
 	styles: {
-		css,
+		css: componentCss,
 		className: 'marquee',
 		publicClassNames: true
 	},
@@ -199,7 +199,7 @@ const MarqueeBase = kind({
 		}
 	},
 
-	render: ({children, clientClassName, clientRef, clientStyle, duplicate, onMarqueeComplete, ...rest}) => {
+	render: ({children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;
