@@ -1,5 +1,8 @@
 import React from 'react';
+import Button from '@enact/moonstone/Button';
+import ContexturePopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
 import GridListImageItem from '@enact/moonstone/GridListImageItem';
+import Item from '@enact/moonstone/Item';
 import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
@@ -9,12 +12,6 @@ import {storiesOf} from '@storybook/react';
 
 import {boolean, number, select} from '../../src/enact-knobs';
 import {action, mergeComponentMetadata} from '../../src/utils';
-
-// *************************************************
-import {Panel, Header} from '@enact/moonstone/Panels';
-import Button from '@enact/moonstone/Button';
-import ContexturePopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
-import Item from '@enact/moonstone/Item';
 
 
 const Config = mergeComponentMetadata('VirtualGridList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
@@ -67,7 +64,6 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
-// *************************************************
 let itemList = [];
 for (let i = 0; i < 60; i++) {
 	itemList.push('item' + i);
@@ -118,12 +114,7 @@ class MyVirtualList extends React.Component {
 	}
 }
 
-
-
-
-
-// **************************************************
-class Sample extends React.Component {
+class ButtonAndVirtualGridList extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
@@ -151,10 +142,8 @@ class Sample extends React.Component {
 
 	render () {
 		return (
-			<Panel>
-				<Header title="test" />
+			<div>
 				<ContexturePopupButton
-					small
 					open={this.state.isPopup}
 					popupComponent={this.renderPopup}
 					onClick={this.openPopup}
@@ -162,10 +151,11 @@ class Sample extends React.Component {
 					showCloseButton
 					spotlightRestrict="self-only"
 					onOpen={this.handleOpen}
+					onClose={this.closePopup}
 				>
 					CAT
 				</ContexturePopupButton>
-			</Panel>
+			</div>
 		);
 	}
 }
@@ -197,8 +187,8 @@ storiesOf('VirtualGridList', module)
 		{propTables: [Config]}
 	)
 	.add(
-		'MySample',
+		'with Button, Spotlight goes to correct target',
 		() => (
-			<Sample />
+			<ButtonAndVirtualGridList />
 		)
 	);
