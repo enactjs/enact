@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Icon` icon sizes
+- `moonstone/InputSpotlightDecorator` to not focus when Spotlight is paused
 
 ## [3.1.3] - 2019-10-09
 
