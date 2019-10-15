@@ -8,6 +8,12 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Marquee` prop `marqueeSpacing` and CSS class `spacing` to configure the spacing between the repeated content
 
+## [3.1.3] - 2019-10-09
+
+### Fixed
+
+- `ui/FloatingLayer` to be dismissable when `open` on mount
+
 ## [3.1.2] - 2019-09-30
 
 ### Fixed
