@@ -79,12 +79,12 @@ let lastIndex = 0;
 
 class MyVirtualList extends React.Component {
 	componentDidMount () {
-		// console.log('######CDM');
 		this.scrollTo({index: lastIndex, animate: false, focus: true});
 	}
 
 	closePopup (index) {
 		lastIndex = index;
+		// eslint-disable-next-line enact/prop-types
 		this.props.closePopup();
 	}
 
@@ -190,7 +190,7 @@ storiesOf('VirtualGridList', module)
 				onScrollStop={action('onScrollStop')}
 				spacing={ri.scale(number('spacing', Config, 18))}
 				spotlightDisabled={boolean('spotlightDisabled', Config, false)}
-				verticalScrollbar={select('verticaltalScrollbar', prop.scrollbarOption, Config)}
+				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
 				wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 			/>
 		),
