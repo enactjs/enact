@@ -35,7 +35,7 @@ function createResBundle (options) {
 				// Deprecated; to be removed in future
 				root: ILIB_MOONSTONE_PATH
 			},
-			basePath: ILIB_MOONSTONE_PATH
+			basePath: ILIB_MOONSTONE_PATH,
 			...options
 		};
 	}
