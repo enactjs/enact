@@ -32,8 +32,10 @@ function createResBundle (options) {
 	if (typeof ILIB_MOONSTONE_PATH !== 'undefined') {
 		opts = {
 			loadParams: {
+				// Deprecated; to be removed in future
 				root: ILIB_MOONSTONE_PATH
 			},
+			basePath: ILIB_MOONSTONE_PATH
 			...options
 		};
 	}
