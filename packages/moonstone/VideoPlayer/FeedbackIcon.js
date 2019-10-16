@@ -39,10 +39,7 @@ const FeedbackIconBase = kind({
 	},
 
 	computed: {
-		children: ({children}) => children && iconMap[children] && iconMap[children].icon,
-		className: ({children, styler}) => styler.append({
-			shrink: children === 'play' || children === 'pause'
-		})
+		children: ({children}) => children && iconMap[children] && iconMap[children].icon
 	},
 
 	render: ({children, ...rest}) => {

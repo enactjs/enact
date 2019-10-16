@@ -493,8 +493,7 @@
 @moon-video-slider-tooltip-thumbnail-border-width: 3px;
 @moon-video-slider-tooltip-thumbnail-border-radius: @moon-contextual-popup-border-radius;
 @moon-video-feedback-icon-width:                   0.5em; // The width of the icon is half of its own font size
-@moon-video-feedback-icon-font-size:               3em; // For most icons; The icon size is 3 times the nearby text font size, so the icon is big enough to visually match
-@moon-video-feedback-icon-shrunken-size:           2em; // For play and pause icons, the em value is smaller since these glyphs are larger scale than the others.
+@moon-video-feedback-icon-font-size:               2em;
 @moon-video-feedback-mini-font-family:             @moon-alt-font-family;
 @moon-video-feedback-mini-font-weight:             bold;
 @moon-video-feedback-mini-font-style:              normal;
@@ -523,3 +522,9 @@
 // Generic
 // ---------------------------------------
 @moon-translate-center: translate3d(-50%, -50%, 0);
+
+// Deprecated - Will be removed in 4.0
+// ---------------------------------------
+
+// No longer shrinking these with updated moonstone font
+@moon-video-feedback-icon-shrunken-size:           2em; // For play and pause icons, the em value is smaller since these glyphs are larger scale than the others.
