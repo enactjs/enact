@@ -100,7 +100,7 @@ class MyVirtualList extends React.Component {
 		delete props.closePopup;
 
 		return (
-			<div {...props} style={{width: '915px', height: '600px'}}>
+			<div {...props} style={{width: ri.scaleToRem(915), height: ri.scaleToRem(600)}}>
 				<VirtualGridList
 					dataSize={itemList.length}
 					itemRenderer={this.renderItem}
@@ -122,7 +122,7 @@ class ButtonAndVirtualGridList extends React.Component {
 		};
 	}
 
-	renderPopup = ({...rest}) => {
+	renderPopup = (rest) => {
 		return (
 			<MyVirtualList {...rest} closePopup={this.closePopup} />
 		);
@@ -136,10 +136,6 @@ class ButtonAndVirtualGridList extends React.Component {
 		this.setState({isPopup: false});
 	}
 
-	handleOpen = () => {
-		// console.log('onOpen');
-	}
-
 	render () {
 		return (
 			<div>
@@ -150,10 +146,9 @@ class ButtonAndVirtualGridList extends React.Component {
 					direction="right"
 					showCloseButton
 					spotlightRestrict="self-only"
-					onOpen={this.handleOpen}
 					onClose={this.closePopup}
 				>
-					CAT
+					Focus here
 				</ContexturePopupButton>
 			</div>
 		);
