@@ -106,7 +106,6 @@ class MyVirtualList extends React.Component {
 					itemRenderer={this.renderItem}
 					itemSize={{minWidth: ri.scale(285), minHeight: ri.scale(60)}}
 					direction="vertical"
-					spacing={ri.scale(0)}
 					cbScrollTo={this.getScrollTo}
 				/>
 			</div>
