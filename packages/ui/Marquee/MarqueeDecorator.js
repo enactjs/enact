@@ -352,7 +352,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeSpeed, rtl} = this.props;
+			const {children, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeSpeed, rtl} = this.props;
 
 			let forceRestartMarquee = false;
 
@@ -377,7 +377,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				prevProps.forceDirection !== forceDirection
 			) {
 				this.cancelAnimation();
-			} else if (disabled && this.isHovered && marqueeOn === 'focus' && this.sync) {
+			} else if (this.isHovered && marqueeOn === 'focus' && this.sync) {
 				this.context.enter(this);
 			}
 
@@ -460,12 +460,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {Boolean} - `true` if a possible marquee condition exists
 		 */
 		shouldStartMarquee () {
-			const {disabled, marqueeDisabled, marqueeOn} = this.props;
+			const {marqueeDisabled, marqueeOn} = this.props;
 			return !marqueeDisabled && (
 				marqueeOn === 'render' ||
 				!this.sync && (
-					(this.isFocused && marqueeOn === 'focus' && !disabled) ||
-					(this.isHovered && (marqueeOn === 'hover' || marqueeOn === 'focus' && disabled))
+					(this.isFocused && marqueeOn === 'focus') ||
+					(this.isHovered && (marqueeOn === 'hover' || marqueeOn === 'focus'))
 				)
 			);
 		}
@@ -731,7 +731,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.isFocused) {
 				this.isFocused = false;
 				if (!this.sync &&
-						!(this.isHovered && (this.props.disabled || this.props.marqueeOn === 'hover'))) {
+						!(this.isHovered && (this.props.marqueeOn === 'hover'))) {
 					this.cancelAnimation();
 				}
 			}
@@ -739,7 +739,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleEnter = (ev) => {
 			this.isHovered = true;
-			if (this.props.disabled || this.props.marqueeOn === 'hover') {
+			if (this.props.marqueeOn === 'hover') {
 				if (this.sync) {
 					this.context.enter(this);
 				} else if (!this.state.animating) {
@@ -763,7 +763,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleUnhover () {
 			this.isHovered = false;
-			if (this.props.disabled || this.props.marqueeOn === 'hover') {
+			if (this.props.marqueeOn === 'hover') {
 				if (this.sync) {
 					this.context.leave(this);
 				} else {
