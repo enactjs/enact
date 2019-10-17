@@ -110,7 +110,9 @@ const mediaIcons = [
 	'liveflagone',
 	'shuffle',
 	'sleep',
-	'notification'
+	'notification',
+	'notificationoff',
+	'checkselection'
 ];
 
 const arrowIcons = [
