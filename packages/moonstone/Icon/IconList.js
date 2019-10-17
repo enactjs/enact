@@ -122,5 +122,7 @@ export default {
 	liveflagone       : 0x0F0102,  // live_flag_one
 	shuffle           : 0x0F0103,  // shuffle
 	sleep             : 0x0F0104,  // sleep
-	notification      : 0x0F0105   // notification
+	notification      : 0x0F0105,  // notification.001
+	notificationoff   : 0x0F0106,  // notification
+	checkselection    : 0x0F0107   // notification.002
 };
