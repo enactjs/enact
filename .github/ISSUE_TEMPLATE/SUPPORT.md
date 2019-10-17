@@ -1,6 +1,6 @@
 ---
 name: 😵 Support
-about: Please use our gitter or StackOverflow
+about: Please use our Gitter or StackOverflow
 
 ---
 
