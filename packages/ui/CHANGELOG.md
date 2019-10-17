@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Marquee` to start on focus when disabled
+
 ## [3.1.3] - 2019-10-09
 
 ### Fixed
