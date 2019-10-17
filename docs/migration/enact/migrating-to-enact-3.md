@@ -21,13 +21,13 @@ Apps that use `@enact/i18n` must install `ilib` as a dependency.  This includes 
 
 #### Example
 ```bash
-npm install ilib@^14.2.0 --save
+npm install ilib@^14.4.0 --save
 ```
 webOS TV developers can optionally use an alias for `ilib` that will provide the webOS-specific locale data for local development.  It is not required as the webOS build tools will automatically provide the correct locale data at build time.  Alias support is in `npm` version `6.9.0` or greater.
 
 #### Example
 ```bash
-npm install ilib@ilib-webos-tv@^14.2.0-webostv.1 --save
+npm install ilib@ilib-webos-tv@^14.4.0-webostv.1 --save
 ```
 
 Import references using `@enact/i18n/ilib` must be updated to use `ilib`.

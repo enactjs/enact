@@ -10,6 +10,19 @@ const
 	contentSelector = `.${css.text}`;
 
 describe('Marquee', () => {
+	beforeEach(() => {
+		global.Element.prototype.getBoundingClientRect = jest.fn(() => {
+			return {
+				width: 100,
+				height: 50,
+				top: 0,
+				left: 0,
+				bottom: 0,
+				right: 0
+			};
+		});
+	});
+
 	test(
 		'should determine the correct directionality of latin text on initial render',
 		() => {
@@ -141,6 +154,44 @@ describe('Marquee', () => {
 			expect(actual).toHaveProperty('direction', expected);
 		}
 	);
+
+	test(
+		'should convert percentage values of marqueeSpacing to absolute values',
+		(done) => {
+			const subject = mount(
+				<Marquee marqueeSpacing="60%" marqueeOn="render" marqueeOnRenderDelay={10} />
+			);
+
+			setTimeout(() => {
+				subject.update();
+
+				const expected = 60;
+				const actual = subject.find(MarqueeBase).prop('spacing');
+
+				expect(actual).toBe(expected);
+				done();
+			}, 100);
+		}
+	);
+
+	test(
+		'should pass absolute values of marqueeSpacing',
+		(done) => {
+			const subject = mount(
+				<Marquee marqueeSpacing={80} marqueeOn="render" marqueeOnRenderDelay={10} />
+			);
+
+			setTimeout(() => {
+				subject.update();
+
+				const expected = 80;
+				const actual = subject.find(MarqueeBase).prop('spacing');
+
+				expect(actual).toBe(expected);
+				done();
+			}, 100);
+		}
+	);
 });
 
 
@@ -233,5 +284,38 @@ describe('MarqueeBase', () => {
 
 		const actual = subject.childAt(0).prop('style');
 		expect(actual).toHaveProperty('left');
+	});
+
+	test('should duplicate from content when promoted and a non-zero distance', () => {
+		const subject = shallow(
+			<MarqueeBase willAnimate distance={100}>
+				Text
+			</MarqueeBase>
+		);
+
+		const actual = subject.text();
+		expect(actual).toBe('TextText');
+	});
+
+	test('should not duplicate from content when promoted and a zero distance', () => {
+		const subject = shallow(
+			<MarqueeBase willAnimate distance={0}>
+				Text
+			</MarqueeBase>
+		);
+
+		const actual = subject.text();
+		expect(actual).toBe('Text');
+	});
+
+	test('should not duplicate from content when not promoted and a non-zero distance', () => {
+		const subject = shallow(
+			<MarqueeBase distance={100}>
+				Text
+			</MarqueeBase>
+		);
+
+		const actual = subject.text();
+		expect(actual).toBe('Text');
 	});
 });
