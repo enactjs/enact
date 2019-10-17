@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Changed
+
+- `ilib` peer dependency to `^14.4.0 || ^14.4.0-webostv1` baseline to target support for caching improvements.
+
 ### Fixed
 
 - `moonstone/Icon` icon sizes
