@@ -10,6 +10,8 @@
 	// -webkit-box-orient: block-axis;
 	// -webkit-line-clamp: 1;
 
+	--ui-marquee-spacing: 0;
+
 	width: auto;
 	white-space: pre !important;
 	overflow: hidden;
@@ -27,10 +29,16 @@
 
 		&.willAnimate {
 			will-change: left, right;
+			overflow: visible;
 		}
 
 		&.animate {
-			overflow: visible;
+			/* Public Class Name */
+		}
+
+		.spacing {
+			display: inline-block;
+			width: calc(1px * var(--ui-marquee-spacing, 0));
 		}
 	}
 
