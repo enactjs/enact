@@ -108,10 +108,12 @@ EnyoLoader.prototype._pathjoin = function (_root, subpath) {
  *
  * @returns {Promise}
  */
-EnyoLoader.prototype._loadFilesAsync = function (path, params, cache) {
+EnyoLoader.prototype._loadFilesAsync = function (path, params, cache, rootPath) {
 	let _root = iLibResources;
-	if (params && typeof params.root !== 'undefined') {
-		_root = params.root;
+	if (typeof rootPath !== 'undefined') {
+		_root = rootPath;
+	} else if (params && typeof params.root !== 'undefined') {
+		_root = params.root; // Deprecated; to be removed in future
 	}
 	let cacheItem = cache.data.shift(),
 		url;
@@ -191,8 +193,13 @@ EnyoLoader.prototype._validateCache = function () {
 	this._cacheValidated = true;
 };
 
-EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
-	let _root = (params && typeof params.root !== 'undefined') ? params.root : iLibResources;
+EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPath) {
+	let _root = iLibResources;
+	if (typeof rootPath !== 'undefined') {
+		_root = rootPath;
+	} else if (params && typeof params.root !== 'undefined') {
+		_root = params.root; // Deprecated; to be removed in future
+	}
 	let cache = {data: this._loadFilesCache(_root, paths)};
 	if (sync) {
 		let ret = [];
