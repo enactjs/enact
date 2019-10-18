@@ -2,11 +2,9 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
-## [unreleased]
+## [3.2.0] - 2019-10-18
 
-### Changed
-
-- `ilib` dependency to `^14.4.0` baseline to target support for caching improvements.
+No significant changes.
 
 ## [3.1.3] - 2019-10-09
 

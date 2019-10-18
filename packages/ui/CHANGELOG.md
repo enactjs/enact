@@ -2,15 +2,15 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
-
-### Changed
-
-- `ui/Marquee` to have a wrap-around effect
+## [3.2.0] - 2019-10-18
 
 ### Added
 
 - `ui/Marquee` prop `marqueeSpacing` and CSS class `spacing` to configure the spacing between the repeated content
+
+### Changed
+
+- `ui/Marquee` to have a wrap-around effect
 
 ### Fixed
 
