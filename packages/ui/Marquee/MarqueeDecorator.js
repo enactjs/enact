@@ -730,8 +730,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forwardBlur(ev, this.props);
 			if (this.isFocused) {
 				this.isFocused = false;
-				if (!this.sync &&
-						!(this.isHovered && (this.props.disabled || this.props.marqueeOn === 'hover'))) {
+				if (!this.sync && !(this.isHovered && this.props.marqueeOn === 'hover')) {
 					this.cancelAnimation();
 				}
 			}
@@ -739,7 +738,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleEnter = (ev) => {
 			this.isHovered = true;
-			if (this.props.disabled || this.props.marqueeOn === 'hover') {
+			if (this.props.marqueeOn === 'hover') {
 				if (this.sync) {
 					this.context.enter(this);
 				} else if (!this.state.animating) {
@@ -763,7 +762,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleUnhover () {
 			this.isHovered = false;
-			if (this.props.disabled || this.props.marqueeOn === 'hover') {
+			if (this.props.marqueeOn === 'hover') {
 				if (this.sync) {
 					this.context.leave(this);
 				} else {
