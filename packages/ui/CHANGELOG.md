@@ -12,6 +12,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Marquee` prop `marqueeSpacing` and CSS class `spacing` to configure the spacing between the repeated content
 
+### Fixed
+
+- `ui/Marquee` to start on focus when disabled
+
 ## [3.1.3] - 2019-10-09
 
 ### Fixed
