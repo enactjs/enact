@@ -100,7 +100,7 @@ const MarqueeBase = kind({
 		/**
 		 * Text overflow setting. Either `'clip'` or `'ellipsis'`
 		 *
-		 * @type {('clip','ellipsis')}
+		 * @type {('clip'|'ellipsis')}
 		 * @public
 		 */
 		overflow: PropTypes.oneOf(['clip', 'ellipsis']),
