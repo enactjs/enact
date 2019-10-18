@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [3.2.0] - 2019-10-18
 
 ### Added
 
@@ -10,7 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `ilib` peer dependency to `^14.4.0 || ^14.4.0-webostv1` baseline to target support for caching improvements.
+- `ilib` peer dependency to `^14.4.0 || ^14.4.0-webostv1` baseline to target support for caching improvements
 
 ### Fixed
 

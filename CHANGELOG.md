@@ -2,6 +2,24 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.2.0] - 2019-10-18
+
+### Added
+
+- `moonstone/Icon` icons
+- `ui/Marquee` prop `marqueeSpacing` and CSS class `spacing` to configure the spacing between the repeated content
+
+### Changed
+
+- `ilib` peer dependency to `^14.4.0 || ^14.4.0-webostv1` baseline to target support for caching improvements
+- `ui/Marquee` to have a wrap-around effect
+
+### Fixed
+
+- `moonstone/Icon` icon sizes
+- `moonstone/InputSpotlightDecorator` to not focus when Spotlight is paused
+- `ui/Marquee` to start on focus when disabled
+
 ## [3.1.3] - 2019-10-09
 
 ### Added
