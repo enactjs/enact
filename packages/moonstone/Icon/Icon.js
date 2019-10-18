@@ -185,6 +185,8 @@ const IconBase = kind({
  * shuffle
  * sleep
  * notification
+ * notificationoff
+ * checkselection
  * ```
  *
  * @name iconList

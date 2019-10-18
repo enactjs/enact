@@ -2,6 +2,21 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [3.2.0] - 2019-10-18
+
+### Added
+
+- `moonstone/Icon` icons
+
+### Changed
+
+- `ilib` peer dependency to `^14.4.0 || ^14.4.0-webostv1` baseline to target support for caching improvements
+
+### Fixed
+
+- `moonstone/Icon` icon sizes
+- `moonstone/InputSpotlightDecorator` to not focus when Spotlight is paused
+
 ## [3.1.3] - 2019-10-09
 
 ### Added

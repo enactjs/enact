@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import shallowEqual from 'recompose/shallowEqual';
 
+import {scale} from '../resolution';
 import {ResizeContext} from '../Resizable';
 
 import MarqueeBase from './MarqueeBase';
@@ -259,6 +260,21 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeResetDelay: PropTypes.number,
 
 			/**
+			 * Amount of spacing between the instances of the content when animating.
+			 *
+			 * May either be a number indicating the number of pixels or a string indicating the
+			 * percentage relative to the width of the component.
+			 *
+			 * *Note:* When using a number, the value should be based on 1920x1080 display and
+			 * will be scaled automatically for the current resolution using {@link ui/resolution}.
+			 *
+			 * @type {String | Number}
+			 * @default '50%'
+			 * @public
+			 */
+			marqueeSpacing: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+			/**
 			 * Rate of marquee measured in pixels/second.
 			 *
 			 * @type {Number}
@@ -291,6 +307,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeOn: 'focus',
 			marqueeOnRenderDelay: 1000,
 			marqueeResetDelay: 1000,
+			marqueeSpacing: '50%',
 			marqueeSpeed: 60
 		}
 
@@ -335,13 +352,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpeed, rtl} = this.props;
+			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeSpeed, rtl} = this.props;
 
 			let forceRestartMarquee = false;
 
 			if (
 				prevProps.locale !== locale ||
 				prevProps.rtl !== rtl ||
+				prevProps.marqueeSpacing !== marqueeSpacing ||
 				!shallowEqual(prevProps.children, children) ||
 				(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
 			) {
@@ -458,6 +476,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		invalidateMetrics () {
+			this.spacing = 0;
 			// Null distance is the special value to allow recalculation
 			this.distance = null;
 			// Assume the marquee does not fit until calculations show otherwise
@@ -478,7 +497,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
 			if (node && this.distance == null && !this.props.marqueeDisabled) {
-				this.distance = this.calculateDistance(node);
+				const {width} = node.getBoundingClientRect();
+				const {scrollWidth} = node;
+
+				this.spacing = this.getSpacing(width);
+				this.distance = this.calculateDistance(width, scrollWidth, this.spacing);
 				this.contentFits = !this.shouldAnimate(this.distance);
 
 				const overflow = this.calculateTextOverflow(this.distance);
@@ -491,13 +514,19 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		/*
 		 * Calculates the distance the marquee must travel to reveal all of the content
 		 *
-		 * @param	{DOMNode}	node	DOM Node to measure
-		 * @returns	{Number}			Distance to travel in pixels
+		 * @param	{Number}  width        Width of the node
+		 * @param	{Number}  scrollWidth  Width of the node if it were unbounded
+		 * @param	{Number}  spacing      Horizontal spacing
+		 * @returns	{Number}               Distance to travel in pixels
 		 */
-		calculateDistance (node) {
-			const rect = node.getBoundingClientRect();
-			const distance = Math.abs(node.scrollWidth - rect.width);
-			return distance;
+		calculateDistance (width, scrollWidth, spacing) {
+			const overflow = scrollWidth - width;
+
+			if (this.shouldAnimate(overflow)) {
+				return scrollWidth + spacing;
+			}
+
+			return 0;
 		}
 
 		/*
@@ -514,6 +543,21 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		calculateTextOverflow (distance) {
 			return distance < 1 ? 'clip' : 'ellipsis';
+		}
+
+		getSpacing (width) {
+			const {marqueeSpacing} = this.props;
+
+			if (typeof marqueeSpacing === 'string') {
+				if (/^\d+(\.\d+)?%$/.test(marqueeSpacing)) {
+					return width * Number.parseFloat(marqueeSpacing) / 100;
+				}
+
+				// warning for invalid string value;
+				return 0;
+			}
+
+			return scale(marqueeSpacing);
 		}
 
 		/*
@@ -686,8 +730,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forwardBlur(ev, this.props);
 			if (this.isFocused) {
 				this.isFocused = false;
-				if (!this.sync &&
-						!(this.isHovered && (this.props.disabled || this.props.marqueeOn === 'hover'))) {
+				if (!this.sync && !(this.isHovered && this.props.marqueeOn === 'hover')) {
 					this.cancelAnimation();
 				}
 			}
@@ -695,7 +738,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleEnter = (ev) => {
 			this.isHovered = true;
-			if (this.props.disabled || this.props.marqueeOn === 'hover') {
+			if (this.props.marqueeOn === 'hover') {
 				if (this.sync) {
 					this.context.enter(this);
 				} else if (!this.state.animating) {
@@ -719,7 +762,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleUnhover () {
 			this.isHovered = false;
-			if (this.props.disabled || this.props.marqueeOn === 'hover') {
+			if (this.props.marqueeOn === 'hover') {
 				if (this.sync) {
 					this.context.leave(this);
 				} else {
@@ -753,7 +796,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const marqueeOnHover = marqueeOn === 'hover';
 			const marqueeOnRender = marqueeOn === 'render';
 
-			if (marqueeOnFocus && !disabled) {
+			if (marqueeOnFocus) {
 				rest[focus] = this.handleFocus;
 			}
 
@@ -773,6 +816,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.marqueeDelay;
 			delete rest.marqueeDisabled;
 			delete rest.marqueeOnRenderDelay;
+			delete rest.marqueeSpacing;
 			delete rest.marqueeResetDelay;
 			delete rest.marqueeSpeed;
 			delete rest.remeasure;
@@ -788,6 +832,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						distance={this.distance}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}
+						spacing={this.spacing}
 						rtl={this.state.rtl}
 						speed={marqueeSpeed}
 						willAnimate={this.state.promoted}
@@ -809,6 +854,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.marqueeDisabled;
 			delete props.marqueeOn;
 			delete props.marqueeOnRenderDelay;
+			delete props.marqueeSpacing;
 			delete props.marqueeResetDelay;
 			delete props.marqueeSpeed;
 			delete props.remeasure;
