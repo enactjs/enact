@@ -1,5 +1,8 @@
 import React from 'react';
+import Button from '@enact/moonstone/Button';
+import ContexturePopupDecorator from '@enact/moonstone/ContextualPopupDecorator';
 import GridListImageItem from '@enact/moonstone/GridListImageItem';
+import Item from '@enact/moonstone/Item';
 import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
@@ -9,6 +12,7 @@ import {storiesOf} from '@storybook/react';
 
 import {boolean, number, select} from '../../src/enact-knobs';
 import {action, mergeComponentMetadata} from '../../src/utils';
+
 
 const Config = mergeComponentMetadata('VirtualGridList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
 
@@ -60,6 +64,96 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
+let itemList = [];
+for (let i = 0; i < 60; i++) {
+	itemList.push('item' + i);
+}
+
+const ContexturePopupButton = ContexturePopupDecorator(Button);
+
+let lastIndex = 0;
+
+class MyVirtualList extends React.Component {
+	componentDidMount () {
+		this.scrollTo({index: lastIndex, animate: false, focus: true});
+	}
+
+	closePopup (index) {
+		lastIndex = index;
+		// eslint-disable-next-line enact/prop-types
+		this.props.closePopup();
+	}
+
+	renderItem = ({index, ...rest}) => {
+		return (
+			/* eslint-disable react/jsx-no-bind */
+			<Item key={index} onClick={() => this.closePopup(index)} {...rest}>{itemList[index]}</Item>
+		);
+	};
+
+	getScrollTo = (scrollTo) => {
+		this.scrollTo = scrollTo;
+	}
+
+	render () {
+		let props = {...this.props};
+		delete props.closePopup;
+
+		return (
+			<div {...props} style={{width: ri.scaleToRem(915), height: ri.scaleToRem(600)}}>
+				<VirtualGridList
+					dataSize={itemList.length}
+					itemRenderer={this.renderItem}
+					itemSize={{minWidth: ri.scale(285), minHeight: ri.scale(60)}}
+					direction="vertical"
+					cbScrollTo={this.getScrollTo}
+				/>
+			</div>
+		);
+	}
+}
+
+class ButtonAndVirtualGridList extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			isPopup: false
+		};
+	}
+
+	renderPopup = (rest) => {
+		return (
+			<MyVirtualList {...rest} closePopup={this.closePopup} />
+		);
+	}
+
+	openPopup = () => {
+		this.setState({isPopup: true});
+	}
+
+	closePopup = () => {
+		this.setState({isPopup: false});
+	}
+
+	render () {
+		return (
+			<div>
+				<ContexturePopupButton
+					open={this.state.isPopup}
+					popupComponent={this.renderPopup}
+					onClick={this.openPopup}
+					direction="right"
+					showCloseButton
+					spotlightRestrict="self-only"
+					onClose={this.closePopup}
+				>
+					Focus here
+				</ContexturePopupButton>
+			</div>
+		);
+	}
+}
+
 storiesOf('VirtualGridList', module)
 	.add(
 		'Horizontal VirtualGridList',
@@ -80,9 +174,15 @@ storiesOf('VirtualGridList', module)
 				onScrollStop={action('onScrollStop')}
 				spacing={ri.scale(number('spacing', Config, 18))}
 				spotlightDisabled={boolean('spotlightDisabled', Config, false)}
-				verticalScrollbar={select('verticaltalScrollbar', prop.scrollbarOption, Config)}
+				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
 				wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 			/>
 		),
 		{propTables: [Config]}
+	)
+	.add(
+		'with Button, Spotlight goes to correct target',
+		() => (
+			<ButtonAndVirtualGridList />
+		)
 	);
