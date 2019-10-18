@@ -178,6 +178,18 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			children: PropTypes.node,
 
 			/**
+			 * Passed through to the wrapped component.
+			 *
+			 * Does not affect Marquee behavior except that components that are `marqueeOn="focus"`
+			 * will be treated as if they were `marqueeOn="hover"`, to allow disabled (and thus,
+			 * unfocusable) components to marquee.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			disabled: PropTypes.bool,
+
+			/**
 			 * Forces the `direction` of the marquee.
 			 *
 			 * Valid values are `'rtl'` and `'ltr'`. This includes non-text elements as well.
@@ -775,6 +787,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {
 				alignment,
 				children,
+				disabled,
 				marqueeOn,
 				marqueeSpeed,
 				...rest
@@ -811,7 +824,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.rtl;
 
 			return (
-				<Wrapped {...rest} onBlur={this.handleBlur}>
+				<Wrapped {...rest} onBlur={this.handleBlur} disabled={disabled}>
 					<MarqueeComponent
 						alignment={alignment}
 						animating={this.state.animating}
