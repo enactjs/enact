@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact i18n module, newest chan
 
 ### Changed
 
-- `ilib` peer dependency to `^14.4.0 || ^14.4.0-webostv1` baseline to target support for caching improvements.
+- `ilib` peer dependency to `^14.4.0 || ^14.4.0-webostv1` baseline to target support for caching improvements
 
 ## [3.1.3] - 2019-10-09
 

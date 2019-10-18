@@ -11,7 +11,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Changed
 
-- `ilib` peer dependency to `^14.4.0 || ^14.4.0-webostv1` baseline to target support for caching improvements.
+- `ilib` peer dependency to `^14.4.0 || ^14.4.0-webostv1` baseline to target support for caching improvements
 - `ui/Marquee` to have a wrap-around effect
 
 ### Fixed
