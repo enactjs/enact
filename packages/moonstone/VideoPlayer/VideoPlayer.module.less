@@ -104,8 +104,9 @@
 						}
 
 						.moon-locale-non-latin({
-							bottom: 5px;
-							line-height: @moon-non-latin-header-line-height;
+							// The font-size .times is the same as .title in non-latin locales so no
+							// vertical adjustment is required to align their baselines
+							bottom: 0px;
 						});
 					}
 
