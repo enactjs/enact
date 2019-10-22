@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/VirtualList.VirtualGridList` and `moonstone/VirtualList.VirtualList` not to scroll to horizontally wrong position via 5-way navigation in RTL languages
+
 ## [3.2.0] - 2019-10-18
 
 ### Added
