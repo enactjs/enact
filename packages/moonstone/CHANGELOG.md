@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/EditableIntegerPicker` prop `unit` to set the aria-valuetext after value
+- `moonstone/EditableIntegerPicker` to include the `unit` in the ARIA read out
 
 ## [3.2.0] - 2019-10-18
 
