@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/VirtualList.VirtualList` to render different sized items properly in RTL locales
+- `ui/VirtualList.VirtualList` item rendering in RTL locales
 
 ## [3.2.0] - 2019-10-18
 
