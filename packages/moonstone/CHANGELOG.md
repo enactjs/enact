@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/EditableIntegerPicker` to include the `unit` in the ARIA read out
+
 ## [3.2.0] - 2019-10-18
 
 ### Added
