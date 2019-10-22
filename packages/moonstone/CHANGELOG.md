@@ -16,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Icon` icon sizes
 - `moonstone/InputSpotlightDecorator` to not focus when Spotlight is paused
+- `moonstone/EditableIntegerPicker` prop `unit` to set the aria-valuetext after value
 
 ## [3.1.3] - 2019-10-09
 

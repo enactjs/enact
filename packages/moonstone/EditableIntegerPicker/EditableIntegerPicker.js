@@ -301,11 +301,12 @@ const EditableIntegerPickerBase = kind({
 				</PickerItem>
 			);
 		},
+		ariaLabel: ({unit, value}) => unit ? `${value} ${unit}` : null,
 		className: ({className, editMode, styler}) => editMode ? styler.append({editMode}) : className,
 		disabled: ({disabled, max, min}) => min >= max ? true : disabled
 	},
 
-	render: ({pickerRef, ...rest}) => {
+	render: ({ariaLabel, pickerRef, ...rest}) => {
 		delete rest.editMode;
 		delete rest.inputRef;
 		delete rest.onInputBlur;
@@ -314,7 +315,7 @@ const EditableIntegerPickerBase = kind({
 		delete rest.unit;
 
 		return (
-			<Picker {...rest} index={0} ref={pickerRef} />
+			<Picker aria-valuetext={ariaLabel} {...rest} index={0} ref={pickerRef} />
 		);
 	}
 });
