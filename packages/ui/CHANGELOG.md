@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/VirtualList.VirtualList` item rendering in RTL locales
+
 ## [3.2.0] - 2019-10-18
 
 ### Added

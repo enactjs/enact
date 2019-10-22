@@ -913,16 +913,17 @@ const VirtualListBaseFactory = (type) => {
 		// For individually sized item
 		applyItemPositionToDOMElement (index) {
 			const
-				{direction} = this.props,
+				{direction, rtl} = this.props,
 				{numOfItems} = this.state,
 				{itemPositions} = this,
 				childNode = this.itemContainerRef.current.children[index % numOfItems];
 
 			if (childNode && itemPositions[index]) {
+				const position = itemPositions[index].position;
 				if (direction === 'vertical') {
-					childNode.style.transform = `translate3d(0, ${itemPositions[index].position}px, 0)`;
+					childNode.style.transform = `translate3d(0, ${position}px, 0)`;
 				} else {
-					childNode.style.transform = `translate3d(${itemPositions[index].position}px, 0, 0)`;
+					childNode.style.transform = `translate3d(${position * (rtl ? -1 : 1)}px, 0, 0)`;
 				}
 			}
 		}
