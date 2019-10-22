@@ -14,8 +14,11 @@
  * @exports GridListImageItemDecorator
  */
 
+import classNames from 'classnames';
 import compose from 'ramda/src/compose';
 import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
+import {CellBase} from '@enact/ui/Layout';
+import ComponentOverride from '@enact/ui/ComponentOverride';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -24,6 +27,7 @@ import Spottable from '@enact/spotlight/Spottable';
 import Icon from '../Icon';
 import {ImageBase as Image} from '../Image';
 import {Marquee, MarqueeController} from '../Marquee';
+import ReplaceableOnFocus from '../internal/ReplaceableOnFocus';
 import Skinnable from '../Skinnable';
 
 import componentCss from './GridListImageItem.module.less';
@@ -34,9 +38,13 @@ const
 	'9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
 	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
 	'4NCg==',
-	captionComponent = (props) => (
+	marqueeComponent = (props) => (
 		<Marquee alignment="center" marqueeOn="hover" {...props} />
-	);
+	),
+	cellComponent = ({className, ...rest}) => {
+		const classes = classNames(className, componentCss.lightweight);
+		return (<CellBase {...rest} className={classes} />);
+	};
 
 /**
  * A Moonstone styled base component for [GridListImageItem]{@link moonstone/GridListImageItem.GridListImageItem}.
@@ -132,22 +140,20 @@ const GridListImageItemBase = kind({
 		publicClassNames: ['gridListImageItem', 'icon', 'image', 'selected', 'caption', 'subCaption']
 	},
 
-	render: ({css, selectionOverlay, ...rest}) => {
+	render: ({captionComponent, css, selectionOverlay, ...rest}) => {
 		if (selectionOverlay) {
 			rest['role'] = 'checkbox';
 			rest['aria-checked'] = rest.selected;
 		}
 
-		return (
-			<UiGridListImageItem
-				{...rest}
-				captionComponent={captionComponent}
-				css={css}
-				iconComponent={Icon}
-				imageComponent={Image}
-				selectionOverlay={selectionOverlay}
-			/>
-		);
+		return UiGridListImageItem.inline({
+			...rest,
+			captionComponent,
+			css,
+			iconComponent: Icon,
+			imageComponent: Image,
+			selectionOverlay
+		});
 	}
 });
 
@@ -188,7 +194,28 @@ const GridListImageItemDecorator = compose(
  * @ui
  * @public
  */
-const GridListImageItem = GridListImageItemDecorator(GridListImageItemBase);
+const GridListImageItemFullBase = GridListImageItemDecorator(GridListImageItemBase);
+
+const GridListImageItemLightDecorator = compose(
+	Spottable,
+	Skinnable
+);
+const GridListImageItemLightBase = GridListImageItemLightDecorator(GridListImageItemBase);
+
+const GridListImageItemLight = (props) => (
+	<ComponentOverride component={GridListImageItemLightBase} captionComponent={cellComponent} {...props} />
+);
+const GridListImageItemFull = (props) => (
+	<ComponentOverride component={GridListImageItemFullBase} captionComponent={marqueeComponent} {...props} />
+);
+
+const GridListImageItem = (props) => (
+	<ReplaceableOnFocus
+		{...props}
+		initialComponent={GridListImageItemLight}
+		updatedComponent={GridListImageItemFull}
+	/>
+);
 
 export default GridListImageItem;
 export {
