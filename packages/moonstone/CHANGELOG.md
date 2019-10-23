@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [3.2.1] - 2019-10-22
+
+### Fixed
+
+- `moonstone/VirtualList` horizontal scrolling in RTL locales
+- `moonstone/EditableIntegerPicker` to include the `unit` in the ARIA read out
+
 ## [3.2.0] - 2019-10-18
 
 ### Added
