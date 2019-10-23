@@ -132,7 +132,7 @@ import ForwardRef from '../ForwardRef';
 
 import {Cell, CellBase, CellDecorator, toFlexAlign} from './Cell';
 
-import css from './Layout.module.less';
+import componentCss from './Layout.module.less';
 
 const wrapInCells = function ({cellProps = [], children = []}) {
 	// No children, bail
@@ -246,6 +246,8 @@ const LayoutBase = kind({
 		 */
 		componentRef: PropTypes.func,
 
+		css: PropTypes.object,
+
 		/**
 		 * Allows this `Layout` to have following siblings drawn on the same line as itself
 		 * instead of carving out the entire horizontal space for itself.
@@ -289,7 +291,7 @@ const LayoutBase = kind({
 	},
 
 	styles: {
-		css,
+		css: componentCss,
 		className: 'layout'
 	},
 
@@ -320,7 +322,7 @@ const LayoutBase = kind({
 		}
 	},
 
-	render: ({cellProps, children, component: Component, componentRef, ...rest}) => {
+	render: ({css, cellProps, children, component: Component, componentRef, ...rest}) => {
 		delete rest.align;
 		delete rest.inline;
 		delete rest.orientation;
@@ -328,7 +330,7 @@ const LayoutBase = kind({
 
 		children = wrapInCells({cellProps, children});
 
-		return <Component ref={componentRef} {...rest}>{children}</Component>;
+		return <Component ref={componentRef} {...rest} css={(typeof Component === 'string' ? null : css)}>{children}</Component>;
 	}
 });
 

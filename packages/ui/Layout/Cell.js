@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import ForwardRef from '../ForwardRef';
 import ri from '../resolution';
 
-import css from './Layout.module.less';
+import componentCss from './Layout.module.less';
 
 const toFlexAlign = (align) => (
 	align === 'end' && 'flex-end' ||
@@ -68,6 +68,8 @@ const CellBase = kind({
 		 */
 		componentRef: PropTypes.func,
 
+		css: PropTypes.object,
+
 		/**
 		 * Sizes `Cell` to its contents.
 		 *
@@ -111,7 +113,7 @@ const CellBase = kind({
 	},
 
 	styles: {
-		css,
+		css: componentCss,
 		className: 'cell'
 	},
 
@@ -139,12 +141,12 @@ const CellBase = kind({
 		}
 	},
 
-	render: ({component: Component, componentRef, ...rest}) => {
+	render: ({component: Component, componentRef, css, ...rest}) => {
 		delete rest.align;
 		delete rest.shrink;
 		delete rest.size;
 
-		return <Component ref={componentRef} {...rest} />;
+		return <Component ref={componentRef} {...rest} css={(typeof Component === 'string' ? null : css)} />;
 	}
 });
 
