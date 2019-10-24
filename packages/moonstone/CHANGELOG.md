@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [3.2.2] - 2019-10-24
+
+### Fixed
+
+- `moonstone/Marquee` text shake when restarting
+
 ## [3.2.1] - 2019-10-22
 
 ### Fixed
