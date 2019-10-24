@@ -550,14 +550,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (typeof marqueeSpacing === 'string') {
 				if (/^\d+(\.\d+)?%$/.test(marqueeSpacing)) {
-					return width * Number.parseFloat(marqueeSpacing) / 100;
+					return Math.floor(width * Number.parseFloat(marqueeSpacing) / 100);
 				}
 
 				// warning for invalid string value;
 				return 0;
 			}
 
-			return scale(marqueeSpacing);
+			return Math.floor(scale(marqueeSpacing));
 		}
 
 		/*
