@@ -3,9 +3,38 @@ import {forProp, forward, handle, stop} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Pure from '../internal/Pure';
+
 import componentCss from './Marquee.module.less';
 
 const isEventSource = (ev) => ev.target === ev.currentTarget;
+
+const SpacingBase = kind({
+	name: 'Spacing',
+
+	handlers: {
+		ref: (node, props) => {
+			if (!node) return;
+
+			const root = node.parentNode;
+			new IntersectionObserver(function (entries, observer) {
+				const {left} = entries[0].boundingClientRect;
+				const offset = Math.round(left) - left;
+				node.style.setProperty('--ui-marquee-offset', offset);
+
+				observer.disconnect();
+			}, {root}).observe(node);
+		}
+	},
+
+	render: (props) => {
+		return (
+			<div {...props} />
+		);
+	}
+});
+
+const Spacing = Pure(SpacingBase);
 
 /**
  * Marquees the children of the component.
@@ -179,6 +208,7 @@ const MarqueeBase = kind({
 			const style = {
 				'--ui-marquee-spacing': spacing,
 				direction,
+				[sideProperty]: 0,
 				textAlign: alignment,
 				textOverflow: overflow
 			};
@@ -188,8 +218,6 @@ const MarqueeBase = kind({
 
 				style[sideProperty] = `${distance}px`;
 				style.transitionDuration = `${duration}s`;
-			} else {
-				style[sideProperty] = 0;
 			}
 
 			return style;
@@ -199,7 +227,7 @@ const MarqueeBase = kind({
 		}
 	},
 
-	render: ({children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, ...rest}) => {
+	render: ({children, clientClassName, clientRef, clientStyle, css, io, duplicate, onMarqueeComplete, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;
@@ -218,13 +246,13 @@ const MarqueeBase = kind({
 					style={clientStyle}
 					onTransitionEnd={onMarqueeComplete}
 				>
-					{children}
 					{duplicate ? (
 						<React.Fragment>
-							<div className={css.spacing} />
 							{children}
+							<Spacing className={css.spacing} />
 						</React.Fragment>
 					) : null}
+					{children}
 				</div>
 			</div>
 		);
