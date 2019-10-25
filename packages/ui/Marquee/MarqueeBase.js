@@ -208,7 +208,6 @@ const MarqueeBase = kind({
 			const style = {
 				'--ui-marquee-spacing': spacing,
 				direction,
-				[sideProperty]: 0,
 				textAlign: alignment,
 				textOverflow: overflow
 			};
@@ -218,6 +217,8 @@ const MarqueeBase = kind({
 
 				style[sideProperty] = `${distance}px`;
 				style.transitionDuration = `${duration}s`;
+			} else {
+				style[sideProperty] = 0;
 			}
 
 			return style;
@@ -227,7 +228,7 @@ const MarqueeBase = kind({
 		}
 	},
 
-	render: ({children, clientClassName, clientRef, clientStyle, css, io, duplicate, onMarqueeComplete, ...rest}) => {
+	render: ({children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;
@@ -246,13 +247,13 @@ const MarqueeBase = kind({
 					style={clientStyle}
 					onTransitionEnd={onMarqueeComplete}
 				>
+					{children}
 					{duplicate ? (
 						<React.Fragment>
-							{children}
 							<Spacing className={css.spacing} />
+							{children}
 						</React.Fragment>
 					) : null}
-					{children}
 				</div>
 			</div>
 		);
