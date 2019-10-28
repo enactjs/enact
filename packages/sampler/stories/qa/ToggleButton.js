@@ -25,8 +25,8 @@ storiesOf('ToggleButton', module)
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, Config)}
 				disabled={boolean('disabled', Config)}
 				size={select('size', ['small', 'large'], Config)}
-				toggleOnLabel={text('toggleOnLabel', Config, 'Loooooooooooooooooog On')}
-				toggleOffLabel={text('toggleOffLabel', Config, 'Loooooooooooooooooog Off')}
+				toggleOnLabel={text('toggleOnLabel', Config, 'I am an extremely and particularly very long button with label On')}
+				toggleOffLabel={text('toggleOffLabel', Config, 'I am an extremely and particularly very long button with label Off')}
 			/>
 		)
 	)
