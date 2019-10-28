@@ -19,8 +19,6 @@ const list = [
 	{children: 'hello 3', 'key': 'key3', 'aria-label': 'aria 3'}
 ];
 
-const list2 = ['test1', 'test2', 'test3'];
-
 class AutoDismissDropdown extends React.Component {
 	constructor (props) {
 		super(props);
