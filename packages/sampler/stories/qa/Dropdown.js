@@ -1,5 +1,6 @@
 import Dropdown, {DropdownBase} from '@enact/moonstone/Dropdown';
 import Button, {ButtonBase} from '@enact/moonstone/Button';
+import Heading from '@enact/moonstone/Heading';
 import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -17,6 +18,35 @@ const list = [
 	{children: 'hello 2', 'key': 'key2', 'aria-label': 'aria 2', disabled: true},
 	{children: 'hello 3', 'key': 'key3', 'aria-label': 'aria 3'}
 ];
+
+const list2 = ['test1', 'test2', 'test3'];
+
+class AutoDismissDropdown extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			open: true
+		};
+	}
+
+	handleClose = () => {
+		this.setState({open: false});
+	}
+
+	render () {
+		return (
+			<div>
+				<Heading>Click in the blank area of the viewport to dismiss the Dropdown</Heading>
+				<Dropdown
+					onClose={this.handleClose}
+					open={this.state.open} // initial value is true
+				>
+					{['test1', 'test2', 'test3']}
+				</Dropdown>
+			</div>
+		);
+	}
+}
 
 storiesOf('Dropdown', module)
 	.add(
@@ -118,5 +148,10 @@ storiesOf('Dropdown', module)
 					{list}
 				</Dropdown>
 			</div>
+		)
+	).add(
+		'with auto dismiss',
+		() => (
+			<AutoDismissDropdown />
 		)
 	);
