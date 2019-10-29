@@ -211,7 +211,7 @@ const MarqueeBase = kind({
 			text: true,
 			willAnimate
 		}),
-		clientStyle: ({alignment, animating, distance, overflow, spacing, rtl, speed}) => {
+		clientStyle: ({alignment, animating, distance, overflow, rtl, spacing, speed}) => {
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
 			const direction = rtl ? 'rtl' : 'ltr';
