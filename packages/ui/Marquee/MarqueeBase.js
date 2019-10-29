@@ -21,10 +21,10 @@ const Spacing = kind({
 
 	handlers: {
 		ref: (node) => {
-			if (!node) return;
+			if (!node || !global.IntersectionObserver) return;
 
 			const root = node.parentNode;
-			new IntersectionObserver(function (entries, observer) {
+			new global.IntersectionObserver(function (entries, observer) {
 				const {left} = entries[0].boundingClientRect;
 				const offset = Math.round(left) - left;
 				node.style.setProperty('--ui-marquee-offset', offset);
