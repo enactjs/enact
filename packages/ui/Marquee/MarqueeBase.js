@@ -3,17 +3,24 @@ import {forProp, forward, handle, stop} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Pure from '../internal/Pure';
-
 import componentCss from './Marquee.module.less';
 
 const isEventSource = (ev) => ev.target === ev.currentTarget;
 
-const SpacingBase = kind({
+const Spacing = kind({
 	name: 'Spacing',
 
+	propTypes: {
+		rtl: PropTypes.bool
+	},
+
+	styles: {
+		className: 'spacing',
+		css: componentCss
+	},
+
 	handlers: {
-		ref: (node, props) => {
+		ref: (node) => {
 			if (!node) return;
 
 			const root = node.parentNode;
@@ -27,14 +34,18 @@ const SpacingBase = kind({
 		}
 	},
 
+	computed: {
+		className: ({rtl, styler}) => styler.append({rtl})
+	},
+
 	render: (props) => {
+		delete props.rtl;
+
 		return (
-			<div {...props} />
+			<span {...props} />
 		);
 	}
 });
-
-const Spacing = Pure(SpacingBase);
 
 /**
  * Marquees the children of the component.
@@ -228,14 +239,13 @@ const MarqueeBase = kind({
 		}
 	},
 
-	render: ({children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, ...rest}) => {
+	render: ({children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, rtl, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;
 		delete rest.onMarqueeComplete;
 		delete rest.overflow;
 		delete rest.spacing;
-		delete rest.rtl;
 		delete rest.speed;
 		delete rest.willAnimate;
 
@@ -249,10 +259,9 @@ const MarqueeBase = kind({
 				>
 					{children}
 					{duplicate ? (
-						<React.Fragment>
-							<Spacing className={css.spacing} />
+						<Spacing rtl={rtl}>
 							{children}
-						</React.Fragment>
+						</Spacing>
 					) : null}
 				</div>
 			</div>
