@@ -683,6 +683,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			// If we're already timing a start action, don't reset.  Start actions will clear us if
 			// sync.
 			if (this.timerState === TimerState.CLEAR) {
+				// If invoked immediately, the setState call in restartAnimation is batched and will
+				// break any non-marquee-on-render instances because the subsequent startAnimation
+				// isn't invoked. By setting a brief timeout, we decouple from the `onTransitionEnd`
+				// event and setState is synchronous allowing the startAnimation to be called
+				// immediately.
+				//
+				// This would be better moved into componentDidUpdate with more expansive state
+				// values to indicate we need to reset an animation vs starting fresh.
 				this.setTimeout(() => {
 					this.restartAnimation(delay);
 				}, 0, TimerState.RESET_PENDING);
