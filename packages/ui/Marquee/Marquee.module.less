@@ -38,6 +38,9 @@
 		}
 
 		.spacing {
+			// inline-block would be better here because it behaves better with punctuation in RTL
+			// locales. However, some versions of chromium (~v72) do not handle `inline-block`
+			// children within `white-space: pre` containers correctly so `inline` is required atm.
 			display: inline;
 			padding-left: calc(1px * (var(--ui-marquee-spacing, 0) + var(--ui-marquee-offset, 0)));
 
