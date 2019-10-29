@@ -661,7 +661,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 *
 		 * @returns {undefined}
 		 */
-		restartAnimation = () => {
+		restartAnimation = (delay) => {
 			this.setState({
 				animating: false
 			});
@@ -669,7 +669,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.sync) {
 				this.context.complete(this);
 			} else if (!this.state.animating) {
-				this.startAnimation();
+				this.startAnimation(delay);
 			}
 		}
 
@@ -679,11 +679,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		resetAnimation = () => {
-			const marqueeResetDelay = Math.max(40, this.props.marqueeResetDelay);
+			const delay = Math.max(40, this.props.marqueeResetDelay + this.props.marqueeDelay);
 			// If we're already timing a start action, don't reset.  Start actions will clear us if
 			// sync.
 			if (this.timerState === TimerState.CLEAR) {
-				this.setTimeout(this.restartAnimation, marqueeResetDelay, TimerState.RESET_PENDING);
+				this.setTimeout(() => {
+					this.restartAnimation(delay);
+				}, 0, TimerState.RESET_PENDING);
 			}
 		}
 
