@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Marquee` text alignment when restarting
+
 ## [3.2.2] - 2019-10-24
 
 No significant changes.
