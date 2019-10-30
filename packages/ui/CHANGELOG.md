@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Marquee` to display ellipsis when its content changes and overflows its bounds
+
 ## [3.2.2] - 2019-10-24
 
 No significant changes.
