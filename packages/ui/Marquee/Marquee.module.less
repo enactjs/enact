@@ -14,7 +14,7 @@
 	--ui-marquee-offset: 0;
 
 	width: auto;
-	white-space: pre !important;
+	white-space: nowrap !important;
 	overflow: hidden;
 	text-align: left;
 
@@ -23,7 +23,7 @@
 		text-overflow: ellipsis;
 		overflow: hidden;
 		width: 100%;
-		white-space: pre !important;
+		white-space: nowrap !important;
 		transition-property: left, right;
 		transition-timing-function: linear;
 		position: relative;
@@ -37,17 +37,13 @@
 			/* Public Class Name */
 		}
 
-		.spacing {
-			// inline-block would be better here because it behaves better with punctuation in RTL
-			// locales. However, some versions of chromium (~v72) do not handle `inline-block`
-			// children within `white-space: pre` containers correctly so `inline` is required atm.
-			display: inline;
-			padding-left: calc(1px * (var(--ui-marquee-spacing, 0) + var(--ui-marquee-offset, 0)));
+		> * {
+			white-space: pre !important;
+			display: inline-block;
+		}
 
-			&.rtl {
-				padding-left: 0;
-				padding-right: calc(1px * (var(--ui-marquee-spacing, 0) + var(--ui-marquee-offset, 0)));
-			}
+		.spacing {
+			text-indent: calc(1px * (var(--ui-marquee-spacing, 0) + var(--ui-marquee-offset, 0)));
 		}
 	}
 

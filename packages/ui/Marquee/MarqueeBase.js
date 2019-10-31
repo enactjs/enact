@@ -7,45 +7,18 @@ import componentCss from './Marquee.module.less';
 
 const isEventSource = (ev) => ev.target === ev.currentTarget;
 
-const Spacing = kind({
-	name: 'Spacing',
+const applyOffset = (node) => {
+	if (!node || !global.IntersectionObserver) return;
 
-	propTypes: {
-		rtl: PropTypes.bool
-	},
+	const root = node.parentNode;
+	new global.IntersectionObserver(function (entries, observer) {
+		const {left} = entries[0].boundingClientRect;
+		const offset = Math.round(left) - left;
+		node.style.setProperty('--ui-marquee-offset', offset);
 
-	styles: {
-		className: 'spacing',
-		css: componentCss
-	},
-
-	handlers: {
-		ref: (node) => {
-			if (!node || !global.IntersectionObserver) return;
-
-			const root = node.parentNode;
-			new global.IntersectionObserver(function (entries, observer) {
-				const {left} = entries[0].boundingClientRect;
-				const offset = Math.round(left) - left;
-				node.style.setProperty('--ui-marquee-offset', offset);
-
-				observer.disconnect();
-			}, {root}).observe(node);
-		}
-	},
-
-	computed: {
-		className: ({rtl, styler}) => styler.append({rtl})
-	},
-
-	render: (props) => {
-		delete props.rtl;
-
-		return (
-			<span {...props} />
-		);
-	}
-});
+		observer.disconnect();
+	}, {root}).observe(node);
+};
 
 /**
  * Marquees the children of the component.
@@ -239,12 +212,13 @@ const MarqueeBase = kind({
 		}
 	},
 
-	render: ({children, clientClassName, clientRef, clientStyle, duplicate, onMarqueeComplete, rtl, ...rest}) => {
+	render: ({children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;
 		delete rest.onMarqueeComplete;
 		delete rest.overflow;
+		delete rest.rtl;
 		delete rest.spacing;
 		delete rest.speed;
 		delete rest.willAnimate;
@@ -257,11 +231,11 @@ const MarqueeBase = kind({
 					style={clientStyle}
 					onTransitionEnd={onMarqueeComplete}
 				>
-					{children}
+					<span>{children}</span>
 					{duplicate ? (
-						<Spacing rtl={rtl}>
+						<span className={css.spacing} ref={applyOffset}>
 							{children}
-						</Spacing>
+						</span>
 					) : null}
 				</div>
 			</div>
