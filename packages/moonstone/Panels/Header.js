@@ -179,7 +179,7 @@ const HeaderBase = kind({
 
 	defaultProps: {
 		fullBleed: false,
-		marqueeOn: 'hover',
+		marqueeOn: 'render',
 		// titleAbove: '00',
 		type: 'standard'
 	},
