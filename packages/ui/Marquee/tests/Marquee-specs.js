@@ -287,7 +287,7 @@ describe('MarqueeBase', () => {
 	});
 
 	test('should duplicate from content when promoted and a non-zero distance', () => {
-		const subject = mount(
+		const subject = shallow(
 			<MarqueeBase willAnimate distance={100}>
 				Text
 			</MarqueeBase>
@@ -298,7 +298,7 @@ describe('MarqueeBase', () => {
 	});
 
 	test('should not duplicate from content when promoted and a zero distance', () => {
-		const subject = mount(
+		const subject = shallow(
 			<MarqueeBase willAnimate distance={0}>
 				Text
 			</MarqueeBase>
