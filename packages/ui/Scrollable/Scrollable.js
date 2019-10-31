@@ -1051,6 +1051,9 @@ class ScrollableBase extends Component {
 		}
 
 		this.childRefCurrent.setScrollPosition(this.scrollLeft, this.scrollTop, this.props.rtl, ...rest);
+		if (this.scrollTop < this.props.overSize) {
+			this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.scrollTop)
+		}
 		this.forwardScrollEvent('onScroll');
 	}
 
@@ -1323,7 +1326,7 @@ class ScrollableBase extends Component {
 
 	render () {
 		const
-			{className, containerRenderer, noScrollByDrag, rtl, style, ...rest} = this.props,
+			{className, containerRenderer, noScrollByDrag, overSize, rtl, style, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className),
 			childWrapper = noScrollByDrag ? 'div' : TouchableDiv,
@@ -1374,6 +1377,7 @@ class ScrollableBase extends Component {
 					initChildRef: this.initChildRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
+					overSize,
 					rtl,
 					scrollTo: this.scrollTo,
 					style,

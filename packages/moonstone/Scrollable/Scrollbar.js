@@ -112,6 +112,10 @@ class ScrollbarBase extends Component {
 			this.uiUpdate(bounds);
 		};
 		this.focusOnButton = focusOnButton;
+
+		this.syncHeight = (overSize, scrollPosition) => {
+			this.getContainerRef().current.style.height = 'calc(100% - ' + overSize + 'px + ' + scrollPosition + 'px)';
+		}
 	}
 
 	render () {
@@ -159,6 +163,7 @@ const Scrollbar = ApiDecorator(
 		'isOneOfScrollButtonsFocused',
 		'showThumb',
 		'startHidingThumb',
+		'syncHeight',
 		'update'
 	]}, Skinnable(ScrollbarBase)
 );

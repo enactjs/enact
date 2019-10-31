@@ -990,11 +990,19 @@ class ScrollableBase extends Component {
 					initChildRef: initUiChildRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
+					overSize,
 					rtl,
 					scrollTo,
 					style,
 					verticalScrollbarProps
-				}) => (
+				}) => {
+				const
+					{direction} = this.props,
+					containerStyle = overSize && (direction == 'vertical' || direction === 'both') ?
+						{height: 'calc(100% + ' + overSize + 'px)'} :
+						null;
+
+				return (
 					<div
 						className={classNames(className, overscrollCss.scrollable)}
 						data-spotlight-container={spotlightContainer}
@@ -1015,10 +1023,12 @@ class ScrollableBase extends Component {
 									isVerticalScrollbarVisible,
 									onScroll: handleScroll,
 									onUpdate: this.handleScrollerUpdate,
+									overSize,
 									ref: this.childRef,
 									rtl,
 									scrollAndFocusScrollbarButton: this.scrollAndFocusScrollbarButton,
-									spotlightId
+									spotlightId,
+									style: containerStyle
 								})}
 							</ChildWrapper>
 							{isVerticalScrollbarVisible ?
@@ -1052,7 +1062,8 @@ class ScrollableBase extends Component {
 							null
 						}
 					</div>
-				)}
+				);
+				}}
 			/>
 		);
 	}

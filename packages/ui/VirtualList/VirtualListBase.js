@@ -443,6 +443,7 @@ const VirtualListBaseFactory = (type) => {
 		hasDataSizeChanged = false
 		cc = []
 		scrollPosition = 0
+		containerScrollPosition = 0
 		scrollPositionTarget = 0
 
 		// For individually sized item
@@ -793,6 +794,23 @@ const VirtualListBaseFactory = (type) => {
 
 		// JS only
 		setScrollPosition (x, y, rtl = this.props.rtl, targetX = 0, targetY = 0) {
+			if (this.props.overSize && this.isPrimaryDirectionVertical && this.containerRef.current) {
+				if (y < this.props.overSize) {
+					this.containerScrollPosition = y;
+					this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, 0, 0)`;
+
+					return;
+				} else {
+					if (y > this.props.overSize && this.containerScrollPosition < this.props.overSize) {
+						this.containerScrollPosition = this.isPrimaryDirectionVertical ? this.props.overSize : x;
+					}
+
+					if (this.containerScrollPosition > this.props.overSize) {
+						this.containerScrollPosition = this.props.overSize;
+					}
+				}
+			}
+
 			if (this.contentRef.current) {
 				this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
 
