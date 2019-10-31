@@ -11,6 +11,7 @@
 	// -webkit-line-clamp: 1;
 
 	--ui-marquee-spacing: 0;
+	--ui-marquee-offset: 0;
 
 	width: auto;
 	white-space: pre !important;
@@ -38,7 +39,7 @@
 
 		.spacing {
 			display: inline-block;
-			width: calc(1px * var(--ui-marquee-spacing, 0));
+			width: calc(1px * (var(--ui-marquee-spacing, 0) + var(--ui-marquee-offset, 0)));
 		}
 	}
 
