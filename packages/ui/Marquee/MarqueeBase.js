@@ -239,7 +239,7 @@ const MarqueeBase = kind({
 		}
 	},
 
-	render: ({children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, rtl, ...rest}) => {
+	render: ({children, clientClassName, clientRef, clientStyle, duplicate, onMarqueeComplete, rtl, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;
