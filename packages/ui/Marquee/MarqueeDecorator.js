@@ -483,7 +483,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.contentFits = false;
 
 			this.setState(state => {
-				return state.overflow === 'ellipsis' ? null : {overflow: 'ellipsis'};
+				if (state.overflow === 'ellipsis' && state.promoted === false) return null;
+
+				return {
+					overflow: 'ellipsis',
+					promoted: false
+				};
 			});
 		}
 

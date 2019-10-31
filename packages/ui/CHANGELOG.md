@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Marquee` text alignment when restarting
+- `ui/Marquee` to display an ellipsis when its content changes and overflows its bounds
 
 ## [3.2.2] - 2019-10-24
 
