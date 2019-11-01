@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [3.2.3] - 2019-11-01
+
+### Changed
+
+- `moonstone/Panels.Header` prop `marqueeOn` default value to `'render'` to improve usability on systems without a pointer
+
 ## [3.2.2] - 2019-10-24
 
 ### Fixed

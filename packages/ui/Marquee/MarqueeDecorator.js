@@ -483,7 +483,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.contentFits = false;
 
 			this.setState(state => {
-				return state.overflow === 'ellipsis' ? null : {overflow: 'ellipsis'};
+				if (state.overflow === 'ellipsis' && state.promoted === false) return null;
+
+				return {
+					overflow: 'ellipsis',
+					promoted: false
+				};
 			});
 		}
 
@@ -550,14 +555,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (typeof marqueeSpacing === 'string') {
 				if (/^\d+(\.\d+)?%$/.test(marqueeSpacing)) {
-					return Math.floor(width * Number.parseFloat(marqueeSpacing) / 100);
+					return width * Number.parseFloat(marqueeSpacing) / 100;
 				}
 
 				// warning for invalid string value;
 				return 0;
 			}
 
-			return Math.floor(scale(marqueeSpacing));
+			return scale(marqueeSpacing);
 		}
 
 		/*
@@ -661,7 +666,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 *
 		 * @returns {undefined}
 		 */
-		restartAnimation = () => {
+		restartAnimation = (delay) => {
 			this.setState({
 				animating: false
 			});
@@ -669,7 +674,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.sync) {
 				this.context.complete(this);
 			} else if (!this.state.animating) {
-				this.startAnimation();
+				this.startAnimation(delay);
 			}
 		}
 
@@ -679,11 +684,21 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		resetAnimation = () => {
-			const marqueeResetDelay = Math.max(40, this.props.marqueeResetDelay);
+			const delay = Math.max(40, this.props.marqueeResetDelay + this.props.marqueeDelay);
 			// If we're already timing a start action, don't reset.  Start actions will clear us if
 			// sync.
 			if (this.timerState === TimerState.CLEAR) {
-				this.setTimeout(this.restartAnimation, marqueeResetDelay, TimerState.RESET_PENDING);
+				// If invoked immediately, the setState call in restartAnimation is batched and will
+				// break any non-marquee-on-render instances because the subsequent startAnimation
+				// isn't invoked. By setting a brief timeout, we decouple from the `onTransitionEnd`
+				// event and setState is synchronous allowing the startAnimation to be called
+				// immediately.
+				//
+				// This would be better moved into componentDidUpdate with more expansive state
+				// values to indicate we need to reset an animation vs starting fresh.
+				this.setTimeout(() => {
+					this.restartAnimation(delay);
+				}, 0, TimerState.RESET_PENDING);
 			}
 		}
 

@@ -2,6 +2,17 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.2.3] - 2019-11-01
+
+### Changed
+
+- `moonstone/Panels.Header` prop `marqueeOn` default value to `'render'` to improve usability on systems without a pointer
+
+### Fixed
+
+- `ui/Marquee` text alignment when restarting
+- `ui/Marquee` to display an ellipsis when its content changes and overflows its bounds
+
 ## [3.2.2] - 2019-10-24
 
 ### Fixed
