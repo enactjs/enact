@@ -718,6 +718,7 @@ const VirtualListBaseFactory = (type) => {
 				{numOfItems} = this.uiRefCurrent.state,
 				{primary} = this.uiRefCurrent,
 				overSizeOffset = overSize - Math.min(overSize, scrollPosition),
+				// The offset varies depending on the VirtualList position.
 				offsetToClientEnd = primary.clientSize - primary.itemSize - overSizeOffset,
 				focusedIndex = getNumberValue(item.getAttribute(dataIndexAttribute));
 

@@ -121,8 +121,11 @@ class ScrollbarBase extends Component {
 				thumbRef = this.getContainerRef(),
 				nextButtonRef = this.scrollButtonsRef.current.nextButtonRef;
 
+			// To scale the thumb height depending on the VirtualList position
 			thumbRef.current.style.transform =
 				'scale3d(1, ' + (height - overSize + scrollPosition - 120) / (height - overSize - 120) + ', 1)';
+
+			// To move the next scroll bar button depending on the VirtualList position
 			nextButtonRef.current.style.transform =
 				'translate3d(0, ' + (scrollPosition - overSize) + 'px, 0)';
 		}

@@ -794,6 +794,8 @@ const VirtualListBaseFactory = (type) => {
 
 		// JS only
 		setScrollPosition (x, y, rtl = this.props.rtl, targetX = 0, targetY = 0) {
+			// if the scrollPosition is less than overSize, then the VirtualList does not scroll.
+			// But the list generates `onScroll` event so that the list could move upper by an App.
 			if (this.props.overSize && this.isPrimaryDirectionVertical && this.containerRef.current) {
 				if (y < this.props.overSize) {
 					this.containerScrollPosition = y;
@@ -908,7 +910,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			this.syncThreshold(maxPos);
-			this.scrollPosition = pos;
+			this.scrollPosition = this.props.overSize ? pos - this.props.overSize : pos;
 			this.updateMoreInfo(dataSize, pos);
 
 			if (this.shouldUpdateBounds || firstIndex !== newFirstIndex) {
