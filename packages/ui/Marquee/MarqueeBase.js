@@ -189,10 +189,16 @@ const MarqueeBase = kind({
 			// inline
 			const direction = rtl ? 'rtl' : 'ltr';
 			const sideProperty = rtl ? 'left' : 'right';
+
+			let textAlign = alignment;
+			if ((textAlign === 'center' || !alignment) && distance > 0) {
+				textAlign = rtl ? 'right' : 'left';
+			}
+
 			const style = {
 				'--ui-marquee-spacing': spacing,
 				direction,
-				textAlign: alignment,
+				textAlign,
 				textOverflow: overflow
 			};
 
