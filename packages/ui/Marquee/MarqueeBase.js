@@ -7,6 +7,19 @@ import componentCss from './Marquee.module.less';
 
 const isEventSource = (ev) => ev.target === ev.currentTarget;
 
+const applyOffset = (node) => {
+	if (!node || !global.IntersectionObserver) return;
+
+	const root = node.parentNode;
+	new global.IntersectionObserver(function (entries, observer) {
+		const {left} = entries[0].boundingClientRect;
+		const offset = Math.round(left) - left;
+		node.style.setProperty('--ui-marquee-offset', offset);
+
+		observer.disconnect();
+	}, {root}).observe(node);
+};
+
 /**
  * Marquees the children of the component.
  *
@@ -171,7 +184,7 @@ const MarqueeBase = kind({
 			text: true,
 			willAnimate
 		}),
-		clientStyle: ({alignment, animating, distance, overflow, spacing, rtl, speed}) => {
+		clientStyle: ({alignment, animating, distance, overflow, rtl, spacing, speed}) => {
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
 			const direction = rtl ? 'rtl' : 'ltr';
@@ -205,8 +218,8 @@ const MarqueeBase = kind({
 		delete rest.distance;
 		delete rest.onMarqueeComplete;
 		delete rest.overflow;
-		delete rest.spacing;
 		delete rest.rtl;
+		delete rest.spacing;
 		delete rest.speed;
 		delete rest.willAnimate;
 
@@ -221,7 +234,7 @@ const MarqueeBase = kind({
 					{children}
 					{duplicate ? (
 						<React.Fragment>
-							<div className={css.spacing} />
+							<div className={css.spacing} ref={applyOffset} />
 							{children}
 						</React.Fragment>
 					) : null}
