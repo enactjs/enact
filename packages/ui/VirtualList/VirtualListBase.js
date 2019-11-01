@@ -797,6 +797,7 @@ const VirtualListBaseFactory = (type) => {
 			if (this.props.overSize && this.isPrimaryDirectionVertical && this.containerRef.current) {
 				if (y < this.props.overSize) {
 					this.containerScrollPosition = y;
+
 					this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, 0, 0)`;
 
 					return;
@@ -1190,6 +1191,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.onUpdate;
 			delete rest.onUpdateItems;
 			delete rest.overhang;
+			delete rest.overSize;
 			delete rest.pageScroll;
 			delete rest.rtl;
 			delete rest.spacing;

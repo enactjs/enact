@@ -714,10 +714,11 @@ const VirtualListBaseFactory = (type) => {
 
 		calculatePositionOnFocus = ({item, scrollPosition = this.uiRefCurrent.scrollPosition}) => {
 			const
-				{pageScroll} = this.props,
+				{overSize, pageScroll} = this.props,
 				{numOfItems} = this.uiRefCurrent.state,
 				{primary} = this.uiRefCurrent,
-				offsetToClientEnd = primary.clientSize - primary.itemSize,
+				overSizeOffset = overSize - Math.min(overSize, scrollPosition),
+				offsetToClientEnd = primary.clientSize - primary.itemSize - overSizeOffset,
 				focusedIndex = getNumberValue(item.getAttribute(dataIndexAttribute));
 
 			if (!isNaN(focusedIndex)) {

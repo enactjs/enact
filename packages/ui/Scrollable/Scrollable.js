@@ -1053,6 +1053,8 @@ class ScrollableBase extends Component {
 		this.childRefCurrent.setScrollPosition(this.scrollLeft, this.scrollTop, this.props.rtl, ...rest);
 		if (this.scrollTop < this.props.overSize) {
 			this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.scrollTop)
+		} else {
+			this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.props.overSize)
 		}
 		this.forwardScrollEvent('onScroll');
 	}

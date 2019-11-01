@@ -519,7 +519,9 @@ class ScrollableBase extends Component {
 			this.alertThumb();
 		}
 
-		if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || isDragging)) {
+		// Temporary fix to allow to scroll by focus in PC.
+		// This fix should be removed when adapting the POC to `develop` branch.
+		if (!(/*shouldPreventScrollByFocus ||*/ Spotlight.getPointerMode() || isDragging)) {
 			const
 				item = ev.target,
 				spotItem = Spotlight.getCurrent();
@@ -995,14 +997,7 @@ class ScrollableBase extends Component {
 					scrollTo,
 					style,
 					verticalScrollbarProps
-				}) => {
-				const
-					{direction} = this.props,
-					containerStyle = overSize && (direction == 'vertical' || direction === 'both') ?
-						{height: 'calc(100% + ' + overSize + 'px)'} :
-						null;
-
-				return (
+				}) => (
 					<div
 						className={classNames(className, overscrollCss.scrollable)}
 						data-spotlight-container={spotlightContainer}
@@ -1027,8 +1022,7 @@ class ScrollableBase extends Component {
 									ref: this.childRef,
 									rtl,
 									scrollAndFocusScrollbarButton: this.scrollAndFocusScrollbarButton,
-									spotlightId,
-									style: containerStyle
+									spotlightId
 								})}
 							</ChildWrapper>
 							{isVerticalScrollbarVisible ?
@@ -1039,6 +1033,7 @@ class ScrollableBase extends Component {
 									focusableScrollButtons={focusableScrollbar}
 									nextButtonAriaLabel={downButtonAriaLabel}
 									onKeyDownButton={this.onKeyDown}
+									overSize={overSize}
 									preventBubblingOnKeyDown={preventBubblingOnKeyDown}
 									previousButtonAriaLabel={upButtonAriaLabel}
 									rtl={rtl}
@@ -1062,8 +1057,7 @@ class ScrollableBase extends Component {
 							null
 						}
 					</div>
-				);
-				}}
+				)}
 			/>
 		);
 	}

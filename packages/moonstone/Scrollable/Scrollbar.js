@@ -1,5 +1,6 @@
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -94,6 +95,7 @@ class ScrollbarBase extends Component {
 
 		this.scrollbarRef = React.createRef();
 		this.scrollButtonsRef = React.createRef();
+		this.overSizeRef = React.createRef();
 	}
 
 	componentDidMount () {
@@ -114,12 +116,48 @@ class ScrollbarBase extends Component {
 		this.focusOnButton = focusOnButton;
 
 		this.syncHeight = (overSize, scrollPosition) => {
-			this.getContainerRef().current.style.height = 'calc(100% - ' + overSize + 'px + ' + scrollPosition + 'px)';
+			const
+				height = parseInt(window.getComputedStyle(this.overSizeRef.current).getPropertyValue('height')),
+				thumbRef = this.getContainerRef(),
+				nextButtonRef = this.scrollButtonsRef.current.nextButtonRef;
+
+			thumbRef.current.style.transform =
+				'scale3d(1, ' + (height - overSize + scrollPosition - 120) / (height - overSize - 120) + ', 1)';
+			nextButtonRef.current.style.transform =
+				'translate3d(0, ' + (scrollPosition - overSize) + 'px, 0)';
 		}
 	}
 
 	render () {
-		const {cbAlertThumb, clientSize, corner, vertical, ...rest} = this.props;
+		const {cbAlertThumb, clientSize, corner, overSize, vertical, ...rest} = this.props;
+
+		if (overSize) {
+			return (
+				<div className={componentCss.overSize} ref={this.overSizeRef}>
+					<ScrollButtons
+						{...rest}
+						ref={this.scrollButtonsRef}
+						vertical={vertical}
+					/>
+					<UiScrollbarBase
+					corner={corner}
+					clientSize={clientSize}
+					css={componentCss}
+					ref={this.scrollbarRef}
+					style={{height: 'calc(100% - ' + (overSize + 120) + 'px)'}}
+					vertical={vertical}
+					childRenderer={({thumbRef}) => ( // eslint-disable-line react/jsx-no-bind
+						<ScrollThumb
+							cbAlertThumb={cbAlertThumb}
+							key="thumb"
+							ref={thumbRef}
+							vertical={vertical}
+						/>
+					)}
+				/>
+				</div>
+			);
+		}
 
 		return (
 			<UiScrollbarBase
