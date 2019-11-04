@@ -239,6 +239,9 @@
 	// Button-non-disabled rules
 	&:not([disabled]) {
 		.focus({
+			// POC: Show a button over other buttons when sticking together.
+			z-index: 1;
+
 			&.pressed,
 			&:active {
 				.bg {

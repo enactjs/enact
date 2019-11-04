@@ -5,6 +5,7 @@ import {isRtlText} from '@enact/i18n/util';
 import {Layout, Cell} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
 import ComponentOverride from '@enact/ui/ComponentOverride';
+import classNames from 'classnames';
 
 import {MarqueeDecorator, MarqueeBase} from '../Marquee';
 import Skinnable from '../Skinnable';
@@ -121,6 +122,11 @@ const HeaderBase = kind({
 		hideLine: PropTypes.bool,
 
 		/**
+		 * TBD
+		 */
+		left: PropTypes.bool,
+
+		/**
 		 * Determines what triggers the header content to start its animation.
 		 *
 		 * @type {('focus'|'hover'|'render')}
@@ -227,7 +233,7 @@ const HeaderBase = kind({
 		}
 	},
 
-	render: ({children, direction, marqueeOn, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+	render: ({children, direction, left, marqueeOn, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.centered;
 		delete rest.fullBleed;
 		delete rest.headerInput;
@@ -261,11 +267,14 @@ const HeaderBase = kind({
 					{titleOrInput}
 					<Cell shrink size={96}>
 						<Layout align="end">
-							<Cell className={css.titlesCell}>
-								{titleBelowComponent}
-								{subTitleBelowComponent}
-							</Cell>
-							{children ? <Cell shrink component="nav" className={css.headerComponents}>{children}</Cell> : null}
+							{/* To align the header components to the right */}
+							{(left && !subTitleBelowComponent) && (
+								<Cell className={css.titlesCell}>
+									{titleBelowComponent}
+									{subTitleBelowComponent}
+								</Cell>
+							) || null}
+							{children ? <Cell shrink component="nav" className={classNames(css.headerComponents, left ? css.left : null)}>{children}</Cell> : null}
 						</Layout>
 					</Cell>
 				</Layout>

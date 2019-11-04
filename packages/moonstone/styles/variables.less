@@ -3,7 +3,7 @@
 
 // App
 // ---------------------------------------
-@moon-app-keepout: 24px;
+@moon-app-keepout: 4px; // POC: Make padding lower
 
 // Font Sizes
 // ---------------------------------------
@@ -146,7 +146,7 @@
 
 // Header
 // ---------------------------------------
-@moon-header-standard-height: 180px;
+@moon-header-standard-height: 207px; // POC: Increase the panel header height
 @moon-header-compact-height: 90px;
 @moon-header-indent-width: 18px;
 @moon-header-title-subtitle-gap: 36px;
@@ -165,7 +165,7 @@
 @moon-button-colordot-width: 27px;
 @moon-button-font-family: @moon-alt-font-family;
 @moon-button-font-style: normal;
-@moon-button-font-weight: 600;
+@moon-button-font-weight: 300; // POC: make font-weight light
 @moon-button-h-margin: @moon-spotlight-outset;
 @moon-button-h-padding: 30px;
 @moon-button-height-large: 96px;
@@ -334,7 +334,7 @@
 @moon-panels-breadcrumb-width: 96px;
 @moon-panels-handle-width: 132px;
 @moon-panel-v-padding: @moon-app-keepout;
-@moon-panel-h-padding: (@moon-app-keepout - @moon-spotlight-outset);
+@moon-panel-h-padding: 29px; // POC: Reduce the padding
 @moon-panel-handle-icon-font-size: 144px;
 
 // Toggle Item
@@ -366,6 +366,10 @@
 @moon-gridlist-item-overlay-icon-size: 60px;
 @moon-gridlist-item-border-width: 6px;
 @moon-gridlist-item-caption-padding-top: 9px;
+// POC: Add more variables
+@moon-gridlist-item-scale: 0.06;
+@moon-gridlist-item-scale-up: (1 + @moon-gridlist-item-scale);
+@moon-gridlist-item-scale-down: (1 / @moon-gridlist-item-scale-up);
 
 // Scrollable
 // ---------------------------------------

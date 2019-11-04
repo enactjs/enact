@@ -3,9 +3,23 @@
 @import '../styles/skin.less';
 
 .gridListImageItem {
-	box-sizing: border-box;
-	border-width: @moon-gridlist-item-border-width;
-	border-style: solid;
+	// POC: Remove Spotlight border, then enlarge an image
+	// box-sizing: border-box;
+	// border-width: @moon-spotlight-outset;
+	// border-style: solid;
+
+	// POC: Enlarge an image when getting Spot
+	@-webkit-keyframes expand {
+		// Old Blink/Webkit doesn't support "@keyframes" so we must use both prefixed and non-prefixed in this section
+		100% {
+			-webkit-transform: translateZ(0) scale(@moon-gridlist-item-scale-up);
+			transform: translateZ(0) scale(@moon-gridlist-item-scale-up);
+		}
+	}
+
+	@keyframes expand {
+		100% { transform: translateZ(0) scale(@moon-gridlist-item-scale-up); }
+	}
 
 	.icon {
 		width: @moon-gridlist-item-overlay-icon-size;
@@ -28,7 +42,19 @@
 
 	.caption {
 		.moon-header-title-below-text();
-		padding-top: @moon-gridlist-item-caption-padding-top;
+		// POC: Position a caption absolutely
+		// padding-top: @moon-gridlist-item-caption-padding-top;
+
+		position: absolute;
+		width: calc(100% - (2 * @moon-spotlight-outset));
+		margin: auto;
+		bottom: 30px;
+		left: 0;
+		right: 0;
+
+		// POC: Hide a caption if not getting focus
+		will-change: transform;
+		transform: translate3d(100%, 100%, 0);
 	}
 
 	.subCaption {
@@ -38,6 +64,24 @@
 
 	.image {
 		/* Public Class Names */
+		// POC: Prepare to enlarge an image when getting focus
+		position: absolute;
+		width: calc(100% - (2 * @moon-spotlight-outset));
+		height: calc(100% - (2 * @moon-spotlight-outset));
+		margin: auto;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: -1;
+
+		transform: translateZ(0);
+		will-change: transform;
+
+		animation-duration: 0.2s;
+		animation-iteration-count: 1;
+		animation-timing-function: ease-out;
+		animation-fill-mode: forwards;
 	}
 
 	// Skin colors
@@ -51,23 +95,37 @@
 			color: transparent;
 		}
 
+		.caption,
+		.subCaption {
+			// POC: DO not change a text color.
+			color: @moon-gridlist-item-selected-color;
+		}
+
 		&.selected {
-			border-color: @moon-gridlist-item-selected-border-color;
-			background-color: @moon-gridlist-item-selected-bg-color;
+			// POC: Remove Spotlight border, then enlarge an image
+			// border-color: @moon-gridlist-item-selected-border-color;
+			// background-color: @moon-gridlist-item-selected-bg-color;
 
 			.icon {
-				border-color: @moon-gridlist-item-selected-icon-border-color;
+				// POC: Remove Spotlight border, then enlarge an image
+				// border-color: @moon-gridlist-item-selected-icon-border-color;
 				color: @moon-gridlist-item-selected-icon-color;
 			}
-			.caption,
-			.subCaption {
-				color: @moon-gridlist-item-selected-color;
-			}
+			// POC: a text color is always same
+			// .caption,
+			// .subCaption {
+			// 	color: @moon-gridlist-item-selected-color;
+			// }
 		}
 
 		.focus({
-			border-color: @moon-gridlist-item-spotlight-border-color;
-			background-color: @moon-gridlist-item-spotlight-bg-color;
+			// POC: Remove Spotlight border, then enlarge an image
+			// border-color: @moon-gridlist-item-spotlight-border-color;
+			// background-color: @moon-gridlist-item-spotlight-bg-color;
+			.image {
+				// POC: Enlarge an image
+				animation-name: expand;
+			}
 
 			.icon {
 				color: @moon-gridlist-item-spotlight-icon-color;
@@ -75,7 +133,9 @@
 
 			.caption,
 			.subCaption {
-				color: @moon-gridlist-item-spotlight-color;
+				// POC: a text color is always same
+				// color: @moon-gridlist-item-spotlight-color;
+				transform: translate3d(0, 0, 0);
 			}
 
 			&.selected {
@@ -106,7 +166,8 @@
 				}
 				&.selected {
 					.icon {
-						border-color: @moon-accent;
+						// POC: Remove Spotlight border, then enlarge an image
+						// border-color: @moon-accent;
 						color: @moon-accent;
 					}
 				}

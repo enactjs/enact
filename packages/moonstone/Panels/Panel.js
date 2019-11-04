@@ -80,6 +80,11 @@ const PanelBase = kind({
 		autoFocus: PropTypes.string,
 
 		/**
+		 * TBD
+		 */
+		backgroundImage: PropTypes.string,
+
+		/**
 		 * Header for the panel.
 		 *
 		 * This is usually passed by the [Slottable]{@link ui/Slottable.Slottable} API by using a
@@ -108,6 +113,7 @@ const PanelBase = kind({
 
 	defaultProps: {
 		autoFocus: 'last-focused',
+		backgroundImage: null, // POC: Support `backgroundImage` prop
 		hideChildren: false
 	},
 
@@ -168,12 +174,17 @@ const PanelBase = kind({
 		headerId: ({'aria-label': label}) => label ? null : `panel_${++panelId}_header`
 	},
 
-	render: ({bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
+	render: ({backgroundImage, bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
 		delete rest.autoFocus;
 		delete rest.hideChildren;
 
 		return (
 			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender}>
+				{/* Support `backgroundImage` prop to provide a background image */}
+				<div
+					className={css.backgroundImage}
+					style={backgroundImage !== null ? {backgroundImage: 'url("' + backgroundImage + '")'} : null}
+				/>
 				<div className={css.header} id={headerId}>{header}</div>
 				<section className={bodyClassName}>{children}</section>
 			</article>

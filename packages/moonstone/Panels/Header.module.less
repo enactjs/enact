@@ -13,7 +13,8 @@
 	background-color: transparent;
 	background-repeat: no-repeat;
 	background-position: top left;
-	margin: 0 @moon-spotlight-outset;
+	// POC: Make the panel heder height larger
+	margin: 31px @moon-spotlight-outset 0;
 
 	// Remove the built-in h1 and h2 margins
 	.decorator,
@@ -34,6 +35,9 @@
 		.spacing {
 			margin-right: 0.05em;
 		}
+
+		// POC: Panel Header text color
+		color: white;
 	}
 
 	.decorator {
@@ -45,6 +49,16 @@
 		.remove-margin-on-edge-children();
 		.margin-start-end(@moon-header-components-gutter, 0);
 		margin-bottom: 18px;
+
+		// POC: Stick to the left
+		&.left {
+			margin-left: 0;
+		}
+
+		// POC: Make the header components closer
+		& > * {
+			margin: 0;
+		}
 
 		white-space: nowrap;
 	}

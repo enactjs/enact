@@ -19,6 +19,23 @@
 	:global(.enact-locale-right-to-left) & {
 		direction: rtl;
 	}
+
+	// POC: Support a background image
+	.backgroundImage {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+
+		background: black;
+		background-image: url(https://images.pexels.com/photos/92664/pexels-photo-92664.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500);
+		background-size: cover;
+		background-position: bottom;
+
+		filter: blur(3px) brightness(40%);
+		-webkit-filter: blur(3px) brightness(40%);
+	}
 }
 
 .body {
