@@ -145,6 +145,11 @@ const VirtualListBaseFactory = (type) => {
 			itemSizes: PropTypes.array,
 
 			/**
+			 * TBD
+			 */
+			overSize: PropTypes.number,
+
+			/**
 			 * It scrolls by page when `true`, by item when `false`.
 			 *
 			 * @type {Boolean}

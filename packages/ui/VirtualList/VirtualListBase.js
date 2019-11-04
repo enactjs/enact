@@ -214,6 +214,11 @@ const VirtualListBaseFactory = (type) => {
 			overhang: PropTypes.number,
 
 			/**
+			 * TBD
+			 */
+			overSize: PropTypes.number,
+
+			/**
 			 * When `true`, the list will scroll by page.  Otherwise the list will scroll by item.
 			 *
 			 * @type {Boolean}

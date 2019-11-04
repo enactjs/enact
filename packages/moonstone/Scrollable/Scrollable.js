@@ -504,11 +504,10 @@ class ScrollableBase extends Component {
 	}
 
 	onFocus = (ev) => {
-		const
-			{isDragging} = this.uiRef.current,
-			shouldPreventScrollByFocus = this.childRef.current.shouldPreventScrollByFocus ?
-				this.childRef.current.shouldPreventScrollByFocus() :
-				false;
+		const {isDragging} = this.uiRef.current;
+		// const shouldPreventScrollByFocus = this.childRef.current.shouldPreventScrollByFocus ?
+		// 	this.childRef.current.shouldPreventScrollByFocus() :
+		// 	false;
 
 		if (this.isWheeling) {
 			this.uiRef.current.stop();
@@ -521,7 +520,7 @@ class ScrollableBase extends Component {
 
 		// Temporary fix to allow to scroll by focus in PC.
 		// This fix should be removed when adapting the POC to `develop` branch.
-		if (!(/*shouldPreventScrollByFocus ||*/ Spotlight.getPointerMode() || isDragging)) {
+		if (!(/* shouldPreventScrollByFocus || */ Spotlight.getPointerMode() || isDragging)) {
 			const
 				item = ev.target,
 				spotItem = Spotlight.getCurrent();

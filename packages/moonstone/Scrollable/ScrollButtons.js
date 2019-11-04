@@ -355,7 +355,7 @@ class ScrollButtons extends Component {
 
 	render () {
 		const
-			{disabled, nextButtonAriaLabel, overSize, previousButtonAriaLabel, rtl, thumbRenderer, vertical} = this.props,
+			{disabled, nextButtonAriaLabel, previousButtonAriaLabel, rtl, thumbRenderer, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			prevIcon = preparePrevButton(vertical),
 			nextIcon = prepareNextButton(vertical);

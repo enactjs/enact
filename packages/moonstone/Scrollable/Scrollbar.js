@@ -1,6 +1,5 @@
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
@@ -52,6 +51,11 @@ class ScrollbarBase extends Component {
 		 * @public
 		 */
 		corner: PropTypes.bool,
+
+		/**
+		 * TBD
+		 */
+		overSize: PropTypes.number,
 
 		/**
 		 * `true` if rtl, `false` if ltr.
@@ -128,7 +132,7 @@ class ScrollbarBase extends Component {
 			// To move the next scroll bar button depending on the VirtualList position
 			nextButtonRef.current.style.transform =
 				'translate3d(0, ' + (scrollPosition - overSize) + 'px, 0)';
-		}
+		};
 	}
 
 	render () {
@@ -143,21 +147,21 @@ class ScrollbarBase extends Component {
 						vertical={vertical}
 					/>
 					<UiScrollbarBase
-					corner={corner}
-					clientSize={clientSize}
-					css={componentCss}
-					ref={this.scrollbarRef}
-					style={{height: 'calc(100% - ' + (overSize + 120) + 'px)'}}
-					vertical={vertical}
-					childRenderer={({thumbRef}) => ( // eslint-disable-line react/jsx-no-bind
-						<ScrollThumb
-							cbAlertThumb={cbAlertThumb}
-							key="thumb"
-							ref={thumbRef}
-							vertical={vertical}
-						/>
-					)}
-				/>
+						corner={corner}
+						clientSize={clientSize}
+						css={componentCss}
+						ref={this.scrollbarRef}
+						style={{height: 'calc(100% - ' + (overSize + 120) + 'px)'}}
+						vertical={vertical}
+						childRenderer={({thumbRef}) => ( // eslint-disable-line react/jsx-no-bind
+							<ScrollThumb
+								cbAlertThumb={cbAlertThumb}
+								key="thumb"
+								ref={thumbRef}
+								vertical={vertical}
+							/>
+						)}
+					/>
 				</div>
 			);
 		}

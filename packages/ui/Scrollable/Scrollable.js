@@ -354,6 +354,11 @@ class ScrollableBase extends Component {
 		}),
 
 		/**
+		 * TBD
+		 */
+		overSize: PropTypes.number,
+
+		/**
 		 * Called when removing additional event listeners in a themed component.
 		 *
 		 * @type {Function}
@@ -1052,9 +1057,9 @@ class ScrollableBase extends Component {
 
 		this.childRefCurrent.setScrollPosition(this.scrollLeft, this.scrollTop, this.props.rtl, ...rest);
 		if (this.scrollTop < this.props.overSize) {
-			this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.scrollTop)
+			this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.scrollTop);
 		} else {
-			this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.props.overSize)
+			this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.props.overSize);
 		}
 		this.forwardScrollEvent('onScroll');
 	}
