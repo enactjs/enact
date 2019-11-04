@@ -107,6 +107,51 @@ class MarqueeWithShortContent extends React.Component {
 	}
 }
 
+
+class MarqueeWithContentChanged extends React.Component {
+	constructor (props) {
+		super(props);
+		this.cnt = 0;
+		this.state = {
+			text: 'Ellipsis show. Wait for marquee to start.'
+		};
+	}
+
+handleClick	= () => {
+	if (this.cnt === 0) {
+		this.setState({
+			text: 'No marquee no marquee'
+		});
+	} else if (this.cnt === 1) {
+		this.setState({
+			text: 'Ellipsis show before the initial start of the marquee. Ellipsis will not show on the subsequent starts.'
+		});
+	} else if (this.cnt === 2) {
+		this.setState({
+			text: 'Second test to show that the Ellipsis show before the initial start of the marquee. Ellipsis will not show on the subsequent starts.'
+		});
+	}
+	this.cnt++;
+}
+
+render = () => {
+	return (
+		<div>
+			<ol>
+				<li>Click once to disable the marquee.</li>
+				<li>Click a second time to show the ellipsis just before the text marquees the first time.</li>
+				<li>Click a third time to show the ellipsis just before the text marquees the first time</li>
+			</ol>
+			<Button onClick={this.handleClick}>
+				{'Click Me'}
+			</Button>
+			<Marquee style={{width: '400px'}} marqueeOn={'render'} >{this.state.text}</Marquee>
+		</div>
+	);
+}
+}
+
+
 storiesOf('Marquee', module)
 	.add(
 		'LTR',
@@ -249,6 +294,15 @@ storiesOf('Marquee', module)
 		() => (
 			<div>
 				<MarqueeWithShortContent />
+			</div>
+		)
+	)
+
+	.add(
+		'with Content Changed',
+		() => (
+			<div>
+				<MarqueeWithContentChanged />
 			</div>
 		)
 	);
