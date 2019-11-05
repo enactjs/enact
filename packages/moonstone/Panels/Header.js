@@ -218,7 +218,7 @@ const HeaderBase = kind({
 			} else {
 				return (
 					<Cell>
-						<MarqueeH1 className={css.title} css={marqueeCss} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>
+						<MarqueeH1 className={css.title} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>
 							{title}
 						</MarqueeH1>
 					</Cell>
