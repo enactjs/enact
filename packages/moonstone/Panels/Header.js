@@ -132,6 +132,7 @@ const HeaderBase = kind({
 
 		/**
 		 * Minimizes the Header to only show the header-components.
+		 * Has no effect on `type="compact"`.
 		 *
 		 * @type {Boolean}
 		 * @default false
