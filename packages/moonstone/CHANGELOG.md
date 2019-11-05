@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Notification` CSS `line-height` for non-latin locales
+- `moonstone/Notification` line height for non-latin locales
 
 ## [3.2.3] - 2019-11-01
 
