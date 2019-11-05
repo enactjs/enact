@@ -458,6 +458,10 @@ class ScrollableBase extends Component {
 		this.resizeRegistry.parent = this.context;
 		this.addEventListeners();
 		this.updateScrollbars();
+
+		if (this.verticalScrollbarRef.current) {
+			this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.scrollTop);
+		}
 	}
 
 	componentDidUpdate (prevProps, prevState) {
@@ -499,6 +503,8 @@ class ScrollableBase extends Component {
 		if (horizontal || vertical) {
 			this.resizeRegistry.notify({});
 		}
+
+		this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.scrollTop);
 	}
 
 	componentWillUnmount () {
