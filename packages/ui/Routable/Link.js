@@ -46,9 +46,12 @@ const Linkable = hoc({navigate: 'onClick'}, (config, Wrapped) => {
 		},
 
 		handlers: {
-			[navigate]: (ev, {path}, {navigate: nav}) => {
-				if (nav) nav({path});
-			}
+			[navigate]: handle(
+				forward(navigate),
+				(ev, {path}, {navigate: nav}) => {
+					if (nav) nav({path});
+				}
+			)
 		},
 
 		render: (props) => {
