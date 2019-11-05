@@ -121,11 +121,11 @@ class MarqueeWithContentChanged extends React.Component {
 		};
 	}
 
-	handleClick	= () => {
+	handleClick = () => {
 		this.setState(({count}) => ({count: ++count % 3}));
 	}
 
-	render = () => {
+	render () {
 		return (
 			<div>
 				<ol>
