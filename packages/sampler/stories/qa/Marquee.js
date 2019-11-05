@@ -129,9 +129,9 @@ class MarqueeWithContentChanged extends React.Component {
 		return (
 			<div>
 				<ol>
-					<li>Click once to disable the marquee.</li>
-					<li>Click a second time to show the ellipsis just before the text marquees the first time.</li>
-					<li>Click a third time to show the ellipsis just before the text marquees the first time</li>
+					<li>Click once to show the ellipsis just before the text marquees the first time.</li>
+					<li>Click a second time to show the ellipsis just before the text marquees the first time</li>
+					<li>Click again to return to a short string without marquee.</li>
 				</ol>
 				<Button onClick={this.handleClick}>
 					{'Click Me'}
