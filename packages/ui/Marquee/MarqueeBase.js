@@ -157,15 +157,15 @@ const MarqueeBase = kind({
 	},
 
 	handlers: {
-		applyOffset: (node, {distance, spacing}) => {
+		applyOffset: (node, {distance, rtl, spacing}) => {
 			if (!node || !global.IntersectionObserver) return;
 
 			const root = node.parentNode;
 			new global.IntersectionObserver(function (entries, observer) {
-				const {left: clientLeft} = entries[0].boundingClientRect;
-				const {left: rootLeft} = entries[0].rootBounds;
+				const {left, right} = entries[0].boundingClientRect;
+				const {left: rootLeft, right: rootRight} = entries[0].rootBounds;
 
-				const textWidth = clientLeft - rootLeft;
+				const textWidth = rtl ? rootRight - right : left - rootLeft;
 				const offset = distance - (textWidth + spacing);
 
 				node.style.setProperty('--ui-marquee-offset', offset);
@@ -234,11 +234,11 @@ const MarqueeBase = kind({
 					style={clientStyle}
 					onTransitionEnd={onMarqueeComplete}
 				>
-					{children}
+					<span>{children}</span>
 					{duplicate ? (
 						<React.Fragment>
 							<div className={css.spacing} ref={applyOffset} />
-							{children}
+							<span>{children}</span>
 						</React.Fragment>
 					) : null}
 				</div>
