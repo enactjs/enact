@@ -228,11 +228,9 @@ const HeaderBase = kind({
 				);
 			} else {
 				return (
-					<Cell component={Transition} type="slide" visible={!minimized} size={minimized ? '0' : '89px'}>
-						<MarqueeH1 className={css.title} css={marqueeCss} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>
-							{title}
-						</MarqueeH1>
-					</Cell>
+					<MarqueeH1 className={css.title} css={marqueeCss} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>
+						{title}
+					</MarqueeH1>
 				);
 			}
 		}
@@ -245,6 +243,8 @@ const HeaderBase = kind({
 		delete rest.hideLine;
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
+
+		const titleHeight = type === 'dense' ? '69px' : '89px';
 
 		switch (type) {
 			case 'compact': return (
@@ -269,7 +269,9 @@ const HeaderBase = kind({
 			case 'dense':
 			case 'standard': return (
 				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
-					{titleOrInput}
+					<Cell component={Transition} type="slide" visible={!minimized} size={minimized ? '0' : titleHeight}>
+						{titleOrInput}
+					</Cell>
 					<Cell shrink size={96}>
 						<Layout align="end">
 							<Cell className={css.titlesCell}>
