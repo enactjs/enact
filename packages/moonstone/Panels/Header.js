@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {isRtlText} from '@enact/i18n/util';
 import {Layout, Cell} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
+import Transition from '@enact/ui/Transition';
 import ComponentOverride from '@enact/ui/ComponentOverride';
 
 import {MarqueeDecorator, MarqueeBase} from '../Marquee';
@@ -227,7 +228,7 @@ const HeaderBase = kind({
 		}
 	},
 
-	render: ({children, direction, marqueeOn, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+	render: ({children, collapsed, direction, marqueeOn, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.centered;
 		delete rest.fullBleed;
 		delete rest.headerInput;
@@ -238,9 +239,11 @@ const HeaderBase = kind({
 		switch (type) {
 			case 'compact': return (
 				<Layout component="header" aria-label={title} {...rest} align="end">
-					<Cell component={CompactTitle} title={title} titleBelow={titleBelowComponent} marqueeOn={marqueeOn} forceDirection={direction}>
-						<h1 className={css.title}>{title}</h1>
-						{titleBelowComponent}
+					<Cell component={Transition} visible={!collapsed} type="slide">
+						<CompactTitle title={title} titleBelow={titleBelowComponent} marqueeOn={marqueeOn} forceDirection={direction}>
+							<h1 className={css.title}>{title}</h1>
+							{titleBelowComponent}
+						</CompactTitle>
 					</Cell>
 					{children ? <Cell shrink component="nav" className={css.headerComponents}>{children}</Cell> : null}
 				</Layout>
@@ -258,7 +261,9 @@ const HeaderBase = kind({
 			case 'dense':
 			case 'standard': return (
 				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
-					{titleOrInput}
+					<Cell component={Transition} visible={!collapsed} type="slide">
+						{titleOrInput}
+					</Cell>
 					<Cell shrink size={96}>
 						<Layout align="end">
 							<Cell className={css.titlesCell}>
