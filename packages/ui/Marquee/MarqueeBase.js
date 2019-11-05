@@ -7,25 +7,6 @@ import componentCss from './Marquee.module.less';
 
 const isEventSource = (ev) => ev.target === ev.currentTarget;
 
-const applyOffset = (node) => {
-	if (!node || !global.IntersectionObserver) return;
-
-	const root = node.parentNode;
-	new global.IntersectionObserver(function (entries, observer) {
-		const {left: clientLeft} = entries[0].boundingClientRect;
-		const {left: rootLeft} = entries[0].rootBounds;
-
-		const textWidth = clientLeft - rootLeft;
-		const right = Number.parseFloat(entries[0].target.parentNode.style.right);
-		const spacing = Number.parseFloat(entries[0].target.parentNode.style.getPropertyValue('--ui-marquee-spacing'));
-		const offset = right - (textWidth + spacing);
-
-		node.style.setProperty('--ui-marquee-offset', offset);
-
-		observer.disconnect();
-	}, {root}).observe(node);
-};
-
 /**
  * Marquees the children of the component.
  *
@@ -176,6 +157,22 @@ const MarqueeBase = kind({
 	},
 
 	handlers: {
+		applyOffset: (node, {distance, spacing}) => {
+			if (!node || !global.IntersectionObserver) return;
+
+			const root = node.parentNode;
+			new global.IntersectionObserver(function (entries, observer) {
+				const {left: clientLeft} = entries[0].boundingClientRect;
+				const {left: rootLeft} = entries[0].rootBounds;
+
+				const textWidth = clientLeft - rootLeft;
+				const offset = distance - (textWidth + spacing);
+
+				node.style.setProperty('--ui-marquee-offset', offset);
+
+				observer.disconnect();
+			}, {root}).observe(node);
+		},
 		onMarqueeComplete: handle(
 			forProp('animating', true),
 			isEventSource,
@@ -218,7 +215,7 @@ const MarqueeBase = kind({
 		}
 	},
 
-	render: ({children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, ...rest}) => {
+	render: ({applyOffset, children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;
@@ -237,11 +234,11 @@ const MarqueeBase = kind({
 					style={clientStyle}
 					onTransitionEnd={onMarqueeComplete}
 				>
-					<span>{children}</span>
+					{children}
 					{duplicate ? (
 						<React.Fragment>
 							<div className={css.spacing} ref={applyOffset} />
-							<span>{children}</span>
+							{children}
 						</React.Fragment>
 					) : null}
 				</div>
