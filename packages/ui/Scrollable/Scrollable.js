@@ -375,6 +375,11 @@ class ScrollableBase extends Component {
 		rtl: PropTypes.bool,
 
 		/**
+		 * TBD
+		 */
+		scale: PropTypes.func,
+
+		/**
 		 * Called to execute additional logic in a themed component when scrollTo is called.
 		 *
 		 * @type {Function}
@@ -458,6 +463,10 @@ class ScrollableBase extends Component {
 		this.resizeRegistry.parent = this.context;
 		this.addEventListeners();
 		this.updateScrollbars();
+
+		if (this.verticalScrollbarRef.current) {
+			this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.scrollTop);
+		}
 	}
 
 	componentDidUpdate (prevProps, prevState) {
@@ -499,6 +508,8 @@ class ScrollableBase extends Component {
 		if (horizontal || vertical) {
 			this.resizeRegistry.notify({});
 		}
+
+		this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.scrollTop);
 	}
 
 	componentWillUnmount () {
@@ -1062,6 +1073,8 @@ class ScrollableBase extends Component {
 			this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.props.overSize);
 		}
 		this.forwardScrollEvent('onScroll');
+
+		this.props.scale({scrollTop: this.scrollTop});
 	}
 
 	stop () {
@@ -1364,6 +1377,7 @@ class ScrollableBase extends Component {
 		delete rest.onWheel;
 		delete rest.overscrollEffectOn;
 		delete rest.removeEventListeners;
+		delete rest.scale;
 		delete rest.scrollTo;
 		delete rest.stop;
 		delete rest.verticalScrollbar;
