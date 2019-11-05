@@ -12,7 +12,10 @@ const applyOffset = (node) => {
 
 	const root = node.parentNode;
 	new global.IntersectionObserver(function (entries, observer) {
-		const {left} = entries[0].boundingClientRect;
+		const {left: clientLeft} = entries[0].boundingClientRect;
+		const {left: rootLeft} = entries[0].rootBounds;
+		const left = clientLeft - rootLeft;
+
 		const offset = Math.round(left) - left;
 		node.style.setProperty('--ui-marquee-offset', offset);
 
