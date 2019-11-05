@@ -131,6 +131,15 @@ const HeaderBase = kind({
 		marqueeOn: PropTypes.oneOf(['focus', 'hover', 'render']),
 
 		/**
+		 * Minimizes the Header to only show the header-components.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		minimized: PropTypes.bool,
+
+		/**
 		 * Sub-title displayed at the bottom of the panel.
 		 *
 		 * This is a [`slot`]{@link ui/Slottable.Slottable}, so it can be used as a tag-name inside
@@ -181,6 +190,7 @@ const HeaderBase = kind({
 	defaultProps: {
 		fullBleed: false,
 		marqueeOn: 'render',
+		minimized: false,
 		// titleAbove: '00',
 		type: 'standard'
 	},
@@ -191,7 +201,7 @@ const HeaderBase = kind({
 	},
 
 	computed: {
-		className: ({centered, fullBleed, hideLine, type, styler}) => styler.append({centered, fullBleed, hideLine}, type),
+		className: ({centered, fullBleed, hideLine, minimized, type, styler}) => styler.append({centered, fullBleed, hideLine, minimized}, type),
 		direction: ({title, titleBelow}) => isRtlText(title) || isRtlText(titleBelow) ? 'rtl' : 'ltr',
 		titleBelowComponent: ({centered, marqueeOn, titleBelow, type}) => {
 			switch (type) {
@@ -218,17 +228,15 @@ const HeaderBase = kind({
 				);
 			} else {
 				return (
-					<Cell>
-						<MarqueeH1 className={css.title} css={marqueeCss} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>
-							{title}
-						</MarqueeH1>
-					</Cell>
+					<MarqueeH1 className={css.title} css={marqueeCss} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>
+						{title}
+					</MarqueeH1>
 				);
 			}
 		}
 	},
 
-	render: ({children, collapsed, direction, marqueeOn, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+	render: ({children, minimized, direction, marqueeOn, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.centered;
 		delete rest.fullBleed;
 		delete rest.headerInput;
@@ -239,7 +247,7 @@ const HeaderBase = kind({
 		switch (type) {
 			case 'compact': return (
 				<Layout component="header" aria-label={title} {...rest} align="end">
-					<Cell component={Transition} visible={!collapsed} type="slide">
+					<Cell component={Transition} visible={!minimized} type="slide">
 						<CompactTitle title={title} titleBelow={titleBelowComponent} marqueeOn={marqueeOn} forceDirection={direction}>
 							<h1 className={css.title}>{title}</h1>
 							{titleBelowComponent}
@@ -261,7 +269,7 @@ const HeaderBase = kind({
 			case 'dense':
 			case 'standard': return (
 				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
-					<Cell component={Transition} visible={!collapsed} type="slide">
+					<Cell component={Transition} type="slide" visible={!minimized} size={minimized ? '0' : '89px'}>
 						{titleOrInput}
 					</Cell>
 					<Cell shrink size={96}>
