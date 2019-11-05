@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `moonstone/Panels.Header` prop `minimized`
+
 ## [3.2.3] - 2019-11-01
 
 ### Changed
