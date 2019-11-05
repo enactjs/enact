@@ -32,6 +32,12 @@ const RTL = [
 	'فوری بھوری لومڑی سست کتے پر چھلانگ لگا. بین پرندوں سوریاست میں پرواز.'
 ];
 
+const texts = [
+	'No marquee no marquee',
+	'Ellipsis show before the initial start of the marquee. Ellipsis will not show on the subsequent starts.',
+	'Second test to show that the Ellipsis show before the initial start of the marquee. Ellipsis will not show on the subsequent starts.'
+];
+
 const disabledDisclaimer = (disabled) => (disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>Marquee does not visually respond to <code>disabled</code> state.</p> : <p />);
 
 const MarqueeI18nSamples = I18nContextDecorator({updateLocaleProp: 'updateLocale'}, kind({
@@ -110,46 +116,31 @@ class MarqueeWithShortContent extends React.Component {
 class MarqueeWithContentChanged extends React.Component {
 	constructor (props) {
 		super(props);
-		this.cnt = 0;
 		this.state = {
-			text: 'Ellipsis show. Wait for marquee to start.'
+			count: 0
 		};
 	}
 
-handleClick	= () => {
-	if (this.cnt === 0) {
-		this.setState({
-			text: 'No marquee no marquee'
-		});
-	} else if (this.cnt === 1) {
-		this.setState({
-			text: 'Ellipsis show before the initial start of the marquee. Ellipsis will not show on the subsequent starts.'
-		});
-	} else if (this.cnt === 2) {
-		this.setState({
-			text: 'Second test to show that the Ellipsis show before the initial start of the marquee. Ellipsis will not show on the subsequent starts.'
-		});
+	handleClick	= () => {
+		this.setState(({count}) => ({count: ++count % 3}));
 	}
-	this.cnt++;
-}
 
-render = () => {
-	return (
-		<div>
-			<ol>
-				<li>Click once to disable the marquee.</li>
-				<li>Click a second time to show the ellipsis just before the text marquees the first time.</li>
-				<li>Click a third time to show the ellipsis just before the text marquees the first time</li>
-			</ol>
-			<Button onClick={this.handleClick}>
-				{'Click Me'}
-			</Button>
-			<Marquee style={{width: '400px'}} marqueeOn={'render'} >{this.state.text}</Marquee>
-		</div>
-	);
+	render = () => {
+		return (
+			<div>
+				<ol>
+					<li>Click once to disable the marquee.</li>
+					<li>Click a second time to show the ellipsis just before the text marquees the first time.</li>
+					<li>Click a third time to show the ellipsis just before the text marquees the first time</li>
+				</ol>
+				<Button onClick={this.handleClick}>
+					{'Click Me'}
+				</Button>
+				<Marquee style={{width: '400px'}} marqueeOn={'render'} >{texts[this.state.count]}</Marquee>
+			</div>
+		);
+	}
 }
-}
-
 
 storiesOf('Marquee', module)
 	.add(
