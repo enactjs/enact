@@ -136,7 +136,7 @@ const NotificationBase = kind({
 
 	computed: {
 		className: ({className, buttons, styler}) => {
-			if (buttons && buttons.length > 3) {
+			if (buttons && buttons.length > 2) {
 				return styler.append({wide: true});
 			} else {
 				return className;
