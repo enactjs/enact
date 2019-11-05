@@ -201,7 +201,7 @@ const HeaderBase = kind({
 	},
 
 	computed: {
-		className: ({centered, fullBleed, hideLine, minimized, type, styler}) => styler.append({centered, fullBleed, hideLine, minimized}, type),
+		className: ({centered, fullBleed, hideLine, type, styler}) => styler.append({centered, fullBleed, hideLine}, type),
 		direction: ({title, titleBelow}) => isRtlText(title) || isRtlText(titleBelow) ? 'rtl' : 'ltr',
 		titleBelowComponent: ({centered, marqueeOn, titleBelow, type}) => {
 			switch (type) {
@@ -215,7 +215,7 @@ const HeaderBase = kind({
 		subTitleBelowComponent: ({centered, marqueeOn, subTitleBelow}) => {
 			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
 		},
-		titleOrInput: ({centered, headerInput, marqueeOn, minimized, title, type}) => {
+		titleOrInput: ({centered, headerInput, marqueeOn, title, type}) => {
 			if (headerInput && type === 'standard') {
 				return (
 					<Cell className={css.headerInput}>
