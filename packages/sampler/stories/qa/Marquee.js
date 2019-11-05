@@ -291,8 +291,6 @@ storiesOf('Marquee', module)
 	.add(
 		'with Content Changed',
 		() => (
-			<div>
-				<MarqueeWithContentChanged />
-			</div>
+			<MarqueeWithContentChanged />
 		)
 	);
