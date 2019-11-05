@@ -107,7 +107,6 @@ class MarqueeWithShortContent extends React.Component {
 	}
 }
 
-
 class MarqueeWithContentChanged extends React.Component {
 	constructor (props) {
 		super(props);
