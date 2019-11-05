@@ -215,7 +215,7 @@ const HeaderBase = kind({
 		subTitleBelowComponent: ({centered, marqueeOn, subTitleBelow}) => {
 			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
 		},
-		titleOrInput: ({centered, headerInput, marqueeOn, title, type}) => {
+		titleOrInput: ({centered, headerInput, marqueeOn, minimized, title, type}) => {
 			if (headerInput && type === 'standard') {
 				return (
 					<Cell className={css.headerInput}>
@@ -228,9 +228,11 @@ const HeaderBase = kind({
 				);
 			} else {
 				return (
-					<MarqueeH1 className={css.title} css={marqueeCss} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>
-						{title}
-					</MarqueeH1>
+					<Cell component={Transition} type="slide" visible={!minimized} size={minimized ? '0' : '89px'}>
+						<MarqueeH1 className={css.title} css={marqueeCss} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>
+							{title}
+						</MarqueeH1>
+					</Cell>
 				);
 			}
 		}
@@ -247,11 +249,9 @@ const HeaderBase = kind({
 		switch (type) {
 			case 'compact': return (
 				<Layout component="header" aria-label={title} {...rest} align="end">
-					<Cell component={Transition} visible={!minimized} type="slide">
-						<CompactTitle title={title} titleBelow={titleBelowComponent} marqueeOn={marqueeOn} forceDirection={direction}>
-							<h1 className={css.title}>{title}</h1>
-							{titleBelowComponent}
-						</CompactTitle>
+					<Cell component={CompactTitle} title={title} titleBelow={titleBelowComponent} marqueeOn={marqueeOn} forceDirection={direction}>
+						<h1 className={css.title}>{title}</h1>
+						{titleBelowComponent}
 					</Cell>
 					{children ? <Cell shrink component="nav" className={css.headerComponents}>{children}</Cell> : null}
 				</Layout>
@@ -269,9 +269,7 @@ const HeaderBase = kind({
 			case 'dense':
 			case 'standard': return (
 				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
-					<Cell component={Transition} type="slide" visible={!minimized} size={minimized ? '0' : '89px'}>
-						{titleOrInput}
-					</Cell>
+					{titleOrInput}
 					<Cell shrink size={96}>
 						<Layout align="end">
 							<Cell className={css.titlesCell}>
