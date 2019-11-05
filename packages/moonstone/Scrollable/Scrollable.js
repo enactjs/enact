@@ -491,7 +491,7 @@ class ScrollableBase extends Component {
 						previousScrollHeight: this.uiRef.current.bounds.scrollHeight,
 						scrollTop: this.uiRef.current.scrollTop
 					};
-				pos = positionFn({item: spotItem, scrollInfo});
+				pos = positionFn({item: spotItem, scrollPosition: scrollInfo.scrollTop});
 			}
 
 			if (pos && (pos.left !== this.uiRef.current.scrollLeft || pos.top !== this.uiRef.current.scrollTop)) {
