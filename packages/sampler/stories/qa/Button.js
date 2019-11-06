@@ -37,7 +37,7 @@ storiesOf('Button', module)
 				selected={boolean('selected', Config)}
 				size={select('size', ['small', 'large'], Config)}
 			>
-				{select('value', prop.longText, Config, 'Loooooooooooooooooog Button')}
+				{select('value', prop.longText, Config, 'A Loooooooooooooooooog Button')}
 			</Button>
 		)
 	)
