@@ -65,7 +65,8 @@
 	// Standard and Dense Header
 	&.dense,
 	&.standard {
-		max-height: @moon-header-standard-height;
+		transition: height 600ms ease-in-out;  // Intentionally slightly longer than the transition for an inertial effect
+		will-change: height;
 
 		.title {
 			// The height is determined by the line-height below, but we want to maintain that as a
@@ -86,19 +87,24 @@
 		.inputHighlight {
 			max-width: 100%;
 		}
-
 	}
 
 	// Standard Header
 	&.standard {
+		height: @moon-header-standard-height;
+
 		.titlesCell {
 			margin-bottom: 9px;
+		}
+
+		&.minimized {
+			height: (@moon-header-standard-height - 89px);  // Must subtract the height of the header element. Considering changing the `em` line-height to a px value to make this more straightforward.
 		}
 	}
 
 	// Dense Header
 	&.dense {
-		max-height: @moon-header-dense-height;
+		height: @moon-header-dense-height;
 
 		.title {
 			font-size: @moon-header-dense-title-font-size;
@@ -112,6 +118,10 @@
 		.titleBelow,
 		.subTitleBelow {
 			font-size: @moon-header-dense-title-below-font-size;
+		}
+
+		&.minimized {
+			height: (@moon-header-standard-height - 69px);  // Must subtract the height of the header element. Considering changing the `em` line-height to a px value to make this more straightforward.
 		}
 	}
 
