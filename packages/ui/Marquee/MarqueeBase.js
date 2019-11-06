@@ -234,11 +234,11 @@ const MarqueeBase = kind({
 					style={clientStyle}
 					onTransitionEnd={onMarqueeComplete}
 				>
-					<span>{children}</span>
+					{children}
 					{duplicate ? (
 						<React.Fragment>
 							<div className={css.spacing} ref={applyOffset} />
-							<span>{children}</span>
+							{children}
 						</React.Fragment>
 					) : null}
 				</div>
