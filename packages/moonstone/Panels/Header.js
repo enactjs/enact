@@ -246,7 +246,7 @@ const HeaderBase = kind({
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
 
-		const titleHeight = ri.unit(ri.scale((type === 'dense') ? 69 : 89), 'rem');
+		const titleHeight = ri.unit(ri.scale((type === 'dense') ? 69 : 90), 'rem');
 
 		switch (type) {
 			case 'compact': return (
@@ -270,7 +270,7 @@ const HeaderBase = kind({
 			// );
 			case 'dense':
 			case 'standard': return (
-				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
+				<Layout component="header" aria-label={title} {...rest} css={css.layout} style={{height: 'unset'}} orientation="vertical">
 					<Cell component={Transition} type="slide" visible={!minimized} size={minimized ? '0' : titleHeight}>
 						{titleOrInput}
 					</Cell>
