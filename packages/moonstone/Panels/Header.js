@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {isRtlText} from '@enact/i18n/util';
 import ComponentOverride from '@enact/ui/ComponentOverride';
 import {Layout, Cell} from '@enact/ui/Layout';
-import ri from '@enact/ui/resolution';
 import Slottable from '@enact/ui/Slottable';
 import Transition from '@enact/ui/Transition';
 
