@@ -49,8 +49,7 @@ class Job {
 	 *
 	 * @method
 	 * @param   {Number}     timeout  The number of milliseconds to wait before starting the job.
-	 *                                This supersedes the timeout set at construction or by
-	 *                                `setTimeout`.
+	 *                                This supersedes the timeout set at construction.
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
 	 *
 	 * @returns {undefined}
@@ -87,7 +86,7 @@ class Job {
 
 	/**
 	 * Executes the job immediately, then prevents any other calls to `throttle()` from running
-	 * until the `timeout` configured at construction or via `setTimeout` passes.
+	 * until the `timeout` configured at construction passes.
 	 *
 	 * @method
 	 * @param   {...*}       args  Any args passed are forwarded to the callback
@@ -106,8 +105,7 @@ class Job {
 	 *
 	 * @method
 	 * @param   {Number}     timeout  The number of milliseconds to wait before allowing the job to
-	 *                                be ran again. This supersedes the timeout set at construction
-	 *                                or by `setTimeout`.
+	 *                                be ran again. This supersedes the timeout set at construction.
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
 	 *
 	 * @returns {undefined}
