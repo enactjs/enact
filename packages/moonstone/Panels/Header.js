@@ -2,10 +2,11 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {isRtlText} from '@enact/i18n/util';
+import ComponentOverride from '@enact/ui/ComponentOverride';
 import {Layout, Cell} from '@enact/ui/Layout';
+import ri from '@enact/ui/resolution';
 import Slottable from '@enact/ui/Slottable';
 import Transition from '@enact/ui/Transition';
-import ComponentOverride from '@enact/ui/ComponentOverride';
 
 import {MarqueeDecorator, MarqueeBase} from '../Marquee';
 import Skinnable from '../Skinnable';
@@ -245,7 +246,7 @@ const HeaderBase = kind({
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
 
-		const titleHeight = type === 'dense' ? '69px' : '89px';
+		const titleHeight = ri.unit(ri.scale((type === 'dense') ? 69 : 89), 'rem');
 
 		switch (type) {
 			case 'compact': return (
