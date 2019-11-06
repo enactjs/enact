@@ -203,7 +203,7 @@ const HeaderBase = kind({
 	},
 
 	computed: {
-		className: ({centered, fullBleed, hideLine, type, styler}) => styler.append({centered, fullBleed, hideLine}, type),
+		className: ({centered, fullBleed, hideLine, minimized, type, styler}) => styler.append({centered, fullBleed, hideLine, minimized}, type),
 		direction: ({title, titleBelow}) => isRtlText(title) || isRtlText(titleBelow) ? 'rtl' : 'ltr',
 		titleBelowComponent: ({centered, marqueeOn, titleBelow, type}) => {
 			switch (type) {
@@ -246,7 +246,7 @@ const HeaderBase = kind({
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
 
-		const titleHeight = ri.unit(ri.scale((type === 'dense') ? 69 : 90), 'rem');
+		const titleHeight = (type === 'dense') ? 69 : 90;
 
 		switch (type) {
 			case 'compact': return (
@@ -270,8 +270,8 @@ const HeaderBase = kind({
 			// );
 			case 'dense':
 			case 'standard': return (
-				<Layout component="header" aria-label={title} {...rest} css={css.layout} style={{height: 'unset'}} orientation="vertical">
-					<Cell component={Transition} type="slide" visible={!minimized} size={minimized ? '0' : titleHeight}>
+				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
+					<Cell component={Transition} type="slide" visible={!minimized} size={minimized ? 0 : titleHeight}>
 						{titleOrInput}
 					</Cell>
 					<Cell shrink size={96}>
