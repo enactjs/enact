@@ -57,20 +57,20 @@ class ScrollerBase extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
-		 * The distance that a list should move first when scrolling
-		 *
-		 * @type {Number}
-		 * @public
-		 */
-		moveDistance: PropTypes.number,
-
-		/**
 		 * Prop to check context value if Scrollbar exists or not.
 		 *
 		 * @type {Boolean}
 		 * @private
 		 */
 		isVerticalScrollbarVisible: PropTypes.bool,
+
+		/**
+		 * The distance that a list should move first when scrolling
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		moveDistance: PropTypes.number,
 
 		/**
 		 * `true` if RTL, `false` if LTR.
