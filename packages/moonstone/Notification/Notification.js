@@ -135,8 +135,9 @@ const NotificationBase = kind({
 	},
 
 	computed: {
-		className: ({buttons, styler}) =>
-			styler.append({wide: (buttons && buttons.filter(Boolean).length > 2)}),
+		className: ({buttons, styler}) => styler.append({
+			wide: (buttons && React.Children.toArray(buttons).filter(Boolean).length > 2)
+		}),
 		buttons: ({buttons}) => React.Children.map(buttons, (button) => {
 			if (button && button.props && !button.props.small) {
 				return React.cloneElement(button, {size: 'small'});
