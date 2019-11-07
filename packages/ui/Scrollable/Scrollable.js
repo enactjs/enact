@@ -354,6 +354,11 @@ class ScrollableBase extends Component {
 		}),
 
 		/**
+		 * TBD
+		 */
+		overSize: PropTypes.number,
+
+		/**
 		 * Called when removing additional event listeners in a themed component.
 		 *
 		 * @type {Function}
@@ -453,6 +458,10 @@ class ScrollableBase extends Component {
 		this.resizeRegistry.parent = this.context;
 		this.addEventListeners();
 		this.updateScrollbars();
+
+		if (this.verticalScrollbarRef.current && this.verticalScrollbarRef.current.syncHeight) {
+			this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.scrollTop);
+		}
 	}
 
 	componentDidUpdate (prevProps, prevState) {
@@ -493,6 +502,10 @@ class ScrollableBase extends Component {
 		const vertical = isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
 		if (horizontal || vertical) {
 			this.resizeRegistry.notify({});
+		}
+
+		if (this.verticalScrollbarRef.current && this.verticalScrollbarRef.current.syncHeight) {
+			this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.scrollTop);
 		}
 	}
 
@@ -1051,6 +1064,13 @@ class ScrollableBase extends Component {
 		}
 
 		this.childRefCurrent.setScrollPosition(this.scrollLeft, this.scrollTop, this.props.rtl, ...rest);
+		if (this.verticalScrollbarRef.current && this.verticalScrollbarRef.current.syncHeight) {
+			if (this.scrollTop < this.props.overSize) {
+				this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.scrollTop);
+			} else {
+				this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.props.overSize);
+			}
+		}
 		this.forwardScrollEvent('onScroll');
 	}
 
@@ -1323,7 +1343,7 @@ class ScrollableBase extends Component {
 
 	render () {
 		const
-			{className, containerRenderer, noScrollByDrag, rtl, style, ...rest} = this.props,
+			{className, containerRenderer, noScrollByDrag, overSize, rtl, style, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className),
 			childWrapper = noScrollByDrag ? 'div' : TouchableDiv,
@@ -1374,6 +1394,7 @@ class ScrollableBase extends Component {
 					initChildRef: this.initChildRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
+					overSize,
 					rtl,
 					scrollTo: this.scrollTo,
 					style,

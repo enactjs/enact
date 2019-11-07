@@ -491,7 +491,8 @@ class ScrollableBase extends Component {
 						previousScrollHeight: this.uiRef.current.bounds.scrollHeight,
 						scrollTop: this.uiRef.current.scrollTop
 					};
-				pos = positionFn({item: spotItem, scrollInfo});
+
+				pos = positionFn({item: spotItem, scrollPosition: scrollInfo.scrollTop});
 			}
 
 			if (pos && (pos.left !== this.uiRef.current.scrollLeft || pos.top !== this.uiRef.current.scrollTop)) {
@@ -504,11 +505,10 @@ class ScrollableBase extends Component {
 	}
 
 	onFocus = (ev) => {
-		const
-			{isDragging} = this.uiRef.current,
-			shouldPreventScrollByFocus = this.childRef.current.shouldPreventScrollByFocus ?
-				this.childRef.current.shouldPreventScrollByFocus() :
-				false;
+		const {isDragging} = this.uiRef.current;
+		const shouldPreventScrollByFocus = this.childRef.current.shouldPreventScrollByFocus ?
+			this.childRef.current.shouldPreventScrollByFocus() :
+			false;
 
 		if (this.isWheeling) {
 			this.uiRef.current.stop();
@@ -990,6 +990,7 @@ class ScrollableBase extends Component {
 					initChildRef: initUiChildRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
+					overSize,
 					rtl,
 					scrollTo,
 					style,
@@ -1015,6 +1016,7 @@ class ScrollableBase extends Component {
 									isVerticalScrollbarVisible,
 									onScroll: handleScroll,
 									onUpdate: this.handleScrollerUpdate,
+									overSize,
 									ref: this.childRef,
 									rtl,
 									scrollAndFocusScrollbarButton: this.scrollAndFocusScrollbarButton,
@@ -1029,6 +1031,7 @@ class ScrollableBase extends Component {
 									focusableScrollButtons={focusableScrollbar}
 									nextButtonAriaLabel={downButtonAriaLabel}
 									onKeyDownButton={this.onKeyDown}
+									overSize={overSize}
 									preventBubblingOnKeyDown={preventBubblingOnKeyDown}
 									previousButtonAriaLabel={upButtonAriaLabel}
 									rtl={rtl}
