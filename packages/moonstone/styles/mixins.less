@@ -304,7 +304,9 @@
 }
 
 .moon-notification-content() {
-	.moon-font(@moon-notification-font-family, @moon-non-latin-font-family-light);
+	.moon-font(@moon-notification-font-family, @moon-non-latin-font-family-light, {
+		line-height: @moon-non-latin-body-line-height;
+	});
 	font-weight: @moon-notification-font-weight;
 	font-style: @moon-notification-font-style;
 	font-size: @moon-notification-font-size;

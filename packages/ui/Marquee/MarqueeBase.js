@@ -7,19 +7,6 @@ import componentCss from './Marquee.module.less';
 
 const isEventSource = (ev) => ev.target === ev.currentTarget;
 
-const applyOffset = (node) => {
-	if (!node || !global.IntersectionObserver) return;
-
-	const root = node.parentNode;
-	new global.IntersectionObserver(function (entries, observer) {
-		const {left} = entries[0].boundingClientRect;
-		const offset = Math.round(left) - left;
-		node.style.setProperty('--ui-marquee-offset', offset);
-
-		observer.disconnect();
-	}, {root}).observe(node);
-};
-
 /**
  * Marquees the children of the component.
  *
@@ -170,6 +157,22 @@ const MarqueeBase = kind({
 	},
 
 	handlers: {
+		applyOffset: (node, {distance, rtl, spacing}) => {
+			if (!node || !global.IntersectionObserver) return;
+
+			const root = node.parentNode;
+			new global.IntersectionObserver(function (entries, observer) {
+				const {left, right} = entries[0].boundingClientRect;
+				const {left: rootLeft, right: rootRight} = entries[0].rootBounds;
+
+				const textWidth = rtl ? rootRight - right : left - rootLeft;
+				const offset = distance - (textWidth + spacing);
+
+				node.style.setProperty('--ui-marquee-offset', offset);
+
+				observer.disconnect();
+			}, {root}).observe(node);
+		},
 		onMarqueeComplete: handle(
 			forProp('animating', true),
 			isEventSource,
@@ -212,7 +215,7 @@ const MarqueeBase = kind({
 		}
 	},
 
-	render: ({children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, ...rest}) => {
+	render: ({applyOffset, children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;

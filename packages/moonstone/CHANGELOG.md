@@ -2,10 +2,11 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unrelease]
+## [unreleased]
 
 ### Fixed
 
+- `moonstone/Notification` line height for non-latin locales
 - `moonstone/Notification` to show all buttons in one line
 
 ## [3.2.3] - 2019-11-01
