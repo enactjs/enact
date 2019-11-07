@@ -94,7 +94,15 @@ class VirtualGridList extends React.Component {
 		 * @required
 		 * @public
 		 */
-		itemSize: gridListItemSizeShape.isRequired
+		itemSize: gridListItemSizeShape.isRequired,
+
+		/**
+		 * The distance that a list should scale first when scrolling
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		moveDistance: PropTypes.number
 	}
 
 	constructor (props) {

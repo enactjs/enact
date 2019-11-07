@@ -189,7 +189,7 @@ class ScrollableBase extends Component {
 		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
 		/**
-		 * The distance that a list should move first when scrolling
+		 * The distance that a list should scale first when scrolling
 		 *
 		 * @type {Number}
 		 * @public

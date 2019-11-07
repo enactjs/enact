@@ -65,7 +65,7 @@ class ScrollerBase extends Component {
 		isVerticalScrollbarVisible: PropTypes.bool,
 
 		/**
-		 * The distance that a list should move first when scrolling
+		 * The distance that a list should scale first when scrolling
 		 *
 		 * @type {Number}
 		 * @public
