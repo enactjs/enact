@@ -53,7 +53,10 @@ class ScrollbarBase extends Component {
 		corner: PropTypes.bool,
 
 		/**
-		 * TBD
+		 * The distance that a list should move first when scrolling
+		 *
+		 * @type {Number}
+		 * @public
 		 */
 		moveDistance: PropTypes.number,
 

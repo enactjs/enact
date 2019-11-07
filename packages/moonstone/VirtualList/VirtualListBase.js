@@ -145,7 +145,10 @@ const VirtualListBaseFactory = (type) => {
 			itemSizes: PropTypes.array,
 
 			/**
-			 * TBD
+			 * The distance that a list should move first when scrolling
+			 *
+			 * @type {Number}
+			 * @public
 			 */
 			moveDistance: PropTypes.number,
 
