@@ -147,7 +147,7 @@ const VirtualListBaseFactory = (type) => {
 			/**
 			 * TBD
 			 */
-			overSize: PropTypes.number,
+			moveDistance: PropTypes.number,
 
 			/**
 			 * It scrolls by page when `true`, by item when `false`.
@@ -719,12 +719,12 @@ const VirtualListBaseFactory = (type) => {
 
 		calculatePositionOnFocus = ({item, scrollPosition = this.uiRefCurrent.scrollPosition}) => {
 			const
-				{overSize, pageScroll} = this.props,
+				{moveDistance, pageScroll} = this.props,
 				{numOfItems} = this.uiRefCurrent.state,
 				{primary} = this.uiRefCurrent,
-				overSizeOffset = overSize - Math.min(overSize, scrollPosition),
+				moveDistanceOffset = moveDistance ? (moveDistance - Math.min(moveDistance, scrollPosition)) : 0,
 				// The offset varies depending on the VirtualList position.
-				offsetToClientEnd = primary.clientSize - primary.itemSize - overSizeOffset,
+				offsetToClientEnd = primary.clientSize - primary.itemSize - moveDistanceOffset,
 				focusedIndex = getNumberValue(item.getAttribute(dataIndexAttribute));
 
 			if (!isNaN(focusedIndex)) {

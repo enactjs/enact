@@ -189,6 +189,14 @@ class ScrollableBase extends Component {
 		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
 		/**
+		 * The distance that a list should move first when scrolling
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		moveDistance: PropTypes.number,
+
+		/**
 		 * Prevents scroll by dragging or flicking on the list or the scroller.
 		 *
 		 * @type {Boolean}
@@ -354,11 +362,6 @@ class ScrollableBase extends Component {
 		}),
 
 		/**
-		 * TBD
-		 */
-		overSize: PropTypes.number,
-
-		/**
 		 * Called when removing additional event listeners in a themed component.
 		 *
 		 * @type {Function}
@@ -455,17 +458,20 @@ class ScrollableBase extends Component {
 	}
 
 	componentDidMount () {
+		const {moveDistance} = this.props;
+
 		this.resizeRegistry.parent = this.context;
 		this.addEventListeners();
 		this.updateScrollbars();
 
-		if (this.verticalScrollbarRef.current && this.verticalScrollbarRef.current.syncHeight) {
-			this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.scrollTop);
+		if (moveDistance && this.verticalScrollbarRef.current && this.verticalScrollbarRef.current.syncHeight) {
+			this.verticalScrollbarRef.current.syncHeight(moveDistance, this.scrollTop);
 		}
 	}
 
 	componentDidUpdate (prevProps, prevState) {
 		const
+			{moveDistance} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			{hasDataSizeChanged} = this.childRefCurrent;
 
@@ -504,8 +510,8 @@ class ScrollableBase extends Component {
 			this.resizeRegistry.notify({});
 		}
 
-		if (this.verticalScrollbarRef.current && this.verticalScrollbarRef.current.syncHeight) {
-			this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.scrollTop);
+		if (moveDistance && this.verticalScrollbarRef.current && this.verticalScrollbarRef.current.syncHeight) {
+			this.verticalScrollbarRef.current.syncHeight(moveDistance, this.scrollTop);
 		}
 	}
 
@@ -1056,6 +1062,8 @@ class ScrollableBase extends Component {
 	}
 
 	scroll = (left, top, ...rest) => {
+		const {moveDistance} = this.props;
+
 		if (left !== this.scrollLeft) {
 			this.setScrollLeft(left);
 		}
@@ -1064,11 +1072,11 @@ class ScrollableBase extends Component {
 		}
 
 		this.childRefCurrent.setScrollPosition(this.scrollLeft, this.scrollTop, this.props.rtl, ...rest);
-		if (this.verticalScrollbarRef.current && this.verticalScrollbarRef.current.syncHeight) {
-			if (this.scrollTop < this.props.overSize) {
-				this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.scrollTop);
+		if (moveDistance && this.verticalScrollbarRef.current && this.verticalScrollbarRef.current.syncHeight) {
+			if (this.scrollTop < moveDistance) {
+				this.verticalScrollbarRef.current.syncHeight(moveDistance, this.scrollTop);
 			} else {
-				this.verticalScrollbarRef.current.syncHeight(this.props.overSize, this.props.overSize);
+				this.verticalScrollbarRef.current.syncHeight(moveDistance, moveDistance);
 			}
 		}
 		this.forwardScrollEvent('onScroll');
@@ -1343,7 +1351,7 @@ class ScrollableBase extends Component {
 
 	render () {
 		const
-			{className, containerRenderer, noScrollByDrag, overSize, rtl, style, ...rest} = this.props,
+			{className, containerRenderer, moveDistance, noScrollByDrag, rtl, style, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className),
 			childWrapper = noScrollByDrag ? 'div' : TouchableDiv,
@@ -1394,7 +1402,7 @@ class ScrollableBase extends Component {
 					initChildRef: this.initChildRef,
 					isHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible,
-					overSize,
+					moveDistance,
 					rtl,
 					scrollTo: this.scrollTo,
 					style,

@@ -55,7 +55,7 @@ class ScrollbarBase extends Component {
 		/**
 		 * TBD
 		 */
-		overSize: PropTypes.number,
+		moveDistance: PropTypes.number,
 
 		/**
 		 * `true` if rtl, `false` if ltr.
@@ -99,7 +99,7 @@ class ScrollbarBase extends Component {
 
 		this.scrollbarRef = React.createRef();
 		this.scrollButtonsRef = React.createRef();
-		this.overSizeRef = React.createRef();
+		this.moveDistanceRef = React.createRef();
 	}
 
 	componentDidMount () {
@@ -119,28 +119,30 @@ class ScrollbarBase extends Component {
 		};
 		this.focusOnButton = focusOnButton;
 
-		this.syncHeight = (overSize, scrollPosition) => {
-			const
-				height = parseInt(window.getComputedStyle(this.overSizeRef.current).getPropertyValue('height')),
-				thumbRef = this.getContainerRef(),
-				nextButtonRef = this.scrollButtonsRef.current.nextButtonRef;
+		this.syncHeight = (moveDistance, scrollPosition) => {
+			if (this.moveDistanceRef.current && typeof window !== 'undefined') {
+				const
+					height = parseInt(window.getComputedStyle(this.moveDistanceRef.current).getPropertyValue('height')),
+					thumbRef = this.getContainerRef(),
+					nextButtonRef = this.scrollButtonsRef.current.nextButtonRef;
 
-			// To scale the thumb height depending on the VirtualList position
-			thumbRef.current.style.transform =
-				'scale3d(1, ' + (height - overSize + scrollPosition - 120) / (height - overSize - 120) + ', 1)';
+				// To scale the thumb height depending on the VirtualList position
+				thumbRef.current.style.transform =
+					'scale3d(1, ' + (height - moveDistance + scrollPosition - 120) / (height - moveDistance - 120) + ', 1)';
 
-			// To move the next scroll bar button depending on the VirtualList position
-			nextButtonRef.current.style.transform =
-				'translate3d(0, ' + (scrollPosition - overSize) + 'px, 0)';
+				// To move the next scroll bar button depending on the VirtualList position
+				nextButtonRef.current.style.transform =
+					'translate3d(0, ' + (scrollPosition - moveDistance) + 'px, 0)';
+			}
 		};
 	}
 
 	render () {
-		const {cbAlertThumb, clientSize, corner, overSize, vertical, ...rest} = this.props;
+		const {cbAlertThumb, clientSize, corner, moveDistance, vertical, ...rest} = this.props;
 
-		if (overSize) {
+		if (moveDistance) {
 			return (
-				<div className={componentCss.overSize} ref={this.overSizeRef}>
+				<div className={componentCss.moveDistance} ref={this.moveDistanceRef}>
 					<ScrollButtons
 						{...rest}
 						ref={this.scrollButtonsRef}
@@ -151,7 +153,7 @@ class ScrollbarBase extends Component {
 						clientSize={clientSize}
 						css={componentCss}
 						ref={this.scrollbarRef}
-						style={{height: 'calc(100% - ' + (overSize + 120) + 'px)'}}
+						style={{height: 'calc(100% - ' + (moveDistance + 120) + 'px)'}}
 						vertical={vertical}
 						childRenderer={({thumbRef}) => ( // eslint-disable-line react/jsx-no-bind
 							<ScrollThumb

@@ -193,6 +193,14 @@ const VirtualListBaseFactory = (type) => {
 			itemSizes: PropTypes.arrayOf(PropTypes.number),
 
 			/**
+			 * The distance that a list should move first when scrolling
+			 *
+			 * @type {Number}
+			 * @public
+			 */
+			moveDistance: PropTypes.number,
+
+			/**
 			 * Called when the range of items has updated.
 			 *
 			 * Event payload includes the `firstIndex` and `lastIndex` of the list.
@@ -212,11 +220,6 @@ const VirtualListBaseFactory = (type) => {
 			 * @private
 			 */
 			overhang: PropTypes.number,
-
-			/**
-			 * TBD
-			 */
-			overSize: PropTypes.number,
 
 			/**
 			 * When `true`, the list will scroll by page.  Otherwise the list will scroll by item.
@@ -799,22 +802,24 @@ const VirtualListBaseFactory = (type) => {
 
 		// JS only
 		setScrollPosition (x, y, rtl = this.props.rtl, targetX = 0, targetY = 0) {
-			// if the scrollPosition is less than overSize, then the VirtualList does not scroll.
+			const {moveDistance} = this.props;
+
+			// if the scrollPosition is less than moveDistance, then the VirtualList does not scroll.
 			// But the list generates `onScroll` event so that the list could move upper by an App.
-			if (this.props.overSize && this.isPrimaryDirectionVertical && this.containerRef.current) {
-				if (y < this.props.overSize) {
+			if (moveDistance && this.isPrimaryDirectionVertical && this.containerRef.current) {
+				if (y < moveDistance) {
 					this.containerScrollPosition = y;
 
 					this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, 0, 0)`;
 
 					return;
 				} else {
-					if (y > this.props.overSize && this.containerScrollPosition < this.props.overSize) {
-						this.containerScrollPosition = this.isPrimaryDirectionVertical ? this.props.overSize : x;
+					if (y > moveDistance && this.containerScrollPosition < moveDistance) {
+						this.containerScrollPosition = this.isPrimaryDirectionVertical ? moveDistance : x;
 					}
 
-					if (this.containerScrollPosition > this.props.overSize) {
-						this.containerScrollPosition = this.props.overSize;
+					if (this.containerScrollPosition > moveDistance) {
+						this.containerScrollPosition = moveDistance;
 					}
 				}
 			}
@@ -837,7 +842,7 @@ const VirtualListBaseFactory = (type) => {
 
 		didScroll (x, y) {
 			const
-				{dataSize, spacing, itemSizes} = this.props,
+				{dataSize, moveDistance, spacing, itemSizes} = this.props,
 				{firstIndex} = this.state,
 				{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds, itemPositions} = this,
 				{clientSize, gridSize} = this.primary,
@@ -915,7 +920,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			this.syncThreshold(maxPos);
-			this.scrollPosition = this.props.overSize ? pos - this.props.overSize : pos;
+			this.scrollPosition = moveDistance ? pos - moveDistance : pos;
 			this.updateMoreInfo(dataSize, pos);
 
 			if (this.shouldUpdateBounds || firstIndex !== newFirstIndex) {
@@ -1195,10 +1200,10 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.isVerticalScrollbarVisible;
 			delete rest.itemRenderer;
 			delete rest.itemSize;
+			delete rest.moveDistance;
 			delete rest.onUpdate;
 			delete rest.onUpdateItems;
 			delete rest.overhang;
-			delete rest.overSize;
 			delete rest.pageScroll;
 			delete rest.rtl;
 			delete rest.spacing;
