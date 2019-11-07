@@ -378,6 +378,11 @@ class ScrollableBase extends Component {
 		rtl: PropTypes.bool,
 
 		/**
+		 * The scale to enlarge the list.
+		 */
+		scale: PropTypes.func,
+
+		/**
 		 * Called to execute additional logic in a themed component when scrollTo is called.
 		 *
 		 * @type {Function}
@@ -1080,6 +1085,10 @@ class ScrollableBase extends Component {
 			}
 		}
 		this.forwardScrollEvent('onScroll');
+
+		if (moveDistance) {
+			this.props.scale({scrollTop: this.scrollTop});
+		}
 	}
 
 	stop () {
@@ -1382,6 +1391,7 @@ class ScrollableBase extends Component {
 		delete rest.onWheel;
 		delete rest.overscrollEffectOn;
 		delete rest.removeEventListeners;
+		delete rest.scale;
 		delete rest.scrollTo;
 		delete rest.stop;
 		delete rest.verticalScrollbar;

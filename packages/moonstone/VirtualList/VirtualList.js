@@ -17,6 +17,8 @@ import React from 'react';
 
 import {ScrollableVirtualList, ScrollableVirtualListNative, VirtualListBase, VirtualListBaseNative} from './VirtualListBase';
 
+import css from './VirtualList.module.less';
+
 /**
  * A Moonstone-styled scrollable and spottable virtual list component.
  *
@@ -72,10 +74,8 @@ const VirtualList = kind({
  * @ui
  * @public
  */
-const VirtualGridList = kind({
-	name: 'VirtualGridList',
-
-	propTypes: /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
+class VirtualGridList extends React.Component {
+	static propTypes = /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
 		/**
 		 * Size of an item for the VirtualGridList; valid value is an object that has `minWidth`
 		 * and `minHeight` as properties.
@@ -95,12 +95,50 @@ const VirtualGridList = kind({
 		 * @public
 		 */
 		itemSize: gridListItemSizeShape.isRequired
-	},
+	}
 
-	render: (props) => (
-		<ScrollableVirtualList {...props} />
-	)
-});
+	constructor (props) {
+		super(props);
+
+		this.listContainer = React.createRef();
+		this.listReverseScaleContainer = React.createRef();
+	}
+
+	listPosition = 0
+
+	scale = (ev) => {
+		let listPosition = ev.scrollTop;
+
+		if (ev.scrollTop > 118 && this.listPosition < 118) {
+			listPosition = 118;
+		}
+
+		this.listContainer.current.style.transform =
+			'scaleY(' + ((listPosition + 722) / 722) + ')';
+		this.listReverseScaleContainer.current.style.transform =
+			'scaleY(' + (722 / (listPosition + 722)) + ')';
+
+		this.listPosition = listPosition;
+	}
+
+	render () {
+		const {moveDistance} = this.props;
+
+		if (moveDistance) {
+			return (
+				<div ref={this.listContainer} className={css.virtualListContainer} style={{height: 'calc(100% - ' + moveDistance + 'px)'}}>
+					<div ref={this.listReverseScaleContainer} className={css.virtualListReverseScaleContainer}>
+						<div style={{width: '100%', height: 'calc(100% + ' + moveDistance + 'px)'}}>
+							<ScrollableVirtualList {...this.props} scale={this.scale} />
+						</div>
+					</div>
+				</div>
+			);
+		} else {
+			return (<ScrollableVirtualList {...this.props} />);
+		}
+	}
+}
 
 /**
  * A Moonstone-styled scrollable and spottable virtual native list component.
