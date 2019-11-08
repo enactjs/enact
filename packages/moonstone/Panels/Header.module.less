@@ -65,7 +65,8 @@
 	// Standard and Dense Header
 	&.dense,
 	&.standard {
-		max-height: @moon-header-standard-height;
+		transition: transform 600ms ease-in-out;
+		will-change: transform;
 
 		.title {
 			// The height is determined by the line-height below, but we want to maintain that as a
@@ -73,6 +74,8 @@
 			// font size changes.
 			line-height: @moon-header-standard-title-line-height;
 			margin-left: -3px; // Negative 3px here to allow the title text to horizontally align with the rest of the header text
+			transition: transform 500ms ease-in-out;
+			will-change: transform;
 
 			.moon-locale-non-latin({line-height: @moon-non-latin-header-standard-title-line-height;});
 		}
@@ -88,12 +91,18 @@
 		}
 
 		&.minimized {
-			height: auto;
+			transform: translateY(calc(var(--header-title-height, 0) * -1));
+
+			.title {
+				transform: translateY(-50%);
+			}
 		}
 	}
 
 	// Standard Header
 	&.standard {
+		height: @moon-header-standard-height;
+
 		.titlesCell {
 			margin-bottom: 9px;
 		}
@@ -101,7 +110,7 @@
 
 	// Dense Header
 	&.dense {
-		max-height: @moon-header-dense-height;
+		height: @moon-header-dense-height;
 
 		.title {
 			font-size: @moon-header-dense-title-font-size;

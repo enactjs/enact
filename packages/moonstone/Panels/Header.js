@@ -1,11 +1,12 @@
 import kind from '@enact/core/kind';
+import compose from 'ramda/src/compose';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {isRtlText} from '@enact/i18n/util';
-import ComponentOverride from '@enact/ui/ComponentOverride';
 import {Layout, Cell} from '@enact/ui/Layout';
+import Measurable from '@enact/ui/Measurable';
 import Slottable from '@enact/ui/Slottable';
-import Transition from '@enact/ui/Transition';
+import ComponentOverride from '@enact/ui/ComponentOverride';
 
 import {MarqueeDecorator, MarqueeBase} from '../Marquee';
 import Skinnable from '../Skinnable';
@@ -180,6 +181,26 @@ const HeaderBase = kind({
 		titleBelow: PropTypes.string,
 
 		/**
+		 * The measurement bounds of the title node
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		titleMeasurements: PropTypes.object,
+
+		/**
+		 * The method which receives the reference node to the title element, used to determine
+		 * the `titleMeasurements`.
+		 *
+		 * @type {Function|Object}
+		 * @private
+		 */
+		titleRef: PropTypes.oneOfType([
+			PropTypes.func,
+			PropTypes.shape({current: PropTypes.any})
+		]),
+
+		/**
 		 * Set the type of header to be used.
 		 *
 		 * @type {('compact'|'dense'|'standard')}
@@ -213,13 +234,17 @@ const HeaderBase = kind({
 					return <MarqueeH2 className={css.titleBelow} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>{(titleBelow != null && titleBelow !== '') ? titleBelow : ' '}</MarqueeH2>;
 			}
 		},
+		style: ({style, titleMeasurements}) => ({
+			...style,
+			'--header-title-height': titleMeasurements && titleMeasurements.height + 'px' || 'auto'
+		}),
 		subTitleBelowComponent: ({centered, marqueeOn, subTitleBelow}) => {
 			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
 		},
-		titleOrInput: ({centered, headerInput, marqueeOn, title, type}) => {
+		titleOrInput: ({centered, headerInput, marqueeOn, title, titleRef, type}) => {
 			if (headerInput && type === 'standard') {
 				return (
-					<Cell className={css.headerInput}>
+					<Cell className={css.headerInput} ref={titleRef}>
 						<ComponentOverride
 							component={headerInput}
 							css={css}
@@ -229,23 +254,26 @@ const HeaderBase = kind({
 				);
 			} else {
 				return (
-					<MarqueeH1 className={css.title} css={marqueeCss} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>
-						{title}
-					</MarqueeH1>
+					<Cell ref={titleRef}>
+						<MarqueeH1 className={css.title} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>
+							{title}
+						</MarqueeH1>
+					</Cell>
 				);
 			}
 		}
 	},
 
-	render: ({children, minimized, direction, marqueeOn, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+	render: ({children, direction, marqueeOn, subTitleBelowComponent, title, titleOrInput, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.centered;
 		delete rest.fullBleed;
 		delete rest.headerInput;
 		delete rest.hideLine;
+		delete rest.minimized;
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
-
-		const titleHeight = (type === 'dense') ? 69 : 90;
+		delete rest.titleMeasurements;
+		delete rest.titleRef;
 
 		switch (type) {
 			case 'compact': return (
@@ -270,9 +298,7 @@ const HeaderBase = kind({
 			case 'dense':
 			case 'standard': return (
 				<Layout component="header" aria-label={title} {...rest} orientation="vertical">
-					<Cell component={Transition} type="slide" visible={!minimized} size={minimized ? 0 : titleHeight}>
-						{titleOrInput}
-					</Cell>
+					{titleOrInput}
 					<Cell shrink size={96}>
 						<Layout align="end">
 							<Cell className={css.titlesCell}>
@@ -289,7 +315,13 @@ const HeaderBase = kind({
 });
 
 // Note that we only export this (even as HeaderBase). HeaderBase is not useful on its own.
-const Header = Slottable({slots: ['headerInput', 'subTitleBelow', 'title', 'titleBelow']}, Skinnable(HeaderBase));
+const HeaderDecorator = compose(
+	Slottable({slots: ['headerInput', 'subTitleBelow', 'title', 'titleBelow']}),
+	Measurable({refProp: 'titleRef', measurementProp: 'titleMeasurements'}),
+	Skinnable
+);
+
+const Header = HeaderDecorator(HeaderBase);
 
 // Set up Header so when it's used in a slottable layout (like Panel), it is automatically
 // recognized as this specific slot.
