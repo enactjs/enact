@@ -470,8 +470,8 @@
 @moon-notification-padding-left-right: 39px;
 @moon-notification-padding-top-bottom: 24px;
 @moon-notification-min-width: 300px;
-@moon-notification-max-width: ((@moon-notification-border-width * 2) + (@moon-notification-padding-left-right * 2) + (2 * ((@moon-button-small-h-margin * 2) + @moon-button-small-max-width)));  // Attempt to calculate the width of all of the buttons and the pieces of Notification that influence the width to get the maximum size
-@moon-notification-wide-width: 1287px;
+@moon-notification-max-width: ((@moon-notification-border-width * 2) + (@moon-notification-padding-left-right * 2) + (2 * ((@moon-button-small-h-margin * 2) + @moon-button-small-max-width)) + 12px);  // Attempt to calculate the width of all of the buttons and the pieces of Notification that influence the width to get the maximum size
+@moon-notification-wide-width: ((@moon-notification-border-width * 2) + (@moon-notification-padding-left-right * 2) + (3 * ((@moon-button-small-h-margin * 2) + @moon-button-small-max-width)) + 12px);
 
 // Tooltip
 // ---------------------------------------

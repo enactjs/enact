@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Notification`to support 3 max-width buttons in a single line
+
 ## [3.2.4] - 2019-11-07
 
 ### Fixed
