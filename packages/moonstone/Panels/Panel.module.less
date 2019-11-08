@@ -7,10 +7,17 @@
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
-	padding: @moon-panel-v-padding @moon-panel-h-padding;
+	padding: @moon-panel-v-padding @moon-panel-h-padding 0;
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
+	transition: transform 600ms ease-in-out;  // Intentionally slightly longer than the transition for an inertial effect
+	will-change: height;
+	height: calc(100% + 100px); // height-ish of the header
+
+	&.minimizedHeader {
+		transform: translateY(-100px); // height-ish of the header
+	}
 
 	&:global(.enact-fit) {
 		height: auto;
