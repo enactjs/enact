@@ -32,6 +32,12 @@ const RTL = [
 	'فوری بھوری لومڑی سست کتے پر چھلانگ لگا. بین پرندوں سوریاست میں پرواز.'
 ];
 
+const texts = [
+	'No marquee no marquee',
+	'Ellipsis show before the initial start of the marquee. Ellipsis will not show on the subsequent starts.',
+	'Second test to show that the Ellipsis show before the initial start of the marquee. Ellipsis will not show on the subsequent starts.'
+];
+
 const disabledDisclaimer = (disabled) => (disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>Marquee does not visually respond to <code>disabled</code> state.</p> : <p />);
 
 const MarqueeI18nSamples = I18nContextDecorator({updateLocaleProp: 'updateLocale'}, kind({
@@ -102,6 +108,35 @@ class MarqueeWithShortContent extends React.Component {
 			<div>
 				scrollWidth: {this.state.scrollWidth} width: {this.state.width}
 				<CustomItem onClick={this.handleClick}>{this.state.long ? 'Very very very very very very very very very long text' : 'text'}</CustomItem>
+			</div>
+		);
+	}
+}
+
+class MarqueeWithContentChanged extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			count: 0
+		};
+	}
+
+	handleClick = () => {
+		this.setState(({count}) => ({count: ++count % 3}));
+	}
+
+	render () {
+		return (
+			<div>
+				<ol>
+					<li>Click once to show the ellipsis just before the text marquees the first time.</li>
+					<li>Click a second time to show the ellipsis just before the text marquees the first time</li>
+					<li>Click again to return to a short string without marquee.</li>
+				</ol>
+				<Button onClick={this.handleClick}>
+					{'Click Me'}
+				</Button>
+				<Marquee style={{width: '400px'}} marqueeOn={'render'} >{texts[this.state.count]}</Marquee>
 			</div>
 		);
 	}
@@ -250,5 +285,12 @@ storiesOf('Marquee', module)
 			<div>
 				<MarqueeWithShortContent />
 			</div>
+		)
+	)
+
+	.add(
+		'with Content Changed',
+		() => (
+			<MarqueeWithContentChanged />
 		)
 	);
