@@ -1,6 +1,8 @@
 import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Spotlight from '@enact/spotlight';
+import ComponentOverride from '@enact/ui/ComponentOverride';
+import Measurable from '@enact/ui/Measurable';
 import SpotlightContainerDecorator, {spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
@@ -103,7 +105,37 @@ const PanelBase = kind({
 		 * @default false
 		 * @public
 		 */
-		hideChildren: PropTypes.bool
+		hideChildren: PropTypes.bool,
+
+		/**
+		 * Instructs this panel and the child Header component to render into a minimized state.
+		 * Has no effect on `type="compact"`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		minimized: PropTypes.bool,
+
+		/**
+		 * The measurement bounds of the title node
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		titleMeasurements: PropTypes.object,
+
+		/**
+		 * The method which receives the reference node to the title element, used to determine
+		 * the `titleMeasurements`.
+		 *
+		 * @type {Function|Object}
+		 * @private
+		 */
+		titleRef: PropTypes.oneOfType([
+			PropTypes.func,
+			PropTypes.shape({current: PropTypes.any})
+		])
 	},
 
 	defaultProps: {
@@ -157,20 +189,36 @@ const PanelBase = kind({
 			return spotOnRender;
 		},
 		children: ({children, hideChildren}) => hideChildren ? null : children,
+		className: ({minimized, styler}) => styler.append({minimized}),
 		bodyClassName: ({header, hideChildren, styler}) => styler.join({
 			body: true,
 			noHeader: !header,
 			visible: !hideChildren
 		}),
+		header: ({header, minimized, titleMeasurements, titleRef}) => (
+			<ComponentOverride
+				component={header}
+				minimized={minimized}
+				titleMeasurements={titleMeasurements}
+				titleRef={titleRef}
+			/>
+		),
 		// nulling headerId prevents the aria-labelledby relationship which is necessary to allow
 		// aria-label to take precedence
 		// (see https://www.w3.org/TR/wai-aria/states_and_properties#aria-labelledby)
-		headerId: ({'aria-label': label}) => label ? null : `panel_${++panelId}_header`
+		headerId: ({'aria-label': label}) => label ? null : `panel_${++panelId}_header`,
+		style: ({style, titleMeasurements}) => ({
+			...style,
+			'--panel-header-title-height': titleMeasurements && titleMeasurements.height + 'px' || 'auto'
+		})
 	},
 
 	render: ({bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
 		delete rest.autoFocus;
 		delete rest.hideChildren;
+		delete rest.minimized;
+		delete rest.titleMeasurements;
+		delete rest.titleRef;
 
 		return (
 			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender}>
@@ -204,9 +252,11 @@ const Panel = SharedStateDecorator(
 			enterTo: 'last-focused',
 			preserveId: true
 		},
-		Slottable(
-			{slots: ['header']},
-			PanelBase
+		Measurable({refProp: 'titleRef', measurementProp: 'titleMeasurements'},
+			Slottable(
+				{slots: ['header']},
+				PanelBase
+			)
 		)
 	)
 );

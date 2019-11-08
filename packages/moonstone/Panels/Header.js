@@ -4,7 +4,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {isRtlText} from '@enact/i18n/util';
 import {Layout, Cell} from '@enact/ui/Layout';
-import Measurable from '@enact/ui/Measurable';
 import Slottable from '@enact/ui/Slottable';
 import ComponentOverride from '@enact/ui/ComponentOverride';
 
@@ -234,10 +233,6 @@ const HeaderBase = kind({
 					return <MarqueeH2 className={css.titleBelow} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>{(titleBelow != null && titleBelow !== '') ? titleBelow : ' '}</MarqueeH2>;
 			}
 		},
-		style: ({style, titleMeasurements}) => ({
-			...style,
-			'--header-title-height': titleMeasurements && titleMeasurements.height + 'px' || 'auto'
-		}),
 		subTitleBelowComponent: ({centered, marqueeOn, subTitleBelow}) => {
 			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
 		},
@@ -317,7 +312,6 @@ const HeaderBase = kind({
 // Note that we only export this (even as HeaderBase). HeaderBase is not useful on its own.
 const HeaderDecorator = compose(
 	Slottable({slots: ['headerInput', 'subTitleBelow', 'title', 'titleBelow']}),
-	Measurable({refProp: 'titleRef', measurementProp: 'titleMeasurements'}),
 	Skinnable
 );
 
