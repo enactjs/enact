@@ -12,6 +12,7 @@ import Input from '@enact/moonstone/Input';
 import Item from '@enact/moonstone/Item';
 import LabeledItem from '@enact/moonstone/LabeledItem';
 import Marquee from '@enact/moonstone/Marquee';
+import Notification from '@enact/moonstone/Notification';
 import RadioItem from '@enact/moonstone/RadioItem';
 import Scroller from '@enact/moonstone/Scroller';
 import SelectableItem from '@enact/moonstone/SelectableItem';
@@ -47,6 +48,49 @@ const prop = {
 		'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'
 	]
 };
+
+// si-LK - sinhala language
+const sinhala = 'සේවය නඩත්තු කිරීම හෝ වැඩි දියුණු කිරීම සඳහා කලා ගැලරිය සේවයට එකතු කිරීම, නවීකරණය කිරීම, පිවිසීම අක්‍රිය කිරීම හෝ අවසන් කිරීම යනාදිය තම පූර්ණ අභිමතය පරිදි සිදු කිරීමට LG Electronics Inc. හට හිමිකම් ඇත.කලා ගැලරිය සේවාව ලද හැකි වන්නේ ඔබ ඉහත නියමයන්ට එකඟ වුවහොත් පමණි.';
+
+class SinhalaLanguage extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			open: false
+		};
+	}
+	closePopup = () => {
+		this.setState({
+			open: false
+		});
+	}
+
+	openPopup = () => {
+		this.setState({
+			open: true
+		});
+	}
+
+	render () {
+		return (
+			<div>
+				<ol>
+					<li>The TV must be set to si-LK with a luna command</li>
+					<li>Sideload QA-Sampler new</li>
+					<li>Select Knobs - Global Knobs - locale: local</li>
+					<li>Click the button to open a Notification Popup in Sinhala - si-LK.</li>
+				</ol>
+				<Button onClick={this.openPopup}>Open Notification popup</Button>
+				<Notification open={this.state.open}>
+					<span>{sinhala}</span>
+					<buttons>
+						<Button onClick={this.closePopup}>Close</Button>
+					</buttons>
+				</Notification>
+			</div>
+		);
+	}
+}
 
 storiesOf('Text', module)
 	.add(
@@ -136,4 +180,10 @@ storiesOf('Text', module)
 				{mixedText}
 			</SlotItem>
 		</div>
+	)
+	.add (
+		'Sinhala si-LK',
+		() => (
+			<SinhalaLanguage />
+		)
 	);
