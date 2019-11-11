@@ -11,10 +11,12 @@
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
-	transition: 700ms transform ease-in-out;
+	transition: 700ms transform ease-in-out, 700ms height ease-in-out;
+	will-change: transform, height;
 
 	&.minimized {
 		transform: translateY(calc(var(--panel-header-title-height) * -1));
+		height: calc(100% + var(--panel-header-title-height));
 	}
 
 	&:global(.enact-fit) {
