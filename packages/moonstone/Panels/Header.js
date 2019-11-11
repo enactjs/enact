@@ -1,4 +1,5 @@
 import kind from '@enact/core/kind';
+import compose from 'ramda/src/compose';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {isRtlText} from '@enact/i18n/util';
@@ -130,6 +131,16 @@ const HeaderBase = kind({
 		marqueeOn: PropTypes.oneOf(['focus', 'hover', 'render']),
 
 		/**
+		 * Minimizes the Header to only show the header-components.
+		 * Has no effect on `type="compact"`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		minimized: PropTypes.bool,
+
+		/**
 		 * Sub-title displayed at the bottom of the panel.
 		 *
 		 * This is a [`slot`]{@link ui/Slottable.Slottable}, so it can be used as a tag-name inside
@@ -169,6 +180,26 @@ const HeaderBase = kind({
 		titleBelow: PropTypes.string,
 
 		/**
+		 * The measurement bounds of the title node
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		titleMeasurements: PropTypes.object,
+
+		/**
+		 * The method which receives the reference node to the title element, used to determine
+		 * the `titleMeasurements`.
+		 *
+		 * @type {Function|Object}
+		 * @private
+		 */
+		titleRef: PropTypes.oneOfType([
+			PropTypes.func,
+			PropTypes.shape({current: PropTypes.any})
+		]),
+
+		/**
 		 * Set the type of header to be used.
 		 *
 		 * @type {('compact'|'dense'|'standard')}
@@ -180,6 +211,7 @@ const HeaderBase = kind({
 	defaultProps: {
 		fullBleed: false,
 		marqueeOn: 'render',
+		minimized: false,
 		// titleAbove: '00',
 		type: 'standard'
 	},
@@ -190,7 +222,7 @@ const HeaderBase = kind({
 	},
 
 	computed: {
-		className: ({centered, fullBleed, hideLine, type, styler}) => styler.append({centered, fullBleed, hideLine}, type),
+		className: ({centered, fullBleed, hideLine, minimized, type, styler}) => styler.append({centered, fullBleed, hideLine, minimized}, type),
 		direction: ({title, titleBelow}) => isRtlText(title) || isRtlText(titleBelow) ? 'rtl' : 'ltr',
 		titleBelowComponent: ({centered, marqueeOn, titleBelow, type}) => {
 			switch (type) {
@@ -204,10 +236,10 @@ const HeaderBase = kind({
 		subTitleBelowComponent: ({centered, marqueeOn, subTitleBelow}) => {
 			return <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>{(subTitleBelow != null && subTitleBelow !== '') ? subTitleBelow : ' '}</MarqueeH2>;
 		},
-		titleOrInput: ({centered, headerInput, marqueeOn, title, type}) => {
+		titleOrInput: ({centered, headerInput, marqueeOn, title, titleRef, type}) => {
 			if (headerInput && type === 'standard') {
 				return (
-					<Cell className={css.headerInput}>
+					<Cell className={css.headerInput} ref={titleRef}>
 						<ComponentOverride
 							component={headerInput}
 							css={css}
@@ -217,7 +249,7 @@ const HeaderBase = kind({
 				);
 			} else {
 				return (
-					<Cell>
+					<Cell ref={titleRef}>
 						<MarqueeH1 className={css.title} marqueeOn={marqueeOn} alignment={centered ? 'center' : null}>
 							{title}
 						</MarqueeH1>
@@ -232,8 +264,11 @@ const HeaderBase = kind({
 		delete rest.fullBleed;
 		delete rest.headerInput;
 		delete rest.hideLine;
+		delete rest.minimized;
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
+		delete rest.titleMeasurements;
+		delete rest.titleRef;
 
 		switch (type) {
 			case 'compact': return (
@@ -275,7 +310,12 @@ const HeaderBase = kind({
 });
 
 // Note that we only export this (even as HeaderBase). HeaderBase is not useful on its own.
-const Header = Slottable({slots: ['headerInput', 'subTitleBelow', 'title', 'titleBelow']}, Skinnable(HeaderBase));
+const HeaderDecorator = compose(
+	Slottable({slots: ['headerInput', 'subTitleBelow', 'title', 'titleBelow']}),
+	Skinnable
+);
+
+const Header = HeaderDecorator(HeaderBase);
 
 // Set up Header so when it's used in a slottable layout (like Panel), it is automatically
 // recognized as this specific slot.

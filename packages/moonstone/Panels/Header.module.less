@@ -73,6 +73,8 @@
 			// font size changes.
 			line-height: @moon-header-standard-title-line-height;
 			margin-left: -3px; // Negative 3px here to allow the title text to horizontally align with the rest of the header text
+			transition: transform 500ms ease-in-out;
+			will-change: transform;
 
 			.moon-locale-non-latin({line-height: @moon-non-latin-header-standard-title-line-height;});
 		}
@@ -87,6 +89,11 @@
 			max-width: 100%;
 		}
 
+		&.minimized {
+			.title {
+				transform: translateY(-10%);
+			}
+		}
 	}
 
 	// Standard Header
