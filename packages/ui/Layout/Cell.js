@@ -66,7 +66,10 @@ const CellBase = kind({
 		 * @type {Function}
 		 * @private
 		 */
-		componentRef: PropTypes.func,
+		componentRef: PropTypes.oneOfType([
+			PropTypes.func,
+			PropTypes.shape({current: PropTypes.any})
+		]),
 
 		/**
 		 * Sizes `Cell` to its contents.

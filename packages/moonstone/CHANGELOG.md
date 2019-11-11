@@ -8,6 +8,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Notification` line height for non-latin locales
 - `moonstone/Notification` to show all buttons in one line
+### Added
+
+- `moonstone/Panels.Header` prop `minimized`
 
 ## [3.2.3] - 2019-11-01
 

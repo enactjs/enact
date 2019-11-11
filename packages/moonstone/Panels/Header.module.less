@@ -65,7 +65,8 @@
 	// Standard and Dense Header
 	&.dense,
 	&.standard {
-		height: @moon-header-standard-height;
+		transition: transform 600ms ease-in-out;
+		will-change: transform;
 
 		.title {
 			// The height is determined by the line-height below, but we want to maintain that as a
@@ -98,6 +99,8 @@
 
 	// Standard Header
 	&.standard {
+		height: @moon-header-standard-height;
+
 		.titlesCell {
 			margin-bottom: 9px;
 		}
