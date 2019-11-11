@@ -68,14 +68,22 @@
 		transition: transform 600ms ease-in-out;
 		will-change: transform;
 
+		.info,
+		.titleCells,
+		.headerComponents {
+			// Static positioning removes the repaint these cells cells issue when the layout changes during the animation.
+			position: static;
+		}
+
 		.title {
 			// The height is determined by the line-height below, but we want to maintain that as a
 			// relative unit (`em`) rather than dictate specific pixels to automatically accomodate
 			// font size changes.
 			line-height: @moon-header-standard-title-line-height;
 			margin-left: -3px; // Negative 3px here to allow the title text to horizontally align with the rest of the header text
-			transition: transform 500ms ease-in-out;
-			will-change: transform;
+			transition: transform 500ms ease-in-out, opacity 500ms ease;
+			opacity: 1;
+			will-change: transform, opacity;
 
 			.moon-locale-non-latin({line-height: @moon-non-latin-header-standard-title-line-height;});
 		}
@@ -95,6 +103,7 @@
 
 			.title {
 				transform: translateY(-50%);
+				opacity: 0.3;
 			}
 		}
 	}
