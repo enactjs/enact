@@ -1,3 +1,4 @@
+
 import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
@@ -48,7 +49,6 @@ const prop = {
 		'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'
 	]
 };
-
 // si-LK - sinhala language
 const sinhala = 'සේවය නඩත්තු කිරීම හෝ වැඩි දියුණු කිරීම සඳහා කලා ගැලරිය සේවයට එකතු කිරීම, නවීකරණය කිරීම, පිවිසීම අක්‍රිය කිරීම හෝ අවසන් කිරීම යනාදිය තම පූර්ණ අභිමතය පරිදි සිදු කිරීමට LG Electronics Inc. හට හිමිකම් ඇත.කලා ගැලරිය සේවාව ලද හැකි වන්නේ ඔබ ඉහත නියමයන්ට එකඟ වුවහොත් පමණි.';
 
@@ -75,12 +75,12 @@ class SinhalaLanguage extends React.Component {
 		return (
 			<div>
 				<ol>
-					<li>The TV must be set to si-LK with a luna command</li>
-					<li>Sideload QA-Sampler new</li>
-					<li>Select Knobs - Global Knobs - locale: local</li>
+					<li>The TV must be set to si-LK with a luna command.</li>
+					<li>Sideload QA-Sampler new.</li>
+					<li>Set locale: local</li>
 					<li>Click the button to open a Notification Popup in Sinhala - si-LK.</li>
 				</ol>
-				<Button onClick={this.openPopup}>Open Notification popup</Button>
+				<Button onClick={this.openPopup}>Open Notification Popup</Button>
 				<Notification open={this.state.open}>
 					<span>{sinhala}</span>
 					<buttons>
@@ -136,7 +136,6 @@ storiesOf('Text', module)
 					<Header title={children} titleBelow={children} subTitleBelow={children}>
 						<Input value={children} slot="headerInput" />
 					</Header>
-
 				</Scroller>
 			);
 		}
@@ -181,6 +180,7 @@ storiesOf('Text', module)
 			</SlotItem>
 		</div>
 	)
+
 	.add (
 		'Sinhala si-LK',
 		() => (
