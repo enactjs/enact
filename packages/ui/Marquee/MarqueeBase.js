@@ -45,6 +45,15 @@ const MarqueeBase = kind({
 		animating: PropTypes.bool,
 
 		/**
+		 * Sets the value of the `aria-label` attribute for the wrapped component.
+		 *
+		 * @memberof ui/Marquee.MarqueeBase.prototype
+		 * @type {String}
+		 * @public
+		 */
+		'aria-label': PropTypes.string,
+
+		/**
 		 * The text or a set of components that should be marqueed
 		 *
 		 * This prop may be empty in some cases, which is OK.
@@ -182,6 +191,8 @@ const MarqueeBase = kind({
 	},
 
 	computed: {
+		'aria-label': ({'aria-label': aria, children}) => aria == null &&
+			typeof children === 'string' ? children : aria,
 		clientClassName: ({animating, willAnimate, styler}) => styler.join({
 			animate: animating,
 			text: true,
