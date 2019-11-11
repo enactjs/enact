@@ -112,7 +112,7 @@ const PanelBase = kind({
 		 * @default false
 		 * @public
 		 */
-		minimizedHeader: PropTypes.bool
+		minimized: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -166,7 +166,7 @@ const PanelBase = kind({
 			return spotOnRender;
 		},
 		children: ({children, hideChildren}) => hideChildren ? null : children,
-		className: ({minimizedHeader, styler}) => styler.append({minimizedHeader}),
+		className: ({minimized, styler}) => styler.append({minimized}),
 		bodyClassName: ({header, hideChildren, styler}) => styler.join({
 			body: true,
 			noHeader: !header,
@@ -181,7 +181,7 @@ const PanelBase = kind({
 	render: ({bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
 		delete rest.autoFocus;
 		delete rest.hideChildren;
-		delete rest.minimizedHeader;
+		delete rest.minimized;
 
 		return (
 			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender}>

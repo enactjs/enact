@@ -12,11 +12,10 @@
 	display: flex;
 	flex-direction: column;
 	transition: transform 600ms ease-in-out;  // Intentionally slightly longer than the transition for an inertial effect
-	will-change: height;
 	height: calc(100% + 100px); // height-ish of the header
 
-	&.minimizedHeader {
-		transform: translateY(-100px); // height-ish of the header
+	&.minimized {
+		transform: translateY(-100px); // animate height-ish of the header
 	}
 
 	&:global(.enact-fit) {
