@@ -25,15 +25,15 @@ class FocusOnSpinner extends React.Component {
 		};
 	}
 
-	handleChange = (e) => {
-		this.setState({
-			txt: e.value
-		});
-	}
-
 	handleDeactivate = () => {
 		this.setState({
 			isLoading: true
+		});
+	}
+
+	hideSpinner = () => {
+		this.setState({
+			isLoading: false
 		});
 	}
 
@@ -41,11 +41,11 @@ class FocusOnSpinner extends React.Component {
 		return (
 			<div>
 				<ol>
-					<li> Focus and Click on the Input field.</li>
-					<li> Click Enter key on the VKB. </li>
+					<li>Focus and Click on the Input field.</li>
+					<li>Click Enter key on the VKB.</li>
 				</ol>
-				<Input dismissOnEnter value={this.state.txt} onChange={this.handleChange} onDeactivate={this.handleDeactivate} />
-				{this.state.isLoading ? <Spinner blockClickOn="screen" /> : null}
+				<Input dismissOnEnter onDeactivate={this.handleDeactivate} />
+				{this.state.isLoading ? <Spinner blockClickOn="screen" onClick={this.hideSpinner} /> : null}
 			</div>
 		);
 	}
