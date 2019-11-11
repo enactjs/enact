@@ -1,12 +1,12 @@
 import Button from '@enact/moonstone/Button';
 import Input from '@enact/moonstone/Input';
-import Spinner from '@enact/moonstone/Spinner';
 import React from 'react';
 import ri from '@enact/ui/resolution';
+import Spinner from '@enact/moonstone/Spinner';
 import {storiesOf} from '@storybook/react';
 
-import {boolean, select, text} from '../../src/enact-knobs';
 import {action} from '../../src/utils';
+import {boolean, select, text} from '../../src/enact-knobs';
 
 Spinner.displayName = 'Spinner';
 
@@ -20,7 +20,6 @@ class FocusOnSpinner extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			txt: '',
 			isLoading: false
 		};
 	}
