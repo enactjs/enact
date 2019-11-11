@@ -2,7 +2,6 @@ import Button from '@enact/moonstone/Button';
 import Input from '@enact/moonstone/Input';
 import Spinner from '@enact/moonstone/Spinner';
 import React from 'react';
-
 import ri from '@enact/ui/resolution';
 import {storiesOf} from '@storybook/react';
 
@@ -26,27 +25,30 @@ class FocusOnSpinner extends React.Component {
 		};
 	}
 
-		handleChange = (e) => {
-			this.setState({
-				txt: e.value
-			});
-		}
+	handleChange = (e) => {
+		this.setState({
+			txt: e.value
+		});
+	}
 
-		handleDeactivate = () => {
-			this.setState({
-				isLoading: true
-			});
-		}
+	handleDeactivate = () => {
+		this.setState({
+			isLoading: true
+		});
+	}
 
-		render () {
-			return (
-				<div>
-					<Button>open</Button>
-					<Input dismissOnEnter value={this.state.txt} onChange={this.handleChange} onDeactivate={this.handleDeactivate} />
-					{this.state.isLoading ? <Spinner blockClickOn="screen" /> : null}
-				</div>
-			);
-		}
+	render () {
+		return (
+			<div>
+				<ol>
+					<li> Focus and Click on the Input field.</li>
+					<li> Click Enter key on the VKB. </li>
+				</ol>
+				<Input dismissOnEnter value={this.state.txt} onChange={this.handleChange} onDeactivate={this.handleDeactivate} />
+				{this.state.isLoading ? <Spinner blockClickOn="screen" /> : null}
+			</div>
+		);
+	}
 }
 
 storiesOf('Spinner', module)
