@@ -1,4 +1,3 @@
-
 import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
@@ -13,7 +12,6 @@ import Input from '@enact/moonstone/Input';
 import Item from '@enact/moonstone/Item';
 import LabeledItem from '@enact/moonstone/LabeledItem';
 import Marquee from '@enact/moonstone/Marquee';
-import Notification from '@enact/moonstone/Notification';
 import RadioItem from '@enact/moonstone/RadioItem';
 import Scroller from '@enact/moonstone/Scroller';
 import SelectableItem from '@enact/moonstone/SelectableItem';
