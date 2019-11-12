@@ -71,9 +71,9 @@ class LongButtonsSinhala extends React.Component {
 			<Notification open>
 				<span>{sinhala}</span>
 				<buttons>
-					<Button onClick={this.toggleState}>Click to toggle the third button</Button>
-					<Button onClick={this.toggleState}>Click to toggle the third button</Button>
-					{this.state.thirdButton ? <Button onClick={this.toggleState}>Click to toggle the third button</Button> : null}
+					<Button onClick={this.toggleState}>Click here to toggle the third button</Button>
+					<Button onClick={this.toggleState}>Click here to toggle the third button</Button>
+					{this.state.thirdButton ? <Button onClick={this.toggleState}>Click here to toggle the third button</Button> : null}
 				</buttons>
 			</Notification>
 		);
