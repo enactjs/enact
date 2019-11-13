@@ -19,8 +19,10 @@ import ActivityPanels from './ActivityPanels';
 import AlwaysViewingPanels from './AlwaysViewingPanels';
 import Breadcrumb from './Breadcrumb';
 import Header, {HeaderBase} from './Header';
+import MinimizeController, {MinimizeControllerContext} from './HeaderController';
 import Panel from './Panel';
 import Panels from './Panels';
+
 
 export default Panels;
 export {
@@ -29,6 +31,8 @@ export {
 	Breadcrumb,
 	Header,
 	HeaderBase,
+	MinimizeController,
+	MinimizeControllerContext,
 	Panel,
 	Panels,
 	Panels as PanelsBase,
