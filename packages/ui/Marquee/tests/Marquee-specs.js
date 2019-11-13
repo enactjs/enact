@@ -347,7 +347,7 @@ describe('MarqueeBase', () => {
 
 	test('should concatenate string children when promoted and a non-zero distance', () => {
 		const subject = mount(
-			<MarqueeBase willAnimate distance={100} aria-label={aria}>
+			<MarqueeBase willAnimate distance={100}>
 				This is {'A'} test
 			</MarqueeBase>
 		);
@@ -359,7 +359,7 @@ describe('MarqueeBase', () => {
 
 	test('should not concatenate non-string children when promoted and a non-zero distance', () => {
 		const subject = mount(
-			<MarqueeBase willAnimate distance={100} aria-label={aria}>
+			<MarqueeBase willAnimate distance={100}>
 				Test
 				<div>Hello</div>
 				World
