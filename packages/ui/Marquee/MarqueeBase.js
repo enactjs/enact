@@ -192,7 +192,9 @@ const MarqueeBase = kind({
 
 	computed: {
 		'aria-label': ({'aria-label': aria, children}) => aria == null &&
-			typeof children === 'string' ? children : aria,
+			React.Children.map(children, c => typeof c === 'string' && c)
+				.filter(Boolean)
+				.join(' ') || aria,	// If aria set or no string children, use aria value
 		clientClassName: ({animating, willAnimate, styler}) => styler.join({
 			animate: animating,
 			text: true,
