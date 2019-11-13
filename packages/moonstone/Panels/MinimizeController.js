@@ -12,22 +12,26 @@ const MinimizeController = hoc((config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
+			const {onMaximize, onMinimize} = this.props;
+
 			this.childContext = {
-				onMaximize: this.props.onMinimize,
-				onMinimize: this.props.onMaximize,
+				onMaximize: onMaximize,
+				onMinimize: onMinimize,
 				onScroll: this.onScroll
 			};
 		}
 
 		resizeOnScroll = ({scrollTop}) => {
+			const {onMaximize, onMinimize} = this.props;
+
 			if (scrollTop > config.moveDistance) {
-				this.props.onMinimize();
+				onMinimize();
 			} else {
-				this.props.onMaximize();
+				onMaximize();
 			}
 		}
 
-		scrollJob = new Job(this.resizeOnScroll, 1000);
+		scrollJob = new Job(this.resizeOnScroll);
 
 		onScroll = (ev) => {
 			this.scrollJob.throttle(ev);

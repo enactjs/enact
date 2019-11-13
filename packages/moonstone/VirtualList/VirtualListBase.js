@@ -10,7 +10,7 @@ import clamp from 'ramda/src/clamp';
 import React, {Component, useContext} from 'react';
 import warning from 'warning';
 
-import {MinimizeControllerContext} from '@enact/moonstone/Panels';
+import {MinimizeControllerContext} from '../Panels';
 
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';

@@ -23,7 +23,6 @@ import MinimizeController, {MinimizeControllerContext} from './MinimizeControlle
 import Panel from './Panel';
 import Panels from './Panels';
 
-
 export default Panels;
 export {
 	ActivityPanels,
