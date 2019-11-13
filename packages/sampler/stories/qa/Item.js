@@ -8,6 +8,7 @@ import {storiesOf} from '@storybook/react';
 import {boolean, select, text} from '../../src/enact-knobs';
 
 const iconNames = ['', ...Object.keys(icons)];
+const sortedIconNames = ['', ...iconNames.sort()];
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -71,14 +72,14 @@ storiesOf('Item', module)
 				</Item>
 				<Item>
 					<Icon size={select('size', ['small', 'large'], Item, 'large')}>
-						{select('iconBefore', iconNames, Item, 'plus')}
+						{select('iconBefore', sortedIconNames, Item, 'plus')}
 					</Icon>
 					{text('Text with iconBefore', Item, 'Item with text that is spottable with an icon (at the start of the string)')}
 				</Item>
 				<Item>
 					{text('Text with iconAfter', Item, 'Item with text that is spottable with an icon(at the end of the string)')}
 					<Icon size={select('size', ['small', 'large'], Item, 'large')}>
-						{select('iconAfter', iconNames, Item, 'pauseforward')}
+						{select('iconAfter', sortedIconNames, Item, 'pauseforward')}
 					</Icon>
 				</Item>
 				<Item>

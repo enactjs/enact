@@ -9,6 +9,7 @@ import {action} from '../../src/utils';
 ExpandableInput.displayName = 'ExpandableInput';
 
 const iconNames = ['', ...Object.keys(icons)];
+const sortedIconNames = ['', ...iconNames.sort()];
 
 storiesOf('ExpandableInput', module)
 	.add(
@@ -16,8 +17,8 @@ storiesOf('ExpandableInput', module)
 		() => (
 			<ExpandableInput
 				disabled={boolean('disabled', ExpandableInput)}
-				iconAfter={select('iconAfter', iconNames, ExpandableInput)}
-				iconBefore={select('iconBefore', iconNames, ExpandableInput)}
+				iconAfter={select('iconAfter', sortedIconNames,  ExpandableInput)}
+				iconBefore={select('iconBefore', sortedIconNames,  ExpandableInput)}
 				noneText={text('noneText', ExpandableInput, 'noneText')}
 				onChange={action('onChange')}
 				onClose={action('onClose')}

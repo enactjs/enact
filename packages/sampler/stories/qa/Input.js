@@ -10,6 +10,7 @@ import {action} from '../../src/utils';
 Input.displayName = 'Input';
 
 const iconNames = ['', ...Object.keys(icons)];
+const sortedIconNames = ['', ...iconNames.sort()];
 
 const divMargin = () => ({margin: ri.unit(12, 'rem')});
 
@@ -32,8 +33,8 @@ storiesOf('Input', module)
 				autoFocus={boolean('autoFocus', Input)}
 				onChange={action('onChange')}
 				disabled={boolean('disabled', Input)}
-				iconAfter={select('iconAfter', iconNames, Input)}
-				iconBefore={select('iconBefore', iconNames, Input)}
+				iconAfter={select('iconAfter', sortedIconNames, Input)}
+				iconBefore={select('iconBefore', sortedIconNames, Input)}
 				invalid={boolean('invalid', Input, false)}
 				invalidMessage={text('invalidMessage', Input, InputBase.defaultProps.invalidMessage)}
 				placeholder={text('placeholder', Input)}
@@ -50,8 +51,8 @@ storiesOf('Input', module)
 				autoFocus={boolean('autoFocus', Input)}
 				onChange={action('onChange')}
 				disabled={boolean('disabled', Input)}
-				iconAfter={select('iconAfter', iconNames, Input)}
-				iconBefore={select('iconBefore', iconNames, Input)}
+				iconAfter={select('iconAfter', sortedIconNames, Input)}
+				iconBefore={select('iconBefore', sortedIconNames, Input)}
 				invalid={boolean('invalid', Input, false)}
 				invalidMessage={text('invalidMessage', Input, InputBase.defaultProps.invalidMessage)}
 				placeholder={text('placeholder', Input, inputData.longPlaceHolder)}
@@ -68,8 +69,8 @@ storiesOf('Input', module)
 					autoFocus={boolean('autoFocus', Input)}
 					onChange={action('onChange')}
 					disabled={boolean('disabled', Input)}
-					iconAfter={select('iconAfter', iconNames, Input)}
-					iconBefore={select('iconBefore', iconNames, Input)}
+					iconAfter={select('iconAfter', sortedIconNames, Input)}
+					iconBefore={select('iconBefore', sortedIconNames, Input)}
 					placeholder={text('placeholder', Input, 'Input some tall characters')}
 					type={select('type', inputData.type, Input, inputData.type[0])}
 					size={select('size', ['small', 'large'], Input)}
@@ -79,8 +80,8 @@ storiesOf('Input', module)
 					autoFocus={boolean('autoFocus', Input)}
 					onChange={action('onChange')}
 					disabled={boolean('disabled', Input)}
-					iconAfter={select('iconAfter', iconNames, Input)}
-					iconBefore={select('iconBefore', iconNames, Input)}
+					iconAfter={select('iconAfter', sortedIconNames, Input)}
+					iconBefore={select('iconBefore', sortedIconNames, Input)}
 					placeholder={text('placeholder', Input, 'Input some tall characters')}
 					type={select('type', inputData.type, Input, inputData.type[0])}
 					size={select('size', ['small', 'large'], Input)}
@@ -90,8 +91,8 @@ storiesOf('Input', module)
 					autoFocus={boolean('autoFocus', Input)}
 					onChange={action('onChange')}
 					disabled={boolean('disabled', Input)}
-					iconAfter={select('iconAfter', iconNames, Input)}
-					iconBefore={select('iconBefore', iconNames, Input)}
+					iconAfter={select('iconAfter', sortedIconNames, Input)}
+					iconBefore={select('iconBefore', sortedIconNames, Input)}
 					placeholder={text('placeholder', Input, 'Input some tall characters')}
 					type={select('type', inputData.type, Input, inputData.type[0])}
 					size={select('size', ['small', 'large'], Input)}
@@ -107,8 +108,8 @@ storiesOf('Input', module)
 				autoFocus={boolean('autoFocus', Input)}
 				onChange={action('onChange')}
 				disabled={boolean('disabled', Input)}
-				iconAfter={select('iconAfter', iconNames, Input)}
-				iconBefore={select('iconBefore', iconNames, Input)}
+				iconAfter={select('iconAfter', sortedIconNames, Input)}
+				iconBefore={select('iconBefore', sortedIconNames, Input)}
 				placeholder={text('placeholder', Input)}
 				type={select('type', inputData.type, Input, inputData.type[0])}
 				size={select('size', ['small', 'large'], Input)}
@@ -123,8 +124,8 @@ storiesOf('Input', module)
 				autoFocus={boolean('autoFocus', Input)}
 				onChange={action('onChange')}
 				disabled={boolean('disabled', Input)}
-				iconAfter={select('iconAfter', iconNames, Input)}
-				iconBefore={select('iconBefore', iconNames, Input)}
+				iconAfter={select('iconAfter', sortedIconNames, Input)}
+				iconBefore={select('iconBefore', sortedIconNames, Input)}
 				placeholder={text('placeholder', Input, 'Input RTL and LTR text together')}
 				type={select('type', inputData.type, Input, inputData.type[0])}
 				size={select('size', ['small', 'large'], Input)}
@@ -141,8 +142,8 @@ storiesOf('Input', module)
 						autoFocus={boolean('autoFocus', Input)}
 						onChange={action('onChange')}
 						disabled={boolean('disabled', Input)}
-						iconAfter={select('iconAfter', iconNames, Input)}
-						iconBefore={select('iconBefore', iconNames, Input)}
+						iconAfter={select('iconAfter', sortedIconNames, Input)}
+						iconBefore={select('iconBefore', sortedIconNames, Input)}
 						placeholder={text('placeholder', Input)}
 						type={select('type', inputData.type, Input, inputData.type[0])}
 						size={select('size', ['small', 'large'], Input)}
@@ -152,8 +153,8 @@ storiesOf('Input', module)
 						autoFocus={boolean('autoFocus', Input)}
 						onChange={action('onChange')}
 						disabled={boolean('disabled', Input)}
-						iconAfter={select('iconAfter', iconNames, Input)}
-						iconBefore={select('iconBefore', iconNames, Input)}
+						iconAfter={select('iconAfter', sortedIconNames, Input)}
+						iconBefore={select('iconBefore', sortedIconNames, Input)}
 						placeholder={text('placeholder', Input)}
 						type={select('type', inputData.type, Input, inputData.type[0])}
 						size={select('size', ['small', 'large'], Input)}
@@ -165,8 +166,8 @@ storiesOf('Input', module)
 						autoFocus={boolean('autoFocus', Input)}
 						onChange={action('onChange')}
 						disabled={boolean('disabled', Input)}
-						iconAfter={select('iconAfter', iconNames, Input)}
-						iconBefore={select('iconBefore', iconNames, Input)}
+						iconAfter={select('iconAfter', sortedIconNames, Input)}
+						iconBefore={select('iconBefore', sortedIconNames, Input)}
 						placeholder={text('placeholder', Input)}
 						type={select('type', inputData.type, Input, inputData.type[0])}
 						size={select('size', ['small', 'large'], Input)}
@@ -176,8 +177,8 @@ storiesOf('Input', module)
 						autoFocus={boolean('autoFocus', Input)}
 						onChange={action('onChange')}
 						disabled={boolean('disabled', Input)}
-						iconAfter={select('iconAfter', iconNames, Input)}
-						iconBefore={select('iconBefore', iconNames, Input)}
+						iconAfter={select('iconAfter', sortedIconNames, Input)}
+						iconBefore={select('iconBefore', sortedIconNames, Input)}
 						placeholder={text('placeholder', Input)}
 						type={select('type', inputData.type, Input, inputData.type[0])}
 						size={select('size', ['small', 'large'], Input)}
@@ -194,8 +195,8 @@ storiesOf('Input', module)
 				autoFocus={boolean('autoFocus', Input)}
 				onChange={action('onChange')}
 				disabled={boolean('disabled', Input)}
-				iconAfter={select('iconAfter', iconNames, Input)}
-				iconBefore={select('iconBefore', iconNames, Input)}
+				iconAfter={select('iconAfter', sortedIconNames, Input)}
+				iconBefore={select('iconBefore', sortedIconNames, Input)}
 				type={inputData.type[1]}
 				size={select('size', ['small', 'large'], Input)}
 				defaultValue={inputData.initialNumericValue}

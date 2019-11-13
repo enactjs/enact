@@ -1,12 +1,11 @@
 import ExpandableInput, {ExpandableInputBase} from '@enact/moonstone/ExpandableInput';
-import {icons} from '@enact/moonstone/Icon';
+import iconNames from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
 import {boolean, select, text} from '../../src/enact-knobs';
 import {action, mergeComponentMetadata} from '../../src/utils';
 
-const iconNames = ['', ...Object.keys(icons)];
+const sortedIconNames = ['', ...iconNames.sort()];
 
 const Config = mergeComponentMetadata('ExpandableInput', ExpandableInputBase, ExpandableInput);
 ExpandableInput.displayName = 'ExpandableInput';
@@ -22,8 +21,8 @@ storiesOf('Moonstone', module)
 		() => (
 			<ExpandableInput
 				disabled={boolean('disabled', Config)}
-				iconAfter={select('iconAfter', iconNames, Config)}
-				iconBefore={select('iconBefore', iconNames, Config)}
+				iconAfter={select('iconAfter', sortedIconNames, Config)}
+				iconBefore={select('iconBefore', sortedIconNames, Config)}
 				noneText={text('noneText', Config, 'noneText')}
 				onChange={action('onChange')}
 				onClose={action('onClose')}
