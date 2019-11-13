@@ -19,7 +19,7 @@ import ActivityPanels from './ActivityPanels';
 import AlwaysViewingPanels from './AlwaysViewingPanels';
 import Breadcrumb from './Breadcrumb';
 import Header, {HeaderBase} from './Header';
-import MinimizeController, {MinimizeControllerContext} from './HeaderController';
+import MinimizeController, {MinimizeControllerContext} from './MinimizeController';
 import Panel from './Panel';
 import Panels from './Panels';
 
