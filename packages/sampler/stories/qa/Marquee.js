@@ -4,6 +4,8 @@ import Button from '@enact/moonstone/Button';
 import Heading from '@enact/moonstone/Heading';
 import Icon from '@enact/moonstone/Icon';
 import Item from '@enact/moonstone/Item';
+import ItemBase from '@enact/moonstone/Item';
+import LabeledItem from '@enact/moonstone/LabeledItem';
 import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
 import Spottable from '@enact/spotlight/Spottable';
 import ri from '@enact/ui/resolution';
@@ -69,6 +71,12 @@ const CustomItem = Spottable(MarqueeController(
 	{marqueeOnFocus: true},
 	CustomItemBase
 ));
+
+const MarqueeItem = Spottable(MarqueeController(
+	{marqueeOnFocus: true},
+	ItemBase
+)
+);
 
 class MarqueeWithShortContent extends React.Component {
 	constructor (props) {
@@ -141,6 +149,50 @@ class MarqueeWithContentChanged extends React.Component {
 		);
 	}
 }
+
+// MarqueeCentered
+const MarqueeCentered = kind({
+	name: 'MarqueeCentered',
+
+	render: (props) => (
+		<div>
+			<Heading>DIV + text-align: center</Heading>
+			<div style={{textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', width: ri.scale(402), height: ri.scale(36), border: '1px solid yellow'}}>looooooooooooooooooooooooooooooong text</div>
+			<Heading>DIV</Heading>
+			<div style={{overflow: 'hidden', textOverflow: 'ellipsis', width: ri.scale(402), height: ri.scale(36), border: '1px solid yellow'}}>looooooooooooooooooooooooooooooong text</div>
+			<br />
+			<Heading>"Focus on below" MarqueeController + center</Heading>
+			<MarqueeItem style={{width: ri.scale(401), display: 'flex', flexDirection: 'column'}}>
+				<div>text</div>
+				<div style={{width: '100%', flex: 1}}>
+					<Marquee
+						alignment="center"
+						style={{width: '100%'}}
+					>
+						{'this is marquee text this is marquee text'}
+					</Marquee>
+				</div>
+			</MarqueeItem>
+			<Heading>MarqueeController + no center</Heading>
+			<MarqueeItem style={{width: ri.scale(401), display: 'flex', flexDirection: 'column', border: '1px solid yellow'}}>
+				<div>text</div>
+				<div style={{width: '100%', flex: 1, textAlign: 'center'}}>
+					<Marquee
+						style={{width: '100%', border: '1px solid red'}}
+					>
+						{'this is marquee text this is marquee text'}
+					</Marquee>
+				</div>
+			</MarqueeItem>
+			<LabeledItem
+				label="this is very long label"
+				style={{width: ri.scale(402)}}
+			>
+				this is very long LabeledItem
+			</LabeledItem>
+		</div>
+	)
+});
 
 storiesOf('Marquee', module)
 	.add(
@@ -292,5 +344,12 @@ storiesOf('Marquee', module)
 		'with Content Changed',
 		() => (
 			<MarqueeWithContentChanged />
+		)
+	)
+
+	.add(
+		'with Text Centered',
+		() => (
+			<MarqueeCentered />
 		)
 	);
