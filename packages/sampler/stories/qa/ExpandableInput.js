@@ -1,5 +1,5 @@
 import ExpandableInput from '@enact/moonstone/ExpandableInput';
-import {icons} from '@enact/moonstone/Icon';
+import iconNames from '../default/icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
@@ -8,7 +8,6 @@ import {action} from '../../src/utils';
 
 ExpandableInput.displayName = 'ExpandableInput';
 
-const iconNames = ['', ...Object.keys(icons)];
 const sortedIconNames = ['', ...iconNames.sort()];
 
 storiesOf('ExpandableInput', module)

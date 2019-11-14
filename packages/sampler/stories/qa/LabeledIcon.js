@@ -71,7 +71,7 @@ storiesOf('LabeledIcon', module)
 			const labelPosition = select('labelPosition', ['above', 'after', 'before', 'below', 'left', 'right'], Config);
 			return (
 				<LabeledIcon
-					icon={select('icon', ['', ...sortedIconNames], Config, 'fullscreen')}
+					icon={select('icon', sortedIconNames, Config, 'fullscreen')}
 					inline
 					disabled={disabled}
 					flip={select('flip', ['', 'both', 'horizontal', 'vertical'], Config, '')}
