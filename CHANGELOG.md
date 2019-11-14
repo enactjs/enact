@@ -2,13 +2,20 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.2.5] - 2019-11-14
+
+### Fixed
+
+- `moonstone/Notification` to support 3 max-width buttons in a single line
+- `ui/Marquee` to not double aria readout for marqueeing contents
+
 ## [3.2.4] - 2019-11-07
 
 ### Fixed
 
 - `moonstone/Notification` line height for non-latin locales
 - `moonstone/Notification` to show all buttons in one line
-- `ui/Marquee` text aligment when content is centered
+- `ui/Marquee` text alignment when content is centered
 
 ## [3.2.3] - 2019-11-01
 
