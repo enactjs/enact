@@ -2,11 +2,17 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [3.2.5] - 2019-11-14
+
+### Fixed
+
+- `ui/Marquee` to not double aria readout for marqueeing contents
+
 ## [3.2.4] - 2019-11-07
 
 ### Fixed
 
-- `ui/Marquee` text aligment when content is centered
+- `ui/Marquee` text alignment when content is centered
 
 ## [3.2.3] - 2019-11-01
 
