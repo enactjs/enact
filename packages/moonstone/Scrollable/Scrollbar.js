@@ -53,6 +53,14 @@ class ScrollbarBase extends Component {
 		corner: PropTypes.bool,
 
 		/**
+		 * Click handler for the scrollbar.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onClick: PropTypes.func,
+
+		/**
 		 * `true` if rtl, `false` if ltr.
 		 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
 		 *
@@ -115,13 +123,14 @@ class ScrollbarBase extends Component {
 	}
 
 	render () {
-		const {cbAlertThumb, clientSize, corner, vertical, ...rest} = this.props;
+		const {cbAlertThumb, clientSize, corner, onClick, vertical, ...rest} = this.props;
 
 		return (
 			<UiScrollbarBase
 				corner={corner}
 				clientSize={clientSize}
 				css={componentCss}
+				onClick={onClick}
 				ref={this.scrollbarRef}
 				vertical={vertical}
 				childRenderer={({thumbRef}) => ( // eslint-disable-line react/jsx-no-bind

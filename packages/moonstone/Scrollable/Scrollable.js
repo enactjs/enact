@@ -623,6 +623,10 @@ class ScrollableBase extends Component {
 		return false; // means to be propagated
 	}
 
+	onScrollbarClick = () => {
+		this.uiRef.current.start({targetX: 0, targetY: 0});
+	}
+
 	onKeyDown = (ev) => {
 		const {keyCode, repeat, target} = ev;
 
@@ -1028,6 +1032,7 @@ class ScrollableBase extends Component {
 									disabled={!isVerticalScrollbarVisible}
 									focusableScrollButtons={focusableScrollbar}
 									nextButtonAriaLabel={downButtonAriaLabel}
+									onClick={this.onScrollbarClick}
 									onKeyDownButton={this.onKeyDown}
 									preventBubblingOnKeyDown={preventBubblingOnKeyDown}
 									previousButtonAriaLabel={upButtonAriaLabel}
@@ -1044,6 +1049,7 @@ class ScrollableBase extends Component {
 								disabled={!isHorizontalScrollbarVisible}
 								focusableScrollButtons={focusableScrollbar}
 								nextButtonAriaLabel={rightButtonAriaLabel}
+								onClick={this.onScrollbarClick}
 								onKeyDownButton={this.onKeyDown}
 								preventBubblingOnKeyDown={preventBubblingOnKeyDown}
 								previousButtonAriaLabel={leftButtonAriaLabel}
