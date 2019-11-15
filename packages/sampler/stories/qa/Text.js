@@ -92,7 +92,6 @@ storiesOf('Text', module)
 					<Header title={children} titleBelow={children} subTitleBelow={children}>
 						<Input value={children} slot="headerInput" />
 					</Header>
-
 				</Scroller>
 			);
 		}

@@ -7,19 +7,6 @@ import componentCss from './Marquee.module.less';
 
 const isEventSource = (ev) => ev.target === ev.currentTarget;
 
-const applyOffset = (node) => {
-	if (!node || !global.IntersectionObserver) return;
-
-	const root = node.parentNode;
-	new global.IntersectionObserver(function (entries, observer) {
-		const {left} = entries[0].boundingClientRect;
-		const offset = Math.round(left) - left;
-		node.style.setProperty('--ui-marquee-offset', offset);
-
-		observer.disconnect();
-	}, {root}).observe(node);
-};
-
 /**
  * Marquees the children of the component.
  *
@@ -56,6 +43,15 @@ const MarqueeBase = kind({
 		 * @public
 		 */
 		animating: PropTypes.bool,
+
+		/**
+		 * Sets the value of the `aria-label` attribute for the wrapped component.
+		 *
+		 * @memberof ui/Marquee.MarqueeBase.prototype
+		 * @type {String}
+		 * @public
+		 */
+		'aria-label': PropTypes.string,
 
 		/**
 		 * The text or a set of components that should be marqueed
@@ -170,6 +166,22 @@ const MarqueeBase = kind({
 	},
 
 	handlers: {
+		applyOffset: (node, {distance, rtl, spacing}) => {
+			if (!node || !global.IntersectionObserver) return;
+
+			const root = node.parentNode;
+			new global.IntersectionObserver(function (entries, observer) {
+				const {left, right} = entries[0].boundingClientRect;
+				const {left: rootLeft, right: rootRight} = entries[0].rootBounds;
+
+				const textWidth = rtl ? rootRight - right : left - rootLeft;
+				const offset = distance - (textWidth + spacing);
+
+				node.style.setProperty('--ui-marquee-offset', offset);
+
+				observer.disconnect();
+			}, {root}).observe(node);
+		},
 		onMarqueeComplete: handle(
 			forProp('animating', true),
 			isEventSource,
@@ -179,6 +191,15 @@ const MarqueeBase = kind({
 	},
 
 	computed: {
+		'aria-label': ({'aria-label': aria, children, distance, willAnimate}) => {
+			if (aria == null && willAnimate && distance > 0) {
+				return React.Children.map(children, c => typeof c === 'string' && c)
+					.filter(Boolean)
+					.join(' ') || aria;
+			} else {
+				return aria;
+			}
+		},
 		clientClassName: ({animating, willAnimate, styler}) => styler.join({
 			animate: animating,
 			text: true,
@@ -212,7 +233,7 @@ const MarqueeBase = kind({
 		}
 	},
 
-	render: ({children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, ...rest}) => {
+	render: ({applyOffset, children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;

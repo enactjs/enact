@@ -318,4 +318,56 @@ describe('MarqueeBase', () => {
 		const actual = subject.text();
 		expect(actual).toBe('Text');
 	});
+
+	test('should add aria-label with content when promoted and a non-zero distance', () => {
+		const text = 'Text';
+		const subject = mount(
+			<MarqueeBase willAnimate distance={100}>
+				{text}
+			</MarqueeBase>
+		);
+
+		const expected = text;
+		const actual = subject.childAt(0).prop('aria-label');
+		expect(actual).toBe(expected);
+	});
+
+	test('should not override aria-label with content when promoted and a non-zero distance', () => {
+		const aria = 'Custom';
+		const subject = mount(
+			<MarqueeBase willAnimate distance={100} aria-label={aria}>
+				Text
+			</MarqueeBase>
+		);
+
+		const expected = aria;
+		const actual = subject.childAt(0).prop('aria-label');
+		expect(actual).toBe(expected);
+	});
+
+	test('should concatenate string children when promoted and a non-zero distance', () => {
+		const subject = mount(
+			<MarqueeBase willAnimate distance={100}>
+				This is {'A'} test
+			</MarqueeBase>
+		);
+
+		const expected = 'This is  A  test';
+		const actual = subject.childAt(0).prop('aria-label');
+		expect(actual).toBe(expected);
+	});
+
+	test('should not concatenate non-string children when promoted and a non-zero distance', () => {
+		const subject = mount(
+			<MarqueeBase willAnimate distance={100}>
+				Test
+				<div>Hello</div>
+				World
+			</MarqueeBase>
+		);
+
+		const expected = 'Test World';
+		const actual = subject.childAt(0).prop('aria-label');
+		expect(actual).toBe(expected);
+	});
 });
