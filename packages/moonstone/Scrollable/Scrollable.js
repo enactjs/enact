@@ -7,6 +7,7 @@
  */
 
 import classNames from 'classnames';
+import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import handle, {forward} from '@enact/core/handle';
 import platform from '@enact/core/platform';
 import {onWindowReady} from '@enact/core/snapshot';
@@ -284,7 +285,16 @@ class ScrollableBase extends Component {
 		 * @default $L('scroll up')
 		 * @public
 		 */
-		scrollUpAriaLabel: PropTypes.string
+		scrollUpAriaLabel: PropTypes.string,
+
+		/**
+		 * Registers the Scrollable component with an
+		 * {@link core/internal/ApiDecorator.ApiDecorator}.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		setApiProvider: PropTypes.func
 	}
 
 	static defaultProps = {
@@ -302,6 +312,10 @@ class ScrollableBase extends Component {
 
 	constructor (props) {
 		super(props);
+
+		if (props.setApiProvider) {
+			props.setApiProvider(this);
+		}
 
 		this.scrollbarProps = {
 			cbAlertThumb: this.alertThumbAfterRendered,
@@ -327,6 +341,7 @@ class ScrollableBase extends Component {
 		this.createOverscrollJob('vertical', 'after');
 
 		this.restoreScrollPosition();
+		this.scrollToTop = this.scrollToTop;
 		scrollables.set(this, this.uiRef.current.containerRef.current);
 	}
 
@@ -458,6 +473,10 @@ class ScrollableBase extends Component {
 				this.lastScrollPositionOnFocus = pos;
 			}
 		}
+	}
+
+	scrollToTop = () => {
+		this.uiRef.current.start({targetX: 0, targetY: 0});
 	}
 
 	calculateAndScrollTo = () => {
@@ -961,6 +980,8 @@ class ScrollableBase extends Component {
 			rightButtonAriaLabel = scrollRightAriaLabel == null ? $L('scroll right') : scrollRightAriaLabel,
 			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
 
+		delete rest.setApiProvider;
+
 		return (
 			<UiScrollableBase
 				noScrollByDrag={!platform.touchscreen}
@@ -1068,16 +1089,20 @@ class ScrollableBase extends Component {
  * @ui
  * @public
  */
-const Scrollable = Skinnable(
-	SpotlightContainerDecorator(
-		{
-			overflow: true,
-			preserveId: true,
-			restrict: 'self-first'
-		},
-		I18nContextDecorator(
-			{rtlProp: 'rtl'},
-			ScrollableBase
+const Scrollable = ApiDecorator(
+	{api: [
+		'scrollToTop'
+	]}, Skinnable(
+		SpotlightContainerDecorator(
+			{
+				overflow: true,
+				preserveId: true,
+				restrict: 'self-first'
+			},
+			I18nContextDecorator(
+				{rtlProp: 'rtl'},
+				ScrollableBase
+			)
 		)
 	)
 );

@@ -18,6 +18,7 @@
 
 import {Spotlight} from '@enact/spotlight';
 import {getRect} from '@enact/spotlight/src/utils';
+import ForwardRef from '@enact/ui/ForwardRef';
 import ri from '@enact/ui/resolution';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import PropTypes from 'prop-types';
@@ -448,14 +449,15 @@ class ScrollerBase extends Component {
  * @ui
  * @public
  */
-const Scroller = (props) => (
+const Scroller = ForwardRef(({forwardRef, ...rest}) => (
 	<Scrollable
-		{...props}
+		{...rest}
+		ref={forwardRef}
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
 			return <ScrollerBase {...scrollerProps} />;
 		}}
 	/>
-);
+));
 
 Scroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
 	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
@@ -483,14 +485,15 @@ Scroller.defaultProps = {
  * @ui
  * @private
  */
-const ScrollerNative = (props) => (
+const ScrollerNative = ForwardRef(({forwardRef, ...rest}) => (
 	<ScrollableNative
-		{...props}
+		{...rest}
+		ref={forwardRef}
 		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
 			return <ScrollerBase {...scrollerProps} />;
 		}}
 	/>
-);
+));
 
 ScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototype */ {
 	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
