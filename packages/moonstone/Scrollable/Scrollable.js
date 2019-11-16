@@ -25,6 +25,7 @@ import $L from '../internal/$L';
 import {SharedState} from '../internal/SharedStateDecorator';
 
 import Scrollbar from './Scrollbar';
+import Button from '../Button';
 import Skinnable from '../Skinnable';
 
 import overscrollCss from './OverscrollEffect.module.less';
@@ -458,6 +459,10 @@ class ScrollableBase extends Component {
 				this.lastScrollPositionOnFocus = pos;
 			}
 		}
+	}
+
+	onScrollToTopButtonClick = () => {
+		this.uiRef.current.start({targetX: 0, targetY: 0});
 	}
 
 	calculateAndScrollTo = () => {
@@ -1036,6 +1041,17 @@ class ScrollableBase extends Component {
 								null
 							}
 						</div>
+						<Button
+							icon="arrowlargeup"
+							onTap={this.onScrollToTopButtonClick}
+							style={{
+								position: 'absolute',
+								right: '0',
+								bottom: '0'
+							}}
+						>
+							Back to top
+						</Button>
 						{isHorizontalScrollbarVisible ?
 							<Scrollbar
 								{...horizontalScrollbarProps}
