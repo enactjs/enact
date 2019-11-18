@@ -3,6 +3,11 @@
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
 ## [unreleased]
+
+### Fixed
+
+- `ui/VirtualList.VirtualList` to render properly without error when `itemSizes` is given and `dataSize` is 0
+
 ## [3.2.5] - 2019-11-14
 
 ### Fixed
