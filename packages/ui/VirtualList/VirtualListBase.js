@@ -466,12 +466,14 @@ const VirtualListBaseFactory = (type) => {
 		getMoreInfo = () => this.moreInfo
 
 		getGridPosition (index) {
-			const {dimensionToExtent, itemPositions, primary, secondary} = this;
-			const secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
-			const extent = Math.floor(index / dimensionToExtent);
+			const
+				{dataSize, itemSizes} = this.props,
+				{dimensionToExtent, itemPositions, primary, secondary} = this,
+				secondaryPosition = (index % dimensionToExtent) * secondary.gridSize,
+				extent = Math.floor(index / dimensionToExtent);
 			let primaryPosition;
 
-			if (this.props.itemSizes && typeof this.props.itemSizes[index] !== 'undefined' && this.props.dataSize > index) {
+			if (itemSizes && typeof itemSizes[index] !== 'undefined' && dataSize > index) {
 				const firstIndexInExtent = extent * dimensionToExtent;
 
 				if (!itemPositions[firstIndexInExtent]) {
