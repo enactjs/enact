@@ -192,7 +192,7 @@ const MarqueeBase = kind({
 
 	computed: {
 		'aria-label': ({'aria-label': aria, children, distance, willAnimate}) => {
-			if (aria == null && willAnimate && distance > 0) {
+			if (children != null && aria == null && willAnimate && distance > 0) {
 				return React.Children.map(children, c => typeof c === 'string' && c)
 					.filter(Boolean)
 					.join(' ') || aria;
