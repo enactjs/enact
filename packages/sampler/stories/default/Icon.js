@@ -2,9 +2,10 @@ import Icon, {IconBase} from '@enact/moonstone/Icon';
 import Heading from '@enact/moonstone/Heading';
 import Scroller from '@enact/moonstone/Scroller';
 import UiIcon from '@enact/ui/Icon';
-import iconNames from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
+
+import iconNames from './icons';
 
 import {select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -38,7 +39,7 @@ storiesOf('Moonstone', module)
 					<br />
 					<br />
 					<Heading showLine>All Icons</Heading>
-					{sortedIconNames.map((icon, index) => <Icon key={index} flip={flip} size={size} title={icon}>{icon}</Icon>)}
+					{iconNames.map((icon, index) => <Icon key={index} flip={flip} size={size} title={icon}>{icon}</Icon>)}
 				</Scroller>
 			);
 		},
