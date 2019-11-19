@@ -1,0 +1,28 @@
+.scrollToTopButton {
+	transition: opacity 0.5s;
+	opacity: 0;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+
+	&.showScrollToTopButton {
+		opacity: 1;
+	}
+
+	&.horizontalScrollbar {
+		bottom: 60px;
+	}
+
+	&.verticalScrollbar {
+		right: 60px;
+	}
+
+	&.rtlScrollToTopButton {
+		left: 0;
+		right: auto;
+
+		&.verticalScrollbar {
+			left: 60px;
+		}
+	}
+}
