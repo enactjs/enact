@@ -466,12 +466,14 @@ const VirtualListBaseFactory = (type) => {
 		getMoreInfo = () => this.moreInfo
 
 		getGridPosition (index) {
-			const {dimensionToExtent, itemPositions, primary, secondary} = this;
-			const secondaryPosition = (index % dimensionToExtent) * secondary.gridSize;
-			const extent = Math.floor(index / dimensionToExtent);
+			const
+				{dataSize, itemSizes} = this.props,
+				{dimensionToExtent, itemPositions, primary, secondary} = this,
+				secondaryPosition = (index % dimensionToExtent) * secondary.gridSize,
+				extent = Math.floor(index / dimensionToExtent);
 			let primaryPosition;
 
-			if (this.props.itemSizes) {
+			if (itemSizes && typeof itemSizes[index] !== 'undefined' && dataSize > index) {
 				const firstIndexInExtent = extent * dimensionToExtent;
 
 				if (!itemPositions[firstIndexInExtent]) {
@@ -481,7 +483,11 @@ const VirtualListBaseFactory = (type) => {
 					}
 				}
 
-				primaryPosition = itemPositions[firstIndexInExtent].position;
+				if (itemPositions[firstIndexInExtent]) {
+					primaryPosition = itemPositions[firstIndexInExtent].position;
+				} else {
+					primaryPosition = extent * primary.gridSize;
+				}
 			} else {
 				primaryPosition = extent * primary.gridSize;
 			}
