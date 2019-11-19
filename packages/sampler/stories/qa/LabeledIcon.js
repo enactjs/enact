@@ -14,7 +14,6 @@ import {boolean, select, text} from '../../src/enact-knobs';
 
 LabeledIcon.displayName = 'LabeledIcon';
 const Config = mergeComponentMetadata('LabeledIcon', UiLabeledIconBase, UiLabeledIcon, UiIcon, IconBase, Icon, LabeledIcon);
-const sortedIconNames = ['', ...iconNames.sort()];
 
 storiesOf('LabeledIcon', module)
 	.add(
@@ -71,7 +70,7 @@ storiesOf('LabeledIcon', module)
 			const labelPosition = select('labelPosition', ['above', 'after', 'before', 'below', 'left', 'right'], Config);
 			return (
 				<LabeledIcon
-					icon={select('icon', sortedIconNames, Config, 'fullscreen')}
+					icon={select('icon', ['', ...iconNames], Config, 'fullscreen')}
 					inline
 					disabled={disabled}
 					flip={select('flip', ['', 'both', 'horizontal', 'vertical'], Config, '')}
