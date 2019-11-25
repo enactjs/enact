@@ -66,6 +66,7 @@ storiesOf('Moonstone', module)
 				noScrollByWheel={boolean('noScrollByWheel', ScrollerConfig)}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
+				showScrollToTopButton={boolean('showScrollToTopButton', ScrollerConfig)}
 				spotlightDisabled={boolean('spotlightDisabled', ScrollerConfig, false)}
 				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, ScrollerConfig)}
 			>

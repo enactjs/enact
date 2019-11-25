@@ -7,10 +7,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/Panels.Header` prop `minimized`
+- `moonstone/Scrollable` scroll to top button
 
 ### Fixed
 
-- `moonstone/Notification`to support 3 max-width buttons in a single line
+- `moonstone/Notification` to support 3 max-width buttons in a single line
+
 ## [3.2.5] - 2019-11-14
 
 ### Fixed
