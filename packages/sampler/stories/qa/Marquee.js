@@ -4,8 +4,9 @@ import Button from '@enact/moonstone/Button';
 import Heading from '@enact/moonstone/Heading';
 import Icon from '@enact/moonstone/Icon';
 import Item from '@enact/moonstone/Item';
-import ItemBase from '@enact/moonstone/Item';
-import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
+import {ItemBase} from '@enact/moonstone/Item';
+// import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
+import Marquee, {MarqueeController} from '@enact/moonstone/Marquee';
 import Spottable from '@enact/spotlight/Spottable';
 import ri from '@enact/ui/resolution';
 import React from 'react';
@@ -71,10 +72,11 @@ const CustomItem = Spottable(MarqueeController(
 	CustomItemBase
 ));
 
-const MarqueeItem = Spottable(MarqueeController(
-	{marqueeOnFocus: true},
-	ItemBase
-)
+const MarqueeItem = Spottable(
+	MarqueeController(
+		{marqueeOnFocus: true},
+		ItemBase
+	)
 );
 
 class MarqueeWithShortContent extends React.Component {
@@ -309,14 +311,14 @@ storiesOf('Marquee', module)
 				<Heading>Focus on below MarqueeController + center</Heading>
 				<MarqueeItem style={{width: ri.scale(401), display: 'flex', flexDirection: 'column'}}>
 					<div>text</div>
-					// <div style={{width: '100%', flex: 1}}>
+					<div style={{width: '100%'}}>
 						<Marquee
 							alignment="center"
 							style={{width: '100%'}}
 						>
 							{'this is marquee text this is marquee text'}
 						</Marquee>
-				// 	</div>
+					</div>
 				</MarqueeItem>
 			</div>
 		)
