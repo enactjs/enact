@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Panels.Header` prop `minimized`
 - `moonstone/Scrollable` scroll to top button
 
 ### Fixed
