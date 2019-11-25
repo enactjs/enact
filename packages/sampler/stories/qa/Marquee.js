@@ -3,9 +3,7 @@ import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Button from '@enact/moonstone/Button';
 import Heading from '@enact/moonstone/Heading';
 import Icon from '@enact/moonstone/Icon';
-import Item from '@enact/moonstone/Item';
-import {ItemBase} from '@enact/moonstone/Item';
-// import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
+import Item, {ItemBase} from '@enact/moonstone/Item';
 import Marquee, {MarqueeController} from '@enact/moonstone/Marquee';
 import Spottable from '@enact/spotlight/Spottable';
 import ri from '@enact/ui/resolution';
@@ -308,12 +306,24 @@ storiesOf('Marquee', module)
 		'with Text Centered',
 		() => (
 			<div>
-				<Heading>Focus on below MarqueeController + center</Heading>
+				<Heading>Focus on below MarqueeController + Marquee center</Heading>
 				<MarqueeItem style={{width: ri.scale(401), display: 'flex', flexDirection: 'column'}}>
-					<div>text</div>
-					<div style={{width: '100%'}}>
+					<div>Sample text</div>
+					<div style={{width: '100%', flex: 1}}>
 						<Marquee
 							alignment="center"
+							style={{width: '100%'}}
+						>
+							{'this is marquee text this is marquee text'}
+						</Marquee>
+					</div>
+				</MarqueeItem>
+				<br />
+				<Heading>MarqueeController + Marquee not center</Heading>
+				<MarqueeItem style={{width: ri.scale(401), display: 'flex', flexDirection: 'column', border: '1px solid yellow'}}>
+					<div>Sample text</div>
+					<div style={{width: '100%', flex: 1, textAlign: 'center'}}>
+						<Marquee
 							style={{width: '100%'}}
 						>
 							{'this is marquee text this is marquee text'}
