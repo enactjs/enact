@@ -82,8 +82,8 @@ const ButtonBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		// `transparent` and  `client` were intentionally excluded from the adove documented
-		// exported classes as it does not appear to provide value to the end-developer, but is
+		// `transparent` and `client` were intentionally excluded from the above documented
+		// exported classes as they do not appear to provide value to the end-developer, but are
 		// needed by IconButton internally for its design guidelines.
 		// Same for `pressed` which is used by Dropdown to nullify the key-press activate animation.
 		css: PropTypes.object,

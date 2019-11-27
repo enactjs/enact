@@ -5,7 +5,7 @@ import {storiesOf} from '@storybook/react';
 import {boolean, select, text} from '../../src/enact-knobs';
 import {action, mergeComponentMetadata} from '../../src/utils';
 
-const iconNames = ['', icons];
+const iconNames = ['', ...icons];
 
 const Config = mergeComponentMetadata('ExpandableInput', ExpandableInputBase, ExpandableInput);
 ExpandableInput.displayName = 'ExpandableInput';
