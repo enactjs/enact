@@ -1,12 +1,12 @@
 import Picker from '@enact/moonstone/Picker';
-import {icons} from '@enact/moonstone/Icon';
 import PickerAddRemove from './components/PickerAddRemove';
 import PickerRTL from './components/PickerRTL';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
-import {boolean, select} from '../../src/enact-knobs';
 import {action} from '../../src/utils';
+import {boolean, select} from '../../src/enact-knobs';
+import iconNames from '../default/icons';
 
 Picker.displayName = 'Picker';
 
@@ -14,8 +14,6 @@ const prop = {
 	orientation: ['horizontal', 'vertical'],
 	width: [null, 'small', 'medium', 'large']
 };
-
-const iconNames = Object.keys(icons);
 
 const pickerList = {
 	tall: [

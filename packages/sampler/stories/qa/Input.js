@@ -1,4 +1,4 @@
-import {icons} from '@enact/moonstone/Icon';
+import icons from '../default/icons';
 import {Input, InputBase} from '@enact/moonstone/Input';
 import ri from '@enact/ui/resolution';
 import React from 'react';
@@ -9,7 +9,7 @@ import {action} from '../../src/utils';
 
 Input.displayName = 'Input';
 
-const iconNames = ['', ...Object.keys(icons)];
+const iconNames = ['', ...icons];
 
 const divMargin = () => ({margin: ri.unit(12, 'rem')});
 

@@ -1,13 +1,13 @@
 import Item from '@enact/moonstone/Item';
-import Icon, {icons} from '@enact/moonstone/Icon';
+import Icon from '@enact/moonstone/Icon';
+import icons from '../default/icons';
 import React from 'react';
 import Button from '@enact/moonstone/Button';
 import Image from '@enact/moonstone/Image';
 import {storiesOf} from '@storybook/react';
-
 import {boolean, select, text} from '../../src/enact-knobs';
 
-const iconNames = ['', ...Object.keys(icons)];
+const iconNames = ['', ...icons];
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',

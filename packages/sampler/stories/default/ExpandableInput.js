@@ -1,12 +1,11 @@
 import ExpandableInput, {ExpandableInputBase} from '@enact/moonstone/ExpandableInput';
-import {icons} from '@enact/moonstone/Icon';
+import icons from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
 import {boolean, select, text} from '../../src/enact-knobs';
 import {action, mergeComponentMetadata} from '../../src/utils';
 
-const iconNames = ['', ...Object.keys(icons)];
+const iconNames = ['', icons];
 
 const Config = mergeComponentMetadata('ExpandableInput', ExpandableInputBase, ExpandableInput);
 ExpandableInput.displayName = 'ExpandableInput';

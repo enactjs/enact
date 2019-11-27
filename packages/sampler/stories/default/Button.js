@@ -1,8 +1,9 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
 import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
-import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
+
+import iconNames from './icons';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {action, mergeComponentMetadata} from '../../src/utils';
@@ -14,7 +15,7 @@ const Config = mergeComponentMetadata('Button', UIButtonBase, UIButton, ButtonBa
 // Set up some defaults for info and knobs
 const prop = {
 	backgroundOpacity: ['', 'translucent', 'lightTranslucent', 'transparent'],
-	icons: ['', ...Object.keys(icons)]
+	icons: ['', ...iconNames]
 };
 
 storiesOf('Moonstone', module)

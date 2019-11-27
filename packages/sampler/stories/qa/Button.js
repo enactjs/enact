@@ -2,12 +2,12 @@ import Button, {ButtonBase} from '@enact/moonstone/Button';
 import IconButton from '@enact/moonstone/IconButton';
 import Heading from '@enact/moonstone/Heading';
 import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
-import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
-import {boolean, select, text} from '../../src/enact-knobs';
 import {action, mergeComponentMetadata} from '../../src/utils';
+import {boolean, select, text} from '../../src/enact-knobs';
+import iconNames from '../default/icons';
 
 import css from './Button.module.less';
 
@@ -21,7 +21,7 @@ const prop = {
 	color: ['', 'red', 'green', 'yellow', 'blue'],
 	longText: {'A Loooooooooooooooooog Button': 'A Loooooooooooooooooog Button', 'BUTTON   WITH   EXTRA   SPACES': 'BUTTON   WITH   EXTRA   SPACES'},
 	tallText: {' ฟิ้ ไั  ஒ  து': ' ฟิ้ ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'},
-	icons: ['', ...Object.keys(icons)]
+	icons: ['', ...iconNames]
 };
 
 storiesOf('Button', module)
