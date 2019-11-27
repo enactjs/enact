@@ -3,8 +3,8 @@ import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import Button from '@enact/moonstone/Button';
 import Heading from '@enact/moonstone/Heading';
 import Icon from '@enact/moonstone/Icon';
-import Item from '@enact/moonstone/Item';
-import {Marquee, MarqueeController} from '@enact/moonstone/Marquee';
+import Item, {ItemBase} from '@enact/moonstone/Item';
+import Marquee, {MarqueeController} from '@enact/moonstone/Marquee';
 import Spottable from '@enact/spotlight/Spottable';
 import ri from '@enact/ui/resolution';
 import React from 'react';
@@ -69,6 +69,13 @@ const CustomItem = Spottable(MarqueeController(
 	{marqueeOnFocus: true},
 	CustomItemBase
 ));
+
+const MarqueeItem = Spottable(
+	MarqueeController(
+		{marqueeOnFocus: true},
+		ItemBase
+	)
+);
 
 class MarqueeWithShortContent extends React.Component {
 	constructor (props) {
@@ -292,5 +299,37 @@ storiesOf('Marquee', module)
 		'with Content Changed',
 		() => (
 			<MarqueeWithContentChanged />
+		)
+	)
+
+	.add(
+		'with Text Centered',
+		() => (
+			<div>
+				<Heading>Focus on below MarqueeController + Marquee center</Heading>
+				<MarqueeItem style={{width: ri.scale(401), display: 'flex', flexDirection: 'column'}}>
+					<div>Sample text</div>
+					<div style={{width: '100%', flex: 1}}>
+						<Marquee
+							alignment="center"
+							style={{width: '100%'}}
+						>
+							{'this is marquee text this is marquee text'}
+						</Marquee>
+					</div>
+				</MarqueeItem>
+				<br />
+				<Heading>MarqueeController + Marquee not center</Heading>
+				<MarqueeItem style={{width: ri.scale(401), display: 'flex', flexDirection: 'column', border: '1px solid yellow'}}>
+					<div>Sample text</div>
+					<div style={{width: '100%', flex: 1, textAlign: 'center'}}>
+						<Marquee
+							style={{width: '100%'}}
+						>
+							{'this is marquee text this is marquee text'}
+						</Marquee>
+					</div>
+				</MarqueeItem>
+			</div>
 		)
 	);
