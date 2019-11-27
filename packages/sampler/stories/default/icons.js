@@ -15,7 +15,7 @@ const decrementIcons = [
 	'rollbackward',
 	'arrowshrink',
 	'back15'
-];
+].sort();
 
 const incrementIcons = [
 	'plus',
@@ -27,7 +27,7 @@ const incrementIcons = [
 	'rollforward',
 	'arrowextend',
 	'forward15'
-];
+].sort();
 
 const listIcons = [
 	'denselist',
@@ -35,7 +35,7 @@ const listIcons = [
 	'list',
 	'drawer',
 	'playlist'
-];
+].sort();
 
 const mediaIcons = [
 	'circle',
@@ -113,7 +113,7 @@ const mediaIcons = [
 	'notification',
 	'notificationoff',
 	'checkselection'
-];
+].sort();
 
 const arrowIcons = [
 	'arrowlargedown',
@@ -128,14 +128,14 @@ const arrowIcons = [
 	'arrowrightskip',
 	'arrowleftprevious',
 	'arrowupdown'
-];
+].sort();
 
 const starIcons = [
 	'star',
 	'hollowstar',
 	'halfstar',
 	'starminus'
-];
+].sort();
 
-export default Object.keys(icons);
+export default Object.keys(icons).sort();
 export {decrementIcons, incrementIcons, listIcons, mediaIcons, arrowIcons, starIcons};
