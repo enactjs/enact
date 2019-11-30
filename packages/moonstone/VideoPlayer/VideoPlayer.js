@@ -16,7 +16,7 @@ import {adaptEvent, call, forKey, forward, forwardWithPrevent, handle, preventDe
 import {is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform';
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import {perfNow, Job} from '@enact/core/util';
+import {isRenderable, perfNow, Job} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import {toUpperCase} from '@enact/i18n/util';
 import Spotlight from '@enact/spotlight';
@@ -26,7 +26,6 @@ import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ComponentOverride from '@enact/ui/ComponentOverride';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import {FloatingLayerContext} from '@enact/ui/FloatingLayer/FloatingLayerDecorator';
-import Media from '@enact/ui/Media';
 import Slottable from '@enact/ui/Slottable';
 import Touchable from '@enact/ui/Touchable';
 import DurationFmt from 'ilib/lib/DurationFmt';
@@ -614,7 +613,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * the video component as a child node.
 		 *
 		 * @type {Component|Element}
-		 * @default {@link ui/Media.Media}
+		 * @default {@link ui/Video.Video}
 		 * @public
 		 */
 		videoComponent: EnactPropTypes.componentOverride
@@ -636,7 +635,7 @@ const VideoPlayerBase = class extends React.Component {
 		},
 		spotlightId: 'videoPlayer',
 		titleHideDelay: 5000,
-		videoComponent: Media
+		videoComponent: Video
 	}
 
 	constructor (props) {
@@ -1847,7 +1846,7 @@ const VideoPlayerBase = class extends React.Component {
 				{
 					// Duplicating logic from <ComponentOverride /> until enzyme supports forwardRef
 					VideoComponent && (
-						(typeof VideoComponent === 'function' || typeof VideoComponent === 'string') && (
+						isRenderable(VideoComponent) && (
 							<VideoComponent {...mediaProps} />
 						) || React.isValidElement(VideoComponent) && (
 							React.cloneElement(VideoComponent, mediaProps)

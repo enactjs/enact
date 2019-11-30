@@ -14,38 +14,8 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-/**
- * Generates a key representing the source node or nodes provided
- *
- * Example:
- * ```
- * getKeyFromSource('path/file.mp4'); // 'path/file.mp4'
- * getKeyFromSource(
- * 	<source src="path/file.mp4" type="video/mp4" />
- * ); // 'path/file.mp4'
- * getKeyFromSource([
- * 	<source src="path/file.mp4" type="video/mp4" />,
- * 	<source src="path/file.ogg" type="video/ogg" />,
- * ]); // 'path/file.mp4+path/file.ogg'
- * ```
- *
- * @function
- * @param   {String|Element|Element[]} source URI for a source, `<source>` node, or array of
- *                                     `<source>` nodes
- * @returns {String}                   Key representing sources
- * @memberof ui/Media
- * @public
- */
-const getKeyFromSource = (source = '') => {
-	if (React.isValidElement(source)) {
-		return React.Children.toArray(source)
-			.filter(s => !!s)
-			.map(s => s.props.src)
-			.join('+');
-	}
-
-	return String(source);
-};
+import {getKeyFromSource} from './utils';
+import PreloadDecorator from './PreloadDecorator';
 
 /**
  * Maps standard media event `type` values to React-style callback prop names
@@ -296,7 +266,7 @@ class Media extends React.Component {
 	}
 
 	render () {
-		const {customMediaEventsMap, mediaComponent: Component, source, ...rest} = this.props;
+		const {children, customMediaEventsMap, mediaComponent: Component, source, ...rest} = this.props;
 
 		delete rest.mediaEventsMap;
 		delete rest.onUpdate;
@@ -312,7 +282,7 @@ class Media extends React.Component {
 				{...this.handledMediaEvents}
 				ref={this.mediaRef}
 			>
-				{source}
+				{source || children}
 			</Component>
 		);
 	}
@@ -322,5 +292,6 @@ export default Media;
 export {
 	getKeyFromSource,
 	handledMediaEventsMap,
-	Media
+	Media,
+	PreloadDecorator
 };
