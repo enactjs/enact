@@ -3,6 +3,11 @@
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
 ## [unreleased]
+
+### Fixed
+
+- `ui/Marquee` to not error when passed `null` `children` during an animation.
+
 ## [3.2.5] - 2019-11-14
 
 ### Fixed
