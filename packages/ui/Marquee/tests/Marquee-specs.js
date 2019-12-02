@@ -370,4 +370,14 @@ describe('MarqueeBase', () => {
 		const actual = subject.childAt(0).prop('aria-label');
 		expect(actual).toBe(expected);
 	});
+
+	test('should not throw exception for null children when promoted and a non-zero distance - ENYO-6362', () => {
+		const mountSubject = () => mount(
+			<MarqueeBase willAnimate distance={100}>
+				{null}
+			</MarqueeBase>
+		);
+
+		expect(mountSubject).not.toThrow();
+	});
 });
