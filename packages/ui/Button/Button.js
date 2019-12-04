@@ -12,6 +12,7 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import ComponentOverride from '../ComponentOverride';
 import Touchable from '../Touchable';
 
 import componentCss from './Button.module.less';
@@ -81,17 +82,22 @@ const ButtonBase = kind({
 		 * with the caveat that if you supply a custom icon, you are responsible for sizing and
 		 * locale positioning of the custom component.
 		 *
-		 * @type {Node}
+		 * Setting this to `true` means the `iconComponent` will be rendered but with empty content.
+		 * This may be useful if you've customized the `iconComponent` to render the icon content
+		 * externally.
+		 *
+		 * @type {Node|Boolean}
 		 * @public
 		 */
-		icon: PropTypes.node,
+		icon: PropTypes.oneOfType([PropTypes.node, PropTypes.bool]),
 
 		/**
 		 * The component used to render the [icon]{@link ui/Button.ButtonBase.icon}.
 		 *
-		 * This component will receive the `size` property set on the Button as well as the `icon`
-		 * class to customize its styling. If [icon]{@link ui/Button.ButtonBase.icon} is not a
-		 * string, this property is not used.
+		 * This component will receive the `size` and `spriteCount` properties and should them.
+		 * This coomponent will also receive the `icon` class to customize its styling.
+		 * If [icon]{@link ui/Button.ButtonBase.icon} is not assigned, this component will not be
+		 * rendered.
 		 *
 		 * @type {Component}
 		 * @public
@@ -167,10 +173,34 @@ const ButtonBase = kind({
 			pressed,
 			selected
 		}, size),
-		icon: ({css, icon, iconComponent: Icon, size}) => {
-			return (typeof icon === 'string' && Icon) ? (
-				<Icon size={size} className={css.icon}>{icon}</Icon>
-			) : icon;
+		icon: ({css, icon, iconComponent, size}) => {
+			if (icon == null || icon === false) return;
+			// If the iconComponent is a string, we exclude the obviously unsupported props
+			// (non-HTML) from the component to simplify the usage of plain HTML elements as the
+			// component. Ex: 'div', 'span', etc.
+			if (typeof iconComponent === 'string') {
+				return (
+					<ComponentOverride
+						component={iconComponent}
+						className={css.icon}
+					>
+						{icon}
+					</ComponentOverride>
+				);
+			} else {
+				// Relay the full compliment of props to the iconComponent. Full Enact components
+				// should be responsible for handling these additional props themselves.
+				// console.log('Rendering %s as a %s icon:', icon, size);
+				return (
+					<ComponentOverride
+						component={iconComponent}
+						size={size}
+						className={css.icon}
+					>
+						{icon}
+					</ComponentOverride>
+				);
+			}
 		}
 	},
 
