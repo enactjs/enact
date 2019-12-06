@@ -65,9 +65,10 @@ const defaultConfig = /** @lends moonstone/MoonstoneDecorator.MoonstoneDecorator
 	/**
 	 * Options for I18nDecorator.
 	 *
-	 * If not applied, app will be responsible for applying the decorator.
+	 * My be `false` to prevent applying the decorator. If not applied, app will be responsible for
+	 * applying the decorator.
 	 *
-	 * @type {Object}
+	 * @type {Object|false}
 	 * @default {sync: true}
 	 * @see {@link i18n/I18nDecorator}
 	 * @public
@@ -98,7 +99,7 @@ const defaultConfig = /** @lends moonstone/MoonstoneDecorator.MoonstoneDecorator
 	 * Override the resolution independence settings.
 	 *
 	 * @type {Object}
-	 * @see {@link moonstone/resolution}
+	 * @see {@link ui/resolution}
 	 * @public
 	 */
 	ri: {
