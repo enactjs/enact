@@ -1,11 +1,12 @@
 /**
  * Modal component that appears at the bottom of the screen and takes up the full screen width.
  *
+ * @example
+ * <Popup open>Hello!</Popup>
+ *
  * @module moonstone/Popup
  * @exports Popup
  * @exports PopupBase
- * @example
- * <Popup open>Hello!</Popup>
  */
 
 import {is} from '@enact/core/keymap';
@@ -73,7 +74,7 @@ const PopupBase = kind({
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
-		 * corresponding internal Elements and states of this component.
+		 * corresponding internal elements and states of this component.
 		 *
 		 * The following classes are supported:
 		 *
@@ -273,6 +274,8 @@ const OpenState = {
  *
  * @class Popup
  * @memberof moonstone/Popup
+ * @extends moonstone/Popup.PopupBase
+ * @mixes moonstone/Popup.PopupDecorator
  * @ui
  * @public
  */

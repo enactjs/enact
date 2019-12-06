@@ -38,7 +38,7 @@ const ImageBase = kind({
 	propTypes: /** @lends moonstone/Image.ImageBase.prototype */ {
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
-		 * corresponding internal Elements and states of this component.
+		 * corresponding internal elements and states of this component.
 		 *
 		 * The following classes are supported:
 		 *
