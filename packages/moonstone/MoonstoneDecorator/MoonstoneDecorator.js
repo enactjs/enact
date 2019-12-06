@@ -65,7 +65,7 @@ const defaultConfig = /** @lends moonstone/MoonstoneDecorator.MoonstoneDecorator
 	/**
 	 * Options for I18nDecorator.
 	 *
-	 * My be `false` to prevent applying the decorator. If not applied, app will be responsible for
+	 * May be `false` to prevent applying the decorator. If not applied, app will be responsible for
 	 * applying the decorator.
 	 *
 	 * @type {Object|false}
