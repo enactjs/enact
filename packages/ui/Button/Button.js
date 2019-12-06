@@ -94,10 +94,12 @@ const ButtonBase = kind({
 		/**
 		 * The component used to render the [icon]{@link ui/Button.ButtonBase.icon}.
 		 *
-		 * This component will receive the `size` and `spriteCount` properties and should them.
-		 * This coomponent will also receive the `icon` class to customize its styling.
-		 * If [icon]{@link ui/Button.ButtonBase.icon} is not assigned, this component will not be
-		 * rendered.
+		 * This component will receive the `icon` class to customize its styling.
+		 * If [icon]{@link ui/Button.ButtonBase.icon} is not assigned or is false, this component
+		 * will not be rendered.
+		 *
+		 * If this is a component rather than an HTML element string, this component will also
+		 * receive the `size` property and should be configured to handle it.
 		 *
 		 * @type {Component}
 		 * @public
@@ -175,32 +177,25 @@ const ButtonBase = kind({
 		}, size),
 		icon: ({css, icon, iconComponent, size}) => {
 			if (icon == null || icon === false) return;
-			// If the iconComponent is a string, we exclude the obviously unsupported props
-			// (non-HTML) from the component to simplify the usage of plain HTML elements as the
-			// component. Ex: 'div', 'span', etc.
-			if (typeof iconComponent === 'string') {
-				return (
-					<ComponentOverride
-						component={iconComponent}
-						className={css.icon}
-					>
-						{icon}
-					</ComponentOverride>
-				);
-			} else {
-				// Relay the full compliment of props to the iconComponent. Full Enact components
-				// should be responsible for handling these additional props themselves.
-				// console.log('Rendering %s as a %s icon:', icon, size);
-				return (
-					<ComponentOverride
-						component={iconComponent}
-						size={size}
-						className={css.icon}
-					>
-						{icon}
-					</ComponentOverride>
-				);
+
+			// Establish the base collection of props for the moost basic `iconComponent` type, an
+			// HTML element string.
+			const props = {
+				className: css.icon,
+				component: iconComponent
+			};
+
+			// Add in additional props that any Component supplied to `iconComponent` should be
+			// configured to handle.
+			if (typeof iconComponent !== 'string') {
+				props.size = size;
 			}
+
+			return (
+				<ComponentOverride {...props}>
+					{icon}
+				</ComponentOverride>
+			);
 		}
 	},
 
