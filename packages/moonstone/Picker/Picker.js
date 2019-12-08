@@ -119,7 +119,7 @@ const PickerBase = kind({
 		 * Disables marqueeing of items.
 		 *
 		 * By default, each picker item is wrapped by a
-		 * [`MarqueeText`]{@link moonstone/Marquee.MarqueeText}. When this is set, the items will
+		 * [`Marquee`]{@link moonstone/Marquee.Marquee}. When this is set, the items will
 		 * not be wrapped.
 		 *
 		 * @type {Boolean}
