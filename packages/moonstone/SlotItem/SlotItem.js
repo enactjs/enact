@@ -87,10 +87,10 @@ const SlotItemBase = kind({
  * @class SlotItemDecorator
  * @memberof moonstone/SlotItem
  * @mixes ui/SlotItem.SlotItemDecorator
- * @mixes ui/Toggleable
- * @mixes spotlight.Spottable
+ * @mixes ui/Toggleable.Toggleable
+ * @mixes spotlight/Spottable.Spottable
  * @mixes moonstone/Marquee.MarqueeDecorator
- * @mixes moonstone/Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @hoc
  * @public
  */

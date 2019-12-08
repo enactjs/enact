@@ -275,7 +275,6 @@ const OpenState = {
  * @class Popup
  * @memberof moonstone/Popup
  * @extends moonstone/Popup.PopupBase
- * @mixes moonstone/Popup.PopupDecorator
  * @ui
  * @public
  */

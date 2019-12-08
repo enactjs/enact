@@ -136,7 +136,7 @@ const defaultConfig = {
  * @mixes ui/ToggleItem.ToggleItemDecorator
  * @mixes spotlight/Spottable.Spottable
  * @mixes moonstone/Marquee.MarqueeDecorator
- * @mixes moonstone/Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @hoc
  * @public
  */

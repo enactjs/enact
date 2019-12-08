@@ -191,7 +191,7 @@ const MediaOverlayDecorator = compose(
  *
  * @class MediaOverlay
  * @memberof moonstone/MediaOverlay
- * @extends moonstone/mediaOverlay.MediaOverlayBase
+ * @extends moonstone/MediaOverlay.MediaOverlayBase
  * @mixes moonstone/MediaOverlay.MediaOverlayDecorator
  * @ui
  * @public

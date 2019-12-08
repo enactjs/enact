@@ -72,9 +72,9 @@ const ItemBase = kind({
  * @class ItemDecorator
  * @hoc
  * @memberof moonstone/Item
- * @mixes spotlight.Spottable
+ * @mixes spotlight/Spottable.Spottable
  * @mixes moonstone/Marquee.MarqueeDecorator
- * @mixes moonstone/Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @ui
  * @public
  */
