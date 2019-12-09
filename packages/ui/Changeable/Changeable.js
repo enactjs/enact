@@ -7,12 +7,37 @@
  * @exports Changeable
  */
 
-import {forProp, forward, handle} from '@enact/core/handle';
+import {forProp, forward, handle, not} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {cap} from '@enact/core/util';
-import PropTypes from 'prop-types';
+import {cap, memoize} from '@enact/core/util';
+// import PropTypes from 'prop-types';
 import React from 'react';
-import warning from 'warning';
+
+const hook = ({prop = 'value', change = 'onChange'} = {}) => {
+	const defaultPropKey = 'default' + cap(prop);
+
+	const handleChange = memoize(fn => handle(
+		not(forProp('disabled', true)),
+		forward(change),
+		({[prop]: value}) => fn(value)
+	).named('handleChange'));
+
+	// eslint-disable-next-line no-shadow
+	function useChange (props) {
+		const [value, onChange] = React.useState(props[defaultPropKey]);
+		const handler = handleChange(onChange);
+
+		return {
+			[prop]: value,
+			[change]: (ev) => handler(ev, props)
+		};
+	}
+
+	return useChange;
+};
+
+const useChange = hook({prop: 'value', change: 'onChange'});
+useChange.configure = hook;
 
 /**
  * Default config for {@link ui/Changeable.Changeable}.
@@ -64,129 +89,21 @@ const defaultConfig = {
  * @hoc
  * @public
  */
-const Changeable = hoc(defaultConfig, (config, Wrapped) => {
-	const {prop, change} = config;
-	const defaultPropKey = 'default' + cap(prop);
+const ChangeableHoc = hoc(defaultConfig, (config, Wrapped) => {
+	const fn = useChange.configure(config);
 
-	return class extends React.PureComponent {
-		static displayName = 'Changeable'
-
-		static propTypes = /** @lends ui/Changeable.Changeable.prototype */ {
-			/**
-			 * Called to notify `Changeable` that the value has changed.
-			 *
-			 * The event object must contain a property with the same name as the configured `prop`.
-			 *
-			 * @name onChange
-			 * @memberof ui/Changeable.Changeable.prototype
-			 * @type {Function}
-			 * @public
-			 */
-			[change]: PropTypes.func,
-
-			/**
-			 * The value set at construction when the value prop is `undefined` or `null`.
-			 *
-			 * This prop is consumed by `Changeable` and not passed onto the wrapped component.
-			 *
-			 * @name defaultValue
-			 * @memberof ui/Changeable.Changeable.prototype
-			 * @type {*}
-			 * @public
-			 */
-			[defaultPropKey]: PropTypes.any,
-
-			/**
-			 * The current value.
-			 *
-			 * When set at construction, the component is considered "controlled" and will only
-			 * update its internal value when updated by new props. If `undefined`, the component is
-			 * "uncontrolled" and `Changeable` will manage the value using callbacks defined by its
-			 * configuration.
-			 *
-			 * @type {*}
-			 * @public
-			 */
-			[prop]: PropTypes.any,
-
-			/**
-			 * Prevents updates to the internal state of `Changeable`.
-			 *
-			 * `disabled` is forwarded on to the wrapped component.
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			disabled: PropTypes.bool
-		}
-
-		static defaultProps = {
-			disabled: false
-		}
-
-		constructor (props) {
-			super(props);
-
-			this.state = {
-				rendered: false,
-				value: null,
-				controlled: prop in props
-			};
-
-			warning(
-				!(prop in props && defaultPropKey in props),
-				`Do not specify both '${prop}' and '${defaultPropKey}' for Changeable instances. '${defaultPropKey}' will be ignored.
-				'${defaultPropKey}' will be ignored unless '${prop}' is 'null' or 'undefined'.`
-			);
-		}
-
-		static getDerivedStateFromProps (props, state) {
-			if (state.rendered === false) {
-				return {
-					rendered: true,
-					value: props[prop] != null ? props[prop] : props[defaultPropKey]
-				};
-			} else if (state.controlled) {
-				return {
-					value: props[prop]
-				};
-			}
-
-			warning(
-				!(typeof props[prop] !== 'undefined'),
-				`'${prop}' specified for an uncontrolled instance of Changeable and will be
-				ignored. To make this instance of Changeable controlled, '${prop}' should be
-				specified at creation.`
-			);
-
-			return null;
-		}
-
-		handle = handle.bind(this)
-
-		handleChange = this.handle(
-			forProp('disabled', false),
-			forward(change),
-			({[prop]: value}) => {
-				if (!this.state.controlled) {
-					this.setState({value});
-				}
-			}
-		)
-
-		render () {
-			const props = Object.assign({}, this.props);
-			if (change) props[change] = this.handleChange;
-			if (prop) props[prop] = this.state.value;
-			delete props[defaultPropKey];
-
-			return <Wrapped {...props} />;
-		}
+	return function Changeable (props) {
+		return (
+			<Wrapped
+				{...props}
+				{...fn(props)}
+			/>
+		);
 	};
 });
 
-export default Changeable;
+export default ChangeableHoc;
 export {
-	Changeable
+	ChangeableHoc,
+	useChange
 };
