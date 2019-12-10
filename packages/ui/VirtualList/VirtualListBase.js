@@ -1145,13 +1145,12 @@ const VirtualListBaseFactory = (type) => {
 		// render
 
 		getContainerClasses (className) {
-			let containerClass = null;
-
-			if (type === Native) {
-				containerClass = this.isPrimaryDirectionVertical ? css.vertical : css.horizontal;
-			}
-
-			return classNames(css.virtualList, containerClass, className);
+			return classNames(
+				css.virtualList,
+				this.isPrimaryDirectionVertical ? css.vertical : css.horizontal,
+				(type === Native) ? css.native : null,
+				className
+			);
 		}
 
 		getContentClasses () {
