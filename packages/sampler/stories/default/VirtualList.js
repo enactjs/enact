@@ -17,7 +17,7 @@ const
 		'&quot;noAnimation&quot;': 'noAnimation'
 	},
 	prop = {
-		direction: {horizontal: 'horizontal', vertical: 'vertical'},
+		direction: ['horizontal', 'vertical'],
 		scrollbarOption: ['auto', 'hidden', 'visible']
 	},
 	items = [],

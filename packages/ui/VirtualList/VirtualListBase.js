@@ -1148,7 +1148,7 @@ const VirtualListBaseFactory = (type) => {
 			return classNames(
 				css.virtualList,
 				this.isPrimaryDirectionVertical ? css.vertical : css.horizontal,
-				(type === Native) ? css.native : null,
+				{[css.native]: (type === Native)},
 				className
 			);
 		}
