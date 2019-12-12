@@ -5,9 +5,9 @@
  * @exports Toggleable
  */
 
-import {forProp, forward, handle} from '@enact/core/handle';
+import {adaptEvent, forProp, forward, handle, not} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {cap, memoize, not} from '@enact/core/util';
+import {cap, memoize} from '@enact/core/util';
 import {pick} from 'ramda';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -96,75 +96,49 @@ const defaultConfig = {
 	toggle: 'onToggle'
 };
 
+const set = (obj, name, value) => {
+	if (name) obj[name] = value;
+	return obj;
+};
 
-/*
-forwardWithState = (evName) => (ev, props) => forward(evName, {...pick(eventProps, props), [prop]: !this.state.active}, props)
-
-		updateActive = (active) => {
-			if (!this.state.controlled) {
-				this.setState({active});
-			}
-		}
-
-		handleActivate = this.handle(
-			forProp('disabled', false),
-			forward(activate),
-			this.forwardWithState(toggle),
-			() => this.updateActive(true)
-		)
-
-		handleDeactivate = this.handle(
-			forProp('disabled', false),
-			forward(deactivate),
-			this.forwardWithState(toggle),
-			() => this.updateActive(false)
-		)
-
-		handleToggle = this.handle(
-			forProp('disabled', false),
-			(toggleProp ? forward(toggleProp) : null),
-			this.forwardWithState(toggle),
-			() => this.updateActive(!this.state.active)
-		)
-
-		render () {
-			const props = Object.assign({}, this.props);
-
-			if (toggleProp || toggle) {
-				// Supporting only one of the toggleProp or toggle, but we don't want both applying.
-				delete props[toggle];
-				props[toggleProp || toggle] = this.handleToggle;
-			}
-			if (activate) props[activate] = this.handleActivate;
-			if (deactivate) props[deactivate] = this.handleDeactivate;
-			if (prop) props[prop] = this.state.active;
-
-			delete props[defaultPropKey];
-
-			return <Wrapped {...props} />;
-		}
-*/
-
-const hook = (config) => {
-	const {activate, deactivate, prop, toggle, toggleProp} = {defaultConfig, ...config};
+const configureToggle = (config) => {
+	const {activate, deactivate, eventProps, prop, toggle /* , toggleProp */} = {...defaultConfig, ...config};
 	const defaultPropKey = 'default' + cap(prop);
 
 	const isEnabled = not(forProp('disabled', true));
 	const handleToggle = memoize(fn => handle(
 		isEnabled,
-		forward(toggle),
+		adaptEvent(
+			(ev, props, value) => ({
+				...pick(eventProps, props),
+				[prop]: !value
+			}),
+			forward(deactivate)
+		),
 		({[prop]: value}) => fn(value)
 	).named('handleToggle'));
 
 	const handleActivate = memoize(fn => handle(
 		isEnabled,
-		forward(activate),
+		adaptEvent(
+			(ev, props) => ({
+				...pick(eventProps, props),
+				[prop]: true
+			}),
+			forward(deactivate)
+		),
 		() => fn(true)
 	).named('handleActivate'));
 
 	const handleDeactivate = memoize(fn => handle(
 		isEnabled,
-		forward(deactivate),
+		adaptEvent(
+			(ev, props) => ({
+				...pick(eventProps, props),
+				[prop]: false
+			}),
+			forward(deactivate)
+		),
 		() => fn(false)
 	).named('handleActivate'));
 
@@ -175,19 +149,20 @@ const hook = (config) => {
 		const activateHandler = handleActivate(onToggle);
 		const deactivateHandler = handleDeactivate(onToggle);
 
-		return {
-			[prop]: value,
-			[toggle]: (ev) => toggleHandler(ev, props),
-			[activate]: (ev) => activateHandler(ev, props),
-			[deactivate]: (ev) => deactivateHandler(ev, props)
-		};
+		const updated = {};
+		set(updated, prop, value);
+		set(updated, toggle, (ev) => toggleHandler(ev, props, value));
+		set(updated, activate, (ev) => activateHandler(ev, props, value));
+		set(updated, deactivate, (ev) => deactivateHandler(ev, props, value));
+
+		return updated;
 	}
 
 	return useToggle;
 };
 
-const useToggle = hook();
-useToggle.configure = hook;
+const useToggle = configureToggle();
+useToggle.configure = configureToggle;
 
 /**
  * A higher-order component that applies a 'toggleable' behavior to its wrapped component.
@@ -272,7 +247,13 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	Toggleable.defaultProps = {
 		disabled: false
 	};
+
+	return Toggleable;
 });
 
 export default ToggleableHOC;
-export {ToggleableHOC as Toggleable};
+export {
+	configureToggle,
+	ToggleableHOC as Toggleable,
+	useToggle
+};

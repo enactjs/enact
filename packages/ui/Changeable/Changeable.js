@@ -13,32 +13,6 @@ import {cap, memoize} from '@enact/core/util';
 // import PropTypes from 'prop-types';
 import React from 'react';
 
-const hook = ({prop = 'value', change = 'onChange'} = {}) => {
-	const defaultPropKey = 'default' + cap(prop);
-
-	const handleChange = memoize(fn => handle(
-		not(forProp('disabled', true)),
-		forward(change),
-		({[prop]: value}) => fn(value)
-	).named('handleChange'));
-
-	// eslint-disable-next-line no-shadow
-	function useChange (props) {
-		const [value, onChange] = React.useState(props[defaultPropKey]);
-		const handler = handleChange(onChange);
-
-		return {
-			[prop]: value,
-			[change]: (ev) => handler(ev, props)
-		};
-	}
-
-	return useChange;
-};
-
-const useChange = hook({prop: 'value', change: 'onChange'});
-useChange.configure = hook;
-
 /**
  * Default config for {@link ui/Changeable.Changeable}.
  *
@@ -64,6 +38,33 @@ const defaultConfig = {
 	 */
 	prop: 'value'
 };
+
+const configureChange = (config) => {
+	const {prop, change} = {...defaultConfig, ...config};
+	const defaultPropKey = 'default' + cap(prop);
+
+	const handleChange = memoize(fn => handle(
+		not(forProp('disabled', true)),
+		forward(change),
+		({[prop]: value}) => fn(value)
+	).named('handleChange'));
+
+	// eslint-disable-next-line no-shadow
+	function useChange (props) {
+		const [value, onChange] = React.useState(props[defaultPropKey]);
+		const handler = handleChange(onChange);
+
+		return {
+			[prop]: value,
+			[change]: (ev) => handler(ev, props)
+		};
+	}
+
+	return useChange;
+};
+
+const useChange = configureChange();
+useChange.configure = configureChange;
 
 /**
  * A higher-order component that adds state management to a component for a single prop via
@@ -104,6 +105,7 @@ const ChangeableHoc = hoc(defaultConfig, (config, Wrapped) => {
 
 export default ChangeableHoc;
 export {
+	configureChange,
 	ChangeableHoc,
 	useChange
 };
