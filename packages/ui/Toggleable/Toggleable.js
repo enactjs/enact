@@ -97,7 +97,7 @@ const defaultConfig = {
 };
 
 const set = (obj, name, value) => {
-	if (name) obj[name] = value;
+	if (name != null && name !== '') obj[name] = value;
 	return obj;
 };
 
@@ -115,7 +115,7 @@ const configureToggle = (config) => {
 			}),
 			forward(deactivate)
 		),
-		({[prop]: value}) => fn(value)
+		(ev, props, value) => fn(!value)
 	).named('handleToggle'));
 
 	const handleActivate = memoize(fn => handle(
