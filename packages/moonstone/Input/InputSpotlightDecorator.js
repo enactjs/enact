@@ -42,7 +42,7 @@ const defaultConfig = {
 	 * @public
 	 * @memberof moonstone/Input.InputSpotlightDecorator.defaultConfig
 	*/
-	unLockedPointer: false
+	unlockedPointer: false
 };
 
 /**
@@ -55,7 +55,7 @@ const defaultConfig = {
  * @private
  */
 const InputSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {unLockedPointer} = config;
+	const {unlockedPointer} = config;
 	const Component = Spottable({emulateMouse: false}, Wrapped);
 	const forwardBlur = forward('onBlur');
 	const forwardMouseDown = forward('onMouseDown');
@@ -156,7 +156,7 @@ const InputSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onSpotlightDisappear();
 				}
 
-				if (!unLockedPointer) {
+				if (!unlockedPointer) {
 					releasePointer(this.state.node);
 				}
 			}
@@ -176,13 +176,13 @@ const InputSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (focusChanged) {
 				if (this.state.focused === 'input') {
 					forward('onActivate', {type: 'onActivate'}, this.props);
-					if (!unLockedPointer) {
+					if (!unlockedPointer) {
 						lockPointer(this.state.node);
 					}
 					this.paused.pause();
 				} else if (prevState.focused === 'input') {
 					forward('onDeactivate', {type: 'onDeactivate'}, this.props);
-					if (!unLockedPointer) {
+					if (!unlockedPointer) {
 						releasePointer(prevState.node);
 					}
 					this.paused.resume();
