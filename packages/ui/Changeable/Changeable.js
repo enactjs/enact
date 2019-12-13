@@ -13,6 +13,8 @@ import {cap, memoize} from '@enact/core/util';
 // import PropTypes from 'prop-types';
 import React from 'react';
 
+import useControlledState from '../useControlledState';
+
 /**
  * Default config for {@link ui/Changeable.Changeable}.
  *
@@ -51,7 +53,7 @@ const configureChange = (config) => {
 
 	// eslint-disable-next-line no-shadow
 	function useChange (props) {
-		const [value, onChange] = React.useState(props[defaultPropKey]);
+		const [value, onChange] = useControlledState(props[defaultPropKey], props[prop], prop in props);
 		const handler = handleChange(onChange);
 
 		return {

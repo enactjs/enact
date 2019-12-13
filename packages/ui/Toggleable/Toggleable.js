@@ -12,6 +12,8 @@ import {pick} from 'ramda';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import useControlledState from '../useControlledState';
+
 /**
  * Default config for `Toggleable`.
  *
@@ -144,7 +146,7 @@ const configureToggle = (config) => {
 
 	// eslint-disable-next-line no-shadow
 	function useToggle (props) {
-		const [value, onToggle] = React.useState(props[defaultPropKey]);
+		const [value, onToggle] = useControlledState(props[defaultPropKey], props[prop], prop in props);
 		const toggleHandler = handleToggle(onToggle);
 		const activateHandler = handleActivate(onToggle);
 		const deactivateHandler = handleDeactivate(onToggle);
