@@ -96,11 +96,15 @@ const ChangeableHoc = hoc(defaultConfig, (config, Wrapped) => {
 	const fn = useChange.configure(config);
 
 	return function Changeable (props) {
+		const updated = {
+			...props,
+			...fn(props)
+		};
+
+		delete updated['default' + cap(config.prop || defaultConfig.prop)];
+
 		return (
-			<Wrapped
-				{...props}
-				{...fn(props)}
-			/>
+			<Wrapped {...updated}/>
 		);
 	};
 });

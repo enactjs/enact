@@ -320,11 +320,21 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	function Spottable (props) {
+		const updated = {
+			...props,
+			...hook(props)
+		};
+
+		delete updated.onSpotlightDisappear;
+		delete updated.onSpotlightDown;
+		delete updated.onSpotlightLeft;
+		delete updated.onSpotlightRight;
+		delete updated.onSpotlightUp;
+		delete updated.selectionKeys;
+		delete updated.spotlightId;
+
 		return (
-			<Wrapped
-				{...props}
-				{...hook(props)}
-			/>
+			<Wrapped {...updated} />
 		);
 	}
 

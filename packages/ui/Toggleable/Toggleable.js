@@ -190,11 +190,15 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const fn = useToggle.configure(config);
 
 	function Toggleable (props) {
+		const updated = {
+			...props,
+			...fn(props)
+		};
+
+		delete updated['default' + cap(config.prop || defaultConfig.prop)];
+
 		return (
-			<Wrapped
-				{...props}
-				{...fn(props)}
-			/>
+			<Wrapped {...updated} />
 		);
 	}
 
