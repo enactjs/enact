@@ -248,7 +248,7 @@ function configureSpottable (config) {
 		const handleSelect = ({which}, {selectionKeys}) => {
 			// Only apply accelerator if handling a selection key
 			if (selectionKeys.find((value) => which === value)) {
-				if (selectCancelled || (lastSelectTarget && lastSelectTarget !== this)) {
+				if (selectCancelled || (lastSelectTarget && lastSelectTarget !== state)) {
 					return false;
 				}
 				lastSelectTarget = state;
