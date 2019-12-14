@@ -148,7 +148,7 @@ function focusEffect (props, state) {
 	};
 }
 
-function mountEffext (props, state, node) {
+function mountEffect (props, state, node) {
 	return () => {
 		// eslint-disable-next-line react/no-find-dom-node
 		state.node = ReactDOM.findDOMNode(node.current);
@@ -209,7 +209,7 @@ function configureSpottable (config) {
 
 		const node = React.useRef(null);
 
-		React.useLayoutEffect(mountEffext(props, state, node), [node.current]);
+		React.useLayoutEffect(mountEffect(props, state, node), [node.current]);
 		React.useEffect(focusEffect(props, state));
 		React.useEffect(updateEffect(props, state), [props.spottableDisabled]);
 
