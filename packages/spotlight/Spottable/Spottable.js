@@ -11,6 +11,7 @@ import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 import {getContainersForNode} from '../src/container';
 import {hasPointerMoved} from '../src/pointer';
@@ -117,18 +118,6 @@ const forwardSpotlightEvents = (ev, {onSpotlightDown, onSpotlightLeft, onSpotlig
 	return true;
 };
 
-const handleSelect = ({which}, {selectionKeys}) => {
-	// Only apply accelerator if handling a selection key
-	if (selectionKeys.find((value) => which === value)) {
-		if (selectCancelled || (lastSelectTarget && lastSelectTarget !== this)) {
-			return false;
-		}
-		lastSelectTarget = this;
-	}
-
-	return true;
-};
-
 const forwardAndResetLastSelectTarget = (ev, props) => {
 	const {keyCode} = ev;
 	const {selectionKeys} = props;
@@ -147,17 +136,58 @@ const forwardAndResetLastSelectTarget = (ev, props) => {
 	return notPrevented && allow;
 };
 
+function focusEffect (props, state) {
+	return () => {
+		state.isFocused = state.node && Spotlight.getCurrent() === state.node;
+
+		// if the component is focused and became disabled
+		if (state.isFocused && props.disabled && lastSelectTarget === state && !selectCancelled) {
+			selectCancelled = true;
+			forward('onMouseUp', null, props);
+		}
+	};
+}
+
+function mountEffext (props, state, node) {
+	return () => {
+		// eslint-disable-next-line react/no-find-dom-node
+		state.node = ReactDOM.findDOMNode(node.current);
+
+		return () => {
+			if (state.isFocused) {
+				forward('onSpotlightDisappear', null, props);
+			}
+
+			if (lastSelectTarget === state) {
+				lastSelectTarget = null;
+			}
+		};
+	}
+}
+
+function updateEffect (props, state) {
+	return () => {
+		// if the component became enabled, notify spotlight to enable restoring "lost" focus
+		if (!props.spottableDisabled && !Spotlight.isPaused()) {
+			if (Spotlight.getPointerMode()) {
+				if (state.isHovered) {
+					Spotlight.setPointerMode(false);
+					Spotlight.focus(state.node);
+					Spotlight.setPointerMode(true);
+				}
+			} else if (!Spotlight.getCurrent()) {
+				const containers = getContainersForNode(state.node);
+				const containerId = Spotlight.getActiveContainer();
+				if (containers.indexOf(containerId) >= 0) {
+					Spotlight.focus(containerId);
+				}
+			}
+		}
+	};
+}
+
 function configureSpottable (config) {
 	const {emulateMouse} = {...defaultConfig, ...config};
-
-	const handleKeyDown = handle(
-		forwardWithPrevent('onKeyDown'),
-		forwardSpotlightEvents,
-		isSpottable,
-		handleSelect,
-		shouldEmulateMouse(emulateMouse),
-		forward('onMouseDown')
-	);
 
 	const handleKeyUp = handle(
 		forwardAndResetLastSelectTarget,
@@ -179,44 +209,9 @@ function configureSpottable (config) {
 
 		const node = React.useRef(null);
 
-		React.useEffect(() => {
-			state.isFocused = node.current && Spotlight.getCurrent() === node.current;
-
-			// if the component is focused and became disabled
-			if (state.isFocused && props.disabled && lastSelectTarget === state && !selectCancelled) {
-				selectCancelled = true;
-				forward('onMouseUp', null, props);
-			}
-
-			return () => {
-				if (state.isFocused) {
-					forward('onSpotlightDisappear', null, props);
-				}
-
-				if (lastSelectTarget === state) {
-					lastSelectTarget = null;
-				}
-			};
-		});
-
-		React.useEffect(() => {
-			// if the component became enabled, notify spotlight to enable restoring "lost" focus
-			if (!props.spottableDisabled && !Spotlight.isPaused()) {
-				if (Spotlight.getPointerMode()) {
-					if (state.isHovered) {
-						Spotlight.setPointerMode(false);
-						Spotlight.focus(node.current);
-						Spotlight.setPointerMode(true);
-					}
-				} else if (!Spotlight.getCurrent()) {
-					const containers = getContainersForNode(node.current);
-					const containerId = Spotlight.getActiveContainer();
-					if (containers.indexOf(containerId) >= 0) {
-						Spotlight.focus(containerId);
-					}
-				}
-			}
-		}, [props.spottableDisabled]);
+		React.useLayoutEffect(mountEffext(props, state, node), [node.current]);
+		React.useEffect(focusEffect(props, state));
+		React.useEffect(updateEffect(props, state), [props.spottableDisabled]);
 
 		const handleBlur = (ev) => {
 			if (state.shouldPreventBlur) return;
@@ -249,6 +244,27 @@ function configureSpottable (config) {
 				forward('onFocus', ev, props);
 			}
 		};
+
+		const handleSelect = ({which}, {selectionKeys}) => {
+			// Only apply accelerator if handling a selection key
+			if (selectionKeys.find((value) => which === value)) {
+				if (selectCancelled || (lastSelectTarget && lastSelectTarget !== this)) {
+					return false;
+				}
+				lastSelectTarget = state;
+			}
+
+			return true;
+		};
+
+		const handleKeyDown = handle(
+			forwardWithPrevent('onKeyDown'),
+			forwardSpotlightEvents,
+			isSpottable,
+			handleSelect,
+			shouldEmulateMouse(emulateMouse),
+			forward('onMouseDown')
+		);
 
 		const handleEnter = (ev) => {
 			forward('onMouseEnter', ev, props);
@@ -285,6 +301,12 @@ function configureSpottable (config) {
 			onMouseLeave: (ev) => handleLeave(ev, props),
 			onKeyDown: (ev) => handleKeyDown(ev, props),
 			onKeyUp: (ev) => handleKeyUp(ev, props),
+			// TODO: This is a bit problematic right now since refs can only be attached to DOM
+			// nodes and React class components but not functional components. Previously, we used
+			// findDOMNode on the spottable class to derive the DOM node so the HOC could be safely
+			// applied to anything. That's no longer the case with this implementation and needs to
+			// be addressed.
+			ref: node,
 			tabIndex: tabIndex
 		};
 	};
