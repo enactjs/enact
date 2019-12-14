@@ -118,24 +118,6 @@ const forwardSpotlightEvents = (ev, {onSpotlightDown, onSpotlightLeft, onSpotlig
 	return true;
 };
 
-const forwardAndResetLastSelectTarget = (ev, props) => {
-	const {keyCode} = ev;
-	const {selectionKeys} = props;
-	const key = selectionKeys.find((value) => keyCode === value);
-	const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
-
-	// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
-	if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {
-		return notPrevented;
-	}
-
-	const allow = lastSelectTarget === this;
-	selectCancelled = false;
-	lastSelectTarget = null;
-
-	return notPrevented && allow;
-};
-
 function focusEffect (props, state) {
 	return () => {
 		state.isFocused = state.node && Spotlight.getCurrent() === state.node;
@@ -189,14 +171,6 @@ function updateEffect (props, state) {
 function configureSpottable (config) {
 	const {emulateMouse} = {...defaultConfig, ...config};
 
-	const handleKeyUp = handle(
-		forwardAndResetLastSelectTarget,
-		isSpottable,
-		shouldEmulateMouse(emulateMouse),
-		forward('onMouseUp'),
-		forward('onClick')
-	);
-
 	// eslint-disable-next-line no-shadow
 	return function useSpottable (props) {
 		const [state] = React.useState({
@@ -244,6 +218,32 @@ function configureSpottable (config) {
 				forward('onFocus', ev, props);
 			}
 		};
+
+		const forwardAndResetLastSelectTarget = (ev, _props) => {
+			const {keyCode} = ev;
+			const {selectionKeys} = _props;
+			const key = selectionKeys.find((value) => keyCode === value);
+			const notPrevented = forwardWithPrevent('onKeyUp', ev, _props);
+
+			// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
+			if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {
+				return notPrevented;
+			}
+
+			const allow = lastSelectTarget === state;
+			selectCancelled = false;
+			lastSelectTarget = null;
+
+			return notPrevented && allow;
+		};
+
+		const handleKeyUp = handle(
+			forwardAndResetLastSelectTarget,
+			isSpottable,
+			shouldEmulateMouse(emulateMouse),
+			forward('onMouseUp'),
+			forward('onClick')
+		);
 
 		const handleSelect = ({which}, {selectionKeys}) => {
 			// Only apply accelerator if handling a selection key
