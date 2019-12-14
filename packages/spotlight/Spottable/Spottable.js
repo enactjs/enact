@@ -72,7 +72,7 @@ const defaultConfig = {
 	emulateMouse: true
 };
 
-const shouldEmulateMouse = (emulateMouse) => (ev, props) => {
+const shouldEmulateMouse = (ev, props, {config: {emulateMouse}}) => {
 	if (!emulateMouse) {
 		return;
 	}
@@ -144,7 +144,7 @@ function mountEffect (props, state, node) {
 				lastSelectTarget = null;
 			}
 		};
-	}
+	};
 }
 
 function updateEffect (props, state) {
@@ -168,8 +168,101 @@ function updateEffect (props, state) {
 	};
 }
 
+const handleBlur = (ev, props, {state}) => {
+	if (state.shouldPreventBlur) return;
+	if (ev.currentTarget === ev.target) {
+		state.isFocused = false;
+	}
+
+	if (Spotlight.isMuted(ev.target)) {
+		ev.stopPropagation();
+	} else {
+		forward('onBlur', ev, props);
+	}
+};
+
+const handleFocus = (ev, props, {state}) => {
+	if (props.spotlightDisabled) {
+		state.shouldPreventBlur = true;
+		ev.target.blur();
+		state.shouldPreventBlur = false;
+		return;
+	}
+
+	if (ev.currentTarget === ev.target) {
+		state.isFocused = true;
+	}
+
+	if (Spotlight.isMuted(ev.target)) {
+		ev.stopPropagation();
+	} else {
+		forward('onFocus', ev, props);
+	}
+};
+
+const forwardAndResetLastSelectTarget = (ev, props, {state}) => {
+	const {keyCode} = ev;
+	const {selectionKeys} = props;
+	const key = selectionKeys.find((value) => keyCode === value);
+	const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
+
+	// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
+	if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {
+		return notPrevented;
+	}
+
+	const allow = lastSelectTarget === state;
+	selectCancelled = false;
+	lastSelectTarget = null;
+
+	return notPrevented && allow;
+};
+
+const handleKeyUp = handle(
+	forwardAndResetLastSelectTarget,
+	isSpottable,
+	shouldEmulateMouse,
+	forward('onMouseUp'),
+	forward('onClick')
+);
+
+const handleSelect = ({which}, {selectionKeys}, {state}) => {
+	// Only apply accelerator if handling a selection key
+	if (selectionKeys.find((value) => which === value)) {
+		if (selectCancelled || (lastSelectTarget && lastSelectTarget !== state)) {
+			return false;
+		}
+		lastSelectTarget = state;
+	}
+
+	return true;
+};
+
+const handleKeyDown = handle(
+	forwardWithPrevent('onKeyDown'),
+	forwardSpotlightEvents,
+	isSpottable,
+	handleSelect,
+	shouldEmulateMouse,
+	forward('onMouseDown')
+);
+
+const handleEnter = (ev, props, {state}) => {
+	forward('onMouseEnter', ev, props);
+	if (hasPointerMoved(ev.clientX, ev.clientY)) {
+		state.isHovered = true;
+	}
+};
+
+const handleLeave = (ev, props, {state}) => {
+	forward('onMouseLeave', ev, props);
+	if (hasPointerMoved(ev.clientX, ev.clientY)) {
+		state.isHovered = false;
+	}
+};
+
 function configureSpottable (config) {
-	const {emulateMouse} = {...defaultConfig, ...config};
+	config = {...defaultConfig, ...config};
 
 	// eslint-disable-next-line no-shadow
 	return function useSpottable (props) {
@@ -187,99 +280,6 @@ function configureSpottable (config) {
 		React.useEffect(focusEffect(props, state));
 		React.useEffect(updateEffect(props, state), [props.spottableDisabled]);
 
-		const handleBlur = (ev) => {
-			if (state.shouldPreventBlur) return;
-			if (ev.currentTarget === ev.target) {
-				state.isFocused = false;
-			}
-
-			if (Spotlight.isMuted(ev.target)) {
-				ev.stopPropagation();
-			} else {
-				forward('onBlur', ev, props);
-			}
-		};
-
-		const handleFocus = (ev) => {
-			if (props.spotlightDisabled) {
-				state.shouldPreventBlur = true;
-				ev.target.blur();
-				state.shouldPreventBlur = false;
-				return;
-			}
-
-			if (ev.currentTarget === ev.target) {
-				state.isFocused = true;
-			}
-
-			if (Spotlight.isMuted(ev.target)) {
-				ev.stopPropagation();
-			} else {
-				forward('onFocus', ev, props);
-			}
-		};
-
-		const forwardAndResetLastSelectTarget = (ev, _props) => {
-			const {keyCode} = ev;
-			const {selectionKeys} = _props;
-			const key = selectionKeys.find((value) => keyCode === value);
-			const notPrevented = forwardWithPrevent('onKeyUp', ev, _props);
-
-			// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
-			if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {
-				return notPrevented;
-			}
-
-			const allow = lastSelectTarget === state;
-			selectCancelled = false;
-			lastSelectTarget = null;
-
-			return notPrevented && allow;
-		};
-
-		const handleKeyUp = handle(
-			forwardAndResetLastSelectTarget,
-			isSpottable,
-			shouldEmulateMouse(emulateMouse),
-			forward('onMouseUp'),
-			forward('onClick')
-		);
-
-		const handleSelect = ({which}, {selectionKeys}) => {
-			// Only apply accelerator if handling a selection key
-			if (selectionKeys.find((value) => which === value)) {
-				if (selectCancelled || (lastSelectTarget && lastSelectTarget !== state)) {
-					return false;
-				}
-				lastSelectTarget = state;
-			}
-
-			return true;
-		};
-
-		const handleKeyDown = handle(
-			forwardWithPrevent('onKeyDown'),
-			forwardSpotlightEvents,
-			isSpottable,
-			handleSelect,
-			shouldEmulateMouse(emulateMouse),
-			forward('onMouseDown')
-		);
-
-		const handleEnter = (ev) => {
-			forward('onMouseEnter', ev, props);
-			if (hasPointerMoved(ev.clientX, ev.clientY)) {
-				state.isHovered = true;
-			}
-		};
-
-		const handleLeave = (ev) => {
-			forward('onMouseLeave', ev, props);
-			if (hasPointerMoved(ev.clientX, ev.clientY)) {
-				state.isHovered = false;
-			}
-		};
-
 		const {spotlightId} = props;
 		let {className, tabIndex} = props;
 
@@ -291,16 +291,21 @@ function configureSpottable (config) {
 			className = className ? className + ' ' + spottableClass : spottableClass;
 		}
 
+		const context = {
+			state,
+			config
+		};
+
 		return {
 			// if (spotlightId) ...
 			'data-spotlight-id': spotlightId,
 			className,
-			onBlur: (ev) => handleBlur(ev, props),
-			onFocus: (ev) => handleFocus(ev, props),
-			onMouseEnter: (ev) => handleEnter(ev, props),
-			onMouseLeave: (ev) => handleLeave(ev, props),
-			onKeyDown: (ev) => handleKeyDown(ev, props),
-			onKeyUp: (ev) => handleKeyUp(ev, props),
+			onBlur: (ev) => handleBlur(ev, props, context),
+			onFocus: (ev) => handleFocus(ev, props, context),
+			onMouseEnter: (ev) => handleEnter(ev, props, context),
+			onMouseLeave: (ev) => handleLeave(ev, props, context),
+			onKeyDown: (ev) => handleKeyDown(ev, props, context),
+			onKeyUp: (ev) => handleKeyUp(ev, props, context),
 			// TODO: This is a bit problematic right now since refs can only be attached to DOM
 			// nodes and React class components but not functional components. Previously, we used
 			// findDOMNode on the spottable class to derive the DOM node so the HOC could be safely
@@ -451,7 +456,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		 * @public
 		 */
 		tabIndex: PropTypes.number
-	}
+	};
 
 	Spottable.defaultProps = {
 		selectionKeys: [ENTER_KEY, REMOTE_OK_KEY]

@@ -104,7 +104,7 @@ const set = (obj, name, value) => {
 };
 
 const configureToggle = (config) => {
-	const {activate, deactivate, eventProps, prop, toggle /* , toggleProp */} = {...defaultConfig, ...config};
+	const {activate, deactivate, eventProps, prop, toggle/* , toggleProp */} = {...defaultConfig, ...config};
 	const defaultPropKey = 'default' + cap(prop);
 
 	const isEnabled = not(forProp('disabled', true));
