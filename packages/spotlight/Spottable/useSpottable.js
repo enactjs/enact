@@ -81,9 +81,13 @@ let lastSelectTarget = null;
 // Should we prevent select being passed through
 let selectCancelled = false;
 
-const handleSelect = ({which}, {selectionKeys}, {state}) => {
+const isSelectionEvent = ({which}, {selectionKeys = defaultProps.selectionKeys}) => {
+	return selectionKeys.find((value) => which === value);
+};
+
+const handleSelect = (ev, props, {state}) => {
 	// Only apply accelerator if handling a selection key
-	if (selectionKeys.find((value) => which === value)) {
+	if (isSelectionEvent(ev, props)) {
 		if (selectCancelled || (lastSelectTarget && lastSelectTarget !== state)) {
 			return false;
 		}
@@ -105,9 +109,10 @@ const shouldEmulateMouse = (ev, props, {config: {emulateMouse}}) => {
 	}
 
 	const {currentTarget, repeat, type, which} = ev;
-	const {selectionKeys} = props;
+	const {selectionKeys = defaultProps.selectionKeys} = props;
 	const keyboardAccessible = isKeyboardAccessible(currentTarget);
 
+	// TODO: Determine if this method or isSelectionEvent should be the definitive method
 	const keyCode = selectionKeys.find((value) => (
 		// emulate mouse events for any remote okay button event
 		which === REMOTE_OK_KEY ||
@@ -218,8 +223,7 @@ const handleFocus = (ev, props, {state}) => {
 
 const forwardAndResetLastSelectTarget = (ev, props, {state}) => {
 	const {keyCode} = ev;
-	const {selectionKeys} = props;
-	const key = selectionKeys.find((value) => keyCode === value);
+	const key = isSelectionEvent(ev, props);
 	const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
 
 	// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
