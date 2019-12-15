@@ -171,7 +171,7 @@ function mountEffect (props, state, node) {
 function updateEffect (props, state) {
 	return () => {
 		// if the component became enabled, notify spotlight to enable restoring "lost" focus
-		if (!props.spottableDisabled && !Spotlight.isPaused()) {
+		if (!props.spotlightDisabled && !Spotlight.isPaused()) {
 			if (Spotlight.getPointerMode()) {
 				if (state.isHovered) {
 					Spotlight.setPointerMode(false);
@@ -284,7 +284,7 @@ function configureSpottable (config) {
 		const node = React.useRef(null);
 		React.useLayoutEffect(mountEffect(props, state, node), [node.current]);
 		React.useEffect(focusEffect(props, state), [props.disabled]);
-		React.useEffect(updateEffect(props, state), [props.spottableDisabled]);
+		React.useEffect(updateEffect(props, state), [props.spotlightDisabled]);
 
 		const context = {
 			state,

@@ -56,6 +56,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		delete updated.onSpotlightRight;
 		delete updated.onSpotlightUp;
 		delete updated.selectionKeys;
+		delete updated.spotlightDisabled;
 		delete updated.spotlightId;
 
 		return (
