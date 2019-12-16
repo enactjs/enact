@@ -6,7 +6,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Input.InputSpotlightDecorator` to add unLockedPointer config
 - `moonstone/VirtualList.VirtualList` to render properly without error when `itemSizes` is given and `dataSize` is 0
 
 ## [3.2.5] - 2019-11-14

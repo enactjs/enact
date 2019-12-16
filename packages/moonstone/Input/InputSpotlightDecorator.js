@@ -30,8 +30,9 @@ const handleKeyDown = handle(
 
 /**
  * Default config for {@link moonstone/Input.InputSpotlightDecorator}
- * @hocconfig
+ *
  * @memberof moonstone/Input.InputSpotlightDecorator
+ * @hocconfig
  */
 const defaultConfig = {
 	/**
