@@ -29,7 +29,7 @@ const handleKeyDown = handle(
 
 
 /**
- * Default config for {@link moonstone/Input.InputSpotlightDecorator}
+ * Default config for [InputSpotlightDecorator]{@link moonstone/Input.InputSpotlightDecorator}
  *
  * @memberof moonstone/Input.InputSpotlightDecorator
  * @hocconfig
@@ -39,8 +39,7 @@ const defaultConfig = {
 	 * Suppress the pointer lock behavior of moonstone input
 	 *
 	 * @type {Boolean}
-	 * default false
-	 * @public
+	 * @default false
 	 * @memberof moonstone/Input.InputSpotlightDecorator.defaultConfig
 	*/
 	unlockedPointer: false
@@ -51,7 +50,7 @@ const defaultConfig = {
  * spotlight behavior for an {@link moonstone/Input.Input}
  *
  * @class InputSpotlightDecorator
- * @memberof moonstone/Input/InputSpotlightDecorator
+ * @memberof moonstone/Input.InputSpotlightDecorator
  * @hoc
  * @private
  */
