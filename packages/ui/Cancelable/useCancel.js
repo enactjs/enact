@@ -113,8 +113,6 @@ function configureCancel (config) {
 
 	function mountEffect (state) {
 		return () => {
-			state.rendered = true;
-			state.handleCancel = (ev) => handleCancel(ev, state.props);
 			addModal(state);
 
 			return () => {
@@ -129,10 +127,10 @@ function configureCancel (config) {
 
 		if (modal) {
 			const [state] = React.useState(initialState);
-			// props needs to be set every render but we only need to refresh the layout effect on
-			// mount/unmount
-			state.props = props;
-			React.useLayoutEffect(mountEffect(state), [state.rendered]);
+			// handleCancel is invoked by the modal listener and needs a reference to the current
+			// props
+			state.handleCancel = (ev) => handleCancel(ev, props);
+			React.useLayoutEffect(mountEffect(state), []);
 
 			return {};
 		}
