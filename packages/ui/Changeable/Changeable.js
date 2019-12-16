@@ -104,7 +104,7 @@ const ChangeableHoc = hoc(defaultConfig, (config, Wrapped) => {
 		delete updated['default' + cap(config.prop || defaultConfig.prop)];
 
 		return (
-			<Wrapped {...updated}/>
+			<Wrapped {...updated} />
 		);
 	};
 });
