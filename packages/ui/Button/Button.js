@@ -101,10 +101,10 @@ const ButtonBase = kind({
 		 * If this is a component rather than an HTML element string, this component will also
 		 * receive the `size` property and should be configured to handle it.
 		 *
-		 * @type {Component}
+		 * @type {Component|Node}
 		 * @public
 		 */
-		iconComponent: EnactPropTypes.component,
+		iconComponent: EnactPropTypes.componentOverride,
 
 		/**
 		 * Enforces a minimum width for the component.
