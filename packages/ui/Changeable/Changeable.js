@@ -9,7 +9,7 @@
 
 import {forProp, forward, handle, not} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {cap, memoize} from '@enact/core/util';
+import {cap} from '@enact/core/util';
 // import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -45,21 +45,24 @@ const configureChange = (config) => {
 	const {prop, change} = {...defaultConfig, ...config};
 	const defaultPropKey = 'default' + cap(prop);
 
-	const handleChange = memoize(fn => handle(
+	const handleChange = handle(
 		not(forProp('disabled', true)),
 		forward(change),
-		({[prop]: value}) => fn(value)
-	).named('handleChange'));
+		({[prop]: value}, props, {onChange}) => onChange(value)
+	).named('handleChange');
 
 	// eslint-disable-next-line no-shadow
 	function useChange (props) {
 		const [value, onChange] = useControlledState(props[defaultPropKey], props[prop], prop in props);
-		const handler = handleChange(onChange);
-
-		return {
-			[prop]: value,
-			[change]: (ev) => handler(ev, props)
+		const context = {
+			onChange
 		};
+
+		const updated = {};
+		if (prop) updated[prop] = value;
+		if (change) updated[change] = (ev) => handleChange(ev, props, context);
+
+		return updated;
 	}
 
 	return useChange;

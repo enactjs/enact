@@ -7,7 +7,7 @@
 
 import {adaptEvent, forProp, forward, handle, not} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {cap, memoize} from '@enact/core/util';
+import {cap} from '@enact/core/util';
 import {pick} from 'ramda';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -108,7 +108,7 @@ const configureToggle = (config) => {
 	const defaultPropKey = 'default' + cap(prop);
 
 	const isEnabled = not(forProp('disabled', true));
-	const handleToggle = memoize(fn => handle(
+	const handleToggle = handle(
 		isEnabled,
 		adaptEvent(
 			(ev, props, value) => ({
@@ -117,10 +117,10 @@ const configureToggle = (config) => {
 			}),
 			forward(deactivate)
 		),
-		(ev, props, value) => fn(!value)
-	).named('handleToggle'));
+		(ev, props, {value, onToggle}) => onToggle(!value)
+	).named('handleToggle');
 
-	const handleActivate = memoize(fn => handle(
+	const handleActivate = handle(
 		isEnabled,
 		adaptEvent(
 			(ev, props) => ({
@@ -129,10 +129,10 @@ const configureToggle = (config) => {
 			}),
 			forward(deactivate)
 		),
-		() => fn(true)
-	).named('handleActivate'));
+		(ev, props, {onToggle}) => onToggle(true)
+	).named('handleActivate');
 
-	const handleDeactivate = memoize(fn => handle(
+	const handleDeactivate = handle(
 		isEnabled,
 		adaptEvent(
 			(ev, props) => ({
@@ -141,21 +141,22 @@ const configureToggle = (config) => {
 			}),
 			forward(deactivate)
 		),
-		() => fn(false)
-	).named('handleActivate'));
+		(ev, props, {onToggle}) => onToggle(false)
+	).named('handleActivate');
 
 	// eslint-disable-next-line no-shadow
 	function useToggle (props) {
 		const [value, onToggle] = useControlledState(props[defaultPropKey], props[prop], prop in props);
-		const toggleHandler = handleToggle(onToggle);
-		const activateHandler = handleActivate(onToggle);
-		const deactivateHandler = handleDeactivate(onToggle);
+		const context = {
+			value,
+			onToggle
+		};
 
 		const updated = {};
-		set(updated, prop, value);
-		set(updated, toggle, (ev) => toggleHandler(ev, props, value));
-		set(updated, activate, (ev) => activateHandler(ev, props, value));
-		set(updated, deactivate, (ev) => deactivateHandler(ev, props, value));
+		if (prop) updated[prop] = value;
+		if (toggle) updated[toggle] = (ev) => handleToggle(ev, props, context);
+		if (activate) updated[activate] = (ev) => handleActivate(ev, props, context);
+		if (deactivate) updated[deactivate] = (ev) => handleDeactivate(ev, props, context);
 
 		return updated;
 	}
