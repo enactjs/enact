@@ -54,9 +54,17 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 	function Skinnable (props) {
 		const {parentSkin, parentVariants, ...rest} = hook(props);
 
+		const updated = {
+			...props,
+			...rest
+		};
+
+		delete updated.skin;
+		delete updated.skinVariants;
+
 		return (
 			<SkinContext.Provider value={{parentSkin, parentVariants}}>
-				<Wrapped {...props} {...rest} />
+				<Wrapped {...updated} />
 			</SkinContext.Provider>
 		);
 	}
