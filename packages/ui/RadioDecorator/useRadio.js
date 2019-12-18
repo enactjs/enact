@@ -9,7 +9,7 @@
 import handle, {forward} from '@enact/core/handle';
 import React from 'react';
 
-import {RadioContext} from './RadioControllerDecorator';
+import {RadioContext} from './useRadioController';
 
 /**
  * Default config for `RadioDecorator`.
@@ -68,8 +68,10 @@ function notifyEffect (state, active) {
 	return () => notifyController(state, active);
 }
 
-const notify = (action) => (ev, props, context) => {
-	context.state.controller.notify({action});
+const notify = (action) => (ev, props, {state}) => {
+	if (state.controller) {
+		state.controller.notify({action});
+	}
 };
 
 function configureRadio (config) {
