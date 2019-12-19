@@ -15,7 +15,7 @@
  * @exports ExpandableItemBase
  */
 
-import Changeable from '@enact/ui/Changeable';
+import Changeable, {configureChange} from '@enact/ui/Changeable';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import equals from 'ramda/src/equals';
 import Group from '@enact/ui/Group';
@@ -27,9 +27,11 @@ import PropTypes from 'prop-types';
 import CheckboxItem from '../CheckboxItem';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import RadioItem from '../RadioItem';
-import Skinnable from '../Skinnable';
+import Skinnable, {useSkinnable} from '../Skinnable';
 
 import css from './ExpandableList.module.less';
+import {configureExpandable} from '../ExpandableItem/Expandable';
+import {SkinContext} from '@enact/ui/Skinnable/Skinnable';
 
 const compareChildren = (a, b) => {
 	if (!a || !b || a.length !== b.length) return false;
@@ -375,6 +377,43 @@ const ExpandableListBase = kind({
 	}
 });
 
+function ExpandableListDecorator (Wrapped) {
+	const Component = React.memo(Wrapped);
+	const useChange = configureChange({change: 'onSelect', prop: 'selected'});
+	const useExpandable = configureExpandable({
+		getChildFocusTarget: (node, {selected = 0}) => {
+			let selectedIndex = selected;
+			if (Array.isArray(selected) && selected.length) {
+				selectedIndex = selected[0];
+			}
+
+			let selectedNode = null;
+			if (node) {
+				selectedNode = node.querySelector(`[data-index="${selectedIndex}"]`);
+			}
+
+			return selectedNode;
+		}
+	});
+
+	// eslint-disable-next-line no-shadow
+	return function ExpandableListDecorator (props) {
+		const {parentSkin, parentVariants, ...rest} = useSkinnable(props);
+		const updated = {
+			...props,
+			...useChange(props),
+			...useExpandable(props),
+			...rest
+		};
+
+		return (
+			<SkinContext.Provider value={{parentSkin, parentVariants}}>
+				<Component {...updated} />
+			</SkinContext.Provider>
+		);
+	};
+}
+
 /**
  * A component that renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to
  * show a selectable list of items.
@@ -396,34 +435,7 @@ const ExpandableListBase = kind({
  * @ui
  * @public
  */
-const ExpandableList = Pure(
-	{propComparators: {
-		children: compareChildren
-	}},
-	Changeable(
-		{change: 'onSelect', prop: 'selected'},
-		Expandable(
-			{
-				getChildFocusTarget: (node, {selected = 0}) => {
-					let selectedIndex = selected;
-					if (Array.isArray(selected) && selected.length) {
-						selectedIndex = selected[0];
-					}
-
-					let selectedNode = null;
-					if (node) {
-						selectedNode = node.querySelector(`[data-index="${selectedIndex}"]`);
-					}
-
-					return selectedNode;
-				}
-			},
-			Skinnable(
-				ExpandableListBase
-			)
-		)
-	)
-);
+const ExpandableList = ExpandableListDecorator(ExpandableListBase);
 
 export default ExpandableList;
 export {ExpandableList, ExpandableListBase};
