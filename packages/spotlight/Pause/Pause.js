@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * Provides a class which allows consumers to safely pause and resume spotlight without resuming
  * another consumer's pause.
@@ -133,10 +135,25 @@ class Pause {
 	}
 }
 
+function usePause (name) {
+	const [state] = React.useState({});
+	if (!state.pause) {
+		state.pause = new Pause(name);
+	}
+
+	React.useLayoutEffect(() => {
+		// just an unmount effect but tied to layout in order to occur immediately
+		return () => state.pause.resume();
+	}, []);
+
+	return state.pause;
+}
+
 export default Pause;
 export {
 	Pause,
 	isPaused,
 	pause,
-	resume
+	resume,
+	usePause
 };
