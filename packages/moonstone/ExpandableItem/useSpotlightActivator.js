@@ -1,5 +1,5 @@
 import {getContainersForNode, getContainerNode, setContainerLastFocusedElement} from '@enact/spotlight/src/container';
-import {forward, handle} from '@enact/core/handle';
+import {handle} from '@enact/core/handle';
 import Spotlight from '@enact/spotlight';
 import {usePause} from '@enact/spotlight/Pause';
 import React from 'react';
@@ -140,12 +140,10 @@ function configureSpotlightActivator (config) {
 	);
 
 	const handleClose = handle(
-		forward('onClose'),
 		handlePause
 	);
 
 	const handleOpen = handle(
-		forward('onOpen'),
 		handlePause
 	);
 
@@ -157,7 +155,6 @@ function configureSpotlightActivator (config) {
 	// eslint-disable-next-line no-shadow
 	return function useSpotlightActivator (props) {
 		const paused = usePause('useSpotlightActivator');
-		const open = props.open && !props.disabled;
 		const containerNode = React.useRef(null);
 
 		const context = {
@@ -170,7 +167,6 @@ function configureSpotlightActivator (config) {
 			onShow: (ev) => handleShow(ev, props, context),
 			onOpen: (ev) => handleOpen(ev, props, context),
 			onClose: (ev) => handleClose(ev, props, context),
-			open: open,
 			setContainerNode: containerNode
 		};
 	};

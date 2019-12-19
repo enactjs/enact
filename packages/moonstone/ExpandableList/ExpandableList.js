@@ -15,7 +15,7 @@
  * @exports ExpandableItemBase
  */
 
-import Changeable, {configureChange} from '@enact/ui/Changeable';
+import {configureChange} from '@enact/ui/Changeable';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import equals from 'ramda/src/equals';
 import Group from '@enact/ui/Group';
@@ -25,9 +25,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import CheckboxItem from '../CheckboxItem';
-import {Expandable, ExpandableItemBase} from '../ExpandableItem';
+import {ExpandableItemBase} from '../ExpandableItem';
 import RadioItem from '../RadioItem';
-import Skinnable, {useSkinnable} from '../Skinnable';
+import {useSkinnable} from '../Skinnable';
 
 import css from './ExpandableList.module.less';
 import {configureExpandable} from '../ExpandableItem/Expandable';

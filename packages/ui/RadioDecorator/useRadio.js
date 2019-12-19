@@ -6,45 +6,9 @@
  * @exports RadioControllerDecorator
  */
 
-import handle, {forward} from '@enact/core/handle';
 import React from 'react';
 
 import {RadioContext} from './useRadioController';
-
-/**
- * Default config for `RadioDecorator`.
- *
- * @memberof ui/RadioDecorator.RadioDecorator
- * @hocconfig
- */
-const defaultConfig = {
-	/**
-	 * The event indicating the wrapped component is activated
-	 *
-	 * @type {String}
-	 * @default null
-	 * @memberof ui/RadioDecorator.RadioDecorator.defaultConfig
-	 */
-	activate: null,
-
-	/**
-	 * The event indicating the wrapped component is deactivated
-	 *
-	 * @type {String}
-	 * @default null
-	 * @memberof ui/RadioDecorator.RadioDecorator.defaultConfig
-	 */
-	deactivate: null,
-
-	/**
-	 * The name of a boolean prop that activates the wrapped component when it is true.
-	 *
-	 * @type {String}
-	 * @default 'active'
-	 * @memberof ui/RadioDecorator.RadioDecorator.defaultConfig
-	 */
-	prop: 'active'
-};
 
 function notifyController (state, active) {
 	if (state.controller && active) {
@@ -55,7 +19,7 @@ function notifyController (state, active) {
 function mountEffect (state, context) {
 	return () => {
 		if (context && typeof context === 'function') {
-			state.controller = context(() => state.deactivate());
+			state.controller = context(() => state.deactivate && state.deactivate());
 
 			return () => {
 				state.controller.unregister();
@@ -68,50 +32,29 @@ function notifyEffect (state, active) {
 	return () => notifyController(state, active);
 }
 
-const notify = (action) => (ev, props, {state}) => {
+const notify = (action, state) => {
 	if (state.controller) {
 		state.controller.notify({action});
 	}
 };
 
-function configureRadio (config) {
-	const {activate, deactivate, prop} = {...defaultConfig, ...config};
+function useRadio (active, deactivate) {
+	const radioContext = React.useContext(RadioContext);
+	const [state] = React.useState({});
 
-	const handleActivate = handle(
-		forward(activate),
-		notify('activate')
-	);
+	// bind deactivate on each render to capture the latest props
+	state.deactivate = deactivate;
 
-	const handleDeactivate = handle(
-		forward(deactivate),
-		notify('deactivate')
-	);
+	React.useEffect(mountEffect(state, radioContext), []);
+	React.useEffect(notifyEffect(state, active), [active]);
 
-	// eslint-disable-next-line no-shadow
-	return function useRadio (props) {
-		const radioContext = React.useContext(RadioContext);
-		const [state] = React.useState({});
-
-		// bind deactivate on each render to capture the latest props
-		state.deactivate = (ev) => forward(deactivate, ev, props);
-
-		React.useEffect(mountEffect(state, radioContext), []);
-		React.useEffect(notifyEffect(state, props[prop]), [props[prop]]);
-
-		const context = {state};
-		const updated = {};
-		if (activate) updated[activate] = (ev) => handleActivate(ev, props, context);
-		if (deactivate) updated[deactivate] = (ev) => handleDeactivate(ev, props, context);
-
-		return updated;
+	return {
+		activate: () => notify('activate', state),
+		deactivate: () => notify('deactivate', state)
 	};
 }
 
-const useRadio = configureRadio();
-useRadio.configure = configureRadio;
-
 export default useRadio;
 export {
-	configureRadio,
 	useRadio
 };
