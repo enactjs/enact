@@ -98,11 +98,6 @@ const defaultConfig = {
 	toggle: 'onToggle'
 };
 
-const set = (obj, name, value) => {
-	if (name != null && name !== '') obj[name] = value;
-	return obj;
-};
-
 const configureToggle = (config) => {
 	const {activate, deactivate, eventProps, prop, toggle/* , toggleProp */} = {...defaultConfig, ...config};
 	const defaultPropKey = 'default' + cap(prop);
