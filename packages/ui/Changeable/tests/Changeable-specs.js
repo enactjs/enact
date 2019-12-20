@@ -194,7 +194,7 @@ describe('Changeable', () => {
 		);
 	});
 
-	test.only('should invoke passed \'onChange\' handler', () => {
+	test('should invoke passed \'onChange\' handler', () => {
 		const handleChange = jest.fn();
 		const Component = Changeable(DivComponent);
 		const subject = shallow(
