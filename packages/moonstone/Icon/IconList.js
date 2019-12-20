@@ -98,7 +98,7 @@ export default {
 	refresh           : 0x0F00CE,  // refresh
 	question          : 0x0F00CF,  // question_mark
 	questionreversed  : 0x0F00D0,  // reversed_question_mark
-	s                 : 0x0F00D1,  // s
+	s                 : 0x0F00D1,  // letter S
 	repeatone         : 0x0F00DF,  // repeat_one
 	repeatall         : 0x0F00E0,  // repeat_all
 	repeatnone        : 0x0F00E1,  // repeat_none
