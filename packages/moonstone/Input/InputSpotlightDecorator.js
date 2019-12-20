@@ -31,7 +31,7 @@ const handleKeyDown = handle(
 /**
  * Default config for [InputSpotlightDecorator]{@link moonstone/Input.InputSpotlightDecorator}
  *
- * @memberof moonstone/Input.InputSpotlightDecorator
+ * @memberof moonstone/Input/InputSpotlightDecorator.InputSpotlightDecorator
  * @hocconfig
  */
 const defaultConfig = {
@@ -40,7 +40,7 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
-	 * @memberof moonstone/Input.InputSpotlightDecorator.defaultConfig
+	 * @memberof moonstone/Input/InputSpotlightDecorator.InputSpotlightDecorator.defaultConfig
 	*/
 	unlockedPointer: false
 };
@@ -50,7 +50,7 @@ const defaultConfig = {
  * spotlight behavior for an {@link moonstone/Input.Input}
  *
  * @class InputSpotlightDecorator
- * @memberof moonstone/Input.InputSpotlightDecorator
+ * @memberof moonstone/Input/InputSpotlightDecorator
  * @hoc
  * @private
  */
