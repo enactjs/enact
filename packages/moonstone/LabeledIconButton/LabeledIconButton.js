@@ -68,6 +68,38 @@ const LabeledIconButtonBase = kind({
 		css: PropTypes.object,
 
 		/**
+		 * Disables voice control.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
+		 * The voice control group label.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		'data-webos-voice-group-label': PropTypes.string,
+
+		/**
+		 * The voice control intent.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		'data-webos-voice-intent': PropTypes.string,
+
+		/**
+		 * The voice control label.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		'data-webos-voice-label': PropTypes.string,
+
+		/**
 		 * Flip the icon horizontally, vertically or both.
 		 *
 		 * @type {('both'|'horizontal'|'vertical')}
@@ -102,11 +134,18 @@ const LabeledIconButtonBase = kind({
 		publicClassNames: ['labeledIconButton', 'icon', 'label', 'large', 'selected', 'small']
 	},
 
-	render: ({css, flip, icon, selected, ...rest}) => {
+	render: ({css, flip, icon, selected, 'data-webos-voice-disabled': voiceDisabled, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-intent': voiceIntent, 'data-webos-voice-label': voiceLabel, ...rest}) => {
 		return UiLabeledIcon.inline({
 			...rest,
 			icon: (
-				<IconButton flip={flip} selected={selected}>
+				<IconButton
+					flip={flip}
+					selected={selected}
+					data-webos-voice-disabled={voiceDisabled}
+					data-webos-voice-group-label={voiceGroupLabel}
+					data-webos-voice-intent={voiceIntent}
+					data-webos-voice-label={voiceLabel}
+				>
 					{icon}
 				</IconButton>
 			),
