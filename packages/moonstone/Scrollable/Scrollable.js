@@ -154,6 +154,15 @@ class ScrollableBase extends Component {
 		childRenderer: PropTypes.func.isRequired,
 
 		/**
+		 * This is passed onto the wrapped component to allow
+		 * it to be a list item for nested list or scroller use case.
+		 *
+		 * @type {Number}
+		 * @private
+		 */
+		'data-index': PropTypes.number,
+
+		/**
 		 * This is set to `true` by SpotlightContainerDecorator
 		 *
 		 * @type {Boolean}
@@ -945,6 +954,7 @@ class ScrollableBase extends Component {
 		const
 			{
 				childRenderer,
+				'data-index': dataIndex,
 				'data-spotlight-container': spotlightContainer,
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
 				'data-spotlight-id': spotlightId,
@@ -997,6 +1007,7 @@ class ScrollableBase extends Component {
 				}) => (
 					<div
 						className={classNames(className, overscrollCss.scrollable)}
+						data-index={dataIndex}
 						data-spotlight-container={spotlightContainer}
 						data-spotlight-container-disabled={spotlightContainerDisabled}
 						data-spotlight-id={spotlightId}
