@@ -17,17 +17,26 @@ const
 		'&quot;noAnimation&quot;': 'noAnimation'
 	},
 	prop = {
+		direction: ['horizontal', 'vertical'],
 		scrollbarOption: ['auto', 'hidden', 'visible']
 	},
 	items = [],
 	defaultDataSize = 1000,
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	uiRenderItem = (size) => ({index, ...rest}) => {
-		const itemStyle = {
-			borderBottom: ri.unit(3, 'rem') + ' solid #202328',
-			boxSizing: 'border-box',
-			height: size + 'px'
-		};
+	uiRenderItem = (direction, size) => ({index, ...rest}) => {
+		const
+			sizePx = size + 'px',
+			itemStyle = {
+				borderBottom: ri.unit(3, 'rem') + ' solid #202328',
+				boxSizing: 'border-box'
+			};
+
+		if (direction !== 'horizontal') {
+			itemStyle.height = sizePx;
+		} else {
+			itemStyle.width = sizePx;
+			itemStyle.writingMode = 'vertical-lr';
+		}
 
 		return (
 			<UiItem {...rest} style={itemStyle}>
@@ -36,12 +45,20 @@ const
 		);
 	},
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderItem = (size) => ({index, ...rest}) => {
-		const itemStyle = {
-			borderBottom: ri.unit(3, 'rem') + ' solid #202328',
-			boxSizing: 'border-box',
-			height: size + 'px'
-		};
+	renderItem = (direction, size) => ({index, ...rest}) => {
+		const
+			sizePx = size + 'px',
+			itemStyle = {
+				borderBottom: ri.unit(3, 'rem') + ' solid #202328',
+				boxSizing: 'border-box',
+			};
+
+		if (direction !== 'horizontal') {
+			itemStyle.height = sizePx;
+		} else {
+			itemStyle.width = sizePx;
+			itemStyle.writingMode = 'vertical-lr';
+		}
 
 		return (
 			<Item {...rest} style={itemStyle}>
@@ -76,8 +93,9 @@ storiesOf('UI', module)
 			return (
 				<UiVirtualList
 					dataSize={updateDataSize(number('dataSize', UiVirtualListConfig, defaultDataSize))}
+					direction={select('direction', prop.direction, UiVirtualListConfig)}
 					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, UiVirtualListConfig)}
-					itemRenderer={uiRenderItem(ri.scale(number('itemSize', UiVirtualListConfig, 72)))}
+					itemRenderer={uiRenderItem(select('direction', prop.direction, VirtualListConfig), ri.scale(number('itemSize', UiVirtualListConfig, 72)))}
 					itemSize={ri.scale(number('itemSize', UiVirtualListConfig, 72))}
 					noScrollByWheel={boolean('noScrollByWheel', UiVirtualListConfig)}
 					onScrollStart={action('onScrollStart')}
@@ -102,9 +120,10 @@ storiesOf('Moonstone', module)
 			return (
 				<VirtualList
 					dataSize={updateDataSize(number('dataSize', VirtualListConfig, defaultDataSize))}
+					direction={select('direction', prop.direction, VirtualListConfig)}
 					focusableScrollbar={boolean('focusableScrollbar', VirtualListConfig)}
 					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, VirtualListConfig)}
-					itemRenderer={renderItem(ri.scale(number('itemSize', VirtualListConfig, 72)))}
+					itemRenderer={renderItem(select('direction', prop.direction, VirtualListConfig), ri.scale(number('itemSize', VirtualListConfig, 72)))}
 					itemSize={ri.scale(number('itemSize', VirtualListConfig, 72))}
 					noScrollByWheel={boolean('noScrollByWheel', VirtualListConfig)}
 					onScrollStart={action('onScrollStart')}
