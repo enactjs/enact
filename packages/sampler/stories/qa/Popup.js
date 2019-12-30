@@ -1,6 +1,10 @@
 import Button from '@enact/moonstone/Button';
+import ExpandableItem from '@enact/moonstone/ExpandableItem';
+import Item from '@enact/moonstone/Item';
 import Notification from '@enact/moonstone/Notification';
+import {Panel} from '@enact/moonstone/Panels';
 import Popup from '@enact/moonstone/Popup';
+import Scroller from '@enact/moonstone/Scroller';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Toggleable from '@enact/ui/Toggleable';
 import React from 'react';
@@ -63,6 +67,87 @@ class PopupResumeFocusAfterOpenState extends React.Component {
 	}
 }
 
+class PopupResumeFocusAfterWindowFocus extends React.Component {
+	constructor (props) {
+		super(props);
+
+		this.state = {
+			expandableOpen: false,
+			popupOpen: false
+		};
+
+		this.nameList = ['Item 1', 'Item 2'];
+	}
+
+	componentDidMount () {
+		this.blurEvent = document.createEvent('Event');
+		this.blurEvent.initEvent('blur', true, true);
+		this.focusEvent = document.createEvent('Event');
+		this.focusEvent.initEvent('focus', true, true);
+	}
+
+	componentDidUpdate (_, prevState) {
+		if (!prevState.popupOpen && this.state.popupOpen) {
+			setTimeout(this.doJob, 1000);
+		}
+	}
+
+	handleItemClick = () => {
+		this.openPopup();
+	}
+
+	openPopup = () => {
+		this.setState({
+			popupOpen: true,
+			expandableOpen: false
+		});
+	}
+
+	closePopup = () => {
+		this.setState({
+			popupOpen: false
+		});
+	}
+
+	doJob = () => {
+		window.dispatchEvent(this.blurEvent);
+		window.dispatchEvent(this.focusEvent);
+	}
+
+	handleExpandableOpen = () => {
+		this.setState({expandableOpen: true});
+	}
+
+	handleExpandableClose = () => {
+		this.setState({expandableOpen: false});
+	}
+
+	render () {
+		return (
+			<Panel>
+				<Scroller>
+					<ExpandableItem
+						title="ExpandableItem Title"
+						label="ExpandableItem Label"
+						open={this.state.expandableOpen}
+						onOpen={this.handleExpandableOpen}
+						onClose={this.handleExpandableClose}
+					>
+						{
+							this.nameList.map((value, index) => (
+								<Item key={index} onClick={this.handleItemClick}>{value}</Item>)
+							)
+						}
+					</ExpandableItem>
+				</Scroller>
+				<Popup open={this.state.popupOpen} noAnimation showCloseButton>
+					<Button onClick={this.closePopup}>Close Popup</Button>
+				</Popup>
+			</Panel>
+		);
+	}
+}
+
 storiesOf('Popup', module)
 	.add(
 		'using spotlightRestrict',
@@ -104,5 +189,11 @@ storiesOf('Popup', module)
 		'resume focus after open state',
 		() => (
 			<PopupResumeFocusAfterOpenState />
+		)
+	)
+	.add(
+		'resume focus after window focus',
+		() => (
+			<PopupResumeFocusAfterWindowFocus />
 		)
 	);
