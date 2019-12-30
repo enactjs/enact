@@ -37,6 +37,8 @@ import docs from '../../images/icon-enact-docs.png';
 import {boolean, select} from '../../src/enact-knobs';
 import {action} from '../../src/utils';
 
+Spotlight.displayName = 'Spotlight';
+
 const Container = SpotlightContainerDecorator(
 	{enterTo: 'last-focused'},
 	'div'
@@ -333,7 +335,7 @@ storiesOf('Spotlight', module)
 	.add(
 		'Multiple Containers',
 		() => (
-			<Scroller>
+			<Scroller spotlightRestrict={select('spotlightRestrict', ['self-first', 'self-only', 'none'], Spotlight, 'none')}>
 				<p>
 					The containers below will spot the last-focused element. Keep track of the
 					last-focused element in the container when testing and ensure that the correct
