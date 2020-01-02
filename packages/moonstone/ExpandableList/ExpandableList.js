@@ -30,7 +30,7 @@ import RadioItem from '../RadioItem';
 import {useSkinnable} from '../Skinnable';
 
 import css from './ExpandableList.module.less';
-import {configureExpandable} from '../ExpandableItem/Expandable';
+import {useExpandable} from '../ExpandableItem/Expandable';
 import {SkinContext} from '@enact/ui/Skinnable/Skinnable';
 
 const compareChildren = (a, b) => {
@@ -380,21 +380,6 @@ const ExpandableListBase = kind({
 function ExpandableListDecorator (Wrapped) {
 	const Component = React.memo(Wrapped);
 	const useChange = configureChange({change: 'onSelect', prop: 'selected'});
-	const useExpandable = configureExpandable({
-		getChildFocusTarget: (node, {selected = 0}) => {
-			let selectedIndex = selected;
-			if (Array.isArray(selected) && selected.length) {
-				selectedIndex = selected[0];
-			}
-
-			let selectedNode = null;
-			if (node) {
-				selectedNode = node.querySelector(`[data-index="${selectedIndex}"]`);
-			}
-
-			return selectedNode;
-		}
-	});
 
 	// eslint-disable-next-line no-shadow
 	return function ExpandableListDecorator (props) {
@@ -402,7 +387,21 @@ function ExpandableListDecorator (Wrapped) {
 		const updated = {
 			...props,
 			...useChange(props),
-			...useExpandable(props),
+			...useExpandable({
+				getChildFocusTarget: (node, {selected = 0}) => {
+					let selectedIndex = selected;
+					if (Array.isArray(selected) && selected.length) {
+						selectedIndex = selected[0];
+					}
+
+					let selectedNode = null;
+					if (node) {
+						selectedNode = node.querySelector(`[data-index="${selectedIndex}"]`);
+					}
+
+					return selectedNode;
+				}
+			}, props),
 			...rest
 		};
 

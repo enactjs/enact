@@ -1,6 +1,8 @@
 import {configureCancel} from '@enact/ui/Cancelable';
 import {useRadio} from '@enact/ui/RadioDecorator';
-import {configureToggle} from '@enact/ui/Toggleable';
+import {useToggle} from '@enact/ui/Toggleable';
+import curry from 'ramda/src/curry';
+import {useState} from 'react';
 
 import useDeferChildren from './useDeferChildren';
 import {configureSpotlightActivator} from './useSpotlightActivator';
@@ -70,16 +72,18 @@ const defaultConfig = {
  * @hoc
  * @public
  */
-function configureExpandable (config) {
+const useExpandable = curry((config, props) => {
+// Configuration
+const [{useCancel, useSpotlightActivator}] = useState(() => {
 	const {getChildFocusTarget, noPointerMode} = {...defaultConfig, ...config};
 
-	const useToggle = configureToggle({toggle: null, activate: 'onOpen', deactivate: 'onClose', prop: 'open'});
 	const useCancel = configureCancel({component: 'span', onCancel: handleCancel});
 	const useSpotlightActivator = configureSpotlightActivator({noPointerMode, getChildFocusTarget});
 
-	// eslint-disable-next-line no-shadow
-	return function useExpandable (props) {
-		const toggle = useToggle(props);
+	return {useCancel, useSpotlightActivator};
+})
+
+		const toggle = useToggle({toggle: null, activate: 'onOpen', deactivate: 'onClose', prop: 'open'}, props);
 		const open = toggle.open && !props.disabled;
 
 		const radio = useRadio(open, toggle.onClose);
@@ -103,11 +107,9 @@ function configureExpandable (config) {
 			open,
 			setContainerNode: activator.setContainerNode
 		};
-	};
-}
+});
 
-const useExpandable = configureExpandable();
-useExpandable.configure = configureExpandable;
+const configureExpandable = (config) => useExpandable(config);
 
 export default useExpandable;
 export {

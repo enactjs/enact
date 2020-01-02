@@ -2,6 +2,8 @@
 import {adaptEvent, forProp, forward, handle, not} from '@enact/core/handle';
 import {cap} from '@enact/core/util';
 import {pick} from 'ramda';
+import curry from 'ramda/src/curry';
+import {useState} from 'react';
 
 import useControlledState from '../useControlledState';
 
@@ -89,7 +91,10 @@ const defaultConfig = {
 	toggle: 'onToggle'
 };
 
-const configureToggle = (config) => {
+// eslint-disable-next-line no-shadow
+const useToggle = curry((config, props) => {
+// Configuration
+const [{activate, deactivate, defaultPropKey, handleToggle, handleActivate, handleDeactivate, prop, toggle}] = useState(() => {
 	const {activate, deactivate, eventProps, prop, toggle/* , toggleProp */} = {...defaultConfig, ...config};
 	const defaultPropKey = 'default' + cap(prop);
 
@@ -130,8 +135,9 @@ const configureToggle = (config) => {
 		(ev, props, {onToggle}) => onToggle(false)
 	).named('handleActivate');
 
-	// eslint-disable-next-line no-shadow
-	function useToggle (props) {
+	return {activate, deactivate, defaultPropKey, handleToggle, handleActivate, handleDeactivate, prop, toggle};
+});
+
 		const [value, onToggle] = useControlledState(props[defaultPropKey], props[prop], prop in props);
 		const context = {
 			value,
@@ -146,11 +152,10 @@ const configureToggle = (config) => {
 
 		return updated;
 	}
+);
 
-	return useToggle;
-};
+const configureToggle = (config) => useToggle(config);
 
-const useToggle = configureToggle();
 useToggle.configure = configureToggle;
 
 export default useToggle;
