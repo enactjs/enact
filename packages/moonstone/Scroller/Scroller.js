@@ -79,6 +79,14 @@ class ScrollerBase extends Component {
 		scrollAndFocusScrollbarButton: PropTypes.func,
 
 		/**
+		 * Configuration for a spotlight container of Scroller
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		spotlightContainerConfig: PropTypes.object,
+
+		/**
 		 * The spotlight id for the component.
 		 *
 		 * @type {String}
@@ -109,10 +117,12 @@ class ScrollerBase extends Component {
 	uiRefCurrent = null
 
 	configureSpotlight () {
-		Spotlight.set(this.props.spotlightId, {
-			onLeaveContainer: this.handleLeaveContainer,
-			onLeaveContainerFail: this.handleLeaveContainer
-		});
+		Spotlight.set(this.props.spotlightId,
+			Object.assign({}, this.props.spotlightContainerConfig, {
+				onLeaveContainer: this.handleLeaveContainer,
+				onLeaveContainerFail: this.handleLeaveContainer
+			})
+		);
 	}
 
 	/**
@@ -359,6 +369,7 @@ class ScrollerBase extends Component {
 		delete props.initUiChildRef;
 		delete props.onUpdate;
 		delete props.scrollAndFocusScrollbarButton;
+		delete props.spotlightContainerConfig;
 		delete props.spotlightId;
 
 		return (

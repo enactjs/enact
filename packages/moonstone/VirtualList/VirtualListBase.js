@@ -3,7 +3,7 @@ import {is} from '@enact/core/keymap';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import Accelerator from '@enact/spotlight/Accelerator';
 import Pause from '@enact/spotlight/Pause';
-import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
+import {Spottable} from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
@@ -29,8 +29,7 @@ const
 	Native = 'Native',
 	// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
 	getNumberValue = (index) => index | 0,
-	nop = () => {},
-	spottableSelector = `.${spottableClass}`;
+	nop = () => {};
 
 /**
  * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} and
@@ -430,14 +429,28 @@ const VirtualListBaseFactory = (type) => {
 		onAcceleratedKeyDown = ({isWrapped, keyCode, nextIndex, repeat, target}) => {
 			const {cbScrollTo, dataSize, spacing, wrap} = this.props;
 			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPositionTarget} = this.uiRefCurrent;
-			const index = getNumberValue(target.dataset.index);
+			let targetIndex = target.dataset.index;
+			let node = target;
+
+			// If `target` is a node inside of an item, we should track up to an item.
+			// FIXME: We need to refine this code to check only inside of this list
+			while (typeof targetIndex === 'undefined') {
+				node = node.parentElement;
+				if (node) {
+					targetIndex = node.dataset.index;
+				} else {
+					targetIndex = 0;
+					break;
+				}
+			}
+			targetIndex = getNumberValue(targetIndex);
 
 			this.isScrolledBy5way = false;
 			this.isScrolledByJump = false;
 
 			if (nextIndex >= 0) {
 				const
-					row = Math.floor(index / dimensionToExtent),
+					row = Math.floor(targetIndex / dimensionToExtent),
 					nextRow = Math.floor(nextIndex / dimensionToExtent),
 					start = this.uiRefCurrent.getGridPosition(nextIndex).primaryPosition,
 					end = this.uiRefCurrent.getGridPosition(nextIndex).primaryPosition + gridSize;
@@ -470,7 +483,7 @@ const VirtualListBaseFactory = (type) => {
 					this.isWrappedBy5way = isWrapped;
 
 					if (isWrapped && (
-						this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${nextIndex}']${spottableSelector}`) == null
+						this.uiRefCurrent.itemContainerRef.current.querySelector(`:scope > [data-index='${nextIndex}']`) == null
 					)) {
 						if (wrap === true) {
 							this.pause.pause();
@@ -486,7 +499,7 @@ const VirtualListBaseFactory = (type) => {
 
 					cbScrollTo({
 						index: nextIndex,
-						stickTo: index < nextIndex ? 'end' : 'start',
+						stickTo: targetIndex < nextIndex ? 'end' : 'start',
 						animate: !(isWrapped && wrap === 'noAnimation')
 					});
 				}
@@ -500,21 +513,38 @@ const VirtualListBaseFactory = (type) => {
 			const direction = getDirection(keyCode);
 
 			if (direction) {
+				const {dimensionToExtent, isPrimaryDirectionVertical} = this.uiRefCurrent;
+
+				// A non-grid list does not need to handle keys for non-scrollable directions.
+				if (dimensionToExtent === 1 && isPrimaryDirectionVertical !== (direction === 'up' || direction === 'down')) {
+					return;
+				}
+
 				Spotlight.setPointerMode(false);
 
 				if (SpotlightAccelerator.processKey(ev, nop)) {
 					ev.stopPropagation();
 				} else {
 					const {repeat} = ev;
-					const {focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, spotlightId} = this.props;
-					const {dimensionToExtent, isPrimaryDirectionVertical} = this.uiRefCurrent;
-					const targetIndex = target.dataset.index;
-					const isScrollButton = (
-						// if target has an index, it must be an item so can't be a scroll button
-						!targetIndex &&
-						// if it lacks an index and is inside the scroller, it must be a button
-						target.matches(`[data-spotlight-id="${spotlightId}"] *`)
-					);
+					const {focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.props;
+
+					let targetIndex = target.dataset.index;
+					let node = target;
+					// If `target` is a node inside of an item, we should track up to an item.
+					// FIXME: We need to refine this code to check only inside of this list
+					while (typeof targetIndex === 'undefined') {
+						node = node.parentElement;
+						if (node) {
+							targetIndex = node.dataset.index;
+						} else {
+							targetIndex = 0;
+							break;
+						}
+					}
+					targetIndex = getNumberValue(targetIndex);
+
+					// FIXME: We need to find better way to determind `target` is a scroll button or not
+					const isScrollButton = (target.dataset.spotlightOverflow === 'ignore');
 					const index = !isScrollButton ? getNumberValue(targetIndex) : -1;
 					const {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex} = this.getNextIndex({index, keyCode, repeat});
 					const directions = {};
@@ -605,7 +635,7 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		focusByIndex = (index) => {
-			const item = this.uiRefCurrent.containerRef.current.querySelector(`[data-index='${index}']${spottableSelector}`);
+			const item = this.uiRefCurrent.itemContainerRef.current.querySelector(`:scope > [data-index='${index}']`);
 
 			if (!item && index >= 0 && index < this.props.dataSize) {
 				// Item is valid but since the the dom doesn't exist yet, we set the index to focus after the ongoing update
@@ -717,8 +747,19 @@ const VirtualListBaseFactory = (type) => {
 				{pageScroll} = this.props,
 				{numOfItems} = this.uiRefCurrent.state,
 				{primary} = this.uiRefCurrent,
-				offsetToClientEnd = primary.clientSize - primary.itemSize,
-				focusedIndex = getNumberValue(item.getAttribute(dataIndexAttribute));
+				offsetToClientEnd = primary.clientSize - primary.itemSize;
+			let
+				itemNode = item,
+				focusedIndex = itemNode.getAttribute(dataIndexAttribute);
+
+			while (focusedIndex === null) {
+				itemNode = itemNode.parentElement;
+				if (itemNode && itemNode !== primary) {
+					focusedIndex = itemNode.getAttribute(dataIndexAttribute);
+				} else {
+					break;
+				}
+			}
 
 			if (!isNaN(focusedIndex)) {
 				let gridPosition = this.uiRefCurrent.getGridPosition(focusedIndex);

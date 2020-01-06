@@ -756,14 +756,14 @@ function getContainerNavigableElements (containerId) {
 				const elementRect = getRect(element);
 				if (isContainer(element)) {
 					return intersects(containerRect, elementRect);
+				} else {
+					return contains(containerRect, elementRect);
 				}
-
-				return contains(containerRect, getRect(element));
 			});
 		}
 
 		// otherwise, return all spottables within the container
-		if (!next) {
+		if (!next || next.length === 0) {
 			next = spottables;
 		}
 	}

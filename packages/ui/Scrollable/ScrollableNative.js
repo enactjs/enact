@@ -749,32 +749,34 @@ class ScrollableBaseNative extends Component {
 	}
 
 	onScroll = (ev) => {
-		let {scrollLeft, scrollTop} = ev.target;
+		if (ev.target === this.childRefCurrent.containerRef.current) {
+			let {scrollLeft, scrollTop} = ev.target;
 
-		const
-			bounds = this.getScrollBounds(),
-			canScrollHorizontally = this.canScrollHorizontally(bounds);
+			const
+				bounds = this.getScrollBounds(),
+				canScrollHorizontally = this.canScrollHorizontally(bounds);
 
-		if (!this.scrolling) {
-			this.scrollStartOnScroll();
-		}
+			if (!this.scrolling) {
+				this.scrollStartOnScroll();
+			}
 
-		if (this.props.rtl && canScrollHorizontally) {
-			scrollLeft = (platform.ios || platform.safari) ? -scrollLeft : bounds.maxLeft - scrollLeft;
-		}
+			if (this.props.rtl && canScrollHorizontally) {
+				scrollLeft = (platform.ios || platform.safari) ? -scrollLeft : bounds.maxLeft - scrollLeft;
+			}
 
-		if (scrollLeft !== this.scrollLeft) {
-			this.setScrollLeft(scrollLeft);
-		}
-		if (scrollTop !== this.scrollTop) {
-			this.setScrollTop(scrollTop);
-		}
+			if (scrollLeft !== this.scrollLeft) {
+				this.setScrollLeft(scrollLeft);
+			}
+			if (scrollTop !== this.scrollTop) {
+				this.setScrollTop(scrollTop);
+			}
 
-		if (this.childRefCurrent.didScroll) {
-			this.childRefCurrent.didScroll(this.scrollLeft, this.scrollTop);
+			if (this.childRefCurrent.didScroll) {
+				this.childRefCurrent.didScroll(this.scrollLeft, this.scrollTop);
+			}
+			this.forwardScrollEvent('onScroll');
+			this.scrollStopJob.start();
 		}
-		this.forwardScrollEvent('onScroll');
-		this.scrollStopJob.start();
 	}
 
 	onKeyDown = (ev) => {

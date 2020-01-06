@@ -1308,16 +1308,19 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	handleScroll = () => {
-		const childRefCurrent = this.childRefCurrent;
+	handleScroll = (ev) => {
+		const containerRefCurrent = this.childRefCurrent.containerRef.current;
+		if (ev.target === containerRefCurrent) {
+			const childRefCurrent = this.childRefCurrent;
 
-		// Prevent scroll by focus.
-		// VirtualList and VirtualGridList DO NOT receive `onscroll` event.
-		// Only Scroller could get `onscroll` event.
-		if (!this.animator.isAnimating() && childRefCurrent && childRefCurrent.containerRef.current && childRefCurrent.getRtlPositionX) {
-			// For Scroller
-			childRefCurrent.containerRef.current.scrollTop = this.scrollTop;
-			childRefCurrent.containerRef.current.scrollLeft = childRefCurrent.getRtlPositionX(this.scrollLeft);
+			// Prevent scroll by focus.
+			// VirtualList and VirtualGridList DO NOT receive `onscroll` event.
+			// Only Scroller could get `onscroll` event.
+			if (!this.animator.isAnimating() && childRefCurrent && containerRefCurrent && childRefCurrent.getRtlPositionX) {
+				// For Scroller
+				containerRefCurrent.scrollTop = this.scrollTop;
+				containerRefCurrent.scrollLeft = childRefCurrent.getRtlPositionX(this.scrollLeft);
+			}
 		}
 	}
 
