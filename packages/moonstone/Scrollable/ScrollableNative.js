@@ -593,7 +593,6 @@ class ScrollableBaseNative extends Component {
 			this.alertThumb();
 		}
 
-
 		if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || isDragging)) {
 			const
 				item = ev.target,

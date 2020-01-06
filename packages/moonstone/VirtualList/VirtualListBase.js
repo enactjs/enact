@@ -3,7 +3,7 @@ import {is} from '@enact/core/keymap';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import Accelerator from '@enact/spotlight/Accelerator';
 import Pause from '@enact/spotlight/Pause';
-import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
+import {Spottable} from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
@@ -29,8 +29,7 @@ const
 	Native = 'Native',
 	// using 'bitwise or' for string > number conversion based on performance: https://jsperf.com/convert-string-to-number-techniques/7
 	getNumberValue = (index) => index | 0,
-	nop = () => {},
-	spottableSelector = `.${spottableClass}`;
+	nop = () => {};
 
 /**
  * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} and
@@ -435,7 +434,7 @@ const VirtualListBaseFactory = (type) => {
 
 			// If `target` is a node inside of an item, we should track up to an item.
 			// FIXME: We need to refine this code to check only inside of this list
-			while (targetIndex === undefined) {
+			while (typeof targetIndex === 'undefined') {
 				node = node.parentElement;
 				if (node) {
 					targetIndex = node.dataset.index;
@@ -514,11 +513,10 @@ const VirtualListBaseFactory = (type) => {
 			const direction = getDirection(keyCode);
 
 			if (direction) {
-				const {dimensionToExtent} = this.uiRefCurrent;
+				const {dimensionToExtent, isPrimaryDirectionVertical} = this.uiRefCurrent;
 
 				// A non-grid list does not need to handle keys for non-scrollable directions.
-				if (dimensionToExtent === 1 &&
-				(this.props.direction === 'vertical') !== (direction === 'up' || direction === 'down')) {
+				if (dimensionToExtent === 1 && isPrimaryDirectionVertical !== (direction === 'up' || direction === 'down')) {
 					return;
 				}
 
@@ -528,14 +526,13 @@ const VirtualListBaseFactory = (type) => {
 					ev.stopPropagation();
 				} else {
 					const {repeat} = ev;
-					const {focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, spotlightId} = this.props;
-					const {isPrimaryDirectionVertical} = this.uiRefCurrent;
+					const {focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.props;
 
 					let targetIndex = target.dataset.index;
 					let node = target;
 					// If `target` is a node inside of an item, we should track up to an item.
 					// FIXME: We need to refine this code to check only inside of this list
-					while (targetIndex === undefined) {
+					while (typeof targetIndex === 'undefined') {
 						node = node.parentElement;
 						if (node) {
 							targetIndex = node.dataset.index;
