@@ -37,6 +37,9 @@ const TimesBase = kind({
 		 */
 		current: PropTypes.number,
 
+		noCurrentTime: PropTypes.bool,
+		noTotalTime: PropTypes.bool,
+
 		/**
 		 * The total time (duration) in seconds of the loaded video source.
 		 *
@@ -64,16 +67,25 @@ const TimesBase = kind({
 		totalReadable:   ({total, formatter}) => secondsToTime(total, formatter)
 	},
 
-	render: ({currentPeriod, currentReadable, totalPeriod, totalReadable, ...rest}) => {
+	render: ({currentPeriod, currentReadable, totalPeriod, totalReadable, noCurrentTime, noTotalTime, ...rest}) => {
 		delete rest.current;
 		delete rest.formatter;
 		delete rest.total;
 
 		return (
 			<div {...rest}>
-				<time className={css.currentTime} dateTime={currentPeriod}>{currentReadable}</time>
-				<span className={css.separator}>/</span>
-				<time className={css.totalTime} dateTime={totalPeriod}>{totalReadable}</time>
+				{noCurrentTime ?
+					null :
+					<time className={css.currentTime} dateTime={currentPeriod}>{currentReadable}</time>
+				}
+				{!noCurrentTime && !noTotalTime ?
+					<span className={css.separator}>/</span> :
+					null
+				}
+				{noTotalTime ?
+					null :
+					<time className={css.totalTime} dateTime={totalPeriod}>{totalReadable}</time>
+				}
 			</div>
 		);
 	}
