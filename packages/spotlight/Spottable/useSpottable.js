@@ -270,17 +270,15 @@ const handleLeave = handle(
 function configureSpottable (config) {
 	config = {...defaultConfig, ...config};
 
-	const initialState = {
-		isFocused: false,
-		isHovered: false,
-		// Used to indicate that we want to stop propagation on blur events that occur as a
-		// result of this component imperatively blurring itself on focus when spotlightDisabled
-		shouldPreventBlur: false
-	};
-
 	// eslint-disable-next-line no-shadow
 	return function useSpottable (props) {
-		const [state] = React.useState(initialState);
+		const [state] = React.useState({
+			isFocused: false,
+			isHovered: false,
+			// Used to indicate that we want to stop propagation on blur events that occur as a
+			// result of this component imperatively blurring itself on focus when spotlightDisabled
+			shouldPreventBlur: false
+		});
 		const node = React.useRef(null);
 		React.useLayoutEffect(mountEffect(props, state, node), [node.current]);
 		React.useEffect(focusEffect(props, state), [props.disabled]);
