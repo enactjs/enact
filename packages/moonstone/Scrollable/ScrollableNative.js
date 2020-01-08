@@ -11,7 +11,7 @@ import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from 
 import {getRect, intersects} from '@enact/spotlight/src/utils';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import PropTypes from 'prop-types';
-import React, {useContext, useRef} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 
 import $L from '../internal/$L';
 import {SharedState} from '../internal/SharedStateDecorator';
@@ -177,36 +177,35 @@ const ScrollableBaseNative = (props) => {
 		rightButtonAriaLabel = scrollRightAriaLabel == null ? $L('scroll right') : scrollRightAriaLabel,
 		leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
 
-	// TODO : Change to useEffect
-	function componentDidMount () {
+	useEffect(() => {
+		// componentDidMount
 		createOverscrollJob('horizontal', 'before');
 		createOverscrollJob('horizontal', 'after');
 
 		createOverscrollJob('vertical', 'before');
 		createOverscrollJob('vertical', 'after');
 
-		scrollables.set(this, uiRef.current.containerRef.current);
+		// TODO: Replace `this` to something.
+		scrollables.set(/* this */ null, uiRef.current.containerRef.current);
 
 		restoreScrollPosition();
-	}
 
-	// TODO : Change to useEffect
-	function componentDidUpdate (prevProps) {
-		if (prevProps['data-spotlight-id'] !== props['data-spotlight-id'] ||
-				prevProps.focusableScrollbar !== props.focusableScrollbar) {
-			configureSpotlightContainer(props);
-		}
-	}
+		// componentWillUnmount
+		return () => {
+			// TODO: Replace `this` to something.
+			scrollables.delete(/* this */ null);
 
-	// TODO : Change to useEffect
-	function componentWillUnmount () {
-		scrollables.delete(this);
+			stopOverscrollJob('horizontal', 'before');
+			stopOverscrollJob('horizontal', 'after');
+			stopOverscrollJob('vertical', 'before');
+			stopOverscrollJob('vertical', 'after');
+		};
+	}, []);	// TODO : Handle exhaustive-deps ESLint rule.
 
-		stopOverscrollJob('horizontal', 'before');
-		stopOverscrollJob('horizontal', 'after');
-		stopOverscrollJob('vertical', 'before');
-		stopOverscrollJob('vertical', 'after');
-	}
+	useEffect(() => {
+		// componentDidUpdate
+		configureSpotlightContainer(props);
+	}, [props['data-spotlight-id'], props.focusableScrollbar]);	// TODO : Handle exhaustive-deps ESLint rule.
 
 	// Only intended to be used within componentDidMount, this method will fetch the last stored
 	// scroll position from SharedState and scroll (without animation) to that position

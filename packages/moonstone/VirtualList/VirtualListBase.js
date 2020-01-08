@@ -7,7 +7,7 @@ import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import warning from 'warning';
 
 
@@ -69,9 +69,8 @@ const VirtualListBaseFactory = (type) => {
 
 		let pause = new Pause('VirtualListBase');
 
-		// ComponentDidMount
-		// TODO : Change to useEffect
-		function componentDidMount () {
+		useEffect(() => {
+			// componentDidMount
 			const containerNode = variables.current.uiRefCurrent.containerRef.current;
 			const scrollerNode = document.querySelector(`[data-spotlight-id="${props.spotlightId}"]`);
 
@@ -91,40 +90,34 @@ const VirtualListBaseFactory = (type) => {
 				scrollerNode.addEventListener('keydown', onKeyDown, {capture: true});
 				scrollerNode.addEventListener('keyup', onKeyUp, {capture: true});
 			}
-		}
 
-		// ComponentDidUpdate
-		// TODO : Change to useEffect
-		function componentDidUpdate (prevProps) {
-			if (prevProps.spotlightId !== props.spotlightId) {
-				configureSpotlight(props.spotlightId);
-			}
-			restoreFocus();
-		}
-
-		// ComponentWillUnmount
-		// TODO : Change to useEffect
-		function componentWillUnmount () {
-			const containerNode = variables.current.uiRefCurrent.containerRef.current;
-			const scrollerNode = document.querySelector(`[data-spotlight-id="${props.spotlightId}"]`);
-
-			if (type === JS) {
-				// remove a function for preventing native scrolling by Spotlight
-				if (containerNode && containerNode.removeEventListener) {
-					containerNode.removeEventListener('scroll', variables.current.preventScroll);
+			// componentWillUnmount
+			return () => {
+				if (type === JS) {
+					// remove a function for preventing native scrolling by Spotlight
+					if (containerNode && containerNode.removeEventListener) {
+						containerNode.removeEventListener('scroll', variables.current.preventScroll);
+					}
 				}
-			}
 
-			if (scrollerNode && scrollerNode.removeEventListener) {
-				scrollerNode.removeEventListener('keydown', onKeyDown, {capture: true});
-				scrollerNode.removeEventListener('keyup', onKeyUp, {capture: true});
-			}
+				if (scrollerNode && scrollerNode.removeEventListener) {
+					scrollerNode.removeEventListener('keydown', onKeyDown, {capture: true});
+					scrollerNode.removeEventListener('keyup', onKeyUp, {capture: true});
+				}
 
-			pause.resume();
-			SpotlightAccelerator.reset();
+				pause.resume();
+				SpotlightAccelerator.reset();
 
-			setContainerDisabled(false);
-		}
+				setContainerDisabled(false);
+			};
+		}, []);	// TODO : Handle exhaustive-deps ESLint rule.
+
+		// componentDidUpdate
+		useEffect(() => {
+			configureSpotlight(props.spotlightId);
+		}, [props.spotlightId]);	// TODO : Handle exhaustive-deps ESLint rule.
+
+		useEffect(restoreFocus);	// TODO : Handle exhaustive-deps ESLint rule.
 
 		function setContainerDisabled (bool) {
 			const containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);

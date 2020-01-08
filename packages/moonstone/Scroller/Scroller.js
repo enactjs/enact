@@ -21,7 +21,7 @@ import {getRect} from '@enact/spotlight/src/utils';
 import ri from '@enact/ui/resolution';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import PropTypes from 'prop-types';
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -41,27 +41,21 @@ const dataContainerDisabledAttribute = 'data-spotlight-container-disabled';
  * @public
  */
 const ScrollerBase = (props) => {
-	// TODO : Change to useEffect
-	function componentDidMount () {
+	useEffect(() => {
+		// componentDidMount
 		configureSpotlight();
-	}
 
-	// TODO : Change to useEffect
-	function componentDidUpdate (prevProps) {
+		// componentWillUnmount
+		return () => setContainerDisabled(false);
+	}, []);	// TODO : Handle exhaustive-deps ESLint rule.
+
+	useEffect(configureSpotlight(), [props.spotlightId]);	// TODO : Handle exhaustive-deps ESLint rule.
+	useEffect(() => {
 		const {onUpdate} = props;
 		if (onUpdate) {
 			onUpdate();
 		}
-
-		if (prevProps.spotlightId !== props.spotlightId) {
-			configureSpotlight();
-		}
-	}
-
-	// TODO : Change to useEffect
-	function componentWillUnmount () {
-		setContainerDisabled(false);
-	}
+	});	// TODO : Handle exhaustive-deps ESLint rule.
 
 	// Instance variables
 	const uiRefCurrent = useRef({});
