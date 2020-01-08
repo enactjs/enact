@@ -21,7 +21,7 @@ import {getRect} from '@enact/spotlight/src/utils';
 import ri from '@enact/ui/resolution';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import PropTypes from 'prop-types';
-import React, {useDebugValue, useRef} from 'react';
+import React, {useRef} from 'react';
 
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -41,8 +41,6 @@ const dataContainerDisabledAttribute = 'data-spotlight-container-disabled';
  * @public
  */
 const ScrollerBase = (props) => {
-	useDebugValue('ScrollerBase');
-
 	// TODO : Change to useEffect
 	function componentDidMount () {
 		configureSpotlight();
@@ -66,7 +64,7 @@ const ScrollerBase = (props) => {
 	}
 
 	// Instance variables
-	let uiRefCurrent = useRef({});
+	const uiRefCurrent = useRef({});
 
 	function configureSpotlight () {
 		Spotlight.set(props.spotlightId, {
@@ -328,6 +326,7 @@ const ScrollerBase = (props) => {
 	);
 };
 
+	ScrollerBase.displayName  = 'ScrollerBase';
 ScrollerBase.propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
 	/**
 	 * Passes the instance of [Scroller]{@link ui/Scroller.Scroller}.

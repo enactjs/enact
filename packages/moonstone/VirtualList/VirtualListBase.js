@@ -49,7 +49,7 @@ const VirtualListBaseFactory = (type) => {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
 		// Instance variables
-		let variables = useRef({
+		const variables = useRef({
 			isScrolledBy5way: false,
 			isScrolledByJump:  false,
 			isWrappedBy5way:  false,
