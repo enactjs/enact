@@ -59,8 +59,12 @@ const VirtualListBaseFactory = (type) => {
 			restoreLastFocused:  false,
 			uiRefCurrent:  null,
 			preventScroll:  null,
-			pause: new Pause('VirtualListBase')
+			pause: null
 		});
+
+		if (variables.current.pause === null) {
+			variables.current.pause = new Pause('VirtualListBase');
+		}
 
 		// Constructor
 		const {spotlightId} = props;
@@ -305,7 +309,7 @@ const VirtualListBaseFactory = (type) => {
 						variables.current.uiRefCurrent.containerRef.current.querySelector(`[data-index='${nextIndex}']${spottableSelector}`) == null
 					)) {
 						if (wrap === true) {
-							pause.pause();
+							variables.current.pause.pause();
 							target.blur();
 						} else {
 							focusByIndex(nextIndex);
@@ -449,7 +453,7 @@ const VirtualListBaseFactory = (type) => {
 					variables.current.isWrappedBy5way = false;
 				}
 
-				pause.resume();
+				variables.current.pause.resume();
 				focusOnNode(item);
 				variables.current.nodeIndexToBeFocused = null;
 				variables.current.isScrolledByJump = false;
