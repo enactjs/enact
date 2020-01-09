@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VirtualList.VirtualList` to render properly without error when `itemSizes` is given and `dataSize` is 0
+- `moonstone/VirtualList.VirtualList` to render properly without error when `itemSizes`'s value is missing
 
 ## [3.2.5] - 2019-11-14
 
