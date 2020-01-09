@@ -58,7 +58,8 @@ const VirtualListBaseFactory = (type) => {
 			preservedIndex:  null,
 			restoreLastFocused:  false,
 			uiRefCurrent:  null,
-			preventScroll:  null
+			preventScroll:  null,
+			pause: new Pause('VirtualListBase')
 		});
 
 		// Constructor
@@ -66,8 +67,6 @@ const VirtualListBaseFactory = (type) => {
 		if (spotlightId) {
 			configureSpotlight();
 		}
-
-		let pause = new Pause('VirtualListBase');
 
 		useEffect(() => {
 			// componentDidMount
@@ -105,7 +104,7 @@ const VirtualListBaseFactory = (type) => {
 					scrollerNode.removeEventListener('keyup', onKeyUp, {capture: true});
 				}
 
-				pause.resume();
+				variables.current.pause.resume();
 				SpotlightAccelerator.reset();
 
 				setContainerDisabled(false);
@@ -114,7 +113,7 @@ const VirtualListBaseFactory = (type) => {
 
 		// componentDidUpdate
 		useEffect(() => {
-			configureSpotlight(props.spotlightId);
+			configureSpotlight();
 		}, [props.spotlightId]);	// TODO : Handle exhaustive-deps ESLint rule.
 
 		useEffect(restoreFocus);	// TODO : Handle exhaustive-deps ESLint rule.

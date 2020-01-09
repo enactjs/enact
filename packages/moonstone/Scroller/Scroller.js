@@ -53,7 +53,7 @@ const ScrollerBase = (props) => {
 	useEffect(() => {
 		const {onUpdate} = props;
 		if (onUpdate) {
-		//	onUpdate();		// TODO: Invoking onUpdate() has error. Fix it.
+		//	onUpdate();		// TODO: Invoking onUpdate() has error. Fix it on PLAT-98204.
 		}
 	});	// TODO : Handle exhaustive-deps ESLint rule.
 
