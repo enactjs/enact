@@ -59,7 +59,7 @@ const
  */
 const dataIndexAttribute = 'data-index';
 
-const navigableFilter = (elem) => {
+const Util_navigableFilter = (elem) => {
 	if (
 		!Spotlight.getPointerMode() &&
 		// ignore containers passed as their id
@@ -70,12 +70,14 @@ const navigableFilter = (elem) => {
 	}
 };
 
-const configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusableScrollbar}) => {
+const Util_configureSpotlightContainer = ({'data-spotlight-id': spotlightId, focusableScrollbar}) => {
 	Spotlight.set(spotlightId, {
-		navigableFilter: focusableScrollbar ? null : navigableFilter
+		navigableFilter: focusableScrollbar ? null : Util_navigableFilter
 	});
 };
 
+
+function MonitorEvents () {
 /*
  * Track the last position of the pointer to check if a list should scroll by
  * page up/down keys when the pointer is on a list without any focused node.
@@ -93,7 +95,7 @@ const
 	// An app could have lists and/or scrollers more than one,
 	// so we should test all of them when page up/down key is pressed.
 	scrollables = new Map(),
-	pageKeyHandler = (ev) => {
+	Util_pageKeyHandler = (ev) => {
 		const {keyCode} = ev;
 		if (Spotlight.getPointerMode() && !Spotlight.getCurrent() && (isPageUp(keyCode) || isPageDown(keyCode))) {
 			const
@@ -119,9 +121,20 @@ const
 
 onWindowReady(() => {
 	document.addEventListener('mousemove', pointerTracker);
-	document.addEventListener('keydown', pageKeyHandler);
+	document.addEventListener('keydown', Util_pageKeyHandler);
 });
 
+function componentDidMount () {
+	scrollables.set(this, variables.current.uiRef.current.containerRef.current);
+}
+
+function componentWillUnmount () {
+	scrollables.delete(this);
+}
+
+}
+
+function Focus () {
 const isIntersecting = (elem, container) => elem && intersects(getRect(container), getRect(elem));
 const getIntersectingElement = (elem, container) => isIntersecting(elem, container) && elem;
 const getTargetInViewByDirectionFromPosition = (direction, position, container) => {
@@ -129,176 +142,32 @@ const getTargetInViewByDirectionFromPosition = (direction, position, container) 
 	return getIntersectingElement(target, container);
 };
 
-/**
- * A Moonstone-styled component that provides horizontal and vertical scrollbars.
- *
- * @function ScrollableBase
- * @memberof moonstone/Scrollable
- * @extends ui/Scrollable.ScrollableBase
- * @ui
- * @public
- */
-const ScrollableBase = (props) => {
-	useDebugValue('Scrollable');
-	const context = useContext(SharedState);
-
-	// constructor
-	// Instance variables
-	let variables = useRef({
-		scrollbarProps: {
-			cbAlertThumb: alertThumbAfterRendered,
-			onNextScroll: onScrollbarButtonClick,
-			onPrevScroll: onScrollbarButtonClick
-		},
-		overscrollRefs: {
-			horizontal: React.createRef(),
-			vertical: React.createRef()
-		},
-		childRef: React.createRef(),
-		uiRef: React.createRef(),
-		animateOnFocus: false
-	});
-	configureSpotlightContainer(props);
-
-	// Destructuring for render
-	const {
-		childRenderer,
-		'data-spotlight-container': spotlightContainer,
-		'data-spotlight-container-disabled': spotlightContainerDisabled,
-		'data-spotlight-id': spotlightId,
-		focusableScrollbar,
-		preventBubblingOnKeyDown,
-		scrollDownAriaLabel,
-		scrollLeftAriaLabel,
-		scrollRightAriaLabel,
-		scrollUpAriaLabel,
-		...rest
-	} = props;
-
-	// TODO : Change to useEffect
-	function componentDidMount () {
-		createOverscrollJob('horizontal', 'before');
-		createOverscrollJob('horizontal', 'after');
-
-		createOverscrollJob('vertical', 'before');
-		createOverscrollJob('vertical', 'after');
-
-		restoreScrollPosition();
-		scrollables.set(this, variables.current.uiRef.current.containerRef.current);
+function focusOnItem () {
+	if (indexToFocus !== null && typeof variables.current.childRef.current.focusByIndex === 'function') {
+		variables.current.childRef.current.focusByIndex(indexToFocus);
+		indexToFocus = null;
 	}
-
-	// TODO : Change to useEffect
-	function componentDidUpdate (prevProps) {
-		if (prevProps['data-spotlight-id'] !== props['data-spotlight-id'] ||
-				prevProps.focusableScrollbar !== props.focusableScrollbar) {
-			configureSpotlightContainer(props);
-		}
+	if (nodeToFocus !== null && typeof variables.current.childRef.current.focusOnNode === 'function') {
+		variables.current.childRef.current.focusOnNode(nodeToFocus);
+		nodeToFocus = null;
 	}
+	if (pointToFocus !== null) {
+		// no need to focus on pointer mode
+		if (!Spotlight.getPointerMode()) {
+			const {direction, x, y} = pointToFocus;
+			const position = {x, y};
+			const {current: {containerRef: {current}}} = variables.current.uiRef;
+			const elemFromPoint = document.elementFromPoint(x, y);
+			const target =
+				elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
+				getTargetInViewByDirectionFromPosition(direction, position, current) ||
+				getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current);
 
-	// TODO : Change to useEffect
-	function componentWillUnmount () {
-		scrollables.delete(this);
-
-		stopOverscrollJob('horizontal', 'before');
-		stopOverscrollJob('horizontal', 'after');
-		stopOverscrollJob('vertical', 'before');
-		stopOverscrollJob('vertical', 'after');
-	}
-
-	// status
-	let isWheeling = false;
-
-	// spotlight
-	let lastScrollPositionOnFocus = null;
-	let indexToFocus = null;
-	let nodeToFocus = null;
-	let pointToFocus = null;
-
-	// voice control
-	let isVoiceControl = false;
-	let voiceControlDirection = 'vertical';
-
-	// overscroll
-	let overscrollJobs = {
-		horizontal: {before: null, after: null},
-		vertical: {before: null, after: null}
-	};
-
-	// Only intended to be used within componentDidMount, this method will fetch the last stored
-	// scroll position from SharedState and scroll (without animation) to that position
-	function restoreScrollPosition () {
-		const {id} = props;
-		if (id && context && context.get) {
-			const scrollPosition = context.get(`${id}.scrollPosition`);
-			if (scrollPosition) {
-				variables.current.uiRef.current.scrollTo({
-					position: scrollPosition,
-					animate: false
-				});
+			if (target) {
+				Spotlight.focus(target);
 			}
 		}
-	}
-
-	function isScrollButtonFocused () {
-		const {horizontalScrollbarRef: h, verticalScrollbarRef: v} = variables.current.uiRef.current;
-
-		return (
-			h.current && h.current.isOneOfScrollButtonsFocused() ||
-			v.current && v.current.isOneOfScrollButtonsFocused()
-		);
-	}
-
-	function onFlick ({direction}) {
-		const bounds = variables.current.uiRef.current.getScrollBounds();
-		const focusedItem = Spotlight.getCurrent();
-
-		if (focusedItem) {
-			focusedItem.blur();
-		}
-
-		if ((
-			direction === 'vertical' && variables.current.uiRef.current.canScrollVertically(bounds) ||
-			direction === 'horizontal' && variables.current.uiRef.current.canScrollHorizontally(bounds)
-		) && !props['data-spotlight-container-disabled']) {
-			variables.current.childRef.current.setContainerDisabled(true);
-		}
-	}
-
-	function onMouseDown (ev) {
-		if (isScrollButtonFocused()) {
-			ev.preventDefault();
-		}
-
-		if (props['data-spotlight-container-disabled']) {
-			ev.preventDefault();
-		}
-	}
-
-	function onTouchStart () {
-		const focusedItem = Spotlight.getCurrent();
-
-		if (!Spotlight.isPaused() && focusedItem && !isScrollButtonFocused()) {
-			focusedItem.blur();
-		}
-	}
-
-	function onWheel ({delta}) {
-		const focusedItem = Spotlight.getCurrent();
-
-		if (focusedItem && !isScrollButtonFocused()) {
-			focusedItem.blur();
-		}
-
-		if (delta !== 0) {
-			isWheeling = true;
-			if (!props['data-spotlight-container-disabled']) {
-				variables.current.childRef.current.setContainerDisabled(true);
-			}
-		}
-	}
-
-	function isContent (element) {
-		return (element && variables.current.uiRef.current && variables.current.uiRef.current.childRefCurrent.containerRef.current.contains(element));
+		pointToFocus = null;
 	}
 
 	function startScrollOnFocus (pos) {
@@ -393,314 +262,25 @@ const ScrollableBase = (props) => {
 		}
 	}
 
-	function scrollByPage (direction) {
-		const
-			{childRefCurrent, scrollTop} = variables.current.uiRef.current,
-			focusedItem = Spotlight.getCurrent(),
-			bounds = variables.current.uiRef.current.getScrollBounds(),
-			isUp = direction === 'up',
-			directionFactor = isUp ? -1 : 1,
-			pageDistance = directionFactor * bounds.clientHeight * paginationPageMultiplier,
-			scrollPossible = isUp ? scrollTop > 0 : bounds.maxTop > scrollTop;
-
-		variables.current.uiRef.current.lastInputType = 'pageKey';
-
-		if (directionFactor !== variables.current.uiRef.current.wheelDirection) {
-			variables.current.uiRef.current.isScrollAnimationTargetAccumulated = false;
-			variables.current.uiRef.current.wheelDirection = directionFactor;
-		}
-
-		if (scrollPossible) {
-			if (focusedItem) {
-				const contentNode = childRefCurrent.containerRef.current;
-				// Should do nothing when focusedItem is paging control button of Scrollbar
-				if (contentNode.contains(focusedItem)) {
-					const
-						contentRect = contentNode.getBoundingClientRect(),
-						clientRect = focusedItem.getBoundingClientRect(),
-						yAdjust = isUp ? 1 : -1,
-						x = clamp(contentRect.left, contentRect.right, (clientRect.right + clientRect.left) / 2),
-						y = bounds.maxTop <= scrollTop + pageDistance || 0 >= scrollTop + pageDistance ?
-							contentRect[isUp ? 'top' : 'bottom'] + yAdjust :
-							clamp(contentRect.top, contentRect.bottom, (clientRect.bottom + clientRect.top) / 2);
-
-					focusedItem.blur();
-					if (!props['data-spotlight-container-disabled']) {
-						variables.current.childRef.current.setContainerDisabled(true);
-					}
-					pointToFocus = {direction, x, y};
-				}
-			} else {
-				pointToFocus = {direction, x: lastPointer.x, y: lastPointer.y};
-			}
-
-			variables.current.uiRef.current.scrollToAccumulatedTarget(pageDistance, true, props.overscrollEffectOn.pageKey);
-		}
-	}
-
-	function hasFocus () {
-		let current = Spotlight.getCurrent();
-
-		if (!current) {
-			// TODO : Remove.
-			// const spotlightId = Spotlight.getActiveContainer();
-			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
-		}
-
-		return current && variables.current.uiRef.current && variables.current.uiRef.current.containerRef.current.contains(current);
-	}
-
-	function checkAndApplyOverscrollEffectByDirection (direction) {
-		const
-			orientation = (direction === 'up' || direction === 'down') ? 'vertical' : 'horizontal',
-			bounds = variables.current.uiRef.current.getScrollBounds(),
-			scrollability = orientation === 'vertical' ? variables.current.uiRef.current.canScrollVertically(bounds) : variables.current.uiRef.current.canScrollHorizontally(bounds);
-
-		if (scrollability) {
-			const
-				isRtl = variables.current.uiRef.current.props.rtl,
-				edge = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
-			variables.current.uiRef.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
-		}
-	}
-
-	// TODO PLAT-98204.
-	function scrollByPageOnPointerMode (ev) {
-		const {keyCode, repeat} = ev;
-		forward('onKeyDown', ev, props);
-		ev.preventDefault();
-
-		variables.current.animateOnFocus = true;
-
-		if (!repeat && (props.direction === 'vertical' || props.direction === 'both')) {
-			const direction = isPageUp(keyCode) ? 'up' : 'down';
-
-			scrollByPage(direction);
-			if (props.overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
-				checkAndApplyOverscrollEffectByDirection(direction);
-			}
-
-			return true; // means consumed
-		}
-
-		return false; // means to be propagated
-	}
-
-	function onKeyDown (ev) {
-		const {keyCode, repeat, target} = ev;
-
-		forward('onKeyDown', ev, props);
-
-		if (isPageUp(keyCode) || isPageDown(keyCode)) {
-			ev.preventDefault();
-		}
-
-		variables.current.animateOnFocus = true;
-
-		if (!repeat && hasFocus()) {
-			const {overscrollEffectOn} = props;
-			let direction = null;
-
-			if (isPageUp(keyCode) || isPageDown(keyCode)) {
-				if (props.direction === 'vertical' || props.direction === 'both') {
-					direction = isPageUp(keyCode) ? 'up' : 'down';
-
-					if (isContent(target)) {
-						ev.stopPropagation();
-						scrollByPage(direction);
-					}
-					if (overscrollEffectOn.pageKey) {
-						checkAndApplyOverscrollEffectByDirection(direction);
-					}
-				}
-			} else if (getDirection(keyCode)) {
-				const element = Spotlight.getCurrent();
-
-				variables.current.uiRef.current.lastInputType = 'arrowKey';
-
-				direction = getDirection(keyCode);
-				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
-					const {horizontalScrollbarRef, verticalScrollbarRef} = variables.current.uiRef.current;
-
-					if (!(horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) &&
-						!(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
-						checkAndApplyOverscrollEffectByDirection(direction);
-					}
-				}
-			}
-		}
-	}
-
-	function onScrollbarButtonClick ({isPreviousScrollButton, isVerticalScrollBar}) {
-		const
-			bounds = variables.current.uiRef.current.getScrollBounds(),
-			direction = isPreviousScrollButton ? -1 : 1,
-			pageDistance = direction * (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
-
-		variables.current.uiRef.current.lastInputType = 'scrollbarButton';
-
-		if (direction !== variables.current.uiRef.current.wheelDirection) {
-			variables.current.uiRef.current.isScrollAnimationTargetAccumulated = false;
-			variables.current.uiRef.current.wheelDirection = direction;
-		}
-
-		variables.current.uiRef.current.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, props.overscrollEffectOn.scrollbarButton);
-	}
-
-	function focusOnScrollButton (scrollbarRef, isPreviousScrollButton) {
-		if (scrollbarRef.current) {
-			scrollbarRef.current.focusOnButton(isPreviousScrollButton);
-		}
-	}
-
-	function scrollAndFocusScrollbarButton (direction) {
-		if (variables.current.uiRef.current) {
-			const
-				{direction: directionProp} = props,
-				uiRefCurrent = variables.current.uiRef.current,
-				isRtl = uiRefCurrent.props.rtl,
-				isPreviousScrollButton = direction === 'up' || (isRtl ? direction === 'right' : direction === 'left'),
-				isHorizontalDirection = direction === 'left' || direction === 'right',
-				isVerticalDirection = direction === 'up' || direction === 'down',
-				canScrollHorizontally = isHorizontalDirection && (directionProp === 'horizontal' || directionProp === 'both'),
-				canScrollingVertically = isVerticalDirection && (directionProp === 'vertical' || directionProp === 'both');
-
-			if (canScrollHorizontally || canScrollingVertically) {
-				onScrollbarButtonClick({
-					isPreviousScrollButton,
-					isVerticalScrollBar: canScrollingVertically
-				});
-
-				if (focusableScrollbar) {
-					focusOnScrollButton(
-						canScrollingVertically ? uiRefCurrent.verticalScrollbarRef : uiRefCurrent.horizontalScrollbarRef,
-						isPreviousScrollButton
-					);
-				}
-			}
-		}
-	}
-
-	function stop () {
-		if (!props['data-spotlight-container-disabled']) {
-			variables.current.childRef.current.setContainerDisabled(false);
-		}
-		focusOnItem();
-		lastScrollPositionOnFocus = null;
-		isWheeling = false;
-		if (isVoiceControl) {
-			isVoiceControl = false;
-			updateFocusAfterVoiceControl();
-		}
-	}
-
-	function focusOnItem () {
-		if (indexToFocus !== null && typeof variables.current.childRef.current.focusByIndex === 'function') {
-			variables.current.childRef.current.focusByIndex(indexToFocus);
-			indexToFocus = null;
-		}
-		if (nodeToFocus !== null && typeof variables.current.childRef.current.focusOnNode === 'function') {
-			variables.current.childRef.current.focusOnNode(nodeToFocus);
-			nodeToFocus = null;
-		}
-		if (pointToFocus !== null) {
-			// no need to focus on pointer mode
-			if (!Spotlight.getPointerMode()) {
-				const {direction, x, y} = pointToFocus;
-				const position = {x, y};
-				const {current: {containerRef: {current}}} = variables.current.uiRef;
-				const elemFromPoint = document.elementFromPoint(x, y);
-				const target =
-					elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
-					getTargetInViewByDirectionFromPosition(direction, position, current) ||
-					getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current);
-
-				if (target) {
-					Spotlight.focus(target);
-				}
-			}
-			pointToFocus = null;
-		}
-	}
-
-	function scrollTo (opt) {
-		indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
-		nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
-	}
-
-	function alertThumb () {
-		const bounds = variables.current.uiRef.current.getScrollBounds();
-
-		variables.current.uiRef.current.showThumb(bounds);
-		variables.current.uiRef.current.startHidingThumb();
-	}
-
-	function alertThumbAfterRendered () {
-		const spotItem = Spotlight.getCurrent();
-
-		if (!Spotlight.getPointerMode() && isContent(spotItem) && variables.current.uiRef.current.isUpdatedScrollThumb) {
-			alertThumb();
-		}
-	}
-
-	function handleResizeWindow () {
-		const focusedItem = Spotlight.getCurrent();
-
-		if (focusedItem) {
-			focusedItem.blur();
-		}
-	}
-
-	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
-	function handleScrollerUpdate () {
-		if (variables.current.uiRef.current.scrollToInfo === null) {
-			const scrollHeight = variables.current.uiRef.current.getScrollBounds().scrollHeight;
-			if (scrollHeight !== variables.current.uiRef.current.bounds.scrollHeight) {
-				calculateAndScrollTo();
-			}
-		}
-
-		// oddly, Scroller manages uiRef.current.bounds so if we don't update it here (it is also
-		// updated in calculateAndScrollTo but we might not have made it to that point), it will be
-		// out of date when we land back in this method next time.
-		variables.current.uiRef.current.bounds.scrollHeight = variables.current.uiRef.current.getScrollBounds().scrollHeight;
-	}
-
-	function clearOverscrollEffect (orientation, edge) {
-		overscrollJobs[orientation][edge].startAfter(overscrollTimeout, orientation, edge, overscrollTypeNone, 0);
-		variables.current.uiRef.current.setOverscrollStatus(orientation, edge, overscrollTypeNone, 0);
-	}
-
-	function applyOverscrollEffect (orientation, edge, type, ratio) {
-		const nodeRef = variables.current.overscrollRefs[orientation].current;
-
-		if (nodeRef) {
-			nodeRef.style.setProperty(overscrollRatioPrefix + orientation + edge, ratio);
-
-			if (type === overscrollTypeOnce) {
-				overscrollJobs[orientation][edge].start(orientation, edge, overscrollTypeDone, 0);
-			}
-		}
-	}
-
-	function createOverscrollJob (orientation, edge) {
-		if (!overscrollJobs[orientation][edge]) {
-			overscrollJobs[orientation][edge] = new Job(applyOverscrollEffect.bind(this), overscrollTimeout);
-		}
-	}
-
-	function stopOverscrollJob (orientation, edge) {
-		const job = overscrollJobs[orientation][edge];
-
-		if (job) {
-			job.stop();
-		}
-	}
-
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function addEventListeners (childContainerRef) {
 		if (childContainerRef.current && childContainerRef.current.addEventListener) {
 			childContainerRef.current.addEventListener('focusin', onFocus);
+		}
+	}
+
+	// FIXME setting event handlers directly to work on the V8 snapshot.
+	function removeEventListeners (childContainerRef) {
+		if (childContainerRef.current && childContainerRef.current.removeEventListener) {
+			childContainerRef.current.removeEventListener('focusin', onFocus);
+		}
+	}
+}
+
+function Voice () {
+	// FIXME setting event handlers directly to work on the V8 snapshot.
+	function addEventListeners (childContainerRef) {
+		if (childContainerRef.current && childContainerRef.current.addEventListener) {
 			if (platform.webos) {
 				childContainerRef.current.addEventListener('webOSVoice', onVoice);
 				childContainerRef.current.setAttribute('data-webos-voice-intent', 'Scroll');
@@ -711,7 +291,6 @@ const ScrollableBase = (props) => {
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function removeEventListeners (childContainerRef) {
 		if (childContainerRef.current && childContainerRef.current.removeEventListener) {
-			childContainerRef.current.removeEventListener('focusin', onFocus);
 			if (platform.webos) {
 				childContainerRef.current.removeEventListener('webOSVoice', onVoice);
 				childContainerRef.current.removeAttribute('data-webos-voice-intent');
@@ -792,6 +371,371 @@ const ScrollableBase = (props) => {
 			e.preventDefault();
 		}
 	}
+}
+
+function OverscrollEffect () {
+	function componentDidMount () {
+		createOverscrollJob('horizontal', 'before');
+		createOverscrollJob('horizontal', 'after');
+
+		createOverscrollJob('vertical', 'before');
+		createOverscrollJob('vertical', 'after');
+	}
+
+	function componentWillUnmount () {
+		stopOverscrollJob('horizontal', 'before');
+		stopOverscrollJob('horizontal', 'after');
+		stopOverscrollJob('vertical', 'before');
+		stopOverscrollJob('vertical', 'after');
+	}
+
+	function checkAndApplyOverscrollEffectByDirection (direction) {
+		const
+			orientation = (direction === 'up' || direction === 'down') ? 'vertical' : 'horizontal',
+			bounds = variables.current.uiRef.current.getScrollBounds(),
+			scrollability = orientation === 'vertical' ? variables.current.uiRef.current.canScrollVertically(bounds) : variables.current.uiRef.current.canScrollHorizontally(bounds);
+
+		if (scrollability) {
+			const
+				isRtl = variables.current.uiRef.current.props.rtl,
+				edge = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
+			variables.current.uiRef.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
+		}
+	}
+
+	function clearOverscrollEffect (orientation, edge) {
+		overscrollJobs[orientation][edge].startAfter(overscrollTimeout, orientation, edge, overscrollTypeNone, 0);
+		variables.current.uiRef.current.setOverscrollStatus(orientation, edge, overscrollTypeNone, 0);
+	}
+
+	function applyOverscrollEffect (orientation, edge, type, ratio) {
+		const nodeRef = variables.current.overscrollRefs[orientation].current;
+
+		if (nodeRef) {
+			nodeRef.style.setProperty(overscrollRatioPrefix + orientation + edge, ratio);
+
+			if (type === overscrollTypeOnce) {
+				overscrollJobs[orientation][edge].start(orientation, edge, overscrollTypeDone, 0);
+			}
+		}
+	}
+
+	function createOverscrollJob (orientation, edge) {
+		if (!overscrollJobs[orientation][edge]) {
+			overscrollJobs[orientation][edge] = new Job(applyOverscrollEffect.bind(this), overscrollTimeout);
+		}
+	}
+
+	function stopOverscrollJob (orientation, edge) {
+		const job = overscrollJobs[orientation][edge];
+
+		if (job) {
+			job.stop();
+		}
+	}
+}
+
+function Restore () {
+	function componentDidMount () {
+		restoreScrollPosition();
+	}
+
+	// Only intended to be used within componentDidMount, this method will fetch the last stored
+	// scroll position from SharedState and scroll (without animation) to that position
+	function restoreScrollPosition () {
+		const {id} = props;
+		if (id && context && context.get) {
+			const scrollPosition = context.get(`${id}.scrollPosition`);
+			if (scrollPosition) {
+				variables.current.uiRef.current.scrollTo({
+					position: scrollPosition,
+					animate: false
+				});
+			}
+		}
+	}
+}
+
+function Spotlight () {
+		function componentDidUpdate (prevProps) {
+		if (prevProps['data-spotlight-id'] !== props['data-spotlight-id'] ||
+				prevProps.focusableScrollbar !== props.focusableScrollbar) {
+			Util_configureSpotlightContainer(props);
+		}
+	}
+}
+
+function ScrollButton () {
+	function isScrollButtonFocused () {
+		const {horizontalScrollbarRef: h, verticalScrollbarRef: v} = variables.current.uiRef.current;
+
+		return (
+			h.current && h.current.isOneOfScrollButtonsFocused() ||
+			v.current && v.current.isOneOfScrollButtonsFocused()
+		);
+	}
+
+	function onScrollbarButtonClick ({isPreviousScrollButton, isVerticalScrollBar}) {
+		const
+			bounds = variables.current.uiRef.current.getScrollBounds(),
+			direction = isPreviousScrollButton ? -1 : 1,
+			pageDistance = direction * (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+
+		variables.current.uiRef.current.lastInputType = 'scrollbarButton';
+
+		if (direction !== variables.current.uiRef.current.wheelDirection) {
+			variables.current.uiRef.current.isScrollAnimationTargetAccumulated = false;
+			variables.current.uiRef.current.wheelDirection = direction;
+		}
+
+		variables.current.uiRef.current.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, props.overscrollEffectOn.scrollbarButton);
+	}
+
+	function focusOnScrollButton (scrollbarRef, isPreviousScrollButton) {
+		if (scrollbarRef.current) {
+			scrollbarRef.current.focusOnButton(isPreviousScrollButton);
+		}
+	}
+
+	function scrollAndFocusScrollbarButton (direction) {
+		if (variables.current.uiRef.current) {
+			const
+				{direction: directionProp} = props,
+				uiRefCurrent = variables.current.uiRef.current,
+				isRtl = uiRefCurrent.props.rtl,
+				isPreviousScrollButton = direction === 'up' || (isRtl ? direction === 'right' : direction === 'left'),
+				isHorizontalDirection = direction === 'left' || direction === 'right',
+				isVerticalDirection = direction === 'up' || direction === 'down',
+				canScrollHorizontally = isHorizontalDirection && (directionProp === 'horizontal' || directionProp === 'both'),
+				canScrollingVertically = isVerticalDirection && (directionProp === 'vertical' || directionProp === 'both');
+
+			if (canScrollHorizontally || canScrollingVertically) {
+				onScrollbarButtonClick({
+					isPreviousScrollButton,
+					isVerticalScrollBar: canScrollingVertically
+				});
+
+				if (focusableScrollbar) {
+					focusOnScrollButton(
+						canScrollingVertically ? uiRefCurrent.verticalScrollbarRef : uiRefCurrent.horizontalScrollbarRef,
+						isPreviousScrollButton
+					);
+				}
+			}
+		}
+	}
+}
+
+// Need
+// isScrollButtonFocused
+function Interaction () {
+	function onFlick ({direction}) {
+		const bounds = variables.current.uiRef.current.getScrollBounds();
+		const focusedItem = Spotlight.getCurrent();
+
+		if (focusedItem) {
+			focusedItem.blur();
+		}
+
+		if ((
+			direction === 'vertical' && variables.current.uiRef.current.canScrollVertically(bounds) ||
+			direction === 'horizontal' && variables.current.uiRef.current.canScrollHorizontally(bounds)
+		) && !props['data-spotlight-container-disabled']) {
+			variables.current.childRef.current.setContainerDisabled(true);
+		}
+	}
+
+	function onMouseDown (ev) {
+		if (isScrollButtonFocused()) {
+			ev.preventDefault();
+		}
+
+		if (props['data-spotlight-container-disabled']) {
+			ev.preventDefault();
+		}
+	}
+
+	function onTouchStart () {
+		const focusedItem = Spotlight.getCurrent();
+
+		if (!Spotlight.isPaused() && focusedItem && !isScrollButtonFocused()) {
+			focusedItem.blur();
+		}
+	}
+
+	function onWheel ({delta}) {
+		const focusedItem = Spotlight.getCurrent();
+
+		if (focusedItem && !isScrollButtonFocused()) {
+			focusedItem.blur();
+		}
+
+		if (delta !== 0) {
+			isWheeling = true;
+			if (!props['data-spotlight-container-disabled']) {
+				variables.current.childRef.current.setContainerDisabled(true);
+			}
+		}
+	}
+
+	function scrollByPage (direction) {
+		const
+			{childRefCurrent, scrollTop} = variables.current.uiRef.current,
+			focusedItem = Spotlight.getCurrent(),
+			bounds = variables.current.uiRef.current.getScrollBounds(),
+			isUp = direction === 'up',
+			directionFactor = isUp ? -1 : 1,
+			pageDistance = directionFactor * bounds.clientHeight * paginationPageMultiplier,
+			scrollPossible = isUp ? scrollTop > 0 : bounds.maxTop > scrollTop;
+
+		variables.current.uiRef.current.lastInputType = 'pageKey';
+
+		if (directionFactor !== variables.current.uiRef.current.wheelDirection) {
+			variables.current.uiRef.current.isScrollAnimationTargetAccumulated = false;
+			variables.current.uiRef.current.wheelDirection = directionFactor;
+		}
+
+		if (scrollPossible) {
+			if (focusedItem) {
+				const contentNode = childRefCurrent.containerRef.current;
+				// Should do nothing when focusedItem is paging control button of Scrollbar
+				if (contentNode.contains(focusedItem)) {
+					const
+						contentRect = contentNode.getBoundingClientRect(),
+						clientRect = focusedItem.getBoundingClientRect(),
+						yAdjust = isUp ? 1 : -1,
+						x = clamp(contentRect.left, contentRect.right, (clientRect.right + clientRect.left) / 2),
+						y = bounds.maxTop <= scrollTop + pageDistance || 0 >= scrollTop + pageDistance ?
+							contentRect[isUp ? 'top' : 'bottom'] + yAdjust :
+							clamp(contentRect.top, contentRect.bottom, (clientRect.bottom + clientRect.top) / 2);
+
+					focusedItem.blur();
+					if (!props['data-spotlight-container-disabled']) {
+						variables.current.childRef.current.setContainerDisabled(true);
+					}
+					pointToFocus = {direction, x, y};
+				}
+			} else {
+				pointToFocus = {direction, x: lastPointer.x, y: lastPointer.y};
+			}
+
+			variables.current.uiRef.current.scrollToAccumulatedTarget(pageDistance, true, props.overscrollEffectOn.pageKey);
+		}
+	}
+
+	// TODO PLAT-98204.
+	function scrollByPageOnPointerMode (ev) {
+		const {keyCode, repeat} = ev;
+		forward('onKeyDown', ev, props);
+		ev.preventDefault();
+
+		variables.current.animateOnFocus = true;
+
+		if (!repeat && (props.direction === 'vertical' || props.direction === 'both')) {
+			const direction = isPageUp(keyCode) ? 'up' : 'down';
+
+			scrollByPage(direction);
+			if (props.overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
+				checkAndApplyOverscrollEffectByDirection(direction);
+			}
+
+			return true; // means consumed
+		}
+
+		return false; // means to be propagated
+	}
+
+	function hasFocus () {
+		let current = Spotlight.getCurrent();
+
+		if (!current) {
+			// TODO : Remove.
+			// const spotlightId = Spotlight.getActiveContainer();
+			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
+		}
+
+		return current && variables.current.uiRef.current && variables.current.uiRef.current.containerRef.current.contains(current);
+	}
+
+	function onKeyDown (ev) {
+		const {keyCode, repeat, target} = ev;
+
+		forward('onKeyDown', ev, props);
+
+		if (isPageUp(keyCode) || isPageDown(keyCode)) {
+			ev.preventDefault();
+		}
+
+		variables.current.animateOnFocus = true;
+
+		if (!repeat && hasFocus()) {
+			const {overscrollEffectOn} = props;
+			let direction = null;
+
+			if (isPageUp(keyCode) || isPageDown(keyCode)) {
+				if (props.direction === 'vertical' || props.direction === 'both') {
+					direction = isPageUp(keyCode) ? 'up' : 'down';
+
+					if (isContent(target)) {
+						ev.stopPropagation();
+						scrollByPage(direction);
+					}
+					if (overscrollEffectOn.pageKey) {
+						checkAndApplyOverscrollEffectByDirection(direction);
+					}
+				}
+			} else if (getDirection(keyCode)) {
+				const element = Spotlight.getCurrent();
+
+				variables.current.uiRef.current.lastInputType = 'arrowKey';
+
+				direction = getDirection(keyCode);
+				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
+					const {horizontalScrollbarRef, verticalScrollbarRef} = variables.current.uiRef.current;
+
+					if (!(horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) &&
+						!(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
+						checkAndApplyOverscrollEffectByDirection(direction);
+					}
+				}
+			}
+		}
+	}
+}
+
+function Scroll () {
+	function stop () {
+		if (!props['data-spotlight-container-disabled']) {
+			variables.current.childRef.current.setContainerDisabled(false);
+		}
+		focusOnItem();
+		lastScrollPositionOnFocus = null;
+		isWheeling = false;
+		if (isVoiceControl) {
+			isVoiceControl = false;
+			updateFocusAfterVoiceControl();
+		}
+	}
+
+	function scrollTo (opt) {
+		indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
+		nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
+	}
+
+	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
+	function handleScrollerUpdate () {
+		if (variables.current.uiRef.current.scrollToInfo === null) {
+			const scrollHeight = variables.current.uiRef.current.getScrollBounds().scrollHeight;
+			if (scrollHeight !== variables.current.uiRef.current.bounds.scrollHeight) {
+				calculateAndScrollTo();
+			}
+		}
+
+		// oddly, Scroller manages uiRef.current.bounds so if we don't update it here (it is also
+		// updated in calculateAndScrollTo but we might not have made it to that point), it will be
+		// out of date when we land back in this method next time.
+		variables.current.uiRef.current.bounds.scrollHeight = variables.current.uiRef.current.getScrollBounds().scrollHeight;
+	}
 
 	const handleScroll = handle(
 		forward('onScroll'),
@@ -800,6 +744,105 @@ const ScrollableBase = (props) => {
 			context.set(`${id}.scrollPosition`, {x, y});
 		}
 	);
+}
+
+function Thumb() {
+	function alertThumb () {
+		const bounds = variables.current.uiRef.current.getScrollBounds();
+
+		variables.current.uiRef.current.showThumb(bounds);
+		variables.current.uiRef.current.startHidingThumb();
+	}
+
+	function alertThumbAfterRendered () {
+		const spotItem = Spotlight.getCurrent();
+
+		if (!Spotlight.getPointerMode() && isContent(spotItem) && variables.current.uiRef.current.isUpdatedScrollThumb) {
+			alertThumb();
+		}
+	}
+}
+
+function Resize () {
+	function handleResizeWindow () {
+		const focusedItem = Spotlight.getCurrent();
+
+		if (focusedItem) {
+			focusedItem.blur();
+		}
+	}
+}
+
+function Util () {
+	function isContent (element) {
+		return (element && variables.current.uiRef.current && variables.current.uiRef.current.childRefCurrent.containerRef.current.contains(element));
+	}
+}
+/**
+ * A Moonstone-styled component that provides horizontal and vertical scrollbars.
+ *
+ * @function ScrollableBase
+ * @memberof moonstone/Scrollable
+ * @extends ui/Scrollable.ScrollableBase
+ * @ui
+ * @public
+ */
+const ScrollableBase = (props) => {
+	useDebugValue('Scrollable');
+	const context = useContext(SharedState);
+
+	// constructor
+	// Instance variables
+	let variables = useRef({
+		scrollbarProps: {
+			cbAlertThumb: alertThumbAfterRendered,
+			onNextScroll: onScrollbarButtonClick,
+			onPrevScroll: onScrollbarButtonClick
+		},
+		overscrollRefs: {
+			horizontal: React.createRef(),
+			vertical: React.createRef()
+		},
+		childRef: React.createRef(),
+		uiRef: React.createRef(),
+		animateOnFocus: false
+	});
+	Util_configureSpotlightContainer(props);
+
+	// Destructuring for render
+	const {
+		childRenderer,
+		'data-spotlight-container': spotlightContainer,
+		'data-spotlight-container-disabled': spotlightContainerDisabled,
+		'data-spotlight-id': spotlightId,
+		focusableScrollbar,
+		preventBubblingOnKeyDown,
+		scrollDownAriaLabel,
+		scrollLeftAriaLabel,
+		scrollRightAriaLabel,
+		scrollUpAriaLabel,
+		...rest
+	} = props;
+
+
+	// status
+	let isWheeling = false;
+
+	// spotlight
+	let lastScrollPositionOnFocus = null;
+	let indexToFocus = null;
+	let nodeToFocus = null;
+	let pointToFocus = null;
+
+	// voice control
+	let isVoiceControl = false;
+	let voiceControlDirection = 'vertical';
+
+	// overscroll
+	let overscrollJobs = {
+		horizontal: {before: null, after: null},
+		vertical: {before: null, after: null}
+	};
 
 	// render
 	const
