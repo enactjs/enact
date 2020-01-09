@@ -47,13 +47,13 @@ const ScrollerBase = (props) => {
 
 		// componentWillUnmount
 		return () => setContainerDisabled(false);
-	}, []);	// TODO : Handle exhaustive-deps ESLint rule.
+	}, [configureSpotlight, setContainerDisabled]);	// TODO : Handle exhaustive-deps ESLint rule.
 
-	useEffect(configureSpotlight(), [props.spotlightId]);	// TODO : Handle exhaustive-deps ESLint rule.
+	useEffect(configureSpotlight, [props.spotlightId]);	// TODO : Handle exhaustive-deps ESLint rule.
 	useEffect(() => {
 		const {onUpdate} = props;
 		if (onUpdate) {
-			onUpdate();
+		//	onUpdate();		// TODO: Invoking onUpdate() has error. Fix it.
 		}
 	});	// TODO : Handle exhaustive-deps ESLint rule.
 
@@ -320,7 +320,7 @@ const ScrollerBase = (props) => {
 	);
 };
 
-	ScrollerBase.displayName  = 'ScrollerBase';
+ScrollerBase.displayName  = 'ScrollerBase';
 ScrollerBase.propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
 	/**
 	 * Passes the instance of [Scroller]{@link ui/Scroller.Scroller}.
