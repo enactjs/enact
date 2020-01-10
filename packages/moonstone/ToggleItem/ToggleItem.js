@@ -70,7 +70,7 @@ const ToggleItemBase = kind({
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
-		 * corresponding internal Elements and states of this component.
+		 * corresponding internal elements and states of this component.
 		 *
 		 * The following classes are supported:
 		 *
@@ -136,7 +136,7 @@ const defaultConfig = {
  * @mixes ui/ToggleItem.ToggleItemDecorator
  * @mixes spotlight/Spottable.Spottable
  * @mixes moonstone/Marquee.MarqueeDecorator
- * @mixes moonstone/Skinnable
+ * @mixes moonstone/Skinnable.Skinnable
  * @hoc
  * @public
  */
