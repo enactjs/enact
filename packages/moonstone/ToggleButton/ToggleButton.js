@@ -183,7 +183,7 @@ const ToggleButtonBase = kind({
  * @memberof moonstone/ToggleButton
  * @extends moonstone/ToggleButton.ToggleButtonBase
  * @ui
- * @mixes ui/Toggleable
+ * @mixes ui/Toggleable.Toggleable
  * @public
  */
 const ToggleButton = Pure(

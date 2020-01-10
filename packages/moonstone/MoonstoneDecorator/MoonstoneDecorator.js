@@ -28,20 +28,105 @@ import {configure} from '@enact/ui/Touchable';
  * @memberof moonstone/MoonstoneDecorator.MoonstoneDecorator
  * @hocconfig
  */
-const defaultConfig = {
+const defaultConfig = /** @lends moonstone/MoonstoneDecorator.MoonstoneDecorator.defaultConfig */ {
+	/**
+	 * Applies AccessibilityDecorator.
+	 *
+	 * If not applied, app will not support accessibility options.
+	 *
+	 * @type {Boolean}
+	 * @default true
+	 * @see {@link moonstone/MoonstoneDecorator.AccessibilityDecorator}
+	 * @public
+	 */
+	accessible: true,
+
+	/**
+	 * Disables use of full screen.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 */
 	disableFullscreen: false,
+
+	/**
+	 * Enables a floating layer for popup components.
+	 *
+	 * If not applied, app will be responsible for applying the decorator.
+	 *
+	 * @type {Boolean}
+	 * @default true
+	 * @see {@link ui/FloatingLayer.FloatingLayerDecorator}
+	 * @public
+	 */
 	float: true,
+
+	/**
+	 * Options for I18nDecorator.
+	 *
+	 * May be `false` to prevent applying the decorator. If not applied, app will be responsible for
+	 * applying the decorator.
+	 *
+	 * @type {Object|false}
+	 * @default {sync: true}
+	 * @see {@link i18n/I18nDecorator}
+	 * @public
+	 */
 	i18n: {
 		sync: true
 	},
+
+	/**
+	 * Disables setting spotlight focus on first render.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 */
 	noAutoFocus: false,
+
+	/**
+	 * Enables overlay mode (no background color will be applied).
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 */
 	overlay: false,
+
+	/**
+	 * Override the resolution independence settings.
+	 *
+	 * @type {Object}
+	 * @see {@link ui/resolution}
+	 * @public
+	 */
 	ri: {
 		screenTypes
 	},
+
+	/**
+	 * Applies skinning support.
+	 *
+	 * @type {Boolean}
+	 * @default true
+	 * @see {@link moonstone/Skinnable}
+	 * @public
+	 */
 	skin: true,
-	spotlight: true,
-	textSize: true
+
+	/**
+	 * Applies spotlight decorator.
+	 *
+	 * If not applied, app will be responsible for applying the decorator.
+	 *
+	 * @type {Boolean}
+	 * @default true
+	 * @see {@link spotlight/SpotlightRootDecorator}
+	 * @public
+	 */
+	spotlight: true
 };
 
 /**
@@ -62,12 +147,17 @@ const defaultConfig = {
  *
  * @class MoonstoneDecorator
  * @memberof moonstone/MoonstoneDecorator
+ * @mixes ui/FloatingLayer.FloatingLayerDecorator
+ * @mixes ui/resolution.ResolutionDecorator
+ * @mixes spotlight/SpotlightRootDecorator.SpotlightRootDecorator
+ * @mixes moonstone/Skinnable.Skinnable
+ * @mixes moonstone/MoonstoneDecorator.AccessibilityDecorator
  * @hoc
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {ri, i18n, spotlight, float, noAutoFocus, overlay,
-		textSize, skin, highContrast, disableFullscreen} = config;
+	const {accessible, ri, i18n, spotlight, float, noAutoFocus, overlay,
+		skin, disableFullscreen} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
 	const bgClassName = classNames({
@@ -98,7 +188,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	}
 	if (spotlight) App = SpotlightRootDecorator({noAutoFocus}, App);
 	if (skin) App = Skinnable({defaultSkin: 'dark'}, App);
-	if (textSize || highContrast) App = AccessibilityDecorator(App);
+	if (accessible) App = AccessibilityDecorator(App);
 
 	// add webOS-specific key maps
 	addAll({
