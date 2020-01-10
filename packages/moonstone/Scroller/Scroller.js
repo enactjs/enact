@@ -42,12 +42,9 @@ const dataContainerDisabledAttribute = 'data-spotlight-container-disabled';
  */
 const ScrollerBase = (props) => {
 	useEffect(() => {
-		// componentDidMount
-		configureSpotlight();
-
 		// componentWillUnmount
 		return () => setContainerDisabled(false);
-	}, [configureSpotlight, setContainerDisabled]);	// TODO : Handle exhaustive-deps ESLint rule.
+	}, [setContainerDisabled]);	// TODO : Handle exhaustive-deps ESLint rule.
 
 	useEffect(configureSpotlight, [props.spotlightId]);	// TODO : Handle exhaustive-deps ESLint rule.
 	useEffect(() => {
@@ -320,7 +317,7 @@ const ScrollerBase = (props) => {
 	);
 };
 
-ScrollerBase.displayName  = 'ScrollerBase';
+ScrollerBase.displayName = 'ScrollerBase';
 ScrollerBase.propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
 	/**
 	 * Passes the instance of [Scroller]{@link ui/Scroller.Scroller}.

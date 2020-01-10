@@ -178,8 +178,6 @@ const ScrollableBase = (props) => {
 	const childRef = React.useRef();
 	const uiRef = React.useRef();
 
-	configureSpotlightContainer(props);
-
 	// Destructuring for render
 	const {
 		childRenderer,

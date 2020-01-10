@@ -157,8 +157,6 @@ const ScrollableBaseNative = (props) => {
 	const childRef = React.useRef();
 	const uiRef = React.useRef();
 
-	configureSpotlightContainer(props);
-
 	const {
 			childRenderer,
 			'data-spotlight-container': spotlightContainer,
@@ -962,7 +960,7 @@ const ScrollableBaseNative = (props) => {
 	);
 };
 
-ScrollableBaseNative.displayName  = 'ScrollableNative';
+ScrollableBaseNative.displayName = 'ScrollableNative';
 ScrollableBaseNative.propTypes = /** @lends moonstone/ScrollableNative.ScrollableNative.prototype */ {
 	/**
 	 * Render function.

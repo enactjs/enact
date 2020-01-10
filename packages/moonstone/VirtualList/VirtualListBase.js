@@ -10,7 +10,6 @@ import clamp from 'ramda/src/clamp';
 import React, {useEffect, useRef} from 'react';
 import warning from 'warning';
 
-
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
@@ -51,14 +50,14 @@ const VirtualListBaseFactory = (type) => {
 		// Instance variables
 		const variables = useRef({
 			isScrolledBy5way: false,
-			isScrolledByJump:  false,
-			isWrappedBy5way:  false,
-			lastFocusedIndex:  null,
-			nodeIndexToBeFocused:  null,
-			preservedIndex:  null,
-			restoreLastFocused:  false,
-			uiRefCurrent:  null,
-			preventScroll:  null,
+			isScrolledByJump: false,
+			isWrappedBy5way: false,
+			lastFocusedIndex: null,
+			nodeIndexToBeFocused: null,
+			preservedIndex: null,
+			restoreLastFocused: false,
+			uiRefCurrent: null,
+			preventScroll: null,
 			pause: null
 		});
 
@@ -68,9 +67,6 @@ const VirtualListBaseFactory = (type) => {
 
 		// Constructor
 		const {spotlightId} = props;
-		if (spotlightId) {
-			configureSpotlight();
-		}
 
 		useEffect(() => {
 			// componentDidMount
