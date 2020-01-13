@@ -10,7 +10,7 @@
 import classNames from 'classnames';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import React, {useEffect, useReducer, useRef} from 'react';
 
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -27,128 +27,87 @@ import css from './Scroller.module.less';
  * @ui
  * @public
  */
-class ScrollerBase extends Component {
-	static displayName = 'ui:ScrollerBase'
+const ScrollerBase = (props) => {
+	// constructor (props) {
+	const containerRef = useRef();
+	const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
-		children: PropTypes.node.isRequired,
+	useEffect(() => {
+		// componentDidMount
+		calculateMetrics();
+	});
 
-		/**
-		 * Callback method of scrollTo.
-		 * Normally, `Scrollable` should set this value.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		cbScrollTo: PropTypes.func,
+	useEffect(() => {
+		// componentDidUpdate
+		forceUpdate();
+	}, [props.isVerticalScrollbarVisible]);
 
-		/**
-		 * Direction of the scroller.
-		 *
-		 * Valid values are:
-		 * * `'both'`,
-		 * * `'horizontal'`, and
-		 * * `'vertical'`.
-		 *
-		 * @type {String}
-		 * @default 'both'
-		 * @public
-		 */
-		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+	useEffect(() => {
+		// componentDidUpdate
+		calculateMetrics();
+	});
+	// }
 
-		/**
-		 * Prop to check context value if Scrollbar exists or not.
-		 *
-		 * @type {Boolean}
-		 * @private
-		 */
-		isVerticalScrollbarVisible: PropTypes.bool,
-
-		/**
-		 * `true` if RTL, `false` if LTR.
-		 *
-		 * @type {Boolean}
-		 * @private
-		 */
-		rtl: PropTypes.bool
-	}
-
-	static defaultProps = {
-		direction: 'both'
-	}
-
-	constructor (props) {
-		super(props);
-
-		this.containerRef = React.createRef();
-	}
-
-	componentDidMount () {
-		this.calculateMetrics();
-	}
-
-	componentDidUpdate (prevProps) {
-		this.calculateMetrics();
-		if (this.props.isVerticalScrollbarVisible && !prevProps.isVerticalScrollbarVisible) {
-			this.forceUpdate();
+	// Instance variables
+	const variables = useRef({
+		scrollBounds : {
+			clientWidth: 0,
+			clientHeight: 0,
+			scrollWidth: 0,
+			scrollHeight: 0,
+			maxLeft: 0,
+			maxTop: 0
+		},
+		scrollPos: {
+			top: 0,
+			left: 0
 		}
+	});
+
+
+	function getScrollBounds () {
+		return variables.current.scrollBounds;
 	}
 
-	scrollBounds = {
-		clientWidth: 0,
-		clientHeight: 0,
-		scrollWidth: 0,
-		scrollHeight: 0,
-		maxLeft: 0,
-		maxTop: 0
-	}
-
-	scrollPos = {
-		top: 0,
-		left: 0
-	}
-
-	getScrollBounds = () => this.scrollBounds
-
-	getRtlPositionX = (x) => {
-		if (this.props.rtl) {
-			return (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
+	function getRtlPositionX (x) {
+		if (props.rtl) {
+			return (platform.ios || platform.safari) ? -x : variables.current.scrollBounds.maxLeft - x;
 		}
 		return x;
 	}
 
 	// for Scrollable
-	setScrollPosition (x, y) {
-		const node = this.containerRef.current;
+	function setScrollPosition (x, y) {
+		const node = containerRef.current;
 
-		if (this.isVertical()) {
+		if (isVertical()) {
 			node.scrollTop = y;
-			this.scrollPos.top = y;
+			variables.current.scrollPos.top = y;
 		}
-		if (this.isHorizontal()) {
-			node.scrollLeft = this.getRtlPositionX(x);
-			this.scrollPos.left = x;
+		if (isHorizontal()) {
+			node.scrollLeft = getRtlPositionX(x);
+			variables.current.scrollPos.left = x;
 		}
 	}
 
 	// for ScrollableNative
-	scrollToPosition (x, y) {
-		this.containerRef.current.scrollTo(this.getRtlPositionX(x), y);
+	function scrollToPosition (x, y) {
+		containerRef.current.scrollTo(getRtlPositionX(x), y);
 	}
 
 	// for ScrollableNative
-	didScroll (x, y) {
-		this.scrollPos.left = x;
-		this.scrollPos.top = y;
+	function didScroll (x, y) {
+		variables.current.scrollPos.left = x;
+		variables.current.scrollPos.top = y;
 	}
 
-	getNodePosition = (node) => {
+	function getNodePosition (node) {
 		const
 			{left: nodeLeft, top: nodeTop, height: nodeHeight, width: nodeWidth} = node.getBoundingClientRect(),
-			{left: containerLeft, top: containerTop} = this.containerRef.current.getBoundingClientRect(),
-			{scrollLeft, scrollTop} = this.containerRef.current,
-			left = this.isHorizontal() ? (scrollLeft + nodeLeft - containerLeft) : null,
-			top = this.isVertical() ? (scrollTop + nodeTop - containerTop) : null;
+			{left: containerLeft, top: containerTop} = containerRef.current.getBoundingClientRect(),
+			{scrollLeft, scrollTop} = containerRef.current,
+			left = isHorizontal() ? (scrollLeft + nodeLeft - containerLeft) : null,
+			top = isVertical() ? (scrollTop + nodeTop - containerTop) : null;
 
 		return {
 			left,
@@ -158,18 +117,18 @@ class ScrollerBase extends Component {
 		};
 	}
 
-	isVertical = () => {
-		return (this.props.direction !== 'horizontal');
+	function isVertical () {
+		return (props.direction !== 'horizontal');
 	}
 
-	isHorizontal = () => {
-		return (this.props.direction !== 'vertical');
+	function isHorizontal () {
+		return (props.direction !== 'vertical');
 	}
 
-	calculateMetrics () {
+	function calculateMetrics () {
 		const
-			{scrollBounds} = this,
-			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.containerRef.current;
+			{scrollBounds} = variables.current,
+			{scrollWidth, scrollHeight, clientWidth, clientHeight} = containerRef.current;
 		scrollBounds.scrollWidth = scrollWidth;
 		scrollBounds.scrollHeight = scrollHeight;
 		scrollBounds.clientWidth = clientWidth;
@@ -178,30 +137,78 @@ class ScrollerBase extends Component {
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
 
-	render () {
-		const
-			{className, style, ...rest} = this.props,
-			mergedStyle = Object.assign({}, style, {
-				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
-				overflowY: this.isVertical() ? 'auto' : 'hidden'
-			});
+	// render
+	const
+		{className, style, ...rest} = props,
+		mergedStyle = Object.assign({}, style, {
+			overflowX: isHorizontal() ? 'auto' : 'hidden',
+			overflowY: isVertical() ? 'auto' : 'hidden'
+		});
 
-		delete rest.cbScrollTo;
-		delete rest.direction;
-		delete rest.rtl;
-		delete rest.isHorizontalScrollbarVisible;
-		delete rest.isVerticalScrollbarVisible;
+	delete rest.cbScrollTo;
+	delete rest.direction;
+	delete rest.rtl;
+	delete rest.isHorizontalScrollbarVisible;
+	delete rest.isVerticalScrollbarVisible;
 
-		return (
-			<div
-				{...rest}
-				className={classNames(className, css.scroller)}
-				ref={this.containerRef}
-				style={mergedStyle}
-			/>
-		);
-	}
-}
+	return (
+		<div
+			{...rest}
+			className={classNames(className, css.scroller)}
+			ref={containerRef}
+			style={mergedStyle}
+		/>
+	);
+};
+
+ScrollerBase.displayName = 'ui:ScrollerBase';
+
+ScrollerBase.propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
+	children: PropTypes.node.isRequired,
+
+	/**
+	 * Callback method of scrollTo.
+	 * Normally, `Scrollable` should set this value.
+	 *
+	 * @type {Function}
+	 * @private
+	 */
+	cbScrollTo: PropTypes.func,
+
+	/**
+	 * Direction of the scroller.
+	 *
+	 * Valid values are:
+	 * * `'both'`,
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'both'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+	/**
+	 * Prop to check context value if Scrollbar exists or not.
+	 *
+	 * @type {Boolean}
+	 * @private
+	 */
+	isVerticalScrollbarVisible: PropTypes.bool,
+
+	/**
+	 * `true` if RTL, `false` if LTR.
+	 *
+	 * @type {Boolean}
+	 * @private
+	 */
+	rtl: PropTypes.bool
+};
+
+ScrollerBase.defaultProps = {
+	direction: 'both'
+};
 
 /**
  * A callback function that receives a reference to the `scrollTo` feature.
