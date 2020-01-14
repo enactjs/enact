@@ -40,6 +40,8 @@ const VirtualListBaseFactory = (type) => {
 			handleRestoreLastFocus,
 			initItemRef,
 			isNeededScrollingPlaceholder,
+			setContainerDisabled,
+			setLastFocusedNode,
 			SpotlightPlaceholder,
 			updateStatesAndBounds
 		} = useSpottable(variables, props, {type});
@@ -53,7 +55,6 @@ const VirtualListBaseFactory = (type) => {
 
 		function initUiRef (ref) {
 			if (ref) {
-				debugger;
 				variables.current.uiRefCurrent = ref;
 				props.initUiChildRef(ref);
 			}

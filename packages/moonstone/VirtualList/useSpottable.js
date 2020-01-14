@@ -62,7 +62,7 @@ const useSpottable = (instance, props, {type}) => {
 		handleRestoreLastFocus,
 		preserveLastFocus,
 		updateStatesAndBounds
-	} = useRestoreSpotlight();
+	} = useRestoreSpotlight(variables);
 
 	useEffect(() => {
 		// componentDidMount
@@ -313,6 +313,7 @@ const useSpottable = (instance, props, {type}) => {
 		handleRestoreLastFocus,
 		initItemRef,
 		isNeededScrollingPlaceholder,
+		setContainerDisabled,
 		setLastFocusedNode,
 		shouldPreventOverscrollEffect,
 		shouldPreventScrollByFocus,
