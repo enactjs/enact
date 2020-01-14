@@ -7,7 +7,7 @@ import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useImperativeHandle, useRef} from 'react';
 import warning from 'warning';
 
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
@@ -44,7 +44,7 @@ const
 const VirtualListBaseFactory = (type) => {
 	const UiBase = (type === JS) ? UiVirtualListBase : UiVirtualListBaseNative;
 
-	const VirtualListCore = (props) => {
+	let VirtualListCore = (props, refernce) => {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
 		// Instance variables
@@ -64,6 +64,15 @@ const VirtualListBaseFactory = (type) => {
 		if (variables.current.pause === null) {
 			variables.current.pause = new Pause('VirtualListBase');
 		}
+
+		useImperativeHandle(refernce, () => ({
+			calculatePositionOnFocus,
+			shouldPreventScrollByFocus,
+			shouldPreventOverscrollEffect,
+			setLastFocusedNode,
+			getScrollBounds,
+			setContainerDisabled
+		}));
 
 		// Constructor
 		const {spotlightId} = props;
@@ -543,8 +552,6 @@ const VirtualListBaseFactory = (type) => {
 		/**
 		 * calculator
 		 */
-
-		// TODO PLAT-98204.
 		function calculatePositionOnFocus ({item, scrollPosition = variables.current.uiRefCurrent.scrollPosition}) {
 			const
 				{pageScroll} = props,
@@ -590,17 +597,14 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		// TODO PLAT-98204.
 		function shouldPreventScrollByFocus () {
 			return ((type === JS) ? (variables.current.isScrolledBy5way) : (variables.current.isScrolledBy5way || variables.current.isScrolledByJump));
 		}
 
-		// TODO PLAT-98204.
 		function shouldPreventOverscrollEffect () {
 			return variables.current.isWrappedBy5way;
 		}
 
-		// TODO PLAT-98204.
 		function setLastFocusedNode (node) {
 			variables.current.lastFocusedIndex = node.dataset && getNumberValue(node.dataset.index);
 		}
@@ -614,7 +618,6 @@ const VirtualListBaseFactory = (type) => {
 			));
 		}
 
-		// TODO PLAT-98204.
 		function getScrollBounds () {
 			return variables.current.uiRefCurrent.getScrollBounds();
 		}
@@ -668,6 +671,7 @@ const VirtualListBaseFactory = (type) => {
 		);
 	};
 
+	VirtualListCore = React.forwardRef(VirtualListCore);
 	VirtualListCore.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 		/**
 		 * The `render` function called for each item in the list.
