@@ -58,11 +58,9 @@ const useSpottable = (instance, props, {type}) => {
     useSpotlightConfig(variables, props);
 
     const {
-        getNodeIndexToBeFocused,
         handlePlaceholderFocus,
         handleRestoreLastFocus,
         preserveLastFocus,
-        setNodeIndexToBeFocused,
         updateStatesAndBounds
     } = useRestoreSpotlight();
 

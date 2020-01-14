@@ -87,12 +87,9 @@ const useRestoreSpotlight = () => {
     }
 
     return {
-        getNodeIndexToBeFocused,
         handlePlaceholderFocus,
         handleRestoreLastFocus,
         preserveLastFocus,
-        restoreFocus,
-        setNodeIndexToBeFocused,
         updateStatesAndBounds,
     }
 };
