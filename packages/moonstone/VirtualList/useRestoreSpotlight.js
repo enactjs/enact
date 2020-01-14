@@ -4,16 +4,16 @@ import {useEffect, useRef} from 'react';
 const getNumberValue = (index) => index | 0;
 
 const useRestoreSpotlight = (instance) => {
-    const {
-        uiRefCurrent
-    } = instance.currnet;
+	const {
+		uiRefCurrent
+	} = instance.currnet;
 
 	const variables = useRef({
 		preservedIndex: false,
 		restoreLastFocused: false
-    });
+	});
 
-    const containerNode = uiRefCurrent && uiRefCurrent.containerRef && uiRefCurrent.containerRef.current || null;
+	const containerNode = uiRefCurrent && uiRefCurrent.containerRef && uiRefCurrent.containerRef.current || null;
 
 	// componentDidUpdate
 	useEffect(restoreFocus);	// TODO : Handle exhaustive-deps ESLint rule.

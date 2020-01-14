@@ -12,15 +12,15 @@ const
 	overscrollTimeout = 300;
 
 const useOverscrollEffect = () => {
-    // overscroll
-    var variables = useRef({
-        overscrollJobs: {
-            horizontal: {before: null, after: null},
-            vertical: {before: null, after: null}
-        }
-    });
+	// overscroll
+	var variables = useRef({
+		overscrollJobs: {
+			horizontal: {before: null, after: null},
+			vertical: {before: null, after: null}
+		}
+	});
 
-    useEffect(() => {
+	useEffect(() => {
 		// componentDidMount
 		createOverscrollJob('horizontal', 'before');
 		createOverscrollJob('horizontal', 'after');
@@ -35,11 +35,11 @@ const useOverscrollEffect = () => {
 			stopOverscrollJob('vertical', 'before');
 			stopOverscrollJob('vertical', 'after');
 		};
-    }, []);	// TODO : Handle exhaustive-deps ESLint rule.
+	}, []);	// TODO : Handle exhaustive-deps ESLint rule.
 
-    // functions
+	// functions
 
-    function applyOverscrollEffect (orientation, edge, type, ratio) {
+	function applyOverscrollEffect (orientation, edge, type, ratio) {
 		const nodeRef = overscrollRefs[orientation].current;
 
 		if (nodeRef) {
@@ -60,7 +60,7 @@ const useOverscrollEffect = () => {
 		if (!variables.current.overscrollJobs[orientation][edge]) {
 			variables.current.overscrollJobs[orientation][edge] = new Job(applyOverscrollEffect.bind(this), overscrollTimeout);
 		}
-    }
+	}
 
 	function stopOverscrollJob (orientation, edge) {
 		const job = variables.current.overscrollJobs[orientation][edge];
@@ -68,9 +68,9 @@ const useOverscrollEffect = () => {
 		if (job) {
 			job.stop();
 		}
-    }
+	}
 
-    function checkAndApplyOverscrollEffectByDirection (direction) {
+	function checkAndApplyOverscrollEffectByDirection (direction) {
 		const
 			orientation = (direction === 'up' || direction === 'down') ? 'vertical' : 'horizontal',
 			bounds = uiRef.current.getScrollBounds(),
@@ -84,13 +84,13 @@ const useOverscrollEffect = () => {
 		}
 	}
 
-    return {
-        applyOverscrollEffect,
-        checkAndApplyOverscrollEffectByDirection,
-        clearOverscrollEffect
-    };
+	return {
+		applyOverscrollEffect,
+		checkAndApplyOverscrollEffectByDirection,
+		clearOverscrollEffect
+	};
 }
 
 export {
-    useOverscrollEffect
+	useOverscrollEffect
 };
