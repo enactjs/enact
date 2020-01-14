@@ -161,6 +161,9 @@ const ButtonBase = kind({
 	},
 
 	computed: {
+		ariaLabel: ({children}) => {
+			return typeof children === 'string' ? children : null;
+		},
 		className: ({icon, minWidth, pressed, selected, size, styler}) => styler.append({
 			hasIcon: (!!icon),
 			minWidth,
@@ -174,7 +177,7 @@ const ButtonBase = kind({
 		}
 	},
 
-	render: ({children, css, decoration, disabled, icon, ...rest}) => {
+	render: ({ariaLabel, children, css, decoration, disabled, icon, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.minWidth;
 		delete rest.pressed;
@@ -182,12 +185,12 @@ const ButtonBase = kind({
 		delete rest.size;
 
 		return (
-			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
+			<div role="button" aria-label={ariaLabel} {...rest} aria-disabled={disabled} disabled={disabled}>
 				{decoration ? (
 					<div className={css.decoration}>{decoration}</div>
 				) : null}
 				<div className={css.bg} />
-				<div className={css.client}>{icon}{children}</div>
+				<div className={css.client} aria-hidden={!!ariaLabel}>{icon}{children}</div>
 			</div>
 		);
 	}
