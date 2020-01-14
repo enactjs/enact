@@ -11,8 +11,7 @@ const
 	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
 	overscrollTimeout = 300;
 
-const useOverscrollEffect = () => {
-	// overscroll
+const useOverscrollEffect = ({}, {}, {overscrollRefs}) => {
 	var variables = useRef({
 		overscrollJobs: {
 			horizontal: {before: null, after: null},

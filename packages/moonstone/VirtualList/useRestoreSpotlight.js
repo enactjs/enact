@@ -3,10 +3,13 @@ import {useEffect, useRef} from 'react';
 
 const getNumberValue = (index) => index | 0;
 
-const useRestoreSpotlight = (instance) => {
+const useRestoreSpotlight = (instance, props) => {
 	const {
 		uiRefCurrent
-	} = instance.currnet;
+	} = instance.current;
+	const {
+		spotlightId
+	} = props;
 
 	const variables = useRef({
 		preservedIndex: false,

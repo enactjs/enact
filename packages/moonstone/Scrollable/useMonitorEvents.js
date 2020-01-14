@@ -1,5 +1,6 @@
 import {onWindowReady} from '@enact/core/snapshot';
 import Spotlight from '@enact/spotlight';
+import {useEffect} from 'react';
 
 /*
  * Track the last position of the pointer to check if a list should scroll by
@@ -40,7 +41,19 @@ const
 		}
 	};
 
-const useMonitorEvents = () => {
+const useMonitorEvents = ({}, {}, {uiRef}) => {
+	useEffect(() => {
+		// componentDidMount
+		// TODO: Replace `this` to something.
+		setMonitorEventTarget(uiRef.current.containerRef.current);
+
+		// componentWillUnmount
+		return () => {
+			// TODO: Replace `this` to something.
+			deleteMonitorEventTarget();
+		};
+	}, []);	// TODO : Handle exhaustive-deps ESLint rule.
+
 	function setMonitorEventTarget (target) {
 		// TODO: Replace `this` to something.
 		scrollables.set(/* this */null, target);
@@ -48,11 +61,6 @@ const useMonitorEvents = () => {
 
 	function deleteMonitorEventTarget() {
 		scrollables.delete(/* this */ null);
-	}
-
-	return {
-		deleteMonitorEventTarget,
-		setMonitorEventTarget
 	}
 };
 

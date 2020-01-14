@@ -62,7 +62,7 @@ const useSpottable = (instance, props, {type}) => {
 		handleRestoreLastFocus,
 		preserveLastFocus,
 		updateStatesAndBounds
-	} = useRestoreSpotlight(variables);
+	} = useRestoreSpotlight(instance, props);
 
 	useEffect(() => {
 		// componentDidMount

@@ -27,7 +27,10 @@ const useKey = (instance, props, {
 }) => {
 	const {
 		uiRefCurrent
-	} = instance.current;
+    } = instance.current;
+    const {
+		spotlightId
+	} = props;
 
 	useEffect(() => {
 		// componentDidMount
