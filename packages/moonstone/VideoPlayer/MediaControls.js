@@ -663,8 +663,18 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			moreButtonSpotlightId: 'moreButton'
 		}
 
+		static getDerivedStateFromProps (props) {
+			if (!props.visible) {
+				return {
+					showMoreComponents: false
+				};
+			}
+			return null;
+		}
+
 		constructor (props) {
 			super(props);
+			this.displayName = 'MediaControlsDecoratorHOC';
 			this.mediaControlsNode = null;
 
 			this.keyLoop = null;
@@ -679,15 +689,6 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			if (props.setApiProvider) {
 				props.setApiProvider(this);
 			}
-		}
-
-		static getDerivedStateFromProps (props) {
-			if (!props.visible) {
-				return {
-					showMoreComponents: false
-				};
-			}
-			return null;
 		}
 
 		componentDidMount () {
@@ -851,19 +852,19 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			this.mediaControlsNode = ReactDOM.findDOMNode(node); // eslint-disable-line react/no-find-dom-node
 		}
 
-		areMoreComponentsAvailable = () => {
-			return this.state.showMoreComponents;
-		}
-
 		showMoreComponents = () => {
 			this.setState({showMoreComponents: true});
+
+			return typeof this.displayName !== 'undefined';
 		}
 
 		hideMoreComponents = () => {
 			this.setState({showMoreComponents: false});
+
+			return typeof this.displayName !== 'undefined';
 		}
 
-		toggleMoreComponents () {
+		toggleMoreComponents = () => {
 			this.setState((prevState) => {
 				return {
 					showMoreComponents: !prevState.showMoreComponents
@@ -932,7 +933,6 @@ const handleCancel = (ev, {onClose}) => {
  */
 const MediaControls = ApiDecorator(
 	{api: [
-		'areMoreComponentsAvailable',
 		'showMoreComponents',
 		'hideMoreComponents'
 	]},
