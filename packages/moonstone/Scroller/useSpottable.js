@@ -9,40 +9,40 @@ import {useSpotlightConfig} from './useSpotlightConfig';
 const dataContainerDisabledAttribute = 'data-spotlight-container-disabled';
 
 const useSpottable = (instance, props) => {
-    const {
-        uiRefCurrent
-    } = instance.current;
-    const {
-        rtl
-    } = props;
+	const {
+		uiRefCurrent
+	} = instance.current;
+	const {
+		rtl
+	} = props;
 
-    const containerNode = uiRefCurrent && uiRefCurrent.current && uiRefCurrent.current.containerRef || null;
+	const containerNode = uiRefCurrent && uiRefCurrent.current && uiRefCurrent.current.containerRef || null;
 
-    // useEffect
+	// useEffect
 
-    useSpotlightConfig(instance, props);
+	useSpotlightConfig(instance, props);
 
-    const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useKey(instance, {}, {
-        handlerGlobalKeyDownCB,
-    });
+	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useKey(instance, {}, {
+		handlerGlobalKeyDownCB,
+	});
 
-    useEffect(() => {
-        // componentDidMount
-        // Nothing
+	useEffect(() => {
+		// componentDidMount
+		// Nothing
 
 		// componentWillUnmount
 		return () => setContainerDisabled(false);
 	}, [setContainerDisabled]);	// TODO : Handle exhaustive-deps ESLint rule.
 
 	useEffect(() => {
-        // componentDidUpdate
+		// componentDidUpdate
 		const {onUpdate} = props;
 		if (onUpdate) {
 		//	onUpdate();		// TODO: Invoking onUpdate() has error. Fix it on PLAT-98204.
 		}
 	});	// TODO : Handle exhaustive-deps ESLint rule.
 
-    // functions
+	// functions
 
 	/**
 	 * Returns the first spotlight container between `node` and the scroller
@@ -237,7 +237,7 @@ const useSpottable = (instance, props) => {
 
 	function handlerGlobalKeyDownCB () {
 		setContainerDisabled(false);
-    }
+	}
 
 	function setContainerDisabled (bool) {
 		if (containerNode) {
@@ -249,14 +249,14 @@ const useSpottable = (instance, props) => {
 				removeGlobalKeyDownEventListener();
 			}
 		}
-    }
+	}
 
-    return {
-        calculatePositionOnFocus,
-        focusOnNode
-    };
+	return {
+		calculatePositionOnFocus,
+		focusOnNode
+	};
 };
 
 export {
-    useSpottable
+	useSpottable
 };
