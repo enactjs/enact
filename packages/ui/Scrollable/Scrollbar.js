@@ -14,6 +14,21 @@ const
 	minThumbSize = 18, // Size in pixels
 	thumbHidingDelay = 400; // in milliseconds
 
+function useHidingThumbJob (callback, timeout) {
+	const [state] = React.useState({});
+	state.job = state.job || new Job(callback, timeout);
+
+	React.useEffect(() => {
+		return () => state.job.stop();
+	}, []);
+
+	return state.job;
+}
+
+const addRemoveClass = (element, className, operation) => {
+	ReactDOM.findDOMNode(element).classList[operation](className); // eslint-disable-line react/no-find-dom-node
+}
+
 /*
  * Set CSS Varaible value.
  *
@@ -35,69 +50,36 @@ const setCSSVariable = (element, variable, value) => {
  * @private
  */
 const ScrollbarBase = forwardRef((props, ref) => {
+	// Refs
 	const containerRef = useRef();
 	const thumbRef = useRef();
-	const variables = useRef({
-		hideThumbJob: null,
-		minThumbSizeRatio: 0
-	}).current;
-
-	useEffect(() => {
-		variables.hideThumbJob = new Job(hideThumb, thumbHidingDelay);
-
-		return () => {
-			variables.hideThumbJob.stop();
-		};
-	}, [variables.hideThumbJob]);
-
-	useEffect(() => {
-		calculateMetrics();
-	});
-
-	function calculateMetrics () {
-		const primaryDimenstion = props.vertical ? 'clientHeight' : 'clientWidth';
-		let trackSize;
-
-		if (props.clientSize) {
-			trackSize = props.clientSize[primaryDimenstion];
-		} else {
-			trackSize = containerRef.current[primaryDimenstion];
-		}
-
-		variables.minThumbSizeRatio = ri.scale(minThumbSize) / trackSize;
-	}
+	// Job
+	const hideThumbJob = useHidingThumbJob(hideThumb, thumbHidingDelay);
 
 	function hideThumb () {
-		ReactDOM.findDOMNode(thumbRef.current).classList.remove(props.css.thumbShown); // eslint-disable-line react/no-find-dom-node
-	}
-
-	function getContainerRef () {
-		return containerRef;
+		addRemoveClass(thumbRef.current, props.css.thumbShown, 'remove');
 	}
 
 	useImperativeHandle(ref, () => ({
+		getContainerRef: () => (containerRef),
 		showThumb: () => {
-			if (variables.hideThumbJob) {
-				variables.hideThumbJob.stop();
-			}
-			ReactDOM.findDOMNode(thumbRef.current).classList.add(props.css.thumbShown); // eslint-disable-line react/no-find-dom-node
+			hideThumbJob.stop();
+			addRemoveClass(thumbRef.current, props.css.thumbShown, 'add');
 		},
 		startHidingThumb: () => {
-			if (variables.hideThumbJob) {
-				variables.hideThumbJob.start();
-			}
+			hideThumbJob.start();
 		},
 		update: (bounds) => {
 			const
-				{vertical} = props,
-				{clientWidth, clientHeight, scrollWidth, scrollHeight, scrollLeft, scrollTop} = bounds,
-				clientSize = vertical ? clientHeight : clientWidth,
-				scrollSize = vertical ? scrollHeight : scrollWidth,
-				scrollOrigin = vertical ? scrollTop : scrollLeft,
-
-				thumbSizeRatioBase = (clientSize / scrollSize),
-				scrollThumbPositionRatio = (scrollOrigin / (scrollSize - clientSize)),
-				scrollThumbSizeRatio = Math.max(variables.minThumbSizeRatio, Math.min(1, thumbSizeRatioBase));
+				{vertical, clientSize} = props,
+				primaryDimenstion = vertical ? 'clientHeight' : 'clientWidth',
+				trackSize = clientSize ? clientSize[primaryDimenstion] : containerRef.current[primaryDimenstion],
+				scrollViewSize = vertical ? bounds.clientHeight : bounds.clientWidth,
+				scrollContentSize = vertical ? bounds.scrollHeight : bounds.scrollWidth,
+				scrollOrigin = vertical ? bounds.scrollTop : bounds.scrollLeft,
+				thumbSizeRatioBase = (scrollViewSize / scrollContentSize),
+				scrollThumbPositionRatio = (scrollOrigin / (scrollContentSize - scrollViewSize)),
+				scrollThumbSizeRatio = Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, thumbSizeRatioBase));
 
 			setCSSVariable(thumbRef.current, '--scrollbar-size-ratio', scrollThumbSizeRatio);
 			setCSSVariable(thumbRef.current, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
@@ -109,7 +91,7 @@ const ScrollbarBase = forwardRef((props, ref) => {
 		containerClassName = classNames(
 			className,
 			css.scrollbar,
-			corner ? css.corner : null,
+			corner && css.corner,
 			vertical ? css.vertical : css.horizontal
 		);
 
@@ -118,7 +100,6 @@ const ScrollbarBase = forwardRef((props, ref) => {
 	return (
 		<div {...rest} className={containerClassName} ref={containerRef}>
 			{childRenderer({
-				getContainerRef,
 				thumbRef
 			})}
 		</div>
