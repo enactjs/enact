@@ -306,6 +306,7 @@ const useSpottable = (instance, props, {type}) => {
     }
 
     return {
+        calculatePositionOnFocus,
         getNodeIndexToBeFocused,
         getScrollBounds,
         handlePlaceholderFocus,

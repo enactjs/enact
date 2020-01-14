@@ -43,7 +43,7 @@ const useKey = (instance, props, {
                 containerNode.removeEventListener('keyup', handleKeyUp, {capture: true});
             }
         };
-    }, [containerNode, containerNode]);	// TODO : Handle exhaustive-deps ESLint rule.
+    }, [containerNode]);	// TODO : Handle exhaustive-deps ESLint rule.
 
     function findSpottableItem (indexFrom, indexTo) {
         const {dataSize} = props;
