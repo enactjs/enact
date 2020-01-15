@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import React, {forwardRef, useEffect, useRef, useImperativeHandle} from 'react';
+import React, {forwardRef, useRef, useImperativeHandle} from 'react';
 import ReactDOM from 'react-dom';
 
 import ri from '../resolution';
@@ -20,14 +20,14 @@ function useHidingThumbJob (callback, timeout) {
 
 	React.useEffect(() => {
 		return () => state.job.stop();
-	}, []);
+	}, [state.job]);
 
 	return state.job;
 }
 
 const addRemoveClass = (element, className, operation) => {
 	ReactDOM.findDOMNode(element).classList[operation](className); // eslint-disable-line react/no-find-dom-node
-}
+};
 
 /*
  * Set CSS Varaible value.
@@ -55,23 +55,34 @@ const ScrollbarBase = forwardRef((props, ref) => {
 	const thumbRef = useRef();
 	// Job
 	const hideThumbJob = useHidingThumbJob(hideThumb, thumbHidingDelay);
+	// Render
+	const
+		{childRenderer, className, corner, css, vertical, ...rest} = props,
+		containerClassName = classNames(
+			className,
+			css.scrollbar,
+			corner && css.corner,
+			vertical ? css.vertical : css.horizontal
+		);
+
+	delete rest.clientSize;
 
 	function hideThumb () {
-		addRemoveClass(thumbRef.current, props.css.thumbShown, 'remove');
+		addRemoveClass(thumbRef.current, css.thumbShown, 'remove');
 	}
 
 	useImperativeHandle(ref, () => ({
 		getContainerRef: () => (containerRef),
 		showThumb: () => {
 			hideThumbJob.stop();
-			addRemoveClass(thumbRef.current, props.css.thumbShown, 'add');
+			addRemoveClass(thumbRef.current, css.thumbShown, 'add');
 		},
 		startHidingThumb: () => {
 			hideThumbJob.start();
 		},
 		update: (bounds) => {
 			const
-				{vertical, clientSize} = props,
+				{clientSize} = props,
 				primaryDimenstion = vertical ? 'clientHeight' : 'clientWidth',
 				trackSize = clientSize ? clientSize[primaryDimenstion] : containerRef.current[primaryDimenstion],
 				scrollViewSize = vertical ? bounds.clientHeight : bounds.clientWidth,
@@ -85,17 +96,6 @@ const ScrollbarBase = forwardRef((props, ref) => {
 			setCSSVariable(thumbRef.current, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
 		}
 	}));
-
-	const
-		{childRenderer, className, corner, css, vertical, ...rest} = props,
-		containerClassName = classNames(
-			className,
-			css.scrollbar,
-			corner && css.corner,
-			vertical ? css.vertical : css.horizontal
-		);
-
-	delete rest.clientSize;
 
 	return (
 		<div {...rest} className={containerClassName} ref={containerRef}>

@@ -19,8 +19,11 @@ import componentCss from './Scrollbar.module.less';
  * @private
  */
 const ScrollbarBase = forwardRef((props, ref) => {
+	// Refs
 	const scrollbarRef = useRef();
 	const scrollButtonsRef = useRef();
+	// render
+	const {cbAlertThumb, clientSize, corner, vertical, ...rest} = props;
 
 	useImperativeHandle(ref, () => {
 		const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = scrollbarRef.current;
@@ -37,9 +40,7 @@ const ScrollbarBase = forwardRef((props, ref) => {
 			},
 			focusOnButton
 		};
-	}, []);
-
-	const {cbAlertThumb, clientSize, corner, vertical, ...rest} = props;
+	}, [scrollbarRef, scrollButtonsRef]);
 
 	return (
 		<UiScrollbarBase
