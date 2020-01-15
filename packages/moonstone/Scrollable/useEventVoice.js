@@ -1,18 +1,38 @@
 import platform from '@enact/core/platform';
+import Spotlight, {focus, getCurrent} from '@enact/spotlight';
 import {useRef} from 'react';
 
-const useVoice = ({}, props, {uiRef, onScrollbarButtonClick}) => {
+const useEventVoice = (props, instances, dependencies) => {
+	/*
+	 * Dependencies
+	 */
+
 	const {
 		direction,
 		rtl
 	} = props;
+	const {
+		uiRef
+	} = instances;
+	const {
+		onScrollbarButtonClick
+	} = dependencies
+
+	/*
+	 * Instance
+	 */
+
 	const variables = useRef({
 		isVoiceControl: false,
 		voiceControlDirection: 'vertical',
 	});
 
+	/*
+	 * Functions
+	 */
+
 	function updateFocusAfterVoiceControl () {
-		const spotItem = Spotlight.getCurrent();
+		const spotItem = getCurrent();
 		if (spotItem && uiRef.current.containerRef.current.contains(spotItem)) {
 			const
 				viewportBounds = uiRef.current.containerRef.current.getBoundingClientRect(),
@@ -25,7 +45,7 @@ const useVoice = ({}, props, {uiRef, onScrollbarButtonClick}) => {
 				for (let i = 0; i < nodes.length; i++) {
 					const nodeBounds = nodes[i].getBoundingClientRect();
 					if (nodeBounds[first] > viewportBounds[first] && nodeBounds[last] < viewportBounds[last]) {
-						Spotlight.focus(nodes[i]);
+						focus(nodes[i]);
 						break;
 					}
 				}
@@ -106,6 +126,10 @@ const useVoice = ({}, props, {uiRef, onScrollbarButtonClick}) => {
 		}
 	}
 
+	/*
+	 * Return
+	 */
+
 	return {
 		addVoiceEventListener,
 		removeVoiceEventListener,
@@ -113,6 +137,7 @@ const useVoice = ({}, props, {uiRef, onScrollbarButtonClick}) => {
 	};
 };
 
+export default useEventVoice;
 export {
-	useVoice
+	useEventVoice
 };

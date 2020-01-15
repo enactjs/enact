@@ -1,56 +1,64 @@
 import Spotlight from '@enact/spotlight';
-import {useEffect, useRef} from 'react';
+import {useRef} from 'react';
 
-const useScrollbar = (instance, props ,{
-	isContent,
-	uiRef
-}) => {
-	// const {
+const useScrollbar = (props, instances, dependencies) => {
+	/*
+	 * Dependencies
+	 */
 
-	// } = instance.current;
-	// const {
-	// 	focusableScrollbar
-	// } = props;
+	const {
+		overscrollEffectOn,
+		direction: directionProp
+	} = props;
+	const {
+		uiRef
+	} = instances;
+	const {
+		isContent,
+	} = dependencies;
+	const {
+		getScrollBounds,
+		horizontalScrollbarRef: hRef,
+		isUpdatedScrollThumb,
+		startHidingThumb,
+		scrollToAccumulatedTarget,
+		showThumb,
+		verticalScrollbarRef: vRef,
+		wheelDirection
+	} = (uiRef || {});
+	const isRtl = uiRef.current ? uiRef.current.props.rtl : false;
 
-	const variables = useRef({
-		scrollbarProps: {
-			cbAlertThumb: alertThumbAfterRendered,
-			onNextScroll: onScrollbarButtonClick,
-			onPrevScroll: onScrollbarButtonClick
-		},
-	});
+	const scrollbarProps = {
+		cbAlertThumb: alertThumbAfterRendered,
+		onNextScroll: onScrollbarButtonClick,
+		onPrevScroll: onScrollbarButtonClick
+	};
 
-	// useEffects
-
-	useEffect(() => {
-
-	}, []);
-
-	// functions
+	/*
+	 * Functions
+	 */
 
 	function isScrollButtonFocused () {
-		const {horizontalScrollbarRef: h, verticalScrollbarRef: v} = uiRef.current;
-
 		return (
-			h.current && h.current.isOneOfScrollButtonsFocused() ||
-			v.current && v.current.isOneOfScrollButtonsFocused()
+			hRef.current && hRef.current.isOneOfScrollButtonsFocused() ||
+			vRef.current && vRef.current.isOneOfScrollButtonsFocused()
 		);
 	}
 
 	function onScrollbarButtonClick ({isPreviousScrollButton, isVerticalScrollBar}) {
 		const
-			bounds = uiRef.current.getScrollBounds(),
+			bounds = getScrollBounds(),
 			direction = isPreviousScrollButton ? -1 : 1,
 			pageDistance = direction * (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
 		uiRef.current.lastInputType = 'scrollbarButton';
 
-		if (direction !== uiRef.current.wheelDirection) {
+		if (direction !== wheelDirection) {
 			uiRef.current.isScrollAnimationTargetAccumulated = false;
 			uiRef.current.wheelDirection = direction;
 		}
 
-		uiRef.current.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, props.overscrollEffectOn.scrollbarButton);
+		scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, overscrollEffectOn.scrollbarButton);
 	}
 
 	function focusOnScrollButton (scrollbarRef, isPreviousScrollButton) {
@@ -62,9 +70,6 @@ const useScrollbar = (instance, props ,{
 	function scrollAndFocusScrollbarButton (direction) {
 		if (uiRef.current) {
 			const
-				{direction: directionProp} = props,
-				uiRefCurrent = uiRef.current,
-				isRtl = uiRefCurrent.props.rtl,
 				isPreviousScrollButton = direction === 'up' || (isRtl ? direction === 'right' : direction === 'left'),
 				isHorizontalDirection = direction === 'left' || direction === 'right',
 				isVerticalDirection = direction === 'up' || direction === 'down',
@@ -79,7 +84,7 @@ const useScrollbar = (instance, props ,{
 
 				if (focusableScrollbar) {
 					focusOnScrollButton(
-						canScrollingVertically ? uiRefCurrent.verticalScrollbarRef : uiRefCurrent.horizontalScrollbarRef,
+						canScrollingVertically ? vRef : hRef,
 						isPreviousScrollButton
 					);
 				}
@@ -88,28 +93,33 @@ const useScrollbar = (instance, props ,{
 	}
 
 	function alertThumb () {
-		const bounds = uiRef.current.getScrollBounds();
+		const bounds = getScrollBounds();
 
-		uiRef.current.showThumb(bounds);
-		uiRef.current.startHidingThumb();
+		showThumb(bounds);
+		startHidingThumb();
 	}
 
 	function alertThumbAfterRendered () {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && isContent(spotItem) && uiRef.current.isUpdatedScrollThumb) {
+		if (!Spotlight.getPointerMode() && isContent(spotItem) && isUpdatedScrollThumb) {
 			alertThumb();
 		}
 	}
+
+	/*
+	 * Return
+	 */
 
 	return {
 		isScrollButtonFocused,
 		onScrollbarButtonClick,
 		scrollAndFocusScrollbarButton,
-		scrollbarProps: variables.current.scrollbarProps
+		scrollbarProps
 	};
-}
+};
 
+export default useScrollbar;
 export {
 	useScrollbar
 };

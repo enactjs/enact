@@ -1,13 +1,14 @@
-// scrollerNode -> containerNode
-const useKey = (instance, {}, {
-	handlerGlobalKeyDownCB
-}) => {
-	const {
-		uiRefCurrent
-	} = instance.current;
+const useEventKey = ({}, {}, dependencies) => {
+	/*
+	 * Dependencies
+	 */
 
-	/**
-	 * Handle global `onKeyDown` event
+	const {
+		handlerGlobalKeyDownCB
+	} = dependencies;
+
+	/*
+	 * Functions
 	 */
 
 	function handleGlobalKeyDown () {
@@ -22,12 +23,17 @@ const useKey = (instance, {}, {
 		document.removeEventListener('keydown', handleGlobalKeyDown, {capture: true});
 	}
 
+	/*
+	 * Retur
+	 */
+
 	return {
 		addGlobalKeyDownEventListener,
 		removeGlobalKeyDownEventListener
 	};
 };
 
+export default useEventKey;
 export {
-	useKey
+	useEventKey
 };

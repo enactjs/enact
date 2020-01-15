@@ -1,13 +1,27 @@
-import clamp from 'ramda/src/clamp';
-import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {useEffect} from 'react';
 
-const usePreventScroll = ({}, props, {containerNode, type}) => {
+const usePreventScroll = (props, {}, dependencies) => {
+    /*
+	 * Dependencies
+	 */
+
+	const {
+        rtl
+    } = props;
+    const {
+        containerNode,
+        type
+    } = dependencies;
+
+	/*
+	 * useEffects
+	 */
+
 	useEffect(() => {
 		if (type === 'JS' && containerNode) {
 			const preventScroll = () => {
 				containerNode.scrollTop = 0;
-				containerNode.scrollLeft = props.rtl ? containerNode.scrollWidth : 0;
+				containerNode.scrollLeft = rtl ? containerNode.scrollWidth : 0;
 			};
 
 			if (containerNode && containerNode.addEventListener) {
@@ -22,8 +36,9 @@ const usePreventScroll = ({}, props, {containerNode, type}) => {
 			}
 		}
 	}, [containerNode]);
-}
+};
 
+export default usePreventScroll;
 export {
 	usePreventScroll,
 };

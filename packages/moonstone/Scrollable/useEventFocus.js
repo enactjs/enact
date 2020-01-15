@@ -1,28 +1,26 @@
 import Spotlight, {} from '@enact/spotlight';
-import {useEffect, useRef} from 'react';
 
-const useFocus = (instance, props ,{
-	childRef,
-	uiRef
-}) => {
-	// const {
+const useEventFocus = (props, instances, dependencies) => {
+	/*
+	 * Dependencies
+	 */
 
-	// } = instance.current;
-	// const {
+	const {
+		direction,
+		overscrollEffectOn
+	} = props;
+	const {
+		childRef,
+		spottable,
+		uiRef
+	} = instances;
+	const {
+		isWheeling
+	} = dependencies;
 
-	// } = props;
-
-	const variables = useRef({
-		isWheeling: false
-	});
-
-	// useEffects
-
-	useEffect(() => {
-
-	}, []);
-
-	// functions
+	/*
+	 * Functions
+	 */
 
 	function startScrollOnFocus (pos) {
 		if (pos) {
@@ -36,10 +34,10 @@ const useFocus = (instance, props ,{
 				uiRef.current.start({
 					targetX: left,
 					targetY: top,
-					animate: (animationDuration > 0) && variables.current.animateOnFocus,
-					overscrollEffect: props.overscrollEffectOn[uiRef.current.lastInputType] && (!childRef.current.shouldPreventOverscrollEffect || !childRef.current.shouldPreventOverscrollEffect())
+					animate: (animationDuration > 0) && spottable.current.animateOnFocus,
+					overscrollEffect: overscrollEffectOn[uiRef.current.lastInputType] && (!childRef.current.shouldPreventOverscrollEffect || !childRef.current.shouldPreventOverscrollEffect())
 				});
-				variables.current.lastScrollPositionOnFocus = pos;
+				spottable.current.lastScrollPositionOnFocus = pos;
 			}
 		}
 	}
@@ -51,7 +49,7 @@ const useFocus = (instance, props ,{
 			containerNode = uiRef.current.childRefCurrent.containerRef.current;
 
 		if (spotItem && positionFn && containerNode && containerNode.contains(spotItem)) {
-			const lastPos = variables.current.lastScrollPositionOnFocus;
+			const lastPos = spottable.current.lastScrollPositionOnFocus;
 			let pos;
 
 			// If scroll animation is ongoing, we need to pass last target position to
@@ -61,9 +59,9 @@ const useFocus = (instance, props ,{
 				const itemRect = getRect(spotItem);
 				let scrollPosition;
 
-				if (props.direction === 'horizontal' || props.direction === 'both' && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {
+				if (direction === 'horizontal' || direction === 'both' && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {
 					scrollPosition = lastPos.left;
-				} else if (props.direction === 'vertical' || props.direction === 'both' && !(itemRect.top >= containerRect.top && itemRect.bottom <= containerRect.bottom)) {
+				} else if (direction === 'vertical' || direction === 'both' && !(itemRect.top >= containerRect.top && itemRect.bottom <= containerRect.bottom)) {
 					scrollPosition = lastPos.top;
 				}
 
@@ -94,9 +92,9 @@ const useFocus = (instance, props ,{
 				childRef.current.shouldPreventScrollByFocus() :
 				false;
 
-		if (variables.current.isWheeling) {
+		if (isWheeling) {
 			uiRef.current.stop();
-			variables.current.animateOnFocus = false;
+			spottable.current.animateOnFocus = false;
 		}
 
 		if (!Spotlight.getPointerMode()) {
@@ -128,12 +126,17 @@ const useFocus = (instance, props ,{
 		return current && uiRef.current && uiRef.current.containerRef.current.contains(current);
 	}
 
+	/*
+	 * Return
+	 */
+
 	return {
 		handleFocus,
 		hasFocus
 	};
-}
+};
 
+export default useEventFocus;
 export {
-	useFocus
+	useEventFocus
 };

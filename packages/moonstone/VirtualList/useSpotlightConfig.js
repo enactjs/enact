@@ -1,18 +1,29 @@
 import Spotlight from '@enact/spotlight';
 import {useEffect} from 'react';
 
-const useSpotlightConfig = (instance, props) => {
+const useSpotlightConfig = (props, instances) => {
+	/*
+	 * Dependencies
+	 */
+
 	const {
-		lastFocusedIndex
-	} = instance.current;
+		spottable: {current: {lastFocusedIndex}}
+	} = instances;
 	const {
 		spotlightId
 	} = props;
 
-	// componentDidUpdate
+	/*
+	 * useEffects
+	 */
+
 	useEffect(() => {
 		configureSpotlight();
 	}, [spotlightId]);	// TODO : Handle exhaustive-deps ESLint rule.
+
+	/*
+	 * Functions
+	 */
 
 	function configureSpotlight () {
 		const {spacing} = props;
@@ -62,8 +73,9 @@ const useSpotlightConfig = (instance, props) => {
 			return focused || Number(node.dataset.index) === key && node;
 		}, null);
 	}
-}
+};
 
+export default useSpotlightConfig;
 export {
 	useSpotlightConfig
 };

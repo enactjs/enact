@@ -13,33 +13,39 @@ const
 	nop = () => {},
 	getNumberValue = (index) => index | 0;
 
-// scrollerNode -> containerNode
-const useKey = (instance, props, {
-	containerNode,
-	getDirection,
-	getTargetByDirectionFromElement,
-	handlerGlobalKeyDownCB,
-	handlePageUpDownKeyDownCB,
-	handleDirectionKeyDownCB,
-	handle5WayKeyUpCB,
-	processKey,
-	setPointerMode,
-}) => {
+const useEventKey = (props, instances, dependencies) => {
+	/*
+	 * Dependencies
+	 */
+
 	const {
-		uiRefCurrent
-    } = instance.current;
-    const {
 		spotlightId
 	} = props;
+	const {
+		spottable: {current: {uiRefCurrent}}
+	} = instances;
+	const {
+		containerNode,
+		getDirection,
+		getTargetByDirectionFromElement,
+		handlerGlobalKeyDownCB,
+		handlePageUpDownKeyDownCB,
+		handleDirectionKeyDownCB,
+		handle5WayKeyUpCB,
+		processKey,
+		setPointerMode
+	} = dependencies;
+
+	/*
+	 * useEffects
+	 */
 
 	useEffect(() => {
-		// componentDidMount
 		if (containerNode && containerNode.addEventListener) {
 			containerNode.addEventListener('keydown', handleKeyDown, {capture: true});
 			containerNode.addEventListener('keyup', handleKeyUp, {capture: true});
 		}
 
-		// componentWillUnmount
 		return () => {
 			if (containerNode && containerNode.removeEventListener) {
 				containerNode.removeEventListener('keydown', handleKeyDown, {capture: true});
@@ -47,6 +53,10 @@ const useKey = (instance, props, {
 			}
 		};
 	}, [containerNode]);	// TODO : Handle exhaustive-deps ESLint rule.
+
+	/*
+	 * Functions
+	 */
 
 	function findSpottableItem (indexFrom, indexTo) {
 		const {dataSize} = props;
@@ -226,12 +236,17 @@ const useKey = (instance, props, {
 		document.removeEventListener('keydown', handleGlobalKeyDown, {capture: true});
 	}
 
+	/*
+	 * Return
+	 */
+
 	return {
 		addGlobalKeyDownEventListener,
 		removeGlobalKeyDownEventListener
 	};
 };
 
+export default useEventKey;
 export {
-	useKey
+	useEventKey
 };

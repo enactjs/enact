@@ -1,14 +1,14 @@
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
-import Spotlight, {getDirection} from '@enact/spotlight';
+import Spotlight, {focus, getDirection} from '@enact/spotlight';
 import Accelerator from '@enact/spotlight/Accelerator';
 import Pause from '@enact/spotlight/Pause';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {useEffect, useRef} from 'react';
 
-import {useKey} from './useKey';
-import {useOverscrollEffect} from './useOverscrollEffect';
-import {useRestoreSpotlight} from './useRestoreSpotlight';
-import {useSpotlightConfig} from './useSpotlightConfig';
+import useEventKey from './useEventKey';
+import useOverscrollEffect from './useOverscrollEffect';
+import useSpotlightConfig from './useSpotlightConfig';
+import useSpotlightRestore from './useSpotlightRestore';
 
 const SpotlightAccelerator = new Accelerator();
 const SpotlightPlaceholder = Spottable('div');
@@ -20,12 +20,22 @@ const
 	getNumberValue = (index) => index | 0,
 	spottableSelector = `.${spottableClass}`;
 
-const useSpottable = (instance, props, {type}) => {
-	const {
-		uiRefCurrent
-	} = instance.current;
+const useSpottable = (props, instances, dependencies) => {
+	/*
+	 * Dependencies
+	 */
 
-	// Instance variables
+	const {
+		virtualListBase: {current: {uiRefCurrent}},
+	} = instances;
+	const {
+		type
+	} = dependencies;
+
+	/*
+	 * Instance
+	 */
+
 	const variables = useRef({
 		isScrolledBy5way: false,
 		isScrolledByJump: false,
@@ -34,16 +44,15 @@ const useSpottable = (instance, props, {type}) => {
 		pause: new Pause('VirtualListBase')
 	});
 
-	// Constructor
-	// Nothing
-
-	// Constants
 	const containerNode = uiRefCurrent && uiRefCurrent.containerRef && uiRefCurrent.containerRef.current || null;
 
-	// useEffect
+	/*
+	 * useEffects
+	 */
+
 	const [isOverscrollEffect, setOverscrollEffect] = useOverscrollEffect();
 
-	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useKey(variables, props, {
+	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey(props, {spottable: variables}, {
 		containerNode,
 		getDirection,
 		getTargetByDirectionFromElement,
@@ -55,14 +64,14 @@ const useSpottable = (instance, props, {type}) => {
 		setPointerMode: Spotlight.setPointerMode
 	});
 
-	useSpotlightConfig(variables, props);
+	useSpotlightConfig(props, {spottable: variables});
 
 	const {
 		handlePlaceholderFocus,
 		handleRestoreLastFocus,
 		preserveLastFocus,
 		updateStatesAndBounds
-	} = useRestoreSpotlight(instance, props);
+	} = useSpotlightRestore(props, instances);
 
 	useEffect(() => {
 		// componentDidMount
@@ -77,7 +86,9 @@ const useSpottable = (instance, props, {type}) => {
 		};
 	}, []);	// TODO : Handle exhaustive-deps ESLint rule.
 
-	// functions
+	/*
+	 * Functions
+	 */
 
 	function getNodeIndexToBeFocused () {
 		return variables.current.nodeIndexToBeFocused;
@@ -164,7 +175,7 @@ const useSpottable = (instance, props, {type}) => {
 			case 'acceleratedKeyDown': onAcceleratedKeyDown(param); break;
 			case 'keyDown':
 				if (Spotlight.move(direction)) {
-					const nextTargetIndex = Spotlight.getCurrent().dataset.index;
+					const nextTargetIndex = getCurrent().dataset.index;
 
 					ev.preventDefault();
 					ev.stopPropagation();
@@ -207,7 +218,7 @@ const useSpottable = (instance, props, {type}) => {
 
 	function focusOnNode (node) {
 		if (node) {
-			Spotlight.focus(node);
+			focus(node);
 		}
 	}
 
@@ -305,6 +316,10 @@ const useSpottable = (instance, props, {type}) => {
 		return uiRefCurrent.getScrollBounds();
 	}
 
+	/*
+	 * Return
+	 */
+
 	return {
 		calculatePositionOnFocus,
 		getNodeIndexToBeFocused,
@@ -322,6 +337,7 @@ const useSpottable = (instance, props, {type}) => {
 	};
 };
 
+export default useSpottable;
 export {
 	useSpottable
 };

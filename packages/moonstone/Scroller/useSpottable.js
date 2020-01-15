@@ -3,46 +3,49 @@ import {getRect} from '@enact/spotlight/src/utils';
 import ri from '@enact/ui/resolution';
 import {useEffect} from 'react';
 
-import {useKey} from './useKey';
-import {useSpotlightConfig} from './useSpotlightConfig';
+import useEventKey from './useEventKey';
+import useSpotlightConfig from './useSpotlightConfig';
 
 const dataContainerDisabledAttribute = 'data-spotlight-container-disabled';
 
-const useSpottable = (instance, props) => {
+const useSpottable = (props, instances) => {
+	/*
+	 * Dependencies
+	 */
+
 	const {
-		uiRefCurrent
-	} = instance.current;
+		uiRef
+	} = instances;
 	const {
 		rtl
 	} = props;
 
-	const containerNode = uiRefCurrent && uiRefCurrent.current && uiRefCurrent.current.containerRef || null;
+	const containerNode = uiRef && uiRef.current && uiRef.current.containerRef.current || null;
 
-	// useEffect
+	/*
+	 * useEffects
+	 */
 
-	useSpotlightConfig(instance, props);
+	useSpotlightConfig(instances, props);
 
-	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useKey(instance, {}, {
+	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey({}, {}, {
 		handlerGlobalKeyDownCB,
 	});
 
 	useEffect(() => {
-		// componentDidMount
-		// Nothing
-
-		// componentWillUnmount
 		return () => setContainerDisabled(false);
 	}, [setContainerDisabled]);	// TODO : Handle exhaustive-deps ESLint rule.
 
 	useEffect(() => {
-		// componentDidUpdate
 		const {onUpdate} = props;
 		if (onUpdate) {
 		//	onUpdate();		// TODO: Invoking onUpdate() has error. Fix it on PLAT-98204.
 		}
 	});	// TODO : Handle exhaustive-deps ESLint rule.
 
-	// functions
+	/*
+	 * Functions
+	 */
 
 	/**
 	 * Returns the first spotlight container between `node` and the scroller
@@ -174,14 +177,14 @@ const useSpottable = (instance, props) => {
 		} = getFocusedItemBounds(item);
 
 		const
-			{clientWidth} = uiRefCurrent.current.scrollBounds,
+			{clientWidth} = uiRef.current.scrollBounds,
 			rtlDirection = rtl ? -1 : 1,
 			{left: containerLeft} = containerNode.getBoundingClientRect(),
-			scrollLastPosition = scrollPosition ? scrollPosition : uiRefCurrent.current.scrollPos.left,
-			currentScrollLeft = rtl ? (uiRefCurrent.current.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
+			scrollLastPosition = scrollPosition ? scrollPosition : uiRef.current.scrollPos.left,
+			currentScrollLeft = rtl ? (uiRef.current.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
 			// calculation based on client position
 			newItemLeft = containerNode.scrollLeft + (itemLeft - containerLeft);
-		let nextScrollLeft = uiRefCurrent.current.scrollPos.left;
+		let nextScrollLeft = uiRef.current.scrollPos.left;
 
 		if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
 			// If focus is moved to an element outside of view area (to the right), scroller will move
@@ -208,8 +211,8 @@ const useSpottable = (instance, props) => {
 	 * @private
 	 */
 	function calculatePositionOnFocus ({item, scrollPosition}) {
-		const horizontal = uiRefCurrent.current.isHorizontal();
-		const vertical = uiRefCurrent.current.isVertical();
+		const horizontal = uiRef.current.isHorizontal();
+		const vertical = uiRef.current.isVertical();
 
 		if (!vertical && !horizontal || !item || !containerNode.contains(item)) {
 			return;
@@ -219,14 +222,14 @@ const useSpottable = (instance, props) => {
 		const itemRect = getRect(item);
 
 		if (horizontal && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {
-			uiRefCurrent.current.scrollPos.left = calculateScrollLeft(item, scrollPosition);
+			uiRef.current.scrollPos.left = calculateScrollLeft(item, scrollPosition);
 		}
 
 		if (vertical && !(itemRect.top >= containerRect.top && itemRect.bottom <= containerRect.bottom)) {
-			uiRefCurrent.current.scrollPos.top = calculateScrollTop(item);
+			uiRef.current.scrollPos.top = calculateScrollTop(item);
 		}
 
-		return uiRefCurrent.current.scrollPos;
+		return uiRef.current.scrollPos;
 	}
 
 	function focusOnNode (node) {
@@ -251,12 +254,17 @@ const useSpottable = (instance, props) => {
 		}
 	}
 
+	/*
+	 * Return
+	 */
+
 	return {
 		calculatePositionOnFocus,
 		focusOnNode
 	};
 };
 
+export default useSpottable;
 export {
 	useSpottable
 };

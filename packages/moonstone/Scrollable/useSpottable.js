@@ -1,32 +1,37 @@
-
 import handle, {forward} from '@enact/core/handle';
-import Spotlight, {getDirection} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
 import {spottableClass} from '@enact/spotlight/Spottable';
 import {getRect, intersects} from '@enact/spotlight/src/utils';
-import {constants} from '@enact/ui/Scrollable';
-import {useContext, useEffect, useRef} from 'react';
+import {useContext, useRef} from 'react';
 
 import {SharedState} from '../internal/SharedStateDecorator';
 
-import {useFocus} from './useFocus';
-import {useKey} from './useKey';
-import {useMouse} from './useMouse';
-import {useOverscrollEffect} from './useOverscrollEffect';
-import {useRestoreSpotlight} from './useRestoreSpotlight';
-import {useResizeWindow} from './useResizeWindow';
-import {useScrollbar} from './useScrollbar';
-import {useSpotlightConfig} from './useSpotlightConfig';
-import {useTouch} from './useTouch';
-import {useVoice} from './useVoice';
-import {useWheel} from './useWheel';
+import useEventFocus from './useEventFocus';
+import useEventKey from './useEventKey';
+import useEventMonitor from './useEventMonitor';
+import useEventMouse from './useEventMouse';
+import useEventResizeWindow from './useEventResizeWindow';
+import useEventTouch from './useEventTouch';
+import useEventVoice from './useEventVoice';
+import useEventWheel from './useEventWheel';
+import useOverscrollEffect from './useOverscrollEffect';
+import useScrollbar from './useScrollbar';
+import useSpotlightConfig from './useSpotlightConfig';
+import useSpotlightRestore from './useSpotlightRestore';
+
+/**
+ * The name of a custom attribute which indicates the index of an item in
+ * [VirtualList]{@link moonstone/VirtualList.VirtualList} or
+ * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
+ *
+ * @constant dataIndexAttribute
+ * @memberof moonstone/Scrollable
+ * @type {String}
+ * @private
+ */
+const dataIndexAttribute = 'data-index';
 
 const
-	{
-		animationDuration,
-		isPageDown,
-		isPageUp,
-		paginationPageMultiplier
-	} = constants,
 	reverseDirections = {
 		down: 'up',
 		up: 'down'
@@ -39,64 +44,74 @@ const getTargetInViewByDirectionFromPosition = (direction, position, container) 
 	return getIntersectingElement(target, container);
 };
 
-const useSpottable = ({}, props, {
-	childRef,
-	overscrollRefs,
-	uiRef
-}) => {
+const useSpottable = (props, instances) => {
+	/*
+	 * Dependencies
+	 */
+
 	const {
-		'data-spotlight-id': spotlightId
-	} = props;
+		childRef,
+		overscrollRefs,
+		uiRef
+	} = instances;
+
+	const context = useContext(SharedState);
+
+	/*
+	 * Instance
+	 */
 
 	const variables = useRef({
 		animateOnFocus: false,
-
-		// status
-		isWheeling: false,
-
-		// spotlight
-		lastScrollPositionOnFocus: null,
 		indexToFocus: null,
+		lastScrollPositionOnFocus: null,
 		nodeToFocus: null,
 		pointToFocus: null,
 	});
 
-	const context = useContext(SharedState);
-
-	// useEffects
+	/*
+	 * useEffects
+	 */
 
 	const {
 		isScrollButtonFocused,
 		onScrollbarButtonClick,
 		scrollAndFocusScrollbarButton,
 		scrollbarProps
-	} = useScrollbar({}, props, {
-		isContent,
-		uiRef
+	} = useScrollbar(props, {uiRef}, {
+		isContent
 	});
 
-	useSpotlightConfig({}, props);
+	useSpotlightConfig(props);
 
-	useRestoreSpotlight({}, props, {uiRef});
+	useSpotlightRestore(props, {uiRef});
 
 	const {
 		applyOverscrollEffect,
 		checkAndApplyOverscrollEffectByDirection,
 		clearOverscrollEffect
-	} = useOverscrollEffect({}, {}, {overscrollRefs});
+	} = useOverscrollEffect({}, {overscrollRefs});
+
+	useEventMonitor({}, {uiRef});
+
+	const {
+		handleWheel,
+		isWheeling
+	} = useEventWheel(props, {childRef}, {
+		isScrollButtonFocused
+	});
 
 	const {
 		handleFocus,
 		hasFocus
-	} = useFocus({}, {}, {
-		childRef,
-		uiRef
+	} = useEventFocus(props, {childRef, spottable: variables, uiRef}, {
+		isWheeling
 	});
 
 	const {
 		handleKeyDown,
 		scrollByPageOnPointerMode
-	} = useKey({}, {}, {
+	} = useEventKey(props, {uiRef, spottable: variables}, {
 		checkAndApplyOverscrollEffectByDirection,
 		hasFocus,
 		isContent,
@@ -106,19 +121,11 @@ const useSpottable = ({}, props, {
 	const {
 		handleFlick,
 		handleMouseDown
-	} = useMouse({}, {}, {uiRef});
-
-	const {
-		handleWheel
-	} = useWheel({}, props, {
-		childRef,
-		isScrollButtonFocused,
-		uiRef
-	});
+	} = useEventMouse({}, {uiRef});
 
 	const {
 		handleTouchStart
-	} = useTouch({}, {}, {
+	} = useEventTouch({}, {}, {
 		isScrollButtonFocused
 	});
 
@@ -126,13 +133,17 @@ const useSpottable = ({}, props, {
 		addVoiceEventListener,
 		removeVoiceEventListener,
 		stopVoice,
-	} = useVoice({}, props, {onScrollbarButtonClick, uiRef});
+	} = useEventVoice(props, {uiRef}, {
+		onScrollbarButtonClick
+	});
 
 	const {
 		handleResizeWindow
-	} = useResizeWindow();
+	} = useEventResizeWindow();
 
-	// functions
+	/*
+	 * Functions
+	 */
 
 	function isContent (element) {
 		return (element && uiRef.current && uiRef.current.childRefCurrent.containerRef.current.contains(element));
@@ -221,6 +232,10 @@ const useSpottable = ({}, props, {
 		}
 	}
 
+	/*
+	 * Render
+	 */
+
 	return {
 		addEventListeners,
 		applyOverscrollEffect,
@@ -241,8 +256,10 @@ const useSpottable = ({}, props, {
 		scrollTo,
 		stop
 	};
-}
+};
 
+export default useSpottable;
 export {
+	dataIndexAttribute,
 	useSpottable
 };

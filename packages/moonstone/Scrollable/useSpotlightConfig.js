@@ -14,27 +14,36 @@ const navigableFilter = (elem) => {
 	}
 };
 
-const useSpotlightConfig = ({}, props) => {
+const useSpotlightConfig = (props) => {
+	/*
+	 * Dependencies
+	 */
+
 	const {
 		'data-spotlight-id': spotlightId,
 		focusableScrollbar,
 	} = props;
 
-	// useEffects
+	/*
+	 * useEffects
+	 */
 
 	useEffect(() => {
-		configureSpotlight(props, focusableScrollbar);
+		configureSpotlight();
 	}, [spotlightId, focusableScrollbar]);	// TODO : Handle exhaustive-deps ESLint rule.
 
-	// functions
+	/*
+	 * Functions
+	 */
 
-	function configureSpotlight ({'data-spotlight-id': spotlightId, focusableScrollbar}) {
+	function configureSpotlight () {
 		Spotlight.set(spotlightId, {
 			navigableFilter: focusableScrollbar ? null : navigableFilter
 		});
 	}
-}
+};
 
+export default useSpotlightConfig;
 export {
 	useSpotlightConfig
 };

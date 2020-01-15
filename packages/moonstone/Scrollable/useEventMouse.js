@@ -1,24 +1,19 @@
-import {useEffect, useRef} from 'react';
+const useEventMouse = ({}, instances) => {
+	/*
+	 * Dependencies
+	 */
 
-const useMouse = (instance, props ,{uiRef}) => {
-	// const {
+	const {
+		uiRef
+	} = instances;
+	const {
+		canScrollHorizontally,
+		canScrollVertically
+	} = (uiRef.current || {});
 
-	// } = instance.current;
-	// const {
-
-	// } = props;
-
-	const variables = useRef({
-
-	});
-
-	// useEffects
-
-	useEffect(() => {
-
-	}, []);
-
-	// functions
+	/*
+	 * Functions
+	 */
 
 	function handleFlick ({direction}) {
 		const bounds = uiRef.current.getScrollBounds();
@@ -29,8 +24,8 @@ const useMouse = (instance, props ,{uiRef}) => {
 		}
 
 		if ((
-			direction === 'vertical' && uiRef.current.canScrollVertically(bounds) ||
-			direction === 'horizontal' && uiRef.current.canScrollHorizontally(bounds)
+			direction === 'vertical' && canScrollVertically(bounds) ||
+			direction === 'horizontal' && canScrollHorizontally(bounds)
 		) && !props['data-spotlight-container-disabled']) {
 			childRef.current.setContainerDisabled(true);
 		}
@@ -46,12 +41,17 @@ const useMouse = (instance, props ,{uiRef}) => {
 		}
 	}
 
+	/*
+	 * Return
+	 */
+
 	return {
 		handleFlick,
 		handleMouseDown
 	};
-}
+};
 
+export default useEventMouse;
 export {
-	useMouse
+	useEventMouse
 };

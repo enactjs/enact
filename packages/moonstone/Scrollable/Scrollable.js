@@ -18,21 +18,9 @@ import $L from '../internal/$L';
 import Skinnable from '../Skinnable';
 
 import Scrollbar from './Scrollbar';
+import {dataIndexAttribute, useSpottable} from './useSpottable';
 
 import overscrollCss from './OverscrollEffect.module.less';
-import {useSpottable} from './useSpottable';
-
-/**
- * The name of a custom attribute which indicates the index of an item in
- * [VirtualList]{@link moonstone/VirtualList.VirtualList} or
- * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
- *
- * @constant dataIndexAttribute
- * @memberof moonstone/Scrollable
- * @type {String}
- * @private
- */
-const dataIndexAttribute = 'data-index';
 
 /**
  * A Moonstone-styled component that provides horizontal and vertical scrollbars.
@@ -44,6 +32,10 @@ const dataIndexAttribute = 'data-index';
  * @public
  */
 const ScrollableBase = (props) => {
+	/*
+	 * Dependencies
+	 */
+
 	const {
 		childRenderer,
 		'data-spotlight-container': spotlightContainer,
@@ -58,16 +50,21 @@ const ScrollableBase = (props) => {
 		...rest
 	} = props;
 
-	// refs
+	/*
+	 * Refs
+	 */
 
-	const childRef = React.useRef();
-	const overscrollRefs = {
-		horizontal: React.useRef(),
-		vertical: React.useRef()
-	};
-	const uiRef = React.useRef();
+	const
+		childRef = React.useRef(),
+		overscrollRefs = {
+			horizontal: React.useRef(),
+			vertical: React.useRef()
+		},
+		uiRef = React.useRef();
 
-	// useEffects
+	/*
+	 * useEffects
+	 */
 
 	const {
 		addEventListeners,
@@ -84,13 +81,15 @@ const ScrollableBase = (props) => {
 		removeEventListeners,
 		scrollAndFocusScrollbarButton,
 		scrollbarProps
-	} = useSpottable({}, props, {
-		childRef,
-		overscrollRefs,
-		uiRef
+	} = useSpottable(props, {
+			childRef,
+			overscrollRefs,
+			uiRef
 	});
 
-	// render
+	/*
+	 * Render
+	 */
 
 	const
 		downButtonAriaLabel = scrollDownAriaLabel == null ? $L('scroll down') : scrollDownAriaLabel,
@@ -133,70 +132,72 @@ const ScrollableBase = (props) => {
 				scrollTo: scrollToInContainer,
 				style,
 				verticalScrollbarProps
-			}) => (
-				<div
-					className={classNames(className, overscrollCss.scrollable)}
-					data-spotlight-container={spotlightContainer}
-					data-spotlight-container-disabled={spotlightContainerDisabled}
-					data-spotlight-id={spotlightId}
-					onTouchStart={handleTouchStart}
-					ref={uiContainerRef}
-					style={style}
-				>
-					<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={overscrollRefs.vertical}>
-						<ChildWrapper className={classNames(contentClassName, overscrollCss.overscrollFrame, overscrollCss.horizontal)} ref={overscrollRefs.horizontal} {...restChildWrapperProps}>
-							{childRenderer({
-								...childComponentProps,
-								cbScrollTo: scrollToInContainer,
-								className: componentCss.scrollableFill,
-								initUiChildRef,
-								isHorizontalScrollbarVisible,
-								isVerticalScrollbarVisible,
-								onScroll: handleScrollInContainer,
-								onUpdate: handleScrollerUpdate,
-								ref: childRef,
-								rtl,
-								scrollAndFocusScrollbarButton,
-								spotlightId
-							})}
-						</ChildWrapper>
-						{isVerticalScrollbarVisible ?
+			}) => {
+				return (
+					<div
+						className={classNames(className, overscrollCss.scrollable)}
+						data-spotlight-container={spotlightContainer}
+						data-spotlight-container-disabled={spotlightContainerDisabled}
+						data-spotlight-id={spotlightId}
+						onTouchStart={handleTouchStart}
+						ref={uiContainerRef}
+						style={style}
+					>
+						<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={overscrollRefs.vertical}>
+							<ChildWrapper className={classNames(contentClassName, overscrollCss.overscrollFrame, overscrollCss.horizontal)} ref={overscrollRefs.horizontal} {...restChildWrapperProps}>
+								{childRenderer({
+									...childComponentProps,
+									cbScrollTo: scrollToInContainer,
+									className: componentCss.scrollableFill,
+									initUiChildRef,
+									isHorizontalScrollbarVisible,
+									isVerticalScrollbarVisible,
+									onScroll: handleScrollInContainer,
+									onUpdate: handleScrollerUpdate,
+									ref: childRef,
+									rtl,
+									scrollAndFocusScrollbarButton,
+									spotlightId
+								})}
+							</ChildWrapper>
+							{isVerticalScrollbarVisible ?
+								<Scrollbar
+									{...verticalScrollbarProps}
+									{...scrollbarProps}
+									disabled={!isVerticalScrollbarVisible}
+									focusableScrollButtons={focusableScrollbar}
+									nextButtonAriaLabel={downButtonAriaLabel}
+									onKeyDownButton={handleKeyDown}
+									preventBubblingOnKeyDown={preventBubblingOnKeyDown}
+									previousButtonAriaLabel={upButtonAriaLabel}
+									rtl={rtl}
+								/> :
+								null
+							}
+						</div>
+						{isHorizontalScrollbarVisible ?
 							<Scrollbar
-								{...verticalScrollbarProps}
+								{...horizontalScrollbarProps}
 								{...scrollbarProps}
-								disabled={!isVerticalScrollbarVisible}
+								corner={isVerticalScrollbarVisible}
+								disabled={!isHorizontalScrollbarVisible}
 								focusableScrollButtons={focusableScrollbar}
-								nextButtonAriaLabel={downButtonAriaLabel}
+								nextButtonAriaLabel={rightButtonAriaLabel}
 								onKeyDownButton={handleKeyDown}
 								preventBubblingOnKeyDown={preventBubblingOnKeyDown}
-								previousButtonAriaLabel={upButtonAriaLabel}
+								previousButtonAriaLabel={leftButtonAriaLabel}
 								rtl={rtl}
 							/> :
 							null
 						}
 					</div>
-					{isHorizontalScrollbarVisible ?
-						<Scrollbar
-							{...horizontalScrollbarProps}
-							{...scrollbarProps}
-							corner={isVerticalScrollbarVisible}
-							disabled={!isHorizontalScrollbarVisible}
-							focusableScrollButtons={focusableScrollbar}
-							nextButtonAriaLabel={rightButtonAriaLabel}
-							onKeyDownButton={handleKeyDown}
-							preventBubblingOnKeyDown={preventBubblingOnKeyDown}
-							previousButtonAriaLabel={leftButtonAriaLabel}
-							rtl={rtl}
-						/> :
-						null
-					}
-				</div>
-			)}
+				);
+			}}
 		/>
 	);
 };
 
-ScrollableBase.displayName  = 'Scrollable';
+ScrollableBase.displayName = 'Scrollable';
 ScrollableBase.propTypes = /** @lends moonstone/Scrollable.Scrollable.prototype */ {
 	/**
 	 * Render function.

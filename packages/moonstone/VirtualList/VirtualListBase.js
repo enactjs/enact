@@ -1,13 +1,13 @@
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import warning from 'warning';
 
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
-import {useSpottable} from './useSpottable';
-import {usePreventScroll} from './usePreventScroll';
+import useSpottable from './useSpottable';
+import usePreventScroll from './usePreventScroll';
 
 const
 	JS = 'JS',
@@ -26,13 +26,25 @@ const VirtualListBaseFactory = (type) => {
 	const UiBase = (type === JS) ? UiVirtualListBase : UiVirtualListBaseNative;
 
 	const VirtualListCore = (props) => {
+		/*
+		 * Dependencies
+		 */
+
 		const {
 			spotlightId
 		} = props;
 
+		/*
+		 * Instance
+		 */
+
 		const variables = useRef({
 			uiRefCurrent: null,
 		});
+
+		/*
+		 * useEffects
+		 */
 
 		const {
 			getNodeIndexToBeFocused,
@@ -40,14 +52,21 @@ const VirtualListBaseFactory = (type) => {
 			handleRestoreLastFocus,
 			initItemRef,
 			isNeededScrollingPlaceholder,
-			setContainerDisabled,
-			setLastFocusedNode,
 			SpotlightPlaceholder,
 			updateStatesAndBounds
-		} = useSpottable(variables, props, {type});
+		} = useSpottable(props, {virtualListBase: variables}, {
+			type
+		});
 
 		const containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
-		usePreventScroll({}, props, {containerNode, type});
+		usePreventScroll(props, {}, {
+			containerNode,
+			type
+		});
+
+		/*
+		 * Functions
+		 */
 
 		function getComponentProps (index) {
 			return (index === getNodeIndexToBeFocused()) ? {ref: (ref) => initItemRef(ref, index)} : {};
@@ -60,7 +79,10 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		// Render
+		/*
+		 * Render
+		 */
+
 		const
 			{itemRenderer, itemsRenderer, role, ...rest} = props,
 			needsScrollingPlaceholder = isNeededScrollingPlaceholder();

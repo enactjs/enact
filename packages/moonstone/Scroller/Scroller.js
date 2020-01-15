@@ -24,7 +24,7 @@ import React, {useRef} from 'react';
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
-import {useSpottable} from './useSpottable';
+import useSpottable from './useSpottable';
 
 /**
  * A Moonstone-styled base component for [Scroller]{@link moonstone/Scroller.Scroller}.
@@ -39,24 +39,37 @@ import {useSpottable} from './useSpottable';
  * @public
  */
 const ScrollerBase = (props) => {
+	/*
+	 * Dependencies
+	 */
+
 	const {
 		initUiChildRef,
 	} = props;
 
-	const variables = useRef({
-		uiRefCurrent: null,
-	});
+	const uiRef = useRef();
 
-	useSpottable(variables, props);
+	/*
+	 * useEffects
+	 */
+
+	useSpottable(props, {uiRef});
+
+	/*
+	 * Functions
+	 */
 
 	function initUiRef (ref) {
 		if (ref) {
-			variables.current.uiRefCurrent = ref;
+			uiRef.current = ref;
 			initUiChildRef(ref);
 		}
 	}
 
-	// render ()
+	/*
+	 * Render
+	 */
+
 	const propsObject = Object.assign({}, props);
 	delete propsObject.initUiChildRef;
 	delete propsObject.onUpdate;

@@ -1,4 +1,4 @@
-import {clamp, Job} from '@enact/core/util';
+import {Job} from '@enact/core/util';
 import {constants} from '@enact/ui/Scrollable';
 import {useEffect, useRef} from 'react';
 
@@ -11,7 +11,19 @@ const
 	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
 	overscrollTimeout = 300;
 
-const useOverscrollEffect = ({}, {}, {overscrollRefs}) => {
+const useOverscrollEffect = ({}, instances) => {
+	/*
+	 * Dependencies
+	 */
+
+	const {
+		overscrollRefs
+	} = instances;
+
+	/*
+	 * Instance
+	 */
+
 	var variables = useRef({
 		overscrollJobs: {
 			horizontal: {before: null, after: null},
@@ -19,15 +31,16 @@ const useOverscrollEffect = ({}, {}, {overscrollRefs}) => {
 		}
 	});
 
+	/*
+	 * useEffects
+	 */
+
 	useEffect(() => {
-		// componentDidMount
 		createOverscrollJob('horizontal', 'before');
 		createOverscrollJob('horizontal', 'after');
-
 		createOverscrollJob('vertical', 'before');
 		createOverscrollJob('vertical', 'after');
 
-		// componentWillUnmount
 		return () => {
 			stopOverscrollJob('horizontal', 'before');
 			stopOverscrollJob('horizontal', 'after');
@@ -36,7 +49,9 @@ const useOverscrollEffect = ({}, {}, {overscrollRefs}) => {
 		};
 	}, []);	// TODO : Handle exhaustive-deps ESLint rule.
 
-	// functions
+	/*
+	 * Functions
+	 */
 
 	function applyOverscrollEffect (orientation, edge, type, ratio) {
 		const nodeRef = overscrollRefs[orientation].current;
@@ -83,13 +98,18 @@ const useOverscrollEffect = ({}, {}, {overscrollRefs}) => {
 		}
 	}
 
+	/*
+	 * Return
+	 */
+
 	return {
 		applyOverscrollEffect,
 		checkAndApplyOverscrollEffectByDirection,
 		clearOverscrollEffect
 	};
-}
+};
 
+export default useOverscrollEffect;
 export {
 	useOverscrollEffect
 };

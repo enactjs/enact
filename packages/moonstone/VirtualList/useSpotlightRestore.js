@@ -1,15 +1,26 @@
-import Spotlight from '@enact/spotlight';
+import {focus, getCurrent} from '@enact/spotlight';
 import {useEffect, useRef} from 'react';
 
 const getNumberValue = (index) => index | 0;
 
-const useRestoreSpotlight = (instance, props) => {
-	const {
-		uiRefCurrent
-	} = instance.current;
+const useSpotlightRestore = (props, instances) => {
+	/*
+	 * Dependencies
+	 */
+
 	const {
 		spotlightId
 	} = props;
+	const {
+		virtualListBase
+	} = instances;
+	const {
+		current: {uiRefCurrent}
+	} = (virtualListBase || {});
+
+	/*
+	 * Instance
+	 */
 
 	const variables = useRef({
 		preservedIndex: false,
@@ -18,10 +29,16 @@ const useRestoreSpotlight = (instance, props) => {
 
 	const containerNode = uiRefCurrent && uiRefCurrent.containerRef && uiRefCurrent.containerRef.current || null;
 
-	// componentDidUpdate
+	/*
+	 * useEffects
+	 */
+
 	useEffect(restoreFocus);	// TODO : Handle exhaustive-deps ESLint rule.
 
-	// Exported
+	/*
+	 * Functions
+	 */
+
 	function handlePlaceholderFocus (ev) {
 		const placeholder = ev.currentTarget;
 
@@ -36,7 +53,7 @@ const useRestoreSpotlight = (instance, props) => {
 	}
 
 	function isPlaceholderFocused () {
-		const current = Spotlight.getCurrent();
+		const current = getCurrent();
 
 		if (current && current.dataset.vlPlaceholder && containerNode && containerNode.contains(current)) {
 			return true;
@@ -56,32 +73,30 @@ const useRestoreSpotlight = (instance, props) => {
 
 			if (node) {
 				// if we're supposed to restore focus and virtual list has positioned a set of items
-				// that includes lastFocusedIndex, clear the indicator
+				// thatx includes lastFocusedIndex, clear the indicator
 				variables.current.restoreLastFocused = false;
 
 				// try to focus the last focused item
-				instance.current.isScrolledByJump = true;
-				const foundLastFocused = Spotlight.focus(node);
-				instance.current.isScrolledByJump = false;
+				virtualListBase.current.isScrolledByJump = true;
+				const foundLastFocused = focus(node);
+				virtualListBase.current.isScrolledByJump = false;
 
 				// but if that fails (because it isn't found or is disabled), focus the container so
 				// spotlight isn't lost
 				if (!foundLastFocused) {
 					variables.current.restoreLastFocused = true;
-					Spotlight.focus(spotlightId);
+					focus(spotlightId);
 				}
 			}
 		}
 	}
 
-	// Exported
 	function handleRestoreLastFocus ({firstIndex, lastIndex}) {
 		if (variables.current.restoreLastFocused && variables.current.preservedIndex >= firstIndex && variables.current.preservedIndex <= lastIndex) {
 			restoreFocus();
 		}
 	}
 
-	// Exported
 	function updateStatesAndBounds ({dataSize, moreInfo, numOfItems}) {
 		// TODO check preservedIndex
 		// const {preservedIndex} = this;
@@ -91,11 +106,14 @@ const useRestoreSpotlight = (instance, props) => {
 		));
 	}
 
-	// Exported
 	function preserveLastFocus (index) {
 		variables.current.preservedIndex = index;
 		variables.current.restoreLastFocused = true;
 	}
+
+	/*
+	 * Return
+	 */
 
 	return {
 		handlePlaceholderFocus,
@@ -105,6 +123,7 @@ const useRestoreSpotlight = (instance, props) => {
 	}
 };
 
+export default useSpotlightRestore;
 export {
-	useRestoreSpotlight
+	useSpotlightRestore
 };
