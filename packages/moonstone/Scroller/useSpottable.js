@@ -19,7 +19,7 @@ const useSpottable = (props, instances) => {
 	const containerNode = uiRef && uiRef.current && uiRef.current.containerRef.current || null;
 
 	/*
-	 * useEffects
+	 * Hooks
 	 */
 
 	useSpotlightConfig(instances, props);

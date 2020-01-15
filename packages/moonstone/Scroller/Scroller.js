@@ -48,7 +48,7 @@ const ScrollerBase = (props) => {
 	const uiRef = useRef();
 
 	/*
-	 * useEffects
+	 * Hooks
 	 */
 
 	useSpottable(props, {uiRef});

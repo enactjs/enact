@@ -12,7 +12,7 @@ const useSpotlightConfig = (props, instances) => {
 	const contentsContainer = uiRef && containerRef.current || null;
 
 	/*
-	 * useEffects
+	 * Hooks
 	 */
 
 	useEffect(() => {

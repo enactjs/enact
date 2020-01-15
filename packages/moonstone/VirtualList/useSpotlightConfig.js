@@ -10,7 +10,7 @@ const useSpotlightConfig = (props, instances) => {
 	const {spotlightId} = props;
 
 	/*
-	 * useEffects
+	 * Hooks
 	 */
 
 	useEffect(() => {

@@ -49,7 +49,7 @@ const useEventMonitor = ({}, instances) => {
 	const {uiRef} = instances;
 
 	/*
-	 * useEffects
+	 * Hooks
 	 */
 
 	useEffect(() => {

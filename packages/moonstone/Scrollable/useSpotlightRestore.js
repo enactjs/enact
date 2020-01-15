@@ -13,7 +13,7 @@ const useSpotlightRestore = (props, instances) => {
 	const context = useContext(SharedState);
 
 	/*
-	 * useEffects
+	 * Hooks
 	 */
 
 	useEffect(() => {

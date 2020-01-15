@@ -41,7 +41,7 @@ const VirtualListBaseFactory = (type) => {
 		});
 
 		/*
-		 * useEffects
+		 * Hooks
 		 */
 
 		const {

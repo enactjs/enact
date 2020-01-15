@@ -63,7 +63,7 @@ const ScrollableBase = (props) => {
 		uiRef = React.useRef();
 
 	/*
-	 * useEffects
+	 * Hooks
 	 */
 
 	const {

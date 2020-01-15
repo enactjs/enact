@@ -9,7 +9,7 @@ const usePreventScroll = (props, {}, dependencies) => {
 	const {containerNode, type} = dependencies;
 
 	/*
-	 * useEffects
+	 * Hooks
 	 */
 
 	useEffect(() => {

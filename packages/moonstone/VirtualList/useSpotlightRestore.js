@@ -24,7 +24,7 @@ const useSpotlightRestore = (props, instances) => {
 	const containerNode = uiRefCurrent && uiRefCurrent.containerRef && uiRefCurrent.containerRef.current || null;
 
 	/*
-	 * useEffects
+	 * Hooks
 	 */
 
 	useEffect(restoreFocus);	// TODO : Handle exhaustive-deps ESLint rule.

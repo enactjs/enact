@@ -32,7 +32,7 @@ const useEventKey = (props, instances, dependencies) => {
 	} = dependencies;
 
 	/*
-	 * useEffects
+	 * Hooks
 	 */
 
 	useEffect(() => {

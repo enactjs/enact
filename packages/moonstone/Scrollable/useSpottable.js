@@ -67,7 +67,7 @@ const useSpottable = (props, instances, dependencies) => {
 	});
 
 	/*
-	 * useEffects
+	 * Hooks
 	 */
 
 	const {

@@ -55,7 +55,7 @@ const ScrollableBaseNative = (props) => {
 		uiRef = React.useRef();
 
 	/*
-	 * useEffects
+	 * Hooks
 	 */
 
 	const {

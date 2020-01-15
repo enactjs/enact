@@ -26,7 +26,7 @@ const useOverscrollEffect = ({}, instances) => {
 	});
 
 	/*
-	 * useEffects
+	 * Hooks
 	 */
 
 	useEffect(() => {
