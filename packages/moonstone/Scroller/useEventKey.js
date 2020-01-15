@@ -1,26 +1,26 @@
-const useEventKey = ({}, {}, dependencies) => {
+import {useRef} from 'react';
+
+const useEventKey = () => {
 	/*
-	 * Dependencies
+	 * Instance
 	 */
 
-	const {
-		handlerGlobalKeyDownCB
-	} = dependencies;
+	const variables = useRef({
+		fn: null
+	});
 
 	/*
 	 * Functions
 	 */
 
-	function handleGlobalKeyDown () {
-		handlerGlobalKeyDownCB();
-	}
-
-	function addGlobalKeyDownEventListener () {
-		document.addEventListener('keydown', handleGlobalKeyDown, {capture: true});
+	function addGlobalKeyDownEventListener (fn) {
+		variables.current.fn = fn;
+		document.addEventListener('keydown', variables.current.fn, {capture: true});
 	}
 
 	function removeGlobalKeyDownEventListener () {
-		document.removeEventListener('keydown', handleGlobalKeyDown, {capture: true});
+		document.removeEventListener('keydown', variables.current.fn, {capture: true});
+		variables.current.fn = null
 	}
 
 	/*

@@ -24,7 +24,7 @@ const useSpottable = (props, instances) => {
 
 	useSpotlightConfig(instances, props);
 
-	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey({}, {}, {handlerGlobalKeyDownCB});
+	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey();
 
 	useEffect(() => {
 		return () => setContainerDisabled(false);
@@ -232,16 +232,12 @@ const useSpottable = (props, instances) => {
 		}
 	}
 
-	function handlerGlobalKeyDownCB () {
-		setContainerDisabled(false);
-	}
-
 	function setContainerDisabled (bool) {
 		if (containerNode) {
 			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
 
 			if (bool) {
-				addGlobalKeyDownEventListener();
+				addGlobalKeyDownEventListener(() => {setContainerDisabled(false));
 			} else {
 				removeGlobalKeyDownEventListener();
 			}

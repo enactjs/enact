@@ -24,12 +24,19 @@ const useEventKey = (props, instances, dependencies) => {
 	const {spottable: {current: {uiRefCurrent}}} = instances;
 	const {
 		containerNode,
-		handlerGlobalKeyDownCB,
-		handlePageUpDownKeyDownCB,
-		handleDirectionKeyDownCB,
-		handle5WayKeyUpCB,
+		handlePageUpDownKeyDown,
+		handleDirectionKeyDown,
+		handle5WayKeyUp,
 		SpotlightAccelerator
 	} = dependencies;
+
+	/*
+	 * Instance
+	 */
+
+	const variables = useRef({
+		fn: null
+	});
 
 	/*
 	 * Hooks
@@ -176,7 +183,7 @@ const useEventKey = (props, instances, dependencies) => {
 						ev.preventDefault();
 						ev.stopPropagation();
 
-						handleDirectionKeyDownCB(ev, 'acceleratedKeyDown', {isWrapped, keyCode, nextIndex, repeat, target});
+						handleDirectionKeyDown(ev, 'acceleratedKeyDown', {isWrapped, keyCode, nextIndex, repeat, target});
 					} else {
 						const {dataSize} = props;
 						const column = index % dimensionToExtent;
@@ -190,7 +197,7 @@ const useEventKey = (props, instances, dependencies) => {
 							ev.preventDefault();
 							ev.stopPropagation();
 						} else if (!isLeaving) {
-							handleDirectionKeyDownCB(ev, 'keyDown', {keyCode, nextIndex: getNumberValue(nextTargetIndex), repeat, target});
+							handleDirectionKeyDown(ev, 'keyDown', {keyCode, nextIndex: getNumberValue(nextTargetIndex), repeat, target});
 						}
 					}
 				} else {
@@ -201,17 +208,17 @@ const useEventKey = (props, instances, dependencies) => {
 				}
 
 				if (isLeaving) {
-					handleDirectionKeyDownCB(ev, 'keyLeave');
+					handleDirectionKeyDown(ev, 'keyLeave');
 				}
 			}
 		} else if (isPageUp(keyCode) || isPageDown(keyCode)) {
-			handlePageUpDownKeyDownCB();
+			handlePageUpDownKeyDown();
 		}
 	}
 
 	function handleKeyUp ({keyCode}) {
 		if (getDirection(keyCode) || isEnter(keyCode)) {
-			handle5WayKeyUpCB();
+			handle5WayKeyUp();
 		}
 	}
 
@@ -219,16 +226,14 @@ const useEventKey = (props, instances, dependencies) => {
 	 * Handle global `onKeyDown` event
 	 */
 
-	function handleGlobalKeyDown () {
-		handlerGlobalKeyDownCB();
-	}
-
-	function addGlobalKeyDownEventListener () {
-		document.addEventListener('keydown', handleGlobalKeyDown, {capture: true});
+	function addGlobalKeyDownEventListener (fn) {
+		variables.current.fn = fn;
+		document.addEventListener('keydown', variables.current.fn, {capture: true});
 	}
 
 	function removeGlobalKeyDownEventListener () {
-		document.removeEventListener('keydown', handleGlobalKeyDown, {capture: true});
+		document.removeEventListener('keydown', variables.current.fn, {capture: true});
+		variables.current.fn = null
 	}
 
 	/*

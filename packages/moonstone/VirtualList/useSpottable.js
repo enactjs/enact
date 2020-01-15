@@ -51,10 +51,30 @@ const useSpottable = (props, instances, dependencies) => {
 
 	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey(props, {spottable: variables}, {
 		containerNode,
-		handleGlobalKeyDownCB,
-		handlePageUpDownKeyDownCB,
-		handleDirectionKeyDownCB,
-		handle5WayKeyUpCB,
+		handlePageUpDownKeyDown: () => {
+			variables.current.isScrolledBy5way = false
+		},
+		handleDirectionKeyDown: (ev, type, param) => {
+			switch (type) {
+				case 'acceleratedKeyDown': onAcceleratedKeyDown(param); break;
+				case 'keyDown':
+					if (Spotlight.move(direction)) {
+						const nextTargetIndex = Spotlight.getCurrent().dataset.index;
+
+						ev.preventDefault();
+						ev.stopPropagation();
+
+						if (typeof nextTargetIndex === 'string') {
+							onAcceleratedKeyDown(param);
+						}
+					}
+					break;
+				case 'keyLeave': SpotlightAccelerator.reset(); break;
+			}
+		},
+		handle5WayKeyUp: () => {
+			SpotlightAccelerator.reset();
+		},
 		SpotlightAccelerator,
 	});
 
@@ -158,42 +178,12 @@ const useSpottable = (props, instances, dependencies) => {
 		}
 	}
 
-	function handleDirectionKeyDownCB (ev, type, param) {
-		switch (type) {
-			case 'acceleratedKeyDown': onAcceleratedKeyDown(param); break;
-			case 'keyDown':
-				if (Spotlight.move(direction)) {
-					const nextTargetIndex = Spotlight.getCurrent().dataset.index;
-
-					ev.preventDefault();
-					ev.stopPropagation();
-
-					if (typeof nextTargetIndex === 'string') {
-						onAcceleratedKeyDown(param);
-					}
-				}
-				break;
-			case 'keyLeave': SpotlightAccelerator.reset(); break;
-		}
-	}
-	function handlePageUpDownKeyDownCB () {
-		variables.current.isScrolledBy5way = false;
-	}
-
-	function handle5WayKeyUpCB () {
-		SpotlightAccelerator.reset();
-	}
-
-	function handleGlobalKeyDownCB () {
-		setContainerDisabled(false);
-	}
-
 	function setContainerDisabled (bool) {
 		if (containerNode) {
 			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
 
 			if (bool) {
-				addGlobalKeyDownEventListener();
+				addGlobalKeyDownEventListener(() => {setContainerDisabled(false));
 			} else {
 				removeGlobalKeyDownEventListener();
 			}
