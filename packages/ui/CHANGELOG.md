@@ -9,6 +9,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Marquee` to not double aria readout for marqueeing contents
 
+### Changed
+
+- `ui/Button` of ARIA structure to support touch accessibility
+
 ## [3.2.4] - 2019-11-07
 
 ### Fixed
