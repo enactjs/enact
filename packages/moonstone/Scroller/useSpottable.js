@@ -237,7 +237,9 @@ const useSpottable = (props, instances) => {
 			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
 
 			if (bool) {
-				addGlobalKeyDownEventListener(() => {setContainerDisabled(false));
+				addGlobalKeyDownEventListener(() => {
+					setContainerDisabled(false)
+				});
 			} else {
 				removeGlobalKeyDownEventListener();
 			}
