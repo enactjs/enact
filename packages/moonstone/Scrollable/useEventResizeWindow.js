@@ -1,4 +1,4 @@
-import {getCurrent} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
 
 const useEventResizeWindow = () => {
 	/*
@@ -6,7 +6,7 @@ const useEventResizeWindow = () => {
 	 */
 
 	function handleResizeWindow () {
-		const focusedItem = getCurrent();
+		const focusedItem = Spotlight.getCurrent();
 
 		if (focusedItem) {
 			focusedItem.blur();

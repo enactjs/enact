@@ -1,5 +1,5 @@
 import platform from '@enact/core/platform';
-import Spotlight, {focus, getCurrent} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
 import {useRef} from 'react';
 
 const useEventVoice = (props, instances, dependencies) => {
@@ -32,7 +32,7 @@ const useEventVoice = (props, instances, dependencies) => {
 	 */
 
 	function updateFocusAfterVoiceControl () {
-		const spotItem = getCurrent();
+		const spotItem = Spotlight.getCurrent();
 		if (spotItem && uiRef.current.containerRef.current.contains(spotItem)) {
 			const
 				viewportBounds = uiRef.current.containerRef.current.getBoundingClientRect(),
@@ -45,7 +45,7 @@ const useEventVoice = (props, instances, dependencies) => {
 				for (let i = 0; i < nodes.length; i++) {
 					const nodeBounds = nodes[i].getBoundingClientRect();
 					if (nodeBounds[first] > viewportBounds[first] && nodeBounds[last] < viewportBounds[last]) {
-						focus(nodes[i]);
+						Spotlight.focus(nodes[i]);
 						break;
 					}
 				}

@@ -1,4 +1,4 @@
-import {getCurrent, isPaused} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
 
 const useEventTouch = ({}, {}, dependencies) => {
 	/*
@@ -14,9 +14,9 @@ const useEventTouch = ({}, {}, dependencies) => {
 	 */
 
 	function handleTouchStart () {
-		const focusedItem = getCurrent();
+		const focusedItem = Spotlight.getCurrent();
 
-		if (!isPaused() && focusedItem && !isScrollButtonFocused()) {
+		if (!Spotlight.isPaused() && focusedItem && !isScrollButtonFocused()) {
 			focusedItem.blur();
 		}
 	}

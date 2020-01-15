@@ -44,7 +44,7 @@ const getTargetInViewByDirectionFromPosition = (direction, position, container) 
 	return getIntersectingElement(target, container);
 };
 
-const useSpottable = (props, instances) => {
+const useSpottable = (props, instances, dependencies) => {
 	/*
 	 * Dependencies
 	 */
@@ -54,6 +54,9 @@ const useSpottable = (props, instances) => {
 		overscrollRefs,
 		uiRef
 	} = instances;
+	const {
+		type
+	} = dependencies;
 
 	const context = useContext(SharedState);
 
@@ -98,14 +101,16 @@ const useSpottable = (props, instances) => {
 		handleWheel,
 		isWheeling
 	} = useEventWheel(props, {childRef}, {
-		isScrollButtonFocused
+		isScrollButtonFocused,
+		type
 	});
 
 	const {
 		handleFocus,
 		hasFocus
 	} = useEventFocus(props, {childRef, spottable: variables, uiRef}, {
-		isWheeling
+		isWheeling,
+		type
 	});
 
 	const {
@@ -115,13 +120,13 @@ const useSpottable = (props, instances) => {
 		checkAndApplyOverscrollEffectByDirection,
 		hasFocus,
 		isContent,
-		uiRef
+		type
 	});
 
 	const {
 		handleFlick,
 		handleMouseDown
-	} = useEventMouse({}, {uiRef});
+	} = useEventMouse({}, {uiRef}, {type});
 
 	const {
 		handleTouchStart
@@ -154,6 +159,12 @@ const useSpottable = (props, instances) => {
 		variables.current.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
 	}
 
+	function start (animate) {
+		if (type === 'Native' && !animate) {
+			this.focusOnItem();
+		}
+	}
+
 	function stop () {
 		if (!props['data-spotlight-container-disabled']) {
 			childRef.current.setContainerDisabled(false);
@@ -162,6 +173,10 @@ const useSpottable = (props, instances) => {
 		variables.current.lastScrollPositionOnFocus = null;
 		variables.current.isWheeling = false;
 		stopVoice();
+	}
+
+	function scrollStopOnScroll () {
+		stop();
 	}
 
 	function focusOnItem () {
@@ -253,7 +268,9 @@ const useSpottable = (props, instances) => {
 		scrollAndFocusScrollbarButton,
 		scrollbarProps,
 		scrollByPageOnPointerMode,
+		scrollStopOnScroll,
 		scrollTo,
+		start,
 		stop
 	};
 };

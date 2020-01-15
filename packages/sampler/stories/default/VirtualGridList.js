@@ -4,7 +4,7 @@ import ri from '@enact/ui/resolution';
 import React from 'react';
 import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {storiesOf} from '@storybook/react';
-import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualGridListNative as VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
 import {VirtualGridList as UiVirtualGridList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 
 import {boolean, number, select} from '../../src/enact-knobs';

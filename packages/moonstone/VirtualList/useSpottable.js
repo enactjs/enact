@@ -218,7 +218,7 @@ const useSpottable = (props, instances, dependencies) => {
 
 	function focusOnNode (node) {
 		if (node) {
-			focus(node);
+			Spotlight.focus(node);
 		}
 	}
 

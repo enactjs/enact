@@ -85,6 +85,8 @@ const ScrollableBase = (props) => {
 			childRef,
 			overscrollRefs,
 			uiRef
+	}, {
+		type: 'JS'
 	});
 
 	/*

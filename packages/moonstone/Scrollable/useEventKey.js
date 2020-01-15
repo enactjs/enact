@@ -1,3 +1,9 @@
+import {constants} from '@enact/ui/Scrollable/ScrollableNative';
+
+const
+	{epsilon} = constants,
+	paginationPageMultiplier = 0.66;
+
 const useEventKey = (props, instances, dependencies) => {
 	/*
 	 * Dependencies
@@ -15,7 +21,8 @@ const useEventKey = (props, instances, dependencies) => {
 	const {
 		checkAndApplyOverscrollEffectByDirection,
 		hasFocus,
-		isContent
+		isContent,
+		type
 	} = dependencies;
 
 	/*
@@ -49,7 +56,7 @@ const useEventKey = (props, instances, dependencies) => {
 						checkAndApplyOverscrollEffectByDirection(direction);
 					}
 				}
-			} else if (getDirection(keyCode)) {
+			} else if (getDirection(keyCode) && (type === 'JS' || type==='Native' && !Spotlight.getPointerMode())) {
 				const element = Spotlight.getCurrent();
 
 				uiRef.current.lastInputType = 'arrowKey';
@@ -74,8 +81,14 @@ const useEventKey = (props, instances, dependencies) => {
 			bounds = uiRef.current.getScrollBounds(),
 			isUp = direction === 'up',
 			directionFactor = isUp ? -1 : 1,
-			pageDistance = directionFactor * bounds.clientHeight * paginationPageMultiplier,
+			pageDistance = directionFactor * bounds.clientHeight * paginationPageMultiplier;
+		let scrollPossible = false;
+
+		if (type === 'JS') {
 			scrollPossible = isUp ? scrollTop > 0 : bounds.maxTop > scrollTop;
+		} else {
+			scrollPossible = isUp ? scrollTop > 0 : bounds.maxTop - scrollTop > epsilon;
+		}
 
 		uiRef.current.lastInputType = 'pageKey';
 
@@ -93,10 +106,17 @@ const useEventKey = (props, instances, dependencies) => {
 						contentRect = contentNode.getBoundingClientRect(),
 						clientRect = focusedItem.getBoundingClientRect(),
 						yAdjust = isUp ? 1 : -1,
-						x = clamp(contentRect.left, contentRect.right, (clientRect.right + clientRect.left) / 2),
+						x = clamp(contentRect.left, contentRect.right, (clientRect.right + clientRect.left) / 2);
+					let y = 0;
+					if (type === 'JS') {
 						y = bounds.maxTop <= scrollTop + pageDistance || 0 >= scrollTop + pageDistance ?
 							contentRect[isUp ? 'top' : 'bottom'] + yAdjust :
 							clamp(contentRect.top, contentRect.bottom, (clientRect.bottom + clientRect.top) / 2);
+					} else {
+						y = bounds.maxTop - epsilon < scrollTop + pageDistance || epsilon > scrollTop + pageDistance ?
+							contentNode.getBoundingClientRect()[isUp ? 'top' : 'bottom'] + yAdjust :
+							clamp(contentRect.top, contentRect.bottom, (clientRect.bottom + clientRect.top) / 2);
+					}
 
 					focusedItem.blur();
 					if (!props['data-spotlight-container-disabled']) {

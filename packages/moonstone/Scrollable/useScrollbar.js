@@ -1,5 +1,6 @@
 import Spotlight from '@enact/spotlight';
-import {useRef} from 'react';
+
+const paginationPageMultiplier = 0.66;
 
 const useScrollbar = (props, instances, dependencies) => {
 	/*

@@ -5,7 +5,9 @@ const useOverscrollEffect = () => {
 	 * Instance
 	 */
 
-	const variables = useRef({isWrappedBy5way: false});
+	const variables = useRef({
+		isWrappedBy5way: false
+	});
 
 	/*
 	 * Functions

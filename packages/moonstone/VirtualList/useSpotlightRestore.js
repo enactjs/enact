@@ -1,4 +1,4 @@
-import {focus, getCurrent} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
 import {useEffect, useRef} from 'react';
 
 const getNumberValue = (index) => index | 0;
@@ -53,7 +53,7 @@ const useSpotlightRestore = (props, instances) => {
 	}
 
 	function isPlaceholderFocused () {
-		const current = getCurrent();
+		const current = Spotlight.getCurrent();
 
 		if (current && current.dataset.vlPlaceholder && containerNode && containerNode.contains(current)) {
 			return true;
@@ -78,14 +78,14 @@ const useSpotlightRestore = (props, instances) => {
 
 				// try to focus the last focused item
 				virtualListBase.current.isScrolledByJump = true;
-				const foundLastFocused = focus(node);
+				const foundLastFocused = Spotlight.focus(node);
 				virtualListBase.current.isScrolledByJump = false;
 
 				// but if that fails (because it isn't found or is disabled), focus the container so
 				// spotlight isn't lost
 				if (!foundLastFocused) {
 					variables.current.restoreLastFocused = true;
-					focus(spotlightId);
+					Spotlight.focus(spotlightId);
 				}
 			}
 		}

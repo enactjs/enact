@@ -1,4 +1,7 @@
 import Spotlight, {} from '@enact/spotlight';
+import {constants} from '@enact/ui/Scrollable/ScrollableNative';
+
+const {epsilon} = constants;
 
 const useEventFocus = (props, instances, dependencies) => {
 	/*
@@ -15,7 +18,8 @@ const useEventFocus = (props, instances, dependencies) => {
 		uiRef
 	} = instances;
 	const {
-		isWheeling
+		isWheeling,
+		type
 	} = dependencies;
 
 	/*
@@ -26,18 +30,36 @@ const useEventFocus = (props, instances, dependencies) => {
 		if (pos) {
 			const
 				{top, left} = pos,
-				bounds = uiRef.current.getScrollBounds(),
-				scrollHorizontally = bounds.maxLeft > 0 && left !== uiRef.current.scrollLeft,
-				scrollVertically = bounds.maxTop > 0 && top !== uiRef.current.scrollTop;
+				bounds = uiRef.current.getScrollBounds();
 
-			if (scrollHorizontally || scrollVertically) {
-				uiRef.current.start({
-					targetX: left,
-					targetY: top,
-					animate: (animationDuration > 0) && spottable.current.animateOnFocus,
-					overscrollEffect: overscrollEffectOn[uiRef.current.lastInputType] && (!childRef.current.shouldPreventOverscrollEffect || !childRef.current.shouldPreventOverscrollEffect())
-				});
-				spottable.current.lastScrollPositionOnFocus = pos;
+			if (type === 'JS') {
+				const
+					scrollHorizontally = bounds.maxLeft > 0 && left !== uiRef.current.scrollLeft,
+					scrollVertically = bounds.maxTop > 0 && top !== uiRef.current.scrollTop;
+
+				if (scrollHorizontally || scrollVertically) {
+					uiRef.current.start({
+						targetX: left,
+						targetY: top,
+						animate: (animationDuration > 0) && spottable.current.animateOnFocus,
+						overscrollEffect: overscrollEffectOn[uiRef.current.lastInputType] && (!childRef.current.shouldPreventOverscrollEffect || !childRef.current.shouldPreventOverscrollEffect())
+					});
+					spottable.current.lastScrollPositionOnFocus = pos;
+				}
+			} else {
+				const
+					scrollHorizontally = bounds.maxLeft > 0 && Math.abs(left - this.uiRef.current.scrollLeft) > epsilon,
+					scrollVertically = bounds.maxTop > 0 && Math.abs(top - this.uiRef.current.scrollTop) > epsilon;
+
+				if (scrollHorizontally || scrollVertically) {
+					this.uiRef.current.start({
+						targetX: left,
+						targetY: top,
+						animate: this.animateOnFocus,
+						overscrollEffect: this.props.overscrollEffectOn[this.uiRef.current.lastInputType] && (!this.childRef.current.shouldPreventOverscrollEffect || !this.childRef.current.shouldPreventOverscrollEffect())
+					});
+					this.lastScrollPositionOnFocus = pos;
+				}
 			}
 		}
 	}
@@ -54,7 +76,10 @@ const useEventFocus = (props, instances, dependencies) => {
 
 			// If scroll animation is ongoing, we need to pass last target position to
 			// determine correct scroll position.
-			if (uiRef.current.animator.isAnimating() && lastPos) {
+			if (lastPos & (
+				type === 'JS' && uiRef.current.animator.isAnimating() ||
+				type === 'Native' && this.uiRef.current.scrolling
+			)) {
 				const containerRect = getRect(containerNode);
 				const itemRect = getRect(spotItem);
 				let scrollPosition;
@@ -92,7 +117,7 @@ const useEventFocus = (props, instances, dependencies) => {
 				childRef.current.shouldPreventScrollByFocus() :
 				false;
 
-		if (isWheeling) {
+		if (type === 'JS' && isWheeling) {
 			uiRef.current.stop();
 			spottable.current.animateOnFocus = false;
 		}

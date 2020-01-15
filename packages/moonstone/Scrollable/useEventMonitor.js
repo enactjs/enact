@@ -1,5 +1,5 @@
 import {onWindowReady} from '@enact/core/snapshot';
-import {getCurrent, getPointerMode} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
 import {useEffect, useRef} from 'react';
 
 /*
@@ -19,7 +19,7 @@ const pointerTracker = (ev) => {
 // so we should test all of them when page up/down key is pressed.
 const pageKeyHandler = (ev) => {
 	const {keyCode} = ev;
-	if (getPointerMode() && !getCurrent() && (isPageUp(keyCode) || isPageDown(keyCode))) {
+	if (Spotlight.getPointerMode() && !Spotlight.getCurrent() && (isPageUp(keyCode) || isPageDown(keyCode))) {
 		const
 			{x, y} = lastPointer,
 			elem = document.elementFromPoint(x, y);
