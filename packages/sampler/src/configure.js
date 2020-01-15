@@ -6,7 +6,7 @@ import {Component} from 'react';
 // Fix for @storybook/addon-info which always needs at least an empty object for defaultProps.
 Component.defaultProps = {};
 
-import Moonstone from '../src/MoonstoneEnvironment';
+import Environment from '../src/Environment';
 
 function config (stories, mod) {
 	configureActions({
@@ -20,8 +20,8 @@ function config (stories, mod) {
 		timestamps: true // Doesn't emit events while user is typing.
 	}));
 
-	// Set moonstone environment defaults
-	addDecorator(Moonstone);
+	// Set environment defaults
+	addDecorator(Environment);
 
 	function loadStories () {
 		stories.keys().forEach((filename) => stories(filename));

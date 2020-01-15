@@ -1,7 +1,7 @@
 import Layout, {Cell} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
-import Button from '@enact/moonstone/Button';
-import Item from '@enact/moonstone/Item';
+import Button from '@enact/ui/Button';
+import Item from '@enact/ui/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
@@ -26,7 +26,7 @@ storiesOf('UI', module)
 						<Button>Second</Button>
 					</Cell>
 					<Cell>
-						<Item>An auto-sizing Item that has a marquee so it will always show the full text string even if it&apos;s too long to fit</Item>
+						<Item>Third</Item>
 					</Cell>
 					<Cell shrink>
 						<Button>Last</Button>

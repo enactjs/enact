@@ -1,9 +1,6 @@
-import Button from '@enact/moonstone/Button';
-import CheckboxItem from '@enact/moonstone/CheckboxItem';
-import RadioItem from '@enact/moonstone/RadioItem';
-import SwitchItem from '@enact/moonstone/SwitchItem';
-
-import ToggleButton from '@enact/moonstone/ToggleButton';
+import Button from '@enact/ui/Button';
+import Item from '@enact/ui/Item';
+import {SlotItem as UISlotItem} from '@enact/ui/SlotItem';
 import Group from '@enact/ui/Group';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -11,14 +8,15 @@ import {storiesOf} from '@storybook/react';
 import {boolean, select} from '../../src/enact-knobs';
 import {action} from '../../src/utils';
 
+const SlotItem = ({children, ...rest}) => (
+	<UISlotItem {...rest} component={Item}>{children}</UISlotItem>
+);
+
 // Set up some defaults for info and knobs
 const prop = {
 	children: {
 		'Button': Button,
-		'CheckboxItem': CheckboxItem,
-		'RadioItem': RadioItem,
-		'SwitchItem': SwitchItem,
-		'ToggleButton': ToggleButton
+		'SlotItem': SlotItem
 	}
 };
 
@@ -31,7 +29,7 @@ storiesOf('UI', module)
 		'Group',
 		() => (
 			<Group
-				childComponent={getComponent(select('childComponent', Object.keys(prop.children), Group, 'CheckboxItem'))}
+				childComponent={getComponent(select('childComponent', Object.keys(prop.children), Group, 'Button'))}
 				itemProps={{
 					inline: boolean('ItemProps-Inline', Group)
 				}}

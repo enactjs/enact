@@ -1,21 +1,14 @@
-import {GridListImageItem} from '@enact/moonstone/GridListImageItem';
 import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {storiesOf} from '@storybook/react';
-import {VirtualGridList, VirtualListBase} from '@enact/moonstone/VirtualList';
 import {VirtualGridList as UiVirtualGridList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 
 import {boolean, number, select} from '../../src/enact-knobs';
 import {action, mergeComponentMetadata} from '../../src/utils';
 
 const
-	wrapOption = {
-		false: false,
-		true: true,
-		'&quot;noAnimation&quot;': 'noAnimation'
-	},
 	prop = {
 		direction: {horizontal: 'horizontal', vertical: 'vertical'},
 		scrollbarOption: ['auto', 'hidden', 'visible']
@@ -32,19 +25,6 @@ const
 
 		return (
 			<UiGridListImageItem
-				{...rest}
-				caption={text}
-				source={source}
-				subCaption={subText}
-			/>
-		);
-	},
-	// eslint-disable-next-line enact/prop-types
-	renderItem = ({index, ...rest}) => {
-		const {text, subText, source} = items[index];
-
-		return (
-			<GridListImageItem
 				{...rest}
 				caption={text}
 				source={source}
@@ -77,7 +57,6 @@ const updateDataSize = (dataSize) => {
 updateDataSize(defaultDataSize);
 
 const UiVirtualGridListConfig = mergeComponentMetadata('VirtualGridList', UiVirtualListBase, UiScrollableBase);
-const VirtualGridListConfig = mergeComponentMetadata('VirtualGridList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
 
 storiesOf('UI', module)
 	.add(
@@ -97,36 +76,6 @@ storiesOf('UI', module)
 				onScrollStop={action('onScrollStop')}
 				spacing={ri.scale(number('spacing', UiVirtualGridListConfig, 20))}
 				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, UiVirtualGridListConfig)}
-			/>
-		),
-		{
-			info: {
-				text: 'Basic usage of VirtualGridList'
-			}
-		}
-	);
-
-storiesOf('Moonstone', module)
-	.add(
-		'VirtualList.VirtualGridList',
-		() => (
-			<VirtualGridList
-				dataSize={updateDataSize(number('dataSize', VirtualGridListConfig, defaultDataSize))}
-				direction={select('direction', prop.direction, VirtualGridListConfig)}
-				focusableScrollbar={boolean('focusableScrollbar', VirtualGridListConfig)}
-				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, VirtualGridListConfig)}
-				itemRenderer={renderItem}
-				itemSize={{
-					minWidth: ri.scale(number('minWidth', VirtualGridListConfig, 180)),
-					minHeight: ri.scale(number('minHeight', VirtualGridListConfig, 270))
-				}}
-				noScrollByWheel={boolean('noScrollByWheel', VirtualGridListConfig)}
-				onScrollStart={action('onScrollStart')}
-				onScrollStop={action('onScrollStop')}
-				spacing={ri.scale(number('spacing', VirtualGridListConfig, 20))}
-				spotlightDisabled={boolean('spotlightDisabled', VirtualGridListConfig, false)}
-				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, VirtualGridListConfig)}
-				wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], VirtualGridListConfig)]}
 			/>
 		),
 		{
