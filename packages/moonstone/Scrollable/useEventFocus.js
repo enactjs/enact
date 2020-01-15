@@ -8,19 +8,9 @@ const useEventFocus = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {
-		direction,
-		overscrollEffectOn
-	} = props;
-	const {
-		childRef,
-		spottable,
-		uiRef
-	} = instances;
-	const {
-		isWheeling,
-		type
-	} = dependencies;
+	const {direction, overscrollEffectOn} = props;
+	const {childRef, spottable, uiRef} = instances;
+	const {isWheeling, type} = dependencies;
 
 	/*
 	 * Functions

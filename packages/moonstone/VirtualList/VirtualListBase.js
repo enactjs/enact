@@ -30,9 +30,7 @@ const VirtualListBaseFactory = (type) => {
 		 * Dependencies
 		 */
 
-		const {
-			spotlightId
-		} = props;
+		const {spotlightId} = props;
 
 		/*
 		 * Instance
@@ -54,9 +52,7 @@ const VirtualListBaseFactory = (type) => {
 			isNeededScrollingPlaceholder,
 			SpotlightPlaceholder,
 			updateStatesAndBounds
-		} = useSpottable(props, {virtualListBase: variables}, {
-			type
-		});
+		} = useSpottable(props, {virtualListBase: variables}, {type});
 
 		const containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		usePreventScroll(props, {}, {

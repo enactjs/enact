@@ -7,12 +7,8 @@ const useSpotlightRestore = (props, instances) => {
 	 * Dependencies
 	 */
 
-	const {
-		id
-	} = props;
-	const {
-		uiRef
-	} = instances;
+	const {id} = props;
+	const {uiRef} = instances;
 
 	const context = useContext(SharedState);
 

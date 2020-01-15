@@ -8,15 +8,9 @@ const useSpotlightRestore = (props, instances) => {
 	 * Dependencies
 	 */
 
-	const {
-		spotlightId
-	} = props;
-	const {
-		virtualListBase
-	} = instances;
-	const {
-		current: {uiRefCurrent}
-	} = (virtualListBase || {});
+	const {spotlightId} = props;
+	const {virtualListBase} = instances;
+	const {current: {uiRefCurrent}} = (virtualListBase || {});
 
 	/*
 	 * Instance

@@ -81,13 +81,7 @@ const ScrollableBase = (props) => {
 		removeEventListeners,
 		scrollAndFocusScrollbarButton,
 		scrollbarProps
-	} = useSpottable(props, {
-			childRef,
-			overscrollRefs,
-			uiRef
-	}, {
-		type: 'JS'
-	});
+	} = useSpottable(props, {childRef, overscrollRefs, uiRef}, {type: 'JS'});
 
 	/*
 	 * Render

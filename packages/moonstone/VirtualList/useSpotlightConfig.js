@@ -6,12 +6,8 @@ const useSpotlightConfig = (props, instances) => {
 	 * Dependencies
 	 */
 
-	const {
-		spottable: {current: {lastFocusedIndex}}
-	} = instances;
-	const {
-		spotlightId
-	} = props;
+	const {spottable: {current: {lastFocusedIndex}}} = instances;
+	const {spotlightId} = props;
 
 	/*
 	 * useEffects

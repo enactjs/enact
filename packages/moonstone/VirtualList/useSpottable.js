@@ -49,6 +49,8 @@ const useSpottable = (props, instances, dependencies) => {
 	 * useEffects
 	 */
 
+	useSpotlightConfig(props, {spottable: variables});
+
 	const [isOverscrollEffect, setOverscrollEffect] = useOverscrollEffect();
 
 	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey(props, {spottable: variables}, {
@@ -59,8 +61,6 @@ const useSpottable = (props, instances, dependencies) => {
 		handle5WayKeyUpCB,
 		SpotlightAccelerator,
 	});
-
-	useSpotlightConfig(props, {spottable: variables});
 
 	const {
 		handlePlaceholderFocus,
@@ -171,7 +171,7 @@ const useSpottable = (props, instances, dependencies) => {
 			case 'acceleratedKeyDown': onAcceleratedKeyDown(param); break;
 			case 'keyDown':
 				if (Spotlight.move(direction)) {
-					const nextTargetIndex = getCurrent().dataset.index;
+					const nextTargetIndex = Spotlight.getCurrent().dataset.index;
 
 					ev.preventDefault();
 					ev.stopPropagation();

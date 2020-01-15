@@ -6,13 +6,8 @@ const useSpotlightConfig = (props, instances) => {
 	 * Dependencies
 	 */
 
-	const {
-		scrollAndFocusScrollbarButton,
-		spotlightId
-	} = props;
-	const {
-		uiRef
-	} = instances;
+	const {scrollAndFocusScrollbarButton, spotlightId} = props;
+	const {uiRef} = instances;
 
 	const contentsContainer = uiRef && containerRef.current || null;
 

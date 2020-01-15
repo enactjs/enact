@@ -19,10 +19,7 @@ const useSpotlightConfig = (props) => {
 	 * Dependencies
 	 */
 
-	const {
-		'data-spotlight-id': spotlightId,
-		focusableScrollbar,
-	} = props;
+	const {'data-spotlight-id': spotlightId, focusableScrollbar} = props;
 
 	/*
 	 * useEffects

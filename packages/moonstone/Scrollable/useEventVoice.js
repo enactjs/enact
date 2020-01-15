@@ -7,16 +7,9 @@ const useEventVoice = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {
-		direction,
-		rtl
-	} = props;
-	const {
-		uiRef
-	} = instances;
-	const {
-		onScrollbarButtonClick
-	} = dependencies
+	const {direction} = props;
+	const {uiRef} = instances;
+	const {onScrollbarButtonClick} = dependencies
 
 	/*
 	 * Instance

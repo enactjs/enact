@@ -20,12 +20,8 @@ const useEventKey = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {
-		spotlightId
-	} = props;
-	const {
-		spottable: {current: {uiRefCurrent}}
-	} = instances;
+	const {spotlightId} = props;
+	const {spottable: {current: {uiRefCurrent}}} = instances;
 	const {
 		containerNode,
 		handlerGlobalKeyDownCB,

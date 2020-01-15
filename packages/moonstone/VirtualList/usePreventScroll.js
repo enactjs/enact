@@ -5,13 +5,8 @@ const usePreventScroll = (props, {}, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {
-		rtl
-	} = props;
-	const {
-		containerNode,
-		type
-	} = dependencies;
+	const {rtl} = props;
+	const {containerNode, type} = dependencies;
 
 	/*
 	 * useEffects

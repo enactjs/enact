@@ -13,12 +13,8 @@ const useSpottable = (props, instances) => {
 	 * Dependencies
 	 */
 
-	const {
-		uiRef
-	} = instances;
-	const {
-		rtl
-	} = props;
+	const {uiRef} = instances;
+	const {rtl} = props;
 
 	const containerNode = uiRef && uiRef.current && uiRef.current.containerRef.current || null;
 
@@ -28,9 +24,7 @@ const useSpottable = (props, instances) => {
 
 	useSpotlightConfig(instances, props);
 
-	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey({}, {}, {
-		handlerGlobalKeyDownCB,
-	});
+	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey({}, {}, {handlerGlobalKeyDownCB});
 
 	useEffect(() => {
 		return () => setContainerDisabled(false);

@@ -7,16 +7,9 @@ const useScrollbar = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {
-		overscrollEffectOn,
-		direction: directionProp
-	} = props;
-	const {
-		uiRef
-	} = instances;
-	const {
-		isContent,
-	} = dependencies;
+	const {overscrollEffectOn, direction: directionProp} = props;
+	const {uiRef} = instances;
+	const {isContent} = dependencies;
 	const {
 		getScrollBounds,
 		horizontalScrollbarRef: hRef,

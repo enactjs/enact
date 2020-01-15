@@ -75,13 +75,7 @@ const ScrollableBaseNative = (props) => {
 		scrollbarProps,
 		scrollStopOnScroll,
 		start
-	} = useSpottable(props, {
-			childRef,
-			overscrollRefs,
-			uiRef
-	}, {
-		type: 'Native'
-	});
+	} = useSpottable(props, {childRef, overscrollRefs, uiRef}, {type: 'Native'});
 
 	/*
 	 * Render

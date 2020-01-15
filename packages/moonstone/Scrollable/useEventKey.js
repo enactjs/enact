@@ -9,21 +9,9 @@ const useEventKey = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {
-		// 'data-spotlight-container-disabled',
-		direction: directionProp,
-		overscrollEffectOn
-	} = props;
-	const {
-		spottable,
-		uiRef
-	} = instances;
-	const {
-		checkAndApplyOverscrollEffectByDirection,
-		hasFocus,
-		isContent,
-		type
-	} = dependencies;
+	const {direction: directionProp, overscrollEffectOn} = props;
+	const {spottable, uiRef} = instances;
+	const {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type} = dependencies;
 
 	/*
 	 * Functions
@@ -41,7 +29,6 @@ const useEventKey = (props, instances, dependencies) => {
 		spottable.current.animateOnFocus = true;
 
 		if (!repeat && hasFocus()) {
-			const {overscrollEffectOn} = props;
 			let direction = null;
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {

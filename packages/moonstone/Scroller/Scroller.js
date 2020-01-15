@@ -43,9 +43,7 @@ const ScrollerBase = (props) => {
 	 * Dependencies
 	 */
 
-	const {
-		initUiChildRef,
-	} = props;
+	const {initUiChildRef} = props;
 
 	const uiRef = useRef();
 
