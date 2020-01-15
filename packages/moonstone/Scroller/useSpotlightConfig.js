@@ -29,7 +29,7 @@ const useSpotlightConfig = (props, instances) => {
 	 */
 
 	function handleLeaveContainer ({direction, target}) {
-        const {current: {containerRef, scrollBounds: {maxLeft, maxTop}, scrollPos: {left, top}}} = uiRef.current;
+		const {current: {containerRef, scrollBounds: {maxLeft, maxTop}, scrollPos: {left, top}}} = uiRef.current;
 
 		// ensure we only scroll to boundary from the contents and not a scroll button which
 		// lie outside of uiRefCurrent.current.containerRef but within the spotlight container

@@ -1,4 +1,6 @@
 import {is} from '@enact/core/keymap';
+import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
+import Spotlight, {getDirection} from '@enact/spotlight';
 import clamp from 'ramda/src/clamp';
 import {useEffect} from 'react';
 
@@ -26,14 +28,11 @@ const useEventKey = (props, instances, dependencies) => {
 	} = instances;
 	const {
 		containerNode,
-		getDirection,
-		getTargetByDirectionFromElement,
 		handlerGlobalKeyDownCB,
 		handlePageUpDownKeyDownCB,
 		handleDirectionKeyDownCB,
 		handle5WayKeyUpCB,
-		processKey,
-		setPointerMode
+		SpotlightAccelerator
 	} = dependencies;
 
 	/*
@@ -141,9 +140,9 @@ const useEventKey = (props, instances, dependencies) => {
 		const direction = getDirection(keyCode);
 
 		if (direction) {
-			setPointerMode(false);
+			Spotlight.setPointerMode(false);
 
-			if (processKey(ev, nop)) {
+			if (SpotlightAccelerator.processKey(ev, nop)) {
 				ev.stopPropagation();
 			} else {
 				const {repeat} = ev;

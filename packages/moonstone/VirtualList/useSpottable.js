@@ -1,5 +1,4 @@
-import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
-import Spotlight, {focus, getDirection} from '@enact/spotlight';
+import Spotlight, {getDirection} from '@enact/spotlight';
 import Accelerator from '@enact/spotlight/Accelerator';
 import Pause from '@enact/spotlight/Pause';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
@@ -54,14 +53,11 @@ const useSpottable = (props, instances, dependencies) => {
 
 	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey(props, {spottable: variables}, {
 		containerNode,
-		getDirection,
-		getTargetByDirectionFromElement,
 		handlerGlobalKeyDownCB,
 		handlePageUpDownKeyDownCB,
 		handleDirectionKeyDownCB,
 		handle5WayKeyUpCB,
-		processKey: SpotlightAccelerator.processKey,
-		setPointerMode: Spotlight.setPointerMode
+		SpotlightAccelerator,
 	});
 
 	useSpotlightConfig(props, {spottable: variables});
