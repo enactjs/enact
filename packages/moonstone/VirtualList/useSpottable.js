@@ -24,12 +24,8 @@ const useSpottable = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {
-		virtualListBase: {current: {uiRefCurrent}},
-	} = instances;
-	const {
-		type
-	} = dependencies;
+	const {virtualListBase: {current: {uiRefCurrent}}} = instances;
+	const {type} = dependencies;
 
 	/*
 	 * Instance
@@ -55,7 +51,7 @@ const useSpottable = (props, instances, dependencies) => {
 
 	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey(props, {spottable: variables}, {
 		containerNode,
-		handlerGlobalKeyDownCB,
+		handleGlobalKeyDownCB,
 		handlePageUpDownKeyDownCB,
 		handleDirectionKeyDownCB,
 		handle5WayKeyUpCB,
@@ -70,10 +66,6 @@ const useSpottable = (props, instances, dependencies) => {
 	} = useSpotlightRestore(props, instances);
 
 	useEffect(() => {
-		// componentDidMount
-		// Nothing
-
-		// componentWillUnmount
 		return () => {
 			variables.current.pause.resume();
 			SpotlightAccelerator.reset();
@@ -192,7 +184,7 @@ const useSpottable = (props, instances, dependencies) => {
 		SpotlightAccelerator.reset();
 	}
 
-	function handlerGlobalKeyDownCB () {
+	function handleGlobalKeyDownCB () {
 		setContainerDisabled(false);
 	}
 

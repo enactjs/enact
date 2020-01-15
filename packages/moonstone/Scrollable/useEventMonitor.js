@@ -46,9 +46,7 @@ const useEventMonitor = ({}, instances) => {
 	 * Dependencies
 	 */
 
-	const {
-		uiRef
-	} = instances;
+	const {uiRef} = instances;
 
 	/*
 	 * useEffects

@@ -9,24 +9,15 @@ const useEventWheel = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {
-		childRef,
-	} = instances;
-	const {
-		isScrollButtonFocused,
-		type
-	} = dependencies;
-	const {
-		setContainerDisabled
-	} = (childRef.current || {});
+	const {childRef} = instances;
+	const {isScrollButtonFocused, type} = dependencies;
+	const {setContainerDisabled} = (childRef.current || {});
 
 	/*
 	 * Instance
 	 */
 
-	const variables = useRef({
-		isWheeling: false
-	});
+	const variables = useRef({isWheeling: false});
 
 	/*
 	 * Functions

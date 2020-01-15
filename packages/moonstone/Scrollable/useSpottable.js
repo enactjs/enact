@@ -49,14 +49,8 @@ const useSpottable = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {
-		childRef,
-		overscrollRefs,
-		uiRef
-	} = instances;
-	const {
-		type
-	} = dependencies;
+	const {childRef, overscrollRefs, uiRef} = instances;
+	const {type} = dependencies;
 
 	const context = useContext(SharedState);
 

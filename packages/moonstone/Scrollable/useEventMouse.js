@@ -3,16 +3,9 @@ const useEventMouse = ({}, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {
-		uiRef
-	} = instances;
-	const {
-		canScrollHorizontally,
-		canScrollVertically
-	} = (uiRef.current || {});
-	const {
-		type
-	} = dependencies;
+	const {uiRef} = instances;
+	const {canScrollHorizontally, canScrollVertically} = (uiRef.current || {});
+	const {type} = dependencies;
 
 	/*
 	 * Functions
