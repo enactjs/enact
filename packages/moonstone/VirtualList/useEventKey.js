@@ -2,7 +2,7 @@ import {is} from '@enact/core/keymap';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import clamp from 'ramda/src/clamp';
-import {useEffect} from 'react';
+import {useEffect, useRef} from 'react';
 
 const
 	isDown = is('down'),
