@@ -13,6 +13,10 @@ const useEventResizeWindow = () => {
 		}
 	}
 
+	/*
+	 * Return
+	 */
+
 	return {
 		handleResizeWindow
 	};

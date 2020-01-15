@@ -140,6 +140,10 @@ const useEventKey = (props, instances, dependencies) => {
 		return false; // means to be propagated
 	}
 
+	/*
+	 * Return
+	 */
+
 	return {
 		handleKeyDown,
 		scrollByPageOnPointerMode

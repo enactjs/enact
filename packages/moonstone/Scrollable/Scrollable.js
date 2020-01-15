@@ -6,11 +6,11 @@
  * @private
  */
 
-import classNames from 'classnames';
 import platform from '@enact/core/platform';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
-import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 

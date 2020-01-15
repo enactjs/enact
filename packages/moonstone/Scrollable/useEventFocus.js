@@ -1,4 +1,4 @@
-import Spotlight, {} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
 import {constants} from '@enact/ui/Scrollable/ScrollableNative';
 
 const {epsilon} = constants;

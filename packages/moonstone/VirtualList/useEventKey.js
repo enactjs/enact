@@ -1,6 +1,6 @@
 import {is} from '@enact/core/keymap';
-import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import Spotlight, {getDirection} from '@enact/spotlight';
+import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import clamp from 'ramda/src/clamp';
 import {useEffect} from 'react';
 

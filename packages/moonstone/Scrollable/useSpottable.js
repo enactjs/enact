@@ -209,7 +209,7 @@ const useSpottable = (props, instances, dependencies) => {
 	}
 
 	/*
-	 * Render
+	 * Return
 	 */
 
 	return {

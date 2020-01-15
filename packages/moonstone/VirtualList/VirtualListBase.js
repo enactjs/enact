@@ -6,8 +6,8 @@ import warning from 'warning';
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
 
-import useSpottable from './useSpottable';
 import usePreventScroll from './usePreventScroll';
+import useSpottable from './useSpottable';
 
 const
 	JS = 'JS',
