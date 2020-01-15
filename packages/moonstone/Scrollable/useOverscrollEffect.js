@@ -3,11 +3,7 @@ import {constants} from '@enact/ui/Scrollable';
 import {useEffect, useRef} from 'react';
 
 const
-	{
-		overscrollTypeDone,
-		overscrollTypeNone,
-		overscrollTypeOnce,
-	} = constants,
+	{overscrollTypeDone, overscrollTypeNone, overscrollTypeOnce} = constants,
 	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
 	overscrollTimeout = 300;
 
@@ -16,9 +12,7 @@ const useOverscrollEffect = ({}, instances) => {
 	 * Dependencies
 	 */
 
-	const {
-		overscrollRefs
-	} = instances;
+	const {overscrollRefs} = instances;
 
 	/*
 	 * Instance

@@ -89,29 +89,15 @@ const useSpottable = (props, instances, dependencies) => {
 
 	useEventMonitor({}, {uiRef});
 
-	const {
-		handleWheel,
-		isWheeling
-	} = useEventWheel(props, {childRef}, {isScrollButtonFocused, type});
+	const {handleWheel, isWheeling} = useEventWheel(props, {childRef}, {isScrollButtonFocused, type});
 
-	const {
-		handleFocus,
-		hasFocus
-	} = useEventFocus(props, {childRef, spottable: variables, uiRef}, {isWheeling, type});
+	const {handleFocus, hasFocus} = useEventFocus(props, {childRef, spottable: variables, uiRef}, {isWheeling, type});
 
-	const {
-		handleKeyDown,
-		scrollByPageOnPointerMode
-	} = useEventKey(props, {uiRef, spottable: variables}, {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type});
+	const {handleKeyDown, scrollByPageOnPointerMode} = useEventKey(props, {uiRef, spottable: variables}, {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type});
 
-	const {
-		handleFlick,
-		handleMouseDown
-	} = useEventMouse({}, {uiRef}, {type});
+	const {handleFlick, handleMouseDown} = useEventMouse({}, {uiRef}, {type});
 
-	const {
-		handleTouchStart
-	} = useEventTouch({}, {}, {isScrollButtonFocused});
+	const {handleTouchStart} = useEventTouch({}, {}, {isScrollButtonFocused});
 
 	const {
 		addVoiceEventListener,
@@ -119,9 +105,7 @@ const useSpottable = (props, instances, dependencies) => {
 		stopVoice,
 	} = useEventVoice(props, {uiRef}, {onScrollbarButtonClick});
 
-	const {
-		handleResizeWindow
-	} = useEventResizeWindow();
+	const {handleResizeWindow} = useEventResizeWindow();
 
 	/*
 	 * Functions

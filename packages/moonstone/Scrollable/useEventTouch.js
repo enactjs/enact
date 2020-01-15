@@ -5,9 +5,7 @@ const useEventTouch = ({}, {}, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {
-		isScrollButtonFocused
-	} = dependencies;
+	const {isScrollButtonFocused} = dependencies;
 
 	/*
 	 * Functions
