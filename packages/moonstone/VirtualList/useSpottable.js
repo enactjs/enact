@@ -92,7 +92,7 @@ const useSpottable = (props, instances, dependencies) => {
 
 			setContainerDisabled(false);
 		};
-	}, []);	// TODO : Handle exhaustive-deps ESLint rule.
+	}, []);
 
 	/*
 	 * Functions

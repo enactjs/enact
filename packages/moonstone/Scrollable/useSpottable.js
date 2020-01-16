@@ -1,4 +1,4 @@
-import handle, {forward} from '@enact/core/handle';
+import {forward} from '@enact/core/handle';
 import Spotlight from '@enact/spotlight';
 import {spottableClass} from '@enact/spotlight/Spottable';
 import {getRect, intersects} from '@enact/spotlight/src/utils';
@@ -87,13 +87,13 @@ const useSpottable = (props, instances, dependencies) => {
 		clearOverscrollEffect
 	} = useOverscrollEffect({}, {overscrollRefs, uiRef});
 
-	useEventMonitor({}, {uiRef});
-
 	const {handleWheel, isWheeling} = useEventWheel(props, {childRef}, {isScrollButtonFocused, type});
 
 	const {handleFocus, hasFocus} = useEventFocus(props, {childRef, spottable: variables, uiRef}, {isWheeling, type});
 
 	const {handleKeyDown, scrollByPageOnPointerMode} = useEventKey(props, {uiRef, spottable: variables}, {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type});
+
+	useEventMonitor({}, {uiRef}, {scrollByPageOnPointerMode});
 
 	const {handleFlick, handleMouseDown} = useEventMouse({}, {uiRef}, {type});
 
@@ -169,13 +169,15 @@ const useSpottable = (props, instances, dependencies) => {
 		}
 	}
 
-	const handleScroll = handle(
-		forward('onScroll'),
-		(ev, {id}, context) => id && context && context.set,
-		({scrollLeft: x, scrollTop: y}, {id}, context) => {
+	function handleScroll (ev) {
+		const {scrollLeft: x, scrollTop: y} = ev;
+		const {id} = props;
+		forward('onScroll', ev, props);
+		if (id && context && context.set) {
+			context.set(ev, props);
 			context.set(`${id}.scrollPosition`, {x, y});
 		}
-	);
+	}
 
 	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
 	function handleScrollerUpdate () {

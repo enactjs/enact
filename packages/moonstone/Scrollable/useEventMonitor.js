@@ -41,12 +41,13 @@ const pageKeyHandler = (ev) => {
 	}
 };
 
-const useEventMonitor = ({}, instances) => {
+const useEventMonitor = ({}, instances, dependencies) => {
 	/*
 	 * Dependencies
 	 */
 
 	const {uiRef} = instances;
+	const {scrollByPageOnPointerMode} = dependencies
 
 	/*
 	 * Hooks
@@ -62,19 +63,18 @@ const useEventMonitor = ({}, instances) => {
 			// TODO: Replace `this` to something.
 			deleteMonitorEventTarget();
 		};
-	}, []);	// TODO : Handle exhaustive-deps ESLint rule.
+	}, []);
 
 	/*
 	 * Functions
 	 */
 
 	function setMonitorEventTarget (target) {
-		// TODO: Replace `this` to something.
-		scrollables.set(/* this */null, target);
+		scrollables.set({scrollByPageOnPointerMode}, target);
 	}
 
 	function deleteMonitorEventTarget() {
-		scrollables.delete(/* this */ null);
+		scrollables.delete({scrollByPageOnPointerMode});
 	}
 };
 

@@ -1,7 +1,7 @@
 import Spotlight from '@enact/spotlight';
 import {getRect} from '@enact/spotlight/src/utils';
 import ri from '@enact/ui/resolution';
-import {useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 
 import useEventKey from './useEventKey';
 import useSpotlightConfig from './useSpotlightConfig';
@@ -28,14 +28,14 @@ const useSpottable = (props, instances) => {
 
 	useEffect(() => {
 		return () => setContainerDisabled(false);
-	}, [setContainerDisabled]);	// TODO : Handle exhaustive-deps ESLint rule.
+	}, [setContainerDisabled]);
 
 	useEffect(() => {
 		const {onUpdate} = props;
 		if (onUpdate) {
-		//	onUpdate();		// TODO: Invoking onUpdate() has error. Fix it on PLAT-98204.
+			onUpdate();
 		}
-	});	// TODO : Handle exhaustive-deps ESLint rule.
+	});
 
 	/*
 	 * Functions
@@ -237,9 +237,9 @@ const useSpottable = (props, instances) => {
 			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
 
 			if (bool) {
-				addGlobalKeyDownEventListener(() => {
+				addGlobalKeyDownEventListener(useCallback(() => {
 					setContainerDisabled(false)
-				});
+				}));
 			} else {
 				removeGlobalKeyDownEventListener();
 			}

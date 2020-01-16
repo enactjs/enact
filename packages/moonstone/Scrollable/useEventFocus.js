@@ -101,6 +101,11 @@ const useEventFocus = (props, instances, dependencies) => {
 	}
 
 	function handleFocus (ev) {
+		if (!childRef.current) {
+			// TODO : On initial load, `childRef.current` is null
+			return;
+		}
+
 		const
 			{isDragging} = uiRef.current,
 			shouldPreventScrollByFocus = childRef.current.shouldPreventScrollByFocus ?

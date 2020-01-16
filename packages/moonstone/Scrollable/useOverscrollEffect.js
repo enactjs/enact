@@ -41,7 +41,7 @@ const useOverscrollEffect = ({}, instances) => {
 			stopOverscrollJob('vertical', 'before');
 			stopOverscrollJob('vertical', 'after');
 		};
-	}, []);	// TODO : Handle exhaustive-deps ESLint rule.
+	}, []);
 
 	/*
 	 * Functions

@@ -27,7 +27,7 @@ const useSpotlightConfig = (props) => {
 
 	useEffect(() => {
 		configureSpotlight();
-	}, [spotlightId, focusableScrollbar]);	// TODO : Handle exhaustive-deps ESLint rule.
+	}, [spotlightId, focusableScrollbar]);
 
 	/*
 	 * Functions

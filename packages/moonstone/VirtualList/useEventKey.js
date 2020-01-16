@@ -54,7 +54,7 @@ const useEventKey = (props, instances, dependencies) => {
 				containerNode.removeEventListener('keyup', handleKeyUp, {capture: true});
 			}
 		};
-	}, [containerNode]);	// TODO : Handle exhaustive-deps ESLint rule.
+	}, [containerNode]);
 
 	/*
 	 * Functions

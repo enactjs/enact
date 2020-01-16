@@ -27,7 +27,7 @@ const useSpotlightRestore = (props, instances) => {
 	 * Hooks
 	 */
 
-	useEffect(restoreFocus);	// TODO : Handle exhaustive-deps ESLint rule.
+	useEffect(restoreFocus);
 
 	/*
 	 * Functions
@@ -62,7 +62,7 @@ const useSpotlightRestore = (props, instances) => {
 			!isPlaceholderFocused()
 		) {
 			const node = containerNode && containerNode.querySelector(
-					`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
+				`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
 			);
 
 			if (node) {

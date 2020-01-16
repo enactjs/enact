@@ -15,7 +15,7 @@ const useSpotlightConfig = (props, instances) => {
 
 	useEffect(() => {
 		configureSpotlight();
-	}, [spotlightId]);	// TODO : Handle exhaustive-deps ESLint rule.
+	}, [spotlightId]);
 
 	/*
 	 * Functions
