@@ -1,8 +1,13 @@
+import {forward} from '@enact/core/handle';
+import {clamp} from '@enact/core/util';
+import Spotlight, {getDirection} from '@enact/spotlight';
+import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import {constants} from '@enact/ui/Scrollable/ScrollableNative';
 
 const
-	{epsilon} = constants,
-	paginationPageMultiplier = 0.66;
+	{epsilon, isPageDown, isPageUp} = constants,
+	paginationPageMultiplier = 0.66,
+	lastPointer = {x: 0, y: 0};
 
 const useEventKey = (props, instances, dependencies) => {
 	/*
@@ -10,7 +15,7 @@ const useEventKey = (props, instances, dependencies) => {
 	 */
 
 	const {direction: directionProp, overscrollEffectOn} = props;
-	const {spottable, uiRef} = instances;
+	const {childRef, spottable, uiRef} = instances;
 	const {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type} = dependencies;
 
 	/*
@@ -43,7 +48,7 @@ const useEventKey = (props, instances, dependencies) => {
 						checkAndApplyOverscrollEffectByDirection(direction);
 					}
 				}
-			} else if (getDirection(keyCode) && (type === 'JS' || type==='Native' && !Spotlight.getPointerMode())) {
+			} else if (getDirection(keyCode) && (type === 'JS' || type === 'Native' && !Spotlight.getPointerMode())) {
 				const element = Spotlight.getCurrent();
 
 				uiRef.current.lastInputType = 'arrowKey';
@@ -124,7 +129,7 @@ const useEventKey = (props, instances, dependencies) => {
 		forward('onKeyDown', ev, props);
 		ev.preventDefault();
 
-		variables.current.animateOnFocus = true;
+		spottable.current.animateOnFocus = true;
 
 		if (!repeat && (directionProp === 'vertical' || directionProp === 'both')) {
 			const direction = isPageUp(keyCode) ? 'up' : 'down';
@@ -146,6 +151,7 @@ const useEventKey = (props, instances, dependencies) => {
 
 	return {
 		handleKeyDown,
+		lastPointer,
 		scrollByPageOnPointerMode
 	};
 };

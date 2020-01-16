@@ -80,7 +80,9 @@ const ScrollableBase = (props) => {
 		handleWheel,
 		removeEventListeners,
 		scrollAndFocusScrollbarButton,
-		scrollbarProps
+		scrollbarProps,
+		scrollTo,
+		stop
 	} = useSpottable(props, {childRef, overscrollRefs, uiRef}, {type: 'JS'});
 
 	/*

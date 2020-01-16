@@ -1,6 +1,9 @@
 import {onWindowReady} from '@enact/core/snapshot';
 import Spotlight from '@enact/spotlight';
+import {constants} from '@enact/ui/Scrollable/ScrollableNative';
 import {useEffect, useRef} from 'react';
+
+const {isPageDown, isPageUp} = constants;
 
 /*
  * Track the last position of the pointer to check if a list should scroll by
@@ -8,15 +11,14 @@ import {useEffect, useRef} from 'react';
  * `keydown` event does not occur if there is no focus on the node and
  * its descendants, we add `keydown` handler to `document` also.
  */
-const
-	lastPointer = {x: 0, y: 0},
-	scrollables = new Map();
+const scrollables = new Map();
+let lastPointer = {x: 0, y: 0};
+// An app could have lists and/or scrollers more than one,
+// so we should test all of them when page up/down key is pressed.
 const pointerTracker = (ev) => {
 	lastPointer.x = ev.clientX;
 	lastPointer.y = ev.clientY;
 };
-// An app could have lists and/or scrollers more than one,
-// so we should test all of them when page up/down key is pressed.
 const pageKeyHandler = (ev) => {
 	const {keyCode} = ev;
 	if (Spotlight.getPointerMode() && !Spotlight.getCurrent() && (isPageUp(keyCode) || isPageDown(keyCode))) {
@@ -41,13 +43,21 @@ const pageKeyHandler = (ev) => {
 	}
 };
 
-const useEventMonitor = ({}, instances, dependencies) => {
+const useEventMonitor = (props, instances, dependencies) => {
 	/*
 	 * Dependencies
 	 */
 
 	const {uiRef} = instances;
-	const {scrollByPageOnPointerMode} = dependencies
+	const {lastPointer: lastPointerProp, scrollByPageOnPointerMode} = dependencies;
+
+	/*
+	 * Instance
+	 */
+
+	const variables = useRef({pageKeyHandlerObj: {scrollByPageOnPointerMode}});
+
+	lastPointer = lastPointerProp;
 
 	/*
 	 * Hooks
@@ -63,18 +73,18 @@ const useEventMonitor = ({}, instances, dependencies) => {
 			// TODO: Replace `this` to something.
 			deleteMonitorEventTarget();
 		};
-	}, []);
+	}, [deleteMonitorEventTarget, setMonitorEventTarget, uiRef]);
 
 	/*
 	 * Functions
 	 */
 
 	function setMonitorEventTarget (target) {
-		scrollables.set({scrollByPageOnPointerMode}, target);
+		scrollables.set(variables.pageKeyHandlerObj, target);
 	}
 
-	function deleteMonitorEventTarget() {
-		scrollables.delete({scrollByPageOnPointerMode});
+	function deleteMonitorEventTarget () {
+		scrollables.delete(variables.pageKeyHandlerObj);
 	}
 };
 

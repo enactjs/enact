@@ -7,7 +7,7 @@ const useScrollbar = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {overscrollEffectOn, direction: directionProp} = props;
+	const {direction: directionProp, focusableScrollbar, overscrollEffectOn} = props;
 	const {uiRef} = instances;
 	const {isContent} = dependencies;
 	const {

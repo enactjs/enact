@@ -7,7 +7,7 @@ const
 	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
 	overscrollTimeout = 300;
 
-const useOverscrollEffect = ({}, instances) => {
+const useOverscrollEffect = (props, instances) => {
 	/*
 	 * Dependencies
 	 */
@@ -30,6 +30,20 @@ const useOverscrollEffect = ({}, instances) => {
 	 */
 
 	useEffect(() => {
+		function createOverscrollJob (orientation, edge) {
+			if (!variables.current.overscrollJobs[orientation][edge]) {
+				variables.current.overscrollJobs[orientation][edge] = new Job(applyOverscrollEffect.bind(this), overscrollTimeout);
+			}
+		}
+
+		function stopOverscrollJob (orientation, edge) {
+			const job = variables.current.overscrollJobs[orientation][edge];
+
+			if (job) {
+				job.stop();
+			}
+		}
+
 		createOverscrollJob('horizontal', 'before');
 		createOverscrollJob('horizontal', 'after');
 		createOverscrollJob('vertical', 'before');
@@ -41,7 +55,7 @@ const useOverscrollEffect = ({}, instances) => {
 			stopOverscrollJob('vertical', 'before');
 			stopOverscrollJob('vertical', 'after');
 		};
-	}, []);
+	}, [applyOverscrollEffect]);
 
 	/*
 	 * Functions
@@ -62,20 +76,6 @@ const useOverscrollEffect = ({}, instances) => {
 	function clearOverscrollEffect (orientation, edge) {
 		variables.current.overscrollJobs[orientation][edge].startAfter(overscrollTimeout, orientation, edge, overscrollTypeNone, 0);
 		uiRef.current.setOverscrollStatus(orientation, edge, overscrollTypeNone, 0);
-	}
-
-	function createOverscrollJob (orientation, edge) {
-		if (!variables.current.overscrollJobs[orientation][edge]) {
-			variables.current.overscrollJobs[orientation][edge] = new Job(applyOverscrollEffect.bind(this), overscrollTimeout);
-		}
-	}
-
-	function stopOverscrollJob (orientation, edge) {
-		const job = variables.current.overscrollJobs[orientation][edge];
-
-		if (job) {
-			job.stop();
-		}
 	}
 
 	function checkAndApplyOverscrollEffectByDirection (direction) {

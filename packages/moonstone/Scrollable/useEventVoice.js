@@ -9,7 +9,7 @@ const useEventVoice = (props, instances, dependencies) => {
 
 	const {direction} = props;
 	const {uiRef} = instances;
-	const {onScrollbarButtonClick} = dependencies
+	const {onScrollbarButtonClick} = dependencies;
 
 	/*
 	 * Instance
@@ -17,7 +17,7 @@ const useEventVoice = (props, instances, dependencies) => {
 
 	const variables = useRef({
 		isVoiceControl: false,
-		voiceControlDirection: 'vertical',
+		voiceControlDirection: 'vertical'
 	});
 
 	/*

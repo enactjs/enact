@@ -1,16 +1,17 @@
 import Spotlight from '@enact/spotlight';
+import {getRect} from '@enact/spotlight/src/utils';
 import {constants} from '@enact/ui/Scrollable/ScrollableNative';
 
-const {epsilon} = constants;
+const {animationDuration, epsilon} = constants;
 
 const useEventFocus = (props, instances, dependencies) => {
 	/*
 	 * Dependencies
 	 */
 
-	const {direction, overscrollEffectOn} = props;
+	const {'data-spotlight-id': spotlightId, direction, overscrollEffectOn} = props;
 	const {childRef, spottable, uiRef} = instances;
-	const {isWheeling, type} = dependencies;
+	const {alertThumb, isWheeling, type} = dependencies;
 
 	/*
 	 * Functions
@@ -151,6 +152,7 @@ const useEventFocus = (props, instances, dependencies) => {
 	 */
 
 	return {
+		calculateAndScrollTo,
 		handleFocus,
 		hasFocus
 	};

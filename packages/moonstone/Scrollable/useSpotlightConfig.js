@@ -26,18 +26,14 @@ const useSpotlightConfig = (props) => {
 	 */
 
 	useEffect(() => {
+		function configureSpotlight () {
+			Spotlight.set(spotlightId, {
+				navigableFilter: focusableScrollbar ? null : navigableFilter
+			});
+		}
+
 		configureSpotlight();
-	}, [spotlightId, focusableScrollbar]);
-
-	/*
-	 * Functions
-	 */
-
-	function configureSpotlight () {
-		Spotlight.set(spotlightId, {
-			navigableFilter: focusableScrollbar ? null : navigableFilter
-		});
-	}
+	}, [focusableScrollbar, spotlightId]);
 };
 
 export default useSpotlightConfig;

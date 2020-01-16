@@ -20,7 +20,7 @@ const useEventKey = () => {
 
 	function removeGlobalKeyDownEventListener () {
 		document.removeEventListener('keydown', variables.current.fn, {capture: true});
-		variables.current.fn = null
+		variables.current.fn = null;
 	}
 
 	/*

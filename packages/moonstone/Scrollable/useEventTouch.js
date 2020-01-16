@@ -1,6 +1,6 @@
 import Spotlight from '@enact/spotlight';
 
-const useEventTouch = ({}, {}, dependencies) => {
+const useEventTouch = (props, instnaces, dependencies) => {
 	/*
 	 * Dependencies
 	 */

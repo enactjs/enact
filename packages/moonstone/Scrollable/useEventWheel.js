@@ -2,14 +2,14 @@ import Spotlight from '@enact/spotlight';
 import {constants} from '@enact/ui/Scrollable/ScrollableNative';
 import {useRef} from 'react';
 
-const {scrollWheelPageMultiplierForMaxPixel} = constants;
+const {overscrollTypeOnce, scrollWheelPageMultiplierForMaxPixel} = constants;
 
 const useEventWheel = (props, instances, dependencies) => {
 	/*
 	 * Dependencies
 	 */
 
-	const {childRef} = instances;
+	const {childRef, uiRef} = instances;
 	const {isScrollButtonFocused, type} = dependencies;
 	const {setContainerDisabled} = (childRef.current || {});
 
@@ -69,7 +69,7 @@ const useEventWheel = (props, instances, dependencies) => {
 
 				if (!variables.current.isWheeling) {
 					if (!props['data-spotlight-container-disabled']) {
-						childRef.current.setContainerDisabled(true);
+						setContainerDisabled(true);
 					}
 					variables.current.isWheeling = true;
 				}
@@ -96,7 +96,7 @@ const useEventWheel = (props, instances, dependencies) => {
 			if (eventDelta < 0 && uiRef.current.scrollLeft > 0 || eventDelta > 0 && uiRef.current.scrollLeft < bounds.maxLeft) {
 				if (!variables.current.isWheeling) {
 					if (!props['data-spotlight-container-disabled']) {
-						childRef.current.setContainerDisabled(true);
+						setContainerDisabled(true);
 					}
 					variables.current.isWheeling = true;
 				}

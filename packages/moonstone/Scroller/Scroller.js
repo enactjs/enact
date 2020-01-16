@@ -38,7 +38,7 @@ import useSpottable from './useSpottable';
  * @ui
  * @public
  */
-const ScrollerBase = (props, reference) => {
+let ScrollerBase = (props, reference) => {
 	/*
 	 * Dependencies
 	 */
@@ -51,7 +51,7 @@ const ScrollerBase = (props, reference) => {
 	 * Hooks
 	 */
 
-	useSpottable(props, {uiRef});
+	const {calculatePositionOnFocus, focusOnNode, setContainerDisabled} = useSpottable(props, {uiRef});
 
 	/*
 	 * Functions

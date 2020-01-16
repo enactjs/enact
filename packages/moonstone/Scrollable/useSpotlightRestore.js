@@ -32,7 +32,7 @@ const useSpotlightRestore = (props, instances) => {
 		}
 
 		restoreScrollPosition();
-	}, []);
+	}, [context, id, uiRef]);
 };
 
 export default useSpotlightRestore;
