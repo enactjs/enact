@@ -1,6 +1,6 @@
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
-import React, {useRef} from 'react';
+import React, {forwardRef, useImperativeHandle, useRef} from 'react';
 import warning from 'warning';
 
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
@@ -25,7 +25,7 @@ const
 const VirtualListBaseFactory = (type) => {
 	const UiBase = (type === JS) ? UiVirtualListBase : UiVirtualListBaseNative;
 
-	const VirtualListCore = (props) => {
+	let VirtualListCore = (props, reference) => {
 		/*
 		 * Dependencies
 		 */
@@ -76,6 +76,21 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		/*
+		 * useImperativeHandle
+		 */
+
+		useImperativeHandle(reference, () => ({
+			calculatePositionOnFocus,
+			focusByIndex,
+			focusOnNode,
+			shouldPreventScrollByFocus,
+			shouldPreventOverscrollEffect,
+			setLastFocusedNode,
+			getScrollBounds,
+			setContainerDisabled
+		}));
+
+		/*
 		 * Render
 		 */
 
@@ -116,6 +131,8 @@ const VirtualListBaseFactory = (type) => {
 			/>
 		);
 	};
+
+	VirtualListCore = forwardRef(VirtualListCore);
 
 	VirtualListCore.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 		/**

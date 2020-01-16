@@ -19,7 +19,7 @@
 
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import PropTypes from 'prop-types';
-import React, {useRef} from 'react';
+import React, {forwardRef, useImperativeHandle, useRef} from 'react';
 
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -38,7 +38,7 @@ import useSpottable from './useSpottable';
  * @ui
  * @public
  */
-const ScrollerBase = (props) => {
+const ScrollerBase = (props, reference) => {
 	/*
 	 * Dependencies
 	 */
@@ -65,6 +65,16 @@ const ScrollerBase = (props) => {
 	}
 
 	/*
+	 * useImperativeHandle
+	 */
+
+	useImperativeHandle(reference, () => ({
+		calculatePositionOnFocus,
+		focusOnNode,
+		setContainerDisabled
+	}));
+
+	/*
 	 * Render
 	 */
 
@@ -82,7 +92,10 @@ const ScrollerBase = (props) => {
 	);
 };
 
+ScrollerBase = forwardRef(ScrollerBase);
+
 ScrollerBase.displayName = 'ScrollerBase';
+
 ScrollerBase.propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
 	/**
 	 * Passes the instance of [Scroller]{@link ui/Scroller.Scroller}.
