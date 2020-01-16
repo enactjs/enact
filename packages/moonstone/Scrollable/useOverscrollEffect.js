@@ -12,13 +12,13 @@ const useOverscrollEffect = ({}, instances) => {
 	 * Dependencies
 	 */
 
-	const {overscrollRefs} = instances;
+	const {overscrollRefs, uiRef} = instances;
 
 	/*
 	 * Instance
 	 */
 
-	var variables = useRef({
+	const variables = useRef({
 		overscrollJobs: {
 			horizontal: {before: null, after: null},
 			vertical: {before: null, after: null}

@@ -85,7 +85,7 @@ const useSpottable = (props, instances, dependencies) => {
 		applyOverscrollEffect,
 		checkAndApplyOverscrollEffectByDirection,
 		clearOverscrollEffect
-	} = useOverscrollEffect({}, {overscrollRefs});
+	} = useOverscrollEffect({}, {overscrollRefs, uiRef});
 
 	useEventMonitor({}, {uiRef});
 
