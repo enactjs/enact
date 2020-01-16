@@ -69,6 +69,7 @@ const VirtualListBaseFactory = (type) => {
 		useImperativeHandle(reference, () => ({
 			calculatePositionOnFocus,
 			focusByIndex,
+			focusOnNode,
 			shouldPreventScrollByFocus,
 			shouldPreventOverscrollEffect,
 			setLastFocusedNode,
