@@ -7,7 +7,7 @@ import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
-import React, {useEffect, useRef} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useRef} from 'react';
 import warning from 'warning';
 
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
@@ -44,7 +44,7 @@ const
 const VirtualListBaseFactory = (type) => {
 	const UiBase = (type === JS) ? UiVirtualListBase : UiVirtualListBaseNative;
 
-	const VirtualListCore = (props) => {
+	let VirtualListCore = (props, reference) => {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
 		// Instance variables
@@ -64,6 +64,18 @@ const VirtualListBaseFactory = (type) => {
 		if (variables.current.pause === null) {
 			variables.current.pause = new Pause('VirtualListBase');
 		}
+		const pause = variables.current.pause;
+
+		useImperativeHandle(reference, () => ({
+			calculatePositionOnFocus,
+			focusByIndex,
+			focusOnNode,
+			shouldPreventScrollByFocus,
+			shouldPreventOverscrollEffect,
+			setLastFocusedNode,
+			getScrollBounds,
+			setContainerDisabled
+		}));
 
 		// Constructor
 		const {spotlightId} = props;
@@ -72,6 +84,7 @@ const VirtualListBaseFactory = (type) => {
 			// componentDidMount
 			const containerNode = variables.current.uiRefCurrent.containerRef.current;
 			const scrollerNode = document.querySelector(`[data-spotlight-id="${props.spotlightId}"]`);
+			const preventScrollHandler = variables.current.preventScroll;
 
 			if (type === JS) {
 				// prevent native scrolling by Spotlight
@@ -81,7 +94,7 @@ const VirtualListBaseFactory = (type) => {
 				};
 
 				if (containerNode && containerNode.addEventListener) {
-					containerNode.addEventListener('scroll', variables.current.preventScroll);
+					containerNode.addEventListener('scroll', preventScrollHandler);
 				}
 			}
 
@@ -95,7 +108,7 @@ const VirtualListBaseFactory = (type) => {
 				if (type === JS) {
 					// remove a function for preventing native scrolling by Spotlight
 					if (containerNode && containerNode.removeEventListener) {
-						containerNode.removeEventListener('scroll', variables.current.preventScroll);
+						containerNode.removeEventListener('scroll', preventScrollHandler);
 					}
 				}
 
@@ -104,7 +117,7 @@ const VirtualListBaseFactory = (type) => {
 					scrollerNode.removeEventListener('keyup', onKeyUp, {capture: true});
 				}
 
-				variables.current.pause.resume();
+				pause.resume();
 				SpotlightAccelerator.reset();
 
 				setContainerDisabled(false);
@@ -116,7 +129,7 @@ const VirtualListBaseFactory = (type) => {
 			configureSpotlight();
 		}, [props.spotlightId]);	// TODO : Handle exhaustive-deps ESLint rule.
 
-		useEffect(restoreFocus);	// TODO : Handle exhaustive-deps ESLint rule.
+		useEffect(restoreFocus);
 
 		function setContainerDisabled (bool) {
 			const containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
@@ -305,7 +318,7 @@ const VirtualListBaseFactory = (type) => {
 						variables.current.uiRefCurrent.containerRef.current.querySelector(`[data-index='${nextIndex}']${spottableSelector}`) == null
 					)) {
 						if (wrap === true) {
-							variables.current.pause.pause();
+							pause.pause();
 							target.blur();
 						} else {
 							focusByIndex(nextIndex);
@@ -517,7 +530,7 @@ const VirtualListBaseFactory = (type) => {
 				!isPlaceholderFocused()
 			) {
 				const node = variables.current.uiRefCurrent.containerRef.current.querySelector(
-						`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
+					`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
 				);
 
 				if (node) {
@@ -543,8 +556,6 @@ const VirtualListBaseFactory = (type) => {
 		/**
 		 * calculator
 		 */
-
-		// TODO PLAT-98204.
 		function calculatePositionOnFocus ({item, scrollPosition = variables.current.uiRefCurrent.scrollPosition}) {
 			const
 				{pageScroll} = props,
@@ -590,17 +601,14 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		// TODO PLAT-98204.
 		function shouldPreventScrollByFocus () {
 			return ((type === JS) ? (variables.current.isScrolledBy5way) : (variables.current.isScrolledBy5way || variables.current.isScrolledByJump));
 		}
 
-		// TODO PLAT-98204.
 		function shouldPreventOverscrollEffect () {
 			return variables.current.isWrappedBy5way;
 		}
 
-		// TODO PLAT-98204.
 		function setLastFocusedNode (node) {
 			variables.current.lastFocusedIndex = node.dataset && getNumberValue(node.dataset.index);
 		}
@@ -614,7 +622,6 @@ const VirtualListBaseFactory = (type) => {
 			));
 		}
 
-		// TODO PLAT-98204.
 		function getScrollBounds () {
 			return variables.current.uiRefCurrent.getScrollBounds();
 		}
@@ -668,6 +675,7 @@ const VirtualListBaseFactory = (type) => {
 		);
 	};
 
+	VirtualListCore = forwardRef(VirtualListCore);
 	VirtualListCore.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 		/**
 		 * The `render` function called for each item in the list.
