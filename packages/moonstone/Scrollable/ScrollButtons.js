@@ -46,15 +46,6 @@ class ScrollButtons extends Component {
 
 	static propTypes = /** @lends moonstone/Scrollable.ScrollButtons.prototype */ {
 		/**
-		 * The render function for thumb.
-		 *
-		 * @type {Function}
-		 * @required
-		 * @private
-		 */
-		thumbRenderer: PropTypes.func.isRequired,
-
-		/**
 		 * Called to alert the user for accessibility notifications.
 		 *
 		 * @type {Function}
@@ -141,6 +132,15 @@ class ScrollButtons extends Component {
 		 * @private
 		 */
 		rtl: PropTypes.bool,
+
+		/**
+		 * The render function for thumb.
+		 *
+		 * @type {Function}
+		 * @required
+		 * @private
+		 */
+		thumbRenderer: PropTypes.func,
 
 		/**
 		 * The scrollbar will be oriented vertically.
@@ -373,7 +373,7 @@ class ScrollButtons extends Component {
 			>
 				{prevIcon}
 			</ScrollButton>,
-			thumbRenderer(),
+			thumbRenderer ? thumbRenderer() : null,
 			<ScrollButton
 				aria-label={rtl && !vertical ? previousButtonAriaLabel : nextButtonAriaLabel}
 				data-spotlight-overflow="ignore"

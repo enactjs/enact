@@ -222,6 +222,11 @@ const VirtualListBaseFactory = (type) => {
 			overhang: PropTypes.number,
 
 			/**
+			 * TBD
+			 */
+			overSize: PropTypes.number,
+
+			/**
 			 * When `true`, the list will scroll by page.  Otherwise the list will scroll by item.
 			 *
 			 * @type {Boolean}
@@ -451,6 +456,7 @@ const VirtualListBaseFactory = (type) => {
 		hasDataSizeChanged = false
 		cc = []
 		scrollPosition = 0
+		containerScrollPosition = 0
 		scrollPositionTarget = 0
 
 		// For individually sized item
@@ -807,6 +813,26 @@ const VirtualListBaseFactory = (type) => {
 
 		// JS only
 		setScrollPosition (x, y, rtl = this.props.rtl, targetX = 0, targetY = 0) {
+			// if the scrollPosition is less than overSize, then the VirtualList does not scroll.
+			// But the list generates `onScroll` event so that the list could move upper by an App.
+			if (this.props.overSize && this.isPrimaryDirectionVertical && this.containerRef.current) {
+				if (y < this.props.overSize) {
+					this.containerScrollPosition = y;
+
+					this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, 0, 0)`;
+
+					return;
+				} else {
+					if (y > this.props.overSize && this.containerScrollPosition < this.props.overSize) {
+						this.containerScrollPosition = this.isPrimaryDirectionVertical ? this.props.overSize : x;
+					}
+
+					if (this.containerScrollPosition > this.props.overSize) {
+						this.containerScrollPosition = this.props.overSize;
+					}
+				}
+			}
+
 			if (this.contentRef.current) {
 				this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
 
@@ -903,7 +929,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			this.syncThreshold(maxPos);
-			this.scrollPosition = pos;
+			this.scrollPosition = this.props.overSize ? pos - this.props.overSize : pos;
 			this.updateMoreInfo(dataSize, pos);
 
 			if (this.shouldUpdateBounds || firstIndex !== newFirstIndex) {
@@ -1186,6 +1212,7 @@ const VirtualListBaseFactory = (type) => {
 			delete rest.onUpdate;
 			delete rest.onUpdateItems;
 			delete rest.overhang;
+			delete rest.overSize;
 			delete rest.pageScroll;
 			delete rest.rtl;
 			delete rest.spacing;
