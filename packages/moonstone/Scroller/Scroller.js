@@ -21,7 +21,7 @@ import {getRect} from '@enact/spotlight/src/utils';
 import ri from '@enact/ui/resolution';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import PropTypes from 'prop-types';
-import React, {useEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useImperativeHandle, useRef} from 'react';
 
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -40,19 +40,45 @@ const dataContainerDisabledAttribute = 'data-spotlight-container-disabled';
  * @ui
  * @public
  */
-const ScrollerBase = (props) => {
+let ScrollerBase = (props, reference) => {
+	const setContainerDisabled = useCallback((bool) => {
+		function handleGlobalKeyDown () {
+			setContainerDisabled(false);
+		}
+
+		const
+			spotlightId = props.spotlightId,
+			containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
+
+		if (containerNode) {
+			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+
+			if (bool) {
+				document.addEventListener('keydown', handleGlobalKeyDown, {capture: true});
+			} else {
+				document.removeEventListener('keydown', handleGlobalKeyDown, {capture: true});
+			}
+		}
+	}, [props.spotlightId]);
+
+	useImperativeHandle(reference, () => ({
+		calculatePositionOnFocus,
+		focusOnNode,
+		setContainerDisabled
+	}));
+
 	useEffect(() => {
 		// componentWillUnmount
 		return () => setContainerDisabled(false);
-	}, [setContainerDisabled]);	// TODO : Handle exhaustive-deps ESLint rule.
+	}, [setContainerDisabled]);
 
-	useEffect(configureSpotlight, [props.spotlightId]);	// TODO : Handle exhaustive-deps ESLint rule.
+	useEffect(configureSpotlight, [props.spotlightId]);
 	useEffect(() => {
 		const {onUpdate} = props;
 		if (onUpdate) {
-		//	onUpdate();		// TODO: Invoking onUpdate() has error. Fix it on PLAT-98204.
+			onUpdate();
 		}
-	});	// TODO : Handle exhaustive-deps ESLint rule.
+	});
 
 	// Instance variables
 	const uiRefCurrent = useRef({});
@@ -257,26 +283,6 @@ const ScrollerBase = (props) => {
 		}
 	}
 
-	function handleGlobalKeyDown () {
-		setContainerDisabled(false);
-	}
-
-	function setContainerDisabled (bool) {
-		const
-			{spotlightId} = props,
-			containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
-
-		if (containerNode) {
-			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
-
-			if (bool) {
-				document.addEventListener('keydown', handleGlobalKeyDown, {capture: true});
-			} else {
-				document.removeEventListener('keydown', handleGlobalKeyDown, {capture: true});
-			}
-		}
-	}
-
 	function handleLeaveContainer ({direction, target}) {
 		const contentsContainer = uiRefCurrent.current.containerRef.current;
 		// ensure we only scroll to boundary from the contents and not a scroll button which
@@ -317,6 +323,7 @@ const ScrollerBase = (props) => {
 	);
 };
 
+ScrollerBase = React.forwardRef(ScrollerBase);
 ScrollerBase.displayName = 'ScrollerBase';
 ScrollerBase.propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
 	/**

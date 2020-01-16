@@ -194,6 +194,30 @@ const ScrollableBase = (props) => {
 	} = props;
 
 	useEffect(() => {
+		const pageKeyHandlerObj = {scrollByPageOnPointerMode};
+		function createOverscrollJob (orientation, edge) {
+			if (!variables.current.overscrollJobs[orientation][edge]) {
+				// TODO : check side-effect about this binding
+				// origin-code : `applyOverscrollEffect.bind(this)`
+				variables.current.overscrollJobs[orientation][edge] = new Job(applyOverscrollEffect, overscrollTimeout);
+			}
+		}
+
+		// Only intended to be used within componentDidMount, this method will fetch the last stored
+		// scroll position from SharedState and scroll (without animation) to that position
+		function restoreScrollPosition () {
+			const {id} = props;
+			if (id && context && context.get) {
+				const scrollPosition = context.get(`${id}.scrollPosition`);
+				if (scrollPosition) {
+					uiRef.current.scrollTo({
+						position: scrollPosition,
+						animate: false
+					});
+				}
+			}
+		}
+
 		// componentDidMount
 		createOverscrollJob('horizontal', 'before');
 		createOverscrollJob('horizontal', 'after');
@@ -203,13 +227,11 @@ const ScrollableBase = (props) => {
 
 		restoreScrollPosition();
 
-		// TODO: Replace `this` to something.
-		scrollables.set(/* this */null, uiRef.current.containerRef.current);
+		scrollables.set(pageKeyHandlerObj, uiRef.current.containerRef.current);
 
 		// componentWillUnmount
 		return () => {
-			// TODO: Replace `this` to something.
-			scrollables.delete(/* this */ null);
+			scrollables.delete(pageKeyHandlerObj);
 
 			stopOverscrollJob('horizontal', 'before');
 			stopOverscrollJob('horizontal', 'after');
@@ -222,21 +244,6 @@ const ScrollableBase = (props) => {
 		configureSpotlightContainer(props);
 	}, [props['data-spotlight-id'], props.focusableScrollbar]);	// TODO : Handle exhaustive-deps ESLint rule.
 
-
-	// Only intended to be used within componentDidMount, this method will fetch the last stored
-	// scroll position from SharedState and scroll (without animation) to that position
-	function restoreScrollPosition () {
-		const {id} = props;
-		if (id && context && context.get) {
-			const scrollPosition = context.get(`${id}.scrollPosition`);
-			if (scrollPosition) {
-				uiRef.current.scrollTo({
-					position: scrollPosition,
-					animate: false
-				});
-			}
-		}
-	}
 
 	function isScrollButtonFocused () {
 		const {horizontalScrollbarRef: h, verticalScrollbarRef: v} = uiRef.current;
@@ -683,14 +690,6 @@ const ScrollableBase = (props) => {
 			if (type === overscrollTypeOnce) {
 				variables.current.overscrollJobs[orientation][edge].start(orientation, edge, overscrollTypeDone, 0);
 			}
-		}
-	}
-
-	function createOverscrollJob (orientation, edge) {
-		if (!variables.current.overscrollJobs[orientation][edge]) {
-			// TODO : check side-effect about this binding
-			// origin-code : `applyOverscrollEffect.bind(this)`
-			variables.current.overscrollJobs[orientation][edge] = new Job(applyOverscrollEffect, overscrollTimeout);
 		}
 	}
 

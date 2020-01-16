@@ -44,7 +44,7 @@ const
 const VirtualListBaseFactory = (type) => {
 	const UiBase = (type === JS) ? UiVirtualListBase : UiVirtualListBaseNative;
 
-	let VirtualListCore = (props, refernce) => {
+	let VirtualListCore = (props, reference) => {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
 		// Instance variables
@@ -64,9 +64,11 @@ const VirtualListBaseFactory = (type) => {
 		if (variables.current.pause === null) {
 			variables.current.pause = new Pause('VirtualListBase');
 		}
+		const pause = variables.current.pause;
 
-		useImperativeHandle(refernce, () => ({
+		useImperativeHandle(reference, () => ({
 			calculatePositionOnFocus,
+			focusByIndex,
 			shouldPreventScrollByFocus,
 			shouldPreventOverscrollEffect,
 			setLastFocusedNode,
@@ -81,6 +83,7 @@ const VirtualListBaseFactory = (type) => {
 			// componentDidMount
 			const containerNode = variables.current.uiRefCurrent.containerRef.current;
 			const scrollerNode = document.querySelector(`[data-spotlight-id="${props.spotlightId}"]`);
+			const preventScrollHandler = variables.current.preventScroll;
 
 			if (type === JS) {
 				// prevent native scrolling by Spotlight
@@ -90,7 +93,7 @@ const VirtualListBaseFactory = (type) => {
 				};
 
 				if (containerNode && containerNode.addEventListener) {
-					containerNode.addEventListener('scroll', variables.current.preventScroll);
+					containerNode.addEventListener('scroll', preventScrollHandler);
 				}
 			}
 
@@ -104,7 +107,7 @@ const VirtualListBaseFactory = (type) => {
 				if (type === JS) {
 					// remove a function for preventing native scrolling by Spotlight
 					if (containerNode && containerNode.removeEventListener) {
-						containerNode.removeEventListener('scroll', variables.current.preventScroll);
+						containerNode.removeEventListener('scroll', preventScrollHandler);
 					}
 				}
 
@@ -113,7 +116,7 @@ const VirtualListBaseFactory = (type) => {
 					scrollerNode.removeEventListener('keyup', onKeyUp, {capture: true});
 				}
 
-				variables.current.pause.resume();
+				pause.resume();
 				SpotlightAccelerator.reset();
 
 				setContainerDisabled(false);
@@ -125,7 +128,7 @@ const VirtualListBaseFactory = (type) => {
 			configureSpotlight();
 		}, [props.spotlightId]);	// TODO : Handle exhaustive-deps ESLint rule.
 
-		useEffect(restoreFocus);	// TODO : Handle exhaustive-deps ESLint rule.
+		useEffect(restoreFocus);
 
 		function setContainerDisabled (bool) {
 			const containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
@@ -314,7 +317,7 @@ const VirtualListBaseFactory = (type) => {
 						variables.current.uiRefCurrent.containerRef.current.querySelector(`[data-index='${nextIndex}']${spottableSelector}`) == null
 					)) {
 						if (wrap === true) {
-							variables.current.pause.pause();
+							pause.pause();
 							target.blur();
 						} else {
 							focusByIndex(nextIndex);
