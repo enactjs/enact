@@ -21,7 +21,7 @@ import {getRect} from '@enact/spotlight/src/utils';
 import ri from '@enact/ui/resolution';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import PropTypes from 'prop-types';
-import React, {useCallback, useEffect, useImperativeHandle, useRef} from 'react';
+import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useRef} from 'react';
 
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -323,7 +323,7 @@ let ScrollerBase = (props, reference) => {
 	);
 };
 
-ScrollerBase = React.forwardRef(ScrollerBase);
+ScrollerBase = forwardRef(ScrollerBase);
 ScrollerBase.displayName = 'ScrollerBase';
 ScrollerBase.propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
 	/**

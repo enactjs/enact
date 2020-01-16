@@ -195,6 +195,7 @@ const ScrollableBase = (props) => {
 
 	useEffect(() => {
 		const pageKeyHandlerObj = {scrollByPageOnPointerMode};
+
 		function createOverscrollJob (orientation, edge) {
 			if (!variables.current.overscrollJobs[orientation][edge]) {
 				// TODO : check side-effect about this binding

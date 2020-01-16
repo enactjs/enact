@@ -7,7 +7,7 @@ import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
-import React, {useEffect, useImperativeHandle, useRef} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useRef} from 'react';
 import warning from 'warning';
 
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
@@ -529,7 +529,7 @@ const VirtualListBaseFactory = (type) => {
 				!isPlaceholderFocused()
 			) {
 				const node = variables.current.uiRefCurrent.containerRef.current.querySelector(
-						`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
+					`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
 				);
 
 				if (node) {
@@ -674,7 +674,7 @@ const VirtualListBaseFactory = (type) => {
 		);
 	};
 
-	VirtualListCore = React.forwardRef(VirtualListCore);
+	VirtualListCore = forwardRef(VirtualListCore);
 	VirtualListCore.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 		/**
 		 * The `render` function called for each item in the list.
