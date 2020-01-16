@@ -13,12 +13,9 @@ const nop = () => {};
  * @ui
  * @private
  */
-const ScrollThumb = forwardRef((props, ref) => {
-	const rest = Object.assign({}, props);
-	delete rest.cbAlertThumb;
-
+const ScrollThumb = forwardRef(({cbAlertThumb, ...rest}, ref) => {
 	useEffect (() => {
-		props.cbAlertThumb();
+		cbAlertThumb();
 	});
 
 	return <UiScrollThumb {...rest} ref={ref} />;

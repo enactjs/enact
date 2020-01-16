@@ -1,7 +1,7 @@
 // import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
 import PropTypes from 'prop-types';
-import React, {forwardRef, useImperativeHandle, useRef} from 'react';
+import React, {forwardRef, memo, useImperativeHandle, useRef} from 'react';
 
 import ScrollButtons from './ScrollButtons';
 import ScrollThumb from './ScrollThumb';
@@ -18,7 +18,7 @@ import componentCss from './Scrollbar.module.less';
  * @ui
  * @private
  */
-const ScrollbarBase = forwardRef((props, ref) => {
+const ScrollbarBase = memo(forwardRef((props, ref) => {
 	// Refs
 	const scrollbarRef = useRef();
 	const scrollButtonsRef = useRef();
@@ -66,7 +66,7 @@ const ScrollbarBase = forwardRef((props, ref) => {
 			)}
 		/>
 	);
-});
+}));
 
 ScrollbarBase.displayName = 'ScrollbarBase';
 

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import React, {forwardRef, useRef, useImperativeHandle} from 'react';
+import React, {forwardRef, memo, useImperativeHandle, useRef} from 'react';
 import ReactDOM from 'react-dom';
 
 import ri from '../resolution';
@@ -25,8 +25,12 @@ function useHidingThumbJob (callback, timeout) {
 	return state.job;
 }
 
-const addRemoveClass = (element, className, operation) => {
-	ReactDOM.findDOMNode(element).classList[operation](className); // eslint-disable-line react/no-find-dom-node
+const addClass = (element, className) => {
+	ReactDOM.findDOMNode(element).classList.add(className); // eslint-disable-line react/no-find-dom-node
+};
+
+const removeClass = (element, className) => {
+	ReactDOM.findDOMNode(element).classList.remove(className); // eslint-disable-line react/no-find-dom-node
 };
 
 /*
@@ -49,7 +53,7 @@ const setCSSVariable = (element, variable, value) => {
  * @ui
  * @private
  */
-const ScrollbarBase = forwardRef((props, ref) => {
+const ScrollbarBase = memo(forwardRef((props, ref) => {
 	// Refs
 	const containerRef = useRef();
 	const thumbRef = useRef();
@@ -68,14 +72,14 @@ const ScrollbarBase = forwardRef((props, ref) => {
 	delete rest.clientSize;
 
 	function hideThumb () {
-		addRemoveClass(thumbRef.current, css.thumbShown, 'remove');
+		removeClass(thumbRef.current, css.thumbShown);
 	}
 
 	useImperativeHandle(ref, () => ({
 		getContainerRef: () => (containerRef),
 		showThumb: () => {
 			hideThumbJob.stop();
-			addRemoveClass(thumbRef.current, css.thumbShown, 'add');
+			addClass(thumbRef.current, css.thumbShown);
 		},
 		startHidingThumb: () => {
 			hideThumbJob.start();
@@ -99,12 +103,10 @@ const ScrollbarBase = forwardRef((props, ref) => {
 
 	return (
 		<div {...rest} className={containerClassName} ref={containerRef}>
-			{childRenderer({
-				thumbRef
-			})}
+			{childRenderer({thumbRef})}
 		</div>
 	);
-});
+}));
 
 ScrollbarBase.displayName = 'ui:Scrollbar';
 
