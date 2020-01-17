@@ -1,6 +1,6 @@
 import {Job} from '@enact/core/util';
 import {constants} from '@enact/ui/Scrollable';
-import {useEffect, useRef} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
 
 const
 	{overscrollTypeDone, overscrollTypeNone, overscrollTypeOnce} = constants,
@@ -24,6 +24,18 @@ const useOverscrollEffect = (props, instances) => {
 			vertical: {before: null, after: null}
 		}
 	});
+
+	const applyOverscrollEffect = useCallback((orientation, edge, type, ratio) => {
+		const nodeRef = overscrollRefs[orientation].current;
+
+		if (nodeRef) {
+			nodeRef.style.setProperty(overscrollRatioPrefix + orientation + edge, ratio);
+
+			if (type === overscrollTypeOnce) {
+				variables.current.overscrollJobs[orientation][edge].start(orientation, edge, overscrollTypeDone, 0);
+			}
+		}
+	}, [overscrollRefs]);
 
 	/*
 	 * Hooks
@@ -60,18 +72,6 @@ const useOverscrollEffect = (props, instances) => {
 	/*
 	 * Functions
 	 */
-
-	function applyOverscrollEffect (orientation, edge, type, ratio) {
-		const nodeRef = overscrollRefs[orientation].current;
-
-		if (nodeRef) {
-			nodeRef.style.setProperty(overscrollRatioPrefix + orientation + edge, ratio);
-
-			if (type === overscrollTypeOnce) {
-				variables.current.overscrollJobs[orientation][edge].start(orientation, edge, overscrollTypeDone, 0);
-			}
-		}
-	}
 
 	function clearOverscrollEffect (orientation, edge) {
 		variables.current.overscrollJobs[orientation][edge].startAfter(overscrollTimeout, orientation, edge, overscrollTypeNone, 0);

@@ -2,7 +2,9 @@ import Spotlight, {getDirection} from '@enact/spotlight';
 import Accelerator from '@enact/spotlight/Accelerator';
 import Pause from '@enact/spotlight/Pause';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
-import {useEffect, useRef} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
+
+import {dataIndexAttribute} from '../Scrollable';
 
 import useEventKey from './useEventKey';
 import useOverscrollEffect from './useOverscrollEffect';
@@ -40,6 +42,7 @@ const useSpottable = (props, instances, dependencies) => {
 	});
 
 	const containerNode = uiRefCurrent && uiRefCurrent.containerRef && uiRefCurrent.containerRef.current || null;
+	const {pause} = variables.current;
 
 	/*
 	 * Hooks
@@ -52,10 +55,14 @@ const useSpottable = (props, instances, dependencies) => {
 	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey(props, {spottable: variables}, {
 		containerNode,
 		handlePageUpDownKeyDown: () => {
-			variables.current.isScrolledBy5way = false
+			variables.current.isScrolledBy5way = false;
 		},
-		handleDirectionKeyDown: (ev, type, param) => {
-			switch (type) {
+		handleDirectionKeyDown: (ev, eventType, param) => {
+			const
+				{keyCode} = ev,
+				direction = getDirection(keyCode);
+
+			switch (eventType) {
 				case 'acceleratedKeyDown': onAcceleratedKeyDown(param); break;
 				case 'keyDown':
 					if (Spotlight.move(direction)) {
@@ -65,7 +72,7 @@ const useSpottable = (props, instances, dependencies) => {
 						ev.stopPropagation();
 
 						if (typeof nextTargetIndex === 'string') {
-							onAcceleratedKeyDown(param);
+							onAcceleratedKeyDown({...param, nextIndex: getNumberValue(nextTargetIndex)});
 						}
 					}
 					break;
@@ -75,7 +82,7 @@ const useSpottable = (props, instances, dependencies) => {
 		handle5WayKeyUp: () => {
 			SpotlightAccelerator.reset();
 		},
-		SpotlightAccelerator,
+		SpotlightAccelerator
 	});
 
 	const {
@@ -85,14 +92,31 @@ const useSpottable = (props, instances, dependencies) => {
 		updateStatesAndBounds
 	} = useSpotlightRestore(props, instances);
 
+	function handleGlobalKeyDown () {
+		this.setContainerDisabled(false);
+	}
+
+	const setContainerDisabled = useCallback((bool) => {
+		if (containerNode) {
+			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+
+			if (bool) {
+				addGlobalKeyDownEventListener(handleGlobalKeyDown);
+			} else {
+				removeGlobalKeyDownEventListener();
+			}
+		}
+	}, [addGlobalKeyDownEventListener, containerNode, removeGlobalKeyDownEventListener]);
+
 	useEffect(() => {
 		return () => {
-			variables.current.pause.resume();
+			// TODO: Fix eslint
+			pause.resume(); // eslint-disable-line react-hooks/exhaustive
 			SpotlightAccelerator.reset();
 
 			setContainerDisabled(false);
 		};
-	}, []);
+	}, [pause, setContainerDisabled]);
 
 	/*
 	 * Functions
@@ -156,7 +180,7 @@ const useSpottable = (props, instances, dependencies) => {
 					containerNode.querySelector(`[data-index='${nextIndex}']${spottableSelector}`) == null
 				)) {
 					if (wrap === true) {
-						variables.current.pause.pause();
+						pause.pause();
 						target.blur();
 					} else {
 						focusByIndex(nextIndex);
@@ -175,20 +199,6 @@ const useSpottable = (props, instances, dependencies) => {
 			}
 		} else if (!repeat && Spotlight.move(getDirection(keyCode))) {
 			SpotlightAccelerator.reset();
-		}
-	}
-
-	function setContainerDisabled (bool) {
-		if (containerNode) {
-			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
-
-			if (bool) {
-				addGlobalKeyDownEventListener(() => {
-					setContainerDisabled(false);
-				});
-			} else {
-				removeGlobalKeyDownEventListener();
-			}
 		}
 	}
 
@@ -214,7 +224,7 @@ const useSpottable = (props, instances, dependencies) => {
 				setOverscrollEffect(false);
 			}
 
-			variables.current.pause.resume();
+			pause.resume();
 			focusOnNode(item);
 			setNodeIndexToBeFocused(null);
 			variables.current.isScrolledByJump = false;

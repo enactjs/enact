@@ -64,28 +64,21 @@ const useEventMonitor = (props, instances, dependencies) => {
 	 */
 
 	useEffect(() => {
-		// componentDidMount
-		// TODO: Replace `this` to something.
+		function setMonitorEventTarget (target) {
+			scrollables.set(variables.pageKeyHandlerObj, target);
+		}
+
+		function deleteMonitorEventTarget () {
+			scrollables.delete(variables.pageKeyHandlerObj);
+		}
+
 		setMonitorEventTarget(uiRef.current.containerRef.current);
 
-		// componentWillUnmount
 		return () => {
 			// TODO: Replace `this` to something.
 			deleteMonitorEventTarget();
 		};
-	}, [deleteMonitorEventTarget, setMonitorEventTarget, uiRef]);
-
-	/*
-	 * Functions
-	 */
-
-	function setMonitorEventTarget (target) {
-		scrollables.set(variables.pageKeyHandlerObj, target);
-	}
-
-	function deleteMonitorEventTarget () {
-		scrollables.delete(variables.pageKeyHandlerObj);
-	}
+	}, [uiRef]);
 };
 
 onWindowReady(() => {

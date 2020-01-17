@@ -37,7 +37,7 @@ const VirtualListBaseFactory = (type) => {
 		 */
 
 		const variables = useRef({
-			uiRefCurrent: null,
+			uiRefCurrent: null
 		});
 
 		/*
@@ -45,11 +45,19 @@ const VirtualListBaseFactory = (type) => {
 		 */
 
 		const {
+			calculatePositionOnFocus,
+			focusByIndex,
+			focusOnNode,
 			getNodeIndexToBeFocused,
+			getScrollBounds,
 			handlePlaceholderFocus,
 			handleRestoreLastFocus,
 			initItemRef,
 			isNeededScrollingPlaceholder,
+			setContainerDisabled,
+			setLastFocusedNode,
+			shouldPreventOverscrollEffect,
+			shouldPreventScrollByFocus,
 			SpotlightPlaceholder,
 			updateStatesAndBounds
 		} = useSpottable(props, {virtualListBase: variables}, {type});

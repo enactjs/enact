@@ -1,7 +1,7 @@
 import Spotlight from '@enact/spotlight';
 import {getRect} from '@enact/spotlight/src/utils';
 import ri from '@enact/ui/resolution';
-import {useCallback, useEffect} from 'react';
+import {useEffect} from 'react';
 
 import useEventKey from './useEventKey';
 import useSpotlightConfig from './useSpotlightConfig';
@@ -27,8 +27,22 @@ const useSpottable = (props, instances) => {
 	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey();
 
 	useEffect(() => {
+		function setContainerDisabled (bool) {
+			if (containerNode) {
+				containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+
+				if (bool) {
+					addGlobalKeyDownEventListener(() => {
+						setContainerDisabled(false);
+					});
+				} else {
+					removeGlobalKeyDownEventListener();
+				}
+			}
+		}
+
 		return () => setContainerDisabled(false);
-	}, [setContainerDisabled]);
+	}, [addGlobalKeyDownEventListener, containerNode, removeGlobalKeyDownEventListener]);
 
 	useEffect(() => {
 		const {onUpdate} = props;
@@ -229,20 +243,6 @@ const useSpottable = (props, instances) => {
 	function focusOnNode (node) {
 		if (node) {
 			Spotlight.focus(node);
-		}
-	}
-
-	function setContainerDisabled (bool) {
-		if (containerNode) {
-			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
-
-			if (bool) {
-				addGlobalKeyDownEventListener(() => {
-					setContainerDisabled(false)
-				});
-			} else {
-				removeGlobalKeyDownEventListener();
-			}
 		}
 	}
 

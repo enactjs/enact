@@ -113,8 +113,8 @@ const useSpotlightRestore = (props, instances) => {
 		handlePlaceholderFocus,
 		handleRestoreLastFocus,
 		preserveLastFocus,
-		updateStatesAndBounds,
-	}
+		updateStatesAndBounds
+	};
 };
 
 export default useSpotlightRestore;

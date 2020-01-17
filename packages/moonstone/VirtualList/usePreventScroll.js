@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 
-const usePreventScroll = (props, {}, dependencies) => {
+const usePreventScroll = (props, instances, dependencies) => {
 	/*
 	 * Dependencies
 	 */
@@ -28,12 +28,12 @@ const usePreventScroll = (props, {}, dependencies) => {
 				if (containerNode && containerNode.removeEventListener) {
 					containerNode.removeEventListener('scroll', preventScroll);
 				}
-			}
+			};
 		}
-	}, [containerNode]);
+	}, [containerNode, rtl, type]);
 };
 
 export default usePreventScroll;
 export {
-	usePreventScroll,
+	usePreventScroll
 };
