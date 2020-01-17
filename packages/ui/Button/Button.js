@@ -12,6 +12,7 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import ComponentOverride from '../ComponentOverride';
 import Touchable from '../Touchable';
 
 import componentCss from './Button.module.less';
@@ -81,22 +82,29 @@ const ButtonBase = kind({
 		 * with the caveat that if you supply a custom icon, you are responsible for sizing and
 		 * locale positioning of the custom component.
 		 *
-		 * @type {Node}
+		 * Setting this to `true` means the `iconComponent` will be rendered but with empty content.
+		 * This may be useful if you've customized the `iconComponent` to render the icon content
+		 * externally.
+		 *
+		 * @type {Node|Boolean}
 		 * @public
 		 */
-		icon: PropTypes.node,
+		icon: PropTypes.oneOfType([PropTypes.node, PropTypes.bool]),
 
 		/**
 		 * The component used to render the [icon]{@link ui/Button.ButtonBase.icon}.
 		 *
-		 * This component will receive the `size` property set on the Button as well as the `icon`
-		 * class to customize its styling. If [icon]{@link ui/Button.ButtonBase.icon} is not a
-		 * string, this property is not used.
+		 * This component will receive the `icon` class to customize its styling.
+		 * If [icon]{@link ui/Button.ButtonBase.icon} is not assigned or is false, this component
+		 * will not be rendered.
 		 *
-		 * @type {Component}
+		 * If this is a component rather than an HTML element string, this component will also
+		 * receive the `size` property and should be configured to handle it.
+		 *
+		 * @type {Component|Node}
 		 * @public
 		 */
-		iconComponent: EnactPropTypes.component,
+		iconComponent: EnactPropTypes.componentOverride,
 
 		/**
 		 * Enforces a minimum width for the component.
@@ -167,10 +175,27 @@ const ButtonBase = kind({
 			pressed,
 			selected
 		}, size),
-		icon: ({css, icon, iconComponent: Icon, size}) => {
-			return (typeof icon === 'string' && Icon) ? (
-				<Icon size={size} className={css.icon}>{icon}</Icon>
-			) : icon;
+		icon: ({css, icon, iconComponent, size}) => {
+			if (icon == null || icon === false) return;
+
+			// Establish the base collection of props for the moost basic `iconComponent` type, an
+			// HTML element string.
+			const props = {
+				className: css.icon,
+				component: iconComponent
+			};
+
+			// Add in additional props that any Component supplied to `iconComponent` should be
+			// configured to handle.
+			if (typeof iconComponent !== 'string') {
+				props.size = size;
+			}
+
+			return (
+				<ComponentOverride {...props}>
+					{icon}
+				</ComponentOverride>
+			);
 		}
 	},
 
