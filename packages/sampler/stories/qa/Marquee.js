@@ -9,8 +9,7 @@ import Spottable from '@enact/spotlight/Spottable';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, number, select} from '../../src/enact-knobs';
+import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
 
 Marquee.displayName = 'Marquee';
 

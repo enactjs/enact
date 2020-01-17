@@ -32,10 +32,9 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import React from 'react';
 import PropTypes from 'prop-types';
 import {storiesOf} from '@storybook/react';
-
 import docs from '../../images/icon-enact-docs.png';
-import {boolean, select} from '../../src/enact-knobs';
-import {action} from '../../src/utils';
+import {boolean, select} from '@enact/storybook-utils/addons/knobs';
+import {action} from '@enact/storybook-utils/addons/actions';
 
 const Container = SpotlightContainerDecorator(
 	{enterTo: 'last-focused'},

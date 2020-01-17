@@ -1,11 +1,10 @@
-import Heading, {HeadingBase} from '@enact/moonstone/Heading';
-import UiHeading from '@enact/ui/Heading';
 import BodyText from '@enact/moonstone/BodyText';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
+import Heading, {HeadingBase} from '@enact/moonstone/Heading';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import UiHeading from '@enact/ui/Heading';
 
 Heading.displayName = 'Heading';
 const Config = mergeComponentMetadata('Heading', UiHeading, HeadingBase, Heading);

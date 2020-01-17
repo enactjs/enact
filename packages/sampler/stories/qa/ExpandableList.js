@@ -5,9 +5,9 @@ import Scroller from '@enact/moonstone/Scroller';
 import {RadioControllerDecorator} from '@enact/ui/RadioDecorator';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, text, select} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata} from '../../src/utils';
+import {boolean, text, select} from '@enact/storybook-utils/addons/knobs';
+import {action} from '@enact/storybook-utils/addons/actions';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 
 const Config = mergeComponentMetadata('ExpandableList', ExpandableList, ExpandableListBase);
 

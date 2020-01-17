@@ -1,14 +1,15 @@
+import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
 import FormCheckboxItem from '@enact/moonstone/FormCheckboxItem';
-import ToggleItem from '@enact/moonstone/ToggleItem';
-import UiToggleItem, {ToggleItemBase as UiToggleItemBase} from '@enact/ui/ToggleItem';
 import Item, {ItemBase} from '@enact/moonstone/Item';
 import Icon from '@enact/moonstone/Icon';
-import {listIcons} from './icons';
+import {mergeComponentMetadata, nullify} from '@enact/storybook-utils';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
+import ToggleItem from '@enact/moonstone/ToggleItem';
+import UiToggleItem, {ToggleItemBase as UiToggleItemBase} from '@enact/ui/ToggleItem';
 
-import {boolean, select, text} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata, nullify} from '../../src/utils';
+import {listIcons} from './icons';
 
 FormCheckboxItem.displayName = 'FormCheckboxItem';
 const Config = mergeComponentMetadata('FormCheckboxItem', ItemBase, Item, UiToggleItemBase, UiToggleItem, ToggleItem, FormCheckboxItem);

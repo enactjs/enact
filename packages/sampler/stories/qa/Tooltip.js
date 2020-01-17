@@ -9,9 +9,8 @@ import Layout, {Cell} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, number, object, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {boolean, number, object, select, text} from '@enact/storybook-utils/addons/knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 
 const Config = mergeComponentMetadata('TooltipDecorator', TooltipDecorator);
 const TooltipButton = TooltipDecorator({tooltipDestinationProp: 'decoration'}, Button);

@@ -1,10 +1,9 @@
 import BodyText, {BodyTextBase} from '@enact/moonstone/BodyText';
-import UiBodyText, {BodyTextBase as UiBodyTextBase} from '@enact/ui/BodyText';
+import {boolean, text, select} from '@enact/storybook-utils/addons/knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, text, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import UiBodyText, {BodyTextBase as UiBodyTextBase} from '@enact/ui/BodyText';
 
 BodyText.displayName = 'BodyText';
 const Config = mergeComponentMetadata('BodyText', UiBodyTextBase, UiBodyText, BodyTextBase, BodyText);

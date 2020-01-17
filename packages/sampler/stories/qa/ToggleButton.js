@@ -3,9 +3,9 @@ import Button, {ButtonBase} from '@enact/moonstone/Button';
 import UiButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, select, text} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata} from '../../src/utils';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
+import {action} from '@enact/storybook-utils/addons/actions';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 
 ToggleButton.displayName = 'ToggleButton';
 const Config = mergeComponentMetadata('ToggleButton', UIButtonBase, UiButton, ButtonBase, Button, ToggleButton);

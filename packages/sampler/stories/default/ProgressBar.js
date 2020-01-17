@@ -1,9 +1,8 @@
+import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
+import {mergeComponentMetadata, nullify} from '@enact/storybook-utils';
 import ProgressBar, {ProgressBarTooltip} from '@enact/moonstone/ProgressBar';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, number, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata, nullify} from '../../src/utils';
 
 const ProgressBarConfig = mergeComponentMetadata('ProgressBar', ProgressBar);
 const ProgressBarTooltipConfig = mergeComponentMetadata('ProgressBarTooltip', ProgressBarTooltip);

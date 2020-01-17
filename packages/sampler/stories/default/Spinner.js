@@ -1,11 +1,11 @@
-import Spinner, {SpinnerBase} from '@enact/moonstone/Spinner';
-import UiSpinner, {SpinnerBase as UiSpinnerBase} from '@enact/ui/Spinner';
+import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
 import ri from '@enact/ui/resolution';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
+import Spinner, {SpinnerBase} from '@enact/moonstone/Spinner';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, select, text} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata} from '../../src/utils';
+import UiSpinner, {SpinnerBase as UiSpinnerBase} from '@enact/ui/Spinner';
 
 Spinner.displayName = 'Spinner';
 const Config = mergeComponentMetadata('Spinner', UiSpinnerBase, UiSpinner, SpinnerBase, Spinner);

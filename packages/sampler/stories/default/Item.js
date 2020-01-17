@@ -1,10 +1,9 @@
+import {boolean, text} from '@enact/storybook-utils/addons/knobs';
 import Item, {ItemBase} from '@enact/moonstone/Item';
-import UiItem, {ItemBase as UiItemBase} from '@enact/ui/Item';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import UiItem, {ItemBase as UiItemBase} from '@enact/ui/Item';
 
 const Config = mergeComponentMetadata('Item', UiItemBase, UiItem, ItemBase, Item);
 Item.displayName = 'Item';
