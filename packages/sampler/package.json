@@ -34,6 +34,7 @@
     "@storybook/addons": "5.3.5",
     "@storybook/react": "5.3.5",
     "@storybook/theming": "5.3.5",
-    "babel-loader": "^8.0.6"
+    "babel-loader": "^8.0.6",
+    "core-js": "^3.6.4"
   }
 }
