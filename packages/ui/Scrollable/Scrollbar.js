@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import React, {forwardRef, memo, useImperativeHandle, useRef} from 'react';
+import React, {forwardRef, memo, useEffect, useImperativeHandle, useRef} from 'react';
 import ReactDOM from 'react-dom';
 
 import ri from '../resolution';
@@ -13,17 +13,6 @@ import componentCss from './Scrollbar.module.less';
 const
 	minThumbSize = 18, // Size in pixels
 	thumbHidingDelay = 400; // in milliseconds
-
-function useHidingThumbJob (callback, timeout) {
-	const [state] = React.useState({});
-	state.job = state.job || new Job(callback, timeout);
-
-	React.useEffect(() => {
-		return () => state.job.stop();
-	}, [state.job]);
-
-	return state.job;
-}
 
 const addClass = (element, className) => {
 	ReactDOM.findDOMNode(element).classList.add(className); // eslint-disable-line react/no-find-dom-node
@@ -57,8 +46,7 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 	// Refs
 	const containerRef = useRef();
 	const thumbRef = useRef();
-	// Job
-	const hideThumbJob = useHidingThumbJob(hideThumb, thumbHidingDelay);
+	const hideThumbJob = useRef(new Job(hideThumb, thumbHidingDelay));
 	// Render
 	const
 		{childRenderer, className, corner, css, vertical, ...rest} = props,
@@ -75,14 +63,21 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 		removeClass(thumbRef.current, css.thumbShown);
 	}
 
+	useEffect(() => {
+		const job = hideThumbJob.current;
+		return () => {
+			job.stop();
+		};
+	}, []);
+
 	useImperativeHandle(ref, () => ({
 		getContainerRef: () => (containerRef),
 		showThumb: () => {
-			hideThumbJob.stop();
+			hideThumbJob.current.stop();
 			addClass(thumbRef.current, css.thumbShown);
 		},
 		startHidingThumb: () => {
-			hideThumbJob.start();
+			hideThumbJob.current.start();
 		},
 		update: (bounds) => {
 			const
