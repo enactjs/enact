@@ -1,7 +1,7 @@
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import React from 'react';
 
-import Scroller, {ScrollerBase} from '../Scroller';
+import Scroller from '../Scroller';
 
 describe('Scroller', () => {
 	let contents;
