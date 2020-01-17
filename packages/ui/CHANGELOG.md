@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Marquee` to not error when passed `null` `children` during an animation.
+- `ui/Button` to have more robust support for a customized `iconComponent` prop
 
 ## [3.2.5] - 2019-11-14
 
