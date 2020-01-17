@@ -139,6 +139,14 @@ const VirtualListBaseFactory = (type) => {
 			}),
 
 			/**
+			 * Disable voice control feature of component.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			'data-webos-voice-disabled': PropTypes.bool,
+
+			/**
 			 * Activates the component for voice control.
 			 *
 			 * @type {Boolean}
@@ -1160,7 +1168,7 @@ const VirtualListBaseFactory = (type) => {
 
 		render () {
 			const
-				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
+				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, ...rest} = this.props,
 				{cc, itemContainerRef, primary} = this,
 				containerClasses = this.getContainerClasses(className),
 				contentClasses = this.getContentClasses();
@@ -1189,7 +1197,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			return (
-				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.containerRef} style={style}>
+				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.containerRef} style={style}>
 					<div {...rest} className={contentClasses} ref={this.contentRef}>
 						{itemsRenderer({cc, itemContainerRef, primary})}
 					</div>

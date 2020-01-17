@@ -108,7 +108,7 @@ behaviors across components. All of these HOCs were created using the `hoc()` fa
 * HOCs can be configurable by passing an object with parameters to the HOC function. This object is
   merged with a set of default configuration parameters.
 * HOCs are flexible in their usage. They can:
-  * Accept a configuration object and a component 
+  * Accept a configuration object and a component
     ```javascript
     const ToggleableWidget = Toggleable({toggle: 'onClick', prop: 'selected'}, Widget);
     ```
