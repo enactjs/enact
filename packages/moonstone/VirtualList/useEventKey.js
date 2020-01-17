@@ -22,7 +22,7 @@ const useEventKey = (props, instances, dependencies) => {
 
 	const {dataSize, focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
 		rtl, spotlightId, wrap} = props;
-	const {spottable: {current: {uiRefCurrent}}} = instances;
+	const {spottable, virtualListBase} = instances;
 	const {
 		containerNode,
 		handlePageUpDownKeyDown,
@@ -48,6 +48,7 @@ const useEventKey = (props, instances, dependencies) => {
 	}, [dataSize]);
 
 	const getNextIndex = useCallback(({index, keyCode, repeat}) => {
+		const uiRefCurrent = virtualListBase.current.uiRefCurrent;
 		const {isPrimaryDirectionVertical, dimensionToExtent} = uiRefCurrent;
 		const column = index % dimensionToExtent;
 		const row = (index - column) % dataSize / dimensionToExtent;
@@ -108,7 +109,7 @@ const useEventKey = (props, instances, dependencies) => {
 		}
 
 		return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
-	}, [dataSize, findSpottableItem, rtl, uiRefCurrent, wrap]);
+	}, [dataSize, findSpottableItem, rtl, wrap]);
 
 	/*
 	 * Hooks
@@ -126,6 +127,7 @@ const useEventKey = (props, instances, dependencies) => {
 					ev.stopPropagation();
 				} else {
 					const {repeat} = ev;
+					const uiRefCurrent = virtualListBase.current.uiRefCurrent;
 					const {dimensionToExtent, isPrimaryDirectionVertical} = uiRefCurrent;
 					const targetIndex = target.dataset.index;
 					const isScrollButton = (
@@ -212,7 +214,7 @@ const useEventKey = (props, instances, dependencies) => {
 		containerNode, dataSize, focusableScrollbar, getNextIndex,
 		handle5WayKeyUp, handleDirectionKeyDown, handlePageUpDownKeyDown,
 		isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
-		spotlightId, SpotlightAccelerator, uiRefCurrent
+		spotlightId, SpotlightAccelerator
 	]);
 
 	/*

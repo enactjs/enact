@@ -6,7 +6,7 @@ const useEventMouse = (props, instances, dependencies) => {
 	 */
 
 	const {childRef, uiRef} = instances;
-	const {canScrollHorizontally, canScrollVertically} = (uiRef.current || {});
+	const {canScrollHorizontally, canScrollVertically} = (uiRef && uiRef.current || {});
 	const {isScrollButtonFocused, type} = dependencies;
 
 	/*
@@ -37,7 +37,7 @@ const useEventMouse = (props, instances, dependencies) => {
 		if (props['data-spotlight-container-disabled']) {
 			ev.preventDefault();
 		} else if (type === 'Native') {
-			this.childRef.current.setContainerDisabled(false);
+			childRef.current.setContainerDisabled(false);
 		}
 	}
 

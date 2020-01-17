@@ -27,22 +27,8 @@ const useSpottable = (props, instances) => {
 	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey();
 
 	useEffect(() => {
-		function setContainerDisabled (bool) {
-			if (containerNode) {
-				containerNode.setAttribute(dataContainerDisabledAttribute, bool);
-
-				if (bool) {
-					addGlobalKeyDownEventListener(() => {
-						setContainerDisabled(false);
-					});
-				} else {
-					removeGlobalKeyDownEventListener();
-				}
-			}
-		}
-
 		return () => setContainerDisabled(false);
-	}, [addGlobalKeyDownEventListener, containerNode, removeGlobalKeyDownEventListener]);
+	}, [addGlobalKeyDownEventListener, containerNode, removeGlobalKeyDownEventListener, setContainerDisabled]);
 
 	useEffect(() => {
 		const {onUpdate} = props;
@@ -54,6 +40,20 @@ const useSpottable = (props, instances) => {
 	/*
 	 * Functions
 	 */
+
+	function setContainerDisabled (bool) {
+		if (containerNode) {
+			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+
+			if (bool) {
+				addGlobalKeyDownEventListener(() => {
+					setContainerDisabled(false);
+				});
+			} else {
+				removeGlobalKeyDownEventListener();
+			}
+		}
+	}
 
 	/**
 	 * Returns the first spotlight container between `node` and the scroller
@@ -252,7 +252,8 @@ const useSpottable = (props, instances) => {
 
 	return {
 		calculatePositionOnFocus,
-		focusOnNode
+		focusOnNode,
+		setContainerDisabled
 	};
 };
 

@@ -124,7 +124,7 @@ const useSpottable = (props, instances, dependencies) => {
 
 	function start (animate) {
 		if (type === 'Native' && !animate) {
-			this.focusOnItem();
+			focusOnItem();
 		}
 	}
 

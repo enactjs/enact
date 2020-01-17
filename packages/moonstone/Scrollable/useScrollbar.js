@@ -11,15 +11,12 @@ const useScrollbar = (props, instances, dependencies) => {
 	const {uiRef} = instances;
 	const {isContent} = dependencies;
 	const {
-		getScrollBounds,
 		horizontalScrollbarRef: hRef,
 		isUpdatedScrollThumb,
-		startHidingThumb,
 		scrollToAccumulatedTarget,
-		showThumb,
 		verticalScrollbarRef: vRef,
 		wheelDirection
-	} = (uiRef || {});
+	} = (uiRef && uiRef.current || {});
 	const isRtl = uiRef.current ? uiRef.current.props.rtl : false;
 
 	const scrollbarProps = {
@@ -41,7 +38,7 @@ const useScrollbar = (props, instances, dependencies) => {
 
 	function onScrollbarButtonClick ({isPreviousScrollButton, isVerticalScrollBar}) {
 		const
-			bounds = getScrollBounds(),
+			bounds = uiRef.current.getScrollBounds(),
 			direction = isPreviousScrollButton ? -1 : 1,
 			pageDistance = direction * (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
@@ -87,10 +84,10 @@ const useScrollbar = (props, instances, dependencies) => {
 	}
 
 	function alertThumb () {
-		const bounds = getScrollBounds();
+		const bounds = uiRef.current.getScrollBounds();
 
-		showThumb(bounds);
-		startHidingThumb();
+		uiRef.current.showThumb(bounds);
+		uiRef.current.startHidingThumb();
 	}
 
 	function alertThumbAfterRendered () {
@@ -106,6 +103,7 @@ const useScrollbar = (props, instances, dependencies) => {
 	 */
 
 	return {
+		alertThumb,
 		isScrollButtonFocused,
 		onScrollbarButtonClick,
 		scrollAndFocusScrollbarButton,

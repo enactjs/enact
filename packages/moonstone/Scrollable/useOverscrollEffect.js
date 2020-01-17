@@ -44,7 +44,7 @@ const useOverscrollEffect = (props, instances) => {
 	useEffect(() => {
 		function createOverscrollJob (orientation, edge) {
 			if (!variables.current.overscrollJobs[orientation][edge]) {
-				variables.current.overscrollJobs[orientation][edge] = new Job(applyOverscrollEffect.bind(this), overscrollTimeout);
+				variables.current.overscrollJobs[orientation][edge] = new Job(applyOverscrollEffect, overscrollTimeout);
 			}
 		}
 

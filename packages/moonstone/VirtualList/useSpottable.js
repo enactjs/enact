@@ -26,7 +26,7 @@ const useSpottable = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {virtualListBase: {current: {uiRefCurrent}}} = instances;
+	const {virtualListBase} = instances;
 	const {type} = dependencies;
 
 	/*
@@ -41,7 +41,11 @@ const useSpottable = (props, instances, dependencies) => {
 		pause: new Pause('VirtualListBase')
 	});
 
-	const containerNode = uiRefCurrent && uiRefCurrent.containerRef && uiRefCurrent.containerRef.current || null;
+	const containerNode =
+		virtualListBase.current &&
+		virtualListBase.current.uiRefCurrent &&
+		virtualListBase.current.uiRefCurrent.containerRef &&
+		virtualListBase.current.uiRefCurrent.containerRef.current || null;
 	const {pause} = variables.current;
 
 	/*
@@ -52,7 +56,7 @@ const useSpottable = (props, instances, dependencies) => {
 
 	const [isOverscrollEffect, setOverscrollEffect] = useOverscrollEffect();
 
-	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey(props, {spottable: variables}, {
+	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey(props, {spottable: variables, virtualListBase}, {
 		containerNode,
 		handlePageUpDownKeyDown: () => {
 			variables.current.isScrolledBy5way = false;
@@ -92,10 +96,6 @@ const useSpottable = (props, instances, dependencies) => {
 		updateStatesAndBounds
 	} = useSpotlightRestore(props, instances);
 
-	function handleGlobalKeyDown () {
-		this.setContainerDisabled(false);
-	}
-
 	const setContainerDisabled = useCallback((bool) => {
 		if (containerNode) {
 			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
@@ -107,6 +107,10 @@ const useSpottable = (props, instances, dependencies) => {
 			}
 		}
 	}, [addGlobalKeyDownEventListener, containerNode, removeGlobalKeyDownEventListener]);
+
+	function handleGlobalKeyDown () {
+		setContainerDisabled(false);
+	}
 
 	useEffect(() => {
 		return () => {
@@ -136,7 +140,7 @@ const useSpottable = (props, instances, dependencies) => {
 
 	function onAcceleratedKeyDown ({isWrapped, keyCode, nextIndex, repeat, target}) {
 		const {cbScrollTo, dataSize, spacing, wrap} = props;
-		const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPositionTarget} = uiRefCurrent;
+		const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPositionTarget} = virtualListBase.current.uiRefCurrent;
 		const index = getNumberValue(target.dataset.index);
 
 		variables.current.isScrolledBy5way = false;
@@ -146,13 +150,13 @@ const useSpottable = (props, instances, dependencies) => {
 			const
 				row = Math.floor(index / dimensionToExtent),
 				nextRow = Math.floor(nextIndex / dimensionToExtent),
-				start = uiRefCurrent.getGridPosition(nextIndex).primaryPosition,
-				end = uiRefCurrent.getGridPosition(nextIndex).primaryPosition + gridSize;
+				start = virtualListBase.current.uiRefCurrent.getGridPosition(nextIndex).primaryPosition,
+				end = virtualListBase.current.uiRefCurrent.getGridPosition(nextIndex).primaryPosition + gridSize;
 			let isNextItemInView = false;
 
 			if (props.itemSizes) {
-				isNextItemInView = uiRefCurrent.itemPositions[nextIndex].position >= scrollPositionTarget &&
-					uiRefCurrent.getItemBottomPosition(nextIndex) <= scrollPositionTarget + clientSize;
+				isNextItemInView = virtualListBase.current.uiRefCurrent.itemPositions[nextIndex].position >= scrollPositionTarget &&
+					virtualListBase.current.uiRefCurrent.getItemBottomPosition(nextIndex) <= scrollPositionTarget + clientSize;
 			} else {
 				const
 					firstFullyVisibleIndex = Math.ceil(scrollPositionTarget / gridSize) * dimensionToExtent,
@@ -245,19 +249,19 @@ const useSpottable = (props, instances, dependencies) => {
 		}
 	}
 
-	function calculatePositionOnFocus ({item, scrollPosition = uiRefCurrent.scrollPosition}) {
+	function calculatePositionOnFocus ({item, scrollPosition = virtualListBase.current.uiRefCurrent.scrollPosition}) {
 		const
 			{pageScroll} = props,
-			{numOfItems} = uiRefCurrent.state,
-			{primary} = uiRefCurrent,
+			{numOfItems} = virtualListBase.current.uiRefCurrent.state,
+			{primary} = virtualListBase.current.uiRefCurrent,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = getNumberValue(item.getAttribute(dataIndexAttribute));
 
 		if (!isNaN(focusedIndex)) {
-			let gridPosition = uiRefCurrent.getGridPosition(focusedIndex);
+			let gridPosition = virtualListBase.current.uiRefCurrent.getGridPosition(focusedIndex);
 
 			if (numOfItems > 0 && focusedIndex % numOfItems !== variables.current.lastFocusedIndex % numOfItems) {
-				const node = uiRefCurrent.getItemNode(variables.current.lastFocusedIndex);
+				const node = virtualListBase.current.uiRefCurrent.getItemNode(variables.current.lastFocusedIndex);
 
 				if (node) {
 					node.blur();
@@ -275,7 +279,7 @@ const useSpottable = (props, instances, dependencies) => {
 					} else {
 						// This code uses the trick to change the target position slightly which will not affect the actual result
 						// since a browser ignore `scrollTo` method if the target position is same as the current position.
-						gridPosition.primaryPosition = scrollPosition + (uiRefCurrent.scrollPosition === scrollPosition ? 0.1 : 0);
+						gridPosition.primaryPosition = scrollPosition + (virtualListBase.current.uiRefCurrent.scrollPosition === scrollPosition ? 0.1 : 0);
 					}
 				} else { // backward over
 					gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
@@ -286,7 +290,7 @@ const useSpottable = (props, instances, dependencies) => {
 			// scrondaryPosition should be 0 here.
 			gridPosition.secondaryPosition = 0;
 
-			return uiRefCurrent.gridPositionToItemPosition(gridPosition);
+			return virtualListBase.current.uiRefCurrent.gridPositionToItemPosition(gridPosition);
 		}
 	}
 
@@ -303,7 +307,7 @@ const useSpottable = (props, instances, dependencies) => {
 	}
 
 	function getScrollBounds () {
-		return uiRefCurrent.getScrollBounds();
+		return virtualListBase.current.uiRefCurrent.getScrollBounds();
 	}
 
 	/*
