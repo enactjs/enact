@@ -272,9 +272,10 @@ function configureSpottable (config) {
 
 	// eslint-disable-next-line no-shadow
 	return function useSpottable (props) {
-		const [state] = React.useState({
+		const {current: state} = React.useRef({
 			isFocused: false,
 			isHovered: false,
+			node: null,
 			// Used to indicate that we want to stop propagation on blur events that occur as a
 			// result of this component imperatively blurring itself on focus when spotlightDisabled
 			shouldPreventBlur: false

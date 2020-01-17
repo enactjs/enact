@@ -45,7 +45,10 @@ function createRegistry (state) {
  * @public
  */
 function useRadioController () {
-	const [state] = React.useState({});
+	const {current: state} = React.useRef({
+		active: null,
+		registry: null
+	});
 
 	createRegistry(state);
 

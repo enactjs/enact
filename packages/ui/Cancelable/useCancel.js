@@ -107,10 +107,6 @@ function configureCancel (config) {
 		handleCancel
 	);
 
-	const initialState = {
-		rendered: false
-	};
-
 	function mountEffect (state) {
 		return () => {
 			addModal(state);
@@ -126,7 +122,10 @@ function configureCancel (config) {
 		invariant(onCancel, 'onCancel must be specified with Cancelable');
 
 		if (modal) {
-			const [state] = React.useState(initialState);
+			const {current: state} = React.useRef({
+				handleCancel: null,
+				rendered: false
+			});
 			// handleCancel is invoked by the modal listener and needs a reference to the current
 			// props
 			state.handleCancel = (ev) => handleCancel(ev, props);

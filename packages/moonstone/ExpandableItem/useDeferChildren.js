@@ -2,7 +2,9 @@ import {Job} from '@enact/core/util';
 import React from 'react';
 
 function useJob (callback, timeout) {
-	const [state] = React.useState({});
+	const {current: state} = React.useRef({
+		job: null
+	});
 	state.job = state.job || new Job(callback, timeout);
 
 	React.useEffect(() => {

@@ -136,10 +136,10 @@ class Pause {
 }
 
 function usePause (name) {
-	const [state] = React.useState({});
-	if (!state.pause) {
-		state.pause = new Pause(name);
-	}
+	const {current: state} = React.useRef({
+		pause: null
+	});
+	state.pause = state.pause || new Pause(name);
 
 	React.useLayoutEffect(() => {
 		// just an unmount effect but tied to layout in order to occur immediately

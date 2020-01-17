@@ -40,7 +40,9 @@ const notify = (action, state) => {
 
 function useRadio (active, deactivate) {
 	const radioContext = React.useContext(RadioContext);
-	const [state] = React.useState({});
+	const {current: state} = React.useRef({
+		deactivate: null
+	});
 
 	// bind deactivate on each render to capture the latest props
 	state.deactivate = deactivate;
