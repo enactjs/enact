@@ -56,7 +56,7 @@ const useSpottable = (props, instances, dependencies) => {
 
 	const [isOverscrollEffect, setOverscrollEffect] = useOverscrollEffect();
 
-	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey(props, {spottable: variables, virtualListBase}, {
+	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey(props, {virtualListBase}, {
 		containerNode,
 		handlePageUpDownKeyDown: () => {
 			variables.current.isScrolledBy5way = false;
@@ -106,8 +106,9 @@ const useSpottable = (props, instances, dependencies) => {
 				removeGlobalKeyDownEventListener();
 			}
 		}
-	}, [addGlobalKeyDownEventListener, containerNode, removeGlobalKeyDownEventListener]);
+	}, [addGlobalKeyDownEventListener, containerNode, handleGlobalKeyDown, removeGlobalKeyDownEventListener]);
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	function handleGlobalKeyDown () {
 		setContainerDisabled(false);
 	}

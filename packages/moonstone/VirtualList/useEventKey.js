@@ -22,7 +22,7 @@ const useEventKey = (props, instances, dependencies) => {
 
 	const {dataSize, focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
 		rtl, spotlightId, wrap} = props;
-	const {spottable, virtualListBase} = instances;
+	const {virtualListBase} = instances;
 	const {
 		containerNode,
 		handlePageUpDownKeyDown,
@@ -109,7 +109,7 @@ const useEventKey = (props, instances, dependencies) => {
 		}
 
 		return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
-	}, [dataSize, findSpottableItem, rtl, wrap]);
+	}, [dataSize, findSpottableItem, rtl, virtualListBase, wrap]);
 
 	/*
 	 * Hooks
@@ -214,7 +214,7 @@ const useEventKey = (props, instances, dependencies) => {
 		containerNode, dataSize, focusableScrollbar, getNextIndex,
 		handle5WayKeyUp, handleDirectionKeyDown, handlePageUpDownKeyDown,
 		isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
-		spotlightId, SpotlightAccelerator
+		spotlightId, SpotlightAccelerator, virtualListBase
 	]);
 
 	/*

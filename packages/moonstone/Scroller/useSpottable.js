@@ -1,7 +1,7 @@
 import Spotlight from '@enact/spotlight';
 import {getRect} from '@enact/spotlight/src/utils';
 import ri from '@enact/ui/resolution';
-import {useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 
 import useEventKey from './useEventKey';
 import useSpotlightConfig from './useSpotlightConfig';
@@ -26,22 +26,7 @@ const useSpottable = (props, instances) => {
 
 	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey();
 
-	useEffect(() => {
-		return () => setContainerDisabled(false);
-	}, [addGlobalKeyDownEventListener, containerNode, removeGlobalKeyDownEventListener, setContainerDisabled]);
-
-	useEffect(() => {
-		const {onUpdate} = props;
-		if (onUpdate) {
-			onUpdate();
-		}
-	});
-
-	/*
-	 * Functions
-	 */
-
-	function setContainerDisabled (bool) {
+	const setContainerDisabled = useCallback((bool) => {
 		if (containerNode) {
 			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
 
@@ -53,7 +38,22 @@ const useSpottable = (props, instances) => {
 				removeGlobalKeyDownEventListener();
 			}
 		}
-	}
+	}, [addGlobalKeyDownEventListener, containerNode, removeGlobalKeyDownEventListener]);
+
+	useEffect(() => {
+		return () => setContainerDisabled(false);
+	}, [setContainerDisabled]);
+
+	useEffect(() => {
+		const {onUpdate} = props;
+		if (onUpdate) {
+			onUpdate();
+		}
+	});
+
+	/*
+	 * Functions
+	 */
 
 	/**
 	 * Returns the first spotlight container between `node` and the scroller
