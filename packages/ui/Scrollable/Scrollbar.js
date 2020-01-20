@@ -46,7 +46,7 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 	// Refs
 	const containerRef = useRef();
 	const thumbRef = useRef();
-	const hideThumbJob = useRef(new Job(hideThumb, thumbHidingDelay));
+	const hideThumbJob = useRef(null);
 	// Render
 	const
 		{childRenderer, className, corner, css, vertical, ...rest} = props,
@@ -58,6 +58,8 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 		);
 
 	delete rest.clientSize;
+
+	hideThumbJob.current = hideThumbJob.current || new Job(hideThumb, thumbHidingDelay);
 
 	function hideThumb () {
 		removeClass(thumbRef.current, css.thumbShown);
