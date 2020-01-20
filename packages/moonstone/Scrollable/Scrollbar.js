@@ -27,18 +27,18 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 
 	useImperativeHandle(ref, () => {
 		const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = scrollbarRef.current;
-		const {isOneOfScrollButtonsFocused, updateButtons, focusOnButton} = scrollButtonsRef.current;
+		const {focusOnButton, isOneOfScrollButtonsFocused, updateButtons} = scrollButtonsRef.current;
 		return {
+			focusOnButton,
 			getContainerRef,
+			isOneOfScrollButtonsFocused,
 			showThumb,
 			startHidingThumb,
 			uiUpdate,
-			isOneOfScrollButtonsFocused,
 			update: (bounds) => {
 				updateButtons(bounds);
 				uiUpdate(bounds);
-			},
-			focusOnButton
+			}
 		};
 	}, [scrollbarRef, scrollButtonsRef]);
 
@@ -49,21 +49,25 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 			css={componentCss}
 			ref={scrollbarRef}
 			vertical={vertical}
-			childRenderer={({thumbRef}) => ( // eslint-disable-line react/jsx-no-bind
-				<ScrollButtons
-					{...rest}
-					ref={scrollButtonsRef}
-					vertical={vertical}
-					thumbRenderer={() => ( // eslint-disable-line react/jsx-no-bind
-						<ScrollThumb
-							cbAlertThumb={cbAlertThumb}
-							key="thumb"
-							ref={thumbRef}
-							vertical={vertical}
-						/>
-					)}
-				/>
-			)}
+			childRenderer={({thumbRef}) => { // eslint-disable-line react/jsx-no-bind
+				return (
+					<ScrollButtons
+						{...rest}
+						ref={scrollButtonsRef}
+						vertical={vertical}
+						thumbRenderer={() => { // eslint-disable-line react/jsx-no-bind
+							return (
+								<ScrollThumb
+									cbAlertThumb={cbAlertThumb}
+									key="thumb"
+									ref={thumbRef}
+									vertical={vertical}
+								/>
+							);
+						}}
+					/>
+				);
+			}}
 		/>
 	);
 }));

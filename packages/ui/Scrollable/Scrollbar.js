@@ -66,9 +66,8 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 	}
 
 	useEffect(() => {
-		const job = hideThumbJob.current;
 		return () => {
-			job.stop();
+			hideThumbJob.current.stop();
 		};
 	}, []);
 
@@ -180,16 +179,14 @@ const Scrollbar = forwardRef((props, ref) => {
 	const scrollbarBaseRef = useRef(null);
 
 	useImperativeHandle(ref, () => {
-		if (scrollbarBaseRef.current) {
-			const {getContainerRef, showThumb, startHidingThumb, update} = scrollbarBaseRef.current;
+		const {getContainerRef, showThumb, startHidingThumb, update} = scrollbarBaseRef.current;
 
-			return {
-				getContainerRef,
-				showThumb,
-				startHidingThumb,
-				update
-			};
-		}
+		return {
+			getContainerRef,
+			showThumb,
+			startHidingThumb,
+			update
+		};
 	}, [scrollbarBaseRef]);
 
 	return (
