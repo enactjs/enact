@@ -1,45 +1,41 @@
 import {ScrollThumb as UiScrollThumb} from '@enact/ui/Scrollable/Scrollbar';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import React, {forwardRef, useEffect} from 'react';
 
 const nop = () => {};
 
 /**
  * A Moonstone-styled scroll thumb with moonstone behavior
  *
- * @class ScrollThumb
+ * @function ScrollThumb
  * @memberof moonstone/Scrollable
  * @extends ui/Scrollable/ScrollThumb
  * @ui
  * @private
  */
-class ScrollThumb extends Component {
-	static propTypes = /** @lends moonstone/Scrollable.ScrollThumb.prototype */ {
-		/**
-		 * Called when [ScrollThumb]{@link moonstone/Scrollable.ScrollThumb} is updated.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		cbAlertThumb: PropTypes.func
-	}
+const ScrollThumb = forwardRef(({cbAlertThumb, ...rest}, ref) => {
+	useEffect (() => {
+		cbAlertThumb();
+	});
 
-	static defaultProps = {
-		cbAlertThumb: nop
-	}
+	return <UiScrollThumb {...rest} ref={ref} />;
+});
 
-	componentDidUpdate () {
-		this.props.cbAlertThumb();
-	}
+ScrollThumb.displayName = 'ScrollThumb';
 
-	render () {
-		const props = Object.assign({}, this.props);
+ScrollThumb.propTypes = /** @lends moonstone/Scrollable.ScrollThumb.prototype */ {
+	/**
+	 * Called when [ScrollThumb]{@link moonstone/Scrollable.ScrollThumb} is updated.
+	 *
+	 * @type {Function}
+	 * @private
+	 */
+	cbAlertThumb: PropTypes.func
+};
 
-		delete props.cbAlertThumb;
-
-		return <UiScrollThumb {...props} />;
-	}
-}
+ScrollThumb.defaultProps = {
+	cbAlertThumb: nop
+};
 
 export default ScrollThumb;
 export {
