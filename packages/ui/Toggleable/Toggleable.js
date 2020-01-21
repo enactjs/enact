@@ -5,7 +5,7 @@
  * @exports Toggleable
  */
 
-import {forward, adaptEvent} from '@enact/core/handle';
+import {adaptEvent, forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import PropTypes from 'prop-types';
