@@ -149,11 +149,12 @@ describe('Toggleable', () => {
 		);
 
 		test(
-			'should use selected prop when selected changed from truthy to undefined',
+			'should use defaultSelected prop when selected changed from truthy to undefined',
 			() => {
+				const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 				const Component = Toggleable(DivComponent);
 				const subject = mount(
-					<Component selected />
+					<Component defaultSelected selected />
 				);
 				// eslint-disable-next-line no-undefined
 				subject.setProps({selected: undefined});
@@ -161,14 +162,15 @@ describe('Toggleable', () => {
 				const expected = 'selected';
 				const actual = subject.find(DivComponent).props();
 
-				expect(actual).toHaveProperty(expected, false);
+				expect(actual).toHaveProperty(expected, true);
+				expect(spy).toHaveBeenCalled();
 			}
 		);
 
 		test(
 			'should use selected prop when both selected and defaultSelected are defined',
 			() => {
-				jest.spyOn(console, 'error').mockImplementation(() => {});
+				const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 				const Component = Toggleable(DivComponent);
 				const subject = shallow(
 					<Component defaultSelected selected={false} />
@@ -178,6 +180,7 @@ describe('Toggleable', () => {
 				const actual = subject.find(DivComponent).props();
 
 				expect(actual).toHaveProperty(expected, false);
+				expect(spy).toHaveBeenCalled();
 			}
 		);
 	});
