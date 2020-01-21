@@ -30,7 +30,7 @@
     "react-dom": "^16.8.6"
   },
   "devDependencies": {
-    "@enact/storybook-utils": "github:enactjs/storybook-utils#feature/sampler-migrate",
+    "@enact/storybook-utils": "^1.0.0",
     "@storybook/addons": "5.3.5",
     "@storybook/react": "5.3.5",
     "@storybook/theming": "5.3.5",
