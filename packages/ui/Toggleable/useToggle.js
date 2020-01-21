@@ -8,7 +8,7 @@ const handleEvent = (adapter) => handle(
 	isEnabled,
 	adaptEvent(
 		(ev, props, context) => ({
-			selected: adapter(ev, props, context)
+			[props.prop || 'selected']: adapter(ev, props, context)
 		}),
 		forward('onToggle')
 	),

@@ -1,6 +1,6 @@
 import {configureCancel} from '@enact/ui/Cancelable';
 import {useRadio} from '@enact/ui/RadioDecorator';
-import {configureToggle} from '@enact/ui/Toggleable';
+import {useToggle} from '@enact/ui/Toggleable';
 
 import useDeferChildren from './useDeferChildren';
 import {configureSpotlightActivator} from './useSpotlightActivator';
@@ -73,16 +73,22 @@ const defaultConfig = {
 function configureExpandable (config) {
 	const {getChildFocusTarget, noPointerMode} = {...defaultConfig, ...config};
 
-	const useToggle = configureToggle({toggle: null, activate: 'onOpen', deactivate: 'onClose', prop: 'open'});
 	const useCancel = configureCancel({component: 'span', onCancel: handleCancel});
 	const useSpotlightActivator = configureSpotlightActivator({noPointerMode, getChildFocusTarget});
 
 	// eslint-disable-next-line no-shadow
 	return function useExpandable (props) {
-		const toggle = useToggle(props);
-		const open = toggle.open && !props.disabled;
+		const toggle = useToggle({
+			prop: 'open',
+			selected: props.open,
+			defaultSelected: props.defaultOpen,
+			onActivate: props.onOpen,
+			onDeactivate: props.onClose
+		});
 
-		const radio = useRadio(open, toggle.onClose);
+		const open = toggle.selected && !props.disabled;
+
+		const radio = useRadio(open, toggle.onDeactivate);
 		const activator = useSpotlightActivator(props);
 
 		return {
@@ -91,13 +97,13 @@ function configureExpandable (config) {
 			onClose: (ev) => {
 				activator.onClose();
 				radio.deactivate();
-				toggle.onClose(ev, props);
+				toggle.onDeactivate(ev);
 			},
 			onHide: activator.onHide,
 			onOpen: (ev) => {
 				activator.onOpen();
 				radio.activate();
-				toggle.onOpen(ev, props);
+				toggle.onActivate(ev);
 			},
 			onShow: activator.onShow,
 			open,
