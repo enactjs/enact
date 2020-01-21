@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@enact/core": "^3.2.5",
+    "classnames": "^2.2.6",
     "prop-types": "^15.7.2",
     "ramda": "^0.24.1",
     "react": "^16.7.0",
