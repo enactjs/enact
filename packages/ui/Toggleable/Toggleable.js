@@ -133,9 +133,9 @@ const defaultConfig = {
 const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	// TODO: Add back eventProps support
 	const {activate, deactivate, prop, toggle, toggleProp} = config;
+	const defaultPropKey = 'default' + cap(prop);
 
 	function Toggleable (props) {
-		const defaultPropKey = 'default' + cap(config.prop || defaultConfig.prop);
 		const updated = {...props};
 		const hook = useToggle({
 			disabled: props.disabled,
@@ -189,7 +189,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		 * @default false
 		 * @public
 		 */
-		defaultSelected: PropTypes.bool,
+		[defaultPropKey]: PropTypes.bool,
 
 		/**
 		 * Whether or not the component is in a disabled state.
@@ -207,7 +207,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		 * @type {Function}
 		 * @public
 		 */
-		onToggle: PropTypes.func,
+		[toggle]: PropTypes.func,
 
 		/**
 		 * Current toggled state.
@@ -222,7 +222,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		 * @type {Boolean}
 		 * @public
 		 */
-		selected: PropTypes.bool
+		[prop]: PropTypes.bool
 	};
 
 	Toggleable.defaultProps = {
