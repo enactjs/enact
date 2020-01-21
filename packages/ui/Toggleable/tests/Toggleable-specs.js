@@ -97,7 +97,7 @@ describe('Toggleable', () => {
 			expect(actual).toBe(expected);
 		});
 
-		test('should use defaultSelected prop when selected prop is null', () => {
+		test('should use selected prop when selected prop is null', () => {
 			const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 			const Component = Toggleable(DivComponent);
 			const subject = shallow(
@@ -107,12 +107,12 @@ describe('Toggleable', () => {
 			const expected = 'selected';
 			const actual = subject.find(DivComponent).props();
 
-			expect(actual).toHaveProperty(expected, true);
+			expect(actual).toHaveProperty(expected, false);
 			expect(spy).toHaveBeenCalled();
 		});
 
 		test(
-			'should use defaultSelected prop when selected changed from truthy to null',
+			'should use selected prop when selected changed from truthy to null',
 			() => {
 				const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 				const Component = Toggleable(DivComponent);
@@ -125,7 +125,7 @@ describe('Toggleable', () => {
 				const expected = 'selected';
 				const actual = subject.find(DivComponent).props();
 
-				expect(actual).toHaveProperty(expected, true);
+				expect(actual).toHaveProperty(expected, false);
 				expect(spy).toHaveBeenCalled();
 			}
 		);

@@ -143,7 +143,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardDeactivate = forwardWithEventProps(deactivate);
 	const forwardToggle = forwardWithEventProps(toggle);
 	const forwardToggleProp = forwardWithEventProps(toggleProp);
-	
+
 	function Toggleable (props) {
 		const updated = {...props};
 		const hook = useToggle({
@@ -209,16 +209,6 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		disabled: PropTypes.bool,
 
 		/**
-		 * Event callback to notify that state should be toggled.
-		 *
-		 * @name onToggle
-		 * @memberof ui/Toggleable.Toggleable.prototype
-		 * @type {Function}
-		 * @public
-		 */
-		[toggle]: PropTypes.func,
-
-		/**
 		 * Current toggled state.
 		 *
 		 * When set at construction, the component is considered 'controlled' and will only
@@ -231,7 +221,17 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		 * @type {Boolean}
 		 * @public
 		 */
-		[prop]: PropTypes.bool
+		[prop]: PropTypes.bool,
+
+		/**
+		 * Event callback to notify that state should be toggled.
+		 *
+		 * @name onToggle
+		 * @memberof ui/Toggleable.Toggleable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		[toggle]: PropTypes.func
 	};
 
 	Toggleable.defaultProps = {
