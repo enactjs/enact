@@ -95,7 +95,19 @@ const defaultConfig = {
 	 * @default 'onToggle'
 	 * @memberof ui/Toggleable.Toggleable.defaultConfig
 	 */
-	toggle: 'onToggle'
+	toggle: 'onToggle',
+
+	/**
+	 * Allows you to remap the incoming `toggle` callback to an event name of your choosing.
+	 *
+	 * For example, run `onToggle` when the wrapped component has an `onClick` property and you've specified
+	 * `onClick` here.
+	 *
+	 * @type {String}
+	 * @default null
+	 * @memberof ui/Toggleable.Toggleable.defaultConfig
+	 */
+	toggleProp: null
 };
 
 /**
