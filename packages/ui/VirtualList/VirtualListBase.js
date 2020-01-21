@@ -190,7 +190,7 @@ const VirtualListBaseFactory = (type) => {
 				calculateMetrics(props);
 				// eslint-disable-next-line react/no-did-mount-set-state
 				const statesAndUpdateBounds = getStatesAndUpdateBounds();
-				setFirstIndex(statesAndUpdateBounds.newFirstIndex);
+				setFirstIndex(statesAndUpdateBounds.firstIndex);
 				setNumOfItems(statesAndUpdateBounds.numOfItems);
 
 			} else {
@@ -272,7 +272,7 @@ const VirtualListBaseFactory = (type) => {
 			calculateMetrics(props);
 			// eslint-disable-next-line react/no-did-update-set-state
 			const statesAndUpdateBounds = getStatesAndUpdateBounds();
-			setFirstIndex(statesAndUpdateBounds.newFirstIndex);
+			setFirstIndex(statesAndUpdateBounds.firstIndex);
 			setNumOfItems(statesAndUpdateBounds.numOfItems);
 
 			setContainerSize();
@@ -299,7 +299,7 @@ const VirtualListBaseFactory = (type) => {
 			if (!variables.current.deferScrollTo && variables.current.hasDataSizeChanged) {
 				const newState = getStatesAndUpdateBounds();
 				// eslint-disable-next-line react/no-did-update-set-state
-				setFirstIndex(newState.newFirstIndex);
+				setFirstIndex(newState.firstIndex);
 				setNumOfItems(newState.numOfItems);
 
 				setContainerSize();
@@ -1009,7 +1009,7 @@ const VirtualListBaseFactory = (type) => {
 				calculateMetrics(props);
 
 				const statesAndUpdateBounds = getStatesAndUpdateBounds();
-				setFirstIndex(statesAndUpdateBounds.newFirstIndex);
+				setFirstIndex(statesAndUpdateBounds.firstIndex);
 				setNumOfItems(statesAndUpdateBounds.numOfItems);
 
 				setContainerSize();
