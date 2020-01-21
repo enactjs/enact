@@ -148,7 +148,9 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		const updated = {...props};
 		const hook = useToggle({
 			disabled: props.disabled,
-			selected: props[prop],
+			// FIX: Current behavior for Toggleable treats `null` as undefined so we coerce it here
+			// to maintain that behavior while using useControlledState
+			selected: props[prop] == null ? undefined : props[prop],
 			defaultSelected: props[defaultPropKey],
 			onToggle: (ev) => forwardToggle(ev, props)
 		});
