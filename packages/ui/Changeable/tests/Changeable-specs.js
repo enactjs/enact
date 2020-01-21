@@ -119,7 +119,7 @@ describe('Changeable', () => {
 
 				subject.setProps({value: null});
 
-				const expected = null;
+				const expected = 1;
 				const actual = subject.find(DivComponent).prop('value');
 
 				expect(actual).toBe(expected);
@@ -143,7 +143,7 @@ describe('Changeable', () => {
 		});
 
 		test(
-			'should use value prop when value changed from truthy to undefined',
+			'should use defaultValue prop when value changed from truthy to undefined',
 			() => {
 				const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 				const Component = Changeable(DivComponent);
@@ -154,7 +154,7 @@ describe('Changeable', () => {
 				subject.setProps({value: undefined});
 
 				// eslint-disable-next-line no-undefined
-				const expected = undefined;
+				const expected = 1;
 				const actual = subject.find(DivComponent).prop('value');
 
 				expect(actual).toBe(expected);
@@ -233,7 +233,7 @@ describe('Changeable', () => {
 				<Component defaultValue={0} />
 			);
 
-			subject.find(DivComponent).prop('onChange')({value: 1});
+			subject.find(DivComponent).invoke('onChange')({value: 1});
 			subject.update();
 
 			const expected = 1;
@@ -251,7 +251,7 @@ describe('Changeable', () => {
 				<Component defaultValue={0} disabled />
 			);
 
-			subject.find(DivComponent).prop('onChange')({value: 1});
+			subject.find(DivComponent).invoke('onChange')({value: 1});
 
 			const expected = 0;
 			const actual = subject.find(DivComponent).prop('value');
@@ -268,7 +268,7 @@ describe('Changeable', () => {
 				<Component value={0} />
 			);
 
-			subject.find(DivComponent).prop('onChange')({value: 1});
+			subject.find(DivComponent).invoke('onChange')({value: 1});
 
 			const expected = 0;
 			const actual = subject.find(DivComponent).prop('value');

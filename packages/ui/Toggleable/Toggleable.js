@@ -9,6 +9,7 @@ import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
+import warning from 'warning';
 
 import {configureToggle, defaultConfig, useToggle} from './useToggle';
 
@@ -41,7 +42,15 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			...fn(props)
 		};
 
-		delete updated['default' + cap(config.prop || defaultConfig.prop)];
+		const defaultPropKey = 'default' + cap(config.prop || defaultConfig.prop);
+
+		warning(
+			!(config.prop in props && defaultPropKey in props),
+			`Do not specify both '${config.prop}' and '${defaultPropKey}' for Toggleable instances.
+			'${defaultPropKey}' will be ignored unless '${config.prop}' is 'null' or 'undefined'.`
+		);
+
+		delete updated[defaultPropKey];
 
 		return (
 			<Wrapped {...updated} />

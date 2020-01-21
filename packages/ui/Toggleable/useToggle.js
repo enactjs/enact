@@ -90,18 +90,19 @@ const defaultConfig = {
 };
 
 const configureToggle = (config) => {
-	const {activate, deactivate, eventProps, prop, toggle/* , toggleProp */} = {...defaultConfig, ...config};
+	const {activate, deactivate, eventProps, prop, toggle, toggleProp} = {...defaultConfig, ...config};
 	const defaultPropKey = 'default' + cap(prop);
 
 	const isEnabled = not(forProp('disabled', true));
 	const handleToggle = handle(
 		isEnabled,
+		forward(toggleProp),
 		adaptEvent(
 			(ev, props, value) => ({
 				...pick(eventProps, props),
 				[prop]: !value
 			}),
-			forward(deactivate)
+			forward(toggle)
 		),
 		(ev, props, {value, onToggle}) => onToggle(!value)
 	).named('handleToggle');
@@ -113,7 +114,7 @@ const configureToggle = (config) => {
 				...pick(eventProps, props),
 				[prop]: true
 			}),
-			forward(deactivate)
+			forward(activate)
 		),
 		(ev, props, {onToggle}) => onToggle(true)
 	).named('handleActivate');
@@ -139,8 +140,8 @@ const configureToggle = (config) => {
 		};
 
 		const updated = {};
-		if (prop) updated[prop] = value;
-		if (toggle) updated[toggle] = (ev) => handleToggle(ev, props, context);
+		if (prop) updated[prop] = Boolean(value);
+		if (toggleProp || toggle) updated[toggleProp || toggle] = (ev) => handleToggle(ev, props, context);
 		if (activate) updated[activate] = (ev) => handleActivate(ev, props, context);
 		if (deactivate) updated[deactivate] = (ev) => handleDeactivate(ev, props, context);
 

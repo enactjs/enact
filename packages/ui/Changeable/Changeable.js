@@ -9,8 +9,8 @@
 
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
-// import PropTypes from 'prop-types';
 import React from 'react';
+import warning from 'warning';
 
 import {configureChange, defaultConfig, useChange} from './useChange';
 
@@ -47,7 +47,15 @@ const ChangeableHoc = hoc(defaultConfig, (config, Wrapped) => {
 			...fn(props)
 		};
 
-		delete updated['default' + cap(config.prop || defaultConfig.prop)];
+		const defaultPropKey = 'default' + cap(config.prop || defaultConfig.prop);
+
+		warning(
+			!(config.prop in props && defaultPropKey in props),
+			`Do not specify both '${config.prop}' and '${defaultPropKey}' for Changeable instances.
+			'${defaultPropKey}' will be ignored unless '${config.prop}' is 'null' or 'undefined'.`
+		);
+
+		delete updated[defaultPropKey];
 
 		return (
 			<Wrapped {...updated} />

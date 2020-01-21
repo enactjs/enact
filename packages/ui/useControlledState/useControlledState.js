@@ -18,7 +18,7 @@ function calcValue (defaultValue, propValue, stateValue, controlled) {
 	}
 
 	// eslint-disable-next-line no-undefined
-	return propValue !== undefined ? propValue : defaultValue;
+	return propValue != undefined ? propValue : defaultValue;
 }
 
 function useControlledState (defaultValue, propValue, controlled) {

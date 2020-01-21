@@ -108,12 +108,13 @@ function configureCancel (config) {
 	);
 
 	function mountEffect (state) {
-		return () => {
-			addModal(state);
-
-			return () => {
-				removeModal(state);
-			};
+		// layout effect order doesn't appear to be consistent with request order so we must invoked
+		// addModal synchronously with render. addModal guards against dupliate entries so calling
+		// on effect creation is safe but we still need a cleanup fn in order to remove the modal on
+		// unmount (which is guaranteed to be only once with the empty memo array below).
+		addModal(state);
+		return () => () => {
+			removeModal(state);
 		};
 	}
 
