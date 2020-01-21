@@ -131,7 +131,8 @@ const defaultConfig = {
  * @public
  */
 const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const {prop, toggle, activate, deactivate, toggleProp} = config;
+	// TODO: Add back eventProps support
+	const {activate, deactivate, prop, toggle, toggleProp} = config;
 
 	function Toggleable (props) {
 		const defaultPropKey = 'default' + cap(config.prop || defaultConfig.prop);
