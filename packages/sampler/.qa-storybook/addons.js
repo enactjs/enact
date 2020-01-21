@@ -1,1 +1,1 @@
-import '../src/addons';
+import '@enact/storybook-utils/addons/register';

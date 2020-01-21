@@ -5,13 +5,10 @@ import Heading from '@enact/moonstone/Heading';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
-
+import {select} from '@enact/storybook-utils/addons/knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
 import {IconButton} from '@enact/moonstone/IconButton';
-
 import {Group} from '@enact/ui/Group';
 
 const ContextualButton = ContextualPopupDecorator(Button);

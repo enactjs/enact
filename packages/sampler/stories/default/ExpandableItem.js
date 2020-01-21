@@ -1,11 +1,11 @@
+import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
 import ExpandableItem, {Expandable, ExpandableItemBase} from '@enact/moonstone/ExpandableItem';
 import Icon from '@enact/moonstone/Icon';
 import Item from '@enact/moonstone/Item';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, select, text} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('ExpandableItem', Expandable, ExpandableItem, ExpandableItemBase);
 ExpandableItem.displayName = 'ExpandableItem';

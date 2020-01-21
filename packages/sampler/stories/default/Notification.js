@@ -1,11 +1,11 @@
+import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, text} from '@enact/storybook-utils/addons/knobs';
+import Button from '@enact/moonstone/Button';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import Notification from '@enact/moonstone/Notification';
 import Popup from '@enact/moonstone/Popup';
-import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, text} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('Notification', Notification, Popup);
 

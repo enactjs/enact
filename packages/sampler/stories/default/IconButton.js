@@ -1,12 +1,13 @@
-import IconButton, {IconButtonBase} from '@enact/moonstone/IconButton';
+import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
 import Button, {ButtonBase} from '@enact/moonstone/Button';
-import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
-import icons from './icons';
+import IconButton, {IconButtonBase} from '@enact/moonstone/IconButton';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
+import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 
-import {boolean, select, text} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata} from '../../src/utils';
+import icons from './icons';
 
 // import icons
 import docs from '../../images/icon-enact-docs.png';

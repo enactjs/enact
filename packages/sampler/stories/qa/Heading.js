@@ -4,7 +4,7 @@ import ri from '@enact/ui/resolution';
 import Scroller from '@enact/moonstone/Scroller';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {select, text} from '../../src/enact-knobs';
+import {select, text} from '@enact/storybook-utils/addons/knobs';
 
 Heading.displayName = 'Heading';
 

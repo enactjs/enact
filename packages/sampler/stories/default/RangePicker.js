@@ -1,10 +1,10 @@
-import RangePicker, {RangePickerBase} from '@enact/moonstone/RangePicker';
+import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
 import {decrementIcons, incrementIcons} from './icons';
+import {mergeComponentMetadata, nullify} from '@enact/storybook-utils';
+import RangePicker, {RangePickerBase} from '@enact/moonstone/RangePicker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, number, select} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata, nullify} from '../../src/utils';
 
 const Config = mergeComponentMetadata('RangePicker', RangePickerBase, RangePicker);
 

@@ -2,9 +2,8 @@ import SelectableItem from '@enact/moonstone/SelectableItem';
 import Group from '@enact/ui/Group';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, select, text} from '../../src/enact-knobs';
-import {action} from '../../src/utils';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
+import {action} from '@enact/storybook-utils/addons/actions';
 
 SelectableItem.displayName = 'SelectableItem';
 
