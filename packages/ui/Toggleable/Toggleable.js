@@ -5,10 +5,11 @@
  * @exports Toggleable
  */
 
-import {forward} from '@enact/core/handle';
+import {forward, adaptEvent} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import PropTypes from 'prop-types';
+import pick from 'ramda/src/pick';
 import React from 'react';
 import warning from 'warning';
 
@@ -131,17 +132,25 @@ const defaultConfig = {
  * @public
  */
 const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	// TODO: Add back eventProps support
-	const {activate, deactivate, prop, toggle, toggleProp} = config;
+	const {activate, deactivate, eventProps, prop, toggle, toggleProp} = config;
 	const defaultPropKey = 'default' + cap(prop);
 
+	const forwardWithEventProps = eventName => adaptEvent(
+		(ev, props) => ({...pick(eventProps, props), ...ev}),
+		forward(eventName)
+	);
+	const forwardActivate = forwardWithEventProps(activate);
+	const forwardDeactivate = forwardWithEventProps(deactivate);
+	const forwardToggle = forwardWithEventProps(toggle);
+	const forwardToggleProp = forwardWithEventProps(toggleProp);
+	
 	function Toggleable (props) {
 		const updated = {...props};
 		const hook = useToggle({
 			disabled: props.disabled,
 			selected: props[prop],
 			defaultSelected: props[defaultPropKey],
-			onToggle: props[toggle]
+			onToggle: (ev) => forwardToggle(ev, props)
 		});
 
 		warning(
@@ -154,19 +163,19 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		if (toggleProp || toggle) {
 			updated[toggleProp || toggle] = (ev) => {
-				if (hook.onToggle()) forward(toggleProp, ev, props);
+				if (hook.onToggle()) forwardToggleProp(ev, props);
 			};
 		}
 
 		if (activate) {
 			updated[activate] = (ev) => {
-				if (hook.onActivate()) forward(activate, ev, props);
+				if (hook.onActivate()) forwardActivate(ev, props);
 			};
 		}
 
 		if (deactivate) {
 			updated[deactivate] = (ev) => {
-				if (hook.onDeactivate()) forward(deactivate, ev, props);
+				if (hook.onDeactivate()) forwardDeactivate(ev, props);
 			};
 		}
 
