@@ -1,10 +1,9 @@
-import Picker from '@enact/moonstone/Picker';
+import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
 import {decrementIcons, incrementIcons} from './icons';
+import Picker from '@enact/moonstone/Picker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, select, text} from '../../src/enact-knobs';
-import {action} from '../../src/utils';
 
 // Set up some defaults for info and knobs
 const prop = {

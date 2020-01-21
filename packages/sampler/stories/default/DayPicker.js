@@ -1,9 +1,8 @@
+import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
 import DayPicker from '@enact/moonstone/DayPicker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, select, text} from '../../src/enact-knobs';
-import {action} from '../../src/utils';
 
 DayPicker.displayName = 'DayPicker';
 

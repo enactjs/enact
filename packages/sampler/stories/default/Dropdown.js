@@ -1,11 +1,11 @@
-import Dropdown, {DropdownBase} from '@enact/moonstone/Dropdown';
+import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, number, select, text} from '@enact/storybook-utils/addons/knobs';
 import Button, {ButtonBase} from '@enact/moonstone/Button';
-import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
+import Dropdown, {DropdownBase} from '@enact/moonstone/Dropdown';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, number, select, text} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata} from '../../src/utils';
+import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 
 Dropdown.displayName = 'Dropdown';
 const Config = mergeComponentMetadata('Dropdown', UIButtonBase, UIButton, ButtonBase, Button, DropdownBase, Dropdown);

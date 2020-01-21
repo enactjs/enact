@@ -2,9 +2,8 @@ import ExpandableInput from '@enact/moonstone/ExpandableInput';
 import icons from '../default/icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, select, text} from '../../src/enact-knobs';
-import {action} from '../../src/utils';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
+import {action} from '@enact/storybook-utils/addons/actions';
 
 ExpandableInput.displayName = 'ExpandableInput';
 

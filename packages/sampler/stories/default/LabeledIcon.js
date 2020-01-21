@@ -1,13 +1,13 @@
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
+import Icon, {IconBase} from '@enact/moonstone/Icon';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import LabeledIcon from '@enact/moonstone/LabeledIcon';
 import {LabeledIconBase as UiLabeledIconBase, LabeledIcon as UiLabeledIcon} from '@enact/ui/LabeledIcon';
-import Icon, {IconBase} from '@enact/moonstone/Icon';
-import UiIcon from '@enact/ui/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
+import UiIcon from '@enact/ui/Icon';
 
 import iconNames from './icons';
-import {mergeComponentMetadata} from '../../src/utils';
-import {boolean, select, text} from '../../src/enact-knobs';
 
 LabeledIcon.displayName = 'LabeledIcon';
 const Config = mergeComponentMetadata('LabeledIcon', UiLabeledIconBase, UiLabeledIcon, UiIcon, IconBase, Icon, LabeledIcon);

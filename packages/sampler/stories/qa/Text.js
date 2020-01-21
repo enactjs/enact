@@ -19,8 +19,7 @@ import SlotItem from '@enact/moonstone/SlotItem';
 import SwitchItem from '@enact/moonstone/SwitchItem';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {select} from '../../src/enact-knobs';
+import {select} from '@enact/storybook-utils/addons/knobs';
 
 const inputData = {
 	english: 'We name themes after gemstones',

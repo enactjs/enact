@@ -6,9 +6,8 @@ import ri from '@enact/ui/resolution';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {mergeComponentMetadata} from '../../src/utils';
-import {number} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
+import {number} from '@enact/storybook-utils/addons/knobs';
 
 import IncrementSliderDelayValue from './components/IncrementSliderDelayValue';
 

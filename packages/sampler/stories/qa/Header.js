@@ -3,9 +3,8 @@ import Button from '@enact/moonstone/Button';
 import Input from '@enact/moonstone/Input';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {mergeComponentMetadata} from '../../src/utils';
-import {boolean, text, select} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
+import {boolean, text, select} from '@enact/storybook-utils/addons/knobs';
 
 Header.displayName = 'Header';
 const Config = mergeComponentMetadata('Header', HeaderBase, Header);

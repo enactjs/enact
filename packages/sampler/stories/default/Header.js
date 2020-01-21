@@ -1,12 +1,11 @@
-import {Header, HeaderBase} from '@enact/moonstone/Panels';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
 import Button from '@enact/moonstone/Button';
+import {Header, HeaderBase} from '@enact/moonstone/Panels';
 import IconButton from '@enact/moonstone/IconButton';
 import Input from '@enact/moonstone/Input';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
 
 Header.displayName = 'Header';
 const Config = mergeComponentMetadata('Header', HeaderBase, Header);

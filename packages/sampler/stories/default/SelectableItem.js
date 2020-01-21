@@ -1,14 +1,14 @@
+import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
+import Icon from '@enact/moonstone/Icon';
+import Item, {ItemBase} from '@enact/moonstone/Item';
+import {listIcons} from './icons';
+import {mergeComponentMetadata, nullify} from '@enact/storybook-utils';
+import React from 'react';
 import SelectableItem from '@enact/moonstone/SelectableItem';
+import {storiesOf} from '@storybook/react';
 import ToggleItem from '@enact/moonstone/ToggleItem';
 import UiToggleItem, {ToggleItemBase as UiToggleItemBase} from '@enact/ui/ToggleItem';
-import Item, {ItemBase} from '@enact/moonstone/Item';
-import Icon from '@enact/moonstone/Icon';
-import {listIcons} from './icons';
-import React from 'react';
-import {storiesOf} from '@storybook/react';
-
-import {boolean, select, text} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata, nullify} from '../../src/utils';
 
 SelectableItem.displayName = 'SelectableItem';
 const Config = mergeComponentMetadata('SelectableItem', ItemBase, Item, UiToggleItemBase, UiToggleItem, ToggleItem, SelectableItem);
