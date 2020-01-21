@@ -9,13 +9,13 @@
  */
 
 import classNames from 'classnames';
-import handle, {forward, forwardWithPrevent} from '@enact/core/handle';
+import {forward, forwardWithPrevent} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
-import React, {useContext, useState, useReducer, useRef, useEffect} from 'react';
+import React, {forwardRef, useCallback, useContext, useEffect, useImperativeHandle, useReducer, useRef, useState} from 'react';
 
 import ForwardRef from '../ForwardRef';
 import {ResizeContext} from '../Resizable';
@@ -69,18 +69,16 @@ const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
  * @ui
  * @private
  */
-const ScrollableBase = (props) => {
+let ScrollableBase = (props, reference) => {
 	const [, forceUpdate] = useReducer(x => x + 1, 0);
 
 	const context = useContext(ResizeContext);
-	const [remeasure, setRemeasure] = useState(false);
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(props.horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(props.verticalScrollbar === 'visible');
 
 	const containerRef = useRef();
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
-
 
 	// Instance variables
 	const variables = useRef({
@@ -157,9 +155,86 @@ const ScrollableBase = (props) => {
 		flickTarget: null,
 		dragStartX: null,
 		dragStartY: null,
+		scrollStopJob: null,
 
-		scrollStopJob: null
+		isScrollbarVisibleChanged: false
 	});
+
+	useImperativeHandle(reference, () => ({
+		animator: variables.current.animator,
+		applyOverscrollEffect,
+		bounds: variables.current.bounds,
+		canScrollHorizontally,
+		canScrollVertically,
+		checkAndApplyOverscrollEffect,
+		get childRefCurrent () {
+			return variables.current.childRefCurrent;
+		},
+		containerRef,
+		getScrollBounds,
+		horizontalScrollbarRef,
+		get isDragging () {
+			return variables.current.isDragging;
+		},
+		isScrollAnimationTargetAccumulated: variables.current.isScrollAnimationTargetAccumulated,
+		get lastInputType () {
+			return variables.current.lastInputType;
+		},
+		set lastInputType (val) {
+			variables.current.lastInputType = val;
+		},
+		props: {
+			rtl: props.rtl
+		},
+		get scrollLeft () {
+			return variables.current.scrollLeft;
+		},
+		scrollTo,
+		scrollToAccumulatedTarget,
+		get scrollToInfo () {
+			return variables.current.scrollToInfo;
+		},
+		get scrollTop () {
+			return variables.current.scrollTop;
+		},
+		setOverscrollStatus,
+		showThumb,
+		start,
+		startHidingThumb,
+		verticalScrollbarRef,
+		get wheelDirection () {
+			return variables.current.wheelDirection;
+		},
+		set wheelDirection (val) {
+			variables.current.wheelDirection = val;
+		}
+	}));
+
+	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
+	// state member.
+	const enqueueForceUpdate = useCallback(() => {
+		variables.current.childRefCurrent.calculateMetrics(variables.current.childRefCurrent.props);
+		forceUpdate();
+	}, []);
+
+	const handleResizeWindow = useCallback(() => {
+		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
+		setTimeout(() => {
+			if (handleResizeWindow) {
+				handleResizeWindow();
+			}
+			scrollTo({position: {x: 0, y: 0}, animate: false});
+
+			enqueueForceUpdate();
+		});
+	}, [enqueueForceUpdate]);	// TODO : Handle exhaustive-deps
+
+
+	const handleResize = useCallback((ev) => {
+		if (ev.action === 'invalidateBounds') {
+			enqueueForceUpdate();
+		}
+	}, [enqueueForceUpdate]);
 
 	if (variables.current.resizeRegistry == null) {
 		variables.current.resizeRegistry = Registry.create(handleResize);
@@ -212,25 +287,25 @@ const ScrollableBase = (props) => {
 	delete rest.verticalScrollbar;
 
 	useEffect(() => {
+		const {animator, resizeRegistry, scrolling, scrollStopJob} = variables.current;
+
 		// componentDidMount
 		variables.current.resizeRegistry.parent = context;
-		addEventListeners();
+
 		updateScrollbars();
 
 		// componentWillUnmount
 		return () => {
-			variables.current.resizeRegistry.parent = null;
+			resizeRegistry.parent = null;
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
-			if (variables.current.scrolling) {
+			if (scrolling) {
 				forwardScrollEvent('onScrollStop', getReachedEdgeInfo());
 			}
-			variables.current.scrollStopJob.stop();
+			scrollStopJob.stop();
 
-			if (variables.current.animator.isAnimating()) {
-				variables.current.animator.stop();
+			if (animator.isAnimating()) {
+				animator.stop();
 			}
-
-			removeEventListeners();
 		};
 	}, []);
 
@@ -250,6 +325,9 @@ const ScrollableBase = (props) => {
 
 		addEventListeners();
 
+		variables.current.isScrollbarVisibleChanged = false;
+
+		return () => removeEventListeners();
 	});
 
 	useEffect(() => {
@@ -258,11 +336,16 @@ const ScrollableBase = (props) => {
 			{hasDataSizeChanged} = variables.current.childRefCurrent;
 		if (
 			hasDataSizeChanged === false &&
-			(isHorizontalScrollbarVisible || isVerticalScrollbarVisible )
+			(isHorizontalScrollbarVisible || isVerticalScrollbarVisible)
 		) {
+			variables.current.isScrollbarVisibleChanged = true;
 			variables.current.deferScrollTo = false;
 			variables.current.isUpdatedScrollThumb = updateScrollThumbSize();
-		} else {
+		}
+	}, [isHorizontalScrollbarVisible, isVerticalScrollbarVisible]);
+
+	useEffect(() => {
+		if (variables.current.isScrollbarVisibleChanged === false) {
 			updateScrollbars();
 		}
 
@@ -274,33 +357,7 @@ const ScrollableBase = (props) => {
 
 		// publish container resize changes
 		variables.current.resizeRegistry.notify({});
-	}, [isHorizontalScrollbarVisible, isVerticalScrollbarVisible]);
-
-
-	function handleResize (ev) {
-		if (ev.action === 'invalidateBounds') {
-			enqueueForceUpdate();
-		}
-	}
-
-	function handleResizeWindow () {
-		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
-		setTimeout(() => {
-			if (handleResizeWindow) {
-				handleResizeWindow();
-			}
-			scrollTo({position: {x: 0, y: 0}, animate: false});
-
-			enqueueForceUpdate();
-		});
-	}
-
-	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
-	// state member.
-	function enqueueForceUpdate () {
-		variables.current.childRefCurrent.calculateMetrics(variables.current.childRefCurrent.props);
-		forceUpdate();
-	}
+	});
 
 	function clampScrollPosition () {
 		const bounds = getScrollBounds();
@@ -320,11 +377,26 @@ const ScrollableBase = (props) => {
 		return (props.rtl ? -x : x);
 	}
 
-	// TODO : 이거 어떻게 하지? const로 하면 재선언 계속 될텐덴 괜찮나..;;
-	const onMouseDown = handle(
-		forwardWithPrevent('onMouseDown'),
-		stop
-	).bindAs(this, 'onMouseDown');
+	const stop = useCallback(() => {
+		variables.current.animator.stop();
+		variables.current.lastInputType = null;
+		variables.current.isScrollAnimationTargetAccumulated = false;
+		startHidingThumb();
+		if (variables.current.overscrollEnabled && !variables.current.isDragging) { // not check props.overscrollEffectOn for safety
+			clearAllOverscrollEffects();
+		}
+		if (props.stop) {
+			props.stop();
+		}
+		if (variables.current.scrolling) {
+			variables.current.scrollStopJob.start();
+		}
+	});
+
+	const onMouseDown = useCallback((ev) => {
+		forwardWithPrevent('onMouseDown', ev, props);
+		stop();
+	}, [props, stop]);
 
 	function onDragStart (ev) {
 		if (ev.type === 'dragstart') return;
@@ -403,7 +475,7 @@ const ScrollableBase = (props) => {
 		return delta;
 	}
 
-	function onWheel (ev) {
+	const onWheel = useCallback((ev) => {
 		if (variables.current.isDragging) {
 			ev.preventDefault();
 			ev.stopPropagation();
@@ -445,7 +517,7 @@ const ScrollableBase = (props) => {
 				ev.stopPropagation();
 			}
 		}
-	}
+	});
 
 	function scrollByPage (keyCode) {
 		const
@@ -458,13 +530,13 @@ const ScrollableBase = (props) => {
 		scrollToAccumulatedTarget(pageDistance, bCanScrollVertically, props.overscrollEffectOn.pageKey);
 	}
 
-	function onKeyDown (ev) {
+	const onKeyDown = useCallback((ev) => {
 		if (props.onKeyDown) {
 			forward('onKeyDown', ev, props);
 		} else if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode))) {
 			scrollByPage(ev.keyCode);
 		}
-	}
+	});
 
 	function scrollToAccumulatedTarget (delta, vertical, overscrollEffect) {
 		if (!variables.current.isScrollAnimationTargetAccumulated) {
@@ -772,22 +844,6 @@ const ScrollableBase = (props) => {
 		forwardScrollEvent('onScroll');
 	}
 
-	function stop () {
-		variables.current.animator.stop();
-		variables.current.lastInputType = null;
-		variables.current.isScrollAnimationTargetAccumulated = false;
-		startHidingThumb();
-		if (variables.current.overscrollEnabled && !variables.current.isDragging) { // not check props.overscrollEffectOn for safety
-			clearAllOverscrollEffects();
-		}
-		if (props.stop) {
-			props.stop();
-		}
-		if (variables.current.scrolling) {
-			variables.current.scrollStopJob.start();
-		}
-	}
-
 	// scrollTo API
 
 	function getPositionForScrollTo (opt) {
@@ -1060,6 +1116,8 @@ const ScrollableBase = (props) => {
 		</ResizeContext.Provider>
 	);
 };
+
+ScrollableBase = forwardRef(ScrollableBase);
 
 ScrollableBase.displayName = 'ui:ScrollableBase';
 

@@ -10,7 +10,7 @@
 import classNames from 'classnames';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
-import React, {useEffect, useReducer, useRef} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useReducer, useRef} from 'react';
 
 import Scrollable from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -27,7 +27,7 @@ import css from './Scroller.module.less';
  * @ui
  * @public
  */
-const ScrollerBase = (props) => {
+let ScrollerBase = (props, reference) => {
 	// constructor (props) {
 	const containerRef = useRef();
 	const [, forceUpdate] = useReducer(x => x + 1, 0);
@@ -35,7 +35,7 @@ const ScrollerBase = (props) => {
 	useEffect(() => {
 		// componentDidMount
 		calculateMetrics();
-	});
+	}, []);
 
 	useEffect(() => {
 		// componentDidUpdate
@@ -64,6 +64,14 @@ const ScrollerBase = (props) => {
 		}
 	});
 
+	useImperativeHandle(reference, () => ({
+		didScroll,
+		getNodePosition,
+		getScrollBounds,
+		scrollToPosition,
+		setScrollPosition,
+		containerRef
+	}));
 
 	function getScrollBounds () {
 		return variables.current.scrollBounds;
@@ -160,6 +168,8 @@ const ScrollerBase = (props) => {
 		/>
 	);
 };
+
+ScrollerBase = forwardRef(ScrollerBase);
 
 ScrollerBase.displayName = 'ui:ScrollerBase';
 

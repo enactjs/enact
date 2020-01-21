@@ -1,12 +1,12 @@
 import classNames from 'classnames';
-import handle, {forward, forwardWithPrevent} from '@enact/core/handle';
+import {forward, forwardWithPrevent} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform';
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
-import React, {useContext, useState, useReducer, useRef, useEffect} from 'react';
+import React, {forwardRef, useCallback, useContext, useEffect, useImperativeHandle, useReducer, useRef, useState} from 'react';
 
 import {ResizeContext} from '../Resizable';
 import ri from '../resolution';
@@ -55,11 +55,10 @@ const TouchableDiv = Touchable('div');
  * @ui
  * @private
  */
-const ScrollableBaseNative = (props) => {
+let ScrollableBaseNative = (props, reference) => {
 	const [, forceUpdate] = useReducer(x => x + 1, 0);
 
 	const context = useContext(ResizeContext);
-	const [remeasure, setRemeasure] = useState(false);
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(props.horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(props.verticalScrollbar === 'visible');
 
@@ -86,7 +85,6 @@ const ScrollableBaseNative = (props) => {
 		animationInfo: null,
 
 		resizeRegistry: null,
-
 
 		// constants
 		pixelPerLine: 39,
@@ -143,9 +141,60 @@ const ScrollableBaseNative = (props) => {
 		flickTarget: null,
 		dragStartX: null,
 		dragStartY: null,
-		scrollStopJob: null
+		scrollStopJob: null,
+
+		isScrollbarVisibleChanged: false
 	});
 
+	useImperativeHandle(reference, () => ({
+		animator: variables.current.animator,
+		applyOverscrollEffect,
+		bounds: variables.current.bounds,
+		canScrollHorizontally,
+		canScrollVertically,
+		checkAndApplyOverscrollEffect,
+		get childRefCurrent () {
+			return variables.current.childRefCurrent;
+		},
+		containerRef,
+		getScrollBounds,
+		horizontalScrollbarRef,
+		get isDragging () {
+			return variables.current.isDragging;
+		},
+		isScrollAnimationTargetAccumulated: variables.current.isScrollAnimationTargetAccumulated,
+		get lastInputType () {
+			return variables.current.lastInputType;
+		},
+		set lastInputType (val) {
+			variables.current.lastInputType = val;
+		},
+		props: {
+			rtl: props.rtl
+		},
+		get scrollLeft () {
+			return variables.current.scrollLeft;
+		},
+		scrollTo,
+		scrollToAccumulatedTarget,
+		get scrollToInfo () {
+			return variables.current.scrollToInfo;
+		},
+		get scrollTop () {
+			return variables.current.scrollTop;
+		},
+		setOverscrollStatus,
+		showThumb,
+		start,
+		startHidingThumb,
+		verticalScrollbarRef,
+		get wheelDirection () {
+			return variables.current.wheelDirection;
+		},
+		set wheelDirection (val) {
+			variables.current.wheelDirection = val;
+		}
+	}));
 	if (variables.current.resizeRegistry == null) {
 		variables.current.resizeRegistry = Registry.create(handleResize);
 	}
@@ -201,20 +250,19 @@ const ScrollableBaseNative = (props) => {
 
 	useEffect(() => {
 		// componentDidMount
+		const {resizeRegistry, scrolling, scrollStopJob} = variables.current;
 		variables.current.resizeRegistry.parent = context;
-		addEventListeners();
+
 		updateScrollbars();
 
 		// componentWillUnmount
 		return () => {
-			variables.current.resizeRegistry.parent = null;
+			resizeRegistry.parent = null;
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
-			if (variables.current.scrolling) {
+			if (scrolling) {
 				forwardScrollEvent('onScrollStop', getReachedEdgeInfo());
 			}
-			variables.current.scrollStopJob.stop();
-
-			removeEventListeners();
+			scrollStopJob.stop();
 		};
 	}, []);
 
@@ -230,6 +278,10 @@ const ScrollableBaseNative = (props) => {
 			}
 		}
 		addEventListeners();
+
+		variables.current.isScrollbarVisibleChanged = false;
+
+		return () => removeEventListeners();
 	});
 
 	useEffect(() => {
@@ -240,9 +292,14 @@ const ScrollableBaseNative = (props) => {
 			hasDataSizeChanged === false &&
 			(isHorizontalScrollbarVisible || isVerticalScrollbarVisible)
 		) {
+			variables.current.isScrollbarVisibleChanged = true;
 			variables.current.deferScrollTo = false;
 			variables.current.isUpdatedScrollThumb = updateScrollThumbSize();
-		} else {
+		}
+	}, [isHorizontalScrollbarVisible, isVerticalScrollbarVisible]);
+
+	useEffect(() => {
+		if (variables.current.isScrollbarVisibleChanged === false) {
 			updateScrollbars();
 		}
 
@@ -254,7 +311,7 @@ const ScrollableBaseNative = (props) => {
 
 		// publish container resize changes
 		variables.current.resizeRegistry.notify({});
-	}, [isHorizontalScrollbarVisible, isVerticalScrollbarVisible]);
+	});
 
 	function handleResize (ev) {
 		if (ev.action === 'invalidateBounds') {
@@ -289,12 +346,20 @@ const ScrollableBaseNative = (props) => {
 		return (props.rtl ? -x : x);
 	}
 
-	// TODO : 이거 어떻게 하지? const로 하면 재선언 계속 될텐덴 괜찮나..;;
-	const onMouseDown = handle(
-		forwardWithPrevent('onMouseDown'),
-		stop
-	);
-	// /*.bindAs(this, 'onMouseDown')*/
+	const stop = useCallback(() => {
+		const
+			childRefCurrent = variables.current.childRefCurrent,
+			childContainerRef = childRefCurrent.containerRef;
+
+		childContainerRef.current.style.scrollBehavior = null;
+		childRefCurrent.scrollToPosition(variables.current.scrollLeft + 0.1, variables.current.scrollTop + 0.1);
+		childContainerRef.current.style.scrollBehavior = 'smooth';
+	});
+
+	const onMouseDown = useCallback((ev) => {
+		forwardWithPrevent('onMouseDown', ev, props);
+		stop();
+	}, [props, stop]);
 
 	function onTouchStart () {
 		variables.current.isTouching = true;
@@ -392,7 +457,7 @@ const ScrollableBaseNative = (props) => {
 	 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot support this
 	 * - for vertical scroll, supports wheel action on scrollbars only
 	 */
-	function onWheel (ev) {
+	const onWheel = useCallback((ev) => {
 		if (variables.current.isDragging) {
 			ev.preventDefault();
 			ev.stopPropagation();
@@ -477,9 +542,9 @@ const ScrollableBaseNative = (props) => {
 				startHidingThumb();
 			}
 		}
-	}
+	});
 
-	function onScroll (ev) {
+	const onScroll  = useCallback((ev) => {
 		let {scrollLeft, scrollTop} = ev.target;
 
 		const
@@ -506,11 +571,11 @@ const ScrollableBaseNative = (props) => {
 		}
 		forwardScrollEvent('onScroll');
 		variables.current.scrollStopJob.start();
-	}
+	});
 
-	function onKeyDown (ev) {
+	const onKeyDown = useCallback((ev) => {
 		forward('onKeyDown', ev, props);
-	}
+	});
 
 	function scrollToAccumulatedTarget (delta, vertical, overscrollEffect) {
 		if (!variables.current.isScrollAnimationTargetAccumulated) {
@@ -794,16 +859,6 @@ const ScrollableBaseNative = (props) => {
 		}
 	}
 
-	function stop () {
-		const
-			childRefCurrent = variables.current.childRefCurrent,
-			childContainerRef = childRefCurrent.containerRef;
-
-		childContainerRef.current.style.scrollBehavior = null;
-		childRefCurrent.scrollToPosition(variables.current.scrollLeft + 0.1, variables.current.scrollTop + 0.1);
-		childContainerRef.current.style.scrollBehavior = 'smooth';
-	}
-
 	// scrollTo API
 
 	function getPositionForScrollTo (opt) {
@@ -1072,6 +1127,8 @@ const ScrollableBaseNative = (props) => {
 		</ResizeContext.Provider>
 	);
 };
+
+ScrollableBaseNative = forwardRef(ScrollableBaseNative);
 
 ScrollableBaseNative.displayName = 'ui:ScrollableBaseNative';
 
