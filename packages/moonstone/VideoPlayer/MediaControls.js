@@ -12,6 +12,7 @@ import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 import {forward} from '@enact/core/handle';
+import {Marquee} from '@enact/moonstone/Marquee';
 
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import PropTypes from 'prop-types';
@@ -321,7 +322,7 @@ const MediaControlsBase = kind({
 	computed: {
 		className: ({visible, styler}) => styler.append({hidden: !visible}),
 		childrenContainerClassName: ({styler}) => styler.append('mediaControls', 'childrenContainerComponents'),
-		guideClassName: ({styler, showBottomComponents}) => styler.join('guideComponents', {hidden: showBottomComponents}),
+		guideClassName: ({styler, showBottomComponents}) => styler.join('guideContainerComponents', {hidden: showBottomComponents}),
 		bottomClassName: ({styler, showBottomComponents}) => styler.join('bottomContainerComponents', {lift: showBottomComponents}),
 		playPauseClassName: ({showBottomComponents}) => showBottomComponents ? null : spotlightDefaultClass
 	},
@@ -376,7 +377,7 @@ const MediaControlsBase = kind({
 				{countReactChildren(children) || bottomComponents ?
 					<div className={guideClassName} >
 						<Icon>arrowlargedown</Icon>
-						<div>Scroll or Press V Button</div>
+						<Marquee marqueeOn="render" alignment="center">{$L('Scroll or Press V Button')}</Marquee>
 					</div> :
 					null
 				}
@@ -615,7 +616,7 @@ const MediaControlsDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 				this.setState({
 					bottomComponentRendered: true
 				});
-				this.mediaControlsNode.style.setProperty('--guideComponentHeight', `${this.getHeightForElement('guideComponents')}px`);
+				this.mediaControlsNode.style.setProperty('--guideComponentHeight', `${this.getHeightForElement('guideContainerComponents')}px`);
 			}
 
 			if (this.state.showBottomComponents !== prevState.showBottomComponents) {

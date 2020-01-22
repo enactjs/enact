@@ -1719,7 +1719,7 @@ const VideoPlayerBase = class extends React.Component {
 			const bottomElement = this.player.querySelector(`.${css.bottomContainerComponents}`);
 			const bottomHeight = bottomElement ? bottomElement.scrollHeight : 0;
 
-			const guideElement = this.player.querySelector(`.${css.guideComponents}`);
+			const guideElement = this.player.querySelector(`.${css.guideContainerComponents}`);
 			const guideHeight = guideElement ? guideElement.scrollHeight : 0;
 
 			this.player.style.setProperty('--guideComponentHeight', `${guideHeight}px`);
@@ -1880,30 +1880,29 @@ const VideoPlayerBase = class extends React.Component {
 						>
 							{secondsToTime(this.state.sliderTooltipTime, durFmt)}
 						</FeedbackContent>
+						{/*
+							Info Section: Title, Description, Times
+							Only render when `this.state.mediaControlsVisible` is true in order for `Marquee`
+							to make calculations correctly in `MediaTitle`.
+						*/}
+						{this.state.mediaSliderVisible ?
+							<div className={css.infoFrame}>
+								<MediaTitle
+									id={this.id}
+									infoVisible={this.state.infoVisible}
+									ref={this.setTitleRef}
+									title={title}
+									visible={this.state.titleVisible && this.state.mediaControlsVisible}
+								>
+									{infoComponents}
+								</MediaTitle>
+							</div> :
+							null
+						}
 						<ControlsContainer
 							className={css.bottom + (this.state.mediaControlsVisible ? '' : ' ' + css.hidden) + (this.state.infoVisible ? ' ' + css.shift : '')}
 							spotlightDisabled={spotlightDisabled || !this.state.mediaControlsVisible}
 						>
-							{/*
-								Info Section: Title, Description, Times
-								Only render when `this.state.mediaControlsVisible` is true in order for `Marquee`
-								to make calculations correctly in `MediaTitle`.
-							*/}
-							{this.state.mediaSliderVisible ?
-								<div className={css.infoFrame}>
-									<MediaTitle
-										id={this.id}
-										infoVisible={this.state.infoVisible}
-										ref={this.setTitleRef}
-										title={title}
-										visible={this.state.titleVisible && this.state.mediaControlsVisible}
-									>
-										{infoComponents}
-									</MediaTitle>
-								</div> :
-								null
-							}
-
 							{noSlider ?
 								null :
 								<div className={css.timeSliderFrame}>

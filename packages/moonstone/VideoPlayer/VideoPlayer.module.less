@@ -54,6 +54,79 @@
 			pointer-events: none;
 		}
 
+		.infoFrame {
+			display: flex;
+			margin-bottom: @moon-spotlight-outset;
+
+			// Title Container
+			.titleFrame {
+				--infoComponentsOffset: 0;
+
+				@badges-present-transition: transform 500ms ease-in-out;
+
+				position: relative;
+				flex-grow: 1;
+				opacity: 1;
+				.margin-start-end(0, @moon-spotlight-outset);
+
+				&.hidden {
+					transition: opacity 1000ms ease-in-out;
+					opacity: 0;
+				}
+
+				// Title
+				.title {
+					position: absolute;
+					bottom: -5px;
+					width: 100%;
+					.moon-text-base(@moon-video-player-title-size);
+					line-height: @moon-header-line-height;
+					transition: @badges-present-transition;
+					.font-kerning;
+
+					&.infoVisible {
+						transform: translateY(~"calc(var(--infoComponentsOffset) * -1)") translateZ(0);
+					}
+
+					.moon-locale-non-latin({
+						// The font-size .times is the same as .title in non-latin locales so no
+						// vertical adjustment is required to align their baselines
+						bottom: 0px;
+					});
+				}
+
+				// Badges and title components
+				.infoComponents {
+					vertical-align: super;
+					font-size: 27px;
+
+					&.hidden {
+						opacity: 0;
+					}
+					&.visible {
+						transition: opacity 500ms ease-in-out;
+					}
+
+					> * {
+						display: inline-block;
+						margin: 0 6px;
+					}
+
+					.badgeTextIcon {
+						font-family: @moon-font-family-bold;
+						font-size: @moon-video-player-badge-text-size;
+						text-align: center;
+						white-space: nowrap;
+						display: inline-block;
+					}
+
+					.fontLgIcons {
+						font-family: "LG Icons";
+					}
+				}
+			}
+		}
+
 		.bottom {
 			transition: transform 0.3s linear;
 			position: absolute;
@@ -73,78 +146,6 @@
 				.timeSliderFrame {
 					position: absolute;
 					width: 100%;
-				}
-			}
-
-			.infoFrame {
-				display: flex;
-				margin-bottom: @moon-spotlight-outset;
-
-				// Title Container
-				.titleFrame {
-					--infoComponentsOffset: 0;
-
-					@badges-present-transition: transform 500ms ease-in-out;
-
-					position: relative;
-					flex-grow: 1;
-					opacity: 1;
-					.margin-start-end(0, @moon-spotlight-outset);
-
-					&.hidden {
-						transition: opacity 1000ms ease-in-out;
-						opacity: 0;
-					}
-
-					// Title
-					.title {
-						position: absolute;
-						bottom: -5px;
-						width: 100%;
-						.moon-text-base(@moon-video-player-title-size);
-						line-height: @moon-header-line-height;
-						transition: @badges-present-transition;
-						.font-kerning;
-
-						&.infoVisible {
-							transform: translateY(~"calc(var(--infoComponentsOffset) * -1)") translateZ(0);
-						}
-
-						.moon-locale-non-latin({
-							// The font-size .times is the same as .title in non-latin locales so no
-							// vertical adjustment is required to align their baselines
-							bottom: 0px;
-						});
-					}
-
-					// Badges and title components
-					.infoComponents {
-						vertical-align: super;
-
-						&.hidden {
-							opacity: 0;
-						}
-						&.visible {
-							transition: opacity 500ms ease-in-out;
-						}
-
-						> * {
-							display: inline-block;
-							margin: 0 6px;
-						}
-
-						.badgeTextIcon {
-							font-family: @moon-font-family-bold;
-							font-size: @moon-video-player-badge-text-size;
-							text-align: center;
-							white-space: nowrap;
-							display: inline-block;
-						}
-
-						.fontLgIcons {
-							font-family: "LG Icons";
-						}
-					}
 				}
 			}
 
@@ -281,8 +282,16 @@
 					}
 				}
 
-				.guideComponents {
-					font-size: 30px;
+				.guideContainerComponents {
+					.guideText {
+						.moon-font({
+							font-weight: 500;
+							font-size: 24px;
+						});
+						font-weight: 500;
+						font-size: 24px;
+					}
+
 					text-align: center;
 					transition: opacity 0.2s linear;
 					&.hidden {
@@ -313,7 +322,8 @@
 					}
 
 					.bottomComponent {
-						height: 141px;
+						margin-top: 30px;
+						height: 159px;
 					}
 				}
 			}
@@ -333,22 +343,26 @@
 				background-color: @moon-video-feedback-mini-bg-color;
 				color: @moon-video-feedback-mini-text-color;
 			}
-			.bottom {
-				background-color: @moon-video-player-bottom-bg-color;
 
-				.infoFrame {
-					text-shadow: @moon-video-player-title-text-shadow;
+			.infoFrame {
+				position: absolute;
+				top: 50%;
+				left: @moon-video-player-padding-side;
+				text-shadow: @moon-video-player-title-text-shadow;
 
-					// Title Container
-					.titleFrame {
-						color: @moon-video-player-title-color;
+				// Title Container
+				.titleFrame {
+					color: @moon-video-player-title-color;
 
-						.redIcon {
-							background-color: @moon-video-player-redicon-bg-color;
-							color: @moon-video-player-redicon-text-color;
-						}
+					.redIcon {
+						background-color: @moon-video-player-redicon-bg-color;
+						color: @moon-video-player-redicon-text-color;
 					}
 				}
+			}
+
+			.bottom {
+				background-color: @moon-video-player-bottom-bg-color;
 
 				.sliderFrame {
 					.slider {
