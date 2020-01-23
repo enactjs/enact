@@ -1,7 +1,7 @@
 import platform from '@enact/core/platform';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import {ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
+import {ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/Scrollable';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';

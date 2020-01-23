@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React, {forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, useCallback} from 'react';
 
 import Scrollable from '../Scrollable';
-import ScrollableNative from '../Scrollable/ScrollableNative';
+import {ScrollableNative} from '../Scrollable/Scrollable';
 
 import css from './VirtualList.module.less';
 

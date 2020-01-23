@@ -1,6 +1,6 @@
 import {onWindowReady} from '@enact/core/snapshot';
 import Spotlight from '@enact/spotlight';
-import {constants} from '@enact/ui/Scrollable/ScrollableNative';
+import {constants} from '@enact/ui/Scrollable/Scrollable';
 import {useEffect, useRef} from 'react';
 
 const {isPageDown, isPageUp} = constants;

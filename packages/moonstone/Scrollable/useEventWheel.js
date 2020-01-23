@@ -1,5 +1,5 @@
 import Spotlight from '@enact/spotlight';
-import {constants} from '@enact/ui/Scrollable/ScrollableNative';
+import {constants} from '@enact/ui/Scrollable/Scrollable';
 import {useRef} from 'react';
 
 const {overscrollTypeOnce, scrollWheelPageMultiplierForMaxPixel} = constants;

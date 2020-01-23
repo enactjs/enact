@@ -2,7 +2,7 @@ import {forward} from '@enact/core/handle';
 import {clamp} from '@enact/core/util';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
-import {constants} from '@enact/ui/Scrollable/ScrollableNative';
+import {constants} from '@enact/ui/Scrollable/Scrollable';
 
 const
 	{epsilon, isPageDown, isPageUp} = constants,

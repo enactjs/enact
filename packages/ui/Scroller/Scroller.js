@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import React, {forwardRef, useEffect, useImperativeHandle, useReducer, useRef} from 'react';
 
 import Scrollable from '../Scrollable';
-import ScrollableNative from '../Scrollable/ScrollableNative';
+import ScrollableNative from '../Scrollable/Scrollable';
 
 import css from './Scroller.module.less';
 
