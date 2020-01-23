@@ -13,7 +13,6 @@ import PropTypes from 'prop-types';
 import React, {forwardRef, useEffect, useImperativeHandle, useReducer, useRef} from 'react';
 
 import Scrollable from '../Scrollable';
-import ScrollableNative from '../Scrollable/Scrollable';
 
 import css from './Scroller.module.less';
 
@@ -93,12 +92,12 @@ const ScrollerBase = forwardRef((props, reference) => {
 		}
 	}
 
-	// for ScrollableNative
+	// for native Scrollable
 	function scrollToPosition (x, y) {
 		containerRef.current.scrollTo(getRtlPositionX(x), y);
 	}
 
-	// for ScrollableNative
+	// for native Scrollable
 	function didScroll (x, y) {
 		variables.current.scrollPos.left = x;
 		variables.current.scrollPos.top = y;
@@ -392,43 +391,8 @@ Scroller.defaultProps = {
 	direction: 'both'
 };
 
-/**
- * An unstyled native scroller, [ScrollableNative]{@link ui/Scrollable.ScrollableNative} applied.
- * For smooth native scrolling, web engine with below Chromium 61, should be launched
- * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
- * The one with Chromium 61 or above, is launched to support it by default.
- *
- * Example:
- * ```
- * <ScrollerNative>Scroll me.</ScrollerNative>
- * ```
- *
- * @class ScrollerNative
- * @memberof ui/Scroller
- * @extends ui/Scroller.ScrollerBase
- * @ui
- * @private
- */
-const ScrollerNative = (props) => (
-	<ScrollableNative
-		{...props}
-		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
-			<ScrollerBase {...rest} ref={initChildRef} />
-		)}
-	/>
-);
-
-ScrollerNative.propTypes = /** @lends ui/Scroller.ScrollerNative.prototype */ {
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
-};
-
-ScrollerNative.defaultProps = {
-	direction: 'both'
-};
-
 export default Scroller;
 export {
 	Scroller,
-	ScrollerBase,
-	ScrollerNative
+	ScrollerBase
 };

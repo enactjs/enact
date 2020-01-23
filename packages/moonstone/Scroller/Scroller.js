@@ -22,7 +22,6 @@ import PropTypes from 'prop-types';
 import React, {forwardRef, useImperativeHandle, useRef} from 'react';
 
 import Scrollable from '../Scrollable';
-import {ScrollableNative} from '../Scrollable/Scrollable';
 
 import useSpottable from './useSpottable';
 
@@ -235,44 +234,8 @@ Scroller.defaultProps = {
 	direction: 'both'
 };
 
-/**
- * A Moonstone-styled native Scroller, Scrollable applied.
- *
- * For smooth native scrolling, web engine with below Chromium 61, should be launched
- * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
- * The one with Chromium 61 or above, is launched to support it by default.
- *
- * Usage:
- * ```
- * <ScrollerNative>Scroll me.</ScrollerNative>
- * ```
- *
- * @class ScrollerNative
- * @memberof moonstone/Scroller
- * @extends moonstone/Scroller.ScrollerBase
- * @ui
- * @private
- */
-const ScrollerNative = (props) => (
-	<ScrollableNative
-		{...props}
-		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
-			return <ScrollerBase {...scrollerProps} />;
-		}}
-	/>
-);
-
-ScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototype */ {
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
-};
-
-ScrollerNative.defaultProps = {
-	direction: 'both'
-};
-
 export default Scroller;
 export {
 	Scroller,
-	ScrollerBase,
-	ScrollerNative
+	ScrollerBase
 };

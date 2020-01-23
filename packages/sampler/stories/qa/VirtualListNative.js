@@ -1,17 +1,17 @@
 import React from 'react';
 import Item from '@enact/moonstone/Item';
-import {VirtualListNative, VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualList, VirtualListBase} from '@enact/moonstone/VirtualList';
 import {Column, Cell} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
-import {ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
-import {VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList/VirtualListBase';
+import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable/Scrollable';
+import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList/VirtualListBase';
 
 import {storiesOf} from '@storybook/react';
 
 import {boolean, number, select} from '../../src/enact-knobs';
 import {action, mergeComponentMetadata} from '../../src/utils';
 
-const Config = mergeComponentMetadata('VirtualListNative', UiVirtualListBaseNative, UiScrollableBaseNative, VirtualListBase);
+const Config = mergeComponentMetadata('VirtualList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
 
 const
 	items = [],
@@ -38,13 +38,13 @@ const updateDataSize = (dataSize) => {
 	return dataSize;
 };
 
-storiesOf('VirtualListNative', module)
+storiesOf('VirtualList', module)
 	.add(
 		'with extra items',
 		() => (
 			<Column>
 				<Cell
-					component={VirtualListNative}
+					component={VirtualList}
 					dataSize={updateDataSize(number('dataSize', Config, 10))}
 					direction="vertical"
 					focusableScrollbar={boolean('focusableScrollbar', Config)}
@@ -60,6 +60,7 @@ storiesOf('VirtualListNative', module)
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 20))}
 					spotlightDisabled={boolean('spotlightDisabled(for all items)', Config, false)}
+					type="Native"
 					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
 					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 				/>

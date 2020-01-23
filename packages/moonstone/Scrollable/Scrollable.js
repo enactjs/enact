@@ -9,7 +9,7 @@
 import platform from '@enact/core/platform';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import {ScrollableBase as UiScrollableBase, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable';
+import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -31,8 +31,7 @@ import overscrollCss from './OverscrollEffect.module.less';
  * @ui
  * @public
  */
-const ScrollableBaseFactory = (type) => {
-	let ScrollableCore = (props) => {
+	const ScrollableBase = (props) => {
 		/*
 		* Dependencies
 		*/
@@ -48,6 +47,7 @@ const ScrollableBaseFactory = (type) => {
 			scrollLeftAriaLabel,
 			scrollRightAriaLabel,
 			scrollUpAriaLabel,
+			type,
 			...rest
 		} = props;
 
@@ -97,7 +97,6 @@ const ScrollableBaseFactory = (type) => {
 			upButtonAriaLabel = scrollUpAriaLabel == null ? $L('scroll up') : scrollUpAriaLabel,
 			rightButtonAriaLabel = scrollRightAriaLabel == null ? $L('scroll right') : scrollRightAriaLabel,
 			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
-		const ScrollableBaseComp = (type === 'JS') ? UiScrollableBase : UiScrollableBaseNative;
 		const scrollableBaseProp = {};
 
 		if (type === 'JS') {
@@ -108,7 +107,7 @@ const ScrollableBaseFactory = (type) => {
 		}
 
 		return (
-			<ScrollableBaseComp
+			<UiScrollableBase
 				noScrollByDrag={!platform.touchscreen}
 				{...rest}
 				{...scrollableBaseProp}
@@ -124,6 +123,7 @@ const ScrollableBaseFactory = (type) => {
 				ref={uiRef}
 				removeEventListeners={removeEventListeners}
 				scrollTo={scrollTo}
+				type={type}
 				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
 					childComponentProps,
 					childWrapper: ChildWrapper,
@@ -207,169 +207,170 @@ const ScrollableBaseFactory = (type) => {
 		);
 	};
 
-	ScrollableCore.propTypes = /** @lends moonstone/Scrollable.Scrollable.prototype */ {
-		/**
-		 * Render function.
-		 *
-		 * @type {Function}
-		 * @required
-		 * @private
-		 */
-		childRenderer: PropTypes.func.isRequired,
+ScrollableBase.displayName = 'Scrollable';
 
-		/**
-		 * This is set to `true` by SpotlightContainerDecorator
-		 *
-		 * @type {Boolean}
-		 * @private
-		 */
-		'data-spotlight-container': PropTypes.bool,
+ScrollableBase.propTypes = /** @lends moonstone/Scrollable.Scrollable.prototype */ {
+	/**
+	 * Render function.
+	 *
+	 * @type {Function}
+	 * @required
+	 * @private
+	 */
+	childRenderer: PropTypes.func.isRequired,
 
-		/**
-		 * `false` if the content of the list or the scroller could get focus
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		'data-spotlight-container-disabled': PropTypes.bool,
+	/**
+	 * This is set to `true` by SpotlightContainerDecorator
+	 *
+	 * @type {Boolean}
+	 * @private
+	 */
+	'data-spotlight-container': PropTypes.bool,
 
-		/**
-		 * This is passed onto the wrapped component to allow
-		 * it to customize the spotlight container for its use case.
-		 *
-		 * @type {String}
-		 * @private
-		 */
-		'data-spotlight-id': PropTypes.string,
+	/**
+	 * `false` if the content of the list or the scroller could get focus
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @private
+	 */
+	'data-spotlight-container-disabled': PropTypes.bool,
 
-		/**
-		 * Direction of the list or the scroller.
-		 * `'both'` could be only used for[Scroller]{@link moonstone/Scroller.Scroller}.
-		 *
-		 * Valid values are:
-		 * * `'both'`,
-		 * * `'horizontal'`, and
-		 * * `'vertical'`.
-		 *
-		 * @type {String}
-		 * @private
-		 */
-		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+	/**
+	 * This is passed onto the wrapped component to allow
+	 * it to customize the spotlight container for its use case.
+	 *
+	 * @type {String}
+	 * @private
+	 */
+	'data-spotlight-id': PropTypes.string,
 
-		/**
-		 * Allows 5-way navigation to the scrollbar controls. By default, 5-way will
-		 * not move focus to the scrollbar controls.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		focusableScrollbar: PropTypes.bool,
+	/**
+	 * Direction of the list or the scroller.
+	 * `'both'` could be only used for[Scroller]{@link moonstone/Scroller.Scroller}.
+	 *
+	 * Valid values are:
+	 * * `'both'`,
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @private
+	 */
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
-		/**
-		 * A unique identifier for the scrollable component.
-		 *
-		 * When specified and when the scrollable is within a SharedStateDecorator, the scroll
-		 * position will be shared and restored on mount if the component is destroyed and
-		 * recreated.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		id: PropTypes.string,
+	/**
+	 * Allows 5-way navigation to the scrollbar controls. By default, 5-way will
+	 * not move focus to the scrollbar controls.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 */
+	focusableScrollbar: PropTypes.bool,
 
-		/**
-		 * Specifies overscroll effects shows on which type of inputs.
-		 *
-		 * @type {Object}
-		 * @default {
-		 *	arrowKey: false,
-		 *	drag: false,
-		 *	pageKey: false,
-		 *	scrollbarButton: false,
-		 *	wheel: true
-		 * }
-		 * @private
-		 */
-		overscrollEffectOn: PropTypes.shape({
-			arrowKey: PropTypes.bool,
-			drag: PropTypes.bool,
-			pageKey: PropTypes.bool,
-			scrollbarButton: PropTypes.bool,
-			wheel: PropTypes.bool
-		}),
+	/**
+	 * A unique identifier for the scrollable component.
+	 *
+	 * When specified and when the scrollable is within a SharedStateDecorator, the scroll
+	 * position will be shared and restored on mount if the component is destroyed and
+	 * recreated.
+	 *
+	 * @type {String}
+	 * @public
+	 */
+	id: PropTypes.string,
 
-		/**
-		 * Specifies preventing keydown events from bubbling up to applications.
-		 * Valid values are `'none'`, and `'programmatic'`.
-		 *
-		 * When it is `'none'`, every keydown event is bubbled.
-		 * When it is `'programmatic'`, an event bubbling is not allowed for a keydown input
-		 * which invokes programmatic spotlight moving.
-		 *
-		 * @type {String}
-		 * @default 'none'
-		 * @private
-		 */
-		preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
+	/**
+	 * Specifies overscroll effects shows on which type of inputs.
+	 *
+	 * @type {Object}
+	 * @default {
+	 *	arrowKey: false,
+		*	drag: false,
+		*	pageKey: false,
+		*	scrollbarButton: false,
+		*	wheel: true
+		* }
+		* @private
+		*/
+	overscrollEffectOn: PropTypes.shape({
+		arrowKey: PropTypes.bool,
+		drag: PropTypes.bool,
+		pageKey: PropTypes.bool,
+		scrollbarButton: PropTypes.bool,
+		wheel: PropTypes.bool
+	}),
 
-		/**
-		 * Sets the hint string read when focusing the next button in the vertical scroll bar.
-		 *
-		 * @type {String}
-		 * @default $L('scroll down')
-		 * @public
-		 */
-		scrollDownAriaLabel: PropTypes.string,
+	/**
+	 * Specifies preventing keydown events from bubbling up to applications.
+	 * Valid values are `'none'`, and `'programmatic'`.
+	 *
+	 * When it is `'none'`, every keydown event is bubbled.
+	 * When it is `'programmatic'`, an event bubbling is not allowed for a keydown input
+	 * which invokes programmatic spotlight moving.
+	 *
+	 * @type {String}
+	 * @default 'none'
+	 * @private
+	 */
+	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
 
-		/**
-		 * Sets the hint string read when focusing the previous button in the horizontal scroll bar.
-		 *
-		 * @type {String}
-		 * @default $L('scroll left')
-		 * @public
-		 */
-		scrollLeftAriaLabel: PropTypes.string,
+	/**
+	 * Sets the hint string read when focusing the next button in the vertical scroll bar.
+	 *
+	 * @type {String}
+	 * @default $L('scroll down')
+	 * @public
+	 */
+	scrollDownAriaLabel: PropTypes.string,
 
-		/**
-		 * Sets the hint string read when focusing the next button in the horizontal scroll bar.
-		 *
-		 * @type {String}
-		 * @default $L('scroll right')
-		 * @public
-		 */
-		scrollRightAriaLabel: PropTypes.string,
+	/**
+	 * Sets the hint string read when focusing the previous button in the horizontal scroll bar.
+	 *
+	 * @type {String}
+	 * @default $L('scroll left')
+	 * @public
+	 */
+	scrollLeftAriaLabel: PropTypes.string,
 
-		/**
-		 * Sets the hint string read when focusing the previous button in the vertical scroll bar.
-		 *
-		 * @type {String}
-		 * @default $L('scroll up')
-		 * @public
-		 */
-		scrollUpAriaLabel: PropTypes.string
-	};
+	/**
+	 * Sets the hint string read when focusing the next button in the horizontal scroll bar.
+	 *
+	 * @type {String}
+	 * @default $L('scroll right')
+	 * @public
+	 */
+	scrollRightAriaLabel: PropTypes.string,
 
-	ScrollableCore.defaultProps = {
-		'data-spotlight-container-disabled': false,
-		focusableScrollbar: false,
-		overscrollEffectOn: {
-			arrowKey: false,
-			drag: false,
-			pageKey: false,
-			scrollbarButton: false,
-			wheel: true
-		},
-		preventBubblingOnKeyDown: 'none'
-	};
+	/**
+	 * Sets the hint string read when focusing the previous button in the vertical scroll bar.
+	 *
+	 * @type {String}
+	 * @default $L('scroll up')
+	 * @public
+	 */
+	scrollUpAriaLabel: PropTypes.string,
 
-	return ScrollableCore;
+	/**
+	 * TBD
+	 */
+	type: PropTypes.string
 };
 
-const ScrollableBase = ScrollableBaseFactory('JS');
-
-ScrollableBase.displayName = 'Scrollable';
+ScrollableBase.defaultProps = {
+	'data-spotlight-container-disabled': false,
+	focusableScrollbar: false,
+	overscrollEffectOn: {
+		arrowKey: false,
+		drag: false,
+		pageKey: false,
+		scrollbarButton: false,
+		wheel: true
+	},
+	preventBubblingOnKeyDown: 'none',
+	type: 'JS'
+};
 
 /**
  * A Moonstone-styled component that provides horizontal and vertical scrollbars.
@@ -395,39 +396,9 @@ const Scrollable = Skinnable(
 	)
 );
 
-const ScrollableBaseNative = ScrollableBaseFactory('Native');
-
-ScrollableBaseNative.displayName = 'ScrollableNative';
-
-/**
- * A Moonstone-styled component that provides horizontal and vertical scrollbars.
- *
- * @class ScrollableNative
- * @memberof moonstone/ScrollableNative
- * @mixes spotlight/SpotlightContainerDecorator
- * @extends moonstone/Scrollable.ScrollableBaseNative
- * @ui
- * @private
- */
-const ScrollableNative = Skinnable(
-	SpotlightContainerDecorator(
-		{
-			overflow: true,
-			preserveId: true,
-			restrict: 'self-first'
-		},
-		I18nContextDecorator(
-			{rtlProp: 'rtl'},
-			ScrollableBaseNative
-		)
-	)
-);
-
 export default Scrollable;
 export {
 	dataIndexAttribute,
 	Scrollable,
-	ScrollableBase,
-	ScrollableBaseNative,
-	ScrollableNative
+	ScrollableBase
 };
