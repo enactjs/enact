@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import React, {forwardRef, useImperativeHandle, useRef} from 'react';
 import warning from 'warning';
 
-import {Scrollable, dataIndexAttribute} from '../Scrollable';
-import ScrollableNative from '../Scrollable/ScrollableNative';
+import {dataIndexAttribute, Scrollable, ScrollableNative} from '../Scrollable';
 
 import usePreventScroll from './usePreventScroll';
 import useSpottable from './useSpottable';

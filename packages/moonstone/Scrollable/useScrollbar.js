@@ -30,6 +30,11 @@ const useScrollbar = (props, instances, dependencies) => {
 	 */
 
 	function isScrollButtonFocused () {
+		const {
+			horizontalScrollbarRef: hRef,
+			verticalScrollbarRef: vRef
+		} = (uiRef && uiRef.current || {});
+
 		return (
 			hRef.current && hRef.current.isOneOfScrollButtonsFocused() ||
 			vRef.current && vRef.current.isOneOfScrollButtonsFocused()
@@ -49,7 +54,7 @@ const useScrollbar = (props, instances, dependencies) => {
 			uiRef.current.wheelDirection = direction;
 		}
 
-		scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, overscrollEffectOn.scrollbarButton);
+		uiRef.current.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, overscrollEffectOn.scrollbarButton);
 	}
 
 	function focusOnScrollButton (scrollbarRef, isPreviousScrollButton) {

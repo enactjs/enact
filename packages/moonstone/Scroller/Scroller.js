@@ -22,7 +22,7 @@ import PropTypes from 'prop-types';
 import React, {forwardRef, useImperativeHandle, useRef} from 'react';
 
 import Scrollable from '../Scrollable';
-import ScrollableNative from '../Scrollable/ScrollableNative';
+import {ScrollableNative} from '../Scrollable/Scrollable';
 
 import useSpottable from './useSpottable';
 
