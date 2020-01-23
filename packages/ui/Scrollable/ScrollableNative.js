@@ -55,7 +55,7 @@ const TouchableDiv = Touchable('div');
  * @ui
  * @private
  */
-let ScrollableBaseNative = (props, reference) => {
+const ScrollableBaseNative = forwardRef((props, reference) => {
 	const [, forceUpdate] = useReducer(x => x + 1, 0);
 
 	const context = useContext(ResizeContext);
@@ -319,11 +319,13 @@ let ScrollableBaseNative = (props, reference) => {
 		}
 	}
 
-	function handleResizeWindow () {
+	const handleResizeWindow = useCallback(() => {
+		const propsHandleResizedWindow = props.handleResizeWindow;
+
 		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
 		setTimeout(() => {
-			if (handleResizeWindow) {
-				handleResizeWindow();
+			if (propsHandleResizedWindow) {
+				propsHandleResizedWindow();
 			}
 			variables.current.childRefCurrent.containerRef.current.style.scrollBehavior = null;
 			variables.current.childRefCurrent.scrollToPosition(0, 0);
@@ -331,7 +333,7 @@ let ScrollableBaseNative = (props, reference) => {
 
 			enqueueForceUpdate();
 		});
-	}
+	}, [enqueueForceUpdate, props.handleResizeWindow]);	// TODO : Handle exhaustive-deps
 
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
@@ -354,11 +356,12 @@ let ScrollableBaseNative = (props, reference) => {
 		childContainerRef.current.style.scrollBehavior = null;
 		childRefCurrent.scrollToPosition(variables.current.scrollLeft + 0.1, variables.current.scrollTop + 0.1);
 		childContainerRef.current.style.scrollBehavior = 'smooth';
-	});
+	}, []);
 
 	const onMouseDown = useCallback((ev) => {
-		forwardWithPrevent('onMouseDown', ev, props);
-		stop();
+		if (forwardWithPrevent('onMouseDown', ev, props)) {
+			stop();
+		}
 	}, [props, stop]);
 
 	function onTouchStart () {
@@ -466,8 +469,8 @@ let ScrollableBaseNative = (props, reference) => {
 				{overscrollEffectOn} = props,
 				overscrollEffectRequired = variables.current.overscrollEnabled && overscrollEffectOn.wheel,
 				bounds = getScrollBounds(),
-				bCanScrollHorizontally = canScrollHorizontally(bounds),
-				bCanScrollVertically = canScrollVertically(bounds),
+				canScrollH = canScrollHorizontally(bounds),
+				canScrollV = canScrollVertically(bounds),
 				eventDeltaMode = ev.deltaMode,
 				eventDelta = (-ev.wheelDeltaY || ev.deltaY);
 			let
@@ -477,7 +480,7 @@ let ScrollableBaseNative = (props, reference) => {
 			variables.current.lastInputType = 'wheel';
 
 			if (props.noScrollByWheel) {
-				if (bCanScrollVertically) {
+				if (canScrollV) {
 					ev.preventDefault();
 				}
 
@@ -493,7 +496,7 @@ let ScrollableBaseNative = (props, reference) => {
 
 			// FIXME This routine is a temporary support for horizontal wheel scroll.
 			// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
-			if (bCanScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
+			if (canScrollV) { // This routine handles wheel events on scrollbars for vertical scroll.
 				if (eventDelta < 0 && variables.current.scrollTop > 0 || eventDelta > 0 && variables.current.scrollTop < bounds.maxTop) {
 					// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
 					if ((horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(ev.target)) ||
@@ -513,7 +516,7 @@ let ScrollableBaseNative = (props, reference) => {
 					}
 					needToHideThumb = true;
 				}
-			} else if (bCanScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
+			} else if (canScrollH) { // this routine handles wheel events on any children for horizontal scroll.
 				if (eventDelta < 0 && variables.current.scrollLeft > 0 || eventDelta > 0 && variables.current.scrollLeft < bounds.maxLeft) {
 					delta = calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
@@ -535,27 +538,27 @@ let ScrollableBaseNative = (props, reference) => {
 					variables.current.isScrollAnimationTargetAccumulated = false;
 					variables.current.wheelDirection = direction;
 				}
-				scrollToAccumulatedTarget(delta, bCanScrollVertically, overscrollEffectOn.wheel);
+				scrollToAccumulatedTarget(delta, canScrollV, overscrollEffectOn.wheel);
 			}
 
 			if (needToHideThumb) {
 				startHidingThumb();
 			}
 		}
-	});
+	}, [props]);
 
-	const onScroll  = useCallback((ev) => {
+	const onScroll = useCallback((ev) => {
 		let {scrollLeft, scrollTop} = ev.target;
 
 		const
 			bounds = getScrollBounds(),
-			bCanScrollHorizontally = canScrollHorizontally(bounds);
+			canScrollH = canScrollHorizontally(bounds);
 
 		if (!variables.current.scrolling) {
 			scrollStartOnScroll();
 		}
 
-		if (props.rtl && bCanScrollHorizontally) {
+		if (props.rtl && canScrollH) {
 			scrollLeft = (platform.ios || platform.safari) ? -scrollLeft : bounds.maxLeft - scrollLeft;
 		}
 
@@ -571,11 +574,11 @@ let ScrollableBaseNative = (props, reference) => {
 		}
 		forwardScrollEvent('onScroll');
 		variables.current.scrollStopJob.start();
-	});
+	}, [props]);
 
 	const onKeyDown = useCallback((ev) => {
 		forward('onKeyDown', ev, props);
-	});
+	}, [props]);
 
 	function scrollToAccumulatedTarget (delta, vertical, overscrollEffect) {
 		if (!variables.current.isScrollAnimationTargetAccumulated) {
@@ -864,8 +867,8 @@ let ScrollableBaseNative = (props, reference) => {
 	function getPositionForScrollTo (opt) {
 		const
 			bounds = getScrollBounds(),
-			bCanScrollHorizontally = canScrollHorizontally(bounds),
-			bCanScrollVertically = canScrollVertically(bounds);
+			canScrollH = canScrollHorizontally(bounds),
+			canScrollV = canScrollVertically(bounds);
 		let
 			itemPos,
 			left = null,
@@ -873,27 +876,27 @@ let ScrollableBaseNative = (props, reference) => {
 
 		if (opt instanceof Object) {
 			if (opt.position instanceof Object) {
-				if (bCanScrollHorizontally) {
+				if (canScrollH) {
 					// We need '!=' to check if opt.position.x is null or undefined
 					left = opt.position.x != null ? opt.position.x : variables.current.scrollLeft;
 				} else {
 					left = 0;
 				}
-				if (bCanScrollVertically) {
+				if (canScrollV) {
 					// We need '!=' to check if opt.position.y is null or undefined
 					top = opt.position.y != null ? opt.position.y : variables.current.scrollTop;
 				} else {
 					top = 0;
 				}
 			} else if (typeof opt.align === 'string') {
-				if (bCanScrollHorizontally) {
+				if (canScrollH) {
 					if (opt.align.includes('left')) {
 						left = 0;
 					} else if (opt.align.includes('right')) {
 						left = bounds.maxLeft;
 					}
 				}
-				if (bCanScrollVertically) {
+				if (canScrollV) {
 					if (opt.align.includes('top')) {
 						top = 0;
 					} else if (opt.align.includes('bottom')) {
@@ -909,10 +912,10 @@ let ScrollableBaseNative = (props, reference) => {
 					}
 				}
 				if (itemPos) {
-					if (bCanScrollHorizontally) {
+					if (canScrollH) {
 						left = itemPos.left;
 					}
-					if (bCanScrollVertically) {
+					if (canScrollV) {
 						top = itemPos.top;
 					}
 				}
@@ -982,10 +985,10 @@ let ScrollableBaseNative = (props, reference) => {
 		const
 			{horizontalScrollbar, verticalScrollbar} = props,
 			bounds = getScrollBounds(),
-			bCanScrollHorizontally = canScrollHorizontally(bounds),
-			bCanScrollVertically = canScrollVertically(bounds),
-			curHorizontalScrollbarVisible = (horizontalScrollbar === 'auto') ? bCanScrollHorizontally : horizontalScrollbar === 'visible',
-			curVerticalScrollbarVisible = (verticalScrollbar === 'auto') ? bCanScrollVertically : verticalScrollbar === 'visible';
+			canScrollH = canScrollHorizontally(bounds),
+			canScrollV = canScrollVertically(bounds),
+			curHorizontalScrollbarVisible = (horizontalScrollbar === 'auto') ? canScrollH : horizontalScrollbar === 'visible',
+			curVerticalScrollbarVisible = (verticalScrollbar === 'auto') ? canScrollV : verticalScrollbar === 'visible';
 
 		// determine if we should hide or show any scrollbars
 		const
@@ -1008,10 +1011,10 @@ let ScrollableBaseNative = (props, reference) => {
 		const
 			{horizontalScrollbar, verticalScrollbar} = props,
 			bounds = getScrollBounds(),
-			bCanScrollHorizontally = canScrollHorizontally(bounds),
-			bCanScrollVertically = canScrollVertically(bounds),
-			curHorizontalScrollbarVisible = (horizontalScrollbar === 'auto') ? bCanScrollHorizontally : horizontalScrollbar === 'visible',
-			curVerticalScrollbarVisible = (verticalScrollbar === 'auto') ? bCanScrollVertically : verticalScrollbar === 'visible';
+			canScrollH = canScrollHorizontally(bounds),
+			canScrollV = canScrollVertically(bounds),
+			curHorizontalScrollbarVisible = (horizontalScrollbar === 'auto') ? canScrollH : horizontalScrollbar === 'visible',
+			curVerticalScrollbarVisible = (verticalScrollbar === 'auto') ? canScrollV : verticalScrollbar === 'visible';
 
 		if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
 			// no visibility change but need to notify whichever scrollbars are visible of the
@@ -1126,9 +1129,7 @@ let ScrollableBaseNative = (props, reference) => {
 			})}
 		</ResizeContext.Provider>
 	);
-};
-
-ScrollableBaseNative = forwardRef(ScrollableBaseNative);
+});
 
 ScrollableBaseNative.displayName = 'ui:ScrollableBaseNative';
 

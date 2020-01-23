@@ -55,25 +55,17 @@ const itemSizesShape = PropTypes.shape({
 const VirtualListBaseFactory = (type) => {
 	let VirtualListCore = (props, reference) => {
 		/* No displayName here. We set displayName to returned components of this factory function. */
-
-		let nextState = null;
-
 		const containerRef = useRef();
 		const contentRef = useRef();
 		const itemContainerRef = useRef();
 
-		const [prevChildProps, setPrevChildProps] = useState(null);
-		const [prevFirstIndex, setPrevFirstIndex] = useState(0);
-		const [updateFrom, setUpdateFrom] = useState(0);
-		const [updateTo, setUpdateTo] = useState(0);
+		const [updateFromTo, setUpdateFromTo] = useState({from: 0, to: 0});
 		const [firstIndex, setFirstIndex] = useState(0);
 		const [numOfItems, setNumOfItems] = useState(0);
 
 		if (props.clientSize) {
 			calculateMetrics(props);
-			nextState = getStatesAndUpdateBounds();
-			setFirstIndex(nextState.firstIndex);
-			setNumOfItems(nextState.numOfItems);
+			setStatesAndUpdateBounds();
 		}
 
 		// Instance variables
@@ -113,7 +105,10 @@ const VirtualListBaseFactory = (type) => {
 			itemPositions: [],
 			indexToScrollIntoView: -1,
 
-			deferScrollTo : false
+			deferScrollTo: false,
+
+			prevChildProps: null,
+			prevFirstIndex: 0
 		});
 
 		useImperativeHandle(reference, () => ({
@@ -158,21 +153,21 @@ const VirtualListBaseFactory = (type) => {
 		// getDerivedStateFromProps
 		useLayoutEffect(() => {
 			const
+				{prevChildProps, prevFirstIndex} = variables.current,
 				shouldInvalidate = (
 					prevFirstIndex === firstIndex ||
-					prevChildProps !== props.childProps
+					prevChildProps !== props.childProps	// TODO : Reconsider this comparison is actually meaningful.
 				),
 				diff = firstIndex - prevFirstIndex,
 				newUpdateTo = (-numOfItems >= diff || diff > 0 || shouldInvalidate) ? firstIndex + numOfItems : prevFirstIndex,
 				newUpdateFrom = (0 >= diff || diff >= numOfItems || shouldInvalidate) ? firstIndex : prevFirstIndex + numOfItems;
 
-			if (updateFrom !== newUpdateFrom || updateTo !== newUpdateTo) {
-				setUpdateFrom(newUpdateFrom);
-				setUpdateTo(newUpdateTo);
+			if (updateFromTo.from !== newUpdateFrom || updateFromTo.to !== newUpdateTo) {
+				setUpdateFromTo({from: newUpdateFrom, to: newUpdateTo});
 			}
-			setPrevChildProps(props.childProps);
-			setPrevFirstIndex(firstIndex);
-		}, [firstIndex, numOfItems, prevChildProps, prevFirstIndex, props.childProps, updateFrom, updateTo]);
+			variables.current.prevChildProps = props.childProps;
+			variables.current.prevFirstIndex = firstIndex;
+		}, [firstIndex, numOfItems, props.childProps, updateFromTo]);
 
 		const emitUpdateItems = useCallback(() => {
 			const {dataSize} = props;
@@ -188,11 +183,7 @@ const VirtualListBaseFactory = (type) => {
 			// componentDidMount
 			if (!props.clientSize) {
 				calculateMetrics(props);
-				// eslint-disable-next-line react/no-did-mount-set-state
-				const statesAndUpdateBounds = getStatesAndUpdateBounds();
-				setFirstIndex(statesAndUpdateBounds.firstIndex);
-				setNumOfItems(statesAndUpdateBounds.numOfItems);
-
+				setStatesAndUpdateBounds();
 			} else {
 				emitUpdateItems();
 			}
@@ -270,10 +261,7 @@ const VirtualListBaseFactory = (type) => {
 			const {x, y} = getXY(variables.current.scrollPosition, 0);
 
 			calculateMetrics(props);
-			// eslint-disable-next-line react/no-did-update-set-state
-			const statesAndUpdateBounds = getStatesAndUpdateBounds();
-			setFirstIndex(statesAndUpdateBounds.firstIndex);
-			setNumOfItems(statesAndUpdateBounds.numOfItems);
+			setStatesAndUpdateBounds();
 
 			setContainerSize();
 
@@ -297,10 +285,7 @@ const VirtualListBaseFactory = (type) => {
 			variables.current.hasDataSizeChanged = true; // (prevProps.dataSize !== this.props.dataSize);
 
 			if (!variables.current.deferScrollTo && variables.current.hasDataSizeChanged) {
-				const newState = getStatesAndUpdateBounds();
-				// eslint-disable-next-line react/no-did-update-set-state
-				setFirstIndex(newState.firstIndex);
-				setNumOfItems(newState.numOfItems);
+				setStatesAndUpdateBounds();
 
 				setContainerSize();
 
@@ -494,7 +479,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		function getStatesAndUpdateBounds () {
+		function setStatesAndUpdateBounds () {
 			const
 				{dataSize, overhang, updateStatesAndBounds} = props,
 				{dimensionToExtent, primary, moreInfo, scrollPosition} = variables.current,
@@ -527,10 +512,8 @@ const VirtualListBaseFactory = (type) => {
 				newFirstIndex = calculateFirstIndex(wasFirstIndexMax, dataSizeDiff);
 			}
 
-			return {
-				firstIndex: newFirstIndex,
-				numOfItems: newNumOfItems
-			};
+			setFirstIndex(newFirstIndex);
+			setNumOfItems(newNumOfItems);
 		}
 
 		function calculateFirstIndex (wasFirstIndexMax, dataSizeDiff) {
@@ -898,7 +881,7 @@ const VirtualListBaseFactory = (type) => {
 			return composedStyle;
 		}
 
-		function applyStyleToNewNode (index, ...restParam) {
+		function applyStyleToNewNode (index, ...restParams) {
 			const
 				{itemRenderer, getComponentProps} = props,
 				key = index % numOfItems,
@@ -912,7 +895,7 @@ const VirtualListBaseFactory = (type) => {
 			variables.current.cc[key] = React.cloneElement(itemElement, {
 				...componentProps,
 				className: classNames(css.listItem, itemElement.props.className),
-				style: {...itemElement.props.style, ...(composeStyle(...restParam))}
+				style: {...itemElement.props.style, ...(composeStyle(...restParams))}
 			});
 		}
 
@@ -927,8 +910,8 @@ const VirtualListBaseFactory = (type) => {
 				{cc, isPrimaryDirectionVertical, dimensionToExtent, secondary, itemPositions, primary} = variables.current;
 			let hideTo = 0,
 				// TODO : check whether the belows variables(newUpdateFrom, newUpdateTo) are needed or not.
-				newUpdateFrom = cc.length ? updateFrom : firstIndex,
-				newUpdateTo = cc.length ? updateTo : firstIndex + numOfItems;
+				newUpdateFrom = cc.length ? updateFromTo.from : firstIndex,
+				newUpdateTo = cc.length ? updateFromTo.to : firstIndex + numOfItems;
 
 			if (newUpdateFrom >= newUpdateTo) {
 				return;
@@ -1007,10 +990,7 @@ const VirtualListBaseFactory = (type) => {
 
 			if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
 				calculateMetrics(props);
-
-				const statesAndUpdateBounds = getStatesAndUpdateBounds();
-				setFirstIndex(statesAndUpdateBounds.firstIndex);
-				setNumOfItems(statesAndUpdateBounds.numOfItems);
+				setStatesAndUpdateBounds();
 
 				setContainerSize();
 				return true;

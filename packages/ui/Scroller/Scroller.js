@@ -27,18 +27,14 @@ import css from './Scroller.module.less';
  * @ui
  * @public
  */
-let ScrollerBase = (props, reference) => {
+const ScrollerBase = forwardRef((props, reference) => {
 	// constructor (props) {
 	const containerRef = useRef();
 	const [, forceUpdate] = useReducer(x => x + 1, 0);
 
 	useEffect(() => {
-		// componentDidMount
-		calculateMetrics();
-	}, []);
-
-	useEffect(() => {
 		// componentDidUpdate
+		// TODO: Check this code is still needed.  This code introduced from #1618. (ahn)
 		forceUpdate();
 	}, [props.isVerticalScrollbarVisible]);
 
@@ -46,7 +42,6 @@ let ScrollerBase = (props, reference) => {
 		// componentDidUpdate
 		calculateMetrics();
 	});
-	// }
 
 	// Instance variables
 	const variables = useRef({
@@ -167,9 +162,7 @@ let ScrollerBase = (props, reference) => {
 			style={mergedStyle}
 		/>
 	);
-};
-
-ScrollerBase = forwardRef(ScrollerBase);
+});
 
 ScrollerBase.displayName = 'ui:ScrollerBase';
 
