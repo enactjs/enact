@@ -114,6 +114,7 @@ const VirtualListBaseFactory = (type) => {
 		useImperativeHandle(reference, () => ({
 			calculateMetrics,
 			containerRef,
+			didScroll,
 			get dimensionToExtent () {
 				return variables.current.dimensionToExtent;
 			},
