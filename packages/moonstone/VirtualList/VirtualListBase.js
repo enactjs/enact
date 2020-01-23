@@ -21,122 +21,123 @@ const
  * @ui
  * @private
  */
-	const VirtualListBase = forwardRef((props, reference) => {
-		const type = props.type;
-
-		/*
-		 * Dependencies
-		 */
-
-		const {spotlightId} = props;
-
-		/*
-		 * Instance
-		 */
-
-		const variables = useRef({
-			uiRefCurrent: null
-		});
-
-		/*
-		 * Hooks
-		 */
-
-		const {
-			calculatePositionOnFocus,
-			focusByIndex,
-			focusOnNode,
-			getNodeIndexToBeFocused,
-			getScrollBounds,
-			handlePlaceholderFocus,
-			handleRestoreLastFocus,
 			initItemRef,
-			isNeededScrollingPlaceholder,
-			setContainerDisabled,
-			setLastFocusedNode,
-			shouldPreventOverscrollEffect,
-			shouldPreventScrollByFocus,
-			SpotlightPlaceholder,
-			updateStatesAndBounds
-		} = useSpottable(props, {virtualListBase: variables}, {type});
+const VirtualListBase = forwardRef((props, reference) => {
+	const type = props.type;
 
-		const containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
-		usePreventScroll(props, {}, {
-			containerNode,
-			type
-		});
+	/*
+	 * Dependencies
+	 */
 
-		/*
-		 * Functions
-		 */
+	const {spotlightId} = props;
 
-		function getComponentProps (index) {
-			return (index === getNodeIndexToBeFocused()) ? {ref: (ref) => initItemRef(ref, index)} : {};
-		}
+	/*
+	 * Instance
+	 */
 
-		function initUiRef (ref) {
-			if (ref) {
-				variables.current.uiRefCurrent = ref;
-				props.initUiChildRef(ref);
-			}
-		}
-
-		/*
-		 * useImperativeHandle
-		 */
-
-		useImperativeHandle(reference, () => ({
-			calculatePositionOnFocus,
-			focusByIndex,
-			focusOnNode,
-			shouldPreventScrollByFocus,
-			shouldPreventOverscrollEffect,
-			setLastFocusedNode,
-			getScrollBounds,
-			setContainerDisabled
-		}));
-
-		/*
-		 * Render
-		 */
-
-		const
-			{itemRenderer, itemsRenderer, role, ...rest} = props,
-			needsScrollingPlaceholder = isNeededScrollingPlaceholder();
-
-		delete rest.initUiChildRef;
-		// not used by VirtualList
-		delete rest.focusableScrollbar;
-		delete rest.scrollAndFocusScrollbarButton;
-		delete rest.spotlightId;
-		delete rest.wrap;
-
-		return (
-			<UiVirtualListBase
-				{...rest}
-				getComponentProps={getComponentProps}
-				itemRenderer={({index, ...itemRest}) => ( // eslint-disable-line react/jsx-no-bind
-					itemRenderer({
-						...itemRest,
-						[dataIndexAttribute]: index,
-						index
-					})
-				)}
-				onUpdateItems={handleRestoreLastFocus}
-				ref={initUiRef}
-				updateStatesAndBounds={updateStatesAndBounds}
-				itemsRenderer={(itemsRendererProps) => { // eslint-disable-line react/jsx-no-bind
-					return itemsRenderer({
-						...itemsRendererProps,
-						handlePlaceholderFocus: handlePlaceholderFocus,
-						needsScrollingPlaceholder,
-						role,
-						SpotlightPlaceholder
-					});
-				}}
-			/>
-		);
+	const variables = useRef({
+		uiRefCurrent: null
 	});
+
+	/*
+	 * Hooks
+	 */
+
+	const {
+		calculatePositionOnFocus,
+		focusByIndex,
+		focusOnNode,
+		getNodeIndexToBeFocused,
+		getScrollBounds,
+		handlePlaceholderFocus,
+		handleRestoreLastFocus,
+		initItemRef,
+		isNeededScrollingPlaceholder,
+		setContainerDisabled,
+		setLastFocusedNode,
+		shouldPreventOverscrollEffect,
+		shouldPreventScrollByFocus,
+		SpotlightPlaceholder,
+		updateStatesAndBounds
+	} = useSpottable(props, {virtualListBase: variables}, {type});
+
+	const containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
+	usePreventScroll(props, {}, {
+		containerNode,
+		type
+	});
+
+	/*
+	 * Functions
+	 */
+
+	function getComponentProps (index) {
+		return (index === getNodeIndexToBeFocused()) ? {ref: (ref) => initItemRef(ref, index)} : {};
+	}
+
+	function initUiRef (ref) {
+		if (ref) {
+			variables.current.uiRefCurrent = ref;
+			props.initUiChildRef(ref);
+		}
+	}
+
+	/*
+	 * useImperativeHandle
+	 */
+
+	useImperativeHandle(reference, () => ({
+		calculatePositionOnFocus,
+		focusByIndex,
+		focusOnNode,
+		shouldPreventScrollByFocus,
+		shouldPreventOverscrollEffect,
+		setLastFocusedNode,
+		getScrollBounds,
+		setContainerDisabled
+	}));
+
+	/*
+	 * Render
+	 */
+
+	const
+		{itemRenderer, itemsRenderer, role, ...rest} = props,
+		needsScrollingPlaceholder = isNeededScrollingPlaceholder();
+
+	delete rest.initUiChildRef;
+	// not used by VirtualList
+	delete rest.focusableScrollbar;
+	delete rest.scrollAndFocusScrollbarButton;
+	delete rest.spotlightId;
+	delete rest.wrap;
+
+	return (
+		<UiVirtualListBase
+			{...rest}
+			getComponentProps={getComponentProps}
+			itemRenderer={({index, ...itemRest}) => ( // eslint-disable-line react/jsx-no-bind
+				itemRenderer({
+					...itemRest,
+					[dataIndexAttribute]: index,
+					index
+				})
+			)}
+			onUpdateItems={handleRestoreLastFocus}
+			ref={initUiRef}
+			updateStatesAndBounds={updateStatesAndBounds}
+			itemsRenderer={(itemsRendererProps) => { // eslint-disable-line react/jsx-no-bind
+				return itemsRenderer({
+					...itemsRendererProps,
+					handlePlaceholderFocus: handlePlaceholderFocus,
+					needsScrollingPlaceholder,
+					role,
+					SpotlightPlaceholder
+				});
+			}}
+		/>
+	);
+});
 
 VirtualListBase.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 	/**

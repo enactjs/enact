@@ -82,11 +82,11 @@ class ScrollButtons extends Component {
 		focusableScrollButtons: PropTypes.bool,
 
 		/**
-		* Sets the hint string read when focusing the next button in the scroll bar.
-		*
-		* @type {String}
-		* @public
-		*/
+		 * Sets the hint string read when focusing the next button in the scroll bar.
+		 *
+		 * @type {String}
+		 * @public
+		 */
 		nextButtonAriaLabel: PropTypes.string,
 
 		/**
