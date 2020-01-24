@@ -47,9 +47,9 @@ const useDOM = () => {
 		getBoundingClientRectDangerously,
 		getRectDangerously,
 		removeAttributeDangerously,
-		setAttributeDangerously,
 		scrollLeftDangerously,
-		scrollTopDangerously
+		scrollTopDangerously,
+		setAttributeDangerously
 	};
 };
 

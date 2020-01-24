@@ -41,6 +41,7 @@ const useEventVoice = (props, instances, dependencies) => {
 			if (spotItemBounds[last] < viewportBounds[first] || spotItemBounds[first] > viewportBounds[last]) {
 				for (let i = 0; i < nodes.length; i++) {
 					const nodeBounds = nodes[i].getBoundingClientRect();
+
 					if (nodeBounds[first] > viewportBounds[first] && nodeBounds[last] < viewportBounds[last]) {
 						Spotlight.focus(nodes[i]);
 						break;

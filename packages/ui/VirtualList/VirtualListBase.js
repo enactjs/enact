@@ -70,12 +70,12 @@ const VirtualListBase = forwardRef((props, reference) => {
 	// Instance variables
 	const variables = useRef({
 		scrollBounds: {
-			clientWidth: 0,
 			clientHeight: 0,
-			scrollWidth: 0,
-			scrollHeight: 0,
+			clientWidth: 0,
 			maxLeft: 0,
-			maxTop: 0
+			maxTop: 0,
+			scrollHeight: 0,
+			scrollWidth: 0
 		},
 
 		moreInfo: {
@@ -124,9 +124,6 @@ const VirtualListBase = forwardRef((props, reference) => {
 		getMoreInfo,
 		getScrollBounds,
 		gridPositionToItemPosition,
-		get numOfItems () {
-			return numOfItems
-		},
 		get hasDataSizeChanged () {
 			return variables.current.hasDataSizeChanged
 		},
@@ -138,15 +135,18 @@ const VirtualListBase = forwardRef((props, reference) => {
 		get itemPositions () {
 			return variables.current.itemPositions;
 		},
+		get numOfItems () {
+			return numOfItems
+		},
 		get primary () {
 			return variables.current.primary;
 		},
 		props,
-		get scrollPositionTarget () {
-			return variables.current.scrollPositionTarget;
-		},
 		get scrollPosition () {
 			return variables.current.scrollPosition;
+		},
+		get scrollPositionTarget () {
+			return variables.current.scrollPositionTarget;
 		},
 		scrollToPosition,
 		setScrollPosition,
@@ -508,9 +508,9 @@ const VirtualListBase = forwardRef((props, reference) => {
 
 		if (!(updateStatesAndBounds && updateStatesAndBounds({
 			cbScrollTo: props.cbScrollTo,
-			newNumOfItems,
 			dataSize,
-			moreInfo
+			moreInfo,
+			newNumOfItems
 		}))) {
 			newFirstIndex = calculateFirstIndex(wasFirstIndexMax, dataSizeDiff);
 		}
@@ -1106,8 +1106,8 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 * @private
 	 */
 	itemSize: PropTypes.oneOfType([
-		PropTypes.number,
-		gridListItemSizeShape
+		gridListItemSizeShape,
+		PropTypes.number
 	]).isRequired,
 
 	/**

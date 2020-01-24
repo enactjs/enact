@@ -69,11 +69,11 @@ const VirtualListBase = forwardRef((props, reference) => {
 		calculatePositionOnFocus,
 		focusByIndex,
 		focusOnNode,
-		shouldPreventScrollByFocus,
-		shouldPreventOverscrollEffect,
-		setLastFocusedNode,
 		getScrollBounds,
-		setContainerDisabled
+		setContainerDisabled,
+		setLastFocusedNode,
+		shouldPreventOverscrollEffect,
+		shouldPreventScrollByFocus
 	});
 
 	/*
@@ -104,8 +104,6 @@ const VirtualListBase = forwardRef((props, reference) => {
 					index
 				})
 			)}
-			onUpdateItems={handleRestoreLastFocus}
-			updateStatesAndBounds={updateStatesAndBounds}
 			itemsRenderer={(itemsRendererProps) => { // eslint-disable-line react/jsx-no-bind
 				return itemsRenderer({
 					...itemsRendererProps,
@@ -115,6 +113,8 @@ const VirtualListBase = forwardRef((props, reference) => {
 					SpotlightPlaceholder
 				});
 			}}
+			onUpdateItems={handleRestoreLastFocus}
+			updateStatesAndBounds={updateStatesAndBounds}
 		/>
 	);
 });
@@ -381,8 +381,8 @@ const listItemsRenderer = (props) => {
 					data-vl-placeholder
 					// a zero width/height element can't be focused by spotlight so we're giving
 					// the placeholder a small size to ensure it is navigable
-					style={{width: 10}}
 					onFocus={handlePlaceholderFocus}
+					style={{width: 10}}
 				/>
 			)}
 			{needsScrollingPlaceholder ? (

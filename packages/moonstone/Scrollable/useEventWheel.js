@@ -117,6 +117,7 @@ const useEventWheel = (props, instances, dependencies) => {
 			/* prevent native scrolling feature for vertical direction */
 			ev.preventDefault();
 			const direction = Math.sign(delta);
+
 			// Not to accumulate scroll position if wheel direction is different from hold direction
 			if (direction !== uiScrollableAdapter.current.wheelDirection) {
 				uiScrollableAdapter.current.isScrollAnimationTargetAccumulated = false;

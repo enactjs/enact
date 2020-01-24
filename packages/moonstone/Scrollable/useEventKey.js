@@ -127,6 +127,7 @@ const useEventKey = (props, instances, dependencies) => {
 
 	function scrollByPageOnPointerMode (ev) {
 		const {keyCode, repeat} = ev;
+ 
 		forward('onKeyDown', ev, props);
 		ev.preventDefault();
 

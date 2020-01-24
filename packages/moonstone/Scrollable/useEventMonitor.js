@@ -22,6 +22,7 @@ const pointerTracker = (ev) => {
 };
 const pageKeyHandler = (ev) => {
 	const {keyCode} = ev;
+
 	if (Spotlight.getPointerMode() && !Spotlight.getCurrent() && (isPageUp(keyCode) || isPageDown(keyCode))) {
 		const
 			{x, y} = lastPointer,

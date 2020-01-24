@@ -52,8 +52,8 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 		{childRenderer, className, corner, css, vertical, ...rest} = props,
 		containerClassName = classNames(
 			className,
-			css.scrollbar,
 			corner && css.corner,
+			css.scrollbar,
 			vertical ? css.vertical : css.horizontal
 		);
 

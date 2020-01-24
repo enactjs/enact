@@ -72,8 +72,9 @@ const useEventFocus = (props, instances, dependencies) => {
 				type === 'JS' && uiScrollableAdapter.current.animator.isAnimating() ||
 				type === 'Native' && uiScrollableAdapter.current.scrolling
 			)) {
-				const containerRect = getRect(childContainerNode);
-				const itemRect = getRect(spotItem);
+				const
+					containerRect = getRect(childContainerNode),
+					const itemRect = getRect(spotItem);
 				let scrollPosition;
 
 				if (direction === 'horizontal' || direction === 'both' && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {
@@ -90,6 +91,7 @@ const useEventFocus = (props, instances, dependencies) => {
 						previousScrollHeight: uiScrollableAdapter.current.bounds.scrollHeight,
 						scrollTop: uiScrollableAdapter.current.scrollTop
 					};
+
 				pos = positionFn({item: spotItem, scrollInfo});
 			}
 

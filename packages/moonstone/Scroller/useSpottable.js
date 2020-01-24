@@ -47,6 +47,7 @@ const useSpottable = (props, instances) => {
 
 	useEffect(() => {
 		const {onUpdate} = props;
+
 		if (onUpdate) {
 			onUpdate();
 		}

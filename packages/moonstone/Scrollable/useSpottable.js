@@ -175,6 +175,7 @@ const useSpottable = (props, instances, dependencies) => {
 	function handleScroll (ev) {
 		const {scrollLeft: x, scrollTop: y} = ev;
 		const {id} = props;
+
 		forward('onScroll', ev, props);
 		if (id && context && context.set) {
 			context.set(ev, props);
@@ -186,6 +187,7 @@ const useSpottable = (props, instances, dependencies) => {
 	function handleScrollerUpdate () {
 		if (uiScrollableAdapter.current.scrollToInfo === null) {
 			const scrollHeight = uiScrollableAdapter.current.getScrollBounds().scrollHeight;
+
 			if (scrollHeight !== uiScrollableAdapter.current.bounds.scrollHeight) {
 				calculateAndScrollTo();
 			}

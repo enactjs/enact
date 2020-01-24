@@ -45,16 +45,16 @@ const ScrollerBase = forwardRef((props, reference) => {
 	// Instance variables
 	const variables = useRef({
 		scrollBounds : {
-			clientWidth: 0,
 			clientHeight: 0,
-			scrollWidth: 0,
-			scrollHeight: 0,
+			clientWidth: 0,
 			maxLeft: 0,
 			maxTop: 0
+			scrollHeight: 0,
+			scrollWidth: 0,
 		},
 		scrollPos: {
-			top: 0,
-			left: 0
+			left: 0,
+			top: 0
 		}
 	});
 
@@ -131,6 +131,7 @@ const ScrollerBase = forwardRef((props, reference) => {
 		const
 			{scrollBounds} = variables.current,
 			{scrollWidth, scrollHeight, clientWidth, clientHeight} = childContainerRef.current;
+			
 		scrollBounds.scrollWidth = scrollWidth;
 		scrollBounds.scrollHeight = scrollHeight;
 		scrollBounds.clientWidth = clientWidth;

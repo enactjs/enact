@@ -64,10 +64,10 @@ let ScrollerBase = (props, reference) => {
 
 	delete propsObject.dangerouslyContainsInScrollable;
 	delete propsObject.onUpdate;
-	delete propsObject.uiScrollableAdapter;
 	delete propsObject.scrollAndFocusScrollbarButton;
 	delete propsObject.setChildAdapter;
 	delete propsObject.spotlightId;
+	delete propsObject.uiScrollableAdapter;
 
 	return (
 		<UiScrollerBase {...propsObject} />

@@ -190,9 +190,7 @@ class ScrollButtons extends Component {
 			shouldDisablePrevButton = currentPos <= 0,
 			/* If a scroll size or a client size is not integer,
 			   browser's max scroll position could be smaller than maxPos by 1 pixel.*/
-			shouldDisableNextButton = maxPos - currentPos <= 1;
-
-		const
+			shouldDisableNextButton = maxPos - currentPos <= 1,
 			updatePrevButton = (this.state.prevButtonDisabled !== shouldDisablePrevButton),
 			updateNextButton = (this.state.nextButtonDisabled !== shouldDisableNextButton);
 
@@ -212,7 +210,6 @@ class ScrollButtons extends Component {
 
 	isOneOfScrollButtonsFocused = () => {
 		const current = Spotlight.getCurrent();
-
 		return current === this.prevButtonRef.current || current === this.nextButtonRef.current;
 	}
 
@@ -232,13 +229,11 @@ class ScrollButtons extends Component {
 
 	onClickPrev = (ev) => {
 		const {onPrevScroll, vertical} = this.props;
-
 		onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
 	}
 
 	onClickNext = (ev) => {
 		const {onNextScroll, vertical} = this.props;
-
 		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
 	}
 

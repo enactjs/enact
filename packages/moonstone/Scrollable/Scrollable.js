@@ -59,11 +59,11 @@ const ScrollableBase = (props) => {
 		calculatePositionOnFocus: null,
 		focusByIndex: null,
 		focusOnNode: null,
-		shouldPreventScrollByFocus: null,
-		shouldPreventOverscrollEffect: null,
-		setLastFocusedNode: null,
 		getScrollBounds: null,
 		setContainerDisabled: null,
+		setLastFocusedNode: null,
+		shouldPreventOverscrollEffect: null,
+		shouldPreventScrollByFocus: null,
 		type
 	});
 
@@ -81,6 +81,7 @@ const ScrollableBase = (props) => {
 		canScrollHorizontally: null,
 		canScrollVertically: null,
 		checkAndApplyOverscrollEffect: null,
+		childContainerRef: null,
 		getScrollBounds: null,
 		horizontalScrollbarRef: null,
 		isDragging: null,
@@ -89,9 +90,9 @@ const ScrollableBase = (props) => {
 		lastInputType: null,
 		rtl: null,
 		scrollBounds: null,
-		scrollLeft: null,
-		scrolling: null,
 		scrollHeight: null,
+		scrolling: null,
+		scrollLeft: null,
 		scrollPos: null,
 		scrollTo: null,
 		scrollToAccumulatedTarget: null,
@@ -102,7 +103,6 @@ const ScrollableBase = (props) => {
 		start: null,
 		startHidingThumb: null,
 		uiChildAdapter: null,
-		childContainerRef: null,
 		verticalScrollbarRef: null,
 		wheelDirection: null
 	});
@@ -140,8 +140,8 @@ const ScrollableBase = (props) => {
 		scrollAndFocusScrollbarButton,
 		scrollbarProps,
 		scrollStopOnScroll, // Native
-		start, // Native
 		scrollTo,
+		start, // Native
 		stop // JS
 	} = useSpottable(props, {childAdapter, overscrollRefs, scrollableContainerRef, uiScrollableAdapter}, {type});
 
@@ -153,8 +153,8 @@ const ScrollableBase = (props) => {
 		downButtonAriaLabel = scrollDownAriaLabel == null ? $L('scroll down') : scrollDownAriaLabel,
 		upButtonAriaLabel = scrollUpAriaLabel == null ? $L('scroll up') : scrollUpAriaLabel,
 		rightButtonAriaLabel = scrollRightAriaLabel == null ? $L('scroll right') : scrollRightAriaLabel,
-		leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
-	const scrollableBaseProp = {};
+		leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel,
+		scrollableBaseProp = {};
 
 	if (type === 'JS') {
 		scrollableBaseProp.stop = stop;

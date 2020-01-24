@@ -22,6 +22,7 @@ const useSpotlightRestore = (props, instances) => {
 		function restoreScrollPosition () {
 			if (id && context && context.get) {
 				const scrollPosition = context.get(`${id}.scrollPosition`);
+
 				if (scrollPosition) {
 					uiScrollableAdapter.current.scrollTo({
 						position: scrollPosition,

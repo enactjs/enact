@@ -26,9 +26,9 @@ const useEventKey = (props, instances, dependencies) => {
 	const {uiChildAdapter} = instances;
 	const {
 		containerNode,
-		handlePageUpDownKeyDown,
-		handleDirectionKeyDown,
 		handle5WayKeyUp,
+		handleDirectionKeyDown,
+		handlePageUpDownKeyDown,
 		SpotlightAccelerator
 	} = dependencies;
 

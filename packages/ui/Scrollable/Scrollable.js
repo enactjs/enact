@@ -38,10 +38,10 @@ const
 		isPageDown: is('pageDown'),
 		isPageUp: is('pageUp'),
 		nop: () => {},
-		overscrollTypeNone: 0,
-		overscrollTypeHold: 1,
-		overscrollTypeOnce: 2,
 		overscrollTypeDone: 9,
+		overscrollTypeHold: 1,
+		overscrollTypeNone: 0,
+		overscrollTypeOnce: 2,
 		overscrollVelocityFactor: 300, // Native
 		paginationPageMultiplier: 0.66,
 		scrollStopWaiting: 200,
@@ -180,8 +180,8 @@ const ScrollableBase = forwardRef((props, reference) => {
 		itemPositions: null,
 		primary: null,
 		props: null,
-		scrollPositionTar: null,
 		scrollPosition: null,
+		scrollPositionTar: null,
 		scrollToPosition: null,
 		setScrollPosition: null,
 		syncClientSize: null
@@ -222,14 +222,14 @@ const ScrollableBase = forwardRef((props, reference) => {
 		get scrollBounds () {
 			return scrollBounds;
 		},
-		get scrollLeft () {
-			return variables.current.scrollLeft;
+		get scrollHeight () {
+			return scrollHeight;
 		},
 		get scrolling () {
 			return scrolling;
 		},
-		get scrollHeight () {
-			return scrollHeight;
+		get scrollLeft () {
+			return variables.current.scrollLeft;
 		},
 		get scrollPos () {
 			return scrollPos;
