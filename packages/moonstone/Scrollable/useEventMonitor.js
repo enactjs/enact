@@ -48,7 +48,7 @@ const useEventMonitor = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {uiRef} = instances;
+	const {uiScrollableAdapter} = instances;
 	const {lastPointer: lastPointerProp, scrollByPageOnPointerMode} = dependencies;
 
 	/*
@@ -72,13 +72,13 @@ const useEventMonitor = (props, instances, dependencies) => {
 			scrollables.delete(variables.pageKeyHandlerObj);
 		}
 
-		setMonitorEventTarget(uiRef.current.containerRef.current);
+		setMonitorEventTarget(uiScrollableAdapter.current.containerRef.current);
 
 		return () => {
 			// TODO: Replace `this` to something.
 			deleteMonitorEventTarget();
 		};
-	}, [uiRef]);
+	}, [uiScrollableAdapter]);
 };
 
 onWindowReady(() => {

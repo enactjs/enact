@@ -59,13 +59,22 @@ const ScrollerBase = forwardRef((props, reference) => {
 	});
 
 	useImperativeHandle(reference, () => ({
+		containerRef,
 		didScroll,
 		getNodePosition,
 		getScrollBounds,
 		scrollToPosition,
-		setScrollPosition,
-		containerRef
+		setScrollPosition
 	}));
+
+	props.setUiChildAdapter({
+		containerRef,
+		didScroll,
+		getNodePosition,
+		getScrollBounds,
+		scrollToPosition,
+		setScrollPosition
+	});
 
 	function getScrollBounds () {
 		return variables.current.scrollBounds;
@@ -377,8 +386,8 @@ ScrollerBase.defaultProps = {
 const Scroller = (props) => (
 	<Scrollable
 		{...props}
-		childRenderer={({initChildRef, ...rest}) => ( // eslint-disable-line react/jsx-no-bind
-			<ScrollerBase {...rest} ref={initChildRef} />
+		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
+			<ScrollerBase {...props} />
 		)}
 	/>
 );

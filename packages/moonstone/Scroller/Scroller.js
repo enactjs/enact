@@ -42,26 +42,13 @@ let ScrollerBase = (props, reference) => {
 	 * Dependencies
 	 */
 
-	const {initUiChildRef} = props;
-
-	const uiRef = useRef();
+	const {uiChildAdapter} = props;
 
 	/*
 	 * Hooks
 	 */
 
-	const {calculatePositionOnFocus, focusOnNode, setContainerDisabled} = useSpottable(props, {uiRef});
-
-	/*
-	 * Functions
-	 */
-
-	function initUiRef (ref) {
-		if (ref) {
-			uiRef.current = ref;
-			initUiChildRef(ref);
-		}
-	}
+	const {calculatePositionOnFocus, focusOnNode, setContainerDisabled} = useSpottable(props, {uiChildAdapter});
 
 	/*
 	 * useImperativeHandle
@@ -73,21 +60,25 @@ let ScrollerBase = (props, reference) => {
 		setContainerDisabled
 	}));
 
+	props.setChildAdapter({
+		calculatePositionOnFocus,
+		focusOnNode,
+		setContainerDisabled
+	});
+
 	/*
 	 * Render
 	 */
 
 	const propsObject = Object.assign({}, props);
-	delete propsObject.initUiChildRef;
+
 	delete propsObject.onUpdate;
 	delete propsObject.scrollAndFocusScrollbarButton;
+	delete propsObject.setChildAdapter;
 	delete propsObject.spotlightId;
 
 	return (
-		<UiScrollerBase
-			{...propsObject}
-			ref={initUiRef}
-		/>
+		<UiScrollerBase {...propsObject} />
 	);
 };
 
@@ -96,15 +87,6 @@ ScrollerBase = forwardRef(ScrollerBase);
 ScrollerBase.displayName = 'ScrollerBase';
 
 ScrollerBase.propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
-	/**
-	 * Passes the instance of [Scroller]{@link ui/Scroller.Scroller}.
-	 *
-	 * @type {Object}
-	 * @param {Object} ref
-	 * @private
-	 */
-	initUiChildRef: PropTypes.func,
-
 	/**
 	 * Called when [Scroller]{@link moonstone/Scroller.Scroller} updates.
 	 *

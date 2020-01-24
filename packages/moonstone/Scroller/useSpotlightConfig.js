@@ -7,7 +7,7 @@ const useSpotlightConfig = (props, instances) => {
 	 */
 
 	const {scrollAndFocusScrollbarButton, spotlightId} = props;
-	const {uiRef} = instances;
+	const {uiScrollableAdapter} = instances;
 
 	/*
 	 * Hooks
@@ -15,13 +15,13 @@ const useSpotlightConfig = (props, instances) => {
 
 	useEffect(() => {
 		function handleLeaveContainer ({direction, target}) {
-			const contentsContainer = uiRef.current.containerRef.current;
+			const contentsContainer = uiScrollableAdapter.current.containerRef.current;
 
 			// ensure we only scroll to boundary from the contents and not a scroll button which
-			// lie outside of uiRefCurrent.current.containerRef but within the spotlight container
+			// lie outside of uiChildAdapter.current.containerRef but within the spotlight container
 			if (contentsContainer && contentsContainer.contains(target)) {
 				const
-					{scrollBounds: {maxLeft, maxTop}, scrollPos: {left, top}} = uiRef.current,
+					{scrollBounds: {maxLeft, maxTop}, scrollPos: {left, top}} = uiScrollableAdapter.current,
 					isVerticalDirection = (direction === 'up' || direction === 'down'),
 					pos = isVerticalDirection ? top : left,
 					max = isVerticalDirection ? maxTop : maxLeft;
@@ -41,7 +41,7 @@ const useSpotlightConfig = (props, instances) => {
 		}
 
 		configureSpotlight();
-	}, [scrollAndFocusScrollbarButton, spotlightId, uiRef]);
+	}, [scrollAndFocusScrollbarButton, spotlightId, uiScrollableAdapter]);
 };
 
 export default useSpotlightConfig;

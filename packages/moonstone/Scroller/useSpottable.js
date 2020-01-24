@@ -13,10 +13,8 @@ const useSpottable = (props, instances) => {
 	 * Dependencies
 	 */
 
-	const {uiRef} = instances;
+	const {uiChildAdapter} = instances;
 	const {rtl} = props;
-
-	const containerNode = uiRef && uiRef.current && uiRef.current.containerRef.current || null;
 
 	/*
 	 * Hooks
@@ -27,6 +25,8 @@ const useSpottable = (props, instances) => {
 	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey();
 
 	const setContainerDisabled = useCallback((bool) => {
+		const containerNode = uiChildAdapter.current.containerRef.current;
+
 		if (containerNode) {
 			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
 
@@ -38,7 +38,7 @@ const useSpottable = (props, instances) => {
 				removeGlobalKeyDownEventListener();
 			}
 		}
-	}, [addGlobalKeyDownEventListener, containerNode, removeGlobalKeyDownEventListener]);
+	}, [addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener]);
 
 	useEffect(() => {
 		return () => setContainerDisabled(false);
@@ -64,6 +64,8 @@ const useSpottable = (props, instances) => {
 	 * @private
 	 */
 	function getSpotlightContainerForNode (node) {
+		const containerNode = uiChildAdapter.current.containerRef.current;
+
 		do {
 			if (node.dataset.spotlightId && node.dataset.spotlightContainer && !node.dataset.expandableContainer) {
 				return node;
@@ -130,6 +132,9 @@ const useSpottable = (props, instances) => {
 		};
 
 		const container = getSpotlightContainerForNode(item);
+		const containerNode = uiChildAdapter.current.containerRef.current;
+
+
 		const scrollerBounds = containerNode.getBoundingClientRect();
 		let {scrollHeight, scrollTop} = containerNode;
 		let scrollTopDelta = 0;
@@ -179,20 +184,21 @@ const useSpottable = (props, instances) => {
 	 * @private
 	 */
 	function calculateScrollLeft (item, scrollPosition) {
+		const containerNode = uiChildAdapter.current.containerRef.current;
 		const {
 			left: itemLeft,
 			width: itemWidth
 		} = getFocusedItemBounds(item);
 
 		const
-			{clientWidth} = uiRef.current.scrollBounds,
+			{clientWidth} = uiChildAdapter.current.scrollBounds,
 			rtlDirection = rtl ? -1 : 1,
 			{left: containerLeft} = containerNode.getBoundingClientRect(),
-			scrollLastPosition = scrollPosition ? scrollPosition : uiRef.current.scrollPos.left,
-			currentScrollLeft = rtl ? (uiRef.current.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
+			scrollLastPosition = scrollPosition ? scrollPosition : uiChildAdapter.current.scrollPos.left,
+			currentScrollLeft = rtl ? (uiChildAdapter.current.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
 			// calculation based on client position
 			newItemLeft = containerNode.scrollLeft + (itemLeft - containerLeft);
-		let nextScrollLeft = uiRef.current.scrollPos.left;
+		let nextScrollLeft = uiChildAdapter.current.scrollPos.left;
 
 		if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
 			// If focus is moved to an element outside of view area (to the right), scroller will move
@@ -219,8 +225,10 @@ const useSpottable = (props, instances) => {
 	 * @private
 	 */
 	function calculatePositionOnFocus ({item, scrollPosition}) {
-		const horizontal = uiRef.current.isHorizontal();
-		const vertical = uiRef.current.isVertical();
+		const horizontal = uiChildAdapter.current.isHorizontal();
+		const vertical = uiChildAdapter.current.isVertical();
+		const containerNode = uiChildAdapter.current.containerRef.current;
+
 
 		if (!vertical && !horizontal || !item || !containerNode.contains(item)) {
 			return;
@@ -230,14 +238,14 @@ const useSpottable = (props, instances) => {
 		const itemRect = getRect(item);
 
 		if (horizontal && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {
-			uiRef.current.scrollPos.left = calculateScrollLeft(item, scrollPosition);
+			uiChildAdapter.current.scrollPos.left = calculateScrollLeft(item, scrollPosition);
 		}
 
 		if (vertical && !(itemRect.top >= containerRect.top && itemRect.bottom <= containerRect.bottom)) {
-			uiRef.current.scrollPos.top = calculateScrollTop(item);
+			uiChildAdapter.current.scrollPos.top = calculateScrollTop(item);
 		}
 
-		return uiRef.current.scrollPos;
+		return uiChildAdapter.current.scrollPos;
 	}
 
 	function focusOnNode (node) {

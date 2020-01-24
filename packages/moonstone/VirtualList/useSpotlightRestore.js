@@ -9,8 +9,7 @@ const useSpotlightRestore = (props, instances) => {
 	 */
 
 	const {spotlightId} = props;
-	const {virtualListBase} = instances;
-	const {current: {uiRefCurrent}} = (virtualListBase || {});
+	const {spottable, uiChildAdapter} = instances;
 
 	/*
 	 * Instance
@@ -20,8 +19,6 @@ const useSpotlightRestore = (props, instances) => {
 		preservedIndex: false,
 		restoreLastFocused: false
 	});
-
-	const containerNode = uiRefCurrent && uiRefCurrent.containerRef && uiRefCurrent.containerRef.current || null;
 
 	/*
 	 * Hooks
@@ -47,6 +44,7 @@ const useSpotlightRestore = (props, instances) => {
 	}
 
 	function isPlaceholderFocused () {
+		const containerNode = uiChildAdapter.current.containerRef.current;
 		const current = Spotlight.getCurrent();
 
 		if (current && current.dataset.vlPlaceholder && containerNode && containerNode.contains(current)) {
@@ -61,6 +59,7 @@ const useSpotlightRestore = (props, instances) => {
 			variables.current.restoreLastFocused &&
 			!isPlaceholderFocused()
 		) {
+			const containerNode = uiChildAdapter.current.containerRef.current;
 			const node = containerNode && containerNode.querySelector(
 				`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
 			);
@@ -71,9 +70,9 @@ const useSpotlightRestore = (props, instances) => {
 				variables.current.restoreLastFocused = false;
 
 				// try to focus the last focused item
-				virtualListBase.current.isScrolledByJump = true;
+				spottable.current.isScrolledByJump = true;
 				const foundLastFocused = Spotlight.focus(node);
-				virtualListBase.current.isScrolledByJump = false;
+				spottable.current.isScrolledByJump = false;
 
 				// but if that fails (because it isn't found or is disabled), focus the container so
 				// spotlight isn't lost

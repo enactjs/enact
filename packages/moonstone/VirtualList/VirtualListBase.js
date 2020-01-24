@@ -1,4 +1,4 @@
-import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
+import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import React, {forwardRef, useImperativeHandle, useRef} from 'react';
 import warning from 'warning';
@@ -13,31 +13,21 @@ const
 	Native = 'Native';
 
 /**
- * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase} and
- * [VirtualListBaseNative]{@link moonstone/VirtualList.VirtualListBaseNative}.
+ * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase}
  *
  * @function VirtualListBase
  * @memberof moonstone/VirtualList
  * @ui
  * @private
  */
-			initItemRef,
 const VirtualListBase = forwardRef((props, reference) => {
-	const type = props.type;
+	const {type, uiChildAdapter} = props;
 
 	/*
 	 * Dependencies
 	 */
 
 	const {spotlightId} = props;
-
-	/*
-	 * Instance
-	 */
-
-	const variables = useRef({
-		uiRefCurrent: null
-	});
 
 	/*
 	 * Hooks
@@ -59,7 +49,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 		shouldPreventScrollByFocus,
 		SpotlightPlaceholder,
 		updateStatesAndBounds
-	} = useSpottable(props, {virtualListBase: variables}, {type});
+	} = useSpottable(props, {uiChildAdapter}, {type});
 
 	const containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 	usePreventScroll(props, {}, {
@@ -73,13 +63,6 @@ const VirtualListBase = forwardRef((props, reference) => {
 
 	function getComponentProps (index) {
 		return (index === getNodeIndexToBeFocused()) ? {ref: (ref) => initItemRef(ref, index)} : {};
-	}
-
-	function initUiRef (ref) {
-		if (ref) {
-			variables.current.uiRefCurrent = ref;
-			props.initUiChildRef(ref);
-		}
 	}
 
 	/*
@@ -97,6 +80,17 @@ const VirtualListBase = forwardRef((props, reference) => {
 		setContainerDisabled
 	}));
 
+	props.setChildAdapter({
+		calculatePositionOnFocus,
+		focusByIndex,
+		focusOnNode,
+		shouldPreventScrollByFocus,
+		shouldPreventOverscrollEffect,
+		setLastFocusedNode,
+		getScrollBounds,
+		setContainerDisabled
+	});
+
 	/*
 	 * Render
 	 */
@@ -105,7 +99,6 @@ const VirtualListBase = forwardRef((props, reference) => {
 		{itemRenderer, itemsRenderer, role, ...rest} = props,
 		needsScrollingPlaceholder = isNeededScrollingPlaceholder();
 
-	delete rest.initUiChildRef;
 	// not used by VirtualList
 	delete rest.focusableScrollbar;
 	delete rest.scrollAndFocusScrollbarButton;
@@ -124,7 +117,6 @@ const VirtualListBase = forwardRef((props, reference) => {
 				})
 			)}
 			onUpdateItems={handleRestoreLastFocus}
-			ref={initUiRef}
 			updateStatesAndBounds={updateStatesAndBounds}
 			itemsRenderer={(itemsRendererProps) => { // eslint-disable-line react/jsx-no-bind
 				return itemsRenderer({
@@ -202,15 +194,6 @@ VirtualListBase.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.pro
 	 * @public
 	 */
 	focusableScrollbar: PropTypes.bool,
-
-	/**
-	 * Passes the instance of [VirtualList]{@link ui/VirtualList.VirtualList}.
-	 *
-	 * @type {Object}
-	 * @param {Object} ref
-	 * @private
-	 */
-	initUiChildRef: PropTypes.func,
 
 	/**
 	 * Prop to check if horizontal Scrollbar exists or not.

@@ -136,11 +136,57 @@ const VirtualListBase = forwardRef((props, reference) => {
 			return variables.current.primary;
 		},
 		props,
+		get scrollBounds () {
+			return scrollBounds;
+		},
 		get scrollPositionTarget () {
 			return variables.current.scrollPositionTarget;
 		},
-		state: {
-			numOfItems
+		get scrollPosition () {
+			return variables.current.scrollPosition;
+		},
+		get scrollPos () {
+			return scrollPos
+		},
+		scrollToPosition,
+		setScrollPosition,
+		syncClientSize
+	}));
+
+	props.setUiChildAdapter({
+		calculateMetrics,
+		containerRef,
+		didScroll,
+		get dimensionToExtent () {
+			return variables.current.dimensionToExtent;
+		},
+		getGridPosition,
+		getItemBottomPosition,
+		getItemNode,
+		getItemPosition,
+		getMoreInfo,
+		getScrollBounds,
+		gridPositionToItemPosition,
+		get numOfItems () {
+			return numOfItems
+		},
+		get hasDataSizeChanged () {
+			return variables.current.hasDataSizeChanged
+		},
+		isHorizontal,
+		get isPrimaryDirectionVertical () {
+			return variables.current.isPrimaryDirectionVertical;
+		},
+		isVertical,
+		get itemPositions () {
+			return variables.current.itemPositions;
+		},
+		get primary () {
+			return variables.current.primary;
+		},
+		props,
+		get scrollPositionTarget () {
+			return variables.current.scrollPositionTarget;
 		},
 		get scrollPosition () {
 			return variables.current.scrollPosition;
@@ -148,7 +194,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 		scrollToPosition,
 		setScrollPosition,
 		syncClientSize
-	}));
+	});
 
 	// getDerivedStateFromProps
 	useLayoutEffect(() => {
@@ -1034,6 +1080,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 	delete rest.overhang;
 	delete rest.pageScroll;
 	delete rest.rtl;
+	delete rest.setChildAdapter;
 	delete rest.spacing;
 	delete rest.updateStatesAndBounds;
 	delete rest.itemSizes;
@@ -1433,13 +1480,12 @@ VirtualListBase.defaultProps = {
 const ScrollableVirtualList = ({role, ...rest}) => (
 	<Scrollable
 		{...rest}
-		childRenderer={({initChildRef, ...childRest}) => ( // eslint-disable-line react/jsx-no-bind
+		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
 			<VirtualListBase
-				{...childRest}
+				{...props}
 				itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
 					cc.length ? <div ref={itemContainerRef} role={role}>{cc}</div> : null
 				)}
-				ref={initChildRef}
 			/>
 		)}
 	/>

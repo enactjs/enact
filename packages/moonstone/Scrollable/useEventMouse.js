@@ -5,8 +5,7 @@ const useEventMouse = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {childRef, uiRef} = instances;
-	const {canScrollHorizontally, canScrollVertically} = (uiRef && uiRef.current || {});
+	const {childAdapter, uiScrollableAdapter} = instances;
 	const {isScrollButtonFocused, type} = dependencies;
 
 	/*
@@ -14,7 +13,8 @@ const useEventMouse = (props, instances, dependencies) => {
 	 */
 
 	function handleFlick ({direction}) {
-		const bounds = uiRef.current.getScrollBounds();
+		const {canScrollHorizontally, canScrollVertically} = uiScrollableAdapter.current;
+		const bounds = uiScrollableAdapter.current.getScrollBounds();
 		const focusedItem = Spotlight.getCurrent();
 
 		if (focusedItem) {
@@ -25,7 +25,7 @@ const useEventMouse = (props, instances, dependencies) => {
 			direction === 'vertical' && canScrollVertically(bounds) ||
 			direction === 'horizontal' && canScrollHorizontally(bounds)
 		) && !props['data-spotlight-container-disabled']) {
-			childRef.current.setContainerDisabled(true);
+			childAdapter.current.setContainerDisabled(true);
 		}
 	}
 
@@ -37,7 +37,7 @@ const useEventMouse = (props, instances, dependencies) => {
 		if (props['data-spotlight-container-disabled']) {
 			ev.preventDefault();
 		} else if (type === 'Native') {
-			childRef.current.setContainerDisabled(false);
+			childAdapter.current.setContainerDisabled(false);
 		}
 	}
 

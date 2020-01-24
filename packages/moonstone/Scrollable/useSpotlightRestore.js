@@ -8,7 +8,7 @@ const useSpotlightRestore = (props, instances) => {
 	 */
 
 	const {id} = props;
-	const {uiRef} = instances;
+	const {uiScrollableAdapter} = instances;
 
 	const context = useContext(SharedState);
 
@@ -23,7 +23,7 @@ const useSpotlightRestore = (props, instances) => {
 			if (id && context && context.get) {
 				const scrollPosition = context.get(`${id}.scrollPosition`);
 				if (scrollPosition) {
-					uiRef.current.scrollTo({
+					uiScrollableAdapter.current.scrollTo({
 						position: scrollPosition,
 						animate: false
 					});
@@ -32,7 +32,7 @@ const useSpotlightRestore = (props, instances) => {
 		}
 
 		restoreScrollPosition();
-	}, [context, id, uiRef]);
+	}, [context, id]);
 };
 
 export default useSpotlightRestore;

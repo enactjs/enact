@@ -15,7 +15,7 @@ const useEventKey = (props, instances, dependencies) => {
 	 */
 
 	const {direction: directionProp, overscrollEffectOn} = props;
-	const {childRef, spottable, uiRef} = instances;
+	const {childAdapter, spottable, uiScrollableAdapter} = instances;
 	const {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type} = dependencies;
 
 	/*
@@ -51,11 +51,11 @@ const useEventKey = (props, instances, dependencies) => {
 			} else if (getDirection(keyCode) && (type === 'JS' || type === 'Native' && !Spotlight.getPointerMode())) {
 				const element = Spotlight.getCurrent();
 
-				uiRef.current.lastInputType = 'arrowKey';
+				uiScrollableAdapter.current.lastInputType = 'arrowKey';
 
 				direction = getDirection(keyCode);
 				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
-					const {horizontalScrollbarRef, verticalScrollbarRef} = uiRef.current;
+					const {horizontalScrollbarRef, verticalScrollbarRef} = uiScrollableAdapter.current;
 
 					if (!(horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) &&
 						!(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
@@ -68,9 +68,9 @@ const useEventKey = (props, instances, dependencies) => {
 
 	function scrollByPage (direction) {
 		const
-			{childRefCurrent, scrollTop} = uiRef.current,
+			{uiChildAdapter, scrollTop} = uiScrollableAdapter.current,
 			focusedItem = Spotlight.getCurrent(),
-			bounds = uiRef.current.getScrollBounds(),
+			bounds = uiScrollableAdapter.current.getScrollBounds(),
 			isUp = direction === 'up',
 			directionFactor = isUp ? -1 : 1,
 			pageDistance = directionFactor * bounds.clientHeight * paginationPageMultiplier;
@@ -82,16 +82,16 @@ const useEventKey = (props, instances, dependencies) => {
 			scrollPossible = isUp ? scrollTop > 0 : bounds.maxTop - scrollTop > epsilon;
 		}
 
-		uiRef.current.lastInputType = 'pageKey';
+		uiScrollableAdapter.current.lastInputType = 'pageKey';
 
-		if (directionFactor !== uiRef.current.wheelDirection) {
-			uiRef.current.isScrollAnimationTargetAccumulated = false;
-			uiRef.current.wheelDirection = directionFactor;
+		if (directionFactor !== uiScrollableAdapter.current.wheelDirection) {
+			uiScrollableAdapter.current.isScrollAnimationTargetAccumulated = false;
+			uiScrollableAdapter.current.wheelDirection = directionFactor;
 		}
 
 		if (scrollPossible) {
 			if (focusedItem) {
-				const contentNode = childRefCurrent.containerRef.current;
+				const contentNode = uiChildAdapter.current.containerRef.current;
 				// Should do nothing when focusedItem is paging control button of Scrollbar
 				if (contentNode.contains(focusedItem)) {
 					const
@@ -112,7 +112,7 @@ const useEventKey = (props, instances, dependencies) => {
 
 					focusedItem.blur();
 					if (!props['data-spotlight-container-disabled']) {
-						childRef.current.setContainerDisabled(true);
+						childAdapter.current.setContainerDisabled(true);
 					}
 					spottable.current.pointToFocus = {direction, x, y};
 				}
@@ -120,7 +120,7 @@ const useEventKey = (props, instances, dependencies) => {
 				spottable.current.pointToFocus = {direction, x: lastPointer.x, y: lastPointer.y};
 			}
 
-			uiRef.current.scrollToAccumulatedTarget(pageDistance, true, overscrollEffectOn.pageKey);
+			uiScrollableAdapter.current.scrollToAccumulatedTarget(pageDistance, true, overscrollEffectOn.pageKey);
 		}
 	}
 

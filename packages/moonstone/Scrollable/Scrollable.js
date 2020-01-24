@@ -12,7 +12,7 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {useRef} from 'react';
 
 import $L from '../internal/$L';
 import Skinnable from '../Skinnable';
@@ -51,17 +51,72 @@ const ScrollableBase = (props) => {
 		...rest
 	} = props;
 
+	/* Instance
+	 *
+	 */
+
+	const childAdapter = useRef({
+		calculatePositionOnFocus: null,
+		focusByIndex: null,
+		focusOnNode: null,
+		shouldPreventScrollByFocus: null,
+		shouldPreventOverscrollEffect: null,
+		setLastFocusedNode: null,
+		getScrollBounds: null,
+		setContainerDisabled: null,
+		type
+	});
+
+	const setChildAdapter = (adapter) => {
+		childAdapter.current = adapter;
+	}
+
+	const uiScrollableAdapter = useRef({
+		animator: null,
+		applyOverscrollEffect: null,
+		bounds: null,
+		calculateDistanceByWheel: null,
+		canScrollHorizontally: null,
+		canScrollVertically: null,
+		checkAndApplyOverscrollEffect: null,
+		containerRef: null,
+		getScrollBounds: null,
+		horizontalScrollbarRef: null,
+		isDragging: null,
+		isScrollAnimationTargetAccumulated: null,
+		isUpdatedScrollThumb: null,
+		lastInputType: null,
+		rtl: null,
+		scrollBounds: null,
+		scrollLeft: null,
+		scrolling: null,
+		scrollHeight: null,
+		scrollPos: null,
+		scrollTo: null,
+		scrollToAccumulatedTarget: null,
+		scrollToInfo: null,
+		scrollTop: null,
+		setOverscrollStatus: null,
+		showThumb: null,
+		start: null,
+		startHidingThumb: null,
+		uiChildAdapter: null,
+		verticalScrollbarRef: null,
+		wheelDirection: null
+	});
+
+	const setUiScrollableAdapter = (adapter) => {
+		uiScrollableAdapter.current = adapter;
+	}
+
 	/*
 	 * Refs
 	 */
 
-	const
-		childRef = React.useRef(),
-		overscrollRefs = {
-			horizontal: React.useRef(),
-			vertical: React.useRef()
-		},
-		uiRef = React.useRef();
+	const overscrollRefs = {
+		horizontal: React.useRef(),
+		vertical: React.useRef()
+	};
 
 	/*
 	 * Hooks
@@ -86,7 +141,7 @@ const ScrollableBase = (props) => {
 		start, // Native
 		scrollTo,
 		stop // JS
-	} = useSpottable(props, {childRef, overscrollRefs, uiRef}, {type});
+	} = useSpottable(props, {childAdapter, overscrollRefs, uiScrollableAdapter}, {type});
 
 	/*
 	 * Render
@@ -120,9 +175,9 @@ const ScrollableBase = (props) => {
 			onMouseDown={handleMouseDown}
 			onScroll={handleScroll}
 			onWheel={handleWheel}
-			ref={uiRef}
 			removeEventListeners={removeEventListeners}
 			scrollTo={scrollTo}
+			setUiScrollableAdapter={setUiScrollableAdapter}
 			type={type}
 			containerRenderer={({ // eslint-disable-line react/jsx-no-bind
 				childComponentProps,
@@ -134,12 +189,12 @@ const ScrollableBase = (props) => {
 				// TODO : change name "handleScrollInContainer"
 				handleScroll: handleScrollInContainer,
 				horizontalScrollbarProps,
-				initChildRef: initUiChildRef,
 				isHorizontalScrollbarVisible,
 				isVerticalScrollbarVisible,
 				rtl,
 				// TODO : change name "scrollToInContainer"
 				scrollTo: scrollToInContainer,
+				setUiChildAdapter,
 				style,
 				verticalScrollbarProps
 			}) => {
@@ -159,15 +214,17 @@ const ScrollableBase = (props) => {
 									...childComponentProps,
 									cbScrollTo: scrollToInContainer,
 									className: componentCss.scrollableFill,
-									initUiChildRef,
 									isHorizontalScrollbarVisible,
 									isVerticalScrollbarVisible,
 									onScroll: (type === 'JS') ? handleScrollInContainer : null,
 									onUpdate: handleScrollerUpdate,
-									ref: childRef,
 									rtl,
 									scrollAndFocusScrollbarButton,
-									spotlightId
+									setChildAdapter,
+									setUiChildAdapter,
+									spotlightId,
+									uiChildAdapter: uiScrollableAdapter.current.uiChildAdapter,
+									uiScrollableAdapter
 								})}
 							</ChildWrapper>
 							{isVerticalScrollbarVisible ?

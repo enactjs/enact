@@ -8,16 +8,8 @@ const useScrollbar = (props, instances, dependencies) => {
 	 */
 
 	const {direction: directionProp, focusableScrollbar, overscrollEffectOn} = props;
-	const {uiRef} = instances;
+	const {uiScrollableAdapter} = instances;
 	const {isContent} = dependencies;
-	const {
-		horizontalScrollbarRef: hRef,
-		isUpdatedScrollThumb,
-		scrollToAccumulatedTarget,
-		verticalScrollbarRef: vRef,
-		wheelDirection
-	} = (uiRef && uiRef.current || {});
-	const isRtl = uiRef.current ? uiRef.current.props.rtl : false;
 
 	const scrollbarProps = {
 		cbAlertThumb: alertThumbAfterRendered,
@@ -30,10 +22,7 @@ const useScrollbar = (props, instances, dependencies) => {
 	 */
 
 	function isScrollButtonFocused () {
-		const {
-			horizontalScrollbarRef: hRef,
-			verticalScrollbarRef: vRef
-		} = (uiRef && uiRef.current || {});
+		const {horizontalScrollbarRef: hRef, verticalScrollbarRef: vRef} = uiScrollableAdapter.current;
 
 		return (
 			hRef.current && hRef.current.isOneOfScrollButtonsFocused() ||
@@ -43,18 +32,19 @@ const useScrollbar = (props, instances, dependencies) => {
 
 	function onScrollbarButtonClick ({isPreviousScrollButton, isVerticalScrollBar}) {
 		const
-			bounds = uiRef.current.getScrollBounds(),
+			{wheelDirection} = uiScrollableAdapter.current,
+			bounds = uiScrollableAdapter.current.getScrollBounds(),
 			direction = isPreviousScrollButton ? -1 : 1,
 			pageDistance = direction * (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
-		uiRef.current.lastInputType = 'scrollbarButton';
+		uiScrollableAdapter.current.lastInputType = 'scrollbarButton';
 
 		if (direction !== wheelDirection) {
-			uiRef.current.isScrollAnimationTargetAccumulated = false;
-			uiRef.current.wheelDirection = direction;
+			uiScrollableAdapter.current.isScrollAnimationTargetAccumulated = false;
+			uiScrollableAdapter.current.wheelDirection = direction;
 		}
 
-		uiRef.current.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, overscrollEffectOn.scrollbarButton);
+		uiScrollableAdapter.current.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, overscrollEffectOn.scrollbarButton);
 	}
 
 	function focusOnScrollButton (scrollbarRef, isPreviousScrollButton) {
@@ -64,9 +54,11 @@ const useScrollbar = (props, instances, dependencies) => {
 	}
 
 	function scrollAndFocusScrollbarButton (direction) {
-		if (uiRef.current) {
+		// TBD
+		// if (uiRef.current) {
 			const
-				isPreviousScrollButton = direction === 'up' || (isRtl ? direction === 'right' : direction === 'left'),
+				{hRef, rtl, vRef} = uiScrollableAdapter.current,
+				isPreviousScrollButton = direction === 'up' || (rtl ? direction === 'right' : direction === 'left'),
 				isHorizontalDirection = direction === 'left' || direction === 'right',
 				isVerticalDirection = direction === 'up' || direction === 'down',
 				canScrollHorizontally = isHorizontalDirection && (directionProp === 'horizontal' || directionProp === 'both'),
@@ -85,18 +77,20 @@ const useScrollbar = (props, instances, dependencies) => {
 					);
 				}
 			}
-		}
+		// }
 	}
 
 	function alertThumb () {
-		const bounds = uiRef.current.getScrollBounds();
+		const bounds = uiScrollableAdapter.current.getScrollBounds();
 
-		uiRef.current.showThumb(bounds);
-		uiRef.current.startHidingThumb();
+		uiScrollableAdapter.current.showThumb(bounds);
+		uiScrollableAdapter.current.startHidingThumb();
 	}
 
 	function alertThumbAfterRendered () {
-		const spotItem = Spotlight.getCurrent();
+		const
+			{isUpdatedScrollThumb} = uiScrollableAdapter.current,
+			spotItem = Spotlight.getCurrent();
 
 		if (!Spotlight.getPointerMode() && isContent(spotItem) && isUpdatedScrollThumb) {
 			alertThumb();

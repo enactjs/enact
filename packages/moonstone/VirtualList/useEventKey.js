@@ -22,7 +22,7 @@ const useEventKey = (props, instances, dependencies) => {
 
 	const {dataSize, focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
 		rtl, spotlightId, wrap} = props;
-	const {virtualListBase} = instances;
+	const {uiChildAdapter} = instances;
 	const {
 		containerNode,
 		handlePageUpDownKeyDown,
@@ -48,8 +48,7 @@ const useEventKey = (props, instances, dependencies) => {
 	}, [dataSize]);
 
 	const getNextIndex = useCallback(({index, keyCode, repeat}) => {
-		const uiRefCurrent = virtualListBase.current.uiRefCurrent;
-		const {isPrimaryDirectionVertical, dimensionToExtent} = uiRefCurrent;
+		const {isPrimaryDirectionVertical, dimensionToExtent} = uiChildAdapter;
 		const column = index % dimensionToExtent;
 		const row = (index - column) % dataSize / dimensionToExtent;
 		const isDownKey = isDown(keyCode);
@@ -109,7 +108,7 @@ const useEventKey = (props, instances, dependencies) => {
 		}
 
 		return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
-	}, [dataSize, findSpottableItem, rtl, virtualListBase, wrap]);
+	}, [dataSize, findSpottableItem, rtl, wrap]);
 
 	/*
 	 * Hooks
@@ -127,8 +126,7 @@ const useEventKey = (props, instances, dependencies) => {
 					ev.stopPropagation();
 				} else {
 					const {repeat} = ev;
-					const uiRefCurrent = virtualListBase.current.uiRefCurrent;
-					const {dimensionToExtent, isPrimaryDirectionVertical} = uiRefCurrent;
+					const {dimensionToExtent, isPrimaryDirectionVertical} = uiChildAdapter;
 					const targetIndex = target.dataset.index;
 					const isScrollButton = (
 						// if target has an index, it must be an item so can't be a scroll button
@@ -214,7 +212,7 @@ const useEventKey = (props, instances, dependencies) => {
 		containerNode, dataSize, focusableScrollbar, getNextIndex,
 		handle5WayKeyUp, handleDirectionKeyDown, handlePageUpDownKeyDown,
 		isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
-		spotlightId, SpotlightAccelerator, virtualListBase
+		spotlightId, SpotlightAccelerator
 	]);
 
 	/*

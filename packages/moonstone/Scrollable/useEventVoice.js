@@ -8,7 +8,7 @@ const useEventVoice = (props, instances, dependencies) => {
 	 */
 
 	const {direction} = props;
-	const {uiRef} = instances;
+	const {uiScrollableAdapter} = instances;
 	const {onScrollbarButtonClick} = dependencies;
 
 	/*
@@ -26,11 +26,11 @@ const useEventVoice = (props, instances, dependencies) => {
 
 	function updateFocusAfterVoiceControl () {
 		const spotItem = Spotlight.getCurrent();
-		if (spotItem && uiRef.current.containerRef.current.contains(spotItem)) {
+		if (spotItem && uiScrollableAdapter.current.containerRef.current.contains(spotItem)) {
 			const
-				viewportBounds = uiRef.current.containerRef.current.getBoundingClientRect(),
+				viewportBounds = uiScrollableAdapter.current.containerRef.current.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),
-				nodes = Spotlight.getSpottableDescendants(uiRef.current.containerRef.current.dataset.spotlightId),
+				nodes = Spotlight.getSpottableDescendants(uiScrollableAdapter.current.containerRef.current.dataset.spotlightId),
 				first = variables.current.voiceControlDirection === 'vertical' ? 'top' : 'left',
 				last = variables.current.voiceControlDirection === 'vertical' ? 'bottom' : 'right';
 
@@ -61,9 +61,9 @@ const useEventVoice = (props, instances, dependencies) => {
 	function handleVoice (e) {
 		const
 			isHorizontal = (direction === 'horizontal'),
-			isRtl = uiRef.current.rtl,
-			{scrollTop, scrollLeft} = uiRef.current,
-			{maxLeft, maxTop} = uiRef.current.getScrollBounds(),
+			isRtl = uiScrollableAdapter.current.rtl,
+			{scrollTop, scrollLeft} = uiScrollableAdapter.current,
+			{maxLeft, maxTop} = uiScrollableAdapter.current.getScrollBounds(),
 			verticalDirection = ['up', 'down', 'top', 'bottom'],
 			horizontalDirection = isRtl ? ['right', 'left', 'rightmost', 'leftmost'] : ['left', 'right', 'leftmost', 'rightmost'],
 			movement = ['previous', 'next', 'first', 'last'];
@@ -99,7 +99,7 @@ const useEventVoice = (props, instances, dependencies) => {
 				const isPreviousScrollButton = (scroll === 'up') || (scroll === 'left' && !isRtl) || (scroll === 'right' && isRtl);
 				onScrollbarButtonClick({isPreviousScrollButton, isVerticalScrollBar: verticalDirection.includes(scroll)});
 			} else { // ['top', 'bottom', 'leftmost', 'rightmost'].includes(scroll)
-				uiRef.current.scrollTo({align: verticalDirection.includes(scroll) && scroll || (scroll === 'leftmost' && isRtl || scroll === 'rightmost' && !isRtl) && 'right' || 'left'});
+				uiScrollableAdapter.current.scrollTo({align: verticalDirection.includes(scroll) && scroll || (scroll === 'leftmost' && isRtl || scroll === 'rightmost' && !isRtl) && 'right' || 'left'});
 			}
 			e.preventDefault();
 		}

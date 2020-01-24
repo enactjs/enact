@@ -50,7 +50,7 @@ const useSpottable = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {childRef, overscrollRefs, uiRef} = instances;
+	const {childAdapter, overscrollRefs, uiScrollableAdapter} = instances;
 	const {type} = dependencies;
 
 	const context = useContext(SharedState);
@@ -77,27 +77,27 @@ const useSpottable = (props, instances, dependencies) => {
 		onScrollbarButtonClick,
 		scrollAndFocusScrollbarButton,
 		scrollbarProps
-	} = useScrollbar(props, {uiRef}, {isContent});
+	} = useScrollbar(props, {uiScrollableAdapter}, {isContent});
 
 	useSpotlightConfig(props);
 
-	useSpotlightRestore(props, {uiRef});
+	useSpotlightRestore(props, {uiScrollableAdapter});
 
 	const {
 		applyOverscrollEffect,
 		checkAndApplyOverscrollEffectByDirection,
 		clearOverscrollEffect
-	} = useOverscrollEffect({}, {overscrollRefs, uiRef});
+	} = useOverscrollEffect({}, {overscrollRefs, uiScrollableAdapter});
 
-	const {handleWheel, isWheeling} = useEventWheel(props, {childRef, uiRef}, {isScrollButtonFocused, type});
+	const {handleWheel, isWheeling} = useEventWheel(props, {childAdapter, uiScrollableAdapter}, {isScrollButtonFocused, type});
 
-	const {calculateAndScrollTo, handleFocus, hasFocus} = useEventFocus(props, {childRef, spottable: variables, uiRef}, {alertThumb, isWheeling, type});
+	const {calculateAndScrollTo, handleFocus, hasFocus} = useEventFocus(props, {childAdapter, spottable: variables, uiScrollableAdapter}, {alertThumb, isWheeling, type});
 
-	const {handleKeyDown, lastPointer, scrollByPageOnPointerMode} = useEventKey(props, {childRef, spottable: variables, uiRef}, {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type});
+	const {handleKeyDown, lastPointer, scrollByPageOnPointerMode} = useEventKey(props, {childAdapter, spottable: variables, uiScrollableAdapter}, {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type});
 
-	useEventMonitor({}, {childRef, uiRef}, {lastPointer, scrollByPageOnPointerMode});
+	useEventMonitor({}, {uiScrollableAdapter}, {lastPointer, scrollByPageOnPointerMode});
 
-	const {handleFlick, handleMouseDown} = useEventMouse({}, {uiRef}, {isScrollButtonFocused, type});
+	const {handleFlick, handleMouseDown} = useEventMouse({}, {childAdapter, uiScrollableAdapter}, {isScrollButtonFocused, type});
 
 	const {handleTouchStart} = useEventTouch({}, {}, {isScrollButtonFocused});
 
@@ -105,7 +105,7 @@ const useSpottable = (props, instances, dependencies) => {
 		addVoiceEventListener,
 		removeVoiceEventListener,
 		stopVoice
-	} = useEventVoice(props, {uiRef}, {onScrollbarButtonClick});
+	} = useEventVoice(props, {uiScrollableAdapter}, {onScrollbarButtonClick});
 
 	const {handleResizeWindow} = useEventResizeWindow();
 
@@ -114,7 +114,7 @@ const useSpottable = (props, instances, dependencies) => {
 	 */
 
 	function isContent (element) {
-		return (element && uiRef.current && uiRef.current.childRefCurrent.containerRef.current.contains(element));
+		return (element && uiScrollableAdapter.current.uiChildAdapter.current.containerRef.current.contains(element));
 	}
 
 	function scrollTo (opt) {
@@ -130,7 +130,7 @@ const useSpottable = (props, instances, dependencies) => {
 
 	function stop () {
 		if (!props['data-spotlight-container-disabled']) {
-			childRef.current.setContainerDisabled(false);
+			childAdapter.current.setContainerDisabled(false);
 		}
 		focusOnItem();
 		variables.current.lastScrollPositionOnFocus = null;
@@ -143,12 +143,12 @@ const useSpottable = (props, instances, dependencies) => {
 	}
 
 	function focusOnItem () {
-		if (variables.current.indexToFocus !== null && typeof childRef.current.focusByIndex === 'function') {
-			childRef.current.focusByIndex(variables.current.indexToFocus);
+		if (variables.current.indexToFocus !== null && typeof childAdapter.current.focusByIndex === 'function') {
+			childAdapter.current.focusByIndex(variables.current.indexToFocus);
 			variables.current.indexToFocus = null;
 		}
-		if (variables.current.nodeToFocus !== null && typeof childRef.current.focusOnNode === 'function') {
-			childRef.current.focusOnNode(variables.current.nodeToFocus);
+		if (variables.current.nodeToFocus !== null && typeof childAdapter.current.focusOnNode === 'function') {
+			childAdapter.current.focusOnNode(variables.current.nodeToFocus);
 			variables.current.nodeToFocus = null;
 		}
 		if (variables.current.pointToFocus !== null) {
@@ -156,7 +156,7 @@ const useSpottable = (props, instances, dependencies) => {
 			if (!Spotlight.getPointerMode()) {
 				const {direction, x, y} = variables.current.pointToFocus;
 				const position = {x, y};
-				const {current: {containerRef: {current}}} = uiRef;
+				const current = uiScrollableAdapter.current.containerRef.current;
 				const elemFromPoint = document.elementFromPoint(x, y);
 				const target =
 					elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
@@ -183,17 +183,17 @@ const useSpottable = (props, instances, dependencies) => {
 
 	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
 	function handleScrollerUpdate () {
-		if (uiRef.current.scrollToInfo === null) {
-			const scrollHeight = uiRef.current.getScrollBounds().scrollHeight;
-			if (scrollHeight !== uiRef.current.bounds.scrollHeight) {
+		if (uiScrollableAdapter.current.scrollToInfo === null) {
+			const scrollHeight = uiScrollableAdapter.current.getScrollBounds().scrollHeight;
+			if (scrollHeight !== uiScrollableAdapter.current.bounds.scrollHeight) {
 				calculateAndScrollTo();
 			}
 		}
 
-		// oddly, Scroller manages uiRef.current.bounds so if we don't update it here (it is also
+		// oddly, Scroller manages uiScrollableAdapter.current.bounds so if we don't update it here (it is also
 		// updated in calculateAndScrollTo but we might not have made it to that point), it will be
 		// out of date when we land back in this method next time.
-		uiRef.current.bounds.scrollHeight = uiRef.current.getScrollBounds().scrollHeight;
+		uiScrollableAdapter.current.bounds.scrollHeight = uiScrollableAdapter.current.getScrollBounds().scrollHeight;
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.

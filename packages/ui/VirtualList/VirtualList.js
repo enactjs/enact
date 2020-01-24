@@ -95,9 +95,6 @@ export {
 	gridListItemSizeShape,
 	itemSizesShape,
 	VirtualGridList,
-	VirtualGridList as VirtualGridListNative,
 	VirtualList,
-	VirtualListBase,
-	VirtualListBase as VirtualListBaseNative,
-	VirtualList as VirtualListNative
+	VirtualListBase
 };
