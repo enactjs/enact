@@ -5,13 +5,11 @@ import {useEffect} from 'react';
 import scrollbarCss from './Scrollbar.module.less';
 
 const navigableFilter = (elem) => {
-	const {dangerouslyContains} = useDOM();
-
 	if (
 		!Spotlight.getPointerMode() &&
 		// ignore containers passed as their id
 		typeof elem !== 'string' &&
-		dangerouslyContains(elem.classList, scrollbarCss.scrollButton)
+		useDOM().containsDangerously(elem.classList, scrollbarCss.scrollButton)
 	) {
 		return false;
 	}

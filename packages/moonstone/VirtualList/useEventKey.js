@@ -115,8 +115,6 @@ const useEventKey = (props, instances, dependencies) => {
 	 * Hooks
 	 */
 
-	const {dangerouslyContains} = useDOM();
-
 	useEffect(() => {
 		function handleKeyDown (ev) {
 			const {keyCode, target} = ev;
@@ -180,7 +178,7 @@ const useEventKey = (props, instances, dependencies) => {
 						}
 					} else {
 						const possibleTarget = getTargetByDirectionFromElement(direction, target);
-						if (!dangerouslyContains(ev.currentTarget, possibleTarget)) {
+						if (!useDOM().containsDangerously(ev.currentTarget, possibleTarget)) {
 							isLeaving = true;
 						}
 					}

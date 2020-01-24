@@ -23,12 +23,6 @@ const useEventVoice = (props, instances, dependencies) => {
 	});
 
 	/*
-	 * Hooks
-	 */
-
-	const {dangerouslyContains} = useDOM();
-
-	/*
 	 * Functions
 	 */
 
@@ -36,7 +30,7 @@ const useEventVoice = (props, instances, dependencies) => {
 		const spotItem = Spotlight.getCurrent();
 		const scrollableContainerNode = scrollableContainerRef.current;
 
-		if (dangerouslyContains(scrollableContainerNode, spotItem)) {
+		if (useDOM().containsDangerously(scrollableContainerNode, spotItem)) {
 			const
 				viewportBounds = scrollableContainerNode.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),

@@ -15,12 +15,6 @@ const useEventFocus = (props, instances, dependencies) => {
 	const {alertThumb, isWheeling, type} = dependencies;
 
 	/*
-	 * Hooks
-	 */
-
-	const {dangerouslyContains} = useDOM();
-
-	/*
 	 * Functions
 	 */
 
@@ -68,7 +62,7 @@ const useEventFocus = (props, instances, dependencies) => {
 			positionFn = childAdapter.current.calculatePositionOnFocus,
 			childContainerNode = uiScrollableAdapter.current.uiChildAdapter.current.childContainerRef.current;
 
-		if (spotItem && positionFn && dangerouslyContains(childContainerNode, spotItem)) {
+		if (spotItem && positionFn && useDOM().containsDangerously(childContainerNode, spotItem)) {
 			const lastPos = spottable.current.lastScrollPositionOnFocus;
 			let pos;
 
@@ -145,7 +139,7 @@ const useEventFocus = (props, instances, dependencies) => {
 			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		}
 
-		return dangerouslyContains(scrollableContainerRef, current);
+		return useDOM().containsDangerously(scrollableContainerRef, current);
 	}
 
 	/*

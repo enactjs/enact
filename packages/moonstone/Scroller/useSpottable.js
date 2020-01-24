@@ -52,8 +52,6 @@ const useSpottable = (props, instances) => {
 		}
 	});
 
-	const {dangerouslyContains} = useDOM();
-
 	/*
 	 * Functions
 	 */
@@ -231,7 +229,7 @@ const useSpottable = (props, instances) => {
 		const vertical = uiChildAdapter.current.isVertical();
 		const childContainerNode = uiChildAdapter.current.childContainerRef.current;
 
-		if (!vertical && !horizontal || !item || !dangerouslyContains(childContainerNode, item)) {
+		if (!vertical && !horizontal || !item || !useDOM().containsDangerously(childContainerNode, item)) {
 			return;
 		}
 

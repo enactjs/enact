@@ -1,15 +1,14 @@
 import Spotlight, {} from '@enact/spotlight';
 import {useEffect, useRef} from 'react';
 
-// useEvent
-// https://github.com/facebook/react/pull/17651
+// At the end, wes should not use DOM APIs as well as the APIs in the `useDOM`. If we use them, we have to try to remove them first if possible.
 
 const useDOM = () => {
 	/*
 	 * Functions
 	 */
 
-	function dangerouslyContains (ref, target) {
+	function containsDangerously (ref, target) {
 		if (!target) {
 			return false;
 		} else if (ref.current) {
@@ -30,27 +29,27 @@ const useDOM = () => {
 	// removeAttribute
 	// scrollLeft
 	// scrollTop
-	function dangerously_getBoundingClientRect () {}
-	function dangerously_dataset () {}
-	function dangerously_GetRect () {}
-	function dangerously_setAttribute () {}
-	function dangerously_removeAttribute () {}
-	const dangerously_scrollLeft = 0;
-	const dangerously_scrollTop = 0;
+	function datasetDangerously () {}
+	function getBoundingClientRectDangerously () {}
+	function getRectDangerously () {}
+	function removeAttributeDangerously () {}
+	function setAttributeDangerously () {}
+	const scrollLeftDangerously = 0;
+	const scrollTopDangerously = 0;
 
 	/*
 	 * Return
 	 */
 
 	return {
-		dangerouslyContains,
-		dangerously_getBoundingClientRect,
-		dangerously_dataset,
-		dangerously_GetRect,
-		dangerously_setAttribute,
-		dangerously_removeAttribute,
-		dangerously_scrollLeft,
-		dangerously_scrollTop
+		containsDangerously,
+		datasetDangerously,
+		getBoundingClientRectDangerously,
+		getRectDangerously,
+		removeAttributeDangerously,
+		setAttributeDangerously,
+		scrollLeftDangerously,
+		scrollTopDangerously
 	};
 };
 

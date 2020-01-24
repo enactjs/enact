@@ -111,14 +111,12 @@ const useSpottable = (props, instances, dependencies) => {
 
 	const {handleResizeWindow} = useEventResizeWindow();
 
-	const {dangerouslyContains} = useDOM();
-
 	/*
 	 * Functions
 	 */
 
 	function isContent (element) {
-		return (element && dangerouslyContains(uiScrollableAdapter.current.uiChildAdapter.current.childContainerRef, element));
+		return (element && useDOM().containsDangerously(uiScrollableAdapter.current.uiChildAdapter.current.childContainerRef, element));
 	}
 
 	function scrollTo (opt) {

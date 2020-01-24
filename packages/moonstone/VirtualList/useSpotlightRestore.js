@@ -27,8 +27,6 @@ const useSpotlightRestore = (props, instances) => {
 
 	useEffect(restoreFocus);
 
-	const {dangerouslyContains} = useDOM();
-
 	/*
 	 * Functions
 	 */
@@ -50,7 +48,7 @@ const useSpotlightRestore = (props, instances) => {
 		const childContainerNode = uiChildAdapter.current.childContainerRef.current;
 		const current = Spotlight.getCurrent();
 
-		if (current && current.dataset.vlPlaceholder && dangerouslyContains(childContainerNode, current)) {
+		if (current && current.dataset.vlPlaceholder && useDOM().containsDangerously(childContainerNode, current)) {
 			return true;
 		}
 

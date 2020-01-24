@@ -744,8 +744,8 @@ const ScrollableBase = forwardRef((props, reference) => {
 					if (eventDelta < 0 && variables.current.scrollTop > 0 || eventDelta > 0 && variables.current.scrollTop < bounds.maxTop) {
 						// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
 						if (
-							dangerouslyContains(horizontalScrollbarRef.current.getContainerRef(), ev.target) ||
-							dangerouslyContains(verticalScrollbarRef.current.getContainerRef(), ev.target)
+							useDOM().containsDangerously(horizontalScrollbarRef.current.getContainerRef(), ev.target) ||
+							useDOM().containsDangerously(verticalScrollbarRef.current.getContainerRef(), ev.target)
 						) {
 							delta = calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 							needToHideThumb = !delta;
@@ -1477,7 +1477,7 @@ const ScrollableBase = forwardRef((props, reference) => {
 	// JS ]]
 
 	function dangerouslyContainsInScrollable (target) {
-		return dangerouslyContains(scrollableContainerRef, target);
+		return useDOM().containsDangerously(scrollableContainerRef, target);
 	}
 
 	variables.current.deferScrollTo = true;
