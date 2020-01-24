@@ -16,7 +16,7 @@ import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
-import React, {forwardRef, useCallback, useContext, useEffect, useImperativeHandle, useReducer, useRef, useState} from 'react';
+import React, {forwardRef, useCallback, useContext, useEffect, useReducer, useRef, useState} from 'react';
 
 import ForwardRef from '../ForwardRef';
 import {ResizeContext} from '../Resizable';
@@ -191,59 +191,6 @@ const ScrollableBase = forwardRef((props, reference) => {
 		uiChildAdapter.current = adapter;
 	}
 
-	useImperativeHandle(reference, () => ({
-		animator: variables.current.animator,
-		applyOverscrollEffect,
-		bounds: variables.current.bounds,
-		canScrollHorizontally,
-		canScrollVertically,
-		checkAndApplyOverscrollEffect,
-		get uiChildAdapter () {
-			return uiChildAdapter;
-		},
-		getScrollBounds,
-		get horizontalScrollbarRef () {
-			return horizontalScrollbarRef;
-		},
-		get isDragging () {
-			return variables.current.isDragging;
-		},
-		isScrollAnimationTargetAccumulated: variables.current.isScrollAnimationTargetAccumulated,
-		get lastInputType () {
-			return variables.current.lastInputType;
-		},
-		set lastInputType (val) {
-			variables.current.lastInputType = val;
-		},
-		props: {
-			rtl: props.rtl
-		},
-		get scrollLeft () {
-			return variables.current.scrollLeft;
-		},
-		scrollTo,
-		scrollToAccumulatedTarget,
-		get scrollToInfo () {
-			return variables.current.scrollToInfo;
-		},
-		get scrollTop () {
-			return variables.current.scrollTop;
-		},
-		setOverscrollStatus,
-		showThumb,
-		start,
-		startHidingThumb,
-		get verticalScrollbarRef () {
-			return verticalScrollbarRef;
-		},
-		get wheelDirection () {
-			return variables.current.wheelDirection;
-		},
-		set wheelDirection (val) {
-			variables.current.wheelDirection = val;
-		}
-	}));
-
 	props.setUiScrollableAdapter({
 		animator: variables.current.animator,
 		applyOverscrollEffect,
@@ -401,6 +348,7 @@ const ScrollableBase = forwardRef((props, reference) => {
 	delete rest.onWheel;
 	delete rest.overscrollEffectOn;
 	delete rest.removeEventListeners;
+	delete rest.scrollableContainerRef;
 	delete rest.scrollStopOnScroll; // Native
 	delete rest.scrollTo;
 	delete rest.setUiScrollableAdapter;

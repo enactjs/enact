@@ -10,7 +10,7 @@
 import classNames from 'classnames';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
-import React, {forwardRef, useEffect, useImperativeHandle, useReducer, useRef} from 'react';
+import React, {forwardRef, useEffect, useReducer, useRef} from 'react';
 
 import Scrollable from '../Scrollable';
 
@@ -57,15 +57,6 @@ const ScrollerBase = forwardRef((props, reference) => {
 			left: 0
 		}
 	});
-
-	useImperativeHandle(reference, () => ({
-		childContainerRef,
-		didScroll,
-		getNodePosition,
-		getScrollBounds,
-		scrollToPosition,
-		setScrollPosition,
-	}));
 
 	props.setUiChildAdapter({
 		childContainerRef,
@@ -158,9 +149,11 @@ const ScrollerBase = forwardRef((props, reference) => {
 
 	delete rest.cbScrollTo;
 	delete rest.direction;
-	delete rest.rtl;
 	delete rest.isHorizontalScrollbarVisible;
 	delete rest.isVerticalScrollbarVisible;
+	delete rest.rtl;
+	delete rest.setUiChildAdapter;
+	delete rest.uiChildAdapter;
 
 	return (
 		<div

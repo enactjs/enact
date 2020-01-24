@@ -1,6 +1,6 @@
 import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
-import React, {forwardRef, useImperativeHandle, useRef} from 'react';
+import React, {forwardRef} from 'react';
 import warning from 'warning';
 
 import {dataIndexAttribute, Scrollable} from '../Scrollable';
@@ -64,21 +64,6 @@ const VirtualListBase = forwardRef((props, reference) => {
 	function getComponentProps (index) {
 		return (index === getNodeIndexToBeFocused()) ? {ref: (ref) => initItemRef(ref, index)} : {};
 	}
-
-	/*
-	 * useImperativeHandle
-	 */
-
-	useImperativeHandle(reference, () => ({
-		calculatePositionOnFocus,
-		focusByIndex,
-		focusOnNode,
-		shouldPreventScrollByFocus,
-		shouldPreventOverscrollEffect,
-		setLastFocusedNode,
-		getScrollBounds,
-		setContainerDisabled
-	}));
 
 	props.setChildAdapter({
 		calculatePositionOnFocus,

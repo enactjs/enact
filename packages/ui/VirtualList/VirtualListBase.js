@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
-import React, {forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, useCallback} from 'react';
+import React, {forwardRef, useEffect, useLayoutEffect, useRef, useState, useCallback} from 'react';
 
 import Scrollable from '../Scrollable';
 
@@ -109,49 +109,6 @@ const VirtualListBase = forwardRef((props, reference) => {
 		prevChildProps: null,
 		prevFirstIndex: 0
 	});
-
-	useImperativeHandle(reference, () => ({
-		calculateMetrics,
-		childContainerRef,
-		didScroll,
-		get dimensionToExtent () {
-			return variables.current.dimensionToExtent;
-		},
-		getGridPosition,
-		getItemBottomPosition,
-		getItemNode,
-		getItemPosition,
-		getMoreInfo,
-		getScrollBounds,
-		gridPositionToItemPosition,
-		isHorizontal,
-		get isPrimaryDirectionVertical () {
-			return variables.current.isPrimaryDirectionVertical;
-		},
-		isVertical,
-		get itemPositions () {
-			return variables.current.itemPositions;
-		},
-		get primary () {
-			return variables.current.primary;
-		},
-		props,
-		get scrollBounds () {
-			return scrollBounds;
-		},
-		get scrollPositionTarget () {
-			return variables.current.scrollPositionTarget;
-		},
-		get scrollPosition () {
-			return variables.current.scrollPosition;
-		},
-		get scrollPos () {
-			return scrollPos
-		},
-		scrollToPosition,
-		setScrollPosition,
-		syncClientSize
-	}));
 
 	props.setUiChildAdapter({
 		calculateMetrics,
@@ -1075,15 +1032,17 @@ const VirtualListBase = forwardRef((props, reference) => {
 	delete rest.isVerticalScrollbarVisible;
 	delete rest.itemRenderer;
 	delete rest.itemSize;
+	delete rest.itemSizes;
 	delete rest.onUpdate;
 	delete rest.onUpdateItems;
 	delete rest.overhang;
 	delete rest.pageScroll;
 	delete rest.rtl;
 	delete rest.setChildAdapter;
+	delete rest.setUiChildAdapter;
 	delete rest.spacing;
+	delete rest.uiChildAdapter;
 	delete rest.updateStatesAndBounds;
-	delete rest.itemSizes;
 
 	if (variables.current.primary) {
 		positionItems();
