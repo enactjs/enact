@@ -54,7 +54,7 @@ const itemSizesShape = PropTypes.shape({
 const VirtualListBase = forwardRef((props, reference) => {
 	const type = props.type;
 	/* No displayName here. We set displayName to returned components of this factory function. */
-	const containerRef = useRef();
+	const childContainerRef = useRef();
 	const contentRef = useRef();
 	const itemContainerRef = useRef();
 
@@ -112,7 +112,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 
 	useImperativeHandle(reference, () => ({
 		calculateMetrics,
-		containerRef,
+		childContainerRef,
 		didScroll,
 		get dimensionToExtent () {
 			return variables.current.dimensionToExtent;
@@ -155,7 +155,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 
 	props.setUiChildAdapter({
 		calculateMetrics,
-		containerRef,
+		childContainerRef,
 		didScroll,
 		get dimensionToExtent () {
 			return variables.current.dimensionToExtent;
@@ -464,7 +464,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 	function calculateMetrics () {
 		const
 			{clientSize, direction, itemSize, overhang, spacing} = props,
-			node = containerRef.current;
+			node = childContainerRef.current;
 
 		if (!clientSize && !node) {
 			return;
@@ -600,7 +600,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 	function calculateScrollBounds () {
 		const
 			{clientSize} = props,
-			node = containerRef.current;
+			node = childContainerRef.current;
 
 		if (!clientSize && !node) {
 			return;
@@ -688,7 +688,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 
 	// Native only
 	function scrollToPosition (x, y, rtl = props.rtl) {
-		if (containerRef.current) {
+		if (childContainerRef.current) {
 			if (variables.current.isPrimaryDirectionVertical) {
 				variables.current.scrollPositionTarget = y;
 			} else {
@@ -699,7 +699,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 				x = (platform.ios || platform.safari) ? -x : variables.current.scrollBounds.maxLeft - x;
 			}
 
-			containerRef.current.scrollTo(x, y);
+			childContainerRef.current.scrollTo(x, y);
 		}
 	}
 
@@ -1024,7 +1024,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 	}
 
 	function syncClientSize () {
-		const node = containerRef.current;
+		const node = childContainerRef.current;
 
 		if (!props.clientSize && !node) {
 			return false;
@@ -1090,7 +1090,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 	}
 
 	return (
-		<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={containerRef} style={style}>
+		<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={childContainerRef} style={style}>
 			<div {...rest} className={contentClasses} ref={contentRef}>
 				{itemsRenderer({cc: variables.current.cc, itemContainerRef, primary: variables.current.primary})}
 			</div>

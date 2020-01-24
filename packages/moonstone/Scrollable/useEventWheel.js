@@ -1,5 +1,6 @@
 import Spotlight from '@enact/spotlight';
 import {constants} from '@enact/ui/Scrollable/Scrollable';
+import useDOM from '@enact/ui/Scrollable/useDOM';
 import {useRef} from 'react';
 
 const {overscrollTypeOnce, scrollWheelPageMultiplierForMaxPixel} = constants;
@@ -17,6 +18,12 @@ const useEventWheel = (props, instances, dependencies) => {
 	 */
 
 	const variables = useRef({isWheeling: false});
+
+	/*
+	 * Hooks
+	 */
+
+	const {dangerouslyContains} = useDOM();
 
 	/*
 	 * Functions
@@ -74,8 +81,8 @@ const useEventWheel = (props, instances, dependencies) => {
 				}
 
 				// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
-				if ((horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(ev.target)) ||
-					(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(ev.target))) {
+				if ((horizontalScrollbarRef.current && dangerouslyContains(horizontalScrollbarRef.current.getContainerRef(), ev.target)) ||
+					(verticalScrollbarRef.current && dangerouslyContains(verticalScrollbarRef.current.getContainerRef(), ev.target))) {
 					delta = uiScrollableAdapter.current.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
 

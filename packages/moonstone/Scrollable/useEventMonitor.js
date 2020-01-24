@@ -1,6 +1,7 @@
 import {onWindowReady} from '@enact/core/snapshot';
 import Spotlight from '@enact/spotlight';
 import {constants} from '@enact/ui/Scrollable/Scrollable';
+import useDOM from '@enact/ui/Scrollable/useDOM';
 import {useEffect, useRef} from 'react';
 
 const {isPageDown, isPageUp} = constants;
@@ -21,6 +22,8 @@ const pointerTracker = (ev) => {
 };
 const pageKeyHandler = (ev) => {
 	const {keyCode} = ev;
+	const {dangerouslyContains} = useDOM();
+
 	if (Spotlight.getPointerMode() && !Spotlight.getCurrent() && (isPageUp(keyCode) || isPageDown(keyCode))) {
 		const
 			{x, y} = lastPointer,
@@ -28,7 +31,7 @@ const pageKeyHandler = (ev) => {
 
 		if (elem) {
 			for (const [key, value] of scrollables) {
-				if (value.contains(elem)) {
+				if (dangerouslyContains(value, elem)) {
 					/* To handle page keys in nested scrollable components,
 					 * break the loop only when `scrollByPageOnPointerMode` returns `true`.
 					 * This approach assumes that an inner scrollable component is
@@ -48,7 +51,7 @@ const useEventMonitor = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {uiScrollableAdapter} = instances;
+	const {scrollableContainerRef} = instances;
 	const {lastPointer: lastPointerProp, scrollByPageOnPointerMode} = dependencies;
 
 	/*
@@ -72,13 +75,13 @@ const useEventMonitor = (props, instances, dependencies) => {
 			scrollables.delete(variables.pageKeyHandlerObj);
 		}
 
-		setMonitorEventTarget(uiScrollableAdapter.current.containerRef.current);
+		setMonitorEventTarget(scrollableContainerRef.current);
 
 		return () => {
 			// TODO: Replace `this` to something.
 			deleteMonitorEventTarget();
 		};
-	}, [uiScrollableAdapter]);
+	}, [scrollableContainerRef]);
 };
 
 onWindowReady(() => {

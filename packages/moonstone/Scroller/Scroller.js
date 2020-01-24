@@ -72,7 +72,9 @@ let ScrollerBase = (props, reference) => {
 
 	const propsObject = Object.assign({}, props);
 
+	delete propsObject.dangerouslyContainsInScrollable;
 	delete propsObject.onUpdate;
+	delete propsObject.uiScrollableAdapter;
 	delete propsObject.scrollAndFocusScrollbarButton;
 	delete propsObject.setChildAdapter;
 	delete propsObject.spotlightId;

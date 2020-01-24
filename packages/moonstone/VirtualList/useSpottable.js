@@ -91,10 +91,10 @@ const useSpottable = (props, instances, dependencies) => {
 	} = useSpotlightRestore(props, {...instances, spottable: variables});
 
 	const setContainerDisabled = useCallback((bool) => {
-		const containerNode = uiChildAdapter.current.containerRef.current;
+		const childContainerNode = uiChildAdapter.current.childContainerRef.current;
 
-		if (containerNode) {
-			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+		if (childContainerNode) {
+			childContainerNode.setAttribute(dataContainerDisabledAttribute, bool);
 
 			if (bool) {
 				addGlobalKeyDownEventListener(handleGlobalKeyDown);
@@ -174,7 +174,7 @@ const useSpottable = (props, instances, dependencies) => {
 			} else if (row === nextRow && (start < scrollPositionTarget || end > scrollPositionTarget + clientSize)) {
 				focusByIndex(nextIndex);
 			} else {
-				const containerNode = uiChildAdapter.current.containerRef.current;
+				const containerNode = uiChildAdapter.current.childContainerRef.current;
 
 				variables.current.isScrolledBy5way = true;
 				setOverscrollEffect(isWrapped);
@@ -216,7 +216,7 @@ const useSpottable = (props, instances, dependencies) => {
 	}
 
 	function focusByIndex (index) {
-		const containerNode = uiChildAdapter.current.containerRef.current;
+		const containerNode = uiChildAdapter.current.childContainerRef.current;
 		const item = containerNode.querySelector(`[data-index='${index}']${spottableSelector}`);
 
 		if (!item && index >= 0 && index < props.dataSize) {

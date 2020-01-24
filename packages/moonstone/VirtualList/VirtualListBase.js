@@ -100,9 +100,12 @@ const VirtualListBase = forwardRef((props, reference) => {
 		needsScrollingPlaceholder = isNeededScrollingPlaceholder();
 
 	// not used by VirtualList
+	delete rest.dangerouslyContainsInScrollable;
+	// not used by VirtualList
 	delete rest.focusableScrollbar;
 	delete rest.scrollAndFocusScrollbarButton;
 	delete rest.spotlightId;
+	delete rest.uiScrollableAdapter;
 	delete rest.wrap;
 
 	return (

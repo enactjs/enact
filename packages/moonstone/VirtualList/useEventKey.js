@@ -1,6 +1,7 @@
 import {is} from '@enact/core/keymap';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
+import useDOM from '@enact/ui/Scrollable/useDOM';
 import clamp from 'ramda/src/clamp';
 import {useCallback, useEffect, useRef} from 'react';
 
@@ -114,6 +115,8 @@ const useEventKey = (props, instances, dependencies) => {
 	 * Hooks
 	 */
 
+	const {dangerouslyContains} = useDOM();
+
 	useEffect(() => {
 		function handleKeyDown (ev) {
 			const {keyCode, target} = ev;
@@ -177,7 +180,7 @@ const useEventKey = (props, instances, dependencies) => {
 						}
 					} else {
 						const possibleTarget = getTargetByDirectionFromElement(direction, target);
-						if (possibleTarget && !ev.currentTarget.contains(possibleTarget)) {
+						if (!dangerouslyContains(ev.currentTarget, possibleTarget)) {
 							isLeaving = true;
 						}
 					}

@@ -1,6 +1,7 @@
 import Spotlight from '@enact/spotlight';
 import {getRect} from '@enact/spotlight/src/utils';
 import {constants} from '@enact/ui/Scrollable/Scrollable';
+import useDOM from '@enact/ui/Scrollable/useDOM';
 
 const {animationDuration, epsilon} = constants;
 
@@ -10,8 +11,14 @@ const useEventFocus = (props, instances, dependencies) => {
 	 */
 
 	const {'data-spotlight-id': spotlightId, direction, overscrollEffectOn} = props;
-	const {childAdapter, spottable, uiScrollableAdapter} = instances;
+	const {childAdapter, spottable, scrollableContainerRef, uiScrollableAdapter} = instances;
 	const {alertThumb, isWheeling, type} = dependencies;
+
+	/*
+	 * Hooks
+	 */
+
+	const {dangerouslyContains} = useDOM();
 
 	/*
 	 * Functions
@@ -59,9 +66,9 @@ const useEventFocus = (props, instances, dependencies) => {
 		const
 			spotItem = Spotlight.getCurrent(),
 			positionFn = childAdapter.current.calculatePositionOnFocus,
-			containerNode = uiScrollableAdapter.current.uiChildAdapter.current.containerRef.current;
+			childContainerNode = uiScrollableAdapter.current.uiChildAdapter.current.childContainerRef.current;
 
-		if (spotItem && positionFn && containerNode && containerNode.contains(spotItem)) {
+		if (spotItem && positionFn && dangerouslyContains(childContainerNode, spotItem)) {
 			const lastPos = spottable.current.lastScrollPositionOnFocus;
 			let pos;
 
@@ -71,7 +78,7 @@ const useEventFocus = (props, instances, dependencies) => {
 				type === 'JS' && uiScrollableAdapter.current.animator.isAnimating() ||
 				type === 'Native' && uiScrollableAdapter.current.scrolling
 			)) {
-				const containerRect = getRect(containerNode);
+				const containerRect = getRect(childContainerNode);
 				const itemRect = getRect(spotItem);
 				let scrollPosition;
 
@@ -138,7 +145,7 @@ const useEventFocus = (props, instances, dependencies) => {
 			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		}
 
-		return current && uiScrollableAdapter.current.containerRef.current.contains(current);
+		return dangerouslyContains(scrollableContainerRef, current);
 	}
 
 	/*

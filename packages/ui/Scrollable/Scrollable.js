@@ -25,6 +25,8 @@ import Touchable from '../Touchable';
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
+import useDOM from './useDOM';
+import useEvent from './useEvent';
 
 import css from './Scrollable.module.less';
 
@@ -72,14 +74,13 @@ const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
  * @private
  */
 const ScrollableBase = forwardRef((props, reference) => {
-	const type = props.type;
+	const {scrollableContainerRef, type} = props;
 	const [, forceUpdate] = useReducer(x => x + 1, 0);
 
 	const context = useContext(ResizeContext);
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(props.horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(props.verticalScrollbar === 'visible');
 
-	const containerRef = useRef();
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
 
@@ -162,7 +163,6 @@ const ScrollableBase = forwardRef((props, reference) => {
 
 	const uiChildAdapter = useRef({
 		calculateMetrics: null,
-		containerRef: null,
 		didScroll: null,
 		dimensionToExtent: null,
 		getGridPosition: null,
@@ -189,7 +189,6 @@ const ScrollableBase = forwardRef((props, reference) => {
 
 	const setUiChildAdapter = (adapter) => {
 		uiChildAdapter.current = adapter;
-		console.log(uiChildAdapter, adapter)
 	}
 
 	useImperativeHandle(reference, () => ({
@@ -202,7 +201,6 @@ const ScrollableBase = forwardRef((props, reference) => {
 		get uiChildAdapter () {
 			return uiChildAdapter;
 		},
-		containerRef,
 		getScrollBounds,
 		get horizontalScrollbarRef () {
 			return horizontalScrollbarRef;
@@ -254,7 +252,6 @@ const ScrollableBase = forwardRef((props, reference) => {
 		canScrollHorizontally,
 		canScrollVertically,
 		checkAndApplyOverscrollEffect,
-		containerRef,
 		getScrollBounds,
 		get horizontalScrollbarRef () {
 			return horizontalScrollbarRef;
@@ -335,9 +332,9 @@ const ScrollableBase = forwardRef((props, reference) => {
 			if (type === 'JS') {
 				scrollTo({position: {x: 0, y: 0}, animate: false});
 			} else {
-				uiChildAdapter.current.containerRef.current.style.scrollBehavior = null;
+				uiChildAdapter.current.childContainerRef.current.style.scrollBehavior = null;
 				uiChildAdapter.current.scrollToPosition(0, 0);
-				uiChildAdapter.current.containerRef.current.style.scrollBehavior = 'smooth';
+				uiChildAdapter.current.childContainerRef.current.style.scrollBehavior = 'smooth';
 			}
 
 			enqueueForceUpdate();
@@ -523,9 +520,9 @@ const ScrollableBase = forwardRef((props, reference) => {
 			}
 		}, [props, startHidingThumb, clearAllOverscrollEffects]) :
 		useCallback(() => {
-			uiChildAdapter.current.containerRef.current.style.scrollBehavior = null;
+			uiChildAdapter.current.childContainerRef.current.style.scrollBehavior = null;
 			uiChildAdapter.current.scrollToPosition(variables.current.scrollLeft + 0.1, variables.current.scrollTop + 0.1);
-			uiChildAdapter.current.containerRef.current.style.scrollBehavior = 'smooth';
+			uiChildAdapter.current.childContainerRef.current.style.scrollBehavior = 'smooth';
 		}, []);
 
 	const onMouseDown = useCallback((ev) => {
@@ -746,8 +743,10 @@ const ScrollableBase = forwardRef((props, reference) => {
 				if (canScrollV) { // This routine handles wheel events on scrollbars for vertical scroll.
 					if (eventDelta < 0 && variables.current.scrollTop > 0 || eventDelta > 0 && variables.current.scrollTop < bounds.maxTop) {
 						// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
-						if ((horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(ev.target)) ||
-							(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(ev.target))) {
+						if (
+							dangerouslyContains(horizontalScrollbarRef.current.getContainerRef(), ev.target) ||
+							dangerouslyContains(verticalScrollbarRef.current.getContainerRef(), ev.target)
+						) {
 							delta = calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 							needToHideThumb = !delta;
 
@@ -1161,9 +1160,9 @@ const ScrollableBase = forwardRef((props, reference) => {
 			if (animate) {
 				uiChildAdapter.current.scrollToPosition(targetX, targetY);
 			} else {
-				uiChildAdapter.current.containerRef.current.style.scrollBehavior = null;
+				uiChildAdapter.current.childContainerRef.current.style.scrollBehavior = null;
 				uiChildAdapter.current.scrollToPosition(targetX, targetY);
-				uiChildAdapter.current.containerRef.current.style.scrollBehavior = 'smooth';
+				uiChildAdapter.current.childContainerRef.current.style.scrollBehavior = 'smooth';
 			}
 			variables.current.scrollStopJob.start();
 
@@ -1406,7 +1405,6 @@ const ScrollableBase = forwardRef((props, reference) => {
 	// ref
 
 	function getScrollBounds () {
-		console.log(uiChildAdapter)
 		if (uiChildAdapter.current && typeof uiChildAdapter.current.getScrollBounds === 'function') {
 			return uiChildAdapter.current.getScrollBounds();
 		}
@@ -1420,23 +1418,25 @@ const ScrollableBase = forwardRef((props, reference) => {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function addEventListeners () {
-		if (containerRef.current && containerRef.current.addEventListener) {
-			containerRef.current.addEventListener('wheel', onWheel);
-			containerRef.current.addEventListener('keydown', onKeyDown);
-			containerRef.current.addEventListener('mousedown', onMouseDown);
-		}
+		useEvent('wheel').addEventListener(scrollableContainerRef, onWheel);
+		useEvent('keydown').addEventListener(scrollableContainerRef, onKeyDown);
+		useEvent('mousedown').addEventListener(scrollableContainerRef, onMouseDown);
 
 		// Native [[
-		if (uiChildAdapter.current.containerRef.current) {
-			if (uiChildAdapter.current.containerRef.current.addEventListener) {
-				uiChildAdapter.current.containerRef.current.addEventListener('scroll', onScroll, {capture: true, passive: true});
+		if (uiChildAdapter.current.childContainerRef.current) {
+			if (uiChildAdapter.current.childContainerRef.current.addEventListener) {
+				useEvent('scroll').addEventListener(
+					uiChildAdapter.current.childContainerRef,
+					onScroll,
+					{capture: true, passive: true}
+				);
 			}
-			uiChildAdapter.current.containerRef.current.style.scrollBehavior = 'smooth';
+			uiChildAdapter.current.childContainerRef.current.style.scrollBehavior = 'smooth';
 		}
 		// Native ]]
 
 		if (props.addEventListeners) {
-			props.addEventListeners(uiChildAdapter.current.containerRef);
+			props.addEventListeners(uiChildAdapter.current.childContainerRef);
 		}
 
 		if (window) {
@@ -1446,25 +1446,19 @@ const ScrollableBase = forwardRef((props, reference) => {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function removeEventListeners () {
-		if (containerRef.current && containerRef.current.removeEventListener) {
-			containerRef.current.removeEventListener('wheel', onWheel);
-			containerRef.current.removeEventListener('keydown', onKeyDown);
-			containerRef.current.removeEventListener('mousedown', onMouseDown);
-		}
+		useEvent('wheel').removeEventListener(scrollableContainerRef, onWheel);
+		useEvent('keydown').removeEventListener(scrollableContainerRef, onKeyDown);
+		useEvent('mousedown').removeEventListener(scrollableContainerRef, onMouseDown);
 
 		// Native [[
-		if (uiChildAdapter.current.containerRef.current && uiChildAdapter.current.containerRef.current.removeEventListener) {
-			uiChildAdapter.current.containerRef.current.removeEventListener('scroll', onScroll, {capture: true, passive: true});
-		}
+		useEvent('scroll').removeEventListener(uiChildAdapter.current.childContainerRef, onScroll, {capture: true, passive: true});
 		// Native ]]
 
 		if (props.removeEventListeners) {
-			props.removeEventListeners(uiChildAdapter.current.containerRef);
+			props.removeEventListeners(uiChildAdapter.current.childContainerRef);
 		}
 
-		if (window) {
-			window.removeEventListener('resize', handleResizeWindow);
-		}
+		useEvent('resize').removeEventListener(window, handleResizeWindow);
 	}
 
 	// render
@@ -1474,13 +1468,17 @@ const ScrollableBase = forwardRef((props, reference) => {
 		// Prevent scroll by focus.
 		// VirtualList and VirtualGridList DO NOT receive `onscroll` event.
 		// Only Scroller could get `onscroll` event.
-		if (!variables.current.animator.isAnimating() && uiChildAdapter.current && uiChildAdapter.current.containerRef.current && uiChildAdapter.current.getRtlPositionX) {
+		if (!variables.current.animator.isAnimating() && uiChildAdapter.current && uiChildAdapter.current.childContainerRef.current && uiChildAdapter.current.getRtlPositionX) {
 			// For Scroller
-			uiChildAdapter.current.containerRef.current.scrollTop = variables.current.scrollTop;
-			uiChildAdapter.current.containerRef.current.scrollLeft = uiChildAdapter.current.getRtlPositionX(variables.current.scrollLeft);
+			uiChildAdapter.current.childContainerRef.current.scrollTop = variables.current.scrollTop;
+			uiChildAdapter.current.childContainerRef.current.scrollLeft = uiChildAdapter.current.getRtlPositionX(variables.current.scrollLeft);
 		}
 	}
 	// JS ]]
+
+	function dangerouslyContainsInScrollable (target) {
+		return dangerouslyContains(scrollableContainerRef, target);
+	}
 
 	variables.current.deferScrollTo = true;
 
@@ -1492,7 +1490,7 @@ const ScrollableBase = forwardRef((props, reference) => {
 				childWrapperProps,
 				className: scrollableClasses,
 				componentCss: css,
-				containerRef: containerRef,
+				dangerouslyContainsInScrollable,
 				handleScroll: type === 'JS' ? handleScroll : null,
 				horizontalScrollbarProps,
 				isHorizontalScrollbarVisible,
@@ -1884,16 +1882,18 @@ const Scrollable = (props) => {
 	// render
 	const {childRenderer, ...rest} = props;
 
+	const scrollableContainerRef = useRef(null);
+
 	return (
 		<ScrollableBase
 			{...rest}
+			scrollableContainerRef={scrollableContainerRef}
 			containerRenderer={({ // eslint-disable-line react/jsx-no-bind
 				childComponentProps,
 				childWrapper: ChildWrapper,
 				childWrapperProps,
 				className,
 				componentCss,
-				containerRef,
 				handleScroll, // JS
 				horizontalScrollbarProps,
 				isHorizontalScrollbarVisible,
@@ -1907,7 +1907,7 @@ const Scrollable = (props) => {
 				return (
 					<div
 						className={className}
-						ref={containerRef}
+						ref={scrollableContainerRef}
 						style={style}
 					>
 						<div className={componentCss.container}>

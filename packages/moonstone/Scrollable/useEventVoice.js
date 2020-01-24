@@ -1,5 +1,7 @@
 import platform from '@enact/core/platform';
 import Spotlight from '@enact/spotlight';
+import useDOM from '@enact/ui/Scrollable/useDOM';
+import useEvent from '@enact/ui/Scrollable/useEvent';
 import {useRef} from 'react';
 
 const useEventVoice = (props, instances, dependencies) => {
@@ -8,7 +10,7 @@ const useEventVoice = (props, instances, dependencies) => {
 	 */
 
 	const {direction} = props;
-	const {uiScrollableAdapter} = instances;
+	const {scrollableContainerRef, uiScrollableAdapter} = instances;
 	const {onScrollbarButtonClick} = dependencies;
 
 	/*
@@ -21,16 +23,24 @@ const useEventVoice = (props, instances, dependencies) => {
 	});
 
 	/*
+	 * Hooks
+	 */
+
+	const {dangerouslyContains} = useDOM();
+
+	/*
 	 * Functions
 	 */
 
 	function updateFocusAfterVoiceControl () {
 		const spotItem = Spotlight.getCurrent();
-		if (spotItem && uiScrollableAdapter.current.containerRef.current.contains(spotItem)) {
+		const scrollableContainerNode = scrollableContainerRef.current;
+
+		if (dangerouslyContains(scrollableContainerNode, spotItem)) {
 			const
-				viewportBounds = uiScrollableAdapter.current.containerRef.current.getBoundingClientRect(),
+				viewportBounds = scrollableContainerNode.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),
-				nodes = Spotlight.getSpottableDescendants(uiScrollableAdapter.current.containerRef.current.dataset.spotlightId),
+				nodes = Spotlight.getSpottableDescendants(scrollableContainerNode.dataset.spotlightId),
 				first = variables.current.voiceControlDirection === 'vertical' ? 'top' : 'left',
 				last = variables.current.voiceControlDirection === 'vertical' ? 'bottom' : 'right';
 
@@ -107,14 +117,14 @@ const useEventVoice = (props, instances, dependencies) => {
 
 	function addVoiceEventListener (childContainerRef) {
 		if (platform.webos) {
-			childContainerRef.current.addEventListener('webOSVoice', handleVoice);
+			useEvent('webOSVoice').addEventListener(childContainerRef, handleVoice);
 			childContainerRef.current.setAttribute('data-webos-voice-intent', 'Scroll');
 		}
 	}
 
 	function removeVoiceEventListener (childContainerRef) {
 		if (platform.webos) {
-			childContainerRef.current.removeEventListener('webOSVoice', handleVoice);
+			useEvent('webOSVoice').removeEventListener(childContainerRef, handleVoice);
 			childContainerRef.current.removeAttribute('data-webos-voice-intent');
 		}
 	}

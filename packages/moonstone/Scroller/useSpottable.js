@@ -1,6 +1,7 @@
 import Spotlight from '@enact/spotlight';
 import {getRect} from '@enact/spotlight/src/utils';
 import ri from '@enact/ui/resolution';
+import useDOM from '@enact/ui/Scrollable/useDOM';
 import {useCallback, useEffect} from 'react';
 
 import useEventKey from './useEventKey';
@@ -20,15 +21,15 @@ const useSpottable = (props, instances) => {
 	 * Hooks
 	 */
 
-	useSpotlightConfig(instances, props);
+	useSpotlightConfig(props, instances);
 
 	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey();
 
 	const setContainerDisabled = useCallback((bool) => {
-		const containerNode = uiChildAdapter.current.containerRef.current;
+		const childContainerNode = uiChildAdapter.current.childContainerRef.current;
 
-		if (containerNode) {
-			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+		if (childContainerNode) {
+			childContainerNode.setAttribute(dataContainerDisabledAttribute, bool);
 
 			if (bool) {
 				addGlobalKeyDownEventListener(() => {
@@ -51,6 +52,8 @@ const useSpottable = (props, instances) => {
 		}
 	});
 
+	const {dangerouslyContains} = useDOM();
+
 	/*
 	 * Functions
 	 */
@@ -64,13 +67,13 @@ const useSpottable = (props, instances) => {
 	 * @private
 	 */
 	function getSpotlightContainerForNode (node) {
-		const containerNode = uiChildAdapter.current.containerRef.current;
+		const childContainerNode = uiChildAdapter.current.childContainerRef.current;
 
 		do {
 			if (node.dataset.spotlightId && node.dataset.spotlightContainer && !node.dataset.expandableContainer) {
 				return node;
 			}
-		} while ((node = node.parentNode) && node !== containerNode);
+		} while ((node = node.parentNode) && node !== childContainerNode);
 	}
 
 	/**
@@ -132,11 +135,10 @@ const useSpottable = (props, instances) => {
 		};
 
 		const container = getSpotlightContainerForNode(item);
-		const containerNode = uiChildAdapter.current.containerRef.current;
+		const childContainerNode = uiChildAdapter.current.childContainerRef.current;
 
-
-		const scrollerBounds = containerNode.getBoundingClientRect();
-		let {scrollHeight, scrollTop} = containerNode;
+		const scrollerBounds = childContainerNode.getBoundingClientRect();
+		let {scrollHeight, scrollTop} = childContainerNode;
 		let scrollTopDelta = 0;
 
 		const adjustScrollTop = (v) => {
@@ -184,7 +186,7 @@ const useSpottable = (props, instances) => {
 	 * @private
 	 */
 	function calculateScrollLeft (item, scrollPosition) {
-		const containerNode = uiChildAdapter.current.containerRef.current;
+		const childContainerNode = uiChildAdapter.current.childContainerRef.current;
 		const {
 			left: itemLeft,
 			width: itemWidth
@@ -193,11 +195,11 @@ const useSpottable = (props, instances) => {
 		const
 			{clientWidth} = uiChildAdapter.current.scrollBounds,
 			rtlDirection = rtl ? -1 : 1,
-			{left: containerLeft} = containerNode.getBoundingClientRect(),
+			{left: containerLeft} = childContainerNode.getBoundingClientRect(),
 			scrollLastPosition = scrollPosition ? scrollPosition : uiChildAdapter.current.scrollPos.left,
 			currentScrollLeft = rtl ? (uiChildAdapter.current.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
 			// calculation based on client position
-			newItemLeft = containerNode.scrollLeft + (itemLeft - containerLeft);
+			newItemLeft = childContainerNode.scrollLeft + (itemLeft - containerLeft);
 		let nextScrollLeft = uiChildAdapter.current.scrollPos.left;
 
 		if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
@@ -227,14 +229,13 @@ const useSpottable = (props, instances) => {
 	function calculatePositionOnFocus ({item, scrollPosition}) {
 		const horizontal = uiChildAdapter.current.isHorizontal();
 		const vertical = uiChildAdapter.current.isVertical();
-		const containerNode = uiChildAdapter.current.containerRef.current;
+		const childContainerNode = uiChildAdapter.current.childContainerRef.current;
 
-
-		if (!vertical && !horizontal || !item || !containerNode.contains(item)) {
+		if (!vertical && !horizontal || !item || !dangerouslyContains(childContainerNode, item)) {
 			return;
 		}
 
-		const containerRect = getRect(containerNode);
+		const containerRect = getRect(childContainerNode);
 		const itemRect = getRect(item);
 
 		if (horizontal && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {

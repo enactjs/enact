@@ -3,7 +3,7 @@ import {clamp} from '@enact/core/util';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import {constants} from '@enact/ui/Scrollable/Scrollable';
-
+import useDOM from '@enact/ui/Scrollable/useDOM'
 const
 	{epsilon, isPageDown, isPageUp} = constants,
 	paginationPageMultiplier = 0.66,
@@ -17,6 +17,12 @@ const useEventKey = (props, instances, dependencies) => {
 	const {direction: directionProp, overscrollEffectOn} = props;
 	const {childAdapter, spottable, uiScrollableAdapter} = instances;
 	const {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type} = dependencies;
+
+	/*
+	 * Hooks
+	 */
+
+	const {dangerouslyContains} = useDOM();
 
 	/*
 	 * Functions
@@ -57,8 +63,8 @@ const useEventKey = (props, instances, dependencies) => {
 				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
 					const {horizontalScrollbarRef, verticalScrollbarRef} = uiScrollableAdapter.current;
 
-					if (!(horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) &&
-						!(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
+					if (!(horizontalScrollbarRef.current && dangerouslyContains(horizontalScrollbarRef.current.getContainerRef, element)) &&
+						!(verticalScrollbarRef.current && dangerouslyContains(verticalScrollbarRef.current.getContainerRef(), element))) {
 						checkAndApplyOverscrollEffectByDirection(direction);
 					}
 				}
@@ -91,9 +97,10 @@ const useEventKey = (props, instances, dependencies) => {
 
 		if (scrollPossible) {
 			if (focusedItem) {
-				const contentNode = uiChildAdapter.current.containerRef.current;
+				const contentNode = uiChildAdapter.current.childContainerRef.current;
 				// Should do nothing when focusedItem is paging control button of Scrollbar
-				if (contentNode.contains(focusedItem)) {
+						checkAndApplyOverscrollEffectByDirection(direction);
+				if (dangerouslyContains(contentNode, focusedItem)) {
 					const
 						contentRect = contentNode.getBoundingClientRect(),
 						clientRect = focusedItem.getBoundingClientRect(),

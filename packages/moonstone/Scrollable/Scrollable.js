@@ -67,6 +67,8 @@ const ScrollableBase = (props) => {
 		type
 	});
 
+	const scrollableContainerRef = useRef();
+
 	const setChildAdapter = (adapter) => {
 		childAdapter.current = adapter;
 	}
@@ -79,7 +81,6 @@ const ScrollableBase = (props) => {
 		canScrollHorizontally: null,
 		canScrollVertically: null,
 		checkAndApplyOverscrollEffect: null,
-		containerRef: null,
 		getScrollBounds: null,
 		horizontalScrollbarRef: null,
 		isDragging: null,
@@ -101,6 +102,7 @@ const ScrollableBase = (props) => {
 		start: null,
 		startHidingThumb: null,
 		uiChildAdapter: null,
+		childContainerRef: null,
 		verticalScrollbarRef: null,
 		wheelDirection: null
 	});
@@ -141,7 +143,7 @@ const ScrollableBase = (props) => {
 		start, // Native
 		scrollTo,
 		stop // JS
-	} = useSpottable(props, {childAdapter, overscrollRefs, uiScrollableAdapter}, {type});
+	} = useSpottable(props, {childAdapter, overscrollRefs, scrollableContainerRef, uiScrollableAdapter}, {type});
 
 	/*
 	 * Render
@@ -176,6 +178,7 @@ const ScrollableBase = (props) => {
 			onScroll={handleScroll}
 			onWheel={handleWheel}
 			removeEventListeners={removeEventListeners}
+			scrollableContainerRef={scrollableContainerRef}
 			scrollTo={scrollTo}
 			setUiScrollableAdapter={setUiScrollableAdapter}
 			type={type}
@@ -185,7 +188,6 @@ const ScrollableBase = (props) => {
 				childWrapperProps: {className: contentClassName, ...restChildWrapperProps},
 				className,
 				componentCss,
-				containerRef: uiContainerRef,
 				// TODO : change name "handleScrollInContainer"
 				handleScroll: handleScrollInContainer,
 				horizontalScrollbarProps,
@@ -205,7 +207,7 @@ const ScrollableBase = (props) => {
 						data-spotlight-container-disabled={spotlightContainerDisabled}
 						data-spotlight-id={spotlightId}
 						onTouchStart={handleTouchStart}
-						ref={uiContainerRef}
+						ref={scrollableContainerRef}
 						style={style}
 					>
 						<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={overscrollRefs.vertical}>

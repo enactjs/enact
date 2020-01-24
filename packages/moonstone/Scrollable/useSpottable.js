@@ -3,6 +3,8 @@ import Spotlight from '@enact/spotlight';
 import {spottableClass} from '@enact/spotlight/Spottable';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {getRect, intersects} from '@enact/spotlight/src/utils';
+import useDOM from '@enact/ui/Scrollable/useDOM';
+import useEvent from '@enact/ui/Scrollable/useEvent';
 import {useContext, useRef} from 'react';
 
 import {SharedState} from '../internal/SharedStateDecorator';
@@ -50,7 +52,7 @@ const useSpottable = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {childAdapter, overscrollRefs, uiScrollableAdapter} = instances;
+	const {childAdapter, overscrollRefs, scrollableContainerRef, uiScrollableAdapter} = instances;
 	const {type} = dependencies;
 
 	const context = useContext(SharedState);
@@ -91,11 +93,11 @@ const useSpottable = (props, instances, dependencies) => {
 
 	const {handleWheel, isWheeling} = useEventWheel(props, {childAdapter, uiScrollableAdapter}, {isScrollButtonFocused, type});
 
-	const {calculateAndScrollTo, handleFocus, hasFocus} = useEventFocus(props, {childAdapter, spottable: variables, uiScrollableAdapter}, {alertThumb, isWheeling, type});
+	const {calculateAndScrollTo, handleFocus, hasFocus} = useEventFocus(props, {childAdapter, scrollableContainerRef, spottable: variables, uiScrollableAdapter}, {alertThumb, isWheeling, type});
 
 	const {handleKeyDown, lastPointer, scrollByPageOnPointerMode} = useEventKey(props, {childAdapter, spottable: variables, uiScrollableAdapter}, {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type});
 
-	useEventMonitor({}, {uiScrollableAdapter}, {lastPointer, scrollByPageOnPointerMode});
+	useEventMonitor({}, {scrollableContainerRef}, {lastPointer, scrollByPageOnPointerMode});
 
 	const {handleFlick, handleMouseDown} = useEventMouse({}, {childAdapter, uiScrollableAdapter}, {isScrollButtonFocused, type});
 
@@ -105,16 +107,18 @@ const useSpottable = (props, instances, dependencies) => {
 		addVoiceEventListener,
 		removeVoiceEventListener,
 		stopVoice
-	} = useEventVoice(props, {uiScrollableAdapter}, {onScrollbarButtonClick});
+	} = useEventVoice(props, {scrollableContainerRef, uiScrollableAdapter}, {onScrollbarButtonClick});
 
 	const {handleResizeWindow} = useEventResizeWindow();
+
+	const {dangerouslyContains} = useDOM();
 
 	/*
 	 * Functions
 	 */
 
 	function isContent (element) {
-		return (element && uiScrollableAdapter.current.uiChildAdapter.current.containerRef.current.contains(element));
+		return (element && dangerouslyContains(uiScrollableAdapter.current.uiChildAdapter.current.childContainerRef, element));
 	}
 
 	function scrollTo (opt) {
@@ -156,12 +160,11 @@ const useSpottable = (props, instances, dependencies) => {
 			if (!Spotlight.getPointerMode()) {
 				const {direction, x, y} = variables.current.pointToFocus;
 				const position = {x, y};
-				const current = uiScrollableAdapter.current.containerRef.current;
 				const elemFromPoint = document.elementFromPoint(x, y);
 				const target =
-					elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
-					getTargetInViewByDirectionFromPosition(direction, position, current) ||
-					getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current);
+					elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), scrollableContainerRef.current) ||
+					getTargetInViewByDirectionFromPosition(direction, position, scrollableContainerRef.current) ||
+					getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, scrollableContainerRef.current);
 
 				if (target) {
 					Spotlight.focus(target);
@@ -198,16 +201,16 @@ const useSpottable = (props, instances, dependencies) => {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function addEventListeners (childContainerRef) {
-		if (childContainerRef.current && childContainerRef.current.addEventListener) {
-			childContainerRef.current.addEventListener('focusin', handleFocus);
+		useEvent('focusin').addEventListener(childContainerRef, handleFocus);
+		if (childContainerRef.current) {
 			addVoiceEventListener(childContainerRef);
 		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function removeEventListeners (childContainerRef) {
-		if (childContainerRef.current && childContainerRef.current.removeEventListener) {
-			childContainerRef.current.removeEventListener('focusin', handleFocus);
+		useEvent('focusin').removeEventListener(childContainerRef, handleFocus);
+		if (childContainerRef.current) {
 			removeVoiceEventListener(childContainerRef);
 		}
 	}

@@ -28,7 +28,7 @@ import css from './Scroller.module.less';
  */
 const ScrollerBase = forwardRef((props, reference) => {
 	// constructor (props) {
-	const containerRef = useRef();
+	const childContainerRef = useRef();
 	const [, forceUpdate] = useReducer(x => x + 1, 0);
 
 	useEffect(() => {
@@ -59,16 +59,16 @@ const ScrollerBase = forwardRef((props, reference) => {
 	});
 
 	useImperativeHandle(reference, () => ({
-		containerRef,
+		childContainerRef,
 		didScroll,
 		getNodePosition,
 		getScrollBounds,
 		scrollToPosition,
-		setScrollPosition
+		setScrollPosition,
 	}));
 
 	props.setUiChildAdapter({
-		containerRef,
+		childContainerRef,
 		didScroll,
 		getNodePosition,
 		getScrollBounds,
@@ -89,7 +89,7 @@ const ScrollerBase = forwardRef((props, reference) => {
 
 	// for Scrollable
 	function setScrollPosition (x, y) {
-		const node = containerRef.current;
+		const node = childContainerRef.current;
 
 		if (isVertical()) {
 			node.scrollTop = y;
@@ -103,7 +103,7 @@ const ScrollerBase = forwardRef((props, reference) => {
 
 	// for native Scrollable
 	function scrollToPosition (x, y) {
-		containerRef.current.scrollTo(getRtlPositionX(x), y);
+		childContainerRef.current.scrollTo(getRtlPositionX(x), y);
 	}
 
 	// for native Scrollable
@@ -115,8 +115,8 @@ const ScrollerBase = forwardRef((props, reference) => {
 	function getNodePosition (node) {
 		const
 			{left: nodeLeft, top: nodeTop, height: nodeHeight, width: nodeWidth} = node.getBoundingClientRect(),
-			{left: containerLeft, top: containerTop} = containerRef.current.getBoundingClientRect(),
-			{scrollLeft, scrollTop} = containerRef.current,
+			{left: containerLeft, top: containerTop} = childContainerRef.current.getBoundingClientRect(),
+			{scrollLeft, scrollTop} = childContainerRef.current,
 			left = isHorizontal() ? (scrollLeft + nodeLeft - containerLeft) : null,
 			top = isVertical() ? (scrollTop + nodeTop - containerTop) : null;
 
@@ -139,7 +139,7 @@ const ScrollerBase = forwardRef((props, reference) => {
 	function calculateMetrics () {
 		const
 			{scrollBounds} = variables.current,
-			{scrollWidth, scrollHeight, clientWidth, clientHeight} = containerRef.current;
+			{scrollWidth, scrollHeight, clientWidth, clientHeight} = childContainerRef.current;
 		scrollBounds.scrollWidth = scrollWidth;
 		scrollBounds.scrollHeight = scrollHeight;
 		scrollBounds.clientWidth = clientWidth;
@@ -166,7 +166,7 @@ const ScrollerBase = forwardRef((props, reference) => {
 		<div
 			{...rest}
 			className={classNames(className, css.scroller)}
-			ref={containerRef}
+			ref={childContainerRef}
 			style={mergedStyle}
 		/>
 	);

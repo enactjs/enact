@@ -1,4 +1,5 @@
 import Spotlight from '@enact/spotlight';
+import useDOM from '@enact/ui/Scrollable/useDOM';
 import {useEffect, useRef} from 'react';
 
 const getNumberValue = (index) => index | 0;
@@ -26,6 +27,8 @@ const useSpotlightRestore = (props, instances) => {
 
 	useEffect(restoreFocus);
 
+	const {dangerouslyContains} = useDOM();
+
 	/*
 	 * Functions
 	 */
@@ -44,10 +47,10 @@ const useSpotlightRestore = (props, instances) => {
 	}
 
 	function isPlaceholderFocused () {
-		const containerNode = uiChildAdapter.current.containerRef.current;
+		const childContainerNode = uiChildAdapter.current.childContainerRef.current;
 		const current = Spotlight.getCurrent();
 
-		if (current && current.dataset.vlPlaceholder && containerNode && containerNode.contains(current)) {
+		if (current && current.dataset.vlPlaceholder && dangerouslyContains(childContainerNode, current)) {
 			return true;
 		}
 
@@ -59,8 +62,8 @@ const useSpotlightRestore = (props, instances) => {
 			variables.current.restoreLastFocused &&
 			!isPlaceholderFocused()
 		) {
-			const containerNode = uiChildAdapter.current.containerRef.current;
-			const node = containerNode && containerNode.querySelector(
+			const childContainerNode = uiChildAdapter.current.childContainerRef.current;
+			const node = childContainerNode && childContainerNode.querySelector(
 				`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
 			);
 
