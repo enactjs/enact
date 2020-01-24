@@ -146,7 +146,6 @@ const ScrollableBase = forwardRef((props, reference) => {
 		scrollTop: 0,
 		scrollToInfo: null,
 
-		childRefCurrent: null,
 		// scroll animator
 		animator: null,
 
@@ -163,6 +162,7 @@ const ScrollableBase = forwardRef((props, reference) => {
 
 	const uiChildAdapter = useRef({
 		calculateMetrics: null,
+		containerRef: null,
 		didScroll: null,
 		dimensionToExtent: null,
 		getGridPosition: null,
