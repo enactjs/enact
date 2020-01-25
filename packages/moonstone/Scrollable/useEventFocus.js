@@ -74,7 +74,7 @@ const useEventFocus = (props, instances, dependencies) => {
 			)) {
 				const
 					containerRect = getRect(childContainerNode),
-					const itemRect = getRect(spotItem);
+					itemRect = getRect(spotItem);
 				let scrollPosition;
 
 				if (direction === 'horizontal' || direction === 'both' && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {

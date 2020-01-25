@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import React, {forwardRef, useEffect, useReducer, useRef} from 'react';
 
 import Scrollable from '../Scrollable';
+import useForceUpdate from '../Scrollable/useForceUpdate';
 
 import css from './Scroller.module.less';
 
@@ -29,7 +30,7 @@ import css from './Scroller.module.less';
 const ScrollerBase = forwardRef((props, reference) => {
 	// constructor (props) {
 	const childContainerRef = useRef();
-	const [, forceUpdate] = useReducer(x => x + 1, 0);
+	const [, forceUpdate] = useForceUpdate();
 
 	useEffect(() => {
 		// componentDidUpdate
@@ -48,9 +49,9 @@ const ScrollerBase = forwardRef((props, reference) => {
 			clientHeight: 0,
 			clientWidth: 0,
 			maxLeft: 0,
-			maxTop: 0
+			maxTop: 0,
 			scrollHeight: 0,
-			scrollWidth: 0,
+			scrollWidth: 0
 		},
 		scrollPos: {
 			left: 0,
@@ -131,7 +132,7 @@ const ScrollerBase = forwardRef((props, reference) => {
 		const
 			{scrollBounds} = variables.current,
 			{scrollWidth, scrollHeight, clientWidth, clientHeight} = childContainerRef.current;
-			
+
 		scrollBounds.scrollWidth = scrollWidth;
 		scrollBounds.scrollHeight = scrollHeight;
 		scrollBounds.clientWidth = clientWidth;

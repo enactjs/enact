@@ -23,6 +23,7 @@ import {ResizeContext} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
 
+import useForceUpdate from './useForceUpdate';
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
 import useDOM from './useDOM';
@@ -75,7 +76,6 @@ const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
  */
 const ScrollableBase = forwardRef((props, reference) => {
 	const {scrollableContainerRef, type} = props;
-	const [, forceUpdate] = useReducer(x => x + 1, 0);
 
 	const context = useContext(ResizeContext);
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(props.horizontalScrollbar === 'visible');
@@ -355,6 +355,8 @@ const ScrollableBase = forwardRef((props, reference) => {
 	delete rest.start; // Native
 	delete rest.stop; // JS
 	delete rest.verticalScrollbar;
+
+	const [, forceUpdate] = useForceUpdate();
 
 	useEffect(() => {
 		const {animator, resizeRegistry, scrolling, scrollStopJob} = variables.current;
