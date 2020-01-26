@@ -8,11 +8,13 @@
  * @exports VirtualListBase
  */
 
-import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Scrollable from '../Scrollable';
+import {ResizeContext} from '../Resizable';
+import {useScrollableComponentizable} from '../Scrollable';
+import Scrollbar from '../Scrollable/Scrollbar';
+
 import {gridListItemSizeShape, itemSizesShape, VirtualListBase} from './VirtualListBase';
 
 /**
@@ -24,52 +26,69 @@ import {gridListItemSizeShape, itemSizesShape, VirtualListBase} from './VirtualL
  * @ui
  * @public
  */
-const VirtualList = kind({
-	name: 'ui:VirtualList',
+const VirtualList = ({role, ...rest}) => {
+	const {
+		childWrapper: ChildWrapper,
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible,
 
-	propTypes: /** @lends ui/VirtualList.VirtualList.prototype */ {
-		/**
-		 * Size of an item for the `VirtualList`.
-		 *
-		 * Valid value is a number. If the direction for the list is vertical,
-		 * `itemSize` means the height of an item. For horizontal, it means the width of an item.
-		 *
-		 * Example:
-		 * ```
-		 * <VirtualList itemSize={ri.scale(72)} />
-		 * ```
-		 *
-		 * @type {Number}
-		 * @required
-		 * @public
-		 */
-		itemSize: PropTypes.number.isRequired,
+		resizeContextProps,
+		scrollableContainerProps,
+		flexLayoutProps,
+		childWrapperProps,
+		childProps,
+		verticalScrollbarProps,
+		horizontalScrollbarProps
+	} = useScrollableComponentizable(rest);
 
-		direction: PropTypes.oneOf(['horizontal', 'vertical']),
-		role: PropTypes.string
-	},
+	return (
+		<ResizeContext.Provider {...resizeContextProps}>
+			<div {...scrollableContainerProps}>
+				<div {...flexLayoutProps}>
+					<ChildWrapper {...childWrapperProps}>
+						<VirtualListBase
+							{...childProps}
+							itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+								cc.length ? <div role={role}>{cc}</div> : null
+							)}
+						/>
+					</ChildWrapper>
+					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
+				</div>
+				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
+			</div>
+		</ResizeContext.Provider>
+	);
+};
 
-	defaultProps: {
-		direction: 'vertical',
-		role: 'list'
-	},
+VirtualList.displayName = 'ui:VirtualList';
 
-	render: ({role, ...rest}) => {
-		return (
-			<Scrollable
-				{...rest}
-				childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
-					<VirtualListBase
-						{...props}
-						itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-							cc.length ? <div ref={itemContainerRef} role={role}>{cc}</div> : null
-						)}
-					/>
-				)}
-			/>
-		);
-	}
-});
+VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
+	/**
+	 * Size of an item for the `VirtualList`.
+	 *
+	 * Valid value is a number. If the direction for the list is vertical,
+	 * `itemSize` means the height of an item. For horizontal, it means the width of an item.
+	 *
+	 * Example:
+	 * ```
+	 * <VirtualList itemSize={ri.scale(72)} />
+	 * ```
+	 *
+	 * @type {Number}
+	 * @required
+	 * @public
+	 */
+	itemSize: PropTypes.number.isRequired,
+
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+	role: PropTypes.string
+};
+
+VirtualList.defaultProps = {
+	direction: 'vertical',
+	role: 'list'
+};
 
 /**
  * An unstyled scrollable virtual grid list component with touch support.
@@ -80,56 +99,73 @@ const VirtualList = kind({
  * @ui
  * @public
  */
-const VirtualGridList = kind({
-	name: 'ui:VirtualGridList',
+const VirtualGridList = ({role, ...rest}) => {
+	const {
+		childWrapper: ChildWrapper,
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible,
 
-	propTypes: /** @lends ui/VirtualList.VirtualGridList.prototype */ {
-		/**
-		 * Size of an item for the `VirtualGridList`.
-		 *
-		 * * Valid value is an object that has `minWidth` and `minHeight` as properties.
-		 *
-		 * Example:
-		 * ```
-		 * <VirtualGridList
-		 * 	itemSize={{
-		 * 		minWidth: ri.scale(180),
-		 * 		minHeight: ri.scale(270)
-		 * 	}}
-		 * />
-		 * ```
-		 *
-		 * @type {ui/VirtualList.gridListItemSizeShape}
-		 * @required
-		 * @public
-		 */
-		itemSize: gridListItemSizeShape.isRequired,
+		resizeContextProps,
+		scrollableContainerProps,
+		flexLayoutProps,
+		childWrapperProps,
+		childProps,
+		verticalScrollbarProps,
+		horizontalScrollbarProps
+	} = useScrollableComponentizable(rest);
 
-		direction: PropTypes.oneOf(['horizontal', 'vertical']),
-		role: PropTypes.string
-	},
+	return (
+		<ResizeContext.Provider {...resizeContextProps}>
+			<div {...scrollableContainerProps}>
+				<div {...flexLayoutProps}>
+					<ChildWrapper {...childWrapperProps}>
+						<VirtualListBase
+							{...childProps}
+							itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+								cc.length ? <div role={role}>{cc}</div> : null
+							)}
+						/>
+					</ChildWrapper>
+					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
+				</div>
+				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
+			</div>
+		</ResizeContext.Provider>
+	);
+};
 
-	defaultProps: {
-		direction: 'vertical',
-		role: 'list'
-	},
+VirtualGridList.displaytName = 'ui:VirtualGridList';
 
-	render: ({role, ...rest}) => {
-		return (
-			<Scrollable
-				{...rest}
-				childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
-					<VirtualListBase
-						{...props}
-						itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-							cc.length ? <div ref={itemContainerRef} role={role}>{cc}</div> : null
-						)}
-					/>
-				)}
-			/>
-		);
-	}
-});
+VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype */ {
+	/**
+	 * Size of an item for the `VirtualGridList`.
+	 *
+	 * * Valid value is an object that has `minWidth` and `minHeight` as properties.
+	 *
+	 * Example:
+	 * ```
+	 * <VirtualGridList
+	 * 	itemSize={{
+	 * 		minWidth: ri.scale(180),
+	 * 		minHeight: ri.scale(270)
+	 * 	}}
+	 * />
+	 * ```
+	 *
+	 * @type {ui/VirtualList.gridListItemSizeShape}
+	 * @required
+	 * @public
+	 */
+	itemSize: gridListItemSizeShape.isRequired,
+
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+	role: PropTypes.string
+};
+
+VirtualGridList.defaultProps = {
+	direction: 'vertical',
+	role: 'list'
+};
 
 export default VirtualList;
 export {

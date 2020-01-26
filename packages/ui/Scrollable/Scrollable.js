@@ -11,9 +11,6 @@
 import PropTypes from 'prop-types';
 import React, {useRef} from 'react';
 
-import {ResizeContext} from '../Resizable';
-
-import Scrollbar from './Scrollbar';
 import useChildAdapter from './useChildAdapter';
 import useDecorateChildProps from './useDecorateChildProps';
 import useScrollable, {constants} from './useScrollable';
@@ -395,9 +392,7 @@ ScrollableBase.defaultProps = {
  * @ui
  * @private
  */
-const Scrollable = (props) => {
-	const {childRenderer, ...rest} = props;
-
+const useScrollableComponentizable = (props) => {
 	const scrollableContainerRef = useRef(null);
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
@@ -411,11 +406,11 @@ const Scrollable = (props) => {
 	// Hooks
 
 	const {
-		childWrapper: ChildWrapper,
+		childWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
 	} = useScrollable({
-		...rest,
+		...props,
 		decorateChildProps,
 		get horizontalScrollbarRef () {
 			return horizontalScrollbarRef;
@@ -429,39 +424,28 @@ const Scrollable = (props) => {
 		},
 		scrollableContainerRef,
 		setUiChildAdapter,
-		type: rest.type || 'JS', // FIXME
+		type: props.type || 'JS', // FIXME
 		uiChildAdapter,
 		get verticalScrollbarRef () {
 			return verticalScrollbarRef;
 		}
 	});
 
-	// Render
+	decorateChildProps
 
-	const {
-		resizeContextProps,
-		scrollableContainerProps,
-		flexLayoutProps,
-		childWrapperProps,
-		childProps,
-		verticalScrollbarProps,
-		horizontalScrollbarProps
-	} = decoratedChildProps;
+	decorateChildProps('scrollableContainerProps', {ref: scrollableContainerRef});
+	decorateChildProps('verticalScrollbarProps', {ref: verticalScrollbarRef});
+	decorateChildProps('horizontalScrollbarProp', {ref: horizontalScrollbarRef});
 
-	return (
-		<ResizeContext.Provider {...resizeContextProps}>
-			<div {...scrollableContainerProps} ref={scrollableContainerRef}>
-				<div {...flexLayoutProps}>
-					<ChildWrapper {...childWrapperProps}>
-						{childRenderer(childProps)}
-					</ChildWrapper>
-					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} ref={verticalScrollbarRef} /> : null}
-				</div>
-				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} ref={horizontalScrollbarRef} /> : null}
-			</div>
-		</ResizeContext.Provider>
-	);
+	return {
+		...decoratedChildProps,
+		childWrapper,
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible
+	};
 };
+
+const Scrollable = {};
 
 Scrollable.displayName = 'ui:Scrollable';
 
@@ -490,7 +474,8 @@ ScrollableBase.defaultProps = {
 export default Scrollable;
 export {
 	constants,
-	Scrollable,
+	useScrollableComponentizable as Scrollable,
 	ScrollableBase,
-	useScrollable
+	useScrollable,
+	useScrollableComponentizable
 };

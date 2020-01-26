@@ -7,10 +7,6 @@ import {dataIndexAttribute, Scrollable} from '../Scrollable';
 import usePreventScroll from './usePreventScroll';
 import useSpottable from './useSpottable';
 
-const
-	JS = 'JS',
-	Native = 'Native';
-
 /**
  * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase}
  *

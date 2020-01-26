@@ -7,9 +7,7 @@
  */
 
 import platform from '@enact/core/platform';
-import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import {ResizeContext} from '@enact/ui/Resizable';
+
 import {useScrollable} from '@enact/ui/Scrollable';
 import {useChildAdapter as useUiChildAdapter} from '@enact/ui/Scrollable/useChildAdapter';
 import useDecorateChildProps from '@enact/ui/Scrollable/useDecorateChildProps';
@@ -18,10 +16,8 @@ import PropTypes from 'prop-types';
 import React, {useRef} from 'react';
 
 import $L from '../internal/$L';
-import Skinnable from '../Skinnable';
 
 import useChildAdapter from './useChildAdapter';
-import Scrollbar from './Scrollbar';
 import {dataIndexAttribute, useSpottable} from './useSpottable';
 
 import overscrollCss from './OverscrollEffect.module.less';
@@ -35,7 +31,7 @@ import overscrollCss from './OverscrollEffect.module.less';
  * @ui
  * @public
  */
-const ScrollableBase = (props) => {
+const useScrollableComponentizable = (props) => {
 	const {
 		childRenderer,
 		'data-spotlight-container': spotlightContainer,
@@ -172,7 +168,7 @@ const ScrollableBase = (props) => {
 	});
 
 	const {
-		childWrapper: ChildWrapper,
+		childWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
 	} = useScrollable({
@@ -204,33 +200,22 @@ const ScrollableBase = (props) => {
 		className: [...(isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : [])]
 	});
 
-	const {
-		resizeContextProps,
-		scrollableContainerProps,
-		flexLayoutProps,
-		childWrapperProps,
-		childProps,
-		verticalScrollbarProps,
-		horizontalScrollbarProps
-	} = decoratedChildProps;
+	decorateChildProps('scrollableContainerProps', {ref: scrollableContainerRef});
+	decorateChildProps('flexLayoutProps', {ref: scrollableContainerRef});
+	decorateChildProps('childWrapperProps', {ref: overscrollRefs.vertical});
+	decorateChildProps('childProps', {uiChildAdapter: uiChildAdapter});
+	decorateChildProps('verticalScrollbarProps', {ref: verticalScrollbarRef});
+	decorateChildProps('horizontalScrollbarProp', {ref: horizontalScrollbarRef});
 
-	return (
-		<ResizeContext.Provider {...resizeContextProps}>
-			<div {...scrollableContainerProps} ref={scrollableContainerRef}>
-				<div {...flexLayoutProps} ref={overscrollRefs.vertical}>
-					<ChildWrapper {...childWrapperProps} ref={overscrollRefs.horizontal}>
-						{childRenderer({
-							...childProps,
-							uiChildAdapter,
-						})}
-					</ChildWrapper>
-					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} ref={verticalScrollbarRef} /> : null}
-				</div>
-				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} ref={horizontalScrollbarRef} /> : null}
-			</div>
-		</ResizeContext.Provider>
-	);
+	return {
+		...decoratedChildProps,
+		childWrapper,
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible
+	};
 };
+
+const ScrollableBase = {};
 
 ScrollableBase.displayName = 'Scrollable';
 
@@ -407,23 +392,12 @@ ScrollableBase.defaultProps = {
  * @ui
  * @public
  */
-const Scrollable = Skinnable(
-	SpotlightContainerDecorator(
-		{
-			overflow: true,
-			preserveId: true,
-			restrict: 'self-first'
-		},
-		I18nContextDecorator(
-			{rtlProp: 'rtl'},
-			ScrollableBase
-		)
-	)
-);
+const Scrollable = {};
 
 export default Scrollable;
 export {
 	dataIndexAttribute,
-	Scrollable,
-	ScrollableBase
+	ScrollableBase as Scrollable,
+	ScrollableBase,
+	useScrollableComponentizable
 };
