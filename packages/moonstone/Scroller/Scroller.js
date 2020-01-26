@@ -191,14 +191,16 @@ ScrollerBase.propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */
  * @ui
  * @public
  */
-const Scroller = (props) => (
-	<Scrollable
-		{...props}
-		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
-			return <ScrollerBase {...scrollerProps} />;
-		}}
-	/>
-);
+const Scroller = (props) => {
+	return (
+		<Scrollable
+			{...props}
+			childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
+				return <ScrollerBase {...scrollerProps} />;
+			}}
+		/>
+	);
+};
 
 Scroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
 	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])

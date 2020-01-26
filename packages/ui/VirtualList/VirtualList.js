@@ -12,7 +12,8 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {gridListItemSizeShape, itemSizesShape, ScrollableVirtualList, VirtualListBase} from './VirtualListBase';
+import Scrollable from '../Scrollable';
+import {gridListItemSizeShape, itemSizesShape, VirtualListBase} from './VirtualListBase';
 
 /**
  * An unstyled scrollable virtual list component with touch support.
@@ -42,12 +43,32 @@ const VirtualList = kind({
 		 * @required
 		 * @public
 		 */
-		itemSize: PropTypes.number.isRequired
+		itemSize: PropTypes.number.isRequired,
+
+		direction: PropTypes.oneOf(['horizontal', 'vertical']),
+		role: PropTypes.string
 	},
 
-	render: (props) => (
-		<ScrollableVirtualList {...props} />
-	)
+	defaultProps: {
+		direction: 'vertical',
+		role: 'list'
+	},
+
+	render: ({role, ...rest}) => {
+		return (
+			<Scrollable
+				{...rest}
+				childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
+					<VirtualListBase
+						{...props}
+						itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+							cc.length ? <div ref={itemContainerRef} role={role}>{cc}</div> : null
+						)}
+					/>
+				)}
+			/>
+		);
+	}
 });
 
 /**
@@ -82,12 +103,32 @@ const VirtualGridList = kind({
 		 * @required
 		 * @public
 		 */
-		itemSize: gridListItemSizeShape.isRequired
+		itemSize: gridListItemSizeShape.isRequired,
+
+		direction: PropTypes.oneOf(['horizontal', 'vertical']),
+		role: PropTypes.string
 	},
 
-	render: (props) => (
-		<ScrollableVirtualList {...props} />
-	)
+	defaultProps: {
+		direction: 'vertical',
+		role: 'list'
+	},
+
+	render: ({role, ...rest}) => {
+		return (
+			<Scrollable
+				{...rest}
+				childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
+					<VirtualListBase
+						{...props}
+						itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+							cc.length ? <div ref={itemContainerRef} role={role}>{cc}</div> : null
+						)}
+					/>
+				)}
+			/>
+		);
+	}
 });
 
 export default VirtualList;

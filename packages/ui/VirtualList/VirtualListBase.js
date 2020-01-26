@@ -5,8 +5,6 @@ import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import React, {useEffect, useLayoutEffect, useRef, useState, useCallback} from 'react';
 
-import Scrollable from '../Scrollable';
-
 import css from './VirtualList.module.less';
 
 const
@@ -1458,34 +1456,9 @@ VirtualListBase.defaultProps = {
  * @public
  */
 
-const ScrollableVirtualList = ({role, ...rest}) => (
-	<Scrollable
-		{...rest}
-		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
-			<VirtualListBase
-				{...props}
-				itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-					cc.length ? <div ref={itemContainerRef} role={role}>{cc}</div> : null
-				)}
-			/>
-		)}
-	/>
-);
-
-ScrollableVirtualList.propTypes = {
-	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-	role: PropTypes.string
-};
-
-ScrollableVirtualList.defaultProps = {
-	direction: 'vertical',
-	role: 'list'
-};
-
 export default VirtualListBase;
 export {
 	gridListItemSizeShape,
 	itemSizesShape,
-	ScrollableVirtualList,
 	VirtualListBase
 };

@@ -379,14 +379,16 @@ ScrollerBase.defaultProps = {
  * @ui
  * @public
  */
-const Scroller = (props) => (
-	<Scrollable
-		{...props}
-		childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
-			<ScrollerBase {...props} />
-		)}
-	/>
-);
+const Scroller = (props) => {
+	return (
+		<Scrollable
+			{...props}
+			childRenderer={(props) => ( // eslint-disable-line react/jsx-no-bind
+				<ScrollerBase {...props} />
+			)}
+		/>
+	);
+}
 
 Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
 	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])

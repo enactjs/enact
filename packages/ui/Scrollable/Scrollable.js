@@ -399,9 +399,10 @@ const Scrollable = (props) => {
 	const {childRenderer, ...rest} = props;
 
 	const scrollableContainerRef = useRef(null);
-	const [uiChildAdapter, setUiChildAdapter] = useChildAdapter();
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
+
+	const [uiChildAdapter, setUiChildAdapter] = useChildAdapter();
 
 	const
 		decoratedChildProps = {},

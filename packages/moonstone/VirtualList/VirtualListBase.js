@@ -1,7 +1,6 @@
 import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import React, {useEffect} from 'react';
-import warning from 'warning';
 
 import {dataIndexAttribute, Scrollable} from '../Scrollable';
 
@@ -362,80 +361,7 @@ VirtualListBase.displayName = 'VirtualListBase';
  * @public
  */
 
-/* eslint-disable enact/prop-types */
-const listItemsRenderer = (props) => {
-	const {
-		cc,
-		handlePlaceholderFocus,
-		itemContainerRef: initUiItemContainerRef,
-		needsScrollingPlaceholder,
-		primary,
-		role,
-		SpotlightPlaceholder
-	} = props;
-
-	return (
-		<React.Fragment>
-			{cc.length ? (
-				<div ref={initUiItemContainerRef} role={role}>{cc}</div>
-			) : null}
-			{primary ? null : (
-				<SpotlightPlaceholder
-					data-index={0}
-					data-vl-placeholder
-					// a zero width/height element can't be focused by spotlight so we're giving
-					// the placeholder a small size to ensure it is navigable
-					onFocus={handlePlaceholderFocus}
-					style={{width: 10}}
-				/>
-			)}
-			{needsScrollingPlaceholder ? (
-				<SpotlightPlaceholder />
-			) : null}
-		</React.Fragment>
-	);
-};
-/* eslint-enable enact/prop-types */
-
-const ScrollableVirtualList = ({role, ...rest}) => { // eslint-disable-line react/jsx-no-bind
-	warning(
-		!rest.itemSizes || !rest.cbScrollTo,
-		'VirtualList with `minSize` in `itemSize` prop does not support `cbScrollTo` prop'
-	);
-
-	return (
-		<Scrollable
-			{...rest}
-			childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
-				<VirtualListBase
-					{...childProps}
-					focusableScrollbar={rest.focusableScrollbar}
-					itemsRenderer={listItemsRenderer}
-					role={role}
-				/>
-			)}
-		/>
-	);
-};
-
-ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
-	cbScrollTo: PropTypes.func,
-	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-	focusableScrollbar: PropTypes.bool,
-	itemSizes: PropTypes.array,
-	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
-	role: PropTypes.string
-};
-
-ScrollableVirtualList.defaultProps = {
-	direction: 'vertical',
-	focusableScrollbar: false,
-	preventBubblingOnKeyDown: 'programmatic',
-	role: 'list'
-};
-
 export default VirtualListBase;
 export {
-	ScrollableVirtualList,
 	VirtualListBase
 };

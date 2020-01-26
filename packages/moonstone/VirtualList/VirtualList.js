@@ -11,8 +11,45 @@ import kind from '@enact/core/kind';
 import {gridListItemSizeShape, itemSizesShape} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import React from 'react';
+import warning from 'warning';
 
-import {ScrollableVirtualList, VirtualListBase} from './VirtualListBase';
+import Scrollable from '../Scrollable';
+import VirtualListBase from './VirtualListBase';
+
+/* eslint-disable enact/prop-types */
+const listItemsRenderer = (props) => {
+	const {
+		cc,
+		handlePlaceholderFocus,
+		itemContainerRef: initUiItemContainerRef,
+		needsScrollingPlaceholder,
+		primary,
+		role,
+		SpotlightPlaceholder
+	} = props;
+
+	return (
+		<React.Fragment>
+			{cc.length ? (
+				<div ref={initUiItemContainerRef} role={role}>{cc}</div>
+			) : null}
+			{primary ? null : (
+				<SpotlightPlaceholder
+					data-index={0}
+					data-vl-placeholder
+					// a zero width/height element can't be focused by spotlight so we're giving
+					// the placeholder a small size to ensure it is navigable
+					onFocus={handlePlaceholderFocus}
+					style={{width: 10}}
+				/>
+			)}
+			{needsScrollingPlaceholder ? (
+				<SpotlightPlaceholder />
+			) : null}
+		</React.Fragment>
+	);
+};
+/* eslint-enable enact/prop-types */
 
 /**
  * A Moonstone-styled scrollable and spottable virtual list component.
@@ -43,10 +80,24 @@ const VirtualList = kind({
 		 * @required
 		 * @public
 		 */
-		itemSize: PropTypes.oneOfType([PropTypes.number, itemSizesShape]).isRequired
+		itemSize: PropTypes.oneOfType([PropTypes.number, itemSizesShape]).isRequired,
+
+		cbScrollTo: PropTypes.func,
+		direction: PropTypes.oneOf(['horizontal', 'vertical']),
+		focusableScrollbar: PropTypes.bool,
+		itemSizes: PropTypes.array,
+		preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
+		role: PropTypes.string
 	},
 
-	render: ({itemSize, ...rest}) => {
+	defaultProps: {
+		direction: 'vertical',
+		focusableScrollbar: false,
+		preventBubblingOnKeyDown: 'programmatic',
+		role: 'list'
+	},
+
+	render: ({itemSize, role, ...rest}) => {
 		const props = itemSize && itemSize.minSize ?
 			{
 				itemSize: itemSize.minSize,
@@ -56,7 +107,25 @@ const VirtualList = kind({
 				itemSize
 			};
 
-		return (<ScrollableVirtualList {...rest} {...props} />);
+		warning(
+			!rest.itemSizes || !rest.cbScrollTo,
+			'VirtualList with `minSize` in `itemSize` prop does not support `cbScrollTo` prop'
+		);
+
+		return (
+			<Scrollable
+				{...rest}
+				{...props}
+				childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
+					<VirtualListBase
+						{...childProps}
+						focusableScrollbar={rest.focusableScrollbar}
+						itemsRenderer={listItemsRenderer}
+						role={role}
+					/>
+				)}
+			/>
+		);
 	}
 });
 
@@ -91,12 +160,38 @@ const VirtualGridList = kind({
 		 * @required
 		 * @public
 		 */
-		itemSize: gridListItemSizeShape.isRequired
+		itemSize: gridListItemSizeShape.isRequired,
+
+		cbScrollTo: PropTypes.func,
+		direction: PropTypes.oneOf(['horizontal', 'vertical']),
+		focusableScrollbar: PropTypes.bool,
+		itemSizes: PropTypes.array,
+		preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
+		role: PropTypes.string
 	},
 
-	render: (props) => (
-		<ScrollableVirtualList {...props} />
-	)
+	defaultProps: {
+		direction: 'vertical',
+		focusableScrollbar: false,
+		preventBubblingOnKeyDown: 'programmatic',
+		role: 'list'
+	},
+
+	render: ({role, ...rest}) => {
+		return (
+			<Scrollable
+				{...rest}
+				childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
+					<VirtualListBase
+						{...childProps}
+						focusableScrollbar={rest.focusableScrollbar}
+						itemsRenderer={listItemsRenderer}
+						role={role}
+					/>
+				)}
+			/>
+		);
+	}
 });
 
 export default VirtualList;
