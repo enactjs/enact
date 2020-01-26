@@ -121,48 +121,48 @@ const VirtualListBase = (props) => {
 	});
 
 	useEffect(() => {
-	props.setUiChildAdapter({
-		calculateMetrics,
-		childContainerRef,
-		didScroll,
-		get dimensionToExtent () {
-			return variables.current.dimensionToExtent;
-		},
-		getGridPosition,
-		getItemBottomPosition,
-		getItemNode,
-		getItemPosition,
-		getMoreInfo,
-		getScrollBounds,
-		gridPositionToItemPosition,
-		get hasDataSizeChanged () {
-			return variables.current.hasDataSizeChanged
-		},
-		isHorizontal,
-		get isPrimaryDirectionVertical () {
-			return variables.current.isPrimaryDirectionVertical;
-		},
-		isVertical,
-		get itemPositions () {
-			return variables.current.itemPositions;
-		},
-		get numOfItems () {
-			return numOfItems
-		},
-		get primary () {
-			return variables.current.primary;
-		},
-		props,
-		get scrollPosition () {
-			return variables.current.scrollPosition;
-		},
-		get scrollPositionTarget () {
-			return variables.current.scrollPositionTarget;
-		},
-		scrollToPosition,
-		setScrollPosition,
-		syncClientSize
-	});
+		props.setUiChildAdapter({
+			calculateMetrics,
+			childContainerRef,
+			didScroll,
+			get dimensionToExtent () {
+				return variables.current.dimensionToExtent;
+			},
+			getGridPosition,
+			getItemBottomPosition,
+			getItemNode,
+			getItemPosition,
+			getMoreInfo,
+			getScrollBounds,
+			gridPositionToItemPosition,
+			get hasDataSizeChanged () {
+				return variables.current.hasDataSizeChanged
+			},
+			isHorizontal,
+			get isPrimaryDirectionVertical () {
+				return variables.current.isPrimaryDirectionVertical;
+			},
+			isVertical,
+			get itemPositions () {
+				return variables.current.itemPositions;
+			},
+			get numOfItems () {
+				return numOfItems
+			},
+			get primary () {
+				return variables.current.primary;
+			},
+			props,
+			get scrollPosition () {
+				return variables.current.scrollPosition;
+			},
+			get scrollPositionTarget () {
+				return variables.current.scrollPositionTarget;
+			},
+			scrollToPosition,
+			setScrollPosition,
+			syncClientSize
+		});
 	}, []);
 
 	// getDerivedStateFromProps
@@ -267,32 +267,32 @@ const VirtualListBase = (props) => {
 	});
 
 	useEffect(() => {
-	const {prevProps} = variables.current;
+		const {prevProps} = variables.current;
 
-	if (
-		prevProps.direction !== props.direction ||
-		prevProps.overhang !== props.overhang ||
-		prevProps.spacing !== props.spacing ||
-		!equals(prevProps.itemSize, props.itemSize)
-	) {
-		const {x, y} = getXY(variables.current.scrollPosition, 0);
+		if (
+			prevProps.direction !== props.direction ||
+			prevProps.overhang !== props.overhang ||
+			prevProps.spacing !== props.spacing ||
+			!equals(prevProps.itemSize, props.itemSize)
+		) {
+			const {x, y} = getXY(variables.current.scrollPosition, 0);
 
-		calculateMetrics(props);
-		setStatesAndUpdateBounds();
+			calculateMetrics(props);
+			setStatesAndUpdateBounds();
 
-		setContainerSize();
+			setContainerSize();
 
-		const {clientHeight, clientWidth, scrollHeight, scrollWidth} = variables.current.scrollBounds;
-		const xMax = scrollWidth - clientWidth;
-		const yMax = scrollHeight - clientHeight;
+			const {clientHeight, clientWidth, scrollHeight, scrollWidth} = variables.current.scrollBounds;
+			const xMax = scrollWidth - clientWidth;
+			const yMax = scrollHeight - clientHeight;
 
-		updateScrollPosition({
-			x: xMax > x ? x : xMax,
-			y: yMax > y ? y : yMax
-		});
+			updateScrollPosition({
+				x: xMax > x ? x : xMax,
+				y: yMax > y ? y : yMax
+			});
 
-		variables.current.deferScrollTo = true;
-	}
+			variables.current.deferScrollTo = true;
+		}
 	});
 	// TODO: Origin def = [props.direction, props.overhang, props.spacing, props.itemSize]
 	// This part made bug that initial rendering is not done util scroll (ahn)
