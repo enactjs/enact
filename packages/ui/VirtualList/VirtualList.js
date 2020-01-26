@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {ResizeContext} from '../Resizable';
-import {useScrollableComponentizable} from '../Scrollable';
+import useScrollableComponentizable from '../Scrollable/useScrollableComponentizable';
 import Scrollbar from '../Scrollable/Scrollbar';
 
 import {gridListItemSizeShape, itemSizesShape, VirtualListBase} from './VirtualListBase';

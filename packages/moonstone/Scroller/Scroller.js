@@ -20,15 +20,14 @@ import {ResizeContext} from '@enact/ui/Resizable';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {useScrollableComponentizable} from '../Scrollable';
 import Scrollbar from '../Scrollable/Scrollbar';
+import useScrollableComponentizable from '../Scrollable/useScrollableComponentizable';
 import Skinnable from '../Skinnable';
 
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import ScrollerBase from './ScrollerBase';
-import useSpottable from './useSpottable';
 
 /**
  * A Moonstone-styled Scroller, Scrollable applied.

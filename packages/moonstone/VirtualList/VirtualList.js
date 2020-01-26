@@ -14,8 +14,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import warning from 'warning';
 
-import {useScrollableComponentizable} from '../Scrollable';
 import Scrollbar from '../Scrollable/Scrollbar';
+import useScrollableComponentizable from '../Scrollable/useScrollableComponentizable';
 import Skinnable from '../Skinnable';
 
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
