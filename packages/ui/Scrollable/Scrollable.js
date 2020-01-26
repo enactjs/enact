@@ -16,7 +16,7 @@ import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
-import React, {forwardRef, useCallback, useContext, useEffect, useReducer, useRef, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useReducer, useRef, useState} from 'react';
 
 import ForwardRef from '../ForwardRef';
 import {ResizeContext} from '../Resizable';
@@ -74,28 +74,22 @@ const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
  * @ui
  * @private
  */
-const ScrollableBase = forwardRef((props, reference) => {
-	const {scrollableContainerRef, type} = props;
+const useScrollable = (props) => {
+	const {
+		horizontalScrollbarRef,
+		scrollableContainerRef,
+		type,
+		verticalScrollbarRef
+	} = props;
 
+	const [, forceUpdate] = useForceUpdate();
+
+	// Instance variables
 	const context = useContext(ResizeContext);
+
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(props.horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(props.verticalScrollbar === 'visible');
 
-	const horizontalScrollbarRef = useRef();
-	const verticalScrollbarRef = useRef();
-
-	const horizontalScrollbarProps = {
-		ref: horizontalScrollbarRef,
-		vertical: false,
-		clientSize: props.clientSize
-	};
-	const verticalScrollbarProps = {
-		ref: verticalScrollbarRef,
-		vertical: true,
-		clientSize: props.clientSize
-	};
-
-	// Instance variables
 	const variables = useRef({
 		overscrollEnabled: !!(props.applyOverscrollEffect),
 
@@ -181,7 +175,7 @@ const ScrollableBase = forwardRef((props, reference) => {
 		primary: null,
 		props: null,
 		scrollPosition: null,
-		scrollPositionTar: null,
+		scrollPositionTarget: null,
 		scrollToPosition: null,
 		setScrollPosition: null,
 		syncClientSize: null
@@ -191,6 +185,7 @@ const ScrollableBase = forwardRef((props, reference) => {
 		uiChildAdapter.current = adapter;
 	}
 
+	if (props.setUiScrollableAdapter) {
 	props.setUiScrollableAdapter({
 		animator: variables.current.animator,
 		applyOverscrollEffect,
@@ -200,9 +195,6 @@ const ScrollableBase = forwardRef((props, reference) => {
 		canScrollVertically,
 		checkAndApplyOverscrollEffect,
 		getScrollBounds,
-		get horizontalScrollbarRef () {
-			return horizontalScrollbarRef;
-		},
 		get isDragging () {
 			return variables.current.isDragging;
 		},
@@ -249,9 +241,6 @@ const ScrollableBase = forwardRef((props, reference) => {
 		get uiChildAdapter () {
 			return uiChildAdapter;
 		},
-		get verticalScrollbarRef () {
-			return verticalScrollbarRef;
-		},
 		get wheelDirection () {
 			return variables.current.wheelDirection;
 		},
@@ -259,6 +248,39 @@ const ScrollableBase = forwardRef((props, reference) => {
 			variables.current.wheelDirection = val;
 		}
 	});
+	}
+
+	const
+		{className, containerRenderer, noScrollByDrag, passProps, rtl, style, ...rest} = props,
+		scrollableClasses = classNames(css.scrollable, className),
+		childWrapper = noScrollByDrag ? 'div' : TouchableDiv;
+
+	delete rest.addEventListeners;
+	delete rest.applyOverscrollEffect;
+	delete rest.cbScrollTo;
+	delete rest.clearOverscrollEffect;
+	delete rest.handleResizeWindow;
+	delete rest.horizontalScrollbar;
+	delete rest.horizontalScrollbarRef;
+	delete rest.noScrollByWheel;
+	delete rest.onFlick;
+	delete rest.onKeyDown;
+	delete rest.onMouseDown;
+	delete rest.onScroll;
+	delete rest.onScrollStart;
+	delete rest.onScrollStop;
+	delete rest.onWheel;
+	delete rest.overscrollEffectOn;
+	delete rest.removeEventListeners;
+	delete rest.scrollableContainerRef;
+	delete rest.scrollStopOnScroll; // Native
+	delete rest.scrollTo;
+	delete rest.setUiScrollableAdapter;
+	delete rest.start; // Native
+	delete rest.stop; // JS
+	delete rest.verticalScrollbar;
+	delete rest.verticalScrollbarRef;
+
 
 	// JS [[
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
@@ -312,51 +334,7 @@ const ScrollableBase = forwardRef((props, reference) => {
 		}
 	}
 
-	props.cbScrollTo(scrollTo);
-
-	// variables for render
-	const
-		{className, containerRenderer, noScrollByDrag, rtl, style, ...rest} = props,
-		scrollableClasses = classNames(css.scrollable, className),
-		contentClasses = classNames(css.content, css.contentNative), // Native
-		childWrapper = noScrollByDrag ? 'div' : TouchableDiv,
-		childWrapperProps = {
-			className: type === 'JS' ? css.content : contentClasses,
-			...(!noScrollByDrag && {
-				flickConfig,
-				onDrag: onDrag,
-				onDragEnd: onDragEnd,
-				onDragStart: onDragStart,
-				onFlick: onFlick,
-				onTouchStart: onTouchStart // Native
-			})
-		};
-
-	delete rest.addEventListeners;
-	delete rest.applyOverscrollEffect;
-	delete rest.cbScrollTo;
-	delete rest.clearOverscrollEffect;
-	delete rest.handleResizeWindow;
-	delete rest.horizontalScrollbar;
-	delete rest.noScrollByWheel;
-	delete rest.onFlick;
-	delete rest.onKeyDown;
-	delete rest.onMouseDown;
-	delete rest.onScroll;
-	delete rest.onScrollStart;
-	delete rest.onScrollStop;
-	delete rest.onWheel;
-	delete rest.overscrollEffectOn;
-	delete rest.removeEventListeners;
-	delete rest.scrollableContainerRef;
-	delete rest.scrollStopOnScroll; // Native
-	delete rest.scrollTo;
-	delete rest.setUiScrollableAdapter;
-	delete rest.start; // Native
-	delete rest.stop; // JS
-	delete rest.verticalScrollbar;
-
-	const [, forceUpdate] = useForceUpdate();
+	// props.cbScrollTo(scrollTo); // TBD
 
 	useEffect(() => {
 		const {animator, resizeRegistry, scrolling, scrollStopJob} = variables.current;
@@ -694,8 +672,8 @@ const ScrollableBase = forwardRef((props, reference) => {
 					if (eventDelta < 0 && variables.current.scrollTop > 0 || eventDelta > 0 && variables.current.scrollTop < bounds.maxTop) {
 						// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
 						if (
-							useDOM().containsDangerously(horizontalScrollbarRef.current.getContainerRef(), ev.target) ||
-							useDOM().containsDangerously(verticalScrollbarRef.current.getContainerRef(), ev.target)
+							horizontalScrollbarRef.current && useDOM().containsDangerously(horizontalScrollbarRef.current.getContainerRef(), ev.target) ||
+							verticalScrollbarRef.current && useDOM().containsDangerously(verticalScrollbarRef.current.getContainerRef(), ev.target)
 						) {
 							delta = calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 							needToHideThumb = !delta;
@@ -1432,28 +1410,88 @@ const ScrollableBase = forwardRef((props, reference) => {
 
 	variables.current.deferScrollTo = true;
 
-	return (
-		<ResizeContext.Provider value={variables.current.resizeRegistry.register}>
-			{containerRenderer({
-				childComponentProps: rest,
-				childWrapper,
-				childWrapperProps,
-				className: scrollableClasses,
-				componentCss: css,
-				dangerouslyContainsInScrollable,
-				handleScroll: type === 'JS' ? handleScroll : null,
-				horizontalScrollbarProps,
-				isHorizontalScrollbarVisible,
-				isVerticalScrollbarVisible,
-				rtl,
-				scrollTo: scrollTo,
-				setUiChildAdapter,
-				style,
-				verticalScrollbarProps
-			})}
-		</ResizeContext.Provider>
-	);
-});
+	const scrollableProps = {
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible,
+	}
+
+	const scrollableContainerProps = {
+		...(passProps ? passProps.scrollableContainerProps : {}),
+		className: classNames(...(passProps ? passProps.scrollableContainerProps.className : []), scrollableClasses),
+		style
+	};
+
+	const flexLayoutProps = {
+		...(passProps ? passProps.flexLayoutProps : {}),
+		className: classNames(
+			css.flexLayout,
+			...(passProps ? passProps.flexLayoutProps.className : []),
+			passProps && isHorizontalScrollbarVisible ? passProps.flexLayoutProps.horizontalScrollbarVisible : null
+		)
+	};
+
+	const childWrapperProps = {
+		...(passProps ? passProps.childProps : {}),
+		className: type === 'JS' ? css.content : classNames(css.content, css.contentNative), // Native;,
+		...(!noScrollByDrag && {
+			flickConfig,
+			onDrag: onDrag,
+			onDragEnd: onDragEnd,
+			onDragStart: onDragStart,
+			onFlick: onFlick,
+			onTouchStart: onTouchStart // Native
+		})
+	};
+
+	const childProps = {
+		...(passProps ? passProps.childProps : {}),
+		...rest,
+		cbScrollTo: scrollTo,
+		className: css.scrollableFill,
+		dangerouslyContainsInScrollable,
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible,
+		onScroll: type === 'JS' ? handleScroll : null,
+		rtl,
+		setUiChildAdapter,
+		type
+	};
+
+	const verticalScrollbarProps = {
+		...(passProps ? passProps.verticalScrollbarProps : {}),
+		clientSize: props.clientSize,
+		disabled: !isVerticalScrollbarVisible,
+		rtl,
+		vertical: true
+	};
+
+	const horizontalScrollbarProps = {
+		...(passProps ? passProps.horizontalScrollbarProps : {}),
+		clientSize: props.clientSize,
+		corner: isVerticalScrollbarVisible,
+		disabled: !isHorizontalScrollbarVisible,
+		rtl,
+		vertical: false
+	};
+
+	const resizeContextProps = {
+		value: variables.current.resizeRegistry.register
+	};
+
+	return {
+		scrollableProps,
+		resizeContextProps,
+		scrollableContainerProps,
+		flexLayoutProps,
+		childWrapperProps,
+		childWrapper,
+		childProps,
+		verticalScrollbarProps,
+		horizontalScrollbarProps
+	};
+};
+
+const ScrollableBase = {};
 
 ScrollableBase.displayName = 'ui:ScrollableBase';
 
@@ -1833,51 +1871,50 @@ const Scrollable = (props) => {
 	const {childRenderer, ...rest} = props;
 
 	const scrollableContainerRef = useRef(null);
+	const horizontalScrollbarRef = useRef();
+	const verticalScrollbarRef = useRef();
+
+	const {
+		scrollableProps: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible},
+		resizeContextProps,
+		scrollableContainerProps,
+		flexLayoutProps,
+		childWrapper: ChildWrapper,
+		childWrapperProps,
+		childProps,
+		verticalScrollbarProps,
+		horizontalScrollbarProps
+	} = useScrollable({
+		...rest,
+		get horizontalScrollbarRef () {
+			return horizontalScrollbarRef;
+		},
+		overscrollEffectOn: props.overscrollEffectOn || { // FIXME
+			arrowKey: false,
+			drag: false,
+			pageKey: false,
+			scrollbarButton: false,
+			wheel: true
+		},
+		scrollableContainerRef,
+		type: rest.type || 'JS', // FIXME
+		get verticalScrollbarRef () {
+			return verticalScrollbarRef;
+		}
+	});
 
 	return (
-		<ScrollableBase
-			{...rest}
-			scrollableContainerRef={scrollableContainerRef}
-			containerRenderer={({ // eslint-disable-line react/jsx-no-bind
-				childComponentProps,
-				childWrapper: ChildWrapper,
-				childWrapperProps,
-				className,
-				componentCss,
-				handleScroll, // JS
-				horizontalScrollbarProps,
-				isHorizontalScrollbarVisible,
-				isVerticalScrollbarVisible,
-				rtl,
-				scrollTo,
-				setUiChildAdapter,
-				style,
-				verticalScrollbarProps
-			}) => {
-				return (
-					<div
-						className={className}
-						ref={scrollableContainerRef}
-						style={style}
-					>
-						<div className={componentCss.container}>
-							<ChildWrapper {...childWrapperProps}>
-								{childRenderer({
-									...childComponentProps,
-									cbScrollTo: scrollTo,
-									className: componentCss.scrollableFill,
-									onScroll: handleScroll, // JS
-									rtl,
-									setUiChildAdapter
-								})}
-							</ChildWrapper>
-							{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
-						</div>
-						{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
-					</div>
-				);
-			}}
-		/>
+		<ResizeContext.Provider {...resizeContextProps}>
+			<div {...scrollableContainerProps} ref={scrollableContainerRef}>
+				<div {...flexLayoutProps}>
+					<ChildWrapper {...childWrapperProps}>
+						{childRenderer(childProps)}
+					</ChildWrapper>
+					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} ref={verticalScrollbarRef} /> : null}
+				</div>
+				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} ref={horizontalScrollbarRef} /> : null}
+			</div>
+		</ResizeContext.Provider>
 	);
 };
 
@@ -1894,9 +1931,21 @@ Scrollable.propTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
 	childRenderer: PropTypes.func.isRequired
 };
 
+ScrollableBase.defaultProps = {
+	overscrollEffectOn: {
+		arrowKey: false,
+		drag: false,
+		pageKey: false,
+		scrollbarButton: false,
+		wheel: true
+	},
+	type: 'JS'
+};
+
 export default Scrollable;
 export {
 	constants,
 	Scrollable,
-	ScrollableBase
+	ScrollableBase,
+	useScrollable
 };

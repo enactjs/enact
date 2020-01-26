@@ -2,7 +2,8 @@ import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
-import React, {forwardRef, useEffect, useLayoutEffect, useRef, useState, useCallback} from 'react';
+import equals from 'ramda/src/equals';
+import React, {useEffect, useLayoutEffect, useRef, useState, useCallback} from 'react';
 
 import Scrollable from '../Scrollable';
 
@@ -51,7 +52,7 @@ const itemSizesShape = PropTypes.shape({
  * @ui
  * @private
  */
-const VirtualListBase = forwardRef((props, reference) => {
+const VirtualListBase = (props) => {
 	const type = props.type;
 	/* No displayName here. We set displayName to returned components of this factory function. */
 	const childContainerRef = useRef();
@@ -107,9 +108,19 @@ const VirtualListBase = forwardRef((props, reference) => {
 		deferScrollTo: false,
 
 		prevChildProps: null,
-		prevFirstIndex: 0
+		prevFirstIndex: 0,
+
+		prevProps: {
+			dataSize: null,
+			direction: null,
+			overhang: null,
+			spacing: null,
+			itemSize: null,
+			rtl: null
+		}
 	});
 
+	useEffect(() => {
 	props.setUiChildAdapter({
 		calculateMetrics,
 		childContainerRef,
@@ -152,6 +163,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 		setScrollPosition,
 		syncClientSize
 	});
+	}, []);
 
 	// getDerivedStateFromProps
 	useLayoutEffect(() => {
@@ -255,12 +267,14 @@ const VirtualListBase = forwardRef((props, reference) => {
 	});
 
 	useEffect(() => {
-		// if (
-		// 	prevProps.direction !== this.props.direction ||
-		// 	prevProps.overhang !== this.props.overhang ||
-		// 	prevProps.spacing !== this.props.spacing ||
-		// 	!equals(prevProps.itemSize, this.props.itemSize)
-		// )
+	const {prevProps} = variables.current;
+
+	if (
+		prevProps.direction !== props.direction ||
+		prevProps.overhang !== props.overhang ||
+		prevProps.spacing !== props.spacing ||
+		!equals(prevProps.itemSize, props.itemSize)
+	) {
 		const {x, y} = getXY(variables.current.scrollPosition, 0);
 
 		calculateMetrics(props);
@@ -278,7 +292,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 		});
 
 		variables.current.deferScrollTo = true;
-
+	}
 	});
 	// TODO: Origin def = [props.direction, props.overhang, props.spacing, props.itemSize]
 	// This part made bug that initial rendering is not done util scroll (ahn)
@@ -1025,6 +1039,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 	delete rest.cbScrollTo;
 	delete rest.childProps;
 	delete rest.clientSize;
+	delete rest.dangerouslyContainsInScrollable;
 	delete rest.dataSize;
 	delete rest.direction;
 	delete rest.getComponentProps;
@@ -1048,6 +1063,15 @@ const VirtualListBase = forwardRef((props, reference) => {
 		positionItems();
 	}
 
+	variables.current.prevProps = {
+		dataSize: props.dataSize,
+		direction: props.direction,
+		overhang: props.overhang,
+		spacing: props.spacing,
+		itemSize: props.itemSize,
+		rtl: props.rtl
+	};
+
 	return (
 		<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={childContainerRef} style={style}>
 			<div {...rest} className={contentClasses} ref={contentRef}>
@@ -1055,7 +1079,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 			</div>
 		</div>
 	);
-});
+};
 
 /**
  * A basic base component for

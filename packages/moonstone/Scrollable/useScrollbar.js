@@ -8,7 +8,7 @@ const useScrollbar = (props, instances, dependencies) => {
 	 */
 
 	const {direction: directionProp, focusableScrollbar, overscrollEffectOn} = props;
-	const {uiScrollableAdapter} = instances;
+	const {horizontalScrollbarRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
 	const {isContent} = dependencies;
 
 	const scrollbarProps = {
@@ -22,11 +22,9 @@ const useScrollbar = (props, instances, dependencies) => {
 	 */
 
 	function isScrollButtonFocused () {
-		const {horizontalScrollbarRef: hRef, verticalScrollbarRef: vRef} = uiScrollableAdapter.current;
-
 		return (
-			hRef.current && hRef.current.isOneOfScrollButtonsFocused() ||
-			vRef.current && vRef.current.isOneOfScrollButtonsFocused()
+			horizontalScrollbarRef.current && horizontalScrollbarRef.current.isOneOfScrollButtonsFocused() ||
+			verticalScrollbarRef.current && verticalScrollbarRef.current.isOneOfScrollButtonsFocused()
 		);
 	}
 

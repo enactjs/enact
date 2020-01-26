@@ -10,7 +10,7 @@
 import classNames from 'classnames';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
-import React, {forwardRef, useEffect, useReducer, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 
 import Scrollable from '../Scrollable';
 import useForceUpdate from '../Scrollable/useForceUpdate';
@@ -27,7 +27,7 @@ import css from './Scroller.module.less';
  * @ui
  * @public
  */
-const ScrollerBase = forwardRef((props, reference) => {
+const ScrollerBase = (props) => {
 	// constructor (props) {
 	const childContainerRef = useRef();
 	const [, forceUpdate] = useForceUpdate();
@@ -59,14 +59,16 @@ const ScrollerBase = forwardRef((props, reference) => {
 		}
 	});
 
-	props.setUiChildAdapter({
-		childContainerRef,
-		didScroll,
-		getNodePosition,
-		getScrollBounds,
-		scrollToPosition,
-		setScrollPosition
-	});
+	useEffect(() => {
+		props.setUiChildAdapter({
+			childContainerRef,
+			didScroll,
+			getNodePosition,
+			getScrollBounds,
+			scrollToPosition,
+			setScrollPosition
+		});
+	}, []);
 
 	function getScrollBounds () {
 		return variables.current.scrollBounds;
@@ -150,6 +152,7 @@ const ScrollerBase = forwardRef((props, reference) => {
 		});
 
 	delete rest.cbScrollTo;
+	delete rest.dangerouslyContainsInScrollable;
 	delete rest.direction;
 	delete rest.isHorizontalScrollbarVisible;
 	delete rest.isVerticalScrollbarVisible;
@@ -165,7 +168,7 @@ const ScrollerBase = forwardRef((props, reference) => {
 			style={mergedStyle}
 		/>
 	);
-});
+};
 
 ScrollerBase.displayName = 'ui:ScrollerBase';
 

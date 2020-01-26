@@ -9,8 +9,8 @@
 import platform from '@enact/core/platform';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
-import classNames from 'classnames';
+import {ResizeContext} from '@enact/ui/Resizable';
+import {useScrollable} from '@enact/ui/Scrollable';
 import PropTypes from 'prop-types';
 import React, {useRef} from 'react';
 
@@ -83,7 +83,6 @@ const ScrollableBase = (props) => {
 		checkAndApplyOverscrollEffect: null,
 		childContainerRef: null,
 		getScrollBounds: null,
-		horizontalScrollbarRef: null,
 		isDragging: null,
 		isScrollAnimationTargetAccumulated: null,
 		isUpdatedScrollThumb: null,
@@ -103,7 +102,6 @@ const ScrollableBase = (props) => {
 		start: null,
 		startHidingThumb: null,
 		uiChildAdapter: null,
-		verticalScrollbarRef: null,
 		wheelDirection: null
 	});
 
@@ -119,6 +117,9 @@ const ScrollableBase = (props) => {
 		horizontal: React.useRef(),
 		vertical: React.useRef()
 	};
+
+	const horizontalScrollbarRef = useRef();
+	const verticalScrollbarRef = useRef();
 
 	/*
 	 * Hooks
@@ -143,7 +144,7 @@ const ScrollableBase = (props) => {
 		scrollTo,
 		start, // Native
 		stop // JS
-	} = useSpottable(props, {childAdapter, overscrollRefs, scrollableContainerRef, uiScrollableAdapter}, {type});
+	} = useSpottable(props, {childAdapter, horizontalScrollbarRef, overscrollRefs, scrollableContainerRef, uiScrollableAdapter, verticalScrollbarRef}, {type});
 
 	/*
 	 * Render
@@ -163,106 +164,92 @@ const ScrollableBase = (props) => {
 		scrollableBaseProp.start = start;
 	}
 
+	const {
+		scrollableProps: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible},
+		resizeContextProps,
+		scrollableContainerProps,
+		flexLayoutProps,
+		childWrapper: ChildWrapper,
+		childWrapperProps,
+		childProps,
+		verticalScrollbarProps,
+		horizontalScrollbarProps
+	} = useScrollable({
+		...rest,
+		...scrollableBaseProp,
+		noScrollByDrag: !platform.touchscreen,
+		addEventListeners: addEventListeners,
+		applyOverscrollEffect: applyOverscrollEffect,
+		clearOverscrollEffect: clearOverscrollEffect,
+		handleResizeWindow: handleResizeWindow,
+		horizontalScrollbarRef,
+		onFlick: handleFlick,
+		onKeyDown: handleKeyDown,
+		onMouseDown: handleMouseDown,
+		onScroll: handleScroll,
+		onWheel: handleWheel,
+		removeEventListeners,
+		scrollableContainerRef,
+		scrollTo: scrollTo,
+		setUiScrollableAdapter,
+		type,
+		verticalScrollbarRef,
+		passProps: {
+			scrollableContainerProps: {
+				className: overscrollCss.scrollable,
+				'data-spotlight-container': spotlightContainer,
+				'data-spotlight-container-disabled': spotlightContainerDisabled,
+				'data-spotlight-id': spotlightId,
+				onTouchStart: handleTouchStart
+			},
+			flexLayoutProps: {
+				className: [overscrollCss.overscrollFrame, overscrollCss.vertical],
+				horizontalScrollbarVisible: isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null
+			},
+			childWrapperProps: {
+				className: [overscrollCss.overscrollFrame, overscrollCss.horizontal]
+			},
+			childProps: {
+				onUpdate: handleScrollerUpdate,
+				scrollAndFocusScrollbarButton,
+				setChildAdapter,
+				spotlightId,
+				uiScrollableAdapter,
+			},
+			verticalScrollbarProps: {
+				...scrollbarProps,
+				focusableScrollButtons: focusableScrollbar,
+				nextButtonAriaLabel: downButtonAriaLabel,
+				onKeyDownButton: handleKeyDown,
+				preventBubblingOnKeyDown,
+				previousButtonAriaLabel: upButtonAriaLabel
+			},
+			horizontalScrollbarProps: {
+				...scrollbarProps,
+				focusableScrollButtons: focusableScrollbar,
+				nextButtonAriaLabel: rightButtonAriaLabel,
+				onKeyDownButton: handleKeyDown,
+				preventBubblingOnKeyDown,
+				previousButtonAriaLabel: leftButtonAriaLabel
+			}
+		}
+	});
+
 	return (
-		<UiScrollableBase
-			noScrollByDrag={!platform.touchscreen}
-			{...rest}
-			{...scrollableBaseProp}
-			addEventListeners={addEventListeners}
-			applyOverscrollEffect={applyOverscrollEffect}
-			clearOverscrollEffect={clearOverscrollEffect}
-			handleResizeWindow={handleResizeWindow}
-			onFlick={handleFlick}
-			onKeyDown={handleKeyDown}
-			onMouseDown={handleMouseDown}
-			onScroll={handleScroll}
-			onWheel={handleWheel}
-			removeEventListeners={removeEventListeners}
-			scrollableContainerRef={scrollableContainerRef}
-			scrollTo={scrollTo}
-			setUiScrollableAdapter={setUiScrollableAdapter}
-			type={type}
-			containerRenderer={({ // eslint-disable-line react/jsx-no-bind
-				childComponentProps,
-				childWrapper: ChildWrapper,
-				childWrapperProps: {className: contentClassName, ...restChildWrapperProps},
-				className,
-				componentCss,
-				// TODO : change name "handleScrollInContainer"
-				handleScroll: handleScrollInContainer,
-				horizontalScrollbarProps,
-				isHorizontalScrollbarVisible,
-				isVerticalScrollbarVisible,
-				rtl,
-				// TODO : change name "scrollToInContainer"
-				scrollTo: scrollToInContainer,
-				setUiChildAdapter,
-				style,
-				verticalScrollbarProps
-			}) => {
-				return (
-					<div
-						className={classNames(className, overscrollCss.scrollable)}
-						data-spotlight-container={spotlightContainer}
-						data-spotlight-container-disabled={spotlightContainerDisabled}
-						data-spotlight-id={spotlightId}
-						onTouchStart={handleTouchStart}
-						ref={scrollableContainerRef}
-						style={style}
-					>
-						<div className={classNames(componentCss.container, overscrollCss.overscrollFrame, overscrollCss.vertical, isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null)} ref={overscrollRefs.vertical}>
-							<ChildWrapper className={classNames(contentClassName, overscrollCss.overscrollFrame, overscrollCss.horizontal)} ref={overscrollRefs.horizontal} {...restChildWrapperProps}>
-								{childRenderer({
-									...childComponentProps,
-									cbScrollTo: scrollToInContainer,
-									className: componentCss.scrollableFill,
-									isHorizontalScrollbarVisible,
-									isVerticalScrollbarVisible,
-									onScroll: (type === 'JS') ? handleScrollInContainer : null,
-									onUpdate: handleScrollerUpdate,
-									rtl,
-									scrollAndFocusScrollbarButton,
-									setChildAdapter,
-									setUiChildAdapter,
-									spotlightId,
-									uiChildAdapter: uiScrollableAdapter.current.uiChildAdapter,
-									uiScrollableAdapter
-								})}
-							</ChildWrapper>
-							{isVerticalScrollbarVisible ?
-								<Scrollbar
-									{...verticalScrollbarProps}
-									{...scrollbarProps}
-									disabled={!isVerticalScrollbarVisible}
-									focusableScrollButtons={focusableScrollbar}
-									nextButtonAriaLabel={downButtonAriaLabel}
-									onKeyDownButton={handleKeyDown}
-									preventBubblingOnKeyDown={preventBubblingOnKeyDown}
-									previousButtonAriaLabel={upButtonAriaLabel}
-									rtl={rtl}
-								/> :
-								null
-							}
-						</div>
-						{isHorizontalScrollbarVisible ?
-							<Scrollbar
-								{...horizontalScrollbarProps}
-								{...scrollbarProps}
-								corner={isVerticalScrollbarVisible}
-								disabled={!isHorizontalScrollbarVisible}
-								focusableScrollButtons={focusableScrollbar}
-								nextButtonAriaLabel={rightButtonAriaLabel}
-								onKeyDownButton={handleKeyDown}
-								preventBubblingOnKeyDown={preventBubblingOnKeyDown}
-								previousButtonAriaLabel={leftButtonAriaLabel}
-								rtl={rtl}
-							/> :
-							null
-						}
-					</div>
-				);
-			}}
-		/>
+		<ResizeContext.Provider {...resizeContextProps}>
+			<div {...scrollableContainerProps} ref={scrollableContainerRef}>
+				<div {...flexLayoutProps} ref={overscrollRefs.vertical}>
+					<ChildWrapper {...childWrapperProps} ref={overscrollRefs.horizontal}>
+						{childRenderer({
+							...childProps,
+							uiChildAdapter: uiScrollableAdapter.current.uiChildAdapter,
+						})}
+					</ChildWrapper>
+					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} ref={verticalScrollbarRef} /> : null}
+				</div>
+				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} ref={horizontalScrollbarRef} /> : null}
+			</div>
+		</ResizeContext.Provider>
 	);
 };
 

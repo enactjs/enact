@@ -19,7 +19,7 @@
 
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import PropTypes from 'prop-types';
-import React, {forwardRef} from 'react';
+import React, {useEffect} from 'react';
 
 import Scrollable from '../Scrollable';
 
@@ -37,7 +37,7 @@ import useSpottable from './useSpottable';
  * @ui
  * @public
  */
-let ScrollerBase = (props, reference) => {
+let ScrollerBase = (props) => {
 	/*
 	 * Dependencies
 	 */
@@ -50,11 +50,13 @@ let ScrollerBase = (props, reference) => {
 
 	const {calculatePositionOnFocus, focusOnNode, setContainerDisabled} = useSpottable(props, {uiChildAdapter});
 
-	props.setChildAdapter({
-		calculatePositionOnFocus,
-		focusOnNode,
-		setContainerDisabled
-	});
+	useEffect(() => {
+		props.setChildAdapter({
+			calculatePositionOnFocus,
+			focusOnNode,
+			setContainerDisabled
+		});
+	}, []);
 
 	/*
 	 * Render
@@ -73,8 +75,6 @@ let ScrollerBase = (props, reference) => {
 		<UiScrollerBase {...propsObject} />
 	);
 };
-
-ScrollerBase = forwardRef(ScrollerBase);
 
 ScrollerBase.displayName = 'ScrollerBase';
 

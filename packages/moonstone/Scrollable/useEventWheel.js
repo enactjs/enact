@@ -10,7 +10,7 @@ const useEventWheel = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {childAdapter, uiScrollableAdapter} = instances;
+	const {childAdapter, horizontalScrollbarRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
 	const {isScrollButtonFocused, type} = dependencies;
 
 	/*
@@ -65,8 +65,6 @@ const useEventWheel = (props, instances, dependencies) => {
 		// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
 		if (canScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
 			if (eventDelta < 0 && uiScrollableAdapter.current.scrollTop > 0 || eventDelta > 0 && uiScrollableAdapter.current.scrollTop < bounds.maxTop) {
-				const {horizontalScrollbarRef, verticalScrollbarRef} = uiScrollableAdapter.current;
-
 				if (!variables.current.isWheeling) {
 					if (!props['data-spotlight-container-disabled']) {
 						childAdapter.current.setContainerDisabled(true);

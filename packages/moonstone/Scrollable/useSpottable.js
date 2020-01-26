@@ -52,7 +52,7 @@ const useSpottable = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {childAdapter, overscrollRefs, scrollableContainerRef, uiScrollableAdapter} = instances;
+	const {childAdapter, horizontalScrollbarRef, overscrollRefs, scrollableContainerRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
 	const {type} = dependencies;
 
 	const context = useContext(SharedState);
@@ -79,7 +79,7 @@ const useSpottable = (props, instances, dependencies) => {
 		onScrollbarButtonClick,
 		scrollAndFocusScrollbarButton,
 		scrollbarProps
-	} = useScrollbar(props, {uiScrollableAdapter}, {isContent});
+	} = useScrollbar(props, {horizontalScrollbarRef, uiScrollableAdapter, verticalScrollbarRef}, {isContent});
 
 	useSpotlightConfig(props);
 
@@ -91,11 +91,11 @@ const useSpottable = (props, instances, dependencies) => {
 		clearOverscrollEffect
 	} = useOverscrollEffect({}, {overscrollRefs, uiScrollableAdapter});
 
-	const {handleWheel, isWheeling} = useEventWheel(props, {childAdapter, uiScrollableAdapter}, {isScrollButtonFocused, type});
+	const {handleWheel, isWheeling} = useEventWheel(props, {childAdapter, horizontalScrollbarRef, uiScrollableAdapter, verticalScrollbarRef}, {isScrollButtonFocused, type});
 
 	const {calculateAndScrollTo, handleFocus, hasFocus} = useEventFocus(props, {childAdapter, scrollableContainerRef, spottable: variables, uiScrollableAdapter}, {alertThumb, isWheeling, type});
 
-	const {handleKeyDown, lastPointer, scrollByPageOnPointerMode} = useEventKey(props, {childAdapter, spottable: variables, uiScrollableAdapter}, {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type});
+	const {handleKeyDown, lastPointer, scrollByPageOnPointerMode} = useEventKey(props, {childAdapter, horizontalScrollbarRef, spottable: variables, uiScrollableAdapter, verticalScrollbarRef}, {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type});
 
 	useEventMonitor({}, {scrollableContainerRef}, {lastPointer, scrollByPageOnPointerMode});
 

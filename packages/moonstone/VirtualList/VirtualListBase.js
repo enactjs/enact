@@ -1,6 +1,6 @@
 import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
-import React, {forwardRef} from 'react';
+import React, {useEffect} from 'react';
 import warning from 'warning';
 
 import {dataIndexAttribute, Scrollable} from '../Scrollable';
@@ -20,7 +20,7 @@ const
  * @ui
  * @private
  */
-const VirtualListBase = forwardRef((props, reference) => {
+const VirtualListBase = (props) => {
 	const {type, uiChildAdapter} = props;
 
 	/*
@@ -65,16 +65,18 @@ const VirtualListBase = forwardRef((props, reference) => {
 		return (index === getNodeIndexToBeFocused()) ? {ref: (ref) => initItemRef(ref, index)} : {};
 	}
 
-	props.setChildAdapter({
-		calculatePositionOnFocus,
-		focusByIndex,
-		focusOnNode,
-		getScrollBounds,
-		setContainerDisabled,
-		setLastFocusedNode,
-		shouldPreventOverscrollEffect,
-		shouldPreventScrollByFocus
-	});
+	useEffect(() => {
+		props.setChildAdapter({
+			calculatePositionOnFocus,
+			focusByIndex,
+			focusOnNode,
+			getScrollBounds,
+			setContainerDisabled,
+			setLastFocusedNode,
+			shouldPreventOverscrollEffect,
+			shouldPreventScrollByFocus
+		});
+	}, []);
 
 	/*
 	 * Render
@@ -117,7 +119,7 @@ const VirtualListBase = forwardRef((props, reference) => {
 			updateStatesAndBounds={updateStatesAndBounds}
 		/>
 	);
-});
+};
 
 VirtualListBase.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 	/**

@@ -15,7 +15,7 @@ const useEventKey = (props, instances, dependencies) => {
 	 */
 
 	const {direction: directionProp, overscrollEffectOn} = props;
-	const {childAdapter, spottable, uiScrollableAdapter} = instances;
+	const {childAdapter, horizontalScrollbarRef, spottable, uiScrollableAdapter, verticalScrollbarRef} = instances;
 	const {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type} = dependencies;
 
 	/*
@@ -55,8 +55,6 @@ const useEventKey = (props, instances, dependencies) => {
 
 				direction = getDirection(keyCode);
 				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
-					const {horizontalScrollbarRef, verticalScrollbarRef} = uiScrollableAdapter.current;
-
 					if (!(horizontalScrollbarRef.current && useDOM().containsDangerously(horizontalScrollbarRef.current.getContainerRef, element)) &&
 						!(verticalScrollbarRef.current && useDOM().containsDangerously(verticalScrollbarRef.current.getContainerRef(), element))) {
 						checkAndApplyOverscrollEffectByDirection(direction);
@@ -127,7 +125,7 @@ const useEventKey = (props, instances, dependencies) => {
 
 	function scrollByPageOnPointerMode (ev) {
 		const {keyCode, repeat} = ev;
- 
+
 		forward('onKeyDown', ev, props);
 		ev.preventDefault();
 
