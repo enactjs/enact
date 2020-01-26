@@ -184,6 +184,7 @@ const useScrollableComponentizable = (props) => {
 		setUiScrollableAdapter,
 		type,
 		uiChildAdapter,
+		uiChildContainerRef,
 		verticalScrollbarRef
 	});
 

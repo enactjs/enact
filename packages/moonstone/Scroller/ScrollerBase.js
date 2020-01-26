@@ -21,13 +21,13 @@ const ScrollerBase = (props) => {
 	 * Dependencies
 	 */
 
-	const {uiChildAdapter} = props;
+	const {uiChildAdapter, uiChildContainerRef} = props;
 
 	/*
 	 * Hooks
 	 */
 
-	const {calculatePositionOnFocus, focusOnNode, setContainerDisabled} = useSpottable(props, {uiChildAdapter});
+	const {calculatePositionOnFocus, focusOnNode, setContainerDisabled} = useSpottable(props, {uiChildAdapter, uiChildContainerRef});
 
 	useEffect(() => {
 		props.setChildAdapter({

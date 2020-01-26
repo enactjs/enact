@@ -16,7 +16,7 @@ import useSpottable from './useSpottable';
  * @private
  */
 const VirtualListBase = (props) => {
-	const {type, uiChildAdapter} = props;
+	const {type, uiChildAdapter, uiChildContainerRef} = props;
 
 	/*
 	 * Dependencies
@@ -28,7 +28,7 @@ const VirtualListBase = (props) => {
 	 * Hooks
 	 */
 
-	const instance = {uiChildAdapter};
+	const instance = {uiChildAdapter, uiChildContainerRef};
 
 	const {
 		calculatePositionOnFocus,
