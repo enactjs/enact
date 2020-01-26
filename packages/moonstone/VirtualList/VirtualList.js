@@ -168,10 +168,9 @@ const VirtualGridListComp = ({role, ...rest}) => {
 		horizontalScrollbarProps
 	} = useScrollableComponentizable(rest);
 
-	const uiChildProps = SpottableVirtualList({
+	const uiChildProps = useSpottableVirtualList({
 		...childProps,
 		focusableScrollbar: rest.focusableScrollbar,
-		itemsRenderer: virtualListItemsRenderer,
 		role: role
 	});
 
