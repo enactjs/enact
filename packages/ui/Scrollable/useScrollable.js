@@ -18,6 +18,7 @@ import useDOM from './useDOM';
 import useEvent from './useEvent';
 
 import css from './Scrollable.module.less';
+import useChildAdapter from './useChildAdapter';
 
 const
 	constants = {
@@ -66,7 +67,9 @@ const useScrollable = (props) => {
 		decorateChildProps,
 		horizontalScrollbarRef,
 		scrollableContainerRef,
+		setUiChildAdapter,
 		type,
+		uiChildAdapter,
 		verticalScrollbarRef
 	} = props;
 
@@ -143,36 +146,6 @@ const useScrollable = (props) => {
 		isScrollbarVisibleChanged: false
 	});
 
-	const uiChildAdapter = useRef({
-		calculateMetrics: null,
-		didScroll: null,
-		dimensionToExtent: null,
-		getGridPosition: null,
-		getItemBottomPosition: null,
-		getItemNode: null,
-		getItemPosition: null,
-		getMoreInfo: null,
-		getNodePosition: null, // For Scroller
-		getScrollBounds: null,
-		gridPositionToItemPosition: null,
-		hasDataSizeChanged: null,
-		isHorizontal: null,
-		isPrimaryDirectionVertical: null,
-		isVertical: null,
-		itemPositions: null,
-		primary: null,
-		props: null,
-		scrollPosition: null,
-		scrollPositionTarget: null,
-		scrollToPosition: null,
-		setScrollPosition: null,
-		syncClientSize: null
-	});
-
-	const setUiChildAdapter = (adapter) => {
-		uiChildAdapter.current = adapter;
-	}
-
 	// useEffect(() => { // FIXME
 		if (props.setUiScrollableAdapter) {
 			props.setUiScrollableAdapter({
@@ -228,9 +201,6 @@ const useScrollable = (props) => {
 				start,
 				startHidingThumb,
 				stop,
-				get uiChildAdapter () {
-					return uiChildAdapter;
-				},
 				get wheelDirection () {
 					return variables.current.wheelDirection;
 				},
@@ -265,9 +235,11 @@ const useScrollable = (props) => {
 	delete rest.scrollableContainerRef;
 	delete rest.scrollStopOnScroll; // Native
 	delete rest.scrollTo;
+	delete rest.setUiChildAdapter;
 	delete rest.setUiScrollableAdapter;
 	delete rest.start; // Native
 	delete rest.stop; // JS
+	delete rest.uiChildAdapter,
 	delete rest.verticalScrollbar;
 	delete rest.verticalScrollbarRef;
 

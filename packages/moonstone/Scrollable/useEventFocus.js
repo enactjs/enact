@@ -11,7 +11,7 @@ const useEventFocus = (props, instances, dependencies) => {
 	 */
 
 	const {'data-spotlight-id': spotlightId, direction, overscrollEffectOn} = props;
-	const {childAdapter, spottable, scrollableContainerRef, uiScrollableAdapter} = instances;
+	const {childAdapter, spottable, scrollableContainerRef, uiChildAdapter, uiScrollableAdapter} = instances;
 	const {alertThumb, isWheeling, type} = dependencies;
 
 	/*
@@ -60,7 +60,7 @@ const useEventFocus = (props, instances, dependencies) => {
 		const
 			spotItem = Spotlight.getCurrent(),
 			positionFn = childAdapter.current.calculatePositionOnFocus,
-			childContainerNode = uiScrollableAdapter.current.uiChildAdapter.current.childContainerRef.current;
+			childContainerNode = uiChildAdapter.current.childContainerRef.current;
 
 		if (spotItem && positionFn && useDOM().containsDangerously(childContainerNode, spotItem)) {
 			const lastPos = spottable.current.lastScrollPositionOnFocus;

@@ -14,6 +14,7 @@ import React, {useRef} from 'react';
 import {ResizeContext} from '../Resizable';
 
 import Scrollbar from './Scrollbar';
+import useChildAdapter from './useChildAdapter';
 import useDecorateChildProps from './useDecorateChildProps';
 import useScrollable, {constants} from './useScrollable';
 
@@ -398,6 +399,7 @@ const Scrollable = (props) => {
 	const {childRenderer, ...rest} = props;
 
 	const scrollableContainerRef = useRef(null);
+	const [uiChildAdapter, setUiChildAdapter] = useChildAdapter();
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
 
@@ -425,7 +427,9 @@ const Scrollable = (props) => {
 			wheel: true
 		},
 		scrollableContainerRef,
+		setUiChildAdapter,
 		type: rest.type || 'JS', // FIXME
+		uiChildAdapter,
 		get verticalScrollbarRef () {
 			return verticalScrollbarRef;
 		}

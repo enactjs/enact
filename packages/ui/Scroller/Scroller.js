@@ -157,8 +157,6 @@ const ScrollerBase = (props) => {
 	delete rest.isHorizontalScrollbarVisible;
 	delete rest.isVerticalScrollbarVisible;
 	delete rest.rtl;
-	delete rest.setUiChildAdapter;
-	delete rest.uiChildAdapter;
 
 	return (
 		<div

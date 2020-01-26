@@ -15,7 +15,7 @@ const useEventKey = (props, instances, dependencies) => {
 	 */
 
 	const {direction: directionProp, overscrollEffectOn} = props;
-	const {childAdapter, horizontalScrollbarRef, spottable, uiScrollableAdapter, verticalScrollbarRef} = instances;
+	const {childAdapter, horizontalScrollbarRef, spottable, uiChildAdapter, uiScrollableAdapter, verticalScrollbarRef} = instances;
 	const {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type} = dependencies;
 
 	/*
@@ -66,7 +66,7 @@ const useEventKey = (props, instances, dependencies) => {
 
 	function scrollByPage (direction) {
 		const
-			{uiChildAdapter, scrollTop} = uiScrollableAdapter.current,
+			{scrollTop} = uiScrollableAdapter.current,
 			focusedItem = Spotlight.getCurrent(),
 			bounds = uiScrollableAdapter.current.getScrollBounds(),
 			isUp = direction === 'up',

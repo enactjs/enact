@@ -52,7 +52,7 @@ const useSpottable = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {childAdapter, scrollableContainerRef, uiScrollableAdapter} = instances;
+	const {childAdapter, scrollableContainerRef, uiChildAdapter, uiScrollableAdapter} = instances;
 	const {type} = dependencies;
 
 	const context = useContext(SharedState);
@@ -116,7 +116,7 @@ const useSpottable = (props, instances, dependencies) => {
 	 */
 
 	function isContent (element) {
-		return (element && useDOM().containsDangerously(uiScrollableAdapter.current.uiChildAdapter.current.childContainerRef, element));
+		return (element && useDOM().containsDangerously(uiChildAdapter.current.childContainerRef, element));
 	}
 
 	function scrollTo (opt) {

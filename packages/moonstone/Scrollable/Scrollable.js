@@ -11,13 +11,16 @@ import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import {ResizeContext} from '@enact/ui/Resizable';
 import {useScrollable} from '@enact/ui/Scrollable';
+import {useChildAdapter as useUiChildAdapter} from '@enact/ui/Scrollable/useChildAdapter';
 import useDecorateChildProps from '@enact/ui/Scrollable/useDecorateChildProps';
+import useScrollableAdapter from '@enact/ui/Scrollable/useScrollableAdapter';
 import PropTypes from 'prop-types';
 import React, {useRef} from 'react';
 
 import $L from '../internal/$L';
 import Skinnable from '../Skinnable';
 
+import useChildAdapter from './useChildAdapter';
 import Scrollbar from './Scrollbar';
 import {dataIndexAttribute, useSpottable} from './useSpottable';
 
@@ -63,69 +66,26 @@ const ScrollableBase = (props) => {
 
 	// Adapters
 
-	const childAdapter = useRef({
-		calculatePositionOnFocus: null,
-		focusByIndex: null,
-		focusOnNode: null,
-		getScrollBounds: null,
-		setContainerDisabled: null,
-		setLastFocusedNode: null,
-		shouldPreventOverscrollEffect: null,
-		shouldPreventScrollByFocus: null,
-		type
-	});
+	const [childAdapter, setChildAdapter] = useChildAdapter();
 
-	const setChildAdapter = (adapter) => {
-		childAdapter.current = adapter;
-	}
+	const [uiScrollableAdapter, setUiScrollableAdapter] = useScrollableAdapter();
 
-	const uiScrollableAdapter = useRef({
-		animator: null,
-		applyOverscrollEffect: null,
-		bounds: null,
-		calculateDistanceByWheel: null,
-		canScrollHorizontally: null,
-		canScrollVertically: null,
-		checkAndApplyOverscrollEffect: null,
-		getScrollBounds: null,
-		isDragging: null,
-		isScrollAnimationTargetAccumulated: null,
-		isUpdatedScrollThumb: null,
-		lastInputType: null,
-		rtl: null,
-		scrollBounds: null,
-		scrollHeight: null,
-		scrolling: null,
-		scrollLeft: null,
-		scrollPos: null,
-		scrollTo: null,
-		scrollToAccumulatedTarget: null,
-		scrollToInfo: null,
-		scrollTop: null,
-		setOverscrollStatus: null,
-		showThumb: null,
-		start: null,
-		startHidingThumb: null,
-		uiChildAdapter: null,
-		wheelDirection: null
-	});
-
-	const setUiScrollableAdapter = (adapter) => {
-		uiScrollableAdapter.current = adapter;
-	}
+	const [uiChildAdapter, setUiChildAdapter] = useUiChildAdapter();
 
 	// Hooks
 
 	const instance = {
 		// Ref
 		scrollableContainerRef,
+		childContainerRef,
 		overscrollRefs,
 		horizontalScrollbarRef,
 		verticalScrollbarRef,
 
 		// Adapter
 		childAdapter,
-		uiScrollableAdapter
+		uiScrollableAdapter,
+		uiChildAdapter
 	};
 
 	const
@@ -233,8 +193,10 @@ const ScrollableBase = (props) => {
 		removeEventListeners,
 		scrollableContainerRef,
 		scrollTo: scrollTo,
+		setUiChildAdapter,
 		setUiScrollableAdapter,
 		type,
+		uiChildAdapter,
 		verticalScrollbarRef
 	});
 
@@ -259,7 +221,7 @@ const ScrollableBase = (props) => {
 					<ChildWrapper {...childWrapperProps} ref={overscrollRefs.horizontal}>
 						{childRenderer({
 							...childProps,
-							uiChildAdapter: uiScrollableAdapter.current.uiChildAdapter,
+							uiChildAdapter,
 						})}
 					</ChildWrapper>
 					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} ref={verticalScrollbarRef} /> : null}
