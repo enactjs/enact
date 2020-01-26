@@ -114,6 +114,18 @@ const ScrollableBase = (props) => {
 
 	// Hooks
 
+	const instance = {
+		// Adapter
+		childAdapter,
+		uiScrollableAdapter,
+
+		// Ref
+		scrollableContainerRef,
+		overscrollRefs,
+		horizontalScrollbarRef,
+		verticalScrollbarRef
+	};
+
 	const
 		decoratedChildProps = {},
 		decorateChildProps = useDecorateChildProps(decoratedChildProps);
@@ -137,7 +149,7 @@ const ScrollableBase = (props) => {
 		scrollTo,
 		start, // Native
 		stop // JS
-	} = useSpottable(props, {childAdapter, horizontalScrollbarRef, overscrollRefs, scrollableContainerRef, uiScrollableAdapter, verticalScrollbarRef}, {type});
+	} = useSpottable(props, instance, {type});
 
 	// Render
 

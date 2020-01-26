@@ -79,35 +79,35 @@ const useSpottable = (props, instances, dependencies) => {
 		onScrollbarButtonClick,
 		scrollAndFocusScrollbarButton,
 		scrollbarProps
-	} = useScrollbar(props, {horizontalScrollbarRef, uiScrollableAdapter, verticalScrollbarRef}, {isContent});
+	} = useScrollbar(props, instances, {isContent});
 
 	useSpotlightConfig(props);
 
-	useSpotlightRestore(props, {uiScrollableAdapter});
+	useSpotlightRestore(props, instances);
 
 	const {
 		applyOverscrollEffect,
 		checkAndApplyOverscrollEffectByDirection,
 		clearOverscrollEffect
-	} = useOverscrollEffect({}, {overscrollRefs, uiScrollableAdapter});
+	} = useOverscrollEffect({}, instances);
 
-	const {handleWheel, isWheeling} = useEventWheel(props, {childAdapter, horizontalScrollbarRef, uiScrollableAdapter, verticalScrollbarRef}, {isScrollButtonFocused, type});
+	const {handleWheel, isWheeling} = useEventWheel(props, instances, {isScrollButtonFocused, type});
 
-	const {calculateAndScrollTo, handleFocus, hasFocus} = useEventFocus(props, {childAdapter, scrollableContainerRef, spottable: variables, uiScrollableAdapter}, {alertThumb, isWheeling, type});
+	const {calculateAndScrollTo, handleFocus, hasFocus} = useEventFocus(props, {...instances, spottable: variables}, {alertThumb, isWheeling, type});
 
-	const {handleKeyDown, lastPointer, scrollByPageOnPointerMode} = useEventKey(props, {childAdapter, horizontalScrollbarRef, spottable: variables, uiScrollableAdapter, verticalScrollbarRef}, {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type});
+	const {handleKeyDown, lastPointer, scrollByPageOnPointerMode} = useEventKey(props, {...instances, spottable: variables}, {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type});
 
-	useEventMonitor({}, {scrollableContainerRef}, {lastPointer, scrollByPageOnPointerMode});
+	useEventMonitor({}, instances, {lastPointer, scrollByPageOnPointerMode});
 
-	const {handleFlick, handleMouseDown} = useEventMouse({}, {childAdapter, uiScrollableAdapter}, {isScrollButtonFocused, type});
+	const {handleFlick, handleMouseDown} = useEventMouse({}, instances, {isScrollButtonFocused, type});
 
-	const {handleTouchStart} = useEventTouch({}, {}, {isScrollButtonFocused});
+	const {handleTouchStart} = useEventTouch({}, instances, {isScrollButtonFocused});
 
 	const {
 		addVoiceEventListener,
 		removeVoiceEventListener,
 		stopVoice
-	} = useEventVoice(props, {scrollableContainerRef, uiScrollableAdapter}, {onScrollbarButtonClick});
+	} = useEventVoice(props, instances, {onScrollbarButtonClick});
 
 	const {handleResizeWindow} = useEventResizeWindow();
 

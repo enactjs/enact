@@ -33,6 +33,8 @@ const VirtualListBase = (props) => {
 	 * Hooks
 	 */
 
+	const instance = {uiChildAdapter};
+
 	const {
 		calculatePositionOnFocus,
 		focusByIndex,
@@ -49,10 +51,10 @@ const VirtualListBase = (props) => {
 		shouldPreventScrollByFocus,
 		SpotlightPlaceholder,
 		updateStatesAndBounds
-	} = useSpottable(props, {uiChildAdapter}, {type});
+	} = useSpottable(props, instance, {type});
 
 	const containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
-	usePreventScroll(props, {}, {
+	usePreventScroll(props, instance, {
 		containerNode,
 		type
 	});
