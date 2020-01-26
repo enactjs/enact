@@ -15,17 +15,22 @@ import {useScrollable} from './Scrollable';
  * @private
  */
 const useScrollableComponentizable = (props) => {
+	// Refs
+	
 	const scrollableContainerRef = useRef(null);
+	const uiChildContainerRef = useRef();
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
 
+	// Adapters
+	
 	const [uiChildAdapter, setUiChildAdapter] = useChildAdapter();
+
+	// Hooks
 
 	const
 		decoratedChildProps = {},
 		decorateChildProps = useDecorateChildProps(decoratedChildProps);
-
-	// Hooks
 
 	const {
 		childWrapper,
@@ -48,6 +53,7 @@ const useScrollableComponentizable = (props) => {
 		setUiChildAdapter,
 		type: props.type || 'JS', // FIXME
 		uiChildAdapter,
+		uiChildContainerRef,
 		get verticalScrollbarRef () {
 			return verticalScrollbarRef;
 		}

@@ -19,7 +19,7 @@ import css from './Scroller.module.less';
  */
 const ScrollerBase = (props) => {
 	// constructor (props) {
-	const uiChildContainerRef = useRef();
+	const {uiChildContainerRef} = props;
 	const [, forceUpdate] = useForceUpdate();
 
 	useEffect(() => {
@@ -51,7 +51,6 @@ const ScrollerBase = (props) => {
 
 	useEffect(() => {
 		props.setUiChildAdapter({
-			uiChildContainerRef,
 			didScroll,
 			getNodePosition,
 			getScrollBounds,
@@ -147,6 +146,7 @@ const ScrollerBase = (props) => {
 	delete rest.isHorizontalScrollbarVisible;
 	delete rest.isVerticalScrollbarVisible;
 	delete rest.rtl;
+	delete rest.uiChildContainerRef;
 
 	return (
 		<div

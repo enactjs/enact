@@ -53,7 +53,7 @@ const itemSizesShape = PropTypes.shape({
 const VirtualListBase = (props) => {
 	const type = props.type;
 	/* No displayName here. We set displayName to returned components of this factory function. */
-	const uiChildContainerRef = useRef();
+	const {uiChildContainerRef} = props;
 	const contentRef = useRef();
 	const itemContainerRef = useRef();
 
@@ -121,7 +121,6 @@ const VirtualListBase = (props) => {
 	useEffect(() => {
 		props.setUiChildAdapter({
 			calculateMetrics,
-			uiChildContainerRef,
 			didScroll,
 			get dimensionToExtent () {
 				return variables.current.dimensionToExtent;
@@ -1053,6 +1052,7 @@ const VirtualListBase = (props) => {
 	delete rest.rtl;
 	delete rest.setChildAdapter;
 	delete rest.spacing;
+	delete rest.uiChildContainerRef;
 	delete rest.updateStatesAndBounds;
 
 	if (variables.current.primary) {

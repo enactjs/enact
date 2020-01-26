@@ -64,8 +64,8 @@ const useScrollableComponentizable = (props) => {
 	const instance = {
 		// Ref
 		scrollableContainerRef,
-		uiChildContainerRef,
 		overscrollRefs,
+		uiChildContainerRef,
 		horizontalScrollbarRef,
 		verticalScrollbarRef,
 
@@ -167,10 +167,10 @@ const useScrollableComponentizable = (props) => {
 		...scrollableBaseProp,
 		decorateChildProps,
 		noScrollByDrag: !platform.touchscreen,
-		addEventListeners: addEventListeners,
-		applyOverscrollEffect: applyOverscrollEffect,
-		clearOverscrollEffect: clearOverscrollEffect,
-		handleResizeWindow: handleResizeWindow,
+		addEventListeners,
+		applyOverscrollEffect,
+		clearOverscrollEffect,
+		handleResizeWindow,
 		horizontalScrollbarRef,
 		onFlick: handleFlick,
 		onKeyDown: handleKeyDown,
@@ -194,7 +194,7 @@ const useScrollableComponentizable = (props) => {
 	decorateChildProps('scrollableContainerProps', {ref: scrollableContainerRef});
 	decorateChildProps('flexLayoutProps', {ref: scrollableContainerRef});
 	decorateChildProps('childWrapperProps', {ref: overscrollRefs.vertical});
-	decorateChildProps('childProps', {uiChildAdapter: uiChildAdapter});
+	decorateChildProps('childProps', {uiChildAdapter, uiChildContainerRef});
 	decorateChildProps('verticalScrollbarProps', {ref: verticalScrollbarRef});
 	decorateChildProps('horizontalScrollbarProp', {ref: horizontalScrollbarRef});
 

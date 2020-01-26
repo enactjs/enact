@@ -15,7 +15,7 @@ const useEventKey = (props, instances, dependencies) => {
 	 */
 
 	const {direction: directionProp, overscrollEffectOn} = props;
-	const {childAdapter, horizontalScrollbarRef, spottable, uiChildAdapter, uiScrollableAdapter, verticalScrollbarRef} = instances;
+	const {childAdapter, horizontalScrollbarRef, spottable, uiChildAdapter, uiChildContainerRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
 	const {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type} = dependencies;
 
 	/*
@@ -89,7 +89,7 @@ const useEventKey = (props, instances, dependencies) => {
 
 		if (scrollPossible) {
 			if (focusedItem) {
-				const contentNode = uiChildAdapter.current.uiChildContainerRef.current;
+				const contentNode = uiChildContainerRef.current;
 				// Should do nothing when focusedItem is paging control button of Scrollbar
 						checkAndApplyOverscrollEffectByDirection(direction);
 				if (useDOM().containsDangerously(contentNode, focusedItem)) {
