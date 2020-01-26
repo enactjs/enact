@@ -7,7 +7,7 @@ import useDOM from '@enact/ui/Scrollable/useDOM';
 import useEvent from '@enact/ui/Scrollable/useEvent';
 import {useContext, useRef} from 'react';
 
-import {SharedState} from '../internal/SharedStateDecorator';
+import {SharedState} from '../internal/SharedStateDecorator/SharedStateDecorator';
 
 import useEventFocus from './useEventFocus';
 import useEventKey from './useEventKey';
@@ -47,7 +47,7 @@ const getTargetInViewByDirectionFromPosition = (direction, position, container) 
 	return getIntersectingElement(target, container);
 };
 
-const useSpottable = (props, instances, dependencies) => {
+const useSpottableScrollable = (props, instances, dependencies) => {
 	/*
 	 * Dependencies
 	 */
@@ -243,8 +243,8 @@ const useSpottable = (props, instances, dependencies) => {
 	};
 };
 
-export default useSpottable;
+export default useSpottableScrollable;
 export {
 	dataIndexAttribute,
-	useSpottable
+	useSpottableScrollable
 };

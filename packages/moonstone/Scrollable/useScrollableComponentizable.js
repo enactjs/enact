@@ -9,7 +9,7 @@ import React, {useRef} from 'react';
 import $L from '../internal/$L';
 
 import useChildAdapter from './useChildAdapter';
-import {useSpottable} from './useSpottable';
+import {useSpottableScrollable} from './useSpottableScrollable';
 
 import overscrollCss from './OverscrollEffect.module.less';
 
@@ -98,7 +98,7 @@ const useScrollableComponentizable = (props) => {
 		scrollTo,
 		start, // Native
 		stop // JS
-	} = useSpottable(props, instance, {type});
+	} = useSpottableScrollable(props, instance, {type});
 
 	// Render
 

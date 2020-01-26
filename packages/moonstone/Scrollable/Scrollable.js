@@ -8,7 +8,7 @@
 
 import PropTypes from 'prop-types';
 
-import {dataIndexAttribute, useSpottable} from './useSpottable';
+import {dataIndexAttribute} from './useSpottableScrollable';
 
 const ScrollableBase = {};
 
