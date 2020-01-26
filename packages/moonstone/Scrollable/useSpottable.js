@@ -52,7 +52,7 @@ const useSpottable = (props, instances, dependencies) => {
 	 * Dependencies
 	 */
 
-	const {childAdapter, horizontalScrollbarRef, overscrollRefs, scrollableContainerRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
+	const {childAdapter, scrollableContainerRef, uiScrollableAdapter} = instances;
 	const {type} = dependencies;
 
 	const context = useContext(SharedState);

@@ -50,6 +50,19 @@ const ScrollableBase = (props) => {
 
 	// Refs
 
+	const scrollableContainerRef = useRef();
+	const childContainerRef = useRef();
+
+	const overscrollRefs = {
+		horizontal: React.useRef(),
+		vertical: React.useRef()
+	};
+
+	const horizontalScrollbarRef = useRef();
+	const verticalScrollbarRef = useRef();
+
+	// Adapters
+
 	const childAdapter = useRef({
 		calculatePositionOnFocus: null,
 		focusByIndex: null,
@@ -61,8 +74,6 @@ const ScrollableBase = (props) => {
 		shouldPreventScrollByFocus: null,
 		type
 	});
-
-	const scrollableContainerRef = useRef();
 
 	const setChildAdapter = (adapter) => {
 		childAdapter.current = adapter;
@@ -76,7 +87,6 @@ const ScrollableBase = (props) => {
 		canScrollHorizontally: null,
 		canScrollVertically: null,
 		checkAndApplyOverscrollEffect: null,
-		childContainerRef: null,
 		getScrollBounds: null,
 		isDragging: null,
 		isScrollAnimationTargetAccumulated: null,
@@ -104,26 +114,18 @@ const ScrollableBase = (props) => {
 		uiScrollableAdapter.current = adapter;
 	}
 
-	const overscrollRefs = {
-		horizontal: React.useRef(),
-		vertical: React.useRef()
-	};
-
-	const horizontalScrollbarRef = useRef();
-	const verticalScrollbarRef = useRef();
-
 	// Hooks
 
 	const instance = {
-		// Adapter
-		childAdapter,
-		uiScrollableAdapter,
-
 		// Ref
 		scrollableContainerRef,
 		overscrollRefs,
 		horizontalScrollbarRef,
-		verticalScrollbarRef
+		verticalScrollbarRef,
+
+		// Adapter
+		childAdapter,
+		uiScrollableAdapter
 	};
 
 	const
