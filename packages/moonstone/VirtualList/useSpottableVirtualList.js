@@ -6,6 +6,7 @@ import {dataIndexAttribute, Scrollable} from '../Scrollable/Scrollable';
 
 import usePreventScroll from './usePreventScroll';
 import useSpottable from './useSpottable';
+import virtualListItemsRenderer from './virtualListItemsRenderer';
 
 /**
  * The base version of [useSpottableVirtualList]{@link moonstone/VirtualList.useSpottableVirtualList}
@@ -103,7 +104,7 @@ const useSpottableVirtualList = (props) => {
 			})
 		),
 		itemsRenderer: (itemsRendererProps) => {
-			return itemsRenderer({
+			return virtualListItemsRenderer({
 				...itemsRendererProps,
 				handlePlaceholderFocus: handlePlaceholderFocus,
 				needsScrollingPlaceholder,

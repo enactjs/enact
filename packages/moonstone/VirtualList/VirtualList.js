@@ -22,7 +22,6 @@ import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {useSpottableVirtualList, VirtualListBase} from './useSpottableVirtualList';
-import virtualListItemsRenderer from './virtualListItemsRenderer';
 
 /**
  * A Moonstone-styled scrollable and spottable virtual list component.
@@ -65,7 +64,6 @@ const VirtualListComp = ({itemSize, role, ...rest}) => {
 	const uiChildProps = useSpottableVirtualList({
 		...childProps,
 		focusableScrollbar: rest.focusableScrollbar,
-		itemsRenderer: virtualListItemsRenderer,
 		role: role
 	});
 
