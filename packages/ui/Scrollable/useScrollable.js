@@ -49,7 +49,7 @@ const
 		paginationPageMultiplier,
 		scrollStopWaiting,
 		scrollWheelPageMultiplierForMaxPixel
-    } = constants;
+	} = constants;
 
 const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
 
@@ -63,6 +63,7 @@ const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
  */
 const useScrollable = (props) => {
 	const {
+		decorateChildProps,
 		horizontalScrollbarRef,
 		scrollableContainerRef,
 		type,
@@ -226,6 +227,7 @@ const useScrollable = (props) => {
 				showThumb,
 				start,
 				startHidingThumb,
+				stop,
 				get uiChildAdapter () {
 					return uiChildAdapter;
 				},
@@ -241,8 +243,7 @@ const useScrollable = (props) => {
 
 	const
 		{className, containerRenderer, noScrollByDrag, passProps, rtl, style, ...rest} = props,
-		scrollableClasses = classNames(css.scrollable, className),
-		childWrapper = noScrollByDrag ? 'div' : TouchableDiv;
+		scrollableClasses = classNames(css.scrollable, className);
 
 	delete rest.addEventListeners;
 	delete rest.applyOverscrollEffect;
@@ -420,7 +421,7 @@ const useScrollable = (props) => {
 		return (props.rtl ? -x : x);
 	}
 
-	const stop = type === 'JS' ?
+	var stop = type === 'JS' ?
 		useCallback(() => {
 			variables.current.animator.stop();
 			variables.current.lastInputType = null;
@@ -1399,29 +1400,17 @@ const useScrollable = (props) => {
 
 	variables.current.deferScrollTo = true;
 
-	const scrollableProps = {
-		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible,
-	}
-
-	const scrollableContainerProps = {
-		...(passProps ? passProps.scrollableContainerProps : {}),
-		className: classNames(...(passProps ? passProps.scrollableContainerProps.className : []), scrollableClasses),
+	decorateChildProps('scrollableContainerProps', {
+		className: [scrollableClasses],
 		style
-	};
+	});
 
-	const flexLayoutProps = {
-		...(passProps ? passProps.flexLayoutProps : {}),
-		className: classNames(
-			css.flexLayout,
-			...(passProps ? passProps.flexLayoutProps.className : []),
-			passProps && isHorizontalScrollbarVisible ? passProps.flexLayoutProps.horizontalScrollbarVisible : null
-		)
-	};
+	decorateChildProps('flexLayoutProps', {
+		className: [css.flexLayout]
+	});
 
-	const childWrapperProps = {
-		...(passProps ? passProps.childProps : {}),
-		className: type === 'JS' ? css.content : classNames(css.content, css.contentNative), // Native;,
+	decorateChildProps('childWrapperProps', {
+		className: type === 'JS' ? [css.content] : [css.content, css.contentNative], // Native;,
 		...(!noScrollByDrag && {
 			flickConfig,
 			onDrag: onDrag,
@@ -1430,13 +1419,12 @@ const useScrollable = (props) => {
 			onFlick: onFlick,
 			onTouchStart: onTouchStart // Native
 		})
-	};
+	});
 
-	const childProps = {
-		...(passProps ? passProps.childProps : {}),
+	decorateChildProps('childProps', {
 		...rest,
 		cbScrollTo: scrollTo,
-		className: css.scrollableFill,
+		className: [css.scrollableFill],
 		dangerouslyContainsInScrollable,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
@@ -1444,45 +1432,37 @@ const useScrollable = (props) => {
 		rtl,
 		setUiChildAdapter,
 		type
-	};
+	});
 
-	const verticalScrollbarProps = {
-		...(passProps ? passProps.verticalScrollbarProps : {}),
+	decorateChildProps('verticalScrollbarProps', {
 		clientSize: props.clientSize,
 		disabled: !isVerticalScrollbarVisible,
 		rtl,
 		vertical: true
-	};
+	});
 
-	const horizontalScrollbarProps = {
-		...(passProps ? passProps.horizontalScrollbarProps : {}),
+	decorateChildProps('horizontalScrollbarProps', {
 		clientSize: props.clientSize,
 		corner: isVerticalScrollbarVisible,
 		disabled: !isHorizontalScrollbarVisible,
 		rtl,
 		vertical: false
-	};
+	});
 
-	const resizeContextProps = {
+	decorateChildProps('resizeContextProps', {
 		value: variables.current.resizeRegistry.register
-	};
+	});
 
 	return {
-		scrollableProps,
-		resizeContextProps,
-		scrollableContainerProps,
-		flexLayoutProps,
-		childWrapperProps,
-		childWrapper,
-		childProps,
-		verticalScrollbarProps,
-		horizontalScrollbarProps
+		childWrapper: noScrollByDrag ? 'div' : TouchableDiv,
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible
 	};
 };
 
 export default useScrollable;
 
 export {
-    constants,
-    useScrollable
+	constants,
+	useScrollable
 };

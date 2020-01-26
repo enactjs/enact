@@ -14,6 +14,7 @@ import React, {useRef} from 'react';
 import {ResizeContext} from '../Resizable';
 
 import Scrollbar from './Scrollbar';
+import useDecorateChildProps from './useDecorateChildProps';
 import useScrollable, {constants} from './useScrollable';
 
 const nop = () => {};
@@ -394,25 +395,25 @@ ScrollableBase.defaultProps = {
  * @private
  */
 const Scrollable = (props) => {
-	// render
 	const {childRenderer, ...rest} = props;
 
 	const scrollableContainerRef = useRef(null);
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
 
+	const
+		decoratedChildProps = {},
+		decorateChildProps = useDecorateChildProps(decoratedChildProps);
+
+	// Hooks
+
 	const {
-		scrollableProps: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible},
-		resizeContextProps,
-		scrollableContainerProps,
-		flexLayoutProps,
 		childWrapper: ChildWrapper,
-		childWrapperProps,
-		childProps,
-		verticalScrollbarProps,
-		horizontalScrollbarProps
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible
 	} = useScrollable({
 		...rest,
+		decorateChildProps,
 		get horizontalScrollbarRef () {
 			return horizontalScrollbarRef;
 		},
@@ -429,6 +430,18 @@ const Scrollable = (props) => {
 			return verticalScrollbarRef;
 		}
 	});
+
+	// Render
+
+	const {
+		resizeContextProps,
+		scrollableContainerProps,
+		flexLayoutProps,
+		childWrapperProps,
+		childProps,
+		verticalScrollbarProps,
+		horizontalScrollbarProps
+	} = decoratedChildProps;
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>

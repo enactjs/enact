@@ -11,6 +11,7 @@ import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import {ResizeContext} from '@enact/ui/Resizable';
 import {useScrollable} from '@enact/ui/Scrollable';
+import useDecorateChildProps from '@enact/ui/Scrollable/useDecorateChildProps';
 import PropTypes from 'prop-types';
 import React, {useRef} from 'react';
 
@@ -32,10 +33,6 @@ import overscrollCss from './OverscrollEffect.module.less';
  * @public
  */
 const ScrollableBase = (props) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {
 		childRenderer,
 		'data-spotlight-container': spotlightContainer,
@@ -51,9 +48,7 @@ const ScrollableBase = (props) => {
 		...rest
 	} = props;
 
-	/* Instance
-	 *
-	 */
+	// Refs
 
 	const childAdapter = useRef({
 		calculatePositionOnFocus: null,
@@ -109,10 +104,6 @@ const ScrollableBase = (props) => {
 		uiScrollableAdapter.current = adapter;
 	}
 
-	/*
-	 * Refs
-	 */
-
 	const overscrollRefs = {
 		horizontal: React.useRef(),
 		vertical: React.useRef()
@@ -121,9 +112,11 @@ const ScrollableBase = (props) => {
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
+
+	const
+		decoratedChildProps = {},
+		decorateChildProps = useDecorateChildProps(decoratedChildProps);
 
 	const {
 		addEventListeners,
@@ -146,9 +139,7 @@ const ScrollableBase = (props) => {
 		stop // JS
 	} = useSpottable(props, {childAdapter, horizontalScrollbarRef, overscrollRefs, scrollableContainerRef, uiScrollableAdapter, verticalScrollbarRef}, {type});
 
-	/*
-	 * Render
-	 */
+	// Render
 
 	const
 		downButtonAriaLabel = scrollDownAriaLabel == null ? $L('scroll down') : scrollDownAriaLabel,
@@ -164,19 +155,56 @@ const ScrollableBase = (props) => {
 		scrollableBaseProp.start = start;
 	}
 
+	decorateChildProps('scrollableContainerProps', {
+		className: [overscrollCss.scrollable],
+		'data-spotlight-container': spotlightContainer,
+		'data-spotlight-container-disabled': spotlightContainerDisabled,
+		'data-spotlight-id': spotlightId,
+		onTouchStart: handleTouchStart
+	});
+
+	decorateChildProps('flexLayoutProps', {
+		className: [overscrollCss.overscrollFrame, overscrollCss.vertical]
+	});
+
+	decorateChildProps('childWrapperProps', {
+		className: [overscrollCss.overscrollFrame, overscrollCss.horizontal]
+	});
+
+	decorateChildProps('childProps', {
+		onUpdate: handleScrollerUpdate,
+		scrollAndFocusScrollbarButton,
+		setChildAdapter,
+		spotlightId,
+		uiScrollableAdapter,
+	});
+
+	decorateChildProps('verticalScrollbarProps', {
+		...scrollbarProps,
+		focusableScrollButtons: focusableScrollbar,
+		nextButtonAriaLabel: downButtonAriaLabel,
+		onKeyDownButton: handleKeyDown,
+		preventBubblingOnKeyDown,
+		previousButtonAriaLabel: upButtonAriaLabel
+	});
+
+	decorateChildProps('horizontalScrollbarProps', {
+		...scrollbarProps,
+		focusableScrollButtons: focusableScrollbar,
+		nextButtonAriaLabel: rightButtonAriaLabel,
+		onKeyDownButton: handleKeyDown,
+		preventBubblingOnKeyDown,
+		previousButtonAriaLabel: leftButtonAriaLabel
+	});
+
 	const {
-		scrollableProps: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible},
-		resizeContextProps,
-		scrollableContainerProps,
-		flexLayoutProps,
 		childWrapper: ChildWrapper,
-		childWrapperProps,
-		childProps,
-		verticalScrollbarProps,
-		horizontalScrollbarProps
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible
 	} = useScrollable({
 		...rest,
 		...scrollableBaseProp,
+		decorateChildProps,
 		noScrollByDrag: !platform.touchscreen,
 		addEventListeners: addEventListeners,
 		applyOverscrollEffect: applyOverscrollEffect,
@@ -193,47 +221,22 @@ const ScrollableBase = (props) => {
 		scrollTo: scrollTo,
 		setUiScrollableAdapter,
 		type,
-		verticalScrollbarRef,
-		passProps: {
-			scrollableContainerProps: {
-				className: overscrollCss.scrollable,
-				'data-spotlight-container': spotlightContainer,
-				'data-spotlight-container-disabled': spotlightContainerDisabled,
-				'data-spotlight-id': spotlightId,
-				onTouchStart: handleTouchStart
-			},
-			flexLayoutProps: {
-				className: [overscrollCss.overscrollFrame, overscrollCss.vertical],
-				horizontalScrollbarVisible: isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : null
-			},
-			childWrapperProps: {
-				className: [overscrollCss.overscrollFrame, overscrollCss.horizontal]
-			},
-			childProps: {
-				onUpdate: handleScrollerUpdate,
-				scrollAndFocusScrollbarButton,
-				setChildAdapter,
-				spotlightId,
-				uiScrollableAdapter,
-			},
-			verticalScrollbarProps: {
-				...scrollbarProps,
-				focusableScrollButtons: focusableScrollbar,
-				nextButtonAriaLabel: downButtonAriaLabel,
-				onKeyDownButton: handleKeyDown,
-				preventBubblingOnKeyDown,
-				previousButtonAriaLabel: upButtonAriaLabel
-			},
-			horizontalScrollbarProps: {
-				...scrollbarProps,
-				focusableScrollButtons: focusableScrollbar,
-				nextButtonAriaLabel: rightButtonAriaLabel,
-				onKeyDownButton: handleKeyDown,
-				preventBubblingOnKeyDown,
-				previousButtonAriaLabel: leftButtonAriaLabel
-			}
-		}
+		verticalScrollbarRef
 	});
+
+	decorateChildProps('flexLayoutProps', {
+		className: [...(isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : [])]
+	});
+
+	const {
+		resizeContextProps,
+		scrollableContainerProps,
+		flexLayoutProps,
+		childWrapperProps,
+		childProps,
+		verticalScrollbarProps,
+		horizontalScrollbarProps
+	} = decoratedChildProps;
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
