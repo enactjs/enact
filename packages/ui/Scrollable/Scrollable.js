@@ -1013,8 +1013,8 @@ const useScrollable = (props) => {
 					if (eventDelta < 0 && variables.current.scrollTop > 0 || eventDelta > 0 && variables.current.scrollTop < bounds.maxTop) {
 						// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
 						if (
-							horizontalScrollbarRef.current && useDOM().containsDangerously(horizontalScrollbarRef.current.getContainerRef(), ev.target) ||
-							verticalScrollbarRef.current && useDOM().containsDangerously(verticalScrollbarRef.current.getContainerRef(), ev.target)
+							horizontalScrollbarRef.current && useDOM().containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, ev.target) ||
+							verticalScrollbarRef.current && useDOM().containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, ev.target)
 						) {
 							delta = calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 							needToHideThumb = !delta;

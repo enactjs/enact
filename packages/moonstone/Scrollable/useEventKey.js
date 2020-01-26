@@ -55,8 +55,8 @@ const useEventKey = (props, instances, dependencies) => {
 
 				direction = getDirection(keyCode);
 				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
-					if (!(horizontalScrollbarRef.current && useDOM().containsDangerously(horizontalScrollbarRef.current.getContainerRef, element)) &&
-						!(verticalScrollbarRef.current && useDOM().containsDangerously(verticalScrollbarRef.current.getContainerRef(), element))) {
+					if (!(horizontalScrollbarRef.current && useDOM().containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, element)) &&
+						!(verticalScrollbarRef.current && useDOM().containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, element))) {
 						checkAndApplyOverscrollEffectByDirection(direction);
 					}
 				}

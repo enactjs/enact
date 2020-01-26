@@ -31,7 +31,9 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 
 		return {
 			focusOnButton,
-			getContainerRef,
+			get uiScrollbarContainer () {
+				return getContainerRef();
+			},
 			isOneOfScrollButtonsFocused,
 			showThumb,
 			startHidingThumb,

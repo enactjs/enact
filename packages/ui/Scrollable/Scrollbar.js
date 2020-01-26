@@ -44,7 +44,7 @@ const setCSSVariable = (element, variable, value) => {
  */
 const ScrollbarBase = memo(forwardRef((props, ref) => {
 	// Refs
-	const containerRef = useRef();
+	const uiScrollbarContainerRef = useRef();
 	const thumbRef = useRef();
 	const hideThumbJob = useRef(null);
 	// Render
@@ -72,7 +72,7 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 	}, []);
 
 	useImperativeHandle(ref, () => ({
-		getContainerRef: () => (containerRef),
+		getContainerRef: () => (uiScrollbarContainerRef),
 		showThumb: () => {
 			hideThumbJob.current.stop();
 			addClass(thumbRef.current, css.thumbShown);
@@ -84,7 +84,7 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 			const
 				{clientSize} = props,
 				primaryDimenstion = vertical ? 'clientHeight' : 'clientWidth',
-				trackSize = clientSize ? clientSize[primaryDimenstion] : containerRef.current[primaryDimenstion],
+				trackSize = clientSize ? clientSize[primaryDimenstion] : uiScrollbarContainerRef.current[primaryDimenstion],
 				scrollViewSize = vertical ? bounds.clientHeight : bounds.clientWidth,
 				scrollContentSize = vertical ? bounds.scrollHeight : bounds.scrollWidth,
 				scrollOrigin = vertical ? bounds.scrollTop : bounds.scrollLeft,
@@ -98,7 +98,7 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 	}));
 
 	return (
-		<div {...rest} className={containerClassName} ref={containerRef}>
+		<div {...rest} className={containerClassName} ref={uiScrollbarContainerRef}>
 			{childRenderer({thumbRef})}
 		</div>
 	);
