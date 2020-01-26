@@ -45,7 +45,7 @@ const useSpotlightRestore = (props, instances) => {
 	}
 
 	function isPlaceholderFocused () {
-		const childContainerNode = uiChildAdapter.current.childContainerRef.current;
+		const childContainerNode = uiChildAdapter.current.uiChildContainerRef.current;
 		const current = Spotlight.getCurrent();
 
 		if (current && current.dataset.vlPlaceholder && useDOM().containsDangerously(childContainerNode, current)) {
@@ -60,7 +60,7 @@ const useSpotlightRestore = (props, instances) => {
 			variables.current.restoreLastFocused &&
 			!isPlaceholderFocused()
 		) {
-			const childContainerNode = uiChildAdapter.current.childContainerRef.current;
+			const childContainerNode = uiChildAdapter.current.uiChildContainerRef.current;
 			const node = childContainerNode && childContainerNode.querySelector(
 				`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
 			);

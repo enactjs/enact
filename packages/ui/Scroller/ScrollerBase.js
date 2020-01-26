@@ -19,7 +19,7 @@ import css from './Scroller.module.less';
  */
 const ScrollerBase = (props) => {
 	// constructor (props) {
-	const childContainerRef = useRef();
+	const uiChildContainerRef = useRef();
 	const [, forceUpdate] = useForceUpdate();
 
 	useEffect(() => {
@@ -51,7 +51,7 @@ const ScrollerBase = (props) => {
 
 	useEffect(() => {
 		props.setUiChildAdapter({
-			childContainerRef,
+			uiChildContainerRef,
 			didScroll,
 			getNodePosition,
 			getScrollBounds,
@@ -73,7 +73,7 @@ const ScrollerBase = (props) => {
 
 	// for Scrollable
 	function setScrollPosition (x, y) {
-		const node = childContainerRef.current;
+		const node = uiChildContainerRef.current;
 
 		if (isVertical()) {
 			node.scrollTop = y;
@@ -87,7 +87,7 @@ const ScrollerBase = (props) => {
 
 	// for native Scrollable
 	function scrollToPosition (x, y) {
-		childContainerRef.current.scrollTo(getRtlPositionX(x), y);
+		uiChildContainerRef.current.scrollTo(getRtlPositionX(x), y);
 	}
 
 	// for native Scrollable
@@ -99,8 +99,8 @@ const ScrollerBase = (props) => {
 	function getNodePosition (node) {
 		const
 			{left: nodeLeft, top: nodeTop, height: nodeHeight, width: nodeWidth} = node.getBoundingClientRect(),
-			{left: containerLeft, top: containerTop} = childContainerRef.current.getBoundingClientRect(),
-			{scrollLeft, scrollTop} = childContainerRef.current,
+			{left: containerLeft, top: containerTop} = uiChildContainerRef.current.getBoundingClientRect(),
+			{scrollLeft, scrollTop} = uiChildContainerRef.current,
 			left = isHorizontal() ? (scrollLeft + nodeLeft - containerLeft) : null,
 			top = isVertical() ? (scrollTop + nodeTop - containerTop) : null;
 
@@ -123,7 +123,7 @@ const ScrollerBase = (props) => {
 	function calculateMetrics () {
 		const
 			{scrollBounds} = variables.current,
-			{scrollWidth, scrollHeight, clientWidth, clientHeight} = childContainerRef.current;
+			{scrollWidth, scrollHeight, clientWidth, clientHeight} = uiChildContainerRef.current;
 
 		scrollBounds.scrollWidth = scrollWidth;
 		scrollBounds.scrollHeight = scrollHeight;
@@ -152,7 +152,7 @@ const ScrollerBase = (props) => {
 		<div
 			{...rest}
 			className={classNames(className, css.scroller)}
-			ref={childContainerRef}
+			ref={uiChildContainerRef}
 			style={mergedStyle}
 		/>
 	);

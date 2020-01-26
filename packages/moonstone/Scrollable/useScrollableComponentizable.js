@@ -41,7 +41,7 @@ const useScrollableComponentizable = (props) => {
 	// Refs
 
 	const scrollableContainerRef = useRef();
-	const childContainerRef = useRef();
+	const uiChildContainerRef = useRef();
 
 	const overscrollRefs = {
 		horizontal: React.useRef(),
@@ -64,7 +64,7 @@ const useScrollableComponentizable = (props) => {
 	const instance = {
 		// Ref
 		scrollableContainerRef,
-		childContainerRef,
+		uiChildContainerRef,
 		overscrollRefs,
 		horizontalScrollbarRef,
 		verticalScrollbarRef,

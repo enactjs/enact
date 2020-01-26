@@ -641,9 +641,9 @@ const useScrollable = (props) => {
 			if (type === 'JS') {
 				scrollTo({position: {x: 0, y: 0}, animate: false});
 			} else {
-				uiChildAdapter.current.childContainerRef.current.style.scrollBehavior = null;
+				uiChildAdapter.current.uiChildContainerRef.current.style.scrollBehavior = null;
 				uiChildAdapter.current.scrollToPosition(0, 0);
-				uiChildAdapter.current.childContainerRef.current.style.scrollBehavior = 'smooth';
+				uiChildAdapter.current.uiChildContainerRef.current.style.scrollBehavior = 'smooth';
 			}
 
 			enqueueForceUpdate();
@@ -788,9 +788,9 @@ const useScrollable = (props) => {
 			}
 		}, [props, startHidingThumb, clearAllOverscrollEffects]) :
 		useCallback(() => {
-			uiChildAdapter.current.childContainerRef.current.style.scrollBehavior = null;
+			uiChildAdapter.current.uiChildContainerRef.current.style.scrollBehavior = null;
 			uiChildAdapter.current.scrollToPosition(variables.current.scrollLeft + 0.1, variables.current.scrollTop + 0.1);
-			uiChildAdapter.current.childContainerRef.current.style.scrollBehavior = 'smooth';
+			uiChildAdapter.current.uiChildContainerRef.current.style.scrollBehavior = 'smooth';
 		}, []);
 
 	const onMouseDown = useCallback((ev) => {
@@ -1428,9 +1428,9 @@ const useScrollable = (props) => {
 			if (animate) {
 				uiChildAdapter.current.scrollToPosition(targetX, targetY);
 			} else {
-				uiChildAdapter.current.childContainerRef.current.style.scrollBehavior = null;
+				uiChildAdapter.current.uiChildContainerRef.current.style.scrollBehavior = null;
 				uiChildAdapter.current.scrollToPosition(targetX, targetY);
-				uiChildAdapter.current.childContainerRef.current.style.scrollBehavior = 'smooth';
+				uiChildAdapter.current.uiChildContainerRef.current.style.scrollBehavior = 'smooth';
 			}
 			variables.current.scrollStopJob.start();
 
@@ -1691,20 +1691,20 @@ const useScrollable = (props) => {
 		useEvent('mousedown').addEventListener(scrollableContainerRef, onMouseDown);
 
 		// Native [[
-		if (uiChildAdapter.current.childContainerRef.current) {
-			if (uiChildAdapter.current.childContainerRef.current.addEventListener) {
+		if (uiChildAdapter.current.uiChildContainerRef.current) {
+			if (uiChildAdapter.current.uiChildContainerRef.current.addEventListener) {
 				useEvent('scroll').addEventListener(
-					uiChildAdapter.current.childContainerRef,
+					uiChildAdapter.current.uiChildContainerRef,
 					onScroll,
 					{capture: true, passive: true}
 				);
 			}
-			uiChildAdapter.current.childContainerRef.current.style.scrollBehavior = 'smooth';
+			uiChildAdapter.current.uiChildContainerRef.current.style.scrollBehavior = 'smooth';
 		}
 		// Native ]]
 
 		if (props.addEventListeners) {
-			props.addEventListeners(uiChildAdapter.current.childContainerRef);
+			props.addEventListeners(uiChildAdapter.current.uiChildContainerRef);
 		}
 
 		if (window) {
@@ -1719,11 +1719,11 @@ const useScrollable = (props) => {
 		useEvent('mousedown').removeEventListener(scrollableContainerRef, onMouseDown);
 
 		// Native [[
-		useEvent('scroll').removeEventListener(uiChildAdapter.current.childContainerRef, onScroll, {capture: true, passive: true});
+		useEvent('scroll').removeEventListener(uiChildAdapter.current.uiChildContainerRef, onScroll, {capture: true, passive: true});
 		// Native ]]
 
 		if (props.removeEventListeners) {
-			props.removeEventListeners(uiChildAdapter.current.childContainerRef);
+			props.removeEventListeners(uiChildAdapter.current.uiChildContainerRef);
 		}
 
 		useEvent('resize').removeEventListener(window, handleResizeWindow);
@@ -1736,10 +1736,10 @@ const useScrollable = (props) => {
 		// Prevent scroll by focus.
 		// VirtualList and VirtualGridList DO NOT receive `onscroll` event.
 		// Only Scroller could get `onscroll` event.
-		if (!variables.current.animator.isAnimating() && uiChildAdapter.current && uiChildAdapter.current.childContainerRef.current && uiChildAdapter.current.getRtlPositionX) {
+		if (!variables.current.animator.isAnimating() && uiChildAdapter.current && uiChildAdapter.current.uiChildContainerRef.current && uiChildAdapter.current.getRtlPositionX) {
 			// For Scroller
-			uiChildAdapter.current.childContainerRef.current.scrollTop = variables.current.scrollTop;
-			uiChildAdapter.current.childContainerRef.current.scrollLeft = uiChildAdapter.current.getRtlPositionX(variables.current.scrollLeft);
+			uiChildAdapter.current.uiChildContainerRef.current.scrollTop = variables.current.scrollTop;
+			uiChildAdapter.current.uiChildContainerRef.current.scrollLeft = uiChildAdapter.current.getRtlPositionX(variables.current.scrollLeft);
 		}
 	}
 	// JS ]]

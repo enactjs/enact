@@ -116,7 +116,7 @@ const useSpottable = (props, instances, dependencies) => {
 	 */
 
 	function isContent (element) {
-		return (element && useDOM().containsDangerously(uiChildAdapter.current.childContainerRef, element));
+		return (element && useDOM().containsDangerously(uiChildAdapter.current.uiChildContainerRef, element));
 	}
 
 	function scrollTo (opt) {
@@ -200,18 +200,18 @@ const useSpottable = (props, instances, dependencies) => {
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
-	function addEventListeners (childContainerRef) {
-		useEvent('focusin').addEventListener(childContainerRef, handleFocus);
-		if (childContainerRef.current) {
-			addVoiceEventListener(childContainerRef);
+	function addEventListeners (uiChildContainerRef) {
+		useEvent('focusin').addEventListener(uiChildContainerRef, handleFocus);
+		if (uiChildContainerRef.current) {
+			addVoiceEventListener(uiChildContainerRef);
 		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
-	function removeEventListeners (childContainerRef) {
-		useEvent('focusin').removeEventListener(childContainerRef, handleFocus);
-		if (childContainerRef.current) {
-			removeVoiceEventListener(childContainerRef);
+	function removeEventListeners (uiChildContainerRef) {
+		useEvent('focusin').removeEventListener(uiChildContainerRef, handleFocus);
+		if (uiChildContainerRef.current) {
+			removeVoiceEventListener(uiChildContainerRef);
 		}
 	}
 

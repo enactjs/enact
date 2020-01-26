@@ -110,17 +110,17 @@ const useEventVoice = (props, instances, dependencies) => {
 		}
 	}
 
-	function addVoiceEventListener (childContainerRef) {
+	function addVoiceEventListener (uiChildContainerRef) {
 		if (platform.webos) {
-			useEvent('webOSVoice').addEventListener(childContainerRef, handleVoice);
-			childContainerRef.current.setAttribute('data-webos-voice-intent', 'Scroll');
+			useEvent('webOSVoice').addEventListener(uiChildContainerRef, handleVoice);
+			uiChildContainerRef.current.setAttribute('data-webos-voice-intent', 'Scroll');
 		}
 	}
 
-	function removeVoiceEventListener (childContainerRef) {
+	function removeVoiceEventListener (uiChildContainerRef) {
 		if (platform.webos) {
-			useEvent('webOSVoice').removeEventListener(childContainerRef, handleVoice);
-			childContainerRef.current.removeAttribute('data-webos-voice-intent');
+			useEvent('webOSVoice').removeEventListener(uiChildContainerRef, handleVoice);
+			uiChildContainerRef.current.removeAttribute('data-webos-voice-intent');
 		}
 	}
 

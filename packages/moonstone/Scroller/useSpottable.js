@@ -26,7 +26,7 @@ const useSpottable = (props, instances) => {
 	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey();
 
 	const setContainerDisabled = useCallback((bool) => {
-		const childContainerNode = uiChildAdapter.current.childContainerRef.current;
+		const childContainerNode = uiChildAdapter.current.uiChildContainerRef.current;
 
 		if (childContainerNode) {
 			childContainerNode.setAttribute(dataContainerDisabledAttribute, bool);
@@ -66,7 +66,7 @@ const useSpottable = (props, instances) => {
 	 * @private
 	 */
 	function getSpotlightContainerForNode (node) {
-		const childContainerNode = uiChildAdapter.current.childContainerRef.current;
+		const childContainerNode = uiChildAdapter.current.uiChildContainerRef.current;
 
 		do {
 			if (node.dataset.spotlightId && node.dataset.spotlightContainer && !node.dataset.expandableContainer) {
@@ -134,7 +134,7 @@ const useSpottable = (props, instances) => {
 		};
 
 		const container = getSpotlightContainerForNode(item);
-		const childContainerNode = uiChildAdapter.current.childContainerRef.current;
+		const childContainerNode = uiChildAdapter.current.uiChildContainerRef.current;
 
 		const scrollerBounds = childContainerNode.getBoundingClientRect();
 		let {scrollHeight, scrollTop} = childContainerNode;
@@ -185,7 +185,7 @@ const useSpottable = (props, instances) => {
 	 * @private
 	 */
 	function calculateScrollLeft (item, scrollPosition) {
-		const childContainerNode = uiChildAdapter.current.childContainerRef.current;
+		const childContainerNode = uiChildAdapter.current.uiChildContainerRef.current;
 		const {
 			left: itemLeft,
 			width: itemWidth
@@ -228,7 +228,7 @@ const useSpottable = (props, instances) => {
 	function calculatePositionOnFocus ({item, scrollPosition}) {
 		const horizontal = uiChildAdapter.current.isHorizontal();
 		const vertical = uiChildAdapter.current.isVertical();
-		const childContainerNode = uiChildAdapter.current.childContainerRef.current;
+		const childContainerNode = uiChildAdapter.current.uiChildContainerRef.current;
 
 		if (!vertical && !horizontal || !item || !useDOM().containsDangerously(childContainerNode, item)) {
 			return;

@@ -53,7 +53,7 @@ const itemSizesShape = PropTypes.shape({
 const VirtualListBase = (props) => {
 	const type = props.type;
 	/* No displayName here. We set displayName to returned components of this factory function. */
-	const childContainerRef = useRef();
+	const uiChildContainerRef = useRef();
 	const contentRef = useRef();
 	const itemContainerRef = useRef();
 
@@ -121,7 +121,7 @@ const VirtualListBase = (props) => {
 	useEffect(() => {
 		props.setUiChildAdapter({
 			calculateMetrics,
-			childContainerRef,
+			uiChildContainerRef,
 			didScroll,
 			get dimensionToExtent () {
 				return variables.current.dimensionToExtent;
@@ -433,7 +433,7 @@ const VirtualListBase = (props) => {
 	function calculateMetrics () {
 		const
 			{clientSize, direction, itemSize, overhang, spacing} = props,
-			node = childContainerRef.current;
+			node = uiChildContainerRef.current;
 
 		if (!clientSize && !node) {
 			return;
@@ -569,7 +569,7 @@ const VirtualListBase = (props) => {
 	function calculateScrollBounds () {
 		const
 			{clientSize} = props,
-			node = childContainerRef.current;
+			node = uiChildContainerRef.current;
 
 		if (!clientSize && !node) {
 			return;
@@ -657,7 +657,7 @@ const VirtualListBase = (props) => {
 
 	// Native only
 	function scrollToPosition (x, y, rtl = props.rtl) {
-		if (childContainerRef.current) {
+		if (uiChildContainerRef.current) {
 			if (variables.current.isPrimaryDirectionVertical) {
 				variables.current.scrollPositionTarget = y;
 			} else {
@@ -668,7 +668,7 @@ const VirtualListBase = (props) => {
 				x = (platform.ios || platform.safari) ? -x : variables.current.scrollBounds.maxLeft - x;
 			}
 
-			childContainerRef.current.scrollTo(x, y);
+			uiChildContainerRef.current.scrollTo(x, y);
 		}
 	}
 
@@ -993,7 +993,7 @@ const VirtualListBase = (props) => {
 	}
 
 	function syncClientSize () {
-		const node = childContainerRef.current;
+		const node = uiChildContainerRef.current;
 
 		if (!props.clientSize && !node) {
 			return false;
@@ -1069,7 +1069,7 @@ const VirtualListBase = (props) => {
 	};
 
 	return (
-		<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={childContainerRef} style={style}>
+		<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={uiChildContainerRef} style={style}>
 			<div {...rest} className={contentClasses} ref={contentRef}>
 				{itemsRenderer({cc: variables.current.cc, itemContainerRef, primary: variables.current.primary})}
 			</div>

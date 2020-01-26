@@ -60,7 +60,7 @@ const useEventFocus = (props, instances, dependencies) => {
 		const
 			spotItem = Spotlight.getCurrent(),
 			positionFn = childAdapter.current.calculatePositionOnFocus,
-			childContainerNode = uiChildAdapter.current.childContainerRef.current;
+			childContainerNode = uiChildAdapter.current.uiChildContainerRef.current;
 
 		if (spotItem && positionFn && useDOM().containsDangerously(childContainerNode, spotItem)) {
 			const lastPos = spottable.current.lastScrollPositionOnFocus;
