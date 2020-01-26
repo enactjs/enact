@@ -208,3 +208,6 @@ ScrollerBase.defaultProps = {
 };
 
 export default ScrollerBase;
+export {
+	ScrollerBase
+};

@@ -9,7 +9,7 @@
 
 import kind from '@enact/core/kind';
 import {ResizeContext} from '@enact/ui/Resizable';
-import {gridListItemSizeShape, itemSizesShape} from '@enact/ui/VirtualList';
+import {gridListItemSizeShape, itemSizesShape, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import React from 'react';
 import warning from 'warning';
@@ -21,7 +21,7 @@ import Skinnable from '../Skinnable';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
-import VirtualListBase from './VirtualListBase';
+import {useSpottableVirtualList, VirtualListBase} from './useSpottableVirtualList';
 import virtualListItemsRenderer from './virtualListItemsRenderer';
 
 /**
@@ -62,17 +62,19 @@ const VirtualListComp = ({itemSize, role, ...rest}) => {
 		horizontalScrollbarProps
 	} = useScrollableComponentizable({...rest, ...props});
 
+	const uiChildProps = useSpottableVirtualList({
+		...childProps,
+		focusableScrollbar: rest.focusableScrollbar,
+		itemsRenderer: virtualListItemsRenderer,
+		role: role
+	});
+
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
 			<div {...scrollableContainerProps}>
 				<div {...flexLayoutProps}>
 					<ChildWrapper {...childWrapperProps}>
-						<VirtualListBase
-							{...childProps}
-							focusableScrollbar={rest.focusableScrollbar}
-							itemsRenderer={virtualListItemsRenderer}
-							role={role}
-						/>
+						<UiVirtualListBase {...uiChildProps} />
 					</ChildWrapper>
 					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
 				</div>
@@ -168,17 +170,19 @@ const VirtualGridListComp = ({role, ...rest}) => {
 		horizontalScrollbarProps
 	} = useScrollableComponentizable(rest);
 
+	const uiChildProps = SpottableVirtualList({
+		...childProps,
+		focusableScrollbar: rest.focusableScrollbar,
+		itemsRenderer: virtualListItemsRenderer,
+		role: role
+	});
+
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
 			<div {...scrollableContainerProps}>
 				<div {...flexLayoutProps}>
 					<ChildWrapper {...childWrapperProps}>
-						<VirtualListBase
-							{...childProps}
-							focusableScrollbar={rest.focusableScrollbar}
-							itemsRenderer={virtualListItemsRenderer}
-							role={role}
-						/>
+						<UiVirtualListBase {...uiChildProps} />
 					</ChildWrapper>
 					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
 				</div>

@@ -1,4 +1,3 @@
-import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import PropTypes from 'prop-types';
 import React, {useEffect} from 'react';
 
@@ -10,13 +9,13 @@ import useSpottable from './useSpottable';
  * [SpotlightContainerDecorator]{@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
  * and the Scrollable version, [Scroller]{@link moonstone/Scroller.Scroller}.
  *
- * @function ScrollerBase
+ * @function useSpottableScroller
  * @memberof moonstone/Scroller
- * @extends ui/Scroller.ScrollerBase
+ * @extends ui/Scroller.useSpottableScroller
  * @ui
  * @public
  */
-const ScrollerBase = (props) => {
+const useSpottableScroller = (props) => {
 	/*
 	 * Dependencies
 	 */
@@ -50,10 +49,10 @@ const ScrollerBase = (props) => {
 	delete propsObject.spotlightId;
 	delete propsObject.uiScrollableAdapter;
 
-	return (
-		<UiScrollerBase {...propsObject} />
-	);
+	return propsObject;
 };
+
+const ScrollerBase = {};
 
 ScrollerBase.displayName = 'ScrollerBase';
 
@@ -92,4 +91,8 @@ ScrollerBase.propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */
 	spotlightId: PropTypes.string
 };
 
-export default ScrollerBase;
+export default useSpottableScroller;
+export {
+	ScrollerBase,
+	useSpottableScroller
+};

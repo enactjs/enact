@@ -17,6 +17,7 @@
  */
 
 import {ResizeContext} from '@enact/ui/Resizable';
+import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -27,7 +28,7 @@ import Skinnable from '../Skinnable';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
-import ScrollerBase from './ScrollerBase';
+import {ScrollerBase, useSpottableScroller} from './useSpottableScroller';
 
 /**
  * A Moonstone-styled Scroller, Scrollable applied.
@@ -58,12 +59,14 @@ const ScrollerComp = (props) => {
 		horizontalScrollbarProps
 	} = useScrollableComponentizable(props);
 
+	const uiChildProps = useSpottableScroller(childProps);
+
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
 			<div {...scrollableContainerProps}>
 				<div {...flexLayoutProps}>
 					<ChildWrapper {...childWrapperProps}>
-						<ScrollerBase {...childProps} />
+						<UiScrollerBase {...uiChildProps} />
 					</ChildWrapper>
 					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
 				</div>

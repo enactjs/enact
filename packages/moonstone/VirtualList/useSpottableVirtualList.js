@@ -2,20 +2,20 @@ import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import React, {useEffect} from 'react';
 
-import {dataIndexAttribute, Scrollable} from '../Scrollable';
+import {dataIndexAttribute, Scrollable} from '../Scrollable/Scrollable';
 
 import usePreventScroll from './usePreventScroll';
 import useSpottable from './useSpottable';
 
 /**
- * The base version of [VirtualListBase]{@link moonstone/VirtualList.VirtualListBase}
+ * The base version of [useSpottableVirtualList]{@link moonstone/VirtualList.useSpottableVirtualList}
  *
- * @function VirtualListBase
+ * @function useSpottableVirtualList
  * @memberof moonstone/VirtualList
  * @ui
  * @private
  */
-const VirtualListBase = (props) => {
+const useSpottableVirtualList = (props) => {
 	const {type, uiChildAdapter, uiChildContainerRef} = props;
 
 	/*
@@ -92,31 +92,31 @@ const VirtualListBase = (props) => {
 	delete rest.uiScrollableAdapter;
 	delete rest.wrap;
 
-	return (
-		<UiVirtualListBase
-			{...rest}
-			getComponentProps={getComponentProps}
-			itemRenderer={({index, ...itemRest}) => ( // eslint-disable-line react/jsx-no-bind
-				itemRenderer({
-					...itemRest,
-					[dataIndexAttribute]: index,
-					index
-				})
-			)}
-			itemsRenderer={(itemsRendererProps) => { // eslint-disable-line react/jsx-no-bind
-				return itemsRenderer({
-					...itemsRendererProps,
-					handlePlaceholderFocus: handlePlaceholderFocus,
-					needsScrollingPlaceholder,
-					role,
-					SpotlightPlaceholder
-				});
-			}}
-			onUpdateItems={handleRestoreLastFocus}
-			updateStatesAndBounds={updateStatesAndBounds}
-		/>
-	);
+	return {
+		...rest,
+		getComponentProps: getComponentProps,
+		itemRenderer: ({index, ...itemRest}) => (
+			itemRenderer({
+				...itemRest,
+				[dataIndexAttribute]: index,
+				index
+			})
+		),
+		itemsRenderer: (itemsRendererProps) => {
+			return itemsRenderer({
+				...itemsRendererProps,
+				handlePlaceholderFocus: handlePlaceholderFocus,
+				needsScrollingPlaceholder,
+				role,
+				SpotlightPlaceholder
+			});
+		},
+		onUpdateItems: handleRestoreLastFocus,
+		updateStatesAndBounds: updateStatesAndBounds
+	};
 };
+
+const VirtualListBase = {};
 
 VirtualListBase.propTypes = /** @lends moonstone/VirtualList.VirtualListBase.prototype */ {
 	/**
@@ -357,7 +357,8 @@ VirtualListBase.displayName = 'VirtualListBase';
  * @public
  */
 
-export default VirtualListBase;
+export default useSpottableVirtualList;
 export {
+	useSpottableVirtualList,
 	VirtualListBase
 };
