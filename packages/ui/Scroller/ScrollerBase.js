@@ -5,6 +5,9 @@ import React, {useEffect, useRef} from 'react';
 
 import useForceUpdate from '../Scrollable/useForceUpdate';
 
+import useCalculateMetrics from './useCalculateMetrics';
+import useScrollPosition from './useScrollPosition';
+
 import css from './Scroller.module.less';
 
 /**
@@ -18,82 +21,46 @@ import css from './Scroller.module.less';
  * @public
  */
 const ScrollerBase = (props) => {
-	// constructor (props) {
-	const {uiChildContainerRef} = props;
+	const {className, direction, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, style, uiChildContainerRef, ...rest} = props;
+	const mergedStyle = {
+		...style,
+		overflowX: isHorizontal() ? 'auto' : 'hidden',
+		overflowY: isVertical() ? 'auto' : 'hidden'
+	};
+
+	// Hooks
+
+	const instance = {uiChildContainerRef};
+
 	const [, forceUpdate] = useForceUpdate();
 
 	useEffect(() => {
 		// componentDidUpdate
 		// TODO: Check this code is still needed.  This code introduced from #1618. (ahn)
 		forceUpdate();
-	}, [props.isVerticalScrollbarVisible]);
+	}, [isHorizontalScrollbarVisible, isVerticalScrollbarVisible]);
+
+	const {getRtlPositionX, getScrollBounds} = useCalculateMetrics(rest, instance);
+
+	const {
+		setScrollPosition,
+		scrollToPosition,
+		didScroll
+	} = useScrollPosition(rest, instance, {getRtlPositionX, isHorizontal, isVertical});
 
 	useEffect(() => {
-		// componentDidUpdate
-		calculateMetrics();
-	});
-
-	// Instance variables
-	const variables = useRef({
-		scrollBounds : {
-			clientHeight: 0,
-			clientWidth: 0,
-			maxLeft: 0,
-			maxTop: 0,
-			scrollHeight: 0,
-			scrollWidth: 0
-		},
-		scrollPos: {
-			left: 0,
-			top: 0
-		}
-	});
-
-	useEffect(() => {
-		props.setUiChildAdapter({
+		rest.setUiChildAdapter({
 			didScroll,
 			getNodePosition,
 			getScrollBounds,
+			isHorizontal,
+			isVertical,
 			scrollToPosition,
 			setScrollPosition
 		});
 	}, []);
 
-	function getScrollBounds () {
-		return variables.current.scrollBounds;
-	}
-
-	function getRtlPositionX (x) {
-		if (props.rtl) {
-			return (platform.ios || platform.safari) ? -x : variables.current.scrollBounds.maxLeft - x;
-		}
-		return x;
-	}
-
-	// for Scrollable
-	function setScrollPosition (x, y) {
-		const node = uiChildContainerRef.current;
-
-		if (isVertical()) {
-			node.scrollTop = y;
-			variables.current.scrollPos.top = y;
-		}
-		if (isHorizontal()) {
-			node.scrollLeft = getRtlPositionX(x);
-			variables.current.scrollPos.left = x;
-		}
-	}
-
-	// for native Scrollable
-	function scrollToPosition (x, y) {
-		uiChildContainerRef.current.scrollTo(getRtlPositionX(x), y);
-	}
-
-	// for native Scrollable
-	function didScroll (x, y) {
-		variables.current.scrollPos.left = x;
-		variables.current.scrollPos.top = y;
-	}
+	// Functions
 
 	function getNodePosition (node) {
 		const
@@ -112,41 +79,18 @@ const ScrollerBase = (props) => {
 	}
 
 	function isVertical () {
-		return (props.direction !== 'horizontal');
+		return (direction !== 'horizontal');
 	}
 
 	function isHorizontal () {
-		return (props.direction !== 'vertical');
+		return (direction !== 'vertical');
 	}
 
-	function calculateMetrics () {
-		const
-			{scrollBounds} = variables.current,
-			{scrollWidth, scrollHeight, clientWidth, clientHeight} = uiChildContainerRef.current;
-
-		scrollBounds.scrollWidth = scrollWidth;
-		scrollBounds.scrollHeight = scrollHeight;
-		scrollBounds.clientWidth = clientWidth;
-		scrollBounds.clientHeight = clientHeight;
-		scrollBounds.maxLeft = Math.max(0, scrollWidth - clientWidth);
-		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
-	}
-
-	// render
-	const
-		{className, style, ...rest} = props,
-		mergedStyle = Object.assign({}, style, {
-			overflowX: isHorizontal() ? 'auto' : 'hidden',
-			overflowY: isVertical() ? 'auto' : 'hidden'
-		});
+	// Render
 
 	delete rest.cbScrollTo;
 	delete rest.dangerouslyContainsInScrollable;
-	delete rest.direction;
-	delete rest.isHorizontalScrollbarVisible;
-	delete rest.isVerticalScrollbarVisible;
 	delete rest.rtl;
-	delete rest.uiChildContainerRef;
 
 	return (
 		<div
