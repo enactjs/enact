@@ -2,7 +2,7 @@ import {useRef} from 'react';
 
 const useScrollPosition = (props, instances, dependencies) => {
     const {uiChildContainerRef} = instances;
-    const {getRtlPositionX} = dependencies;
+    const {getRtlPositionX, isHorizontal, isVertical} = dependencies;
 
 	// Instance variables
 	const variables = useRef({

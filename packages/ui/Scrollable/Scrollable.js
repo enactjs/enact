@@ -771,27 +771,7 @@ const useScrollable = (props) => {
 		return (props.rtl ? -x : x);
 	}
 
-	var stop = type === 'JS' ?
-		useCallback(() => {
-			variables.current.animator.stop();
-			variables.current.lastInputType = null;
-			variables.current.isScrollAnimationTargetAccumulated = false;
-			startHidingThumb();
-			if (variables.current.overscrollEnabled && !variables.current.isDragging) { // not check props.overscrollEffectOn for safety
-				clearAllOverscrollEffects();
-			}
-			if (props.stop) {
-				props.stop();
-			}
-			if (variables.current.scrolling) {
-				variables.current.scrollStopJob.start();
-			}
-		}, [props, startHidingThumb, clearAllOverscrollEffects]) :
-		useCallback(() => {
-			uiChildContainerRef.current.style.scrollBehavior = null;
-			uiChildAdapter.current.scrollToPosition(variables.current.scrollLeft + 0.1, variables.current.scrollTop + 0.1);
-			uiChildContainerRef.current.style.scrollBehavior = 'smooth';
-		}, []);
+	
 
 	const onMouseDown = useCallback((ev) => {
 		if (forwardWithPrevent('onMouseDown', ev, props)) {
@@ -1437,6 +1417,36 @@ const useScrollable = (props) => {
 			if (props.start) {
 				props.start(animate);
 			}
+		}
+	}
+
+	function stopForJS () {
+		variables.current.animator.stop();
+		variables.current.lastInputType = null;
+		variables.current.isScrollAnimationTargetAccumulated = false;
+		startHidingThumb();
+		if (variables.current.overscrollEnabled && !variables.current.isDragging) { // not check props.overscrollEffectOn for safety
+			clearAllOverscrollEffects();
+		}
+		if (props.stop) {
+			props.stop();
+		}
+		if (variables.current.scrolling) {
+			variables.current.scrollStopJob.start();
+		}
+	}
+
+	function stopForNative () {
+		uiChildContainerRef.current.style.scrollBehavior = null;
+		uiChildAdapter.current.scrollToPosition(variables.current.scrollLeft + 0.1, variables.current.scrollTop + 0.1);
+		uiChildContainerRef.current.style.scrollBehavior = 'smooth';
+	}
+
+	function stop () {
+		if (type === 'JS') {
+			stopForJS();
+		} else {
+			stopForNative();
 		}
 	}
 
