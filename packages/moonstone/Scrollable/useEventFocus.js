@@ -114,7 +114,7 @@ const useEventFocus = (props, instances, context) => {
 			alertThumb();
 		}
 
-		if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || uiScrollableAdapter.current)) {
+		if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || uiScrollableAdapter.current.isDragging)) {
 			const
 				item = ev.target,
 				spotItem = Spotlight.getCurrent();
