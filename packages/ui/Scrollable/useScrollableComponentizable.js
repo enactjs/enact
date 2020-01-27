@@ -4,7 +4,6 @@ import useChildAdapter from './useChildAdapter';
 import useDecorateChildProps from './useDecorateChildProps';
 import {useScrollable} from './Scrollable';
 
-
 /**
  * An unstyled component that provides horizontal and vertical scrollbars and makes a render prop element scrollable.
  *
@@ -16,14 +15,14 @@ import {useScrollable} from './Scrollable';
  */
 const useScrollableComponentizable = (props) => {
 	// Refs
-	
+
 	const scrollableContainerRef = useRef(null);
 	const uiChildContainerRef = useRef();
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
 
 	// Adapters
-	
+
 	const [uiChildAdapter, setUiChildAdapter] = useChildAdapter();
 
 	// Hooks

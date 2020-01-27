@@ -5,7 +5,7 @@ const useCalculateMetrics = (props, instances) => {
 
 	// Instance variables
 	const variables = useRef({
-		scrollBounds : {
+		scrollBounds: {
 			clientHeight: 0,
 			clientWidth: 0,
 			maxLeft: 0,

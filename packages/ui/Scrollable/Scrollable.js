@@ -622,7 +622,6 @@ const useScrollable = (props) => {
 	delete rest.verticalScrollbar;
 	delete rest.verticalScrollbarRef;
 
-
 	// JS [[
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.

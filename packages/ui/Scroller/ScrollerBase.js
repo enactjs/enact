@@ -48,6 +48,8 @@ const ScrollerBase = (props) => {
 		didScroll
 	} = useScrollPosition(rest, instance, {getRtlPositionX, isHorizontal, isVertical});
 
+	// setUiChildAdapter
+
 	useEffect(() => {
 		rest.setUiChildAdapter({
 			didScroll,

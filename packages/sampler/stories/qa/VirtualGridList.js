@@ -13,7 +13,6 @@ import {storiesOf} from '@storybook/react';
 import {boolean, number, select} from '../../src/enact-knobs';
 import {action, mergeComponentMetadata} from '../../src/utils';
 
-
 const Config = mergeComponentMetadata('VirtualGridList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
 
 const
