@@ -53,7 +53,7 @@ const useSpottableScrollable = (props, instances, context) => {
 
 	const contextSharedState = useContext(SharedState);
 
-	// Instance
+	// Mutable value
 
 	const variables = useRef({
 		animateOnFocus: false,

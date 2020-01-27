@@ -25,7 +25,7 @@ const useSpottable = (props, instances, context) => {
 	const {uiChildAdapter, uiChildContainerRef} = instances;
 	const {type} = context;
 
-	// Instance
+	// Mutable value
 
 	const variables = useRef({
 		isScrolledBy5way: false,

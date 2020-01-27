@@ -10,7 +10,7 @@ const
 const useOverscrollEffect = (props, instances) => {
 	const {overscrollRefs, uiScrollableAdapter} = instances;
 
-	// Instance
+	// Mutable value
 
 	const variables = useRef({
 		overscrollJobs: {

@@ -49,7 +49,7 @@ const useEventMonitor = (props, instances, context) => {
 	const {scrollableContainerRef} = instances;
 	const {lastPointer: lastPointerProp, scrollByPageOnPointerMode} = context;
 
-	// Instance
+	// Mutable value
 
 	const variables = useRef({pageKeyHandlerObj: {scrollByPageOnPointerMode}});
 

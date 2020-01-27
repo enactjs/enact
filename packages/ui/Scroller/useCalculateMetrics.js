@@ -3,7 +3,7 @@ import {useEffect, useRef} from 'react';
 const useCalculateMetrics = (props, instances) => {
 	const {uiChildContainerRef} = instances;
 
-	// Instance
+	// Mutable value
 
 	const variables = useRef({
 		scrollBounds: {

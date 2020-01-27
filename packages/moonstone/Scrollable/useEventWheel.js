@@ -9,7 +9,7 @@ const useEventWheel = (props, instances, context) => {
 	const {childAdapter, horizontalScrollbarRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
 	const {isScrollButtonFocused, type} = context;
 
-	// Instance
+	// Mutable value
 
 	const variables = useRef({isWheeling: false});
 

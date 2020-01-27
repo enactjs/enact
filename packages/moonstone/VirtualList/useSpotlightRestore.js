@@ -8,7 +8,7 @@ const useSpotlightRestore = (props, instances) => {
 	const {spotlightId} = props;
 	const {spottable, uiChildAdapter, uiChildContainerRef} = instances;
 
-	// Instance
+	// Mutable value
 
 	const variables = useRef({
 		preservedIndex: false,

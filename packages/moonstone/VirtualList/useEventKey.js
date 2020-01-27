@@ -28,7 +28,7 @@ const useEventKey = (props, instances, context) => {
 		SpotlightAccelerator
 	} = context;
 
-	// Instance
+	// Mutable value
 
 	const variables = useRef({
 		fn: null

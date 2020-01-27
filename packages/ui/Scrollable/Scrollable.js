@@ -454,7 +454,8 @@ const useScrollable = (props) => {
 
 	const [, forceUpdate] = useForceUpdate();
 
-	// Instance variables
+	// Mutable value
+
 	const context = useContext(ResizeContext);
 
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(props.horizontalScrollbar === 'visible');

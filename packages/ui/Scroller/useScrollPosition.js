@@ -4,7 +4,7 @@ const useScrollPosition = (props, instances, context) => {
     const {uiChildContainerRef} = instances;
     const {getRtlPositionX, isHorizontal, isVertical} = context;
 
-	// Instance
+	// Mutable value
 
 	const variables = useRef({
 		scrollPos: {

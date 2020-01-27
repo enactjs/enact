@@ -1,7 +1,7 @@
 import {useRef} from 'react';
 
 const useEventKey = () => {
-	// Instance
+	// Mutable value
 
 	const variables = useRef({
 		fn: null

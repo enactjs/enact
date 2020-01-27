@@ -66,7 +66,7 @@ const VirtualListBase = (props) => {
 	const [firstIndex, setFirstIndex] = useState(0);
 	const [numOfItems, setNumOfItems] = useState(0);
 
-	// Instance variables
+	// Mutable value
 
 	const variables = useRef({
 		isMounted: false,

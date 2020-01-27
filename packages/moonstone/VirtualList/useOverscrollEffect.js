@@ -1,7 +1,7 @@
 import {useRef} from 'react';
 
 const useOverscrollEffect = () => {
-	// Instance
+	// Mutable value
 
 	const variables = useRef({
 		isWrappedBy5way: false

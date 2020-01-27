@@ -9,7 +9,7 @@ const useEventVoice = (props, instances, context) => {
 	const {scrollableContainerRef, uiScrollableAdapter} = instances;
 	const {onScrollbarButtonClick} = context;
 
-	// Instance
+	// Mutable value
 
 	const variables = useRef({
 		isVoiceControl: false,
