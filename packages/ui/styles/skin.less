@@ -1,0 +1,11 @@
+@enact-skin-mode: theme;
+@enact-skin-name: external;
+
+.applySkins(@componentRules) when (isruleset(@componentRules)) and (@enact-skin-mode = external) {
+	&:global(.@{enact-skin-name}) {
+		// Load the external theme colors into this scope
+		@import "~ENACT_THEME_ROOT/colors.less";
+
+		@componentRules();
+	}
+}

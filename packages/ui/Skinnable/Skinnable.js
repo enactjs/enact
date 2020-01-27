@@ -80,6 +80,8 @@ const defaultConfig = {
 	 */
 	defaultVariants: null,
 
+	externalSkin: true,
+
 	/**
 	 * A complete list of all supported variants.
 	 *
@@ -145,7 +147,7 @@ const SkinContext = React.createContext(null);
  * @public
  */
 const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
-	const {prop, skins, defaultSkin, allowedVariants, variantsProp} = config;
+	const {prop, skins, defaultSkin, externalSkin, allowedVariants, variantsProp} = config;
 	const defaultVariants = objectify(config.defaultVariants);
 
 	function determineSkin (authorSkin, parentSkin) {
@@ -186,7 +188,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 	}
 
 	function getClassName (effectiveSkin, className, variants) {
-		const skin = skins && skins[effectiveSkin];
+		const skin = externalSkin && effectiveSkin === 'external' ? 'external' : (skins && skins[effectiveSkin]);
 
 		// only apply the skin class if it's set and different from the "current" skin as
 		// defined by the value in context
