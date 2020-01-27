@@ -14,7 +14,6 @@ import useVirtualMetrics from './useVirtualMetrics';
 
 import css from './VirtualList.module.less';
 
-
 const nop = () => {};
 
 /**

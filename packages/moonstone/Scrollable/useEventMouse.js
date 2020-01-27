@@ -7,9 +7,10 @@ const useEventMouse = (props, instances, context) => {
 	// Functions
 
 	function handleFlick ({direction}) {
-		const {canScrollHorizontally, canScrollVertically} = uiScrollableAdapter.current;
-		const bounds = uiScrollableAdapter.current.getScrollBounds();
-		const focusedItem = Spotlight.getCurrent();
+		const
+			{canScrollHorizontally, canScrollVertically} = uiScrollableAdapter.current,
+			bounds = uiScrollableAdapter.current.getScrollBounds(),
+			focusedItem = Spotlight.getCurrent();
 
 		if (focusedItem) {
 			focusedItem.blur();

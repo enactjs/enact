@@ -53,6 +53,7 @@ const useCalculateMetrics = (props, instances, context) => {
 			primaryInfo = widthInfo;
 			secondary = heightInfo;
 		}
+
 		dimensionToExtent = 1;
 
 		virtualListBase.current.isItemSized = (primaryInfo.minItemSize && secondary.minItemSize);
@@ -80,6 +81,7 @@ const useCalculateMetrics = (props, instances, context) => {
 
 		// reset
 		virtualListBase.current.scrollPosition = 0;
+
 		if (type === 'JS' && contentRef.current) {
 			contentRef.current.style.transform = null;
 		}

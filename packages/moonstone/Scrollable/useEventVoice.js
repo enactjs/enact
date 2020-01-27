@@ -18,9 +18,10 @@ const useEventVoice = (props, instances, context) => {
 
 	// Functions
 
-	function updateFocusAfterVoiceControl () {
-		const spotItem = Spotlight.getCurrent();
-		const scrollableContainerNode = scrollableContainerRef.current;
+	const updateFocusAfterVoiceControl = () => {
+		const
+			spotItem = Spotlight.getCurrent(),
+			scrollableContainerNode = scrollableContainerRef.current;
 
 		if (useDOM().containsDangerously(scrollableContainerNode, spotItem)) {
 			const
@@ -50,12 +51,12 @@ const useEventVoice = (props, instances, context) => {
 		}
 	}
 
-	function isReachedEdge (scrollPos, ltrBound, rtlBound, isRtl = false) {
+	const isReachedEdge = (scrollPos, ltrBound, rtlBound, isRtl = false) => {
 		const bound = isRtl ? rtlBound : ltrBound;
 		return (bound === 0 && scrollPos === 0) || (bound > 0 && scrollPos >= bound - 1);
 	}
 
-	function handleVoice (e) {
+	const handleVoice = (e) => {
 		const
 			isHorizontal = (direction === 'horizontal'),
 			isRtl = uiScrollableAdapter.current.rtl,
@@ -64,7 +65,6 @@ const useEventVoice = (props, instances, context) => {
 			verticalDirection = ['up', 'down', 'top', 'bottom'],
 			horizontalDirection = isRtl ? ['right', 'left', 'rightmost', 'leftmost'] : ['left', 'right', 'leftmost', 'rightmost'],
 			movement = ['previous', 'next', 'first', 'last'];
-
 		let
 			scroll = e && e.detail && e.detail.scroll,
 			index = movement.indexOf(scroll);
@@ -92,12 +92,14 @@ const useEventVoice = (props, instances, context) => {
 		// Case 3. Can scroll
 		} else {
 			variables.current.isVoiceControl = true;
+
 			if (['up', 'down', 'left', 'right'].includes(scroll)) {
 				const isPreviousScrollButton = (scroll === 'up') || (scroll === 'left' && !isRtl) || (scroll === 'right' && isRtl);
 				onScrollbarButtonClick({isPreviousScrollButton, isVerticalScrollBar: verticalDirection.includes(scroll)});
 			} else { // ['top', 'bottom', 'leftmost', 'rightmost'].includes(scroll)
 				uiScrollableAdapter.current.scrollTo({align: verticalDirection.includes(scroll) && scroll || (scroll === 'leftmost' && isRtl || scroll === 'rightmost' && !isRtl) && 'right' || 'left'});
 			}
+
 			e.preventDefault();
 		}
 	}

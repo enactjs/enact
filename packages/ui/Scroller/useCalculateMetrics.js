@@ -42,6 +42,7 @@ const useCalculateMetrics = (props, instances) => {
 		if (props.rtl) {
 			return (platform.ios || platform.safari) ? -x : variables.current.scrollBounds.maxLeft - x;
 		}
+
 		return x;
 	}
 

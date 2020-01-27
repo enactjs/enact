@@ -34,6 +34,8 @@ const useEventKey = (props, instances, context) => {
 		fn: null
 	});
 
+	// Functions
+
 	const findSpottableItem = useCallback((indexFrom, indexTo) => {
 		if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
 			return -1;
@@ -156,6 +158,7 @@ const useEventKey = (props, instances, context) => {
 						} else {
 							const column = index % dimensionToExtent;
 							const row = (index - column) % dataSize / dimensionToExtent;
+
 							isLeaving = directions.up && row === 0 ||
 								directions.down && row === Math.floor((dataSize - 1) % dataSize / dimensionToExtent) ||
 								directions.left && column === 0 ||
@@ -170,6 +173,7 @@ const useEventKey = (props, instances, context) => {
 						}
 					} else {
 						const possibleTarget = getTargetByDirectionFromElement(direction, target);
+
 						if (!useDOM().containsDangerously(ev.currentTarget, possibleTarget)) {
 							isLeaving = true;
 						}

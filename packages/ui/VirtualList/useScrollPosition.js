@@ -78,6 +78,7 @@ const useScrollPosition = (props, instances, context) => {
 				for (index = 0; index < dataSize; index += dimensionToExtent) {
 					itemPosition = itemPositions[index];
 					size = itemSizes[index];
+
 					if (itemPosition && size && itemPosition.position + size >= pos && itemPosition.position <= pos + clientSize) {
 						firstRenderedIndex = index;
 						break;

@@ -12,7 +12,7 @@ const useEventFocus = (props, instances, context) => {
 
 	// Functions
 
-	function startScrollOnFocus (pos) {
+	const startScrollOnFocus = (pos) => {
 		if (pos) {
 			const
 				{top, left} = pos,
@@ -28,7 +28,8 @@ const useEventFocus = (props, instances, context) => {
 						targetX: left,
 						targetY: top,
 						animate: (animationDuration > 0) && spottable.current.animateOnFocus,
-						overscrollEffect: overscrollEffectOn[uiScrollableAdapter.current.lastInputType] && (!childAdapter.current.shouldPreventOverscrollEffect || !childAdapter.current.shouldPreventOverscrollEffect())
+						overscrollEffect: overscrollEffectOn[uiScrollableAdapter.current.lastInputType] &&
+							(!childAdapter.current.shouldPreventOverscrollEffect || !childAdapter.current.shouldPreventOverscrollEffect())
 					});
 					spottable.current.lastScrollPositionOnFocus = pos;
 				}
@@ -42,7 +43,8 @@ const useEventFocus = (props, instances, context) => {
 						targetX: left,
 						targetY: top,
 						animate: spottable.current.animateOnFocus,
-						overscrollEffect: props.overscrollEffectOn[uiScrollableAdapter.current.lastInputType] && (!childAdapter.current.shouldPreventOverscrollEffect || !childAdapter.current.shouldPreventOverscrollEffect())
+						overscrollEffect: props.overscrollEffectOn[uiScrollableAdapter.current.lastInputType] &&
+							(!childAdapter.current.shouldPreventOverscrollEffect || !childAdapter.current.shouldPreventOverscrollEffect())
 					});
 					spottable.current.lastScrollPositionOnFocus = pos;
 				}
@@ -52,9 +54,9 @@ const useEventFocus = (props, instances, context) => {
 
 	function calculateAndScrollTo () {
 		const
-			spotItem = Spotlight.getCurrent(),
 			positionFn = childAdapter.current.calculatePositionOnFocus,
-			childContainerNode = uiChildContainerRef.current;
+			childContainerNode = uiChildContainerRef.current,
+			spotItem = Spotlight.getCurrent();
 
 		if (spotItem && positionFn && useDOM().containsDangerously(childContainerNode, spotItem)) {
 			const lastPos = spottable.current.lastScrollPositionOnFocus;
@@ -99,7 +101,6 @@ const useEventFocus = (props, instances, context) => {
 	}
 
 	function handleFocus (ev) {
-
 		const shouldPreventScrollByFocus = childAdapter.current.shouldPreventScrollByFocus ?
 			childAdapter.current.shouldPreventScrollByFocus() :
 			false;

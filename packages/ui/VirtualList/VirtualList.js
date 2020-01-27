@@ -27,6 +27,8 @@ import {gridListItemSizeShape, itemSizesShape, VirtualListBase} from './VirtualL
  * @public
  */
 const VirtualList = ({role, ...rest}) => {
+	// Hooks
+
 	const {
 		childWrapper: ChildWrapper,
 		isHorizontalScrollbarVisible,
@@ -40,6 +42,8 @@ const VirtualList = ({role, ...rest}) => {
 		verticalScrollbarProps,
 		horizontalScrollbarProps
 	} = useScrollableComponentizable(rest);
+
+	// Render
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>

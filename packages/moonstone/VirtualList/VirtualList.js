@@ -7,7 +7,9 @@
  * @exports VirtualListBase
  */
 
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 import kind from '@enact/core/kind';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import {ResizeContext} from '@enact/ui/Resizable';
 import {gridListItemSizeShape, itemSizesShape, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
@@ -17,9 +19,6 @@ import warning from 'warning';
 import Scrollbar from '../Scrollable/Scrollbar';
 import useScrollableComponentizable from '../Scrollable/useScrollableComponentizable';
 import Skinnable from '../Skinnable';
-
-import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {useSpottableVirtualList, VirtualListBase} from './useSpottableVirtualList';
 
@@ -32,7 +31,7 @@ import {useSpottableVirtualList, VirtualListBase} from './useSpottableVirtualLis
  * @ui
  * @public
  */
-const VirtualListComp = ({itemSize, role, ...rest}) => {
+const ScrollableVirtualList = ({itemSize, role, ...rest}) => {
 	const props = itemSize && itemSize.minSize ?
 		{
 			itemSize: itemSize.minSize,
@@ -47,11 +46,15 @@ const VirtualListComp = ({itemSize, role, ...rest}) => {
 		'VirtualList with `minSize` in `itemSize` prop does not support `cbScrollTo` prop'
 	);
 
+	// Hooks
+
 	const {
+		// Variables
 		childWrapper: ChildWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
 
+		// Child Props
 		resizeContextProps,
 		scrollableContainerProps,
 		flexLayoutProps,
@@ -82,9 +85,9 @@ const VirtualListComp = ({itemSize, role, ...rest}) => {
 	);
 };
 
-VirtualListComp.displayName = 'VirtualList';
+ScrollableVirtualList.displayName = 'VirtualList';
 
-VirtualListComp.propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
+ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 	/**
 	 * Size of an item for the VirtualList; valid value is a number generally.
 	 * For different item size, value is an object that has `minSize`
@@ -111,7 +114,7 @@ VirtualListComp.propTypes = /** @lends moonstone/VirtualList.VirtualList.prototy
 	role: PropTypes.string
 };
 
-VirtualListComp.defaultProps = {
+ScrollableVirtualList.defaultProps = {
 	direction: 'vertical',
 	focusableScrollbar: false,
 	preventBubblingOnKeyDown: 'programmatic',
@@ -139,7 +142,7 @@ const VirtualList = Skinnable(
 		},
 		I18nContextDecorator(
 			{rtlProp: 'rtl'},
-			VirtualListComp
+			ScrollableVirtualList
 		)
 	)
 );
@@ -153,12 +156,14 @@ const VirtualList = Skinnable(
  * @ui
  * @public
  */
-const VirtualGridListComp = ({role, ...rest}) => {
+const VirtualGridListScrollable = ({role, ...rest}) => {
 	const {
+		// Variables
 		childWrapper: ChildWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
 
+		// Child Props
 		resizeContextProps,
 		scrollableContainerProps,
 		flexLayoutProps,
@@ -189,9 +194,9 @@ const VirtualGridListComp = ({role, ...rest}) => {
 	);
 };
 
-VirtualGridListComp.displayName = 'VirtualGridList';
+VirtualGridListScrollable.displayName = 'VirtualGridList';
 
-VirtualGridListComp.propTypes = /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
+VirtualGridListScrollable.propTypes = /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
 	/**
 	 * Size of an item for the VirtualGridList; valid value is an object that has `minWidth`
 	 * and `minHeight` as properties.
@@ -220,7 +225,7 @@ VirtualGridListComp.propTypes = /** @lends moonstone/VirtualList.VirtualGridList
 	role: PropTypes.string
 };
 
-VirtualGridListComp.defaultProps = {
+VirtualGridListScrollable.defaultProps = {
 	direction: 'vertical',
 	focusableScrollbar: false,
 	preventBubblingOnKeyDown: 'programmatic',
@@ -248,7 +253,7 @@ const VirtualGridList = Skinnable(
 		},
 		I18nContextDecorator(
 			{rtlProp: 'rtl'},
-			VirtualGridListComp
+			VirtualGridListScrollable
 		)
 	)
 );

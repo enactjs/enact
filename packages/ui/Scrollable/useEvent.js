@@ -12,6 +12,7 @@ const useEvent = (eventName) => {
 				window.addEventListener(eventName, fn, param);
 			}
 		},
+
         removeEventListener (ref, fn, param) {
 			if (ref.current) {
 				ref.current.removeEventListener(eventName, fn, param);

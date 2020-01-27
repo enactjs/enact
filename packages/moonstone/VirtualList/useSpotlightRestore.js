@@ -35,8 +35,9 @@ const useSpotlightRestore = (props, instances) => {
 	}
 
 	function isPlaceholderFocused () {
-		const childContainerNode = uiChildContainerRef.current;
-		const current = Spotlight.getCurrent();
+		const
+			childContainerNode = uiChildContainerRef.current,
+			current = Spotlight.getCurrent();
 
 		if (current && current.dataset.vlPlaceholder && useDOM().containsDangerously(childContainerNode, current)) {
 			return true;

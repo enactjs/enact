@@ -16,6 +16,8 @@
  * @exports ScrollerBase
  */
 
+import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import {ResizeContext} from '@enact/ui/Resizable';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import PropTypes from 'prop-types';
@@ -25,8 +27,6 @@ import Scrollbar from '../Scrollable/Scrollbar';
 import useScrollableComponentizable from '../Scrollable/useScrollableComponentizable';
 import Skinnable from '../Skinnable';
 
-import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {ScrollerBase, useSpottableScroller} from './useSpottableScroller';
 
@@ -44,7 +44,9 @@ import {ScrollerBase, useSpottableScroller} from './useSpottableScroller';
  * @ui
  * @public
  */
-const ScrollerComp = (props) => {
+const ScrollableScroller = (props) => {
+	// Hooks
+
 	const {
 		childWrapper: ChildWrapper,
 		isHorizontalScrollbarVisible,
@@ -61,6 +63,8 @@ const ScrollerComp = (props) => {
 
 	const uiChildProps = useSpottableScroller(childProps);
 
+	// Render
+
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
 			<div {...scrollableContainerProps}>
@@ -76,11 +80,11 @@ const ScrollerComp = (props) => {
 	);
 };
 
-ScrollerComp.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
+ScrollableScroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
 	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
 };
 
-ScrollerComp.defaultProps = {
+ScrollableScroller.defaultProps = {
 	direction: 'both',
 
 	'data-spotlight-container-disabled': false,
@@ -105,7 +109,7 @@ const Scroller = Skinnable(
 		},
 		I18nContextDecorator(
 			{rtlProp: 'rtl'},
-			ScrollerComp
+			ScrollableScroller
 		)
 	)
 );

@@ -31,6 +31,8 @@ import ScrollerBase from './ScrollerBase';
  * @public
  */
 const Scroller = (props) => {
+	// Hooks
+
 	const {
 		childWrapper: ChildWrapper,
 		isHorizontalScrollbarVisible,
@@ -45,6 +47,8 @@ const Scroller = (props) => {
 		horizontalScrollbarProps
 	} = useScrollableComponentizable(props);
 
+	// Return
+
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
 			<div {...scrollableContainerProps}>
@@ -58,7 +62,7 @@ const Scroller = (props) => {
 			</div>
 		</ResizeContext.Provider>
 	);
-}
+};
 
 Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
 	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])

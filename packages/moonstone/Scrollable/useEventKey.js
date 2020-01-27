@@ -4,6 +4,7 @@ import Spotlight, {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import {constants} from '@enact/ui/Scrollable/Scrollable';
 import useDOM from '@enact/ui/Scrollable/useDOM'
+
 const
 	{epsilon, isPageDown, isPageUp} = constants,
 	paginationPageMultiplier = 0.66,
@@ -46,11 +47,13 @@ const useEventKey = (props, instances, context) => {
 				const element = Spotlight.getCurrent();
 
 				uiScrollableAdapter.current.lastInputType = 'arrowKey';
-
 				direction = getDirection(keyCode);
+
 				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
-					if (!(horizontalScrollbarRef.current && useDOM().containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, element)) &&
-						!(verticalScrollbarRef.current && useDOM().containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, element))) {
+					if (
+						!(horizontalScrollbarRef.current && useDOM().containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, element)) &&
+						!(verticalScrollbarRef.current && useDOM().containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, element))
+					) {
 						checkAndApplyOverscrollEffectByDirection(direction);
 					}
 				}
@@ -58,7 +61,7 @@ const useEventKey = (props, instances, context) => {
 		}
 	}
 
-	function scrollByPage (direction) {
+	const scrollByPage = (direction) => {
 		const
 			{scrollTop} = uiScrollableAdapter.current,
 			focusedItem = Spotlight.getCurrent(),
@@ -84,8 +87,10 @@ const useEventKey = (props, instances, context) => {
 		if (scrollPossible) {
 			if (focusedItem) {
 				const contentNode = uiChildContainerRef.current;
+
 				// Should do nothing when focusedItem is paging control button of Scrollbar
-						checkAndApplyOverscrollEffectByDirection(direction);
+				checkAndApplyOverscrollEffectByDirection(direction);
+
 				if (useDOM().containsDangerously(contentNode, focusedItem)) {
 					const
 						contentRect = contentNode.getBoundingClientRect(),
@@ -93,6 +98,7 @@ const useEventKey = (props, instances, context) => {
 						yAdjust = isUp ? 1 : -1,
 						x = clamp(contentRect.left, contentRect.right, (clientRect.right + clientRect.left) / 2);
 					let y = 0;
+
 					if (type === 'JS') {
 						y = bounds.maxTop <= scrollTop + pageDistance || 0 >= scrollTop + pageDistance ?
 							contentRect[isUp ? 'top' : 'bottom'] + yAdjust :
@@ -104,9 +110,11 @@ const useEventKey = (props, instances, context) => {
 					}
 
 					focusedItem.blur();
+
 					if (!props['data-spotlight-container-disabled']) {
 						childAdapter.current.setContainerDisabled(true);
 					}
+
 					spottable.current.pointToFocus = {direction, x, y};
 				}
 			} else {
@@ -129,6 +137,7 @@ const useEventKey = (props, instances, context) => {
 			const direction = isPageUp(keyCode) ? 'up' : 'down';
 
 			scrollByPage(direction);
+
 			if (overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
 				checkAndApplyOverscrollEffectByDirection(direction);
 			}

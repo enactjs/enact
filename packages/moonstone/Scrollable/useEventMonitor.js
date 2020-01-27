@@ -2,6 +2,7 @@ import {onWindowReady} from '@enact/core/snapshot';
 import Spotlight from '@enact/spotlight';
 import {constants} from '@enact/ui/Scrollable/Scrollable';
 import useDOM from '@enact/ui/Scrollable/useDOM';
+import useEvent from '@enact/ui/Scrollable/useEvent';
 import {useEffect, useRef} from 'react';
 
 const {isPageDown, isPageUp} = constants;
@@ -13,13 +14,16 @@ const {isPageDown, isPageUp} = constants;
  * its descendants, we add `keydown` handler to `document` also.
  */
 const scrollables = new Map();
+
 let lastPointer = {x: 0, y: 0};
+
 // An app could have lists and/or scrollers more than one,
 // so we should test all of them when page up/down key is pressed.
 const pointerTracker = (ev) => {
 	lastPointer.x = ev.clientX;
 	lastPointer.y = ev.clientY;
 };
+
 const pageKeyHandler = (ev) => {
 	const {keyCode} = ev;
 
@@ -58,11 +62,11 @@ const useEventMonitor = (props, instances, context) => {
 	// Hooks
 
 	useEffect(() => {
-		function setMonitorEventTarget (target) {
+		const setMonitorEventTarget = (target) => {
 			scrollables.set(variables.pageKeyHandlerObj, target);
 		}
 
-		function deleteMonitorEventTarget () {
+		const deleteMonitorEventTarget = () => {
 			scrollables.delete(variables.pageKeyHandlerObj);
 		}
 
@@ -76,8 +80,8 @@ const useEventMonitor = (props, instances, context) => {
 };
 
 onWindowReady(() => {
-	document.addEventListener('mousemove', pointerTracker);
-	document.addEventListener('keydown', pageKeyHandler);
+	useEvent('mousemove').addEventListener(document, pointerTracker);
+	useEvent('keydown').addEventListener(document, pageKeyHandler);
 });
 
 export default useEventMonitor;

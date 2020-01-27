@@ -35,3 +35,6 @@ const useDecorateChildProps = (instance) => (childComponentName, props) => {
 };
 
 export default useDecorateChildProps;
+export {
+	useDecorateChildProps
+};

@@ -19,6 +19,8 @@ const useOverscrollEffect = (props, instances) => {
 		}
 	});
 
+	// Hooks
+
 	const applyOverscrollEffect = useCallback((orientation, edge, type, ratio) => {
 		const nodeRef = overscrollRefs[orientation].current;
 
@@ -30,8 +32,6 @@ const useOverscrollEffect = (props, instances) => {
 			}
 		}
 	}, [overscrollRefs]);
-
-	// Hooks
 
 	useEffect(() => {
 		function createOverscrollJob (orientation, edge) {

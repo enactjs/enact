@@ -49,6 +49,7 @@ const useSpotlightConfig = (props, instances) => {
 	 */
 	function lastFocusedRestore ({key}, all) {
 		const placeholder = all.find(el => 'vlPlaceholder' in el.dataset);
+
 		if (placeholder) {
 			placeholder.dataset.index = key;
 

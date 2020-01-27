@@ -48,12 +48,6 @@ const useSpottableVirtualList = (props) => {
 		type
 	});
 
-	// Functions
-
-	function getComponentProps (index) {
-		return (index === getNodeIndexToBeFocused()) ? {ref: (ref) => initItemRef(ref, index)} : {};
-	}
-
 	useEffect(() => {
 		props.setChildAdapter({
 			calculatePositionOnFocus,
@@ -66,6 +60,13 @@ const useSpottableVirtualList = (props) => {
 			shouldPreventScrollByFocus
 		});
 	}, []);
+
+	
+	// Functions
+
+	function getComponentProps (index) {
+		return (index === getNodeIndexToBeFocused()) ? {ref: (ref) => initItemRef(ref, index)} : {};
+	}
 
 	// Render
 

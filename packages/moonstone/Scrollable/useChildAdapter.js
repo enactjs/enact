@@ -15,9 +15,13 @@ const useChildAdapter = () => {
 		type: null
 	});
 
+	// Functions
+
     const setChildAdapter = (adapter) => {
 		childAdapter.current = adapter;
 	};
+
+	// Return
 
     return [childAdapter, setChildAdapter];
 };

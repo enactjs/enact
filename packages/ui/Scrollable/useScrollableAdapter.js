@@ -1,6 +1,8 @@
 import {useRef} from 'react';
 
 const scrollableAdapter = () => {
+	// Mutable value
+
     const scrollableAdapter = useRef({
 		animator: null,
 		applyOverscrollEffect: null,
@@ -30,13 +32,20 @@ const scrollableAdapter = () => {
         startHidingThumb: null,
         stop,
 		wheelDirection: null
-	});;
+	});
+
+	// Functions
 
     const setScrollableAdapter = (adapter) => {
 		scrollableAdapter.current = adapter;
     }
 
+    // Return
+
     return [scrollableAdapter, setScrollableAdapter];
 };
 
 export default scrollableAdapter;
+export {
+	scrollableAdapter
+};

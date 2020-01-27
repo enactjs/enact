@@ -34,11 +34,10 @@ import useSpotlightRestore from './useSpotlightRestore';
  */
 const dataIndexAttribute = 'data-index';
 
-const
-	reverseDirections = {
-		down: 'up',
-		up: 'down'
-	};
+const reverseDirections = {
+	down: 'up',
+	up: 'down'
+};
 
 const isIntersecting = (elem, container) => elem && intersects(getRect(container), getRect(elem));
 const getIntersectingElement = (elem, container) => isIntersecting(elem, container) && elem;
@@ -50,7 +49,6 @@ const getTargetInViewByDirectionFromPosition = (direction, position, container) 
 const useSpottableScrollable = (props, instances, context) => {
 	const {childAdapter, scrollableContainerRef, uiChildAdapter, uiChildContainerRef, uiScrollableAdapter} = instances;
 	const {type} = context;
-
 	const contextSharedState = useContext(SharedState);
 
 	// Mutable value
@@ -124,6 +122,7 @@ const useSpottableScrollable = (props, instances, context) => {
 		if (!props['data-spotlight-container-disabled']) {
 			childAdapter.current.setContainerDisabled(false);
 		}
+
 		focusOnItem();
 		variables.current.lastScrollPositionOnFocus = null;
 		variables.current.isWheeling = false;
@@ -139,34 +138,40 @@ const useSpottableScrollable = (props, instances, context) => {
 			childAdapter.current.focusByIndex(variables.current.indexToFocus);
 			variables.current.indexToFocus = null;
 		}
+
 		if (variables.current.nodeToFocus !== null && typeof childAdapter.current.focusOnNode === 'function') {
 			childAdapter.current.focusOnNode(variables.current.nodeToFocus);
 			variables.current.nodeToFocus = null;
 		}
+
 		if (variables.current.pointToFocus !== null) {
 			// no need to focus on pointer mode
 			if (!Spotlight.getPointerMode()) {
-				const {direction, x, y} = variables.current.pointToFocus;
-				const position = {x, y};
-				const elemFromPoint = document.elementFromPoint(x, y);
-				const target =
-					elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), scrollableContainerRef.current) ||
-					getTargetInViewByDirectionFromPosition(direction, position, scrollableContainerRef.current) ||
-					getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, scrollableContainerRef.current);
+				const
+					{direction, x, y} = variables.current.pointToFocus,
+					position = {x, y},
+					elemFromPoint = document.elementFromPoint(x, y),
+					target =
+						elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), scrollableContainerRef.current) ||
+						getTargetInViewByDirectionFromPosition(direction, position, scrollableContainerRef.current) ||
+						getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, scrollableContainerRef.current);
 
 				if (target) {
 					Spotlight.focus(target);
 				}
 			}
+
 			variables.current.pointToFocus = null;
 		}
 	}
 
 	function handleScroll (ev) {
-		const {scrollLeft: x, scrollTop: y} = ev;
-		const {id} = props;
+		const
+			{scrollLeft: x, scrollTop: y} = ev,
+			{id} = props;
 
 		forward('onScroll', ev, props);
+
 		if (id && contextSharedState && contextSharedState.set) {
 			contextSharedState.set(ev, props);
 			contextSharedState.set(`${id}.scrollPosition`, {x, y});
@@ -192,6 +197,7 @@ const useSpottableScrollable = (props, instances, context) => {
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function addEventListeners (uiChildContainerRef) {
 		useEvent('focusin').addEventListener(uiChildContainerRef, handleFocus);
+
 		if (uiChildContainerRef.current) {
 			addVoiceEventListener(uiChildContainerRef);
 		}
@@ -200,6 +206,7 @@ const useSpottableScrollable = (props, instances, context) => {
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function removeEventListeners (uiChildContainerRef) {
 		useEvent('focusin').removeEventListener(uiChildContainerRef, handleFocus);
+
 		if (uiChildContainerRef.current) {
 			removeVoiceEventListener(uiChildContainerRef);
 		}

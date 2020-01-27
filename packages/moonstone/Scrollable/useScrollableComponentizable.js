@@ -1,5 +1,4 @@
 import platform from '@enact/core/platform';
-
 import {useScrollable} from '@enact/ui/Scrollable';
 import {useChildAdapter as useUiChildAdapter} from '@enact/ui/Scrollable/useChildAdapter';
 import useDecorateChildProps from '@enact/ui/Scrollable/useDecorateChildProps';
@@ -38,7 +37,7 @@ const useScrollableComponentizable = (props) => {
 		...rest
 	} = props;
 
-	// Refs
+	// Mutable value
 
 	const scrollableContainerRef = useRef();
 	const uiChildContainerRef = useRef();
@@ -208,3 +207,6 @@ const useScrollableComponentizable = (props) => {
 };
 
 export default useScrollableComponentizable;
+export {
+	useScrollableComponentizable
+};

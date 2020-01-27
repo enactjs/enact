@@ -108,7 +108,7 @@ const usePositionItems = (props, instances, context) => {
 	return {
 		positionItems
 	};
-}
+};
 
 export default usePositionItems;
 export {

@@ -1,6 +1,8 @@
 import {useRef} from 'react';
 
 const useChildAdapter = () => {
+	// Mutable value
+
     const childAdapter = useRef({
 		calculateMetrics: null,
 		didScroll: null,
@@ -27,9 +29,13 @@ const useChildAdapter = () => {
 		syncClientSize: null
     });
 
+    // Functions
+
     const setChildAdapter = (adapter) => {
 		childAdapter.current = adapter;
     };
+
+    // Return
 
     return [childAdapter, setChildAdapter];
 };

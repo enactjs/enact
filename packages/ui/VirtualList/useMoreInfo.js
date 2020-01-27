@@ -32,7 +32,6 @@ const useMoreInfo = (props, instances, context) => {
 		} else if (props.itemSizes) {
 			const {isPrimaryDirectionVertical, scrollBounds: {clientWidth, clientHeight}, scrollPosition} = virtualListBase.current;
 			const size = isPrimaryDirectionVertical ? clientHeight : clientWidth;
-
 			let firstVisibleIndex = null, lastVisibleIndex = null;
 
 			for (let i = firstIndex; i < firstIndex + numOfItems; i++) {

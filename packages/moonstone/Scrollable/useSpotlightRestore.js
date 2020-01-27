@@ -5,7 +5,6 @@ import {SharedState} from '../internal/SharedStateDecorator/SharedStateDecorator
 const useSpotlightRestore = (props, instances) => {
 	const {id} = props;
 	const {uiScrollableAdapter} = instances;
-
 	const context = useContext(SharedState);
 
 	// Hooks

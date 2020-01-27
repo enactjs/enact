@@ -14,7 +14,7 @@ import {useScrollable} from './Scrollable';
  * @private
  */
 const useScrollableComponentizable = (props) => {
-	// Refs
+	// Mutable value
 
 	const scrollableContainerRef = useRef(null);
 	const uiChildContainerRef = useRef();
@@ -58,11 +58,11 @@ const useScrollableComponentizable = (props) => {
 		}
 	});
 
-	decorateChildProps
-
 	decorateChildProps('scrollableContainerProps', {ref: scrollableContainerRef});
 	decorateChildProps('verticalScrollbarProps', {ref: verticalScrollbarRef});
 	decorateChildProps('horizontalScrollbarProp', {ref: horizontalScrollbarRef});
+
+	// Return
 
 	return {
 		...decoratedChildProps,
@@ -73,3 +73,6 @@ const useScrollableComponentizable = (props) => {
 };
 
 export default useScrollableComponentizable;
+export {
+	useScrollableComponentizable
+};

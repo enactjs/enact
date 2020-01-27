@@ -80,6 +80,7 @@ const useEventWheel = (props, instances, context) => {
 				if (overscrollEffectRequired && (eventDelta < 0 && uiScrollableAdapter.current.scrollTop <= 0 || eventDelta > 0 && uiScrollableAdapter.current.scrollTop >= bounds.maxTop)) {
 					uiScrollableAdapter.current.applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
 				}
+
 				needToHideThumb = true;
 			}
 		} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
@@ -88,8 +89,10 @@ const useEventWheel = (props, instances, context) => {
 					if (!props['data-spotlight-container-disabled']) {
 						childAdapter.current.setContainerDisabled(true);
 					}
+
 					variables.current.isWheeling = true;
 				}
+
 				delta = uiScrollableAdapter.current.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				needToHideThumb = !delta;
 
@@ -99,6 +102,7 @@ const useEventWheel = (props, instances, context) => {
 				if (overscrollEffectRequired && (eventDelta < 0 && uiScrollableAdapter.current.scrollLeft <= 0 || eventDelta > 0 && uiScrollableAdapter.current.scrollLeft >= bounds.maxLeft)) {
 					uiScrollableAdapter.current.applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
 				}
+
 				needToHideThumb = true;
 			}
 		}
@@ -106,6 +110,7 @@ const useEventWheel = (props, instances, context) => {
 		if (delta !== 0) {
 			/* prevent native scrolling feature for vertical direction */
 			ev.preventDefault();
+
 			const direction = Math.sign(delta);
 
 			// Not to accumulate scroll position if wheel direction is different from hold direction
@@ -113,6 +118,7 @@ const useEventWheel = (props, instances, context) => {
 				uiScrollableAdapter.current.isScrollAnimationTargetAccumulated = false;
 				uiScrollableAdapter.current.wheelDirection = direction;
 			}
+
 			uiScrollableAdapter.current.scrollToAccumulatedTarget(delta, canScrollVertically, overscrollEffectRequired);
 		}
 

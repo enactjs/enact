@@ -151,6 +151,7 @@ const useSpottable = (props, instances, context) => {
 						dataSize - 1,
 						Math.floor((scrollPositionTarget + clientSize + spacing) / gridSize) * dimensionToExtent - 1
 					);
+
 				isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex <= lastFullyVisibleIndex;
 			}
 
@@ -198,7 +199,6 @@ const useSpottable = (props, instances, context) => {
 	/**
 	 * Focus on the Node of the VirtualList item
 	 */
-
 	function focusOnNode (node) {
 		if (node) {
 			Spotlight.focus(node);
@@ -206,8 +206,9 @@ const useSpottable = (props, instances, context) => {
 	}
 
 	function focusByIndex (index) {
-		const containerNode = uiChildContainerRef.current;
-		const item = containerNode.querySelector(`[data-index='${index}']${spottableSelector}`);
+		const
+			containerNode = uiChildContainerRef.current,
+			item = containerNode.querySelector(`[data-index='${index}']${spottableSelector}`);
 
 		if (!item && index >= 0 && index < props.dataSize) {
 			// Item is valid but since the the dom doesn't exist yet, we set the index to focus after the ongoing update
@@ -256,6 +257,7 @@ const useSpottable = (props, instances, context) => {
 					node.blur();
 				}
 			}
+
 			setNodeIndexToBeFocused(null);
 			variables.current.lastFocusedIndex = focusedIndex;
 

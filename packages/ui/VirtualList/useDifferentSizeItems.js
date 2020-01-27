@@ -14,6 +14,7 @@ const useDifferentSizeItems = (props, instances, context) => {
 
 		if (childNode && itemPositions[index]) {
 			const position = itemPositions[index].position;
+
 			if (direction === 'vertical') {
 				childNode.style.transform = `translate3d(0, ${position}px, 0)`;
 			} else {
