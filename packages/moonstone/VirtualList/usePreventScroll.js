@@ -1,16 +1,10 @@
 import {useEffect} from 'react';
 
 const usePreventScroll = (props, instances, context) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {rtl} = props;
 	const {containerNode, type} = context;
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useEffect(() => {
 		if (type === 'JS' && containerNode) {

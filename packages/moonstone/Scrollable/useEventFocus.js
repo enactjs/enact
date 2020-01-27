@@ -6,17 +6,11 @@ import useDOM from '@enact/ui/Scrollable/useDOM';
 const {animationDuration, epsilon} = constants;
 
 const useEventFocus = (props, instances, context) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {'data-spotlight-id': spotlightId, direction, overscrollEffectOn} = props;
 	const {childAdapter, spottable, scrollableContainerRef, uiChildAdapter, uiChildContainerRef, uiScrollableAdapter} = instances;
 	const {alertThumb, isWheeling, type} = context;
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function startScrollOnFocus (pos) {
 		if (pos) {
@@ -144,9 +138,7 @@ const useEventFocus = (props, instances, context) => {
 		return useDOM().containsDangerously(scrollableContainerRef, current);
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		calculateAndScrollTo,

@@ -2,16 +2,10 @@ import Spotlight from '@enact/spotlight';
 import {useEffect} from 'react';
 
 const useSpotlightConfig = (props, instances) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {dangerouslyContainsInScrollable, scrollAndFocusScrollbarButton, spotlightId} = props;
 	const {uiScrollableAdapter} = instances;
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useEffect(() => {
 		function handleLeaveContainer ({direction, target}) {

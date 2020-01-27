@@ -4,7 +4,8 @@ const useScrollPosition = (props, instances, context) => {
     const {uiChildContainerRef} = instances;
     const {getRtlPositionX, isHorizontal, isVertical} = context;
 
-	// Instance variables
+	// Instance
+
 	const variables = useRef({
 		scrollPos: {
 			left: 0,
@@ -12,9 +13,7 @@ const useScrollPosition = (props, instances, context) => {
 		}
 	});
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	// for Scrollable
 	function setScrollPosition (x, y) {
@@ -41,9 +40,7 @@ const useScrollPosition = (props, instances, context) => {
 		variables.current.scrollPos.top = y;
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		setScrollPosition,

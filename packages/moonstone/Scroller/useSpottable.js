@@ -10,16 +10,10 @@ import useSpotlightConfig from './useSpotlightConfig';
 const dataContainerDisabledAttribute = 'data-spotlight-container-disabled';
 
 const useSpottable = (props, instances) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {uiChildAdapter, uiChildContainerRef} = instances;
 	const {rtl} = props;
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useSpotlightConfig(props, instances);
 
@@ -53,9 +47,7 @@ const useSpottable = (props, instances) => {
 		}
 	});
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	/**
 	 * Returns the first spotlight container between `node` and the scroller
@@ -254,9 +246,7 @@ const useSpottable = (props, instances) => {
 		}
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		calculatePositionOnFocus,

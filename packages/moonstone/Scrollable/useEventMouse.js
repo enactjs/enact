@@ -1,16 +1,10 @@
 import Spotlight from '@enact/spotlight';
 
 const useEventMouse = (props, instances, context) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {childAdapter, uiScrollableAdapter} = instances;
 	const {isScrollButtonFocused, type} = context;
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function handleFlick ({direction}) {
 		const {canScrollHorizontally, canScrollVertically} = uiScrollableAdapter.current;
@@ -41,9 +35,7 @@ const useEventMouse = (props, instances, context) => {
 		}
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		handleFlick,

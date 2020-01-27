@@ -10,17 +10,11 @@ const
 	lastPointer = {x: 0, y: 0};
 
 const useEventKey = (props, instances, context) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {direction: directionProp, overscrollEffectOn} = props;
 	const {childAdapter, horizontalScrollbarRef, spottable, uiChildAdapter, uiChildContainerRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
 	const {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type} = context;
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function handleKeyDown (ev) {
 		const {keyCode, repeat, target} = ev;
@@ -145,9 +139,7 @@ const useEventKey = (props, instances, context) => {
 		return false; // means to be propagated
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		handleKeyDown,

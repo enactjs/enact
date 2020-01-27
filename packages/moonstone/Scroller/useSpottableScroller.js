@@ -16,15 +16,9 @@ import useSpottable from './useSpottable';
  * @public
  */
 const useSpottableScroller = (props) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {uiChildAdapter, uiChildContainerRef} = props;
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	const {calculatePositionOnFocus, focusOnNode, setContainerDisabled} = useSpottable(props, {uiChildAdapter, uiChildContainerRef});
 
@@ -36,9 +30,7 @@ const useSpottableScroller = (props) => {
 		});
 	}, []);
 
-	/*
-	 * Render
-	 */
+	// Render
 
 	const propsObject = Object.assign({}, props);
 

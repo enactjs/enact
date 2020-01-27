@@ -16,15 +16,9 @@ const navigableFilter = (elem) => {
 };
 
 const useSpotlightConfig = (props) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {'data-spotlight-id': spotlightId, focusableScrollbar} = props;
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useEffect(() => {
 		function configureSpotlight () {

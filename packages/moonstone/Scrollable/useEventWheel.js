@@ -6,22 +6,14 @@ import {useRef} from 'react';
 const {overscrollTypeOnce, scrollWheelPageMultiplierForMaxPixel} = constants;
 
 const useEventWheel = (props, instances, context) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {childAdapter, horizontalScrollbarRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
 	const {isScrollButtonFocused, type} = context;
 
-	/*
-	 * Instance
-	 */
+	// Instance
 
 	const variables = useRef({isWheeling: false});
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function handleWheel ({delta}) {
 		const focusedItem = Spotlight.getCurrent();
@@ -129,9 +121,7 @@ const useEventWheel = (props, instances, context) => {
 		}
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		handleWheel: type === 'JS' ? handleWheel : handleWheelNative,

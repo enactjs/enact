@@ -5,31 +5,21 @@ import {useEffect, useRef} from 'react';
 const getNumberValue = (index) => index | 0;
 
 const useSpotlightRestore = (props, instances) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {spotlightId} = props;
 	const {spottable, uiChildAdapter, uiChildContainerRef} = instances;
 
-	/*
-	 * Instance
-	 */
+	// Instance
 
 	const variables = useRef({
 		preservedIndex: false,
 		restoreLastFocused: false
 	});
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useEffect(restoreFocus);
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function handlePlaceholderFocus (ev) {
 		const placeholder = ev.currentTarget;
@@ -105,9 +95,7 @@ const useSpotlightRestore = (props, instances) => {
 		variables.current.restoreLastFocused = true;
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		handlePlaceholderFocus,

@@ -46,24 +46,16 @@ const pageKeyHandler = (ev) => {
 };
 
 const useEventMonitor = (props, instances, context) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {scrollableContainerRef} = instances;
 	const {lastPointer: lastPointerProp, scrollByPageOnPointerMode} = context;
 
-	/*
-	 * Instance
-	 */
+	// Instance
 
 	const variables = useRef({pageKeyHandlerObj: {scrollByPageOnPointerMode}});
 
 	lastPointer = lastPointerProp;
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useEffect(() => {
 		function setMonitorEventTarget (target) {

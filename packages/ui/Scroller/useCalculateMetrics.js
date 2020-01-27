@@ -3,7 +3,8 @@ import {useEffect, useRef} from 'react';
 const useCalculateMetrics = (props, instances) => {
 	const {uiChildContainerRef} = instances;
 
-	// Instance variables
+	// Instance
+
 	const variables = useRef({
 		scrollBounds: {
 			clientHeight: 0,
@@ -15,18 +16,14 @@ const useCalculateMetrics = (props, instances) => {
 		}
 	});
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useEffect(() => {
 		// componentDidUpdate
 		calculateMetrics();
 	});
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function calculateMetrics () {
 		const
@@ -52,9 +49,7 @@ const useCalculateMetrics = (props, instances) => {
 		return variables.current.scrollBounds;
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		calculateMetrics,

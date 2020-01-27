@@ -5,26 +5,18 @@ import useEvent from '@enact/ui/Scrollable/useEvent';
 import {useRef} from 'react';
 
 const useEventVoice = (props, instances, context) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {direction} = props;
 	const {scrollableContainerRef, uiScrollableAdapter} = instances;
 	const {onScrollbarButtonClick} = context;
 
-	/*
-	 * Instance
-	 */
+	// Instance
 
 	const variables = useRef({
 		isVoiceControl: false,
 		voiceControlDirection: 'vertical'
 	});
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function updateFocusAfterVoiceControl () {
 		const spotItem = Spotlight.getCurrent();
@@ -124,9 +116,7 @@ const useEventVoice = (props, instances, context) => {
 		}
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		addVoiceEventListener,

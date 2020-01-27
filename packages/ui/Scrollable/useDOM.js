@@ -4,9 +4,7 @@ import {useEffect, useRef} from 'react';
 // At the end, wes should not use DOM APIs as well as the APIs in the `useDOM`. If we use them, we have to try to remove them first if possible.
 
 const useDOM = () => {
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function containsDangerously (ref, target) {
 		if (!target) {
@@ -37,9 +35,7 @@ const useDOM = () => {
 	const scrollLeftDangerously = 0;
 	const scrollTopDangerously = 0;
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		containsDangerously,

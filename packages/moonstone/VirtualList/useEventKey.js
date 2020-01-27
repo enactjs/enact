@@ -17,10 +17,6 @@ const
 	getNumberValue = (index) => index | 0;
 
 const useEventKey = (props, instances, context) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {dataSize, focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
 		rtl, spotlightId, wrap} = props;
 	const {uiChildAdapter} = instances;
@@ -32,9 +28,7 @@ const useEventKey = (props, instances, context) => {
 		SpotlightAccelerator
 	} = context;
 
-	/*
-	 * Instance
-	 */
+	// Instance
 
 	const variables = useRef({
 		fn: null
@@ -111,9 +105,7 @@ const useEventKey = (props, instances, context) => {
 		return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
 	}, [dataSize, findSpottableItem, rtl, wrap]);
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useEffect(() => {
 		function handleKeyDown (ev) {
@@ -216,9 +208,7 @@ const useEventKey = (props, instances, context) => {
 		spotlightId, SpotlightAccelerator
 	]);
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function addGlobalKeyDownEventListener (fn) {
 		variables.current.fn = fn;
@@ -230,9 +220,7 @@ const useEventKey = (props, instances, context) => {
 		variables.current.fn = null;
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		addGlobalKeyDownEventListener,

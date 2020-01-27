@@ -3,10 +3,6 @@ import Spotlight from '@enact/spotlight';
 const paginationPageMultiplier = 0.66;
 
 const useScrollbar = (props, instances, context) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {direction: directionProp, focusableScrollbar, overscrollEffectOn} = props;
 	const {horizontalScrollbarRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
 	const {isContent} = context;
@@ -17,9 +13,7 @@ const useScrollbar = (props, instances, context) => {
 		onPrevScroll: onScrollbarButtonClick
 	};
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function isScrollButtonFocused () {
 		return (
@@ -95,9 +89,7 @@ const useScrollbar = (props, instances, context) => {
 		}
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		alertThumb,

@@ -6,7 +6,7 @@ const useCalculateMetrics = (props, instances, context) => {
 	const {firstIndex} = virtualListBase;
 	const {getMoreInfo, numOfItems, setFirstIndex, setNumOfItems, updateMoreInfo} = context;
 
-	// Instance variables
+	// Instance
 
 	const variables = useRef({
 		scrollBounds: {

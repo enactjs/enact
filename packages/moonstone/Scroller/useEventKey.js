@@ -1,17 +1,13 @@
 import {useRef} from 'react';
 
 const useEventKey = () => {
-	/*
-	 * Instance
-	 */
+	// Instance
 
 	const variables = useRef({
 		fn: null
 	});
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function addGlobalKeyDownEventListener (fn) {
 		variables.current.fn = fn;
@@ -23,9 +19,7 @@ const useEventKey = () => {
 		variables.current.fn = null;
 	}
 
-	/*
-	 * Retur
-	 */
+	// Return
 
 	return {
 		addGlobalKeyDownEventListener,

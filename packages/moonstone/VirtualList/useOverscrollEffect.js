@@ -1,25 +1,19 @@
 import {useRef} from 'react';
 
 const useOverscrollEffect = () => {
-	/*
-	 * Instance
-	 */
+	// Instance
 
 	const variables = useRef({
 		isWrappedBy5way: false
 	});
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function setWrappedBy5way (bool) {
 		variables.current.isWrappedBy5way = bool;
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return [variables.current.isWrappedBy5way, setWrappedBy5way];
 };

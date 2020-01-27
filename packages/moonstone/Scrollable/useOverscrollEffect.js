@@ -8,15 +8,9 @@ const
 	overscrollTimeout = 300;
 
 const useOverscrollEffect = (props, instances) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {overscrollRefs, uiScrollableAdapter} = instances;
 
-	/*
-	 * Instance
-	 */
+	// Instance
 
 	const variables = useRef({
 		overscrollJobs: {
@@ -37,9 +31,7 @@ const useOverscrollEffect = (props, instances) => {
 		}
 	}, [overscrollRefs]);
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useEffect(() => {
 		function createOverscrollJob (orientation, edge) {
@@ -69,9 +61,7 @@ const useOverscrollEffect = (props, instances) => {
 		};
 	}, [applyOverscrollEffect]);
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function clearOverscrollEffect (orientation, edge) {
 		variables.current.overscrollJobs[orientation][edge].startAfter(overscrollTimeout, orientation, edge, overscrollTypeNone, 0);
@@ -93,9 +83,7 @@ const useOverscrollEffect = (props, instances) => {
 		}
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		applyOverscrollEffect,

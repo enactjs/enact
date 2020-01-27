@@ -22,16 +22,10 @@ const
 	spottableSelector = `.${spottableClass}`;
 
 const useSpottable = (props, instances, context) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {uiChildAdapter, uiChildContainerRef} = instances;
 	const {type} = context;
 
-	/*
-	 * Instance
-	 */
+	// Instance
 
 	const variables = useRef({
 		isScrolledBy5way: false,
@@ -43,9 +37,7 @@ const useSpottable = (props, instances, context) => {
 
 	const {pause} = variables.current;
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useSpotlightConfig(props, {spottable: variables});
 
@@ -119,9 +111,7 @@ const useSpottable = (props, instances, context) => {
 		};
 	}, [pause, setContainerDisabled]);
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function getNodeIndexToBeFocused () {
 		return variables.current.nodeIndexToBeFocused;
@@ -309,9 +299,7 @@ const useSpottable = (props, instances, context) => {
 		return uiChildAdapter.current.getScrollBounds();
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		calculatePositionOnFocus,

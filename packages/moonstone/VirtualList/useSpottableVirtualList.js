@@ -18,16 +18,9 @@ import virtualListItemsRenderer from './virtualListItemsRenderer';
  */
 const useSpottableVirtualList = (props) => {
 	const {type, uiChildAdapter, uiChildContainerRef} = props;
-
-	/*
-	 * Dependencies
-	 */
-
 	const {spotlightId} = props;
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	const instance = {uiChildAdapter, uiChildContainerRef};
 
@@ -55,9 +48,7 @@ const useSpottableVirtualList = (props) => {
 		type
 	});
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function getComponentProps (index) {
 		return (index === getNodeIndexToBeFocused()) ? {ref: (ref) => initItemRef(ref, index)} : {};
@@ -76,9 +67,7 @@ const useSpottableVirtualList = (props) => {
 		});
 	}, []);
 
-	/*
-	 * Render
-	 */
+	// Render
 
 	const
 		{itemRenderer, itemsRenderer, role, ...rest} = props,

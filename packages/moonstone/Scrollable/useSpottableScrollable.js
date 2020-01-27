@@ -48,18 +48,12 @@ const getTargetInViewByDirectionFromPosition = (direction, position, container) 
 };
 
 const useSpottableScrollable = (props, instances, context) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {childAdapter, scrollableContainerRef, uiChildAdapter, uiChildContainerRef, uiScrollableAdapter} = instances;
 	const {type} = context;
 
 	const contextSharedState = useContext(SharedState);
 
-	/*
-	 * Instance
-	 */
+	// Instance
 
 	const variables = useRef({
 		animateOnFocus: false,
@@ -69,9 +63,7 @@ const useSpottableScrollable = (props, instances, context) => {
 		pointToFocus: null
 	});
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	const {
 		alertThumb,
@@ -111,9 +103,7 @@ const useSpottableScrollable = (props, instances, context) => {
 
 	const {handleResizeWindow} = useEventResizeWindow();
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function isContent (element) {
 		return (element && useDOM().containsDangerously(uiChildContainerRef, element));
@@ -215,9 +205,7 @@ const useSpottableScrollable = (props, instances, context) => {
 		}
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		addEventListeners,

@@ -5,7 +5,7 @@ const useMoreInfo = (props, instances, context) => {
 	const {firstIndex} = virtualListBase;
 	const {numOfItems} = context;
 
-	// Instance variables
+	// Instance
 
 	const variables = useRef({
 		moreInfo: {

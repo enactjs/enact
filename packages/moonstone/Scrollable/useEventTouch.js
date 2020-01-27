@@ -1,15 +1,9 @@
 import Spotlight from '@enact/spotlight';
 
 const useEventTouch = (props, instnaces, context) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {isScrollButtonFocused} = context;
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function handleTouchStart () {
 		const focusedItem = Spotlight.getCurrent();
@@ -19,9 +13,7 @@ const useEventTouch = (props, instnaces, context) => {
 		}
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		handleTouchStart

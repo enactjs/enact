@@ -3,18 +3,12 @@ import {useContext, useEffect} from 'react';
 import {SharedState} from '../internal/SharedStateDecorator/SharedStateDecorator';
 
 const useSpotlightRestore = (props, instances) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {id} = props;
 	const {uiScrollableAdapter} = instances;
 
 	const context = useContext(SharedState);
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useEffect(() => {
 		// Only intended to be used within componentDidMount, this method will fetch the last stored
