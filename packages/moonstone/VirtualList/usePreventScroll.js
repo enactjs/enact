@@ -1,12 +1,12 @@
 import {useEffect} from 'react';
 
-const usePreventScroll = (props, instances, dependencies) => {
+const usePreventScroll = (props, instances, context) => {
 	/*
 	 * Dependencies
 	 */
 
 	const {rtl} = props;
-	const {containerNode, type} = dependencies;
+	const {containerNode, type} = context;
 
 	/*
 	 * Hooks

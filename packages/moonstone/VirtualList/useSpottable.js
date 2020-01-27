@@ -21,13 +21,13 @@ const
 	getNumberValue = (index) => index | 0,
 	spottableSelector = `.${spottableClass}`;
 
-const useSpottable = (props, instances, dependencies) => {
+const useSpottable = (props, instances, context) => {
 	/*
 	 * Dependencies
 	 */
 
 	const {uiChildAdapter, uiChildContainerRef} = instances;
-	const {type} = dependencies;
+	const {type} = context;
 
 	/*
 	 * Instance

@@ -1,11 +1,11 @@
 import {platform} from '@enact/core/platform';
 import {useRef} from 'react';
 
-const useScrollPosition = (props, instances, dependencies) => {
+const useScrollPosition = (props, instances, context) => {
 	const {type} = props;
 	const {contentRef, uiChildContainerRef, virtualListBase} = instances;
 	const {firstIndex} = virtualListBase;
-	const {getScrollBounds, setFirstIndex, syncThreshold,updateMoreInfo} = dependencies;
+	const {getScrollBounds, setFirstIndex, syncThreshold,updateMoreInfo} = context;
 
 	// Functions
 

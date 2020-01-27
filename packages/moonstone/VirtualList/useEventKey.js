@@ -16,7 +16,7 @@ const
 	nop = () => {},
 	getNumberValue = (index) => index | 0;
 
-const useEventKey = (props, instances, dependencies) => {
+const useEventKey = (props, instances, context) => {
 	/*
 	 * Dependencies
 	 */
@@ -30,7 +30,7 @@ const useEventKey = (props, instances, dependencies) => {
 		handleDirectionKeyDown,
 		handlePageUpDownKeyDown,
 		SpotlightAccelerator
-	} = dependencies;
+	} = context;
 
 	/*
 	 * Instance

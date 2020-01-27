@@ -47,15 +47,15 @@ const getTargetInViewByDirectionFromPosition = (direction, position, container) 
 	return getIntersectingElement(target, container);
 };
 
-const useSpottableScrollable = (props, instances, dependencies) => {
+const useSpottableScrollable = (props, instances, context) => {
 	/*
 	 * Dependencies
 	 */
 
 	const {childAdapter, scrollableContainerRef, uiChildAdapter, uiChildContainerRef, uiScrollableAdapter} = instances;
-	const {type} = dependencies;
+	const {type} = context;
 
-	const context = useContext(SharedState);
+	const contextSharedState = useContext(SharedState);
 
 	/*
 	 * Instance
@@ -177,9 +177,9 @@ const useSpottableScrollable = (props, instances, dependencies) => {
 		const {id} = props;
 
 		forward('onScroll', ev, props);
-		if (id && context && context.set) {
-			context.set(ev, props);
-			context.set(`${id}.scrollPosition`, {x, y});
+		if (id && contextSharedState && contextSharedState.set) {
+			contextSharedState.set(ev, props);
+			contextSharedState.set(`${id}.scrollPosition`, {x, y});
 		}
 	}
 

@@ -45,13 +45,13 @@ const pageKeyHandler = (ev) => {
 	}
 };
 
-const useEventMonitor = (props, instances, dependencies) => {
+const useEventMonitor = (props, instances, context) => {
 	/*
 	 * Dependencies
 	 */
 
 	const {scrollableContainerRef} = instances;
-	const {lastPointer: lastPointerProp, scrollByPageOnPointerMode} = dependencies;
+	const {lastPointer: lastPointerProp, scrollByPageOnPointerMode} = context;
 
 	/*
 	 * Instance

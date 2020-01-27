@@ -4,14 +4,14 @@ import useDOM from '@enact/ui/Scrollable/useDOM';
 import useEvent from '@enact/ui/Scrollable/useEvent';
 import {useRef} from 'react';
 
-const useEventVoice = (props, instances, dependencies) => {
+const useEventVoice = (props, instances, context) => {
 	/*
 	 * Dependencies
 	 */
 
 	const {direction} = props;
 	const {scrollableContainerRef, uiScrollableAdapter} = instances;
-	const {onScrollbarButtonClick} = dependencies;
+	const {onScrollbarButtonClick} = context;
 
 	/*
 	 * Instance

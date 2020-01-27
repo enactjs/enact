@@ -1,12 +1,12 @@
 import Spotlight from '@enact/spotlight';
 
-const useEventMouse = (props, instances, dependencies) => {
+const useEventMouse = (props, instances, context) => {
 	/*
 	 * Dependencies
 	 */
 
 	const {childAdapter, uiScrollableAdapter} = instances;
-	const {isScrollButtonFocused, type} = dependencies;
+	const {isScrollButtonFocused, type} = context;
 
 	/*
 	 * Functions

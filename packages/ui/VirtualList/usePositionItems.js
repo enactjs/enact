@@ -3,10 +3,10 @@ import React from 'react';
 
 import css from './VirtualList.module.less';
 
-const usePositionItems = (props, instances, dependencies) => {
+const usePositionItems = (props, instances, context) => {
 	const {virtualListBase} = instances;
 	const {firstIndex, updateFromTo} = virtualListBase;
-	const {getGridPosition, getXY, numOfItems} = dependencies;
+	const {getGridPosition, getXY, numOfItems} = context;
 
 	// Functions
 

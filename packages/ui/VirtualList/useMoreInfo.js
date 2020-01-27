@@ -1,9 +1,9 @@
 import {useEffect, useRef} from 'react';
 
-const useMoreInfo = (props, instances, dependencies) => {
+const useMoreInfo = (props, instances, context) => {
 	const {virtualListBase} = instances;
 	const {firstIndex} = virtualListBase;
-	const {numOfItems} = dependencies;
+	const {numOfItems} = context;
 
 	// Instance variables
 

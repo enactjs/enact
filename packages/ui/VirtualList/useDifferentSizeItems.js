@@ -1,7 +1,7 @@
-const useDifferentSizeItems = (props, instances, dependencies) => {
+const useDifferentSizeItems = (props, instances, context) => {
 	const {virtualListBase} = instances;
 	const {firstIndex} = virtualListBase;
-	const {getItemTopPositionFromPreviousItemBottomPosition, numOfItems, updateMoreInfo, updateScrollBoundsWithItemPositions} = dependencies;
+	const {getItemTopPositionFromPreviousItemBottomPosition, numOfItems, updateMoreInfo, updateScrollBoundsWithItemPositions} = context;
 
 	// Functions
 

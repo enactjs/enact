@@ -5,14 +5,14 @@ import useDOM from '@enact/ui/Scrollable/useDOM';
 
 const {animationDuration, epsilon} = constants;
 
-const useEventFocus = (props, instances, dependencies) => {
+const useEventFocus = (props, instances, context) => {
 	/*
 	 * Dependencies
 	 */
 
 	const {'data-spotlight-id': spotlightId, direction, overscrollEffectOn} = props;
 	const {childAdapter, spottable, scrollableContainerRef, uiChildAdapter, uiChildContainerRef, uiScrollableAdapter} = instances;
-	const {alertThumb, isWheeling, type} = dependencies;
+	const {alertThumb, isWheeling, type} = context;
 
 	/*
 	 * Functions

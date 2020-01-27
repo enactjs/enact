@@ -2,14 +2,14 @@ import Spotlight from '@enact/spotlight';
 
 const paginationPageMultiplier = 0.66;
 
-const useScrollbar = (props, instances, dependencies) => {
+const useScrollbar = (props, instances, context) => {
 	/*
 	 * Dependencies
 	 */
 
 	const {direction: directionProp, focusableScrollbar, overscrollEffectOn} = props;
 	const {horizontalScrollbarRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
-	const {isContent} = dependencies;
+	const {isContent} = context;
 
 	const scrollbarProps = {
 		cbAlertThumb: alertThumbAfterRendered,

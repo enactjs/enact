@@ -9,14 +9,14 @@ const
 	paginationPageMultiplier = 0.66,
 	lastPointer = {x: 0, y: 0};
 
-const useEventKey = (props, instances, dependencies) => {
+const useEventKey = (props, instances, context) => {
 	/*
 	 * Dependencies
 	 */
 
 	const {direction: directionProp, overscrollEffectOn} = props;
 	const {childAdapter, horizontalScrollbarRef, spottable, uiChildAdapter, uiChildContainerRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
-	const {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type} = dependencies;
+	const {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type} = context;
 
 	/*
 	 * Functions

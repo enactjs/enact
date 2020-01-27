@@ -1,10 +1,10 @@
 import {useRef} from 'react';
 
-const useCalculateMetrics = (props, instances, dependencies) => {
+const useCalculateMetrics = (props, instances, context) => {
 	const {type} = props;
 	const {contentRef, uiChildContainerRef, virtualListBase} = instances;
 	const {firstIndex} = virtualListBase;
-	const {getMoreInfo, numOfItems, setFirstIndex, setNumOfItems, updateMoreInfo} = dependencies;
+	const {getMoreInfo, numOfItems, setFirstIndex, setNumOfItems, updateMoreInfo} = context;
 
 	// Instance variables
 

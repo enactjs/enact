@@ -5,13 +5,13 @@ import {useRef} from 'react';
 
 const {overscrollTypeOnce, scrollWheelPageMultiplierForMaxPixel} = constants;
 
-const useEventWheel = (props, instances, dependencies) => {
+const useEventWheel = (props, instances, context) => {
 	/*
 	 * Dependencies
 	 */
 
 	const {childAdapter, horizontalScrollbarRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
-	const {isScrollButtonFocused, type} = dependencies;
+	const {isScrollButtonFocused, type} = context;
 
 	/*
 	 * Instance

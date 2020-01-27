@@ -1,11 +1,11 @@
 import Spotlight from '@enact/spotlight';
 
-const useEventTouch = (props, instnaces, dependencies) => {
+const useEventTouch = (props, instnaces, context) => {
 	/*
 	 * Dependencies
 	 */
 
-	const {isScrollButtonFocused} = dependencies;
+	const {isScrollButtonFocused} = context;
 
 	/*
 	 * Functions
