@@ -2,6 +2,7 @@ import {is} from '@enact/core/keymap';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import useDOM from '@enact/ui/Scrollable/useDOM';
+import useEvent from '@enact/ui/Scrollable/useEvent';
 import clamp from 'ramda/src/clamp';
 import {useCallback, useEffect, useRef} from 'react';
 
@@ -19,9 +20,8 @@ const
 const useEventKey = (props, instances, context) => {
 	const {dataSize, focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
 		rtl, spotlightId, wrap} = props;
-	const {uiChildAdapter} = instances;
+	const {uiChildAdapter, uiChildContainerRef} = instances;
 	const {
-		containerNode,
 		handle5WayKeyUp,
 		handleDirectionKeyDown,
 		handlePageUpDownKeyDown,
@@ -194,19 +194,15 @@ const useEventKey = (props, instances, context) => {
 			}
 		}
 
-		if (containerNode && containerNode.addEventListener) {
-			containerNode.addEventListener('keydown', handleKeyDown, {capture: true});
-			containerNode.addEventListener('keyup', handleKeyUp, {capture: true});
-		}
+		useEvent('keydown').addEventListener(uiChildContainerRef, handleKeyDown, {capture: true});
+		useEvent('keyup').addEventListener(uiChildContainerRef, handleKeyUp, {capture: true});
 
 		return () => {
-			if (containerNode && containerNode.removeEventListener) {
-				containerNode.removeEventListener('keydown', handleKeyDown, {capture: true});
-				containerNode.removeEventListener('keyup', handleKeyUp, {capture: true});
-			}
+			useEvent('keydown').removeEventListener(uiChildContainerRef, handleKeyDown, {capture: true});
+			useEvent('keyup').removeEventListener(uiChildContainerRef, handleKeyUp, {capture: true});
 		};
 	}, [
-		containerNode, dataSize, focusableScrollbar, getNextIndex,
+		uiChildContainerRef, dataSize, focusableScrollbar, getNextIndex,
 		handle5WayKeyUp, handleDirectionKeyDown, handlePageUpDownKeyDown,
 		isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
 		spotlightId, SpotlightAccelerator
@@ -216,11 +212,11 @@ const useEventKey = (props, instances, context) => {
 
 	function addGlobalKeyDownEventListener (fn) {
 		variables.current.fn = fn;
-		document.addEventListener('keydown', variables.current.fn, {capture: true});
+		useEvent('keydown').addEventListener(document, variables.current.fn, {capture: true});
 	}
 
 	function removeGlobalKeyDownEventListener () {
-		document.removeEventListener('keydown', variables.current.fn, {capture: true});
+		useEvent('keydown').removeEventListener(document, variables.current.fn, {capture: true});
 		variables.current.fn = null;
 	}
 

@@ -1364,13 +1364,11 @@ const useScrollable = (props) => {
 
 		// Native [[
 		if (uiChildContainerRef.current) {
-			if (uiChildContainerRef.current.addEventListener) {
-				useEvent('scroll').addEventListener(
-					uiChildContainerRef,
-					onScroll,
-					{capture: true, passive: true}
-				);
-			}
+			useEvent('scroll').addEventListener(
+				uiChildContainerRef,
+				onScroll,
+				{capture: true, passive: true}
+			);
 
 			uiChildContainerRef.current.style.scrollBehavior = 'smooth';
 		}
@@ -1381,7 +1379,7 @@ const useScrollable = (props) => {
 		}
 
 		if (window) {
-			window.addEventListener('resize', handleResizeWindow);
+			useEvent('resize').addEventListener(window, handleResizeWindow);
 		}
 	}
 

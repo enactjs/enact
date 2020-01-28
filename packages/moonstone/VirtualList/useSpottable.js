@@ -43,7 +43,7 @@ const useSpottable = (props, instances, context) => {
 
 	const [isOverscrollEffect, setOverscrollEffect] = useOverscrollEffect();
 
-	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey(props, {uiChildAdapter}, {
+	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey(props, instances, {
 		handlePageUpDownKeyDown: () => {
 			variables.current.isScrolledBy5way = false;
 		},

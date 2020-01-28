@@ -6,18 +6,18 @@ import {useEffect, useRef} from 'react';
 const useEvent = (eventName) => {
 	return {
 		addEventListener (ref, fn, param) {
-			if (ref.current) {
+			if (typeof window !== 'undefined' && (ref === window || ref === document)) {
+				ref.addEventListener(eventName, fn, param);
+			} else if (ref.current) {
 				ref.current.addEventListener(eventName, fn, param);
-			} else if (typeof window !== 'undefined' && ref === window) {
-				window.addEventListener(eventName, fn, param);
 			}
 		},
 
         removeEventListener (ref, fn, param) {
-			if (ref.current) {
+			if (typeof window !== 'undefined' && (ref === window || ref === document)) {
+				ref.addEventListener(eventName, fn, param);
+			} else if (ref.current) {
 				ref.current.removeEventListener(eventName, fn, param);
-			} else if (typeof window !== 'undefined' && ref === window) {
-				window.addEventListener(eventName, fn, param);
 			}
 		}
 	};
