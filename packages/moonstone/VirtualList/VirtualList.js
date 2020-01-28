@@ -106,20 +106,50 @@ ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.p
 	itemSize: PropTypes.oneOfType([PropTypes.number, itemSizesShape]).isRequired,
 
 	cbScrollTo: PropTypes.func,
+
+	/**
+	 * `false` if the content of the list or the scroller could get focus
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @private
+	 */
+	'data-spotlight-container-disabled': PropTypes.bool,
+
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
 	focusableScrollbar: PropTypes.bool,
 	itemSizes: PropTypes.array,
+
+	/**
+	 * Specifies overscroll effects shows on which type of inputs.
+	 *
+	 * @type {Object}
+	 * @default {
+	 *	arrowKey: false,
+	 *	drag: false,
+	 *	pageKey: false,
+	 *	scrollbarButton: false,
+	 *	wheel: true
+	 * }
+	 * @private
+	 */
+	overscrollEffectOn: PropTypes.shape({
+		arrowKey: PropTypes.bool,
+		drag: PropTypes.bool,
+		pageKey: PropTypes.bool,
+		scrollbarButton: PropTypes.bool,
+		wheel: PropTypes.bool
+	}),
+
 	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
-	role: PropTypes.string
+	role: PropTypes.string,
+
+	type: PropTypes.string
 };
 
 ScrollableVirtualList.defaultProps = {
-	direction: 'vertical',
-	focusableScrollbar: false,
-	preventBubblingOnKeyDown: 'programmatic',
-	role: 'list',
-
 	'data-spotlight-container-disabled': false,
+	direction: 'vertical',
 	focusableScrollbar: false,
 	overscrollEffectOn: {
 		arrowKey: false,
@@ -129,6 +159,7 @@ ScrollableVirtualList.defaultProps = {
 		wheel: true
 	},
 	preventBubblingOnKeyDown: 'none',
+	role: 'list',
 	type: 'JS'
 };
 
@@ -217,20 +248,49 @@ VirtualGridListScrollable.propTypes = /** @lends moonstone/VirtualList.VirtualGr
 	itemSize: gridListItemSizeShape.isRequired,
 
 	cbScrollTo: PropTypes.func,
+
+	/**
+	 * `false` if the content of the list or the scroller could get focus
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @private
+	 */
+	'data-spotlight-container-disabled': PropTypes.bool,
+
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
 	focusableScrollbar: PropTypes.bool,
 	itemSizes: PropTypes.array,
+
+	/**
+	 * Specifies overscroll effects shows on which type of inputs.
+	 *
+	 * @type {Object}
+	 * @default {
+	 *	arrowKey: false,
+	 *	drag: false,
+	 *	pageKey: false,
+	 *	scrollbarButton: false,
+	 *	wheel: true
+	 * }
+	 * @private
+	 */
+	overscrollEffectOn: PropTypes.shape({
+		arrowKey: PropTypes.bool,
+		drag: PropTypes.bool,
+		pageKey: PropTypes.bool,
+		scrollbarButton: PropTypes.bool,
+		wheel: PropTypes.bool
+	}),
+
 	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
-	role: PropTypes.string
+	role: PropTypes.string,
+	type: PropTypes.string
 };
 
 VirtualGridListScrollable.defaultProps = {
-	direction: 'vertical',
-	focusableScrollbar: false,
-	preventBubblingOnKeyDown: 'programmatic',
-	role: 'list',
-
 	'data-spotlight-container-disabled': false,
+	direction: 'vertical',
 	focusableScrollbar: false,
 	overscrollEffectOn: {
 		arrowKey: false,
@@ -240,6 +300,7 @@ VirtualGridListScrollable.defaultProps = {
 		wheel: true
 	},
 	preventBubblingOnKeyDown: 'none',
+	role: 'list',
 	type: 'JS'
 };
 
