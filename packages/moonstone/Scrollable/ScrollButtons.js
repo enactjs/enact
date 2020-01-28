@@ -3,7 +3,7 @@ import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import {is} from '@enact/core/keymap';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import {Announce} from '@enact/ui/AnnounceDecorator';
-import useEvent from '@enact/ui/Scrollable/useEvent';
+import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
@@ -174,13 +174,13 @@ class ScrollButtons extends Component {
 	}
 
 	componentDidMount () {
-		useEvent('keydown').addEventListener(this.nextButtonRef, this.onKeyDownNext);
-		useEvent('keydown').addEventListener(this.prevButtonRef, this.onKeyDownPrev);
+		utilEvent('keydown').addEventListener(this.nextButtonRef, this.onKeyDownNext);
+		utilEvent('keydown').addEventListener(this.prevButtonRef, this.onKeyDownPrev);
 	}
 
 	componentWillUnmount () {
-		useEvent('keydown').removeEventListener(this.nextButtonRef, this.onKeyDownNext);
-		useEvent('keydown').removeEventListener(this.prevButtonRef, this.onKeyDownPrev);
+		utilEvent('keydown').removeEventListener(this.nextButtonRef, this.onKeyDownNext);
+		utilEvent('keydown').removeEventListener(this.prevButtonRef, this.onKeyDownPrev);
 	}
 
 	updateButtons = (bounds) => {

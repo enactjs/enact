@@ -8,7 +8,6 @@
  */
 
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
-import kind from '@enact/core/kind';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import {ResizeContext} from '@enact/ui/Resizable';
 import {gridListItemSizeShape, itemSizesShape, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';

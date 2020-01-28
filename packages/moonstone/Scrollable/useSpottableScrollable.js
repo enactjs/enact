@@ -3,8 +3,8 @@ import Spotlight from '@enact/spotlight';
 import {spottableClass} from '@enact/spotlight/Spottable';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {getRect, intersects} from '@enact/spotlight/src/utils';
-import useDOM from '@enact/ui/Scrollable/useDOM';
-import useEvent from '@enact/ui/Scrollable/useEvent';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
+import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import {useContext, useRef} from 'react';
 
 import {SharedState} from '../internal/SharedStateDecorator/SharedStateDecorator';
@@ -47,7 +47,7 @@ const getTargetInViewByDirectionFromPosition = (direction, position, container) 
 };
 
 const useSpottableScrollable = (props, instances, context) => {
-	const {childAdapter, scrollableContainerRef, uiChildAdapter, uiChildContainerRef, uiScrollableAdapter} = instances;
+	const {childAdapter, scrollableContainerRef, uiChildContainerRef, uiScrollableAdapter} = instances;
 	const {type} = context;
 	const contextSharedState = useContext(SharedState);
 
@@ -104,7 +104,7 @@ const useSpottableScrollable = (props, instances, context) => {
 	// Functions
 
 	function isContent (element) {
-		return (element && useDOM().containsDangerously(uiChildContainerRef, element));
+		return (element && utilDOM().containsDangerously(uiChildContainerRef, element));
 	}
 
 	function scrollTo (opt) {
@@ -195,20 +195,20 @@ const useSpottableScrollable = (props, instances, context) => {
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
-	function addEventListeners (uiChildContainerRef) {
-		useEvent('focusin').addEventListener(uiChildContainerRef, handleFocus);
+	function addEventListeners (ref) { // `ref` is always `uiChildContainerRef`.
+		utilEvent('focusin').addEventListener(ref, handleFocus);
 
-		if (uiChildContainerRef.current) {
-			addVoiceEventListener(uiChildContainerRef);
+		if (ref.current) {
+			addVoiceEventListener(ref);
 		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
-	function removeEventListeners (uiChildContainerRef) {
-		useEvent('focusin').removeEventListener(uiChildContainerRef, handleFocus);
+	function removeEventListeners (ref) { // `ref` is always `uiChildContainerRef`.
+		utilEvent('focusin').removeEventListener(ref, handleFocus);
 
-		if (uiChildContainerRef.current) {
-			removeVoiceEventListener(uiChildContainerRef);
+		if (ref.current) {
+			removeVoiceEventListener(ref);
 		}
 	}
 

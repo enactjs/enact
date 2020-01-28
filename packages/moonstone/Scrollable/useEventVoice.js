@@ -1,7 +1,7 @@
 import platform from '@enact/core/platform';
 import Spotlight from '@enact/spotlight';
-import useDOM from '@enact/ui/Scrollable/useDOM';
-import useEvent from '@enact/ui/Scrollable/useEvent';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
+import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import {useRef} from 'react';
 
 const useEventVoice = (props, instances, context) => {
@@ -23,7 +23,7 @@ const useEventVoice = (props, instances, context) => {
 			spotItem = Spotlight.getCurrent(),
 			scrollableContainerNode = scrollableContainerRef.current;
 
-		if (useDOM().containsDangerously(scrollableContainerNode, spotItem)) {
+		if (utilDOM().containsDangerously(scrollableContainerNode, spotItem)) {
 			const
 				viewportBounds = scrollableContainerNode.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),
@@ -42,7 +42,7 @@ const useEventVoice = (props, instances, context) => {
 				}
 			}
 		}
-	}
+	};
 
 	function stopVoice () {
 		if (variables.current.isVoiceControl) {
@@ -54,7 +54,7 @@ const useEventVoice = (props, instances, context) => {
 	const isReachedEdge = (scrollPos, ltrBound, rtlBound, isRtl = false) => {
 		const bound = isRtl ? rtlBound : ltrBound;
 		return (bound === 0 && scrollPos === 0) || (bound > 0 && scrollPos >= bound - 1);
-	}
+	};
 
 	const handleVoice = (e) => {
 		const
@@ -102,18 +102,18 @@ const useEventVoice = (props, instances, context) => {
 
 			e.preventDefault();
 		}
-	}
+	};
 
 	function addVoiceEventListener (uiChildContainerRef) {
 		if (platform.webos) {
-			useEvent('webOSVoice').addEventListener(uiChildContainerRef, handleVoice);
+			utilEvent('webOSVoice').addEventListener(uiChildContainerRef, handleVoice);
 			uiChildContainerRef.current.setAttribute('data-webos-voice-intent', 'Scroll');
 		}
 	}
 
 	function removeVoiceEventListener (uiChildContainerRef) {
 		if (platform.webos) {
-			useEvent('webOSVoice').removeEventListener(uiChildContainerRef, handleVoice);
+			utilEvent('webOSVoice').removeEventListener(uiChildContainerRef, handleVoice);
 			uiChildContainerRef.current.removeAttribute('data-webos-voice-intent');
 		}
 	}

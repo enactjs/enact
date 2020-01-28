@@ -1,5 +1,5 @@
 import Spotlight from '@enact/spotlight';
-import useDOM from '@enact/ui/Scrollable/useDOM';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
 import {useEffect} from 'react';
 
 import scrollbarCss from './Scrollbar.module.less';
@@ -9,7 +9,7 @@ const navigableFilter = (elem) => {
 		!Spotlight.getPointerMode() &&
 		// ignore containers passed as their id
 		typeof elem !== 'string' &&
-		useDOM().containsDangerously(elem.classList, scrollbarCss.scrollButton)
+		utilDOM().containsDangerously(elem.classList, scrollbarCss.scrollButton)
 	) {
 		return false;
 	}

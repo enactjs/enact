@@ -1,13 +1,13 @@
 import Spotlight from '@enact/spotlight';
 import {getRect} from '@enact/spotlight/src/utils';
 import {constants} from '@enact/ui/Scrollable/Scrollable';
-import useDOM from '@enact/ui/Scrollable/useDOM';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
 
 const {animationDuration, epsilon} = constants;
 
 const useEventFocus = (props, instances, context) => {
 	const {'data-spotlight-id': spotlightId, direction, overscrollEffectOn} = props;
-	const {childAdapter, spottable, scrollableContainerRef, uiChildAdapter, uiChildContainerRef, uiScrollableAdapter} = instances;
+	const {childAdapter, spottable, scrollableContainerRef, uiChildContainerRef, uiScrollableAdapter} = instances;
 	const {alertThumb, isWheeling, type} = context;
 
 	// Functions
@@ -50,7 +50,7 @@ const useEventFocus = (props, instances, context) => {
 				}
 			}
 		}
-	}
+	};
 
 	function calculateAndScrollTo () {
 		const
@@ -58,7 +58,7 @@ const useEventFocus = (props, instances, context) => {
 			childContainerNode = uiChildContainerRef.current,
 			spotItem = Spotlight.getCurrent();
 
-		if (spotItem && positionFn && useDOM().containsDangerously(childContainerNode, spotItem)) {
+		if (spotItem && positionFn && utilDOM().containsDangerously(childContainerNode, spotItem)) {
 			const lastPos = spottable.current.lastScrollPositionOnFocus;
 			let pos;
 
@@ -136,7 +136,7 @@ const useEventFocus = (props, instances, context) => {
 			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		}
 
-		return useDOM().containsDangerously(scrollableContainerRef, current);
+		return utilDOM().containsDangerously(scrollableContainerRef, current);
 	}
 
 	// Return

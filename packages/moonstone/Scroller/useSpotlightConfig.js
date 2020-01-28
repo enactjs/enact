@@ -33,7 +33,7 @@ const useSpotlightConfig = (props, instances) => {
 		}
 
 		configureSpotlight();
-	}, [scrollAndFocusScrollbarButton, spotlightId, uiScrollableAdapter]);
+	}, [dangerouslyContainsInScrollable, scrollAndFocusScrollbarButton, spotlightId, uiScrollableAdapter]);
 };
 
 export default useSpotlightConfig;

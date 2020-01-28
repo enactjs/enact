@@ -94,7 +94,7 @@ const useSpottable = (props, instances, context) => {
 				removeGlobalKeyDownEventListener();
 			}
 		}
-	}, [addGlobalKeyDownEventListener, handleGlobalKeyDown, removeGlobalKeyDownEventListener]);
+	}, [addGlobalKeyDownEventListener, handleGlobalKeyDown, removeGlobalKeyDownEventListener, uiChildContainerRef]);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	function handleGlobalKeyDown () {

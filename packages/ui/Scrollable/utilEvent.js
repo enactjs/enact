@@ -1,6 +1,3 @@
-import Spotlight, {} from '@enact/spotlight';
-import {useEffect, useRef} from 'react';
-
 // A `React.useEvent` hooks is introduced in https://github.com/facebook/react/pull/17651
 // The `useEvent` below will be replaced with the `React.useEvent` later.
 const useEvent = (eventName) => {

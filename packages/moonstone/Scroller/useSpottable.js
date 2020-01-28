@@ -1,7 +1,7 @@
 import Spotlight from '@enact/spotlight';
 import {getRect} from '@enact/spotlight/src/utils';
 import ri from '@enact/ui/resolution';
-import useDOM from '@enact/ui/Scrollable/useDOM';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
 import {useCallback, useEffect} from 'react';
 
 import useEventKey from './useEventKey';
@@ -33,7 +33,7 @@ const useSpottable = (props, instances) => {
 				removeGlobalKeyDownEventListener();
 			}
 		}
-	}, [addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener]);
+	}, [addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener, uiChildContainerRef]);
 
 	useEffect(() => {
 		return () => setContainerDisabled(false);
@@ -222,7 +222,7 @@ const useSpottable = (props, instances) => {
 		const vertical = uiChildAdapter.current.isVertical();
 		const childContainerNode = uiChildContainerRef.current;
 
-		if (!vertical && !horizontal || !item || !useDOM().containsDangerously(childContainerNode, item)) {
+		if (!vertical && !horizontal || !item || !utilDOM().containsDangerously(childContainerNode, item)) {
 			return;
 		}
 

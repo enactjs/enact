@@ -1,8 +1,8 @@
 import {onWindowReady} from '@enact/core/snapshot';
 import Spotlight from '@enact/spotlight';
 import {constants} from '@enact/ui/Scrollable/Scrollable';
-import useDOM from '@enact/ui/Scrollable/useDOM';
-import useEvent from '@enact/ui/Scrollable/useEvent';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
+import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import {useEffect, useRef} from 'react';
 
 const {isPageDown, isPageUp} = constants;
@@ -34,7 +34,7 @@ const pageKeyHandler = (ev) => {
 
 		if (elem) {
 			for (const [key, value] of scrollables) {
-				if (useDOM().containsDangerously(value, elem)) {
+				if (utilDOM().containsDangerously(value, elem)) {
 					/* To handle page keys in nested scrollable components,
 					 * break the loop only when `scrollByPageOnPointerMode` returns `true`.
 					 * This approach assumes that an inner scrollable component is
@@ -64,11 +64,11 @@ const useEventMonitor = (props, instances, context) => {
 	useEffect(() => {
 		const setMonitorEventTarget = (target) => {
 			scrollables.set(variables.pageKeyHandlerObj, target);
-		}
+		};
 
 		const deleteMonitorEventTarget = () => {
 			scrollables.delete(variables.pageKeyHandlerObj);
-		}
+		};
 
 		setMonitorEventTarget(scrollableContainerRef.current);
 
@@ -80,8 +80,8 @@ const useEventMonitor = (props, instances, context) => {
 };
 
 onWindowReady(() => {
-	useEvent('mousemove').addEventListener(document, pointerTracker);
-	useEvent('keydown').addEventListener(document, pageKeyHandler);
+	utilEvent('mousemove').addEventListener(document, pointerTracker);
+	utilEvent('keydown').addEventListener(document, pageKeyHandler);
 });
 
 export default useEventMonitor;

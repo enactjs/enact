@@ -23,7 +23,6 @@ import overscrollCss from './OverscrollEffect.module.less';
  */
 const useChildPropsDecorator = (props) => {
 	const {
-		childRenderer,
 		'data-spotlight-container': spotlightContainer,
 		'data-spotlight-container-disabled': spotlightContainerDisabled,
 		'data-spotlight-id': spotlightId,
@@ -136,7 +135,7 @@ const useChildPropsDecorator = (props) => {
 		scrollAndFocusScrollbarButton,
 		setChildAdapter,
 		spotlightId,
-		uiScrollableAdapter,
+		uiScrollableAdapter
 	});
 
 	decorateChildProps('verticalScrollbarProps', {

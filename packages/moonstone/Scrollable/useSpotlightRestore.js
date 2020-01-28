@@ -26,7 +26,7 @@ const useSpotlightRestore = (props, instances) => {
 		}
 
 		restoreScrollPosition();
-	}, [context, id]);
+	}, [context, id, uiScrollableAdapter]);
 };
 
 export default useSpotlightRestore;

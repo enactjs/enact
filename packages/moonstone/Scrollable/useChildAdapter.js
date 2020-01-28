@@ -2,8 +2,8 @@ import {useRef} from 'react';
 
 const useChildAdapter = () => {
 	// Mutable value
-	
-    const childAdapter = useRef({
+
+	const childAdapter = useRef({
 		calculatePositionOnFocus: null,
 		focusByIndex: null,
 		focusOnNode: null,
@@ -17,13 +17,13 @@ const useChildAdapter = () => {
 
 	// Functions
 
-    const setChildAdapter = (adapter) => {
+	const setChildAdapter = (adapter) => {
 		childAdapter.current = adapter;
 	};
 
 	// Return
 
-    return [childAdapter, setChildAdapter];
+	return [childAdapter, setChildAdapter];
 };
 
 export default useChildAdapter;

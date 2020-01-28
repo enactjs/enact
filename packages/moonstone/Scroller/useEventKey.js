@@ -1,4 +1,4 @@
-import useEvent from '@enact/ui/Scrollable/useEvent';
+import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import {useRef} from 'react';
 
 const useEventKey = () => {
@@ -12,11 +12,11 @@ const useEventKey = () => {
 
 	function addGlobalKeyDownEventListener (fn) {
 		variables.current.fn = fn;
-		useEvent('keydown').addEventListener(document, variables.current.fn, {capture: true});
+		utilEvent('keydown').addEventListener(document, variables.current.fn, {capture: true});
 	}
 
 	function removeGlobalKeyDownEventListener () {
-		useEvent('keydown').removeEventListener(document, variables.current.fn, {capture: true});
+		utilEvent('keydown').removeEventListener(document, variables.current.fn, {capture: true});
 		variables.current.fn = null;
 	}
 

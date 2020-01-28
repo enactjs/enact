@@ -1,8 +1,7 @@
-import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 
-import {dataIndexAttribute, Scrollable} from '../Scrollable/Scrollable';
+import {dataIndexAttribute} from '../Scrollable/Scrollable';
 
 import usePreventScroll from './usePreventScroll';
 import useSpottable from './useSpottable';
@@ -48,20 +47,21 @@ const useSpottableVirtualList = (props) => {
 		type
 	});
 
+	const adapter = {
+		calculatePositionOnFocus,
+		focusByIndex,
+		focusOnNode,
+		getScrollBounds,
+		setContainerDisabled,
+		setLastFocusedNode,
+		shouldPreventOverscrollEffect,
+		shouldPreventScrollByFocus
+	};
 	useEffect(() => {
-		props.setChildAdapter({
-			calculatePositionOnFocus,
-			focusByIndex,
-			focusOnNode,
-			getScrollBounds,
-			setContainerDisabled,
-			setLastFocusedNode,
-			shouldPreventOverscrollEffect,
-			shouldPreventScrollByFocus
-		});
-	}, []);
+		props.setChildAdapter(adapter);
+	}, [adapter, props, props.setChildAdapter]);
 
-	
+
 	// Functions
 
 	function getComponentProps (index) {
@@ -71,7 +71,7 @@ const useSpottableVirtualList = (props) => {
 	// Render
 
 	const
-		{itemRenderer, itemsRenderer, role, ...rest} = props,
+		{itemRenderer, role, ...rest} = props,
 		needsScrollingPlaceholder = isNeededScrollingPlaceholder();
 
 	// not used by VirtualList

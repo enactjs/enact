@@ -85,19 +85,18 @@ ScrollableScroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype 
 };
 
 ScrollableScroller.defaultProps = {
+	'data-spotlight-container-disabled': false, // eslint-disable-line react/default-props-match-prop-types
 	direction: 'both',
-
-	'data-spotlight-container-disabled': false,
-	focusableScrollbar: false,
-	overscrollEffectOn: {
+	focusableScrollbar: false, // eslint-disable-line react/default-props-match-prop-types
+	overscrollEffectOn: { // eslint-disable-line react/default-props-match-prop-types
 		arrowKey: false,
 		drag: false,
 		pageKey: false,
 		scrollbarButton: false,
 		wheel: true
 	},
-	preventBubblingOnKeyDown: 'none',
-	type: 'JS'
+	preventBubblingOnKeyDown: 'none', // eslint-disable-line react/default-props-match-prop-types
+	type: 'JS' // eslint-disable-line react/default-props-match-prop-types
 };
 
 const Scroller = Skinnable(

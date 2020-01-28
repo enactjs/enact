@@ -25,8 +25,8 @@ import Touchable from '../Touchable';
 
 import useForceUpdate from './useForceUpdate';
 import ScrollAnimator from './ScrollAnimator';
-import useDOM from './useDOM';
-import useEvent from './useEvent';
+import utilDOM from './utilDOM';
+import utilEvent from './utilEvent';
 
 import css from './Scrollable.module.less';
 
@@ -628,8 +628,8 @@ const useScrollable = (props) => {
 					if (eventDelta < 0 && variables.current.scrollTop > 0 || eventDelta > 0 && variables.current.scrollTop < bounds.maxTop) {
 						// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
 						if (
-							horizontalScrollbarRef.current && useDOM().containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, ev.target) ||
-							verticalScrollbarRef.current && useDOM().containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, ev.target)
+							horizontalScrollbarRef.current && utilDOM().containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, ev.target) ||
+							verticalScrollbarRef.current && utilDOM().containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, ev.target)
 						) {
 							delta = calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 							needToHideThumb = !delta;
@@ -1354,13 +1354,13 @@ const useScrollable = (props) => {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function addEventListeners () {
-		useEvent('wheel').addEventListener(scrollableContainerRef, onWheel);
-		useEvent('keydown').addEventListener(scrollableContainerRef, onKeyDown);
-		useEvent('mousedown').addEventListener(scrollableContainerRef, onMouseDown);
+		utilEvent('wheel').addEventListener(scrollableContainerRef, onWheel);
+		utilEvent('keydown').addEventListener(scrollableContainerRef, onKeyDown);
+		utilEvent('mousedown').addEventListener(scrollableContainerRef, onMouseDown);
 
 		// Native [[
 		if (uiChildContainerRef.current) {
-			useEvent('scroll').addEventListener(
+			utilEvent('scroll').addEventListener(
 				uiChildContainerRef,
 				onScroll,
 				{capture: true, passive: true}
@@ -1375,25 +1375,25 @@ const useScrollable = (props) => {
 		}
 
 		if (window) {
-			useEvent('resize').addEventListener(window, handleResizeWindow);
+			utilEvent('resize').addEventListener(window, handleResizeWindow);
 		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function removeEventListeners () {
-		useEvent('wheel').removeEventListener(scrollableContainerRef, onWheel);
-		useEvent('keydown').removeEventListener(scrollableContainerRef, onKeyDown);
-		useEvent('mousedown').removeEventListener(scrollableContainerRef, onMouseDown);
+		utilEvent('wheel').removeEventListener(scrollableContainerRef, onWheel);
+		utilEvent('keydown').removeEventListener(scrollableContainerRef, onKeyDown);
+		utilEvent('mousedown').removeEventListener(scrollableContainerRef, onMouseDown);
 
 		// Native [[
-		useEvent('scroll').removeEventListener(uiChildContainerRef, onScroll, {capture: true, passive: true});
+		utilEvent('scroll').removeEventListener(uiChildContainerRef, onScroll, {capture: true, passive: true});
 		// Native ]]
 
 		if (props.removeEventListeners) {
 			props.removeEventListeners(uiChildContainerRef);
 		}
 
-		useEvent('resize').removeEventListener(window, handleResizeWindow);
+		utilEvent('resize').removeEventListener(window, handleResizeWindow);
 	}
 
 	// render
@@ -1412,7 +1412,7 @@ const useScrollable = (props) => {
 	// JS ]]
 
 	function dangerouslyContainsInScrollable (target) {
-		return useDOM().containsDangerously(scrollableContainerRef, target);
+		return utilDOM().containsDangerously(scrollableContainerRef, target);
 	}
 
 	variables.current.deferScrollTo = true;

@@ -1,12 +1,12 @@
 import Spotlight from '@enact/spotlight';
-import useDOM from '@enact/ui/Scrollable/useDOM';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
 import {useEffect, useRef} from 'react';
 
 const getNumberValue = (index) => index | 0;
 
 const useSpotlightRestore = (props, instances) => {
 	const {spotlightId} = props;
-	const {spottable, uiChildAdapter, uiChildContainerRef} = instances;
+	const {spottable, uiChildContainerRef} = instances;
 
 	// Mutable value
 
@@ -39,7 +39,7 @@ const useSpotlightRestore = (props, instances) => {
 			childContainerNode = uiChildContainerRef.current,
 			current = Spotlight.getCurrent();
 
-		if (current && current.dataset.vlPlaceholder && useDOM().containsDangerously(childContainerNode, current)) {
+		if (current && current.dataset.vlPlaceholder && utilDOM().containsDangerously(childContainerNode, current)) {
 			return true;
 		}
 

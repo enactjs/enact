@@ -1,8 +1,8 @@
 import {is} from '@enact/core/keymap';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
-import useDOM from '@enact/ui/Scrollable/useDOM';
-import useEvent from '@enact/ui/Scrollable/useEvent';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
+import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import clamp from 'ramda/src/clamp';
 import {useCallback, useEffect, useRef} from 'react';
 
@@ -105,7 +105,7 @@ const useEventKey = (props, instances, context) => {
 		}
 
 		return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
-	}, [dataSize, findSpottableItem, rtl, wrap]);
+	}, [dataSize, findSpottableItem, rtl, uiChildAdapter, wrap]);
 
 	// Hooks
 
@@ -174,7 +174,7 @@ const useEventKey = (props, instances, context) => {
 					} else {
 						const possibleTarget = getTargetByDirectionFromElement(direction, target);
 
-						if (!useDOM().containsDangerously(ev.currentTarget, possibleTarget)) {
+						if (!utilDOM().containsDangerously(ev.currentTarget, possibleTarget)) {
 							isLeaving = true;
 						}
 					}
@@ -194,29 +194,29 @@ const useEventKey = (props, instances, context) => {
 			}
 		}
 
-		useEvent('keydown').addEventListener(uiChildContainerRef, handleKeyDown, {capture: true});
-		useEvent('keyup').addEventListener(uiChildContainerRef, handleKeyUp, {capture: true});
+		utilEvent('keydown').addEventListener(uiChildContainerRef, handleKeyDown, {capture: true});
+		utilEvent('keyup').addEventListener(uiChildContainerRef, handleKeyUp, {capture: true});
 
 		return () => {
-			useEvent('keydown').removeEventListener(uiChildContainerRef, handleKeyDown, {capture: true});
-			useEvent('keyup').removeEventListener(uiChildContainerRef, handleKeyUp, {capture: true});
+			utilEvent('keydown').removeEventListener(uiChildContainerRef, handleKeyDown, {capture: true});
+			utilEvent('keyup').removeEventListener(uiChildContainerRef, handleKeyUp, {capture: true});
 		};
 	}, [
 		uiChildContainerRef, dataSize, focusableScrollbar, getNextIndex,
 		handle5WayKeyUp, handleDirectionKeyDown, handlePageUpDownKeyDown,
 		isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
-		spotlightId, SpotlightAccelerator
+		spotlightId, SpotlightAccelerator, uiChildAdapter
 	]);
 
 	// Functions
 
 	function addGlobalKeyDownEventListener (fn) {
 		variables.current.fn = fn;
-		useEvent('keydown').addEventListener(document, variables.current.fn, {capture: true});
+		utilEvent('keydown').addEventListener(document, variables.current.fn, {capture: true});
 	}
 
 	function removeGlobalKeyDownEventListener () {
-		useEvent('keydown').removeEventListener(document, variables.current.fn, {capture: true});
+		utilEvent('keydown').removeEventListener(document, variables.current.fn, {capture: true});
 		variables.current.fn = null;
 	}
 

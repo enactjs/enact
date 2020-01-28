@@ -3,7 +3,7 @@ import {clamp} from '@enact/core/util';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import {constants} from '@enact/ui/Scrollable/Scrollable';
-import useDOM from '@enact/ui/Scrollable/useDOM'
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
 
 const
 	{epsilon, isPageDown, isPageUp} = constants,
@@ -12,7 +12,7 @@ const
 
 const useEventKey = (props, instances, context) => {
 	const {direction: directionProp, overscrollEffectOn} = props;
-	const {childAdapter, horizontalScrollbarRef, spottable, uiChildAdapter, uiChildContainerRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
+	const {childAdapter, horizontalScrollbarRef, spottable, uiChildContainerRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
 	const {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type} = context;
 
 	// Functions
@@ -51,8 +51,8 @@ const useEventKey = (props, instances, context) => {
 
 				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
 					if (
-						!(horizontalScrollbarRef.current && useDOM().containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, element)) &&
-						!(verticalScrollbarRef.current && useDOM().containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, element))
+						!(horizontalScrollbarRef.current && utilDOM().containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, element)) &&
+						!(verticalScrollbarRef.current && utilDOM().containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, element))
 					) {
 						checkAndApplyOverscrollEffectByDirection(direction);
 					}
@@ -61,7 +61,7 @@ const useEventKey = (props, instances, context) => {
 		}
 	}
 
-	const scrollByPage = (direction) => {
+	function scrollByPage (direction) {
 		const
 			{scrollTop} = uiScrollableAdapter.current,
 			focusedItem = Spotlight.getCurrent(),
@@ -91,7 +91,7 @@ const useEventKey = (props, instances, context) => {
 				// Should do nothing when focusedItem is paging control button of Scrollbar
 				checkAndApplyOverscrollEffectByDirection(direction);
 
-				if (useDOM().containsDangerously(contentNode, focusedItem)) {
+				if (utilDOM().containsDangerously(contentNode, focusedItem)) {
 					const
 						contentRect = contentNode.getBoundingClientRect(),
 						clientRect = focusedItem.getBoundingClientRect(),
