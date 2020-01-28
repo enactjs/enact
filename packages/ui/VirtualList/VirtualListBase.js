@@ -179,7 +179,6 @@ const VirtualListBase = (props) => {
 
 	// Calculate metrics for VirtualList after the 1st render to know client W/H.
 	useEffect(() => {
-		// componentDidMount
 		if (!props.clientSize) {
 			calculateMetrics(props);
 			setStatesAndUpdateBounds();
@@ -195,13 +194,11 @@ const VirtualListBase = (props) => {
 	}, []);
 
 	useEffect(() => {
-		// componentDidUpdate
 		// if (prevState.firstIndex !== firstIndex || prevState.numOfItems !== numOfItems)
 		emitUpdateItems();
 	}, [firstIndex, numOfItems, emitUpdateItems]);
 
 	useEffect(() => {
-		// componentDidUpdate
 		variables.current.deferScrollTo = false;
 
 		variables.current.shouldUpdateBounds = false;

@@ -35,7 +35,6 @@ const ScrollerBase = (props) => {
 	const [, forceUpdate] = useForceUpdate();
 
 	useEffect(() => {
-		// componentDidUpdate
 		// TODO: Check this code is still needed.  This code introduced from #1618. (ahn)
 		forceUpdate();
 	}, [isHorizontalScrollbarVisible, isVerticalScrollbarVisible]);

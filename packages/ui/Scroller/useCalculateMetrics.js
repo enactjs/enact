@@ -19,7 +19,6 @@ const useCalculateMetrics = (props, instances) => {
 	// Hooks
 
 	useEffect(() => {
-		// componentDidUpdate
 		calculateMetrics();
 	});
 

@@ -314,7 +314,6 @@ const useScrollable = (props) => {
 	useEffect(() => {
 		const {animator, resizeRegistry, scrolling, scrollStopJob} = variables.current;
 
-		// componentDidMount
 		variables.current.resizeRegistry.parent = context;
 
 		updateScrollbars();
@@ -339,8 +338,6 @@ const useScrollable = (props) => {
 	}, []);
 
 	useEffect(() => {
-		// componentDidUpdate
-
 		// Need to sync calculated client size if it is different from the real size
 		if (uiChildAdapter.current.syncClientSize) {
 			// If we actually synced, we need to reset scroll position.
@@ -360,7 +357,6 @@ const useScrollable = (props) => {
 	});
 
 	useEffect(() => {
-		// componentDidUpdate
 		const {hasDataSizeChanged} = uiChildAdapter.current;
 
 		if (
