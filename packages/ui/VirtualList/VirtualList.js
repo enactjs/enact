@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {ResizeContext} from '../Resizable';
-import useScrollableComponentizable from '../Scrollable/useScrollableComponentizable';
+import useChildPropsDecorator from '../Scrollable/useChildPropsDecorator';
 import Scrollbar from '../Scrollable/Scrollbar';
 
 import {gridListItemSizeShape, itemSizesShape, VirtualListBase} from './VirtualListBase';
@@ -41,7 +41,7 @@ const VirtualList = ({role, ...rest}) => {
 		childProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useScrollableComponentizable(rest);
+	} = useChildPropsDecorator(rest);
 
 	// Render
 
@@ -116,7 +116,7 @@ const VirtualGridList = ({role, ...rest}) => {
 		childProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useScrollableComponentizable(rest);
+	} = useChildPropsDecorator(rest);
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>

@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {ResizeContext} from '../Resizable';
-import useScrollableComponentizable from '../Scrollable/useScrollableComponentizable';
+import useChildPropsDecorator from '../Scrollable/useChildPropsDecorator';
 import Scrollbar from '../Scrollable/Scrollbar';
 
 import ScrollerBase from './ScrollerBase';
@@ -45,7 +45,7 @@ const Scroller = (props) => {
 		childProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useScrollableComponentizable(props);
+	} = useChildPropsDecorator(props);
 
 	// Return
 

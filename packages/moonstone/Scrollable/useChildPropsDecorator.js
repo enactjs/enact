@@ -1,11 +1,11 @@
 import platform from '@enact/core/platform';
 import {useScrollable} from '@enact/ui/Scrollable';
 import {useChildAdapter as useUiChildAdapter} from '@enact/ui/Scrollable/useChildAdapter';
-import useDecorateChildProps from '@enact/ui/Scrollable/useDecorateChildProps';
+import {utilDecorateChildProps} from '@enact/ui/Scrollable/useChildPropsDecorator';
 import useScrollableAdapter from '@enact/ui/Scrollable/useScrollableAdapter';
 import React, {useRef} from 'react';
 
-import $L from '../internal/$L';
+import $L from '../internal/$L/$L';
 
 import useChildAdapter from './useChildAdapter';
 import {useSpottableScrollable} from './useSpottableScrollable';
@@ -21,7 +21,7 @@ import overscrollCss from './OverscrollEffect.module.less';
  * @ui
  * @public
  */
-const useScrollableComponentizable = (props) => {
+const useChildPropsDecorator = (props) => {
 	const {
 		childRenderer,
 		'data-spotlight-container': spotlightContainer,
@@ -76,7 +76,7 @@ const useScrollableComponentizable = (props) => {
 
 	const
 		decoratedChildProps = {},
-		decorateChildProps = useDecorateChildProps(decoratedChildProps);
+		decorateChildProps = utilDecorateChildProps(decoratedChildProps);
 
 	const {
 		addEventListeners,
@@ -206,7 +206,7 @@ const useScrollableComponentizable = (props) => {
 	};
 };
 
-export default useScrollableComponentizable;
+export default useChildPropsDecorator;
 export {
-	useScrollableComponentizable
+	useChildPropsDecorator
 };

@@ -1,8 +1,42 @@
+import useChildAdapter from './useChildAdapter';
+import {useScrollable} from './Scrollable';
+
+import classNames from 'classnames';
+import warning from 'warning';
 import {useRef} from 'react';
 
-import useChildAdapter from './useChildAdapter';
-import useDecorateChildProps from './useDecorateChildProps';
-import {useScrollable} from './Scrollable';
+const utilDecorateChildProps = (instance) => (childComponentName, props) => {
+	if (!instance[childComponentName]) {
+		instance[childComponentName] = {};
+	}
+
+	if (typeof props === 'object') {
+		for (const prop in props) {
+			if (prop === 'className') {
+				if (!instance[childComponentName].classNames) {
+					instance[childComponentName].classNames = [];
+				}
+
+				warning(
+					Array.isArray(props.className),
+					`Unsupported other types for 'className' prop except Array`
+				);
+
+				// Add className string in the `className` prop.
+				instance[childComponentName].classNames = [...instance[childComponentName].classNames, ...props.className];
+				instance[childComponentName].className = classNames(...instance[childComponentName].classNames);
+			} else {
+				warning(
+					!instance[childComponentName][prop],
+					`Unsupported to push value in the same prop.`
+				);
+
+				// Override the previous value.
+				instance[childComponentName][prop] = props[prop];
+			}
+		}
+	}
+};
 
 /**
  * An unstyled component that provides horizontal and vertical scrollbars and makes a render prop element scrollable.
@@ -13,7 +47,7 @@ import {useScrollable} from './Scrollable';
  * @ui
  * @private
  */
-const useScrollableComponentizable = (props) => {
+const useChildPropsDecorator = (props) => {
 	// Mutable value
 
 	const scrollableContainerRef = useRef(null);
@@ -29,7 +63,7 @@ const useScrollableComponentizable = (props) => {
 
 	const
 		decoratedChildProps = {},
-		decorateChildProps = useDecorateChildProps(decoratedChildProps);
+		decorateChildProps = utilDecorateChildProps(decoratedChildProps);
 
 	const {
 		childWrapper,
@@ -72,7 +106,8 @@ const useScrollableComponentizable = (props) => {
 	};
 };
 
-export default useScrollableComponentizable;
+export default useChildPropsDecorator;
 export {
-	useScrollableComponentizable
+	useChildPropsDecorator,
+	utilDecorateChildProps
 };
