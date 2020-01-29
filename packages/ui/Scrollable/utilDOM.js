@@ -1,3 +1,5 @@
+import warning from 'warning';
+
 // At the end, wes should not use DOM APIs as well as the APIs in the `utilDOM`. If we use them, we have to try to remove them first if possible.
 
 const utilDOM = () => {
@@ -7,6 +9,8 @@ const utilDOM = () => {
 		if (!target) {
 			return false;
 		} else if (ref.current) {
+			warning(ref.current.contains, 'The `contains` function of the Ref is not supported.');
+
 			return ref.current.contains(target);
 		} else if (ref) {
 			return ref.contains(target);

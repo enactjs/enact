@@ -738,8 +738,8 @@ VirtualListBase.defaultProps = {
  * Example:
  * ```
  * onScrollStart = ({scrollLeft, scrollTop, moreInfo}) => {
- *	 const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
- *	 // do something with firstVisibleIndex and lastVisibleIndex
+ *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+ *     // do something with firstVisibleIndex and lastVisibleIndex
  * }
  *
  * render = () => (

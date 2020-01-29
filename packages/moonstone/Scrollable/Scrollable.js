@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 
 import {dataIndexAttribute} from './useSpottableScrollable';
 
+// ScrollableBase is now only used in storybook.
 const ScrollableBase = {};
 
 ScrollableBase.displayName = 'Scrollable';

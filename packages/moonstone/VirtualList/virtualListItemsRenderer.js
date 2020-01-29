@@ -13,7 +13,7 @@ const listItemsRenderer = (props) => {
 	} = props;
 
 	return (
-		<React.Fragment>
+		<>
 			{cc.length ? (
 				<div ref={initUiItemContainerRef} role={role}>{cc}</div>
 			) : null}
@@ -30,7 +30,7 @@ const listItemsRenderer = (props) => {
 			{needsScrollingPlaceholder ? (
 				<SpotlightPlaceholder />
 			) : null}
-		</React.Fragment>
+		</>
 	);
 };
 /* eslint-enable enact/prop-types */
