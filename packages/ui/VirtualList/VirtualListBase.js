@@ -193,7 +193,7 @@ const VirtualListBase = (props) => {
 		} else {
 			setContainerSize();
 		}
-	}, [adjustItemPositionWithItemSize, calculateMetrics, emitUpdateItems, props, props.clientSize, props.itemSizes, setContainerSize, setStatesAndUpdateBounds]);
+	}, []);
 
 	useEffect(() => {
 		// if (prevState.firstIndex !== firstIndex || prevState.numOfItems !== numOfItems)
