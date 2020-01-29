@@ -86,11 +86,41 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 	itemSize: PropTypes.number.isRequired,
 
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-	role: PropTypes.string
+
+	/**
+	 * Specifies how to show horizontal scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+
+	role: PropTypes.string,
+
+	/**
+	 * Specifies how to show vertical scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
 VirtualList.defaultProps = {
 	direction: 'vertical',
+	horizontalScrollbar: 'auto',
 	role: 'list',
 	verticalScrollbar: 'auto'
 };
@@ -164,11 +194,41 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 	itemSize: gridListItemSizeShape.isRequired,
 
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-	role: PropTypes.string
+
+	/**
+	 * Specifies how to show horizontal scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+
+	role: PropTypes.string,
+
+	/**
+	 * Specifies how to show vertical scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
 VirtualGridList.defaultProps = {
 	direction: 'vertical',
+	horizontalScrollbar: 'auto',
 	role: 'list',
 	verticalScrollbar: 'auto'
 };

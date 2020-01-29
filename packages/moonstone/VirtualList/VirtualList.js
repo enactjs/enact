@@ -118,6 +118,21 @@ ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.p
 
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
 	focusableScrollbar: PropTypes.bool,
+
+	/**
+	 * Specifies how to show horizontal scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+
 	itemSizes: PropTypes.array,
 
 	/**
@@ -165,6 +180,7 @@ ScrollableVirtualList.defaultProps = {
 	'data-spotlight-container-disabled': false,
 	direction: 'vertical',
 	focusableScrollbar: false,
+	horizontalScrollbar: 'auto',
 	overscrollEffectOn: {
 		arrowKey: false,
 		drag: false,
@@ -275,6 +291,20 @@ VirtualGridListScrollable.propTypes = /** @lends moonstone/VirtualList.VirtualGr
 
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
 	focusableScrollbar: PropTypes.bool,
+	/**
+	 * Specifies how to show horizontal scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+
 	itemSizes: PropTypes.array,
 
 	/**
@@ -321,6 +351,7 @@ VirtualGridListScrollable.defaultProps = {
 	'data-spotlight-container-disabled': false,
 	direction: 'vertical',
 	focusableScrollbar: false,
+	horizontalScrollbar: 'auto',
 	overscrollEffectOn: {
 		arrowKey: false,
 		drag: false,

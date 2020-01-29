@@ -1,7 +1,6 @@
 import useChildAdapter from './useChildAdapter';
 import {useScrollable} from './Scrollable';
 
-import classNames from 'classnames';
 import warning from 'warning';
 import {useRef} from 'react';
 

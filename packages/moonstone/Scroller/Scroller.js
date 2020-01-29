@@ -81,13 +81,42 @@ const ScrollableScroller = (props) => {
 };
 
 ScrollableScroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+	/**
+	 * Specifies how to show horizontal scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+
+	/**
+	 * Specifies how to show vertical scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
 ScrollableScroller.defaultProps = {
 	'data-spotlight-container-disabled': false, // eslint-disable-line react/default-props-match-prop-types
 	direction: 'both',
 	focusableScrollbar: false, // eslint-disable-line react/default-props-match-prop-types
+	horizontalScrollbar: 'auto',
 	overscrollEffectOn: { // eslint-disable-line react/default-props-match-prop-types
 		arrowKey: false,
 		drag: false,
@@ -96,7 +125,8 @@ ScrollableScroller.defaultProps = {
 		wheel: true
 	},
 	preventBubblingOnKeyDown: 'none', // eslint-disable-line react/default-props-match-prop-types
-	type: 'JS' // eslint-disable-line react/default-props-match-prop-types
+	type: 'JS', // eslint-disable-line react/default-props-match-prop-types
+	verticalScrollbar: 'auto'
 };
 
 const Scroller = Skinnable(

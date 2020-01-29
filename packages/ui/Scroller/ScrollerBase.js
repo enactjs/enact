@@ -20,7 +20,7 @@ import css from './Scroller.module.less';
  * @public
  */
 const ScrollerBase = (props) => {
-	const {className, direction, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, style, uiChildContainerRef, ...rest} = props;
+	const {className, direction, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, setUiChildAdapter, style, uiChildContainerRef, ...rest} = props;
 	const mergedStyle = {
 		...style,
 		overflowX: isHorizontal() ? 'auto' : 'hidden',
@@ -63,8 +63,8 @@ const ScrollerBase = (props) => {
 		setScrollPosition
 	};
 	useEffect(() => {
-		rest.setUiChildAdapter(adapter);
-	}, [adapter, rest]);
+		setUiChildAdapter(adapter);
+	}, [adapter, rest, setUiChildAdapter]);
 
 	// Functions
 
@@ -97,6 +97,7 @@ const ScrollerBase = (props) => {
 	delete rest.cbScrollTo;
 	delete rest.dangerouslyContainsInScrollable;
 	delete rest.rtl;
+	delete rest.uiChildAdapter;
 
 	return (
 		<div
@@ -159,6 +160,8 @@ ScrollerBase.propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
 	 * @private
 	 */
 	rtl: PropTypes.bool,
+
+	setUiChildAdapter: PropTypes.func,
 
 	uiChildContainerRef: PropTypes.object
 };

@@ -205,7 +205,7 @@ const VirtualListBase = (props) => {
 		if (variables.current.prevState.firstIndex !== firstIndex || variables.current.prevState.numOfItems !== numOfItems) {
 			emitUpdateItems();
 		}
-	}, [firstIndex, numOfItems, emitUpdateItems, variables.current.prevState.firstIndex, variables.current.prevState.numOfItems]);
+	}, [firstIndex, numOfItems, emitUpdateItems, variables.current.prevState.firstIndex, variables.current.prevState.numOfItems]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		variables.current.deferScrollTo = false;
@@ -266,8 +266,6 @@ const VirtualListBase = (props) => {
 			!equals(prevProps.itemSize, props.itemSize)
 		) {
 			const {x, y} = getXY(variables.current.scrollPosition, 0);
-
-			debugger;
 
 			calculateMetrics(props);
 			setStatesAndUpdateBounds();
@@ -412,7 +410,7 @@ const VirtualListBase = (props) => {
 	delete rest.setChildAdapter;
 	delete rest.setUiChildAdapter;
 	delete rest.spacing;
-	delete rest.uiChildAdapter
+	delete rest.uiChildAdapter;
 	delete rest.uiChildContainerRef;
 	delete rest.updateStatesAndBounds;
 
@@ -433,7 +431,7 @@ const VirtualListBase = (props) => {
 		updateFromTo: {...updateFromTo},
 		firstIndex,
 		numOfItems
-	}
+	};
 
 	return (
 		<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={uiChildContainerRef} style={style}>
