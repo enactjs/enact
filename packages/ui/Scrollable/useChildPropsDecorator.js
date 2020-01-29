@@ -93,6 +93,7 @@ const useChildPropsDecorator = (props) => {
 	});
 
 	decorateChildProps('scrollableContainerProps', {ref: scrollableContainerRef});
+	decorateChildProps('childProps', {uiChildAdapter, uiChildContainerRef});
 	decorateChildProps('verticalScrollbarProps', {ref: verticalScrollbarRef});
 	decorateChildProps('horizontalScrollbarProp', {ref: horizontalScrollbarRef});
 

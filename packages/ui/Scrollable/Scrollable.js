@@ -161,6 +161,10 @@ const useScrollable = (props) => {
 		isScrollbarVisibleChanged: false
 	});
 
+	if (variables.current.animator == null) {
+		variables.current.animator = new ScrollAnimator();
+	}
+
 	{// useEffect(() => { // FIXME
 		if (props.setUiScrollableAdapter) {
 			props.setUiScrollableAdapter({
@@ -252,6 +256,7 @@ const useScrollable = (props) => {
 	delete rest.start; // Native
 	delete rest.stop; // JS
 	delete rest.uiChildAdapter;
+	delete rest.uiChildContainerRef;
 	delete rest.verticalScrollbar;
 	delete rest.verticalScrollbarRef;
 
@@ -292,10 +297,6 @@ const useScrollable = (props) => {
 
 	if (variables.current.resizeRegistry == null) {
 		variables.current.resizeRegistry = Registry.create(handleResize);
-	}
-
-	if (variables.current.animator == null) {
-		variables.current.animator = new ScrollAnimator();
 	}
 
 	if (variables.current.scrollStopJob == null) {
