@@ -1449,8 +1449,12 @@ const useScrollable = (props) => {
 		cbScrollTo: scrollTo,
 		className: [css.scrollableFill],
 		dangerouslyContainsInScrollable,
-		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible,
+		get isHorizontalScrollbarVisible () {
+			return isHorizontalScrollbarVisible;
+		},
+		get isVerticalScrollbarVisible () {
+			return isVerticalScrollbarVisible;
+		},
 		onScroll: type === 'JS' ? handleScroll : null,
 		rtl,
 		setUiChildAdapter,

@@ -144,7 +144,21 @@ ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.p
 	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
 	role: PropTypes.string,
 
-	type: PropTypes.string
+	type: PropTypes.string,
+
+	/**
+	 * Specifies how to show vertical scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
 ScrollableVirtualList.defaultProps = {
@@ -160,7 +174,8 @@ ScrollableVirtualList.defaultProps = {
 	},
 	preventBubblingOnKeyDown: 'none',
 	role: 'list',
-	type: 'JS'
+	type: 'JS',
+	verticalScrollbar: 'auto'
 };
 
 const VirtualList = Skinnable(
@@ -285,7 +300,21 @@ VirtualGridListScrollable.propTypes = /** @lends moonstone/VirtualList.VirtualGr
 
 	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
 	role: PropTypes.string,
-	type: PropTypes.string
+	type: PropTypes.string,
+
+	/**
+	 * Specifies how to show vertical scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
 VirtualGridListScrollable.defaultProps = {
@@ -301,7 +330,8 @@ VirtualGridListScrollable.defaultProps = {
 	},
 	preventBubblingOnKeyDown: 'none',
 	role: 'list',
-	type: 'JS'
+	type: 'JS',
+	verticalScrollbar: 'auto'
 };
 
 const VirtualGridList = Skinnable(

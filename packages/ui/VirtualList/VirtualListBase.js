@@ -103,6 +103,12 @@ const VirtualListBase = (props) => {
 			spacing: null,
 			itemSize: null,
 			rtl: null
+		},
+
+		prevState: {
+			updateFromTo: {from: 0, to: 0},
+			firstIndex: 0,
+			numOfItems: 0
 		}
 	});
 
@@ -196,9 +202,10 @@ const VirtualListBase = (props) => {
 	}, []);
 
 	useEffect(() => {
-		// if (prevState.firstIndex !== firstIndex || prevState.numOfItems !== numOfItems)
-		emitUpdateItems();
-	}, [firstIndex, numOfItems, emitUpdateItems]);
+		if (variables.current.prevState.firstIndex !== firstIndex || variables.current.prevState.numOfItems !== numOfItems) {
+			emitUpdateItems();
+		}
+	}, [firstIndex, numOfItems, emitUpdateItems, variables.current.prevState.firstIndex, variables.current.prevState.numOfItems]);
 
 	useEffect(() => {
 		variables.current.deferScrollTo = false;
@@ -260,6 +267,8 @@ const VirtualListBase = (props) => {
 		) {
 			const {x, y} = getXY(variables.current.scrollPosition, 0);
 
+			debugger;
+
 			calculateMetrics(props);
 			setStatesAndUpdateBounds();
 
@@ -282,7 +291,7 @@ const VirtualListBase = (props) => {
 
 	useEffect(() => {
 		// TODO: remove `hasDataSizeChanged` and fix ui/Scrollable*
-		variables.current.hasDataSizeChanged = true; // (prevProps.dataSize !== this.props.dataSize);
+		variables.current.hasDataSizeChanged = (variables.current.prevProps.dataSize !== props.dataSize);
 
 		if (!variables.current.deferScrollTo && variables.current.hasDataSizeChanged) {
 			setStatesAndUpdateBounds();
@@ -417,6 +426,12 @@ const VirtualListBase = (props) => {
 		itemSize: props.itemSize,
 		rtl: props.rtl
 	};
+
+	variables.current.prevState = {
+		updateFromTo: {...updateFromTo},
+		firstIndex,
+		numOfItems
+	}
 
 	return (
 		<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={uiChildContainerRef} style={style}>

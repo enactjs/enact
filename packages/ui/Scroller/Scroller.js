@@ -69,7 +69,8 @@ Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
 };
 
 Scroller.defaultProps = {
-	direction: 'both'
+	direction: 'both',
+	verticalScrollbar: 'auto'
 };
 
 /**

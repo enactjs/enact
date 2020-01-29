@@ -91,7 +91,8 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 
 VirtualList.defaultProps = {
 	direction: 'vertical',
-	role: 'list'
+	role: 'list',
+	verticalScrollbar: 'auto'
 };
 
 /**
@@ -168,7 +169,8 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 
 VirtualGridList.defaultProps = {
 	direction: 'vertical',
-	role: 'list'
+	role: 'list',
+	verticalScrollbar: 'auto'
 };
 
 export default VirtualList;
