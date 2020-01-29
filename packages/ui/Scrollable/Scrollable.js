@@ -235,6 +235,7 @@ const useScrollable = (props) => {
 	delete rest.applyOverscrollEffect;
 	delete rest.cbScrollTo;
 	delete rest.clearOverscrollEffect;
+	delete rest.decorateChildProps;
 	delete rest.handleResizeWindow;
 	delete rest.horizontalScrollbar;
 	delete rest.horizontalScrollbarRef;

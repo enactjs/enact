@@ -38,7 +38,7 @@ const ScrollerBase = (props) => {
 		forceUpdate();
 	}, [forceUpdate, isHorizontalScrollbarVisible, isVerticalScrollbarVisible]);
 
-	const {getRtlPositionX, getScrollBounds} = useCalculateMetrics(rest, instance);
+	const {calculateMetrics, getRtlPositionX, getScrollBounds} = useCalculateMetrics(rest, instance);
 
 	const {
 		getScrollPos,
@@ -50,6 +50,7 @@ const ScrollerBase = (props) => {
 	// setUiChildAdapter
 
 	const adapter = {
+		calculateMetrics,
 		didScroll,
 		getNodePosition,
 		getScrollBounds,

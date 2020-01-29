@@ -410,7 +410,9 @@ const VirtualListBase = (props) => {
 	delete rest.pageScroll;
 	delete rest.rtl;
 	delete rest.setChildAdapter;
+	delete rest.setUiChildAdapter;
 	delete rest.spacing;
+	delete rest.uiChildAdapter
 	delete rest.uiChildContainerRef;
 	delete rest.updateStatesAndBounds;
 

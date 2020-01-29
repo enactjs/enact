@@ -13,18 +13,15 @@ const utilDecorateChildProps = (instance) => (childComponentName, props) => {
 	if (typeof props === 'object') {
 		for (const prop in props) {
 			if (prop === 'className') {
-				if (!instance[childComponentName].classNames) {
-					instance[childComponentName].classNames = [];
-				}
 
 				warning(
 					Array.isArray(props.className),
 					'Unsupported other types for `className` prop except Array'
 				);
 
-				// Add className string in the `className` prop.
-				instance[childComponentName].classNames = [...instance[childComponentName].classNames, ...props.className];
-				instance[childComponentName].className = classNames(...instance[childComponentName].classNames);
+				instance[childComponentName].className = instance[childComponentName].className ?
+					instance[childComponentName].className + ' ' + props.className.join(' ') :
+					props.className.join(' ');
 			} else {
 				warning(
 					!instance[childComponentName][prop],
