@@ -7,7 +7,7 @@ const utilDOM = () => {
 		if (!target) {
 			return false;
 		} else if (ref.current) {
-			return ref.current.contains(target)
+			return ref.current.contains(target);
 		} else if (ref) {
 			return ref.contains(target);
 		}

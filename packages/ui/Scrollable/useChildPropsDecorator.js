@@ -19,7 +19,7 @@ const utilDecorateChildProps = (instance) => (childComponentName, props) => {
 
 				warning(
 					Array.isArray(props.className),
-					`Unsupported other types for 'className' prop except Array`
+					'Unsupported other types for `className` prop except Array'
 				);
 
 				// Add className string in the `className` prop.
@@ -28,7 +28,7 @@ const utilDecorateChildProps = (instance) => (childComponentName, props) => {
 			} else {
 				warning(
 					!instance[childComponentName][prop],
-					`Unsupported to push value in the same prop.`
+					'Unsupported to push value in the same ' + prop + ' prop.'
 				);
 
 				// Override the previous value.

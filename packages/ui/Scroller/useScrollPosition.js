@@ -1,8 +1,8 @@
 import {useRef} from 'react';
 
 const useScrollPosition = (props, instances, context) => {
-    const {uiChildContainerRef} = instances;
-    const {getRtlPositionX, isHorizontal, isVertical} = context;
+	const {uiChildContainerRef} = instances;
+	const {getRtlPositionX, isHorizontal, isVertical} = context;
 
 	// Mutable value
 
@@ -40,9 +40,14 @@ const useScrollPosition = (props, instances, context) => {
 		variables.current.scrollPos.top = y;
 	}
 
+	function getScrollPos () {
+		return variables.current.scrollPos;
+	}
+
 	// Return
 
 	return {
+		getScrollPos,
 		setScrollPosition,
 		scrollToPosition,
 		didScroll

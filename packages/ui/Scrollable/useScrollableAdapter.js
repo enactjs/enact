@@ -1,9 +1,9 @@
 import {useRef} from 'react';
 
-const scrollableAdapter = () => {
+const useScrollableAdapter = () => {
 	// Mutable value
 
-    const scrollableAdapter = useRef({
+	const scrollableAdapter = useRef({
 		animator: null,
 		applyOverscrollEffect: null,
 		bounds: null,
@@ -29,23 +29,23 @@ const scrollableAdapter = () => {
 		setOverscrollStatus: null,
 		showThumb: null,
 		start: null,
-        startHidingThumb: null,
-        stop,
+		startHidingThumb: null,
+		stop: null,
 		wheelDirection: null
 	});
 
 	// Functions
 
-    const setScrollableAdapter = (adapter) => {
+	const setScrollableAdapter = (adapter) => {
 		scrollableAdapter.current = adapter;
-    }
+	};
 
-    // Return
+	// Return
 
-    return [scrollableAdapter, setScrollableAdapter];
+	return [scrollableAdapter, setScrollableAdapter];
 };
 
-export default scrollableAdapter;
+export default useScrollableAdapter;
 export {
-	scrollableAdapter
+	useScrollableAdapter
 };

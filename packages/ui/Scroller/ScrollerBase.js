@@ -1,7 +1,6 @@
 import classNames from 'classnames';
-import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect} from 'react';
 
 import useForceUpdate from '../Scrollable/useForceUpdate';
 
@@ -37,11 +36,12 @@ const ScrollerBase = (props) => {
 	useEffect(() => {
 		// TODO: Check this code is still needed.  This code introduced from #1618. (ahn)
 		forceUpdate();
-	}, [isHorizontalScrollbarVisible, isVerticalScrollbarVisible]);
+	}, [forceUpdate, isHorizontalScrollbarVisible, isVerticalScrollbarVisible]);
 
 	const {getRtlPositionX, getScrollBounds} = useCalculateMetrics(rest, instance);
 
 	const {
+		getScrollPos,
 		setScrollPosition,
 		scrollToPosition,
 		didScroll
@@ -49,17 +49,21 @@ const ScrollerBase = (props) => {
 
 	// setUiChildAdapter
 
+	const adapter = {
+		didScroll,
+		getNodePosition,
+		getScrollBounds,
+		isHorizontal,
+		isVertical,
+		get scrollPos () {
+			return getScrollPos();
+		},
+		scrollToPosition,
+		setScrollPosition
+	};
 	useEffect(() => {
-		rest.setUiChildAdapter({
-			didScroll,
-			getNodePosition,
-			getScrollBounds,
-			isHorizontal,
-			isVertical,
-			scrollToPosition,
-			setScrollPosition
-		});
-	}, []);
+		rest.setUiChildAdapter(adapter);
+	}, [adapter, rest]);
 
 	// Functions
 
@@ -137,6 +141,14 @@ ScrollerBase.propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
 	 * @type {Boolean}
 	 * @private
 	 */
+	isHorizontalScrollbarVisible: PropTypes.bool,
+
+	/**
+	 * Prop to check context value if Scrollbar exists or not.
+	 *
+	 * @type {Boolean}
+	 * @private
+	 */
 	isVerticalScrollbarVisible: PropTypes.bool,
 
 	/**
@@ -145,7 +157,9 @@ ScrollerBase.propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
 	 * @type {Boolean}
 	 * @private
 	 */
-	rtl: PropTypes.bool
+	rtl: PropTypes.bool,
+
+	uiChildContainerRef: PropTypes.object
 };
 
 ScrollerBase.defaultProps = {

@@ -52,7 +52,7 @@ const VirtualList = ({role, ...rest}) => {
 					<ChildWrapper {...childWrapperProps}>
 						<VirtualListBase
 							{...childProps}
-							itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
 								cc.length ? <div role={role}>{cc}</div> : null
 							)}
 						/>
@@ -125,7 +125,7 @@ const VirtualGridList = ({role, ...rest}) => {
 					<ChildWrapper {...childWrapperProps}>
 						<VirtualListBase
 							{...childProps}
-							itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
+							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
 								cc.length ? <div role={role}>{cc}</div> : null
 							)}
 						/>

@@ -1,3 +1,4 @@
+import {platform} from '@enact/core/platform';
 import {useEffect, useRef} from 'react';
 
 const useCalculateMetrics = (props, instances) => {

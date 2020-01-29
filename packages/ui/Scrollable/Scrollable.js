@@ -59,6 +59,7 @@ const
 		overscrollTypeHold,
 		overscrollTypeNone,
 		overscrollTypeOnce,
+		overscrollVelocityFactor,
 		paginationPageMultiplier,
 		scrollStopWaiting,
 		scrollWheelPageMultiplierForMaxPixel
@@ -160,7 +161,7 @@ const useScrollable = (props) => {
 		isScrollbarVisibleChanged: false
 	});
 
-	// useEffect(() => { // FIXME
+	{// useEffect(() => { // FIXME
 		if (props.setUiScrollableAdapter) {
 			props.setUiScrollableAdapter({
 				animator: variables.current.animator,
@@ -188,19 +189,16 @@ const useScrollable = (props) => {
 					return props.rtl;
 				},
 				get scrollBounds () {
-					return scrollBounds;
+					return getScrollBounds();
 				},
 				get scrollHeight () {
-					return scrollHeight;
+					return variables.current.bounds.scrollHeight;
 				},
 				get scrolling () {
-					return scrolling;
+					return variables.current.scrolling;
 				},
 				get scrollLeft () {
 					return variables.current.scrollLeft;
-				},
-				get scrollPos () {
-					return scrollPos;
 				},
 				scrollTo,
 				scrollToAccumulatedTarget,
@@ -223,10 +221,10 @@ const useScrollable = (props) => {
 				}
 			});
 		}
-	// }, []); // FIXME
+	}// }, []); // FIXME
 
 	const
-		{className, containerRenderer, noScrollByDrag, passProps, rtl, style, ...rest} = props,
+		{className, noScrollByDrag, rtl, style, ...rest} = props,
 		scrollableClasses = classNames(css.scrollable, className);
 
 	delete rest.addEventListeners;
@@ -253,7 +251,7 @@ const useScrollable = (props) => {
 	delete rest.setUiScrollableAdapter;
 	delete rest.start; // Native
 	delete rest.stop; // JS
-	delete rest.uiChildAdapter,
+	delete rest.uiChildAdapter;
 	delete rest.verticalScrollbar;
 	delete rest.verticalScrollbarRef;
 
@@ -263,9 +261,9 @@ const useScrollable = (props) => {
 	const enqueueForceUpdate = useCallback(() => {
 		uiChildAdapter.current.calculateMetrics(uiChildAdapter.current.props);
 		forceUpdate();
-	}, []);
+	}, [forceUpdate, uiChildAdapter]);
 
-	const handleResizeWindow = useCallback(() => {
+	function handleResizeWindow () {
 		const propsHandleResizedWindow = props.handleResizeWindow;
 
 		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
@@ -283,8 +281,7 @@ const useScrollable = (props) => {
 
 			enqueueForceUpdate();
 		});
-	}, [enqueueForceUpdate, props.handleResizeWindow]); // TODO : Handle exhaustive-deps
-
+	} // esline-disable-line react-hooks/exhaustive-deps
 
 	const handleResize = useCallback((ev) => {
 		if (ev.action === 'invalidateBounds') {
@@ -335,7 +332,7 @@ const useScrollable = (props) => {
 			}
 			// JS ]
 		};
-	}, []);
+	}); // esline-disable-next-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		// Need to sync calculated client size if it is different from the real size
@@ -367,7 +364,7 @@ const useScrollable = (props) => {
 			variables.current.deferScrollTo = false;
 			variables.current.isUpdatedScrollThumb = updateScrollThumbSize();
 		}
-	}, [isHorizontalScrollbarVisible, isVerticalScrollbarVisible]);
+	}); // esline-disable-next-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		if (variables.current.isScrollbarVisibleChanged === false) {
@@ -404,11 +401,11 @@ const useScrollable = (props) => {
 		return (props.rtl ? -x : x);
 	}
 
-	const onMouseDown = useCallback((ev) => {
+	function onMouseDown (ev) {
 		if (forwardWithPrevent('onMouseDown', ev, props)) {
 			stop();
 		}
-	}, [props, stop]);
+	} // esline-disable-next-line react-hooks/exhaustive-deps
 
 	// Native [[
 	function onTouchStart () {
@@ -563,7 +560,8 @@ const useScrollable = (props) => {
 	* - for horizontal scroll, supports wheel action on any children nodes since web engine cannot support this
 	* - for vertical scroll, supports wheel action on scrollbars only
 	*/
-	const onWheel = useCallback((ev) => {
+	// esline-disable-next-line react-hooks/exhaustive-deps
+	function onWheel (ev) {
 		if (variables.current.isDragging) {
 			ev.preventDefault();
 			ev.stopPropagation();
@@ -664,7 +662,7 @@ const useScrollable = (props) => {
 				}
 
 				if (delta !== 0) {
-					const direction = Math.sign(delta);
+					direction = Math.sign(delta);
 					// Not to accumulate scroll position if wheel direction is different from hold direction
 					if (direction !== variables.current.wheelDirection) {
 						variables.current.isScrollAnimationTargetAccumulated = false;
@@ -679,7 +677,7 @@ const useScrollable = (props) => {
 				}
 			}
 		}
-	}, [props]);
+	}
 
 	// JS [[
 	function scrollByPage (keyCode) {
@@ -695,7 +693,8 @@ const useScrollable = (props) => {
 	// JS ]]
 
 	// Native [[
-	const onScroll = useCallback((ev) => {
+	// esline-disable-next-line react-hooks/exhaustive-deps
+	function onScroll (ev) {
 		let {scrollLeft, scrollTop} = ev.target;
 
 		const
@@ -723,16 +722,16 @@ const useScrollable = (props) => {
 
 		forwardScrollEvent('onScroll');
 		variables.current.scrollStopJob.start();
-	}, [props]);
+	}
 	// Native ]]
 
-	const onKeyDown = useCallback((ev) => {
+	function onKeyDown (ev) {
 		if (type === 'Native' || props.onKeyDown) {
 			forward('onKeyDown', ev, props);
 		} else if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode))) {
 			scrollByPage(ev.keyCode);
 		}
-	}, [props]); // TODO: Handle exhaustive-deps
+	} // esline-disable-line react-hooks/exhaustive-deps
 
 	function scrollToAccumulatedTarget (delta, vertical, overscrollEffect) {
 		if (!variables.current.isScrollAnimationTargetAccumulated) {
@@ -764,9 +763,9 @@ const useScrollable = (props) => {
 		}
 	}
 
-	function setOverscrollStatus (orientation, edge, type, ratio) {
+	function setOverscrollStatus (orientation, edge, overScrollType, ratio) {
 		const status = variables.current.overscrollStatus[orientation][edge];
-		status.type = type;
+		status.type = overScrollType;
 		status.ratio = ratio;
 	}
 
@@ -793,24 +792,24 @@ const useScrollable = (props) => {
 		return Math.min(1, 2 * overDistance / baseSize);
 	}
 
-	function applyOverscrollEffect (orientation, edge, type, ratio) {
-		props.applyOverscrollEffect(orientation, edge, type, ratio);
-		setOverscrollStatus(orientation, edge, type === overscrollTypeOnce ? overscrollTypeDone : type, ratio);
+	function applyOverscrollEffect (orientation, edge, overScrollType, ratio) {
+		props.applyOverscrollEffect(orientation, edge, overScrollType, ratio);
+		setOverscrollStatus(orientation, edge, overScrollType === overscrollTypeOnce ? overscrollTypeDone : type, ratio);
 	}
 
-	function checkAndApplyOverscrollEffect (orientation, edge, type, ratio = 1) {
+	function checkAndApplyOverscrollEffect (orientation, edge, overScrollType, ratio = 1) {
 		const
 			isVertical = (orientation === 'vertical'),
 			curPos = isVertical ? variables.current.scrollTop : variables.current.scrollLeft,
 			maxPos = getScrollBounds()[isVertical ? 'maxTop' : 'maxLeft'];
 
 		if (
-			type === 'JS' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos) ||
-			type === 'Native' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - 1)
+			overScrollType === 'JS' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos) ||
+			overScrollType === 'Native' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - 1)
 		) { // Already on the edge
-			applyOverscrollEffect(orientation, edge, type, ratio);
+			applyOverscrollEffect(orientation, edge, overScrollType, ratio);
 		} else {
-			setOverscrollStatus(orientation, edge, type, ratio);
+			setOverscrollStatus(orientation, edge, overScrollType, ratio);
 		}
 	}
 
@@ -832,13 +831,13 @@ const useScrollable = (props) => {
 		});
 	}
 
-	function applyOverscrollEffectOnDrag (orientation, edge, targetPosition, type) {
+	function applyOverscrollEffectOnDrag (orientation, edge, targetPosition, overScrollType) {
 		if (edge) {
 			const
 				oppositeEdge = edge === 'before' ? 'after' : 'before',
 				ratio = calculateOverscrollRatio(orientation, targetPosition);
 
-			applyOverscrollEffect(orientation, edge, type, ratio);
+			applyOverscrollEffect(orientation, edge, overScrollType, ratio);
 			clearOverscrollEffect(orientation, oppositeEdge);
 		} else {
 			clearOverscrollEffect(orientation, 'before');
@@ -847,25 +846,25 @@ const useScrollable = (props) => {
 	}
 
 	// Native [[
-	function checkAndApplyOverscrollEffectOnDrag (targetX, targetY, type) {
+	function checkAndApplyOverscrollEffectOnDrag (targetX, targetY, overScrollType) {
 		const bounds = getScrollBounds();
 
 		if (canScrollHorizontally(bounds)) {
-			applyOverscrollEffectOnDrag('horizontal', getEdgeFromPosition(targetX, bounds.maxLeft), targetX, type);
+			applyOverscrollEffectOnDrag('horizontal', getEdgeFromPosition(targetX, bounds.maxLeft), targetX, overScrollType);
 		}
 
 		if (canScrollVertically(bounds)) {
-			applyOverscrollEffectOnDrag('vertical', getEdgeFromPosition(targetY, bounds.maxTop), targetY, type);
+			applyOverscrollEffectOnDrag('vertical', getEdgeFromPosition(targetY, bounds.maxTop), targetY, overScrollType);
 		}
 	}
 	// Native ]]
 
 	function checkAndApplyOverscrollEffectOnScroll (orientation) {
 		['before', 'after'].forEach((edge) => {
-			const {ratio, type} = getOverscrollStatus(orientation, edge);
+			const {ratio, overScrollType} = getOverscrollStatus(orientation, edge);
 
-			if (type === overscrollTypeOnce) {
-				checkAndApplyOverscrollEffect(orientation, edge, type, ratio);
+			if (overScrollType === overscrollTypeOnce) {
+				checkAndApplyOverscrollEffect(orientation, edge, overScrollType, ratio);
 			}
 		});
 	}
@@ -880,8 +879,9 @@ const useScrollable = (props) => {
 
 	// call scroll callbacks
 
-	function forwardScrollEvent (type, reachedEdgeInfo) {
-		forward(type, {scrollLeft: variables.current.scrollLeft, scrollTop: variables.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo}, props);
+	// esline-disable-next-line react-hooks/exhaustive-deps
+	function forwardScrollEvent (overScrollType, reachedEdgeInfo) {
+		forward(overScrollType, {scrollLeft: variables.current.scrollLeft, scrollTop: variables.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo}, props);
 	}
 
 	// Native [[
@@ -938,6 +938,7 @@ const useScrollable = (props) => {
 		}
 	}
 
+	// esline-disable-next-line react-hooks/exhaustive-deps
 	function getReachedEdgeInfo () {
 		const
 			bounds = getScrollBounds(),
@@ -1088,6 +1089,7 @@ const useScrollable = (props) => {
 		uiChildContainerRef.current.style.scrollBehavior = 'smooth';
 	}
 
+	// esline-disable-next-line react-hooks/exhaustive-deps
 	function stop () {
 		if (type === 'JS') {
 			stopForJS();
@@ -1221,6 +1223,7 @@ const useScrollable = (props) => {
 		return {left, top};
 	}
 
+	// esline-disable-next-line react-hooks/exhaustive-deps
 	function scrollTo (opt) {
 		if (!variables.current.deferScrollTo) {
 			const {left, top} = getPositionForScrollTo(opt);
@@ -1280,6 +1283,7 @@ const useScrollable = (props) => {
 		}
 	}
 
+	// esline-disable-next-line react-hooks/exhaustive-deps
 	function updateScrollbars () {
 		const
 			{horizontalScrollbar, verticalScrollbar} = props,
@@ -1306,6 +1310,7 @@ const useScrollable = (props) => {
 		}
 	}
 
+	// esline-disable-next-line react-hooks/exhaustive-deps
 	function updateScrollThumbSize () {
 		const
 			{horizontalScrollbar, verticalScrollbar} = props,

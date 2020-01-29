@@ -10,7 +10,7 @@ const useEvent = (eventName) => {
 			}
 		},
 
-        removeEventListener (ref, fn, param) {
+		removeEventListener (ref, fn, param) {
 			if (typeof window !== 'undefined' && (ref === window || ref === document)) {
 				ref.addEventListener(eventName, fn, param);
 			} else if (ref.current) {

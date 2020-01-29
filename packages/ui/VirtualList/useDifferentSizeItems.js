@@ -1,7 +1,7 @@
 const useDifferentSizeItems = (props, instances, context) => {
-	const {virtualListBase} = instances;
+	const {itemContainerRef, virtualListBase} = instances;
 	const {firstIndex} = virtualListBase;
-	const {getItemTopPositionFromPreviousItemBottomPosition, numOfItems, updateMoreInfo, updateScrollBoundsWithItemPositions} = context;
+	const {getItemBottomPosition, getItemTopPositionFromPreviousItemBottomPosition, numOfItems, setContainerSize, updateMoreInfo, updateScrollBoundsWithItemPositions} = context;
 
 	// Functions
 
@@ -81,7 +81,7 @@ const useDifferentSizeItems = (props, instances, context) => {
 		adjustItemPositionWithItemSize,
 		calculateAndCacheItemPosition
 	};
-}
+};
 
 export default useDifferentSizeItems;
 export {

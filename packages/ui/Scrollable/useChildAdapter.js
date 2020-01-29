@@ -3,7 +3,7 @@ import {useRef} from 'react';
 const useChildAdapter = () => {
 	// Mutable value
 
-    const childAdapter = useRef({
+	const childAdapter = useRef({
 		calculateMetrics: null,
 		didScroll: null,
 		dimensionToExtent: null,
@@ -27,21 +27,21 @@ const useChildAdapter = () => {
 		scrollToPosition: null,
 		setScrollPosition: null,
 		syncClientSize: null
-    });
+	});
 
-    // Functions
+	// Functions
 
-    const setChildAdapter = (adapter) => {
+	const setChildAdapter = (adapter) => {
 		childAdapter.current = adapter;
-    };
+	};
 
-    // Return
+	// Return
 
-    return [childAdapter, setChildAdapter];
+	return [childAdapter, setChildAdapter];
 };
 
 export default useChildAdapter;
 
 export {
-    useChildAdapter
+	useChildAdapter
 };

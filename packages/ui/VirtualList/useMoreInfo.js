@@ -1,9 +1,9 @@
-import {useEffect, useRef} from 'react';
+import {useRef} from 'react';
 
 const useMoreInfo = (props, instances, context) => {
 	const {virtualListBase} = instances;
 	const {firstIndex} = virtualListBase;
-	const {numOfItems} = context;
+	const {getItemBottomPosition, numOfItems} = context;
 
 	// Mutable value
 

@@ -1,5 +1,6 @@
-const useVirtualMetrics = (props, instances) => {
+const useVirtualMetrics = (props, instances, context) => {
 	const {virtualListBase} = instances;
+	const {cbCalculateAndCacheItemPosition} = context;
 
 	// Functions
 
@@ -18,7 +19,7 @@ const useVirtualMetrics = (props, instances) => {
 			if (!itemPositions[firstIndexInExtent]) {
 				// Cache individually sized item positions
 				for (let i = itemPositions.length; i <= index; i++) {
-					calculateAndCacheItemPosition(i);
+					cbCalculateAndCacheItemPosition.fn(i);
 				}
 			}
 

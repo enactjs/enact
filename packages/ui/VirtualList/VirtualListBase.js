@@ -106,19 +106,11 @@ const VirtualListBase = (props) => {
 		}
 	});
 
-	if (props.clientSize && variables.current.isMounted === false) {
-		calculateMetrics(props);
-		setStatesAndUpdateBounds();
-
-		variables.current.isMounted = true;
-	}
-
 	// Hooks
 
-	const instance = {contentRef, uiChildContainerRef, virtualListBase: {...variables, firstIndex, updateFromTo}};
+	const instance = {contentRef, itemContainerRef, uiChildContainerRef, virtualListBase: {...variables, firstIndex, updateFromTo}};
 
-	const {getMoreInfo, updateMoreInfo} = useMoreInfo(props, instance, {numOfItems});
-
+	const cbCalculateAndCacheItemPosition = {fn: null};
 	const {
 		getGridPosition,
 		getItemBottomPosition,
@@ -126,7 +118,9 @@ const VirtualListBase = (props) => {
 		getXY,
 		gridPositionToItemPosition,
 		getItemTopPositionFromPreviousItemBottomPosition
-	} = useVirtualMetrics(props, instance);
+	} = useVirtualMetrics(props, instance, {cbCalculateAndCacheItemPosition});
+
+	const {getMoreInfo, updateMoreInfo} = useMoreInfo(props, instance, {getItemBottomPosition, numOfItems});
 
 	const {
 		calculateMetrics,
@@ -136,7 +130,14 @@ const VirtualListBase = (props) => {
 		syncClientSize,
 		syncThreshold,
 		updateScrollBoundsWithItemPositions
-	} = useCalculateMetrics(props, instance, {getMoreInfo, numOfItems, setFirstIndex, setNumOfItems, updateMoreInfo});
+	} = useCalculateMetrics(props, instance, {getItemBottomPosition, getMoreInfo, numOfItems, setFirstIndex, setNumOfItems, updateMoreInfo});
+
+	if (props.clientSize && variables.current.isMounted === false) {
+		calculateMetrics(props);
+		setStatesAndUpdateBounds();
+
+		variables.current.isMounted = true;
+	}
 
 	const {
 		didScroll,
@@ -147,7 +148,8 @@ const VirtualListBase = (props) => {
 
 	const {positionItems} = usePositionItems(props, instance, {getGridPosition, getXY, numOfItems, updateScrollBoundsWithItemPositions});
 
-	const {adjustItemPositionWithItemSize, calculateAndCacheItemPosition} = useDifferentSizeItems(props, instance, {getItemTopPositionFromPreviousItemBottomPosition, numOfItems, updateMoreInfo});
+	const {adjustItemPositionWithItemSize, calculateAndCacheItemPosition} = useDifferentSizeItems(props, instance, {getItemBottomPosition, getItemTopPositionFromPreviousItemBottomPosition, numOfItems, setContainerSize, updateMoreInfo});
+	cbCalculateAndCacheItemPosition.fn = calculateAndCacheItemPosition;
 
 	// getDerivedStateFromProps
 	useLayoutEffect(() => {
@@ -191,7 +193,7 @@ const VirtualListBase = (props) => {
 		} else {
 			setContainerSize();
 		}
-	}, []);
+	}, [adjustItemPositionWithItemSize, calculateMetrics, emitUpdateItems, props, props.clientSize, props.itemSizes, setContainerSize, setStatesAndUpdateBounds]);
 
 	useEffect(() => {
 		// if (prevState.firstIndex !== firstIndex || prevState.numOfItems !== numOfItems)
@@ -289,14 +291,14 @@ const VirtualListBase = (props) => {
 
 			variables.current.deferScrollTo = true;
 		}
-	}, [props.dataSize]);
+	}, [props.dataSize, setContainerSize, setStatesAndUpdateBounds, variables]);
 
 	useEffect(() => {
 		// else if (prevProps.rtl !== this.props.rtl)
 		if (!variables.current.deferScrollTo) {
 			updateScrollPosition(getXY(variables.current.scrollPosition, 0));
 		}
-	}, [props.rtl]);
+	}, [getXY, props.rtl, updateScrollPosition]);
 
 	useEffect(() => {
 		const scrollBounds = getScrollBounds();
@@ -309,49 +311,50 @@ const VirtualListBase = (props) => {
 
 	// setUiChildAdapter
 
+	const adapter = {
+		calculateMetrics,
+		didScroll,
+		get dimensionToExtent () {
+			return variables.current.dimensionToExtent;
+		},
+		getGridPosition,
+		getItemBottomPosition,
+		getItemNode,
+		getItemPosition,
+		getMoreInfo,
+		getScrollBounds,
+		gridPositionToItemPosition,
+		get hasDataSizeChanged () {
+			return variables.current.hasDataSizeChanged;
+		},
+		isHorizontal,
+		get isPrimaryDirectionVertical () {
+			return variables.current.isPrimaryDirectionVertical;
+		},
+		isVertical,
+		get itemPositions () {
+			return variables.current.itemPositions;
+		},
+		get numOfItems () {
+			return numOfItems;
+		},
+		get primary () {
+			return variables.current.primary;
+		},
+		props,
+		get scrollPosition () {
+			return variables.current.scrollPosition;
+		},
+		get scrollPositionTarget () {
+			return variables.current.scrollPositionTarget;
+		},
+		scrollToPosition,
+		setScrollPosition,
+		syncClientSize
+	};
 	useEffect(() => {
-		props.setUiChildAdapter({
-			calculateMetrics,
-			didScroll,
-			get dimensionToExtent () {
-				return variables.current.dimensionToExtent;
-			},
-			getGridPosition,
-			getItemBottomPosition,
-			getItemNode,
-			getItemPosition,
-			getMoreInfo,
-			getScrollBounds,
-			gridPositionToItemPosition,
-			get hasDataSizeChanged () {
-				return variables.current.hasDataSizeChanged
-			},
-			isHorizontal,
-			get isPrimaryDirectionVertical () {
-				return variables.current.isPrimaryDirectionVertical;
-			},
-			isVertical,
-			get itemPositions () {
-				return variables.current.itemPositions;
-			},
-			get numOfItems () {
-				return numOfItems
-			},
-			get primary () {
-				return variables.current.primary;
-			},
-			props,
-			get scrollPosition () {
-				return variables.current.scrollPosition;
-			},
-			get scrollPositionTarget () {
-				return variables.current.scrollPositionTarget;
-			},
-			scrollToPosition,
-			setScrollPosition,
-			syncClientSize
-		});
-	}, []);
+		props.setUiChildAdapter(adapter);
+	}, [adapter, props]);
 
 	// Functions
 
@@ -375,7 +378,7 @@ const VirtualListBase = (props) => {
 		{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, ...rest} = props,
 		containerClasses = classNames(
 			css.virtualList,
-			(type === 'Native') ? variables.current.isPrimaryDirectionVertical ? css.vertical : css.horizontal : null,
+			(type === 'Native') ? (variables.current.isPrimaryDirectionVertical && css.vertical || css.horizontal) : null,
 			className
 		),
 		contentClasses = (type === 'Native') ? null : css.content;
@@ -629,6 +632,8 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 * TBD
 	 */
 	type: PropTypes.string,
+
+	uiChildContainerRef: PropTypes.object,
 
 	/**
 	 * Called to execute additional logic in a themed component when updating states and bounds.
