@@ -63,11 +63,11 @@ const useEventMonitor = (props, instances, context) => {
 
 	useEffect(() => {
 		const setMonitorEventTarget = (target) => {
-			scrollables.set(variables.pageKeyHandlerObj, target);
+			scrollables.set(variables.current.pageKeyHandlerObj, target);
 		};
 
 		const deleteMonitorEventTarget = () => {
-			scrollables.delete(variables.pageKeyHandlerObj);
+			scrollables.delete(variables.current.pageKeyHandlerObj);
 		};
 
 		setMonitorEventTarget(scrollableContainerRef.current);
