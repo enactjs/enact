@@ -1180,15 +1180,19 @@ const itemSizesShape = PropTypes.shape({
 			delete rest.isHorizontalScrollbarVisible;
 			delete rest.isVerticalScrollbarVisible;
 			delete rest.itemRenderer;
+			delete rest.itemSizes;
 			delete rest.itemSize;
 			delete rest.onUpdate;
 			delete rest.onUpdateItems;
 			delete rest.overhang;
 			delete rest.pageScroll;
 			delete rest.rtl;
+			delete rest.setChildAdapter;
+			delete rest.setUiChildAdapter;
 			delete rest.spacing;
+			delete rest.uiChildAdapter;
+			delete rest.uiChildContainerRef;
 			delete rest.updateStatesAndBounds;
-			delete rest.itemSizes;
 
 			if (primary) {
 				this.positionItems();

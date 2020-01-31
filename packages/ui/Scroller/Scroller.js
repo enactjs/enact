@@ -191,6 +191,8 @@ class ScrollerBase extends React.Component {
 		delete rest.rtl;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
+		delete rest.uiChildAdapter;
+		delete rest.uiChildContainerRef;
 
 		return (
 			<div
