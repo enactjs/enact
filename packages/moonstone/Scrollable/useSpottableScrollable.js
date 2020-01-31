@@ -13,7 +13,6 @@ import useEventFocus from './useEventFocus';
 import useEventKey from './useEventKey';
 import useEventMonitor from './useEventMonitor';
 import useEventMouse from './useEventMouse';
-import utilEventResizeWindow from './utilEventResizeWindow';
 import useEventTouch from './useEventTouch';
 import useEventVoice from './useEventVoice';
 import useEventWheel from './useEventWheel';
@@ -98,8 +97,6 @@ const useSpottableScrollable = (props, instances, context) => {
 		removeVoiceEventListener,
 		stopVoice
 	} = useEventVoice(props, instances, {onScrollbarButtonClick});
-
-	const {handleResizeWindow} = utilEventResizeWindow();
 
 	// Functions
 
@@ -192,6 +189,14 @@ const useSpottableScrollable = (props, instances, context) => {
 		// updated in calculateAndScrollTo but we might not have made it to that point), it will be
 		// out of date when we land back in this method next time.
 		uiScrollableAdapter.current.bounds.scrollHeight = uiScrollableAdapter.current.getScrollBounds().scrollHeight;
+	}
+
+	function handleResizeWindow () {
+		const focusedItem = Spotlight.getCurrent();
+
+		if (focusedItem) {
+			focusedItem.blur();
+		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
