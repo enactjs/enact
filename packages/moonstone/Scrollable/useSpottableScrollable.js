@@ -3,15 +3,17 @@ import Spotlight from '@enact/spotlight';
 import {spottableClass} from '@enact/spotlight/Spottable';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {getRect, intersects} from '@enact/spotlight/src/utils';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
+import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import {useContext, useRef} from 'react';
 
-import {SharedState} from '../internal/SharedStateDecorator';
+import {SharedState} from '../internal/SharedStateDecorator/SharedStateDecorator';
 
 import useEventFocus from './useEventFocus';
 import useEventKey from './useEventKey';
 import useEventMonitor from './useEventMonitor';
 import useEventMouse from './useEventMouse';
-import useEventResizeWindow from './useEventResizeWindow';
+import utilEventResizeWindow from './utilEventResizeWindow';
 import useEventTouch from './useEventTouch';
 import useEventVoice from './useEventVoice';
 import useEventWheel from './useEventWheel';
@@ -32,11 +34,10 @@ import useSpotlightRestore from './useSpotlightRestore';
  */
 const dataIndexAttribute = 'data-index';
 
-const
-	reverseDirections = {
-		down: 'up',
-		up: 'down'
-	};
+const reverseDirections = {
+	down: 'up',
+	up: 'down'
+};
 
 const isIntersecting = (elem, container) => elem && intersects(getRect(container), getRect(elem));
 const getIntersectingElement = (elem, container) => isIntersecting(elem, container) && elem;
@@ -45,19 +46,12 @@ const getTargetInViewByDirectionFromPosition = (direction, position, container) 
 	return getIntersectingElement(target, container);
 };
 
-const useSpottable = (props, instances, dependencies) => {
-	/*
-	 * Dependencies
-	 */
+const useSpottableScrollable = (props, instances, context) => {
+	const {childAdapter, scrollableContainerRef, uiChildContainerRef, uiScrollableAdapter} = instances;
+	const {type} = context;
+	const contextSharedState = useContext(SharedState);
 
-	const {childRef, overscrollRefs, uiRef} = instances;
-	const {type} = dependencies;
-
-	const context = useContext(SharedState);
-
-	/*
-	 * Instance
-	 */
+	// Mutable value
 
 	const variables = useRef({
 		animateOnFocus: false,
@@ -67,9 +61,7 @@ const useSpottable = (props, instances, dependencies) => {
 		pointToFocus: null
 	});
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	const {
 		alertThumb,
@@ -77,44 +69,42 @@ const useSpottable = (props, instances, dependencies) => {
 		onScrollbarButtonClick,
 		scrollAndFocusScrollbarButton,
 		scrollbarProps
-	} = useScrollbar(props, {uiRef}, {isContent});
+	} = useScrollbar(props, instances, {isContent});
 
 	useSpotlightConfig(props);
 
-	useSpotlightRestore(props, {uiRef});
+	useSpotlightRestore(props, instances);
 
 	const {
 		applyOverscrollEffect,
 		checkAndApplyOverscrollEffectByDirection,
 		clearOverscrollEffect
-	} = useOverscrollEffect({}, {overscrollRefs, uiRef});
+	} = useOverscrollEffect({}, instances);
 
-	const {handleWheel, isWheeling} = useEventWheel(props, {childRef, uiRef}, {isScrollButtonFocused, type});
+	const {handleWheel, isWheeling} = useEventWheel(props, instances, {isScrollButtonFocused, type});
 
-	const {calculateAndScrollTo, handleFocus, hasFocus} = useEventFocus(props, {childRef, spottable: variables, uiRef}, {alertThumb, isWheeling, type});
+	const {calculateAndScrollTo, handleFocus, hasFocus} = useEventFocus(props, {...instances, spottable: variables}, {alertThumb, isWheeling, type});
 
-	const {handleKeyDown, lastPointer, scrollByPageOnPointerMode} = useEventKey(props, {childRef, spottable: variables, uiRef}, {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type});
+	const {handleKeyDown, lastPointer, scrollByPageOnPointerMode} = useEventKey(props, {...instances, spottable: variables}, {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type});
 
-	useEventMonitor({}, {childRef, uiRef}, {lastPointer, scrollByPageOnPointerMode});
+	useEventMonitor({}, instances, {lastPointer, scrollByPageOnPointerMode});
 
-	const {handleFlick, handleMouseDown} = useEventMouse({}, {uiRef}, {isScrollButtonFocused, type});
+	const {handleFlick, handleMouseDown} = useEventMouse({}, instances, {isScrollButtonFocused, type});
 
-	const {handleTouchStart} = useEventTouch({}, {}, {isScrollButtonFocused});
+	const {handleTouchStart} = useEventTouch({}, instances, {isScrollButtonFocused});
 
 	const {
 		addVoiceEventListener,
 		removeVoiceEventListener,
 		stopVoice
-	} = useEventVoice(props, {uiRef}, {onScrollbarButtonClick});
+	} = useEventVoice(props, instances, {onScrollbarButtonClick});
 
-	const {handleResizeWindow} = useEventResizeWindow();
+	const {handleResizeWindow} = utilEventResizeWindow();
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function isContent (element) {
-		return (element && uiRef.current && uiRef.current.childRefCurrent.containerRef.current.contains(element));
+		return (element && utilDOM.containsDangerously(uiChildContainerRef, element));
 	}
 
 	function scrollTo (opt) {
@@ -130,8 +120,9 @@ const useSpottable = (props, instances, dependencies) => {
 
 	function stop () {
 		if (!props['data-spotlight-container-disabled']) {
-			childRef.current.setContainerDisabled(false);
+			childAdapter.current.setContainerDisabled(false);
 		}
+
 		focusOnItem();
 		variables.current.lastScrollPositionOnFocus = null;
 		variables.current.isWheeling = false;
@@ -143,78 +134,85 @@ const useSpottable = (props, instances, dependencies) => {
 	}
 
 	function focusOnItem () {
-		if (variables.current.indexToFocus !== null && typeof childRef.current.focusByIndex === 'function') {
-			childRef.current.focusByIndex(variables.current.indexToFocus);
+		if (variables.current.indexToFocus !== null && typeof childAdapter.current.focusByIndex === 'function') {
+			childAdapter.current.focusByIndex(variables.current.indexToFocus);
 			variables.current.indexToFocus = null;
 		}
-		if (variables.current.nodeToFocus !== null && typeof childRef.current.focusOnNode === 'function') {
-			childRef.current.focusOnNode(variables.current.nodeToFocus);
+
+		if (variables.current.nodeToFocus !== null && typeof childAdapter.current.focusOnNode === 'function') {
+			childAdapter.current.focusOnNode(variables.current.nodeToFocus);
 			variables.current.nodeToFocus = null;
 		}
+
 		if (variables.current.pointToFocus !== null) {
 			// no need to focus on pointer mode
 			if (!Spotlight.getPointerMode()) {
-				const {direction, x, y} = variables.current.pointToFocus;
-				const position = {x, y};
-				const {current: {containerRef: {current}}} = uiRef;
-				const elemFromPoint = document.elementFromPoint(x, y);
-				const target =
-					elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), current) ||
-					getTargetInViewByDirectionFromPosition(direction, position, current) ||
-					getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, current);
+				const
+					{direction, x, y} = variables.current.pointToFocus,
+					position = {x, y},
+					elemFromPoint = document.elementFromPoint(x, y),
+					target =
+						elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), scrollableContainerRef.current) ||
+						getTargetInViewByDirectionFromPosition(direction, position, scrollableContainerRef.current) ||
+						getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, scrollableContainerRef.current);
 
 				if (target) {
 					Spotlight.focus(target);
 				}
 			}
+
 			variables.current.pointToFocus = null;
 		}
 	}
 
 	function handleScroll (ev) {
-		const {scrollLeft: x, scrollTop: y} = ev;
-		const {id} = props;
+		const
+			{scrollLeft: x, scrollTop: y} = ev,
+			{id} = props;
+
 		forward('onScroll', ev, props);
-		if (id && context && context.set) {
-			context.set(ev, props);
-			context.set(`${id}.scrollPosition`, {x, y});
+
+		if (id && contextSharedState && contextSharedState.set) {
+			contextSharedState.set(ev, props);
+			contextSharedState.set(`${id}.scrollPosition`, {x, y});
 		}
 	}
 
 	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
 	function handleScrollerUpdate () {
-		if (uiRef.current.scrollToInfo === null) {
-			const scrollHeight = uiRef.current.getScrollBounds().scrollHeight;
-			if (scrollHeight !== uiRef.current.bounds.scrollHeight) {
+		if (uiScrollableAdapter.current.scrollToInfo === null) {
+			const scrollHeight = uiScrollableAdapter.current.getScrollBounds().scrollHeight;
+
+			if (scrollHeight !== uiScrollableAdapter.current.bounds.scrollHeight) {
 				calculateAndScrollTo();
 			}
 		}
 
-		// oddly, Scroller manages uiRef.current.bounds so if we don't update it here (it is also
+		// oddly, Scroller manages uiScrollableAdapter.current.bounds so if we don't update it here (it is also
 		// updated in calculateAndScrollTo but we might not have made it to that point), it will be
 		// out of date when we land back in this method next time.
-		uiRef.current.bounds.scrollHeight = uiRef.current.getScrollBounds().scrollHeight;
+		uiScrollableAdapter.current.bounds.scrollHeight = uiScrollableAdapter.current.getScrollBounds().scrollHeight;
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
-	function addEventListeners (childContainerRef) {
-		if (childContainerRef.current && childContainerRef.current.addEventListener) {
-			childContainerRef.current.addEventListener('focusin', handleFocus);
-			addVoiceEventListener(childContainerRef);
+	function addEventListeners (ref) { // `ref` is always `uiChildContainerRef`.
+		utilEvent('focusin').addEventListener(ref, handleFocus);
+
+		if (ref.current) {
+			addVoiceEventListener(ref);
 		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
-	function removeEventListeners (childContainerRef) {
-		if (childContainerRef.current && childContainerRef.current.removeEventListener) {
-			childContainerRef.current.removeEventListener('focusin', handleFocus);
-			removeVoiceEventListener(childContainerRef);
+	function removeEventListeners (ref) { // `ref` is always `uiChildContainerRef`.
+		utilEvent('focusin').removeEventListener(ref, handleFocus);
+
+		if (ref.current) {
+			removeVoiceEventListener(ref);
 		}
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		addEventListeners,
@@ -240,8 +238,8 @@ const useSpottable = (props, instances, dependencies) => {
 	};
 };
 
-export default useSpottable;
+export default useSpottableScrollable;
 export {
 	dataIndexAttribute,
-	useSpottable
+	useSpottableScrollable
 };

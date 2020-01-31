@@ -1,31 +1,26 @@
+import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import {useRef} from 'react';
 
 const useEventKey = () => {
-	/*
-	 * Instance
-	 */
+	// Mutable value
 
 	const variables = useRef({
 		fn: null
 	});
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function addGlobalKeyDownEventListener (fn) {
 		variables.current.fn = fn;
-		document.addEventListener('keydown', variables.current.fn, {capture: true});
+		utilEvent('keydown').addEventListener(document, variables.current.fn, {capture: true});
 	}
 
 	function removeGlobalKeyDownEventListener () {
-		document.removeEventListener('keydown', variables.current.fn, {capture: true});
+		utilEvent('keydown').removeEventListener(document, variables.current.fn, {capture: true});
 		variables.current.fn = null;
 	}
 
-	/*
-	 * Retur
-	 */
+	// Return
 
 	return {
 		addGlobalKeyDownEventListener,

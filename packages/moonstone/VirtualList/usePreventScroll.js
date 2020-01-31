@@ -1,16 +1,11 @@
+import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import {useEffect} from 'react';
 
-const usePreventScroll = (props, instances, dependencies) => {
-	/*
-	 * Dependencies
-	 */
-
+const usePreventScroll = (props, instances, context) => {
 	const {rtl} = props;
-	const {containerNode, type} = dependencies;
+	const {containerNode, type} = context;
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useEffect(() => {
 		if (type === 'JS' && containerNode) {
@@ -19,15 +14,11 @@ const usePreventScroll = (props, instances, dependencies) => {
 				containerNode.scrollLeft = rtl ? containerNode.scrollWidth : 0;
 			};
 
-			if (containerNode && containerNode.addEventListener) {
-				containerNode.addEventListener('scroll', preventScroll);
-			}
+			utilEvent('scroll').addEventListener(containerNode, preventScroll);
 
 			return () => {
 				// remove a function for preventing native scrolling by Spotlight
-				if (containerNode && containerNode.removeEventListener) {
-					containerNode.removeEventListener('scroll', preventScroll);
-				}
+				utilEvent('scroll').removeEventListener(containerNode, preventScroll);
 			};
 		}
 	}, [containerNode, rtl, type]);

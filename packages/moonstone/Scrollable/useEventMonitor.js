@@ -1,6 +1,8 @@
 import {onWindowReady} from '@enact/core/snapshot';
 import Spotlight from '@enact/spotlight';
-import {constants} from '@enact/ui/Scrollable/ScrollableNative';
+import {constants} from '@enact/ui/Scrollable/Scrollable';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
+import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import {useEffect, useRef} from 'react';
 
 const {isPageDown, isPageUp} = constants;
@@ -12,15 +14,19 @@ const {isPageDown, isPageUp} = constants;
  * its descendants, we add `keydown` handler to `document` also.
  */
 const scrollables = new Map();
+
 let lastPointer = {x: 0, y: 0};
+
 // An app could have lists and/or scrollers more than one,
 // so we should test all of them when page up/down key is pressed.
 const pointerTracker = (ev) => {
 	lastPointer.x = ev.clientX;
 	lastPointer.y = ev.clientY;
 };
+
 const pageKeyHandler = (ev) => {
 	const {keyCode} = ev;
+
 	if (Spotlight.getPointerMode() && !Spotlight.getCurrent() && (isPageUp(keyCode) || isPageDown(keyCode))) {
 		const
 			{x, y} = lastPointer,
@@ -28,12 +34,12 @@ const pageKeyHandler = (ev) => {
 
 		if (elem) {
 			for (const [key, value] of scrollables) {
-				if (value.contains(elem)) {
+				if (utilDOM.containsDangerously(value, elem)) {
 					/* To handle page keys in nested scrollable components,
-					* break the loop only when `scrollByPageOnPointerMode` returns `true`.
-					* This approach assumes that an inner scrollable component is
-					* mounted earlier than an outer scrollable component.
-					*/
+					 * break the loop only when `scrollByPageOnPointerMode` returns `true`.
+					 * This approach assumes that an inner scrollable component is
+					 * mounted earlier than an outer scrollable component.
+					 */
 					if (key.scrollByPageOnPointerMode(ev)) {
 						break;
 					}
@@ -43,47 +49,39 @@ const pageKeyHandler = (ev) => {
 	}
 };
 
-const useEventMonitor = (props, instances, dependencies) => {
-	/*
-	 * Dependencies
-	 */
+const useEventMonitor = (props, instances, context) => {
+	const {scrollableContainerRef} = instances;
+	const {lastPointer: lastPointerProp, scrollByPageOnPointerMode} = context;
 
-	const {uiRef} = instances;
-	const {lastPointer: lastPointerProp, scrollByPageOnPointerMode} = dependencies;
-
-	/*
-	 * Instance
-	 */
+	// Mutable value
 
 	const variables = useRef({pageKeyHandlerObj: {scrollByPageOnPointerMode}});
 
 	lastPointer = lastPointerProp;
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useEffect(() => {
-		function setMonitorEventTarget (target) {
-			scrollables.set(variables.pageKeyHandlerObj, target);
-		}
+		const setMonitorEventTarget = (target) => {
+			scrollables.set(variables.current.pageKeyHandlerObj, target);
+		};
 
-		function deleteMonitorEventTarget () {
-			scrollables.delete(variables.pageKeyHandlerObj);
-		}
+		const deleteMonitorEventTarget = () => {
+			scrollables.delete(variables.current.pageKeyHandlerObj);
+		};
 
-		setMonitorEventTarget(uiRef.current.containerRef.current);
+		setMonitorEventTarget(scrollableContainerRef.current);
 
 		return () => {
 			// TODO: Replace `this` to something.
 			deleteMonitorEventTarget();
 		};
-	}, [uiRef]);
+	}, [scrollableContainerRef]);
 };
 
 onWindowReady(() => {
-	document.addEventListener('mousemove', pointerTracker);
-	document.addEventListener('keydown', pageKeyHandler);
+	utilEvent('mousemove').addEventListener(document, pointerTracker);
+	utilEvent('keydown').addEventListener(document, pageKeyHandler);
 });
 
 export default useEventMonitor;

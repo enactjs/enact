@@ -8,15 +8,9 @@ const
 	overscrollTimeout = 300;
 
 const useOverscrollEffect = (props, instances) => {
-	/*
-	 * Dependencies
-	 */
+	const {overscrollRefs, uiScrollableAdapter} = instances;
 
-	const {overscrollRefs, uiRef} = instances;
-
-	/*
-	 * Instance
-	 */
+	// Mutable value
 
 	const variables = useRef({
 		overscrollJobs: {
@@ -24,6 +18,8 @@ const useOverscrollEffect = (props, instances) => {
 			vertical: {before: null, after: null}
 		}
 	});
+
+	// Hooks
 
 	const applyOverscrollEffect = useCallback((orientation, edge, type, ratio) => {
 		const nodeRef = overscrollRefs[orientation].current;
@@ -36,10 +32,6 @@ const useOverscrollEffect = (props, instances) => {
 			}
 		}
 	}, [overscrollRefs]);
-
-	/*
-	 * Hooks
-	 */
 
 	useEffect(() => {
 		function createOverscrollJob (orientation, edge) {
@@ -69,32 +61,29 @@ const useOverscrollEffect = (props, instances) => {
 		};
 	}, [applyOverscrollEffect]);
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function clearOverscrollEffect (orientation, edge) {
 		variables.current.overscrollJobs[orientation][edge].startAfter(overscrollTimeout, orientation, edge, overscrollTypeNone, 0);
-		uiRef.current.setOverscrollStatus(orientation, edge, overscrollTypeNone, 0);
+		uiScrollableAdapter.current.setOverscrollStatus(orientation, edge, overscrollTypeNone, 0);
 	}
 
 	function checkAndApplyOverscrollEffectByDirection (direction) {
 		const
 			orientation = (direction === 'up' || direction === 'down') ? 'vertical' : 'horizontal',
-			bounds = uiRef.current.getScrollBounds(),
-			scrollability = orientation === 'vertical' ? uiRef.current.canScrollVertically(bounds) : uiRef.current.canScrollHorizontally(bounds);
+			bounds = uiScrollableAdapter.current.getScrollBounds(),
+			scrollability = orientation === 'vertical' ? uiScrollableAdapter.current.canScrollVertically(bounds) : uiScrollableAdapter.current.canScrollHorizontally(bounds);
 
 		if (scrollability) {
 			const
-				isRtl = uiRef.current.props.rtl,
+				isRtl = uiScrollableAdapter.current.rtl,
 				edge = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
-			uiRef.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
+
+			uiScrollableAdapter.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 		}
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		applyOverscrollEffect,

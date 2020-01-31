@@ -94,7 +94,6 @@ storiesOf('UI', module)
 		}
 	);
 
-
 storiesOf('Moonstone', module)
 	.add(
 		'VirtualList',

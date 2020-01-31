@@ -28,9 +28,12 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 	useImperativeHandle(ref, () => {
 		const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = scrollbarRef.current;
 		const {focusOnButton, isOneOfScrollButtonsFocused, updateButtons} = scrollButtonsRef.current;
+
 		return {
 			focusOnButton,
-			getContainerRef,
+			get uiScrollbarContainer () {
+				return getContainerRef();
+			},
 			isOneOfScrollButtonsFocused,
 			showThumb,
 			startHidingThumb,
@@ -44,8 +47,8 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 
 	return (
 		<UiScrollbarBase
-			corner={corner}
 			clientSize={clientSize}
+			corner={corner}
 			css={componentCss}
 			ref={scrollbarRef}
 			vertical={vertical}
@@ -159,6 +162,7 @@ const Scrollbar = ApiDecorator(
 );
 */
 const Scrollbar = ScrollbarBase;
+
 Scrollbar.displayName = 'Scrollbar';
 
 export default Scrollbar;

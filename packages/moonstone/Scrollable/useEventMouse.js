@@ -1,21 +1,16 @@
 import Spotlight from '@enact/spotlight';
 
-const useEventMouse = (props, instances, dependencies) => {
-	/*
-	 * Dependencies
-	 */
+const useEventMouse = (props, instances, context) => {
+	const {childAdapter, uiScrollableAdapter} = instances;
+	const {isScrollButtonFocused, type} = context;
 
-	const {childRef, uiRef} = instances;
-	const {canScrollHorizontally, canScrollVertically} = (uiRef && uiRef.current || {});
-	const {isScrollButtonFocused, type} = dependencies;
-
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function handleFlick ({direction}) {
-		const bounds = uiRef.current.getScrollBounds();
-		const focusedItem = Spotlight.getCurrent();
+		const
+			{canScrollHorizontally, canScrollVertically} = uiScrollableAdapter.current,
+			bounds = uiScrollableAdapter.current.getScrollBounds(),
+			focusedItem = Spotlight.getCurrent();
 
 		if (focusedItem) {
 			focusedItem.blur();
@@ -25,7 +20,7 @@ const useEventMouse = (props, instances, dependencies) => {
 			direction === 'vertical' && canScrollVertically(bounds) ||
 			direction === 'horizontal' && canScrollHorizontally(bounds)
 		) && !props['data-spotlight-container-disabled']) {
-			childRef.current.setContainerDisabled(true);
+			childAdapter.current.setContainerDisabled(true);
 		}
 	}
 
@@ -37,13 +32,11 @@ const useEventMouse = (props, instances, dependencies) => {
 		if (props['data-spotlight-container-disabled']) {
 			ev.preventDefault();
 		} else if (type === 'Native') {
-			childRef.current.setContainerDisabled(false);
+			childAdapter.current.setContainerDisabled(false);
 		}
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		handleFlick,

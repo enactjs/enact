@@ -1,6 +1,8 @@
 import {is} from '@enact/core/keymap';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
+import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import clamp from 'ramda/src/clamp';
 import {useCallback, useEffect, useRef} from 'react';
 
@@ -15,29 +17,24 @@ const
 	nop = () => {},
 	getNumberValue = (index) => index | 0;
 
-const useEventKey = (props, instances, dependencies) => {
-	/*
-	 * Dependencies
-	 */
-
+const useEventKey = (props, instances, context) => {
 	const {dataSize, focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
 		rtl, spotlightId, wrap} = props;
-	const {virtualListBase} = instances;
+	const {uiChildAdapter, uiChildContainerRef} = instances;
 	const {
-		containerNode,
-		handlePageUpDownKeyDown,
-		handleDirectionKeyDown,
 		handle5WayKeyUp,
+		handleDirectionKeyDown,
+		handlePageUpDownKeyDown,
 		SpotlightAccelerator
-	} = dependencies;
+	} = context;
 
-	/*
-	 * Instance
-	 */
+	// Mutable value
 
 	const variables = useRef({
 		fn: null
 	});
+
+	// Functions
 
 	const findSpottableItem = useCallback((indexFrom, indexTo) => {
 		if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
@@ -48,8 +45,7 @@ const useEventKey = (props, instances, dependencies) => {
 	}, [dataSize]);
 
 	const getNextIndex = useCallback(({index, keyCode, repeat}) => {
-		const uiRefCurrent = virtualListBase.current.uiRefCurrent;
-		const {isPrimaryDirectionVertical, dimensionToExtent} = uiRefCurrent;
+		const {isPrimaryDirectionVertical, dimensionToExtent} = uiChildAdapter;
 		const column = index % dimensionToExtent;
 		const row = (index - column) % dataSize / dimensionToExtent;
 		const isDownKey = isDown(keyCode);
@@ -109,11 +105,9 @@ const useEventKey = (props, instances, dependencies) => {
 		}
 
 		return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
-	}, [dataSize, findSpottableItem, rtl, virtualListBase, wrap]);
+	}, [dataSize, findSpottableItem, rtl, uiChildAdapter, wrap]);
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useEffect(() => {
 		function handleKeyDown (ev) {
@@ -127,8 +121,7 @@ const useEventKey = (props, instances, dependencies) => {
 					ev.stopPropagation();
 				} else {
 					const {repeat} = ev;
-					const uiRefCurrent = virtualListBase.current.uiRefCurrent;
-					const {dimensionToExtent, isPrimaryDirectionVertical} = uiRefCurrent;
+					const {dimensionToExtent, isPrimaryDirectionVertical} = uiChildAdapter;
 					const targetIndex = target.dataset.index;
 					const isScrollButton = (
 						// if target has an index, it must be an item so can't be a scroll button
@@ -165,6 +158,7 @@ const useEventKey = (props, instances, dependencies) => {
 						} else {
 							const column = index % dimensionToExtent;
 							const row = (index - column) % dataSize / dimensionToExtent;
+
 							isLeaving = directions.up && row === 0 ||
 								directions.down && row === Math.floor((dataSize - 1) % dataSize / dimensionToExtent) ||
 								directions.left && column === 0 ||
@@ -179,7 +173,8 @@ const useEventKey = (props, instances, dependencies) => {
 						}
 					} else {
 						const possibleTarget = getTargetByDirectionFromElement(direction, target);
-						if (possibleTarget && !ev.currentTarget.contains(possibleTarget)) {
+
+						if (!utilDOM.containsDangerously(ev.currentTarget, possibleTarget)) {
 							isLeaving = true;
 						}
 					}
@@ -199,41 +194,33 @@ const useEventKey = (props, instances, dependencies) => {
 			}
 		}
 
-		if (containerNode && containerNode.addEventListener) {
-			containerNode.addEventListener('keydown', handleKeyDown, {capture: true});
-			containerNode.addEventListener('keyup', handleKeyUp, {capture: true});
-		}
+		utilEvent('keydown').addEventListener(uiChildContainerRef, handleKeyDown, {capture: true});
+		utilEvent('keyup').addEventListener(uiChildContainerRef, handleKeyUp, {capture: true});
 
 		return () => {
-			if (containerNode && containerNode.removeEventListener) {
-				containerNode.removeEventListener('keydown', handleKeyDown, {capture: true});
-				containerNode.removeEventListener('keyup', handleKeyUp, {capture: true});
-			}
+			utilEvent('keydown').removeEventListener(uiChildContainerRef, handleKeyDown, {capture: true});
+			utilEvent('keyup').removeEventListener(uiChildContainerRef, handleKeyUp, {capture: true});
 		};
 	}, [
-		containerNode, dataSize, focusableScrollbar, getNextIndex,
+		uiChildContainerRef, dataSize, focusableScrollbar, getNextIndex,
 		handle5WayKeyUp, handleDirectionKeyDown, handlePageUpDownKeyDown,
 		isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
-		spotlightId, SpotlightAccelerator, virtualListBase
+		spotlightId, SpotlightAccelerator, uiChildAdapter
 	]);
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function addGlobalKeyDownEventListener (fn) {
 		variables.current.fn = fn;
-		document.addEventListener('keydown', variables.current.fn, {capture: true});
+		utilEvent('keydown').addEventListener(document, variables.current.fn, {capture: true});
 	}
 
 	function removeGlobalKeyDownEventListener () {
-		document.removeEventListener('keydown', variables.current.fn, {capture: true});
+		utilEvent('keydown').removeEventListener(document, variables.current.fn, {capture: true});
 		variables.current.fn = null;
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		addGlobalKeyDownEventListener,

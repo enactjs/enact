@@ -3,18 +3,11 @@ import {useContext, useEffect} from 'react';
 import {SharedState} from '../internal/SharedStateDecorator/SharedStateDecorator';
 
 const useSpotlightRestore = (props, instances) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {id} = props;
-	const {uiRef} = instances;
-
+	const {uiScrollableAdapter} = instances;
 	const context = useContext(SharedState);
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useEffect(() => {
 		// Only intended to be used within componentDidMount, this method will fetch the last stored
@@ -22,8 +15,9 @@ const useSpotlightRestore = (props, instances) => {
 		function restoreScrollPosition () {
 			if (id && context && context.get) {
 				const scrollPosition = context.get(`${id}.scrollPosition`);
+
 				if (scrollPosition) {
-					uiRef.current.scrollTo({
+					uiScrollableAdapter.current.scrollTo({
 						position: scrollPosition,
 						animate: false
 					});
@@ -32,7 +26,7 @@ const useSpotlightRestore = (props, instances) => {
 		}
 
 		restoreScrollPosition();
-	}, [context, id, uiRef]);
+	}, [context, id, uiScrollableAdapter]);
 };
 
 export default useSpotlightRestore;

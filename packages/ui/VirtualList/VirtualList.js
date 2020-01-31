@@ -4,18 +4,18 @@
  * @module ui/VirtualList
  * @exports gridListImageSizeShape
  * @exports VirtualGridList
- * @exports VirtualGridListNative
  * @exports VirtualList
  * @exports VirtualListBase
- * @exports VirtualListBaseNative
- * @exports VirtualListNative
  */
 
-import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {gridListItemSizeShape, itemSizesShape, ScrollableVirtualList, ScrollableVirtualListNative, VirtualListBase, VirtualListBaseNative} from './VirtualListBase';
+import {ResizeContext} from '../Resizable';
+import useChildPropsDecorator from '../Scrollable/useChildPropsDecorator';
+import Scrollbar from '../Scrollable/Scrollbar';
+
+import {gridListItemSizeShape, itemSizesShape, VirtualListBase} from './VirtualListBase';
 
 /**
  * An unstyled scrollable virtual list component with touch support.
@@ -26,32 +26,104 @@ import {gridListItemSizeShape, itemSizesShape, ScrollableVirtualList, Scrollable
  * @ui
  * @public
  */
-const VirtualList = kind({
-	name: 'ui:VirtualList',
+const VirtualList = ({role, ...rest}) => {
+	// Hooks
 
-	propTypes: /** @lends ui/VirtualList.VirtualList.prototype */ {
-		/**
-		 * Size of an item for the `VirtualList`.
-		 *
-		 * Valid value is a number. If the direction for the list is vertical,
-		 * `itemSize` means the height of an item. For horizontal, it means the width of an item.
-		 *
-		 * Example:
-		 * ```
-		 * <VirtualList itemSize={ri.scale(72)} />
-		 * ```
-		 *
-		 * @type {Number}
-		 * @required
-		 * @public
-		 */
-		itemSize: PropTypes.number.isRequired
-	},
+	const {
+		childWrapper: ChildWrapper,
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible,
 
-	render: (props) => (
-		<ScrollableVirtualList {...props} />
-	)
-});
+		resizeContextProps,
+		scrollableContainerProps,
+		flexLayoutProps,
+		childWrapperProps,
+		childProps,
+		verticalScrollbarProps,
+		horizontalScrollbarProps
+	} = useChildPropsDecorator(rest);
+
+	// Render
+
+	return (
+		<ResizeContext.Provider {...resizeContextProps}>
+			<div {...scrollableContainerProps}>
+				<div {...flexLayoutProps}>
+					<ChildWrapper {...childWrapperProps}>
+						<VirtualListBase
+							{...childProps}
+							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
+								cc.length ? <div role={role}>{cc}</div> : null
+							)}
+						/>
+					</ChildWrapper>
+					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
+				</div>
+				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
+			</div>
+		</ResizeContext.Provider>
+	);
+};
+
+VirtualList.displayName = 'ui:VirtualList';
+
+VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
+	/**
+	 * Size of an item for the `VirtualList`.
+	 *
+	 * Valid value is a number. If the direction for the list is vertical,
+	 * `itemSize` means the height of an item. For horizontal, it means the width of an item.
+	 *
+	 * Example:
+	 * ```
+	 * <VirtualList itemSize={ri.scale(72)} />
+	 * ```
+	 *
+	 * @type {Number}
+	 * @required
+	 * @public
+	 */
+	itemSize: PropTypes.number.isRequired,
+
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	/**
+	 * Specifies how to show horizontal scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+
+	role: PropTypes.string,
+
+	/**
+	 * Specifies how to show vertical scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
+};
+
+VirtualList.defaultProps = {
+	direction: 'vertical',
+	horizontalScrollbar: 'auto',
+	role: 'list',
+	verticalScrollbar: 'auto'
+};
 
 /**
  * An unstyled scrollable virtual grid list component with touch support.
@@ -62,129 +134,110 @@ const VirtualList = kind({
  * @ui
  * @public
  */
-const VirtualGridList = kind({
-	name: 'ui:VirtualGridList',
+const VirtualGridList = ({role, ...rest}) => {
+	const {
+		childWrapper: ChildWrapper,
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible,
 
-	propTypes: /** @lends ui/VirtualList.VirtualGridList.prototype */ {
-		/**
-		 * Size of an item for the `VirtualGridList`.
-		 *
-		 * * Valid value is an object that has `minWidth` and `minHeight` as properties.
-		 *
-		 * Example:
-		 * ```
-		 * <VirtualGridList
-		 * 	itemSize={{
-		 * 		minWidth: ri.scale(180),
-		 * 		minHeight: ri.scale(270)
-		 * 	}}
-		 * />
-		 * ```
-		 *
-		 * @type {ui/VirtualList.gridListItemSizeShape}
-		 * @required
-		 * @public
-		 */
-		itemSize: gridListItemSizeShape.isRequired
-	},
+		resizeContextProps,
+		scrollableContainerProps,
+		flexLayoutProps,
+		childWrapperProps,
+		childProps,
+		verticalScrollbarProps,
+		horizontalScrollbarProps
+	} = useChildPropsDecorator(rest);
 
-	render: (props) => (
-		<ScrollableVirtualList {...props} />
-	)
-});
+	return (
+		<ResizeContext.Provider {...resizeContextProps}>
+			<div {...scrollableContainerProps}>
+				<div {...flexLayoutProps}>
+					<ChildWrapper {...childWrapperProps}>
+						<VirtualListBase
+							{...childProps}
+							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
+								cc.length ? <div role={role}>{cc}</div> : null
+							)}
+						/>
+					</ChildWrapper>
+					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
+				</div>
+				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
+			</div>
+		</ResizeContext.Provider>
+	);
+};
 
-/**
- * An unstyled scrollable virtual native list component with touch support.
- *
- * For smooth native scrolling, web engine with below Chromium 61, should be launched
- * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
- * The one with Chromium 61 or above, is launched to support it by default.
- *
- * @class VirtualListNative
- * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBaseNative
- * @ui
- * @private
- */
-const VirtualListNative = kind({
-	name: 'ui:VirtualListNative',
+VirtualGridList.displaytName = 'ui:VirtualGridList';
 
-	propTypes: /** @lends ui/VirtualList.VirtualListNative.prototype */ {
-		/**
-		 * Size of an item for the `VirtualList`.
-		 *
-		 * If the direction for the list is vertical, `itemSize` means the height of an item.
-		 * For `horizontal`, it means the width of an item.
-		 *
-		 * Example:
-		 * ```
-		 * <VirtualListNative itemSize={ri.scale(72)} />
-		 * ```
-		 *
-		 * @type {Number}
-		 * @required
-		 * @public
-		 */
-		itemSize: PropTypes.number.isRequired
-	},
+VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype */ {
+	/**
+	 * Size of an item for the `VirtualGridList`.
+	 *
+	 * * Valid value is an object that has `minWidth` and `minHeight` as properties.
+	 *
+	 * Example:
+	 * ```
+	 * <VirtualGridList
+	 * 	itemSize={{
+	 * 		minWidth: ri.scale(180),
+	 * 		minHeight: ri.scale(270)
+	 * 	}}
+	 * />
+	 * ```
+	 *
+	 * @type {ui/VirtualList.gridListItemSizeShape}
+	 * @required
+	 * @public
+	 */
+	itemSize: gridListItemSizeShape.isRequired,
 
-	render: (props) => (
-		<ScrollableVirtualListNative {...props} />
-	)
-});
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
-/**
- * An unstyled scrollable virtual native grid list component with touch support.
- *
- * For smooth native scrolling, web engine with below Chromium 61, should be launched
- * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
- * The one with Chromium 61 or above, is launched to support it by default.
- *
- * @class VirtualGridListNative
- * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBaseNative
- * @ui
- * @private
- */
-const VirtualGridListNative = kind({
-	name: 'ui:VirtualGridListNative',
+	/**
+	 * Specifies how to show horizontal scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
-	propTypes: /** @lends ui/VirtualList.VirtualGridListNative.prototype */ {
-		/**
-		 * Size of an item for the `VirtualGridList`
-		 *
-		 * * Valid value is an object that has `minWidth` and `minHeight` as properties.
-		 *
-		 * Example:
-		 * ```
-		 * <VirtualGridListNative
-		 * 	itemSize={{
-		 * 		minWidth: ri.scale(180),
-		 * 		minHeight: ri.scale(270)
-		 * 	}}
-		 * />
-		 * ```
-		 *
-		 * @type {ui/VirtualList.gridListItemSizeShape}
-		 * @required
-		 * @public
-		 */
-		itemSize: gridListItemSizeShape.isRequired
-	},
+	role: PropTypes.string,
 
-	render: (props) => (
-		<ScrollableVirtualListNative {...props} />
-	)
-});
+	/**
+	 * Specifies how to show vertical scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
+};
+
+VirtualGridList.defaultProps = {
+	direction: 'vertical',
+	horizontalScrollbar: 'auto',
+	role: 'list',
+	verticalScrollbar: 'auto'
+};
 
 export default VirtualList;
 export {
 	gridListItemSizeShape,
 	itemSizesShape,
 	VirtualGridList,
-	VirtualGridListNative,
 	VirtualList,
-	VirtualListBase,
-	VirtualListBaseNative,
-	VirtualListNative
+	VirtualListBase
 };

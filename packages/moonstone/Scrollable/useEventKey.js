@@ -2,25 +2,20 @@ import {forward} from '@enact/core/handle';
 import {clamp} from '@enact/core/util';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
-import {constants} from '@enact/ui/Scrollable/ScrollableNative';
+import {constants} from '@enact/ui/Scrollable/Scrollable';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
 
 const
 	{epsilon, isPageDown, isPageUp} = constants,
 	paginationPageMultiplier = 0.66,
 	lastPointer = {x: 0, y: 0};
 
-const useEventKey = (props, instances, dependencies) => {
-	/*
-	 * Dependencies
-	 */
-
+const useEventKey = (props, instances, context) => {
 	const {direction: directionProp, overscrollEffectOn} = props;
-	const {childRef, spottable, uiRef} = instances;
-	const {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type} = dependencies;
+	const {childAdapter, horizontalScrollbarRef, spottable, uiChildContainerRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
+	const {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type} = context;
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function handleKeyDown (ev) {
 		const {keyCode, repeat, target} = ev;
@@ -51,14 +46,14 @@ const useEventKey = (props, instances, dependencies) => {
 			} else if (getDirection(keyCode) && (type === 'JS' || type === 'Native' && !Spotlight.getPointerMode())) {
 				const element = Spotlight.getCurrent();
 
-				uiRef.current.lastInputType = 'arrowKey';
-
+				uiScrollableAdapter.current.lastInputType = 'arrowKey';
 				direction = getDirection(keyCode);
-				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
-					const {horizontalScrollbarRef, verticalScrollbarRef} = uiRef.current;
 
-					if (!(horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(element)) &&
-						!(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(element))) {
+				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
+					if (
+						!(horizontalScrollbarRef.current && utilDOM.containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, element)) &&
+						!(verticalScrollbarRef.current && utilDOM.containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, element))
+					) {
 						checkAndApplyOverscrollEffectByDirection(direction);
 					}
 				}
@@ -68,9 +63,9 @@ const useEventKey = (props, instances, dependencies) => {
 
 	function scrollByPage (direction) {
 		const
-			{childRefCurrent, scrollTop} = uiRef.current,
+			{scrollTop} = uiScrollableAdapter.current,
 			focusedItem = Spotlight.getCurrent(),
-			bounds = uiRef.current.getScrollBounds(),
+			bounds = uiScrollableAdapter.current.getScrollBounds(),
 			isUp = direction === 'up',
 			directionFactor = isUp ? -1 : 1,
 			pageDistance = directionFactor * bounds.clientHeight * paginationPageMultiplier;
@@ -82,24 +77,28 @@ const useEventKey = (props, instances, dependencies) => {
 			scrollPossible = isUp ? scrollTop > 0 : bounds.maxTop - scrollTop > epsilon;
 		}
 
-		uiRef.current.lastInputType = 'pageKey';
+		uiScrollableAdapter.current.lastInputType = 'pageKey';
 
-		if (directionFactor !== uiRef.current.wheelDirection) {
-			uiRef.current.isScrollAnimationTargetAccumulated = false;
-			uiRef.current.wheelDirection = directionFactor;
+		if (directionFactor !== uiScrollableAdapter.current.wheelDirection) {
+			uiScrollableAdapter.current.isScrollAnimationTargetAccumulated = false;
+			uiScrollableAdapter.current.wheelDirection = directionFactor;
 		}
 
 		if (scrollPossible) {
 			if (focusedItem) {
-				const contentNode = childRefCurrent.containerRef.current;
+				const contentNode = uiChildContainerRef.current;
+
 				// Should do nothing when focusedItem is paging control button of Scrollbar
-				if (contentNode.contains(focusedItem)) {
+				checkAndApplyOverscrollEffectByDirection(direction);
+
+				if (utilDOM.containsDangerously(contentNode, focusedItem)) {
 					const
 						contentRect = contentNode.getBoundingClientRect(),
 						clientRect = focusedItem.getBoundingClientRect(),
 						yAdjust = isUp ? 1 : -1,
 						x = clamp(contentRect.left, contentRect.right, (clientRect.right + clientRect.left) / 2);
 					let y = 0;
+
 					if (type === 'JS') {
 						y = bounds.maxTop <= scrollTop + pageDistance || 0 >= scrollTop + pageDistance ?
 							contentRect[isUp ? 'top' : 'bottom'] + yAdjust :
@@ -111,21 +110,24 @@ const useEventKey = (props, instances, dependencies) => {
 					}
 
 					focusedItem.blur();
+
 					if (!props['data-spotlight-container-disabled']) {
-						childRef.current.setContainerDisabled(true);
+						childAdapter.current.setContainerDisabled(true);
 					}
+
 					spottable.current.pointToFocus = {direction, x, y};
 				}
 			} else {
 				spottable.current.pointToFocus = {direction, x: lastPointer.x, y: lastPointer.y};
 			}
 
-			uiRef.current.scrollToAccumulatedTarget(pageDistance, true, overscrollEffectOn.pageKey);
+			uiScrollableAdapter.current.scrollToAccumulatedTarget(pageDistance, true, overscrollEffectOn.pageKey);
 		}
 	}
 
 	function scrollByPageOnPointerMode (ev) {
 		const {keyCode, repeat} = ev;
+
 		forward('onKeyDown', ev, props);
 		ev.preventDefault();
 
@@ -135,6 +137,7 @@ const useEventKey = (props, instances, dependencies) => {
 			const direction = isPageUp(keyCode) ? 'up' : 'down';
 
 			scrollByPage(direction);
+
 			if (overscrollEffectOn.pageKey) { /* if the spotlight focus will not move */
 				checkAndApplyOverscrollEffectByDirection(direction);
 			}
@@ -145,9 +148,7 @@ const useEventKey = (props, instances, dependencies) => {
 		return false; // means to be propagated
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		handleKeyDown,

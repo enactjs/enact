@@ -1,42 +1,40 @@
 import platform from '@enact/core/platform';
 import Spotlight from '@enact/spotlight';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
+import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import {useRef} from 'react';
 
-const useEventVoice = (props, instances, dependencies) => {
-	/*
-	 * Dependencies
-	 */
-
+const useEventVoice = (props, instances, context) => {
 	const {direction} = props;
-	const {uiRef} = instances;
-	const {onScrollbarButtonClick} = dependencies;
+	const {scrollableContainerRef, uiScrollableAdapter} = instances;
+	const {onScrollbarButtonClick} = context;
 
-	/*
-	 * Instance
-	 */
+	// Mutable value
 
 	const variables = useRef({
 		isVoiceControl: false,
 		voiceControlDirection: 'vertical'
 	});
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
-	function updateFocusAfterVoiceControl () {
-		const spotItem = Spotlight.getCurrent();
-		if (spotItem && uiRef.current.containerRef.current.contains(spotItem)) {
+	const updateFocusAfterVoiceControl = () => {
+		const
+			spotItem = Spotlight.getCurrent(),
+			scrollableContainerNode = scrollableContainerRef.current;
+
+		if (utilDOM.containsDangerously(scrollableContainerNode, spotItem)) {
 			const
-				viewportBounds = uiRef.current.containerRef.current.getBoundingClientRect(),
+				viewportBounds = scrollableContainerNode.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),
-				nodes = Spotlight.getSpottableDescendants(uiRef.current.containerRef.current.dataset.spotlightId),
+				nodes = Spotlight.getSpottableDescendants(scrollableContainerNode.dataset.spotlightId),
 				first = variables.current.voiceControlDirection === 'vertical' ? 'top' : 'left',
 				last = variables.current.voiceControlDirection === 'vertical' ? 'bottom' : 'right';
 
 			if (spotItemBounds[last] < viewportBounds[first] || spotItemBounds[first] > viewportBounds[last]) {
 				for (let i = 0; i < nodes.length; i++) {
 					const nodeBounds = nodes[i].getBoundingClientRect();
+
 					if (nodeBounds[first] > viewportBounds[first] && nodeBounds[last] < viewportBounds[last]) {
 						Spotlight.focus(nodes[i]);
 						break;
@@ -44,7 +42,7 @@ const useEventVoice = (props, instances, dependencies) => {
 				}
 			}
 		}
-	}
+	};
 
 	function stopVoice () {
 		if (variables.current.isVoiceControl) {
@@ -53,21 +51,20 @@ const useEventVoice = (props, instances, dependencies) => {
 		}
 	}
 
-	function isReachedEdge (scrollPos, ltrBound, rtlBound, isRtl = false) {
+	const isReachedEdge = (scrollPos, ltrBound, rtlBound, isRtl = false) => {
 		const bound = isRtl ? rtlBound : ltrBound;
 		return (bound === 0 && scrollPos === 0) || (bound > 0 && scrollPos >= bound - 1);
-	}
+	};
 
-	function handleVoice (e) {
+	const handleVoice = (e) => {
 		const
 			isHorizontal = (direction === 'horizontal'),
-			isRtl = uiRef.current.rtl,
-			{scrollTop, scrollLeft} = uiRef.current,
-			{maxLeft, maxTop} = uiRef.current.getScrollBounds(),
+			isRtl = uiScrollableAdapter.current.rtl,
+			{scrollTop, scrollLeft} = uiScrollableAdapter.current,
+			{maxLeft, maxTop} = uiScrollableAdapter.current.getScrollBounds(),
 			verticalDirection = ['up', 'down', 'top', 'bottom'],
 			horizontalDirection = isRtl ? ['right', 'left', 'rightmost', 'leftmost'] : ['left', 'right', 'leftmost', 'rightmost'],
 			movement = ['previous', 'next', 'first', 'last'];
-
 		let
 			scroll = e && e.detail && e.detail.scroll,
 			index = movement.indexOf(scroll);
@@ -95,33 +92,33 @@ const useEventVoice = (props, instances, dependencies) => {
 		// Case 3. Can scroll
 		} else {
 			variables.current.isVoiceControl = true;
+
 			if (['up', 'down', 'left', 'right'].includes(scroll)) {
 				const isPreviousScrollButton = (scroll === 'up') || (scroll === 'left' && !isRtl) || (scroll === 'right' && isRtl);
 				onScrollbarButtonClick({isPreviousScrollButton, isVerticalScrollBar: verticalDirection.includes(scroll)});
 			} else { // ['top', 'bottom', 'leftmost', 'rightmost'].includes(scroll)
-				uiRef.current.scrollTo({align: verticalDirection.includes(scroll) && scroll || (scroll === 'leftmost' && isRtl || scroll === 'rightmost' && !isRtl) && 'right' || 'left'});
+				uiScrollableAdapter.current.scrollTo({align: verticalDirection.includes(scroll) && scroll || (scroll === 'leftmost' && isRtl || scroll === 'rightmost' && !isRtl) && 'right' || 'left'});
 			}
+
 			e.preventDefault();
 		}
-	}
+	};
 
-	function addVoiceEventListener (childContainerRef) {
+	function addVoiceEventListener (uiChildContainerRef) {
 		if (platform.webos) {
-			childContainerRef.current.addEventListener('webOSVoice', handleVoice);
-			childContainerRef.current.setAttribute('data-webos-voice-intent', 'Scroll');
+			utilEvent('webOSVoice').addEventListener(uiChildContainerRef, handleVoice);
+			uiChildContainerRef.current.setAttribute('data-webos-voice-intent', 'Scroll');
 		}
 	}
 
-	function removeVoiceEventListener (childContainerRef) {
+	function removeVoiceEventListener (uiChildContainerRef) {
 		if (platform.webos) {
-			childContainerRef.current.removeEventListener('webOSVoice', handleVoice);
-			childContainerRef.current.removeAttribute('data-webos-voice-intent');
+			utilEvent('webOSVoice').removeEventListener(uiChildContainerRef, handleVoice);
+			uiChildContainerRef.current.removeAttribute('data-webos-voice-intent');
 		}
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		addVoiceEventListener,

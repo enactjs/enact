@@ -2,16 +2,10 @@ import Spotlight from '@enact/spotlight';
 import {useEffect} from 'react';
 
 const useSpotlightConfig = (props, instances) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {spottable: {current: {lastFocusedIndex}}} = instances;
 	const {spacing, spotlightId} = props;
 
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useEffect(() => {
 		const lastFocusedPersist = () => {
@@ -47,9 +41,7 @@ const useSpotlightConfig = (props, instances) => {
 		configureSpotlight();
 	}, [lastFocusedIndex, spacing, spotlightId]);
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	/*
 	 * Restores the data-index into the placeholder if it exists. Tries to find a matching child
@@ -57,6 +49,7 @@ const useSpotlightConfig = (props, instances) => {
 	 */
 	function lastFocusedRestore ({key}, all) {
 		const placeholder = all.find(el => 'vlPlaceholder' in el.dataset);
+
 		if (placeholder) {
 			placeholder.dataset.index = key;
 

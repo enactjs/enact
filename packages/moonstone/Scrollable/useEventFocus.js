@@ -1,78 +1,76 @@
 import Spotlight from '@enact/spotlight';
 import {getRect} from '@enact/spotlight/src/utils';
-import {constants} from '@enact/ui/Scrollable/ScrollableNative';
+import {constants} from '@enact/ui/Scrollable/Scrollable';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
 
 const {animationDuration, epsilon} = constants;
 
-const useEventFocus = (props, instances, dependencies) => {
-	/*
-	 * Dependencies
-	 */
-
+const useEventFocus = (props, instances, context) => {
 	const {'data-spotlight-id': spotlightId, direction, overscrollEffectOn} = props;
-	const {childRef, spottable, uiRef} = instances;
-	const {alertThumb, isWheeling, type} = dependencies;
+	const {childAdapter, spottable, scrollableContainerRef, uiChildContainerRef, uiScrollableAdapter} = instances;
+	const {alertThumb, isWheeling, type} = context;
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
-	function startScrollOnFocus (pos) {
+	const startScrollOnFocus = (pos) => {
 		if (pos) {
 			const
 				{top, left} = pos,
-				bounds = uiRef.current.getScrollBounds();
+				bounds = uiScrollableAdapter.current.getScrollBounds();
 
 			if (type === 'JS') {
 				const
-					scrollHorizontally = bounds.maxLeft > 0 && left !== uiRef.current.scrollLeft,
-					scrollVertically = bounds.maxTop > 0 && top !== uiRef.current.scrollTop;
+					scrollHorizontally = bounds.maxLeft > 0 && left !== uiScrollableAdapter.current.scrollLeft,
+					scrollVertically = bounds.maxTop > 0 && top !== uiScrollableAdapter.current.scrollTop;
 
 				if (scrollHorizontally || scrollVertically) {
-					uiRef.current.start({
+					uiScrollableAdapter.current.start({
 						targetX: left,
 						targetY: top,
 						animate: (animationDuration > 0) && spottable.current.animateOnFocus,
-						overscrollEffect: overscrollEffectOn[uiRef.current.lastInputType] && (!childRef.current.shouldPreventOverscrollEffect || !childRef.current.shouldPreventOverscrollEffect())
+						overscrollEffect: overscrollEffectOn[uiScrollableAdapter.current.lastInputType] &&
+							(!childAdapter.current.shouldPreventOverscrollEffect || !childAdapter.current.shouldPreventOverscrollEffect())
 					});
 					spottable.current.lastScrollPositionOnFocus = pos;
 				}
 			} else {
 				const
-					scrollHorizontally = bounds.maxLeft > 0 && Math.abs(left - uiRef.current.scrollLeft) > epsilon,
-					scrollVertically = bounds.maxTop > 0 && Math.abs(top - uiRef.current.scrollTop) > epsilon;
+					scrollHorizontally = bounds.maxLeft > 0 && Math.abs(left - uiScrollableAdapter.current.scrollLeft) > epsilon,
+					scrollVertically = bounds.maxTop > 0 && Math.abs(top - uiScrollableAdapter.current.scrollTop) > epsilon;
 
 				if (scrollHorizontally || scrollVertically) {
-					uiRef.current.start({
+					uiScrollableAdapter.current.start({
 						targetX: left,
 						targetY: top,
 						animate: spottable.current.animateOnFocus,
-						overscrollEffect: props.overscrollEffectOn[uiRef.current.lastInputType] && (!childRef.current.shouldPreventOverscrollEffect || !childRef.current.shouldPreventOverscrollEffect())
+						overscrollEffect: props.overscrollEffectOn[uiScrollableAdapter.current.lastInputType] &&
+							(!childAdapter.current.shouldPreventOverscrollEffect || !childAdapter.current.shouldPreventOverscrollEffect())
 					});
 					spottable.current.lastScrollPositionOnFocus = pos;
 				}
 			}
 		}
-	}
+	};
 
 	function calculateAndScrollTo () {
 		const
-			spotItem = Spotlight.getCurrent(),
-			positionFn = childRef.current.calculatePositionOnFocus,
-			containerNode = uiRef.current.childRefCurrent.containerRef.current;
+			positionFn = childAdapter.current.calculatePositionOnFocus,
+			childContainerNode = uiChildContainerRef.current,
+			spotItem = Spotlight.getCurrent();
 
-		if (spotItem && positionFn && containerNode && containerNode.contains(spotItem)) {
+		if (spotItem && positionFn && utilDOM.containsDangerously(childContainerNode, spotItem)) {
 			const lastPos = spottable.current.lastScrollPositionOnFocus;
 			let pos;
 
 			// If scroll animation is ongoing, we need to pass last target position to
 			// determine correct scroll position.
 			if (lastPos & (
-				type === 'JS' && uiRef.current.animator.isAnimating() ||
-				type === 'Native' && uiRef.current.scrolling
+				type === 'JS' && uiScrollableAdapter.current.animator.isAnimating() ||
+				type === 'Native' && uiScrollableAdapter.current.scrolling
 			)) {
-				const containerRect = getRect(containerNode);
-				const itemRect = getRect(spotItem);
+				const
+					containerRect = getRect(childContainerNode),
+					itemRect = getRect(spotItem);
 				let scrollPosition;
 
 				if (direction === 'horizontal' || direction === 'both' && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {
@@ -86,35 +84,29 @@ const useEventFocus = (props, instances, dependencies) => {
 				// scrollInfo passes in current `scrollHeight` and `scrollTop` before calculations
 				const
 					scrollInfo = {
-						previousScrollHeight: uiRef.current.bounds.scrollHeight,
-						scrollTop: uiRef.current.scrollTop
+						previousScrollHeight: uiScrollableAdapter.current.bounds.scrollHeight,
+						scrollTop: uiScrollableAdapter.current.scrollTop
 					};
+
 				pos = positionFn({item: spotItem, scrollInfo});
 			}
 
-			if (pos && (pos.left !== uiRef.current.scrollLeft || pos.top !== uiRef.current.scrollTop)) {
+			if (pos && (pos.left !== uiScrollableAdapter.current.scrollLeft || pos.top !== uiScrollableAdapter.current.scrollTop)) {
 				startScrollOnFocus(pos);
 			}
 
 			// update `scrollHeight`
-			uiRef.current.bounds.scrollHeight = uiRef.current.getScrollBounds().scrollHeight;
+			uiScrollableAdapter.current.bounds.scrollHeight = uiScrollableAdapter.current.getScrollBounds().scrollHeight;
 		}
 	}
 
 	function handleFocus (ev) {
-		if (!childRef.current) {
-			// TODO : On initial load, `childRef.current` is null
-			return;
-		}
-
-		const
-			{isDragging} = uiRef.current,
-			shouldPreventScrollByFocus = childRef.current.shouldPreventScrollByFocus ?
-				childRef.current.shouldPreventScrollByFocus() :
-				false;
+		const shouldPreventScrollByFocus = childAdapter.current.shouldPreventScrollByFocus ?
+			childAdapter.current.shouldPreventScrollByFocus() :
+			false;
 
 		if (type === 'JS' && isWheeling) {
-			uiRef.current.stop();
+			uiScrollableAdapter.current.stop();
 			spottable.current.animateOnFocus = false;
 		}
 
@@ -122,7 +114,7 @@ const useEventFocus = (props, instances, dependencies) => {
 			alertThumb();
 		}
 
-		if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || isDragging)) {
+		if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || uiScrollableAdapter.current.isDragging)) {
 			const
 				item = ev.target,
 				spotItem = Spotlight.getCurrent();
@@ -130,8 +122,8 @@ const useEventFocus = (props, instances, dependencies) => {
 			if (item && item === spotItem) {
 				calculateAndScrollTo();
 			}
-		} else if (childRef.current.setLastFocusedNode) {
-			childRef.current.setLastFocusedNode(ev.target);
+		} else if (childAdapter.current.setLastFocusedNode) {
+			childAdapter.current.setLastFocusedNode(ev.target);
 		}
 	}
 
@@ -144,12 +136,10 @@ const useEventFocus = (props, instances, dependencies) => {
 			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		}
 
-		return current && uiRef.current && uiRef.current.containerRef.current.contains(current);
+		return utilDOM.containsDangerously(scrollableContainerRef, current);
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		calculateAndScrollTo,

@@ -1,37 +1,25 @@
 import Spotlight from '@enact/spotlight';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
 import {useEffect, useRef} from 'react';
 
 const getNumberValue = (index) => index | 0;
 
 const useSpotlightRestore = (props, instances) => {
-	/*
-	 * Dependencies
-	 */
-
 	const {spotlightId} = props;
-	const {virtualListBase} = instances;
-	const {current: {uiRefCurrent}} = (virtualListBase || {});
+	const {spottable, uiChildContainerRef} = instances;
 
-	/*
-	 * Instance
-	 */
+	// Mutable value
 
 	const variables = useRef({
 		preservedIndex: false,
 		restoreLastFocused: false
 	});
 
-	const containerNode = uiRefCurrent && uiRefCurrent.containerRef && uiRefCurrent.containerRef.current || null;
-
-	/*
-	 * Hooks
-	 */
+	// Hooks
 
 	useEffect(restoreFocus);
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	function handlePlaceholderFocus (ev) {
 		const placeholder = ev.currentTarget;
@@ -47,9 +35,11 @@ const useSpotlightRestore = (props, instances) => {
 	}
 
 	function isPlaceholderFocused () {
-		const current = Spotlight.getCurrent();
+		const
+			childContainerNode = uiChildContainerRef.current,
+			current = Spotlight.getCurrent();
 
-		if (current && current.dataset.vlPlaceholder && containerNode && containerNode.contains(current)) {
+		if (current && current.dataset.vlPlaceholder && utilDOM.containsDangerously(childContainerNode, current)) {
 			return true;
 		}
 
@@ -61,7 +51,8 @@ const useSpotlightRestore = (props, instances) => {
 			variables.current.restoreLastFocused &&
 			!isPlaceholderFocused()
 		) {
-			const node = containerNode && containerNode.querySelector(
+			const childContainerNode = uiChildContainerRef.current;
+			const node = childContainerNode && childContainerNode.querySelector(
 				`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
 			);
 
@@ -71,9 +62,9 @@ const useSpotlightRestore = (props, instances) => {
 				variables.current.restoreLastFocused = false;
 
 				// try to focus the last focused item
-				virtualListBase.current.isScrolledByJump = true;
+				spottable.current.isScrolledByJump = true;
 				const foundLastFocused = Spotlight.focus(node);
-				virtualListBase.current.isScrolledByJump = false;
+				spottable.current.isScrolledByJump = false;
 
 				// but if that fails (because it isn't found or is disabled), focus the container so
 				// spotlight isn't lost
@@ -105,9 +96,7 @@ const useSpotlightRestore = (props, instances) => {
 		variables.current.restoreLastFocused = true;
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		handlePlaceholderFocus,

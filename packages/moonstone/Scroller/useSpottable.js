@@ -1,6 +1,7 @@
 import Spotlight from '@enact/spotlight';
 import {getRect} from '@enact/spotlight/src/utils';
 import ri from '@enact/ui/resolution';
+import utilDOM from '@enact/ui/Scrollable/utilDOM';
 import {useCallback, useEffect} from 'react';
 
 import useEventKey from './useEventKey';
@@ -9,26 +10,20 @@ import useSpotlightConfig from './useSpotlightConfig';
 const dataContainerDisabledAttribute = 'data-spotlight-container-disabled';
 
 const useSpottable = (props, instances) => {
-	/*
-	 * Dependencies
-	 */
-
-	const {uiRef} = instances;
+	const {uiChildAdapter, uiChildContainerRef} = instances;
 	const {rtl} = props;
 
-	const containerNode = uiRef && uiRef.current && uiRef.current.containerRef.current || null;
+	// Hooks
 
-	/*
-	 * Hooks
-	 */
-
-	useSpotlightConfig(instances, props);
+	useSpotlightConfig(props, instances);
 
 	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey();
 
 	const setContainerDisabled = useCallback((bool) => {
-		if (containerNode) {
-			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+		const childContainerNode = uiChildContainerRef.current;
+
+		if (childContainerNode) {
+			childContainerNode.setAttribute(dataContainerDisabledAttribute, bool);
 
 			if (bool) {
 				addGlobalKeyDownEventListener(() => {
@@ -38,7 +33,7 @@ const useSpottable = (props, instances) => {
 				removeGlobalKeyDownEventListener();
 			}
 		}
-	}, [addGlobalKeyDownEventListener, containerNode, removeGlobalKeyDownEventListener]);
+	}, [addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener, uiChildContainerRef]);
 
 	useEffect(() => {
 		return () => setContainerDisabled(false);
@@ -46,14 +41,13 @@ const useSpottable = (props, instances) => {
 
 	useEffect(() => {
 		const {onUpdate} = props;
+
 		if (onUpdate) {
 			onUpdate();
 		}
 	});
 
-	/*
-	 * Functions
-	 */
+	// Functions
 
 	/**
 	 * Returns the first spotlight container between `node` and the scroller
@@ -64,11 +58,13 @@ const useSpottable = (props, instances) => {
 	 * @private
 	 */
 	function getSpotlightContainerForNode (node) {
+		const childContainerNode = uiChildContainerRef.current;
+
 		do {
 			if (node.dataset.spotlightId && node.dataset.spotlightContainer && !node.dataset.expandableContainer) {
 				return node;
 			}
-		} while ((node = node.parentNode) && node !== containerNode);
+		} while ((node = node.parentNode) && node !== childContainerNode);
 	}
 
 	/**
@@ -130,8 +126,10 @@ const useSpottable = (props, instances) => {
 		};
 
 		const container = getSpotlightContainerForNode(item);
-		const scrollerBounds = containerNode.getBoundingClientRect();
-		let {scrollHeight, scrollTop} = containerNode;
+		const childContainerNode = uiChildContainerRef.current;
+
+		const scrollerBounds = childContainerNode.getBoundingClientRect();
+		let {scrollHeight, scrollTop} = childContainerNode;
 		let scrollTopDelta = 0;
 
 		const adjustScrollTop = (v) => {
@@ -179,20 +177,21 @@ const useSpottable = (props, instances) => {
 	 * @private
 	 */
 	function calculateScrollLeft (item, scrollPosition) {
+		const childContainerNode = uiChildContainerRef.current;
 		const {
 			left: itemLeft,
 			width: itemWidth
 		} = getFocusedItemBounds(item);
 
 		const
-			{clientWidth} = uiRef.current.scrollBounds,
+			{clientWidth} = uiChildAdapter.current.scrollBounds,
 			rtlDirection = rtl ? -1 : 1,
-			{left: containerLeft} = containerNode.getBoundingClientRect(),
-			scrollLastPosition = scrollPosition ? scrollPosition : uiRef.current.scrollPos.left,
-			currentScrollLeft = rtl ? (uiRef.current.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
+			{left: containerLeft} = childContainerNode.getBoundingClientRect(),
+			scrollLastPosition = scrollPosition ? scrollPosition : uiChildAdapter.current.scrollPos.left,
+			currentScrollLeft = rtl ? (uiChildAdapter.current.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
 			// calculation based on client position
-			newItemLeft = containerNode.scrollLeft + (itemLeft - containerLeft);
-		let nextScrollLeft = uiRef.current.scrollPos.left;
+			newItemLeft = childContainerNode.scrollLeft + (itemLeft - containerLeft);
+		let nextScrollLeft = uiChildAdapter.current.scrollPos.left;
 
 		if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
 			// If focus is moved to an element outside of view area (to the right), scroller will move
@@ -219,25 +218,26 @@ const useSpottable = (props, instances) => {
 	 * @private
 	 */
 	function calculatePositionOnFocus ({item, scrollPosition}) {
-		const horizontal = uiRef.current.isHorizontal();
-		const vertical = uiRef.current.isVertical();
+		const horizontal = uiChildAdapter.current.isHorizontal();
+		const vertical = uiChildAdapter.current.isVertical();
+		const childContainerNode = uiChildContainerRef.current;
 
-		if (!vertical && !horizontal || !item || !containerNode.contains(item)) {
+		if (!vertical && !horizontal || !item || !utilDOM.containsDangerously(childContainerNode, item)) {
 			return;
 		}
 
-		const containerRect = getRect(containerNode);
+		const containerRect = getRect(childContainerNode);
 		const itemRect = getRect(item);
 
 		if (horizontal && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {
-			uiRef.current.scrollPos.left = calculateScrollLeft(item, scrollPosition);
+			uiChildAdapter.current.scrollPos.left = calculateScrollLeft(item, scrollPosition);
 		}
 
 		if (vertical && !(itemRect.top >= containerRect.top && itemRect.bottom <= containerRect.bottom)) {
-			uiRef.current.scrollPos.top = calculateScrollTop(item);
+			uiChildAdapter.current.scrollPos.top = calculateScrollTop(item);
 		}
 
-		return uiRef.current.scrollPos;
+		return uiChildAdapter.current.scrollPos;
 	}
 
 	function focusOnNode (node) {
@@ -246,9 +246,7 @@ const useSpottable = (props, instances) => {
 		}
 	}
 
-	/*
-	 * Return
-	 */
+	// Return
 
 	return {
 		calculatePositionOnFocus,
