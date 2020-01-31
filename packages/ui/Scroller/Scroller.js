@@ -10,7 +10,7 @@
 import {platform} from '@enact/webos';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {Component} from 'react';
 
 import {ResizeContext} from '../Resizable';
 import useScroll from '../Scrollable';
@@ -28,7 +28,7 @@ import css from './Scroller.module.less';
  * @ui
  * @public
  */
-class ScrollerBase extends React.Component {
+class ScrollerBase extends Component {
 	static displayName = 'ui:ScrollerBase'
 
 	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {

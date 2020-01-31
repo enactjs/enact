@@ -123,13 +123,13 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 		 * @type {Object}
 		 * @default {
 		 *	arrowKey: false,
-		*	drag: false,
-		*	pageKey: false,
-		*	scrollbarButton: false,
-		*	wheel: true
-		* }
-		* @private
-		*/
+		 *	drag: false,
+		 *	pageKey: false,
+		 *	scrollbarButton: false,
+		 *	wheel: true
+		 * }
+		 * @private
+		 */
 		overscrollEffectOn: PropTypes.shape({
 			arrowKey: PropTypes.bool,
 			drag: PropTypes.bool,

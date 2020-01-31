@@ -129,14 +129,14 @@ class ScrollableBase extends Component {
 		 * Example:
 		 * ```
 		 *	// If you set cbScrollTo prop like below;
-		*	cbScrollTo: (fn) => {scrollTo = fn;}
-		*	// You can simply call like below;
-		*	scrollTo({align: 'top'}); // scroll to the top
-		* ```
-		*
-		* @type {Function}
-		* @public
-		*/
+		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
+		 *	// You can simply call like below;
+		 *	this.scrollTo({align: 'top'}); // scroll to the top
+		 * ```
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		cbScrollTo: PropTypes.func,
 
 		/**
@@ -151,8 +151,8 @@ class ScrollableBase extends Component {
 		 * Client size of the container; valid values are an object that has `clientWidth` and `clientHeight`.
 		 *
 		 * @type {Object}
-		 * @property {Number}	clientHeight	The client height of the list.
-		 * @property {Number}	clientWidth	The client width of the list.
+		 * @property {Number}    clientHeight    The client height of the list.
+		 * @property {Number}    clientWidth    The client width of the list.
 		 * @public
 		 */
 		clientSize: PropTypes.shape({
@@ -288,26 +288,26 @@ class ScrollableBase extends Component {
 		 * Example:
 		 * ```
 		 * onScrollStart = ({scrollLeft, scrollTop, moreInfo}) => {
-		 *	 const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
-		*	 // do something with firstVisibleIndex and lastVisibleIndex
-		* }
-		*
-		* render = () => (
-		*	 <VirtualList
-		*		 ...
-		*		 onScrollStart={onScrollStart}
-		*		 ...
-		*	 />
-		* )
-		* ```
-		*
-		* @type {Function}
-		* @param {Object} event
-		* @param {Number} event.scrollLeft Scroll left value.
-		* @param {Number} event.scrollTop Scroll top value.
-		* @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
-		* @public
-		*/
+		 *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+		 *     // do something with firstVisibleIndex and lastVisibleIndex
+		 * }
+		 *
+		 * render = () => (
+		 *     <VirtualList
+		 *         ...
+		 *         onScrollStart={this.onScrollStart}
+		 *         ...
+		 *     />
+		 * )
+		 * ```
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @param {Number} event.scrollLeft Scroll left value.
+		 * @param {Number} event.scrollTop Scroll top value.
+		 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+		 * @public
+		 */
 		onScrollStart: PropTypes.func,
 
 		/**
@@ -319,26 +319,26 @@ class ScrollableBase extends Component {
 		 * Example:
 		 * ```
 		 * onScrollStop = ({scrollLeft, scrollTop, moreInfo}) => {
-		 *	 const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
-		*	 // do something with firstVisibleIndex and lastVisibleIndex
-		* }
-		*
-		* render = () => (
-		*	 <VirtualList
-		*		 ...
-		*		 onScrollStop={onScrollStop}
-		*		 ...
-		*	 />
-		* )
-		* ```
-		*
-		* @type {Function}
-		* @param {Object} event
-		* @param {Number} event.scrollLeft Scroll left value.
-		* @param {Number} event.scrollTop Scroll top value.
-		* @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
-		* @public
-		*/
+		 *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+		 *     // do something with firstVisibleIndex and lastVisibleIndex
+		 * }
+		 *
+		 * render = () => (
+		 *     <VirtualList
+		 *         ...
+		 *         onScrollStop={this.onScrollStop}
+		 *         ...
+		 *     />
+		 * )
+		 * ```
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @param {Number} event.scrollLeft Scroll left value.
+		 * @param {Number} event.scrollTop Scroll top value.
+		 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+		 * @public
+		 */
 		onScrollStop: PropTypes.func,
 
 		/**
