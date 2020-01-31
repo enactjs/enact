@@ -1,7 +1,7 @@
 import platform from '@enact/core/platform';
-import {useScroll} from '@enact/ui/Scrollable';
+import {useScrollable} from '@enact/ui/Scrollable';
 import {useChildAdapter as useUiChildAdapter} from '@enact/ui/Scrollable/useChildAdapter';
-import {utilDecorateChildProps} from '@enact/ui/Scrollable/useChildPropsDecorator';
+import {utilDecorateChildProps} from '@enact/ui/Scrollable/useScroll';
 import useScrollableAdapter from '@enact/ui/Scrollable/useScrollableAdapter';
 import React, {useRef} from 'react';
 
@@ -21,7 +21,7 @@ import overscrollCss from './OverscrollEffect.module.less';
  * @ui
  * @public
  */
-const useChildPropsDecorator = (props) => {
+const useScroll = (props) => {
 	const {
 		'data-spotlight-container': spotlightContainer,
 		'data-spotlight-container-disabled': spotlightContainerDisabled,
@@ -160,7 +160,7 @@ const useChildPropsDecorator = (props) => {
 		childWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
-	} = useScroll({
+	} = useScrollable({
 		...rest,
 		...scrollableBaseProp,
 		decorateChildProps,
@@ -205,7 +205,7 @@ const useChildPropsDecorator = (props) => {
 	};
 };
 
-export default useChildPropsDecorator;
+export default useScroll;
 export {
-	useChildPropsDecorator
+	useScroll
 };

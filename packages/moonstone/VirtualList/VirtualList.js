@@ -16,7 +16,7 @@ import React from 'react';
 import warning from 'warning';
 
 import Scrollbar from '../Scrollable/Scrollbar';
-import useChildPropsDecorator from '../Scrollable/useChildPropsDecorator';
+import useScroll from '../Scrollable/useScroll';
 import Skinnable from '../Skinnable';
 
 import {useSpottableVirtualList, VirtualListBase} from './useSpottableVirtualList';
@@ -61,7 +61,7 @@ const ScrollableVirtualList = ({itemSize, role, ...rest}) => {
 		childProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useChildPropsDecorator({...rest, ...props});
+	} = useScroll({...rest, ...props});
 
 	const uiChildProps = useSpottableVirtualList({
 		...childProps,
@@ -232,7 +232,7 @@ const VirtualGridListScrollable = ({role, ...rest}) => {
 		childProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useChildPropsDecorator(rest);
+	} = useScroll(rest);
 
 	const uiChildProps = useSpottableVirtualList({
 		...childProps,

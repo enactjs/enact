@@ -75,7 +75,7 @@ const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
  * @ui
  * @private
  */
-const useScroll = (props) => {
+const useScrollable = (props) => {
 	const {
 		decorateChildProps,
 		horizontalScrollbarRef,
@@ -1883,5 +1883,5 @@ export {
 	constants,
 	Scrollable,
 	ScrollableBase,
-	useScroll
+	useScrollable
 };

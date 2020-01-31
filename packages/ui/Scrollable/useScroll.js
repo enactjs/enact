@@ -1,5 +1,5 @@
 import useChildAdapter from './useChildAdapter';
-import {useScroll} from './Scrollable';
+import {useScrollable} from './Scrollable';
 
 import warning from 'warning';
 import {useRef} from 'react';
@@ -43,7 +43,7 @@ const utilDecorateChildProps = (instance) => (childComponentName, props) => {
  * @ui
  * @private
  */
-const useChildPropsDecorator = (props) => {
+const useScroll = (props) => {
 	// Mutable value
 
 	const scrollableContainerRef = useRef(null);
@@ -65,7 +65,7 @@ const useChildPropsDecorator = (props) => {
 		childWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
-	} = useScroll({
+	} = useScrollable({
 		...props,
 		decorateChildProps,
 		get horizontalScrollbarRef () {
@@ -103,8 +103,8 @@ const useChildPropsDecorator = (props) => {
 	};
 };
 
-export default useChildPropsDecorator;
+export default useScroll;
 export {
-	useChildPropsDecorator,
+	useScroll,
 	utilDecorateChildProps
 };

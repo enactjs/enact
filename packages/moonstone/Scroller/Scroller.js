@@ -24,7 +24,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import Scrollbar from '../Scrollable/Scrollbar';
-import useChildPropsDecorator from '../Scrollable/useChildPropsDecorator';
+import useScroll from '../Scrollable/useScroll';
 import Skinnable from '../Skinnable';
 
 
@@ -98,7 +98,7 @@ const ScrollableScroller = (props) => {
 		childProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useChildPropsDecorator(props);
+	} = useScroll(props);
 
 	const uiChildProps = useSpottableScroller(childProps);
 
