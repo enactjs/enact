@@ -44,47 +44,7 @@ const useSpottableScroller = (props) => {
 	return propsObject;
 };
 
-const ScrollerBase = {};
-
-ScrollerBase.displayName = 'ScrollerBase';
-
-ScrollerBase.propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
-	/**
-	 * Called when [Scroller]{@link moonstone/Scroller.Scroller} updates.
-	 *
-	 * @type {function}
-	 * @private
-	 */
-	onUpdate: PropTypes.func,
-
-	/**
-	 * `true` if rtl, `false` if ltr.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 */
-	rtl: PropTypes.bool,
-
-	/**
-	 * Called when [Scroller]{@link moonstone/Scroller.Scroller} should be scrolled
-	 * and the focus should be moved to a scrollbar button.
-	 *
-	 * @type {function}
-	 * @private
-	 */
-	scrollAndFocusScrollbarButton: PropTypes.func,
-
-	/**
-	 * The spotlight id for the component.
-	 *
-	 * @type {String}
-	 * @private
-	 */
-	spotlightId: PropTypes.string
-};
-
 export default useSpottableScroller;
 export {
-	ScrollerBase,
 	useSpottableScroller
 };
