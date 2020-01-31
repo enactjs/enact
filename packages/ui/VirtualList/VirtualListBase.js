@@ -50,6 +50,7 @@ const itemSizesShape = PropTypes.shape({
  * @ui
  * @private
  */
+// TBD: indentation is broken intentionally to help comparing
 	class VirtualListBase extends Component {
 		/* No displayName here. We set displayName to returned components of this factory function. */
 
@@ -330,7 +331,7 @@ const itemSizesShape = PropTypes.shape({
 			this.shouldUpdateBounds = false;
 
 			// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
-			this.hasDataSizeChanged= (prevProps.dataSize !== this.props.dataSize);
+			this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
 
 			if (prevState.firstIndex !== firstIndex || prevState.numOfItems !== numOfItems) {
 				this.emitUpdateItems();
@@ -442,11 +443,11 @@ const itemSizesShape = PropTypes.shape({
 
 		shouldUpdateBounds = false
 
-		dimensionToExtent= 0
+		dimensionToExtent = 0
 		threshold = 0
 		maxFirstIndex = 0
 		curDataSize = 0
-		hasDataSizeChanged= false
+		hasDataSizeChanged = false
 		cc = []
 		scrollPosition = 0
 		scrollPositionTarget = 0
@@ -590,17 +591,17 @@ const itemSizesShape = PropTypes.shape({
 				primary = widthInfo;
 				secondary = heightInfo;
 			}
-			dimensionToExtent= 1;
+			dimensionToExtent = 1;
 
 			this.isItemSized = (primary.minItemSize && secondary.minItemSize);
 
 			if (this.isItemSized) {
 				// the number of columns is the ratio of the available width plus the spacing
 				// by the minimum item width plus the spacing
-				dimensionToExtent= Math.max(Math.floor((secondary.clientSize + spacing) / (secondary.minItemSize + spacing)), 1);
+				dimensionToExtent = Math.max(Math.floor((secondary.clientSize + spacing) / (secondary.minItemSize + spacing)), 1);
 				// the actual item width is a ratio of the remaining width after all columns
 				// and spacing are accounted for and the number of columns that we know we should have
-				secondary.itemSize = Math.floor((secondary.clientSize - (spacing * (dimensionToExtent- 1))) / dimensionToExtent);
+				secondary.itemSize = Math.floor((secondary.clientSize - (spacing * (dimensionToExtent - 1))) / dimensionToExtent);
 				// the actual item height is related to the item width
 				primary.itemSize = Math.floor(primary.minItemSize * (secondary.itemSize / secondary.minItemSize));
 			}
@@ -610,7 +611,7 @@ const itemSizesShape = PropTypes.shape({
 			thresholdBase = primary.gridSize * Math.ceil(overhang / 2);
 
 			this.threshold = {min: -Infinity, max: thresholdBase, base: thresholdBase};
-			this.dimensionToExtent= dimensionToExtent;
+			this.dimensionToExtent = dimensionToExtent;
 
 			this.primary = primary;
 			this.secondary = secondary;
@@ -626,7 +627,7 @@ const itemSizesShape = PropTypes.shape({
 			const
 				{dataSize, overhang, updateStatesAndBounds} = props,
 				{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
-				numOfItems = Math.min(dataSize, dimensionToExtent* (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
+				numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 				wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
 				dataSizeDiff = dataSize - this.curDataSize;
 			let newFirstIndex = firstIndex;
@@ -670,7 +671,7 @@ const itemSizesShape = PropTypes.shape({
 
 			if (wasFirstIndexMax && dataSizeDiff > 0) { // If dataSize increased from bottom, we need adjust firstIndex
 				// If this is a gridlist and dataSizeDiff is smaller than 1 line, we are adjusting firstIndex without threshold change.
-				if (dimensionToExtent> 1 && dataSizeDiff < dimensionToExtent) {
+				if (dimensionToExtent > 1 && dataSizeDiff < dimensionToExtent) {
 					newFirstIndex = maxFirstIndex;
 				} else { // For other bottom adding case, we need to update firstIndex and threshold.
 					const
@@ -768,7 +769,7 @@ const itemSizesShape = PropTypes.shape({
 				moreInfo.lastVisibleIndex = lastVisibleIndex;
 			} else {
 				moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - itemSize) / gridSize) + 1) * dimensionToExtent;
-				moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent- 1);
+				moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent - 1);
 			}
 		}
 
@@ -1524,11 +1525,11 @@ VirtualListBase.defaultProps = {
  * }
  *
  * render = () => (
- *	 <VirtualList
- *		 ...
- *		 onScrollStart={this.onScrollStart}
- *		 ...
- *	 />
+ *     <VirtualList
+ *         ...
+ *         onScrollStart={this.onScrollStart}
+ *         ...
+ *     />
  * )
  * ```
  *
@@ -1551,16 +1552,16 @@ VirtualListBase.defaultProps = {
  * Example:
  * ```
  * onScrollStop = ({scrollLeft, scrollTop, moreInfo}) => {
- *	 const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
- *	 // do something with firstVisibleIndex and lastVisibleIndex
+ *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+ *     // do something with firstVisibleIndex and lastVisibleIndex
  * }
  *
  * render = () => (
- *	 <VirtualList
- *		 ...
- *		 onScrollStop={this.onScrollStop}
- *		 ...
- *	 />
+ *     <VirtualList
+ *         ...
+ *         onScrollStop={this.onScrollStop}
+ *         ...
+ *     />
  * )
  * ```
  *
