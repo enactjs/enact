@@ -10,10 +10,12 @@
     "link-all": "lerna --concurrency 1 --ignore enact-sampler exec -- npm --loglevel error link",
     "unlink-all": "lerna --concurrency 1 --ignore enact-sampler exec -- npm --loglevel error unlink",
     "test": "lerna --concurrency 1 run test",
-    "clean": "lerna clean"
+    "clean": "lerna clean",
+    "validate-docs": "validate-docs --strict --standalone --path packages"
   },
   "license": "Apache-2.0",
   "devDependencies": {
+    "@enact/docs-utils": "^0.1.0",
     "lerna": "2.8.0"
   }
 }
