@@ -16,14 +16,13 @@ import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
-import {useCallback, useContext, useEffect, useRef, useState} from 'react';
+import {useCallback, useContext, useEffect, useReducer, useRef, useState} from 'react';
 
 import ForwardRef from '../ForwardRef';
 import {ResizeContext} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
 
-import useForceUpdate from './useForceUpdate';
 import ScrollAnimator from './ScrollAnimator';
 import utilDOM from './utilDOM';
 import utilEvent from './utilEvent';
@@ -66,6 +65,8 @@ const
 	} = constants;
 
 const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
+
+const useForceUpdate = () => (useReducer(x => x + 1, 0));
 
 /**
  * An unstyled component that passes scrollable behavior information as its render prop's arguments.
