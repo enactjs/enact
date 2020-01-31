@@ -277,7 +277,7 @@ const itemSizesShape = PropTypes.shape({
 
 			this.state = {
 				firstIndex: 0,
-				_numOfItems: 0,
+				numOfItems: 0,
 				prevChildProps: null,
 				prevFirstIndex: 0,
 				updateFrom: 0,
@@ -285,49 +285,7 @@ const itemSizesShape = PropTypes.shape({
 				...nextState
 			};
 
-			const adapter = {
-				calculateMetrics: this.calculateMetrics.bind(this),
-				didScroll: this.didScroll.bind(this),
-				get dimensionToExtent () {
-					return this._dimensionToExtent;
-				},
-				getGridPosition: this.getGridPosition.bind(this),
-				getItemBottomPosition: this.getItemBottomPosition.bind(this),
-				getItemNode: this.getItemNode.bind(this),
-				getItemPosition: this.getItemPosition.bind(this),
-				getMoreInfo: this.getMoreInfo.bind(this),
-				getScrollBounds: this.getScrollBounds.bind(this),
-				gridPositionToItemPosition: this.gridPositionToItemPosition.bind(this),
-				get hasDataSizeChanged () {
-					return this._hasDataSizeChanged;
-				},
-				isHorizontal: this.isHorizontal.bind(this),
-				get isPrimaryDirectionVertical () {
-					return this._isPrimaryDirectionVertical;
-				},
-				isVertical: this.isVertical.bind(this),
-				get itemPositions () {
-					return this.itemPositions;
-				},
-				get numOfItems () {
-					return _numOfItems;
-				},
-				get primary () {
-					return this._primary;
-				},
-				props,
-				get scrollPosition () {
-					return this._scrollPosition;
-				},
-				get scrollPositionTarget () {
-					return this._scrollPositionTarget;
-				},
-				scrollToPosition: this.scrollToPosition.bind(this),
-				setScrollPosition: this.setScrollPosition.bind(this),
-				syncClientSize: this.syncClientSize.bind(this)
-			};
-
-			props.setUiChildAdapter(adapter);
+			props.setUiChildAdapter(this);
 		}
 
 		static getDerivedStateFromProps (props, state) {
@@ -337,8 +295,8 @@ const itemSizesShape = PropTypes.shape({
 					state.prevChildProps !== props.childProps
 				),
 				diff = state.firstIndex - state.prevFirstIndex,
-				updateTo = (-state._numOfItems >= diff || diff > 0 || shouldInvalidate) ? state.firstIndex + state._numOfItems : state.prevFirstIndex,
-				updateFrom = (0 >= diff || diff >= state._numOfItems || shouldInvalidate) ? state.firstIndex : state.prevFirstIndex + state._numOfItems,
+				updateTo = (-state.numOfItems >= diff || diff > 0 || shouldInvalidate) ? state.firstIndex + state.numOfItems : state.prevFirstIndex,
+				updateFrom = (0 >= diff || diff >= state.numOfItems || shouldInvalidate) ? state.firstIndex : state.prevFirstIndex + state.numOfItems,
 				nextUpdateFromAndTo = (state.updateFrom !== updateFrom || state.updateTo !== updateTo) ? {updateFrom, updateTo} : null;
 
 			return {
@@ -367,14 +325,14 @@ const itemSizesShape = PropTypes.shape({
 
 		componentDidUpdate (prevProps, prevState) {
 			let deferScrollTo = false;
-			const {firstIndex, _numOfItems} = this.state;
+			const {firstIndex, numOfItems} = this.state;
 
 			this.shouldUpdateBounds = false;
 
-			// TODO: remove `this._hasDataSizeChanged` and fix ui/Scrollable*
-			this._hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
+			// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
+			this.hasDataSizeChanged= (prevProps.dataSize !== this.props.dataSize);
 
-			if (prevState.firstIndex !== firstIndex || prevState._numOfItems !== _numOfItems) {
+			if (prevState.firstIndex !== firstIndex || prevState.numOfItems !== numOfItems) {
 				this.emitUpdateItems();
 			}
 
@@ -399,7 +357,7 @@ const itemSizesShape = PropTypes.shape({
 						// Currently we support expandable items in only vertical VirtualList.
 						// So the top and bottom of the boundaries are checked.
 						const
-							scrollBounds = {top: this._scrollPosition, bottom: this._scrollPosition + this.scrollBounds.clientHeight},
+							scrollBounds = {top: this.scrollPosition, bottom: this.scrollPosition + this.scrollBounds.clientHeight},
 							itemBounds = {top: this.getGridPosition(indexToScrollIntoView).primaryPosition, bottom: this.getItemBottomPosition(indexToScrollIntoView)};
 
 						if (itemBounds.top < scrollBounds.top) {
@@ -427,7 +385,7 @@ const itemSizesShape = PropTypes.shape({
 				prevProps.spacing !== this.props.spacing ||
 				!equals(prevProps.itemSize, this.props.itemSize)
 			) {
-				const {x, y} = this.getXY(this._scrollPosition, 0);
+				const {x, y} = this.getXY(this.scrollPosition, 0);
 
 				this.calculateMetrics(this.props);
 				// eslint-disable-next-line react/no-did-update-set-state
@@ -444,7 +402,7 @@ const itemSizesShape = PropTypes.shape({
 				});
 
 				deferScrollTo = true;
-			} else if (this._hasDataSizeChanged) {
+			} else if (this.hasDataSizeChanged) {
 				const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
 				// eslint-disable-next-line react/no-did-update-set-state
 				this.setState(newState);
@@ -452,13 +410,13 @@ const itemSizesShape = PropTypes.shape({
 
 				deferScrollTo = true;
 			} else if (prevProps.rtl !== this.props.rtl) {
-				this.updateScrollPosition(this.getXY(this._scrollPosition, 0));
+				this.updateScrollPosition(this.getXY(this.scrollPosition, 0));
 			}
 
-			const maxPos = this._isPrimaryDirectionVertical ? this.scrollBounds.maxTop : this.scrollBounds.maxLeft;
+			const maxPos = this.isPrimaryDirectionVertical ? this.scrollBounds.maxTop : this.scrollBounds.maxLeft;
 
-			if (!deferScrollTo && this._scrollPosition > maxPos) {
-				this.props.cbScrollTo({position: (this._isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
+			if (!deferScrollTo && this.scrollPosition > maxPos) {
+				this.props.cbScrollTo({position: (this.isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 			}
 		}
 
@@ -476,22 +434,22 @@ const itemSizesShape = PropTypes.shape({
 			lastVisibleIndex: null
 		}
 
-		_primary = null
+		primary = null
 		secondary = null
 
-		_isPrimaryDirectionVertical = true
+		isPrimaryDirectionVertical = true
 		isItemSized = false
 
 		shouldUpdateBounds = false
 
-		_dimensionToExtent = 0
+		dimensionToExtent= 0
 		threshold = 0
 		maxFirstIndex = 0
 		curDataSize = 0
-		_hasDataSizeChanged = false
+		hasDataSizeChanged= false
 		cc = []
-		_scrollPosition = 0
-		_scrollPositionTarget = 0
+		scrollPosition = 0
+		scrollPositionTarget = 0
 
 		// For individually sized item
 		itemPositions = []
@@ -505,9 +463,9 @@ const itemSizesShape = PropTypes.shape({
 			}
 		}
 
-		isVertical = () => this._isPrimaryDirectionVertical
+		isVertical = () => this.isPrimaryDirectionVertical
 
-		isHorizontal = () => !this._isPrimaryDirectionVertical
+		isHorizontal = () => !this.isPrimaryDirectionVertical
 
 		getScrollBounds = () => this.scrollBounds
 
@@ -516,13 +474,13 @@ const itemSizesShape = PropTypes.shape({
 		getGridPosition (index) {
 			const
 				{dataSize, itemSizes} = this.props,
-				{_dimensionToExtent, itemPositions, _primary, secondary} = this,
-				secondaryPosition = (index % _dimensionToExtent) * secondary.gridSize,
-				extent = Math.floor(index / _dimensionToExtent);
+				{dimensionToExtent, itemPositions, primary, secondary} = this,
+				secondaryPosition = (index % dimensionToExtent) * secondary.gridSize,
+				extent = Math.floor(index / dimensionToExtent);
 			let primaryPosition;
 
 			if (itemSizes && typeof itemSizes[index] !== 'undefined' && dataSize > index) {
-				const firstIndexInExtent = extent * _dimensionToExtent;
+				const firstIndexInExtent = extent * dimensionToExtent;
 
 				if (!itemPositions[firstIndexInExtent]) {
 					// Cache individually sized item positions
@@ -534,10 +492,10 @@ const itemSizesShape = PropTypes.shape({
 				if (itemPositions[firstIndexInExtent]) {
 					primaryPosition = itemPositions[firstIndexInExtent].position;
 				} else {
-					primaryPosition = extent * _primary.gridSize;
+					primaryPosition = extent * primary.gridSize;
 				}
 			} else {
-				primaryPosition = extent * _primary.gridSize;
+				primaryPosition = extent * primary.gridSize;
 			}
 
 			return {primaryPosition, secondaryPosition};
@@ -552,7 +510,7 @@ const itemSizesShape = PropTypes.shape({
 			if (itemPosition && (itemSize || itemSize === 0)) {
 				return itemPosition.position + itemSize;
 			} else {
-				return index * this._primary.gridSize - this.props.spacing;
+				return index * this.primary.gridSize - this.props.spacing;
 			}
 		}
 
@@ -563,16 +521,16 @@ const itemSizesShape = PropTypes.shape({
 
 		getItemPosition = (index, stickTo = 'start') => {
 			const
-				{_primary} = this,
+				{primary} = this,
 				position = this.getGridPosition(index);
 			let  offset = 0;
 
 			if (stickTo === 'start') {
 				offset = 0;
 			} else if (this.props.itemSizes) {
-				offset = _primary.clientSize - this.props.itemSizes[index];
+				offset = primary.clientSize - this.props.itemSizes[index];
 			} else {
-				offset = _primary.clientSize - _primary.itemSize;
+				offset = primary.clientSize - primary.itemSize;
 			}
 
 			position.primaryPosition -= offset;
@@ -581,9 +539,9 @@ const itemSizesShape = PropTypes.shape({
 		}
 
 		gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
-			(this._isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
+			(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
 
-		getXY = (primaryPosition, secondaryPosition) => (this._isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
+		getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
 		getClientSize = (node) => ({
 			clientWidth: node.clientWidth,
@@ -592,11 +550,11 @@ const itemSizesShape = PropTypes.shape({
 
 		emitUpdateItems () {
 			const {dataSize} = this.props;
-			const {firstIndex, _numOfItems} = this.state;
+			const {firstIndex, numOfItems} = this.state;
 
 			forward('onUpdateItems', {
 				firstIndex: firstIndex,
-				lastIndex: Math.min(firstIndex + _numOfItems, dataSize)
+				lastIndex: Math.min(firstIndex + numOfItems, dataSize)
 			}, this.props);
 		}
 
@@ -621,44 +579,44 @@ const itemSizesShape = PropTypes.shape({
 					minItemSize: itemSize.minWidth || null,
 					itemSize: itemSize
 				};
-			let _primary, secondary, _dimensionToExtent, thresholdBase;
+			let primary, secondary, dimensionToExtent, thresholdBase;
 
-			this._isPrimaryDirectionVertical = (direction === 'vertical');
+			this.isPrimaryDirectionVertical = (direction === 'vertical');
 
-			if (this._isPrimaryDirectionVertical) {
-				_primary = heightInfo;
+			if (this.isPrimaryDirectionVertical) {
+				primary = heightInfo;
 				secondary = widthInfo;
 			} else {
-				_primary = widthInfo;
+				primary = widthInfo;
 				secondary = heightInfo;
 			}
-			_dimensionToExtent = 1;
+			dimensionToExtent= 1;
 
-			this.isItemSized = (_primary.minItemSize && secondary.minItemSize);
+			this.isItemSized = (primary.minItemSize && secondary.minItemSize);
 
 			if (this.isItemSized) {
 				// the number of columns is the ratio of the available width plus the spacing
 				// by the minimum item width plus the spacing
-				_dimensionToExtent = Math.max(Math.floor((secondary.clientSize + spacing) / (secondary.minItemSize + spacing)), 1);
+				dimensionToExtent= Math.max(Math.floor((secondary.clientSize + spacing) / (secondary.minItemSize + spacing)), 1);
 				// the actual item width is a ratio of the remaining width after all columns
 				// and spacing are accounted for and the number of columns that we know we should have
-				secondary.itemSize = Math.floor((secondary.clientSize - (spacing * (_dimensionToExtent - 1))) / _dimensionToExtent);
+				secondary.itemSize = Math.floor((secondary.clientSize - (spacing * (dimensionToExtent- 1))) / dimensionToExtent);
 				// the actual item height is related to the item width
-				_primary.itemSize = Math.floor(_primary.minItemSize * (secondary.itemSize / secondary.minItemSize));
+				primary.itemSize = Math.floor(primary.minItemSize * (secondary.itemSize / secondary.minItemSize));
 			}
 
-			_primary.gridSize = _primary.itemSize + spacing;
+			primary.gridSize = primary.itemSize + spacing;
 			secondary.gridSize = secondary.itemSize + spacing;
-			thresholdBase = _primary.gridSize * Math.ceil(overhang / 2);
+			thresholdBase = primary.gridSize * Math.ceil(overhang / 2);
 
 			this.threshold = {min: -Infinity, max: thresholdBase, base: thresholdBase};
-			this._dimensionToExtent = _dimensionToExtent;
+			this.dimensionToExtent= dimensionToExtent;
 
-			this._primary = _primary;
+			this.primary = primary;
 			this.secondary = secondary;
 
 			// reset
-			this._scrollPosition = 0;
+			this.scrollPosition = 0;
 			if (this.props.type === JS && this.contentRef.current) {
 				this.contentRef.current.style.transform = null;
 			}
@@ -667,9 +625,9 @@ const itemSizesShape = PropTypes.shape({
 		getStatesAndUpdateBounds = (props, firstIndex = 0) => {
 			const
 				{dataSize, overhang, updateStatesAndBounds} = props,
-				{_dimensionToExtent, _primary, moreInfo, _scrollPosition} = this,
-				_numOfItems = Math.min(dataSize, _dimensionToExtent * (Math.ceil(_primary.clientSize / _primary.gridSize) + overhang)),
-				wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - _dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
+				{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
+				numOfItems = Math.min(dataSize, dimensionToExtent* (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
+				wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
 				dataSizeDiff = dataSize - this.curDataSize;
 			let newFirstIndex = firstIndex;
 
@@ -679,18 +637,18 @@ const itemSizesShape = PropTypes.shape({
 			// So `shouldUpdateBounds` is true here.
 			this.shouldUpdateBounds = true;
 
-			this.maxFirstIndex = Math.ceil((dataSize - _numOfItems) / _dimensionToExtent) * _dimensionToExtent;
+			this.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
 			this.curDataSize = dataSize;
 
 			// reset children
 			this.cc = [];
 			this.itemPositions = []; // For individually sized item
 			this.calculateScrollBounds(props);
-			this.updateMoreInfo(dataSize, _scrollPosition);
+			this.updateMoreInfo(dataSize, scrollPosition);
 
 			if (!(updateStatesAndBounds && updateStatesAndBounds({
 				cbScrollTo: props.cbScrollTo,
-				_numOfItems,
+				numOfItems,
 				dataSize,
 				moreInfo
 			}))) {
@@ -699,33 +657,33 @@ const itemSizesShape = PropTypes.shape({
 
 			return {
 				firstIndex: newFirstIndex,
-				_numOfItems: _numOfItems
+				numOfItems: numOfItems
 			};
 		}
 
 		calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff, firstIndex) {
 			const
 				{overhang} = props,
-				{_dimensionToExtent, _isPrimaryDirectionVertical, maxFirstIndex, _primary, scrollBounds, _scrollPosition, threshold} = this,
-				{gridSize} = _primary;
+				{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, scrollPosition, threshold} = this,
+				{gridSize} = primary;
 			let newFirstIndex = firstIndex;
 
 			if (wasFirstIndexMax && dataSizeDiff > 0) { // If dataSize increased from bottom, we need adjust firstIndex
 				// If this is a gridlist and dataSizeDiff is smaller than 1 line, we are adjusting firstIndex without threshold change.
-				if (_dimensionToExtent > 1 && dataSizeDiff < _dimensionToExtent) {
+				if (dimensionToExtent> 1 && dataSizeDiff < dimensionToExtent) {
 					newFirstIndex = maxFirstIndex;
 				} else { // For other bottom adding case, we need to update firstIndex and threshold.
 					const
-						maxPos = _isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
+						maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
 						maxOfMin = maxPos - threshold.base,
 						numOfUpperLine = Math.floor(overhang / 2),
-						firstIndexFromPosition = Math.floor(_scrollPosition / gridSize),
+						firstIndexFromPosition = Math.floor(scrollPosition / gridSize),
 						expectedFirstIndex = Math.max(0, firstIndexFromPosition - numOfUpperLine);
 
 					// To navigate with 5way, we need to adjust firstIndex to the next line
 					// since at the bottom we have num of overhang lines for upper side but none for bottom side
 					// So we add numOfUpperLine at the top and rest lines at the bottom
-					newFirstIndex = Math.min(maxFirstIndex, expectedFirstIndex * _dimensionToExtent);
+					newFirstIndex = Math.min(maxFirstIndex, expectedFirstIndex * dimensionToExtent);
 
 					// We need to update threshold also since we moved the firstIndex
 					threshold.max = Math.min(maxPos, threshold.max + gridSize);
@@ -748,7 +706,7 @@ const itemSizesShape = PropTypes.shape({
 			}
 
 			const
-				{scrollBounds, _isPrimaryDirectionVertical} = this,
+				{scrollBounds, isPrimaryDirectionVertical} = this,
 				{clientWidth, clientHeight} = clientSize || this.getClientSize(node);
 			let maxPos;
 
@@ -760,42 +718,42 @@ const itemSizesShape = PropTypes.shape({
 			scrollBounds.maxTop = Math.max(0, scrollBounds.scrollHeight - clientHeight);
 
 			// correct position
-			maxPos = _isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
+			maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
 
 			this.syncThreshold(maxPos);
 		}
 
 		setContainerSize = () => {
 			if (this.contentRef.current) {
-				this.contentRef.current.style.width = this.scrollBounds.scrollWidth + (this._isPrimaryDirectionVertical ? -1 : 0) + 'px';
-				this.contentRef.current.style.height = this.scrollBounds.scrollHeight + (this._isPrimaryDirectionVertical ? 0 : -1) + 'px';
+				this.contentRef.current.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
+				this.contentRef.current.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
 			}
 		}
 
 		updateMoreInfo (dataSize, primaryPosition) {
 			const
-				{_dimensionToExtent, moreInfo} = this,
-				{itemSize, gridSize, clientSize} = this._primary;
+				{dimensionToExtent, moreInfo} = this,
+				{itemSize, gridSize, clientSize} = this.primary;
 
 			if (dataSize <= 0) {
 				moreInfo.firstVisibleIndex = null;
 				moreInfo.lastVisibleIndex = null;
 			} else if (this.props.itemSizes) {
-				const {firstIndex, _numOfItems} = this.state;
-				const {_isPrimaryDirectionVertical, scrollBounds: {clientWidth, clientHeight}, _scrollPosition} = this;
-				const size = _isPrimaryDirectionVertical ? clientHeight : clientWidth;
+				const {firstIndex, numOfItems} = this.state;
+				const {isPrimaryDirectionVertical, scrollBounds: {clientWidth, clientHeight}, scrollPosition} = this;
+				const size = isPrimaryDirectionVertical ? clientHeight : clientWidth;
 
 				let firstVisibleIndex = null, lastVisibleIndex = null;
 
-				for (let i = firstIndex; i < firstIndex +  _numOfItems; i++) {
-					if (_scrollPosition <= this.getItemBottomPosition(i)) {
+				for (let i = firstIndex; i < firstIndex +  numOfItems; i++) {
+					if (scrollPosition <= this.getItemBottomPosition(i)) {
 						firstVisibleIndex = i;
 						break;
 					}
 				}
 
-				for (let i = firstIndex + _numOfItems - 1; i >= firstIndex; i--) {
-					if (_scrollPosition + size >= this.getItemBottomPosition(i) - this.props.itemSizes[i]) {
+				for (let i = firstIndex + numOfItems - 1; i >= firstIndex; i--) {
+					if (scrollPosition + size >= this.getItemBottomPosition(i) - this.props.itemSizes[i]) {
 						lastVisibleIndex = i;
 						break;
 					}
@@ -809,8 +767,8 @@ const itemSizesShape = PropTypes.shape({
 				moreInfo.firstVisibleIndex = firstVisibleIndex;
 				moreInfo.lastVisibleIndex = lastVisibleIndex;
 			} else {
-				moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - itemSize) / gridSize) + 1) * _dimensionToExtent;
-				moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * _dimensionToExtent - 1);
+				moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - itemSize) / gridSize) + 1) * dimensionToExtent;
+				moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent- 1);
 			}
 		}
 
@@ -831,10 +789,10 @@ const itemSizesShape = PropTypes.shape({
 		// Native only
 		scrollToPosition (x, y, rtl = this.props.rtl) {
 			if (this.props.uiChildContainerRef.current) {
-				if (this._isPrimaryDirectionVertical) {
-					this._scrollPositionTarget = y;
+				if (this.isPrimaryDirectionVertical) {
+					this.scrollPositionTarget = y;
 				} else {
-					this._scrollPositionTarget = x;
+					this.scrollPositionTarget = x;
 				}
 
 				if (rtl) {
@@ -852,11 +810,11 @@ const itemSizesShape = PropTypes.shape({
 
 				// The `x`, `y` as parameters in scrollToPosition() are the position when stopping scrolling.
 				// But the `x`, `y` as parameters in setScrollPosition() are the position between current position and the position stopping scrolling.
-				// To know the position when stopping scrolling here, `targetX` and `targetY` are passed and cached in `this._scrollPositionTarget`.
-				if (this._isPrimaryDirectionVertical) {
-					this._scrollPositionTarget = targetY;
+				// To know the position when stopping scrolling here, `targetX` and `targetY` are passed and cached in `this.scrollPositionTarget`.
+				if (this.isPrimaryDirectionVertical) {
+					this.scrollPositionTarget = targetY;
 				} else {
-					this._scrollPositionTarget = targetX;
+					this.scrollPositionTarget = targetX;
 				}
 
 				this.didScroll(x, y);
@@ -867,12 +825,12 @@ const itemSizesShape = PropTypes.shape({
 			const
 				{dataSize, spacing, itemSizes} = this.props,
 				{firstIndex} = this.state,
-				{_isPrimaryDirectionVertical, threshold, _dimensionToExtent, maxFirstIndex, scrollBounds, itemPositions} = this,
-				{clientSize, gridSize} = this._primary,
-				maxPos = _isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
+				{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds, itemPositions} = this,
+				{clientSize, gridSize} = this.primary,
+				maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
 			let newFirstIndex = firstIndex, index, pos, size, itemPosition;
 
-			if (_isPrimaryDirectionVertical) {
+			if (isPrimaryDirectionVertical) {
 				pos = y;
 			} else {
 				pos = x;
@@ -886,7 +844,7 @@ const itemSizesShape = PropTypes.shape({
 					let firstRenderedIndex = -1;
 
 					// find an item which is known as placed the first rendered item's position
-					for (index = 0; index < dataSize; index += _dimensionToExtent) {
+					for (index = 0; index < dataSize; index += dimensionToExtent) {
 						itemPosition = itemPositions[index];
 						size = itemSizes[index];
 						if (itemPosition && size && itemPosition.position + size >= pos && itemPosition.position <= pos + clientSize) {
@@ -898,12 +856,12 @@ const itemSizesShape = PropTypes.shape({
 					// found an item which is visible within a current viewport
 					if (index < dataSize) {
 						if (itemPosition.position <= pos) {
-							newFirstIndex = firstRenderedIndex - overhangBefore * _dimensionToExtent;
+							newFirstIndex = firstRenderedIndex - overhangBefore * dimensionToExtent;
 							newThresholdMin = itemPosition.position;
 							newThresholdMax = newThresholdMin + size + spacing;
 						} else {
 							const diffToFirstIndex = Math.ceil((itemPosition.position - pos) / gridSize);
-							newFirstIndex = firstRenderedIndex - (diffToFirstIndex + overhangBefore) * _dimensionToExtent;
+							newFirstIndex = firstRenderedIndex - (diffToFirstIndex + overhangBefore) * dimensionToExtent;
 							newThresholdMin = itemPosition.position - diffToFirstIndex * gridSize;
 							newThresholdMax = newThresholdMin + gridSize;
 						}
@@ -911,12 +869,12 @@ const itemSizesShape = PropTypes.shape({
 						const firstExtent = Math.max(
 							0,
 							Math.min(
-								Math.floor(maxFirstIndex / _dimensionToExtent),
+								Math.floor(maxFirstIndex / dimensionToExtent),
 								Math.floor((pos - gridSize * overhangBefore) / gridSize)
 							)
 						);
 
-						newFirstIndex = firstExtent * _dimensionToExtent;
+						newFirstIndex = firstExtent * dimensionToExtent;
 						newThresholdMin = (firstExtent + overhangBefore) * gridSize;
 						newThresholdMax = newThresholdMin + gridSize;
 					}
@@ -928,12 +886,12 @@ const itemSizesShape = PropTypes.shape({
 						firstExtent = Math.max(
 							0,
 							Math.min(
-								Math.floor(maxFirstIndex / _dimensionToExtent),
+								Math.floor(maxFirstIndex / dimensionToExtent),
 								Math.floor((pos - gridSize * overhangBefore) / gridSize)
 							)
 						);
 
-					newFirstIndex = firstExtent * _dimensionToExtent;
+					newFirstIndex = firstExtent * dimensionToExtent;
 					newThresholdMin = (firstExtent + overhangBefore) * gridSize;
 					newThresholdMax = newThresholdMin + gridSize;
 				}
@@ -943,7 +901,7 @@ const itemSizesShape = PropTypes.shape({
 			}
 
 			this.syncThreshold(maxPos);
-			this._scrollPosition = pos;
+			this.scrollPosition = pos;
 			this.updateMoreInfo(dataSize, pos);
 
 			if (this.shouldUpdateBounds || firstIndex !== newFirstIndex) {
@@ -968,9 +926,9 @@ const itemSizesShape = PropTypes.shape({
 		applyItemPositionToDOMElement (index) {
 			const
 				{direction, rtl} = this.props,
-				{_numOfItems} = this.state,
+				{numOfItems} = this.state,
 				{itemPositions} = this,
-				childNode = this.itemContainerRef.current.children[index % _numOfItems];
+				childNode = this.itemContainerRef.current.children[index % numOfItems];
 
 			if (childNode && itemPositions[index]) {
 				const position = itemPositions[index].position;
@@ -998,15 +956,15 @@ const itemSizesShape = PropTypes.shape({
 		updateScrollBoundsWithItemPositions () {
 			const
 				{dataSize, itemSizes, spacing} = this.props,
-				{firstIndex, _numOfItems} = this.state,
-				{_isPrimaryDirectionVertical, itemPositions} = this,
-				scrollBoundsDimension = _isPrimaryDirectionVertical ? 'scrollHeight' : 'scrollWidth';
+				{firstIndex, numOfItems} = this.state,
+				{isPrimaryDirectionVertical, itemPositions} = this,
+				scrollBoundsDimension = isPrimaryDirectionVertical ? 'scrollHeight' : 'scrollWidth';
 
 			if (itemPositions.length === dataSize) { // all item sizes are known
 				this.scrollBounds[scrollBoundsDimension] =
 					itemSizes.reduce((acc, cur) => acc + cur, 0) + (dataSize - 1) * spacing;
 			} else {
-				for (let index = firstIndex + _numOfItems - 1; index < dataSize; index++) {
+				for (let index = firstIndex + numOfItems - 1; index < dataSize; index++) {
 					const nextInfo = itemPositions[index + 1];
 					if (!nextInfo) {
 						const endPosition = this.getItemBottomPosition(index);
@@ -1027,8 +985,8 @@ const itemSizesShape = PropTypes.shape({
 			if (this.itemContainerRef.current) {
 				const
 					{dataSize} = this.props,
-					{firstIndex, _numOfItems} = this.state,
-					lastIndex = firstIndex + _numOfItems - 1;
+					{firstIndex, numOfItems} = this.state,
+					lastIndex = firstIndex + numOfItems - 1;
 
 				// Cache individually sized item positions
 				// and adjust item DOM element positions
@@ -1047,14 +1005,14 @@ const itemSizesShape = PropTypes.shape({
 				this.setContainerSize();
 
 				// Update moreInfo based on this.itemPositions
-				this.updateMoreInfo(dataSize, this._scrollPosition);
+				this.updateMoreInfo(dataSize, this.scrollPosition);
 			}
 		}
 
 		getItemNode = (index) => {
 			const ref = this.itemContainerRef.current;
 
-			return ref ? ref.children[index % this.state._numOfItems] : null;
+			return ref ? ref.children[index % this.state.numOfItems] : null;
 		}
 
 		composeStyle (width, height, primaryPosition, secondaryPosition) {
@@ -1077,7 +1035,7 @@ const itemSizesShape = PropTypes.shape({
 		applyStyleToNewNode = (index, ...rest) => {
 			const
 				{itemRenderer, getComponentProps} = this.props,
-				key = index % this.state._numOfItems,
+				key = index % this.state.numOfItems,
 				itemElement = itemRenderer({
 					...this.props.childProps,
 					key,
@@ -1093,19 +1051,19 @@ const itemSizesShape = PropTypes.shape({
 		}
 
 		applyStyleToHideNode = (index) => {
-			const key = index % this.state._numOfItems;
+			const key = index % this.state.numOfItems;
 			this.cc[key] = <div key={key} style={{display: 'none'}} />;
 		}
 
 		positionItems () {
 			const
 				{dataSize, itemSizes} = this.props,
-				{firstIndex, _numOfItems} = this.state,
-				{cc, _isPrimaryDirectionVertical, _dimensionToExtent, _primary, secondary, itemPositions} = this;
+				{firstIndex, numOfItems} = this.state,
+				{cc, isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, itemPositions} = this;
 			let
 				hideTo = 0,
 				updateFrom = cc.length ? this.state.updateFrom : firstIndex,
-				updateTo = cc.length ? this.state.updateTo : firstIndex + _numOfItems;
+				updateTo = cc.length ? this.state.updateTo : firstIndex + numOfItems;
 
 			if (updateFrom >= updateTo) {
 				return;
@@ -1118,14 +1076,14 @@ const itemSizesShape = PropTypes.shape({
 				width, height,
 				{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom);
 
-			width = (_isPrimaryDirectionVertical ? secondary.itemSize : _primary.itemSize) + 'px';
-			height = (_isPrimaryDirectionVertical ? _primary.itemSize : secondary.itemSize) + 'px';
+			width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
+			height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
 
 			// positioning items
-			for (let i = updateFrom, j = updateFrom % _dimensionToExtent; i < updateTo; i++) {
+			for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
 				this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
 
-				if (++j === _dimensionToExtent) {
+				if (++j === dimensionToExtent) {
 					secondaryPosition = 0;
 
 					if (this.props.itemSizes) {
@@ -1134,10 +1092,10 @@ const itemSizesShape = PropTypes.shape({
 						} else if (itemSizes[i]) {
 							primaryPosition += itemSizes[i] + this.props.spacing;
 						} else {
-							primaryPosition += _primary.gridSize;
+							primaryPosition += primary.gridSize;
 						}
 					} else {
-						primaryPosition += _primary.gridSize;
+						primaryPosition += primary.gridSize;
 					}
 
 					j = 0;
@@ -1151,19 +1109,19 @@ const itemSizesShape = PropTypes.shape({
 			}
 		}
 
-		getScrollHeight = () => (this._isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
+		getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
 
-		getScrollWidth = () => (this._isPrimaryDirectionVertical ? this.scrollBounds.clientWidth : this.getVirtualScrollDimension())
+		getScrollWidth = () => (this.isPrimaryDirectionVertical ? this.scrollBounds.clientWidth : this.getVirtualScrollDimension())
 
 		getVirtualScrollDimension = () => {
 			if (this.props.itemSizes) {
 				return this.props.itemSizes.reduce((total, size, index) => (total + size + (index > 0 ? this.props.spacing : 0)), 0);
 			} else {
 				const
-					{_dimensionToExtent, _primary, curDataSize} = this,
+					{dimensionToExtent, primary, curDataSize} = this,
 					{spacing} = this.props;
 
-				return (Math.ceil(curDataSize / _dimensionToExtent) * _primary.gridSize) - spacing;
+				return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
 			}
 		}
 
@@ -1196,7 +1154,7 @@ const itemSizesShape = PropTypes.shape({
 			let containerClass = null;
 
 			if (this.props.type === Native) {
-				containerClass = this._isPrimaryDirectionVertical ? css.vertical : css.horizontal;
+				containerClass = this.isPrimaryDirectionVertical ? css.vertical : css.horizontal;
 			}
 
 			return classNames(css.virtualList, containerClass, className);
@@ -1209,7 +1167,7 @@ const itemSizesShape = PropTypes.shape({
 		render () {
 			const
 				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, ...rest} = this.props,
-				{cc, itemContainerRef, _primary} = this,
+				{cc, itemContainerRef, primary} = this,
 				containerClasses = this.getContainerClasses(className),
 				contentClasses = this.getContentClasses();
 
@@ -1232,14 +1190,14 @@ const itemSizesShape = PropTypes.shape({
 			delete rest.updateStatesAndBounds;
 			delete rest.itemSizes;
 
-			if (_primary) {
+			if (primary) {
 				this.positionItems();
 			}
 
 			return (
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.props.uiChildContainerRef} style={style}>
 					<div {...rest} className={contentClasses} ref={this.contentRef}>
-						{itemsRenderer({cc, itemContainerRef, _primary})}
+						{itemsRenderer({cc, itemContainerRef, primary})}
 					</div>
 				</div>
 			);
@@ -1311,29 +1269,29 @@ const itemSizesShape = PropTypes.shape({
 
 // 	const [updateFromTo, setUpdateFromTo] = useState({from: 0, to: 0});
 // 	const [firstIndex, setFirstIndex] = useState(0);
-// 	const [_numOfItems, setNumOfItems] = useState(0);
+// 	const [numOfItems, setNumOfItems] = useState(0);
 
 // 	// Mutable value
 
 // 	const variables = useRef({
 // 		isMounted: false,
 
-// 		_primary: null,
+// 		primary: null,
 // 		secondary: null,
 
-// 		_isPrimaryDirectionVertical: true,
+// 		isPrimaryDirectionVertical: true,
 // 		isItemSized: false,
 
 // 		shouldUpdateBounds: false,
 
-// 		_dimensionToExtent: 0,
+// 		dimensionToExtent: 0,
 // 		threshold: 0,
 // 		maxFirstIndex: 0,
 // 		curDataSize: 0,
-// 		_hasDataSizeChanged: false,
+// 		hasDataSizeChanged: false,
 // 		cc: [],
-// 		_scrollPosition: 0,
-// 		_scrollPositionTarget: 0,
+// 		scrollPosition: 0,
+// 		scrollPositionTarget: 0,
 
 // 		// For individually sized item
 // 		itemPositions: [],
@@ -1356,7 +1314,7 @@ const itemSizesShape = PropTypes.shape({
 // 		prevState: {
 // 			updateFromTo: {from: 0, to: 0},
 // 			firstIndex: 0,
-// 			_numOfItems: 0
+// 			numOfItems: 0
 // 		}
 // 	});
 
@@ -1374,7 +1332,7 @@ const itemSizesShape = PropTypes.shape({
 // 		getItemTopPositionFromPreviousItemBottomPosition
 // 	} = useVirtualMetrics(props, instance, {cbCalculateAndCacheItemPosition});
 
-// 	const {getMoreInfo, updateMoreInfo} = useMoreInfo(props, instance, {getItemBottomPosition, _numOfItems});
+// 	const {getMoreInfo, updateMoreInfo} = useMoreInfo(props, instance, {getItemBottomPosition, numOfItems});
 
 // 	const {
 // 		calculateMetrics,
@@ -1384,7 +1342,7 @@ const itemSizesShape = PropTypes.shape({
 // 		syncClientSize,
 // 		syncThreshold,
 // 		updateScrollBoundsWithItemPositions
-// 	} = useCalculateMetrics(props, instance, {getItemBottomPosition, getMoreInfo, _numOfItems, setFirstIndex, setNumOfItems, updateMoreInfo});
+// 	} = useCalculateMetrics(props, instance, {getItemBottomPosition, getMoreInfo, numOfItems, setFirstIndex, setNumOfItems, updateMoreInfo});
 
 // 	if (props.clientSize && variables.current.isMounted === false) {
 // 		calculateMetrics(props);
@@ -1400,9 +1358,9 @@ const itemSizesShape = PropTypes.shape({
 // 		updateScrollPosition
 // 	} = useScrollPosition(props, instance, {getScrollBounds, setFirstIndex, syncThreshold, updateMoreInfo, updateScrollBoundsWithItemPositions});
 
-// 	const {positionItems} = usePositionItems(props, instance, {getGridPosition, getXY, _numOfItems, updateScrollBoundsWithItemPositions});
+// 	const {positionItems} = usePositionItems(props, instance, {getGridPosition, getXY, numOfItems, updateScrollBoundsWithItemPositions});
 
-// 	const {adjustItemPositionWithItemSize, calculateAndCacheItemPosition} = useDifferentSizeItems(props, instance, {getItemBottomPosition, getItemTopPositionFromPreviousItemBottomPosition, _numOfItems, setContainerSize, updateMoreInfo});
+// 	const {adjustItemPositionWithItemSize, calculateAndCacheItemPosition} = useDifferentSizeItems(props, instance, {getItemBottomPosition, getItemTopPositionFromPreviousItemBottomPosition, numOfItems, setContainerSize, updateMoreInfo});
 // 	cbCalculateAndCacheItemPosition.fn = calculateAndCacheItemPosition;
 
 // 	// getDerivedStateFromProps
@@ -1414,24 +1372,24 @@ const itemSizesShape = PropTypes.shape({
 // 				prevChildProps !== props.childProps	// TODO : Reconsider this comparison is actually meaningful.
 // 			),
 // 			diff = firstIndex - prevFirstIndex,
-// 			newUpdateTo = (-_numOfItems >= diff || diff > 0 || shouldInvalidate) ? firstIndex + _numOfItems : prevFirstIndex,
-// 			newUpdateFrom = (0 >= diff || diff >= _numOfItems || shouldInvalidate) ? firstIndex : prevFirstIndex + _numOfItems;
+// 			newUpdateTo = (-numOfItems >= diff || diff > 0 || shouldInvalidate) ? firstIndex + numOfItems : prevFirstIndex,
+// 			newUpdateFrom = (0 >= diff || diff >= numOfItems || shouldInvalidate) ? firstIndex : prevFirstIndex + numOfItems;
 
 // 		if (updateFromTo.from !== newUpdateFrom || updateFromTo.to !== newUpdateTo) {
 // 			setUpdateFromTo({from: newUpdateFrom, to: newUpdateTo});
 // 		}
 // 		variables.current.prevChildProps = props.childProps;
 // 		variables.current.prevFirstIndex = firstIndex;
-// 	}, [firstIndex, _numOfItems, props.childProps, updateFromTo]);
+// 	}, [firstIndex, numOfItems, props.childProps, updateFromTo]);
 
 // 	const emitUpdateItems = useCallback(() => {
 // 		const {dataSize} = props;
 
 // 		forward('onUpdateItems', {
 // 			firstIndex: firstIndex,
-// 			lastIndex: Math.min(firstIndex + _numOfItems, dataSize)
+// 			lastIndex: Math.min(firstIndex + numOfItems, dataSize)
 // 		}, props);
-// 	}, [props, firstIndex, _numOfItems]);
+// 	}, [props, firstIndex, numOfItems]);
 
 // 	// Calculate metrics for VirtualList after the 1st render to know client W/H.
 // 	useEffect(() => {
@@ -1450,10 +1408,10 @@ const itemSizesShape = PropTypes.shape({
 // 	}, []);
 
 // 	useEffect(() => {
-// 		if (variables.current.prevState.firstIndex !== firstIndex || variables.current.prevState._numOfItems !== _numOfItems) {
+// 		if (variables.current.prevState.firstIndex !== firstIndex || variables.current.prevState.numOfItems !== numOfItems) {
 // 			emitUpdateItems();
 // 		}
-// 	}, [firstIndex, _numOfItems, emitUpdateItems, variables.current.prevState.firstIndex, variables.current.prevState._numOfItems]); // eslint-disable-line react-hooks/exhaustive-deps
+// 	}, [firstIndex, numOfItems, emitUpdateItems, variables.current.prevState.firstIndex, variables.current.prevState.numOfItems]); // eslint-disable-line react-hooks/exhaustive-deps
 
 // 	useEffect(() => {
 // 		variables.current.deferScrollTo = false;
@@ -1481,7 +1439,7 @@ const itemSizesShape = PropTypes.shape({
 // 					// Currently we support expandable items in only vertical VirtualList.
 // 					// So the top and bottom of the boundaries are checked.
 // 					const
-// 						scrollBounds = {top: variables.current._scrollPosition, bottom: variables.current._scrollPosition + variables.current.scrollBounds.clientHeight},
+// 						scrollBounds = {top: variables.current.scrollPosition, bottom: variables.current.scrollPosition + variables.current.scrollBounds.clientHeight},
 // 						itemBounds = {top: getGridPosition(indexToScrollIntoView).primaryPosition, bottom: getItemBottomPosition(indexToScrollIntoView)};
 
 // 					if (itemBounds.top < scrollBounds.top) {
@@ -1513,7 +1471,7 @@ const itemSizesShape = PropTypes.shape({
 // 			prevProps.spacing !== props.spacing ||
 // 			!equals(prevProps.itemSize, props.itemSize)
 // 		) {
-// 			const {x, y} = getXY(variables.current._scrollPosition, 0);
+// 			const {x, y} = getXY(variables.current.scrollPosition, 0);
 
 // 			calculateMetrics(props);
 // 			setStatesAndUpdateBounds();
@@ -1536,10 +1494,10 @@ const itemSizesShape = PropTypes.shape({
 // 	// This part made bug that initial rendering is not done util scroll (ahn)
 
 // 	useEffect(() => {
-// 		// TODO: remove `_hasDataSizeChanged` and fix ui/Scrollable*
-// 		variables.current._hasDataSizeChanged = (variables.current.prevProps.dataSize !== props.dataSize);
+// 		// TODO: remove `hasDataSizeChanged` and fix ui/Scrollable*
+// 		variables.current.hasDataSizeChanged= (variables.current.prevProps.dataSize !== props.dataSize);
 
-// 		if (!variables.current.deferScrollTo && variables.current._hasDataSizeChanged) {
+// 		if (!variables.current.deferScrollTo && variables.current.hasDataSizeChanged) {
 // 			setStatesAndUpdateBounds();
 
 // 			setContainerSize();
@@ -1551,16 +1509,16 @@ const itemSizesShape = PropTypes.shape({
 // 	useEffect(() => {
 // 		// else if (prevProps.rtl !== this.props.rtl)
 // 		if (!variables.current.deferScrollTo) {
-// 			updateScrollPosition(getXY(variables.current._scrollPosition, 0));
+// 			updateScrollPosition(getXY(variables.current.scrollPosition, 0));
 // 		}
 // 	}, [getXY, props.rtl, updateScrollPosition]);
 
 // 	useEffect(() => {
 // 		const scrollBounds = getScrollBounds();
-// 		const maxPos = variables.current._isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
+// 		const maxPos = variables.current.isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
 
-// 		if (!variables.current.deferScroll && variables.current._scrollPosition > maxPos) {
-// 			props.cbScrollTo({position: (variables.current._isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
+// 		if (!variables.current.deferScroll && variables.current.scrollPosition > maxPos) {
+// 			props.cbScrollTo({position: (variables.current.isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 // 		}
 // 	});
 
@@ -1569,8 +1527,8 @@ const itemSizesShape = PropTypes.shape({
 // 	const adapter = {
 // 		calculateMetrics,
 // 		didScroll,
-// 		get _dimensionToExtent () {
-// 			return variables.current._dimensionToExtent;
+// 		get dimensionToExtent() {
+// 			return variables.current.dimensionToExtent;
 // 		},
 // 		getGridPosition,
 // 		getItemBottomPosition,
@@ -1579,29 +1537,29 @@ const itemSizesShape = PropTypes.shape({
 // 		getMoreInfo,
 // 		getScrollBounds,
 // 		gridPositionToItemPosition,
-// 		get _hasDataSizeChanged () {
-// 			return variables.current._hasDataSizeChanged;
+// 		get hasDataSizeChanged() {
+// 			return variables.current.hasDataSizeChanged;
 // 		},
 // 		isHorizontal,
-// 		get _isPrimaryDirectionVertical () {
-// 			return variables.current._isPrimaryDirectionVertical;
+// 		get isPrimaryDirectionVertical () {
+// 			return variables.current.isPrimaryDirectionVertical;
 // 		},
 // 		isVertical,
 // 		get itemPositions () {
 // 			return variables.current.itemPositions;
 // 		},
-// 		get _numOfItems () {
-// 			return _numOfItems;
+// 		get numOfItems () {
+// 			return numOfItems;
 // 		},
-// 		get _primary () {
-// 			return variables.current._primary;
+// 		get primary () {
+// 			return variables.current.primary;
 // 		},
 // 		props,
-// 		get _scrollPosition () {
-// 			return variables.current._scrollPosition;
+// 		get scrollPosition () {
+// 			return variables.current.scrollPosition;
 // 		},
-// 		get _scrollPositionTarget () {
-// 			return variables.current._scrollPositionTarget;
+// 		get scrollPositionTarget () {
+// 			return variables.current.scrollPositionTarget;
 // 		},
 // 		scrollToPosition,
 // 		setScrollPosition,
@@ -1614,17 +1572,17 @@ const itemSizesShape = PropTypes.shape({
 // 	// Functions
 
 // 	function isVertical () {
-// 		return variables.current._isPrimaryDirectionVertical;
+// 		return variables.current.isPrimaryDirectionVertical;
 // 	}
 
 // 	function isHorizontal () {
-// 		return !variables.current._isPrimaryDirectionVertical;
+// 		return !variables.current.isPrimaryDirectionVertical;
 // 	}
 
 // 	function getItemNode (index) {
 // 		const ref = itemContainerRef.current;
 
-// 		return ref ? ref.children[index % _numOfItems] : null;
+// 		return ref ? ref.children[index % numOfItems] : null;
 // 	}
 
 // 	// Render
@@ -1633,7 +1591,7 @@ const itemSizesShape = PropTypes.shape({
 // 		{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, ...rest} = props,
 // 		containerClasses = classNames(
 // 			css.virtualList,
-// 			(type === 'Native') ? (variables.current._isPrimaryDirectionVertical && css.vertical || css.horizontal) : null,
+// 			(type === 'Native') ? (variables.current.isPrimaryDirectionVertical && css.vertical || css.horizontal) : null,
 // 			className
 // 		),
 // 		contentClasses = (type === 'Native') ? null : css.content;
@@ -1662,7 +1620,7 @@ const itemSizesShape = PropTypes.shape({
 // 	delete rest.uiChildContainerRef;
 // 	delete rest.updateStatesAndBounds;
 
-// 	if (variables.current._primary) {
+// 	if (variables.current.primary) {
 // 		positionItems();
 // 	}
 
@@ -1678,13 +1636,13 @@ const itemSizesShape = PropTypes.shape({
 // 	variables.current.prevState = {
 // 		updateFromTo: {...updateFromTo},
 // 		firstIndex,
-// 		_numOfItems
+// 		numOfItems
 // 	};
 
 // 	return (
 // 		<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={uiChildContainerRef} style={style}>
 // 			<div {...rest} className={contentClasses} ref={contentRef}>
-// 				{itemsRenderer({cc: variables.current.cc, itemContainerRef, _primary: variables.current._primary})}
+// 				{itemsRenderer({cc: variables.current.cc, itemContainerRef, primary: variables.current.primary})}
 // 			</div>
 // 		</div>
 // 	);
