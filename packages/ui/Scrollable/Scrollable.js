@@ -75,7 +75,7 @@ const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
  * @ui
  * @private
  */
-const useScroller = (props) => {
+const useScroll = (props) => {
 	const {
 		decorateChildProps,
 		horizontalScrollbarRef,
@@ -158,14 +158,14 @@ const useScroller = (props) => {
 		dragStartY: null,
 		scrollStopJob: null,
 
-		isScrollbarVisibleChanged: false
+		prevState: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible}
 	});
 
 	if (variables.current.animator == null) {
 		variables.current.animator = new ScrollAnimator();
 	}
 
-	{// useEffect(() => { // FIXME
+	useEffect(() => {
 		if (props.setUiScrollableAdapter) {
 			props.setUiScrollableAdapter({
 				animator: variables.current.animator,
@@ -225,7 +225,32 @@ const useScroller = (props) => {
 				}
 			});
 		}
-	}// }, []); // FIXME
+
+		variables.current.resizeRegistry.parent = context;
+
+		// componentWillUnmount
+		return () => {
+			const {animator, resizeRegistry, scrolling, scrollStopJob} = variables.current;
+
+			resizeRegistry.parent = null;
+
+			// Before call cancelAnimationFrame, you must send scrollStop Event.
+			if (scrolling) {
+				forwardScrollEvent('onScrollStop', getReachedEdgeInfo());
+			}
+
+			scrollStopJob.stop();
+
+			// JS [
+			if (animator.isAnimating()) {
+				animator.stop();
+			}
+			// JS ]
+
+			removeEventListeners();
+		};
+
+	}, []);
 
 	const
 		{className, noScrollByDrag, rtl, style, ...rest} = props,
@@ -308,35 +333,11 @@ const useScroller = (props) => {
 		}
 	}
 
-	// props.cbScrollTo(scrollTo); // TBD
-
 	useEffect(() => {
-		const {animator, resizeRegistry, scrolling, scrollStopJob} = variables.current;
+		const
+			{hasDataSizeChanged} = uiChildAdapter.current,
+			{deferScrollTo, prevState, resizeRegistry, scrollToInfo} = variables.current;
 
-		variables.current.resizeRegistry.parent = context;
-
-		updateScrollbars();
-
-		// componentWillUnmount
-		return () => {
-			resizeRegistry.parent = null;
-
-			// Before call cancelAnimationFrame, you must send scrollStop Event.
-			if (scrolling) {
-				forwardScrollEvent('onScrollStop', getReachedEdgeInfo());
-			}
-
-			scrollStopJob.stop();
-
-			// JS [
-			if (animator.isAnimating()) {
-				animator.stop();
-			}
-			// JS ]
-		};
-	}); // esline-disable-next-line react-hooks/exhaustive-deps
-
-	useEffect(() => {
 		// Need to sync calculated client size if it is different from the real size
 		if (uiChildAdapter.current.syncClientSize) {
 			// If we actually synced, we need to reset scroll position.
@@ -350,36 +351,36 @@ const useScroller = (props) => {
 
 		addEventListeners();
 
-		variables.current.isScrollbarVisibleChanged = false;
-
-		return () => removeEventListeners();
-	});
-
-	useEffect(() => {
-		const {hasDataSizeChanged} = uiChildAdapter.current;
-
 		if (
 			hasDataSizeChanged === false &&
-			(isHorizontalScrollbarVisible || isVerticalScrollbarVisible)
+			(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
 		) {
-			variables.current.isScrollbarVisibleChanged = true;
 			variables.current.deferScrollTo = false;
 			variables.current.isUpdatedScrollThumb = updateScrollThumbSize();
-		}
-	}); // esline-disable-next-line react-hooks/exhaustive-deps
-
-	useEffect(() => {
-		if (variables.current.isScrollbarVisibleChanged === false) {
+		} else {
 			updateScrollbars();
 		}
 
-		if (variables.current.scrollToInfo !== null) {
-			if (!variables.current.deferScrollTo) {
-				scrollTo(variables.current.scrollToInfo);
+		if (scrollToInfo !== null) {
+			if (!deferScrollTo) {
+				scrollTo(scrollToInfo);
 			}
 		}
 
 		// publish container resize changes
+		const horizontal = isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
+		const vertical = isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
+		if (horizontal || vertical) {
+			resizeRegistry.notify({});
+		}
+
+	}); // esline-disable-next-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
+
+
+
+
 		variables.current.resizeRegistry.notify({});
 	});
 
@@ -1481,6 +1482,11 @@ const useScroller = (props) => {
 		value: variables.current.resizeRegistry.register
 	});
 
+	variables.current.prevState = {
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible
+	};
+
 	return {
 		childWrapper: noScrollByDrag ? 'div' : TouchableDiv,
 		isHorizontalScrollbarVisible,
@@ -1885,5 +1891,5 @@ export {
 	constants,
 	Scrollable,
 	ScrollableBase,
-	useScroller
+	useScroll
 };

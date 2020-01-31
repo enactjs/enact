@@ -1,5 +1,5 @@
 import useChildAdapter from './useChildAdapter';
-import {useScroller} from './Scrollable';
+import {useScroll} from './Scrollable';
 
 import warning from 'warning';
 import {useRef} from 'react';
@@ -65,7 +65,7 @@ const useChildPropsDecorator = (props) => {
 		childWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
-	} = useScroller({
+	} = useScroll({
 		...props,
 		decorateChildProps,
 		get horizontalScrollbarRef () {

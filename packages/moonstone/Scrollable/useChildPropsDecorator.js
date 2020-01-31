@@ -1,5 +1,5 @@
 import platform from '@enact/core/platform';
-import {useScroller} from '@enact/ui/Scrollable';
+import {useScroll} from '@enact/ui/Scrollable';
 import {useChildAdapter as useUiChildAdapter} from '@enact/ui/Scrollable/useChildAdapter';
 import {utilDecorateChildProps} from '@enact/ui/Scrollable/useChildPropsDecorator';
 import useScrollableAdapter from '@enact/ui/Scrollable/useScrollableAdapter';
@@ -160,7 +160,7 @@ const useChildPropsDecorator = (props) => {
 		childWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
-	} = useScroller({
+	} = useScroll({
 		...rest,
 		...scrollableBaseProp,
 		decorateChildProps,
