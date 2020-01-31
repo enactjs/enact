@@ -23,3 +23,6 @@ script:
     - cd packages/sampler
     - npm run pack
     - echo -e "\x1b\x5b35;1m*** sampler build complete\x1b\x5b0m"
+    - echo -e "\x1b\x5b35;1m*** Starting docs validation...\x1b\x5b0m"
+    - npm run validate-docs
+    - echo -e "\x1b\x5b35;1m*** Docs validation complete\x1b\x5b0m"
