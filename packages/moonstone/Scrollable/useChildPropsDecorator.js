@@ -191,11 +191,11 @@ const useChildPropsDecorator = (props) => {
 	});
 
 	decorateChildProps('scrollableContainerProps', {ref: scrollableContainerRef});
-	decorateChildProps('flexLayoutProps', {ref: scrollableContainerRef});
-	decorateChildProps('childWrapperProps', {ref: overscrollRefs.vertical});
+	decorateChildProps('flexLayoutProps', {ref: overscrollRefs.vertical});
+	decorateChildProps('childWrapperProps', {ref: overscrollRefs.horizontal});
 	decorateChildProps('childProps', {uiChildAdapter, uiChildContainerRef});
 	decorateChildProps('verticalScrollbarProps', {ref: verticalScrollbarRef});
-	decorateChildProps('horizontalScrollbarProp', {ref: horizontalScrollbarRef});
+	decorateChildProps('horizontalScrollbarProps', {ref: horizontalScrollbarRef});
 
 	return {
 		...decoratedChildProps,
