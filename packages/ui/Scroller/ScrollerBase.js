@@ -1,11 +1,6 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React, {useEffect} from 'react';
-
-import useForceUpdate from '../Scrollable/useForceUpdate';
-
-import useCalculateMetrics from './useCalculateMetrics';
-import useScrollPosition from './useScrollPosition';
+import React, {} from 'react';
 
 import css from './Scroller.module.less';
 
@@ -19,62 +14,128 @@ import css from './Scroller.module.less';
  * @ui
  * @public
  */
-const ScrollerBase = (props) => {
-	const {className, direction, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, setUiChildAdapter, style, uiChildContainerRef, ...rest} = props;
-	const mergedStyle = {
-		...style,
-		overflowX: isHorizontal() ? 'auto' : 'hidden',
-		overflowY: isVertical() ? 'auto' : 'hidden'
-	};
+class ScrollerBase extends React.Component {
+	static displayName = 'ui:ScrollerBase'
 
-	// Hooks
+	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
+		children: PropTypes.node.isRequired,
 
-	const instance = {uiChildContainerRef};
+		/**
+		 * Callback method of scrollTo.
+		 * Normally, `Scrollable` should set this value.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		cbScrollTo: PropTypes.func,
 
-	const [, forceUpdate] = useForceUpdate();
+		/**
+		 * Direction of the scroller.
+		 *
+		 * Valid values are:
+		 * * `'both'`,
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
+		 *
+		 * @type {String}
+		 * @default 'both'
+		 * @public
+		 */
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
-	useEffect(() => {
-		// TODO: Check this code is still needed.  This code introduced from #1618. (ahn)
-		forceUpdate();
-	}, [forceUpdate, isHorizontalScrollbarVisible, isVerticalScrollbarVisible]);
+		/**
+		 * Prop to check context value if Scrollbar exists or not.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		isVerticalScrollbarVisible: PropTypes.bool,
 
-	const {calculateMetrics, getRtlPositionX, getScrollBounds} = useCalculateMetrics(rest, instance);
+		/**
+		 * `true` if RTL, `false` if LTR.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool
+	}
 
-	const {
-		getScrollPos,
-		setScrollPosition,
-		scrollToPosition,
-		didScroll
-	} = useScrollPosition(rest, instance, {getRtlPositionX, isHorizontal, isVertical});
+	static defaultProps = {
+		direction: 'both'
+	}
 
-	// setUiChildAdapter
+	constructor (props) {
+		super(props);
 
-	const adapter = {
-		calculateMetrics,
-		didScroll,
-		getNodePosition,
-		getScrollBounds,
-		isHorizontal,
-		isVertical,
-		get scrollPos () {
-			return getScrollPos();
-		},
-		scrollToPosition,
-		setScrollPosition
-	};
-	useEffect(() => {
-		setUiChildAdapter(adapter);
-	}, [adapter, rest, setUiChildAdapter]);
+		props.setUiChildAdapter(this);
+	}
 
-	// Functions
+	componentDidMount () {
+		this.calculateMetrics();
+	}
 
-	function getNodePosition (node) {
+	componentDidUpdate (prevProps) {
+		this.calculateMetrics();
+		if (this.props.isVerticalScrollbarVisible && !prevProps.isVerticalScrollbarVisible) {
+			this.forceUpdate();
+		}
+	}
+
+	scrollBounds = {
+		clientWidth: 0,
+		clientHeight: 0,
+		scrollWidth: 0,
+		scrollHeight: 0,
+		maxLeft: 0,
+		maxTop: 0
+	}
+
+	scrollPos = {
+		top: 0,
+		left: 0
+	}
+
+	getScrollBounds = () => this.scrollBounds
+
+	getRtlPositionX = (x) => {
+		if (this.props.rtl) {
+			return (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
+		}
+		return x;
+	}
+
+	// for Scrollable
+	setScrollPosition (x, y) {
+		const node = this.props.uiChildContainerRef.current;
+
+		if (this.isVertical()) {
+			node.scrollTop = y;
+			this.scrollPos.top = y;
+		}
+		if (this.isHorizontal()) {
+			node.scrollLeft = this.getRtlPositionX(x);
+			this.scrollPos.left = x;
+		}
+	}
+
+	// for ScrollableNative
+	scrollToPosition (x, y) {
+		this.props.uiChildContainerRef.current.scrollTo(this.getRtlPositionX(x), y);
+	}
+
+	// for ScrollableNative
+	didScroll (x, y) {
+		this.scrollPos.left = x;
+		this.scrollPos.top = y;
+	}
+
+	getNodePosition = (node) => {
 		const
 			{left: nodeLeft, top: nodeTop, height: nodeHeight, width: nodeWidth} = node.getBoundingClientRect(),
-			{left: containerLeft, top: containerTop} = uiChildContainerRef.current.getBoundingClientRect(),
-			{scrollLeft, scrollTop} = uiChildContainerRef.current,
-			left = isHorizontal() ? (scrollLeft + nodeLeft - containerLeft) : null,
-			top = isVertical() ? (scrollTop + nodeTop - containerTop) : null;
+			{left: containerLeft, top: containerTop} = this.props.uiChildContainerRef.current.getBoundingClientRect(),
+			{scrollLeft, scrollTop} = this.props.uiChildContainerRef.current,
+			left = this.isHorizontal() ? (scrollLeft + nodeLeft - containerLeft) : null,
+			top = this.isVertical() ? (scrollTop + nodeTop - containerTop) : null;
 
 		return {
 			left,
@@ -84,30 +145,50 @@ const ScrollerBase = (props) => {
 		};
 	}
 
-	function isVertical () {
-		return (direction !== 'horizontal');
+	isVertical = () => {
+		return (this.props.direction !== 'horizontal');
 	}
 
-	function isHorizontal () {
-		return (direction !== 'vertical');
+	isHorizontal = () => {
+		return (this.props.direction !== 'vertical');
 	}
 
-	// Render
+	calculateMetrics () {
+		const
+			{scrollBounds} = this,
+			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.props.uiChildContainerRef.current;
+		scrollBounds.scrollWidth = scrollWidth;
+		scrollBounds.scrollHeight = scrollHeight;
+		scrollBounds.clientWidth = clientWidth;
+		scrollBounds.clientHeight = clientHeight;
+		scrollBounds.maxLeft = Math.max(0, scrollWidth - clientWidth);
+		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
+	}
 
-	delete rest.cbScrollTo;
-	delete rest.dangerouslyContainsInScrollable;
-	delete rest.rtl;
-	delete rest.uiChildAdapter;
+	render () {
+		const
+			{className, style, ...rest} = this.props,
+			mergedStyle = Object.assign({}, style, {
+				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
+				overflowY: this.isVertical() ? 'auto' : 'hidden'
+			});
 
-	return (
-		<div
-			{...rest}
-			className={classNames(className, css.scroller)}
-			ref={uiChildContainerRef}
-			style={mergedStyle}
-		/>
-	);
-};
+		delete rest.cbScrollTo;
+		delete rest.direction;
+		delete rest.rtl;
+		delete rest.isHorizontalScrollbarVisible;
+		delete rest.isVerticalScrollbarVisible;
+
+		return (
+			<div
+				{...rest}
+				className={classNames(className, css.scroller)}
+				ref={this.props.uiChildContainerRef}
+				style={mergedStyle}
+			/>
+		);
+	}
+}
 
 ScrollerBase.displayName = 'ui:ScrollerBase';
 
