@@ -376,14 +376,6 @@ const useScroll = (props) => {
 
 	}); // esline-disable-next-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
-
-
-
-
-		variables.current.resizeRegistry.notify({});
-	});
-
 	// JS [[
 	function clampScrollPosition () {
 		const bounds = getScrollBounds();
