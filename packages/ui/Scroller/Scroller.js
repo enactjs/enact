@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {ResizeContext} from '../Resizable';
-import useScroll from '../Scrollable/useScroll';
+import useScroll from '../Scrollable';
 import Scrollbar from '../Scrollable/Scrollbar';
 
 import css from './Scroller.module.less';
@@ -71,7 +71,17 @@ class ScrollerBase extends React.Component {
 		 * @type {Boolean}
 		 * @private
 		 */
-		rtl: PropTypes.bool
+		rtl: PropTypes.bool,
+
+		/**
+		 * TBD
+		 */
+		setUiChildAdapter: PropTypes.func,
+
+		/**
+		 * TBD
+		 */
+		uiChildContainerRef: PropTypes.object
 	}
 
 	static defaultProps = {
@@ -188,6 +198,7 @@ class ScrollerBase extends React.Component {
 			});
 
 		delete rest.cbScrollTo;
+		delete rest.dangerouslyContainsInScrollable;
 		delete rest.direction;
 		delete rest.rtl;
 		delete rest.setChildAdapter;
@@ -207,153 +218,6 @@ class ScrollerBase extends React.Component {
 		);
 	}
 }
-
-ScrollerBase.displayName = 'ui:ScrollerBase';
-
-ScrollerBase.propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
-	children: PropTypes.node.isRequired,
-
-	/**
-	 * Callback method of scrollTo.
-	 * Normally, `Scrollable` should set this value.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
-	cbScrollTo: PropTypes.func,
-
-	/**
-	 * Direction of the scroller.
-	 *
-	 * Valid values are:
-	 * * `'both'`,
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'both'
-	 * @public
-	 */
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
-
-	/**
-	 * Prop to check context value if Scrollbar exists or not.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 */
-	isHorizontalScrollbarVisible: PropTypes.bool,
-
-	/**
-	 * Prop to check context value if Scrollbar exists or not.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 */
-	isVerticalScrollbarVisible: PropTypes.bool,
-
-	/**
-	 * `true` if RTL, `false` if LTR.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 */
-	rtl: PropTypes.bool,
-
-	setUiChildAdapter: PropTypes.func,
-
-	uiChildContainerRef: PropTypes.object
-};
-
-ScrollerBase.defaultProps = {
-	direction: 'both'
-};
-
-/**
- * An unstyled scroller.
- *
- * Example:
- * ```
- * <Scroller>Scroll me.</Scroller>
- * ```
- *
- * @class Scroller
- * @memberof ui/Scroller
- * @extends ui/Scroller.ScrollerBase
- * @ui
- * @public
- */
-const Scroller = (props) => {
-	// Hooks
-
-	const {
-		childWrapper: ChildWrapper,
-		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible,
-
-		resizeContextProps,
-		scrollableContainerProps,
-		flexLayoutProps,
-		childWrapperProps,
-		childProps,
-		verticalScrollbarProps,
-		horizontalScrollbarProps
-	} = useScroll(props);
-
-	// Return
-
-	return (
-		<ResizeContext.Provider {...resizeContextProps}>
-			<div {...scrollableContainerProps}>
-				<div {...flexLayoutProps}>
-					<ChildWrapper {...childWrapperProps}>
-						<ScrollerBase {...childProps} />
-					</ChildWrapper>
-					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
-				</div>
-				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
-			</div>
-		</ResizeContext.Provider>
-	);
-};
-
-Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
-
-	/**
-	 * Specifies how to show horizontal scrollbar.
-	 *
-	 * Valid values are:
-	 * * `'auto'`,
-	 * * `'visible'`, and
-	 * * `'hidden'`.
-	 *
-	 * @type {String}
-	 * @default 'auto'
-	 * @public
-	 */
-	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
-
-	/**
-	 * Specifies how to show vertical scrollbar.
-	 *
-	 * Valid values are:
-	 * * `'auto'`,
-	 * * `'visible'`, and
-	 * * `'hidden'`.
-	 *
-	 * @type {String}
-	 * @default 'auto'
-	 * @public
-	 */
-	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
-};
-
-Scroller.defaultProps = {
-	direction: 'both',
-	horizontalScrollbar: 'auto',
-	verticalScrollbar: 'auto'
-};
 
 /**
  * A callback function that receives a reference to the `scrollTo` feature.
@@ -502,6 +366,92 @@ Scroller.defaultProps = {
  * @default 'auto'
  * @public
  */
+
+/**
+ * An unstyled scroller.
+ *
+ * Example:
+ * ```
+ * <Scroller>Scroll me.</Scroller>
+ * ```
+ *
+ * @class Scroller
+ * @memberof ui/Scroller
+ * @extends ui/Scroller.ScrollerBase
+ * @ui
+ * @public
+ */
+const Scroller = (props) => {
+	// Hooks
+
+	const {
+		childWrapper: ChildWrapper,
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible,
+
+		resizeContextProps,
+		scrollableContainerProps,
+		flexLayoutProps,
+		childWrapperProps,
+		childProps,
+		verticalScrollbarProps,
+		horizontalScrollbarProps
+	} = useScroll(props);
+
+	// Return
+
+	return (
+		<ResizeContext.Provider {...resizeContextProps}>
+			<div {...scrollableContainerProps}>
+				<div {...flexLayoutProps}>
+					<ChildWrapper {...childWrapperProps}>
+						<ScrollerBase {...childProps} />
+					</ChildWrapper>
+					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
+				</div>
+				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
+			</div>
+		</ResizeContext.Provider>
+	);
+};
+
+Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+	/**
+	 * Specifies how to show horizontal scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+
+	/**
+	 * Specifies how to show vertical scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
+};
+
+Scroller.defaultProps = {
+	direction: 'both',
+	horizontalScrollbar: 'auto',
+	verticalScrollbar: 'auto'
+};
 
 export default Scroller;
 export {

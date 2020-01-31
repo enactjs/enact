@@ -52,7 +52,7 @@ const itemSizesShape = PropTypes.shape({
  */
 // TBD: indentation is broken intentionally to help comparing
 	class VirtualListBase extends Component {
-		/* No displayName here. We set displayName to returned components of this factory function. */
+		displayName = 'ui:VirtualListBase'
 
 		static propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
 			/**
@@ -245,6 +245,16 @@ const itemSizesShape = PropTypes.shape({
 			spacing: PropTypes.number,
 
 			/**
+			 * TBD
+			 */
+			type: PropTypes.string,
+
+			/**
+			 * TBD
+			 */
+			uiChildContainerRef: PropTypes.object,
+
+			/**
 			 * Called to execute additional logic in a themed component when updating states and bounds.
 			 *
 			 * @type {Function}
@@ -259,7 +269,8 @@ const itemSizesShape = PropTypes.shape({
 			direction: 'vertical',
 			overhang: 3,
 			pageScroll: false,
-			spacing: 0
+			spacing: 0,
+			type: 'JS'
 		}
 
 		constructor (props) {
@@ -267,7 +278,6 @@ const itemSizesShape = PropTypes.shape({
 
 			super(props);
 
-			// this.props.uiChildContainerRef = React.createRef();
 			this.contentRef = React.createRef();
 			this.itemContainerRef = React.createRef();
 
@@ -1175,6 +1185,7 @@ const itemSizesShape = PropTypes.shape({
 			delete rest.cbScrollTo;
 			delete rest.childProps;
 			delete rest.clientSize;
+			delete rest.dangerouslyContainsInScrollable;
 			delete rest.dataSize;
 			delete rest.direction;
 			delete rest.getComponentProps;
@@ -1217,10 +1228,12 @@ const itemSizesShape = PropTypes.shape({
  * @memberof ui/VirtualList
  * @ui
  * @public
- */
-VirtualListBase.displayName = 'ui:VirtualListBase';
+ //
 
-VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
+ // TBD: indentation is broken intentionally to help comparing
+ // Need to remove the VirtualListBase propTypes and defaultProps below.
+ //
+VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype // {
 	/**
 	 * The rendering function called for each item in the list.
 	 *
@@ -1246,7 +1259,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 *
 	 * @required
 	 * @public
-	 */
+	 //
 	itemRenderer: PropTypes.func.isRequired,
 
 	/**
@@ -1256,7 +1269,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 * @type {Number|ui/VirtualList.gridListItemSizeShape}
 	 * @required
 	 * @private
-	 */
+	 //
 	itemSize: PropTypes.oneOfType([
 		gridListItemSizeShape,
 		PropTypes.number
@@ -1268,7 +1281,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 * @type {Function}
 	 * @required
 	 * @private
-	 */
+	 //
 	itemsRenderer: PropTypes.func.isRequired,
 
 	/**
@@ -1277,7 +1290,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 *
 	 * @type {Function}
 	 * @private
-	 */
+	 //
 	cbScrollTo: PropTypes.func,
 
 	/**
@@ -1285,7 +1298,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 *
 	 * @type {Object}
 	 * @public
-	 */
+	 //
 	childProps: PropTypes.object,
 
 	/**
@@ -1295,7 +1308,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 * @property {Number}	clientHeight	The client height of the list.
 	 * @property {Number}	clientWidth	The client width of the list.
 	 * @public
-	 */
+	 //
 	clientSize: PropTypes.shape({
 		clientHeight: PropTypes.number.isRequired,
 		clientWidth: PropTypes.number.isRequired
@@ -1306,7 +1319,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 *
 	 * @type {Boolean}
 	 * @public
-	 */
+	 //
 	'data-webos-voice-disabled': PropTypes.bool,
 
 	/**
@@ -1314,7 +1327,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 *
 	 * @type {Boolean}
 	 * @public
-	 */
+	 //
 	'data-webos-voice-focused': PropTypes.bool,
 
 	/**
@@ -1322,7 +1335,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 *
 	 * @type {String}
 	 * @public
-	 */
+	 //
 	'data-webos-voice-group-label': PropTypes.string,
 
 	/**
@@ -1331,7 +1344,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 * @type {Number}
 	 * @default 0
 	 * @public
-	 */
+	 //
 	dataSize: PropTypes.number,
 
 	/**
@@ -1344,7 +1357,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 * @type {String}
 	 * @default 'vertical'
 	 * @public
-	 */
+	 //
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
 	/**
@@ -1352,7 +1365,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 *
 	 * @type {Function}
 	 * @private
-	 */
+	 //
 	getComponentProps: PropTypes.func,
 
 	/**
@@ -1360,7 +1373,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 *
 	 * @type {Number[]}
 	 * @private
-	 */
+	 //
 	itemSizes: PropTypes.arrayOf(PropTypes.number),
 
 	/**
@@ -1370,7 +1383,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 *
 	 * @type {Function}
 	 * @private
-	 */
+	 //
 	onUpdateItems: PropTypes.func,
 
 	/**
@@ -1381,7 +1394,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 * @type {Number}
 	 * @default 3
 	 * @private
-	 */
+	 //
 	overhang: PropTypes.number,
 
 	/**
@@ -1390,7 +1403,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 * @type {Boolean}
 	 * @default false
 	 * @private
-	 */
+	 //
 	pageScroll: PropTypes.bool,
 
 	/**
@@ -1398,7 +1411,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 *
 	 * @type {Boolean}
 	 * @private
-	 */
+	 //
 	rtl: PropTypes.bool,
 
 	/**
@@ -1407,14 +1420,17 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 * @type {Number}
 	 * @default 0
 	 * @public
-	 */
+	 //
 	spacing: PropTypes.number,
 
 	/**
 	 * TBD
-	 */
+	 //
 	type: PropTypes.string,
 
+	/**
+	 * TBD
+	 //
 	uiChildContainerRef: PropTypes.object,
 
 	/**
@@ -1422,7 +1438,7 @@ VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype 
 	 *
 	 * @type {Function}
 	 * @private
-	 */
+	 //
 	updateStatesAndBounds: PropTypes.func
 };
 
@@ -1435,6 +1451,7 @@ VirtualListBase.defaultProps = {
 	spacing: 0,
 	type: 'JS'
 };
+*/
 
 /**
  * A callback function that receives a reference to the `scrollTo` feature.

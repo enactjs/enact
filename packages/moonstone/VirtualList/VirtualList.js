@@ -15,11 +15,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import warning from 'warning';
 
+import useScroll from '../Scrollable';
 import Scrollbar from '../Scrollable/Scrollbar';
-import useScroll from '../Scrollable/useScroll';
 import Skinnable from '../Skinnable';
 
-import {useSpottableVirtualList, VirtualListBase} from './useSpottableVirtualList';
+import {useSpottableVirtualList, VirtualListBase} from './VirtualListBase';
 
 /**
  * A Moonstone-styled scrollable and spottable virtual list component.
@@ -30,7 +30,7 @@ import {useSpottableVirtualList, VirtualListBase} from './useSpottableVirtualLis
  * @ui
  * @public
  */
-const ScrollableVirtualList = ({itemSize, role, ...rest}) => {
+let VirtualList = ({itemSize, role, ...rest}) => {
 	const props = itemSize && itemSize.minSize ?
 		{
 			itemSize: itemSize.minSize,
@@ -84,9 +84,9 @@ const ScrollableVirtualList = ({itemSize, role, ...rest}) => {
 	);
 };
 
-ScrollableVirtualList.displayName = 'VirtualList';
+VirtualList.displayName = 'VirtualList';
 
-ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
+VirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 	/**
 	 * Size of an item for the VirtualList; valid value is a number generally.
 	 * For different item size, value is an object that has `minSize`
@@ -176,7 +176,7 @@ ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.p
 	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
-ScrollableVirtualList.defaultProps = {
+VirtualList.defaultProps = {
 	'data-spotlight-container-disabled': false,
 	direction: 'vertical',
 	focusableScrollbar: false,
@@ -194,7 +194,7 @@ ScrollableVirtualList.defaultProps = {
 	verticalScrollbar: 'auto'
 };
 
-const VirtualList = Skinnable(
+VirtualList = Skinnable(
 	SpotlightContainerDecorator(
 		{
 			overflow: true,
@@ -203,7 +203,7 @@ const VirtualList = Skinnable(
 		},
 		I18nContextDecorator(
 			{rtlProp: 'rtl'},
-			ScrollableVirtualList
+			VirtualList
 		)
 	)
 );
@@ -217,7 +217,7 @@ const VirtualList = Skinnable(
  * @ui
  * @public
  */
-const VirtualGridListScrollable = ({role, ...rest}) => {
+let VirtualGridList = ({role, ...rest}) => {
 	const {
 		// Variables
 		childWrapper: ChildWrapper,
@@ -255,9 +255,9 @@ const VirtualGridListScrollable = ({role, ...rest}) => {
 	);
 };
 
-VirtualGridListScrollable.displayName = 'VirtualGridList';
+VirtualGridList.displayName = 'VirtualGridList';
 
-VirtualGridListScrollable.propTypes = /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
+VirtualGridList.propTypes = /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
 	/**
 	 * Size of an item for the VirtualGridList; valid value is an object that has `minWidth`
 	 * and `minHeight` as properties.
@@ -347,7 +347,7 @@ VirtualGridListScrollable.propTypes = /** @lends moonstone/VirtualList.VirtualGr
 	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
-VirtualGridListScrollable.defaultProps = {
+VirtualGridList.defaultProps = {
 	'data-spotlight-container-disabled': false,
 	direction: 'vertical',
 	focusableScrollbar: false,
@@ -365,7 +365,7 @@ VirtualGridListScrollable.defaultProps = {
 	verticalScrollbar: 'auto'
 };
 
-const VirtualGridList = Skinnable(
+VirtualGridList = Skinnable(
 	SpotlightContainerDecorator(
 		{
 			overflow: true,
@@ -374,7 +374,7 @@ const VirtualGridList = Skinnable(
 		},
 		I18nContextDecorator(
 			{rtlProp: 'rtl'},
-			VirtualGridListScrollable
+			VirtualGridList
 		)
 	)
 );

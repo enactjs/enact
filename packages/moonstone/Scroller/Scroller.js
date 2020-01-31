@@ -21,166 +21,74 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import {ResizeContext} from '@enact/ui/Resizable';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {Component} from 'react';
 
+import useScroll from '../Scrollable';
 import Scrollbar from '../Scrollable/Scrollbar';
-import useScroll from '../Scrollable/useScroll';
 import Skinnable from '../Skinnable';
 
 
 import {useSpottableScroller} from './useSpottableScroller';
 
-const ScrollerBase = {};
-
-ScrollerBase.displayName = 'ScrollerBase';
-
-ScrollerBase.propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
-	/**
-	 * Called when [Scroller]{@link moonstone/Scroller.Scroller} updates.
-	 *
-	 * @type {function}
-	 * @private
-	 */
-	onUpdate: PropTypes.func,
-
-	/**
-	 * `true` if rtl, `false` if ltr.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 */
-	rtl: PropTypes.bool,
-
-	/**
-	 * Called when [Scroller]{@link moonstone/Scroller.Scroller} should be scrolled
-	 * and the focus should be moved to a scrollbar button.
-	 *
-	 * @type {function}
-	 * @private
-	 */
-	scrollAndFocusScrollbarButton: PropTypes.func,
-
-	/**
-	 * The spotlight id for the component.
-	 *
-	 * @type {String}
-	 * @private
-	 */
-	spotlightId: PropTypes.string
-};
-
 /**
- * A Moonstone-styled Scroller, Scrollable applied.
+ * A Moonstone-styled base component for [Scroller]{@link moonstone/Scroller.Scroller}.
+ * In most circumstances, you will want to use the
+ * [SpotlightContainerDecorator]{@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
+ * and the Scrollable version, [Scroller]{@link moonstone/Scroller.Scroller}.
  *
- * Usage:
- * ```
- * <Scroller>Scroll me.</Scroller>
- * ```
- *
- * @class Scroller
+ * @class ScrollerBase
  * @memberof moonstone/Scroller
- * @extends moonstone/Scroller.ScrollerBase
+ * @extends ui/Scroller.ScrollerBase
  * @ui
  * @public
  */
-const ScrollableScroller = (props) => {
-	// Hooks
+class ScrollerBase extends Component {
+	static displayName = 'ScrollerBase'
 
-	const {
-		childWrapper: ChildWrapper,
-		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible,
+	static propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
+		/**
+		 * Passes the instance of [Scroller]{@link ui/Scroller.Scroller}.
+		 *
+		 * @type {Object}
+		 * @param {Object} ref
+		 * @private
+		 */
+		initUiChildRef: PropTypes.func,
 
-		resizeContextProps,
-		scrollableContainerProps,
-		flexLayoutProps,
-		childWrapperProps,
-		childProps,
-		verticalScrollbarProps,
-		horizontalScrollbarProps
-	} = useScroll(props);
+		/**
+		 * Called when [Scroller]{@link moonstone/Scroller.Scroller} updates.
+		 *
+		 * @type {function}
+		 * @private
+		 */
+		onUpdate: PropTypes.func,
 
-	const uiChildProps = useSpottableScroller(childProps);
+		/**
+		 * `true` if rtl, `false` if ltr.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
 
-	// Render
+		/**
+		 * Called when [Scroller]{@link moonstone/Scroller.Scroller} should be scrolled
+		 * and the focus should be moved to a scrollbar button.
+		 *
+		 * @type {function}
+		 * @private
+		 */
+		scrollAndFocusScrollbarButton: PropTypes.func,
 
-	return (
-		<ResizeContext.Provider {...resizeContextProps}>
-			<div {...scrollableContainerProps}>
-				<div {...flexLayoutProps}>
-					<ChildWrapper {...childWrapperProps}>
-						<UiScrollerBase {...uiChildProps} />
-					</ChildWrapper>
-					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
-				</div>
-				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
-			</div>
-		</ResizeContext.Provider>
-	);
-};
-
-ScrollableScroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
-
-	/**
-	 * Specifies how to show horizontal scrollbar.
-	 *
-	 * Valid values are:
-	 * * `'auto'`,
-	 * * `'visible'`, and
-	 * * `'hidden'`.
-	 *
-	 * @type {String}
-	 * @default 'auto'
-	 * @public
-	 */
-	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
-
-	/**
-	 * Specifies how to show vertical scrollbar.
-	 *
-	 * Valid values are:
-	 * * `'auto'`,
-	 * * `'visible'`, and
-	 * * `'hidden'`.
-	 *
-	 * @type {String}
-	 * @default 'auto'
-	 * @public
-	 */
-	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
-};
-
-ScrollableScroller.defaultProps = {
-	'data-spotlight-container-disabled': false, // eslint-disable-line react/default-props-match-prop-types
-	direction: 'both',
-	focusableScrollbar: false, // eslint-disable-line react/default-props-match-prop-types
-	horizontalScrollbar: 'auto',
-	overscrollEffectOn: { // eslint-disable-line react/default-props-match-prop-types
-		arrowKey: false,
-		drag: false,
-		pageKey: false,
-		scrollbarButton: false,
-		wheel: true
-	},
-	preventBubblingOnKeyDown: 'none', // eslint-disable-line react/default-props-match-prop-types
-	type: 'JS', // eslint-disable-line react/default-props-match-prop-types
-	verticalScrollbar: 'auto'
-};
-
-const Scroller = Skinnable(
-	SpotlightContainerDecorator(
-		{
-			overflow: true,
-			preserveId: true,
-			restrict: 'self-first'
-		},
-		I18nContextDecorator(
-			{rtlProp: 'rtl'},
-			ScrollableScroller
-		)
-	)
-);
+		/**
+		 * The spotlight id for the component.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		spotlightId: PropTypes.string
+	}
+}
 
 /**
  * Allows 5-way navigation to the scrollbar controls. By default, 5-way will
@@ -245,6 +153,119 @@ const Scroller = Skinnable(
  * @default $L('scroll up')
  * @public
  */
+
+/**
+ * A Moonstone-styled Scroller, Scrollable applied.
+ *
+ * Usage:
+ * ```
+ * <Scroller>Scroll me.</Scroller>
+ * ```
+ *
+ * @class Scroller
+ * @memberof moonstone/Scroller
+ * @extends moonstone/Scroller.ScrollerBase
+ * @ui
+ * @public
+ */
+let Scroller = (props) => {
+	// Hooks
+
+	const {
+		childWrapper: ChildWrapper,
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible,
+
+		resizeContextProps,
+		scrollableContainerProps,
+		flexLayoutProps,
+		childWrapperProps,
+		childProps,
+		verticalScrollbarProps,
+		horizontalScrollbarProps
+	} = useScroll(props);
+
+	const uiChildProps = useSpottableScroller(childProps);
+
+	// Render
+
+	return (
+		<ResizeContext.Provider {...resizeContextProps}>
+			<div {...scrollableContainerProps}>
+				<div {...flexLayoutProps}>
+					<ChildWrapper {...childWrapperProps}>
+						<UiScrollerBase {...uiChildProps} />
+					</ChildWrapper>
+					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
+				</div>
+				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
+			</div>
+		</ResizeContext.Provider>
+	);
+};
+
+Scroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+	/**
+	 * Specifies how to show horizontal scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+
+	/**
+	 * Specifies how to show vertical scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
+};
+
+Scroller.defaultProps = {
+	'data-spotlight-container-disabled': false, // eslint-disable-line react/default-props-match-prop-types
+	direction: 'both',
+	focusableScrollbar: false, // eslint-disable-line react/default-props-match-prop-types
+	horizontalScrollbar: 'auto',
+	overscrollEffectOn: { // eslint-disable-line react/default-props-match-prop-types
+		arrowKey: false,
+		drag: false,
+		pageKey: false,
+		scrollbarButton: false,
+		wheel: true
+	},
+	preventBubblingOnKeyDown: 'none', // eslint-disable-line react/default-props-match-prop-types
+	type: 'JS', // eslint-disable-line react/default-props-match-prop-types
+	verticalScrollbar: 'auto'
+};
+
+Scroller = Skinnable(
+	SpotlightContainerDecorator(
+		{
+			overflow: true,
+			preserveId: true,
+			restrict: 'self-first'
+		},
+		I18nContextDecorator(
+			{rtlProp: 'rtl'},
+			Scroller
+		)
+	)
+);
 
 export default Scroller;
 export {
