@@ -2,7 +2,7 @@ import warning from 'warning';
 
 // At the end, wes should not use DOM APIs as well as the APIs in the `utilDOM`. If we use them, we have to try to remove them first if possible.
 
-const utilDOM = () => {
+const utilDOM = (function () {
 	// Functions
 
 	function containsDangerously (ref, target) {
@@ -48,7 +48,7 @@ const utilDOM = () => {
 		scrollTopDangerously,
 		setAttributeDangerously
 	};
-};
+})();
 
 export default utilDOM;
 export {

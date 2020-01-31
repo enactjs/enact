@@ -1,6 +1,6 @@
 import Spotlight from '@enact/spotlight';
 
-const useEventResizeWindow = () => {
+const utilEventResizeWindow = () => {
 	// Functions
 
 	function handleResizeWindow () {
@@ -18,7 +18,7 @@ const useEventResizeWindow = () => {
 	};
 };
 
-export default useEventResizeWindow;
+export default utilEventResizeWindow;
 export {
-	useEventResizeWindow
+	utilEventResizeWindow
 };

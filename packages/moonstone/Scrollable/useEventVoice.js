@@ -23,7 +23,7 @@ const useEventVoice = (props, instances, context) => {
 			spotItem = Spotlight.getCurrent(),
 			scrollableContainerNode = scrollableContainerRef.current;
 
-		if (utilDOM().containsDangerously(scrollableContainerNode, spotItem)) {
+		if (utilDOM.containsDangerously(scrollableContainerNode, spotItem)) {
 			const
 				viewportBounds = scrollableContainerNode.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),

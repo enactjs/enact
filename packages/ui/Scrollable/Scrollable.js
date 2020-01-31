@@ -75,7 +75,7 @@ const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
  * @ui
  * @private
  */
-const useScrollable = (props) => {
+const useScroller = (props) => {
 	const {
 		decorateChildProps,
 		horizontalScrollbarRef,
@@ -628,8 +628,8 @@ const useScrollable = (props) => {
 					if (eventDelta < 0 && variables.current.scrollTop > 0 || eventDelta > 0 && variables.current.scrollTop < bounds.maxTop) {
 						// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
 						if (
-							horizontalScrollbarRef.current && utilDOM().containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, ev.target) ||
-							verticalScrollbarRef.current && utilDOM().containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, ev.target)
+							horizontalScrollbarRef.current && utilDOM.containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, ev.target) ||
+							verticalScrollbarRef.current && utilDOM.containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, ev.target)
 						) {
 							delta = calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 							needToHideThumb = !delta;
@@ -806,8 +806,8 @@ const useScrollable = (props) => {
 			maxPos = getScrollBounds()[isVertical ? 'maxTop' : 'maxLeft'];
 
 		if (
-			overScrollType === 'JS' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos) ||
-			overScrollType === 'Native' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - 1)
+			type === 'JS' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos) ||
+			type === 'Native' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - 1)
 		) { // Already on the edge
 			applyOverscrollEffect(orientation, edge, overScrollType, ratio);
 		} else {
@@ -1419,7 +1419,7 @@ const useScrollable = (props) => {
 	// JS ]]
 
 	function dangerouslyContainsInScrollable (target) {
-		return utilDOM().containsDangerously(scrollableContainerRef, target);
+		return utilDOM.containsDangerously(scrollableContainerRef, target);
 	}
 
 	variables.current.deferScrollTo = true;
@@ -1885,5 +1885,5 @@ export {
 	constants,
 	Scrollable,
 	ScrollableBase,
-	useScrollable
+	useScroller
 };

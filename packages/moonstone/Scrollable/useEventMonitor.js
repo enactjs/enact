@@ -34,7 +34,7 @@ const pageKeyHandler = (ev) => {
 
 		if (elem) {
 			for (const [key, value] of scrollables) {
-				if (utilDOM().containsDangerously(value, elem)) {
+				if (utilDOM.containsDangerously(value, elem)) {
 					/* To handle page keys in nested scrollable components,
 					 * break the loop only when `scrollByPageOnPointerMode` returns `true`.
 					 * This approach assumes that an inner scrollable component is

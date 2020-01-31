@@ -174,7 +174,7 @@ const useEventKey = (props, instances, context) => {
 					} else {
 						const possibleTarget = getTargetByDirectionFromElement(direction, target);
 
-						if (!utilDOM().containsDangerously(ev.currentTarget, possibleTarget)) {
+						if (!utilDOM.containsDangerously(ev.currentTarget, possibleTarget)) {
 							isLeaving = true;
 						}
 					}

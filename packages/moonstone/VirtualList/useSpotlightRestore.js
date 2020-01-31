@@ -39,7 +39,7 @@ const useSpotlightRestore = (props, instances) => {
 			childContainerNode = uiChildContainerRef.current,
 			current = Spotlight.getCurrent();
 
-		if (current && current.dataset.vlPlaceholder && utilDOM().containsDangerously(childContainerNode, current)) {
+		if (current && current.dataset.vlPlaceholder && utilDOM.containsDangerously(childContainerNode, current)) {
 			return true;
 		}
 

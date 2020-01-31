@@ -65,8 +65,8 @@ const useEventWheel = (props, instances, context) => {
 				}
 
 				// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
-				if ((horizontalScrollbarRef.current && utilDOM().containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, ev.target)) ||
-					(verticalScrollbarRef.current && utilDOM().containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, ev.target))) {
+				if ((horizontalScrollbarRef.current && utilDOM.containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, ev.target)) ||
+					(verticalScrollbarRef.current && utilDOM.containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, ev.target))) {
 					delta = uiScrollableAdapter.current.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 					needToHideThumb = !delta;
 

@@ -58,7 +58,7 @@ const useEventFocus = (props, instances, context) => {
 			childContainerNode = uiChildContainerRef.current,
 			spotItem = Spotlight.getCurrent();
 
-		if (spotItem && positionFn && utilDOM().containsDangerously(childContainerNode, spotItem)) {
+		if (spotItem && positionFn && utilDOM.containsDangerously(childContainerNode, spotItem)) {
 			const lastPos = spottable.current.lastScrollPositionOnFocus;
 			let pos;
 
@@ -136,7 +136,7 @@ const useEventFocus = (props, instances, context) => {
 			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		}
 
-		return utilDOM().containsDangerously(scrollableContainerRef, current);
+		return utilDOM.containsDangerously(scrollableContainerRef, current);
 	}
 
 	// Return

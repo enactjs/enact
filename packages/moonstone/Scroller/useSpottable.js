@@ -222,7 +222,7 @@ const useSpottable = (props, instances) => {
 		const vertical = uiChildAdapter.current.isVertical();
 		const childContainerNode = uiChildContainerRef.current;
 
-		if (!vertical && !horizontal || !item || !utilDOM().containsDangerously(childContainerNode, item)) {
+		if (!vertical && !horizontal || !item || !utilDOM.containsDangerously(childContainerNode, item)) {
 			return;
 		}
 

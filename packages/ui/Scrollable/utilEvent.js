@@ -1,6 +1,6 @@
 // A `React.useEvent` hooks is introduced in https://github.com/facebook/react/pull/17651
 // The `useEvent` below will be replaced with the `React.useEvent` later.
-const useEvent = (eventName) => {
+const utilEvent = (eventName) => {
 	return {
 		addEventListener (ref, fn, param) {
 			if (typeof window !== 'undefined' && (ref === window || ref === document)) {
@@ -24,7 +24,7 @@ const useEvent = (eventName) => {
 	};
 };
 
-export default useEvent;
+export default utilEvent;
 export {
-	useEvent
+	utilEvent
 };

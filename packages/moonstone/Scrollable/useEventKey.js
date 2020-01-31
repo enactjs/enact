@@ -51,8 +51,8 @@ const useEventKey = (props, instances, context) => {
 
 				if (overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
 					if (
-						!(horizontalScrollbarRef.current && utilDOM().containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, element)) &&
-						!(verticalScrollbarRef.current && utilDOM().containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, element))
+						!(horizontalScrollbarRef.current && utilDOM.containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, element)) &&
+						!(verticalScrollbarRef.current && utilDOM.containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, element))
 					) {
 						checkAndApplyOverscrollEffectByDirection(direction);
 					}
@@ -91,7 +91,7 @@ const useEventKey = (props, instances, context) => {
 				// Should do nothing when focusedItem is paging control button of Scrollbar
 				checkAndApplyOverscrollEffectByDirection(direction);
 
-				if (utilDOM().containsDangerously(contentNode, focusedItem)) {
+				if (utilDOM.containsDangerously(contentNode, focusedItem)) {
 					const
 						contentRect = contentNode.getBoundingClientRect(),
 						clientRect = focusedItem.getBoundingClientRect(),

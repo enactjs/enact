@@ -13,7 +13,7 @@ import useEventFocus from './useEventFocus';
 import useEventKey from './useEventKey';
 import useEventMonitor from './useEventMonitor';
 import useEventMouse from './useEventMouse';
-import useEventResizeWindow from './useEventResizeWindow';
+import utilEventResizeWindow from './utilEventResizeWindow';
 import useEventTouch from './useEventTouch';
 import useEventVoice from './useEventVoice';
 import useEventWheel from './useEventWheel';
@@ -99,12 +99,12 @@ const useSpottableScrollable = (props, instances, context) => {
 		stopVoice
 	} = useEventVoice(props, instances, {onScrollbarButtonClick});
 
-	const {handleResizeWindow} = useEventResizeWindow();
+	const {handleResizeWindow} = utilEventResizeWindow();
 
 	// Functions
 
 	function isContent (element) {
-		return (element && utilDOM().containsDangerously(uiChildContainerRef, element));
+		return (element && utilDOM.containsDangerously(uiChildContainerRef, element));
 	}
 
 	function scrollTo (opt) {
