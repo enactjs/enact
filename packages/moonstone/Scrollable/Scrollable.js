@@ -238,6 +238,8 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 /*
 // Move to useSpotlightRestore
 
+	// Only intended to be used within componentDidMount, this method will fetch the last stored
+	// scroll position from SharedState and scroll (without animation) to that position
 	function restoreScrollPosition () {
 		if (id && context && context.get) {
 			const scrollPosition = context.get(`${id}.scrollPosition`);
@@ -633,22 +635,18 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 		}
 	}
 
-	function onScrollbarButtonClick ({isPreviousScrollButton, isVerticalScrollBar}) {
-		const
-			{wheelDirection} = uiScrollableAdapter.current,
-			bounds = uiScrollableAdapter.current.getScrollBounds(),
-			direction = isPreviousScrollButton ? -1 : 1,
-			pageDistance = direction * (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+// Move to Scrollable below
 
-		uiScrollableAdapter.current.lastInputType = 'scrollbarButton';
-
-		if (direction !== wheelDirection) {
-			uiScrollableAdapter.current.isScrollAnimationTargetAccumulated = false;
-			uiScrollableAdapter.current.wheelDirection = direction;
-		}
-
-		uiScrollableAdapter.current.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, overscrollEffectOn.scrollbarButton);
+	stop = () => {
 	}
+
+	focusOnItem () {
+	}
+
+	scrollTo = (opt) => {
+	}
+
+// Move to useScrollbar
 
 	function alertThumb () {
 		const bounds = uiScrollableAdapter.current.getScrollBounds();
@@ -982,24 +980,25 @@ const useSpottableScrollable = (props, instances, context) => {
 };
 
 const useScroll = (props) => {
-		const {
+			// TBD: indentation is broken intentionally to help comparing
+			const {
 				'data-spotlight-container': spotlightContainer,
-			'data-spotlight-container-disabled': spotlightContainerDisabled,
-			'data-spotlight-id': spotlightId,
-			focusableScrollbar,
-			preventBubblingOnKeyDown,
-			scrollDownAriaLabel,
-			scrollLeftAriaLabel,
-			scrollRightAriaLabel,
-			scrollUpAriaLabel,
-			type,
-			...rest
-		} = props,
-		downButtonAriaLabel = scrollDownAriaLabel == null ? $L('scroll down') : scrollDownAriaLabel,
-		upButtonAriaLabel = scrollUpAriaLabel == null ? $L('scroll up') : scrollUpAriaLabel,
-		rightButtonAriaLabel = scrollRightAriaLabel == null ? $L('scroll right') : scrollRightAriaLabel,
-		leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel,
-		scrollableBaseProp = {};
+				'data-spotlight-container-disabled': spotlightContainerDisabled,
+				'data-spotlight-id': spotlightId,
+				focusableScrollbar,
+				preventBubblingOnKeyDown,
+				scrollDownAriaLabel,
+				scrollLeftAriaLabel,
+				scrollRightAriaLabel,
+				scrollUpAriaLabel,
+				type,
+				...rest
+			} = props,
+			downButtonAriaLabel = scrollDownAriaLabel == null ? $L('scroll down') : scrollDownAriaLabel,
+			upButtonAriaLabel = scrollUpAriaLabel == null ? $L('scroll up') : scrollUpAriaLabel,
+			rightButtonAriaLabel = scrollRightAriaLabel == null ? $L('scroll right') : scrollRightAriaLabel,
+			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel,
+			scrollableBaseProp = {};
 
 	// Mutable value
 
