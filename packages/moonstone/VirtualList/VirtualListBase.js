@@ -3,7 +3,7 @@ import Accelerator from '@enact/spotlight/Accelerator';
 import Pause from '@enact/spotlight/Pause';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import PropTypes from 'prop-types';
-import {Component, useCallback, useEffect, useRef} from 'react';
+import React, {Component, useCallback, useEffect, useRef} from 'react';
 
 import {dataIndexAttribute} from '../Scrollable';
 
