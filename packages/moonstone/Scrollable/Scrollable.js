@@ -13,9 +13,8 @@ import {spottableClass} from '@enact/spotlight/Spottable';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {getRect, intersects} from '@enact/spotlight/src/utils';
 import {useScrollable} from '@enact/ui/Scrollable';
-import {useChildAdapter as useUiChildAdapter} from '@enact/ui/Scrollable/useChildAdapter';
+import {useChildAdapter as useUiChildAdapter} from '@enact/ui/Scrollable/useChild';
 import {utilDecorateChildProps} from '@enact/ui/Scrollable';
-import useScrollableAdapter from '@enact/ui/Scrollable/useScrollableAdapter';
 import utilDOM from '@enact/ui/Scrollable/utilDOM';
 import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import PropTypes from 'prop-types';
@@ -25,17 +24,13 @@ import $L from '../internal/$L/$L';
 import {SharedState} from '../internal/SharedStateDecorator/SharedStateDecorator';
 
 import useChildAdapter from './useChildAdapter';
-import useEventFocus from './useEventFocus';
-import useEventKey from './useEventKey';
-import useEventMonitor from './useEventMonitor';
-import useEventMouse from './useEventMouse';
-import useEventTouch from './useEventTouch';
-import useEventVoice from './useEventVoice';
-import useEventWheel from './useEventWheel';
+import {
+	useEventFocus, useEventKey, useEventMonitor, useEventMouse,
+	useEventTouch, useEventVoice, useEventWheel
+} from './useEvent';
 import useOverscrollEffect from './useOverscrollEffect';
 import useScrollbar from './useScrollbar';
-import useSpotlightConfig from './useSpotlightConfig';
-import useSpotlightRestore from './useSpotlightRestore';
+import {useSpotlightConfig, useSpotlightRestore} from './useSpotlight';
 
 import overscrollCss from './OverscrollEffect.module.less';
 
@@ -1017,7 +1012,40 @@ const useScroll = (props) => {
 
 	const [childAdapter, setChildAdapter] = useChildAdapter();
 
-	const [uiScrollableAdapter, setUiScrollableAdapter] = useScrollableAdapter();
+	const uiScrollableAdapter = useRef({
+		animator: null,
+		applyOverscrollEffect: null,
+		bounds: null,
+		calculateDistanceByWheel: null,
+		canScrollHorizontally: null,
+		canScrollVertically: null,
+		checkAndApplyOverscrollEffect: null,
+		getScrollBounds: null,
+		isDragging: null,
+		isScrollAnimationTargetAccumulated: null,
+		isUpdatedScrollThumb: null,
+		lastInputType: null,
+		rtl: null,
+		scrollBounds: null,
+		scrollHeight: null,
+		scrolling: null,
+		scrollLeft: null,
+		scrollPos: null,
+		scrollTo: null,
+		scrollToAccumulatedTarget: null,
+		scrollToInfo: null,
+		scrollTop: null,
+		setOverscrollStatus: null,
+		showThumb: null,
+		start: null,
+		startHidingThumb: null,
+		stop: null,
+		wheelDirection: null
+	});
+
+	const setUiScrollableAdapter = (adapter) => {
+		uiScrollableAdapter.current = adapter;
+	};
 
 	const [uiChildAdapter, setUiChildAdapter] = useUiChildAdapter();
 

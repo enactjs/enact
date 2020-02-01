@@ -36,7 +36,6 @@ const useSpotlightConfig = (props, instances) => {
 	}, [dangerouslyContainsInScrollable, scrollAndFocusScrollbarButton, spotlightId, uiChildAdapter]);
 };
 
-export default useSpotlightConfig;
 export {
 	useSpotlightConfig
 };

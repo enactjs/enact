@@ -7,11 +7,10 @@ import React, {Component, useCallback, useEffect, useRef} from 'react';
 
 import {dataIndexAttribute} from '../Scrollable';
 
-import useEventKey from './useEventKey';
+import {useEventKey} from './useEvent';
 import useOverscrollEffect from './useOverscrollEffect';
 import usePreventScroll from './usePreventScroll';
-import useSpotlightConfig from './useSpotlightConfig';
-import useSpotlightRestore from './useSpotlightRestore';
+import {useSpotlightConfig, useSpotlightRestore} from './useSpotlightConfig';
 
 const SpotlightAccelerator = new Accelerator();
 const SpotlightPlaceholder = Spottable('div');

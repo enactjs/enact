@@ -31,8 +31,8 @@ import useScroll from '../Scrollable';
 import Scrollbar from '../Scrollable/Scrollbar';
 import Skinnable from '../Skinnable';
 
-import useEventKey from './useEventKey';
-import useSpotlightConfig from './useSpotlightConfig';
+import {useEventKey} from './useEvent';
+import {useSpotlightConfig} from './useSpotlight';
 
 const dataContainerDisabledAttribute = 'data-spotlight-container-disabled';
 /**

@@ -25,7 +25,7 @@ import ri from '../resolution';
 import Touchable from '../Touchable';
 
 import ScrollAnimator from './ScrollAnimator';
-import useChildAdapter from './useChildAdapter';
+import {useChildAdapter} from './useChild';
 import utilDOM from './utilDOM';
 import utilEvent from './utilEvent';
 
