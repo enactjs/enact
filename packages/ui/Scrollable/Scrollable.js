@@ -486,7 +486,9 @@ const useScrollable = (props) => {
 				get isDragging () {
 					return mutableRef.current.isDragging;
 				},
-				isScrollAnimationTargetAccumulated: mutableRef.current.isScrollAnimationTargetAccumulated,
+				get isScrollAnimationTargetAccumulated () {
+					return mutableRef.current.isScrollAnimationTargetAccumulated;
+				},
 				get isUpdatedScrollThumb () {
 					return mutableRef.current.isUpdatedScrollThumb;
 				},
@@ -602,12 +604,12 @@ const useScrollable = (props) => {
 	}, [forceUpdate, uiChildAdapter]);
 
 	function handleResizeWindow () {
-		const propsHandleResizedWindow = props.handleResizeWindow;
+		const propsHandleResizeWindow = props.handleResizeWindow;
 
 		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
 		setTimeout(() => {
-			if (propsHandleResizedWindow) {
-				propsHandleResizedWindow();
+			if (propsHandleResizeWindow) {
+				propsHandleResizeWindow();
 			}
 			if (type === 'JS') {
 				scrollTo({position: {x: 0, y: 0}, animate: false});
