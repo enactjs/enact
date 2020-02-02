@@ -354,7 +354,7 @@ const useEventMonitor = (props, instances, context) => {
 
 	// Mutable value
 
-	const variables = useRef({pageKeyHandlerObj: {scrollByPageOnPointerMode}});
+	const mutableRef = useRef({pageKeyHandlerObj: {scrollByPageOnPointerMode}});
 
 	lastPointer = lastPointerProp;
 
@@ -362,11 +362,11 @@ const useEventMonitor = (props, instances, context) => {
 
 	useEffect(() => {
 		const setMonitorEventTarget = (target) => {
-			scrollables.set(variables.current.pageKeyHandlerObj, target);
+			scrollables.set(mutableRef.current.pageKeyHandlerObj, target);
 		};
 
 		const deleteMonitorEventTarget = () => {
-			scrollables.delete(variables.current.pageKeyHandlerObj);
+			scrollables.delete(mutableRef.current.pageKeyHandlerObj);
 		};
 
 		setMonitorEventTarget(uiScrollableContainerRef.current);
@@ -453,7 +453,7 @@ const useEventVoice = (props, instances, context) => {
 
 	// Mutable value
 
-	const variables = useRef({
+	const mutableRef = useRef({
 		isVoiceControl: false,
 		voiceControlDirection: 'vertical'
 	});
@@ -470,8 +470,8 @@ const useEventVoice = (props, instances, context) => {
 				viewportBounds = scrollableContainerNode.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),
 				nodes = Spotlight.getSpottableDescendants(scrollableContainerNode.dataset.spotlightId),
-				first = variables.current.voiceControlDirection === 'vertical' ? 'top' : 'left',
-				last = variables.current.voiceControlDirection === 'vertical' ? 'bottom' : 'right';
+				first = mutableRef.current.voiceControlDirection === 'vertical' ? 'top' : 'left',
+				last = mutableRef.current.voiceControlDirection === 'vertical' ? 'bottom' : 'right';
 
 			if (spotItemBounds[last] < viewportBounds[first] || spotItemBounds[first] > viewportBounds[last]) {
 				for (let i = 0; i < nodes.length; i++) {
@@ -487,8 +487,8 @@ const useEventVoice = (props, instances, context) => {
 	};
 
 	function stopVoice () {
-		if (variables.current.isVoiceControl) {
-			variables.current.isVoiceControl = false;
+		if (mutableRef.current.isVoiceControl) {
+			mutableRef.current.isVoiceControl = false;
 			updateFocusAfterVoiceControl();
 		}
 	}
@@ -515,11 +515,11 @@ const useEventVoice = (props, instances, context) => {
 			scroll = isHorizontal ? horizontalDirection[index] : verticalDirection[index];
 		}
 
-		variables.current.voiceControlDirection = verticalDirection.includes(scroll) && 'vertical' || horizontalDirection.includes(scroll) && 'horizontal' || null;
+		mutableRef.current.voiceControlDirection = verticalDirection.includes(scroll) && 'vertical' || horizontalDirection.includes(scroll) && 'horizontal' || null;
 
 		// Case 1. Invalid direction
-		if (variables.current.voiceControlDirection === null) {
-			variables.current.isVoiceControl = false;
+		if (mutableRef.current.voiceControlDirection === null) {
+			mutableRef.current.isVoiceControl = false;
 		// Case 2. Cannot scroll
 		} else if (
 			(['up', 'top'].includes(scroll) && isReachedEdge(scrollTop, 0)) ||
@@ -533,7 +533,7 @@ const useEventVoice = (props, instances, context) => {
 			}
 		// Case 3. Can scroll
 		} else {
-			variables.current.isVoiceControl = true;
+			mutableRef.current.isVoiceControl = true;
 
 			if (['up', 'down', 'left', 'right'].includes(scroll)) {
 				const isPreviousScrollButton = (scroll === 'up') || (scroll === 'left' && !isRtl) || (scroll === 'right' && isRtl);
@@ -575,7 +575,7 @@ const useEventWheel = (props, instances, context) => {
 
 	// Mutable value
 
-	const variables = useRef({isWheeling: false});
+	const mutableRef = useRef({isWheeling: false});
 
 	// Functions
 
@@ -587,7 +587,7 @@ const useEventWheel = (props, instances, context) => {
 		}
 
 		if (delta !== 0) {
-			variables.current.isWheeling = true;
+			mutableRef.current.isWheeling = true;
 			if (!props['data-spotlight-container-disabled']) {
 				childAdapter.current.setContainerDisabled(true);
 			}
@@ -621,11 +621,11 @@ const useEventWheel = (props, instances, context) => {
 		// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
 		if (canScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
 			if (eventDelta < 0 && uiScrollableAdapter.current.scrollTop > 0 || eventDelta > 0 && uiScrollableAdapter.current.scrollTop < bounds.maxTop) {
-				if (!variables.current.isWheeling) {
+				if (!mutableRef.current.isWheeling) {
 					if (!props['data-spotlight-container-disabled']) {
 						childAdapter.current.setContainerDisabled(true);
 					}
-					variables.current.isWheeling = true;
+					mutableRef.current.isWheeling = true;
 				}
 
 				// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
@@ -649,12 +649,12 @@ const useEventWheel = (props, instances, context) => {
 			}
 		} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
 			if (eventDelta < 0 && uiScrollableAdapter.current.scrollLeft > 0 || eventDelta > 0 && uiScrollableAdapter.current.scrollLeft < bounds.maxLeft) {
-				if (!variables.current.isWheeling) {
+				if (!mutableRef.current.isWheeling) {
 					if (!props['data-spotlight-container-disabled']) {
 						childAdapter.current.setContainerDisabled(true);
 					}
 
-					variables.current.isWheeling = true;
+					mutableRef.current.isWheeling = true;
 				}
 
 				delta = uiScrollableAdapter.current.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
@@ -695,7 +695,7 @@ const useEventWheel = (props, instances, context) => {
 
 	return {
 		handleWheel: type === 'JS' ? handleWheel : handleWheelNative,
-		isWheeling: variables.current.isWheeling
+		isWheeling: mutableRef.current.isWheeling
 	};
 };
 

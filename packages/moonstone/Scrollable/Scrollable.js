@@ -310,7 +310,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 		}
 
 		if (delta !== 0) {
-			variables.current.isWheeling = true;
+			mutableRef.current.isWheeling = true;
 			if (!props['data-spotlight-container-disabled']) {
 				childAdapter.current.setContainerDisabled(true);
 			}
@@ -668,27 +668,27 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 		}
 
 		focusOnItem();
-		variables.current.lastScrollPositionOnFocus = null;
-		variables.current.isWheeling = false;
+		mutableRef.current.lastScrollPositionOnFocus = null;
+		mutableRef.current.isWheeling = false;
 		stopVoice();
 	}
 
 	function focusOnItem () {
-		if (variables.current.indexToFocus !== null && typeof childAdapter.current.focusByIndex === 'function') {
-			childAdapter.current.focusByIndex(variables.current.indexToFocus);
-			variables.current.indexToFocus = null;
+		if (mutableRef.current.indexToFocus !== null && typeof childAdapter.current.focusByIndex === 'function') {
+			childAdapter.current.focusByIndex(mutableRef.current.indexToFocus);
+			mutableRef.current.indexToFocus = null;
 		}
 
-		if (variables.current.nodeToFocus !== null && typeof childAdapter.current.focusOnNode === 'function') {
-			childAdapter.current.focusOnNode(variables.current.nodeToFocus);
-			variables.current.nodeToFocus = null;
+		if (mutableRef.current.nodeToFocus !== null && typeof childAdapter.current.focusOnNode === 'function') {
+			childAdapter.current.focusOnNode(mutableRef.current.nodeToFocus);
+			mutableRef.current.nodeToFocus = null;
 		}
 
-		if (variables.current.pointToFocus !== null) {
+		if (mutableRef.current.pointToFocus !== null) {
 			// no need to focus on pointer mode
 			if (!Spotlight.getPointerMode()) {
 				const
-					{direction, x, y} = variables.current.pointToFocus,
+					{direction, x, y} = mutableRef.current.pointToFocus,
 					position = {x, y},
 					elemFromPoint = document.elementFromPoint(x, y),
 					target =
@@ -701,13 +701,13 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 				}
 			}
 
-			variables.current.pointToFocus = null;
+			mutableRef.current.pointToFocus = null;
 		}
 	}
 
 	function scrollTo (opt) {
-		variables.current.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
-		variables.current.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
+		mutableRef.current.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
+		mutableRef.current.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
 	}
 
 // Move to useScrollbar
@@ -755,7 +755,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 // Move to useOverscrollEffect
 
 	function clearOverscrollEffect (orientation, edge) {
-		variables.current.overscrollJobs[orientation][edge].startAfter(overscrollTimeout, orientation, edge, overscrollTypeNone, 0);
+		mutableRef.current.overscrollJobs[orientation][edge].startAfter(overscrollTimeout, orientation, edge, overscrollTypeNone, 0);
 		uiScrollableAdapter.current.setOverscrollStatus(orientation, edge, overscrollTypeNone, 0);
 	}
 
@@ -766,19 +766,19 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 			nodeRef.style.setProperty(overscrollRatioPrefix + orientation + edge, ratio);
 
 			if (type === overscrollTypeOnce) {
-				variables.current.overscrollJobs[orientation][edge].start(orientation, edge, overscrollTypeDone, 0);
+				mutableRef.current.overscrollJobs[orientation][edge].start(orientation, edge, overscrollTypeDone, 0);
 			}
 		}
 	}, [overscrollRefs]);
 
 	function createOverscrollJob (orientation, edge) {
-		if (!variables.current.overscrollJobs[orientation][edge]) {
-			variables.current.overscrollJobs[orientation][edge] = new Job(applyOverscrollEffect, overscrollTimeout);
+		if (!mutableRef.current.overscrollJobs[orientation][edge]) {
+			mutableRef.current.overscrollJobs[orientation][edge] = new Job(applyOverscrollEffect, overscrollTimeout);
 		}
 	}
 
 	function stopOverscrollJob (orientation, edge) {
-		const job = variables.current.overscrollJobs[orientation][edge];
+		const job = mutableRef.current.overscrollJobs[orientation][edge];
 
 		if (job) {
 			job.stop();
@@ -817,8 +817,8 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 				viewportBounds = scrollableContainerNode.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),
 				nodes = Spotlight.getSpottableDescendants(scrollableContainerNode.dataset.spotlightId),
-				first = variables.current.voiceControlDirection === 'vertical' ? 'top' : 'left',
-				last = variables.current.voiceControlDirection === 'vertical' ? 'bottom' : 'right';
+				first = mutableRef.current.voiceControlDirection === 'vertical' ? 'top' : 'left',
+				last = mutableRef.current.voiceControlDirection === 'vertical' ? 'bottom' : 'right';
 
 			if (spotItemBounds[last] < viewportBounds[first] || spotItemBounds[first] > viewportBounds[last]) {
 				for (let i = 0; i < nodes.length; i++) {
@@ -856,11 +856,11 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 			scroll = isHorizontal ? horizontalDirection[index] : verticalDirection[index];
 		}
 
-		variables.current.voiceControlDirection = verticalDirection.includes(scroll) && 'vertical' || horizontalDirection.includes(scroll) && 'horizontal' || null;
+		mutableRef.current.voiceControlDirection = verticalDirection.includes(scroll) && 'vertical' || horizontalDirection.includes(scroll) && 'horizontal' || null;
 
 		// Case 1. Invalid direction
-		if (variables.current.voiceControlDirection === null) {
-			variables.current.isVoiceControl = false;
+		if (mutableRef.current.voiceControlDirection === null) {
+			mutableRef.current.isVoiceControl = false;
 		// Case 2. Cannot scroll
 		} else if (
 			(['up', 'top'].includes(scroll) && isReachedEdge(scrollTop, 0)) ||
@@ -874,7 +874,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 			}
 		// Case 3. Can scroll
 		} else {
-			variables.current.isVoiceControl = true;
+			mutableRef.current.isVoiceControl = true;
 
 			if (['up', 'down', 'left', 'right'].includes(scroll)) {
 				const isPreviousScrollButton = (scroll === 'up') || (scroll === 'left' && !isRtl) || (scroll === 'right' && isRtl);
@@ -910,7 +910,7 @@ const useSpottableScrollable = (props, instances, context) => {
 
 	// Mutable value
 
-	const variables = useRef({
+	const mutableRef = useRef({
 		animateOnFocus: false,
 		indexToFocus: null,
 		lastScrollPositionOnFocus: null,
@@ -940,9 +940,9 @@ const useSpottableScrollable = (props, instances, context) => {
 
 	const {handleWheel, isWheeling} = useEventWheel(props, instances, {isScrollButtonFocused, type});
 
-	const {calculateAndScrollTo, handleFocus, hasFocus} = useEventFocus(props, {...instances, spottable: variables}, {alertThumb, isWheeling, type});
+	const {calculateAndScrollTo, handleFocus, hasFocus} = useEventFocus(props, {...instances, spottable: mutableRef}, {alertThumb, isWheeling, type});
 
-	const {handleKeyDown, lastPointer, scrollByPageOnPointerMode} = useEventKey(props, {...instances, spottable: variables}, {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type});
+	const {handleKeyDown, lastPointer, scrollByPageOnPointerMode} = useEventKey(props, {...instances, spottable: mutableRef}, {checkAndApplyOverscrollEffectByDirection, hasFocus, isContent, type});
 
 	useEventMonitor({}, instances, {lastPointer, scrollByPageOnPointerMode});
 
@@ -963,8 +963,8 @@ const useSpottableScrollable = (props, instances, context) => {
 	}
 
 	function scrollTo (opt) {
-		variables.current.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
-		variables.current.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
+		mutableRef.current.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : null;
+		mutableRef.current.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
 	}
 
 	function start (animate) {
@@ -979,8 +979,8 @@ const useSpottableScrollable = (props, instances, context) => {
 		}
 
 		focusOnItem();
-		variables.current.lastScrollPositionOnFocus = null;
-		variables.current.isWheeling = false;
+		mutableRef.current.lastScrollPositionOnFocus = null;
+		mutableRef.current.isWheeling = false;
 		stopVoice();
 	}
 
@@ -989,21 +989,21 @@ const useSpottableScrollable = (props, instances, context) => {
 	}
 
 	function focusOnItem () {
-		if (variables.current.indexToFocus !== null && typeof childAdapter.current.focusByIndex === 'function') {
-			childAdapter.current.focusByIndex(variables.current.indexToFocus);
-			variables.current.indexToFocus = null;
+		if (mutableRef.current.indexToFocus !== null && typeof childAdapter.current.focusByIndex === 'function') {
+			childAdapter.current.focusByIndex(mutableRef.current.indexToFocus);
+			mutableRef.current.indexToFocus = null;
 		}
 
-		if (variables.current.nodeToFocus !== null && typeof childAdapter.current.focusOnNode === 'function') {
-			childAdapter.current.focusOnNode(variables.current.nodeToFocus);
-			variables.current.nodeToFocus = null;
+		if (mutableRef.current.nodeToFocus !== null && typeof childAdapter.current.focusOnNode === 'function') {
+			childAdapter.current.focusOnNode(mutableRef.current.nodeToFocus);
+			mutableRef.current.nodeToFocus = null;
 		}
 
-		if (variables.current.pointToFocus !== null) {
+		if (mutableRef.current.pointToFocus !== null) {
 			// no need to focus on pointer mode
 			if (!Spotlight.getPointerMode()) {
 				const
-					{direction, x, y} = variables.current.pointToFocus,
+					{direction, x, y} = mutableRef.current.pointToFocus,
 					position = {x, y},
 					elemFromPoint = document.elementFromPoint(x, y),
 					target =
@@ -1016,7 +1016,7 @@ const useSpottableScrollable = (props, instances, context) => {
 				}
 			}
 
-			variables.current.pointToFocus = null;
+			mutableRef.current.pointToFocus = null;
 		}
 	}
 

@@ -28,7 +28,7 @@ const useEventKey = (props, instances, context) => {
 
 	// Mutable value
 
-	const variables = useRef({
+	const mutableRef = useRef({
 		fn: null
 	});
 
@@ -214,13 +214,13 @@ const useEventKey = (props, instances, context) => {
 	// Functions
 
 	function addGlobalKeyDownEventListener (fn) {
-		variables.current.fn = fn;
-		utilEvent('keydown').addEventListener(document, variables.current.fn, {capture: true});
+		mutableRef.current.fn = fn;
+		utilEvent('keydown').addEventListener(document, mutableRef.current.fn, {capture: true});
 	}
 
 	function removeGlobalKeyDownEventListener () {
-		utilEvent('keydown').removeEventListener(document, variables.current.fn, {capture: true});
-		variables.current.fn = null;
+		utilEvent('keydown').removeEventListener(document, mutableRef.current.fn, {capture: true});
+		mutableRef.current.fn = null;
 	}
 
 	// Return

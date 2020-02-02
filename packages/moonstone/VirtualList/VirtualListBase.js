@@ -197,7 +197,7 @@ const
 
 		// Mutable value
 
-		const variables = useRef({
+		const mutableRef = useRef({
 			isScrolledBy5way: false,
 			isScrolledByJump: false,
 			lastFocusedIndex: null,
@@ -205,17 +205,17 @@ const
 			pause: new Pause('VirtualListBase')
 		});
 
-		const {pause} = variables.current;
+		const {pause} = mutableRef.current;
 
 		// Hooks
 
-		useSpotlightConfig(props, {spottable: variables});
+		useSpotlightConfig(props, {spottable: mutableRef});
 
 		const [isOverscrollEffect, setOverscrollEffect] = useOverscrollEffect();
 
 		const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey(props, instances, {
 			handlePageUpDownKeyDown: () => {
-				variables.current.isScrolledBy5way = false;
+				mutableRef.current.isScrolledBy5way = false;
 			},
 			handleDirectionKeyDown: (ev, eventType, param) => {
 				const
@@ -250,7 +250,7 @@ const
 			handleRestoreLastFocus,
 			preserveLastFocus,
 			updateStatesAndBounds
-		} = useSpotlightRestore(props, {...instances, spottable: variables});
+		} = useSpotlightRestore(props, {...instances, spottable: mutableRef});
 
 		const setContainerDisabled = useCallback((bool) => {
 			const
@@ -414,11 +414,11 @@ const
 */
 
 		function getNodeIndexToBeFocused () {
-			return variables.current.nodeIndexToBeFocused;
+			return mutableRef.current.nodeIndexToBeFocused;
 		}
 
 		function setNodeIndexToBeFocused (index) {
-			variables.current.nodeIndexToBeFocused = index;
+			mutableRef.current.nodeIndexToBeFocused = index;
 		}
 
 		function onAcceleratedKeyDown ({isWrapped, keyCode, nextIndex, repeat, target}) {
@@ -426,8 +426,8 @@ const
 			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPositionTarget} = uiScrollableAdapter.current;
 			const index = getNumberValue(target.dataset.index);
 
-			variables.current.isScrolledBy5way = false;
-			variables.current.isScrolledByJump = false;
+			mutableRef.current.isScrolledBy5way = false;
+			mutableRef.current.isScrolledByJump = false;
 
 			if (nextIndex >= 0) {
 				const
@@ -451,17 +451,17 @@ const
 					isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex <= lastFullyVisibleIndex;
 				}
 
-				variables.current.lastFocusedIndex = nextIndex;
+				mutableRef.current.lastFocusedIndex = nextIndex;
 
 				if (isNextItemInView) {
 					// The next item could be still out of viewport. So we need to prevent scrolling into view with `isScrolledBy5way` flag.
-					variables.current.isScrolledBy5way = true;
+					mutableRef.current.isScrolledBy5way = true;
 					focusByIndex(nextIndex);
-					variables.current.isScrolledBy5way = false;
+					mutableRef.current.isScrolledBy5way = false;
 				} else if (row === nextRow && (start < scrollPositionTarget || end > scrollPositionTarget + clientSize)) {
 					focusByIndex(nextIndex);
 				} else {
-					variables.current.isScrolledBy5way = true;
+					mutableRef.current.isScrolledBy5way = true;
 					setOverscrollEffect(isWrapped);
 
 					if (isWrapped && (
@@ -605,7 +605,7 @@ Move to useEvent
 				pause.resume();
 				focusOnNode(item);
 				setNodeIndexToBeFocused(null);
-				variables.current.isScrolledByJump = false;
+				mutableRef.current.isScrolledByJump = false;
 			}
 		}
 
@@ -617,14 +617,14 @@ Move to useEvent
 					// If focusing the item of VirtuallistNative, `onFocus` in Scrollable will be called.
 					// Then VirtualListNative tries to scroll again differently from VirtualList.
 					// So we would like to skip `focus` handling when focusing the item as a workaround.
-					variables.current.isScrolledByJump = true;
+					mutableRef.current.isScrolledByJump = true;
 					focusByIndex(index);
 				}
 			}
 		}
 
 		function isNeededScrollingPlaceholder () {
-			return variables.current.nodeIndexToBeFocused != null && Spotlight.isPaused();
+			return mutableRef.current.nodeIndexToBeFocused != null && Spotlight.isPaused();
 		}
 
 /*
@@ -637,14 +637,14 @@ Move to useEvent
 				const index = placeholder.dataset.index;
 
 				if (index) {
-					variables.current.preservedIndex = getNumberValue(index);
-					variables.current.restoreLastFocused = true;
+					mutableRef.current.preservedIndex = getNumberValue(index);
+					mutableRef.current.restoreLastFocused = true;
 				}
 			}
 		}
 
 		function handleRestoreLastFocus ({firstIndex, lastIndex}) {
-			if (variables.current.restoreLastFocused && variables.current.preservedIndex >= firstIndex && variables.current.preservedIndex <= lastIndex) {
+			if (mutableRef.current.restoreLastFocused && mutableRef.current.preservedIndex >= firstIndex && mutableRef.current.preservedIndex <= lastIndex) {
 				restoreFocus();
 			}
 		}
@@ -661,19 +661,19 @@ Move to useEvent
 
 		function restoreFocus () {
 			if (
-				variables.current.restoreLastFocused &&
+				mutableRef.current.restoreLastFocused &&
 				!isPlaceholderFocused()
 			) {
 				const
 					{spotlightId} = this.props,
 					node = this.uiRefCurrent.containerRef.current.querySelector(
-						`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
+						`[data-spotlight-id="${spotlightId}"] [data-index="${mutableRef.current.preservedIndex}"]`
 					);
 
 				if (node) {
 					// if we're supposed to restore focus and virtual list has positioned a set of items
 					// that includes lastFocusedIndex, clear the indicator
-					variables.current.restoreLastFocused = false;
+					mutableRef.current.restoreLastFocused = false;
 
 					// try to focus the last focused item
 					spottable.current.isScrolledByJump = true;
@@ -683,7 +683,7 @@ Move to useEvent
 					// but if that fails (because it isn't found or is disabled), focus the container so
 					// spotlight isn't lost
 					if (!foundLastFocused) {
-						variables.current.restoreLastFocused = true;
+						mutableRef.current.restoreLastFocused = true;
 						Spotlight.focus(spotlightId);
 					}
 				}
@@ -701,8 +701,8 @@ Move to useEvent
 			if (!isNaN(focusedIndex)) {
 				let gridPosition = uiScrollableAdapter.current.getGridPosition(focusedIndex);
 
-				if (numOfItems > 0 && focusedIndex % numOfItems !== variables.current.lastFocusedIndex % numOfItems) {
-					const node = uiScrollableAdapter.current.getItemNode(variables.current.lastFocusedIndex);
+				if (numOfItems > 0 && focusedIndex % numOfItems !== mutableRef.current.lastFocusedIndex % numOfItems) {
+					const node = uiScrollableAdapter.current.getItemNode(mutableRef.current.lastFocusedIndex);
 
 					if (node) {
 						node.blur();
@@ -710,7 +710,7 @@ Move to useEvent
 				}
 
 				setNodeIndexToBeFocused(null);
-				variables.current.lastFocusedIndex = focusedIndex;
+				mutableRef.current.lastFocusedIndex = focusedIndex;
 
 				if (primary.clientSize >= primary.itemSize) {
 					if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
@@ -737,7 +737,7 @@ Move to useEvent
 		}
 
 		function shouldPreventScrollByFocus () {
-			return ((type === JS) ? (variables.current.isScrolledBy5way) : (variables.current.isScrolledBy5way || variables.current.isScrolledByJump));
+			return ((type === JS) ? (mutableRef.current.isScrolledBy5way) : (mutableRef.current.isScrolledBy5way || mutableRef.current.isScrolledByJump));
 		}
 
 		function shouldPreventOverscrollEffect () {
@@ -745,15 +745,15 @@ Move to useEvent
 		}
 
 		function setLastFocusedNode (node) {
-			variables.current.lastFocusedIndex = node.dataset && getNumberValue(node.dataset.index);
+			mutableRef.current.lastFocusedIndex = node.dataset && getNumberValue(node.dataset.index);
 		}
 
 /*
 // Move to useSpotlight
 
 		function updateStatesAndBounds ({dataSize, moreInfo, numOfItems}) {
-			return (variables.current.restoreLastFocused && numOfItems > 0 && variables.current.preservedIndex < dataSize && (
-				variables.current.preservedIndex < moreInfo.firstVisibleIndex || variables.current.preservedIndex > moreInfo.lastVisibleIndex
+			return (mutableRef.current.restoreLastFocused && numOfItems > 0 && mutableRef.current.preservedIndex < dataSize && (
+				mutableRef.current.preservedIndex < moreInfo.firstVisibleIndex || mutableRef.current.preservedIndex > moreInfo.lastVisibleIndex
 			));
 		}
 */

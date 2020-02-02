@@ -71,7 +71,7 @@ const useSpotlightRestore = (props, instances) => {
 
 	// Mutable value
 
-	const variables = useRef({
+	const mutableRef = useRef({
 		preservedIndex: false,
 		restoreLastFocused: false
 	});
@@ -89,8 +89,8 @@ const useSpotlightRestore = (props, instances) => {
 			const index = placeholder.dataset.index;
 
 			if (index) {
-				variables.current.preservedIndex = getNumberValue(index);
-				variables.current.restoreLastFocused = true;
+				mutableRef.current.preservedIndex = getNumberValue(index);
+				mutableRef.current.restoreLastFocused = true;
 			}
 		}
 	}
@@ -109,19 +109,19 @@ const useSpotlightRestore = (props, instances) => {
 
 	function restoreFocus () {
 		if (
-			variables.current.restoreLastFocused &&
+			mutableRef.current.restoreLastFocused &&
 			!isPlaceholderFocused()
 		) {
 			const
 				{spotlightId} = this.props,
 				node = this.uiRefCurrent.containerRef.current.querySelector(
-					`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
+					`[data-spotlight-id="${spotlightId}"] [data-index="${mutableRef.current.preservedIndex}"]`
 				);
 
 			if (node) {
 				// if we're supposed to restore focus and virtual list has positioned a set of items
 				// thatx includes lastFocusedIndex, clear the indicator
-				variables.current.restoreLastFocused = false;
+				mutableRef.current.restoreLastFocused = false;
 
 				// try to focus the last focused item
 				spottable.current.isScrolledByJump = true;
@@ -131,7 +131,7 @@ const useSpotlightRestore = (props, instances) => {
 				// but if that fails (because it isn't found or is disabled), focus the container so
 				// spotlight isn't lost
 				if (!foundLastFocused) {
-					variables.current.restoreLastFocused = true;
+					mutableRef.current.restoreLastFocused = true;
 					Spotlight.focus(spotlightId);
 				}
 			}
@@ -139,20 +139,20 @@ const useSpotlightRestore = (props, instances) => {
 	}
 
 	function handleRestoreLastFocus ({firstIndex, lastIndex}) {
-		if (variables.current.restoreLastFocused && variables.current.preservedIndex >= firstIndex && variables.current.preservedIndex <= lastIndex) {
+		if (mutableRef.current.restoreLastFocused && mutableRef.current.preservedIndex >= firstIndex && mutableRef.current.preservedIndex <= lastIndex) {
 			restoreFocus();
 		}
 	}
 
 	function updateStatesAndBounds ({dataSize, moreInfo, numOfItems}) {
-		return (variables.current.restoreLastFocused && numOfItems > 0 && variables.current.preservedIndex < dataSize && (
-			variables.current.preservedIndex < moreInfo.firstVisibleIndex || variables.current.preservedIndex > moreInfo.lastVisibleIndex
+		return (mutableRef.current.restoreLastFocused && numOfItems > 0 && mutableRef.current.preservedIndex < dataSize && (
+			mutableRef.current.preservedIndex < moreInfo.firstVisibleIndex || mutableRef.current.preservedIndex > moreInfo.lastVisibleIndex
 		));
 	}
 
 	function preserveLastFocus (index) {
-		variables.current.preservedIndex = index;
-		variables.current.restoreLastFocused = true;
+		mutableRef.current.preservedIndex = index;
+		mutableRef.current.restoreLastFocused = true;
 	}
 
 	// Return
