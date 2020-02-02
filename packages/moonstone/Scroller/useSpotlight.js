@@ -2,7 +2,6 @@ import Spotlight from '@enact/spotlight';
 import {useEffect} from 'react';
 
 const useSpotlightConfig = (props, instances) => {
-	const {dangerouslyContainsInScrollable, scrollAndFocusScrollbarButton, spotlightId} = props;
 	const {uiScrollableAdapter} = instances;
 
 	// Hooks
@@ -11,7 +10,7 @@ const useSpotlightConfig = (props, instances) => {
 		function handleLeaveContainer ({direction, target}) {
 			// ensure we only scroll to boundary from the contents and not a scroll button which
 			// lie outside of uiChildContainerRef but within the spotlight container
-			if (dangerouslyContainsInScrollable(target)) {
+			if (props.dangerouslyContainsInScrollable(target)) {
 				const
 					{scrollBounds: {maxLeft, maxTop}, scrollPos: {left, top}} = uiScrollableAdapter.current,
 					isVerticalDirection = (direction === 'up' || direction === 'down'),
@@ -20,20 +19,20 @@ const useSpotlightConfig = (props, instances) => {
 
 				// If max is equal to 0, it means scroller can not scroll to the direction.
 				if (pos >= 0 && pos <= max && max !== 0) {
-					scrollAndFocusScrollbarButton(direction);
+					props.scrollAndFocusScrollbarButton(direction);
 				}
 			}
 		}
 
 		function configureSpotlight () {
-			Spotlight.set(spotlightId, {
+			Spotlight.set(props.spotlightId, {
 				onLeaveContainer: handleLeaveContainer,
 				onLeaveContainerFail: handleLeaveContainer
 			});
 		}
 
 		configureSpotlight();
-	}, [dangerouslyContainsInScrollable, scrollAndFocusScrollbarButton, spotlightId, uiScrollableAdapter]);
+	}, [dangerouslyContainsInScrollable, props, uiScrollableAdapter]);
 };
 
 export {

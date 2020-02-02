@@ -47,7 +47,7 @@ const useScrollbar = (props, instances, context) => {
 	function scrollAndFocusScrollbarButton (direction) {
 		if (uiScrollableAdapter.current) {
 			const
-				{hRef, rtl, vRef} = uiScrollableAdapter.current,
+				{rtl} = uiScrollableAdapter.current,
 				isPreviousScrollButton = direction === 'up' || (rtl ? direction === 'right' : direction === 'left'),
 				isHorizontalDirection = direction === 'left' || direction === 'right',
 				isVerticalDirection = direction === 'up' || direction === 'down',
@@ -62,7 +62,7 @@ const useScrollbar = (props, instances, context) => {
 
 				if (props.focusableScrollbar) {
 					focusOnScrollButton(
-						canScrollingVertically ? vRef : hRef,
+						canScrollingVertically ? verticalScrollbarRef : horizontalScrollbarRef,
 						isPreviousScrollButton
 					);
 				}

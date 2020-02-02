@@ -317,6 +317,12 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 		}
 	}
 
+// Move to Scrollable below
+
+	function isContent (element) {
+		return (element && utilDOM.containsDangerously(uiChildContainerRef, element));
+	}
+
 // Move to useEventFocus
 
 	const startScrollOnFocus = (pos) => {
@@ -631,7 +637,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 	function scrollAndFocusScrollbarButton (direction) {
 		if (uiScrollableAdapter.current) {
 			const
-				{hRef, rtl, vRef} = uiScrollableAdapter.current,
+				{rtl} = uiScrollableAdapter.current,
 				isPreviousScrollButton = direction === 'up' || (rtl ? direction === 'right' : direction === 'left'),
 				isHorizontalDirection = direction === 'left' || direction === 'right',
 				isVerticalDirection = direction === 'up' || direction === 'down',
@@ -646,7 +652,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 
 				if (props.focusableScrollbar) {
 					focusOnScrollButton(
-						canScrollingVertically ? vRef : hRef,
+						canScrollingVertically ? verticalScrollbarRef : horizontalScrollbarRef,
 						isPreviousScrollButton
 					);
 				}
@@ -898,7 +904,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 */
 
 const useSpottableScrollable = (props, instances, context) => {
-	const {childAdapter, scrollableContainerRef, uiChildContainerRef, uiScrollableAdapter} = instances;
+	const {childAdapter, horizontalScrollbarRef, scrollableContainerRef, uiChildContainerRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
 	const {type} = context;
 	const contextSharedState = useContext(SharedState);
 

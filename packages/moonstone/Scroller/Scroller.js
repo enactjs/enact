@@ -369,7 +369,7 @@ const useSpottable = (props, instances) => {
 
 			// If max is equal to 0, it means scroller can not scroll to the direction.
 			if (pos >= 0 && pos <= max && max !== 0) {
-				scrollAndFocusScrollbarButton(direction);
+				props.scrollAndFocusScrollbarButton(direction);
 			}
 		}
 	}

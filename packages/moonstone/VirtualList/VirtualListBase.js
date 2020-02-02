@@ -459,13 +459,11 @@ const
 				} else if (row === nextRow && (start < scrollPositionTarget || end > scrollPositionTarget + clientSize)) {
 					focusByIndex(nextIndex);
 				} else {
-					const containerNode = uiChildContainerRef.current;
-
 					variables.current.isScrolledBy5way = true;
 					setOverscrollEffect(isWrapped);
 
 					if (isWrapped && (
-						containerNode.querySelector(`[data-index='${nextIndex}']${spottableSelector}`) == null
+						scrollableContainerRef.current.querySelector(`[data-index='${nextIndex}']${spottableSelector}`) == null
 					)) {
 						if (wrap === true) {
 							pause.pause();
@@ -571,6 +569,12 @@ Move to useEvent
 				handlePageUpDownKeyDown();
 			}
 		}
+
+		function handleKeyUp ({keyCode}) {
+			if (getDirection(keyCode) || isEnter(keyCode)) {
+				handle5WayKeyUp();
+			}
+		}
 */
 
 		/**
@@ -642,11 +646,9 @@ Move to useEvent
 		}
 
 		function isPlaceholderFocused () {
-			const
-				childContainerNode = uiChildContainerRef.current,
-				current = Spotlight.getCurrent();
+			const current = Spotlight.getCurrent();
 
-			if (current && current.dataset.vlPlaceholder && utilDOM.containsDangerously(childContainerNode, current)) {
+			if (current && current.dataset.vlPlaceholder && utilDOM.containsDangerously(scrollableContainerRef.current, current)) {
 				return true;
 			}
 
@@ -665,7 +667,7 @@ Move to useEvent
 
 				if (node) {
 					// if we're supposed to restore focus and virtual list has positioned a set of items
-					// thatx includes lastFocusedIndex, clear the indicator
+					// that includes lastFocusedIndex, clear the indicator
 					variables.current.restoreLastFocused = false;
 
 					// try to focus the last focused item
@@ -741,6 +743,18 @@ Move to useEvent
 			variables.current.lastFocusedIndex = node.dataset && getNumberValue(node.dataset.index);
 		}
 
+/*
+// Move to useSpotlight
+
+		function updateStatesAndBounds ({dataSize, moreInfo, numOfItems}) {
+			// TODO check preservedIndex
+			// const {preservedIndex} = this;
+
+			return (variables.current.restoreLastFocused && numOfItems > 0 && variables.current.preservedIndex < dataSize && (
+				variables.current.preservedIndex < moreInfo.firstVisibleIndex || variables.current.preservedIndex > moreInfo.lastVisibleIndex
+			));
+		}
+*/
 		function getScrollBounds () {
 			return uiScrollableAdapter.current.getScrollBounds();
 		}

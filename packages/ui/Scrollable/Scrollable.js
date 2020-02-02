@@ -79,7 +79,7 @@ const useForceUpdate = () => (useReducer(x => x + 1, 0));
  * @private
  */
 class ScrollableBase extends Component {
-	static  displayName = 'ui:ScrollableBase'
+	static displayName = 'ui:ScrollableBase'
 
 	static propTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
 		/**
@@ -1127,9 +1127,9 @@ const useScrollable = (props) => {
 		}
 	}
 
-	function setOverscrollStatus (orientation, edge, overScrollType, ratio) {
+	function setOverscrollStatus (orientation, edge, overscrollEffectType, ratio) {
 		const status = variables.current.overscrollStatus[orientation][edge];
-		status.type = overScrollType;
+		status.type = overscrollEffectType;
 		status.ratio = ratio;
 	}
 
@@ -1156,12 +1156,12 @@ const useScrollable = (props) => {
 		return Math.min(1, 2 * overDistance / baseSize);
 	}
 
-	function applyOverscrollEffect (orientation, edge, overScrollType, ratio) {
-		props.applyOverscrollEffect(orientation, edge, overScrollType, ratio);
-		setOverscrollStatus(orientation, edge, overScrollType === overscrollTypeOnce ? overscrollTypeDone : type, ratio);
+	function applyOverscrollEffect (orientation, edge, overscrollEffectType, ratio) {
+		props.applyOverscrollEffect(orientation, edge, overscrollEffectType, ratio);
+		setOverscrollStatus(orientation, edge, overscrollEffectType === overscrollTypeOnce ? overscrollTypeDone : type, ratio);
 	}
 
-	function checkAndApplyOverscrollEffect (orientation, edge, overScrollType, ratio = 1) {
+	function checkAndApplyOverscrollEffect (orientation, edge, overscrollEffectType, ratio = 1) {
 		const
 			isVertical = (orientation === 'vertical'),
 			curPos = isVertical ? variables.current.scrollTop : variables.current.scrollLeft,
@@ -1171,9 +1171,9 @@ const useScrollable = (props) => {
 			type === 'JS' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos) ||
 			type === 'Native' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - 1)
 		) { // Already on the edge
-			applyOverscrollEffect(orientation, edge, overScrollType, ratio);
+			applyOverscrollEffect(orientation, edge, overscrollEffectType, ratio);
 		} else {
-			setOverscrollStatus(orientation, edge, overScrollType, ratio);
+			setOverscrollStatus(orientation, edge, overscrollEffectType, ratio);
 		}
 	}
 
@@ -1195,13 +1195,13 @@ const useScrollable = (props) => {
 		});
 	}
 
-	function applyOverscrollEffectOnDrag (orientation, edge, targetPosition, overScrollType) {
+	function applyOverscrollEffectOnDrag (orientation, edge, targetPosition, overscrollEffectType) {
 		if (edge) {
 			const
 				oppositeEdge = edge === 'before' ? 'after' : 'before',
 				ratio = calculateOverscrollRatio(orientation, targetPosition);
 
-			applyOverscrollEffect(orientation, edge, overScrollType, ratio);
+			applyOverscrollEffect(orientation, edge, overscrollEffectType, ratio);
 			clearOverscrollEffect(orientation, oppositeEdge);
 		} else {
 			clearOverscrollEffect(orientation, 'before');
@@ -1210,25 +1210,25 @@ const useScrollable = (props) => {
 	}
 
 	// Native [[
-	function checkAndApplyOverscrollEffectOnDrag (targetX, targetY, overScrollType) {
+	function checkAndApplyOverscrollEffectOnDrag (targetX, targetY, overscrollEffectType) {
 		const bounds = getScrollBounds();
 
 		if (canScrollHorizontally(bounds)) {
-			applyOverscrollEffectOnDrag('horizontal', getEdgeFromPosition(targetX, bounds.maxLeft), targetX, overScrollType);
+			applyOverscrollEffectOnDrag('horizontal', getEdgeFromPosition(targetX, bounds.maxLeft), targetX, overscrollEffectType);
 		}
 
 		if (canScrollVertically(bounds)) {
-			applyOverscrollEffectOnDrag('vertical', getEdgeFromPosition(targetY, bounds.maxTop), targetY, overScrollType);
+			applyOverscrollEffectOnDrag('vertical', getEdgeFromPosition(targetY, bounds.maxTop), targetY, overscrollEffectType);
 		}
 	}
 	// Native ]]
 
 	function checkAndApplyOverscrollEffectOnScroll (orientation) {
 		['before', 'after'].forEach((edge) => {
-			const {ratio, overScrollType} = getOverscrollStatus(orientation, edge);
+			const {ratio, overscrollEffectType} = getOverscrollStatus(orientation, edge);
 
-			if (overScrollType === overscrollTypeOnce) {
-				checkAndApplyOverscrollEffect(orientation, edge, overScrollType, ratio);
+			if (overscrollEffectType === overscrollTypeOnce) {
+				checkAndApplyOverscrollEffect(orientation, edge, overscrollEffectType, ratio);
 			}
 		});
 	}
@@ -1244,8 +1244,8 @@ const useScrollable = (props) => {
 	// call scroll callbacks
 
 	// esline-disable-next-line react-hooks/exhaustive-deps
-	function forwardScrollEvent (overScrollType, reachedEdgeInfo) {
-		forward(overScrollType, {scrollLeft: variables.current.scrollLeft, scrollTop: variables.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo}, props);
+	function forwardScrollEvent (overscrollEffectType, reachedEdgeInfo) {
+		forward(overscrollEffectType, {scrollLeft: variables.current.scrollLeft, scrollTop: variables.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo}, props);
 	}
 
 	// Native [[
