@@ -285,6 +285,132 @@ const
 
 		// Functions
 
+
+/*
+// Move to useSpotlight
+
+		function configureSpotlight () {
+			Spotlight.set(spotlightId, {
+				enterTo: 'last-focused',
+				/*
+				 * Returns the data-index as the key for last focused
+				 */
+				lastFocusedPersist,
+				/*
+				 * Restores the data-index into the placeholder if its the only element. Tries to find a
+				 * matching child otherwise.
+				 */
+				lastFocusedRestore: lastFocusedRestore,
+				/*
+				 * Directs spotlight focus to favor straight elements that are within range of `spacing`
+				 * over oblique elements, like scroll buttons.
+				 */
+				obliqueMultiplier: spacing > 0 ? spacing : 1
+			});
+		}
+
+		const lastFocusedPersist = () => {
+			if (lastFocusedIndex != null) {
+				return {
+					container: false,
+					element: true,
+					key: lastFocusedIndex
+				};
+			}
+		};
+
+		/*
+		 * Restores the data-index into the placeholder if it exists. Tries to find a matching child
+		 * otherwise.
+		 */
+		function lastFocusedRestore ({key}, all) {
+			const placeholder = all.find(el => 'vlPlaceholder' in el.dataset);
+
+			if (placeholder) {
+				placeholder.dataset.index = key;
+
+				return placeholder;
+			}
+
+			return all.reduce((focused, node) => {
+				return focused || Number(node.dataset.index) === key && node;
+			}, null);
+		}
+
+// Move to useEvent
+
+		const findSpottableItem = useCallback((indexFrom, indexTo) => {
+			if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
+				return -1;
+			} else {
+				return clamp(0, dataSize - 1, indexFrom);
+			}
+		}, [dataSize]);
+
+		const getNextIndex = useCallback(({index, keyCode, repeat}) => {
+			const {isPrimaryDirectionVertical, dimensionToExtent} = uiScrollableAdapter;
+			const column = index % dimensionToExtent;
+			const row = (index - column) % dataSize / dimensionToExtent;
+			const isDownKey = isDown(keyCode);
+			const isLeftMovement = (!rtl && isLeft(keyCode)) || (rtl && isRight(keyCode));
+			const isRightMovement = (!rtl && isRight(keyCode)) || (rtl && isLeft(keyCode));
+			const isUpKey = isUp(keyCode);
+			const isNextRow = index + dimensionToExtent < dataSize;
+			const isNextAdjacent = column < dimensionToExtent - 1 && index < (dataSize - 1);
+			const isBackward = (
+				isPrimaryDirectionVertical && isUpKey ||
+				!isPrimaryDirectionVertical && isLeftMovement ||
+				null
+			);
+			const isForward = (
+				isPrimaryDirectionVertical && isDownKey ||
+				!isPrimaryDirectionVertical && isRightMovement ||
+				null
+			);
+			let isWrapped = false;
+			let nextIndex = -1;
+			let targetIndex = -1;
+
+			if (index >= 0) {
+				if (isPrimaryDirectionVertical) {
+					if (isUpKey && row) {
+						targetIndex = index - dimensionToExtent;
+					} else if (isDownKey && isNextRow) {
+						targetIndex = index + dimensionToExtent;
+					} else if (isLeftMovement && column) {
+						targetIndex = index - 1;
+					} else if (isRightMovement && isNextAdjacent) {
+						targetIndex = index + 1;
+					}
+				} else if (isLeftMovement && row) {
+					targetIndex = index - dimensionToExtent;
+				} else if (isRightMovement && isNextRow) {
+					targetIndex = index + dimensionToExtent;
+				} else if (isUpKey && column) {
+					targetIndex = index - 1;
+				} else if (isDownKey && isNextAdjacent) {
+					targetIndex = index + 1;
+				}
+
+				if (targetIndex >= 0) {
+					nextIndex = targetIndex;
+				}
+			}
+
+			if (!repeat && nextIndex === -1 && wrap) {
+				if (isForward && findSpottableItem((row + 1) * dimensionToExtent, dataSize) < 0) {
+					nextIndex = findSpottableItem(0, index);
+					isWrapped = true;
+				} else if (isBackward && findSpottableItem(-1, row * dimensionToExtent - 1) < 0) {
+					nextIndex = findSpottableItem(dataSize, index);
+					isWrapped = true;
+				}
+			}
+
+			return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
+		}, [dataSize, findSpottableItem, rtl, uiScrollableAdapter, wrap]);		
+*/
+
 		function getNodeIndexToBeFocused () {
 			return variables.current.nodeIndexToBeFocused;
 		}
@@ -364,6 +490,89 @@ const
 			}
 		}
 
+/*
+
+Move to useEvent
+
+		function handleKeyDown (ev) {
+			const {keyCode, target} = ev;
+			const direction = getDirection(keyCode);
+
+			if (direction) {
+				Spotlight.setPointerMode(false);
+
+				if (SpotlightAccelerator.processKey(ev, nop)) {
+					ev.stopPropagation();
+				} else {
+					const {repeat} = ev;
+					const {dimensionToExtent, isPrimaryDirectionVertical} = uiScrollableAdapter;
+					const targetIndex = target.dataset.index;
+					const isScrollButton = (
+						// if target has an index, it must be an item so can't be a scroll button
+						!targetIndex &&
+						// if it lacks an index and is inside the scroller, it must be a button
+						target.matches(`[data-spotlight-id="${spotlightId}"] *`)
+					);
+					const index = !isScrollButton ? getNumberValue(targetIndex) : -1;
+					const {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex} = getNextIndex({index, keyCode, repeat});
+					const directions = {};
+					let isLeaving = false;
+					let isScrollbarVisible;
+
+					if (isPrimaryDirectionVertical) {
+						directions.left = isLeftMovement;
+						directions.right = isRightMovement;
+						directions.up = isUpKey;
+						directions.down = isDownKey;
+						isScrollbarVisible = isVerticalScrollbarVisible;
+					} else {
+						directions.left = isUpKey;
+						directions.right = isDownKey;
+						directions.up = isLeftMovement;
+						directions.down = isRightMovement;
+						isScrollbarVisible = isHorizontalScrollbarVisible;
+					}
+
+					if (!isScrollButton) {
+						if (nextIndex >= 0) {
+							ev.preventDefault();
+							ev.stopPropagation();
+
+							handleDirectionKeyDown(ev, 'acceleratedKeyDown', {isWrapped, keyCode, nextIndex, repeat, target});
+						} else {
+							const column = index % dimensionToExtent;
+							const row = (index - column) % dataSize / dimensionToExtent;
+
+							isLeaving = directions.up && row === 0 ||
+								directions.down && row === Math.floor((dataSize - 1) % dataSize / dimensionToExtent) ||
+								directions.left && column === 0 ||
+								directions.right && (!focusableScrollbar || !isScrollbarVisible) && (column === dimensionToExtent - 1 || index === dataSize - 1 && row === 0);
+
+							if (repeat && isLeaving) {
+								ev.preventDefault();
+								ev.stopPropagation();
+							} else if (!isLeaving) {
+								handleDirectionKeyDown(ev, 'keyDown', {keyCode, repeat, target});
+							}
+						}
+					} else {
+						const possibleTarget = getTargetByDirectionFromElement(direction, target);
+
+						if (!utilDOM.containsDangerously(ev.currentTarget, possibleTarget)) {
+							isLeaving = true;
+						}
+					}
+
+					if (isLeaving) {
+						handleDirectionKeyDown(ev, 'keyLeave');
+					}
+				}
+			} else if (isPageUp(keyCode) || isPageDown(keyCode)) {
+				handlePageUpDownKeyDown();
+			}
+		}
+*/
+
 		/**
 		 * Focus on the Node of the VirtualList item
 		 */
@@ -409,6 +618,71 @@ const
 		function isNeededScrollingPlaceholder () {
 			return variables.current.nodeIndexToBeFocused != null && Spotlight.isPaused();
 		}
+
+/*
+// Move to useSpoitlight
+
+		function handlePlaceholderFocus (ev) {
+			const placeholder = ev.currentTarget;
+
+			if (placeholder) {
+				const index = placeholder.dataset.index;
+
+				if (index) {
+					variables.current.preservedIndex = getNumberValue(index);
+					variables.current.restoreLastFocused = true;
+				}
+			}
+		}
+
+		function handleRestoreLastFocus ({firstIndex, lastIndex}) {
+			if (variables.current.restoreLastFocused && variables.current.preservedIndex >= firstIndex && variables.current.preservedIndex <= lastIndex) {
+				restoreFocus();
+			}
+		}
+
+		function isPlaceholderFocused () {
+			const
+				childContainerNode = uiChildContainerRef.current,
+				current = Spotlight.getCurrent();
+
+			if (current && current.dataset.vlPlaceholder && utilDOM.containsDangerously(childContainerNode, current)) {
+				return true;
+			}
+
+			return false;
+		}
+
+		function restoreFocus () {
+			if (
+				variables.current.restoreLastFocused &&
+				!isPlaceholderFocused()
+			) {
+				const childContainerNode = uiChildContainerRef.current;
+				const node = childContainerNode && childContainerNode.querySelector(
+					`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
+				);
+
+				if (node) {
+					// if we're supposed to restore focus and virtual list has positioned a set of items
+					// thatx includes lastFocusedIndex, clear the indicator
+					variables.current.restoreLastFocused = false;
+
+					// try to focus the last focused item
+					spottable.current.isScrolledByJump = true;
+					const foundLastFocused = Spotlight.focus(node);
+					spottable.current.isScrolledByJump = false;
+
+					// but if that fails (because it isn't found or is disabled), focus the container so
+					// spotlight isn't lost
+					if (!foundLastFocused) {
+						variables.current.restoreLastFocused = true;
+						Spotlight.focus(spotlightId);
+					}
+				}
+			}
+		}
+*/
 
 		function calculatePositionOnFocus ({item, scrollPosition = uiScrollableAdapter.current.scrollPosition}) {
 			const
@@ -491,12 +765,12 @@ const
 	};
 
 const useSpottableVirtualList = (props) => {
-	const {type, uiChildContainerRef} = props;
+	const {type, scrollableContainerRef, uiChildContainerRef} = props;
 	const {spotlightId} = props;
 
 	// Hooks
 
-	const instance = {uiChildContainerRef};
+	const instance = {scrollableContainerRef, uiChildContainerRef};
 
 	const {
 		calculatePositionOnFocus,
@@ -517,10 +791,7 @@ const useSpottableVirtualList = (props) => {
 	} = useSpottable(props, instance, {type});
 
 	const containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
-	usePreventScroll(props, instance, {
-		containerNode,
-		type
-	});
+	usePreventScroll(props, instance, {type});
 
 	const adapter = {
 		calculatePositionOnFocus,

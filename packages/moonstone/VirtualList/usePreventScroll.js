@@ -3,11 +3,14 @@ import {useEffect} from 'react';
 
 const usePreventScroll = (props, instances, context) => {
 	const {rtl} = props;
-	const {containerNode, type} = context;
+	cosnt {scrollableContainerRef} = instances;
+	const {type} = context;
 
 	// Hooks
 
 	useEffect(() => {
+		const containerNode = scrollableContainerRef.current;
+
 		if (type === 'JS' && containerNode) {
 			const preventScroll = () => {
 				containerNode.scrollTop = 0;

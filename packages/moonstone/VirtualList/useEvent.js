@@ -194,12 +194,14 @@ const useEventKey = (props, instances, context) => {
 			}
 		}
 
-		utilEvent('keydown').addEventListener(uiChildContainerRef, handleKeyDown, {capture: true});
-		utilEvent('keyup').addEventListener(uiChildContainerRef, handleKeyUp, {capture: true});
+		const scrollerNode = document.querySelector(`[data-spotlight-id="${props.spotlightId}"]`);
+
+		utilEvent('keydown').addEventListener(scrollerNode, handleKeyDown, {capture: true});
+		utilEvent('keyup').addEventListener(scrollerNode, handleKeyUp, {capture: true});
 
 		return () => {
-			utilEvent('keydown').removeEventListener(uiChildContainerRef, handleKeyDown, {capture: true});
-			utilEvent('keyup').removeEventListener(uiChildContainerRef, handleKeyUp, {capture: true});
+			utilEvent('keydown').removeEventListener(scrollerNode, handleKeyDown, {capture: true});
+			utilEvent('keyup').removeEventListener(scrollerNode, handleKeyUp, {capture: true});
 		};
 	}, [
 		uiChildContainerRef, dataSize, focusableScrollbar, getNextIndex,

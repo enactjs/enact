@@ -268,14 +268,13 @@ const useSpottable = (props, instances) => {
 
 		const
 			{rtl} = props,
-			scrollableContainerNode = scrollableContainerRef.current,
 			{clientWidth} = uiScrollableAdapter.current.scrollBounds,
 			rtlDirection = rtl ? -1 : 1,
-			{left: containerLeft} = scrollableContainerNode.getBoundingClientRect(),
+			{left: containerLeft} = scrollableContainerRef.current.getBoundingClientRect(),
 			scrollLastPosition = scrollPosition ? scrollPosition : uiScrollableAdapter.current.scrollPos.left,
 			currentScrollLeft = rtl ? (uiScrollableAdapter.current.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
 			// calculation based on client position
-			newItemLeft = scrollableContainerNode.scrollLeft + (itemLeft - containerLeft);
+			newItemLeft = scrollableContainerRef.current.scrollLeft + (itemLeft - containerLeft);
 		let nextScrollLeft = uiScrollableAdapter.current.scrollPos.left;
 
 		if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
@@ -330,6 +329,51 @@ const useSpottable = (props, instances) => {
 			Spotlight.focus(node);
 		}
 	}
+
+/*
+// Move to Scroller above
+
+	useEffect(() => {
+		return () => setContainerDisabled(false);
+	}, [setContainerDisabled]);
+
+	const setContainerDisabled = useCallback((bool) => {
+		const
+			{spotlightId} = this.props,
+			containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
+
+		if (containerNode) {
+			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+
+			if (bool) {
+				addGlobalKeyDownEventListener(() => {
+					setContainerDisabled(false);
+				});
+			} else {
+				removeGlobalKeyDownEventListener();
+			}
+		}
+	}, [addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener, uiChildContainerRef]);
+
+// Move to useSpotlight
+
+	function handleLeaveContainer ({direction, target}) {
+		// ensure we only scroll to boundary from the contents and not a scroll button which
+		// lie outside of uiChildContainerRef but within the spotlight container
+		if (dangerouslyContainsInScrollable(target)) {
+			const
+				{scrollBounds: {maxLeft, maxTop}, scrollPos: {left, top}} = uiScrollableAdapter.current,
+				isVerticalDirection = (direction === 'up' || direction === 'down'),
+				pos = isVerticalDirection ? top : left,
+				max = isVerticalDirection ? maxTop : maxLeft;
+
+			// If max is equal to 0, it means scroller can not scroll to the direction.
+			if (pos >= 0 && pos <= max && max !== 0) {
+				scrollAndFocusScrollbarButton(direction);
+			}
+		}
+	}
+*/
 
 	// Return
 
