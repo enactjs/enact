@@ -67,7 +67,7 @@ const useSpotlightConfig = (props, instances) => {
 const getNumberValue = (index) => index | 0;
 
 const useSpotlightRestore = (props, instances) => {
-	const {spottable, uiChildContainerRef, uiScrollableContainerRef} = instances;
+	const {spottable, uiChildAdapter, uiChildContainerRef} = instances;
 
 	// Mutable value
 
@@ -96,11 +96,9 @@ const useSpotlightRestore = (props, instances) => {
 	}
 
 	function isPlaceholderFocused () {
-		const
-			childContainerNode = uiChildContainerRef.current,
-			current = Spotlight.getCurrent();
+		const current = Spotlight.getCurrent();
 
-		if (current && current.dataset.vlPlaceholder && utilDOM.containsDangerously(childContainerNode, current)) {
+		if (current && current.dataset.vlPlaceholder && utilDOM.containsDangerously(uiChildContainerRef.current, current)) {
 			return true;
 		}
 
@@ -114,7 +112,7 @@ const useSpotlightRestore = (props, instances) => {
 		) {
 			const
 				{spotlightId} = props,
-				node = uiScrollableContainerRef.current.querySelector(
+				node = uiChildContainerRef.current.querySelector(
 					`[data-spotlight-id="${spotlightId}"] [data-index="${mutableRef.current.preservedIndex}"]`
 				);
 

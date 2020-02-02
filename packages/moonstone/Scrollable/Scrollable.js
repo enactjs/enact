@@ -1247,8 +1247,7 @@ const useScroll = (props) => {
 		scrollAndFocusScrollbarButton,
 		setChildAdapter,
 		spotlightId,
-		uiScrollableAdapter,
-		uiScrollableContainerRef
+		uiScrollableAdapter
 	});
 
 	decorateChildProps('verticalScrollbarProps', {

@@ -2,14 +2,14 @@ import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import {useEffect} from 'react';
 
 const usePreventScroll = (props, instances, context) => {
-	const {uiScrollableContainerRef} = instances;
+	const {uiChildContainerRef} = instances;
 	const {type} = context;
 
 	// Hooks
 
 	useEffect(() => {
 		const {rtl} = props;
-		const containerNode = uiScrollableContainerRef.current;
+		const containerNode = uiChildContainerRef.current;
 
 		if (type === 'JS' && containerNode) {
 			const preventScroll = () => {

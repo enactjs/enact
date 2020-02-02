@@ -192,7 +192,7 @@ const
 
 // TBD: indentation is broken intentionally to help comparing
 	const useSpottable = (props, instances, context) => {
-		const {uiChildContainerRef, uiScrollableAdapter} = instances;
+		const {uiChildAdapter, uiChildContainerRef} = instances;
 		const {type} = context;
 
 		// Mutable value
@@ -350,7 +350,7 @@ const
 
 		const getNextIndex = useCallback(({index, keyCode, repeat}) => {
 			const {dataSize, rtl, wrap} = props;
-			const {isPrimaryDirectionVertical, dimensionToExtent} = uiScrollableAdapter.current;
+			const {isPrimaryDirectionVertical, dimensionToExtent} = uiChildAdapter.current;
 			const column = index % dimensionToExtent;
 			const row = (index - column) % dataSize / dimensionToExtent;
 			const isDownKey = isDown(keyCode);
@@ -410,7 +410,7 @@ const
 			}
 
 			return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
-		}, [dataSize, findSpottableItem, rtl, uiScrollableAdapter, wrap]);
+		}, [dataSize, findSpottableItem, rtl, uiChildAdapter, wrap]);
 */
 
 		function getNodeIndexToBeFocused () {
@@ -423,7 +423,7 @@ const
 
 		function onAcceleratedKeyDown ({isWrapped, keyCode, nextIndex, repeat, target}) {
 			const {cbScrollTo, dataSize, spacing, wrap} = props;
-			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPositionTarget} = uiScrollableAdapter.current;
+			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPositionTarget} = uiChildAdapter.current;
 			const index = getNumberValue(target.dataset.index);
 
 			mutableRef.current.isScrolledBy5way = false;
@@ -433,13 +433,13 @@ const
 				const
 					row = Math.floor(index / dimensionToExtent),
 					nextRow = Math.floor(nextIndex / dimensionToExtent),
-					start = uiScrollableAdapter.current.getGridPosition(nextIndex).primaryPosition,
-					end = uiScrollableAdapter.current.getGridPosition(nextIndex).primaryPosition + gridSize;
+					start = uiChildAdapter.current.getGridPosition(nextIndex).primaryPosition,
+					end = uiChildAdapter.current.getGridPosition(nextIndex).primaryPosition + gridSize;
 				let isNextItemInView = false;
 
 				if (props.itemSizes) {
-					isNextItemInView = uiScrollableAdapter.current.itemPositions[nextIndex].position >= scrollPositionTarget &&
-						uiScrollableAdapter.current.getItemBottomPosition(nextIndex) <= scrollPositionTarget + clientSize;
+					isNextItemInView = uiChildAdapter.current.itemPositions[nextIndex].position >= scrollPositionTarget &&
+						uiChildAdapter.current.getItemBottomPosition(nextIndex) <= scrollPositionTarget + clientSize;
 				} else {
 					const
 						firstFullyVisibleIndex = Math.ceil(scrollPositionTarget / gridSize) * dimensionToExtent,
@@ -465,7 +465,7 @@ const
 					setOverscrollEffect(isWrapped);
 
 					if (isWrapped && (
-						uiScrollableContainerRef.current.querySelector(`[data-index='${nextIndex}']${spottableSelector}`) == null
+						uiChildContainerRef.current.querySelector(`[data-index='${nextIndex}']${spottableSelector}`) == null
 					)) {
 						if (wrap === true) {
 							pause.pause();
@@ -591,7 +591,7 @@ Move to useEvent
 		}
 
 		function focusByIndex (index) {
-			const item = uiScrollableContainerRef.current.querySelector(`[data-index='${index}']${spottableSelector}`);
+			const item = uiChildContainerRef.current.querySelector(`[data-index='${index}']${spottableSelector}`);
 
 			if (!item && index >= 0 && index < props.dataSize) {
 				// Item is valid but since the the dom doesn't exist yet, we set the index to focus after the ongoing update
@@ -652,7 +652,7 @@ Move to useEvent
 		function isPlaceholderFocused () {
 			const current = Spotlight.getCurrent();
 
-			if (current && current.dataset.vlPlaceholder && utilDOM.containsDangerously(uiScrollableContainerRef.current, current)) {
+			if (current && current.dataset.vlPlaceholder && utilDOM.containsDangerously(uiChildContainerRef.current, current)) {
 				return true;
 			}
 
@@ -666,7 +666,7 @@ Move to useEvent
 			) {
 				const
 					{spotlightId} = props,
-					node = uiScrollableContainerRef.current.querySelector(
+					node = uiChildContainerRef.current.querySelector(
 						`[data-spotlight-id="${spotlightId}"] [data-index="${mutableRef.current.preservedIndex}"]`
 					);
 
@@ -691,22 +691,19 @@ Move to useEvent
 		}
 */
 
-		function calculatePositionOnFocus ({item, scrollPosition}) {
-			console.log(uiScrollableAdapter, primary, primary.clientSize)
+		function calculatePositionOnFocus ({item, scrollPosition = uiChildAdapter.current.scrollPosition}) {
 			const
 
 				{pageScroll} = props,
-				{numOfItems, primary} = uiScrollableAdapter.current,
+				{numOfItems, primary} = uiChildAdapter.current,
 				offsetToClientEnd = primary.clientSize - primary.itemSize,
 				focusedIndex = getNumberValue(item.getAttribute(dataIndexAttribute));
 
-			scrollPosition = scrollPosition || uiScrollableAdapter.current.scrollPosition;
-
 			if (!isNaN(focusedIndex)) {
-				let gridPosition = uiScrollableAdapter.current.getGridPosition(focusedIndex);
+				let gridPosition = uiChildAdapter.current.getGridPosition(focusedIndex);
 
 				if (numOfItems > 0 && focusedIndex % numOfItems !== mutableRef.current.lastFocusedIndex % numOfItems) {
-					const node = uiScrollableAdapter.current.getItemNode(mutableRef.current.lastFocusedIndex);
+					const node = uiChildAdapter.current.getItemNode(mutableRef.current.lastFocusedIndex);
 
 					if (node) {
 						node.blur();
@@ -725,7 +722,7 @@ Move to useEvent
 						} else {
 							// This code uses the trick to change the target position slightly which will not affect the actual result
 							// since a browser ignore `scrollTo` method if the target position is same as the current position.
-							gridPosition.primaryPosition = scrollPosition + (uiScrollableAdapter.current.scrollPosition === scrollPosition ? 0.1 : 0);
+							gridPosition.primaryPosition = scrollPosition + (uiChildAdapter.current.scrollPosition === scrollPosition ? 0.1 : 0);
 						}
 					} else { // backward over
 						gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
@@ -736,7 +733,7 @@ Move to useEvent
 				// scrondaryPosition should be 0 here.
 				gridPosition.secondaryPosition = 0;
 
-				return uiScrollableAdapter.current.gridPositionToItemPosition(gridPosition);
+				return uiChildAdapter.current.gridPositionToItemPosition(gridPosition);
 			}
 		}
 
@@ -762,7 +759,7 @@ Move to useEvent
 		}
 */
 		function getScrollBounds () {
-			return uiScrollableAdapter.current.getScrollBounds();
+			return uiChildAdapter.current.getScrollBounds();
 		}
 
 		// Return
@@ -785,12 +782,12 @@ Move to useEvent
 	};
 
 const useSpottableVirtualList = (props) => {
-	const {type, uiScrollableAdapter, uiScrollableContainerRef} = props;
+	const {type, uiChildAdapter, uiChildContainerRef} = props;
 	const {spotlightId} = props;
 
 	// Hooks
 
-	const instance = {uiScrollableAdapter, uiScrollableContainerRef};
+	const instance = {uiChildAdapter, uiChildContainerRef};
 
 	const {
 		calculatePositionOnFocus,
@@ -850,7 +847,6 @@ const useSpottableVirtualList = (props) => {
 			delete rest.scrollAndFocusScrollbarButton;
 			delete rest.spotlightId;
 			delete rest.uiScrollableAdapter;
-			delete rest.uiScrollableContainerRef;
 			delete rest.wrap;
 
 			return {
