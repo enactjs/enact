@@ -18,8 +18,6 @@ const
 	getNumberValue = (index) => index | 0;
 
 const useEventKey = (props, instances, context) => {
-	const {dataSize, focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
-		rtl, spotlightId, wrap} = props;
 	const {uiChildContainerRef, uiScrollableAdapter} = instances;
 	const {
 		handle5WayKeyUp,
@@ -107,7 +105,7 @@ const useEventKey = (props, instances, context) => {
 		}
 
 		return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
-	}, [dataSize, findSpottableItem, rtl, uiScrollableAdapter, wrap]);
+	}, [findSpottableItem, uiScrollableAdapter]);
 
 	// Hooks
 
@@ -208,10 +206,9 @@ const useEventKey = (props, instances, context) => {
 			utilEvent('keyup').removeEventListener(scrollerNode, handleKeyUp, {capture: true});
 		};
 	}, [
-		uiChildContainerRef, dataSize, focusableScrollbar, getNextIndex,
+		uiChildContainerRef, getNextIndex,
 		handle5WayKeyUp, handleDirectionKeyDown, handlePageUpDownKeyDown,
-		isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
-		spotlightId, SpotlightAccelerator, uiChildAdapter
+		SpotlightAccelerator, uiChildAdapter
 	]);
 
 	// Functions

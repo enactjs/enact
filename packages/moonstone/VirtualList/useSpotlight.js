@@ -4,7 +4,6 @@ import {useEffect, useRef} from 'react';
 
 const useSpotlightConfig = (props, instances) => {
 	const {spottable: {current: {lastFocusedIndex}}} = instances;
-	const {spacing, spotlightId} = props;
 
 	// Hooks
 
@@ -20,6 +19,8 @@ const useSpotlightConfig = (props, instances) => {
 		};
 
 		function configureSpotlight () {
+			const {spacing, spotlightId} = props;
+
 			Spotlight.set(spotlightId, {
 				enterTo: 'last-focused',
 				/*
@@ -40,7 +41,7 @@ const useSpotlightConfig = (props, instances) => {
 		}
 
 		configureSpotlight();
-	}, [lastFocusedIndex, spacing, spotlightId]);
+	}, [lastFocusedIndex]);
 
 	// Functions
 
@@ -66,7 +67,6 @@ const useSpotlightConfig = (props, instances) => {
 const getNumberValue = (index) => index | 0;
 
 const useSpotlightRestore = (props, instances) => {
-	const {spotlightId} = props;
 	const {spottable, uiChildContainerRef} = instances;
 
 	// Mutable value

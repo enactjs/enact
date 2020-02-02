@@ -2,13 +2,13 @@ import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import {useEffect} from 'react';
 
 const usePreventScroll = (props, instances, context) => {
-	const {rtl} = props;
 	cosnt {uiScrollableContainerRef} = instances;
 	const {type} = context;
 
 	// Hooks
 
 	useEffect(() => {
+		const {rtl} = props;
 		const containerNode = uiScrollableContainerRef.current;
 
 		if (type === 'JS' && containerNode) {
@@ -24,7 +24,7 @@ const usePreventScroll = (props, instances, context) => {
 				utilEvent('scroll').removeEventListener(containerNode, preventScroll);
 			};
 		}
-	}, [containerNode, rtl, type]);
+	}, [containerNode, type]);
 };
 
 export default usePreventScroll;
