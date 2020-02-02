@@ -192,7 +192,7 @@ const
 
 // TBD: indentation is broken intentionally to help comparing
 	const useSpottable = (props, instances, context) => {
-		const {uiChildAdapter, uiChildContainerRef} = instances;
+		const {uiChildContainerRef, uiScrollableAdapter} = instances;
 		const {type} = context;
 
 		// Mutable value
@@ -491,12 +491,12 @@ const
 	};
 
 const useSpottableVirtualList = (props) => {
-	const {type, uiChildAdapter, uiChildContainerRef} = props;
+	const {type, uiChildContainerRef} = props;
 	const {spotlightId} = props;
 
 	// Hooks
 
-	const instance = {uiChildAdapter, uiChildContainerRef};
+	const instance = {uiChildContainerRef};
 
 	const {
 		calculatePositionOnFocus,
