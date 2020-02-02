@@ -20,7 +20,7 @@ const
 const useEventKey = (props, instances, context) => {
 	const {dataSize, focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
 		rtl, spotlightId, wrap} = props;
-	const {uiChildAdapter, uiChildContainerRef} = instances;
+	const {uiChildContainerRef, uiScrollableAdapter} = instances;
 	const {
 		handle5WayKeyUp,
 		handleDirectionKeyDown,
@@ -45,7 +45,7 @@ const useEventKey = (props, instances, context) => {
 	}, [dataSize]);
 
 	const getNextIndex = useCallback(({index, keyCode, repeat}) => {
-		const {isPrimaryDirectionVertical, dimensionToExtent} = uiChildAdapter;
+		const {isPrimaryDirectionVertical, dimensionToExtent} = uiScrollableAdapter;
 		const column = index % dimensionToExtent;
 		const row = (index - column) % dataSize / dimensionToExtent;
 		const isDownKey = isDown(keyCode);
@@ -105,7 +105,7 @@ const useEventKey = (props, instances, context) => {
 		}
 
 		return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
-	}, [dataSize, findSpottableItem, rtl, uiChildAdapter, wrap]);
+	}, [dataSize, findSpottableItem, rtl, uiScrollableAdapter, wrap]);
 
 	// Hooks
 
@@ -121,7 +121,7 @@ const useEventKey = (props, instances, context) => {
 					ev.stopPropagation();
 				} else {
 					const {repeat} = ev;
-					const {dimensionToExtent, isPrimaryDirectionVertical} = uiChildAdapter;
+					const {dimensionToExtent, isPrimaryDirectionVertical} = uiScrollableAdapter;
 					const targetIndex = target.dataset.index;
 					const isScrollButton = (
 						// if target has an index, it must be an item so can't be a scroll button

@@ -97,7 +97,6 @@ class ScrollerBase extends Component {
 
 const useSpottable = (props, instances) => {
 	const {scrollableContainerRef, uiChildContainerRef, uiScrollableAdapter} = instances;
-	const {rtl} = props;
 
 	// Hooks
 
@@ -106,10 +105,12 @@ const useSpottable = (props, instances) => {
 	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey();
 
 	const setContainerDisabled = useCallback((bool) => {
-		const childContainerNode = uiChildContainerRef.current;
+		const
+			{spotlightId} = this.props,
+			containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 
-		if (childContainerNode) {
-			childContainerNode.setAttribute(dataContainerDisabledAttribute, bool);
+		if (containerNode) {
+			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
 
 			if (bool) {
 				addGlobalKeyDownEventListener(() => {
@@ -266,6 +267,7 @@ const useSpottable = (props, instances) => {
 		} = getFocusedItemBounds(item);
 
 		const
+			{rtl} = props,
 			scrollableContainerNode = scrollableContainerRef.current,
 			{clientWidth} = uiScrollableAdapter.current.scrollBounds,
 			rtlDirection = rtl ? -1 : 1,

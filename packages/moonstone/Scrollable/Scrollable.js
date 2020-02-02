@@ -723,6 +723,14 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 
 // Move to Scrollable below
 
+	function handleResizeWindow () {
+		const focusedItem = Spotlight.getCurrent();
+
+		if (focusedItem) {
+			focusedItem.blur();
+		}
+	}
+
 	function handleScrollerUpdate () {
 		if (uiScrollableAdapter.current.scrollToInfo === null) {
 			const scrollHeight = uiScrollableAdapter.current.getScrollBounds().scrollHeight;
