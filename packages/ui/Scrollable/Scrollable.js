@@ -448,11 +448,11 @@ const useScrollable = (props) => {
 	const {
 		decorateChildProps,
 		horizontalScrollbarRef,
-		scrollableContainerRef,
 		setUiChildAdapter,
 		type,
 		uiChildAdapter,
 		uiChildContainerRef,
+		uiScrollableContainerRef,
 		verticalScrollbarRef
 	} = props;
 
@@ -643,7 +643,6 @@ const useScrollable = (props) => {
 	delete rest.onWheel;
 	delete rest.overscrollEffectOn;
 	delete rest.removeEventListeners;
-	delete rest.scrollableContainerRef;
 	delete rest.scrollStopOnScroll; // Native
 	delete rest.scrollTo;
 	delete rest.setUiChildAdapter;
@@ -652,6 +651,7 @@ const useScrollable = (props) => {
 	delete rest.stop; // JS
 	delete rest.uiChildAdapter;
 	delete rest.uiChildContainerRef;
+	delete rest.uiScrollableContainerRef;
 	delete rest.verticalScrollbar;
 	delete rest.verticalScrollbarRef;
 
@@ -1723,9 +1723,9 @@ const useScrollable = (props) => {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function addEventListeners () {
-		utilEvent('wheel').addEventListener(scrollableContainerRef, onWheel);
-		utilEvent('keydown').addEventListener(scrollableContainerRef, onKeyDown);
-		utilEvent('mousedown').addEventListener(scrollableContainerRef, onMouseDown);
+		utilEvent('wheel').addEventListener(uiScrollableContainerRef, onWheel);
+		utilEvent('keydown').addEventListener(uiScrollableContainerRef, onKeyDown);
+		utilEvent('mousedown').addEventListener(uiScrollableContainerRef, onMouseDown);
 
 		// Native [[
 		if (uiChildContainerRef.current) {
@@ -1750,9 +1750,9 @@ const useScrollable = (props) => {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function removeEventListeners () {
-		utilEvent('wheel').removeEventListener(scrollableContainerRef, onWheel);
-		utilEvent('keydown').removeEventListener(scrollableContainerRef, onKeyDown);
-		utilEvent('mousedown').removeEventListener(scrollableContainerRef, onMouseDown);
+		utilEvent('wheel').removeEventListener(uiScrollableContainerRef, onWheel);
+		utilEvent('keydown').removeEventListener(uiScrollableContainerRef, onKeyDown);
+		utilEvent('mousedown').removeEventListener(uiScrollableContainerRef, onMouseDown);
 
 		// Native [[
 		utilEvent('scroll').removeEventListener(uiChildContainerRef, onScroll, {capture: true, passive: true});
@@ -1781,7 +1781,7 @@ const useScrollable = (props) => {
 	// JS ]]
 
 	function dangerouslyContainsInScrollable (target) {
-		return utilDOM.containsDangerously(scrollableContainerRef, target);
+		return utilDOM.containsDangerously(uiScrollableContainerRef, target);
 	}
 
 	variables.current.deferScrollTo = true;
@@ -1913,7 +1913,7 @@ const utilDecorateChildProps = (instance) => (childComponentName, props) => {
 const useScroll = (props) => {
 	// Mutable value
 
-	const scrollableContainerRef = useRef(null);
+	const uiScrollableContainerRef = useRef(null);
 	const uiChildContainerRef = useRef();
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
@@ -1945,17 +1945,17 @@ const useScroll = (props) => {
 			scrollbarButton: false,
 			wheel: true
 		},
-		scrollableContainerRef,
 		setUiChildAdapter,
 		type: props.type || 'JS', // FIXME
 		uiChildAdapter,
 		uiChildContainerRef,
+		uiScrollableContainerRef,
 		get verticalScrollbarRef () {
 			return verticalScrollbarRef;
 		}
 	});
 
-	decorateChildProps('scrollableContainerProps', {ref: scrollableContainerRef});
+	decorateChildProps('scrollableContainerProps', {ref: uiScrollableContainerRef});
 	decorateChildProps('childProps', {uiChildAdapter, uiChildContainerRef});
 	decorateChildProps('verticalScrollbarProps', {ref: verticalScrollbarRef});
 	decorateChildProps('horizontalScrollbarProps', {ref: horizontalScrollbarRef});

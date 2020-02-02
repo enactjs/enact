@@ -463,7 +463,7 @@ const
 					setOverscrollEffect(isWrapped);
 
 					if (isWrapped && (
-						scrollableContainerRef.current.querySelector(`[data-index='${nextIndex}']${spottableSelector}`) == null
+						uiScrollableContainerRef.current.querySelector(`[data-index='${nextIndex}']${spottableSelector}`) == null
 					)) {
 						if (wrap === true) {
 							pause.pause();
@@ -587,7 +587,7 @@ Move to useEvent
 		}
 
 		function focusByIndex (index) {
-			const item = scrollableContainerRef.current.querySelector(`[data-index='${index}']${spottableSelector}`);
+			const item = uiScrollableContainerRef.current.querySelector(`[data-index='${index}']${spottableSelector}`);
 
 			if (!item && index >= 0 && index < props.dataSize) {
 				// Item is valid but since the the dom doesn't exist yet, we set the index to focus after the ongoing update
@@ -648,7 +648,7 @@ Move to useEvent
 		function isPlaceholderFocused () {
 			const current = Spotlight.getCurrent();
 
-			if (current && current.dataset.vlPlaceholder && utilDOM.containsDangerously(scrollableContainerRef.current, current)) {
+			if (current && current.dataset.vlPlaceholder && utilDOM.containsDangerously(uiScrollableContainerRef.current, current)) {
 				return true;
 			}
 
@@ -779,12 +779,12 @@ Move to useEvent
 	};
 
 const useSpottableVirtualList = (props) => {
-	const {type, scrollableContainerRef, uiChildContainerRef} = props;
+	const {type, uiScrollableContainerRef, uiChildContainerRef} = props;
 	const {spotlightId} = props;
 
 	// Hooks
 
-	const instance = {scrollableContainerRef, uiChildContainerRef};
+	const instance = {uiScrollableContainerRef, uiChildContainerRef};
 
 	const {
 		calculatePositionOnFocus,

@@ -96,7 +96,7 @@ class ScrollerBase extends Component {
 }
 
 const useSpottable = (props, instances) => {
-	const {scrollableContainerRef, uiChildContainerRef, uiScrollableAdapter} = instances;
+	const {uiScrollableContainerRef, uiChildContainerRef, uiScrollableAdapter} = instances;
 
 	// Hooks
 
@@ -149,7 +149,7 @@ const useSpottable = (props, instances) => {
 			if (node.dataset.spotlightId && node.dataset.spotlightContainer && !node.dataset.expandableContainer) {
 				return node;
 			}
-		} while ((node = node.parentNode) && node !== scrollableContainerRef.current);
+		} while ((node = node.parentNode) && node !== uiScrollableContainerRef.current);
 	}
 
 	/**
@@ -211,8 +211,8 @@ const useSpottable = (props, instances) => {
 		};
 
 		const container = getSpotlightContainerForNode(item);
-		const scrollerBounds = scrollableContainerRef.current.getBoundingClientRect();
-		let {scrollHeight, scrollTop} = scrollableContainerRef.current;
+		const scrollerBounds = uiScrollableContainerRef.current.getBoundingClientRect();
+		let {scrollHeight, scrollTop} = uiScrollableContainerRef.current;
 		let scrollTopDelta = 0;
 
 		const adjustScrollTop = (v) => {
@@ -270,11 +270,11 @@ const useSpottable = (props, instances) => {
 			{rtl} = props,
 			{clientWidth} = uiScrollableAdapter.current.scrollBounds,
 			rtlDirection = rtl ? -1 : 1,
-			{left: containerLeft} = scrollableContainerRef.current.getBoundingClientRect(),
+			{left: containerLeft} = uiScrollableContainerRef.current.getBoundingClientRect(),
 			scrollLastPosition = scrollPosition ? scrollPosition : uiScrollableAdapter.current.scrollPos.left,
 			currentScrollLeft = rtl ? (uiScrollableAdapter.current.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
 			// calculation based on client position
-			newItemLeft = scrollableContainerRef.current.scrollLeft + (itemLeft - containerLeft);
+			newItemLeft = uiScrollableContainerRef.current.scrollLeft + (itemLeft - containerLeft);
 		let nextScrollLeft = uiScrollableAdapter.current.scrollPos.left;
 
 		if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
@@ -302,7 +302,7 @@ const useSpottable = (props, instances) => {
 	 * @private
 	 */
 	function calculatePositionOnFocus ({item, scrollPosition}) {
-		const containerNode = scrollableContainerRef.current;
+		const containerNode = uiScrollableContainerRef.current;
 		const horizontal = uiScrollableAdapter.current.isHorizontal();
 		const vertical = uiScrollableAdapter.current.isVertical();
 

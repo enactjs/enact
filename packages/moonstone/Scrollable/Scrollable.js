@@ -518,7 +518,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		}
 
-		return utilDOM.containsDangerously(scrollableContainerRef, current);
+		return utilDOM.containsDangerously(uiScrollableContainerRef, current);
 	}
 
 // Move to useOverscrollEffect
@@ -692,9 +692,9 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 					position = {x, y},
 					elemFromPoint = document.elementFromPoint(x, y),
 					target =
-						elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), scrollableContainerRef.current) ||
-						getTargetInViewByDirectionFromPosition(direction, position, scrollableContainerRef.current) ||
-						getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, scrollableContainerRef.current);
+						elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), uiScrollableContainerRef.current) ||
+						getTargetInViewByDirectionFromPosition(direction, position, uiScrollableContainerRef.current) ||
+						getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, uiScrollableContainerRef.current);
 
 				if (target) {
 					Spotlight.focus(target);
@@ -810,7 +810,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 	const updateFocusAfterVoiceControl = () => {
 		const
 			spotItem = Spotlight.getCurrent(),
-			scrollableContainerNode = scrollableContainerRef.current;
+			scrollableContainerNode = uiScrollableContainerRef.current;
 
 		if (utilDOM.containsDangerously(scrollableContainerNode, spotItem)) {
 			const
@@ -904,7 +904,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 */
 
 const useSpottableScrollable = (props, instances, context) => {
-	const {childAdapter, horizontalScrollbarRef, scrollableContainerRef, uiChildContainerRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
+	const {childAdapter, horizontalScrollbarRef, uiScrollableContainerRef, uiChildContainerRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
 	const {type} = context;
 	const contextSharedState = useContext(SharedState);
 
@@ -1007,9 +1007,9 @@ const useSpottableScrollable = (props, instances, context) => {
 					position = {x, y},
 					elemFromPoint = document.elementFromPoint(x, y),
 					target =
-						elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), scrollableContainerRef.current) ||
-						getTargetInViewByDirectionFromPosition(direction, position, scrollableContainerRef.current) ||
-						getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, scrollableContainerRef.current);
+						elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), uiScrollableContainerRef.current) ||
+						getTargetInViewByDirectionFromPosition(direction, position, uiScrollableContainerRef.current) ||
+						getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, uiScrollableContainerRef.current);
 
 				if (target) {
 					Spotlight.focus(target);
@@ -1123,7 +1123,7 @@ const useScroll = (props) => {
 
 	// Mutable value
 
-	const scrollableContainerRef = useRef();
+	const uiScrollableContainerRef = useRef();
 	const uiChildContainerRef = useRef();
 
 	const overscrollRefs = {
@@ -1179,7 +1179,7 @@ const useScroll = (props) => {
 
 	const instance = {
 		// Ref
-		scrollableContainerRef,
+		uiScrollableContainerRef,
 		overscrollRefs,
 		uiChildContainerRef,
 		horizontalScrollbarRef,
@@ -1287,13 +1287,13 @@ const useScroll = (props) => {
 		onScroll: handleScroll,
 		onWheel: handleWheel,
 		removeEventListeners,
-		scrollableContainerRef,
 		scrollTo: scrollTo,
 		setUiChildAdapter,
 		setUiScrollableAdapter,
 		type,
 		uiChildAdapter,
 		uiChildContainerRef,
+		uiScrollableContainerRef,
 		verticalScrollbarRef
 	});
 
@@ -1301,7 +1301,7 @@ const useScroll = (props) => {
 		className: [...(isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : [])]
 	});
 
-	decorateChildProps('scrollableContainerProps', {ref: scrollableContainerRef});
+	decorateChildProps('scrollableContainerProps', {ref: uiScrollableContainerRef});
 	decorateChildProps('flexLayoutProps', {ref: overscrollRefs.vertical});
 	decorateChildProps('childWrapperProps', {ref: overscrollRefs.horizontal});
 	decorateChildProps('childProps', {uiChildAdapter, uiChildContainerRef});

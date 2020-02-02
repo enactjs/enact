@@ -15,7 +15,7 @@ const {overscrollTypeOnce, scrollWheelPageMultiplierForMaxPixel} = constants;
 const {animationDuration, epsilon} = constants;
 
 const useEventFocus = (props, instances, context) => {
-	const {childAdapter, spottable, scrollableContainerRef, uiChildContainerRef, uiScrollableAdapter} = instances;
+	const {childAdapter, spottable, uiScrollableContainerRef, uiChildContainerRef, uiScrollableAdapter} = instances;
 	const {alertThumb, isWheeling, type} = context;
 
 	// Functions
@@ -143,7 +143,7 @@ const useEventFocus = (props, instances, context) => {
 			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		}
 
-		return utilDOM.containsDangerously(scrollableContainerRef, current);
+		return utilDOM.containsDangerously(uiScrollableContainerRef, current);
 	}
 
 	// Return
@@ -349,7 +349,7 @@ const pageKeyHandler = (ev) => {
 };
 
 const useEventMonitor = (props, instances, context) => {
-	const {scrollableContainerRef} = instances;
+	const {uiScrollableContainerRef} = instances;
 	const {lastPointer: lastPointerProp, scrollByPageOnPointerMode} = context;
 
 	// Mutable value
@@ -369,13 +369,13 @@ const useEventMonitor = (props, instances, context) => {
 			scrollables.delete(variables.current.pageKeyHandlerObj);
 		};
 
-		setMonitorEventTarget(scrollableContainerRef.current);
+		setMonitorEventTarget(uiScrollableContainerRef.current);
 
 		return () => {
 			// TODO: Replace `this` to something.
 			deleteMonitorEventTarget();
 		};
-	}, [scrollableContainerRef]);
+	}, [uiScrollableContainerRef]);
 };
 
 onWindowReady(() => {
@@ -448,7 +448,7 @@ const useEventTouch = (props, instnaces, context) => {
 };
 
 const useEventVoice = (props, instances, context) => {
-	const {scrollableContainerRef, uiScrollableAdapter} = instances;
+	const {uiScrollableContainerRef, uiScrollableAdapter} = instances;
 	const {onScrollbarButtonClick} = context;
 
 	// Mutable value
@@ -463,7 +463,7 @@ const useEventVoice = (props, instances, context) => {
 	const updateFocusAfterVoiceControl = () => {
 		const
 			spotItem = Spotlight.getCurrent(),
-			scrollableContainerNode = scrollableContainerRef.current;
+			scrollableContainerNode = uiScrollableContainerRef.current;
 
 		if (utilDOM.containsDangerously(scrollableContainerNode, spotItem)) {
 			const
