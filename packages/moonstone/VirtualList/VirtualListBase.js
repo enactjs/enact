@@ -300,7 +300,7 @@ const
 				 * Restores the data-index into the placeholder if its the only element. Tries to find a
 				 * matching child otherwise.
 				 */
-				lastFocusedRestore: lastFocusedRestore,
+				lastFocusedRestore,
 				/*
 				 * Directs spotlight focus to favor straight elements that are within range of `spacing`
 				 * over oblique elements, like scroll buttons.
@@ -340,15 +340,17 @@ const
 // Move to useEvent
 
 		const findSpottableItem = useCallback((indexFrom, indexTo) => {
+			const {dataSize} = props;
 			if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
 				return -1;
 			} else {
 				return clamp(0, dataSize - 1, indexFrom);
 			}
-		}, [dataSize]);
+		}, [props]);
 
 		const getNextIndex = useCallback(({index, keyCode, repeat}) => {
-			const {isPrimaryDirectionVertical, dimensionToExtent} = uiScrollableAdapter;
+			const {dataSize, rtl, wrap} = this.props;
+			const {isPrimaryDirectionVertical, dimensionToExtent} = uiScrollableAdapter.current;
 			const column = index % dimensionToExtent;
 			const row = (index - column) % dataSize / dimensionToExtent;
 			const isDownKey = isDown(keyCode);
@@ -503,7 +505,8 @@ Move to useEvent
 					ev.stopPropagation();
 				} else {
 					const {repeat} = ev;
-					const {dimensionToExtent, isPrimaryDirectionVertical} = uiScrollableAdapter;
+					const {focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, spotlightId} = props;
+					const {dimensionToExtent, isPrimaryDirectionVertical} = uiScrollableAdapter.current;
 					const targetIndex = target.dataset.index;
 					const isScrollButton = (
 						// if target has an index, it must be an item so can't be a scroll button
@@ -538,6 +541,7 @@ Move to useEvent
 
 							handleDirectionKeyDown(ev, 'acceleratedKeyDown', {isWrapped, keyCode, nextIndex, repeat, target});
 						} else {
+							const {dataSize} = props;
 							const column = index % dimensionToExtent;
 							const row = (index - column) % dataSize / dimensionToExtent;
 
@@ -660,10 +664,11 @@ Move to useEvent
 				variables.current.restoreLastFocused &&
 				!isPlaceholderFocused()
 			) {
-				const childContainerNode = uiChildContainerRef.current;
-				const node = childContainerNode && childContainerNode.querySelector(
-					`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
-				);
+				const
+					{spotlightId} = this.props,
+					node = this.uiRefCurrent.containerRef.current.querySelector(
+						`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
+					);
 
 				if (node) {
 					// if we're supposed to restore focus and virtual list has positioned a set of items
@@ -747,9 +752,6 @@ Move to useEvent
 // Move to useSpotlight
 
 		function updateStatesAndBounds ({dataSize, moreInfo, numOfItems}) {
-			// TODO check preservedIndex
-			// const {preservedIndex} = this;
-
 			return (variables.current.restoreLastFocused && numOfItems > 0 && variables.current.preservedIndex < dataSize && (
 				variables.current.preservedIndex < moreInfo.firstVisibleIndex || variables.current.preservedIndex > moreInfo.lastVisibleIndex
 			));

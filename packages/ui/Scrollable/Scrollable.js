@@ -465,70 +465,8 @@ const useScrollable = (props) => {
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(props.horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(props.verticalScrollbar === 'visible');
 
-	const variables = useRef({
-		overscrollEnabled: !!(props.applyOverscrollEffect),
-
-		// Enable the early bail out of repeated scrolling to the same position
-		animationInfo: null,
-
-		resizeRegistry: null,
-
-		// constants
-		pixelPerLine: 39,
-		scrollWheelMultiplierForDeltaPixel: 1.5, // The ratio of wheel 'delta' units to pixels scrolled.
-
-		// status
-		deferScrollTo: true,
-		isScrollAnimationTargetAccumulated: false,
-		isUpdatedScrollThumb: false,
-
-		// overscroll
-		lastInputType: null,
-		overscrollStatus: {
-			horizontal: {
-				before: {type: overscrollTypeNone, ratio: 0},
-				after: {type: overscrollTypeNone, ratio: 0}
-			},
-			vertical: {
-				before: {type: overscrollTypeNone, ratio: 0},
-				after: {type: overscrollTypeNone, ratio: 0}
-			}
-		},
-
-		// bounds info
-		bounds: {
-			clientWidth: 0,
-			clientHeight: 0,
-			scrollWidth: 0,
-			scrollHeight: 0,
-			maxTop: 0,
-			maxLeft: 0
-		},
-
-		// wheel/drag/flick info
-		wheelDirection: 0,
-		isDragging: false,
-		isTouching: false, // Native
-
-		// scroll info
-		scrolling: false,
-		scrollLeft: 0,
-		scrollTop: 0,
-		scrollToInfo: null,
-
-		// scroll animator
-		animator: null,
-
-		// non-declared-variable.
-		accumulatedTargetX: null,
-		accumulatedTargetY: null,
-		flickTarget: null,
-		dragStartX: null,
-		dragStartY: null,
-		scrollStopJob: null,
-
-		prevState: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible}
-	});
+	const init = getVariablesInit();
+	const variables = useRef(init);
 
 	if (variables.current.animator == null) {
 		variables.current.animator = new ScrollAnimator();
@@ -758,6 +696,74 @@ const useScrollable = (props) => {
 		}
 	}
 	// JS ]]
+
+	function getVariablesInit () {
+		return {
+// TBD: indentation is broken intentionally to help comparing
+	overscrollEnabled: !!(props.applyOverscrollEffect),
+
+	// Enable the early bail out of repeated scrolling to the same position
+	animationInfo: null,
+
+	resizeRegistry: null,
+
+	// constants
+	pixelPerLine: 39,
+	scrollWheelMultiplierForDeltaPixel: 1.5, // The ratio of wheel 'delta' units to pixels scrolled.
+
+	// status
+	deferScrollTo: true,
+	isScrollAnimationTargetAccumulated: false,
+	isUpdatedScrollThumb: false,
+
+	// overscroll
+	lastInputType: null,
+	overscrollStatus: {
+		horizontal: {
+			before: {type: overscrollTypeNone, ratio: 0},
+			after: {type: overscrollTypeNone, ratio: 0}
+		},
+		vertical: {
+			before: {type: overscrollTypeNone, ratio: 0},
+			after: {type: overscrollTypeNone, ratio: 0}
+		}
+	},
+
+	// bounds info
+	bounds: {
+		clientWidth: 0,
+		clientHeight: 0,
+		scrollWidth: 0,
+		scrollHeight: 0,
+		maxTop: 0,
+		maxLeft: 0
+	},
+
+	// wheel/drag/flick info
+	wheelDirection: 0,
+	isDragging: false,
+	isTouching: false, // Native
+
+	// scroll info
+	scrolling: false,
+	scrollLeft: 0,
+	scrollTop: 0,
+	scrollToInfo: null,
+
+	// scroll animator
+	animator: null,
+
+	// non-declared-variable.
+	accumulatedTargetX: null,
+	accumulatedTargetY: null,
+	flickTarget: null,
+	dragStartX: null,
+	dragStartY: null,
+	scrollStopJob: null,
+
+	prevState: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible}
+		};
+	}
 
 	// drag/flick event handlers
 
@@ -1225,7 +1231,7 @@ const useScrollable = (props) => {
 
 	function checkAndApplyOverscrollEffectOnScroll (orientation) {
 		['before', 'after'].forEach((edge) => {
-			const {ratio, overscrollEffectType} = getOverscrollStatus(orientation, edge);
+			const {ratio, type: overscrollEffectType} = getOverscrollStatus(orientation, edge);
 
 			if (overscrollEffectType === overscrollTypeOnce) {
 				checkAndApplyOverscrollEffect(orientation, edge, overscrollEffectType, ratio);
@@ -1310,6 +1316,7 @@ const useScrollable = (props) => {
 
 		if (canScrollHorizontally(bounds)) {
 			const
+				rtl = this.props.rtl,
 				edge = getEdgeFromPosition(variables.current.scrollLeft, bounds.maxLeft);
 
 			if (edge) { // if edge is null, no need to check which edge is reached.
@@ -1428,40 +1435,6 @@ const useScrollable = (props) => {
 		}
 	}
 
-	function stopForJS () {
-		variables.current.animator.stop();
-		variables.current.lastInputType = null;
-		variables.current.isScrollAnimationTargetAccumulated = false;
-		startHidingThumb();
-
-		if (variables.current.overscrollEnabled && !variables.current.isDragging) { // not check props.overscrollEffectOn for safety
-			clearAllOverscrollEffects();
-		}
-
-		if (props.stop) {
-			props.stop();
-		}
-
-		if (variables.current.scrolling) {
-			variables.current.scrollStopJob.start();
-		}
-	}
-
-	function stopForNative () {
-		uiChildContainerRef.current.style.scrollBehavior = null;
-		uiChildAdapter.current.scrollToPosition(variables.current.scrollLeft + 0.1, variables.current.scrollTop + 0.1);
-		uiChildContainerRef.current.style.scrollBehavior = 'smooth';
-	}
-
-	// esline-disable-next-line react-hooks/exhaustive-deps
-	function stop () {
-		if (type === 'JS') {
-			stopForJS();
-		} else {
-			stopForNative();
-		}
-	}
-
 	// JS [[
 	function scrollAnimation (animationInfo) {
 		return (curTime) => {
@@ -1520,6 +1493,40 @@ const useScrollable = (props) => {
 		forwardScrollEvent('onScroll');
 	}
 	// JS ]]
+
+	function stopForJS () {
+		variables.current.animator.stop();
+		variables.current.lastInputType = null;
+		variables.current.isScrollAnimationTargetAccumulated = false;
+		startHidingThumb();
+
+		if (variables.current.overscrollEnabled && !variables.current.isDragging) { // not check props.overscrollEffectOn for safety
+			clearAllOverscrollEffects();
+		}
+
+		if (props.stop) {
+			props.stop();
+		}
+
+		if (variables.current.scrolling) {
+			variables.current.scrollStopJob.start();
+		}
+	}
+
+	function stopForNative () {
+		uiChildContainerRef.current.style.scrollBehavior = null;
+		uiChildAdapter.current.scrollToPosition(variables.current.scrollLeft + 0.1, variables.current.scrollTop + 0.1);
+		uiChildContainerRef.current.style.scrollBehavior = 'smooth';
+	}
+
+	// esline-disable-next-line react-hooks/exhaustive-deps
+	function stop () {
+		if (type === 'JS') {
+			stopForJS();
+		} else {
+			stopForNative();
+		}
+	}
 
 	// scrollTo API
 

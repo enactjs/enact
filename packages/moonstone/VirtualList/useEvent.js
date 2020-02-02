@@ -37,15 +37,17 @@ const useEventKey = (props, instances, context) => {
 	// Functions
 
 	const findSpottableItem = useCallback((indexFrom, indexTo) => {
+		const {dataSize} = props;
 		if (indexFrom < 0 && indexTo < 0 || indexFrom >= dataSize && indexTo >= dataSize) {
 			return -1;
 		} else {
 			return clamp(0, dataSize - 1, indexFrom);
 		}
-	}, [dataSize]);
+	}, [props]);
 
 	const getNextIndex = useCallback(({index, keyCode, repeat}) => {
-		const {isPrimaryDirectionVertical, dimensionToExtent} = uiScrollableAdapter;
+		const {dataSize, rtl, wrap} = props;
+		const {isPrimaryDirectionVertical, dimensionToExtent} = uiScrollableAdapter.current;
 		const column = index % dimensionToExtent;
 		const row = (index - column) % dataSize / dimensionToExtent;
 		const isDownKey = isDown(keyCode);
@@ -121,7 +123,8 @@ const useEventKey = (props, instances, context) => {
 					ev.stopPropagation();
 				} else {
 					const {repeat} = ev;
-					const {dimensionToExtent, isPrimaryDirectionVertical} = uiScrollableAdapter;
+					const {focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, spotlightId} = props;
+					const {dimensionToExtent, isPrimaryDirectionVertical} = uiScrollableAdapter.current;
 					const targetIndex = target.dataset.index;
 					const isScrollButton = (
 						// if target has an index, it must be an item so can't be a scroll button
@@ -156,6 +159,7 @@ const useEventKey = (props, instances, context) => {
 
 							handleDirectionKeyDown(ev, 'acceleratedKeyDown', {isWrapped, keyCode, nextIndex, repeat, target});
 						} else {
+							const {dataSize} = props;
 							const column = index % dimensionToExtent;
 							const row = (index - column) % dataSize / dimensionToExtent;
 

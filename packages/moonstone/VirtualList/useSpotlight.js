@@ -30,7 +30,7 @@ const useSpotlightConfig = (props, instances) => {
 				 * Restores the data-index into the placeholder if its the only element. Tries to find a
 				 * matching child otherwise.
 				 */
-				lastFocusedRestore: lastFocusedRestore,
+				lastFocusedRestore,
 				/*
 				 * Directs spotlight focus to favor straight elements that are within range of `spacing`
 				 * over oblique elements, like scroll buttons.
@@ -112,10 +112,11 @@ const useSpotlightRestore = (props, instances) => {
 			variables.current.restoreLastFocused &&
 			!isPlaceholderFocused()
 		) {
-			const childContainerNode = uiChildContainerRef.current;
-			const node = childContainerNode && childContainerNode.querySelector(
-				`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
-			);
+			const
+				{spotlightId} = this.props,
+				node = this.uiRefCurrent.containerRef.current.querySelector(
+					`[data-spotlight-id="${spotlightId}"] [data-index="${variables.current.preservedIndex}"]`
+				);
 
 			if (node) {
 				// if we're supposed to restore focus and virtual list has positioned a set of items
@@ -144,9 +145,6 @@ const useSpotlightRestore = (props, instances) => {
 	}
 
 	function updateStatesAndBounds ({dataSize, moreInfo, numOfItems}) {
-		// TODO check preservedIndex
-		// const {preservedIndex} = this;
-
 		return (variables.current.restoreLastFocused && numOfItems > 0 && variables.current.preservedIndex < dataSize && (
 			variables.current.preservedIndex < moreInfo.firstVisibleIndex || variables.current.preservedIndex > moreInfo.lastVisibleIndex
 		));
