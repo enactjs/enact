@@ -235,6 +235,11 @@ const itemSizesShape = PropTypes.shape({
 			 */
 			rtl: PropTypes.bool,
 
+			/*
+			 * TBD
+			 */
+			setUiChildAdapter: PropTypes.func,
+
 			/**
 			 * The spacing between items.
 			 *

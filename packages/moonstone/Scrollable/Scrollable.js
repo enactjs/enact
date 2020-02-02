@@ -23,7 +23,7 @@ import React, {Component, useContext, useRef} from 'react';
 import $L from '../internal/$L';
 import {SharedState} from '../internal/SharedStateDecorator';
 
-import useChildAdapter from './useChildAdapter';
+import useChildAdapter from './useChild';
 import {
 	useEventFocus, useEventKey, useEventMonitor, useEventMouse,
 	useEventTouch, useEventVoice, useEventWheel
