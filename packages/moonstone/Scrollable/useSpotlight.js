@@ -18,23 +18,20 @@ const navigableFilter = (elem) => {
 };
 
 const useSpotlightConfig = (props) => {
-	const {'data-spotlight-id': spotlightId, focusableScrollbar} = props;
-
 	// Hooks
 
 	useEffect(() => {
 		function configureSpotlight () {
-			Spotlight.set(spotlightId, {
-				navigableFilter: focusableScrollbar ? null : navigableFilter
+			Spotlight.set(props['data-spotlight-id'], {
+				navigableFilter: props.focusableScrollbar ? null : navigableFilter
 			});
 		}
 
 		configureSpotlight();
-	}, [focusableScrollbar, spotlightId]);
+	}, [props]);
 };
 
 const useSpotlightRestore = (props, instances) => {
-	const {id} = props;
 	const {uiScrollableAdapter} = instances;
 	const context = useContext(SharedState);
 
@@ -44,6 +41,7 @@ const useSpotlightRestore = (props, instances) => {
 		// Only intended to be used within componentDidMount, this method will fetch the last stored
 		// scroll position from SharedState and scroll (without animation) to that position
 		function restoreScrollPosition () {
+			const {id} = props;
 			if (id && context && context.get) {
 				const scrollPosition = context.get(`${id}.scrollPosition`);
 
@@ -57,7 +55,7 @@ const useSpotlightRestore = (props, instances) => {
 		}
 
 		restoreScrollPosition();
-	}, [context, id, uiScrollableAdapter]);
+	}, [context, uiScrollableAdapter]);
 };
 
 export {
