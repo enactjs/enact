@@ -32,7 +32,7 @@ const useSpotlightConfig = (props, instances) => {
 		}
 
 		configureSpotlight();
-	}, [dangerouslyContainsInScrollable, props, uiScrollableAdapter]);
+	}, [props, uiScrollableAdapter]);
 };
 
 export {

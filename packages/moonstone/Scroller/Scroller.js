@@ -106,7 +106,7 @@ const useSpottable = (props, instances) => {
 
 	const setContainerDisabled = useCallback((bool) => {
 		const
-			{spotlightId} = this.props,
+			{spotlightId} = props,
 			containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 
 		if (containerNode) {
@@ -339,7 +339,7 @@ const useSpottable = (props, instances) => {
 
 	const setContainerDisabled = useCallback((bool) => {
 		const
-			{spotlightId} = this.props,
+			{spotlightId} = props,
 			containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 
 		if (containerNode) {
@@ -409,6 +409,7 @@ const useSpottableScroller = (props) => {
 	delete propsObject.setChildAdapter;
 	delete propsObject.spotlightId;
 	delete propsObject.uiScrollableAdapter;
+	delete propsObject.uiScrollableContainerRef;
 
 	return propsObject;
 };

@@ -2,7 +2,7 @@ import {forward} from '@enact/core/handle';
 import platform from '@enact/core/platform';
 import {onWindowReady} from '@enact/core/snapshot';
 import {clamp} from '@enact/core/util';
-import Spotlight from '@enact/spotlight';
+import Spotlight, {getDirection} from '@enact/spotlight';
 import {getRect} from '@enact/spotlight/src/utils';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import {constants} from '@enact/ui/Scrollable';
@@ -12,7 +12,10 @@ import {useEffect, useRef} from 'react';
 
 const {overscrollTypeOnce, scrollWheelPageMultiplierForMaxPixel} = constants;
 
-const {animationDuration, epsilon} = constants;
+const
+	{animationDuration, epsilon, isPageDown, isPageUp} = constants,
+	paginationPageMultiplier = 0.66;
+let lastPointer = {x: 0, y: 0};
 
 const useEventFocus = (props, instances, context) => {
 	const {childAdapter, spottable, uiScrollableContainerRef, uiChildContainerRef, uiScrollableAdapter} = instances;
@@ -154,11 +157,6 @@ const useEventFocus = (props, instances, context) => {
 		hasFocus
 	};
 };
-
-const
-	{epsilon, isPageDown, isPageUp} = constants,
-	paginationPageMultiplier = 0.66,
-	lastPointer = {x: 0, y: 0};
 
 const useEventKey = (props, instances, context) => {
 	const {childAdapter, horizontalScrollbarRef, spottable, uiChildContainerRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
@@ -304,8 +302,6 @@ const useEventKey = (props, instances, context) => {
 	};
 };
 
-const {isPageDown, isPageUp} = constants;
-
 /*
  * Track the last position of the pointer to check if a list should scroll by
  * page up/down keys when the pointer is on a list without any focused node.
@@ -313,8 +309,6 @@ const {isPageDown, isPageUp} = constants;
  * its descendants, we add `keydown` handler to `document` also.
  */
 const scrollables = new Map();
-
-let lastPointer = {x: 0, y: 0};
 
 // An app could have lists and/or scrollers more than one,
 // so we should test all of them when page up/down key is pressed.

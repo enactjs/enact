@@ -67,7 +67,7 @@ const useSpotlightConfig = (props, instances) => {
 const getNumberValue = (index) => index | 0;
 
 const useSpotlightRestore = (props, instances) => {
-	const {spottable, uiChildContainerRef} = instances;
+	const {spottable, uiChildContainerRef, uiScrollableContainerRef} = instances;
 
 	// Mutable value
 
@@ -113,8 +113,8 @@ const useSpotlightRestore = (props, instances) => {
 			!isPlaceholderFocused()
 		) {
 			const
-				{spotlightId} = this.props,
-				node = this.uiRefCurrent.containerRef.current.querySelector(
+				{spotlightId} = props,
+				node = uiScrollableContainerRef.current.querySelector(
 					`[data-spotlight-id="${spotlightId}"] [data-index="${mutableRef.current.preservedIndex}"]`
 				);
 
@@ -166,6 +166,6 @@ const useSpotlightRestore = (props, instances) => {
 };
 
 export {
-	useSpotlightConfig
+	useSpotlightConfig,
 	useSpotlightRestore
 };

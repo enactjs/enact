@@ -1316,7 +1316,7 @@ const useScrollable = (props) => {
 
 		if (canScrollHorizontally(bounds)) {
 			const
-				rtl = this.props.rtl,
+				rtl = props.rtl,
 				edge = getEdgeFromPosition(mutableRef.current.scrollLeft, bounds.maxLeft);
 
 			if (edge) { // if edge is null, no need to check which edge is reached.

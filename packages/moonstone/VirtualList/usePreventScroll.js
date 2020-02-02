@@ -2,7 +2,7 @@ import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import {useEffect} from 'react';
 
 const usePreventScroll = (props, instances, context) => {
-	cosnt {uiScrollableContainerRef} = instances;
+	const {uiScrollableContainerRef} = instances;
 	const {type} = context;
 
 	// Hooks
@@ -24,7 +24,7 @@ const usePreventScroll = (props, instances, context) => {
 				utilEvent('scroll').removeEventListener(containerNode, preventScroll);
 			};
 		}
-	}, [containerNode, type]);
+	}, [type]);
 };
 
 export default usePreventScroll;

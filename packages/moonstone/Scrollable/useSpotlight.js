@@ -1,6 +1,6 @@
 import Spotlight from '@enact/spotlight';
 import utilDOM from '@enact/ui/Scrollable/utilDOM';
-import {useEffect} from 'react';
+import {useContext, useEffect} from 'react';
 
 import {SharedState} from '../internal/SharedStateDecorator/SharedStateDecorator';
 

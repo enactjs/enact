@@ -205,11 +205,7 @@ const useEventKey = (props, instances, context) => {
 			utilEvent('keydown').removeEventListener(scrollerNode, handleKeyDown, {capture: true});
 			utilEvent('keyup').removeEventListener(scrollerNode, handleKeyUp, {capture: true});
 		};
-	}, [
-		uiChildContainerRef, getNextIndex,
-		handle5WayKeyUp, handleDirectionKeyDown, handlePageUpDownKeyDown,
-		SpotlightAccelerator, uiChildAdapter
-	]);
+	}, [ uiChildContainerRef, getNextIndex, handle5WayKeyUp, handleDirectionKeyDown, handlePageUpDownKeyDown, SpotlightAccelerator]);
 
 	// Functions
 

@@ -23,7 +23,7 @@ import React, {Component, useContext, useRef} from 'react';
 import $L from '../internal/$L';
 import {SharedState} from '../internal/SharedStateDecorator';
 
-import useChildAdapter from './useChild';
+import {useChildAdapter} from './useChild';
 import {
 	useEventFocus, useEventKey, useEventMonitor, useEventMouse,
 	useEventTouch, useEventVoice, useEventWheel
@@ -1193,7 +1193,8 @@ const useScroll = (props) => {
 
 	const
 		decoratedChildProps = {},
-		decorateChildProps = utilDecorateChildProps(decoratedChildProps);
+		decorateChildProps = utilDecorateChildProps(decoratedChildProps),
+		scrollableProps = {};
 
 	const {
 		addEventListeners,
@@ -1219,10 +1220,10 @@ const useScroll = (props) => {
 	// Render
 
 	if (type === 'JS') {
-		scrollableBaseProp.stop = stop;
+		scrollableProps.stop = stop;
 	} else {
-		scrollableBaseProp.scrollStopOnScroll = scrollStopOnScroll;
-		scrollableBaseProp.start = start;
+		scrollableProps.scrollStopOnScroll = scrollStopOnScroll;
+		scrollableProps.start = start;
 	}
 
 	decorateChildProps('scrollableContainerProps', {
@@ -1246,7 +1247,8 @@ const useScroll = (props) => {
 		scrollAndFocusScrollbarButton,
 		setChildAdapter,
 		spotlightId,
-		uiScrollableAdapter
+		uiScrollableAdapter,
+		uiScrollableContainerRef
 	});
 
 	decorateChildProps('verticalScrollbarProps', {
@@ -1273,7 +1275,7 @@ const useScroll = (props) => {
 		isVerticalScrollbarVisible
 	} = useScrollable({
 		...rest,
-		...scrollableBaseProp,
+		...scrollableProps,
 		decorateChildProps,
 		noScrollByDrag: !platform.touchscreen,
 		addEventListeners,

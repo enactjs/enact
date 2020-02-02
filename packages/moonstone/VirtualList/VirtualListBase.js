@@ -10,7 +10,7 @@ import {dataIndexAttribute} from '../Scrollable';
 import {useEventKey} from './useEvent';
 import useOverscrollEffect from './useOverscrollEffect';
 import usePreventScroll from './usePreventScroll';
-import {useSpotlightConfig, useSpotlightRestore} from './useSpotlightConfig';
+import {useSpotlightConfig, useSpotlightRestore} from './useSpotlight';
 
 const SpotlightAccelerator = new Accelerator();
 const SpotlightPlaceholder = Spottable('div');
@@ -254,7 +254,7 @@ const
 
 		const setContainerDisabled = useCallback((bool) => {
 			const
-				{spotlightId} = this.props,
+				{spotlightId} = props,
 				containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 
 			if (containerNode) {
@@ -294,17 +294,17 @@ const
 				enterTo: 'last-focused',
 				/*
 				 * Returns the data-index as the key for last focused
-				 */
+				 //
 				lastFocusedPersist,
 				/*
 				 * Restores the data-index into the placeholder if its the only element. Tries to find a
 				 * matching child otherwise.
-				 */
+				 //
 				lastFocusedRestore,
 				/*
 				 * Directs spotlight focus to favor straight elements that are within range of `spacing`
 				 * over oblique elements, like scroll buttons.
-				 */
+				 //
 				obliqueMultiplier: spacing > 0 ? spacing : 1
 			});
 		}
@@ -322,7 +322,7 @@ const
 		/*
 		 * Restores the data-index into the placeholder if it exists. Tries to find a matching child
 		 * otherwise.
-		 */
+		 //
 		function lastFocusedRestore ({key}, all) {
 			const placeholder = all.find(el => 'vlPlaceholder' in el.dataset);
 
@@ -349,7 +349,7 @@ const
 		}, [props]);
 
 		const getNextIndex = useCallback(({index, keyCode, repeat}) => {
-			const {dataSize, rtl, wrap} = this.props;
+			const {dataSize, rtl, wrap} = props;
 			const {isPrimaryDirectionVertical, dimensionToExtent} = uiScrollableAdapter.current;
 			const column = index % dimensionToExtent;
 			const row = (index - column) % dataSize / dimensionToExtent;
@@ -410,7 +410,7 @@ const
 			}
 
 			return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
-		}, [dataSize, findSpottableItem, rtl, uiScrollableAdapter, wrap]);		
+		}, [dataSize, findSpottableItem, rtl, uiScrollableAdapter, wrap]);
 */
 
 		function getNodeIndexToBeFocused () {
@@ -665,8 +665,8 @@ Move to useEvent
 				!isPlaceholderFocused()
 			) {
 				const
-					{spotlightId} = this.props,
-					node = this.uiRefCurrent.containerRef.current.querySelector(
+					{spotlightId} = props,
+					node = uiScrollableContainerRef.current.querySelector(
 						`[data-spotlight-id="${spotlightId}"] [data-index="${mutableRef.current.preservedIndex}"]`
 					);
 
@@ -691,12 +691,16 @@ Move to useEvent
 		}
 */
 
-		function calculatePositionOnFocus ({item, scrollPosition = uiScrollableAdapter.current.scrollPosition}) {
+		function calculatePositionOnFocus ({item, scrollPosition}) {
+			console.log(uiScrollableAdapter, primary, primary.clientSize)
 			const
+
 				{pageScroll} = props,
 				{numOfItems, primary} = uiScrollableAdapter.current,
 				offsetToClientEnd = primary.clientSize - primary.itemSize,
 				focusedIndex = getNumberValue(item.getAttribute(dataIndexAttribute));
+
+			scrollPosition = scrollPosition || uiScrollableAdapter.current.scrollPosition;
 
 			if (!isNaN(focusedIndex)) {
 				let gridPosition = uiScrollableAdapter.current.getGridPosition(focusedIndex);
@@ -781,12 +785,12 @@ Move to useEvent
 	};
 
 const useSpottableVirtualList = (props) => {
-	const {type, uiScrollableContainerRef, uiChildContainerRef} = props;
+	const {type, uiScrollableAdapter, uiScrollableContainerRef} = props;
 	const {spotlightId} = props;
 
 	// Hooks
 
-	const instance = {uiScrollableContainerRef, uiChildContainerRef};
+	const instance = {uiScrollableAdapter, uiScrollableContainerRef};
 
 	const {
 		calculatePositionOnFocus,
@@ -846,6 +850,7 @@ const useSpottableVirtualList = (props) => {
 			delete rest.scrollAndFocusScrollbarButton;
 			delete rest.spotlightId;
 			delete rest.uiScrollableAdapter;
+			delete rest.uiScrollableContainerRef;
 			delete rest.wrap;
 
 			return {
