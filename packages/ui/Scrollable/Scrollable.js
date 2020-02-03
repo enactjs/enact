@@ -652,7 +652,7 @@ const useScrollBase = (props) => {
 	useEffect(() => {
 		const
 			{hasDataSizeChanged} = uiChildAdapter.current,
-			{deferScrollTo, prevState, resizeRegistry, scrollToInfo} = mutableRef.current;
+			{prevState, resizeRegistry, scrollToInfo} = mutableRef.current;
 
 		// Need to sync calculated client size if it is different from the real size
 		if (uiChildAdapter.current.syncClientSize) {
