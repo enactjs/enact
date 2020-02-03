@@ -16,25 +16,18 @@
  * @exports ScrollerBase
  */
 
-import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
-import Spotlight from '@enact/spotlight';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import {Spotlight} from '@enact/spotlight';
 import {getRect} from '@enact/spotlight/src/utils';
-import {ResizeContext} from '@enact/ui/Resizable';
 import ri from '@enact/ui/resolution';
-import utilDOM from '@enact/ui/Scrollable/utilDOM';
 import {ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import PropTypes from 'prop-types';
-import React, {Component, useCallback, useEffect} from 'react';
+import React, {Component} from 'react';
 
-import useScroll from '../Scrollable';
-import Scrollbar from '../Scrollable/Scrollbar';
-import Skinnable from '../Skinnable';
-
-import {useEventKey} from './useEvent';
-import {useSpotlightConfig} from './useSpotlight';
+import Scrollable from '../Scrollable';
+import ScrollableNative from '../Scrollable/ScrollableNative';
 
 const dataContainerDisabledAttribute = 'data-spotlight-container-disabled';
+
 /**
  * A Moonstone-styled base component for [Scroller]{@link moonstone/Scroller.Scroller}.
  * In most circumstances, you will want to use the
@@ -93,48 +86,34 @@ class ScrollerBase extends Component {
 		 */
 		spotlightId: PropTypes.string
 	}
-}
 
-const useSpottable = (props, instances) => {
-	const {uiChildContainerRef, uiScrollAdapter} = instances;
+	componentDidMount () {
+		this.configureSpotlight();
+	}
 
-	// Hooks
-
-	useSpotlightConfig(props, instances);
-
-	const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey();
-
-	const setContainerDisabled = useCallback((bool) => {
-		const
-			{spotlightId} = props,
-			containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
-
-		if (containerNode) {
-			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
-
-			if (bool) {
-				addGlobalKeyDownEventListener(() => {
-					setContainerDisabled(false);
-				});
-			} else {
-				removeGlobalKeyDownEventListener();
-			}
-		}
-	}, [addGlobalKeyDownEventListener, props, removeGlobalKeyDownEventListener]);
-
-	useEffect(() => {
-		return () => setContainerDisabled(false);
-	}, [setContainerDisabled]);
-
-	useEffect(() => {
-		const {onUpdate} = props;
-
+	componentDidUpdate (prevProps) {
+		const {onUpdate} = this.props;
 		if (onUpdate) {
 			onUpdate();
 		}
-	});
 
-	// Functions
+		if (prevProps.spotlightId !== this.props.spotlightId) {
+			this.configureSpotlight();
+		}
+	}
+
+	componentWillUnmount () {
+		this.setContainerDisabled(false);
+	}
+
+	uiRefCurrent = null
+
+	configureSpotlight () {
+		Spotlight.set(this.props.spotlightId, {
+			onLeaveContainer: this.handleLeaveContainer,
+			onLeaveContainerFail: this.handleLeaveContainer
+		});
+	}
 
 	/**
 	 * Returns the first spotlight container between `node` and the scroller
@@ -144,12 +123,12 @@ const useSpottable = (props, instances) => {
 	 * @returns {Node|Null} Spotlight container for `node`
 	 * @private
 	 */
-	function getSpotlightContainerForNode (node) {
+	getSpotlightContainerForNode = (node) => {
 		do {
 			if (node.dataset.spotlightId && node.dataset.spotlightContainer && !node.dataset.expandableContainer) {
 				return node;
 			}
-		} while ((node = node.parentNode) && node !== uiChildContainerRef.current);
+		} while ((node = node.parentNode) && node !== this.uiRefCurrent.containerRef.current);
 	}
 
 	/**
@@ -161,8 +140,8 @@ const useSpottable = (props, instances) => {
 	 * @returns {Object} Bounds as returned by `getBoundingClientRect`
 	 * @private
 	 */
-	function getFocusedItemBounds (node) {
-		node = getSpotlightContainerForNode(node) || node;
+	getFocusedItemBounds = (node) => {
+		node = this.getSpotlightContainerForNode(node) || node;
 		return node.getBoundingClientRect();
 	}
 
@@ -179,7 +158,7 @@ const useSpottable = (props, instances) => {
 	 * @returns {Number} Calculated `scrollTop`
 	 * @private
 	 */
-	function calculateScrollTop (item) {
+	calculateScrollTop = (item) => {
 		const threshold = ri.scale(24);
 		const roundToStart = (sb, st) => {
 			// round to start
@@ -210,9 +189,9 @@ const useSpottable = (props, instances) => {
 			return st;
 		};
 
-		const container = getSpotlightContainerForNode(item);
-		const scrollerBounds = uiChildContainerRef.current.getBoundingClientRect();
-		let {scrollHeight, scrollTop} = uiChildContainerRef.current;
+		const container = this.getSpotlightContainerForNode(item);
+		const scrollerBounds = this.uiRefCurrent.containerRef.current.getBoundingClientRect();
+		let {scrollHeight, scrollTop} = this.uiRefCurrent.containerRef.current;
 		let scrollTopDelta = 0;
 
 		const adjustScrollTop = (v) => {
@@ -259,28 +238,27 @@ const useSpottable = (props, instances) => {
 	 * @returns {Number} Calculated `scrollLeft`
 	 * @private
 	 */
-	function calculateScrollLeft (item, scrollPosition) {
-		const childContainerNode = uiChildContainerRef.current;
+	calculateScrollLeft = (item, scrollPosition) => {
 		const {
 			left: itemLeft,
 			width: itemWidth
-		} = getFocusedItemBounds(item);
+		} = this.getFocusedItemBounds(item);
 
 		const
-			{rtl} = props,
-			{clientWidth} = uiScrollAdapter.current.scrollBounds,
+			{rtl} = this.props,
+			{clientWidth} = this.uiRefCurrent.scrollBounds,
 			rtlDirection = rtl ? -1 : 1,
-			{left: containerLeft} = childContainerNode.getBoundingClientRect(),
-			scrollLastPosition = scrollPosition ? scrollPosition : uiScrollAdapter.current.scrollPos.left,
-			currentScrollLeft = rtl ? (uiScrollAdapter.current.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
+			{left: containerLeft} = this.uiRefCurrent.containerRef.current.getBoundingClientRect(),
+			scrollLastPosition = scrollPosition ? scrollPosition : this.uiRefCurrent.scrollPos.left,
+			currentScrollLeft = rtl ? (this.uiRefCurrent.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
 			// calculation based on client position
-			newItemLeft = childContainerNode.scrollLeft + (itemLeft - containerLeft);
-		let nextScrollLeft = uiScrollAdapter.current.scrollPos.left;
+			newItemLeft = this.uiRefCurrent.containerRef.current.scrollLeft + (itemLeft - containerLeft);
+		let nextScrollLeft = this.uiRefCurrent.scrollPos.left;
 
 		if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
 			// If focus is moved to an element outside of view area (to the right), scroller will move
 			// to the right just enough to show the current `focusedItem`. This does not apply to
-			// `focusedItem` that has a width that is bigger than `scrollBounds.clientWidth`.
+			// `focusedItem` that has a width that is bigger than `this.scrollBounds.clientWidth`.
 			nextScrollLeft += rtlDirection * ((newItemLeft + itemWidth) - (clientWidth + currentScrollLeft));
 		} else if (newItemLeft < currentScrollLeft) {
 			// If focus is outside of the view area to the left, move scroller to the left accordingly.
@@ -301,12 +279,12 @@ const useSpottable = (props, instances) => {
 	 * @returns {Object} with keys {top, left} containing calculated top and left positions for scroll.
 	 * @private
 	 */
-	function calculatePositionOnFocus ({item, scrollPosition}) {
-		const containerNode = uiChildContainerRef.current;
-		const horizontal = uiScrollAdapter.current.isHorizontal();
-		const vertical = uiScrollAdapter.current.isVertical();
+	calculatePositionOnFocus = ({item, scrollPosition}) => {
+		const containerNode = this.uiRefCurrent.containerRef.current;
+		const horizontal = this.uiRefCurrent.isHorizontal();
+		const vertical = this.uiRefCurrent.isVertical();
 
-		if (!vertical && !horizontal || !item || !utilDOM.containsDangerously(containerNode, item)) {
+		if (!vertical && !horizontal || !item || !containerNode.contains(item)) {
 			return;
 		}
 
@@ -314,105 +292,83 @@ const useSpottable = (props, instances) => {
 		const itemRect = getRect(item);
 
 		if (horizontal && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {
-			uiScrollAdapter.current.scrollPos.left = calculateScrollLeft(item, scrollPosition);
+			this.uiRefCurrent.scrollPos.left = this.calculateScrollLeft(item, scrollPosition);
 		}
 
 		if (vertical && !(itemRect.top >= containerRect.top && itemRect.bottom <= containerRect.bottom)) {
-			uiScrollAdapter.current.scrollPos.top = calculateScrollTop(item);
+			this.uiRefCurrent.scrollPos.top = this.calculateScrollTop(item);
 		}
 
-		return uiScrollAdapter.current.scrollPos;
+		return this.uiRefCurrent.scrollPos;
 	}
 
-	function focusOnNode (node) {
+	focusOnNode = (node) => {
 		if (node) {
 			Spotlight.focus(node);
 		}
 	}
 
-/* eslint-disable indent */
-/*
-// Move to Scroller above
+	handleGlobalKeyDown = () => {
+		this.setContainerDisabled(false);
+	}
 
-	useEffect(() => {
-		return () => setContainerDisabled(false);
-	}, [setContainerDisabled]);
-
-	const setContainerDisabled = useCallback((bool) => {
+	setContainerDisabled = (bool) => {
 		const
-			{spotlightId} = props,
+			{spotlightId} = this.props,
 			containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 
 		if (containerNode) {
 			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
 
 			if (bool) {
-				addGlobalKeyDownEventListener(() => {
-					setContainerDisabled(false);
-				});
+				document.addEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
 			} else {
-				removeGlobalKeyDownEventListener();
+				document.removeEventListener('keydown', this.handleGlobalKeyDown, {capture: true});
 			}
 		}
-	}, [addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener, uiChildContainerRef]);
+	}
 
-// Move to useSpotlight
-
-	function handleLeaveContainer ({direction, target}) {
+	handleLeaveContainer = ({direction, target}) => {
+		const contentsContainer = this.uiRefCurrent.containerRef.current;
 		// ensure we only scroll to boundary from the contents and not a scroll button which
-		// lie outside of uiChildContainerRef but within the spotlight container
-		if (scrollContainerContainsDangerously(target)) {
+		// lie outside of this.uiRefCurrent.containerRef but within the spotlight container
+		if (contentsContainer && contentsContainer.contains(target)) {
 			const
-				{scrollBounds: {maxLeft, maxTop}, scrollPos: {left, top}} = uiScrollAdapter.current,
+				{scrollBounds: {maxLeft, maxTop}, scrollPos: {left, top}} = this.uiRefCurrent,
 				isVerticalDirection = (direction === 'up' || direction === 'down'),
 				pos = isVerticalDirection ? top : left,
 				max = isVerticalDirection ? maxTop : maxLeft;
 
 			// If max is equal to 0, it means scroller can not scroll to the direction.
 			if (pos >= 0 && pos <= max && max !== 0) {
-				props.scrollAndFocusScrollbarButton(direction);
+				this.props.scrollAndFocusScrollbarButton(direction);
 			}
 		}
 	}
-*/
 
-	// Return
+	initUiRef = (ref) => {
+		if (ref) {
+			this.uiRefCurrent = ref;
+			this.props.initUiChildRef(ref);
+		}
+	}
 
-	return {
-		calculatePositionOnFocus,
-		focusOnNode,
-		setContainerDisabled
-	};
-};
+	render () {
+		const props = Object.assign({}, this.props);
 
-const useSpottableScroller = (props) => {
-	const {uiChildContainerRef} = props;
+		delete props.initUiChildRef;
+		delete props.onUpdate;
+		delete props.scrollAndFocusScrollbarButton;
+		delete props.spotlightId;
 
-	// Hooks
-
-	const {calculatePositionOnFocus, focusOnNode, setContainerDisabled} = useSpottable(props, {uiChildContainerRef});
-
-	useEffect(() => {
-		props.setChildAdapter({
-			calculatePositionOnFocus,
-			focusOnNode,
-			setContainerDisabled
-		});
-	}, [calculatePositionOnFocus, focusOnNode, props, props.setChildAdapter, setContainerDisabled]);
-
-	// Render
-
-	const propsObject = Object.assign({}, props);
-
-	delete propsObject.scrollContainerContainsDangerously;
-	delete propsObject.onUpdate;
-	delete propsObject.scrollAndFocusScrollbarButton;
-	delete propsObject.setChildAdapter;
-	delete propsObject.spotlightId;
-	delete propsObject.uiScrollAdapter;
-
-	return propsObject;
-};
+		return (
+			<UiScrollerBase
+				{...props}
+				ref={this.initUiRef}
+			/>
+		);
+	}
+}
 
 /**
  * Allows 5-way navigation to the scrollbar controls. By default, 5-way will
@@ -492,107 +448,61 @@ const useSpottableScroller = (props) => {
  * @ui
  * @public
  */
-let Scroller = (props) => {
-	// Hooks
-
-	const {
-		childWrapper: ChildWrapper,
-		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible,
-
-		resizeContextProps,
-		scrollContainerProps,
-		innerScrollContainerProps,
-		childWrapperProps,
-		childProps,
-		verticalScrollbarProps,
-		horizontalScrollbarProps
-	} = useScroll(props);
-
-	const uiChildProps = useSpottableScroller(childProps);
-
-	// Render
-
-	return (
-		<ResizeContext.Provider {...resizeContextProps}>
-			<div {...scrollContainerProps}>
-				<div {...innerScrollContainerProps}>
-					<ChildWrapper {...childWrapperProps}>
-						<UiScrollerBase {...uiChildProps} />
-					</ChildWrapper>
-					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
-				</div>
-				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
-			</div>
-		</ResizeContext.Provider>
-	);
-};
+const Scroller = (props) => (
+	<Scrollable
+		{...props}
+		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
+			return <ScrollerBase {...scrollerProps} />;
+		}}
+	/>
+);
 
 Scroller.propTypes = /** @lends moonstone/Scroller.Scroller.prototype */ {
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
-
-	/**
-	 * Specifies how to show horizontal scrollbar.
-	 *
-	 * Valid values are:
-	 * * `'auto'`,
-	 * * `'visible'`, and
-	 * * `'hidden'`.
-	 *
-	 * @type {String}
-	 * @default 'auto'
-	 * @public
-	 */
-	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
-
-	/**
-	 * Specifies how to show vertical scrollbar.
-	 *
-	 * Valid values are:
-	 * * `'auto'`,
-	 * * `'visible'`, and
-	 * * `'hidden'`.
-	 *
-	 * @type {String}
-	 * @default 'auto'
-	 * @public
-	 */
-	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
 };
 
 Scroller.defaultProps = {
-	'data-spotlight-container-disabled': false, // eslint-disable-line react/default-props-match-prop-types
-	direction: 'both',
-	focusableScrollbar: false, // eslint-disable-line react/default-props-match-prop-types
-	horizontalScrollbar: 'auto',
-	overscrollEffectOn: { // eslint-disable-line react/default-props-match-prop-types
-		arrowKey: false,
-		drag: false,
-		pageKey: false,
-		scrollbarButton: false,
-		wheel: true
-	},
-	preventBubblingOnKeyDown: 'none', // eslint-disable-line react/default-props-match-prop-types
-	type: 'JS', // eslint-disable-line react/default-props-match-prop-types
-	verticalScrollbar: 'auto'
+	direction: 'both'
 };
 
-Scroller = Skinnable(
-	SpotlightContainerDecorator(
-		{
-			overflow: true,
-			preserveId: true,
-			restrict: 'self-first'
-		},
-		I18nContextDecorator(
-			{rtlProp: 'rtl'},
-			Scroller
-		)
-	)
+/**
+ * A Moonstone-styled native Scroller, Scrollable applied.
+ *
+ * For smooth native scrolling, web engine with below Chromium 61, should be launched
+ * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
+ * The one with Chromium 61 or above, is launched to support it by default.
+ *
+ * Usage:
+ * ```
+ * <ScrollerNative>Scroll me.</ScrollerNative>
+ * ```
+ *
+ * @class ScrollerNative
+ * @memberof moonstone/Scroller
+ * @extends moonstone/Scroller.ScrollerBase
+ * @ui
+ * @private
+ */
+const ScrollerNative = (props) => (
+	<ScrollableNative
+		{...props}
+		childRenderer={(scrollerProps) => { // eslint-disable-line react/jsx-no-bind
+			return <ScrollerBase {...scrollerProps} />;
+		}}
+	/>
 );
+
+ScrollerNative.propTypes = /** @lends moonstone/Scroller.ScrollerNative.prototype */ {
+	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical'])
+};
+
+ScrollerNative.defaultProps = {
+	direction: 'both'
+};
 
 export default Scroller;
 export {
 	Scroller,
-	ScrollerBase
+	ScrollerBase,
+	ScrollerNative
 };

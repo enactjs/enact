@@ -1,9 +1,8 @@
 import {forward} from '@enact/core/handle';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target';
 import {is} from '@enact/core/keymap';
-import Spotlight, {getDirection} from '@enact/spotlight';
 import {Announce} from '@enact/ui/AnnounceDecorator';
-import utilEvent from '@enact/ui/Scrollable/utilEvent';
+import Spotlight, {getDirection} from '@enact/spotlight';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
@@ -83,11 +82,11 @@ class ScrollButtons extends Component {
 		focusableScrollButtons: PropTypes.bool,
 
 		/**
-		 * Sets the hint string read when focusing the next button in the scroll bar.
-		 *
-		 * @type {String}
-		 * @public
-		 */
+		* Sets the hint string read when focusing the next button in the scroll bar.
+		*
+		* @type {String}
+		* @public
+		*/
 		nextButtonAriaLabel: PropTypes.string,
 
 		/**
@@ -174,13 +173,13 @@ class ScrollButtons extends Component {
 	}
 
 	componentDidMount () {
-		utilEvent('keydown').addEventListener(this.nextButtonRef, this.onKeyDownNext);
-		utilEvent('keydown').addEventListener(this.prevButtonRef, this.onKeyDownPrev);
+		this.nextButtonRef.current.addEventListener('keydown', this.onKeyDownNext);
+		this.prevButtonRef.current.addEventListener('keydown', this.onKeyDownPrev);
 	}
 
 	componentWillUnmount () {
-		utilEvent('keydown').removeEventListener(this.nextButtonRef, this.onKeyDownNext);
-		utilEvent('keydown').removeEventListener(this.prevButtonRef, this.onKeyDownPrev);
+		this.nextButtonRef.current.removeEventListener('keydown', this.onKeyDownNext);
+		this.prevButtonRef.current.removeEventListener('keydown', this.onKeyDownPrev);
 	}
 
 	updateButtons = (bounds) => {
@@ -191,7 +190,9 @@ class ScrollButtons extends Component {
 			shouldDisablePrevButton = currentPos <= 0,
 			/* If a scroll size or a client size is not integer,
 			   browser's max scroll position could be smaller than maxPos by 1 pixel.*/
-			shouldDisableNextButton = maxPos - currentPos <= 1,
+			shouldDisableNextButton = maxPos - currentPos <= 1;
+
+		const
 			updatePrevButton = (this.state.prevButtonDisabled !== shouldDisablePrevButton),
 			updateNextButton = (this.state.nextButtonDisabled !== shouldDisableNextButton);
 
@@ -211,6 +212,7 @@ class ScrollButtons extends Component {
 
 	isOneOfScrollButtonsFocused = () => {
 		const current = Spotlight.getCurrent();
+
 		return current === this.prevButtonRef.current || current === this.nextButtonRef.current;
 	}
 
@@ -230,11 +232,13 @@ class ScrollButtons extends Component {
 
 	onClickPrev = (ev) => {
 		const {onPrevScroll, vertical} = this.props;
+
 		onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
 	}
 
 	onClickNext = (ev) => {
 		const {onNextScroll, vertical} = this.props;
+
 		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
 	}
 

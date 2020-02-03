@@ -41,12 +41,12 @@ const ScrollButtonBase = kind({
 		active: PropTypes.bool,
 
 		/**
-		 * Sets the hint string read when focusing the scroll bar button.
-		 *
-		 * @type {String}
-		 * @memberof moonstone/Scrollable.ScrollButton.prototype
-		 * @public
-		 */
+		* Sets the hint string read when focusing the scroll bar button.
+		*
+		* @type {String}
+		* @memberof moonstone/Scrollable.ScrollButton.prototype
+		* @public
+		*/
 		'aria-label': PropTypes.string,
 
 		/**

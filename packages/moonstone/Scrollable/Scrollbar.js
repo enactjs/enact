@@ -1,11 +1,11 @@
-// import ApiDecorator from '@enact/core/internal/ApiDecorator';
+import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import {ScrollbarBase as UiScrollbarBase} from '@enact/ui/Scrollable/Scrollbar';
 import PropTypes from 'prop-types';
-import React, {forwardRef, memo, useImperativeHandle, useRef} from 'react';
+import React, {Component} from 'react';
 
 import ScrollButtons from './ScrollButtons';
 import ScrollThumb from './ScrollThumb';
-// import Skinnable from '../Skinnable';
+import Skinnable from '../Skinnable';
 
 import componentCss from './Scrollbar.module.less';
 
@@ -18,128 +18,131 @@ import componentCss from './Scrollbar.module.less';
  * @ui
  * @private
  */
-const ScrollbarBase = memo(forwardRef((props, ref) => {
-	// Refs
-	const scrollbarRef = useRef();
-	const scrollButtonsRef = useRef();
-	// render
-	const {cbAlertThumb, clientSize, corner, vertical, ...rest} = props;
+class ScrollbarBase extends Component {
+	static displayName = 'ScrollbarBase'
 
-	useImperativeHandle(ref, () => {
-		const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = scrollbarRef.current;
-		const {focusOnButton, isOneOfScrollButtonsFocused, updateButtons} = scrollButtonsRef.current;
+	static propTypes = /** @lends moonstone/Scrollable.Scrollbar.prototype */ {
+		/**
+		 * Called when [ScrollThumb]{@link moonstone/Scrollable.ScrollThumb} is updated.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		cbAlertThumb: PropTypes.func,
 
-		return {
-			focusOnButton,
-			get uiScrollbarContainer () {
-				return getContainerRef();
-			},
-			isOneOfScrollButtonsFocused,
-			showThumb,
-			startHidingThumb,
-			uiUpdate,
-			update: (bounds) => {
-				updateButtons(bounds);
-				uiUpdate(bounds);
-			}
+		/**
+		 * Client size of the container; valid values are an object that has `clientWidth` and `clientHeight`.
+		 *
+		 * @type {Object}
+		 * @property {Number}    clientHeight    The client height of the list.
+		 * @property {Number}    clientWidth    The client width of the list.
+		 * @public
+		 */
+		clientSize: PropTypes.shape({
+			clientHeight: PropTypes.number.isRequired,
+			clientWidth: PropTypes.number.isRequired
+		}),
+
+		/**
+		 * Adds the corner between vertical and horizontal scrollbars.
+		 *
+		 * @type {Booelan}
+		 * @default false
+		 * @public
+		 */
+		corner: PropTypes.bool,
+
+		/**
+		 * `true` if rtl, `false` if ltr.
+		 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
+		 * Registers the ScrollButtons component with an
+		 * {@link core/internal/ApiDecorator.ApiDecorator}.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		setApiProvider: PropTypes.func,
+
+		/**
+		 * The scrollbar will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		vertical: PropTypes.bool
+	}
+
+	static defaultProps = {
+		corner: false,
+		vertical: true
+	}
+
+	constructor (props) {
+		super(props);
+
+		if (props.setApiProvider) {
+			props.setApiProvider(this);
+		}
+
+		this.scrollbarRef = React.createRef();
+		this.scrollButtonsRef = React.createRef();
+	}
+
+	componentDidMount () {
+		const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = this.scrollbarRef.current;
+
+		this.getContainerRef = getContainerRef;
+		this.showThumb = showThumb;
+		this.startHidingThumb = startHidingThumb;
+		this.uiUpdate = uiUpdate;
+
+		const {isOneOfScrollButtonsFocused, updateButtons, focusOnButton} = this.scrollButtonsRef.current;
+
+		this.isOneOfScrollButtonsFocused = isOneOfScrollButtonsFocused;
+		this.update = (bounds) => {
+			updateButtons(bounds);
+			this.uiUpdate(bounds);
 		};
-	}, [scrollbarRef, scrollButtonsRef]);
+		this.focusOnButton = focusOnButton;
+	}
 
-	return (
-		<UiScrollbarBase
-			clientSize={clientSize}
-			corner={corner}
-			css={componentCss}
-			ref={scrollbarRef}
-			vertical={vertical}
-			childRenderer={({thumbRef}) => { // eslint-disable-line react/jsx-no-bind
-				return (
+	render () {
+		const {cbAlertThumb, clientSize, corner, vertical, ...rest} = this.props;
+
+		return (
+			<UiScrollbarBase
+				corner={corner}
+				clientSize={clientSize}
+				css={componentCss}
+				ref={this.scrollbarRef}
+				vertical={vertical}
+				childRenderer={({thumbRef}) => ( // eslint-disable-line react/jsx-no-bind
 					<ScrollButtons
 						{...rest}
-						ref={scrollButtonsRef}
+						ref={this.scrollButtonsRef}
 						vertical={vertical}
-						thumbRenderer={() => { // eslint-disable-line react/jsx-no-bind
-							return (
-								<ScrollThumb
-									cbAlertThumb={cbAlertThumb}
-									key="thumb"
-									ref={thumbRef}
-									vertical={vertical}
-								/>
-							);
-						}}
+						thumbRenderer={() => ( // eslint-disable-line react/jsx-no-bind
+							<ScrollThumb
+								cbAlertThumb={cbAlertThumb}
+								key="thumb"
+								ref={thumbRef}
+								vertical={vertical}
+							/>
+						)}
 					/>
-				);
-			}}
-		/>
-	);
-}));
-
-ScrollbarBase.displayName = 'ScrollbarBase';
-
-ScrollbarBase.propTypes = /** @lends moonstone/Scrollable.Scrollbar.prototype */ {
-	/**
-	 * Called when [ScrollThumb]{@link moonstone/Scrollable.ScrollThumb} is updated.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
-	cbAlertThumb: PropTypes.func,
-
-	/**
-	 * Client size of the container; valid values are an object that has `clientWidth` and `clientHeight`.
-	 *
-	 * @type {Object}
-	 * @property {Number}    clientHeight    The client height of the list.
-	 * @property {Number}    clientWidth    The client width of the list.
-	 * @public
-	 */
-	clientSize: PropTypes.shape({
-		clientHeight: PropTypes.number.isRequired,
-		clientWidth: PropTypes.number.isRequired
-	}),
-
-	/**
-	 * Adds the corner between vertical and horizontal scrollbars.
-	 *
-	 * @type {Booelan}
-	 * @default false
-	 * @public
-	 */
-	corner: PropTypes.bool,
-
-	/**
-	 * `true` if rtl, `false` if ltr.
-	 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 */
-	rtl: PropTypes.bool,
-
-	/**
-	 * Registers the ScrollButtons component with an
-	 * {@link core/internal/ApiDecorator.ApiDecorator}.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
-	// setApiProvider: PropTypes.func,
-
-	/**
-	 * The scrollbar will be oriented vertically.
-	 *
-	 * @type {Boolean}
-	 * @default true
-	 * @public
-	 */
-	vertical: PropTypes.bool
-};
-
-ScrollbarBase.defaultProps = {
-	corner: false,
-	vertical: true
-};
+				)}
+			/>
+		);
+	}
+}
 
 /**
  * A Moonstone-styled scroll bar. It is used in [Scrollable]{@link moonstone/Scrollable.Scrollable}.
@@ -149,7 +152,6 @@ ScrollbarBase.defaultProps = {
  * @ui
  * @private
  */
-/* TODO: Is it possible to use ApiDecorator?
 const Scrollbar = ApiDecorator(
 	{api: [
 		'focusOnButton',
@@ -160,9 +162,6 @@ const Scrollbar = ApiDecorator(
 		'update'
 	]}, Skinnable(ScrollbarBase)
 );
-*/
-const Scrollbar = ScrollbarBase;
-
 Scrollbar.displayName = 'Scrollbar';
 
 export default Scrollbar;

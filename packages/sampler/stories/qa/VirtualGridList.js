@@ -12,6 +12,7 @@ import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
 import {action} from '@enact/storybook-utils/addons/actions';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 
+
 const Config = mergeComponentMetadata('VirtualGridList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
 
 const

@@ -4,18 +4,18 @@
 @import '../styles/variables.less';
 @import '../styles/skin.less';
 
-.scroll {
-	--scroll-overscroll-ratio-horizontalbefore: 0;
-	--scroll-overscroll-ratio-horizontalafter: 0;
-	--scroll-overscroll-ratio-verticalbefore: 0;
-	--scroll-overscroll-ratio-verticalafter: 0;
+.scrollable {
+	--scrollable-overscroll-ratio-horizontalbefore: 0;
+	--scrollable-overscroll-ratio-horizontalafter: 0;
+	--scrollable-overscroll-ratio-verticalbefore: 0;
+	--scrollable-overscroll-ratio-verticalafter: 0;
 
 	// Skin colors
 	.applySkins({
 		.overscrollFrame {
 			&::before,
 			&::after {
-				background-color: @moon-scroll-overscroll-color;
+				background-color: @moon-scrollable-overscroll-color;
 			}
 		}
 	});
@@ -28,7 +28,7 @@
 		position: absolute;
 		content: "";
 		border-radius: 50%;
-		transition-duration: @moon-scroll-overscroll-duration;
+		transition-duration: @moon-scrollable-overscroll-duration;
 		transition-property: transform;
 		transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 	}
@@ -37,12 +37,12 @@
 		&::before,
 		&::after {
 			top: 50%; // Center the element
-			width: @moon-scroll-overscroll-thickness;
+			width: @moon-scrollable-overscroll-thickness;
 			height: 70%;
 		}
 
 		&::before {
-			transform: translateY(-50%) scale3d(~"calc((2 - var(--scroll-overscroll-ratio-horizontalbefore)) / 2)", var(--scroll-overscroll-ratio-horizontalbefore), 1);
+			transform: translateY(-50%) scale3d(~"calc((2 - var(--scrollable-overscroll-ratio-horizontalbefore)) / 2)", var(--scrollable-overscroll-ratio-horizontalbefore), 1);
 			left: 0;
 			z-index: 1;
 
@@ -53,7 +53,7 @@
 		}
 
 		&::after {
-			transform: translateY(-50%) scale3d(~"calc((2 - var(--scroll-overscroll-ratio-horizontalafter)) / 2)", var(--scroll-overscroll-ratio-horizontalafter), 1);
+			transform: translateY(-50%) scale3d(~"calc((2 - var(--scrollable-overscroll-ratio-horizontalafter)) / 2)", var(--scrollable-overscroll-ratio-horizontalafter), 1);
 			right: 0;
 
 			:global(.enact-locale-right-to-left) & {
@@ -66,25 +66,25 @@
 	&.vertical {
 		&::before,
 		&::after {
-			--overscroll-effect-vertical-size: ~"calc(100% - " @moon-scroll-scrollbar-size ~")";
+			--overscroll-effect-vertical-size: ~"calc(100% - " @moon-scrollable-scrollbar-size ~")";
 			width: ~"calc(var(--overscroll-effect-vertical-size) * 0.7)";
-			height: @moon-scroll-overscroll-thickness;
+			height: @moon-scrollable-overscroll-thickness;
 			.margin-start-end(~"calc(var(--overscroll-effect-vertical-size) * 0.15)", 0);
 		}
 
 		&::before {
-			transform: scale3d(var(--scroll-overscroll-ratio-verticalbefore), ~"calc((2 - var(--scroll-overscroll-ratio-verticalbefore)) / 2)", 1);
+			transform: scale3d(var(--scrollable-overscroll-ratio-verticalbefore), ~"calc((2 - var(--scrollable-overscroll-ratio-verticalbefore)) / 2)", 1);
 			top: 0;
 			z-index: 1;
 		}
 
 		&::after {
-			transform: scale3d(var(--scroll-overscroll-ratio-verticalafter), ~"calc((2 - var(--scroll-overscroll-ratio-verticalafter)) / 2)", 1);
+			transform: scale3d(var(--scrollable-overscroll-ratio-verticalafter), ~"calc((2 - var(--scrollable-overscroll-ratio-verticalafter)) / 2)", 1);
 			bottom: 0;
 		}
 
 		&.horizontalScrollbarVisible::after {
-			bottom: @moon-scroll-scrollbar-size;
+			bottom: @moon-scrollable-scrollbar-size;
 		}
 	}
 }

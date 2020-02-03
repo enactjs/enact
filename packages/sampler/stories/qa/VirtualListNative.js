@@ -1,17 +1,16 @@
 import React from 'react';
 import Item from '@enact/moonstone/Item';
-import {VirtualList, VirtualListBase} from '@enact/moonstone/VirtualList';
+import {VirtualListNative, VirtualListBase} from '@enact/moonstone/VirtualList';
 import {Column, Cell} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
-import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable/Scrollable';
-import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList/VirtualListBase';
-
+import {ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
+import {VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList/VirtualListBase';
 import {storiesOf} from '@storybook/react';
 import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
 import {action} from '@enact/storybook-utils/addons/actions';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 
-const Config = mergeComponentMetadata('VirtualList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
+const Config = mergeComponentMetadata('VirtualListNative', UiVirtualListBaseNative, UiScrollableBaseNative, VirtualListBase);
 
 const
 	items = [],
@@ -38,13 +37,13 @@ const updateDataSize = (dataSize) => {
 	return dataSize;
 };
 
-storiesOf('VirtualList', module)
+storiesOf('VirtualListNative', module)
 	.add(
 		'with extra items',
 		() => (
 			<Column>
 				<Cell
-					component={VirtualList}
+					component={VirtualListNative}
 					dataSize={updateDataSize(number('dataSize', Config, 10))}
 					direction="vertical"
 					focusableScrollbar={boolean('focusableScrollbar', Config)}
@@ -60,7 +59,6 @@ storiesOf('VirtualList', module)
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', Config, 20))}
 					spotlightDisabled={boolean('spotlightDisabled(for all items)', Config, false)}
-					type="Native"
 					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, Config)}
 					wrap={wrapOption[select('wrap', ['false', 'true', '"noAnimation"'], Config)]}
 				/>

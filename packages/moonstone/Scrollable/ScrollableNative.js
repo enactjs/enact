@@ -1,18 +1,10 @@
-/**
- * Provides Moonstone-themed scrollable components and behaviors.
- *
- * @module moonstone/Scrollable
- * @exports Scrollable
- * @private
- */
-
 import classNames from 'classnames';
 import handle, {forward} from '@enact/core/handle';
 import platform from '@enact/core/platform';
 import {onWindowReady} from '@enact/core/snapshot';
 import {clamp, Job} from '@enact/core/util';
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
-import {constants, ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
+import {constants, ScrollableBaseNative as UiScrollableBaseNative} from '@enact/ui/Scrollable/ScrollableNative';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import {spottableClass} from '@enact/spotlight/Spottable';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
@@ -32,32 +24,21 @@ import scrollbarCss from './Scrollbar.module.less';
 
 const
 	{
-		animationDuration,
+		epsilon,
 		isPageDown,
 		isPageUp,
 		overscrollTypeDone,
 		overscrollTypeNone,
 		overscrollTypeOnce,
-		paginationPageMultiplier
+		scrollWheelPageMultiplierForMaxPixel
 	} = constants,
 	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
 	overscrollTimeout = 300,
+	paginationPageMultiplier = 0.66,
 	reverseDirections = {
 		down: 'up',
 		up: 'down'
 	};
-
-/**
- * The name of a custom attribute which indicates the index of an item in
- * [VirtualList]{@link moonstone/VirtualList.VirtualList} or
- * [VirtualGridList]{@link moonstone/VirtualList.VirtualGridList}.
- *
- * @constant dataIndexAttribute
- * @memberof moonstone/Scrollable
- * @type {String}
- * @private
- */
-const dataIndexAttribute = 'data-index';
 
 const navigableFilter = (elem) => {
 	if (
@@ -130,20 +111,20 @@ const getTargetInViewByDirectionFromPosition = (direction, position, container) 
 };
 
 /**
- * A Moonstone-styled component that provides horizontal and vertical scrollbars.
+ * A Moonstone-styled native component that provides horizontal and vertical scrollbars.
  *
- * @class ScrollableBase
- * @memberof moonstone/Scrollable
- * @extends ui/Scrollable.ScrollableBase
+ * @class ScrollableBaseNative
+ * @memberof moonstone/ScrollableNative
+ * @extends ui/Scrollable.ScrollableBaseNative
  * @ui
- * @public
+ * @private
  */
-class ScrollableBase extends Component {
-	static displayName = 'Scrollable'
+class ScrollableBaseNative extends Component {
+	static displayName = 'ScrollableNative'
 
 	static contextType = SharedState
 
-	static propTypes = /** @lends moonstone/Scrollable.Scrollable.prototype */ {
+	static propTypes = /** @lends moonstone/ScrollableNative.ScrollableNative.prototype */ {
 		/**
 		 * Render function.
 		 *
@@ -326,8 +307,9 @@ class ScrollableBase extends Component {
 		this.createOverscrollJob('vertical', 'before');
 		this.createOverscrollJob('vertical', 'after');
 
-		this.restoreScrollPosition();
 		scrollables.set(this, this.uiRef.current.containerRef.current);
+
+		this.restoreScrollPosition();
 	}
 
 	componentDidUpdate (prevProps) {
@@ -380,6 +362,7 @@ class ScrollableBase extends Component {
 		}
 	}
 
+
 	isScrollButtonFocused () {
 		const {horizontalScrollbarRef: h, verticalScrollbarRef: v} = this.uiRef.current;
 
@@ -412,6 +395,8 @@ class ScrollableBase extends Component {
 
 		if (this.props['data-spotlight-container-disabled']) {
 			ev.preventDefault();
+		} else {
+			this.childRef.current.setContainerDisabled(false);
 		}
 	}
 
@@ -423,36 +408,121 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	onWheel = ({delta}) => {
-		const focusedItem = Spotlight.getCurrent();
+	/*
+	 * wheel event handler;
+	 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot support this
+	 * - for vertical scroll, supports wheel action on scrollbars only
+	 */
+	onWheel = (ev) => {
+		const
+			overscrollEffectRequired = this.props.overscrollEffectOn.wheel,
+			bounds = this.uiRef.current.getScrollBounds(),
+			canScrollHorizontally = this.uiRef.current.canScrollHorizontally(bounds),
+			canScrollVertically = this.uiRef.current.canScrollVertically(bounds),
+			eventDeltaMode = ev.deltaMode,
+			eventDelta = (-ev.wheelDeltaY || ev.deltaY);
+		let
+			delta = 0,
+			needToHideThumb = false;
 
-		if (focusedItem && !this.isScrollButtonFocused()) {
-			focusedItem.blur();
+		if (typeof window !== 'undefined') {
+			window.document.activeElement.blur();
+		}
+
+		this.uiRef.current.showThumb(bounds);
+
+		// FIXME This routine is a temporary support for horizontal wheel scroll.
+		// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
+		if (canScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
+			if (eventDelta < 0 && this.uiRef.current.scrollTop > 0 || eventDelta > 0 && this.uiRef.current.scrollTop < bounds.maxTop) {
+				const {horizontalScrollbarRef, verticalScrollbarRef} = this.uiRef.current;
+
+				if (!this.isWheeling) {
+					if (!this.props['data-spotlight-container-disabled']) {
+						this.childRef.current.setContainerDisabled(true);
+					}
+					this.isWheeling = true;
+				}
+
+				// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
+				if ((horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef().current.contains(ev.target)) ||
+					(verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef().current.contains(ev.target))) {
+					delta = this.uiRef.current.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
+					needToHideThumb = !delta;
+
+					ev.preventDefault();
+				} else if (overscrollEffectRequired) {
+					this.uiRef.current.checkAndApplyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce);
+				}
+
+				ev.stopPropagation();
+			} else {
+				if (overscrollEffectRequired && (eventDelta < 0 && this.uiRef.current.scrollTop <= 0 || eventDelta > 0 && this.uiRef.current.scrollTop >= bounds.maxTop)) {
+					this.uiRef.current.applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
+				}
+				needToHideThumb = true;
+			}
+		} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
+			if (eventDelta < 0 && this.uiRef.current.scrollLeft > 0 || eventDelta > 0 && this.uiRef.current.scrollLeft < bounds.maxLeft) {
+				if (!this.isWheeling) {
+					if (!this.props['data-spotlight-container-disabled']) {
+						this.childRef.current.setContainerDisabled(true);
+					}
+					this.isWheeling = true;
+				}
+				delta = this.uiRef.current.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+				needToHideThumb = !delta;
+
+				ev.preventDefault();
+				ev.stopPropagation();
+			} else {
+				if (overscrollEffectRequired && (eventDelta < 0 && this.uiRef.current.scrollLeft <= 0 || eventDelta > 0 && this.uiRef.current.scrollLeft >= bounds.maxLeft)) {
+					this.uiRef.current.applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
+				}
+				needToHideThumb = true;
+			}
 		}
 
 		if (delta !== 0) {
-			this.isWheeling = true;
-			if (!this.props['data-spotlight-container-disabled']) {
-				this.childRef.current.setContainerDisabled(true);
+			/* prevent native scrolling feature for vertical direction */
+			ev.preventDefault();
+			const direction = Math.sign(delta);
+			// Not to accumulate scroll position if wheel direction is different from hold direction
+			if (direction !== this.uiRef.current.wheelDirection) {
+				this.uiRef.current.isScrollAnimationTargetAccumulated = false;
+				this.uiRef.current.wheelDirection = direction;
 			}
+			this.uiRef.current.scrollToAccumulatedTarget(delta, canScrollVertically, overscrollEffectRequired);
+		}
+
+		if (needToHideThumb) {
+			this.uiRef.current.startHidingThumb();
+		}
+	}
+
+	start = (animate) => {
+		if (!animate) {
+			this.focusOnItem();
 		}
 	}
 
 	isContent = (element) => (element && this.uiRef.current && this.uiRef.current.childRefCurrent.containerRef.current.contains(element))
+
+	// event handlers for Spotlight support
 
 	startScrollOnFocus = (pos) => {
 		if (pos) {
 			const
 				{top, left} = pos,
 				bounds = this.uiRef.current.getScrollBounds(),
-				scrollHorizontally = bounds.maxLeft > 0 && left !== this.uiRef.current.scrollLeft,
-				scrollVertically = bounds.maxTop > 0 && top !== this.uiRef.current.scrollTop;
+				scrollHorizontally = bounds.maxLeft > 0 && Math.abs(left - this.uiRef.current.scrollLeft) > epsilon,
+				scrollVertically = bounds.maxTop > 0 && Math.abs(top - this.uiRef.current.scrollTop) > epsilon;
 
 			if (scrollHorizontally || scrollVertically) {
 				this.uiRef.current.start({
 					targetX: left,
 					targetY: top,
-					animate: (animationDuration > 0) && this.animateOnFocus,
+					animate: this.animateOnFocus,
 					overscrollEffect: this.props.overscrollEffectOn[this.uiRef.current.lastInputType] && (!this.childRef.current.shouldPreventOverscrollEffect || !this.childRef.current.shouldPreventOverscrollEffect())
 				});
 				this.lastScrollPositionOnFocus = pos;
@@ -472,7 +542,7 @@ class ScrollableBase extends Component {
 
 			// If scroll animation is ongoing, we need to pass last target position to
 			// determine correct scroll position.
-			if (this.uiRef.current.animator.isAnimating() && lastPos) {
+			if (this.uiRef.current.scrolling && lastPos) {
 				const containerRect = getRect(containerNode);
 				const itemRect = getRect(spotItem);
 				let scrollPosition;
@@ -510,11 +580,6 @@ class ScrollableBase extends Component {
 				this.childRef.current.shouldPreventScrollByFocus() :
 				false;
 
-		if (this.isWheeling) {
-			this.uiRef.current.stop();
-			this.animateOnFocus = false;
-		}
-
 		if (!Spotlight.getPointerMode()) {
 			this.alertThumb();
 		}
@@ -540,7 +605,7 @@ class ScrollableBase extends Component {
 			isUp = direction === 'up',
 			directionFactor = isUp ? -1 : 1,
 			pageDistance = directionFactor * bounds.clientHeight * paginationPageMultiplier,
-			scrollPossible = isUp ? scrollTop > 0 : bounds.maxTop > scrollTop;
+			scrollPossible = isUp ? scrollTop > 0 : bounds.maxTop - scrollTop > epsilon;
 
 		this.uiRef.current.lastInputType = 'pageKey';
 
@@ -559,8 +624,8 @@ class ScrollableBase extends Component {
 						clientRect = focusedItem.getBoundingClientRect(),
 						yAdjust = isUp ? 1 : -1,
 						x = clamp(contentRect.left, contentRect.right, (clientRect.right + clientRect.left) / 2),
-						y = bounds.maxTop <= scrollTop + pageDistance || 0 >= scrollTop + pageDistance ?
-							contentRect[isUp ? 'top' : 'bottom'] + yAdjust :
+						y = bounds.maxTop - epsilon < scrollTop + pageDistance || epsilon > scrollTop + pageDistance ?
+							contentNode.getBoundingClientRect()[isUp ? 'top' : 'bottom'] + yAdjust :
 							clamp(contentRect.top, contentRect.bottom, (clientRect.bottom + clientRect.top) / 2);
 
 					focusedItem.blur();
@@ -585,7 +650,7 @@ class ScrollableBase extends Component {
 			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		}
 
-		return current && this.uiRef.current && this.uiRef.current.containerRef.current.contains(current);
+		return current && this.uiRef.current.containerRef.current.contains(current);
 	}
 
 	checkAndApplyOverscrollEffectByDirection = (direction) => {
@@ -650,7 +715,7 @@ class ScrollableBase extends Component {
 						this.checkAndApplyOverscrollEffectByDirection(direction);
 					}
 				}
-			} else if (getDirection(keyCode)) {
+			} else if (!Spotlight.getPointerMode() && getDirection(keyCode)) {
 				const element = Spotlight.getCurrent();
 
 				this.uiRef.current.lastInputType = 'arrowKey';
@@ -718,11 +783,10 @@ class ScrollableBase extends Component {
 		}
 	}
 
-	stop = () => {
+	scrollStopOnScroll = () => {
 		if (!this.props['data-spotlight-container-disabled']) {
 			this.childRef.current.setContainerDisabled(false);
 		}
-
 		this.focusOnItem();
 		this.lastScrollPositionOnFocus = null;
 		this.isWheeling = false;
@@ -962,7 +1026,7 @@ class ScrollableBase extends Component {
 			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
 
 		return (
-			<UiScrollableBase
+			<UiScrollableBaseNative
 				noScrollByDrag={!platform.touchscreen}
 				{...rest}
 				addEventListeners={this.addEventListeners}
@@ -976,8 +1040,9 @@ class ScrollableBase extends Component {
 				onWheel={this.onWheel}
 				ref={this.uiRef}
 				removeEventListeners={this.removeEventListeners}
+				scrollStopOnScroll={this.scrollStopOnScroll}
 				scrollTo={this.scrollTo}
-				stop={this.stop}
+				start={this.start}
 				containerRenderer={({ // eslint-disable-line react/jsx-no-bind
 					childComponentProps,
 					childWrapper: ChildWrapper,
@@ -985,7 +1050,6 @@ class ScrollableBase extends Component {
 					className,
 					componentCss,
 					containerRef: uiContainerRef,
-					handleScroll,
 					horizontalScrollbarProps,
 					initChildRef: initUiChildRef,
 					isHorizontalScrollbarVisible,
@@ -1013,7 +1077,6 @@ class ScrollableBase extends Component {
 									initUiChildRef,
 									isHorizontalScrollbarVisible,
 									isVerticalScrollbarVisible,
-									onScroll: handleScroll,
 									onUpdate: this.handleScrollerUpdate,
 									ref: this.childRef,
 									rtl,
@@ -1061,14 +1124,14 @@ class ScrollableBase extends Component {
 /**
  * A Moonstone-styled component that provides horizontal and vertical scrollbars.
  *
- * @class Scrollable
- * @memberof moonstone/Scrollable
+ * @class ScrollableNative
+ * @memberof moonstone/ScrollableNative
  * @mixes spotlight/SpotlightContainerDecorator
- * @extends moonstone/Scrollable.ScrollableBase
+ * @extends moonstone/Scrollable.ScrollableBaseNative
  * @ui
- * @public
+ * @private
  */
-const Scrollable = Skinnable(
+const ScrollableNative = Skinnable(
 	SpotlightContainerDecorator(
 		{
 			overflow: true,
@@ -1077,14 +1140,13 @@ const Scrollable = Skinnable(
 		},
 		I18nContextDecorator(
 			{rtlProp: 'rtl'},
-			ScrollableBase
+			ScrollableBaseNative
 		)
 	)
 );
 
-export default Scrollable;
+export default ScrollableNative;
 export {
-	dataIndexAttribute,
-	Scrollable,
-	ScrollableBase
+	ScrollableBaseNative,
+	ScrollableNative
 };
