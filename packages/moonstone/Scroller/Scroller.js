@@ -500,8 +500,8 @@ let Scroller = (props) => {
 		isVerticalScrollbarVisible,
 
 		resizeContextProps,
-		scrollableContainerProps,
-		flexLayoutProps,
+		scrollContainerProps,
+		innerScrollContainerProps,
 		childWrapperProps,
 		childProps,
 		verticalScrollbarProps,
@@ -514,8 +514,8 @@ let Scroller = (props) => {
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
-			<div {...scrollableContainerProps}>
-				<div {...flexLayoutProps}>
+			<div {...scrollContainerProps}>
+				<div {...innerScrollContainerProps}>
 					<ChildWrapper {...childWrapperProps}>
 						<UiScrollerBase {...uiChildProps} />
 					</ChildWrapper>

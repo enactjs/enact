@@ -35,8 +35,8 @@ const VirtualList = ({role, ...rest}) => {
 		isVerticalScrollbarVisible,
 
 		resizeContextProps,
-		scrollableContainerProps,
-		flexLayoutProps,
+		scrollContainerProps,
+		innerScrollContainerProps,
 		childWrapperProps,
 		childProps,
 		verticalScrollbarProps,
@@ -47,8 +47,8 @@ const VirtualList = ({role, ...rest}) => {
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
-			<div {...scrollableContainerProps}>
-				<div {...flexLayoutProps}>
+			<div {...scrollContainerProps}>
+				<div {...innerScrollContainerProps}>
 					<ChildWrapper {...childWrapperProps}>
 						<VirtualListBase
 							{...childProps}
@@ -142,8 +142,8 @@ const VirtualGridList = ({role, ...rest}) => {
 		isVerticalScrollbarVisible,
 
 		resizeContextProps,
-		scrollableContainerProps,
-		flexLayoutProps,
+		scrollContainerProps,
+		innerScrollContainerProps,
 		childWrapperProps,
 		childProps,
 		verticalScrollbarProps,
@@ -152,8 +152,8 @@ const VirtualGridList = ({role, ...rest}) => {
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
-			<div {...scrollableContainerProps}>
-				<div {...flexLayoutProps}>
+			<div {...scrollContainerProps}>
+				<div {...innerScrollContainerProps}>
 					<ChildWrapper {...childWrapperProps}>
 						<VirtualListBase
 							{...childProps}

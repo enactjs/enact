@@ -12,7 +12,7 @@ import Spotlight from '@enact/spotlight';
 import {spottableClass} from '@enact/spotlight/Spottable';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {getRect, intersects} from '@enact/spotlight/src/utils';
-import {useScrollable} from '@enact/ui/Scrollable';
+import {useScrollBase} from '@enact/ui/Scrollable';
 import {useChildAdapter as useUiChildAdapter} from '@enact/ui/Scrollable/useChild';
 import {utilDecorateChildProps} from '@enact/ui/Scrollable';
 import utilDOM from '@enact/ui/Scrollable/utilDOM';
@@ -1226,7 +1226,7 @@ const useScroll = (props) => {
 		scrollableProps.start = start;
 	}
 
-	decorateChildProps('scrollableContainerProps', {
+	decorateChildProps('scrollContainerProps', {
 		className: [overscrollCss.scrollable],
 		'data-spotlight-container': spotlightContainer,
 		'data-spotlight-container-disabled': spotlightContainerDisabled,
@@ -1234,7 +1234,7 @@ const useScroll = (props) => {
 		onTouchStart: handleTouchStart
 	});
 
-	decorateChildProps('flexLayoutProps', {
+	decorateChildProps('innerScrollContainerProps', {
 		className: [overscrollCss.overscrollFrame, overscrollCss.vertical]
 	});
 
@@ -1272,7 +1272,7 @@ const useScroll = (props) => {
 		childWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
-	} = useScrollable({
+	} = useScrollBase({
 		...rest,
 		...scrollableProps,
 		decorateChildProps,
@@ -1298,12 +1298,12 @@ const useScroll = (props) => {
 		verticalScrollbarRef
 	});
 
-	decorateChildProps('flexLayoutProps', {
+	decorateChildProps('innerScrollContainerProps', {
 		className: [...(isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : [])]
 	});
 
-	decorateChildProps('scrollableContainerProps', {ref: uiScrollableContainerRef});
-	decorateChildProps('flexLayoutProps', {ref: overscrollRefs.vertical});
+	decorateChildProps('scrollContainerProps', {ref: uiScrollableContainerRef});
+	decorateChildProps('innerScrollContainerProps', {ref: overscrollRefs.vertical});
 	decorateChildProps('childWrapperProps', {ref: overscrollRefs.horizontal});
 	decorateChildProps('childProps', {uiChildAdapter, uiChildContainerRef});
 	decorateChildProps('verticalScrollbarProps', {ref: verticalScrollbarRef});

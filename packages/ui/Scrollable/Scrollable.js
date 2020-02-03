@@ -444,7 +444,7 @@ class ScrollableBase extends Component {
 	}
 }
 
-const useScrollable = (props) => {
+const useScrollBase = (props) => {
 	const {
 		decorateChildProps,
 		horizontalScrollbarRef,
@@ -488,6 +488,9 @@ const useScrollable = (props) => {
 				},
 				get isScrollAnimationTargetAccumulated () {
 					return mutableRef.current.isScrollAnimationTargetAccumulated;
+				},
+				set isScrollAnimationTargetAccumulated (val) {
+					return mutableRef.current.isScrollAnimationTargetAccumulated = val;
 				},
 				get isUpdatedScrollThumb () {
 					return mutableRef.current.isUpdatedScrollThumb;
@@ -1795,12 +1798,12 @@ const useScrollable = (props) => {
 
 	mutableRef.current.deferScrollTo = true;
 
-	decorateChildProps('scrollableContainerProps', {
+	decorateChildProps('scrollContainerProps', {
 		className: [scrollableClasses],
 		style
 	});
 
-	decorateChildProps('flexLayoutProps', {
+	decorateChildProps('innerScrollContainerProps', {
 		className: [css.flexLayout]
 	});
 
@@ -1941,7 +1944,7 @@ const useScroll = (props) => {
 		childWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
-	} = useScrollable({
+	} = useScrollBase({
 		...props,
 		decorateChildProps,
 		get horizontalScrollbarRef () {
@@ -1964,7 +1967,7 @@ const useScroll = (props) => {
 		}
 	});
 
-	decorateChildProps('scrollableContainerProps', {ref: uiScrollableContainerRef});
+	decorateChildProps('scrollContainerProps', {ref: uiScrollableContainerRef});
 	decorateChildProps('childProps', {uiChildAdapter, uiChildContainerRef});
 	decorateChildProps('verticalScrollbarProps', {ref: verticalScrollbarRef});
 	decorateChildProps('horizontalScrollbarProps', {ref: horizontalScrollbarRef});
@@ -1985,6 +1988,6 @@ export {
 	Scrollable,
 	ScrollableBase,
 	useScroll,
-	useScrollable,
+	useScrollBase,
 	utilDecorateChildProps
 };

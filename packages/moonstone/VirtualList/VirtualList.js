@@ -55,8 +55,8 @@ let VirtualList = ({itemSize, role, ...rest}) => {
 
 		// Child Props
 		resizeContextProps,
-		scrollableContainerProps,
-		flexLayoutProps,
+		scrollContainerProps,
+		innerScrollContainerProps,
 		childWrapperProps,
 		childProps,
 		verticalScrollbarProps,
@@ -71,8 +71,8 @@ let VirtualList = ({itemSize, role, ...rest}) => {
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
-			<div {...scrollableContainerProps}>
-				<div {...flexLayoutProps}>
+			<div {...scrollContainerProps}>
+				<div {...innerScrollContainerProps}>
 					<ChildWrapper {...childWrapperProps}>
 						<UiVirtualListBase {...uiChildProps} />
 					</ChildWrapper>
@@ -227,8 +227,8 @@ let VirtualGridList = ({role, ...rest}) => {
 
 		// Child Props
 		resizeContextProps,
-		scrollableContainerProps,
-		flexLayoutProps,
+		scrollContainerProps,
+		innerScrollContainerProps,
 		childWrapperProps,
 		childProps,
 		verticalScrollbarProps,
@@ -243,8 +243,8 @@ let VirtualGridList = ({role, ...rest}) => {
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
-			<div {...scrollableContainerProps}>
-				<div {...flexLayoutProps}>
+			<div {...scrollContainerProps}>
+				<div {...innerScrollContainerProps}>
 					<ChildWrapper {...childWrapperProps}>
 						<UiVirtualListBase {...uiChildProps} />
 					</ChildWrapper>
