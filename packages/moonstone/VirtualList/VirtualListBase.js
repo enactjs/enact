@@ -506,7 +506,7 @@ Move to useEvent
 				} else {
 					const {repeat} = ev;
 					const {focusableScrollbar, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, spotlightId} = props;
-					const {dimensionToExtent, isPrimaryDirectionVertical} = uiScrollableAdapter.current;
+					const {dimensionToExtent, isPrimaryDirectionVertical} = uiScrollAdapter.current;
 					const targetIndex = target.dataset.index;
 					const isScrollButton = (
 						// if target has an index, it must be an item so can't be a scroll button
@@ -846,7 +846,7 @@ const useSpottableVirtualList = (props) => {
 			delete rest.focusableScrollbar;
 			delete rest.scrollAndFocusScrollbarButton;
 			delete rest.spotlightId;
-			delete rest.uiScrollableAdapter;
+			delete rest.uiScrollAdapter;
 			delete rest.wrap;
 
 			return {

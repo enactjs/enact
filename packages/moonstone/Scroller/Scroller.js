@@ -96,7 +96,7 @@ class ScrollerBase extends Component {
 }
 
 const useSpottable = (props, instances) => {
-	const {uiChildContainerRef, uiScrollableAdapter} = instances;
+	const {uiChildContainerRef, uiScrollAdapter} = instances;
 
 	// Hooks
 
@@ -268,14 +268,14 @@ const useSpottable = (props, instances) => {
 
 		const
 			{rtl} = props,
-			{clientWidth} = uiScrollableAdapter.current.scrollBounds,
+			{clientWidth} = uiScrollAdapter.current.scrollBounds,
 			rtlDirection = rtl ? -1 : 1,
 			{left: containerLeft} = uiContainerRef.current.getBoundingClientRect(),
-			scrollLastPosition = scrollPosition ? scrollPosition : uiScrollableAdapter.current.scrollPos.left,
-			currentScrollLeft = rtl ? (uiScrollableAdapter.current.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
+			scrollLastPosition = scrollPosition ? scrollPosition : uiScrollAdapter.current.scrollPos.left,
+			currentScrollLeft = rtl ? (uiScrollAdapter.current.scrollBounds.maxLeft - scrollLastPosition) : scrollLastPosition,
 			// calculation based on client position
 			newItemLeft = uiContainerRef.current.scrollLeft + (itemLeft - containerLeft);
-		let nextScrollLeft = uiScrollableAdapter.current.scrollPos.left;
+		let nextScrollLeft = uiScrollAdapter.current.scrollPos.left;
 
 		if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
 			// If focus is moved to an element outside of view area (to the right), scroller will move
@@ -303,8 +303,8 @@ const useSpottable = (props, instances) => {
 	 */
 	function calculatePositionOnFocus ({item, scrollPosition}) {
 		const containerNode = uiContainerRef.current;
-		const horizontal = uiScrollableAdapter.current.isHorizontal();
-		const vertical = uiScrollableAdapter.current.isVertical();
+		const horizontal = uiScrollAdapter.current.isHorizontal();
+		const vertical = uiScrollAdapter.current.isVertical();
 
 		if (!vertical && !horizontal || !item || !utilDOM.containsDangerously(containerNode, item)) {
 			return;
@@ -314,14 +314,14 @@ const useSpottable = (props, instances) => {
 		const itemRect = getRect(item);
 
 		if (horizontal && !(itemRect.left >= containerRect.left && itemRect.right <= containerRect.right)) {
-			uiScrollableAdapter.current.scrollPos.left = calculateScrollLeft(item, scrollPosition);
+			uiScrollAdapter.current.scrollPos.left = calculateScrollLeft(item, scrollPosition);
 		}
 
 		if (vertical && !(itemRect.top >= containerRect.top && itemRect.bottom <= containerRect.bottom)) {
-			uiScrollableAdapter.current.scrollPos.top = calculateScrollTop(item);
+			uiScrollAdapter.current.scrollPos.top = calculateScrollTop(item);
 		}
 
-		return uiScrollableAdapter.current.scrollPos;
+		return uiScrollAdapter.current.scrollPos;
 	}
 
 	function focusOnNode (node) {
@@ -362,7 +362,7 @@ const useSpottable = (props, instances) => {
 		// lie outside of uiContainerRef but within the spotlight container
 		if (dangerouslyContainsInScrollable(target)) {
 			const
-				{scrollBounds: {maxLeft, maxTop}, scrollPos: {left, top}} = uiScrollableAdapter.current,
+				{scrollBounds: {maxLeft, maxTop}, scrollPos: {left, top}} = uiScrollAdapter.current,
 				isVerticalDirection = (direction === 'up' || direction === 'down'),
 				pos = isVerticalDirection ? top : left,
 				max = isVerticalDirection ? maxTop : maxLeft;
@@ -408,7 +408,7 @@ const useSpottableScroller = (props) => {
 	delete propsObject.scrollAndFocusScrollbarButton;
 	delete propsObject.setChildAdapter;
 	delete propsObject.spotlightId;
-	delete propsObject.uiScrollableAdapter;
+	delete propsObject.uiScrollAdapter;
 
 	return propsObject;
 };

@@ -241,7 +241,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 			const scrollPosition = context.get(`${id}.scrollPosition`);
 
 			if (scrollPosition) {
-				uiScrollableAdapter.current.scrollTo({
+				uiScrollAdapter.current.scrollTo({
 					position: scrollPosition,
 					animate: false
 				});
@@ -262,8 +262,8 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 
 	function handleFlick ({direction}) {
 		const
-			{canScrollHorizontally, canScrollVertically} = uiScrollableAdapter.current,
-			bounds = uiScrollableAdapter.current.getScrollBounds(),
+			{canScrollHorizontally, canScrollVertically} = uiScrollAdapter.current,
+			bounds = uiScrollAdapter.current.getScrollBounds(),
 			focusedItem = Spotlight.getCurrent();
 
 		if (focusedItem) {
@@ -329,34 +329,34 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 		if (pos) {
 			const
 				{top, left} = pos,
-				bounds = uiScrollableAdapter.current.getScrollBounds();
+				bounds = uiScrollAdapter.current.getScrollBounds();
 
 		if (type === 'JS') {
 			const
-				scrollHorizontally = bounds.maxLeft > 0 && left !== uiScrollableAdapter.current.scrollLeft,
-				scrollVertically = bounds.maxTop > 0 && top !== uiScrollableAdapter.current.scrollTop;
+				scrollHorizontally = bounds.maxLeft > 0 && left !== uiScrollAdapter.current.scrollLeft,
+				scrollVertically = bounds.maxTop > 0 && top !== uiScrollAdapter.current.scrollTop;
 
 			if (scrollHorizontally || scrollVertically) {
-				uiScrollableAdapter.current.start({
+				uiScrollAdapter.current.start({
 					targetX: left,
 					targetY: top,
 					animate: (animationDuration > 0) && spottable.current.animateOnFocus,
-					overscrollEffect: props.overscrollEffectOn[uiScrollableAdapter.current.lastInputType] &&
+					overscrollEffect: props.overscrollEffectOn[uiScrollAdapter.current.lastInputType] &&
 						(!childAdapter.current.shouldPreventOverscrollEffect || !childAdapter.current.shouldPreventOverscrollEffect())
 				});
 				spottable.current.lastScrollPositionOnFocus = pos;
 			}
 		} else {
 			const
-				scrollHorizontally = bounds.maxLeft > 0 && Math.abs(left - uiScrollableAdapter.current.scrollLeft) > epsilon,
-				scrollVertically = bounds.maxTop > 0 && Math.abs(top - uiScrollableAdapter.current.scrollTop) > epsilon;
+				scrollHorizontally = bounds.maxLeft > 0 && Math.abs(left - uiScrollAdapter.current.scrollLeft) > epsilon,
+				scrollVertically = bounds.maxTop > 0 && Math.abs(top - uiScrollAdapter.current.scrollTop) > epsilon;
 
 			if (scrollHorizontally || scrollVertically) {
-				uiScrollableAdapter.current.start({
+				uiScrollAdapter.current.start({
 					targetX: left,
 					targetY: top,
 					animate: spottable.current.animateOnFocus,
-					overscrollEffect: props.overscrollEffectOn[uiScrollableAdapter.current.lastInputType] &&
+					overscrollEffect: props.overscrollEffectOn[uiScrollAdapter.current.lastInputType] &&
 						(!childAdapter.current.shouldPreventOverscrollEffect || !childAdapter.current.shouldPreventOverscrollEffect())
 				});
 				spottable.current.lastScrollPositionOnFocus = pos;
@@ -380,8 +380,8 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 			// If scroll animation is ongoing, we need to pass last target position to
 			// determine correct scroll position.
 			if (lastPos & (
-				type === 'JS' && uiScrollableAdapter.current.animator.isAnimating() ||
-				type === 'Native' && uiScrollableAdapter.current.scrolling
+				type === 'JS' && uiScrollAdapter.current.animator.isAnimating() ||
+				type === 'Native' && uiScrollAdapter.current.scrolling
 			)) {
 				const
 					containerRect = getRect(childContainerNode),
@@ -399,19 +399,19 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 				// scrollInfo passes in current `scrollHeight` and `scrollTop` before calculations
 				const
 					scrollInfo = {
-						previousScrollHeight: uiScrollableAdapter.current.bounds.scrollHeight,
-						scrollTop: uiScrollableAdapter.current.scrollTop
+						previousScrollHeight: uiScrollAdapter.current.bounds.scrollHeight,
+						scrollTop: uiScrollAdapter.current.scrollTop
 					};
 
 				pos = positionFn({item: spotItem, scrollInfo});
 			}
 
-			if (pos && (pos.left !== uiScrollableAdapter.current.scrollLeft || pos.top !== uiScrollableAdapter.current.scrollTop)) {
+			if (pos && (pos.left !== uiScrollAdapter.current.scrollLeft || pos.top !== uiScrollAdapter.current.scrollTop)) {
 				startScrollOnFocus(pos);
 			}
 
 			// update `scrollHeight`
-			uiScrollableAdapter.current.bounds.scrollHeight = uiScrollableAdapter.current.getScrollBounds().scrollHeight;
+			uiScrollAdapter.current.bounds.scrollHeight = uiScrollAdapter.current.getScrollBounds().scrollHeight;
 		}
 	}
 
@@ -423,7 +423,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 			false;
 
 		if (type === 'JS' && isWheeling) {
-			uiScrollableAdapter.current.stop();
+			uiScrollAdapter.current.stop();
 			spottable.current.animateOnFocus = false;
 		}
 
@@ -431,7 +431,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 			alertThumb();
 		}
 
-		if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || uiScrollableAdapter.current.isDragging)) {
+		if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || uiScrollAdapter.current.isDragging)) {
 			const
 				item = ev.target,
 				spotItem = Spotlight.getCurrent();
@@ -448,9 +448,9 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 
 	function scrollByPage (direction) {
 		const
-			{scrollTop} = uiScrollableAdapter.current,
+			{scrollTop} = uiScrollAdapter.current,
 			focusedItem = Spotlight.getCurrent(),
-			bounds = uiScrollableAdapter.current.getScrollBounds(),
+			bounds = uiScrollAdapter.current.getScrollBounds(),
 			isUp = direction === 'up',
 			directionFactor = isUp ? -1 : 1,
 			pageDistance = directionFactor * bounds.clientHeight * paginationPageMultiplier;
@@ -462,11 +462,11 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 			scrollPossible = isUp ? scrollTop > 0 : bounds.maxTop - scrollTop > epsilon;
 		}
 
-		uiScrollableAdapter.current.lastInputType = 'pageKey';
+		uiScrollAdapter.current.lastInputType = 'pageKey';
 
-		if (directionFactor !== uiScrollableAdapter.current.wheelDirection) {
-			uiScrollableAdapter.current.isScrollAnimationTargetAccumulated = false;
-			uiScrollableAdapter.current.wheelDirection = directionFactor;
+		if (directionFactor !== uiScrollAdapter.current.wheelDirection) {
+			uiScrollAdapter.current.isScrollAnimationTargetAccumulated = false;
+			uiScrollAdapter.current.wheelDirection = directionFactor;
 		}
 
 		if (scrollPossible) {
@@ -504,7 +504,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 				spottable.current.pointToFocus = {direction, x: lastPointer.x, y: lastPointer.y};
 			}
 
-			uiScrollableAdapter.current.scrollToAccumulatedTarget(pageDistance, true, props.overscrollEffectOn.pageKey);
+			uiScrollAdapter.current.scrollToAccumulatedTarget(pageDistance, true, props.overscrollEffectOn.pageKey);
 		}
 	}
 
@@ -518,7 +518,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 			current = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 		}
 
-		return utilDOM.containsDangerously(uiScrollableContainerRef, current);
+		return utilDOM.containsDangerously(uiScrollContainerRef, current);
 	}
 
 // Move to useOverscrollEffect
@@ -526,15 +526,15 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 	function checkAndApplyOverscrollEffectByDirection (direction) {
 		const
 			orientation = (direction === 'up' || direction === 'down') ? 'vertical' : 'horizontal',
-			bounds = uiScrollableAdapter.current.getScrollBounds(),
-			scrollability = orientation === 'vertical' ? uiScrollableAdapter.current.canScrollVertically(bounds) : uiScrollableAdapter.current.canScrollHorizontally(bounds);
+			bounds = uiScrollAdapter.current.getScrollBounds(),
+			scrollability = orientation === 'vertical' ? uiScrollAdapter.current.canScrollVertically(bounds) : uiScrollAdapter.current.canScrollHorizontally(bounds);
 
 		if (scrollability) {
 			const
-				isRtl = uiScrollableAdapter.current.rtl,
+				isRtl = uiScrollAdapter.current.rtl,
 				edge = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
 
-			uiScrollableAdapter.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
+			uiScrollAdapter.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 		}
 	}
 
@@ -594,7 +594,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 			} else if (getDirection(keyCode) && (type === 'JS' || type === 'Native' && !Spotlight.getPointerMode())) {
 				const element = Spotlight.getCurrent();
 
-				uiScrollableAdapter.current.lastInputType = 'arrowKey';
+				uiScrollAdapter.current.lastInputType = 'arrowKey';
 				direction = getDirection(keyCode);
 
 				if (props.overscrollEffectOn.arrowKey && !(element ? getTargetByDirectionFromElement(direction, element) : null)) {
@@ -613,19 +613,19 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 
 	function onScrollbarButtonClick ({isPreviousScrollButton, isVerticalScrollBar}) {
 		const
-			{wheelDirection} = uiScrollableAdapter.current,
-			bounds = uiScrollableAdapter.current.getScrollBounds(),
+			{wheelDirection} = uiScrollAdapter.current,
+			bounds = uiScrollAdapter.current.getScrollBounds(),
 			direction = isPreviousScrollButton ? -1 : 1,
 			pageDistance = direction * (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
-		uiScrollableAdapter.current.lastInputType = 'scrollbarButton';
+		uiScrollAdapter.current.lastInputType = 'scrollbarButton';
 
 		if (direction !== wheelDirection) {
-			uiScrollableAdapter.current.isScrollAnimationTargetAccumulated = false;
-			uiScrollableAdapter.current.wheelDirection = direction;
+			uiScrollAdapter.current.isScrollAnimationTargetAccumulated = false;
+			uiScrollAdapter.current.wheelDirection = direction;
 		}
 
-		uiScrollableAdapter.current.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, props.overscrollEffectOn.scrollbarButton);
+		uiScrollAdapter.current.scrollToAccumulatedTarget(pageDistance, isVerticalScrollBar, props.overscrollEffectOn.scrollbarButton);
 	}
 
 	function focusOnScrollButton (scrollbarRef, isPreviousScrollButton) {
@@ -635,9 +635,9 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 	}
 
 	function scrollAndFocusScrollbarButton (direction) {
-		if (uiScrollableAdapter.current) {
+		if (uiScrollAdapter.current) {
 			const
-				{rtl} = uiScrollableAdapter.current,
+				{rtl} = uiScrollAdapter.current,
 				isPreviousScrollButton = direction === 'up' || (rtl ? direction === 'right' : direction === 'left'),
 				isHorizontalDirection = direction === 'left' || direction === 'right',
 				isVerticalDirection = direction === 'up' || direction === 'down',
@@ -692,9 +692,9 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 					position = {x, y},
 					elemFromPoint = document.elementFromPoint(x, y),
 					target =
-						elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), uiScrollableContainerRef.current) ||
-						getTargetInViewByDirectionFromPosition(direction, position, uiScrollableContainerRef.current) ||
-						getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, uiScrollableContainerRef.current);
+						elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), uiScrollContainerRef.current) ||
+						getTargetInViewByDirectionFromPosition(direction, position, uiScrollContainerRef.current) ||
+						getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, uiScrollContainerRef.current);
 
 				if (target) {
 					Spotlight.focus(target);
@@ -713,16 +713,16 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 // Move to useScrollbar
 
 	function alertThumb () {
-		const bounds = uiScrollableAdapter.current.getScrollBounds();
+		const bounds = uiScrollAdapter.current.getScrollBounds();
 
-		uiScrollableAdapter.current.showThumb(bounds);
-		uiScrollableAdapter.current.startHidingThumb();
+		uiScrollAdapter.current.showThumb(bounds);
+		uiScrollAdapter.current.startHidingThumb();
 	}
 
 	function alertThumbAfterRendered () {
 		const spotItem = Spotlight.getCurrent();
 
-		if (!Spotlight.getPointerMode() && isContent(spotItem) && uiScrollableAdapter.current.isUpdatedScrollThumb) {
+		if (!Spotlight.getPointerMode() && isContent(spotItem) && uiScrollAdapter.current.isUpdatedScrollThumb) {
 			alertThumb();
 		}
 	}
@@ -738,25 +738,25 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 	}
 
 	function handleScrollerUpdate () {
-		if (uiScrollableAdapter.current.scrollToInfo === null) {
-			const scrollHeight = uiScrollableAdapter.current.getScrollBounds().scrollHeight;
+		if (uiScrollAdapter.current.scrollToInfo === null) {
+			const scrollHeight = uiScrollAdapter.current.getScrollBounds().scrollHeight;
 
-			if (scrollHeight !== uiScrollableAdapter.current.bounds.scrollHeight) {
+			if (scrollHeight !== uiScrollAdapter.current.bounds.scrollHeight) {
 				calculateAndScrollTo();
 			}
 		}
 
-		// oddly, Scroller manages uiScrollableAdapter.current.bounds so if we don't update it here (it is also
+		// oddly, Scroller manages uiScrollAdapter.current.bounds so if we don't update it here (it is also
 		// updated in calculateAndScrollTo but we might not have made it to that point), it will be
 		// out of date when we land back in this method next time.
-		uiScrollableAdapter.current.bounds.scrollHeight = uiScrollableAdapter.current.getScrollBounds().scrollHeight;
+		uiScrollAdapter.current.bounds.scrollHeight = uiScrollAdapter.current.getScrollBounds().scrollHeight;
 	}
 
 // Move to useOverscrollEffect
 
 	function clearOverscrollEffect (orientation, edge) {
 		mutableRef.current.overscrollJobs[orientation][edge].startAfter(overscrollTimeout, orientation, edge, overscrollTypeNone, 0);
-		uiScrollableAdapter.current.setOverscrollStatus(orientation, edge, overscrollTypeNone, 0);
+		uiScrollAdapter.current.setOverscrollStatus(orientation, edge, overscrollTypeNone, 0);
 	}
 
 	const applyOverscrollEffect = useCallback((orientation, edge, type, ratio) => {
@@ -810,7 +810,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 	const updateFocusAfterVoiceControl = () => {
 		const
 			spotItem = Spotlight.getCurrent(),
-			scrollableContainerNode = uiScrollableContainerRef.current;
+			scrollableContainerNode = uiScrollContainerRef.current;
 
 		if (utilDOM.containsDangerously(scrollableContainerNode, spotItem)) {
 			const
@@ -842,9 +842,9 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 	const handleVoice = (e) => {
 		const
 			isHorizontal = (props.direction === 'horizontal'),
-			isRtl = uiScrollableAdapter.current.rtl,
-			{scrollTop, scrollLeft} = uiScrollableAdapter.current,
-			{maxLeft, maxTop} = uiScrollableAdapter.current.getScrollBounds(),
+			isRtl = uiScrollAdapter.current.rtl,
+			{scrollTop, scrollLeft} = uiScrollAdapter.current,
+			{maxLeft, maxTop} = uiScrollAdapter.current.getScrollBounds(),
 			verticalDirection = ['up', 'down', 'top', 'bottom'],
 			horizontalDirection = isRtl ? ['right', 'left', 'rightmost', 'leftmost'] : ['left', 'right', 'leftmost', 'rightmost'],
 			movement = ['previous', 'next', 'first', 'last'];
@@ -880,7 +880,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 				const isPreviousScrollButton = (scroll === 'up') || (scroll === 'left' && !isRtl) || (scroll === 'right' && isRtl);
 				onScrollbarButtonClick({isPreviousScrollButton, isVerticalScrollBar: verticalDirection.includes(scroll)});
 			} else { // ['top', 'bottom', 'leftmost', 'rightmost'].includes(scroll)
-				uiScrollableAdapter.current.scrollTo({align: verticalDirection.includes(scroll) && scroll || (scroll === 'leftmost' && isRtl || scroll === 'rightmost' && !isRtl) && 'right' || 'left'});
+				uiScrollAdapter.current.scrollTo({align: verticalDirection.includes(scroll) && scroll || (scroll === 'leftmost' && isRtl || scroll === 'rightmost' && !isRtl) && 'right' || 'left'});
 			}
 
 			e.preventDefault();
@@ -904,7 +904,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 */
 
 const useSpottableScrollable = (props, instances, context) => {
-	const {childAdapter, horizontalScrollbarRef, uiScrollableContainerRef, uiChildContainerRef, uiScrollableAdapter, verticalScrollbarRef} = instances;
+	const {childAdapter, horizontalScrollbarRef, uiScrollContainerRef, uiChildContainerRef, uiScrollAdapter, verticalScrollbarRef} = instances;
 	const {type} = context;
 	const contextSharedState = useContext(SharedState);
 
@@ -1007,9 +1007,9 @@ const useSpottableScrollable = (props, instances, context) => {
 					position = {x, y},
 					elemFromPoint = document.elementFromPoint(x, y),
 					target =
-						elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), uiScrollableContainerRef.current) ||
-						getTargetInViewByDirectionFromPosition(direction, position, uiScrollableContainerRef.current) ||
-						getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, uiScrollableContainerRef.current);
+						elemFromPoint && elemFromPoint.closest && getIntersectingElement(elemFromPoint.closest(`.${spottableClass}`), uiScrollContainerRef.current) ||
+						getTargetInViewByDirectionFromPosition(direction, position, uiScrollContainerRef.current) ||
+						getTargetInViewByDirectionFromPosition(reverseDirections[direction], position, uiScrollContainerRef.current);
 
 				if (target) {
 					Spotlight.focus(target);
@@ -1035,18 +1035,18 @@ const useSpottableScrollable = (props, instances, context) => {
 
 	// Callback for scroller updates; calculate and, if needed, scroll to new position based on focused item.
 	function handleScrollerUpdate () {
-		if (uiScrollableAdapter.current.scrollToInfo === null) {
-			const scrollHeight = uiScrollableAdapter.current.getScrollBounds().scrollHeight;
+		if (uiScrollAdapter.current.scrollToInfo === null) {
+			const scrollHeight = uiScrollAdapter.current.getScrollBounds().scrollHeight;
 
-			if (scrollHeight !== uiScrollableAdapter.current.bounds.scrollHeight) {
+			if (scrollHeight !== uiScrollAdapter.current.bounds.scrollHeight) {
 				calculateAndScrollTo();
 			}
 		}
 
-		// oddly, Scroller manages uiScrollableAdapter.current.bounds so if we don't update it here (it is also
+		// oddly, Scroller manages uiScrollAdapter.current.bounds so if we don't update it here (it is also
 		// updated in calculateAndScrollTo but we might not have made it to that point), it will be
 		// out of date when we land back in this method next time.
-		uiScrollableAdapter.current.bounds.scrollHeight = uiScrollableAdapter.current.getScrollBounds().scrollHeight;
+		uiScrollAdapter.current.bounds.scrollHeight = uiScrollAdapter.current.getScrollBounds().scrollHeight;
 	}
 
 	function handleResizeWindow () {
@@ -1123,7 +1123,7 @@ const useScroll = (props) => {
 
 	// Mutable value
 
-	const uiScrollableContainerRef = useRef();
+	const uiScrollContainerRef = useRef();
 	const uiChildContainerRef = useRef();
 
 	const overscrollRefs = {
@@ -1138,7 +1138,7 @@ const useScroll = (props) => {
 
 	const [childAdapter, setChildAdapter] = useChildAdapter();
 
-	const uiScrollableAdapter = useRef({
+	const uiScrollAdapter = useRef({
 		animator: null,
 		applyOverscrollEffect: null,
 		bounds: null,
@@ -1170,7 +1170,7 @@ const useScroll = (props) => {
 	});
 
 	const setUiScrollableAdapter = (adapter) => {
-		uiScrollableAdapter.current = adapter;
+		uiScrollAdapter.current = adapter;
 	};
 
 	const [uiChildAdapter, setUiChildAdapter] = useUiChildAdapter();
@@ -1179,7 +1179,7 @@ const useScroll = (props) => {
 
 	const instance = {
 		// Ref
-		uiScrollableContainerRef,
+		uiScrollContainerRef,
 		overscrollRefs,
 		uiChildContainerRef,
 		horizontalScrollbarRef,
@@ -1187,7 +1187,7 @@ const useScroll = (props) => {
 
 		// Adapter
 		childAdapter,
-		uiScrollableAdapter,
+		uiScrollAdapter,
 		uiChildAdapter
 	};
 
@@ -1247,7 +1247,7 @@ const useScroll = (props) => {
 		scrollAndFocusScrollbarButton,
 		setChildAdapter,
 		spotlightId,
-		uiScrollableAdapter
+		uiScrollAdapter
 	});
 
 	decorateChildProps('verticalScrollbarProps', {
@@ -1294,7 +1294,7 @@ const useScroll = (props) => {
 		type,
 		uiChildAdapter,
 		uiChildContainerRef,
-		uiScrollableContainerRef,
+		uiScrollContainerRef,
 		verticalScrollbarRef
 	});
 
@@ -1302,7 +1302,7 @@ const useScroll = (props) => {
 		className: [...(isHorizontalScrollbarVisible ? overscrollCss.horizontalScrollbarVisible : [])]
 	});
 
-	decorateChildProps('scrollContainerProps', {ref: uiScrollableContainerRef});
+	decorateChildProps('scrollContainerProps', {ref: uiScrollContainerRef});
 	decorateChildProps('innerScrollContainerProps', {ref: overscrollRefs.vertical});
 	decorateChildProps('childWrapperProps', {ref: overscrollRefs.horizontal});
 	decorateChildProps('childProps', {uiChildAdapter, uiChildContainerRef});

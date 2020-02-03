@@ -452,7 +452,7 @@ const useScrollBase = (props) => {
 		type,
 		uiChildAdapter,
 		uiChildContainerRef,
-		uiScrollableContainerRef,
+		uiScrollContainerRef,
 		verticalScrollbarRef
 	} = props;
 
@@ -594,7 +594,7 @@ const useScrollBase = (props) => {
 	delete rest.stop; // JS
 	delete rest.uiChildAdapter;
 	delete rest.uiChildContainerRef;
-	delete rest.uiScrollableContainerRef;
+	delete rest.uiScrollContainerRef;
 	delete rest.verticalScrollbar;
 	delete rest.verticalScrollbarRef;
 
@@ -1735,9 +1735,9 @@ const useScrollBase = (props) => {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function addEventListeners () {
-		utilEvent('wheel').addEventListener(uiScrollableContainerRef, onWheel);
-		utilEvent('keydown').addEventListener(uiScrollableContainerRef, onKeyDown);
-		utilEvent('mousedown').addEventListener(uiScrollableContainerRef, onMouseDown);
+		utilEvent('wheel').addEventListener(uiScrollContainerRef, onWheel);
+		utilEvent('keydown').addEventListener(uiScrollContainerRef, onKeyDown);
+		utilEvent('mousedown').addEventListener(uiScrollContainerRef, onMouseDown);
 
 		// Native [[
 		if (uiChildContainerRef.current) {
@@ -1762,9 +1762,9 @@ const useScrollBase = (props) => {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function removeEventListeners () {
-		utilEvent('wheel').removeEventListener(uiScrollableContainerRef, onWheel);
-		utilEvent('keydown').removeEventListener(uiScrollableContainerRef, onKeyDown);
-		utilEvent('mousedown').removeEventListener(uiScrollableContainerRef, onMouseDown);
+		utilEvent('wheel').removeEventListener(uiScrollContainerRef, onWheel);
+		utilEvent('keydown').removeEventListener(uiScrollContainerRef, onKeyDown);
+		utilEvent('mousedown').removeEventListener(uiScrollContainerRef, onMouseDown);
 
 		// Native [[
 		utilEvent('scroll').removeEventListener(uiChildContainerRef, onScroll, {capture: true, passive: true});
@@ -1793,7 +1793,7 @@ const useScrollBase = (props) => {
 	// JS ]]
 
 	function dangerouslyContainsInScrollable (target) {
-		return utilDOM.containsDangerously(uiScrollableContainerRef, target);
+		return utilDOM.containsDangerously(uiScrollContainerRef, target);
 	}
 
 	mutableRef.current.deferScrollTo = true;
@@ -1925,7 +1925,7 @@ const utilDecorateChildProps = (instance) => (childComponentName, props) => {
 const useScroll = (props) => {
 	// Mutable value
 
-	const uiScrollableContainerRef = useRef(null);
+	const uiScrollContainerRef = useRef(null);
 	const uiChildContainerRef = useRef();
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
@@ -1961,13 +1961,13 @@ const useScroll = (props) => {
 		type: props.type || 'JS', // FIXME
 		uiChildAdapter,
 		uiChildContainerRef,
-		uiScrollableContainerRef,
+		uiScrollContainerRef,
 		get verticalScrollbarRef () {
 			return verticalScrollbarRef;
 		}
 	});
 
-	decorateChildProps('scrollContainerProps', {ref: uiScrollableContainerRef});
+	decorateChildProps('scrollContainerProps', {ref: uiScrollContainerRef});
 	decorateChildProps('childProps', {uiChildAdapter, uiChildContainerRef});
 	decorateChildProps('verticalScrollbarProps', {ref: verticalScrollbarRef});
 	decorateChildProps('horizontalScrollbarProps', {ref: horizontalScrollbarRef});
