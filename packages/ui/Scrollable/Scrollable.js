@@ -16,7 +16,7 @@ import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
-import {Component, useCallback, useContext, useEffect, useReducer, useRef, useState} from 'react';
+import {Component, useCallback, useContext, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
 import warning from 'warning';
 
 import ForwardRef from '../ForwardRef';
@@ -472,7 +472,7 @@ const useScrollBase = (props) => {
 		mutableRef.current.animator = new ScrollAnimator();
 	}
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (props.setUiScrollAdapter) {
 			props.setUiScrollAdapter({
 				animator: mutableRef.current.animator,
@@ -537,7 +537,9 @@ const useScrollBase = (props) => {
 				}
 			});
 		}
+	}, []);
 
+	useEffect(() => {
 		mutableRef.current.resizeRegistry.parent = context;
 
 		// componentWillUnmount

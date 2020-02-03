@@ -35,6 +35,10 @@ const useSpotlightRestore = (props, instances) => {
 	const {uiScrollAdapter} = instances;
 	const context = useContext(SharedState);
 
+	console.log('useSpotlightRestore', uiScrollAdapter.current.scrollTo)
+
+	if (!uiScrollAdapter.current.scrollTo) debugger;
+
 	// Hooks
 
 	useEffect(() => {
@@ -45,6 +49,8 @@ const useSpotlightRestore = (props, instances) => {
 			if (id && context && context.get) {
 				const scrollPosition = context.get(`${id}.scrollPosition`);
 
+				console.log('uiScrollAdapter.current.scrollTo', uiScrollAdapter.current.scrollTo)
+				if (!uiScrollAdapter.current.scrollTo) debugger;
 				if (scrollPosition) {
 					uiScrollAdapter.current.scrollTo({
 						position: scrollPosition,
