@@ -223,7 +223,8 @@ const
 					direction = getDirection(keyCode);
 
 				switch (eventType) {
-					case 'acceleratedKeyDown': onAcceleratedKeyDown(param); break;
+					case 'acceleratedKeyDown': onAcceleratedKeyDown(param);
+						break;
 					case 'keyDown':
 						if (Spotlight.move(direction)) {
 							const nextTargetIndex = Spotlight.getCurrent().dataset.index;
@@ -236,7 +237,8 @@ const
 							}
 						}
 						break;
-					case 'keyLeave': SpotlightAccelerator.reset(); break;
+					case 'keyLeave': SpotlightAccelerator.reset();
+						break;
 				}
 			},
 			handle5WayKeyUp: () => {
@@ -248,7 +250,7 @@ const
 		const {
 			handlePlaceholderFocus,
 			handleRestoreLastFocus,
-			preserveLastFocus,
+			setPreservedIndex,
 			updateStatesAndBounds
 		} = useSpotlightRestore(props, {...instances, spottable: mutableRef});
 
@@ -538,7 +540,6 @@ Move to useEvent
 						if (nextIndex >= 0) {
 							ev.preventDefault();
 							ev.stopPropagation();
-
 							handleDirectionKeyDown(ev, 'acceleratedKeyDown', {isWrapped, keyCode, nextIndex, repeat, target});
 						} else {
 							const {dataSize} = props;
@@ -595,7 +596,7 @@ Move to useEvent
 
 			if (!item && index >= 0 && index < props.dataSize) {
 				// Item is valid but since the the dom doesn't exist yet, we set the index to focus after the ongoing update
-				preserveLastFocus(index);
+				setPreservedIndex(index);
 			} else {
 				if (isOverscrollEffect) {
 					SpotlightAccelerator.reset();

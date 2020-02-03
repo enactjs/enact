@@ -148,7 +148,7 @@ const useSpotlightRestore = (props, instances) => {
 		));
 	}
 
-	function preserveLastFocus (index) {
+	function setPreservedIndex (index) {
 		mutableRef.current.preservedIndex = index;
 		mutableRef.current.restoreLastFocused = true;
 	}
@@ -158,7 +158,7 @@ const useSpotlightRestore = (props, instances) => {
 	return {
 		handlePlaceholderFocus,
 		handleRestoreLastFocus,
-		preserveLastFocus,
+		setPreservedIndex,
 		updateStatesAndBounds
 	};
 };

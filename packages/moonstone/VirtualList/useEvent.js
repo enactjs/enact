@@ -154,7 +154,6 @@ const useEventKey = (props, instances, context) => {
 						if (nextIndex >= 0) {
 							ev.preventDefault();
 							ev.stopPropagation();
-
 							handleDirectionKeyDown(ev, 'acceleratedKeyDown', {isWrapped, keyCode, nextIndex, repeat, target});
 						} else {
 							const {dataSize} = props;
