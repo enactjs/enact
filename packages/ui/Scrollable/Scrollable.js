@@ -899,18 +899,27 @@ const useScrollBase = (props) => {
 	function onFlick (ev) {
 		const {direction} = props;
 
-		if (type === 'JS' || !mutableRef.current.isTouching) {
-			mutableRef.current.flickTarget = mutableRef.current.animator.simulate(
+		if (type === 'JS') {
+			flickTarget = mutableRef.current.animator.simulate(
 				mutableRef.current.scrollLeft,
 				mutableRef.current.scrollTop,
 				(direction !== 'vertical') ? getRtlX(-ev.velocityX) : 0,
 				(direction !== 'horizontal') ? -ev.velocityY : 0
 			);
-		} else if (mutableRef.current.overscrollEnabled && props.overscrollEffectOn.drag) {
-			mutableRef.current.flickTarget = {
-				targetX: mutableRef.current.scrollLeft + getRtlX(-ev.velocityX) * overscrollVelocityFactor, // 'horizontal' or 'both'
-				targetY: mutableRef.current.scrollTop + -ev.velocityY * overscrollVelocityFactor // 'vertical' or 'both'
-			};
+		} else {
+			if (!mutableRef.current.isTouching) {
+				mutableRef.current.flickTarget = mutableRef.current.animator.simulate(
+					mutableRef.current.scrollLeft,
+					mutableRef.current.scrollTop,
+					(direction !== 'vertical') ? getRtlX(-ev.velocityX) : 0,
+					(direction !== 'horizontal') ? -ev.velocityY : 0
+				);
+			} else if (mutableRef.current.overscrollEnabled && props.overscrollEffectOn.drag) {
+				mutableRef.current.flickTarget = {
+					targetX: mutableRef.current.scrollLeft + getRtlX(-ev.velocityX) * overscrollVelocityFactor, // 'horizontal' or 'both'
+					targetY: mutableRef.current.scrollTop + -ev.velocityY * overscrollVelocityFactor // 'vertical' or 'both'
+				};
+			}
 		}
 
 		if (props.onFlick) {
@@ -1101,10 +1110,14 @@ const useScrollBase = (props) => {
 	// Native ]]
 
 	function onKeyDown (ev) {
-		if (type === 'Native' || props.onKeyDown) {
+		if (type === 'JS') {
+			if (props.onKeyDown) {
+				forward('onKeyDown', ev, props);
+			} else if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode))) {
+				scrollByPage(ev.keyCode);
+			}
+		} else {
 			forward('onKeyDown', ev, props);
-		} else if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode))) {
-			scrollByPage(ev.keyCode);
 		}
 	} // esline-disable-line react-hooks/exhaustive-deps
 
