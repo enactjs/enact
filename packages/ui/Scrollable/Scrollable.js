@@ -537,7 +537,7 @@ const useScrollBase = (props) => {
 				}
 			});
 		}
-	}, []);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		mutableRef.current.resizeRegistry.parent = context;
