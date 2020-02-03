@@ -841,7 +841,7 @@ const useSpottableVirtualList = (props) => {
 				needsScrollingPlaceholder = isNeededScrollingPlaceholder();
 
 			// not used by VirtualList
-			delete rest.dangerouslyContainsInScrollable;
+			delete rest.containsInScrollDangerously;
 			// not used by VirtualList
 			delete rest.focusableScrollbar;
 			delete rest.scrollAndFocusScrollbarButton;

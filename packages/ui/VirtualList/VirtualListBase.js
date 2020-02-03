@@ -1190,7 +1190,7 @@ const itemSizesShape = PropTypes.shape({
 			delete rest.cbScrollTo;
 			delete rest.childProps;
 			delete rest.clientSize;
-			delete rest.dangerouslyContainsInScrollable;
+			delete rest.containsInScrollDangerously;
 			delete rest.dataSize;
 			delete rest.direction;
 			delete rest.getComponentProps;

@@ -360,7 +360,7 @@ const useSpottable = (props, instances) => {
 	function handleLeaveContainer ({direction, target}) {
 		// ensure we only scroll to boundary from the contents and not a scroll button which
 		// lie outside of uiContainerRef but within the spotlight container
-		if (dangerouslyContainsInScrollable(target)) {
+		if (containsInScrollDangerously(target)) {
 			const
 				{scrollBounds: {maxLeft, maxTop}, scrollPos: {left, top}} = uiScrollAdapter.current,
 				isVerticalDirection = (direction === 'up' || direction === 'down'),
@@ -403,7 +403,7 @@ const useSpottableScroller = (props) => {
 
 	const propsObject = Object.assign({}, props);
 
-	delete propsObject.dangerouslyContainsInScrollable;
+	delete propsObject.containsInScrollDangerously;
 	delete propsObject.onUpdate;
 	delete propsObject.scrollAndFocusScrollbarButton;
 	delete propsObject.setChildAdapter;

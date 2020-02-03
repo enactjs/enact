@@ -1805,7 +1805,7 @@ const useScrollBase = (props) => {
 	}
 	// JS ]]
 
-	function dangerouslyContainsInScrollable (target) {
+	function containsInScrollDangerously (target) {
 		return utilDOM.containsDangerously(uiScrollContainerRef, target);
 	}
 
@@ -1817,7 +1817,7 @@ const useScrollBase = (props) => {
 	});
 
 	decorateChildProps('innerScrollContainerProps', {
-		className: [css.flexLayout]
+		className: [css.innerScrollContainer]
 	});
 
 	decorateChildProps('childWrapperProps', {
@@ -1836,7 +1836,7 @@ const useScrollBase = (props) => {
 		...rest,
 		cbScrollTo: scrollTo,
 		className: [css.scrollableFill],
-		dangerouslyContainsInScrollable,
+		containsInScrollDangerously,
 		get isHorizontalScrollbarVisible () {
 			return isHorizontalScrollbarVisible;
 		},
