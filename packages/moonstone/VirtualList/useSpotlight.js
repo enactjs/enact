@@ -41,7 +41,7 @@ const useSpotlightConfig = (props, instances) => {
 		}
 
 		configureSpotlight();
-	}, [lastFocusedIndex]);
+	}, [lastFocusedIndex, props.spotlightId]);
 
 	// Functions
 
