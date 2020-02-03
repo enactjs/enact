@@ -3,8 +3,7 @@ import LabeledItem from '@enact/moonstone/LabeledItem';
 import Scroller from '@enact/moonstone/Scroller';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, select, text} from '../../src/enact-knobs';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
 
 LabeledItem.displayName = 'LabeledItem';
 

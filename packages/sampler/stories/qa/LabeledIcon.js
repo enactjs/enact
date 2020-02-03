@@ -6,11 +6,9 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import Scroller from '@enact/ui/Scroller';
 import Layout, {Cell} from '@enact/ui/Layout';
-
 import iconNames from '../default/icons';
-
-import {mergeComponentMetadata} from '../../src/utils';
-import {boolean, select, text} from '../../src/enact-knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
 
 LabeledIcon.displayName = 'LabeledIcon';
 const Config = mergeComponentMetadata('LabeledIcon', UiLabeledIconBase, UiLabeledIcon, UiIcon, IconBase, Icon, LabeledIcon);

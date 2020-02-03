@@ -7,9 +7,9 @@ import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable/Scrollabl
 import {VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList/VirtualListBase';
 
 import {storiesOf} from '@storybook/react';
-
-import {boolean, number, select} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata} from '../../src/utils';
+import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
+import {action} from '@enact/storybook-utils/addons/actions';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 
 const Config = mergeComponentMetadata('VirtualList', UiVirtualListBase, UiScrollableBase, VirtualListBase);
 

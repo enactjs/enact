@@ -1,12 +1,13 @@
-import icons from './icons';
-import VideoPlayer, {MediaControls, VideoPlayerBase} from '@enact/moonstone/VideoPlayer';
-import IconButton from '@enact/moonstone/IconButton';
+import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, number, select, text} from '@enact/storybook-utils/addons/knobs';
 import Button from '@enact/moonstone/Button';
+import IconButton from '@enact/moonstone/IconButton';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
+import VideoPlayer, {MediaControls, VideoPlayerBase} from '@enact/moonstone/VideoPlayer';
 
-import {boolean, number, select, text} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata} from '../../src/utils';
+import icons from './icons';
 
 // Set up some defaults for info and knobs
 const prop = {

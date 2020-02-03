@@ -139,7 +139,7 @@ const IconBase = kind({
  * view360
  * view360off
  * info
- * cycle
+ * repeattrack
  * bluetoothoff
  * verticalellipsis
  * arrowcurveright

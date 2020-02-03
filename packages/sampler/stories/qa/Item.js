@@ -5,7 +5,7 @@ import React from 'react';
 import Button from '@enact/moonstone/Button';
 import Image from '@enact/moonstone/Image';
 import {storiesOf} from '@storybook/react';
-import {boolean, select, text} from '../../src/enact-knobs';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
 
 const iconNames = ['', ...icons];
 

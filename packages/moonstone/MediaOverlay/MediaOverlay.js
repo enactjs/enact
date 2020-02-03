@@ -52,7 +52,7 @@ const MediaOverlayBase = kind({
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
-		 * corresponding internal Elements and states of this component.
+		 * corresponding internal elements and states of this component.
 		 *
 		 * The following classes are supported:
 		 *
@@ -191,7 +191,7 @@ const MediaOverlayDecorator = compose(
  *
  * @class MediaOverlay
  * @memberof moonstone/MediaOverlay
- * @extends moonstone/mediaOverlay.MediaOverlayBase
+ * @extends moonstone/MediaOverlay.MediaOverlayBase
  * @mixes moonstone/MediaOverlay.MediaOverlayDecorator
  * @ui
  * @public

@@ -1,14 +1,13 @@
 import Icon, {IconBase} from '@enact/moonstone/Icon';
 import Heading from '@enact/moonstone/Heading';
-import Scroller from '@enact/moonstone/Scroller';
-import UiIcon from '@enact/ui/Icon';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
+import Scroller from '@enact/moonstone/Scroller';
+import {select, text} from '@enact/storybook-utils/addons/knobs';
 import {storiesOf} from '@storybook/react';
+import UiIcon from '@enact/ui/Icon';
 
 import iconNames from './icons';
-
-import {select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
 
 // import icons
 import docs from '../../images/icon-enact-docs.png';

@@ -1,12 +1,12 @@
-import Dialog from '@enact/moonstone/Dialog';
-import Popup from '@enact/moonstone/Popup';
+import {action} from '@enact/storybook-utils/addons/actions';
 import BodyText from '@enact/moonstone/BodyText';
+import {boolean, text} from '@enact/storybook-utils/addons/knobs';
 import Button from '@enact/moonstone/Button';
+import Dialog from '@enact/moonstone/Dialog';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
+import Popup from '@enact/moonstone/Popup';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, text} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('Dialog', Popup, Dialog);
 Dialog.displayName = 'Dialog';

@@ -59,7 +59,7 @@ const VideoBase = class extends React.Component {
 		 * * `pause()` - pause video
 		 * * `load()` - load video
 		 *
-		 * The [`source`]{@link moonstone/VideoPlayer.VideoBase.source} property is passed to
+		 * The [`source`]{@link moonstone/VideoPlayer.Video.source} property is passed to
 		 * the video component as a child node.
 		 *
 		 * @type {String|Component|Element}
@@ -275,7 +275,7 @@ const VideoDecorator = compose(
  * ```
  *
  * @class Video
- * @mixes ui/Slottable
+ * @mixes ui/Slottable.Slottable
  * @memberof moonstone/VideoPlayer
  * @ui
  * @public

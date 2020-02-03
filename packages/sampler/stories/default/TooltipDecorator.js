@@ -1,11 +1,10 @@
+import {boolean, number, object, select, text} from '@enact/storybook-utils/addons/knobs';
 import Button from '@enact/moonstone/Button';
-import TooltipDecorator, {Tooltip, TooltipBase} from '@enact/moonstone/TooltipDecorator';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
+import TooltipDecorator, {Tooltip, TooltipBase} from '@enact/moonstone/TooltipDecorator';
 // import {object} from '@storybook/addon-knobs';
-
-import {boolean, number, object, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('TooltipDecorator', TooltipDecorator, Tooltip, TooltipBase);
 const TooltipButton = TooltipDecorator({tooltipDestinationProp: 'decoration'}, Button);

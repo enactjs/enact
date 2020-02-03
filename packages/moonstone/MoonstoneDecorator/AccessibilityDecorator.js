@@ -26,6 +26,7 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			 * the components' contrast to this preset.
 			 *
 			 * @type {Boolean}
+			 * @default false
 			 * @public
 			 */
 			highContrast: PropTypes.bool,
@@ -37,7 +38,7 @@ const AccessibilityDecorator = hoc((config, Wrapped) => {	// eslint-disable-line
 			 * information to adjust the components' text sizes to this preset.
 			 * Current presets are `'normal'` (default), and `'large'`.
 			 *
-			 * @type {String}
+			 * @type {('normal'|'large')}
 			 * @default 'normal'
 			 * @public
 			 */

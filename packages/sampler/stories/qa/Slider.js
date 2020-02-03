@@ -5,8 +5,7 @@ import Slider from '@enact/moonstone/Slider';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {storiesOf} from '@storybook/react';
-
-import {number} from '../../src/enact-knobs';
+import {number} from '@enact/storybook-utils/addons/knobs';
 
 Slider.displayName = 'Slider';
 

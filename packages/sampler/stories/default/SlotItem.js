@@ -1,10 +1,9 @@
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
 import Icon from '@enact/moonstone/Icon';
-import SlotItem from '@enact/moonstone/SlotItem';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
+import SlotItem from '@enact/moonstone/SlotItem';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('SlotItem', SlotItem);
 

@@ -1,7 +1,7 @@
 import BodyText from '@enact/moonstone/BodyText';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {boolean, select} from '../../src/enact-knobs';
+import {boolean, select} from '@enact/storybook-utils/addons/knobs';
 
 BodyText.displayName = 'BodyText';
 
