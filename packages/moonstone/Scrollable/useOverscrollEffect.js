@@ -4,7 +4,7 @@ import {useCallback, useEffect, useRef} from 'react';
 
 const
 	{overscrollTypeDone, overscrollTypeNone, overscrollTypeOnce} = constants,
-	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
+	overscrollRatioPrefix = '--scroll-overscroll-ratio-',
 	overscrollTimeout = 300;
 
 const useOverscrollEffect = (props, instances) => {

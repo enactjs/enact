@@ -810,13 +810,13 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 	const updateFocusAfterVoiceControl = () => {
 		const
 			spotItem = Spotlight.getCurrent(),
-			scrollableContainerNode = uiScrollContainerRef.current;
+			scrollContainerNode = uiScrollContainerRef.current;
 
-		if (utilDOM.containsDangerously(scrollableContainerNode, spotItem)) {
+		if (utilDOM.containsDangerously(scrollContainerNode, spotItem)) {
 			const
-				viewportBounds = scrollableContainerNode.getBoundingClientRect(),
+				viewportBounds = scrollContainerNode.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),
-				nodes = Spotlight.getSpottableDescendants(scrollableContainerNode.dataset.spotlightId),
+				nodes = Spotlight.getSpottableDescendants(scrollContainerNode.dataset.spotlightId),
 				first = mutableRef.current.voiceControlDirection === 'vertical' ? 'top' : 'left',
 				last = mutableRef.current.voiceControlDirection === 'vertical' ? 'bottom' : 'right';
 
@@ -903,7 +903,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 	}
 */
 
-const useSpottableScrollable = (props, instances, context) => {
+const useSpottableScroll = (props, instances, context) => {
 	const {childAdapter, horizontalScrollbarRef, uiScrollContainerRef, uiChildContainerRef, uiScrollAdapter, verticalScrollbarRef} = instances;
 	const {type} = context;
 	const contextSharedState = useContext(SharedState);
@@ -1169,7 +1169,7 @@ const useScroll = (props) => {
 		wheelDirection: null
 	});
 
-	const setUiScrollableAdapter = (adapter) => {
+	const setUiScrollAdapter = (adapter) => {
 		uiScrollAdapter.current = adapter;
 	};
 
@@ -1194,7 +1194,7 @@ const useScroll = (props) => {
 	const
 		decoratedChildProps = {},
 		decorateChildProps = utilDecorateChildProps(decoratedChildProps),
-		scrollableProps = {};
+		scrollProps = {};
 
 	const {
 		addEventListeners,
@@ -1215,19 +1215,19 @@ const useScroll = (props) => {
 		scrollTo,
 		start, // Native
 		stop // JS
-	} = useSpottableScrollable(props, instance, {type});
+	} = useSpottableScroll(props, instance, {type});
 
 	// Render
 
 	if (type === 'JS') {
-		scrollableProps.stop = stop;
+		scrollProps.stop = stop;
 	} else {
-		scrollableProps.scrollStopOnScroll = scrollStopOnScroll;
-		scrollableProps.start = start;
+		scrollProps.scrollStopOnScroll = scrollStopOnScroll;
+		scrollProps.start = start;
 	}
 
 	decorateChildProps('scrollContainerProps', {
-		className: [overscrollCss.scrollable],
+		className: [overscrollCss.scroll],
 		'data-spotlight-container': spotlightContainer,
 		'data-spotlight-container-disabled': spotlightContainerDisabled,
 		'data-spotlight-id': spotlightId,
@@ -1274,7 +1274,7 @@ const useScroll = (props) => {
 		isVerticalScrollbarVisible
 	} = useScrollBase({
 		...rest,
-		...scrollableProps,
+		...scrollProps,
 		decorateChildProps,
 		noScrollByDrag: !platform.touchscreen,
 		addEventListeners,
@@ -1290,7 +1290,7 @@ const useScroll = (props) => {
 		removeEventListeners,
 		scrollTo: scrollTo,
 		setUiChildAdapter,
-		setUiScrollableAdapter,
+		setUiScrollAdapter,
 		type,
 		uiChildAdapter,
 		uiChildContainerRef,

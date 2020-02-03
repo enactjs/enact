@@ -308,7 +308,7 @@ const useEventKey = (props, instances, context) => {
  * `keydown` event does not occur if there is no focus on the node and
  * its descendants, we add `keydown` handler to `document` also.
  */
-const scrollables = new Map();
+const scrollers = new Map();
 
 // An app could have lists and/or scrollers more than one,
 // so we should test all of them when page up/down key is pressed.
@@ -326,7 +326,7 @@ const pageKeyHandler = (ev) => {
 			elem = document.elementFromPoint(x, y);
 
 		if (elem) {
-			for (const [key, value] of scrollables) {
+			for (const [key, value] of scrollers) {
 				if (utilDOM.containsDangerously(value, elem)) {
 					/* To handle page keys in nested scrollable components,
 					 * break the loop only when `scrollByPageOnPointerMode` returns `true`.
@@ -356,11 +356,11 @@ const useEventMonitor = (props, instances, context) => {
 
 	useEffect(() => {
 		const setMonitorEventTarget = (target) => {
-			scrollables.set(mutableRef.current.pageKeyHandlerObj, target);
+			scrollers.set(mutableRef.current.pageKeyHandlerObj, target);
 		};
 
 		const deleteMonitorEventTarget = () => {
-			scrollables.delete(mutableRef.current.pageKeyHandlerObj);
+			scrollers.delete(mutableRef.current.pageKeyHandlerObj);
 		};
 
 		setMonitorEventTarget(uiScrollContainerRef.current);
@@ -457,13 +457,13 @@ const useEventVoice = (props, instances, context) => {
 	const updateFocusAfterVoiceControl = () => {
 		const
 			spotItem = Spotlight.getCurrent(),
-			scrollableContainerNode = uiScrollContainerRef.current;
+			scrollContainerNode = uiScrollContainerRef.current;
 
-		if (utilDOM.containsDangerously(scrollableContainerNode, spotItem)) {
+		if (utilDOM.containsDangerously(scrollContainerNode, spotItem)) {
 			const
-				viewportBounds = scrollableContainerNode.getBoundingClientRect(),
+				viewportBounds = scrollContainerNode.getBoundingClientRect(),
 				spotItemBounds = spotItem.getBoundingClientRect(),
-				nodes = Spotlight.getSpottableDescendants(scrollableContainerNode.dataset.spotlightId),
+				nodes = Spotlight.getSpottableDescendants(scrollContainerNode.dataset.spotlightId),
 				first = mutableRef.current.voiceControlDirection === 'vertical' ? 'top' : 'left',
 				last = mutableRef.current.voiceControlDirection === 'vertical' ? 'bottom' : 'right';
 

@@ -473,8 +473,8 @@ const useScrollBase = (props) => {
 	}
 
 	useEffect(() => {
-		if (props.setUiScrollableAdapter) {
-			props.setUiScrollableAdapter({
+		if (props.setUiScrollAdapter) {
+			props.setUiScrollAdapter({
 				animator: mutableRef.current.animator,
 				applyOverscrollEffect,
 				bounds: mutableRef.current.bounds,
@@ -566,7 +566,7 @@ const useScrollBase = (props) => {
 
 	const
 		{className, noScrollByDrag, rtl, style, ...rest} = props,
-		scrollableClasses = classNames(css.scrollable, className);
+		scrollClasses = classNames(css.scroll, className);
 
 	delete rest.addEventListeners;
 	delete rest.applyOverscrollEffect;
@@ -589,7 +589,7 @@ const useScrollBase = (props) => {
 	delete rest.scrollStopOnScroll; // Native
 	delete rest.scrollTo;
 	delete rest.setUiChildAdapter;
-	delete rest.setUiScrollableAdapter;
+	delete rest.setUiScrollAdapter;
 	delete rest.start; // Native
 	delete rest.stop; // JS
 	delete rest.uiChildAdapter;
@@ -1812,7 +1812,7 @@ const useScrollBase = (props) => {
 	mutableRef.current.deferScrollTo = true;
 
 	decorateChildProps('scrollContainerProps', {
-		className: [scrollableClasses],
+		className: [scrollClasses],
 		style
 	});
 
@@ -1835,7 +1835,7 @@ const useScrollBase = (props) => {
 	decorateChildProps('childProps', {
 		...rest,
 		cbScrollTo: scrollTo,
-		className: [css.scrollableFill],
+		className: [css.scrollFill],
 		containsInScrollDangerously,
 		get isHorizontalScrollbarVisible () {
 			return isHorizontalScrollbarVisible;
