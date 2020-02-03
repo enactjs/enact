@@ -536,6 +536,8 @@ const useScrollBase = (props) => {
 					mutableRef.current.wheelDirection = val;
 				}
 			});
+
+			props.cbScrollTo(scrollTo);
 		}
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -676,7 +678,7 @@ const useScrollBase = (props) => {
 		}
 
 		if (scrollToInfo !== null) {
-			if (!deferScrollTo) {
+			if (!mutableRef.current.deferScrollTo) {
 				scrollTo(scrollToInfo);
 			}
 		}
@@ -1810,8 +1812,6 @@ const useScrollBase = (props) => {
 		return utilDOM.containsDangerously(uiScrollContainerRef, target);
 	}
 
-	mutableRef.current.deferScrollTo = true;
-
 	decorateChildProps('scrollContainerProps', {
 		className: [scrollClasses],
 		style
@@ -1868,6 +1868,8 @@ const useScrollBase = (props) => {
 	decorateChildProps('resizeContextProps', {
 		value: mutableRef.current.resizeRegistry.register
 	});
+
+	mutableRef.current.deferScrollTo = true;
 
 	mutableRef.current.prevState = {
 		isHorizontalScrollbarVisible,
