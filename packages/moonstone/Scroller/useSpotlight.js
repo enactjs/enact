@@ -10,7 +10,7 @@ const useSpotlightConfig = (props, instances) => {
 		function handleLeaveContainer ({direction, target}) {
 			// ensure we only scroll to boundary from the contents and not a scroll button which
 			// lie outside of uiChildContainerRef but within the spotlight container
-			if (props.containsInScrollDangerously(target)) {
+			if (props.scrollContainerContainsDangerously(target)) {
 				const
 					{scrollBounds: {maxLeft, maxTop}, scrollPos: {left, top}} = uiScrollAdapter.current,
 					isVerticalDirection = (direction === 'up' || direction === 'down'),

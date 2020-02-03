@@ -1,6 +1,6 @@
 import Spotlight from '@enact/spotlight';
 import utilDOM from '@enact/ui/Scrollable/utilDOM';
-import {useContext, useEffect} from 'react';
+import {useContext, useEffect, useLayoutEffect} from 'react';
 
 import {SharedState} from '../internal/SharedStateDecorator/SharedStateDecorator';
 
@@ -20,7 +20,7 @@ const navigableFilter = (elem) => {
 const useSpotlightConfig = (props) => {
 	// Hooks
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		function configureSpotlight () {
 			Spotlight.set(props['data-spotlight-id'], {
 				navigableFilter: props.focusableScrollbar ? null : navigableFilter

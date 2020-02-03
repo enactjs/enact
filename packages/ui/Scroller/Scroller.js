@@ -198,7 +198,7 @@ class ScrollerBase extends Component {
 			});
 
 		delete rest.cbScrollTo;
-		delete rest.containsInScrollDangerously;
+		delete rest.scrollContainerContainsDangerously;
 		delete rest.direction;
 		delete rest.rtl;
 		delete rest.setChildAdapter;

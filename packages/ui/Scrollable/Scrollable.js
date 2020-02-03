@@ -1806,7 +1806,7 @@ const useScrollBase = (props) => {
 	}
 	// JS ]]
 
-	function containsInScrollDangerously (target) {
+	function scrollContainerContainsDangerously (target) {
 		return utilDOM.containsDangerously(uiScrollContainerRef, target);
 	}
 
@@ -1837,7 +1837,7 @@ const useScrollBase = (props) => {
 		...rest,
 		cbScrollTo: scrollTo,
 		className: [css.scrollFill],
-		containsInScrollDangerously,
+		scrollContainerContainsDangerously,
 		get isHorizontalScrollbarVisible () {
 			return isHorizontalScrollbarVisible;
 		},
