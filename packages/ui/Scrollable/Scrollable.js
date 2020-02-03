@@ -537,7 +537,9 @@ const useScrollBase = (props) => {
 				}
 			});
 
-			props.cbScrollTo(scrollTo);
+			if (props.cbScrollTo) {
+				props.cbScrollTo(scrollTo);
+			}
 		}
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
