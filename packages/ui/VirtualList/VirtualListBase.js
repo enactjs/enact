@@ -51,8 +51,9 @@ const itemSizesShape = PropTypes.shape({
  * @private
  */
 // TBD: indentation is broken intentionally to help comparing
+/* eslint-disable indent */
 	class VirtualListBase extends Component {
-		/* No displayName here. We set displayName to returned components of this factory function. */
+		displayName = 'ui:VirtualListBase'
 
 		static propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
 			/**
@@ -235,6 +236,11 @@ const itemSizesShape = PropTypes.shape({
 			 */
 			rtl: PropTypes.bool,
 
+			/*
+			 * TBD
+			 */
+			setUiChildAdapter: PropTypes.func,
+
 			/**
 			 * The spacing between items.
 			 *
@@ -243,6 +249,16 @@ const itemSizesShape = PropTypes.shape({
 			 * @public
 			 */
 			spacing: PropTypes.number,
+
+			/**
+			 * TBD
+			 */
+			type: PropTypes.string,
+
+			/**
+			 * TBD
+			 */
+			uiChildContainerRef: PropTypes.object,
 
 			/**
 			 * Called to execute additional logic in a themed component when updating states and bounds.
@@ -259,7 +275,8 @@ const itemSizesShape = PropTypes.shape({
 			direction: 'vertical',
 			overhang: 3,
 			pageScroll: false,
-			spacing: 0
+			spacing: 0,
+			type: 'JS'
 		}
 
 		constructor (props) {
@@ -267,7 +284,6 @@ const itemSizesShape = PropTypes.shape({
 
 			super(props);
 
-			// this.props.uiChildContainerRef = React.createRef();
 			this.contentRef = React.createRef();
 			this.itemContainerRef = React.createRef();
 
@@ -1175,6 +1191,7 @@ const itemSizesShape = PropTypes.shape({
 			delete rest.cbScrollTo;
 			delete rest.childProps;
 			delete rest.clientSize;
+			delete rest.scrollContainerContainsDangerously;
 			delete rest.dataSize;
 			delete rest.direction;
 			delete rest.getComponentProps;
@@ -1217,224 +1234,7 @@ const itemSizesShape = PropTypes.shape({
  * @memberof ui/VirtualList
  * @ui
  * @public
- */
-VirtualListBase.displayName = 'ui:VirtualListBase';
-
-VirtualListBase.propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
-	/**
-	 * The rendering function called for each item in the list.
-	 *
-	 * > **Note**: The list does **not** always render a component whenever its render function is called
-	 * due to performance optimization.
-	 *
-	 * Example:
-	 * ```
-	 * renderItem = ({index, ...rest}) => {
-	 * 	delete rest.data;
-	 *
-	 * 	return (
-	 * 		<MyComponent index={index} {...rest} />
-	 * 	);
-	 * }
-	 * ```
-	 *
-	 * @type {Function}
-	 * @param {Object}	 event
-	 * @param {Number}	 event.data-index	It is required for `Spotlight` 5-way navigation. Pass to the root element in the component.
-	 * @param {Number}	 event.index	The index number of the component to render
-	 * @param {Number}	 event.key	It MUST be passed as a prop to the root element in the component for DOM recycling.
-	 *
-	 * @required
-	 * @public
-	 */
-	itemRenderer: PropTypes.func.isRequired,
-
-	/**
-	 * The size of an item for the list; valid values are either a number for `VirtualList`
-	 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
-	 *
-	 * @type {Number|ui/VirtualList.gridListItemSizeShape}
-	 * @required
-	 * @private
-	 */
-	itemSize: PropTypes.oneOfType([
-		gridListItemSizeShape,
-		PropTypes.number
-	]).isRequired,
-
-	/**
-	 * The render function for the items.
-	 *
-	 * @type {Function}
-	 * @required
-	 * @private
-	 */
-	itemsRenderer: PropTypes.func.isRequired,
-
-	/**
-	 * Callback method of scrollTo.
-	 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
-	cbScrollTo: PropTypes.func,
-
-	/**
-	 * Additional props included in the object passed to the `itemsRenderer` callback.
-	 *
-	 * @type {Object}
-	 * @public
-	 */
-	childProps: PropTypes.object,
-
-	/**
-	 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
-	 *
-	 * @type {Object}
-	 * @property {Number}	clientHeight	The client height of the list.
-	 * @property {Number}	clientWidth	The client width of the list.
-	 * @public
-	 */
-	clientSize: PropTypes.shape({
-		clientHeight: PropTypes.number.isRequired,
-		clientWidth: PropTypes.number.isRequired
-	}),
-
-	/**
-	 * Disable voice control feature of component.
-	 *
-	 * @type {Boolean}
-	 * @public
-	 */
-	'data-webos-voice-disabled': PropTypes.bool,
-
-	/**
-	 * Activates the component for voice control.
-	 *
-	 * @type {Boolean}
-	 * @public
-	 */
-	'data-webos-voice-focused': PropTypes.bool,
-
-	/**
-	 * The voice control group label.
-	 *
-	 * @type {String}
-	 * @public
-	 */
-	'data-webos-voice-group-label': PropTypes.string,
-
-	/**
-	 * The number of items of data the list contains.
-	 *
-	 * @type {Number}
-	 * @default 0
-	 * @public
-	 */
-	dataSize: PropTypes.number,
-
-	/**
-	 * The layout direction of the list.
-	 *
-	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'vertical'
-	 * @public
-	 */
-	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-
-	/**
-	 * Called to get the props for list items.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
-	getComponentProps: PropTypes.func,
-
-	/**
-	 * The array for individually sized items.
-	 *
-	 * @type {Number[]}
-	 * @private
-	 */
-	itemSizes: PropTypes.arrayOf(PropTypes.number),
-
-	/**
-	 * Called when the range of items has updated.
-	 *
-	 * Event payload includes the `firstIndex` and `lastIndex` of the list.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
-	onUpdateItems: PropTypes.func,
-
-	/**
-	 * Number of spare DOM node.
-	 * `3` is good for the default value experimentally and
-	 * this value is highly recommended not to be changed by developers.
-	 *
-	 * @type {Number}
-	 * @default 3
-	 * @private
-	 */
-	overhang: PropTypes.number,
-
-	/**
-	 * When `true`, the list will scroll by page. Otherwise the list will scroll by item.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @private
-	 */
-	pageScroll: PropTypes.bool,
-
-	/**
-	 * `true` if RTL, `false` if LTR.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 */
-	rtl: PropTypes.bool,
-
-	/**
-	 * The spacing between items.
-	 *
-	 * @type {Number}
-	 * @default 0
-	 * @public
-	 */
-	spacing: PropTypes.number,
-
-	/**
-	 * TBD
-	 */
-	type: PropTypes.string,
-
-	uiChildContainerRef: PropTypes.object,
-
-	/**
-	 * Called to execute additional logic in a themed component when updating states and bounds.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
-	updateStatesAndBounds: PropTypes.func
-};
-
-VirtualListBase.defaultProps = {
-	cbScrollTo: nop,
-	dataSize: 0,
-	direction: 'vertical',
-	overhang: 3,
-	pageScroll: false,
-	spacing: 0,
-	type: 'JS'
-};
+ //
 
 /**
  * A callback function that receives a reference to the `scrollTo` feature.

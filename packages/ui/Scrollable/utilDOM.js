@@ -13,6 +13,8 @@ const utilDOM = (function () {
 
 			return ref.current.contains(target);
 		} else if (ref) {
+			warning(ref.contains, 'The `contains` function of the Ref is not supported.');
+
 			return ref.contains(target);
 		}
 

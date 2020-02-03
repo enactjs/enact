@@ -15,11 +15,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import warning from 'warning';
 
+import useScroll from '../Scrollable';
 import Scrollbar from '../Scrollable/Scrollbar';
-import useChildPropsDecorator from '../Scrollable/useChildPropsDecorator';
 import Skinnable from '../Skinnable';
 
-import {useSpottableVirtualList, VirtualListBase} from './useSpottableVirtualList';
+import {useSpottableVirtualList, VirtualListBase} from './VirtualListBase';
 
 /**
  * A Moonstone-styled scrollable and spottable virtual list component.
@@ -30,7 +30,7 @@ import {useSpottableVirtualList, VirtualListBase} from './useSpottableVirtualLis
  * @ui
  * @public
  */
-const ScrollableVirtualList = ({itemSize, role, ...rest}) => {
+let VirtualList = ({itemSize, role, ...rest}) => {
 	const props = itemSize && itemSize.minSize ?
 		{
 			itemSize: itemSize.minSize,
@@ -55,13 +55,13 @@ const ScrollableVirtualList = ({itemSize, role, ...rest}) => {
 
 		// Child Props
 		resizeContextProps,
-		scrollableContainerProps,
-		flexLayoutProps,
+		scrollContainerProps,
+		innerScrollContainerProps,
 		childWrapperProps,
 		childProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useChildPropsDecorator({...rest, ...props});
+	} = useScroll({...rest, ...props});
 
 	const uiChildProps = useSpottableVirtualList({
 		...childProps,
@@ -71,8 +71,8 @@ const ScrollableVirtualList = ({itemSize, role, ...rest}) => {
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
-			<div {...scrollableContainerProps}>
-				<div {...flexLayoutProps}>
+			<div {...scrollContainerProps}>
+				<div {...innerScrollContainerProps}>
 					<ChildWrapper {...childWrapperProps}>
 						<UiVirtualListBase {...uiChildProps} />
 					</ChildWrapper>
@@ -84,99 +84,101 @@ const ScrollableVirtualList = ({itemSize, role, ...rest}) => {
 	);
 };
 
-ScrollableVirtualList.displayName = 'VirtualList';
+VirtualList.displayName = 'VirtualList';
 
-ScrollableVirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
-	/**
-	 * Size of an item for the VirtualList; valid value is a number generally.
-	 * For different item size, value is an object that has `minSize`
-	 * and `size` as properties.
-	 * If the direction for the list is vertical, itemSize means the height of an item.
-	 * For horizontal, it means the width of an item.
-	 *
-	 * Usage:
-	 * ```
-	 * <VirtualList itemSize={ri.scale(72)} />
-	 * ```
-	 *
-	 * @type {Number|ui/VirtualList.itemSizesShape}
-	 * @required
-	 * @public
-	 */
-	itemSize: PropTypes.oneOfType([PropTypes.number, itemSizesShape]).isRequired,
+// TBD: indentation is broken intentionally to help comparing
+/* eslint-disable indent */
+VirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
+		/**
+		 * Size of an item for the VirtualList; valid value is a number generally.
+		 * For different item size, value is an object that has `minSize`
+		 * and `size` as properties.
+		 * If the direction for the list is vertical, itemSize means the height of an item.
+		 * For horizontal, it means the width of an item.
+		 *
+		 * Usage:
+		 * ```
+		 * <VirtualList itemSize={ri.scale(72)} />
+		 * ```
+		 *
+		 * @type {Number|ui/VirtualList.itemSizesShape}
+		 * @required
+		 * @public
+		 */
+		itemSize: PropTypes.oneOfType([PropTypes.number, itemSizesShape]).isRequired,
 
-	cbScrollTo: PropTypes.func,
+		cbScrollTo: PropTypes.func,
 
-	/**
-	 * `false` if the content of the list or the scroller could get focus
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @private
-	 */
-	'data-spotlight-container-disabled': PropTypes.bool,
+		/**
+		 * `false` if the content of the list or the scroller could get focus
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		'data-spotlight-container-disabled': PropTypes.bool,
 
-	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-	focusableScrollbar: PropTypes.bool,
+		direction: PropTypes.oneOf(['horizontal', 'vertical']),
+		focusableScrollbar: PropTypes.bool,
 
-	/**
-	 * Specifies how to show horizontal scrollbar.
-	 *
-	 * Valid values are:
-	 * * `'auto'`,
-	 * * `'visible'`, and
-	 * * `'hidden'`.
-	 *
-	 * @type {String}
-	 * @default 'auto'
-	 * @public
-	 */
-	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+		/**
+		 * Specifies how to show horizontal scrollbar.
+		 *
+		 * Valid values are:
+		 * * `'auto'`,
+		 * * `'visible'`, and
+		 * * `'hidden'`.
+		 *
+		 * @type {String}
+		 * @default 'auto'
+		 * @public
+		 */
+		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
-	itemSizes: PropTypes.array,
+		itemSizes: PropTypes.array,
 
-	/**
-	 * Specifies overscroll effects shows on which type of inputs.
-	 *
-	 * @type {Object}
-	 * @default {
-	 *	arrowKey: false,
-	 *	drag: false,
-	 *	pageKey: false,
-	 *	scrollbarButton: false,
-	 *	wheel: true
-	 * }
-	 * @private
-	 */
-	overscrollEffectOn: PropTypes.shape({
-		arrowKey: PropTypes.bool,
-		drag: PropTypes.bool,
-		pageKey: PropTypes.bool,
-		scrollbarButton: PropTypes.bool,
-		wheel: PropTypes.bool
-	}),
+		/**
+		 * Specifies overscroll effects shows on which type of inputs.
+		 *
+		 * @type {Object}
+		 * @default {
+		 *	arrowKey: false,
+		*	drag: false,
+		*	pageKey: false,
+		*	scrollbarButton: false,
+		*	wheel: true
+		* }
+		* @private
+		*/
+		overscrollEffectOn: PropTypes.shape({
+			arrowKey: PropTypes.bool,
+			drag: PropTypes.bool,
+			pageKey: PropTypes.bool,
+			scrollbarButton: PropTypes.bool,
+			wheel: PropTypes.bool
+		}),
 
-	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
-	role: PropTypes.string,
+		preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
+		role: PropTypes.string,
 
-	type: PropTypes.string,
+		type: PropTypes.string,
 
-	/**
-	 * Specifies how to show vertical scrollbar.
-	 *
-	 * Valid values are:
-	 * * `'auto'`,
-	 * * `'visible'`, and
-	 * * `'hidden'`.
-	 *
-	 * @type {String}
-	 * @default 'auto'
-	 * @public
-	 */
-	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
+		/**
+		 * Specifies how to show vertical scrollbar.
+		 *
+		 * Valid values are:
+		 * * `'auto'`,
+		 * * `'visible'`, and
+		 * * `'hidden'`.
+		 *
+		 * @type {String}
+		 * @default 'auto'
+		 * @public
+		 */
+		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
-ScrollableVirtualList.defaultProps = {
+VirtualList.defaultProps = {
 	'data-spotlight-container-disabled': false,
 	direction: 'vertical',
 	focusableScrollbar: false,
@@ -194,7 +196,7 @@ ScrollableVirtualList.defaultProps = {
 	verticalScrollbar: 'auto'
 };
 
-const VirtualList = Skinnable(
+VirtualList = Skinnable(
 	SpotlightContainerDecorator(
 		{
 			overflow: true,
@@ -203,7 +205,7 @@ const VirtualList = Skinnable(
 		},
 		I18nContextDecorator(
 			{rtlProp: 'rtl'},
-			ScrollableVirtualList
+			VirtualList
 		)
 	)
 );
@@ -217,7 +219,7 @@ const VirtualList = Skinnable(
  * @ui
  * @public
  */
-const VirtualGridListScrollable = ({role, ...rest}) => {
+let VirtualGridList = ({role, ...rest}) => {
 	const {
 		// Variables
 		childWrapper: ChildWrapper,
@@ -226,13 +228,13 @@ const VirtualGridListScrollable = ({role, ...rest}) => {
 
 		// Child Props
 		resizeContextProps,
-		scrollableContainerProps,
-		flexLayoutProps,
+		scrollContainerProps,
+		innerScrollContainerProps,
 		childWrapperProps,
 		childProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useChildPropsDecorator(rest);
+	} = useScroll(rest);
 
 	const uiChildProps = useSpottableVirtualList({
 		...childProps,
@@ -242,8 +244,8 @@ const VirtualGridListScrollable = ({role, ...rest}) => {
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
-			<div {...scrollableContainerProps}>
-				<div {...flexLayoutProps}>
+			<div {...scrollContainerProps}>
+				<div {...innerScrollContainerProps}>
 					<ChildWrapper {...childWrapperProps}>
 						<UiVirtualListBase {...uiChildProps} />
 					</ChildWrapper>
@@ -255,99 +257,101 @@ const VirtualGridListScrollable = ({role, ...rest}) => {
 	);
 };
 
-VirtualGridListScrollable.displayName = 'VirtualGridList';
+VirtualGridList.displayName = 'VirtualGridList';
 
-VirtualGridListScrollable.propTypes = /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
-	/**
-	 * Size of an item for the VirtualGridList; valid value is an object that has `minWidth`
-	 * and `minHeight` as properties.
-	 *
-	 * Usage:
-	 * ```
-	 * <VirtualGridList
-	 * 	itemSize={{
-	 * 		minWidth: ri.scale(180),
-	 * 		minHeight: ri.scale(270)
-	 * 	}}
-	 * />
-	 * ```
-	 *
-	 * @type {ui/VirtualList.gridListItemSizeShape}
-	 * @required
-	 * @public
-	 */
-	itemSize: gridListItemSizeShape.isRequired,
+// TBD: indentation is broken intentionally to help comparing
+/* eslint-disable indent */
+VirtualGridList.propTypes = /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
+		/**
+		 * Size of an item for the VirtualGridList; valid value is an object that has `minWidth`
+		 * and `minHeight` as properties.
+		 *
+		 * Usage:
+		 * ```
+		 * <VirtualGridList
+		 * 	itemSize={{
+		 * 		minWidth: ri.scale(180),
+		 * 		minHeight: ri.scale(270)
+		 * 	}}
+		 * />
+		 * ```
+		 *
+		 * @type {ui/VirtualList.gridListItemSizeShape}
+		 * @required
+		 * @public
+		 */
+		itemSize: gridListItemSizeShape.isRequired,
 
-	cbScrollTo: PropTypes.func,
+		cbScrollTo: PropTypes.func,
 
-	/**
-	 * `false` if the content of the list or the scroller could get focus
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @private
-	 */
-	'data-spotlight-container-disabled': PropTypes.bool,
+		/**
+		 * `false` if the content of the list or the scroller could get focus
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		'data-spotlight-container-disabled': PropTypes.bool,
 
-	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-	focusableScrollbar: PropTypes.bool,
-	/**
-	 * Specifies how to show horizontal scrollbar.
-	 *
-	 * Valid values are:
-	 * * `'auto'`,
-	 * * `'visible'`, and
-	 * * `'hidden'`.
-	 *
-	 * @type {String}
-	 * @default 'auto'
-	 * @public
-	 */
-	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+		direction: PropTypes.oneOf(['horizontal', 'vertical']),
+		focusableScrollbar: PropTypes.bool,
+		/**
+		 * Specifies how to show horizontal scrollbar.
+		 *
+		 * Valid values are:
+		 * * `'auto'`,
+		 * * `'visible'`, and
+		 * * `'hidden'`.
+		 *
+		 * @type {String}
+		 * @default 'auto'
+		 * @public
+		 */
+		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
-	itemSizes: PropTypes.array,
+		itemSizes: PropTypes.array,
 
-	/**
-	 * Specifies overscroll effects shows on which type of inputs.
-	 *
-	 * @type {Object}
-	 * @default {
-	 *	arrowKey: false,
-	 *	drag: false,
-	 *	pageKey: false,
-	 *	scrollbarButton: false,
-	 *	wheel: true
-	 * }
-	 * @private
-	 */
-	overscrollEffectOn: PropTypes.shape({
-		arrowKey: PropTypes.bool,
-		drag: PropTypes.bool,
-		pageKey: PropTypes.bool,
-		scrollbarButton: PropTypes.bool,
-		wheel: PropTypes.bool
-	}),
+		/**
+		 * Specifies overscroll effects shows on which type of inputs.
+		 *
+		 * @type {Object}
+		 * @default {
+		 *	arrowKey: false,
+		*	drag: false,
+		*	pageKey: false,
+		*	scrollbarButton: false,
+		*	wheel: true
+		* }
+		* @private
+		*/
+		overscrollEffectOn: PropTypes.shape({
+			arrowKey: PropTypes.bool,
+			drag: PropTypes.bool,
+			pageKey: PropTypes.bool,
+			scrollbarButton: PropTypes.bool,
+			wheel: PropTypes.bool
+		}),
 
-	preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
-	role: PropTypes.string,
-	type: PropTypes.string,
+		preventBubblingOnKeyDown: PropTypes.oneOf(['none', 'programmatic']),
+		role: PropTypes.string,
+		type: PropTypes.string,
 
-	/**
-	 * Specifies how to show vertical scrollbar.
-	 *
-	 * Valid values are:
-	 * * `'auto'`,
-	 * * `'visible'`, and
-	 * * `'hidden'`.
-	 *
-	 * @type {String}
-	 * @default 'auto'
-	 * @public
-	 */
-	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
+		/**
+		 * Specifies how to show vertical scrollbar.
+		 *
+		 * Valid values are:
+		 * * `'auto'`,
+		 * * `'visible'`, and
+		 * * `'hidden'`.
+		 *
+		 * @type {String}
+		 * @default 'auto'
+		 * @public
+		 */
+		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
-VirtualGridListScrollable.defaultProps = {
+VirtualGridList.defaultProps = {
 	'data-spotlight-container-disabled': false,
 	direction: 'vertical',
 	focusableScrollbar: false,
@@ -365,7 +369,7 @@ VirtualGridListScrollable.defaultProps = {
 	verticalScrollbar: 'auto'
 };
 
-const VirtualGridList = Skinnable(
+VirtualGridList = Skinnable(
 	SpotlightContainerDecorator(
 		{
 			overflow: true,
@@ -374,7 +378,7 @@ const VirtualGridList = Skinnable(
 		},
 		I18nContextDecorator(
 			{rtlProp: 'rtl'},
-			VirtualGridListScrollable
+			VirtualGridList
 		)
 	)
 );

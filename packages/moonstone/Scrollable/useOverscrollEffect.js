@@ -4,15 +4,15 @@ import {useCallback, useEffect, useRef} from 'react';
 
 const
 	{overscrollTypeDone, overscrollTypeNone, overscrollTypeOnce} = constants,
-	overscrollRatioPrefix = '--scrollable-overscroll-ratio-',
+	overscrollRatioPrefix = '--scroll-overscroll-ratio-',
 	overscrollTimeout = 300;
 
 const useOverscrollEffect = (props, instances) => {
-	const {overscrollRefs, uiScrollableAdapter} = instances;
+	const {overscrollRefs, uiScrollAdapter} = instances;
 
 	// Mutable value
 
-	const variables = useRef({
+	const mutableRef = useRef({
 		overscrollJobs: {
 			horizontal: {before: null, after: null},
 			vertical: {before: null, after: null}
@@ -28,20 +28,20 @@ const useOverscrollEffect = (props, instances) => {
 			nodeRef.style.setProperty(overscrollRatioPrefix + orientation + edge, ratio);
 
 			if (type === overscrollTypeOnce) {
-				variables.current.overscrollJobs[orientation][edge].start(orientation, edge, overscrollTypeDone, 0);
+				mutableRef.current.overscrollJobs[orientation][edge].start(orientation, edge, overscrollTypeDone, 0);
 			}
 		}
 	}, [overscrollRefs]);
 
 	useEffect(() => {
 		function createOverscrollJob (orientation, edge) {
-			if (!variables.current.overscrollJobs[orientation][edge]) {
-				variables.current.overscrollJobs[orientation][edge] = new Job(applyOverscrollEffect, overscrollTimeout);
+			if (!mutableRef.current.overscrollJobs[orientation][edge]) {
+				mutableRef.current.overscrollJobs[orientation][edge] = new Job(applyOverscrollEffect, overscrollTimeout);
 			}
 		}
 
 		function stopOverscrollJob (orientation, edge) {
-			const job = variables.current.overscrollJobs[orientation][edge];
+			const job = mutableRef.current.overscrollJobs[orientation][edge];
 
 			if (job) {
 				job.stop();
@@ -64,22 +64,22 @@ const useOverscrollEffect = (props, instances) => {
 	// Functions
 
 	function clearOverscrollEffect (orientation, edge) {
-		variables.current.overscrollJobs[orientation][edge].startAfter(overscrollTimeout, orientation, edge, overscrollTypeNone, 0);
-		uiScrollableAdapter.current.setOverscrollStatus(orientation, edge, overscrollTypeNone, 0);
+		mutableRef.current.overscrollJobs[orientation][edge].startAfter(overscrollTimeout, orientation, edge, overscrollTypeNone, 0);
+		uiScrollAdapter.current.setOverscrollStatus(orientation, edge, overscrollTypeNone, 0);
 	}
 
 	function checkAndApplyOverscrollEffectByDirection (direction) {
 		const
 			orientation = (direction === 'up' || direction === 'down') ? 'vertical' : 'horizontal',
-			bounds = uiScrollableAdapter.current.getScrollBounds(),
-			scrollability = orientation === 'vertical' ? uiScrollableAdapter.current.canScrollVertically(bounds) : uiScrollableAdapter.current.canScrollHorizontally(bounds);
+			bounds = uiScrollAdapter.current.getScrollBounds(),
+			scrollability = orientation === 'vertical' ? uiScrollAdapter.current.canScrollVertically(bounds) : uiScrollAdapter.current.canScrollHorizontally(bounds);
 
 		if (scrollability) {
 			const
-				isRtl = uiScrollableAdapter.current.rtl,
+				isRtl = uiScrollAdapter.current.rtl,
 				edge = (direction === 'up' || !isRtl && direction === 'left' || isRtl && direction === 'right') ? 'before' : 'after';
 
-			uiScrollableAdapter.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
+			uiScrollAdapter.current.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 		}
 	}
 

@@ -40,8 +40,6 @@ const useChildAdapter = () => {
 	return [childAdapter, setChildAdapter];
 };
 
-export default useChildAdapter;
-
 export {
 	useChildAdapter
 };

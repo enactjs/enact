@@ -1,7 +1,7 @@
-import {mount} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import React from 'react';
 
-import Scroller from '../Scroller';
+import Scroller, {ScrollerBase} from '../Scroller';
 
 describe('Scroller', () => {
 	let contents;
@@ -164,8 +164,6 @@ describe('Scroller', () => {
 		);
 	});
 
-	// TODO: Fix
-	/*
 	describe('ScrollerBase API', () => {
 		test('should call onUpdate when Scroller updates', () => {
 			const handleUpdate = jest.fn();
@@ -185,5 +183,4 @@ describe('Scroller', () => {
 			expect(expected).toBe(actual);
 		});
 	});
-	*/
 });

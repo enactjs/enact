@@ -2,12 +2,15 @@ import utilEvent from '@enact/ui/Scrollable/utilEvent';
 import {useEffect} from 'react';
 
 const usePreventScroll = (props, instances, context) => {
-	const {rtl} = props;
-	const {containerNode, type} = context;
+	const {uiChildContainerRef} = instances;
+	const {type} = context;
 
 	// Hooks
 
 	useEffect(() => {
+		const {rtl} = props;
+		const containerNode = uiChildContainerRef.current;
+
 		if (type === 'JS' && containerNode) {
 			const preventScroll = () => {
 				containerNode.scrollTop = 0;
@@ -21,7 +24,7 @@ const usePreventScroll = (props, instances, context) => {
 				utilEvent('scroll').removeEventListener(containerNode, preventScroll);
 			};
 		}
-	}, [containerNode, rtl, type]);
+	}, [props, type]); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
 export default usePreventScroll;
