@@ -17,6 +17,7 @@ const SpotlightPlaceholder = Spottable('div');
 const nop = () => {};
 
 // TBD: indentation is broken intentionally to help comparing
+/* eslint-disable indent */
 	class VirtualListCore extends Component {
 		displayName = 'VirtualListBase'
 
@@ -192,6 +193,7 @@ const
 	spottableSelector = `.${spottableClass}`;
 
 // TBD: indentation is broken intentionally to help comparing
+/* eslint-disable indent */
 	const useSpottable = (props, instances, context) => {
 		const {uiChildAdapter, uiChildContainerRef} = instances;
 		const {type} = context;
@@ -266,7 +268,7 @@ const
 					removeGlobalKeyDownEventListener();
 				}
 			}
-		}, [addGlobalKeyDownEventListener, handleGlobalKeyDown, removeGlobalKeyDownEventListener, uiChildContainerRef]);
+		}, [addGlobalKeyDownEventListener, handleGlobalKeyDown, props, removeGlobalKeyDownEventListener]);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		function handleGlobalKeyDown () {
@@ -286,6 +288,7 @@ const
 		// Functions
 
 
+/* eslint-disable indent */
 /*
 // Move to useSpotlight
 
@@ -769,7 +772,6 @@ Move to useEvent
 
 const useSpottableVirtualList = (props) => {
 	const {type, uiChildAdapter, uiChildContainerRef} = props;
-	const {spotlightId} = props;
 
 	// Hooks
 
@@ -789,11 +791,10 @@ const useSpottableVirtualList = (props) => {
 		setLastFocusedNode,
 		shouldPreventOverscrollEffect,
 		shouldPreventScrollByFocus,
-		SpotlightPlaceholder,
+		SpotlightPlaceholder, // eslint-disable-line no-shadow
 		updateStatesAndBounds
 	} = useSpottable(props, instance, {type});
 
-	const containerNode = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 	usePreventScroll(props, instance, {type});
 
 	const adapter = {
@@ -819,6 +820,7 @@ const useSpottableVirtualList = (props) => {
 	// Render
 
 	// TBD: indentation is broken intentionally to help comparing
+	/* eslint-disable indent */
 	{
 		{
 			const
@@ -945,7 +947,7 @@ function listItemsRenderer (props) {
 		needsScrollingPlaceholder,
 		primary,
 		role,
-		SpotlightPlaceholder
+		SpotlightPlaceholder // eslint-disable-line no-shadow
 	} = props;
 
 	return (
@@ -968,7 +970,7 @@ function listItemsRenderer (props) {
 			) : null}
 		</>
 	);
-};
+}
 /* eslint-enable enact/prop-types */
 
 export default useSpottableVirtualList;

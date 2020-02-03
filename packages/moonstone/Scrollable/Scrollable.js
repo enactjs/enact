@@ -212,7 +212,12 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 		 * @default $L('scroll up')
 		 * @public
 		 */
-		scrollUpAriaLabel: PropTypes.string
+		scrollUpAriaLabel: PropTypes.string,
+
+		/*
+		 * TBD
+		 */
+		type: PropTypes.string
 	}
 
 	static defaultProps = {
@@ -230,6 +235,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 	}
 }
 
+/* eslint-disable indent */
 /*
 // Move to useSpotlightRestore
 
@@ -904,7 +910,7 @@ class ScrollableBase extends Component { // ScrollableBase is now only used in s
 */
 
 const useSpottableScroll = (props, instances, context) => {
-	const {childAdapter, horizontalScrollbarRef, uiScrollContainerRef, uiChildContainerRef, uiScrollAdapter, verticalScrollbarRef} = instances;
+	const {childAdapter, uiChildContainerRef, uiScrollAdapter, uiScrollContainerRef} = instances;
 	const {type} = context;
 	const contextSharedState = useContext(SharedState);
 
@@ -1103,6 +1109,7 @@ const useSpottableScroll = (props, instances, context) => {
 
 const useScroll = (props) => {
 			// TBD: indentation is broken intentionally to help comparing
+			/* eslint-disable indent */
 			const {
 				'data-spotlight-container': spotlightContainer,
 				'data-spotlight-container-disabled': spotlightContainerDisabled,
@@ -1288,7 +1295,7 @@ const useScroll = (props) => {
 		onScroll: handleScroll,
 		onWheel: handleWheel,
 		removeEventListeners,
-		scrollTo: scrollTo,
+		scrollTo,
 		setUiChildAdapter,
 		setUiScrollAdapter,
 		type,

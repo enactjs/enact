@@ -55,7 +55,7 @@ const useSpotlightRestore = (props, instances) => {
 		}
 
 		restoreScrollPosition();
-	}, [context, uiScrollAdapter]);
+	}, [context, props, uiScrollAdapter]);
 };
 
 export {

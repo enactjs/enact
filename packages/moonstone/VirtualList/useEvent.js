@@ -104,7 +104,7 @@ const useEventKey = (props, instances, context) => {
 		}
 
 		return {isDownKey, isUpKey, isLeftMovement, isRightMovement, isWrapped, nextIndex};
-	}, [findSpottableItem, uiChildAdapter]);
+	}, [findSpottableItem, props, uiChildAdapter]);
 
 	// Hooks
 
@@ -203,7 +203,7 @@ const useEventKey = (props, instances, context) => {
 			utilEvent('keydown').removeEventListener(scrollerNode, handleKeyDown, {capture: true});
 			utilEvent('keyup').removeEventListener(scrollerNode, handleKeyUp, {capture: true});
 		};
-	}, [uiChildContainerRef, getNextIndex, handle5WayKeyUp, handleDirectionKeyDown, handlePageUpDownKeyDown, spotlightAcceleratorProcessKey]);
+	}, [uiChildContainerRef, getNextIndex, handle5WayKeyUp, handleDirectionKeyDown, handlePageUpDownKeyDown, props, spotlightAcceleratorProcessKey, uiChildAdapter.current]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	// Functions
 

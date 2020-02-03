@@ -68,6 +68,7 @@ const VirtualList = ({role, ...rest}) => {
 VirtualList.displayName = 'ui:VirtualList';
 
 // TBD: indentation is broken intentionally to help comparing
+/* eslint-disable indent */
 VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 		/**
 		 * Size of an item for the `VirtualList`.
@@ -173,6 +174,7 @@ const VirtualGridList = ({role, ...rest}) => {
 VirtualGridList.displaytName = 'ui:VirtualGridList';
 
 // TBD: indentation is broken intentionally to help comparing
+/* eslint-disable indent */
 VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype */ {
 		/**
 		 * Size of an item for the `VirtualGridList`.

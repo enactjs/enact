@@ -51,6 +51,7 @@ const itemSizesShape = PropTypes.shape({
  * @private
  */
 // TBD: indentation is broken intentionally to help comparing
+/* eslint-disable indent */
 	class VirtualListBase extends Component {
 		displayName = 'ui:VirtualListBase'
 

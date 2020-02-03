@@ -87,6 +87,7 @@ let VirtualList = ({itemSize, role, ...rest}) => {
 VirtualList.displayName = 'VirtualList';
 
 // TBD: indentation is broken intentionally to help comparing
+/* eslint-disable indent */
 VirtualList.propTypes = /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 		/**
 		 * Size of an item for the VirtualList; valid value is a number generally.
@@ -259,6 +260,7 @@ let VirtualGridList = ({role, ...rest}) => {
 VirtualGridList.displayName = 'VirtualGridList';
 
 // TBD: indentation is broken intentionally to help comparing
+/* eslint-disable indent */
 VirtualGridList.propTypes = /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
 		/**
 		 * Size of an item for the VirtualGridList; valid value is an object that has `minWidth`

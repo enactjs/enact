@@ -41,7 +41,7 @@ const useSpotlightConfig = (props, instances) => {
 		}
 
 		configureSpotlight();
-	}, [lastFocusedIndex, props.spotlightId]);
+	}, [lastFocusedIndex, props, props.spotlightId]);
 
 	// Functions
 
@@ -67,7 +67,7 @@ const useSpotlightConfig = (props, instances) => {
 const getNumberValue = (index) => index | 0;
 
 const useSpotlightRestore = (props, instances) => {
-	const {spottable, uiChildAdapter, uiChildContainerRef} = instances;
+	const {spottable, uiChildContainerRef} = instances;
 
 	// Mutable value
 

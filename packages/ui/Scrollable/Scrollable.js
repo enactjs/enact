@@ -490,7 +490,7 @@ const useScrollBase = (props) => {
 					return mutableRef.current.isScrollAnimationTargetAccumulated;
 				},
 				set isScrollAnimationTargetAccumulated (val) {
-					return mutableRef.current.isScrollAnimationTargetAccumulated = val;
+					mutableRef.current.isScrollAnimationTargetAccumulated = val;
 				},
 				get isUpdatedScrollThumb () {
 					return mutableRef.current.isUpdatedScrollThumb;
@@ -542,7 +542,7 @@ const useScrollBase = (props) => {
 
 		// componentWillUnmount
 		return () => {
-			const {animator, resizeRegistry, scrolling, scrollStopJob} = mutableRef.current;
+			const {animator, resizeRegistry, scrolling, scrollStopJob} = mutableRef.current; // eslint-disable-line react-hooks/exhaustive-deps
 
 			resizeRegistry.parent = null;
 
@@ -562,7 +562,7 @@ const useScrollBase = (props) => {
 			removeEventListeners();
 		};
 
-	}, []);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const
 		{className, noScrollByDrag, rtl, style, ...rest} = props,
@@ -704,6 +704,7 @@ const useScrollBase = (props) => {
 
 	function getVariablesInit () {
 		return {
+/* eslint-disable indent */
 // TBD: indentation is broken intentionally to help comparing
 	overscrollEnabled: !!(props.applyOverscrollEffect),
 
@@ -900,13 +901,13 @@ const useScrollBase = (props) => {
 		const {direction} = props;
 
 		if (type === 'JS') {
-			flickTarget = mutableRef.current.animator.simulate(
+			mutableRef.current.flickTarget = mutableRef.current.animator.simulate(
 				mutableRef.current.scrollLeft,
 				mutableRef.current.scrollTop,
 				(direction !== 'vertical') ? getRtlX(-ev.velocityX) : 0,
 				(direction !== 'horizontal') ? -ev.velocityY : 0
 			);
-		} else {
+		} else if (type === 'Native') {
 			if (!mutableRef.current.isTouching) {
 				mutableRef.current.flickTarget = mutableRef.current.animator.simulate(
 					mutableRef.current.scrollLeft,
@@ -1333,12 +1334,10 @@ const useScrollBase = (props) => {
 			reachedEdgeInfo = {bottom: false, left: false, right: false, top: false};
 
 		if (canScrollHorizontally(bounds)) {
-			const
-				rtl = props.rtl,
-				edge = getEdgeFromPosition(mutableRef.current.scrollLeft, bounds.maxLeft);
+			const edge = getEdgeFromPosition(mutableRef.current.scrollLeft, bounds.maxLeft);
 
 			if (edge) { // if edge is null, no need to check which edge is reached.
-				if ((edge === 'before' && !rtl) || (edge === 'after' && rtl)) {
+				if ((edge === 'before' && !props.rtl) || (edge === 'after' && props.rtl)) {
 					reachedEdgeInfo.left = true;
 				} else {
 					reachedEdgeInfo.right = true;

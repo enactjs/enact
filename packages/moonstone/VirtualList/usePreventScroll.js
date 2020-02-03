@@ -24,7 +24,7 @@ const usePreventScroll = (props, instances, context) => {
 				utilEvent('scroll').removeEventListener(containerNode, preventScroll);
 			};
 		}
-	}, [type]);
+	}, [props, type]); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
 export default usePreventScroll;
