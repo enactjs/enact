@@ -8,12 +8,13 @@ import React, {Component, useCallback, useEffect, useRef} from 'react';
 import {dataIndexAttribute} from '../Scrollable';
 
 import {useEventKey} from './useEvent';
-import useOverscrollEffect from './useOverscrollEffect';
 import usePreventScroll from './usePreventScroll';
 import {useSpotlightConfig, useSpotlightRestore} from './useSpotlight';
 
 const SpotlightAccelerator = new Accelerator();
 const SpotlightPlaceholder = Spottable('div');
+
+const nop = () => {};
 
 // TBD: indentation is broken intentionally to help comparing
 	class VirtualListCore extends Component {
@@ -200,6 +201,7 @@ const
 		const mutableRef = useRef({
 			isScrolledBy5way: false,
 			isScrolledByJump: false,
+			isWrappedBy5way: false,
 			lastFocusedIndex: null,
 			nodeIndexToBeFocused: false,
 			pause: new Pause('VirtualListBase')
@@ -211,22 +213,16 @@ const
 
 		useSpotlightConfig(props, {spottable: mutableRef});
 
-		const [isOverscrollEffect, setOverscrollEffect] = useOverscrollEffect();
-
 		const {addGlobalKeyDownEventListener, removeGlobalKeyDownEventListener} = useEventKey(props, instances, {
 			handlePageUpDownKeyDown: () => {
 				mutableRef.current.isScrolledBy5way = false;
 			},
 			handleDirectionKeyDown: (ev, eventType, param) => {
-				const
-					{keyCode} = ev,
-					direction = getDirection(keyCode);
-
 				switch (eventType) {
 					case 'acceleratedKeyDown': onAcceleratedKeyDown(param);
 						break;
 					case 'keyDown':
-						if (Spotlight.move(direction)) {
+						if (Spotlight.move(param.direction)) {
 							const nextTargetIndex = Spotlight.getCurrent().dataset.index;
 
 							ev.preventDefault();
@@ -244,7 +240,9 @@ const
 			handle5WayKeyUp: () => {
 				SpotlightAccelerator.reset();
 			},
-			SpotlightAccelerator
+			spotlightAcceleratorProcessKey: (ev) => {
+				return SpotlightAccelerator.processKey(ev, nop);
+			}
 		});
 
 		const {
@@ -449,7 +447,7 @@ const
 					focusByIndex(nextIndex);
 				} else {
 					mutableRef.current.isScrolledBy5way = true;
-					setOverscrollEffect(isWrapped);
+					mutableRef.current.isWrappedBy5way = isWrapped;
 
 					if (isWrapped && (
 						uiChildContainerRef.current.querySelector(`[data-index='${nextIndex}']${spottableSelector}`) == null
@@ -583,9 +581,9 @@ Move to useEvent
 				// Item is valid but since the the dom doesn't exist yet, we set the index to focus after the ongoing update
 				setPreservedIndex(index);
 			} else {
-				if (isOverscrollEffect) {
+				if (mutableRef.current.isWrappedBy5way) {
 					SpotlightAccelerator.reset();
-					setOverscrollEffect(false);
+					mutableRef.current.isWrappedBy5way = false;
 				}
 
 				pause.resume();
@@ -728,7 +726,7 @@ Move to useEvent
 		}
 
 		function shouldPreventOverscrollEffect () {
-			return isOverscrollEffect;
+			return mutableRef.current.isWrappedBy5way;
 		}
 
 		function setLastFocusedNode (node) {
@@ -752,6 +750,8 @@ Move to useEvent
 
 		return {
 			calculatePositionOnFocus,
+			focusByIndex,
+			focusOnNode,
 			getNodeIndexToBeFocused,
 			getScrollBounds,
 			handlePlaceholderFocus,
@@ -809,7 +809,6 @@ const useSpottableVirtualList = (props) => {
 	useEffect(() => {
 		props.setChildAdapter(adapter);
 	}, [adapter, props, props.setChildAdapter]);
-
 
 	// Functions
 

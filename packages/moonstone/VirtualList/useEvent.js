@@ -14,7 +14,6 @@ const
 	isPageDown = is('pageDown'),
 	isRight = is('right'),
 	isUp = is('up'),
-	nop = () => {},
 	getNumberValue = (index) => index | 0;
 
 const useEventKey = (props, instances, context) => {
@@ -23,7 +22,7 @@ const useEventKey = (props, instances, context) => {
 		handle5WayKeyUp,
 		handleDirectionKeyDown,
 		handlePageUpDownKeyDown,
-		SpotlightAccelerator
+		spotlightAcceleratorProcessKey
 	} = context;
 
 	// Mutable value
@@ -117,7 +116,7 @@ const useEventKey = (props, instances, context) => {
 			if (direction) {
 				Spotlight.setPointerMode(false);
 
-				if (SpotlightAccelerator.processKey(ev, nop)) {
+				if (spotlightAcceleratorProcessKey(ev)) {
 					ev.stopPropagation();
 				} else {
 					const {repeat} = ev;
@@ -169,7 +168,7 @@ const useEventKey = (props, instances, context) => {
 								ev.preventDefault();
 								ev.stopPropagation();
 							} else if (!isLeaving) {
-								handleDirectionKeyDown(ev, 'keyDown', {keyCode, repeat, target});
+								handleDirectionKeyDown(ev, 'keyDown', {direction, keyCode, repeat, target});
 							}
 						}
 					} else {
@@ -204,7 +203,7 @@ const useEventKey = (props, instances, context) => {
 			utilEvent('keydown').removeEventListener(scrollerNode, handleKeyDown, {capture: true});
 			utilEvent('keyup').removeEventListener(scrollerNode, handleKeyUp, {capture: true});
 		};
-	}, [ uiChildContainerRef, getNextIndex, handle5WayKeyUp, handleDirectionKeyDown, handlePageUpDownKeyDown, SpotlightAccelerator]);
+	}, [uiChildContainerRef, getNextIndex, handle5WayKeyUp, handleDirectionKeyDown, handlePageUpDownKeyDown, spotlightAcceleratorProcessKey]);
 
 	// Functions
 
