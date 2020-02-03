@@ -424,8 +424,8 @@ const
 		}
 
 		function onAcceleratedKeyDown ({isWrapped, keyCode, nextIndex, repeat, target}) {
-			const {cbScrollTo, dataSize, spacing, wrap} = props;
-			const {dimensionToExtent, primary: {clientSize, gridSize}, scrollPositionTarget} = uiChildAdapter.current;
+			const {cbScrollTo, wrap} = props;
+			const {dimensionToExtent, primary: {clientSize, itemSize}, scrollPositionTarget} = uiChildAdapter.current;
 			const index = getNumberValue(target.dataset.index);
 
 			mutableRef.current.isScrolledBy5way = false;
@@ -436,31 +436,16 @@ const
 					row = Math.floor(index / dimensionToExtent),
 					nextRow = Math.floor(nextIndex / dimensionToExtent),
 					start = uiChildAdapter.current.getGridPosition(nextIndex).primaryPosition,
-					end = uiChildAdapter.current.getGridPosition(nextIndex).primaryPosition + gridSize;
-				let isNextItemInView = false;
-
-				if (props.itemSizes) {
-					isNextItemInView = uiChildAdapter.current.itemPositions[nextIndex].position >= scrollPositionTarget &&
-						uiChildAdapter.current.getItemBottomPosition(nextIndex) <= scrollPositionTarget + clientSize;
-				} else {
-					const
-						firstFullyVisibleIndex = Math.ceil(scrollPositionTarget / gridSize) * dimensionToExtent,
-						lastFullyVisibleIndex = Math.min(
-							dataSize - 1,
-							Math.floor((scrollPositionTarget + clientSize + spacing) / gridSize) * dimensionToExtent - 1
-						);
-
-					isNextItemInView = nextIndex >= firstFullyVisibleIndex && nextIndex <= lastFullyVisibleIndex;
-				}
+					end = props.itemSizes ? uiChildAdapter.current.getItemBottomPosition(nextIndex) : start + itemSize;
 
 				mutableRef.current.lastFocusedIndex = nextIndex;
 
-				if (isNextItemInView) {
+				if (start >= scrollPositionTarget && end <= scrollPositionTarget + clientSize) {
 					// The next item could be still out of viewport. So we need to prevent scrolling into view with `isScrolledBy5way` flag.
 					mutableRef.current.isScrolledBy5way = true;
 					focusByIndex(nextIndex);
 					mutableRef.current.isScrolledBy5way = false;
-				} else if (row === nextRow && (start < scrollPositionTarget || end > scrollPositionTarget + clientSize)) {
+				} else if (row === nextRow) {
 					focusByIndex(nextIndex);
 				} else {
 					mutableRef.current.isScrolledBy5way = true;
