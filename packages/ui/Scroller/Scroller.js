@@ -7,7 +7,7 @@
  * @exports ScrollerNative
  */
 
-import {platform} from '@enact/webos';
+import {platform} from '@enact/core/platform';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
