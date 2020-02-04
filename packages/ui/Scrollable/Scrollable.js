@@ -465,8 +465,70 @@ const useScrollBase = (props) => {
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(props.horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(props.verticalScrollbar === 'visible');
 
-	const init = getVariablesInit();
-	const mutableRef = useRef(init);
+	const mutableRef = useRef({
+		overscrollEnabled: !!(props.applyOverscrollEffect),
+
+		// Enable the early bail out of repeated scrolling to the same position
+		animationInfo: null,
+
+		resizeRegistry: null,
+
+		// constants
+		pixelPerLine: 39,
+		scrollWheelMultiplierForDeltaPixel: 1.5, // The ratio of wheel 'delta' units to pixels scrolled.
+
+		// status
+		deferScrollTo: true,
+		isScrollAnimationTargetAccumulated: false,
+		isUpdatedScrollThumb: false,
+
+		// overscroll
+		lastInputType: null,
+		overscrollStatus: {
+			horizontal: {
+				before: {type: overscrollTypeNone, ratio: 0},
+				after: {type: overscrollTypeNone, ratio: 0}
+			},
+			vertical: {
+				before: {type: overscrollTypeNone, ratio: 0},
+				after: {type: overscrollTypeNone, ratio: 0}
+			}
+		},
+
+		// bounds info
+		bounds: {
+			clientWidth: 0,
+			clientHeight: 0,
+			scrollWidth: 0,
+			scrollHeight: 0,
+			maxTop: 0,
+			maxLeft: 0
+		},
+
+		// wheel/drag/flick info
+		wheelDirection: 0,
+		isDragging: false,
+		isTouching: false, // Native
+
+		// scroll info
+		scrolling: false,
+		scrollLeft: 0,
+		scrollTop: 0,
+		scrollToInfo: null,
+
+		// scroll animator
+		animator: null,
+
+		// non-declared-variable.
+		accumulatedTargetX: null,
+		accumulatedTargetY: null,
+		flickTarget: null,
+		dragStartX: null,
+		dragStartY: null,
+		scrollStopJob: null,
+
+		prevState: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible}
+	});
 
 	if (mutableRef.current.animator == null) {
 		mutableRef.current.animator = new ScrollAnimator();
@@ -707,75 +769,6 @@ const useScrollBase = (props) => {
 		}
 	}
 	// JS ]]
-
-	function getVariablesInit () {
-		return {
-/* eslint-disable indent */
-// TBD: indentation is broken intentionally to help comparing
-	overscrollEnabled: !!(props.applyOverscrollEffect),
-
-	// Enable the early bail out of repeated scrolling to the same position
-	animationInfo: null,
-
-	resizeRegistry: null,
-
-	// constants
-	pixelPerLine: 39,
-	scrollWheelMultiplierForDeltaPixel: 1.5, // The ratio of wheel 'delta' units to pixels scrolled.
-
-	// status
-	deferScrollTo: true,
-	isScrollAnimationTargetAccumulated: false,
-	isUpdatedScrollThumb: false,
-
-	// overscroll
-	lastInputType: null,
-	overscrollStatus: {
-		horizontal: {
-			before: {type: overscrollTypeNone, ratio: 0},
-			after: {type: overscrollTypeNone, ratio: 0}
-		},
-		vertical: {
-			before: {type: overscrollTypeNone, ratio: 0},
-			after: {type: overscrollTypeNone, ratio: 0}
-		}
-	},
-
-	// bounds info
-	bounds: {
-		clientWidth: 0,
-		clientHeight: 0,
-		scrollWidth: 0,
-		scrollHeight: 0,
-		maxTop: 0,
-		maxLeft: 0
-	},
-
-	// wheel/drag/flick info
-	wheelDirection: 0,
-	isDragging: false,
-	isTouching: false, // Native
-
-	// scroll info
-	scrolling: false,
-	scrollLeft: 0,
-	scrollTop: 0,
-	scrollToInfo: null,
-
-	// scroll animator
-	animator: null,
-
-	// non-declared-variable.
-	accumulatedTargetX: null,
-	accumulatedTargetY: null,
-	flickTarget: null,
-	dragStartX: null,
-	dragStartY: null,
-	scrollStopJob: null,
-
-	prevState: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible}
-		};
-	}
 
 	// drag/flick event handlers
 
