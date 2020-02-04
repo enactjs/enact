@@ -53,6 +53,7 @@ storiesOf('Moonstone', module)
 					headerInput={headerInput}
 					hideLine={boolean('hideLine', Config)}
 					marqueeOn={select('marqueeOn', prop.marqueeOn, Config)}
+					minimized={boolean('minimized', Config)}
 				>
 					{children}
 				</Header>

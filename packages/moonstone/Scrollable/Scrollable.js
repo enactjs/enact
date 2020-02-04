@@ -25,8 +25,10 @@ import $L from '../internal/$L';
 import {SharedState} from '../internal/SharedStateDecorator';
 
 import Scrollbar from './Scrollbar';
+import Button from '../Button';
 import Skinnable from '../Skinnable';
 
+import css from './Scrollable.module.less';
 import overscrollCss from './OverscrollEffect.module.less';
 import scrollbarCss from './Scrollbar.module.less';
 
@@ -284,7 +286,16 @@ class ScrollableBase extends Component {
 		 * @default $L('scroll up')
 		 * @public
 		 */
-		scrollUpAriaLabel: PropTypes.string
+		scrollUpAriaLabel: PropTypes.string,
+
+		/**
+		 * Shows a button that'll scroll back up to the "top" when scrolling to the edge.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		showScrollToTopButton: PropTypes.bool
 	}
 
 	static defaultProps = {
@@ -315,6 +326,10 @@ class ScrollableBase extends Component {
 		};
 		this.childRef = React.createRef();
 		this.uiRef = React.createRef();
+
+		this.state = {
+			shouldShowScrollToTopButton: false
+		};
 
 		configureSpotlightContainer(props);
 	}
@@ -458,6 +473,10 @@ class ScrollableBase extends Component {
 				this.lastScrollPositionOnFocus = pos;
 			}
 		}
+	}
+
+	onScrollToTopButtonClick = () => {
+		this.uiRef.current.start({targetX: 0, targetY: 0});
 	}
 
 	calculateAndScrollTo = () => {
@@ -837,6 +856,31 @@ class ScrollableBase extends Component {
 		}
 	}
 
+	// scroll to top button
+
+	showScrollToTopButton = () => this.setState({shouldShowScrollToTopButton: true});
+
+	hideScrollToTopButton = () => this.setState({shouldShowScrollToTopButton: false});
+
+	toggleScrollToTopButton = ({reachedEdgeInfo}) => {
+		const {bottom, left, right} = reachedEdgeInfo;
+		const {direction, showScrollToTopButton} = this.props;
+		const isRtl = this.uiRef.current.props.rtl;
+		const hasReachedEdge = (
+			bottom && (direction === 'both' || direction === 'vertical') ||
+			!isRtl && (right && (direction === 'both' || direction === 'horizontal')) ||
+			isRtl && (left && (direction === 'both' || direction === 'horizontal'))
+		);
+
+		if (showScrollToTopButton && hasReachedEdge) {
+			this.showScrollToTopButton();
+		} else if (!hasReachedEdge) {
+			this.hideScrollToTopButton();
+		}
+
+		return true;
+	}
+
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	addEventListeners = (childContainerRef) => {
 		if (childContainerRef.current && childContainerRef.current.addEventListener) {
@@ -935,6 +979,7 @@ class ScrollableBase extends Component {
 
 	handleScroll = handle(
 		forward('onScroll'),
+		this.toggleScrollToTopButton,
 		(ev, {id}, context) => id && context && context.set,
 		({scrollLeft: x, scrollTop: y}, {id}, context) => {
 			context.set(`${id}.scrollPosition`, {x, y});
@@ -960,6 +1005,8 @@ class ScrollableBase extends Component {
 			upButtonAriaLabel = scrollUpAriaLabel == null ? $L('scroll up') : scrollUpAriaLabel,
 			rightButtonAriaLabel = scrollRightAriaLabel == null ? $L('scroll right') : scrollRightAriaLabel,
 			leftButtonAriaLabel = scrollLeftAriaLabel == null ? $L('scroll left') : scrollLeftAriaLabel;
+
+			delete rest.showScrollToTopButton;
 
 		return (
 			<UiScrollableBase
@@ -1036,6 +1083,19 @@ class ScrollableBase extends Component {
 								null
 							}
 						</div>
+						<Button
+							className={classNames(
+								css.scrollToTopButton,
+								this.state.shouldShowScrollToTopButton ? css.showScrollToTopButton : null,
+								isHorizontalScrollbarVisible ? css.horizontalScrollbar : null,
+								isVerticalScrollbarVisible ? css.verticalScrollbar : null,
+								rtl ? css.rtlScrollToTopButton : null
+							)}
+							icon="arrowlargeup"
+							onTap={this.onScrollToTopButtonClick}
+						>
+							Back to top
+						</Button>
 						{isHorizontalScrollbarVisible ?
 							<Scrollbar
 								{...horizontalScrollbarProps}

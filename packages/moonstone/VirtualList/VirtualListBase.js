@@ -7,8 +7,10 @@ import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {VirtualListBase as UiVirtualListBase, VirtualListBaseNative as UiVirtualListBaseNative} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
-import React, {Component} from 'react';
+import React, {Component, useContext} from 'react';
 import warning from 'warning';
+
+import {MinimizeControllerContext} from '../Panels';
 
 import {Scrollable, dataIndexAttribute} from '../Scrollable';
 import ScrollableNative from '../Scrollable/ScrollableNative';
@@ -940,10 +942,12 @@ const ScrollableVirtualList = ({role, ...rest}) => { // eslint-disable-line reac
 		!rest.itemSizes || !rest.cbScrollTo,
 		'VirtualList with `minSize` in `itemSize` prop does not support `cbScrollTo` prop'
 	);
+	const context = useContext(MinimizeControllerContext);
 
 	return (
 		<Scrollable
 			{...rest}
+			onScroll={context && context.onScroll ? context.onScroll : rest.onScroll}
 			childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 				<VirtualListBase
 					{...childProps}
@@ -977,10 +981,12 @@ const ScrollableVirtualListNative = ({role, ...rest}) => {
 		!rest.itemSizes || !rest.cbScrollTo,
 		'VirtualList with `minSize` in `itemSize` prop does not support `cbScrollTo` prop'
 	);
+	const context = useContext(MinimizeControllerContext);
 
 	return (
 		<ScrollableNative
 			{...rest}
+			onScroll={context && context.onScroll ? context.onScroll : rest.onScroll}
 			childRenderer={(childProps) => ( // eslint-disable-line react/jsx-no-bind
 				<VirtualListBaseNative
 					{...childProps}

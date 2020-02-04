@@ -4,6 +4,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/Panels.Header` prop `minimized`
+- `moonstone/Scrollable` scroll to top button
+
 ### Fixed
 
 - `moonstone/VirtualList.VirtualList`, `moonstone/VirtualList.VirtualGridList` add `data-webos-voice-disabled` prop for disable voice control

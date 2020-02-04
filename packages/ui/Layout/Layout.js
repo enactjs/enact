@@ -211,7 +211,10 @@ const LayoutBase = kind({
 		 * @type {Function}
 		 * @private
 		 */
-		componentRef: PropTypes.func,
+		componentRef: PropTypes.oneOfType([
+			PropTypes.func,
+			PropTypes.shape({current: PropTypes.any})
+		]),
 
 		/**
 		 * Allows this `Layout` to have following siblings drawn on the same line as itself
