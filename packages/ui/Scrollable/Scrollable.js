@@ -598,10 +598,10 @@ const useScrollBase = (props) => {
 					mutableRef.current.wheelDirection = val;
 				}
 			});
+		}
 
-			if (props.cbScrollTo) {
-				props.cbScrollTo(scrollTo);
-			}
+		if (props.cbScrollTo) {
+			props.cbScrollTo(scrollTo);
 		}
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
