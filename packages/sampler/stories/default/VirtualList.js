@@ -1,12 +1,12 @@
+import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
 import {Item as UiItem} from '@enact/ui/Item';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
 import ri from '@enact/ui/resolution';
 import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {storiesOf} from '@storybook/react';
 import {VirtualList as UiVirtualList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
-
-import {boolean, number, select} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata} from '../../src/utils';
 
 const
 	prop = {

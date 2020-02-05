@@ -1,12 +1,11 @@
+import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, select} from '@enact/storybook-utils/addons/knobs';
 import Button from '@enact/ui/Button';
 import Item from '@enact/ui/Item';
-import {SlotItem as UISlotItem} from '@enact/ui/SlotItem';
 import Group from '@enact/ui/Group';
+import {SlotItem as UISlotItem} from '@enact/ui/SlotItem';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, select} from '../../src/enact-knobs';
-import {action} from '../../src/utils';
 
 const SlotItem = ({children, ...rest}) => (
 	<UISlotItem {...rest} component={Item}>{children}</UISlotItem>

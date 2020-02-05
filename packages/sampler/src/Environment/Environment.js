@@ -4,9 +4,9 @@ import classnames from 'classnames';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Column, Cell} from '@enact/ui/Layout';
 import BodyText from '@enact/ui/BodyText';
-import {boolean, select} from '../enact-knobs';
+import {Column, Cell} from '@enact/ui/Layout';
+import {boolean, select} from '@enact/storybook-utils/addons/knobs';
 import qs from 'query-string';
 
 import css from './Environment.module.less';

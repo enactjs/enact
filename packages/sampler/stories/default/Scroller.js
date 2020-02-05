@@ -1,11 +1,11 @@
+import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, select} from '@enact/storybook-utils/addons/knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
 import ri from '@enact/ui/resolution';
 import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {Scroller as UiScroller, ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, select} from '../../src/enact-knobs';
-import {action, mergeComponentMetadata} from '../../src/utils';
 
 const
 	prop = {

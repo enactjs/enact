@@ -1,11 +1,10 @@
-import Layout, {Cell} from '@enact/ui/Layout';
-import ri from '@enact/ui/resolution';
+import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
 import Button from '@enact/ui/Button';
 import Item from '@enact/ui/Item';
+import Layout, {Cell} from '@enact/ui/Layout';
 import React from 'react';
+import ri from '@enact/ui/resolution';
 import {storiesOf} from '@storybook/react';
-
-import {boolean, number, select} from '../../src/enact-knobs';
 
 Layout.displayName = 'Layout';
 Cell.displayName = 'Cell';

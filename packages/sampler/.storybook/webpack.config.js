@@ -1,5 +1,5 @@
 /* global __dirname */
 
-const webpack = require('../src/webpack');
+const webpack = require('@enact/storybook-utils/configs/webpack');
 
-module.exports = async opts => webpack(opts, __dirname);
+module.exports = async ({config, mode}) => webpack(config, mode, __dirname);
