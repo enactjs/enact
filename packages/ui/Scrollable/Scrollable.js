@@ -73,7 +73,7 @@ const useForceUpdate = () => (useReducer(x => x + 1, 0));
 /**
  * An unstyled component that passes scrollable behavior information as its render prop's arguments.
  *
- * @function ScrollableBase
+ * @class ScrollableBase
  * @memberof ui/Scrollable
  * @ui
  * @private
