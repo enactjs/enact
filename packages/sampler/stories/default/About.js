@@ -73,7 +73,7 @@ storiesOf('About', module)
 				>
 					Welcome to the Enact sampler! Explore Enact components.
 				</BodyText>
-				<Button onClick={action('onClick')} selected={boolean('button selected', Button)}>
+				<Button className={css.button} onClick={action('onClick')} selected={boolean('button selected', Button)}>
 					Click me
 				</Button>
 				<HintDialog

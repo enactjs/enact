@@ -1,16 +1,9 @@
 // Environment.module.less
 //
+@import "~@enact/ui/styles/core.less";
 @import "~@enact/ui/styles/mixins.less";
+@import "../../src/styles/colors.less";
 @import "../../src/styles/variables.less";
-
-// from ~@enact/ui/styles/core.less. Can't import global mixins.
-.enact-selectable() {
-	cursor: auto;
-	-ms-user-select: element;
-	-webkit-user-select: text;
-	-moz-user-select: text;
-	user-select: text;
-}
 
 [data-reactroot] {
 	overflow: auto !important;
@@ -18,6 +11,9 @@
 }
 
 .environmentPanels {
+	padding: @app-outset;
+	background-color: @panels-bg-color;
+
 	&::before {
 		content: "";
 		background: var(--env-background);
@@ -27,43 +23,28 @@
 		opacity: 0.5;
 	}
 
+	.header {
+		font-size: @app-header-font-size;
+		font-weight: @app-header-font-weight;
+		margin-top: 0;
+	}
+
 	.description {
-		margin: 0 @spotlight-outset 1em;
+		margin: 0 @app-outset 1em;
 
 		p:first-child {
 			margin-top: 0;
 		}
 	}
 
-	// Here, we target the storybook rendering canvas div. It's inserted as a child of our Panel,
+	// Here, we target the storybook rendering canvas div. It's inserted as a child of our view,
 	// but it applies position:relative, which doesn't help us when we have stories that should fill
-	// the entire panel body. This targets that inaccessible node using Panel's structure and
-	// storybook's structure to update that goofy rule to a rational one.
-	// The :not() bit targets only non-enact elements, so if a story doesn't use withInfo, and a
-	// `div` isn't added, the components aren't being told to be a different size/position.
-	.storyCell > div:not([class]):not([style]):first-child {
+	// the entire panel body. This targets that inaccessible node using storybook's structure to
+	// update that goofy rule to a rational one.
+	section > div:first-child {
 		position: relative;
 		width: 100%;
 		height: 100%;
-	}
-
-	// Hack into the Info - Don't try this at home, kids
-	main > article > section > :nth-child(2) > :nth-child(3) {
-		.enact-selectable();
-
-		background-color: black !important;
-
-		h1, h2, h3, p, div {
-			color: inherit !important;
-		}
-
-		pre {
-			background-color: #222 !important;
-			font-weight: bold;
-			border-radius: 1em;
-			border: 3px solid #444;
-			overflow-x: auto !important;
-		}
 	}
 }
 
@@ -76,35 +57,4 @@ html {
 // Fix for margin added around zoom-area
 body {
 	margin: 0;
-}
-
-// Fix or scrollable tabs area
-// Notes: Storybook provides its own scroller, so we don't need to see the OS version of it.
-// :global(.simplebar-content) {
-// 	overflow: hidden;
-// }
-
-// Storybook injects the info overlay within the Environment panel itself, so we need to
-// assign the z-index of `section` to be at the same level as the X button to allow the info overlay
-// to overlap it (hiding the X while the info overlay is open).
-//
-// This was removed (but may be needed in the future) due to this causing layering ordering issues
-// in the Panels.Header story. the info module injects code into the panel, which breaks the
-// top-level expectations of Slottable for the Header to drop into the "header" slot (since the info
-// overlay div is inserted at the top as a wrapper), which causes the Header render into the body
-// (<section> tag), resulting in layering order problems.
-// .panel > section {
-// 	z-index: 1;
-// }
-
-// Here, we target the storybook rendering canvas div. It's inserted as a child of our Panel, but it
-// applies position:relative, which doesn't help us when we have stories that should fill the entire
-// panel body. This targets that inaccessible node using Panel's structure and storybook's structure
-// to update that goofy rule to a rational one.
-// The :not() bit targets only non-enact elements, so if a story doesn't use withInfo, and a `div`
-// isn't added, the components aren't being told to be a different size/position.
-.panel > section > div:not([class]):not([style]):first-child {
-	width: 100%;
-	height: 100%;
-	position: relative !important;
 }

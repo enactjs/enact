@@ -23,16 +23,16 @@ const PanelsBase = kind({
 
 	styles: {
 		css,
-		className: 'environmentPanels'
+		className: 'environmentPanels enact-fit enact-unselectable'
 	},
 
 	render: ({children, description, title, ...rest}) => (
 		<Column {...rest}>
-			<Cell shrink>{title}</Cell>
+			<Cell component={BodyText} className={css.header} shrink>{title}</Cell>
 			{description ? (
 				<Cell shrink component={BodyText} className={css.description}>{description}</Cell>
 			) : null}
-			<Cell>{children}</Cell>
+			<Cell component="section">{children}</Cell>
 		</Column>
 	)
 });
