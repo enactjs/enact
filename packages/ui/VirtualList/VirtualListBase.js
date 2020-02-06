@@ -1033,7 +1033,6 @@ class VirtualListBase extends Component {
 		const
 			{x, y} = this.getXY(primaryPosition, secondaryPosition),
 			style = {
-				position: 'absolute',
 				/* FIXME: RTL / this calculation only works for Chrome */
 				transform: `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`
 			};
