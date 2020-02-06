@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Changed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `childProps` to `itemProps` for clearity.
+
 ### Fixed
 
 - `ui/Marquee` to not error when passed `null` `children` during an animation.
