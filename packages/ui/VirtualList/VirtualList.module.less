@@ -3,27 +3,28 @@
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
-}
 
-.vertical {
-	&.native {
+	&.vertical {
 		overflow-y: scroll;
+		.listItem {
+			width: 100%;
+		}
 	}
-}
 
-.horizontal {
-	&.native {
+	&.horizontal {
 		overflow-x: scroll;
+		.listItem {
+			height: 100%;
+		}
+	}
+
+	.content {
+		will-change: transform;
 	}
 }
 
 .listItem {
 	overflow: hidden;
-	height: 100%;
-	will-change: transform;
-}
-
-.content {
 	will-change: transform;
 }
 
