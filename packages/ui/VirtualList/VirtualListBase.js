@@ -75,7 +75,6 @@ class VirtualListBase extends Component {
 		 * @param {Object}     event
 		 * @param {Number}     event.data-index    It is required for `Spotlight` 5-way navigation. Pass to the root element in the component.
 		 * @param {Number}     event.index    The index number of the component to render
-		 * @param {Number}     event.key    It MUST be passed as a prop to the root element in the component for DOM recycling.
 		 *
 		 * @required
 		 * @public
@@ -112,14 +111,6 @@ class VirtualListBase extends Component {
 		 * @private
 		 */
 		cbScrollTo: PropTypes.func,
-
-		/**
-		 * Additional props included in the object passed to the `itemsRenderer` callback.
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		childProps: PropTypes.object,
 
 		/**
 		 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
@@ -187,6 +178,14 @@ class VirtualListBase extends Component {
 		 * @private
 		 */
 		getComponentProps: PropTypes.func,
+
+		/**
+		 * Additional props included in the object passed to the `itemRenderer` callback.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		itemProps: PropTypes.object,
 
 		/**
 		 * The array for individually sized items.
@@ -293,7 +292,7 @@ class VirtualListBase extends Component {
 		this.state = {
 			firstIndex: 0,
 			numOfItems: 0,
-			prevChildProps: null,
+			prevItemProps: null,
 			prevFirstIndex: 0,
 			updateFrom: 0,
 			updateTo: 0,
@@ -307,7 +306,7 @@ class VirtualListBase extends Component {
 		const
 			shouldInvalidate = (
 				state.prevFirstIndex === state.firstIndex ||
-				state.prevChildProps !== props.childProps
+				state.prevItemProps !== props.itemProps
 			),
 			diff = state.firstIndex - state.prevFirstIndex,
 			updateTo = (-state.numOfItems >= diff || diff > 0 || shouldInvalidate) ? state.firstIndex + state.numOfItems : state.prevFirstIndex,
@@ -316,7 +315,7 @@ class VirtualListBase extends Component {
 
 		return {
 			...nextUpdateFromAndTo,
-			prevChildProps: props.childProps,
+			prevItemProps: props.itemProps,
 			prevFirstIndex: state.firstIndex
 		};
 	}
@@ -1049,20 +1048,15 @@ class VirtualListBase extends Component {
 
 	applyStyleToNewNode = (index, ...rest) => {
 		const
-			{itemRenderer, getComponentProps} = this.props,
 			key = index % this.state.numOfItems,
-			itemElement = itemRenderer({
-				...this.props.childProps,
-				key,
-				index
-			}),
+			{itemProps, itemRenderer, getComponentProps} = this.props,
 			componentProps = getComponentProps && getComponentProps(index) || {};
 
-		this.cc[key] = React.cloneElement(itemElement, {
-			...componentProps,
-			className: classNames(css.listItem, itemElement.props.className),
-			style: {...itemElement.props.style, ...(this.composeStyle(...rest))}
-		});
+		this.cc[key] = (
+			<div className={css.listItem} key={key} style={this.composeStyle(...rest)}>
+				{itemRenderer({...itemProps, ...componentProps, index})}
+			</div>
+		);
 	}
 
 	applyStyleToHideNode = (index) => {
@@ -1187,22 +1181,22 @@ class VirtualListBase extends Component {
 			contentClasses = this.getContentClasses();
 
 		delete rest.cbScrollTo;
-		delete rest.childProps;
 		delete rest.clientSize;
-		delete rest.scrollContainerContainsDangerously;
 		delete rest.dataSize;
 		delete rest.direction;
 		delete rest.getComponentProps;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
+		delete rest.itemProps;
 		delete rest.itemRenderer;
-		delete rest.itemSizes;
 		delete rest.itemSize;
+		delete rest.itemSizes;
 		delete rest.onUpdate;
 		delete rest.onUpdateItems;
 		delete rest.overhang;
 		delete rest.pageScroll;
 		delete rest.rtl;
+		delete rest.scrollContainerContainsDangerously;
 		delete rest.setChildAdapter;
 		delete rest.setUiChildAdapter;
 		delete rest.spacing;
