@@ -536,7 +536,19 @@ const VirtualListBaseFactory = (type) => {
 					}
 
 					if (!isScrollButton) {
-						if (nextIndex >= 0) {
+						const
+							currentNodes = this.uiRefCurrent.containerRef.current.querySelectorAll(`[data-index='${index}']${spottableSelector}`),
+							nextNode = this.uiRefCurrent.containerRef.current.querySelectorAll(`[data-index='${nextIndex}']${spottableSelector}`);
+
+						if (currentNodes.length > 1) {
+							if (nextNode.length === 0 && (
+								index !== 0 && directions.up ||
+								index !== this.props.dataSize - 1 && directions.down
+							)) {
+								ev.preventDefault();
+								ev.stopPropagation();
+							}
+						} else if (nextIndex >= 0) {
 							ev.preventDefault();
 							ev.stopPropagation();
 							this.onAcceleratedKeyDown({isWrapped, keyCode, nextIndex, repeat, target});
