@@ -235,8 +235,8 @@ class VirtualListBase extends Component {
 		rtl: PropTypes.bool,
 
 		/*
-			* TBD
-			*/
+		 * TBD
+		 */
 		setUiChildAdapter: PropTypes.func,
 
 		/**
