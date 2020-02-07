@@ -2,7 +2,7 @@ import kind from '@enact/core/kind';
 import {action} from '@enact/storybook-utils/addons/actions';
 import {boolean} from '@enact/storybook-utils/addons/knobs';
 import BodyText from '@enact/ui/BodyText';
-import Button from '@enact/ui/Button';
+import {Button as UIButton} from '@enact/ui/Button';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -62,6 +62,19 @@ const HintDialog = kind({
 	}
 });
 
+const Button = kind({
+	name: 'Button',
+
+	styles: {
+		css,
+		className: 'button'
+	},
+
+	render: ({children, ...rest}) => (
+		<UIButton {...rest}>{children}</UIButton>
+	)
+});
+
 storiesOf('About', module)
 	.add(
 		'A Tour of Sampler',
@@ -73,7 +86,7 @@ storiesOf('About', module)
 				>
 					Welcome to the Enact sampler! Explore Enact components.
 				</BodyText>
-				<Button className={css.button} onClick={action('onClick')} selected={boolean('button selected', Button)}>
+				<Button onClick={action('onClick')}>
 					Click me
 				</Button>
 				<HintDialog
