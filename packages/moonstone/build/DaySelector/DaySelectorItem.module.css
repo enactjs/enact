@@ -1,0 +1,48 @@
+.daySelectorItem:global(.moonstone):global(.spottable):focus:not([disabled]) {
+  background-color: #cf0652;
+  color: #fff;
+}
+.daySelectorItem:global(.moonstone).selected {
+  background-color: #383838;
+  color: #fff;
+}
+.daySelectorItem:global(.moonstone).selected:global(.spottable):focus {
+  background-color: #cf0652;
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .daySelectorItem:global(.moonstone.highContrast):global(.spottable):focus:not([disabled]) {
+  background-color: #ccc;
+  color: #000;
+}
+:global(.enact-a11y-high-contrast) .daySelectorItem:global(.moonstone.highContrast).selected {
+  background-color: #7a7a7a;
+  color: #000;
+}
+:global(.enact-a11y-high-contrast) .daySelectorItem:global(.moonstone.highContrast).selected:global(.spottable):focus {
+  background-color: #ccc;
+  color: #000;
+}
+.daySelectorItem:global(.moonstone-light):global(.spottable):focus:not([disabled]) {
+  background-color: #cf0652;
+  color: #fff;
+}
+.daySelectorItem:global(.moonstone-light).selected {
+  background-color: #686868;
+  color: #fff;
+}
+.daySelectorItem:global(.moonstone-light).selected:global(.spottable):focus {
+  background-color: #cf0652;
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .daySelectorItem:global(.moonstone-light.highContrast):global(.spottable):focus:not([disabled]) {
+  background-color: #000;
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .daySelectorItem:global(.moonstone-light.highContrast).selected {
+  background-color: #6f6f6f;
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .daySelectorItem:global(.moonstone-light.highContrast).selected:global(.spottable):focus {
+  background-color: #000;
+  color: #fff;
+}

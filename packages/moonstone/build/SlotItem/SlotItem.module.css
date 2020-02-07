@@ -1,0 +1,34 @@
+.slotItem .content {
+  flex: 1 1 auto;
+}
+.slotItem .slot {
+  line-height: 0;
+  white-space: nowrap;
+}
+.slotItem .slot.before > *,
+.slotItem .slot.after > * {
+  margin-top: 0;
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+.slotItem .slot.after > :first-child {
+  -webkit-margin-start: 0.5rem;
+}
+.slotItem .slot.after > :last-child {
+  -webkit-margin-end: 0;
+}
+.slotItem .slot.before > :first-child {
+  -webkit-margin-start: 0;
+}
+.slotItem .slot.before > :last-child {
+  -webkit-margin-end: 0.5rem;
+}
+.slotItem:global(.spottable):not(:focus) .slot.hidden {
+  display: none;
+}
+.slotItem[disabled] .slot.hidden {
+  display: none;
+}
+[data-spotlight-container-muted="true"] .slotItem:global(.spottable):focus .slot.hidden {
+  display: none;
+}

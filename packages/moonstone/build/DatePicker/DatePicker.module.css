@@ -1,0 +1,7 @@
+.day,
+.month {
+  /* day and month should be available to the JS but have no associated rules at this time. */
+}
+.year {
+  min-width: 5rem;
+}

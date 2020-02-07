@@ -1,0 +1,173 @@
+.toggleButton {
+  padding-left: 1.25rem;
+  padding-right: 2.75rem;
+  text-align: center;
+  position: relative;
+}
+:global(.enact-locale-right-to-left) .toggleButton {
+  padding-left: 2.75rem;
+  padding-right: 1.25rem;
+}
+.toggleButton .toggleIndicator {
+  left: auto;
+  right: 1.25rem;
+  position: absolute;
+  top: 50%;
+  border-radius: 40rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-width: 0.125rem;
+  border-style: solid;
+  transform: translateY(-50%);
+  font-family: "Moonstone Icons";
+  font-size: 1.25rem;
+  line-height: 0.625rem;
+}
+:global(.enact-locale-right-to-left) .toggleButton .toggleIndicator {
+  left: 1.25rem;
+  right: auto;
+}
+.toggleButton.selected .toggleIndicator::after {
+  content: "\0EFFDB";
+}
+.toggleButton.small {
+  padding-left: 0.875rem;
+  padding-right: 2.125rem;
+}
+:global(.enact-locale-right-to-left) .toggleButton.small {
+  padding-left: 2.125rem;
+  padding-right: 0.875rem;
+}
+.toggleButton.small .toggleIndicator {
+  left: auto;
+  right: 0.875rem;
+  top: 50%;
+}
+:global(.enact-locale-right-to-left) .toggleButton.small .toggleIndicator {
+  left: 0.875rem;
+  right: auto;
+}
+.toggleButton:global(.moonstone) .toggleIndicator {
+  background-color: #383838;
+  border-color: #fff;
+}
+.toggleButton:global(.moonstone).selected {
+  border-color: #cf0652;
+}
+.toggleButton:global(.moonstone).selected .toggleIndicator {
+  background-color: #cf0652;
+  border-color: #fff;
+  color: transparent;
+}
+.toggleButton:global(.moonstone)[disabled] .toggleIndicator {
+  color: #262626;
+  border-color: #6c6c6c;
+}
+.toggleButton:global(.moonstone)[disabled].selected .toggleIndicator {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.moonstone.highContrast) .toggleIndicator {
+  background-color: #383838;
+  border-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.moonstone.highContrast).selected {
+  border-color: #ccc;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.moonstone.highContrast).selected .toggleIndicator {
+  background-color: transparent;
+  border-color: #fff;
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.moonstone.highContrast)[disabled] .toggleIndicator {
+  color: #262626;
+  border-color: #6c6c6c;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.moonstone.highContrast)[disabled].selected .toggleIndicator {
+  background-color: #6c6c6c;
+}
+.toggleButton:global(.moonstone-light) .toggleIndicator {
+  background-color: #4d4d4d;
+  border-color: #fff;
+}
+.toggleButton:global(.moonstone-light).selected {
+  border-color: #cf0652;
+}
+.toggleButton:global(.moonstone-light).selected .toggleIndicator {
+  background-color: #cf0652;
+  border-color: #fff;
+  color: transparent;
+}
+.toggleButton:global(.moonstone-light)[disabled] .toggleIndicator {
+  color: #262626;
+  border-color: #6c6c6c;
+}
+.toggleButton:global(.moonstone-light)[disabled].selected .toggleIndicator {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.moonstone-light.highContrast) .toggleIndicator {
+  background-color: #4d4d4d;
+  border-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.moonstone-light.highContrast).selected {
+  border-color: #000;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.moonstone-light.highContrast).selected .toggleIndicator {
+  background-color: transparent;
+  border-color: #fff;
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.moonstone-light.highContrast)[disabled] .toggleIndicator {
+  color: #262626;
+  border-color: #6c6c6c;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.moonstone-light.highContrast)[disabled].selected .toggleIndicator {
+  background-color: #6c6c6c;
+}
+.toggleButton:global(.spottable):focus:global(.moonstone) .toggleIndicator {
+  background-color: #383838;
+  border-color: #fff;
+}
+.toggleButton:global(.spottable):focus:global(.moonstone).selected .toggleIndicator {
+  background-color: #cf0652;
+  border-color: #fff;
+  color: transparent;
+}
+.toggleButton:global(.spottable):focus:global(.moonstone)[disabled] .toggleIndicator {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.spottable):focus:global(.moonstone.highContrast) .toggleIndicator {
+  background-color: transparent;
+  border-color: #000;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.spottable):focus:global(.moonstone.highContrast).selected .toggleIndicator {
+  background-color: transparent;
+  border-color: #000;
+  color: #000;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.spottable):focus:global(.moonstone.highContrast)[disabled] .toggleIndicator {
+  opacity: 0.4;
+}
+.toggleButton:global(.spottable):focus:global(.moonstone-light) .toggleIndicator {
+  background-color: #4d4d4d;
+  border-color: #fff;
+}
+.toggleButton:global(.spottable):focus:global(.moonstone-light).selected .toggleIndicator {
+  background-color: #cf0652;
+  border-color: #fff;
+  color: transparent;
+}
+.toggleButton:global(.spottable):focus:global(.moonstone-light)[disabled] .toggleIndicator {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.spottable):focus:global(.moonstone-light.highContrast) .toggleIndicator {
+  background-color: transparent;
+  border-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.spottable):focus:global(.moonstone-light.highContrast).selected .toggleIndicator {
+  background-color: transparent;
+  border-color: #fff;
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .toggleButton:global(.spottable):focus:global(.moonstone-light.highContrast)[disabled] .toggleIndicator {
+  opacity: 0.4;
+}

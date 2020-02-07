@@ -1,0 +1,612 @@
+@-webkit-keyframes expand {
+  60% {
+    -webkit-transform: translateZ(0) scale(1.05);
+    transform: translateZ(0) scale(1.05);
+  }
+}
+@-webkit-keyframes contract {
+  60% {
+    -webkit-transform: translateZ(0) scale(0.95238095);
+    transform: translateZ(0) scale(0.95238095);
+  }
+}
+@keyframes expand {
+  60% {
+    transform: translateZ(0) scale(1.05);
+  }
+}
+@keyframes contract {
+  60% {
+    transform: translateZ(0) scale(0.95238095);
+  }
+}
+.button {
+  font-family: "Moonstone";
+  font-size: 1.625rem;
+  font-style: normal;
+  font-weight: 600;
+  -webkit-font-kerning: normal;
+  font-kerning: normal;
+  height: 3.5rem;
+  line-height: 3.25rem;
+  border-radius: 0.125rem;
+  min-width: 3.5rem;
+  max-width: 18.75rem;
+  padding: 0 1.25rem;
+  margin: 0 0.375rem;
+  text-align: center;
+  vertical-align: middle;
+}
+:global(.enact-locale-non-latin) .button {
+  font-family: "Moonstone";
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 700;
+}
+.button::before {
+  content: none;
+}
+.button:global(.largeText) {
+  font-size: 2rem;
+  height: 4rem;
+  min-width: 4rem;
+  line-height: 3.75rem;
+}
+.button .bg {
+  background-color: inherit;
+  border-width: 0.125rem;
+  border-style: solid;
+  border-radius: 0.125rem;
+  transform: translateZ(0);
+  will-change: transform;
+  animation-duration: 0.2s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-out;
+}
+.button .client {
+  padding: 0.125rem 0;
+  border-radius: inherit;
+}
+.button .icon {
+  flex-shrink: 0;
+  -webkit-margin-start: 0;
+  -webkit-margin-end: 0.625rem;
+}
+.button.iconAfter .client {
+  flex-direction: row-reverse;
+}
+.button.iconAfter .icon {
+  -webkit-margin-start: 0.625rem;
+  -webkit-margin-end: 0;
+}
+.button.red .client::before,
+.button.green .client::before,
+.button.yellow .client::before,
+.button.blue .client::before {
+  content: "";
+  position: absolute;
+  bottom: 0.75rem;
+  left: 50%;
+  width: 1.125rem;
+  height: 0.375rem;
+  border-radius: 0.375rem;
+  transform: translate(-50%, 50%);
+}
+.button.red.minWidth .icon,
+.button.green.minWidth .icon,
+.button.yellow.minWidth .icon,
+.button.blue.minWidth .icon {
+  -webkit-margin-start: 0;
+}
+.button.red.minWidth .client,
+.button.green.minWidth .client,
+.button.yellow.minWidth .client,
+.button.blue.minWidth .client {
+  -webkit-margin-start: 1.125rem;
+  -webkit-padding-start: 0.625rem;
+}
+.button.red.minWidth .client::before,
+.button.green.minWidth .client::before,
+.button.yellow.minWidth .client::before,
+.button.blue.minWidth .client::before {
+  bottom: 50%;
+  left: -1.125rem;
+  transform: translateY(50%);
+}
+:global(.enact-locale-right-to-left) .button.red.minWidth .client::before,
+:global(.enact-locale-right-to-left) .button.green.minWidth .client::before,
+:global(.enact-locale-right-to-left) .button.yellow.minWidth .client::before,
+:global(.enact-locale-right-to-left) .button.blue.minWidth .client::before {
+  left: initial;
+  right: -1.125rem;
+}
+.button .marquee {
+  flex-grow: 1;
+}
+.button:not(.hasIcon):not(.hasColor) .marquee {
+  text-align: center;
+}
+.button.minWidth {
+  min-width: 12.5rem;
+}
+.button.small {
+  font-family: "Moonstone";
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 600;
+  -webkit-font-kerning: normal;
+  font-kerning: normal;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  max-width: 18.75rem;
+  line-height: 2.25rem;
+  margin: 0 0.375rem;
+  padding-left: 0.875rem;
+  padding-right: 0.875rem;
+  margin-left: 0.375rem;
+  margin-right: 0.375rem;
+}
+:global(.enact-locale-non-latin) .button.small {
+  font-family: "Moonstone";
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 700;
+}
+.button.small::before {
+  content: "";
+  position: absolute;
+  top: -0.375rem;
+  right: -0.375rem;
+  bottom: -0.375rem;
+  left: -0.375rem;
+  border-radius: 0.125rem;
+}
+.button.small.minWidth {
+  min-width: 6.25rem;
+}
+.button.small .icon {
+  -webkit-margin-start: 0;
+  -webkit-margin-end: 0.625rem;
+}
+.button.small.iconAfter .icon {
+  -webkit-margin-start: 0.625rem;
+  -webkit-margin-end: 0;
+}
+.button.small.red .client::before,
+.button.small.green .client::before,
+.button.small.yellow .client::before,
+.button.small.blue .client::before {
+  bottom: 0.5rem;
+  width: 0.875rem;
+  height: 0.375rem;
+}
+.button.small.red.minWidth .client,
+.button.small.green.minWidth .client,
+.button.small.yellow.minWidth .client,
+.button.small.blue.minWidth .client {
+  -webkit-margin-start: 0.875rem;
+}
+.button.small.red.minWidth .client::before,
+.button.small.green.minWidth .client::before,
+.button.small.yellow.minWidth .client::before,
+.button.small.blue.minWidth .client::before {
+  bottom: 50%;
+  left: -0.875rem;
+}
+:global(.enact-locale-right-to-left) .button.small.red.minWidth .client::before,
+:global(.enact-locale-right-to-left) .button.small.green.minWidth .client::before,
+:global(.enact-locale-right-to-left) .button.small.yellow.minWidth .client::before,
+:global(.enact-locale-right-to-left) .button.small.blue.minWidth .client::before {
+  right: -0.875rem;
+}
+.button.small.red.minWidth .icon,
+.button.small.green.minWidth .icon,
+.button.small.yellow.minWidth .icon,
+.button.small.blue.minWidth .icon {
+  -webkit-margin-start: 0;
+}
+.button.small.red.minWidth.iconAfter .icon,
+.button.small.green.minWidth.iconAfter .icon,
+.button.small.yellow.minWidth.iconAfter .icon,
+.button.small.blue.minWidth.iconAfter .icon {
+  -webkit-margin-start: 0.625rem;
+}
+.button.small:global(.largeText) {
+  font-size: 1.5rem;
+  height: 3rem;
+  min-width: 3rem;
+  line-height: 2.75rem;
+}
+.button.small:global(.largeText).minWidth {
+  min-width: 6.25rem;
+}
+.button:not(.small) + .button:not(.small) {
+  margin-inline-start: 0.875rem;
+}
+.button:not([disabled]):global(.spottable):focus.pressed .bg,
+.button:not([disabled]):global(.spottable):focus:active .bg {
+  animation-name: expand;
+}
+.button:global(.moonstone),
+:global(.enact-a11y-high-contrast) .button:global(.moonstone) {
+  color: #ccc;
+}
+.button:global(.moonstone) .bg {
+  background-color: #383838;
+  border-color: transparent;
+}
+.button:global(.moonstone).translucent .bg {
+  background-color: rgba(56, 56, 56, 0.22);
+}
+.button:global(.moonstone).lightTranslucent .bg {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+.button:global(.moonstone).transparent {
+  color: #ccc;
+}
+.button:global(.moonstone).transparent .bg {
+  background-color: transparent;
+}
+.button:global(.moonstone).red .client::before {
+  background-color: #e1777e;
+}
+.button:global(.moonstone).green .client::before {
+  background-color: #7fd563;
+}
+.button:global(.moonstone).yellow .client::before {
+  background-color: #d3b85f;
+}
+.button:global(.moonstone).blue .client::before {
+  background-color: #5185c1;
+}
+.button:global(.moonstone):global(.spottable):focus,
+:global(.enact-a11y-high-contrast) .button:global(.moonstone):global(.spottable):focus:not(:global(.highContrast)) {
+  color: #fff;
+  background-color: transparent;
+}
+.button:global(.moonstone):global(.spottable):focus .bg {
+  background-color: #cf0652;
+}
+.button:global(.moonstone):global(.spottable):focus[disabled] {
+  color: #fff;
+}
+.button:global(.moonstone):global(.spottable):focus[disabled] .client {
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+}
+.button:global(.moonstone):global(.spottable):focus[disabled] .bg {
+  background-color: #cf0652;
+}
+.button:global(.moonstone):global(.spottable):focus[disabled] .icon {
+  color: #fff;
+}
+.button:global(.moonstone).selected {
+  color: #ccc;
+}
+.button:global(.moonstone).selected .bg {
+  background-color: #222;
+  border-color: #cf0652;
+}
+.button:global(.moonstone).selected.transparent {
+  color: #ccc;
+}
+.button:global(.moonstone).selected:global(.spottable):focus {
+  color: #fff;
+}
+.button:global(.moonstone).selected:global(.spottable):focus .bg {
+  background-color: #cf0652;
+  border-color: #ccc;
+}
+.button:global(.moonstone).selected:global(.spottable):focus[disabled] .bg {
+  border-color: #fa4187;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast),
+:global(.enact-a11y-high-contrast) :global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast) {
+  color: #ccc;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast) .bg {
+  background-color: #383838;
+  border-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast).translucent .bg {
+  background-color: rgba(56, 56, 56, 0.22);
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast).lightTranslucent .bg {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast).transparent {
+  color: #ccc;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast).transparent .bg {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast).red .client::before {
+  background-color: #e1777e;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast).green .client::before {
+  background-color: #7fd563;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast).yellow .client::before {
+  background-color: #d3b85f;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast).blue .client::before {
+  background-color: #5185c1;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast):global(.spottable):focus,
+:global(.enact-a11y-high-contrast) :global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast):global(.spottable):focus:not(:global(.highContrast)) {
+  color: #000;
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast):global(.spottable):focus .bg {
+  background-color: #ccc;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast):global(.spottable):focus[disabled] {
+  color: #000;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast):global(.spottable):focus[disabled] .client {
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast):global(.spottable):focus[disabled] .bg {
+  background-color: #ccc;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast):global(.spottable):focus[disabled] .icon {
+  color: #000;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast).selected {
+  color: #ccc;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast).selected .bg {
+  background-color: #222;
+  border-color: #ccc;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast).selected.transparent {
+  color: #ccc;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast).selected:global(.spottable):focus {
+  color: #000;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast).selected:global(.spottable):focus .bg {
+  background-color: #ccc;
+  border-color: #ccc;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone.highContrast).selected:global(.spottable):focus[disabled] .bg {
+  border-color: #ffffff;
+}
+.button:global(.moonstone-light),
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light) {
+  color: #fff;
+}
+.button:global(.moonstone-light) .bg {
+  background-color: #686868;
+  border-color: transparent;
+}
+.button:global(.moonstone-light).translucent .bg {
+  background-color: rgba(0, 0, 0, 0.56);
+}
+.button:global(.moonstone-light).lightTranslucent .bg {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+.button:global(.moonstone-light).transparent {
+  color: #4d4d4d;
+}
+.button:global(.moonstone-light).transparent .bg {
+  background-color: transparent;
+}
+.button:global(.moonstone-light).red .client::before {
+  background-color: #e1777e;
+}
+.button:global(.moonstone-light).green .client::before {
+  background-color: #7fd563;
+}
+.button:global(.moonstone-light).yellow .client::before {
+  background-color: #d3b85f;
+}
+.button:global(.moonstone-light).blue .client::before {
+  background-color: #5185c1;
+}
+.button:global(.moonstone-light):global(.spottable):focus,
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light):global(.spottable):focus:not(:global(.highContrast)) {
+  color: #fff;
+  background-color: transparent;
+}
+.button:global(.moonstone-light):global(.spottable):focus .bg {
+  background-color: #cf0652;
+}
+.button:global(.moonstone-light):global(.spottable):focus[disabled] {
+  color: #fff;
+}
+.button:global(.moonstone-light):global(.spottable):focus[disabled] .client {
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+}
+.button:global(.moonstone-light):global(.spottable):focus[disabled] .bg {
+  background-color: #cf0652;
+}
+.button:global(.moonstone-light):global(.spottable):focus[disabled] .icon {
+  color: #fff;
+}
+.button:global(.moonstone-light).selected {
+  color: #fff;
+}
+.button:global(.moonstone-light).selected .bg {
+  background-color: #4d4d4d;
+  border-color: #cf0652;
+}
+.button:global(.moonstone-light).selected.transparent {
+  color: #fff;
+}
+.button:global(.moonstone-light).selected:global(.spottable):focus {
+  color: #fff;
+}
+.button:global(.moonstone-light).selected:global(.spottable):focus .bg {
+  background-color: #cf0652;
+  border-color: #fff;
+}
+.button:global(.moonstone-light).selected:global(.spottable):focus[disabled] .bg {
+  border-color: #fa4187;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast),
+:global(.enact-a11y-high-contrast) :global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast) {
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast) .bg {
+  background-color: #6f6f6f;
+  border-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast).translucent .bg {
+  background-color: rgba(0, 0, 0, 0.56);
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast).lightTranslucent .bg {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast).transparent {
+  color: #4d4d4d;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast).transparent .bg {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast).red .client::before {
+  background-color: #e1777e;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast).green .client::before {
+  background-color: #7fd563;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast).yellow .client::before {
+  background-color: #d3b85f;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast).blue .client::before {
+  background-color: #5185c1;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast):global(.spottable):focus,
+:global(.enact-a11y-high-contrast) :global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast):global(.spottable):focus:not(:global(.highContrast)) {
+  color: #fff;
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast):global(.spottable):focus .bg {
+  background-color: #000;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast):global(.spottable):focus[disabled] {
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast):global(.spottable):focus[disabled] .client {
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast):global(.spottable):focus[disabled] .bg {
+  background-color: #000;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast):global(.spottable):focus[disabled] .icon {
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast).selected {
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast).selected .bg {
+  background-color: #4d4d4d;
+  border-color: #000;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast).selected.transparent {
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast).selected:global(.spottable):focus {
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast).selected:global(.spottable):focus .bg {
+  background-color: #000;
+  border-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .button:global(.moonstone-light.highContrast).selected:global(.spottable):focus[disabled] .bg {
+  border-color: #333333;
+}
+[data-spotlight-container-muted="true"] .button:not([disabled]):global(.spottable):focus.pressed .bg {
+  animation-name: none;
+}
+[data-spotlight-container-muted="true"] .button:global(.moonstone):global(.spottable):focus {
+  background-color: transparent;
+  color: #ccc;
+}
+[data-spotlight-container-muted="true"] .button:global(.moonstone):global(.spottable):focus .bg {
+  background-color: #383838;
+}
+[data-spotlight-container-muted="true"] .button:global(.moonstone):global(.spottable):focus.translucent .bg {
+  background-color: rgba(56, 56, 56, 0.22);
+}
+[data-spotlight-container-muted="true"] .button:global(.moonstone):global(.spottable):focus.lightTranslucent .bg {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+[data-spotlight-container-muted="true"] .button:global(.moonstone):global(.spottable):focus.transparent {
+  color: #ccc;
+}
+[data-spotlight-container-muted="true"] .button:global(.moonstone):global(.spottable):focus.transparent .bg {
+  background-color: transparent;
+}
+[data-spotlight-container-muted="true"] .button:global(.moonstone).selected:global(.spottable):focus .bg {
+  border-color: #cf0652;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .button:global(.moonstone.highContrast):global(.spottable):focus {
+  background-color: transparent;
+  color: #ccc;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .button:global(.moonstone.highContrast):global(.spottable):focus .bg {
+  background-color: #383838;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .button:global(.moonstone.highContrast):global(.spottable):focus.translucent .bg {
+  background-color: rgba(56, 56, 56, 0.22);
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .button:global(.moonstone.highContrast):global(.spottable):focus.lightTranslucent .bg {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .button:global(.moonstone.highContrast):global(.spottable):focus.transparent {
+  color: #ccc;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .button:global(.moonstone.highContrast):global(.spottable):focus.transparent .bg {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .button:global(.moonstone.highContrast).selected:global(.spottable):focus .bg {
+  border-color: #ccc;
+}
+[data-spotlight-container-muted="true"] .button:global(.moonstone-light):global(.spottable):focus {
+  background-color: transparent;
+  color: #fff;
+}
+[data-spotlight-container-muted="true"] .button:global(.moonstone-light):global(.spottable):focus .bg {
+  background-color: #686868;
+}
+[data-spotlight-container-muted="true"] .button:global(.moonstone-light):global(.spottable):focus.translucent .bg {
+  background-color: rgba(0, 0, 0, 0.56);
+}
+[data-spotlight-container-muted="true"] .button:global(.moonstone-light):global(.spottable):focus.lightTranslucent .bg {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+[data-spotlight-container-muted="true"] .button:global(.moonstone-light):global(.spottable):focus.transparent {
+  color: #4d4d4d;
+}
+[data-spotlight-container-muted="true"] .button:global(.moonstone-light):global(.spottable):focus.transparent .bg {
+  background-color: transparent;
+}
+[data-spotlight-container-muted="true"] .button:global(.moonstone-light).selected:global(.spottable):focus .bg {
+  border-color: #cf0652;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .button:global(.moonstone-light.highContrast):global(.spottable):focus {
+  background-color: transparent;
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .button:global(.moonstone-light.highContrast):global(.spottable):focus .bg {
+  background-color: #6f6f6f;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .button:global(.moonstone-light.highContrast):global(.spottable):focus.translucent .bg {
+  background-color: rgba(0, 0, 0, 0.56);
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .button:global(.moonstone-light.highContrast):global(.spottable):focus.lightTranslucent .bg {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .button:global(.moonstone-light.highContrast):global(.spottable):focus.transparent {
+  color: #4d4d4d;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .button:global(.moonstone-light.highContrast):global(.spottable):focus.transparent .bg {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .button:global(.moonstone-light.highContrast).selected:global(.spottable):focus .bg {
+  border-color: #000;
+}

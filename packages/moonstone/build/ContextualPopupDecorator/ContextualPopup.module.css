@@ -1,0 +1,137 @@
+.contextualPopup {
+  font-family: "Moonstone";
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  position: absolute;
+}
+:global(.enact-locale-non-latin) .contextualPopup {
+  font-family: "Moonstone";
+  font-weight: 300;
+  font-size: 1.125rem;
+  line-height: 1.7em;
+}
+.contextualPopup a:link {
+  color: inherit;
+  text-decoration: none;
+}
+.contextualPopup a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+.contextualPopup a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.contextualPopup a:active {
+  color: inherit;
+  text-decoration: none;
+}
+.contextualPopup .container {
+  position: absolute;
+  min-height: 4rem;
+  min-width: 4rem;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 0.125rem;
+  padding: 0.375rem;
+  background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding-box;
+}
+.contextualPopup .container .closeButton {
+  position: absolute;
+  right: 0.375rem;
+  top: 0.375rem;
+  margin: 0;
+}
+.contextualPopup .container.reserveClose {
+  padding-left: 0.375rem;
+  padding-right: 2.875rem;
+}
+:global(.enact-locale-right-to-left) .contextualPopup .container.reserveClose {
+  padding-left: 2.875rem;
+  padding-right: 0.375rem;
+}
+.contextualPopup:global(.largeText) .container.reserveClose {
+  padding-left: 0.375rem;
+  padding-right: 3.375rem;
+}
+:global(.enact-locale-right-to-left) .contextualPopup:global(.largeText) .container.reserveClose {
+  padding-left: 3.375rem;
+  padding-right: 0.375rem;
+}
+:global(.enact-locale-right-to-left) .contextualPopup .container {
+  direction: rtl;
+}
+:global(.enact-locale-right-to-left) .contextualPopup .container .closeButton {
+  right: auto;
+  left: 0.375rem;
+}
+.contextualPopup .arrow {
+  position: absolute;
+  height: 1.25rem;
+  width: 1.25rem;
+  will-change: transform;
+}
+.contextualPopup .arrow.up {
+  transform: rotate(180deg);
+}
+.contextualPopup .arrow.left {
+  transform: rotate(90deg);
+}
+.contextualPopup .arrow.right {
+  transform: rotate(-90deg);
+}
+.contextualPopup:global(.moonstone) {
+  filter: drop-shadow(0 0.5rem 0.66667rem rgba(0, 0, 0, 0.3));
+}
+.contextualPopup:global(.moonstone) .container {
+  background-color: #000;
+  border-color: #bbb;
+}
+.contextualPopup:global(.moonstone) .arrow .arrowBorder {
+  fill: #bbb;
+}
+.contextualPopup:global(.moonstone) .arrow .arrowFill {
+  fill: #000;
+}
+:global(.enact-a11y-high-contrast) .contextualPopup:global(.moonstone.highContrast) {
+  filter: drop-shadow(0 0.5rem 0.66667rem rgba(0, 0, 0, 0.3));
+}
+:global(.enact-a11y-high-contrast) .contextualPopup:global(.moonstone.highContrast) .container {
+  background-color: #000;
+  border-color: #bbb;
+}
+:global(.enact-a11y-high-contrast) .contextualPopup:global(.moonstone.highContrast) .arrow .arrowBorder {
+  fill: #bbb;
+}
+:global(.enact-a11y-high-contrast) .contextualPopup:global(.moonstone.highContrast) .arrow .arrowFill {
+  fill: #000;
+}
+.contextualPopup:global(.moonstone-light) {
+  filter: drop-shadow(0 0.5rem 0.66667rem rgba(0, 0, 0, 0.3));
+}
+.contextualPopup:global(.moonstone-light) .container {
+  background-color: #ededed;
+  border-color: #bbb;
+}
+.contextualPopup:global(.moonstone-light) .arrow .arrowBorder {
+  fill: #bbb;
+}
+.contextualPopup:global(.moonstone-light) .arrow .arrowFill {
+  fill: #ededed;
+}
+:global(.enact-a11y-high-contrast) .contextualPopup:global(.moonstone-light.highContrast) {
+  filter: drop-shadow(0 0.5rem 0.66667rem rgba(0, 0, 0, 0.3));
+}
+:global(.enact-a11y-high-contrast) .contextualPopup:global(.moonstone-light.highContrast) .container {
+  background-color: #ededed;
+  border-color: #bbb;
+}
+:global(.enact-a11y-high-contrast) .contextualPopup:global(.moonstone-light.highContrast) .arrow .arrowBorder {
+  fill: #bbb;
+}
+:global(.enact-a11y-high-contrast) .contextualPopup:global(.moonstone-light.highContrast) .arrow .arrowFill {
+  fill: #ededed;
+}

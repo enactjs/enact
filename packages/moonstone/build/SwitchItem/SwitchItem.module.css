@@ -1,0 +1,14 @@
+.switchItem {
+  /* Available for customization */
+}
+.toggleItem .switch {
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+:global(.enact-locale-right-to-left) .toggleItem .switch {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+.toggleItem .switch::before {
+  display: none;
+}

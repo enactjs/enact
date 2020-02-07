@@ -1,0 +1,465 @@
+.header {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  border-bottom-width: 0.125rem;
+  border-bottom-style: solid;
+  position: relative;
+  max-width: 100%;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: top left;
+  margin: 0 0.375rem;
+}
+.header .decorator,
+.header .decorator .input,
+.header .decorator .inputHighlight,
+.header .title,
+.header .titleBelow,
+.header .subTitleBelow {
+  margin: 0;
+}
+.header .decorator .input,
+.header .decorator .inputHighlight,
+.header .title {
+  font-family: "Moonstone";
+  font-weight: normal;
+  font-size: 2.875rem;
+  font-style: normal;
+  line-height: 1.3em;
+  -webkit-font-kerning: normal;
+  font-kerning: normal;
+  text-indent: 0.05em;
+}
+:global(.enact-locale-non-latin) .header .decorator .input,
+:global(.enact-locale-non-latin) .header .decorator .inputHighlight,
+:global(.enact-locale-non-latin) .header .title {
+  font-family: "Moonstone";
+  font-size: 2.375rem;
+  line-height: 1.5em;
+}
+.header .decorator .input .spacing,
+.header .decorator .inputHighlight .spacing,
+.header .title .spacing {
+  margin-left: 0.05em;
+}
+.header .decorator {
+  padding: 0;
+  margin: -0.08333rem 0.125rem 0 -0.125rem;
+}
+.header .headerComponents {
+  margin-left: 2.5rem;
+  margin-right: 0;
+  margin-bottom: 0.75rem;
+  white-space: nowrap;
+}
+.header .headerComponents > :first-child {
+  -webkit-margin-start: 0;
+}
+.header .headerComponents > :last-child {
+  -webkit-margin-end: 0;
+}
+:global(.enact-locale-right-to-left) .header .headerComponents {
+  margin-left: 0;
+  margin-right: 2.5rem;
+}
+.header.dense .titleBelow,
+.header.standard .titleBelow,
+.header.compact .titleBelow,
+.header.dense .subTitleBelow,
+.header.standard .subTitleBelow,
+.header.compact .subTitleBelow {
+  font-family: "Moonstone";
+  line-height: 1.5rem;
+  font-weight: normal;
+  font-size: 1.125rem;
+  font-style: normal;
+  letter-spacing: 0;
+  line-height: 1.4em;
+}
+:global(.enact-locale-non-latin) .header.dense .titleBelow,
+:global(.enact-locale-non-latin) .header.standard .titleBelow,
+:global(.enact-locale-non-latin) .header.compact .titleBelow,
+:global(.enact-locale-non-latin) .header.dense .subTitleBelow,
+:global(.enact-locale-non-latin) .header.standard .subTitleBelow,
+:global(.enact-locale-non-latin) .header.compact .subTitleBelow {
+  font-family: "Moonstone";
+  font-weight: 400;
+  font-size: 1.375rem;
+  line-height: 1.7em;
+}
+:global(.enact-locale-non-latin) .header.dense .titleBelow,
+:global(.enact-locale-non-latin) .header.standard .titleBelow,
+:global(.enact-locale-non-latin) .header.compact .titleBelow,
+:global(.enact-locale-non-latin) .header.dense .subTitleBelow,
+:global(.enact-locale-non-latin) .header.standard .subTitleBelow,
+:global(.enact-locale-non-latin) .header.compact .subTitleBelow {
+  font-size: 1rem;
+  line-height: 1.5em;
+}
+.header.dense .subTitleBelow,
+.header.standard .subTitleBelow,
+.header.compact .subTitleBelow {
+  font-weight: normal;
+  font-size: 1.125rem;
+  line-height: 1.4em;
+}
+:global(.enact-locale-non-latin) .header.dense .subTitleBelow,
+:global(.enact-locale-non-latin) .header.standard .subTitleBelow,
+:global(.enact-locale-non-latin) .header.compact .subTitleBelow {
+  line-height: 1.5em;
+}
+.header.dense,
+.header.standard {
+  height: 7.5rem;
+}
+.header.dense .title,
+.header.standard .title {
+  line-height: 1.3em;
+  margin-left: -0.125rem;
+}
+:global(.enact-locale-non-latin) .header.dense .title,
+:global(.enact-locale-non-latin) .header.standard .title {
+  line-height: 1.5em;
+}
+.header.dense .decorator,
+.header.standard .decorator,
+.header.dense .input,
+.header.standard .input {
+  height: 100%;
+  width: 100%;
+}
+.header.dense .inputHighlight,
+.header.standard .inputHighlight {
+  max-width: 100%;
+}
+.header.standard .titlesCell {
+  margin-bottom: 0.375rem;
+}
+.header.dense {
+  height: 6.375rem;
+}
+.header.dense .title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+.header.dense .titlesCell {
+  margin-bottom: 0.625rem;
+}
+.header.dense .titleBelow,
+.header.dense .subTitleBelow {
+  font-size: 1rem;
+}
+.header.compact {
+  height: 3.75rem;
+}
+.header.compact .compactTitle {
+  margin-bottom: 0.125rem;
+}
+.header.compact .input,
+.header.compact .inputHighlight,
+.header.compact .title {
+  font-size: 2.5rem;
+  display: inline;
+}
+:global(.enact-locale-non-latin) .header.compact .input,
+:global(.enact-locale-non-latin) .header.compact .inputHighlight,
+:global(.enact-locale-non-latin) .header.compact .title {
+  line-height: 1.5em;
+}
+.header.compact .titleBelow {
+  display: inline;
+  padding-inline-start: 0.75rem;
+}
+.header.fullBleed {
+  border-top-width: 0;
+}
+.header:global(.moonstone) {
+  color: #ccc;
+  border-bottom-color: #404040;
+}
+.header:global(.moonstone).hideLine {
+  border-bottom-color: transparent;
+}
+.header:global(.moonstone).dense .decorator,
+.header:global(.moonstone).standard .decorator {
+  background-color: transparent;
+}
+.header:global(.moonstone).dense .decorator:global(.spottable):focus,
+.header:global(.moonstone).standard .decorator:global(.spottable):focus {
+  background-color: transparent;
+  box-shadow: none;
+}
+.header:global(.moonstone).dense .decorator:global(.spottable):focus .input,
+.header:global(.moonstone).standard .decorator:global(.spottable):focus .input {
+  color: #fff;
+}
+.header:global(.moonstone).dense .decorator:global(.spottable):focus .inputHighlight,
+.header:global(.moonstone).standard .decorator:global(.spottable):focus .inputHighlight {
+  opacity: 1;
+}
+.header:global(.moonstone).dense .decorator .input,
+.header:global(.moonstone).standard .decorator .input {
+  color: #ccc;
+}
+.header:global(.moonstone).dense .decorator .input::-webkit-input-placeholder,
+.header:global(.moonstone).standard .decorator .input::-webkit-input-placeholder {
+  color: #ccc;
+}
+.header:global(.moonstone).dense .decorator .input::-moz-placeholder,
+.header:global(.moonstone).standard .decorator .input::-moz-placeholder {
+  color: #ccc;
+}
+.header:global(.moonstone).dense .decorator .inputHighlight,
+.header:global(.moonstone).standard .decorator .inputHighlight {
+  background-color: #cf0652;
+}
+.header:global(.moonstone).dense .titleBelow,
+.header:global(.moonstone).standard .titleBelow,
+.header:global(.moonstone).dense .subTitleBelow,
+.header:global(.moonstone).standard .subTitleBelow {
+  color: #a6a6a6;
+}
+.header:global(.moonstone).fullBleed {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #f5f5f5;
+}
+.header:global(.moonstone).fullBleed .titleBelow,
+.header:global(.moonstone).fullBleed .subTitleBelow {
+  color: #ededed;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast) {
+  color: #ccc;
+  border-bottom-color: #404040;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).hideLine {
+  border-bottom-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).dense .decorator,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).standard .decorator {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).dense .decorator:global(.spottable):focus,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).standard .decorator:global(.spottable):focus {
+  background-color: transparent;
+  box-shadow: none;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).dense .decorator:global(.spottable):focus .input,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).standard .decorator:global(.spottable):focus .input {
+  color: #000;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).dense .decorator:global(.spottable):focus .inputHighlight,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).standard .decorator:global(.spottable):focus .inputHighlight {
+  opacity: 1;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).dense .decorator .input,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).standard .decorator .input {
+  color: #ccc;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).dense .decorator .input::-webkit-input-placeholder,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).standard .decorator .input::-webkit-input-placeholder {
+  color: #ccc;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).dense .decorator .input::-moz-placeholder,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).standard .decorator .input::-moz-placeholder {
+  color: #ccc;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).dense .decorator .inputHighlight,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).standard .decorator .inputHighlight {
+  background-color: #ccc;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).dense .titleBelow,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).standard .titleBelow,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).dense .subTitleBelow,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).standard .subTitleBelow {
+  color: #a6a6a6;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).fullBleed {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #f5f5f5;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).fullBleed .titleBelow,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone.highContrast).fullBleed .subTitleBelow {
+  color: #ededed;
+}
+.header:global(.moonstone-light) {
+  color: #383838;
+  border-bottom-color: #404040;
+}
+.header:global(.moonstone-light).hideLine {
+  border-bottom-color: transparent;
+}
+.header:global(.moonstone-light).dense .decorator,
+.header:global(.moonstone-light).standard .decorator {
+  background-color: transparent;
+}
+.header:global(.moonstone-light).dense .decorator:global(.spottable):focus,
+.header:global(.moonstone-light).standard .decorator:global(.spottable):focus {
+  background-color: transparent;
+  box-shadow: none;
+}
+.header:global(.moonstone-light).dense .decorator:global(.spottable):focus .input,
+.header:global(.moonstone-light).standard .decorator:global(.spottable):focus .input {
+  color: #fff;
+}
+.header:global(.moonstone-light).dense .decorator:global(.spottable):focus .inputHighlight,
+.header:global(.moonstone-light).standard .decorator:global(.spottable):focus .inputHighlight {
+  opacity: 1;
+}
+.header:global(.moonstone-light).dense .decorator .input,
+.header:global(.moonstone-light).standard .decorator .input {
+  color: #383838;
+}
+.header:global(.moonstone-light).dense .decorator .input::-webkit-input-placeholder,
+.header:global(.moonstone-light).standard .decorator .input::-webkit-input-placeholder {
+  color: #383838;
+}
+.header:global(.moonstone-light).dense .decorator .input::-moz-placeholder,
+.header:global(.moonstone-light).standard .decorator .input::-moz-placeholder {
+  color: #383838;
+}
+.header:global(.moonstone-light).dense .decorator .inputHighlight,
+.header:global(.moonstone-light).standard .decorator .inputHighlight {
+  background-color: #cf0652;
+}
+.header:global(.moonstone-light).dense .titleBelow,
+.header:global(.moonstone-light).standard .titleBelow,
+.header:global(.moonstone-light).dense .subTitleBelow,
+.header:global(.moonstone-light).standard .subTitleBelow {
+  color: #4d4d4d;
+}
+.header:global(.moonstone-light).fullBleed {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #f5f5f5;
+}
+.header:global(.moonstone-light).fullBleed .titleBelow,
+.header:global(.moonstone-light).fullBleed .subTitleBelow {
+  color: #f5f5f5;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast) {
+  color: #383838;
+  border-bottom-color: #404040;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).hideLine {
+  border-bottom-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).dense .decorator,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).standard .decorator {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).dense .decorator:global(.spottable):focus,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).standard .decorator:global(.spottable):focus {
+  background-color: transparent;
+  box-shadow: none;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).dense .decorator:global(.spottable):focus .input,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).standard .decorator:global(.spottable):focus .input {
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).dense .decorator:global(.spottable):focus .inputHighlight,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).standard .decorator:global(.spottable):focus .inputHighlight {
+  opacity: 1;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).dense .decorator .input,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).standard .decorator .input {
+  color: #383838;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).dense .decorator .input::-webkit-input-placeholder,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).standard .decorator .input::-webkit-input-placeholder {
+  color: #383838;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).dense .decorator .input::-moz-placeholder,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).standard .decorator .input::-moz-placeholder {
+  color: #383838;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).dense .decorator .inputHighlight,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).standard .decorator .inputHighlight {
+  background-color: #000;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).dense .titleBelow,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).standard .titleBelow,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).dense .subTitleBelow,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).standard .subTitleBelow {
+  color: #4d4d4d;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).fullBleed {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #f5f5f5;
+}
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).fullBleed .titleBelow,
+:global(.enact-a11y-high-contrast) .header:global(.moonstone-light.highContrast).fullBleed .subTitleBelow {
+  color: #f5f5f5;
+}
+:global(.moon-panels-hasControls) .header.compact,
+:global(.moon-panels-hasControls) .header.dense .title,
+:global(.moon-panels-hasControls) .header.dense .headerInput,
+:global(.moon-panels-hasControls) .header.standard .title,
+:global(.moon-panels-hasControls) .header.standard .headerInput {
+  padding-left: 0;
+  padding-right: var(--moon-panels-controls-width);
+}
+:global(.enact-locale-right-to-left) :global(.moon-panels-hasControls) .header.compact,
+:global(.enact-locale-right-to-left) :global(.moon-panels-hasControls) .header.dense .title,
+:global(.enact-locale-right-to-left) :global(.moon-panels-hasControls) .header.dense .headerInput,
+:global(.enact-locale-right-to-left) :global(.moon-panels-hasControls) .header.standard .title,
+:global(.enact-locale-right-to-left) :global(.moon-panels-hasControls) .header.standard .headerInput {
+  padding-left: var(--moon-panels-controls-width);
+  padding-right: 0;
+}
+:global(.moon-panels-hasControls) .header.centered.dense .title,
+:global(.moon-panels-hasControls) .header.centered.dense .headerInput,
+:global(.moon-panels-hasControls) .header.centered.standard .title,
+:global(.moon-panels-hasControls) .header.centered.standard .headerInput {
+  padding-left: var(--moon-panels-controls-width);
+  padding-right: var(--moon-panels-controls-width);
+}
+:global(.enact-locale-right-to-left) :global(.moon-panels-hasControls) .header.centered.dense .title,
+:global(.enact-locale-right-to-left) :global(.moon-panels-hasControls) .header.centered.dense .headerInput,
+:global(.enact-locale-right-to-left) :global(.moon-panels-hasControls) .header.centered.standard .title,
+:global(.enact-locale-right-to-left) :global(.moon-panels-hasControls) .header.centered.standard .headerInput {
+  padding-left: var(--moon-panels-controls-width);
+  padding-right: var(--moon-panels-controls-width);
+}
+:global(.moon-panels-hasControls) .header.compact .headerComponents {
+  border-right-width: 1px;
+  border-right-style: solid;
+  padding-left: initial;
+  padding-right: 0.75rem;
+}
+:global(.enact-locale-right-to-left) :global(.moon-panels-hasControls) .header.compact .headerComponents {
+  padding-left: 0.75rem;
+  padding-right: initial;
+}
+:global(.enact-locale-right-to-left) :global(.moon-panels-hasControls) .header.compact .headerComponents {
+  border-right-width: 0;
+  border-right-style: none;
+  border-left-width: 1px;
+  border-left-style: solid;
+}
+:global(.moon-panels-hasControls) .header.compact:global(.moonstone) .headerComponents {
+  border-right-color: #383838;
+}
+:global(.enact-locale-right-to-left) :global(.moon-panels-hasControls) .header.compact:global(.moonstone) .headerComponents {
+  border-right-color: transparent;
+  border-left-color: #383838;
+}
+:global(.enact-a11y-high-contrast) :global(.moon-panels-hasControls) .header.compact:global(.moonstone.highContrast) .headerComponents {
+  border-right-color: #383838;
+}
+:global(.enact-locale-right-to-left) :global(.enact-a11y-high-contrast) :global(.moon-panels-hasControls) .header.compact:global(.moonstone.highContrast) .headerComponents {
+  border-right-color: transparent;
+  border-left-color: #383838;
+}
+:global(.moon-panels-hasControls) .header.compact:global(.moonstone-light) .headerComponents {
+  border-right-color: #4d4d4d;
+}
+:global(.enact-locale-right-to-left) :global(.moon-panels-hasControls) .header.compact:global(.moonstone-light) .headerComponents {
+  border-right-color: transparent;
+  border-left-color: #4d4d4d;
+}
+:global(.enact-a11y-high-contrast) :global(.moon-panels-hasControls) .header.compact:global(.moonstone-light.highContrast) .headerComponents {
+  border-right-color: #4d4d4d;
+}
+:global(.enact-locale-right-to-left) :global(.enact-a11y-high-contrast) :global(.moon-panels-hasControls) .header.compact:global(.moonstone-light.highContrast) .headerComponents {
+  border-right-color: transparent;
+  border-left-color: #4d4d4d;
+}

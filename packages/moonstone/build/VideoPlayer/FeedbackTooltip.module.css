@@ -1,0 +1,75 @@
+.feedbackTooltip {
+  position: absolute;
+  bottom: 0.375rem;
+}
+.feedbackTooltip.hidden {
+  display: none;
+}
+.feedbackTooltip .thumbnail,
+.feedbackTooltip .content {
+  pointer-events: none;
+  will-change: transform;
+}
+.feedbackTooltip .thumbnail {
+  border-width: 0.125rem;
+  border-style: solid;
+  border-radius: 0;
+  overflow: hidden;
+  transition: opacity 250ms;
+}
+.feedbackTooltip .thumbnail .image {
+  margin: 0;
+  width: 10.5rem;
+  height: 5.875rem;
+}
+.feedbackTooltip.thumbnailDeactivated .thumbnail {
+  opacity: 0.5;
+}
+.feedbackTooltip .content {
+  font-family: "Moonstone";
+  font-weight: normal;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  white-space: nowrap;
+}
+:global(.enact-locale-non-latin) .feedbackTooltip .content {
+  font-family: "Moonstone";
+  font-weight: 400;
+  font-size: 1.375rem;
+  line-height: 1.7em;
+}
+.feedbackTooltip.afterMidpoint .thumbnail,
+.feedbackTooltip.afterMidpoint .content {
+  transform: translateX(-100%) translateX(0);
+}
+.feedbackTooltip.afterMidpoint .content {
+  text-align: right;
+}
+.feedbackTooltip:global(.moonstone) .thumbnail {
+  border-color: #bbb;
+}
+.feedbackTooltip:global(.moonstone) .content {
+  color: #fff;
+  text-shadow: 0 0.08333rem 0.08333rem rgba(0, 0, 0, 0.75);
+}
+:global(.enact-a11y-high-contrast) .feedbackTooltip:global(.moonstone.highContrast) .thumbnail {
+  border-color: #bbb;
+}
+:global(.enact-a11y-high-contrast) .feedbackTooltip:global(.moonstone.highContrast) .content {
+  color: #fff;
+  text-shadow: 0 0.08333rem 0.08333rem rgba(0, 0, 0, 0.75);
+}
+.feedbackTooltip:global(.moonstone-light) .thumbnail {
+  border-color: #000;
+}
+.feedbackTooltip:global(.moonstone-light) .content {
+  color: #fff;
+  text-shadow: 0 0.08333rem 0.08333rem rgba(0, 0, 0, 0.75);
+}
+:global(.enact-a11y-high-contrast) .feedbackTooltip:global(.moonstone-light.highContrast) .thumbnail {
+  border-color: #000;
+}
+:global(.enact-a11y-high-contrast) .feedbackTooltip:global(.moonstone-light.highContrast) .content {
+  color: #fff;
+  text-shadow: 0 0.08333rem 0.08333rem rgba(0, 0, 0, 0.75);
+}

@@ -1,0 +1,293 @@
+@keyframes spin {
+  0% {
+    transform: rotate(0.25turn);
+  }
+  33% {
+    transform: rotate(0.5turn);
+  }
+  80% {
+    transform: rotate(0.95turn);
+  }
+  85% {
+    transform: rotate(1turn);
+  }
+  100% {
+    transform: rotate(1.25turn);
+  }
+}
+@keyframes rotate1 {
+  0%,
+  100% {
+    transform: rotate(0turn);
+  }
+  33% {
+    transform: rotate(0.125turn);
+  }
+}
+@keyframes rotate2 {
+  0%,
+  100% {
+    transform: rotate(0turn);
+  }
+  33% {
+    transform: rotate(0.25turn);
+  }
+}
+@keyframes rotate3 {
+  0%,
+  100% {
+    transform: rotate(0turn);
+  }
+  33% {
+    transform: rotate(0.375turn);
+  }
+}
+@keyframes rotate4 {
+  0%,
+  100% {
+    transform: rotate(0turn);
+  }
+  33% {
+    transform: rotate(0.5turn);
+  }
+}
+.spinner {
+  line-height: 1.5rem;
+  vertical-align: middle;
+}
+.spinner .bg {
+  position: relative;
+  border-radius: 41.625rem;
+  width: 2.125rem;
+  height: 2.125rem;
+  padding: 0.5rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+.spinner .decorator {
+  width: 2.125rem;
+  height: 2.125rem;
+  position: relative;
+  background-size: cover;
+  border-radius: 41.625rem;
+  overflow: hidden;
+  margin: 0 auto;
+  -webkit-mask-image: radial-gradient(transparent 0.89583rem, black 0.9375rem);
+  animation: none 1.25s linear infinite;
+  animation-name: spin;
+  animation-play-state: paused;
+}
+.spinner .decorator .fan1,
+.spinner .decorator .fan2,
+.spinner .decorator .fan3,
+.spinner .decorator .fan4 {
+  content: "";
+  top: 0;
+  right: 50%;
+  bottom: 50%;
+  left: 0;
+  clip-path: polygon(100% 0, 0 3%, 100% 100%);
+  transform-origin: bottom right;
+}
+.spinner .decorator .fan1,
+.spinner .decorator .fan2,
+.spinner .decorator .fan3,
+.spinner .decorator .fan4,
+.spinner .decorator .cap {
+  position: absolute;
+  animation: none 1.25s linear infinite;
+  animation-name: rotate1;
+  animation-play-state: paused;
+  animation-fill-mode: both;
+}
+.spinner .decorator .fan2 {
+  animation-name: rotate2;
+}
+.spinner .decorator .fan3 {
+  animation-name: rotate3;
+}
+.spinner .decorator .fan4,
+.spinner .decorator .cap {
+  animation-name: rotate4;
+}
+.spinner .decorator .cap {
+  top: 0;
+  right: 0;
+  bottom: 50%;
+  left: 0;
+  clip-path: circle(1px at 50% 1px);
+  transform-origin: bottom;
+}
+.spinner .client {
+  font-family: "Moonstone";
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  font-weight: bold;
+  margin-top: 0.375rem;
+  max-width: 14.5rem;
+}
+:global(.enact-locale-non-latin) .spinner .client {
+  font-family: "Moonstone";
+  font-weight: 300;
+  font-size: 1.125rem;
+  line-height: 1.7em;
+}
+.spinner .client a:link {
+  color: inherit;
+  text-decoration: none;
+}
+.spinner .client a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+.spinner .client a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.spinner .client a:active {
+  color: inherit;
+  text-decoration: none;
+}
+.spinner.small .bg,
+.spinner.small .decorator {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.spinner.small .bg {
+  padding: 0.375rem;
+}
+.spinner.small .decorator {
+  -webkit-mask-image: radial-gradient(transparent 0.58333rem, black 0.625rem);
+}
+.spinner.small .decorator .cap {
+  clip-path: circle(1px at 50% 1px);
+}
+.spinner.small:global(.largeText) .bg,
+.spinner.small:global(.largeText) .decorator {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+.spinner.small:global(.largeText) .decorator {
+  -webkit-mask-image: radial-gradient(transparent 0.70833rem, black 0.75rem);
+}
+.spinner.content {
+  padding: 0.6875rem;
+}
+.spinner.running .decorator,
+.spinner.running .decorator .fan1,
+.spinner.running .decorator .fan2,
+.spinner.running .decorator .fan3,
+.spinner.running .decorator .fan4,
+.spinner.running .decorator .cap {
+  -webkit-animation-play-state: running;
+  animation-play-state: running;
+}
+.spinner:global(.moonstone) {
+  color: #fff;
+}
+.spinner:global(.moonstone) .bg {
+  background-color: #383838;
+}
+.spinner:global(.moonstone) .decorator {
+  background: radial-gradient(circle at 0% 0%, #fff 20%, rgba(255, 255, 255, 0.2) 40%), radial-gradient(circle at 35% 8%, #fff 15%, transparent 15%);
+}
+.spinner:global(.moonstone) .decorator .fan1,
+.spinner:global(.moonstone) .decorator .fan2,
+.spinner:global(.moonstone) .decorator .fan3,
+.spinner:global(.moonstone) .decorator .fan4 {
+  background-color: #fff;
+}
+.spinner:global(.moonstone) .decorator .cap {
+  background-color: #fff;
+}
+.spinner:global(.moonstone).transparent .bg {
+  background-color: transparent;
+}
+.spinner:global(.moonstone) .client {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone.highContrast) {
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone.highContrast) .bg {
+  background-color: #383838;
+}
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone.highContrast) .decorator {
+  background: radial-gradient(circle at 0% 0%, #fff 20%, rgba(255, 255, 255, 0.2) 40%), radial-gradient(circle at 35% 8%, #fff 15%, transparent 15%);
+}
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone.highContrast) .decorator .fan1,
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone.highContrast) .decorator .fan2,
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone.highContrast) .decorator .fan3,
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone.highContrast) .decorator .fan4 {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone.highContrast) .decorator .cap {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone.highContrast).transparent .bg {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone.highContrast) .client {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+.spinner:global(.moonstone-light) {
+  color: #fff;
+}
+.spinner:global(.moonstone-light) .bg {
+  background-color: #686868;
+}
+.spinner:global(.moonstone-light) .decorator {
+  background: radial-gradient(circle at 0% 0%, #fff 20%, rgba(255, 255, 255, 0.2) 40%), radial-gradient(circle at 35% 8%, #fff 15%, transparent 15%);
+}
+.spinner:global(.moonstone-light) .decorator .fan1,
+.spinner:global(.moonstone-light) .decorator .fan2,
+.spinner:global(.moonstone-light) .decorator .fan3,
+.spinner:global(.moonstone-light) .decorator .fan4 {
+  background-color: #fff;
+}
+.spinner:global(.moonstone-light) .decorator .cap {
+  background-color: #fff;
+}
+.spinner:global(.moonstone-light).transparent .bg {
+  background-color: transparent;
+}
+.spinner:global(.moonstone-light) .client {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone-light.highContrast) {
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone-light.highContrast) .bg {
+  background-color: #6f6f6f;
+}
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone-light.highContrast) .decorator {
+  background: radial-gradient(circle at 0% 0%, #fff 20%, rgba(255, 255, 255, 0.2) 40%), radial-gradient(circle at 35% 8%, #fff 15%, transparent 15%);
+}
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone-light.highContrast) .decorator .fan1,
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone-light.highContrast) .decorator .fan2,
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone-light.highContrast) .decorator .fan3,
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone-light.highContrast) .decorator .fan4 {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone-light.highContrast) .decorator .cap {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone-light.highContrast).transparent .bg {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .spinner:global(.moonstone-light.highContrast) .client {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+.spinnerContainer:global(.moonstone) .blockClickOn .scrim {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+:global(.enact-a11y-high-contrast) .spinnerContainer:global(.moonstone.highContrast) .blockClickOn .scrim {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.spinnerContainer:global(.moonstone-light) .blockClickOn .scrim {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+:global(.enact-a11y-high-contrast) .spinnerContainer:global(.moonstone-light.highContrast) .blockClickOn .scrim {
+  background-color: rgba(0, 0, 0, 0.3);
+}

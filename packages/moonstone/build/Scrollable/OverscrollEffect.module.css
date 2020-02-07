@@ -1,0 +1,80 @@
+.scrollable {
+  --scrollable-overscroll-ratio-horizontalbefore: 0;
+  --scrollable-overscroll-ratio-horizontalafter: 0;
+  --scrollable-overscroll-ratio-verticalbefore: 0;
+  --scrollable-overscroll-ratio-verticalafter: 0;
+}
+.scrollable:global(.moonstone) .overscrollFrame::before,
+.scrollable:global(.moonstone) .overscrollFrame::after {
+  background-color: #ccc;
+}
+:global(.enact-a11y-high-contrast) .scrollable:global(.moonstone.highContrast) .overscrollFrame::before,
+:global(.enact-a11y-high-contrast) .scrollable:global(.moonstone.highContrast) .overscrollFrame::after {
+  background-color: #ccc;
+}
+.scrollable:global(.moonstone-light) .overscrollFrame::before,
+.scrollable:global(.moonstone-light) .overscrollFrame::after {
+  background-color: #454545;
+}
+:global(.enact-a11y-high-contrast) .scrollable:global(.moonstone-light.highContrast) .overscrollFrame::before,
+:global(.enact-a11y-high-contrast) .scrollable:global(.moonstone-light.highContrast) .overscrollFrame::after {
+  background-color: #454545;
+}
+.overscrollFrame::before,
+.overscrollFrame::after {
+  display: block;
+  position: absolute;
+  content: "";
+  border-radius: 50%;
+  transition-duration: 300ms;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.overscrollFrame.horizontal::before,
+.overscrollFrame.horizontal::after {
+  top: 50%;
+  width: 0.25rem;
+  height: 70%;
+}
+.overscrollFrame.horizontal::before {
+  transform: translateY(-50%) scale3d(calc((2 - var(--scrollable-overscroll-ratio-horizontalbefore)) / 2), var(--scrollable-overscroll-ratio-horizontalbefore), 1);
+  left: 0;
+  z-index: 1;
+}
+:global(.enact-locale-right-to-left) .overscrollFrame.horizontal::before {
+  left: auto;
+  right: 0;
+}
+.overscrollFrame.horizontal::after {
+  transform: translateY(-50%) scale3d(calc((2 - var(--scrollable-overscroll-ratio-horizontalafter)) / 2), var(--scrollable-overscroll-ratio-horizontalafter), 1);
+  right: 0;
+}
+:global(.enact-locale-right-to-left) .overscrollFrame.horizontal::after {
+  left: 0;
+  right: auto;
+}
+.overscrollFrame.vertical::before,
+.overscrollFrame.vertical::after {
+  --overscroll-effect-vertical-size: calc(100% - 2.5rem );
+  width: calc(var(--overscroll-effect-vertical-size) * 0.7);
+  height: 0.25rem;
+  margin-left: calc(var(--overscroll-effect-vertical-size) * 0.15);
+  margin-right: 0;
+}
+:global(.enact-locale-right-to-left) .overscrollFrame.vertical::before,
+:global(.enact-locale-right-to-left) .overscrollFrame.vertical::after {
+  margin-left: 0;
+  margin-right: calc(var(--overscroll-effect-vertical-size) * 0.15);
+}
+.overscrollFrame.vertical::before {
+  transform: scale3d(var(--scrollable-overscroll-ratio-verticalbefore), calc((2 - var(--scrollable-overscroll-ratio-verticalbefore)) / 2), 1);
+  top: 0;
+  z-index: 1;
+}
+.overscrollFrame.vertical::after {
+  transform: scale3d(var(--scrollable-overscroll-ratio-verticalafter), calc((2 - var(--scrollable-overscroll-ratio-verticalafter)) / 2), 1);
+  bottom: 0;
+}
+.overscrollFrame.vertical.horizontalScrollbarVisible::after {
+  bottom: 2.5rem;
+}

@@ -1,0 +1,83 @@
+.iconButton {
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0;
+  background-size: 3.25rem 6.5rem;
+  line-height: 2rem;
+  border-radius: 40rem;
+}
+.iconButton::before {
+  content: none;
+}
+.iconButton .bg {
+  border-radius: 40rem;
+}
+.iconButton.small {
+  padding: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-size: 2.25rem 4.5rem;
+  line-height: 1.5rem;
+}
+.iconButton.small::before {
+  content: "";
+  position: absolute;
+  top: -0.375rem;
+  right: -0.375rem;
+  bottom: -0.375rem;
+  left: -0.375rem;
+  border-radius: 0.125rem;
+}
+.iconButton:global(.largeText) {
+  height: 4rem;
+  width: 4rem;
+  line-height: 2.4rem;
+}
+.iconButton:global(.largeText).small {
+  height: 3rem;
+  width: 3rem;
+  line-height: 1.8rem;
+}
+.iconButton.red,
+.iconButton.green,
+.iconButton.yellow,
+.iconButton.blue {
+  line-height: 1.75rem;
+}
+.iconButton.red .client::before,
+.iconButton.green .client::before,
+.iconButton.yellow .client::before,
+.iconButton.blue .client::before {
+  height: 0.375rem;
+}
+.iconButton.red.small,
+.iconButton.green.small,
+.iconButton.yellow.small,
+.iconButton.blue.small {
+  line-height: 1.25rem;
+}
+.iconButton.red.small .client::before,
+.iconButton.green.small .client::before,
+.iconButton.yellow.small .client::before,
+.iconButton.blue.small .client::before {
+  height: 0.25rem;
+}
+.iconButton .icon,
+.iconButton .icon.small {
+  line-height: inherit;
+}
+.iconButton .selected {
+  /* Exported for customization */
+}
+.iconButton:global(.moonstone).transparent .bg {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .iconButton:global(.moonstone.highContrast).transparent .bg {
+  background-color: transparent;
+}
+.iconButton:global(.moonstone-light).transparent .bg {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .iconButton:global(.moonstone-light.highContrast).transparent .bg {
+  background-color: transparent;
+}

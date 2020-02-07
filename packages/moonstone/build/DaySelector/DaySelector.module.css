@@ -1,0 +1,46 @@
+.daySelector {
+  border-radius: 0.125rem;
+  display: inline-flex;
+  white-space: nowrap;
+}
+.daySelector .daySelectorItem {
+  padding: 0.25rem;
+  border-left: inherit;
+}
+.daySelector .daySelectorItem > :first-child {
+  -webkit-margin-start: 0.25rem;
+}
+.daySelector .daySelectorItem > :last-child {
+  margin: 0.125rem 0;
+  -webkit-margin-end: 0.25rem;
+}
+.daySelector > :first-child {
+  border-left: initial;
+  border-radius: 0.125rem 0 0 0.125rem;
+}
+.daySelector > :last-child {
+  border-radius: 0 0.125rem 0.125rem 0;
+  padding-right: 0.8125rem;
+}
+:global(.enact-locale-right-to-left) .daySelector > :first-child {
+  border-left: inherit;
+  border-radius: 0 0.125rem 0.125rem 0;
+}
+:global(.enact-locale-right-to-left) .daySelector > :last-child {
+  border-left: initial;
+  border-radius: 0.125rem 0 0 0.125rem;
+  padding-left: 0.8125rem;
+  padding-right: 0.25rem;
+}
+.daySelector:global(.moonstone) {
+  border: 0.125rem solid #fff;
+}
+:global(.enact-a11y-high-contrast) .daySelector:global(.moonstone.highContrast) {
+  border: 0.125rem solid #fff;
+}
+.daySelector:global(.moonstone-light) {
+  border: 0.125rem solid #fff;
+}
+:global(.enact-a11y-high-contrast) .daySelector:global(.moonstone-light.highContrast) {
+  border: 0.125rem solid #ccc;
+}

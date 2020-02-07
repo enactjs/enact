@@ -1,0 +1,49 @@
+.editableIntegerPicker {
+  vertical-align: middle;
+  padding: 0.25rem;
+}
+.editableIntegerPicker .input {
+  width: 100%;
+  text-align: center;
+  border-style: none;
+  border-width: 0;
+  font-family: inherit;
+  font-size: inherit;
+  box-sizing: border-box;
+}
+.editableIntegerPicker:global(.moonstone).editMode {
+  background-color: #fff;
+  color: #cf0652;
+  box-shadow: inset 0 0 0 0.125rem;
+}
+.editableIntegerPicker:global(.moonstone) .input {
+  background-color: transparent;
+  color: inherit;
+}
+:global(.enact-a11y-high-contrast) .editableIntegerPicker:global(.moonstone.highContrast).editMode {
+  background-color: #fff;
+  color: #ccc;
+  box-shadow: inset 0 0 0 0.25rem;
+}
+:global(.enact-a11y-high-contrast) .editableIntegerPicker:global(.moonstone.highContrast) .input {
+  background-color: transparent;
+  color: #000;
+}
+.editableIntegerPicker:global(.moonstone-light).editMode {
+  background-color: #fff;
+  color: #cf0652;
+  box-shadow: inset 0 0 0 0.125rem;
+}
+.editableIntegerPicker:global(.moonstone-light) .input {
+  background-color: transparent;
+  color: inherit;
+}
+:global(.enact-a11y-high-contrast) .editableIntegerPicker:global(.moonstone-light.highContrast).editMode {
+  background-color: #fff;
+  color: #000;
+  box-shadow: inset 0 0 0 0.25rem;
+}
+:global(.enact-a11y-high-contrast) .editableIntegerPicker:global(.moonstone-light.highContrast) .input {
+  background-color: transparent;
+  color: inherit;
+}

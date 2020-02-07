@@ -1,0 +1,65 @@
+.tooltip {
+  --tooltip-progress-proportion: 0;
+  --tooltip-progress-percent: calc(var(--tooltip-progress-proportion) * 100%);
+  --tooltip-calculated-offset: var(--moon-tooltip-offset, 0px);
+}
+.tooltip.horizontal {
+  left: var(--tooltip-progress-percent);
+}
+.tooltip.horizontal.above {
+  top: 0;
+}
+.tooltip.horizontal.above.left,
+.tooltip.horizontal.above.before,
+:global(.enact-locale-right-to-left) .tooltip.horizontal.above.after {
+  transform: translateY(calc(-100% - var(--tooltip-calculated-offset)));
+}
+.tooltip.horizontal.above.right,
+.tooltip.horizontal.above.after,
+:global(.enact-locale-right-to-left) .tooltip.horizontal.above.before {
+  transform: translateX(-100%) translateY(calc(-100% - var(--tooltip-calculated-offset)));
+}
+.tooltip.horizontal.above:global(.largeText) {
+  bottom: calc(var(--tooltip-calculated-offset) + 0 );
+}
+.tooltip.horizontal.below {
+  bottom: 0;
+}
+.tooltip.horizontal.below.left,
+.tooltip.horizontal.below.before,
+:global(.enact-locale-right-to-left) .tooltip.horizontal.below.after {
+  transform: translateY(calc(100% + var(--tooltip-calculated-offset)));
+}
+.tooltip.horizontal.below.right,
+.tooltip.horizontal.below.after,
+:global(.enact-locale-right-to-left) .tooltip.horizontal.below.before {
+  transform: translateX(-100%) translateY(calc(100% + var(--tooltip-calculated-offset)));
+}
+.tooltip.horizontal.below:global(.largeText) {
+  top: calc(var(--tooltip-calculated-offset) + 0 );
+}
+.tooltip.vertical {
+  bottom: var(--tooltip-progress-percent);
+}
+.tooltip.vertical.left,
+.tooltip.vertical.before,
+:global(.enact-locale-right-to-left) .tooltip.vertical.after {
+  right: 0;
+  transform: translate(calc(var(--tooltip-calculated-offset) * -1), 50%);
+}
+.tooltip.vertical.left:global(.largeText),
+.tooltip.vertical.before:global(.largeText),
+:global(.enact-locale-right-to-left) .tooltip.vertical.after:global(.largeText) {
+  transform: translate(calc(var(--tooltip-calculated-offset) * -1 - 0 ), 50%);
+}
+.tooltip.vertical.right,
+.tooltip.vertical.after,
+:global(.enact-locale-right-to-left) .tooltip.vertical.before {
+  right: auto;
+  transform: translate(var(--tooltip-calculated-offset), 50%);
+}
+.tooltip.vertical.right:global(.largeText),
+.tooltip.vertical.after:global(.largeText),
+:global(.enact-locale-right-to-left) .tooltip.vertical.before:global(.largeText) {
+  transform: translate(calc(var(--tooltip-calculated-offset) + 0 ), 50%);
+}

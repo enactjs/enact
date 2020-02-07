@@ -1,0 +1,49 @@
+.toggleIcon .icon {
+  font-size: 2.25rem;
+  text-align: left;
+  width: 0.875rem;
+  margin: 0;
+}
+.toggleIcon .icon:global(.largeText) {
+  font-size: 2.75rem;
+  width: 1.125rem;
+}
+.toggleIcon:not(.selected) {
+  display: none;
+}
+.toggleIcon:global(.moonstone) {
+  color: #cf0652;
+}
+:global(.enact-a11y-high-contrast) .toggleIcon:global(.moonstone.highContrast) {
+  color: #ccc;
+}
+.toggleIcon:global(.moonstone-light) {
+  color: #cf0652;
+}
+:global(.enact-a11y-high-contrast) .toggleIcon:global(.moonstone-light.highContrast) {
+  color: #000;
+}
+:global(.spottable):focus .toggleIcon:global(.moonstone) {
+  color: inherit;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .toggleIcon:global(.moonstone.highContrast) {
+  color: inherit;
+}
+:global(.spottable):focus .toggleIcon:global(.moonstone-light) {
+  color: inherit;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .toggleIcon:global(.moonstone-light.highContrast) {
+  color: inherit;
+}
+[data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone) {
+  color: #cf0652;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone.highContrast) {
+  color: #ccc;
+}
+[data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone-light) {
+  color: #cf0652;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone-light.highContrast) {
+  color: #000;
+}

@@ -1,0 +1,34 @@
+.feedback {
+  display: inline-block;
+  -webkit-margin-end: 0.5rem;
+}
+.feedback.hidden {
+  display: none;
+}
+.feedback > * {
+  display: inline-block;
+  margin: 0;
+  -webkit-margin-end: 0.5rem;
+}
+.feedback > *:last-child {
+  -webkit-margin-end: 0;
+}
+.feedback .icon {
+  font-size: 2em;
+  width: 0.5em;
+  height: inherit;
+  line-height: inherit;
+  vertical-align: bottom;
+}
+.feedback .icon:global(.moonstone) {
+  color: inherit;
+}
+:global(.enact-a11y-high-contrast) .feedback .icon:global(.moonstone.highContrast) {
+  color: inherit;
+}
+.feedback .icon:global(.moonstone-light) {
+  color: inherit;
+}
+:global(.enact-a11y-high-contrast) .feedback .icon:global(.moonstone-light.highContrast) {
+  color: inherit;
+}

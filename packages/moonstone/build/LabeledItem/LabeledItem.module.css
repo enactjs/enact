@@ -1,0 +1,74 @@
+.labeledItem {
+  flex-wrap: wrap;
+}
+.labeledItem .text {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+.labeledItem .text .title {
+  overflow: hidden;
+}
+.labeledItem .text .icon {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+:global(.enact-locale-right-to-left) .labeledItem .text {
+  direction: rtl;
+}
+.labeledItem .label {
+  font-family: "Moonstone";
+  font-size: 1.125rem;
+  font-weight: 300;
+  font-style: normal;
+  line-height: 1.5rem;
+  text-transform: none;
+  margin-top: -0.375rem;
+  padding-bottom: 0.375rem;
+  width: 100%;
+}
+:global(.enact-locale-non-latin) .labeledItem .label {
+  font-family: "Moonstone";
+  font-weight: 300;
+  font-size: 1.125rem;
+  line-height: 1.7em;
+}
+:global(.enact-locale-right-to-left) .labeledItem .label {
+  padding-left: 0;
+}
+.labeledItem.with-label .label {
+  padding-bottom: 0.125rem;
+}
+.labeledItem:global(.largeText) .label {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  padding-bottom: 0.125rem;
+}
+.labeledItem:global(.moonstone) .label {
+  color: inherit;
+}
+.labeledItem:global(.moonstone):global(.spottable):focus .text,
+.labeledItem:global(.moonstone):global(.spottable):focus .label {
+  color: inherit;
+}
+:global(.enact-a11y-high-contrast) .labeledItem:global(.moonstone.highContrast) .label {
+  color: inherit;
+}
+:global(.enact-a11y-high-contrast) .labeledItem:global(.moonstone.highContrast):global(.spottable):focus .text,
+:global(.enact-a11y-high-contrast) .labeledItem:global(.moonstone.highContrast):global(.spottable):focus .label {
+  color: inherit;
+}
+.labeledItem:global(.moonstone-light) .label {
+  color: inherit;
+}
+.labeledItem:global(.moonstone-light):global(.spottable):focus .text,
+.labeledItem:global(.moonstone-light):global(.spottable):focus .label {
+  color: inherit;
+}
+:global(.enact-a11y-high-contrast) .labeledItem:global(.moonstone-light.highContrast) .label {
+  color: inherit;
+}
+:global(.enact-a11y-high-contrast) .labeledItem:global(.moonstone-light.highContrast):global(.spottable):focus .text,
+:global(.enact-a11y-high-contrast) .labeledItem:global(.moonstone-light.highContrast):global(.spottable):focus .label {
+  color: inherit;
+}

@@ -1,0 +1,111 @@
+.daySelectorCheckbox {
+  width: 1.625rem;
+  height: 1.625rem;
+  border-radius: 40rem;
+}
+.daySelectorCheckbox:global(.largeText) {
+  width: 1.875rem;
+  height: 1.875rem;
+  border-radius: 40rem;
+}
+.daySelectorCheckbox:global(.largeText) .icon {
+  width: 1.875rem;
+  height: 1.875rem;
+  line-height: 1.875rem;
+  font-size: 3rem;
+}
+.daySelectorCheckbox .icon {
+  width: 1.625rem;
+  height: 1.625rem;
+  line-height: 1.625rem;
+  font-size: 2.5rem;
+  margin: 0;
+  visibility: hidden;
+}
+.daySelectorCheckbox.selected:global(.moonstone) {
+  background-color: #fff;
+}
+.daySelectorCheckbox.selected:global(.moonstone) .icon {
+  color: #cf0652;
+}
+:global(.enact-a11y-high-contrast) .daySelectorCheckbox.selected:global(.moonstone.highContrast) {
+  background-color: #000;
+}
+:global(.enact-a11y-high-contrast) .daySelectorCheckbox.selected:global(.moonstone.highContrast) .icon {
+  color: #ccc;
+}
+.daySelectorCheckbox.selected:global(.moonstone-light) {
+  background-color: #fff;
+}
+.daySelectorCheckbox.selected:global(.moonstone-light) .icon {
+  color: #cf0652;
+}
+:global(.enact-a11y-high-contrast) .daySelectorCheckbox.selected:global(.moonstone-light.highContrast) {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .daySelectorCheckbox.selected:global(.moonstone-light.highContrast) .icon {
+  color: #000;
+}
+.daySelectorCheckbox.selected .icon {
+  visibility: visible;
+}
+.daySelectorCheckbox:global(.moonstone) {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+.daySelectorCheckbox:global(.moonstone) .icon {
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .daySelectorCheckbox:global(.moonstone.highContrast) {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+:global(.enact-a11y-high-contrast) .daySelectorCheckbox:global(.moonstone.highContrast) .icon {
+  color: #fff;
+}
+.daySelectorCheckbox:global(.moonstone-light) {
+  background-color: #a2a2a2;
+}
+.daySelectorCheckbox:global(.moonstone-light) .icon {
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .daySelectorCheckbox:global(.moonstone-light.highContrast) {
+  background-color: #a2a2a2;
+}
+:global(.enact-a11y-high-contrast) .daySelectorCheckbox:global(.moonstone-light.highContrast) .icon {
+  color: #fff;
+}
+:global(.spottable):focus .daySelectorCheckbox:global(.moonstone):not([disabled]) {
+  background-color: #fff;
+}
+:global(.spottable):focus .daySelectorCheckbox:global(.moonstone):not([disabled]) .icon {
+  color: #cf0652;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .daySelectorCheckbox:global(.moonstone.highContrast):not([disabled]) {
+  background-color: #000;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .daySelectorCheckbox:global(.moonstone.highContrast):not([disabled]) .icon {
+  color: #ccc;
+}
+:global(.spottable):focus .daySelectorCheckbox:global(.moonstone-light):not([disabled]) {
+  background-color: #fff;
+}
+:global(.spottable):focus .daySelectorCheckbox:global(.moonstone-light):not([disabled]) .icon {
+  color: #cf0652;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .daySelectorCheckbox:global(.moonstone-light.highContrast):not([disabled]) {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .daySelectorCheckbox:global(.moonstone-light.highContrast):not([disabled]) .icon {
+  color: #000;
+}
+[data-spotlight-container-muted="true"] :global(.spottable):focus .daySelectorCheckbox:global(.moonstone):not([disabled]) {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] :global(.spottable):focus .daySelectorCheckbox:global(.moonstone.highContrast):not([disabled]) {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+[data-spotlight-container-muted="true"] :global(.spottable):focus .daySelectorCheckbox:global(.moonstone-light):not([disabled]) {
+  background-color: #a2a2a2;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] :global(.spottable):focus .daySelectorCheckbox:global(.moonstone-light.highContrast):not([disabled]) {
+  background-color: #a2a2a2;
+}

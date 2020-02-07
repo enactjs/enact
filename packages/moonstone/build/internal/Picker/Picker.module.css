@@ -1,0 +1,327 @@
+.picker {
+  display: inline-block;
+  border-radius: 2.5rem;
+  vertical-align: bottom;
+  position: relative;
+  text-align: center;
+  margin-left: 0.375rem;
+  margin-right: 0.375rem;
+}
+.picker .sizingPlaceholder,
+.picker .valueWrapper {
+  font-family: "Moonstone";
+  font-weight: normal;
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  max-width: 20rem;
+}
+:global(.enact-locale-non-latin) .picker .sizingPlaceholder,
+:global(.enact-locale-non-latin) .picker .valueWrapper {
+  font-family: "Moonstone";
+  font-weight: 400;
+  font-size: 1.375rem;
+  line-height: 1.7em;
+}
+:global(.enact-locale-non-latin) .picker .sizingPlaceholder,
+:global(.enact-locale-non-latin) .picker .valueWrapper {
+  line-height: 2.5rem;
+}
+.picker .sizingPlaceholder {
+  height: 0;
+  visibility: hidden;
+}
+.picker .valueWrapper {
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+  vertical-align: bottom;
+  line-height: 2.5rem;
+  height: 2.5rem;
+}
+.picker .incrementer,
+.picker .decrementer {
+  cursor: pointer;
+  margin: 0;
+  position: relative;
+  transition: transform 100ms;
+}
+.picker .incrementer[disabled],
+.picker .decrementer[disabled] {
+  cursor: default;
+}
+.picker.horizontal {
+  display: inline-flex;
+}
+:global(.enact-locale-right-to-left) .picker.horizontal {
+  flex-direction: row-reverse;
+}
+.picker.horizontal .incrementer {
+  order: 3;
+  flex-shrink: 0;
+  margin-left: 0.375rem;
+}
+.picker.horizontal .decrementer {
+  order: 1;
+  flex-shrink: 0;
+  margin-right: 0.375rem;
+}
+.picker.horizontal .valueWrapper {
+  order: 2;
+}
+.picker.joined::before {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  content: "";
+  display: block;
+  position: absolute;
+  border-width: 0;
+  border-style: solid;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.picker.joined .icon {
+  vertical-align: top;
+  margin: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
+}
+.picker.joined .incrementer,
+.picker.joined .decrementer {
+  will-change: transform;
+  transform: scale(0.7);
+}
+.picker.joined .incrementer.hidden,
+.picker.joined .decrementer.hidden {
+  visibility: hidden;
+}
+.picker.joined:global(.spottable):focus .incrementer,
+.picker.joined:global(.spottable):focus .decrementer {
+  transform: scale(0.95);
+}
+.picker.joined:global(.spottable):focus.incrementing .incrementer,
+.picker.joined:global(.spottable):focus.decrementing .decrementer {
+  transform: scale(0.7);
+}
+.picker.joined:global(.spottable):focus[disabled] .incrementer,
+.picker.joined:global(.spottable):focus[disabled] .decrementer {
+  transform: scale(0.7);
+}
+.picker.joined.horizontal.incrementing::before {
+  border-right-width: 0.25rem;
+}
+.picker.joined.horizontal.decrementing::before {
+  border-left-width: 0.25rem;
+}
+.picker.joined.horizontal .incrementer,
+.picker.joined.horizontal .decrementer {
+  margin: 0;
+  height: 2.5rem;
+  line-height: 2.5rem;
+}
+.picker.joined.vertical.incrementing::before {
+  border-top-width: 0.25rem;
+}
+.picker.joined.vertical.decrementing::before {
+  border-bottom-width: 0.25rem;
+}
+.picker.joined.vertical .incrementer,
+.picker.joined.vertical .decrementer {
+  display: block;
+}
+.picker.small .valueWrapper {
+  width: 3.125rem;
+}
+.picker.medium .valueWrapper {
+  width: 7.5rem;
+}
+.picker.large .valueWrapper {
+  width: 12.5rem;
+}
+.picker.horizontal.small .valueWrapper,
+.picker.horizontal.medium .valueWrapper,
+.picker.horizontal.large .valueWrapper {
+  position: relative;
+}
+.picker.horizontal.small .valueWrapper .item,
+.picker.horizontal.medium .valueWrapper .item,
+.picker.horizontal.large .valueWrapper .item {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(100%);
+}
+.picker.vertical .valueWrapper {
+  display: block;
+  position: relative;
+}
+.picker.vertical .valueWrapper .sizingPlaceholder,
+.picker.vertical .valueWrapper .item {
+  margin: 0 0.375rem;
+}
+.picker.vertical .valueWrapper .item {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateY(100%);
+}
+.picker:global(.moonstone) .sizingPlaceholder,
+.picker:global(.moonstone) .valueWrapper {
+  color: #ccc;
+}
+.picker:global(.moonstone) .valueWrapper {
+  color: inherit;
+}
+.picker:global(.moonstone).joined {
+  color: #ccc;
+  background-color: transparent;
+}
+.picker:global(.moonstone).joined::before {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+.picker:global(.moonstone).joined:global(.spottable):focus {
+  background-color: #cf0652;
+  color: #fff;
+}
+.picker:global(.moonstone).joined:global(.spottable):focus[disabled] {
+  color: rgba(255, 255, 255, 0.4);
+}
+:global(.enact-a11y-high-contrast) .picker:global(.moonstone.highContrast) .sizingPlaceholder,
+:global(.enact-a11y-high-contrast) .picker:global(.moonstone.highContrast) .valueWrapper {
+  color: #ccc;
+}
+:global(.enact-a11y-high-contrast) .picker:global(.moonstone.highContrast) .valueWrapper {
+  color: inherit;
+}
+:global(.enact-a11y-high-contrast) .picker:global(.moonstone.highContrast).joined {
+  color: #ccc;
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .picker:global(.moonstone.highContrast).joined::before {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+:global(.enact-a11y-high-contrast) .picker:global(.moonstone.highContrast).joined:global(.spottable):focus {
+  background-color: #ccc;
+  color: #000;
+}
+:global(.enact-a11y-high-contrast) .picker:global(.moonstone.highContrast).joined:global(.spottable):focus[disabled] {
+  color: rgba(0, 0, 0, 0.4);
+}
+.picker:global(.moonstone-light) .sizingPlaceholder,
+.picker:global(.moonstone-light) .valueWrapper {
+  color: #4d4d4d;
+}
+.picker:global(.moonstone-light) .valueWrapper {
+  color: inherit;
+}
+.picker:global(.moonstone-light).joined {
+  color: #4d4d4d;
+  background-color: transparent;
+}
+.picker:global(.moonstone-light).joined::before {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+.picker:global(.moonstone-light).joined:global(.spottable):focus {
+  background-color: #cf0652;
+  color: #fff;
+}
+.picker:global(.moonstone-light).joined:global(.spottable):focus[disabled] {
+  color: rgba(255, 255, 255, 0.4);
+}
+:global(.enact-a11y-high-contrast) .picker:global(.moonstone-light.highContrast) .sizingPlaceholder,
+:global(.enact-a11y-high-contrast) .picker:global(.moonstone-light.highContrast) .valueWrapper {
+  color: #4d4d4d;
+}
+:global(.enact-a11y-high-contrast) .picker:global(.moonstone-light.highContrast) .valueWrapper {
+  color: inherit;
+}
+:global(.enact-a11y-high-contrast) .picker:global(.moonstone-light.highContrast).joined {
+  color: #4d4d4d;
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .picker:global(.moonstone-light.highContrast).joined::before {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+:global(.enact-a11y-high-contrast) .picker:global(.moonstone-light.highContrast).joined:global(.spottable):focus {
+  background-color: #000;
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .picker:global(.moonstone-light.highContrast).joined:global(.spottable):focus[disabled] {
+  color: rgba(255, 255, 255, 0.4);
+}
+.picker:global(.largeText) {
+  border-radius: 3rem;
+}
+.picker:global(.largeText) .sizingPlaceholder,
+.picker:global(.largeText) .valueWrapper {
+  font-size: 1.625rem;
+}
+.picker:global(.largeText) .valueWrapper {
+  line-height: 3rem;
+  height: 3rem;
+}
+.picker:global(.largeText).joined.horizontal {
+  font-size: 1.625rem;
+  height: 3rem;
+  line-height: 3rem;
+}
+.picker:global(.largeText).joined.horizontal .incrementer,
+.picker:global(.largeText).joined.horizontal .decrementer,
+.picker:global(.largeText).joined.horizontal .incrementer .icon,
+.picker:global(.largeText).joined.horizontal .decrementer .icon {
+  height: 3rem;
+  line-height: 3rem;
+}
+.picker:global(.largeText).small.vertical .valueWrapper .sizingPlaceholder,
+.picker:global(.largeText).medium.vertical .valueWrapper .sizingPlaceholder,
+.picker:global(.largeText).large.vertical .valueWrapper .sizingPlaceholder,
+.picker:global(.largeText).small.vertical .valueWrapper .item,
+.picker:global(.largeText).medium.vertical .valueWrapper .item,
+.picker:global(.largeText).large.vertical .valueWrapper .item {
+  margin: 0 0.375rem;
+}
+.picker:global(.largeText).vertical .valueWrapper {
+  padding: 0 0.375rem;
+}
+.picker:global(.largeText).vertical .valueWrapper .sizingPlaceholder,
+.picker:global(.largeText).vertical .valueWrapper .item {
+  margin: 0;
+}
+[data-spotlight-container-muted="true"] .picker:global(.moonstone).joined:global(.spottable):focus {
+  background-color: transparent;
+  color: #ccc;
+}
+[data-spotlight-container-muted="true"] .picker:global(.moonstone).joined:global(.spottable):focus .incrementer,
+[data-spotlight-container-muted="true"] .picker:global(.moonstone).joined:global(.spottable):focus .decrementer {
+  transform: scale(0.7);
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .picker:global(.moonstone.highContrast).joined:global(.spottable):focus {
+  background-color: transparent;
+  color: #ccc;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .picker:global(.moonstone.highContrast).joined:global(.spottable):focus .incrementer,
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .picker:global(.moonstone.highContrast).joined:global(.spottable):focus .decrementer {
+  transform: scale(0.7);
+}
+[data-spotlight-container-muted="true"] .picker:global(.moonstone-light).joined:global(.spottable):focus {
+  background-color: transparent;
+  color: #4d4d4d;
+}
+[data-spotlight-container-muted="true"] .picker:global(.moonstone-light).joined:global(.spottable):focus .incrementer,
+[data-spotlight-container-muted="true"] .picker:global(.moonstone-light).joined:global(.spottable):focus .decrementer {
+  transform: scale(0.7);
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .picker:global(.moonstone-light.highContrast).joined:global(.spottable):focus {
+  background-color: transparent;
+  color: #4d4d4d;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .picker:global(.moonstone-light.highContrast).joined:global(.spottable):focus .incrementer,
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .picker:global(.moonstone-light.highContrast).joined:global(.spottable):focus .decrementer {
+  transform: scale(0.7);
+}

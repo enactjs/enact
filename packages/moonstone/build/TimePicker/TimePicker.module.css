@@ -1,0 +1,16 @@
+.timeComponents {
+  direction: ltr;
+  display: inline-block;
+}
+:global(.enact-locale-right-to-left) .timeComponents {
+  display: flex;
+}
+:global(.enact-locale-right-to-left) .timeComponents .hourComponents {
+  order: 2;
+}
+:global(.enact-locale-right-to-left) .timeComponents .minutesComponents {
+  order: 3;
+}
+:global(.enact-locale-right-to-left) .timeComponents .meridiemComponent {
+  order: 1;
+}

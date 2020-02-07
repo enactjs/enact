@@ -1,0 +1,89 @@
+.formCheckboxItem {
+  /* Available for customization */
+}
+.formCheckboxItem:global(.largeText) {
+  font-size: 1.375rem;
+  line-height: 2.25rem;
+}
+:global(.enact-locale-non-latin) .formCheckboxItem:global(.largeText) {
+  line-height: 2.25rem;
+}
+.toggleItem .content {
+  overflow: hidden;
+}
+.toggleItem:global(.moonstone)[disabled] {
+  opacity: 1;
+}
+.toggleItem:global(.moonstone)[disabled] > * {
+  opacity: 0.4;
+}
+.toggleItem:global(.moonstone)[disabled] .slot {
+  opacity: 1;
+}
+.toggleItem:global(.moonstone)[disabled] .slot > * {
+  opacity: 0.4;
+}
+.toggleItem:global(.moonstone):global(.spottable):focus {
+  color: #fff;
+  background-color: transparent;
+}
+.toggleItem:global(.moonstone):global(.spottable):focus[disabled] .slot .toggleIcon {
+  opacity: 1;
+}
+:global(.enact-a11y-high-contrast) .toggleItem:global(.moonstone.highContrast)[disabled] {
+  opacity: 1;
+}
+:global(.enact-a11y-high-contrast) .toggleItem:global(.moonstone.highContrast)[disabled] > * {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) .toggleItem:global(.moonstone.highContrast)[disabled] .slot {
+  opacity: 1;
+}
+:global(.enact-a11y-high-contrast) .toggleItem:global(.moonstone.highContrast)[disabled] .slot > * {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) .toggleItem:global(.moonstone.highContrast):global(.spottable):focus {
+  color: #fff;
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .toggleItem:global(.moonstone.highContrast):global(.spottable):focus[disabled] .slot .toggleIcon {
+  opacity: 1;
+}
+.toggleItem:global(.moonstone-light)[disabled] {
+  opacity: 1;
+}
+.toggleItem:global(.moonstone-light)[disabled] > * {
+  opacity: 0.4;
+}
+.toggleItem:global(.moonstone-light)[disabled] .slot {
+  opacity: 1;
+}
+.toggleItem:global(.moonstone-light)[disabled] .slot > * {
+  opacity: 0.4;
+}
+.toggleItem:global(.moonstone-light):global(.spottable):focus {
+  color: #000;
+  background-color: transparent;
+}
+.toggleItem:global(.moonstone-light):global(.spottable):focus[disabled] .slot .toggleIcon {
+  opacity: 1;
+}
+:global(.enact-a11y-high-contrast) .toggleItem:global(.moonstone-light.highContrast)[disabled] {
+  opacity: 1;
+}
+:global(.enact-a11y-high-contrast) .toggleItem:global(.moonstone-light.highContrast)[disabled] > * {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) .toggleItem:global(.moonstone-light.highContrast)[disabled] .slot {
+  opacity: 1;
+}
+:global(.enact-a11y-high-contrast) .toggleItem:global(.moonstone-light.highContrast)[disabled] .slot > * {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) .toggleItem:global(.moonstone-light.highContrast):global(.spottable):focus {
+  color: #000;
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .toggleItem:global(.moonstone-light.highContrast):global(.spottable):focus[disabled] .slot .toggleIcon {
+  opacity: 1;
+}

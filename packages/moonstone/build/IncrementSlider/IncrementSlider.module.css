@@ -1,0 +1,34 @@
+.incrementSlider {
+  direction: ltr;
+}
+.incrementSlider.horizontal {
+  display: flex;
+}
+.incrementSlider.horizontal .input,
+.incrementSlider.horizontal .slider {
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+}
+.incrementSlider.horizontal .slider {
+  flex-grow: 1;
+  margin-left: 0;
+  margin-right: 0;
+}
+.incrementSlider.vertical {
+  display: inline-flex;
+  flex-direction: column;
+}
+.incrementSlider.vertical .decrementButton,
+.incrementSlider.vertical .incrementButton {
+  display: block;
+}
+.incrementSlider.vertical .decrementButton {
+  order: 3;
+}
+.incrementSlider.vertical .slider {
+  flex-grow: 1;
+  order: 2;
+}
+.incrementSlider.vertical .incrementButton {
+  order: 1;
+}

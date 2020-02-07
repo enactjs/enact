@@ -1,0 +1,64 @@
+.mediaOverlay {
+  display: block;
+  position: relative;
+  padding: 0.25rem;
+  width: 13.375rem;
+  height: auto;
+}
+.mediaOverlay .media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+.mediaOverlay .image,
+.mediaOverlay .textLayout {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.mediaOverlay .textLayout {
+  margin: 0.5rem;
+}
+.mediaOverlay .image {
+  margin: 0.25rem;
+  height: auto;
+  width: auto;
+}
+.mediaOverlay .text {
+  font-weight: 500;
+}
+.mediaOverlay:global(.moonstone)[disabled]:global(.spottable):focus {
+  opacity: 0.4;
+}
+.mediaOverlay:global(.moonstone)[disabled]:global(.spottable):focus .media,
+.mediaOverlay:global(.moonstone)[disabled]:global(.spottable):focus .image,
+.mediaOverlay:global(.moonstone)[disabled]:global(.spottable):focus .textLayout {
+  opacity: 1;
+}
+:global(.enact-a11y-high-contrast) .mediaOverlay:global(.moonstone.highContrast)[disabled]:global(.spottable):focus {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) .mediaOverlay:global(.moonstone.highContrast)[disabled]:global(.spottable):focus .media,
+:global(.enact-a11y-high-contrast) .mediaOverlay:global(.moonstone.highContrast)[disabled]:global(.spottable):focus .image,
+:global(.enact-a11y-high-contrast) .mediaOverlay:global(.moonstone.highContrast)[disabled]:global(.spottable):focus .textLayout {
+  opacity: 1;
+}
+.mediaOverlay:global(.moonstone-light)[disabled]:global(.spottable):focus {
+  opacity: 0.4;
+}
+.mediaOverlay:global(.moonstone-light)[disabled]:global(.spottable):focus .media,
+.mediaOverlay:global(.moonstone-light)[disabled]:global(.spottable):focus .image,
+.mediaOverlay:global(.moonstone-light)[disabled]:global(.spottable):focus .textLayout {
+  opacity: 1;
+}
+:global(.enact-a11y-high-contrast) .mediaOverlay:global(.moonstone-light.highContrast)[disabled]:global(.spottable):focus {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) .mediaOverlay:global(.moonstone-light.highContrast)[disabled]:global(.spottable):focus .media,
+:global(.enact-a11y-high-contrast) .mediaOverlay:global(.moonstone-light.highContrast)[disabled]:global(.spottable):focus .image,
+:global(.enact-a11y-high-contrast) .mediaOverlay:global(.moonstone-light.highContrast)[disabled]:global(.spottable):focus .textLayout {
+  opacity: 1;
+}

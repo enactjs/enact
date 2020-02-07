@@ -1,0 +1,393 @@
+.slider {
+  position: relative;
+  margin: 0 0.375rem;
+  height: 0.25rem;
+  width: 0.25rem;
+  box-sizing: content-box;
+  direction: ltr;
+  touch-action: none;
+}
+.slider .progressBar {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+.slider .knob {
+  --moon-tooltip-offset: 1.25rem;
+  position: absolute;
+  will-change: left, bottom;
+}
+.slider .knob::before {
+  content: "";
+  position: absolute;
+  height: 2.5rem;
+  width: 2.5rem;
+  transform: translate3d(-50%, -50%, 0) scale(0.75);
+  border-radius: 1.25rem;
+  border: 0.125rem solid transparent;
+  box-sizing: border-box;
+  will-change: transform;
+  transition: transform ease-out 100ms;
+}
+.slider[disabled] {
+  touch-action: auto;
+}
+.slider:global(.largeText) .knob::before {
+  height: 3rem;
+  width: 3rem;
+  border-radius: 1.5rem;
+}
+.slider .tooltip {
+  display: none;
+}
+.slider.horizontal {
+  width: auto;
+  padding: 1.125rem 1.25rem;
+}
+.slider.horizontal .fill,
+.slider.horizontal .load {
+  height: 100%;
+}
+.slider.horizontal .knob {
+  left: calc(var(--ui-slider-proportion-end-knob) * 100%);
+}
+.slider.horizontal:global(.largeText) {
+  padding: 1.375rem 1.5rem;
+}
+.slider.vertical {
+  padding: 1.25rem 1.125rem;
+  min-height: 5rem;
+  display: inline-block;
+  vertical-align: top;
+}
+.slider.vertical .fill,
+.slider.vertical .load {
+  width: 100%;
+}
+.slider.vertical .knob {
+  bottom: calc(var(--ui-slider-proportion-end-knob) * 100%);
+  top: auto;
+}
+.slider.vertical:global(.largeText) {
+  padding: 1.25rem 1.375rem;
+}
+.slider:global(.spottable).pressed .tooltip,
+.slider:global(.spottable):focus .tooltip {
+  display: block;
+}
+.slider:global(.moonstone) .bar {
+  background-color: rgba(204, 204, 204, 0.2);
+}
+.slider:global(.moonstone) .fill {
+  background-color: #cf0652;
+}
+.slider:global(.moonstone) .load {
+  background-color: rgba(237, 237, 237, 0.2);
+}
+.slider:global(.moonstone) .knob::before {
+  background-color: #fff;
+  border-color: transparent;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+}
+.slider:global(.moonstone):global(.spottable):focus {
+  background-color: transparent;
+}
+.slider:global(.moonstone):global(.spottable):focus .bar {
+  background-color: rgba(204, 204, 204, 0.2);
+}
+.slider:global(.moonstone):global(.spottable):focus .fill {
+  background-color: #cf0652;
+}
+.slider:global(.moonstone):global(.spottable):focus .load {
+  background-color: rgba(237, 237, 237, 0.2);
+}
+.slider:global(.moonstone):global(.spottable):focus .knob::before {
+  background-color: #cf0652;
+  border-color: transparent;
+}
+.slider:global(.moonstone):global(.spottable):focus.active .knob::before,
+.slider:global(.moonstone):global(.spottable):focus.activateOnFocus .knob::before,
+.slider:global(.moonstone):global(.spottable):focus.pressed .knob::before {
+  background-color: #fff;
+  border-color: #cf0652;
+  transform: translate3d(-50%, -50%, 0) scale(1);
+}
+.slider:global(.moonstone):global(.spottable):focus.active .bar {
+  background-color: rgba(204, 204, 204, 0.2);
+}
+.slider:global(.moonstone):global(.spottable):focus.active .fill {
+  background-color: #cf0652;
+}
+.slider:global(.moonstone):global(.spottable):focus.active .load {
+  background-color: rgba(237, 237, 237, 0.2);
+}
+.slider:global(.moonstone):global(.spottable):focus[disabled] .bar {
+  opacity: 0.4;
+}
+.slider:global(.moonstone):global(.spottable):focus[disabled] .knob::before {
+  background-color: #cf0652;
+  border-color: transparent;
+}
+.slider:global(.moonstone):global(.spottable):focus[disabled].active .knob::before,
+.slider:global(.moonstone):global(.spottable):focus[disabled].activateOnFocus .knob::before,
+.slider:global(.moonstone):global(.spottable):focus[disabled].pressed .knob::before {
+  transform: translate3d(-50%, -50%, 0) scale(0.75);
+}
+.slider:global(.moonstone)[disabled] {
+  opacity: 1;
+}
+.slider:global(.moonstone)[disabled] .bar {
+  opacity: 0.4;
+}
+.slider:global(.moonstone)[disabled] .knob::before {
+  background-color: #666;
+  border-color: transparent;
+}
+.slider:global(.moonstone).noFill .fill {
+  background-color: transparent;
+}
+.slider:global(.moonstone).noFill:global(.spottable) .fill,
+.slider:global(.moonstone).noFill:global(.spottable).active .fill,
+.slider:global(.moonstone).noFill:global(.spottable).pressed .fill {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast) .bar {
+  background-color: rgba(204, 204, 204, 0.2);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast) .fill {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast) .load {
+  background-color: rgba(237, 237, 237, 0.2);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast) .knob::before {
+  background-color: #fff;
+  border-color: transparent;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus .bar {
+  background-color: rgba(204, 204, 204, 0.2);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus .fill {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus .load {
+  background-color: rgba(237, 237, 237, 0.2);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus .knob::before {
+  background-color: #ccc;
+  border-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus.active .knob::before,
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus.activateOnFocus .knob::before,
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus.pressed .knob::before {
+  background-color: #fff;
+  border-color: #ccc;
+  transform: translate3d(-50%, -50%, 0) scale(1);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus.active .bar {
+  background-color: rgba(204, 204, 204, 0.2);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus.active .fill {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus.active .load {
+  background-color: rgba(237, 237, 237, 0.2);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus[disabled] .bar {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus[disabled] .knob::before {
+  background-color: #ccc;
+  border-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus[disabled].active .knob::before,
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus[disabled].activateOnFocus .knob::before,
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast):global(.spottable):focus[disabled].pressed .knob::before {
+  transform: translate3d(-50%, -50%, 0) scale(0.75);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast)[disabled] {
+  opacity: 1;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast)[disabled] .bar {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast)[disabled] .knob::before {
+  background-color: #666;
+  border-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast).noFill .fill {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast).noFill:global(.spottable) .fill,
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast).noFill:global(.spottable).active .fill,
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone.highContrast).noFill:global(.spottable).pressed .fill {
+  background-color: transparent;
+}
+.slider:global(.moonstone-light) .bar {
+  background-color: rgba(51, 51, 51, 0.2);
+}
+.slider:global(.moonstone-light) .fill {
+  background-color: #cf0652;
+}
+.slider:global(.moonstone-light) .load {
+  background-color: rgba(51, 51, 51, 0.3);
+}
+.slider:global(.moonstone-light) .knob::before {
+  background-color: #fff;
+  border-color: transparent;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+}
+.slider:global(.moonstone-light):global(.spottable):focus {
+  background-color: transparent;
+}
+.slider:global(.moonstone-light):global(.spottable):focus .bar {
+  background-color: rgba(51, 51, 51, 0.2);
+}
+.slider:global(.moonstone-light):global(.spottable):focus .fill {
+  background-color: #cf0652;
+}
+.slider:global(.moonstone-light):global(.spottable):focus .load {
+  background-color: rgba(51, 51, 51, 0.3);
+}
+.slider:global(.moonstone-light):global(.spottable):focus .knob::before {
+  background-color: #cf0652;
+  border-color: transparent;
+}
+.slider:global(.moonstone-light):global(.spottable):focus.active .knob::before,
+.slider:global(.moonstone-light):global(.spottable):focus.activateOnFocus .knob::before,
+.slider:global(.moonstone-light):global(.spottable):focus.pressed .knob::before {
+  background-color: #fff;
+  border-color: #cf0652;
+  transform: translate3d(-50%, -50%, 0) scale(1);
+}
+.slider:global(.moonstone-light):global(.spottable):focus.active .bar {
+  background-color: rgba(51, 51, 51, 0.2);
+}
+.slider:global(.moonstone-light):global(.spottable):focus.active .fill {
+  background-color: #cf0652;
+}
+.slider:global(.moonstone-light):global(.spottable):focus.active .load {
+  background-color: rgba(51, 51, 51, 0.3);
+}
+.slider:global(.moonstone-light):global(.spottable):focus[disabled] .bar {
+  opacity: 0.4;
+}
+.slider:global(.moonstone-light):global(.spottable):focus[disabled] .knob::before {
+  background-color: #cf0652;
+  border-color: transparent;
+}
+.slider:global(.moonstone-light):global(.spottable):focus[disabled].active .knob::before,
+.slider:global(.moonstone-light):global(.spottable):focus[disabled].activateOnFocus .knob::before,
+.slider:global(.moonstone-light):global(.spottable):focus[disabled].pressed .knob::before {
+  transform: translate3d(-50%, -50%, 0) scale(0.75);
+}
+.slider:global(.moonstone-light)[disabled] {
+  opacity: 1;
+}
+.slider:global(.moonstone-light)[disabled] .bar {
+  opacity: 0.4;
+}
+.slider:global(.moonstone-light)[disabled] .knob::before {
+  background-color: #666;
+  border-color: transparent;
+}
+.slider:global(.moonstone-light).noFill .fill {
+  background-color: transparent;
+}
+.slider:global(.moonstone-light).noFill:global(.spottable) .fill,
+.slider:global(.moonstone-light).noFill:global(.spottable).active .fill,
+.slider:global(.moonstone-light).noFill:global(.spottable).pressed .fill {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast) .bar {
+  background-color: rgba(51, 51, 51, 0.2);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast) .fill {
+  background-color: #000;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast) .load {
+  background-color: rgba(51, 51, 51, 0.3);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast) .knob::before {
+  background-color: #fff;
+  border-color: transparent;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus .bar {
+  background-color: rgba(51, 51, 51, 0.2);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus .fill {
+  background-color: #000;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus .load {
+  background-color: rgba(51, 51, 51, 0.3);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus .knob::before {
+  background-color: #000;
+  border-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus.active .knob::before,
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus.activateOnFocus .knob::before,
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus.pressed .knob::before {
+  background-color: #fff;
+  border-color: #000;
+  transform: translate3d(-50%, -50%, 0) scale(1);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus.active .bar {
+  background-color: rgba(51, 51, 51, 0.2);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus.active .fill {
+  background-color: #000;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus.active .load {
+  background-color: rgba(51, 51, 51, 0.3);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus[disabled] .bar {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus[disabled] .knob::before {
+  background-color: #000;
+  border-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus[disabled].active .knob::before,
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus[disabled].activateOnFocus .knob::before,
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast):global(.spottable):focus[disabled].pressed .knob::before {
+  transform: translate3d(-50%, -50%, 0) scale(0.75);
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast)[disabled] {
+  opacity: 1;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast)[disabled] .bar {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast)[disabled] .knob::before {
+  background-color: #666;
+  border-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast).noFill .fill {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast).noFill:global(.spottable) .fill,
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast).noFill:global(.spottable).active .fill,
+:global(.enact-a11y-high-contrast) .slider:global(.moonstone-light.highContrast).noFill:global(.spottable).pressed .fill {
+  background-color: transparent;
+}
+[data-spotlight-container-muted="true"] .slider:global(.moonstone):global(.spottable):global(.spottable):focus .knob::before {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .slider:global(.moonstone.highContrast):global(.spottable):global(.spottable):focus .knob::before {
+  background-color: #fff;
+}
+[data-spotlight-container-muted="true"] .slider:global(.moonstone-light):global(.spottable):global(.spottable):focus .knob::before {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] .slider:global(.moonstone-light.highContrast):global(.spottable):global(.spottable):focus .knob::before {
+  background-color: #fff;
+}

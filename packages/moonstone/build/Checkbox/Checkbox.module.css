@@ -1,0 +1,87 @@
+.toggleIcon {
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 40rem;
+}
+.toggleIcon .icon {
+  visibility: hidden;
+  margin: 0;
+  line-height: 1.125rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  font-size: 2.25rem;
+}
+.toggleIcon:global(.largeText) {
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 1.375rem;
+}
+.toggleIcon:global(.largeText) .icon {
+  line-height: 1.375rem;
+  width: 1.375rem;
+  height: 1.375rem;
+  font-size: 2.75rem;
+}
+.toggleIcon.selected .icon {
+  visibility: visible;
+}
+.toggleIcon:global(.moonstone) {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.22);
+}
+:global(.enact-a11y-high-contrast) .toggleIcon:global(.moonstone.highContrast) {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.22);
+}
+.toggleIcon:global(.moonstone-light) {
+  color: #fff;
+  background-color: #686868;
+}
+:global(.enact-a11y-high-contrast) .toggleIcon:global(.moonstone-light.highContrast) {
+  color: #fff;
+  background-color: #7a7a7a;
+}
+:global(.spottable):focus .toggleIcon:global(.moonstone) {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+:global(.spottable):focus .toggleIcon:global(.moonstone)[disabled] {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .toggleIcon:global(.moonstone.highContrast) {
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .toggleIcon:global(.moonstone.highContrast)[disabled] {
+  opacity: 0.4;
+}
+:global(.spottable):focus .toggleIcon:global(.moonstone-light) {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+:global(.spottable):focus .toggleIcon:global(.moonstone-light)[disabled] {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .toggleIcon:global(.moonstone-light.highContrast) {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .toggleIcon:global(.moonstone-light.highContrast)[disabled] {
+  opacity: 0.4;
+}
+[data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone):not([disabled]) {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.22);
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone.highContrast):not([disabled]) {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.22);
+}
+[data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone-light):not([disabled]) {
+  color: #fff;
+  background-color: #686868;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone-light.highContrast):not([disabled]) {
+  color: #fff;
+  background-color: #7a7a7a;
+}

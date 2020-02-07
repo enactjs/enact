@@ -1,0 +1,77 @@
+.scrollbar {
+  background: inherit;
+  display: flex;
+  border-color: transparent;
+  visibility: visible;
+  opacity: 1;
+  flex: none;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  transition: opacity 0.1s linear;
+  -moz-transition: opacity 0.1s linear;
+  -webkit-transition: opacity 0.1s linear;
+  /* ScrollButton */
+  /* ScrollThumb */
+}
+.scrollbar.vertical {
+  flex-direction: column;
+}
+:global(.enact-locale-right-to-left) .scrollbar.horizontal {
+  direction: ltr;
+  transform: scaleX(-1);
+}
+.scrollbar.corner {
+  -webkit-padding-end: 2.5rem;
+}
+:global(.enact-text-large) .scrollbar.corner {
+  -webkit-padding-end: 3rem;
+}
+.scrollbar .scrollbarButtonNoCompositeLayer,
+.scrollbar .scrollbarButtonNoCompositeLayer:before,
+.scrollbar .scrollbarButtonNoCompositeLayer:after,
+.scrollbar .scrollbarButtonNoCompositeLayer div,
+.scrollbar .scrollbarButtonNoCompositeLayer span {
+  will-change: auto;
+}
+.scrollbar .scrollbarButtonNoCompositeLayer:before {
+  content: none;
+}
+.scrollbar .scrollbarButtonNoCompositeLayer div,
+.scrollbar .scrollbarButtonNoCompositeLayer span {
+  -webkit-transform: initial;
+  transform: initial;
+}
+.scrollbar .scrollButton {
+  background-color: transparent;
+  margin: 0;
+}
+.scrollbar .scrollButton,
+.scrollbar .scrollButton:before,
+.scrollbar .scrollButton:after,
+.scrollbar .scrollButton div,
+.scrollbar .scrollButton span {
+  will-change: auto;
+}
+.scrollbar .scrollButton:before {
+  content: none;
+}
+.scrollbar .scrollButton div,
+.scrollbar .scrollButton span {
+  -webkit-transform: initial;
+  transform: initial;
+}
+.scrollbar .thumbShown {
+  opacity: 1;
+}
+:global(.moonstone) .scrollbar .thumbShown::before {
+  background-color: rgba(102, 102, 102, 0.75);
+}
+:global(.enact-a11y-high-contrast) :global(.moonstone.highContrast) .scrollbar .thumbShown::before {
+  background-color: #ccc;
+}
+:global(.moonstone-light) .scrollbar .thumbShown::before {
+  background-color: rgba(102, 102, 102, 0.75);
+}
+:global(.enact-a11y-high-contrast) :global(.moonstone-light.highContrast) .scrollbar .thumbShown::before {
+  background-color: #000;
+}

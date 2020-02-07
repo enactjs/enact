@@ -1,0 +1,7 @@
+.expandableList .listItem {
+  font-weight: 300;
+  font-size: 1.125rem;
+}
+.expandableList:global(.largeText) .listItem {
+  font-size: 1.375rem;
+}

@@ -1,0 +1,538 @@
+.videoPlayer {
+  --moon-video-player-max-side-components: 0;
+  overflow: hidden;
+}
+.videoPlayer .video {
+  height: 100%;
+  width: 100%;
+}
+.videoPlayer .preloadVideo {
+  display: none;
+}
+.videoPlayer .overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.videoPlayer .overlay::after {
+  content: "";
+  position: absolute;
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 15rem;
+  transform-origin: bottom;
+}
+.videoPlayer .fullscreen .miniFeedback {
+  position: absolute;
+  z-index: 50;
+  top: 1.25rem;
+  left: 1.25rem;
+  font-family: "Moonstone";
+  font-weight: bold;
+  font-style: normal;
+  font-size: 1.625rem;
+  padding: 0 0.75rem;
+  line-height: 2.5rem;
+  border-radius: 1.25rem;
+  bottom: auto;
+  pointer-events: none;
+}
+.videoPlayer .fullscreen .bottom {
+  position: absolute;
+  z-index: 100;
+  bottom: 1.25rem;
+  left: 2.5rem;
+  right: 2.5rem;
+}
+.videoPlayer .fullscreen .bottom.hidden {
+  pointer-events: none;
+}
+.videoPlayer .fullscreen .bottom.hidden .sliderFrame {
+  position: absolute;
+  width: 100%;
+}
+.videoPlayer .fullscreen .bottom .infoFrame {
+  display: flex;
+  margin-bottom: 0.375rem;
+}
+.videoPlayer .fullscreen .bottom .infoFrame .titleFrame {
+  --infoComponentsOffset: 0;
+  position: relative;
+  flex-grow: 1;
+  opacity: 1;
+  margin-left: 0;
+  margin-right: 0.375rem;
+}
+:global(.enact-locale-right-to-left) .videoPlayer .fullscreen .bottom .infoFrame .titleFrame {
+  margin-left: 0.375rem;
+  margin-right: 0;
+}
+.videoPlayer .fullscreen .bottom .infoFrame .titleFrame.hidden {
+  transition: opacity 1000ms ease-in-out;
+  opacity: 0;
+}
+.videoPlayer .fullscreen .bottom .infoFrame .titleFrame .title {
+  position: absolute;
+  bottom: -0.20833rem;
+  width: 100%;
+  font-family: "Moonstone";
+  font-weight: normal;
+  font-size: 2rem;
+  line-height: 1.5rem;
+  line-height: 1.3em;
+  transition: transform 500ms ease-in-out;
+  -webkit-font-kerning: normal;
+  font-kerning: normal;
+}
+:global(.enact-locale-non-latin) .videoPlayer .fullscreen .bottom .infoFrame .titleFrame .title {
+  font-family: "Moonstone";
+  font-weight: 400;
+  font-size: 1.375rem;
+  line-height: 1.7em;
+}
+.videoPlayer .fullscreen .bottom .infoFrame .titleFrame .title.infoVisible {
+  transform: translateY(calc(var(--infoComponentsOffset) * -1)) translateZ(0);
+}
+:global(.enact-locale-non-latin) .videoPlayer .fullscreen .bottom .infoFrame .titleFrame .title {
+  bottom: 0rem;
+}
+.videoPlayer .fullscreen .bottom .infoFrame .titleFrame .infoComponents {
+  vertical-align: super;
+}
+.videoPlayer .fullscreen .bottom .infoFrame .titleFrame .infoComponents.hidden {
+  opacity: 0;
+}
+.videoPlayer .fullscreen .bottom .infoFrame .titleFrame .infoComponents.visible {
+  transition: opacity 500ms ease-in-out;
+}
+.videoPlayer .fullscreen .bottom .infoFrame .titleFrame .infoComponents > * {
+  display: inline-block;
+  margin: 0 0.25rem;
+}
+.videoPlayer .fullscreen .bottom .infoFrame .titleFrame .infoComponents .badgeTextIcon {
+  font-family: "Moonstone";
+  font-size: 1rem;
+  text-align: center;
+  white-space: nowrap;
+  display: inline-block;
+}
+.videoPlayer .fullscreen .bottom .infoFrame .titleFrame .infoComponents .fontLgIcons {
+  font-family: "LG Icons";
+}
+.videoPlayer .fullscreen .bottom .infoFrame .times {
+  font-family: "Moonstone";
+  font-weight: normal;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  align-self: flex-end;
+  white-space: nowrap;
+}
+:global(.enact-locale-non-latin) .videoPlayer .fullscreen .bottom .infoFrame .times {
+  font-family: "Moonstone";
+  font-weight: 400;
+  font-size: 1.375rem;
+  line-height: 1.7em;
+}
+.videoPlayer .fullscreen .bottom .infoFrame .times > * {
+  display: inline-block;
+}
+.videoPlayer .fullscreen .bottom .infoFrame .times .separator {
+  padding: 0 1ex;
+}
+:global(.enact-locale-right-to-left) .videoPlayer .fullscreen .bottom .infoFrame .times {
+  direction: ltr;
+}
+.videoPlayer .fullscreen .bottom .sliderFrame.hidden {
+  will-change: opacity;
+  opacity: 0;
+}
+.videoPlayer .fullscreen .bottom .sliderFrame .mediaSlider {
+  margin: 0;
+  padding: 1.5rem 0;
+  height: 0.375rem;
+}
+.videoPlayer .fullscreen .bottom .sliderFrame .mediaSlider::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -2.5rem;
+  bottom: 0;
+  left: -2.5rem;
+}
+.videoPlayer .fullscreen .bottom .sliderFrame .mediaSlider:global(.spottable):focus .knob::before {
+  transform: translate3d(-50%, -50%, 0) scale(0.5);
+  opacity: 1;
+}
+.videoPlayer .fullscreen .bottom .sliderFrame .mediaSlider:global(.spottable).pressed .knob::before {
+  transform: translate3d(-50%, -50%, 0) scale(0.75);
+  opacity: 1;
+}
+.videoPlayer .fullscreen .bottom .sliderFrame .fill,
+.videoPlayer .fullscreen .bottom .sliderFrame .load {
+  border-top-right-radius: 0.1875rem;
+  border-bottom-right-radius: 0.1875rem;
+}
+.videoPlayer .fullscreen .bottom .sliderFrame .knob::before {
+  width: 2rem;
+  height: 2rem;
+  border-width: 0;
+  border-radius: 1rem;
+  -webkit-transform: translate3d(-50%, -50%, 0) scale(0.5);
+  transform: translate3d(-50%, -50%, 0) scale(0.5);
+  opacity: 0;
+  will-change: transform, opacity;
+  -webkit-transition: -webkit-transform cubic-bezier(0.15, 0.85, 0.6, 1.65) 0.2s, opacity ease 0.2s;
+  transition: transform cubic-bezier(0.15, 0.85, 0.6, 1.65) 0.2s, opacity ease 0.2s;
+}
+.videoPlayer .fullscreen .bottom .sliderFrame.scrubbing .knob {
+  display: block;
+}
+.videoPlayer .fullscreen .bottom .sliderFrame .status-indicator .moon-slider-popup-center {
+  font-family: "Moonstone";
+  font-size: 1rem;
+  line-height: 1.5rem;
+  position: absolute;
+  margin: 0 1.25rem;
+}
+.videoPlayer .fullscreen .bottom .controlsFrame {
+  position: relative;
+  display: flex;
+}
+.videoPlayer .fullscreen .bottom .controlsFrame.hidden {
+  will-change: opacity;
+  opacity: 0;
+}
+.videoPlayer .fullscreen .bottom .controlsFrame .leftComponents,
+.videoPlayer .fullscreen .bottom .controlsFrame .rightComponents {
+  flex: 0 1;
+  flex-basis: calc(( 4.25rem * var(--moon-video-player-max-side-components)) - 0.75rem );
+  white-space: nowrap;
+  padding: 0.125rem 0;
+}
+.videoPlayer .fullscreen .bottom .controlsFrame .leftComponents {
+  text-align: start;
+}
+.videoPlayer .fullscreen .bottom .controlsFrame .leftComponents > :first-child {
+  margin-left: 0;
+  margin-right: 0.375rem;
+}
+:global(.enact-locale-right-to-left) .videoPlayer .fullscreen .bottom .controlsFrame .leftComponents > :first-child {
+  margin-left: 0.375rem;
+  margin-right: 0;
+}
+.videoPlayer .fullscreen .bottom .controlsFrame .rightComponents {
+  text-align: end;
+}
+.videoPlayer .fullscreen .bottom .controlsFrame .rightComponents > :last-child {
+  margin-left: 0.375rem;
+  margin-right: 0;
+}
+:global(.enact-locale-right-to-left) .videoPlayer .fullscreen .bottom .controlsFrame .rightComponents > :last-child {
+  margin-left: 0;
+  margin-right: 0.375rem;
+}
+.videoPlayer .fullscreen .bottom .controlsFrame .centerComponentsContainer {
+  flex: 3 1;
+  width: 0;
+  -webkit-mask-image: -webkit-gradient(linear, left top, right top, color-stop(0.9, #000000), color-stop(1, rgba(0, 0, 0, 0)));
+  padding: 0.125rem 0;
+}
+.videoPlayer .fullscreen .bottom .controlsFrame .centerComponentsContainer .centerComponents {
+  transition: 500ms transform ease;
+  will-change: transform;
+  white-space: nowrap;
+}
+.videoPlayer .fullscreen .bottom .controlsFrame .centerComponentsContainer .centerComponents.more {
+  transform: translateX(-100%);
+  text-align: center;
+  pointer-events: none;
+}
+.videoPlayer .fullscreen .bottom .controlsFrame .centerComponentsContainer .centerComponents.more .moreControls {
+  pointer-events: auto;
+}
+.videoPlayer .fullscreen .bottom .controlsFrame .centerComponentsContainer .centerComponents .mediaControls,
+.videoPlayer .fullscreen .bottom .controlsFrame .centerComponentsContainer .centerComponents .moreControls {
+  width: 100%;
+  display: inline-block;
+}
+.videoPlayer .fullscreen .bottom .controlsFrame .centerComponentsContainer .centerComponents .mediaControls > *,
+.videoPlayer .fullscreen .bottom .controlsFrame .centerComponentsContainer .centerComponents .moreControls > * {
+  vertical-align: top;
+}
+.videoPlayer .fullscreen .bottom .controlsFrame .centerComponentsContainer .centerComponents .mediaControls {
+  text-align: center;
+  direction: ltr;
+}
+.videoPlayer .fullscreen .bottom .controlsFrame .centerComponentsContainer .centerComponents .moreControls {
+  pointer-events: none;
+}
+:global(.enact-locale-right-to-left) .videoPlayer .fullscreen .bottom .controlsFrame .centerComponentsContainer {
+  -webkit-mask-image: -webkit-gradient(linear, right top, left top, color-stop(0.9, #000000), color-stop(1, rgba(0, 0, 0, 0)));
+}
+:global(.enact-locale-right-to-left) .videoPlayer .fullscreen .bottom .controlsFrame .centerComponentsContainer .centerComponents.more {
+  transform: translateX(100%);
+}
+.videoPlayer .controlsHandleAbove {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: auto;
+  left: 0;
+}
+.videoPlayer:global(.moonstone) .fullscreen .miniFeedback {
+  background-color: rgba(75, 75, 75, 0.7);
+  color: #fff;
+}
+.videoPlayer:global(.moonstone) .fullscreen .bottom {
+  background-color: transparent;
+}
+.videoPlayer:global(.moonstone) .fullscreen .bottom .infoFrame {
+  text-shadow: 0 0.08333rem 0.08333rem rgba(0, 0, 0, 0.75);
+}
+.videoPlayer:global(.moonstone) .fullscreen .bottom .infoFrame .titleFrame {
+  color: #fff;
+}
+.videoPlayer:global(.moonstone) .fullscreen .bottom .infoFrame .titleFrame .redIcon {
+  background-color: transparent;
+  color: #fe4a4b;
+}
+.videoPlayer:global(.moonstone) .fullscreen .bottom .infoFrame .times {
+  font-family: "Moonstone";
+  font-weight: normal;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  align-self: flex-end;
+  white-space: nowrap;
+  color: #ccc;
+}
+:global(.enact-locale-non-latin) .videoPlayer:global(.moonstone) .fullscreen .bottom .infoFrame .times {
+  font-family: "Moonstone";
+  font-weight: 400;
+  font-size: 1.375rem;
+  line-height: 1.7em;
+}
+.videoPlayer:global(.moonstone) .fullscreen .bottom .infoFrame .times > * {
+  display: inline-block;
+}
+.videoPlayer:global(.moonstone) .fullscreen .bottom .infoFrame .times .separator {
+  padding: 0 1ex;
+}
+.videoPlayer:global(.moonstone) .fullscreen .bottom .infoFrame .times .currentTime {
+  color: #fff;
+}
+.videoPlayer:global(.moonstone) .fullscreen .bottom .sliderFrame .slider .bars {
+  background-color: rgba(38, 38, 38, 0.2);
+}
+.videoPlayer:global(.moonstone) .fullscreen .bottom .sliderFrame .slider .load {
+  background-color: rgba(58, 2, 23, 0.3);
+}
+.videoPlayer:global(.moonstone) .fullscreen .bottom .sliderFrame .slider .fill {
+  background-color: rgba(207, 6, 82, 0.8);
+}
+.videoPlayer:global(.moonstone) .fullscreen .bottom .sliderFrame .slider .knob::before {
+  background-color: #fff;
+}
+.videoPlayer:global(.moonstone) .fullscreen .bottom .sliderFrame .status-indicator .moon-slider-popup-center {
+  color: #fff;
+  text-shadow: 0 0.08333rem 0.08333rem rgba(0, 0, 0, 0.75);
+}
+.videoPlayer:global(.moonstone) .fullscreen .bottom .sliderFrame .status-indicator .moon-slider-popup-center .moon-icon {
+  color: inherit;
+}
+.videoPlayer:global(.moonstone) .overlay.high-contrast-scrim::after {
+  background: initial;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .miniFeedback {
+  background-color: rgba(75, 75, 75, 0.7);
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .bottom {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .bottom .infoFrame {
+  text-shadow: 0 0.08333rem 0.08333rem rgba(0, 0, 0, 0.75);
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .bottom .infoFrame .titleFrame {
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .bottom .infoFrame .titleFrame .redIcon {
+  background-color: transparent;
+  color: #fe4a4b;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .bottom .infoFrame .times {
+  font-family: "Moonstone";
+  font-weight: normal;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  align-self: flex-end;
+  white-space: nowrap;
+  color: #ccc;
+}
+:global(.enact-locale-non-latin) :global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .bottom .infoFrame .times {
+  font-family: "Moonstone";
+  font-weight: 400;
+  font-size: 1.375rem;
+  line-height: 1.7em;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .bottom .infoFrame .times > * {
+  display: inline-block;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .bottom .infoFrame .times .separator {
+  padding: 0 1ex;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .bottom .infoFrame .times .currentTime {
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .bottom .sliderFrame .slider .bars {
+  background-color: rgba(38, 38, 38, 0.2);
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .bottom .sliderFrame .slider .load {
+  background-color: rgba(128, 128, 128, 0.3);
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .bottom .sliderFrame .slider .fill {
+  background-color: rgba(204, 204, 204, 0.8);
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .bottom .sliderFrame .slider .knob::before {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .bottom .sliderFrame .status-indicator .moon-slider-popup-center {
+  color: #fff;
+  text-shadow: 0 0.08333rem 0.08333rem rgba(0, 0, 0, 0.75);
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .fullscreen .bottom .sliderFrame .status-indicator .moon-slider-popup-center .moon-icon {
+  color: inherit;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone.highContrast) .overlay.high-contrast-scrim::after {
+  background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
+}
+.videoPlayer:global(.moonstone-light) .fullscreen .miniFeedback {
+  background-color: rgba(75, 75, 75, 0.7);
+  color: #fff;
+}
+.videoPlayer:global(.moonstone-light) .fullscreen .bottom {
+  background-color: transparent;
+}
+.videoPlayer:global(.moonstone-light) .fullscreen .bottom .infoFrame {
+  text-shadow: 0 0.08333rem 0.08333rem rgba(0, 0, 0, 0.75);
+}
+.videoPlayer:global(.moonstone-light) .fullscreen .bottom .infoFrame .titleFrame {
+  color: #fff;
+}
+.videoPlayer:global(.moonstone-light) .fullscreen .bottom .infoFrame .titleFrame .redIcon {
+  background-color: transparent;
+  color: #fe4a4b;
+}
+.videoPlayer:global(.moonstone-light) .fullscreen .bottom .infoFrame .times {
+  font-family: "Moonstone";
+  font-weight: normal;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  align-self: flex-end;
+  white-space: nowrap;
+  color: #ccc;
+}
+:global(.enact-locale-non-latin) .videoPlayer:global(.moonstone-light) .fullscreen .bottom .infoFrame .times {
+  font-family: "Moonstone";
+  font-weight: 400;
+  font-size: 1.375rem;
+  line-height: 1.7em;
+}
+.videoPlayer:global(.moonstone-light) .fullscreen .bottom .infoFrame .times > * {
+  display: inline-block;
+}
+.videoPlayer:global(.moonstone-light) .fullscreen .bottom .infoFrame .times .separator {
+  padding: 0 1ex;
+}
+.videoPlayer:global(.moonstone-light) .fullscreen .bottom .infoFrame .times .currentTime {
+  color: #fff;
+}
+.videoPlayer:global(.moonstone-light) .fullscreen .bottom .sliderFrame .slider .bars {
+  background-color: rgba(38, 38, 38, 0.2);
+}
+.videoPlayer:global(.moonstone-light) .fullscreen .bottom .sliderFrame .slider .load {
+  background-color: rgba(58, 2, 23, 0.3);
+}
+.videoPlayer:global(.moonstone-light) .fullscreen .bottom .sliderFrame .slider .fill {
+  background-color: rgba(207, 6, 82, 0.8);
+}
+.videoPlayer:global(.moonstone-light) .fullscreen .bottom .sliderFrame .slider .knob::before {
+  background-color: #fff;
+}
+.videoPlayer:global(.moonstone-light) .fullscreen .bottom .sliderFrame .status-indicator .moon-slider-popup-center {
+  color: #fff;
+  text-shadow: 0 0.08333rem 0.08333rem rgba(0, 0, 0, 0.75);
+}
+.videoPlayer:global(.moonstone-light) .fullscreen .bottom .sliderFrame .status-indicator .moon-slider-popup-center .moon-icon {
+  color: inherit;
+}
+.videoPlayer:global(.moonstone-light) .overlay.high-contrast-scrim::after {
+  background: initial;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .miniFeedback {
+  background-color: rgba(75, 75, 75, 0.7);
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .bottom {
+  background-color: transparent;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .bottom .infoFrame {
+  text-shadow: 0 0.08333rem 0.08333rem rgba(0, 0, 0, 0.75);
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .bottom .infoFrame .titleFrame {
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .bottom .infoFrame .titleFrame .redIcon {
+  background-color: transparent;
+  color: #fe4a4b;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .bottom .infoFrame .times {
+  font-family: "Moonstone";
+  font-weight: normal;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  align-self: flex-end;
+  white-space: nowrap;
+  color: #ccc;
+}
+:global(.enact-locale-non-latin) :global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .bottom .infoFrame .times {
+  font-family: "Moonstone";
+  font-weight: 400;
+  font-size: 1.375rem;
+  line-height: 1.7em;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .bottom .infoFrame .times > * {
+  display: inline-block;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .bottom .infoFrame .times .separator {
+  padding: 0 1ex;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .bottom .infoFrame .times .currentTime {
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .bottom .sliderFrame .slider .bars {
+  background-color: rgba(38, 38, 38, 0.2);
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .bottom .sliderFrame .slider .load {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .bottom .sliderFrame .slider .fill {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .bottom .sliderFrame .slider .knob::before {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .bottom .sliderFrame .status-indicator .moon-slider-popup-center {
+  color: #fff;
+  text-shadow: 0 0.08333rem 0.08333rem rgba(0, 0, 0, 0.75);
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .fullscreen .bottom .sliderFrame .status-indicator .moon-slider-popup-center .moon-icon {
+  color: inherit;
+}
+:global(.enact-a11y-high-contrast) .videoPlayer:global(.moonstone-light.highContrast) .overlay.high-contrast-scrim::after {
+  background: linear-gradient(rgba(204, 204, 204, 0) 0%, rgba(204, 204, 204, 0.6) 100%);
+}

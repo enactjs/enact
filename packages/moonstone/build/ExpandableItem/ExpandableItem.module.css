@@ -1,0 +1,22 @@
+.expandableItem.autoLabel {
+  min-height: 4rem;
+}
+.expandableItem.autoLabel:global(.largeText) {
+  min-height: 4.5rem;
+}
+.expandableItem .labeledItem.always .label,
+.expandableItem .labeledItem.auto .label {
+  display: block;
+}
+.expandableItem .labeledItem.never .label {
+  display: none;
+}
+.expandableItem .labeledItem .icon {
+  will-change: transform;
+}
+.expandableItem.open .labeledItem.auto .label {
+  display: none;
+}
+.expandableItem.open .labeledItem .icon {
+  transform: scaleY(-1);
+}

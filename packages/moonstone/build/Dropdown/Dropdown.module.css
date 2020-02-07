@@ -1,0 +1,62 @@
+.dropdown.tinyWidth {
+  min-width: 10rem;
+  width: 10rem;
+}
+.dropdown.smallWidth {
+  width: 12.5rem;
+}
+.dropdown.mediumWidth {
+  width: 14.375rem;
+}
+.dropdown.largeWidth {
+  width: 16.25rem;
+}
+.dropdown.x-largeWidth {
+  max-width: 21.875rem;
+  width: 21.875rem;
+}
+.dropdown.hugeWidth {
+  max-width: 28.75rem;
+  width: 28.75rem;
+}
+.dropdown:not([disabled]):global(.spottable):focus.pressed .bg,
+.dropdown:not([disabled]):global(.spottable):focus:active .bg {
+  animation-name: none;
+}
+.dropDownList {
+  border-radius: 0.125rem;
+  max-height: 12.5rem;
+}
+.dropDownList.tiny {
+  width: 9.125rem;
+}
+.dropDownList.small {
+  width: 11.625rem;
+}
+.dropDownList.medium {
+  width: 13.5rem;
+}
+.dropDownList.large {
+  width: 15.375rem;
+}
+.dropDownList.x-large {
+  width: 21rem;
+}
+.dropDownList.huge {
+  width: 27.875rem;
+}
+.dropDownList:global(.largeText) {
+  max-height: 15rem;
+}
+.dropDownList:global(.moonstone) [data-selected="true"]:not(:focus) {
+  color: #cf0652;
+}
+:global(.enact-a11y-high-contrast) .dropDownList:global(.moonstone.highContrast) [data-selected="true"]:not(:focus) {
+  color: #ccc;
+}
+.dropDownList:global(.moonstone-light) [data-selected="true"]:not(:focus) {
+  color: #cf0652;
+}
+:global(.enact-a11y-high-contrast) .dropDownList:global(.moonstone-light.highContrast) [data-selected="true"]:not(:focus) {
+  color: #000;
+}

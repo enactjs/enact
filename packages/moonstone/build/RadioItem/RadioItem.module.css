@@ -1,0 +1,149 @@
+.radioItem {
+  /* Available for customization */
+}
+.toggleIcon .icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 4rem;
+  flex-shrink: 0;
+  margin-right: 0;
+  margin-left: 0;
+  box-shadow: inset 0 0 0 0.08333rem;
+}
+.toggleIcon .icon::before {
+  content: "";
+  position: absolute;
+  top: 0.16667rem;
+  right: 0.16667rem;
+  bottom: 0.16667rem;
+  left: 0.16667rem;
+  border-radius: inherit;
+}
+.toggleIcon .icon:global(.largeText) {
+  width: 1rem;
+  height: 1rem;
+}
+.toggleIcon:global(.moonstone) .icon {
+  background-color: rgba(166, 166, 166, 0.5);
+  color: #fff;
+}
+.toggleIcon:global(.moonstone).selected .icon {
+  background-color: rgba(166, 166, 166, 0.5);
+  color: #fff;
+}
+.toggleIcon:global(.moonstone).selected .icon::before {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .toggleIcon:global(.moonstone.highContrast) .icon {
+  background-color: #4d4d4d;
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .toggleIcon:global(.moonstone.highContrast).selected .icon {
+  background-color: #4d4d4d;
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .toggleIcon:global(.moonstone.highContrast).selected .icon::before {
+  background-color: #fff;
+}
+.toggleIcon:global(.moonstone-light) .icon {
+  background-color: rgba(136, 136, 136, 0.5);
+  color: #333333;
+}
+.toggleIcon:global(.moonstone-light).selected .icon {
+  background-color: rgba(136, 136, 136, 0.5);
+  color: #333333;
+}
+.toggleIcon:global(.moonstone-light).selected .icon::before {
+  background-color: #333333;
+}
+:global(.enact-a11y-high-contrast) .toggleIcon:global(.moonstone-light.highContrast) .icon {
+  background-color: rgba(136, 136, 136, 0.5);
+  color: #333333;
+}
+:global(.enact-a11y-high-contrast) .toggleIcon:global(.moonstone-light.highContrast).selected .icon {
+  background-color: rgba(136, 136, 136, 0.5);
+  color: #333333;
+}
+:global(.enact-a11y-high-contrast) .toggleIcon:global(.moonstone-light.highContrast).selected .icon::before {
+  background-color: #333333;
+}
+:global(.spottable):focus .toggleIcon:global(.moonstone) .icon {
+  background-color: rgba(166, 166, 166, 0.5);
+  color: #fff;
+}
+:global(.spottable):focus .toggleIcon:global(.moonstone).selected .icon {
+  background-color: rgba(166, 166, 166, 0.5);
+  color: #fff;
+}
+:global(.spottable):focus .toggleIcon:global(.moonstone).selected .icon::before {
+  background-color: #fff;
+}
+:global(.spottable):focus .toggleIcon:global(.moonstone)[disabled] {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .toggleIcon:global(.moonstone.highContrast) .icon {
+  background-color: rgba(166, 166, 166, 0.8);
+  color: #000;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .toggleIcon:global(.moonstone.highContrast).selected .icon {
+  background-color: rgba(166, 166, 166, 0.8);
+  color: #000;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .toggleIcon:global(.moonstone.highContrast).selected .icon::before {
+  background-color: #000;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .toggleIcon:global(.moonstone.highContrast)[disabled] {
+  opacity: 0.4;
+}
+:global(.spottable):focus .toggleIcon:global(.moonstone-light) .icon {
+  background-color: rgba(136, 136, 136, 0.5);
+  color: #fff;
+}
+:global(.spottable):focus .toggleIcon:global(.moonstone-light).selected .icon {
+  background-color: rgba(136, 136, 136, 0.5);
+  color: #fff;
+}
+:global(.spottable):focus .toggleIcon:global(.moonstone-light).selected .icon::before {
+  background-color: #fff;
+}
+:global(.spottable):focus .toggleIcon:global(.moonstone-light)[disabled] {
+  opacity: 0.4;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .toggleIcon:global(.moonstone-light.highContrast) .icon {
+  background-color: rgba(136, 136, 136, 0.5);
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .toggleIcon:global(.moonstone-light.highContrast).selected .icon {
+  background-color: rgba(136, 136, 136, 0.5);
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .toggleIcon:global(.moonstone-light.highContrast).selected .icon::before {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) :global(.spottable):focus .toggleIcon:global(.moonstone-light.highContrast)[disabled] {
+  opacity: 0.4;
+}
+[data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone).selected .icon {
+  background-color: #fff;
+}
+[data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone).selected .icon::before {
+  background-color: rgba(166, 166, 166, 0.5);
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone.highContrast).selected .icon {
+  background-color: #fff;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone.highContrast).selected .icon::before {
+  background-color: #4d4d4d;
+}
+[data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone-light).selected .icon {
+  background-color: #333333;
+}
+[data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone-light).selected .icon::before {
+  background-color: rgba(136, 136, 136, 0.5);
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone-light.highContrast).selected .icon {
+  background-color: #333333;
+}
+:global(.enact-a11y-high-contrast) [data-spotlight-container-muted="true"] :global(.spottable):focus .toggleIcon:global(.moonstone-light.highContrast).selected .icon::before {
+  background-color: rgba(136, 136, 136, 0.5);
+}

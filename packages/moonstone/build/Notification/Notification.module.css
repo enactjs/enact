@@ -1,0 +1,69 @@
+.notification {
+  position: relative;
+  left: 50%;
+  min-width: 12.5rem;
+  max-width: 42.83333rem;
+  width: fit-content;
+  text-align: center;
+  border-radius: 0.125rem;
+  border-style: solid;
+  border-width: 1px;
+  margin-bottom: 13.5rem;
+  transform: translate3d(-50%, 50%, 0);
+  padding: 1rem 1.625rem;
+}
+.notification.wide {
+  max-width: 62.33333rem;
+}
+.notification .body {
+  width: fit-content;
+  margin: 0;
+}
+.notification .notificationBody {
+  font-family: "Moonstone";
+  font-weight: 500;
+  font-style: normal;
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  text-align: initial;
+  overflow-wrap: break-word;
+  word-break: keep-all;
+}
+:global(.enact-locale-non-latin) .notification .notificationBody {
+  font-family: "Moonstone";
+  line-height: 1.7em;
+}
+:global(.enact-locale-ja) .notification .notificationBody {
+  line-break: strict;
+}
+:global(.enact-locale-ja) .notification .notificationBody,
+:global(.enact-locale-zh) .notification .notificationBody {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.notification .buttons {
+  box-sizing: border-box;
+}
+.notification .buttons > * {
+  margin-top: 1rem;
+}
+:global(.enact-locale-right-to-left) .notification {
+  right: 50%;
+  transform: translate3d(50%, 50%, 0);
+}
+.notification:global(.moonstone) {
+  border-color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0.5rem 0.66667rem rgba(0, 0, 0, 0.3);
+}
+:global(.enact-a11y-high-contrast) .notification:global(.moonstone.highContrast) {
+  border-color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0.5rem 0.66667rem rgba(0, 0, 0, 0.3);
+}
+.notification:global(.moonstone-light) {
+  border-color: #bbb;
+  box-shadow: 0 0.5rem 0.66667rem rgba(0, 0, 0, 0.3);
+}
+:global(.enact-a11y-high-contrast) .notification:global(.moonstone-light.highContrast) {
+  border-color: #bbb;
+  box-shadow: 0 0.5rem 0.66667rem rgba(0, 0, 0, 0.3);
+}

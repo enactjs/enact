@@ -1,0 +1,155 @@
+.panels {
+  pointer-events: none;
+}
+.panels > * {
+  pointer-events: auto;
+}
+.panels .controls {
+  position: absolute;
+  top: 1.375rem;
+  left: auto;
+  right: 0.625rem;
+  z-index: 1;
+  padding-left: 0.75rem;
+  padding-right: initial;
+}
+:global(.enact-locale-right-to-left) .panels .controls {
+  left: 0.625rem;
+  right: auto;
+}
+:global(.enact-locale-right-to-left) .panels .controls {
+  padding-left: initial;
+  padding-right: 0.75rem;
+}
+.panels .controls > :first-child {
+  -webkit-margin-start: 0;
+}
+.panels .controls > :last-child {
+  -webkit-margin-end: 0;
+}
+.panels .breadcrumbs {
+  position: absolute;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  height: 100%;
+  z-index: 10;
+  overflow: hidden;
+}
+.panels .breadcrumbs .breadcrumb {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  width: 4rem;
+}
+.panels .breadcrumbs .breadcrumb .breadcrumbHeader {
+  padding-top: 0.125rem;
+  margin: 1rem 0.625rem;
+  font-family: "Moonstone";
+  font-size: 1.25rem;
+}
+.panels .viewport {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+}
+.panels .viewport.transitioning::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10000;
+}
+:global(.enact-locale-right-to-left) .panels {
+  direction: ltr;
+}
+:global(.enact-locale-right-to-left) .panels .breadcrumbs,
+:global(.enact-locale-right-to-left) .panels .controls {
+  direction: rtl;
+}
+.panels:global(.moonstone) .breadcrumbs .breadcrumb:global(.spottable):focus {
+  background-color: #cf0652;
+  color: #fff;
+}
+.panels:global(.moonstone) .breadcrumbs .breadcrumb:global(.spottable):focus .breadcrumbHeader {
+  border-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .panels:global(.moonstone.highContrast) .breadcrumbs .breadcrumb:global(.spottable):focus {
+  background-color: #ccc;
+  color: #000;
+}
+:global(.enact-a11y-high-contrast) .panels:global(.moonstone.highContrast) .breadcrumbs .breadcrumb:global(.spottable):focus .breadcrumbHeader {
+  border-color: #000;
+}
+.panels:global(.moonstone-light) .breadcrumbs .breadcrumb:global(.spottable):focus {
+  background-color: #cf0652;
+  color: #fff;
+}
+.panels:global(.moonstone-light) .breadcrumbs .breadcrumb:global(.spottable):focus .breadcrumbHeader {
+  border-color: #fff;
+}
+:global(.enact-a11y-high-contrast) .panels:global(.moonstone-light.highContrast) .breadcrumbs .breadcrumb:global(.spottable):focus {
+  background-color: #000;
+  color: #fff;
+}
+:global(.enact-a11y-high-contrast) .panels:global(.moonstone-light.highContrast) .breadcrumbs .breadcrumb:global(.spottable):focus .breadcrumbHeader {
+  border-color: #fff;
+}
+.panels.activity .breadcrumbs {
+  width: 4rem;
+}
+.panels.activity .viewport.transitioning {
+  -webkit-clip-path: polygon(4rem 0, 100% 0, 100% 100%, 4rem 100%);
+  clip-path: polygon(4rem 0, 100% 0, 100% 100%, 4rem 100%);
+}
+.panels.activity .viewport > :not([data-index="0"]) {
+  padding-left: 0;
+  width: calc(100% - 4rem);
+}
+.panels.activity[data-index="0"] .breadcrumbs {
+  z-index: -1;
+  pointer-events: none;
+}
+:global(.enact-locale-right-to-left) .panels.activity:not([data-index="0"]) .controls {
+  left: 4.375rem;
+}
+.panels.alwaysViewing .viewport {
+  left: 50%;
+}
+.panels.alwaysViewing .breadcrumbs {
+  width: 50%;
+}
+.panels.alwaysViewing:global(.moonstone) .viewport {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+.panels.alwaysViewing:global(.moonstone) .breadcrumbs .breadcrumb .breadcrumbHeader {
+  color: white;
+  border-top: 0.25rem solid white;
+}
+:global(.enact-a11y-high-contrast) .panels.alwaysViewing:global(.moonstone.highContrast) .viewport {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+:global(.enact-a11y-high-contrast) .panels.alwaysViewing:global(.moonstone.highContrast) .breadcrumbs .breadcrumb .breadcrumbHeader {
+  color: white;
+  border-top: 0.25rem solid white;
+}
+.panels.alwaysViewing:global(.moonstone-light) .viewport {
+  background-color: rgba(237, 237, 237, 0.75);
+}
+.panels.alwaysViewing:global(.moonstone-light) .breadcrumbs .breadcrumb .breadcrumbHeader {
+  color: white;
+  border-top: 0.25rem solid white;
+}
+:global(.enact-a11y-high-contrast) .panels.alwaysViewing:global(.moonstone-light.highContrast) .viewport {
+  background-color: rgba(237, 237, 237, 0.75);
+}
+:global(.enact-a11y-high-contrast) .panels.alwaysViewing:global(.moonstone-light.highContrast) .breadcrumbs .breadcrumb .breadcrumbHeader {
+  color: white;
+  border-top: 0.25rem solid white;
+}
