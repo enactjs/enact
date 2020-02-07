@@ -3,7 +3,9 @@
 const utilEvent = (eventName) => {
 	return {
 		addEventListener (ref, fn, param) {
-			if (typeof window !== 'undefined' && (ref === window || ref === document)) {
+			if (!ref) {
+				return;
+			} else if (typeof window !== 'undefined' && (ref === window || ref === document)) {
 				ref.addEventListener(eventName, fn, param);
 			} else if (ref.current) {
 				ref.current.addEventListener(eventName, fn, param);
@@ -13,7 +15,9 @@ const utilEvent = (eventName) => {
 		},
 
 		removeEventListener (ref, fn, param) {
-			if (typeof window !== 'undefined' && (ref === window || ref === document)) {
+			if (!ref) {
+				return;
+			} else if (typeof window !== 'undefined' && (ref === window || ref === document)) {
 				ref.removeEventListener(eventName, fn, param);
 			} else if (ref.current) {
 				ref.current.removeEventListener(eventName, fn, param);
