@@ -315,8 +315,8 @@ class VirtualListBase extends Component {
 
 		return {
 			...nextUpdateFromAndTo,
-			prevFirstIndex: state.firstIndex
-			prevItemProps: props.itemProps,
+			prevFirstIndex: state.firstIndex,
+			prevItemProps: props.itemProps
 		};
 	}
 
