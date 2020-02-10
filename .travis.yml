@@ -22,5 +22,4 @@ script:
     - echo -e "\x1b\x5b35;1m*** Starting sampler builds...\x1b\x5b0m"
     - cd packages/sampler
     - npm run pack
-    - npm run pack-qa
     - echo -e "\x1b\x5b35;1m*** sampler build complete\x1b\x5b0m"

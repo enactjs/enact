@@ -1299,25 +1299,6 @@
         "xhr": "^2.4.1"
       }
     },
-    "@enact/moonstone": {
-      "version": "3.2.5",
-      "resolved": "https://registry.npmjs.org/@enact/moonstone/-/moonstone-3.2.5.tgz",
-      "integrity": "sha512-/CjWpm8ptI8XA2VYCQSUp7LhzTDFLQiTqfGQI4iCSX0C+q6S2ITfYDHHYnSgrDYx29pf2qYEkxFMqY5Uaim7tA==",
-      "requires": {
-        "@enact/core": "^3.2.5",
-        "@enact/i18n": "^3.2.5",
-        "@enact/spotlight": "^3.2.5",
-        "@enact/ui": "^3.2.5",
-        "classnames": "^2.2.5",
-        "invariant": "^2.2.2",
-        "prop-types": "^15.7.2",
-        "ramda": "^0.24.1",
-        "react": "^16.8.0",
-        "react-dom": "^16.8.0",
-        "recompose": "^0.26.0",
-        "warning": "^3.0.0"
-      }
-    },
     "@enact/spotlight": {
       "version": "3.2.5",
       "resolved": "https://registry.npmjs.org/@enact/spotlight/-/spotlight-3.2.5.tgz",
