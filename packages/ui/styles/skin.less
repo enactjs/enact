@@ -1,10 +1,16 @@
-@enact-skin-mode: theme;
-@enact-skin-name: external;
+@enact-skin-name: undefined;
 
-.applySkins(@componentRules) when (isruleset(@componentRules)) and (@enact-skin-mode = external) {
+// Skin deployment options:
+// * npm package with known prefix (e.g. enact-skin- => enact-skin-gm-lux). entry point would be either:
+//   * a .css file with local refs to additional resources. this should be able to be injected "as is" and webpack would resolve the dependencies
+//   * a .less file which could import others as it needed. this would need to be preprocessed akin to our current process
+// * package.json config object (e.g. enact: { skins: { gm-entry: 'manifest.json' } })
+//
+
+.applySkins(@componentRules) when (isruleset(@componentRules)) and not (@enact-skin-name = undefined) {
 	&:global(.@{enact-skin-name}) {
 		// Load the external theme colors into this scope
-		@import "~ENACT_THEME_ROOT/colors.less";
+		@import (optional) "~ENACT_SKINS_ROOT";
 
 		@componentRules();
 	}

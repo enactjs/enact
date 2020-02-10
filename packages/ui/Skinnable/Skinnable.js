@@ -19,6 +19,9 @@ import classnames from 'classnames';
 
 import {objectify, preferDefined} from './util';
 
+const externalSkins = process.env.ENACT_SKINS || [];
+const isExternalSkin = skin => externalSkins.includes(skin);
+
 /**
  * Default config for `Skinnable`.
  *
@@ -151,7 +154,13 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 	const defaultVariants = objectify(config.defaultVariants);
 
 	function determineSkin (authorSkin, parentSkin) {
-		return authorSkin || defaultSkin || parentSkin;
+		const skin = authorSkin || parentSkin;
+
+		if (!Object.keys(skins).includes(skin) && !isExternalSkin(skin)) {
+			return defaultSkin;
+		}
+
+		return skin;
 	}
 
 	function determineVariants (authorVariants, parentVariants) {
@@ -188,7 +197,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 	}
 
 	function getClassName (effectiveSkin, className, variants) {
-		const skin = externalSkin && effectiveSkin === 'external' ? 'external' : (skins && skins[effectiveSkin]);
+		const skin = isExternalSkin(effectiveSkin) ? effectiveSkin : skins[defaultSkin];
 
 		// only apply the skin class if it's set and different from the "current" skin as
 		// defined by the value in context
