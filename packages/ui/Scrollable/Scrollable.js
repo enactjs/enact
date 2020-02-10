@@ -534,7 +534,7 @@ const useScrollBase = (props) => {
 		mutableRef.current.animator = new ScrollAnimator();
 	}
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		if (props.setUiScrollAdapter) {
 			props.setUiScrollAdapter({
 				animator: mutableRef.current.animator,
@@ -599,7 +599,9 @@ const useScrollBase = (props) => {
 				}
 			});
 		}
+	});
 
+	useEffect(() => {
 		if (props.cbScrollTo) {
 			props.cbScrollTo(scrollTo);
 		}
