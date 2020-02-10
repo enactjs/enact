@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+> Note: Moonstone was removed from the core Enact repository. It is now in its own repository at https://github.com/enactjs/moonstone/. Using Moonstone through npm has not changed.
+
 ## [3.2.5] - 2019-11-14
 
 ### Fixed

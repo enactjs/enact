@@ -8,9 +8,7 @@
     "lint": "enact lint --strict",
     "test": "echo \"No test suite\" && exit 0",
     "pack": "build-storybook -c .storybook -o dist",
-    "pack-qa": "build-storybook -c .qa-storybook -o dist",
-    "serve": "start-storybook -p 8080 -c .storybook --ci",
-    "serve-qa": "start-storybook -p 8080 -c .qa-storybook --ci"
+    "serve": "start-storybook -p 8080 -c .storybook --ci"
   },
   "license": "Apache-2.0",
   "eslintConfig": {
@@ -19,7 +17,6 @@
   "dependencies": {
     "@enact/core": "^3.2.5",
     "@enact/i18n": "^3.2.5",
-    "@enact/moonstone": "^3.2.5",
     "@enact/spotlight": "^3.2.5",
     "@enact/ui": "^3.2.5",
     "@enact/webos": "^3.2.5",
