@@ -548,6 +548,9 @@ const useScrollBase = (props) => {
 				get isDragging () {
 					return mutableRef.current.isDragging;
 				},
+				set isDragging (val) {
+					mutableRef.current.isDragging = val;
+				},
 				get isScrollAnimationTargetAccumulated () {
 					return mutableRef.current.isScrollAnimationTargetAccumulated;
 				},
