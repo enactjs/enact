@@ -1047,8 +1047,8 @@ class VirtualListBase extends Component {
 
 	applyStyleToNewNode = (index, ...rest) => {
 		const
-			key = index % this.state.numOfItems,
 			{itemProps, itemRenderer, getComponentProps} = this.props,
+			key = index % this.state.numOfItems,
 			componentProps = getComponentProps && getComponentProps(index) || {};
 
 		this.cc[key] = (
