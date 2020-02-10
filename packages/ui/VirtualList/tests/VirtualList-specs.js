@@ -6,7 +6,7 @@ import VirtualList from '../VirtualList';
 
 import css from '../VirtualList.module.less';
 
-configure({ adapter: new Adapter() });
+configure({adapter: new Adapter()});
 
 describe('VirtualList', () => {
 	let
