@@ -38,5 +38,9 @@
     "react-dom": "^16.8.0",
     "recompose": "^0.26.0",
     "warning": "^3.0.0"
+  },
+  "devDependencies": {
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2"
   }
 }
