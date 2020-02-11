@@ -447,16 +447,23 @@ class ScrollableBase extends Component {
 const useScrollBase = (props) => {
 	const
 		{
+			children,
 			className,
 			clientSize,
+			'data-webos-voice-focused': voiceFocused,
+			'data-webos-voice-group-label': voiceGroupLabel,
+			dataSize,
 			decorateChildProps,
 			direction,
 			horizontalScrollbar,
 			horizontalScrollbarRef,
+			itemRenderer,
+			itemSize,
 			noScrollByDrag,
 			noScrollByWheel,
 			overscrollEffectOn,
 			rtl,
+			spacing,
 			setUiChildAdapter,
 			setUiScrollAdapter,
 			type,
@@ -465,6 +472,7 @@ const useScrollBase = (props) => {
 			uiScrollContainerRef,
 			verticalScrollbar,
 			verticalScrollbarRef,
+			wrap,
 			...rest
 		} = props,
 		scrollClasses = classNames(css.scroll, className);
@@ -1804,20 +1812,8 @@ const useScrollBase = (props) => {
 		return utilDOM.containsDangerously(uiScrollContainerRef, target);
 	}
 
-	const {
-		children,
-		data-webos-voice-focused: voiceFocused,
-		data-webos-voice-group-label: voiceGroupLabel,
-		dataSize,
-		itemRenderer,
-		itemSize,
-		spacing,
-		wrap,
-		...scrollableProp
-	} = rest;
-
 	decorateChildProps('scrollContainerProps', {
-		...scrollableProp,
+		...rest,
 		className: [scrollClasses]
 	});
 
