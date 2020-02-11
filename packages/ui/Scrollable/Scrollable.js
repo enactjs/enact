@@ -1000,8 +1000,8 @@ const useScrollBase = (props) => {
 			} else { // Native
 				const
 					{overscrollEffectOn} = props,
-					overscrollEffectRequired = mutableRef.current.overscrollEnabled && overscrollEffectOn.wheel,
-					needToHideThumb = false;;
+					overscrollEffectRequired = mutableRef.current.overscrollEnabled && overscrollEffectOn.wheel;
+				let needToHideThumb = false;
 
 				if (props.onWheel) {
 					forward('onWheel', ev, props);
