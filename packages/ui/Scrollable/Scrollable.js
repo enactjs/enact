@@ -1000,9 +1000,7 @@ const useScrollBase = (props) => {
 					ev.stopPropagation();
 				}
 			} else { // Native
-				const
-					{overscrollEffectOn} = props,
-					overscrollEffectRequired = mutableRef.current.overscrollEnabled && overscrollEffectOn.wheel;
+				const overscrollEffectRequired = mutableRef.current.overscrollEnabled && overscrollEffectOn.wheel;
 				let needToHideThumb = false;
 
 				if (props.onWheel) {
@@ -1056,7 +1054,7 @@ const useScrollBase = (props) => {
 				if (delta !== 0) {
 					const dir = Math.sign(delta);
 
-          // Not to accumulate scroll position if wheel direction is different from hold direction
+					// Not to accumulate scroll position if wheel direction is different from hold direction
 					if (dir !== mutableRef.current.wheelDirection) {
 						mutableRef.current.isScrollAnimationTargetAccumulated = false;
 						mutableRef.current.wheelDirection = dir;
