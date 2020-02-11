@@ -666,11 +666,16 @@ const useScrollBase = (props) => {
 				animator.stop();
 			}
 			// JS ]
-
-			removeEventListeners();
 		};
 
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
+		addEventListeners();
+		return () => {
+			removeEventListeners();
+		};
+	});
 
 	// JS [[
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
@@ -734,8 +739,6 @@ const useScrollBase = (props) => {
 		}
 
 		clampScrollPosition(); // JS
-
-		addEventListeners();
 
 		if (
 			hasDataSizeChanged === false &&
