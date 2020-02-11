@@ -445,16 +445,51 @@ class ScrollableBase extends Component {
 }
 
 const useScrollBase = (props) => {
-	const {
-		decorateChildProps,
-		horizontalScrollbarRef,
-		setUiChildAdapter,
-		type,
-		uiChildAdapter,
-		uiChildContainerRef,
-		uiScrollContainerRef,
-		verticalScrollbarRef
-	} = props;
+	const
+		{
+			className,
+			clientSize,
+			decorateChildProps,
+			direction,
+			horizontalScrollbar,
+			horizontalScrollbarRef,
+			noScrollByDrag,
+			noScrollByWheel,
+			overscrollEffectOn,
+			rtl,
+			setUiChildAdapter,
+			setUiScrollAdapter,
+			type,
+			uiChildAdapter,
+			uiChildContainerRef,
+			uiScrollContainerRef,
+			verticalScrollbar,
+			verticalScrollbarRef,
+			...rest
+		} = props,
+		scrollClasses = classNames(css.scroll, className);
+
+	// The following props are the one having the same naming function in this scope.
+	// So it is better to use props[propName]
+	// instead of extracting it from the `props` and renaming it
+	delete rest.addEventListeners;
+	delete rest.applyOverscrollEffect;
+	delete rest.cbScrollTo;
+	delete rest.clearOverscrollEffect;
+	delete rest.clientSize;
+	delete rest.handleResizeWindow;
+	delete rest.onFlick;
+	delete rest.onKeyDown;
+	delete rest.onMouseDown;
+	delete rest.onScroll;
+	delete rest.onScrollStart;
+	delete rest.onScrollStop;
+	delete rest.onWheel;
+	delete rest.removeEventListeners;
+	delete rest.scrollStopOnScroll; // Native
+	delete rest.scrollTo;
+	delete rest.start; // Native
+	delete rest.stop; // JS
 
 	// Mutable value and Hooks
 
@@ -462,8 +497,8 @@ const useScrollBase = (props) => {
 
 	const context = useContext(ResizeContext);
 
-	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(props.horizontalScrollbar === 'visible');
-	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(props.verticalScrollbar === 'visible');
+	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
+	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
 
 	const mutableRef = useRef({
 		overscrollEnabled: !!(props.applyOverscrollEffect),
@@ -535,8 +570,8 @@ const useScrollBase = (props) => {
 	}
 
 	useLayoutEffect(() => {
-		if (props.setUiScrollAdapter) {
-			props.setUiScrollAdapter({
+		if (setUiScrollAdapter) {
+			setUiScrollAdapter({
 				animator: mutableRef.current.animator,
 				applyOverscrollEffect,
 				bounds: mutableRef.current.bounds,
@@ -567,7 +602,7 @@ const useScrollBase = (props) => {
 					mutableRef.current.lastInputType = val;
 				},
 				get rtl () {
-					return props.rtl;
+					return rtl;
 				},
 				get scrollBounds () {
 					return getScrollBounds();
@@ -636,40 +671,6 @@ const useScrollBase = (props) => {
 		};
 
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-	const
-		{className, noScrollByDrag, rtl, style, ...rest} = props,
-		scrollClasses = classNames(css.scroll, className);
-
-	delete rest.addEventListeners;
-	delete rest.applyOverscrollEffect;
-	delete rest.cbScrollTo;
-	delete rest.clearOverscrollEffect;
-	delete rest.decorateChildProps;
-	delete rest.handleResizeWindow;
-	delete rest.horizontalScrollbar;
-	delete rest.horizontalScrollbarRef;
-	delete rest.noScrollByWheel;
-	delete rest.onFlick;
-	delete rest.onKeyDown;
-	delete rest.onMouseDown;
-	delete rest.onScroll;
-	delete rest.onScrollStart;
-	delete rest.onScrollStop;
-	delete rest.onWheel;
-	delete rest.overscrollEffectOn;
-	delete rest.removeEventListeners;
-	delete rest.scrollStopOnScroll; // Native
-	delete rest.scrollTo;
-	delete rest.setUiChildAdapter;
-	delete rest.setUiScrollAdapter;
-	delete rest.start; // Native
-	delete rest.stop; // JS
-	delete rest.uiChildAdapter;
-	delete rest.uiChildContainerRef;
-	delete rest.uiScrollContainerRef;
-	delete rest.verticalScrollbar;
-	delete rest.verticalScrollbarRef;
 
 	// JS [[
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
@@ -778,7 +779,7 @@ const useScrollBase = (props) => {
 	// drag/flick event handlers
 
 	function getRtlX (x) {
-		return (props.rtl ? -x : x);
+		return (rtl ? -x : x);
 	}
 
 	function onMouseDown (ev) {
@@ -820,8 +821,6 @@ const useScrollBase = (props) => {
 				return;
 			}
 
-			const {direction} = props;
-
 			mutableRef.current.lastInputType = 'drag';
 
 			forward('onDrag', ev, props);
@@ -829,11 +828,10 @@ const useScrollBase = (props) => {
 				targetX: (direction === 'vertical') ? 0 : mutableRef.current.dragStartX - getRtlX(ev.x), // 'horizontal' or 'both'
 				targetY: (direction === 'horizontal') ? 0 : mutableRef.current.dragStartY - ev.y, // 'vertical' or 'both'
 				animate: false,
-				overscrollEffect: props.overscrollEffectOn.drag
+				overscrollEffect: overscrollEffectOn.drag
 			});
 		} else {
 			const
-				{direction, overscrollEffectOn} = props,
 				targetX = (direction === 'vertical') ? 0 : mutableRef.current.dragStartX - getRtlX(ev.x), // 'horizontal' or 'both'
 				targetY = (direction === 'horizontal') ? 0 : mutableRef.current.dragStartY - ev.y; // 'vertical' or 'both'
 
@@ -862,12 +860,12 @@ const useScrollBase = (props) => {
 				mutableRef.current.lastInputType = 'drag';
 
 				mutableRef.current.isScrollAnimationTargetAccumulated = false;
-				start({targetX, targetY, duration, overscrollEffect: props.overscrollEffectOn.drag});
+				start({targetX, targetY, duration, overscrollEffect: overscrollEffectOn.drag});
 			} else {
 				stop();
 			}
 
-			if (mutableRef.current.overscrollEnabled) { // not check props.overscrollEffectOn.drag for safety
+			if (mutableRef.current.overscrollEnabled) { // not check overscrollEffectOn.drag for safety
 				clearAllOverscrollEffects();
 			}
 
@@ -878,9 +876,7 @@ const useScrollBase = (props) => {
 			mutableRef.current.lastInputType = 'drag';
 
 			if (mutableRef.current.flickTarget) {
-				const
-					{overscrollEffectOn} = props,
-					{targetX, targetY} = mutableRef.current.flickTarget;
+				const {targetX, targetY} = mutableRef.current.flickTarget;
 
 				if (!mutableRef.current.isTouching) {
 					mutableRef.current.isScrollAnimationTargetAccumulated = false;
@@ -892,7 +888,7 @@ const useScrollBase = (props) => {
 				stop();
 			}
 
-			if (mutableRef.current.overscrollEnabled) { // not check props.overscrollEffectOn.drag for safety
+			if (mutableRef.current.overscrollEnabled) { // not check overscrollEffectOn.drag for safety
 				clearAllOverscrollEffects();
 			}
 
@@ -902,8 +898,6 @@ const useScrollBase = (props) => {
 	}
 
 	function onFlick (ev) {
-		const {direction} = props;
-
 		if (type === 'JS') {
 			mutableRef.current.flickTarget = mutableRef.current.animator.simulate(
 				mutableRef.current.scrollLeft,
@@ -919,7 +913,7 @@ const useScrollBase = (props) => {
 					(direction !== 'vertical') ? getRtlX(-ev.velocityX) : 0,
 					(direction !== 'horizontal') ? -ev.velocityY : 0
 				);
-			} else if (mutableRef.current.overscrollEnabled && props.overscrollEffectOn.drag) {
+			} else if (mutableRef.current.overscrollEnabled && overscrollEffectOn.drag) {
 				mutableRef.current.flickTarget = {
 					targetX: mutableRef.current.scrollLeft + getRtlX(-ev.velocityX) * overscrollVelocityFactor, // 'horizontal' or 'both'
 					targetY: mutableRef.current.scrollTop + -ev.velocityY * overscrollVelocityFactor // 'vertical' or 'both'
@@ -957,7 +951,6 @@ const useScrollBase = (props) => {
 		} else {
 			const
 				// Native [[
-				{overscrollEffectOn} = props,
 				overscrollEffectRequired = mutableRef.current.overscrollEnabled && overscrollEffectOn.wheel,
 				// Native ]]
 				bounds = getScrollBounds(),
@@ -967,12 +960,12 @@ const useScrollBase = (props) => {
 				eventDelta = (-ev.wheelDeltaY || ev.deltaY);
 			let
 				delta = 0,
-				direction, // JS
+				dir, // JS
 				needToHideThumb = false; // Native
 
 			mutableRef.current.lastInputType = 'wheel';
 
-			if (props.noScrollByWheel) {
+			if (noScrollByWheel) {
 				if (type === 'Native' && canScrollV) {
 					ev.preventDefault();
 				}
@@ -987,17 +980,17 @@ const useScrollBase = (props) => {
 					delta = calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				}
 
-				direction = Math.sign(delta);
+				dir = Math.sign(delta);
 
-				if (direction !== mutableRef.current.wheelDirection) {
+				if (dir !== mutableRef.current.wheelDirection) {
 					mutableRef.current.isScrollAnimationTargetAccumulated = false;
-					mutableRef.current.wheelDirection = direction;
+					mutableRef.current.wheelDirection = dir;
 				}
 
 				forward('onWheel', {delta, horizontalScrollbarRef, verticalScrollbarRef}, props);
 
 				if (delta !== 0) {
-					scrollToAccumulatedTarget(delta, canScrollV, props.overscrollEffectOn.wheel);
+					scrollToAccumulatedTarget(delta, canScrollV, overscrollEffectOn.wheel);
 					ev.preventDefault();
 					ev.stopPropagation();
 				}
@@ -1051,11 +1044,11 @@ const useScrollBase = (props) => {
 				}
 
 				if (delta !== 0) {
-					direction = Math.sign(delta);
+					dir = Math.sign(delta);
 					// Not to accumulate scroll position if wheel direction is different from hold direction
-					if (direction !== mutableRef.current.wheelDirection) {
+					if (dir !== mutableRef.current.wheelDirection) {
 						mutableRef.current.isScrollAnimationTargetAccumulated = false;
-						mutableRef.current.wheelDirection = direction;
+						mutableRef.current.wheelDirection = dir;
 					}
 
 					scrollToAccumulatedTarget(delta, canScrollV, overscrollEffectOn.wheel);
@@ -1077,7 +1070,7 @@ const useScrollBase = (props) => {
 
 		mutableRef.current.lastInputType = 'pageKey';
 
-		scrollToAccumulatedTarget(pageDistance, canScrollV, props.overscrollEffectOn.pageKey);
+		scrollToAccumulatedTarget(pageDistance, canScrollV, overscrollEffectOn.pageKey);
 	}
 	// JS ]]
 
@@ -1094,7 +1087,7 @@ const useScrollBase = (props) => {
 			scrollStartOnScroll();
 		}
 
-		if (props.rtl && canScrollH) {
+		if (rtl && canScrollH) {
 			scrollLeft = (platform.ios || platform.safari) ? -scrollLeft : bounds.maxLeft - scrollLeft;
 		}
 
@@ -1290,7 +1283,7 @@ const useScrollBase = (props) => {
 		if (props.scrollStopOnScroll) {
 			props.scrollStopOnScroll();
 		}
-		if (mutableRef.current.overscrollEnabled && !mutableRef.current.isDragging) { // not check props.overscrollEffectOn for safety
+		if (mutableRef.current.overscrollEnabled && !mutableRef.current.isDragging) { // not check overscrollEffectOn for safety
 			clearAllOverscrollEffects();
 		}
 		mutableRef.current.lastInputType = null;
@@ -1308,7 +1301,7 @@ const useScrollBase = (props) => {
 
 		mutableRef.current.scrollLeft = clamp(0, bounds.maxLeft, value);
 
-		if (mutableRef.current.overscrollEnabled && props.overscrollEffectOn[mutableRef.current.lastInputType]) {
+		if (mutableRef.current.overscrollEnabled && overscrollEffectOn[mutableRef.current.lastInputType]) {
 			checkAndApplyOverscrollEffectOnScroll('horizontal');
 		}
 
@@ -1322,7 +1315,7 @@ const useScrollBase = (props) => {
 
 		mutableRef.current.scrollTop = clamp(0, bounds.maxTop, value);
 
-		if (mutableRef.current.overscrollEnabled && props.overscrollEffectOn[mutableRef.current.lastInputType]) {
+		if (mutableRef.current.overscrollEnabled && overscrollEffectOn[mutableRef.current.lastInputType]) {
 			checkAndApplyOverscrollEffectOnScroll('vertical');
 		}
 
@@ -1341,7 +1334,7 @@ const useScrollBase = (props) => {
 			const edge = getEdgeFromPosition(mutableRef.current.scrollLeft, bounds.maxLeft);
 
 			if (edge) { // if edge is null, no need to check which edge is reached.
-				if ((edge === 'before' && !props.rtl) || (edge === 'after' && props.rtl)) {
+				if ((edge === 'before' && !rtl) || (edge === 'after' && rtl)) {
 					reachedEdgeInfo.left = true;
 				} else {
 					reachedEdgeInfo.right = true;
@@ -1510,7 +1503,7 @@ const useScrollBase = (props) => {
 			setScrollTop(top);
 		}
 
-		uiChildAdapter.current.setScrollPosition(mutableRef.current.scrollLeft, mutableRef.current.scrollTop, props.rtl, ...restParams);
+		uiChildAdapter.current.setScrollPosition(mutableRef.current.scrollLeft, mutableRef.current.scrollTop, rtl, ...restParams);
 		forwardScrollEvent('onScroll');
 	}
 	// JS ]]
@@ -1521,7 +1514,7 @@ const useScrollBase = (props) => {
 		mutableRef.current.isScrollAnimationTargetAccumulated = false;
 		startHidingThumb();
 
-		if (mutableRef.current.overscrollEnabled && !mutableRef.current.isDragging) { // not check props.overscrollEffectOn for safety
+		if (mutableRef.current.overscrollEnabled && !mutableRef.current.isDragging) { // not check overscrollEffectOn for safety
 			clearAllOverscrollEffects();
 		}
 
@@ -1636,12 +1629,10 @@ const useScrollBase = (props) => {
 	}
 
 	function canScrollHorizontally (bounds) {
-		const {direction} = props;
 		return (direction === 'horizontal' || direction === 'both') && (bounds.scrollWidth > bounds.clientWidth) && !isNaN(bounds.scrollWidth);
 	}
 
 	function canScrollVertically (bounds) {
-		const {direction} = props;
 		return (direction === 'vertical' || direction === 'both') && (bounds.scrollHeight > bounds.clientHeight) && !isNaN(bounds.scrollHeight);
 	}
 
@@ -1678,7 +1669,6 @@ const useScrollBase = (props) => {
 	// esline-disable-next-line react-hooks/exhaustive-deps
 	function updateScrollbars () {
 		const
-			{horizontalScrollbar, verticalScrollbar} = props,
 			bounds = getScrollBounds(),
 			canScrollH = canScrollHorizontally(bounds),
 			canScrollV = canScrollVertically(bounds),
@@ -1705,7 +1695,6 @@ const useScrollBase = (props) => {
 	// esline-disable-next-line react-hooks/exhaustive-deps
 	function updateScrollThumbSize () {
 		const
-			{horizontalScrollbar, verticalScrollbar} = props,
 			bounds = getScrollBounds(),
 			canScrollH = canScrollHorizontally(bounds),
 			canScrollV = canScrollVertically(bounds),
@@ -1812,9 +1801,23 @@ const useScrollBase = (props) => {
 		return utilDOM.containsDangerously(uiScrollContainerRef, target);
 	}
 
+	const {
+		children,
+		dataSize,
+		itemRenderer,
+		itemSize,
+		spacing,
+		wrap,
+		// onBlurCapture,
+		// onFocusCapture,
+		// onMouseEnter,
+		// onMouseLeave,
+		...scrollableProp
+	} = rest;
+
 	decorateChildProps('scrollContainerProps', {
-		className: [scrollClasses],
-		style
+		...scrollableProp,
+		className: [scrollClasses]
 	});
 
 	decorateChildProps('innerScrollContainerProps', {
@@ -1834,9 +1837,14 @@ const useScrollBase = (props) => {
 	});
 
 	decorateChildProps('childProps', {
-		...rest,
 		cbScrollTo: scrollTo,
+		children,
 		className: [css.scrollFill],
+		clientSize,
+		dataSize,
+		direction,
+		itemRenderer,
+		itemSize,
 		scrollContainerContainsDangerously,
 		get isHorizontalScrollbarVisible () {
 			return isHorizontalScrollbarVisible;
@@ -1847,18 +1855,20 @@ const useScrollBase = (props) => {
 		onScroll: type === 'JS' ? handleScroll : null,
 		rtl,
 		setUiChildAdapter,
-		type
+		spacing,
+		type,
+		wrap
 	});
 
 	decorateChildProps('verticalScrollbarProps', {
-		clientSize: props.clientSize,
+		clientSize,
 		disabled: !isVerticalScrollbarVisible,
 		rtl,
 		vertical: true
 	});
 
 	decorateChildProps('horizontalScrollbarProps', {
-		clientSize: props.clientSize,
+		clientSize,
 		corner: isVerticalScrollbarVisible,
 		disabled: !isHorizontalScrollbarVisible,
 		rtl,
