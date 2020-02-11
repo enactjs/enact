@@ -631,11 +631,16 @@ const useScrollBase = (props) => {
 				animator.stop();
 			}
 			// JS ]
-
-			removeEventListeners();
 		};
 
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
+		addEventListeners();
+		return () => {
+			removeEventListeners();
+		};
+	});
 
 	const
 		{className, noScrollByDrag, rtl, style, ...rest} = props,
@@ -733,8 +738,6 @@ const useScrollBase = (props) => {
 		}
 
 		clampScrollPosition(); // JS
-
-		addEventListeners();
 
 		if (
 			hasDataSizeChanged === false &&
