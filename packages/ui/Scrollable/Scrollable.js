@@ -31,10 +31,7 @@ import utilEvent from './utilEvent';
 
 import css from './Scrollable.module.less';
 
-const
-	nop = () => {},
-	JS = 'JS',
-	Native = 'Native';
+const nop = () => {};
 
 const
 	constants = {
@@ -442,7 +439,7 @@ class ScrollableBase extends Component {
 		onScrollStart: nop,
 		onScrollStop: nop,
 		overscrollEffectOn: {drag: false, pageKey: false, wheel: false},
-		type: JS,
+		type: 'JS',
 		verticalScrollbar: 'auto'
 	}
 }
@@ -690,7 +687,7 @@ const useScrollBase = (props) => {
 			if (propsHandleResizeWindow) {
 				propsHandleResizeWindow();
 			}
-			if (type === JS) {
+			if (type === 'JS') {
 				scrollTo({position: {x: 0, y: 0}, animate: false});
 			} else {
 				uiChildContainerRef.current.style.scrollBehavior = null;
@@ -714,7 +711,7 @@ const useScrollBase = (props) => {
 	}
 
 	if (mutableRef.current.scrollStopJob == null) {
-		if (type === JS) {
+		if (type === 'JS') {
 			mutableRef.current.scrollStopJob = new Job(doScrollStop, scrollStopWaiting);
 		} else {
 			mutableRef.current.scrollStopJob = new Job(scrollStopOnScroll, scrollStopWaiting);
@@ -797,7 +794,7 @@ const useScrollBase = (props) => {
 	// Native ]]
 
 	function onDragStart (ev) {
-		if (type === JS ) {
+		if (type === 'JS' ) {
 			if (ev.type === 'dragstart') return;
 
 			forward('onDragStart', ev, props);
@@ -818,7 +815,7 @@ const useScrollBase = (props) => {
 	}
 
 	function onDrag (ev) {
-		if (type === JS) {
+		if (type === 'JS') {
 			if (ev.type === 'drag') {
 				return;
 			}
@@ -851,7 +848,7 @@ const useScrollBase = (props) => {
 	}
 
 	function onDragEnd (ev) {
-		if (type === JS) {
+		if (type === 'JS') {
 			if (ev.type === 'dragend') {
 				return;
 			}
@@ -907,14 +904,14 @@ const useScrollBase = (props) => {
 	function onFlick (ev) {
 		const {direction} = props;
 
-		if (type === JS) {
+		if (type === 'JS') {
 			mutableRef.current.flickTarget = mutableRef.current.animator.simulate(
 				mutableRef.current.scrollLeft,
 				mutableRef.current.scrollTop,
 				(direction !== 'vertical') ? getRtlX(-ev.velocityX) : 0,
 				(direction !== 'horizontal') ? -ev.velocityY : 0
 			);
-		} else if (type === Native) {
+		} else if (type === 'Native') {
 			if (!mutableRef.current.isTouching) {
 				mutableRef.current.flickTarget = mutableRef.current.animator.simulate(
 					mutableRef.current.scrollLeft,
@@ -969,14 +966,14 @@ const useScrollBase = (props) => {
 			mutableRef.current.lastInputType = 'wheel';
 
 			if (props.noScrollByWheel) {
-				if (type === Native && canScrollV) {
+				if (type === 'Native' && canScrollV) {
 					ev.preventDefault();
 				}
 
 				return;
 			}
 
-			if (type === JS) {
+			if (type === 'JS') {
 				if (canScrollV) {
 					delta = calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 				} else if (canScrollH) {
@@ -1116,7 +1113,7 @@ const useScrollBase = (props) => {
 	// Native ]]
 
 	function onKeyDown (ev) {
-		if (type === JS) {
+		if (type === 'JS') {
 			if (props.onKeyDown) {
 				forward('onKeyDown', ev, props);
 			} else if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode))) {
@@ -1150,7 +1147,7 @@ const useScrollBase = (props) => {
 			return 'before';
 		/* If a scroll size or a client size is not integer,
 			browser's max scroll position could be smaller than maxPos by 1 pixel.*/
-		} else if (type === JS && position >= maxPosition || type === Native && position >= maxPosition - 1) {
+		} else if (type === 'JS' && position >= maxPosition || type === 'Native' && position >= maxPosition - 1) {
 			return 'after';
 		} else {
 			return null;
@@ -1198,8 +1195,8 @@ const useScrollBase = (props) => {
 			maxPos = getScrollBounds()[isVertical ? 'maxTop' : 'maxLeft'];
 
 		if (
-			type === JS && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos) ||
-			type === Native && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - 1)
+			type === 'JS' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos) ||
+			type === 'Native' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - 1)
 		) { // Already on the edge
 			applyOverscrollEffect(orientation, edge, overscrollEffectType, ratio);
 		} else {
@@ -1378,7 +1375,7 @@ const useScrollBase = (props) => {
 			bounds = getScrollBounds(),
 			{maxLeft, maxTop} = bounds;
 
-		const updatedAnimationInfo = type === JS ?
+		const updatedAnimationInfo = type === 'JS' ?
 			{
 				sourceX: scrollLeft,
 				sourceY: scrollTop,
@@ -1393,7 +1390,7 @@ const useScrollBase = (props) => {
 
 		// bail early when scrolling to the same position
 		if (
-			(type === JS && mutableRef.current.animator.isAnimating() || type === Native && mutableRef.current.scrolling) &&
+			(type === 'JS' && mutableRef.current.animator.isAnimating() || type === 'Native' && mutableRef.current.scrolling) &&
 			mutableRef.current.animationInfo &&
 			mutableRef.current.animationInfo.targetX === targetX &&
 			mutableRef.current.animationInfo.targetY === targetY
@@ -1403,7 +1400,7 @@ const useScrollBase = (props) => {
 
 		mutableRef.current.animationInfo = updatedAnimationInfo;
 
-		if (type === JS) {
+		if (type === 'JS') {
 			mutableRef.current.animator.stop();
 
 			if (!mutableRef.current.scrolling) {
@@ -1431,7 +1428,7 @@ const useScrollBase = (props) => {
 			}
 		}
 
-		if (type === JS) {
+		if (type === 'JS') {
 			showThumb(bounds);
 
 			if (animate) {
@@ -1543,7 +1540,7 @@ const useScrollBase = (props) => {
 
 	// esline-disable-next-line react-hooks/exhaustive-deps
 	function stop () {
-		if (type === JS) {
+		if (type === 'JS') {
 			stopForJS();
 		} else {
 			stopForNative();
@@ -1757,7 +1754,7 @@ const useScrollBase = (props) => {
 		utilEvent('mousedown').addEventListener(uiScrollContainerRef, onMouseDown);
 
 		// Native [[
-		if (type === Native && uiChildContainerRef.current) {
+		if (type === 'Native' && uiChildContainerRef.current) {
 			utilEvent('scroll').addEventListener(
 				uiChildContainerRef,
 				onScroll,
@@ -1823,14 +1820,14 @@ const useScrollBase = (props) => {
 	});
 
 	decorateChildProps('childWrapperProps', {
-		className: type === JS ? [css.content] : [css.content, css.contentNative], // Native;,
+		className: type === 'JS' ? [css.content] : [css.content, css.contentNative], // Native;,
 		...(!noScrollByDrag && {
 			flickConfig,
 			onDrag: onDrag,
 			onDragEnd: onDragEnd,
 			onDragStart: onDragStart,
 			onFlick: onFlick,
-			onTouchStart: type === Native ? onTouchStart : null// Native
+			onTouchStart: type === 'Native' ? onTouchStart : null// Native
 		})
 	});
 
@@ -1845,7 +1842,7 @@ const useScrollBase = (props) => {
 		get isVerticalScrollbarVisible () {
 			return isVerticalScrollbarVisible;
 		},
-		onScroll: type === JS ? handleScroll : null,
+		onScroll: type === 'JS' ? handleScroll : null,
 		rtl,
 		setUiChildAdapter,
 		type
@@ -1975,7 +1972,7 @@ const useScroll = (props) => {
 			wheel: true
 		},
 		setUiChildAdapter,
-		type: props.type || JS, // FIXME
+		type: props.type || 'JS', // FIXME
 		uiChildAdapter,
 		uiChildContainerRef,
 		uiScrollContainerRef,
