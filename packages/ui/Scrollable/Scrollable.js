@@ -1806,15 +1806,13 @@ const useScrollBase = (props) => {
 
 	const {
 		children,
+		data-webos-voice-focused: voiceFocused,
+		data-webos-voice-group-label: voiceGroupLabel,
 		dataSize,
 		itemRenderer,
 		itemSize,
 		spacing,
 		wrap,
-		// onBlurCapture,
-		// onFocusCapture,
-		// onMouseEnter,
-		// onMouseLeave,
 		...scrollableProp
 	} = rest;
 
@@ -1844,6 +1842,8 @@ const useScrollBase = (props) => {
 		children,
 		className: [css.scrollFill],
 		clientSize,
+		data-webos-voice-focused: voiceFocused,
+		data-webos-voice-group-label: voiceGroupLabel,
 		dataSize,
 		direction,
 		itemRenderer,
