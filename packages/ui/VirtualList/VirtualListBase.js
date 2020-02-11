@@ -7,10 +7,7 @@ import React, {Component} from 'react';
 
 import css from './VirtualList.module.less';
 
-const
-	nop = () => {},
-	JS = 'JS',
-	Native = 'Native';
+const nop = () => {};
 
 /**
  * The shape for the grid list item size
@@ -471,7 +468,7 @@ class VirtualListBase extends Component {
 	indexToScrollIntoView = -1
 
 	updateScrollPosition = ({x, y}, rtl = this.props.rtl) => {
-		if (this.props.type === Native) {
+		if (this.props.type === 'Native') {
 			this.scrollToPosition(x, y, rtl);
 		} else {
 			this.setScrollPosition(x, y, rtl, x, y);
@@ -632,7 +629,7 @@ class VirtualListBase extends Component {
 
 		// reset
 		this.scrollPosition = 0;
-		if (this.props.type === JS && this.contentRef.current) {
+		if (this.props.type === 'JS' && this.contentRef.current) {
 			this.contentRef.current.style.transform = null;
 		}
 	}
@@ -1168,7 +1165,7 @@ class VirtualListBase extends Component {
 	getContainerClasses (className) {
 		let containerClass = null;
 
-		if (this.props.type === Native) {
+		if (this.props.type === 'Native') {
 			containerClass = this.isPrimaryDirectionVertical ? css.vertical : css.horizontal;
 		}
 
@@ -1176,7 +1173,7 @@ class VirtualListBase extends Component {
 	}
 
 	getContentClasses () {
-		return this.props.type === Native ? null : css.content;
+		return this.props.type === 'Native' ? null : css.content;
 	}
 
 	render () {

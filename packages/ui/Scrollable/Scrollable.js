@@ -956,19 +956,12 @@ const useScrollBase = (props) => {
 			ev.stopPropagation();
 		} else {
 			const
-				// Native [[
-				{overscrollEffectOn} = props,
-				overscrollEffectRequired = mutableRef.current.overscrollEnabled && overscrollEffectOn.wheel,
-				// Native ]]
 				bounds = getScrollBounds(),
 				canScrollH = canScrollHorizontally(bounds),
 				canScrollV = canScrollVertically(bounds),
 				eventDeltaMode = ev.deltaMode,
 				eventDelta = (-ev.wheelDeltaY || ev.deltaY);
-			let
-				delta = 0,
-				direction, // JS
-				needToHideThumb = false; // Native
+			let delta = 0;
 
 			mutableRef.current.lastInputType = 'wheel';
 
@@ -987,7 +980,7 @@ const useScrollBase = (props) => {
 					delta = calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				}
 
-				direction = Math.sign(delta);
+				const direction = Math.sign(delta);
 
 				if (direction !== mutableRef.current.wheelDirection) {
 					mutableRef.current.isScrollAnimationTargetAccumulated = false;
@@ -1002,6 +995,11 @@ const useScrollBase = (props) => {
 					ev.stopPropagation();
 				}
 			} else { // Native
+				const
+					{overscrollEffectOn} = props,
+					overscrollEffectRequired = mutableRef.current.overscrollEnabled && overscrollEffectOn.wheel;
+				let needToHideThumb = false;
+
 				if (props.onWheel) {
 					forward('onWheel', ev, props);
 					return;
@@ -1051,7 +1049,7 @@ const useScrollBase = (props) => {
 				}
 
 				if (delta !== 0) {
-					direction = Math.sign(delta);
+					const direction = Math.sign(delta);
 					// Not to accumulate scroll position if wheel direction is different from hold direction
 					if (direction !== mutableRef.current.wheelDirection) {
 						mutableRef.current.isScrollAnimationTargetAccumulated = false;
@@ -1756,7 +1754,7 @@ const useScrollBase = (props) => {
 		utilEvent('mousedown').addEventListener(uiScrollContainerRef, onMouseDown);
 
 		// Native [[
-		if (uiChildContainerRef.current) {
+		if (type === 'Native' && uiChildContainerRef.current) {
 			utilEvent('scroll').addEventListener(
 				uiChildContainerRef,
 				onScroll,
@@ -1829,7 +1827,7 @@ const useScrollBase = (props) => {
 			onDragEnd: onDragEnd,
 			onDragStart: onDragStart,
 			onFlick: onFlick,
-			onTouchStart: onTouchStart // Native
+			onTouchStart: type === 'Native' ? onTouchStart : null// Native
 		})
 	});
 
