@@ -1756,7 +1756,7 @@ const useScrollBase = (props) => {
 		utilEvent('mousedown').addEventListener(uiScrollContainerRef, onMouseDown);
 
 		// Native [[
-		if (uiChildContainerRef.current) {
+		if (type === 'Native' && uiChildContainerRef.current) {
 			utilEvent('scroll').addEventListener(
 				uiChildContainerRef,
 				onScroll,
