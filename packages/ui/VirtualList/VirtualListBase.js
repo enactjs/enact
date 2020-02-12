@@ -278,6 +278,7 @@ class VirtualListBase extends Component {
 
 		super(props);
 
+		this.contentContainerRef = React.createRef();
 		this.contentRef = React.createRef();
 		this.itemContainerRef = React.createRef();
 
@@ -572,7 +573,8 @@ class VirtualListBase extends Component {
 	calculateMetrics (props) {
 		const
 			{clientSize, direction, itemSize, overhang, spacing} = props,
-			node = this.props.uiChildContainerRef.current;
+			node = this.props.uiChildContainerRef.current,
+			innerNode = this.contentContainerRef.current;
 
 		if (!clientSize && !node) {
 			return;
@@ -580,13 +582,16 @@ class VirtualListBase extends Component {
 
 		const
 			{clientWidth, clientHeight} = (clientSize || this.getClientSize(node)),
+			{clientWidth: clientInnerWidth, clientHeight: clientInnerHeight} = (clientSize || this.getClientSize(innerNode)),
 			heightInfo = {
 				clientSize: clientHeight,
+				clientInnerSize: clientInnerHeight,
 				minItemSize: itemSize.minHeight || null,
 				itemSize: itemSize
 			},
 			widthInfo = {
 				clientSize: clientWidth,
+				clientInnerSize: clientInnerWidth,
 				minItemSize: itemSize.minWidth || null,
 				itemSize: itemSize
 			};
@@ -608,10 +613,10 @@ class VirtualListBase extends Component {
 		if (this.isItemSized) {
 			// the number of columns is the ratio of the available width plus the spacing
 			// by the minimum item width plus the spacing
-			dimensionToExtent = Math.max(Math.floor((secondary.clientSize + spacing) / (secondary.minItemSize + spacing)), 1);
+			dimensionToExtent = Math.max(Math.floor((secondary.clientInnerSize + spacing) / (secondary.minItemSize + spacing)), 1);
 			// the actual item width is a ratio of the remaining width after all columns
 			// and spacing are accounted for and the number of columns that we know we should have
-			secondary.itemSize = Math.floor((secondary.clientSize - (spacing * (dimensionToExtent - 1))) / dimensionToExtent);
+			secondary.itemSize = Math.floor((secondary.clientInnerSize - (spacing * (dimensionToExtent - 1))) / dimensionToExtent);
 			// the actual item height is related to the item width
 			primary.itemSize = Math.floor(primary.minItemSize * (secondary.itemSize / secondary.minItemSize));
 		}
@@ -736,8 +741,11 @@ class VirtualListBase extends Component {
 
 	setContainerSize = () => {
 		if (this.contentRef.current) {
-			this.contentRef.current.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
-			this.contentRef.current.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
+			if (!this.isPrimaryDirectionVertical) {
+				this.contentRef.current.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
+			} else {
+				this.contentRef.current.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
+			}
 		}
 	}
 
@@ -1205,7 +1213,7 @@ class VirtualListBase extends Component {
 				style={style} ref={this.props.uiChildContainerRef}
 			>
 				{contentContainerProps ? (
-					<div className={css.contentContainer}>
+					<div className={css.contentContainer} ref={this.contentContainerRef}>
 						<div {...rest} className={contentClasses} ref={this.contentRef}>
 							{itemsRenderer({cc, itemContainerRef, primary})}
 						</div>
