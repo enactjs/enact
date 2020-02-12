@@ -1832,21 +1832,21 @@ const useScrollBase = (props) => {
 		})
 	});
 
+	const childProps = props.itemRenderer ? // If the child component is a VirtualList
+		{
+			'data-webos-voice-focused': voiceFocused,
+			'data-webos-voice-group-label': voiceGroupLabel,
+			dataSize,
+			itemRenderer,
+			itemSize,
+			itemSizes,
+			spacing,
+			wrap
+		} :
+		{children};
+
 	decorateChildProps('childProps', {
-		...(
-			props.itemRenderer ? // If the child component is a VirtualList
-			{
-				'data-webos-voice-focused': voiceFocused,
-				'data-webos-voice-group-label': voiceGroupLabel,
-				dataSize,
-				itemRenderer,
-				itemSize,
-				itemSizes,
-				spacing,
-				wrap
-			} :
-			{children}
-		),
+		...childProps,
 		cbScrollTo: scrollTo,
 		className: [css.scrollFill],
 		clientSize,
