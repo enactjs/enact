@@ -459,6 +459,7 @@ const useScrollBase = (props) => {
 			horizontalScrollbarRef,
 			itemRenderer,
 			itemSize,
+			itemSizes,
 			noScrollByDrag,
 			noScrollByWheel,
 			overscrollEffectOn,
@@ -1832,16 +1833,26 @@ const useScrollBase = (props) => {
 	});
 
 	decorateChildProps('childProps', {
+		...(
+			props.itemRenderer ? // If the child component is a VirtualList
+			{
+				'data-webos-voice-focused': voiceFocused,
+				'data-webos-voice-group-label': voiceGroupLabel,
+				dataSize,
+				itemRenderer,
+				itemSize,
+				itemSizes,
+				spacing,
+				wrap
+			} :
+			{children}
+		),
 		cbScrollTo: scrollTo,
-		children,
 		className: [css.scrollFill],
 		clientSize,
-		'data-webos-voice-focused': voiceFocused,
-		'data-webos-voice-group-label': voiceGroupLabel,
-		dataSize,
+
 		direction,
-		itemRenderer,
-		itemSize,
+
 		scrollContainerContainsDangerously,
 		get isHorizontalScrollbarVisible () {
 			return isHorizontalScrollbarVisible;
@@ -1852,9 +1863,7 @@ const useScrollBase = (props) => {
 		onScroll: type === 'JS' ? handleScroll : null,
 		rtl,
 		setUiChildAdapter,
-		spacing,
-		type,
-		wrap
+		type
 	});
 
 	decorateChildProps('verticalScrollbarProps', {
