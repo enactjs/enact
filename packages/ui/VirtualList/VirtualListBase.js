@@ -1157,9 +1157,15 @@ class VirtualListBase extends Component {
 
 	render () {
 		const
-			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, type, ...rest} = this.props,
+			{className, contentContainerProps, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, type, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, itemContainerRef, primary} = this,
-			containerClasses = classNames(css.virtualList, isPrimaryDirectionVertical ? css.vertical : css.horizontal, type === 'Native' ? css.native : null, className),
+			containerClasses = classNames(
+				className,
+				css.virtualList,
+				isPrimaryDirectionVertical ? css.vertical : css.horizontal,
+				type === 'Native' ? css.native : null,
+				contentContainerProps ? contentContainerProps.className : null
+			),
 			contentClasses = type === 'Native' ? null : css.content;
 
 		delete rest.cbScrollTo;
@@ -1191,10 +1197,23 @@ class VirtualListBase extends Component {
 		}
 
 		return (
-			<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.props.uiChildContainerRef} style={style}>
-				<div {...rest} className={contentClasses} ref={this.contentRef}>
-					{itemsRenderer({cc, itemContainerRef, primary})}
-				</div>
+			<div
+				className={containerClasses}
+				data-webos-voice-focused={voiceFocused}
+				data-webos-voice-group-label={voiceGroupLabel}
+				data-webos-voice-disabled={voiceDisabled}
+				style={style} ref={this.props.uiChildContainerRef}
+			>
+				{contentContainerProps ? (
+					<div className={css.contentContainer}>
+						<div {...rest} className={contentClasses} ref={this.contentRef}>
+							{itemsRenderer({cc, itemContainerRef, primary})}
+						</div>
+					</div>) :
+					(<div {...rest} className={contentClasses} ref={this.contentRef}>
+						{itemsRenderer({cc, itemContainerRef, primary})}
+					</div>)
+				}
 			</div>
 		);
 	}

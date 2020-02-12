@@ -191,7 +191,7 @@ class ScrollerBase extends Component {
 
 	render () {
 		const
-			{className, style, ...rest} = this.props,
+			{children, className, contentContainerProps, style, ...rest} = this.props,
 			mergedStyle = Object.assign({}, style, {
 				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
 				overflowY: this.isVertical() ? 'auto' : 'hidden'
@@ -211,10 +211,16 @@ class ScrollerBase extends Component {
 		return (
 			<div
 				{...rest}
-				className={classNames(className, css.scroller)}
+				className={classNames(className, css.scroller, contentContainerProps.className)}
 				ref={this.props.uiChildContainerRef}
 				style={mergedStyle}
-			/>
+			>
+				{
+					contentContainerProps ?
+						<div className={css.contentContainer}>{children}</div> :
+						{children}
+				}
+			</div>
 		);
 	}
 }
