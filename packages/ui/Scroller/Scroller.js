@@ -44,6 +44,14 @@ class ScrollerBase extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
+		 * The class class to provide a padding style.
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		contentContainerProps: PropTypes.object,
+
+		/**
 		 * Direction of the scroller.
 		 *
 		 * Valid values are:
@@ -74,12 +82,18 @@ class ScrollerBase extends Component {
 		rtl: PropTypes.bool,
 
 		/**
-		 * TBD
+		 * Adapter for wrapper to access this class instance.
+		 *
+		 * @type {Function}
+		 * @private
 		 */
 		setUiChildAdapter: PropTypes.func,
 
 		/**
-		 * TBD
+		 * Adapter for wrapper to access this class container ref.
+		 *
+		 * @type {Function}
+		 * @private
 		 */
 		uiChildContainerRef: PropTypes.object
 	}

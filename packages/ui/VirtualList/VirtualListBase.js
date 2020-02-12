@@ -123,6 +123,11 @@ class VirtualListBase extends Component {
 		}),
 
 		/**
+		 * The class class to provide a padding style
+		 */
+		contentContainerProps: PropTypes.object,
+
+		/**
 		 * Disable voice control feature of component.
 		 *
 		 * @type {Boolean}
@@ -230,8 +235,11 @@ class VirtualListBase extends Component {
 		 */
 		rtl: PropTypes.bool,
 
-		/*
-		 * TBD
+		/**
+		 * Adapter for wrapper to access this class instance.
+		 *
+		 * @type {Function}
+		 * @private
 		 */
 		setUiChildAdapter: PropTypes.func,
 
@@ -245,12 +253,15 @@ class VirtualListBase extends Component {
 		spacing: PropTypes.number,
 
 		/**
-		 * TBD
+		 * JS or Native type
 		 */
 		type: PropTypes.string,
 
 		/**
-		 * TBD
+		 * Adapter for wrapper to access this class container ref.
+		 *
+		 * @type {Function}
+		 * @private
 		 */
 		uiChildContainerRef: PropTypes.object,
 
