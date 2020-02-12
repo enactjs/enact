@@ -715,12 +715,10 @@ const useScrollBase = (props) => {
 		mutableRef.current.resizeRegistry = Registry.create(handleResize);
 	}
 
-	if (mutableRef.current.scrollStopJob == null) {
-		if (type === 'JS') {
-			mutableRef.current.scrollStopJob = new Job(doScrollStop, scrollStopWaiting);
-		} else {
-			mutableRef.current.scrollStopJob = new Job(scrollStopOnScroll, scrollStopWaiting);
-		}
+	if (type === 'JS') {
+		mutableRef.current.scrollStopJob = new Job(doScrollStop, scrollStopWaiting);
+	} else {
+		mutableRef.current.scrollStopJob = new Job(scrollStopOnScroll, scrollStopWaiting);
 	}
 
 	useEffect(() => {
