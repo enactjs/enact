@@ -715,11 +715,19 @@ const useScrollBase = (props) => {
 		mutableRef.current.resizeRegistry = Registry.create(handleResize);
 	}
 
-	if (type === 'JS') {
-		mutableRef.current.scrollStopJob = new Job(doScrollStop, scrollStopWaiting);
-	} else {
-		mutableRef.current.scrollStopJob = new Job(scrollStopOnScroll, scrollStopWaiting);
-	}
+	useEffect(() => {
+		const ref = mutableRef.current;
+
+		if (type === 'JS') {
+			ref.scrollStopJob = new Job(doScrollStop, scrollStopWaiting);
+		} else {
+			ref.scrollStopJob = new Job(scrollStopOnScroll, scrollStopWaiting);
+		}
+
+		return () => {
+			ref.scrollStopJob.stop();
+		};
+	}); // esline-disable-next-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		const
