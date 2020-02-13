@@ -1177,7 +1177,10 @@ class VirtualListBase extends Component {
 				type === 'Native' ? css.native : null,
 				contentWrapperProps ? css.padding : null
 			),
-			contentClasses = classNames(type === 'Native' ? null : css.content, contentWrapperProps.className);
+			contentClasses = classNames(
+				type === 'Native' ? null : css.content,
+				contentWrapperProps ? contentWrapperProps.className: null
+			);
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
