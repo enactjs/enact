@@ -450,6 +450,7 @@ const useScrollBase = (props) => {
 			children,
 			className,
 			clientSize,
+			'data-webos-voice-disabled': voiceDisabled,
 			'data-webos-voice-focused': voiceFocused,
 			'data-webos-voice-group-label': voiceGroupLabel,
 			dataSize,
@@ -1835,6 +1836,7 @@ const useScrollBase = (props) => {
 	const childProps = props.itemRenderer ? // If the child component is a VirtualList
 		{
 			clientSize,
+			'data-webos-voice-disabled': voiceDisabled,
 			'data-webos-voice-focused': voiceFocused,
 			'data-webos-voice-group-label': voiceGroupLabel,
 			dataSize,
