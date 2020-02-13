@@ -125,7 +125,7 @@ class VirtualListBase extends Component {
 		/**
 		 * The class class to provide a padding style
 		 */
-		contentContainerProps: PropTypes.object,
+		contentWrapperProps: PropTypes.object,
 
 		/**
 		 * Disable voice control feature of component.
@@ -289,7 +289,6 @@ class VirtualListBase extends Component {
 
 		super(props);
 
-		this.contentContainerRef = React.createRef();
 		this.contentRef = React.createRef();
 		this.itemContainerRef = React.createRef();
 
@@ -584,8 +583,7 @@ class VirtualListBase extends Component {
 	calculateMetrics (props) {
 		const
 			{clientSize, direction, itemSize, overhang, spacing} = props,
-			node = this.props.uiChildContainerRef.current,
-			innerNode = this.contentContainerRef.current;
+			node = this.props.uiChildContainerRef.current;
 
 		if (!clientSize && !node) {
 			return;
@@ -593,16 +591,13 @@ class VirtualListBase extends Component {
 
 		const
 			{clientWidth, clientHeight} = (clientSize || this.getClientSize(node)),
-			{clientWidth: clientInnerWidth, clientHeight: clientInnerHeight} = (clientSize || this.getClientSize(innerNode)),
 			heightInfo = {
 				clientSize: clientHeight,
-				clientInnerSize: clientInnerHeight,
 				minItemSize: itemSize.minHeight || null,
 				itemSize: itemSize
 			},
 			widthInfo = {
 				clientSize: clientWidth,
-				clientInnerSize: clientInnerWidth,
 				minItemSize: itemSize.minWidth || null,
 				itemSize: itemSize
 			};
@@ -624,10 +619,10 @@ class VirtualListBase extends Component {
 		if (this.isItemSized) {
 			// the number of columns is the ratio of the available width plus the spacing
 			// by the minimum item width plus the spacing
-			dimensionToExtent = Math.max(Math.floor((secondary.clientInnerSize + spacing) / (secondary.minItemSize + spacing)), 1);
+			dimensionToExtent = Math.max(Math.floor((secondary.clientSize + spacing) / (secondary.minItemSize + spacing)), 1);
 			// the actual item width is a ratio of the remaining width after all columns
 			// and spacing are accounted for and the number of columns that we know we should have
-			secondary.itemSize = Math.floor((secondary.clientInnerSize - (spacing * (dimensionToExtent - 1))) / dimensionToExtent);
+			secondary.itemSize = Math.floor((secondary.clientSize - (spacing * (dimensionToExtent - 1))) / dimensionToExtent);
 			// the actual item height is related to the item width
 			primary.itemSize = Math.floor(primary.minItemSize * (secondary.itemSize / secondary.minItemSize));
 		}
@@ -752,11 +747,8 @@ class VirtualListBase extends Component {
 
 	setContainerSize = () => {
 		if (this.contentRef.current) {
-			if (!this.isPrimaryDirectionVertical) {
-				this.contentRef.current.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
-			} else {
-				this.contentRef.current.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
-			}
+			this.contentRef.current.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
+			this.contentRef.current.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
 		}
 	}
 
@@ -1176,16 +1168,15 @@ class VirtualListBase extends Component {
 
 	render () {
 		const
-			{className, contentContainerProps, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, type, ...rest} = this.props,
+			{className, contentWrapperProps, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, type, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, itemContainerRef, primary} = this,
 			containerClasses = classNames(
 				className,
 				css.virtualList,
 				isPrimaryDirectionVertical ? css.vertical : css.horizontal,
-				type === 'Native' ? css.native : null,
-				contentContainerProps ? contentContainerProps.className : null
+				type === 'Native' ? css.native : null
 			),
-			contentClasses = type === 'Native' ? null : css.content;
+			contentClasses = classNames(type === 'Native' ? null : css.content, contentWrapperProps.className);
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
@@ -1221,18 +1212,12 @@ class VirtualListBase extends Component {
 				data-webos-voice-focused={voiceFocused}
 				data-webos-voice-group-label={voiceGroupLabel}
 				data-webos-voice-disabled={voiceDisabled}
-				style={style} ref={this.props.uiChildContainerRef}
+				ref={this.props.uiChildContainerRef}
+				style={style}
 			>
-				{contentContainerProps ? (
-					<div className={css.contentContainer} ref={this.contentContainerRef}>
-						<div {...rest} className={contentClasses} ref={this.contentRef}>
-							{itemsRenderer({cc, itemContainerRef, primary})}
-						</div>
-					</div>) :
-					(<div {...rest} className={contentClasses} ref={this.contentRef}>
-						{itemsRenderer({cc, itemContainerRef, primary})}
-					</div>)
-				}
+				<div {...rest} className={contentClasses} ref={this.contentRef}>
+					{itemsRenderer({cc, itemContainerRef, primary})}
+				</div>
 			</div>
 		);
 	}

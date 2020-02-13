@@ -1,15 +1,14 @@
 .virtualList {
+	background: green;
+	--scroll-fadeout-size: 48px;
+
 	position: relative;
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
 
-	.contentContainer {
-		position: relative;
-
-		.content {
-			will-change: transform;
-		}
+	.content {
+		will-change: transform;
 	}
 }
 
@@ -32,6 +31,7 @@
 }
 
 .listItem {
+	background: red;
 	position: absolute;
 	overflow: hidden;
 

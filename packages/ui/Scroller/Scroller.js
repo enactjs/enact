@@ -49,7 +49,7 @@ class ScrollerBase extends Component {
 		 * @type {Object}
 		 * @private
 		 */
-		contentContainerProps: PropTypes.object,
+		contentWrapperProps: PropTypes.object,
 
 		/**
 		 * Direction of the scroller.
@@ -205,7 +205,7 @@ class ScrollerBase extends Component {
 
 	render () {
 		const
-			{children, className, contentContainerProps, style, ...rest} = this.props,
+			{children, className, contentWrapperProps, style, ...rest} = this.props,
 			mergedStyle = Object.assign({}, style, {
 				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
 				overflowY: this.isVertical() ? 'auto' : 'hidden'
@@ -222,20 +222,13 @@ class ScrollerBase extends Component {
 		delete rest.uiChildAdapter;
 		delete rest.uiChildContainerRef;
 
-		return contentContainerProps ? (
+		return (
 			<div
 				{...rest}
-				className={classNames(className, css.scroller, contentContainerProps.className)}
+				className={classNames(className, css.scroller, contentWrapperProps ? contentWrapperProps.className : null)}
 				ref={this.props.uiChildContainerRef}
 				style={mergedStyle}
-			>
-				<div className={css.contentContainer}>{children}</div>
-			</div>
-		) :
-		(
-			<div {...rest} className={classNames(className, css.scroller)} ref={this.props.uiChildContainerRef} style={mergedStyle}>
-				{children}
-			</div>
+			><div style={{background: 'red'}}>{children}</div></div>
 		);
 	}
 }
