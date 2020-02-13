@@ -95,6 +95,12 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {	// eslint-disa
 			};
 		}
 
+		componentDidUpdate (prevProps, prevState) {
+			if ((prevState.isActive && !this.state.isActive) && (prevProps.value !== this.state.value)) {
+				forwardChange({value: this.state.value}, this.props);
+			}
+		}
+
 		handleChange = (ev) => {
 			if (!this.state.isActive) {
 				this.setState({
