@@ -1834,6 +1834,7 @@ const useScrollBase = (props) => {
 
 	const childProps = props.itemRenderer ? // If the child component is a VirtualList
 		{
+			clientSize,
 			'data-webos-voice-focused': voiceFocused,
 			'data-webos-voice-group-label': voiceGroupLabel,
 			dataSize,
@@ -1849,10 +1850,7 @@ const useScrollBase = (props) => {
 		...childProps,
 		cbScrollTo: scrollTo,
 		className: [css.scrollFill],
-		clientSize,
-
 		direction,
-
 		scrollContainerContainsDangerously,
 		get isHorizontalScrollbarVisible () {
 			return isHorizontalScrollbarVisible;
