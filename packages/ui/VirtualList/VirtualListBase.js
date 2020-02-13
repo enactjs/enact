@@ -1174,7 +1174,8 @@ class VirtualListBase extends Component {
 				className,
 				css.virtualList,
 				isPrimaryDirectionVertical ? css.vertical : css.horizontal,
-				type === 'Native' ? css.native : null
+				type === 'Native' ? css.native : null,
+				contentWrapperProps ? css.padding : null
 			),
 			contentClasses = classNames(type === 'Native' ? null : css.content, contentWrapperProps.className);
 

@@ -15,8 +15,15 @@
 	&.native {
 		overflow-y: scroll;
 	}
+
 	.listItem {
-		width: 100%;
+		width: calc(100% - 96px);
+	}
+
+	&.padding {
+		.listItem {
+			width: calc(100% - 96px);
+		}
 	}
 }
 
@@ -24,8 +31,15 @@
 	&.native {
 		overflow-x: scroll;
 	}
+
 	.listItem {
-		height: 100%;
+		height: calc(100% - 96px);
+	}
+
+	&.padding {
+		.listItem {
+			height: calc(100% - 96px);
+		}
 	}
 }
 

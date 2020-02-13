@@ -228,7 +228,11 @@ class ScrollerBase extends Component {
 				className={classNames(className, css.scroller, contentWrapperProps ? contentWrapperProps.className : null)}
 				ref={this.props.uiChildContainerRef}
 				style={mergedStyle}
-			><div style={{background: 'red'}}>{children}</div></div>
+			>
+				<div className={css.contentWrapper} style={{background: 'red'}}>
+					{children}
+				</div>
+			</div>
 		);
 	}
 }
