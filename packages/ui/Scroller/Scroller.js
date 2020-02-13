@@ -222,18 +222,19 @@ class ScrollerBase extends Component {
 		delete rest.uiChildAdapter;
 		delete rest.uiChildContainerRef;
 
-		return (
+		return contentContainerProps ? (
 			<div
 				{...rest}
 				className={classNames(className, css.scroller, contentContainerProps.className)}
 				ref={this.props.uiChildContainerRef}
 				style={mergedStyle}
 			>
-				{
-					contentContainerProps ?
-						<div className={css.contentContainer}>{children}</div> :
-						{children}
-				}
+				<div className={css.contentContainer}>{children}</div>
+			</div>
+		) :
+		(
+			<div {...rest} className={classNames(className, css.scroller)} ref={this.props.uiChildContainerRef} style={mergedStyle}>
+				{children}
 			</div>
 		);
 	}
