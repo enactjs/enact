@@ -93,18 +93,17 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {	// eslint-disa
 				// next onChange event. The `noAnimation` prop takes precedence over this.
 				noAnimation: false
 			};
+			this.prevValue = props.value;
 		}
 
-		componentDidUpdate (prevProps, prevState) {
-			if ((prevState.isActive && !this.state.isActive) && (prevProps.value !== this.state.value)) {
-				forwardChange({value: this.state.value}, this.props);
-			}
-		}
+		prevValue = null
 
 		handleChange = (ev) => {
 			if (!this.state.isActive) {
+				const value = this.validateValue(parseInt(ev.value));
+				this.prevValue = this.state.value;
 				this.setState({
-					value: this.validateValue(parseInt(ev.value)),
+					value,
 					noAnimation: false
 				});
 			}
@@ -157,13 +156,18 @@ const EditableIntegerPickerDecorator = hoc((config, Wrapped) => {	// eslint-disa
 		}
 
 		handleBlur = (ev) => {
+			const value = this.validateValue(parseInt(ev.target.value));
+			this.prevValue = this.state.value;
 			this.setState({
-				value: this.validateValue(parseInt(ev.target.value)),
+				value,
 				isActive: false
 			}, () => {
 				Spotlight.focus(this.pickerNode);
 				this.freezeSpotlight(false);
 			});
+			if (this.prevValue !== value) {
+				forwardChange({value}, this.props);
+			}
 			forwardBlur(ev, this.props);
 		}
 
