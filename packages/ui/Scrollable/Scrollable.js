@@ -486,7 +486,6 @@ const useScrollBase = (props) => {
 	delete rest.applyOverscrollEffect;
 	delete rest.cbScrollTo;
 	delete rest.clearOverscrollEffect;
-	delete rest.clientSize;
 	delete rest.handleResizeWindow;
 	delete rest.onFlick;
 	delete rest.onKeyDown;
