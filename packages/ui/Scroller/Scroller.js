@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import {ResizeContext} from '../Resizable';
-import useScroll from '../Scrollable';
+import {ScrollContext, ScrollContextDecorator, useScroll} from '../Scrollable';
 import Scrollbar from '../Scrollable/Scrollbar';
 
 import css from './Scroller.module.less';
@@ -203,7 +203,6 @@ class ScrollerBase extends Component {
 		delete rest.rtl;
 		delete rest.setChildAdapter;
 		delete rest.setUiChildAdapter;
-		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
 		delete rest.uiChildAdapter;
 		delete rest.uiChildContainerRef;
@@ -381,13 +380,16 @@ class ScrollerBase extends Component {
  * @ui
  * @public
  */
-const Scroller = (props) => {
+const Scroller = ScrollContextDecorator((props) => {
 	// Hooks
 
 	const {
-		childWrapper: ChildWrapper,
 		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible,
+		isVerticalScrollbarVisible
+	} = useContext(ScrollContext);
+
+	const {
+		childWrapper: ChildWrapper,
 
 		resizeContextProps,
 		scrollContainerProps,
@@ -413,7 +415,7 @@ const Scroller = (props) => {
 			</div>
 		</ResizeContext.Provider>
 	);
-};
+});
 
 Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
 	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),

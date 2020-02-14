@@ -26,7 +26,7 @@ import {gridListItemSizeShape, itemSizesShape, VirtualListBase} from './VirtualL
  * @ui
  * @public
  */
-const VirtualList = ({role, ...rest}) => {
+const VirtualList = ScrollContextDecorator(({role, ...rest}) => {
 	// Hooks
 
 	const {
@@ -66,7 +66,7 @@ const VirtualList = ({role, ...rest}) => {
 			</div>
 		</ResizeContext.Provider>
 	);
-};
+});
 
 VirtualList.displayName = 'ui:VirtualList';
 
@@ -137,11 +137,16 @@ VirtualList.defaultProps = {
  * @ui
  * @public
  */
-const VirtualGridList = ({role, ...rest}) => {
+const VirtualGridList = ScrollContextDecorator(({role, ...rest}) => {
+	// Hooks
+
+	const {
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible
+	} = useContext(ScrollContext);
+
 	const {
 		childWrapper: ChildWrapper,
-		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible,
 
 		resizeContextProps,
 		scrollContainerProps,
@@ -151,6 +156,8 @@ const VirtualGridList = ({role, ...rest}) => {
 		verticalScrollbarProps,
 		horizontalScrollbarProps
 	} = useScroll(rest);
+
+	// Render
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
@@ -170,7 +177,7 @@ const VirtualGridList = ({role, ...rest}) => {
 			</div>
 		</ResizeContext.Provider>
 	);
-};
+});
 
 VirtualGridList.displaytName = 'ui:VirtualGridList';
 
