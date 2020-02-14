@@ -67,8 +67,6 @@ const
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
 
-const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
-
 const useForceUpdate = () => (useReducer(x => x + 1, 0));
 
 /**
@@ -451,9 +449,11 @@ const ScrollContextDecorator = (Wrapped) => (props) => {
 	const {horizontalScrollbar, verticalScrollbar} = props;
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
+	const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
 
 	return (
 		<ScrollContext.Provider value={{
+			childWrapper: props.noScrollByDrag ? 'div' : TouchableDiv,
 			isHorizontalScrollbarVisible,
 			isVerticalScrollbarVisible,
 			setIsHorizontalScrollbarVisible,
@@ -1917,10 +1917,6 @@ const useScrollBase = (props) => {
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
 	};
-
-	return {
-		childWrapper: noScrollByDrag ? 'div' : TouchableDiv
-	};
 };
 
 /**
@@ -1996,9 +1992,7 @@ const useScroll = (props) => {
 		decoratedChildProps = {},
 		decorateChildProps = utilDecorateChildProps(decoratedChildProps);
 
-	const {
-		childWrapper
-	} = useScrollBase({
+	useScrollBase({
 		...props,
 		decorateChildProps,
 		get horizontalScrollbarRef () {
@@ -2028,10 +2022,7 @@ const useScroll = (props) => {
 
 	// Return
 
-	return {
-		...decoratedChildProps,
-		childWrapper
-	};
+	return decoratedChildPropsg;
 };
 
 export default useScroll;
