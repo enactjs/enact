@@ -1874,6 +1874,7 @@ const useScrollBase = (props) => {
 
 	decorateChildProps('horizontalScrollbarProps', {
 		clientSize,
+		corner: isVerticalScrollbarVisible,
 		disabled: !isHorizontalScrollbarVisible,
 		rtl,
 		vertical: false

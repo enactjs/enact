@@ -49,9 +49,10 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 	const hideThumbJob = useRef(null);
 	// Render
 	const
-		{childRenderer, className, css, vertical, ...rest} = props,
+		{childRenderer, className, corner, css, vertical, ...rest} = props,
 		containerClassName = classNames(
 			className,
+			corner && css.corner,
 			css.scrollbar,
 			vertical ? css.vertical : css.horizontal
 		);
@@ -129,6 +130,15 @@ ScrollbarBase.propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
 	}),
 
 	/**
+	 * If `true`, add the corner between vertical and horizontal scrollbars.
+	 *
+	 * @type {Booelan}
+	 * @default false
+	 * @public
+	 */
+	corner: PropTypes.bool,
+
+	/**
 	 * Customizes the component by mapping the supplied collection of CSS class names to the
 	 * corresponding internal elements and states of this component.
 	 *
@@ -152,6 +162,7 @@ ScrollbarBase.propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
 };
 
 ScrollbarBase.defaultProps = {
+	corner: false,
 	css: componentCss,
 	vertical: true
 };
