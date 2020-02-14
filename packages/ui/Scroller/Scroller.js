@@ -66,14 +66,6 @@ class ScrollerBase extends Component {
 		isVerticalScrollbarVisible: PropTypes.bool,
 
 		/**
-		 * Support additional padding size
-		 *
-		 * @type {Object}
-		 * @private
-		 */
-		padded: PropTypes.bool,
-
-		/**
 		 * `true` if RTL, `false` if LTR.
 		 *
 		 * @type {Boolean}
@@ -214,7 +206,6 @@ class ScrollerBase extends Component {
 		delete rest.cbScrollTo;
 		delete rest.scrollContainerContainsDangerously;
 		delete rest.direction;
-		delete rest.padded;
 		delete rest.rtl;
 		delete rest.setChildAdapter;
 		delete rest.setUiChildAdapter;

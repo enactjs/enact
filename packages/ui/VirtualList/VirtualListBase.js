@@ -216,7 +216,7 @@ class VirtualListBase extends Component {
 		/**
 		 * Support additional padding size
 		 *
-		 * @type {Object}
+		 * @type {Boolean}
 		 * @private
 		 */
 		padded: PropTypes.bool,
