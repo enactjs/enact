@@ -219,7 +219,7 @@ class VirtualListBase extends Component {
 		 * @type {Object}
 		 * @private
 		 */
-		padding: PropTypes.bool,
+		padded: PropTypes.bool,
 
 		/**
 		 * When `true`, the list will scroll by page.  Otherwise the list will scroll by item.
@@ -1171,14 +1171,14 @@ class VirtualListBase extends Component {
 
 	render () {
 		const
-			{className, padding, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, type, ...rest} = this.props,
+			{className, padded, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, type, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, itemContainerRef, primary} = this,
 			containerClasses = classNames(
 				className,
 				css.virtualList,
 				isPrimaryDirectionVertical ? css.vertical : css.horizontal,
 				type === 'Native' ? css.native : null,
-				padding ? css.padding : null
+				padded ? css.padding : null
 			),
 			contentClasses = type === 'Native' ? null : css.content;
 

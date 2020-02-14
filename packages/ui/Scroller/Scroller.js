@@ -71,7 +71,7 @@ class ScrollerBase extends Component {
 		 * @type {Object}
 		 * @private
 		 */
-		padding: PropTypes.bool,
+		padded: PropTypes.bool,
 
 		/**
 		 * `true` if RTL, `false` if LTR.
@@ -214,7 +214,7 @@ class ScrollerBase extends Component {
 		delete rest.cbScrollTo;
 		delete rest.scrollContainerContainsDangerously;
 		delete rest.direction;
-		delete rest.padding;
+		delete rest.padded;
 		delete rest.rtl;
 		delete rest.setChildAdapter;
 		delete rest.setUiChildAdapter;

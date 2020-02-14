@@ -1821,7 +1821,7 @@ const useScrollBase = (props) => {
 	});
 
 	decorateChildProps('childWrapperProps', {
-		className: type === 'JS' ? [css.content] : [css.content, css.contentNative], // Native;,
+		className: type === 'JS' ? [css.childWrapper] : [css.childWrapper, css.childWrapperNative], // Native;,
 		...(!noScrollByDrag && {
 			flickConfig,
 			onDrag: onDrag,
@@ -1850,7 +1850,7 @@ const useScrollBase = (props) => {
 	decorateChildProps('childProps', {
 		...childProps,
 		cbScrollTo: scrollTo,
-		className: [css.scrollFill],
+		className: [css.child],
 		direction,
 		scrollContainerContainsDangerously,
 		get isHorizontalScrollbarVisible () {
