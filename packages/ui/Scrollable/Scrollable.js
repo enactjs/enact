@@ -15,6 +15,7 @@ import {platform} from '@enact/core/platform'; // Native
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
+import React from 'react';
 import clamp from 'ramda/src/clamp';
 import {Component, useCallback, useContext, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
 import warning from 'warning';
@@ -444,6 +445,25 @@ class ScrollableBase extends Component {
 	}
 }
 
+const ScrollContext = React.createContext();
+
+const ScrollContextDecorator = (Wrapped) => (props) => {
+	const {horizontalScrollbar, verticalScrollbar} = props;
+	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
+	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
+
+	return (
+		<ScrollContext.Provider value={{
+			isHorizontalScrollbarVisible,
+			isVerticalScrollbarVisible,
+			setIsHorizontalScrollbarVisible,
+			setIsVerticalScrollbarVisible
+		}}>
+			<Wrapped {...props} />;
+		</ScrollContext.Provider>
+	);
+};
+
 const useScrollBase = (props) => {
 	const
 		{
@@ -506,8 +526,12 @@ const useScrollBase = (props) => {
 
 	const context = useContext(ResizeContext);
 
-	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
-	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
+	const {
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible,
+		setIsHorizontalScrollbarVisible,
+		setIsVerticalScrollbarVisible
+	} = useContext(ScrollContext);
 
 	const mutableRef = useRef({
 		overscrollEnabled: !!(props.applyOverscrollEffect),
@@ -1851,7 +1875,10 @@ const useScrollBase = (props) => {
 			spacing,
 			wrap
 		} :
-		{children};
+		{
+			children,
+			isVerticalScrollbarVisible
+		};
 
 	decorateChildProps('childProps', {
 		...childProps,
@@ -1859,12 +1886,6 @@ const useScrollBase = (props) => {
 		className: [css.scrollFill],
 		direction,
 		scrollContainerContainsDangerously,
-		get isHorizontalScrollbarVisible () {
-			return isHorizontalScrollbarVisible;
-		},
-		get isVerticalScrollbarVisible () {
-			return isVerticalScrollbarVisible;
-		},
 		onScroll: type === 'JS' ? handleScroll : null,
 		rtl,
 		setUiChildAdapter,
@@ -1898,9 +1919,7 @@ const useScrollBase = (props) => {
 	};
 
 	return {
-		childWrapper: noScrollByDrag ? 'div' : TouchableDiv,
-		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible
+		childWrapper: noScrollByDrag ? 'div' : TouchableDiv
 	};
 };
 
@@ -1978,9 +1997,7 @@ const useScroll = (props) => {
 		decorateChildProps = utilDecorateChildProps(decoratedChildProps);
 
 	const {
-		childWrapper,
-		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible
+		childWrapper
 	} = useScrollBase({
 		...props,
 		decorateChildProps,
@@ -2013,9 +2030,7 @@ const useScroll = (props) => {
 
 	return {
 		...decoratedChildProps,
-		childWrapper,
-		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible
+		childWrapper
 	};
 };
 
@@ -2024,6 +2039,8 @@ export {
 	constants,
 	Scrollable,
 	ScrollableBase,
+	ScrollContext,
+	ScrollContextDecorator,
 	useScroll,
 	useScrollBase,
 	utilDecorateChildProps

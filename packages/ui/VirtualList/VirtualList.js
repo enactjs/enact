@@ -9,10 +9,10 @@
  */
 
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {useState} from 'react';
 
 import {ResizeContext} from '../Resizable';
-import useScroll from '../Scrollable';
+import {ScrollContext, ScrollContextDecorator, useScroll} from '../Scrollable';
 import Scrollbar from '../Scrollable/Scrollbar';
 
 import {gridListItemSizeShape, itemSizesShape, VirtualListBase} from './VirtualListBase';
@@ -30,9 +30,12 @@ const VirtualList = ({role, ...rest}) => {
 	// Hooks
 
 	const {
-		childWrapper: ChildWrapper,
 		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible,
+		isVerticalScrollbarVisible
+	} = useContext(ScrollContext);
+
+	const {
+		childWrapper: ChildWrapper,
 
 		resizeContextProps,
 		scrollContainerProps,
@@ -237,6 +240,8 @@ export default VirtualList;
 export {
 	gridListItemSizeShape,
 	itemSizesShape,
+	ScrollContext,
+	ScrollContextDecorator,
 	VirtualGridList,
 	VirtualList,
 	VirtualListBase
