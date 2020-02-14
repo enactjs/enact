@@ -44,14 +44,6 @@ class ScrollerBase extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
-		 * The class class to provide a padding style.
-		 *
-		 * @type {Object}
-		 * @private
-		 */
-		contentWrapperProps: PropTypes.object,
-
-		/**
 		 * Direction of the scroller.
 		 *
 		 * Valid values are:
@@ -72,6 +64,14 @@ class ScrollerBase extends Component {
 		 * @private
 		 */
 		isVerticalScrollbarVisible: PropTypes.bool,
+
+		/**
+		 * Support additional padding size
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		padding: PropTypes.bool,
 
 		/**
 		 * `true` if RTL, `false` if LTR.
@@ -214,6 +214,7 @@ class ScrollerBase extends Component {
 		delete rest.cbScrollTo;
 		delete rest.scrollContainerContainsDangerously;
 		delete rest.direction;
+		delete rest.padding;
 		delete rest.rtl;
 		delete rest.setChildAdapter;
 		delete rest.setUiChildAdapter;

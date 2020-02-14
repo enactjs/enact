@@ -123,11 +123,6 @@ class VirtualListBase extends Component {
 		}),
 
 		/**
-		 * The class class to provide a padding style
-		 */
-		contentWrapperProps: PropTypes.object,
-
-		/**
 		 * Disable voice control feature of component.
 		 *
 		 * @type {Boolean}
@@ -217,6 +212,14 @@ class VirtualListBase extends Component {
 		 * @private
 		 */
 		overhang: PropTypes.number,
+
+		/**
+		 * Support additional padding size
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		padding: PropTypes.bool,
 
 		/**
 		 * When `true`, the list will scroll by page.  Otherwise the list will scroll by item.
