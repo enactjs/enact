@@ -4,6 +4,11 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/ProgressBar` to support additional `orientation` type of `'radial'`
+- `ui/ProgressBar` public class name `radial`
+
 ### Changed
 
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `childProps` to `itemProps` for clarity.
