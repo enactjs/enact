@@ -229,7 +229,7 @@ class ScrollerBase extends Component {
 				ref={this.props.uiChildContainerRef}
 				style={mergedStyle}
 			>
-				<div className={css.contentWrapper} style={{background: 'red'}}>
+				<div className={css.contentWrapper}>
 					{children}
 				</div>
 			</div>
