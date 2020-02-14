@@ -1171,7 +1171,7 @@ class VirtualListBase extends Component {
 
 	render () {
 		const
-			{className, padded, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, type, ...rest} = this.props,
+			{className, padded, 'data-webos-voice-disabled': voiceDisabled, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, type, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, itemContainerRef, primary} = this,
 			containerClasses = classNames(
 				className,
@@ -1213,9 +1213,9 @@ class VirtualListBase extends Component {
 		return (
 			<div
 				className={containerClasses}
+				data-webos-voice-disabled={voiceDisabled}
 				data-webos-voice-focused={voiceFocused}
 				data-webos-voice-group-label={voiceGroupLabel}
-				data-webos-voice-disabled={voiceDisabled}
 				ref={this.props.uiChildContainerRef}
 				style={style}
 			>
