@@ -1179,7 +1179,7 @@ class VirtualListBase extends Component {
 			),
 			contentClasses = classNames(
 				type === 'Native' ? null : css.content,
-				contentWrapperProps ? contentWrapperProps.className: null
+				contentWrapperProps ? contentWrapperProps.className : null
 			);
 
 		delete rest.cbScrollTo;

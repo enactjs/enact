@@ -1860,7 +1860,6 @@ const useScrollBase = (props) => {
 
 	decorateChildProps('horizontalScrollbarProps', {
 		clientSize: props.clientSize,
-		corner: isVerticalScrollbarVisible,
 		disabled: !isHorizontalScrollbarVisible,
 		rtl,
 		vertical: false
@@ -1964,9 +1963,7 @@ const useScroll = (props) => {
 	} = useScrollBase({
 		...props,
 		decorateChildProps,
-		get horizontalScrollbarRef () {
-			return horizontalScrollbarRef;
-		},
+		horizontalScrollbarRef,
 		overscrollEffectOn: props.overscrollEffectOn || { // FIXME
 			arrowKey: false,
 			drag: false,
@@ -1979,9 +1976,7 @@ const useScroll = (props) => {
 		uiChildAdapter,
 		uiChildContainerRef,
 		uiScrollContainerRef,
-		get verticalScrollbarRef () {
-			return verticalScrollbarRef;
-		}
+		verticalScrollbarRef
 	});
 
 	decorateChildProps('scrollContainerProps', {ref: uiScrollContainerRef});
