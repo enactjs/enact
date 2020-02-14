@@ -1168,19 +1168,16 @@ class VirtualListBase extends Component {
 
 	render () {
 		const
-			{className, contentWrapperProps, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, type, ...rest} = this.props,
+			{className, padding, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, type, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, itemContainerRef, primary} = this,
 			containerClasses = classNames(
 				className,
 				css.virtualList,
 				isPrimaryDirectionVertical ? css.vertical : css.horizontal,
 				type === 'Native' ? css.native : null,
-				contentWrapperProps ? css.padding : null
+				padding ? css.padding : null
 			),
-			contentClasses = classNames(
-				type === 'Native' ? null : css.content,
-				contentWrapperProps ? contentWrapperProps.className : null
-			);
+			contentClasses = type === 'Native' ? null : css.content;
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
