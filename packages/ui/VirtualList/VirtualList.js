@@ -30,9 +30,9 @@ const VirtualList = ScrollContextDecorator(({role, ...rest}) => {
 	// Hooks
 
 	const {
-		childWrapper: ChildWrapper,
 		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible
+		isVerticalScrollbarVisible,
+		mutableRef: {childWrapper: ChildWrapper}
 	} = useContext(ScrollContext);
 
 	const {
@@ -140,9 +140,9 @@ const VirtualGridList = ScrollContextDecorator(({role, ...rest}) => {
 	// Hooks
 
 	const {
-		childWrapper: ChildWrapper,
 		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible
+		isVerticalScrollbarVisible,
+		mutableRef: {childWrapper: ChildWrapper}
 	} = useContext(ScrollContext);
 
 	const {
