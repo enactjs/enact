@@ -10,6 +10,7 @@
 
 import classNames from 'classnames';
 import {forward, forwardWithPrevent} from '@enact/core/handle';
+import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform'; // Native
 import Registry from '@enact/core/internal/Registry';
@@ -445,24 +446,58 @@ class ScrollableBase extends Component {
 
 const ScrollContext = React.createContext();
 
-const ScrollContextDecorator = (Wrapped) => (props) => {
-	const {horizontalScrollbar, verticalScrollbar} = props;
-	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
-	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
-	const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
-
-	return (
-		<ScrollContext.Provider value={{
-			childWrapper: props.noScrollByDrag ? 'div' : TouchableDiv,
-			isHorizontalScrollbarVisible,
-			isVerticalScrollbarVisible,
-			setIsHorizontalScrollbarVisible,
-			setIsVerticalScrollbarVisible
-		}}>
-			<Wrapped {...props} />;
-		</ScrollContext.Provider>
-	);
+/**
+ * Default config for {@link ui/ScrollContextDecorator.ScrollContextDecorator}.
+ *
+ * @memberof ui/ScrollContextDecorator.ScrollContextDecorator
+ * @hocconfig
+ */
+const defaultConfig = {
+	/**
+	 * Configures ...
+	 *
+	 * @type {String}
+	 * @default 'children'
+	 * @memberof ui/A11yDecorator.A11yDecorator.defaultConfig
+	 */
+	tbd: 'tbd'
 };
+
+const ScrollContextDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	return (props) => {
+		const {horizontalScrollbar, verticalScrollbar} = props;
+		const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
+		const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
+		const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
+
+		const uiScrollContainerRef = useRef(null);
+		const uiChildContainerRef = useRef();
+		const horizontalScrollbarRef = useRef();
+		const verticalScrollbarRef = useRef();
+
+		const [uiChildAdapter, setUiChildAdapter] = useChildAdapter();
+
+		return (
+			<ScrollContext.Provider value={{
+				childWrapper: props.noScrollByDrag ? 'div' : TouchableDiv,
+				isHorizontalScrollbarVisible,
+				isVerticalScrollbarVisible,
+				setIsHorizontalScrollbarVisible,
+				setIsVerticalScrollbarVisible,
+
+				uiScrollContainerRef,
+				uiChildAdapter,
+				uiChildContainerRef,
+				horizontalScrollbarRef,
+				setUiChildAdapter,
+				verticalScrollbarRef
+
+			}}>
+				<Wrapped {...props} />;
+			</ScrollContext.Provider>
+		);
+	};
+});
 
 const useScrollBase = (props) => {
 	const
@@ -477,7 +512,6 @@ const useScrollBase = (props) => {
 			decorateChildProps,
 			direction,
 			horizontalScrollbar,
-			horizontalScrollbarRef,
 			itemRenderer,
 			itemSize,
 			itemSizes,
@@ -485,15 +519,10 @@ const useScrollBase = (props) => {
 			noScrollByWheel,
 			overscrollEffectOn,
 			rtl,
-			setUiChildAdapter,
 			setUiScrollAdapter,
 			spacing,
 			type,
-			uiChildAdapter,
-			uiChildContainerRef,
-			uiScrollContainerRef,
 			verticalScrollbar,
-			verticalScrollbarRef,
 			wrap,
 			...rest
 		} = props,
@@ -530,7 +559,14 @@ const useScrollBase = (props) => {
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
 		setIsHorizontalScrollbarVisible,
-		setIsVerticalScrollbarVisible
+		setIsVerticalScrollbarVisible,
+
+		uiScrollContainerRef,
+		uiChildAdapter,
+		uiChildContainerRef,
+		horizontalScrollbarRef,
+		setUiChildAdapter,
+		verticalScrollbarRef
 	} = useContext(ScrollContext);
 
 	const mutableRef = useRef({
@@ -1975,18 +2011,15 @@ const utilDecorateChildProps = (instance) => (childComponentName, props) => {
 };
 
 const useScroll = (props) => {
-	// Mutable value
-
-	const uiScrollContainerRef = useRef(null);
-	const uiChildContainerRef = useRef();
-	const horizontalScrollbarRef = useRef();
-	const verticalScrollbarRef = useRef();
-
-	// Adapters
-
-	const [uiChildAdapter, setUiChildAdapter] = useChildAdapter();
-
 	// Hooks
+
+	const {
+		uiScrollContainerRef,
+		uiChildAdapter,
+		uiChildContainerRef,
+		horizontalScrollbarRef,
+		verticalScrollbarRef
+	} = useContext(ScrollContext);
 
 	const
 		decoratedChildProps = {},
@@ -1995,9 +2028,6 @@ const useScroll = (props) => {
 	useScrollBase({
 		...props,
 		decorateChildProps,
-		get horizontalScrollbarRef () {
-			return horizontalScrollbarRef;
-		},
 		overscrollEffectOn: props.overscrollEffectOn || { // FIXME
 			arrowKey: false,
 			drag: false,
@@ -2005,14 +2035,7 @@ const useScroll = (props) => {
 			scrollbarButton: false,
 			wheel: true
 		},
-		setUiChildAdapter,
 		type: props.type || 'JS', // FIXME
-		uiChildAdapter,
-		uiChildContainerRef,
-		uiScrollContainerRef,
-		get verticalScrollbarRef () {
-			return verticalScrollbarRef;
-		}
 	});
 
 	decorateChildProps('scrollContainerProps', {ref: uiScrollContainerRef});
