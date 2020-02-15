@@ -546,6 +546,7 @@ const ScrollContextDecorator = hoc((config, Wrapped) => {
 			// ui/VirtualList and ui/ Scroller functions
 			// which could be called from ui/Scrollable or VirtualList, Scroller in theme libraries
 			didScroll: nop,
+			getChildScrollBounds: nop,
 			isHorizontal: nop,
 			isVertical: nop,
 			scrollToPosition: nop,
@@ -1791,8 +1792,8 @@ const useScrollBase = (props) => {
 	// ref
 
 	function getScrollBounds () {
-		if (mutableRef.current && typeof mutableRef.current.getScrollBounds === 'function') {
-			return mutableRef.current.getScrollBounds();
+		if (mutableRef.current && typeof mutableRef.current.getChildScrollBounds === 'function') {
+			return mutableRef.current.getChildScrollBounds();
 		}
 	}
 

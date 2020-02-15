@@ -98,7 +98,7 @@ class ScrollerBase extends Component {
 			...props.scrollContext.current,
 			didScroll: this.didScroll.bind(this),
 			getNodePosition: this.getNodePosition.bind(this),
-			getScrollBounds: this.getScrollBounds.bind(this),
+			getChildScrollBounds: this.getScrollBounds.bind(this),
 			isHorizontal: this.isHorizontal.bind(this),
 			isVertical: this.isVertical.bind(this),
 			scrollToPosition: this.scrollToPosition.bind(this),

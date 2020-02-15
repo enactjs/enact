@@ -309,7 +309,7 @@ class VirtualListBase extends Component {
 			getItemNode: this.getItemNode.bind(this),
 			getItemPosition: this.getItemPosition.bind(this),
 			getMoreInfo: this.getMoreInfo.bind(this),
-			getScrollBounds: this.getScrollBounds.bind(this),
+			getChildScrollBounds: this.getScrollBounds.bind(this),
 			getScrollPosition: this.getScrollPosition.bind(this),
 			getScrollPositionTarget: this.getScrollPositionTarget.bind(this),
 			gridPositionToItemPosition: this.gridPositionToItemPosition.bind(this),
