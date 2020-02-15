@@ -462,7 +462,7 @@ const defaultConfig = {
 };
 
 const ScrollContextDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	return (props) => {
+	const Wrapper = (props) => {
 		const {horizontalScrollbar, verticalScrollbar} = props;
 		const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
 		const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
@@ -554,23 +554,34 @@ const ScrollContextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		});
 
 		return (
-			<ScrollContext.Provider value={{
-				uiScrollContainerRef,
-				uiChildContainerRef,
-				horizontalScrollbarRef,
-				verticalScrollbarRef,
-				scrollMutableRef,
+			<ScrollContext.Provider
+				value={{
+					uiScrollContainerRef,
+					uiChildContainerRef,
+					horizontalScrollbarRef,
+					verticalScrollbarRef,
+					scrollMutableRef,
 
-				childWrapper: props.noScrollByDrag ? 'div' : TouchableDiv,
-				isHorizontalScrollbarVisible,
-				isVerticalScrollbarVisible,
-				setIsHorizontalScrollbarVisible,
-				setIsVerticalScrollbarVisible
-			}}>
+					childWrapper: props.noScrollByDrag ? 'div' : TouchableDiv,
+					isHorizontalScrollbarVisible,
+					isVerticalScrollbarVisible,
+					setIsHorizontalScrollbarVisible,
+					setIsVerticalScrollbarVisible
+				}}
+			>
 				<Wrapped {...props} />;
 			</ScrollContext.Provider>
 		);
 	};
+
+	Wrapper.propTypes = {
+		applyOverscrollEffect: PropTypes.func,
+		horizontalScrollbar: PropTypes.bool,
+		noScrollByDrag: PropTypes.bool,
+		verticalScrollbar: PropTypes.bool
+	};
+
+	return Wrapper;
 });
 
 const useScrollBase = (props) => {
@@ -709,7 +720,7 @@ const useScrollBase = (props) => {
 	const enqueueForceUpdate = useCallback(() => {
 		scrollMutableRef.current.calculateMetrics();
 		forceUpdate();
-	}, [forceUpdate]);
+	}, [forceUpdate, scrollMutableRef]);
 
 	function handleResizeWindow () {
 		const propsHandleResizeWindow = props.handleResizeWindow;
@@ -1926,7 +1937,7 @@ const useScrollBase = (props) => {
 class Scrollable extends Component {
 	static displayName = 'ui:Scrollable'
 
-	static propTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
+	static PropTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
 		/**
 		 * Render function.
 		 *
@@ -1992,7 +2003,7 @@ const useScroll = (props) => {
 			scrollbarButton: false,
 			wheel: true
 		},
-		type: props.type || 'JS', // FIXME
+		type: props.type || 'JS' // FIXME
 	});
 
 	decorateChildProps('scrollContainerProps', {ref: uiScrollContainerRef});
@@ -2002,7 +2013,7 @@ const useScroll = (props) => {
 
 	// Return
 
-	return decoratedChildPropsg;
+	return decoratedChildProps;
 };
 
 export default useScroll;

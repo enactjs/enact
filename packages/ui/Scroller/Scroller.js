@@ -74,6 +74,11 @@ class ScrollerBase extends Component {
 		rtl: PropTypes.bool,
 
 		/**
+		 * The context from the ScrollContext is needed to share the ScrollBase methods to Scrollable
+		 */
+		scrollContext: PropTypes.object,
+
+		/**
 		 * TBD
 		 */
 		uiChildContainerRef: PropTypes.object

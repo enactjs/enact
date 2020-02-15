@@ -231,6 +231,11 @@ class VirtualListBase extends Component {
 		rtl: PropTypes.bool,
 
 		/**
+		 * The context from the ScrollContext is needed to share the ScrollBase methods to Scrollable
+		 */
+		scrollContext: PropTypes.object,
+
+		/**
 		 * The spacing between items.
 		 *
 		 * @type {Number}
@@ -312,7 +317,7 @@ class VirtualListBase extends Component {
 			getPrimary: this.getPrimary.bind(this),
 			scrollToPosition: this.scrollToPosition.bind(this),
 			setScrollPosition: this.setScrollPosition.bind(this),
-			syncClientSize: this.syncClientSize.bind(this),
+			syncClientSize: this.syncClientSize.bind(this)
 		};
 	}
 
