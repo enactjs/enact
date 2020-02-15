@@ -652,61 +652,22 @@ const useScrollBase = (props) => {
 				canScrollVertically,
 				checkAndApplyOverscrollEffect,
 				getScrollBounds,
-				get isDragging () {
-					return mutableRef.current.isDragging;
-				},
-				set isDragging (val) {
-					mutableRef.current.isDragging = val;
-				},
-				get isScrollAnimationTargetAccumulated () {
-					return mutableRef.current.isScrollAnimationTargetAccumulated;
-				},
-				set isScrollAnimationTargetAccumulated (val) {
-					mutableRef.current.isScrollAnimationTargetAccumulated = val;
-				},
-				get isUpdatedScrollThumb () {
-					return mutableRef.current.isUpdatedScrollThumb;
-				},
-				get lastInputType () {
-					return mutableRef.current.lastInputType;
-				},
-				set lastInputType (val) {
-					mutableRef.current.lastInputType = val;
-				},
-				get rtl () {
-					return rtl;
-				},
 				get scrollBounds () {
 					return getScrollBounds();
 				},
 				get scrollHeight () {
 					return mutableRef.current.bounds.scrollHeight;
 				},
-				get scrolling () {
-					return mutableRef.current.scrolling;
-				},
-				get scrollLeft () {
-					return mutableRef.current.scrollLeft;
-				},
 				scrollTo,
 				scrollToAccumulatedTarget,
 				get scrollToInfo () {
 					return mutableRef.current.scrollToInfo;
 				},
-				get scrollTop () {
-					return mutableRef.current.scrollTop;
-				},
 				setOverscrollStatus,
 				showThumb,
 				start,
 				startHidingThumb,
-				stop,
-				get wheelDirection () {
-					return mutableRef.current.wheelDirection;
-				},
-				set wheelDirection (val) {
-					mutableRef.current.wheelDirection = val;
-				}
+				stop
 			});
 		}
 	});
