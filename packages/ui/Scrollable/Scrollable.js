@@ -447,16 +447,21 @@ const ScrollContext = React.createContext();
 
 const ScrollContextDecorator = hoc((config, Wrapped) => {
 	const Wrapper = (props) => {
-		const {horizontalScrollbar, verticalScrollbar} = props;
-		const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
-		const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
+		// States
+		const
+			{horizontalScrollbar, verticalScrollbar} = props,
+			[isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible'),
+			[isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
+
+		// Ref objects
+		const
+			uiScrollContainerRef = useRef(),
+			uiChildContainerRef = useRef(),
+			horizontalScrollbarRef = useRef(),
+			verticalScrollbarRef = useRef();
+
+		// Mutable Ref objects
 		const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
-
-		const uiScrollContainerRef = useRef();
-		const uiChildContainerRef = useRef();
-		const horizontalScrollbarRef = useRef();
-		const verticalScrollbarRef = useRef();
-
 		const mutableRef = useRef({
 			overscrollEnabled: !!(props.applyOverscrollEffect),
 
@@ -523,7 +528,7 @@ const ScrollContextDecorator = hoc((config, Wrapped) => {
 
 			prevState: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible},
 
-			// functions which could be called from theme libraries
+			// ui/Scrollable functions which could be called from Scrollable in theme libraries
 			applyOverscrollEffect: nop,
 			calculateDistanceByWheel: nop,
 			canScrollHorizontally: nop,
@@ -536,7 +541,34 @@ const ScrollContextDecorator = hoc((config, Wrapped) => {
 			showThumb: nop,
 			start: nop,
 			startHidingThumb: nop,
-			stop: nop
+			stop: nop,
+
+			// ui/VirtualList and ui/ Scroller functions
+			// which could be called from ui/Scrollable or VirtualList, Scroller in theme libraries
+			didScroll: nop,
+			isHorizontal: nop,
+			isVertical: nop,
+			scrollToPosition: nop,
+			setScrollPosition: nop,
+
+			// ui/Scroller functions which could be called from ui/Scrollable or Scroller in theme libraries
+			getNodePosition: nop,
+
+			// ui/VirtualList functions which could be called from ui/Scrollable or VirtualList in theme libraries
+			calculateMetrics: nop,
+			getDimensionToExtent: nop,
+			getGridPosition: nop,
+			getItemBottomPosition: nop,
+			getItemNode: nop,
+			getItemPosition: nop,
+			getMoreInfo: nop,
+			getScrollPosition: nop,
+			getScrollPositionTarget: nop,
+			gridPositionToItemPosition: nop,
+			isDataSizeChanged: nop,
+			getItemPositions: nop,
+			getPrimary: nop,
+			syncClientSize: nop
 		});
 
 		return (
@@ -1924,7 +1956,7 @@ const useScrollBase = (props) => {
 class Scrollable extends Component {
 	static displayName = 'ui:Scrollable'
 
-	static PropTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
+	static propTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
 		/**
 		 * Render function.
 		 *
