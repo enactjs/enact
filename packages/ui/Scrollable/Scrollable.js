@@ -539,7 +539,22 @@ const ScrollContextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			dragStartY: null,
 			scrollStopJob: null,
 
-			prevState: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible}
+			prevState: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible},
+
+			// functions from theme libraries
+			applyOverscrollEffect: nop,
+			calculateDistanceByWheel: nop,
+			canScrollHorizontally: nop,
+			canScrollVertically: nop,
+			checkAndApplyOverscrollEffect: nop,
+			getScrollBounds: nop,
+			scrollTo: nop,
+			scrollToAccumulatedTarget: nop,
+			setOverscrollStatus: nop,
+			showThumb: nop,
+			start: nop,
+			startHidingThumb: nop,
+			stop: nop
 		});
 
 		return (
@@ -584,7 +599,6 @@ const useScrollBase = (props) => {
 			noScrollByWheel,
 			overscrollEffectOn,
 			rtl,
-			setUiScrollAdapter,
 			spacing,
 			type,
 			verticalScrollbar,
@@ -641,36 +655,23 @@ const useScrollBase = (props) => {
 		mutableRef.current.animator = new ScrollAnimator();
 	}
 
-	useLayoutEffect(() => {
-		if (setUiScrollAdapter) {
-			setUiScrollAdapter({
-				animator: mutableRef.current.animator,
-				applyOverscrollEffect,
-				bounds: mutableRef.current.bounds,
-				calculateDistanceByWheel,
-				canScrollHorizontally,
-				canScrollVertically,
-				checkAndApplyOverscrollEffect,
-				getScrollBounds,
-				get scrollBounds () {
-					return getScrollBounds();
-				},
-				get scrollHeight () {
-					return mutableRef.current.bounds.scrollHeight;
-				},
-				scrollTo,
-				scrollToAccumulatedTarget,
-				get scrollToInfo () {
-					return mutableRef.current.scrollToInfo;
-				},
-				setOverscrollStatus,
-				showThumb,
-				start,
-				startHidingThumb,
-				stop
-			});
-		}
-	});
+	// Map functions so that those functions could be called from theme libraries with mutableRef.
+	mutableRef.current = {
+		...mutableRef.current,
+		applyOverscrollEffect,
+		calculateDistanceByWheel,
+		canScrollHorizontally,
+		canScrollVertically,
+		checkAndApplyOverscrollEffect,
+		getScrollBounds,
+		scrollTo,
+		scrollToAccumulatedTarget,
+		setOverscrollStatus,
+		showThumb,
+		start,
+		startHidingThumb,
+		stop
+	};
 
 	useLayoutEffect(() => {
 		if (props.cbScrollTo) {
