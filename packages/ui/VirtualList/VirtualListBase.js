@@ -230,11 +230,6 @@ class VirtualListBase extends Component {
 		 */
 		rtl: PropTypes.bool,
 
-		/*
-		 * TBD
-		 */
-		setUiChildAdapter: PropTypes.func,
-
 		/**
 		 * The spacing between items.
 		 *
@@ -296,7 +291,29 @@ class VirtualListBase extends Component {
 			...nextState
 		};
 
-		props.setUiChildAdapter(this);
+		props.scrollContext.current = {
+			...props.scrollContext.current,
+			calculateMetrics: this.calculateMetrics.bind(this),
+			didScroll: this.didScroll.bind(this),
+			getDimensionToExtent: this.getDimensionToExtent.bind(this),
+			getGridPosition: this.getGridPosition.bind(this),
+			getItemBottomPosition: this.getItemBottomPosition.bind(this),
+			getItemNode: this.getItemNode.bind(this),
+			getItemPosition: this.getItemPosition.bind(this),
+			getMoreInfo: this.getMoreInfo.bind(this),
+			getScrollBounds: this.getScrollBounds.bind(this),
+			getScrollPosition: this.getScrollPosition.bind(this),
+			getScrollPositionTarget: this.getScrollPositionTarget.bind(this),
+			gridPositionToItemPosition: this.gridPositionToItemPosition.bind(this),
+			isDataSizeChanged: this.isDataSizeChanged.bind(this),
+			isHorizontal: this.isHorizontal.bind(this),
+			isVertical: this.isVertical.bind(this),
+			getItemPositions: this.getItemPositions.bind(this),
+			getPrimary: this.getPrimary.bind(this),
+			scrollToPosition: this.scrollToPosition.bind(this),
+			setScrollPosition: this.setScrollPosition.bind(this),
+			syncClientSize: this.syncClientSize.bind(this),
+		};
 	}
 
 	static getDerivedStateFromProps (props, state) {
@@ -559,6 +576,18 @@ class VirtualListBase extends Component {
 		clientHeight: node.clientHeight
 	})
 
+	getScrollPosition = () => (this.scrollPosition)
+
+	getScrollPositionTarget = () => (this.scrollPositionTarget)
+
+	getDimensionToExtent = () => (this.dimensionToExtent)
+
+	isDataSizeChanged = () => (this.hasDataSizeChanged)
+
+	getItemPositions = () => (this.itemPositions)
+
+	getPrimary = () => (this.primary)
+
 	emitUpdateItems () {
 		const {dataSize} = this.props;
 		const {firstIndex, numOfItems} = this.state;
@@ -569,7 +598,7 @@ class VirtualListBase extends Component {
 		}, this.props);
 	}
 
-	calculateMetrics (props) {
+	calculateMetrics (props = this.props) {
 		const
 			{clientSize, direction, itemSize, overhang, spacing} = props,
 			node = this.props.uiChildContainerRef.current;
@@ -1177,10 +1206,9 @@ class VirtualListBase extends Component {
 		delete rest.pageScroll;
 		delete rest.rtl;
 		delete rest.scrollContainerContainsDangerously;
+		delete rest.scrollContext;
 		delete rest.setChildAdapter;
-		delete rest.setUiChildAdapter;
 		delete rest.spacing;
-		delete rest.uiChildAdapter;
 		delete rest.uiChildContainerRef;
 		delete rest.updateStatesAndBounds;
 
