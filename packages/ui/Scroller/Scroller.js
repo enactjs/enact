@@ -397,7 +397,7 @@ const Scroller = ScrollContextDecorator((props) => {
 	const {
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
-		mutableRef: {childWrapper: ChildWrapper}
+		mutableRef: {current: {childWrapper: ChildWrapper}}
 	} = useContext(ScrollContext);
 
 	const {
