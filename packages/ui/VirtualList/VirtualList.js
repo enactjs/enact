@@ -9,7 +9,7 @@
  */
 
 import PropTypes from 'prop-types';
-import React, {useState} from 'react';
+import React, {useContext} from 'react';
 
 import {ResizeContext} from '../Resizable';
 import {ScrollContext, ScrollContextDecorator, useScroll} from '../Scrollable';

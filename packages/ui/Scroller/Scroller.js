@@ -10,7 +10,7 @@
 import {platform} from '@enact/core/platform';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import React, {Component, useContext} from 'react';
 
 import {ResizeContext} from '../Resizable';
 import {ScrollContext, ScrollContextDecorator, useScroll} from '../Scrollable';
