@@ -75,6 +75,9 @@ class ScrollerBase extends Component {
 
 		/**
 		 * The context from the ScrollContext is needed to share the ScrollBase methods to Scrollable
+		 *
+		 * @type {Function}
+		 * @private
 		 */
 		scrollContext: PropTypes.object,
 

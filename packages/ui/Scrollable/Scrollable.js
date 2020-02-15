@@ -576,9 +576,9 @@ const ScrollContextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 	Wrapper.propTypes = {
 		applyOverscrollEffect: PropTypes.func,
-		horizontalScrollbar: PropTypes.bool,
+		horizontalScrollbar: PropTypes.string,
 		noScrollByDrag: PropTypes.bool,
-		verticalScrollbar: PropTypes.bool
+		verticalScrollbar: PropTypes.string
 	};
 
 	return Wrapper;
