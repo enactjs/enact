@@ -10,9 +10,7 @@ import ScrollThumb from './ScrollThumb';
 
 import componentCss from './Scrollbar.module.less';
 
-const
-	minThumbSize = 18, // Size in pixels
-	thumbHidingDelay = 400; // in milliseconds
+const thumbHidingDelay = 400; // in milliseconds
 
 const addClass = (element, className) => {
 	ReactDOM.findDOMNode(element).classList.add(className); // eslint-disable-line react/no-find-dom-node
@@ -49,7 +47,7 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 	const hideThumbJob = useRef(null);
 	// Render
 	const
-		{childRenderer, className, corner, css, vertical, ...rest} = props,
+		{childRenderer, className, corner, css, minThumbSize, vertical, ...rest} = props,
 		containerClassName = classNames(
 			className,
 			corner && css.corner,
@@ -92,6 +90,7 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 				scrollThumbPositionRatio = (scrollOrigin / (scrollContentSize - scrollViewSize)),
 				scrollThumbSizeRatio = Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, thumbSizeRatioBase));
 
+			setCSSVariable(thumbRef.current, '--scroll-thumb-min-size', minThumbSize);
 			setCSSVariable(thumbRef.current, '--scrollbar-size-ratio', scrollThumbSizeRatio);
 			setCSSVariable(thumbRef.current, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
 		}
@@ -151,6 +150,15 @@ ScrollbarBase.propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
 	 */
 	css: PropTypes.object,
 
+
+	/**
+	 * The minimum size of the thumb.
+	 *
+	 * @type {number}
+	 * @public
+	 */
+	minThumbSize: PropTypes.number, // Size in pixels
+
 	/**
 	 * If `true`, the scrollbar will be oriented vertically.
 	 *
@@ -164,6 +172,7 @@ ScrollbarBase.propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
 ScrollbarBase.defaultProps = {
 	corner: false,
 	css: componentCss,
+	minThumbSize: 18, // Size in pixels
 	vertical: true
 };
 
