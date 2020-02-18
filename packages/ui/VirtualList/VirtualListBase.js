@@ -736,8 +736,16 @@ class VirtualListBase extends Component {
 
 	setContainerSize = () => {
 		if (this.contentRef.current) {
-			this.contentRef.current.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
-			this.contentRef.current.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
+			if (typeof this.props.itemSize === 'object') {
+				this.contentRef.current.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
+				this.contentRef.current.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
+			} else if (this.isPrimaryDirectionVertical) {
+				this.contentRef.current.style.width = '100%';
+				this.contentRef.current.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
+			} else {
+				this.contentRef.current.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
+				this.contentRef.current.style.height = '100%';
+			}
 		}
 	}
 
