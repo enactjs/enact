@@ -153,11 +153,12 @@ ScrollbarBase.propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
 
 	/**
 	 * The minimum size of the thumb.
+	 * This value will be applied ri.scale.
 	 *
 	 * @type {number}
 	 * @public
 	 */
-	minThumbSize: PropTypes.number, // Size in pixels
+	minThumbSize: PropTypes.number,
 
 	/**
 	 * If `true`, the scrollbar will be oriented vertically.
@@ -172,7 +173,7 @@ ScrollbarBase.propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
 ScrollbarBase.defaultProps = {
 	corner: false,
 	css: componentCss,
-	minThumbSize: 18, // Size in pixels
+	minThumbSize: 18,
 	vertical: true
 };
 
