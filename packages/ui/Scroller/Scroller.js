@@ -81,7 +81,7 @@ class ScrollerBase extends Component {
 		/**
 		 * TBD
 		 */
-		uiChildContainerRef: PropTypes.object
+		scrollContentRef: PropTypes.object
 	}
 
 	static defaultProps = {
@@ -130,7 +130,7 @@ class ScrollerBase extends Component {
 
 	// for Scrollable
 	setScrollPosition (x, y) {
-		const node = this.props.uiChildContainerRef.current;
+		const node = this.props.scrollContentRef.current;
 
 		if (this.isVertical()) {
 			node.scrollTop = y;
@@ -144,7 +144,7 @@ class ScrollerBase extends Component {
 
 	// for ScrollableNative
 	scrollToPosition (x, y) {
-		this.props.uiChildContainerRef.current.scrollTo(this.getRtlPositionX(x), y);
+		this.props.scrollContentRef.current.scrollTo(this.getRtlPositionX(x), y);
 	}
 
 	// for ScrollableNative
@@ -156,8 +156,8 @@ class ScrollerBase extends Component {
 	getNodePosition = (node) => {
 		const
 			{left: nodeLeft, top: nodeTop, height: nodeHeight, width: nodeWidth} = node.getBoundingClientRect(),
-			{left: containerLeft, top: containerTop} = this.props.uiChildContainerRef.current.getBoundingClientRect(),
-			{scrollLeft, scrollTop} = this.props.uiChildContainerRef.current,
+			{left: containerLeft, top: containerTop} = this.props.scrollContentRef.current.getBoundingClientRect(),
+			{scrollLeft, scrollTop} = this.props.scrollContentRef.current,
 			left = this.isHorizontal() ? (scrollLeft + nodeLeft - containerLeft) : null,
 			top = this.isVertical() ? (scrollTop + nodeTop - containerTop) : null;
 
@@ -180,7 +180,7 @@ class ScrollerBase extends Component {
 	calculateMetrics () {
 		const
 			{scrollBounds} = this,
-			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.props.uiChildContainerRef.current;
+			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.props.scrollContentRef.current;
 		scrollBounds.scrollWidth = scrollWidth;
 		scrollBounds.scrollHeight = scrollHeight;
 		scrollBounds.clientWidth = clientWidth;
@@ -206,13 +206,13 @@ class ScrollerBase extends Component {
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
 		delete rest.uiChildAdapter;
-		delete rest.uiChildContainerRef;
+		delete rest.scrollContentRef;
 
 		return (
 			<div
 				{...rest}
 				className={classNames(className, css.scroller)}
-				ref={this.props.uiChildContainerRef}
+				ref={this.props.scrollContentRef}
 				style={mergedStyle}
 			/>
 		);

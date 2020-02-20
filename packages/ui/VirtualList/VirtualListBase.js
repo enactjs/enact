@@ -252,7 +252,7 @@ class VirtualListBase extends Component {
 		/**
 		 * TBD
 		 */
-		uiChildContainerRef: PropTypes.object,
+		scrollContentRef: PropTypes.object,
 
 		/**
 		 * Called to execute additional logic in a themed component when updating states and bounds.
@@ -572,7 +572,7 @@ class VirtualListBase extends Component {
 	calculateMetrics (props) {
 		const
 			{clientSize, direction, itemSize, overhang, spacing} = props,
-			node = this.props.uiChildContainerRef.current;
+			node = this.props.scrollContentRef.current;
 
 		if (!clientSize && !node) {
 			return;
@@ -710,7 +710,7 @@ class VirtualListBase extends Component {
 	calculateScrollBounds (props) {
 		const
 			{clientSize} = props,
-			node = this.props.uiChildContainerRef.current;
+			node = this.props.scrollContentRef.current;
 
 		if (!clientSize && !node) {
 			return;
@@ -799,7 +799,7 @@ class VirtualListBase extends Component {
 
 	// Native only
 	scrollToPosition (x, y, rtl = this.props.rtl) {
-		if (this.props.uiChildContainerRef.current) {
+		if (this.props.scrollContentRef.current) {
 			if (this.isPrimaryDirectionVertical) {
 				this.scrollPositionTarget = y;
 			} else {
@@ -810,7 +810,7 @@ class VirtualListBase extends Component {
 				x = (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
 			}
 
-			this.props.uiChildContainerRef.current.scrollTo(x, y);
+			this.props.scrollContentRef.current.scrollTo(x, y);
 		}
 	}
 
@@ -1133,7 +1133,7 @@ class VirtualListBase extends Component {
 	syncClientSize = () => {
 		const
 			{props} = this,
-			node = this.props.uiChildContainerRef.current;
+			node = this.props.scrollContentRef.current;
 
 		if (!props.clientSize && !node) {
 			return false;
@@ -1183,7 +1183,7 @@ class VirtualListBase extends Component {
 		delete rest.setUiChildAdapter;
 		delete rest.spacing;
 		delete rest.uiChildAdapter;
-		delete rest.uiChildContainerRef;
+		delete rest.scrollContentRef;
 		delete rest.updateStatesAndBounds;
 
 		if (primary) {
@@ -1191,7 +1191,7 @@ class VirtualListBase extends Component {
 		}
 
 		return (
-			<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.props.uiChildContainerRef} style={style}>
+			<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.props.scrollContentRef} style={style}>
 				<div {...rest} className={contentClasses} ref={this.contentRef}>
 					{itemsRenderer({cc, itemContainerRef, primary})}
 				</div>

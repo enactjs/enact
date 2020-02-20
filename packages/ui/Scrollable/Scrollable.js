@@ -470,8 +470,8 @@ const useScrollBase = (props) => {
 			spacing,
 			type,
 			uiChildAdapter,
-			uiChildContainerRef,
-			uiScrollContainerRef,
+			scrollContentRef,
+			scrollContainerRef,
 			verticalScrollbar,
 			verticalScrollbarRef,
 			wrap,
@@ -705,9 +705,9 @@ const useScrollBase = (props) => {
 			if (type === 'JS') {
 				scrollTo({position: {x: 0, y: 0}, animate: false});
 			} else {
-				uiChildContainerRef.current.style.scrollBehavior = null;
+				scrollContentRef.current.style.scrollBehavior = null;
 				uiChildAdapter.current.scrollToPosition(0, 0);
-				uiChildContainerRef.current.style.scrollBehavior = 'smooth';
+				scrollContentRef.current.style.scrollBehavior = 'smooth';
 			}
 
 			enqueueForceUpdate();
@@ -1452,9 +1452,9 @@ const useScrollBase = (props) => {
 			if (animate) {
 				uiChildAdapter.current.scrollToPosition(targetX, targetY);
 			} else {
-				uiChildContainerRef.current.style.scrollBehavior = null;
+				scrollContentRef.current.style.scrollBehavior = null;
 				uiChildAdapter.current.scrollToPosition(targetX, targetY);
-				uiChildContainerRef.current.style.scrollBehavior = 'smooth';
+				scrollContentRef.current.style.scrollBehavior = 'smooth';
 			}
 
 			mutableRef.current.scrollStopJob.start();
@@ -1544,9 +1544,9 @@ const useScrollBase = (props) => {
 	}
 
 	function stopForNative () {
-		uiChildContainerRef.current.style.scrollBehavior = null;
+		scrollContentRef.current.style.scrollBehavior = null;
 		uiChildAdapter.current.scrollToPosition(mutableRef.current.scrollLeft + 0.1, mutableRef.current.scrollTop + 0.1);
-		uiChildContainerRef.current.style.scrollBehavior = 'smooth';
+		scrollContentRef.current.style.scrollBehavior = 'smooth';
 	}
 
 	// esline-disable-next-line react-hooks/exhaustive-deps
@@ -1756,24 +1756,24 @@ const useScrollBase = (props) => {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function addEventListeners () {
-		utilEvent('wheel').addEventListener(uiScrollContainerRef, onWheel);
-		utilEvent('keydown').addEventListener(uiScrollContainerRef, onKeyDown);
-		utilEvent('mousedown').addEventListener(uiScrollContainerRef, onMouseDown);
+		utilEvent('wheel').addEventListener(scrollContainerRef, onWheel);
+		utilEvent('keydown').addEventListener(scrollContainerRef, onKeyDown);
+		utilEvent('mousedown').addEventListener(scrollContainerRef, onMouseDown);
 
 		// Native [[
-		if (type === 'Native' && uiChildContainerRef.current) {
+		if (type === 'Native' && scrollContentRef.current) {
 			utilEvent('scroll').addEventListener(
-				uiChildContainerRef,
+				scrollContentRef,
 				onScroll,
 				{capture: true, passive: true}
 			);
 
-			uiChildContainerRef.current.style.scrollBehavior = 'smooth';
+			scrollContentRef.current.style.scrollBehavior = 'smooth';
 		}
 		// Native ]]
 
 		if (props.addEventListeners) {
-			props.addEventListeners(uiChildContainerRef);
+			props.addEventListeners(scrollContentRef);
 		}
 
 		if (window) {
@@ -1783,16 +1783,16 @@ const useScrollBase = (props) => {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function removeEventListeners () {
-		utilEvent('wheel').removeEventListener(uiScrollContainerRef, onWheel);
-		utilEvent('keydown').removeEventListener(uiScrollContainerRef, onKeyDown);
-		utilEvent('mousedown').removeEventListener(uiScrollContainerRef, onMouseDown);
+		utilEvent('wheel').removeEventListener(scrollContainerRef, onWheel);
+		utilEvent('keydown').removeEventListener(scrollContainerRef, onKeyDown);
+		utilEvent('mousedown').removeEventListener(scrollContainerRef, onMouseDown);
 
 		// Native [[
-		utilEvent('scroll').removeEventListener(uiChildContainerRef, onScroll, {capture: true, passive: true});
+		utilEvent('scroll').removeEventListener(scrollContentRef, onScroll, {capture: true, passive: true});
 		// Native ]]
 
 		if (props.removeEventListeners) {
-			props.removeEventListeners(uiChildContainerRef);
+			props.removeEventListeners(scrollContentRef);
 		}
 
 		utilEvent('resize').removeEventListener(window, handleResizeWindow);
@@ -1805,16 +1805,16 @@ const useScrollBase = (props) => {
 		// Prevent scroll by focus.
 		// VirtualList and VirtualGridList DO NOT receive `onscroll` event.
 		// Only Scroller could get `onscroll` event.
-		if (!mutableRef.current.animator.isAnimating() && uiChildAdapter.current && uiChildContainerRef.current && uiChildAdapter.current.getRtlPositionX) {
+		if (!mutableRef.current.animator.isAnimating() && uiChildAdapter.current && scrollContentRef.current && uiChildAdapter.current.getRtlPositionX) {
 			// For Scroller
-			uiChildContainerRef.current.scrollTop = mutableRef.current.scrollTop;
-			uiChildContainerRef.current.scrollLeft = uiChildAdapter.current.getRtlPositionX(mutableRef.current.scrollLeft);
+			scrollContentRef.current.scrollTop = mutableRef.current.scrollTop;
+			scrollContentRef.current.scrollLeft = uiChildAdapter.current.getRtlPositionX(mutableRef.current.scrollLeft);
 		}
 	}
 	// JS ]]
 
 	function scrollContainerContainsDangerously (target) {
-		return utilDOM.containsDangerously(uiScrollContainerRef, target);
+		return utilDOM.containsDangerously(scrollContainerRef, target);
 	}
 
 	decorateChildProps('scrollContainerProps', {
@@ -1962,8 +1962,8 @@ const utilDecorateChildProps = (instance) => (childComponentName, props) => {
 const useScroll = (props) => {
 	// Mutable value
 
-	const uiScrollContainerRef = useRef(null);
-	const uiChildContainerRef = useRef();
+	const scrollContainerRef= useRef(null);
+	const scrollContentRef = useRef();
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
 
@@ -1997,15 +1997,15 @@ const useScroll = (props) => {
 		setUiChildAdapter,
 		type: props.type || 'JS', // FIXME
 		uiChildAdapter,
-		uiChildContainerRef,
-		uiScrollContainerRef,
+		scrollContentRef,
+		scrollContainerRef,
 		get verticalScrollbarRef () {
 			return verticalScrollbarRef;
 		}
 	});
 
-	decorateChildProps('scrollContainerProps', {ref: uiScrollContainerRef});
-	decorateChildProps('scrollContentProps', {uiChildAdapter, uiChildContainerRef});
+	decorateChildProps('scrollContainerProps', {ref: scrollContainerRef});
+	decorateChildProps('scrollContentProps', {uiChildAdapter, scrollContentRef});
 	decorateChildProps('verticalScrollbarProps', {ref: verticalScrollbarRef});
 	decorateChildProps('horizontalScrollbarProps', {ref: horizontalScrollbarRef});
 
