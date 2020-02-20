@@ -454,7 +454,7 @@ const useScrollBase = (props) => {
 			'data-webos-voice-focused': voiceFocused,
 			'data-webos-voice-group-label': voiceGroupLabel,
 			dataSize,
-			decorateChildProps,
+			assignProperties,
 			direction,
 			horizontalScrollbar,
 			horizontalScrollbarRef,
@@ -1817,16 +1817,16 @@ const useScrollBase = (props) => {
 		return utilDOM.containsDangerously(scrollContainerRef, target);
 	}
 
-	decorateChildProps('scrollContainerProps', {
+	assignProperties('scrollContainerProps', {
 		...rest,
 		className: [scrollClasses]
 	});
 
-	decorateChildProps('scrollInnerContainerProps', {
+	assignProperties('scrollInnerContainerProps', {
 		className: [css.scrollInnerContainer]
 	});
 
-	decorateChildProps('scrollContentWrapperProps', {
+	assignProperties('scrollContentWrapperProps', {
 		className: type === 'JS' ? [css.scrollContentWrapper] : [css.scrollContentWrapper, css.scrollContentWrapperNative], // Native;,
 		...(!noScrollByDrag && {
 			flickConfig,
@@ -1853,7 +1853,7 @@ const useScrollBase = (props) => {
 		} :
 		{children};
 
-	decorateChildProps('scrollContentProps', {
+	assignProperties('scrollContentProps', {
 		...scrollContentProps,
 		cbScrollTo: scrollTo,
 		className: [css.scrollFill],
@@ -1871,14 +1871,14 @@ const useScrollBase = (props) => {
 		type
 	});
 
-	decorateChildProps('verticalScrollbarProps', {
+	assignProperties('verticalScrollbarProps', {
 		clientSize,
 		disabled: !isVerticalScrollbarVisible,
 		rtl,
 		vertical: true
 	});
 
-	decorateChildProps('horizontalScrollbarProps', {
+	assignProperties('horizontalScrollbarProps', {
 		clientSize,
 		corner: isVerticalScrollbarVisible,
 		disabled: !isHorizontalScrollbarVisible,
@@ -1886,7 +1886,7 @@ const useScrollBase = (props) => {
 		vertical: false
 	});
 
-	decorateChildProps('resizeContextProps', {
+	assignProperties('resizeContextProps', {
 		value: mutableRef.current.resizeRegistry.register
 	});
 
@@ -1929,31 +1929,31 @@ class Scrollable extends Component {
 	}
 }
 
-const utilDecorateChildProps = (instance) => (childComponentName, props) => {
-	if (!instance[childComponentName]) {
-		instance[childComponentName] = {};
+const assignPropertiesOf = (instance) => (name, properties) => {
+	if (!instance[name]) {
+		instance[name] = {};
 	}
 
-	if (typeof props === 'object') {
-		for (const prop in props) {
-			if (prop === 'className') {
+	if (typeof properties === 'object') {
+		for (const property in properties) {
+			if (property === 'className') {
 
 				warning(
-					Array.isArray(props.className),
+					Array.isArray(properties.className),
 					'Unsupported other types for `className` prop except Array'
 				);
 
-				instance[childComponentName].className = instance[childComponentName].className ?
-					instance[childComponentName].className + ' ' + props.className.join(' ') :
-					props.className.join(' ');
+				instance[name].className = instance[name].className ?
+					instance[name].className + ' ' + properties.className.join(' ') :
+					properties.className.join(' ');
 			} else {
 				warning(
-					!instance[childComponentName][prop],
-					'Unsupported to push value in the same ' + prop + ' prop.'
+					!instance[name][property],
+					'Unsupported to push value in the same ' + property + ' prop.'
 				);
 
 				// Override the previous value.
-				instance[childComponentName][prop] = props[prop];
+				instance[name][property] = properties[property];
 			}
 		}
 	}
@@ -1974,8 +1974,8 @@ const useScroll = (props) => {
 	// Hooks
 
 	const
-		decoratedChildProps = {},
-		decorateChildProps = utilDecorateChildProps(decoratedChildProps);
+		collectionOfProperties = {},
+		assignProperties = assignPropertiesOf(collectionOfProperties);
 
 	const {
 		scrollContentWrapper,
@@ -1983,7 +1983,7 @@ const useScroll = (props) => {
 		isVerticalScrollbarVisible
 	} = useScrollBase({
 		...props,
-		decorateChildProps,
+		assignProperties,
 		get horizontalScrollbarRef () {
 			return horizontalScrollbarRef;
 		},
@@ -1995,7 +1995,7 @@ const useScroll = (props) => {
 			wheel: true
 		},
 		setScrollContentHandle,
-		type: props.type || 'JS', // FIXME
+		type: props.type || 'Native', // FIXME
 		scrollContentHandle,
 		scrollContentRef,
 		scrollContainerRef,
@@ -2004,15 +2004,15 @@ const useScroll = (props) => {
 		}
 	});
 
-	decorateChildProps('scrollContainerProps', {ref: scrollContainerRef});
-	decorateChildProps('scrollContentProps', {scrollContentHandle, scrollContentRef});
-	decorateChildProps('verticalScrollbarProps', {ref: verticalScrollbarRef});
-	decorateChildProps('horizontalScrollbarProps', {ref: horizontalScrollbarRef});
+	assignProperties('scrollContainerProps', {ref: scrollContainerRef});
+	assignProperties('scrollContentProps', {scrollContentHandle, scrollContentRef});
+	assignProperties('verticalScrollbarProps', {ref: verticalScrollbarRef});
+	assignProperties('horizontalScrollbarProps', {ref: horizontalScrollbarRef});
 
 	// Return
 
 	return {
-		...decoratedChildProps,
+		...collectionOfProperties,
 		scrollContentWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
@@ -2026,5 +2026,5 @@ export {
 	ScrollableBase,
 	useScroll,
 	useScrollBase,
-	utilDecorateChildProps
+	assignPropertiesOf
 };
