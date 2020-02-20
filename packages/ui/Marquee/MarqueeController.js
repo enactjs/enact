@@ -1,6 +1,7 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const STATE = {
@@ -45,6 +46,20 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 
 	return class extends React.Component {
 		static displayName = 'MarqueeController'
+
+		static propTypes = /** @lends ui/Marquee.MarqueeController.prototype */ {
+			/**
+			 * Determines what triggers the marquee to start its animation.
+			 *
+			 * This property is passed down to any chirdren Marquee components, and is used there,
+			 * unless `marqueeOn` is specified for them as well.
+			 *
+			 * @type {('focus'|'hover'|'render')}
+			 * @default 'focus'
+			 * @public
+			 */
+			marqueeOn: PropTypes.oneOf(['focus', 'hover', 'render'])
+		}
 
 		constructor (props) {
 			super(props);
