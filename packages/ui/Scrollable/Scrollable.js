@@ -1995,7 +1995,7 @@ const useScroll = (props) => {
 			wheel: true
 		},
 		setScrollContentHandle,
-		type: props.type || 'Native', // FIXME
+		type: props.type || 'JS', // FIXME
 		scrollContentHandle,
 		scrollContentRef,
 		scrollContainerRef,

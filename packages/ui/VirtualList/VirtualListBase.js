@@ -270,7 +270,7 @@ class VirtualListBase extends Component {
 		overhang: 3,
 		pageScroll: false,
 		spacing: 0,
-		type: 'Native'
+		type: 'JS'
 	}
 
 	constructor (props) {
