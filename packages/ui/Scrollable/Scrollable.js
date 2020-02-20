@@ -1827,7 +1827,7 @@ const useScrollBase = (props) => {
 	});
 
 	decorateChildProps('scrollContentWrapperProps', {
-		className: type === 'JS' ? [css.content] : [css.content, css.contentNative], // Native;,
+		className: type === 'JS' ? [css.scrollContentWrapper] : [css.scrollContentWrapper, css.scrollContentWrapperNative], // Native;,
 		...(!noScrollByDrag && {
 			flickConfig,
 			onDrag: onDrag,
