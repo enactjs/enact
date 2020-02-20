@@ -230,6 +230,11 @@ class VirtualListBase extends Component {
 		 */
 		rtl: PropTypes.bool,
 
+		/**
+		 * TBD
+		 */
+		scrollContentRef: PropTypes.object,
+
 		/*
 		 * TBD
 		 */
@@ -250,11 +255,6 @@ class VirtualListBase extends Component {
 		type: PropTypes.string,
 
 		/**
-		 * TBD
-		 */
-		scrollContentRef: PropTypes.object,
-
-		/**
 		 * Called to execute additional logic in a themed component when updating states and bounds.
 		 *
 		 * @type {Function}
@@ -270,7 +270,7 @@ class VirtualListBase extends Component {
 		overhang: 3,
 		pageScroll: false,
 		spacing: 0,
-		type: 'JS'
+		type: 'Native'
 	}
 
 	constructor (props) {

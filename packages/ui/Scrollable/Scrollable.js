@@ -1962,7 +1962,7 @@ const assignPropertiesOf = (instance) => (name, properties) => {
 const useScroll = (props) => {
 	// Mutable value
 
-	const scrollContainerRef= useRef(null);
+	const scrollContainerRef = useRef(null);
 	const scrollContentRef = useRef();
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();

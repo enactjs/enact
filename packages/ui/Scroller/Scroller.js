@@ -76,12 +76,12 @@ class ScrollerBase extends Component {
 		/**
 		 * TBD
 		 */
-		setScrollContentHandle: PropTypes.func,
+		scrollContentRef: PropTypes.object,
 
 		/**
 		 * TBD
 		 */
-		scrollContentRef: PropTypes.object
+		setScrollContentHandle: PropTypes.func
 	}
 
 	static defaultProps = {
