@@ -56,6 +56,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				complete: this.handleComplete,
 				enter: this.handleEnter,
 				leave: this.handleLeave,
+				marqueeOn: props.marqueeOn,
 				register: this.handleRegister,
 				start: this.handleStart,
 				unregister: this.handleUnregister
@@ -284,7 +285,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			let props = this.props;
+			let {...props} = this.props;
 
 			if (marqueeOnFocus) {
 				props = {
@@ -293,6 +294,8 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 					onFocus: this.handleFocus
 				};
 			}
+
+			delete props.marqueeOn;
 
 			return (
 				<MarqueeControllerContext.Provider value={this.childContext}>
