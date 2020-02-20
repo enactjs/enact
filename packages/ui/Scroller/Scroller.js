@@ -76,7 +76,7 @@ class ScrollerBase extends Component {
 		/**
 		 * TBD
 		 */
-		setUiChildAdapter: PropTypes.func,
+		setScrollContentHandle: PropTypes.func,
 
 		/**
 		 * TBD
@@ -91,7 +91,7 @@ class ScrollerBase extends Component {
 	constructor (props) {
 		super(props);
 
-		props.setUiChildAdapter(this);
+		props.setScrollContentHandle(this);
 	}
 
 	componentDidMount () {
@@ -201,11 +201,11 @@ class ScrollerBase extends Component {
 		delete rest.scrollContainerContainsDangerously;
 		delete rest.direction;
 		delete rest.rtl;
-		delete rest.setChildAdapter;
-		delete rest.setUiChildAdapter;
+		delete rest.setThemeScrollContentHandle;
+		delete rest.setScrollContentHandle;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
-		delete rest.uiChildAdapter;
+		delete rest.scrollContentHandle;
 		delete rest.scrollContentRef;
 
 		return (

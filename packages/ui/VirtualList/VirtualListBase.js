@@ -233,7 +233,7 @@ class VirtualListBase extends Component {
 		/*
 		 * TBD
 		 */
-		setUiChildAdapter: PropTypes.func,
+		setScrollContentHandle: PropTypes.func,
 
 		/**
 		 * The spacing between items.
@@ -296,7 +296,7 @@ class VirtualListBase extends Component {
 			...nextState
 		};
 
-		props.setUiChildAdapter(this);
+		props.setScrollContentHandle(this);
 	}
 
 	static getDerivedStateFromProps (props, state) {
@@ -1179,10 +1179,10 @@ class VirtualListBase extends Component {
 		delete rest.pageScroll;
 		delete rest.rtl;
 		delete rest.scrollContainerContainsDangerously;
-		delete rest.setChildAdapter;
-		delete rest.setUiChildAdapter;
+		delete rest.setThemeScrollContentHandle;
+		delete rest.setScrollContentHandle;
 		delete rest.spacing;
-		delete rest.uiChildAdapter;
+		delete rest.scrollContentHandle;
 		delete rest.scrollContentRef;
 		delete rest.updateStatesAndBounds;
 
