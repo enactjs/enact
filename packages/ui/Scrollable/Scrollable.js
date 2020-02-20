@@ -466,7 +466,7 @@ const useScrollBase = (props) => {
 			overscrollEffectOn,
 			rtl,
 			setScrollContentHandle,
-			setUiScrollAdapter,
+			setScrollContainerHandle,
 			spacing,
 			type,
 			scrollContentHandle,
@@ -579,8 +579,8 @@ const useScrollBase = (props) => {
 	}
 
 	useLayoutEffect(() => {
-		if (setUiScrollAdapter) {
-			setUiScrollAdapter({
+		if (setScrollContainerHandle) {
+			setScrollContainerHandle({
 				animator: mutableRef.current.animator,
 				applyOverscrollEffect,
 				bounds: mutableRef.current.bounds,
