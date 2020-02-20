@@ -1822,11 +1822,11 @@ const useScrollBase = (props) => {
 		className: [scrollClasses]
 	});
 
-	decorateChildProps('innerScrollContainerProps', {
-		className: [css.innerScrollContainer]
+	decorateChildProps('scrollInnerContainerProps', {
+		className: [css.scrollInnerContainer]
 	});
 
-	decorateChildProps('childWrapperProps', {
+	decorateChildProps('scrollContentWrapperProps', {
 		className: type === 'JS' ? [css.content] : [css.content, css.contentNative], // Native;,
 		...(!noScrollByDrag && {
 			flickConfig,
@@ -1838,7 +1838,7 @@ const useScrollBase = (props) => {
 		})
 	});
 
-	const childProps = props.itemRenderer ? // If the child component is a VirtualList
+	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
 		{
 			clientSize,
 			'data-webos-voice-disabled': voiceDisabled,
@@ -1853,8 +1853,8 @@ const useScrollBase = (props) => {
 		} :
 		{children};
 
-	decorateChildProps('childProps', {
-		...childProps,
+	decorateChildProps('scrollContentProps', {
+		...scrollContentProps,
 		cbScrollTo: scrollTo,
 		className: [css.scrollFill],
 		direction,
@@ -1898,7 +1898,7 @@ const useScrollBase = (props) => {
 	};
 
 	return {
-		childWrapper: noScrollByDrag ? 'div' : TouchableDiv,
+		scrollContentWrapper: noScrollByDrag ? 'div' : TouchableDiv,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
 	};
@@ -1978,7 +1978,7 @@ const useScroll = (props) => {
 		decorateChildProps = utilDecorateChildProps(decoratedChildProps);
 
 	const {
-		childWrapper,
+		scrollContentWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
 	} = useScrollBase({
@@ -2005,7 +2005,7 @@ const useScroll = (props) => {
 	});
 
 	decorateChildProps('scrollContainerProps', {ref: uiScrollContainerRef});
-	decorateChildProps('childProps', {uiChildAdapter, uiChildContainerRef});
+	decorateChildProps('scrollContentProps', {uiChildAdapter, uiChildContainerRef});
 	decorateChildProps('verticalScrollbarProps', {ref: verticalScrollbarRef});
 	decorateChildProps('horizontalScrollbarProps', {ref: horizontalScrollbarRef});
 
@@ -2013,7 +2013,7 @@ const useScroll = (props) => {
 
 	return {
 		...decoratedChildProps,
-		childWrapper,
+		scrollContentWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
 	};
