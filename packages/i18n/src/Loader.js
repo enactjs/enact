@@ -33,7 +33,13 @@ const getImpl = (url, callback, sync) => {
 	}
 };
 
-const getSync = (url, callback) => getImpl(url, callback, true);
+const getSync = (url, callback) => {
+	try {
+		getImpl(url, callback, true);
+	} catch (e) {
+		callback(null, e);
+	}
+};
 
 const get = memoize((url) => new Promise((resolve, reject) => {
 	getImpl(url, (json, error) => {
