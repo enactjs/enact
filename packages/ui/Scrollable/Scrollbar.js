@@ -90,7 +90,6 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 				scrollThumbPositionRatio = (scrollOrigin / (scrollContentSize - scrollViewSize)),
 				scrollThumbSizeRatio = Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, thumbSizeRatioBase));
 
-			setCSSVariable(thumbRef.current, '--scroll-thumb-min-size', minThumbSize);
 			setCSSVariable(thumbRef.current, '--scrollbar-size-ratio', scrollThumbSizeRatio);
 			setCSSVariable(thumbRef.current, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
 		}
