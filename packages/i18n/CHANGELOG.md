@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `i18n` loader to catch errors on failed synchronous requests
+
 ## [3.2.5] - 2019-11-14
 
 No significant changes.
