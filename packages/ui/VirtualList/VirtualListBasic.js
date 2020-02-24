@@ -1,6 +1,3 @@
-import {UiVirtualListBase, UiVirtualListBaseNative} from './UiVirtualListBase';
-import {gridListItemSizeShape, itemSizesShape} from './VirtualListBasic';
-
 import css from './VirtualList.module.less';
 
 const nop = () => {};
