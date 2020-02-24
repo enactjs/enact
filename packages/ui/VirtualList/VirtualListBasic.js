@@ -47,10 +47,10 @@ const itemSizesShape = PropTypes.shape({
  * @ui
  * @private
  */
-class VirtualListBase extends Component {
-	displayName = 'ui:VirtualListBase'
+class VirtualListBasic extends Component {
+	displayName = 'ui:VirtualListBasic'
 
-	static propTypes = /** @lends ui/VirtualList.VirtualListBase.prototype */ {
+	static propTypes = /** @lends ui/VirtualList.VirtualListBasic.prototype */ {
 		/**
 		 * The rendering function called for each item in the list.
 		 *
@@ -1204,7 +1204,7 @@ class VirtualListBase extends Component {
  * A basic base component for
  * [VirtualList]{@link ui/VirtualList.VirtualList} and [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
  *
- * @class VirtualListBase
+ * @class VirtualListBasic
  * @memberof ui/VirtualList
  * @ui
  * @public
@@ -1238,7 +1238,7 @@ class VirtualListBase extends Component {
  * ```
  *
  * @name cbScrollTo
- * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @memberof ui/VirtualList.VirtualListBasic.prototype
  * @type {Function}
  * @public
  */
@@ -1252,7 +1252,7 @@ class VirtualListBase extends Component {
  * * `'hidden'`.
  *
  * @name horizontalScrollbar
- * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @memberof ui/VirtualList.VirtualListBasic.prototype
  * @type {String}
  * @default 'auto'
  * @public
@@ -1262,7 +1262,7 @@ class VirtualListBase extends Component {
  * Prevents scroll by wheeling on the list.
  *
  * @name noScrollByWheel
- * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @memberof ui/VirtualList.VirtualListBasic.prototype
  * @type {Boolean}
  * @default false
  * @public
@@ -1276,7 +1276,7 @@ class VirtualListBase extends Component {
  * Use `onScrollStart` or `onScrollStop` instead.
  *
  * @name onScroll
- * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @memberof ui/VirtualList.VirtualListBasic.prototype
  * @type {Function}
  * @param {Object} event
  * @param {Number} event.scrollLeft Scroll left value.
@@ -1308,7 +1308,7 @@ class VirtualListBase extends Component {
  * ```
  *
  * @name onScrollStart
- * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @memberof ui/VirtualList.VirtualListBasic.prototype
  * @type {Function}
  * @param {Object} event
  * @param {Number} event.scrollLeft Scroll left value.
@@ -1340,7 +1340,7 @@ class VirtualListBase extends Component {
  * ```
  *
  * @name onScrollStop
- * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @memberof ui/VirtualList.VirtualListBasic.prototype
  * @type {Function}
  * @param {Object} event
  * @param {Number} event.scrollLeft Scroll left value.
@@ -1358,15 +1358,15 @@ class VirtualListBase extends Component {
  * * `'hidden'`.
  *
  * @name verticalScrollbar
- * @memberof ui/VirtualList.VirtualListBase.prototype
+ * @memberof ui/VirtualList.VirtualListBasic.prototype
  * @type {String}
  * @default 'auto'
  * @public
  */
 
-export default VirtualListBase;
+export default VirtualListBasic;
 export {
 	gridListItemSizeShape,
 	itemSizesShape,
-	VirtualListBase
+	VirtualListBasic
 };

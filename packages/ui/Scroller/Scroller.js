@@ -3,7 +3,7 @@
  *
  * @module ui/Scroller
  * @exports Scroller
- * @exports ScrollerBase
+ * @exports ScrollerBasic
  * @exports ScrollerNative
  */
 
@@ -23,15 +23,15 @@ import css from './Scroller.module.less';
  *
  * In most circumstances, you will want to use the Scrollable version.
  *
- * @class ScrollerBase
+ * @class ScrollerBasic
  * @memberof ui/Scroller
  * @ui
  * @public
  */
-class ScrollerBase extends Component {
-	static displayName = 'ui:ScrollerBase'
+class ScrollerBasic extends Component {
+	static displayName = 'ui:ScrollerBasic'
 
-	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
+	static propTypes = /** @lends ui/Scroller.ScrollerBasic.prototype */ {
 		children: PropTypes.node.isRequired,
 
 		/**
@@ -245,7 +245,7 @@ class ScrollerBase extends Component {
  * ```
  *
  * @name cbScrollTo
- * @memberof ui/Scroller.ScrollerBase.prototype
+ * @memberof ui/Scroller.ScrollerBasic.prototype
  * @type {Function}
  * @public
  */
@@ -259,7 +259,7 @@ class ScrollerBase extends Component {
  * * `'hidden'`.
  *
  * @name horizontalScrollbar
- * @memberof ui/Scroller.ScrollerBase.prototype
+ * @memberof ui/Scroller.ScrollerBasic.prototype
  * @type {String}
  * @default 'auto'
  * @public
@@ -269,7 +269,7 @@ class ScrollerBase extends Component {
  * Prevents scroll by wheeling on the scroller.
  *
  * @name noScrollByWheel
- * @memberof ui/Scroller.ScrollerBase.prototype
+ * @memberof ui/Scroller.ScrollerBasic.prototype
  * @type {Boolean}
  * @default false
  * @public
@@ -283,7 +283,7 @@ class ScrollerBase extends Component {
  * Use `onScrollStart` or `onScrollStop` instead.
  *
  * @name onScroll
- * @memberof ui/Scroller.ScrollerBase.prototype
+ * @memberof ui/Scroller.ScrollerBasic.prototype
  * @type {Function}
  * @param {Object} event
  * @param {Number} event.scrollLeft Scroll left value.
@@ -313,7 +313,7 @@ class ScrollerBase extends Component {
  * ```
  *
  * @name onScrollStart
- * @memberof ui/Scroller.ScrollerBase.prototype
+ * @memberof ui/Scroller.ScrollerBasic.prototype
  * @type {Function}
  * @param {Object} event
  * @param {Number} event.scrollLeft Scroll left value.
@@ -343,7 +343,7 @@ class ScrollerBase extends Component {
  * ```
  *
  * @name onScrollStop
- * @memberof ui/Scroller.ScrollerBase.prototype
+ * @memberof ui/Scroller.ScrollerBasic.prototype
  * @type {Function}
  * @param {Object} event
  * @param {Number} event.scrollLeft Scroll left value.
@@ -361,7 +361,7 @@ class ScrollerBase extends Component {
  * * `'hidden'`.
  *
  * @name verticalScrollbar
- * @memberof ui/Scroller.ScrollerBase.prototype
+ * @memberof ui/Scroller.ScrollerBasic.prototype
  * @type {String}
  * @default 'auto'
  * @public
@@ -377,7 +377,7 @@ class ScrollerBase extends Component {
  *
  * @class Scroller
  * @memberof ui/Scroller
- * @extends ui/Scroller.ScrollerBase
+ * @extends ui/Scroller.ScrollerBasic
  * @ui
  * @public
  */
@@ -405,7 +405,7 @@ const Scroller = (props) => {
 			<div {...scrollContainerProps}>
 				<div {...scrollInnerContainerProps}>
 					<ScrollContentWrapper {...scrollContentWrapperProps}>
-						<ScrollerBase {...scrollContentProps} />
+						<ScrollerBasic {...scrollContentProps} />
 					</ScrollContentWrapper>
 					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
 				</div>
@@ -456,5 +456,5 @@ Scroller.defaultProps = {
 export default Scroller;
 export {
 	Scroller,
-	ScrollerBase
+	ScrollerBasic
 };
