@@ -1,9 +1,5 @@
-import classNames from 'classnames';
-import {forward} from '@enact/core/handle';
-import {platform} from '@enact/core/platform';
-import PropTypes from 'prop-types';
-import equals from 'ramda/src/equals';
-import React, {Component} from 'react';
+import {UiVirtualListBase, UiVirtualListBaseNative} from './UiVirtualListBase';
+import {gridListItemSizeShape, itemSizesShape} from './VirtualListBasic';
 
 import css from './VirtualList.module.less';
 

@@ -29,7 +29,7 @@ import {useScrollContentHandle} from './useScrollContentHandle';
 import utilDOM from './utilDOM';
 import utilEvent from './utilEvent';
 
-import css from './Scrollable.module.less';
+import css from './useScroll.module.less';
 
 const nop = () => {};
 
