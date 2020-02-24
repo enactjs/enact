@@ -15,6 +15,7 @@ import {ResizeContext} from '../Resizable';
 import useScroll from '../Scrollable';
 import Scrollbar from '../Scrollable/Scrollbar';
 
+import {UiVirtualListBase, UiVirtualListBaseNative} from './UiVirtualListBase';
 import {gridListItemSizeShape, itemSizesShape, VirtualListBase} from './VirtualListBase';
 
 /**
@@ -239,5 +240,6 @@ export {
 	itemSizesShape,
 	VirtualGridList,
 	VirtualList,
-	VirtualListBase
+	UiVirtualListBase as VirtualListBase, // to support legacy VirtualListBase
+	UiVirtualListBaseNative as VirtualListBaseNative // to support legacy VirtualListBaseNative
 };
