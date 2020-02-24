@@ -5,9 +5,6 @@ import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import React, {Component} from 'react';
 
-// import Scrollable from '../Scrollable';
-// import ScrollableNative from '../Scrollable/ScrollableNative';
-
 import css from './UiVirtualList.module.less';
 
 const
@@ -29,21 +26,6 @@ const gridListItemSizeShape = PropTypes.shape({
 	minHeight: PropTypes.number.isRequired,
 	minWidth: PropTypes.number.isRequired
 });
-
-// /**
-//  * The shape for the list different item size
-//  * in a list for [VirtualList]{@link ui/VirtualList.VirtualList}.
-//  *
-//  * @typedef {Object} itemSizesShape
-//  * @memberof ui/VirtualList
-//  * @property {Number} minSize The minimum size of the list item.
-//  * @property {Number[]} size An array of the list item size. If it is not defined, the list items will render with the `minSize` size.
-//  * @public
-//  */
-// const itemSizesShape = PropTypes.shape({
-// 	minSize: PropTypes.number.isRequired,
-// 	size: PropTypes.arrayOf(PropTypes.number)
-// });
 
 /**
  * The base version of the virtual list component.
@@ -1377,62 +1359,8 @@ VirtualListBaseNative.displayName = 'ui:VirtualListBaseNative';
  * @public
  */
 
-// const ScrollableVirtualList = ({role, ...rest}) => (
-// 	<Scrollable
-// 		{...rest}
-// 		childRenderer={({initChildRef, ...childRest}) => ( // eslint-disable-line react/jsx-no-bind
-// 			<VirtualListBase
-// 				{...childRest}
-// 				itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-// 					cc.length ? <div ref={itemContainerRef} role={role}>{cc}</div> : null
-// 				)}
-// 				ref={initChildRef}
-// 			/>
-// 		)}
-// 	/>
-// );
-
-// ScrollableVirtualList.propTypes = {
-// 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-// 	role: PropTypes.string
-// };
-
-// ScrollableVirtualList.defaultProps = {
-// 	direction: 'vertical',
-// 	role: 'list'
-// };
-
-// const ScrollableVirtualListNative = ({role, ...rest}) => (
-// 	<ScrollableNative
-// 		{...rest}
-// 		childRenderer={({initChildRef, ...childRest}) => ( // eslint-disable-line react/jsx-no-bind
-// 			<VirtualListBaseNative
-// 				{...childRest}
-// 				itemsRenderer={({cc, itemContainerRef}) => ( // eslint-disable-line react/jsx-no-bind
-// 					cc.length ? <div ref={itemContainerRef} role={role}>{cc}</div> : null
-// 				)}
-// 				ref={initChildRef}
-// 			/>
-// 		)}
-// 	/>
-// );
-
-// ScrollableVirtualListNative.propTypes = /** @lends ui/VirtualList.VirtualListBaseNative.prototype */ {
-// 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-// 	role: PropTypes.string
-// };
-
-// ScrollableVirtualListNative.defaultProps = {
-// 	direction: 'vertical',
-// 	role: 'list'
-// };
-
 export default VirtualListBase;
 export {
-	// gridListItemSizeShape,
-	// itemSizesShape,
-	// ScrollableVirtualList,
-	// ScrollableVirtualListNative,
 	VirtualListBase as UiVirtualListBase,
 	VirtualListBaseNative as UiVirtualListBaseNative
 };
