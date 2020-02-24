@@ -1204,7 +1204,8 @@ class VirtualListBasic extends Component {
  * @memberof ui/VirtualList
  * @ui
  * @public
- //
+ */
+VirtualListBase.displayName = 'ui:VirtualListBase';
 
 /**
  * A callback function that receives a reference to the `scrollTo` feature.
