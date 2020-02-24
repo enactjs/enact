@@ -16,7 +16,7 @@ import useScroll from '../useScroll';
 import Scrollbar from '../useScroll/Scrollbar';
 
 import {UiVirtualListBase, UiVirtualListBaseNative} from './UiVirtualListBase';
-import {gridListItemSizeShape, itemSizesShape, VirtualListBase} from './VirtualListBase';
+import {gridListItemSizeShape, itemSizesShape, ThemeVirtualListBase as VirtualListBase} from './VirtualListBase';
 
 /**
  * An unstyled scrollable virtual list component with touch support.

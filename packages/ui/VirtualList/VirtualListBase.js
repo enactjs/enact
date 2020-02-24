@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import React, {Component} from 'react';
 
+import {UiVirtualListBase, UiVirtualListBaseNative} from './UiVirtualListBase';
+
 import css from './VirtualList.module.less';
 
 const nop = () => {};
@@ -1369,5 +1371,7 @@ export default VirtualListBase;
 export {
 	gridListItemSizeShape,
 	itemSizesShape,
-	VirtualListBase
+	VirtualListBase as ThemeVirtualListBase,
+	UiVirtualListBase as VirtualListBase,
+	UiVirtualListBaseNative as VirtualListBaseNative
 };
