@@ -1209,7 +1209,7 @@ class VirtualListBasic extends Component {
  * @ui
  * @public
  */
-VirtualListBase.displayName = 'ui:VirtualListBase';
+VirtualListBasic.displayName = 'ui:VirtualListBasic';
 
 /**
  * A callback function that receives a reference to the `scrollTo` feature.
