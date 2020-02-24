@@ -350,5 +350,5 @@ class ScrollerBase extends Component {
 
 export default ScrollerBase;
 export {
-	ScrollerBase as UiScrollerBase
+	ScrollerBase
 };
