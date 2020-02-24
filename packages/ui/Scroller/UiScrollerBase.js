@@ -1,12 +1,3 @@
-/**
- * Unstyled scroller components and behaviors to be customized by a theme or application.
- *
- * @module ui/Scroller
- * @exports Scroller
- * @exports ScrollerBase
- * @exports ScrollerNative
- */
-
 import classNames from 'classnames';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';

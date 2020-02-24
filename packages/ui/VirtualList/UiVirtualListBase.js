@@ -12,16 +12,6 @@ const
 	JS = 'JS',
 	Native = 'Native';
 
-/**
- * The shape for the grid list item size
- * in a list for [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
- *
- * @typedef {Object} gridListItemSizeShape
- * @memberof ui/VirtualList
- * @property {Number} minWidth The minimum width of the grid list item.
- * @property {Number} minHeight The minimum height of the grid list item.
- * @public
- */
 const gridListItemSizeShape = PropTypes.shape({
 	minHeight: PropTypes.number.isRequired,
 	minWidth: PropTypes.number.isRequired
