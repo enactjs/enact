@@ -19,17 +19,17 @@ import clamp from 'ramda/src/clamp';
 import {Component, useCallback, useContext, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
 import warning from 'warning';
 
-import ForwardRef from '../ForwardRef';
-import {ResizeContext} from '../Resizable';
+import ForwardRef from '../ForwardRef/ForwardRef';
+import {ResizeContext} from '../Resizable/Resizable';
 import ri from '../resolution';
-import Touchable from '../Touchable';
+import Touchable from '../Touchable/Touchable';
 
 import ScrollAnimator from './ScrollAnimator';
 import {useChildAdapter} from './useChild';
 import utilDOM from './utilDOM';
 import utilEvent from './utilEvent';
 
-import css from './Scrollable.module.less';
+import css from './useScroll.module.less';
 
 const nop = () => {};
 
