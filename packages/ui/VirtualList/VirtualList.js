@@ -12,8 +12,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {ResizeContext} from '../Resizable';
-import useScroll from '../Scrollable';
-import Scrollbar from '../Scrollable/Scrollbar';
+import useScroll from '../useScroll';
+import Scrollbar from '../useScroll/Scrollbar';
 
 import {UiVirtualListBase, UiVirtualListBaseNative} from './UiVirtualListBase';
 import {gridListItemSizeShape, itemSizesShape, VirtualListBase} from './VirtualListBase';

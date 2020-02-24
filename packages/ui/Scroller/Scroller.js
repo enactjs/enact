@@ -13,8 +13,8 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import {ResizeContext} from '../Resizable';
-import useScroll from '../Scrollable';
-import Scrollbar from '../Scrollable/Scrollbar';
+import useScroll from '../useScroll';
+import Scrollbar from '../useScroll/Scrollbar';
 
 import {UiScrollerBase} from './UiScrollerBase';
 
