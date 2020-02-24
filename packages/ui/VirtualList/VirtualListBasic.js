@@ -1365,9 +1365,9 @@ VirtualListBasic.displayName = 'ui:VirtualListBasic';
  * @public
  */
 
-export default UiVirtualListBase;
+export default VirtualListBasic;
 export {
 	gridListItemSizeShape,
 	itemSizesShape,
-	VirtualListBase as VirtualListBasic
+	VirtualListBasic
 };
