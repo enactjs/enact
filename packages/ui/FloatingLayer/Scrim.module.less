@@ -1,6 +1,13 @@
 .scrim {
 	&.translucent {
-		pointer-events: auto;
-		background-color: fade(black, 30%);
+		pointer-events: none;
+		opacity: 0;
+
+		&.visible {
+			pointer-events: auto;
+			background-color: fade(black, 30%);
+			opacity: 1;
+			transition: opacity 500ms ease-in-out;
+		}
 	}
 }

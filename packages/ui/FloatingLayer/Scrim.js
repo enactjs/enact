@@ -1,10 +1,8 @@
 import React from 'react';
+import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
 import css from './Scrim.module.less';
-
-const transparentClassName = css.scrim + ' enact-fit ' + css.transparent;
-const translucentClassName = css.scrim + ' enact-fit ' + css.translucent;
 
 // Stores references to any Scrim instances whose type is translucent to ensure that only the top-
 // most Scrim is visible to avoid stacking scrims.
@@ -114,16 +112,20 @@ class Scrim extends React.Component {
 	hide = () => this.setState({visible: false})
 
 	render () {
-		if (this.state.visible) {
-			const {type, ...rest} = this.props;
-			const className = type === 'transparent' ? transparentClassName : translucentClassName;
+		if (!this.state.visible && this.props.type === 'transparent') return null;
 
-			return (
-				<div {...rest} className={className} />
-			);
-		}
+		const {type, ...rest} = this.props;
+		const className = classnames(
+			this.props.className,
+			css.scrim,
+			'enact-fit',
+			css[type],
+			{[css.visible]: this.state.visible}
+		);
 
-		return null;
+		return (
+			<div {...rest} className={className} />
+		);
 	}
 }
 
