@@ -1,41 +1,50 @@
-import classNames from 'classnames';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React, {forwardRef} from 'react';
+import React from 'react';
 
 import css from './ScrollThumb.module.less';
 
 /**
  * An unstyled scroll thumb without any behavior.
  *
- * @function ScrollThumb
+ * @class ScrollThumb
  * @memberof ui/Scrollable
  * @ui
  * @private
  */
-const ScrollThumb = forwardRef((props, ref) => {
-	const
-		{vertical, ...rest} = props,
-		className = classNames(css.scrollThumb, vertical ? css.vertical : null);
+const ScrollThumb = kind({
+	name: 'ui:ScrollThumb',
 
-	return <div {...rest} className={className} ref={ref} />;
+	propTypes: /** @lends ui/Scrollable.ScrollThumb.prototype */ {
+		/**
+		 * If `true`, the scrollbar will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		vertical: PropTypes.bool
+	},
+
+	defaultProps: {
+		vertical: true
+	},
+
+	styles: {
+		css,
+		className: 'scrollThumb'
+	},
+
+	computed: {
+		className: ({vertical, styler}) => styler.append({vertical})
+	},
+
+	render: (props) => {
+		delete props.vertical;
+
+		return <div {...props} />;
+	}
 });
-
-ScrollThumb.displayName = 'ui:ScrollThumb';
-
-ScrollThumb.propTypes = /** @lends ui/Scrollable.ScrollThumb.prototype */ {
-	/**
-	 * If `true`, the scrollbar will be oriented vertically.
-	 *
-	 * @type {Boolean}
-	 * @default true
-	 * @public
-	 */
-	vertical: PropTypes.bool
-};
-
-ScrollThumb.defaultProps = {
-	vertical: true
-};
 
 export default ScrollThumb;
 export {

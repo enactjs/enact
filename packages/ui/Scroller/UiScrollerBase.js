@@ -1,40 +1,24 @@
-/**
- * Unstyled scroller components and behaviors to be customized by a theme or application.
- *
- * @module ui/Scroller
- * @exports Scroller
- * @exports ScrollerBase
- * @exports ScrollerBasic
- * @exports ScrollerNative
- */
-
-import {platform} from '@enact/core/platform';
 import classNames from 'classnames';
+import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import {ResizeContext} from '../Resizable';
-import useScroll from '../useScroll';
-import Scrollbar from '../useScroll/Scrollbar';
-
-import {ScrollerBase} from './UiScrollerBase';
-
-import css from './Scroller.module.less';
+import css from './UiScroller.module.less';
 
 /**
  * An unstyled base scroller component.
  *
  * In most circumstances, you will want to use the Scrollable version.
  *
- * @class ScrollerBasic
+ * @class ScrollerBase
  * @memberof ui/Scroller
  * @ui
  * @public
  */
-class ScrollerBasic extends Component {
-	static displayName = 'ui:ScrollerBasic'
+class ScrollerBase extends Component {
+	static displayName = 'ui:ScrollerBase'
 
-	static propTypes = /** @lends ui/Scroller.ScrollerBasic.prototype */ {
+	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
 		children: PropTypes.node.isRequired,
 
 		/**
@@ -74,17 +58,7 @@ class ScrollerBasic extends Component {
 		 * @type {Boolean}
 		 * @private
 		 */
-		rtl: PropTypes.bool,
-
-		/**
-		 * TBD
-		 */
-		scrollContentRef: PropTypes.object,
-
-		/**
-		 * TBD
-		 */
-		setScrollContentHandle: PropTypes.func
+		rtl: PropTypes.bool
 	}
 
 	static defaultProps = {
@@ -94,7 +68,7 @@ class ScrollerBasic extends Component {
 	constructor (props) {
 		super(props);
 
-		props.setScrollContentHandle(this);
+		this.containerRef = React.createRef();
 	}
 
 	componentDidMount () {
@@ -133,7 +107,7 @@ class ScrollerBasic extends Component {
 
 	// for Scrollable
 	setScrollPosition (x, y) {
-		const node = this.props.scrollContentRef.current;
+		const node = this.containerRef.current;
 
 		if (this.isVertical()) {
 			node.scrollTop = y;
@@ -147,7 +121,7 @@ class ScrollerBasic extends Component {
 
 	// for ScrollableNative
 	scrollToPosition (x, y) {
-		this.props.scrollContentRef.current.scrollTo(this.getRtlPositionX(x), y);
+		this.containerRef.current.scrollTo(this.getRtlPositionX(x), y);
 	}
 
 	// for ScrollableNative
@@ -159,8 +133,8 @@ class ScrollerBasic extends Component {
 	getNodePosition = (node) => {
 		const
 			{left: nodeLeft, top: nodeTop, height: nodeHeight, width: nodeWidth} = node.getBoundingClientRect(),
-			{left: containerLeft, top: containerTop} = this.props.scrollContentRef.current.getBoundingClientRect(),
-			{scrollLeft, scrollTop} = this.props.scrollContentRef.current,
+			{left: containerLeft, top: containerTop} = this.containerRef.current.getBoundingClientRect(),
+			{scrollLeft, scrollTop} = this.containerRef.current,
 			left = this.isHorizontal() ? (scrollLeft + nodeLeft - containerLeft) : null,
 			top = this.isVertical() ? (scrollTop + nodeTop - containerTop) : null;
 
@@ -183,7 +157,7 @@ class ScrollerBasic extends Component {
 	calculateMetrics () {
 		const
 			{scrollBounds} = this,
-			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.props.scrollContentRef.current;
+			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.containerRef.current;
 		scrollBounds.scrollWidth = scrollWidth;
 		scrollBounds.scrollHeight = scrollHeight;
 		scrollBounds.clientWidth = clientWidth;
@@ -201,21 +175,16 @@ class ScrollerBasic extends Component {
 			});
 
 		delete rest.cbScrollTo;
-		delete rest.scrollContainerContainsDangerously;
 		delete rest.direction;
 		delete rest.rtl;
-		delete rest.setThemeScrollContentHandle;
-		delete rest.setScrollContentHandle;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
-		delete rest.scrollContentHandle;
-		delete rest.scrollContentRef;
 
 		return (
 			<div
 				{...rest}
 				className={classNames(className, css.scroller)}
-				ref={this.props.scrollContentRef}
+				ref={this.containerRef}
 				style={mergedStyle}
 			/>
 		);
@@ -248,7 +217,7 @@ class ScrollerBasic extends Component {
  * ```
  *
  * @name cbScrollTo
- * @memberof ui/Scroller.ScrollerBasic.prototype
+ * @memberof ui/Scroller.ScrollerBase.prototype
  * @type {Function}
  * @public
  */
@@ -262,7 +231,7 @@ class ScrollerBasic extends Component {
  * * `'hidden'`.
  *
  * @name horizontalScrollbar
- * @memberof ui/Scroller.ScrollerBasic.prototype
+ * @memberof ui/Scroller.ScrollerBase.prototype
  * @type {String}
  * @default 'auto'
  * @public
@@ -272,7 +241,7 @@ class ScrollerBasic extends Component {
  * Prevents scroll by wheeling on the scroller.
  *
  * @name noScrollByWheel
- * @memberof ui/Scroller.ScrollerBasic.prototype
+ * @memberof ui/Scroller.ScrollerBase.prototype
  * @type {Boolean}
  * @default false
  * @public
@@ -286,7 +255,7 @@ class ScrollerBasic extends Component {
  * Use `onScrollStart` or `onScrollStop` instead.
  *
  * @name onScroll
- * @memberof ui/Scroller.ScrollerBasic.prototype
+ * @memberof ui/Scroller.ScrollerBase.prototype
  * @type {Function}
  * @param {Object} event
  * @param {Number} event.scrollLeft Scroll left value.
@@ -316,7 +285,7 @@ class ScrollerBasic extends Component {
  * ```
  *
  * @name onScrollStart
- * @memberof ui/Scroller.ScrollerBasic.prototype
+ * @memberof ui/Scroller.ScrollerBase.prototype
  * @type {Function}
  * @param {Object} event
  * @param {Number} event.scrollLeft Scroll left value.
@@ -346,7 +315,7 @@ class ScrollerBasic extends Component {
  * ```
  *
  * @name onScrollStop
- * @memberof ui/Scroller.ScrollerBasic.prototype
+ * @memberof ui/Scroller.ScrollerBase.prototype
  * @type {Function}
  * @param {Object} event
  * @param {Number} event.scrollLeft Scroll left value.
@@ -364,101 +333,13 @@ class ScrollerBasic extends Component {
  * * `'hidden'`.
  *
  * @name verticalScrollbar
- * @memberof ui/Scroller.ScrollerBasic.prototype
+ * @memberof ui/Scroller.ScrollerBase.prototype
  * @type {String}
  * @default 'auto'
  * @public
  */
 
-/**
- * An unstyled scroller.
- *
- * Example:
- * ```
- * <Scroller>Scroll me.</Scroller>
- * ```
- *
- * @class Scroller
- * @memberof ui/Scroller
- * @extends ui/Scroller.ScrollerBasic
- * @ui
- * @public
- */
-const Scroller = (props) => {
-	// Hooks
-
-	const {
-		scrollContentWrapper: ScrollContentWrapper,
-		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible,
-
-		resizeContextProps,
-		scrollContainerProps,
-		scrollInnerContainerProps,
-		scrollContentWrapperProps,
-		scrollContentProps,
-		verticalScrollbarProps,
-		horizontalScrollbarProps
-	} = useScroll(props);
-
-	// Return
-
-	return (
-		<ResizeContext.Provider {...resizeContextProps}>
-			<div {...scrollContainerProps}>
-				<div {...scrollInnerContainerProps}>
-					<ScrollContentWrapper {...scrollContentWrapperProps}>
-						<ScrollerBasic {...scrollContentProps} />
-					</ScrollContentWrapper>
-					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
-				</div>
-				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
-			</div>
-		</ResizeContext.Provider>
-	);
-};
-
-Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
-
-	/**
-	 * Specifies how to show horizontal scrollbar.
-	 *
-	 * Valid values are:
-	 * * `'auto'`,
-	 * * `'visible'`, and
-	 * * `'hidden'`.
-	 *
-	 * @type {String}
-	 * @default 'auto'
-	 * @public
-	 */
-	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
-
-	/**
-	 * Specifies how to show vertical scrollbar.
-	 *
-	 * Valid values are:
-	 * * `'auto'`,
-	 * * `'visible'`, and
-	 * * `'hidden'`.
-	 *
-	 * @type {String}
-	 * @default 'auto'
-	 * @public
-	 */
-	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
-};
-
-Scroller.defaultProps = {
-	direction: 'both',
-	horizontalScrollbar: 'auto',
-	verticalScrollbar: 'auto'
-};
-
-export default Scroller;
+export default ScrollerBase;
 export {
-	Scroller,
-	ScrollerBase, // to support legacy ScrollerBase
-	ScrollerBasic // to support theme libraries
+	ScrollerBase
 };
