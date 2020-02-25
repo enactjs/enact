@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import React, {forwardRef, memo, useEffect, useImperativeHandle, useRef} from 'react';
+import React, {PureComponent, Component} from 'react';
 import ReactDOM from 'react-dom';
 
 import ri from '../resolution';
@@ -10,15 +10,9 @@ import ScrollThumb from './ScrollThumb';
 
 import componentCss from './Scrollbar.module.less';
 
-const thumbHidingDelay = 400; // in milliseconds
-
-const addClass = (element, className) => {
-	ReactDOM.findDOMNode(element).classList.add(className); // eslint-disable-line react/no-find-dom-node
-};
-
-const removeClass = (element, className) => {
-	ReactDOM.findDOMNode(element).classList.remove(className); // eslint-disable-line react/no-find-dom-node
-};
+const
+	minThumbSize = 18, // Size in pixels
+	thumbHidingDelay = 400; // in milliseconds
 
 /*
  * Set CSS Varaible value.
@@ -35,146 +29,165 @@ const setCSSVariable = (element, variable, value) => {
 /**
  * An unstyled base component for a scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
  *
- * @function ScrollbarBase
+ * @class ScrollbarBase
  * @memberof ui/Scrollable
  * @ui
  * @private
  */
-const ScrollbarBase = memo(forwardRef((props, ref) => {
-	// Refs
-	const uiScrollbarContainerRef = useRef();
-	const thumbRef = useRef();
-	const hideThumbJob = useRef(null);
-	// Render
-	const
-		{childRenderer, className, corner, css, minThumbSize, vertical, ...rest} = props,
-		containerClassName = classNames(
-			className,
-			corner && css.corner,
-			css.scrollbar,
-			vertical ? css.vertical : css.horizontal
-		);
+class ScrollbarBase extends PureComponent {
+	static displayName = 'ui:Scrollbar'
 
-	delete rest.clientSize;
+	static propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
+		/**
+		 * The render function for child.
+		 *
+		 * @type {Function}
+		 * @required
+		 * @private
+		 */
+		childRenderer: PropTypes.func.isRequired,
 
-	hideThumbJob.current = hideThumbJob.current || new Job(hideThumb, thumbHidingDelay);
+		/**
+		 * Client size of the container; valid values are an object that has `clientWidth` and `clientHeight`.
+		 *
+		 * @type {Object}
+		 * @property {Number}    clientHeight    The client height of the list.
+		 * @property {Number}    clientWidth    The client width of the list.
+		 * @public
+		 */
+		clientSize: PropTypes.shape({
+			clientHeight: PropTypes.number.isRequired,
+			clientWidth: PropTypes.number.isRequired
+		}),
 
-	function hideThumb () {
-		removeClass(thumbRef.current, css.thumbShown);
+		/**
+		 * If `true`, add the corner between vertical and horizontal scrollbars.
+		 *
+		 * @type {Booelan}
+		 * @default false
+		 * @public
+		 */
+		corner: PropTypes.bool,
+
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `scrollbar` - The scrollbar component class
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
+
+		/**
+		 * If `true`, the scrollbar will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		vertical: PropTypes.bool
 	}
 
-	useEffect(() => {
-		return () => {
-			hideThumbJob.current.stop();
-		};
-	}, []);
+	static defaultProps = {
+		corner: false,
+		css: componentCss,
+		vertical: true
+	}
 
-	useImperativeHandle(ref, () => ({
-		getContainerRef: () => (uiScrollbarContainerRef),
-		showThumb: () => {
-			hideThumbJob.current.stop();
-			addClass(thumbRef.current, css.thumbShown);
-		},
-		startHidingThumb: () => {
-			hideThumbJob.current.start();
-		},
-		update: (bounds) => {
-			const
-				{clientSize} = props,
-				primaryDimenstion = vertical ? 'clientHeight' : 'clientWidth',
-				trackSize = clientSize ? clientSize[primaryDimenstion] : uiScrollbarContainerRef.current[primaryDimenstion],
-				scrollViewSize = vertical ? bounds.clientHeight : bounds.clientWidth,
-				scrollContentSize = vertical ? bounds.scrollHeight : bounds.scrollWidth,
-				scrollOrigin = vertical ? bounds.scrollTop : bounds.scrollLeft,
-				thumbSizeRatioBase = (scrollViewSize / scrollContentSize),
-				scrollThumbPositionRatio = (scrollOrigin / (scrollContentSize - scrollViewSize)),
-				scrollThumbSizeRatio = Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, thumbSizeRatioBase));
+	constructor (props) {
+		super(props);
 
-			setCSSVariable(thumbRef.current, '--scrollbar-size-ratio', scrollThumbSizeRatio);
-			setCSSVariable(thumbRef.current, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
+		this.containerRef = React.createRef();
+		this.thumbRef = React.createRef();
+	}
+
+	componentDidMount () {
+		this.calculateMetrics();
+	}
+
+	componentDidUpdate () {
+		this.calculateMetrics();
+	}
+
+	componentWillUnmount () {
+		this.hideThumbJob.stop();
+	}
+
+	minThumbSizeRatio = 0
+	ignoreMode = false
+
+	update = (bounds) => {
+		const
+			{vertical} = this.props,
+			{clientWidth, clientHeight, scrollWidth, scrollHeight, scrollLeft, scrollTop} = bounds,
+			clientSize = vertical ? clientHeight : clientWidth,
+			scrollSize = vertical ? scrollHeight : scrollWidth,
+			scrollOrigin = vertical ? scrollTop : scrollLeft,
+
+			thumbSizeRatioBase = (clientSize / scrollSize),
+			scrollThumbPositionRatio = (scrollOrigin / (scrollSize - clientSize)),
+			scrollThumbSizeRatio = Math.max(this.minThumbSizeRatio, Math.min(1, thumbSizeRatioBase));
+
+		setCSSVariable(this.thumbRef.current, '--scrollbar-size-ratio', scrollThumbSizeRatio);
+		setCSSVariable(this.thumbRef.current, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
+	}
+
+	showThumb = () => {
+		this.hideThumbJob.stop();
+		ReactDOM.findDOMNode(this.thumbRef.current).classList.add(this.props.css.thumbShown); // eslint-disable-line react/no-find-dom-node
+	}
+
+	startHidingThumb = () => {
+		this.hideThumbJob.start();
+	}
+
+	hideThumb = () => {
+		ReactDOM.findDOMNode(this.thumbRef.current).classList.remove(this.props.css.thumbShown); // eslint-disable-line react/no-find-dom-node
+	}
+
+	hideThumbJob = new Job(this.hideThumb.bind(this), thumbHidingDelay);
+
+	calculateMetrics = () => {
+		const primaryDimenstion = this.props.vertical ? 'clientHeight' : 'clientWidth';
+		let trackSize;
+
+		if (this.props.clientSize) {
+			trackSize = this.props.clientSize[primaryDimenstion];
+		} else {
+			trackSize = this.containerRef.current[primaryDimenstion];
 		}
-	}));
 
-	return (
-		<div {...rest} className={containerClassName} ref={uiScrollbarContainerRef}>
-			{childRenderer({thumbRef})}
-		</div>
-	);
-}));
+		this.minThumbSizeRatio = ri.scale(minThumbSize) / trackSize;
+	}
 
-ScrollbarBase.displayName = 'ui:Scrollbar';
+	getContainerRef = () => (this.containerRef)
 
-ScrollbarBase.propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
-	/**
-	 * The render function for child.
-	 *
-	 * @type {Function}
-	 * @required
-	 * @private
-	 */
-	childRenderer: PropTypes.func.isRequired,
+	render () {
+		const
+			{childRenderer, className, corner, css, vertical, ...rest} = this.props,
+			containerClassName = classNames(
+				className,
+				css.scrollbar,
+				corner ? css.corner : null,
+				vertical ? css.vertical : css.horizontal
+			);
 
-	/**
-	 * Client size of the container; valid values are an object that has `clientWidth` and `clientHeight`.
-	 *
-	 * @type {Object}
-	 * @property {Number}    clientHeight    The client height of the list.
-	 * @property {Number}    clientWidth    The client width of the list.
-	 * @public
-	 */
-	clientSize: PropTypes.shape({
-		clientHeight: PropTypes.number.isRequired,
-		clientWidth: PropTypes.number.isRequired
-	}),
+		delete rest.clientSize;
 
-	/**
-	 * If `true`, add the corner between vertical and horizontal scrollbars.
-	 *
-	 * @type {Booelan}
-	 * @default false
-	 * @public
-	 */
-	corner: PropTypes.bool,
-
-	/**
-	 * Customizes the component by mapping the supplied collection of CSS class names to the
-	 * corresponding internal elements and states of this component.
-	 *
-	 * The following classes are supported:
-	 *
-	 * * `scrollbar` - The scrollbar component class
-	 *
-	 * @type {Object}
-	 * @public
-	 */
-	css: PropTypes.object,
-
-
-	/**
-	 * The minimum size of the thumb.
-	 * This value will be applied ri.scale.
-	 *
-	 * @type {number}
-	 * @public
-	 */
-	minThumbSize: PropTypes.number,
-
-	/**
-	 * If `true`, the scrollbar will be oriented vertically.
-	 *
-	 * @type {Boolean}
-	 * @default true
-	 * @public
-	 */
-	vertical: PropTypes.bool
-};
-
-ScrollbarBase.defaultProps = {
-	corner: false,
-	css: componentCss,
-	minThumbSize: 18,
-	vertical: true
-};
+		return (
+			<div {...rest} className={containerClassName} ref={this.containerRef}>
+				{childRenderer({
+					getContainerRef: this.getContainerRef,
+					thumbRef: this.thumbRef
+				})}
+			</div>
+		);
+	}
+}
 
 /**
  * An unstyled scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
@@ -184,51 +197,53 @@ ScrollbarBase.defaultProps = {
  * @ui
  * @private
  */
-const Scrollbar = forwardRef((props, ref) => {
-	const scrollbarBaseRef = useRef(null);
+class Scrollbar extends Component {
+	static propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
+		/**
+		 * If `true`, the scrollbar will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		vertical: PropTypes.bool
+	}
 
-	useImperativeHandle(ref, () => {
-		const {getContainerRef, showThumb, startHidingThumb, update} = scrollbarBaseRef.current;
+	static defaultProps = {
+		vertical: true
+	}
 
-		return {
-			getContainerRef,
-			showThumb,
-			startHidingThumb,
-			update
-		};
-	}, [scrollbarBaseRef]);
+	setApi = (ref) => {
+		if (ref) {
+			const {getContainerRef, showThumb, startHidingThumb, update: uiUpdate} = ref;
 
-	return (
-		<ScrollbarBase
-			{...props}
-			ref={scrollbarBaseRef}
-			childRenderer={({thumbRef}) => { // eslint-disable-line react/jsx-no-bind
-				return (
-					<ScrollThumb
-						key="thumb"
-						ref={thumbRef}
-						vertical={props.vertical}
-					/>
-				);
-			}}
-		/>
-	);
-});
+			this.getContainerRef = getContainerRef;
+			this.showThumb = showThumb;
+			this.startHidingThumb = startHidingThumb;
+			this.update = uiUpdate;
+		}
+	}
 
-Scrollbar.propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
-	/**
-	 * If `true`, the scrollbar will be oriented vertically.
-	 *
-	 * @type {Boolean}
-	 * @default true
-	 * @public
-	 */
-	vertical: PropTypes.bool
-};
+	render () {
+		const {vertical} = this.props;
 
-Scrollbar.defaultProps = {
-	vertical: true
-};
+		return (
+			<ScrollbarBase
+				{...this.props}
+				ref={this.setApi}
+				childRenderer={({thumbRef}) => { // eslint-disable-line react/jsx-no-bind
+					return (
+						<ScrollThumb
+							key="thumb"
+							ref={thumbRef}
+							vertical={vertical}
+						/>
+					);
+				}}
+			/>
+		);
+	}
+}
 
 export default Scrollbar;
 export {

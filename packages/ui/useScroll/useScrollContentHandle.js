@@ -1,9 +1,9 @@
 import {useRef} from 'react';
 
-const useChildAdapter = () => {
+const useScrollContentHandle = () => {
 	// Mutable value
 
-	const childAdapter = useRef({
+	const scrollContentHandle = useRef({
 		calculateMetrics: null,
 		didScroll: null,
 		dimensionToExtent: null,
@@ -31,15 +31,15 @@ const useChildAdapter = () => {
 
 	// Functions
 
-	const setChildAdapter = (adapter) => {
-		childAdapter.current = adapter;
+	const setScrollContentHandle = (handle) => {
+		scrollContentHandle.current = handle;
 	};
 
 	// Return
 
-	return [childAdapter, setChildAdapter];
+	return [scrollContentHandle, setScrollContentHandle];
 };
 
 export {
-	useChildAdapter
+	useScrollContentHandle
 };

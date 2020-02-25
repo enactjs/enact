@@ -6,23 +6,25 @@
  * @exports VirtualGridList
  * @exports VirtualList
  * @exports VirtualListBase
+ * @exports VirtualListBasic
  */
 
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import {ResizeContext} from '../Resizable';
-import useScroll from '../Scrollable';
-import Scrollbar from '../Scrollable/Scrollbar';
+import useScroll from '../useScroll';
+import Scrollbar from '../useScroll/Scrollbar';
 
-import {gridListItemSizeShape, itemSizesShape, VirtualListBase} from './VirtualListBase';
+import {UiVirtualListBase, UiVirtualListBaseNative} from './UiVirtualListBase';
+import {gridListItemSizeShape, itemSizesShape, VirtualListBasic} from './VirtualListBasic';
 
 /**
  * An unstyled scrollable virtual list component with touch support.
  *
  * @class VirtualList
  * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBase
+ * @extends ui/VirtualList.VirtualListBasic
  * @ui
  * @public
  */
@@ -30,15 +32,15 @@ const VirtualList = ({role, ...rest}) => {
 	// Hooks
 
 	const {
-		childWrapper: ChildWrapper,
+		scrollContentWrapper: ScrollContentWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
 
 		resizeContextProps,
 		scrollContainerProps,
-		innerScrollContainerProps,
-		childWrapperProps,
-		childProps,
+		scrollInnerContainerProps,
+		scrollContentWrapperProps,
+		scrollContentProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
 	} = useScroll(rest);
@@ -48,15 +50,15 @@ const VirtualList = ({role, ...rest}) => {
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
 			<div {...scrollContainerProps}>
-				<div {...innerScrollContainerProps}>
-					<ChildWrapper {...childWrapperProps}>
-						<VirtualListBase
-							{...childProps}
+				<div {...scrollInnerContainerProps}>
+					<ScrollContentWrapper {...scrollContentWrapperProps}>
+						<VirtualListBasic
+							{...scrollContentProps}
 							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
 								cc.length ? <div role={role}>{cc}</div> : null
 							)}
 						/>
-					</ChildWrapper>
+					</ScrollContentWrapper>
 					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
 				</div>
 				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
@@ -130,21 +132,21 @@ VirtualList.defaultProps = {
  *
  * @class VirtualGridList
  * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBase
+ * @extends ui/VirtualList.VirtualListBasic
  * @ui
  * @public
  */
 const VirtualGridList = ({role, ...rest}) => {
 	const {
-		childWrapper: ChildWrapper,
+		scrollContentWrapper: ScrollContentWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
 
 		resizeContextProps,
 		scrollContainerProps,
-		innerScrollContainerProps,
-		childWrapperProps,
-		childProps,
+		scrollInnerContainerProps,
+		scrollContentWrapperProps,
+		scrollContentProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
 	} = useScroll(rest);
@@ -152,15 +154,15 @@ const VirtualGridList = ({role, ...rest}) => {
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
 			<div {...scrollContainerProps}>
-				<div {...innerScrollContainerProps}>
-					<ChildWrapper {...childWrapperProps}>
-						<VirtualListBase
-							{...childProps}
+				<div {...scrollInnerContainerProps}>
+					<ScrollContentWrapper {...scrollContentWrapperProps}>
+						<VirtualListBasic
+							{...scrollContentProps}
 							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
 								cc.length ? <div role={role}>{cc}</div> : null
 							)}
 						/>
-					</ChildWrapper>
+					</ScrollContentWrapper>
 					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
 				</div>
 				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
@@ -239,5 +241,7 @@ export {
 	itemSizesShape,
 	VirtualGridList,
 	VirtualList,
-	VirtualListBase
+	VirtualListBasic,
+	UiVirtualListBase as VirtualListBase, // to support legacy VirtualListBase
+	UiVirtualListBaseNative as VirtualListBaseNative // to support legacy VirtualListBaseNative
 };
