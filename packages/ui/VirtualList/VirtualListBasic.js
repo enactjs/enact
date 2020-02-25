@@ -230,10 +230,15 @@ class VirtualListBasic extends Component {
 		 */
 		rtl: PropTypes.bool,
 
+		/**
+		 * TBD
+		 */
+		scrollContentRef: PropTypes.object,
+
 		/*
 		 * TBD
 		 */
-		setUiChildAdapter: PropTypes.func,
+		setScrollContentHandle: PropTypes.func,
 
 		/**
 		 * The spacing between items.
@@ -248,11 +253,6 @@ class VirtualListBasic extends Component {
 		 * TBD
 		 */
 		type: PropTypes.string,
-
-		/**
-		 * TBD
-		 */
-		uiChildContainerRef: PropTypes.object,
 
 		/**
 		 * Called to execute additional logic in a themed component when updating states and bounds.
@@ -296,7 +296,7 @@ class VirtualListBasic extends Component {
 			...nextState
 		};
 
-		props.setUiChildAdapter(this);
+		props.setScrollContentHandle(this);
 	}
 
 	static getDerivedStateFromProps (props, state) {
@@ -572,7 +572,7 @@ class VirtualListBasic extends Component {
 	calculateMetrics (props) {
 		const
 			{clientSize, direction, itemSize, overhang, spacing} = props,
-			node = this.props.uiChildContainerRef.current;
+			node = this.props.scrollContentRef.current;
 
 		if (!clientSize && !node) {
 			return;
@@ -710,7 +710,7 @@ class VirtualListBasic extends Component {
 	calculateScrollBounds (props) {
 		const
 			{clientSize} = props,
-			node = this.props.uiChildContainerRef.current;
+			node = this.props.scrollContentRef.current;
 
 		if (!clientSize && !node) {
 			return;
@@ -799,7 +799,7 @@ class VirtualListBasic extends Component {
 
 	// Native only
 	scrollToPosition (x, y, rtl = this.props.rtl) {
-		if (this.props.uiChildContainerRef.current) {
+		if (this.props.scrollContentRef.current) {
 			if (this.isPrimaryDirectionVertical) {
 				this.scrollPositionTarget = y;
 			} else {
@@ -810,7 +810,7 @@ class VirtualListBasic extends Component {
 				x = (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
 			}
 
-			this.props.uiChildContainerRef.current.scrollTo(x, y);
+			this.props.scrollContentRef.current.scrollTo(x, y);
 		}
 	}
 
@@ -1133,7 +1133,7 @@ class VirtualListBasic extends Component {
 	syncClientSize = () => {
 		const
 			{props} = this,
-			node = this.props.uiChildContainerRef.current;
+			node = this.props.scrollContentRef.current;
 
 		if (!props.clientSize && !node) {
 			return false;
@@ -1179,11 +1179,11 @@ class VirtualListBasic extends Component {
 		delete rest.pageScroll;
 		delete rest.rtl;
 		delete rest.scrollContainerContainsDangerously;
-		delete rest.setChildAdapter;
-		delete rest.setUiChildAdapter;
+		delete rest.setThemeScrollContentHandle;
+		delete rest.setScrollContentHandle;
 		delete rest.spacing;
-		delete rest.uiChildAdapter;
-		delete rest.uiChildContainerRef;
+		delete rest.scrollContentHandle;
+		delete rest.scrollContentRef;
 		delete rest.updateStatesAndBounds;
 
 		if (primary) {
@@ -1191,7 +1191,7 @@ class VirtualListBasic extends Component {
 		}
 
 		return (
-			<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.props.uiChildContainerRef} style={style}>
+			<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.props.scrollContentRef} style={style}>
 				<div {...rest} className={contentClasses} ref={this.contentRef}>
 					{itemsRenderer({cc, itemContainerRef, primary})}
 				</div>

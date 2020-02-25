@@ -1,22 +1,11 @@
-/**
- * Unstyled scrollable components and behaviors to be customized by a theme or application.
- *
- * @module ui/Scrollable
- * @exports constants
- * @exports Scrollable
- * @exports ScrollableBase
- * @private
- */
-
 import classNames from 'classnames';
 import {forward, forwardWithPrevent} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform'; // Native
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
-import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
-import {Component, useCallback, useContext, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
+import {useCallback, useContext, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
 import warning from 'warning';
 
 import ForwardRef from '../ForwardRef';
@@ -24,14 +13,13 @@ import {ResizeContext} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
 
+import {Scrollable, ScrollableBasic} from './Scrollable';
 import ScrollAnimator from './ScrollAnimator';
-import {useChildAdapter} from './useChild';
+import {useScrollContentHandle} from './useScrollContentHandle';
 import utilDOM from './utilDOM';
 import utilEvent from './utilEvent';
 
 import css from './useScroll.module.less';
-
-const nop = () => {};
 
 const
 	constants = {
@@ -70,380 +58,6 @@ const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
 
 const useForceUpdate = () => (useReducer(x => x + 1, 0));
 
-/**
- * An unstyled component that passes scrollable behavior information as its render prop's arguments.
- *
- * @class ScrollableBase
- * @memberof ui/Scrollable
- * @ui
- * @private
- */
-class ScrollableBase extends Component {
-	static displayName = 'ui:ScrollableBase'
-
-	static propTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
-		/**
-		 * Render function.
-		 *
-		 * @type {Function}
-		 * @required
-		 * @private
-		 */
-		containerRenderer: PropTypes.func.isRequired,
-
-		/**
-		 * Called when adding additional event listeners in a themed component.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		addEventListeners: PropTypes.func,
-
-		/**
-		 * Called to execute additional logic in a themed component to show overscroll effect.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		applyOverscrollEffect: PropTypes.func,
-
-		/**
-		 * A callback function that receives a reference to the `scrollTo` feature.
-		 *
-		 * Once received, the `scrollTo` method can be called as an imperative interface.
-		 *
-		 * The `scrollTo` function accepts the following parameters:
-		 * - {position: {x, y}} - Pixel value for x and/or y position
-		 * - {align} - Where the scroll area should be aligned. Values are:
-		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
-		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
-		 * - {index} - Index of specific item. (`0` or positive integer)
-		 *   This option is available for only `VirtualList` kind.
-		 * - {node} - Node to scroll into view
-		 * - {animate} - When `true`, scroll occurs with animation. When `false`, no
-		 *   animation occurs.
-		 * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
-		 *   by `index` or `node`.
-		 * > Note: Only specify one of: `position`, `align`, `index` or `node`
-		 *
-		 * Example:
-		 * ```
-		 *	// If you set cbScrollTo prop like below;
-		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
-		 *	// You can simply call like below;
-		 *	this.scrollTo({align: 'top'}); // scroll to the top
-		 * ```
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		cbScrollTo: PropTypes.func,
-
-		/**
-		 * Called to execute additional logic in a themed component to clear overscroll effect.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		clearOverscrollEffect: PropTypes.func,
-
-		/**
-		 * Client size of the container; valid values are an object that has `clientWidth` and `clientHeight`.
-		 *
-		 * @type {Object}
-		 * @property {Number}    clientHeight    The client height of the list.
-		 * @property {Number}    clientWidth    The client width of the list.
-		 * @public
-		 */
-		clientSize: PropTypes.shape({
-			clientHeight: PropTypes.number.isRequired,
-			clientWidth: PropTypes.number.isRequired
-		}),
-
-		/**
-		 * Direction of the list or the scroller.
-		 *
-		 * `'both'` could be only used for[Scroller]{@link ui/Scroller.Scroller}.
-		 *
-		 * Valid values are:
-		 * * `'both'`,
-		 * * `'horizontal'`, and
-		 * * `'vertical'`.
-		 *
-		 * @type {String}
-		 * @private
-		 */
-		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
-
-		/**
-		 * Called when resizing window
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		handleResizeWindow: PropTypes.func,
-
-		/**
-		 * Specifies how to show horizontal scrollbar.
-		 *
-		 * Valid values are:
-		 * * `'auto'`,
-		 * * `'visible'`, and
-		 * * `'hidden'`.
-		 *
-		 * @type {String}
-		 * @default 'auto'
-		 * @public
-		 */
-		horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
-
-		/**
-		 * Prevents scroll by dragging or flicking on the list or the scroller.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		noScrollByDrag: PropTypes.bool,
-
-		/**
-		 * Prevents scroll by wheeling on the list or the scroller.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noScrollByWheel: PropTypes.bool,
-
-		/**
-		 * Called when triggering a drag event in JavaScript scroller.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onDrag: PropTypes.func,
-
-		/**
-		 * Called when triggering a dragend event in JavaScript scroller.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onDragEnd: PropTypes.func,
-
-		/**
-		 * Called when triggering a dragstart event in JavaScript scroller.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onDragStart: PropTypes.func,
-
-		/**
-		 * Called when flicking with a mouse or a touch screen.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onFlick: PropTypes.func,
-
-		/**
-		 * Called when pressing a key.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onKeyDown: PropTypes.func,
-
-		/**
-		 * Called when triggering a mousedown event.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onMouseDown: PropTypes.func,
-
-		/**
-		 * Called when scrolling.
-		 *
-		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
-		 * It is not recommended to set this prop since it can cause performance degradation.
-		 * Use `onScrollStart` or `onScrollStop` instead.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {Number} event.scrollLeft Scroll left value.
-		 * @param {Number} event.scrollTop Scroll top value.
-		 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
-		 * @public
-		 */
-		onScroll: PropTypes.func,
-
-		/**
-		 * Called when scroll starts.
-		 *
-		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
-		 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
-		 *
-		 * Example:
-		 * ```
-		 * onScrollStart = ({scrollLeft, scrollTop, moreInfo}) => {
-		 *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
-		 *     // do something with firstVisibleIndex and lastVisibleIndex
-		 * }
-		 *
-		 * render = () => (
-		 *     <VirtualList
-		 *         ...
-		 *         onScrollStart={this.onScrollStart}
-		 *         ...
-		 *     />
-		 * )
-		 * ```
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {Number} event.scrollLeft Scroll left value.
-		 * @param {Number} event.scrollTop Scroll top value.
-		 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
-		 * @public
-		 */
-		onScrollStart: PropTypes.func,
-
-		/**
-		 * Called when scroll stops.
-		 *
-		 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
-		 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
-		 *
-		 * Example:
-		 * ```
-		 * onScrollStop = ({scrollLeft, scrollTop, moreInfo}) => {
-		 *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
-		 *     // do something with firstVisibleIndex and lastVisibleIndex
-		 * }
-		 *
-		 * render = () => (
-		 *     <VirtualList
-		 *         ...
-		 *         onScrollStop={this.onScrollStop}
-		 *         ...
-		 *     />
-		 * )
-		 * ```
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {Number} event.scrollLeft Scroll left value.
-		 * @param {Number} event.scrollTop Scroll top value.
-		 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
-		 * @public
-		 */
-		onScrollStop: PropTypes.func,
-
-		/**
-		 * Called when wheeling.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onWheel: PropTypes.func,
-
-		/**
-		 * Specifies overscroll effects shows on which type of inputs.
-		 *
-		 * @type {Object}
-		 * @default {drag: false, pageKey: false, wheel: false}
-		 * @private
-		 */
-		overscrollEffectOn: PropTypes.shape({
-			drag: PropTypes.bool,
-			pageKey: PropTypes.bool,
-			wheel: PropTypes.bool
-		}),
-
-		/**
-		 * Called when removing additional event listeners in a themed component.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		removeEventListeners: PropTypes.func,
-
-		/**
-		 * Indicates the content's text direction is right-to-left.
-		 *
-		 * @type {Boolean}
-		 * @private
-		 */
-		rtl: PropTypes.bool,
-
-		/**
-		 * Called to execute additional logic in a themed component after scrolling in native scroller.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		scrollStopOnScroll: PropTypes.func,
-
-		/**
-		 * Called to execute additional logic in a themed component when scrollTo is called.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		scrollTo: PropTypes.func,
-
-		/**
-		 * Called to execute additional logic in a themed component when scroll starts in native scroller.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		start: PropTypes.func,
-
-		/**
-		 * Called to execute additional logic in a themed component when scroll stops.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		stop: PropTypes.func,
-
-		/**
-		 * TBD
-		 */
-		type: PropTypes.string,
-
-		/**
-		 * Specifies how to show vertical scrollbar.
-		 *
-		 * Valid values are:
-		 * * `'auto'`,
-		 * * `'visible'`, and
-		 * * `'hidden'`.
-		 *
-		 * @type {String}
-		 * @default 'auto'
-		 * @public
-		 */
-		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
-	}
-
-	static defaultProps = {
-		cbScrollTo: nop,
-		horizontalScrollbar: 'auto',
-		noScrollByDrag: false,
-		noScrollByWheel: false,
-		onScroll: nop,
-		onScrollStart: nop,
-		onScrollStop: nop,
-		overscrollEffectOn: {drag: false, pageKey: false, wheel: false},
-		type: 'JS',
-		verticalScrollbar: 'auto'
-	}
-}
-
 const useScrollBase = (props) => {
 	const
 		{
@@ -454,7 +68,7 @@ const useScrollBase = (props) => {
 			'data-webos-voice-focused': voiceFocused,
 			'data-webos-voice-group-label': voiceGroupLabel,
 			dataSize,
-			decorateChildProps,
+			assignProperties,
 			direction,
 			horizontalScrollbar,
 			horizontalScrollbarRef,
@@ -465,13 +79,13 @@ const useScrollBase = (props) => {
 			noScrollByWheel,
 			overscrollEffectOn,
 			rtl,
-			setUiChildAdapter,
-			setUiScrollAdapter,
+			setScrollContentHandle,
+			setScrollContainerHandle,
 			spacing,
 			type,
-			uiChildAdapter,
-			uiChildContainerRef,
-			uiScrollContainerRef,
+			scrollContentHandle,
+			scrollContentRef,
+			scrollContainerRef,
 			verticalScrollbar,
 			verticalScrollbarRef,
 			wrap,
@@ -579,8 +193,8 @@ const useScrollBase = (props) => {
 	}
 
 	useLayoutEffect(() => {
-		if (setUiScrollAdapter) {
-			setUiScrollAdapter({
+		if (setScrollContainerHandle) {
+			setScrollContainerHandle({
 				animator: mutableRef.current.animator,
 				applyOverscrollEffect,
 				bounds: mutableRef.current.bounds,
@@ -690,9 +304,9 @@ const useScrollBase = (props) => {
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	const enqueueForceUpdate = useCallback(() => {
-		uiChildAdapter.current.calculateMetrics(uiChildAdapter.current.props);
+		scrollContentHandle.current.calculateMetrics(scrollContentHandle.current.props);
 		forceUpdate();
-	}, [forceUpdate, uiChildAdapter]);
+	}, [forceUpdate, scrollContentHandle]);
 
 	function handleResizeWindow () {
 		const propsHandleResizeWindow = props.handleResizeWindow;
@@ -705,9 +319,9 @@ const useScrollBase = (props) => {
 			if (type === 'JS') {
 				scrollTo({position: {x: 0, y: 0}, animate: false});
 			} else {
-				uiChildContainerRef.current.style.scrollBehavior = null;
-				uiChildAdapter.current.scrollToPosition(0, 0);
-				uiChildContainerRef.current.style.scrollBehavior = 'smooth';
+				scrollContentRef.current.style.scrollBehavior = null;
+				scrollContentHandle.current.scrollToPosition(0, 0);
+				scrollContentRef.current.style.scrollBehavior = 'smooth';
 			}
 
 			enqueueForceUpdate();
@@ -741,13 +355,13 @@ const useScrollBase = (props) => {
 
 	useEffect(() => {
 		const
-			{hasDataSizeChanged} = uiChildAdapter.current,
+			{hasDataSizeChanged} = scrollContentHandle.current,
 			{prevState, resizeRegistry, scrollToInfo} = mutableRef.current;
 
 		// Need to sync calculated client size if it is different from the real size
-		if (uiChildAdapter.current.syncClientSize) {
+		if (scrollContentHandle.current.syncClientSize) {
 			// If we actually synced, we need to reset scroll position.
-			if (uiChildAdapter.current.syncClientSize()) {
+			if (scrollContentHandle.current.syncClientSize()) {
 				setScrollLeft(0);
 				setScrollTop(0);
 			}
@@ -1114,8 +728,8 @@ const useScrollBase = (props) => {
 			setScrollTop(scrollTop);
 		}
 
-		if (uiChildAdapter.current.didScroll) {
-			uiChildAdapter.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
+		if (scrollContentHandle.current.didScroll) {
+			scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
 		}
 
 		forwardScrollEvent('onScroll');
@@ -1450,11 +1064,11 @@ const useScrollBase = (props) => {
 			}
 		} else { // Native
 			if (animate) {
-				uiChildAdapter.current.scrollToPosition(targetX, targetY);
+				scrollContentHandle.current.scrollToPosition(targetX, targetY);
 			} else {
-				uiChildContainerRef.current.style.scrollBehavior = null;
-				uiChildAdapter.current.scrollToPosition(targetX, targetY);
-				uiChildContainerRef.current.style.scrollBehavior = 'smooth';
+				scrollContentRef.current.style.scrollBehavior = null;
+				scrollContentHandle.current.scrollToPosition(targetX, targetY);
+				scrollContentRef.current.style.scrollBehavior = 'smooth';
 			}
 
 			mutableRef.current.scrollStopJob.start();
@@ -1519,7 +1133,7 @@ const useScrollBase = (props) => {
 			setScrollTop(top);
 		}
 
-		uiChildAdapter.current.setScrollPosition(mutableRef.current.scrollLeft, mutableRef.current.scrollTop, rtl, ...restParams);
+		scrollContentHandle.current.setScrollPosition(mutableRef.current.scrollLeft, mutableRef.current.scrollTop, rtl, ...restParams);
 		forwardScrollEvent('onScroll');
 	}
 	// JS ]]
@@ -1544,9 +1158,9 @@ const useScrollBase = (props) => {
 	}
 
 	function stopForNative () {
-		uiChildContainerRef.current.style.scrollBehavior = null;
-		uiChildAdapter.current.scrollToPosition(mutableRef.current.scrollLeft + 0.1, mutableRef.current.scrollTop + 0.1);
-		uiChildContainerRef.current.style.scrollBehavior = 'smooth';
+		scrollContentRef.current.style.scrollBehavior = null;
+		scrollContentHandle.current.scrollToPosition(mutableRef.current.scrollLeft + 0.1, mutableRef.current.scrollTop + 0.1);
+		scrollContentRef.current.style.scrollBehavior = 'smooth';
 	}
 
 	// esline-disable-next-line react-hooks/exhaustive-deps
@@ -1602,11 +1216,11 @@ const useScrollBase = (props) => {
 					}
 				}
 			} else {
-				if (typeof opt.index === 'number' && typeof uiChildAdapter.current.getItemPosition === 'function') {
-					itemPos = uiChildAdapter.current.getItemPosition(opt.index, opt.stickTo);
+				if (typeof opt.index === 'number' && typeof scrollContentHandle.current.getItemPosition === 'function') {
+					itemPos = scrollContentHandle.current.getItemPosition(opt.index, opt.stickTo);
 				} else if (opt.node instanceof Object) {
-					if (opt.node.nodeType === 1 && typeof uiChildAdapter.current.getNodePosition === 'function') {
-						itemPos = uiChildAdapter.current.getNodePosition(opt.node);
+					if (opt.node.nodeType === 1 && typeof scrollContentHandle.current.getNodePosition === 'function') {
+						itemPos = scrollContentHandle.current.getNodePosition(opt.node);
 					}
 				}
 
@@ -1743,37 +1357,37 @@ const useScrollBase = (props) => {
 	// ref
 
 	function getScrollBounds () {
-		if (uiChildAdapter.current && typeof uiChildAdapter.current.getScrollBounds === 'function') {
-			return uiChildAdapter.current.getScrollBounds();
+		if (scrollContentHandle.current && typeof scrollContentHandle.current.getScrollBounds === 'function') {
+			return scrollContentHandle.current.getScrollBounds();
 		}
 	}
 
 	function getMoreInfo () {
-		if (uiChildAdapter.current && typeof uiChildAdapter.current.getMoreInfo === 'function') {
-			return uiChildAdapter.current.getMoreInfo();
+		if (scrollContentHandle.current && typeof scrollContentHandle.current.getMoreInfo === 'function') {
+			return scrollContentHandle.current.getMoreInfo();
 		}
 	}
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function addEventListeners () {
-		utilEvent('wheel').addEventListener(uiScrollContainerRef, onWheel);
-		utilEvent('keydown').addEventListener(uiScrollContainerRef, onKeyDown);
-		utilEvent('mousedown').addEventListener(uiScrollContainerRef, onMouseDown);
+		utilEvent('wheel').addEventListener(scrollContainerRef, onWheel);
+		utilEvent('keydown').addEventListener(scrollContainerRef, onKeyDown);
+		utilEvent('mousedown').addEventListener(scrollContainerRef, onMouseDown);
 
 		// Native [[
-		if (type === 'Native' && uiChildContainerRef.current) {
+		if (type === 'Native' && scrollContentRef.current) {
 			utilEvent('scroll').addEventListener(
-				uiChildContainerRef,
+				scrollContentRef,
 				onScroll,
 				{capture: true, passive: true}
 			);
 
-			uiChildContainerRef.current.style.scrollBehavior = 'smooth';
+			scrollContentRef.current.style.scrollBehavior = 'smooth';
 		}
 		// Native ]]
 
 		if (props.addEventListeners) {
-			props.addEventListeners(uiChildContainerRef);
+			props.addEventListeners(scrollContentRef);
 		}
 
 		if (window) {
@@ -1783,16 +1397,16 @@ const useScrollBase = (props) => {
 
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function removeEventListeners () {
-		utilEvent('wheel').removeEventListener(uiScrollContainerRef, onWheel);
-		utilEvent('keydown').removeEventListener(uiScrollContainerRef, onKeyDown);
-		utilEvent('mousedown').removeEventListener(uiScrollContainerRef, onMouseDown);
+		utilEvent('wheel').removeEventListener(scrollContainerRef, onWheel);
+		utilEvent('keydown').removeEventListener(scrollContainerRef, onKeyDown);
+		utilEvent('mousedown').removeEventListener(scrollContainerRef, onMouseDown);
 
 		// Native [[
-		utilEvent('scroll').removeEventListener(uiChildContainerRef, onScroll, {capture: true, passive: true});
+		utilEvent('scroll').removeEventListener(scrollContentRef, onScroll, {capture: true, passive: true});
 		// Native ]]
 
 		if (props.removeEventListeners) {
-			props.removeEventListeners(uiChildContainerRef);
+			props.removeEventListeners(scrollContentRef);
 		}
 
 		utilEvent('resize').removeEventListener(window, handleResizeWindow);
@@ -1805,29 +1419,29 @@ const useScrollBase = (props) => {
 		// Prevent scroll by focus.
 		// VirtualList and VirtualGridList DO NOT receive `onscroll` event.
 		// Only Scroller could get `onscroll` event.
-		if (!mutableRef.current.animator.isAnimating() && uiChildAdapter.current && uiChildContainerRef.current && uiChildAdapter.current.getRtlPositionX) {
+		if (!mutableRef.current.animator.isAnimating() && scrollContentHandle.current && scrollContentRef.current && scrollContentHandle.current.getRtlPositionX) {
 			// For Scroller
-			uiChildContainerRef.current.scrollTop = mutableRef.current.scrollTop;
-			uiChildContainerRef.current.scrollLeft = uiChildAdapter.current.getRtlPositionX(mutableRef.current.scrollLeft);
+			scrollContentRef.current.scrollTop = mutableRef.current.scrollTop;
+			scrollContentRef.current.scrollLeft = scrollContentHandle.current.getRtlPositionX(mutableRef.current.scrollLeft);
 		}
 	}
 	// JS ]]
 
 	function scrollContainerContainsDangerously (target) {
-		return utilDOM.containsDangerously(uiScrollContainerRef, target);
+		return utilDOM.containsDangerously(scrollContainerRef, target);
 	}
 
-	decorateChildProps('scrollContainerProps', {
+	assignProperties('scrollContainerProps', {
 		...rest,
 		className: [scrollClasses]
 	});
 
-	decorateChildProps('innerScrollContainerProps', {
-		className: [css.innerScrollContainer]
+	assignProperties('scrollInnerContainerProps', {
+		className: [css.scrollInnerContainer]
 	});
 
-	decorateChildProps('childWrapperProps', {
-		className: type === 'JS' ? [css.content] : [css.content, css.contentNative], // Native;,
+	assignProperties('scrollContentWrapperProps', {
+		className: type === 'JS' ? [css.scrollContentWrapper] : [css.scrollContentWrapper, css.scrollContentWrapperNative], // Native;,
 		...(!noScrollByDrag && {
 			flickConfig,
 			onDrag: onDrag,
@@ -1838,7 +1452,7 @@ const useScrollBase = (props) => {
 		})
 	});
 
-	const childProps = props.itemRenderer ? // If the child component is a VirtualList
+	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
 		{
 			clientSize,
 			'data-webos-voice-disabled': voiceDisabled,
@@ -1853,8 +1467,8 @@ const useScrollBase = (props) => {
 		} :
 		{children};
 
-	decorateChildProps('childProps', {
-		...childProps,
+	assignProperties('scrollContentProps', {
+		...scrollContentProps,
 		cbScrollTo: scrollTo,
 		className: [css.scrollFill],
 		direction,
@@ -1867,18 +1481,18 @@ const useScrollBase = (props) => {
 		},
 		onScroll: type === 'JS' ? handleScroll : null,
 		rtl,
-		setUiChildAdapter,
+		setScrollContentHandle,
 		type
 	});
 
-	decorateChildProps('verticalScrollbarProps', {
+	assignProperties('verticalScrollbarProps', {
 		clientSize,
 		disabled: !isVerticalScrollbarVisible,
 		rtl,
 		vertical: true
 	});
 
-	decorateChildProps('horizontalScrollbarProps', {
+	assignProperties('horizontalScrollbarProps', {
 		clientSize,
 		corner: isVerticalScrollbarVisible,
 		disabled: !isHorizontalScrollbarVisible,
@@ -1886,7 +1500,7 @@ const useScrollBase = (props) => {
 		vertical: false
 	});
 
-	decorateChildProps('resizeContextProps', {
+	assignProperties('resizeContextProps', {
 		value: mutableRef.current.resizeRegistry.register
 	});
 
@@ -1898,62 +1512,37 @@ const useScrollBase = (props) => {
 	};
 
 	return {
-		childWrapper: noScrollByDrag ? 'div' : TouchableDiv,
+		scrollContentWrapper: noScrollByDrag ? 'div' : TouchableDiv,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
 	};
 };
 
-/**
- * An unstyled component that provides horizontal and vertical scrollbars and makes a render prop element scrollable.
- *
- * @function Scrollable
- * @memberof ui/Scrollable
- * @extends ui/Scrollable.ScrollableBase
- * @ui
- * @private
- */
-
-class Scrollable extends Component {
-	static displayName = 'ui:Scrollable'
-
-	static propTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
-		/**
-		 * Render function.
-		 *
-		 * @type {Function}
-		 * @required
-		 * @private
-		 */
-		childRenderer: PropTypes.func.isRequired
-	}
-}
-
-const utilDecorateChildProps = (instance) => (childComponentName, props) => {
-	if (!instance[childComponentName]) {
-		instance[childComponentName] = {};
+const assignPropertiesOf = (instance) => (name, properties) => {
+	if (!instance[name]) {
+		instance[name] = {};
 	}
 
-	if (typeof props === 'object') {
-		for (const prop in props) {
-			if (prop === 'className') {
+	if (typeof properties === 'object') {
+		for (const property in properties) {
+			if (property === 'className') {
 
 				warning(
-					Array.isArray(props.className),
+					Array.isArray(properties.className),
 					'Unsupported other types for `className` prop except Array'
 				);
 
-				instance[childComponentName].className = instance[childComponentName].className ?
-					instance[childComponentName].className + ' ' + props.className.join(' ') :
-					props.className.join(' ');
+				instance[name].className = instance[name].className ?
+					instance[name].className + ' ' + properties.className.join(' ') :
+					properties.className.join(' ');
 			} else {
 				warning(
-					!instance[childComponentName][prop],
-					'Unsupported to push value in the same ' + prop + ' prop.'
+					!instance[name][property],
+					'Unsupported to push value in the same ' + property + ' prop.'
 				);
 
 				// Override the previous value.
-				instance[childComponentName][prop] = props[prop];
+				instance[name][property] = properties[property];
 			}
 		}
 	}
@@ -1962,28 +1551,28 @@ const utilDecorateChildProps = (instance) => (childComponentName, props) => {
 const useScroll = (props) => {
 	// Mutable value
 
-	const uiScrollContainerRef = useRef(null);
-	const uiChildContainerRef = useRef();
+	const scrollContainerRef = useRef(null);
+	const scrollContentRef = useRef();
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
 
 	// Adapters
 
-	const [uiChildAdapter, setUiChildAdapter] = useChildAdapter();
+	const [scrollContentHandle, setScrollContentHandle] = useScrollContentHandle();
 
 	// Hooks
 
 	const
-		decoratedChildProps = {},
-		decorateChildProps = utilDecorateChildProps(decoratedChildProps);
+		collectionOfProperties = {},
+		assignProperties = assignPropertiesOf(collectionOfProperties);
 
 	const {
-		childWrapper,
+		scrollContentWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
 	} = useScrollBase({
 		...props,
-		decorateChildProps,
+		assignProperties,
 		get horizontalScrollbarRef () {
 			return horizontalScrollbarRef;
 		},
@@ -1994,26 +1583,26 @@ const useScroll = (props) => {
 			scrollbarButton: false,
 			wheel: true
 		},
-		setUiChildAdapter,
+		setScrollContentHandle,
 		type: props.type || 'JS', // FIXME
-		uiChildAdapter,
-		uiChildContainerRef,
-		uiScrollContainerRef,
+		scrollContentHandle,
+		scrollContentRef,
+		scrollContainerRef,
 		get verticalScrollbarRef () {
 			return verticalScrollbarRef;
 		}
 	});
 
-	decorateChildProps('scrollContainerProps', {ref: uiScrollContainerRef});
-	decorateChildProps('childProps', {uiChildAdapter, uiChildContainerRef});
-	decorateChildProps('verticalScrollbarProps', {ref: verticalScrollbarRef});
-	decorateChildProps('horizontalScrollbarProps', {ref: horizontalScrollbarRef});
+	assignProperties('scrollContainerProps', {ref: scrollContainerRef});
+	assignProperties('scrollContentProps', {scrollContentHandle, scrollContentRef});
+	assignProperties('verticalScrollbarProps', {ref: verticalScrollbarRef});
+	assignProperties('horizontalScrollbarProps', {ref: horizontalScrollbarRef});
 
 	// Return
 
 	return {
-		...decoratedChildProps,
-		childWrapper,
+		...collectionOfProperties,
+		scrollContentWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
 	};
@@ -2023,8 +1612,8 @@ export default useScroll;
 export {
 	constants,
 	Scrollable,
-	ScrollableBase,
+	ScrollableBasic,
 	useScroll,
 	useScrollBase,
-	utilDecorateChildProps
+	assignPropertiesOf
 };
