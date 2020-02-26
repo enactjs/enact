@@ -235,6 +235,11 @@ class VirtualListBasic extends Component {
 		 */
 		scrollContentRef: PropTypes.object,
 
+		/**
+		 * TBD
+		 */
+		scrollMode: PropTypes.string,
+
 		/*
 		 * TBD
 		 */
@@ -248,11 +253,6 @@ class VirtualListBasic extends Component {
 		 * @public
 		 */
 		spacing: PropTypes.number,
-
-		/**
-		 * TBD
-		 */
-		type: PropTypes.string,
 
 		/**
 		 * Called to execute additional logic in a themed component when updating states and bounds.
@@ -269,8 +269,8 @@ class VirtualListBasic extends Component {
 		direction: 'vertical',
 		overhang: 3,
 		pageScroll: false,
-		spacing: 0,
-		type: 'JS'
+		scrollMode: 'translate',
+		spacing: 0
 	}
 
 	constructor (props) {
@@ -467,7 +467,7 @@ class VirtualListBasic extends Component {
 	indexToScrollIntoView = -1
 
 	updateScrollPosition = ({x, y}, rtl = this.props.rtl) => {
-		if (this.props.type === 'Native') {
+		if (this.props.scrollMode === 'native') {
 			this.scrollToPosition(x, y, rtl);
 		} else {
 			this.setScrollPosition(x, y, rtl, x, y);
@@ -628,7 +628,7 @@ class VirtualListBasic extends Component {
 
 		// reset
 		this.scrollPosition = 0;
-		if (this.props.type === 'JS' && this.contentRef.current) {
+		if (this.props.scrollMode === 'translate' && this.contentRef.current) {
 			this.contentRef.current.style.transform = null;
 		}
 	}
@@ -797,7 +797,7 @@ class VirtualListBasic extends Component {
 		}
 	}
 
-	// Native only
+	// scrollMode 'native' only
 	scrollToPosition (x, y, rtl = this.props.rtl) {
 		if (this.props.scrollContentRef.current) {
 			if (this.isPrimaryDirectionVertical) {
@@ -814,7 +814,7 @@ class VirtualListBasic extends Component {
 		}
 	}
 
-	// JS only
+	// scrollMode 'translate' only
 	setScrollPosition (x, y, rtl = this.props.rtl, targetX = 0, targetY = 0) {
 		if (this.contentRef.current) {
 			this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
@@ -1157,10 +1157,10 @@ class VirtualListBasic extends Component {
 
 	render () {
 		const
-			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, type, ...rest} = this.props,
+			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, scrollMode, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, itemContainerRef, primary} = this,
-			containerClasses = classNames(css.virtualList, isPrimaryDirectionVertical ? css.vertical : css.horizontal, type === 'Native' ? css.native : null, className),
-			contentClasses = type === 'Native' ? null : css.content;
+			containerClasses = classNames(css.virtualList, isPrimaryDirectionVertical ? css.vertical : css.horizontal, scrollMode === 'native' ? css.native : null, className),
+			contentClasses = scrollMode === 'native' ? null : css.content;
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;

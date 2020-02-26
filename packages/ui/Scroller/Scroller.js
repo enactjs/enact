@@ -49,6 +49,8 @@ const Scroller = (props) => {
 		horizontalScrollbarProps
 	} = useScroll(props);
 
+	delete scrollContentProps.scrollMode;
+
 	// Return
 
 	return (
