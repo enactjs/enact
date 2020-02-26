@@ -554,24 +554,10 @@ class VirtualListBasic extends Component {
 
 	getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
-	getClientSize = (props) => {
-		if (props.clientSize) {
-			return props.clientSize;
-		} else if (window && window.getComputedStyle) {
-			const node = props.scrollContentRef && props.scrollContentRef.current;
-
-			if (node) {
-				const {width, paddingLeft, paddingRight, height, paddingTop, paddingBottom} = window.getComputedStyle(node);
-
-				return {
-					clientWidth: parseInt(width) - parseInt(paddingLeft) - parseInt(paddingRight),
-					clientHeight: parseInt(height) - parseInt(paddingTop) - parseInt(paddingBottom)
-				};
-			} else {
-				return null;
-			}
-		}
-	}
+	getClientSize = (node) => ({
+		clientWidth: node.clientWidth,
+		clientHeight: node.clientHeight
+	})
 
 	emitUpdateItems () {
 		const {dataSize} = this.props;
@@ -585,15 +571,15 @@ class VirtualListBasic extends Component {
 
 	calculateMetrics (props) {
 		const
-			{direction, itemSize, overhang, spacing} = props,
-			clientSize = this.getClientSize(props);
+			{clientSize, direction, itemSize, overhang, spacing} = props,
+			node = this.props.scrollContentRef.current;
 
-		if (!clientSize) {
+		if (!clientSize && !node) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = clientSize,
+			{clientWidth, clientHeight} = (clientSize || this.getClientSize(node)),
 			heightInfo = {
 				clientSize: clientHeight,
 				minItemSize: itemSize.minHeight || null,
@@ -722,15 +708,17 @@ class VirtualListBasic extends Component {
 	}
 
 	calculateScrollBounds (props) {
-		const clientSize = this.getClientSize(props);
+		const
+			{clientSize} = props,
+			node = this.props.scrollContentRef.current;
 
-		if (!clientSize) {
+		if (!clientSize && !node) {
 			return;
 		}
 
 		const
 			{scrollBounds, isPrimaryDirectionVertical} = this,
-			{clientWidth, clientHeight} = clientSize;
+			{clientWidth, clientHeight} = clientSize || this.getClientSize(node);
 		let maxPos;
 
 		scrollBounds.clientWidth = clientWidth;
@@ -1145,14 +1133,14 @@ class VirtualListBasic extends Component {
 	syncClientSize = () => {
 		const
 			{props} = this,
-			clientSize = this.getClientSize(props);
+			node = this.props.scrollContentRef.current;
 
-		if (!clientSize) {
+		if (!props.clientSize && !node) {
 			return false;
 		}
 
 		const
-			{clientWidth, clientHeight} = clientSize,
+			{clientWidth, clientHeight} = props.clientSize || this.getClientSize(node),
 			{scrollBounds} = this;
 
 		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
