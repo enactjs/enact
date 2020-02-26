@@ -188,6 +188,7 @@ class ScrollerBasic extends Component {
 		delete rest.scrollContainerContainsDangerously;
 		delete rest.direction;
 		delete rest.rtl;
+		delete rest.scrollMode;
 		delete rest.setThemeScrollContentHandle;
 		delete rest.setScrollContentHandle;
 		delete rest.isHorizontalScrollbarVisible;

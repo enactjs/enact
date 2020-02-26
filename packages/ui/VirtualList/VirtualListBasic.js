@@ -1179,6 +1179,7 @@ class VirtualListBasic extends Component {
 		delete rest.pageScroll;
 		delete rest.rtl;
 		delete rest.scrollContainerContainsDangerously;
+		delete rest.scrollMode;
 		delete rest.setThemeScrollContentHandle;
 		delete rest.setScrollContentHandle;
 		delete rest.spacing;
