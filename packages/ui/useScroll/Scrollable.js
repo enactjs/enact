@@ -322,6 +322,11 @@ class ScrollableBasic extends Component {
 		rtl: PropTypes.bool,
 
 		/**
+		 * TBD
+		 */
+		scrollMode: PropTypes.string,
+
+		/**
 		 * Called to execute additional logic in a themed component after scrolling in native scroller.
 		 *
 		 * @type {Function}
@@ -354,11 +359,6 @@ class ScrollableBasic extends Component {
 		stop: PropTypes.func,
 
 		/**
-		 * TBD
-		 */
-		type: PropTypes.string,
-
-		/**
 		 * Specifies how to show vertical scrollbar.
 		 *
 		 * Valid values are:
@@ -382,7 +382,7 @@ class ScrollableBasic extends Component {
 		onScrollStart: nop,
 		onScrollStop: nop,
 		overscrollEffectOn: {drag: false, pageKey: false, wheel: false},
-		type: 'JS',
+		scrollMode: 'translate',
 		verticalScrollbar: 'auto'
 	}
 }
