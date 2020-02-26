@@ -748,11 +748,8 @@ class VirtualListBasic extends Component {
 
 	setContainerSize = () => {
 		if (this.contentRef.current) {
-			if (this.isPrimaryDirectionVertical) {
-				this.contentRef.current.style.height = this.scrollBounds.scrollHeight + 'px';
-			} else {
-				this.contentRef.current.style.width = this.scrollBounds.scrollWidth + 'px';
-			}
+			this.contentRef.current.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
+			this.contentRef.current.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
 		}
 	}
 
