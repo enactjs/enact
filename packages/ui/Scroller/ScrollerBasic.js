@@ -13,7 +13,7 @@ import css from './Scroller.module.less';
  * @class ScrollerBasic
  * @memberof ui/Scroller
  * @ui
- * @public
+ * @private
  */
 class ScrollerBasic extends Component {
 	static displayName = 'ui:ScrollerBasic'
