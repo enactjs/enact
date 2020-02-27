@@ -1632,7 +1632,7 @@ const useScroll = (props) => {
  * ```
  *
  * @name cbScrollTo
- * @memeberof ui/useScroll.useScrollBase
+ * @memberof ui/useScroll.useScrollBase
  * @type {Function}
  * @public
  */
@@ -1648,7 +1648,7 @@ const useScroll = (props) => {
  * * `'vertical'`.
  *
  * @name direction
- * @memeberof ui/useScroll.useScrollBase
+ * @memberof ui/useScroll.useScrollBase
  * @type {String}
  * @default 'both'
  * @public
