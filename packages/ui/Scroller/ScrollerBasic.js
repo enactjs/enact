@@ -61,18 +61,20 @@ class ScrollerBasic extends Component {
 		rtl: PropTypes.bool,
 
 		/**
-		 * TBD
+		 * Ref for scroll content
+		 *
+		 * @type {Object}
+		 * @private
 		 */
 		scrollContentRef: PropTypes.object,
 
 		/**
-		 * TBD
+		 * Setter of imperative handles for scroll content
+		 *
+		 * @type {Function}
+		 * @private
 		 */
 		setScrollContentHandle: PropTypes.func
-	}
-
-	static defaultProps = {
-		direction: 'both'
 	}
 
 	constructor (props) {

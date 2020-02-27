@@ -30,6 +30,7 @@ const nop = () => {};
  *
  * @class Scroller
  * @memberof ui/Scroller
+ * @extends ui/Scroller.ScrollerBasic
  * @extends ui/useScroll.useScrollBase
  * @ui
  * @public
