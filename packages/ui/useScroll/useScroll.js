@@ -21,6 +21,19 @@ import utilEvent from './utilEvent';
 
 import css from './useScroll.module.less';
 
+/**
+ * Unstyled scrollable hook and behaviors to be customized by a theme or application.
+ *
+ * @module ui/useScroll
+ * @exports constants
+ * @exports Scrollable
+ * @exports ScrollableBasic
+ * @exports useScroll
+ * @exports useScrollBase,
+ * @exports assignPropertiesOf
+ * @public
+ */
+
 const
 	constants = {
 		animationDuration: 1000,
@@ -61,7 +74,7 @@ const useForceUpdate = () => (useReducer(x => x + 1, 0));
 /**
  * A custom hook that passes scrollable behavior information as its render prop.
  *
- * @function
+ * @function ui/useScroll.useScrollBase
  * @memberof ui/useScroll
  * @ui
  * @public
