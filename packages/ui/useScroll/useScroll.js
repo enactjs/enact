@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import {forward, forwardWithPrevent} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
-import {platform} from '@enact/core/platform'; // Native
+import {platform} from '@enact/core/platform'; // scrollMode 'native'
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
@@ -33,7 +33,7 @@ const
 		overscrollTypeHold: 1,
 		overscrollTypeOnce: 2,
 		overscrollTypeDone: 9,
-		overscrollVelocityFactor: 300, // Native
+		overscrollVelocityFactor: 300, // scrollMode 'native'
 		paginationPageMultiplier: 0.66,
 		scrollStopWaiting: 200,
 		scrollWheelPageMultiplierForMaxPixel: 0.2 // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
@@ -81,11 +81,11 @@ const useScrollBase = (props) => {
 			rtl,
 			setScrollContentHandle,
 			setScrollContainerHandle,
-			spacing,
-			type,
 			scrollContentHandle,
 			scrollContentRef,
 			scrollContainerRef,
+			scrollMode,
+			spacing,
 			verticalScrollbar,
 			verticalScrollbarRef,
 			wrap,
@@ -109,10 +109,10 @@ const useScrollBase = (props) => {
 	delete rest.onScrollStop;
 	delete rest.onWheel;
 	delete rest.removeEventListeners;
-	delete rest.scrollStopOnScroll; // Native
+	delete rest.scrollStopOnScroll; // scrollMode 'native'
 	delete rest.scrollTo;
-	delete rest.start; // Native
-	delete rest.stop; // JS
+	delete rest.start; // scrollMode 'native'
+	delete rest.stop; // scrollMode 'translate'
 
 	// Mutable value and Hooks
 
@@ -166,7 +166,7 @@ const useScrollBase = (props) => {
 		// wheel/drag/flick info
 		wheelDirection: 0,
 		isDragging: false,
-		isTouching: false, // Native
+		isTouching: false, // scrollMode 'native'
 
 		// scroll info
 		scrolling: false,
@@ -284,11 +284,11 @@ const useScrollBase = (props) => {
 
 			scrollStopJob.stop();
 
-			// JS [
+			// scrollMode 'translate' [
 			if (animator.isAnimating()) {
 				animator.stop();
 			}
-			// JS ]
+			// scrollMode 'translate' ]
 		};
 
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -300,7 +300,7 @@ const useScrollBase = (props) => {
 		};
 	});
 
-	// JS [[
+	// scrollMode 'translate' [[
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	const enqueueForceUpdate = useCallback(() => {
@@ -316,7 +316,7 @@ const useScrollBase = (props) => {
 			if (propsHandleResizeWindow) {
 				propsHandleResizeWindow();
 			}
-			if (type === 'JS') {
+			if (scrollMode === 'translate') {
 				scrollTo({position: {x: 0, y: 0}, animate: false});
 			} else {
 				scrollContentRef.current.style.scrollBehavior = null;
@@ -333,7 +333,7 @@ const useScrollBase = (props) => {
 			enqueueForceUpdate();
 		}
 	}, [enqueueForceUpdate]);
-	// JS ]]
+	// scrollMode 'translate' ]]
 
 	if (mutableRef.current.resizeRegistry == null) {
 		mutableRef.current.resizeRegistry = Registry.create(handleResize);
@@ -342,7 +342,7 @@ const useScrollBase = (props) => {
 	useEffect(() => {
 		const ref = mutableRef.current;
 
-		if (type === 'JS') {
+		if (scrollMode === 'translate') {
 			ref.scrollStopJob = new Job(doScrollStop, scrollStopWaiting);
 		} else {
 			ref.scrollStopJob = new Job(scrollStopOnScroll, scrollStopWaiting);
@@ -367,7 +367,7 @@ const useScrollBase = (props) => {
 			}
 		}
 
-		clampScrollPosition(); // JS
+		clampScrollPosition(); // scrollMode 'translate'
 
 		if (
 			hasDataSizeChanged === false &&
@@ -394,7 +394,7 @@ const useScrollBase = (props) => {
 
 	}); // esline-disable-next-line react-hooks/exhaustive-deps
 
-	// JS [[
+	// scrollMode 'translate' [[
 	function clampScrollPosition () {
 		const bounds = getScrollBounds();
 
@@ -406,7 +406,7 @@ const useScrollBase = (props) => {
 			mutableRef.current.scrollLeft = bounds.maxLeft;
 		}
 	}
-	// JS ]]
+	// scrollMode 'translate' ]]
 
 	// drag/flick event handlers
 
@@ -420,14 +420,14 @@ const useScrollBase = (props) => {
 		}
 	} // esline-disable-next-line react-hooks/exhaustive-deps
 
-	// Native [[
+	// scrollMode 'native' [[
 	function onTouchStart () {
 		mutableRef.current.isTouching = true;
 	}
-	// Native ]]
+	// scrollMode 'native' ]]
 
 	function onDragStart (ev) {
-		if (type === 'JS' ) {
+		if (scrollMode === 'translate' ) {
 			if (ev.type === 'dragstart') return;
 
 			forward('onDragStart', ev, props);
@@ -448,7 +448,7 @@ const useScrollBase = (props) => {
 	}
 
 	function onDrag (ev) {
-		if (type === 'JS') {
+		if (scrollMode === 'translate') {
 			if (ev.type === 'drag') {
 				return;
 			}
@@ -478,7 +478,7 @@ const useScrollBase = (props) => {
 	}
 
 	function onDragEnd (ev) {
-		if (type === 'JS') {
+		if (scrollMode === 'translate') {
 			if (ev.type === 'dragend') {
 				return;
 			}
@@ -530,14 +530,14 @@ const useScrollBase = (props) => {
 	}
 
 	function onFlick (ev) {
-		if (type === 'JS') {
+		if (scrollMode === 'translate') {
 			mutableRef.current.flickTarget = mutableRef.current.animator.simulate(
 				mutableRef.current.scrollLeft,
 				mutableRef.current.scrollTop,
 				(direction !== 'vertical') ? getRtlX(-ev.velocityX) : 0,
 				(direction !== 'horizontal') ? -ev.velocityY : 0
 			);
-		} else if (type === 'Native') {
+		} else if (scrollMode === 'native') {
 			if (!mutableRef.current.isTouching) {
 				mutableRef.current.flickTarget = mutableRef.current.animator.simulate(
 					mutableRef.current.scrollLeft,
@@ -592,14 +592,14 @@ const useScrollBase = (props) => {
 			mutableRef.current.lastInputType = 'wheel';
 
 			if (noScrollByWheel) {
-				if (type === 'Native' && canScrollV) {
+				if (scrollMode === 'native' && canScrollV) {
 					ev.preventDefault();
 				}
 
 				return;
 			}
 
-			if (type === 'JS') {
+			if (scrollMode === 'translate') {
 				if (canScrollV) {
 					delta = calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 				} else if (canScrollH) {
@@ -620,7 +620,7 @@ const useScrollBase = (props) => {
 					ev.preventDefault();
 					ev.stopPropagation();
 				}
-			} else { // Native
+			} else { // scrollMode 'native'
 				const overscrollEffectRequired = mutableRef.current.overscrollEnabled && overscrollEffectOn.wheel;
 				let needToHideThumb = false;
 
@@ -691,7 +691,7 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	// JS [[
+	// scrollMode 'translate' [[
 	function scrollByPage (keyCode) {
 		const
 			bounds = getScrollBounds(),
@@ -702,9 +702,9 @@ const useScrollBase = (props) => {
 
 		scrollToAccumulatedTarget(pageDistance, canScrollV, overscrollEffectOn.pageKey);
 	}
-	// JS ]]
+	// scrollMode 'translate' ]]
 
-	// Native [[
+	// scrollMode 'native' [[
 	// esline-disable-next-line react-hooks/exhaustive-deps
 	function onScroll (ev) {
 		let {scrollLeft, scrollTop} = ev.target;
@@ -735,10 +735,10 @@ const useScrollBase = (props) => {
 		forwardScrollEvent('onScroll');
 		mutableRef.current.scrollStopJob.start();
 	}
-	// Native ]]
+	// scrollMode 'native' ]]
 
 	function onKeyDown (ev) {
-		if (type === 'JS') {
+		if (scrollMode === 'translate') {
 			if (props.onKeyDown) {
 				forward('onKeyDown', ev, props);
 			} else if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode))) {
@@ -772,7 +772,7 @@ const useScrollBase = (props) => {
 			return 'before';
 		/* If a scroll size or a client size is not integer,
 			browser's max scroll position could be smaller than maxPos by 1 pixel.*/
-		} else if (type === 'JS' && position >= maxPosition || type === 'Native' && position >= maxPosition - 1) {
+		} else if (scrollMode === 'translate' && position >= maxPosition || scrollMode === 'native' && position >= maxPosition - 1) {
 			return 'after';
 		} else {
 			return null;
@@ -810,7 +810,7 @@ const useScrollBase = (props) => {
 
 	function applyOverscrollEffect (orientation, edge, overscrollEffectType, ratio) {
 		props.applyOverscrollEffect(orientation, edge, overscrollEffectType, ratio);
-		setOverscrollStatus(orientation, edge, overscrollEffectType === overscrollTypeOnce ? overscrollTypeDone : type, ratio);
+		setOverscrollStatus(orientation, edge, overscrollEffectType === overscrollTypeOnce ? overscrollTypeDone : overscrollEffectType, ratio);
 	}
 
 	function checkAndApplyOverscrollEffect (orientation, edge, overscrollEffectType, ratio = 1) {
@@ -820,8 +820,8 @@ const useScrollBase = (props) => {
 			maxPos = getScrollBounds()[isVertical ? 'maxTop' : 'maxLeft'];
 
 		if (
-			type === 'JS' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos) ||
-			type === 'Native' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - 1)
+			scrollMode === 'translate' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos) ||
+			scrollMode === 'native' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - 1)
 		) { // Already on the edge
 			applyOverscrollEffect(orientation, edge, overscrollEffectType, ratio);
 		} else {
@@ -861,7 +861,7 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	// Native [[
+	// scrollMode 'native' [[
 	function checkAndApplyOverscrollEffectOnDrag (targetX, targetY, overscrollEffectType) {
 		const bounds = getScrollBounds();
 
@@ -873,7 +873,7 @@ const useScrollBase = (props) => {
 			applyOverscrollEffectOnDrag('vertical', getEdgeFromPosition(targetY, bounds.maxTop), targetY, overscrollEffectType);
 		}
 	}
-	// Native ]]
+	// scrollMode 'native' ]]
 
 	function checkAndApplyOverscrollEffectOnScroll (orientation) {
 		['before', 'after'].forEach((edge) => {
@@ -900,7 +900,7 @@ const useScrollBase = (props) => {
 		forward(overscrollEffectType, {scrollLeft: mutableRef.current.scrollLeft, scrollTop: mutableRef.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo}, props);
 	}
 
-	// Native [[
+	// scrollMode 'native' [[
 	// call scroll callbacks and update scrollbars for native scroll
 
 	function scrollStartOnScroll () {
@@ -922,7 +922,7 @@ const useScrollBase = (props) => {
 		forwardScrollEvent('onScrollStop', getReachedEdgeInfo());
 		startHidingThumb();
 	}
-	// Native ]]
+	// scrollMode 'native' ]]
 
 	// update scroll position
 
@@ -987,12 +987,12 @@ const useScrollBase = (props) => {
 
 	// scroll start/stop
 
-	// JS [[
+	// scrollMode 'translate' [[
 	function doScrollStop () {
 		mutableRef.current.scrolling = false;
 		forwardScrollEvent('onScrollStop', getReachedEdgeInfo());
 	}
-	// JS ]]
+	// scrollMode 'translate' ]]
 
 	function start ({targetX, targetY, animate = true, duration = animationDuration, overscrollEffect = false}) {
 		const
@@ -1000,7 +1000,7 @@ const useScrollBase = (props) => {
 			bounds = getScrollBounds(),
 			{maxLeft, maxTop} = bounds;
 
-		const updatedAnimationInfo = type === 'JS' ?
+		const updatedAnimationInfo = scrollMode === 'translate' ?
 			{
 				sourceX: scrollLeft,
 				sourceY: scrollTop,
@@ -1015,7 +1015,7 @@ const useScrollBase = (props) => {
 
 		// bail early when scrolling to the same position
 		if (
-			(type === 'JS' && mutableRef.current.animator.isAnimating() || type === 'Native' && mutableRef.current.scrolling) &&
+			(scrollMode === 'translate' && mutableRef.current.animator.isAnimating() || scrollMode === 'native' && mutableRef.current.scrolling) &&
 			mutableRef.current.animationInfo &&
 			mutableRef.current.animationInfo.targetX === targetX &&
 			mutableRef.current.animationInfo.targetY === targetY
@@ -1025,7 +1025,7 @@ const useScrollBase = (props) => {
 
 		mutableRef.current.animationInfo = updatedAnimationInfo;
 
-		if (type === 'JS') {
+		if (scrollMode === 'translate') {
 			mutableRef.current.animator.stop();
 
 			if (!mutableRef.current.scrolling) {
@@ -1053,7 +1053,7 @@ const useScrollBase = (props) => {
 			}
 		}
 
-		if (type === 'JS') {
+		if (scrollMode === 'translate') {
 			showThumb(bounds);
 
 			if (animate) {
@@ -1062,7 +1062,7 @@ const useScrollBase = (props) => {
 				scroll(targetX, targetY, targetX, targetY);
 				stop();
 			}
-		} else { // Native
+		} else { // scrollMode 'native'
 			if (animate) {
 				scrollContentHandle.current.scrollToPosition(targetX, targetY);
 			} else {
@@ -1079,7 +1079,7 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	// JS [[
+	// scrollMode 'translate' [[
 	function scrollAnimation (animationInfo) {
 		return (curTime) => {
 			const
@@ -1136,9 +1136,9 @@ const useScrollBase = (props) => {
 		scrollContentHandle.current.setScrollPosition(mutableRef.current.scrollLeft, mutableRef.current.scrollTop, rtl, ...restParams);
 		forwardScrollEvent('onScroll');
 	}
-	// JS ]]
+	// scrollMode 'translate' ]]
 
-	function stopForJS () {
+	function stopForTranslate () {
 		mutableRef.current.animator.stop();
 		mutableRef.current.lastInputType = null;
 		mutableRef.current.isScrollAnimationTargetAccumulated = false;
@@ -1165,8 +1165,8 @@ const useScrollBase = (props) => {
 
 	// esline-disable-next-line react-hooks/exhaustive-deps
 	function stop () {
-		if (type === 'JS') {
-			stopForJS();
+		if (scrollMode === 'translate') {
+			stopForTranslate();
 		} else {
 			stopForNative();
 		}
@@ -1374,8 +1374,8 @@ const useScrollBase = (props) => {
 		utilEvent('keydown').addEventListener(scrollContainerRef, onKeyDown);
 		utilEvent('mousedown').addEventListener(scrollContainerRef, onMouseDown);
 
-		// Native [[
-		if (type === 'Native' && scrollContentRef.current) {
+		// scrollMode 'native' [[
+		if (scrollMode === 'native' && scrollContentRef.current) {
 			utilEvent('scroll').addEventListener(
 				scrollContentRef,
 				onScroll,
@@ -1384,7 +1384,7 @@ const useScrollBase = (props) => {
 
 			scrollContentRef.current.style.scrollBehavior = 'smooth';
 		}
-		// Native ]]
+		// scrollMode 'native' ]]
 
 		if (props.addEventListeners) {
 			props.addEventListeners(scrollContentRef);
@@ -1401,9 +1401,9 @@ const useScrollBase = (props) => {
 		utilEvent('keydown').removeEventListener(scrollContainerRef, onKeyDown);
 		utilEvent('mousedown').removeEventListener(scrollContainerRef, onMouseDown);
 
-		// Native [[
+		// scrollMode 'native' [[
 		utilEvent('scroll').removeEventListener(scrollContentRef, onScroll, {capture: true, passive: true});
-		// Native ]]
+		// scrollMode 'native' ]]
 
 		if (props.removeEventListeners) {
 			props.removeEventListeners(scrollContentRef);
@@ -1414,7 +1414,7 @@ const useScrollBase = (props) => {
 
 	// render
 
-	// JS [[
+	// scrollMode 'translate' [[
 	function handleScroll () {
 		// Prevent scroll by focus.
 		// VirtualList and VirtualGridList DO NOT receive `onscroll` event.
@@ -1425,7 +1425,7 @@ const useScrollBase = (props) => {
 			scrollContentRef.current.scrollLeft = scrollContentHandle.current.getRtlPositionX(mutableRef.current.scrollLeft);
 		}
 	}
-	// JS ]]
+	// scrollMode 'translate' ]]
 
 	function scrollContainerContainsDangerously (target) {
 		return utilDOM.containsDangerously(scrollContainerRef, target);
@@ -1441,14 +1441,14 @@ const useScrollBase = (props) => {
 	});
 
 	assignProperties('scrollContentWrapperProps', {
-		className: type === 'JS' ? [css.scrollContentWrapper] : [css.scrollContentWrapper, css.scrollContentWrapperNative], // Native;,
+		className: scrollMode === 'translate' ? [css.scrollContentWrapper] : [css.scrollContentWrapper, css.scrollContentWrapperNative], // scrollMode 'native'
 		...(!noScrollByDrag && {
 			flickConfig,
 			onDrag: onDrag,
 			onDragEnd: onDragEnd,
 			onDragStart: onDragStart,
 			onFlick: onFlick,
-			onTouchStart: type === 'Native' ? onTouchStart : null// Native
+			onTouchStart: scrollMode === 'native' ? onTouchStart : null // scrollMode 'native'
 		})
 	});
 
@@ -1472,17 +1472,17 @@ const useScrollBase = (props) => {
 		cbScrollTo: scrollTo,
 		className: [css.scrollFill],
 		direction,
-		scrollContainerContainsDangerously,
 		get isHorizontalScrollbarVisible () {
 			return isHorizontalScrollbarVisible;
 		},
 		get isVerticalScrollbarVisible () {
 			return isVerticalScrollbarVisible;
 		},
-		onScroll: type === 'JS' ? handleScroll : null,
+		onScroll: scrollMode === 'translate' ? handleScroll : null,
 		rtl,
-		setScrollContentHandle,
-		type
+		scrollContainerContainsDangerously,
+		scrollMode,
+		setScrollContentHandle
 	});
 
 	assignProperties('verticalScrollbarProps', {
@@ -1583,11 +1583,11 @@ const useScroll = (props) => {
 			scrollbarButton: false,
 			wheel: true
 		},
-		setScrollContentHandle,
-		type: props.type || 'JS', // FIXME
 		scrollContentHandle,
 		scrollContentRef,
 		scrollContainerRef,
+		scrollMode: props.scrollMode || 'translate', // FIXME
+		setScrollContentHandle,
 		get verticalScrollbarRef () {
 			return verticalScrollbarRef;
 		}

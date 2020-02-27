@@ -2,7 +2,11 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [3.3.0-alpha.1] - 2020-02-26
+
+### Added
+
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` prop `scrollMode` is added.
 
 ### Changed
 
