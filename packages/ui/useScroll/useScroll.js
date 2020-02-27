@@ -74,7 +74,7 @@ const useForceUpdate = () => (useReducer(x => x + 1, 0));
 /**
  * A custom hook that passes scrollable behavior information as its render prop.
  *
- * @function ui/useScroll.useScrollBase
+ * @class
  * @memberof ui/useScroll
  * @ui
  * @public
@@ -1645,7 +1645,7 @@ const useScroll = (props) => {
  * ```
  *
  * @name cbScrollTo
- * @memberof ui/useScroll.useScrollBase
+ * @memberof ui/useScroll.useScrollBase.prototype
  * @type {Function}
  * @public
  */
@@ -1661,7 +1661,7 @@ const useScroll = (props) => {
  * * `'vertical'`.
  *
  * @name direction
- * @memberof ui/useScroll.useScrollBase
+ * @memberof ui/useScroll.useScrollBase.prototype
  * @type {String}
  * @default 'both'
  * @public
@@ -1676,7 +1676,7 @@ const useScroll = (props) => {
  * * `'hidden'`.
  *
  * @name horizontalScrollbar
- * @memberof ui/useScroll.useScrollBase
+ * @memberof ui/useScroll.useScrollBase.prototype
  * @type {String}
  * @default 'auto'
  * @public
@@ -1686,7 +1686,7 @@ const useScroll = (props) => {
  * Prevents scroll by wheeling on the scroller.
  *
  * @name noScrollByWheel
- * @memberof ui/useScroll.useScrollBase
+ * @memberof ui/useScroll.useScrollBase.prototype
  * @type {Boolean}
  * @default false
  * @public
@@ -1700,7 +1700,7 @@ const useScroll = (props) => {
  * Use `onScrollStart` or `onScrollStop` instead.
  *
  * @name onScroll
- * @memberof ui/useScroll.useScrollBase
+ * @memberof ui/useScroll.useScrollBase.prototype
  * @type {Function}
  * @param {Object} event
  * @param {Number} event.scrollLeft Scroll left value.
@@ -1730,7 +1730,7 @@ const useScroll = (props) => {
  * ```
  *
  * @name onScrollStart
- * @memberof ui/useScroll.useScrollBase
+ * @memberof ui/useScroll.useScrollBase.prototype
  * @type {Function}
  * @param {Object} event
  * @param {Number} event.scrollLeft Scroll left value.
@@ -1760,7 +1760,7 @@ const useScroll = (props) => {
  * ```
  *
  * @name onScrollStop
- * @memberof ui/useScroll.useScrollBase
+ * @memberof ui/useScroll.useScrollBase.prototype
  * @type {Function}
  * @param {Object} event
  * @param {Number} event.scrollLeft Scroll left value.
@@ -1777,7 +1777,7 @@ const useScroll = (props) => {
  * * `'native'`.
  *
  * @name scrollMode
- * @memberof ui/useScroll.useScrollBase
+ * @memberof ui/useScroll.useScrollBase.prototype
  * @type {String}
  * @default 'translate'
  * @public
@@ -1792,7 +1792,7 @@ const useScroll = (props) => {
  * * `'hidden'`.
  *
  * @name verticalScrollbar
- * @memberof ui/useScroll.useScrollBase
+ * @memberof ui/useScroll.useScrollBase.prototype
  * @type {String}
  * @default 'auto'
  * @public
