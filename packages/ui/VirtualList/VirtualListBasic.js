@@ -42,7 +42,7 @@ const itemSizesShape = PropTypes.shape({
 /**
  * The base version of the virtual list component.
  *
- * @class VirtualListCore
+ * @class VirtualListBasic
  * @memberof ui/VirtualList
  * @ui
  * @private
@@ -231,17 +231,32 @@ class VirtualListBasic extends Component {
 		rtl: PropTypes.bool,
 
 		/**
-		 * TBD
+		 * Ref for scroll content
+		 *
+		 * @type {Object}
+		 * @private
 		 */
 		scrollContentRef: PropTypes.object,
 
 		/**
-		 * TBD
+		 * Specifies how to scroll.
+		 *
+		 * Valid values are:
+		 * * `'translate'`,
+		 * * `'native'`.
+		 *
+		 * @name scrollMode
+		 * @type {String}
+		 * @default 'translate'
+		 * @public
 		 */
 		scrollMode: PropTypes.string,
 
-		/*
-		 * TBD
+		/**
+		 * Setter of imperative handles for scroll content
+		 *
+		 * @type {Function}
+		 * @private
 		 */
 		setScrollContentHandle: PropTypes.func,
 

@@ -4,9 +4,8 @@ import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageI
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import ri from '@enact/ui/resolution';
 import React from 'react';
-import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {storiesOf} from '@storybook/react';
-import {VirtualGridList as UiVirtualGridList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
+import {VirtualGridList as UiVirtualGridList, VirtualListBasic as UiVirtualListBasic} from '@enact/ui/VirtualList';
 
 const
 	prop = {
@@ -56,7 +55,7 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
-const UiVirtualGridListConfig = mergeComponentMetadata('VirtualGridList', UiVirtualListBase, UiScrollableBase);
+const UiVirtualGridListConfig = mergeComponentMetadata('VirtualGridList', UiVirtualListBasic);
 
 storiesOf('UI', module)
 	.add(

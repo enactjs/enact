@@ -4,9 +4,8 @@ import {Item as UiItem} from '@enact/ui/Item';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
 import ri from '@enact/ui/resolution';
-import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {storiesOf} from '@storybook/react';
-import {VirtualList as UiVirtualList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
+import {VirtualList as UiVirtualList, VirtualListBasic as UiVirtualListBasic} from '@enact/ui/VirtualList';
 
 const
 	prop = {
@@ -45,7 +44,7 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
-const UiVirtualListConfig = mergeComponentMetadata('VirtualList', UiVirtualListBase, UiScrollableBase);
+const UiVirtualListConfig = mergeComponentMetadata('VirtualList', UiVirtualListBasic);
 
 storiesOf('UI', module)
 	.add(
