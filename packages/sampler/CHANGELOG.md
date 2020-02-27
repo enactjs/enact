@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
-## [unreleased]
+## [3.3.0-alpha.1] - 2020-02-26
 
 Migrate common Enact Storybook configurations, addons, and utilities into @enact/storybook-utils helper package.
 
