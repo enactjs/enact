@@ -18,6 +18,8 @@ import Scrollbar from '../useScroll/Scrollbar';
 import ScrollerBasic from './ScrollerBasic';
 import ScrollerBase from './UiScrollerBase';
 
+const nop = () => {};
+
 /**
  * An unstyled scroller.
  *
@@ -28,7 +30,7 @@ import ScrollerBase from './UiScrollerBase';
  *
  * @class Scroller
  * @memberof ui/Scroller
- * @extends ui/Scroller.ScrollerBasic
+ * @extends ui/useScroll.useScrollBase
  * @ui
  * @public
  */
@@ -66,41 +68,21 @@ const Scroller = (props) => {
 	);
 };
 
-Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
-	direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
-
-	/**
-	 * Specifies how to show horizontal scrollbar.
-	 *
-	 * Valid values are:
-	 * * `'auto'`,
-	 * * `'visible'`, and
-	 * * `'hidden'`.
-	 *
-	 * @type {String}
-	 * @default 'auto'
-	 * @public
-	 */
-	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
-
-	/**
-	 * Specifies how to show vertical scrollbar.
-	 *
-	 * Valid values are:
-	 * * `'auto'`,
-	 * * `'visible'`, and
-	 * * `'hidden'`.
-	 *
-	 * @type {String}
-	 * @default 'auto'
-	 * @public
-	 */
-	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
-};
-
 Scroller.defaultProps = {
+	cbScrollTo: nop,
 	direction: 'both',
 	horizontalScrollbar: 'auto',
+	noScrollByDrag: false,
+	noScrollByWheel: false,
+	onScroll: nop,
+	onScrollStart: nop,
+	onScrollStop: nop,
+	overscrollEffectOn: {
+		drag: false,
+		pageKey: false,
+		wheel: true
+	},
+	scrollMode: 'translate',
 	verticalScrollbar: 'auto'
 };
 

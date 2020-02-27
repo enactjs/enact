@@ -58,6 +58,14 @@ const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
 
 const useForceUpdate = () => (useReducer(x => x + 1, 0));
 
+/**
+ * A custom hook that passes scrollable behavior information as its render prop.
+ *
+ * @function
+ * @memberof ui/useScroll
+ * @ui
+ * @public
+ */
 const useScrollBase = (props) => {
 	const
 		{
@@ -1573,24 +1581,12 @@ const useScroll = (props) => {
 	} = useScrollBase({
 		...props,
 		assignProperties,
-		get horizontalScrollbarRef () {
-			return horizontalScrollbarRef;
-		},
-		overscrollEffectOn: props.overscrollEffectOn || { // FIXME
-			arrowKey: false,
-			drag: false,
-			pageKey: false,
-			scrollbarButton: false,
-			wheel: true
-		},
+		horizontalScrollbarRef,
+		scrollContainerRef,
 		scrollContentHandle,
 		scrollContentRef,
-		scrollContainerRef,
-		scrollMode: props.scrollMode || 'translate', // FIXME
 		setScrollContentHandle,
-		get verticalScrollbarRef () {
-			return verticalScrollbarRef;
-		}
+		verticalScrollbarRef
 	});
 
 	assignProperties('scrollContainerProps', {ref: scrollContainerRef});
@@ -1607,6 +1603,187 @@ const useScroll = (props) => {
 		isVerticalScrollbarVisible
 	};
 };
+
+/**
+ * A callback function that receives a reference to the `scrollTo` feature.
+ *
+ * Once received, the `scrollTo` method can be called as an imperative interface.
+ *
+ * The `scrollTo` function accepts the following parameters:
+ * - {position: {x, y}} - Pixel value for x and/or y position
+ * - {align} - Where the scroll area should be aligned. Values are:
+ *   `'left'`, `'right'`, `'top'`, `'bottom'`,
+ *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
+ * - {index} - Index of specific item. (`0` or positive integer)
+ *   This option is available for only `VirtualList` kind.
+ * - {node} - Node to scroll into view
+ * - {animate} - When `true`, scroll occurs with animation. When `false`, no
+ *   animation occurs.
+ * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
+ *   by `index` or `node`.
+ * > Note: Only specify one of: `position`, `align`, `index` or `node`
+ *
+ * Example:
+ * ```
+ *	// If you set cbScrollTo prop like below;
+ *	cbScrollTo: (fn) => {this.scrollTo = fn;}
+ *	// You can simply call like below;
+ *	this.scrollTo({align: 'top'}); // scroll to the top
+ * ```
+ *
+ * @name cbScrollTo
+ * @memeberof ui/useScroll.useScrollBase
+ * @type {Function}
+ * @public
+ */
+
+/**
+ * Direction of the list or the scroller.
+ *
+ * `'both'` could be only used for[Scroller]{@link ui/Scroller.Scroller}.
+ *
+ * Valid values are:
+ * * `'both'`,
+ * * `'horizontal'`, and
+ * * `'vertical'`.
+ *
+ * @name direction
+ * @memeberof ui/useScroll.useScrollBase
+ * @type {String}
+ * @default 'both'
+ * @public
+ */
+
+/**
+ * Specifies how to show horizontal scrollbar.
+ *
+ * Valid values are:
+ * * `'auto'`,
+ * * `'visible'`, and
+ * * `'hidden'`.
+ *
+ * @name horizontalScrollbar
+ * @memberof ui/useScroll.useScrollBase
+ * @type {String}
+ * @default 'auto'
+ * @public
+ */
+
+/**
+ * Prevents scroll by wheeling on the scroller.
+ *
+ * @name noScrollByWheel
+ * @memberof ui/useScroll.useScrollBase
+ * @type {Boolean}
+ * @default false
+ * @public
+ */
+
+/**
+ * Called when scrolling.
+ *
+ * Passes `scrollLeft` and `scrollTop`.
+ * It is not recommended to set this prop since it can cause performance degradation.
+ * Use `onScrollStart` or `onScrollStop` instead.
+ *
+ * @name onScroll
+ * @memberof ui/useScroll.useScrollBase
+ * @type {Function}
+ * @param {Object} event
+ * @param {Number} event.scrollLeft Scroll left value.
+ * @param {Number} event.scrollTop Scroll top value.
+ * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+ * @public
+ */
+
+/**
+ * Called when scroll starts.
+ *
+ * Passes `scrollLeft` and `scrollTop`.
+ *
+ * Example:
+ * ```
+ * onScrollStart = ({scrollLeft, scrollTop}) => {
+ *     // do something with scrollLeft and scrollTop
+ * }
+ *
+ * render = () => (
+ *     <Scroller
+ *         ...
+ *         onScrollStart={this.onScrollStart}
+ *         ...
+ *     />
+ * )
+ * ```
+ *
+ * @name onScrollStart
+ * @memberof ui/useScroll.useScrollBase
+ * @type {Function}
+ * @param {Object} event
+ * @param {Number} event.scrollLeft Scroll left value.
+ * @param {Number} event.scrollTop Scroll top value.
+ * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+ * @public
+ */
+
+/**
+ * Called when scroll stops.
+ *
+ * Passes `scrollLeft` and `scrollTop`.
+ *
+ * Example:
+ * ```
+ * onScrollStop = ({scrollLeft, scrollTop}) => {
+ *     // do something with scrollLeft and scrollTop
+ * }
+ *
+ * render = () => (
+ *     <Scroller
+ *         ...
+ *         onScrollStop={this.onScrollStop}
+ *         ...
+ *     />
+ * )
+ * ```
+ *
+ * @name onScrollStop
+ * @memberof ui/useScroll.useScrollBase
+ * @type {Function}
+ * @param {Object} event
+ * @param {Number} event.scrollLeft Scroll left value.
+ * @param {Number} event.scrollTop Scroll top value.
+ * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+ * @public
+ */
+
+/**
+ * Specifies how to scroll.
+ *
+ * Valid values are:
+ * * `'translate'`,
+ * * `'native'`.
+ *
+ * @name scrollMode
+ * @memberof ui/useScroll.useScrollBase
+ * @type {String}
+ * @default 'translate'
+ * @public
+ */
+
+/**
+ * Specifies how to show vertical scrollbar.
+ *
+ * Valid values are:
+ * * `'auto'`,
+ * * `'visible'`, and
+ * * `'hidden'`.
+ *
+ * @name verticalScrollbar
+ * @memberof ui/useScroll.useScrollBase
+ * @type {String}
+ * @default 'auto'
+ * @public
+ */
 
 export default useScroll;
 export {
