@@ -239,9 +239,9 @@ export default VirtualList;
 export {
 	gridListItemSizeShape,
 	itemSizesShape,
+	UiVirtualListBase as VirtualListBase, // to support legacy VirtualListBase
+	UiVirtualListBaseNative as VirtualListBaseNative, // to support legacy VirtualListBaseNative
 	VirtualGridList,
 	VirtualList,
-	VirtualListBasic,
-	UiVirtualListBase as VirtualListBase, // to support legacy VirtualListBase
-	UiVirtualListBaseNative as VirtualListBaseNative // to support legacy VirtualListBaseNative
+	VirtualListBasic
 };

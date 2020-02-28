@@ -2,12 +2,12 @@
  * Unstyled scrollable hook and behaviors to be customized by a theme or application.
  *
  * @module ui/useScroll
+ * @exports assignPropertiesOf
  * @exports constants
  * @exports Scrollable
  * @exports ScrollableBasic
  * @exports useScroll
  * @exports useScrollBase,
- * @exports assignPropertiesOf
  * @private
  */
 
@@ -42,10 +42,10 @@ const
 		isPageDown: is('pageDown'),
 		isPageUp: is('pageUp'),
 		nop: () => {},
-		overscrollTypeNone: 0,
-		overscrollTypeHold: 1,
-		overscrollTypeOnce: 2,
 		overscrollTypeDone: 9,
+		overscrollTypeHold: 1,
+		overscrollTypeNone: 0,
+		overscrollTypeOnce: 2,
 		overscrollVelocityFactor: 300, // scrollMode 'native'
 		paginationPageMultiplier: 0.66,
 		scrollStopWaiting: 200,
@@ -88,8 +88,8 @@ const useScrollBase = (props) => {
 			'data-webos-voice-disabled': voiceDisabled,
 			'data-webos-voice-focused': voiceFocused,
 			'data-webos-voice-group-label': voiceGroupLabel,
-			dataSize,
 			assignProperties,
+			dataSize,
 			direction,
 			horizontalScrollbar,
 			horizontalScrollbarRef,
@@ -100,12 +100,12 @@ const useScrollBase = (props) => {
 			noScrollByWheel,
 			overscrollEffectOn,
 			rtl,
-			setScrollContentHandle,
-			setScrollContainerHandle,
+			scrollContainerRef,
 			scrollContentHandle,
 			scrollContentRef,
-			scrollContainerRef,
 			scrollMode,
+			setScrollContainerHandle,
+			setScrollContentHandle,
 			spacing,
 			verticalScrollbar,
 			verticalScrollbarRef,
@@ -1611,18 +1611,18 @@ const useScroll = (props) => {
 
 	return {
 		...collectionOfProperties,
-		scrollContentWrapper,
 		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible
+		isVerticalScrollbarVisible,
+		scrollContentWrapper
 	};
 };
 
 export default useScroll;
 export {
+	assignPropertiesOf,
 	constants,
 	Scrollable,
 	ScrollableBasic,
 	useScroll,
-	useScrollBase,
-	assignPropertiesOf
+	useScrollBase
 };
