@@ -555,21 +555,17 @@ class VirtualListBasic extends Component {
 	getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
 	getClientSize = (props) => {
-		if (props.clientSize) {
-			return props.clientSize;
-		} else if (window && window.getComputedStyle) {
-			const node = props.scrollContentRef && props.scrollContentRef.current;
+		const
+			{clientWidth, clientHeight} =
+				props.clientSize ||
+				props.scrollContentRef.current ||
+				{clientWidth: 0, clientHeight: 0},
+			clientSize = {clientWidth, clientHeight};
 
-			if (node) {
-				const {width, paddingLeft, paddingRight, height, paddingTop, paddingBottom} = window.getComputedStyle(node);
-
-				return {
-					clientWidth: parseInt(width) - parseInt(paddingLeft) - parseInt(paddingRight),
-					clientHeight: parseInt(height) - parseInt(paddingTop) - parseInt(paddingBottom)
-				};
-			} else {
-				return null;
-			}
+		if (props.getClientSize) {
+			return props.getClientSize(clientSize);
+		} else {
+			return clientSize;
 		}
 	}
 
@@ -1178,6 +1174,7 @@ class VirtualListBasic extends Component {
 		delete rest.clientSize;
 		delete rest.dataSize;
 		delete rest.direction;
+		delete rest.getClientSize;
 		delete rest.getComponentProps;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
