@@ -4,8 +4,6 @@
  * @module ui/useScroll
  * @exports assignPropertiesOf
  * @exports constants
- * @exports Scrollable
- * @exports ScrollableBasic
  * @exports useScroll
  * @exports useScrollBase,
  * @private
@@ -26,7 +24,6 @@ import {ResizeContext} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
 
-import {Scrollable, ScrollableBasic} from './Scrollable';
 import ScrollAnimator from './ScrollAnimator';
 import {useScrollContentHandle} from './useScrollContentHandle';
 import utilDOM from './utilDOM';
@@ -1621,8 +1618,6 @@ export default useScroll;
 export {
 	assignPropertiesOf,
 	constants,
-	Scrollable,
-	ScrollableBasic,
 	useScroll,
 	useScrollBase
 };

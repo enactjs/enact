@@ -8,8 +8,6 @@ import css from './Scroller.module.less';
 /**
  * An unstyled base scroller component.
  *
- * In most circumstances, you will want to use the Scrollable version.
- *
  * @class ScrollerBasic
  * @memberof ui/Scroller
  * @ui
@@ -23,7 +21,7 @@ class ScrollerBasic extends Component {
 
 		/**
 		 * Callback method of scrollTo.
-		 * Normally, `Scrollable` should set this value.
+		 * Normally, `useScroll` should set this value.
 		 *
 		 * @type {Function}
 		 * @private
@@ -117,7 +115,6 @@ class ScrollerBasic extends Component {
 		return x;
 	}
 
-	// for Scrollable
 	setScrollPosition (x, y) {
 		const node = this.props.scrollContentRef.current;
 
@@ -131,12 +128,12 @@ class ScrollerBasic extends Component {
 		}
 	}
 
-	// for ScrollableNative
+	// scrollMode 'translate'
 	scrollToPosition (x, y) {
 		this.props.scrollContentRef.current.scrollTo(this.getRtlPositionX(x), y);
 	}
 
-	// for ScrollableNative
+	// scrollMode 'native'
 	didScroll (x, y) {
 		this.scrollPos.left = x;
 		this.scrollPos.top = y;
