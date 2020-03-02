@@ -1049,7 +1049,9 @@ class VirtualListBasic extends Component {
 			key = index % numOfItems,
 			componentProps = getComponentProps && getComponentProps(index) || {},
 			itemContainerRef = (ref) => {
-				itemRefs.current[index % numOfItems] = (ref === null) ? null : ref;
+				if (itemRefs) {
+					itemRefs.current[index % numOfItems] = (ref === null) ? null : ref;
+				}
 			};
 
 		this.cc[key] = (
@@ -1063,7 +1065,11 @@ class VirtualListBasic extends Component {
 		const
 			{numOfItems} = this.state;
 			key = index % this.state.numOfItems;
-			itemContainerRef = (ref) => (itemRefs.current[index % numOfItems] = null);
+			itemContainerRef = (ref) => {
+				if (itemRefs) {
+					itemRefs.current[index % numOfItems] = null
+				}
+			};
 
 		this.cc[key] = <div key={key} ref={itemContainerRef} style={{display: 'none'}} />;
 	}
