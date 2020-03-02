@@ -1044,20 +1044,28 @@ class VirtualListBasic extends Component {
 
 	applyStyleToNewNode = (index, ...rest) => {
 		const
-			{itemProps, itemRenderer, getComponentProps} = this.props,
-			key = index % this.state.numOfItems,
-			componentProps = getComponentProps && getComponentProps(index) || {};
+			{itemRefs, itemProps, itemRenderer, getComponentProps} = this.props,
+			{numOfItems} = this.state,
+			key = index % numOfItems,
+			componentProps = getComponentProps && getComponentProps(index) || {},
+			itemContainerRef = (ref) => {
+				itemRefs.current[index % numOfItems] = (ref === null) ? null : ref;
+			};
 
 		this.cc[key] = (
-			<div className={css.listItem} key={key} style={this.composeStyle(...rest)}>
+			<div className={css.listItem} key={key} ref={itemContainerRef} style={this.composeStyle(...rest)}>
 				{itemRenderer({...itemProps, ...componentProps, index})}
 			</div>
 		);
 	}
 
 	applyStyleToHideNode = (index) => {
-		const key = index % this.state.numOfItems;
-		this.cc[key] = <div key={key} style={{display: 'none'}} />;
+		const
+			{numOfItems} = this.state;
+			key = index % this.state.numOfItems;
+			itemContainerRef = (ref) => (itemRefs.current[index % numOfItems] = null);
+
+		this.cc[key] = <div key={key} ref={itemContainerRef} style={{display: 'none'}} />;
 	}
 
 	positionItems () {
@@ -1170,6 +1178,7 @@ class VirtualListBasic extends Component {
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
 		delete rest.itemProps;
+		delete rest.itemRefs;
 		delete rest.itemRenderer;
 		delete rest.itemSize;
 		delete rest.itemSizes;
