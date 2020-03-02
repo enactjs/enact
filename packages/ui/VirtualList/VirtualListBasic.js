@@ -185,6 +185,14 @@ class VirtualListBasic extends Component {
 		itemProps: PropTypes.object,
 
 		/**
+		 * Ref for items
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		itemRefs: PropTypes.array,
+
+		/**
 		 * The array for individually sized items.
 		 *
 		 * @type {Number[]}
@@ -1063,11 +1071,12 @@ class VirtualListBasic extends Component {
 
 	applyStyleToHideNode = (index) => {
 		const
-			{numOfItems} = this.state;
-			key = index % this.state.numOfItems;
-			itemContainerRef = (ref) => {
+			{itemRefs} = this.props,
+			{numOfItems} = this.state,
+			key = index % this.state.numOfItems,
+			itemContainerRef = () => {
 				if (itemRefs) {
-					itemRefs.current[index % numOfItems] = null
+					itemRefs.current[index % numOfItems] = null;
 				}
 			};
 
