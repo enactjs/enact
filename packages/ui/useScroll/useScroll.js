@@ -39,10 +39,10 @@ const
 		isPageDown: is('pageDown'),
 		isPageUp: is('pageUp'),
 		nop: () => {},
-		overscrollTypeDone: 9,
-		overscrollTypeHold: 1,
 		overscrollTypeNone: 0,
+		overscrollTypeHold: 1,
 		overscrollTypeOnce: 2,
+		overscrollTypeDone: 9,
 		overscrollVelocityFactor: 300, // scrollMode 'native'
 		paginationPageMultiplier: 0.66,
 		scrollStopWaiting: 200,
