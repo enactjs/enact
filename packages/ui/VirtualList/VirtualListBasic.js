@@ -245,7 +245,6 @@ class VirtualListBasic extends Component {
 		 * * `'translate'`,
 		 * * `'native'`.
 		 *
-		 * @name scrollMode
 		 * @type {String}
 		 * @default 'translate'
 		 * @public
