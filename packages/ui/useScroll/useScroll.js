@@ -728,6 +728,10 @@ const useScrollBase = (props) => {
 			setScrollTop(scrollTop);
 		}
 
+		if (scrollMode === 'native') {
+			scrollContentHandle.current.updateScrollPositionTarget(mutableRef.current.scrollTop, mutableRef.current.scrollLeft);
+		}
+
 		if (scrollContentHandle.current.didScroll) {
 			scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
 		}

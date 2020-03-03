@@ -832,6 +832,14 @@ class VirtualListBasic extends Component {
 		}
 	}
 
+	updateScrollPositionTarget (x, y) {
+		if (this.isPrimaryDirectionVertical) {
+			this.scrollPositionTarget = x;
+		} else {
+			this.scrollPositionTarget = y;
+		}
+	}
+
 	didScroll (x, y) {
 		const
 			{dataSize, spacing, itemSizes} = this.props,
