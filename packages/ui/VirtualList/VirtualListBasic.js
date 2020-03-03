@@ -123,6 +123,23 @@ class VirtualListBasic extends Component {
 		}),
 
 		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal Elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `virtualList` - The VirtualList component class
+		 * * `vertical` - The selector class for a vertical list
+		 * * `horizontal` - The selector class for a vertical list
+		 * * `native` - The selector class for a list has `scrollMode` value of `'native'`
+		 * * `listItem` - The list item class
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		css: PropTypes.object,
+
+		/**
 		 * Disable voice control feature of component.
 		 *
 		 * @type {Boolean}
@@ -1172,7 +1189,8 @@ class VirtualListBasic extends Component {
 				isPrimaryDirectionVertical ? css.vertical : css.horizontal,
 				scrollMode === 'native' ? css.native : null,
 				themeCss ? themeCss.virtualList : null,
-				themeCss && isPrimaryDirectionVertical ? themeCss.vertical : themeCss.horizontal,
+				themeCss && isPrimaryDirectionVertical ? themeCss.vertical : null,
+				themeCss && !isPrimaryDirectionVertical ? themeCss.horizontal : null,
 				themeCss && scrollMode === 'native' ? themeCss.native : null,
 				className
 			),
