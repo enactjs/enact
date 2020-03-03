@@ -187,10 +187,10 @@ class VirtualListBasic extends Component {
 		/**
 		 * Ref for items
 		 *
-		 * @type {Function}
+		 * @type {Object}
 		 * @private
 		 */
-		itemRefs: PropTypes.array,
+		itemRefs: PropTypes.object,
 
 		/**
 		 * The array for individually sized items.
