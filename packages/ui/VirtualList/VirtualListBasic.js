@@ -69,9 +69,9 @@ class VirtualListBasic extends Component {
 		 * ```
 		 *
 		 * @type {Function}
-		 * @param {Object}     event
-		 * @param {Number}     event.data-index    It is required for `Spotlight` 5-way navigation. Pass to the root element in the component.
-		 * @param {Number}     event.index    The index number of the component to render
+		 * @param {Object} event
+		 * @param {Number} event.data-index It is required for `Spotlight` 5-way navigation. Pass to the root element in the component.
+		 * @param {Number} event.index The index number of the component to render
 		 *
 		 * @required
 		 * @public
@@ -102,7 +102,7 @@ class VirtualListBasic extends Component {
 
 		/**
 		 * Callback method of scrollTo.
-		 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
+		 * Normally, useScroll should set this value.
 		 *
 		 * @type {Function}
 		 * @private
@@ -113,8 +113,8 @@ class VirtualListBasic extends Component {
 		 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
 		 *
 		 * @type {Object}
-		 * @property {Number}    clientHeight    The client height of the list.
-		 * @property {Number}    clientWidth    The client width of the list.
+		 * @property {Number} clientHeight The client height of the list.
+		 * @property {Number} clientWidth The client width of the list.
 		 * @public
 		 */
 		clientSize: PropTypes.shape({
@@ -214,7 +214,7 @@ class VirtualListBasic extends Component {
 		overhang: PropTypes.number,
 
 		/**
-		 * When `true`, the list will scroll by page.  Otherwise the list will scroll by item.
+		 * When `true`, the list will scroll by page. Otherwise the list will scroll by item.
 		 *
 		 * @type {Boolean}
 		 * @default false
