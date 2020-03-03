@@ -12,12 +12,8 @@
 .vertical {
 	&.native {
 		overflow-y: scroll;
-
-		.listItem {
-			width: calc(100% - 2 * var(--scroll-fadeout-size));
-		}
 	}
-	&:not(.native) .listItem {
+	.listItem {
 		width: 100%;
 	}
 }
@@ -25,12 +21,8 @@
 .horizontal {
 	&.native {
 		overflow-x: scroll;
-
-		.listItem {
-			height: calc(100% - 2 * var(--scroll-fadeout-size));
-		}
 	}
-	&:not(.native) .listItem {
+	.listItem {
 		height: 100%;
 	}
 }

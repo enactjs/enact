@@ -1052,12 +1052,12 @@ class VirtualListBasic extends Component {
 
 	applyStyleToNewNode = (index, ...rest) => {
 		const
-			{itemProps, itemRenderer, getComponentProps} = this.props,
+			{css: themeCss, itemProps, itemRenderer, getComponentProps} = this.props,
 			key = index % this.state.numOfItems,
 			componentProps = getComponentProps && getComponentProps(index) || {};
 
 		this.cc[key] = (
-			<div className={css.listItem} key={key} style={this.composeStyle(...rest)}>
+			<div className={classNames(css.listItem, themeCss ? themeCss.listItem : null)} key={key} style={this.composeStyle(...rest)}>
 				{itemRenderer({...itemProps, ...componentProps, index})}
 			</div>
 		);
@@ -1165,9 +1165,17 @@ class VirtualListBasic extends Component {
 
 	render () {
 		const
-			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, scrollMode, ...rest} = this.props,
+			{className, css: themeCss, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, scrollMode, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, itemContainerRef, primary} = this,
-			containerClasses = classNames(css.virtualList, isPrimaryDirectionVertical ? css.vertical : css.horizontal, scrollMode === 'native' ? css.native : null, className),
+			containerClasses = classNames(
+				css.virtualList,
+				isPrimaryDirectionVertical ? css.vertical : css.horizontal,
+				scrollMode === 'native' ? css.native : null,
+				themeCss ? themeCss.virtualList : null,
+				themeCss && isPrimaryDirectionVertical ? themeCss.vertical : themeCss.horizontal,
+				themeCss && scrollMode === 'native' ? themeCss.native : null,
+				className
+			),
 			contentClasses = scrollMode === 'native' ? null : css.content;
 
 		delete rest.cbScrollTo;
