@@ -833,11 +833,7 @@ class VirtualListBasic extends Component {
 	}
 
 	updateScrollPositionTarget (x, y) {
-		if (this.isPrimaryDirectionVertical) {
-			this.scrollPositionTarget = x;
-		} else {
-			this.scrollPositionTarget = y;
-		}
+		this.scrollPositionTarget = this.isPrimaryDirectionVertical ? y : x;
 	}
 
 	didScroll (x, y) {
