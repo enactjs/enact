@@ -353,7 +353,7 @@ class VirtualListBasic extends Component {
 
 		this.shouldUpdateBounds = false;
 
-		// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
+		// TODO: remove `this.hasDataSizeChanged` and fix useScroll
 		this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
 
 		if (prevState.firstIndex !== firstIndex || prevState.numOfItems !== numOfItems) {
