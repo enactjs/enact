@@ -341,7 +341,7 @@ const VirtualGridList = ({role, ...rest}) => {
 	);
 };
 
-VirtualGridList.displaytName = 'ui:VirtualGridList';
+VirtualGridList.displayName = 'ui:VirtualGridList';
 
 VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype */ {
 	/**

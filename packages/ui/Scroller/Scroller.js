@@ -67,6 +67,8 @@ const Scroller = (props) => {
 	);
 };
 
+Scroller.displayName = 'ui:Scroller';
+
 Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
 	/**
 	 * A callback function that receives a reference to the `scrollTo` feature.

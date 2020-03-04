@@ -102,7 +102,7 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 	);
 }));
 
-ScrollbarBase.displayName = 'ui:Scrollbar';
+ScrollbarBase.displayName = 'ui:ScrollbarBase';
 
 ScrollbarBase.propTypes = /** @lends ui/useScroll.Scrollbar.prototype */ {
 	/**
@@ -213,6 +213,8 @@ const Scrollbar = forwardRef((props, ref) => {
 		/>
 	);
 });
+
+Scrollbar.displayName = 'ui:Scrollbar';
 
 Scrollbar.propTypes = /** @lends ui/useScroll.Scrollbar.prototype */ {
 	/**
