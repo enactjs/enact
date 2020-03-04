@@ -1598,15 +1598,9 @@ const useScroll = (props) => {
 		...props,
 		assignProperties,
 		horizontalScrollbarRef,
-		overscrollEffectOn: props.overscrollEffectOn || { // FIXME
-			drag: false,
-			pageKey: false,
-			wheel: true
-		},
 		scrollContainerRef,
 		scrollContentHandle,
 		scrollContentRef,
-		scrollMode: props.scrollMode || 'translate',
 		setScrollContentHandle,
 		verticalScrollbarRef
 	});
