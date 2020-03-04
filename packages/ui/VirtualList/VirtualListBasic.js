@@ -470,6 +470,7 @@ class VirtualListBasic extends Component {
 		if (this.props.scrollMode === 'native') {
 			this.scrollToPosition(x, y, rtl);
 		} else {
+			this.setScrollPositionTarget (x, y);
 			this.setScrollPosition(x, y, rtl, x, y);
 		}
 	}
@@ -797,15 +798,20 @@ class VirtualListBasic extends Component {
 		}
 	}
 
+	setScrollPositionTarget (x, y) {
+		// The `x`, `y` as parameters in scrollToPosition() are the position when stopping scrolling.
+		// But the `x`, `y` as parameters in setScrollPosition() are the position between current position and the position stopping scrolling.
+		// To know the position when stopping scrolling properly, `x` and `y` are passed and cached in `this.scrollPositionTarget`.
+		if (this.isPrimaryDirectionVertical) {
+			this.scrollPositionTarget = y;
+		} else {
+			this.scrollPositionTarget = x;
+		}
+	}
+
 	// scrollMode 'native' only
 	scrollToPosition (x, y, rtl = this.props.rtl) {
 		if (this.props.scrollContentRef.current) {
-			if (this.isPrimaryDirectionVertical) {
-				this.scrollPositionTarget = y;
-			} else {
-				this.scrollPositionTarget = x;
-			}
-
 			if (rtl) {
 				x = (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
 			}
@@ -815,19 +821,9 @@ class VirtualListBasic extends Component {
 	}
 
 	// scrollMode 'translate' only
-	setScrollPosition (x, y, rtl = this.props.rtl, targetX = 0, targetY = 0) {
+	setScrollPosition (x, y, rtl = this.props.rtl) {
 		if (this.contentRef.current) {
 			this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
-
-			// The `x`, `y` as parameters in scrollToPosition() are the position when stopping scrolling.
-			// But the `x`, `y` as parameters in setScrollPosition() are the position between current position and the position stopping scrolling.
-			// To know the position when stopping scrolling here, `targetX` and `targetY` are passed and cached in `this.scrollPositionTarget`.
-			if (this.isPrimaryDirectionVertical) {
-				this.scrollPositionTarget = targetY;
-			} else {
-				this.scrollPositionTarget = targetX;
-			}
-
 			this.didScroll(x, y);
 		}
 	}

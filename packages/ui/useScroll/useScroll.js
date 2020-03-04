@@ -1055,11 +1055,12 @@ const useScrollBase = (props) => {
 
 		if (scrollMode === 'translate') {
 			showThumb(bounds);
+			scrollContentHandle.current.setScrollPositionTarget(targetX, targetY);
 
 			if (animate) {
 				mutableRef.current.animator.animate(scrollAnimation(mutableRef.current.animationInfo));
 			} else {
-				scroll(targetX, targetY, targetX, targetY);
+				scroll(targetX, targetY);
 				stop();
 			}
 		} else { // scrollMode 'native'
@@ -1112,13 +1113,13 @@ const useScrollBase = (props) => {
 					}
 				}
 
-				scroll(curTargetX, curTargetY, targetX, targetY);
+				scroll(curTargetX, curTargetY);
 
 				if (!toBeContinued) {
 					stop();
 				}
 			} else {
-				scroll(targetX, targetY, targetX, targetY);
+				scroll(targetX, targetY);
 				stop();
 			}
 		};
