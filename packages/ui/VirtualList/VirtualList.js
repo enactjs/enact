@@ -441,7 +441,7 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 	 * Called when scroll starts.
 	 *
 	 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
-	 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
+	 * You can get firstVisibleIndex and lastVisibleIndex from VirtualGridList with `moreInfo`.
 	 *
 	 * Example:
 	 * ```
@@ -451,7 +451,7 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 	 * }
 	 *
 	 * render = () => (
-	 *     <VirtualList
+	 *     <VirtualGridList
 	 *         ...
 	 *         onScrollStart={this.onScrollStart}
 	 *         ...
@@ -482,7 +482,7 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 	 * }
 	 *
 	 * render = () => (
-	 *     <VirtualList
+	 *     <VirtualGridList
 	 *         ...
 	 *         onScrollStop={this.onScrollStop}
 	 *         ...
