@@ -798,17 +798,6 @@ class VirtualListBasic extends Component {
 		}
 	}
 
-	setScrollPositionTarget (x, y) {
-		// The `x`, `y` as parameters in scrollToPosition() are the position when stopping scrolling.
-		// But the `x`, `y` as parameters in setScrollPosition() are the position between current position and the position stopping scrolling.
-		// To know the position when stopping scrolling properly, `x` and `y` are passed and cached in `this.scrollPositionTarget`.
-		if (this.isPrimaryDirectionVertical) {
-			this.scrollPositionTarget = y;
-		} else {
-			this.scrollPositionTarget = x;
-		}
-	}
-
 	// scrollMode 'native' only
 	scrollToPosition (x, y, rtl = this.props.rtl) {
 		if (this.props.scrollContentRef.current) {
@@ -817,6 +806,18 @@ class VirtualListBasic extends Component {
 			}
 
 			this.props.scrollContentRef.current.scrollTo(x, y);
+		}
+	}
+
+	// scrollMode 'translate' only
+	setScrollPositionTarget (x, y) {
+		// The `x`, `y` as parameters in scrollToPosition() are the position when stopping scrolling.
+		// But the `x`, `y` as parameters in setScrollPosition() are the position between current position and the position stopping scrolling.
+		// To know the position when stopping scrolling properly, `x` and `y` are passed and cached in `this.scrollPositionTarget`.
+		if (this.isPrimaryDirectionVertical) {
+			this.scrollPositionTarget = y;
+		} else {
+			this.scrollPositionTarget = x;
 		}
 	}
 

@@ -115,7 +115,30 @@ class ScrollerBasic extends Component {
 		return x;
 	}
 
-	// for Scrollable
+	// scrollMode 'native' only
+	scrollToPosition (x, y) {
+		this.props.scrollContentRef.current.scrollTo(this.getRtlPositionX(x), y);
+	}
+
+	// scrollMode 'native' only
+	didScroll (x, y) {
+		this.scrollPos.left = x;
+		this.scrollPos.top = y;
+	}
+
+	// scrollMode 'translate' only
+	setScrollPositionTarget (x, y) {
+		// The `x`, `y` as parameters in scrollToPosition() are the position when stopping scrolling.
+		// But the `x`, `y` as parameters in setScrollPosition() are the position between current position and the position stopping scrolling.
+		// To know the position when stopping scrolling properly, `x` and `y` are passed and cached in `this.scrollPositionTarget`.
+		if (this.isPrimaryDirectionVertical) {
+			this.scrollPositionTarget = y;
+		} else {
+			this.scrollPositionTarget = x;
+		}
+	}
+
+	// scrollMode 'translate' only
 	setScrollPosition (x, y) {
 		const node = this.props.scrollContentRef.current;
 
@@ -127,17 +150,6 @@ class ScrollerBasic extends Component {
 			node.scrollLeft = this.getRtlPositionX(x);
 			this.scrollPos.left = x;
 		}
-	}
-
-	// for ScrollableNative
-	scrollToPosition (x, y) {
-		this.props.scrollContentRef.current.scrollTo(this.getRtlPositionX(x), y);
-	}
-
-	// for ScrollableNative
-	didScroll (x, y) {
-		this.scrollPos.left = x;
-		this.scrollPos.top = y;
 	}
 
 	getNodePosition = (node) => {
