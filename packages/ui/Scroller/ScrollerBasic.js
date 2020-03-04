@@ -38,7 +38,7 @@ class ScrollerBasic extends Component {
 		 *
 		 * @type {String}
 		 * @default 'both'
-		 * @private
+		 * @public
 		 */
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
