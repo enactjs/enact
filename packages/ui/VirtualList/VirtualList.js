@@ -71,25 +71,6 @@ VirtualList.displayName = 'ui:VirtualList';
 
 VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 	/**
-	 * Size of an item for the `VirtualList`.
-	 *
-	 * Valid value is a number. If the direction for the list is vertical,
-	 * `itemSize` means the height of an item. For horizontal, it means the width of an item.
-	 *
-	 * Example:
-	 * ```
-	 * <VirtualList itemSize={ri.scale(72)} />
-	 * ```
-	 *
-	 * @type {Number}
-	 * @required
-	 * @public
-	 */
-	itemSize: PropTypes.number.isRequired,
-
-	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-
-	/**
 	 * Specifies how to show horizontal scrollbar.
 	 *
 	 * Valid values are:
@@ -103,6 +84,13 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 	 */
 	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
+	/**
+	 * The ARIA role for the list.
+	 *
+	 * @type {String}
+	 * @default 'list'
+	 * @public
+	 */
 	role: PropTypes.string,
 
 	/**
@@ -175,29 +163,6 @@ VirtualGridList.displaytName = 'ui:VirtualGridList';
 
 VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype */ {
 	/**
-	 * Size of an item for the `VirtualGridList`.
-	 *
-	 * * Valid value is an object that has `minWidth` and `minHeight` as properties.
-	 *
-	 * Example:
-	 * ```
-	 * <VirtualGridList
-	 * 	itemSize={{
-	 * 		minWidth: ri.scale(180),
-	 * 		minHeight: ri.scale(270)
-	 * 	}}
-	 * />
-	 * ```
-	 *
-	 * @type {ui/VirtualList.gridListItemSizeShape}
-	 * @required
-	 * @public
-	 */
-	itemSize: gridListItemSizeShape.isRequired,
-
-	direction: PropTypes.oneOf(['horizontal', 'vertical']),
-
-	/**
 	 * Specifies how to show horizontal scrollbar.
 	 *
 	 * Valid values are:
@@ -211,6 +176,13 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 	 */
 	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
+	/**
+	 * The ARIA role for the list.
+	 *
+	 * @type {String}
+	 * @default 'list'
+	 * @public
+	 */
 	role: PropTypes.string,
 
 	/**
