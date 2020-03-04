@@ -40,12 +40,13 @@ const itemSizesShape = PropTypes.shape({
 });
 
 /**
- * The base version of the virtual list component.
+ * A basic base component for
+ * [VirtualList]{@link ui/VirtualList.VirtualList} and [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
  *
  * @class VirtualListBasic
  * @memberof ui/VirtualList
  * @ui
- * @private
+ * @public
  */
 class VirtualListBasic extends Component {
 	displayName = 'ui:VirtualListBasic'
@@ -1213,17 +1214,6 @@ class VirtualListBasic extends Component {
 		);
 	}
 }
-
-/**
- * A basic base component for
- * [VirtualList]{@link ui/VirtualList.VirtualList} and [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
- *
- * @class VirtualListBasic
- * @memberof ui/VirtualList
- * @ui
- * @public
- */
-VirtualListBasic.displayName = 'ui:VirtualListBasic';
 
 export default VirtualListBasic;
 export {
