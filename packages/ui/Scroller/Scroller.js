@@ -123,7 +123,7 @@ Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
 	 * @default 'auto'
 	 * @public
 	 */
-	horizontalScrollbar: PropTypes.string,
+	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
 	/**
 	 * Prevents scroll by dragging or flicking on the scroller.
@@ -252,7 +252,7 @@ Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
 	 * @default 'auto'
 	 * @public
 	 */
-	verticalScrollbar: PropTypes.string
+	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
 Scroller.defaultProps = {
