@@ -60,7 +60,6 @@ class VirtualListBasic extends Component {
 		 * Example:
 		 * ```
 		 * renderItem = ({index, ...rest}) => {
-		 * 	delete rest.data;
 		 *
 		 * 	return (
 		 * 		<MyComponent index={index} {...rest} />

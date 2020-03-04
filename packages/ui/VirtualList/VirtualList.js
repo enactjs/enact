@@ -3,6 +3,7 @@
  *
  * @module ui/VirtualList
  * @exports gridListImageSizeShape
+ * @exports itemSizesShape
  * @exports VirtualGridList
  * @exports VirtualList
  * @exports VirtualListBase
@@ -70,6 +71,19 @@ const VirtualList = ({role, ...rest}) => {
 VirtualList.displayName = 'ui:VirtualList';
 
 VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
+	/**
+	 * The layout direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
 	/**
 	 * Specifies how to show horizontal scrollbar.
 	 *
@@ -162,6 +176,19 @@ const VirtualGridList = ({role, ...rest}) => {
 VirtualGridList.displaytName = 'ui:VirtualGridList';
 
 VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype */ {
+	/**
+	 * The layout direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
 	/**
 	 * Specifies how to show horizontal scrollbar.
 	 *

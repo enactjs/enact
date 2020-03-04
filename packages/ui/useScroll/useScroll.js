@@ -5,7 +5,7 @@
  * @exports assignPropertiesOf
  * @exports constants
  * @exports useScroll
- * @exports useScrollBase,
+ * @exports useScrollBase
  * @private
  */
 

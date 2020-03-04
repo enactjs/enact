@@ -349,7 +349,6 @@ class ScrollerBasic extends Component {
  * @param {Object} event
  * @param {Number} event.scrollLeft Scroll left value.
  * @param {Number} event.scrollTop Scroll top value.
- * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
  * @public
  */
 

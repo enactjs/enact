@@ -5,7 +5,6 @@
  * @exports Scroller
  * @exports ScrollerBase
  * @exports ScrollerBasic
- * @exports ScrollerNative
  */
 
 import React from 'react';
