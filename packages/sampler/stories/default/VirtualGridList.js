@@ -55,7 +55,7 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
-const VirtualGridListConfig = mergeComponentMetadata('VirtualGridList', VirtualGridList, VirtualListBasic);
+const VirtualGridListConfig = mergeComponentMetadata('VirtualGridList', VirtualListBasic, VirtualGridList);
 
 storiesOf('UI', module)
 	.add(

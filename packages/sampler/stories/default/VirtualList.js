@@ -44,7 +44,7 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
-const VirtualListConfig = mergeComponentMetadata('VirtualList', VirtualList, VirtualListBasic);
+const VirtualListConfig = mergeComponentMetadata('VirtualList', VirtualListBasic, VirtualList);
 
 storiesOf('UI', module)
 	.add(
