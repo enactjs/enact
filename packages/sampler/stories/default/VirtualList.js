@@ -51,7 +51,7 @@ storiesOf('UI', module)
 		'VirtualList',
 		() => {
 			return (
-				<UiVirtualList
+				<VirtualList
 					dataSize={updateDataSize(number('dataSize', VirtualListConfig, defaultDataSize))}
 					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, VirtualListConfig)}
 					itemRenderer={uiRenderItem(ri.scale(number('itemSize', VirtualListConfig, 72)))}
