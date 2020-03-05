@@ -471,7 +471,7 @@ class VirtualListBasic extends Component {
 			this.scrollToPosition(x, y, rtl);
 		} else {
 			this.setScrollPositionTarget (x, y);
-			this.setScrollPosition(x, y, rtl, x, y);
+			this.setScrollPosition(x, y, rtl);
 		}
 	}
 
