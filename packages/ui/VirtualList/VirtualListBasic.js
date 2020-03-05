@@ -572,18 +572,9 @@ class VirtualListBasic extends Component {
 	getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
 	getClientSize = (props) => {
-		const
-			{clientWidth, clientHeight} =
-				props.clientSize ||
-				props.scrollContentRef.current ||
-				{clientWidth: 0, clientHeight: 0},
-			clientSize = {clientWidth, clientHeight};
+		const clientSize = props.clientSize || props.scrollContentRef.current;
 
-		if (props.getClientSize) {
-			return props.getClientSize(clientSize);
-		} else {
-			return clientSize;
-		}
+		return clientSize && props.getClientSize ? props.getClientSize(clientSize) : clientSize;
 	}
 
 	emitUpdateItems () {
@@ -1184,17 +1175,19 @@ class VirtualListBasic extends Component {
 		const
 			{className, css: themeCss, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, scrollMode, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, itemContainerRef, primary} = this,
+			scrollModeNative = scrollMode === 'native',
 			containerClasses = classNames(
 				css.virtualList,
 				isPrimaryDirectionVertical ? css.vertical : css.horizontal,
-				scrollMode === 'native' ? css.native : null,
-				themeCss ? themeCss.virtualList : null,
-				themeCss && isPrimaryDirectionVertical ? themeCss.vertical : null,
-				themeCss && !isPrimaryDirectionVertical ? themeCss.horizontal : null,
-				themeCss && scrollMode === 'native' ? themeCss.native : null,
+				{[css.native]: scrollModeNative},
+				themeCss && [
+					themeCss.virtualList,
+					isPrimaryDirectionVertical && themeCss.vertical || themeCss.horizontal,
+					{[themeCss.native] : scrollModeNative}
+				],
 				className
 			),
-			contentClasses = scrollMode === 'native' ? null : css.content;
+			contentClasses = scrollModeNative ? null : css.content;
 
 		delete rest.cbScrollTo;
 		delete rest.clientSize;
