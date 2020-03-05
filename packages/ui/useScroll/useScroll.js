@@ -1055,7 +1055,9 @@ const useScrollBase = (props) => {
 
 		if (scrollMode === 'translate') {
 			showThumb(bounds);
-			scrollContentHandle.current.setScrollPositionTarget(targetX, targetY);
+			if (scrollContentHandle.current && scrollContentHandle.current.setScrollPositionTarget) {
+				scrollContentHandle.current.setScrollPositionTarget(targetX, targetY);
+			}
 
 			if (animate) {
 				mutableRef.current.animator.animate(scrollAnimation(mutableRef.current.animationInfo));
