@@ -1046,8 +1046,7 @@ class VirtualListBasic extends Component {
 	applyStyleToNewNode = (index, ...rest) => {
 		const
 			{itemRefs, itemProps, itemRenderer, getComponentProps} = this.props,
-			{numOfItems} = this.state,
-			key = index % numOfItems,
+			key = index % this.state.numOfItems,
 			componentProps = getComponentProps && getComponentProps(index) || {},
 			itemContainerRef = (ref) => {
 				if (ref === null) {
@@ -1071,8 +1070,7 @@ class VirtualListBasic extends Component {
 	applyStyleToHideNode = (index) => {
 		const
 			{itemRefs} = this.props,
-			{numOfItems} = this.state,
-			key = index % numOfItems,
+			key = index % this.state.numOfItems,
 			itemContainerRef = () => (itemRefs.current[key] = null);
 
 		this.cc[key] = <div key={key} ref={itemContainerRef} style={{display: 'none'}} />;
