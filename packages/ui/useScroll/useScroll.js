@@ -1553,6 +1553,7 @@ const useScroll = (props) => {
 
 	const scrollContainerRef = useRef(null);
 	const scrollContentRef = useRef();
+	const itemRefs = useRef();
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
 
@@ -1576,6 +1577,7 @@ const useScroll = (props) => {
 		get horizontalScrollbarRef () {
 			return horizontalScrollbarRef;
 		},
+		itemRefs,
 		overscrollEffectOn: props.overscrollEffectOn || { // FIXME
 			arrowKey: false,
 			drag: false,
@@ -1594,7 +1596,7 @@ const useScroll = (props) => {
 	});
 
 	assignProperties('scrollContainerProps', {ref: scrollContainerRef});
-	assignProperties('scrollContentProps', {scrollContentHandle, scrollContentRef});
+	assignProperties('scrollContentProps', {itemRefs, scrollContentHandle, scrollContentRef});
 	assignProperties('verticalScrollbarProps', {ref: verticalScrollbarRef});
 	assignProperties('horizontalScrollbarProps', {ref: horizontalScrollbarRef});
 

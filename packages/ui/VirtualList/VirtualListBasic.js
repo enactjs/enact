@@ -287,7 +287,6 @@ class VirtualListBasic extends Component {
 		super(props);
 
 		this.contentRef = React.createRef();
-		this.itemContainerRef = React.createRef();
 
 		if (props.clientSize) {
 			this.calculateMetrics(props);
@@ -944,10 +943,10 @@ class VirtualListBasic extends Component {
 	// For individually sized item
 	applyItemPositionToDOMElement (index) {
 		const
-			{direction, rtl} = this.props,
+			{direction, itemRefs, rtl} = this.props,
 			{numOfItems} = this.state,
 			{itemPositions} = this,
-			childNode = this.itemContainerRef.current.children[index % numOfItems];
+			childNode = itemRefs.current[index % numOfItems];
 
 		if (childNode && itemPositions[index]) {
 			const position = itemPositions[index].position;
@@ -1001,7 +1000,7 @@ class VirtualListBasic extends Component {
 
 	// For individually sized item
 	adjustItemPositionWithItemSize () {
-		if (this.itemContainerRef.current) {
+		if (this.contentRef.current) {
 			const
 				{dataSize} = this.props,
 				{firstIndex, numOfItems} = this.state,
@@ -1028,12 +1027,6 @@ class VirtualListBasic extends Component {
 		}
 	}
 
-	getItemNode = (index) => {
-		const ref = this.itemContainerRef.current;
-
-		return ref ? ref.children[index % this.state.numOfItems] : null;
-	}
-
 	composeStyle (width, height, primaryPosition, secondaryPosition) {
 		const
 			{x, y} = this.getXY(primaryPosition, secondaryPosition),
@@ -1057,8 +1050,14 @@ class VirtualListBasic extends Component {
 			key = index % numOfItems,
 			componentProps = getComponentProps && getComponentProps(index) || {},
 			itemContainerRef = (ref) => {
-				if (itemRefs) {
+				if (ref === null) {
 					itemRefs.current[key] = ref;
+				} else {
+					const itemNode = ref.children[0];
+
+					itemRefs.current[key] = (parseInt(itemNode.dataset.index) === index) ?
+						itemNode :
+						ref.querySelector(`[data-index="${index}"]`);
 				}
 			};
 
@@ -1074,11 +1073,7 @@ class VirtualListBasic extends Component {
 			{itemRefs} = this.props,
 			{numOfItems} = this.state,
 			key = index % numOfItems,
-			itemContainerRef = () => {
-				if (itemRefs) {
-					itemRefs.current[key] = null;
-				}
-			};
+			itemContainerRef = () => (itemRefs.current[key] = null);
 
 		this.cc[key] = <div key={key} ref={itemContainerRef} style={{display: 'none'}} />;
 	}
@@ -1181,7 +1176,7 @@ class VirtualListBasic extends Component {
 	render () {
 		const
 			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, scrollMode, ...rest} = this.props,
-			{cc, isPrimaryDirectionVertical, itemContainerRef, primary} = this,
+			{cc, isPrimaryDirectionVertical, primary} = this,
 			containerClasses = classNames(css.virtualList, isPrimaryDirectionVertical ? css.vertical : css.horizontal, scrollMode === 'native' ? css.native : null, className),
 			contentClasses = scrollMode === 'native' ? null : css.content;
 
@@ -1218,7 +1213,7 @@ class VirtualListBasic extends Component {
 		return (
 			<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.props.scrollContentRef} style={style}>
 				<div {...rest} className={contentClasses} ref={this.contentRef}>
-					{itemsRenderer({cc, itemContainerRef, primary})}
+					{itemsRenderer({cc, primary})}
 				</div>
 			</div>
 		);
