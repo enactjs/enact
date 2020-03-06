@@ -1553,7 +1553,7 @@ const useScroll = (props) => {
 
 	const scrollContainerRef = useRef(null);
 	const scrollContentRef = useRef();
-	const itemRefs = useRef();
+	const itemRefs = useRef([]);
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
 
