@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Changed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `itemProps` to `childProps` for legacy.
+
 ### Fixed
 
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` not to suddenly jump when pressing directional keys after wheeling.
