@@ -1577,7 +1577,6 @@ const useScroll = (props) => {
 		get horizontalScrollbarRef () {
 			return horizontalScrollbarRef;
 		},
-		itemRefs,
 		overscrollEffectOn: props.overscrollEffectOn || { // FIXME
 			arrowKey: false,
 			drag: false,
