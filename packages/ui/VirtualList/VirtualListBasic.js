@@ -110,6 +110,14 @@ class VirtualListBasic extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
+		 * Additional props included in the object passed to the `itemRenderer` callback.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		childProps: PropTypes.object,
+
+		/**
 		 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
 		 *
 		 * @type {Object}
@@ -175,14 +183,6 @@ class VirtualListBasic extends Component {
 		 * @private
 		 */
 		getComponentProps: PropTypes.func,
-
-		/**
-		 * Additional props included in the object passed to the `itemRenderer` callback.
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		itemProps: PropTypes.object,
 
 		/**
 		 * Ref for items
@@ -296,8 +296,8 @@ class VirtualListBasic extends Component {
 		this.state = {
 			firstIndex: 0,
 			numOfItems: 0,
+			prevChildProps: null,
 			prevFirstIndex: 0,
-			prevItemProps: null,
 			updateFrom: 0,
 			updateTo: 0,
 			...nextState
@@ -310,7 +310,7 @@ class VirtualListBasic extends Component {
 		const
 			shouldInvalidate = (
 				state.prevFirstIndex === state.firstIndex ||
-				state.prevItemProps !== props.itemProps
+				state.prevChildProps !== props.childProps
 			),
 			diff = state.firstIndex - state.prevFirstIndex,
 			updateTo = (-state.numOfItems >= diff || diff > 0 || shouldInvalidate) ? state.firstIndex + state.numOfItems : state.prevFirstIndex,
@@ -319,8 +319,8 @@ class VirtualListBasic extends Component {
 
 		return {
 			...nextUpdateFromAndTo,
-			prevFirstIndex: state.firstIndex,
-			prevItemProps: props.itemProps
+			prevChildProps: props.childProps,
+			prevFirstIndex: state.firstIndex
 		};
 	}
 
@@ -1045,7 +1045,7 @@ class VirtualListBasic extends Component {
 
 	applyStyleToNewNode = (index, ...rest) => {
 		const
-			{itemRefs, itemProps, itemRenderer, getComponentProps} = this.props,
+			{childProps, itemProps, itemRenderer, getComponentProps} = this.props,
 			key = index % this.state.numOfItems,
 			componentProps = getComponentProps && getComponentProps(index) || {},
 			itemContainerRef = (ref) => {
@@ -1062,7 +1062,7 @@ class VirtualListBasic extends Component {
 
 		this.cc[key] = (
 			<div className={css.listItem} key={key} ref={itemContainerRef} style={this.composeStyle(...rest)}>
-				{itemRenderer({...itemProps, ...componentProps, index})}
+				{itemRenderer({...childProps, ...componentProps, index})}
 			</div>
 		);
 	}
@@ -1179,13 +1179,13 @@ class VirtualListBasic extends Component {
 			contentClasses = scrollMode === 'native' ? null : css.content;
 
 		delete rest.cbScrollTo;
+		delete rest.childProps;
 		delete rest.clientSize;
 		delete rest.dataSize;
 		delete rest.direction;
 		delete rest.getComponentProps;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
-		delete rest.itemProps;
 		delete rest.itemRefs;
 		delete rest.itemRenderer;
 		delete rest.itemSize;
