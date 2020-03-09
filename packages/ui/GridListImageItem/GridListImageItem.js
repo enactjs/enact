@@ -147,10 +147,10 @@ const GridListImageItem = kind({
 		/**
 		 * The components that will be shown below the image.
 		 *
-		 * @type {Object}
+		 * @type {Array|Element}
 		 * @private
 		 */
-		subComponents: PropTypes.any
+		subComponents: PropTypes.oneOfType([PropTypes.array, PropTypes.element])
 	},
 
 	defaultProps: {
