@@ -1208,8 +1208,8 @@ class VirtualListBasic extends Component {
 		delete rest.clientSize;
 		delete rest.dataSize;
 		delete rest.direction;
-		delete rest.getContentSize;
 		delete rest.getComponentProps;
+		delete rest.getContentSize;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
 		delete rest.itemRenderer;
