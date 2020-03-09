@@ -79,6 +79,7 @@ const useForceUpdate = () => (useReducer(x => x + 1, 0));
 const useScrollBase = (props) => {
 	const
 		{
+			childProps,
 			children,
 			className,
 			clientSize,
@@ -90,7 +91,6 @@ const useScrollBase = (props) => {
 			direction,
 			horizontalScrollbar,
 			horizontalScrollbarRef,
-			itemProps,
 			itemRenderer,
 			itemSize,
 			itemSizes,
@@ -1475,12 +1475,12 @@ const useScrollBase = (props) => {
 
 	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
 		{
+			childProps,
 			clientSize,
 			'data-webos-voice-disabled': voiceDisabled,
 			'data-webos-voice-focused': voiceFocused,
 			'data-webos-voice-group-label': voiceGroupLabel,
 			dataSize,
-			itemProps,
 			itemRenderer,
 			itemSize,
 			itemSizes,
