@@ -1076,11 +1076,14 @@ const useScrollBase = (props) => {
 
 		if (scrollMode === 'translate') {
 			showThumb(bounds);
+			if (scrollContentHandle.current && scrollContentHandle.current.setScrollPositionTarget) {
+				scrollContentHandle.current.setScrollPositionTarget(targetX, targetY);
+			}
 
 			if (animate) {
 				mutableRef.current.animator.animate(scrollAnimation(mutableRef.current.animationInfo));
 			} else {
-				scroll(targetX, targetY, targetX, targetY);
+				scroll(targetX, targetY);
 				stop();
 			}
 		} else { // scrollMode 'native'
@@ -1133,19 +1136,19 @@ const useScrollBase = (props) => {
 					}
 				}
 
-				scroll(curTargetX, curTargetY, targetX, targetY);
+				scroll(curTargetX, curTargetY);
 
 				if (!toBeContinued) {
 					stop();
 				}
 			} else {
-				scroll(targetX, targetY, targetX, targetY);
+				scroll(targetX, targetY);
 				stop();
 			}
 		};
 	}
 
-	function scroll (left, top, ...restParams) {
+	function scroll (left, top) {
 		if (left !== mutableRef.current.scrollLeft) {
 			setScrollLeft(left);
 		}
@@ -1154,7 +1157,7 @@ const useScrollBase = (props) => {
 			setScrollTop(top);
 		}
 
-		scrollContentHandle.current.setScrollPosition(mutableRef.current.scrollLeft, mutableRef.current.scrollTop, rtl, ...restParams);
+		scrollContentHandle.current.setScrollPosition(mutableRef.current.scrollLeft, mutableRef.current.scrollTop, rtl);
 		forwardScrollEvent('onScroll');
 	}
 	// scrollMode 'translate' ]]
