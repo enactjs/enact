@@ -1148,7 +1148,7 @@ const useScrollBase = (props) => {
 		};
 	}
 
-	function scroll (left, top, ...restParams) {
+	function scroll (left, top) {
 		if (left !== mutableRef.current.scrollLeft) {
 			setScrollLeft(left);
 		}
@@ -1157,7 +1157,7 @@ const useScrollBase = (props) => {
 			setScrollTop(top);
 		}
 
-		scrollContentHandle.current.setScrollPosition(mutableRef.current.scrollLeft, mutableRef.current.scrollTop, rtl, ...restParams);
+		scrollContentHandle.current.setScrollPosition(mutableRef.current.scrollLeft, mutableRef.current.scrollTop, rtl);
 		forwardScrollEvent('onScroll');
 	}
 	// scrollMode 'translate' ]]
