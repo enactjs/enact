@@ -1201,7 +1201,7 @@ class VirtualListBasic extends Component {
 	render () {
 		const
 			{className, css: themeCss, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, scrollMode, ...rest} = this.props,
-			{cc, isPrimaryDirectionVertical, itemContainerRef, primary} = this,
+			{cc, isPrimaryDirectionVertical, primary} = this,
 			scrollModeNative = scrollMode === 'native',
 			containerClasses = classNames(
 				css.virtualList,
