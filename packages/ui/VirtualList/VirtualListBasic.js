@@ -1000,7 +1000,7 @@ class VirtualListBasic extends Component {
 
 	// For individually sized item
 	adjustItemPositionWithItemSize () {
-		if (this.contentRef.current) {
+		if (this.cc.length) {
 			const
 				{dataSize} = this.props,
 				{firstIndex, numOfItems} = this.state,
