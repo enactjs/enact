@@ -39,7 +39,7 @@ const
  * The class to scroll a list or a scroller with animation.
  *
  * @class ScrollAnimator
- * @memberof ui/Scrollable
+ * @memberof ui/useScroll
  * @private
  */
 class ScrollAnimator {
@@ -51,7 +51,7 @@ class ScrollAnimator {
 	 *	`'linear'`, `'ease-in'`, `'ease-out'`, or `'ease-in-out'`, or null. If `null`, defaults to
 	 *	`'ease-out'`.
 	 * @constructor
-	 * @memberof ui/Scrollable.ScrollAnimator
+	 * @memberof ui/useScroll.ScrollAnimator
 	 */
 	constructor (type) {
 		this.timingFunction = timingFunctions[type || this.type];

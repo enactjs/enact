@@ -1,3 +1,14 @@
+/**
+ * Unstyled scrollable hook and behaviors to be customized by a theme or application.
+ *
+ * @module ui/useScroll
+ * @exports assignPropertiesOf
+ * @exports constants
+ * @exports useScroll
+ * @exports useScrollBase
+ * @private
+ */
+
 import classNames from 'classnames';
 import {forward, forwardWithPrevent} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
@@ -13,7 +24,6 @@ import {ResizeContext} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
 
-import {Scrollable, ScrollableBasic} from './Scrollable';
 import ScrollAnimator from './ScrollAnimator';
 import {useScrollContentHandle} from './useScrollContentHandle';
 import utilDOM from './utilDOM';
@@ -58,17 +68,26 @@ const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
 
 const useForceUpdate = () => (useReducer(x => x + 1, 0));
 
+/**
+ * A custom hook that passes scrollable behavior information as its render prop.
+ *
+ * @class
+ * @memberof ui/useScroll
+ * @ui
+ * @private
+ */
 const useScrollBase = (props) => {
 	const
 		{
+			childProps,
 			children,
 			className,
 			clientSize,
 			'data-webos-voice-disabled': voiceDisabled,
 			'data-webos-voice-focused': voiceFocused,
 			'data-webos-voice-group-label': voiceGroupLabel,
-			dataSize,
 			assignProperties,
+			dataSize,
 			direction,
 			horizontalScrollbar,
 			horizontalScrollbarRef,
@@ -77,14 +96,16 @@ const useScrollBase = (props) => {
 			itemSizes,
 			noScrollByDrag,
 			noScrollByWheel,
+			overhang,
 			overscrollEffectOn,
+			pageScroll,
 			rtl,
-			setScrollContentHandle,
-			setScrollContainerHandle,
+			scrollContainerRef,
 			scrollContentHandle,
 			scrollContentRef,
-			scrollContainerRef,
 			scrollMode,
+			setScrollContainerHandle,
+			setScrollContentHandle,
 			spacing,
 			verticalScrollbar,
 			verticalScrollbarRef,
@@ -1454,6 +1475,7 @@ const useScrollBase = (props) => {
 
 	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
 		{
+			childProps,
 			clientSize,
 			'data-webos-voice-disabled': voiceDisabled,
 			'data-webos-voice-focused': voiceFocused,
@@ -1462,6 +1484,8 @@ const useScrollBase = (props) => {
 			itemRenderer,
 			itemSize,
 			itemSizes,
+			overhang,
+			pageScroll,
 			spacing,
 			wrap
 		} :
@@ -1573,24 +1597,12 @@ const useScroll = (props) => {
 	} = useScrollBase({
 		...props,
 		assignProperties,
-		get horizontalScrollbarRef () {
-			return horizontalScrollbarRef;
-		},
-		overscrollEffectOn: props.overscrollEffectOn || { // FIXME
-			arrowKey: false,
-			drag: false,
-			pageKey: false,
-			scrollbarButton: false,
-			wheel: true
-		},
+		horizontalScrollbarRef,
+		scrollContainerRef,
 		scrollContentHandle,
 		scrollContentRef,
-		scrollContainerRef,
-		scrollMode: props.scrollMode || 'translate', // FIXME
 		setScrollContentHandle,
-		get verticalScrollbarRef () {
-			return verticalScrollbarRef;
-		}
+		verticalScrollbarRef
 	});
 
 	assignProperties('scrollContainerProps', {ref: scrollContainerRef});
@@ -1602,18 +1614,16 @@ const useScroll = (props) => {
 
 	return {
 		...collectionOfProperties,
-		scrollContentWrapper,
 		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible
+		isVerticalScrollbarVisible,
+		scrollContentWrapper
 	};
 };
 
 export default useScroll;
 export {
+	assignPropertiesOf,
 	constants,
-	Scrollable,
-	ScrollableBasic,
 	useScroll,
-	useScrollBase,
-	assignPropertiesOf
+	useScrollBase
 };
