@@ -8,7 +8,7 @@ import css from './ScrollThumb.module.less';
  * An unstyled scroll thumb without any behavior.
  *
  * @function ScrollThumb
- * @memberof ui/Scrollable
+ * @memberof ui/useScroll
  * @ui
  * @private
  */
@@ -22,7 +22,7 @@ const ScrollThumb = forwardRef((props, ref) => {
 
 ScrollThumb.displayName = 'ui:ScrollThumb';
 
-ScrollThumb.propTypes = /** @lends ui/Scrollable.ScrollThumb.prototype */ {
+ScrollThumb.propTypes = /** @lends ui/useScroll.ScrollThumb.prototype */ {
 	/**
 	 * If `true`, the scrollbar will be oriented vertically.
 	 *
