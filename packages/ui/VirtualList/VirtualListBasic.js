@@ -40,12 +40,13 @@ const itemSizesShape = PropTypes.shape({
 });
 
 /**
- * The base version of the virtual list component.
+ * A basic base component for
+ * [VirtualList]{@link ui/VirtualList.VirtualList} and [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
  *
- * @class VirtualListCore
+ * @class VirtualListBasic
  * @memberof ui/VirtualList
  * @ui
- * @private
+ * @public
  */
 class VirtualListBasic extends Component {
 	displayName = 'ui:VirtualListBasic'
@@ -60,7 +61,6 @@ class VirtualListBasic extends Component {
 		 * Example:
 		 * ```
 		 * renderItem = ({index, ...rest}) => {
-		 * 	delete rest.data;
 		 *
 		 * 	return (
 		 * 		<MyComponent index={index} {...rest} />
@@ -69,9 +69,9 @@ class VirtualListBasic extends Component {
 		 * ```
 		 *
 		 * @type {Function}
-		 * @param {Object}     event
-		 * @param {Number}     event.data-index    It is required for `Spotlight` 5-way navigation. Pass to the root element in the component.
-		 * @param {Number}     event.index    The index number of the component to render
+		 * @param {Object} event
+		 * @param {Number} event.data-index It is required for `Spotlight` 5-way navigation. Pass to the root element in the component.
+		 * @param {Number} event.index The index number of the component to render
 		 *
 		 * @required
 		 * @public
@@ -102,7 +102,7 @@ class VirtualListBasic extends Component {
 
 		/**
 		 * Callback method of scrollTo.
-		 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
+		 * Normally, useScroll should set this value.
 		 *
 		 * @type {Function}
 		 * @private
@@ -121,8 +121,8 @@ class VirtualListBasic extends Component {
 		 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
 		 *
 		 * @type {Object}
-		 * @property {Number}    clientHeight    The client height of the list.
-		 * @property {Number}    clientWidth    The client width of the list.
+		 * @property {Number} clientHeight The client height of the list.
+		 * @property {Number} clientWidth The client width of the list.
 		 * @public
 		 */
 		clientSize: PropTypes.shape({
@@ -222,7 +222,7 @@ class VirtualListBasic extends Component {
 		overhang: PropTypes.number,
 
 		/**
-		 * When `true`, the list will scroll by page.  Otherwise the list will scroll by item.
+		 * When `true`, the list will scroll by page. Otherwise the list will scroll by item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -239,17 +239,31 @@ class VirtualListBasic extends Component {
 		rtl: PropTypes.bool,
 
 		/**
-		 * TBD
+		 * Ref for scroll content
+		 *
+		 * @type {Object}
+		 * @private
 		 */
 		scrollContentRef: PropTypes.object,
 
 		/**
-		 * TBD
+		 * Specifies how to scroll.
+		 *
+		 * Valid values are:
+		 * * `'translate'`,
+		 * * `'native'`.
+		 *
+		 * @type {String}
+		 * @default 'translate'
+		 * @public
 		 */
 		scrollMode: PropTypes.string,
 
-		/*
-		 * TBD
+		/**
+		 * Setter of imperative handles for scroll content
+		 *
+		 * @type {Function}
+		 * @private
 		 */
 		setScrollContentHandle: PropTypes.func,
 
@@ -347,7 +361,7 @@ class VirtualListBasic extends Component {
 
 		this.shouldUpdateBounds = false;
 
-		// TODO: remove `this.hasDataSizeChanged` and fix ui/Scrollable*
+		// TODO: remove `this.hasDataSizeChanged` and fix useScroll
 		this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
 
 		if (prevState.firstIndex !== firstIndex || prevState.numOfItems !== numOfItems) {
@@ -1196,12 +1210,12 @@ class VirtualListBasic extends Component {
 		delete rest.pageScroll;
 		delete rest.rtl;
 		delete rest.scrollContainerContainsDangerously;
-		delete rest.scrollMode;
-		delete rest.setThemeScrollContentHandle;
-		delete rest.setScrollContentHandle;
-		delete rest.spacing;
 		delete rest.scrollContentHandle;
 		delete rest.scrollContentRef;
+		delete rest.scrollMode;
+		delete rest.setScrollContentHandle;
+		delete rest.setThemeScrollContentHandle;
+		delete rest.spacing;
 		delete rest.updateStatesAndBounds;
 
 		if (primary) {
@@ -1217,171 +1231,6 @@ class VirtualListBasic extends Component {
 		);
 	}
 }
-
-/**
- * A basic base component for
- * [VirtualList]{@link ui/VirtualList.VirtualList} and [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
- *
- * @class VirtualListBasic
- * @memberof ui/VirtualList
- * @ui
- * @public
- */
-VirtualListBasic.displayName = 'ui:VirtualListBasic';
-
-/**
- * A callback function that receives a reference to the `scrollTo` feature.
- *
- * Once received, the `scrollTo` method can be called as an imperative interface.
- *
- * The `scrollTo` function accepts the following parameters:
- * - {position: {x, y}} - Pixel value for x and/or y position
- * - {align} - Where the scroll area should be aligned. Values are:
- *   `'left'`, `'right'`, `'top'`, `'bottom'`,
- *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
- * - {index} - Index of specific item. (`0` or positive integer)
- *   This option is available for only `VirtualList` kind.
- * - {node} - Node to scroll into view
- * - {animate} - When `true`, scroll occurs with animation. When `false`, no
- *   animation occurs.
- * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
- *   by `index` or `node`.
- * > Note: Only specify one of: `position`, `align`, `index` or `node`
- *
- * Example:
- * ```
- *	// If you set cbScrollTo prop like below;
- *	cbScrollTo: (fn) => {this.scrollTo = fn;}
- *	// You can simply call like below;
- *	this.scrollTo({align: 'top'}); // scroll to the top
- * ```
- *
- * @name cbScrollTo
- * @memberof ui/VirtualList.VirtualListBasic.prototype
- * @type {Function}
- * @public
- */
-
-/**
- * Specifies how to show horizontal scrollbar.
- *
- * Valid values are:
- * * `'auto'`,
- * * `'visible'`, and
- * * `'hidden'`.
- *
- * @name horizontalScrollbar
- * @memberof ui/VirtualList.VirtualListBasic.prototype
- * @type {String}
- * @default 'auto'
- * @public
- */
-
-/**
- * Prevents scroll by wheeling on the list.
- *
- * @name noScrollByWheel
- * @memberof ui/VirtualList.VirtualListBasic.prototype
- * @type {Boolean}
- * @default false
- * @public
- */
-
-/**
- * Called when scrolling.
- *
- * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
- * It is not recommended to set this prop since it can cause performance degradation.
- * Use `onScrollStart` or `onScrollStop` instead.
- *
- * @name onScroll
- * @memberof ui/VirtualList.VirtualListBasic.prototype
- * @type {Function}
- * @param {Object} event
- * @param {Number} event.scrollLeft Scroll left value.
- * @param {Number} event.scrollTop Scroll top value.
- * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
- * @public
- */
-
-/**
- * Called when scroll starts.
- *
- * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
- * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
- *
- * Example:
- * ```
- * onScrollStart = ({scrollLeft, scrollTop, moreInfo}) => {
- *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
- *     // do something with firstVisibleIndex and lastVisibleIndex
- * }
- *
- * render = () => (
- *     <VirtualList
- *         ...
- *         onScrollStart={this.onScrollStart}
- *         ...
- *     />
- * )
- * ```
- *
- * @name onScrollStart
- * @memberof ui/VirtualList.VirtualListBasic.prototype
- * @type {Function}
- * @param {Object} event
- * @param {Number} event.scrollLeft Scroll left value.
- * @param {Number} event.scrollTop Scroll top value.
- * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
- * @public
- */
-
-/**
- * Called when scroll stops.
- *
- * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
- * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
- *
- * Example:
- * ```
- * onScrollStop = ({scrollLeft, scrollTop, moreInfo}) => {
- *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
- *     // do something with firstVisibleIndex and lastVisibleIndex
- * }
- *
- * render = () => (
- *     <VirtualList
- *         ...
- *         onScrollStop={this.onScrollStop}
- *         ...
- *     />
- * )
- * ```
- *
- * @name onScrollStop
- * @memberof ui/VirtualList.VirtualListBasic.prototype
- * @type {Function}
- * @param {Object} event
- * @param {Number} event.scrollLeft Scroll left value.
- * @param {Number} event.scrollTop Scroll top value.
- * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
- * @public
- */
-
-/**
- * Specifies how to show vertical scrollbar.
- *
- * Valid values are:
- * * `'auto'`,
- * * `'visible'`, and
- * * `'hidden'`.
- *
- * @name verticalScrollbar
- * @memberof ui/VirtualList.VirtualListBasic.prototype
- * @type {String}
- * @default 'auto'
- * @public
- */
 
 export default VirtualListBasic;
 export {

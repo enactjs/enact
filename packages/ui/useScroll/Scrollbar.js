@@ -33,10 +33,10 @@ const setCSSVariable = (element, variable, value) => {
 };
 
 /**
- * An unstyled base component for a scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
+ * An unstyled base component for a scroll bar.
  *
  * @function ScrollbarBase
- * @memberof ui/Scrollable
+ * @memberof ui/useScroll
  * @ui
  * @private
  */
@@ -102,9 +102,9 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 	);
 }));
 
-ScrollbarBase.displayName = 'ui:Scrollbar';
+ScrollbarBase.displayName = 'ui:ScrollbarBase';
 
-ScrollbarBase.propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
+ScrollbarBase.propTypes = /** @lends ui/useScroll.Scrollbar.prototype */ {
 	/**
 	 * The render function for child.
 	 *
@@ -176,10 +176,10 @@ ScrollbarBase.defaultProps = {
 };
 
 /**
- * An unstyled scroll bar. It is used in [Scrollable]{@link ui/Scrollable.Scrollable}.
+ * An unstyled scroll bar.
  *
  * @class Scrollbar
- * @memberof ui/Scrollable
+ * @memberof ui/useScroll
  * @ui
  * @private
  */
@@ -214,7 +214,9 @@ const Scrollbar = forwardRef((props, ref) => {
 	);
 });
 
-Scrollbar.propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
+Scrollbar.displayName = 'ui:Scrollbar';
+
+Scrollbar.propTypes = /** @lends ui/useScroll.Scrollbar.prototype */ {
 	/**
 	 * If `true`, the scrollbar will be oriented vertically.
 	 *

@@ -8,8 +8,6 @@ import css from './Scroller.module.less';
 /**
  * An unstyled base scroller component.
  *
- * In most circumstances, you will want to use the Scrollable version.
- *
  * @class ScrollerBasic
  * @memberof ui/Scroller
  * @ui
@@ -23,7 +21,7 @@ class ScrollerBasic extends Component {
 
 		/**
 		 * Callback method of scrollTo.
-		 * Normally, `Scrollable` should set this value.
+		 * Normally, `useScroll` should set this value.
 		 *
 		 * @type {Function}
 		 * @private
@@ -61,18 +59,20 @@ class ScrollerBasic extends Component {
 		rtl: PropTypes.bool,
 
 		/**
-		 * TBD
+		 * Ref for scroll content
+		 *
+		 * @type {Object}
+		 * @private
 		 */
 		scrollContentRef: PropTypes.object,
 
 		/**
-		 * TBD
+		 * Setter of imperative handles for scroll content
+		 *
+		 * @type {Function}
+		 * @private
 		 */
 		setScrollContentHandle: PropTypes.func
-	}
-
-	static defaultProps = {
-		direction: 'both'
 	}
 
 	constructor (props) {
@@ -115,7 +115,6 @@ class ScrollerBasic extends Component {
 		return x;
 	}
 
-	// for Scrollable
 	setScrollPosition (x, y) {
 		const node = this.props.scrollContentRef.current;
 
@@ -129,12 +128,12 @@ class ScrollerBasic extends Component {
 		}
 	}
 
-	// for ScrollableNative
+	// scrollMode 'translate'
 	scrollToPosition (x, y) {
 		this.props.scrollContentRef.current.scrollTo(this.getRtlPositionX(x), y);
 	}
 
-	// for ScrollableNative
+	// scrollMode 'native'
 	didScroll (x, y) {
 		this.scrollPos.left = x;
 		this.scrollPos.top = y;
@@ -185,16 +184,16 @@ class ScrollerBasic extends Component {
 			});
 
 		delete rest.cbScrollTo;
-		delete rest.scrollContainerContainsDangerously;
 		delete rest.direction;
-		delete rest.rtl;
-		delete rest.scrollMode;
-		delete rest.setThemeScrollContentHandle;
-		delete rest.setScrollContentHandle;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
+		delete rest.rtl;
+		delete rest.scrollContainerContainsDangerously;
 		delete rest.scrollContentHandle;
 		delete rest.scrollContentRef;
+		delete rest.scrollMode;
+		delete rest.setScrollContentHandle;
+		delete rest.setThemeScrollContentHandle;
 
 		return (
 			<div
@@ -206,154 +205,6 @@ class ScrollerBasic extends Component {
 		);
 	}
 }
-
-/**
- * A callback function that receives a reference to the `scrollTo` feature.
- *
- * Once received, the `scrollTo` method can be called as an imperative interface.
- *
- * The `scrollTo` function accepts the following parameters:
- * - {position: {x, y}} - Pixel value for x and/or y position
- * - {align} - Where the scroll area should be aligned. Values are:
- *   `'left'`, `'right'`, `'top'`, `'bottom'`,
- *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
- * - {node} - Node to scroll into view
- * - {animate} - When `true`, scroll occurs with animation. When `false`, no
- *   animation occurs.
- * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
- *   by `index` or `node`.
- * > Note: Only specify one of: `position`, `align`, `index` or `node`
- *
- * Example:
- * ```
- *	// If you set cbScrollTo prop like below;
- *	cbScrollTo: (fn) => {this.scrollTo = fn;}
- *	// You can simply call like below;
- *	this.scrollTo({align: 'top'}); // scroll to the top
- * ```
- *
- * @name cbScrollTo
- * @memberof ui/Scroller.ScrollerBasic.prototype
- * @type {Function}
- * @public
- */
-
-/**
- * Specifies how to show horizontal scrollbar.
- *
- * Valid values are:
- * * `'auto'`,
- * * `'visible'`, and
- * * `'hidden'`.
- *
- * @name horizontalScrollbar
- * @memberof ui/Scroller.ScrollerBasic.prototype
- * @type {String}
- * @default 'auto'
- * @public
- */
-
-/**
- * Prevents scroll by wheeling on the scroller.
- *
- * @name noScrollByWheel
- * @memberof ui/Scroller.ScrollerBasic.prototype
- * @type {Boolean}
- * @default false
- * @public
- */
-
-/**
- * Called when scrolling.
- *
- * Passes `scrollLeft` and `scrollTop`.
- * It is not recommended to set this prop since it can cause performance degradation.
- * Use `onScrollStart` or `onScrollStop` instead.
- *
- * @name onScroll
- * @memberof ui/Scroller.ScrollerBasic.prototype
- * @type {Function}
- * @param {Object} event
- * @param {Number} event.scrollLeft Scroll left value.
- * @param {Number} event.scrollTop Scroll top value.
- * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
- * @public
- */
-
-/**
- * Called when scroll starts.
- *
- * Passes `scrollLeft` and `scrollTop`.
- *
- * Example:
- * ```
- * onScrollStart = ({scrollLeft, scrollTop}) => {
- *     // do something with scrollLeft and scrollTop
- * }
- *
- * render = () => (
- *     <Scroller
- *         ...
- *         onScrollStart={this.onScrollStart}
- *         ...
- *     />
- * )
- * ```
- *
- * @name onScrollStart
- * @memberof ui/Scroller.ScrollerBasic.prototype
- * @type {Function}
- * @param {Object} event
- * @param {Number} event.scrollLeft Scroll left value.
- * @param {Number} event.scrollTop Scroll top value.
- * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
- * @public
- */
-
-/**
- * Called when scroll stops.
- *
- * Passes `scrollLeft` and `scrollTop`.
- *
- * Example:
- * ```
- * onScrollStop = ({scrollLeft, scrollTop}) => {
- *     // do something with scrollLeft and scrollTop
- * }
- *
- * render = () => (
- *     <Scroller
- *         ...
- *         onScrollStop={this.onScrollStop}
- *         ...
- *     />
- * )
- * ```
- *
- * @name onScrollStop
- * @memberof ui/Scroller.ScrollerBasic.prototype
- * @type {Function}
- * @param {Object} event
- * @param {Number} event.scrollLeft Scroll left value.
- * @param {Number} event.scrollTop Scroll top value.
- * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
- * @public
- */
-
-/**
- * Specifies how to show vertical scrollbar.
- *
- * Valid values are:
- * * `'auto'`,
- * * `'visible'`, and
- * * `'hidden'`.
- *
- * @name verticalScrollbar
- * @memberof ui/Scroller.ScrollerBasic.prototype
- * @type {String}
- * @default 'auto'
- * @public
- */
 
 export default ScrollerBasic;
 export {
