@@ -4,9 +4,8 @@ import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageI
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import ri from '@enact/ui/resolution';
 import React from 'react';
-import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
 import {storiesOf} from '@storybook/react';
-import {VirtualGridList as UiVirtualGridList, VirtualListBase as UiVirtualListBase} from '@enact/ui/VirtualList';
+import {VirtualGridList, VirtualListBasic} from '@enact/ui/VirtualList';
 
 const
 	prop = {
@@ -56,26 +55,26 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
-const UiVirtualGridListConfig = mergeComponentMetadata('VirtualGridList', UiVirtualListBase, UiScrollableBase);
+const VirtualGridListConfig = mergeComponentMetadata('VirtualGridList', VirtualListBasic, VirtualGridList);
 
 storiesOf('UI', module)
 	.add(
 		'VirtualList.VirtualGridList',
 		() => (
-			<UiVirtualGridList
-				dataSize={updateDataSize(number('dataSize', UiVirtualGridListConfig, defaultDataSize))}
-				direction={select('direction', prop.direction, UiVirtualGridListConfig)}
-				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, UiVirtualGridListConfig)}
+			<VirtualGridList
+				dataSize={updateDataSize(number('dataSize', VirtualGridListConfig, defaultDataSize))}
+				direction={select('direction', prop.direction, VirtualGridListConfig)}
+				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, VirtualGridListConfig)}
 				itemRenderer={uiRenderItem}
 				itemSize={{
-					minWidth: ri.scale(number('minWidth', UiVirtualGridListConfig, 180)),
-					minHeight: ri.scale(number('minHeight', UiVirtualGridListConfig, 270))
+					minWidth: ri.scale(number('minWidth', VirtualGridListConfig, 180)),
+					minHeight: ri.scale(number('minHeight', VirtualGridListConfig, 270))
 				}}
-				noScrollByWheel={boolean('noScrollByWheel', UiVirtualGridListConfig)}
+				noScrollByWheel={boolean('noScrollByWheel', VirtualGridListConfig)}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				spacing={ri.scale(number('spacing', UiVirtualGridListConfig, 20))}
-				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, UiVirtualGridListConfig)}
+				spacing={ri.scale(number('spacing', VirtualGridListConfig, 20))}
+				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, VirtualGridListConfig)}
 			/>
 		),
 		{

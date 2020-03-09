@@ -3,8 +3,7 @@ import {boolean, select} from '@enact/storybook-utils/addons/knobs';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
 import ri from '@enact/ui/resolution';
-import {ScrollableBase as UiScrollableBase} from '@enact/ui/Scrollable';
-import {Scroller as UiScroller, ScrollerBase as UiScrollerBase} from '@enact/ui/Scroller';
+import {Scroller} from '@enact/ui/Scroller';
 import {storiesOf} from '@storybook/react';
 
 const
@@ -13,19 +12,19 @@ const
 		scrollbarOption: ['auto', 'hidden', 'visible']
 	};
 
-const UiScrollerConfig = mergeComponentMetadata('Scroller', UiScrollerBase, UiScrollableBase, UiScroller);
+const scrollerConfig = mergeComponentMetadata('Scroller', Scroller);
 
 storiesOf('UI', module)
 	.add(
 		'Scroller',
 		() => (
-			<UiScroller
-				direction={select('direction', prop.direction, UiScrollerConfig)}
-				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, UiScrollerConfig)}
-				noScrollByWheel={boolean('noScrollByWheel', UiScrollerConfig)}
+			<Scroller
+				direction={select('direction', prop.direction, scrollerConfig)}
+				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, scrollerConfig)}
+				noScrollByWheel={boolean('noScrollByWheel', scrollerConfig)}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, UiScrollerConfig)}
+				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, scrollerConfig)}
 			>
 				<div
 					style={{
@@ -43,7 +42,7 @@ storiesOf('UI', module)
 						Mauris blandit sollicitudin mattis. Fusce commodo arcu vitae risus consectetur sollicitudin. Aliquam eget posuere orci. Cras pellentesque lobortis sapien non lacinia.
 					</div>
 				</div>
-			</UiScroller>
+			</Scroller>
 		),
 		{
 			info: {
