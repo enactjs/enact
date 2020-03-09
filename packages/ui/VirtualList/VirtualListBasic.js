@@ -681,7 +681,7 @@ class VirtualListBasic extends Component {
 		}
 
 		return {
-			firstIndex: newFirstIndex,
+			firstIndex: Math.min(newFirstIndex, this.maxFirstIndex),
 			numOfItems: numOfItems
 		};
 	}
