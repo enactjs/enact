@@ -8,21 +8,13 @@ import {storiesOf} from '@storybook/react';
 import {VirtualList, VirtualListBasic} from '@enact/ui/VirtualList';
 
 const
-	prop = {
-		scrollbarOption: ['auto', 'hidden', 'visible']
-	},
+	prop = {scrollbarOption: ['auto', 'hidden', 'visible']},
 	items = [],
 	defaultDataSize = 1000,
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	uiRenderItem = (size) => ({index, ...rest}) => {
-		const itemStyle = {
-			borderBottom: ri.unit(3, 'rem') + ' solid #202328',
-			boxSizing: 'border-box',
-			height: size + 'px'
-		};
-
 		return (
-			<UiItem {...rest} style={itemStyle}>
+			<UiItem {...rest} style={{height: size + 'px'}}>
 				{items[index]}
 			</UiItem>
 		);
@@ -54,8 +46,8 @@ storiesOf('UI', module)
 				<VirtualList
 					dataSize={updateDataSize(number('dataSize', VirtualListConfig, defaultDataSize))}
 					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, VirtualListConfig)}
-					itemRenderer={uiRenderItem(ri.scale(number('itemSize', VirtualListConfig, 72)))}
-					itemSize={ri.scale(number('itemSize', VirtualListConfig, 72))}
+					itemRenderer={uiRenderItem(ri.scale(number('itemSize', VirtualListConfig, 156)))}
+					itemSize={ri.scale(number('itemSize', VirtualListConfig, 156))}
 					noScrollByWheel={boolean('noScrollByWheel', VirtualListConfig)}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
