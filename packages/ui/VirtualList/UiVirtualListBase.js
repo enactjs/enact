@@ -622,7 +622,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			return {
-				firstIndex: newFirstIndex,
+				firstIndex: Math.min(newFirstIndex, this.maxFirstIndex),
 				numOfItems: numOfItems
 			};
 		}
