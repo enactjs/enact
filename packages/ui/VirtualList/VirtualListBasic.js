@@ -202,6 +202,14 @@ class VirtualListBasic extends Component {
 		getComponentProps: PropTypes.func,
 
 		/**
+		 * Called to get size of a content area
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		getContentSize: PropTypes.func,
+
+		/**
 		 * Ref for items
 		 *
 		 * @type {Object}
@@ -594,9 +602,9 @@ class VirtualListBasic extends Component {
 	getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
 	getContentSize = (props) => {
-		const contentSizes = props.clientSize || props.scrollContentRef.current;
+		const contentSize = props.clientSize || props.scrollContentRef.current;
 
-		return contentSizes && props.getContentSize ? props.getContentSize(contentSizes) : contentSizes;
+		return contentSize && props.getContentSize ? props.getContentSize(contentSize) : contentSize;
 	}
 
 	emitUpdateItems () {
@@ -612,14 +620,14 @@ class VirtualListBasic extends Component {
 	calculateMetrics (props) {
 		const
 			{direction, itemSize, overhang, spacing} = props,
-			contentSizes = this.getContentSize(props);
+			contentSize = this.getContentSize(props);
 
-		if (!contentSizes) {
+		if (!contentSize) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = contentSizes,
+			{clientWidth, clientHeight} = contentSize,
 			heightInfo = {
 				contentSize: clientHeight,
 				minItemSize: itemSize.minHeight || null,
@@ -748,15 +756,15 @@ class VirtualListBasic extends Component {
 	}
 
 	calculateScrollBounds (props) {
-		const contentSizes = this.getContentSize(props);
+		const contentSize = this.getContentSize(props);
 
-		if (!contentSizes) {
+		if (!contentSize) {
 			return;
 		}
 
 		const
 			{scrollBounds, isPrimaryDirectionVertical} = this,
-			{clientWidth, clientHeight} = contentSizes;
+			{clientWidth, clientHeight} = contentSize;
 		let maxPos;
 
 		scrollBounds.clientWidth = clientWidth;
@@ -1176,14 +1184,14 @@ class VirtualListBasic extends Component {
 	syncClientSize = () => {
 		const
 			{props} = this,
-			contentSizes = this.getContentSize(props);
+			contentSize = this.getContentSize(props);
 
-		if (!contentSizes) {
+		if (!contentSize) {
 			return false;
 		}
 
 		const
-			{clientWidth, clientHeight} = contentSizes,
+			{clientWidth, clientHeight} = contentSize,
 			{scrollBounds} = this;
 
 		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
