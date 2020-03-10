@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Marquee` for characters like j being left-truncated because of being too close to the edge.
+
 ## [3.3.0-alpha.2] - 2020-03-09
 
 ### Changed
