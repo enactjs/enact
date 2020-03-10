@@ -3,14 +3,14 @@ import {loadStories} from '@enact/storybook-utils';
 import {configureActions} from '@enact/storybook-utils/addons/actions';
 import {withKnobs} from '@enact/storybook-utils/addons/knobs';
 
-import Moonstone from '../src/MoonstoneEnvironment';
+import Environment from '../src/Environment';
 
 function config (stories, mod) {
 	configureActions();
 	addDecorator(withKnobs());
 
-	// Set moonstone environment defaults
-	addDecorator(Moonstone);
+	// Set environment defaults
+	addDecorator(Environment);
 
 	configure(loadStories(stories), mod);
 }

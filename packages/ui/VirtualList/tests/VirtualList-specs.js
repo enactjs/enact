@@ -2,6 +2,7 @@ import {mount} from 'enzyme';
 import React from 'react';
 
 import VirtualList from '../VirtualList';
+
 import css from '../VirtualList.module.less';
 
 describe('VirtualList', () => {
@@ -315,6 +316,27 @@ describe('VirtualList', () => {
 
 				const expected = label;
 				const actual = subject.find(`.${css.virtualList}`).prop('data-webos-voice-group-label');
+
+				expect(actual).toBe(expected);
+			}
+		);
+
+		test(
+			'should render "data-webos-voice-disabled" to outermost node of VirtualList',
+			() => {
+				const subject = mount(
+					<VirtualList
+						cbScrollTo={getScrollTo}
+						clientSize={clientSize}
+						dataSize={dataSize}
+						itemRenderer={renderItem}
+						itemSize={30}
+						data-webos-voice-disabled
+					/>
+				);
+
+				const expected = true;
+				const actual = subject.find(`.${css.virtualList}`).prop('data-webos-voice-disabled');
 
 				expect(actual).toBe(expected);
 			}

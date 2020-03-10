@@ -2,6 +2,25 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.3.0-alpha.1] - 2020-02-26
+
+> Note: Moonstone was removed from the core Enact repository. It is now in its own repository at https://github.com/enactjs/moonstone/. Using Moonstone through npm has not changed.
+
+### Added
+
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` prop `scrollMode` is added.
+
+### Changed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `childProps` to `itemProps` for clarity.
+- `enact-sampler` to use common Enact Storybook configurations, addons, and utilities from `@enact/storybook-utils` helper package.
+
+### Fixed
+
+- `ui/Marquee` to not error when passed `null` `children` during an animation.
+- `ui/Button` to have more robust support for a customized `iconComponent` prop
+
+
 ## [3.2.5] - 2019-11-14
 
 ### Fixed

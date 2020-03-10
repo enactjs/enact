@@ -1,10 +1,11 @@
 import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
-import Button from '@enact/moonstone/Button';
-import Item from '@enact/moonstone/Item';
+import Item from '@enact/ui/Item';
 import Layout, {Cell} from '@enact/ui/Layout';
 import React from 'react';
 import ri from '@enact/ui/resolution';
 import {storiesOf} from '@storybook/react';
+
+import css from './Layout.module.less';
 
 Layout.displayName = 'Layout';
 Cell.displayName = 'Cell';
@@ -16,19 +17,20 @@ storiesOf('UI', module)
 			<div className="debug" style={{height: ri.unit(399, 'rem')}}>
 				<Layout
 					align={select('align', ['start', 'center', 'stretch', 'end'], Layout, 'start')}
+					className={css.layout}
 					orientation={select('orientation', ['horizontal', 'vertical'], Layout, 'horizontal')}
 				>
 					<Cell size={number('cell size', Cell, {range: true, min: 0, max: 300, step: 5}, 100) + 'px'} shrink>
-						<Button>First</Button>
+						<Item>First</Item>
 					</Cell>
 					<Cell shrink={boolean('shrinkable cell', Cell)}>
-						<Button>Second</Button>
+						<Item>Second</Item>
 					</Cell>
 					<Cell>
-						<Item>An auto-sizing Item that has a marquee so it will always show the full text string even if it&apos;s too long to fit</Item>
+						<Item>Third</Item>
 					</Cell>
 					<Cell shrink>
-						<Button>Last</Button>
+						<Item>Last</Item>
 					</Cell>
 				</Layout>
 			</div>

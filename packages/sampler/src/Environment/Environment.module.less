@@ -1,0 +1,61 @@
+// Environment.module.less
+//
+@import "~@enact/ui/styles/core.less";
+@import "~@enact/ui/styles/mixins.less";
+@import "../../src/styles/colors.less";
+@import "../../src/styles/variables.less";
+
+[data-reactroot] {
+	overflow: auto !important;
+	transition: none !important;
+}
+
+.environmentPanels {
+	padding: @app-outset;
+	background-color: @panels-bg-color;
+	font-family: Arial, Helvetica, sans-serif;
+
+	&::before {
+		content: "";
+		background: var(--env-background);
+		position: absolute;
+		.position(0);
+		filter: blur(3px);
+		opacity: 0.5;
+	}
+
+	.header {
+		font-size: @app-header-font-size;
+		font-weight: @app-header-font-weight;
+		margin-top: 0;
+	}
+
+	.description {
+		margin: 0 @app-outset 1em;
+
+		p:first-child {
+			margin-top: 0;
+		}
+	}
+
+	// Here, we target the storybook rendering canvas div. It's inserted as a child of our view,
+	// but it applies position:relative, which doesn't help us when we have stories that should fill
+	// the entire panel body. This targets that inaccessible node using storybook's structure to
+	// update that goofy rule to a rational one.
+	section > div:first-child {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+}
+
+// Fix for the +/- buttons
+html {
+	height: 100%;
+	margin: 0;
+}
+
+// Fix for margin added around zoom-area
+body {
+	margin: 0;
+}

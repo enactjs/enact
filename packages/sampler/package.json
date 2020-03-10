@@ -1,6 +1,6 @@
 {
   "name": "enact-sampler",
-  "version": "3.2.5",
+  "version": "3.3.0-alpha.2",
   "description": "Component and QA samples for Enact",
   "private": true,
   "main": "index.js",
@@ -8,21 +8,18 @@
     "lint": "enact lint --strict",
     "test": "echo \"No test suite\" && exit 0",
     "pack": "build-storybook -c .storybook -o dist",
-    "pack-qa": "build-storybook -c .qa-storybook -o dist",
-    "serve": "start-storybook -p 8080 -c .storybook --ci",
-    "serve-qa": "start-storybook -p 8080 -c .qa-storybook --ci"
+    "serve": "start-storybook -p 8080 -c .storybook --ci"
   },
   "license": "Apache-2.0",
   "eslintConfig": {
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^3.2.5",
-    "@enact/i18n": "^3.2.5",
-    "@enact/moonstone": "^3.2.5",
-    "@enact/spotlight": "^3.2.5",
-    "@enact/ui": "^3.2.5",
-    "@enact/webos": "^3.2.5",
+    "@enact/core": "^3.3.0-alpha.2",
+    "@enact/i18n": "^3.3.0-alpha.2",
+    "@enact/spotlight": "^3.3.0-alpha.2",
+    "@enact/ui": "^3.3.0-alpha.2",
+    "@enact/webos": "^3.3.0-alpha.2",
     "classnames": "^2.2.6",
     "ilib": "^14.4.0",
     "query-string": "^6.7.0",
