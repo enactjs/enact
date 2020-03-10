@@ -1616,10 +1616,10 @@ const useScroll = (props) => {
 
 	return {
 		...collectionOfProperties,
-		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible,
+		scrollContentWrapper,
 		scrollContentHandle,
-		scrollContentWrapper
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible
 	};
 };
 
