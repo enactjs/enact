@@ -260,14 +260,6 @@ class VirtualListBasic extends Component {
 		scrollMode: PropTypes.string,
 
 		/**
-		 * Setter of imperative handles for scroll content
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		setScrollContentHandle: PropTypes.func,
-
-		/**
 		 * The spacing between items.
 		 *
 		 * @type {Number}
@@ -316,8 +308,6 @@ class VirtualListBasic extends Component {
 			updateTo: 0,
 			...nextState
 		};
-
-		props.setScrollContentHandle(this);
 	}
 
 	static getDerivedStateFromProps (props, state) {
@@ -1207,10 +1197,8 @@ class VirtualListBasic extends Component {
 		delete rest.pageScroll;
 		delete rest.rtl;
 		delete rest.scrollContainerContainsDangerously;
-		delete rest.scrollContentHandle;
 		delete rest.scrollContentRef;
 		delete rest.scrollMode;
-		delete rest.setScrollContentHandle;
 		delete rest.setThemeScrollContentHandle;
 		delete rest.spacing;
 		delete rest.updateStatesAndBounds;

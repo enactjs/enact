@@ -64,21 +64,7 @@ class ScrollerBasic extends Component {
 		 * @type {Object}
 		 * @private
 		 */
-		scrollContentRef: PropTypes.object,
-
-		/**
-		 * Setter of imperative handles for scroll content
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		setScrollContentHandle: PropTypes.func
-	}
-
-	constructor (props) {
-		super(props);
-
-		props.setScrollContentHandle(this);
+		scrollContentRef: PropTypes.object
 	}
 
 	componentDidMount () {
@@ -189,10 +175,8 @@ class ScrollerBasic extends Component {
 		delete rest.isVerticalScrollbarVisible;
 		delete rest.rtl;
 		delete rest.scrollContainerContainsDangerously;
-		delete rest.scrollContentHandle;
 		delete rest.scrollContentRef;
 		delete rest.scrollMode;
-		delete rest.setScrollContentHandle;
 		delete rest.setThemeScrollContentHandle;
 
 		return (

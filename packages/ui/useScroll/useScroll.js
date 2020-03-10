@@ -25,7 +25,6 @@ import ri from '../resolution';
 import Touchable from '../Touchable';
 
 import ScrollAnimator from './ScrollAnimator';
-import {useScrollContentHandle} from './useScrollContentHandle';
 import utilDOM from './utilDOM';
 import utilEvent from './utilEvent';
 
@@ -105,7 +104,6 @@ const useScrollBase = (props) => {
 			scrollContentRef,
 			scrollMode,
 			setScrollContainerHandle,
-			setScrollContentHandle,
 			spacing,
 			verticalScrollbar,
 			verticalScrollbarRef,
@@ -375,6 +373,9 @@ const useScrollBase = (props) => {
 	}); // esline-disable-next-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
+		if (!props.itemRenderer) {
+			return;
+		}
 		const
 			{hasDataSizeChanged} = scrollContentHandle.current,
 			{prevState, resizeRegistry, scrollToInfo} = mutableRef.current;
@@ -412,7 +413,6 @@ const useScrollBase = (props) => {
 		if (horizontal || vertical) {
 			resizeRegistry.notify({});
 		}
-
 	}); // esline-disable-next-line react-hooks/exhaustive-deps
 
 	// scrollMode 'translate' [[
@@ -1508,8 +1508,7 @@ const useScrollBase = (props) => {
 		onScroll: scrollMode === 'translate' ? handleScroll : null,
 		rtl,
 		scrollContainerContainsDangerously,
-		scrollMode,
-		setScrollContentHandle
+		scrollMode
 	});
 
 	assignProperties('verticalScrollbarProps', {
@@ -1578,15 +1577,12 @@ const assignPropertiesOf = (instance) => (name, properties) => {
 const useScroll = (props) => {
 	// Mutable value
 
-	const scrollContainerRef = useRef(null);
-	const scrollContentRef = useRef();
+	const scrollContainerRef = useRef({});
+	const scrollContentHandle = useRef({});
+	const scrollContentRef = useRef({});
 	const itemRefs = useRef([]);
-	const horizontalScrollbarRef = useRef();
-	const verticalScrollbarRef = useRef();
-
-	// Adapters
-
-	const [scrollContentHandle, setScrollContentHandle] = useScrollContentHandle();
+	const horizontalScrollbarRef = useRef({});
+	const verticalScrollbarRef = useRef({});
 
 	// Hooks
 
@@ -1605,14 +1601,12 @@ const useScroll = (props) => {
 		scrollContainerRef,
 		scrollContentHandle,
 		scrollContentRef,
-		setScrollContentHandle,
 		verticalScrollbarRef
 	});
 
 	assignProperties('scrollContainerProps', {ref: scrollContainerRef});
 	assignProperties('scrollContentProps', {
 		...(props.itemRenderer ? {itemRefs} : {}),
-		scrollContentHandle,
 		scrollContentRef
 	});
 	assignProperties('verticalScrollbarProps', {ref: verticalScrollbarRef});
@@ -1624,6 +1618,7 @@ const useScroll = (props) => {
 		...collectionOfProperties,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
+		scrollContentHandle,
 		scrollContentWrapper
 	};
 };
