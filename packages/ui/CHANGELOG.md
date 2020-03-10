@@ -15,6 +15,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to show items properly when reducing data size by updating `firstIndex` correctly.
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` not to suddenly jump when pressing directional keys after wheeling.
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to show items properly when reducing data size.
 
 ## [3.3.0-alpha.1] - 2020-02-26
 
