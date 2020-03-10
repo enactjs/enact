@@ -185,6 +185,14 @@ class VirtualListBasic extends Component {
 		getComponentProps: PropTypes.func,
 
 		/**
+		 * Ref for items
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		itemRefs: PropTypes.object,
+
+		/**
 		 * The array for individually sized items.
 		 *
 		 * @type {Number[]}
@@ -293,7 +301,6 @@ class VirtualListBasic extends Component {
 		super(props);
 
 		this.contentRef = React.createRef();
-		this.itemContainerRef = React.createRef();
 
 		if (props.clientSize) {
 			this.calculateMetrics(props);
@@ -484,7 +491,8 @@ class VirtualListBasic extends Component {
 		if (this.props.scrollMode === 'native') {
 			this.scrollToPosition(x, y, rtl);
 		} else {
-			this.setScrollPosition(x, y, rtl, x, y);
+			this.setScrollPositionTarget (x, y);
+			this.setScrollPosition(x, y, rtl);
 		}
 	}
 
@@ -814,12 +822,6 @@ class VirtualListBasic extends Component {
 	// scrollMode 'native' only
 	scrollToPosition (x, y, rtl = this.props.rtl) {
 		if (this.props.scrollContentRef.current) {
-			if (this.isPrimaryDirectionVertical) {
-				this.scrollPositionTarget = y;
-			} else {
-				this.scrollPositionTarget = x;
-			}
-
 			if (rtl) {
 				x = (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
 			}
@@ -829,19 +831,21 @@ class VirtualListBasic extends Component {
 	}
 
 	// scrollMode 'translate' only
-	setScrollPosition (x, y, rtl = this.props.rtl, targetX = 0, targetY = 0) {
+	setScrollPositionTarget (x, y) {
+		// The `x`, `y` as parameters in scrollToPosition() are the position when stopping scrolling.
+		// But the `x`, `y` as parameters in setScrollPosition() are the position between current position and the position stopping scrolling.
+		// To know the position when stopping scrolling properly, `x` and `y` are passed and cached in `this.scrollPositionTarget`.
+		if (this.isPrimaryDirectionVertical) {
+			this.scrollPositionTarget = y;
+		} else {
+			this.scrollPositionTarget = x;
+		}
+	}
+
+	// scrollMode 'translate' only
+	setScrollPosition (x, y, rtl = this.props.rtl) {
 		if (this.contentRef.current) {
 			this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
-
-			// The `x`, `y` as parameters in scrollToPosition() are the position when stopping scrolling.
-			// But the `x`, `y` as parameters in setScrollPosition() are the position between current position and the position stopping scrolling.
-			// To know the position when stopping scrolling here, `targetX` and `targetY` are passed and cached in `this.scrollPositionTarget`.
-			if (this.isPrimaryDirectionVertical) {
-				this.scrollPositionTarget = targetY;
-			} else {
-				this.scrollPositionTarget = targetX;
-			}
-
 			this.didScroll(x, y);
 		}
 	}
@@ -950,10 +954,10 @@ class VirtualListBasic extends Component {
 	// For individually sized item
 	applyItemPositionToDOMElement (index) {
 		const
-			{direction, rtl} = this.props,
+			{direction, itemRefs, rtl} = this.props,
 			{numOfItems} = this.state,
 			{itemPositions} = this,
-			childNode = this.itemContainerRef.current.children[index % numOfItems];
+			childNode = itemRefs.current[index % numOfItems];
 
 		if (childNode && itemPositions[index]) {
 			const position = itemPositions[index].position;
@@ -1007,7 +1011,7 @@ class VirtualListBasic extends Component {
 
 	// For individually sized item
 	adjustItemPositionWithItemSize () {
-		if (this.itemContainerRef.current) {
+		if (this.cc.length) {
 			const
 				{dataSize} = this.props,
 				{firstIndex, numOfItems} = this.state,
@@ -1034,12 +1038,6 @@ class VirtualListBasic extends Component {
 		}
 	}
 
-	getItemNode = (index) => {
-		const ref = this.itemContainerRef.current;
-
-		return ref ? ref.children[index % this.state.numOfItems] : null;
-	}
-
 	composeStyle (width, height, primaryPosition, secondaryPosition) {
 		const
 			{x, y} = this.getXY(primaryPosition, secondaryPosition),
@@ -1058,20 +1056,35 @@ class VirtualListBasic extends Component {
 
 	applyStyleToNewNode = (index, ...rest) => {
 		const
-			{childProps, itemRenderer, getComponentProps} = this.props,
+			{childProps, itemRefs, itemRenderer, getComponentProps} = this.props,
 			key = index % this.state.numOfItems,
-			componentProps = getComponentProps && getComponentProps(index) || {};
+			componentProps = getComponentProps && getComponentProps(index) || {},
+			itemContainerRef = (ref) => {
+				if (ref === null) {
+					itemRefs.current[key] = ref;
+				} else {
+					const itemNode = ref.children[0];
+
+					itemRefs.current[key] = (parseInt(itemNode.dataset.index) === index) ?
+						itemNode :
+						ref.querySelector(`[data-index="${index}"]`);
+				}
+			};
 
 		this.cc[key] = (
-			<div className={css.listItem} key={key} style={this.composeStyle(...rest)}>
+			<div className={css.listItem} key={key} ref={itemContainerRef} style={this.composeStyle(...rest)}>
 				{itemRenderer({...childProps, ...componentProps, index})}
 			</div>
 		);
 	}
 
 	applyStyleToHideNode = (index) => {
-		const key = index % this.state.numOfItems;
-		this.cc[key] = <div key={key} style={{display: 'none'}} />;
+		const
+			{itemRefs} = this.props,
+			key = index % this.state.numOfItems,
+			itemContainerRef = () => (itemRefs.current[key] = null);
+
+		this.cc[key] = <div key={key} ref={itemContainerRef} style={{display: 'none'}} />;
 	}
 
 	positionItems () {
@@ -1172,7 +1185,7 @@ class VirtualListBasic extends Component {
 	render () {
 		const
 			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, scrollMode, ...rest} = this.props,
-			{cc, isPrimaryDirectionVertical, itemContainerRef, primary} = this,
+			{cc, isPrimaryDirectionVertical, primary} = this,
 			containerClasses = classNames(css.virtualList, isPrimaryDirectionVertical ? css.vertical : css.horizontal, scrollMode === 'native' ? css.native : null, className),
 			contentClasses = scrollMode === 'native' ? null : css.content;
 
@@ -1184,6 +1197,7 @@ class VirtualListBasic extends Component {
 		delete rest.getComponentProps;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
+		delete rest.itemRefs;
 		delete rest.itemRenderer;
 		delete rest.itemSize;
 		delete rest.itemSizes;
@@ -1208,7 +1222,7 @@ class VirtualListBasic extends Component {
 		return (
 			<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.props.scrollContentRef} style={style}>
 				<div {...rest} className={contentClasses} ref={this.contentRef}>
-					{itemsRenderer({cc, itemContainerRef, primary})}
+					{itemsRenderer({cc, primary})}
 				</div>
 			</div>
 		);
