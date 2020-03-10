@@ -3,188 +3,578 @@
  *
  * @module ui/VirtualList
  * @exports gridListImageSizeShape
+ * @exports itemSizesShape
  * @exports VirtualGridList
- * @exports VirtualGridListNative
  * @exports VirtualList
  * @exports VirtualListBase
- * @exports VirtualListBaseNative
- * @exports VirtualListNative
+ * @exports VirtualListBasic
  */
 
-import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {gridListItemSizeShape, itemSizesShape, ScrollableVirtualList, ScrollableVirtualListNative, VirtualListBase, VirtualListBaseNative} from './VirtualListBase';
+import {ResizeContext} from '../Resizable';
+import useScroll from '../useScroll';
+import Scrollbar from '../useScroll/Scrollbar';
+
+import {UiVirtualListBase, UiVirtualListBaseNative} from './UiVirtualListBase';
+import {gridListItemSizeShape, itemSizesShape, VirtualListBasic} from './VirtualListBasic';
+
+const nop = () => {};
 
 /**
  * An unstyled scrollable virtual list component with touch support.
  *
  * @class VirtualList
  * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBase
+ * @extends ui/VirtualList.VirtualListBasic
  * @ui
  * @public
  */
-const VirtualList = kind({
-	name: 'ui:VirtualList',
+const VirtualList = ({role, ...rest}) => {
+	// Hooks
 
-	propTypes: /** @lends ui/VirtualList.VirtualList.prototype */ {
-		/**
-		 * Size of an item for the `VirtualList`.
-		 *
-		 * Valid value is a number. If the direction for the list is vertical,
-		 * `itemSize` means the height of an item. For horizontal, it means the width of an item.
-		 *
-		 * Example:
-		 * ```
-		 * <VirtualList itemSize={ri.scale(72)} />
-		 * ```
-		 *
-		 * @type {Number}
-		 * @required
-		 * @public
-		 */
-		itemSize: PropTypes.number.isRequired
+	const {
+		scrollContentWrapper: ScrollContentWrapper,
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible,
+
+		resizeContextProps,
+		scrollContainerProps,
+		scrollInnerContainerProps,
+		scrollContentWrapperProps,
+		scrollContentProps,
+		verticalScrollbarProps,
+		horizontalScrollbarProps
+	} = useScroll(rest);
+
+	// Render
+
+	return (
+		<ResizeContext.Provider {...resizeContextProps}>
+			<div {...scrollContainerProps}>
+				<div {...scrollInnerContainerProps}>
+					<ScrollContentWrapper {...scrollContentWrapperProps}>
+						<VirtualListBasic
+							{...scrollContentProps}
+							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
+								cc.length ? <div role={role}>{cc}</div> : null
+							)}
+						/>
+					</ScrollContentWrapper>
+					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
+				</div>
+				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
+			</div>
+		</ResizeContext.Provider>
+	);
+};
+
+VirtualList.displayName = 'ui:VirtualList';
+
+VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
+	/**
+	 * A callback function that receives a reference to the `scrollTo` feature.
+	 *
+	 * Once received, the `scrollTo` method can be called as an imperative interface.
+	 *
+	 * The `scrollTo` function accepts the following parameters:
+	 * - {position: {x, y}} - Pixel value for x and/or y position
+	 * - {align} - Where the scroll area should be aligned. Values are:
+	 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
+	 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
+	 * - {index} - Index of specific item. (`0` or positive integer)
+	 *   This option is available for only `VirtualList` kind.
+	 * - {node} - Node to scroll into view
+	 * - {animate} - When `true`, scroll occurs with animation. When `false`, no
+	 *   animation occurs.
+	 * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
+	 *   by `index` or `node`.
+	 * > Note: Only specify one of: `position`, `align`, `index` or `node`
+	 *
+	 * Example:
+	 * ```
+	 *	// If you set cbScrollTo prop like below;
+	 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
+	 *	// You can simply call like below;
+	 *	this.scrollTo({align: 'top'}); // scroll to the top
+	 * ```
+	 *
+	 * @type {Function}
+	 * @public
+	 */
+	cbScrollTo: PropTypes.func,
+
+	/**
+	 * The layout direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	/**
+	 * Specifies how to show horizontal scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+
+	/**
+	 * Prevents scroll by dragging or flicking on the list.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @private
+	 */
+	noScrollByDrag: PropTypes.bool,
+
+	/**
+	 * Prevents scroll by wheeling on the list.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 */
+	noScrollByWheel: PropTypes.bool,
+
+	/**
+	 * Called when scrolling.
+	 *
+	 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+	 * It is not recommended to set this prop since it can cause performance degradation.
+	 * Use `onScrollStart` or `onScrollStop` instead.
+	 *
+	 * @type {Function}
+	 * @param {Object} event
+	 * @param {Number} event.scrollLeft Scroll left value.
+	 * @param {Number} event.scrollTop Scroll top value.
+	 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+	 * @public
+	 */
+	onScroll: PropTypes.func,
+
+	/**
+	 * Called when scroll starts.
+	 *
+	 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+	 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
+	 *
+	 * Example:
+	 * ```
+	 * onScrollStart = ({scrollLeft, scrollTop, moreInfo}) => {
+	 *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+	 *     // do something with firstVisibleIndex and lastVisibleIndex
+	 * }
+	 *
+	 * render = () => (
+	 *     <VirtualList
+	 *         ...
+	 *         onScrollStart={this.onScrollStart}
+	 *         ...
+	 *     />
+	 * )
+	 * ```
+	 *
+	 * @type {Function}
+	 * @param {Object} event
+	 * @param {Number} event.scrollLeft Scroll left value.
+	 * @param {Number} event.scrollTop Scroll top value.
+	 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+	 * @public
+	 */
+	onScrollStart: PropTypes.func,
+
+	/**
+	 * Called when scroll stops.
+	 *
+	 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+	 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
+	 *
+	 * Example:
+	 * ```
+	 * onScrollStop = ({scrollLeft, scrollTop, moreInfo}) => {
+	 *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+	 *     // do something with firstVisibleIndex and lastVisibleIndex
+	 * }
+	 *
+	 * render = () => (
+	 *     <VirtualList
+	 *         ...
+	 *         onScrollStop={this.onScrollStop}
+	 *         ...
+	 *     />
+	 * )
+	 * ```
+	 *
+	 * @type {Function}
+	 * @param {Object} event
+	 * @param {Number} event.scrollLeft Scroll left value.
+	 * @param {Number} event.scrollTop Scroll top value.
+	 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+	 * @public
+	 */
+	onScrollStop: PropTypes.func,
+
+	/**
+	 * Specifies overscroll effects shows on which type of inputs.
+	 *
+	 * @type {Object}
+	 * @default {drag: false, pageKey: false, wheel: false}
+	 * @private
+	 */
+	overscrollEffectOn: PropTypes.shape({
+		drag: PropTypes.bool,
+		pageKey: PropTypes.bool,
+		wheel: PropTypes.bool
+	}),
+
+	/**
+	 * The ARIA role for the list.
+	 *
+	 * @type {String}
+	 * @default 'list'
+	 * @public
+	 */
+	role: PropTypes.string,
+
+	/**
+	 * Specifies how to scroll.
+	 *
+	 * Valid values are:
+	 * * `'translate'`,
+	 * * `'native'`.
+	 *
+	 * @type {String}
+	 * @default 'translate'
+	 * @public
+	 */
+	scrollMode: PropTypes.string,
+
+	/**
+	 * Specifies how to show vertical scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
+};
+
+VirtualList.defaultProps = {
+	cbScrollTo: nop,
+	direction: 'vertical',
+	horizontalScrollbar: 'auto',
+	noScrollByDrag: false,
+	noScrollByWheel: false,
+	onScroll: nop,
+	onScrollStart: nop,
+	onScrollStop: nop,
+	overscrollEffectOn: {
+		drag: false,
+		pageKey: false,
+		wheel: false
 	},
-
-	render: (props) => (
-		<ScrollableVirtualList {...props} />
-	)
-});
+	role: 'list',
+	scrollMode: 'translate',
+	verticalScrollbar: 'auto'
+};
 
 /**
  * An unstyled scrollable virtual grid list component with touch support.
  *
  * @class VirtualGridList
  * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBase
+ * @extends ui/VirtualList.VirtualListBasic
  * @ui
  * @public
  */
-const VirtualGridList = kind({
-	name: 'ui:VirtualGridList',
+const VirtualGridList = ({role, ...rest}) => {
+	const {
+		scrollContentWrapper: ScrollContentWrapper,
+		isHorizontalScrollbarVisible,
+		isVerticalScrollbarVisible,
 
-	propTypes: /** @lends ui/VirtualList.VirtualGridList.prototype */ {
-		/**
-		 * Size of an item for the `VirtualGridList`.
-		 *
-		 * * Valid value is an object that has `minWidth` and `minHeight` as properties.
-		 *
-		 * Example:
-		 * ```
-		 * <VirtualGridList
-		 * 	itemSize={{
-		 * 		minWidth: ri.scale(180),
-		 * 		minHeight: ri.scale(270)
-		 * 	}}
-		 * />
-		 * ```
-		 *
-		 * @type {ui/VirtualList.gridListItemSizeShape}
-		 * @required
-		 * @public
-		 */
-		itemSize: gridListItemSizeShape.isRequired
+		resizeContextProps,
+		scrollContainerProps,
+		scrollInnerContainerProps,
+		scrollContentWrapperProps,
+		scrollContentProps,
+		verticalScrollbarProps,
+		horizontalScrollbarProps
+	} = useScroll(rest);
+
+	return (
+		<ResizeContext.Provider {...resizeContextProps}>
+			<div {...scrollContainerProps}>
+				<div {...scrollInnerContainerProps}>
+					<ScrollContentWrapper {...scrollContentWrapperProps}>
+						<VirtualListBasic
+							{...scrollContentProps}
+							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
+								cc.length ? <div role={role}>{cc}</div> : null
+							)}
+						/>
+					</ScrollContentWrapper>
+					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
+				</div>
+				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
+			</div>
+		</ResizeContext.Provider>
+	);
+};
+
+VirtualGridList.displayName = 'ui:VirtualGridList';
+
+VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype */ {
+	/**
+	 * A callback function that receives a reference to the `scrollTo` feature.
+	 *
+	 * Once received, the `scrollTo` method can be called as an imperative interface.
+	 *
+	 * The `scrollTo` function accepts the following parameters:
+	 * - {position: {x, y}} - Pixel value for x and/or y position
+	 * - {align} - Where the scroll area should be aligned. Values are:
+	 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
+	 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
+	 * - {index} - Index of specific item. (`0` or positive integer)
+	 *   This option is available for only `VirtualList` kind.
+	 * - {node} - Node to scroll into view
+	 * - {animate} - When `true`, scroll occurs with animation. When `false`, no
+	 *   animation occurs.
+	 * - {focus} - When `true`, attempts to focus item after scroll. Only valid when scrolling
+	 *   by `index` or `node`.
+	 * > Note: Only specify one of: `position`, `align`, `index` or `node`
+	 *
+	 * Example:
+	 * ```
+	 *	// If you set cbScrollTo prop like below;
+	 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
+	 *	// You can simply call like below;
+	 *	this.scrollTo({align: 'top'}); // scroll to the top
+	 * ```
+	 *
+	 * @type {Function}
+	 * @public
+	 */
+	cbScrollTo: PropTypes.func,
+
+	/**
+	 * The layout direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	/**
+	 * Specifies how to show horizontal scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
+
+	/**
+	 * Prevents scroll by dragging or flicking on the list.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @private
+	 */
+	noScrollByDrag: PropTypes.bool,
+
+	/**
+	 * Prevents scroll by wheeling on the list.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 */
+	noScrollByWheel: PropTypes.bool,
+
+	/**
+	 * Called when scrolling.
+	 *
+	 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+	 * It is not recommended to set this prop since it can cause performance degradation.
+	 * Use `onScrollStart` or `onScrollStop` instead.
+	 *
+	 * @type {Function}
+	 * @param {Object} event
+	 * @param {Number} event.scrollLeft Scroll left value.
+	 * @param {Number} event.scrollTop Scroll top value.
+	 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+	 * @public
+	 */
+	onScroll: PropTypes.func,
+
+	/**
+	 * Called when scroll starts.
+	 *
+	 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+	 * You can get firstVisibleIndex and lastVisibleIndex from VirtualGridList with `moreInfo`.
+	 *
+	 * Example:
+	 * ```
+	 * onScrollStart = ({scrollLeft, scrollTop, moreInfo}) => {
+	 *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+	 *     // do something with firstVisibleIndex and lastVisibleIndex
+	 * }
+	 *
+	 * render = () => (
+	 *     <VirtualGridList
+	 *         ...
+	 *         onScrollStart={this.onScrollStart}
+	 *         ...
+	 *     />
+	 * )
+	 * ```
+	 *
+	 * @type {Function}
+	 * @param {Object} event
+	 * @param {Number} event.scrollLeft Scroll left value.
+	 * @param {Number} event.scrollTop Scroll top value.
+	 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+	 * @public
+	 */
+	onScrollStart: PropTypes.func,
+
+	/**
+	 * Called when scroll stops.
+	 *
+	 * Passes `scrollLeft`, `scrollTop`, and `moreInfo`.
+	 * You can get firstVisibleIndex and lastVisibleIndex from VirtualList with `moreInfo`.
+	 *
+	 * Example:
+	 * ```
+	 * onScrollStop = ({scrollLeft, scrollTop, moreInfo}) => {
+	 *     const {firstVisibleIndex, lastVisibleIndex} = moreInfo;
+	 *     // do something with firstVisibleIndex and lastVisibleIndex
+	 * }
+	 *
+	 * render = () => (
+	 *     <VirtualGridList
+	 *         ...
+	 *         onScrollStop={this.onScrollStop}
+	 *         ...
+	 *     />
+	 * )
+	 * ```
+	 *
+	 * @type {Function}
+	 * @param {Object} event
+	 * @param {Number} event.scrollLeft Scroll left value.
+	 * @param {Number} event.scrollTop Scroll top value.
+	 * @param {Object} event.moreInfo The object including `firstVisibleIndex` and `lastVisibleIndex` properties.
+	 * @public
+	 */
+	onScrollStop: PropTypes.func,
+
+	/**
+	 * Specifies overscroll effects shows on which type of inputs.
+	 *
+	 * @type {Object}
+	 * @default {drag: false, pageKey: false, wheel: false}
+	 * @private
+	 */
+	overscrollEffectOn: PropTypes.shape({
+		drag: PropTypes.bool,
+		pageKey: PropTypes.bool,
+		wheel: PropTypes.bool
+	}),
+
+	/**
+	 * The ARIA role for the list.
+	 *
+	 * @type {String}
+	 * @default 'list'
+	 * @public
+	 */
+	role: PropTypes.string,
+
+	/**
+	 * Specifies how to scroll.
+	 *
+	 * Valid values are:
+	 * * `'translate'`,
+	 * * `'native'`.
+	 *
+	 * @type {String}
+	 * @default 'translate'
+	 * @public
+	 */
+	scrollMode: PropTypes.string,
+
+	/**
+	 * Specifies how to show vertical scrollbar.
+	 *
+	 * Valid values are:
+	 * * `'auto'`,
+	 * * `'visible'`, and
+	 * * `'hidden'`.
+	 *
+	 * @type {String}
+	 * @default 'auto'
+	 * @public
+	 */
+	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
+};
+
+VirtualGridList.defaultProps = {
+	cbScrollTo: nop,
+	direction: 'vertical',
+	horizontalScrollbar: 'auto',
+	noScrollByDrag: false,
+	noScrollByWheel: false,
+	onScroll: nop,
+	onScrollStart: nop,
+	onScrollStop: nop,
+	overscrollEffectOn: {
+		drag: false,
+		pageKey: false,
+		wheel: false
 	},
-
-	render: (props) => (
-		<ScrollableVirtualList {...props} />
-	)
-});
-
-/**
- * An unstyled scrollable virtual native list component with touch support.
- *
- * For smooth native scrolling, web engine with below Chromium 61, should be launched
- * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
- * The one with Chromium 61 or above, is launched to support it by default.
- *
- * @class VirtualListNative
- * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBaseNative
- * @ui
- * @private
- */
-const VirtualListNative = kind({
-	name: 'ui:VirtualListNative',
-
-	propTypes: /** @lends ui/VirtualList.VirtualListNative.prototype */ {
-		/**
-		 * Size of an item for the `VirtualList`.
-		 *
-		 * If the direction for the list is vertical, `itemSize` means the height of an item.
-		 * For `horizontal`, it means the width of an item.
-		 *
-		 * Example:
-		 * ```
-		 * <VirtualListNative itemSize={ri.scale(72)} />
-		 * ```
-		 *
-		 * @type {Number}
-		 * @required
-		 * @public
-		 */
-		itemSize: PropTypes.number.isRequired
-	},
-
-	render: (props) => (
-		<ScrollableVirtualListNative {...props} />
-	)
-});
-
-/**
- * An unstyled scrollable virtual native grid list component with touch support.
- *
- * For smooth native scrolling, web engine with below Chromium 61, should be launched
- * with the flag '--enable-blink-features=CSSOMSmoothScroll' to support it.
- * The one with Chromium 61 or above, is launched to support it by default.
- *
- * @class VirtualGridListNative
- * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBaseNative
- * @ui
- * @private
- */
-const VirtualGridListNative = kind({
-	name: 'ui:VirtualGridListNative',
-
-	propTypes: /** @lends ui/VirtualList.VirtualGridListNative.prototype */ {
-		/**
-		 * Size of an item for the `VirtualGridList`
-		 *
-		 * * Valid value is an object that has `minWidth` and `minHeight` as properties.
-		 *
-		 * Example:
-		 * ```
-		 * <VirtualGridListNative
-		 * 	itemSize={{
-		 * 		minWidth: ri.scale(180),
-		 * 		minHeight: ri.scale(270)
-		 * 	}}
-		 * />
-		 * ```
-		 *
-		 * @type {ui/VirtualList.gridListItemSizeShape}
-		 * @required
-		 * @public
-		 */
-		itemSize: gridListItemSizeShape.isRequired
-	},
-
-	render: (props) => (
-		<ScrollableVirtualListNative {...props} />
-	)
-});
+	role: 'list',
+	scrollMode: 'translate',
+	verticalScrollbar: 'auto'
+};
 
 export default VirtualList;
 export {
 	gridListItemSizeShape,
 	itemSizesShape,
+	UiVirtualListBase as VirtualListBase, // to support legacy VirtualListBase
+	UiVirtualListBaseNative as VirtualListBaseNative, // to support legacy VirtualListBaseNative
 	VirtualGridList,
-	VirtualGridListNative,
 	VirtualList,
-	VirtualListBase,
-	VirtualListBaseNative,
-	VirtualListNative
+	VirtualListBasic
 };

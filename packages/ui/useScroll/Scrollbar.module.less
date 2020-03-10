@@ -1,0 +1,35 @@
+.scrollbar {
+	background: inherit;
+	display: flex;
+	border-color: transparent;
+	visibility: visible;
+	opacity: 1;
+	flex: none;
+
+	transform: translateZ(0);
+	-webkit-transform: translateZ(0);
+	transition: opacity 0.1s linear;
+	-moz-transition: opacity 0.1s linear;
+	-webkit-transition: opacity 0.1s linear;
+
+	&.vertical {
+		flex-direction: column;
+	}
+
+	&.horizontal {
+		:global(.enact-locale-right-to-left) & {
+			// Flip the entire bar horizontally in RTL mode, and force it to remain in LTR.
+			direction: ltr;
+			transform: scaleX(-1);
+		}
+	}
+
+	&.corner {
+		-webkit-padding-end: 3px;
+	}
+
+	/* ScrollThumb */
+	.thumbShown {
+		opacity: 1;
+	}
+}

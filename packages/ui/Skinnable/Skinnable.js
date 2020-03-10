@@ -2,8 +2,8 @@
  * A higher-order component for customizing the visual appearance throughout an application.
  *
  * This is the base-level implementation of this component. It will typically never be accessed
- * directly, and only be instantiated with a configuration once inside a visual library like
- * {@link moonstone/Skinnable}. Interface libraries will supply a set of supported skins which will
+ * directly, and only be instantiated with a configuration once inside a visual library.
+ * Interface libraries will supply a set of supported skins which will
  * be accessible to their components.
  *
  * @module ui/Skinnable

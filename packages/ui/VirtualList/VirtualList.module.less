@@ -1,27 +1,38 @@
+// VirtualList.module.less
+//
+
 .virtualList {
 	position: relative;
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
 
-	&.vertical {
-		overflow-y: scroll;
-	}
-
-	&.horizontal {
-		overflow-x: scroll;
-	}
-
-	.listItem {
-		overflow: hidden;
-		width: 100%;
-
-		will-change: transform;
-	}
-	
 	.content {
 		will-change: transform;
 	}
+}
+
+.vertical {
+	&.native {
+		overflow-y: scroll;
+	}
+	.listItem {
+		width: 100%;
+	}
+}
+
+.horizontal {
+	&.native {
+		overflow-x: scroll;
+	}
+	.listItem {
+		height: 100%;
+	}
+}
+
+.listItem {
+	position: absolute;
+	will-change: transform;
 }
 
 .virtualList::-webkit-scrollbar {
