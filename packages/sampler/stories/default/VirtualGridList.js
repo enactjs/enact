@@ -27,6 +27,7 @@ const
 				{...rest}
 				caption={text}
 				source={source}
+				style={{width: '100%'}}
 				subCaption={subText}
 			/>
 		);
