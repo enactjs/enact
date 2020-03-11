@@ -1580,6 +1580,7 @@ const useScroll = (props) => {
 
 	const scrollContainerRef = useRef(null);
 	const scrollContentRef = useRef();
+	const itemRefs = useRef([]);
 	const horizontalScrollbarRef = useRef();
 	const verticalScrollbarRef = useRef();
 
@@ -1609,7 +1610,11 @@ const useScroll = (props) => {
 	});
 
 	assignProperties('scrollContainerProps', {ref: scrollContainerRef});
-	assignProperties('scrollContentProps', {scrollContentHandle, scrollContentRef});
+	assignProperties('scrollContentProps', {
+		...(props.itemRenderer ? {itemRefs} : {}),
+		scrollContentHandle,
+		scrollContentRef
+	});
 	assignProperties('verticalScrollbarProps', {ref: verticalScrollbarRef});
 	assignProperties('horizontalScrollbarProps', {ref: horizontalScrollbarRef});
 
