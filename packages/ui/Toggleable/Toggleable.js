@@ -150,7 +150,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: props.disabled,
 			// FIX: Current behavior for Toggleable treats `null` as undefined so we coerce it here
 			// to maintain that behavior while using useControlledState
-			selected: props[prop] == null ? undefined : props[prop],
+			selected: props[prop] == null ? undefined : props[prop], // eslint-disable-line no-undefined
 			defaultSelected: props[defaultPropKey],
 			onToggle: (ev) => forwardToggle(ev, props)
 		});
@@ -165,19 +165,19 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		if (toggleProp || toggle) {
 			updated[toggleProp || toggle] = (ev) => {
-				if (hook.onToggle()) forwardToggleProp(ev, props);
+				if (hook.toggle()) forwardToggleProp(ev, props);
 			};
 		}
 
 		if (activate) {
 			updated[activate] = (ev) => {
-				if (hook.onActivate()) forwardActivate(ev, props);
+				if (hook.activate()) forwardActivate(ev, props);
 			};
 		}
 
 		if (deactivate) {
 			updated[deactivate] = (ev) => {
-				if (hook.onDeactivate()) forwardDeactivate(ev, props);
+				if (hook.deactivate()) forwardDeactivate(ev, props);
 			};
 		}
 
