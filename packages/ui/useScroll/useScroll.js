@@ -373,9 +373,6 @@ const useScrollBase = (props) => {
 	}); // esline-disable-next-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		if (!props.itemRenderer) {
-			return;
-		}
 		const
 			{hasDataSizeChanged} = scrollContentHandle.current,
 			{prevState, resizeRegistry, scrollToInfo} = mutableRef.current;
