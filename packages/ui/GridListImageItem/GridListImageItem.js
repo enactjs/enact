@@ -188,10 +188,11 @@ const GridListImageItem = kind({
 		},
 		subComponents: ({caption, captionComponent: Caption, css, subCaption, subComponents}) => {
 			return (
-				subComponents ? subComponents : [
-					caption ? (<Cell className={css.caption} component={Caption} shrink key={'caption'}>{caption}</Cell>) : null,
-					subCaption ? (<Cell className={css.subCaption} component={Caption} shrink key={'subCaption'}>{subCaption}</Cell>) : null
-				]
+				subComponents ? subComponents :
+				<React.Fragment>
+					{caption ? (<Cell className={css.caption} component={Caption} shrink>{caption}</Cell>) : null}
+					{subCaption ? (<Cell className={css.subCaption} component={Caption} shrink>{subCaption}</Cell>) : null}
+				</React.Fragment>
 			);
 		}
 	},
