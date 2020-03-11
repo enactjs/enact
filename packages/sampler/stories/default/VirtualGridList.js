@@ -67,7 +67,7 @@ storiesOf('UI', module)
 				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, VirtualGridListConfig)}
 				itemRenderer={uiRenderItem}
 				itemSize={{
-					minWidth: ri.scale(number('minWidth', VirtualGridListConfig, 180)),
+					minWidth: ri.scale(number('minWidth', VirtualGridListConfig, 100)),
 					minHeight: ri.scale(number('minHeight', VirtualGridListConfig, 270))
 				}}
 				noScrollByWheel={boolean('noScrollByWheel', VirtualGridListConfig)}

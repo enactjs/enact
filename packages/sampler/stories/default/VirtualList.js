@@ -8,9 +8,7 @@ import {storiesOf} from '@storybook/react';
 import {VirtualList, VirtualListBasic} from '@enact/ui/VirtualList';
 
 const
-	prop = {
-		scrollbarOption: ['auto', 'hidden', 'visible']
-	},
+	prop = {scrollbarOption: ['auto', 'hidden', 'visible']},
 	items = [],
 	defaultDataSize = 1000,
 	// eslint-disable-next-line enact/prop-types, enact/display-name
