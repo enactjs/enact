@@ -27,6 +27,7 @@ const
 				{...rest}
 				caption={text}
 				source={source}
+				style={{width: '100%'}}
 				subCaption={subText}
 			/>
 		);
@@ -67,7 +68,7 @@ storiesOf('UI', module)
 				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, VirtualGridListConfig)}
 				itemRenderer={uiRenderItem}
 				itemSize={{
-					minWidth: ri.scale(number('minWidth', VirtualGridListConfig, 100)),
+					minWidth: ri.scale(number('minWidth', VirtualGridListConfig, 180)),
 					minHeight: ri.scale(number('minHeight', VirtualGridListConfig, 270))
 				}}
 				noScrollByWheel={boolean('noScrollByWheel', VirtualGridListConfig)}
