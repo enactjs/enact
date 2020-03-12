@@ -41,6 +41,7 @@ const setCSSVariable = (element, variable, value) => {
  * @private
  */
 const ScrollbarBase = memo(forwardRef((props, ref) => {
+	console.log("ui/ScrollbarBase start==============================");
 	// Refs
 	const uiScrollbarContainerRef = useRef();
 	const thumbRef = useRef();
@@ -64,7 +65,9 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 	}
 
 	useEffect(() => {
+		console.log("ui/ScrollbarBase useEffect1 nothing");
 		return () => {
+			console.log("ui/ScrollbarBase useEffect1 cleanup hideThumbjob stop");
 			hideThumbJob.current.stop();
 		};
 	}, []);
@@ -95,6 +98,7 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 		}
 	}));
 
+	console.log("ui/ScrollbarBase render");
 	return (
 		<div {...rest} className={containerClassName} ref={uiScrollbarContainerRef}>
 			{childRenderer({thumbRef})}
@@ -197,6 +201,7 @@ const Scrollbar = forwardRef((props, ref) => {
 		};
 	}, [scrollbarBaseRef]);
 
+	console.log("ui/Scrollbar render");
 	return (
 		<ScrollbarBase
 			{...props}
