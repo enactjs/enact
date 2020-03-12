@@ -8,7 +8,10 @@ import {storiesOf} from '@storybook/react';
 import {VirtualList, VirtualListBasic} from '@enact/ui/VirtualList';
 
 const
-	prop = {scrollbarOption: ['auto', 'hidden', 'visible']},
+	prop = {
+		scrollbarOption: ['auto', 'hidden', 'visible'],
+		scrollModeOption: ['native', 'translate']
+	},
 	items = [],
 	defaultDataSize = 1000,
 	// eslint-disable-next-line enact/prop-types, enact/display-name
@@ -54,9 +57,11 @@ storiesOf('UI', module)
 					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, VirtualListConfig)}
 					itemRenderer={uiRenderItem(ri.scale(number('itemSize', VirtualListConfig, 72)))}
 					itemSize={ri.scale(number('itemSize', VirtualListConfig, 72))}
+					key={select('scrollMode', prop.scrollModeOption, VirtualListConfig)}
 					noScrollByWheel={boolean('noScrollByWheel', VirtualListConfig)}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
+					scrollMode={select('scrollMode', prop.scrollModeOption, VirtualListConfig)}
 					spacing={ri.scale(number('spacing', VirtualListConfig))}
 					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, VirtualListConfig)}
 				/>

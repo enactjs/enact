@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `ui/VirtualList.VirtualList`, `ui/VirtualList.VirtualGridList` and `ui/Scroller.Scroller` samplers have been updated based on current VirtualList and Scroller APIs
+
 ## [3.3.0-alpha.2] - 2020-03-09
 
 ### Changed
