@@ -17,4 +17,48 @@ describe('useControlledState', () => {
 
 		expect(actual).toBe(expected);
 	});
+
+	test('should not change default value', () => {
+		const subject = shallow(<Component defaultValue="abc" />);
+
+		subject.setProps({defaultValue: 'def'});
+
+		const expected = 'abc';
+		const actual = subject.find('div').prop('children');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should not change uncontrolled setting', () => {
+		const subject = shallow(<Component defaultValue="abc" />);
+
+		subject.setProps({defaultValue: null, value: 'def'});
+
+		const expected = 'abc';
+		const actual = subject.find('div').prop('children');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should update controlled value', () => {
+		const subject = shallow(<Component value="abc" />);
+
+		subject.setProps({value: 'def'});
+
+		const expected = 'def';
+		const actual = subject.find('div').prop('children');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should not change controlled setting', () => {
+		const subject = shallow(<Component value="abc" />);
+
+		subject.setProps({defaultValue: 'def', value: 'ghi'});
+
+		const expected = 'ghi';
+		const actual = subject.find('div').prop('children');
+
+		expect(actual).toBe(expected);
+	});
 });
