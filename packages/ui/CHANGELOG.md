@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/styles/mixins.less` `.position()` support for list-style arguments, in addition to the existing separated arguments
+
 ## [3.3.0-alpha.2] - 2020-03-09
 
 ### Changed
