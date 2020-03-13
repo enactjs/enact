@@ -77,7 +77,6 @@ const useForceUpdate = () => (useReducer(x => x + 1, 0));
  * @private
  */
 const useScrollBase = (props) => {
-	console.log("ui/useScrollBase start==================");
 	const
 		{
 			childProps,
@@ -215,7 +214,6 @@ const useScrollBase = (props) => {
 	}
 
 	useLayoutEffect(() => {
-		console.log("ui/useScrollBase useLayoutEffect1 setScrollContainerHandle");
 		if (setScrollContainerHandle) {
 			setScrollContainerHandle({
 				animator: mutableRef.current.animator,
@@ -286,19 +284,16 @@ const useScrollBase = (props) => {
 	});
 
 	useLayoutEffect(() => {
-		console.log("ui/useScrollBase useLayoutEffect2 cbScrollTo");
 		if (props.cbScrollTo) {
 			props.cbScrollTo(scrollTo);
 		}
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		console.log("ui/useScrollBase useEffect1 resizeRegistry");
 		mutableRef.current.resizeRegistry.parent = context;
 
 		// componentWillUnmount
 		return () => {
-			console.log("ui/useScrollBase useEffect1 cleanup");
 			const {animator, resizeRegistry, scrolling, scrollStopJob} = mutableRef.current; // eslint-disable-line react-hooks/exhaustive-deps
 
 			resizeRegistry.parent = null;
@@ -320,10 +315,8 @@ const useScrollBase = (props) => {
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		console.log("ui/useScrollBase useEffect2 addEventListeners");
 		addEventListeners();
 		return () => {
-			console.log("ui/useScrollBase useEffect2 cleanup removeEventListeners");
 			removeEventListeners();
 		};
 	});
@@ -368,7 +361,6 @@ const useScrollBase = (props) => {
 	}
 
 	useEffect(() => {
-		console.log("ui/useScrollBase useEffect3 scrollStopJob");
 		const ref = mutableRef.current;
 
 		if (scrollMode === 'translate') {
@@ -378,13 +370,11 @@ const useScrollBase = (props) => {
 		}
 
 		return () => {
-			console.log("ui/useScrollBase useEffect3 cleanup scrollStopJob");
 			ref.scrollStopJob.stop();
 		};
 	}); // esline-disable-next-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		console.log("ui/useScrollBase useEffect4 updateScrollbars");
 		const
 			{hasDataSizeChanged} = scrollContentHandle.current,
 			{prevState, resizeRegistry, scrollToInfo} = mutableRef.current;
@@ -1548,7 +1538,6 @@ const useScrollBase = (props) => {
 		isVerticalScrollbarVisible
 	};
 
-	console.log("ui/useScrollBase end==============================");
 	return {
 		scrollContentWrapper: noScrollByDrag ? 'div' : TouchableDiv,
 		isHorizontalScrollbarVisible,
@@ -1588,7 +1577,7 @@ const assignPropertiesOf = (instance) => (name, properties) => {
 
 const useScroll = (props) => {
 	// Mutable value
-	console.log("ui/useScroll start==============================");
+
 	const scrollContainerRef = useRef(null);
 	const scrollContentRef = useRef();
 	const itemRefs = useRef([]);
@@ -1630,7 +1619,7 @@ const useScroll = (props) => {
 	assignProperties('horizontalScrollbarProps', {ref: horizontalScrollbarRef});
 
 	// Return
-	console.log("ui/useScroll end==============================");
+
 	return {
 		...collectionOfProperties,
 		isHorizontalScrollbarVisible,

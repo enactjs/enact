@@ -321,8 +321,6 @@ class VirtualListBasic extends Component {
 	}
 
 	constructor (props) {
-		console.log("ui/VirtualListBasic constructor");
-
 		let nextState = null;
 
 		super(props);
@@ -367,7 +365,6 @@ class VirtualListBasic extends Component {
 
 	// Calculate metrics for VirtualList after the 1st render to know client W/H.
 	componentDidMount () {
-		console.log("ui/VirtualListBasic componnentDidMount");
 		if (!this.props.clientSize) {
 			this.calculateMetrics(this.props);
 			// eslint-disable-next-line react/no-did-mount-set-state
@@ -384,7 +381,6 @@ class VirtualListBasic extends Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		console.log("ui/VirtualListBasic componnentDidUpdate");
 		let deferScrollTo = false;
 		const {firstIndex, numOfItems} = this.state;
 
@@ -1211,7 +1207,6 @@ class VirtualListBasic extends Component {
 	// render
 
 	render () {
-		console.log("ui/VirtualListBasic render==============================");
 		const
 			{className, css: themeCss, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, scrollMode, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, primary} = this,
