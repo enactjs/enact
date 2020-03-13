@@ -49,7 +49,7 @@ const VirtualList = ({role, ...rest}) => {
 	} = useScroll(rest);
 
 	// Render
-
+	console.log("ui/VirtualList render");
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
 			<div {...scrollContainerProps}>
