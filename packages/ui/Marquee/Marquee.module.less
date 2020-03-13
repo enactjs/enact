@@ -27,6 +27,7 @@
 		transition-property: left, right;
 		transition-timing-function: linear;
 		position: relative;
+		text-indent: 0.06em;  // Fix for characters like `j` being left-truncated because of being too close to the edge
 
 		&.willAnimate {
 			will-change: left, right;
