@@ -142,8 +142,10 @@ const useScrollBase = (props) => {
 
 	const context = useContext(ResizeContext);
 
-	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
-	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
+	//const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
+	//const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
+	let isHorizontalScrollbarVisible = (horizontalScrollbar === 'visible');
+	let isVerticalScrollbarVisible = (verticalScrollbar === 'visible');
 
 	const mutableRef = useRef({
 		overscrollEnabled: !!(props.applyOverscrollEffect),
@@ -404,6 +406,7 @@ const useScrollBase = (props) => {
 			hasDataSizeChanged === false &&
 			(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
 		) {
+
 			mutableRef.current.deferScrollTo = false;
 			mutableRef.current.isUpdatedScrollThumb = updateScrollThumbSize();
 		} else {
@@ -1345,11 +1348,19 @@ const useScrollBase = (props) => {
 				isHorizontalScrollbarVisible !== curHorizontalScrollbarVisible ||
 				isVerticalScrollbarVisible !== curVerticalScrollbarVisible
 			);
-
+		console.log("isVisibilityChanged?", isVisibilityChanged);
 		if (isVisibilityChanged) {
 			// one or both scrollbars have changed visibility
-			setIsHorizontalScrollbarVisible(curHorizontalScrollbarVisible);
-			setIsVerticalScrollbarVisible(curVerticalScrollbarVisible);
+			isHorizontalScrollbarVisible = curHorizontalScrollbarVisible;
+			isVerticalScrollbarVisible = curVerticalScrollbarVisible;
+
+			if (horizontalScrollbarRef.current) {
+				horizontalScrollbarRef.current.setScrollbarVisible(curHorizontalScrollbarVisible);
+			}
+			if (verticalScrollbarRef.current) {
+				verticalScrollbarRef.current.setScrollbarVisible(curVerticalScrollbarVisible);
+			}
+			mutableRef.current.isUpdatedScrollThumb = updateScrollThumbSize();
 		} else {
 			mutableRef.current.deferScrollTo = false;
 			mutableRef.current.isUpdatedScrollThumb = updateScrollThumbSize();

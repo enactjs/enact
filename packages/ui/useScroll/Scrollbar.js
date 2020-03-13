@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import React, {forwardRef, memo, useEffect, useImperativeHandle, useRef} from 'react';
+import React, {forwardRef, memo, useEffect, useImperativeHandle, useRef, useState} from 'react';
 import ReactDOM from 'react-dom';
 
 import ri from '../resolution';
@@ -46,6 +46,9 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 	const uiScrollbarContainerRef = useRef();
 	const thumbRef = useRef();
 	const hideThumbJob = useRef(null);
+
+	const [visible, setVisible] = useState(false);
+
 	// Render
 	const
 		{childRenderer, className, corner, css, minThumbSize, vertical, ...rest} = props,
@@ -95,12 +98,15 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 
 			setCSSVariable(thumbRef.current, '--scrollbar-size-ratio', scrollThumbSizeRatio);
 			setCSSVariable(thumbRef.current, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
+		},
+		setScrollbarVisible: (visible) => {
+			setVisible(visible);
 		}
 	}));
 
 	console.log("ui/ScrollbarBase render");
 	return (
-		<div {...rest} className={containerClassName} ref={uiScrollbarContainerRef}>
+		<div {...rest} className={containerClassName} ref={uiScrollbarContainerRef} style={visible ? null : {display: 'none'}}>
 			{childRenderer({thumbRef})}
 		</div>
 	);
@@ -191,13 +197,14 @@ const Scrollbar = forwardRef((props, ref) => {
 	const scrollbarBaseRef = useRef(null);
 
 	useImperativeHandle(ref, () => {
-		const {getContainerRef, showThumb, startHidingThumb, update} = scrollbarBaseRef.current;
+		const {getContainerRef, showThumb, startHidingThumb, update, setScrollbarVisible} = scrollbarBaseRef.current;
 
 		return {
 			getContainerRef,
 			showThumb,
 			startHidingThumb,
-			update
+			update,
+			setScrollbarVisible
 		};
 	}, [scrollbarBaseRef]);
 

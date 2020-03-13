@@ -333,9 +333,9 @@ const VirtualGridList = ({role, ...rest}) => {
 							)}
 						/>
 					</ScrollContentWrapper>
-					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
+					<Scrollbar {...verticalScrollbarProps} />
 				</div>
-				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
+				<Scrollbar {...horizontalScrollbarProps} />
 			</div>
 		</ResizeContext.Provider>
 	);
