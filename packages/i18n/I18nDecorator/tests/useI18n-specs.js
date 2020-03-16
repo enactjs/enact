@@ -7,7 +7,7 @@ import {updateLocale} from '../../locale';
 
 import useI18n from '../useI18n';
 
-describe('I18nDecorator', () => {
+describe('useI18n', () => {
 
 	// Suite-wide setup
 
@@ -46,6 +46,7 @@ describe('I18nDecorator', () => {
 
 	test('should return en-US classes', () => {
 		const subject = shallow(<Component />);
+		subject.update();
 
 		const expected = ['enact-locale-en', 'enact-locale-en-US', 'enact-locale-US'].sort();
 		const actual = subject.prop('className').split(' ').sort();

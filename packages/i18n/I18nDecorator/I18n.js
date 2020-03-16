@@ -29,6 +29,7 @@ class I18n {
 		// const ilibLocale = ilib.getLocale();
 
 		this._locale = null;
+		this._ready = sync;
 
 		this.latinLanguageOverrides = latinLanguageOverrides;
 		this.loadResourceJob = new Job(onLoadResources);
@@ -41,7 +42,10 @@ class I18n {
 	set locale (locale) {
 		if (this._locale !== locale) {
 			this._locale = locale;
-			this.loadResources(locale);
+
+			if (this._ready) {
+				this.loadResources(locale);
+			}
 		}
 	}
 
@@ -60,16 +64,20 @@ class I18n {
 	}
 
 	load () {
+		this._ready = true;
+
 		if (typeof window === 'object') {
 			on('languagechange', this.handleLocaleChange, window);
 		}
 
 		if (!this.sync) {
-			this.loadResources(this.state.locale);
+			this.loadResources(this._locale);
 		}
 	}
 
 	unload () {
+		this._ready = false;
+
 		this.loadResourceJob.stop();
 		if (typeof window === 'object') {
 			off('languagechange', this.handleLocaleChange, window);
@@ -77,6 +85,12 @@ class I18n {
 	}
 
 	loadResources (spec) {
+		if (!this._ready) {
+			// eslint-disable-next-line no-console
+			console.error('Unable to load i18n resources before load() is called');
+			return;
+		}
+
 		const locale = updateLocale(spec);
 		const options = {sync: this.sync, locale};
 		const rtl = wrapIlibCallback(isRtlLocale, options);

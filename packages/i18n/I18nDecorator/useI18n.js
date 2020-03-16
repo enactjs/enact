@@ -16,6 +16,12 @@ function useI18n ({locale, ...config} = {}) {
 
 	inst.current.locale = locale;
 
+	React.useEffect(() => {
+		inst.current.load();
+
+		return () => inst.current.unload();
+	}, []);
+
 	return {
 		...state,
 		updateLocale: inst.current.updateLocale
