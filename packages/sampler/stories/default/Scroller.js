@@ -9,7 +9,8 @@ import {storiesOf} from '@storybook/react';
 const
 	prop = {
 		direction: ['both', 'horizontal', 'vertical'],
-		scrollbarOption: ['auto', 'hidden', 'visible']
+		scrollbarOption: ['auto', 'hidden', 'visible'],
+		scrollModeOption: ['native', 'translate']
 	};
 
 const scrollerConfig = mergeComponentMetadata('Scroller', Scroller);
@@ -21,9 +22,11 @@ storiesOf('UI', module)
 			<Scroller
 				direction={select('direction', prop.direction, scrollerConfig)}
 				horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, scrollerConfig)}
+				key={select('scrollMode', prop.scrollModeOption, scrollerConfig)}
 				noScrollByWheel={boolean('noScrollByWheel', scrollerConfig)}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
+				scrollMode={select('scrollMode', prop.scrollModeOption, scrollerConfig)}
 				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, scrollerConfig)}
 			>
 				<div

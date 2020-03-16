@@ -35,6 +35,7 @@ const VirtualList = ({role, ...rest}) => {
 	// Hooks
 
 	const {
+		scrollContentHandle,
 		scrollContentWrapper: ScrollContentWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
@@ -60,6 +61,7 @@ const VirtualList = ({role, ...rest}) => {
 							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
 								cc.length ? <div role={role}>{cc}</div> : null
 							)}
+							ref={scrollContentHandle}
 						/>
 					</ScrollContentWrapper>
 					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
@@ -308,6 +310,7 @@ VirtualList.defaultProps = {
  */
 const VirtualGridList = ({role, ...rest}) => {
 	const {
+		scrollContentHandle,
 		scrollContentWrapper: ScrollContentWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
@@ -331,6 +334,7 @@ const VirtualGridList = ({role, ...rest}) => {
 							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
 								cc.length ? <div role={role}>{cc}</div> : null
 							)}
+							ref={scrollContentHandle}
 						/>
 					</ScrollContentWrapper>
 					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}

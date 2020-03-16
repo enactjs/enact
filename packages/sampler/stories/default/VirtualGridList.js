@@ -10,7 +10,8 @@ import {VirtualGridList, VirtualListBasic} from '@enact/ui/VirtualList';
 const
 	prop = {
 		direction: {horizontal: 'horizontal', vertical: 'vertical'},
-		scrollbarOption: ['auto', 'hidden', 'visible']
+		scrollbarOption: ['auto', 'hidden', 'visible'],
+		scrollModeOption: ['native', 'translate']
 	},
 	items = [],
 	defaultDataSize = 1000,
@@ -27,6 +28,7 @@ const
 				{...rest}
 				caption={text}
 				source={source}
+				style={{width: '100%'}}
 				subCaption={subText}
 			/>
 		);
@@ -70,9 +72,11 @@ storiesOf('UI', module)
 					minWidth: ri.scale(number('minWidth', VirtualGridListConfig, 180)),
 					minHeight: ri.scale(number('minHeight', VirtualGridListConfig, 270))
 				}}
+				key={select('scrollMode', prop.scrollModeOption, VirtualGridListConfig)}
 				noScrollByWheel={boolean('noScrollByWheel', VirtualGridListConfig)}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
+				scrollMode={select('scrollMode', prop.scrollModeOption, VirtualGridListConfig)}
 				spacing={ri.scale(number('spacing', VirtualGridListConfig, 20))}
 				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, VirtualGridListConfig)}
 			/>

@@ -37,6 +37,7 @@ const Scroller = (props) => {
 	// Hooks
 
 	const {
+		scrollContentHandle,
 		scrollContentWrapper: ScrollContentWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
@@ -57,7 +58,7 @@ const Scroller = (props) => {
 			<div {...scrollContainerProps}>
 				<div {...scrollInnerContainerProps}>
 					<ScrollContentWrapper {...scrollContentWrapperProps}>
-						<ScrollerBasic {...scrollContentProps} />
+						<ScrollerBasic {...scrollContentProps} ref={scrollContentHandle} />
 					</ScrollContentWrapper>
 					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
 				</div>
