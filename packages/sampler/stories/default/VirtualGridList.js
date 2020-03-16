@@ -1,6 +1,6 @@
 import {action} from '@enact/storybook-utils/addons/actions';
 import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
-import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
+import {ImageItem as UiImageItem} from '@enact/ui/ImageItem';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import ri from '@enact/ui/resolution';
 import React from 'react';
@@ -24,7 +24,7 @@ const
 		const {text, subText, source} = items[index];
 
 		return (
-			<UiGridListImageItem
+			<UiImageItem
 				{...rest}
 				caption={text}
 				source={source}
