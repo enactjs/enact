@@ -149,10 +149,18 @@ class ScrollerBasic extends Component {
 		return (this.props.direction !== 'vertical');
 	}
 
+	getContentSize = () => {
+		const contentSize = this.props.scrollContentRef.current;
+
+		return contentSize && this.props.getContentSize ? this.props.getContentSize(contentSize) : contentSize;
+	}
+
 	calculateMetrics () {
 		const
 			{scrollBounds} = this,
-			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.props.scrollContentRef.current;
+			{clientWidth, clientHeight} = this.getContentSize(),
+			{scrollWidth, scrollHeight} = this.props.scrollContentRef.current;
+
 		scrollBounds.scrollWidth = scrollWidth;
 		scrollBounds.scrollHeight = scrollHeight;
 		scrollBounds.clientWidth = clientWidth;
