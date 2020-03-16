@@ -178,6 +178,7 @@ class ScrollerBasic extends Component {
 			});
 
 		delete rest.cbScrollTo;
+		delete rest.getContentSize;
 		delete rest.direction;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
