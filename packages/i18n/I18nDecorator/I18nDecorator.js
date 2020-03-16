@@ -18,6 +18,7 @@ import {createResBundle, setResBundle} from '../src/resBundle';
 import wrapIlibCallback from '../src/wrapIlibCallback';
 
 import getI18nClasses from './getI18nClasses';
+import {useI18nContext, I18nContext} from './useI18nContext';
 import {onWindowFocus} from './windowFocus';
 
 const join = (a, b) => a && b ? a + ' ' + b : (a || b || '');
@@ -26,8 +27,6 @@ const contextTypes = {
 	rtl: PropTypes.bool,
 	updateLocale: PropTypes.func
 };
-
-const I18nContext = React.createContext(null);
 
 /**
  * Default config for `I18nDecorator`.
@@ -314,36 +313,31 @@ const I18nContextDecorator = hoc(contextDefaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	return function I18nContextDecorator (props) {
+		const i18nContext = useI18nContext();
+
+		if (i18nContext) {
+			const {loaded, locale, rtl, updateLocale: update} = i18nContext;
+
+			props = Object.assign({}, props);
+			if (loadedProp) {
+				props[loadedProp] = loaded;
+			}
+
+			if (localeProp) {
+				props[localeProp] = locale;
+			}
+
+			if (rtlProp) {
+				props[rtlProp] = rtl;
+			}
+
+			if (updateLocaleProp) {
+				props[updateLocaleProp] = update;
+			}
+		}
+
 		return (
-			<I18nContext.Consumer>
-				{(i18nContext) => {
-
-					if (i18nContext) {
-						const {loaded, locale, rtl, updateLocale: update} = i18nContext;
-
-						props = Object.assign({}, props);
-						if (loadedProp) {
-							props[loadedProp] = loaded;
-						}
-
-						if (localeProp) {
-							props[localeProp] = locale;
-						}
-
-						if (rtlProp) {
-							props[rtlProp] = rtl;
-						}
-
-						if (updateLocaleProp) {
-							props[updateLocaleProp] = update;
-						}
-					}
-
-					return (
-						<Wrapped {...props} />
-					);
-				}}
-			</I18nContext.Consumer>
+			<Wrapped {...props} />
 		);
 	};
 });
