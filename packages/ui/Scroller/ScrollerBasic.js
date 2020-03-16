@@ -43,6 +43,14 @@ class ScrollerBasic extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
+		 * Called to get size of a content area
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		getContentSize: PropTypes.func,
+
+		/**
 		 * Prop to check context value if Scrollbar exists or not.
 		 *
 		 * @type {Boolean}
