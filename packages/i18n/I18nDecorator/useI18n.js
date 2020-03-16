@@ -2,7 +2,7 @@ import React from 'react';
 
 import I18n from './I18n';
 
-function useI18n ({locale, ...config}) {
+function useI18n ({locale, ...config} = {}) {
 	const [state, setState] = React.useState({
 		locale,
 		loaded: Boolean(config.sync)

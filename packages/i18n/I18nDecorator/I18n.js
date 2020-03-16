@@ -18,7 +18,13 @@ import getI18nClasses from './getI18nClasses';
 import {onWindowFocus} from './windowFocus';
 
 class I18n {
-	constructor ({latinLanguageOverrides, nonLatinLanguageOverrides, onLoadResources, resources, sync}) {
+	constructor ({
+		latinLanguageOverrides,
+		nonLatinLanguageOverrides,
+		onLoadResources = () => {},
+		resources,
+		sync = true
+	}) {
 		// TODO: Maybe init locale in constructor for sync?
 		// const ilibLocale = ilib.getLocale();
 
