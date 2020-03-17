@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Added
 
+- `ui/styles/mixins.less` `.position()` support for list-style arguments, in addition to the existing separated arguments
 - `ui/GridListItemItem` prop `subComponents`
 
 ### Fixed
