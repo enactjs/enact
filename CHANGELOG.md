@@ -2,22 +2,45 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.3.0-alpha.3] - 2020-03-09
+
+### Added
+
+- `ui/GridListItemItem` prop `subComponents`
+
+### Fixed
+
+- `core/util.mergeClassNames` to mirror class names when used in unit tests
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to show items properly when reducing data size by updating `firstIndex` correctly
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` not to suddenly jump when pressing directional keys after wheeling
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to show items properly when reducing data size
+
+## [3.3.0-alpha.2] - 2020-03-09
+
+### Changed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `itemProps` to `childProps` for backwards compatibility
+
+### Fixed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to not suddenly jump when pressing directional keys after wheeling
+
 ## [3.3.0-alpha.1] - 2020-02-26
 
 > Note: Moonstone was removed from the core Enact repository. It is now in its own repository at https://github.com/enactjs/moonstone/. Using Moonstone through npm has not changed.
 
 ### Added
 
-- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` prop `scrollMode` is added.
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` prop `scrollMode` is added
 
 ### Changed
 
-- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `childProps` to `itemProps` for clarity.
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `childProps` to `itemProps` for clarity
 - `enact-sampler` to use common Enact Storybook configurations, addons, and utilities from `@enact/storybook-utils` helper package.
 
 ### Fixed
 
-- `ui/Marquee` to not error when passed `null` `children` during an animation.
+- `ui/Marquee` to not error when passed `null` `children` during an animation
 - `ui/Button` to have more robust support for a customized `iconComponent` prop
 
 
