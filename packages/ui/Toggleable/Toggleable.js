@@ -146,13 +146,16 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 	function Toggleable (props) {
 		const updated = {...props};
+
 		const hook = useToggle({
-			disabled: props.disabled,
-			// FIX: Current behavior for Toggleable treats `null` as undefined so we coerce it here
-			// to maintain that behavior while using useControlledState
-			selected: props[prop] == null ? undefined : props[prop], // eslint-disable-line no-undefined
 			defaultSelected: props[defaultPropKey],
-			onToggle: (ev) => forwardToggle(ev, props)
+			disabled: props.disabled,
+			onToggle: (ev) => forwardToggle(ev, props),
+
+			// FIXME: Current behavior for Toggleable treats `null` as undefined so we coerce it
+			// here to maintain that behavior while using useControlledState.
+			// eslint-disable-next-line no-undefined
+			selected: props[prop] == null ? undefined : props[prop],
 		});
 
 		warning(
@@ -161,7 +164,17 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			'${defaultPropKey}' will be ignored unless '${prop}' is 'null' or 'undefined'.`
 		);
 
-		if (prop) updated[prop] = hook.selected;
+		// This is tracking the previous value of selected to support the FIXME below.
+		const {current: instance} = React.useRef({selected: props[prop]});
+
+		if (prop) {
+			// FIXME: Current behavior is to use `false` when switching from a truthy value to
+			// either null or undefined. The ternary below enforces that but we don't want to
+			// continue this exception in the future and should sunset it with this HOC.
+			updated[prop] = instance.selected && props[props] == null ? false : hook.selected;
+		}
+
+		instance.selected = props[prop];
 
 		if (toggleProp || toggle) {
 			updated[toggleProp || toggle] = (ev) => {
