@@ -1544,12 +1544,15 @@ const assignPropertiesOf = (instance) => (name, properties) => {
 	if (typeof properties === 'object') {
 		for (const property in properties) {
 			if (property === 'className') {
+
 				warning(
 					Array.isArray(properties.className),
 					'Unsupported other types for `className` prop except Array'
 				);
 
-				instance[name].className = classNames(instance[name].className, properties.className);
+				instance[name].className = instance[name].className ?
+					instance[name].className + ' ' + properties.className.join(' ') :
+					properties.className.join(' ');
 			} else {
 				warning(
 					!instance[name][property],
