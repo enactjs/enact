@@ -7,10 +7,11 @@
 
 import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {Column, Cell} from '../Layout';
+import {Column, Cell, Row} from '../Layout';
 import Icon from '../Icon';
 import Image from '../Image';
 
@@ -37,7 +38,7 @@ const ImageItem = kind({
 		caption: PropTypes.string,
 
 		/**
-		 * The component used to render the captions
+		 * The component used to render the captions.
 		 *
 		 * @type {String|Component}
 		 * @public
@@ -72,13 +73,26 @@ const ImageItem = kind({
 		iconComponent: EnactPropTypes.component,
 
 		/**
-		 * The component used to render the image component
+		 * The component used to render the image component.
 		 *
 		 * @type {Component}
 		 * @default ui/Image.Image
 		 * @public
 		 */
 		imageComponent: EnactPropTypes.component,
+
+		/**
+		 * The layout orientation of the component.
+		 *
+		 * Valid values are:
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
+		 *
+		 * @type {String}
+		 * @default 'vertical'
+		 * @public
+		 */
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
 		 * Placeholder image used while [source]{@link ui/ImageItem.ImageItem#source}
@@ -157,6 +171,7 @@ const ImageItem = kind({
 		captionComponent: 'div',
 		iconComponent: Icon,
 		imageComponent: Image,
+		orientation: 'vertical',
 		selected: false,
 		selectionOverlayShowing: false
 	},
@@ -196,7 +211,9 @@ const ImageItem = kind({
 		}
 	},
 
-	render: ({css, imageComponent: ImageComponent, placeholder, source, selectionOverlay, subComponents, ...rest}) => {
+	render: ({className, css, imageComponent: ImageComponent, orientation, placeholder, source, selectionOverlay, subComponents, ...rest}) => {
+		const classes = classNames(className, orientation === 'vertical' ? css.vertical : css.horizontal);
+
 		delete rest.caption;
 		delete rest.captionComponent;
 		delete rest.iconComponent;
@@ -205,12 +222,19 @@ const ImageItem = kind({
 		delete rest.subCaption;
 
 		return (
-			<Column {...rest} inline>
+			orientation === 'vertical' ? <Column {...rest} className={classes} inline>
 				<Cell className={css.image} component={ImageComponent} placeholder={placeholder} src={source}>
 					{selectionOverlay}
 				</Cell>
 				{subComponents}
-			</Column>
+			</Column> : <Row {...rest} className={classes} inline>
+				<Cell className={css.image} component={ImageComponent} placeholder={placeholder} shrink src={source}>
+					{selectionOverlay}
+				</Cell>
+				<Cell align="center">
+					{subComponents}
+				</Cell>
+			</Row>
 		);
 	}
 });
