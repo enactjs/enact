@@ -7,7 +7,6 @@
 
 import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -183,8 +182,8 @@ const ImageItem = kind({
 	},
 
 	computed: {
-		className: ({caption, selected, styler, subCaption}) => styler.append(
-			{selected, caption, subCaption}
+		className: ({css, orientation, selected, styler}) => styler.append(
+			{selected, horizontal: orientation === 'horizontal' ? css.horizontal : null, vertical: orientation === 'vertical' ? css.vertical : null}
 		),
 		selectionOverlay: ({css, iconComponent: IconComponent, selectionOverlay: SelectionOverlay, selectionOverlayShowing}) => {
 			if (selectionOverlayShowing) {
@@ -201,19 +200,23 @@ const ImageItem = kind({
 				);
 			}
 		},
-		subComponents: ({caption, captionComponent: Caption, css, subCaption, subComponents}) => {
-			return (
+		subComponents: ({caption, captionComponent: Caption, css, orientation, subCaption, subComponents}) => {
+			const components = (
 				subComponents ? subComponents : <React.Fragment>
 					{caption ? (<Cell className={css.caption} component={Caption} shrink>{caption}</Cell>) : null}
 					{subCaption ? (<Cell className={css.subCaption} component={Caption} shrink>{subCaption}</Cell>) : null}
 				</React.Fragment>
 			);
+
+			return (
+				orientation === 'horizontal' ? <Cell align="center">
+					{components}
+				</Cell> : components
+			);
 		}
 	},
 
-	render: ({className, css, imageComponent: ImageComponent, orientation, placeholder, source, selectionOverlay, subComponents, ...rest}) => {
-		const classes = classNames(className, orientation === 'vertical' ? css.vertical : css.horizontal);
-
+	render: ({css, imageComponent: ImageComponent, orientation, placeholder, source, selectionOverlay, subComponents, ...rest}) => {
 		delete rest.caption;
 		delete rest.captionComponent;
 		delete rest.iconComponent;
@@ -221,20 +224,17 @@ const ImageItem = kind({
 		delete rest.selectionOverlayShowing;
 		delete rest.subCaption;
 
+		const
+			isHorizontal = orientation === 'horizontal',
+			Component = isHorizontal ? Row : Column;
+
 		return (
-			orientation === 'vertical' ? <Column {...rest} className={classes} inline>
-				<Cell className={css.image} component={ImageComponent} placeholder={placeholder} src={source}>
+			<Component {...rest} inline>
+				<Cell className={css.image} component={ImageComponent} placeholder={placeholder} shrink={isHorizontal} src={source}>
 					{selectionOverlay}
 				</Cell>
 				{subComponents}
-			</Column> : <Row {...rest} className={classes} inline>
-				<Cell className={css.image} component={ImageComponent} placeholder={placeholder} shrink src={source}>
-					{selectionOverlay}
-				</Cell>
-				<Cell align="center">
-					{subComponents}
-				</Cell>
-			</Row>
+			</Component>
 		);
 	}
 });
