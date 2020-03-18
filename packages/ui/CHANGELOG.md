@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+- `ui/GridListImageItem`, use `ui/ImageItem` instead
+
+### Added
+
+- `ui/ImageItem` component
+
 ## [3.3.0-alpha.3] - 2020-03-09
 
 ### Added

@@ -159,10 +159,10 @@ const ImageItem = kind({
 		subCaption: PropTypes.string,
 
 		/**
-		 * The components that will be shown below the image.
+		 * The components that will be shown near the image, aligned with `orientation`.
 		 *
 		 * @type {Array|Element}
-		 * @private
+		 * @public
 		 */
 		subComponents: PropTypes.oneOfType([PropTypes.array, PropTypes.element])
 	},
