@@ -154,22 +154,34 @@
 	left: @l;
 }
 .position (@t, @rl, @b) {
-	top: @t;
-	right: @rl;
-	bottom: @b;
-	left: @rl;
+	.position(@t, @rl, @b, @rl);
 }
 .position (@tb, @rl) {
-	top: @tb;
-	right: @rl;
-	bottom: @tb;
-	left: @rl;
+	.position(@tb, @rl, @tb, @rl);
 }
-.position (@trbl) {
-	top: @trbl;
-	right: @trbl;
-	bottom: @trbl;
-	left: @trbl;
+.position (@trbl) when (length(@trbl) = 4) {
+	.position(
+		extract(@trbl, 1),
+		extract(@trbl, 2),
+		extract(@trbl, 3),
+		extract(@trbl, 4)
+	);
+}
+.position (@trbl) when (length(@trbl) = 3) {
+	.position(
+		extract(@trbl, 1),
+		extract(@trbl, 2),
+		extract(@trbl, 3)
+	);
+}
+.position (@trbl) when (length(@trbl) = 2) {
+	.position(
+		extract(@trbl, 1),
+		extract(@trbl, 2)
+	);
+}
+.position (@trbl) when (length(@trbl) = 1) {
+	.position(@trbl, @trbl, @trbl, @trbl);
 }
 
 .border-box() {
