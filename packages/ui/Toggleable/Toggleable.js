@@ -201,7 +201,6 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		);
 	}
 
-	/** @lends ui/Toggleable.Toggleable.prototype */
 	Toggleable.propTypes = {
 		/**
 		 * Default toggled state applied at construction when the toggled prop is `undefined` or
@@ -218,6 +217,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		/**
 		 * Whether or not the component is in a disabled state.
 		 *
+		 * @memberof ui/Toggleable.Toggleable.prototype
 		 * @type {Boolean}
 		 * @public
 		 */
