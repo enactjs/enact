@@ -55,12 +55,13 @@ function useClass (Ctor, ...args) {
  */
 function useToggle (config = {}) {
 	const toggle = useClass(Toggle, config);
-
-	toggle.setContext(...useControlledState(
+	const state = useControlledState(
 		config.defaultSelected,
 		config.selected,
 		typeof config.selected !== 'undefined'
-	));
+	);
+
+	toggle.setContext(...state);
 
 	return {
 		activate: toggle.handleActivate,

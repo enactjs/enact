@@ -164,17 +164,17 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			'${defaultPropKey}' will be ignored unless '${prop}' is 'null' or 'undefined'.`
 		);
 
-		// This is tracking the previous value of selected to support the FIXME below.
-		const {current: instance} = React.useRef({selected: props[prop]});
+		// FIXME: Current behavior is to use `false` when switching from a truthy value to
+		// either null or undefined. The ternary below enforces that but we don't want to
+		// continue this exception in the future and should sunset it with this HOC.
+		const {current: instance} = React.useRef({selected: null});
+		const selected = (instance.selected && props[props] == null) ? false : hook.selected;
 
 		if (prop) {
-			// FIXME: Current behavior is to use `false` when switching from a truthy value to
-			// either null or undefined. The ternary below enforces that but we don't want to
-			// continue this exception in the future and should sunset it with this HOC.
-			updated[prop] = instance.selected && props[props] == null ? false : hook.selected;
+			updated[prop] = selected;
 		}
 
-		instance.selected = props[prop];
+		instance.selected = selected;
 
 		if (toggleProp || toggle) {
 			updated[toggleProp || toggle] = (ev) => {
