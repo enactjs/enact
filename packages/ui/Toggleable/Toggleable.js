@@ -168,13 +168,12 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		// either null or undefined. The ternary below enforces that but we don't want to
 		// continue this exception in the future and should sunset it with this HOC.
 		const {current: instance} = React.useRef({selected: null});
-		const selected = (instance.selected && props[props] == null) ? false : hook.selected;
+		const selected = (instance.selected && props[prop] == null) ? false : hook.selected;
+		instance.selected = selected;
 
 		if (prop) {
 			updated[prop] = selected;
 		}
-
-		instance.selected = selected;
 
 		if (toggleProp || toggle) {
 			updated[toggleProp || toggle] = (ev) => {

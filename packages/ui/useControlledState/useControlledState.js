@@ -3,10 +3,7 @@ import React from 'react';
 // Generate a handler that hides the controlled value from users, supports functional callbacks,
 // and is memoized by the onChange provided by useState
 function createHandler () {
-	return (onChange, controlled) => (value) => {
-		// TODO: Should we allow and warn here or just prevent (as we currently do)
-		if (controlled) return;
-
+	return (onChange) => (value) => {
 		onChange(prevState => ({
 			value: typeof value === 'function' ? value(prevState.value) : value,
 			controlled: prevState.controlled
@@ -33,7 +30,7 @@ function useControlledState (defaultValue, propValue, controlled) {
 
 	return [
 		calcValue(defaultValue, propValue, state.value, state.controlled),
-		React.useMemo(createHandler, [onChange, controlled])(onChange, controlled)
+		React.useMemo(createHandler, [onChange])(onChange)
 	];
 }
 

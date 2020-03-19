@@ -5,8 +5,8 @@ import useControlledState from '../useControlledState';
 describe('useControlledState', () => {
 	function Component (props) {
 		// eslint-disable-next-line enact/prop-types
-		const [value] = useControlledState(props.defaultValue, props.value, 'value' in props);
-		return <div>{value}</div>;
+		const [value, setValue] = useControlledState(props.defaultValue, props.value, 'value' in props);
+		return <div setValue={setValue}>{value}</div>;
 	}
 
 	test('should use the default value when the value is undefined', () => {
@@ -57,6 +57,18 @@ describe('useControlledState', () => {
 		subject.setProps({defaultValue: 'def', value: 'ghi'});
 
 		const expected = 'ghi';
+		const actual = subject.find('div').prop('children');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should not allow setting a value when controlled', () => {
+		const subject = shallow(<Component value="abc" />);
+
+		subject.invoke('setValue')('ghi');
+		subject.update();
+
+		const expected = 'abc';
 		const actual = subject.find('div').prop('children');
 
 		expect(actual).toBe(expected);

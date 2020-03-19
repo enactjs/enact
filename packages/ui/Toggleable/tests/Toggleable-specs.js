@@ -372,7 +372,7 @@ describe('Toggleable', () => {
 		}
 	);
 
-	test(
+	test.only(
 		'should not update \'selected\' when \'onToggle\' invoked and is controlled',
 		() => {
 			const Component = Toggleable(DivComponent);
