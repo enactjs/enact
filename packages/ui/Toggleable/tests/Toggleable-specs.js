@@ -111,7 +111,7 @@ describe('Toggleable', () => {
 			expect(spy).toHaveBeenCalled();
 		});
 
-		test.only(
+		test(
 			'should use selected prop when selected changed from truthy to null',
 			() => {
 				const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -148,7 +148,7 @@ describe('Toggleable', () => {
 			}
 		);
 
-		test.only(
+		test(
 			'should use selected prop when selected changed from truthy to undefined',
 			() => {
 				const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
