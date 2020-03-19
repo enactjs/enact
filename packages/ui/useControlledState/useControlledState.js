@@ -4,6 +4,7 @@ import React from 'react';
 // and is memoized by the onChange provided by useState
 function createHandler () {
 	return (onChange, controlled) => (value) => {
+		// TODO: Should we allow and warn here or just prevent (as we currently do)
 		if (controlled) return;
 
 		onChange(prevState => ({
