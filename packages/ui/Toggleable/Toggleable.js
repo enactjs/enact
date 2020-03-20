@@ -155,7 +155,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			// FIXME: Current behavior for Toggleable treats `null` as undefined so we coerce it
 			// here to maintain that behavior while using useControlledState.
 			// eslint-disable-next-line no-undefined
-			selected: props[prop] == null ? undefined : props[prop],
+			selected: props[prop] == null ? undefined : props[prop]
 		});
 
 		warning(
