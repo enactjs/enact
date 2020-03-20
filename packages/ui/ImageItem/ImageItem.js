@@ -6,12 +6,10 @@
  */
 
 import kind from '@enact/core/kind';
-import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import {Column, Cell, Row} from '../Layout';
-import Icon from '../Icon';
 import Image from '../Image';
 
 import componentCss from './ImageItem.module.less';
@@ -29,20 +27,12 @@ const ImageItem = kind({
 
 	propTypes: /** @lends ui/ImageItem.ImageItem.prototype */ {
 		/**
-		 * The primary caption to be displayed with the image.
+		 * The caption string or a node to be displayed with the image.
 		 *
-		 * @type {String}
+		 * @type {Node}
 		 * @public
 		 */
-		caption: PropTypes.string,
-
-		/**
-		 * The component used to render the captions.
-		 *
-		 * @type {String|Component}
-		 * @public
-		 */
-		captionComponent: EnactPropTypes.renderable,
+		caption: PropTypes.node,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -50,11 +40,9 @@ const ImageItem = kind({
 		 *
 		 * The following classes are supported:
 		 *
-		 * * `icon` - The icon component class for default selection overlay
 		 * * `image` - The image component class
 		 * * `selected` - Applied when `selected` prop is `true`
 		 * * `caption` - The caption component class
-		 * * `subCaption` - The subCaption component class
 		 *
 		 * @type {Object}
 		 * @public
@@ -62,23 +50,12 @@ const ImageItem = kind({
 		css: PropTypes.object,
 
 		/**
-		 * The component used to render the default check icon when selected.
-		 * If there is custom selectionOverlay component, this icon will not be shown.
-		 *
-		 * @type {Component}
-		 * @default ui/Icon.Icon
-		 * @public
-		 */
-		iconComponent: EnactPropTypes.component,
-
-		/**
 		 * The component used to render the image component.
 		 *
-		 * @type {Component}
-		 * @default ui/Image.Image
+		 * @type {Node}
 		 * @public
 		 */
-		imageComponent: EnactPropTypes.component,
+		imageComponent: PropTypes.node,
 
 		/**
 		 * The layout orientation of the component.
@@ -113,66 +90,18 @@ const ImageItem = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * The custom selection overlay component to render.
+		 * String value or Object of values used to determine which image will appear on
+		 * a specific screenSize.
 		 *
-		 * A component can be a stateless functional component, `kind()` or React component.
-		 * The following is an example with custom selection overlay kind.
-		 *
-		 * Example:
-		 * ```
-		 * const SelectionOverlay = kind({
-		 * 	render: () => <div>custom overlay</div>
-		 * });
-		 *
-		 * <ImageItem selectionOverlay={SelectionOverlay} />
-		 * ```
-		 *
-		 * @type {Function}
+		 * @type {String|Object}
 		 * @public
 		 */
-		selectionOverlay: PropTypes.func,
-
-		/**
-		 * Shows a selection overlay with a centered icon. When `selected` is true, a check mark is shown.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		selectionOverlayShowing: PropTypes.bool,
-
-		/**
-		 * The absolute URL path to the image.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		source: PropTypes.string,
-
-		/**
-		 * The second caption line to be displayed with the image.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		subCaption: PropTypes.string,
-
-		/**
-		 * The components that will be shown near the image, aligned with `orientation`.
-		 *
-		 * @type {Array|Element}
-		 * @public
-		 */
-		subComponents: PropTypes.oneOfType([PropTypes.array, PropTypes.element])
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	defaultProps: {
-		captionComponent: 'div',
-		iconComponent: Icon,
-		imageComponent: Image,
 		orientation: 'vertical',
-		selected: false,
-		selectionOverlayShowing: false
+		selected: false
 	},
 
 	styles: {
@@ -182,47 +111,22 @@ const ImageItem = kind({
 	},
 
 	computed: {
-		className: ({css, orientation, selected, styler}) => styler.append(
-			{selected, horizontal: orientation === 'horizontal' ? css.horizontal : null, vertical: orientation === 'vertical' ? css.vertical : null}
+		className: ({orientation, selected, styler}) => styler.append(
+			{selected, horizontal: orientation === 'horizontal', vertical: orientation === 'vertical'}
 		),
-		selectionOverlay: ({css, iconComponent: IconComponent, selectionOverlay: SelectionOverlay, selectionOverlayShowing}) => {
-			if (selectionOverlayShowing) {
-				return (
-					<div className={css.overlayContainer}>
-						{
-							SelectionOverlay ?
-								<SelectionOverlay /> :
-								<div className={css.overlayComponent}>
-									<IconComponent className={css.icon}>check</IconComponent>
-								</div>
-						}
-					</div>
-				);
-			}
-		},
-		subComponents: ({caption, captionComponent: Caption, css, orientation, subCaption, subComponents}) => {
-			const components = (
-				subComponents ? subComponents : <React.Fragment>
-					{caption ? (<Cell className={css.caption} component={Caption} shrink>{caption}</Cell>) : null}
-					{subCaption ? (<Cell className={css.subCaption} component={Caption} shrink>{subCaption}</Cell>) : null}
-				</React.Fragment>
-			);
+		caption: ({caption, css, orientation}) => {
+			const captionComponent = typeof caption === 'string' ? <Cell className={css.caption} shrink>{caption}</Cell> : caption;
 
 			return (
 				orientation === 'horizontal' ? <Cell align="center">
-					{components}
-				</Cell> : components
+					{captionComponent}
+				</Cell> : captionComponent
 			);
 		}
 	},
 
-	render: ({css, imageComponent: ImageComponent, orientation, placeholder, source, selectionOverlay, subComponents, ...rest}) => {
-		delete rest.caption;
-		delete rest.captionComponent;
-		delete rest.iconComponent;
+	render: ({caption, css, imageComponent, orientation, placeholder, src, ...rest}) => {
 		delete rest.selected;
-		delete rest.selectionOverlayShowing;
-		delete rest.subCaption;
 
 		const
 			isHorizontal = orientation === 'horizontal',
@@ -230,10 +134,8 @@ const ImageItem = kind({
 
 		return (
 			<Component {...rest} inline>
-				<Cell className={css.image} component={ImageComponent} placeholder={placeholder} shrink={isHorizontal} src={source}>
-					{selectionOverlay}
-				</Cell>
-				{subComponents}
+				{imageComponent ? imageComponent : <Cell className={css.image} component={Image} placeholder={placeholder} shrink={isHorizontal} src={src} />}
+				{caption}
 			</Component>
 		);
 	}
