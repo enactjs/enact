@@ -158,21 +158,33 @@ class ScrollerBasic extends Component {
 	}
 
 	getContentSize = () => {
-		const contentSize = this.props.scrollContentRef.current;
+		const scrollContentNode = this.props.scrollContentRef.current;
 
-		return contentSize && this.props.getContentSize ? this.props.getContentSize(contentSize) : contentSize;
+		if (scrollContentNode) {
+			if (this.props.getContentSize) {
+				return this.props.getContentSize(scrollContentNode);
+			} else {
+				const {clientWidth: contentWidth, clientHeight: contentHeight} = scrollContentNode;
+				return {contentWidth, contentHeight};
+			}
+		} else {
+			return {contentWidth: 0, contentHeight: 0};
+		}
 	}
 
 	calculateMetrics () {
 		const
 			{scrollBounds} = this,
-			{clientWidth, clientHeight} = this.getContentSize(),
-			{scrollWidth, scrollHeight} = this.props.scrollContentRef.current;
+			{contentWidth, contentHeight} = this.getContentSize(),
+			{clientWidth, clientHeight, scrollWidth, scrollHeight} = this.props.scrollContentRef.current;
 
 		scrollBounds.scrollWidth = scrollWidth;
 		scrollBounds.scrollHeight = scrollHeight;
 		scrollBounds.clientWidth = clientWidth;
 		scrollBounds.clientHeight = clientHeight;
+		scrollBounds.contentWidth = contentWidth;
+		scrollBounds.contentHeight = contentHeight;
+
 		scrollBounds.maxLeft = Math.max(0, scrollWidth - clientWidth);
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
