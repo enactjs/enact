@@ -131,7 +131,7 @@ const ImageItem = kind({
 				<Cell
 					className={css.image}
 					component={ComponentOverride}
-					overrideComponent={imageComponent}
+					$component={imageComponent}
 					placeholder={placeholder}
 					shrink={isHorizontal}
 					src={src}

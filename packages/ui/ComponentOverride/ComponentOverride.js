@@ -55,10 +55,9 @@ import React from 'react';
  * @ui
  * @public
  */
-const ComponentOverride = ({component: Component, overrideComponent, ...props}) => {
-	if (overrideComponent) {
-		Component = overrideComponent;
-		delete props.overrideComponent;
+const ComponentOverride = ({component: Component, ...props}) => {
+	if (!Component && props.$component) {
+		Component = props.$component;
 	}
 
 	return Component && (
