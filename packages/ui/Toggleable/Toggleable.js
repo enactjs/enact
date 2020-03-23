@@ -153,7 +153,9 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			onToggle: (ev) => forwardToggle(ev, props),
 
 			// FIXME: Current behavior for Toggleable treats `null` as undefined so we coerce it
-			// here to maintain that behavior while using useControlledState.
+			// here to maintain that behavior while using useControlledState. The default state is
+			// still `false` unless explicitly changed by the use of `defaultPropKey` so the author
+			// can continue to omit the value when using this HOC as before.
 			// eslint-disable-next-line no-undefined
 			selected: props[prop] == null ? undefined : props[prop]
 		});
