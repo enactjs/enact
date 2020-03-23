@@ -568,7 +568,7 @@ class VirtualListBasic extends Component {
 
 	getClientSize = (node) => ({
 		clientWidth: node.clientWidth,
-		clientHiehgt: node.clientHeight
+		clientHeight: node.clientHeight
 	})
 
 	emitUpdateItems () {
