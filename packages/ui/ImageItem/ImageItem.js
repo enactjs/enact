@@ -9,8 +9,9 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {Column, Cell, Row} from '../Layout';
+import ComponentOverride from '../ComponentOverride';
 import Image from '../Image';
+import {Cell, Column, Row} from '../Layout';
 
 import componentCss from './ImageItem.module.less';
 
@@ -100,6 +101,7 @@ const ImageItem = kind({
 	},
 
 	defaultProps: {
+		imageComponent: Image,
 		orientation: 'vertical',
 		selected: false
 	},
@@ -111,31 +113,33 @@ const ImageItem = kind({
 	},
 
 	computed: {
-		className: ({orientation, selected, styler}) => styler.append(
-			{selected, horizontal: orientation === 'horizontal', vertical: orientation === 'vertical'}
-		),
-		caption: ({caption, css, orientation}) => {
-			const captionComponent = typeof caption === 'string' ? <Cell className={css.caption} shrink>{caption}</Cell> : caption;
-
-			return (
-				orientation === 'horizontal' ? <Cell align="center">
-					{captionComponent}
-				</Cell> : captionComponent
-			);
-		}
+		className: ({orientation, selected, styler}) => styler.append({
+			selected,
+			horizontal: orientation === 'horizontal',
+			vertical: orientation === 'vertical'
+		})
 	},
 
 	render: ({caption, css, imageComponent, orientation, placeholder, src, ...rest}) => {
 		delete rest.selected;
 
-		const
-			isHorizontal = orientation === 'horizontal',
-			Component = isHorizontal ? Row : Column;
+		const isHorizontal = orientation === 'horizontal';
+		const Component = isHorizontal ? Row : Column;
 
 		return (
 			<Component {...rest} inline>
-				{imageComponent ? imageComponent : <Cell className={css.image} component={Image} placeholder={placeholder} shrink={isHorizontal} src={src} />}
-				{caption}
+				<Cell
+					className={css.image}
+					component={ComponentOverride}
+					overrideComponent={imageComponent}
+					placeholder={placeholder}
+					shrink={isHorizontal}
+					src={src}
+				/>
+				{/* eslint-disable-next-line no-undefined */}
+				<Cell className={css.caption} shrink align={isHorizontal ? 'center' : undefined}>
+					{caption}
+				</Cell>
 			</Component>
 		);
 	}
