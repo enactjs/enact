@@ -56,10 +56,6 @@ import React from 'react';
  * @public
  */
 const ComponentOverride = ({component: Component, ...props}) => {
-	if (!Component && props.$component) {
-		Component = props.$component;
-	}
-
 	return Component && (
 		(typeof Component === 'function' || typeof Component === 'string') && (
 			<Component {...props} />

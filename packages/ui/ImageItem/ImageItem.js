@@ -15,6 +15,14 @@ import {Cell, Column, Row} from '../Layout';
 
 import componentCss from './ImageItem.module.less';
 
+// Adapts ComponentOverride to work within Cell since both use the component prop
+function ImageOverride ({imageComponent, ...rest}) {
+	return ComponentOverride({
+		component: imageComponent,
+		...rest
+	});
+}
+
 /**
  * A basic image item without any behavior.
  *
@@ -130,14 +138,18 @@ const ImageItem = kind({
 			<Component {...rest} inline>
 				<Cell
 					className={css.image}
-					component={ComponentOverride}
-					$component={imageComponent}
+					component={ImageOverride}
+					imageComponent={imageComponent}
 					placeholder={placeholder}
 					shrink={isHorizontal}
 					src={src}
 				/>
-				{/* eslint-disable-next-line no-undefined */}
-				<Cell className={css.caption} shrink align={isHorizontal ? 'center' : undefined}>
+				<Cell
+					className={css.caption}
+					shrink={!isHorizontal}
+					// eslint-disable-next-line no-undefined
+					align={isHorizontal ? 'center' : undefined}
+				>
 					{caption}
 				</Cell>
 			</Component>
