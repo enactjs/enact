@@ -1243,7 +1243,7 @@ const useScrollBase = (props) => {
 				}
 			} else {
 				if (typeof opt.index === 'number' && typeof scrollContentHandle.current.getItemPosition === 'function') {
-					itemPos = scrollContentHandle.current.getItemPosition(opt.index, opt.stickTo);
+					itemPos = scrollContentHandle.current.getItemPosition(opt.index, opt.stickTo, opt.optionalOffset);
 				} else if (opt.node instanceof Object) {
 					if (opt.node.nodeType === 1 && typeof scrollContentHandle.current.getNodePosition === 'function') {
 						itemPos = scrollContentHandle.current.getNodePosition(opt.node);
