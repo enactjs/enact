@@ -1,15 +1,6 @@
-/**
- * Adds Internationalization (I18N) support to an application using ilib.
- *
- * @module i18n/I18nDecorator
- * @exports I18nDecorator
- * @exports I18nContextDecorator
- */
-
 import {on, off} from '@enact/core/dispatcher';
 import {Job} from '@enact/core/util';
 
-// import ilib from '../src/index.js';
 import {isRtlLocale, updateLocale} from '../locale';
 import {createResBundle, setResBundle} from '../src/resBundle';
 import wrapIlibCallback from '../src/wrapIlibCallback';
@@ -25,9 +16,6 @@ class I18n {
 		resources,
 		sync = true
 	}) {
-		// TODO: Maybe init locale in constructor for sync?
-		// const ilibLocale = ilib.getLocale();
-
 		this._locale = null;
 		this._ready = sync;
 
@@ -43,9 +31,7 @@ class I18n {
 		if (this._locale !== locale) {
 			this._locale = locale;
 
-			if (this._ready) {
-				this.loadResources(locale);
-			}
+			this.loadResources(locale);
 		}
 	}
 
@@ -63,6 +49,9 @@ class I18n {
 		}).filter(Boolean) : [];
 	}
 
+	/**
+	 * Called when the DOM is ready to listeners and async resource retrieval
+	 */
 	load () {
 		this._ready = true;
 
@@ -70,11 +59,15 @@ class I18n {
 			on('languagechange', this.handleLocaleChange, window);
 		}
 
+		// When async, 
 		if (!this.sync) {
 			this.loadResources(this._locale);
 		}
 	}
 
+	/**
+	 * Called to clean up resource retrieval and event listeners
+	 */
 	unload () {
 		this._ready = false;
 
@@ -85,11 +78,7 @@ class I18n {
 	}
 
 	loadResources (spec) {
-		if (!this._ready) {
-			// eslint-disable-next-line no-console
-			console.error('Unable to load i18n resources before load() is called');
-			return;
-		}
+		if (!this._ready) return;
 
 		const locale = updateLocale(spec);
 		const options = {sync: this.sync, locale};
