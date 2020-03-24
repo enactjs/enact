@@ -116,6 +116,7 @@ const useScrollBase = (props) => {
 	// So it is better to use props[propName]
 	// instead of extracting it from the `props` and renaming it
 	delete rest.addEventListeners;
+	delete rest.applyFadeoutEffect;
 	delete rest.applyOverscrollEffect;
 	delete rest.cbScrollTo;
 	delete rest.clearOverscrollEffect;
@@ -947,6 +948,8 @@ const useScrollBase = (props) => {
 	function setScrollLeft (value) {
 		const bounds = getScrollBounds();
 
+		props.applyFadeoutEffect(mutableRef.current.scrollLeft, value, bounds.maxLeft);
+
 		mutableRef.current.scrollLeft = clamp(0, bounds.maxLeft, value);
 
 		if (mutableRef.current.overscrollEnabled && overscrollEffectOn[mutableRef.current.lastInputType]) {
@@ -960,6 +963,8 @@ const useScrollBase = (props) => {
 
 	function setScrollTop (value) {
 		const bounds = getScrollBounds();
+
+		props.applyFadeoutEffect(mutableRef.current.scrollTop, value, bounds.maxTop);
 
 		mutableRef.current.scrollTop = clamp(0, bounds.maxTop, value);
 
