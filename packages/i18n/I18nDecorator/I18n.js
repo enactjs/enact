@@ -8,6 +8,10 @@ import wrapIlibCallback from '../src/wrapIlibCallback';
 import getI18nClasses from './getI18nClasses';
 import {onWindowFocus} from './windowFocus';
 
+/**
+ * @class I18n
+ * @private
+ */
 class I18n {
 	constructor ({
 		latinLanguageOverrides,
@@ -27,6 +31,12 @@ class I18n {
 		this.sync = sync;
 	}
 
+	/**
+	 * Sets the current locale triggering resource retrieval
+	 *
+	 * @type {String}
+	 * @public
+	 */
 	set locale (locale) {
 		if (this._locale !== locale) {
 			this._locale = locale;
@@ -35,8 +45,12 @@ class I18n {
 		}
 	}
 
+	/**
+	 * Normalize the structure of the external resources to be an array of resource/onLoad pairs
+	 *
+	 * @private
+	 */
 	normalizeResources (resources) {
-		// Normalize the structure of the external resources to be an array of resource/onLoad pairs
 		return Array.isArray(resources) ? resources.map(res => {
 			if (!res) return;
 
@@ -50,7 +64,9 @@ class I18n {
 	}
 
 	/**
-	 * Called when the DOM is ready to listeners and async resource retrieval
+	 * Call when the DOM is ready to listeners and async resource retrieval
+	 *
+	 * @public
 	 */
 	load () {
 		this._ready = true;
@@ -67,6 +83,8 @@ class I18n {
 
 	/**
 	 * Called to clean up resource retrieval and event listeners
+	 *
+	 * @public
 	 */
 	unload () {
 		this._ready = false;
@@ -77,6 +95,11 @@ class I18n {
 		}
 	}
 
+	/**
+	 * Loads the resources for the given locale
+	 *
+	 * @private
+	 */
 	loadResources (spec) {
 		if (!this._ready) return;
 
@@ -131,6 +154,9 @@ class I18n {
 		}
 	}
 
+	/**
+	 * Called when the `languagechange` event fires
+	 */
 	handleLocaleChange = () => {
 		onWindowFocus(this.updateLocale);
 	}

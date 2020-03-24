@@ -34,7 +34,7 @@ function useClass (Ctor, ...args) {
  */
 
 /**
- * Configuration for `useToggle`
+ * Object returned by `useToggle`
  *
  * @typedef {Object} useToggleInterface
  * @memberof ui/Toggleable
@@ -48,7 +48,9 @@ function useClass (Ctor, ...args) {
 /**
  * Manages a boolean state value.
  *
- * The value may either be toggled via the `onToggle` or explicitly set via `onActivate` and `onDeactivate`. The initial value can be set using the `defaultSelected` option
+ * The value may either be toggled via the `onToggle` or explicitly set via `onActivate` and
+ * `onDeactivate`. The initial value can be set using the `defaultSelected` option
+ *
  * @param {useToggleConfig} config Configuration options
  * @returns {useToggleInterface}
  * @private
