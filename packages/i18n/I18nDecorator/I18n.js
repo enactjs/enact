@@ -75,7 +75,7 @@ class I18n {
 			on('languagechange', this.handleLocaleChange, window);
 		}
 
-		// When async, 
+		// When async, we defer loading resources until DOM is ready
 		if (!this.sync) {
 			this.loadResources(this._locale);
 		}

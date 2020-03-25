@@ -39,7 +39,7 @@ describe('useI18n', () => {
 		const subject = shallow(<Component />);
 
 		const expected = false;
-		const actual = subject.prop('rtl')
+		const actual = subject.prop('rtl');
 
 		expect(actual).toBe(expected);
 	});
