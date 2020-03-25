@@ -14,6 +14,7 @@ import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
 import componentCss from './ImageItem.module.less';
+import EnactPropTypes from '@enact/core/internal/prop-types/prop-types';
 
 // Adapts ComponentOverride to work within Cell since both use the component prop
 function ImageOverride ({imageComponent, ...rest}) {
@@ -61,10 +62,10 @@ const ImageItem = kind({
 		/**
 		 * The component used to render the image component.
 		 *
-		 * @type {Node}
+		 * @type {Component|Element}
 		 * @public
 		 */
-		imageComponent: PropTypes.node,
+		imageComponent: EnactPropTypes.componentOverride,
 
 		/**
 		 * The layout orientation of the component.
@@ -135,7 +136,7 @@ const ImageItem = kind({
 		const Component = isHorizontal ? Row : Column;
 
 		return (
-			<Component {...rest} inline={!isHorizontal}>
+			<Component {...rest}>
 				<Cell
 					className={css.image}
 					component={ImageOverride}
@@ -144,14 +145,16 @@ const ImageItem = kind({
 					shrink={isHorizontal}
 					src={src}
 				/>
-				<Cell
-					className={css.caption}
-					shrink={!isHorizontal}
-					// eslint-disable-next-line no-undefined
-					align={isHorizontal ? 'center' : undefined}
-				>
-					{caption}
-				</Cell>
+				{caption ? (
+					<Cell
+						className={css.caption}
+						shrink={!isHorizontal}
+						// eslint-disable-next-line no-undefined
+						align={isHorizontal ? 'center' : undefined}
+					>
+						{caption}
+					</Cell>
+				) : null}
 			</Component>
 		);
 	}
