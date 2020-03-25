@@ -948,7 +948,9 @@ const useScrollBase = (props) => {
 	function setScrollLeft (value) {
 		const bounds = getScrollBounds();
 
-		props.applyFadeoutEffect && props.applyFadeoutEffect(mutableRef.current.scrollLeft, value, bounds.maxLeft);
+		if (props.applyFadeoutEffect) {
+			props.applyFadeoutEffect(mutableRef.current.scrollLeft, value, bounds.maxLeft);
+		}
 
 		mutableRef.current.scrollLeft = clamp(0, bounds.maxLeft, value);
 
@@ -964,7 +966,9 @@ const useScrollBase = (props) => {
 	function setScrollTop (value) {
 		const bounds = getScrollBounds();
 
-		props.applyFadeoutEffect && props.applyFadeoutEffect(mutableRef.current.scrollTop, value, bounds.maxTop);
+		if (props.applyFadeoutEffect) {
+			props.applyFadeoutEffect(mutableRef.current.scrollTop, value, bounds.maxTop);
+		}
 
 		mutableRef.current.scrollTop = clamp(0, bounds.maxTop, value);
 
