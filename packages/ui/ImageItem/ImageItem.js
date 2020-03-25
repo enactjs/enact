@@ -135,7 +135,7 @@ const ImageItem = kind({
 		const Component = isHorizontal ? Row : Column;
 
 		return (
-			<Component {...rest} inline>
+			<Component {...rest} inline={!isHorizontal}>
 				<Cell
 					className={css.image}
 					component={ImageOverride}
