@@ -51,7 +51,7 @@ describe('useI18n', () => {
 		const expected = ['enact-locale-en', 'enact-locale-en-US', 'enact-locale-US'].sort();
 		const actual = subject.prop('className').split(' ').sort();
 
-		expect(actual).toMatchObject(expected);
+		expect(actual).toEqual(expected);
 	});
 
 	test('should return rtl=true for RTL locales', () => {
@@ -76,7 +76,7 @@ describe('useI18n', () => {
 		].sort();
 		const actual = subject.prop('className').split(' ').sort();
 
-		expect(actual).toMatchObject(expected);
+		expect(actual).toEqual(expected);
 	});
 
 	test('should return support overriding to latin locale', () => {
@@ -91,7 +91,7 @@ describe('useI18n', () => {
 		].sort();
 		const actual = subject.prop('className').split(' ').sort();
 
-		expect(actual).toMatchObject(expected);
+		expect(actual).toEqual(expected);
 	});
 
 	test('should return support overriding to non-latin locale', () => {
@@ -105,6 +105,6 @@ describe('useI18n', () => {
 		].sort();
 		const actual = subject.prop('className').split(' ').sort();
 
-		expect(actual).toMatchObject(expected);
+		expect(actual).toEqual(expected);
 	});
 });
