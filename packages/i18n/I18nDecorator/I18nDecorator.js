@@ -120,7 +120,7 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 	I18nDecorator.propTypes = {
 		/**
-		 * Classname for a root app element.
+		 * Classes to apply to the wrapped component.
 		 *
 		 * @type {String}
 		 * @public
@@ -128,9 +128,10 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		className: PropTypes.string,
 
 		/**
-		 * A string with a {@link https://tools.ietf.org/html/rfc5646|BCP 47 language tag}.
+		 * The locale to use.
 		 *
-		 * The system locale will be used by default.
+		 * A string with a {@link https://tools.ietf.org/html/rfc5646|BCP 47 language tag}. The
+		 * system locale will be used by default.
 		 *
 		 * @type {String}
 		 * @public
