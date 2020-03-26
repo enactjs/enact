@@ -151,6 +151,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			defaultSelected: props[defaultPropKey],
 			disabled: props.disabled,
 			onToggle: (ev) => forwardToggle(ev, props),
+			prop,
 
 			// FIXME: Current behavior for Toggleable treats `null` as undefined so we coerce it
 			// here to maintain that behavior while using useControlledState. The default state is
@@ -169,9 +170,9 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		// FIXME: Current behavior is to use `false` when switching from a truthy value to
 		// either null or undefined. The ternary below enforces that but we don't want to
 		// continue this exception in the future and should sunset it with this HOC.
-		const {current: instance} = React.useRef({selected: null});
+		const [instance] = React.useState({selected: null});
 		const selected = (instance.selected && props[prop] == null) ? false : hook.selected;
-		instance.selected = selected;
+		instance.selected = props[prop];
 
 		if (prop) {
 			updated[prop] = selected;
