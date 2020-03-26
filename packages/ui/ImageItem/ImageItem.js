@@ -70,11 +70,7 @@ const ImageItem = kind({
 		/**
 		 * The layout orientation of the component.
 		 *
-		 * Valid values are:
-		 * * `'horizontal'`, and
-		 * * `'vertical'`.
-		 *
-		 * @type {String}
+		 * @type {('horizontal'|'vertical')}
 		 * @default 'vertical'
 		 * @public
 		 */
