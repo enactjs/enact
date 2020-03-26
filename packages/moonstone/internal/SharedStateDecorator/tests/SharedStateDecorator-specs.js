@@ -135,10 +135,9 @@ describe('SharedStateDecorator Specs', () => {
 
 		const subject = mount(<Component />);
 
-		const expected = null;
 		const actual = subject.text();
 
-		expect(actual).toBe(expected);
+		expect(actual).toBeFalsy();
 	});
 
 	test('should not set or return values when {id} is set to an empty string', () => {
@@ -154,10 +153,9 @@ describe('SharedStateDecorator Specs', () => {
 
 		const subject = mount(<Component id="" />);
 
-		const expected = null;
 		const actual = subject.text();
 
-		expect(actual).toBe(expected);
+		expect(actual).toBeFalsy();
 	});
 
 	test('should not set or return values when {id} is set to null', () => {
@@ -173,10 +171,9 @@ describe('SharedStateDecorator Specs', () => {
 
 		const subject = mount(<Component id={null} />);
 
-		const expected = null;
 		const actual = subject.text();
 
-		expect(actual).toBe(expected);
+		expect(actual).toBeFalsy();
 	});
 
 	test('should not set or return values when {id} and {noSharedState} are set', () => {
@@ -192,10 +189,9 @@ describe('SharedStateDecorator Specs', () => {
 
 		const subject = mount(<Component id="outer" noSharedState />);
 
-		const expected = null;
 		const actual = subject.text();
 
-		expect(actual).toBe(expected);
+		expect(actual).toBeFalsy();
 	});
 
 	test('should supporting deleting a value by key when {id} is set', () => {
@@ -212,10 +208,9 @@ describe('SharedStateDecorator Specs', () => {
 
 		const subject = mount(<Component id="outer" />);
 
-		const expected = null;
 		const actual = subject.text();
 
-		expect(actual).toBe(expected);
+		expect(actual).toBeFalsy();
 	});
 
 	test('should share data upstream when inside another SharedStateDecorator', () => {
