@@ -6,13 +6,23 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {Column, Cell, Row} from '../Layout';
+import ComponentOverride from '../ComponentOverride';
 import Image from '../Image';
+import {Cell, Column, Row} from '../Layout';
 
 import componentCss from './ImageItem.module.less';
+
+// Adapts ComponentOverride to work within Cell since both use the component prop
+function ImageOverride ({imageComponent, ...rest}) {
+	return ComponentOverride({
+		component: imageComponent,
+		...rest
+	});
+}
 
 /**
  * A basic image item without any behavior.
@@ -52,10 +62,10 @@ const ImageItem = kind({
 		/**
 		 * The component used to render the image component.
 		 *
-		 * @type {Node}
+		 * @type {Component|Element}
 		 * @public
 		 */
-		imageComponent: PropTypes.node,
+		imageComponent: EnactPropTypes.componentOverride,
 
 		/**
 		 * The layout orientation of the component.
@@ -100,6 +110,7 @@ const ImageItem = kind({
 	},
 
 	defaultProps: {
+		imageComponent: Image,
 		orientation: 'vertical',
 		selected: false
 	},
@@ -111,31 +122,39 @@ const ImageItem = kind({
 	},
 
 	computed: {
-		className: ({orientation, selected, styler}) => styler.append(
-			{selected, horizontal: orientation === 'horizontal', vertical: orientation === 'vertical'}
-		),
-		caption: ({caption, css, orientation}) => {
-			const captionComponent = typeof caption === 'string' ? <Cell className={css.caption} shrink>{caption}</Cell> : caption;
-
-			return (
-				orientation === 'horizontal' ? <Cell align="center">
-					{captionComponent}
-				</Cell> : captionComponent
-			);
-		}
+		className: ({orientation, selected, styler}) => styler.append({
+			selected,
+			horizontal: orientation === 'horizontal',
+			vertical: orientation === 'vertical'
+		})
 	},
 
 	render: ({caption, css, imageComponent, orientation, placeholder, src, ...rest}) => {
 		delete rest.selected;
 
-		const
-			isHorizontal = orientation === 'horizontal',
-			Component = isHorizontal ? Row : Column;
+		const isHorizontal = orientation === 'horizontal';
+		const Component = isHorizontal ? Row : Column;
 
 		return (
-			<Component {...rest} inline>
-				{imageComponent ? imageComponent : <Cell className={css.image} component={Image} placeholder={placeholder} shrink={isHorizontal} src={src} />}
-				{caption}
+			<Component {...rest}>
+				<Cell
+					className={css.image}
+					component={ImageOverride}
+					imageComponent={imageComponent}
+					placeholder={placeholder}
+					shrink={isHorizontal}
+					src={src}
+				/>
+				{caption ? (
+					<Cell
+						className={css.caption}
+						shrink={!isHorizontal}
+						// eslint-disable-next-line no-undefined
+						align={isHorizontal ? 'center' : undefined}
+					>
+						{caption}
+					</Cell>
+				) : null}
 			</Component>
 		);
 	}
