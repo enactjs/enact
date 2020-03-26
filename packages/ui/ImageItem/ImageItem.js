@@ -32,7 +32,7 @@ function ImageOverride ({imageComponent, ...rest}) {
  * @ui
  * @public
  */
-const ImageItem = kind({
+const ImageItemBase = kind({
 	name: 'ui:ImageItem',
 
 	propTypes: /** @lends ui/ImageItem.ImageItem.prototype */ {
@@ -156,5 +156,8 @@ const ImageItem = kind({
 	}
 });
 
-export default ImageItem;
-export {ImageItem};
+export default ImageItemBase;
+export {
+	ImageItemBase as ImageItem,
+	ImageItemBase
+};
