@@ -50,9 +50,12 @@ const ImageItemBase = kind({
 		 *
 		 * The following classes are supported:
 		 *
+		 * * `imageItem` - The root component class
+		 * * `caption` - The caption component class
+		 * * `horizontal` - Applied when `orientation="horizontal"
 		 * * `image` - The image component class
 		 * * `selected` - Applied when `selected` prop is `true`
-		 * * `caption` - The caption component class
+		 * * `vertical` - Applied when `orientation="vertical"
 		 *
 		 * @type {Object}
 		 * @public
@@ -77,8 +80,7 @@ const ImageItemBase = kind({
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * Placeholder image used while [source]{@link ui/ImageItem.ImageItem#source}
-		 * is loaded.
+		 * A placeholder image to be displayed before the image is loaded.
 		 *
 		 * @type {String}
 		 * @public
@@ -86,8 +88,7 @@ const ImageItemBase = kind({
 		placeholder: PropTypes.string,
 
 		/**
-		 * Applies a selected visual effect to the image, but only if `selectionOverlayShowing`
-		 * is also `true`.
+		 * Applies a selected visual effect to the image.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -96,8 +97,8 @@ const ImageItemBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * String value or Object of values used to determine which image will appear on
-		 * a specific screenSize.
+		 * String value or Object of values used to determine which image will appear on a specific
+		 * screenSize.
 		 *
 		 * @type {String|Object}
 		 * @public
