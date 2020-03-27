@@ -64,6 +64,9 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 	}
 
 	useEffect(() => {
+		addClass(thumbRef.current, css.thumbShown);
+		hideThumbJob.current.start();
+
 		return () => {
 			hideThumbJob.current.stop();
 		};
