@@ -637,7 +637,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const props = Object.assign({}, this.props);
+			const {forwardRef, ...props} = this.props;
 
 			this.addHandlers(props);
 
@@ -658,7 +658,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			return (
-				<Wrapped {...props} />
+				<Wrapped {...props} ref={forwardRef} />
 			);
 		}
 	};
