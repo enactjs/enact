@@ -37,12 +37,12 @@ const ImageItemBase = kind({
 
 	propTypes: /** @lends ui/ImageItem.ImageItem.prototype */ {
 		/**
-		 * The caption string or a node to be displayed with the image.
+		 * The caption displayed with the image.
 		 *
 		 * @type {Node}
 		 * @public
 		 */
-		caption: PropTypes.node,
+		children: PropTypes.node,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -125,7 +125,7 @@ const ImageItemBase = kind({
 		})
 	},
 
-	render: ({caption, css, imageComponent, orientation, placeholder, src, ...rest}) => {
+	render: ({children, css, imageComponent, orientation, placeholder, src, ...rest}) => {
 		delete rest.selected;
 
 		const isHorizontal = orientation === 'horizontal';
@@ -141,14 +141,14 @@ const ImageItemBase = kind({
 					shrink={isHorizontal}
 					src={src}
 				/>
-				{caption ? (
+				{children ? (
 					<Cell
 						className={css.caption}
 						shrink={!isHorizontal}
 						// eslint-disable-next-line no-undefined
 						align={isHorizontal ? 'center' : undefined}
 					>
-						{caption}
+						{children}
 					</Cell>
 				) : null}
 			</Component>

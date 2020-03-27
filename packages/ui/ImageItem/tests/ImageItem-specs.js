@@ -13,19 +13,19 @@ describe('ImageItem', () => {
 		return null;
 	}
 
-	test('should support `caption` prop', () => {
-		const caption = 'caption';
+	test('should support `children` prop', () => {
+		const children = 'children';
 		const subject = shallow(
-			<ImageItemBase caption={caption} />
+			<ImageItemBase>{children}</ImageItemBase>
 		);
 
-		const expected = caption;
+		const expected = children;
 		const actual = subject.find('.caption').prop('children');
 
 		expect(actual).toBe(expected);
 	});
 
-	test('should omit caption node when `caption` is unset', () => {
+	test('should omit caption node when `children` is unset', () => {
 		const subject = shallow(
 			<ImageItemBase />
 		);
