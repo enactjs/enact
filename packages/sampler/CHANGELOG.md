@@ -14,6 +14,10 @@ No significant changes.
 
 Migrate common Enact Storybook configurations, addons, and utilities into @enact/storybook-utils helper package.
 
+## [3.2.6] - 2020-03-26
+
+No significant changes.
+
 ## [3.2.5] - 2019-11-14
 
 No significant changes.

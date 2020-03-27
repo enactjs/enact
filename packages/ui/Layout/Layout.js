@@ -365,6 +365,7 @@ const Column = LayoutDecorator((props) => (
 		orientation: 'vertical'
 	})
 ));
+Column.displayName = 'Column';
 
 /**
  * Shorthand for `<Layout orientation="horizontal">`, which positions its
@@ -389,6 +390,7 @@ const Row = LayoutDecorator((props) => (
 		orientation: 'horizontal'
 	})
 ));
+Row.displayName = 'Row';
 
 export default LayoutBase;
 export {

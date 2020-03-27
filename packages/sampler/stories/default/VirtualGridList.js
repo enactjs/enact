@@ -1,6 +1,6 @@
 import {action} from '@enact/storybook-utils/addons/actions';
 import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
-import {GridListImageItem as UiGridListImageItem} from '@enact/ui/GridListImageItem';
+import {ImageItem as UiImageItem} from '@enact/ui/ImageItem';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import ri from '@enact/ui/resolution';
 import React from 'react';
@@ -21,15 +21,14 @@ const
 	),
 	// eslint-disable-next-line enact/prop-types
 	uiRenderItem = ({index, ...rest}) => {
-		const {text, subText, source} = items[index];
+		const {text, source} = items[index];
 
 		return (
-			<UiGridListImageItem
+			<UiImageItem
 				{...rest}
 				caption={text}
-				source={source}
+				src={source}
 				style={{width: '100%'}}
-				subCaption={subText}
 			/>
 		);
 	};
@@ -45,11 +44,10 @@ const updateDataSize = (dataSize) => {
 		const
 			count = (headingZeros + i).slice(-itemNumberDigits),
 			text = `Item ${count}${shouldAddLongContent({index: i, modIndex: 2})}`,
-			subText = `SubItem ${count}${shouldAddLongContent({index: i, modIndex: 3})}`,
 			color = Math.floor((Math.random() * (0x1000000 - 0x101010)) + 0x101010).toString(16),
 			source = `http://placehold.it/300x300/${color}/ffffff&text=Image ${i}`;
 
-		items.push({text, subText, source});
+		items.push({text, source});
 	}
 
 	return dataSize;

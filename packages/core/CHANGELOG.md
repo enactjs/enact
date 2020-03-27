@@ -16,6 +16,10 @@ No significant changes.
 
 No significant changes.
 
+## [3.2.6] - 2020-03-26
+
+No significant changes.
+
 ## [3.2.5] - 2019-11-14
 
 No significant changes.
