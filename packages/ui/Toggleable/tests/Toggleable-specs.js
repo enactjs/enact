@@ -492,4 +492,23 @@ describe('Toggleable', () => {
 		}
 	);
 
+	// testing regression from #2679 causing #2735
+	test(
+		'should not update instance value when prop did not change',
+		() => {
+			const Component = Toggleable(DivComponent);
+			const subject = mount(
+				<Component />
+			);
+
+			subject.find(DivComponent).invoke('onToggle')(); // set to true
+			subject.setProps({});           // force re-render to simulate upstream state change
+
+			const expected = true;
+			const actual = subject.find(DivComponent).props();
+
+			expect(actual).toHaveProperty('selected', expected);
+		}
+	);
+
 });
