@@ -1397,12 +1397,7 @@ const useScrollBase = (props) => {
 
 		// scrollMode 'native' [[
 		if (scrollMode === 'native' && scrollContentRef.current) {
-			utilEvent('scroll').addEventListener(
-				scrollContentRef,
-				onScroll,
-				{capture: true, passive: true}
-			);
-
+			utilEvent('scroll').addEventListener(scrollContentRef, onScroll, {passive: true});
 			scrollContentRef.current.style.scrollBehavior = 'smooth';
 		}
 		// scrollMode 'native' ]]
@@ -1423,7 +1418,7 @@ const useScrollBase = (props) => {
 		utilEvent('mousedown').removeEventListener(scrollContainerRef, onMouseDown);
 
 		// scrollMode 'native' [[
-		utilEvent('scroll').removeEventListener(scrollContentRef, onScroll, {capture: true, passive: true});
+		utilEvent('scroll').removeEventListener(scrollContentRef, onScroll, {passive: true});
 		// scrollMode 'native' ]]
 
 		if (props.removeEventListeners) {
@@ -1549,15 +1544,12 @@ const assignPropertiesOf = (instance) => (name, properties) => {
 	if (typeof properties === 'object') {
 		for (const property in properties) {
 			if (property === 'className') {
-
 				warning(
 					Array.isArray(properties.className),
 					'Unsupported other types for `className` prop except Array'
 				);
 
-				instance[name].className = instance[name].className ?
-					instance[name].className + ' ' + properties.className.join(' ') :
-					properties.className.join(' ');
+				instance[name].className = classNames(instance[name].className, properties.className);
 			} else {
 				warning(
 					!instance[name][property],

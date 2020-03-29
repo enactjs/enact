@@ -3,8 +3,10 @@
  *
  * @module ui/GridListImageItem
  * @exports GridListImageItem
+ * @deprecated Will be removed in 4.0.0. Use {@link ui/ImageItem} instead.
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
@@ -196,7 +198,7 @@ const GridListImageItem = kind({
 		}
 	},
 
-	render: ({css, imageComponent: ImageComponent, placeholder, source, selectionOverlay, subComponents, ...rest}) => {
+	render: deprecate(({css, imageComponent: ImageComponent, placeholder, source, selectionOverlay, subComponents, ...rest}) => {
 		delete rest.caption;
 		delete rest.captionComponent;
 		delete rest.iconComponent;
@@ -212,7 +214,11 @@ const GridListImageItem = kind({
 				{subComponents}
 			</Column>
 		);
-	}
+	}, {
+		name: 'ui/GridListImageItem',
+		replacedBy: 'ui/ImageItem',
+		until: '4.0.0'
+	})
 });
 
 export default GridListImageItem;
