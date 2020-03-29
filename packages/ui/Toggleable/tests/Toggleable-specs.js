@@ -502,7 +502,7 @@ describe('Toggleable', () => {
 			);
 
 			subject.find(DivComponent).invoke('onToggle')(); // set to true
-			subject.setProps({});           // force re-render to simulate upstream state change
+			subject.setProps({}); // force re-render to simulate upstream state change
 
 			const expected = true;
 			const actual = subject.find(DivComponent).props();
