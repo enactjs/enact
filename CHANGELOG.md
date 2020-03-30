@@ -2,6 +2,20 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.3.0-alpha.4] - 2020-03-30
+
+### Deprecated
+
+- `ui/GridListImageItem`, use `ui/ImageItem` instead
+
+### Added
+
+- `ui/ImageItem` component
+
+### Fixed
+
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` to update scroll thumb position properly in nested cases
+
 ## [3.3.0-alpha.3] - 2020-03-09
 
 ### Added
