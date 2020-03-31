@@ -7,8 +7,13 @@
 
 import React from 'react';
 
+import useClass from '../internal/useClass';
+
 import computed from './computed';
+import Handlers from './handlers';
 import styles from './styles';
+
+const NoContext = React.createContext(null);
 
 /**
  * @callback RenderFunction
@@ -116,7 +121,7 @@ import styles from './styles';
 const kind = (config) => {
 	const {
 		computed: cfgComputed,
-		contextType,
+		contextType = NoContext,
 		defaultProps,
 		handlers,
 		name,
@@ -134,44 +139,20 @@ const kind = (config) => {
 		return render(props, context);
 	};
 
-	// addition prop decorations would be chained here (after config.render)
-	const Component = class extends React.Component {
-		static displayName = name || 'Component'
+	function Component (props) {
+		const ctx = React.useContext(contextType);
+		const handle = useClass(Handlers, handlers);
+		handle.set(props, ctx);
 
-		constructor () {
-			super();
-			this.handlers = {};
+		const merged = {
+			...props,
+			...handle.handlers
+		};
 
-			// cache bound function for each handler
-			if (handlers) {
-				Object.keys(handlers).forEach(handler => {
-					return this.prepareHandler(handler, handlers[handler]);
-				});
-			}
-		}
+		return renderKind(merged, ctx);
+	}
 
-		/*
-		 * Caches an event handler on the local `handlers` member
-		 *
-		 * @param   {String}    name     Event name
-		 * @param   {Function}  handler  Event handler
-		 *
-		 * @returns {undefined}
-		 */
-		prepareHandler (prop, handler) {
-			this.handlers[prop] = (ev) => {
-				return handler(ev, this.props, this.context);
-			};
-		}
-
-		render () {
-			return renderKind({
-				...this.props,
-				...this.handlers
-			}, this.context);
-		}
-	};
-
+	if (name) Component.displayName = name;
 	if (propTypes) Component.propTypes = propTypes;
 	if (contextType) Component.contextType = contextType;
 	if (defaultProps) Component.defaultProps = defaultProps;
