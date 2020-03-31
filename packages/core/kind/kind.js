@@ -154,7 +154,6 @@ const kind = (config) => {
 
 	if (name) Component.displayName = name;
 	if (propTypes) Component.propTypes = propTypes;
-	if (contextType) Component.contextType = contextType;
 	if (defaultProps) Component.defaultProps = defaultProps;
 
 	// Decorate the Component with the computed property object in DEV for easier testability
