@@ -26,10 +26,11 @@ const
 		return (
 			<UiImageItem
 				{...rest}
-				caption={text}
 				src={source}
 				style={{width: '100%'}}
-			/>
+			>
+				{text}
+			</UiImageItem>
 		);
 	};
 
