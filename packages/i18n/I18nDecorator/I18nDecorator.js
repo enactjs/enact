@@ -10,6 +10,8 @@ import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import '../src/glue';
+
 import useI18n from './useI18n';
 import {useI18nContext, I18nContext} from './useI18nContext';
 
