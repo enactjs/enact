@@ -78,7 +78,7 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 		startHidingThumb: () => {
 			hideThumbJob.current.start();
 		},
-		update: (bounds) => {
+		update: (bounds, scale = 1) => {
 			const
 				{clientSize} = props,
 				primaryDimenstion = vertical ? 'clientHeight' : 'clientWidth',
@@ -86,9 +86,9 @@ const ScrollbarBase = memo(forwardRef((props, ref) => {
 				scrollViewSize = vertical ? bounds.clientHeight : bounds.clientWidth,
 				scrollContentSize = vertical ? bounds.scrollHeight : bounds.scrollWidth,
 				scrollOrigin = vertical ? bounds.scrollTop : bounds.scrollLeft,
-				thumbSizeRatioBase = (scrollViewSize / scrollContentSize),
+				thumbSizeRatioBase = (scrollViewSize / scrollContentSize) * scale,
 				scrollThumbPositionRatio = (scrollOrigin / (scrollContentSize - scrollViewSize)),
-				scrollThumbSizeRatio = Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, thumbSizeRatioBase));
+				scrollThumbSizeRatio = Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, thumbSizeRatioBase) * scale);
 
 			setCSSVariable(thumbRef.current, '--scrollbar-size-ratio', scrollThumbSizeRatio);
 			setCSSVariable(thumbRef.current, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
