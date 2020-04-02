@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/ProgressBar` display fill and load base on center using `balanced` prop
+
 ## [3.3.0-alpha.4] - 2020-03-30
 
 ### Deprecated

@@ -19,9 +19,25 @@ import {validateRange} from '../internal/validators';
 import componentCss from './ProgressBar.module.less';
 
 const progressToProportion = (value) => clamp(0, 1, value);
-const calcBarStyle = (prop, anchor, value = anchor, startProp, endProp) => {
+const calcBarStyle = (prop, balanced, anchor, value = anchor, startProp, endProp) => {
 	let start = Math.min(anchor, value);
 	let end = Math.max(anchor, value) - start;
+
+	if (balanced) {
+		if (prop === 'progress') {
+			if (value <= 0.5) {
+				end = 0.5 - (end - start);
+				start = 0.5 - end;
+			} else {
+				end = (end - start) - 0.5;
+				start = 0.5;
+			}
+		} else if (prop === 'backgroundProgress') {
+			const gap = (end - start) / 2;
+			start = 0.5 - gap;
+			end = gap * 2;
+		}
+	}
 
 	if (__DEV__) {
 		validateRange(start, 0, 1, 'ProgressBar', prop, 'min', 'max');
@@ -56,6 +72,14 @@ const ProgressBar = kind({
 		 * @public
 		 */
 		backgroundProgress: PropTypes.number,
+
+		/**
+		 * Display fill and load base on center
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		balanced: PropTypes.bool,
 
 		/**
 		 * The contents to be displayed with progress bar.
@@ -139,11 +163,12 @@ const ProgressBar = kind({
 
 	computed: {
 		className: ({orientation, styler}) => styler.append(orientation),
-		style: ({backgroundProgress, progress, progressAnchor, style}) => {
+		style: ({backgroundProgress, balanced, progress, progressAnchor, style}) => {
 			return {
 				...style,
 				...calcBarStyle(
 					'backgroundProgress',
+					balanced,
 					progressAnchor,
 					backgroundProgress,
 					'--ui-progressbar-proportion-start-background',
@@ -151,6 +176,7 @@ const ProgressBar = kind({
 				),
 				...calcBarStyle(
 					'progress',
+					balanced,
 					progressAnchor,
 					progress,
 					'--ui-progressbar-proportion-start',
@@ -160,7 +186,7 @@ const ProgressBar = kind({
 		}
 	},
 
-	render: ({children, css, ...rest}) => {
+	render: ({children, css, balanced, ...rest}) => {
 		delete rest.backgroundProgress;
 		delete rest.orientation;
 		delete rest.progress;
@@ -172,6 +198,7 @@ const ProgressBar = kind({
 					<div className={css.load} />
 					<div className={css.fill} />
 				</div>
+				{balanced ? <div className={css.seperator} /> : null}
 				{children}
 			</div>
 		);

@@ -10,9 +10,16 @@
 	direction: ltr;
 
 	.bar,
+	.seperator,
 	.fill,
 	.load {
 		position: absolute;
+	}
+
+	.seperator {
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
 	}
 
 	&.vertical {
@@ -35,6 +42,11 @@
 			bottom: ~"calc(var(--ui-progressbar-proportion-start-background) * 100%)";
 			height: ~"calc(var(--ui-progressbar-proportion-end-background) * 100%)";
 		}
+
+		.seperator {
+			width: 48px;
+			height: 6px;
+		}
 	}
 
 	&.horizontal {
@@ -56,6 +68,11 @@
 		.load {
 			left: ~"calc(var(--ui-progressbar-proportion-start-background) * 100%)";
 			width: ~"calc(var(--ui-progressbar-proportion-end-background) * 100%)";
+		}
+
+		.seperator {
+			width: 6px;
+			height: 48px;
 		}
 	}
 }
