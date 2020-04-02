@@ -31,8 +31,8 @@ storiesOf('UI', module)
 			>
 				<div
 					style={{
-						height: ri.scaleToRem(2002),
-						width: ri.scaleToRem(4001)
+						height: ri.scaleToRem(2004),
+						width: ri.scaleToRem(4002)
 					}}
 				>
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
