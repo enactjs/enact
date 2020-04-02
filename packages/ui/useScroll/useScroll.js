@@ -16,7 +16,7 @@ import {platform} from '@enact/core/platform'; // scrollMode 'native'
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
-import {useCallback, useContext, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
 import warning from 'warning';
 
 import ForwardRef from '../ForwardRef';
@@ -63,7 +63,9 @@ const
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
 
-const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
+const TouchableDiv = ForwardRef({prop: 'componentRef'}, Touchable(
+	({componentRef, ...rest}) => (<div {...rest} ref={componentRef} />)
+));
 
 const useForceUpdate = () => (useReducer(x => x + 1, 0));
 
