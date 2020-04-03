@@ -102,13 +102,13 @@
  * @example
  * <Layout className="debug layout">
  * 	<Cell shrink>
- * 		<Button>First</Button>
+ * 		<button>First</button>
  * 	</Cell>
  * 	<Cell>
- * 		<Item>An Item with some long text in it</Item>
+ * 		<div>A div with some long text in it</div>
  * 	</Cell>
  * 	<Cell shrink>
- * 		<Button>Last</Button>
+ * 		<button>Last</button>
  * 	</Cell>
  * </Layout>
  *
