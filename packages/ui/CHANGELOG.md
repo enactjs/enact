@@ -2,7 +2,19 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [3.3.0-alpha.5] - 2020-04-06
+
+No significant changes.
+
+## [3.3.0-alpha.4] - 2020-03-30
+
+### Deprecated
+
+- `ui/GridListImageItem`, use `ui/ImageItem` instead
+
+### Added
+
+- `ui/ImageItem` component
 
 ### Fixed
 
@@ -14,12 +26,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/styles/mixins.less` `.position()` support for list-style arguments, in addition to the existing separated arguments
 - `ui/GridListItemItem` prop `subComponents`
-
-### Fixed
-
-- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to show items properly when reducing data size by updating `firstIndex` correctly
-- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` not to suddenly jump when pressing directional keys after wheeling
-- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to show items properly when reducing data size
 
 ## [3.3.0-alpha.2] - 2020-03-09
 
@@ -45,6 +51,12 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Marquee` to not error when passed `null` `children` during an animation
 - `ui/Button` to have more robust support for a customized `iconComponent` prop
+
+## [3.2.6] - 2020-03-26
+
+### Fixed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to show items properly when reducing data size
 
 ## [3.2.5] - 2019-11-14
 

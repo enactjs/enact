@@ -43,14 +43,6 @@ class ScrollerBasic extends Component {
 		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
-		 * Called to get size of a content area
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		getContentSize: PropTypes.func,
-
-		/**
 		 * Prop to check context value if Scrollbar exists or not.
 		 *
 		 * @type {Boolean}
@@ -157,17 +149,10 @@ class ScrollerBasic extends Component {
 		return (this.props.direction !== 'vertical');
 	}
 
-	getContentSize = () => {
-		const contentSize = this.props.scrollContentRef.current;
-
-		return contentSize && this.props.getContentSize ? this.props.getContentSize(contentSize) : contentSize;
-	}
-
 	calculateMetrics () {
 		const
 			{scrollBounds} = this,
-			{clientWidth, clientHeight} = this.getContentSize(),
-			{scrollWidth, scrollHeight} = this.props.scrollContentRef.current;
+			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.props.scrollContentRef.current;
 
 		scrollBounds.scrollWidth = scrollWidth;
 		scrollBounds.scrollHeight = scrollHeight;
@@ -186,7 +171,6 @@ class ScrollerBasic extends Component {
 			});
 
 		delete rest.cbScrollTo;
-		delete rest.getContentSize;
 		delete rest.direction;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;

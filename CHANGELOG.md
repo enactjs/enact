@@ -2,6 +2,26 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.3.0-alpha.5] - 2020-04-06
+
+### Added
+
+- `core/handle.not` to return the logical complement of the value returned from the handler
+
+## [3.3.0-alpha.4] - 2020-03-30
+
+### Deprecated
+
+- `ui/GridListImageItem`, use `ui/ImageItem` instead
+
+### Added
+
+- `ui/ImageItem` component
+
+### Fixed
+
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` to update scroll thumb position properly in nested cases
+
 ## [3.3.0-alpha.3] - 2020-03-09
 
 ### Added
@@ -12,9 +32,6 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Fixed
 
 - `core/util.mergeClassNames` to mirror class names when used in unit tests
-- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to show items properly when reducing data size by updating `firstIndex` correctly
-- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` not to suddenly jump when pressing directional keys after wheeling
-- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to show items properly when reducing data size
 
 ## [3.3.0-alpha.2] - 2020-03-09
 
@@ -44,6 +61,11 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `ui/Marquee` to not error when passed `null` `children` during an animation
 - `ui/Button` to have more robust support for a customized `iconComponent` prop
 
+## [3.2.6] - 2020-03-26
+
+### Fixed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to show items properly when reducing data size
 
 ## [3.2.5] - 2019-11-14
 
