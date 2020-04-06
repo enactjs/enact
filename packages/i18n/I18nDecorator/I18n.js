@@ -21,6 +21,8 @@ class I18n {
 	}) {
 		this._locale = null;
 		this._ready = sync;
+		this._onLoadResources = () => {};
+		this.loadResourceJob = null;
 
 		this.latinLanguageOverrides = latinLanguageOverrides;
 		this.nonLatinLanguageOverrides = nonLatinLanguageOverrides;
@@ -34,17 +36,15 @@ class I18n {
 	 * @type {String}
 	 * @public
 	 */
-	set locale (locale) {
+	setContext (locale, onLoadResources) {
+		this.loadResourceJob = new Job(onLoadResources);
+		this._onLoadResources = onLoadResources;
+
 		if (this._locale !== locale) {
 			this._locale = locale;
 
 			this.loadResources(locale);
 		}
-	}
-
-	set onLoadResources (callback) {
-		this.loadResourceJob = new Job(callback);
-		this._onLoadResources = callback;
 	}
 
 	/**

@@ -43,8 +43,7 @@ function useI18n ({locale, ...config} = {}) {
 	});
 
 	const i18n = useClass(I18n, config);
-	i18n.onLoadResources = setState;
-	i18n.locale = locale;
+	i18n.setContext(locale, setState);
 
 	// Add/remove listeners on mount/unmount
 	React.useEffect(() => {
