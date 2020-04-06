@@ -49,7 +49,7 @@ function useClass (Ctor, ...args) {
  * Manages a boolean state value.
  *
  * The value may either be toggled via the `onToggle` or explicitly set via `onActivate` and
- * `onDeactivate`. The initial value can be set using the `defaultSelected` option
+ * `onDeactivate`. The initial value can be set using the `defaultSelected` option.
  *
  * @param {useToggleConfig} config Configuration options
  * @returns {useToggleInterface}
