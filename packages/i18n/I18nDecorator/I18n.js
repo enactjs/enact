@@ -9,6 +9,8 @@ import getI18nClasses from './getI18nClasses';
 import {onWindowFocus} from './windowFocus';
 
 /**
+ * Manages i18n resource loading.
+ *
  * @class I18n
  * @private
  */
@@ -31,7 +33,9 @@ class I18n {
 	}
 
 	/**
-	 * Sets the current locale triggering resource retrieval
+	 * Sets the current locale and load callback.
+	 *
+	 * Changing the localew will request new resource files for that locale.
 	 *
 	 * @type {String}
 	 * @public
@@ -66,7 +70,9 @@ class I18n {
 	}
 
 	/**
-	 * Call when the DOM is ready to listeners and async resource retrieval
+	 * Adds the `languagechange` event listener and initiaties async resource retrieval.
+	 *
+	 * Should only be called after `window` is available and the DOM is ready.
 	 *
 	 * @public
 	 */
@@ -84,7 +90,7 @@ class I18n {
 	}
 
 	/**
-	 * Called to clean up resource retrieval and event listeners
+	 * Cleans up resource retrieval and event listeners
 	 *
 	 * @public
 	 */
@@ -164,12 +170,13 @@ class I18n {
 	}
 
 	/**
-	 * Updates the locale for the application. If `newLocale` is omitted, the locale will be
-	 * reset to the device's default locale.
+	 * Updates the locale for the application.
 	 *
-	 * @param	{String}	newLocale	Locale identifier string
+	 * If `newLocale` is omitted, the locale will be reset to the device's default locale.
 	 *
-	 * @returns	{undefined}
+	 * @param   {String}    newLocale   Locale identifier string
+	 *
+	 * @returns {undefined}
 	 * @public
 	 */
 	updateLocale = (newLocale) => {
