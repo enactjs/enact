@@ -1,6 +1,6 @@
 {
   "lerna": "2.8.0",
-  "version": "3.3.0-alpha.3",
+  "version": "3.3.0-alpha.5",
   "command": {
     "bootstrap": {
       "npmClientArgs": [

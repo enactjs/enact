@@ -40,12 +40,12 @@ import Toggle from './Toggle';
  * @returns {useToggleInterface}
  * @private
  */
-function useToggle (config = {}) {
+function useToggle ({defaultSelected, selected, ...config} = {}) {
 	const toggle = useClass(Toggle, config);
 	const state = useControlledState(
-		config.defaultSelected,
-		config.selected,
-		typeof config.selected !== 'undefined'
+		defaultSelected,
+		selected,
+		typeof selected !== 'undefined'
 	);
 
 	toggle.setContext(...state);

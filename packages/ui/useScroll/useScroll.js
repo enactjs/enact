@@ -655,8 +655,8 @@ const useScrollBase = (props) => {
 					if (eventDelta < 0 && mutableRef.current.scrollTop > 0 || eventDelta > 0 && mutableRef.current.scrollTop < bounds.maxTop) {
 						// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
 						if (
-							horizontalScrollbarRef.current && utilDOM.containsDangerously(horizontalScrollbarRef.current.uiScrollbarContainer, ev.target) ||
-							verticalScrollbarRef.current && utilDOM.containsDangerously(verticalScrollbarRef.current.uiScrollbarContainer, ev.target)
+							horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef && utilDOM.containsDangerously(horizontalScrollbarRef.current.getContainerRef(), ev.target) ||
+							verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef && utilDOM.containsDangerously(verticalScrollbarRef.current.getContainerRef(), ev.target)
 						) {
 							delta = calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 							needToHideThumb = !delta;
@@ -1238,7 +1238,7 @@ const useScrollBase = (props) => {
 				}
 			} else {
 				if (typeof opt.index === 'number' && typeof scrollContentHandle.current.getItemPosition === 'function') {
-					itemPos = scrollContentHandle.current.getItemPosition(opt.index, opt.stickTo);
+					itemPos = scrollContentHandle.current.getItemPosition(opt.index, opt.stickTo, opt.offset);
 				} else if (opt.node instanceof Object) {
 					if (opt.node.nodeType === 1 && typeof scrollContentHandle.current.getNodePosition === 'function') {
 						itemPos = scrollContentHandle.current.getNodePosition(opt.node);
