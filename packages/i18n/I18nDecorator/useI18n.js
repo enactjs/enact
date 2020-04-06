@@ -1,3 +1,4 @@
+import useClass from '@enact/core/useClass';
 import React from 'react';
 
 import I18n from './I18n';
@@ -7,13 +8,13 @@ import I18n from './I18n';
  *
  * @typedef {Object} useI18nConfig
  * @memberof i18n/I18nDecorator
- * @property {String[]} [latinLanguageOverrides]    Locales that should be treated as latin
- * @property {String[]} [nonLatinLanguageOverrides] Locales that should be treated as non-latin
- * @property {Function} [onLoadResources]           Called when resources have been loaded after a
- *                                                  locale change
- * @property {Function[]} [resources]               Additional resource callbacks to be invoked
- *                                                  during a locale change
- * @property {Boolean}  [sync = false]              Load the resources synchronously
+ * @property {String[]}   [latinLanguageOverrides]    Locales that should be treated as latin
+ * @property {String[]}   [nonLatinLanguageOverrides] Locales that should be treated as non-latin
+ * @property {Function}   [onLoadResources]           Called when resources have been loaded after a
+ *                                                    locale change
+ * @property {Function[]} [resources]                 Additional resource callbacks to be invoked
+ *                                                    during a locale change
+ * @property {Boolean}    [sync = false]              Load the resources synchronously
  * @private
  */
 
@@ -41,25 +42,20 @@ function useI18n ({locale, ...config} = {}) {
 		loaded: Boolean(config.sync)
 	});
 
-	const inst = React.useRef(null);
-	inst.current = inst.current || new I18n({
-		onLoadResources: setState,
-		...config
-	});
-
-	// I18n's locale setter will trigger resource loading and call onLoadResources when complete
-	inst.current.locale = locale;
+	const i18n = useClass(I18n, config);
+	i18n.onLoadResources = setState;
+	i18n.locale = locale;
 
 	// Add/remove listeners on mount/unmount
 	React.useEffect(() => {
-		inst.current.load();
+		i18n.load();
 
-		return () => inst.current.unload();
-	}, []);
+		return () => i18n.unload();
+	}, [i18n]);
 
 	return {
 		...state,
-		updateLocale: inst.current.updateLocale
+		updateLocale: i18n.updateLocale
 	};
 }
 

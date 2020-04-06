@@ -16,7 +16,6 @@ class I18n {
 	constructor ({
 		latinLanguageOverrides,
 		nonLatinLanguageOverrides,
-		onLoadResources = () => {},
 		resources,
 		sync = true
 	}) {
@@ -24,9 +23,7 @@ class I18n {
 		this._ready = sync;
 
 		this.latinLanguageOverrides = latinLanguageOverrides;
-		this.loadResourceJob = new Job(onLoadResources);
 		this.nonLatinLanguageOverrides = nonLatinLanguageOverrides;
-		this.onLoadResources = onLoadResources;
 		this.resources = this.normalizeResources(resources);
 		this.sync = sync;
 	}
@@ -43,6 +40,11 @@ class I18n {
 
 			this.loadResources(locale);
 		}
+	}
+
+	set onLoadResources (callback) {
+		this.loadResourceJob = new Job(callback);
+		this._onLoadResources = callback;
 	}
 
 	/**
@@ -128,7 +130,7 @@ class I18n {
 				if (onLoad) onLoad(result);
 			});
 
-			this.onLoadResources(state);
+			this._onLoadResources(state);
 		} else {
 			const resources = Promise.all([
 				rtl,

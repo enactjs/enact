@@ -120,7 +120,7 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		);
 	}
 
-	I18nDecorator.propTypes = {
+	I18nDecorator.propTypes = /** @lends i18n/I18nDecorator.I18nDecorator.prototype */ {
 		/**
 		 * Classes to apply to the wrapped component.
 		 *
