@@ -188,5 +188,7 @@ export default I18nDecorator;
 export {
 	I18nContext,
 	I18nContextDecorator,
-	I18nDecorator
+	I18nDecorator,
+	useI18n,
+	useI18nContext
 };
