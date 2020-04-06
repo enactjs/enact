@@ -46,7 +46,11 @@ function useI18n ({locale, ...config} = {}) {
 	i18n.setContext(locale, setState);
 
 	// Add/remove listeners on mount/unmount
+
+	console.log('useI18n out of useEffect', config.sync)
+	debugger;
 	React.useEffect(() => {
+		console.log('useI18n inside of useEffect', config.sync)
 		i18n.load();
 
 		return () => i18n.unload();
