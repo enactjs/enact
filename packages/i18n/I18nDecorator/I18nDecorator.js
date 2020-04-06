@@ -158,9 +158,9 @@ const I18nContextDecorator = hoc(contextDefaultConfig, (config, Wrapped) => {
 		const i18nContext = useI18nContext();
 
 		if (i18nContext) {
-			const {loaded, locale, rtl, updateLocale: update} = i18nContext;
+			const {loaded, locale, rtl, updateLocale} = i18nContext;
 
-			props = Object.assign({}, props);
+			props = {...props};
 			if (loadedProp) {
 				props[loadedProp] = loaded;
 			}
@@ -174,7 +174,7 @@ const I18nContextDecorator = hoc(contextDefaultConfig, (config, Wrapped) => {
 			}
 
 			if (updateLocaleProp) {
-				props[updateLocaleProp] = update;
+				props[updateLocaleProp] = updateLocale;
 			}
 		}
 
