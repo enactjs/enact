@@ -98,7 +98,7 @@ const useScrollBase = (props) => {
 			noScrollByDrag,
 			noScrollByWheel,
 			overhang,
-			overscrollEffectOn,
+			overscrollEffectOn = {drag: false, pageKey: false, wheel: false},
 			pageScroll,
 			rtl,
 			scrollContainerRef,
