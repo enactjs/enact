@@ -121,7 +121,15 @@ const ProgressBar = kind({
 		 * @default 0
 		 * @public
 		 */
-		progressAnchor: PropTypes.number
+		progressAnchor: PropTypes.number,
+
+		/**
+		 * Display separator at the center
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		separator: PropTypes.bool,
 	},
 
 	defaultProps: {
@@ -160,7 +168,7 @@ const ProgressBar = kind({
 		}
 	},
 
-	render: ({children, css, ...rest}) => {
+	render: ({children, css, separator, ...rest}) => {
 		delete rest.backgroundProgress;
 		delete rest.orientation;
 		delete rest.progress;
@@ -172,6 +180,7 @@ const ProgressBar = kind({
 					<div className={css.load} />
 					<div className={css.fill} />
 				</div>
+				{separator ? <div className={css.separator} /> : null}
 				{children}
 			</div>
 		);
