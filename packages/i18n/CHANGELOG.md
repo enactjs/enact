@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [3.3.0-alpha.5] - 2020-04-06
+
+No significant changes.
+
 ## [3.3.0-alpha.4] - 2020-03-30
 
 No significant changes.
