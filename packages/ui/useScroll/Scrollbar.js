@@ -41,7 +41,7 @@ const setCSSVariable = (element, variable, value) => {
  * @private
  */
 const useScrollbar = (props) => {
-	const {className, clientSize, corner, css, minThumbSize, vertical, ...rest} = props;
+	const {className, clientSize, corner, css, minThumbSize, vertical, ...scrollbarProps} = props;
 	// Refs
 	const uiScrollbarContainerRef = useRef();
 	const scrollbarTrackRef = useRef();
@@ -95,7 +95,7 @@ const useScrollbar = (props) => {
 			vertical ? css.vertical : css.horizontal
 		),
 		getContainerRef,
-		rest,
+		scrollbarProps,
 		scrollbarTrackRef,
 		showScrollbarTrack,
 		startHidingScrollbarTrack,
@@ -117,7 +117,7 @@ const Scrollbar = memo(forwardRef((props, ref) => {
 	const {
 		className,
 		getContainerRef,
-		rest,
+		scrollbarProps,
 		scrollbarTrackRef,
 		showScrollbarTrack,
 		startHidingScrollbarTrack,
@@ -134,7 +134,7 @@ const Scrollbar = memo(forwardRef((props, ref) => {
 	}));
 
 	return (
-		<div {...rest} className={className} ref={uiScrollbarContainerRef}>
+		<div {...scrollbarProps} className={className} ref={uiScrollbarContainerRef}>
 			<ScrollbarTrack
 				ref={scrollbarTrackRef}
 				vertical={vertical}
@@ -210,6 +210,7 @@ Scrollbar.defaultProps = {
 export default Scrollbar;
 export {
 	Scrollbar,
+	Scrollbar as ScrollbarBase,
 	ScrollbarTrack,
 	useScrollbar
 };
