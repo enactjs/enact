@@ -6,11 +6,11 @@ import ReactDOM from 'react-dom';
 
 import ri from '../resolution';
 
-import ScrollThumb from './ScrollThumb';
+import ScrollbarTrack from './ScrollbarTrack';
 
 import componentCss from './Scrollbar.module.less';
 
-const thumbHidingDelay = 400; // in milliseconds
+const scrollbarTrackHidingDelay = 400; // in milliseconds
 
 const addClass = (element, className) => {
 	ReactDOM.findDOMNode(element).classList.add(className); // eslint-disable-line react/no-find-dom-node
@@ -33,87 +33,119 @@ const setCSSVariable = (element, variable, value) => {
 };
 
 /**
- * An unstyled base component for a scroll bar.
+ * A custom hook that passes scrollbar behavior information as its render prop.
  *
- * @function ScrollbarBase
+ * @class
  * @memberof ui/useScroll
  * @ui
  * @private
  */
-const ScrollbarBase = memo(forwardRef((props, ref) => {
+const useScrollbar = (props) => {
+	const {className, clientSize, corner, css, minThumbSize, vertical, ...rest} = props;
 	// Refs
 	const uiScrollbarContainerRef = useRef();
-	const thumbRef = useRef();
-	const hideThumbJob = useRef(null);
-	// Render
-	const
-		{childRenderer, className, corner, css, minThumbSize, vertical, ...rest} = props,
-		containerClassName = classNames(
-			className,
-			corner && css.corner,
-			css.scrollbar,
-			vertical ? css.vertical : css.horizontal
-		);
+	const scrollbarTrackRef = useRef();
+	const hideScrollbarTrackJob = useRef(null);
 
-	delete rest.clientSize;
+	hideScrollbarTrackJob.current = hideScrollbarTrackJob.current || new Job(hideScrollbarTrack, scrollbarTrackHidingDelay);
 
-	hideThumbJob.current = hideThumbJob.current || new Job(hideThumb, thumbHidingDelay);
-
-	function hideThumb () {
-		removeClass(thumbRef.current, css.thumbShown);
+	function hideScrollbarTrack () {
+		removeClass(scrollbarTrackRef.current, css.scrollbarTrackShown);
 	}
 
 	useEffect(() => {
 		return () => {
-			hideThumbJob.current.stop();
+			hideScrollbarTrackJob.current.stop();
 		};
 	}, []);
 
-	useImperativeHandle(ref, () => ({
-		getContainerRef: () => (uiScrollbarContainerRef),
-		showThumb: () => {
-			hideThumbJob.current.stop();
-			addClass(thumbRef.current, css.thumbShown);
-		},
-		startHidingThumb: () => {
-			hideThumbJob.current.start();
-		},
-		update: (bounds) => {
-			const
-				{clientSize} = props,
-				primaryDimenstion = vertical ? 'clientHeight' : 'clientWidth',
-				trackSize = clientSize ? clientSize[primaryDimenstion] : uiScrollbarContainerRef.current[primaryDimenstion],
-				scrollViewSize = vertical ? bounds.clientHeight : bounds.clientWidth,
-				scrollContentSize = vertical ? bounds.scrollHeight : bounds.scrollWidth,
-				scrollOrigin = vertical ? bounds.scrollTop : bounds.scrollLeft,
-				thumbSizeRatioBase = (scrollViewSize / scrollContentSize),
-				scrollThumbPositionRatio = (scrollOrigin / (scrollContentSize - scrollViewSize)),
-				scrollThumbSizeRatio = Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, thumbSizeRatioBase));
+	function getContainerRef () {
+		return uiScrollbarContainerRef;
+	}
 
-			setCSSVariable(thumbRef.current, '--scrollbar-size-ratio', scrollThumbSizeRatio);
-			setCSSVariable(thumbRef.current, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
-		}
+	function showScrollbarTrack () {
+		hideScrollbarTrackJob.current.stop();
+		addClass(scrollbarTrackRef.current, css.scrollbarTrackShown);
+	}
+
+	function startHidingScrollbarTrack () {
+		hideScrollbarTrackJob.current.start();
+	}
+
+	function update (bounds) {
+		const
+			primaryDimenstion = vertical ? 'clientHeight' : 'clientWidth',
+			trackSize = clientSize ? clientSize[primaryDimenstion] : uiScrollbarContainerRef.current[primaryDimenstion],
+			scrollViewSize = vertical ? bounds.clientHeight : bounds.clientWidth,
+			scrollContentSize = vertical ? bounds.scrollHeight : bounds.scrollWidth,
+			scrollOrigin = vertical ? bounds.scrollTop : bounds.scrollLeft,
+			scrollbarSizeRatioBase = (scrollViewSize / scrollContentSize),
+			scrollbarProgressRatio = (scrollOrigin / (scrollContentSize - scrollViewSize)),
+			scrollbarSizeRatio = Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, scrollbarSizeRatioBase));
+
+		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-size-ratio', scrollbarSizeRatio);
+		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-progress-ratio', scrollbarProgressRatio);
+	}
+
+	return {
+		className: classNames(
+			className,
+			{[corner]: css.corner},
+			css.scrollbar,
+			vertical ? css.vertical : css.horizontal
+		),
+		getContainerRef,
+		rest,
+		scrollbarTrackRef,
+		showScrollbarTrack,
+		startHidingScrollbarTrack,
+		uiScrollbarContainerRef,
+		update,
+		vertical
+	};
+};
+
+/**
+ * An unstyled scroll bar.
+ *
+ * @class Scrollbar
+ * @memberof ui/useScroll
+ * @ui
+ * @private
+ */
+const Scrollbar = memo(forwardRef((props, ref) => {
+	const {
+		className,
+		getContainerRef,
+		rest,
+		scrollbarTrackRef,
+		showScrollbarTrack,
+		startHidingScrollbarTrack,
+		uiScrollbarContainerRef,
+		update,
+		vertical
+	} = useScrollbar(props);
+
+	useImperativeHandle(ref, () => ({
+		getContainerRef,
+		showScrollbarTrack,
+		startHidingScrollbarTrack,
+		update
 	}));
 
 	return (
-		<div {...rest} className={containerClassName} ref={uiScrollbarContainerRef}>
-			{childRenderer({thumbRef})}
+		<div {...rest} className={className} ref={uiScrollbarContainerRef}>
+			<ScrollbarTrack
+				ref={scrollbarTrackRef}
+				vertical={vertical}
+			/>
 		</div>
 	);
 }));
 
-ScrollbarBase.displayName = 'ui:ScrollbarBase';
+Scrollbar.displayName = 'ui:Scrollbar';
 
-ScrollbarBase.propTypes = /** @lends ui/useScroll.Scrollbar.prototype */ {
-	/**
-	 * The render function for child.
-	 *
-	 * @type {Function}
-	 * @required
-	 * @private
-	 */
-	childRenderer: PropTypes.func.isRequired,
-
+Scrollbar.propTypes = /** @lends ui/useScroll.Scrollbar.prototype */ {
 	/**
 	 * Client size of the container; valid values are an object that has `clientWidth` and `clientHeight`.
 	 *
@@ -168,72 +200,16 @@ ScrollbarBase.propTypes = /** @lends ui/useScroll.Scrollbar.prototype */ {
 	vertical: PropTypes.bool
 };
 
-ScrollbarBase.defaultProps = {
+Scrollbar.defaultProps = {
 	corner: false,
 	css: componentCss,
 	minThumbSize: 18,
 	vertical: true
 };
 
-/**
- * An unstyled scroll bar.
- *
- * @class Scrollbar
- * @memberof ui/useScroll
- * @ui
- * @private
- */
-const Scrollbar = forwardRef((props, ref) => {
-	const scrollbarBaseRef = useRef(null);
-
-	useImperativeHandle(ref, () => {
-		const {getContainerRef, showThumb, startHidingThumb, update} = scrollbarBaseRef.current;
-
-		return {
-			getContainerRef,
-			showThumb,
-			startHidingThumb,
-			update
-		};
-	}, [scrollbarBaseRef]);
-
-	return (
-		<ScrollbarBase
-			{...props}
-			ref={scrollbarBaseRef}
-			childRenderer={({thumbRef}) => { // eslint-disable-line react/jsx-no-bind
-				return (
-					<ScrollThumb
-						key="thumb"
-						ref={thumbRef}
-						vertical={props.vertical}
-					/>
-				);
-			}}
-		/>
-	);
-});
-
-Scrollbar.displayName = 'ui:Scrollbar';
-
-Scrollbar.propTypes = /** @lends ui/useScroll.Scrollbar.prototype */ {
-	/**
-	 * If `true`, the scrollbar will be oriented vertically.
-	 *
-	 * @type {Boolean}
-	 * @default true
-	 * @public
-	 */
-	vertical: PropTypes.bool
-};
-
-Scrollbar.defaultProps = {
-	vertical: true
-};
-
 export default Scrollbar;
 export {
 	Scrollbar,
-	ScrollbarBase,
-	ScrollThumb
+	ScrollbarTrack,
+	useScrollbar
 };
