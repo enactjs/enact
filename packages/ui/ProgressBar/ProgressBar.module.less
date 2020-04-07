@@ -5,6 +5,7 @@
 	--ui-progressbar-proportion-start-background: 0;
 	--ui-progressbar-proportion-end: 0;
 	--ui-progressbar-proportion-end-background: 0;
+	--ui-progressbar-progress-anchor: 0;
 
 	position: relative;
 	direction: ltr;
@@ -17,8 +18,6 @@
 	}
 
 	.separator {
-		top: 50%;
-		left: 50%;
 		transform: translate(-50%, -50%);
 	}
 
@@ -44,8 +43,8 @@
 		}
 
 		.separator {
-			width: 48px;
-			height: 6px;
+			top: ~"calc((1 - var(--ui-progressbar-progress-anchor)) * 100%)";
+			left: 50%;
 		}
 	}
 
@@ -71,8 +70,8 @@
 		}
 
 		.separator {
-			width: 6px;
-			height: 48px;
+			top: 50%;
+			left: ~"calc(var(--ui-progressbar-progress-anchor) * 100%)";
 		}
 	}
 }

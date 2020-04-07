@@ -163,7 +163,8 @@ const ProgressBar = kind({
 					progress,
 					'--ui-progressbar-proportion-start',
 					'--ui-progressbar-proportion-end'
-				)
+				),
+				'--ui-progressbar-progress-anchor': progressAnchor
 			};
 		}
 	},

@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/ProgressBar` add `separator` for support balance slider
+- `ui/ProgressBar` prop `separator` to show rectangle separator
 
 ## [3.3.0-alpha.4] - 2020-03-30
 
