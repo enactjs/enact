@@ -696,7 +696,7 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
 });
 
 /**
- * Accepts a handler and returns the complement of the value returned from the handler.
+ * Accepts a handler and returns the logical complement of the value returned from the handler.
  *
  * Example:
  * ```
