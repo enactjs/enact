@@ -129,6 +129,28 @@ describe('kind', () => {
 		expect(actual).toBe(expected);
 	});
 
+	test('support using hooks within kind instances', () => {
+		const Comp = kind({
+			name: 'Comp',
+			render: () => {
+				// eslint-disable-next-line react-hooks/rules-of-hooks
+				const [state, setState] = React.useState(0);
+
+				// eslint-disable-next-line react/jsx-no-bind
+				return <button onClick={() => setState(state + 1)}>{state}</button>;
+			}
+		});
+
+		const subject = mount(<Comp />);
+
+		subject.find('button').invoke('onClick')();
+
+		const expected = 1;
+		const actual = subject.find('button').prop('children');
+
+		expect(actual).toBe(expected);
+	});
+
 	describe('inline', () => {
 		test('should support a minimal kind', () => {
 			const Minimal = kind({
