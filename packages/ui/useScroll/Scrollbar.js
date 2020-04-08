@@ -99,7 +99,7 @@ const useScrollbar = (props) => {
 		scrollbarProps: {
 			className: classNames(
 				className,
-				{[corner]: css.corner},
+				corner ? css.corner : null,
 				css.scrollbar,
 				vertical ? css.vertical : css.horizontal
 			),
