@@ -131,23 +131,6 @@ class VirtualListBasic extends Component {
 		}),
 
 		/**
-		 * Customizes the component by mapping the supplied collection of CSS class names to the
-		 * corresponding internal Elements and states of this component.
-		 *
-		 * The following classes are supported:
-		 *
-		 * * `virtualList` - The VirtualList component class
-		 * * `vertical` - The selector class for a vertical list
-		 * * `horizontal` - The selector class for a vertical list
-		 * * `native` - The selector class for a list has `scrollMode` value of `'native'`
-		 * * `listItem` - The list item class
-		 *
-		 * @type {Object}
-		 * @private
-		 */
-		css: PropTypes.object,
-
-		/**
 		 * Disable voice control feature of component.
 		 *
 		 * @type {Boolean}
@@ -200,14 +183,6 @@ class VirtualListBasic extends Component {
 		 * @private
 		 */
 		getComponentProps: PropTypes.func,
-
-		/**
-		 * Called to get size of a content area
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		getContentSize: PropTypes.func,
 
 		/**
 		 * Ref for items
@@ -567,18 +542,18 @@ class VirtualListBasic extends Component {
 		return index === 0 ? 0 : this.getItemBottomPosition(index - 1) + spacing;
 	}
 
-	getItemPosition = (index, stickTo = 'start') => {
+	getItemPosition = (index, stickTo = 'start', optionalOffset = 0) => {
 		const
 			{primary} = this,
 			position = this.getGridPosition(index);
-		let  offset = 0;
+		let offset = 0;
 
 		if (stickTo === 'start') {
-			offset = 0;
+			offset = optionalOffset;
 		} else if (this.props.itemSizes) {
-			offset = primary.contentSize - this.props.itemSizes[index];
+			offset = primary.clientSize - this.props.itemSizes[index] - optionalOffset;
 		} else {
-			offset = primary.contentSize - primary.itemSize;
+			offset = primary.clientSize - primary.itemSize - optionalOffset;
 		}
 
 		position.primaryPosition -= offset;
@@ -591,11 +566,10 @@ class VirtualListBasic extends Component {
 
 	getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
-	getContentSize = (props) => {
-		const contentSize = props.clientSize || props.scrollContentRef.current;
-
-		return contentSize && props.getContentSize ? props.getContentSize(contentSize) : contentSize;
-	}
+	getClientSize = (node) => ({
+		clientWidth: node.clientWidth,
+		clientHeight: node.clientHeight
+	})
 
 	emitUpdateItems () {
 		const {dataSize} = this.props;
@@ -609,22 +583,22 @@ class VirtualListBasic extends Component {
 
 	calculateMetrics (props) {
 		const
-			{direction, itemSize, overhang, spacing} = props,
-			contentSize = this.getContentSize(props);
+			{clientSize, direction, itemSize, overhang, spacing} = props,
+			node = this.props.scrollContentRef.current;
 
-		if (!contentSize) {
+		if (!clientSize && !node) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = contentSize,
+			{clientWidth, clientHeight} = clientSize || this.getClientSize(node),
 			heightInfo = {
-				contentSize: clientHeight,
+				clientSize: clientHeight,
 				minItemSize: itemSize.minHeight || null,
 				itemSize: itemSize
 			},
 			widthInfo = {
-				contentSize: clientWidth,
+				clientSize: clientWidth,
 				minItemSize: itemSize.minWidth || null,
 				itemSize: itemSize
 			};
@@ -646,10 +620,10 @@ class VirtualListBasic extends Component {
 		if (this.isItemSized) {
 			// the number of columns is the ratio of the available width plus the spacing
 			// by the minimum item width plus the spacing
-			dimensionToExtent = Math.max(Math.floor((secondary.contentSize + spacing) / (secondary.minItemSize + spacing)), 1);
+			dimensionToExtent = Math.max(Math.floor((secondary.clientSize + spacing) / (secondary.minItemSize + spacing)), 1);
 			// the actual item width is a ratio of the remaining width after all columns
 			// and spacing are accounted for and the number of columns that we know we should have
-			secondary.itemSize = Math.floor((secondary.contentSize - (spacing * (dimensionToExtent - 1))) / dimensionToExtent);
+			secondary.itemSize = Math.floor((secondary.clientSize - (spacing * (dimensionToExtent - 1))) / dimensionToExtent);
 			// the actual item height is related to the item width
 			primary.itemSize = Math.floor(primary.minItemSize * (secondary.itemSize / secondary.minItemSize));
 		}
@@ -675,7 +649,7 @@ class VirtualListBasic extends Component {
 		const
 			{dataSize, overhang, updateStatesAndBounds} = props,
 			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
-			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.contentSize / primary.gridSize) + overhang)),
+			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
 			dataSizeDiff = dataSize - this.curDataSize;
 		let newFirstIndex = firstIndex;
@@ -746,15 +720,17 @@ class VirtualListBasic extends Component {
 	}
 
 	calculateScrollBounds (props) {
-		const contentSize = this.getContentSize(props);
+		const
+			{clientSize} = props,
+			node = this.props.scrollContentRef.current;
 
-		if (!contentSize) {
+		if (!clientSize && !node) {
 			return;
 		}
 
 		const
 			{scrollBounds, isPrimaryDirectionVertical} = this,
-			{clientWidth, clientHeight} = contentSize;
+			{clientWidth, clientHeight} = clientSize || this.getClientSize(node);
 		let maxPos;
 
 		scrollBounds.clientWidth = clientWidth;
@@ -780,7 +756,7 @@ class VirtualListBasic extends Component {
 	updateMoreInfo (dataSize, primaryPosition) {
 		const
 			{dimensionToExtent, moreInfo} = this,
-			{itemSize, gridSize, contentSize} = this.primary;
+			{itemSize, gridSize, clientSize} = this.primary;
 
 		if (dataSize <= 0) {
 			moreInfo.firstVisibleIndex = null;
@@ -815,7 +791,7 @@ class VirtualListBasic extends Component {
 			moreInfo.lastVisibleIndex = lastVisibleIndex;
 		} else {
 			moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - itemSize) / gridSize) + 1) * dimensionToExtent;
-			moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + contentSize) / gridSize) * dimensionToExtent - 1);
+			moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent - 1);
 		}
 	}
 
@@ -869,7 +845,7 @@ class VirtualListBasic extends Component {
 			{dataSize, spacing, itemSizes} = this.props,
 			{firstIndex} = this.state,
 			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds, itemPositions} = this,
-			{contentSize, gridSize} = this.primary,
+			{clientSize, gridSize} = this.primary,
 			maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
 		let newFirstIndex = firstIndex, index, pos, size, itemPosition;
 
@@ -890,7 +866,7 @@ class VirtualListBasic extends Component {
 				for (index = 0; index < dataSize; index += dimensionToExtent) {
 					itemPosition = itemPositions[index];
 					size = itemSizes[index];
-					if (itemPosition && size && itemPosition.position + size >= pos && itemPosition.position <= pos + contentSize) {
+					if (itemPosition && size && itemPosition.position + size >= pos && itemPosition.position <= pos + clientSize) {
 						firstRenderedIndex = index;
 						break;
 					}
@@ -1070,7 +1046,7 @@ class VirtualListBasic extends Component {
 
 	applyStyleToNewNode = (index, ...rest) => {
 		const
-			{css: themeCss, childProps, itemRefs, itemRenderer, getComponentProps} = this.props,
+			{childProps, itemRefs, itemRenderer, getComponentProps} = this.props,
 			key = index % this.state.numOfItems,
 			componentProps = getComponentProps && getComponentProps(index) || {},
 			itemContainerRef = (ref) => {
@@ -1086,7 +1062,7 @@ class VirtualListBasic extends Component {
 			};
 
 		this.cc[key] = (
-			<div className={classNames(css.listItem, themeCss ? themeCss.listItem : null)} key={key} ref={itemContainerRef} style={this.composeStyle(...rest)}>
+			<div className={css.listItem} key={key} ref={itemContainerRef} style={this.composeStyle(...rest)}>
 				{itemRenderer({...childProps, ...componentProps, index})}
 			</div>
 		);
@@ -1174,14 +1150,14 @@ class VirtualListBasic extends Component {
 	syncClientSize = () => {
 		const
 			{props} = this,
-			contentSize = this.getContentSize(props);
+			node = this.props.scrollContentRef.current;
 
-		if (!contentSize) {
+		if (!props.clientSize && !node) {
 			return false;
 		}
 
 		const
-			{clientWidth, clientHeight} = contentSize,
+			{clientWidth, clientHeight} = props.clientSize || this.getClientSize(node),
 			{scrollBounds} = this;
 
 		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
@@ -1198,18 +1174,13 @@ class VirtualListBasic extends Component {
 
 	render () {
 		const
-			{className, css: themeCss, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, scrollMode, ...rest} = this.props,
+			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, scrollMode, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, primary} = this,
 			scrollModeNative = scrollMode === 'native',
 			containerClasses = classNames(
 				css.virtualList,
 				isPrimaryDirectionVertical ? css.vertical : css.horizontal,
 				{[css.native]: scrollModeNative},
-				themeCss && [
-					themeCss.virtualList,
-					isPrimaryDirectionVertical && themeCss.vertical || themeCss.horizontal,
-					{[themeCss.native] : scrollModeNative}
-				],
 				className
 			),
 			contentClasses = scrollModeNative ? null : css.content;
@@ -1220,7 +1191,6 @@ class VirtualListBasic extends Component {
 		delete rest.dataSize;
 		delete rest.direction;
 		delete rest.getComponentProps;
-		delete rest.getContentSize;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
 		delete rest.itemRefs;

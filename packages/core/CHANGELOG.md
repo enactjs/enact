@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [3.3.0-alpha.5] - 2020-04-06
+
+### Added
+
+- `core/handle.not` to return the logical complement of the value returned from the handler
+
+## [3.3.0-alpha.4] - 2020-03-30
+
+No significant changes.
+
 ## [3.3.0-alpha.3] - 2020-03-17
 
 ### Fixed
