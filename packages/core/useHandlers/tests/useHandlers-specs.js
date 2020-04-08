@@ -43,6 +43,18 @@ describe('useHandlers', () => {
 		expect(actual).toBe(expected);
 	});
 
+	test('should receive the event', () => {
+		const spy = jest.fn();
+		const subject = shallow(<Component />);
+
+		const props = {children: 'updated'};
+		subject.setProps(props);
+
+		subject.find('div').invoke('testEvent')(spy);
+
+		expect(spy).toHaveBeenCalled();
+	});
+
 	test('should reflect the latest props', () => {
 		const spy = jest.fn();
 		const subject = shallow(<Component />);
