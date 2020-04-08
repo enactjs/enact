@@ -16,7 +16,7 @@ import {platform} from '@enact/core/platform'; // scrollMode 'native'
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
-import {useCallback, useContext, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
 import warning from 'warning';
 
 import ForwardRef from '../ForwardRef';
@@ -63,7 +63,9 @@ const
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
 
-const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
+const TouchableDiv = ForwardRef({prop: 'componentRef'}, Touchable(
+	({componentRef, ...rest}) => (<div {...rest} ref={componentRef} />)
+));
 
 const useForceUpdate = () => (useReducer(x => x + 1, 0));
 
@@ -478,7 +480,7 @@ const useScrollBase = (props) => {
 				targetX: (direction === 'vertical') ? 0 : mutableRef.current.dragStartX - getRtlX(ev.x), // 'horizontal' or 'both'
 				targetY: (direction === 'horizontal') ? 0 : mutableRef.current.dragStartY - ev.y, // 'vertical' or 'both'
 				animate: false,
-				overscrollEffect: overscrollEffectOn.drag
+				overscrollEffect: overscrollEffectOn && overscrollEffectOn.drag
 			});
 		} else {
 			const
@@ -488,8 +490,8 @@ const useScrollBase = (props) => {
 			mutableRef.current.lastInputType = 'drag';
 
 			if (!mutableRef.current.isTouching) {
-				start({targetX, targetY, animate: false, overscrollEffect: overscrollEffectOn.drag});
-			} else if (mutableRef.current.overscrollEnabled && overscrollEffectOn.drag) {
+				start({targetX, targetY, animate: false, overscrollEffect: overscrollEffectOn && overscrollEffectOn.drag});
+			} else if (mutableRef.current.overscrollEnabled && overscrollEffectOn && overscrollEffectOn.drag) {
 				checkAndApplyOverscrollEffectOnDrag(targetX, targetY, overscrollTypeHold);
 			}
 		}
@@ -510,12 +512,12 @@ const useScrollBase = (props) => {
 				mutableRef.current.lastInputType = 'drag';
 
 				mutableRef.current.isScrollAnimationTargetAccumulated = false;
-				start({targetX, targetY, duration, overscrollEffect: overscrollEffectOn.drag});
+				start({targetX, targetY, duration, overscrollEffect: overscrollEffectOn && overscrollEffectOn.drag});
 			} else {
 				stop();
 			}
 
-			if (mutableRef.current.overscrollEnabled) { // not check overscrollEffectOn.drag for safety
+			if (mutableRef.current.overscrollEnabled) { // not check overscrollEffectOn && overscrollEffectOn.drag for safety
 				clearAllOverscrollEffects();
 			}
 
@@ -530,15 +532,15 @@ const useScrollBase = (props) => {
 
 				if (!mutableRef.current.isTouching) {
 					mutableRef.current.isScrollAnimationTargetAccumulated = false;
-					start({targetX, targetY, overscrollEffect: overscrollEffectOn.drag});
-				} else if (mutableRef.current.overscrollEnabled && overscrollEffectOn.drag) {
+					start({targetX, targetY, overscrollEffect: overscrollEffectOn && overscrollEffectOn.drag});
+				} else if (mutableRef.current.overscrollEnabled && overscrollEffectOn && overscrollEffectOn.drag) {
 					checkAndApplyOverscrollEffectOnDrag(targetX, targetY, overscrollTypeOnce);
 				}
 			} else if (!mutableRef.current.isTouching) {
 				stop();
 			}
 
-			if (mutableRef.current.overscrollEnabled) { // not check overscrollEffectOn.drag for safety
+			if (mutableRef.current.overscrollEnabled) { // not check overscrollEffectOn && overscrollEffectOn.drag for safety
 				clearAllOverscrollEffects();
 			}
 
@@ -563,7 +565,7 @@ const useScrollBase = (props) => {
 					(direction !== 'vertical') ? getRtlX(-ev.velocityX) : 0,
 					(direction !== 'horizontal') ? -ev.velocityY : 0
 				);
-			} else if (mutableRef.current.overscrollEnabled && overscrollEffectOn.drag) {
+			} else if (mutableRef.current.overscrollEnabled && overscrollEffectOn && overscrollEffectOn.drag) {
 				mutableRef.current.flickTarget = {
 					targetX: mutableRef.current.scrollLeft + getRtlX(-ev.velocityX) * overscrollVelocityFactor, // 'horizontal' or 'both'
 					targetY: mutableRef.current.scrollTop + -ev.velocityY * overscrollVelocityFactor // 'vertical' or 'both'
@@ -634,12 +636,12 @@ const useScrollBase = (props) => {
 				forward('onWheel', {delta, horizontalScrollbarRef, verticalScrollbarRef}, props);
 
 				if (delta !== 0) {
-					scrollToAccumulatedTarget(delta, canScrollV, overscrollEffectOn.wheel);
+					scrollToAccumulatedTarget(delta, canScrollV, overscrollEffectOn && overscrollEffectOn.wheel);
 					ev.preventDefault();
 					ev.stopPropagation();
 				}
 			} else { // scrollMode 'native'
-				const overscrollEffectRequired = mutableRef.current.overscrollEnabled && overscrollEffectOn.wheel;
+				const overscrollEffectRequired = mutableRef.current.overscrollEnabled && overscrollEffectOn && overscrollEffectOn.wheel;
 				let needToHideThumb = false;
 
 				if (props.onWheel) {
@@ -699,7 +701,7 @@ const useScrollBase = (props) => {
 						mutableRef.current.wheelDirection = dir;
 					}
 
-					scrollToAccumulatedTarget(delta, canScrollV, overscrollEffectOn.wheel);
+					scrollToAccumulatedTarget(delta, canScrollV, overscrollEffectOn && overscrollEffectOn.wheel);
 				}
 
 				if (needToHideThumb) {
@@ -718,7 +720,7 @@ const useScrollBase = (props) => {
 
 		mutableRef.current.lastInputType = 'pageKey';
 
-		scrollToAccumulatedTarget(pageDistance, canScrollV, overscrollEffectOn.pageKey);
+		scrollToAccumulatedTarget(pageDistance, canScrollV, overscrollEffectOn && overscrollEffectOn.pageKey);
 	}
 	// scrollMode 'translate' ]]
 
@@ -931,7 +933,7 @@ const useScrollBase = (props) => {
 		if (props.scrollStopOnScroll) {
 			props.scrollStopOnScroll();
 		}
-		if (mutableRef.current.overscrollEnabled && !mutableRef.current.isDragging) { // not check overscrollEffectOn for safety
+		if (mutableRef.current.overscrollEnabled && !mutableRef.current.isDragging) { // not check overscrollEffectOn && overscrollEffectOn for safety
 			clearAllOverscrollEffects();
 		}
 		mutableRef.current.lastInputType = null;
@@ -949,7 +951,7 @@ const useScrollBase = (props) => {
 
 		mutableRef.current.scrollLeft = clamp(0, bounds.maxLeft, value);
 
-		if (mutableRef.current.overscrollEnabled && overscrollEffectOn[mutableRef.current.lastInputType]) {
+		if (mutableRef.current.overscrollEnabled && overscrollEffectOn && overscrollEffectOn[mutableRef.current.lastInputType]) {
 			checkAndApplyOverscrollEffectOnScroll('horizontal');
 		}
 
@@ -963,7 +965,7 @@ const useScrollBase = (props) => {
 
 		mutableRef.current.scrollTop = clamp(0, bounds.maxTop, value);
 
-		if (mutableRef.current.overscrollEnabled && overscrollEffectOn[mutableRef.current.lastInputType]) {
+		if (mutableRef.current.overscrollEnabled && overscrollEffectOn && overscrollEffectOn[mutableRef.current.lastInputType]) {
 			checkAndApplyOverscrollEffectOnScroll('vertical');
 		}
 
@@ -1165,7 +1167,7 @@ const useScrollBase = (props) => {
 		mutableRef.current.isScrollAnimationTargetAccumulated = false;
 		startHidingThumb();
 
-		if (mutableRef.current.overscrollEnabled && !mutableRef.current.isDragging) { // not check overscrollEffectOn for safety
+		if (mutableRef.current.overscrollEnabled && !mutableRef.current.isDragging) { // not check overscrollEffectOn && overscrollEffectOn for safety
 			clearAllOverscrollEffects();
 		}
 
