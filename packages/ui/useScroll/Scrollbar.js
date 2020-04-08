@@ -96,7 +96,6 @@ const useScrollbar = (props) => {
 
 	return {
 		restProps: rest,
-		scrollbarHandle,
 		scrollbarProps: {
 			className: classNames(
 				className,
