@@ -1,4 +1,4 @@
-import useClass from '../internal/useClass';
+import useClass from '../useClass';
 
 class Handlers {
 	constructor (fns) {

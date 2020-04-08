@@ -1,4 +1,4 @@
-import useClass from '@enact/core/internal/useClass';
+import useClass from '@enact/core/useClass';
 
 import useControlledState from '../useControlledState';
 
