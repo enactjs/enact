@@ -1,17 +1,19 @@
 import useClass from '../useClass';
 
 class Handlers {
-	constructor (fns) {
+	constructor (_handlers) {
 		this.props = {};
 		this.context = {};
 
 		this._handlers = {};
-		Object.keys(fns).forEach(fn => {
-			this._handlers[fn] = (ev) => {
-				fns[fn](ev, this.props, this.context);
-			};
-			this._handlers[fn].displayName = fn;
-		});
+		if (_handlers) {
+			Object.keys(_handlers).forEach(fn => {
+				this._handlers[fn] = (ev) => {
+					_handlers[fn](ev, this.props, this.context);
+				};
+				this._handlers[fn].displayName = fn;
+			});
+		}
 	}
 
 	get handlers () {
@@ -24,8 +26,8 @@ class Handlers {
 	}
 }
 
-function useHandlers (fns, props, context) {
-	const h = useClass(Handlers, fns);
+function useHandlers (handlers, props, context) {
+	const h = useClass(Handlers, handlers);
 	h.setContext(props, context);
 
 	return h;

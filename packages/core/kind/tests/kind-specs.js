@@ -49,6 +49,19 @@ describe('kind', () => {
 		expect(actual).toBe(expected);
 	});
 
+	test('should support undefined handlers', () => {
+		const Minimal = kind({
+			name: 'Minimal',
+			render: () => <div />
+		});
+
+		const subject = mount(<Minimal />);
+
+		const actual = subject.find('div');
+
+		expect(actual).toBeDefined();
+	});
+
 	test('should default {label} property', () => {
 		const subject = <Kind prop={1} />;
 

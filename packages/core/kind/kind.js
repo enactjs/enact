@@ -12,6 +12,9 @@ import useHandlers from '../useHandlers';
 import computed from './computed';
 import styles from './styles';
 
+// Because contextType is optional and hooks must be called in the same order, we need a fallback
+// context when none is specified. This likely has some overhead so we may want to deprecate and
+// remove contextType support for 4.0 since the context APIs have improved since this was added.
 const NoContext = React.createContext(null);
 
 /**
