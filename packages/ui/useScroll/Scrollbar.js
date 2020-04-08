@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
+import pick from 'ramda/src/pick';
 import React, {forwardRef, memo, useEffect, useImperativeHandle, useRef} from 'react';
 import ReactDOM from 'react-dom';
 
@@ -41,7 +42,7 @@ const setCSSVariable = (element, variable, value) => {
  * @private
  */
 const useScrollbar = (props) => {
-	const {className, clientSize, corner, css, minThumbSize, vertical, ...scrollbarProps} = props;
+	const {className, clientSize, corner, css, minThumbSize, vertical, ...rest} = props;
 	// Refs
 	const uiScrollbarContainerRef = useRef();
 	const scrollbarTrackRef = useRef();
@@ -79,29 +80,35 @@ const useScrollbar = (props) => {
 			scrollViewSize = vertical ? bounds.clientHeight : bounds.clientWidth,
 			scrollContentSize = vertical ? bounds.scrollHeight : bounds.scrollWidth,
 			scrollOrigin = vertical ? bounds.scrollTop : bounds.scrollLeft,
-			scrollbarSizeRatioBase = (scrollViewSize / scrollContentSize),
-			scrollbarProgressRatio = (scrollOrigin / (scrollContentSize - scrollViewSize)),
-			scrollbarSizeRatio = Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, scrollbarSizeRatioBase));
+			scrollbarThumbSizeRatioBase = (scrollViewSize / scrollContentSize),
+			scrollbarThumbProgressRatio = (scrollOrigin / (scrollContentSize - scrollViewSize)),
+			scrollbarThumbSizeRatio = Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, scrollbarThumbSizeRatioBase));
 
-		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-size-ratio', scrollbarSizeRatio);
-		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-progress-ratio', scrollbarProgressRatio);
+		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-size-ratio', scrollbarThumbSizeRatio);
+		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-progress-ratio', scrollbarThumbProgressRatio);
 	}
 
 	return {
-		className: classNames(
-			className,
-			{[corner]: css.corner},
-			css.scrollbar,
-			vertical ? css.vertical : css.horizontal
-		),
-		getContainerRef,
-		scrollbarProps,
-		scrollbarTrackRef,
-		showScrollbarTrack,
-		startHidingScrollbarTrack,
-		uiScrollbarContainerRef,
-		update,
-		vertical
+		imperativeHandles: {
+			getContainerRef,
+			showScrollbarTrack,
+			startHidingScrollbarTrack,
+			update
+		},
+		restProps: rest,
+		scrollbarProps: {
+			className: classNames(
+				className,
+				{[corner]: css.corner},
+				css.scrollbar,
+				vertical ? css.vertical : css.horizontal
+			),
+			ref: uiScrollbarContainerRef
+		},
+		scrollbarTrackProps: {
+			ref: scrollbarTrackRef,
+			vertical
+		}
 	};
 };
 
@@ -115,30 +122,25 @@ const useScrollbar = (props) => {
  */
 const Scrollbar = memo(forwardRef((props, ref) => {
 	const {
-		className,
-		getContainerRef,
+		imperativeHandles,
+		restProps,
 		scrollbarProps,
-		scrollbarTrackRef,
-		showScrollbarTrack,
-		startHidingScrollbarTrack,
-		uiScrollbarContainerRef,
-		update,
-		vertical
+		scrollbarTrackProps
 	} = useScrollbar(props);
 
-	useImperativeHandle(ref, () => ({
-		getContainerRef,
-		showScrollbarTrack,
-		startHidingScrollbarTrack,
-		update
-	}));
+	useImperativeHandle(ref, () => {
+		const handles = pick([
+			'getContainerRef',
+			'showScrollbarTrack',
+			'startHidingScrollbarTrack',
+			'update'
+		], imperativeHandles);
+		return handles;
+	});
 
 	return (
-		<div {...scrollbarProps} className={className} ref={uiScrollbarContainerRef}>
-			<ScrollbarTrack
-				ref={scrollbarTrackRef}
-				vertical={vertical}
-			/>
+		<div {...restProps} {...scrollbarProps}>
+			<ScrollbarTrack {...scrollbarTrackProps} />
 		</div>
 	);
 }));
