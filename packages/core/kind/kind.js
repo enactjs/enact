@@ -7,10 +7,9 @@
 
 import React from 'react';
 
-import useClass from '../internal/useClass';
+import useHandlers from '../useHandlers';
 
 import computed from './computed';
-import Handlers from './handlers';
 import styles from './styles';
 
 const NoContext = React.createContext(null);
@@ -141,8 +140,7 @@ const kind = (config) => {
 
 	function Component (props) {
 		const ctx = React.useContext(contextType);
-		const handle = useClass(Handlers, handlers);
-		handle.set(props, ctx);
+		const handle = useHandlers(handlers, props, ctx);
 
 		const merged = {
 			...props,
