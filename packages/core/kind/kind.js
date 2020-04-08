@@ -143,11 +143,11 @@ const kind = (config) => {
 
 	function Component (props) {
 		const ctx = React.useContext(contextType);
-		const handle = useHandlers(handlers, props, ctx);
+		const boundHandlers = useHandlers(handlers, props, ctx);
 
 		const merged = {
 			...props,
-			...handle.handlers
+			...boundHandlers
 		};
 
 		return renderKind(merged, ctx);

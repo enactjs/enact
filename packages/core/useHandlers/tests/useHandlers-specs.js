@@ -10,7 +10,7 @@ describe('useHandlers', () => {
 		value: 1
 	};
 	function Component (props) {
-		const {handlers} = useHandlers({
+		const handlers = useHandlers({
 			testEvent: (ev, p, c) => {
 				ev(p, c);
 			}
