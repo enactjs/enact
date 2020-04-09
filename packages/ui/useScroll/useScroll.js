@@ -91,7 +91,7 @@ const useScrollBase = (props) => {
 			dataSize,
 			direction,
 			horizontalScrollbar,
-			horizontalScrollbarRef,
+			horizontalScrollbarHandle,
 			itemRenderer,
 			itemSize,
 			itemSizes,
@@ -108,7 +108,7 @@ const useScrollBase = (props) => {
 			setScrollContainerHandle,
 			spacing,
 			verticalScrollbar,
-			verticalScrollbarRef,
+			verticalScrollbarHandle,
 			wrap,
 			...rest
 		} = props,
@@ -159,7 +159,7 @@ const useScrollBase = (props) => {
 		// status
 		deferScrollTo: true,
 		isScrollAnimationTargetAccumulated: false,
-		isUpdatedScrollThumb: false,
+		isUpdatedScrollbarTrack: false,
 
 		// overscroll
 		lastInputType: null,
@@ -236,8 +236,8 @@ const useScrollBase = (props) => {
 				set isScrollAnimationTargetAccumulated (val) {
 					mutableRef.current.isScrollAnimationTargetAccumulated = val;
 				},
-				get isUpdatedScrollThumb () {
-					return mutableRef.current.isUpdatedScrollThumb;
+				get isUpdatedScrollbarTrack () {
+					return mutableRef.current.isUpdatedScrollbarTrack;
 				},
 				get lastInputType () {
 					return mutableRef.current.lastInputType;
@@ -269,9 +269,9 @@ const useScrollBase = (props) => {
 					return mutableRef.current.scrollTop;
 				},
 				setOverscrollStatus,
-				showThumb,
+				showScrollbarTrack,
 				start,
-				startHidingThumb,
+				startHidingScrollbarTrack,
 				stop,
 				get wheelDirection () {
 					return mutableRef.current.wheelDirection;
@@ -395,7 +395,7 @@ const useScrollBase = (props) => {
 			(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
 		) {
 			mutableRef.current.deferScrollTo = false;
-			mutableRef.current.isUpdatedScrollThumb = updateScrollThumbSize();
+			mutableRef.current.isUpdatedScrollbarTrack = updateScrollbarTrackSize();
 		} else {
 			updateScrollbars();
 		}
@@ -633,7 +633,7 @@ const useScrollBase = (props) => {
 					mutableRef.current.wheelDirection = dir;
 				}
 
-				forward('onWheel', {delta, horizontalScrollbarRef, verticalScrollbarRef}, props);
+				forward('onWheel', {delta, horizontalScrollbarHandle, verticalScrollbarHandle}, props);
 
 				if (delta !== 0) {
 					scrollToAccumulatedTarget(delta, canScrollV, overscrollEffectOn && overscrollEffectOn.wheel);
@@ -642,14 +642,14 @@ const useScrollBase = (props) => {
 				}
 			} else { // scrollMode 'native'
 				const overscrollEffectRequired = mutableRef.current.overscrollEnabled && overscrollEffectOn && overscrollEffectOn.wheel;
-				let needToHideThumb = false;
+				let needToHideScrollbarTrack = false;
 
 				if (props.onWheel) {
 					forward('onWheel', ev, props);
 					return;
 				}
 
-				showThumb(bounds);
+				showScrollbarTrack(bounds);
 
 				// FIXME This routine is a temporary support for horizontal wheel scroll.
 				// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
@@ -657,11 +657,11 @@ const useScrollBase = (props) => {
 					if (eventDelta < 0 && mutableRef.current.scrollTop > 0 || eventDelta > 0 && mutableRef.current.scrollTop < bounds.maxTop) {
 						// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
 						if (
-							horizontalScrollbarRef.current && horizontalScrollbarRef.current.getContainerRef && utilDOM.containsDangerously(horizontalScrollbarRef.current.getContainerRef(), ev.target) ||
-							verticalScrollbarRef.current && verticalScrollbarRef.current.getContainerRef && utilDOM.containsDangerously(verticalScrollbarRef.current.getContainerRef(), ev.target)
+							horizontalScrollbarHandle.current && horizontalScrollbarHandle.current.getContainerRef && utilDOM.containsDangerously(horizontalScrollbarHandle.current.getContainerRef(), ev.target) ||
+							verticalScrollbarHandle.current && verticalScrollbarHandle.current.getContainerRef && utilDOM.containsDangerously(verticalScrollbarHandle.current.getContainerRef(), ev.target)
 						) {
 							delta = calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
-							needToHideThumb = !delta;
+							needToHideScrollbarTrack = !delta;
 
 							ev.preventDefault();
 						} else if (overscrollEffectRequired) {
@@ -674,12 +674,12 @@ const useScrollBase = (props) => {
 							applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
 						}
 
-						needToHideThumb = true;
+						needToHideScrollbarTrack = true;
 					}
 				} else if (canScrollH) { // this routine handles wheel events on any children for horizontal scroll.
 					if (eventDelta < 0 && mutableRef.current.scrollLeft > 0 || eventDelta > 0 && mutableRef.current.scrollLeft < bounds.maxLeft) {
 						delta = calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
-						needToHideThumb = !delta;
+						needToHideScrollbarTrack = !delta;
 
 						ev.preventDefault();
 						ev.stopPropagation();
@@ -688,7 +688,7 @@ const useScrollBase = (props) => {
 							applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
 						}
 
-						needToHideThumb = true;
+						needToHideScrollbarTrack = true;
 					}
 				}
 
@@ -704,8 +704,8 @@ const useScrollBase = (props) => {
 					scrollToAccumulatedTarget(delta, canScrollV, overscrollEffectOn && overscrollEffectOn.wheel);
 				}
 
-				if (needToHideThumb) {
-					startHidingThumb();
+				if (needToHideScrollbarTrack) {
+					startHidingScrollbarTrack();
 				}
 			}
 		}
@@ -925,7 +925,7 @@ const useScrollBase = (props) => {
 
 	function scrollStartOnScroll () {
 		mutableRef.current.scrolling = true;
-		showThumb(getScrollBounds());
+		showScrollbarTrack(getScrollBounds());
 		forwardScrollEvent('onScrollStart');
 	}
 
@@ -940,7 +940,7 @@ const useScrollBase = (props) => {
 		mutableRef.current.isScrollAnimationTargetAccumulated = false;
 		mutableRef.current.scrolling = false;
 		forwardScrollEvent('onScrollStop', getReachedEdgeInfo());
-		startHidingThumb();
+		startHidingScrollbarTrack();
 	}
 	// scrollMode 'native' ]]
 
@@ -956,7 +956,7 @@ const useScrollBase = (props) => {
 		}
 
 		if (isHorizontalScrollbarVisible) {
-			updateThumb(horizontalScrollbarRef, bounds);
+			updateScrollbarTrack(horizontalScrollbarHandle, bounds);
 		}
 	}
 
@@ -970,7 +970,7 @@ const useScrollBase = (props) => {
 		}
 
 		if (isVerticalScrollbarVisible) {
-			updateThumb(verticalScrollbarRef, bounds);
+			updateScrollbarTrack(verticalScrollbarHandle, bounds);
 		}
 	}
 
@@ -1074,7 +1074,7 @@ const useScrollBase = (props) => {
 		}
 
 		if (scrollMode === 'translate') {
-			showThumb(bounds);
+			showScrollbarTrack(bounds);
 			if (scrollContentHandle.current && scrollContentHandle.current.setScrollPositionTarget) {
 				scrollContentHandle.current.setScrollPositionTarget(targetX, targetY);
 			}
@@ -1165,7 +1165,7 @@ const useScrollBase = (props) => {
 		mutableRef.current.animator.stop();
 		mutableRef.current.lastInputType = null;
 		mutableRef.current.isScrollAnimationTargetAccumulated = false;
-		startHidingThumb();
+		startHidingScrollbarTrack();
 
 		if (mutableRef.current.overscrollEnabled && !mutableRef.current.isDragging) { // not check overscrollEffectOn && overscrollEffectOn for safety
 			clearAllOverscrollEffects();
@@ -1291,17 +1291,17 @@ const useScrollBase = (props) => {
 
 	// scroll bar
 
-	function showThumb (bounds) {
-		if (isHorizontalScrollbarVisible && canScrollHorizontally(bounds) && horizontalScrollbarRef.current) {
-			horizontalScrollbarRef.current.showThumb();
+	function showScrollbarTrack (bounds) {
+		if (isHorizontalScrollbarVisible && canScrollHorizontally(bounds) && horizontalScrollbarHandle.current) {
+			horizontalScrollbarHandle.current.showScrollbarTrack();
 		}
 
-		if (isVerticalScrollbarVisible && canScrollVertically(bounds) && verticalScrollbarRef.current) {
-			verticalScrollbarRef.current.showThumb();
+		if (isVerticalScrollbarVisible && canScrollVertically(bounds) && verticalScrollbarHandle.current) {
+			verticalScrollbarHandle.current.showScrollbarTrack();
 		}
 	}
 
-	function updateThumb (scrollbarRef, bounds) {
+	function updateScrollbarTrack (scrollbarRef, bounds) {
 		scrollbarRef.current.update({
 			...bounds,
 			scrollLeft: mutableRef.current.scrollLeft,
@@ -1309,13 +1309,13 @@ const useScrollBase = (props) => {
 		});
 	}
 
-	function startHidingThumb () {
-		if (isHorizontalScrollbarVisible && horizontalScrollbarRef.current) {
-			horizontalScrollbarRef.current.startHidingThumb();
+	function startHidingScrollbarTrack () {
+		if (isHorizontalScrollbarVisible && horizontalScrollbarHandle.current) {
+			horizontalScrollbarHandle.current.startHidingScrollbarTrack();
 		}
 
-		if (isVerticalScrollbarVisible && verticalScrollbarRef.current) {
-			verticalScrollbarRef.current.startHidingThumb();
+		if (isVerticalScrollbarVisible && verticalScrollbarHandle.current) {
+			verticalScrollbarHandle.current.startHidingScrollbarTrack();
 		}
 	}
 
@@ -1341,12 +1341,12 @@ const useScrollBase = (props) => {
 			setIsVerticalScrollbarVisible(curVerticalScrollbarVisible);
 		} else {
 			mutableRef.current.deferScrollTo = false;
-			mutableRef.current.isUpdatedScrollThumb = updateScrollThumbSize();
+			mutableRef.current.isUpdatedScrollbarTrack = updateScrollbarTrackSize();
 		}
 	}
 
 	// esline-disable-next-line react-hooks/exhaustive-deps
-	function updateScrollThumbSize () {
+	function updateScrollbarTrackSize () {
 		const
 			bounds = getScrollBounds(),
 			canScrollH = canScrollHorizontally(bounds),
@@ -1363,12 +1363,12 @@ const useScrollBase = (props) => {
 				scrollTop: mutableRef.current.scrollTop
 			};
 
-			if (curHorizontalScrollbarVisible && horizontalScrollbarRef.current) {
-				horizontalScrollbarRef.current.update(updatedBounds);
+			if (curHorizontalScrollbarVisible && horizontalScrollbarHandle.current) {
+				horizontalScrollbarHandle.current.update(updatedBounds);
 			}
 
-			if (curVerticalScrollbarVisible && verticalScrollbarRef.current) {
-				verticalScrollbarRef.current.update(updatedBounds);
+			if (curVerticalScrollbarVisible && verticalScrollbarHandle.current) {
+				verticalScrollbarHandle.current.update(updatedBounds);
 			}
 
 			return true;
@@ -1572,8 +1572,8 @@ const useScroll = (props) => {
 	const scrollContentHandle = useRef({});
 	const scrollContentRef = useRef({});
 	const itemRefs = useRef([]);
-	const horizontalScrollbarRef = useRef({});
-	const verticalScrollbarRef = useRef({});
+	const horizontalScrollbarHandle = useRef({});
+	const verticalScrollbarHandle = useRef({});
 
 	// Hooks
 
@@ -1588,11 +1588,11 @@ const useScroll = (props) => {
 	} = useScrollBase({
 		...props,
 		assignProperties,
-		horizontalScrollbarRef,
+		horizontalScrollbarHandle,
 		scrollContainerRef,
 		scrollContentHandle,
 		scrollContentRef,
-		verticalScrollbarRef
+		verticalScrollbarHandle
 	});
 
 	assignProperties('scrollContainerProps', {ref: scrollContainerRef});
@@ -1600,8 +1600,8 @@ const useScroll = (props) => {
 		...(props.itemRenderer ? {itemRefs} : {}),
 		scrollContentRef
 	});
-	assignProperties('verticalScrollbarProps', {ref: verticalScrollbarRef});
-	assignProperties('horizontalScrollbarProps', {ref: horizontalScrollbarRef});
+	assignProperties('verticalScrollbarProps', {scrollbarHandle: verticalScrollbarHandle});
+	assignProperties('horizontalScrollbarProps', {scrollbarHandle: horizontalScrollbarHandle});
 
 	// Return
 
