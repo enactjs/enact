@@ -9,6 +9,9 @@
     "test": "enact test",
     "test-json": "enact test --json",
     "test-watch": "enact test --watch",
+    "test-ui": "start-tests tests/ui/wdio.conf.js",
+    "test-ui-docker": "start-tests tests/ui/wdio.docker.conf.js",
+    "test-ui-tv": "start-tests tests/ui/wdio.tv.conf.js",
     "transpile": "enact transpile"
   },
   "license": "Apache-2.0",
@@ -52,6 +55,7 @@
     "ilib": "^14.4.0 || ^14.4.0-webostv1"
   },
   "devDependencies": {
+    "@enact/ui-test-utils": "^0.3.2",
     "ilib": "^14.4.0"
   }
 }

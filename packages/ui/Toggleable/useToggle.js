@@ -1,23 +1,8 @@
-import React from 'react';
+import useClass from '@enact/core/useClass';
 
 import useControlledState from '../useControlledState';
 
 import Toggle from './Toggle';
-
-/**
- * Creates one instance of the class, `Ctor` with the provided `args`, for the life of the
- * component.
- *
- * @param {Function} Ctor Class constructor
- * @param  {...any} args Arguments to pass to the constructor
- * @private
- */
-function useClass (Ctor, ...args) {
-	const ref = React.useRef(null);
-	ref.current = ref.current || new Ctor(...args);
-
-	return ref.current;
-}
 
 /**
  * Configuration for `useToggle`
@@ -34,7 +19,7 @@ function useClass (Ctor, ...args) {
  */
 
 /**
- * Configuration for `useToggle`
+ * Object returned by `useToggle`
  *
  * @typedef {Object} useToggleInterface
  * @memberof ui/Toggleable
@@ -48,7 +33,9 @@ function useClass (Ctor, ...args) {
 /**
  * Manages a boolean state value.
  *
- * The value may either be toggled via the `onToggle` or explicitly set via `onActivate` and `onDeactivate`. The initial value can be set using the `defaultSelected` option
+ * The value may either be toggled via the `onToggle` or explicitly set via `onActivate` and
+ * `onDeactivate`. The initial value can be set using the `defaultSelected` option.
+ *
  * @param {useToggleConfig} config Configuration options
  * @returns {useToggleInterface}
  * @private
