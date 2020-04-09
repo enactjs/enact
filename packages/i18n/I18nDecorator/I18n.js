@@ -35,7 +35,7 @@ class I18n {
 	/**
 	 * Sets the current locale and load callback.
 	 *
-	 * Changing the localew will request new resource files for that locale.
+	 * Changing the locale will request new resource files for that locale.
 	 *
 	 * @type {String}
 	 * @public
@@ -52,7 +52,7 @@ class I18n {
 	}
 
 	/**
-	 * Normalize the structure of the external resources to be an array of resource/onLoad pairs
+	 * Normalize the structure of the external resources to be an array of resource/onLoad pairs.
 	 *
 	 * @private
 	 */
@@ -90,7 +90,7 @@ class I18n {
 	}
 
 	/**
-	 * Cleans up resource retrieval and event listeners
+	 * Cleans up resource retrieval and event listeners.
 	 *
 	 * @public
 	 */
@@ -104,7 +104,7 @@ class I18n {
 	}
 
 	/**
-	 * Loads the resources for the given locale
+	 * Loads the resources for the given locale.
 	 *
 	 * @private
 	 */
@@ -163,7 +163,7 @@ class I18n {
 	}
 
 	/**
-	 * Called when the `languagechange` event fires
+	 * Called when the `languagechange` event fires.
 	 */
 	handleLocaleChange = () => {
 		onWindowFocus(this.updateLocale);
