@@ -17,6 +17,59 @@ import React from 'react';
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
 import {addModal, removeModal} from './modalHandler';
 
+function useClass (Ctor, ...args) {
+	const ref = React.useRef(null);
+	ref.current = ref.current || new Ctor(...args);
+
+	return ref.current;
+}
+
+class Cancel {
+	static displayName = 'Cancelable';
+
+	static propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
+		/**
+		 * Called when a cancel action is received.
+		 *
+		 * This callback is invoked for every cancel action before the config or prop handler is
+		 * invoked.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onCancel: PropTypes.func
+	}
+
+	constructor (props) {
+		this.isFirstRender = true;
+
+		this.props = props;
+		this.context = {};
+		this.dispatchCancelToConfig = this.props.dispatchCancelToConfig;
+	}
+
+	componentWillUnmount () {
+		if (this.props.modal) {
+			removeModal(this);
+		}
+	}
+
+	handleCancel = handle(
+			forCancel,
+			forward('onCancel'),
+			this.dispatchCancelToConfig,
+			stop,
+			stopImmediate
+		)
+
+	handleKeyUp = handle(
+		forward('onKeyUp'),
+		// nesting handlers for DRYness. note that if any conditions return false in
+		// this.handleCancel(), this handler chain will stop too
+		this.handleCancel
+	)
+}
+
 /**
  * Default config for {@link ui/Cancelable.Cancelable}
  *
@@ -153,6 +206,10 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		return stopped;
 	};
 
+	// handleKeyUp
+	// props
+	// isFirstRender
+
 	return class extends React.Component {
 		static displayName = 'Cancelable';
 
@@ -171,43 +228,36 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			this.isFirstRender = true;
+			this.cancel = this.cancel || new Cancel({
+				onCancel,
+				modal,
+				Component,
+
+				dispatchCancelToConfig,
+
+				Wrapped,
+
+				...props
+			});
 		}
 
 		componentWillUnmount () {
-			if (modal) {
-				removeModal(this);
-			}
+			this.cancel.componentWillUnmount();
 		}
-
-		handle = handle.bind(this)
-
-		handleCancel = this.handle(
-			forCancel,
-			forward('onCancel'),
-			dispatchCancelToConfig,
-			stop,
-			stopImmediate
-		)
-
-		handleKeyUp = this.handle(
-			forward('onKeyUp'),
-			// nesting handlers for DRYness. note that if any conditions return false in
-			// this.handleCancel(), this handler chain will stop too
-			this.handleCancel
-		)
 
 		renderWrapped (props) {
 			return (
-				<Component onKeyUp={this.handleKeyUp}>
+				<Component onKeyUp={this.cancel.handleKeyUp}>
 					<Wrapped {...props} />
 				</Component>
 			);
 		}
 
 		renderUnwrapped (props) {
+			props.onKeyUp = this.cancel.handleKeyUp;
+
 			return (
-				<Wrapped {...props} onKeyUp={this.handleKeyUp} />
+				<Wrapped {...props} />
 			);
 		}
 
@@ -222,9 +272,9 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.onCancel;
 			delete props[onCancel];
 
-			if (this.isFirstRender && modal) {
-				addModal(this);
-				this.isFirstRender = false;
+			if (this.cancel.isFirstRender && modal) {
+				addModal(this.cancel);
+				this.cancel.isFirstRender = false;
 			}
 
 			return	modal && this.renderModal(props) ||
