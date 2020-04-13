@@ -10,6 +10,7 @@
 import {forward, handle, stop, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
+import useClass from '@enact/core/useClass';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -17,41 +18,12 @@ import React from 'react';
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
 import {addModal, removeModal} from './modalHandler';
 
-function useClass (Ctor, ...args) {
-	const ref = React.useRef(null);
-	ref.current = ref.current || new Ctor(...args);
-
-	return ref.current;
-}
-
 class Cancel {
-	static displayName = 'Cancelable';
-
-	static propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
-		/**
-		 * Called when a cancel action is received.
-		 *
-		 * This callback is invoked for every cancel action before the config or prop handler is
-		 * invoked.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onCancel: PropTypes.func
-	}
-
 	constructor (props) {
-		this.isFirstRender = true;
-
 		this.props = props;
 		this.context = {};
-		this.dispatchCancelToConfig = this.props.dispatchCancelToConfig;
-	}
 
-	componentWillUnmount () {
-		if (this.props.modal) {
-			removeModal(this);
-		}
+		this.dispatchCancelToConfig = this.props.dispatchCancelToConfig;
 	}
 
 	handleCancel = handle(
@@ -68,6 +40,27 @@ class Cancel {
 		// this.handleCancel(), this handler chain will stop too
 		this.handleCancel
 	)
+}
+
+function mountEffect (state) {
+	// layout effect order doesn't appear to be consistent with request order so we must invoked
+	// addModal synchronously with render. addModal guards against dupliate entries so calling
+	// on effect creation is safe but we still need a cleanup fn in order to remove the modal on
+	// unmount (which is guaranteed to be only once with the empty memo array below).
+	addModal(state);
+	return () => () => {
+		removeModal(state);
+	};
+}
+
+function useCancel ({modal, ...config} = {}) {
+	const cancel = useClass(Cancel, config);
+
+	React.useLayoutEffect(mountEffect(cancel), [cancel]);
+
+	return {
+		handleKeyUp: cancel.handleKeyUp
+	};
 }
 
 /**
@@ -206,82 +199,65 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		return stopped;
 	};
 
-	// handleKeyUp
-	// props
-	// isFirstRender
-
-	return class extends React.Component {
-		static displayName = 'Cancelable';
-
-		static propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
-			/**
-			 * Called when a cancel action is received.
-			 *
-			 * This callback is invoked for every cancel action before the config or prop handler is
-			 * invoked.
-			 *
-			 * @type {Function}
-			 * @public
-			 */
-			onCancel: PropTypes.func
-		}
-
-		constructor (props) {
-			super(props);
-			this.cancel = this.cancel || new Cancel({
-				onCancel,
-				modal,
-				Component,
-
-				dispatchCancelToConfig,
-
-				Wrapped,
-
-				...props
-			});
-		}
-
-		componentWillUnmount () {
-			this.cancel.componentWillUnmount();
-		}
-
-		renderWrapped (props) {
-			return (
-				<Component onKeyUp={this.cancel.handleKeyUp}>
-					<Wrapped {...props} />
-				</Component>
-			);
-		}
-
-		renderUnwrapped (props) {
-			props.onKeyUp = this.cancel.handleKeyUp;
-
-			return (
+	function renderWrapped (props, handleKeyUp) {
+		return (
+			<Component onKeyUp={handleKeyUp}>
 				<Wrapped {...props} />
-			);
-		}
+			</Component>
+		);
+	}
 
-		renderModal (props) {
-			return (
-				<Wrapped {...props} />
-			);
-		}
+	function renderUnwrapped (props, handleKeyUp) {
+		props.onKeyUp = handleKeyUp;
 
-		render () {
-			const props = Object.assign({}, this.props);
-			delete props.onCancel;
-			delete props[onCancel];
+		return (
+			<Wrapped {...props} />
+		);
+	}
 
-			if (this.cancel.isFirstRender && modal) {
-				addModal(this.cancel);
-				this.cancel.isFirstRender = false;
-			}
+	function renderModal (props) {
+		return (
+			<Wrapped {...props} />
+		);
+	}
 
-			return	modal && this.renderModal(props) ||
-					Component && this.renderWrapped(props) ||
-					this.renderUnwrapped(props);
-		}
+	function Cancelable (props) {
+		const updated = {...props};
+
+		const {handleKeyUp} = useCancel({
+			onCancel,
+			modal,
+			Component,
+
+			dispatchCancelToConfig,
+
+			...props
+		});
+
+		delete updated.onCancel;
+		delete updated[onCancel];
+
+		return	modal && renderModal(updated) ||
+				Component && renderWrapped(updated, handleKeyUp) ||
+				renderUnwrapped(updated, handleKeyUp);
+	}
+
+	Cancelable.displayName = 'Cancelable';
+
+	Cancelable.propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
+		/**
+		 * Called when a cancel action is received.
+		 *
+		 * This callback is invoked for every cancel action before the config or prop handler is
+		 * invoked.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onCancel: PropTypes.func
 	};
+
+	return Cancelable;
 });
 
 export default Cancelable;
