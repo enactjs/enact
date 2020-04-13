@@ -21,25 +21,23 @@ import {addModal, removeModal} from './modalHandler';
 class Cancel {
 	constructor (props) {
 		this.props = props;
-		this.context = {};
-
-		this.dispatchCancelToConfig = this.props.dispatchCancelToConfig;
+		this.context = {}; // Needed to get the ture value as the return value of the `hasPropsAndContext`.
 	}
 
 	handleCancel = handle(
-			forCancel,
-			forward('onCancel'),
-			this.dispatchCancelToConfig,
-			stop,
-			stopImmediate
-		)
+		forCancel,
+		forward('onCancel'),
+		(ev) => (this.props.dispatchCancelToConfig(ev, this.props)),
+		stop,
+		stopImmediate
+	)
 
 	handleKeyUp = handle(
 		forward('onKeyUp'),
 		// nesting handlers for DRYness. note that if any conditions return false in
 		// this.handleCancel(), this handler chain will stop too
 		this.handleCancel
-	)
+	).bind(this)
 }
 
 function mountEffect (state) {
@@ -48,12 +46,32 @@ function mountEffect (state) {
 	// on effect creation is safe but we still need a cleanup fn in order to remove the modal on
 	// unmount (which is guaranteed to be only once with the empty memo array below).
 	addModal(state);
+
 	return () => () => {
 		removeModal(state);
 	};
 }
 
-function useCancel ({modal, ...config} = {}) {
+/**
+ * Configuration for `useCancel`
+ *
+ * @typedef {Object} useCancelConfig
+ * @memberof ui/Cancelable
+ * @property {Function} [dispatchCancelToConfig]  The handler making the `onCancel event bubbling up or not
+ * @property {Boolean}  [modal = false]           The flag to cancel events globally
+ * @private
+ */
+
+/**
+ * Manages a cancel action.
+ *
+ * The cancel action is handled via the configured `onCancel` handler.
+ *
+ * @param {useCancelConfig} config Configuration options
+ * @returns {useCancelInterface}
+ * @private
+ */
+function useCancel (config) {
 	const cancel = useClass(Cancel, config);
 
 	React.useLayoutEffect(mountEffect(cancel), [cancel]);
@@ -165,7 +183,7 @@ add('cancel', 27);
  * @hoc
  * @public
  */
-const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
+const CancelableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const {
 		onCancel,
 		modal,
@@ -199,6 +217,12 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		return stopped;
 	};
 
+	function renderModal (props) {
+		return (
+			<Wrapped {...props} />
+		);
+	}
+
 	function renderWrapped (props, handleKeyUp) {
 		return (
 			<Component onKeyUp={handleKeyUp}>
@@ -208,16 +232,8 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 	}
 
 	function renderUnwrapped (props, handleKeyUp) {
-		props.onKeyUp = handleKeyUp;
-
 		return (
-			<Wrapped {...props} />
-		);
-	}
-
-	function renderModal (props) {
-		return (
-			<Wrapped {...props} />
+			<Wrapped {...props} onKeyUp={handleKeyUp} />
 		);
 	}
 
@@ -225,12 +241,8 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		const updated = {...props};
 
 		const {handleKeyUp} = useCancel({
-			onCancel,
-			modal,
-			Component,
-
 			dispatchCancelToConfig,
-
+			modal,
 			...props
 		});
 
@@ -260,9 +272,9 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 	return Cancelable;
 });
 
-export default Cancelable;
+export default CancelableHOC;
 export {
 	addCancelHandler,
-	Cancelable,
+	CancelableHOC as Cancelable,
 	removeCancelHandler
 };
