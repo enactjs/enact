@@ -40,15 +40,15 @@ class Cancel {
 	).bind(this)
 }
 
-function mountEffect (state) {
+function mountEffect (state, modal) {
 	// layout effect order doesn't appear to be consistent with request order so we must invoked
 	// addModal synchronously with render. addModal guards against dupliate entries so calling
 	// on effect creation is safe but we still need a cleanup fn in order to remove the modal on
 	// unmount (which is guaranteed to be only once with the empty memo array below).
-	addModal(state);
+	if (modal) addModal(state);
 
 	return () => () => {
-		removeModal(state);
+		if (modal) removeModal(state);
 	};
 }
 
@@ -71,10 +71,10 @@ function mountEffect (state) {
  * @returns {useCancelInterface}
  * @private
  */
-function useCancel (config) {
+function useCancel ({modal, ...config} = {}) {
 	const cancel = useClass(Cancel, config);
 
-	React.useLayoutEffect(mountEffect(cancel), [cancel]);
+	React.useLayoutEffect(mountEffect(cancel, modal), [cancel]);
 
 	return {
 		handleKeyUp: cancel.handleKeyUp
