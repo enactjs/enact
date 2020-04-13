@@ -77,7 +77,7 @@ function useCancel ({modal, ...config} = {}) {
 	React.useLayoutEffect(mountEffect(cancel, modal), [cancel]);
 
 	return {
-		handleKeyUp: cancel.handleKeyUp
+		handleKeyUp: modal ? null : cancel.handleKeyUp
 	};
 }
 
