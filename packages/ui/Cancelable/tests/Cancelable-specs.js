@@ -1,5 +1,5 @@
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 
 import {addCancelHandler, Cancelable, removeCancelHandler} from '../Cancelable';
 
@@ -33,7 +33,7 @@ describe('Cancelable', () => {
 			Component
 		);
 
-		const subject = shallow(
+		const subject = mount(
 			<Comp onCustomEvent={handleCancel} />
 		);
 
@@ -52,7 +52,7 @@ describe('Cancelable', () => {
 			Component
 		);
 
-		const subject = shallow(
+		const subject = mount(
 			<Comp />
 		);
 
@@ -71,7 +71,7 @@ describe('Cancelable', () => {
 			Component
 		);
 
-		const subject = shallow(
+		const subject = mount(
 			<Comp />
 		);
 
@@ -91,7 +91,7 @@ describe('Cancelable', () => {
 			Component
 		);
 
-		const subject = shallow(
+		const subject = mount(
 			<Comp />
 		);
 
@@ -111,7 +111,7 @@ describe('Cancelable', () => {
 			Component
 		);
 
-		const subject = shallow(
+		const subject = mount(
 			<Comp />
 		);
 
@@ -131,7 +131,7 @@ describe('Cancelable', () => {
 			Component
 		);
 
-		const subject = shallow(
+		const subject = mount(
 			<Comp onKeyUp={handleKeyUp} />
 		);
 
@@ -152,7 +152,7 @@ describe('Cancelable', () => {
 			Component
 		);
 
-		const subject = shallow(
+		const subject = mount(
 			<Comp />
 		);
 
