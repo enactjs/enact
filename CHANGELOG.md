@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.3.0-alpha.6] - 2020-04-14
+
+### Fixed
+
+- `ui/Scroller` to prevent interaction with scrollbars when muted
+
 ## [3.3.0-alpha.5] - 2020-04-06
 
 ### Added
