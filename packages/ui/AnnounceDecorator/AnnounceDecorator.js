@@ -101,5 +101,6 @@ const AnnounceDecorator = hoc(defaultConfig, ({prop}, Wrapped) => {
 export default AnnounceDecorator;
 export {
 	Announce,
-	AnnounceDecorator
+	AnnounceDecorator,
+	useAnnounce
 };
