@@ -142,6 +142,7 @@ const ProgressBar = kind({
 		style: ({backgroundProgress, progress, progressAnchor, style}) => {
 			return {
 				...style,
+				'--ui-progressbar-proportion-anchor': progressAnchor,
 				...calcBarStyle(
 					'backgroundProgress',
 					progressAnchor,
