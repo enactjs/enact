@@ -1,29 +1,20 @@
-import useClass from '@enact/core/useClass';
 import React from 'react';
 
-import AnnounceComp from './Announce';
-
-class Announce {
-	constructor (ref) {
-		this.ref = ref;
-	}
-
-	announce = (message) => {
-		if (this.ref && this.ref.current) {
-			this.ref.current.announce(message);
-		}
-	}
-}
+import Announce from './Announce';
 
 function useAnnouce () {
 	const ref = React.useRef(null);
-	const inst = useClass(Announce, ref);
+	const announce = React.useCallback(message => {
+		if (ref && ref.current) {
+			ref.current.announce(message);
+		}
+	}, [ref]);
 
 	return {
-		announce: inst.announce,
-		children: <AnnounceComp ref={ref} />
+		announce,
+		children: <Announce ref={ref} />
 	};
-};
+}
 
 export default useAnnouce;
 export {
