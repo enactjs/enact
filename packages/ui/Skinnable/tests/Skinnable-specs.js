@@ -307,8 +307,8 @@ describe('Skinnable Specs', () => {
 			</SkinnableParent>
 		);
 
-		const expected = 'darkSkin normal unicase smallCaps';
-		const actual = subject.find('div').last().prop('className');
+		const expected = 'darkSkin normal unicase smallCaps'.split(' ').sort();
+		const actual = subject.find('div').last().prop('className').split(' ').sort();
 
 		expect(actual).toEqual(expected);
 	});
@@ -343,7 +343,7 @@ describe('Skinnable Specs', () => {
 		expect(actual).toEqual(expected);
 	});
 
-	test('should inherit an overridden default variant', () => {
+	test.only('should inherit an overridden default variant', () => {
 		const config = {
 			defaultSkin: 'dark',
 			defaultVariants: 'normal',
