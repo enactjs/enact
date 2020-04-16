@@ -54,8 +54,8 @@ const SkinContext = React.createContext(null);
  * @hoc
  * @public
  */
-function useSkins (config, skin, skinVariants) {
-	const {defaultSkin, defaultVariants, skins, variants} = config;
+function useSkins (config) {
+	const {defaultSkin, defaultVariants, skin, skins, skinVariants, variants} = config;
 
 	const {parentSkin, parentVariants} = React.useContext(SkinContext) || {};
 

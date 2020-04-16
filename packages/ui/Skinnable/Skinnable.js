@@ -126,11 +126,16 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 	const {prop, skins, defaultSkin, allowedVariants: variants, variantsProp} = config;
 	const defaultVariants = objectify(config.defaultVariants);
 
-	const hookConfig = {defaultSkin, defaultVariants, skins, variants};
-
 	// eslint-disable-next-line no-shadow
 	function Skinnable ({className, skin, skinVariants, ...rest}) {
-		const hook = useSkins(hookConfig, skin, skinVariants);
+		const hook = useSkins({
+			defaultSkin,
+			defaultVariants,
+			skin,
+			skins,
+			skinVariants,
+			variants
+		});
 
 		const allClassNames = classnames(hook.className, className);
 		if (allClassNames) {
@@ -204,5 +209,6 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 
 export default Skinnable;
 export {
-	Skinnable
+	Skinnable,
+	useSkins
 };
