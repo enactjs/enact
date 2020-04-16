@@ -20,6 +20,48 @@ import classnames from 'classnames';
 import {objectify, preferDefined} from './util';
 
 /**
+ * Allows a component to respond to skin changes via the Context API
+ *
+ * Example:
+ * ```
+ * <App skin="dark">
+ * 	<Section>
+ * 		<Button>Gray Button</Button>
+ * 	<Section>
+ * 	<Popup skin="light">
+ * 		<Button>White Button</Button>
+ * 	</Popup>
+ * </App>
+ * ```
+ *
+ * @class SkinContext
+ * @memberof ui/Skinnable
+ * @hoc
+ * @public
+ */
+const SkinContext = React.createContext(null);
+
+/**
+ * Object returned by `useSkinContext`
+ *
+ * @typedef {Object} useSkinContextInterface
+ * @memberof ui/Skinnable
+ * @property {String}   parentSkin     The applied parent skin
+ * @property {Array}    parentVariants The collection of applied parent variants
+ * @private
+ */
+
+/**
+ * Retrieves the parent skin and variants
+ *
+ * @returns {useSkinContextInterface}
+ * @private
+ */
+function useSkinContext () {
+	return React.useContext(SkinContext);
+}
+
+/**
  * Default config for `Skinnable`.
  *
  * @memberof ui/Skinnable.Skinnable
@@ -91,48 +133,6 @@ const defaultConfig = {
 	 */
 	allowedVariants: null
 };
-
-/**
- * Allows a component to respond to skin changes via the Context API
- *
- * Example:
- * ```
- * <App skin="dark">
- * 	<Section>
- * 		<Button>Gray Button</Button>
- * 	<Section>
- * 	<Popup skin="light">
- * 		<Button>White Button</Button>
- * 	</Popup>
- * </App>
- * ```
- *
- * @class SkinContext
- * @memberof ui/Skinnable
- * @hoc
- * @public
- */
-const SkinContext = React.createContext(null);
-
-/**
- * Object returned by `useSkinContext`
- *
- * @typedef {Object} useSkinContextInterface
- * @memberof ui/Skinnable
- * @property {String}   parentSkin     The applied parent skin
- * @property {Array}    parentVariants The collection of applied parent variants
- * @private
- */
-
-/**
- * Retrieves the parent skin and variants
- *
- * @returns {useSkinContextInterface}
- * @private
- */
-function useSkinContext () {
-	return React.useContext(SkinContext);
-}
 
 /**
  * A higher-order component that assigns skinning classes for the purposes of styling children components.
