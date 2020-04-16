@@ -114,6 +114,10 @@ const defaultConfig = {
  */
 const SkinContext = React.createContext(null);
 
+function useSkinContext () {
+	return React.useContext(SkinContext);
+}
+
 /**
  * A higher-order component that assigns skinning classes for the purposes of styling children components.
  *
@@ -247,34 +251,31 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 				PropTypes.object
 			])
 		},
-		render: ({className, skin, skinVariants, ...rest}) => (
-			<SkinContext.Consumer>
-				{(value) => {
-					const {parentSkin, parentVariants} = value || {};
-					const effectiveSkin = determineSkin(skin, parentSkin);
-					const variants = determineVariants(skinVariants, parentVariants);
-					const allClassNames = getClassName(effectiveSkin, className, variants);
+		render: ({className, skin, skinVariants, ...rest}) => {
+			const skinContext = useSkinContext();
+			const {parentSkin, parentVariants} = skinContext || {};
+			const effectiveSkin = determineSkin(skin, parentSkin);
+			const variants = determineVariants(skinVariants, parentVariants);
+			const allClassNames = getClassName(effectiveSkin, className, variants);
 
-					if (allClassNames) {
-						rest.className = allClassNames;
-					}
+			if (allClassNames) {
+				rest.className = allClassNames;
+			}
 
-					if (prop) {
-						rest[prop] = effectiveSkin;
-					}
+			if (prop) {
+				rest[prop] = effectiveSkin;
+			}
 
-					if (variantsProp) {
-						rest[variantsProp] = variants;
-					}
+			if (variantsProp) {
+				rest[variantsProp] = variants;
+			}
 
-					return (
-						<SkinContext.Provider value={{parentSkin: effectiveSkin, parentVariants: variants}}>
-							<Wrapped {...rest} />
-						</SkinContext.Provider>
-					);
-				}}
-			</SkinContext.Consumer>
-		)
+			return (
+				<SkinContext.Provider value={{parentSkin: effectiveSkin, parentVariants: variants}}>
+					<Wrapped {...rest} />
+				</SkinContext.Provider>
+			);
+		}
 	});
 });
 
