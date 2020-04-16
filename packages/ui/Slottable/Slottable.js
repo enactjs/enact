@@ -45,10 +45,10 @@ const Slottable = hoc(defaultConfig, (config, Wrapped) => {
 	const slots = config.slots;
 
 	// eslint-disable-next-line no-shadow
-	return function Slottable (props) {
-		const distributed = useSlots({slots, children: props.children});
+	return function Slottable ({children, ...rest}) {
+		const distributed = useSlots({slots, children});
 		return (
-			<Wrapped {...props} {...distributed} />
+			<Wrapped {...rest} {...distributed} />
 		);
 	};
 });
