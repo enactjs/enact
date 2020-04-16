@@ -114,6 +114,22 @@ const defaultConfig = {
  */
 const SkinContext = React.createContext(null);
 
+/**
+ * Object returned by `useSkinContext`
+ *
+ * @typedef {Object} useSkinContextInterface
+ * @memberof ui/Skinnable
+ * @property {String}   parentSkin     The applied parent skin
+ * @property {Array}    parentVariants The collection of applied parent variants
+ * @private
+ */
+
+/**
+ * Retrieves the parent skin and variants
+ *
+ * @returns {useSkinContextInterface}
+ * @private
+ */
 function useSkinContext () {
 	return React.useContext(SkinContext);
 }
