@@ -187,4 +187,26 @@ describe('Slottable Specs', () => {
 			expect(actualTitle).toBe(expectedTitle);
 		}
 	);
+
+	test('should preserve values in \'slot\' property', () => {
+		// This suppresses the unique key warning that this implementation creates. Also, we can't
+		// restore this because it breaks our global warning listener.
+		jest.spyOn(console, 'error').mockImplementation(() => {});
+
+		const Component = Slottable({slots: ['a']}, ({a}) => (
+			<div>
+				{a}
+			</div>
+		));
+		const subject = mount(
+			<Component a={[<div key="X">X</div>]}>
+				<div slot="a" key="A">A</div>
+			</Component>
+		);
+
+		const expected = 'XA';
+		const actual = subject.text();
+
+		expect(actual).toBe(expected);
+	});
 });
