@@ -54,4 +54,7 @@ const Slottable = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default Slottable;
-export {Slottable};
+export {
+	Slottable,
+	useSlots
+};
