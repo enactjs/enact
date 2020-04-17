@@ -188,6 +188,33 @@ describe('ViewManager', () => {
 		}
 	);
 
+	test(
+		'should only fire onTransition once on new {index}',
+		function (done) {
+			const duration = 50;
+			const spy = jest.fn();
+			const subject = mount(
+				<ViewManager index={3} duration={duration} onTransition={spy}>
+					<div className="view">View 1</div>
+					<div className="view">View 2</div>
+					<div className="view">View 3</div>
+					<div className="view">View 4</div>
+					<div className="view">View 5</div>
+				</ViewManager>
+			);
+
+			subject.setProps({index: 4});
+
+			window.setTimeout(function () {
+				const expected = 1;
+				const actual = spy.mock.calls.length;
+
+				expect(actual).toBe(expected);
+				done();
+			}, duration + 10);
+		}
+	);
+
 	test('should have size of 1 on TransitionGroup', () => {
 		const subject = mount(
 			<ViewManager noAnimation index={0} duration={0}>
