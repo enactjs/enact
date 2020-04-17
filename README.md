@@ -18,7 +18,7 @@ Alternatively, if you wish to install and setup package dependencies for global 
 ```
 npm run bootstrap-link
 ```
-That command will `npm link` the packages into global NPM userspace, for usage in other projects via `npm link <package` or `enact link`.
+That command will `npm link` the packages into global NPM userspace, for usage in other projects via `npm link <package>` or `enact link`.
 
 ## Copyright and License Information
 
