@@ -199,7 +199,7 @@ describe('Slottable Specs', () => {
 			</div>
 		));
 		const subject = mount(
-			<Component a={[<div key="X">X</div>]}>
+			<Component a={<div key="X">X</div>}>
 				<div slot="a" key="A">A</div>
 			</Component>
 		);
