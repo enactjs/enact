@@ -8,17 +8,17 @@ Enact uses lerna to manage the individual modules within this repo.
 
 Developers should use the individual npm modules hosted under the `@enact` namespace.
 
-For local framework development, this mono-repo can be setup using the bootstrap command
+For local framework development, this mono-repo can be setup using the `bootstrap` command:
 
 ```
 npm run bootstrap
 ```
 
-Alternatively, if you wish to install and setup package dependencies for global usage on a system, the bootstrap-link command can be used:
+Alternatively, if you wish to install and setup package dependencies for global usage on a system, the `bootstrap-link` command can be used:
 ```
 npm run bootstrap-link
 ```
-That command will `npm link` the packages into global NPM userspace, for usage in other projects via `npm link <package>` or `enact link`.
+That command will `npm link` the packages into global NPM userspace, for use in other projects via `npm link <package>` or `enact link`.
 
 ## Copyright and License Information
 
