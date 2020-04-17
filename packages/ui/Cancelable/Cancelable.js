@@ -7,79 +7,17 @@
  * @exports removeCancelHandle
  */
 
-import {forward, handle, stop, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
-import useClass from '@enact/core/useClass';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
-import {addModal, removeModal} from './modalHandler';
+import {addCancelHandler, removeCancelHandler} from './cancelHandler';
+import useCancel from './useCancel';
 
-class Cancel {
-	constructor (props) {
-		this.props = props;
-		this.context = {}; // Needed to get the ture value as the return value of the `hasPropsAndContext`.
-	}
-
-	handleCancel = handle(
-		forCancel,
-		forward('onCancel'),
-		(ev) => (this.props.dispatchCancelToConfig(ev, this.props)),
-		stop,
-		stopImmediate
-	)
-
-	handleKeyUp = handle(
-		forward('onKeyUp'),
-		// nesting handlers for DRYness. note that if any conditions return false in
-		// this.handleCancel(), this handler chain will stop too
-		this.handleCancel
-	).bind(this)
-}
-
-function mountEffect (state, modal) {
-	// layout effect order doesn't appear to be consistent with request order so we must invoked
-	// addModal synchronously with render. addModal guards against dupliate entries so calling
-	// on effect creation is safe but we still need a cleanup fn in order to remove the modal on
-	// unmount (which is guaranteed to be only once with the empty memo array below).
-	if (modal) addModal(state);
-
-	return () => () => {
-		if (modal) removeModal(state);
-	};
-}
-
-/**
- * Configuration for `useCancel`
- *
- * @typedef {Object} useCancelConfig
- * @memberof ui/Cancelable
- * @property {Function} [dispatchCancelToConfig]  The handler making the `onCancel event bubbling up or not
- * @property {Boolean}  [modal = false]           The flag to cancel events globally
- * @private
- */
-
-/**
- * Manages a cancel action.
- *
- * The cancel action is handled via the configured `onCancel` handler.
- *
- * @param {useCancelConfig} config Configuration options
- * @returns {useCancelInterface}
- * @private
- */
-function useCancel ({modal, ...config} = {}) {
-	const cancel = useClass(Cancel, config);
-
-	React.useLayoutEffect(mountEffect(cancel, modal), [cancel]);
-
-	return {
-		handleKeyUp: modal ? null : cancel.handleKeyUp
-	};
-}
+// Add keymap for escape key
+add('cancel', 27);
 
 /**
  * Default config for {@link ui/Cancelable.Cancelable}
@@ -132,9 +70,6 @@ const defaultConfig = {
 	 */
 	component: null
 };
-
-// Add keymap for escape key
-add('cancel', 27);
 
 /**
  * A higher-order component that adds support to a component to handle cancel actions.
