@@ -10,10 +10,10 @@ function computeAriaLabel ({aria, hint, prehint, content}) {
 				hint && prefix && (prefix + ' ' + hint) ||
 				prehint ||
 				hint ||
-                null;
+				null;
 
 		return label;
-    }
+	}
 
 	return aria;
 }
@@ -55,5 +55,5 @@ const useA11y = ({accessibilityPreHint: prehint, accessibilityHint: hint, 'aria-
 
 export default useA11y;
 export {
-    useA11y
+	useA11y
 };
