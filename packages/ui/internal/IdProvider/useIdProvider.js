@@ -32,14 +32,16 @@ const useIdProvider = ({prefix}) => {
 	const ids = React.useRef({});
 
 	React.useEffect(() => {
-		// Call the onUnmount handler for each generated id (note: not the key)
-		for (const key in ids.current) {
-			const {id, onUnmount} = ids.current[key];
+		return () => {
+			// Call the onUnmount handler for each generated id (note: not the key)
+			for (const key in ids.current) {
+				const {id, onUnmount} = ids.current[key];
 
-			if (typeof onUnmount === 'function') {
-				onUnmount(id);
+				if (typeof onUnmount === 'function') {
+					onUnmount(id);
+				}
 			}
-		}
+		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const generateId = React.useCallback((key = ID_KEY, idPrefix = prefix, onUnmount) => {
