@@ -9,9 +9,8 @@
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactDOM from 'react-dom';
 
-import Spot from './Spot';
+import useSpot from './useSpot';
 
 /**
  * The class name for spottable components. In general, you do not need to directly access this class
@@ -23,24 +22,6 @@ const spottableClass = 'spottable';
 
 const ENTER_KEY = 13;
 const REMOTE_OK_KEY = 16777221;
-
-const isKeyboardAccessible = (node) => {
-	if (!node) return false;
-	const name = node.nodeName.toUpperCase();
-	const type = node.type ? node.type.toUpperCase() : null;
-	return (
-		name === 'BUTTON' ||
-		name === 'A' ||
-		name === 'INPUT' && (
-			type === 'BUTTON' ||
-			type === 'CHECKBOX' ||
-			type === 'IMAGE' ||
-			type === 'RADIO' ||
-			type === 'RESET' ||
-			type === 'SUBMIT'
-		)
-	);
-};
 
 const isSpottable = (props) => !props.spotlightDisabled;
 
@@ -93,174 +74,157 @@ const defaultConfig = {
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	const {emulateMouse} = config;
 
-	return class extends React.Component {
-		static displayName = 'Spottable'
+	function Spottable (props) {
+		const {disabled, spotlightId, spotlightDisabled, ...rest} = props;
 
-		static propTypes = /** @lends spotlight/Spottable.Spottable.prototype */ {
-			/**
-			 * Whether or not the component is in a disabled state.
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			disabled: PropTypes.bool,
+		const spot = useSpot({emulateMouse, ...props});
+		spot.setFocusedWhenDisabled({spotlightDisabled});
+		const spottable = spot.focusedWhenDisabled || isSpottable(props);
 
-			/**
-			 * The handler to run when the component is removed while retaining focus.
-			 *
-			 * @type {Function}
-			 * @param {Object} event
-			 * @public
-			 */
-			onSpotlightDisappear: PropTypes.func,
+		let tabIndex = rest.tabIndex;
 
-			/**
-			 * The handler to run when the 5-way down key is pressed.
-			 *
-			 * @type {Function}
-			 * @param {Object} event
-			 * @public
-			 */
-			onSpotlightDown: PropTypes.func,
+		delete rest.onSpotlightDisappear;
+		delete rest.onSpotlightDown;
+		delete rest.onSpotlightLeft;
+		delete rest.onSpotlightRight;
+		delete rest.onSpotlightUp;
+		delete rest.selectionKeys;
+		delete rest.spotlightDisabled;
 
-			/**
-			 * The handler to run when the 5-way left key is pressed.
-			 *
-			 * @type {Function}
-			 * @param {Object} event
-			 * @public
-			 */
-			onSpotlightLeft: PropTypes.func,
-
-			/**
-			 * The handler to run when the 5-way right key is pressed.
-			 *
-			 * @type {Function}
-			 * @param {Object} event
-			 * @public
-			 */
-			onSpotlightRight: PropTypes.func,
-
-			/**
-			 * The handler to run when the 5-way up key is pressed.
-			 *
-			 * @type {Function}
-			 * @param {Object} event
-			 * @public
-			 */
-			onSpotlightUp: PropTypes.func,
-
-			/**
-			 * An array of numbers representing keyCodes that should trigger mouse event
-			 * emulation when `emulateMouse` is `true`. If a keyCode equals a directional
-			 * key, then default 5-way navigation will be prevented when that key is pressed.
-			 *
-			 * @type {Number[]}
-			 * @default [13, 16777221]
-			 * @public
-			 */
-			selectionKeys: PropTypes.arrayOf(PropTypes.number),
-
-			/**
-			 * When `true`, the component cannot be navigated using spotlight.
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			spotlightDisabled: PropTypes.bool,
-
-			/**
-			 * Used to identify this component within the Spotlight system
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			spotlightId: PropTypes.string,
-
-			/**
-			 * The tabIndex of the component. This value will default to -1 if left
-			 * unset and the control is spottable.
-			 *
-			 * @type {Number}
-			 * @public
-			 */
-			tabIndex: PropTypes.number
+		if (tabIndex == null) {
+			tabIndex = -1;
 		}
 
-		static defaultProps = {
-			selectionKeys: [ENTER_KEY, REMOTE_OK_KEY]
-		}
-
-		constructor (props) {
-			super(props);
-
-			this.spot = new Spot({emulateMouse, ...props});
-		}
-
-		componentDidMount () {
-			// eslint-disable-next-line react/no-find-dom-node
-			this.spot.componentDidMount(ReactDOM.findDOMNode(this));
-		}
-
-		componentDidUpdate (prevProps) {
-			this.spot.componentDidUpdate(prevProps);
-		}
-
-		componentWillUnmount () {
-			this.spot.componentWillUnmount();
-		}
-
-		render () {
-			const {disabled, spotlightId, spotlightDisabled, ...rest} = this.props;
-
-			this.spot.render({spotlightDisabled});
-
-			const spottable = this.spot.focusedWhenDisabled || isSpottable(this.props);
-
-			let tabIndex = rest.tabIndex;
-
-			delete rest.onSpotlightDisappear;
-			delete rest.onSpotlightDown;
-			delete rest.onSpotlightLeft;
-			delete rest.onSpotlightRight;
-			delete rest.onSpotlightUp;
-			delete rest.selectionKeys;
-			delete rest.spotlightDisabled;
-
-			if (tabIndex == null) {
-				tabIndex = -1;
+		if (spottable) {
+			if (rest.className) {
+				rest.className += ' ' + spottableClass;
+			} else {
+				rest.className = spottableClass;
 			}
-
-			if (spottable) {
-				if (rest.className) {
-					rest.className += ' ' + spottableClass;
-				} else {
-					rest.className = spottableClass;
-				}
-			}
-
-			if (spotlightId) {
-				rest['data-spotlight-id'] = spotlightId;
-			}
-
-			return (
-				<Wrapped
-					{...rest}
-					onBlur={this.spot.handleBlur.bind(this.spot)}
-					onFocus={this.spot.handleFocus.bind(this.spot)}
-					onMouseEnter={this.spot.handleEnter.bind(this.spot)}
-					onMouseLeave={this.spot.handleLeave.bind(this.spot)}
-					onKeyDown={this.spot.handleKeyDown.bind(this.spot)}
-					onKeyUp={this.spot.handleKeyUp.bind(this.spot)}
-					disabled={disabled}
-					tabIndex={tabIndex}
-				/>
-			);
 		}
-	};
+
+		if (spotlightId) {
+			rest['data-spotlight-id'] = spotlightId;
+		}
+
+		return (
+			<Wrapped
+				{...rest}
+				disabled={disabled}
+				onBlur={spot.blur}
+				onFocus={spot.focus}
+				onKeyDown={spot.keyDown}
+				onKeyUp={spot.keyUp}
+				onMouseEnter={spot.mouseEnter}
+				onMouseLeave={spot.mouseLeave}
+				tabIndex={tabIndex}
+			/>
+		);
+	}
+
+	Spottable.propTypes = /** @lends spotlight/Spottable.Spottable.prototype */ {
+		/**
+		 * Whether or not the component is in a disabled state.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
+		/**
+		 * The handler to run when the component is removed while retaining focus.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDisappear: PropTypes.func,
+
+		/**
+		 * The handler to run when the 5-way down key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDown: PropTypes.func,
+
+		/**
+		 * The handler to run when the 5-way left key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightLeft: PropTypes.func,
+
+		/**
+		 * The handler to run when the 5-way right key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightRight: PropTypes.func,
+
+		/**
+		 * The handler to run when the 5-way up key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightUp: PropTypes.func,
+
+		/**
+		 * An array of numbers representing keyCodes that should trigger mouse event
+		 * emulation when `emulateMouse` is `true`. If a keyCode equals a directional
+		 * key, then default 5-way navigation will be prevented when that key is pressed.
+		 *
+		 * @type {Number[]}
+		 * @default [13, 16777221]
+		 * @public
+		 */
+		selectionKeys: PropTypes.arrayOf(PropTypes.number),
+
+		/**
+		 * When `true`, the component cannot be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: PropTypes.bool,
+
+		/**
+		 * Used to identify this component within the Spotlight system
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		spotlightId: PropTypes.string,
+
+		/**
+		 * The tabIndex of the component. This value will default to -1 if left
+		 * unset and the control is spottable.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		tabIndex: PropTypes.number
+	}
+
+	Spottable.defaultProps = {
+		selectionKeys: [ENTER_KEY, REMOTE_OK_KEY]
+	}
+
+	return Spottable;
 });
 
 export default Spottable;
-export {Spottable, spottableClass};
+export {
+	Spottable,
+	spottableClass,
+	useSpot
+};

@@ -46,11 +46,24 @@ class Spot {
         this.focusedWhenDisabled = false;
     }
 
-    componentDidMount (node) {
+    setContext ({prevSpotlightDisabled}) {
+        this.context.prevSpotlightDisabled = prevSpotlightDisabled;
+    }
+
+    load (node) {
         this.node = node;
     }
 
-    componentDidUpdate (prevProps) {
+    unload () {
+        if (this.isFocused) {
+            forward('onSpotlightDisappear', null, this.props);
+        }
+        if (lastSelectTarget === this) {
+            lastSelectTarget = null;
+        }
+    }
+
+    spotlightDisabledChanged () {
         this.isFocused = this.node && Spotlight.getCurrent() === this.node;
 
         // if the component is focused and became disabled
@@ -60,7 +73,7 @@ class Spot {
         }
 
         // if the component became enabled, notify spotlight to enable restoring "lost" focus
-        if (isSpottable(this.props) && !isSpottable(prevProps) && !Spotlight.isPaused()) {
+        if (isSpottable(this.props) && this.context.prevSpotlightDisabled && !Spotlight.isPaused()) {
             if (Spotlight.getPointerMode()) {
                 if (this.isHovered) {
                     Spotlight.setPointerMode(false);
@@ -77,13 +90,8 @@ class Spot {
         }
     }
 
-    componentWillUnmount () {
-        if (this.isFocused) {
-            forward('onSpotlightDisappear', null, this.props);
-        }
-        if (lastSelectTarget === this) {
-            lastSelectTarget = null;
-        }
+    setFocusedWhenDisabled ({spotlightDisabled}) {
+        this.focusedWhenDisabled = this.isFocused && spotlightDisabled;
     }
 
     shouldEmulateMouse = (ev, props) => {
@@ -234,10 +242,6 @@ class Spot {
         if (hasPointerMoved(ev.clientX, ev.clientY)) {
             this.isHovered = false;
         }
-    }
-
-    render ({spotlightDisabled}) {
-        this.focusedWhenDisabled = this.isFocused && spotlightDisabled;
     }
 }
 
