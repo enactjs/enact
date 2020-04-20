@@ -26,5 +26,5 @@ class Cancel {
 
 export default Cancel;
 export {
-    Cancel
+	Cancel
 };
