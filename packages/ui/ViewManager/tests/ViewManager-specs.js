@@ -367,6 +367,26 @@ describe('ViewManager', () => {
 		expect(spy).toHaveBeenCalledTimes(1);
 	});
 
+	test('should include the current index and previous index in onTransition event payload', () => {
+		const spy = jest.fn();
+		const subject = mount(
+			<ViewManager index={0} onTransition={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		spy.mockClear();
+
+		subject.setProps({index: 1});
+
+		expect(spy).toHaveBeenLastCalledWith({index: 1, previousIndex: 0});
+
+		subject.setProps({index: 0});
+
+		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1});
+	});
+
 	test('should fire onWillTransition once per transition', () => {
 		const spy = jest.fn();
 		const subject = mount(
@@ -379,5 +399,23 @@ describe('ViewManager', () => {
 		subject.setProps({index: 1});
 
 		expect(spy).toHaveBeenCalledTimes(1);
+	});
+
+	test('should include the current index and previous index in onWillTransition event payload', () => {
+		const spy = jest.fn();
+		const subject = mount(
+			<ViewManager index={0} onWillTransition={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		subject.setProps({index: 1});
+
+		expect(spy).toHaveBeenLastCalledWith({index: 1, previousIndex: 0});
+
+		subject.setProps({index: 0});
+
+		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1});
 	});
 });
