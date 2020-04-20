@@ -23,7 +23,7 @@ const spottableClass = 'spottable';
 const ENTER_KEY = 13;
 const REMOTE_OK_KEY = 16777221;
 
-const isSpottable = (props) => !props.spotlightDisabled;
+const isSpottable = (spotlightDisabled) => !spotlightDisabled;
 
 // Last instance of spottable to be focused
 let lastSelectTarget = null;
@@ -74,22 +74,35 @@ const defaultConfig = {
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	const {emulateMouse} = config;
 
-	function Spottable (props) {
-		const {disabled, spotlightId, spotlightDisabled, ...rest} = props;
-
-		const spot = useSpot({emulateMouse, ...props});
+	function Spottable ({
+		disabled,
+		onSpotlightDisappear,
+		onSpotlightDown,
+		onSpotlightLeft,
+		onSpotlightRight,
+		onSpotlightUp,
+		selectionKeys,
+		spotlightDisabled,
+		spotlightId,
+		...rest
+	}) {
+		const spot = useSpot({
+			disabled,
+			emulateMouse,
+			onSpotlightDisappear,
+			onSpotlightDown,
+			onSpotlightLeft,
+			onSpotlightRight,
+			onSpotlightUp,
+			selectionKeys,
+			spotlightDisabled,
+			spotlightId,
+			...rest
+		});
 		spot.setFocusedWhenDisabled({spotlightDisabled});
-		const spottable = spot.focusedWhenDisabled || isSpottable(props);
+		const spottable = spot.focusedWhenDisabled || isSpottable(spotlightDisabled);
 
 		let tabIndex = rest.tabIndex;
-
-		delete rest.onSpotlightDisappear;
-		delete rest.onSpotlightDown;
-		delete rest.onSpotlightLeft;
-		delete rest.onSpotlightRight;
-		delete rest.onSpotlightUp;
-		delete rest.selectionKeys;
-		delete rest.spotlightDisabled;
 
 		if (tabIndex == null) {
 			tabIndex = -1;
@@ -107,6 +120,21 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			rest['data-spotlight-id'] = spotlightId;
 		}
 
+		// 	onKeyDown,
+		// onMouseDown,
+		// onMouseUp,
+		// onClick,
+		// onBlur,
+		// onFocus,
+		// onMouseEnter,
+		// onMouseLeave,
+		// onMouseMove,
+		// onMouseOut,
+		// onMouseOver,
+		// onTouchEnd,
+		// onTouchMove,
+		// onTouchStart,
+
 		return (
 			<Wrapped
 				{...rest}
@@ -117,6 +145,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				onKeyUp={spot.keyUp}
 				onMouseEnter={spot.mouseEnter}
 				onMouseLeave={spot.mouseLeave}
+				ref={spot.ref}
 				tabIndex={tabIndex}
 			/>
 		);

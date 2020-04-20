@@ -50,7 +50,7 @@ class Spot {
         this.context.prevSpotlightDisabled = prevSpotlightDisabled;
     }
 
-    load (node) {
+    load (node = null) {
         this.node = node;
     }
 

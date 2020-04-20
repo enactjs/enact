@@ -43,18 +43,16 @@ import Spot from './Spot';
 
 const useSpot = ({...config} = {}) => {
     const spot = useClass(Spot, config);
+    const ref = React.useRef(null);
     const prevSpotlightDisabled = React.useRef(config.prevSpotlightDisabled);
-
     const {spotlightDisabled} = config;
 
     prevSpotlightDisabled.current = spotlightDisabled;
-
-
 	spot.setContext({prevSpotlightDisabled});
 
     React.useEffect(() => {
         // eslint-disable-next-line react/no-find-dom-node
-        spot.load(ReactDOM.findDOMNode(this));
+        spot.load(ReactDOM.findDOMNode(ref.current));
 
         return () => {
             spot.unload();
@@ -68,6 +66,7 @@ const useSpot = ({...config} = {}) => {
     return {
         focusedWhenDisabled: spot.focusedWhenDisabled,
         setFocusedWhenDisabled: spot.setFocusedWhenDisabled,
+        ref,
 
         blur: spot.handleBlur,
         focus: spot.handleFocus,
