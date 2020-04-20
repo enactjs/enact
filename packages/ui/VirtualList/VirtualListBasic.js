@@ -542,18 +542,18 @@ class VirtualListBasic extends Component {
 		return index === 0 ? 0 : this.getItemBottomPosition(index - 1) + spacing;
 	}
 
-	getItemPosition = (index, stickTo = 'start', optionalOffset = 0) => {
+	getItemPosition = (index, stickTo = 'start') => {
 		const
 			{primary} = this,
 			position = this.getGridPosition(index);
 		let offset = 0;
 
 		if (stickTo === 'start') {
-			offset = optionalOffset;
+			offset = 0;
 		} else if (this.props.itemSizes) {
-			offset = primary.clientSize - this.props.itemSizes[index] - optionalOffset;
+			offset = primary.clientSize - this.props.itemSizes[index];
 		} else {
-			offset = primary.clientSize - primary.itemSize - optionalOffset;
+			offset = primary.clientSize - primary.itemSize;
 		}
 
 		position.primaryPosition -= offset;
