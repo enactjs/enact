@@ -73,7 +73,7 @@ const A11yDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		return (
 			<Wrapped {...rest} {...a11y} />
 		);
-	};
+	}
 
 	A11yDecorator.propTypes = /** @lends ui/A11yDecorator.A11yDecorator.prototype */ {
 		/**
