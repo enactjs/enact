@@ -8,6 +8,7 @@
 
 	// centered
 	&.centered {
+		left: 0;
 		margin: 0;
 		margin-left: 50%;
 		position: absolute;
@@ -23,6 +24,8 @@
 	:global(.enact-locale-right-to-left) & {
 		// centered
 		&.centered {
+			left: initial;
+			right: 0;
 			margin: 0;
 			margin-right: 50%;
 			-webkit-transform: translateX(50%) translateY(-50%);
