@@ -350,4 +350,34 @@ describe('ViewManager', () => {
 
 		expect(subject.find('View')).toHaveLength(3);
 	});
+
+	test('should fire onTransition once per transition', () => {
+		const spy = jest.fn();
+		const subject = mount(
+			<ViewManager index={0} onTransition={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		spy.mockClear();
+
+		subject.setProps({index: 1});
+
+		expect(spy).toHaveBeenCalledTimes(1);
+	});
+
+	test('should fire onWillTransition once per transition', () => {
+		const spy = jest.fn();
+		const subject = mount(
+			<ViewManager index={0} onWillTransition={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		subject.setProps({index: 1});
+
+		expect(spy).toHaveBeenCalledTimes(1);
+	});
 });
