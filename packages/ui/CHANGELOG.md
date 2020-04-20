@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/ViewManager` events `onTransition` and `onWillTransition` payload members `index` and `previousIndex`
+
+### Fixed
+
+- `ui/ViewManager` to only fire `onTransition` once per transition
+
 ## [3.3.0-alpha.6] - 2020-04-14
 
 ### Fixed
