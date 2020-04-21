@@ -4,66 +4,106 @@ import ProgressBar from '../ProgressBar';
 import css from '../ProgressBar.module.less';
 
 describe('ProgressBar Specs', () => {
-	test('should have width of 0.5', () => {
-		const progressBar = mount(
-			<ProgressBar
-				progress={0.5}
-			/>
-		);
 
-		const style = progressBar.find(`.${css.progressBar}`).prop('style');
+	describe('horizontal', () => {
+		test('should have width of 0.5', () => {
+			const progressBar = mount(
+				<ProgressBar
+					progress={0.5}
+				/>
+			);
 
-		const expected = 0.5;
-		const actual = style['--ui-progressbar-proportion-end'];
+			const style = progressBar.find(`.${css.progressBar}`).prop('style');
 
-		expect(actual).toBe(expected);
+			const expected = 0.5;
+			const actual = style['--ui-progressbar-proportion-end'];
+
+			expect(actual).toBe(expected);
+		});
+
+		test('should have background width of 0.75', () => {
+			const progressBar = mount(
+				<ProgressBar
+					backgroundProgress={0.75}
+				/>
+			);
+
+			const style = progressBar.find(`.${css.progressBar}`).prop('style');
+
+			const expected = 0.75;
+			const actual = style['--ui-progressbar-proportion-end-background'];
+
+			expect(actual).toBe(expected);
+		});
 	});
 
-	test('should have background width of 0.75', () => {
-		const progressBar = mount(
-			<ProgressBar
-				backgroundProgress={0.75}
-			/>
-		);
+	describe('vertical', () => {
+		test('should have height of 0.5', () => {
+			const progressBar = mount(
+				<ProgressBar
+					progress={0.5}
+					orientation="vertical"
+				/>
+			);
 
-		const style = progressBar.find(`.${css.progressBar}`).prop('style');
+			const style = progressBar.find(`.${css.progressBar}`).prop('style');
 
-		const expected = 0.75;
-		const actual = style['--ui-progressbar-proportion-end-background'];
+			const expected = 0.5;
+			const actual = style['--ui-progressbar-proportion-end'];
 
-		expect(actual).toBe(expected);
+			expect(actual).toBe(expected);
+		});
+
+		test('should have background height of 0.75', () => {
+			const progressBar = mount(
+				<ProgressBar
+					progress={0.5}
+					backgroundProgress={0.75}
+					orientation="vertical"
+				/>
+			);
+
+			const style = progressBar.find(`.${css.progressBar}`).prop('style');
+
+			const expected = 0.75;
+			const actual = style['--ui-progressbar-proportion-end-background'];
+
+			expect(actual).toBe(expected);
+		});
 	});
 
-	test('should have height of 0.5', () => {
-		const progressBar = mount(
-			<ProgressBar
-				progress={0.5}
-				orientation="vertical"
-			/>
-		);
+	describe('radial', () => {
+		test('should have a radius of 0.5', () => {
+			const progressBar = mount(
+				<ProgressBar
+					progress={0.5}
+					orientation="radial"
+				/>
+			);
 
-		const style = progressBar.find(`.${css.progressBar}`).prop('style');
+			const style = progressBar.find(`.${css.progressBar}`).prop('style');
 
-		const expected = 0.5;
-		const actual = style['--ui-progressbar-proportion-end'];
+			const expected = 0.5;
+			const actual = style['--ui-progressbar-proportion-end'];
 
-		expect(actual).toBe(expected);
-	});
+			expect(actual).toBe(expected);
+		});
 
-	test('should have background height of 0.75', () => {
-		const progressBar = mount(
-			<ProgressBar
-				progress={0.5}
-				backgroundProgress={0.75}
-				orientation="vertical"
-			/>
-		);
+		test('should have background radius of 0.75', () => {
+			const progressBar = mount(
+				<ProgressBar
+					progress={0.5}
+					backgroundProgress={0.75}
+					orientation="radial"
+				/>
+			);
 
-		const style = progressBar.find(`.${css.progressBar}`).prop('style');
+			const style = progressBar.find(`.${css.progressBar}`).prop('style');
 
-		const expected = 0.75;
-		const actual = style['--ui-progressbar-proportion-end-background'];
+			const expected = 0.75;
+			const actual = style['--ui-progressbar-proportion-end-background'];
 
-		expect(actual).toBe(expected);
+			expect(actual).toBe(expected);
+		});
 	});
 });
