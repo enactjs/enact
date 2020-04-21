@@ -56,42 +56,42 @@ const REMOTE_OK_KEY = 16777221;
 
 const useSpot = ({selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...config} = {}) => {
 	const useForceUpdate = () => (React.useReducer(x => x + 1, 0));
-    const spot = useClass(Spot, {selectionKeys, spotlightDisabled, useForceUpdate, ...config});
-    const ref = React.useRef(null);
-    const mutableRef = React.useRef({
-        prevSpotlightDisabled: spotlightDisabled,
-        spotlightDisabled
-    });
+	const spot = useClass(Spot, {selectionKeys, spotlightDisabled, useForceUpdate, ...config});
+	const ref = React.useRef(null);
+	const mutableRef = React.useRef({
+		prevSpotlightDisabled: spotlightDisabled,
+		spotlightDisabled
+	});
 
-    spot.setContext(mutableRef);
+	spot.setContext(mutableRef);
 
-    React.useEffect(() => {
-        // eslint-disable-next-line react/no-find-dom-node
-        spot.load(ReactDOM.findDOMNode(ref.current));
+	React.useEffect(() => {
+		// eslint-disable-next-line react/no-find-dom-node
+		spot.load(ReactDOM.findDOMNode(ref.current));
 
-        return () => {
-            spot.unload();
-        }
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+		return () => {
+			spot.unload();
+		}
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    React.useEffect(() => {
-        spot.spotlightDisabledChanged();
-    }, [spotlightDisabled]);
+	React.useEffect(() => {
+		spot.spotlightDisabledChanged();
+	}, [spotlightDisabled]);
 
-    return {
-        blur: spot.handleBlur,
-        className: spot.context.spottableClass || null,
-        focus: spot.handleFocus,
-        keyDown: spot.handleKeyDown,
-        keyUp: spot.handleKeyUp,
-        mouseEnter: spot.handleEnter,
-        mouseLeave: spot.handleLeave,
-        ref
-    };
+	return {
+		blur: spot.handleBlur,
+		className: spot.context.spottableClass || null,
+		focus: spot.handleFocus,
+		keyDown: spot.handleKeyDown,
+		keyUp: spot.handleKeyUp,
+		mouseEnter: spot.handleEnter,
+		mouseLeave: spot.handleLeave,
+		ref
+	};
 };
 
 export default useSpot;
 export {
 	spottableClass,
-    useSpot
+	useSpot
 };
