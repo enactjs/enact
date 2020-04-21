@@ -188,6 +188,15 @@ const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
 				css[key] = baseMap[key] + ' ' + additiveMap[key];
 			}
 		});
+
+		if (process.env.NODE_ENV === 'test') {
+			return new Proxy({}, {
+				get (target, key) {
+					// use the merged value if it exists and the key otherwise
+					return css[key] || key;
+				}
+			});
+		}
 	}
 
 	return css;

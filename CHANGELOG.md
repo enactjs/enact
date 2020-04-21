@@ -2,9 +2,76 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [3.3.0-alpha.6] - 2020-04-14
+
+### Fixed
+
+- `ui/Scroller` to prevent interaction with scrollbars when muted
+
+## [3.3.0-alpha.5] - 2020-04-06
+
+### Added
+
+- `core/handle.not` to return the logical complement of the value returned from the handler
+
+## [3.3.0-alpha.4] - 2020-03-30
+
+### Deprecated
+
+- `ui/GridListImageItem`, use `ui/ImageItem` instead
+
+### Added
+
+- `ui/ImageItem` component
+
+### Fixed
+
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` to update scroll thumb position properly in nested cases
+
+## [3.3.0-alpha.3] - 2020-03-09
+
+### Added
+
+- `ui/styles/mixins.less` `.position()` support for list-style arguments, in addition to the existing separated arguments
+- `ui/GridListItemItem` prop `subComponents`
+
+### Fixed
+
+- `core/util.mergeClassNames` to mirror class names when used in unit tests
+
+## [3.3.0-alpha.2] - 2020-03-09
+
+### Changed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `itemProps` to `childProps` for backwards compatibility
+
+### Fixed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to not suddenly jump when pressing directional keys after wheeling
+
+## [3.3.0-alpha.1] - 2020-02-26
 
 > Note: Moonstone was removed from the core Enact repository. It is now in its own repository at https://github.com/enactjs/moonstone/. Using Moonstone through npm has not changed.
+
+### Added
+
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` prop `scrollMode` is added
+
+### Changed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `childProps` to `itemProps` for clarity
+- `enact-sampler` to use common Enact Storybook configurations, addons, and utilities from `@enact/storybook-utils` helper package.
+
+### Fixed
+
+- `ui/Marquee` to not error when passed `null` `children` during an animation
+- `ui/Button` to have more robust support for a customized `iconComponent` prop
+
+## [3.2.6] - 2020-03-26
+
+### Fixed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to show items properly when reducing data size
 
 ## [3.2.5] - 2019-11-14
 

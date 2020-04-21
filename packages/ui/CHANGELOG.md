@@ -2,7 +2,38 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [3.3.0-alpha.6] - 2020-04-14
+
+### Fixed
+
+- `ui/Scroller` to prevent interaction with scrollbars when muted
+
+## [3.3.0-alpha.5] - 2020-04-06
+
+No significant changes.
+
+## [3.3.0-alpha.4] - 2020-03-30
+
+### Deprecated
+
+- `ui/GridListImageItem`, use `ui/ImageItem` instead
+
+### Added
+
+- `ui/ImageItem` component
+
+### Fixed
+
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` to update scroll thumb position properly in nested cases
+
+## [3.3.0-alpha.3] - 2020-03-09
+
+### Added
+
+- `ui/styles/mixins.less` `.position()` support for list-style arguments, in addition to the existing separated arguments
+- `ui/GridListItemItem` prop `subComponents`
+
+## [3.3.0-alpha.2] - 2020-03-09
 
 ### Added
 
@@ -11,12 +42,32 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
-- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `childProps` to `itemProps` for clarity.
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `itemProps` to `childProps` for backwards compatibility
 
 ### Fixed
 
-- `ui/Marquee` to not error when passed `null` `children` during an animation.
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to not suddenly jump when pressing directional keys after wheeling
+
+## [3.3.0-alpha.1] - 2020-02-26
+
+### Added
+
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` prop `scrollMode` is added
+
+### Changed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `childProps` to `itemProps` for clarity
+
+### Fixed
+
+- `ui/Marquee` to not error when passed `null` `children` during an animation
 - `ui/Button` to have more robust support for a customized `iconComponent` prop
+
+## [3.2.6] - 2020-03-26
+
+### Fixed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to show items properly when reducing data size
 
 ## [3.2.5] - 2019-11-14
 

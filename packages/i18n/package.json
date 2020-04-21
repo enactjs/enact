@@ -1,7 +1,7 @@
 {
   "name": "@enact/i18n",
   "main": "./src/index.js",
-  "version": "3.2.5",
+  "version": "3.3.0-alpha.6",
   "description": "Internationalization support for Enact using iLib",
   "scripts": {
     "clean": "enact clean",
@@ -9,6 +9,9 @@
     "test": "enact test",
     "test-json": "enact test --json",
     "test-watch": "enact test --watch",
+    "test-ui": "start-tests tests/ui/wdio.conf.js",
+    "test-ui-docker": "start-tests tests/ui/wdio.docker.conf.js",
+    "test-ui-tv": "start-tests tests/ui/wdio.tv.conf.js",
     "transpile": "enact transpile"
   },
   "license": "Apache-2.0",
@@ -41,7 +44,7 @@
     ]
   },
   "dependencies": {
-    "@enact/core": "^3.2.5",
+    "@enact/core": "^3.3.0-alpha.6",
     "prop-types": "^15.7.2",
     "ramda": "^0.24.1",
     "react": "^16.8.0",
@@ -52,6 +55,7 @@
     "ilib": "^14.4.0 || ^14.4.0-webostv1"
   },
   "devDependencies": {
+    "@enact/ui-test-utils": "^0.3.2",
     "ilib": "^14.4.0"
   }
 }

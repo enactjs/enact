@@ -3,8 +3,10 @@
  *
  * @module ui/GridListImageItem
  * @exports GridListImageItem
+ * @deprecated Will be removed in 4.0.0. Use {@link ui/ImageItem} instead.
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
@@ -142,7 +144,15 @@ const GridListImageItem = kind({
 		 * @type {String}
 		 * @public
 		 */
-		subCaption: PropTypes.string
+		subCaption: PropTypes.string,
+
+		/**
+		 * The components that will be shown below the image.
+		 *
+		 * @type {Array|Element}
+		 * @private
+		 */
+		subComponents: PropTypes.oneOfType([PropTypes.array, PropTypes.element])
 	},
 
 	defaultProps: {
@@ -177,24 +187,38 @@ const GridListImageItem = kind({
 					</div>
 				);
 			}
+		},
+		subComponents: ({caption, captionComponent: Caption, css, subCaption, subComponents}) => {
+			return (
+				subComponents ? subComponents : <React.Fragment>
+					{caption ? (<Cell className={css.caption} component={Caption} shrink>{caption}</Cell>) : null}
+					{subCaption ? (<Cell className={css.subCaption} component={Caption} shrink>{subCaption}</Cell>) : null}
+				</React.Fragment>
+			);
 		}
 	},
 
-	render: ({caption, captionComponent: Caption, css, imageComponent: ImageComponent, placeholder, source, subCaption, selectionOverlay, ...rest}) => {
+	render: deprecate(({css, imageComponent: ImageComponent, placeholder, source, selectionOverlay, subComponents, ...rest}) => {
+		delete rest.caption;
+		delete rest.captionComponent;
 		delete rest.iconComponent;
 		delete rest.selected;
 		delete rest.selectionOverlayShowing;
+		delete rest.subCaption;
 
 		return (
 			<Column {...rest} inline>
 				<Cell className={css.image} component={ImageComponent} placeholder={placeholder} src={source}>
 					{selectionOverlay}
 				</Cell>
-				{caption ? (<Cell className={css.caption} component={Caption} shrink>{caption}</Cell>) : null}
-				{subCaption ? (<Cell className={css.subCaption} component={Caption} shrink>{subCaption}</Cell>) : null}
+				{subComponents}
 			</Column>
 		);
-	}
+	}, {
+		name: 'ui/GridListImageItem',
+		replacedBy: 'ui/ImageItem',
+		until: '4.0.0'
+	})
 });
 
 export default GridListImageItem;

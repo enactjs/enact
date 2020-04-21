@@ -695,6 +695,33 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
 	}, 'adaptEvent');
 });
 
+/**
+ * Accepts a handler and returns the logical complement of the value returned from the handler.
+ *
+ * Example:
+ * ```
+ * import {forProp, forward, not, handle} from '@enact/core/handle';
+ *
+ * // calls the onChange callback when disabled is not true
+ * const handleChange = handle(
+ *  not(forProp('disabled', true)),
+ *  forward('onChange')
+ * )
+ * ```
+ *
+ * @method   not
+ * @param    {HandlerFunction}  handler  Handler to complement
+ *
+ * @returns  {HandlerFunction}           Returns an [event
+ *                                       handler]{@link core/handle.HandlerFunction} (suitable for
+ *                                       passing to handle) that returns the complement of the
+ *                                       return value of `handler`
+ * @curried
+ * @memberof core/handle
+ * @public
+ */
+const not = handle.not = (handler) => (...args) => !handler(...args);
+
 export default handle;
 export {
 	adaptEvent,
@@ -708,6 +735,7 @@ export {
 	forProp,
 	handle,
 	log,
+	not,
 	oneOf,
 	preventDefault,
 	returnsTrue,
