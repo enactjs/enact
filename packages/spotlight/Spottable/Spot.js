@@ -46,7 +46,8 @@ class Spot {
         this.props = props;
         this.context = {
             emulateMouse,
-            focusedWhenDisabled: false
+            focusedWhenDisabled: false,
+            spottableClass: null
         };
 
         this.isHovered = false;
@@ -54,7 +55,6 @@ class Spot {
         // result of this component imperatively blurring itself on focus when spotlightDisabled
         this.shouldPreventBlur = false;
         this.isFocused = false;
-        this.spottableClass = null;
     }
 
     setContext (mutableRef) {
@@ -186,24 +186,20 @@ class Spot {
     handle = handle.bind(this)
 
     handleKeyDown = this.handle(
-        forwardWithPrevent('onKeyDown'),
         this.forwardSpotlightEvents,
         this.isActionable,
         this.handleSelect,
-        this.shouldEmulateMouse,
-        forward('onMouseDown')
+        this.shouldEmulateMouse
     )
 
     handleKeyUp = this.handle(
         this.forwardAndResetLastSelectTarget,
         this.isActionable,
-        this.shouldEmulateMouse,
-        forward('onMouseUp'),
-        forward('onClick')
+        this.shouldEmulateMouse
     )
 
     handleBlur = (ev) => {
-        if (this.shouldPreventBlur) return;
+        if (this.shouldPreventBlur) return false;
         if (ev.currentTarget === ev.target) {
             this.isFocused = false;
             if (this.context.focusedWhenDisabled) {
@@ -217,9 +213,10 @@ class Spot {
 
         if (Spotlight.isMuted(ev.target)) {
             ev.stopPropagation();
-        } else {
-            forward('onBlur', ev, this.props);
+            return false;
         }
+
+        return true;
     }
 
     handleFocus = (ev) => {
@@ -236,20 +233,19 @@ class Spot {
 
         if (Spotlight.isMuted(ev.target)) {
             ev.stopPropagation();
-        } else {
-            forward('onFocus', ev, this.props);
+            return false;
         }
+
+        return true;
     }
 
     handleEnter = (ev) => {
-        forward('onMouseEnter', ev, this.props);
         if (hasPointerMoved(ev.clientX, ev.clientY)) {
             this.isHovered = true;
         }
     }
 
     handleLeave = (ev) => {
-        forward('onMouseLeave', ev, this.props);
         if (hasPointerMoved(ev.clientX, ev.clientY)) {
             this.isHovered = false;
         }
@@ -258,5 +254,6 @@ class Spot {
 
 export default Spot;
 export {
-    Spot
+    Spot,
+    spottableClass
 };

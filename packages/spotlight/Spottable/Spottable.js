@@ -6,6 +6,7 @@
  * @exports spottableClass
  */
 
+import {forward, forwardWithPrevent, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -13,6 +14,15 @@ import React from 'react';
 
 import {spottableClass, useSpot} from './useSpot';
 
+const
+	forwardMouseDown = forward('onMouseDown'),
+	forwardMouseUp = forward('onMouseUp'),
+	forwardClick = forward('onClick'),
+	forwardBlur = forward('onBlur'),
+	forwardFocus = forward('onFocus'),
+	forwardMouseEnter = forward('onMouseEnter'),
+	forwardMouseLeave = forward('onMouseLeave');
+const forwardKeyDownWithPrevent = forwardWithPrevent('onKeyDown')
 /**
  * Default configuration for Spottable
  *
@@ -56,21 +66,25 @@ const defaultConfig = {
  */
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	const {emulateMouse} = config;
+	const handleWithProps = (props) => (...handlers) => (ev) => {
+		handlers.reduce((ret, fn) => (ret && fn(ev, props) || false), true);
+	};
 
 	// eslint-disable-next-line no-shadow
-	function Spottable ({
-		className,
-		disabled,
-		onSpotlightDisappear,
-		onSpotlightDown,
-		onSpotlightLeft,
-		onSpotlightRight,
-		onSpotlightUp,
-		selectionKeys,
-		spotlightDisabled,
-		spotlightId,
-		...rest
-	}) {
+	function Spottable (props) {
+		const {
+			className,
+			disabled,
+			onSpotlightDisappear,
+			onSpotlightDown,
+			onSpotlightLeft,
+			onSpotlightRight,
+			onSpotlightUp,
+			selectionKeys,
+			spotlightDisabled,
+			spotlightId,
+			...rest
+		} = props;
 		const spot = useSpot({
 			disabled,
 			emulateMouse,
@@ -83,45 +97,51 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			spotlightDisabled,
 			...rest
 		});
+		const handle = handleWithProps(props);
 
 		let tabIndex = rest.tabIndex;
-
 		if (tabIndex == null) {
 			tabIndex = -1;
 		}
+		rest.tabIndex = tabIndex;
 
 		if (spotlightId) {
 			rest['data-spotlight-id'] = spotlightId;
 		}
 
-		// onKeyDown,
-		// onMouseDown,
-		// onMouseUp,
-		// onClick,
-		// onBlur,
-		// onFocus,
-		// onMouseEnter,
-		// onMouseLeave,
-		// onMouseMove,
-		// onMouseOut,
-		// onMouseOver,
-		// onTouchEnd,
-		// onTouchMove,
-		// onTouchStart,
+		rest.onKeyDown = handle(
+			forwardKeyDownWithPrevent,
+			spot.keyDown,
+			forwardMouseDown,
+		);
+		rest.onKeyUp = handle(
+			spot.keyUp,
+			forwardMouseUp,
+			forwardClick,
+		);
+		rest.onBlur = handle(
+			spot.blur,
+			forwardBlur,
+		);
+		rest.onFocus = handle(
+			spot.focus,
+			forwardFocus,
+		);
+		rest.onMouseEnter = handle(
+			returnsTrue((ev) => forwardMouseEnter(ev, props)),
+			spot.mouseEnter
+		);
+		rest.onMouseLeave = handle(
+			returnsTrue((ev) => forwardMouseLeave(ev, props)),
+			spot.mouseLeave
+		);
 
 		return (
 			<Wrapped
 				{...rest}
 				className={classNames(className, spot.className)}
 				disabled={disabled}
-				onBlur={spot.blur}
-				onFocus={spot.focus}
-				onKeyDown={spot.keyDown}
-				onKeyUp={spot.keyUp}
-				onMouseEnter={spot.mouseEnter}
-				onMouseLeave={spot.mouseLeave}
 				ref={spot.ref}
-				tabIndex={tabIndex}
 			/>
 		);
 	}

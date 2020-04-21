@@ -2,7 +2,7 @@ import useClass from '@enact/core/useClass';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Spot from './Spot';
+import {Spot, spottableClass} from './Spot';
 
 const ENTER_KEY = 13;
 const REMOTE_OK_KEY = 16777221;
@@ -90,5 +90,6 @@ const useSpot = ({selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled,
 
 export default useSpot;
 export {
+	spottableClass,
     useSpot
 };
