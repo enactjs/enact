@@ -8,6 +8,14 @@ import {getDirection, Spotlight} from '../src/spotlight';
 // const ENTER_KEY = 13;
 const REMOTE_OK_KEY = 16777221;
 
+/**
+ * The class name for spottable components. In general, you do not need to directly access this class
+ *
+ * @memberof spotlight/Spottable
+ * @public
+ */
+const spottableClass = 'spottable';
+
 const isKeyboardAccessible = (node) => {
 	if (!node) return false;
 	const name = node.nodeName.toUpperCase();
@@ -36,18 +44,25 @@ let selectCancelled = false;
 class Spot {
     constructor ({emulateMouse, ...props}) {
         this.props = props;
-        this.context = {emulateMouse};
+        this.context = {
+            emulateMouse,
+            focusedWhenDisabled: false
+        };
 
         this.isHovered = false;
         // Used to indicate that we want to stop propagation on blur events that occur as a
         // result of this component imperatively blurring itself on focus when spotlightDisabled
         this.shouldPreventBlur = false;
         this.isFocused = false;
-        this.focusedWhenDisabled = false;
+        this.spottableClass = null;
     }
 
-    setContext ({prevSpotlightDisabled}) {
+    setContext (mutableRef) {
+        const {prevSpotlightDisabled, spotlightDisabled} = mutableRef.current;
+
         this.context.prevSpotlightDisabled = prevSpotlightDisabled;
+        this.context.focusedWhenDisabled = this.isFocused && spotlightDisabled;
+        this.context.spottableClass = (this.context.focusedWhenDisabled || isSpottable(mutableRef.current)) ? spottableClass : null;
     }
 
     load (node = null) {
@@ -88,10 +103,6 @@ class Spot {
                 }
             }
         }
-    }
-
-    setFocusedWhenDisabled ({spotlightDisabled}) {
-        this.focusedWhenDisabled = this.isFocused && spotlightDisabled;
     }
 
     shouldEmulateMouse = (ev, props) => {
@@ -195,8 +206,8 @@ class Spot {
         if (this.shouldPreventBlur) return;
         if (ev.currentTarget === ev.target) {
             this.isFocused = false;
-            if (this.focusedWhenDisabled) {
-                this.focusedWhenDisabled = false;
+            if (this.context.focusedWhenDisabled) {
+                this.context.focusedWhenDisabled = false;
                 // We only need to trigger a rerender if a focused item becomes disabled and still needs its focus.
                 // Once it blurs we need to rerender to remove the spottable class so it will not spot again.
                 // The reason we don't use state is for performance reasons to avoid updates.

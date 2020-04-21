@@ -4,17 +4,25 @@ import ReactDOM from 'react-dom';
 
 import Spot from './Spot';
 
+const ENTER_KEY = 13;
+const REMOTE_OK_KEY = 16777221;
+
 /**
  * Configuration for `useSpot`
  *
  * @typedef {Object} useSpotConfig
- * @memberof ui/Spotable
- * @property {Boolean}  [defaultSelected = false] Initial state of the Spot
- * @property {Boolean}  [disabled = false]        Disables updating the state
- * @property {Boolean}  [prop = "selected"]       The key used to pass the current value back
- *                                                through the `onSpot` callback.
- * @property {Boolean}  [selected = false]        Current state of the Spot
- * @property {Function} [onSpot]                Called when the state is changed
+ * @memberof ui/Spottable
+ * @property {Boolean}  disabled             Whether or not the component is in a disabled state.
+ * @property {Boolean}  emulateMouse         Whether or not the component should emulate mouse events as a response to Spotlight 5-way events.
+ * @property {Function} onSpotlightDisappear The handler to run when the component is removed while retaining focus.
+ * @property {Function} onSpotlightDown      The handler to run when the 5-way down key is pressed.
+ * @property {Function} onSpotlightLeft      The handler to run when the 5-way left key is pressed.
+ * @property {Function} onSpotlightRight     The handler to run when the 5-way right key is pressed.
+ * @property {Function} onSpotlightUp        The handler to run when the 5-way up key is pressed.
+ * @property {Number[]} selectionKeys        An array of numbers representing keyCodes that should trigger mouse event
+ *                                           emulation when `emulateMouse` is `true`. If a keyCode equals a directional
+ *                                           key, then default 5-way navigation will be prevented when that key is pressed.
+ * @property {Boolean}  spotlightDisabled    When `true`, the component cannot be navigated using spotlight.
  * @private
  */
 
@@ -22,11 +30,15 @@ import Spot from './Spot';
  * Object returned by `useSpot`
  *
  * @typedef {Object} useSpotInterface
- * @memberof ui/Spotable
- * @property {Boolean}  selected   Current state of the Spot
- * @property {Function} activate   Sets the current state to `true`
- * @property {Function} deactivate Sets the current state to `false`
- * @property {Function} Spot     Spots the current state to the opposite value
+ * @memberof ui/Spottable
+ * @property {Boolean}  [blur]       Handle when blurred.
+ * @property {Boolean}  [className]  The class being spottable and focused when disabled.
+ * @property {Boolean}  [focus]      Handle when focused.
+ * @property {Boolean}  [keyDown]    Handle to run when the 5-way up key is pressed.
+ * @property {Boolean}  [keyUp]      Handle to run when the 5-way up key is released.
+ * @property {Boolean}  [mouseEnter] Handle when mouse enters.
+ * @property {Boolean}  [mouseLeave] Handle when mouse leaves.
+ * @property {Boolean}  [ref]        The ref for the target node.
  * @private
  */
 
@@ -41,14 +53,15 @@ import Spot from './Spot';
  * @private
  */
 
-const useSpot = ({...config} = {}) => {
-    const spot = useClass(Spot, config);
+const useSpot = ({selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...config} = {}) => {
+    const spot = useClass(Spot, {selectionKeys, spotlightDisabled, ...config});
     const ref = React.useRef(null);
-    const prevSpotlightDisabled = React.useRef(config.prevSpotlightDisabled);
-    const {spotlightDisabled} = config;
+    const mutableRef = React.useRef({
+        prevSpotlightDisabled: spotlightDisabled,
+        spotlightDisabled
+    });
 
-    prevSpotlightDisabled.current = spotlightDisabled;
-	spot.setContext({prevSpotlightDisabled});
+    spot.setContext(mutableRef);
 
     React.useEffect(() => {
         // eslint-disable-next-line react/no-find-dom-node
@@ -57,23 +70,21 @@ const useSpot = ({...config} = {}) => {
         return () => {
             spot.unload();
         }
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     React.useEffect(() => {
         spot.spotlightDisabledChanged();
     }, [spotlightDisabled]);
 
     return {
-        focusedWhenDisabled: spot.focusedWhenDisabled,
-        setFocusedWhenDisabled: spot.setFocusedWhenDisabled,
-        ref,
-
         blur: spot.handleBlur,
+        className: spot.context.spottableClass || null,
         focus: spot.handleFocus,
         keyDown: spot.handleKeyDown,
         keyUp: spot.handleKeyUp,
         mouseEnter: spot.handleEnter,
         mouseLeave: spot.handleLeave,
+        ref
     };
 };
 

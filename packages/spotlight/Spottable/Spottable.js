@@ -7,28 +7,11 @@
  */
 
 import hoc from '@enact/core/hoc';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import useSpot from './useSpot';
-
-/**
- * The class name for spottable components. In general, you do not need to directly access this class
- *
- * @memberof spotlight/Spottable
- * @public
- */
-const spottableClass = 'spottable';
-
-const ENTER_KEY = 13;
-const REMOTE_OK_KEY = 16777221;
-
-const isSpottable = (spotlightDisabled) => !spotlightDisabled;
-
-// Last instance of spottable to be focused
-let lastSelectTarget = null;
-// Should we prevent select being passed through
-let selectCancelled = false;
+import {spottableClass, useSpot} from './useSpot';
 
 /**
  * Default configuration for Spottable
@@ -74,7 +57,9 @@ const defaultConfig = {
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	const {emulateMouse} = config;
 
+	// eslint-disable-next-line no-shadow
 	function Spottable ({
+		className,
 		disabled,
 		onSpotlightDisappear,
 		onSpotlightDown,
@@ -96,11 +81,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			onSpotlightUp,
 			selectionKeys,
 			spotlightDisabled,
-			spotlightId,
 			...rest
 		});
-		spot.setFocusedWhenDisabled({spotlightDisabled});
-		const spottable = spot.focusedWhenDisabled || isSpottable(spotlightDisabled);
 
 		let tabIndex = rest.tabIndex;
 
@@ -108,19 +90,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			tabIndex = -1;
 		}
 
-		if (spottable) {
-			if (rest.className) {
-				rest.className += ' ' + spottableClass;
-			} else {
-				rest.className = spottableClass;
-			}
-		}
-
 		if (spotlightId) {
 			rest['data-spotlight-id'] = spotlightId;
 		}
 
-		// 	onKeyDown,
+		// onKeyDown,
 		// onMouseDown,
 		// onMouseUp,
 		// onClick,
@@ -138,6 +112,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		return (
 			<Wrapped
 				{...rest}
+				className={classNames(className, spot.className)}
 				disabled={disabled}
 				onBlur={spot.blur}
 				onFocus={spot.focus}
@@ -242,10 +217,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		 * @public
 		 */
 		tabIndex: PropTypes.number
-	}
-
-	Spottable.defaultProps = {
-		selectionKeys: [ENTER_KEY, REMOTE_OK_KEY]
 	}
 
 	return Spottable;
