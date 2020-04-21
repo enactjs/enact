@@ -1,7 +1,7 @@
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
-import useIdProvider from './useIdProvider';
+import useId from './useId';
 
 /**
  * Default config for {@link ui/IdProvider.IdProvider}
@@ -52,7 +52,7 @@ const IdProvider = hoc(defaultConfig, (config, Wrapped) => {
 	// eslint-disable-next-line no-shadow
 	function IdProvider (props) {
 		const updated = Object.assign({}, props);
-		const {generateId} = useIdProvider({prefix});
+		const {generateId} = useId({prefix});
 
 		if (generateProp) {
 			updated[generateProp] = generateId;
@@ -73,5 +73,5 @@ const IdProvider = hoc(defaultConfig, (config, Wrapped) => {
 export default IdProvider;
 export {
 	IdProvider,
-	useIdProvider
+	useId
 };
