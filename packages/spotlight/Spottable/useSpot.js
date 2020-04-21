@@ -14,6 +14,7 @@ const REMOTE_OK_KEY = 16777221;
  * @memberof ui/Spottable
  * @property {Boolean}  disabled             Whether or not the component is in a disabled state.
  * @property {Boolean}  emulateMouse         Whether or not the component should emulate mouse events as a response to Spotlight 5-way events.
+ * @property {Function} onMouseUp            Is is called if the component is focused and became disabled.
  * @property {Function} onSpotlightDisappear The handler to run when the component is removed while retaining focus.
  * @property {Function} onSpotlightDown      The handler to run when the 5-way down key is pressed.
  * @property {Function} onSpotlightLeft      The handler to run when the 5-way left key is pressed.
@@ -54,7 +55,8 @@ const REMOTE_OK_KEY = 16777221;
  */
 
 const useSpot = ({selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...config} = {}) => {
-    const spot = useClass(Spot, {selectionKeys, spotlightDisabled, ...config});
+	const useForceUpdate = () => (React.useReducer(x => x + 1, 0));
+    const spot = useClass(Spot, {selectionKeys, spotlightDisabled, useForceUpdate, ...config});
     const ref = React.useRef(null);
     const mutableRef = React.useRef({
         prevSpotlightDisabled: spotlightDisabled,
