@@ -118,7 +118,7 @@ const defaultConfig = {
  * @hoc
  * @public
  */
-const CancelableHOC = hoc(defaultConfig, (config, Wrapped) => {
+const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 	const {
 		onCancel,
 		modal,
@@ -126,31 +126,6 @@ const CancelableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	} = config;
 
 	invariant(onCancel, 'onCancel must be specified with Cancelable');
-
-	const onCancelIsString = typeof onCancel === 'string';
-	const onCancelIsFunction = typeof onCancel === 'function';
-	const dispatchCancelToConfig = function (ev, props) {
-		// by default, we return false which allows event propagation because it will "break" the
-		// handler chain and not call `stop` and `stopImmediate` below
-		let stopped = false;
-
-		const cancelEvent = {
-			type: 'onCancel',
-			stopPropagation: () => {
-				stopped = true;
-			}
-		};
-
-		if (onCancelIsString && typeof props[onCancel] === 'function') {
-			// use the custom event name from the config
-			cancelEvent.type = onCancel;
-			props[onCancel](cancelEvent);
-		} else if (onCancelIsFunction) {
-			onCancel(cancelEvent, props);
-		}
-
-		return stopped;
-	};
 
 	function renderModal (props) {
 		return (
@@ -172,16 +147,16 @@ const CancelableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		);
 	}
 
+	// eslint-disable-next-line no-shadow
 	function Cancelable (props) {
 		const updated = {...props};
 
 		const {handleKeyUp} = useCancel({
-			dispatchCancelToConfig,
+			...props,
 			modal,
-			...props
+			onCancel
 		});
 
-		delete updated.onCancel;
 		delete updated[onCancel];
 
 		return	modal && renderModal(updated) ||
@@ -207,9 +182,10 @@ const CancelableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	return Cancelable;
 });
 
-export default CancelableHOC;
+export default Cancelable;
 export {
 	addCancelHandler,
-	CancelableHOC as Cancelable,
-	removeCancelHandler
+	Cancelable,
+	removeCancelHandler,
+	useCancel
 };

@@ -27,6 +27,15 @@ function mountEffect (state, modal) {
  */
 
 /**
+ * Object returned by `useCancel`
+ *
+ * @typedef {Object} useCancelInterface
+ * @memberof ui/Cancelable
+ * @property {Function} [handleKeyUp] Handle to run when the 5-way up key is released.
+ * @private
+ */
+
+/**
  * Manages a cancel action.
  *
  * The cancel action is handled via the configured `onCancel` handler.

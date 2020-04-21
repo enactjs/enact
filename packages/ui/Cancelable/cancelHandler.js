@@ -65,8 +65,46 @@ const removeCancelHandler = function (handler) {
 	}
 };
 
+/**
+ * Dispatch cancel events
+ *
+ * @function
+ * @memberof ui/Cancelable
+ * @param {Function} handler Call onCancel event handler
+ * @returns {Boolean} `false` to stop the handler chain
+ * @public
+ */
+const dispatchCancelToConfig = (onCancel) => {
+	const onCancelIsString = typeof onCancel === 'string';
+	const onCancelIsFunction = typeof onCancel === 'function';
+
+	return (props) => {
+		// by default, we return false which allows event propagation because it will "break" the
+		// handler chain and not call `stop` and `stopImmediate` below
+		let stopped = false;
+
+		const cancelEvent = {
+			type: 'onCancel',
+			stopPropagation: () => {
+				stopped = true;
+			}
+		};
+
+		if (onCancelIsString && typeof props[onCancel] === 'function') {
+			// use the custom event name from the config
+			cancelEvent.type = onCancel;
+			props[onCancel](cancelEvent);
+		} else if (onCancelIsFunction) {
+			onCancel(cancelEvent, props);
+		}
+
+		return stopped;
+	};
+};
+
 export {
 	addCancelHandler,
+	dispatchCancelToConfig,
 	forCancel,
 	removeCancelHandler
 };
