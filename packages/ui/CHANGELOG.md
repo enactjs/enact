@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/ProgressBar` to support additional `orientation` type of `'radial'`
+- `ui/ProgressBar` public class name `radial`
+
 ## [3.3.0-alpha.6] - 2020-04-14
 
 ### Fixed
@@ -34,11 +41,6 @@ No significant changes.
 - `ui/GridListItemItem` prop `subComponents`
 
 ## [3.3.0-alpha.2] - 2020-03-09
-
-### Added
-
-- `ui/ProgressBar` to support additional `orientation` type of `'radial'`
-- `ui/ProgressBar` public class name `radial`
 
 ### Changed
 

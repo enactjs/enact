@@ -141,8 +141,8 @@ const ProgressBar = kind({
 
 	computed: {
 		className: ({backgroundProgress, orientation, progress, styler}) => styler.append(orientation, {
-			fillHalfWay: (progress > 0.5),
-			loadHalfWay: (backgroundProgress > 0.5)
+			fillOverHalf: (progress > 0.5),
+			loadOverHalf: (backgroundProgress > 0.5)
 		}),
 		style: ({backgroundProgress, progress, progressAnchor, style}) => {
 			return {
