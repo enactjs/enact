@@ -165,10 +165,9 @@ class Spot {
 	}
 
 	forwardAndResetLastSelectTarget = (ev, props) => {
-		const {keyCode} = ev;
+		const {keyCode, notPrevented} = ev;
 		const {selectionKeys} = props;
 		const key = selectionKeys.find((value) => keyCode === value);
-		const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
 
 		// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
 		if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {

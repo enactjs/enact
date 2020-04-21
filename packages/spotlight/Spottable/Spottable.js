@@ -22,7 +22,10 @@ const
 	forwardFocus = forward('onFocus'),
 	forwardMouseEnter = forward('onMouseEnter'),
 	forwardMouseLeave = forward('onMouseLeave');
-const forwardKeyDownWithPrevent = forwardWithPrevent('onKeyDown')
+const
+	forwardKeyDownWithPrevent = forwardWithPrevent('onKeyDown'),
+	forwardKeyUpWithPrevent = forwardWithPrevent('onKeyUp');
+
 /**
  * Default configuration for Spottable
  *
@@ -88,7 +91,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		const spot = useSpot({
 			disabled,
 			emulateMouse,
-			onKeyUp: rest.onKeyUp,
 			onMouseUp: rest.onMouseUp,
 			onSpotlightDisappear,
 			onSpotlightDown,
@@ -115,11 +117,16 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			spot.keyDown,
 			forwardMouseDown,
 		);
-		rest.onKeyUp = handle(
-			spot.keyUp,
-			forwardMouseUp,
-			forwardClick,
-		);
+		rest.onKeyUp = (ev) => {
+			const notPrevented = forwardKeyUpWithPrevent(ev, props);
+			const event = {notPrevented, ...ev};
+
+			handle(
+				spot.keyUp,
+				forwardMouseUp,
+				forwardClick,
+			)(event);
+		};
 		rest.onBlur = handle(
 			spot.blur,
 			forwardBlur,
