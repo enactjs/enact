@@ -13,6 +13,7 @@
  * @exports ViewManagerDecorator
  */
 
+import handle, {adaptEvent, call, forward} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -224,6 +225,24 @@ const ViewManagerBase = class extends React.Component {
 		return null;
 	}
 
+	makeTransitionEvent () {
+		return {index: this.props.index, previousIndex: this.state.prevIndex};
+	}
+
+	handleTransition = handle(
+		adaptEvent(
+			call('makeTransitionEvent'),
+			forward('onTransition')
+		)
+	).bindAs(this, 'handleTransition')
+
+	handleWillTransition = handle(
+		adaptEvent(
+			call('makeTransitionEvent'),
+			forward('onWillTransition')
+		)
+	).bindAs(this, 'handleWillTransition')
+
 	render () {
 		const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, ...rest} = this.props;
 		let {end = index, start = index} = this.props;
@@ -254,7 +273,14 @@ const ViewManagerBase = class extends React.Component {
 		delete rest.start;
 
 		return (
-			<TransitionGroup {...rest} childFactory={childFactory} size={size} currentIndex={index}>
+			<TransitionGroup
+				{...rest}
+				childFactory={childFactory}
+				currentIndex={index}
+				onTransition={this.handleTransition}
+				onWillTransition={this.handleWillTransition}
+				size={size}
+			>
 				{views}
 			</TransitionGroup>
 		);

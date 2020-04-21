@@ -293,10 +293,12 @@ class TransitionGroup extends React.Component {
 	}
 
 	completeTransition (key) {
-		delete this.currentlyTransitioningKeys[key];
+		if (key in this.currentlyTransitioningKeys) {
+			delete this.currentlyTransitioningKeys[key];
 
-		if (Object.keys(this.currentlyTransitioningKeys).length === 0) {
-			forwardOnTransition(null, this.props);
+			if (Object.keys(this.currentlyTransitioningKeys).length === 0) {
+				forwardOnTransition(null, this.props);
+			}
 		}
 	}
 
