@@ -245,7 +245,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		 * @public
 		 */
 		tabIndex: PropTypes.number
-	}
+	};
 
 	return Spottable;
 });

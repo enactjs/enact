@@ -71,12 +71,12 @@ const useSpot = ({selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled,
 
 		return () => {
 			spot.unload();
-		}
+		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	React.useEffect(() => {
 		spot.spotlightDisabledChanged();
-	}, [spotlightDisabled]);
+	}, [spot, spotlightDisabled]);
 
 	return {
 		blur: spot.handleBlur,
