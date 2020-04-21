@@ -7,6 +7,7 @@
  * @exports removeCancelHandle
  */
 
+import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import invariant from 'invariant';
@@ -148,23 +149,22 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 	}
 
 	// eslint-disable-next-line no-shadow
-	function Cancelable (props) {
-		const updated = {...props};
-
-		const {handleKeyUp} = useCancel({
-			...props,
+	function Cancelable ({[onCancel]: onCancelProp, ...rest}) {
+		const cancel = useCancel({
 			modal,
-			onCancel
+			onCancel,
+			[onCancel]: onCancelProp
 		});
 
-		delete updated[onCancel];
+		const handleKeyUp = (ev) => {
+			forward('onKeyUp', ev, rest);
+			cancel.keyUp(ev);
+		};
 
-		return	modal && renderModal(updated) ||
-				Component && renderWrapped(updated, handleKeyUp) ||
-				renderUnwrapped(updated, handleKeyUp);
+		return	modal && renderModal(rest) ||
+				Component && renderWrapped(rest, handleKeyUp) ||
+				renderUnwrapped(rest, handleKeyUp);
 	}
-
-	Cancelable.displayName = 'Cancelable';
 
 	Cancelable.propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
 		/**

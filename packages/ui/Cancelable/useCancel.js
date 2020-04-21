@@ -21,8 +21,8 @@ function mountEffect (state, modal) {
  *
  * @typedef {Object} useCancelConfig
  * @memberof ui/Cancelable
- * @property {Function} [dispatchCancelToConfig]  The handler making the `onCancel event bubbling up or not
- * @property {Boolean}  [modal = false]           The flag to cancel events globally
+ * @property {String|Function} [onCancel]      Called when a cancel action is invoked by the user.
+ * @property {Boolean}         [modal = false] The flag to cancel events globally
  * @private
  */
 
@@ -31,7 +31,7 @@ function mountEffect (state, modal) {
  *
  * @typedef {Object} useCancelInterface
  * @memberof ui/Cancelable
- * @property {Function} [handleKeyUp] Handle to run when the 5-way up key is released.
+ * @property {Function} [keyUp] Handle to run when the 5-way up key is released.
  * @private
  */
 
@@ -50,7 +50,7 @@ function useCancel ({modal, ...config} = {}) {
 	React.useLayoutEffect(mountEffect(cancel, modal), [cancel]);
 
 	return {
-		handleKeyUp: modal ? null : cancel.handleKeyUp
+		keyUp: modal ? null : cancel.handleKeyUp
 	};
 }
 

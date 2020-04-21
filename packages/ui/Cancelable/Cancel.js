@@ -19,7 +19,6 @@ class Cancel {
 	)
 
 	handleKeyUp = handle(
-		forward('onKeyUp'),
 		// nesting handlers for DRYness. note that if any conditions return false in
 		// this.handleCancel(), this handler chain will stop too
 		this.handleCancel
