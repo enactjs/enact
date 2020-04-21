@@ -1,11 +1,10 @@
-import {forward, forwardWithPrevent, handle, preventDefault, stop} from '@enact/core/handle';
+import {forward, handle, preventDefault, stop} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 
 import {getContainersForNode} from '../src/container';
 import {hasPointerMoved} from '../src/pointer';
 import {getDirection, Spotlight} from '../src/spotlight';
 
-// const ENTER_KEY = 13;
 const REMOTE_OK_KEY = 16777221;
 
 /**
