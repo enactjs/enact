@@ -4,11 +4,13 @@ import {dispatchCancelToConfig, forCancel} from './cancelHandler';
 
 class Cancel {
 	constructor ({onCancel, ...config}) {
-		this.props = config; // {...props, dispatchCancelToConfig: dispatchCancelToConfig(onCancel)};
+		this.props = config;
 		this.context = {}; // Needed to get the ture value as the return value of the `hasPropsAndContext`.
 
 		this.dispatchCancelToConfig = dispatchCancelToConfig(onCancel);
 	}
+
+	handle = handle.bind(this)
 
 	handleCancel = handle(
 		forCancel,
@@ -22,7 +24,7 @@ class Cancel {
 		// nesting handlers for DRYness. note that if any conditions return false in
 		// this.handleCancel(), this handler chain will stop too
 		this.handleCancel
-	).bind(this)
+	)
 }
 
 export default Cancel;
