@@ -30,12 +30,15 @@ const ID_KEY = '$$ID$$';
  */
 const useIdProvider = ({prefix}) => {
 	const ids = React.useRef({});
+	// The ref value 'ids.current' will likely have changed by the time.
+	// So it was copiped from 'ids.current' to the `idsCurrent`.
+	const idsCurrent = ids.current;
 
 	React.useEffect(() => {
 		return () => {
 			// Call the onUnmount handler for each generated id (note: not the key)
-			for (const key in ids.current) {
-				const {id, onUnmount} = ids.current[key];
+			for (const key in idsCurrent) {
+				const {id, onUnmount} = idsCurrent[key];
 
 				if (typeof onUnmount === 'function') {
 					onUnmount(id);
