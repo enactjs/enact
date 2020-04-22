@@ -343,7 +343,7 @@ describe('Skinnable Specs', () => {
 		expect(actual).toEqual(expected);
 	});
 
-	test.only('should inherit an overridden default variant', () => {
+	test('should inherit an overridden default variant', () => {
 		const config = {
 			defaultSkin: 'dark',
 			defaultVariants: 'normal',
