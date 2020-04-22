@@ -307,8 +307,8 @@ describe('Skinnable Specs', () => {
 			</SkinnableParent>
 		);
 
-		const expected = 'darkSkin normal unicase smallCaps'.split(' ').sort();
-		const actual = subject.find('div').last().prop('className').split(' ').sort();
+		const expected = 'darkSkin normal unicase smallCaps';
+		const actual = subject.find('div').last().prop('className');
 
 		expect(actual).toEqual(expected);
 	});
