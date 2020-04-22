@@ -1,6 +1,6 @@
 /**
- * A basic progress bar component that can display the progress of something in a horizontal or
- * vertical bar format.
+ * A basic progress bar component that can display the progress of something in a horizontal,
+ * vertical, or radial bar format.
  *
  * A secondary independent progress indicator can be displayed, to indicate
  * an additional degree of information, often used as a background loading progress.
@@ -77,6 +77,7 @@ const ProgressBar = kind({
 		 * * `load`        - The `backgroundProgress` node
 		 * * `horizontal`  - Applied when `orientation` is `'horizontal'`
 		 * * `vertical`    - Applied when `orientation` is `'vertical'`
+		 * * `radial`      - Applied when `orientation` is `'radial'`
 		 *
 		 * @type {Object}
 		 * @public
@@ -90,6 +91,7 @@ const ProgressBar = kind({
 		 *
 		 * * `'horizontal'` - A left and right orientation
 		 * * `'vertical'` - An up and down orientation
+		 * * `'radial'` - A circular orientation
 		 *
 		 * @type {String}
 		 * @default 'horizontal'
@@ -138,7 +140,10 @@ const ProgressBar = kind({
 	},
 
 	computed: {
-		className: ({orientation, styler}) => styler.append(orientation),
+		className: ({backgroundProgress, orientation, progress, styler}) => styler.append(orientation, {
+			fillOverHalf: (progress > 0.5),
+			loadOverHalf: (backgroundProgress > 0.5)
+		}),
 		style: ({backgroundProgress, progress, progressAnchor, style}) => {
 			return {
 				...style,
