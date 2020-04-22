@@ -72,16 +72,16 @@ const useScrollbar = (props) => {
 		hideScrollbarTrackJob.current.start();
 	}
 
-	function update (bounds) {
+	function update (bounds, scale = 1) {
 		const
 			primaryDimenstion = vertical ? 'clientHeight' : 'clientWidth',
 			trackSize = clientSize ? clientSize[primaryDimenstion] : scrollbarContainerRef.current[primaryDimenstion],
 			scrollViewSize = vertical ? bounds.clientHeight : bounds.clientWidth,
 			scrollContentSize = vertical ? bounds.scrollHeight : bounds.scrollWidth,
 			scrollOrigin = vertical ? bounds.scrollTop : bounds.scrollLeft,
-			scrollbarThumbSizeRatioBase = (scrollViewSize / scrollContentSize),
+			scrollbarThumbSizeRatioBase = (scrollViewSize / scrollContentSize) * scale,
 			scrollbarThumbProgressRatio = (scrollOrigin / (scrollContentSize - scrollViewSize)),
-			scrollbarThumbSizeRatio = Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, scrollbarThumbSizeRatioBase));
+			scrollbarThumbSizeRatio = Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, scrollbarThumbSizeRatioBase) * scale);
 
 		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-size-ratio', scrollbarThumbSizeRatio);
 		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-progress-ratio', scrollbarThumbProgressRatio);
@@ -108,7 +108,8 @@ const useScrollbar = (props) => {
 		scrollbarTrackProps: {
 			ref: scrollbarTrackRef,
 			vertical
-		}
+		},
+		update
 	};
 };
 
