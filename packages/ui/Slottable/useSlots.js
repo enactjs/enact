@@ -5,9 +5,10 @@ import warning from 'warning';
 // omitting the `slot` property. It relies on the black box structure of a React element which could
 // change breaking this code. Without it, the slot property will cascade to a DOM node causing a
 // React warning.
-function cloneElement (child) {
+function cloneElement (child, index) {
 	const newProps = Object.assign({}, child.props);
 	delete newProps.slot;
+	newProps.key = `slot-${index}`;
 
 	return React.createElement(child.type, newProps);
 }
@@ -25,7 +26,7 @@ function distributeChild (child, index, slots, props) {
 		);
 
 		if (hasUserSlot) {
-			c = cloneElement(child);
+			c = cloneElement(child, index);
 		}
 	} else if (hasSlot(slot = child.type.defaultSlot)) {
 		c = child;

@@ -57,7 +57,7 @@ const Slottable = hoc(defaultConfig, (config, Wrapped) => {
 			const dist = distributed[slot];
 			const prop = rest[slot];
 			if (prop && dist) {
-				distributed[slot] = Array.isArray(dist) ? [prop, ...dist] : [prop, dist];
+				distributed[slot] = [].concat(prop, dist);
 			}
 		});
 

@@ -2,7 +2,7 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
 import React from 'react';
-import {mount} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import kind from '@enact/core/kind';
 import Slottable from '../Slottable';
 
@@ -209,4 +209,51 @@ describe('Slottable Specs', () => {
 
 		expect(actual).toBe(expected);
 	});
+
+	test('should add values to existing array in \'slot\' property', () => {
+		const Component = Slottable({slots: ['a']}, ({a}) => (
+			<div>
+				{a}
+			</div>
+		));
+		const subject = shallow(
+			<Component a={['a', 'b']}>
+				<a>c</a>
+			</Component>
+		);
+
+		const expected = ['a', 'b', 'c'];
+		const actual = subject.prop('a');
+
+		expect(actual).toEqual(expected);
+	});
+
+	test(
+		'should distribute multiple children with the same slot into the same slot',
+		() => {
+
+			function ComponentBase ({a}) {
+				return (
+					<div className="root-div">
+						{a}
+					</div>
+				);
+			}
+
+			const Component = Slottable({slots: ['a']}, ComponentBase);
+
+			const subject = mount(
+				<Component>
+					<div slot="a">A</div>
+					<div slot="a">A</div>
+					<div slot="a">A</div>
+				</Component>
+			);
+
+			const expected = 'AAA';
+			const actual = subject.text();
+
+			expect(actual).toBe(expected);
+		}
+	);
 });

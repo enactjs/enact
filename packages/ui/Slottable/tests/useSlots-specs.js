@@ -178,7 +178,6 @@ describe('useSlots', () => {
 	test(
 		'should distribute children with props other than simply \'children\', in entirety, to the matching destination slot',
 		() => {
-
 			function Component ({children}) {
 				const {a, b, c, custom} = useSlots({slots: ['a', 'b', 'c', 'custom'], children});
 				return (
@@ -207,6 +206,32 @@ describe('useSlots', () => {
 			const expectedTitle = 'Div A';
 			const actualTitle = subject.find('.root-div').childAt(2).prop('title');
 			expect(actualTitle).toBe(expectedTitle);
+		}
+	);
+
+	test(
+		'should distribute multiple children with the same slot into the same slot',
+		() => {
+			function Component ({children}) {
+				const {a} = useSlots({slots: ['a'], children});
+				return (
+					<div className="root-div">
+						{a}
+					</div>
+				);
+			}
+			const subject = mount(
+				<Component>
+					<div slot="a">A</div>
+					<div slot="a">A</div>
+					<div slot="a">A</div>
+				</Component>
+			);
+
+			const expected = 'AAA';
+			const actual = subject.text();
+
+			expect(actual).toBe(expected);
 		}
 	);
 });
