@@ -37,15 +37,18 @@ function determineVariants (defaultVariants, allowedVariants, authorVariants, pa
 		return {};
 	}
 
+	defaultVariants = objectify(defaultVariants);
 	authorVariants = objectify(authorVariants);
 	parentVariants = objectify(parentVariants);
 
 	// Merge all of the variants objects, preferring values in objects from left to right.
 	const mergedObj = [defaultVariants, parentVariants, authorVariants].reduce(
 		(obj, a) => {
-			Object.keys(a).forEach(key => {
-				obj[key] = preferDefined(a[key], obj[key]);
-			});
+			if (a) {
+				Object.keys(a).forEach(key => {
+					obj[key] = preferDefined(a[key], obj[key]);
+				});
+			}
 
 			return obj;
 		},
@@ -60,20 +63,15 @@ function determineVariants (defaultVariants, allowedVariants, authorVariants, pa
 		}
 	}
 
-
 	return mergedObj;
 }
 
-function getClassName (skins, effectiveSkin, className, variants) {
+function getClassName (skins, effectiveSkin, variants) {
 	const skin = skins && skins[effectiveSkin];
 
 	// only apply the skin class if it's set and different from the "current" skin as
 	// defined by the value in context
-	if (skin || variants) {
-		className = classnames(skin, variants, className);
-	}
-
-	if (className) return className;
+	return classnames(skin, variants);
 }
 
 
