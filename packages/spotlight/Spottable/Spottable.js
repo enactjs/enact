@@ -119,7 +119,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		);
 		rest.onKeyUp = handle(
 			adaptEvent(
-				(ev, props) => ({notPrevented: forwardKeyUpWithPrevent(ev, props), ...ev}),
+				(ev, props) => ({notPrevented: forwardKeyUpWithPrevent(ev, props), ...ev}), // eslint-disable-line no-shadow
 				spot.keyUp
 			),
 			forwardMouseUp,
