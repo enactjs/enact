@@ -13,7 +13,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/ViewManager` to only fire `onTransition` once per transition
-- `ui/Spinner` to set `left` instead of `maring-left` for center alignment
+- `ui/Spinner` center alignment
 
 ## [3.3.0-alpha.6] - 2020-04-14
 
