@@ -25,34 +25,60 @@ import {determineSkin, determineVariants, getClassName} from './util';
 const SkinContext = React.createContext(null);
 
 /**
- * A higher-order component that assigns skinning classes for the purposes of styling children components.
+ * Configuration for `useSkins`
  *
- * Use the config options to specify the skins your theme has. Set this up in your theme's decorator
- * component to establish your supported skins.
- *
- * Note: This HoC passes `className` to the wrapped component. It must be passed to the main DOM
- * node. Additionally, it can be configured to pass the skin and skin variant as props.
- *
- * Example:
- * ```
- * const MyApp = ({skinName, ...rest) => (<div {...props}>{skinName}</div>);
- * ...
- * App = Skinnable({
- * 	prop: 'skinName',
- * 	skins: {
- * 		dark: 'moonstone',
- * 		light: 'moonstone-light'
- * 	},
- * 	defaultTheme: 'dark'
- * 	defaultVariants: ['highContrast'],
- * 	allowedVariants: ['highContrast', 'largeText', 'grayscale']
- * }, MyApp);
- * ```
- *
- * @class Skinnable
+ * @typedef {Object} useSkinsConfig
  * @memberof ui/Skinnable
- * @hoc
- * @public
+ * @property {String}   defaultSkin     Default skin name when none has been specified or inherited.
+ * @property {String[]} defaultVariants Default variants when none have been specified or inherited.
+ * @property {String}   [skin]          Specific skin to apply to this instance which will take precedence over the default or the inherited value.
+ * @property {String[]} skins           List of allowed skins
+ * @property {String[]} [skinVariants]  Specific variants to apply to this instance which will take precedence over the default or the inherited value.
+ * @property {String[]} variants        List of allowed variants
+ * @private
+ */
+
+/**
+ * Object returned by `useSkins`
+ *
+ * @typedef {Object} useSkinsInterface
+ * @memberof ui/Skinnable
+ * @property {String}   className    CSS classes for the effective skin and variants.
+ * @property {String}   skin         Effective skin based on the allowed skins, the configured.
+ *                                   `skin`, the default skin, and the inherited `skin` from up the
+ *                                   component tree.
+ * @property {String[]} variants     Effective skins variant based on the allowed variants, the
+ *                                   configured variants, the default variants, and the inherited
+ *                                   variants from up the component tree.
+ * @property {Function} provideSkins Wraps a component tree with a skin provider to allow that tree
+ *                                   to inherit the effective skin configured at this level.
+ * @private
+ */
+
+/**
+ * Deteremines the effective skin and skin variants for a component and provides a method to provide
+ * those values to other contained components in this subtree.
+ *
+ * ```
+ * function ComponentDecorator (props) {
+ *   const skins = useSkins({
+ *     defaultSkin: 'neutral',
+ *     defaultVariants: [],
+ *     skins: ['neutral', 'bold'],
+ *     variants: ['highContrast'],
+ *     skin: props.skin,
+ *     skinVariants: props.skinVariants
+ *   });
+ *
+ *   return skins.provideSkins(
+ *     <Component className={classnames(props.className, skins.className)} />
+ *   );
+ * }
+ * ```
+ *
+ * @param {useSkinsConfig} config Configuration options
+ * @returns {useSkinsInterface}
+ * @private
  */
 function useSkins (config) {
 	const {defaultSkin, defaultVariants, skin, skins, skinVariants, variants} = config;
