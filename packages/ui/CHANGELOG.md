@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Spinner` to set left position to 0 by default to align center
+- `ui/Spinner` to set `left` instead of `maring-left` for center alignment
 
 ## [3.3.0-alpha.6] - 2020-04-14
 
