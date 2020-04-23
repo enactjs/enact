@@ -156,7 +156,10 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			[onCancel]: onCancelProp
 		});
 
-		const handleKeyUp = (ev) => forward('onKeyUp', ev, rest) && cancel.keyUp(ev);
+		const handleKeyUp = (ev) => {
+			forward('onKeyUp', ev, rest);
+			cancel.keyUp(ev);
+		};
 
 		return	modal && renderModal(rest) ||
 				Component && renderWrapped(rest, handleKeyUp) ||
