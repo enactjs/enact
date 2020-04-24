@@ -53,7 +53,7 @@ describe('useAnnounce', () => {
 
 		const expected = text;
 		// Have to get the actual DOM node here since Announce updates the DOM directly so the
-		// change isn't represented in either the Reach or Enzyme views
+		// change isn't represented in either the React or Enzyme views
 		const actual = subject.find({role: 'alert'}).instance().getAttribute('aria-label');
 
 		expect(actual).toBe(expected);
