@@ -7,7 +7,6 @@
  * @exports VirtualGridList
  * @exports VirtualList
  * @exports VirtualListBase
- * @exports VirtualListBasic
  */
 
 import PropTypes from 'prop-types';
@@ -17,8 +16,7 @@ import {ResizeContext} from '../Resizable';
 import useScroll from '../useScroll';
 import Scrollbar from '../useScroll/Scrollbar';
 
-import {UiVirtualListBase, UiVirtualListBaseNative} from './UiVirtualListBase';
-import {gridListItemSizeShape, itemSizesShape, VirtualListBasic} from './VirtualListBasic';
+import {gridListItemSizeShape, itemSizesShape, VirtualListBase} from './VirtualListBase';
 
 const nop = () => {};
 
@@ -27,7 +25,7 @@ const nop = () => {};
  *
  * @class VirtualList
  * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBasic
+ * @extends ui/VirtualList.VirtualListBase
  * @ui
  * @public
  */
@@ -56,7 +54,7 @@ const VirtualList = ({role, ...rest}) => {
 			<div {...scrollContainerProps}>
 				<div {...scrollInnerContainerProps}>
 					<ScrollContentWrapper {...scrollContentWrapperProps}>
-						<VirtualListBasic
+						<VirtualListBase
 							{...scrollContentProps}
 							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
 								cc.length ? <div role={role}>{cc}</div> : null
@@ -304,7 +302,7 @@ VirtualList.defaultProps = {
  *
  * @class VirtualGridList
  * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBasic
+ * @extends ui/VirtualList.VirtualListBase
  * @ui
  * @public
  */
@@ -329,7 +327,7 @@ const VirtualGridList = ({role, ...rest}) => {
 			<div {...scrollContainerProps}>
 				<div {...scrollInnerContainerProps}>
 					<ScrollContentWrapper {...scrollContentWrapperProps}>
-						<VirtualListBasic
+						<VirtualListBase
 							{...scrollContentProps}
 							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
 								cc.length ? <div role={role}>{cc}</div> : null
@@ -576,9 +574,7 @@ export default VirtualList;
 export {
 	gridListItemSizeShape,
 	itemSizesShape,
-	UiVirtualListBase as VirtualListBase, // to support legacy VirtualListBase
-	UiVirtualListBaseNative as VirtualListBaseNative, // to support legacy VirtualListBaseNative
 	VirtualGridList,
 	VirtualList,
-	VirtualListBasic
+	VirtualListBase
 };

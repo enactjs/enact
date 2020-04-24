@@ -8,15 +8,15 @@ import css from './Scroller.module.less';
 /**
  * An unstyled base scroller component.
  *
- * @class ScrollerBasic
+ * @class ScrollerBase
  * @memberof ui/Scroller
  * @ui
  * @public
  */
-class ScrollerBasic extends Component {
-	static displayName = 'ui:ScrollerBasic'
+class ScrollerBase extends Component {
+	static displayName = 'ui:ScrollerBase'
 
-	static propTypes = /** @lends ui/Scroller.ScrollerBasic.prototype */ {
+	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
 		children: PropTypes.node.isRequired,
 
 		/**
@@ -191,7 +191,7 @@ class ScrollerBasic extends Component {
 	}
 }
 
-export default ScrollerBasic;
+export default ScrollerBase;
 export {
-	ScrollerBasic
+	ScrollerBase
 };
