@@ -2,6 +2,7 @@ import useClass from '@enact/core/useClass';
 import React from 'react';
 
 import Cancel from './Cancel';
+import {addCancelHandler, removeCancelHandler} from './cancelHandler';
 import {addModal, removeModal} from './modalHandler';
 
 function mountEffect (state, modal) {
@@ -56,6 +57,8 @@ function useCancel ({modal, ...config} = {}) {
 
 export default useCancel;
 export {
+	addCancelHandler,
+	removeCancelHandler,
 	useCancel
 };
 
