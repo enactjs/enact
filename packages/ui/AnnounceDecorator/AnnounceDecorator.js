@@ -6,10 +6,12 @@
  * @exports AnnounceDecorator
  */
 
-import Announce from './Announce';
 import hoc from '@enact/core/hoc';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
+
+import Announce from './Announce';
+import useAnnounce from './useAnnounce';
 
 /**
  * Default config for {@link ui/AnnounceDecorator.AnnounceDecorator}.
@@ -67,48 +69,38 @@ const defaultConfig = {
  * @public
  */
 const AnnounceDecorator = hoc(defaultConfig, ({prop}, Wrapped) => {
-	return class extends React.Component {
-		static displayName = 'AnnounceDecorator'
+	// eslint-disable-next-line no-shadow
+	function AnnounceDecorator ({children, ...rest}) {
+		const announce = useAnnounce();
 
-		static propTypes = /** @lends ui/AnnounceDecorator.AnnounceDecorator.prototype */ {
-			/**
-			 * The wrapped component's children.
-			 *
-			 * An instance of {@link ui/AnnounceDecorator.Announce} will be appended to `children`.
-			 *
-			 * @type {Node}
-			 * @public
-			 */
-			children: PropTypes.node
-		}
+		if (prop) rest[prop] = announce.announce;
 
-		announce = (message) => {
-			if (this.announceRef) {
-				this.announceRef.announce(message);
-			}
-		}
+		return (
+			<Wrapped {...rest}>
+				{children}
+				{announce.children}
+			</Wrapped>
+		);
+	}
 
-		setAnnounceRef = (node) => {
-			this.announceRef = node;
-		}
-
-		render () {
-			const {children, ...rest} = this.props;
-
-			rest[prop] = this.announce;
-
-			return (
-				<Wrapped {...rest}>
-					{children}
-					<Announce ref={this.setAnnounceRef} />
-				</Wrapped>
-			);
-		}
+	AnnounceDecorator.propTypes = /** @lends ui/AnnounceDecorator.AnnounceDecorator.prototype */ {
+		/**
+		 * The wrapped component's children.
+		 *
+		 * An instance of {@link ui/AnnounceDecorator.Announce} will be appended to `children`.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		children: PropTypes.node
 	};
+
+	return AnnounceDecorator;
 });
 
 export default AnnounceDecorator;
 export {
 	Announce,
-	AnnounceDecorator
+	AnnounceDecorator,
+	useAnnounce
 };
