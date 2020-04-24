@@ -25,7 +25,6 @@ import React from 'react';
  *
  * @param {Function} Ctor Class constructor
  * @param  {...any}  args Arguments to pass to the constructor
- * @returns {Object}      An instance of `Ctor`
  * @private
  */
 function useClass (Ctor, ...args) {
