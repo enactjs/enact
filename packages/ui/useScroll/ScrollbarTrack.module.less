@@ -1,12 +1,11 @@
-// ScrollThumb.module.less
+// ScrollbarTrack.module.less
 //
-
-.scrollThumb {
+.scrollbarTrack {
 	/* Set these to reasonable default values */
-	--scrollbar-size-ratio: 1;
-	--scrollbar-progress-ratio: 0;
-	--scrollbar-size: ~"calc(100% * var(--scrollbar-size-ratio))";
-	--scrollbar-progress: ~"calc(((1 - var(--scrollbar-size-ratio)) * var(--scrollbar-progress-ratio)) * 100%)";
+	--scrollbar-thumb-size-ratio: 1;
+	--scrollbar-thumb-progress-ratio: 0;
+	--scrollbar-thumb-size: ~"calc(100% * var(--scrollbar-thumb-size-ratio))";
+	--scrollbar-thumb-progress: ~"calc(((1 - var(--scrollbar-thumb-size-ratio)) * var(--scrollbar-thumb-progress-ratio)) * 100%)";
 
 	position: relative;
 	width: 3px;
@@ -33,14 +32,14 @@
 
 	&.vertical {
 		&::before {
-			height: var(--scrollbar-size);
-			top: var(--scrollbar-progress);
+			height: var(--scrollbar-thumb-size);
+			top: var(--scrollbar-thumb-progress);
 		}
 	}
 	&:not(.vertical) {
 		&::before {
-			width: var(--scrollbar-size);
-			left: var(--scrollbar-progress);
+			width: var(--scrollbar-thumb-size);
+			left: var(--scrollbar-thumb-progress);
 			top: 50%;
 
 			transform: translateY(-50%);

@@ -2,6 +2,25 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/ProgressBar` to support additional `orientation` type of `'radial'`
+- `ui/ProgressBar` public class name `radial`
+- `ui/ViewManager` events `onTransition` and `onWillTransition` payload members `index` and `previousIndex`
+
+### Fixed
+
+- `ui/ViewManager` to only fire `onTransition` once per transition
+- `ui/Spinner` center alignment
+
+## [3.3.0-alpha.6] - 2020-04-14
+
+### Fixed
+
+- `ui/Scroller` to prevent interaction with scrollbars when muted
+
 ## [3.3.0-alpha.5] - 2020-04-06
 
 No significant changes.
