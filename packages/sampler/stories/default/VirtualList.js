@@ -5,7 +5,7 @@ import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
 import ri from '@enact/ui/resolution';
 import {storiesOf} from '@storybook/react';
-import {VirtualList, VirtualListBasic} from '@enact/ui/VirtualList';
+import {VirtualList, VirtualListBase} from '@enact/ui/VirtualList';
 
 const
 	prop = {
@@ -45,7 +45,7 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
-const VirtualListConfig = mergeComponentMetadata('VirtualList', VirtualListBasic, VirtualList);
+const VirtualListConfig = mergeComponentMetadata('VirtualList', VirtualListBase, VirtualList);
 
 storiesOf('UI', module)
 	.add(
