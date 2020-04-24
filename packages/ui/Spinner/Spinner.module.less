@@ -8,11 +8,9 @@
 
 	// centered
 	&.centered {
-		margin: 0;
-		margin-left: 50%;
+		left: 50%;
 		position: absolute;
 		top: 50%;
-		-webkit-transform: translateX(-50%) translateY(-50%);
 		transform: translateX(-50%) translateY(-50%);
 	}
 
@@ -23,9 +21,8 @@
 	:global(.enact-locale-right-to-left) & {
 		// centered
 		&.centered {
-			margin: 0;
-			margin-right: 50%;
-			-webkit-transform: translateX(50%) translateY(-50%);
+			left: initial;
+			right: 50%;
 			transform: translateX(50%) translateY(-50%);
 		}
 	}
