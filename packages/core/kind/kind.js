@@ -7,8 +7,15 @@
 
 import React from 'react';
 
+import useHandlers from '../useHandlers';
+
 import computed from './computed';
 import styles from './styles';
+
+// Because contextType is optional and hooks must be called in the same order, we need a fallback
+// context when none is specified. This likely has some overhead so we may want to deprecate and
+// remove contextType support for 4.0 since the context APIs have improved since this was added.
+const NoContext = React.createContext(null);
 
 /**
  * @callback RenderFunction
@@ -116,7 +123,7 @@ import styles from './styles';
 const kind = (config) => {
 	const {
 		computed: cfgComputed,
-		contextType,
+		contextType = NoContext,
 		defaultProps,
 		handlers,
 		name,
@@ -134,46 +141,20 @@ const kind = (config) => {
 		return render(props, context);
 	};
 
-	// addition prop decorations would be chained here (after config.render)
-	const Component = class extends React.Component {
-		static displayName = name || 'Component'
+	function Component (props) {
+		const ctx = React.useContext(contextType);
+		const boundHandlers = useHandlers(handlers, props, ctx);
 
-		constructor () {
-			super();
-			this.handlers = {};
+		const merged = {
+			...props,
+			...boundHandlers
+		};
 
-			// cache bound function for each handler
-			if (handlers) {
-				Object.keys(handlers).forEach(handler => {
-					return this.prepareHandler(handler, handlers[handler]);
-				});
-			}
-		}
+		return renderKind(merged, ctx);
+	}
 
-		/*
-		 * Caches an event handler on the local `handlers` member
-		 *
-		 * @param   {String}    name     Event name
-		 * @param   {Function}  handler  Event handler
-		 *
-		 * @returns {undefined}
-		 */
-		prepareHandler (prop, handler) {
-			this.handlers[prop] = (ev) => {
-				return handler(ev, this.props, this.context);
-			};
-		}
-
-		render () {
-			return renderKind({
-				...this.props,
-				...this.handlers
-			}, this.context);
-		}
-	};
-
+	if (name) Component.displayName = name;
 	if (propTypes) Component.propTypes = propTypes;
-	if (contextType) Component.contextType = contextType;
 	if (defaultProps) Component.defaultProps = defaultProps;
 
 	// Decorate the Component with the computed property object in DEV for easier testability
