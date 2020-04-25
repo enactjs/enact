@@ -5,9 +5,7 @@ import kind from '../kind';
 
 describe('kind', () => {
 
-	const TestContext = React.createContext({
-		value: 'initial'
-	});
+	const TestContext = React.createContext();
 	const Kind = kind({
 		name: 'Kind',
 		propTypes: {
@@ -22,20 +20,15 @@ describe('kind', () => {
 			className: 'kind'
 		},
 		handlers: {
-			onClick: (ev, props, context) => {
-				props.onClick(context.value);
-			}
+			onClick: () => {}
 		},
 		computed: {
-			value: ({prop}) => prop + 1,
-			contextValue: (props, context) => {
-				return context ? `context${context.value}` : 'unknown';
-			}
+			value: ({prop}) => prop + 1
 		},
-		render: ({contextValue, label, value, ...rest}) => {
+		render: ({label, value, ...rest}) => {
 			delete rest.prop;
 			return (
-				<div {...rest} title={label} data-context={contextValue}>
+				<div {...rest} title={label}>
 					{value}
 				</div>
 			);
@@ -47,19 +40,6 @@ describe('kind', () => {
 		const actual = Kind.displayName;
 
 		expect(actual).toBe(expected);
-	});
-
-	test('should support undefined handlers', () => {
-		const Minimal = kind({
-			name: 'Minimal',
-			render: () => <div />
-		});
-
-		const subject = mount(<Minimal />);
-
-		const actual = subject.find('div');
-
-		expect(actual).toBeDefined();
 	});
 
 	test('should default {label} property', () => {
@@ -104,49 +84,9 @@ describe('kind', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should support contextType in handlers', () => {
-		const onClick = jest.fn();
-		const subject = mount(
-			<Kind prop={1} onClick={onClick} />
-		);
-
-		subject.find('div').invoke('onClick')();
-
-		const expected = 'initial';
-		const actual = onClick.mock.calls[0][0];
-
-		expect(actual).toBe(expected);
-	});
-
-	test('should support contextType in computed', () => {
-		const subject = mount(
-			<Kind prop={1} />
-		);
-
-		const expected = 'contextinitial';
-		const actual = subject.find('div').prop('data-context');
-
-		expect(actual).toBe(expected);
-	});
-
-	test('support using hooks within kind instances', () => {
-		const Comp = kind({
-			name: 'Comp',
-			render: () => {
-				// eslint-disable-next-line react-hooks/rules-of-hooks
-				const [state, setState] = React.useState(0);
-
-				// eslint-disable-next-line react/jsx-no-bind
-				return <button onClick={() => setState(state + 1)}>{state}</button>;
-			}
-		});
-
-		const subject = mount(<Comp />);
-
-		subject.find('button').invoke('onClick')();
-
-		const expected = 1;
-		const actual = subject.find('button').prop('children');
+	test('should assign contextType when handlers are specified', () => {
+		const actual = Kind.contextType != null;
+		const expected = true;
 
 		expect(actual).toBe(expected);
 	});
@@ -196,15 +136,6 @@ describe('kind', () => {
 
 			const expected = 'function';
 			const actual = typeof component.props.onClick;
-
-			expect(actual).toBe(expected);
-		});
-
-		test('should not support context', () => {
-			const component = Kind.inline();
-
-			const expected = 'unknown';
-			const actual = component.props['data-context'];
 
 			expect(actual).toBe(expected);
 		});
