@@ -1,6 +1,6 @@
 import React from 'react';
 
-function computeAriaLabel ({aria, hint, prehint, content}) {
+function computeAriaLabel (hint, prehint, aria, content) {
 	if (!aria) {
 		const
 			prefix = content || null,
@@ -23,8 +23,8 @@ function computeAriaLabel ({aria, hint, prehint, content}) {
  *
  * @typedef {Object} useA11yConfig
  * @memberof ui/A11yDecorator
- * @property {String}  [accessibilityPreHint] Sets the hint text to be read after the content.
- * @property {String}  [accessibilityHint]    Sets the hint text to be read before the content.
+ * @property {String}  [accessibilityHint]    Sets the hint text to be read after the content.
+ * @property {String}  [accessibilityPreHint] Sets the hint text to be read before the content.
  * @property {String}  [aria-label]           Sets the value of the `aria-label` attribute for the wrapped component.
  * @property {String}  [content]              The accessibility content.
  * @private
@@ -47,9 +47,12 @@ function computeAriaLabel ({aria, hint, prehint, content}) {
  * @returns {useA11yInterface}
  * @private
  */
-const useA11y = ({accessibilityPreHint: prehint, accessibilityHint: hint, 'aria-label': aria, content}) => {
+const useA11y = ({accessibilityHint, accessibilityPreHint, 'aria-label': ariaLabel, content}) => {
 	return {
-		'aria-label': React.useMemo(() => computeAriaLabel({aria, hint, prehint, content}), [aria, hint, prehint, content])
+		'aria-label': React.useMemo(
+			() => computeAriaLabel(accessibilityHint, accessibilityPreHint, ariaLabel, content),
+			[accessibilityHint, accessibilityPreHint, ariaLabel, content]
+		)
 	};
 };
 
