@@ -50,8 +50,8 @@ const IdProvider = hoc(defaultConfig, (config, Wrapped) => {
 	const {generateProp, idProp, prefix} = config;
 
 	// eslint-disable-next-line no-shadow
-	function IdProvider (props) {
-		const updated = Object.assign({}, props);
+	const IdProvider = React.forwardRef((props, ref) => {
+		const updated = {...props};
 		const {generateId} = useId({prefix});
 
 		if (generateProp) {
@@ -63,9 +63,11 @@ const IdProvider = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		return (
-			<Wrapped {...updated} />
+			<Wrapped {...updated} ref={ref} />
 		);
-	}
+	});
+
+	IdProvider.displayname = 'IdProvider';
 
 	return IdProvider;
 });
