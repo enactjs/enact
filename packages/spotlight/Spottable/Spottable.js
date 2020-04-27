@@ -74,7 +74,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	};
 
 	// eslint-disable-next-line no-shadow
-	function Spottable (props) {
+	const Spottable = React.forwardRef((props, ref) => {
 		const {
 			className,
 			disabled,
@@ -97,6 +97,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			onSpotlightLeft,
 			onSpotlightRight,
 			onSpotlightUp,
+			ref,
 			selectionKeys,
 			spotlightDisabled
 		});
@@ -150,7 +151,9 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				ref={spot.ref}
 			/>
 		);
-	}
+	});
+
+	Spottable.displayName = 'Spottable';
 
 	Spottable.propTypes = /** @lends spotlight/Spottable.Spottable.prototype */ {
 		/**
