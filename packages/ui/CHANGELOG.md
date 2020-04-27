@@ -2,11 +2,11 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [3.3.0-alpha.7] - 2020-04-27
 
 ### Added
 
-- `ui/ProgressBar` to support additional `orientation` type of `'radial'`
+- `ui/ProgressBar` support for `orientation` type of `'radial'`
 - `ui/ProgressBar` public class name `radial`
 - `ui/ViewManager` events `onTransition` and `onWillTransition` payload members `index` and `previousIndex`
 
