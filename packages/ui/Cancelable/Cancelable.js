@@ -9,16 +9,12 @@
 
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {add} from '@enact/core/keymap';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import {addCancelHandler, removeCancelHandler} from './cancelHandler';
 import useCancel from './useCancel';
-
-// Add keymap for escape key
-add('cancel', 27);
 
 /**
  * Default config for {@link ui/Cancelable.Cancelable}
@@ -126,45 +122,69 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		component: Component
 	} = config;
 
+	const onCancelIsString = typeof onCancel === 'string';
+	const onCancelIsFunction = typeof onCancel === 'function';
+
 	invariant(onCancel, 'onCancel must be specified with Cancelable');
 
-	function renderModal (props) {
+	function renderModal (props, ref) {
 		return (
-			<Wrapped {...props} />
+			<Wrapped {...props} ref={ref} />
 		);
 	}
 
-	function renderWrapped (props, handleKeyUp) {
+	function renderWrapped (props, handleKeyUp, ref) {
 		return (
-			<Component onKeyUp={handleKeyUp}>
+			<Component onKeyUp={handleKeyUp} ref={ref}>
 				<Wrapped {...props} />
 			</Component>
 		);
 	}
 
-	function renderUnwrapped (props, handleKeyUp) {
+	function renderUnwrapped (props, handleKeyUp, ref) {
 		return (
-			<Wrapped {...props} onKeyUp={handleKeyUp} />
+			<Wrapped {...props} onKeyUp={handleKeyUp} ref={ref} />
 		);
 	}
 
 	// eslint-disable-next-line no-shadow
-	function Cancelable ({[onCancel]: onCancelProp, ...rest}) {
-		const cancel = useCancel({
+	const Cancelable = React.forwardRef((props, ref) => {
+		const updated = {...props};
+		let onCancelWithStopPropagation = null;
+
+		if (onCancelIsString && typeof props[config.onCancel] === 'function') {
+			onCancelWithStopPropagation = (ev) => {
+				const cancelEvent = {...ev};
+
+				cancelEvent.Type = config.onCancel; // use the custom event name from the config
+				props[config.onCancel](cancelEvent);
+			};
+		} else if (onCancelIsFunction) {
+			onCancelWithStopPropagation = config.onCancel;
+		}
+
+		const {keyUp} = useCancel({
 			modal,
-			onCancel,
-			[onCancel]: onCancelProp
+			onCancel: props.onCancel,
+			onCancelWithStopPropagation
 		});
 
 		const handleKeyUp = (ev) => {
-			forward('onKeyUp', ev, rest);
-			cancel.keyUp(ev);
+			forward('onKeyUp', ev, updated);
+			if (keyUp) {
+				keyUp(ev);
+			}
 		};
 
-		return	modal && renderModal(rest) ||
-				Component && renderWrapped(rest, handleKeyUp) ||
-				renderUnwrapped(rest, handleKeyUp);
-	}
+		delete updated.onCancel;
+		delete updated[onCancel];
+
+		return	modal && renderModal(updated, ref) ||
+				Component && renderWrapped(updated, handleKeyUp, ref) ||
+				renderUnwrapped(updated, handleKeyUp, ref);
+	});
+
+	Cancelable.displayName = 'Cancelable';
 
 	Cancelable.propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
 		/**

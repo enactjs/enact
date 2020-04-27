@@ -3,11 +3,11 @@ import {forward, handle, stop, stopImmediate} from '@enact/core/handle';
 import {dispatchCancelToConfig, forCancel} from './cancelHandler';
 
 class Cancel {
-	constructor ({onCancel, ...config}) {
-		this.props = config;
+	constructor ({onCancel, onCancelWithStopPropagation}) {
+		this.props = {onCancel};
 		this.context = {}; // Needed to get the ture value as the return value of the `hasPropsAndContext`.
 
-		this.dispatchCancelToConfig = dispatchCancelToConfig(onCancel);
+		this.dispatchCancelToConfig = dispatchCancelToConfig(onCancelWithStopPropagation);
 	}
 
 	handle = handle.bind(this)
@@ -15,7 +15,7 @@ class Cancel {
 	handleCancel = handle(
 		forCancel,
 		forward('onCancel'),
-		() => (this.dispatchCancelToConfig(this.props)),
+		() => (this.dispatchCancelToConfig()),
 		stop,
 		stopImmediate
 	)

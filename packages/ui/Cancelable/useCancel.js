@@ -1,9 +1,13 @@
+import {add} from '@enact/core/keymap';
 import useClass from '@enact/core/useClass';
 import React from 'react';
 
 import Cancel from './Cancel';
 import {addCancelHandler, removeCancelHandler} from './cancelHandler';
 import {addModal, removeModal} from './modalHandler';
+
+// Add keymap for escape key
+add('cancel', 27);
 
 function mountEffect (state, modal) {
 	// layout effect order doesn't appear to be consistent with request order so we must invoked
@@ -22,8 +26,11 @@ function mountEffect (state, modal) {
  *
  * @typedef {Object} useCancelConfig
  * @memberof ui/Cancelable
- * @property {String|Function} [onCancel]      Called when a cancel action is invoked by the user.
- * @property {Boolean}         [modal = false] The flag to cancel events globally
+ * @property {Boolean}  [modal = false]               The flag to cancel events globally
+ * @property {Function} [onCancel]                    Called when a cancel action is invoked by the user.
+ * @property {Function} [onCancelWithStopPropagation] The event including the `stopPropagation` function will be passed as the first parameter.
+ *                                                    If the functions is not called, it allows event propagation.
+ *                                                    If the function is called, it calls `stop` and `stopImmediate`.
  * @private
  */
 
@@ -45,7 +52,7 @@ function mountEffect (state, modal) {
  * @returns {useCancelInterface}
  * @private
  */
-function useCancel ({modal, ...config} = {}) {
+function useCancel ({modal = false, ...config} = {}) {
 	const cancel = useClass(Cancel, config);
 
 	React.useLayoutEffect(mountEffect(cancel, modal), [cancel]);
