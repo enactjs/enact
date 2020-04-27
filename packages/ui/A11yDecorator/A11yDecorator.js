@@ -62,7 +62,7 @@ const A11yDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {prop} = config;
 
 	// eslint-disable-next-line no-shadow
-	function A11yDecorator ({'aria-label': ariaLabel, accessibilityHint, accessibilityPreHint, [prop]: content, ...rest}) {
+	const A11yDecorator = React.forwardRef(({accessibilityHint, accessibilityPreHint, 'aria-label': ariaLabel, [prop]: content, ...rest}, ref) => {
 		const a11y = useA11y({
 			accessibilityHint,
 			accessibilityPreHint,
@@ -71,9 +71,11 @@ const A11yDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		});
 
 		return (
-			<Wrapped {...rest} {...a11y} />
+			<Wrapped {...rest} {...a11y} ref={ref} />
 		);
-	}
+	});
+
+	A11yDecorator.displayName = 'A11yDecorator';
 
 	A11yDecorator.propTypes = /** @lends ui/A11yDecorator.A11yDecorator.prototype */ {
 		/**
