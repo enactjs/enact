@@ -9,7 +9,7 @@ class Handlers {
 		if (_handlers) {
 			Object.keys(_handlers).forEach(fn => {
 				this._handlers[fn] = (ev) => {
-					_handlers[fn](ev, this.props, this.context);
+					return _handlers[fn](ev, this.props, this.context);
 				};
 				this._handlers[fn].displayName = fn;
 			});

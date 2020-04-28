@@ -12,7 +12,7 @@ describe('useHandlers', () => {
 	function Component (props) {
 		const handlers = useHandlers({
 			testEvent: (ev, p, c) => {
-				ev(p, c);
+				return ev(p, c);
 			}
 		}, props, context);
 
@@ -82,5 +82,19 @@ describe('useHandlers', () => {
 		const actual = spy.mock.calls[0][1];
 
 		expect(actual).toMatchObject(expected);
+	});
+
+	test('should return the value from the handler', () => {
+		const spy = jest.fn().mockImplementation(() => 'ok');
+		const subject = shallow(<Component />);
+
+		const returnValue = subject.find('div').invoke('testEvent')(spy);
+
+		// defined a "global" context to ease testability but this isn't representative of the
+		// expected use case of this feature.
+		const expected = 'ok';
+		const actual = returnValue;
+
+		expect(actual).toBe(expected);
 	});
 });
