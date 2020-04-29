@@ -56,6 +56,7 @@ const NoContext = React.createContext(null);
  * @typedef {Object} KindConfig
  * @memberof core/kind
  * @property {String} [name]
+ * @property {Boolean} [functional]
  * @property {Object.<string, Function>} [propTypes]
  * @property {Object.<string, any>} [defaultProps]
  * @property {Object} [contextType]
