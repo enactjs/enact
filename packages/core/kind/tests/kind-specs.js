@@ -132,6 +132,7 @@ describe('kind', () => {
 	test('support using hooks within kind instances', () => {
 		const Comp = kind({
 			name: 'Comp',
+			functional: true,
 			render: () => {
 				// eslint-disable-next-line react-hooks/rules-of-hooks
 				const [state, setState] = React.useState(0);

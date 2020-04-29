@@ -8,6 +8,7 @@
 import React from 'react';
 
 import useHandlers from '../useHandlers';
+import Handlers from '../useHandlers/Handlers';
 
 import computed from './computed';
 import styles from './styles';
@@ -71,6 +72,9 @@ const NoContext = React.createContext(null);
  * ```
  *	import css from './Button.module.less';
  *	const Button = kind({
+ *		name: 'Button',
+ *		// Return a functional component suitable for use with React hooks
+ *		functional: true,
  *		// expect color and onClick properties but neither required
  *		propTypes: {
  *			color: PropTypes.string
@@ -125,6 +129,7 @@ const kind = (config) => {
 		computed: cfgComputed,
 		contextType = NoContext,
 		defaultProps,
+		functional,
 		handlers,
 		name,
 		propTypes,	// eslint-disable-line react/forbid-foreign-prop-types
@@ -141,16 +146,44 @@ const kind = (config) => {
 		return render(props, context);
 	};
 
-	function Component (props) {
-		const ctx = React.useContext(contextType);
-		const boundHandlers = useHandlers(handlers, props, ctx);
+	let Component;
 
-		const merged = {
-			...props,
-			...boundHandlers
+	// In 4.x, this branch will become the only supported version and the class branch will be
+	// removed.
+	if (functional) {
+		Component = function (props) {
+			const ctx = React.useContext(contextType);
+			const boundHandlers = useHandlers(handlers, props, ctx);
+
+			const merged = {
+				...props,
+				...boundHandlers
+			};
+
+			return renderKind(merged, ctx);
 		};
+	} else {
+		// eslint-disable-next-line enact/display-name
+		Component = class extends React.Component {
+			constructor () {
+				super();
 
-		return renderKind(merged, ctx);
+				this.handlers = new Handlers(handlers);
+			}
+
+			static contextType = contextType
+
+			render () {
+				this.handlers.setContext(this.props, this.context);
+
+				const merged = {
+					...this.props,
+					...this.handlers.handlers
+				};
+
+				return renderKind(merged, this.context);
+			}
+		};
 	}
 
 	if (name) Component.displayName = name;
