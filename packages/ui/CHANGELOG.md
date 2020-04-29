@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Layout` to export `Layout` by default instead of `LayoutBase`
+
 ## [3.3.0-alpha.7] - 2020-04-27
 
 ### Added
