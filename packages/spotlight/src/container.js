@@ -329,7 +329,9 @@ const getSpottableDescendants = (containerId) => {
 
 	candidates.push(...getOwnedNodes(node, selector));
 
-	return candidates.filter(n => navigableFilter(n, containerId));
+	return candidates.filter((target, i, targets) => navigableFilter(target, containerId) && !targets.find((nextTarget) => (
+		target !== nextTarget && target.contains(nextTarget))
+	));
 };
 
 /**

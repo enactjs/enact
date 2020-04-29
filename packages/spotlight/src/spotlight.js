@@ -726,6 +726,7 @@ const Spotlight = (function () {
 		focus: function (elem) {
 			let target = elem;
 			let wasContainerId = false;
+			let wasNode = false;
 
 			if (!elem) {
 				target = getTargetByContainer();
@@ -741,10 +742,17 @@ const Spotlight = (function () {
 				}
 			} else if (isContainer(elem)) {
 				target = getTargetByContainer(getContainerId(elem));
+			} else {
+				wasNode = true;
 			}
 
 			const nextContainerIds = getContainersForNode(target);
 			const nextContainerId = last(nextContainerIds);
+
+			if (wasNode) {
+				target = target.querySelector(getContainerConfig(nextContainerId).selector) || target;
+			}
+
 			if (isNavigable(target, nextContainerId, true)) {
 				const focused = focusElement(target, nextContainerIds);
 
