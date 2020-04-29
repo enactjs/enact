@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ### Added
 
-- `core/kind` option `functional` to return a functional component suitable for use with React hooks instead of a class component.
+- `core/kind` option `functional` to return a functional component, suitable for use with React hooks, instead of a class component
 
 ## [3.3.0-alpha.7] - 2020-04-27
 
