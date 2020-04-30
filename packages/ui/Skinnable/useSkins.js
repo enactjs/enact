@@ -56,7 +56,7 @@ const SkinContext = React.createContext(null);
  */
 
 /**
- * Deteremines the effective skin and skin variants for a component and provides a method to provide
+ * Determines the effective skin and skin variants for a component and provides a method to provide
  * those values to other contained components in this subtree.
  *
  * ```
