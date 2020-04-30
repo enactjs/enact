@@ -231,7 +231,7 @@ describe('Slottable Specs', () => {
 	test(
 		'should distribute multiple children with the same slot into the same slot',
 		() => {
-
+			// eslint-disable-next-line enact/prop-types
 			function ComponentBase ({a}) {
 				return (
 					<div className="root-div">
