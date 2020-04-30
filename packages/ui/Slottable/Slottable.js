@@ -46,13 +46,12 @@ const Slottable = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	return function Slottable ({children, ...rest}) {
-		const distributed = useSlots({slots, children});
-
 		// Slottable allows there to be other values in the destination slot and merges them.
 		// However, consumers can't avoid key warnings when merging the two lists so we should
 		// "consider this harmful" and not continue to support this with the hook and instead
-		// encourage "either/or". We should continue to support it here so this block ensures
-		// backwards compatibility.
+		// encourage using the slot as the default with the prop as a fallback as implemented by the
+		// hook.
+		const distributed = useSlots({slots, props: {children}});
 		slots.forEach(slot => {
 			const dist = distributed[slot];
 			const prop = rest[slot];

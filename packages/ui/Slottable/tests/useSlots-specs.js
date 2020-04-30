@@ -9,8 +9,8 @@ import useSlots from '../useSlots';
 describe('useSlots', () => {
 
 	test('should distribute children with a \'slot\' property', () => {
-		function Component ({children}) {
-			const {a, b, c} = useSlots({slots: ['a', 'b', 'c'], children});
+		function Component (props) {
+			const {a, b, c} = useSlots({slots: ['a', 'b', 'c'], props});
 
 			return (
 				<div>
@@ -38,8 +38,8 @@ describe('useSlots', () => {
 	test(
 		'should distribute children with a \'type\' that matches a slot',
 		() => {
-			function Component ({children}) {
-				const {a, b, c, custom} = useSlots({slots: ['a', 'b', 'c', 'custom'], children});
+			function Component (props) {
+				const {a, b, c, custom} = useSlots({slots: ['a', 'b', 'c', 'custom'], props});
 
 				return (
 					<div>
@@ -69,13 +69,13 @@ describe('useSlots', () => {
 	test(
 		'should distribute children whose \'type\' has a \'defaultSlot\' property that matches a slot',
 		() => {
-			function Custom ({children}) {
-				return <div>{children}</div>;
+			function Custom (props) {
+				return <div>{props.children}</div>;
 			}
 			Custom.defaultSlot = 'c';
 
-			function Component ({children}) {
-				const {a, b, c} = useSlots({slots: ['a', 'b',  'c'], children});
+			function Component (props) {
+				const {a, b, c} = useSlots({slots: ['a', 'b',  'c'], props});
 
 				return (
 					<div>
@@ -105,7 +105,7 @@ describe('useSlots', () => {
 		'should distribute children with no \'slot\' property to Slottable\'s \'children\'',
 		() => {
 			function Component (props) {
-				const {a, b, children} = useSlots({slots: ['a', 'b'], children: props.children});
+				const {a, b, children} = useSlots({slots: ['a', 'b'], props});
 
 				return (
 					<div>
@@ -137,8 +137,8 @@ describe('useSlots', () => {
 			// an empty mock implementation
 			console.error.mockImplementation();
 
-			function Component ({children}) {
-				const {a, b, c} = useSlots({slots: ['a', 'b'], children});
+			function Component (props) {
+				const {a, b, c} = useSlots({slots: ['a', 'b'], props});
 
 				return (
 					<div>
@@ -178,8 +178,8 @@ describe('useSlots', () => {
 	test(
 		'should distribute children with props other than simply \'children\', in entirety, to the matching destination slot',
 		() => {
-			function Component ({children}) {
-				const {a, b, c, custom} = useSlots({slots: ['a', 'b', 'c', 'custom'], children});
+			function Component (props) {
+				const {a, b, c, custom} = useSlots({slots: ['a', 'b', 'c', 'custom'], props});
 				return (
 					<div className="root-div">
 						{c}
@@ -212,8 +212,8 @@ describe('useSlots', () => {
 	test(
 		'should distribute multiple children with the same slot into the same slot',
 		() => {
-			function Component ({children}) {
-				const {a} = useSlots({slots: ['a'], children});
+			function Component (props) {
+				const {a} = useSlots({slots: ['a'], props});
 				return (
 					<div className="root-div">
 						{a}
@@ -229,6 +229,52 @@ describe('useSlots', () => {
 			);
 
 			const expected = 'AAA';
+			const actual = subject.text();
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should override prop with slot value',
+		() => {
+			function Component (props) {
+				const {a} = useSlots({slots: ['a'], props});
+				return (
+					<div className="root-div">
+						{a}
+					</div>
+				);
+			}
+			const subject = mount(
+				<Component a="B">
+					<div slot="a">A</div>
+				</Component>
+			);
+
+			const expected = 'A';
+			const actual = subject.text();
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should fallback to prop when slot is omitted',
+		() => {
+			function Component (props) {
+				const {a} = useSlots({slots: ['a'], props});
+				return (
+					<div className="root-div">
+						{a}
+					</div>
+				);
+			}
+			const subject = mount(
+				<Component a="B" />
+			);
+
+			const expected = 'B';
 			const actual = subject.text();
 
 			expect(actual).toBe(expected);

@@ -58,7 +58,7 @@ function distributeChild (child, index, slots, props) {
 	return false;
 }
 
-function distribute (slots, children) {
+function distribute (slots, {children, ...fallback}) {
 	const props = {
 		children
 	};
@@ -78,7 +78,13 @@ function distribute (slots, children) {
 		}
 	}
 
-	return props;
+	// We handle fallback here (rather than at the props initialization) because distributeChild
+	// will append to existing props and we want the distributed value to override the fallback
+	// value.
+	return {
+		...fallback,
+		...props
+	};
 }
 
 /**
@@ -86,20 +92,38 @@ function distribute (slots, children) {
  *
  * @typedef {Object} useSlotsConfig
  * @memberof ui/Slottable
- * @property {String[]} [slots]    List of slot names
- * @property {Node}     [children] Nodes to distribute into the slots
+ * @property {String[]} [slots] List of slot names
+ * @property {Object}   [props] Props object
  * @private
  */
 
 /**
  * Distributes `children` into the configured `slots`.
  *
+ * `useSlots` iterates over all of the `children` in `props` and distributes any children based on
+ * the followig rules:
+ *
+ * * If the child has a `slot` property matching a valid slot, or
+ * * If the component for the child has the `defaultSlot` static member matching a valid slot, or
+ * * If the child component is a string matching a valid slot.
+ *
+ * When a child matches one of the above rules, it is removed from children and inserted into a prop
+ * matching the name of the slot.
+ *
+ * *Special Conditions*
+ *
+ * * If multiple children match the same slot, the destination prop will be an array of children.
+ * * If a value exists on `props` but not as a slot within `children`, the prop value is used as a
+ *   fallback.
+ * * If a value exists both on `props` and as a slot within `children`, the slot value(s) replaces
+ *   the prop value.
+ *
  * ```
- * function Component ({children: original, ...rest}) {
- *   const {before, after, children} = useSlots({slots: ['before', 'after'], original});
+ * function Component (props) {
+ *   const {before, after, children} = useSlots({slots: ['before', 'after', 'label'], props});
  *
  *   return (
- *     <div {...rest}>
+ *     <div {...rest} aria-label={label}>
  *       <span class="before">{before}</span>
  *       {children}
  *       <span class="after">{after}</span>
@@ -107,7 +131,7 @@ function distribute (slots, children) {
  *   );
  * }
  *
- * <Component>
+ * <Component label="descriptive label">
  *   <Icon slot="before">star</Icon>
  *   Some other content
  *   <Icon slot="after">flag</Icon>
@@ -122,9 +146,9 @@ function distribute (slots, children) {
  * @private
  */
 function useSlots (config = {}) {
-	const {slots, children} = config;
+	const {slots, props} = config;
 
-	return distribute(slots, children);
+	return distribute(slots, props);
 }
 
 export default useSlots;
