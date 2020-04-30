@@ -1,9 +1,7 @@
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
-let GlobalId = 0;
-
-const ID_KEY = '$$ID$$';
+import useId from './useId';
 
 /**
  * Default config for {@link ui/IdProvider.IdProvider}
@@ -51,60 +49,29 @@ const defaultConfig = {
 const IdProvider = hoc(defaultConfig, (config, Wrapped) => {
 	const {generateProp, idProp, prefix} = config;
 
-	return class extends React.Component {
-		static displayName = 'IdProvider'
+	// eslint-disable-next-line no-shadow
+	function IdProvider (props) {
+		const updated = {...props};
+		const {generateId} = useId({prefix});
 
-		constructor () {
-			super();
-
-			this.ids = {};
+		if (generateProp) {
+			updated[generateProp] = generateId;
 		}
 
-		componentWillUnmount () {
-			// Call the onUnmount handler for each generated id (note: not the key)
-			for (const key in this.ids) {
-				const {id, onUnmount} = this.ids[key];
-				if (typeof onUnmount === 'function') {
-					onUnmount(id);
-				}
-			}
+		if (idProp && !updated[idProp]) {
+			updated[idProp] = generateId();
 		}
 
-		generateId = (key, idPrefix = prefix, onUnmount) => {
-			// if an id has been generated for the key, return it
-			if (key in this.ids) {
-				return this.ids[key].id;
-			}
+		return (
+			<Wrapped {...updated} />
+		);
+	}
 
-			// otherwise generate a new id (with an optional prefix), cache it, and return it
-			const id = `${idPrefix}${++GlobalId}`;
-			this.ids[typeof key === 'undefined' ? `generated-${id}` : key] = {
-				id,
-				onUnmount
-			};
-
-			return id;
-		}
-
-		render () {
-			const props = Object.assign({}, this.props);
-
-			if (generateProp) {
-				props[generateProp] = this.generateId;
-			}
-
-			if (idProp && !props[idProp]) {
-				props[idProp] = this.generateId(ID_KEY);
-			}
-
-			return (
-				<Wrapped {...props} />
-			);
-		}
-	};
+	return IdProvider;
 });
 
 export default IdProvider;
 export {
-	IdProvider
+	IdProvider,
+	useId
 };
