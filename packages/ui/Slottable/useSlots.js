@@ -105,7 +105,7 @@ function distribute (slots, {children, ...fallback}) {
  *
  * * If the child has a `slot` property matching a valid slot, or
  * * If the component for the child has the `defaultSlot` static member matching a valid slot, or
- * * If the child component is a string matching a valid slot.
+ * * If the child component's type is a string matching a valid slot.
  *
  * When a child matches one of the above rules, it is removed from children and inserted into a prop
  * matching the name of the slot.
