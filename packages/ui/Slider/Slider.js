@@ -155,11 +155,15 @@ const SliderBase = kind({
 		/**
 		 * The orientation of the slider, either `"horizontal"` or `"vertical"`.
 		 *
+		 * Allowed values include:
+		 * * `'horizontal'` - A left and right orientation
+		 * * `'vertical'` - An up and down orientation
+		 *
 		 * @type {String}
 		 * @default "horizontal"
 		 * @public
 		 */
-		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+		orientation: PropTypes.string,
 
 		/**
 		 * Applies a pressed visual effect.
