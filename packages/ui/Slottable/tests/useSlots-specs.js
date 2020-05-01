@@ -36,6 +36,32 @@ describe('useSlots', () => {
 		expect(actual).toBe(expected);
 	});
 
+	test('should have no children when all have been distributed', () => {
+		// eslint-disable-next-line enact/prop-types
+		function Component ({a, b, c, children}) {
+			const slots = useSlots({a, b, c, children});
+
+			return (
+				<div>
+					{slots.children}
+				</div>
+			);
+		}
+
+		const subject = mount(
+			<Component>
+				<div slot="a">A</div>
+				<div slot="b">B</div>
+				<div slot="c">C</div>
+			</Component>
+		);
+
+		const expected = '';
+		const actual = subject.text();
+
+		expect(actual).toBe(expected);
+	});
+
 	test(
 		'should distribute children with a \'type\' that matches a slot',
 		() => {

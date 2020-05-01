@@ -77,6 +77,12 @@ function distribute ({children, ...slots}) {
 		props.children = remaining.length === 0 ? null : remaining;
 	}
 
+	slotNames.forEach(slot => {
+		if (slots[slot] === undefined) { // eslint-disable-line no-undefined
+			delete slots[slot];
+		}
+	});
+
 	// We handle fallback here (rather than at the props initialization) because distributeChild
 	// will append to existing props and we want the distributed value to override the fallback
 	// value.
