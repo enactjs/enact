@@ -72,11 +72,7 @@ function distribute ({children, ...slots}) {
 			}
 		});
 
-		if (remaining.length > 0) {
-			props.children = remaining;
-		} else {
-			delete props.children;
-		}
+		props.children = remaining.length === 0 ? null : remaining;
 	}
 
 	// We handle fallback here (rather than at the props initialization) because distributeChild
