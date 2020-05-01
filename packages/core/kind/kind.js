@@ -166,13 +166,13 @@ const kind = (config) => {
 	} else {
 		// eslint-disable-next-line enact/display-name
 		Component = class extends React.Component {
+			static contextType = contextType
+
 			constructor () {
 				super();
 
 				this.handlers = new Handlers(handlers);
 			}
-
-			static contextType = contextType
 
 			render () {
 				this.handlers.setContext(this.props, this.context);
