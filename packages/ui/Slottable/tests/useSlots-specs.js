@@ -9,14 +9,15 @@ import useSlots from '../useSlots';
 describe('useSlots', () => {
 
 	test('should distribute children with a \'slot\' property', () => {
-		function Component (props) {
-			const {a, b, c} = useSlots({slots: ['a', 'b', 'c'], props});
+		// eslint-disable-next-line enact/prop-types
+		function Component ({a, b, c, children}) {
+			const slots = useSlots({a, b, c, children});
 
 			return (
 				<div>
-					{c}
-					{b}
-					{a}
+					{slots.c}
+					{slots.b}
+					{slots.a}
 				</div>
 			);
 		}
@@ -38,15 +39,16 @@ describe('useSlots', () => {
 	test(
 		'should distribute children with a \'type\' that matches a slot',
 		() => {
-			function Component (props) {
-				const {a, b, c, custom} = useSlots({slots: ['a', 'b', 'c', 'custom'], props});
+			// eslint-disable-next-line enact/prop-types
+			function Component ({a, b, c, children, custom}) {
+				const slots = useSlots({a, b, c, children, custom});
 
 				return (
 					<div>
-						{c}
-						{b}
-						{a}
-						{custom}
+						{slots.c}
+						{slots.b}
+						{slots.a}
+						{slots.custom}
 					</div>
 				);
 			}
@@ -74,14 +76,14 @@ describe('useSlots', () => {
 			}
 			Custom.defaultSlot = 'c';
 
-			function Component (props) {
-				const {a, b, c} = useSlots({slots: ['a', 'b',  'c'], props});
+			function Component ({a, b, c, children}) {
+				const slots = useSlots({a, b, c, children});
 
 				return (
 					<div>
-						{c}
-						{b}
-						{a}
+						{slots.c}
+						{slots.b}
+						{slots.a}
 					</div>
 				);
 			}
@@ -104,14 +106,14 @@ describe('useSlots', () => {
 	test(
 		'should distribute children with no \'slot\' property to Slottable\'s \'children\'',
 		() => {
-			function Component (props) {
-				const {a, b, children} = useSlots({slots: ['a', 'b'], props});
+			function Component ({a, b, children}) {
+				const slots = useSlots({a, b, children});
 
 				return (
 					<div>
-						{children}
-						{b}
-						{a}
+						{slots.children}
+						{slots.b}
+						{slots.a}
 					</div>
 				);
 			}
@@ -137,14 +139,14 @@ describe('useSlots', () => {
 			// an empty mock implementation
 			console.error.mockImplementation();
 
-			function Component (props) {
-				const {a, b, c} = useSlots({slots: ['a', 'b'], props});
+			function Component ({a, b, children}) {
+				const slots = useSlots({a, b, children});
 
 				return (
 					<div>
-						{c}
-						{b}
-						{a}
+						{slots.c}
+						{slots.b}
+						{slots.a}
 					</div>
 				);
 			}
@@ -178,14 +180,15 @@ describe('useSlots', () => {
 	test(
 		'should distribute children with props other than simply \'children\', in entirety, to the matching destination slot',
 		() => {
-			function Component (props) {
-				const {a, b, c, custom} = useSlots({slots: ['a', 'b', 'c', 'custom'], props});
+			function Component ({a, b, c, children, custom}) {
+				const slots = useSlots({a, b, c, children, custom});
+
 				return (
 					<div className="root-div">
-						{c}
-						{b}
-						{a}
-						{custom}
+						{slots.c}
+						{slots.b}
+						{slots.a}
+						{slots.custom}
 					</div>
 				);
 			}
@@ -212,11 +215,11 @@ describe('useSlots', () => {
 	test(
 		'should distribute multiple children with the same slot into the same slot',
 		() => {
-			function Component (props) {
-				const {a} = useSlots({slots: ['a'], props});
+			function Component ({a, children}) {
+				const slots = useSlots({a, children});
 				return (
-					<div className="root-div">
-						{a}
+					<div>
+						{slots.a}
 					</div>
 				);
 			}
@@ -238,11 +241,11 @@ describe('useSlots', () => {
 	test(
 		'should override prop with slot value',
 		() => {
-			function Component (props) {
-				const {a} = useSlots({slots: ['a'], props});
+			function Component ({a, children}) {
+				const slots = useSlots({a, children});
 				return (
-					<div className="root-div">
-						{a}
+					<div>
+						{slots.a}
 					</div>
 				);
 			}
@@ -262,11 +265,11 @@ describe('useSlots', () => {
 	test(
 		'should fallback to prop when slot is omitted',
 		() => {
-			function Component (props) {
-				const {a} = useSlots({slots: ['a'], props});
+			function Component ({a, children}) {
+				const slots = useSlots({a, children});
 				return (
-					<div className="root-div">
-						{a}
+					<div>
+						{slots.a}
 					</div>
 				);
 			}

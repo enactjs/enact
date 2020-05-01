@@ -58,15 +58,16 @@ function distributeChild (child, index, slots, props) {
 	return false;
 }
 
-function distribute (slots, {children, ...fallback}) {
+function distribute ({children, ...slots}) {
+	const slotNames = Object.keys(slots);
 	const props = {
 		children
 	};
 
-	if (slots) {
+	if (slotNames.length > 0) {
 		const remaining = [];
 		React.Children.forEach(children, (child, index) => {
-			if (!distributeChild(child, index, slots, props)) {
+			if (!distributeChild(child, index, slotNames, props)) {
 				remaining.push(child);
 			}
 		});
@@ -82,7 +83,7 @@ function distribute (slots, {children, ...fallback}) {
 	// will append to existing props and we want the distributed value to override the fallback
 	// value.
 	return {
-		...fallback,
+		...slots,
 		...props
 	};
 }
@@ -92,8 +93,8 @@ function distribute (slots, {children, ...fallback}) {
  *
  * @typedef {Object} useSlotsConfig
  * @memberof ui/Slottable
- * @property {String[]} [slots] List of slot names
- * @property {Object}   [props] Props object
+ * @property {Object} [slots] An object mapping slot names to default values. It must contain a
+ *                            `children` key with an array of elements to be distributed into slots.
  * @private
  */
 
@@ -119,14 +120,14 @@ function distribute (slots, {children, ...fallback}) {
  *   the prop value.
  *
  * ```
- * function Component (props) {
- *   const {before, after, children} = useSlots({slots: ['before', 'after', 'label'], props});
+ * function Component ({after, before, children, label, ...rest}) {
+ *   const slots = useSlots({after, before, children, label});
  *
  *   return (
  *     <div {...rest} aria-label={label}>
- *       <span class="before">{before}</span>
- *       {children}
- *       <span class="after">{after}</span>
+ *       <span class="before">{slots.before}</span>
+ *       {slots.children}
+ *       <span class="after">{slots.after}</span>
  *     </div>
  *   );
  * }
@@ -145,10 +146,8 @@ function distribute (slots, {children, ...fallback}) {
  * @memberof ui/Slottable
  * @private
  */
-function useSlots (config = {}) {
-	const {slots, props} = config;
-
-	return distribute(slots, props);
+function useSlots (slots) {
+	return distribute(slots);
 }
 
 export default useSlots;
