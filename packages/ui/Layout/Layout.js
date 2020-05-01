@@ -392,7 +392,7 @@ const Row = LayoutDecorator((props) => (
 ));
 Row.displayName = 'Row';
 
-export default LayoutBase;
+export default Layout;
 export {
 	Cell,
 	CellBase,
