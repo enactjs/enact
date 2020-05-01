@@ -60,7 +60,7 @@ const Slottable = hoc(defaultConfig, (config, Wrapped) => {
 		slots.forEach(slot => {
 			const dist = distributed[slot];
 			const prop = props[slot];
-			if (prop && dist) {
+			if (prop != null && dist != null) {
 				distributed[slot] = [].concat(prop, dist);
 			} else if (prop) {
 				distributed[slot] = prop;

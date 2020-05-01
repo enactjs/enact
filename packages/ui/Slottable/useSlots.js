@@ -72,6 +72,8 @@ function distribute ({children, ...slots}) {
 			}
 		});
 
+		// we need to retain the children prop so that it can overwrite the value from props if the
+		// author spreads the return of useSlots over props
 		props.children = remaining.length === 0 ? null : remaining;
 	}
 
