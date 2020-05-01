@@ -76,6 +76,7 @@ describe('useSlots', () => {
 			}
 			Custom.defaultSlot = 'c';
 
+			// eslint-disable-next-line enact/prop-types
 			function Component ({a, b, c, children}) {
 				const slots = useSlots({a, b, c, children});
 
@@ -106,6 +107,7 @@ describe('useSlots', () => {
 	test(
 		'should distribute children with no \'slot\' property to Slottable\'s \'children\'',
 		() => {
+			// eslint-disable-next-line enact/prop-types
 			function Component ({a, b, children}) {
 				const slots = useSlots({a, b, children});
 
@@ -139,6 +141,7 @@ describe('useSlots', () => {
 			// an empty mock implementation
 			console.error.mockImplementation();
 
+			// eslint-disable-next-line enact/prop-types
 			function Component ({a, b, children}) {
 				const slots = useSlots({a, b, children});
 
@@ -180,6 +183,7 @@ describe('useSlots', () => {
 	test(
 		'should distribute children with props other than simply \'children\', in entirety, to the matching destination slot',
 		() => {
+			// eslint-disable-next-line enact/prop-types
 			function Component ({a, b, c, children, custom}) {
 				const slots = useSlots({a, b, c, children, custom});
 
@@ -215,6 +219,7 @@ describe('useSlots', () => {
 	test(
 		'should distribute multiple children with the same slot into the same slot',
 		() => {
+			// eslint-disable-next-line enact/prop-types
 			function Component ({a, children}) {
 				const slots = useSlots({a, children});
 				return (
@@ -241,6 +246,7 @@ describe('useSlots', () => {
 	test(
 		'should override prop with slot value',
 		() => {
+			// eslint-disable-next-line enact/prop-types
 			function Component ({a, children}) {
 				const slots = useSlots({a, children});
 				return (
@@ -265,6 +271,7 @@ describe('useSlots', () => {
 	test(
 		'should fallback to prop when slot is omitted',
 		() => {
+			// eslint-disable-next-line enact/prop-types
 			function Component ({a, children}) {
 				const slots = useSlots({a, children});
 				return (
