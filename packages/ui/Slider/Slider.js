@@ -153,7 +153,7 @@ const SliderBase = kind({
 		noFill: PropTypes.bool,
 
 		/**
-		 * The orientation of the slider, either `"horizontal"` or `"vertical"`.
+		 * The orientation of the slider.
 		 *
 		 * Allowed values include:
 		 * * `'horizontal'` - A left and right orientation
