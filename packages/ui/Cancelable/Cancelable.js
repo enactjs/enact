@@ -127,28 +127,28 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 
 	invariant(onCancel, 'onCancel must be specified with Cancelable');
 
-	function renderModal (props, ref) {
+	function renderModal (props) {
 		return (
-			<Wrapped {...props} ref={ref} />
+			<Wrapped {...props} />
 		);
 	}
 
-	function renderWrapped (props, handleKeyUp, ref) {
+	function renderWrapped (props, handleKeyUp) {
 		return (
-			<Component onKeyUp={handleKeyUp} ref={ref}>
+			<Component onKeyUp={handleKeyUp}>
 				<Wrapped {...props} />
 			</Component>
 		);
 	}
 
-	function renderUnwrapped (props, handleKeyUp, ref) {
+	function renderUnwrapped (props, handleKeyUp) {
 		return (
-			<Wrapped {...props} onKeyUp={handleKeyUp} ref={ref} />
+			<Wrapped {...props} onKeyUp={handleKeyUp} />
 		);
 	}
 
 	// eslint-disable-next-line no-shadow
-	const Cancelable = React.forwardRef((props, ref) => {
+	function Cancelable (props) {
 		const updated = {...props};
 		let onCancelWithStopPropagation = null;
 
@@ -179,12 +179,10 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		delete updated.onCancel;
 		delete updated[onCancel];
 
-		return	modal && renderModal(updated, ref) ||
-				Component && renderWrapped(updated, handleKeyUp, ref) ||
-				renderUnwrapped(updated, handleKeyUp, ref);
-	});
-
-	Cancelable.displayName = 'Cancelable';
+		return	modal && renderModal(updated) ||
+				Component && renderWrapped(updated, handleKeyUp) ||
+				renderUnwrapped(updated, handleKeyUp);
+	}
 
 	Cancelable.propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
 		/**
