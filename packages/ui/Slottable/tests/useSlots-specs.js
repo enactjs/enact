@@ -2,20 +2,26 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
 import React from 'react';
-import {mount, shallow} from 'enzyme';
-import kind from '@enact/core/kind';
-import Slottable from '../Slottable';
+import {mount} from 'enzyme';
 
-describe('Slottable Specs', () => {
+import useSlots from '../useSlots';
+
+describe('useSlots', () => {
 
 	test('should distribute children with a \'slot\' property', () => {
-		const Component = Slottable({slots: ['a', 'b', 'c']}, ({a, b, c}) => (
-			<div>
-				{c}
-				{b}
-				{a}
-			</div>
-		));
+		// eslint-disable-next-line enact/prop-types
+		function Component ({a, b, c, children}) {
+			const slots = useSlots({a, b, c, children});
+
+			return (
+				<div>
+					{slots.c}
+					{slots.b}
+					{slots.a}
+				</div>
+			);
+		}
+
 		const subject = mount(
 			<Component>
 				<div slot="a">A</div>
@@ -30,17 +36,48 @@ describe('Slottable Specs', () => {
 		expect(actual).toBe(expected);
 	});
 
+	test('should have no children when all have been distributed', () => {
+		// eslint-disable-next-line enact/prop-types
+		function Component ({a, b, c, children}) {
+			const slots = useSlots({a, b, c, children});
+
+			return (
+				<div>
+					{slots.children}
+				</div>
+			);
+		}
+
+		const subject = mount(
+			<Component>
+				<div slot="a">A</div>
+				<div slot="b">B</div>
+				<div slot="c">C</div>
+			</Component>
+		);
+
+		const expected = '';
+		const actual = subject.text();
+
+		expect(actual).toBe(expected);
+	});
+
 	test(
 		'should distribute children with a \'type\' that matches a slot',
 		() => {
-			const Component = Slottable({slots: ['a', 'b', 'c', 'custom']}, ({a, b, c, custom}) => (
-				<div>
-					{c}
-					{b}
-					{a}
-					{custom}
-				</div>
-			));
+			// eslint-disable-next-line enact/prop-types
+			function Component ({a, b, c, children, custom}) {
+				const slots = useSlots({a, b, c, children, custom});
+
+				return (
+					<div>
+						{slots.c}
+						{slots.b}
+						{slots.a}
+						{slots.custom}
+					</div>
+				);
+			}
 			const subject = mount(
 				<Component>
 					<div slot="a">A</div>
@@ -60,21 +97,23 @@ describe('Slottable Specs', () => {
 	test(
 		'should distribute children whose \'type\' has a \'defaultSlot\' property that matches a slot',
 		() => {
-			const Custom = kind({
-				name: 'Custom',
-				render: ({children}) => {
-					return <div>{children}</div>;
-				}
-			});
+			function Custom (props) {
+				return <div>{props.children}</div>;
+			}
 			Custom.defaultSlot = 'c';
 
-			const Component = Slottable({slots: ['a', 'b', 'c']}, ({a, b, c}) => (
-				<div>
-					{c}
-					{b}
-					{a}
-				</div>
-			));
+			// eslint-disable-next-line enact/prop-types
+			function Component ({a, b, c, children}) {
+				const slots = useSlots({a, b, c, children});
+
+				return (
+					<div>
+						{slots.c}
+						{slots.b}
+						{slots.a}
+					</div>
+				);
+			}
 
 			const subject = mount(
 				<Component>
@@ -94,13 +133,18 @@ describe('Slottable Specs', () => {
 	test(
 		'should distribute children with no \'slot\' property to Slottable\'s \'children\'',
 		() => {
-			const Component = Slottable({slots: ['a', 'b']}, ({a, b, children}) => (
-				<div>
-					{children}
-					{b}
-					{a}
-				</div>
-			));
+			// eslint-disable-next-line enact/prop-types
+			function Component ({a, b, children}) {
+				const slots = useSlots({a, b, children});
+
+				return (
+					<div>
+						{slots.children}
+						{slots.b}
+						{slots.a}
+					</div>
+				);
+			}
 			const subject = mount(
 				<Component>
 					<div slot="a">A</div>
@@ -123,13 +167,18 @@ describe('Slottable Specs', () => {
 			// an empty mock implementation
 			console.error.mockImplementation();
 
-			const Component = Slottable({slots: ['a', 'b']}, ({a, b, c}) => (
-				<div>
-					{c}
-					{b}
-					{a}
-				</div>
-			));
+			// eslint-disable-next-line enact/prop-types
+			function Component ({a, b, children}) {
+				const slots = useSlots({a, b, children});
+
+				return (
+					<div>
+						{slots.c}
+						{slots.b}
+						{slots.a}
+					</div>
+				);
+			}
 
 			const subject = mount(
 				<Component>
@@ -160,14 +209,19 @@ describe('Slottable Specs', () => {
 	test(
 		'should distribute children with props other than simply \'children\', in entirety, to the matching destination slot',
 		() => {
-			const Component = Slottable({slots: ['a', 'b', 'c', 'custom']}, ({a, b, c, custom}) => (
-				<div className="root-div">
-					{c}
-					{b}
-					{a}
-					{custom}
-				</div>
-			));
+			// eslint-disable-next-line enact/prop-types
+			function Component ({a, b, c, children, custom}) {
+				const slots = useSlots({a, b, c, children, custom});
+
+				return (
+					<div className="root-div">
+						{slots.c}
+						{slots.b}
+						{slots.a}
+						{slots.custom}
+					</div>
+				);
+			}
 			const subject = mount(
 				<Component>
 					<div slot="a" title="Div A" />
@@ -188,60 +242,18 @@ describe('Slottable Specs', () => {
 		}
 	);
 
-	test('should preserve values in \'slot\' property', () => {
-		// This suppresses the unique key warning that this implementation creates. Also, we can't
-		// restore this because it breaks our global warning listener.
-		jest.spyOn(console, 'error').mockImplementation(() => {});
-
-		const Component = Slottable({slots: ['a']}, ({a}) => (
-			<div>
-				{a}
-			</div>
-		));
-		const subject = mount(
-			<Component a={<div key="X">X</div>}>
-				<div slot="a" key="A">A</div>
-			</Component>
-		);
-
-		const expected = 'XA';
-		const actual = subject.text();
-
-		expect(actual).toBe(expected);
-	});
-
-	test('should add values to existing array in \'slot\' property', () => {
-		const Component = Slottable({slots: ['a']}, ({a}) => (
-			<div>
-				{a}
-			</div>
-		));
-		const subject = shallow(
-			<Component a={['a', 'b']}>
-				<a>c</a>
-			</Component>
-		);
-
-		const expected = ['a', 'b', 'c'];
-		const actual = subject.prop('a');
-
-		expect(actual).toEqual(expected);
-	});
-
 	test(
 		'should distribute multiple children with the same slot into the same slot',
 		() => {
 			// eslint-disable-next-line enact/prop-types
-			function ComponentBase ({a}) {
+			function Component ({a, children}) {
+				const slots = useSlots({a, children});
 				return (
-					<div className="root-div">
-						{a}
+					<div>
+						{slots.a}
 					</div>
 				);
 			}
-
-			const Component = Slottable({slots: ['a']}, ComponentBase);
-
 			const subject = mount(
 				<Component>
 					<div slot="a">A</div>
@@ -251,6 +263,54 @@ describe('Slottable Specs', () => {
 			);
 
 			const expected = 'AAA';
+			const actual = subject.text();
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should override prop with slot value',
+		() => {
+			// eslint-disable-next-line enact/prop-types
+			function Component ({a, children}) {
+				const slots = useSlots({a, children});
+				return (
+					<div>
+						{slots.a}
+					</div>
+				);
+			}
+			const subject = mount(
+				<Component a="B">
+					<div slot="a">A</div>
+				</Component>
+			);
+
+			const expected = 'A';
+			const actual = subject.text();
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should fallback to prop when slot is omitted',
+		() => {
+			// eslint-disable-next-line enact/prop-types
+			function Component ({a, children}) {
+				const slots = useSlots({a, children});
+				return (
+					<div>
+						{slots.a}
+					</div>
+				);
+			}
+			const subject = mount(
+				<Component a="B" />
+			);
+
+			const expected = 'B';
 			const actual = subject.text();
 
 			expect(actual).toBe(expected);
