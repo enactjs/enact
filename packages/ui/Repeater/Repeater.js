@@ -82,11 +82,10 @@ const RepeaterBase = kind({
 		/**
 		 * Called with a reference to [component]{@link ui/Repeater.Repeater#component}
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.func,
-
+		componentRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 		/**
 		 * The property on each `childComponent` that receives the index of the item in the `Repeater`.
 		 *

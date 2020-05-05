@@ -53,10 +53,10 @@ const ItemBase = kind({
 		/**
 		 * Called with a reference to [component]{@link ui/Item.ItemBase#component}
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.func,
+		componentRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the

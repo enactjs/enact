@@ -51,11 +51,11 @@ const TransitionBase = kind({
 		 *
 		 *Useful if you need to measure or interact with the node directly.
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @default null
 		 * @public
 		 */
-		childRef: PropTypes.func,
+		childRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 
 		/**
 		 * The node to be transitioned.

@@ -98,10 +98,10 @@ class TransitionGroup extends React.Component {
 		/**
 		 * Called with a reference to [component]{@link ui/ViewManager.TransitionGroup#component}
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.func,
+		componentRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 
 		/**
 		 * Current Index the ViewManager is on

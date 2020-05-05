@@ -81,9 +81,10 @@ const SpinnerBase = kind({
 		/**
 		 * Called with a reference to [component]{@link ui/Spinner.Spinner#component}
 		 *
+		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.func,
+		componentRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the

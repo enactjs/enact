@@ -66,10 +66,10 @@ const MarqueeBase = kind({
 		/**
 		 * Called when mounting or unmounting with a reference to the client node
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @public
 		 */
-		clientRef: PropTypes.func,
+		clientRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the

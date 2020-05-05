@@ -63,10 +63,10 @@ const CellBase = kind({
 		/**
 		 * Called with a reference to [component]{@link ui/Cell.Cell#component}
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.func,
+		componentRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 
 		/**
 		 * Sizes `Cell` to its contents.

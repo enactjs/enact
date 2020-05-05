@@ -208,10 +208,10 @@ const LayoutBase = kind({
 		/**
 		 * Called with a reference to [component]{@link ui/Layout.Layout#component}
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.func,
+		componentRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 
 		/**
 		 * Allows this `Layout` to have following siblings drawn on the same line as itself

@@ -72,10 +72,10 @@ const ViewManagerBase = class extends React.Component {
 		/**
 		 * Called with a reference to [component]{@link ui/ViewManager.ViewManager#component}
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.func,
+		componentRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 
 		/**
 		 * Time in milliseconds to complete a transition

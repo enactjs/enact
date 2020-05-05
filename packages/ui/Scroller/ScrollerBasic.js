@@ -61,10 +61,10 @@ class ScrollerBasic extends Component {
 		/**
 		 * Ref for scroll content
 		 *
-		 * @type {Object}
+		 * @type {Object|Function}
 		 * @private
 		 */
-		scrollContentRef: PropTypes.object
+		scrollContentRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func])
 	}
 
 	componentDidMount () {
