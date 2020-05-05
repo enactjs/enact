@@ -598,7 +598,7 @@ const isNavigable = (node, containerId, verify) => {
 		return false;
 	}
 
-	return navigableFilter(node, containerId);
+	return navigableFilter(node, containerId) && !node.querySelector(config.selector);
 };
 
 /**
