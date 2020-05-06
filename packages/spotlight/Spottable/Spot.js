@@ -37,31 +37,34 @@ const isSpottable = (props) => !props.spotlightDisabled;
 
 // Last instance of spottable to be focused
 let lastSelectTarget = null;
+
 // Should we prevent select being passed through
 let selectCancelled = false;
 
 class Spot {
-	constructor ({emulateMouse, ...props}) {
-		this.props = props;
-		this.context = {
+	constructor ({emulateMouse, useForceUpdate}) {
+		this.config = {
 			emulateMouse,
-			focusedWhenDisabled: false,
-			spottableClass: null
+			useForceUpdate
 		};
+		this.props = {};
+		this.context = {};
 
+		this.isFocused = false;
+		this.isFocusedWhenDisabled = false;
 		this.isHovered = false;
+		this.spottableClass = null;
 		// Used to indicate that we want to stop propagation on blur events that occur as a
 		// result of this component imperatively blurring itself on focus when spotlightDisabled
 		this.shouldPreventBlur = false;
-		this.isFocused = false;
 	}
 
-	setContext (mutableRef) {
-		const {prevSpotlightDisabled, spotlightDisabled} = mutableRef.current;
+	setPropsAndContext (props, context) {
+		this.props = props;
+		this.context.prevSpotlightDisabled = context.prevSpotlightDisabled;
 
-		this.context.prevSpotlightDisabled = prevSpotlightDisabled;
-		this.context.focusedWhenDisabled = this.isFocused && spotlightDisabled;
-		this.context.spottableClass = (this.context.focusedWhenDisabled || isSpottable(mutableRef.current)) ? spottableClass : null;
+		this.isFocusedWhenDisabled = this.isFocused && props.spotlightDisabled;
+		this.spottableClass = (this.isFocusedWhenDisabled || isSpottable(props)) ? spottableClass : null;
 	}
 
 	load (node = null) {
@@ -77,13 +80,13 @@ class Spot {
 		}
 	}
 
-	spotlightDisabledChanged () {
-		this.isFocused = this.node && Spotlight.getCurrent() === this.node;
+	didUpdate = () => {
+		this.isFocused = this.node && this.node === Spotlight.getCurrent();
 
 		// if the component is focused and became disabled
 		if (this.isFocused && this.props.disabled && lastSelectTarget === this && !selectCancelled) {
 			selectCancelled = true;
-			forward('onMouseUp', null, this.props);
+			forward('onSelectionCancel', null, this.props);
 		}
 
 		// if the component became enabled, notify spotlight to enable restoring "lost" focus
@@ -104,8 +107,40 @@ class Spot {
 		}
 	}
 
+	forwardSpotlightEvents = (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp}) => {
+		const {keyCode} = ev;
+
+		if (onSpotlightDown && is('down', keyCode)) {
+			onSpotlightDown(ev);
+		} else if (onSpotlightLeft && is('left', keyCode)) {
+			onSpotlightLeft(ev);
+		} else if (onSpotlightRight && is('right', keyCode)) {
+			onSpotlightRight(ev);
+		} else if (onSpotlightUp && is('up', keyCode)) {
+			onSpotlightUp(ev);
+		}
+
+		return true;
+	}
+
+	forwardAndResetLastSelectTarget = (ev, props) => {
+		const {keyCode, notPrevented} = ev;
+		const {selectionKeys} = props;
+		const key = selectionKeys.find((value) => keyCode === value);
+
+		// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
+		if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {
+			return notPrevented;
+		}
+
+		const allow = lastSelectTarget === this;
+		selectCancelled = false;
+		lastSelectTarget = null;
+		return notPrevented && allow;
+	}
+
 	shouldEmulateMouse = (ev, props) => {
-		if (!this.context.emulateMouse) {
+		if (!this.config.emulateMouse) {
 			return;
 		}
 
@@ -134,21 +169,7 @@ class Spot {
 		return keyCode && !repeat;
 	}
 
-	forwardSpotlightEvents = (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp}) => {
-		const {keyCode} = ev;
-
-		if (onSpotlightDown && is('down', keyCode)) {
-			onSpotlightDown(ev);
-		} else if (onSpotlightLeft && is('left', keyCode)) {
-			onSpotlightLeft(ev);
-		} else if (onSpotlightRight && is('right', keyCode)) {
-			onSpotlightRight(ev);
-		} else if (onSpotlightUp && is('up', keyCode)) {
-			onSpotlightUp(ev);
-		}
-
-		return true;
-	}
+	isActionable = (ev, props) => isSpottable(props)
 
 	handleSelect = ({which}, props) => {
 		const {selectionKeys} = props;
@@ -163,24 +184,6 @@ class Spot {
 		return true;
 	}
 
-	forwardAndResetLastSelectTarget = (ev, props) => {
-		const {keyCode, notPrevented} = ev;
-		const {selectionKeys} = props;
-		const key = selectionKeys.find((value) => keyCode === value);
-
-		// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
-		if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {
-			return notPrevented;
-		}
-
-		const allow = lastSelectTarget === this;
-		selectCancelled = false;
-		lastSelectTarget = null;
-		return notPrevented && allow;
-	}
-
-	isActionable = (ev, props) => isSpottable(props)
-
 	handle = handle.bind(this)
 
 	handleKeyDown = this.handle(
@@ -188,34 +191,15 @@ class Spot {
 		this.isActionable,
 		this.handleSelect,
 		this.shouldEmulateMouse
+		// `forwardMouseUp` is usually called out of the useSpot if the `this.shouldEmulateMouse` returns true.
 	)
 
 	handleKeyUp = this.handle(
 		this.forwardAndResetLastSelectTarget,
 		this.isActionable,
 		this.shouldEmulateMouse
+		// `forwardMouseDown` and `forwardClick` are usually called out of the useSpot if the `this.shouldEmulateMouse` returns true.
 	)
-
-	handleBlur = (ev) => {
-		if (this.shouldPreventBlur) return false;
-		if (ev.currentTarget === ev.target) {
-			this.isFocused = false;
-			if (this.context.focusedWhenDisabled) {
-				this.context.focusedWhenDisabled = false;
-				// We only need to trigger a rerender if a focused item becomes disabled and still needs its focus.
-				// Once it blurs we need to rerender to remove the spottable class so it will not spot again.
-				// The reason we don't use state is for performance reasons to avoid updates.
-				this.props.useForceUpdate();
-			}
-		}
-
-		if (Spotlight.isMuted(ev.target)) {
-			ev.stopPropagation();
-			return false;
-		}
-
-		return true;
-	}
 
 	handleFocus = (ev) => {
 		if (this.props.spotlightDisabled) {
@@ -227,6 +211,28 @@ class Spot {
 
 		if (ev.currentTarget === ev.target) {
 			this.isFocused = true;
+		}
+
+		if (Spotlight.isMuted(ev.target)) {
+			ev.stopPropagation();
+			return false;
+		}
+
+		return true;
+	}
+
+	handleBlur = (ev) => {
+		if (this.shouldPreventBlur) return false;
+
+		if (ev.currentTarget === ev.target) {
+			this.isFocused = false;
+			if (this.isFocusedWhenDisabled) {
+				this.isFocusedWhenDisabled = false;
+				// We only need to trigger a rerender if a focused item becomes disabled and still needs its focus.
+				// Once it blurs we need to rerender to remove the spottable class so it will not spot again.
+				// The reason we don't use state is for performance reasons to avoid updates.
+				this.config.useForceUpdate();
+			}
 		}
 
 		if (Spotlight.isMuted(ev.target)) {

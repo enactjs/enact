@@ -14,7 +14,7 @@ const REMOTE_OK_KEY = 16777221;
  * @memberof ui/Spottable
  * @property {Boolean}  disabled             Whether or not the component is in a disabled state.
  * @property {Boolean}  emulateMouse         Whether or not the component should emulate mouse events as a response to Spotlight 5-way events.
- * @property {Function} onMouseUp            Is is called if the component is focused and became disabled.
+ * @property {Function} onSelectionCancel    Is is called if the component is focused and became disabled.
  * @property {Function} onSpotlightDisappear The handler to run when the component is removed while retaining focus.
  * @property {Function} onSpotlightDown      The handler to run when the 5-way down key is pressed.
  * @property {Function} onSpotlightLeft      The handler to run when the 5-way left key is pressed.
@@ -54,16 +54,21 @@ const REMOTE_OK_KEY = 16777221;
  * @private
  */
 
-const useSpot = ({selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...config} = {}) => {
+const useSpot = ({emulateMouse, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
 	const useForceUpdate = () => (React.useReducer(x => x + 1, 0));
-	const spot = useClass(Spot, {selectionKeys, spotlightDisabled, useForceUpdate, ...config});
+	const spot = useClass(Spot, {emulateMouse, useForceUpdate});
 	const ref = React.useRef(null);
-	const mutableRef = React.useRef({
+	const context = React.useRef({
 		prevSpotlightDisabled: spotlightDisabled,
 		spotlightDisabled
 	});
 
-	spot.setContext(mutableRef);
+	context.current = {
+		prevSpotlightDisabled: context.current.spotlightDisabled,
+		spotlightDisabled
+	};
+
+	spot.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context.current);
 
 	React.useEffect(() => {
 		// eslint-disable-next-line react/no-find-dom-node
@@ -74,13 +79,11 @@ const useSpot = ({selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled,
 		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	React.useEffect(() => {
-		spot.spotlightDisabledChanged();
-	}, [spot, spotlightDisabled]);
+	React.useEffect(spot.didUpdate); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return {
 		blur: spot.handleBlur,
-		className: spot.context.spottableClass || null,
+		className: spot.spottableClass || null,
 		focus: spot.handleFocus,
 		keyDown: spot.handleKeyDown,
 		keyUp: spot.handleKeyUp,

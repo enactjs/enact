@@ -91,7 +91,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		const spot = useSpot({
 			disabled,
 			emulateMouse,
-			onMouseUp: rest.onMouseUp,
+			onSelectionCancel: rest.onMouseUp,
 			onSpotlightDisappear,
 			onSpotlightDown,
 			onSpotlightLeft,
