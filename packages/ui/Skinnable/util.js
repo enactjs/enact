@@ -46,6 +46,7 @@ function determineSkin (defaultSkin, authorSkin, parentSkin) {
  * @param {String|String[]} allowedVariants The allowed variants for this instance
  * @param {String|String[]} authorVariants  The author-provided variants
  * @param {String|String[]} parentVariants  The inherited variants from an upstream useSkins
+ * @private
  */
 function determineVariants (defaultVariants, allowedVariants, authorVariants, parentVariants) {
 	if (!allowedVariants || !(allowedVariants instanceof Array)) {
