@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [3.3.0-alpha.8] - 2020-05-04
+
+### Added
+
+- `core/kind` option `functional` to return a functional component, suitable for use with React hooks, instead of a class component
+
+## [3.3.0-alpha.7] - 2020-04-27
+
+No significant changes.
+
 ## [3.3.0-alpha.6] - 2020-04-14
 
 No significant changes.

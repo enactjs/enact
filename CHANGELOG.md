@@ -2,6 +2,29 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.3.0-alpha.8] - 2020-05-04
+
+### Added
+
+- `core/kind` option `functional` to return a functional component, suitable for use with React hooks, instead of a class component
+
+### Fixed
+
+- `ui/Layout` to export `Layout` by default instead of `LayoutBase`
+
+## [3.3.0-alpha.7] - 2020-04-27
+
+### Added
+
+- `ui/ProgressBar` support for `orientation` type of `'radial'`
+- `ui/ProgressBar` public class name `radial`
+- `ui/ViewManager` events `onTransition` and `onWillTransition` payload members `index` and `previousIndex`
+
+### Fixed
+
+- `ui/ViewManager` to only fire `onTransition` once per transition
+- `ui/Spinner` center alignment
+
 ## [3.3.0-alpha.6] - 2020-04-14
 
 ### Fixed
