@@ -54,10 +54,10 @@ const REMOTE_OK_KEY = 16777221;
  * @private
  */
 
-const useSpot = ({ref, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...config} = {}) => {
+const useSpot = ({selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...config} = {}) => {
 	const useForceUpdate = () => (React.useReducer(x => x + 1, 0));
 	const spot = useClass(Spot, {selectionKeys, spotlightDisabled, useForceUpdate, ...config});
-	const spotRef = React.useRef(null);
+	const ref = React.useRef(null);
 	const mutableRef = React.useRef({
 		prevSpotlightDisabled: spotlightDisabled,
 		spotlightDisabled
@@ -65,11 +65,9 @@ const useSpot = ({ref, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisa
 
 	spot.setContext(mutableRef);
 
-	spotRef.current = ref && ref.current || spotRef.current;
-
 	React.useEffect(() => {
 		// eslint-disable-next-line react/no-find-dom-node
-		spot.load(ReactDOM.findDOMNode(spotRef.current));
+		spot.load(ReactDOM.findDOMNode(ref.current));
 
 		return () => {
 			spot.unload();
@@ -88,7 +86,7 @@ const useSpot = ({ref, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisa
 		keyUp: spot.handleKeyUp,
 		mouseEnter: spot.handleEnter,
 		mouseLeave: spot.handleLeave,
-		ref: spotRef
+		ref
 	};
 };
 
