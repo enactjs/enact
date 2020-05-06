@@ -19,7 +19,6 @@ import {determineSkin, determineVariants, getClassName} from './util';
  *
  * @class SkinContext
  * @memberof ui/Skinnable
- * @hoc
  * @private
  */
 const SkinContext = React.createContext(null);
@@ -29,12 +28,12 @@ const SkinContext = React.createContext(null);
  *
  * @typedef {Object} useSkinsConfig
  * @memberof ui/Skinnable
- * @property {String}   defaultSkin     Default skin name when none has been specified or inherited.
- * @property {String[]} defaultVariants Default variants when none have been specified or inherited.
- * @property {String}   [skin]          Specific skin to apply to this instance which will take precedence over the default or the inherited value.
- * @property {String[]} skins           List of allowed skins
- * @property {String[]} [skinVariants]  Specific variants to apply to this instance which will take precedence over the default or the inherited value.
- * @property {String[]} variants        List of allowed variants
+ * @property {String}   defaultSkin       Default skin name when none has been specified or inherited.
+ * @property {String[]} [defaultVariants] Default variants when none have been specified or inherited.
+ * @property {String}   [skin]            Specific skin to apply to this instance which will take precedence over the default or the inherited value.
+ * @property {String[]} skins             List of allowed skins
+ * @property {String[]} [skinVariants]    Specific variants to apply to this instance which will take precedence over the default or the inherited value.
+ * @property {String[]} [variants]        List of allowed variants
  * @private
  */
 

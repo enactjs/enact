@@ -27,10 +27,26 @@ const objectify = (arg) => {
 
 const preferDefined = (a, b) => ((a != null) ? a : b);
 
+/**
+ * Determines the effective skin
+ *
+ * @param {String} defaultSkin The local default for this instance of useSkins
+ * @param {String} authorSkin  The author-provided skin value
+ * @param {String} parentSkin  The inherited skin value from an upstream useSkins
+ * @private
+ */
 function determineSkin (defaultSkin, authorSkin, parentSkin) {
 	return authorSkin || defaultSkin || parentSkin;
 }
 
+/**
+ * Determines the effective skin variant
+ *
+ * @param {String|String[]} defaultVariants The local default variants for this instance
+ * @param {String|String[]} allowedVariants The allowed variants for this instance
+ * @param {String|String[]} authorVariants  The author-provided variants
+ * @param {String|String[]} parentVariants  The inherited variants from an upstream useSkins
+ */
 function determineVariants (defaultVariants, allowedVariants, authorVariants, parentVariants) {
 	if (!allowedVariants || !(allowedVariants instanceof Array)) {
 		// There are no allowed variants, so just return an empty object, indicating that there are no viable determined variants.
