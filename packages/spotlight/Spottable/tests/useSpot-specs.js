@@ -1,4 +1,5 @@
-import {adaptEvent, forward, forwardWithPrevent, returnsTrue} from '@enact/core/handle';
+import {adaptEvent, forward, forwardWithPrevent} from '@enact/core/handle';
+import Spotlight from '../../src/spotlight.js';
 import classNames from 'classnames';
 import {mount} from 'enzyme';
 import React from 'react';
@@ -6,13 +7,8 @@ import React from 'react';
 import useSpot from '../useSpot';
 
 const
-	forwardMouseDown = forward('onMouseDown'),
 	forwardMouseUp = forward('onMouseUp'),
-	forwardClick = forward('onClick'),
-	forwardBlur = forward('onBlur'),
-	forwardFocus = forward('onFocus'),
-	forwardMouseEnter = forward('onMouseEnter'),
-	forwardMouseLeave = forward('onMouseLeave');
+	forwardMouseDown = forward('onMouseDown');
 
 const
 	forwardKeyDownWithPrevent = forwardWithPrevent('onKeyDown'),
@@ -22,15 +18,27 @@ const handleWithProps = (props) => (...handlers) => (ev) => {
 	handlers.reduce((ret, fn) => (ret && fn(ev, props) || false), true);
 };
 
+const makeKeyEvent = (keyCode) => {
+	return {
+		keyCode,
+		which: keyCode
+	};
+};
+
+const REMOTE_OK_KEY = 16777221;
+
+let compRef = null;
+let getCurrent = null;
+
 describe('useSpot', () => {
 
 	function Component (props) {
 		// eslint-disable-next-line enact/prop-types
-		const {className, component, disabled, emulateMouse, onSpotlightDisappear, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, selectionKeys, spotlightDisabled, ...rest} = props;
+		const {className, component, disabled, emulateMouse, onSelectionCancel, onSpotlightDisappear, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, selectionKeys, spotlightDisabled, ...rest} = props;
 		const spot = useSpot({
 			disabled,
 			emulateMouse,
-			onSelectionCancel: rest.onMouseUp,
+			onSelectionCancel,
 			onSpotlightDisappear,
 			onSpotlightDown,
 			onSpotlightLeft,
@@ -39,18 +47,10 @@ describe('useSpot', () => {
 			selectionKeys,
 			spotlightDisabled
 		});
-		const handle = handleWithProps(props);
 		const Comp = component || 'div';
+		const handle = handleWithProps(props);
 
-		// let tabIndex = rest.tabIndex;
-		// if (tabIndex == null) {
-		// 	tabIndex = -1;
-		// }
 		rest.tabIndex = -1;
-
-		// if (spotlightId) {
-		// 	rest['data-spotlight-id'] = spotlightId;
-		// }
 
 		rest.onKeyDown = handle(
 			forwardKeyDownWithPrevent,
@@ -62,25 +62,14 @@ describe('useSpot', () => {
 				(ev, props) => ({notPrevented: forwardKeyUpWithPrevent(ev, props), ...ev}), // eslint-disable-line no-shadow
 				spot.keyUp
 			),
-			forwardMouseUp,
-			forwardClick,
+			forwardMouseUp
 		);
-		rest.onBlur = handle(
-			spot.blur,
-			forwardBlur,
-		);
-		rest.onFocus = handle(
-			spot.focus,
-			forwardFocus,
-		);
-		rest.onMouseEnter = handle(
-			returnsTrue((ev) => forwardMouseEnter(ev, props)),
-			spot.mouseEnter
-		);
-		rest.onMouseLeave = handle(
-			returnsTrue((ev) => forwardMouseLeave(ev, props)),
-			spot.mouseLeave
-		);
+		rest.onBlur = (ev) => spot.blur(ev, props);
+		rest.onFocus = (ev) => spot.focus(ev, props);
+		rest.onMouseEnter = (ev) => spot.mouseEnter(ev, props);
+		rest.onMouseLeave = (ev) => spot.mouseLeave(ev, props);
+
+		compRef = spot.ref;
 
 		return (
 			<Comp
@@ -91,6 +80,17 @@ describe('useSpot', () => {
 			/>
 		);
 	}
+
+	beforeEach(() => {
+		// Spotlight.getCurrent() did not work in unit tests.
+		// So Spotlight.getCurrent() is replaced with the function returning the wrapped component by the Component.
+		getCurrent = Spotlight.getCurrent;
+		Spotlight.getCurrent = () => (compRef.current);
+	});
+
+	afterEach(() => {
+		Spotlight.getCurrent = getCurrent;
+	});
 
 	test('should add the spottable class', () => {
 		const subject = mount(
@@ -125,20 +125,171 @@ describe('useSpot', () => {
 		expect(actual).not.toEqual(expected);
 	});
 
-	test('should emit {onSpotlightDisappear} when unmounted while focused', () => {
-		const spy = jest.fn();
-
+	test('should add the spottable class to a {spotlightDisabled} and {focused} component', () => {
 		const subject = mount(
-			<Component onSpotlightDisappear={spy} />
+			<Component spotlightDisabled />
 		);
 
 		subject.simulate('focus');
-		subject.unmount();
+		subject.setProps({
+			'data-id': '123'
+		});
 
-		const expected = 1;
-		const actual = spy.mock.calls.length;
+		const expected = 'spottable';
+		const actual = subject.find('div').prop('className');
 
 		expect(actual).toEqual(expected);
+	});
+
+	describe('should emit event properly', () => {
+		test('should emit {onSpotlightUp} when the the {keydown} is emitted with 38 keycode', () => {
+			const spy = jest.fn();
+
+			const subject = mount(
+				<Component onSpotlightUp={spy} />
+			);
+
+			subject.simulate('keydown', makeKeyEvent(38));
+
+
+			const expected = 1;
+			const actual = spy.mock.calls.length;
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('should emit {onSpotlightDown} when the the {keydown} is emitted with 40 keycode', () => {
+			const spy = jest.fn();
+
+			const subject = mount(
+				<Component onSpotlightDown={spy} />
+			);
+
+			subject.simulate('keydown', makeKeyEvent(40));
+
+
+			const expected = 1;
+			const actual = spy.mock.calls.length;
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('should emit {onSpotlightLeft} when the the {keydown} is emitted with 37 keycode', () => {
+			const spy = jest.fn();
+
+			const subject = mount(
+				<Component onSpotlightLeft={spy} />
+			);
+
+			subject.simulate('keydown', makeKeyEvent(37));
+
+
+			const expected = 1;
+			const actual = spy.mock.calls.length;
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('should emit {onSpotlightRight} when the the {keydown} is emitted with 39 keycode', () => {
+			const spy = jest.fn();
+
+			const subject = mount(
+				<Component onSpotlightRight={spy} />
+			);
+
+			subject.simulate('keydown', makeKeyEvent(39));
+
+			const expected = 1;
+			const actual = spy.mock.calls.length;
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('should emit {onSelectionCancel} when the component was focused and become disabled', () => {
+			const spy = jest.fn();
+
+			const subject = mount(
+				<Component onSelectionCancel={spy} selectionKeys={[1]} />
+			);
+
+			subject.simulate('focus');
+			subject.simulate('keydown', makeKeyEvent(1));
+			subject.setProps({
+				disabled: true
+			});
+
+			const expected = 1;
+			const actual = spy.mock.calls.length;
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('should emit {onSpotlightDisappear} when unmounted while focused', () => {
+			const spy = jest.fn();
+
+			const subject = mount(
+				<Component onSpotlightDisappear={spy} />
+			);
+
+			subject.simulate('focus');
+			subject.unmount();
+
+			const expected = 1;
+			const actual = spy.mock.calls.length;
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('should emulate {onMouseDown} when REMOTE_OK_KEY key is pressed', () => {
+			const spy = jest.fn();
+
+			const subject = mount(
+				<Component emulateMouse onMouseDown={spy} selectionKeys={[13]} />
+			);
+
+			subject.simulate('keydown', makeKeyEvent(REMOTE_OK_KEY));
+
+			const expected = 1;
+			const actual = spy.mock.calls.length;
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('should emulate {onMouseUp} when {REMOTE_OK_KEY} key is pressed and released', () => {
+			const spy = jest.fn();
+
+			const subject = mount(
+				<Component emulateMouse onMouseUp={spy} selectionKeys={[13]} />
+			);
+
+			subject.simulate('keydown', makeKeyEvent(REMOTE_OK_KEY));
+			subject.simulate('keyup', makeKeyEvent(REMOTE_OK_KEY));
+
+			const expected = 1;
+			const actual = spy.mock.calls.length;
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('should not emulate {onMouseUp} if passing ev.notPrevented of false even though {REMOTE_OK_KEY} key is pressed', () => {
+			const spy = jest.fn();
+			function onKeyUp (ev) {
+				ev.preventDefault();
+			}
+
+			const subject = mount(
+				<Component emulateMouse onKeyUp={onKeyUp} onMouseUp={spy} selectionKeys={[13]} />
+			);
+
+			subject.simulate('keydown', makeKeyEvent(REMOTE_OK_KEY));
+			subject.simulate('keyup', makeKeyEvent(REMOTE_OK_KEY));
+
+			const expected = 0;
+			const actual = spy.mock.calls.length;
+
+			expect(actual).toEqual(expected);
+		});
+
 	});
 
 	describe('shouldComponentUpdate', () => {
