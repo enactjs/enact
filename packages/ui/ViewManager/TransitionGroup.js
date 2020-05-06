@@ -5,8 +5,8 @@
 // Using string refs from the source code of ReactTransitionGroup
 /* eslint-disable react/no-string-refs */
 
-import {forward} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import {forward} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import eqBy from 'ramda/src/eqBy';
 import findIndex from 'ramda/src/findIndex';
@@ -101,7 +101,7 @@ class TransitionGroup extends React.Component {
 		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Current Index the ViewManager is on

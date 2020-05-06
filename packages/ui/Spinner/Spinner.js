@@ -14,8 +14,8 @@
  * @exports SpinnerDecorator
  */
 
-import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -84,7 +84,7 @@ const SpinnerBase = kind({
 		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the

@@ -50,7 +50,7 @@ const RouterBase = class extends React.Component {
 		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Routes defined as an object rather than via JSX.

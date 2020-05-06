@@ -13,8 +13,8 @@
  * @exports ViewManagerDecorator
  */
 
-import handle, {adaptEvent, call, forward} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import handle, {adaptEvent, call, forward} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -75,7 +75,7 @@ const ViewManagerBase = class extends React.Component {
 		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Time in milliseconds to complete a transition

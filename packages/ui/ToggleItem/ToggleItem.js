@@ -11,8 +11,8 @@
  * @exports ToggleItemDecorator
  */
 
-import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React, {Fragment} from 'react';
@@ -115,7 +115,7 @@ const ToggleItemBase = kind({
 		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the

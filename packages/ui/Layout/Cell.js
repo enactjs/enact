@@ -1,5 +1,5 @@
-import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -66,7 +66,7 @@ const CellBase = kind({
 		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Sizes `Cell` to its contents.

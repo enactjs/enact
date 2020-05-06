@@ -17,6 +17,7 @@
  */
 
 import {forward} from '@enact/core/handle';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
 import React from 'react';
@@ -55,7 +56,7 @@ const TransitionBase = kind({
 		 * @default null
 		 * @public
 		 */
-		childRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+		childRef: EnactPropTypes.ref,
 
 		/**
 		 * The node to be transitioned.
