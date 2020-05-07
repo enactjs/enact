@@ -28,7 +28,7 @@ const makeKeyEvent = (keyCode) => {
 const REMOTE_OK_KEY = 16777221;
 
 let compRef = null;
-let getCurrent = null;
+let getCurrent = Spotlight.getCurrent;
 
 describe('useSpot', () => {
 
@@ -82,9 +82,9 @@ describe('useSpot', () => {
 	}
 
 	beforeEach(() => {
-		// Spotlight.getCurrent() did not work in unit tests.
-		// So Spotlight.getCurrent() is replaced with the function returning the wrapped component by the Component.
-		getCurrent = Spotlight.getCurrent;
+		// Spotlight.getCurrent() did not work in unit tests. It always returns `undefined`.
+		// So Spotlight.getCurrent() is replaced with the function returning the wrapped component by the Component
+		// including `useSpot`.
 		Spotlight.getCurrent = () => (compRef.current);
 	});
 
