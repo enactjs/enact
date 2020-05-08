@@ -256,4 +256,33 @@ describe('Slottable Specs', () => {
 			expect(actual).toBe(expected);
 		}
 	);
+
+	test(
+		'should allow downstream component to have default value for unset slot',
+		() => {
+			// eslint-disable-next-line enact/prop-types
+			function ComponentBase ({a}) {
+				return (
+					<div>
+						{a}
+					</div>
+				);
+			}
+
+			ComponentBase.defaultProps = {
+				a: 'Default A'
+			};
+
+			const Component = Slottable({slots: ['a']}, ComponentBase);
+
+			const subject = mount(
+				<Component />
+			);
+
+			const expected = ComponentBase.defaultProps.a;
+			const actual = subject.text();
+
+			expect(actual).toBe(expected);
+		}
+	);
 });
