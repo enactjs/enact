@@ -5,56 +5,40 @@ import {States} from './state';
 import Touch from './Touch';
 
 function useTouch (config = {}) {
-	const {activeProp, disabled} = config;
-	const touch = useClass(Touch);
-	const [state, setState] = useState({
-		active: States.Inactive,
-		prevDisabled: disabled
-	});
-	const retVal = {
-		handlers: touch.getHandlers()
-	};
+	const {activeProp, disabled, dragConfig, flickConfig, holdConfig} = config;
 
-	touch.setConfig(config);
-	touch.setContext(state, setState);
+	const touch = useClass(Touch);
+	const [state, setState] = useState(States.Inactive);
+
+	touch.setPropsAndContext(config, state, setState);
 
 	// componentDidMount and componentWillUnmount
 	useEffect(() => {
 		touch.addGlobalHandlers();
 		return (() => {
-			touch.reset();
+			touch.disable();
 			touch.removeGlobalHandlers();
 		});
-	}, [touch]);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	// componentDidUpdate
 	useEffect(() => {
-		const {dragConfig, flickConfig, holdConfig} = config;
 		touch.updateGestureConfig(dragConfig, flickConfig, holdConfig);
-	}, [touch, config.dragConfig, config.flickConfig, config.holdConfig]);
+	}, [dragConfig, flickConfig, holdConfig]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		// getDerivedStateFromProps
-		if (state.prevDisabled !== disabled) {
-			// componentDidUpdate
-			if (disabled) {
-				touch.reset();
-			}
-
-			setState({
-				active: (activeProp && disabled) ? States.Inactive : States.Active,
-				prevDisabled: disabled
-			});
+		if (disabled) {
+			touch.disable();
 		}
-	}, [activeProp, disabled, state, touch]);
+	}, [disabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		if (activeProp) {
-			retVal[activeProp] = state.active !== States.Inactive;
-		}
-	}, [activeProp, retVal, state.active]);
+		setState((prevState) => ((!activeProp || disabled) ? States.Inactive : prevState));
+	}, [activeProp, disabled]);
 
-	return retVal;
+	return {
+		active: state !== States.Inactive,
+		handlers: touch.getHandlers()
+	};
 }
 
 export default useTouch;

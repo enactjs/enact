@@ -47,35 +47,52 @@ const defaultConfig = {
  * @hoc
  * @public
  */
-const TouchableHoC = hoc(defaultConfig, (config, Wrapped) => {
+const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 	const {
 		activeProp
 	} = config;
 
+	// eslint-disable-next-line no-shadow
 	function Touchable (props) {
-		const updated = {...props};
-		const hook = useTouch({activeProp, ...props});
+		const {
+			dragConfig, flickConfig, holdConfig,
+			noResume,
+			onBlur,
+			onClick,
+			onDown,
+			onDrag, onDragEnd, onDragStart,
+			onFlick,
+			onHold, onHoldEnd, onHoldPulse,
+			onMouseDown, onMouseEnter, onMouseLeave, onMouseMove, onMouseUp,
+			onMove,
+			onTap,
+			onTouchEnd, onTouchMove, onTouchStart,
+			onUp,
+			...updated} = props;
+		const hook = useTouch({
+			activeProp,
+			disabled: props.disabled,
+			dragConfig, flickConfig, holdConfig,
+			noResume,
+			onBlur,
+			onClick,
+			onDown,
+			onDrag, onDragEnd, onDragStart,
+			onFlick,
+			onHold, onHoldEnd, onHoldPulse,
+			onMouseDown, onMouseEnter, onMouseLeave, onMouseMove, onMouseUp,
+			onMove,
+			onTap,
+			onTouchEnd, onTouchMove, onTouchStart,
+			onUp
+		});
 
-		/* TBD: disabled is not deleted */
-		delete updated.dragConfig;
-		delete updated.flickConfig;
-		delete updated.holdConfig;
-		delete updated.noResume;
-		delete updated.onDown;
-		delete updated.onDrag; /* TBD I don't know why this prop was not deleted in the original code */
-		delete updated.onDragEnd; /* TBD I don't know why this prop was not deleted in the original code */
-		delete updated.onDragStart; /* TBD I don't know why this prop was not deleted in the original code */
-		delete updated.onFlick;
-		delete updated.onHold;
-		delete updated.onHoldEnd;
-		delete updated.onHoldPulse;
-		delete updated.onTap;
-		delete updated.onUp;
-
+		// To allow this pattern, handlers in hook.handlers is named as a format of on[Event].
+		// If we don't allow this pattern, a developer should add ten event handlers to Wrapped component manually.
 		Object.assign(updated, hook.handlers);
 
 		if (activeProp) {
-			updated[activeProp] = hook.activeProp;
+			updated[activeProp] = hook.active;
 		}
 
 		return (
@@ -261,9 +278,9 @@ const TouchableHoC = hoc(defaultConfig, (config, Wrapped) => {
 	return Touchable;
 });
 
-export default TouchableHoC;
+export default Touchable;
 export {
 	configure,
-	TouchableHoC as Touchable,
+	Touchable,
 	useTouch
 };

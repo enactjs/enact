@@ -12,7 +12,7 @@ import complement from 'ramda/src/complement';
 import platform from '@enact/core/platform';
 
 import {mergeConfig} from './config';
-import {activate, deactivate, pause, States} from './state';
+import {States} from './state';
 import ClickAllow from './ClickAllow';
 
 import {Drag} from './Drag';
@@ -190,8 +190,7 @@ const handleBlur = handle(
  * @public
  */
 class Touch {
-	constructor (config) {
-		this.setConfig(config);
+	constructor () {
 		this.context = {};
 
 		this.target = null;
@@ -225,12 +224,9 @@ class Touch {
 		handleGlobalMove.bindAs(this, 'handleGlobalMove');
 	}
 
-	setConfig (config) {
+	setPropsAndContext (config, state, setState) {
 		// remapping to props for better compatibility with core/handle and binding
 		this.props = config;
-	}
-
-	setContext (state, setState) {
 		this.context.state = state;
 		this.context.setState = setState;
 	}
@@ -273,7 +269,7 @@ class Touch {
 	activate (ev) {
 		this.setTarget(ev.currentTarget);
 		if (this.props.activeProp) {
-			this.context.setState(activate);
+			this.context.setState(States.Active);
 		}
 
 		return true;
@@ -282,7 +278,7 @@ class Touch {
 	deactivate () {
 		this.clearTarget();
 		if (this.props.activeProp) {
-			this.context.setState(deactivate);
+			this.context.setState(States.Inactive);
 		}
 
 		return true;
@@ -290,13 +286,13 @@ class Touch {
 
 	pause () {
 		if (this.props.activeProp) {
-			this.context.setState(pause);
+			this.context.setState(States.Paused);
 		}
 
 		return true;
 	}
 
-	reset () {
+	disable () {
 		this.clearTarget();
 		this.hold.end();
 	}
