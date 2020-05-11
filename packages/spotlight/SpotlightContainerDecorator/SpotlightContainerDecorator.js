@@ -16,6 +16,120 @@ import Spotlight from '../src/spotlight';
 
 // import SpotlightContainer from './SpotlightContainer';
 
+const SpotlightContainerFactory = ({
+	containerConfig,
+	stateFromProps,
+	releaseContainer,
+	navigableFilter,
+	preserveId
+}) => (
+class SpotlightContainer {
+	constructor (props) {
+		const {
+			containerConfig,
+			stateFromProps,
+			releaseContainer
+		} = props;
+
+		this.state = stateFromProps(props);
+		// Used to indicate that we want to stop propagation on blur events that occur as a
+		// result of this component imperatively blurring itself on focus when spotlightDisabled
+		this.shouldPreventBlur = false;
+
+		const cfg = {
+			...containerConfig,
+			navigableFilter: this.navigableFilter
+		};
+
+		Spotlight.set(this.state.id, cfg);
+
+		this.context= {
+			stateFromProps,
+			releaseContainer
+		}
+
+		globalState = this.state;
+		this.props = props;
+	}
+
+	static getDerivedStateFromProps (props, state = globalState) {
+		const {spotlightId: id, spotlightRestrict} = props;
+		const {id: prevId, spotlightRestrict: prevSpotlightRestrict} = state || {};
+		// prevId will only be undefined the first render so this prevents releasing the
+		// container after initially creating it
+		const isIdChanged = prevId && id && prevId !== id;
+
+		if (isIdChanged) {
+			releaseContainer(state);
+		}
+
+		if (isIdChanged || spotlightRestrict !== prevSpotlightRestrict) {
+			return stateFromProps({spotlightId: prevId, spotlightRestrict: prevSpotlightRestrict, ...props});
+		} else {
+			return null;
+		}
+	}
+
+	componentWillUnmount () {
+		releaseContainer(this.state);
+	}
+
+	navigableFilter = (elem) => {
+		// If the component to which this was applied specified a navigableFilter, run it
+		if (typeof navigableFilter === 'function') {
+			if (navigableFilter(elem, this.props, this.context) === false) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	silentBlur = ({target}) => {
+		this.shouldPreventBlur = true;
+		target.blur();
+		this.shouldPreventBlur = false;
+	}
+
+	handle = handle.bind(this)
+
+	handleBlur = oneOf(
+		[() => this.shouldPreventBlur, stop],
+		[returnsTrue, forward('onBlurCapture')]
+	).bindAs(this, 'handleBlur')
+
+	handleFocus = oneOf(
+		[forProp('spotlightDisabled', true), handle(
+			stop,
+			call('silentBlur')
+		)],
+		[returnsTrue, forward('onFocusCapture')]
+	).bindAs(this, 'handleFocus')
+
+	handleMouseEnter = this.handle(
+		forward('onMouseEnter'),
+		isNewPointerPosition,
+		() => Spotlight.setActiveContainer(this.state.id)
+	)
+
+	handleMouseLeave = this.handle(
+		forward('onMouseLeave'),
+		not(forProp('spotlightRestrict', 'self-only')),
+		isNewPointerPosition,
+		(ev) => {
+			const parentContainer = ev.currentTarget.parentNode.closest('[data-spotlight-container]');
+			let activeContainer = Spotlight.getActiveContainer();
+
+			// if this container is wrapped by another and this is the currently active
+			// container, move the active container to the parent
+			if (parentContainer && activeContainer === this.state.id) {
+				activeContainer = parentContainer.dataset.spotlightId;
+				Spotlight.setActiveContainer(activeContainer);
+			}
+		}
+	)
+});
+
 /**
  * The class name to apply to the default component to focus in a container.
  *
@@ -146,112 +260,13 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 	};
 
-	class SpotlightContainer {
-		constructor (props) {
-			const {
-				containerConfig,
-				stateFromProps,
-				releaseContainer
-			} = props;
-
-			this.state = stateFromProps(props);
-			// Used to indicate that we want to stop propagation on blur events that occur as a
-			// result of this component imperatively blurring itself on focus when spotlightDisabled
-			this.shouldPreventBlur = false;
-
-			const cfg = {
-				...containerConfig,
-				navigableFilter: this.navigableFilter
-			};
-
-			Spotlight.set(this.state.id, cfg);
-
-			this.context= {
-				stateFromProps,
-				releaseContainer
-			}
-
-			globalState = this.state;
-			this.props = props;
-		}
-
-		static getDerivedStateFromProps (props, state = globalState) {
-			const {spotlightId: id, spotlightRestrict} = props;
-			const {id: prevId, spotlightRestrict: prevSpotlightRestrict} = state || {};
-			// prevId will only be undefined the first render so this prevents releasing the
-			// container after initially creating it
-			const isIdChanged = prevId && id && prevId !== id;
-
-			if (isIdChanged) {
-				releaseContainer(state);
-			}
-
-			if (isIdChanged || spotlightRestrict !== prevSpotlightRestrict) {
-				return stateFromProps({spotlightId: prevId, spotlightRestrict: prevSpotlightRestrict, ...props});
-			} else {
-				return null;
-			}
-		}
-
-		componentWillUnmount () {
-			releaseContainer(this.state);
-		}
-
-		navigableFilter = (elem) => {
-			// If the component to which this was applied specified a navigableFilter, run it
-			if (typeof navigableFilter === 'function') {
-				if (navigableFilter(elem, this.props, this.context) === false) {
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		silentBlur = ({target}) => {
-			this.shouldPreventBlur = true;
-			target.blur();
-			this.shouldPreventBlur = false;
-		}
-
-		handle = handle.bind(this)
-
-		handleBlur = oneOf(
-			[() => this.shouldPreventBlur, stop],
-			[returnsTrue, forward('onBlurCapture')]
-		).bindAs(this, 'handleBlur')
-
-		handleFocus = oneOf(
-			[forProp('spotlightDisabled', true), handle(
-				stop,
-				call('silentBlur')
-			)],
-			[returnsTrue, forward('onFocusCapture')]
-		).bindAs(this, 'handleFocus')
-
-		handleMouseEnter = this.handle(
-			forward('onMouseEnter'),
-			isNewPointerPosition,
-			() => Spotlight.setActiveContainer(this.state.id)
-		)
-
-		handleMouseLeave = this.handle(
-			forward('onMouseLeave'),
-			not(forProp('spotlightRestrict', 'self-only')),
-			isNewPointerPosition,
-			(ev) => {
-				const parentContainer = ev.currentTarget.parentNode.closest('[data-spotlight-container]');
-				let activeContainer = Spotlight.getActiveContainer();
-
-				// if this container is wrapped by another and this is the currently active
-				// container, move the active container to the parent
-				if (parentContainer && activeContainer === this.state.id) {
-					activeContainer = parentContainer.dataset.spotlightId;
-					Spotlight.setActiveContainer(activeContainer);
-				}
-			}
-		)
-	}
+	const SpotlightContainer = SpotlightContainerFactory({
+		containerConfig,
+		stateFromProps,
+		releaseContainer,
+		navigableFilter,
+		preserveId
+	});
 
 	return class extends React.Component {
 		static displayName = 'SpotlightContainerDecorator';
