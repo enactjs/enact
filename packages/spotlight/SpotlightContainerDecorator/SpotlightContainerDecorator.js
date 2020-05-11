@@ -7,11 +7,14 @@
 
 import {call, forProp, forward, handle, oneOf, returnsTrue, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+// import useClass from '@enact/core/useClass';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import {hasPointerMoved} from '../src/pointer';
 import Spotlight from '../src/spotlight';
+
+// import SpotlightContainer from './SpotlightContainer';
 
 /**
  * The class name to apply to the default component to focus in a container.
@@ -25,6 +28,8 @@ const isNewPointerPosition = (ev) => hasPointerMoved(ev.clientX, ev.clientY);
 const not = (fn) => function () {
 	return !fn.apply(this, arguments);
 };
+
+let globalState = {};
 
 /**
  * Default config for {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
@@ -141,61 +146,13 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 	};
 
-	return class extends React.Component {
-		static displayName = 'SpotlightContainerDecorator';
-
-		static propTypes = /** @lends spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.prototype */ {
-			/**
-			 * When `true`, controls in the container cannot be navigated.
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			spotlightDisabled: PropTypes.bool,
-
-			/**
-			 * Used to identify this component within the Spotlight system.
-			 *
-			 * If the value is `null`, an id will be generated.
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			spotlightId: PropTypes.string,
-
-			/**
-			 * Whether or not the container is in muted mode.
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			spotlightMuted: PropTypes.bool,
-
-			/**
-			 * Restricts or prioritizes navigation when focus attempts to leave the container. It
-			 * can be either 'none', 'self-first', or 'self-only'. Specifying 'self-first' indicates that
-			 * elements within the container will have a higher likelihood to be chosen as the next
-			 * navigable element. Specifying 'self-only' indicates that elements in other containers
-			 * cannot be navigated to by using 5-way navigation - however, elements in other containers
-			 * can still receive focus by calling `Spotlight.focus(elem)` explicitly. Specying 'none'
-			 * indicates there should be no restrictions when 5-way navigating the container.
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
-		}
-
-		static defaultProps = {
-			spotlightDisabled: false,
-			spotlightMuted: false,
-			spotlightRestrict: 'self-first'
-		}
-
+	class SpotlightContainer {
 		constructor (props) {
-			super(props);
+			const {
+				containerConfig,
+				stateFromProps,
+				releaseContainer
+			} = props;
 
 			this.state = stateFromProps(props);
 			// Used to indicate that we want to stop propagation on blur events that occur as a
@@ -208,11 +165,19 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 
 			Spotlight.set(this.state.id, cfg);
+
+			this.context= {
+				stateFromProps,
+				releaseContainer
+			}
+
+			globalState = this.state;
+			this.props = props;
 		}
 
-		static getDerivedStateFromProps (props, state) {
+		static getDerivedStateFromProps (props, state = globalState) {
 			const {spotlightId: id, spotlightRestrict} = props;
-			const {id: prevId, spotlightRestrict: prevSpotlightRestrict} = state;
+			const {id: prevId, spotlightRestrict: prevSpotlightRestrict} = state || {};
 			// prevId will only be undefined the first render so this prevents releasing the
 			// container after initially creating it
 			const isIdChanged = prevId && id && prevId !== id;
@@ -286,6 +251,93 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}
 		)
+	}
+
+	return class extends React.Component {
+		static displayName = 'SpotlightContainerDecorator';
+
+		static propTypes = /** @lends spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.prototype */ {
+			/**
+			 * When `true`, controls in the container cannot be navigated.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			spotlightDisabled: PropTypes.bool,
+
+			/**
+			 * Used to identify this component within the Spotlight system.
+			 *
+			 * If the value is `null`, an id will be generated.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			spotlightId: PropTypes.string,
+
+			/**
+			 * Whether or not the container is in muted mode.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			spotlightMuted: PropTypes.bool,
+
+			/**
+			 * Restricts or prioritizes navigation when focus attempts to leave the container. It
+			 * can be either 'none', 'self-first', or 'self-only'. Specifying 'self-first' indicates that
+			 * elements within the container will have a higher likelihood to be chosen as the next
+			 * navigable element. Specifying 'self-only' indicates that elements in other containers
+			 * cannot be navigated to by using 5-way navigation - however, elements in other containers
+			 * can still receive focus by calling `Spotlight.focus(elem)` explicitly. Specying 'none'
+			 * indicates there should be no restrictions when 5-way navigating the container.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
+		}
+
+		static defaultProps = {
+			spotlightDisabled: false,
+			spotlightMuted: false,
+			spotlightRestrict: 'self-first'
+		}
+
+		constructor (props) {
+			super(props);
+
+			this.spotlightContainer = new SpotlightContainer({
+				...props,
+				containerConfig,
+				stateFromProps,
+				releaseContainer
+			});
+		}
+
+		static getDerivedStateFromProps (props, state) {
+			return SpotlightContainer.getDerivedStateFromProps(props, state);
+		}
+
+		componentWillUnmount () {
+			this.spotlightContainer.componentWillUnmount();
+		}
+
+		navigableFilter = (elem) => {
+			return this.spotlightContainer.navigableFilter(elem);
+		}
+
+		handle = handle.bind(this)
+
+		handleBlur = (ev) => (this.spotlightContainer.handleBlur(ev))
+
+		handleFocus = (ev) => (this.spotlightContainer.handleFocus(ev))
+
+		handleMouseEnter = (ev) => (this.spotlightContainer.handleMouseEnter(ev))
+
+		handleMouseLeave = (ev) => (this.spotlightContainer.handleMouseLeave(ev))
 
 		render () {
 			const {spotlightDisabled, spotlightMuted, ...rest} = this.props;
@@ -294,11 +346,11 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.spotlightRestrict;
 
 			rest['data-spotlight-container'] = true;
-			rest['data-spotlight-id'] = this.state.id;
-			rest.onBlurCapture = this.handleBlur;
-			rest.onFocusCapture = this.handleFocus;
-			rest.onMouseEnter = this.handleMouseEnter;
-			rest.onMouseLeave = this.handleMouseLeave;
+			rest['data-spotlight-id'] = this.spotlightContainer.state.id;
+			rest.onBlurCapture = this.spotlightContainer.handleBlur;
+			rest.onFocusCapture = this.spotlightContainer.handleFocus;
+			rest.onMouseEnter = this.spotlightContainer.handleMouseEnter;
+			rest.onMouseLeave = this.spotlightContainer.handleMouseLeave;
 
 			if (spotlightDisabled) {
 				rest['data-spotlight-container-disabled'] = spotlightDisabled;
@@ -307,6 +359,8 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (spotlightMuted) {
 				rest['data-spotlight-container-muted'] = spotlightMuted;
 			}
+
+			this.spotlightContainer.props = this.props;
 
 			return (
 				<Wrapped {...rest} />
