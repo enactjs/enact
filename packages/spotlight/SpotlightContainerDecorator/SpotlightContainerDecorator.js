@@ -16,6 +16,11 @@ import Spotlight from '../src/spotlight';
 
 // import SpotlightContainer from './SpotlightContainer';
 
+const isNewPointerPosition = (ev) => hasPointerMoved(ev.clientX, ev.clientY);
+const not = (fn) => function () {
+	return !fn.apply(this, arguments);
+};
+
 class SpotlightContainer {
 	constructor (props) {
 		this.props = props;
@@ -41,11 +46,11 @@ class SpotlightContainer {
 
 		Spotlight.set(this.state.id, cfg);
 
-		this.config= {
+		this.config = {
 			stateFromProps,
 			releaseContainer,
 			navigableFilter
-		}
+		};
 	}
 
 	setPropsAndContext (props) {
@@ -58,16 +63,16 @@ class SpotlightContainer {
 		const isIdChanged = prevId && id && prevId !== id;
 
 		if (isIdChanged) {
-			releaseContainer(this.state);
+			this.config.releaseContainer(this.state);
 		}
 
 		if (isIdChanged || spotlightRestrict !== prevSpotlightRestrict) {
-			this.state = stateFromProps({spotlightId: prevId, spotlightRestrict: prevSpotlightRestrict, ...props});
+			this.state = this.config.stateFromProps({spotlightId: prevId, spotlightRestrict: prevSpotlightRestrict, ...props});
 		}
 	}
 
 	componentWillUnmount () {
-		releaseContainer(this.state);
+		this.config.releaseContainer(this.state);
 	}
 
 	navigableFilter = (elem) => {
@@ -128,6 +133,27 @@ class SpotlightContainer {
 	)
 }
 
+function useSpotlightContainer (config) {
+	const spotlightContainer = useClass(SpotlightContainer, config);
+
+	spotlightContainer.setPropsAndContext(config);
+
+	React.useEffect(() => {
+		return () => {
+			spotlightContainer.componentWillUnmount();
+		};
+	});
+
+	return {
+		navigableFilter: spotlightContainer.navigableFilter,
+		id: spotlightContainer.state.id,
+		blur: spotlightContainer.handleBlur,
+		focus: spotlightContainer.handleFocus,
+		mouseEnter: spotlightContainer.handleMouseEnter,
+		mouseLeave: spotlightContainer.handleMouseLeave
+	};
+}
+
 /**
  * The class name to apply to the default component to focus in a container.
  *
@@ -135,11 +161,6 @@ class SpotlightContainer {
  * @public
  */
 const spotlightDefaultClass = 'spottable-default';
-
-const isNewPointerPosition = (ev) => hasPointerMoved(ev.clientX, ev.clientY);
-const not = (fn) => function () {
-	return !fn.apply(this, arguments);
-};
 
 /**
  * Default config for {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
@@ -256,22 +277,15 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 	};
 
+	// eslint-disable-next-line no-shadow
 	function SpotlightContainerDecorator (props, ref) {
-		const spotlightContainer = useClass(SpotlightContainer, {
+		const spotlightContainer = useSpotlightContainer({
 			...props,
 			containerConfig,
 			stateFromProps,
 			releaseContainer,
 			navigableFilter
 		});
-
-		spotlightContainer.setPropsAndContext(props);
-
-		React.useEffect(() => {
-			return () => {
-				this.spotlightContainer.componentWillUnmount();
-			};
-		})
 
 		React.useImperativeHandle(ref, () => ({
 			navigableFilter: (elem) => {
@@ -286,11 +300,11 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		delete rest.spotlightRestrict;
 
 		rest['data-spotlight-container'] = true;
-		rest['data-spotlight-id'] = spotlightContainer.state.id;
-		rest.onBlurCapture = spotlightContainer.handleBlur;
-		rest.onFocusCapture = spotlightContainer.handleFocus;
-		rest.onMouseEnter = spotlightContainer.handleMouseEnter;
-		rest.onMouseLeave = spotlightContainer.handleMouseLeave;
+		rest['data-spotlight-id'] = spotlightContainer.id;
+		rest.onBlurCapture = spotlightContainer.blur;
+		rest.onFocusCapture = spotlightContainer.focus;
+		rest.onMouseEnter = spotlightContainer.mouseEnter;
+		rest.onMouseLeave = spotlightContainer.mouseLeave;
 
 		if (spotlightDisabled) {
 			rest['data-spotlight-container-disabled'] = spotlightDisabled;
@@ -305,9 +319,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		);
 	}
 
-	const ForwardSpotlightContainerDecorator = React.forwardRef(SpotlightContainerDecorator);
-
-	ForwardSpotlightContainerDecorator.propTypes = /** @lends spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.prototype */ {
+	SpotlightContainerDecorator.propTypes = /** @lends spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.prototype */ {
 		/**
 		 * When `true`, controls in the container cannot be navigated.
 		 *
@@ -349,7 +361,9 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @public
 		 */
 		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
-	}
+	};
+
+	const ForwardSpotlightContainerDecorator = React.forwardRef(SpotlightContainerDecorator);
 
 	ForwardSpotlightContainerDecorator.defaultProps = {
 		spotlightDisabled: false,
@@ -363,5 +377,6 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 export default SpotlightContainerDecorator;
 export {
 	SpotlightContainerDecorator,
-	spotlightDefaultClass
+	spotlightDefaultClass,
+	useSpotlightContainer
 };
