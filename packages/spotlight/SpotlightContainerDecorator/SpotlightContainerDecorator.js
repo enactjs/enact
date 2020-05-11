@@ -16,13 +16,6 @@ import Spotlight from '../src/spotlight';
 
 // import SpotlightContainer from './SpotlightContainer';
 
-const SpotlightContainerFactory = ({
-	containerConfig,
-	stateFromProps,
-	releaseContainer,
-	navigableFilter,
-	preserveId
-}) => (
 class SpotlightContainer {
 	constructor (props) {
 		this.props = props;
@@ -31,7 +24,8 @@ class SpotlightContainer {
 		const {
 			containerConfig,
 			stateFromProps,
-			releaseContainer
+			releaseContainer,
+			navigableFilter
 		} = props;
 
 		this.state = stateFromProps(props);
@@ -47,9 +41,10 @@ class SpotlightContainer {
 
 		Spotlight.set(this.state.id, cfg);
 
-		this.context= {
+		this.config= {
 			stateFromProps,
-			releaseContainer
+			releaseContainer,
+			navigableFilter
 		}
 	}
 
@@ -76,6 +71,8 @@ class SpotlightContainer {
 	}
 
 	navigableFilter = (elem) => {
+		const {navigableFilter} = this.config;
+
 		// If the component to which this was applied specified a navigableFilter, run it
 		if (typeof navigableFilter === 'function') {
 			if (navigableFilter(elem, this.props, this.context) === false) {
@@ -129,7 +126,7 @@ class SpotlightContainer {
 			}
 		}
 	)
-});
+}
 
 /**
  * The class name to apply to the default component to focus in a container.
@@ -259,20 +256,13 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 	};
 
-	const SpotlightContainer = SpotlightContainerFactory({
-		containerConfig,
-		stateFromProps,
-		releaseContainer,
-		navigableFilter,
-		preserveId
-	});
-
 	function SpotlightContainerDecorator (props, ref) {
 		const spotlightContainer = useClass(SpotlightContainer, {
 			...props,
 			containerConfig,
 			stateFromProps,
-			releaseContainer
+			releaseContainer,
+			navigableFilter
 		});
 
 		spotlightContainer.setPropsAndContext(props);
