@@ -9,18 +9,16 @@ const not = (fn) => function () {
 };
 
 class SpotlightContainer {
-	constructor (props) {
-		this.props = props;
-		this.context = {};
-
+	constructor (config) {
 		const {
 			containerConfig,
-			stateFromProps,
-			releaseContainer,
-			navigableFilter
-		} = props;
+			stateFromProps
+		} = config;
 
-		this.state = stateFromProps(props);
+		this.config = config;
+		this.props = {};
+		this.context = {};
+		this.state = stateFromProps(config);
 
 		// Used to indicate that we want to stop propagation on blur events that occur as a
 		// result of this component imperatively blurring itself on focus when spotlightDisabled
@@ -32,12 +30,6 @@ class SpotlightContainer {
 		};
 
 		Spotlight.set(this.state.id, cfg);
-
-		this.config = {
-			stateFromProps,
-			releaseContainer,
-			navigableFilter
-		};
 	}
 
 	setPropsAndContext (props) {
@@ -58,7 +50,7 @@ class SpotlightContainer {
 		}
 	}
 
-	componentWillUnmount () {
+	unload () {
 		this.config.releaseContainer(this.state);
 	}
 

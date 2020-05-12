@@ -10,17 +10,17 @@ function useSpotlightContainer (config) {
 
 	React.useEffect(() => {
 		return () => {
-			spotlightContainer.componentWillUnmount();
+			spotlightContainer.unload();
 		};
 	});
 
 	return {
-		navigableFilter: spotlightContainer.navigableFilter,
-		id: spotlightContainer.state.id,
 		blur: spotlightContainer.handleBlur,
 		focus: spotlightContainer.handleFocus,
+		id: spotlightContainer.state.id,
 		mouseEnter: spotlightContainer.handleMouseEnter,
-		mouseLeave: spotlightContainer.handleMouseLeave
+		mouseLeave: spotlightContainer.handleMouseLeave,
+		navigableFilter: spotlightContainer.navigableFilter
 	};
 }
 

@@ -141,9 +141,9 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		const spotlightContainer = useSpotlightContainer({
 			...props,
 			containerConfig,
-			stateFromProps,
+			navigableFilter,
 			releaseContainer,
-			navigableFilter
+			stateFromProps
 		});
 
 		React.useImperativeHandle(ref, () => ({
@@ -177,6 +177,8 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			<Wrapped {...rest} />
 		);
 	}
+
+	const ForwardSpotlightContainerDecorator = React.forwardRef(SpotlightContainerDecorator);
 
 	SpotlightContainerDecorator.propTypes = /** @lends spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.prototype */ {
 		/**
@@ -221,8 +223,6 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
 	};
-
-	const ForwardSpotlightContainerDecorator = React.forwardRef(SpotlightContainerDecorator);
 
 	ForwardSpotlightContainerDecorator.defaultProps = {
 		spotlightDisabled: false,
