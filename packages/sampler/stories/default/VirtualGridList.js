@@ -5,7 +5,7 @@ import {mergeComponentMetadata} from '@enact/storybook-utils';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {VirtualGridList, VirtualListBasic} from '@enact/ui/VirtualList';
+import {VirtualGridList, VirtualListBase} from '@enact/ui/VirtualList';
 
 const
 	prop = {
@@ -56,7 +56,7 @@ const updateDataSize = (dataSize) => {
 
 updateDataSize(defaultDataSize);
 
-const VirtualGridListConfig = mergeComponentMetadata('VirtualGridList', VirtualListBasic, VirtualGridList);
+const VirtualGridListConfig = mergeComponentMetadata('VirtualGridList', VirtualListBase, VirtualGridList);
 
 storiesOf('UI', module)
 	.add(

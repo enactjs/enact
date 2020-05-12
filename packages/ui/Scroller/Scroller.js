@@ -4,7 +4,6 @@
  * @module ui/Scroller
  * @exports Scroller
  * @exports ScrollerBase
- * @exports ScrollerBasic
  */
 
 import PropTypes from 'prop-types';
@@ -14,8 +13,7 @@ import {ResizeContext} from '../Resizable';
 import useScroll from '../useScroll';
 import Scrollbar from '../useScroll/Scrollbar';
 
-import ScrollerBasic from './ScrollerBasic';
-import ScrollerBase from './UiScrollerBase';
+import ScrollerBase from './ScrollerBase';
 
 const nop = () => {};
 
@@ -29,7 +27,7 @@ const nop = () => {};
  *
  * @class Scroller
  * @memberof ui/Scroller
- * @extends ui/Scroller.ScrollerBasic
+ * @extends ui/Scroller.ScrollerBase
  * @ui
  * @public
  */
@@ -58,7 +56,7 @@ const Scroller = (props) => {
 			<div {...scrollContainerProps}>
 				<div {...scrollInnerContainerProps}>
 					<ScrollContentWrapper {...scrollContentWrapperProps}>
-						<ScrollerBasic {...scrollContentProps} ref={scrollContentHandle} />
+						<ScrollerBase {...scrollContentProps} ref={scrollContentHandle} />
 					</ScrollContentWrapper>
 					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
 				</div>
@@ -279,6 +277,5 @@ Scroller.defaultProps = {
 export default Scroller;
 export {
 	Scroller,
-	ScrollerBase, // to support legacy ScrollerBase
-	ScrollerBasic // to support theme libraries
+	ScrollerBase
 };
