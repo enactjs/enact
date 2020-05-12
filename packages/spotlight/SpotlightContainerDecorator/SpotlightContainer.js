@@ -7,8 +7,8 @@ const isNewPointerPosition = (ev) => hasPointerMoved(ev.clientX, ev.clientY);
 const not = (fn) => function () {
 	return !fn.apply(this, arguments);
 };
-const releaseContainer = ({preserveId: preserve, id}) => {
-	if (preserve) {
+const releaseContainer = ({preserveId, id}) => {
+	if (preserveId) {
 		Spotlight.unmount(id);
 	} else {
 		Spotlight.remove(id);
@@ -16,14 +16,11 @@ const releaseContainer = ({preserveId: preserve, id}) => {
 };
 
 class SpotlightContainer {
-	constructor ({state, ...config}) {
-		const {containerConfig} = config;
-
-		this.config = config;
-		this.props = {};
+	constructor ({containerConfig, navigableFilter, state, ...rest}) {
+		this.props = rest;
 		this.context = {
 			...this.context,
-			state
+			navigableFilter
 		};
 
 		// Used to indicate that we want to stop propagation on blur events that occur as a
@@ -39,21 +36,23 @@ class SpotlightContainer {
 	}
 
 	setPropsAndContext (props, context) {
+		const {preserveId, state, stateFromProps} = context;
+
 		this.props = props;
-		this.context.state = context;
+		this.context.state = state;
 
 		const {spotlightId: id, spotlightRestrict} = props;
-		const {id: prevId, spotlightRestrict: prevSpotlightRestrict} = this.context.state.current;
+		const {id: prevId, spotlightRestrict: prevSpotlightRestrict} = state.current;
 		// prevId will only be undefined the first render so this prevents releasing the
 		// container after initially creating it
 		const isIdChanged = prevId && id && prevId !== id;
 
 		if (isIdChanged) {
-			releaseContainer(this.context.state.current);
+			releaseContainer(state.current);
 		}
 
 		if (isIdChanged || spotlightRestrict !== prevSpotlightRestrict) {
-			this.context.state.current = this.config.stateFromProps({spotlightId: prevId, spotlightRestrict: prevSpotlightRestrict, ...props});
+			state.current = stateFromProps({preserveId, spotlightId: prevId, spotlightRestrict: prevSpotlightRestrict});
 		}
 	}
 
@@ -62,7 +61,7 @@ class SpotlightContainer {
 	}
 
 	navigableFilter = (elem) => {
-		const {navigableFilter} = this.config;
+		const {navigableFilter} = this.context;
 
 		// If the component to which this was applied specified a navigableFilter, run it
 		if (typeof navigableFilter === 'function') {

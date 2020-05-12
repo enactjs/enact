@@ -61,6 +61,11 @@ const defaultConfig = {
 	enterTo: null,
 
 	/**
+	 * Filter the navigable elements.
+	 */
+	navigableFilter: null,
+
+	/**
 	 * Whether the container will preserve the id when it unmounts.
 	 *
 	 * @type {Boolean}
@@ -114,11 +119,15 @@ const defaultConfig = {
  * @hoc
  */
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	const {navigableFilter, preserveId, ...containerConfig} = config;
+
 	// eslint-disable-next-line no-shadow
 	function SpotlightContainerDecorator (props, ref) {
 		const spotlightContainer = useSpotlightContainer({
 			...props,
-			config
+			containerConfig, // continue5WayHold, defaultElement, and enterTo can be in the containerConfig object.
+			navigableFilter,
+			preserveId
 		});
 
 		React.useImperativeHandle(ref, () => ({
