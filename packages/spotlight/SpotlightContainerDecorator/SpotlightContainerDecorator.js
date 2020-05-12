@@ -62,6 +62,10 @@ const defaultConfig = {
 
 	/**
 	 * Filter the navigable elements.
+	 *
+	 * @type {Function}
+	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
+	 * @public
 	 */
 	navigableFilter: null,
 
