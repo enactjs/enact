@@ -86,6 +86,7 @@ const RepeaterBase = kind({
 		 * @private
 		 */
 		componentRef: EnactPropTypes.ref,
+
 		/**
 		 * The property on each `childComponent` that receives the index of the item in the `Repeater`.
 		 *
