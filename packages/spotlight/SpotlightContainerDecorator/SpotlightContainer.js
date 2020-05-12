@@ -7,18 +7,24 @@ const isNewPointerPosition = (ev) => hasPointerMoved(ev.clientX, ev.clientY);
 const not = (fn) => function () {
 	return !fn.apply(this, arguments);
 };
+const releaseContainer = ({preserveId: preserve, id}) => {
+	if (preserve) {
+		Spotlight.unmount(id);
+	} else {
+		Spotlight.remove(id);
+	}
+};
 
 class SpotlightContainer {
-	constructor (config) {
-		const {
-			containerConfig,
-			stateFromProps
-		} = config;
+	constructor ({state, ...config}) {
+		const {containerConfig} = config;
 
 		this.config = config;
 		this.props = {};
-		this.context = {};
-		this.state = stateFromProps(config);
+		this.context = {
+			...this.context,
+			state
+		};
 
 		// Used to indicate that we want to stop propagation on blur events that occur as a
 		// result of this component imperatively blurring itself on focus when spotlightDisabled
@@ -29,29 +35,30 @@ class SpotlightContainer {
 			navigableFilter: this.navigableFilter
 		};
 
-		Spotlight.set(this.state.id, cfg);
+		Spotlight.set(state.current.id, cfg);
 	}
 
-	setPropsAndContext (props) {
+	setPropsAndContext (props, context) {
 		this.props = props;
+		this.context.state = context;
 
 		const {spotlightId: id, spotlightRestrict} = props;
-		const {id: prevId, spotlightRestrict: prevSpotlightRestrict} = this.state;
+		const {id: prevId, spotlightRestrict: prevSpotlightRestrict} = this.context.state.current;
 		// prevId will only be undefined the first render so this prevents releasing the
 		// container after initially creating it
 		const isIdChanged = prevId && id && prevId !== id;
 
 		if (isIdChanged) {
-			this.config.releaseContainer(this.state);
+			releaseContainer(this.context.state.current);
 		}
 
 		if (isIdChanged || spotlightRestrict !== prevSpotlightRestrict) {
-			this.state = this.config.stateFromProps({spotlightId: prevId, spotlightRestrict: prevSpotlightRestrict, ...props});
+			this.context.state.current = this.config.stateFromProps({spotlightId: prevId, spotlightRestrict: prevSpotlightRestrict, ...props});
 		}
 	}
 
 	unload () {
-		this.config.releaseContainer(this.state);
+		releaseContainer(this.context.state.current);
 	}
 
 	navigableFilter = (elem) => {
@@ -91,7 +98,7 @@ class SpotlightContainer {
 	handleMouseEnter = this.handle(
 		forward('onMouseEnter'),
 		isNewPointerPosition,
-		() => Spotlight.setActiveContainer(this.state.id)
+		() => Spotlight.setActiveContainer(this.context.state.current.id)
 	)
 
 	handleMouseLeave = this.handle(
@@ -104,7 +111,7 @@ class SpotlightContainer {
 
 			// if this container is wrapped by another and this is the currently active
 			// container, move the active container to the parent
-			if (parentContainer && activeContainer === this.state.id) {
+			if (parentContainer && activeContainer === this.context.state.current.id) {
 				activeContainer = parentContainer.dataset.spotlightId;
 				Spotlight.setActiveContainer(activeContainer);
 			}

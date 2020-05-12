@@ -9,8 +9,6 @@ import hoc from '@enact/core/hoc';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Spotlight from '../src/spotlight';
-
 import useSpotlightContainer from './useSpotlightContainer';
 
 /**
@@ -116,34 +114,11 @@ const defaultConfig = {
  * @hoc
  */
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {navigableFilter, preserveId, ...containerConfig} = config;
-
-	const stateFromProps = ({spotlightId, spotlightRestrict}) => {
-		const options = {restrict: spotlightRestrict};
-		const id = Spotlight.add(spotlightId || options, options);
-		return {
-			id,
-			preserveId: preserveId && id === spotlightId,
-			spotlightRestrict
-		};
-	};
-
-	const releaseContainer = ({preserveId: preserve, id}) => {
-		if (preserve) {
-			Spotlight.unmount(id);
-		} else {
-			Spotlight.remove(id);
-		}
-	};
-
 	// eslint-disable-next-line no-shadow
 	function SpotlightContainerDecorator (props, ref) {
 		const spotlightContainer = useSpotlightContainer({
 			...props,
-			containerConfig,
-			navigableFilter,
-			releaseContainer,
-			stateFromProps
+			config
 		});
 
 		React.useImperativeHandle(ref, () => ({

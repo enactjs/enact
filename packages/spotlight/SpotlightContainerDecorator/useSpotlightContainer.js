@@ -1,12 +1,25 @@
 import useClass from '@enact/core/useClass';
 import React from 'react';
 
+import Spotlight from '../src/spotlight';
+
 import SpotlightContainer from './SpotlightContainer';
 
-function useSpotlightContainer (config) {
-	const spotlightContainer = useClass(SpotlightContainer, config);
+const stateFromProps = ({spotlightId, spotlightRestrict}, preserveId) => {
+	const options = {restrict: spotlightRestrict};
+	const id = Spotlight.add(spotlightId || options, options);
+	return {
+		id,
+		preserveId: preserveId && id === spotlightId,
+		spotlightRestrict
+	};
+};
 
-	spotlightContainer.setPropsAndContext(config);
+function useSpotlightContainer (config) {
+	const state = React.useRef(stateFromProps(config, config.preserveId));
+	const spotlightContainer = useClass(SpotlightContainer, {state, config});
+
+	spotlightContainer.setPropsAndContext(config, state);
 
 	React.useEffect(() => {
 		return () => {
@@ -17,7 +30,7 @@ function useSpotlightContainer (config) {
 	return {
 		blur: spotlightContainer.handleBlur,
 		focus: spotlightContainer.handleFocus,
-		id: spotlightContainer.state.id,
+		id: state.current.id,
 		mouseEnter: spotlightContainer.handleMouseEnter,
 		mouseLeave: spotlightContainer.handleMouseLeave,
 		navigableFilter: spotlightContainer.navigableFilter
