@@ -8,84 +8,24 @@
  */
 
 import hoc from '@enact/core/hoc';
-import kind from '@enact/core/kind';
 import React from 'react';
-import warning from 'warning';
 
-// ** WARNING ** This is an intentional but likely dangerous hack necessary to clone a child while
-// omitting the `slot` property. It relies on the black box structure of a React element which could
-// change breaking this code. Without it, the slot property will cascade to a DOM node causing a
-// React warning.
-const cloneElement = (child) => {
-	const newProps = Object.assign({}, child.props);
-	delete newProps.slot;
+import useSlots from './useSlots';
 
-	return React.createElement(child.type, newProps);
-};
-
-const distributeChild = (child, index, slots, props) => {
-	let c, slot;
-	const hasSlot = (name) => slots.indexOf(name) !== -1;
-
-	if (!React.isValidElement(child)) {
-		return false;
-	} else if (child.props.slot) {
-		const hasUserSlot = hasSlot(slot = child.props.slot);
-		warning(hasUserSlot, 'The slot "%s" specified on %s does not exist', child.props.slot,
-			typeof child.type === 'string' ? child.type : (child.type.name || child.type.displayName || 'component')
-		);
-
-		if (hasUserSlot) {
-			c = cloneElement(child);
-		}
-	} else if (hasSlot(slot = child.type.defaultSlot)) {
-		c = child;
-	} else if (hasSlot(slot = child.type)) {
-		const propNames = Object.keys(child.props);
-		if (propNames.length === 1 && propNames[0] === 'children') {
-			c = child.props.children;
-		} else {
-			c = child;
-		}
-	}
-
-	if (c) {
-		let prop = props[slot];
-		if (prop) {
-			if (Array.isArray(prop)) {
-				prop.push(c);
-			} else {
-				prop = [prop, c];
-			}
-		} else {
-			prop = c;
-		}
-		props[slot] = prop;
-
-		return true;
-	}
-
-	return false;
-};
-
-const distribute = function (slots, props) {
-	if (slots) {
-		const children = [];
-		const adjusted = {...props};
-		React.Children.forEach(props.children, (child, index) => {
-			if (!distributeChild(child, index, slots, adjusted)) {
-				children.push(child);
-			}
-		});
-
-		adjusted.children = children.length > 0 ? children : null;
-		return adjusted;
-	}
-
-	return props;
-};
-
+/**
+ * Default config for `Slottable`.
+ *
+ * @memberof ui/Slottable.Slottable
+ * @hocconfig
+ * @public
+ */
 const defaultConfig = {
+	/**
+	 * Array of slot names which will be extracted from `children` and distributed to props.
+	 *
+	 * @type {String[]}
+	 * @memberof ui/Slottable.Slottable.defaultConfig
+	 */
 	slots: null
 };
 
@@ -103,16 +43,39 @@ const defaultConfig = {
  */
 const Slottable = hoc(defaultConfig, (config, Wrapped) => {
 	const slots = config.slots;
-	return kind({
-		name: 'Slottable',
-		render: (props) => {
-			const adjusted = distribute(slots, props);
-			return (
-				<Wrapped {...adjusted} />
-			);
-		}
-	});
+
+	// eslint-disable-next-line no-shadow
+	return function Slottable (props) {
+		// extract the slots into a new object but populating the default value to be undefined so
+		// the key exists in order to allow the current "harmful" behavior below. Must be undefined
+		// in order to trigger defaultProps on downstream components.
+		const slotProps = {children: props.children};
+		slots.forEach(k => (slotProps[k] = undefined)); // eslint-disable-line no-undefined
+
+		// Slottable allows there to be other values in the destination slot and merges them.
+		// However, consumers can't avoid key warnings when merging the two lists so we should
+		// "consider this harmful" and not continue to support this with the hook and instead
+		// encourage using the slot as the default with the prop as a fallback as implemented by the
+		// hook.
+		const distributed = useSlots(slotProps);
+		slots.forEach(slot => {
+			const dist = distributed[slot];
+			const prop = props[slot];
+			if (prop != null && dist != null) {
+				distributed[slot] = [].concat(prop, dist);
+			} else if (prop != null) {
+				distributed[slot] = prop;
+			}
+		});
+
+		return (
+			<Wrapped {...props} {...distributed} />
+		);
+	};
 });
 
 export default Slottable;
-export {Slottable};
+export {
+	Slottable,
+	useSlots
+};

@@ -7,8 +7,8 @@
  * @exports ItemDecorator
  */
 
-import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
@@ -53,10 +53,10 @@ const ItemBase = kind({
 		/**
 		 * Called with a reference to [component]{@link ui/Item.ItemBase#component}
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.func,
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
