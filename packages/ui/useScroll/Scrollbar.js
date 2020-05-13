@@ -55,6 +55,7 @@ const useScrollbar = (props) => {
 
 	useEffect(() => {
 		return () => {
+			console.log('UI useScroll: useScrollbar: useEffect1: componentWillUnMount : hideScrollbarTrackJob stop');
 			hideScrollbarTrackJob.current.stop();
 		};
 	}, []);

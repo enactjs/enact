@@ -290,10 +290,12 @@ const useScrollBase = (props) => {
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
+		console.log('ui useScroll: useScrollBase: useEffect1: componentDidMount : resizeRegistry context');
 		mutableRef.current.resizeRegistry.parent = context;
 
 		// componentWillUnmount
 		return () => {
+			console.log('ui useScroll: useScrollBase: useEffect1: componentWillUnMount : resizeRegistry context');
 			const {animator, resizeRegistry, scrolling, scrollStopJob} = mutableRef.current; // eslint-disable-line react-hooks/exhaustive-deps
 
 			resizeRegistry.parent = null;
@@ -315,8 +317,10 @@ const useScrollBase = (props) => {
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
+		console.log('ui useScroll: useScrollBase: useEffect2: componentDidMount & componentDidUpdate : addEventListeners');
 		addEventListeners();
 		return () => {
+			console.log('ui useScroll: useScrollBase: useEffect2: componentWillReceiveProps : removeEventListeners');
 			removeEventListeners();
 		};
 	});
@@ -361,6 +365,7 @@ const useScrollBase = (props) => {
 	}
 
 	useEffect(() => {
+		console.log('ui useScroll: useScrollBase: useEffect3: componentDidMount & componentDidUpdate : new scrollStopJob');
 		const ref = mutableRef.current;
 
 		if (scrollMode === 'translate') {
@@ -370,11 +375,13 @@ const useScrollBase = (props) => {
 		}
 
 		return () => {
+			console.log('ui useScroll: useScrollBase: useEffect3: componentWillReceiveProps : stop scrollStopJob');
 			ref.scrollStopJob.stop();
 		};
 	}); // esline-disable-next-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
+		console.log('ui useScroll: useScrollBase: useEffect4: componentDidUpdate : updateScrollbars');
 		const
 			{hasDataSizeChanged} = scrollContentHandle.current,
 			{prevState, resizeRegistry, scrollToInfo} = mutableRef.current;

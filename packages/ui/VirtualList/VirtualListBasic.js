@@ -311,6 +311,7 @@ class VirtualListBasic extends Component {
 	}
 
 	static getDerivedStateFromProps (props, state) {
+		console.log('ui VirtualListBasic: getDerivedStateFromProps: updateFromTo');
 		const
 			shouldInvalidate = (
 				state.prevFirstIndex === state.firstIndex ||
@@ -330,6 +331,7 @@ class VirtualListBasic extends Component {
 
 	// Calculate metrics for VirtualList after the 1st render to know client W/H.
 	componentDidMount () {
+		console.log('ui VirtualListBasic: componentDidMount: calculateMetrics');
 		if (!this.props.clientSize) {
 			this.calculateMetrics(this.props);
 			// eslint-disable-next-line react/no-did-mount-set-state
@@ -346,6 +348,7 @@ class VirtualListBasic extends Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
+		console.log('ui VirtualListBasic: componentDidUpdate: emitUpdateItems');
 		let deferScrollTo = false;
 		const {firstIndex, numOfItems} = this.state;
 
