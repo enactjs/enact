@@ -272,9 +272,9 @@ describe('Touchable', () => {
 					);
 
 					const ev = {};
-					const beforeDown = subject.state('active');
+					const beforeDown = subject.find(DivComponent).prop('active');
 					subject.simulate('mousedown', ev);
-					const afterDown = subject.state('active');
+					const afterDown = subject.find(DivComponent).prop('active');
 
 					const expected = false;
 					const actual = beforeDown === afterDown;
@@ -294,8 +294,8 @@ describe('Touchable', () => {
 
 					subject.simulate('mousedown', {});
 
-					const expected = 0;
-					const actual = subject.state('active');
+					const expected = false;
+					const actual = subject.find(DivComponent).prop('active');
 
 					expect(actual).toBe(expected);
 				}
@@ -312,8 +312,8 @@ describe('Touchable', () => {
 
 					subject.simulate('mousedown', {});
 
-					const expected = 0;
-					const actual = subject.state('active');
+					const expected = false;
+					const actual = subject.find(DivComponent).prop('active');
 
 					expect(actual).toBe(expected);
 				}
@@ -355,9 +355,9 @@ describe('Touchable', () => {
 					const ev = {};
 					subject.simulate('mousedown', ev);
 
-					const beforeUp = subject.state('active');
+					const beforeUp = subject.find(DivComponent).prop('active');
 					subject.simulate('mouseup', ev);
-					const afterUp = subject.state('active');
+					const afterUp = subject.find(DivComponent).prop('active');
 
 					const expected = false;
 					const actual = beforeUp === afterUp;
@@ -378,9 +378,9 @@ describe('Touchable', () => {
 					const ev = {};
 					subject.simulate('mousedown', ev);
 
-					const beforeUp = subject.state('active');
+					const beforeUp = subject.find(DivComponent).prop('active');
 					subject.simulate('mouseup', ev);
-					const afterUp = subject.state('active');
+					const afterUp = subject.find(DivComponent).prop('active');
 
 					const expected = true;
 					const actual = beforeUp === afterUp;
@@ -400,9 +400,9 @@ describe('Touchable', () => {
 					const ev = {};
 					subject.simulate('mousedown', ev);
 
-					const beforeUp = subject.state('active');
+					const beforeUp = subject.find(DivComponent).prop('active');
 					subject.simulate('mouseup', ev);
-					const afterUp = subject.state('active');
+					const afterUp = subject.find(DivComponent).prop('active');
 
 					const expected = true;
 					const actual = beforeUp === afterUp;
