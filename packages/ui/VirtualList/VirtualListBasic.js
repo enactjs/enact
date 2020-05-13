@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
@@ -241,10 +242,10 @@ class VirtualListBasic extends Component {
 		/**
 		 * Ref for scroll content
 		 *
-		 * @type {Object}
+		 * @type {Object|Function}}
 		 * @private
 		 */
-		scrollContentRef: PropTypes.object,
+		scrollContentRef: EnactPropTypes.ref,
 
 		/**
 		 * Specifies how to scroll.
