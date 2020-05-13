@@ -1458,18 +1458,6 @@ const useScrollBase = (props) => {
 		className: [css.scrollInnerContainer]
 	});
 
-	assignProperties('scrollContentWrapperProps', {
-		className: scrollMode === 'translate' ? [css.scrollContentWrapper] : [css.scrollContentWrapper, css.scrollContentWrapperNative], // scrollMode 'native'
-		...(!noScrollByDrag && {
-			flickConfig,
-			onDrag: onDrag,
-			onDragEnd: onDragEnd,
-			onDragStart: onDragStart,
-			onFlick: onFlick,
-			onTouchStart: scrollMode === 'native' ? onTouchStart : null // scrollMode 'native'
-		})
-	});
-
 	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
 		{
 			childProps,
@@ -1490,8 +1478,16 @@ const useScrollBase = (props) => {
 
 	assignProperties('scrollContentProps', {
 		...scrollContentProps,
+		...(!noScrollByDrag && {
+			flickConfig,
+			onDrag: onDrag,
+			onDragEnd: onDragEnd,
+			onDragStart: onDragStart,
+			onFlick: onFlick,
+			onTouchStart: scrollMode === 'native' ? onTouchStart : null // scrollMode 'native'
+		}),
 		cbScrollTo: scrollTo,
-		className: [css.scrollFill],
+		className: scrollMode === 'translate' ? null : css.scrollContentNative, // scrollMode 'native'
 		direction,
 		get isHorizontalScrollbarVisible () {
 			return isHorizontalScrollbarVisible;
@@ -1532,7 +1528,7 @@ const useScrollBase = (props) => {
 	};
 
 	return {
-		scrollContentWrapper: noScrollByDrag ? 'div' : TouchableDiv,
+		scrollContentComp: noScrollByDrag ? 'div' : TouchableDiv,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
 	};
@@ -1582,7 +1578,7 @@ const useScroll = (props) => {
 		assignProperties = assignPropertiesOf(collectionOfProperties);
 
 	const {
-		scrollContentWrapper,
+		scrollContentComp,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
 	} = useScrollBase({
@@ -1607,7 +1603,7 @@ const useScroll = (props) => {
 
 	return {
 		...collectionOfProperties,
-		scrollContentWrapper,
+		scrollContentComp,
 		scrollContentHandle,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
