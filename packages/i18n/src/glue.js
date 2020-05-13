@@ -1,4 +1,4 @@
-/* global ILIB_DISABLE */
+/* global ILIB_NO_ASSETS */
 /*
  * glue.js - glue code to fit ilib into enyo
  *
@@ -25,9 +25,10 @@ import './dates';
 import Loader from './Loader';
 import {updateLocale} from '../locale';
 
-// if iLib data is pre-provided, or ILIB_DISABLE is set, skip iLib loader usage
+// if iLib data is pre-provided, or ILIB_NO_ASSETS is set, skip iLib loader usage
 // otherwise use our local Loader.js file
-if (!global.ilibData && !(typeof ILIB_DISABLE !== 'undefined' && ILIB_DISABLE === true)) {
+if (!global.ilibData &&
+		!(typeof ILIB_NO_ASSETS !== 'undefined' && ILIB_NO_ASSETS === true)) {
 	ilib.setLoaderCallback(new Loader());
 }
 
