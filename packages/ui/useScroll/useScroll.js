@@ -1500,6 +1500,7 @@ const useScrollBase = (props) => {
 		role,
 		rtl,
 		scrollContainerContainsDangerously,
+		scrollContentComp: noScrollByDrag ? 'div' : TouchableDiv,
 		scrollMode
 	});
 
@@ -1530,7 +1531,6 @@ const useScrollBase = (props) => {
 	};
 
 	return {
-		scrollContentComp: noScrollByDrag ? 'div' : TouchableDiv,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
 	};
@@ -1580,7 +1580,6 @@ const useScroll = (props) => {
 		assignProperties = assignPropertiesOf(collectionOfProperties);
 
 	const {
-		scrollContentComp,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
 	} = useScrollBase({
@@ -1605,7 +1604,6 @@ const useScroll = (props) => {
 
 	return {
 		...collectionOfProperties,
-		scrollContentComp,
 		scrollContentHandle,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible
