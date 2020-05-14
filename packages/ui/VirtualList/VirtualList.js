@@ -58,9 +58,6 @@ const VirtualList = ({role, ...rest}) => {
 					<ScrollContentWrapper {...scrollContentWrapperProps}>
 						<VirtualListBasic
 							{...scrollContentProps}
-							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
-								cc.length ? <div role={role}>{cc}</div> : null
-							)}
 							ref={scrollContentHandle}
 						/>
 					</ScrollContentWrapper>
@@ -331,9 +328,6 @@ const VirtualGridList = ({role, ...rest}) => {
 					<ScrollContentWrapper {...scrollContentWrapperProps}>
 						<VirtualListBasic
 							{...scrollContentProps}
-							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
-								cc.length ? <div role={role}>{cc}</div> : null
-							)}
 							ref={scrollContentHandle}
 						/>
 					</ScrollContentWrapper>
