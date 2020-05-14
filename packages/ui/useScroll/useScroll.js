@@ -100,6 +100,7 @@ const useScrollBase = (props) => {
 			overhang,
 			overscrollEffectOn,
 			pageScroll,
+			role,
 			rtl,
 			scrollContainerRef,
 			scrollContentHandle,
@@ -1496,6 +1497,7 @@ const useScrollBase = (props) => {
 			return isVerticalScrollbarVisible;
 		},
 		onScroll: scrollMode === 'translate' ? handleScroll : null,
+		role,
 		rtl,
 		scrollContainerContainsDangerously,
 		scrollMode
