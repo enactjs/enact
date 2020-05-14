@@ -1488,7 +1488,7 @@ const useScrollBase = (props) => {
 			onTouchStart: scrollMode === 'native' ? onTouchStart : null // scrollMode 'native'
 		}),
 		cbScrollTo: scrollTo,
-		className: scrollMode === 'translate' ? null : css.scrollContentNative, // scrollMode 'native'
+		className: [scrollMode === 'translate' ? null : css.scrollContentNative], // scrollMode 'native'
 		direction,
 		get isHorizontalScrollbarVisible () {
 			return isHorizontalScrollbarVisible;
