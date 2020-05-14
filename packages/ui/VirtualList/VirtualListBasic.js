@@ -1226,9 +1226,8 @@ class VirtualListBasic extends Component {
 		return (
 			<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.props.scrollContentRef} style={style}>
 				<div {...rest} className={contentClasses} ref={this.contentRef} role={role}>
-					{cc.length ? cc : null}
+					{[...cc, placeholderRenderer && placeholderRenderer(primary)]}
 				</div>
-				{placeholderRenderer && placeholderRenderer(primary)}
 			</div>
 		);
 	}
