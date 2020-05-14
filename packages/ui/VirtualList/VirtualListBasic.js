@@ -254,7 +254,7 @@ class VirtualListBasic extends Component {
 		 * @type {Object|Function}}
 		 * @private
 		 */
-		scrollContentRef: EnactPropTypes.ref,
+		scrollContentRef: PropTypes.object,
 
 		/**
 		 * Specifies how to scroll.

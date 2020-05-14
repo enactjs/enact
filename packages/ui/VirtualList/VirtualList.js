@@ -31,7 +31,7 @@ const nop = () => {};
  * @ui
  * @public
  */
-const VirtualList = ({role, ...rest}) => {
+const VirtualList = (props) => {
 	// Hooks
 
 	const {
@@ -47,7 +47,7 @@ const VirtualList = ({role, ...rest}) => {
 		scrollContentProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useScroll(rest);
+	} = useScroll(props);
 
 	// Render
 
@@ -305,7 +305,7 @@ VirtualList.defaultProps = {
  * @ui
  * @public
  */
-const VirtualGridList = ({role, ...rest}) => {
+const VirtualGridList = (props) => {
 	const {
 		scrollContentHandle,
 		scrollContentWrapper: ScrollContentWrapper,
@@ -319,7 +319,7 @@ const VirtualGridList = ({role, ...rest}) => {
 		scrollContentProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useScroll(rest);
+	} = useScroll(props);
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
