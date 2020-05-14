@@ -1,3 +1,4 @@
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import {platform} from '@enact/core/platform';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -61,10 +62,10 @@ class ScrollerBasic extends Component {
 		/**
 		 * Ref for scroll content
 		 *
-		 * @type {Object}
+		 * @type {Object|Function}
 		 * @private
 		 */
-		scrollContentRef: PropTypes.object
+		scrollContentRef: EnactPropTypes.ref
 	}
 
 	componentDidMount () {

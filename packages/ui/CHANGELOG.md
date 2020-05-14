@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Group` prop `selectedEventProp` to configure the key that `ui/GroupItem` uses to hold the value that it gives the `onSelect` event
+
 ## [3.3.0-alpha.9] - 2020-05-11
 
 No significant changes.

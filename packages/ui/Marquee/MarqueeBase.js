@@ -1,5 +1,6 @@
-import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forProp, forward, handle, stop} from '@enact/core/handle';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -66,10 +67,10 @@ const MarqueeBase = kind({
 		/**
 		 * Called when mounting or unmounting with a reference to the client node
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @public
 		 */
-		clientRef: PropTypes.func,
+		clientRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
