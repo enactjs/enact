@@ -249,14 +249,6 @@ class VirtualListBasic extends Component {
 		rtl: PropTypes.bool,
 
 		/**
-		 * The Content Element. `div` for `noScrollByDrag` props is false and `Touchable` for `noScrollByDrag` props is true.
-		 *
-		 * @type {Object}
-		 * @private
-		 */
-		scrollContentComp: React.object,
-
-		/**
 		 * Ref for scroll content
 		 *
 		 * @type {Object|Function}}
@@ -1192,7 +1184,7 @@ class VirtualListBasic extends Component {
 
 	render () {
 		const
-			{className, placeholderRenderer, role, scrollContentComp: ScrollContentComp, scrollContentRef, scrollMode, ...rest} = this.props,
+			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, placeholderRenderer, role, style, scrollMode, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, primary} = this,
 			scrollModeNative = scrollMode === 'native',
 			containerClasses = classNames(
@@ -1232,12 +1224,12 @@ class VirtualListBasic extends Component {
 		}
 
 		return (
-			<ScrollContentComp {...rest} className={containerClasses} ref={scrollContentRef}>
-				<div className={contentClasses} ref={this.contentRef} role={role}>
+			<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.props.scrollContentRef} style={style}>
+				<div {...rest} className={contentClasses} ref={this.contentRef} role={role}>
 					{cc.length ? cc : null}
 				</div>
 				{placeholderRenderer && placeholderRenderer(primary)}
-			</ScrollContentComp>
+			</div>
 		);
 	}
 }

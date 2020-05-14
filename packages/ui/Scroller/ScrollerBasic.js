@@ -60,14 +60,6 @@ class ScrollerBasic extends Component {
 		rtl: PropTypes.bool,
 
 		/**
-		 * The Content Element. `div` for `noScrollByDrag` props is false and `Touchable` for `noScrollByDrag` props is true.
-		 *
-		 * @type {Object}
-		 * @private
-		 */
-		scrollContentComp: React.object,
-
-		/**
 		 * Ref for scroll content
 		 *
 		 * @type {Object|Function}
@@ -173,7 +165,7 @@ class ScrollerBasic extends Component {
 
 	render () {
 		const
-			{className, scrollContentComp: ScrollContentComp, style, ...rest} = this.props,
+			{className, style, ...rest} = this.props,
 			mergedStyle = Object.assign({}, style, {
 				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
 				overflowY: this.isVertical() ? 'auto' : 'hidden'
@@ -190,7 +182,7 @@ class ScrollerBasic extends Component {
 		delete rest.setThemeScrollContentHandle;
 
 		return (
-			<ScrollContentComp
+			<div
 				{...rest}
 				className={classNames(className, css.scroller)}
 				ref={this.props.scrollContentRef}
