@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {addCancelHandler, removeCancelHandler} from './cancelHandler';
-import useCancel from './useCancel';
+import {isCancel, useCancel} from './useCancel';
 
 /**
  * Default config for {@link ui/Cancelable.Cancelable}
@@ -150,29 +150,33 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 	// eslint-disable-next-line no-shadow
 	function Cancelable (props) {
 		const updated = {...props};
-		let onCancelWithStopPropagation = null;
 
-		if (onCancelIsString && typeof props[config.onCancel] === 'function') {
-			onCancelWithStopPropagation = (ev) => {
-				const cancelEvent = {...ev};
+		// Intentionally `onConfiguredCancel` function was not moved to the `useCancel`
+		// because the `useCancal` is considered to accpet not a prop string but a function.
+		// eslint-disable-next-line no-shadow
+		function onConfiguredCancel (onCancel) {
+			if (onCancelIsString && typeof props[onCancel] === 'function') {
+				return (ev) => {
+					const cancelEvent = {...ev};
 
-				cancelEvent.Type = config.onCancel; // use the custom event name from the config
-				props[config.onCancel](cancelEvent);
-			};
-		} else if (onCancelIsFunction) {
-			onCancelWithStopPropagation = config.onCancel;
+					cancelEvent.Type = onCancel; // use the custom event name from the config
+					props[onCancel](cancelEvent);
+				};
+			} else if (onCancelIsFunction) {
+				return onCancel;
+			}
 		}
 
-		const {keyUp} = useCancel({
+		const {cancel} = useCancel({
 			modal,
-			onCancel: props.onCancel,
-			onCancelWithStopPropagation
+			onCancel: onConfiguredCancel(onCancel)
 		});
 
 		const handleKeyUp = (ev) => {
 			forward('onKeyUp', ev, updated);
-			if (keyUp) {
-				keyUp(ev);
+			if (!modal && isCancel(ev)) {
+				forward('onCancel', ev, updated);
+				cancel(ev);
 			}
 		};
 

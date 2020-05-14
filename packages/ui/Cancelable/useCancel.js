@@ -2,7 +2,7 @@ import {add} from '@enact/core/keymap';
 import useClass from '@enact/core/useClass';
 import React from 'react';
 
-import Cancel from './Cancel';
+import {Cancel, isCancel} from './Cancel';
 import {addCancelHandler, removeCancelHandler} from './cancelHandler';
 import {addModal, removeModal} from './modalHandler';
 
@@ -26,11 +26,10 @@ function mountEffect (state, modal) {
  *
  * @typedef {Object} useCancelConfig
  * @memberof ui/Cancelable
- * @property {Boolean}  [modal = false]               The flag to cancel events globally
- * @property {Function} [onCancel]                    Called when a cancel action is invoked by the user.
- * @property {Function} [onCancelWithStopPropagation] The event including the `stopPropagation` function will be passed as the first parameter.
- *                                                    If the functions is not called, it allows event propagation.
- *                                                    If the function is called, it calls `stop` and `stopImmediate`.
+ * @property {Boolean}  [modal = false] The flag to cancel events globally
+ * @property {Function} [onCancel]      The event including the `stopPropagation` function will be passed as the first parameter.
+ *                                      If the functions is not called, it allows event propagation.
+ *                                      If the function is called, it calls `stop` and `stopImmediate`.
  * @private
  */
 
@@ -39,7 +38,7 @@ function mountEffect (state, modal) {
  *
  * @typedef {Object} useCancelInterface
  * @memberof ui/Cancelable
- * @property {Function} [keyUp] Handle to run when the 5-way up key is released.
+ * @property {Function} [cancle] Handle to run when needed to cancel.
  * @private
  */
 
@@ -58,13 +57,14 @@ function useCancel ({modal = false, ...config} = {}) {
 	React.useLayoutEffect(mountEffect(cancel, modal), [cancel]);
 
 	return {
-		keyUp: modal ? null : cancel.handleKeyUp
+		cancel: cancel.handleCancel
 	};
 }
 
 export default useCancel;
 export {
 	addCancelHandler,
+	isCancel,
 	removeCancelHandler,
 	useCancel
 };

@@ -1,24 +1,23 @@
 import {mount} from 'enzyme';
 import React from 'react';
 
-import {addCancelHandler, removeCancelHandler, useCancel} from '../useCancel';
+import {addCancelHandler, isCancel, removeCancelHandler, useCancel} from '../useCancel';
 
 describe('useCancel', () => {
 
 	// eslint-disable-next-line enact/prop-types
-	function Component ({children, className, modal, onCancel, onCancelWithStopPropagation, onKeyUp}) {
-		const {keyUp} = useCancel({
+	function Component ({children, className, modal, onCancel, onKeyUp}) {
+		const {cancel} = useCancel({
 			modal,
-			onCancel,
-			onCancelWithStopPropagation
+			onCancel
 		});
 
 		function handleKeyUp (ev) {
 			if (onKeyUp) {
 				onKeyUp(ev);
 			}
-			if (keyUp) {
-				keyUp(ev);
+			if (!modal && isCancel(ev)) {
+				cancel(ev);
 			}
 		}
 
@@ -42,10 +41,10 @@ describe('useCancel', () => {
 	const returnsTrue = () => true;
 	const stop = (ev) => ev.stopPropagation();
 
-	test('should call onCancelWithStopPropagation for escape key by default', () => {
+	test('should call onCancel for escape key by default', () => {
 		const handleCancel = jest.fn(returnsTrue);
 		const subject = mount(
-			<Component onCancelWithStopPropagation={handleCancel} />
+			<Component onCancel={handleCancel} />
 		);
 
 		subject.simulate('keyup', makeKeyEvent(27));
@@ -56,10 +55,10 @@ describe('useCancel', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should not call onCancelWithStopPropagation for non-escape key', () => {
+	test('should not call onCancel for non-escape key', () => {
 		const handleCancel = jest.fn(returnsTrue);
 		const subject = mount(
-			<Component onCancelWithStopPropagation={handleCancel} />
+			<Component onCancel={handleCancel} />
 		);
 
 		subject.simulate('keyup', makeKeyEvent(42));
@@ -74,7 +73,7 @@ describe('useCancel', () => {
 		const handleCancel = jest.fn(stop);
 		const keyEvent = makeKeyEvent(27);
 		const subject = mount(
-			<Component onCancelWithStopPropagation={handleCancel} />
+			<Component onCancel={handleCancel} />
 		);
 
 		subject.simulate('keyup', keyEvent);
@@ -89,7 +88,7 @@ describe('useCancel', () => {
 		const handleCancel = jest.fn(returnsTrue);
 		const keyEvent = makeKeyEvent(42);
 		const subject = mount(
-			<Component onCancelWithStopPropagation={handleCancel} />
+			<Component onCancel={handleCancel} />
 		);
 
 		subject.simulate('keyup', keyEvent);
@@ -104,7 +103,7 @@ describe('useCancel', () => {
 		const handleKeyUp = jest.fn();
 		const keyEvent = makeKeyEvent(42);
 		const subject = mount(
-			<Component onCancelWithStopPropagation={returnsTrue} onKeyUp={handleKeyUp} />
+			<Component onCancel={returnsTrue} onKeyUp={handleKeyUp} />
 		);
 
 		subject.simulate('keyup', keyEvent);
@@ -115,12 +114,12 @@ describe('useCancel', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should call onCancelWithStopPropagation when additional cancel handlers pass', () => {
+	test('should call onCancel when additional cancel handlers pass', () => {
 		const customCancelHandler = (ev) => ev.keyCode === 461;
 		addCancelHandler(customCancelHandler);
 		const handleCancel = jest.fn(returnsTrue);
 		const subject = mount(
-			<Component onCancelWithStopPropagation={handleCancel} />
+			<Component onCancel={handleCancel} />
 		);
 
 		subject.simulate('keyup', makeKeyEvent(461));
@@ -138,8 +137,8 @@ describe('useCancel', () => {
 		() => {
 			const handleCancel = jest.fn(returnsTrue);
 			const subject = mount(
-				<Component onCancelWithStopPropagation={handleCancel}>
-					<Component className="second" onCancelWithStopPropagation={handleCancel} />
+				<Component onCancel={handleCancel}>
+					<Component className="second" onCancel={handleCancel} />
 				</Component>
 			);
 
@@ -157,8 +156,8 @@ describe('useCancel', () => {
 		() => {
 			const handleCancel = jest.fn(stop);
 			const subject = mount(
-				<Component onCancelWithStopPropagation={handleCancel}>
-					<Component className="second" onCancelWithStopPropagation={handleCancel} />
+				<Component onCancel={handleCancel}>
+					<Component className="second" onCancel={handleCancel} />
 				</Component>
 			);
 
@@ -192,7 +191,7 @@ describe('useCancel', () => {
 			'should invoke handler for cancel events dispatch to the window',
 			() => {
 				const handleCancel = jest.fn(returnsTrue);
-				mount(<Component modal onCancelWithStopPropagation={handleCancel} />);
+				mount(<Component modal onCancel={handleCancel} />);
 				document.dispatchEvent(makeKeyboardEvent(27));
 
 				const expected = 1;
@@ -209,8 +208,8 @@ describe('useCancel', () => {
 				return false;
 			};
 
-			mount(<Component modal onCancelWithStopPropagation={append('first')} />);
-			mount(<Component modal onCancelWithStopPropagation={append('second')} />);
+			mount(<Component modal onCancel={append('first')} />);
+			mount(<Component modal onCancel={append('second')} />);
 
 			document.dispatchEvent(makeKeyboardEvent(27));
 
@@ -228,8 +227,8 @@ describe('useCancel', () => {
 			};
 
 			mount(
-				<Component modal onCancelWithStopPropagation={append('first')}>
-					<Component modal onCancelWithStopPropagation={append('second')} />
+				<Component modal onCancel={append('first')}>
+					<Component modal onCancel={append('second')} />
 				</Component>
 			);
 
@@ -246,8 +245,8 @@ describe('useCancel', () => {
 			() => {
 				const handleCancel = jest.fn(returnsTrue);
 
-				mount(<Component modal onCancelWithStopPropagation={handleCancel} />);
-				mount(<Component modal onCancelWithStopPropagation={stop} />);
+				mount(<Component modal onCancel={handleCancel} />);
+				mount(<Component modal onCancel={stop} />);
 
 				document.dispatchEvent(makeKeyboardEvent(27));
 

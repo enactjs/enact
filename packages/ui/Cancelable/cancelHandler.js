@@ -74,7 +74,7 @@ const removeCancelHandler = function (handler) {
  * @returns {Boolean} `false` to stop the handler chain
  * @public
  */
-const dispatchCancelToConfig = (onCancelWithStopPropagation) => () => {
+const dispatchCancelToConfig = (onCancel) => () => {
 	// by default, we return false which allows event propagation because it will "break" the
 	// handler chain and not call `stop` and `stopImmediate` below
 	let stopped = false;
@@ -86,8 +86,8 @@ const dispatchCancelToConfig = (onCancelWithStopPropagation) => () => {
 		}
 	};
 
-	if (onCancelWithStopPropagation) {
-		onCancelWithStopPropagation(cancelEvent);
+	if (onCancel) {
+		onCancel(cancelEvent);
 	}
 
 	return stopped;
