@@ -231,6 +231,15 @@ class VirtualListBasic extends Component {
 		placeholderRenderer: PropTypes.func,
 
 		/**
+		 * The ARIA role for the list.
+		 *
+		 * @type {String}
+		 * @default 'list'
+		 * @public
+		 */
+		role: PropTypes.string,
+
+		/**
 		 * `true` if RTL, `false` if LTR.
 		 *
 		 * @type {Boolean}
