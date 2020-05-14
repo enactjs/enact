@@ -65,7 +65,7 @@ class ScrollerBasic extends Component {
 		 * @type {Object|Function}
 		 * @private
 		 */
-		scrollContentRef: EnactPropTypes.ref,
+		scrollContentRef: EnactPropTypes.ref
 	}
 
 	componentDidMount () {
