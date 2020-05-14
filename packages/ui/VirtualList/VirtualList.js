@@ -36,13 +36,14 @@ const VirtualList = ({role, ...rest}) => {
 
 	const {
 		scrollContentHandle,
-		scrollContentComp: ScrollContentComp,
+		scrollContentWrapper: ScrollContentWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
 
 		resizeContextProps,
 		scrollContainerProps,
 		scrollInnerContainerProps,
+		scrollContentWrapperProps,
 		scrollContentProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
@@ -53,14 +54,18 @@ const VirtualList = ({role, ...rest}) => {
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
 			<div {...scrollContainerProps}>
-				<ScrollContentComp {...scrollInnerContainerProps}>
-					<VirtualListBasic
-						{...scrollContentProps}
-						ref={scrollContentHandle}
-						role={role}
-					/>
+				<div {...scrollInnerContainerProps}>
+					<ScrollContentWrapper {...scrollContentWrapperProps}>
+						<VirtualListBasic
+							{...scrollContentProps}
+							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
+								cc.length ? <div role={role}>{cc}</div> : null
+							)}
+							ref={scrollContentHandle}
+						/>
+					</ScrollContentWrapper>
 					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
-				</ScrollContentComp>
+				</div>
 				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
 			</div>
 		</ResizeContext.Provider>
@@ -306,7 +311,7 @@ VirtualList.defaultProps = {
 const VirtualGridList = ({role, ...rest}) => {
 	const {
 		scrollContentHandle,
-		scrollContentComp: ScrollContentComp,
+		scrollContentWrapper: ScrollContentWrapper,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
 
@@ -322,14 +327,18 @@ const VirtualGridList = ({role, ...rest}) => {
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
 			<div {...scrollContainerProps}>
-				<ScrollContentComp {...scrollInnerContainerProps}>
-					<VirtualListBasic
-						{...scrollContentProps}
-						ref={scrollContentHandle}
-						role={role}
-					/>
+				<div {...scrollInnerContainerProps}>
+					<ScrollContentWrapper {...scrollContentWrapperProps}>
+						<VirtualListBasic
+							{...scrollContentProps}
+							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
+								cc.length ? <div role={role}>{cc}</div> : null
+							)}
+							ref={scrollContentHandle}
+						/>
+					</ScrollContentWrapper>
 					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
-				</ScrollContentComp>
+				</div>
 				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
 			</div>
 		</ResizeContext.Provider>
