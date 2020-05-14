@@ -36,14 +36,13 @@ const VirtualList = ({role, ...rest}) => {
 
 	const {
 		scrollContentHandle,
-		scrollContentWrapper: ScrollContentWrapper,
+		scrollContentComp: ScrollContentComp,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
 
 		resizeContextProps,
 		scrollContainerProps,
 		scrollInnerContainerProps,
-		scrollContentWrapperProps,
 		scrollContentProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
@@ -54,18 +53,14 @@ const VirtualList = ({role, ...rest}) => {
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
 			<div {...scrollContainerProps}>
-				<div {...scrollInnerContainerProps}>
-					<ScrollContentWrapper {...scrollContentWrapperProps}>
-						<VirtualListBasic
-							{...scrollContentProps}
-							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
-								cc.length ? <div role={role}>{cc}</div> : null
-							)}
-							ref={scrollContentHandle}
-						/>
-					</ScrollContentWrapper>
+				<ScrollContentComp {...scrollInnerContainerProps}>
+					<VirtualListBasic
+						{...scrollContentProps}
+						ref={scrollContentHandle}
+						role={role}
+					/>
 					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
-				</div>
+				</ScrollContentComp>
 				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
 			</div>
 		</ResizeContext.Provider>
@@ -311,7 +306,7 @@ VirtualList.defaultProps = {
 const VirtualGridList = ({role, ...rest}) => {
 	const {
 		scrollContentHandle,
-		scrollContentWrapper: ScrollContentWrapper,
+		scrollContentComp: ScrollContentComp,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
 
@@ -327,18 +322,14 @@ const VirtualGridList = ({role, ...rest}) => {
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
 			<div {...scrollContainerProps}>
-				<div {...scrollInnerContainerProps}>
-					<ScrollContentWrapper {...scrollContentWrapperProps}>
-						<VirtualListBasic
-							{...scrollContentProps}
-							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
-								cc.length ? <div role={role}>{cc}</div> : null
-							)}
-							ref={scrollContentHandle}
-						/>
-					</ScrollContentWrapper>
+				<ScrollContentComp {...scrollInnerContainerProps}>
+					<VirtualListBasic
+						{...scrollContentProps}
+						ref={scrollContentHandle}
+						role={role}
+					/>
 					{isVerticalScrollbarVisible ? <Scrollbar {...verticalScrollbarProps} /> : null}
-				</div>
+				</ScrollContentComp>
 				{isHorizontalScrollbarVisible ? <Scrollbar {...horizontalScrollbarProps} /> : null}
 			</div>
 		</ResizeContext.Provider>
