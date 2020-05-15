@@ -123,8 +123,8 @@
  * @exports Row
  */
 
-import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -208,10 +208,10 @@ const LayoutBase = kind({
 		/**
 		 * Called with a reference to [component]{@link ui/Layout.Layout#component}
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.func,
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Allows this `Layout` to have following siblings drawn on the same line as itself
