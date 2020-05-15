@@ -93,15 +93,6 @@ class VirtualListBasic extends Component {
 		]).isRequired,
 
 		/**
-		 * The render function for the items.
-		 *
-		 * @type {Function}
-		 * @required
-		 * @private
-		 */
-		itemsRenderer: PropTypes.func.isRequired,
-
-		/**
 		 * Callback method of scrollTo.
 		 * Normally, useScroll should set this value.
 		 *
@@ -230,6 +221,24 @@ class VirtualListBasic extends Component {
 		 * @private
 		 */
 		pageScroll: PropTypes.bool,
+
+		/**
+		 * The render function for the placeholder elements.
+		 *
+		 * @type {Function}
+		 * @required
+		 * @private
+		 */
+		placeholderRenderer: PropTypes.func,
+
+		/**
+		 * The ARIA role for the list.
+		 *
+		 * @type {String}
+		 * @default 'list'
+		 * @public
+		 */
+		role: PropTypes.string,
 
 		/**
 		 * `true` if RTL, `false` if LTR.
@@ -1175,7 +1184,7 @@ class VirtualListBasic extends Component {
 
 	render () {
 		const
-			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, scrollMode, ...rest} = this.props,
+			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, placeholderRenderer, role, style, scrollMode, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, primary} = this,
 			scrollModeNative = scrollMode === 'native',
 			containerClasses = classNames(
@@ -1216,8 +1225,8 @@ class VirtualListBasic extends Component {
 
 		return (
 			<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.props.scrollContentRef} style={style}>
-				<div {...rest} className={contentClasses} ref={this.contentRef}>
-					{itemsRenderer({cc, primary})}
+				<div {...rest} className={contentClasses} ref={this.contentRef} role={role}>
+					{[...cc, placeholderRenderer && placeholderRenderer(primary)]}
 				</div>
 			</div>
 		);
