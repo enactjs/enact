@@ -210,7 +210,7 @@ const MarqueeBase = kind({
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
 			const direction = rtl ? 'rtl' : 'ltr';
-			const sideProperty = rtl ? 'left' : 'right';
+			const rtlDirectionMultiplier = rtl ? 1 : -1;
 			const style = {
 				'--ui-marquee-spacing': spacing,
 				direction,
@@ -221,10 +221,10 @@ const MarqueeBase = kind({
 			if (animating) {
 				const duration = distance / speed;
 
-				style[sideProperty] = `${distance}px`;
+				style.transform = `translateX(${distance * rtlDirectionMultiplier}px)`;
 				style.transitionDuration = `${duration}s`;
 			} else {
-				style[sideProperty] = 0;
+				style.transform = 'translateX(0)';
 			}
 
 			return style;
