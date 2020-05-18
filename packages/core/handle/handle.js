@@ -696,6 +696,54 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
 });
 
 /**
+ * Adapts an event with `adapter` before calling `handler`.
+ *
+ * The `adapter` function receives the same arguments as any handler. The value returned from
+ * `adapter` is passed as the first argument to `handler` with the remaining arguments kept the
+ * same. This is often useful to generate a custom event payload before forwarding on to a callback.
+ *
+ * Example:
+ * ```
+ * import {adaptEvent, forward} from '@enact/core/handle';
+ *
+ * // calls the onChange callback with an event payload containing a type and value member
+ * const incrementAndChange = adaptEvent(
+ * 	(ev, props) => ({
+ * 	  type: 'onChange',
+ * 	  value: props.value + 1
+ * 	}),
+ * 	forward('onChange')
+ * )
+ * ```
+ *
+ * @method   forwardCustom
+ * @param    {EventAdapter}     adapter  Function to adapt the event payload
+ * @param    {HandlerFunction}  handler  Handler to call with the handler function
+ *
+ * @returns  {HandlerFunction}           Returns an [event handler]{@link core/handle.HandlerFunction} (suitable for passing to handle) that returns the result of `handler`
+ * @curried
+ * @memberof core/handle
+ * @public
+ */
+const forwardCustom = handle.forwardCustom = (name, adapter) => handle(
+	adaptEvent(
+		(...args) => {
+			let ev = adapter ? adapter(...args) : null;
+
+			// Handle either no adapter or a non-object return from the adapter
+			if (!ev || typeof ev !== 'object') {
+				ev = {};
+			}
+
+			ev.type = name;
+
+			return ev;
+		},
+		forward(name)
+	)
+).named('forwardCustom');
+
+/**
  * Accepts a handler and returns the logical complement of the value returned from the handler.
  *
  * Example:
@@ -728,6 +776,7 @@ export {
 	call,
 	callOnEvent,
 	forward,
+	forwardCustom,
 	forwardWithPrevent,
 	forEventProp,
 	forKey,
