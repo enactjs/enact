@@ -696,7 +696,11 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
 });
 
 /**
- * Adapts an event with `adapter` before calling `handler`.
+ * Forwards the event to a function at `name` on `props`.
+ *
+ * If `adapter` is not specified, a new event payload will be generated with a `type` member with
+ * the `name` of the custom event. If `adapter` is specified, the `type` member is added to the
+ * value returned by `adapter`.
  *
  * The `adapter` function receives the same arguments as any handler. The value returned from
  * `adapter` is passed as the first argument to `handler` with the remaining arguments kept the
@@ -704,23 +708,23 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
  *
  * Example:
  * ```
- * import {adaptEvent, forward} from '@enact/core/handle';
+ * import {forwardCustom} from '@enact/core/handle';
  *
- * // calls the onChange callback with an event payload containing a type and value member
- * const incrementAndChange = adaptEvent(
- * 	(ev, props) => ({
- * 	  type: 'onChange',
- * 	  value: props.value + 1
- * 	}),
- * 	forward('onChange')
- * )
+ * // calls the onChange callback with the event: {type: 'onChange'}
+ * const forwardChange = forwardCustom('onChange');
+ *
+ * // calls the onChange callback with the event: {type: 'onChange', index}
+ * const forwardChangeWithIndex = forwardCustom('onChange', (ev, {index}) => ({index}));
  * ```
  *
  * @method   forwardCustom
- * @param    {EventAdapter}     adapter  Function to adapt the event payload
- * @param    {HandlerFunction}  handler  Handler to call with the handler function
+ * @param    {String}        name      Name of method on the `props`
+ * @param    {EventAdapter}  [adapter] Function to adapt the event payload
  *
- * @returns  {HandlerFunction}           Returns an [event handler]{@link core/handle.HandlerFunction} (suitable for passing to handle) that returns the result of `handler`
+ * @returns  {HandlerFunction}         Returns an [event handler]{@link core/handle.EventHandler}
+ *                                     (suitable for passing to handle or used directly within
+ *                                     `handlers` in [kind]{@link core/kind}) that will forward the
+ *                                     custom event.
  * @curried
  * @memberof core/handle
  * @public
