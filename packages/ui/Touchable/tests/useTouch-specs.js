@@ -35,7 +35,7 @@ describe('useTouch', () => {
 			'should return active state when activeProp is configured',
 			() => {
 				const subject = shallow(
-					<TouchableComponent activeProp='active' />
+					<TouchableComponent activeProp="active" />
 				);
 				const wrapped = subject.find(DivComponent);
 
@@ -117,7 +117,7 @@ describe('useTouch', () => {
 			const handler = jest.fn();
 			const subject = mount(
 				<TouchableComponent
-					activeProp='active'
+					activeProp="active"
 					onDown={handler}
 				/>
 			);
@@ -135,7 +135,7 @@ describe('useTouch', () => {
 			const handler = jest.fn();
 			const subject = mount(
 				<TouchableComponent
-					activeProp='active'
+					activeProp="active"
 					onUp={handler}
 				/>
 			);
@@ -154,7 +154,7 @@ describe('useTouch', () => {
 			const handler = jest.fn();
 			const subject = mount(
 				<TouchableComponent
-					activeProp='active'
+					activeProp="active"
 					onTap={handler}
 				/>
 			);
@@ -171,7 +171,7 @@ describe('useTouch', () => {
 			const handler = jest.fn();
 			const subject = mount(
 				<TouchableComponent
-					activeProp='active'
+					activeProp="active"
 					onTap={handler}
 				/>
 			);
@@ -187,7 +187,7 @@ describe('useTouch', () => {
 			const handler = jest.fn();
 			const subject = mount(
 				<TouchableComponent
-					activeProp='active'
+					activeProp="active"
 					onClick={handler}
 					onTap={handler}
 				/>
@@ -204,7 +204,7 @@ describe('useTouch', () => {
 			const handler = jest.fn();
 			const subject = mount(
 				<TouchableComponent
-					activeProp='active'
+					activeProp="active"
 					onClick={handler}
 					onTap={handler}
 				/>
@@ -228,7 +228,7 @@ describe('useTouch', () => {
 			const handler = jest.fn();
 			const subject = mount(
 				<TouchableComponent
-					activeProp='active'
+					activeProp="active"
 					onTap={handler}
 					onUp={preventDefault}
 				/>
@@ -273,7 +273,7 @@ describe('useTouch', () => {
 					const handler = jest.fn();
 					const subject = mount(
 						<TouchableComponent
-							activeProp='active'
+							activeProp="active"
 							onDown={handler}
 						/>
 					);
@@ -294,7 +294,7 @@ describe('useTouch', () => {
 					const handler = jest.fn();
 					const subject = mount(
 						<TouchableComponent
-							activeProp='active'
+							activeProp="active"
 							disabled
 							onDown={handler}
 						/>
@@ -313,7 +313,7 @@ describe('useTouch', () => {
 				() => {
 					const subject = mount(
 						<TouchableComponent
-							activeProp='active'
+							activeProp="active"
 							onDown={preventDefault}
 						/>
 					);
@@ -356,7 +356,7 @@ describe('useTouch', () => {
 					const handler = jest.fn();
 					const subject = mount(
 						<TouchableComponent
-							activeProp='active'
+							activeProp="active"
 							onDown={handler}
 						/>
 					);
@@ -378,7 +378,7 @@ describe('useTouch', () => {
 					const handler = jest.fn();
 					const subject = mount(
 						<TouchableComponent
-							activeProp='active'
+							activeProp="active"
 							disabled
 							onDown={handler}
 						/>
@@ -398,10 +398,9 @@ describe('useTouch', () => {
 			test(
 				'should not update active state on mouse down when preventDefault is called',
 				() => {
-					const handler = jest.fn();
 					const subject = mount(
 						<TouchableComponent
-							activeProp='active'
+							activeProp="active"
 							onDown={preventDefault}
 						/>
 					);
