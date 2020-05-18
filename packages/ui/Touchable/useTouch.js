@@ -5,12 +5,12 @@ import {States} from './state';
 import Touch from './Touch';
 
 function useTouch (config = {}) {
-	const {activeProp, disabled, dragConfig, flickConfig, holdConfig} = config;
+	const {getActive = false, disabled, dragConfig, flickConfig, holdConfig} = config;
 
 	const touch = useClass(Touch);
 	const [state, setState] = useState(States.Inactive);
 
-	touch.setPropsAndContext(config, state, setState);
+	touch.setPropsAndContext({...config, disabled: !!disabled}, state, setState);
 
 	// componentDidMount and componentWillUnmount
 	useEffect(() => {
@@ -32,8 +32,8 @@ function useTouch (config = {}) {
 	}, [disabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		setState((prevState) => ((!activeProp || disabled) ? States.Inactive : prevState));
-	}, [activeProp, disabled]);
+		setState((prevState) => ((!getActive || disabled) ? States.Inactive : prevState));
+	}, [getActive, disabled]);
 
 	return {
 		active: state !== States.Inactive,

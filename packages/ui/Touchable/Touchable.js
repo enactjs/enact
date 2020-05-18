@@ -17,6 +17,58 @@ import {flickConfigPropType} from './Flick';
 import {holdConfigPropType} from './Hold';
 import useTouch from './useTouch';
 
+const selectProps = (props) => {
+	const {
+		/* configs */
+		dragConfig, flickConfig, holdConfig,
+		/* general props */
+		disabled,
+		noResume,
+		/* events to be captured and forwarded by useTouch hook */
+		onBlur,
+		onClick,
+		onMouseDown, onMouseEnter, onMouseLeave, onMouseMove, onMouseUp,
+		onTouchEnd, onTouchMove, onTouchStart,
+		/* custom events to be forwarded by useTouch hook */
+		onDown,
+		onDrag, onDragEnd, onDragStart,
+		onFlick,
+		onHold, onHoldEnd, onHoldPulse,
+		onMove,
+		onTap,
+		onUp,
+		/* rest */
+		...rest
+	} = props;
+
+	return {
+		configForHook: {
+			/* configs */
+			dragConfig, flickConfig, holdConfig,
+			/* general props */
+			disabled,
+			noResume,
+			/* events to be captured and forwarded by useTouch hook */
+			onBlur,
+			onClick,
+			onMouseDown, onMouseEnter, onMouseLeave, onMouseMove, onMouseUp,
+			onTouchEnd, onTouchMove, onTouchStart,
+			/* custom events to be forwarded by useTouch hook */
+			onDown,
+			onDrag, onDragEnd, onDragStart,
+			onFlick,
+			onHold, onHoldEnd, onHoldPulse,
+			onMove,
+			onTap,
+			onUp
+		},
+		propsForWrapped: {
+			disabled, // needed for both useTouch and the wrapped component
+			...rest
+		}
+	};
+};
+
 /**
  * Default config for `Touchable`.
  *
@@ -54,49 +106,17 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	function Touchable (props) {
-		const {
-			dragConfig, flickConfig, holdConfig,
-			noResume,
-			onBlur,
-			onClick,
-			onDown,
-			onDrag, onDragEnd, onDragStart,
-			onFlick,
-			onHold, onHoldEnd, onHoldPulse,
-			onMouseDown, onMouseEnter, onMouseLeave, onMouseMove, onMouseUp,
-			onMove,
-			onTap,
-			onTouchEnd, onTouchMove, onTouchStart,
-			onUp,
-			...updated} = props;
-		const hook = useTouch({
-			activeProp,
-			disabled: props.disabled,
-			dragConfig, flickConfig, holdConfig,
-			noResume,
-			onBlur,
-			onClick,
-			onDown,
-			onDrag, onDragEnd, onDragStart,
-			onFlick,
-			onHold, onHoldEnd, onHoldPulse,
-			onMouseDown, onMouseEnter, onMouseLeave, onMouseMove, onMouseUp,
-			onMove,
-			onTap,
-			onTouchEnd, onTouchMove, onTouchStart,
-			onUp
-		});
+		const {configForHook, propsForWrapped} = selectProps(props);
+		const hook = useTouch({getActive: !!activeProp, ...configForHook});
 
-		// To allow this pattern, handlers in hook.handlers is named as a format of on[Event].
-		// If we don't allow this pattern, a developer should add ten event handlers to Wrapped component manually.
-		Object.assign(updated, hook.handlers);
+		Object.assign(propsForWrapped, hook.handlers);
 
 		if (activeProp) {
-			updated[activeProp] = hook.active;
+			propsForWrapped[activeProp] = hook.active;
 		}
 
 		return (
-			<Wrapped {...updated} />
+			<Wrapped {...propsForWrapped} />
 		);
 	}
 
@@ -250,6 +270,14 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 * @public
 		 */
 		onHoldPulse: PropTypes.func,
+
+		/**
+		 * Event handler for 'move' pointer events
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onMove: PropTypes.func,
 
 		/**
 		 * Event handler for 'tap' pointer events

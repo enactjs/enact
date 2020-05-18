@@ -268,7 +268,7 @@ class Touch {
 
 	activate (ev) {
 		this.setTarget(ev.currentTarget);
-		if (this.props.activeProp) {
+		if (this.props.getActive) {
 			this.context.setState(States.Active);
 		}
 
@@ -277,7 +277,7 @@ class Touch {
 
 	deactivate () {
 		this.clearTarget();
-		if (this.props.activeProp) {
+		if (this.props.getActive) {
 			this.context.setState(States.Inactive);
 		}
 
@@ -285,7 +285,7 @@ class Touch {
 	}
 
 	pause () {
-		if (this.props.activeProp) {
+		if (this.props.getActive) {
 			this.context.setState(States.Paused);
 		}
 
