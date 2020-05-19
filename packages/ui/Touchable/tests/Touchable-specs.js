@@ -5,7 +5,6 @@ import React from 'react';
 import {shallow, mount} from 'enzyme';
 
 import Touchable from '../Touchable';
-import {activate, deactivate} from '../state';
 import {configure, getConfig, resetDefaultConfig} from '../config';
 
 describe('Touchable', () => {
@@ -240,28 +239,6 @@ describe('Touchable', () => {
 
 	describe('state management', () => {
 		describe('activate', () => {
-			test('should return null when active', () => {
-				const state = {
-					active: 2
-				};
-
-				const expected = null;
-				const actual = activate(state);
-
-				expect(actual).toBe(expected);
-			});
-
-			test('should return updated state when inactive', () => {
-				const state = {
-					active: 0
-				};
-
-				const expected = {active: 2};
-				const actual = activate(state);
-
-				expect(actual).toEqual(expected);
-			});
-
 			test(
 				'should update active state on mouse down when activeProp is configured',
 				() => {
@@ -321,28 +298,6 @@ describe('Touchable', () => {
 		});
 
 		describe('deactivate', () => {
-			test('should return null when inactive', () => {
-				const state = {
-					active: 0
-				};
-
-				const expected = null;
-				const actual = deactivate(state);
-
-				expect(actual).toBe(expected);
-			});
-
-			test('should return updated state when active', () => {
-				const state = {
-					active: 2
-				};
-
-				const expected = {active: 0};
-				const actual = deactivate(state);
-
-				expect(actual).toEqual(expected);
-			});
-
 			test(
 				'should update active state on mouse up when activeProp is configured',
 				() => {
