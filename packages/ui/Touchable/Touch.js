@@ -285,7 +285,7 @@ class Touch {
 	}
 
 	pause () {
-		if (this.props.getActive) {
+		if (this.props.getActive && this.context.state === States.Active) {
 			this.context.setState(States.Paused);
 		}
 
@@ -374,7 +374,7 @@ class Touch {
 	}
 
 	isPaused () {
-		return this.context.state.active === States.Paused;
+		return this.context.state === States.Paused;
 	}
 
 	hasFocus () {
