@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
@@ -90,15 +91,6 @@ class VirtualListBasic extends Component {
 			PropTypes.number,
 			gridListItemSizeShape
 		]).isRequired,
-
-		/**
-		 * The render function for the items.
-		 *
-		 * @type {Function}
-		 * @required
-		 * @private
-		 */
-		itemsRenderer: PropTypes.func.isRequired,
 
 		/**
 		 * Callback method of scrollTo.
@@ -231,6 +223,24 @@ class VirtualListBasic extends Component {
 		pageScroll: PropTypes.bool,
 
 		/**
+		 * The render function for the placeholder elements.
+		 *
+		 * @type {Function}
+		 * @required
+		 * @private
+		 */
+		placeholderRenderer: PropTypes.func,
+
+		/**
+		 * The ARIA role for the list.
+		 *
+		 * @type {String}
+		 * @default 'list'
+		 * @public
+		 */
+		role: PropTypes.string,
+
+		/**
 		 * `true` if RTL, `false` if LTR.
 		 *
 		 * @type {Boolean}
@@ -241,10 +251,10 @@ class VirtualListBasic extends Component {
 		/**
 		 * Ref for scroll content
 		 *
-		 * @type {Object}
+		 * @type {Object|Function}}
 		 * @private
 		 */
-		scrollContentRef: PropTypes.object,
+		scrollContentRef: EnactPropTypes.ref,
 
 		/**
 		 * Specifies how to scroll.
@@ -1174,7 +1184,7 @@ class VirtualListBasic extends Component {
 
 	render () {
 		const
-			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, scrollMode, ...rest} = this.props,
+			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, placeholderRenderer, role, style, scrollMode, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, primary} = this,
 			scrollModeNative = scrollMode === 'native',
 			containerClasses = classNames(
@@ -1215,8 +1225,8 @@ class VirtualListBasic extends Component {
 
 		return (
 			<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.props.scrollContentRef} style={style}>
-				<div {...rest} className={contentClasses} ref={this.contentRef}>
-					{itemsRenderer({cc, primary})}
+				<div {...rest} className={contentClasses} ref={this.contentRef} role={role}>
+					{[...cc, placeholderRenderer && placeholderRenderer(primary)]}
 				</div>
 			</div>
 		);

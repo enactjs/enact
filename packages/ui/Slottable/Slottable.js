@@ -46,10 +46,11 @@ const Slottable = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	return function Slottable (props) {
-		// extract the slots into a new object but populating the default value to be null to allow
-		// the current "harmful" behavior below.
+		// extract the slots into a new object but populating the default value to be undefined so
+		// the key exists in order to allow the current "harmful" behavior below. Must be undefined
+		// in order to trigger defaultProps on downstream components.
 		const slotProps = {children: props.children};
-		slots.forEach(k => (slotProps[k] = null));
+		slots.forEach(k => (slotProps[k] = undefined)); // eslint-disable-line no-undefined
 
 		// Slottable allows there to be other values in the destination slot and merges them.
 		// However, consumers can't avoid key warnings when merging the two lists so we should
