@@ -3,6 +3,8 @@ import React from 'react';
 
 import FloatingLayerContainer from './FloatingLayerContainer';
 
+const FloatingLayerContext = React.createContext();
+
 /**
  * Configuration for `useFloatingLayer`
  *
@@ -17,8 +19,7 @@ import FloatingLayerContainer from './FloatingLayerContainer';
  *
  * @typedef {Object} useFloatingLayerInterface
  * @memberof ui/FloatingLayerDecorator
- * @property {Function} registry         Registe the instance
- * @property {Function} setFloatingLayer Set the floating layer DOM element
+ * @property {Function} provideFloatingLayer Provide the wrapper DOM elements
  * @private
  */
 
@@ -29,20 +30,32 @@ import FloatingLayerContainer from './FloatingLayerContainer';
  * @returns {useFloatingLayerInterface}
  * @private
  */
-function useFloatingLayer (config) {
+function useFloatingLayer ({className, ...config}) {
+	const {floatLayerId} = config;
 	const floating = useClass(FloatingLayerContainer, config);
 
 	React.useEffect(() => {
 		floating.load();
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+	const provideFloatingLayer = React.useCallback((children) => {
+		return (
+			<FloatingLayerContext.Provider value={floating.registry.register}>
+				<div className={className}>
+					{children}
+					<div id={floatLayerId} key="floatLayer" ref={floating.setFloatingLayer} />
+				</div>
+			</FloatingLayerContext.Provider>
+		);
+	}, [className, floating, floatLayerId]);
+
 	return {
-		registry: floating.registry,
-		setFloatingLayer: floating.setFloatingLayer
+		provideFloatingLayer
 	};
 }
 
 export default useFloatingLayer;
 export {
+	FloatingLayerContext,
 	useFloatingLayer
 };

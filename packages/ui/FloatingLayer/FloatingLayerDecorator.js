@@ -5,9 +5,7 @@
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
-import useFloatingLayer from './useFloatingLayer';
-
-const FloatingLayerContext = React.createContext();
+import {FloatingLayerContext, useFloatingLayer} from './useFloatingLayer';
 
 /**
  * Default config for {@link ui/FloatingLayer.FloatingLayerDecorator}.
@@ -58,15 +56,10 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	// eslint-disable-next-line no-shadow
 	function FloatingLayerDecorator (props) {
 		const {className, ...rest} = props;
-		const floating = useFloatingLayer({floatLayerId});
+		const hook = useFloatingLayer({className, floatLayerId});
 
-		return (
-			<FloatingLayerContext.Provider value={floating.registry.register}>
-				<div className={className}>
-					<Wrapped key="floatWrapped" {...rest} className={wrappedClassName} />
-					<div id={floatLayerId} key="floatLayer" ref={floating.setFloatingLayer} />
-				</div>
-			</FloatingLayerContext.Provider>
+		return hook.provideFloatingLayer(
+			<Wrapped key="floatWrapped" {...rest} className={wrappedClassName} />
 		);
 	}
 
