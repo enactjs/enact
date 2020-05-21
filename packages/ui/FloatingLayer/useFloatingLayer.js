@@ -30,9 +30,9 @@ const FloatingLayerContext = React.createContext();
  * @returns {useFloatingLayerInterface}
  * @private
  */
-function useFloatingLayer ({className, ...config}) {
-	const {floatLayerId} = config;
-	const floating = useClass(FloatingLayerContainer, config);
+function useFloatingLayer (config = {}) {
+	const {className, floatLayerId = 'floatLayer'} = config;
+	const floating = useClass(FloatingLayerContainer, {floatLayerId});
 
 	React.useEffect(() => {
 		floating.load();
