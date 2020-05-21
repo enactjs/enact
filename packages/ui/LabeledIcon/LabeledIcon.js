@@ -140,10 +140,10 @@ const LabeledIconBase = kind({
 		/**
 		 * The size of the icon.
 		 *
-		 * Applies either the `small` or `large` CSS class which can be customized by
+		 * Applies the CSS class which can be customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
-		 * @type {('large'|'small')}
+		 * @type {String}
 		 * @default 'large'
 		 * @public
 		 */
