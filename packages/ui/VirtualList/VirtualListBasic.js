@@ -356,6 +356,12 @@ class VirtualListBasic extends Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
+		window.performanceData = window.performanceData || [];
+		const spendTime = window.performance.now() - window.prevTime;
+		if (spendTime) {
+			window.performanceData.push(spendTime);
+		}
+
 		let deferScrollTo = false;
 		const {firstIndex, numOfItems} = this.state;
 
@@ -934,6 +940,7 @@ class VirtualListBasic extends Component {
 		this.updateMoreInfo(dataSize, pos);
 
 		if (this.shouldUpdateBounds || firstIndex !== newFirstIndex) {
+			window.prevTime = window.performance.now();
 			this.setState({firstIndex: newFirstIndex});
 		}
 	}
