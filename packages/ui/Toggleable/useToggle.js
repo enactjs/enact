@@ -48,7 +48,8 @@ function useToggle ({defaultSelected, selected, ...config} = {}) {
 		typeof selected !== 'undefined'
 	);
 
-	toggle.setContext(...state);
+	const props = {disabled: config.disabled, onToggle: config.onToggle};
+	toggle.setContext(props, ...state);
 
 	return {
 		activate: toggle.handleActivate,
