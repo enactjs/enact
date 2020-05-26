@@ -12,7 +12,8 @@ class Toggle {
 		this.context = {};
 	}
 
-	setContext (value, onToggle) {
+	setContext (props, value, onToggle) {
+		this.props = {...this.props, ...props};
 		this.context.value = value;
 		this.context.onToggle = onToggle;
 	}
