@@ -255,7 +255,7 @@ describe('Toggleable', () => {
 				<Component onToggle={handleToggle} disabled />
 			);
 
-			subject.setProps({disabled: false})
+			subject.setProps({disabled: false});
 
 			subject.simulate('toggle');
 
@@ -275,7 +275,7 @@ describe('Toggleable', () => {
 				<Component />
 			);
 
-			subject.setProps({onToggle: handleToggle})
+			subject.setProps({onToggle: handleToggle});
 
 			subject.simulate('toggle');
 
