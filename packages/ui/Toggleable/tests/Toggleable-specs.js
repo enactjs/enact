@@ -247,6 +247,46 @@ describe('Toggleable', () => {
 	);
 
 	test(
+		'should invoke passed \'onToggle\' handler when disabled at creation and becoming enabled',
+		() => {
+			const handleToggle = jest.fn();
+			const Component = Toggleable(DivComponent);
+			const subject = shallow(
+				<Component onToggle={handleToggle} disabled />
+			);
+
+			subject.setProps({disabled: false});
+
+			subject.simulate('toggle');
+
+			const expected = 1;
+			const actual = handleToggle.mock.calls.length;
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should invoke changed \'onToggle\' handler',
+		() => {
+			const handleToggle = jest.fn();
+			const Component = Toggleable(DivComponent);
+			const subject = shallow(
+				<Component />
+			);
+
+			subject.setProps({onToggle: handleToggle});
+
+			subject.simulate('toggle');
+
+			const expected = 1;
+			const actual = handleToggle.mock.calls.length;
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
 		'should not invoke passed \'onActivate\' handler when disabled',
 		() => {
 			const handleActivate = jest.fn();
