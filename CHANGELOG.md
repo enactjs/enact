@@ -7,6 +7,15 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Added
 
 - `core/handle.forwardCustom` handler to simplify forwarding custom events from components
+## [3.3.0-alpha.10] - 2020-05-26
+
+### Added
+
+- `ui/Group` prop `selectedEventProp` to configure the key used to hold the value in the `onSelect` event
+
+### Fixed
+
+- `Toggleable` to recognize changes in `disabled` and `onToggle`
 
 ## [3.3.0-alpha.9] - 2020-05-11
 

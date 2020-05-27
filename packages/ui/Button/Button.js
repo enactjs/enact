@@ -145,10 +145,10 @@ const ButtonBase = kind({
 		/**
 		 * The size of the button.
 		 *
-		 * Applies either the `small` or `large` CSS class which can be customized by
+		 * Applies the CSS class which can be customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
-		 * @type {('small'|'large')}
+		 * @type {String}
 		 * @default 'large'
 		 * @public
 		 */
