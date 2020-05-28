@@ -1,5 +1,7 @@
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
+import map from 'ramda/src/map';
+import omit from 'ramda/src/omit';
 import pick from 'ramda/src/pick';
 import React from 'react';
 
@@ -40,14 +42,7 @@ const CacheReactElementWithPropContext = ({filterProps}) => {
 			return (
 				<CacheReactElementContext.Consumer>
 					{(props) => {
-						const cachedProps = {};
-
-						for (const key in props) {
-							if (filterProps.indexOf(key) >= 0) {
-								cachedProps[key] = props[key];
-							}
-						}
-
+						const cachedProps = pick(filterProps, props);
 						return children ? children(cachedProps) : null;
 					}}
 				</CacheReactElementContext.Consumer>
@@ -146,16 +141,13 @@ const CacheReactElementDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return <Wrapped {...rest} />;
 		}
 
-		const cachedProps = {};
+		const cachedProps = pick(filterChildren, rest);
+		const omittedProps = omit(filterChildren, rest);
 		const updatedProps = {};
 
-		for (const key in rest) {
-			if (filterChildren.indexOf(key) >= 0) {
-				const CachedContextProp = CacheReactElementWithChildrenContextDecorator(key);
-				cachedProps[key] = <CachedContextProp>{rest[key]}</CachedContextProp>;
-			} else {
-				updatedProps[key] = rest[key];
-			}
+		for (const key in omittedProps) {
+			const CachedContextProp = CacheReactElementWithChildrenContextDecorator(key);
+			updatedProps[key] = <CachedContextProp>{rest[key]}</CachedContextProp>;
 		}
 
 		element.current = element.current || (
