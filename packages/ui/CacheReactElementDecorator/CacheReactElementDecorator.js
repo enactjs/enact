@@ -1,6 +1,5 @@
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
-import map from 'ramda/src/map';
 import omit from 'ramda/src/omit';
 import pick from 'ramda/src/pick';
 import React from 'react';
@@ -57,7 +56,7 @@ const CacheReactElementWithPropContext = ({filterProps}) => {
 		 * Cache React elements.
 		 *
 		 * @type {Boolean}
-		 * @default false
+		 * @default true
 		 * @public
 		 */
 		cached: PropTypes.bool
@@ -79,16 +78,29 @@ const CacheReactElementWithPropContextDecorator = hoc(defaultWithPropConfig, (co
 
 	// eslint-disable-next-line no-shadow
 	function CacheReactElementWithPropContextDecorator ({cached, ...rest}) {
-		debugger;
+		const cachedContext = React.useContext(CacheReactElementContext);
 		if (cached) {
-			const cachedContext = React.useContext(CacheReactElementContext);
 			const cachedProps = pick(filterProps, cachedContext);
-
-			return <Wrapped {...rest} {...cachedProps} />
+			return <Wrapped {...rest} {...cachedProps} />;
 		} else {
-			return <Wrapped {...rest} />
+			return <Wrapped {...rest} />;
 		}
 	}
+
+	CacheReactElementWithPropContextDecorator.propTypes = /** @lends sandstone/ImageItem.CacheReactElementWithPropContextDecorator.prototype */ {
+		/**
+		 * Cache React elements.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		cached: PropTypes.bool
+	};
+
+	CacheReactElementWithPropContextDecorator.defaultProps = {
+		cached: true
+	};
 
 	return CacheReactElementWithPropContextDecorator;
 });
@@ -169,7 +181,7 @@ const CacheReactElementDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * Cache React elements.
 		 *
 		 * @type {Boolean}
-		 * @default false
+		 * @default true
 		 * @public
 		 */
 		cached: PropTypes.bool
