@@ -696,7 +696,7 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
 });
 
 /**
- * Forwards the event to a function at `name` on `props`.
+ * Creates a handler that will forward the event to a function at `name` on `props`.
  *
  * If `adapter` is not specified, a new event payload will be generated with a `type` member with
  * the `name` of the custom event. If `adapter` is specified, the `type` member is added to the
