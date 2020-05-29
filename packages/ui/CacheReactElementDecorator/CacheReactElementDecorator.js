@@ -1,3 +1,10 @@
+/**
+ * caches React elements, but allows context values to re-render.
+ *
+ * @module ui/CacheReactElementContext
+ * @exports CacheReactElementContext
+ */
+
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
 import omit from 'ramda/src/omit';
