@@ -41,7 +41,7 @@ const ImageItemBase = kind({
 		 * Cache React elements.
 		 *
 		 * @type {Boolean}
-		 * @default true
+		 * @default false
 		 * @public
 		 */
 		cached: PropTypes.bool,
@@ -117,7 +117,7 @@ const ImageItemBase = kind({
 	},
 
 	defaultProps: {
-		cached: true,
+		cached: false,
 		imageComponent: Image,
 		orientation: 'vertical',
 		selected: false

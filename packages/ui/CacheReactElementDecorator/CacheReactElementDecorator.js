@@ -144,14 +144,14 @@ const CacheReactElementAndUpdatePropsContextDecorator = hoc(defaultWithPropConfi
 		 * Cache React elements.
 		 *
 		 * @type {Boolean}
-		 * @default true
+		 * @default false
 		 * @public
 		 */
 		cached: PropTypes.bool
 	};
 
 	CacheReactElementAndUpdatePropsContextDecorator.defaultProps = {
-		cached: true
+		cached: false
 	};
 
 	return CacheReactElementAndUpdatePropsContextDecorator;
@@ -186,14 +186,14 @@ const CacheReactElementAndUpdateDOMAttributesContextDecorator = hoc(defaultWithP
 			 * Cache React elements.
 			 *
 			 * @type {Boolean}
-			 * @default true
+			 * @default false
 			 * @public
 			 */
 			cached: PropTypes.bool
 		}
 
 		static defaultProps = {
-			cached: true
+			cached: false
 		}
 
 		componentDidMount () {
@@ -315,14 +315,14 @@ const CacheReactElementDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * Cache React elements.
 		 *
 		 * @type {Boolean}
-		 * @default true
+		 * @default false
 		 * @public
 		 */
 		cached: PropTypes.bool
 	};
 
 	CacheReactElementDecorator.defaultProps = {
-		cached: true
+		cached: false
 	};
 
 	return CacheReactElementDecorator;
