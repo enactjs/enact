@@ -725,7 +725,6 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
  *                                     (suitable for passing to handle or used directly within
  *                                     `handlers` in [kind]{@link core/kind}) that will forward the
  *                                     custom event.
- * @curried
  * @memberof core/handle
  * @public
  */
