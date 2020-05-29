@@ -38,6 +38,15 @@ const ImageItemBase = kind({
 
 	propTypes: /** @lends ui/ImageItem.ImageItem.prototype */ {
 		/**
+		 * Cache React elements.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		cached: PropTypes.bool,
+
+		/**
 		 * The caption displayed with the image.
 		 *
 		 * @type {Node}
@@ -108,6 +117,7 @@ const ImageItemBase = kind({
 	},
 
 	defaultProps: {
+		cached: true,
 		imageComponent: Image,
 		orientation: 'vertical',
 		selected: false

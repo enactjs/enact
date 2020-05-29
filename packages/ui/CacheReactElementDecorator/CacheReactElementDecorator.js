@@ -56,7 +56,7 @@ const CacheReactElementWithPropContext = ({filterProps}) => {
 		 * Cache React elements.
 		 *
 		 * @type {Boolean}
-		 * @default false
+		 * @default true
 		 * @public
 		 */
 		cached: PropTypes.bool
@@ -86,6 +86,21 @@ const CacheReactElementWithPropContextDecorator = hoc(defaultWithPropConfig, (co
 			return <Wrapped {...rest} />;
 		}
 	}
+
+	CacheReactElementWithPropContextDecorator.propTypes = /** @lends sandstone/ImageItem.CacheReactElementWithPropContextDecorator.prototype */ {
+		/**
+		 * Cache React elements.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		cached: PropTypes.bool
+	};
+
+	CacheReactElementWithPropContextDecorator.defaultProps = {
+		cached: true
+	};
 
 	return CacheReactElementWithPropContextDecorator;
 });
@@ -167,7 +182,7 @@ const CacheReactElementDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * Cache React elements.
 		 *
 		 * @type {Boolean}
-		 * @default false
+		 * @default true
 		 * @public
 		 */
 		cached: PropTypes.bool
