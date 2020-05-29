@@ -151,6 +151,7 @@ const CacheReactElementDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			<Wrapped
 				{...cachedProps}
 				{...updatedProps}
+				cached={cached}
 			/>
 		);
 

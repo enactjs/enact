@@ -136,8 +136,9 @@ const ImageItemBase = kind({
 		const ContextCell = cached ? CacheReactElementWithPropContextDecorator({filterProps: ['src']})(Cell) : Cell;
 
 		return (
-			<ContextComponent {...rest}>
+			<ContextComponent {...rest} cached={cached} >
 				<ContextCell
+					cached={cached}
 					className={css.image}
 					component={ImageOverride}
 					imageComponent={imageComponent}
