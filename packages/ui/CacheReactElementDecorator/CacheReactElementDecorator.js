@@ -153,13 +153,13 @@ const CacheReactElementDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return <Wrapped {...rest} />;
 		}
 
-		const cachedProps = pick(filterChildren, rest);
-		const omittedProps = omit(filterChildren, rest);
-		const updatedProps = {};
+		const cachedProps = {};
+		const pickProps = pick(filterChildren, rest);
+		const updatedProps = omit(filterChildren, rest);
 
-		for (const key in omittedProps) {
+		for (const key in pickProps) {
 			const CachedContextProp = CacheReactElementWithChildrenContextDecorator(key);
-			updatedProps[key] = <CachedContextProp>{rest[key]}</CachedContextProp>;
+			cachedProps[key] = <CachedContextProp>{rest[key]}</CachedContextProp>;
 		}
 
 		element.current = element.current || (
