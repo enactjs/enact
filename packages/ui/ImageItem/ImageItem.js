@@ -10,7 +10,7 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {CacheReactElementWithPropContextDecorator} from '../CacheReactElementDecorator';
+import {CacheReactElementAndUpdateDOMAttributesContextDecorator} from '../CacheReactElementDecorator';
 import ComponentOverride from '../ComponentOverride';
 import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
@@ -41,7 +41,7 @@ const ImageItemBase = kind({
 		 * Cache React elements.
 		 *
 		 * @type {Boolean}
-		 * @default true
+		 * @default false
 		 * @public
 		 */
 		cached: PropTypes.bool,
@@ -117,7 +117,7 @@ const ImageItemBase = kind({
 	},
 
 	defaultProps: {
-		cached: true,
+		cached: false,
 		imageComponent: Image,
 		orientation: 'vertical',
 		selected: false
@@ -142,13 +142,14 @@ const ImageItemBase = kind({
 
 		const isHorizontal = orientation === 'horizontal';
 		const Component = isHorizontal ? Row : Column;
-		const ContextComponent = cached ? CacheReactElementWithPropContextDecorator({filterProps: ['data-index', 'src']})(Component) : Component;
-		const ContextCell = cached ? CacheReactElementWithPropContextDecorator({filterProps: ['src']})(Cell) : Cell;
+		const ContextComponent = cached ? CacheReactElementAndUpdateDOMAttributesContextDecorator({filterProps: ['data-index', 'src']})(Component) : Component;
+		const ContextCell = cached ? CacheReactElementAndUpdateDOMAttributesContextDecorator({filterProps: ['src']})(Cell) : Cell;
+		const cachedProp = cached ? {cached} : null;
 
 		return (
-			<ContextComponent {...rest} cached={cached} >
+			<ContextComponent {...rest} {...cachedProp} >
 				<ContextCell
-					cached={cached}
+					{...cachedProp}
 					className={css.image}
 					component={ImageOverride}
 					imageComponent={imageComponent}
