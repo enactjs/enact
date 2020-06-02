@@ -1074,11 +1074,12 @@ const useScrollBase = (props) => {
 			}
 		}
 
+		if (scrollContentHandle.current && scrollContentHandle.current.setScrollPositionTarget) {
+			scrollContentHandle.current.setScrollPositionTarget(targetX, targetY);
+		}
+
 		if (scrollMode === 'translate') {
 			showScrollbarTrack(bounds);
-			if (scrollContentHandle.current && scrollContentHandle.current.setScrollPositionTarget) {
-				scrollContentHandle.current.setScrollPositionTarget(targetX, targetY);
-			}
 
 			if (animate) {
 				mutableRef.current.animator.animate(scrollAnimation(mutableRef.current.animationInfo));
