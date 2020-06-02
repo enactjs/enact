@@ -26,7 +26,7 @@ const CacheReactElementContext = React.createContext();
  * );
  * ```
  *
- * @class CacheReactElementAndUpdatePropsContext
+ * @class CacheReactElementAndUpdateChildrenContextDecorator
  * @memberof ui/CacheReactElementDecorator
  * @hoc
  * @private

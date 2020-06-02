@@ -142,7 +142,7 @@ const ImageItemBase = kind({
 
 		const isHorizontal = orientation === 'horizontal';
 		const Component = isHorizontal ? Row : Column;
-		const ContextComponent = cached ? CacheReactElementAndUpdateDOMAttributesContextDecorator({filterProps: ['data-index', 'src']})(Component) : Component;
+		const ContextComponent = cached ? CacheReactElementAndUpdateDOMAttributesContextDecorator({filterProps: ['data-index']})(Component) : Component;
 		const ContextCell = cached ? CacheReactElementAndUpdateDOMAttributesContextDecorator({filterProps: ['src']})(Cell) : Cell;
 		const cachedProp = cached ? {cached} : null;
 
