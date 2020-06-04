@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/handle.forwardCustom` handler to simplify forwarding custom events from components
+
+## [3.3.0-alpha.10] - 2020-05-26
+
+No significant changes.
+
 ## [3.3.0-alpha.9] - 2020-05-11
 
 No significant changes.
