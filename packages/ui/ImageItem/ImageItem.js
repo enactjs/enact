@@ -112,6 +112,8 @@ const ImageItemBase = kind({
 		selected: false
 	},
 
+	functional: true,
+
 	styles: {
 		css: componentCss,
 		className: 'imageItem',
@@ -119,39 +121,71 @@ const ImageItemBase = kind({
 	},
 
 	computed: {
-		className: ({orientation, selected, styler}) => styler.append({
-			selected,
-			horizontal: orientation === 'horizontal',
-			vertical: orientation === 'vertical'
-		})
-	},
+		className: ({orientation, selected, styler}) => {
+			return styler.append(
+				React.useMemo(() => {
+					console.log('ui className')
+					return {
+						selected,
+						horizontal: orientation === 'horizontal',
+						vertical: orientation === 'vertical'
+					};
+				}, [orientation, selected])
+			);
+		},
+		isHorizntal : ({orientation}) => (orientation === 'horizontal'),
 
-	render: ({children, css, imageComponent, orientation, placeholder, src, ...rest}) => {
-		delete rest.selected;
-
-		const isHorizontal = orientation === 'horizontal';
-		const Component = isHorizontal ? Row : Column;
-
-		return (
-			<Component {...rest}>
-				<Cell
+		imgComp: ({css, imageComponent, isHorizntal, placeholder, src}) => {
+			return React.useMemo(() => {
+				console.log('ui imgComp')
+				return <Cell
 					className={css.image}
 					component={ImageOverride}
 					imageComponent={imageComponent}
 					placeholder={placeholder}
-					shrink={isHorizontal}
+					shrink={isHorizntal}
 					src={src}
 				/>
-				{children ? (
-					<Cell
-						className={css.caption}
-						shrink={!isHorizontal}
-						// eslint-disable-next-line no-undefined
-						align={isHorizontal ? 'center' : undefined}
-					>
-						{children}
-					</Cell>
-				) : null}
+			}, [Object.values(css).join(''), imageComponent.type.displayName, isHorizntal, placeholder, src])
+		},
+		children: ({children, css, isHorizntal}) => {
+			return React.useMemo(() => {
+				console.log('ui children')
+				return <Cell
+					className={css.caption}
+					shrink={!isHorizntal}
+					// eslint-disable-next-line no-undefined
+					align={isHorizntal ? 'center' : undefined}
+					children={children}
+				/>
+			}, [Object.values(css).join(''), isHorizntal])
+		},
+		// children: ({children, childrenWrapper}) => {
+		// 	return React.useMemo(() => {
+		// 		// console.log(children, childrenWrapper)
+		// 		children ? React.cloneElement(childrenWrapper, null, children) : null
+		// 	}, [children, childrenWrapper])
+		// }
+	},
+
+	render: ({children, css, imgComp, orientation, ...rest}) => {
+		delete rest.childrenWrapper;
+		delete rest.css;
+		delete rest.imageComponent;
+		delete rest.isHorizntal;
+		delete rest.orientation;
+		delete rest.placeholder;
+		delete rest.selected;
+		delete rest.src;
+
+		// console.log('data-index', rest['data-index'])
+
+		const Component = orientation === 'horizontal' ? Row : Column;
+
+		return (
+			<Component {...rest}>
+				{imgComp}
+				{children}
 			</Component>
 		);
 	}

@@ -28,8 +28,9 @@ const computed = (cfg, optProps) => {
 
 	const renderComputed = (props, ...args) => {
 		const updated = {};
-		for (let i = keys.length - 1; i >= 0; i--) {
-			updated[keys[i]] = cfg[keys[i]](props, ...args);
+
+		for (let i = 0; i < keys.length; i++) {
+			updated[keys[i]] = cfg[keys[i]]({...props, ...updated, css: props.css, styler: props.styler}, ...args);
 		}
 
 		return Object.assign(props, updated);
