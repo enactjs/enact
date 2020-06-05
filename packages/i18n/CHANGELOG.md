@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `i18n/I18nDecorator` locale selection during prerendering
+
 ## [3.3.0-alpha.10] - 2020-05-26
 
 No significant changes.
