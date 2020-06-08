@@ -209,6 +209,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 
 export default Skinnable;
 export {
+	objectify,
 	Skinnable,
 	useSkins
 };
