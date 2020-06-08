@@ -1,6 +1,6 @@
 /* eslint-disable enact/prop-types */
 
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import React from 'react';
 
 import useChainRefs from '../useChainRefs';

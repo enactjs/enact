@@ -38,7 +38,7 @@ function chainRefs (...refs) {
 }
 
 /**
- * Creates a memoized reference callback that updates each of the provided references676 
+ * Creates a memoized reference callback that updates each of the provided references
  *
  * @param {Object|Function} ...handlers  List of references to be updated.
  * @returns {Function}                   A memoized callback that updates each reference
