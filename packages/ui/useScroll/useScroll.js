@@ -826,7 +826,7 @@ const useScrollBase = (props) => {
 	}
 
 	function applyOverscrollEffect (orientation, edge, overscrollEffectType, ratio) {
-		props.applyOverscrollEffect(orientation, edge, overscrollEffectType, ratio);
+		props.applyOverscrollEffect(orientation, edge, overscrollEffectType, ratio, rtl);
 		setOverscrollStatus(orientation, edge, overscrollEffectType === overscrollTypeOnce ? overscrollTypeDone : overscrollEffectType, ratio);
 	}
 
