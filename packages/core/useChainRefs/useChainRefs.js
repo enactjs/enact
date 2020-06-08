@@ -1,3 +1,12 @@
+/**
+ * Updates multiple reference callbacks or objects
+ *
+ * @module core/useChainRefs
+ * @exports useChainRefs
+ * @exports chainRefs
+ * @private
+ */
+
 import React from 'react';
 import warning from 'warning';
 
@@ -15,12 +24,26 @@ function updateRef (ref, node) {
 	}
 }
 
+/**
+ * Creates a reference callback that updates each of the provided references
+ *
+ * @param {Object|Function} ...handlers  List of references to be updated.
+ * @returns {Function}                   A callback that updates each reference
+ * @public
+ */
 function chainRefs (...refs) {
 	return (node) => {
 		refs.forEach(ref => updateRef(ref, node));
 	};
 }
 
+/**
+ * Creates a memoized reference callback that updates each of the provided references676 
+ *
+ * @param {Object|Function} ...handlers  List of references to be updated.
+ * @returns {Function}                   A memoized callback that updates each reference
+ * @public
+ */
 function useChainRefs (...refs) {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	return React.useCallback(chainRefs(...refs), refs);
