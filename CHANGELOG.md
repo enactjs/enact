@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.3.0-alpha.11] - 2020-06-08
+
+### Added
+
+- `core/handle.forwardCustom` handler to simplify forwarding custom events from components
+
+### Fixed
+
+- `i18n/I18nDecorator` locale selection during prerendering
+
 ## [3.3.0-alpha.10] - 2020-05-26
 
 ### Added
