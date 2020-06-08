@@ -6,9 +6,12 @@
  */
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
+import pick from 'ramda/src/pick';
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 import ComponentOverride from '../ComponentOverride';
 import Image from '../Image';
@@ -22,6 +25,121 @@ function ImageOverride ({imageComponent, ...rest}) {
 		component: imageComponent,
 		...rest
 	});
+}
+
+const MemoChildrenContext = React.createContext();
+
+const MemoChildrenDecorator = hoc((config, Wrapped) => {
+	function CacheContextDecorator (props) {
+		return (
+			<MemoChildrenContext.Provider value={props}>
+				<Wrapped {...props} />
+			</MemoChildrenContext.Provider>
+		);
+	}
+
+	return CacheContextDecorator;
+});
+
+function useMemoChildrenContext () {
+	return React.useContext(MemoChildrenContext);
+}
+
+const defaultWithPropConfig = {
+	/**
+	 * The array includes the key strings of the context object
+	 * which will be used as props.
+	 *
+	 * @type {Array}
+	 * @default []
+	 * @public
+	 */
+	filterProps: []
+};
+
+const MemoChildrenDOMAttributesContextDecorator = hoc(defaultWithPropConfig, (config, Wrapped) => {
+	const {filterProps} = config;
+	return class MemoChildrenDOMAttributesContext extends React.Component {
+		static propTypes = /** @lends sandstone/CacheReactElementDecorator.CacheReactElementAndUpdateDOMAttributesContextDecorator.prototype */ {
+			filterProps: []
+		}
+
+		componentDidMount () {
+			this.updateDOMAttributes();
+		}
+
+		node = null
+
+		cachedProps = {}
+
+		cachedChildren = null
+
+		updateDOMAttributes () {
+			this.node = this.node || ReactDOM.findDOMNode(this); // eslint-disable-line react/no-find-dom-node
+
+			if (this.node) {
+				for (const prop in this.cachedProps) {
+					this.node.setAttribute(prop, this.cachedProps[prop]);
+				}
+			}
+		}
+
+		render () {
+			const {filterProps, ...rest} = this.props;
+			return (
+				<MemoChildrenContext.Consumer>
+					{(context) => {
+						this.cachedProps = pick(filterProps, context);
+						this.cachedChildren = this.cachedChildren || this.props.children;
+						this.updateDOMAttributes();
+
+						return this.cachedChildren;
+					}}
+				</MemoChildrenContext.Consumer>
+			);
+		}
+	}
+});
+
+class MemoChildrenDOMAttributesContext extends React.Component {
+	static propTypes = /** @lends sandstone/CacheReactElementDecorator.CacheReactElementAndUpdateDOMAttributesContextDecorator.prototype */ {
+		attr: []
+	}
+
+	componentDidMount () {
+		this.updateDOMAttributes();
+	}
+
+	node = null
+
+	cachedProps = {}
+
+	cachedChildren = null
+
+	updateDOMAttributes () {
+		this.node = this.node || ReactDOM.findDOMNode(this); // eslint-disable-line react/no-find-dom-node
+
+		if (this.node) {
+			for (const prop in this.cachedProps) {
+				this.node.setAttribute(prop, this.cachedProps[prop]);
+			}
+		}
+	}
+
+	render () {
+		const {attr, ...rest} = this.props;
+		return (
+			<MemoChildrenContext.Consumer>
+				{(context) => {
+					this.cachedProps = pick(attr, context);
+					this.cachedChildren = this.cachedChildren || this.props.children;
+					this.updateDOMAttributes();
+
+					return this.cachedChildren;
+				}}
+			</MemoChildrenContext.Consumer>
+		);
+	}
 }
 
 /**
@@ -121,43 +239,39 @@ const ImageItemBase = kind({
 	},
 
 	computed: {
-		className: ({orientation, selected, styler}) => {
-			return styler.append(
-				React.useMemo(() => {
-					console.log('ui className')
-					return {
-						selected,
-						horizontal: orientation === 'horizontal',
-						vertical: orientation === 'vertical'
-					};
-				}, [orientation, selected])
-			);
-		},
 		isHorizntal : ({orientation}) => (orientation === 'horizontal'),
-
 		imgComp: ({css, imageComponent, isHorizntal, placeholder, src}) => {
 			return React.useMemo(() => {
-				console.log('ui imgComp')
-				return <Cell
-					className={css.image}
-					component={ImageOverride}
-					imageComponent={imageComponent}
-					placeholder={placeholder}
-					shrink={isHorizntal}
-					src={src}
-				/>
+				console.log('ui:imgComp');
+
+				return (
+					<Cell
+						className={css.image}
+						component={ImageOverride}
+						imageComponent={imageComponent}
+						placeholder={placeholder}
+						shrink={isHorizntal}
+						src={src}
+						context={MemoChildrenDOMAttributesContext}
+					/>
+				);
 			}, [Object.values(css).join(''), imageComponent.type.displayName, isHorizntal, placeholder, src])
 		},
 		children: ({children, css, isHorizntal}) => {
 			return React.useMemo(() => {
-				console.log('ui children')
-				return <Cell
-					className={css.caption}
-					shrink={!isHorizntal}
-					// eslint-disable-next-line no-undefined
-					align={isHorizntal ? 'center' : undefined}
-					children={children}
-				/>
+				console.log('ui:children')
+				return (
+					<Cell
+						className={css.caption}
+						shrink={!isHorizntal}
+						// eslint-disable-next-line no-undefined
+						align={isHorizntal ? 'center' : undefined}
+					>
+						<MemoChildrenContext.Consumer>
+							{({children}) => (children)}
+						</MemoChildrenContext.Consumer>
+					</Cell>
+				);
 			}, [Object.values(css).join(''), isHorizntal])
 		},
 		// children: ({children, childrenWrapper}) => {
@@ -166,6 +280,19 @@ const ImageItemBase = kind({
 		// 		children ? React.cloneElement(childrenWrapper, null, children) : null
 		// 	}, [children, childrenWrapper])
 		// }
+		className: ({orientation, selected, styler}) => {
+			return styler.append(
+				React.useMemo(() => {
+					console.log('ui:className');
+
+					return {
+						selected,
+						horizontal: orientation === 'horizontal',
+						vertical: orientation === 'vertical'
+					};
+				}, [orientation, selected])
+			);
+		}
 	},
 
 	render: ({children, css, imgComp, orientation, ...rest}) => {
@@ -183,10 +310,12 @@ const ImageItemBase = kind({
 		const Component = orientation === 'horizontal' ? Row : Column;
 
 		return (
-			<Component {...rest}>
-				{imgComp}
-				{children}
-			</Component>
+			<MemoChildrenDOMAttributesContext attr={['data-index']}>
+				<Component {...rest}>
+					{imgComp}
+					{children}
+				</Component>
+			</MemoChildrenDOMAttributesContext>
 		);
 	}
 });
@@ -194,5 +323,6 @@ const ImageItemBase = kind({
 export default ImageItemBase;
 export {
 	ImageItemBase as ImageItem,
-	ImageItemBase
+	ImageItemBase,
+	MemoChildrenDecorator
 };
