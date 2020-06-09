@@ -952,24 +952,6 @@ class VirtualListBasic extends Component {
 	}
 
 	// For individually sized item
-	applyItemPositionToDOMElement (index) {
-		const
-			{direction, itemRefs, rtl} = this.props,
-			{numOfItems} = this.state,
-			{itemPositions} = this,
-			childNode = itemRefs.current[index % numOfItems];
-
-		if (childNode && itemPositions[index]) {
-			const position = itemPositions[index].position;
-			if (direction === 'vertical') {
-				childNode.style.transform = `translate3d(0, ${position}px, 0)`;
-			} else {
-				childNode.style.transform = `translate3d(${position * (rtl ? -1 : 1)}px, 0, 0)`;
-			}
-		}
-	}
-
-	// For individually sized item
 	updateThresholdWithItemPosition () {
 		const
 			{overhang} = this.props,
@@ -1021,7 +1003,6 @@ class VirtualListBasic extends Component {
 			// and adjust item DOM element positions
 			for (let index = firstIndex; index <= lastIndex; index++) {
 				this.calculateAndCacheItemPosition(index);
-				this.applyItemPositionToDOMElement(index);
 			}
 
 			// Update threshold based on this.itemPositions
