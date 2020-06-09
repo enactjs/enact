@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to not cause unnecessary rerenders
+- `ui/Skinnable` to not force all `Skinnable` children to update if a parent updates
+
 ## [3.3.0-alpha.11] - 2020-06-08
 
 No significant changes.
