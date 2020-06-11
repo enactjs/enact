@@ -163,7 +163,7 @@ const ImageBase = kind({
 		imgSrc: ({src}) => selectSrc(src) || null
 	},
 
-	render: ({alt, 'aria-label': ariaLabel, bgImage, children, context: MemoChildrenDOMAttributesContext, css, img, imgSrc, onError, onLoad, style, ...rest}) => {
+	render: ({alt, 'aria-label': ariaLabel, bgImage, children, css, imgSrc, onError, onLoad, style, ...rest}) => {
 		delete rest.placeholder;
 		delete rest.sizing;
 		delete rest.src;
@@ -171,7 +171,7 @@ const ImageBase = kind({
 		return (
 			<div role="img" {...rest} aria-label={ariaLabel || alt} style={{...style, backgroundImage: bgImage}}>
 				{children}
-				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} /> :
+				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} />
 			</div>
 		);
 	}
