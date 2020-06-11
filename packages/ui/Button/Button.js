@@ -107,6 +107,17 @@ const ButtonBase = kind({
 		iconComponent: EnactPropTypes.componentOverride,
 
 		/**
+		 * The icon component prop passed to the {@link ui/Button.Button.iconComponent} component as props.
+		 *
+		 * If [icon]{@link ui/Button.ButtonBase.icon} is not assigned or is false, the icon
+		 * will not be rendered.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		iconProps: PropTypes.object,
+
+		/**
 		 * Enforces a minimum width for the component.
 		 *
 		 * Applies the `minWidth` CSS class which can be customized by
@@ -175,12 +186,13 @@ const ButtonBase = kind({
 			pressed,
 			selected
 		}, size),
-		icon: ({css, icon, iconComponent, size}) => {
+		icon: ({css, icon, iconComponent, iconProps, size}) => {
 			if (icon == null || icon === false) return;
 
 			// Establish the base collection of props for the moost basic `iconComponent` type, an
 			// HTML element string.
 			const props = {
+				...iconProps,
 				className: css.icon,
 				component: iconComponent
 			};
@@ -201,6 +213,7 @@ const ButtonBase = kind({
 
 	render: ({children, css, decoration, disabled, icon, ...rest}) => {
 		delete rest.iconComponent;
+		delete rest.iconProps;
 		delete rest.minWidth;
 		delete rest.pressed;
 		delete rest.selected;
