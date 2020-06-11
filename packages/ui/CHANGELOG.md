@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Button` prop `iconProps` to allow iconProps to pass it to the Icon as props
+
 ## [3.3.0-alpha.11] - 2020-06-08
 
 No significant changes.
