@@ -16,6 +16,7 @@ import ReactDOM from 'react-dom';
 import ComponentOverride from '../ComponentOverride';
 import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
+import {selectSrc} from '../resolution';
 
 import componentCss from './ImageItem.module.less';
 
@@ -121,13 +122,13 @@ class MemoChildrenDOMAttributesContext extends React.Component {
 
 		if (this.node) {
 			for (const prop in this.cachedProps) {
-				this.node.setAttribute(prop, this.cachedProps[prop]);
+				this.node.setAttribute(prop, this.props.value && this.props.value[prop](this.cachedProps[prop]) || this.cachedProps[prop]);
 			}
 		}
 	}
 
 	render () {
-		const {attr, ...rest} = this.props;
+		const {attr} = this.props;
 		return (
 			<MemoChildrenContext.Consumer>
 				{(context) => {
@@ -240,9 +241,9 @@ const ImageItemBase = kind({
 
 	computed: {
 		isHorizntal : ({orientation}) => (orientation === 'horizontal'),
-		imgComp: ({css, imageComponent, isHorizntal, placeholder, src}) => {
+		imgCompWithoutSrc: ({css, imageComponent, isHorizntal, placeholder, src}) => {
 			return React.useMemo(() => {
-				console.log('ui:imgComp');
+				console.log('ui:imgCompWithoutSrc');
 
 				return (
 					<Cell
@@ -255,11 +256,23 @@ const ImageItemBase = kind({
 						context={MemoChildrenDOMAttributesContext}
 					/>
 				);
-			}, [Object.values(css).join(''), imageComponent.type.displayName, isHorizntal, placeholder, src])
+			}, [Object.values(css).join(''), imageComponent.type.displayName, isHorizntal, placeholder]);
+		},
+		imgComp: ({imgCompWithoutSrc, src}) => {
+			return React.useMemo(() => {
+				console.log('ui:imgComp');
+
+				return (
+					<MemoChildrenDOMAttributesContext attr={['src']} value={{src: selectSrc}}>
+						{imgCompWithoutSrc}
+					</MemoChildrenDOMAttributesContext>
+				);
+			}, [src]);
 		},
 		children: ({children, css, isHorizntal}) => {
 			return React.useMemo(() => {
-				console.log('ui:children')
+				console.log('ui:children');
+
 				return (
 					<Cell
 						className={css.caption}
