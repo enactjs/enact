@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to not horizontally scroll by clicking in RTL locales
+
 ## [3.3.0-alpha.11] - 2020-06-08
 
 No significant changes.

@@ -1179,7 +1179,7 @@ const useScrollBase = (props) => {
 
 	function stopForNative () {
 		scrollContentRef.current.style.scrollBehavior = null;
-		scrollContentHandle.current.scrollToPosition(mutableRef.current.scrollLeft + 0.1, mutableRef.current.scrollTop + 0.1);
+		scrollContentHandle.current.scrollToPosition(mutableRef.current.scrollLeft + (rtl ? -0.1 : 0.1), mutableRef.current.scrollTop + 0.1);
 		scrollContentRef.current.style.scrollBehavior = 'smooth';
 	}
 
