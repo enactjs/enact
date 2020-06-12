@@ -5,10 +5,8 @@
  * @exports Icon
  */
 
-import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import {cap} from '@enact/core/util';
-import {useI18nContext} from '@enact/i18n/I18nDecorator';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -53,12 +51,12 @@ const isUri = function (c) {
 /**
  * A basic icon component structure without any behaviors applied to it.
  *
- * @class IconBase
+ * @class Icon
  * @memberof ui/Icon
  * @ui
  * @public
  */
-const IconBase = kind({
+const Icon = kind({
 	name: 'ui:Icon',
 
 	propTypes: /** @lends ui/Icon.Icon.prototype */ {
@@ -205,7 +203,6 @@ const IconBase = kind({
 	},
 
 	render: ({iconProps, ...rest}) => {
-		delete rest.flip;
 		delete rest.iconList;
 		delete rest.pressed;
 		delete rest.size;
@@ -220,54 +217,7 @@ const IconBase = kind({
 	}
 });
 
-/**
- * Adds support for auto-flipping icons by locale
- *
- * @hoc
- * @memberof ui/Icon
- * @public
- */
-const IconDecorator = hoc((config, Wrapped) => {
-	function IconDecorator ({flip, ...rest}) {
-		const {rtl} = useI18nContext();
-
-		if (flip === 'auto' && rtl) {
-			flip = 'horizontal';
-		}
-
-		return <Wrapped {...rest} flip={flip} />;
-	}
-
-	IconDecorator.propTypes = /** @lends ui/Icon.IconDecorator.prototype */ {
-		/**
-		 * Flips the icon
-		 *
-		 * When `'auto'`, the icon is flipped horizontally for locales that use right-to-left text
-		 * direction.
-		 *
-		 * @type {('auto'|'both'|'horizontal'|'vertical')}
-		 * @public
-		 */
-		flip: PropTypes.oneOf(['auto', 'both', 'horizontal', 'vertical'])
-	}
-
-	return IconDecorator;
-});
-
-/**
- * An icon component with support for auto-flipping icons.
- *
- * @class Icon
- * @memberof ui/Icon
- * @mixes ui/Icon.IconDecorator
- * @ui
- * @public
- */
-const Icon = IconDecorator(IconBase);
-
 export default Icon;
 export {
-	Icon,
-	IconBase,
-	IconDecorator
+	Icon
 };
