@@ -1070,10 +1070,7 @@ class VirtualListBasic extends Component {
 						itemNode :
 						ref.querySelector(`[data-index="${index}"]`);
 
-					if (itemRefs.current[key]) {
-						this.itemContainerRefs[key] = (this.contentRef.current === itemRefs.current[key].parentElement) ?
-							itemRefs.current[key] : itemRefs.current[key].parentElement;
-					}
+					this.itemContainerRefs[key] = ref;
 				}
 			};
 
