@@ -4,6 +4,11 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/Button` prop `iconFlip` to set the `flip` prop of `iconComponent`
+- `ui/Icon` prop `flip` value "auto" to horizontally flip the icon for locales that use right-to-left text direction
+
 ### Fixed
 
 - `ui/Scroller` and `ui/VirtualList` to not horizontally scroll by clicking in RTL locales
