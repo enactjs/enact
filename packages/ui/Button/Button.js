@@ -92,6 +92,17 @@ const ButtonBase = kind({
 		icon: PropTypes.oneOfType([PropTypes.node, PropTypes.bool]),
 
 		/**
+		 * Flips the icon
+		 *
+		 * When `'auto'`, the icon is flipped horizontally for locales that use right-to-left text
+		 * direction.
+		 *
+		 * @type {('auto'|'both'|'horizontal'|'vertical')}
+		 * @public
+		 */
+		iconFlip: PropTypes.oneOf(['auto', 'both', 'horizontal', 'vertical']),
+
+		/**
 		 * The component used to render the [icon]{@link ui/Button.ButtonBase.icon}.
 		 *
 		 * This component will receive the `icon` class to customize its styling.
@@ -175,7 +186,7 @@ const ButtonBase = kind({
 			pressed,
 			selected
 		}, size),
-		icon: ({css, icon, iconComponent, size}) => {
+		icon: ({css, icon, iconComponent, iconFlip, size}) => {
 			if (icon == null || icon === false) return;
 
 			// Establish the base collection of props for the moost basic `iconComponent` type, an
@@ -189,6 +200,7 @@ const ButtonBase = kind({
 			// configured to handle.
 			if (typeof iconComponent !== 'string') {
 				props.size = size;
+				props.flip = iconFlip;
 			}
 
 			return (
@@ -201,6 +213,7 @@ const ButtonBase = kind({
 
 	render: ({children, css, decoration, disabled, icon, ...rest}) => {
 		delete rest.iconComponent;
+		delete rest.iconFlip;
 		delete rest.minWidth;
 		delete rest.pressed;
 		delete rest.selected;
