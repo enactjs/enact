@@ -5,6 +5,7 @@
  * @exports Icon
  */
 
+import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import {cap} from '@enact/core/util';
 import {useI18nContext} from '@enact/i18n/I18nDecorator';
@@ -14,7 +15,6 @@ import React from 'react';
 import ri from '../resolution';
 
 import componentCss from './Icon.module.less';
-import hoc from '@enact/core/hoc';
 
 /**
  * Merges consumer styles with the image `src` resolved through the resolution independence module.
