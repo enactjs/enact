@@ -92,15 +92,13 @@ const ButtonBase = kind({
 		icon: PropTypes.oneOfType([PropTypes.node, PropTypes.bool]),
 
 		/**
-		 * Flips the icon
+		 * Flips the icon.
 		 *
-		 * When `'auto'`, the icon is flipped horizontally for locales that use right-to-left text
-		 * direction.
-		 *
-		 * @type {('auto'|'both'|'horizontal'|'vertical')}
+		 * @see {@link ui/Icon.IconDecorator#flip}
+		 * @type {String}
 		 * @public
 		 */
-		iconFlip: PropTypes.oneOf(['auto', 'both', 'horizontal', 'vertical']),
+		iconFlip: PropTypes.string,
 
 		/**
 		 * The component used to render the [icon]{@link ui/Button.ButtonBase.icon}.
