@@ -92,15 +92,6 @@ const ButtonBase = kind({
 		icon: PropTypes.oneOfType([PropTypes.node, PropTypes.bool]),
 
 		/**
-		 * Flips the icon.
-		 *
-		 * @see {@link ui/Icon.Icon#flip}
-		 * @type {String}
-		 * @public
-		 */
-		iconFlip: PropTypes.string,
-
-		/**
 		 * The component used to render the [icon]{@link ui/Button.ButtonBase.icon}.
 		 *
 		 * This component will receive the `icon` class to customize its styling.
@@ -114,6 +105,15 @@ const ButtonBase = kind({
 		 * @public
 		 */
 		iconComponent: EnactPropTypes.componentOverride,
+
+		/**
+		 * Flips the icon.
+		 *
+		 * @see {@link ui/Icon.Icon#flip}
+		 * @type {String}
+		 * @public
+		 */
+		iconFlip: PropTypes.string,
 
 		/**
 		 * Enforces a minimum width for the component.
@@ -198,6 +198,8 @@ const ButtonBase = kind({
 			// configured to handle.
 			if (typeof iconComponent !== 'string') {
 				props.size = size;
+				// the following inadvertently triggers a linting rule
+				// eslint-disable-next-line enact/prop-types
 				props.flip = iconFlip;
 			}
 
