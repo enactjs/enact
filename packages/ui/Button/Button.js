@@ -99,7 +99,8 @@ const ButtonBase = kind({
 		 * will not be rendered.
 		 *
 		 * If this is a component rather than an HTML element string, this component will also
-		 * receive the `size` and `flip` properties and should be configured to handle it.
+		 * receive the `size` and `iconFlip` (as `flip`) properties and should be configured to
+		 * handle it.
 		 *
 		 * @type {Component|Node}
 		 * @public
