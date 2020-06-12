@@ -94,7 +94,7 @@ const ButtonBase = kind({
 		/**
 		 * Flips the icon.
 		 *
-		 * @see {@link ui/Icon.IconDecorator#flip}
+		 * @see {@link ui/Icon.Icon#flip}
 		 * @type {String}
 		 * @public
 		 */
@@ -108,7 +108,7 @@ const ButtonBase = kind({
 		 * will not be rendered.
 		 *
 		 * If this is a component rather than an HTML element string, this component will also
-		 * receive the `size` property and should be configured to handle it.
+		 * receive the `size` and `flip` properties and should be configured to handle it.
 		 *
 		 * @type {Component|Node}
 		 * @public
@@ -187,7 +187,7 @@ const ButtonBase = kind({
 		icon: ({css, icon, iconComponent, iconFlip, size}) => {
 			if (icon == null || icon === false) return;
 
-			// Establish the base collection of props for the moost basic `iconComponent` type, an
+			// Establish the base collection of props for the most basic `iconComponent` type, an
 			// HTML element string.
 			const props = {
 				className: css.icon,
