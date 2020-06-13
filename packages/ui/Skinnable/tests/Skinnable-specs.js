@@ -391,7 +391,7 @@ describe('Skinnable Specs', () => {
 			<div {...props} />
 		);
 
-		const ChildComponent = (props) => {
+		const ChildComponent = () => {
 			wasRendered();
 			return <div>Hello</div>;
 		};

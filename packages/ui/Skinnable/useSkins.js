@@ -87,7 +87,7 @@ function useSkins (config) {
 	const effectiveSkin = determineSkin(defaultSkin, skin, parentSkin);
 	const effectiveVariants = useMemo(() => determineVariants(defaultVariants, variants, skinVariants, parentVariants), [defaultVariants, variants, skinVariants, parentVariants]);
 	const className = getClassName(skins, effectiveSkin, effectiveVariants);
-	const value = useMemo(() => ({parentSkin: effectiveSkin, parentVariants: effectiveVariants}), [parentSkin, effectiveVariants]);
+	const value = useMemo(() => ({parentSkin: effectiveSkin, parentVariants: effectiveVariants}), [effectiveSkin, effectiveVariants]);
 
 	const provideSkins = React.useCallback((children) => {
 		return (
