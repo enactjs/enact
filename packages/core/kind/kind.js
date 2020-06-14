@@ -138,8 +138,8 @@ const kind = (config) => {
 		styles: cfgStyles
 	} = config;
 
-	const renderStyles = cfgStyles ? styles(cfgStyles) : (props) => (props);
-	const renderComputed = cfgComputed ? computed(cfgComputed) : (props) => (props);
+	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
+	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
 	const renderKind = (props, context) => {
 		if (renderStyles) props = renderStyles(props, context);
 		if (renderComputed) props = renderComputed(props, context);
@@ -156,15 +156,12 @@ const kind = (config) => {
 			const ctx = React.useContext(contextType);
 			const boundHandlers = useHandlers(handlers, props, ctx);
 
-			let updated = {
+			const merged = {
 				...props,
 				...boundHandlers
 			};
 
-			updated = renderStyles(updated, ctx);
-			updated = renderComputed(updated, ctx);
-
-			return render(updated, ctx);
+			return renderKind(merged, ctx);
 		};
 	} else {
 		// eslint-disable-next-line enact/display-name
