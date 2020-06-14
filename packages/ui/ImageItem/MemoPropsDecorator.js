@@ -4,23 +4,23 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const MemoChildrenContext = React.createContext();
+const MemoPropsContext = React.createContext();
 
-const MemoChildrenDecorator = hoc((config, Wrapped) => {
+const MemoPropsDecorator = hoc((config, Wrapped) => {
 	// eslint-disable-next-line no-shadow
-	function MemoChildrenDecorator (props) {
+	function MemoPropsDecorator (props) {
 		return (
-			<MemoChildrenContext.Provider value={props}>
+			<MemoPropsContext.Provider value={props}>
 				<Wrapped {...props} />
-			</MemoChildrenContext.Provider>
+			</MemoPropsContext.Provider>
 		);
 	}
 
-	return MemoChildrenDecorator;
+	return MemoPropsDecorator;
 });
 
-class MemoChildrenDOMAttributesContext extends React.Component {
-	static propTypes = /** @lends sandstone/MemoChildrenDecorator.MemoChildrenDOMAttributesContext.prototype */ {
+class MemoPropsDOMAttributesContext extends React.Component {
+	static propTypes = /** @lends sandstone/MemoPropsDecorator.MemoPropsDOMAttributesContext.prototype */ {
 		attr: PropTypes.array,
 		value: PropTypes.object
 	}
@@ -53,7 +53,7 @@ class MemoChildrenDOMAttributesContext extends React.Component {
 		const {attr} = this.props;
 
 		return (
-			<MemoChildrenContext.Consumer>
+			<MemoPropsContext.Consumer>
 				{(context) => {
 					this.memoProps = pick(attr, context);
 					this.memoChildren = this.memoChildren || this.props.children;
@@ -61,24 +61,14 @@ class MemoChildrenDOMAttributesContext extends React.Component {
 
 					return this.memoChildren;
 				}}
-			</MemoChildrenContext.Consumer>
+			</MemoPropsContext.Consumer>
 		);
 	}
 }
 
-const reducedComputed = (props, initialContext = {}) => {
-	return Object.keys(props).reduce(function (context, key) {
-		return {
-			...context,
-			[key]: props[key](context)
-		};
-	}, initialContext);
-};
-
-export default MemoChildrenContext;
+export default MemoPropsContext;
 export {
-	MemoChildrenContext,
-	MemoChildrenDecorator,
-	MemoChildrenDOMAttributesContext,
-	reducedComputed
+	MemoPropsContext,
+	MemoPropsDecorator,
+	MemoPropsDOMAttributesContext
 };

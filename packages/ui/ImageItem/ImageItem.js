@@ -20,11 +20,11 @@ import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
 import  {
-	MemoChildrenContext,
-	MemoChildrenDecorator,
-	MemoChildrenDOMAttributesContext,
-	reducedComputed
-} from './MemoChildrenDecorator';
+	MemoPropsContext,
+	MemoPropsDecorator,
+	MemoPropsDOMAttributesContext
+} from './MemoPropsDecorator';
+import {reducedComputed} from './util';
 
 import componentCss from './ImageItem.module.less';
 
@@ -157,7 +157,7 @@ const ImageItemBase = kind({
 				imgComp: ({isHorizntal}) => {
 					return useMemo(() => {
 						return (
-							<MemoChildrenContext.Consumer>
+							<MemoPropsContext.Consumer>
 								{context => {
 									return (
 										<Cell
@@ -170,7 +170,7 @@ const ImageItemBase = kind({
 										/>
 									);
 								}}
-							</MemoChildrenContext.Consumer>
+							</MemoPropsContext.Consumer>
 						);
 						// We don't need the dependency of the `src` because it will be passed through a context.
 						// We compare imageComponent.type for dependency instead of imageComponent.
@@ -188,9 +188,9 @@ const ImageItemBase = kind({
 								// eslint-disable-next-line no-undefined
 								align={isHorizntal ? 'center' : undefined}
 							>
-								<MemoChildrenContext.Consumer>
+								<MemoPropsContext.Consumer>
 									{context => (context && context.children || children)}
-								</MemoChildrenContext.Consumer>
+								</MemoPropsContext.Consumer>
 							</Cell>
 						);
 					}, [caption, isHorizntal]);
@@ -201,12 +201,12 @@ const ImageItemBase = kind({
 					delete rest.children;
 
 					return (
-						<MemoChildrenDOMAttributesContext attr={['data-index']}>
+						<MemoPropsDOMAttributesContext attr={['data-index']}>
 							<Component {...rest}>
 								{imgComp}
 								{children}
 							</Component>
-						</MemoChildrenDOMAttributesContext>
+						</MemoPropsDOMAttributesContext>
 					);
 				}
 			});
@@ -224,8 +224,8 @@ export default ImageItemBase;
 export {
 	ImageItemBase as ImageItem,
 	ImageItemBase,
-	MemoChildrenDecorator,
-	MemoChildrenContext,
-	MemoChildrenDOMAttributesContext,
+	MemoPropsDecorator,
+	MemoPropsContext,
+	MemoPropsDOMAttributesContext,
 	reducedComputed
 };
