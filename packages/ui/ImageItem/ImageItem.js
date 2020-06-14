@@ -18,7 +18,6 @@ import React from 'react';
 import ComponentOverride from '../ComponentOverride';
 import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
-import {selectSrc} from '../resolution';
 
 import  {
 	MemoChildrenContext,
@@ -155,31 +154,28 @@ const ImageItemBase = kind({
 
 			const computedProps = reducedComputed({
 				isHorizntal: () => (orientation === 'horizontal'),
-				imgCompWithoutSrc: ({isHorizntal}) => {
+				imgComp: ({isHorizntal}) => {
 					return useMemo(() => {
 						return (
-							<Cell
-								className={css.image}
-								component={ImageOverride}
-								imageComponent={imageComponent}
-								placeholder={placeholder}
-								shrink={isHorizntal}
-								src={src}
-							/>
+							<MemoChildrenContext.Consumer>
+								{context => {
+									return (
+										<Cell
+											className={css.image}
+											component={ImageOverride}
+											imageComponent={imageComponent}
+											placeholder={placeholder}
+											shrink={isHorizntal}
+											src={context.src}
+										/>
+									);
+								}}
+							</MemoChildrenContext.Consumer>
 						);
 						// We don't need the dependency of the `src` because it will be passed through a context.
 						// We compare imageComponent.type for dependency instead of imageComponent.
 						// eslint-disable-next-line react-hooks/exhaustive-deps
 					}, [css.image, imageComponent, isHorizntal, placeholder, src]);
-				},
-				imgComp: ({imgCompWithoutSrc}) => {
-					return useMemo(() => {
-						return (
-							<MemoChildrenDOMAttributesContext attr={['src']} selector="img" value={{src: selectSrc}}>
-								{imgCompWithoutSrc}
-							</MemoChildrenDOMAttributesContext>
-						);
-					}, [imgCompWithoutSrc]);
 				},
 				children: ({isHorizntal}) => {
 					const {caption} = css;
