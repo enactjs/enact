@@ -149,7 +149,7 @@ const ImageItemBase = kind({
 				)
 			);
 		},
-		imageItem: ({css, imageComponent, orientation, placeholder, src, ...rest}) => {
+		imageItem: ({children, css, imageComponent, orientation, placeholder, src, ...rest}) => {
 			delete rest.selected;
 
 			const computedProps = reducedComputed({
@@ -166,7 +166,7 @@ const ImageItemBase = kind({
 											imageComponent={imageComponent}
 											placeholder={placeholder}
 											shrink={isHorizntal}
-											src={context.src}
+											src={context && context.src || src}
 										/>
 									);
 								}}
@@ -189,7 +189,7 @@ const ImageItemBase = kind({
 								align={isHorizntal ? 'center' : undefined}
 							>
 								<MemoChildrenContext.Consumer>
-									{({children: memoChildren}) => (memoChildren)}
+									{context => (context && context.children || children)}
 								</MemoChildrenContext.Consumer>
 							</Cell>
 						);
