@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [3.3.0-alpha.12] - 2020-06-15
 
 ### Added
 
@@ -11,8 +11,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Marquee.MarqueeDecorator` to not cause unnecessary rerenders
+- `ui/Scroller` and `ui/VirtualList` to not inadvertently scroll due to click events when in RTL locales
 - `ui/Skinnable` to not force all `Skinnable` children to update if a parent updates
-- `ui/Scroller` and `ui/VirtualList` to not horizontally scroll by clicking in RTL locales
 
 ## [3.3.0-alpha.11] - 2020-06-08
 
