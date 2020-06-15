@@ -151,21 +151,11 @@ const ImageItemBase = kind({
 	},
 
 	computed: {
-		className: ({orientation, selected, styler}) => {
-			return styler.append(
-				React.useMemo(
-					() => {
-						// console.log('ui:className');
-						return {
-							selected,
-							horizontal: orientation === 'horizontal',
-							vertical: orientation === 'vertical'
-						};
-					},
-					[isHorizntal, selected]
-				)
-			);
-		},
+		className: ({orientation, selected, styler}) => styler.append({
+			selected,
+			horizontal: orientation === 'horizontal',
+			vertical: orientation === 'vertical'
+		}),
 		computedProps: ({children, css, imageComponent, orientation, placeholder, selected, src, ...rest}) => (reducedComputed({
 			isHorizntal: () => (orientation === 'horizontal'),
 			memoImage: ({isHorizntal}) => {
