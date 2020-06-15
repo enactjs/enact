@@ -1,3 +1,8 @@
+/*  eslint-disable react-hooks/rules-of-hooks */
+//
+// React Hook "useMemo" is called in the function of the "computed" object properly,
+// which is neither a React function component or a custom React Hook function
+
 /**
  * Unstyled image item components and behaviors to be customized by a theme or application.
  *
@@ -14,15 +19,40 @@ import ComponentOverride from '../ComponentOverride';
 import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
+import  {
+	MemoPropsContext,
+	MemoPropsDecorator,
+	MemoPropsDOMAttributesContext
+} from './MemoPropsDecorator';
+import {reducedComputed} from './util';
+
 import componentCss from './ImageItem.module.less';
 
 // Adapts ComponentOverride to work within Cell since both use the component prop
 function ImageOverride ({imageComponent, ...rest}) {
-	return ComponentOverride({
-		component: imageComponent,
-		...rest
-	});
+	return (
+		<MemoPropsContext.Consumer>
+			{(context) => {
+				// console.log('ui:ImageOverride');
+				return ComponentOverride({
+					...rest,
+					component: imageComponent,
+					src: context && context.src || rest.src
+				})
+			}}
+		</MemoPropsContext.Consumer>
+	);
 }
+
+ImageOverride.propTypes = {
+	/**
+	 * The component used to render the image component.
+	 *
+	 * @type {Component|Element}
+	 * @public
+	 */
+	imageComponent: EnactPropTypes.componentOverride
+};
 
 /**
  * A basic image item without any behavior.
@@ -112,6 +142,8 @@ const ImageItemBase = kind({
 		selected: false
 	},
 
+	functional: true,
+
 	styles: {
 		css: componentCss,
 		className: 'imageItem',
@@ -123,36 +155,73 @@ const ImageItemBase = kind({
 			selected,
 			horizontal: orientation === 'horizontal',
 			vertical: orientation === 'vertical'
-		})
+		}),
+		computedProps: ({children, css, imageComponent, orientation, placeholder, selected, src, ...rest}) => (reducedComputed({
+			isHorizntal: () => (orientation === 'horizontal'),
+			memoImage: ({isHorizntal}) => {
+				return React.useMemo(() => {
+					// console.log('ui:memoImage');
+					return (
+						<Cell
+							className={css.image}
+							component={ImageOverride}
+							imageComponent={imageComponent}
+							placeholder={placeholder}
+							shrink={isHorizntal}
+							src={src}
+						/>
+					);
+					// We don't need the dependency of the `src` because it will be passed through a context.
+					// We compare imageComponent.type for dependency instead of imageComponent.
+					// eslint-disable-next-line react-hooks/exhaustive-deps
+				}, [css.image, imageComponent, isHorizntal, placeholder]);
+			},
+			memoChildren: () => {
+				return React.useMemo(() => {
+					// console.log('ui:memoChildren');
+					return children;
+				}, [children]);
+			},
+			content: ({memoChildren, isHorizntal}) => {
+				return React.useMemo(() => {
+					// console.log('ui:content');
+					return (
+						<Cell
+							className={css.caption}
+							shrink={!isHorizntal}
+							// eslint-disable-next-line no-undefined
+							align={isHorizntal ? 'center' : undefined}
+						>
+							{memoChildren}
+						</Cell>
+					);
+				}, [css.caption, isHorizntal, memoChildren]);
+			},
+			computedProps: ({content, isHorizntal, memoImage}) => ({content, isHorizntal, memoImage, rest})
+		}))
 	},
 
-	render: ({children, css, imageComponent, orientation, placeholder, src, ...rest}) => {
+	render: ({className, computedProps: {content, isHorizntal, memoImage, rest}}) => {
+		const Component = isHorizntal ? Row : Column;
+
 		delete rest.selected;
 
-		const isHorizontal = orientation === 'horizontal';
-		const Component = isHorizontal ? Row : Column;
-
+		// console.log('ui:render');
 		return (
-			<Component {...rest}>
-				<Cell
-					className={css.image}
-					component={ImageOverride}
-					imageComponent={imageComponent}
-					placeholder={placeholder}
-					shrink={isHorizontal}
-					src={src}
-				/>
-				{children ? (
-					<Cell
-						className={css.caption}
-						shrink={!isHorizontal}
-						// eslint-disable-next-line no-undefined
-						align={isHorizontal ? 'center' : undefined}
-					>
-						{children}
-					</Cell>
-				) : null}
-			</Component>
+			<MemoPropsDOMAttributesContext attr={['data-index']}>
+				{
+					React.useMemo(() => {
+						// console.log('ui:imageContent');
+						return (
+							<Component {...rest} className={className}>
+								<MemoPropsContext.Consumer>
+									{() => ([memoImage, content])}
+								</MemoPropsContext.Consumer>
+							</Component>
+						);
+					}, [className])
+				}
+			</MemoPropsDOMAttributesContext>
 		);
 	}
 });
@@ -160,5 +229,8 @@ const ImageItemBase = kind({
 export default ImageItemBase;
 export {
 	ImageItemBase as ImageItem,
-	ImageItemBase
+	MemoPropsDecorator,
+	MemoPropsContext,
+	MemoPropsDOMAttributesContext,
+	reducedComputed
 };
