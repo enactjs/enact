@@ -169,7 +169,7 @@ const ImageItemBase = kind({
 		imageItem: ({children, css, imageComponent, orientation, placeholder, src, ...rest}) => {
 			delete rest.selected;
 
-			const computedProps = reducedComputed({
+			return reducedComputed({
 				isHorizntal: () => (orientation === 'horizontal'),
 				imgComp: ({isHorizntal}) => {
 					return React.useMemo(() => {
@@ -229,8 +229,6 @@ const ImageItemBase = kind({
 					);
 				}
 			});
-
-			return computedProps.imageItem;
 		}
 	},
 
