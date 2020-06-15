@@ -20,6 +20,7 @@ import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
 import  {
+	MemoComponentDecorator,
 	MemoPropsContext,
 	MemoPropsDecorator,
 	MemoPropsDOMAttributesContext
@@ -29,16 +30,32 @@ import {reducedComputed} from './util';
 import componentCss from './ImageItem.module.less';
 
 const useMemo = (...args) => {
+	console.log('useMemo', args); // eslint-disable-line no-console
 	return React.useMemo(...args);
 };
 
 // Adapts ComponentOverride to work within Cell since both use the component prop
 function ImageOverride ({imageComponent, ...rest}) {
-	return ComponentOverride({
-		component: imageComponent,
-		...rest
-	});
+	return (
+		<MemoPropsContext.Consumer>
+			{(context) => ComponentOverride({
+				...rest,
+				component: imageComponent,
+				src: context && context.src || rest.src
+			})}
+		</MemoPropsContext.Consumer>
+	);
 }
+
+ImageOverride.propTypes = {
+	/**
+	 * The component used to render the image component.
+	 *
+	 * @type {Component|Element}
+	 * @public
+	 */
+	imageComponent: EnactPropTypes.componentOverride
+};
 
 /**
  * A basic image item without any behavior.
@@ -157,27 +174,21 @@ const ImageItemBase = kind({
 				imgComp: ({isHorizntal}) => {
 					return useMemo(() => {
 						return (
-							<MemoPropsContext.Consumer>
-								{context => {
-									return (
-										<Cell
-											className={css.image}
-											component={ImageOverride}
-											imageComponent={imageComponent}
-											placeholder={placeholder}
-											shrink={isHorizntal}
-											src={context && context.src || src}
-										/>
-									);
-								}}
-							</MemoPropsContext.Consumer>
+							<Cell
+								className={css.image}
+								component={ImageOverride}
+								imageComponent={imageComponent}
+								placeholder={placeholder}
+								shrink={isHorizntal}
+								src={src}
+							/>
 						);
 						// We don't need the dependency of the `src` because it will be passed through a context.
 						// We compare imageComponent.type for dependency instead of imageComponent.
 						// eslint-disable-next-line react-hooks/exhaustive-deps
-					}, [css.image, imageComponent, isHorizntal, placeholder, src]);
+					}, [css.image, imageComponent, isHorizntal, placeholder]);
 				},
-				children: ({isHorizntal}) => {
+				content: ({isHorizntal}) => {
 					const {caption} = css;
 
 					return useMemo(() => {
@@ -195,16 +206,15 @@ const ImageItemBase = kind({
 						);
 					}, [caption, isHorizntal]);
 				},
-				imageItem: ({children, imgComp}) => {
+				imageItem: ({content, imgComp}) => {
 					const Component = orientation === 'horizontal' ? Row : Column;
-
-					delete rest.children;
 
 					return (
 						<MemoPropsDOMAttributesContext attr={['data-index']}>
 							<Component {...rest}>
-								{imgComp}
-								{children}
+								<MemoPropsContext.Consumer>
+									{() => ([imgComp, content])}
+								</MemoPropsContext.Consumer>
 							</Component>
 						</MemoPropsDOMAttributesContext>
 					);
@@ -220,9 +230,11 @@ const ImageItemBase = kind({
 	}
 });
 
-export default ImageItemBase;
+const ImageItem = MemoComponentDecorator(ImageItemBase);
+
+export default ImageItem;
 export {
-	ImageItemBase as ImageItem,
+	ImageItem,
 	ImageItemBase,
 	MemoPropsDecorator,
 	MemoPropsContext,

@@ -9,10 +9,28 @@ const MemoPropsContext = React.createContext();
 const MemoPropsDecorator = hoc((config, Wrapped) => {
 	// eslint-disable-next-line no-shadow
 	function MemoPropsDecorator (props) {
+		const children = React.useRef(null);
+
+		children.current = children.current || <Wrapped {...props} />;
+
 		return (
 			<MemoPropsContext.Provider value={props}>
-				<Wrapped {...props} />
+				{children.current}
 			</MemoPropsContext.Provider>
+		);
+	}
+
+	return MemoPropsDecorator;
+});
+
+const MemoPropsContextDecorator = hoc((config = {}, Wrapped) => {
+	// eslint-disable-next-line no-shadow
+	function MemoPropsDecorator (props) {
+		const context = React.useContext(MemoPropsContext);
+		const memoProps = pick(config.props, context);
+
+		return (
+			<Wrapped {...props} {...memoProps} />
 		);
 	}
 
@@ -66,9 +84,24 @@ class MemoPropsDOMAttributesContext extends React.Component {
 	}
 }
 
+const MemoComponentDecorator = hoc((config, Wrapped) => {
+	// eslint-disable-next-line no-shadow
+	function MemoComponentDecorator (props) {
+		const children = React.useRef(null);
+
+		children.current = children.current || <Wrapped {...props} />;
+
+		return children.current;
+	}
+
+	return MemoComponentDecorator;
+});
+
 export default MemoPropsContext;
 export {
+	MemoComponentDecorator,
 	MemoPropsContext,
+	MemoPropsContextDecorator,
 	MemoPropsDecorator,
 	MemoPropsDOMAttributesContext
 };
