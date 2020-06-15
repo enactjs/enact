@@ -20,7 +20,6 @@ import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
 import  {
-	MemoComponentDecorator,
 	MemoPropsContext,
 	MemoPropsDecorator,
 	MemoPropsDOMAttributesContext
@@ -29,20 +28,18 @@ import {reducedComputed} from './util';
 
 import componentCss from './ImageItem.module.less';
 
-const useMemo = (...args) => {
-	console.log('useMemo', args); // eslint-disable-line no-console
-	return React.useMemo(...args);
-};
-
 // Adapts ComponentOverride to work within Cell since both use the component prop
 function ImageOverride ({imageComponent, ...rest}) {
 	return (
 		<MemoPropsContext.Consumer>
-			{(context) => ComponentOverride({
-				...rest,
-				component: imageComponent,
-				src: context && context.src || rest.src
-			})}
+			{(context) => {
+				console.log('ui:ImageOverride');
+				return ComponentOverride({
+					...rest,
+					component: imageComponent,
+					src: context && context.src || rest.src
+				})
+			}}
 		</MemoPropsContext.Consumer>
 	);
 }
@@ -156,12 +153,15 @@ const ImageItemBase = kind({
 	computed: {
 		className: ({orientation, selected, styler}) => {
 			return styler.append(
-				useMemo(
-					() => ({
-						selected,
-						horizontal: orientation === 'horizontal',
-						vertical: orientation === 'vertical'
-					}),
+				React.useMemo(
+					() => {
+						console.log('ui:className');
+						return {
+							selected,
+							horizontal: orientation === 'horizontal',
+							vertical: orientation === 'vertical'
+						};
+					},
 					[orientation, selected]
 				)
 			);
@@ -172,7 +172,8 @@ const ImageItemBase = kind({
 			const computedProps = reducedComputed({
 				isHorizntal: () => (orientation === 'horizontal'),
 				imgComp: ({isHorizntal}) => {
-					return useMemo(() => {
+					return React.useMemo(() => {
+						console.log('ui:imgComp');
 						return (
 							<Cell
 								className={css.image}
@@ -191,7 +192,8 @@ const ImageItemBase = kind({
 				content: ({isHorizntal}) => {
 					const {caption} = css;
 
-					return useMemo(() => {
+					return React.useMemo(() => {
+						console.log('ui:content');
 						return (
 							<Cell
 								className={caption}
@@ -230,12 +232,11 @@ const ImageItemBase = kind({
 	}
 });
 
-const ImageItem = MemoComponentDecorator(ImageItemBase);
+const ImageItem = ImageItemBase;
 
-export default ImageItem;
+export default ImageItemBase;
 export {
-	ImageItem,
-	ImageItemBase,
+	ImageItemBase as ImageItem,
 	MemoPropsDecorator,
 	MemoPropsContext,
 	MemoPropsDOMAttributesContext,

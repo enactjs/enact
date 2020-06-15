@@ -9,13 +9,9 @@ const MemoPropsContext = React.createContext();
 const MemoPropsDecorator = hoc((config, Wrapped) => {
 	// eslint-disable-next-line no-shadow
 	function MemoPropsDecorator (props) {
-		const children = React.useRef(null);
-
-		children.current = children.current || <Wrapped {...props} />;
-
 		return (
 			<MemoPropsContext.Provider value={props}>
-				{children.current}
+				<Wrapped {...props} />
 			</MemoPropsContext.Provider>
 		);
 	}
@@ -25,16 +21,22 @@ const MemoPropsDecorator = hoc((config, Wrapped) => {
 
 const MemoPropsContextDecorator = hoc((config = {}, Wrapped) => {
 	// eslint-disable-next-line no-shadow
-	function MemoPropsDecorator (props) {
+	function MemoPropsContextDecorator (props) {
 		const context = React.useContext(MemoPropsContext);
-		const memoProps = pick(config.props, context);
+		if (config.props) {
+			const memoProps = pick(config.props, context);
 
-		return (
-			<Wrapped {...props} {...memoProps} />
-		);
+			return (
+				<Wrapped {...props} {...memoProps} />
+			);
+		} else {
+			return (
+				<Wrapped {...props} {...context} />
+			);
+		}
 	}
 
-	return MemoPropsDecorator;
+	return MemoPropsContextDecorator;
 });
 
 class MemoPropsDOMAttributesContext extends React.Component {
@@ -74,10 +76,9 @@ class MemoPropsDOMAttributesContext extends React.Component {
 			<MemoPropsContext.Consumer>
 				{(context) => {
 					this.memoProps = pick(attr, context);
-					this.memoChildren = this.memoChildren || this.props.children;
 					this.updateDOMAttributes();
 
-					return this.memoChildren;
+					return this.props.children;
 				}}
 			</MemoPropsContext.Consumer>
 		);
