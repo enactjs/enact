@@ -197,7 +197,7 @@ const ImageItemBase = kind({
 					);
 				}, [css.caption, isHorizntal, memoChildren]);
 			},
-			computedProps: ({content, isHorizntal, memoImage, rest}) => ({content, isHorizntal, memoImage, rest})
+			computedProps: ({content, isHorizntal, memoImage}) => ({content, isHorizntal, memoImage, rest})
 		}))
 	},
 
