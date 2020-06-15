@@ -189,7 +189,13 @@ const ImageItemBase = kind({
 						// eslint-disable-next-line react-hooks/exhaustive-deps
 					}, [css.image, imageComponent, isHorizntal, placeholder]);
 				},
-				content: ({isHorizntal}) => {
+				memoChildren: () => {
+					return React.useMemo(() => {
+						console.log('ui:memoChildren');
+						return children;
+					}, [children]);
+				},
+				content: ({memoChildren, isHorizntal}) => {
 					const {caption} = css;
 
 					return React.useMemo(() => {
@@ -201,9 +207,10 @@ const ImageItemBase = kind({
 								// eslint-disable-next-line no-undefined
 								align={isHorizntal ? 'center' : undefined}
 							>
-								<MemoPropsContext.Consumer>
+								{/* <MemoPropsContext.Consumer>
 									{context => (context && context.children || children)}
-								</MemoPropsContext.Consumer>
+								</MemoPropsContext.Consumer> */}
+								{memoChildren}
 							</Cell>
 						);
 					}, [caption, isHorizntal]);
@@ -228,6 +235,7 @@ const ImageItemBase = kind({
 	},
 
 	render: ({imageItem}) => {
+		console.log('ui:render');
 		return imageItem;
 	}
 });
