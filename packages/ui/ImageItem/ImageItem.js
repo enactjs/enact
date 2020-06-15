@@ -33,7 +33,7 @@ function ImageOverride ({imageComponent, ...rest}) {
 	return (
 		<MemoPropsContext.Consumer>
 			{(context) => {
-				console.log('ui:ImageOverride');
+				// console.log('ui:ImageOverride');
 				return ComponentOverride({
 					...rest,
 					component: imageComponent,
@@ -151,29 +151,29 @@ const ImageItemBase = kind({
 	},
 
 	computed: {
-		className: ({orientation, selected, styler}) => {
-			return styler.append(
-				React.useMemo(
-					() => {
-						console.log('ui:className');
-						return {
-							selected,
-							horizontal: orientation === 'horizontal',
-							vertical: orientation === 'vertical'
-						};
-					},
-					[orientation, selected]
-				)
-			);
-		},
-		imageItem: ({children, css, imageComponent, orientation, placeholder, src, ...rest}) => {
+		imageItem: ({children, css, imageComponent, orientation, placeholder, selected, src, styler, ...rest}) => {
 			delete rest.selected;
 
 			return reducedComputed({
 				isHorizntal: () => (orientation === 'horizontal'),
-				imgComp: ({isHorizntal}) => {
+				className: ({isHorizntal}) => {
+					return styler.append(
+						React.useMemo(
+							() => {
+								// console.log('ui:className');
+								return {
+									selected,
+									horizontal: isHorizntal,
+									vertical: !isHorizntal
+								};
+							},
+							[isHorizntal, selected]
+						)
+					);
+				},
+				memoImage: ({isHorizntal}) => {
 					return React.useMemo(() => {
-						console.log('ui:imgComp');
+						// console.log('ui:memoImage');
 						return (
 							<Cell
 								className={css.image}
@@ -191,40 +191,42 @@ const ImageItemBase = kind({
 				},
 				memoChildren: () => {
 					return React.useMemo(() => {
-						console.log('ui:memoChildren');
+						// console.log('ui:memoChildren');
 						return children;
 					}, [children]);
 				},
 				content: ({memoChildren, isHorizntal}) => {
-					const {caption} = css;
-
 					return React.useMemo(() => {
-						console.log('ui:content');
+						// console.log('ui:content');
 						return (
 							<Cell
-								className={caption}
+								className={css.caption}
 								shrink={!isHorizntal}
 								// eslint-disable-next-line no-undefined
 								align={isHorizntal ? 'center' : undefined}
 							>
-								{/* <MemoPropsContext.Consumer>
-									{context => (context && context.children || children)}
-								</MemoPropsContext.Consumer> */}
 								{memoChildren}
 							</Cell>
 						);
-					}, [caption, isHorizntal]);
+					}, [css.caption, isHorizntal, memoChildren]);
 				},
-				imageItem: ({content, imgComp}) => {
-					const Component = orientation === 'horizontal' ? Row : Column;
-
-					return (
-						<MemoPropsDOMAttributesContext attr={['data-index']}>
-							<Component {...rest}>
+				imageContent: ({className, content, memoImage}) => {
+					return React.useMemo(() => {
+						const Component = orientation === 'horizontal' ? Row : Column;
+						// console.log('ui:imageContent');
+						return (
+							<Component {...rest} className={className}>
 								<MemoPropsContext.Consumer>
-									{() => ([imgComp, content])}
+									{() => ([memoImage, content])}
 								</MemoPropsContext.Consumer>
 							</Component>
+						);
+					}, [className]);
+				},
+				imageItem: ({imageContent}) => {
+					return (
+						<MemoPropsDOMAttributesContext attr={['data-index']}>
+							{imageContent}
 						</MemoPropsDOMAttributesContext>
 					);
 				}
@@ -233,7 +235,7 @@ const ImageItemBase = kind({
 	},
 
 	render: ({imageItem}) => {
-		console.log('ui:render');
+		// console.log('ui:render');
 		return imageItem;
 	}
 });
@@ -242,7 +244,7 @@ const ImageItem = ImageItemBase;
 
 export default ImageItemBase;
 export {
-	ImageItemBase as ImageItem,
+	ImageItem,
 	MemoPropsDecorator,
 	MemoPropsContext,
 	MemoPropsDOMAttributesContext,
