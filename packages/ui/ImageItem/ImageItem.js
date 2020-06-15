@@ -151,26 +151,26 @@ const ImageItemBase = kind({
 	},
 
 	computed: {
-		imageItem: ({children, css, imageComponent, orientation, placeholder, selected, src, styler, ...rest}) => {
+		className: ({orientation, selected, styler}) => {
+			return styler.append(
+				React.useMemo(
+					() => {
+						// console.log('ui:className');
+						return {
+							selected,
+							horizontal: orientation === 'horizontal',
+							vertical: orientation === 'vertical'
+						};
+					},
+					[isHorizntal, selected]
+				)
+			);
+		},
+		computedProps: ({children, css, imageComponent, orientation, placeholder, selected, src, ...rest}) => {
 			delete rest.selected;
 
 			return reducedComputed({
 				isHorizntal: () => (orientation === 'horizontal'),
-				className: ({isHorizntal}) => {
-					return styler.append(
-						React.useMemo(
-							() => {
-								// console.log('ui:className');
-								return {
-									selected,
-									horizontal: isHorizntal,
-									vertical: !isHorizntal
-								};
-							},
-							[isHorizntal, selected]
-						)
-					);
-				},
 				memoImage: ({isHorizntal}) => {
 					return React.useMemo(() => {
 						// console.log('ui:memoImage');
@@ -210,9 +210,19 @@ const ImageItemBase = kind({
 						);
 					}, [css.caption, isHorizntal, memoChildren]);
 				},
-				imageContent: ({className, content, memoImage}) => {
-					return React.useMemo(() => {
-						const Component = orientation === 'horizontal' ? Row : Column;
+				computedProps: ({content, isHorizntal, memoImage, rest}) => ({content, isHorizntal, memoImage, rest})
+			});
+		}
+	},
+
+	render: ({className, computedProps: {content, isHorizntal, memoImage, rest}}) => {
+		const Component = isHorizntal ? Row : Column;
+
+		// console.log('ui:render');
+		return (
+			<MemoPropsDOMAttributesContext attr={['data-index']}>
+				{
+					React.useMemo(() => {
 						// console.log('ui:imageContent');
 						return (
 							<Component {...rest} className={className}>
@@ -221,30 +231,16 @@ const ImageItemBase = kind({
 								</MemoPropsContext.Consumer>
 							</Component>
 						);
-					}, [className]);
-				},
-				imageItem: ({imageContent}) => {
-					return (
-						<MemoPropsDOMAttributesContext attr={['data-index']}>
-							{imageContent}
-						</MemoPropsDOMAttributesContext>
-					);
+					}, [className])
 				}
-			});
-		}
-	},
-
-	render: ({imageItem}) => {
-		// console.log('ui:render');
-		return imageItem;
+			</MemoPropsDOMAttributesContext>
+		);
 	}
 });
 
-const ImageItem = ImageItemBase;
-
 export default ImageItemBase;
 export {
-	ImageItem,
+	ImageItemBase as ImageItem,
 	MemoPropsDecorator,
 	MemoPropsContext,
 	MemoPropsDOMAttributesContext,
