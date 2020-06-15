@@ -166,57 +166,55 @@ const ImageItemBase = kind({
 				)
 			);
 		},
-		computedProps: ({children, css, imageComponent, orientation, placeholder, selected, src, ...rest}) => {
-			delete rest.selected;
-
-			return reducedComputed({
-				isHorizntal: () => (orientation === 'horizontal'),
-				memoImage: ({isHorizntal}) => {
-					return React.useMemo(() => {
-						// console.log('ui:memoImage');
-						return (
-							<Cell
-								className={css.image}
-								component={ImageOverride}
-								imageComponent={imageComponent}
-								placeholder={placeholder}
-								shrink={isHorizntal}
-								src={src}
-							/>
-						);
-						// We don't need the dependency of the `src` because it will be passed through a context.
-						// We compare imageComponent.type for dependency instead of imageComponent.
-						// eslint-disable-next-line react-hooks/exhaustive-deps
-					}, [css.image, imageComponent, isHorizntal, placeholder]);
-				},
-				memoChildren: () => {
-					return React.useMemo(() => {
-						// console.log('ui:memoChildren');
-						return children;
-					}, [children]);
-				},
-				content: ({memoChildren, isHorizntal}) => {
-					return React.useMemo(() => {
-						// console.log('ui:content');
-						return (
-							<Cell
-								className={css.caption}
-								shrink={!isHorizntal}
-								// eslint-disable-next-line no-undefined
-								align={isHorizntal ? 'center' : undefined}
-							>
-								{memoChildren}
-							</Cell>
-						);
-					}, [css.caption, isHorizntal, memoChildren]);
-				},
-				computedProps: ({content, isHorizntal, memoImage, rest}) => ({content, isHorizntal, memoImage, rest})
-			});
-		}
+		computedProps: ({children, css, imageComponent, orientation, placeholder, selected, src, ...rest}) => (reducedComputed({
+			isHorizntal: () => (orientation === 'horizontal'),
+			memoImage: ({isHorizntal}) => {
+				return React.useMemo(() => {
+					// console.log('ui:memoImage');
+					return (
+						<Cell
+							className={css.image}
+							component={ImageOverride}
+							imageComponent={imageComponent}
+							placeholder={placeholder}
+							shrink={isHorizntal}
+							src={src}
+						/>
+					);
+					// We don't need the dependency of the `src` because it will be passed through a context.
+					// We compare imageComponent.type for dependency instead of imageComponent.
+					// eslint-disable-next-line react-hooks/exhaustive-deps
+				}, [css.image, imageComponent, isHorizntal, placeholder]);
+			},
+			memoChildren: () => {
+				return React.useMemo(() => {
+					// console.log('ui:memoChildren');
+					return children;
+				}, [children]);
+			},
+			content: ({memoChildren, isHorizntal}) => {
+				return React.useMemo(() => {
+					// console.log('ui:content');
+					return (
+						<Cell
+							className={css.caption}
+							shrink={!isHorizntal}
+							// eslint-disable-next-line no-undefined
+							align={isHorizntal ? 'center' : undefined}
+						>
+							{memoChildren}
+						</Cell>
+					);
+				}, [css.caption, isHorizntal, memoChildren]);
+			},
+			computedProps: ({content, isHorizntal, memoImage, rest}) => ({content, isHorizntal, memoImage, rest})
+		}))
 	},
 
 	render: ({className, computedProps: {content, isHorizntal, memoImage, rest}}) => {
 		const Component = isHorizntal ? Row : Column;
+
+		delete rest.selected;
 
 		// console.log('ui:render');
 		return (
