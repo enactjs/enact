@@ -45,7 +45,7 @@ function ImageOverride ({imageComponent, ...rest}) {
 			{(context) => {
 				const src = context && context.src || rest.src;
 
-				console.log('ui:ImageOverride');
+				// console.log('ui:ImageOverride');
 				return src ? ComponentOverride({
 					...rest,
 					component: imageComponent,
@@ -181,7 +181,7 @@ const ImageItemBase = kind({
 			isHorizntal: () => (orientation === 'horizontal'),
 			memoImage: ({isHorizntal}) => {
 				return React.useMemo(() => {
-					console.log('ui:memoImage');
+					// console.log('ui:memoImage');
 					return (
 						<Cell
 							className={css.image}
@@ -200,13 +200,13 @@ const ImageItemBase = kind({
 			},
 			memoCaption: () => {
 				return React.useMemo(() => {
-					console.log('ui:memoCaption');
+					// console.log('ui:memoCaption');
 					return children;
 				}, [children]);
 			},
 			memoChildren: ({memoCaption, isHorizntal}) => {
 				return React.useMemo(() => {
-					console.log('ui:memoChildren');
+					// console.log('ui:memoChildren');
 					return (
 						<Cell
 							// eslint-disable-next-line no-undefined
@@ -229,12 +229,12 @@ const ImageItemBase = kind({
 
 		delete rest.selected;
 
-		console.log('ui:render');
+		// console.log('ui:render');
 		return (
 			<MemoPropsDOMAttributesContext attr={['data-index']}>
 				{
 					React.useMemo(() => {
-						console.log('ui:imageContent');
+						// console.log('ui:imageContent');
 						return (
 							<Component {...rest} className={className}>
 								<MemoPropsContext.Consumer>
