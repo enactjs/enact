@@ -357,7 +357,7 @@ function getTargetByDirectionFromElement (direction, element) {
 
 	const elementRect = getRect(element);
 
-	return getNavigableContainersForNode(element)
+	const next = getNavigableContainersForNode(element)
 		.reduceRight((result, containerId, index, elementContainerIds) => {
 			result = result || getTargetInContainerByDirectionFromElement(
 				direction,
@@ -380,6 +380,10 @@ function getTargetByDirectionFromElement (direction, element) {
 
 			return result;
 		}, null);
+
+	// if the reduce above returns the original element, it means it hit a `leaveFor` config that
+	// prevents navigation so we enforce that here by returning null.
+	return next !== element ? next : null;
 }
 
 function getTargetByDirectionFromPosition (direction, position, containerId) {
