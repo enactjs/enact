@@ -1,6 +1,8 @@
+// import {render} from '@testing-library/react'
 import React from 'react';
 import {mount, shallow} from 'enzyme';
-import {ImageItemBase} from '../ImageItem';
+
+import ImageItem from '../ImageItem';
 
 const src = {
 	'hd': 'http://lorempixel.com/64/64/city/1/',
@@ -16,7 +18,7 @@ describe('ImageItem', () => {
 	test('should support `children` prop', () => {
 		const children = 'children';
 		const subject = shallow(
-			<ImageItemBase>{children}</ImageItemBase>
+			<ImageItem>{children}</ImageItem>
 		);
 
 		const expected = children;
@@ -27,7 +29,7 @@ describe('ImageItem', () => {
 
 	test('should omit caption node when `children` is unset', () => {
 		const subject = shallow(
-			<ImageItemBase />
+			<ImageItem />
 		);
 
 		const actual = subject.find('.caption');
@@ -37,7 +39,7 @@ describe('ImageItem', () => {
 
 	test('should use a `Row` when `orientation="horizontal"`', () => {
 		const subject = shallow(
-			<ImageItemBase orientation="horizontal" />
+			<ImageItem orientation="horizontal" />
 		);
 
 		const actual = subject.find('Row.imageItem');
@@ -47,18 +49,18 @@ describe('ImageItem', () => {
 
 	test('should apply `.horizontal` when `orientation="horizontal"`', () => {
 		const subject = shallow(
-			<ImageItemBase orientation="horizontal" />
+			<ImageItem orientation="horizontal" />
 		);
 
 		const expected = 'horizontal';
-		const actual = subject.prop('className');
+		const actual = subject.find('Row.imageItem').prop('className');
 
 		expect(actual).toContain(expected);
 	});
 
 	test('should use a `Column` when `orientation="vertical"`', () => {
 		const subject = shallow(
-			<ImageItemBase orientation="vertical" />
+			<ImageItem orientation="vertical" />
 		);
 
 		const actual = subject.find('Column.imageItem');
@@ -68,22 +70,22 @@ describe('ImageItem', () => {
 
 	test('should apply `.horizontal` when `orientation="vertical"`', () => {
 		const subject = shallow(
-			<ImageItemBase orientation="vertical" />
+			<ImageItem orientation="vertical" />
 		);
 
 		const expected = 'vertical';
-		const actual = subject.prop('className');
+		const actual = subject.find('Column.imageItem').prop('className');
 
 		expect(actual).toContain(expected);
 	});
 
 	test('should apply `.selected` when `selected`', () => {
 		const subject = shallow(
-			<ImageItemBase selected />
+			<ImageItem selected />
 		);
 
 		const expected = 'selected';
-		const actual = subject.prop('className');
+		const actual = subject.find('Column.imageItem').prop('className');
 
 		expect(actual).toContain(expected);
 	});
@@ -96,7 +98,7 @@ describe('ImageItem', () => {
 
 		// Using mount() to render Img within Cell
 		const subject = mount(
-			<ImageItemBase imageComponent={Img} {...props} />
+			<ImageItem imageComponent={Img} {...props} />
 		);
 
 		const expected = props;
@@ -113,7 +115,7 @@ describe('ImageItem', () => {
 
 		// Using mount() to render Img within Cell
 		const subject = mount(
-			<ImageItemBase imageComponent={<Img />} {...props} />
+			<ImageItem imageComponent={<Img />} {...props} />
 		);
 
 		const expected = props;
@@ -130,7 +132,7 @@ describe('ImageItem', () => {
 
 		// Using mount() to render Img within Cell
 		const subject = mount(
-			<ImageItemBase
+			<ImageItem
 				imageComponent={<Img src="my-src.png" placeholder="my-place.png" />}
 				{...props}
 			/>
@@ -144,7 +146,7 @@ describe('ImageItem', () => {
 
 	test('should support string for `src` prop', () => {
 		const subject = shallow(
-			<ImageItemBase src={src.hd} />
+			<ImageItem src={src.hd} />
 		);
 
 		const expected = {src: src.hd};
@@ -155,7 +157,7 @@ describe('ImageItem', () => {
 
 	test('should support object for `src` prop', () => {
 		const subject = shallow(
-			<ImageItemBase src={src} />
+			<ImageItem src={src} />
 		);
 
 		const expected = {src};

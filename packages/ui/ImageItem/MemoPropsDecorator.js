@@ -24,16 +24,13 @@ const MemoPropsContextDecorator = hoc((config = {}, Wrapped) => {
 	function MemoPropsContextDecorator (props) {
 		const context = React.useContext(MemoPropsContext);
 
-		if (config.props) {
+		if (!context) {
+			return <Wrapped {...props} {...context} />;
+		} else if (config.props) {
 			const memoProps = pick(config.props, context);
-
-			return (
-				<Wrapped {...props} {...memoProps} />
-			);
+			return <Wrapped {...props} {...memoProps} />;
 		} else {
-			return (
-				<Wrapped {...props} {...context} />
-			);
+			return <Wrapped {...props} {...context} />;
 		}
 	}
 
@@ -73,8 +70,10 @@ class MemoPropsDOMAttributesContext extends React.Component {
 		return (
 			<MemoPropsContext.Consumer>
 				{(context) => {
-					this.memoProps = pick(attr, context);
-					this.updateDOMAttributes();
+					if (context) {
+						this.memoProps = pick(attr, context);
+						this.updateDOMAttributes();
+					}
 
 					return this.props.children;
 				}}
