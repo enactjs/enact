@@ -2,7 +2,8 @@
 /*  eslint-disable react-hooks/exhaustive-deps */
 //
 // React Hook "useMemo" is called in the function of the "computed" object properly,
-// which is neither a React function component or a custom React Hook function
+// which is neither a React function component or a custom React Hook function.
+// We might support `useComputed` later.
 
 /**
  * Unstyled image item components and behaviors to be customized by a theme or application.
@@ -44,7 +45,7 @@ function ImageOverride ({imageComponent, ...rest}) {
 			{(context) => {
 				const src = context && context.src || rest.src;
 
-				// console.log('ui:ImageOverride');
+				console.log('ui:ImageOverride');
 				return src ? ComponentOverride({
 					...rest,
 					component: imageComponent,
@@ -176,12 +177,11 @@ const ImageItemBase = kind({
 			horizontal: orientation === 'horizontal',
 			vertical: orientation === 'vertical'
 		}),
-		// Warning: Do not call Hooks inside useEffect(...), useMemo(...), or other built-in Hooks. You can only call Hooks at the top level of your React function. For more information, see https://fb.me/rules-of-hooks
 		computedProps: ({children, css, imageComponent, orientation, placeholder, src, ...rest}) => (reducedComputed({
 			isHorizntal: () => (orientation === 'horizontal'),
 			memoImage: ({isHorizntal}) => {
 				return React.useMemo(() => {
-					// console.log('ui:memoImage');
+					console.log('ui:memoImage');
 					return (
 						<Cell
 							className={css.image}
@@ -200,13 +200,13 @@ const ImageItemBase = kind({
 			},
 			memoCaption: () => {
 				return React.useMemo(() => {
-					// console.log('ui:memoChildren');
+					console.log('ui:memoCaption');
 					return children;
 				}, [children]);
 			},
 			memoChildren: ({memoCaption, isHorizntal}) => {
 				return React.useMemo(() => {
-					// console.log('ui:content');
+					console.log('ui:memoChildren');
 					return (
 						<Cell
 							// eslint-disable-next-line no-undefined
@@ -229,12 +229,12 @@ const ImageItemBase = kind({
 
 		delete rest.selected;
 
-		// console.log('ui:render');
+		console.log('ui:render');
 		return (
 			<MemoPropsDOMAttributesContext attr={['data-index']}>
 				{
 					React.useMemo(() => {
-						// console.log('ui:imageContent');
+						console.log('ui:imageContent');
 						return (
 							<Component {...rest} className={className}>
 								<MemoPropsContext.Consumer>

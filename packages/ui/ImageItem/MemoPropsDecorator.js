@@ -23,6 +23,7 @@ const MemoPropsContextDecorator = hoc((config = {}, Wrapped) => {
 	// eslint-disable-next-line no-shadow
 	function MemoPropsContextDecorator (props) {
 		const context = React.useContext(MemoPropsContext);
+
 		if (config.props) {
 			const memoProps = pick(config.props, context);
 
@@ -41,8 +42,7 @@ const MemoPropsContextDecorator = hoc((config = {}, Wrapped) => {
 
 class MemoPropsDOMAttributesContext extends React.Component {
 	static propTypes = /** @lends sandstone/MemoPropsDecorator.MemoPropsDOMAttributesContext.prototype */ {
-		attr: PropTypes.array,
-		value: PropTypes.object
+		attr: PropTypes.array
 	}
 
 	static defaultProps = {
@@ -56,8 +56,6 @@ class MemoPropsDOMAttributesContext extends React.Component {
 	node = null
 
 	memoProps = {}
-
-	memoChildren = null
 
 	updateDOMAttributes () {
 		this.node = this.node || ReactDOM.findDOMNode(this); // eslint-disable-line react/no-find-dom-node
@@ -85,22 +83,8 @@ class MemoPropsDOMAttributesContext extends React.Component {
 	}
 }
 
-const MemoComponentDecorator = hoc((config, Wrapped) => {
-	// eslint-disable-next-line no-shadow
-	function MemoComponentDecorator (props) {
-		const children = React.useRef(null);
-
-		children.current = children.current || <Wrapped {...props} />;
-
-		return children.current;
-	}
-
-	return MemoComponentDecorator;
-});
-
 export default MemoPropsContext;
 export {
-	MemoComponentDecorator,
 	MemoPropsContext,
 	MemoPropsContextDecorator,
 	MemoPropsDecorator,
