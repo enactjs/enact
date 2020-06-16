@@ -1,4 +1,5 @@
 /*  eslint-disable react-hooks/rules-of-hooks */
+/*  eslint-disable react-hooks/exhaustive-deps */
 //
 // React Hook "useMemo" is called in the function of the "computed" object properly,
 // which is neither a React function component or a custom React Hook function
@@ -28,11 +29,11 @@ import {reducedComputed} from './util';
 
 import componentCss from './ImageItem.module.less';
 
-let placeholder = null;
+let placeholderElement = null;
 
 // Adapts ComponentOverride to work within Cell since both use the component prop
 function ImageOverride ({imageComponent, ...rest}) {
-	placeholder = placeholder || ComponentOverride({
+	placeholderElement = placeholderElement || ComponentOverride({
 		...rest,
 		component: imageComponent,
 		src: null
@@ -48,7 +49,7 @@ function ImageOverride ({imageComponent, ...rest}) {
 					...rest,
 					component: imageComponent,
 					src
-				}) : placeholder;
+				}) : placeholderElement;
 			}}
 		</MemoPropsContext.Consumer>
 	);
@@ -59,9 +60,18 @@ ImageOverride.propTypes = {
 	 * The component used to render the image component.
 	 *
 	 * @type {Component|Element}
-	 * @public
+	 * @private
 	 */
-	imageComponent: EnactPropTypes.componentOverride
+	imageComponent: EnactPropTypes.componentOverride,
+
+	/**
+	 * String value or Object of values used to determine which image will appear on a specific
+	 * screenSize.
+	 *
+	 * @type {String|Object}
+	 * @private
+	 */
+	src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 };
 
 /**
@@ -166,7 +176,7 @@ const ImageItemBase = kind({
 			horizontal: orientation === 'horizontal',
 			vertical: orientation === 'vertical'
 		}),
-		computedProps: ({children, css, imageComponent, orientation, placeholder, selected, src, ...rest}) => (reducedComputed({
+		computedProps: ({children, css, imageComponent, orientation, placeholder, src, ...rest}) => (reducedComputed({
 			isHorizntal: () => (orientation === 'horizontal'),
 			memoImage: ({isHorizntal}) => {
 				return React.useMemo(() => {
