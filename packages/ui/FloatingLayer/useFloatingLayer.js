@@ -11,9 +11,12 @@ function useFloatingLayer () {
 	}, [setId]);
 
 	const registerFloatingLayer = React.useContext(FloatingLayerContext);
-	if (registerFloatingLayer) {
-		registerFloatingLayer(handler);
-	}
+
+	React.useEffect(() => {
+		if (registerFloatingLayer) {
+			registerFloatingLayer(handler);
+		}
+	}, [handler, registerFloatingLayer]);
 
 	return {floatingLayerId};
 }
