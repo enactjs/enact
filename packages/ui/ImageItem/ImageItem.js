@@ -176,6 +176,7 @@ const ImageItemBase = kind({
 			horizontal: orientation === 'horizontal',
 			vertical: orientation === 'vertical'
 		}),
+		// Warning: Do not call Hooks inside useEffect(...), useMemo(...), or other built-in Hooks. You can only call Hooks at the top level of your React function. For more information, see https://fb.me/rules-of-hooks
 		computedProps: ({children, css, imageComponent, orientation, placeholder, src, ...rest}) => (reducedComputed({
 			isHorizntal: () => (orientation === 'horizontal'),
 			memoImage: ({isHorizntal}) => {
@@ -186,6 +187,7 @@ const ImageItemBase = kind({
 							className={css.image}
 							component={ImageOverride}
 							imageComponent={imageComponent}
+							key="image"
 							placeholder={placeholder}
 							shrink={isHorizntal}
 							src={src}
@@ -196,32 +198,33 @@ const ImageItemBase = kind({
 					// eslint-disable-next-line react-hooks/exhaustive-deps
 				}, [css.image, imageComponent, isHorizntal, placeholder]);
 			},
-			memoChildren: () => {
+			memoCaption: () => {
 				return React.useMemo(() => {
 					// console.log('ui:memoChildren');
 					return children;
 				}, [children]);
 			},
-			content: ({memoChildren, isHorizntal}) => {
+			memoChildren: ({memoCaption, isHorizntal}) => {
 				return React.useMemo(() => {
 					// console.log('ui:content');
 					return (
 						<Cell
-							className={css.caption}
-							shrink={!isHorizntal}
 							// eslint-disable-next-line no-undefined
 							align={isHorizntal ? 'center' : undefined}
+							className={css.caption}
+							key="children"
+							shrink={!isHorizntal}
 						>
-							{memoChildren}
+							{memoCaption}
 						</Cell>
 					);
-				}, [css.caption, isHorizntal, memoChildren]);
+				}, [css.caption, isHorizntal, memoCaption]);
 			},
-			computedProps: ({content, isHorizntal, memoImage}) => ({content, isHorizntal, memoImage, rest})
+			computedProps: ({isHorizntal, memoChildren, memoImage}) => ({isHorizntal, memoChildren, memoImage, rest})
 		}))
 	},
 
-	render: ({className, computedProps: {content, isHorizntal, memoImage, rest}}) => {
+	render: ({className, computedProps: {isHorizntal, memoChildren, memoImage, rest}}) => {
 		const Component = isHorizntal ? Row : Column;
 
 		delete rest.selected;
@@ -235,7 +238,7 @@ const ImageItemBase = kind({
 						return (
 							<Component {...rest} className={className}>
 								<MemoPropsContext.Consumer>
-									{() => ([memoImage, content])}
+									{() => ([memoImage, memoChildren])}
 								</MemoPropsContext.Consumer>
 							</Component>
 						);
