@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
-- `spotlight` to trigger `onContainerLeaveFail` when `leaveFor` prevents navigation
+- `spotlight` to trigger `onLeaveContainerFail` when `leaveFor` prevents navigation
 
 ## [3.3.0-alpha.12] - 2020-06-15
 
