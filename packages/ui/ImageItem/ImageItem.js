@@ -56,7 +56,6 @@ function ImageOverride ({imageComponent, placeholder, src, ...rest}) {
 				{(context) => {
 					const imageSrc = context && context.src || src;
 
-					// console.log('ui:ImageOverride');
 					return (src || placeholder) ? ComponentOverride({
 						...rest,
 						component: imageComponent,
@@ -201,7 +200,6 @@ const ImageItemBase = kind({
 			isHorizntal: () => (orientation === 'horizontal'),
 			memoImage: ({isHorizntal}) => {
 				return React.useMemo(() => {
-					// console.log('ui:memoImage');
 					return (
 						<Cell
 							className={css.image}
@@ -220,13 +218,11 @@ const ImageItemBase = kind({
 			},
 			memoCaption: () => {
 				return children ? React.useMemo(() => {
-					// console.log('ui:memoCaption');
 					return children;
 				}, [children]) : null;
 			},
 			memoChildren: ({memoCaption, isHorizntal}) => {
 				return memoCaption ? React.useMemo(() => {
-					// console.log('ui:memoChildren');
 					return (
 						<Cell
 							// eslint-disable-next-line no-undefined
@@ -250,12 +246,10 @@ const ImageItemBase = kind({
 		delete rest.className;
 		delete rest.selected;
 
-		// console.log('ui:render');
 		return (
 			<MemoPropsDOMAttributesContext attr={['data-index']}>
 				{
 					React.useMemo(() => {
-						// console.log('ui:imageContent');
 						return (
 							<Component {...rest} className={className}>
 								{
