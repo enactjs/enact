@@ -14,11 +14,7 @@ describe('ImageItem', () => {
 		return null;
 	}
 
-	// FIXME:
-	// enzyme doesn't support a new context consumer yet.
-	// `children` and `src` is updated throught a context.
-	// It will be fixed based on testing-library later.
-	test.skip('should support `children` prop', () => {
+	test('should support `children` prop', () => {
 		const children = 'children';
 		const subject = shallow(
 			<ImageItem>{children}</ImageItem>
@@ -45,7 +41,7 @@ describe('ImageItem', () => {
 			<ImageItem orientation="horizontal" />
 		);
 
-		const actual = subject.find('Row.imageItem');
+		const actual = subject.find('div.imageItem');
 
 		expect(actual).toHaveLength(1);
 	});
@@ -56,7 +52,7 @@ describe('ImageItem', () => {
 		);
 
 		const expected = 'horizontal';
-		const actual = subject.find('Row.imageItem').prop('className');
+		const actual = subject.find('div.imageItem').prop('className');
 
 		expect(actual).toContain(expected);
 	});
@@ -66,7 +62,7 @@ describe('ImageItem', () => {
 			<ImageItem orientation="vertical" />
 		);
 
-		const actual = subject.find('Column.imageItem');
+		const actual = subject.find('div.imageItem');
 
 		expect(actual).toHaveLength(1);
 	});
@@ -77,7 +73,7 @@ describe('ImageItem', () => {
 		);
 
 		const expected = 'vertical';
-		const actual = subject.find('Column.imageItem').prop('className');
+		const actual = subject.find('div.imageItem').prop('className');
 
 		expect(actual).toContain(expected);
 	});
@@ -88,7 +84,7 @@ describe('ImageItem', () => {
 		);
 
 		const expected = 'selected';
-		const actual = subject.find('Column.imageItem').prop('className');
+		const actual = subject.find('div.imageItem').prop('className');
 
 		expect(actual).toContain(expected);
 	});
@@ -147,11 +143,7 @@ describe('ImageItem', () => {
 		expect(actual).toMatchObject(expected);
 	});
 
-	// FIXME:
-	// enzyme doesn't support a new context consumer yet.
-	// `children` and `src` is updated throught a context.
-	// It will be fixed based on testing-library later.
-	test.skip('should support string for `src` prop', () => {
+	test('should support string for `src` prop', () => {
 		const subject = shallow(
 			<ImageItem src={src.hd} />
 		);
@@ -162,11 +154,7 @@ describe('ImageItem', () => {
 		expect(actual).toMatchObject(expected);
 	});
 
-	// FIXME:
-	// enzyme doesn't support a new context consumer yet.
-	// `children` and `src` is updated throught a context.
-	// It will be fixed based on testing-library later.
-	test.skip('should support object for `src` prop', () => {
+	test('should support object for `src` prop', () => {
 		const subject = shallow(
 			<ImageItem src={src} />
 		);

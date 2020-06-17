@@ -18,24 +18,27 @@ import ComponentOverride from '../ComponentOverride';
 import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
-import  {MemoPropsContext, MemoPropsDecorator} from './MemoPropsDecorator';
-
 import componentCss from './ImageItem.module.less';
 
 // Adapts ComponentOverride to work within Cell since both use the component prop
-function ImageOverride ({imageComponent, placeholder, src, ...rest}) {
-	return (
+function ImageOverride ({imageComponent, memoizedContext: MemoPropsContext, placeholder, src, ...rest}) {
+	return MemoPropsContext ? (
 		<MemoPropsContext.Consumer>
 			{(context) => {
 				return ComponentOverride({
 					...rest,
 					component: imageComponent,
-					placeholder: context && context.placeholder || placeholder,
+					placeholder,
 					src: context && context.src || src
 				});
 			}}
 		</MemoPropsContext.Consumer>
-	);
+	) : ComponentOverride({
+		...rest,
+		component: imageComponent,
+		placeholder,
+		src
+	});
 }
 
 ImageOverride.propTypes = {
@@ -112,6 +115,14 @@ const ImageItemBase = kind({
 		imageComponent: EnactPropTypes.componentOverride,
 
 		/**
+		 * The context includes `placeholder` and `src` properties at least.
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		memoizedContext: PropTypes.object,
+
+		/**
 		 * The layout orientation of the component.
 		 *
 		 * @type {('horizontal'|'vertical')}
@@ -167,7 +178,7 @@ const ImageItemBase = kind({
 			horizontal: orientation === 'horizontal',
 			vertical: orientation === 'vertical'
 		}),
-		memoizedImageCell: ({css, imageComponent, orientation, placeholder, src}) => {
+		memoizedImageCell: ({css, imageComponent, memoizedContext, orientation, placeholder, src}) => {
 			const isHorizontal = orientation === 'horizontal';
 
 			return React.useMemo(() => {
@@ -177,6 +188,7 @@ const ImageItemBase = kind({
 						component={ImageOverride}
 						imageComponent={imageComponent}
 						key="image"
+						memoizedContext={memoizedContext}
 						placeholder={placeholder}
 						shrink={isHorizontal}
 						src={src}
@@ -193,7 +205,7 @@ const ImageItemBase = kind({
 		}
 	},
 
-	render: ({className, css, memoizedChildren, memoizedImageCell, orientation, ...rest}) => {
+	render: ({className, css, memoizedChildren, memoizedContext: MemoPropsContext, memoizedImageCell, orientation, ...rest}) => {
 		delete rest.children;
 		delete rest.className;
 		delete rest.imageComponent;
@@ -218,6 +230,25 @@ const ImageItemBase = kind({
 			);
 		}, [css.caption, isHorizontal, memoizedChildren]) : null;
 
+		const component = [memoizedImageCell, memoizedChildrenCell];
+
+		return (
+			<div {...rest} className={className}>
+				{MemoPropsContext ?
+					React.useMemo(() => {
+						return (
+							<Component>
+								<MemoPropsContext.Consumer>
+									{() => (component)}
+								</MemoPropsContext.Consumer>
+							</Component>
+						);
+					}, []) :
+					component
+				}
+			</div>
+		);
+
 		return (
 			<div {...rest} className={className}>
 				{React.useMemo(() => {
@@ -237,7 +268,5 @@ const ImageItemBase = kind({
 export default ImageItemBase;
 export {
 	ImageItemBase as ImageItem,
-	ImageItemBase,
-	MemoPropsDecorator,
-	MemoPropsContext,
+	ImageItemBase
 };
