@@ -29,28 +29,17 @@ import  {
 
 import componentCss from './ImageItem.module.less';
 
-let placeholderElement = null;
-
 // Adapts ComponentOverride to work within Cell since both use the component prop
 function ImageOverride ({imageComponent, placeholder, src, ...rest}) {
-	placeholderElement = placeholderElement || placeholder && ComponentOverride({
-		...rest,
-		component: imageComponent,
-		placeholder,
-		src: null
-	}) || null;
-
 	return (
 		<MemoPropsContext.Consumer>
 			{(context) => {
-				const imageSrc = context && context.src || src;
-
-				return (src || placeholder) ? ComponentOverride({
+				return ComponentOverride({
 					...rest,
 					component: imageComponent,
-					placeholder,
-					src: imageSrc
-				}) : placeholderElement;
+					placeholder: context && context.placeholder || placeholder,
+					src: context && context.src || src
+				});
 			}}
 		</MemoPropsContext.Consumer>
 	);
