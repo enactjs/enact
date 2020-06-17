@@ -18,12 +18,11 @@ import ComponentOverride from '../ComponentOverride';
 import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
-import  {MemoPropsContext, MemoPropsDecorator, MemoPropsChildrenContext, useContext} from './MemoPropsDecorator';
+import  {MemoPropsDecorator, MemoPropsContext, MemoPropsThemeContext, useContext} from './MemoPropsDecorator';
 
 import componentCss from './ImageItem.module.less';
 
 const useMemoPropsContext = useContext(MemoPropsContext);
-const useMemoPropsChildrenContext = useContext(MemoPropsChildrenContext);
 
 // Adapts ComponentOverride to work within Cell since both use the component prop
 function ImageOverride ({imageComponent, ...rest}) {
@@ -43,24 +42,7 @@ ImageOverride.propTypes = {
 	 * @type {Component|Element}
 	 * @private
 	 */
-	imageComponent: EnactPropTypes.componentOverride,
-
-	/**
-	 * A placeholder image to be displayed before the image is loaded.
-	 *
-	 * @type {String}
-	 * @private
-	 */
-	placeholder: PropTypes.string,
-
-	/**
-	 * String value or Object of values used to determine which image will appear on a specific
-	 * screenSize.
-	 *
-	 * @type {String|Object}
-	 * @private
-	 */
-	src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+	imageComponent: EnactPropTypes.componentOverride
 };
 
 /**
@@ -178,7 +160,7 @@ const ImageItemBase = kind({
 						key="children"
 						shrink={!isHorizontal}
 					>
-						{useMemoPropsChildrenContext((context) => {
+						{useMemoPropsContext((context) => {
 							return context && context.children;
 						})}
 					</Cell>
@@ -211,7 +193,7 @@ const ImageItemBase = kind({
 	}
 });
 
-const ImageItem = MemoPropsDecorator({filter: ['children']})(ImageItemBase);
+const ImageItem = MemoPropsDecorator({filter: ['children', 'src']})(ImageItemBase);
 
 /**
  * The caption displayed with the image.
@@ -222,11 +204,20 @@ const ImageItem = MemoPropsDecorator({filter: ['children']})(ImageItemBase);
  * @public
  */
 
+/**
+ * String value or Object of values used to determine which image will appear on a specific
+ * screenSize.
+ *
+ * @name src
+ * @type {String|Object}
+ * @public
+ */
+
 export default ImageItem;
 export {
 	ImageItem,
 	ImageItemBase,
 	MemoPropsDecorator,
-	MemoPropsContext,
+	MemoPropsThemeContext,
 	useContext
 };

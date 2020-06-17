@@ -4,8 +4,8 @@ import pick from 'ramda/src/pick';
 import omit from 'ramda/src/omit';
 import React from 'react';
 
+const MemoPropsThemeContext = React.createContext();
 const MemoPropsContext = React.createContext();
-const MemoPropsChildrenContext = React.createContext();
 
 const defaultConfig = {
 	filter: []
@@ -21,15 +21,15 @@ const MemoPropsDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		if (context) {
 			return (
-				<MemoPropsChildrenContext.Provider value={picked}>
+				<MemoPropsContext.Provider value={picked}>
 					<Wrapped {...omitted} />
-				</MemoPropsChildrenContext.Provider>
+				</MemoPropsContext.Provider>
 			);
 		} else {
 			return (
-				<MemoPropsContext.Provider value={rest}>
+				<MemoPropsThemeContext.Provider value={rest}>
 					<Wrapped {...omitted} />
-				</MemoPropsContext.Provider>
+				</MemoPropsThemeContext.Provider>
 			);
 		}
 	}
@@ -55,10 +55,10 @@ const useContext = (Context) => (fn) => {
 	);
 };
 
-export default MemoPropsContext;
+export default MemoPropsThemeContext;
 export {
 	MemoPropsContext,
 	MemoPropsDecorator,
-	MemoPropsChildrenContext,
+	MemoPropsThemeContext,
 	useContext
 };
