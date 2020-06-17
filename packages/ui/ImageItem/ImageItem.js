@@ -1,9 +1,6 @@
 /*  eslint-disable react-hooks/rules-of-hooks */
 /*  eslint-disable react-hooks/exhaustive-deps */
-//
-// React Hook "useMemo" is called in the function of the "computed" object properly,
-// which is neither a React function component or a custom React Hook function.
-// We might support `useComputed` or something like that later.
+// To use `React.useMemo` in a kind, the eslint rules above has benn blocked.
 
 /**
  * Unstyled image item components and behaviors to be customized by a theme or application.
@@ -175,7 +172,7 @@ const ImageItemBase = kind({
 			vertical: orientation === 'vertical'
 		}),
 		memoizedImageCell: ({css, imageComponent, orientation, placeholder, src}) => {
-			const isHorizntal = orientation === 'horizontal';
+			const isHorizontal = orientation === 'horizontal';
 			return React.useMemo(() => {
 				return (
 					<Cell
@@ -184,13 +181,13 @@ const ImageItemBase = kind({
 						imageComponent={imageComponent}
 						key="image"
 						placeholder={placeholder}
-						shrink={isHorizntal}
+						shrink={isHorizontal}
 						src={src}
 					/>
 				);
 				// We don't need the dependency of the `src` because it will be passed through a context.
 				// eslint-disable-next-line react-hooks/exhaustive-deps
-			}, [css.image, imageComponent, isHorizntal, placeholder]);
+			}, [css.image, imageComponent, isHorizontal, placeholder]);
 		},
 		memoizedChildren: ({children}) => {
 			return children ? React.useMemo(() => {
@@ -200,9 +197,6 @@ const ImageItemBase = kind({
 	},
 
 	render: ({className, css, memoizedChildren, memoizedImageCell, orientation, ...rest}) => {
-		const isHorizntal = orientation === 'horizontal';
-		const Component = isHorizntal ? Row : Column;
-
 		delete rest.children;
 		delete rest.className;
 		delete rest.imageComponent;
@@ -210,19 +204,22 @@ const ImageItemBase = kind({
 		delete rest.selected;
 		delete rest.src;
 
+		const isHorizontal = orientation === 'horizontal';
+		const Component = isHorizontal ? Row : Column;
+
 		const memoizedChildrenCell = memoizedChildren ? React.useMemo(() => {
 			return (
 				<Cell
 					// eslint-disable-next-line no-undefined
-					align={isHorizntal ? 'center' : undefined}
+					align={isHorizontal ? 'center' : undefined}
 					className={css.caption}
 					key="children"
-					shrink={!isHorizntal}
+					shrink={!isHorizontal}
 				>
 					{memoizedChildren}
 				</Cell>
 			);
-		}, [css.caption, isHorizntal, memoizedChildren]) : null;
+		}, [css.caption, isHorizontal, memoizedChildren]) : null;
 
 		return (
 			<MemoPropsDOMAttributesContext attr={['data-index']}>

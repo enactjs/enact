@@ -25,7 +25,7 @@ const MemoPropsContextDecorator = hoc((config = {}, Wrapped) => {
 		const context = React.useContext(MemoPropsContext);
 
 		if (!context) {
-			return <Wrapped {...props} {...context} />;
+			return <Wrapped {...props} />;
 		} else if (config.props) {
 			const memoProps = pick(config.props, context);
 			return <Wrapped {...props} {...memoProps} />;
