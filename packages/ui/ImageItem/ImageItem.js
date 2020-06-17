@@ -169,6 +169,7 @@ const ImageItemBase = kind({
 		}),
 		memoizedImageCell: ({css, imageComponent, orientation, placeholder, src}) => {
 			const isHorizontal = orientation === 'horizontal';
+
 			return React.useMemo(() => {
 				return (
 					<Cell
@@ -227,7 +228,7 @@ const ImageItemBase = kind({
 							</MemoPropsContext.Consumer>
 						</Component>
 					);
-				}, [className])}
+				}, [])}
 			</div>
 		);
 	}
