@@ -3,7 +3,7 @@
 //
 // React Hook "useMemo" is called in the function of the "computed" object properly,
 // which is neither a React function component or a custom React Hook function.
-// We might support `useComputed` later.
+// We might support `useComputed` or something like that later.
 
 /**
  * Unstyled image item components and behaviors to be customized by a theme or application.
@@ -42,9 +42,10 @@ function ImageOverride ({imageComponent, placeholder, src, ...rest}) {
 	}) || null;
 
 	return (
-		// FIXME: for unit test temparary.
+		// FIXME: `(describe && test)` condition was added to run unit tests properly.
 		// enzyme doesn't support a new context consumer yet.
 		// Unit tests will be updated based on testing-library.
+		// Then the `(describe && test)` condition will be removed.
 		(describe && test) ?
 			ComponentOverride({
 				...rest,
@@ -212,7 +213,6 @@ const ImageItemBase = kind({
 						/>
 					);
 					// We don't need the dependency of the `src` because it will be passed through a context.
-					// We compare imageComponent.type for dependency instead of imageComponent.
 					// eslint-disable-next-line react-hooks/exhaustive-deps
 				}, [css.image, imageComponent, isHorizntal, placeholder]);
 			},
@@ -253,9 +253,10 @@ const ImageItemBase = kind({
 						return (
 							<Component {...rest} className={className}>
 								{
-									// FIXME: for unit test temparary.
+									// FIXME: `(describe && test)` condition was added to run unit tests properly.
 									// enzyme doesn't support a new context consumer yet.
 									// Unit tests will be updated based on testing-library.
+									// Then the `(describe && test)` condition will be removed.
 									(describe && test) ?
 										[memoImage, memoChildren] :
 										<MemoPropsContext.Consumer>
