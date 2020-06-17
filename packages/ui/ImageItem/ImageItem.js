@@ -42,29 +42,18 @@ function ImageOverride ({imageComponent, placeholder, src, ...rest}) {
 	}) || null;
 
 	return (
-		// FIXME: `(describe && test)` condition was added to run unit tests properly.
-		// enzyme doesn't support a new context consumer yet.
-		// Unit tests will be updated based on testing-library.
-		// Then the `(describe && test)` condition will be removed.
-		(describe && test) ?
-			ComponentOverride({
-				...rest,
-				component: imageComponent,
-				placeholder,
-				src
-			}) :
-			<MemoPropsContext.Consumer>
-				{(context) => {
-					const imageSrc = context && context.src || src;
+		<MemoPropsContext.Consumer>
+			{(context) => {
+				const imageSrc = context && context.src || src;
 
-					return (src || placeholder) ? ComponentOverride({
-						...rest,
-						component: imageComponent,
-						placeholder,
-						src: imageSrc
-					}) : placeholderElement;
-				}}
-			</MemoPropsContext.Consumer>
+				return (src || placeholder) ? ComponentOverride({
+					...rest,
+					component: imageComponent,
+					placeholder,
+					src: imageSrc
+				}) : placeholderElement;
+			}}
+		</MemoPropsContext.Consumer>
 	);
 }
 
@@ -252,17 +241,9 @@ const ImageItemBase = kind({
 					React.useMemo(() => {
 						return (
 							<Component {...rest} className={className}>
-								{
-									// FIXME: `(describe && test)` condition was added to run unit tests properly.
-									// enzyme doesn't support a new context consumer yet.
-									// Unit tests will be updated based on testing-library.
-									// Then the `(describe && test)` condition will be removed.
-									(describe && test) ?
-										[memoImage, memoChildren] :
-										<MemoPropsContext.Consumer>
-											{() => ([memoImage, memoChildren])}
-										</MemoPropsContext.Consumer>
-								}
+								<MemoPropsContext.Consumer>
+									{() => ([memoImage, memoChildren])}
+								</MemoPropsContext.Consumer>
 							</Component>
 						);
 					}, [className])
