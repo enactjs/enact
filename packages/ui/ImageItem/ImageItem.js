@@ -26,7 +26,6 @@ import  {
 	MemoPropsDecorator,
 	MemoPropsDOMAttributesContext
 } from './MemoPropsDecorator';
-import {reducedComputed} from './util';
 
 import componentCss from './ImageItem.module.less';
 
@@ -186,54 +185,55 @@ const ImageItemBase = kind({
 			horizontal: orientation === 'horizontal',
 			vertical: orientation === 'vertical'
 		}),
-		computedProps: ({children, css, imageComponent, orientation, placeholder, src, ...rest}) => (reducedComputed({
-			isHorizntal: () => (orientation === 'horizontal'),
-			memoImage: ({isHorizntal}) => {
-				return React.useMemo(() => {
-					return (
-						<Cell
-							className={css.image}
-							component={ImageOverride}
-							imageComponent={imageComponent}
-							key="image"
-							placeholder={placeholder}
-							shrink={isHorizntal}
-							src={src}
-						/>
-					);
-					// We don't need the dependency of the `src` because it will be passed through a context.
-					// eslint-disable-next-line react-hooks/exhaustive-deps
-				}, [css.image, imageComponent, isHorizntal, placeholder]);
-			},
-			memoCaption: () => {
-				return children ? React.useMemo(() => {
-					return children;
-				}, [children]) : null;
-			},
-			memoChildren: ({memoCaption, isHorizntal}) => {
-				return memoCaption ? React.useMemo(() => {
-					return (
-						<Cell
-							// eslint-disable-next-line no-undefined
-							align={isHorizntal ? 'center' : undefined}
-							className={css.caption}
-							key="children"
-							shrink={!isHorizntal}
-						>
-							{memoCaption}
-						</Cell>
-					);
-				}, [css.caption, isHorizntal, memoCaption]) : null;
-			},
-			computedProps: ({isHorizntal, memoChildren, memoImage}) => ({isHorizntal, memoChildren, memoImage, rest})
-		}))
+		memoizedImageCell: ({css, imageComponent, orientation, placeholder, src}) => {
+			const isHorizntal = orientation === 'horizontal';
+			return React.useMemo(() => {
+				return (
+					<Cell
+						className={css.image}
+						component={ImageOverride}
+						imageComponent={imageComponent}
+						key="image"
+						placeholder={placeholder}
+						shrink={isHorizntal}
+						src={src}
+					/>
+				);
+				// We don't need the dependency of the `src` because it will be passed through a context.
+				// eslint-disable-next-line react-hooks/exhaustive-deps
+			}, [css.image, imageComponent, isHorizntal, placeholder]);
+		},
+		memoizedChildren: ({children}) => {
+			return children ? React.useMemo(() => {
+				return children;
+			}, [children]) : null;
+		}
 	},
 
-	render: ({className, computedProps: {isHorizntal, memoChildren, memoImage, rest}}) => {
+	render: ({className, css, memoizedChildren, memoizedImageCell, orientation, ...rest}) => {
+		const isHorizntal = orientation === 'horizontal';
 		const Component = isHorizntal ? Row : Column;
 
+		delete rest.children;
 		delete rest.className;
+		delete rest.imageComponent;
+		delete rest.placeholder;
 		delete rest.selected;
+		delete rest.src;
+
+		const memoizedChildrenCell = memoizedChildren ? React.useMemo(() => {
+			return (
+				<Cell
+					// eslint-disable-next-line no-undefined
+					align={isHorizntal ? 'center' : undefined}
+					className={css.caption}
+					key="children"
+					shrink={!isHorizntal}
+				>
+					{memoizedChildren}
+				</Cell>
+			);
+		}, [css.caption, isHorizntal, memoizedChildren]) : null;
 
 		return (
 			<MemoPropsDOMAttributesContext attr={['data-index']}>
@@ -242,7 +242,7 @@ const ImageItemBase = kind({
 						return (
 							<Component {...rest} className={className}>
 								<MemoPropsContext.Consumer>
-									{() => ([memoImage, memoChildren])}
+									{() => ([memoizedImageCell, memoizedChildrenCell])}
 								</MemoPropsContext.Consumer>
 							</Component>
 						);
@@ -259,6 +259,5 @@ export {
 	ImageItemBase,
 	MemoPropsDecorator,
 	MemoPropsContext,
-	MemoPropsDOMAttributesContext,
-	reducedComputed
+	MemoPropsDOMAttributesContext
 };
