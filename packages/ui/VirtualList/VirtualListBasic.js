@@ -303,6 +303,7 @@ class VirtualListBasic extends Component {
 		super(props);
 
 		this.contentRef = React.createRef();
+		this.itemContainerRefs = [];
 
 		if (props.clientSize) {
 			this.calculateMetrics(props);
@@ -954,10 +955,10 @@ class VirtualListBasic extends Component {
 	// For individually sized item
 	applyItemPositionToDOMElement (index) {
 		const
-			{direction, itemRefs, rtl} = this.props,
+			{direction, rtl} = this.props,
 			{numOfItems} = this.state,
 			{itemPositions} = this,
-			childNode = itemRefs.current[index % numOfItems];
+			childNode = this.itemContainerRefs[index % numOfItems];
 
 		if (childNode && itemPositions[index]) {
 			const position = itemPositions[index].position;
@@ -1068,6 +1069,8 @@ class VirtualListBasic extends Component {
 					itemRefs.current[key] = (parseInt(itemNode.dataset.index) === index) ?
 						itemNode :
 						ref.querySelector(`[data-index="${index}"]`);
+
+					this.itemContainerRefs[key] = ref;
 				}
 			};
 
