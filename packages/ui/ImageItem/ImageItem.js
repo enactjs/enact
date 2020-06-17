@@ -97,7 +97,7 @@ const ImageItemBase = kind({
 		 * The component used to render the image component.
 		 *
 		 * @type {Component|Element}
-		 * @private
+		 * @public
 		 */
 		imageComponent: EnactPropTypes.componentOverride,
 
@@ -114,7 +114,7 @@ const ImageItemBase = kind({
 		 * A placeholder image to be displayed before the image is loaded.
 		 *
 		 * @type {String}
-		 * @private
+		 * @public
 		 */
 		placeholder: PropTypes.string,
 
