@@ -215,7 +215,16 @@ const ImageItemBase = kind({
 	}
 });
 
-const ImageItem = MemoPropsDecorator(ImageItemBase);
+const ImageItem = MemoPropsDecorator({filter: ['children']})(ImageItemBase);
+
+/**
+ * The caption displayed with the image.
+ *
+ * @name children
+ * @memberof ui/ImageItem.ImageItemBase.prototype
+ * @type {Node}
+ * @public
+ */
 
 export default ImageItem;
 export {
