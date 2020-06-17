@@ -18,24 +18,22 @@ import ComponentOverride from '../ComponentOverride';
 import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
-import  {MemoPropsContext, MemoPropsDecorator, MemoPropsChildrenContext} from './MemoPropsDecorator';
+import  {MemoPropsContext, MemoPropsDecorator, MemoPropsChildrenContext, useContext} from './MemoPropsDecorator';
 
 import componentCss from './ImageItem.module.less';
 
+const useMemoPropsContext = useContext(MemoPropsContext);
+const useMemoPropsChildrenContext = useContext(MemoPropsChildrenContext);
+
 // Adapts ComponentOverride to work within Cell since both use the component prop
-function ImageOverride ({imageComponent, placeholder, ...rest}) {
-	return (
-		<MemoPropsContext.Consumer>
-			{(context) => {
-				return ComponentOverride({
-					...rest,
-					component: imageComponent,
-					placeholder,
-					src: context && context.src
-				});
-			}}
-		</MemoPropsContext.Consumer>
-	);
+function ImageOverride ({imageComponent, ...rest}) {
+	return useMemoPropsContext((context) => {
+		return ComponentOverride({
+			...rest,
+			component: imageComponent,
+			src: context && context.src
+		});
+	});
 }
 
 ImageOverride.propTypes = {
@@ -180,11 +178,9 @@ const ImageItemBase = kind({
 						key="children"
 						shrink={!isHorizontal}
 					>
-						<MemoPropsChildrenContext.Consumer>
-							{(context) => {
-								return context && context.children;
-							}}
-						</MemoPropsChildrenContext.Consumer>
+						{useMemoPropsChildrenContext((context) => {
+							return context && context.children;
+						})}
 					</Cell>
 				);
 			}, [css.caption, isHorizontal]);
@@ -232,4 +228,5 @@ export {
 	ImageItemBase,
 	MemoPropsDecorator,
 	MemoPropsContext,
+	useContext
 };

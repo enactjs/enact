@@ -47,9 +47,18 @@ const MemoPropsDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return MemoPropsDecorator;
 });
 
+const useContext = (Context) => (fn) => {
+	return (
+		<Context.Consumer>
+			{fn}
+		</Context.Consumer>
+	);
+};
+
 export default MemoPropsContext;
 export {
 	MemoPropsContext,
 	MemoPropsDecorator,
-	MemoPropsChildrenContext
+	MemoPropsChildrenContext,
+	useContext
 };
