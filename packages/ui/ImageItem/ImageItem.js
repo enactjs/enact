@@ -18,11 +18,7 @@ import ComponentOverride from '../ComponentOverride';
 import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
-import  {
-	MemoPropsContext,
-	MemoPropsDecorator,
-	MemoPropsDOMAttributesContext
-} from './MemoPropsDecorator';
+import  {MemoPropsContext, MemoPropsDecorator} from './MemoPropsDecorator';
 
 import componentCss from './ImageItem.module.less';
 
@@ -185,7 +181,7 @@ const ImageItemBase = kind({
 						src={src}
 					/>
 				);
-				// We don't need the dependency of the `src` because it will be passed through a context.
+				// We don't need the dependency of the `src` because it will be updated through a context.
 				// eslint-disable-next-line react-hooks/exhaustive-deps
 			}, [css.image, imageComponent, isHorizontal, placeholder]);
 		},
@@ -222,19 +218,17 @@ const ImageItemBase = kind({
 		}, [css.caption, isHorizontal, memoizedChildren]) : null;
 
 		return (
-			<MemoPropsDOMAttributesContext attr={['data-index']}>
-				{
-					React.useMemo(() => {
-						return (
-							<Component {...rest} className={className}>
-								<MemoPropsContext.Consumer>
-									{() => ([memoizedImageCell, memoizedChildrenCell])}
-								</MemoPropsContext.Consumer>
-							</Component>
-						);
-					}, [className])
-				}
-			</MemoPropsDOMAttributesContext>
+			<div {...rest} className={className}>
+				{React.useMemo(() => {
+					return (
+						<Component>
+							<MemoPropsContext.Consumer>
+								{() => ([memoizedImageCell, memoizedChildrenCell])}
+							</MemoPropsContext.Consumer>
+						</Component>
+					);
+				}, [className])}
+			</div>
 		);
 	}
 });
@@ -245,5 +239,4 @@ export {
 	ImageItemBase,
 	MemoPropsDecorator,
 	MemoPropsContext,
-	MemoPropsDOMAttributesContext
 };
