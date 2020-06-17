@@ -144,7 +144,6 @@ const ImageItemBase = kind({
 						shrink={isHorizontal}
 					/>
 				);
-				// We don't need the dependency of the `src` because it will be updated through a context.
 				// eslint-disable-next-line react-hooks/exhaustive-deps
 			}, [css.image, imageComponent, isHorizontal, placeholder]);
 		},
@@ -209,6 +208,7 @@ const ImageItem = MemoPropsDecorator({filter: ['children', 'src']})(ImageItemBas
  * screenSize.
  *
  * @name src
+ * @memberof ui/ImageItem.ImageItemBase.prototype
  * @type {String|Object}
  * @public
  */
