@@ -18,7 +18,7 @@ import ComponentOverride from '../ComponentOverride';
 import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
-import  {MemoPropsContextConsumer, MemoPropsDecorator, MemoPropsThemeContextConsumer} from './MemoPropsDecorator';
+import  {MemoPropsContextConsumer, MemoPropsDecorator, MemoPropsThemeContextConsumer, MemoPropsThemeDecorator} from './MemoPropsDecorator';
 
 import componentCss from './ImageItem.module.less';
 
@@ -205,5 +205,6 @@ export {
 	ImageItem,
 	ImageItemBase,
 	MemoPropsDecorator,
-	MemoPropsThemeContextConsumer
+	MemoPropsThemeContextConsumer,
+	MemoPropsThemeDecorator
 };

@@ -14,26 +14,31 @@ const MemoPropsDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {filter} = config;
 
 	// eslint-disable-next-line no-shadow
-	function MemoPropsDecorator ({isMemoPropsContext, ...rest}) {
-		const picked = pick(filter, rest) || {};
-		const omitted = omit(filter, rest) || {};
+	function MemoPropsDecorator (props) {
+		const picked = pick(filter, props) || {};
+		const omitted = omit(filter, props) || {};
 
-		if (filter.length) {
-			return (
-				<MemoPropsContext.Provider value={picked}>
-					<Wrapped {...omitted} />
-				</MemoPropsContext.Provider>
-			);
-		} else {
-			return (
-				<MemoPropsThemeContext.Provider value={rest}>
-					<Wrapped {...rest} />
-				</MemoPropsThemeContext.Provider>
-			);
-		}
+		return (
+			<MemoPropsContext.Provider value={picked}>
+				<Wrapped {...omitted} />
+			</MemoPropsContext.Provider>
+		);
 	}
 
 	return MemoPropsDecorator;
+});
+
+const MemoPropsThemeDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	// eslint-disable-next-line no-shadow
+	function MemoPropsThemeDecorator (props) {
+		return (
+			<MemoPropsThemeContext.Provider value={props}>
+				<Wrapped {...props} />
+			</MemoPropsThemeContext.Provider>
+		);
+	}
+
+	return MemoPropsThemeDecorator;
 });
 
 const ContextConsumer = (Context) => (fn) => { // eslint-disable-line enact/display-name
@@ -51,5 +56,6 @@ export default MemoPropsThemeContext;
 export {
 	MemoPropsContextConsumer,
 	MemoPropsDecorator,
-	MemoPropsThemeContextConsumer
+	MemoPropsThemeContextConsumer,
+	MemoPropsThemeDecorator
 };
