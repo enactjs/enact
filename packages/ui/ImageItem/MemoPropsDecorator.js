@@ -1,5 +1,4 @@
 import hoc from '@enact/core/hoc';
-import PropTypes from 'prop-types';
 import pick from 'ramda/src/pick';
 import omit from 'ramda/src/omit';
 import React from 'react';
@@ -19,7 +18,7 @@ const MemoPropsDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		const picked = pick(filter, rest) || {};
 		const omitted = omit(filter, rest) || {};
 
-		if (isMemoPropsContext) {
+		if (filter.length) {
 			return (
 				<MemoPropsContext.Provider value={picked}>
 					<Wrapped {...omitted} />
@@ -28,21 +27,11 @@ const MemoPropsDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		} else {
 			return (
 				<MemoPropsThemeContext.Provider value={rest}>
-					<Wrapped {...omitted} />
+					<Wrapped {...rest} />
 				</MemoPropsThemeContext.Provider>
 			);
 		}
 	}
-
-	MemoPropsDecorator.propTypes = /** @lends ui/MemoPropsDecorator.MemoPropsDecorator.prototype */ {
-		/**
-		 * If true, `MemoPropsThemeContext`'s context is passed.
-		 *
-		 * @type {Node}
-		 * @private
-		 */
-		isMemoPropsContext: PropTypes.bool
-	};
 
 	return MemoPropsDecorator;
 });

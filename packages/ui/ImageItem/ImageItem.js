@@ -173,7 +173,7 @@ const ImageItemBase = kind({
 							{[memoizedImageCell, memoizedChildrenCell]}
 						</Component>
 					);
-				}, [])}
+				}, [Component])}
 			</div>
 		);
 	}
