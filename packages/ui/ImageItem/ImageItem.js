@@ -22,8 +22,6 @@ import  {MemoPropsContextConsumer, MemoPropsDecorator, MemoPropsThemeContextCons
 
 import componentCss from './ImageItem.module.less';
 
-let placeholderElement = null;
-
 // Adapts ComponentOverride to work within Cell since both use the component prop
 function ImageOverride ({imageComponent, ...rest}) {
 	return MemoPropsContextConsumer((context) => {
@@ -33,21 +31,6 @@ function ImageOverride ({imageComponent, ...rest}) {
 			src: context && context.src
 		});
 	});
-
-	return (
-		<MemoPropsContext.Consumer>
-			{(context) => {
-				const src = context && context.src || rest.src;
-
-				// console.log('ui:ImageOverride');
-				return src ? ComponentOverride({
-					...rest,
-					component: imageComponent,
-					src
-				}) : placeholderElement;
-			}}
-		</MemoPropsContext.Consumer>
-	);
 }
 
 ImageOverride.propTypes = {
@@ -189,9 +172,9 @@ const ImageItemBase = kind({
 		delete rest.placeholder;
 		delete rest.selected;
 
-		delete rest.selected;
+		const isHorizontal = orientation === 'horizontal';
+		const Component = isHorizontal ? Row : Column;
 
-		// console.log('ui:render');
 		return (
 			<div {...rest} className={className}>
 				{React.useMemo(() => {
