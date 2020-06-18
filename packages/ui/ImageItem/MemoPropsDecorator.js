@@ -15,11 +15,11 @@ const MemoPropsDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {filter} = config;
 
 	// eslint-disable-next-line no-shadow
-	function MemoPropsDecorator ({context, ...rest}) {
+	function MemoPropsDecorator ({isMemoPropsContext, ...rest}) {
 		const picked = pick(filter, rest) || {};
 		const omitted = omit(filter, rest) || {};
 
-		if (context) {
+		if (isMemoPropsContext) {
 			return (
 				<MemoPropsContext.Provider value={picked}>
 					<Wrapped {...omitted} />
@@ -36,18 +36,18 @@ const MemoPropsDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 	MemoPropsDecorator.propTypes = /** @lends ui/MemoPropsDecorator.MemoPropsDecorator.prototype */ {
 		/**
-		 * The caption displayed with the image.
+		 * If true, `MemoPropsThemeContext`'s context is passed.
 		 *
 		 * @type {Node}
-		 * @public
+		 * @private
 		 */
-		children: PropTypes.node
+		isMemoPropsContext: PropTypes.bool
 	};
 
 	return MemoPropsDecorator;
 });
 
-const useContext = (Context) => (fn) => {
+const useContext = (Context) => (fn) => { // eslint-disable-line enact/display-name
 	return (
 		<Context.Consumer>
 			{fn}
