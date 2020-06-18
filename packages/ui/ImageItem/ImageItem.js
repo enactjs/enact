@@ -18,15 +18,13 @@ import ComponentOverride from '../ComponentOverride';
 import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
-import  {MemoPropsDecorator, MemoPropsContext, MemoPropsThemeContext, useContext} from './MemoPropsDecorator';
+import  {MemoPropsContextConsumer, MemoPropsDecorator, MemoPropsThemeContextConsumer} from './MemoPropsDecorator';
 
 import componentCss from './ImageItem.module.less';
 
-const useMemoPropsContext = useContext(MemoPropsContext);
-
 // Adapts ComponentOverride to work within Cell since both use the component prop
 function ImageOverride ({imageComponent, ...rest}) {
-	return useMemoPropsContext((context) => {
+	return MemoPropsContextConsumer((context) => {
 		return ComponentOverride({
 			...rest,
 			component: imageComponent,
@@ -159,7 +157,7 @@ const ImageItemBase = kind({
 						key="children"
 						shrink={!isHorizontal}
 					>
-						{useMemoPropsContext((context) => {
+						{MemoPropsContextConsumer((context) => {
 							return context && context.children;
 						})}
 					</Cell>
@@ -169,7 +167,6 @@ const ImageItemBase = kind({
 	},
 
 	render: ({className, memoizedChildrenCell, memoizedImageCell, orientation, ...rest}) => {
-		delete rest.className;
 		delete rest.css;
 		delete rest.imageComponent;
 		delete rest.placeholder;
@@ -218,6 +215,5 @@ export {
 	ImageItem,
 	ImageItemBase,
 	MemoPropsDecorator,
-	MemoPropsThemeContext,
-	useContext
+	MemoPropsThemeContextConsumer
 };

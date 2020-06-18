@@ -47,7 +47,7 @@ const MemoPropsDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return MemoPropsDecorator;
 });
 
-const useContext = (Context) => (fn) => { // eslint-disable-line enact/display-name
+const ContextConsumer = (Context) => (fn) => { // eslint-disable-line enact/display-name
 	return (
 		<Context.Consumer>
 			{fn}
@@ -55,10 +55,12 @@ const useContext = (Context) => (fn) => { // eslint-disable-line enact/display-n
 	);
 };
 
+const MemoPropsContextConsumer = ContextConsumer(MemoPropsContext);
+const MemoPropsThemeContextConsumer = ContextConsumer(MemoPropsThemeContext);
+
 export default MemoPropsThemeContext;
 export {
-	MemoPropsContext,
+	MemoPropsContextConsumer,
 	MemoPropsDecorator,
-	MemoPropsThemeContext,
-	useContext
+	MemoPropsThemeContextConsumer
 };
