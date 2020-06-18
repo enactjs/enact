@@ -7,6 +7,10 @@
  *
  * @module ui/ImageItem
  * @exports ImageItem
+ * @exports ImageItemBase
+ * @exports MemoPropsDecorator
+ * @exports MemoPropsThemeContextConsumer
+ * @exports MemoPropsThemeDecorator
  */
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
@@ -38,6 +42,7 @@ function ImageOverride ({imageComponent, ...rest}) {
  *
  * @class ImageItem
  * @memberof ui/ImageItem
+ * @mixes ui/ImageItem.MemoPropsThemeDecorator
  * @ui
  * @public
  */
@@ -185,7 +190,7 @@ const ImageItem = MemoPropsDecorator({filter: ['children', 'src']})(ImageItemBas
  * The caption displayed with the image.
  *
  * @name children
- * @memberof ui/ImageItem.ImageItemBase.prototype
+ * @memberof ui/ImageItem.ImageItem.prototype
  * @type {Node}
  * @public
  */
@@ -195,7 +200,7 @@ const ImageItem = MemoPropsDecorator({filter: ['children', 'src']})(ImageItemBas
  * screenSize.
  *
  * @name src
- * @memberof ui/ImageItem.ImageItemBase.prototype
+ * @memberof ui/ImageItem.ImageItem.prototype
  * @type {String|Object}
  * @public
  */
