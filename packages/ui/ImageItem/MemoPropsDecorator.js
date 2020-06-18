@@ -28,7 +28,7 @@ const MemoPropsDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return MemoPropsDecorator;
 });
 
-const MemoPropsThemeDecorator = hoc(defaultConfig, (config, Wrapped) => {
+const MemoPropsThemeDecorator = hoc((config, Wrapped) => {
 	// eslint-disable-next-line no-shadow
 	function MemoPropsThemeDecorator (props) {
 		return (
