@@ -1,6 +1,6 @@
 /*  eslint-disable react-hooks/rules-of-hooks */
 /*  eslint-disable react-hooks/exhaustive-deps */
-// To use `React.useMemo` in a kind, the eslint rules above has benn blocked.
+// To use `React.useMemo` in a kind, the above eslint rules have been disabled.
 
 /**
  * Unstyled image item components and behaviors to be customized by a theme or application.
@@ -32,16 +32,6 @@ function ImageOverride ({imageComponent, ...rest}) {
 		});
 	});
 }
-
-ImageOverride.propTypes = {
-	/**
-	 * The component used to render the image component.
-	 *
-	 * @type {Component|Element}
-	 * @private
-	 */
-	imageComponent: EnactPropTypes.componentOverride
-};
 
 /**
  * A basic image item without any behavior.
