@@ -9,7 +9,7 @@ const src = {
 	'uhd': 'http://lorempixel.com/256/256/city/1/'
 };
 
-describe('ImageItemBase', () => {
+describe('ImageItem', () => {
 	function Img () {
 		return null;
 	}
