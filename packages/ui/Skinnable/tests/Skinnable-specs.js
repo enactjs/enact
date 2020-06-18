@@ -374,4 +374,43 @@ describe('Skinnable Specs', () => {
 
 		expect(actual).toEqual(expected);
 	});
+
+	test('should not force re-render of child if child unaffected', () => {
+		const config = {
+			defaultSkin: 'dark',
+			defaultVariants: 'normal',
+			skins: {
+				dark: 'darkSkin',
+				light: 'lightSkin'
+			},
+			allowedVariants: ['normal', 'smallCaps', 'unicase']
+		};
+		const wasRendered = jest.fn();
+
+		const Component = (props) => (
+			<div {...props} />
+		);
+
+		const ChildComponent = () => {
+			wasRendered();
+			return <div>Hello</div>;
+		};
+
+		const SkinnableParent = Skinnable(config, Component);
+		const SkinnableChild = Skinnable(config, ChildComponent);
+
+		const subject = mount(
+			<SkinnableParent>
+				<SkinnableChild />
+			</SkinnableParent>
+		);
+
+		// Sending props to force parent to re-render
+		subject.setProps({className: 'foo'});
+
+		const expected = 1;
+		const actual = wasRendered.mock.calls.length;
+
+		expect(actual).toEqual(expected);
+	});
 });

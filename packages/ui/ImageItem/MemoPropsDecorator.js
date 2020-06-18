@@ -1,92 +1,66 @@
 import hoc from '@enact/core/hoc';
-import pick from 'ramda/src/pick';
 import PropTypes from 'prop-types';
+import pick from 'ramda/src/pick';
+import omit from 'ramda/src/omit';
 import React from 'react';
-import ReactDOM from 'react-dom';
 
+const MemoPropsThemeContext = React.createContext();
 const MemoPropsContext = React.createContext();
 
-const MemoPropsDecorator = hoc((config, Wrapped) => {
+const defaultConfig = {
+	filter: []
+};
+
+const MemoPropsDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	const {filter} = config;
+
 	// eslint-disable-next-line no-shadow
-	function MemoPropsDecorator (props) {
-		return (
-			<MemoPropsContext.Provider value={props}>
-				<Wrapped {...props} />
-			</MemoPropsContext.Provider>
-		);
+	function MemoPropsDecorator ({isMemoPropsContext, ...rest}) {
+		const picked = pick(filter, rest) || {};
+		const omitted = omit(filter, rest) || {};
+
+		if (isMemoPropsContext) {
+			return (
+				<MemoPropsContext.Provider value={picked}>
+					<Wrapped {...omitted} />
+				</MemoPropsContext.Provider>
+			);
+		} else {
+			return (
+				<MemoPropsThemeContext.Provider value={rest}>
+					<Wrapped {...omitted} />
+				</MemoPropsThemeContext.Provider>
+			);
+		}
 	}
+
+	MemoPropsDecorator.propTypes = /** @lends ui/MemoPropsDecorator.MemoPropsDecorator.prototype */ {
+		/**
+		 * If true, `MemoPropsThemeContext`'s context is passed.
+		 *
+		 * @type {Node}
+		 * @private
+		 */
+		isMemoPropsContext: PropTypes.bool
+	};
 
 	return MemoPropsDecorator;
 });
 
-const MemoPropsContextDecorator = hoc((config = {}, Wrapped) => {
-	// eslint-disable-next-line no-shadow
-	function MemoPropsContextDecorator (props) {
-		const context = React.useContext(MemoPropsContext);
+const ContextConsumer = (Context) => (fn) => { // eslint-disable-line enact/display-name
+	return (
+		<Context.Consumer>
+			{fn}
+		</Context.Consumer>
+	);
+};
 
-		if (config.props) {
-			const memoProps = pick(config.props, context);
+const MemoPropsContextConsumer = ContextConsumer(MemoPropsContext);
+const MemoPropsThemeContextConsumer = ContextConsumer(MemoPropsThemeContext);
 
-			return (
-				<Wrapped {...props} {...memoProps} />
-			);
-		} else {
-			return (
-				<Wrapped {...props} {...context} />
-			);
-		}
-	}
-
-	return MemoPropsContextDecorator;
-});
-
-class MemoPropsDOMAttributesContext extends React.Component {
-	static propTypes = /** @lends sandstone/MemoPropsDecorator.MemoPropsDOMAttributesContext.prototype */ {
-		attr: PropTypes.array
-	}
-
-	static defaultProps = {
-		attr: []
-	}
-
-	componentDidMount () {
-		this.updateDOMAttributes();
-	}
-
-	node = null
-
-	memoProps = {}
-
-	updateDOMAttributes () {
-		this.node = this.node || ReactDOM.findDOMNode(this); // eslint-disable-line react/no-find-dom-node
-
-		if (this.node) {
-			for (const prop in this.memoProps) {
-				this.node.setAttribute(prop, this.memoProps[prop]);
-			}
-		}
-	}
-
-	render () {
-		const {attr} = this.props;
-
-		return (
-			<MemoPropsContext.Consumer>
-				{(context) => {
-					this.memoProps = pick(attr, context);
-					this.updateDOMAttributes();
-
-					return this.props.children;
-				}}
-			</MemoPropsContext.Consumer>
-		);
-	}
-}
-
-export default MemoPropsContext;
+export default MemoPropsThemeContext;
 export {
-	MemoPropsContext,
-	MemoPropsContextDecorator,
+	MemoPropsContextConsumer,
 	MemoPropsDecorator,
-	MemoPropsDOMAttributesContext
+	MemoPropsThemeContextConsumer
 };

@@ -2,6 +2,22 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [3.3.0-alpha.12] - 2020-06-15
+
+### Added
+
+- `ui/Button` prop `iconFlip` to set the `flip` prop of `iconComponent`
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to not cause unnecessary rerenders
+- `ui/Scroller` and `ui/VirtualList` to not inadvertently scroll due to click events when in RTL locales
+- `ui/Skinnable` to not force all `Skinnable` children to update if a parent updates
+
+## [3.3.0-alpha.11] - 2020-06-08
+
+No significant changes.
+
 ## [3.3.0-alpha.10] - 2020-05-26
 
 ### Added

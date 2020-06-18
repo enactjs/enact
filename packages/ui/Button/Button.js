@@ -99,12 +99,22 @@ const ButtonBase = kind({
 		 * will not be rendered.
 		 *
 		 * If this is a component rather than an HTML element string, this component will also
-		 * receive the `size` property and should be configured to handle it.
+		 * receive the `size` and `iconFlip` (as `flip`) properties and should be configured to
+		 * handle it.
 		 *
 		 * @type {Component|Node}
 		 * @public
 		 */
 		iconComponent: EnactPropTypes.componentOverride,
+
+		/**
+		 * Flips the icon.
+		 *
+		 * @see {@link ui/Icon.Icon#flip}
+		 * @type {String}
+		 * @public
+		 */
+		iconFlip: PropTypes.string,
 
 		/**
 		 * Enforces a minimum width for the component.
@@ -175,10 +185,10 @@ const ButtonBase = kind({
 			pressed,
 			selected
 		}, size),
-		icon: ({css, icon, iconComponent, size}) => {
+		icon: ({css, icon, iconComponent, iconFlip, size}) => {
 			if (icon == null || icon === false) return;
 
-			// Establish the base collection of props for the moost basic `iconComponent` type, an
+			// Establish the base collection of props for the most basic `iconComponent` type, an
 			// HTML element string.
 			const props = {
 				className: css.icon,
@@ -189,6 +199,9 @@ const ButtonBase = kind({
 			// configured to handle.
 			if (typeof iconComponent !== 'string') {
 				props.size = size;
+				// the following inadvertently triggers a linting rule
+				// eslint-disable-next-line enact/prop-types
+				props.flip = iconFlip;
 			}
 
 			return (
@@ -201,6 +214,7 @@ const ButtonBase = kind({
 
 	render: ({children, css, decoration, disabled, icon, ...rest}) => {
 		delete rest.iconComponent;
+		delete rest.iconFlip;
 		delete rest.minWidth;
 		delete rest.pressed;
 		delete rest.selected;

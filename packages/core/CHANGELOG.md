@@ -2,7 +2,11 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
-## [unreleased]
+## [3.3.0-alpha.12] - 2020-06-15
+
+No significant changes.
+
+## [3.3.0-alpha.11] - 2020-06-08
 
 ### Added
 

@@ -160,7 +160,6 @@ const useScrollBase = (props) => {
 		// status
 		deferScrollTo: true,
 		isScrollAnimationTargetAccumulated: false,
-		isUpdatedScrollbarTrack: false,
 
 		// overscroll
 		lastInputType: null,
@@ -236,9 +235,6 @@ const useScrollBase = (props) => {
 				},
 				set isScrollAnimationTargetAccumulated (val) {
 					mutableRef.current.isScrollAnimationTargetAccumulated = val;
-				},
-				get isUpdatedScrollbarTrack () {
-					return mutableRef.current.isUpdatedScrollbarTrack;
 				},
 				get lastInputType () {
 					return mutableRef.current.lastInputType;
@@ -396,7 +392,7 @@ const useScrollBase = (props) => {
 			(isHorizontalScrollbarVisible && !prevState.isHorizontalScrollbarVisible || isVerticalScrollbarVisible && !prevState.isVerticalScrollbarVisible)
 		) {
 			mutableRef.current.deferScrollTo = false;
-			mutableRef.current.isUpdatedScrollbarTrack = updateScrollbarTrackSize();
+			updateScrollbarTrackSize();
 		} else {
 			updateScrollbars();
 		}
@@ -1183,7 +1179,7 @@ const useScrollBase = (props) => {
 
 	function stopForNative () {
 		scrollContentRef.current.style.scrollBehavior = null;
-		scrollContentHandle.current.scrollToPosition(mutableRef.current.scrollLeft + 0.1, mutableRef.current.scrollTop + 0.1);
+		scrollContentHandle.current.scrollToPosition(mutableRef.current.scrollLeft + (rtl ? -0.1 : 0.1), mutableRef.current.scrollTop + 0.1);
 		scrollContentRef.current.style.scrollBehavior = 'smooth';
 	}
 
@@ -1342,7 +1338,7 @@ const useScrollBase = (props) => {
 			setIsVerticalScrollbarVisible(curVerticalScrollbarVisible);
 		} else {
 			mutableRef.current.deferScrollTo = false;
-			mutableRef.current.isUpdatedScrollbarTrack = updateScrollbarTrackSize();
+			updateScrollbarTrackSize();
 		}
 	}
 
