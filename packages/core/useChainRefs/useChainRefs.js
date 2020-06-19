@@ -27,6 +27,7 @@ function updateRef (ref, node) {
 /**
  * Creates a reference callback that updates each of the provided references
  *
+ * @memberof core/useChainRefs
  * @param {Object|Function} ...handlers  List of references to be updated.
  * @returns {Function}                   A callback that updates each reference
  * @public
@@ -40,6 +41,7 @@ function chainRefs (...refs) {
 /**
  * Creates a memoized reference callback that updates each of the provided references
  *
+ * @memberof core/useChainRefs
  * @param {Object|Function} ...handlers  List of references to be updated.
  * @returns {Function}                   A memoized callback that updates each reference
  * @public
