@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Fixed
 
 - `spotlight` to trigger `onLeaveContainerFail` when `leaveFor` prevents navigation
+- `spotlight` to correctly maintain pointer mode on webOS
 
 ## [3.3.0-alpha.12] - 2020-06-15
 
