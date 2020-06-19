@@ -26,14 +26,32 @@ import  {MemoPropsContextConsumer, MemoPropsDecorator, MemoPropsThemeContextCons
 
 import componentCss from './ImageItem.module.less';
 
+const Async = ({children}) => {
+	const [c, setC] = React.useState('');
+	const d = React.useRef(children);
+
+	React.useEffect(() => {
+		if (c ==='') setC(d.current);
+	})
+
+	return c;
+};
+
 // Adapts ComponentOverride to work within Cell since both use the component prop
 function ImageOverride ({imageComponent, ...rest}) {
 	return MemoPropsContextConsumer((context) => {
-		return ComponentOverride({
-			...rest,
-			component: imageComponent,
-			src: context && context.src
-		});
+		return (
+			<Async>
+				{
+					ComponentOverride({
+						...rest,
+						component: imageComponent,
+						src: context && context.src
+					})
+				}
+			</Async>
+		);
+
 	});
 }
 
