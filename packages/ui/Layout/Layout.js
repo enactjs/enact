@@ -203,7 +203,7 @@ const LayoutBase = kind({
 		 * @default 'div'
 		 * @public
 		 */
-		component:  EnactPropTypes.renderable,
+		component: EnactPropTypes.renderable,
 
 		/**
 		 * Called with a reference to [component]{@link ui/Layout.Layout#component}

@@ -58,7 +58,7 @@ const CellBase = kind({
 		 * @default 'div'
 		 * @public
 		 */
-		component:  EnactPropTypes.renderable,
+		component: EnactPropTypes.renderable,
 
 		/**
 		 * Called with a reference to [component]{@link ui/Cell.Cell#component}
@@ -116,17 +116,19 @@ const CellBase = kind({
 	},
 
 	computed: {
-		className: ({shrink, size, styler}) => styler.append({shrink, grow: (!shrink && !size)}),
+		className: ({shrink, size, styler}) => styler.append({shrink, grow: (!shrink && !size), content: (size === 'content')}),
 		style: ({align, shrink, size, style}) => {
-			if (typeof size === 'number') size = ri.unit(ri.scale(size), 'rem');
+			if (typeof size === 'number') size = ri.scaleToRem(size);
 
-			let cellSize = size;
-			if (!size) {
-				if (shrink) {
-					cellSize = '100%';
+			let cellSize;
+			if (size) {
+				if (size === 'content') {
+					size = 'auto';
 				} else {
-					cellSize = 'none';
+					cellSize = size;
 				}
+			} else if (shrink) {
+				cellSize = '100%';
 			}
 
 			return {
@@ -134,7 +136,7 @@ const CellBase = kind({
 				alignSelf: toFlexAlign(align),
 				flexBasis: (shrink ? null : size),
 				// Setting 100% below in the presence of `shrink`` and absense of `size` prevents overflow
-				'--cell-size': cellSize
+				'--cell-size': (cellSize || 'initial')
 			};
 		}
 	},
