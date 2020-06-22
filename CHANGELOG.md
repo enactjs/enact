@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.3.0-alpha.13] - 2020-06-22
+
+### Fixed
+
+- `spotlight` to trigger `onLeaveContainerFail` when `leaveFor` prevents navigation
+- `spotlight` to correctly maintain pointer mode on webOS
+
 ## [3.3.0-alpha.12] - 2020-06-15
 
 ### Added
