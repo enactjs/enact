@@ -78,6 +78,7 @@ import {
 } from './target';
 
 import {
+	getContainerRect,
 	matchSelector,
 	parseSelector
 } from './utils';
@@ -327,10 +328,27 @@ const Spotlight = (function () {
 			const currentContainerId = last(currentContainerIds);
 			const nextContainerIds = getContainersForNode(next);
 
-			// prevent focus if 5-way is being held and the next element isn't wrapped by
-			// the current element's immediate container
-			if (_5WayKeyHold && nextContainerIds.indexOf(currentContainerId) < 0 && !isContainer5WayHoldable(currentContainerId)) {
-				return false;
+			if (nextContainerIds.indexOf(currentContainerId) < 0) {
+				const currentContainerRect = getContainerRect(currentContainerId);
+				const nextContainerRect = getContainerRect(last(nextContainerIds));
+
+				if (
+					// prevent focus if 5-way is being held and the next element isn't wrapped by
+					// the current element's immediate container
+					(_5WayKeyHold && !isContainer5WayHoldable(currentContainerId)) ||
+					getContainerConfig(currentContainerId).straightOnlyLeave && (
+						(
+							(direction === 'left' || direction === 'right') &&
+							(nextContainerRect.bottom < currentContainerRect.top || nextContainerRect.top > currentContainerRect.bottom)
+						) ||
+						(
+							(direction === 'up' || direction === 'down') &&
+							(nextContainerRect.right < currentContainerRect.left || nextContainerRect.left > currentContainerRect.right)
+						)
+					)
+				) {
+					return false;
+				}
 			}
 
 			notifyLeaveContainer(
