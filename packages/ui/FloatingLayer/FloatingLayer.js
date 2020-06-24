@@ -284,7 +284,11 @@ const handleCancel = handle(
  * @mixes ui/Cancelable.Cancelable
  * @public
  */
-const FloatingLayer = Cancelable({modal: true, onCancel: handleCancel}, FloatingLayerBase);
+const FloatingLayer = Cancelable({
+	modal: true,
+	modalWhen: ({open}) => open,
+	onCancel: handleCancel
+}, FloatingLayerBase);
 
 export default FloatingLayer;
 export {FloatingLayer, FloatingLayerBase};

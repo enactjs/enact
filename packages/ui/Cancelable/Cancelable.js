@@ -57,6 +57,15 @@ const defaultConfig = {
 	modal: false,
 
 	/**
+	 * Optional function to defer attaching a modal listener until a prop condition is met
+	 *
+	 * @type {Function}
+	 * @memberof ui/Cancelable.Cancelable.defaultConfig
+	 * @private
+	 */
+	modalWhen: null,
+
+	/**
 	 * The component that will contain the wrapped component.
 	 *
 	 * When set, the wrapped component will be contained within an instance of `component`. This may
@@ -121,6 +130,7 @@ add('cancel', 27);
  */
 const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 	const {
+		modalWhen,
 		onCancel,
 		modal,
 		component: Component
@@ -222,9 +232,14 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.onCancel;
 			delete props[onCancel];
 
-			if (this.isFirstRender && modal) {
-				addModal(this);
-				this.isFirstRender = false;
+			if (modal) {
+				if (this.isFirstRender && (!modalWhen || modalWhen(this.props))) {
+					addModal(this);
+					this.isFirstRender = false;
+				} else if (!this.isFirstRender && (!modalWhen || !modalWhen(this.props))) {
+					removeModal(this);
+					this.isFirstRender = true;
+				}
 			}
 
 			return	modal && this.renderModal(props) ||
