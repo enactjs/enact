@@ -170,7 +170,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			forward(change),
 			({[prop]: value}) => {
 				if (!this.state.controlled) {
-					this.setState({value});
+					this.setState(({value: oldValue}) => value !== oldValue ? {value} : null);
 				}
 			}
 		)
