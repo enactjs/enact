@@ -181,7 +181,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			this.isFirstRender = true;
+			this.modalAdded = true;
 		}
 
 		componentWillUnmount () {
@@ -233,12 +233,16 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			delete props[onCancel];
 
 			if (modal) {
-				if (this.isFirstRender && (!modalWhen || modalWhen(this.props))) {
+				if (this.modalAdded && (!modalWhen || modalWhen(this.props))) {
+					// add the modal on first render either when modalWhen is unset or when
+					// modalWhen returns true
 					addModal(this);
-					this.isFirstRender = false;
-				} else if (!this.isFirstRender && (!modalWhen || !modalWhen(this.props))) {
+					this.modalAdded = false;
+				} else if (!this.modalAdded && modalWhen && !modalWhen(this.props)) {
+					// remove the modal when it was previously added and when modalWhen is set and
+					// returns false. This ensure only conditionally added modals are also removed.
 					removeModal(this);
-					this.isFirstRender = true;
+					this.modalAdded = true;
 				}
 			}
 
