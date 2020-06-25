@@ -117,7 +117,7 @@ const defaultConfig = {
  * Its default event and property can be configured when applied to a component.
  *
  * Note: This HoC passes a number of props to the wrapped component that should be passed to the
- * main DOM node or consumed by the wrapped compoment.
+ * main DOM node or consumed by the wrapped component.
  *
  * Example:
  * ```
