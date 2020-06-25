@@ -5,7 +5,7 @@ import React from 'react';
 function createHandler () {
 	return (onChange) => (value) => {
 		onChange(prevState => {
-			const newValue = typeof value === 'function' ? value(prevState.value) : value
+			const newValue = typeof value === 'function' ? value(prevState.value) : value;
 
 			if (newValue !== prevState.value) {
 				return ({

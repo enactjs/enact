@@ -5,8 +5,9 @@
  * @exports Toggleable
  */
 
-import {adaptEvent, forward} from '@enact/core/handle';
+import handle, {adaptEvent, forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import useHandlers from '@enact/core/useHandlers';
 import {cap} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import pick from 'ramda/src/pick';
@@ -144,6 +145,21 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardToggle = forwardWithEventProps(toggle);
 	const forwardToggleProp = forwardWithEventProps(toggleProp);
 
+	const toggleHandlers = {
+		onToggle: handle(
+			(ev, props, context) => (context.toggle()),
+			forwardToggleProp
+		),
+		onActivate: handle(
+			(ev, props, context) => (context.activate()),
+			forwardActivate
+		),
+		onDeactivate: handle(
+			(ev, props, context) => (context.deactivate()),
+			forwardDeactivate
+		)
+	};
+
 	function Toggleable (props) {
 		const updated = {...props};
 		const propSelected = props[prop];
@@ -159,6 +175,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			// eslint-disable-next-line no-undefined
 			selected: propSelected == null ? undefined : propSelected
 		});
+		const handlers = useHandlers(toggleHandlers, props, hook);
 
 		warning(
 			!(prop in props && defaultPropKey in props),
@@ -178,21 +195,15 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		if (toggleProp || toggle) {
-			updated[toggleProp || toggle] = (ev) => {
-				if (hook.toggle()) forwardToggleProp(ev, props);
-			};
+			updated[toggleProp || toggle] = handlers.onToggle;
 		}
 
 		if (activate) {
-			updated[activate] = (ev) => {
-				if (hook.activate()) forwardActivate(ev, props);
-			};
+			updated[activate] = handlers.onActivate;
 		}
 
 		if (deactivate) {
-			updated[deactivate] = (ev) => {
-				if (hook.deactivate()) forwardDeactivate(ev, props);
-			};
+			updated[deactivate] = handlers.onDeactivate;
 		}
 
 		delete updated[defaultPropKey];
