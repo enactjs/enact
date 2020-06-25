@@ -148,9 +148,13 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 					value: props[prop] != null ? props[prop] : props[defaultPropKey]
 				};
 			} else if (state.controlled) {
-				return {
-					value: props[prop]
-				};
+				if (state.value !== props[prop]) {
+					return {
+						value: props[prop]
+					};
+				} else {
+					return null;
+				}
 			}
 
 			warning(
