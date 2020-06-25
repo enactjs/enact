@@ -594,7 +594,7 @@ class VirtualListBasic extends Component {
 
 	calculateMetrics (props) {
 		const
-			{clientSize, direction, itemSize, overhang, scrollMode, spacing} = props,
+			{clientSize, direction, itemSize, overhang, spacing} = props,
 			node = this.props.scrollContentRef.current;
 
 		if (!clientSize && !node) {
@@ -651,12 +651,8 @@ class VirtualListBasic extends Component {
 
 		// reset
 		this.scrollPosition = 0;
-		if (scrollMode === 'translate' && this.contentRef.current) {
+		if (this.props.scrollMode === 'translate' && this.contentRef.current) {
 			this.contentRef.current.style.transform = null;
-		} else if (scrollMode === 'native' && node) {
-			node.style.scrollBehavior = null;
-			this.updateScrollPosition(this.getXY(this.scrollPosition, 0));
-			node.style.scrollBehavior = 'smooth';
 		}
 	}
 
