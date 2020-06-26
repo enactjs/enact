@@ -73,6 +73,7 @@ let GlobalConfig = {
 	selectorDisabled: false,
 	straightMultiplier: 1,
 	straightOnly: false,
+	straightOnlyLeave: false, // prevents navigation to oblique containers when leaving the current container
 	straightOverlapThreshold: 0.5,
 	tabIndexIgnoreList: 'a, input, select, textarea, button, iframe, [contentEditable=true]'
 };
