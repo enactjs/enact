@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/util` function `safeChildMap` to safely iterate over Reach `children`
+
 ## [3.3.0-alpha.13] - 2020-06-22
 
 No significant changes.
