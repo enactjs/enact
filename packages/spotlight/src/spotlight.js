@@ -336,11 +336,11 @@ const Spotlight = (function () {
 					return false;
 				}
 
-				if (getContainerConfig(currentContainerId).straightOnlyLeave) {	
+				if (getContainerConfig(currentContainerId).straightOnlyLeave) {
 					const currentContainerRect = getContainerRect(currentContainerId);
 					const nextContainerRect = getContainerRect(last(nextContainerIds));
 
-					// prevent focus for straightOnlyLeave containers 
+					// prevent focus for obliquely leaving straightOnlyLeave containers
 					if (
 						(
 							(direction === 'left' || direction === 'right') &&
