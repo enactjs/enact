@@ -344,7 +344,7 @@ const useScrollBase = (props) => {
 
 			enqueueForceUpdate();
 		});
-	} // esline-disable-line react-hooks/exhaustive-deps
+	}
 
 	const handleResize = useCallback((ev) => {
 		if (ev.action === 'invalidateBounds') {
@@ -369,7 +369,7 @@ const useScrollBase = (props) => {
 		return () => {
 			ref.scrollStopJob.stop();
 		};
-	}); // esline-disable-next-line react-hooks/exhaustive-deps
+	}, [direction, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl, scrollMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		const
@@ -409,7 +409,7 @@ const useScrollBase = (props) => {
 		if (horizontal || vertical) {
 			resizeRegistry.notify({});
 		}
-	}); // esline-disable-next-line react-hooks/exhaustive-deps
+	});
 
 	// scrollMode 'translate' [[
 	function clampScrollPosition () {
@@ -435,7 +435,7 @@ const useScrollBase = (props) => {
 		if (forwardWithPrevent('onMouseDown', ev, props)) {
 			stop();
 		}
-	} // esline-disable-next-line react-hooks/exhaustive-deps
+	}
 
 	// scrollMode 'native' [[
 	function onTouchStart () {
@@ -592,7 +592,6 @@ const useScrollBase = (props) => {
 	* - for horizontal scroll, supports wheel action on any children nodes since web engine cannot support this
 	* - for vertical scroll, supports wheel action on scrollbars only
 	*/
-	// esline-disable-next-line react-hooks/exhaustive-deps
 	function onWheel (ev) {
 		if (mutableRef.current.isDragging) {
 			ev.preventDefault();
@@ -722,7 +721,6 @@ const useScrollBase = (props) => {
 	// scrollMode 'translate' ]]
 
 	// scrollMode 'native' [[
-	// esline-disable-next-line react-hooks/exhaustive-deps
 	function onScroll (ev) {
 		let {scrollLeft, scrollTop} = ev.target;
 
@@ -764,7 +762,7 @@ const useScrollBase = (props) => {
 		} else {
 			forward('onKeyDown', ev, props);
 		}
-	} // esline-disable-line react-hooks/exhaustive-deps
+	}
 
 	function scrollToAccumulatedTarget (delta, vertical, overscrollEffect) {
 		if (!mutableRef.current.isScrollAnimationTargetAccumulated) {
@@ -912,7 +910,6 @@ const useScrollBase = (props) => {
 
 	// call scroll callbacks
 
-	// esline-disable-next-line react-hooks/exhaustive-deps
 	function forwardScrollEvent (overscrollEffectType, reachedEdgeInfo) {
 		forward(overscrollEffectType, {scrollLeft: mutableRef.current.scrollLeft, scrollTop: mutableRef.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo}, props);
 	}
@@ -971,7 +968,6 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	// esline-disable-next-line react-hooks/exhaustive-deps
 	function getReachedEdgeInfo () {
 		const
 			bounds = getScrollBounds(),
@@ -1183,7 +1179,6 @@ const useScrollBase = (props) => {
 		scrollContentRef.current.style.scrollBehavior = 'smooth';
 	}
 
-	// esline-disable-next-line react-hooks/exhaustive-deps
 	function stop () {
 		if (scrollMode === 'translate') {
 			stopForTranslate();
@@ -1258,7 +1253,6 @@ const useScrollBase = (props) => {
 		return {left, top};
 	}
 
-	// esline-disable-next-line react-hooks/exhaustive-deps
 	function scrollTo (opt) {
 		if (!mutableRef.current.deferScrollTo) {
 			const {left, top} = getPositionForScrollTo(opt);
@@ -1316,7 +1310,6 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	// esline-disable-next-line react-hooks/exhaustive-deps
 	function updateScrollbars () {
 		const
 			bounds = getScrollBounds(),
@@ -1342,7 +1335,6 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	// esline-disable-next-line react-hooks/exhaustive-deps
 	function updateScrollbarTrackSize () {
 		const
 			bounds = getScrollBounds(),
