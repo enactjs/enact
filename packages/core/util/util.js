@@ -12,7 +12,7 @@
  * @exports memoize
  * @exports mergeClassNameMaps
  * @exports perfNow
- * @exports safeChildMap
+ * @exports mapAndFilterChildren
  */
 import always from 'ramda/src/always';
 import isType from 'ramda/src/is';
@@ -240,14 +240,16 @@ const memoize = (fn) => {
  * @param {*}        children  Children to map over
  * @param {Function} callback  Function to apply to each child. Will not be called if the child is
  *                              `null`. If `callback` returns `null`, the child will be removed from
- *                              the result.
+ *                              the result. If `null` is returned, the item will not be included in
+ *                              the final output, regardless of the filter function.
+ * @param {Function} [filter]  Filter function applied after mapping.
  *
  * @returns {*}                The processed children or the value of `children` if not an array.
  * @memberof core/util
  * @see https://reactjs.org/docs/react-api.html#reactchildrenmap
  * @public
  */
-const safeChildMap = (children, callback) => {
+const mapAndFilterChildren = (children, callback, filter) => {
 	const result = React.Children.map(children, (child) => {
 		if (child != null) {
 			return callback(child);
@@ -255,8 +257,8 @@ const safeChildMap = (children, callback) => {
 			return child;
 		}
 	});
-	if (result) {
-		return result.filter(child => child != null);
+ 	if (result && filter) {
+		return result.filter(filter);
 	} else {
 		return result;
 	}
@@ -273,5 +275,5 @@ export {
 	memoize,
 	mergeClassNameMaps,
 	perfNow,
-	safeChildMap
+	mapAndFilterChildren
 };
