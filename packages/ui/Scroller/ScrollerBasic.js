@@ -163,6 +163,25 @@ class ScrollerBasic extends Component {
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
 
+	syncClientSize = () => {
+		const node = this.props.scrollContentRef.current;
+
+		if (!node) {
+			return false;
+		}
+
+		const
+			{clientWidth, clientHeight} = node,
+			{scrollBounds} = this;
+
+		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
+			this.calculateMetrics();
+			return true;
+		}
+
+		return false;
+	}
+
 	render () {
 		const
 			{className, style, ...rest} = this.props,

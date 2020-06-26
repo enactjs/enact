@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
+- `ui/Scroller` to update clientSize when it's changed
 - `ui/VirtualList` to reset scroll position when client size changed
 
 ## [3.3.0-alpha.13] - 2020-06-22
