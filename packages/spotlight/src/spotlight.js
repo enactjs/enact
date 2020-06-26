@@ -329,14 +329,19 @@ const Spotlight = (function () {
 			const nextContainerIds = getContainersForNode(next);
 
 			if (nextContainerIds.indexOf(currentContainerId) < 0) {
-				const currentContainerRect = getContainerRect(currentContainerId);
-				const nextContainerRect = getContainerRect(last(nextContainerIds));
 
-				if (
-					// prevent focus if 5-way is being held and the next element isn't wrapped by
-					// the current element's immediate container
-					(_5WayKeyHold && !isContainer5WayHoldable(currentContainerId)) ||
-					getContainerConfig(currentContainerId).straightOnlyLeave && (
+				// prevent focus if 5-way is being held and the next element isn't wrapped by
+				// the current element's immediate container
+				if (_5WayKeyHold && !isContainer5WayHoldable(currentContainerId)) {
+					return false;
+				}
+
+				if (getContainerConfig(currentContainerId).straightOnlyLeave) {	
+					const currentContainerRect = getContainerRect(currentContainerId);
+					const nextContainerRect = getContainerRect(last(nextContainerIds));
+
+					// prevent focus for straightOnlyLeave containers 
+					if (
 						(
 							(direction === 'left' || direction === 'right') &&
 							(nextContainerRect.bottom < currentContainerRect.top || nextContainerRect.top > currentContainerRect.bottom)
@@ -345,9 +350,9 @@ const Spotlight = (function () {
 							(direction === 'up' || direction === 'down') &&
 							(nextContainerRect.right < currentContainerRect.left || nextContainerRect.left > currentContainerRect.right)
 						)
-					)
-				) {
-					return false;
+					) {
+						return false;
+					}
 				}
 			}
 
