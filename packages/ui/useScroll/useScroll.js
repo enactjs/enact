@@ -369,7 +369,7 @@ const useScrollBase = (props) => {
 		return () => {
 			ref.scrollStopJob.stop();
 		};
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [direction, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl, scrollMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		const
