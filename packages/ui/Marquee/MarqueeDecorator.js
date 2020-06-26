@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import shallowEqual from 'recompose/shallowEqual';
 
+import {animate, cancel} from '../animation';
 import {scale} from '../resolution';
 import {ResizeContext} from '../Resizable';
 
@@ -97,7 +98,16 @@ const defaultConfig = {
 	 * @kind member
 	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
-	marqueeDirection: (str) => direction(str) === 'rtl' ? 'rtl' : 'ltr'
+	marqueeDirection: (str) => direction(str) === 'rtl' ? 'rtl' : 'ltr',
+
+	/**
+	 * The technique used for animating the marquee
+	 *
+	 * @type {('transition'|'webanimation')}
+	 * @kind member
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
+	 */
+	mode: 'transition'
 };
 
 /*
@@ -137,7 +147,7 @@ const TimerState = {
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {blur, className: configClassName, component: MarqueeComponent, enter, focus, invalidateProps, leave, marqueeDirection} = config;
+	const {blur, className: configClassName, component: MarqueeComponent, enter, focus, invalidateProps, leave, marqueeDirection, mode} = config;
 
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
@@ -326,6 +336,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.distance = null;
 			this.contentFits = false;
 			this.resizeRegistry = null;
+			this.animation = null;
 		}
 
 		componentDidMount () {
@@ -365,7 +376,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			) {
 				// restart marqueeOn="render" marquees or synced marquees that were animating
 				forceRestartMarquee = marqueeOn === 'render' || (
-					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)
+					this.sync && (this.isAnimating() || this.timerState > TimerState.CLEAR)
 				);
 
 				this.invalidateMetrics();
@@ -453,6 +464,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					fn();
 				}, time);
 			}
+		}
+
+		isAnimating () {
+			return (
+				mode === 'transition' && this.state.animating ||
+				mode === 'webanimation' && this.animation
+			);
 		}
 
 		/*
@@ -588,7 +606,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// if marquee isn't necessary, do not set `animating` but return `true` to mark it
 				// complete if it's synchronized so it doesn't block other instances.
 				return true;
-			} else if (!this.state.animating) {
+			} else if (!this.isAnimating()) {
 				// Don't need to worry about this.timerState because if we're sync, we were just
 				// told to start, so our state is correct already. If we're not sync, this will
 				// restart us anyhow. If we were waiting to tell sync to start us, someone else in
@@ -596,10 +614,35 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.setTimeout(() => {
 					this.calculateMetrics();
 					if (!this.contentFits) {
-						this.setState({
-							promoted: true,
-							animating: true
-						});
+						if (mode === 'transition') {
+							this.setState({
+								promoted: true,
+								animating: true
+							});
+						} else if (mode === 'webanimation') {
+							const duration = (this.distance * 1000) / this.props.marqueeSpeed;
+
+							this.animation = animate({
+								node: this.node,
+								type: 'marquee',
+								keyframes: [
+									{transform: 'translateX(0)'},
+									{transform: `translateX(${this.state.rtl ? '' : '-'}${this.distance}px)`},
+								],
+								options: {
+									duration,
+									direction: 'normal'
+								},
+								onCancel: this.stop,
+								onFinish: this.resetAnimation
+							});
+
+							if (!this.state.promoted) {
+								this.setState({
+									promoted: true
+								});
+							}
+						}
 					} else if (this.sync) {
 						this.context.complete(this);
 					}
@@ -614,13 +657,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		stop = () => {
 			this.clearTimeout();
-
-			if (this.state.animating) {
-				this.setState({
-					animating: false
-				});
-			}
-
+			this.stopAnimation();
 			this.demote();
 		}
 
@@ -632,7 +669,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		tryStartingAnimation = (delay) => {
-			if (this.state.animating || this.timerState !== TimerState.CLEAR) return;
+			if (this.isAnimating() || this.timerState !== TimerState.CLEAR) return;
 
 			this.startAnimation(delay);
 		}
@@ -669,13 +706,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		restartAnimation = (delay) => {
-			this.setState({
-				animating: false
-			});
+			this.stopAnimation();
+
 			// synchronized Marquees defer to the controller to restart them
 			if (this.sync) {
 				this.context.complete(this);
-			} else if (!this.state.animating) {
+			} else if (!this.isAnimating()) {
 				this.startAnimation(delay);
 			}
 		}
@@ -718,10 +754,23 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.stop();
 		}
 
+		stopAnimation () {
+			if (this.isAnimating()) {
+				if (mode === 'transition') {
+					this.setState({
+						animating: false
+					});
+				} else if (mode === 'webanimation') {
+					cancel(this.animation);
+					this.animation = null;
+				}
+			}
+		}
+
 		handleResize = () => {
 			if (this.node && !this.props.marqueeDisabled) {
 				this.invalidateMetrics();
-				if (this.state.animating) {
+				if (this.isAnimating()) {
 					this.cancelAnimation();
 					this.resetAnimation();
 				}
@@ -735,7 +784,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleFocus = (ev) => {
 			this.isFocused = true;
 			if (!this.sync) {
-				if (!this.state.animating) {
+				if (!this.isAnimating()) {
 					this.startAnimation();
 				}
 			}
@@ -758,7 +807,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props.marqueeOn === 'hover') {
 				if (this.sync) {
 					this.context.enter(this);
-				} else if (!this.state.animating) {
+				} else if (!this.isAnimating()) {
 					this.startAnimation();
 				}
 			}
