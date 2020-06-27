@@ -257,7 +257,7 @@ const mapAndFilterChildren = (children, callback, filter) => {
 			return child;
 		}
 	});
- 	if (result && filter) {
+	if (result && filter) {
 		return result.filter(filter);
 	} else {
 		return result;
