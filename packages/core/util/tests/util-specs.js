@@ -69,23 +69,65 @@ describe('util', () => {
 	});
 
 	describe('mapAndFilterChildren', () => {
-		test('should omit false and null-ish values', () => {
-			// eslint-disable-next-line no-undefined
-			const result = mapAndFilterChildren([1, null, false, undefined, '', NaN], v => v);
+		test('Returns null if null passed', () => {
+			const expected = null;
+			const actual = mapAndFilterChildren(null, val => val);
 
-			const expected = [1, '', NaN];
-			const actual = result;
-
-			expect(expected).toEqual(actual);
+			expect(actual).toBe(expected);
 		});
 
-		test('should not invoke callback for false and null-ish values', () => {
-			const spy = jest.fn();
+		test('Returns passed array if identity filter', () => {
+			const children = [1, 2, 3];
 
+			const expected = children;
+			const actual = mapAndFilterChildren(children, val => val);
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('Returns passed array without nullish or false entries with identity filter', () => {
 			// eslint-disable-next-line no-undefined
-			mapAndFilterChildren([1, null, false, undefined, '', NaN], spy);
+			const children = [1, 2, null, 3, undefined, false];
 
-			expect(spy).toBeCalledTimes(3);
+			const expected = [1, 2, 3];
+			const actual = mapAndFilterChildren(children, val => val);
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('Does not call filter with nullish or false entries', () => {
+			const spy = jest.fn();
+			// eslint-disable-next-line no-undefined
+			const children = [1, 2, null, 3, undefined, false];
+
+			mapAndFilterChildren(children, spy);
+
+			const expected = 3;
+			const actual = spy.mock.calls.length;
+
+			expect(actual).toBe(expected);
+		});
+
+		test('Returns without null entries from filter', () => {
+			const children = [1, 2, 3];
+
+			const expected = [1, 3];
+			const actual = mapAndFilterChildren(children, val => val === 2 ? null : val);
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('Runs custom filter', () => {
+			const children = [1, 2, 3];
+
+			const expected = [1];
+			const actual = mapAndFilterChildren(
+				children,
+				val => val === 2 ? null : val,
+				(val) => val === 1
+			);
+
+			expect(actual).toEqual(expected);
 		});
 
 		test('should forward value and index to callback', () => {
@@ -99,13 +141,6 @@ describe('util', () => {
 			const actual = spy.mock.calls[0];
 
 			expect(expected).toEqual(actual);
-		});
-
-		test('should invoke filter', () => {
-			const spy = jest.fn().mockImplementation(() => true);
-			mapAndFilterChildren([1], v => v, spy);
-
-			expect(spy).toBeCalledTimes(1);
 		});
 	});
 });
