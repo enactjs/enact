@@ -250,9 +250,9 @@ const memoize = (fn) => {
  * @public
  */
 const mapAndFilterChildren = (children, callback, filter) => {
-	const result = React.Children.map(children, (child) => {
+	const result = React.Children.map(children, (child, ...rest) => {
 		if (child != null) {
-			return callback(child);
+			return callback(child, ...rest);
 		} else {
 			return child;
 		}

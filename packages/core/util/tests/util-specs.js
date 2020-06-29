@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {memoize, isRenderable} from '../util';
+import {mapAndFilterChildren, memoize, isRenderable} from '../util';
 
 describe('util', () => {
 	describe('isRenderable', () => {
@@ -65,6 +65,47 @@ describe('util', () => {
 			const actual = spy.mock.calls[0];
 
 			expect(expected).toEqual(actual);
+		});
+	});
+
+	describe('mapAndFilterChildren', () => {
+		test('should omit false and null-ish values', () => {
+			// eslint-disable-next-line no-undefined
+			const result = mapAndFilterChildren([1, null, false, undefined, '', NaN], v => v);
+
+			const expected = [1, '', NaN];
+			const actual = result;
+
+			expect(expected).toEqual(actual);
+		});
+
+		test('should not invoke callback for false and null-ish values', () => {
+			const spy = jest.fn();
+
+			// eslint-disable-next-line no-undefined
+			mapAndFilterChildren([1, null, false, undefined, '', NaN], spy);
+
+			expect(spy).toBeCalledTimes(3);
+		});
+
+		test('should forward value and index to callback', () => {
+			const spy = jest.fn();
+			mapAndFilterChildren([1], spy);
+
+			const expected = [
+				1, // value
+				0 // index
+			];
+			const actual = spy.mock.calls[0];
+
+			expect(expected).toEqual(actual);
+		});
+
+		test('should invoke filter', () => {
+			const spy = jest.fn().mockImplementation(() => true);
+			mapAndFilterChildren([1], v => v, spy);
+
+			expect(spy).toBeCalledTimes(1);
 		});
 	});
 });
