@@ -4,22 +4,29 @@
 	box-sizing: border-box;
 
 	.image {
+		position: relative;
 		display: block; // leaving this to prevent whitespace between inline-block elements
 		margin: 0;
 	}
-	
+
 	.caption,
 	&.selected {
 		/* Public Class Names */
 	}
-	
+
 	&.horizontal {
 		.image {
+			display: inline-block;
+			vertical-align: top;	 //TODO : adjust align.
+			// TODO fix marque bug
 			width: 25%;
 			height: 100%;
 		}
+		.image+div {
+			display: inline-block;
+		}
 	}
-	
+
 	&.vertical {
 		.image {
 			width: 100%;

@@ -12,7 +12,6 @@ import React from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import Image from '../Image';
-import {Cell, Column, Row} from '../Layout';
 
 import componentCss from './ImageItem.module.less';
 
@@ -126,33 +125,29 @@ const ImageItemBase = kind({
 		})
 	},
 
-	render: ({children, css, imageComponent, orientation, placeholder, src, ...rest}) => {
+	render: ({children, css, imageComponent: ImageComponent, orientation, placeholder, src, ...rest}) => {
 		delete rest.selected;
-
 		const isHorizontal = orientation === 'horizontal';
-		const Component = isHorizontal ? Row : Column;
 
 		return (
-			<Component {...rest}>
-				<Cell
+			<div {...rest}>
+				<ImageOverride
+					component={ImageComponent}
 					className={css.image}
-					component={ImageOverride}
-					imageComponent={imageComponent}
 					placeholder={placeholder}
-					shrink={isHorizontal}
 					src={src}
 				/>
 				{children ? (
-					<Cell
+					<div
 						className={css.caption}
-						shrink={!isHorizontal}
 						// eslint-disable-next-line no-undefined
 						align={isHorizontal ? 'center' : undefined}
 					>
 						{children}
-					</Cell>
+					</div>
+
 				) : null}
-			</Component>
+			</div>
 		);
 	}
 });
