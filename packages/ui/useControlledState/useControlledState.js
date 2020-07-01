@@ -4,10 +4,18 @@ import React from 'react';
 // and is memoized by the onChange provided by useState
 function createHandler () {
 	return (onChange) => (value) => {
-		onChange(prevState => ({
-			value: typeof value === 'function' ? value(prevState.value) : value,
-			controlled: prevState.controlled
-		}));
+		onChange(prevState => {
+			const newValue = typeof value === 'function' ? value(prevState.value) : value;
+
+			if (!prevState.controlled && newValue !== prevState.value) {
+				return ({
+					value: typeof value === 'function' ? value(prevState.value) : value,
+					controlled: prevState.controlled
+				});
+			} else {
+				return prevState;
+			}
+		});
 	};
 }
 
