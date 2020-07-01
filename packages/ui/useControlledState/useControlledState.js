@@ -7,7 +7,7 @@ function createHandler () {
 		onChange(prevState => {
 			const newValue = typeof value === 'function' ? value(prevState.value) : value;
 
-			if (newValue !== prevState.value) {
+			if (!prevState.controlled && newValue !== prevState.value) {
 				return ({
 					value: typeof value === 'function' ? value(prevState.value) : value,
 					controlled: prevState.controlled
