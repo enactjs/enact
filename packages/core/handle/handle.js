@@ -415,6 +415,29 @@ const forward = handle.forward = curry(named((name, ev, props) => {
 const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
 
 /**
+ * Calls `event.stopPropagation()` and returns `true`
+ *
+ * Example:
+ * ```
+ * import {handle, stop} from '@enact/core/handle';
+ *
+ * const stopAndLog = handle(
+ *   stop,
+ *   (ev) => console.log('stopPropagation called', ev)
+ * );
+ * ```
+ *
+ * @method   stop
+ * @param    {Object}   ev  Event payload
+ *
+ * @returns  {true}         Always returns `true`
+ * @curried
+ * @memberof core/handle
+ * @public
+ */
+const stop = handle.stop = named(callOnEvent('stopPropagation'), 'stop');
+
+/**
  * Forwards the event to a function at `name` on `props` with capability to prevent default
  * behavior. If the specified prop is `undefined` or is not a function, it is ignored. Returns
  * `false` when `event.preventDefault()` has been called in a handler.
@@ -442,38 +465,21 @@ const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
 const forwardWithPrevent = handle.forwardWithPrevent = curry(named((name, ev, props) => {
 	let prevented = false;
 	const wrappedEvent = Object.assign({}, ev, {
+		persist: () => {
+			callOnEvent('persist', ev);
+		},
 		preventDefault: () => {
 			prevented = true;
 			preventDefault(ev);
+		},
+		stopPropagation: () => {
+			stop(ev);
 		}
 	});
 	forward(name, wrappedEvent, props);
 
 	return !prevented;
 }, 'forwardWithPrevent'));
-
-/**
- * Calls `event.stopPropagation()` and returns `true`
- *
- * Example:
- * ```
- * import {handle, stop} from '@enact/core/handle';
- *
- * const stopAndLog = handle(
- *   stop,
- *   (ev) => console.log('stopPropagation called', ev)
- * );
- * ```
- *
- * @method   stop
- * @param    {Object}   ev  Event payload
- *
- * @returns  {true}         Always returns `true`
- * @curried
- * @memberof core/handle
- * @public
- */
-const stop = handle.stop = named(callOnEvent('stopPropagation'), 'stop');
 
 /**
  * Calls `event.stopImmediatePropagation()` and returns `true`

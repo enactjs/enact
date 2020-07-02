@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `core/handle.forwardWithPrevent` handler to provide `stopPropagation` and `persist` method for compatibility React synthetic event
+
 ## [3.3.0-alpha.14] - 2020-06-29
 
 ### Added
