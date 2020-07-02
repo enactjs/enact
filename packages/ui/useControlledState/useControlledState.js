@@ -1,21 +1,20 @@
 import React from 'react';
 
+function nop () {}
+
 // Generate a handler that hides the controlled value from users, supports functional callbacks,
 // and is memoized by the onChange provided by useState
 function createHandler () {
-	return (onChange) => (value) => {
-		onChange(prevState => {
-			const newValue = typeof value === 'function' ? value(prevState.value) : value;
+	return (onChange, currentValue, controlled) => {
+		if (controlled) {
+			return nop;
+		}
 
-			if (!prevState.controlled && newValue !== prevState.value) {
-				return ({
-					value: typeof value === 'function' ? value(prevState.value) : value,
-					controlled: prevState.controlled
-				});
-			} else {
-				return prevState;
+		return (value) => {
+			if (value !== currentValue) {
+				onChange(value);
 			}
-		});
+		};
 	};
 }
 
@@ -30,15 +29,18 @@ function calcValue (defaultValue, propValue, stateValue, controlled) {
 }
 
 function useControlledState (defaultValue, propValue, controlled) {
+	const isControlled = React.useRef(controlled);
+
 	// Store both the value and the "controlled" flag in a state hook
-	const [state, onChange] = React.useState({
-		value: defaultValue,
-		controlled
-	});
+	const [value, onChange] = React.useState(defaultValue);
+
+	const memoOnChange = React.useMemo(
+		createHandler, [onChange, value, isControlled.current]
+	);
 
 	return [
-		calcValue(defaultValue, propValue, state.value, state.controlled),
-		React.useMemo(createHandler, [onChange])(onChange)
+		calcValue(defaultValue, propValue, value, isControlled.current),
+		memoOnChange(onChange, value, isControlled.current)
 	];
 }
 
