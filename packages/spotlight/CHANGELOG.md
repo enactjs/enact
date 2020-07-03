@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight/Spottable` to enable `stopPropagation` method from forwarding keyup and keydown events
+
 ## [3.3.0-alpha.14] - 2020-06-29
 
 ### Added
