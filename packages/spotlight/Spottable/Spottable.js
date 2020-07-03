@@ -6,7 +6,7 @@
  * @exports spottableClass
  */
 
-import {forward, forwardWithPrevent, handle, preventDefault, stop} from '@enact/core/handle';
+import {forward, handle, preventDefault, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
@@ -307,11 +307,27 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
+		forwardWithPrevent = (name, ev, props) => {
+			let allow = true;
+			forward(name, new Proxy(ev, {
+				get (original, member) {
+					if (member === 'preventDefault') {
+						return () => {
+							allow = false;
+							original.preventDefault();
+						};
+					}
+					return original[member];
+				}
+			}), props);
+			return allow;
+		}
+
 		forwardAndResetLastSelectTarget = (ev, props) => {
 			const {keyCode} = ev;
 			const {selectionKeys} = props;
 			const key = selectionKeys.find((value) => keyCode === value);
-			const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
+			const notPrevented = this.forwardWithPrevent('onKeyUp', ev, props);
 
 			// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
 			if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {
@@ -329,7 +345,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		handle = handle.bind(this)
 
 		handleKeyDown = this.handle(
-			forwardWithPrevent('onKeyDown'),
+			(ev, props) => this.forwardWithPrevent('onKeyDown', ev, props),
 			this.forwardSpotlightEvents,
 			this.isActionable,
 			this.handleSelect,
