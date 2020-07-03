@@ -307,27 +307,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		forwardWithPrevent = (name, ev, props) => {
-			let allow = true;
-			forward(name, new Proxy(ev, {
-				get (original, member) {
-					if (member === 'preventDefault') {
-						return () => {
-							allow = false;
-							original.preventDefault();
-						};
-					}
-					return original[member];
-				}
-			}), props);
-			return allow;
-		}
-
 		forwardAndResetLastSelectTarget = (ev, props) => {
 			const {keyCode} = ev;
 			const {selectionKeys} = props;
 			const key = selectionKeys.find((value) => keyCode === value);
-			const notPrevented = this.forwardWithPrevent('onKeyUp', ev, props);
+			forward('onKeyUp', ev, props);
+			const notPrevented = !ev.defaultPrevented;
 
 			// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
 			if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {
@@ -345,7 +330,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		handle = handle.bind(this)
 
 		handleKeyDown = this.handle(
-			(ev, props) => this.forwardWithPrevent('onKeyDown', ev, props),
+			forward('onKeyDown'),
+			(ev) => !ev.defaultPrevented,
 			this.forwardSpotlightEvents,
 			this.isActionable,
 			this.handleSelect,
