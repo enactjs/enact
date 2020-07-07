@@ -27,7 +27,6 @@ const
 			<UiImageItem
 				{...rest}
 				src={source}
-				style={{width: '100%'}}
 			>
 				{text}
 			</UiImageItem>
