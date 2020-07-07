@@ -2,7 +2,13 @@ import classnames from 'classnames/bind';
 
 import {mergeClassNameMaps} from '../util';
 
+import debugClassnames from './debugClassnames';
 import {addInternalProp} from './util';
+
+let bindableClassnames = classnames;
+if (__DEV__) {
+	bindableClassnames = debugClassnames;
+}
 
 /**
  * Merges external and internal CSS classes and style objects. Internal CSS classes can be
@@ -64,7 +70,7 @@ const styles = (cfg, optProps) => {
 			css = mergeClassNameMaps(css, props.css, allowedClassNames);
 		}
 
-		const cn = css ? classnames.bind(css) : classnames;
+		const cn = css ? bindableClassnames.bind(css) : classnames;
 		const joinedClassName = props[prop] = classnames(
 			className ? cn(className.split(' ')) : null,
 			props.className
