@@ -169,6 +169,14 @@ class VirtualListBasic extends Component {
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
+		 * Called to get the scroll affordance from themed component.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		getAffordance: PropTypes.func,
+
+		/**
 		 * Called to get the props for list items.
 		 *
 		 * @type {Function}
@@ -291,6 +299,7 @@ class VirtualListBasic extends Component {
 		cbScrollTo: nop,
 		dataSize: 0,
 		direction: 'vertical',
+		getAffordance: () => (0),
 		overhang: 3,
 		pageScroll: false,
 		scrollMode: 'translate',
@@ -1148,7 +1157,7 @@ class VirtualListBasic extends Component {
 		}
 	}
 
-	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
+	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() + this.props.getAffordance() : this.scrollBounds.clientHeight)
 
 	getScrollWidth = () => (this.isPrimaryDirectionVertical ? this.scrollBounds.clientWidth : this.getVirtualScrollDimension())
 
@@ -1207,6 +1216,7 @@ class VirtualListBasic extends Component {
 		delete rest.clientSize;
 		delete rest.dataSize;
 		delete rest.direction;
+		delete rest.getAffordance;
 		delete rest.getComponentProps;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
