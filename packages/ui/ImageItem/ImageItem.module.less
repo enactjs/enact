@@ -2,8 +2,6 @@
 //
 .imageItem {
 	box-sizing: border-box;
-	width: 100%;
-	height: 100%;
 
 	.image {
 		position: relative;
@@ -13,6 +11,7 @@
 
 	.caption,
 	&.selected {
+		width: 100%;
 		/* Public Class Names */
 	}
 
@@ -25,14 +24,19 @@
 		}
 		.image+div {
 			display: inline-block;
+			width: 75%;
 			vertical-align: middle;
 		}
 	}
 
 	&.vertical {
+		height: 100%;
 		.image {
 			width: 100%;
 			height: calc(100% - 50px);
+		}
+		.image+div {
+			height: 50px;
 		}
 	}
 }
