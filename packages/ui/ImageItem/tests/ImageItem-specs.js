@@ -35,12 +35,12 @@ describe('ImageItem', () => {
 		expect(actual).toHaveLength(0);
 	});
 
-	test('should use a `Row` when `orientation="horizontal"`', () => {
+	test('should use a `div` when `orientation="horizontal"`', () => {
 		const subject = shallow(
 			<ImageItemBase orientation="horizontal" />
 		);
 
-		const actual = subject.find('Row.imageItem');
+		const actual = subject.find('div.imageItem');
 
 		expect(actual).toHaveLength(1);
 	});
@@ -56,12 +56,12 @@ describe('ImageItem', () => {
 		expect(actual).toContain(expected);
 	});
 
-	test('should use a `Column` when `orientation="vertical"`', () => {
+	test('should use a `div` when `orientation="vertical"`', () => {
 		const subject = shallow(
 			<ImageItemBase orientation="vertical" />
 		);
 
-		const actual = subject.find('Column.imageItem');
+		const actual = subject.find('div.imageItem');
 
 		expect(actual).toHaveLength(1);
 	});
