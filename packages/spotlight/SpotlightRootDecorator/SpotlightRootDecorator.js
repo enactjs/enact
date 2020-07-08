@@ -88,7 +88,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				if (elem.getAttribute('data-spotlight-container-disabled') === 'true') return false;
 				elem = elem.parentNode;
 			}
-		}
+		};
 
 		render () {
 			return <Wrapped {...this.props} />;

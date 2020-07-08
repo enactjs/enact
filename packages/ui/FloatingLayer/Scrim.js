@@ -70,11 +70,11 @@ class Scrim extends React.Component {
 		 * @public
 		 */
 		type: PropTypes.oneOf(['transparent', 'translucent'])
-	}
+	};
 
 	static defaultProps = {
 		type: 'translucent'
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -109,9 +109,9 @@ class Scrim extends React.Component {
 		}
 	}
 
-	show = () => this.setState({visible: true})
+	show = () => this.setState({visible: true});
 
-	hide = () => this.setState({visible: false})
+	hide = () => this.setState({visible: false});
 
 	render () {
 		if (this.state.visible) {

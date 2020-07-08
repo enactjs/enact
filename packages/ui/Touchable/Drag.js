@@ -8,9 +8,9 @@ const Tracking = {
 };
 
 class Drag {
-	dragConfig = null
+	dragConfig = null;
 
-	isDragging = () => this.dragConfig != null
+	isDragging = () => this.dragConfig != null;
 
 	setContainerBounds = (node) => {
 		const {global: isGlobal, boxSizing} = this.dragConfig;
@@ -41,7 +41,7 @@ class Drag {
 		}
 
 		this.bounds = bounds;
-	}
+	};
 
 	updatePosition = (clientX, clientY) => {
 		const {maxX, maxY, minX, minY} = this.bounds;
@@ -57,7 +57,7 @@ class Drag {
 		}
 
 		return false;
-	}
+	};
 
 	begin = (config, {noResume, onDrag, onDragEnd, onDragStart}, coords, node) => {
 		if (!onDrag && !onDragStart && !onDragEnd) return;
@@ -79,7 +79,7 @@ class Drag {
 
 		this.setContainerBounds(node);
 		this.move(coords);
-	}
+	};
 
 	move = (coords) => {
 		if (!this.isDragging()) return;
@@ -106,7 +106,7 @@ class Drag {
 				...coords
 			});
 		}
-	}
+	};
 
 	blur = () => {
 		if (!this.isDragging()) return;
@@ -114,7 +114,7 @@ class Drag {
 		if (!this.dragConfig.global) {
 			this.end();
 		}
-	}
+	};
 
 	end = () => {
 		if (!this.isDragging()) return;
@@ -126,7 +126,7 @@ class Drag {
 
 		this.tracking = Tracking.Untracked;
 		this.dragConfig = null;
-	}
+	};
 
 	enter = () => {
 		if (!this.isDragging()) return;
@@ -134,7 +134,7 @@ class Drag {
 		if (this.dragConfig.resume && this.tracking === Tracking.Paused) {
 			this.tracking = Tracking.Active;
 		}
-	}
+	};
 
 	leave = () => {
 		if (!this.isDragging()) return;
@@ -142,7 +142,7 @@ class Drag {
 		if (!this.dragConfig.global && this.tracking === Tracking.Active) {
 			this.tracking = Tracking.Paused;
 		}
-	}
+	};
 
 }
 

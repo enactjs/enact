@@ -164,13 +164,13 @@ class TransitionGroup extends React.Component {
 		 * @default 2
 		 */
 		size: PropTypes.number
-	}
+	};
 
 	static defaultProps = {
 		childFactory: identity,
 		component: 'div',
 		size: 2
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -314,7 +314,7 @@ class TransitionGroup extends React.Component {
 		} else {
 			this._handleDoneAppearing(key);
 		}
-	}
+	};
 
 	_handleDoneAppearing = (key) => {
 		const component = this.groupRefs[key];
@@ -334,7 +334,7 @@ class TransitionGroup extends React.Component {
 			// This was removed before it had fully appeared. Remove it.
 			this.performLeave(key);
 		}
-	}
+	};
 
 	performEnter = (key) => {
 		this.currentlyTransitioningKeys[key] = true;
@@ -348,7 +348,7 @@ class TransitionGroup extends React.Component {
 		} else {
 			this._handleDoneEntering(key);
 		}
-	}
+	};
 
 	_handleDoneEntering = (key) => {
 		const component = this.groupRefs[key];
@@ -361,7 +361,7 @@ class TransitionGroup extends React.Component {
 		}, this.props);
 
 		this.completeTransition(key);
-	}
+	};
 
 	performStay = (key) => {
 		const component = this.groupRefs[key];
@@ -373,7 +373,7 @@ class TransitionGroup extends React.Component {
 		} else {
 			this._handleDoneStaying(key);
 		}
-	}
+	};
 
 	_handleDoneStaying = (key) => {
 		const component = this.groupRefs[key];
@@ -384,7 +384,7 @@ class TransitionGroup extends React.Component {
 		forwardOnStay({
 			view: component
 		}, this.props);
-	}
+	};
 
 	performLeave = (key) => {
 		this.currentlyTransitioningKeys[key] = true;
@@ -398,7 +398,7 @@ class TransitionGroup extends React.Component {
 			// is done.
 			this._handleDoneLeaving(key);
 		}
-	}
+	};
 
 	_handleDoneLeaving = (key) => {
 		const component = this.groupRefs[key];
@@ -417,11 +417,11 @@ class TransitionGroup extends React.Component {
 			const index = indexOfChild(key, state.children);
 			return {children: remove(index, 1, state.children)};
 		});
-	}
+	};
 
 	storeRefs = key => node => {
 		this.groupRefs[key] = node;
-	}
+	};
 
 	render () {
 		// support wrapping arbitrary children with a component that supports the necessary

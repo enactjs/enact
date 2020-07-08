@@ -23,7 +23,7 @@ class Flick {
 		this.onFlick = onFlick;
 
 		this.move(coords);
-	}
+	};
 
 	move = ({x, y}) => {
 		if (!this.tracking) return;
@@ -38,15 +38,15 @@ class Flick {
 		if (this.moves.length > this.maxMoves) {
 			this.moves.shift();
 		}
-	}
+	};
 
 	blur = () => {
 		this.end();
-	}
+	};
 
 	cancel = () => {
 		this.tracking = false;
-	}
+	};
 
 	cancelJob = new Job(this.cancel);
 
@@ -94,7 +94,7 @@ class Flick {
 		}
 
 		this.tracking = false;
-	}
+	};
 }
 
 const defaultFlickConfig = {
