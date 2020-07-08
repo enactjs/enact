@@ -40,6 +40,10 @@ function debugClassnames () {
 					}
 				}
 			}
+			// Perhaps attempting to access undefined value in css object?
+		} else if (argType === 'undefined') {
+			// eslint-disable-next-line no-console
+			console.warn(`${moduleName}: Received 'undefined'`);
 		}
 	}
 
