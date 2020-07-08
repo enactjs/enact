@@ -27,6 +27,7 @@ import React from 'react';
  * @method
  * @private
  */
+// eslint-disable-next-line react-hooks/rules-of-hooks
 const indexOfChild = useWith(findIndex, [propEq('key'), identity]);
 
 /**

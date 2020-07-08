@@ -131,9 +131,11 @@ const makeHandler = (handlers) => {
 };
 
 // Loose check to determine if obj is component-ish if it has both props and context members
-const hasPropsAndContext = (obj) => {
-	return obj && obj.hasOwnProperty && obj.hasOwnProperty('props') && obj.hasOwnProperty('context');
-};
+const hasPropsAndContext = (obj) => (
+	obj &&
+		Object.prototype.hasOwnProperty.call(obj, 'props') &&
+		Object.prototype.hasOwnProperty.call(obj, 'context')
+);
 
 const named = (fn, name) => {
 	if (__DEV__) {
