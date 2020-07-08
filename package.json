@@ -11,7 +11,7 @@
     "link-all": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock link",
     "unlink-all": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock unlink",
     "publish": "lerna publish --skip-npm --skip-git",
-    "link": "lerna --concurrency 1 run lint",
+    "lint": "lerna --concurrency 1 run lint",
     "test": "lerna --concurrency 1 run test",
     "test-ss": "lerna --concurrency 1 run test-ss",
     "test-ui": "lerna --concurrency 1 run test-ui",
