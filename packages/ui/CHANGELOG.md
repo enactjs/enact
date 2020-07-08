@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `ui/ViewManager.TransitionGroup` to suppres `onTransition` events when a view appears or stays
+
 ## [3.3.0-alpha.15] - 2020-07-07
 
 No significant changes.
