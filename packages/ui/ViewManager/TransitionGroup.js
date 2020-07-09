@@ -227,7 +227,7 @@ class TransitionGroup extends React.Component {
 		// that have fallen out of the `children` array and manually clean them up from the map.
 		prevChildKeys
 			.filter(key => !nextChildKeys.includes(key))
-			.forEach(key => this.completeTransition(key));
+			.forEach(key => this.completeTransition({key}));
 	}
 
 	reconcileChildren (prevActiveChildMapping, nextActiveChildMapping) {
@@ -243,7 +243,7 @@ class TransitionGroup extends React.Component {
 		}
 
 		// remove any "dropped" children from the list of transitioning children
-		droppedKeys.forEach(key => this.completeTransition(key));
+		droppedKeys.forEach(key => this.completeTransition({key}));
 
 		// mark any new child as entering
 		nextChildKeys.forEach((key, index) => {
@@ -292,11 +292,11 @@ class TransitionGroup extends React.Component {
 		keysToLeave.forEach(this.performLeave);
 	}
 
-	completeTransition (key) {
+	completeTransition ({key, noForwarding = false}) {
 		if (key in this.currentlyTransitioningKeys) {
 			delete this.currentlyTransitioningKeys[key];
 
-			if (Object.keys(this.currentlyTransitioningKeys).length === 0) {
+			if (!noForwarding && Object.keys(this.currentlyTransitioningKeys).length === 0) {
 				forwardOnTransition(null, this.props);
 			}
 		}
@@ -326,7 +326,7 @@ class TransitionGroup extends React.Component {
 			view: component
 		}, this.props);
 
-		this.completeTransition(key);
+		this.completeTransition({key, noForwarding: true});
 
 		let currentChildMapping = mapChildren(this.props.children);
 
@@ -360,7 +360,7 @@ class TransitionGroup extends React.Component {
 			view: component
 		}, this.props);
 
-		this.completeTransition(key);
+		this.completeTransition({key});
 	}
 
 	performStay = (key) => {
@@ -411,7 +411,7 @@ class TransitionGroup extends React.Component {
 			view: component
 		}, this.props);
 
-		this.completeTransition(key);
+		this.completeTransition({key});
 
 		this.setState(function (state) {
 			const index = indexOfChild(key, state.children);
