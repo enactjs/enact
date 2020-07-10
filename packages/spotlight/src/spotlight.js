@@ -352,22 +352,28 @@ const Spotlight = (function () {
 						if (config && config.enterTo) {
 							return getContainerRect(id);
 						}
-					}, null) || getRect(next);
+					}, null);
 
-					const currentContainerRect = getContainerRect(straighOnlyLeaveContainer);
+					// If we find a container around the target that is within the first shared
+					// container and is a restricted container, verify that it matches straightOnly
+					// rules. If we don't find one, it means that the target is not within a
+					// restricted container and normal 5-way rules should apply so we bail out.
+					if (nextRect) {
+						const currentContainerRect = getContainerRect(straighOnlyLeaveContainer);
 
-					// prevent focus for obliquely leaving straightOnlyLeave containers
-					if (
-						(
-							(direction === 'left' || direction === 'right') &&
-							(nextRect.bottom < currentContainerRect.top || nextRect.top > currentContainerRect.bottom)
-						) ||
-						(
-							(direction === 'up' || direction === 'down') &&
-							(nextRect.right < currentContainerRect.left || nextRect.left > currentContainerRect.right)
-						)
-					) {
-						return false;
+						// prevent focus for obliquely leaving straightOnlyLeave containers
+						if (
+							(
+								(direction === 'left' || direction === 'right') &&
+								(nextRect.bottom < currentContainerRect.top || nextRect.top > currentContainerRect.bottom)
+							) ||
+							(
+								(direction === 'up' || direction === 'down') &&
+								(nextRect.right < currentContainerRect.left || nextRect.left > currentContainerRect.right)
+							)
+						) {
+							return false;
+						}
 					}
 				}
 			}
