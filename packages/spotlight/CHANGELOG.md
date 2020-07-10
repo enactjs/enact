@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` behavior when navigating from a container within a `straightOnlyLeave` container
+
 ## [3.3.0-alpha.15] - 2020-07-07
 
 No significant changes.
