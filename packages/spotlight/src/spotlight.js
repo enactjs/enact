@@ -336,40 +336,6 @@ const Spotlight = (function () {
 				if (_5WayKeyHold && !isContainer5WayHoldable(currentContainerId)) {
 					return false;
 				}
-
-				// find the nearest ancestral container that is configured for `straightOnlyLeave`
-				const straighOnlyLeaveContainer = currentContainerIds.slice().reverse().find(id => getContainerConfig(id).straightOnlyLeave);
-
-				if (straighOnlyLeaveContainer) {
-					// find the bounds of either the closest non-shared restricted container or, if
-					// none exists, the bounds of the next target
-					const uniqueNextContainers = nextContainerIds.filter(id => !currentContainerIds.includes(id));
-					const nextRect = uniqueNextContainers.reduceRight((result, id) => {
-						if (result) return result;
-
-						const config = getContainerConfig(id);
-
-						if (config && config.enterTo) {
-							return getContainerRect(id);
-						}
-					}, null) || getRect(next);
-
-					const currentContainerRect = getContainerRect(straighOnlyLeaveContainer);
-
-					// prevent focus for obliquely leaving straightOnlyLeave containers
-					if (
-						(
-							(direction === 'left' || direction === 'right') &&
-							(nextRect.bottom < currentContainerRect.top || nextRect.top > currentContainerRect.bottom)
-						) ||
-						(
-							(direction === 'up' || direction === 'down') &&
-							(nextRect.right < currentContainerRect.left || nextRect.left > currentContainerRect.right)
-						)
-					) {
-						return false;
-					}
-				}
 			}
 
 			notifyLeaveContainer(

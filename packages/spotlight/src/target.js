@@ -305,6 +305,20 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 			break;
 		}
 
+		// If one of the downstream containers is configured for straightOnlyLeave, we use that
+		// container's bounds as the source rect for navigation. It's not really "straight only" but
+		// more like `enterTo` causing spotlight to treat the container as a unit (but for leaving).
+		const straighOnlyLeaveContainer = elementContainerIds
+			.slice(elementContainerIds.indexOf(containerId) + 1)
+			.find(id => {
+				const cfg = getContainerConfig(id)
+				return cfg && cfg.straightOnlyLeave;
+			});
+
+		if (straighOnlyLeaveContainer) {
+			elementRect = getContainerRect(straighOnlyLeaveContainer);
+		}
+
 		// try to navigate from element to one of the candidates in containerId
 		next = navigate(
 			elementRect,
