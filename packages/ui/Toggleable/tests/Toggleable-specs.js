@@ -116,7 +116,7 @@ describe('Toggleable', () => {
 			() => {
 				const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 				const Component = Toggleable(DivComponent);
-				const subject = shallow(
+				const subject = mount(
 					<Component defaultSelected selected />
 				);
 
@@ -153,7 +153,7 @@ describe('Toggleable', () => {
 			() => {
 				const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 				const Component = Toggleable(DivComponent);
-				const subject = shallow(
+				const subject = mount(
 					<Component defaultSelected selected />
 				);
 				// eslint-disable-next-line no-undefined
@@ -247,6 +247,46 @@ describe('Toggleable', () => {
 	);
 
 	test(
+		'should invoke passed \'onToggle\' handler when disabled at creation and becoming enabled',
+		() => {
+			const handleToggle = jest.fn();
+			const Component = Toggleable(DivComponent);
+			const subject = shallow(
+				<Component onToggle={handleToggle} disabled />
+			);
+
+			subject.setProps({disabled: false});
+
+			subject.simulate('toggle');
+
+			const expected = 1;
+			const actual = handleToggle.mock.calls.length;
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should invoke changed \'onToggle\' handler',
+		() => {
+			const handleToggle = jest.fn();
+			const Component = Toggleable(DivComponent);
+			const subject = shallow(
+				<Component />
+			);
+
+			subject.setProps({onToggle: handleToggle});
+
+			subject.simulate('toggle');
+
+			const expected = 1;
+			const actual = handleToggle.mock.calls.length;
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
 		'should not invoke passed \'onActivate\' handler when disabled',
 		() => {
 			const handleActivate = jest.fn();
@@ -290,7 +330,7 @@ describe('Toggleable', () => {
 				<Component defaultSelected />
 			);
 
-			subject.find(DivComponent).prop('onToggle')();
+			subject.find(DivComponent).invoke('onToggle')();
 			subject.update();
 
 			const expected = 'selected';
@@ -308,7 +348,7 @@ describe('Toggleable', () => {
 				<Component defaultSelected />
 			);
 
-			subject.find(DivComponent).prop('onJiggle')();
+			subject.find(DivComponent).invoke('onJiggle')();
 			subject.update();
 
 			const expected = 'selected';
@@ -326,7 +366,7 @@ describe('Toggleable', () => {
 				<Component defaultSelected disabled />
 			);
 
-			subject.find(DivComponent).prop('onToggle')();
+			subject.find(DivComponent).invoke('onToggle')();
 			subject.update();
 
 			const expected = 'selected';
@@ -344,7 +384,7 @@ describe('Toggleable', () => {
 				<Component defaultSelected={false} disabled />
 			);
 
-			subject.find(DivComponent).prop('onActivate')();
+			subject.find(DivComponent).invoke('onActivate')();
 			subject.update();
 
 			const expected = 'selected';
@@ -362,7 +402,7 @@ describe('Toggleable', () => {
 				<Component defaultSelected disabled />
 			);
 
-			subject.find(DivComponent).prop('onDeactivate')();
+			subject.find(DivComponent).invoke('onDeactivate')();
 			subject.update();
 
 			const expected = 'selected';
@@ -380,7 +420,7 @@ describe('Toggleable', () => {
 				<Component selected />
 			);
 
-			subject.find(DivComponent).prop('onToggle')();
+			subject.find(DivComponent).invoke('onToggle')();
 			subject.update();
 
 			const expected = 'selected';
@@ -398,7 +438,7 @@ describe('Toggleable', () => {
 				<Component selected />
 			);
 
-			subject.find(DivComponent).prop('onJiggle')();
+			subject.find(DivComponent).invoke('onJiggle')();
 			subject.update();
 
 			const expected = 'selected';
@@ -416,7 +456,7 @@ describe('Toggleable', () => {
 				<Component selected={false} />
 			);
 
-			subject.find(DivComponent).prop('onActivate')();
+			subject.find(DivComponent).invoke('onActivate')();
 			subject.update();
 
 			const expected = 'selected';
@@ -434,7 +474,7 @@ describe('Toggleable', () => {
 				<Component selected />
 			);
 
-			subject.find(DivComponent).prop('onDeactivate')();
+			subject.find(DivComponent).invoke('onDeactivate')();
 			subject.update();
 
 			const expected = 'selected';
@@ -489,6 +529,25 @@ describe('Toggleable', () => {
 			const actual = subject.find(DivComponent).getElement().props;
 
 			expect(actual).toHaveProperty(expected);
+		}
+	);
+
+	// testing regression from #2679 causing #2735
+	test(
+		'should not update instance value when prop did not change',
+		() => {
+			const Component = Toggleable(DivComponent);
+			const subject = mount(
+				<Component />
+			);
+
+			subject.find(DivComponent).invoke('onToggle')(); // set to true
+			subject.setProps({}); // force re-render to simulate upstream state change
+
+			const expected = true;
+			const actual = subject.find(DivComponent).props();
+
+			expect(actual).toHaveProperty('selected', expected);
 		}
 	);
 

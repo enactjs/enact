@@ -7,11 +7,12 @@
  * @exports ButtonDecorator
  */
 
-import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import ComponentOverride from '../ComponentOverride';
 import Touchable from '../Touchable';
 
 import componentCss from './Button.module.less';
@@ -30,7 +31,7 @@ const ButtonBase = kind({
 	propTypes: /** @lends ui/Button.ButtonBase.prototype */ {
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
-		 * corresponding internal Elements and states of this component.
+		 * corresponding internal elements and states of this component.
 		 *
 		 * The following classes are supported:
 		 *
@@ -81,22 +82,39 @@ const ButtonBase = kind({
 		 * with the caveat that if you supply a custom icon, you are responsible for sizing and
 		 * locale positioning of the custom component.
 		 *
-		 * @type {Node}
+		 * Setting this to `true` means the `iconComponent` will be rendered but with empty content.
+		 * This may be useful if you've customized the `iconComponent` to render the icon content
+		 * externally.
+		 *
+		 * @type {Node|Boolean}
 		 * @public
 		 */
-		icon: PropTypes.node,
+		icon: PropTypes.oneOfType([PropTypes.node, PropTypes.bool]),
 
 		/**
 		 * The component used to render the [icon]{@link ui/Button.ButtonBase.icon}.
 		 *
-		 * This component will receive the `size` property set on the Button as well as the `icon`
-		 * class to customize its styling. If [icon]{@link ui/Button.ButtonBase.icon} is not a
-		 * string, this property is not used.
+		 * This component will receive the `icon` class to customize its styling.
+		 * If [icon]{@link ui/Button.ButtonBase.icon} is not assigned or is false, this component
+		 * will not be rendered.
 		 *
-		 * @type {Component}
+		 * If this is a component rather than an HTML element string, this component will also
+		 * receive the `size` and `iconFlip` (as `flip`) properties and should be configured to
+		 * handle it.
+		 *
+		 * @type {Component|Node}
 		 * @public
 		 */
-		iconComponent: EnactPropTypes.component,
+		iconComponent: EnactPropTypes.componentOverride,
+
+		/**
+		 * Flips the icon.
+		 *
+		 * @see {@link ui/Icon.Icon#flip}
+		 * @type {String}
+		 * @public
+		 */
+		iconFlip: PropTypes.string,
 
 		/**
 		 * Enforces a minimum width for the component.
@@ -137,10 +155,10 @@ const ButtonBase = kind({
 		/**
 		 * The size of the button.
 		 *
-		 * Applies either the `small` or `large` CSS class which can be customized by
+		 * Applies the CSS class which can be customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
-		 * @type {('small'|'large')}
+		 * @type {String}
 		 * @default 'large'
 		 * @public
 		 */
@@ -167,15 +185,36 @@ const ButtonBase = kind({
 			pressed,
 			selected
 		}, size),
-		icon: ({css, icon, iconComponent: Icon, size}) => {
-			return (typeof icon === 'string' && Icon) ? (
-				<Icon size={size} className={css.icon}>{icon}</Icon>
-			) : icon;
+		icon: ({css, icon, iconComponent, iconFlip, size}) => {
+			if (icon == null || icon === false) return;
+
+			// Establish the base collection of props for the most basic `iconComponent` type, an
+			// HTML element string.
+			const props = {
+				className: css.icon,
+				component: iconComponent
+			};
+
+			// Add in additional props that any Component supplied to `iconComponent` should be
+			// configured to handle.
+			if (typeof iconComponent !== 'string') {
+				props.size = size;
+				// the following inadvertently triggers a linting rule
+				// eslint-disable-next-line enact/prop-types
+				props.flip = iconFlip;
+			}
+
+			return (
+				<ComponentOverride {...props}>
+					{icon}
+				</ComponentOverride>
+			);
 		}
 	},
 
 	render: ({children, css, decoration, disabled, icon, ...rest}) => {
 		delete rest.iconComponent;
+		delete rest.iconFlip;
 		delete rest.minWidth;
 		delete rest.pressed;
 		delete rest.selected;

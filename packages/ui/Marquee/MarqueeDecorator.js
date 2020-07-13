@@ -403,7 +403,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		promoteJob = new Job(() => {
-			this.setState(state => state.promoted ? null : {promoted: true});
+			if (!this.contentFits) {
+				this.setState(state => state.promoted ? null : {promoted: true});
+			}
 		})
 
 		demoteJob = new Job(() => {
@@ -662,7 +664,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		/*
-		 * Resets the marquee and restarts it after `marqueeDelay` millisecons.
+		 * Resets the marquee and restarts it after `marqueeDelay` milliseconds.
 		 *
 		 * @returns {undefined}
 		 */

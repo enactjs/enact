@@ -11,8 +11,8 @@
  * @exports IconButtonDecorator
  */
 
-import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -68,7 +68,7 @@ const IconButtonBase = kind({
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
-		 * corresponding internal Elements and states of this component.
+		 * corresponding internal elements and states of this component.
 		 *
 		 * The following classes are supported:
 		 *
@@ -134,10 +134,10 @@ const IconButtonBase = kind({
 		/**
 		 * The size of the button.
 		 *
-		 * Applies either the `small` or `large` CSS class which can be customized by
+		 * Applies the CSS class which can be customized by
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
-		 * @type {('small'|'large')}
+		 * @type {String}
 		 * @default 'large'
 		 * @public
 		 */

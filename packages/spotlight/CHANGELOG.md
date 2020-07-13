@@ -2,6 +2,73 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [3.3.0] - 2020-07-13
+
+No significant changes.
+
+## [3.3.0-alpha.15] - 2020-07-07
+
+No significant changes.
+
+## [3.3.0-alpha.14] - 2020-06-29
+
+No significant changes.
+
+## [3.3.0-alpha.13] - 2020-06-22
+
+### Fixed
+
+- `spotlight` to trigger `onLeaveContainerFail` when `leaveFor` prevents navigation
+- `spotlight` to correctly maintain pointer mode on webOS
+
+## [3.3.0-alpha.12] - 2020-06-15
+
+No significant changes.
+
+## [3.3.0-alpha.11] - 2020-06-08
+
+No significant changes.
+
+## [3.3.0-alpha.10] - 2020-05-26
+
+No significant changes.
+
+## [3.3.0-alpha.9] - 2020-05-11
+
+No significant changes.
+
+## [3.3.0-alpha.8] - 2020-05-04
+
+No significant changes.
+
+## [3.3.0-alpha.7] - 2020-04-27
+
+No significant changes.
+
+## [3.3.0-alpha.6] - 2020-04-14
+
+No significant changes.
+
+## [3.3.0-alpha.5] - 2020-04-06
+
+No significant changes.
+
+## [3.3.0-alpha.4] - 2020-03-30
+
+No significant changes.
+
+## [3.3.0-alpha.3] - 2020-03-17
+
+No significant changes.
+
+## [3.3.0-alpha.2] - 2020-03-09
+
+No significant changes.
+
+## [3.3.0-alpha.1] - 2020-02-26
+
+No significant changes.
+
 ## [3.2.6] - 2020-03-26
 
 No significant changes.

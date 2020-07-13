@@ -2,12 +2,162 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.3.0] - 2020-07-13
+
+### Changed
+
+- `ui/ViewManager.TransitionGroup` to suppress `onTransition` events when a view appears or stays
+
+## [3.3.0-alpha.15] - 2020-07-07
+
+No significant changes.
+
+## [3.3.0-alpha.14] - 2020-06-29
+
+### Added
+
+- `core/util` function `mapAndFilterChildren` to safely iterate over React `children`
+
+### Fixed
+
+- `ui/Scroller` to update when `clientSize` is changed
+- `ui/VirtualList` to reset scroll position when `clientSize` is changed
+
+## [3.3.0-alpha.13] - 2020-06-22
+
+### Fixed
+
+- `spotlight` to trigger `onLeaveContainerFail` when `leaveFor` prevents navigation
+- `spotlight` to correctly maintain pointer mode on webOS
+
+## [3.3.0-alpha.12] - 2020-06-15
+
+### Added
+
+- `ui/Button` prop `iconFlip` to set the `flip` prop of `iconComponent`
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to not cause unnecessary rerenders
+- `ui/Scroller` and `ui/VirtualList` to not inadvertently scroll due to click events when in RTL locales
+- `ui/Skinnable` to not force all `Skinnable` children to update if a parent updates
+
+## [3.3.0-alpha.11] - 2020-06-08
+
+### Added
+
+- `core/handle.forwardCustom` handler to simplify forwarding custom events from components
+
+### Fixed
+
+- `i18n/I18nDecorator` locale selection during prerendering
+
+## [3.3.0-alpha.10] - 2020-05-26
+
+### Added
+
+- `ui/Group` prop `selectedEventProp` to configure the key used to hold the value in the `onSelect` event
+
+### Fixed
+
+- `Toggleable` to recognize changes in `disabled` and `onToggle`
+
+## [3.3.0-alpha.9] - 2020-05-11
+
+No significant changes.
+
+## [3.3.0-alpha.8] - 2020-05-04
+
+### Added
+
+- `core/kind` option `functional` to return a functional component, suitable for use with React hooks, instead of a class component
+
+### Fixed
+
+- `ui/Layout` to export `Layout` by default instead of `LayoutBase`
+
+## [3.3.0-alpha.7] - 2020-04-27
+
+### Added
+
+- `ui/ProgressBar` support for `orientation` type of `'radial'`
+- `ui/ProgressBar` public class name `radial`
+- `ui/ViewManager` events `onTransition` and `onWillTransition` payload members `index` and `previousIndex`
+
+### Fixed
+
+- `ui/ViewManager` to only fire `onTransition` once per transition
+- `ui/Spinner` center alignment
+
+## [3.3.0-alpha.6] - 2020-04-14
+
+### Fixed
+
+- `ui/Scroller` to prevent interaction with scrollbars when muted
+
+## [3.3.0-alpha.5] - 2020-04-06
+
+### Added
+
+- `core/handle.not` to return the logical complement of the value returned from the handler
+
+## [3.3.0-alpha.4] - 2020-03-30
+
+### Deprecated
+
+- `ui/GridListImageItem`, use `ui/ImageItem` instead
+
+### Added
+
+- `ui/ImageItem` component
+
+### Fixed
+
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` to update scroll thumb position properly in nested cases
+
+## [3.3.0-alpha.3] - 2020-03-09
+
+### Added
+
+- `ui/styles/mixins.less` `.position()` support for list-style arguments, in addition to the existing separated arguments
+- `ui/GridListItemItem` prop `subComponents`
+
+### Fixed
+
+- `core/util.mergeClassNames` to mirror class names when used in unit tests
+
+## [3.3.0-alpha.2] - 2020-03-09
+
+### Changed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `itemProps` to `childProps` for backwards compatibility
+
+### Fixed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to not suddenly jump when pressing directional keys after wheeling
+
+## [3.3.0-alpha.1] - 2020-02-26
+
+> Note: Moonstone was removed from the core Enact repository. It is now in its own repository at https://github.com/enactjs/moonstone/. Using Moonstone through npm has not changed.
+
+### Added
+
+- `ui/Scroller`, `ui/VirtualList.VirtualGridList`, and `ui/VirtualList.VirtualList` prop `scrollMode` is added
+
+### Changed
+
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` prop `childProps` to `itemProps` for clarity
+- `enact-sampler` to use common Enact Storybook configurations, addons, and utilities from `@enact/storybook-utils` helper package.
+
+### Fixed
+
+- `ui/Marquee` to not error when passed `null` `children` during an animation
+- `ui/Button` to have more robust support for a customized `iconComponent` prop
+
 ## [3.2.6] - 2020-03-26
 
 ### Fixed
 
-- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to show items properly when reducing data size by updating `firstIndex` correctly
-- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` not to suddenly jump when pressing directional keys after wheeling
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to show items properly when reducing data size
 
 ## [3.2.5] - 2019-11-14

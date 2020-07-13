@@ -39,6 +39,23 @@ describe('Group', () => {
 		expect(actual).toBe(expected);
 	});
 
+	test('should call handler with data on select stored in the key specified by `selectedEventProp`', () => {
+		const handleClick = jest.fn();
+		const subject = mount(
+			<GroupBase childComponent="div" onSelect={handleClick} selectedEventProp="value">
+				{stringItems}
+			</GroupBase>
+		);
+
+		const selected = 1;
+		subject.find('div').at(selected).simulate('click', {});
+
+		const expected = stringItems[selected];
+		const actual = handleClick.mock.calls[0][0].value;
+
+		expect(actual).toBe(expected);
+	});
+
 	test(
 		'should call handler on move when childSelect="onMouseMove"',
 		() => {

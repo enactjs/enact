@@ -47,9 +47,10 @@ const RouterBase = class extends React.Component {
 		/**
 		 * Called with a reference to [component]{@link ui/Routable.Router#component}.
 		 *
+		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.func,
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Routes defined as an object rather than via JSX.

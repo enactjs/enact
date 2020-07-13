@@ -1,33 +1,18 @@
 import {configure, addDecorator} from '@storybook/react';
-import {configureActions} from '@storybook/addon-actions';
-import {withKnobs} from '@storybook/addon-knobs';
-import {Component} from 'react';
+import {loadStories} from '@enact/storybook-utils';
+import {configureActions} from '@enact/storybook-utils/addons/actions';
+import {withKnobs} from '@enact/storybook-utils/addons/knobs';
 
-// Fix for @storybook/addon-info which always needs at least an empty object for defaultProps.
-Component.defaultProps = {};
-
-import Moonstone from '../src/MoonstoneEnvironment';
+import Environment from '../src/Environment';
 
 function config (stories, mod) {
-	configureActions({
-		// Limit the number of items logged into the actions panel
-		limit: 10
-	});
+	configureActions();
+	addDecorator(withKnobs());
 
-	// Set addon-knobs defaults
-	addDecorator(withKnobs({
-		// debounce: {wait: 500}, // Same as lodash debounce.
-		timestamps: true // Doesn't emit events while user is typing.
-	}));
+	// Set environment defaults
+	addDecorator(Environment);
 
-	// Set moonstone environment defaults
-	addDecorator(Moonstone);
-
-	function loadStories () {
-		stories.keys().forEach((filename) => stories(filename));
-	}
-
-	configure(loadStories, mod);
+	configure(loadStories(stories), mod);
 }
 
 export default config;

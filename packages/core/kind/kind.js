@@ -7,8 +7,16 @@
 
 import React from 'react';
 
+import useHandlers from '../useHandlers';
+import Handlers from '../useHandlers/Handlers';
+
 import computed from './computed';
 import styles from './styles';
+
+// Because contextType is optional and hooks must be called in the same order, we need a fallback
+// context when none is specified. This likely has some overhead so we may want to deprecate and
+// remove contextType support for 4.0 since the context APIs have improved since this was added.
+const NoContext = React.createContext(null);
 
 /**
  * @callback RenderFunction
@@ -48,6 +56,7 @@ import styles from './styles';
  * @typedef {Object} KindConfig
  * @memberof core/kind
  * @property {String} [name]
+ * @property {Boolean} [functional]
  * @property {Object.<string, Function>} [propTypes]
  * @property {Object.<string, any>} [defaultProps]
  * @property {Object} [contextType]
@@ -64,6 +73,9 @@ import styles from './styles';
  * ```
  *	import css from './Button.module.less';
  *	const Button = kind({
+ *		name: 'Button',
+ *		// Return a functional component suitable for use with React hooks
+ *		functional: true,
  *		// expect color and onClick properties but neither required
  *		propTypes: {
  *			color: PropTypes.string
@@ -116,8 +128,9 @@ import styles from './styles';
 const kind = (config) => {
 	const {
 		computed: cfgComputed,
-		contextType,
+		contextType = NoContext,
 		defaultProps,
+		functional,
 		handlers,
 		name,
 		propTypes,	// eslint-disable-line react/forbid-foreign-prop-types
@@ -134,46 +147,48 @@ const kind = (config) => {
 		return render(props, context);
 	};
 
-	// addition prop decorations would be chained here (after config.render)
-	const Component = class extends React.Component {
-		static displayName = name || 'Component'
+	let Component;
 
-		constructor () {
-			super();
-			this.handlers = {};
+	// In 4.x, this branch will become the only supported version and the class branch will be
+	// removed.
+	if (functional) {
+		Component = function (props) {
+			const ctx = React.useContext(contextType);
+			const boundHandlers = useHandlers(handlers, props, ctx);
 
-			// cache bound function for each handler
-			if (handlers) {
-				Object.keys(handlers).forEach(handler => {
-					return this.prepareHandler(handler, handlers[handler]);
-				});
-			}
-		}
-
-		/*
-		 * Caches an event handler on the local `handlers` member
-		 *
-		 * @param   {String}    name     Event name
-		 * @param   {Function}  handler  Event handler
-		 *
-		 * @returns {undefined}
-		 */
-		prepareHandler (prop, handler) {
-			this.handlers[prop] = (ev) => {
-				return handler(ev, this.props, this.context);
+			const merged = {
+				...props,
+				...boundHandlers
 			};
-		}
 
-		render () {
-			return renderKind({
-				...this.props,
-				...this.handlers
-			}, this.context);
-		}
-	};
+			return renderKind(merged, ctx);
+		};
+	} else {
+		// eslint-disable-next-line enact/display-name
+		Component = class extends React.Component {
+			static contextType = contextType
 
+			constructor () {
+				super();
+
+				this.handlers = new Handlers(handlers);
+			}
+
+			render () {
+				this.handlers.setContext(this.props, this.context);
+
+				const merged = {
+					...this.props,
+					...this.handlers.handlers
+				};
+
+				return renderKind(merged, this.context);
+			}
+		};
+	}
+
+	if (name) Component.displayName = name;
 	if (propTypes) Component.propTypes = propTypes;
-	if (contextType) Component.contextType = contextType;
 	if (defaultProps) Component.defaultProps = defaultProps;
 
 	// Decorate the Component with the computed property object in DEV for easier testability

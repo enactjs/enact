@@ -268,22 +268,22 @@ describe('MarqueeBase', () => {
 		}
 	);
 
-	test('should transition from the right with LTR text', () => {
+	test('should transition from the right with LTR text (a negative translate value)', () => {
 		const subject = shallow(
 			<MarqueeBase animating distance={100} />
 		);
 
-		const actual = subject.childAt(0).prop('style');
-		expect(actual).toHaveProperty('right');
+		const actual = subject.childAt(0).prop('style').transform;
+		expect(actual).toContain('-');
 	});
 
-	test('should transition from the left with RTL text', () => {
+	test('should transition from the left with RTL text (a positive translate value)', () => {
 		const subject = shallow(
 			<MarqueeBase animating distance={100} rtl />
 		);
 
-		const actual = subject.childAt(0).prop('style');
-		expect(actual).toHaveProperty('left');
+		const actual = subject.childAt(0).prop('style').transform;
+		expect(actual).not.toContain('-');
 	});
 
 	test('should duplicate from content when promoted and a non-zero distance', () => {
@@ -369,5 +369,15 @@ describe('MarqueeBase', () => {
 		const expected = 'Test World';
 		const actual = subject.childAt(0).prop('aria-label');
 		expect(actual).toBe(expected);
+	});
+
+	test('should not throw exception for null children when promoted and a non-zero distance - ENYO-6362', () => {
+		const mountSubject = () => mount(
+			<MarqueeBase willAnimate distance={100}>
+				{null}
+			</MarqueeBase>
+		);
+
+		expect(mountSubject).not.toThrow();
 	});
 });

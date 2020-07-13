@@ -2,6 +2,80 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [3.3.0] - 2020-07-13
+
+No significant changes.
+
+## [3.3.0-alpha.15] - 2020-07-07
+
+No significant changes.
+
+## [3.3.0-alpha.14] - 2020-06-29
+
+### Added
+
+- `core/util` function `mapAndFilterChildren` to safely iterate over React `children`
+
+## [3.3.0-alpha.13] - 2020-06-22
+
+No significant changes.
+
+## [3.3.0-alpha.12] - 2020-06-15
+
+No significant changes.
+
+## [3.3.0-alpha.11] - 2020-06-08
+
+### Added
+
+- `core/handle.forwardCustom` handler to simplify forwarding custom events from components
+
+## [3.3.0-alpha.10] - 2020-05-26
+
+No significant changes.
+
+## [3.3.0-alpha.9] - 2020-05-11
+
+No significant changes.
+
+## [3.3.0-alpha.8] - 2020-05-04
+
+### Added
+
+- `core/kind` option `functional` to return a functional component, suitable for use with React hooks, instead of a class component
+
+## [3.3.0-alpha.7] - 2020-04-27
+
+No significant changes.
+
+## [3.3.0-alpha.6] - 2020-04-14
+
+No significant changes.
+
+## [3.3.0-alpha.5] - 2020-04-06
+
+### Added
+
+- `core/handle.not` to return the logical complement of the value returned from the handler
+
+## [3.3.0-alpha.4] - 2020-03-30
+
+No significant changes.
+
+## [3.3.0-alpha.3] - 2020-03-17
+
+### Fixed
+
+- `core/util.mergeClassNames` to mirror class names when used in unit tests
+
+## [3.3.0-alpha.2] - 2020-03-09
+
+No significant changes.
+
+## [3.3.0-alpha.1] - 2020-02-26
+
+No significant changes.
+
 ## [3.2.6] - 2020-03-26
 
 No significant changes.

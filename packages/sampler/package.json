@@ -1,6 +1,6 @@
 {
   "name": "enact-sampler",
-  "version": "3.2.6",
+  "version": "3.3.0",
   "description": "Component and QA samples for Enact",
   "private": true,
   "main": "index.js",
@@ -8,21 +8,18 @@
     "lint": "enact lint --strict",
     "test": "echo \"No test suite\" && exit 0",
     "pack": "build-storybook -c .storybook -o dist",
-    "pack-qa": "build-storybook -c .qa-storybook -o dist",
-    "serve": "start-storybook -p 8080 -c .storybook --ci",
-    "serve-qa": "start-storybook -p 8080 -c .qa-storybook --ci"
+    "serve": "start-storybook -p 8080 -c .storybook --ci"
   },
   "license": "Apache-2.0",
   "eslintConfig": {
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^3.2.6",
-    "@enact/i18n": "^3.2.6",
-    "@enact/moonstone": "^3.2.6",
-    "@enact/spotlight": "^3.2.6",
-    "@enact/ui": "^3.2.6",
-    "@enact/webos": "^3.2.6",
+    "@enact/core": "^3.3.0",
+    "@enact/i18n": "^3.3.0",
+    "@enact/spotlight": "^3.3.0",
+    "@enact/ui": "^3.3.0",
+    "@enact/webos": "^3.3.0",
     "classnames": "^2.2.6",
     "ilib": "^14.4.0",
     "query-string": "^6.7.0",
@@ -30,31 +27,11 @@
     "react-dom": "^16.8.6"
   },
   "devDependencies": {
-    "@babel/core": "^7",
-    "@babel/plugin-proposal-class-properties": "^7",
-    "@babel/plugin-proposal-export-default-from": "^7",
-    "@babel/plugin-proposal-export-namespace-from": "^7",
-    "@babel/plugin-syntax-dynamic-import": "^7",
-    "@babel/plugin-transform-react-inline-elements": "^7",
-    "@enact/dev-utils": "^2.3.0",
-    "@storybook/addon-actions": "5.1.9",
-    "@storybook/addon-info": "5.1.9",
-    "@storybook/addon-knobs": "5.1.9",
-    "@storybook/addons": "5.1.9",
-    "@storybook/react": "5.1.9",
-    "@storybook/theming": "5.1.9",
+    "@enact/storybook-utils": "^1.0.0",
+    "@storybook/addons": "5.3.5",
+    "@storybook/react": "5.3.5",
+    "@storybook/theming": "5.3.5",
     "babel-loader": "^8.0.6",
-    "babel-plugin-dev-expression": "^0.2.1",
-    "caniuse-lite": "1.0.30000974",
-    "core-js": "^3.1.4",
-    "less": "^3.9.0",
-    "less-loader": "^5.0.0",
-    "mini-css-extract-plugin": "^0.7.0",
-    "postcss-flexbugs-fixes": "^4.1.0",
-    "postcss-global-import": "^1.0.6",
-    "postcss-loader": "^3.0.0",
-    "postcss-preset-env": "^6.6.0",
-    "postcss-resolution-independence": "^1.0.0",
-    "react-dev-utils": "^9.0.1"
+    "core-js": "^3.6.4"
   }
 }

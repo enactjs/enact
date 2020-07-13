@@ -6,7 +6,7 @@
  * @exports spottableClass
  */
 
-import {forward, forwardWithPrevent, handle, preventDefault, stop} from '@enact/core/handle';
+import {forward, handle, preventDefault, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
@@ -311,7 +311,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			const {keyCode} = ev;
 			const {selectionKeys} = props;
 			const key = selectionKeys.find((value) => keyCode === value);
-			const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
+
+			// FIXME: temporary patch to maintain compatibility with moonstone 3.2.5 which
+			// deconstructs `preventDefault` from the event which is incompatible with React's
+			// synthetic event.
+			ev.preventDefault = ev.preventDefault.bind(ev);
+
+			forward('onKeyUp', ev, props);
+			const notPrevented = !ev.defaultPrevented;
 
 			// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
 			if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {
@@ -329,7 +336,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		handle = handle.bind(this)
 
 		handleKeyDown = this.handle(
-			forwardWithPrevent('onKeyDown'),
+			forward('onKeyDown'),
+			(ev) => !ev.defaultPrevented,
 			this.forwardSpotlightEvents,
 			this.isActionable,
 			this.handleSelect,

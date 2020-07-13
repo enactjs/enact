@@ -8,8 +8,8 @@
  * @exports SliderDecorator
  */
 
-import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
@@ -68,7 +68,7 @@ const SliderBase = kind({
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
-		 * corresponding internal Elements and states of this component.
+		 * corresponding internal elements and states of this component.
 		 *
 		 * The following classes are supported:
 		 *
@@ -153,13 +153,17 @@ const SliderBase = kind({
 		noFill: PropTypes.bool,
 
 		/**
-		 * The orientation of the slider, either `"horizontal"` or `"vertical"`.
+		 * The orientation of the slider.
+		 *
+		 * Allowed values include:
+		 * * `'horizontal'` - A left and right orientation
+		 * * `'vertical'` - An up and down orientation
 		 *
 		 * @type {String}
 		 * @default "horizontal"
 		 * @public
 		 */
-		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+		orientation: PropTypes.string,
 
 		/**
 		 * Applies a pressed visual effect.
