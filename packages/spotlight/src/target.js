@@ -311,7 +311,7 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 		const straighOnlyLeaveContainer = elementContainerIds
 			.slice(elementContainerIds.indexOf(containerId) + 1)
 			.find(id => {
-				const cfg = getContainerConfig(id)
+				const cfg = getContainerConfig(id);
 				return cfg && cfg.straightOnlyLeave;
 			});
 
