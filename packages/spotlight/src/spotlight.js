@@ -327,13 +327,10 @@ const Spotlight = (function () {
 			const currentContainerId = last(currentContainerIds);
 			const nextContainerIds = getContainersForNode(next);
 
-			if (nextContainerIds.indexOf(currentContainerId) < 0) {
-
-				// prevent focus if 5-way is being held and the next element isn't wrapped by
-				// the current element's immediate container
-				if (_5WayKeyHold && !isContainer5WayHoldable(currentContainerId)) {
-					return false;
-				}
+			// prevent focus if 5-way is being held and the next element isn't wrapped by
+			// the current element's immediate container
+			if (_5WayKeyHold && nextContainerIds.indexOf(currentContainerId) < 0 && !isContainer5WayHoldable(currentContainerId)) {
+				return false;
 			}
 
 			notifyLeaveContainer(
