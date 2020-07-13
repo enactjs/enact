@@ -78,8 +78,6 @@ import {
 } from './target';
 
 import {
-	getContainerRect,
-	getRect,
 	matchSelector,
 	parseSelector
 } from './utils';
