@@ -311,7 +311,21 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			const {keyCode} = ev;
 			const {selectionKeys} = props;
 			const key = selectionKeys.find((value) => keyCode === value);
-			forward('onKeyUp', ev, props);
+
+			// FIXME: temporary patch to maintain compatibility with moonstone 3.2.5 which
+			// deconstructs `preventDefault` from the event which is incompatible with React's
+			// synthetic event.
+			const proxy = new Proxy(ev, {
+				get (target, name) {
+					if (name === 'preventDefault') {
+						return () => ev.preventDefault();
+					}
+
+					return ev[name];
+				}
+			});
+
+			forward('onKeyUp', proxy, props);
 			const notPrevented = !ev.defaultPrevented;
 
 			// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
