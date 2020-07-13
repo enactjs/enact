@@ -11,7 +11,6 @@ No significant changes.
 ### Added
 
 - `core/util` function `mapAndFilterChildren` to safely iterate over React `children`
-- `spotlight` container config prop `straightOnlyLeave` to prevent navigation to oblique containers when leaving the current container
 
 ### Fixed
 

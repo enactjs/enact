@@ -305,18 +305,18 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 			break;
 		}
 
-		// If one of the downstream containers is configured for straightOnlyLeave, we use that
+		// If one of the downstream containers is configured for partition, we use that
 		// container's bounds as the partition rect for navigation.
-		const straightOnlyLeaveContainer = elementContainerIds
+		const partitionContainer = elementContainerIds
 			.slice(elementContainerIds.indexOf(containerId) + 1)
 			.find(id => {
 				const cfg = getContainerConfig(id);
-				return cfg && cfg.straightOnlyLeave;
+				return cfg && cfg.partition;
 			});
 
 		let partitionRect = elementRect;
-		if (straightOnlyLeaveContainer) {
-			partitionRect = getContainerRect(straightOnlyLeaveContainer);
+		if (partitionContainer) {
+			partitionRect = getContainerRect(partitionContainer);
 		}
 
 		// try to navigate from element to one of the candidates in containerId
