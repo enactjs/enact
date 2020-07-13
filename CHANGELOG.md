@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.3.0] - 2020-07-13
+
+### Changed
+
+- `ui/ViewManager.TransitionGroup` to suppress `onTransition` events when a view appears or stays
+
 ## [3.3.0-alpha.15] - 2020-07-07
 
 No significant changes.
