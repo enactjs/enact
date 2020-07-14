@@ -10,7 +10,7 @@ import ScrollbarTrack from './ScrollbarTrack';
 
 import componentCss from './Scrollbar.module.less';
 
-const scrollbarTrackHidingDelay = 400; // in milliseconds
+const scrollbarTrackHidingDelay = 1000; // in milliseconds
 
 const addClass = (element, className) => {
 	ReactDOM.findDOMNode(element).classList.add(className); // eslint-disable-line react/no-find-dom-node
