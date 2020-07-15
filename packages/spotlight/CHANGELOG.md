@@ -2,15 +2,17 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [3.3.0] - 2020-07-13
+
+No significant changes.
+
 ## [3.3.0-alpha.15] - 2020-07-07
 
 No significant changes.
 
 ## [3.3.0-alpha.14] - 2020-06-29
 
-### Added
-
-- `spotlight` container config prop `straightOnlyLeave` to prevent navigation to oblique containers when leaving the current container
+No significant changes.
 
 ## [3.3.0-alpha.13] - 2020-06-22
 
