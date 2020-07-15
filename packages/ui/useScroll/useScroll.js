@@ -32,7 +32,7 @@ import css from './useScroll.module.less';
 
 const
 	constants = {
-		animationDuration: 1000,
+		animationDuration: 900,
 		epsilon: 1,
 		flickConfig: {maxDuration: null},
 		isPageDown: is('pageDown'),
