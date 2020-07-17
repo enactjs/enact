@@ -1,5 +1,6 @@
-import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forProp, forward, handle, stop} from '@enact/core/handle';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -66,10 +67,10 @@ const MarqueeBase = kind({
 		/**
 		 * Called when mounting or unmounting with a reference to the client node
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @public
 		 */
-		clientRef: PropTypes.func,
+		clientRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -209,7 +210,7 @@ const MarqueeBase = kind({
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
 			const direction = rtl ? 'rtl' : 'ltr';
-			const sideProperty = rtl ? 'left' : 'right';
+			const rtlDirectionMultiplier = rtl ? 1 : -1;
 			const style = {
 				'--ui-marquee-spacing': spacing,
 				direction,
@@ -220,10 +221,10 @@ const MarqueeBase = kind({
 			if (animating) {
 				const duration = distance / speed;
 
-				style[sideProperty] = `${distance}px`;
+				style.transform = `translateX(${distance * rtlDirectionMultiplier}px)`;
 				style.transitionDuration = `${duration}s`;
 			} else {
-				style[sideProperty] = 0;
+				style.transform = 'translateX(0)';
 			}
 
 			return style;

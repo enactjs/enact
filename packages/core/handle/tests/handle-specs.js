@@ -7,6 +7,7 @@ import {
 	forKeyCode,
 	forProp,
 	forward,
+	forwardCustom,
 	forwardWithPrevent,
 	oneOf,
 	preventDefault,
@@ -536,6 +537,63 @@ describe('handle', () => {
 
 			const expected = [1, 2, 3];
 			const actual = obj.handler.mock.calls[0];
+
+			expect(actual).toEqual(expected);
+		});
+	});
+
+	describe('#forwardCustom', () => {
+		test('should pass an object with `type` when no adapter is provided', () => {
+			const handler = jest.fn();
+
+			forwardCustom('onCustomEvent')(null, {onCustomEvent: handler});
+
+			const expected = {
+				type: 'onCustomEvent'
+			};
+			const actual = handler.mock.calls[0][0];
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('should add `type` to object returned by adapter', () => {
+			const handler = jest.fn();
+			const adapter = () => ({index: 0});
+			forwardCustom('onCustomEvent', adapter)(null, {onCustomEvent: handler});
+
+			const expected = {
+				type: 'onCustomEvent',
+				index: 0
+			};
+			const actual = handler.mock.calls[0][0];
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('should create an event payload if the adapter returns nothing', () => {
+			const handler = jest.fn();
+			const adapter = () => null;
+			forwardCustom('onCustomEvent', adapter)(null, {onCustomEvent: handler});
+
+			const expected = {
+				type: 'onCustomEvent'
+			};
+			const actual = handler.mock.calls[0][0];
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('should pass event, props, and context args to adapter', () => {
+			const adapter = jest.fn();
+			const args = [
+				1, // ev,
+				2, // props,
+				3  // context
+			];
+			forwardCustom('onCustomEvent', adapter)(...args);
+
+			const expected = args;
+			const actual = adapter.mock.calls[0];
 
 			expect(actual).toEqual(expected);
 		});

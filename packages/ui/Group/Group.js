@@ -6,8 +6,8 @@
  * @exports GroupBase
  */
 
-import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -130,6 +130,15 @@ const GroupBase = kind({
 		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.array]),
 
 		/**
+		 * The key that will hold the value in the event passed to `onSelect`.
+		 *
+		 * @type {String}
+		 * @default 'data'
+		 * @public
+		 */
+		selectedEventProp: PropTypes.string,
+
+		/**
 		 * The name of the DOM property that represents the selected state.
 		 *
 		 * @type {String}
@@ -144,6 +153,7 @@ const GroupBase = kind({
 		childSelect: 'onClick',
 		indexProp: 'data-index',
 		select: 'single',
+		selectedEventProp: 'data',
 		selectedProp: 'data-selected'
 	},
 
@@ -161,6 +171,7 @@ const GroupBase = kind({
 		delete props.childSelect;
 		delete props.select;
 		delete props.selected;
+		delete props.selectedEventProp;
 		delete props.selectedProp;
 
 		return <Repeater role="group" {...props} childComponent={GroupItem} />;

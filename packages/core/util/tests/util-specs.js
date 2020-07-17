@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {memoize, isRenderable} from '../util';
+import {mapAndFilterChildren, memoize, isRenderable} from '../util';
 
 describe('util', () => {
 	describe('isRenderable', () => {
@@ -62,6 +62,82 @@ describe('util', () => {
 			memoized(1, 2);
 
 			const expected = [1, 2];
+			const actual = spy.mock.calls[0];
+
+			expect(expected).toEqual(actual);
+		});
+	});
+
+	describe('mapAndFilterChildren', () => {
+		test('Returns null if null passed', () => {
+			const expected = null;
+			const actual = mapAndFilterChildren(null, val => val);
+
+			expect(actual).toBe(expected);
+		});
+
+		test('Returns passed array if identity filter', () => {
+			const children = [1, 2, 3];
+
+			const expected = children;
+			const actual = mapAndFilterChildren(children, val => val);
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('Returns passed array without nullish or false entries with identity filter', () => {
+			// eslint-disable-next-line no-undefined
+			const children = [1, 2, null, 3, undefined, false];
+
+			const expected = [1, 2, 3];
+			const actual = mapAndFilterChildren(children, val => val);
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('Does not call filter with nullish or false entries', () => {
+			const spy = jest.fn();
+			// eslint-disable-next-line no-undefined
+			const children = [1, 2, null, 3, undefined, false];
+
+			mapAndFilterChildren(children, spy);
+
+			const expected = 3;
+			const actual = spy.mock.calls.length;
+
+			expect(actual).toBe(expected);
+		});
+
+		test('Returns without null entries from filter', () => {
+			const children = [1, 2, 3];
+
+			const expected = [1, 3];
+			const actual = mapAndFilterChildren(children, val => val === 2 ? null : val);
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('Runs custom filter', () => {
+			const children = [1, 2, 3];
+
+			const expected = [1];
+			const actual = mapAndFilterChildren(
+				children,
+				val => val === 2 ? null : val,
+				(val) => val === 1
+			);
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('should forward value and index to callback', () => {
+			const spy = jest.fn();
+			mapAndFilterChildren([1], spy);
+
+			const expected = [
+				1, // value
+				0 // index
+			];
 			const actual = spy.mock.calls[0];
 
 			expect(expected).toEqual(actual);

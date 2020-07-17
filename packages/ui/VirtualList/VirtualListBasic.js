@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
@@ -92,15 +93,6 @@ class VirtualListBasic extends Component {
 		]).isRequired,
 
 		/**
-		 * The render function for the items.
-		 *
-		 * @type {Function}
-		 * @required
-		 * @private
-		 */
-		itemsRenderer: PropTypes.func.isRequired,
-
-		/**
 		 * Callback method of scrollTo.
 		 * Normally, useScroll should set this value.
 		 *
@@ -177,6 +169,14 @@ class VirtualListBasic extends Component {
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
+		 * Called to get the scroll affordance from themed component.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		getAffordance: PropTypes.func,
+
+		/**
 		 * Called to get the props for list items.
 		 *
 		 * @type {Function}
@@ -231,6 +231,24 @@ class VirtualListBasic extends Component {
 		pageScroll: PropTypes.bool,
 
 		/**
+		 * The render function for the placeholder elements.
+		 *
+		 * @type {Function}
+		 * @required
+		 * @private
+		 */
+		placeholderRenderer: PropTypes.func,
+
+		/**
+		 * The ARIA role for the list.
+		 *
+		 * @type {String}
+		 * @default 'list'
+		 * @public
+		 */
+		role: PropTypes.string,
+
+		/**
 		 * `true` if RTL, `false` if LTR.
 		 *
 		 * @type {Boolean}
@@ -241,10 +259,10 @@ class VirtualListBasic extends Component {
 		/**
 		 * Ref for scroll content
 		 *
-		 * @type {Object}
+		 * @type {Object|Function}}
 		 * @private
 		 */
-		scrollContentRef: PropTypes.object,
+		scrollContentRef: EnactPropTypes.ref,
 
 		/**
 		 * Specifies how to scroll.
@@ -281,6 +299,7 @@ class VirtualListBasic extends Component {
 		cbScrollTo: nop,
 		dataSize: 0,
 		direction: 'vertical',
+		getAffordance: () => (0),
 		overhang: 3,
 		pageScroll: false,
 		scrollMode: 'translate',
@@ -293,6 +312,7 @@ class VirtualListBasic extends Component {
 		super(props);
 
 		this.contentRef = React.createRef();
+		this.itemContainerRefs = [];
 
 		if (props.clientSize) {
 			this.calculateMetrics(props);
@@ -583,7 +603,7 @@ class VirtualListBasic extends Component {
 
 	calculateMetrics (props) {
 		const
-			{clientSize, direction, itemSize, overhang, spacing} = props,
+			{clientSize, direction, itemSize, overhang, scrollMode, spacing} = props,
 			node = this.props.scrollContentRef.current;
 
 		if (!clientSize && !node) {
@@ -640,8 +660,12 @@ class VirtualListBasic extends Component {
 
 		// reset
 		this.scrollPosition = 0;
-		if (this.props.scrollMode === 'translate' && this.contentRef.current) {
+		if (scrollMode === 'translate' && this.contentRef.current) {
 			this.contentRef.current.style.transform = null;
+		} else if (scrollMode === 'native' && node) {
+			node.style.scrollBehavior = null;
+			this.updateScrollPosition(this.getXY(this.scrollPosition, 0));
+			node.style.scrollBehavior = 'smooth';
 		}
 	}
 
@@ -811,7 +835,7 @@ class VirtualListBasic extends Component {
 
 	// scrollMode 'native' only
 	scrollToPosition (x, y, rtl = this.props.rtl) {
-		if (this.props.scrollContentRef.current) {
+		if (this.props.scrollContentRef.current && this.props.scrollContentRef.current.scrollTo) {
 			if (rtl) {
 				x = (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
 			}
@@ -944,10 +968,10 @@ class VirtualListBasic extends Component {
 	// For individually sized item
 	applyItemPositionToDOMElement (index) {
 		const
-			{direction, itemRefs, rtl} = this.props,
+			{direction, rtl} = this.props,
 			{numOfItems} = this.state,
 			{itemPositions} = this,
-			childNode = itemRefs.current[index % numOfItems];
+			childNode = this.itemContainerRefs[index % numOfItems];
 
 		if (childNode && itemPositions[index]) {
 			const position = itemPositions[index].position;
@@ -1058,6 +1082,8 @@ class VirtualListBasic extends Component {
 					itemRefs.current[key] = (parseInt(itemNode.dataset.index) === index) ?
 						itemNode :
 						ref.querySelector(`[data-index="${index}"]`);
+
+					this.itemContainerRefs[key] = ref;
 				}
 			};
 
@@ -1131,7 +1157,7 @@ class VirtualListBasic extends Component {
 		}
 	}
 
-	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
+	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() + this.props.getAffordance() : this.scrollBounds.clientHeight)
 
 	getScrollWidth = () => (this.isPrimaryDirectionVertical ? this.scrollBounds.clientWidth : this.getVirtualScrollDimension())
 
@@ -1174,7 +1200,7 @@ class VirtualListBasic extends Component {
 
 	render () {
 		const
-			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, itemsRenderer, style, scrollMode, ...rest} = this.props,
+			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, placeholderRenderer, role, style, scrollMode, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, primary} = this,
 			scrollModeNative = scrollMode === 'native',
 			containerClasses = classNames(
@@ -1190,6 +1216,7 @@ class VirtualListBasic extends Component {
 		delete rest.clientSize;
 		delete rest.dataSize;
 		delete rest.direction;
+		delete rest.getAffordance;
 		delete rest.getComponentProps;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
@@ -1215,8 +1242,8 @@ class VirtualListBasic extends Component {
 
 		return (
 			<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.props.scrollContentRef} style={style}>
-				<div {...rest} className={contentClasses} ref={this.contentRef}>
-					{itemsRenderer({cc, primary})}
+				<div {...rest} className={contentClasses} ref={this.contentRef} role={role}>
+					{[...cc, placeholderRenderer && placeholderRenderer(primary)]}
 				</div>
 			</div>
 		);

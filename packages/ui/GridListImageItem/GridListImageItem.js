@@ -7,8 +7,8 @@
  */
 
 import deprecate from '@enact/core/internal/deprecate';
-import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 

@@ -2,6 +2,63 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `ui/Scroller` and `ui/VirtualList` scrollbar to be shown for 1000 ms
+
+## [3.3.0] - 2020-07-13
+
+### Changed
+
+- `ui/ViewManager.TransitionGroup` to suppress `onTransition` events when a view appears or stays
+
+## [3.3.0-alpha.15] - 2020-07-07
+
+No significant changes.
+
+## [3.3.0-alpha.14] - 2020-06-29
+
+### Fixed
+
+- `ui/Scroller` to update when `clientSize` is changed
+- `ui/VirtualList` to reset scroll position when `clientSize` is changed
+
+## [3.3.0-alpha.13] - 2020-06-22
+
+No significant changes.
+
+## [3.3.0-alpha.12] - 2020-06-15
+
+### Added
+
+- `ui/Button` prop `iconFlip` to set the `flip` prop of `iconComponent`
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to not cause unnecessary rerenders
+- `ui/Scroller` and `ui/VirtualList` to not inadvertently scroll due to click events when in RTL locales
+- `ui/Skinnable` to not force all `Skinnable` children to update if a parent updates
+
+## [3.3.0-alpha.11] - 2020-06-08
+
+No significant changes.
+
+## [3.3.0-alpha.10] - 2020-05-26
+
+### Added
+
+- `ui/Group` prop `selectedEventProp` to configure the key used to hold the value in the `onSelect` event
+
+### Fixed
+
+- `Toggleable` to recognize changes in `disabled` and `onToggle`
+
+## [3.3.0-alpha.9] - 2020-05-11
+
+No significant changes.
+
 ## [3.3.0-alpha.8] - 2020-05-04
 
 ### Fixed

@@ -203,7 +203,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * elements within the container will have a higher likelihood to be chosen as the next
 		 * navigable element. Specifying 'self-only' indicates that elements in other containers
 		 * cannot be navigated to by using 5-way navigation - however, elements in other containers
-		 * can still receive focus by calling `Spotlight.focus(elem)` explicitly. Specying 'none'
+		 * can still receive focus by calling `Spotlight.focus(elem)` explicitly. Specifying 'none'
 		 * indicates there should be no restrictions when 5-way navigating the container.
 		 *
 		 * @type {String}
