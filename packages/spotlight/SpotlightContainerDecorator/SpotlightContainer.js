@@ -95,7 +95,7 @@ class SpotlightContainer {
 
 	onPointerEnter = handle(
 		isNewPointerPosition,
-		() => Spotlight.setActiveContainer(this.context.state.current.id)
+		() => Spotlight.setActiveContainer(this.id)
 	).bindAs(this, 'onPointerEnter');
 
 	onPointerLeave = handle(
@@ -107,7 +107,7 @@ class SpotlightContainer {
 
 			// if this container is wrapped by another and this is the currently active
 			// container, move the active container to the parent
-			if (parentContainer && activeContainer === this.context.state.current.id) {
+			if (parentContainer && activeContainer === this.id) {
 				activeContainer = parentContainer.dataset.spotlightId;
 				Spotlight.setActiveContainer(activeContainer);
 			}
