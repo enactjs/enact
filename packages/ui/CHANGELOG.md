@@ -2,11 +2,11 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [3.3.1] - 2020-07-20
 
 ### Changed
 
-- `ui/Scroller` and `ui/VirtualList` scrollbar to be shown for 1000 ms
+- `ui/Scroller` by increasing the scrollbar's inactivity timeout to 1000 ms
 
 ## [3.3.0] - 2020-07-13
 

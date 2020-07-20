@@ -2,11 +2,11 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
+## [3.3.1] - 2020-07-20
 
 ### Fixed
 
-- `spotlight/Spottable` to correctly manage focus after updating
+- `spotlight/Spottable` to correctly control focus when elements move under a stationary pointer
 
 ## [3.3.0] - 2020-07-13
 
