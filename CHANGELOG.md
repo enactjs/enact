@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.3.1] - 2020-07-20
+
+### Changed
+
+- `ui/Scroller` by increasing the scrollbar's inactivity timeout to 1000 ms
+
+### Fixed
+
+- `spotlight/Spottable` to correctly control focus when elements move under a stationary pointer
+
 ## [3.3.0] - 2020-07-13
 
 ### Changed

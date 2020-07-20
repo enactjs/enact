@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [3.3.1] - 2020-07-20
+
+### Changed
+
+- `ui/Scroller` by increasing the scrollbar's inactivity timeout to 1000 ms
+
 ## [3.3.0] - 2020-07-13
 
 ### Changed

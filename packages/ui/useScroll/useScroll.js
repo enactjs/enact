@@ -108,6 +108,7 @@ const useScrollBase = (props) => {
 			scrollMode,
 			setScrollContainerHandle,
 			spacing,
+			spotlightContainerDisabled,
 			verticalScrollbar,
 			verticalScrollbarHandle,
 			wrap,
@@ -369,7 +370,7 @@ const useScrollBase = (props) => {
 		return () => {
 			ref.scrollStopJob.stop();
 		};
-	}, [direction, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl, scrollMode]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [direction, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl, scrollMode, spotlightContainerDisabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		const

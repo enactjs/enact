@@ -14,7 +14,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {getContainersForNode} from '../src/container';
-import {hasPointerMoved} from '../src/pointer';
 import {getDirection, Spotlight} from '../src/spotlight';
 
 /**
@@ -394,16 +393,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleEnter = (ev) => {
 			forward('onMouseEnter', ev, this.props);
-			if (hasPointerMoved(ev.clientX, ev.clientY)) {
-				this.isHovered = true;
-			}
+			this.isHovered = true;
 		}
 
 		handleLeave = (ev) => {
 			forward('onMouseLeave', ev, this.props);
-			if (hasPointerMoved(ev.clientX, ev.clientY)) {
-				this.isHovered = false;
-			}
+			this.isHovered = false;
 		}
 
 		render () {
