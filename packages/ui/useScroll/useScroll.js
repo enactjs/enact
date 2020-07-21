@@ -1468,7 +1468,6 @@ const useScrollBase = (props) => {
 
 	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
 		{
-			...voiceProps,
 			childProps,
 			clientSize,
 			dataSize,
@@ -1480,13 +1479,11 @@ const useScrollBase = (props) => {
 			spacing,
 			wrap
 		} :
-		{
-			...voiceProps,
-			children
-		};
+		{children};
 
 	assignProperties('scrollContentProps', {
 		...scrollContentProps,
+		...voiceProps,
 		cbScrollTo: scrollTo,
 		className: [css.scrollFill],
 		direction,
