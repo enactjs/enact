@@ -289,15 +289,17 @@ const useScrollBase = (props) => {
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
+		const containerRef = scrollContainerRef.current;
+
 		mutableRef.current.resizeRegistry.parent = context;
-		mutableRef.current.resizeObserver.observe(scrollContainerRef.current);
+		mutableRef.current.resizeObserver.observe(containerRef);
 
 		// componentWillUnmount
 		return () => {
-			const {animator, resizeRegistry, scrolling, scrollStopJob} = mutableRef.current; // eslint-disable-line react-hooks/exhaustive-deps
+			const {animator, resizeObserver, resizeRegistry, scrolling, scrollStopJob} = mutableRef.current; // eslint-disable-line react-hooks/exhaustive-deps
 
 			resizeRegistry.parent = null;
-			mutableRef.current.resizeObserver.unobserve(scrollContainerRef.current);
+			resizeObserver.unobserve(containerRef);
 
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			if (scrolling) {
