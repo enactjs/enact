@@ -153,6 +153,7 @@ const useScrollBase = (props) => {
 		animationInfo: null,
 
 		resizeRegistry: null,
+		resizeObserver: null,
 
 		// constants
 		pixelPerLine: 39,
@@ -289,6 +290,7 @@ const useScrollBase = (props) => {
 
 	useEffect(() => {
 		mutableRef.current.resizeRegistry.parent = context;
+		mutableRef.current.resizeObserver.observe(scrollContainerRef.current);
 
 		// componentWillUnmount
 		return () => {
@@ -356,6 +358,11 @@ const useScrollBase = (props) => {
 
 	if (mutableRef.current.resizeRegistry == null) {
 		mutableRef.current.resizeRegistry = Registry.create(handleResize);
+	}
+
+	if (mutableRef.current.resizeObserver === null) {
+		// eslint-disable-next-line no-undef
+		mutableRef.current.resizeObserver = new ResizeObserver(() => enqueueForceUpdate());
 	}
 
 	useEffect(() => {
