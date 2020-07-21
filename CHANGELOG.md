@@ -2,11 +2,11 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [Unrelease]
+## [unrelease]
 
-### Fixed
+### Added
 
-- `ui/Scroller` to support `data-webos-voice-focused`, `data-webos-voice-disabled`, `data-webos-voice-group-label` props
+- `ui/Scroller` prop `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label`
 
 ## [3.3.1] - 2020-07-20
 
