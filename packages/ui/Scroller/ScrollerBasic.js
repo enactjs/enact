@@ -30,6 +30,30 @@ class ScrollerBasic extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
+		 * Disable voice control feature of component.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
+		 * Activates the component for voice control.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		'data-webos-voice-focused': PropTypes.bool,
+
+		/**
+		 * The voice control group label.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		'data-webos-voice-group-label': PropTypes.string,
+
+		/**
 		 * Direction of the scroller.
 		 *
 		 * Valid values are:
