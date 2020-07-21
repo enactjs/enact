@@ -362,7 +362,11 @@ const useScrollBase = (props) => {
 
 	if (mutableRef.current.resizeObserver === null) {
 		// eslint-disable-next-line no-undef
-		mutableRef.current.resizeObserver = new ResizeObserver(() => enqueueForceUpdate());
+		mutableRef.current.resizeObserver = new ResizeObserver(() => {
+			if (scrollContentHandle.current.syncClientSize) {
+				scrollContentHandle.current.syncClientSize();
+			}
+		});
 	}
 
 	useEffect(() => {
