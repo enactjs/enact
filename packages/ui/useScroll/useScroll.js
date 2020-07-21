@@ -1,3 +1,4 @@
+/* global ResizeObserver */
 /**
  * Unstyled scrollable hook and behaviors to be customized by a theme or application.
  *
@@ -153,7 +154,6 @@ const useScrollBase = (props) => {
 		animationInfo: null,
 
 		resizeRegistry: null,
-		resizeObserver: null,
 
 		// constants
 		pixelPerLine: 39,
@@ -288,18 +288,38 @@ const useScrollBase = (props) => {
 		}
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		const containerRef = scrollContainerRef.current;
+		if (!containerRef) {
+			return;
+		}
+		if (typeof ResizeObserver === 'function') {
+			let resizeObserver = new ResizeObserver(() => {
+				if (scrollContentHandle.current && scrollContentHandle.current.syncClientSize) {
+					scrollContentHandle.current.syncClientSize();
+				}
+			});
 
+			resizeObserver.observe(containerRef);
+
+			return () => {
+				if (resizeObserver) {
+					resizeObserver.disconnect();
+					resizeObserver = null;
+				}
+			};
+		}
+
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
 		mutableRef.current.resizeRegistry.parent = context;
-		mutableRef.current.resizeObserver.observe(containerRef);
 
 		// componentWillUnmount
 		return () => {
-			const {animator, resizeObserver, resizeRegistry, scrolling, scrollStopJob} = mutableRef.current; // eslint-disable-line react-hooks/exhaustive-deps
+			const {animator, resizeRegistry, scrolling, scrollStopJob} = mutableRef.current; // eslint-disable-line react-hooks/exhaustive-deps
 
 			resizeRegistry.parent = null;
-			resizeObserver.unobserve(containerRef);
 
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			if (scrolling) {
@@ -361,15 +381,6 @@ const useScrollBase = (props) => {
 
 	if (mutableRef.current.resizeRegistry == null) {
 		mutableRef.current.resizeRegistry = Registry.create(handleResize);
-	}
-
-	if (mutableRef.current.resizeObserver === null) {
-		// eslint-disable-next-line no-undef
-		mutableRef.current.resizeObserver = new ResizeObserver(() => {
-			if (scrollContentHandle.current.syncClientSize) {
-				scrollContentHandle.current.syncClientSize();
-			}
-		});
 	}
 
 	useEffect(() => {
