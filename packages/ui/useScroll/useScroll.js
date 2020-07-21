@@ -1460,13 +1460,17 @@ const useScrollBase = (props) => {
 		})
 	});
 
+	const voiceProps = {
+		'data-webos-voice-disabled': voiceDisabled,
+		'data-webos-voice-focused': voiceFocused,
+		'data-webos-voice-group-label': voiceGroupLabel
+	};
+
 	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
 		{
+			...voiceProps,
 			childProps,
 			clientSize,
-			'data-webos-voice-disabled': voiceDisabled,
-			'data-webos-voice-focused': voiceFocused,
-			'data-webos-voice-group-label': voiceGroupLabel,
 			dataSize,
 			itemRenderer,
 			itemSize,
@@ -1476,7 +1480,10 @@ const useScrollBase = (props) => {
 			spacing,
 			wrap
 		} :
-		{children};
+		{
+			...voiceProps,
+			children
+		};
 
 	assignProperties('scrollContentProps', {
 		...scrollContentProps,
