@@ -1088,8 +1088,6 @@ const useScrollBase = (props) => {
 				scrollContentRef.current.style.scrollBehavior = 'smooth';
 			}
 
-			mutableRef.current.scrollStopJob.start();
-
 			if (props.start) {
 				props.start(animate);
 			}
