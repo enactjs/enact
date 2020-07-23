@@ -1,3 +1,4 @@
+/* global ResizeObserver */
 /**
  * Unstyled scrollable hook and behaviors to be customized by a theme or application.
  *
@@ -284,6 +285,29 @@ const useScrollBase = (props) => {
 	useLayoutEffect(() => {
 		if (props.cbScrollTo) {
 			props.cbScrollTo(scrollTo);
+		}
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useLayoutEffect(() => {
+		const containerRef = scrollContainerRef.current;
+		if (!containerRef) {
+			return;
+		}
+		if (typeof ResizeObserver === 'function') {
+			let resizeObserver = new ResizeObserver(() => {
+				if (scrollContentHandle.current && scrollContentHandle.current.syncClientSize) {
+					scrollContentHandle.current.syncClientSize();
+				}
+			});
+
+			resizeObserver.observe(containerRef);
+
+			return () => {
+				if (resizeObserver) {
+					resizeObserver.disconnect();
+					resizeObserver = null;
+				}
+			};
 		}
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
