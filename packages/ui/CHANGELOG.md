@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
+- `ui/VirtualList` with scrollMode `native` to not scrollTo bottom when dataSize changed to smaller and scrollTo called with `animate: false` option
 - `ui/Scroller` and `ui/VirtualList` to not fire `onScrollStop` event redundantly
 
 ## [3.3.1] - 2020-07-20
