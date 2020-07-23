@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ## [unrelease]
 
+### Fixed
+
+- `ui/AnnounceDecorator` to clear previously read string by calling announce with the `clear` property
+
 ### Added
 
 - `ui/Scroller` prop `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label`
