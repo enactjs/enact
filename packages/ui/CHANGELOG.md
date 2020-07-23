@@ -7,6 +7,11 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Scroller` and `ui/VirtualList` to re-render when its size changed
+## [unrelease]
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to not fire `onScrollStop` event redundantly
 
 ## [3.3.1] - 2020-07-20
 
