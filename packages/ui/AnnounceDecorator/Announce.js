@@ -61,6 +61,10 @@ const Announce = class extends React.Component {
 	}
 
 	componentWillUnmount () {
+		this.clearTimeout();
+	}
+
+	clearTimeout () {
 		if (this.alertTimeout) {
 			clearTimeout(this.alertTimeout);
 		}
@@ -79,7 +83,12 @@ const Announce = class extends React.Component {
 	 * @returns {undefined}
 	 * @public
 	 */
-	announce = (message) => {
+	announce = (message, clear = false) => {
+		if (clear) {
+			this.clearTimeout();
+			this.resetAlert();
+		}
+
 		if (this.alert && !this.alertTimeout && message) {
 			this.alert.setAttribute('aria-label', message);
 			this.alertTimeout = setTimeout(this.resetAlert, this.props.timeout);
