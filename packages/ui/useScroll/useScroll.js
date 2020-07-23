@@ -1255,15 +1255,22 @@ const useScrollBase = (props) => {
 	function scrollTo (opt) {
 		if (!mutableRef.current.deferScrollTo) {
 			const {left, top} = getPositionForScrollTo(opt);
+			const targetX = (left !== null) ? left : mutableRef.current.scrollLeft;
+			const targetY = (top !== null) ? top : mutableRef.current.scrollTop;
 
 			if (props.scrollTo) {
 				props.scrollTo(opt);
 			}
 
 			mutableRef.current.scrollToInfo = null;
+
+			if (scrollMode === 'native' && scrollContentHandle.current && scrollContentHandle.current.setScrollToPositionTarget) {
+				scrollContentHandle.current.setScrollToPositionTarget(targetX, targetY);
+			}
+
 			start({
-				targetX: (left !== null) ? left : mutableRef.current.scrollLeft,
-				targetY: (top !== null) ? top : mutableRef.current.scrollTop,
+				targetX,
+				targetY,
 				animate: opt.animate
 			});
 		} else {

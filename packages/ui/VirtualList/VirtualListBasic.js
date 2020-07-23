@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
+import {clamp} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import React, {Component} from 'react';
@@ -456,9 +457,15 @@ class VirtualListBasic extends Component {
 		}
 
 		const maxPos = this.isPrimaryDirectionVertical ? this.scrollBounds.maxTop : this.scrollBounds.maxLeft;
+		let currentPos = this.scrollPosition;
 
-		if (!deferScrollTo && this.scrollPosition > maxPos) {
+		if (this.props.scrollMode === 'native' && this.scrollToPositionTarget >= 0) {
+			currentPos = this.scrollToPositionTarget;
+		}
+
+		if (!deferScrollTo && currentPos > maxPos) {
 			this.props.cbScrollTo({position: (this.isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
+			this.scrollToPositionTarget = -1;
 		}
 	}
 
@@ -492,6 +499,7 @@ class VirtualListBasic extends Component {
 	cc = []
 	scrollPosition = 0
 	scrollPositionTarget = 0
+	scrollToPositionTarget = -1
 
 	// For individually sized item
 	itemPositions = []
@@ -563,9 +571,9 @@ class VirtualListBasic extends Component {
 	}
 
 	getItemPosition = (index, stickTo = 'start', optionalOffset = 0) => {
-		const
-			{primary} = this,
-			position = this.getGridPosition(index);
+		const {isPrimaryDirectionVertical, primary, scrollBounds} = this;
+		const maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
+		const position = this.getGridPosition(index);
 		let offset = 0;
 
 		if (stickTo === 'start') {
@@ -577,6 +585,7 @@ class VirtualListBasic extends Component {
 		}
 
 		position.primaryPosition -= offset;
+		position.primaryPosition = clamp(0, maxPos, position.primaryPosition);
 
 		return this.gridPositionToItemPosition(position);
 	}
@@ -660,6 +669,7 @@ class VirtualListBasic extends Component {
 
 		// reset
 		this.scrollPosition = 0;
+		this.scrollToPositionTarget = -1;
 		if (scrollMode === 'translate' && this.contentRef.current) {
 			this.contentRef.current.style.transform = null;
 		} else if (scrollMode === 'native' && node) {
@@ -841,6 +851,15 @@ class VirtualListBasic extends Component {
 			}
 
 			this.props.scrollContentRef.current.scrollTo(x, y);
+		}
+	}
+
+	// scrollMode 'native' only
+	setScrollToPositionTarget (x, y) {
+		if (this.isPrimaryDirectionVertical) {
+			this.scrollToPositionTarget = y;
+		} else {
+			this.scrollToPositionTarget = x;
 		}
 	}
 
