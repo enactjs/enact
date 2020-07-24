@@ -584,8 +584,7 @@ class VirtualListBasic extends Component {
 			offset = primary.clientSize - primary.itemSize - optionalOffset;
 		}
 
-		position.primaryPosition -= offset;
-		position.primaryPosition = clamp(0, maxPos, position.primaryPosition);
+		position.primaryPosition = clamp(0, maxPos, position.primaryPosition - offset);
 
 		return this.gridPositionToItemPosition(position);
 	}
