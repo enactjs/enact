@@ -276,7 +276,7 @@ const ViewManagerBase = class extends React.Component {
 			enteringDelay,
 			enteringProp,
 			childProps,
-			rtl
+			rtl: Boolean(rtl)
 		});
 
 		delete rest.end;
