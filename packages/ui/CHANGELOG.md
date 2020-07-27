@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/ViewManager` prop `rtl` to adjust arranger animations for locales that use right-to-left reading order
+
 ### Fixed
 
 - `ui/Scroller` and `ui/VirtualList` to re-render when its size changed
