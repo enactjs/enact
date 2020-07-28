@@ -500,20 +500,21 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		measureScrollWidth () {
+		measureWidths () {
 			// move all the children into the wrapper node ...
 			const wrapper = document.createElement('span');
 			this.moveChildren(this.node, wrapper);
 			this.node.appendChild(wrapper);
 
 			// measure it to find the precise floating point width of the content ...
-			const {width} = wrapper.getBoundingClientRect();
+			const {width: scrollWidth} = wrapper.getBoundingClientRect();
+			const {width} = this.node.getBoundingClientRect();
 
 			// and move all the children back and remove the wrapper
 			this.node.removeChild(wrapper);
 			this.moveChildren(wrapper, this.node);
 
-			return width;
+			return {scrollWidth, width};
 		}
 
 		/*
@@ -526,8 +527,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
 			if (node && this.distance == null && !this.props.marqueeDisabled) {
-				const {width} = node.getBoundingClientRect();
-				const scrollWidth = this.measureScrollWidth();
+				const {width, scrollWidth} = this.measureWidths();
 
 				this.spacing = this.getSpacing(width);
 				this.distance = this.calculateDistance(width, scrollWidth, this.spacing);
