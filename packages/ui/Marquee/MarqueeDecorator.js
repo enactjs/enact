@@ -876,9 +876,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						speed={marqueeSpeed}
 						willAnimate={this.state.promoted}
 					>
-						<span>
-							{children}
-						</span>
+						{children}
 					</MarqueeComponent>
 				</Wrapped>
 			);
