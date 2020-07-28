@@ -505,7 +505,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
 			if (node && this.distance == null && !this.props.marqueeDisabled) {
 				const {width} = node.getBoundingClientRect();
-				const {scrollWidth} = node;
+				const {width: scrollWidth} = node.firstChild.getBoundingClientRect();
 
 				this.spacing = this.getSpacing(width);
 				this.distance = this.calculateDistance(width, scrollWidth, this.spacing);
@@ -549,7 +549,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{String}				text-overflow value
 		 */
 		calculateTextOverflow (distance) {
-			return distance < 1 ? 'clip' : 'ellipsis';
+			return distance < 0 ? 'clip' : 'ellipsis';
 		}
 
 		getSpacing (width) {
@@ -574,7 +574,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{Boolean}				`true` if it should animated
 		 */
 		shouldAnimate (distance) {
-			return distance >= 1;
+			return distance >= 0;
 		}
 
 		/*
@@ -854,7 +854,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						speed={marqueeSpeed}
 						willAnimate={this.state.promoted}
 					>
-						{children}
+						<span>
+							{children}
+						</span>
 					</MarqueeComponent>
 				</Wrapped>
 			);
