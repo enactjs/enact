@@ -125,12 +125,11 @@ class View extends React.Component {
 		reverseTransition: PropTypes.bool,
 
 		/**
-		 * When `true`, indicates the current locale uses right-to-eft reading order.
+		 * When `true`, indicates the current locale uses right-to-left reading order.
 		 *
 		 * The effect depends on how the provided `arranger` handles this option.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 */
 		rtl: PropTypes.bool
 	}
