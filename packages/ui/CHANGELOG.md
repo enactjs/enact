@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/BodyText`, `ui/Button`, `ui/Group`, `ui/Heading`, `ui/Icon`, `ui/IconButton`, `ui/Image`, `ui/ImageItem`, `ui/LabeledIcon`, `ui/Layout`, `ui/ProgressBar`, `ui/Repeater`, `ui/Slider`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleIcon`, `ui/ToggleItem`, `ui/ViewManager` support for forwarding `ref`s to the respective root component
+
 ### Fixed
 
 - `ui/VirtualList` with scrollMode `native` to not scrollTo bottom when dataSize changed to smaller and scrollTo called with `animate: false` option
