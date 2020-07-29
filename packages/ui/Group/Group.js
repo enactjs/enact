@@ -8,10 +8,12 @@
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
+import compose from 'ramda/src/compose';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import Changeable from '../Changeable';
+import ForwardRef from '../ForwardRef';
 import Repeater from '../Repeater';
 
 import {GroupItem, pickGroupItemProps} from './GroupItem';
@@ -190,6 +192,20 @@ const GroupBase = kind({
 });
 
 /**
+ * A higher-order component that adds behavior to [Group]{@link ui/Group.GroupBase}.
+ *
+ * @hoc
+ * @memberof ui/Group
+ * @mixes ui/ForwardRef.ForwardRef
+ * @mixes ui/Changeable.Changeable
+ * @public
+ */
+const GroupDecorator = compose(
+	ForwardRef({prop: 'componentRef'}),
+	Changeable({change: 'onSelect', prop: 'selected'})
+);
+
+/**
  * A component that supports selection of its child items via configurable properties and
  * events.
  *
@@ -197,12 +213,11 @@ const GroupBase = kind({
  *
  * @class Group
  * @memberof ui/Group
- * @mixes ui/Changeable.Changeable
+ * @mixes ui/Group.GroupDecorator
  * @ui
  * @public
  */
-const Group = Changeable(
-	{change: 'onSelect', prop: 'selected'},
+const Group = GroupDecorator(
 	GroupBase
 );
 
