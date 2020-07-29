@@ -122,7 +122,16 @@ class View extends React.Component {
 		 * @type {Boolean}
 		 * @default false
 		 */
-		reverseTransition: PropTypes.bool
+		reverseTransition: PropTypes.bool,
+
+		/**
+		 * When `true`, indicates the current locale uses right-to-left reading order.
+		 *
+		 * The effect depends on how the provided `arranger` handles this option.
+		 *
+		 * @type {Boolean}
+		 */
+		rtl: PropTypes.bool
 	}
 
 	static defaultProps = {
@@ -231,7 +240,7 @@ class View extends React.Component {
 	 * @private
 	 */
 	prepareTransition = (arranger, callback, noAnimation) => {
-		const {duration, index, previousIndex = index, reverseTransition} = this.props;
+		const {duration, index, previousIndex = index, reverseTransition, rtl} = this.props;
 
 		// Need to ensure that we have a valid node reference before we animation. Sometimes, React
 		// will replace the node after mount causing a reference cached there to be invalid.
@@ -245,6 +254,7 @@ class View extends React.Component {
 				from: previousIndex,
 				node: this.node,
 				reverse: reverseTransition,
+				rtl,
 				to: index,
 				fill: 'forwards',
 				duration
