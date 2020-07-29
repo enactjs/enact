@@ -348,6 +348,7 @@ const SliderDecorator = compose(
  * @extends ui/Slider.SliderBase
  * @memberof ui/Slider
  * @mixes ui/Slider.SliderDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

@@ -160,6 +160,7 @@ const ToggleIconDecorator = compose(
  * @memberof ui/ToggleIcon
  * @extends ui/ToggleIcon.ToggleIconBase
  * @mixes ui/ToggleIcon.ToggleIconDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

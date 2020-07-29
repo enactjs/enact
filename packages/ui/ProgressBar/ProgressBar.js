@@ -217,9 +217,10 @@ const ProgressBarDecorator = compose(
  * An unstyled progress bar component that can be customized by a theme or application.
  *
  * @class ProgressBar
+ * @memberof ui/ProgressBar
  * @extends ui/ProgressBar.ProgressBarBase
  * @mixes ui/ProgressBar.ProgressBarDecorator
- * @memberof ui/ProgressBar
+ * @omit componentRef
  * @ui
  * @public
  */

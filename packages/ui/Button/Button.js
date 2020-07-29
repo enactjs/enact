@@ -263,9 +263,10 @@ const ButtonDecorator = compose(
  * A minimally-styled button component with touch support.
  *
  * @class Button
- * @extends ui/Button.ButtonBase
  * @memberof ui/Button
+ * @extends ui/Button.ButtonBase
  * @mixes ui/Button.ButtonDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

@@ -169,6 +169,7 @@ const CellDecorator = ForwardRef({prop: 'componentRef'});
  * @memberof ui/Layout
  * @extends ui/Layout.CellBase
  * @mixes ui/Layout.CellDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

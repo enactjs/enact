@@ -215,6 +215,7 @@ const SlotItemDecorator = compose(
  * @memberof ui/SlotItem
  * @extends ui/SlotItem.SlotItemBase
  * @mixes ui/SlotItem.SlotItemDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

@@ -42,7 +42,7 @@ import componentCss from './Image.module.less';
  *
  * > If you need a naturally sized image, you can use the native `<img>` element instead.
  *
- * @class Image
+ * @class ImageBase
  * @memberof ui/Image
  * @ui
  * @public
@@ -50,7 +50,7 @@ import componentCss from './Image.module.less';
 const ImageBase = kind({
 	name: 'ui:Image',
 
-	propTypes: /** @lends ui/Image.Image.prototype */ {
+	propTypes: /** @lends ui/Image.ImageBase.prototype */ {
 		/**
 		 * String value for the alt attribute of the image.
 		 *
@@ -212,6 +212,7 @@ const ImageDecorator = compose(
  * @memberof ui/Image
  * @extends ui/Image.ImageBase
  * @mixes ui/Image.ImageDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

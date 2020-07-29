@@ -269,6 +269,7 @@ const LabeledIconDecorator = compose(
  * @memberof ui/LabeledIcon
  * @extends ui/LabeledIcon.LabeledIconBase
  * @mixes ui/LabeledIcon.LabeledIconDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

@@ -339,6 +339,7 @@ const LayoutDecorator = ForwardRef({prop: 'componentRef'});
  * @memberof ui/Layout
  * @extends ui/Layout.LayoutBase
  * @mixes ui/ForwardRef.ForwardRef
+ * @omit componentRef
  * @ui
  * @public
  */

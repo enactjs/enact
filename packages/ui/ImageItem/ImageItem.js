@@ -192,6 +192,7 @@ const ImageItemDecorator = compose(
  * @memberof ui/ImageItem
  * @extends ui/ImageItem.ImageItemBase
  * @mixes ui/ImageItem.ImageItemDecorator
+ * @omit componentRef
  * @ui
  * @public
  */
