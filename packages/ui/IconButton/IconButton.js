@@ -14,9 +14,11 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import React from 'react';
 
 import ComponentOverride from '../ComponentOverride';
+import ForwardRef from '../ForwardRef';
 import Touchable from '../Touchable';
 
 import componentCss from './IconButton.module.less';
@@ -194,16 +196,19 @@ const IconButtonBase = kind({
 	}
 });
 
-
 /**
  * A higher-order component that adds universal button behaviors to an [IconButtonBase]{@link ui/IconButton.IconButtonBase}.
  *
  * @hoc
  * @memberof ui/IconButton
+ * @mixes ui/ForwardRef.ForwardRef
  * @mixes ui/Touchable.Touchable
  * @public
  */
-const IconButtonDecorator = Touchable({activeProp: 'pressed'});
+const IconButtonDecorator = compose(
+	ForwardRef({prop: 'componentRef'}),
+	Touchable({activeProp: 'pressed'})
+);
 
 /**
  * A minimally styled, but interactive, Button ready for customization by a theme.

@@ -14,6 +14,7 @@ import compose from 'ramda/src/compose';
 import React from 'react';
 
 import ComponentOverride from '../ComponentOverride';
+import ForwardRef from '../ForwardRef';
 import {CellBase, LayoutBase} from '../Layout';
 import Slottable from '../Slottable';
 
@@ -250,6 +251,7 @@ const LabeledIconBase = kind({
  * @public
  */
 const LabeledIconDecorator = compose(
+	ForwardRef({prop: 'componentRef'}),
 	Slottable({slots: ['icon']})
 );
 

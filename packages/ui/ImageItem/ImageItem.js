@@ -3,14 +3,18 @@
  *
  * @module ui/ImageItem
  * @exports ImageItem
+ * @exports ImageItemBase
+ * @exports ImageItemDecorator
  */
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import React from 'react';
 
 import ComponentOverride from '../ComponentOverride';
+import ForwardRef from '../ForwardRef';
 import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
@@ -27,7 +31,7 @@ function ImageOverride ({imageComponent, ...rest}) {
 /**
  * A basic image item without any behavior.
  *
- * @class ImageItem
+ * @class ImageItemBase
  * @memberof ui/ImageItem
  * @ui
  * @public
@@ -35,7 +39,7 @@ function ImageOverride ({imageComponent, ...rest}) {
 const ImageItemBase = kind({
 	name: 'ui:ImageItem',
 
-	propTypes: /** @lends ui/ImageItem.ImageItem.prototype */ {
+	propTypes: /** @lends ui/ImageItem.ImageItemBase.prototype */ {
 		/**
 		 * The caption displayed with the image.
 		 *
@@ -168,8 +172,34 @@ const ImageItemBase = kind({
 	}
 });
 
-export default ImageItemBase;
+/**
+ * A higher-order component that adds behaviors to an
+ * [ImageItemBase]{@link ui/ImageItem.ImageItemBase}.
+ *
+ * @hoc
+ * @memberof ui/ImageItem
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const ImageItemDecorator = compose(
+	ForwardRef({prop: 'componentRef'})
+);
+
+/**
+ * A minimally styled ImageItem ready for customization by a theme.
+ *
+ * @class ImageItem
+ * @memberof ui/ImageItem
+ * @extends ui/ImageItem.ImageItemBase
+ * @mixes ui/ImageItem.ImageItemDecorator
+ * @ui
+ * @public
+ */
+const ImageItem = ImageItemDecorator(ImageItemBase);
+
+export default ImageItem;
 export {
-	ImageItemBase as ImageItem,
-	ImageItemBase
+	ImageItem,
+	ImageItemBase,
+	ImageItemDecorator
 };

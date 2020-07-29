@@ -16,6 +16,7 @@ import React from 'react';
 
 import Changeable from '../Changeable';
 import ComponentOverride from '../ComponentOverride';
+import ForwardRef from '../ForwardRef';
 import Touchable from '../Touchable';
 
 import Knob from './Knob';
@@ -334,6 +335,7 @@ const SliderBase = kind({
  * @public
  */
 const SliderDecorator = compose(
+	ForwardRef({prop: 'componentRef'}),
 	Changeable,
 	PositionDecorator,
 	Touchable({activeProp: 'pressed'})

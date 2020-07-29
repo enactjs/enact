@@ -1,6 +1,6 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
-import {ImageItemBase} from '../ImageItem';
+import ImageItem, {ImageItemBase} from '../ImageItem';
 
 const src = {
 	'hd': 'http://lorempixel.com/64/64/city/1/',
@@ -162,5 +162,17 @@ describe('ImageItem', () => {
 		const actual = subject.find('.image').props();
 
 		expect(actual).toMatchObject(expected);
+	});
+
+	test('should return a DOM node reference for `componentRef`', () => {
+		const ref = jest.fn();
+		mount(
+			<ImageItem ref={ref} src={src} />
+		);
+
+		const expected = 'DIV';
+		const actual = ref.mock.calls[0][0].nodeName;
+
+		expect(actual).toBe(expected);
 	});
 });

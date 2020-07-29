@@ -3,15 +3,19 @@
  *
  * @module ui/Image
  * @exports Image
+ * @exports ImageBase
+ * @exports ImageDecorator
  */
 
 import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import React from 'react';
 import warning from 'warning';
 
 import {selectSrc} from '../resolution';
+import ForwardRef from '../ForwardRef';
 
 import componentCss from './Image.module.less';
 
@@ -189,8 +193,33 @@ const ImageBase = kind({
 	}
 });
 
-export default ImageBase;
+/**
+ * A higher-order component that adds behaviors to an [ImageBase]{@link ui/Image.ImageBase}.
+ *
+ * @hoc
+ * @memberof ui/Image
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const ImageDecorator = compose(
+	ForwardRef({prop: 'componentRef'})
+);
+
+/**
+ * A minimally styled Image ready for customization by a theme.
+ *
+ * @class Image
+ * @memberof ui/Image
+ * @extends ui/Image.ImageBase
+ * @mixes ui/Image.ImageDecorator
+ * @ui
+ * @public
+ */
+const Image = ImageDecorator(ImageBase);
+
+export default Image;
 export {
-	ImageBase as Image,
-	ImageBase
+	Image,
+	ImageBase,
+	ImageDecorator
 };

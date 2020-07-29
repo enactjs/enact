@@ -7,7 +7,9 @@ import Icon from '../../Icon';
 import SlotItem from '../../SlotItem';
 import Item from '../../Item';
 
-const SlottedItem = (props) => <SlotItem {...props} component={Item} />;
+const SlottedItem = React.forwardRef((props, ref) => (
+	<SlotItem {...props} component={Item} ref={ref} />
+));
 
 const tap = (node) => {
 	node.simulate('mousedown');
@@ -96,5 +98,19 @@ describe('ToggleItem Specs', () => {
 		const actual = handleToggle.mock.calls[0][0].value;
 
 		expect(expected).toBe(actual);
+	});
+
+	test('should return a DOM node reference for `componentRef`', () => {
+		const ref = jest.fn();
+		mount(
+			<ToggleItem component={SlottedItem} iconComponent={CustomIcon} ref={ref}>
+				Toggle Item
+			</ToggleItem>
+		);
+
+		const expected = 'DIV';
+		const actual = ref.mock.calls[0][0].nodeName;
+
+		expect(actual).toBe(expected);
 	});
 });

@@ -54,5 +54,17 @@ describe('LabeledIcon Specs', () => {
 
 		expect(actual).toHaveLength(expected);
 	});
+
+	test('should return a DOM node reference for `componentRef`', () => {
+		const ref = jest.fn();
+		mount(
+			<LabeledIcon ref={ref} iconComponent={iconComponent} icon={iconName} />
+		);
+
+		const expected = 'DIV';
+		const actual = ref.mock.calls[0][0].nodeName;
+
+		expect(actual).toBe(expected);
+	});
 });
 
