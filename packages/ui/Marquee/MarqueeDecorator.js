@@ -494,6 +494,29 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			});
 		}
 
+		moveChildren (from, to) {
+			for (let n of from.childNodes) {
+				to.appendChild(n);
+			}
+		}
+
+		measureWidths () {
+			// move all the children into the wrapper node ...
+			const wrapper = document.createElement('span');
+			this.moveChildren(this.node, wrapper);
+			this.node.appendChild(wrapper);
+
+			// measure it to find the precise floating point width of the content ...
+			const {width: scrollWidth} = wrapper.getBoundingClientRect();
+			const {width} = this.node.getBoundingClientRect();
+
+			// and move all the children back and remove the wrapper
+			this.node.removeChild(wrapper);
+			this.moveChildren(wrapper, this.node);
+
+			return {scrollWidth, width};
+		}
+
 		/*
 		* Determines if the component should marquee and the distance to animate
 		*
@@ -504,8 +527,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
 			if (node && this.distance == null && !this.props.marqueeDisabled) {
-				const {width} = node.getBoundingClientRect();
-				const {scrollWidth} = node;
+				const {width, scrollWidth} = this.measureWidths();
 
 				this.spacing = this.getSpacing(width);
 				this.distance = this.calculateDistance(width, scrollWidth, this.spacing);
@@ -549,7 +571,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{String}				text-overflow value
 		 */
 		calculateTextOverflow (distance) {
-			return distance < 1 ? 'clip' : 'ellipsis';
+			return distance === 0 ? 'clip' : 'ellipsis';
 		}
 
 		getSpacing (width) {
@@ -574,7 +596,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{Boolean}				`true` if it should animated
 		 */
 		shouldAnimate (distance) {
-			return distance >= 1;
+			return distance > 0;
 		}
 
 		/*
