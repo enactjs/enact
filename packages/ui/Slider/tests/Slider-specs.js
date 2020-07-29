@@ -5,7 +5,7 @@ import Slider from '../Slider';
 
 describe('Slider', () => {
 	function ProgressBar () {
-		return <div />
+		return <div />;
 	}
 
 	test('should return a DOM node reference for `componentRef`', () => {
