@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/ViewManager` prop `rtl` to adjust arranger animations for locales that use right-to-left reading order
+- `ui/ViewManager` prop `rtl` to allow arrangers to adjust animations to be locale aware
 
 ### Fixed
 
