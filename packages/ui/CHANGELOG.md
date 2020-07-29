@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
+- `ui/Marquee` to correctly animation when scaled or when less than 1px longer than its container
 - `ui/VirtualList` with scrollMode `native` to not scrollTo bottom when dataSize changed to smaller and scrollTo called with `animate: false` option
 - `ui/Scroller` and `ui/VirtualList` to re-render when its size changed
 - `ui/Scroller` and `ui/VirtualList` to not fire `onScrollStop` event redundantly
