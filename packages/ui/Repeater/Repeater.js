@@ -80,10 +80,13 @@ const RepeaterBase = kind({
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to [component]{@link ui/Repeater.Repeater#component}
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Repeater.Repeater}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
 		 *
 		 * @type {Object|Function}
-		 * @private
+		 * @public
 		 */
 		componentRef: EnactPropTypes.ref,
 

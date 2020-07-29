@@ -6,6 +6,7 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import {cap} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -74,6 +75,17 @@ const Icon = kind({
 		 * @public
 		 */
 		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+
+		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Icon.Icon}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -202,7 +214,7 @@ const Icon = kind({
 		}
 	},
 
-	render: ({iconProps, ...rest}) => {
+	render: ({componentRef, iconProps, ...rest}) => {
 		delete rest.iconList;
 		delete rest.pressed;
 		delete rest.size;
@@ -212,6 +224,7 @@ const Icon = kind({
 				aria-hidden
 				{...rest}
 				{...iconProps}
+				ref={componentRef}
 			/>
 		);
 	}

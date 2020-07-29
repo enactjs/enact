@@ -82,6 +82,17 @@ const GroupBase = kind({
 		childSelect: PropTypes.string,
 
 		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Group.Group}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
+
+		/**
 		 * The property on each `childComponent` that receives the index of the item
 		 *
 		 * @type {String}
@@ -166,15 +177,15 @@ const GroupBase = kind({
 		)
 	},
 
-	render: (props) => {
-		delete props.onSelect;
-		delete props.childSelect;
-		delete props.select;
-		delete props.selected;
-		delete props.selectedEventProp;
-		delete props.selectedProp;
+	render: ({componentRef, ...rest}) => {
+		delete rest.onSelect;
+		delete rest.childSelect;
+		delete rest.select;
+		delete rest.selected;
+		delete rest.selectedEventProp;
+		delete rest.selectedProp;
 
-		return <Repeater role="group" {...props} childComponent={GroupItem} />;
+		return <Repeater role="group" {...rest} childComponent={GroupItem} ref={componentRef} />;
 	}
 });
 

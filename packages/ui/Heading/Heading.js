@@ -11,6 +11,7 @@
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -35,6 +36,17 @@ const Heading = kind({
 		 * @public
 		 */
 		children: PropTypes.node,
+
+		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Heading.Heading}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -124,12 +136,12 @@ const Heading = kind({
 		}
 	},
 
-	render: ({Tag, ...rest}) => {
+	render: ({Tag, componentRef, ...rest}) => {
 		delete rest.size;
 		delete rest.spacing;
 
 		return (
-			<Tag {...rest} />
+			<Tag {...rest} ref={componentRef} />
 		);
 	}
 });

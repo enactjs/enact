@@ -45,6 +45,17 @@ const ImageItemBase = kind({
 		children: PropTypes.node,
 
 		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/ImageItem.ImageItem}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
+
+		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal elements and states of this component.
 		 *
@@ -126,14 +137,14 @@ const ImageItemBase = kind({
 		})
 	},
 
-	render: ({children, css, imageComponent, orientation, placeholder, src, ...rest}) => {
+	render: ({children, componentRef, css, imageComponent, orientation, placeholder, src, ...rest}) => {
 		delete rest.selected;
 
 		const isHorizontal = orientation === 'horizontal';
 		const Component = isHorizontal ? Row : Column;
 
 		return (
-			<Component {...rest}>
+			<Component {...rest} ref={componentRef}>
 				<Cell
 					className={css.image}
 					component={ImageOverride}

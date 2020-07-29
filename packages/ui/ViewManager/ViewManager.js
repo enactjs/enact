@@ -70,10 +70,13 @@ const ViewManagerBase = class extends React.Component {
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to [component]{@link ui/ViewManager.ViewManager#component}
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/ViewManager.ViewManager}, the `ref` prop is forwarded to this
+		 * component as `componentRef`.
 		 *
 		 * @type {Object|Function}
-		 * @private
+		 * @public
 		 */
 		componentRef: EnactPropTypes.ref,
 

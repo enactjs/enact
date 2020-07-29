@@ -43,6 +43,17 @@ const LabeledIconBase = kind({
 		children: PropTypes.node,
 
 		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/LabeledIcon.LabeledIcon}, the `ref` prop is forwarded to this
+		 * component as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
+
+		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal elements and states of this component.
 		 *
@@ -170,7 +181,7 @@ const LabeledIconBase = kind({
 		}
 	},
 
-	render: ({css, children, disabled, flip, icon, iconComponent: Icon, orientation, size, ...rest}) => {
+	render: ({css, children, componentRef, disabled, flip, icon, iconComponent: Icon, orientation, size, ...rest}) => {
 		delete rest.inline;
 
 		let iconClassName = css.icon;
@@ -198,6 +209,7 @@ const LabeledIconBase = kind({
 		return LayoutBase.inline({
 			...rest,
 			align: 'center center',
+			componentRef,
 			disabled,
 			orientation,
 			children: [

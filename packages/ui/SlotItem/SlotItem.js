@@ -68,10 +68,13 @@ const SlotItemBase = kind({
 		autoHide: PropTypes.oneOf(['after', 'before', 'both']),
 
 		/**
-		 * Called with a reference to [component]{@link ui/SlotItem.SlotItemBase#component}
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/SlotItem.SlotItem}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
 		 *
 		 * @type {Object|Function}
-		 * @private
+		 * @public
 		 */
 		componentRef: EnactPropTypes.ref,
 

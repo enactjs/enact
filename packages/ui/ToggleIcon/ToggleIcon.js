@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import React from 'react';
 
+import ForwardRef from '../ForwardRef';
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
 
@@ -42,6 +43,17 @@ const ToggleIconBase = kind({
 		 * @public
 		 */
 		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+
+		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/ToggleIcon.ToggleIcon}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -111,12 +123,12 @@ const ToggleIconBase = kind({
 		iconClassName: ({iconClasses, css}) => iconClasses ? `${css.icon} ${iconClasses}` : css.icon
 	},
 
-	render: ({children, iconComponent: IconComponent, iconClassName, ...rest}) => {
+	render: ({children, componentRef, iconComponent: IconComponent, iconClassName, ...rest}) => {
 		delete rest.selected;
 		delete rest.iconClasses;
 
 		return (
-			<div {...rest}>
+			<div {...rest} ref={componentRef}>
 				<IconComponent className={iconClassName}>{children}</IconComponent>
 			</div>
 		);
@@ -129,12 +141,14 @@ const ToggleIconBase = kind({
  *
  * @class ToggleIconDecorator
  * @memberof ui/ToggleIcon
+ * @mixes ui/ForwardRef.ForwardRef
  * @mixes ui/Toggleable.Toggleable
  * @mixes ui/Touchable.Touchable
  * @ui
  * @public
  */
 const ToggleIconDecorator = compose(
+	ForwardRef({prop: 'componentRef'}),
 	Toggleable({toggleProp: 'onTap'}),
 	Touchable
 );

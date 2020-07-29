@@ -67,6 +67,17 @@ const IconButtonBase = kind({
 		children: PropTypes.node,
 
 		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/IconButton.IconButton}, the `ref` prop is forwarded to this
+		 * component as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
+
+		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal elements and states of this component.
 		 *
@@ -161,7 +172,7 @@ const IconButtonBase = kind({
 		className: ({size, styler}) => styler.append(size)
 	},
 
-	render: ({buttonComponent, children, css, flip, icon, iconComponent: Icon, size, ...rest}) => {
+	render: ({buttonComponent, children, componentRef, css, flip, icon, iconComponent: Icon, size, ...rest}) => {
 		// To support the simpler use case of only specifying the icon as the children within
 		// <IconButton>, this falls back on using children if icon isn't specified.
 		if (!icon && children) {
@@ -177,7 +188,8 @@ const IconButtonBase = kind({
 			children: [
 				<Icon key="icon" flip={flip} size={size} className={css.icon}>{icon}</Icon>,
 				...React.Children.toArray(children)
-			]
+			],
+			ref: componentRef
 		});
 	}
 });

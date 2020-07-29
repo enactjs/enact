@@ -61,10 +61,13 @@ const CellBase = kind({
 		component:  EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to [component]{@link ui/Cell.Cell#component}
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Layout.Cell}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
 		 *
 		 * @type {Object|Function}
-		 * @private
+		 * @public
 		 */
 		componentRef: EnactPropTypes.ref,
 
