@@ -495,8 +495,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		moveChildren (from, to) {
-			for (let n of from.childNodes) {
-				to.appendChild(n);
+			while (from.childNodes.length) {
+				to.appendChild(from.childNodes.item(0));
 			}
 		}
 
