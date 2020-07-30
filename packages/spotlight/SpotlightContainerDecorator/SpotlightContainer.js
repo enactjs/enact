@@ -52,8 +52,8 @@ class SpotlightContainer {
 		}
 
 		this.attr['data-spotlight-id'] = this.id;
-		this.attr['data-spotlight-disabled'] = disabled;
-		this.attr['data-spotlight-muted'] = muted;
+		this.attr['data-spotlight-container-disabled'] = disabled;
+		this.attr['data-spotlight-container-muted'] = muted;
 	}
 
 	unload () {
