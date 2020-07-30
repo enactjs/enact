@@ -59,7 +59,7 @@ function useSpotlightContainer (config) {
 		return () => {
 			spotlightContainer.unload();
 		};
-	});
+	}, [spotlightContainer]);
 
 	return {
 		attributes: spotlightContainer.attributes,

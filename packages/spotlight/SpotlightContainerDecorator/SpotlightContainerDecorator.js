@@ -155,7 +155,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			id: spotlightId,
 			muted: spotlightMuted,
 			disabled: spotlightDisabled,
-			restricted: spotlightRestrict,
+			restrict: spotlightRestrict,
 
 			containerConfig, // continue5WayHold, defaultElement, and enterTo can be in the containerConfig object.
 			navigableFilter,

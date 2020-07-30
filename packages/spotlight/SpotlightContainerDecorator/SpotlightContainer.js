@@ -21,7 +21,9 @@ class SpotlightContainer {
 		this.filter = navigableFilter;
 
 		// private hash of spotlight DOM attributes
-		this.attr = {};
+		this.attr = {
+			'data-spotlight-container': true
+		};
 
 		// Used to indicate that we want to stop propagation on blur events that occur as a
 		// result of this component imperatively blurring itself on focus when spotlightDisabled
@@ -33,13 +35,14 @@ class SpotlightContainer {
 	}
 
 	setProps ({disabled, id, muted, restrict}) {
-		if (this.id == null || this.id !== id) {
+		if (this.id == null || (id && this.id !== id)) {
 			if (this.id) {
 				this.releaseContainer(this.id);
 			}
 
-			this.id = Spotlight.add(id, {
+			this.id = Spotlight.add({
 				...this.config,
+				id,
 				restrict,
 				navigableFilter: this.navigableFilter
 			});
