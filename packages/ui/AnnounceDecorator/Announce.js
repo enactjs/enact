@@ -80,6 +80,7 @@ const Announce = class extends React.Component {
 	 *
 	 * @method
 	 * @param   {String}     message  Message to notify the user
+	 * @param   {Boolean}    clear    Clears a previous message before setting the new message
 	 * @returns {undefined}
 	 * @public
 	 */
