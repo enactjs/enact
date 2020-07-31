@@ -63,8 +63,8 @@ function useSpotlightContainer (config) {
 
 	return {
 		attributes: spotlightContainer.attributes,
-		onBlurChild: spotlightContainer.onBlurChild,
-		onFocusChild: spotlightContainer.onFocusChild,
+		onBlurCapture: spotlightContainer.onBlurCapture,
+		onFocusCapture: spotlightContainer.onFocusCapture,
 		onPointerEnter: spotlightContainer.onPointerEnter,
 		onPointerLeave: spotlightContainer.onPointerLeave
 	};

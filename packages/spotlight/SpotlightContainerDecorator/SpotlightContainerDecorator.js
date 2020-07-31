@@ -24,12 +24,12 @@ const containerHandlers = {
 		callContext('onPointerLeave')
 	),
 	onFocusCapture: handle(
-		forward('onFocusCapture'),
-		callContext('onFocusChild')
+		callContext('onFocusCapture'),
+		forward('onFocusCapture')
 	),
 	onBlurCapture: handle(
-		forward('onBlurCapture'),
-		callContext('onBlurChild')
+		callContext('onBlurCapture'),
+		forward('onBlurCapture')
 	)
 };
 
