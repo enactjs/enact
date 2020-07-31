@@ -31,7 +31,7 @@ const nop = () => {};
  * @ui
  * @public
  */
-const VirtualList = ({role, ...rest}) => {
+const VirtualList = (props) => {
 	// Hooks
 
 	const {
@@ -47,7 +47,7 @@ const VirtualList = ({role, ...rest}) => {
 		scrollContentProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useScroll(rest);
+	} = useScroll(props);
 
 	// Render
 
@@ -58,9 +58,6 @@ const VirtualList = ({role, ...rest}) => {
 					<ScrollContentWrapper {...scrollContentWrapperProps}>
 						<VirtualListBasic
 							{...scrollContentProps}
-							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
-								cc.length ? <div role={role}>{cc}</div> : null
-							)}
 							ref={scrollContentHandle}
 						/>
 					</ScrollContentWrapper>
@@ -308,7 +305,7 @@ VirtualList.defaultProps = {
  * @ui
  * @public
  */
-const VirtualGridList = ({role, ...rest}) => {
+const VirtualGridList = (props) => {
 	const {
 		scrollContentHandle,
 		scrollContentWrapper: ScrollContentWrapper,
@@ -322,7 +319,7 @@ const VirtualGridList = ({role, ...rest}) => {
 		scrollContentProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useScroll(rest);
+	} = useScroll(props);
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
@@ -331,9 +328,6 @@ const VirtualGridList = ({role, ...rest}) => {
 					<ScrollContentWrapper {...scrollContentWrapperProps}>
 						<VirtualListBasic
 							{...scrollContentProps}
-							itemsRenderer={({cc}) => ( // eslint-disable-line react/jsx-no-bind
-								cc.length ? <div role={role}>{cc}</div> : null
-							)}
 							ref={scrollContentHandle}
 						/>
 					</ScrollContentWrapper>

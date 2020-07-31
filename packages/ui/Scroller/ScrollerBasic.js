@@ -1,3 +1,4 @@
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import {platform} from '@enact/core/platform';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -27,6 +28,30 @@ class ScrollerBasic extends Component {
 		 * @private
 		 */
 		cbScrollTo: PropTypes.func,
+
+		/**
+		 * Disable voice control feature of component.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
+		 * Activates the component for voice control.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		'data-webos-voice-focused': PropTypes.bool,
+
+		/**
+		 * The voice control group label.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		'data-webos-voice-group-label': PropTypes.string,
 
 		/**
 		 * Direction of the scroller.
@@ -61,10 +86,10 @@ class ScrollerBasic extends Component {
 		/**
 		 * Ref for scroll content
 		 *
-		 * @type {Object}
+		 * @type {Object|Function}
 		 * @private
 		 */
-		scrollContentRef: PropTypes.object
+		scrollContentRef: EnactPropTypes.ref
 	}
 
 	componentDidMount () {
@@ -160,6 +185,25 @@ class ScrollerBasic extends Component {
 		scrollBounds.clientHeight = clientHeight;
 		scrollBounds.maxLeft = Math.max(0, scrollWidth - clientWidth);
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
+	}
+
+	syncClientSize = () => {
+		const node = this.props.scrollContentRef.current;
+
+		if (!node) {
+			return false;
+		}
+
+		const
+			{clientWidth, clientHeight} = node,
+			{scrollBounds} = this;
+
+		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
+			this.calculateMetrics();
+			return true;
+		}
+
+		return false;
 	}
 
 	render () {

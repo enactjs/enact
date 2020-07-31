@@ -305,12 +305,27 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 			break;
 		}
 
+		// If one of the downstream containers is configured for partition, we use that
+		// container's bounds as the partition rect for navigation.
+		const partitionContainer = elementContainerIds
+			.slice(elementContainerIds.indexOf(containerId) + 1)
+			.find(id => {
+				const cfg = getContainerConfig(id);
+				return cfg && cfg.partition;
+			});
+
+		let partitionRect = elementRect;
+		if (partitionContainer) {
+			partitionRect = getContainerRect(partitionContainer);
+		}
+
 		// try to navigate from element to one of the candidates in containerId
 		next = navigate(
 			elementRect,
 			direction,
 			elementRects,
-			getContainerConfig(containerId)
+			getContainerConfig(containerId),
+			partitionRect
 		);
 
 		// if we match a container,
@@ -357,7 +372,7 @@ function getTargetByDirectionFromElement (direction, element) {
 
 	const elementRect = getRect(element);
 
-	return getNavigableContainersForNode(element)
+	const next = getNavigableContainersForNode(element)
 		.reduceRight((result, containerId, index, elementContainerIds) => {
 			result = result || getTargetInContainerByDirectionFromElement(
 				direction,
@@ -380,6 +395,10 @@ function getTargetByDirectionFromElement (direction, element) {
 
 			return result;
 		}, null);
+
+	// if the reduce above returns the original element, it means it hit a `leaveFor` config that
+	// prevents navigation so we enforce that here by returning null.
+	return next !== element ? next : null;
 }
 
 function getTargetByDirectionFromPosition (direction, position, containerId) {

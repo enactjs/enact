@@ -28,6 +28,7 @@ const pickGroupItemProps = (props) => ({
 		onSelect: props.onSelect,
 		select: props.select,
 		selected: props.selected,
+		selectedEventProp: props.selectedEventProp,
 		selectedProp: props.selectedProp
 	}
 });
@@ -58,16 +59,16 @@ const GroupItemBase = kind({
 					indexProp,
 					onSelect,
 					select,
-					selected
+					selected,
+					selectedEventProp
 				}
 			} = props;
 
 			if (onSelect) {
 				const index = props[indexProp];
-				const data = props[childProp];
 
 				onSelect({
-					data,
+					[selectedEventProp]: props[childProp],
 					selected: selectItem(select, index, selected)
 				});
 			}
