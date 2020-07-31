@@ -2,17 +2,27 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
+## [3.4.0] - 2020-07-29
+
+No significant changes.
+
+## [3.3.1] - 2020-07-20
 
 ### Fixed
 
-- `spotlight/Spottable` to enable `stopPropagation` method from forwarding keyup and keydown events
+- `spotlight/Spottable` to correctly control focus when elements move under a stationary pointer
+
+## [3.3.0] - 2020-07-13
+
+No significant changes.
+
+## [3.3.0-alpha.15] - 2020-07-07
+
+No significant changes.
 
 ## [3.3.0-alpha.14] - 2020-06-29
 
-### Added
-
-- `spotlight` container config prop `straightOnlyLeave` to prevent navigation to oblique containers when leaving the current container
+No significant changes.
 
 ## [3.3.0-alpha.13] - 2020-06-22
 

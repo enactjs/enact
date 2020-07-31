@@ -14,7 +14,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {getContainersForNode} from '../src/container';
-import {hasPointerMoved} from '../src/pointer';
 import {getDirection, Spotlight} from '../src/spotlight';
 
 /**
@@ -311,6 +310,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			const {keyCode} = ev;
 			const {selectionKeys} = props;
 			const key = selectionKeys.find((value) => keyCode === value);
+
+			// FIXME: temporary patch to maintain compatibility with moonstone 3.2.5 which
+			// deconstructs `preventDefault` from the event which is incompatible with React's
+			// synthetic event.
+			ev.preventDefault = ev.preventDefault.bind(ev);
+
 			forward('onKeyUp', ev, props);
 			const notPrevented = !ev.defaultPrevented;
 
@@ -388,16 +393,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleEnter = (ev) => {
 			forward('onMouseEnter', ev, this.props);
-			if (hasPointerMoved(ev.clientX, ev.clientY)) {
-				this.isHovered = true;
-			}
+			this.isHovered = true;
 		};
 
 		handleLeave = (ev) => {
 			forward('onMouseLeave', ev, this.props);
-			if (hasPointerMoved(ev.clientX, ev.clientY)) {
-				this.isHovered = false;
-			}
+			this.isHovered = false;
 		};
 
 		render () {

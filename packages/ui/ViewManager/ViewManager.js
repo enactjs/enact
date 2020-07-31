@@ -187,6 +187,16 @@ const ViewManagerBase = class extends React.Component {
 		reverseTransition: PropTypes.bool,
 
 		/**
+		 * Indicates the current locale uses right-to-left reading order.
+		 *
+		 * `rtl` is passed to the `arranger` in order to alter the animation (e.g. reversing the
+		 * horizontal direction).
+		 *
+		 * @type {Boolean}
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * Index of first visible view. Defaults to the current value of `index`.
 		 *
 		 * @type {Number}
@@ -244,7 +254,7 @@ const ViewManagerBase = class extends React.Component {
 	).bindAs(this, 'handleWillTransition');
 
 	render () {
-		const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, ...rest} = this.props;
+		const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, rtl, ...rest} = this.props;
 		let {end = index, start = index} = this.props;
 		const {prevIndex: previousIndex, reverseTransition} = this.state;
 		const childrenList = React.Children.toArray(children);
@@ -265,7 +275,8 @@ const ViewManagerBase = class extends React.Component {
 			reverseTransition,
 			enteringDelay,
 			enteringProp,
-			childProps
+			childProps,
+			rtl: Boolean(rtl)
 		});
 
 		delete rest.end;

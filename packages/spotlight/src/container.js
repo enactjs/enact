@@ -65,13 +65,13 @@ let GlobalConfig = {
 	onLeaveContainer: null,      // @private - notify the container when leaving via 5-way
 	onLeaveContainerFail: null,  // @private - notify the container when failing to leave via 5-way
 	overflow: false,
+	partition: false, // use the container bounds for partitioning when leaving
 	rememberSource: false,
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
 	selector: '',           // can be a valid <extSelector> except "@" syntax.
 	selectorDisabled: false,
 	straightMultiplier: 1,
 	straightOnly: false,
-	straightOnlyLeave: false, // prevents navigation to oblique containers when leaving the current container
 	straightOverlapThreshold: 0.5,
 	tabIndexIgnoreList: 'a, input, select, textarea, button, iframe, [contentEditable=true]'
 };

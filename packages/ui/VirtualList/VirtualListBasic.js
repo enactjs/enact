@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
+import {clamp} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import React, {Component} from 'react';
@@ -169,6 +170,14 @@ class VirtualListBasic extends Component {
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
+		 * Called to get the scroll affordance from themed component.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		getAffordance: PropTypes.func,
+
+		/**
 		 * Called to get the props for list items.
 		 *
 		 * @type {Function}
@@ -291,6 +300,7 @@ class VirtualListBasic extends Component {
 		cbScrollTo: nop,
 		dataSize: 0,
 		direction: 'vertical',
+		getAffordance: () => (0),
 		overhang: 3,
 		pageScroll: false,
 		scrollMode: 'translate',
@@ -447,9 +457,15 @@ class VirtualListBasic extends Component {
 		}
 
 		const maxPos = this.isPrimaryDirectionVertical ? this.scrollBounds.maxTop : this.scrollBounds.maxLeft;
+		let currentPos = this.scrollPosition;
 
-		if (!deferScrollTo && this.scrollPosition > maxPos) {
+		if (this.props.scrollMode === 'native' && this.scrollToPositionTarget >= 0) {
+			currentPos = this.scrollToPositionTarget;
+		}
+
+		if (!deferScrollTo && currentPos > maxPos) {
 			this.props.cbScrollTo({position: (this.isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
+			this.scrollToPositionTarget = -1;
 		}
 	}
 
@@ -483,6 +499,7 @@ class VirtualListBasic extends Component {
 	cc = [];
 	scrollPosition = 0;
 	scrollPositionTarget = 0;
+	scrollToPositionTarget = -1;
 
 	// For individually sized item
 	itemPositions = [];
@@ -554,9 +571,9 @@ class VirtualListBasic extends Component {
 	};
 
 	getItemPosition = (index, stickTo = 'start', optionalOffset = 0) => {
-		const
-			{primary} = this,
-			position = this.getGridPosition(index);
+		const {isPrimaryDirectionVertical, primary, scrollBounds} = this;
+		const maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
+		const position = this.getGridPosition(index);
 		let offset = 0;
 
 		if (stickTo === 'start') {
@@ -567,7 +584,7 @@ class VirtualListBasic extends Component {
 			offset = primary.clientSize - primary.itemSize - optionalOffset;
 		}
 
-		position.primaryPosition -= offset;
+		position.primaryPosition = clamp(0, maxPos, position.primaryPosition - offset);
 
 		return this.gridPositionToItemPosition(position);
 	};
@@ -651,6 +668,7 @@ class VirtualListBasic extends Component {
 
 		// reset
 		this.scrollPosition = 0;
+		this.scrollToPositionTarget = -1;
 		if (scrollMode === 'translate' && this.contentRef.current) {
 			this.contentRef.current.style.transform = null;
 		} else if (scrollMode === 'native' && node) {
@@ -832,6 +850,15 @@ class VirtualListBasic extends Component {
 			}
 
 			this.props.scrollContentRef.current.scrollTo(x, y);
+		}
+	}
+
+	// scrollMode 'native' only
+	setScrollToPositionTarget (x, y) {
+		if (this.isPrimaryDirectionVertical) {
+			this.scrollToPositionTarget = y;
+		} else {
+			this.scrollToPositionTarget = x;
 		}
 	}
 
@@ -1148,7 +1175,7 @@ class VirtualListBasic extends Component {
 		}
 	}
 
-	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight);
+	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() + this.props.getAffordance() : this.scrollBounds.clientHeight);
 
 	getScrollWidth = () => (this.isPrimaryDirectionVertical ? this.scrollBounds.clientWidth : this.getVirtualScrollDimension());
 
@@ -1207,6 +1234,7 @@ class VirtualListBasic extends Component {
 		delete rest.clientSize;
 		delete rest.dataSize;
 		delete rest.direction;
+		delete rest.getAffordance;
 		delete rest.getComponentProps;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
