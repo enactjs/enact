@@ -1,4 +1,4 @@
-/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
+/* eslint no-console: ["error", { allow: ["warn", "error"] }], react/jsx-no-bind: off */
 
 import React from 'react';
 import {shallow, mount} from 'enzyme';
