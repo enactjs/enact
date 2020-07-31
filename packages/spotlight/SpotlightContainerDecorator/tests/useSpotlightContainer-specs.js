@@ -1,4 +1,6 @@
-import {mount, shallow} from 'enzyme';
+/* eslint-disable enact/prop-types */
+
+import {shallow} from 'enzyme';
 import React from 'react';
 import Spotlight from '../../src/spotlight';
 import {getContainerConfig} from '../../src/container';
