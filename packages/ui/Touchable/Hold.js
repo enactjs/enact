@@ -49,6 +49,16 @@ class Hold {
 		}
 	}
 
+	// This method will get the `onHold`, `onHoldEnd`, `onHoldPulse` props and update the existing `holdConfig` values.
+	updateProps = ({onHold, onHoldEnd, onHoldPulse}) => {
+		// `holdConfig` might not exists a gesture not in progress. Check if gesture exists before updating the references to the `holdConfig`
+		if (!this.holdConfig) return;
+
+		this.holdConfig.onHoldPulse = onHoldPulse;
+		this.holdConfig.onHold = onHold;
+		this.holdConfig.onHoldEnd = onHoldEnd;
+	}
+
 	move = (coords) => {
 		if (!this.isHolding()) return;
 
