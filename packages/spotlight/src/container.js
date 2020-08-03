@@ -629,7 +629,7 @@ const getAllContainerIds = () => {
  * @memberof spotlight/container
  * @public
  */
-function getContainerDefaultElement (containerId) {
+function getContainerDefaultElement (containerId, preferredEnterTo) {
 	const config = getContainerConfig(containerId);
 
 	let defaultElementSelector = config && config.defaultElement;
@@ -638,6 +638,12 @@ function getContainerDefaultElement (containerId) {
 	}
 
 	defaultElementSelector = coerceArray(defaultElementSelector);
+
+	// If a preferred enterTo has been provided, we will favor it by making it first in search array
+	if (preferredEnterTo && typeof preferredEnterTo === 'string' && preferredEnterTo !== 'default-element') {
+		defaultElementSelector.unshift(preferredEnterTo);
+	}
+
 	const spottables = getDeepSpottableDescendants(containerId);
 
 	return defaultElementSelector.reduce((result, selector) => {
@@ -720,7 +726,7 @@ function setContainerLastFocusedElement (node, containerIds) {
  * @memberof spotlight/container
  * @public
  */
-function getContainerNavigableElements (containerId) {
+function getContainerNavigableElements (containerId, preferredEnterTo) {
 	if (!isContainer(containerId)) {
 		return [];
 	}
@@ -728,7 +734,7 @@ function getContainerNavigableElements (containerId) {
 	const config = getContainerConfig(containerId);
 	const {enterTo, overflow} = config;
 
-	const enterLast = enterTo === 'last-focused';
+	const enterLast = enterTo === 'last-focused' || preferredEnterTo === 'last-focused';
 	let next;
 
 	// if the container has a preferred entry point, try to find it first
@@ -738,7 +744,7 @@ function getContainerNavigableElements (containerId) {
 
 	// try default element if last focused can't be focused
 	if (!next) {
-		next = getContainerDefaultElement(containerId);
+		next = getContainerDefaultElement(containerId, preferredEnterTo);
 	}
 
 	if (!next) {
@@ -780,11 +786,11 @@ function getContainerNavigableElements (containerId) {
  * @memberof spotlight/container
  * @public
  */
-function getContainerFocusTarget (containerId) {
+function getContainerFocusTarget (containerId, enterTo) {
 	// deferring restoration until it's requested to allow containers to prepare first
 	restoreLastFocusedElement(containerId);
 
-	let next = getContainerNavigableElements(containerId);
+	let next = getContainerNavigableElements(containerId, enterTo);
 	// If multiple candidates returned, we need to find the first viable target since some may
 	// be empty containers which should be skipped.
 	return next.reduce((result, element) => {
