@@ -58,7 +58,7 @@ class Hold {
 		this.holdConfig.onHoldPulse = onHoldPulse;
 		this.holdConfig.onHold = onHold;
 		this.holdConfig.onHoldEnd = onHoldEnd;
-	}
+	};
 
 	move = (coords) => {
 		if (!this.isHolding()) return;

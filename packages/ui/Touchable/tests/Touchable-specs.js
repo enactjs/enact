@@ -48,6 +48,93 @@ describe('Touchable', () => {
 			}
 		);
 
+		test (
+			'should update state configurations onHoldPulse events',
+			() => {
+				const holdConfig = {
+					events: [
+						{name: 'hold', time: 10}
+					],
+					frequency: 10
+				}
+
+				const Component = Touchable(DivComponent);
+				const handler = jest.fn();
+				const subject = mount(
+					<Component onHold={() => {}} holdConfig={holdConfig} />
+				)
+
+				const ev = {};
+				subject.simulate('mousedown', ev);
+				subject.setProps({
+					onHoldPulse: handler
+				})
+
+				setTimeout(() => {
+					expect(handler).toHaveBeenCalled();;
+					done();
+				}, 20);
+			}
+		);
+
+		test (
+			'should update state configurations onHold events',
+			() => {
+				const holdConfig = {
+					events: [
+						{name: 'hold', time: 10}
+					],
+					frequency: 10
+				}
+
+				const Component = Touchable(DivComponent);
+				const handler = jest.fn();
+				const subject = mount(
+					<Component onHoldPulse={() => {}} holdConfig={holdConfig} />
+				)
+
+				const ev = {};
+				subject.simulate('mousedown', ev);
+				subject.setProps({
+					onHold: handler
+				})
+
+				setTimeout(() => {
+					expect(handler).toHaveBeenCalled();;
+					done();
+				}, 20);
+			}
+		);
+
+		test (
+			'should update state configurations onHoldEnd events',
+			() => {
+				const holdConfig = {
+					events: [
+						{name: 'hold', time: 10}
+					],
+					frequency: 10
+				}
+
+				const Component = Touchable(DivComponent);
+				const handler = jest.fn();
+				const subject = mount(
+					<Component onHoldPulse={() => {}} holdConfig={holdConfig} />
+				)
+
+				const ev = {};
+				subject.simulate('mousedown', ev);
+				subject.setProps({
+					onHoldEnd: handler
+				})
+
+				setTimeout(() => {
+					expect(handler).toHaveBeenCalled();;
+					done();
+				}, 20);
+			}
+		);
+
 		test('should merge configurations', () => {
 			configure({
 				flick: {

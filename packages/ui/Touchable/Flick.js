@@ -32,7 +32,7 @@ class Flick {
 
 		// This will update the `flickConfig` with the new value
 		this.flickConfig.onFlick = onFlick;
-	}
+	};
 
 	move = ({x, y}) => {
 		if (!this.tracking) return;

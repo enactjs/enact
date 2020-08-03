@@ -90,7 +90,7 @@ class Drag {
 		this.dragConfig.onDragStart = onDragStart;
 		this.dragConfig.onDrag = onDrag;
 		this.dragConfig.onDragEnd = onDragEnd;
-	}
+	};
 
 	move = (coords) => {
 		if (!this.isDragging()) return;
