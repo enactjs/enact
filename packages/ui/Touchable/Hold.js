@@ -49,10 +49,10 @@ class Hold {
 		}
 	};
 
-	// This method will get the `onHold`, `onHoldEnd`, `onHoldPulse` props and update the existing `holdConfig` values. So basically update the gesture (hold, flick, drag) props during a gesture callback.
+	// This method will get the `onHold`, `onHoldEnd`, `onHoldPulse` props and update in the existing `holdConfig`.
 	updateProps = ({onHold, onHoldEnd, onHoldPulse}) => {
-		// `holdConfig` might not exists a gesture not in progress. Check if gesture exists before updating the references to the `holdConfig`
-		if (!this.holdConfig) return;
+		// check `isHolding` gesture is not in progress. Check if gesture exists before updating the references to the `holdConfig`
+		if (!this.isHolding()) return;
 
 		// Update the original values with new values of the gestures
 		this.holdConfig.onHoldPulse = onHoldPulse;

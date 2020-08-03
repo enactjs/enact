@@ -81,15 +81,15 @@ class Drag {
 		this.move(coords);
 	};
 
-	// This method will get the `onHold`, `onHoldEnd`, `onHoldPulse` props and update the existing `holdConfig` values.
-	updateProps = ({onHold, onHoldEnd, onHoldPulse}) => {
-		// `holdConfig` might not exists a gesture not in progress. Check if gesture exists before updating the references to the `holdConfig`
-		if (!this.holdConfig) return;
+	// This method will get the `onDrag`, `onDragEnd`, `onDragStart` props in the existing `dragConfig`.
+	updateProps = ({onDrag, onDragEnd, onDragStart}) => {
+		// Check `isDragging` gesture is not in progress. Check if gesture exists before updating the references to the `dragConfig`
+		if (!this.isDragging()) return;
 
-		// This will update the `holdConfig` with the new value
-		this.holdConfig.onHoldPulse = onHoldPulse;
-		this.holdConfig.onHold = onHold;
-		this.holdConfig.onHoldEnd = onHoldEnd;
+		// This will update the `dragConfig` with the new value
+		this.dragConfig.onDragStart = onDragStart;
+		this.dragConfig.onDrag = onDrag;
+		this.dragConfig.onDragEnd = onDragEnd;
 	}
 
 	move = (coords) => {
